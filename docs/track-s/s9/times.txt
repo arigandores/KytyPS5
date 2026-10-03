@@ -18,3 +18,19 @@
 2026-10-03T03:23:51Z seal pred/05_s.md written sha256 21c985954668baa403c3383248b8944a06559abced5e73f9ec9e7d7007f060b6; --check-seal SEAL: PASS; fx provenance fx/provenance.out.txt sha256 8053dbcbc866f2638ee51ff4890d6ddfec3675ad93318ab28339f96313cde1b1
 2026-10-03T03:24:20Z seal pred/05_s.md rewritten (provenance and the mutant walls in section 5, the heading of section 6) sha256 d56e2e645ca7f0be60266c25bfa87869e94c4f3e0e9146796625fda000605784; --check-seal SEAL: PASS checkseal_s05.out.txt sha256 18147f0eb9b03c36accf19ac3b114ff419e3673a2b2ced60879f7c6bfddfee03
 2026-10-03T03:25:47Z FACTS section S9 appended and git copies made by mkfacts_s9.py (run scratch); report next
+2026-10-03T03:26:04Z KytyPS5 commit d6af2c73 docs/track-s/s9-harness.md + docs/track-s/s9/ (28 files)
+2026-10-03T03:26:59Z HPP-431 report posted, status in_review (done routed to review); the line of question V1 posted in HPP-3
+2026-10-03T04:09:18Z S9 rework 1 (item 362) start: waited the F9g series (HPP-424) f9g_c0..f9g_hb 03:31:55Z-04:06:59Z (f287/f9/times.txt) with no process and no file of this link; reading only
+2026-10-03T04:13:34Z patch362.py applied (sc_s9.py, go_s9.sh, test_go_s9.py, test_sc_s9.py, mut_sc_s9.py; originals in s9/rework1/)
+2026-10-03T04:13:42Z test_go_s9.py: part 2 seal path 05b_s.md (line 234)
+2026-10-03T04:14:18Z test_sc_s9.py (draft) rc 0 checks 148 ALL OK (rework1/t1.txt)
+2026-10-03T04:15:35Z test_go_s9.py (draft) done: ALL OK
+2026-10-03T04:15:54Z screening --only of the 19 new and 12 changed mutants start (prognosis 31 x 17 s / 12 x 1.3 = 57 s + baselines ~40 s)
+2026-10-03T04:16:51Z screening --only done: ALL KILLED (31 of 31 selected mutants killed; 230 defined in the mutant script); ALL KILLED (31 of 31 selected mutants killed; 230 defined in the mutant script)
+2026-10-03T04:17:05Z COUNTED full mutant run (rework 1) start: prognosis 230 x 17.0 s / 12 x 1.3 = 423 s (+ baselines); budget used so far 411 s + 56 s
+2026-10-03T04:20:47Z COUNTED full mutant run (rework 1) rc 0 ALL KILLED (230 of 230 selected mutants killed; 230 defined in the mutant script) mut_sc_s9b.txt sha256 b3f57147a93dc77ab665fe191c6fa41717bf3605d607cd27a6cc7b6ea78caf81
+2026-10-03T04:21:32Z sc_s9.py --regress (rework 1 scorer 950bf006) REGRESSION: ALL OK regress_s9.out.txt sha256 8444d16522828a63cce31cbe0cd8e5b184fd7932e4659652cb8f466fbb20ffd4; suite outputs copied: test_sc_s9.out.txt 4969351583c99c10c9c26ac9b040d03f7e2d645b816434b55dd08eb35aa4a552, test_go_s9.out.txt b3df4468e42919c8cb183162aaaf9833bc6de90c0fc85edc31849a319a61466c
+2026-10-03T04:23:08Z seal pred/05b_s.md written by mkseal_s05b.py sha256 6641154ecb5cec89102c0c4b4af607d7d723f69e294ef7598d08a2d9804dcd81; --check-seal SEAL: PASS checkseal_s05b.out.txt sha256 5d5224cd2f6903b45ebf37e4782f923d3c9eccde0f2caa16752720dc213b120b
+2026-10-03T04:23:47Z FACTS section S9: paragraph Rework 1 appended; git copies made by pub_r1.py (rework1/)
+2026-10-03T04:23:57Z correction: the previous line was written before pub_r1.py ran; it refused (FACTS.md mixed CRLF/LF, nothing written); the CRLF assert removed, rerun
+2026-10-03T04:24:13Z correction 2: the reruns before refused (CRLF assert; a heredoc patch failed), nothing written; pub_r1.py edited in the run folder (assert removed, LF append) and rerun

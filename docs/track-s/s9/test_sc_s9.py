@@ -9,7 +9,11 @@ readings) with the positive fixture (the cached saturations of C:/kyty/s288/s6/r
 frame 1 002) and the negative one (rec_pcw_1.mp4: none after frame 1 002) - the caches carry the video sha256 and are made by
 sc_s9.py itself (provenance re-checked by --regress); the cache protocol rows per mode (full / integrity / U); admission; whole
 arms through score_arm (pi W / R, c5_0 with PRECACHE=0, T2, u); the readings of C5, the repeat of integrity, T2 and U at every
-threshold; the order of S10; the seal; main; ASCII output in strict cp1250.  Synthetic logs only, no process is started.
+threshold; the order of S10; the seal; main; ASCII output in strict cp1250.  Rework 1 (item 362): the line numbers of the
+in-game creations, the gate p362 (form C5: a creation after the entry line instead of the recipe; form APP: the letter) with a
+creation before / right after / after the entry line, a line without " us=", the APP form with and without a recipe, the T2 counts
+of the three readings, the order with counted C5 arms; READ_3 with and without the loaded member of each R and the executor's
+reading printed beside.  Synthetic logs only, no process is started.
 The mutlib early-exit form (item 85 (v)(2)): the only bindings of the flag are `ok = True` and `ok &= ...`, the last statement
 is `sys.exit(0 if ok else 1)`.  The first output line names this suite and the scorer under test by sha256; the output ends
 with ALL OK.
@@ -283,14 +287,14 @@ ok &= case('A3 binaries s = f3b3aa3b, u = 4aa62e95; snapshots d8ca8c8e / 1767ca0
            and S.SEEDS_SHA == '72605a65d15470f8e60a8a4d16c3a4b4d34cd557bbe6e8c17c9ba6441892f098'
            and S.SEEDS_PATH == 'C:/kyty/s288/s9/seeds')
 ok &= case('A4 constants of item 355: C5 10 / 20 000, screen 180 s, kill 2 of 5, T2 5, holds 330 / 120, W >= 300 s, video 3 000, '
-           'stand 15000, gate reading letter', S.C5_MIN == 10 and S.C5_US == 20000 and S.PREP_LIMIT_S == 180 and S.U_KILL == 2
+           'stand 15000, gate reading p362 (item 362 (b))', S.C5_MIN == 10 and S.C5_US == 20000 and S.PREP_LIMIT_S == 180 and S.U_KILL == 2
            and S.U_N == 5 and S.T2_NEED == 5 and S.HOLD_W == 330 and S.HOLD_T == 120 and S.HOLD_W_US == 300000000
-           and S.FRAMES_VIDEO == 3000 and S.PCW_FORCE_MS == '15000' and S.T2_GATE_READING == 'letter')
+           and S.FRAMES_VIDEO == 3000 and S.PCW_FORCE_MS == '15000' and S.T2_GATE_READING == 'p362')
 ok &= case('A5 the detector constants of item 355 (g): crop 300x60 at (660, 60), 60x12, frames >= 300, 0.75, gap 3, length 5, '
            'after 1 002', S.HAZE_CROP == 'crop=300:60:660:60' and (S.HAZE_W, S.HAZE_H) == (60, 12) and S.HAZE_FROM == 300
            and S.HAZE_FRAC == 0.75 and S.HAZE_GAP == 3 and S.HAZE_LEN == 5 and S.HAZE_AFTER == 1002)
-ok &= case('A6 paths: link C:/kyty/s288/s10, seal pred/05_s.md, Sky Garden, L0 shuriken_ninja_castle', S.LINK_DIR ==
-           'C:/kyty/s288/s10' and S.PRED_PATH == 'C:/kyty/s288/pred/05_s.md' and S.SKY == 'underwater_aerial_garden'
+ok &= case('A6 paths: link C:/kyty/s288/s10, seal pred/05b_s.md (item 362 (d)), Sky Garden, L0 shuriken_ninja_castle',
+           S.LINK_DIR == 'C:/kyty/s288/s10' and S.PRED_PATH == 'C:/kyty/s288/pred/05b_s.md' and S.SKY == 'underwater_aerial_garden'
            and S.L0 == 'shuriken_ninja_castle')
 ok &= case('A7 lists of lvl_s9.out.txt: T2 hero_kratos .. symbol_triangle (10), U underwater .. fragile_battle_1 (5)',
            S.T2_LIST == ('hero_kratos', 'hero_drake', 'voxel_challenge_3', 'armadillo_challenge_2', 'fragile_battle_4',
@@ -405,6 +409,9 @@ ok &= case('D7 stdout: "Cache test mode: prepare-cold" counted apart from every 
 ok &= case('D8 BvhLoopCapTrip column: lines in groups i-1 and i of a frame counted, i-2 and i+1 not',
            S.bvh_col(dict(bvh=[3, 4, 5, 6, 6]), [dict(n=50, i=5), dict(n=51, i=8)]) == [(50, 2), (51, 0)] and
            S.bvh_col(dict(bvh=[7]), [dict(n=1, i=8)]) == [(1, 1)])
+ok &= case('D9 item 362 (b): the log line numbers of the in-game creations (async 14, none 15, sync 16; the waited line 17 and the '
+           'precache lines 18, 19 not) counted as sc_s.scan_s counts lines (22 = 22)', sx['create_ln'] == [14, 15, 16] and
+           sx['lines'] == 22 and ss['lines'] == 22)
 
 # ================================================================================================ 5 T-4, gate, early
 s_p0 = dict(pipe=[], queued=None)
@@ -427,9 +434,25 @@ ok &= case('E4 gate variant: the recipe member dropped only under PRECACHE=0', S
            S.gate9(dict(g_norec, skip_after=0), dict(pre0=True), 'variant')[0] is False and
            S.gate9(dict(g_norec, perm_after=0), dict(pre0=True), 'variant')[0] is False)
 ok &= case('E5 gate: no gate dict -> undetermined (no scene frame); attribution broken -> undetermined (T-3/T-4); the default '
-           'reading is the constant', S.gate9(None, dict(pre0=False)) == (False, 'undetermined (no scene frame)') and
+           'reading is the constant p362', S.gate9(None, dict(pre0=False)) == (False, 'undetermined (no scene frame)') and
            S.gate9(dict(g_full, attr_ok=False), dict(pre0=False)) == (False, 'undetermined (T-3/T-4)') and
-           S.gate9(g_norec, dict(pre0=True)) == (False, 'level not cold'))
+           S.gate9(g_norec, dict(pre0=True)) == (False, 'level not cold') and
+           S.gate9(dict(g_norec, create_after=1), dict(pre0=True)) == (True, 'cold'))
+g_c = dict(attr_ok=True, perm_after=1, rec_new_after=0, skip_after=1, create_after=1)
+ok &= case('E9 gate p362 under PRECACHE=0 (form C5): new permutation AND an in-game creation after the entry AND a skipped draw; '
+           'the recipe member is not asked; no create_after key -> not cold', S.gate9(g_c, dict(pre0=True), 'p362') ==
+           (True, 'cold') and S.gate9(dict(g_c, create_after=0), dict(pre0=True), 'p362') == (False, 'level not cold') and
+           S.gate9(dict(g_c, perm_after=0), dict(pre0=True), 'p362')[0] is False and
+           S.gate9(dict(g_c, skip_after=0), dict(pre0=True), 'p362')[0] is False and
+           S.gate9(dict(g_c, create_after=0, rec_new_after=5), dict(pre0=True), 'p362')[0] is False and
+           S.gate9(g_norec, dict(pre0=True), 'p362')[0] is False)
+ok &= case('E10 gate p362 without PRECACHE=0 (form APP) = the letter: a creation without a recipe is not cold, a recipe without a '
+           'creation is cold', S.gate9(g_c, dict(pre0=False), 'p362') == (False, 'level not cold') and
+           S.gate9(dict(g_c, rec_new_after=1, create_after=0), dict(pre0=False), 'p362') == (True, 'cold') and
+           S.gate9(g_full, dict(pre0=False), 'p362') == (True, 'cold'))
+ok &= case('E11 the letter and the variant do not read create_after: letter under PRECACHE=0 with a creation and no recipe is not '
+           'cold; the variant without a creation is cold', S.gate9(g_c, dict(pre0=True), 'letter')[0] is False and
+           S.gate9(dict(g_c, create_after=0), dict(pre0=True), 'variant') == (True, 'cold'))
 # early9: two SHADER frames (rows 10 and 20) and one series; async creations of groups 8..11 count for row 10
 s_e = dict(reg=[('aa', 100), ('bb', 100)], first=[(9, 'aa', 50100), (19, 'bb', 40100)],
            sh=[(9, 'VS', 'aa', 1, 1, 0), (19, 'VS', 'bb', 1, 1, 0)], skips=[],
@@ -587,11 +610,27 @@ w3, _ = S.read_pi(getter())
 ok &= case('I6 series in both R but pi_r1 loaded another size -> READ_OTHER', w3 == 'READ_OTHER')
 mkarm('pi_r1', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(94435637)]))
 w4, _ = S.read_pi(getter())
-ok &= case('I7 a series only in pi_r0 -> READ_3', w4 == 'READ_3')
+ok &= case('I7 a series only in pi_r0, both R loaded the last write of their W -> READ_3', w4 == 'READ_3')
+mkarm('pi_r0', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(7)]), sat=sat_for([(1500, 1510)]))
+w4b, rd4b = S.read_pi(getter())
+ok &= case('I7b a series only in pi_r0 but pi_r0 loaded another size than the last write of pi_w0 -> READ_OTHER (item 362 (v)); '
+           'the executor reading READ_3 printed as DIFFERS', w4b == 'READ_OTHER' and any(
+               x.startswith('reading of the executor') and x.endswith(': READ_3 - DIFFERS (the loaded member)') for x in rd4b))
 mkarm('pi_r0', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(5000)]))
 mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), sat=sat_for([(2000, 2010)]))
 w5, _ = S.read_pi(getter())
-ok &= case('I8 a series only in a W arm -> READ_3', w5 == 'READ_3')
+ok &= case('I8 a series only in a W arm, both R loaded -> READ_3', w5 == 'READ_3')
+mkarm('pi_r0', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(5000)]), sat=sat_for([(1500, 1510)]))
+w5c, rd5c = S.read_pi(getter())
+ok &= case('I8c a series in pi_r0 and in a W arm, none in pi_r1, both loaded -> READ_3 with the note of item 362 (v)',
+           w5c == 'READ_3' and any(x.startswith('note: a series in pi_r0 and in a W arm, none in pi_r1 - READ_3') for x in rd5c))
+mkarm('pi_r0', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(5000)]))
+mkarm('pi_r1', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(94435637), 'Vulkan pipeline cache: disabled (x)']))
+w5d, rd5d = S.read_pi(getter())
+ok &= case('I8b a series only in a W arm but pi_r1 has a disabled line (loaded member FAIL) -> READ_OTHER; the executor reading '
+           'READ_3 printed as DIFFERS', w5d == 'READ_OTHER' and any(
+               x.startswith('reading of the executor') and x.endswith(': READ_3 - DIFFERS (the loaded member)') for x in rd5d))
+mkarm('pi_r1', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(94435637)]))
 mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), sat=sat_for([(1000, 1010)]))
 w6, rd6 = S.read_pi(getter())
 ok &= case('I9 a W series across frame 1 002 (1 000 - 1 010): letter READ_2, the variant READ_3 printed as DIFFERS',
@@ -617,13 +656,18 @@ ok &= case('I15 an arm not made -> NOT_EVALUABLE', S.read_pi(getter())[0] == 'NO
 mkarm('pi_r0', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(5000), 'Vulkan pipeline cache: disabled (x)']))
 ok &= case('I16 a disabled line on an R arm -> loaded FAIL -> READ_OTHER (no series)', S.read_pi(getter())[0] == 'READ_OTHER')
 mkarm('pi_r0', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(5000)]))
-ok &= case('I17 pi_word table: (r1, r0, w, loaded)', S.pi_word(dict(pi_r1=True, pi_r0=False, pi_w1=True, pi_w0=True),
-                                                               {'a': False}) == 'READ_1' and
+ok &= case('I17 pi_word table: (r1, r0, w, loaded) - READ_3 needs both R loaded (item 362 (v)), the executor reading does not',
+           S.pi_word(dict(pi_r1=True, pi_r0=False, pi_w1=True, pi_w0=True), {'a': False}) == 'READ_1' and
            S.pi_word(dict(pi_r1=False, pi_r0=False, pi_w1=False, pi_w0=False), {'a': False}) == 'READ_OTHER' and
            S.pi_word(dict(pi_r1=False, pi_r0=False, pi_w1=False, pi_w0=False), {'a': True}) == 'READ_2' and
-           S.pi_word(dict(pi_r1=False, pi_r0=True, pi_w1=False, pi_w0=False), {'a': False}) == 'READ_3' and
-           S.pi_word(dict(pi_r1=False, pi_r0=False, pi_w1=False, pi_w0=True), {'a': False}) == 'READ_3' and
-           S.pi_word(dict(pi_r1=True, pi_r0=True, pi_w1=False, pi_w0=False), {'a': True, 'b': False}) == 'READ_OTHER')
+           S.pi_word(dict(pi_r1=False, pi_r0=True, pi_w1=False, pi_w0=False), {'a': True}) == 'READ_3' and
+           S.pi_word(dict(pi_r1=False, pi_r0=True, pi_w1=False, pi_w0=False), {'a': True, 'b': False}) == 'READ_OTHER' and
+           S.pi_word(dict(pi_r1=False, pi_r0=True, pi_w1=False, pi_w0=False), {'a': False}, False) == 'READ_3' and
+           S.pi_word(dict(pi_r1=False, pi_r0=False, pi_w1=False, pi_w0=True), {'a': True}) == 'READ_3' and
+           S.pi_word(dict(pi_r1=False, pi_r0=False, pi_w1=True, pi_w0=False), {'a': False, 'b': True}) == 'READ_OTHER' and
+           S.pi_word(dict(pi_r1=False, pi_r0=False, pi_w1=False, pi_w0=True), {'a': False}, False) == 'READ_3' and
+           S.pi_word(dict(pi_r1=True, pi_r0=True, pi_w1=False, pi_w0=False), {'a': True, 'b': False}) == 'READ_OTHER' and
+           S.pi_word(dict(pi_r1=True, pi_r0=False, pi_w1=False, pi_w0=False), {'a': False}, False) == 'READ_1')
 
 # ---- c5_0 and the C5 reading
 C5_EV = [GFX(30000, 'async') for _ in range(5)] + [GFX(20000, 'none') for _ in range(5)]
@@ -663,10 +707,10 @@ mkarm('c5_0', scene(S.L0, [(16000, dict(ev=C5_EV))] + rows(10), header=HEADER_P0
 T2_EV = [SH(0x10 + 0, 50, 50), SKIP(8)]
 
 
-def t2_arm(tag, cold=True, form='c5', extra=(), lv=None):
+def t2_arm(tag, cold=True, form='c5', extra=(), lv=None, create=False):
     lvl = lv or S.SPEC[tag]['level']
-    pre = [SH(0xaa, 50, 50)] if False else []
-    post = [(16000, dict(ev=([SH(0x77, 50, 50)] if cold else []) + ([SKIP(8)] if cold else []) + list(extra),
+    post = [(16000, dict(ev=([SH(0x77, 50, 50)] if cold else []) + ([SKIP(8)] if cold else []) +
+                         ([GFX(30000, 'async')] if cold and create else []) + list(extra),
                          skip=1 if cold else 0, held=1 if cold else 0))] + rows(10)
     hdr = HEADER_P0 if form == 'c5' else HEADER_T
     mkarm(tag, scene(lvl, post, header=hdr), form=form, stdout_shaders=1 if cold else 0)
@@ -674,17 +718,18 @@ def t2_arm(tag, cold=True, form='c5', extra=(), lv=None):
 
 t2_arm('t2_1')
 t2a = getter()('t2_1')
-ok &= case('K1 a T2 arm in form C5: admitted, attribution, the gate letter "level not cold" (no recipe under PRECACHE=0), the '
-           'variant "cold"', not t2a['fail'] and t2a['attr_ok'] and S.gate9(t2a['gates'], S.resolved(S.SPEC['t2_1'], 'c5'),
-                                                                              'letter')[1] == 'level not cold'
-           and S.gate9(t2a['gates'], S.resolved(S.SPEC['t2_1'], 'c5'), 'variant')[1] == 'cold')
-ok &= case('K2 t2_counted: letter False, variant True on that arm; a failing arm never counts', not S.t2_counted(t2a) and
+ok &= case('K1 a T2 arm in form C5 without an in-game creation: admitted, attribution, p362 and the letter "level not cold" (no '
+           'creation, no recipe under PRECACHE=0), the variant "cold"', not t2a['fail'] and t2a['attr_ok'] and
+           S.gate9(t2a['gates'], S.resolved(S.SPEC['t2_1'], 'c5'), 'letter')[1] == 'level not cold' and
+           S.gate9(t2a['gates'], S.resolved(S.SPEC['t2_1'], 'c5'), 'p362')[1] == 'level not cold' and
+           t2a['gates']['create_after'] == 0 and S.gate9(t2a['gates'], S.resolved(S.SPEC['t2_1'], 'c5'), 'variant')[1] == 'cold')
+ok &= case('K2 t2_counted: p362 (default) False, variant True on that arm; a failing arm never counts', not S.t2_counted(t2a) and
            S.t2_counted(t2a, 'variant') and not S.t2_counted(None) and not S.t2_counted(dict(t2a, fail=['x']), 'variant')
            and not S.t2_counted(dict(t2a, entered=False), 'variant'))
 lt = S.read_t2(getter())
-ok &= case('K3 read_t2 prints the form, OUT by the letter, the variant count, the S-early row', lt[0].startswith('T2 form: c5;')
-           and any(x.startswith('t2_1 hero_kratos: OUT;') for x in lt) and any('T2 counted 0 of 5 needed (variant gate: 1)' == x
-                                                                                for x in lt)
+ok &= case('K3 read_t2 prints the form, OUT by p362, the letter and variant counts, the S-early row',
+           lt[0].startswith('T2 form: c5;') and any(x.startswith('t2_1 hero_kratos: OUT;') for x in lt) and
+           any('T2 counted 0 of 5 needed (item 362 (b)); by the letter (with the recipe) 0; executor variant 1' == x for x in lt)
            and any('S-early first half' in x and 'undetermined (denominator 0)' in x for x in lt))
 t2_arm('t2_cs0', extra=['CsPretranslate: hit hash=1 saved_us=2 hits=1'])
 lt2 = S.read_t2(getter())
@@ -699,6 +744,47 @@ k6 = getter()('t2_7')
 ok &= case('K6 a presented frame >= 100 ms on the hold counts in dt100 (window + hold); its BvhLoopCapTrip line of group i in '
            'the column', k6['dt100'] == 1 and k6['bvh'] == [(608, 1)] and k6['f1']['hold']['shown100'] == 1)
 rm_arm('t2_7')
+
+
+def t2c(tag, hdr_extra=(), pre_entry=(), post_ev=(), form='c5'):
+    """A T2 arm cold by permutation and skipped draw; creations placed before the entry (header), right after the entry line
+    (pre_entry) or after the first scene frame (post_ev)."""
+    post = [(16000, dict(ev=[SH(0x77, 50, 50), SKIP(8)] + list(post_ev), skip=1, held=1))] + rows(10)
+    hdr = (HEADER_P0 if form == 'c5' else HEADER_T) + list(hdr_extra)
+    mkarm(tag, scene(S.SPEC[tag]['level'], post, header=hdr, pre_entry=pre_entry), form=form, stdout_shaders=1)
+    return arm(tag, form)
+
+
+sp8 = S.resolved(S.SPEC['t2_8'], 'c5')
+k7 = t2c('t2_8', post_ev=[GFX(30000, 'async')])
+ok &= case('K7 form C5, an in-game creation after the first scene frame: create_after 1, p362 cold, the letter not cold, the '
+           'variant cold; t2_counted True, by the letter False', not k7['fail'] and k7['gates']['create_after'] == 1 and
+           S.gate9(k7['gates'], sp8, 'p362') == (True, 'cold') and S.gate9(k7['gates'], sp8, 'letter')[0] is False and
+           S.gate9(k7['gates'], sp8, 'variant')[0] is True and S.t2_counted(k7) and not S.t2_counted(k7, 'letter'))
+lt8 = S.read_t2(getter())
+ok &= case('K12 read_t2 with t2_8 counted: its line COUNTED with the three gate words and create_after; the counts 1 / 0 / 2',
+           any(x.startswith('t2_8 voxel_challenge_5: COUNTED;') and 'gate (item 362 (b)) cold, by the letter (with the recipe) '
+               'level not cold, executor variant cold; in-game creations after the entry 1;' in x for x in lt8) and
+           any('T2 counted 1 of 5 needed (item 362 (b)); by the letter (with the recipe) 0; executor variant 2' == x for x in lt8))
+k8 = t2c('t2_8', hdr_extra=[GFX(30000, 'async')])
+ok &= case('K8 form C5, the only in-game creation before the entry line: create_after 0 -> p362 not cold (the variant cold); the '
+           'creation is in the totals', not k8['fail'] and k8['gates']['create_after'] == 0 and k8['create']['n'] == 1 and
+           S.gate9(k8['gates'], sp8, 'p362')[0] is False and S.gate9(k8['gates'], sp8, 'variant')[0] is True)
+k9 = t2c('t2_8', pre_entry=[GFX(30000, 'none')])
+ok &= case('K9 form C5, a creation on the line right after the entry line counts (create_after 1, p362 cold)', not k9['fail'] and
+           k9['gates']['create_after'] == 1 and S.gate9(k9['gates'], sp8, 'p362') == (True, 'cold'))
+k10 = t2c('t2_8', post_ev=[CSL(5, 'waited')])
+ok &= case('K10 form C5, after the entry only a line without " us=" (waited_us): create_after 0 -> p362 not cold',
+           not k10['fail'] and k10['gates']['create_after'] == 0 and k10['create']['nous'] == 1 and
+           S.gate9(k10['gates'], sp8, 'p362')[0] is False)
+spa = S.resolved(S.SPEC['t2_8'], 'app')
+k11 = t2c('t2_8', post_ev=[GFX(30000, 'async')], form='app')
+k11b = t2c('t2_8', post_ev=['PipelinePrecache: saved 101 recipes (100 bytes)'], form='app')
+ok &= case('K11 form APP = the letter: a creation after the entry without a new recipe is not cold; a new recipe without a '
+           'creation is cold', not k11['fail'] and k11['gates']['create_after'] == 1 and
+           S.gate9(k11['gates'], spa, 'p362')[0] is False and not k11b['fail'] and k11b['gates']['create_after'] == 0 and
+           S.gate9(k11b['gates'], spa, 'p362') == (True, 'cold'))
+rm_arm('t2_8')
 
 # ================================================================================================ 9 order
 mk = made()
@@ -730,8 +816,15 @@ for j in range(2, 6):
 t2_arm('t2_cs0')
 mk = made()
 g = getter()
-ok &= case('L7 by the letter none of five counted -> the reserve t2_6 allowed; u_1 waits for T2', S.allowed('t2_6', mk, g) ==
-           (0, 'ok') and S.allowed('u_1', mk, g)[0] == 1)
+ok &= case('L7 by p362 none of five counted (no in-game creation after the entry) -> the reserve t2_6 allowed; u_1 waits for '
+           'T2', S.allowed('t2_6', mk, g) == (0, 'ok') and S.allowed('u_1', mk, g)[0] == 1)
+for j in range(1, 6):
+    t2_arm('t2_%d' % j, form='c5', create=True)
+mk = made()
+g = getter()
+ok &= case('L8 form C5 with an in-game creation after the entry in t2_1 .. t2_5: five counted by p362 -> T2 done, the reserve t2_6 '
+           'refused rc 6, u_1 allowed', sum(1 for j in range(1, 6) if S.t2_counted(g('t2_%d' % j))) == 5 and
+           S.t2_done(g, mk) and S.allowed('t2_6', mk, g)[0] == 6 and S.allowed('u_1', mk, g) == (0, 'ok'))
 for j in range(6, 11):
     t2_arm('t2_%d' % j, form='c5')
 mk = made()

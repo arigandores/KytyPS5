@@ -1,10 +1,10 @@
-suite test_sc_s9.py sha256 c02212ae644384dac903b543df1ec931b737937e2c0ab60fc5dcb14f3a858695 target sc_s9.py sha256 fc6dc21e959aa981cd74b7f28bb3d853996a95b8e9a3b0432a238e19fe1e860e
+suite test_sc_s9.py sha256 31fa783a7647dd7f0a0452734f250248f5af96252a63f04126fadb69fa4f5a07 target sc_s9.py sha256 950bf006393d76929704904e4d099589bdfb104220f3ebe18d334978896014f5
 PASS A1 load_sc_s refuses a sc_s.py whose sha256 is not the pinned one
 PASS A2 the inherited sc_s.py is the scorer of seals 03 / 04 (8b0e0aff) and A.B is sc142
 PASS A3 binaries s = f3b3aa3b, u = 4aa62e95; snapshots d8ca8c8e / 1767ca0a; empty set e3b0c442; catalogue 72605a65
-PASS A4 constants of item 355: C5 10 / 20 000, screen 180 s, kill 2 of 5, T2 5, holds 330 / 120, W >= 300 s, video 3 000, stand 15000, gate reading letter
+PASS A4 constants of item 355: C5 10 / 20 000, screen 180 s, kill 2 of 5, T2 5, holds 330 / 120, W >= 300 s, video 3 000, stand 15000, gate reading p362 (item 362 (b))
 PASS A5 the detector constants of item 355 (g): crop 300x60 at (660, 60), 60x12, frames >= 300, 0.75, gap 3, length 5, after 1 002
-PASS A6 paths: link C:/kyty/s288/s10, seal pred/05_s.md, Sky Garden, L0 shuriken_ninja_castle
+PASS A6 paths: link C:/kyty/s288/s10, seal pred/05b_s.md (item 362 (d)), Sky Garden, L0 shuriken_ninja_castle
 PASS A7 lists of lvl_s9.out.txt: T2 hero_kratos .. symbol_triangle (10), U underwater .. fragile_battle_1 (5)
 PASS A8 the order of S10 (item 355 (k); t2_cs0 right after t2_1, item 355 (d))
 PASS A9 pi arms: W M full hold 330, R T integrity from their W hold 120; knobs 1 1 0 0; binary s
@@ -40,11 +40,15 @@ PASS D5 in-game creations: AvTrace pipeline lines without "precache" - us of asy
 PASS D6 the scan_x row count equals the inherited scan_s rows on the same log
 PASS D7 stdout: "Cache test mode: prepare-cold" counted apart from every "Cache test mode:" line; a missing file absent
 PASS D8 BvhLoopCapTrip column: lines in groups i-1 and i of a frame counted, i-2 and i+1 not
+PASS D9 item 362 (b): the log line numbers of the in-game creations (async 14, none 15, sync 16; the waited line 17 and the precache lines 18, 19 not) counted as sc_s.scan_s counts lines (22 = 22)
 PASS E1 T-4 under PRECACHE=0: no queue and 0 precache lines holds; a precache line or a queue breaks it
 PASS E2 T-4 without PRECACHE=0 = the inherited letter: precache lines = G + C queued, no queue -> broken
 PASS E3 gate letter: new permutation AND new recipe AND skipped draw
 PASS E4 gate variant: the recipe member dropped only under PRECACHE=0
-PASS E5 gate: no gate dict -> undetermined (no scene frame); attribution broken -> undetermined (T-3/T-4); the default reading is the constant
+PASS E5 gate: no gate dict -> undetermined (no scene frame); attribution broken -> undetermined (T-3/T-4); the default reading is the constant p362
+PASS E9 gate p362 under PRECACHE=0 (form C5): new permutation AND an in-game creation after the entry AND a skipped draw; the recipe member is not asked; no create_after key -> not cold
+PASS E10 gate p362 without PRECACHE=0 (form APP) = the letter: a creation without a recipe is not cold, a recipe without a creation is cold
+PASS E11 the letter and the variant do not read create_after: letter under PRECACHE=0 with a creation and no recipe is not cold; the variant without a creation is cold
 PASS E6 S-early cost of a frame = PREP + async creations of groups i-2 .. i+1 (not i-3, not i+2, not sync / precache)
 PASS E7 S-early lead = FirstUse - Register (50 000 / 40 000): short by the letter 1 of 2 (40 000 = cost is not short), by PREP only 0 of 2
 PASS E8 S-early without attribution -> None
@@ -73,8 +77,11 @@ PASS I3 read_pi: no series anywhere, both R loaded the last write of their W -> 
 PASS I4 a series after 1 002 in pi_r1 only -> READ_1
 PASS I5 series in both R and both loaded -> READ_2
 PASS I6 series in both R but pi_r1 loaded another size -> READ_OTHER
-PASS I7 a series only in pi_r0 -> READ_3
-PASS I8 a series only in a W arm -> READ_3
+PASS I7 a series only in pi_r0, both R loaded the last write of their W -> READ_3
+PASS I7b a series only in pi_r0 but pi_r0 loaded another size than the last write of pi_w0 -> READ_OTHER (item 362 (v)); the executor reading READ_3 printed as DIFFERS
+PASS I8 a series only in a W arm, both R loaded -> READ_3
+PASS I8c a series in pi_r0 and in a W arm, none in pi_r1, both loaded -> READ_3 with the note of item 362 (v)
+PASS I8b a series only in a W arm but pi_r1 has a disabled line (loaded member FAIL) -> READ_OTHER; the executor reading READ_3 printed as DIFFERS
 PASS I9 a W series across frame 1 002 (1 000 - 1 010): letter READ_2, the variant READ_3 printed as DIFFERS
 PASS I10 a W arm presented < 300 s -> NOT_EVALUABLE
 PASS I11 a pi arm with a video < 3 000 frames -> NOT_EVALUABLE
@@ -84,7 +91,7 @@ PASS I13 the knob line missing on a pi arm -> admission FAIL -> NOT_EVALUABLE
 PASS I14 a death marker on a pi arm -> NOT_EVALUABLE
 PASS I15 an arm not made -> NOT_EVALUABLE
 PASS I16 a disabled line on an R arm -> loaded FAIL -> READ_OTHER (no series)
-PASS I17 pi_word table: (r1, r0, w, loaded)
+PASS I17 pi_word table: (r1, r0, w, loaded) - READ_3 needs both R loaded (item 362 (v)), the executor reading does not
 PASS J1 c5_0 under PRECACHE=0: T-4 holds with no queue, attribution determined, the knob line 0 / 0, admitted
 PASS J2 10 creations median 25 000 -> YES -> form C5
 PASS J3 9 creations -> NO -> form APP
@@ -95,19 +102,26 @@ PASS J7 c5_0 not entered -> UNDETERMINED, no T2 form
 PASS J8 c5_0 not made -> NOT_MADE
 PASS J9 c5_0 without the knob line 0 / 0 of f3b3aa3b -> FAIL -> UNDETERMINED
 PASS J10 a GamePatch: line in the log -> admission FAIL (item 342 (e))
-PASS K1 a T2 arm in form C5: admitted, attribution, the gate letter "level not cold" (no recipe under PRECACHE=0), the variant "cold"
-PASS K2 t2_counted: letter False, variant True on that arm; a failing arm never counts
-PASS K3 read_t2 prints the form, OUT by the letter, the variant count, the S-early row
+PASS K1 a T2 arm in form C5 without an in-game creation: admitted, attribution, p362 and the letter "level not cold" (no creation, no recipe under PRECACHE=0), the variant "cold"
+PASS K2 t2_counted: p362 (default) False, variant True on that arm; a failing arm never counts
+PASS K3 read_t2 prints the form, OUT by p362, the letter and variant counts, the S-early row
 PASS K4 t2_cs0 against t2_1: the deltas and the CsPretranslate lines as data rows
 PASS K5 the BvhLoopCapTrip column, skip / held rows of a T2 arm
 PASS K6 a presented frame >= 100 ms on the hold counts in dt100 (window + hold); its BvhLoopCapTrip line of group i in the column
+PASS K7 form C5, an in-game creation after the first scene frame: create_after 1, p362 cold, the letter not cold, the variant cold; t2_counted True, by the letter False
+PASS K12 read_t2 with t2_8 counted: its line COUNTED with the three gate words and create_after; the counts 1 / 0 / 2
+PASS K8 form C5, the only in-game creation before the entry line: create_after 0 -> p362 not cold (the variant cold); the creation is in the totals
+PASS K9 form C5, a creation on the line right after the entry line counts (create_after 1, p362 cold)
+PASS K10 form C5, after the entry only a line without " us=" (waited_us): create_after 0 -> p362 not cold
+PASS K11 form APP = the letter: a creation after the entry without a new recipe is not cold; a new recipe without a creation is cold
 PASS L1 order: pi_w1 .. pi_r0 and c5_0 made -> t2_1 allowed (form C5 decided), t2_2 waits for t2_cs0, made tags refused
 PASS L2 t2_cs0 right after t2_1; t2_2 before t2_cs0 refused (order); t2_cs0 before t2_1 refused
 PASS L3 without c5_0 the T2 arms wait (rc 1); an unknown tag rc 2
 PASS L4 c5_0 made but UNDETERMINED -> T2 refused rc 6
 PASS L5 the pi order: pi_r1 needs pi_w1 ... c5_0 needs pi_r0
 PASS L6 a death marker in an earlier arm stops every later tag (rc 6)
-PASS L7 by the letter none of five counted -> the reserve t2_6 allowed; u_1 waits for T2
+PASS L7 by p362 none of five counted (no in-game creation after the entry) -> the reserve t2_6 allowed; u_1 waits for T2
+PASS L8 form C5 with an in-game creation after the entry in t2_1 .. t2_5: five counted by p362 -> T2 done, the reserve t2_6 refused rc 6, u_1 allowed
 PASS L9 every T2 tag made -> T2 done -> u_1 allowed, u_2 waits for u_1
 PASS L10 form APP: five T2 arms cold by the letter (a recipe saved after the entry) -> T2 done with exactly five, the reserve t2_6 refused rc 6
 PASS L11 four counted -> T2 not done, the reserve t2_6 allowed, u_1 waits
@@ -133,5 +147,5 @@ PASS O3 main --tag: the arm printed, the json written, rc 0 for an admitted arm
 PASS O4 main --tag of a failing arm rc 1; an unknown tag rc 2
 PASS O5 --summary runs, the output is ASCII (strict cp1250)
 PASS O6 seeds_sha: the manifest of seedexp_s9.py ("<name> <bytes> <sha256>" sorted); a missing dir -> None
-checks: 134
+checks: 148
 ALL OK

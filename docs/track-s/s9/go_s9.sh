@@ -14,7 +14,7 @@
 #     u_k            T, form U: the app caches mirrored from s10/empty_app (empty, MANIFEST sha EMPTY_SHA), GLCache NOT
 #                    restored (copied before, returned after), KYTY_SHADER_SEED_PATH=C:/kyty/s288/s9/seeds
 #                    KYTY_CACHE_MODE=prepare-cold, binary u (the installed 4aa62e95), the catalogue checked by sha before
-#   BINARIES: the seal lines "s binary: <sha> <path>" (f3b3aa3b) and "u binary: <sha> <path>" (4aa62e95) of pred/05_s.md.
+#   BINARIES: the seal lines "s binary: <sha> <path>" (f3b3aa3b) and "u binary: <sha> <path>" (4aa62e95) of pred/05b_s.md (item 362 (d)).
 #   THE LOCK line begins "go_s.sh <tag> " (cachex_s.py, unchanged, admits a write only from that prefix) and names go_s9.sh.
 # EXIT CODES: 0 run done; 1 hard refusal / failed run / failed return; 2 usage; 4 BUSY (lock, stop file, idle) - no run;
 #   6 a condition of item 355 is not met (sc_s9.py --allowed rc 6 or the plan UNDETERMINED) - no run, report to the lead;
@@ -36,7 +36,7 @@ SNAPDRVDIR="C:/kyty/s288/snap0_drv"
 VIDGLITCH=C:/kyty/scripts/s51_vidglitch.py
 S9=$ROOT/s9
 SC=$S9/sc_s9.py
-PRED=pred/05_s.md
+PRED=pred/05b_s.md
 RSLEEP=5
 PLMAX=540
 PLWAIT=${PLWAIT:-$PLMAX}
@@ -208,7 +208,7 @@ lockheld
 guards 0 || busy "procload / name guard not clean before the lock"
 if [ -e $STOPF ]; then busy "stop file $STOPF appeared before the lock"; fi
 set -o noclobber
-if ! { echo "go_s.sh $T pid $$ started $(date +%Y-%m-%dT%H:%M:%S) (go_s9.sh seal 05)" > $LOCK; } 2>/dev/null; then
+if ! { echo "go_s.sh $T pid $$ started $(date +%Y-%m-%dT%H:%M:%S) (go_s9.sh seal 05b)" > $LOCK; } 2>/dev/null; then
   set +o noclobber
   busy "lock taken by someone else: $(cat $LOCK 2>/dev/null)"
 fi

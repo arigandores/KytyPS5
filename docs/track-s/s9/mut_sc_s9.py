@@ -8,6 +8,9 @@ environment key, per plan term, per scan_x pattern, per window edge (BvhLoopCapT
 term, per detector term (command, arithmetic, median, threshold, gap, length, frame 1 002 in both readings, the cache), per
 cache-protocol and admission row, per reading word of the repeat of integrity / C5 / T2 / U, per order rule, the seal and main.
 The inherited code (sc_s.py, sc142.py) is not mutated here: it is pinned by sha256 and its own fixtures run on it.
+Rework 1 (item 362): mutants of the gate p362, the creation line numbers, create_after, READ_3 with the loaded member and the
+executor's reading.  Not mutated (equivalent): "ln > el" -> "ln >= el" (the entry line is never a creation line) and the
+identity "scan_x lines = scan_s lines" (both count every line).
 Not mutated (equivalent - no input can tell the mutant): the identity "scan_x rows = scan_s rows" (both scans count the same
 lines; a line one counts and the other does not crashes sc_s.scan_s first) and the video member of clean_arm() (a pi arm
 without a video has no haze reading, so it is NOT_EVALUABLE either way).  Not mutated: report texts no fixture reads; the regression (--regress reads the real S4 / S6 logs and videos; its output sha
@@ -30,7 +33,8 @@ MUTANTS = [
     ('hold_w_us', 'HOLD_W_US = 300000000 ', 'HOLD_W_US = 300000001 '),
     ('frames', 'FRAMES_VIDEO = 3000\n', 'FRAMES_VIDEO = 3001\n'),
     ('force', "PCW_FORCE_MS = '15000'", "PCW_FORCE_MS = '1500'"),
-    ('gate_read', "T2_GATE_READING = 'letter'", "T2_GATE_READING = 'variant'"),
+    ('gate_read', "T2_GATE_READING = 'p362'", "T2_GATE_READING = 'letter'"),
+    ('gate_read_v', "T2_GATE_READING = 'p362'", "T2_GATE_READING = 'variant'"),
     ('hz_wh', 'HAZE_W, HAZE_H = 60, 12', 'HAZE_W, HAZE_H = 60, 13'),
     ('hz_crop', "HAZE_CROP = 'crop=300:60:660:60'", "HAZE_CROP = 'crop=300:60:660:61'"),
     ('hz_from_up', 'HAZE_FROM = 300\n', 'HAZE_FROM = 301\n'),
@@ -55,7 +59,7 @@ MUTANTS = [
     ('t2_last', "'miniboss_challenge_genie', 'symbol_triangle')", "'miniboss_challenge_genie', 'symbol_square')"),
     ('u_order', "U_LIST = ('underwater_aerial_garden', 'hoover_beach',", "U_LIST = ('hoover_beach', 'underwater_aerial_garden',"),
     ('u_last', "'interactive_credit_00', 'fragile_battle_1')", "'interactive_credit_00', 'voxel_challenge_1')"),
-    ('pred', "PRED_PATH = 'C:/kyty/s288/pred/05_s.md'", "PRED_PATH = 'C:/kyty/s288/pred/04_s.md'"),
+    ('pred', "PRED_PATH = 'C:/kyty/s288/pred/05b_s.md'", "PRED_PATH = 'C:/kyty/s288/pred/05_s.md'"),
     ('link', "LINK_DIR = 'C:/kyty/s288/s10'", "LINK_DIR = 'C:/kyty/s288/s9'"),
     ('inh_sha', "    if got != want:\n        raise SystemExit('sc_s9.py:", "    if False:\n        raise SystemExit('sc_s9.py:"),
     # the arms
@@ -99,6 +103,9 @@ MUTANTS = [
     ('sx_gp', "                    r['gamepatch'] += 1", "                    pass"),
     ('sx_pre', "if line.startswith(b'AvTrace: pipeline ') and b'precache' not in line:", "if line.startswith(b'AvTrace: pipeline '):"),
     ('sx_nous', "                        r['create_nous'] += 1", "                        pass"),
+    ('sx_lines', "            r['lines'] += 1\n", "            pass\n"),
+    ('sx_ln', "                        r['create_ln'].append(r['lines'])", "                        r['create_ln'].append(r['lines'] + 1)"),
+    ('sx_ln_off', "                        r['create_ln'].append(r['lines'])", "                        pass"),
     ('so_pc', "if line.startswith(b'Cache test mode: prepare-cold'):", "if line.startswith(b'Cache test mode:'):"),
     ('bvh_lo', "x['i'] - 1 <= g <= x['i'])", "x['i'] - 2 <= g <= x['i'])"),
     ('bvh_hi', "x['i'] - 1 <= g <= x['i'])", "x['i'] - 1 <= g <= x['i'] + 1)"),
@@ -115,6 +122,14 @@ MUTANTS = [
     ('g_vperm', "        cold = g['perm_after'] >= 1 and g['skip_after'] >= 1\n", "        cold = g['skip_after'] >= 1\n"),
     ('g_vskip', "        cold = g['perm_after'] >= 1 and g['skip_after'] >= 1\n", "        cold = g['perm_after'] >= 1\n"),
     ('g_default', "    reading = reading or T2_GATE_READING", "    reading = reading or 'variant'"),
+    ('g_p362', "if reading == 'p362' and spec['pre0']:", "if reading == 'p362':"),
+    ('g_p362_off', "if reading == 'p362' and spec['pre0']:", "if False:"),
+    ('g_pcreate', "g['perm_after'] >= 1 and g.get('create_after', 0) >= 1 and g['skip_after'] >= 1", "g['perm_after'] >= 1 and g['skip_after'] >= 1"),
+    ('g_pperm', "cold = g['perm_after'] >= 1 and g.get('create_after', 0) >= 1", "cold = g.get('create_after', 0) >= 1"),
+    ('g_pskip', "g.get('create_after', 0) >= 1 and g['skip_after'] >= 1", "g.get('create_after', 0) >= 1"),
+    ('g_pdef', "g.get('create_after', 0) >= 1", "g.get('create_after', 1) >= 1"),
+    ('sa_cafter', "if el is not None and ln > el)", "if el is not None and ln < el)"),
+    ('sa_cafter_src', "g['create_after'] = sum(1 for ln in sx['create_ln'] if", "g['create_after'] = sum(1 for ln in sx['create'] if"),
     ('e_lo', "i - 2 <= p[0] <= i + 1 and p[2] == 'async'", "i - 3 <= p[0] <= i + 1 and p[2] == 'async'"),
     ('e_hi', "i - 2 <= p[0] <= i + 1 and p[2] == 'async'", "i - 2 <= p[0] <= i + 2 and p[2] == 'async'"),
     ('e_async', "i - 2 <= p[0] <= i + 1 and p[2] == 'async'", "i - 2 <= p[0] <= i + 1 and p[2] != 'precache'"),
@@ -201,6 +216,11 @@ MUTANTS = [
     ('pw_w', "    if w:\n        return 'READ_3'", "    if w:\n        return 'READ_2'"),
     ('pw_last', "    return 'READ_2' if both_loaded else 'READ_OTHER'\n\n\ndef read_c5", "    return 'READ_2'\n\n\ndef read_c5"),
     ('pw_wor', "w = hz['pi_w1'] or hz['pi_w0']", "w = hz['pi_w1']"),
+    ('pw_3load', "    if r0:\n        return 'READ_3' if both_loaded or not need_load", "    if r0:\n        return 'READ_3' if True or not need_load"),
+    ('pw_wload', "    if w:\n        return 'READ_3' if both_loaded or not need_load", "    if w:\n        return 'READ_3' if True or not need_load"),
+    ('pw_or', "    if r0:\n        return 'READ_3' if both_loaded or not need_load", "    if r0:\n        return 'READ_3' if both_loaded and not need_load"),
+    ('pw_need', "def pi_word(hz, loaded, need_load=True):", "def pi_word(hz, loaded, need_load=False):"),
+    ('rp_wx', "    wx = pi_word(hz, loaded, False)", "    wx = pi_word(hz, loaded)"),
     ('pw_all', "both_loaded = all(loaded.values())", "both_loaded = any(loaded.values())"),
     ('c5_n', "yes = c['n'] >= C5_MIN and", "yes = c['n'] > C5_MIN and"),
     ('c5_med', "c['med'] is not None and c['med'] >= C5_US", "c['med'] is not None and c['med'] > C5_US"),
@@ -211,6 +231,8 @@ MUTANTS = [
     ('tc_fail', "    if r is None or not ok_arm(r) or not r.get('entered'):\n        return False\n    return gate9",
      "    if r is None:\n        return False\n    return gate9"),
     ('rt_counted', "        c = t2_counted(r)\n", "        c = t2_counted(r, 'variant')\n"),
+    ('rt_counted_l', "        counted_l += t2_counted(r, 'letter')", "        counted_l += t2_counted(r, 'variant')"),
+    ('rt_gp', "        gp = gate9(r.get('gates'), spec, 'p362')", "        gp = gate9(r.get('gates'), spec, 'letter')"),
     ('ue_gates', "gates = r['prep']['seed_installed'] >= 1 and r['prep']['prepare_cold'] >= 1", "gates = r['prep']['seed_installed'] >= 1"),
     ('ue_gates2', "gates = r['prep']['seed_installed'] >= 1 and r['prep']['prepare_cold'] >= 1", "gates = r['prep']['prepare_cold'] >= 1"),
     ('ue_screen', "screen = max(xs) if len(xs) == 2 else None", "screen = max(xs) if xs else None"),

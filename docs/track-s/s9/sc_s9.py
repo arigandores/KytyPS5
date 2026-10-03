@@ -24,13 +24,16 @@ READINGS (words of this scorer; the decisions are the lead's, S11):
              (660, 60) of the 960x540 frame, scale 60x12, mean saturation (max-min)/(max+1), low = below 0.75 x the median of the
              frames >= 300, gap <= 3, kept when end - start >= 5) on the four videos, the series after frame 1 002; the words
              READ_1 (a series in pi_r1, none in pi_r0), READ_2 (no series in the four, or in both R; both R loaded N bytes = the
-             last write of their own W, 0 disabled), READ_3 (a series only in pi_r0, or only in the W arms), READ_OTHER.
+             last write of their own W, 0 disabled), READ_3 (a series only in pi_r0 among the R arms, or only in the W arms; AND
+             the loaded member of READ_2 on both R - item 362 (v)), READ_OTHER; the executor's reading (READ_3 without the loaded
+             member) printed beside.
   --read-c5  item 355 (d): "salt without precache neutralises" = >= 10 in-game creations (lines "AvTrace: pipeline" without
              "precache") and their median us >= 20 000 -> YES -> T2 form C5; NO -> T2 form APP; the arm not admitted / not
              entered -> UNDETERMINED (no T2).
-  --read-t2  item 355 (d), (zh): the cold gate of item 241 (v)(7) (letter; the variant without the recipe member when the form
-             runs KYTY_PIPELINE_PRECACHE=0 printed beside), the attribution, the S-early lead row, the BvhLoopCapTrip column,
-             the data rows of t2_cs0 against t2_1.
+  --read-t2  item 355 (d), (zh), item 362 (b): the cold gate of item 241 (v)(7) - in the form C5 (KYTY_PIPELINE_PRECACHE=0) the
+             recipe member is replaced by ">= 1 in-game creation after the entry line", in the form APP by the letter; the letter
+             (with the recipe) and the executor's variant (the recipe member dropped) printed beside; the attribution, the S-early
+             lead row, the BvhLoopCapTrip column, the data rows of t2_cs0 against t2_1.
   --read-u   item 355 (e): gates "ShaderSeed: installed" (log) and "Cache test mode: prepare-cold" (stdout); per arm a skipped
              draw line after the first scene frame or an attributed frame >= 100 ms; the preparation screen (process start to the
              later of "ShaderPreparation: ready" and "PipelinePrecache: all pipelines created", both printed); S-cat KILLED when
@@ -68,7 +71,7 @@ B = A.B
 
 ROOT = 'C:/kyty/s288'
 LINK_DIR = 'C:/kyty/s288/s10'
-PRED_PATH = 'C:/kyty/s288/pred/05_s.md'
+PRED_PATH = 'C:/kyty/s288/pred/05b_s.md'                       # item 362 (d)
 BIN_S = 'f3b3aa3bef3f0ceadf668d0fc8bd68230ab1e3158d87bbc0b4c66b92a6651ca3'   # S5c, item 340 (v), item 355 (g)
 BIN_U = '4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac'   # installed, item 342, item 355 (e)
 SNAP_APP = 'd8ca8c8efb60b43b37c14a274a4738c83a9dc5866cc784e649e97314c5fd45c4'   # item 241 (g)(1)
@@ -92,7 +95,7 @@ C5_US = 20000                    # item 355 (d): median us >= 20 000
 PREP_LIMIT_S = 180               # item 229 (d)(2), item 355 (e)
 U_KILL = 2                       # item 229 (d)(2): >= 2 of 5
 U_N = 5
-T2_GATE_READING = 'letter'       # item 241 (v)(7) by the letter; 'variant' - see gate9() (a question to the lead, S9 report)
+T2_GATE_READING = 'p362'         # item 362 (b): C5 - the recipe member replaced by an in-game creation; APP - the letter
 HAZE_W, HAZE_H = 60, 12          # item 355 (g): the detector of the lead, by the letter
 HAZE_CROP = 'crop=300:60:660:60'
 HAZE_FROM = 300
@@ -199,10 +202,12 @@ def plan(spec):
 def scan_x(path):
     """The lines sc_s.scan_s does not keep, with the same group index (the number of main FrameTrace rows before the line):
     BvhLoopCapTrip:, CsPretranslate: by kind, GamePatch:, in-game creation lines (AvTrace: pipeline without "precache") with
-    their us field, and the row count (= len(scan_s rows), an identity of this scan)."""
-    r = dict(rows=0, bvh=[], csp={}, gamepatch=0, create=[], create_nous=0)
+    their us field and their log line number (counted as sc_s.scan_s counts s['lines'], item 362 (b)), the row count (=
+    len(scan_s rows)) and the line count (= scan_s lines) - identities of this scan."""
+    r = dict(rows=0, lines=0, bvh=[], csp={}, gamepatch=0, create=[], create_nous=0, create_ln=[])
     with open(path, 'rb') as f:
         for line in f:
+            r['lines'] += 1
             c0 = line[:1]
             if c0 == b'F':
                 if line.startswith(b'FrameTrace: n='):
@@ -228,6 +233,7 @@ def scan_x(path):
                         r['create_nous'] += 1
                     else:
                         r['create'].append(us)
+                        r['create_ln'].append(r['lines'])
     return r
 
 
@@ -261,16 +267,21 @@ def ident_t4(s, spec):
 
 
 def gate9(g, spec, reading=None):
-    """Item 241 (v)(7) cold gate on a C5 / T2 arm.  letter: the gate of sc_s (new permutation, new recipe and skipped draw after
-    the entry line); variant: when the arm runs KYTY_PIPELINE_PRECACHE=0 the recipe member is dropped - that knob stops the
-    recipe writer (4fc501f4 pipelineCache.cpp RecordGraphicsRecipe returns while PipelinePrecacheEnabled() is false), so the
-    letter can never hold there.  Returns (cold, word)."""
+    """Item 241 (v)(7) cold gate on a C5 / T2 arm, item 362 (b).  p362 (the seal): when the arm runs KYTY_PIPELINE_PRECACHE=0
+    (form C5) the recipe member is replaced by >= 1 in-game creation after the entry line (create_after: lines "AvTrace: pipeline "
+    without "precache" with a " us=" field whose log line number is above the line "Level has started: L"); new permutation and
+    skipped draw by the letter; without PRECACHE=0 (form APP) the letter.  letter: the gate of sc_s (new permutation, new recipe
+    and skipped draw after the entry line) - KYTY_PIPELINE_PRECACHE=0 stops the recipe writer (4fc501f4 pipelineCache.cpp:5858),
+    so it never holds in the form C5; variant (the executor's, rejected by item 362 (b), printed): under PRECACHE=0 the recipe
+    member dropped with no replacement.  Returns (cold, word)."""
     reading = reading or T2_GATE_READING
     if g is None:
         return False, 'undetermined (no scene frame)'
     if not g['attr_ok']:
         return False, 'undetermined (T-3/T-4)'
-    if reading == 'variant' and spec['pre0']:
+    if reading == 'p362' and spec['pre0']:
+        cold = g['perm_after'] >= 1 and g.get('create_after', 0) >= 1 and g['skip_after'] >= 1
+    elif reading == 'variant' and spec['pre0']:
         cold = g['perm_after'] >= 1 and g['skip_after'] >= 1
     else:
         cold = g['perm_after'] >= 1 and g['rec_new_after'] >= 1 and g['skip_after'] >= 1
@@ -526,6 +537,8 @@ def score_arm(tag, form=None, root=LINK_DIR, pred_sha=None, pred_path=PRED_PATH,
         ident.append(('T-4 AvTrace pipeline precache lines = G + C queued (KYTY_PIPELINE_PRECACHE=0: 0 = no queue)', ok4, d4))
     ident.append(('scan_x rows = scan_s rows (the group index of BvhLoopCapTrip / CsPretranslate)', sx['rows'] == len(s['rows']),
                   '%d / %d' % (sx['rows'], len(s['rows']))))
+    ident.append(('scan_x lines = scan_s lines (the line numbers of the in-game creations, item 362 (b))', sx['lines'] == s['lines'],
+                  '%d / %d' % (sx['lines'], s['lines'])))
     attr_ok = spec['cls'] == 'T' and all(ok for name, ok, _ in ident if name.startswith(('T-3', 'T-4')))
     r['attr_ok'] = attr_ok
     d142 = base['derive']
@@ -563,6 +576,8 @@ def score_arm(tag, form=None, root=LINK_DIR, pred_sha=None, pred_path=PRED_PATH,
         r['unatt100'] = A.unattributed(r['f1'], attr_ok, A.K3_US)
         g = A.gates(s, std, eg, spec, attr_ok)
         g['attr_ok'] = attr_ok
+        el = A.entry_line(s, spec['level'])
+        g['create_after'] = sum(1 for ln in sx['create_ln'] if el is not None and ln > el)      # item 362 (b)
         r['gates'] = g
         r['bvh'] = bvh_col(sx, r['f1']['long'])
         r['early'] = early9(s, r['f1'], attr_ok)
@@ -630,23 +645,28 @@ def read_pi(get):
         return 'NOT_EVALUABLE', out
     word = pi_word(hz, loaded)
     wv = pi_word(var, loaded)
+    wx = pi_word(hz, loaded, False)
     out.append('series after %d: pi_w1 %s pi_r1 %s pi_w0 %s pi_r0 %s; loaded both R %s' % (
         HAZE_AFTER, hz['pi_w1'], hz['pi_r1'], hz['pi_w0'], hz['pi_r0'], all(loaded.values())))
     out.append('reading (variant: a series with any frame after %d): %s%s' % (HAZE_AFTER, wv,
                                                                              '' if wv == word else ' - DIFFERS (edge 1 002)'))
+    out.append('reading of the executor (READ_3 without the loaded member of (2), rejected by item 362 (v)): %s%s' % (
+        wx, '' if wx == word else ' - DIFFERS (the loaded member)'))
     if word == 'READ_3' and hz['pi_r0'] and (hz['pi_w1'] or hz['pi_w0']):
-        out.append('note: a series in pi_r0 and in a W arm - "only in pi_r0" read among the R arms (executor\'s reading); '
-                   'the strict reading gives READ_OTHER')
+        out.append('note: a series in pi_r0 and in a W arm, none in pi_r1 - READ_3 ("only in pi_r0" among the R arms, item 362 (v))')
     meaning = {'READ_1': '(1) the sign with the blob =1 - a defect of S-pcw: iteration 2, B33 not FIXED (decision S11)',
                'READ_2': '(2) the event of pcw_int is not tied to the blob =1 - B33 FIXED by item 355 (g)(2) (decision S11)',
-               'READ_3': '(3) an effect of the scene [I], as (2) (decision S11)',
+               'READ_3': '(3) an effect of the scene [I], as (2): with the loaded member of (2) on both R (item 362 (v)) '
+                         '(decision S11)',
                'READ_OTHER': 'another outcome - decision S11'}
     out.append('repeat of integrity (item 355 (g)): %s - %s; the lead sheet of every series after frame %d' % (
         word, meaning[word], HAZE_AFTER))
     return word, out
 
 
-def pi_word(hz, loaded):
+def pi_word(hz, loaded, need_load=True):
+    """Item 355 (g), item 362 (v): "as (2)" is the consequence and the condition - READ_3 needs the loaded member of (2) on both
+    R, else READ_OTHER; need_load False gives the executor's reading (printed beside)."""
     r1, r0 = hz['pi_r1'], hz['pi_r0']
     w = hz['pi_w1'] or hz['pi_w0']
     both_loaded = all(loaded.values())
@@ -655,9 +675,9 @@ def pi_word(hz, loaded):
     if r1 and r0:
         return 'READ_2' if both_loaded else 'READ_OTHER'
     if r0:
-        return 'READ_3'
+        return 'READ_3' if both_loaded or not need_load else 'READ_OTHER'
     if w:
-        return 'READ_3'
+        return 'READ_3' if both_loaded or not need_load else 'READ_OTHER'
     return 'READ_2' if both_loaded else 'READ_OTHER'
 
 
@@ -698,6 +718,7 @@ def read_t2(get):
     form, _, _ = read_c5(get)
     out.append('T2 form: %s; the gate counts by the %s reading (T2_GATE_READING)' % (form, T2_GATE_READING))
     counted = []
+    counted_l = 0
     counted_v = 0
     for j in range(len(T2_LIST)):
         tag = 't2_%d' % (j + 1)
@@ -705,21 +726,26 @@ def read_t2(get):
         if r is None:
             continue
         spec = resolved(SPEC[tag], r.get('form'))
+        gp = gate9(r.get('gates'), spec, 'p362')
         gl = gate9(r.get('gates'), spec, 'letter')
         gv = gate9(r.get('gates'), spec, 'variant')
         c = t2_counted(r)
+        counted_l += t2_counted(r, 'letter')
         counted_v += t2_counted(r, 'variant')
         if c:
             counted.append(r)
         e = r.get('early')
-        out.append('%s %s: %s; arm %s; gate letter %s, variant %s; skip rows %s held %s presented >= 100 ms %s; attributed >= 100 '
+        out.append('%s %s: %s; arm %s; gate (item 362 (b)) %s, by the letter (with the recipe) %s, executor variant %s; in-game '
+                   'creations after the entry %s; skip rows %s held %s presented >= 100 ms %s; attributed >= 100 '
                    'ms %s (PCW %s), >= 1 s %s; not attributed %s; sc142 %s; BvhLoopCapTrip in i-1..i of frames >= 100 ms %s; '
                    'S-early lead<cost %s (PREP only %s) of %s' % (
-                       tag, r['level'], 'COUNTED' if c else 'OUT', 'PASS' if ok_arm(r) else 'FAIL %s' % r['fail'], gl[1], gv[1],
+                       tag, r['level'], 'COUNTED' if c else 'OUT', 'PASS' if ok_arm(r) else 'FAIL %s' % r['fail'], gp[1], gl[1],
+                       gv[1], (r.get('gates') or {}).get('create_after'),
                        r.get('skip_rows'), r.get('held'), r.get('dt100'), r.get('att100'), r.get('att_pcw100'),
                        r.get('att1s'), A.fmt_unattr(r.get('unatt100')), r.get('outcome142'), r.get('bvh'),
                        e['short'] if e else None, e['short_prep'] if e else None, e['known'] if e else None))
-    out.append('T2 counted %d of %d needed (variant gate: %d)' % (len(counted), T2_NEED, counted_v))
+    out.append('T2 counted %d of %d needed (item 362 (b)); by the letter (with the recipe) %d; executor variant %d' % (
+        len(counted), T2_NEED, counted_l, counted_v))
     kn = sum(r['early']['known'] for r in counted if r.get('early'))
     sh = sum(r['early']['short'] for r in counted if r.get('early'))
     shp = sum(r['early']['short_prep'] for r in counted if r.get('early'))
@@ -885,9 +911,10 @@ def fmt_arm(r):
                                               'h' if x['held'] else '-', bv.get(x['n'], 0)) for x in f['long']) or 'none'))
     o.append('  attributed >= 100 ms %s (PCW %s), >= 1 s %s; not attributed %s' % (
         r['att100'], r['att_pcw100'], r['att1s'], A.fmt_unattr(r['unatt100'])))
-    o.append('  cold gate letter %s, variant %s; gates %s' % (gate9(r['gates'], resolved(SPEC[r['tag']], r.get('form')), 'letter')[1],
-                                                           gate9(r['gates'], resolved(SPEC[r['tag']], r.get('form')), 'variant')[1],
-                                                           dict((k, v) for k, v in r['gates'].items())))
+    sp9 = resolved(SPEC[r['tag']], r.get('form'))
+    o.append('  cold gate (item 362 (b)) %s, by the letter (with the recipe) %s, executor variant %s; gates %s' % (
+        gate9(r['gates'], sp9, 'p362')[1], gate9(r['gates'], sp9, 'letter')[1], gate9(r['gates'], sp9, 'variant')[1],
+        dict((k, v) for k, v in r['gates'].items())))
     o.append('  in-game creations (letter of item 355 (d)) %d median %s, without us %d; sc_s creations %d %s' % (
         r['create']['n'], r['create']['med'], r['create']['nous'], r['create']['all_n'], r['create']['all']))
     p = r['prep']

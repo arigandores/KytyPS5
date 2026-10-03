@@ -1,4 +1,4 @@
-suite test_go_s9.py sha256 69802808dc8bd653b91263406c95ae648cfc1baf9dbe354452ed055803236524 target go_s9.sh sha256 17653e57acac320bf72133033e585b8cf4c55efcc306888287b397bd41df4a85
+suite test_go_s9.py sha256 f1262161fc902f46ffd3301e42ef1e622bb098fea7762613aeebf4783189d41a target go_s9.sh sha256 cf6977f4a894649b9b02a7f5afc561c4fa5e6d1bf6a2bee8c8150d46c83a40fc
 PASS G1 go_s9.sh is ASCII only (item 175 (v))
 PASS G2 a tag with other characters -> rc 2 usage
 PASS G3 the stop file -> rc 4 BUSY before anything

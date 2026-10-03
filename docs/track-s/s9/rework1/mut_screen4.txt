@@ -1,0 +1,53 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s288\s9\sc_s9.py sha256 950bf006393d76929704904e4d099589bdfb104220f3ebe18d334978896014f5
+test    C:\kyty\s288\s9\test_sc_s9.py sha256 31fa783a7647dd7f0a0452734f250248f5af96252a63f04126fadb69fa4f5a07
+mutants C:\kyty\s288\s9\mut_sc_s9.py sha256 5d235a5934f606e2f56cc1b3224cdb19abb5dd764cbd5fc75414afa56a77e1bf
+mutants: format list, 230 defined (strict: every use of MUTANTS checked; statements evaluated at lines 19)
+selection: --only, 31 mutants
+suite: family V; fast on (139 guarded updates of ok); end of suite: the final exit call at line 978
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: replay candidates ['mkarm', 'rm_arm', 't2_app', 't2_arm', 't2c', 'u_arm', 'write_log'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 12 (spawn, one process per job), work dir C:\kyty\s288\s9\mutwork\sc_s9_18724_1791000955
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.02 s in the baseline (13 of 101 calls validated; not validated: 82 x a scorer function (expected_env); 6 x it returns a dict (only immutable values are replayed))
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (21.8 s)
+BASELINE#2  SURVIVED  (22.0 s)  [fixture replay validation]
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (32.6 s)
+CONTROL CONTROL_pass_end_of_main  SURVIVED  (32.2 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (32.6 s)
+gate_read  KILLED by test line 289  (0.0 s)
+gate_read_v  KILLED by test line 289  (0.0 s)
+pred  KILLED by test line 296  (0.0 s)
+sx_lines  KILLED by test line 412  (0.0 s)
+sx_ln  KILLED by test line 412  (0.0 s)
+sx_ln_off  KILLED by test line 412  (0.0 s)
+g_var  KILLED by test line 432  (0.0 s)
+g_var2  KILLED by test line 428  (0.0 s)
+g_rec  KILLED by test line 428  (0.0 s)
+g_vperm  KILLED by test line 432  (0.0 s)
+g_vskip  KILLED by test line 432  (0.0 s)
+g_default  KILLED by test line 436  (0.0 s)
+g_p362  KILLED by test line 449  (0.0 s)
+g_p362_off  KILLED by test line 436  (0.0 s)
+g_pcreate  KILLED by test line 436  (0.0 s)
+g_pperm  KILLED by test line 442  (0.0 s)
+g_pskip  KILLED by test line 442  (0.0 s)
+g_pdef  KILLED by test line 436  (0.0 s)
+sa_cafter  KILLED by test line 760  (16.3 s)
+sa_cafter_src  KILLED by test line 770  (16.9 s)
+pw_3  KILLED by test line 613  (4.4 s)
+pw_w  KILLED by test line 622  (6.0 s)
+pw_last  KILLED by FAIL  (12.1 s)
+pw_3load  KILLED by test line 616  (4.9 s)
+pw_wload  KILLED by test line 630  (7.4 s)
+pw_or  KILLED by test line 613  (4.5 s)
+pw_need  KILLED by test line 616  (5.5 s)
+rp_wx  KILLED by test line 616  (5.5 s)
+rt_counted  KILLED by test line 730  (13.9 s)
+rt_counted_l  KILLED by test line 730  (15.8 s)
+rt_gp  KILLED by test line 765  (16.3 s)
+31 mutants: 31 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+controls: 3 of 3 survived
+early exit: 31 kill(s) ended at their first failing case; they skipped a median 68 % / mean 59 % of the suite's 148 checks, about 19.9 s of the baseline's suite time per job (617 s in all)
+wall 55.7 s, worker time 271.1 s, 12 workers
+ALL KILLED (31 of 31 selected mutants killed; 230 defined in the mutant script)

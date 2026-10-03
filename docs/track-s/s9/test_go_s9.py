@@ -40,7 +40,7 @@ SC9 = os.path.join(HERE, 'sc_s9.py').replace('\\', '/')
 (BASE / 's9' / 'sc_s9.py').write_bytes(("import importlib.util, sys\n"
                                         "s = importlib.util.spec_from_file_location('sc9', %r)\nm = importlib.util.module_from_spec(s)\n"
                                         "s.loader.exec_module(m)\nsys.exit(m.main(sys.argv[1:], %r, %r))\n" % (
-                                            SC9, (BASE / 's10').as_posix(), (BASE / 'pred' / '05_s.md').as_posix())
+                                            SC9, (BASE / 's10').as_posix(), (BASE / 'pred' / '05b_s.md').as_posix())
                                         ).encode('ascii'))
 BASH = shutil.which('bash') or 'C:/Program Files/Git/bin/bash.exe'
 N = [0]
@@ -66,7 +66,7 @@ def go(tag, dry='1', plwait='540', form=None, base=BASE):
 
 
 def seal(lines):
-    (BASE / 'pred' / '05_s.md').write_text('\n'.join(lines) + '\n', encoding='ascii')
+    (BASE / 'pred' / '05b_s.md').write_text('\n'.join(lines) + '\n', encoding='ascii')
 
 
 ok = True
@@ -231,7 +231,7 @@ for a, b in (('ROOT=C:/kyty/s288\n', 'ROOT=%s\n' % B2.as_posix()), ('LOCK=/c/kyt
     text2 = text2.replace(a, b)
 (B2 / 's9' / 'go_s9.sh').write_bytes(text2.encode('ascii'))
 TAGS2 = ('pi_w1', 'pi_r1', 'u_1', 'c5_0')
-(B2 / 'pred' / '05_s.md').write_bytes((''.join('go_s9 call: PLWAIT=540 bash C:/kyty/s288/s9/go_s9.sh %s\n' % t for t in TAGS2) +
+(B2 / 'pred' / '05b_s.md').write_bytes((''.join('go_s9 call: PLWAIT=540 bash C:/kyty/s288/s9/go_s9.sh %s\n' % t for t in TAGS2) +
                                        's binary: %s %s\nu binary: %s %s\n' % (sha2(PINS), PINS.as_posix(), sha2(PINU),
                                                                                PINU.as_posix())).encode('ascii'))
 BINP = '/' + B2.as_posix()[0].lower() + B2.as_posix()[2:] + '/bin'

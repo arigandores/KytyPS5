@@ -33,7 +33,7 @@ echo "--- worktree HEAD"
 	echo "submodule $path $sha"
 done
 echo "--- cherry-pick F10c 68602c4f"
-"$G" -C $WT -c user.name="Emu Engineer" -c user.email=emu-engineer@agents.invalid cherry-pick 68602c4f
+"$G" -C $WT -c user.name="Emu Engineer" -c user.email=<agent-email> cherry-pick 68602c4f
 
 "$G" -C $WT log -6 --format='%H %P %s' | cut -c1-160
 echo "--- git status --short (worktree vs its HEAD; 0 = clean)"

@@ -41,7 +41,7 @@ old_log = '"$G" -C $WT log -4 '
 assert m.count(old_log) == 1
 cp = NL.join([
     'echo "--- cherry-pick F10c 68602c4f"',
-    '"$G" -C $WT -c user.name="Emu Engineer" -c user.email=emu-engineer@agents.invalid cherry-pick 68602c4f',
+    '"$G" -C $WT -c user.name="Emu Engineer" -c user.email=<agent-email> cherry-pick 68602c4f',
     '']) + NL
 m = m.replace(old_log, cp + '"$G" -C $WT log -6 ', 1)
 old_hdr = '# FS3a (HPP-447, ROADMAP s122 item 367(g)(1)): copy of mk_wt_f9e2c.sh on the F9e2c worktree commit 722c5e7f, no cherry-pick'

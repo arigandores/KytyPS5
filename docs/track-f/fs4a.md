@@ -100,7 +100,8 @@ bool FixSvalEnabled() {
 `C:/kyty/f287/fs4/fs4a/`, копии в `docs/track-f/fs4a/` (текстовые — LF): `mk_scripts.py`, `mk_wt_fs4a.sh`, `mk_wt.log`, `build_fs4a.cmd`, `lockrun.sh`,
 `patch_fs4a.py`, `patch_wt.out.txt`, `patch_main.out.txt`, `gate_order.out.txt`, `mk_knobs.py`, `knobs_fs4a.py`, `knobs_fs4a.out.txt`, `diffstat_vs_d515b901.txt`,
 `fs4a_vs_d515b901.diff`, `fs4a_vs_92d11340.diff`, `cherry.out.txt`, `cfgtests_defaults.log`, `commit_msg_code.txt`, `SHA256SUMS_fs4a.txt` (sha256 локальных
-оригиналов и бинаря).
+оригиналов и бинаря). В копиях `mk_scripts.py` и `mk_wt_fs4a.sh` адрес агента в `user.email` заменён на `<agent-email>` (общее
+правило 28), поэтому их sha256 отличаются от строк `SHA256SUMS_fs4a.txt`.
 
 ## Вопросы лиду
 

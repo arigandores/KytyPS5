@@ -1,0 +1,2 @@
+patched tests/ShaderRecompilerComputeTests.cpp
+ALL OK

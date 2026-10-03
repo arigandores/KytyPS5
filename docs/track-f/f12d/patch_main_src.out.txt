@@ -1,0 +1,6 @@
+patched src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h edits 1
+patched src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp edits 1
+patched src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp edits 1
+patched src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp edits 2
+patched src/graphics/shader/recompiler/frontend/translate/Memory.cpp edits 3
+ALL OK

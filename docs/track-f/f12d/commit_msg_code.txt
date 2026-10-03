@@ -1,0 +1,15 @@
+track F link F12d (HPP-477): KYTY_FIX_F10 (default 0) - IMAGE_BVH_INTERSECT_RAY treats node types 2-3 as triangles (ROADMAP s122 item 391(v), row F10)
+
+At KYTY_FIX_F10=1 both paths (native SPIR-V spirvEmitterMemory.cpp, IR Memory.cpp) take node types 0-3 as
+triangles with the vertex table of the GPURT b89f22aa software path of the instruction (F12a 08bd2a87 section
+1.2): type 2 = (V2, V3, V4), type 3 = (V2, V4, V0), V4 = node dwords 12..14 (already loaded); the ID byte shift
+type << 3 is shared; types 4-7, boxes, node address, KYTY_FIX_B1B, KYTY_BVH_STUB and the loop cap are unchanged.
+At =0 (unset, empty, 0/false/off/no; read once, Common::EnvValueOn) the pre-fix lines run in the else branch.
+The translation cache variant gets ":fixf10" last (directory variant_fixb26_fixb1b_fixf10). The edit is in
+src/graphics/shader/**: the translator signature changes for every variant, also at =0 (cold cache).
+
+Tests: shader_recompiler_compute_tests --fix-f10-only (GPU gate of item 391(g)(2): the 10 cases of F12a
+section 7.1 and the RC4 mix case of F12b, every word exact, plus the B1b cases) and --f10-dump-spirv <dir>
+(SPIR-V of the B1b and F10 cases for the =0 byte compare of item 391(g)(3)).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

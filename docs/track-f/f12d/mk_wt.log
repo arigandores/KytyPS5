@@ -1,0 +1,30 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 01c8981b)
+Updating files:  33% (1708/5139)Updating files:  34% (1748/5139)Updating files:  35% (1799/5139)Updating files:  36% (1851/5139)Updating files:  37% (1902/5139)Updating files:  38% (1953/5139)Updating files:  39% (2005/5139)Updating files:  40% (2056/5139)Updating files:  41% (2107/5139)Updating files:  42% (2159/5139)Updating files:  43% (2210/5139)Updating files:  44% (2262/5139)Updating files:  45% (2313/5139)Updating files:  46% (2364/5139)Updating files:  47% (2416/5139)Updating files:  48% (2467/5139)Updating files:  49% (2519/5139)Updating files:  50% (2570/5139)Updating files:  51% (2621/5139)Updating files:  52% (2673/5139)Updating files:  53% (2724/5139)Updating files:  54% (2776/5139)Updating files:  55% (2827/5139)Updating files:  56% (2878/5139)Updating files:  57% (2930/5139)Updating files:  58% (2981/5139)Updating files:  59% (3033/5139)Updating files:  60% (3084/5139)Updating files:  61% (3135/5139)Updating files:  62% (3187/5139)Updating files:  63% (3238/5139)Updating files:  64% (3289/5139)Updating files:  65% (3341/5139)Updating files:  66% (3392/5139)Updating files:  66% (3426/5139)Updating files:  67% (3444/5139)Updating files:  68% (3495/5139)Updating files:  69% (3546/5139)Updating files:  70% (3598/5139)Updating files:  71% (3649/5139)Updating files:  72% (3701/5139)Updating files:  73% (3752/5139)Updating files:  74% (3803/5139)Updating files:  75% (3855/5139)Updating files:  76% (3906/5139)Updating files:  77% (3958/5139)Updating files:  78% (4009/5139)Updating files:  79% (4060/5139)Updating files:  80% (4112/5139)Updating files:  81% (4163/5139)Updating files:  82% (4214/5139)Updating files:  83% (4266/5139)Updating files:  84% (4317/5139)Updating files:  85% (4369/5139)Updating files:  86% (4420/5139)Updating files:  87% (4471/5139)Updating files:  88% (4523/5139)Updating files:  89% (4574/5139)Updating files:  90% (4626/5139)Updating files:  91% (4677/5139)Updating files:  92% (4728/5139)Updating files:  93% (4780/5139)Updating files:  94% (4831/5139)Updating files:  95% (4883/5139)Updating files:  96% (4934/5139)Updating files:  97% (4985/5139)Updating files:  98% (5037/5139)Updating files:  99% (5088/5139)Updating files: 100% (5139/5139)Updating files: 100% (5139/5139), done.
+HEAD is now at 01c8981b track F link F12c (HPP-476): ROADMAP p.392 - fact of p.391(d),(z),(i): links F12d HPP-477 (todo), F12e HPP-478, F12f HPP-480, F12g HPP-481, F12h HPP-482, F13a HPP-479, F13b HPP-483, F13c HPP-484 created with lead review stages; HPP-287 blocked on HPP-482, HPP-484, HPP-473
+--- worktree HEAD
+01c8981b6edbef929d85709909e3ef5a551d968a track F link F12c (HPP-476): ROADMAP p.392 - fact of p.391(d),(z),(i): links F1
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+01c8981b6edbef929d85709909e3ef5a551d968a 22519cde8f618979d487bff3b60455cbfad14ed4 track F link F12c (HPP-476): ROADMAP p.392 - fact of p.391(d),(z),(i): links F
+22519cde8f618979d487bff3b60455cbfad14ed4 99aac1e586a77239ce1026077b8122af57008cbc track F link F12c (HPP-476): ROADMAP p.391 - F12a and F12b accepted (RC1-RC8 a
+99aac1e586a77239ce1026077b8122af57008cbc 08bd2a87db3516a5233534781a75f68ee87d2a83 track F link F12b (HPP-475): review of the F12a project (F10, types 2-3) - SOU
+08bd2a87db3516a5233534781a75f68ee87d2a83 cdf8bf9c0c5a2afbe4223a5597367d3faada0a16 track F link F12a (HPP-474): F10 project - first source of the HW answer on BV
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 456 with CR 0
+WT OK

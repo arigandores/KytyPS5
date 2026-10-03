@@ -1,0 +1,17 @@
+[host]    LeastRecentlyUsedCache           ok
+[f10-dump] B1bBvhNodeAddress            words=9702
+[f10-dump] B1bBvhPaddingBitsIgnored     words=9702
+[f10-dump] B1bBvhFieldBit32             words=9702
+[f10-dump] B1bBvh64NodePointer          words=9939
+[f10-dump] F10Type0Hit                  words=5319
+[f10-dump] F10Type0Miss                 words=5319
+[f10-dump] F10Type1Hit                  words=5319
+[f10-dump] F10Type1Miss                 words=5319
+[f10-dump] F10Type2Hit                  words=5319
+[f10-dump] F10Type2Miss                 words=5319
+[f10-dump] F10Type3Hit                  words=5319
+[f10-dump] F10Type3Miss                 words=5319
+[f10-dump] F10Type6                     words=5319
+[f10-dump] F10Type7                     words=5319
+[f10-dump] F10MixWave64                 words=10633
+ALL OK

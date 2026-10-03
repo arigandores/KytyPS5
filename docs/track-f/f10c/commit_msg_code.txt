@@ -1,0 +1,13 @@
+track F link F10c (HPP-451): KYTY_FIX_SVAL (default 0) - ValidateShaderSpirv with ValidatorOptions SetUniformBufferStandardLayout iff the device enabled uniformBufferStandardLayout (ROADMAP s122 item 369(b), row F16)
+
+KYTY_FIX_SVAL read once (Common::EnvValueOn: unset, "", 0/false/off/no = OFF).
+ON: spvtools::ValidatorOptions with SetUniformBufferStandardLayout(true) iff
+GraphicContext::uniform_buffer_standard_layout_enabled, set in VulkanCreateDevice
+next to features12.uniformBufferStandardLayout and copied by the PipelineCache
+constructor before StartWorkers / StartPrecache; "FixSvalStat: validated=<n>
+rejected=<m>" every 256 checks. OFF: tools.Validate(spirv) as before.
+"FixSval: mode=<0|1> ubo_std_layout=<0|1>" once from the PipelineCache constructor
+(main thread, before the guest thread starts). Outside the translation signature
+set: KYTY_SHADER_SOURCE_HASH stays 56189185. Not run in the game (WIP until F10e).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

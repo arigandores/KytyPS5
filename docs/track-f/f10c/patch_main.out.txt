@@ -1,0 +1,6 @@
+src/graphics/host_gpu/graphicContext.h field: after line 63
+src/graphics/presentation/window/vulkanWindow.cpp enable: after line 705
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp helpers: before line 1337
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp validate: replace line 1363
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp ctor: after2 line 4660
+ALL OK

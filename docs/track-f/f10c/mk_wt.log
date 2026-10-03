@@ -1,0 +1,30 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 465f0d8e)
+Updating files:  76% (3585/4667)Updating files:  77% (3594/4667)Updating files:  78% (3641/4667)Updating files:  79% (3687/4667)Updating files:  80% (3734/4667)Updating files:  81% (3781/4667)Updating files:  82% (3827/4667)Updating files:  83% (3874/4667)Updating files:  84% (3921/4667)Updating files:  85% (3967/4667)Updating files:  86% (4014/4667)Updating files:  87% (4061/4667)Updating files:  88% (4107/4667)Updating files:  89% (4154/4667)Updating files:  90% (4201/4667)Updating files:  91% (4247/4667)Updating files:  92% (4294/4667)Updating files:  93% (4341/4667)Updating files:  94% (4387/4667)Updating files:  95% (4434/4667)Updating files:  96% (4481/4667)Updating files:  97% (4527/4667)Updating files:  98% (4574/4667)Updating files:  99% (4621/4667)Updating files: 100% (4667/4667)Updating files: 100% (4667/4667), done.
+HEAD is now at 465f0d8e track F link F7d (HPP-443): Red Team hostile review of F7b conclusion (2) B39 NOT A DEFECT - SOUND_WITH_CHANGES, 6 text RCs, no data RC: floor value in 6687 is written by compute dispatches EID 3399-3455 (lighting, not examined by F7b); image_3[0] and [3] under the floor UV are uniform too; AO pass 3277/7146 stored = min(pre, AO texel) 18/18 while RenderDoc 'out' deviates 7/18 (probe 2a is [I]); 1x1 T# have nonzero guest addresses (second null path GetNullImage not taken); 0 skip lines in both logs; proposal P1 (lighting dispatches) outside the verdict
+--- worktree HEAD
+465f0d8e171406abfa3d17cb62e12c8aaa88e256 track F link F7d (HPP-443): Red Team hostile review of F7b conclusion (2) B39 N
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+465f0d8e171406abfa3d17cb62e12c8aaa88e256 18d9c792b6d0f1d2d03ad594ba0fe01030ef5e77 track F link F7d (HPP-443): Red Team hostile review of F7b conclusion (2) B39 
+18d9c792b6d0f1d2d03ad594ba0fe01030ef5e77 cd7977f7a1da919492f7dac4e1c7d5d3a2d31d8d track F link F10b (HPP-446): ROADMAP s122 item 369 - F10a accepted, F16 DEFECT
+cd7977f7a1da919492f7dac4e1c7d5d3a2d31d8d 9e60a8a55625edf68cd708769485662c81ab8ff2 track F link FS3a (HPP-447): report fs3a.md - code 4e72289e (KYTY_FIX_B42 defa
+9e60a8a55625edf68cd708769485662c81ab8ff2 19e33445ae37a418166781280ccf08b8716eb1da track P link P37 (HPP-440): lead review - ROADMAP s122 item 368: P37 accepted;
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 456 with CR 0
+WT OK

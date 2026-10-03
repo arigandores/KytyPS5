@@ -1,0 +1,312 @@
+diff --git a/src/graphics/host_gpu/renderer/cache/textureCache.cpp b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+index a476712d..85bca63d 100644
+--- a/src/graphics/host_gpu/renderer/cache/textureCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+@@ -448,6 +448,7 @@ void TextureCache::DeleteImage(ImageId id) {
+ 		EXIT("TextureCache: deleting a GPU-modified image without resolving its contents\n");
+ 	}
+ 	m_download_images.erase(id);
++	m_b42_draw_seq.erase(id); // Track F, F9e2b (KYTY_FIX_B42): a recycled slot id starts without a draw stamp
+ 	if (image->info.HasMetadata()) {
+ 		const auto metadata = m_surface_metas.find(image->info.metadata.range.address);
+ 		if (metadata != m_surface_metas.end() &&
+@@ -2343,7 +2344,7 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
+ }
+ 
+ vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc,
+-                                             uint32_t guest_clear_regs) {
++                                             uint32_t guest_clear_regs, bool fce_materialize) {
+ 	if (desc.type != BindingType::RenderTarget) {
+ 		EXIT("TextureCache: invalid color-target binding\n");
+ 	}
+@@ -2355,6 +2356,12 @@ vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc,
+ 	TouchImage(image);
+ 	image.MarkGpuModified();
+ 	image.usage.render_target = true;
++	// Track F, F9e2b (KYTY_FIX_B42, ROADMAP s122 item 353(g)(1)): a draw-path acquisition stamps the image with the B42
++	// sequence; the fast-clear-eliminate acquisition of MaterializeBoundTargetDccClears does not. Read only by
++	// QueryMetaFill.
++	if (!fce_materialize) {
++		m_b42_draw_seq[id] = ++m_b42_seq;
++	}
+ 	// Session 71, candidate C3 (counters only). Observed HERE, before PrepareDccClear and
+ 	// PrepareCmaskClear: when they succeed on a whole image, ClearImage ends in CommitGpuWrite,
+ 	// which drops m_buffer_modified, and the upload this is about to size no longer exists.
+@@ -3128,6 +3135,27 @@ bool TextureCache::IsMeta(uint64_t address) {
+ 	return found != m_surface_metas.end() && found->second.type != MetaDataInfo::Type::PendingDcc;
+ }
+ 
++// Track F, F9e2 / F9e2b (KYTY_FIX_B42, ROADMAP s122 items 351(v)(1), 353(g)(1)): read-only, see textureCache.h.
++TextureCache::MetaFillQuery TextureCache::QueryMetaFill(uint64_t address, ImageId image) {
++	std::scoped_lock lock {m_lock};
++	MetaFillQuery    answer {};
++	if (const auto stamp = m_b42_draw_seq.find(image); stamp != m_b42_draw_seq.end()) {
++		answer.b42_draw_seq = stamp->second;
++	}
++	const auto found = m_surface_metas.find(address);
++	if (found == m_surface_metas.end()) {
++		return answer;
++	}
++	answer.found        = true;
++	answer.pending      = found->second.type == MetaDataInfo::Type::PendingDcc;
++	answer.cmask        = found->second.type == MetaDataInfo::Type::CMask;
++	answer.clear_mask   = found->second.clear_mask;
++	answer.fill_value   = found->second.fill_value;
++	answer.fill_size    = found->second.fill_size;
++	answer.b42_fill_seq = found->second.b42_fill_seq;
++	return answer;
++}
++
+ uint32_t TextureCache::MetaClearMask(uint64_t address, uint32_t* fill_value) {
+ 	std::scoped_lock lock {m_lock};
+ 	const auto       found = m_surface_metas.find(address);
+@@ -3209,6 +3237,8 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
+ 		Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
+ 		found->second.fill_value = fill_value;
+ 		found->second.fill_size  = size;
++		// Track F, F9e2b (KYTY_FIX_B42, ROADMAP s122 item 353(g)(1)): this fill's place in the B42 sequence.
++		found->second.b42_fill_seq = ++m_b42_seq;
+ 		if (found->second.type == MetaDataInfo::Type::PendingDcc) {
+ 			found->second.fill_seq = 0;
+ 			m_fill_stamp_address   = address;
+diff --git a/src/graphics/host_gpu/renderer/cache/textureCache.h b/src/graphics/host_gpu/renderer/cache/textureCache.h
+index f2271c61..2013825a 100644
+--- a/src/graphics/host_gpu/renderer/cache/textureCache.h
++++ b/src/graphics/host_gpu/renderer/cache/textureCache.h
+@@ -67,8 +67,13 @@ public:
+ 	static constexpr uint32_t kRegStencilClear   = 1u << 6u; // ... STENCIL_CLEAR, as resolved
+ 
+ 	[[nodiscard]] vk::ImageView FindTexture(ImageId id, const ImageDesc& desc);
++	// Track F, F9e2b (KYTY_FIX_B42, ROADMAP s122 item 353(g)(1)): `fce_materialize` - the acquisition of the
++	// fast-clear-eliminate register scan RenderExecutor::MaterializeBoundTargetDccClears (descriptors.cpp), the only
++	// caller that passes true. Every other acquisition is a draw-path colour target and stamps the image with the B42
++	// sequence (m_b42_draw_seq); the flag changes nothing else.
+ 	[[nodiscard]] vk::ImageView FindRenderTarget(ImageId id, const ImageDesc& desc,
+-	                                             uint32_t guest_clear_regs = 0);
++	                                             uint32_t guest_clear_regs = 0,
++	                                             bool     fce_materialize  = false);
+ 	[[nodiscard]] vk::ImageView FindDepthTarget(ImageId id, const ImageDesc& desc,
+ 	                                            uint32_t guest_clear_regs = 0);
+ 	// Gate "rtfast": see m_meta_epoch.
+@@ -115,6 +120,24 @@ public:
+ 	[[nodiscard]] bool IsRegionGpuModified(uint64_t address, uint64_t size);
+ 
+ 	[[nodiscard]] bool IsMeta(uint64_t address);
++	// Track F, F9e2 (KYTY_FIX_B42, ROADMAP s122 item 351(v)(1)): a read-only copy of the metadata entry at `address`,
++	// taken under m_lock. Nothing is inserted, bumped, stamped or consumed - the answer is the same with and without
++	// the fix. `pending`: the entry is a PendingDcc fill (TrackDccFill) no image binding has classified yet; `cmask`:
++	// a binding classified it as CMASK (PrepareCmaskClear). F9e2b (item 353(g)(1)), in the same acquisition:
++	// `b42_fill_seq` - the B42 sequence of the last fill that set fill_value at `address`; `b42_draw_seq` - that of
++	// the last draw-path FindRenderTarget of `image` (0: none since the image was created). Drawn after the fill
++	// <=> b42_draw_seq > b42_fill_seq.
++	struct MetaFillQuery {
++		bool     found        = false;
++		bool     pending      = false;
++		bool     cmask        = false;
++		uint32_t clear_mask   = 0;
++		uint32_t fill_value   = 0xffffffffu;
++		uint64_t fill_size    = 0;
++		uint64_t b42_fill_seq = 0;
++		uint64_t b42_draw_seq = 0;
++	};
++	[[nodiscard]] MetaFillQuery QueryMetaFill(uint64_t address, ImageId image);
+ 	// Cleared layers of one surface in a single acquisition (bit per layer, 0 when the address
+ 	// is not a finished metadata clear). IsMetaCleared answers the same question one layer at a
+ 	// time and is kept for the callers that only look at a single layer.
+@@ -167,6 +190,9 @@ private:
+ 		uint32_t fill_value = 0xffffffffu;
+ 		uint64_t fill_size  = 0;
+ 		uint64_t fill_seq   = 0; // GPU write sequence of the fill dispatch (PendingDcc)
++		// Track F, F9e2b (KYTY_FIX_B42, ROADMAP s122 item 353(g)(1)): m_b42_seq at the last TrackDccFill that set
++		// fill_value. Read only by QueryMetaFill.
++		uint64_t b42_fill_seq = 0;
+ 	};
+ 
+ 	struct OverlapResult {
+@@ -305,6 +331,12 @@ private:
+ 	// HTile work FindRenderTarget / FindDepthTarget would do is never skipped past a change.
+ 	std::atomic<uint64_t>                             m_meta_epoch {0};
+ 	void BumpMetaEpoch() noexcept { m_meta_epoch.fetch_add(1, std::memory_order_relaxed); }
++	// Track F, F9e2b (KYTY_FIX_B42, ROADMAP s122 item 353(g)(1)), under m_lock: one monotonic sequence. TrackDccFill
++	// writes it into MetaDataInfo::b42_fill_seq, a draw-path FindRenderTarget into m_b42_draw_seq[id] (erased in
++	// DeleteImage, so a recycled slot id starts unstamped). Read only by QueryMetaFill: no Vulkan value, no metadata
++	// state and no epoch depends on them, with KYTY_FIX_B42 on or off.
++	uint64_t                                          m_b42_seq = 0;
++	std::unordered_map<ImageId, uint64_t>             m_b42_draw_seq;
+ 	uint64_t                                          m_total_used_memory  = 0;
+ 	uint64_t                                          m_trigger_gc_memory  = 0;
+ 	uint64_t                                          m_pressure_gc_memory = 1536ull * 1024 * 1024;
+diff --git a/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp b/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+index f93f7add..a23ded71 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+@@ -3623,6 +3623,135 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId
+ 	cache.MarkGpuWritten(id);
+ }
+ 
++namespace {
++
++// Track F, F9e2 (B42, ROADMAP s122 item 351(v)(1)-(3)) and F9e2b (item 353(g)(1)-(3)), KYTY_FIX_B42 (default ON since
++// FS3a, item 367(g)(1): unset or "" = ON, 0/false/off/no = OFF).
++// colorRenderTarget.cpp gives a single-sample CMASK target metadata only when its width and height are multiples of
++// 1024, so the fast-clear-eliminate register scan below never materializes the CMASK fast clear of a smaller target
++// (the Sky Garden water input T6, 960x540 / 480x270): the image keeps whatever guest memory or buffer bytes it was
++// created from. `hit`: a CMASK fast-clear target the old path skips (no DCC, one sample, one level, not a volume,
++// not both axes 1024-multiples) whose CMASK address holds a fill of value 0 covering width*height*layers/128 bytes -
++// a code-0 CMASK in every tile, i.e. the whole surface is the clear colour whatever the tile layout - kept either as a
++// PendingDcc fill or (F9e2b, RC2: a re-fill of a live target after its first clear) as a CMask entry with clear-mask
++// bits set (`rearm`; F9e2c, RC1 of F9f2: only the bits of the view layers count - the ones PrepareCmaskClear can
++// consume; a fill of 0 sets the whole mask and a clear drops only the view layers), and the target was not acquired
++// as a draw-path colour target after that fill (F9e2b, RC1: the
++// hardware FCE writes the clear colour only into tiles no draw touched; TextureCache::QueryMetaFill, drawn <=>
++// b42_draw_seq > b42_fill_seq). Every member but the last one holding is `drawn`: not a hit, the descriptor is not
++// touched, the old path runs. Counted with the fix on and off. ON: the descriptor of a hit gets the CMASK metadata the
++// 1024 branch of colorRenderTarget.cpp would give it, and the existing FindRenderTarget -> PrepareCmaskClear clears
++// it. `applied` grows only when PrepareCmaskClear cleared at least one layer (a clear-mask bit consumed while the fill
++// value stayed 0: that bit is dropped only right after ClearImage). OFF: the query and the line only - the old path.
++bool FixB42Enabled() {
++	// Track F, FS3a (HPP-447, ROADMAP s122 item 367(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
++	// other value as EnvValueOn (the form of FSa / FS2a).
++	static const bool enabled = [] {
++		const char* value = std::getenv("KYTY_FIX_B42");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
++	return enabled;
++}
++
++enum class FixB42Kind : uint8_t { None, Hit, Drawn };
++
++struct FixB42Hit {
++	FixB42Kind kind       = FixB42Kind::None;
++	bool       rearm      = false; // a hit on a CMask entry (re-armed by a later fill)
++	uint64_t   cmask_size = 0;
++	uint32_t   clear_mask = 0; // clear mask of the entry seen before the acquisition
++};
++
++FixB42Hit FixB42Probe(TextureCache& cache, const HW::RenderTarget& rt, const RenderColorInfo& color) {
++	FixB42Hit   probe {};
++	const auto& info = color.desc.info;
++	if (!color.image_id || info.metadata.kind != ImageMetadataKind::None || info.samples != 1 ||
++	    info.resources.levels != 1 || info.IsVolume() ||
++	    (info.extent.width % 1024u == 0 && info.extent.height % 1024u == 0)) {
++		return probe;
++	}
++	const auto size  = static_cast<uint64_t>(info.extent.width) * info.extent.height * info.resources.layers / 128u;
++	const auto fill  = cache.QueryMetaFill(rt.cmask.addr, color.image_id);
++	// F9e2c: the layer bits of the view FindRenderTarget gets below - as PrepareCmaskClear reads them (no bits where
++	// it returns without a clear).
++	const auto& view       = color.desc.view_info;
++	const bool  view_ok    = view.base_level == 0 && view.base_layer < 32 && view.layer_count <= 32 - view.base_layer;
++	const auto  layer_bits = !view_ok ? 0u
++	                                  : (view.layer_count >= 32 ? UINT32_MAX : (1u << view.layer_count) - 1u)
++	                                        << view.base_layer;
++	const bool armed = fill.pending || (fill.cmask && (fill.clear_mask & layer_bits) != 0);
++	if (size == 0 || !fill.found || !armed || fill.fill_value != 0 || fill.fill_size < size) {
++		return probe;
++	}
++	probe.cmask_size = size;
++	probe.clear_mask = fill.clear_mask;
++	if (fill.b42_draw_seq > fill.b42_fill_seq) {
++		probe.kind = FixB42Kind::Drawn;
++		return probe;
++	}
++	probe.kind  = FixB42Kind::Hit;
++	probe.rearm = fill.cmask;
++	return probe;
++}
++
++// The line: on every growth of hit or drawn for the first 256 lines, then at most once per 600 frames (still only on a
++// growth of hit or drawn). hit / applied / drawn / rearm are the counters of the line's extent; hit_all - the hits of
++// all extents.
++// Track F, FS3a (ROADMAP s122 item 367(g)(1), debt of item 363(v)): the line FixB42Ext of an extent - on a growth of its
++// hit or applied (applied grows only with hit, so: on a hit), the first one at once, then at most once per 600 frames
++// of that extent, at most 64 lines per extent; outside the 256-line budget of FixB42 (that line and its rate are
++// unchanged). It reads the counters only: no state of the fix or of the cache depends on it.
++void FixB42Note(const FixB42Hit& probe, bool applied, uint32_t width, uint32_t height, uint64_t cmask, uint32_t word0,
++                uint32_t word1) {
++	struct Counts {
++		uint64_t hit     = 0;
++		uint64_t applied = 0;
++		uint64_t drawn   = 0;
++		uint64_t rearm   = 0;
++		uint32_t ext_lines      = 0; // FS3a: FixB42Ext lines of this extent
++		uint32_t ext_printed_at = 0; // FS3a: frame of the last FixB42Ext line of this extent
++	};
++	static std::mutex                                      m;
++	static std::map<std::pair<uint32_t, uint32_t>, Counts> by_extent;
++	static uint64_t                                        hit_all    = 0;
++	static uint32_t                                        lines      = 0;
++	static uint32_t                                        printed_at = 0;
++	const auto                                             frame      = GpuTimeProfiler::Frame();
++	std::scoped_lock                                       lock {m};
++	auto&                                                  counts     = by_extent[{width, height}];
++	if (probe.kind == FixB42Kind::Hit) {
++		counts.hit++;
++		hit_all++;
++		if (probe.rearm) {
++			counts.rearm++;
++		}
++		if (applied) {
++			counts.applied++;
++		}
++	} else {
++		counts.drawn++;
++	}
++	if (probe.kind == FixB42Kind::Hit && counts.ext_lines < 64 &&
++	    (counts.ext_lines == 0 || frame - counts.ext_printed_at >= 600u)) {
++		counts.ext_lines++;
++		counts.ext_printed_at = frame;
++		LOGF("FixB42Ext: mode=%d extent=%ux%u hit=%" PRIu64 " applied=%" PRIu64 " drawn=%" PRIu64 " rearm=%" PRIu64
++		     " frame=%u\n",
++		     FixB42Enabled() ? 1 : 0, width, height, counts.hit, counts.applied, counts.drawn, counts.rearm, frame);
++	}
++	if (lines >= 256 && frame - printed_at < 600u) {
++		return;
++	}
++	lines++;
++	printed_at = frame;
++	LOGF("FixB42: mode=%d hit=%" PRIu64 " applied=%" PRIu64 " drawn=%" PRIu64 " rearm=%" PRIu64 " hit_all=%" PRIu64
++	     " last_frame=%u extent=%ux%u cmask=0x%" PRIx64 " clear=%08x/%08x\n",
++	     FixB42Enabled() ? 1 : 0, counts.hit, counts.applied, counts.drawn, counts.rearm, hit_all, frame, width, height,
++	     cmask, word0, word1);
++}
++
++} // namespace
++
+ // A fast-clear-eliminate / DCC-decompress draw (CB_COLOR_CONTROL.MODE 2/6) binds the surface as
+ // a colour target with the CLEAR_WORD registers of its fast clear still loaded. Kyty skips the
+ // draw itself (host images are never compressed), but this is the last point where a
+@@ -3638,6 +3767,13 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
+ 		    !rt.info.dcc_compression_enable) {
+ 			RenderColorInfo color {};
+ 			ResolveRenderColorTarget(buffer, color, 0, slot, true, true);
++			// Track F, F9e2 / F9e2b (B42): see FixB42Probe. With the fix off nothing below changes.
++			const auto b42 = FixB42Probe(cache, rt, color);
++			if (b42.kind == FixB42Kind::Hit && FixB42Enabled()) {
++				color.desc.info.metadata.kind              = ImageMetadataKind::Cmask;
++				color.desc.info.metadata.range             = {rt.cmask.addr, b42.cmask_size};
++				color.desc.info.metadata.cmask_clear_words = {rt.clear_word0.word0, rt.clear_word1.word1};
++			}
+ 			if (color.image_id && color.desc.info.metadata.kind == ImageMetadataKind::Cmask) {
+ 				// Session 71, candidate C3 (counters only): the second entrance into
+ 				// FindRenderTarget, which rt_fast_no never sees. Hand it the same registers the
+@@ -3652,7 +3788,18 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
+ 				        (rt.cmask.addr != 0 ? TextureCache::kRegColorCmaskAddr : 0u) |
+ 				        (rt.info.dcc_compression_enable ? TextureCache::kRegColorDccEnable : 0u) |
+ 				        (rt.dcc_addr.addr != 0 ? TextureCache::kRegColorDccAddr : 0u) |
+-				        (rt.dcc.dcc_clear_key_enable ? TextureCache::kRegColorDccKey : 0u));
++				        (rt.dcc.dcc_clear_key_enable ? TextureCache::kRegColorDccKey : 0u),
++				    true); // Track F, F9e2b (B42): the FCE acquisition - no draw stamp
++			}
++			if (b42.kind != FixB42Kind::None) {
++				bool applied = false;
++				if (b42.kind == FixB42Kind::Hit && FixB42Enabled()) {
++					const auto after = cache.QueryMetaFill(rt.cmask.addr, color.image_id);
++					applied = after.found && after.cmask && after.fill_value == 0 &&
++					          (b42.clear_mask & ~after.clear_mask) != 0;
++				}
++				FixB42Note(b42, applied, color.desc.info.extent.width, color.desc.info.extent.height, rt.cmask.addr,
++				           rt.clear_word0.word0, rt.clear_word1.word1);
+ 			}
+ 			continue;
+ 		}

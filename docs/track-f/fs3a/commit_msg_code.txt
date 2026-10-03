@@ -1,0 +1,15 @@
+track F link FS3a (HPP-447): KYTY_FIX_B42 default 0 -> 1 (ROADMAP s122 item 367(g)(1)) and the per-extent line FixB42Ext
+
+FixB42Enabled reads KYTY_FIX_B42 in the form of FSa / FS2a: unset or "" = ON, 0/false/off/no = OFF, any other value
+as EnvValueOn. FixB42Note adds the line
+FixB42Ext: mode=<0|1> extent=<w>x<h> hit=<n> applied=<n> drawn=<n> rearm=<n> frame=<n>
+on a hit of an extent (applied grows only with hit), the first one at once, then at most once per 600 frames of that
+extent, at most 64 lines per extent, outside the 256-line budget of FixB42 (that line, its form and rate unchanged);
+the line reads the counters only (two bookkeeping fields per extent under the same mutex), no fix or cache state
+depends on it. Closes the debt of item 363(v) by the variant "extent line outside the common budget".
+
+Shipping binary FS3: clean worktree of 722c5e7f (4414e235 + F9e2 + F9e2b + F9e2c) + cherry-pick of this commit.
+Not claimed: that the CMASK clear is the only cause of B42 in every scene, that the water in these angles is clean on
+the console, that other water levels are free of the defect. Not installed; no game run.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

@@ -73,6 +73,22 @@ void SetTouchPad(int id, int finger, bool down, float x, float y);
 void SetMotionPitch(int id, float radians);
 void SetMotionShake(int id, bool down);
 void ResetInputState();
+// Track F, F19c (ROADMAP s122 item 451(d)): KYTY_FIX_B24 is on (read once in Initialize).
+bool FixB24On();
+// Track F, F19c stand KYTY_TEST_HIDLOSS (item 451(c), F19a s6.1): pad output counters of the stand window.
+// TestHidLossWindow(true) zeroes them and starts counting, TestHidLossWindow(false) stops counting; outside the window a
+// pad output call does one relaxed load of a static flag and nothing else.
+struct HidLossPadStats {
+	uint64_t pad_vib         = 0;
+	uint64_t pad_led         = 0;
+	uint64_t pad_trig        = 0;
+	uint64_t pad_wait_max_us = 0;
+	uint64_t po_applied      = 0;
+	uint64_t po_wait_max_us  = 0;
+	uint64_t guest_sdl       = 0;
+};
+void            TestHidLossWindow(bool open);
+HidLossPadStats TestHidLossPadStats();
 
 enum class MotionSensor { Accelerometer, Gyroscope };
 // Real pad sensor sample in SDL units: m/s^2 for the accelerometer, rad/s for the gyroscope.

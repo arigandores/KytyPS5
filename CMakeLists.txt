@@ -440,6 +440,11 @@ endfunction()
 
 add_kyty_full_emulator_test(shader_cfg_tests "${KYTY_TESTS_DIR}/shaderCfgTests.cpp")
 
+# Track F, B24 pad output stand (F19c; ROADMAP s122 item 451(e)(1)): run by docs/track-f/f19c/run_stand_f19c.py, not by
+# ctest.
+add_kyty_full_emulator_test(b24_pad_stand
+	"${KYTY_TESTS_DIR}/B24PadStand.cpp")
+
 add_executable(scalar_provenance_tests EXCLUDE_FROM_ALL
 	"${KYTY_TESTS_DIR}/ScalarProvenanceTests.cpp"
 	"${KYTY_SOURCE_DIR}/graphics/host_gpu/hostMemory.cpp"

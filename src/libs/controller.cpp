@@ -4,6 +4,7 @@
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "common/stringUtils.h"
 #include "common/threads.h"
@@ -21,6 +22,9 @@
 #include <cstring>
 #include <cmath>
 #include <mutex>
+#include <condition_variable>
+#include <string>
+#include <thread>
 #include <vector>
 
 namespace Libs::Controller {
@@ -81,6 +85,290 @@ struct DualSenseEffects {
 };
 
 static_assert(sizeof(DualSenseEffects) == 32);
+
+// Track F, F19c stand KYTY_TEST_HIDLOSS (ROADMAP s122 item 451(c), F19a s6.1): pad output counters of the stand window,
+// opened and closed by the stand in window.cpp (TestHidLossWindow). Outside the window - always when the stand is unset -
+// a guest pad output call does one relaxed load of g_hidloss_window and nothing else; no guest state is written.
+static std::atomic<bool> g_hidloss_window {false};
+
+struct HidLossCounters {
+	std::atomic<uint64_t> pad_vib {0};
+	std::atomic<uint64_t> pad_led {0};
+	std::atomic<uint64_t> pad_trig {0};
+	std::atomic<uint64_t> pad_wait_max_us {0};
+	std::atomic<uint64_t> po_applied {0};
+	std::atomic<uint64_t> po_wait_max_us {0};
+	std::atomic<uint64_t> guest_sdl {0};
+};
+
+static HidLossCounters g_hidloss;
+
+static uint64_t PadNowUs() {
+	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
+	                                 std::chrono::steady_clock::now().time_since_epoch())
+	                                 .count());
+}
+
+static void PadAtomicMax(std::atomic<uint64_t>& value, uint64_t sample) {
+	uint64_t current = value.load(std::memory_order_relaxed);
+	while (sample > current && !value.compare_exchange_weak(current, sample, std::memory_order_relaxed)) {
+	}
+}
+
+// One guest pad output call (SetVibration, SetLightBar, SetTriggerEffect) inside the stand window: counts the entry, the
+// wall from entry to return (pad_wait_max_us) and every SDL call the function makes itself (guest_sdl).
+class PadCallProbe {
+public:
+	explicit PadCallProbe(std::atomic<uint64_t>& kind): m_on(g_hidloss_window.load(std::memory_order_relaxed)) {
+		if (m_on) {
+			kind.fetch_add(1, std::memory_order_relaxed);
+			m_start_us = PadNowUs();
+		}
+	}
+	~PadCallProbe() {
+		if (m_on) {
+			PadAtomicMax(g_hidloss.pad_wait_max_us, PadNowUs() - m_start_us);
+		}
+	}
+
+	KYTY_CLASS_NO_COPY(PadCallProbe);
+
+	void Sdl() {
+		if (m_on) {
+			g_hidloss.guest_sdl.fetch_add(1, std::memory_order_relaxed);
+		}
+	}
+
+private:
+	bool     m_on;
+	uint64_t m_start_us = 0;
+};
+
+void TestHidLossWindow(bool open) {
+	if (open) {
+		for (auto* counter: {&g_hidloss.pad_vib, &g_hidloss.pad_led, &g_hidloss.pad_trig, &g_hidloss.pad_wait_max_us,
+		                     &g_hidloss.po_applied, &g_hidloss.po_wait_max_us, &g_hidloss.guest_sdl}) {
+			counter->store(0, std::memory_order_relaxed);
+		}
+	}
+	g_hidloss_window.store(open, std::memory_order_release);
+}
+
+HidLossPadStats TestHidLossPadStats() {
+	HidLossPadStats stats;
+	stats.pad_vib         = g_hidloss.pad_vib.load(std::memory_order_relaxed);
+	stats.pad_led         = g_hidloss.pad_led.load(std::memory_order_relaxed);
+	stats.pad_trig        = g_hidloss.pad_trig.load(std::memory_order_relaxed);
+	stats.pad_wait_max_us = g_hidloss.pad_wait_max_us.load(std::memory_order_relaxed);
+	stats.po_applied      = g_hidloss.po_applied.load(std::memory_order_relaxed);
+	stats.po_wait_max_us  = g_hidloss.po_wait_max_us.load(std::memory_order_relaxed);
+	stats.guest_sdl       = g_hidloss.guest_sdl.load(std::memory_order_relaxed);
+	return stats;
+}
+
+// Track F, F19c (ROADMAP s122 item 451(d), member A of F19a s5.1): KYTY_FIX_B24 - unset, empty, 0/false/off/no: off
+// (Common::EnvFlagOn). Written once by Initialize before the guest threads exist, only read afterwards. At 1 the guest's
+// SetVibration, SetLightBar and SetTriggerEffect call no SDL: each puts the latest value of its kind into a slot of
+// PadOutput under the slot's own short mutex (not GameController::m_mutex; a new value overwrites the old one, every
+// kind has a generation counter) and wakes the one PadOutput thread of the process. PadOutput makes the same SDL calls
+// as the path at 0, without GameController::m_mutex, for its copy of the active pad id, which CheckActive writes under
+// GameController::m_mutex. The pad lookup and the call run under SDL_LockJoysticks (the lock every one of these SDL
+// calls takes anyway; it is recursive), so a pad closed meanwhile by the removal handler (SDL_GameControllerClose takes
+// the same lock) is never touched. PadOutput is stopped and joined by EmergencyShutdown before ReleaseHostPads.
+static bool g_fix_b24 = false;
+
+bool FixB24On() {
+	return g_fix_b24;
+}
+
+class PadOutput {
+public:
+	PadOutput() = default;
+	~PadOutput() { Stop(); }
+
+	KYTY_CLASS_NO_COPY(PadOutput);
+
+	void Start();
+	void Stop();
+	void SetActive(int id, bool ps5);
+	void PostVibration(uint8_t large_motor, uint8_t small_motor);
+	void PostLightBar(uint8_t r, uint8_t g, uint8_t b);
+	// Returns the copy of "the active pad is a PS5 pad" - the *sent of SetTriggerEffect at KYTY_FIX_B24=1.
+	bool PostTriggerEffect(const DualSenseEffects& effect);
+
+private:
+	void        Loop();
+	static void ApplyVibration(int id, uint8_t large_motor, uint8_t small_motor);
+	static void ApplyLightBar(int id, uint8_t r, uint8_t g, uint8_t b);
+	static void ApplyTriggerEffect(int id, const DualSenseEffects& effect);
+
+	// Everything below is guarded by m_mutex; m_thread is touched only by Start and Stop.
+	std::mutex              m_mutex;
+	std::condition_variable m_cv;
+	std::thread             m_thread;
+	bool                    m_stop          = false;
+	int                     m_active_id     = -1;
+	bool                    m_active_ps5    = false;
+	uint64_t                m_vibration_gen = 0;
+	uint64_t                m_light_bar_gen = 0;
+	uint64_t                m_effect_gen    = 0;
+	uint8_t                 m_vibration[2]  = {};
+	uint8_t                 m_light_bar[3]  = {};
+	DualSenseEffects        m_effect {};
+};
+
+static PadOutput* g_pad_output = nullptr;
+
+void PadOutput::Start() {
+	m_thread = std::thread([this] { Loop(); });
+}
+
+void PadOutput::Stop() {
+	{
+		std::lock_guard lock(m_mutex);
+		m_stop = true;
+	}
+	m_cv.notify_all();
+	if (m_thread.joinable()) {
+		if (m_thread.get_id() == std::this_thread::get_id()) {
+			m_thread.detach();
+		} else {
+			m_thread.join();
+		}
+	}
+}
+
+void PadOutput::SetActive(int id, bool ps5) {
+	std::lock_guard lock(m_mutex);
+	m_active_id  = id;
+	m_active_ps5 = ps5;
+}
+
+void PadOutput::PostVibration(uint8_t large_motor, uint8_t small_motor) {
+	{
+		std::lock_guard lock(m_mutex);
+		m_vibration[0] = large_motor;
+		m_vibration[1] = small_motor;
+		m_vibration_gen++;
+	}
+	m_cv.notify_one();
+}
+
+void PadOutput::PostLightBar(uint8_t r, uint8_t g, uint8_t b) {
+	{
+		std::lock_guard lock(m_mutex);
+		m_light_bar[0] = r;
+		m_light_bar[1] = g;
+		m_light_bar[2] = b;
+		m_light_bar_gen++;
+	}
+	m_cv.notify_one();
+}
+
+bool PadOutput::PostTriggerEffect(const DualSenseEffects& effect) {
+	bool ps5 = false;
+	{
+		std::lock_guard lock(m_mutex);
+		m_effect = effect;
+		m_effect_gen++;
+		ps5 = m_active_ps5;
+	}
+	m_cv.notify_one();
+	return ps5;
+}
+
+// One application of a slot on the PadOutput thread; inside the stand window counts it and its wall.
+template <typename Apply>
+static void PadOutputApply(Apply&& apply) {
+	const bool     on       = g_hidloss_window.load(std::memory_order_relaxed);
+	const uint64_t start_us = on ? PadNowUs() : 0;
+	apply();
+	if (on) {
+		g_hidloss.po_applied.fetch_add(1, std::memory_order_relaxed);
+		PadAtomicMax(g_hidloss.po_wait_max_us, PadNowUs() - start_us);
+	}
+}
+
+void PadOutput::Loop() {
+	uint64_t vibration_done = 0;
+	uint64_t light_bar_done = 0;
+	uint64_t effect_done    = 0;
+
+	std::unique_lock lock(m_mutex);
+	for (;;) {
+		m_cv.wait(lock, [&] {
+			return m_stop || m_vibration_gen != vibration_done || m_light_bar_gen != light_bar_done ||
+			       m_effect_gen != effect_done;
+		});
+		if (m_stop) {
+			return;
+		}
+		const int              id        = m_active_id;
+		const bool             vibration = m_vibration_gen != vibration_done;
+		const bool             light_bar = m_light_bar_gen != light_bar_done;
+		const bool             effect    = m_effect_gen != effect_done;
+		const uint8_t          motor[2]  = {m_vibration[0], m_vibration[1]};
+		const uint8_t          color[3]  = {m_light_bar[0], m_light_bar[1], m_light_bar[2]};
+		const DualSenseEffects effects   = m_effect;
+		vibration_done                   = m_vibration_gen;
+		light_bar_done                   = m_light_bar_gen;
+		effect_done                      = m_effect_gen;
+		lock.unlock();
+
+		if (vibration) {
+			PadOutputApply([&] { ApplyVibration(id, motor[0], motor[1]); });
+		}
+		if (light_bar) {
+			PadOutputApply([&] { ApplyLightBar(id, color[0], color[1], color[2]); });
+		}
+		if (effect) {
+			PadOutputApply([&] { ApplyTriggerEffect(id, effects); });
+		}
+
+		lock.lock();
+	}
+}
+
+// The SDL calls of GameController::SetVibration at KYTY_FIX_B24=0, for the given pad id, under SDL_LockJoysticks.
+void PadOutput::ApplyVibration(int id, uint8_t large_motor, uint8_t small_motor) {
+	if (id == HOST_INPUT_CONTROLLER_ID) {
+		return;
+	}
+	bool        failed = false;
+	std::string error;
+	SDL_LockJoysticks();
+	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id)); pad != nullptr) {
+		const auto large = static_cast<uint16_t>(large_motor * 0x101U);
+		const auto small = static_cast<uint16_t>(small_motor * 0x101U);
+		if (SDL_GameControllerRumble(pad, large, small, RUMBLE_DURATION_MS) != 0) {
+			failed = true;
+			error  = SDL_GetError();
+		}
+	}
+	SDL_UnlockJoysticks();
+	if (failed) {
+		LOGF("\t rumble failed: %s\n", error.c_str());
+	}
+}
+
+// The SDL calls of GameController::SetLightBar at KYTY_FIX_B24=0.
+void PadOutput::ApplyLightBar(int id, uint8_t r, uint8_t g, uint8_t b) {
+	SDL_LockJoysticks();
+	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id)); pad != nullptr) {
+		(void)SDL_GameControllerSetLED(pad, r, g, b);
+	}
+	SDL_UnlockJoysticks();
+}
+
+// The SDL calls of GameController::SetTriggerEffect at KYTY_FIX_B24=0.
+void PadOutput::ApplyTriggerEffect(int id, const DualSenseEffects& effect) {
+	SDL_LockJoysticks();
+	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
+	if (pad != nullptr && SDL_GameControllerGetType(pad) == SDL_CONTROLLER_TYPE_PS5) {
+		(void)SDL_GameControllerSendEffect(pad, &effect, sizeof(effect));
+	}
+	SDL_UnlockJoysticks();
+}
 
 // Haptic PCM of the guest's vibration port, streamed to the pad. A USB DualSense is a 4-channel
 // audio device whose channels 3/4 drive the voice coils: that is how the console feels, and it
@@ -385,6 +673,8 @@ private:
 	uint8_t          m_next_touch_id = 1;
 	float            m_orientation[4] = {0.0f, 0.0f, 0.0f, 1.0f}; // integrated gyro, x y z w
 	uint64_t         m_gyro_timestamp = 0;
+	// Track F, F19c (item 451(d)): connected ids whose pad is a PS5 pad (filled at KYTY_FIX_B24=1 only).
+	std::vector<int> m_ps5_ids;
 };
 
 static GameController* g_controller = nullptr;
@@ -535,6 +825,13 @@ static bool trigger_effect_to_dualsense(const PadTriggerEffectCommand& command, 
 void Initialize() {
 	EXIT_IF(g_controller != nullptr);
 
+	// Track F, F19c (ROADMAP s122 item 451(d)): KYTY_FIX_B24, read once here - before the guest threads exist.
+	g_fix_b24 = Common::EnvFlagOn("KYTY_FIX_B24");
+	if (g_fix_b24) {
+		LOGF("FixB24: mode=1\n");
+		g_pad_output = new PadOutput;
+		g_pad_output->Start();
+	}
 	g_haptics = new HapticsOutput;
 	g_haptics->Start();
 	g_controller = new GameController;
@@ -547,11 +844,17 @@ void Shutdown() {
 	g_controller = nullptr;
 	delete g_haptics;
 	g_haptics = nullptr;
+	delete g_pad_output;
+	g_pad_output = nullptr;
 }
 
 void EmergencyShutdown() {
 	if (g_haptics != nullptr) {
 		g_haptics->Stop();
+	}
+	// Track F, F19c (item 451(d)): PadOutput is stopped and joined before the host pads are released.
+	if (g_pad_output != nullptr) {
+		g_pad_output->Stop();
 	}
 	if (g_controller != nullptr) {
 		g_controller->ReleaseHostPads();
@@ -559,6 +862,14 @@ void EmergencyShutdown() {
 }
 
 void GameController::Connect(int id) {
+	// Track F, F19c (item 451(d)): at KYTY_FIX_B24=1 the pad type is read here, before m_mutex (Connect runs in
+	// Initialize for the host input id and on the main thread right after SDL_GameControllerOpen), so no SDL call is made
+	// under m_mutex; CheckActive copies "the active pad is a PS5 pad" from m_ps5_ids.
+	bool ps5 = false;
+	if (g_fix_b24 && id >= 0) {
+		auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
+		ps5       = pad != nullptr && SDL_GameControllerGetType(pad) == SDL_CONTROLLER_TYPE_PS5;
+	}
 	Common::LockGuard lock(m_mutex);
 
 	if (std::find(m_connected_ids.begin(), m_connected_ids.end(), id) != m_connected_ids.end()) {
@@ -566,6 +877,9 @@ void GameController::Connect(int id) {
 	}
 
 	m_connected_ids.push_back(id);
+	if (ps5) {
+		m_ps5_ids.push_back(id);
+	}
 
 	CheckActive();
 }
@@ -582,6 +896,7 @@ void GameController::Disconnect(int id) {
 	}
 
 	m_connected_ids.erase(it);
+	m_ps5_ids.erase(std::remove(m_ps5_ids.begin(), m_ps5_ids.end(), id), m_ps5_ids.end());
 
 	CheckActive();
 }
@@ -616,6 +931,12 @@ void GameController::CheckActive() {
 	m_orientation[0] = m_orientation[1] = m_orientation[2] = 0.0f;
 	m_orientation[3] = 1.0f;
 	m_gyro_timestamp = 0;
+	if (g_pad_output != nullptr) {
+		// Track F, F19c (item 451(d)): the PadOutput copy of the active pad id and of "the active pad is a PS5 pad"
+		// (KYTY_FIX_B24=1 only; the caller holds m_mutex; no SDL call here - the type was read by Connect).
+		g_pad_output->SetActive(m_active_id,
+		                        std::find(m_ps5_ids.begin(), m_ps5_ids.end(), m_active_id) != m_ps5_ids.end());
+	}
 }
 
 void GameController::AddState() {
@@ -847,14 +1168,23 @@ void GameController::ReleaseHostPads() {
 	}
 
 	m_connected_ids.clear();
+	m_ps5_ids.clear();
 }
 
 void GameController::SetVibration(uint8_t large_motor, uint8_t small_motor) {
+	PadCallProbe probe(g_hidloss.pad_vib);
+	if (g_fix_b24) {
+		// Track F, F19c (item 451(d)): no SDL on the guest thread - the latest value goes to the PadOutput slot.
+		g_pad_output->PostVibration(large_motor, small_motor);
+		return;
+	}
+
 	Common::LockGuard lock(m_mutex);
 
 	if (m_active_id == HOST_INPUT_CONTROLLER_ID) {
 		return;
 	}
+	probe.Sdl();
 	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
 	if (pad == nullptr) {
 		return;
@@ -862,20 +1192,32 @@ void GameController::SetVibration(uint8_t large_motor, uint8_t small_motor) {
 
 	const auto large = static_cast<uint16_t>(large_motor * 0x101U);
 	const auto small = static_cast<uint16_t>(small_motor * 0x101U);
+	probe.Sdl();
 	if (SDL_GameControllerRumble(pad, large, small, RUMBLE_DURATION_MS) != 0) {
+		probe.Sdl();
 		LOGF("\t rumble failed: %s\n", SDL_GetError());
 	}
 }
 
 void GameController::SetLightBar(uint8_t r, uint8_t g, uint8_t b) {
+	PadCallProbe probe(g_hidloss.pad_led);
+	if (g_fix_b24) {
+		// Track F, F19c (item 451(d)): no SDL on the guest thread - the latest value goes to the PadOutput slot.
+		g_pad_output->PostLightBar(r, g, b);
+		return;
+	}
+
 	Common::LockGuard lock(m_mutex);
+	probe.Sdl();
 	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
 	    pad != nullptr) {
+		probe.Sdl();
 		(void)SDL_GameControllerSetLED(pad, r, g, b);
 	}
 }
 
 bool GameController::SetTriggerEffect(const PadTriggerEffectParam& param, bool* sent) {
+	PadCallProbe probe(g_hidloss.pad_trig);
 	*sent = false;
 	if ((param.trigger_mask & ~0x03u) != 0) {
 		return false;
@@ -897,10 +1239,21 @@ bool GameController::SetTriggerEffect(const PadTriggerEffectParam& param, bool* 
 	if (effect.enable_bits == 0) {
 		return true;
 	}
+	if (g_fix_b24) {
+		// Track F, F19c (item 451(d)): no SDL on the guest thread - the effect goes to the PadOutput slot; *sent is
+		// "the active pad is a PS5 pad and the effect is in the slot".
+		*sent = g_pad_output->PostTriggerEffect(effect);
+		return true;
+	}
 
 	Common::LockGuard lock(m_mutex);
+	probe.Sdl();
 	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
+	if (pad != nullptr) {
+		probe.Sdl();
+	}
 	if (pad != nullptr && SDL_GameControllerGetType(pad) == SDL_CONTROLLER_TYPE_PS5) {
+		probe.Sdl();
 		*sent = SDL_GameControllerSendEffect(pad, &effect, sizeof(effect)) == 0;
 	}
 	return true;

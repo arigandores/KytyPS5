@@ -47,6 +47,8 @@
 #include <atomic>
 #include <chrono>
 #include <cstdlib>
+#include <cmath>
+#include <cstring>
 #include <thread>
 #include <utility>
 #include <fmt/format.h>
@@ -338,6 +340,28 @@ static void GameEventFinger([[maybe_unused]] const EventFinger& f) {
 #endif
 }
 
+// Track F, F19c stand KYTY_TEST_HIDLOSS (ROADMAP s122 item 451(c), F19a s6.1): counters of the stand window - main
+// thread probes, removal events, callbacks of the virtual pad. Counted only while window is set (from fire - 1 s to the
+// stat line); the stand itself is next to WindowTestMinimizeNoteGuestText.
+struct TestHidLossCounters {
+	std::atomic<bool>     window {false};
+	std::atomic<uint64_t> main_late_max_us {0};
+	std::atomic<uint64_t> probes_posted {0};
+	std::atomic<uint64_t> probes_run {0};
+	std::atomic<uint64_t> removed {0};
+	std::atomic<uint64_t> vp_rumble {0};
+	std::atomic<uint64_t> vp_led {0};
+	std::atomic<uint64_t> vp_effect {0};
+};
+
+static TestHidLossCounters g_test_hidloss;
+
+static void TestHidLossCount(std::atomic<uint64_t>& counter) {
+	if (g_test_hidloss.window.load(std::memory_order_relaxed)) {
+		counter.fetch_add(1, std::memory_order_relaxed);
+	}
+}
+
 static void GameEventController([[maybe_unused]] const EventController& f) {
 	EXIT_NOT_IMPLEMENTED(f.remapped);
 
@@ -376,6 +400,10 @@ static void GameEventController([[maybe_unused]] const EventController& f) {
 	}
 
 	if (f.removed) {
+		// Track F, F19c (ROADMAP s122 item 451(c)): printed always - without it a pad lost on the host leaves no line in
+		// the log (the print above is a build option); one line on a rare event, nothing the guest sees.
+		LOGF("Controller %d: removed\n", f.id);
+		TestHidLossCount(g_test_hidloss.removed);
 		Controller::Disconnect(f.id);
 		SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));
 	}
@@ -1037,6 +1065,234 @@ void WindowShutdown() {
 	}
 }
 
+// Track F, F19c (ROADMAP s122 item 451(c), F19a s4): KYTY_TEST_HIDLOSS=<s>[:<mode>] - stand only, off when unset or
+// empty, read once per process (first guest log write; form of KYTY_TEST_MINIMIZE). Modes: detach (default), hold,
+// sleep; any other value - line "TestHidLoss: config invalid ...", stand off. Armed by the game's first level entry line
+// (TestMinimizeIsLevelEntry). At armed + max(0, <s> - PRE_S) the main thread attaches the virtual pad "KYTY test pad"
+// (SDL_JoystickAttachVirtualEx: game controller type, 6 axes, 15 buttons; its Rumble, SetLED and SendEffect callbacks only
+// count) - the emulator then opens it through the usual controller add event. At armed + <s> the main thread runs
+// "fire": detach - SDL_JoystickDetachVirtual of the virtual pad; hold - SDL_LockJoysticks, HOLD_MS of sleep,
+// SDL_UnlockJoysticks; sleep - HOLD_MS of sleep without the lock. In hold and sleep the virtual pad stays attached until
+// the process ends. From fire - 1 s to done + 2 s the stand thread posts an empty main thread task every PROBE_MS that
+// records its age (main_late_max_us); after done + 2 s it posts the task that closes the counting window and prints the
+// line "TestHidLoss: stat ..." (main thread tasks run in posting order: every probe posted before it has run). t_us -
+// Common::FrameStats::NowNs() / 1000. The stand thread is detached; a process that ends inside the window prints no stat.
+constexpr double   TEST_HIDLOSS_PRE_S    = 10.0;
+constexpr uint32_t TEST_HIDLOSS_HOLD_MS  = 3000;
+constexpr uint32_t TEST_HIDLOSS_PROBE_MS = 20;
+
+enum class TestHidLossMode { Detach, Hold, Sleep };
+
+struct TestHidLossConfig {
+	bool            on      = false;
+	double          delay_s = 0.0;
+	TestHidLossMode mode    = TestHidLossMode::Detach;
+};
+
+static const char* TestHidLossModeName(TestHidLossMode mode) {
+	switch (mode) {
+		case TestHidLossMode::Detach: return "detach";
+		case TestHidLossMode::Hold: return "hold";
+		case TestHidLossMode::Sleep: return "sleep";
+	}
+	return "?";
+}
+
+static TestHidLossConfig TestHidLossReadConfig() {
+	TestHidLossConfig c;
+	const char*       value = std::getenv("KYTY_TEST_HIDLOSS");
+	if (value == nullptr || value[0] == '\0') {
+		return c;
+	}
+	char*        end     = nullptr;
+	const double delay_s = std::strtod(value, &end);
+	bool ok = value[0] >= '0' && value[0] <= '9' && end != value && std::isfinite(delay_s) && delay_s <= 86400.0;
+	auto mode = TestHidLossMode::Detach;
+	if (ok && end[0] != '\0') {
+		if (std::strcmp(end, ":detach") == 0) {
+			mode = TestHidLossMode::Detach;
+		} else if (std::strcmp(end, ":hold") == 0) {
+			mode = TestHidLossMode::Hold;
+		} else if (std::strcmp(end, ":sleep") == 0) {
+			mode = TestHidLossMode::Sleep;
+		} else {
+			ok = false;
+		}
+	}
+	if (!ok) {
+		LOGF("TestHidLoss: config invalid value=\"%s\" (expected <s>[:detach|hold|sleep]), stand off\n", value);
+		return c;
+	}
+	c.on      = true;
+	c.delay_s = delay_s;
+	c.mode    = mode;
+	LOGF("TestHidLoss: config on delay_s=%g mode=%s hold_ms=%u\n", delay_s, TestHidLossModeName(mode),
+	     TEST_HIDLOSS_HOLD_MS);
+	return c;
+}
+
+static uint64_t TestHidLossNowUs() {
+	return Common::FrameStats::NowNs() / 1000;
+}
+
+// Instance id of the attached virtual pad (-1: none); written and read on the main thread only.
+static SDL_JoystickID g_test_hidloss_vp = -1;
+// t_us of the "done" line, 0 until fire has finished; written by the main thread, read by the stand thread.
+static std::atomic<uint64_t> g_test_hidloss_done_us {0};
+
+static int SDLCALL TestHidLossVpRumble(void* /*userdata*/, Uint16 /*low*/, Uint16 /*high*/) {
+	TestHidLossCount(g_test_hidloss.vp_rumble);
+	return 0;
+}
+
+static int SDLCALL TestHidLossVpSetLed(void* /*userdata*/, Uint8 /*red*/, Uint8 /*green*/, Uint8 /*blue*/) {
+	TestHidLossCount(g_test_hidloss.vp_led);
+	return 0;
+}
+
+static int SDLCALL TestHidLossVpSendEffect(void* /*userdata*/, const void* /*data*/, int /*size*/) {
+	TestHidLossCount(g_test_hidloss.vp_effect);
+	return 0;
+}
+
+// Main thread.
+static void TestHidLossAttach() {
+	SDL_VirtualJoystickDesc desc {};
+	desc.version    = SDL_VIRTUAL_JOYSTICK_DESC_VERSION;
+	desc.type       = SDL_JOYSTICK_TYPE_GAMECONTROLLER;
+	desc.naxes      = 6;
+	desc.nbuttons   = 15;
+	desc.name       = "KYTY test pad";
+	desc.Rumble     = TestHidLossVpRumble;
+	desc.SetLED     = TestHidLossVpSetLed;
+	desc.SendEffect = TestHidLossVpSendEffect;
+	const int index = SDL_JoystickAttachVirtualEx(&desc);
+	if (index < 0) {
+		LOGF("TestHidLoss: attach failed error=\"%s\" t_us=%" PRIu64 "\n", SDL_GetError(), TestHidLossNowUs());
+		return;
+	}
+	g_test_hidloss_vp = SDL_JoystickGetDeviceInstanceID(index);
+	LOGF("TestHidLoss: attach index=%d t_us=%" PRIu64 "\n", index, TestHidLossNowUs());
+}
+
+// Main thread.
+static void TestHidLossFire(TestHidLossMode mode) {
+	LOGF("TestHidLoss: fire mode=%s t_us=%" PRIu64 "\n", TestHidLossModeName(mode), TestHidLossNowUs());
+	switch (mode) {
+		case TestHidLossMode::Detach: {
+			int index = -1;
+			for (int i = 0; g_test_hidloss_vp >= 0 && i < SDL_NumJoysticks(); i++) {
+				if (SDL_JoystickGetDeviceInstanceID(i) == g_test_hidloss_vp) {
+					index = i;
+					break;
+				}
+			}
+			if (index < 0 || SDL_JoystickDetachVirtual(index) != 0) {
+				LOGF("TestHidLoss: detach failed index=%d error=\"%s\"\n", index, SDL_GetError());
+			}
+			break;
+		}
+		case TestHidLossMode::Hold:
+			SDL_LockJoysticks();
+			SDL_Delay(TEST_HIDLOSS_HOLD_MS);
+			SDL_UnlockJoysticks();
+			break;
+		case TestHidLossMode::Sleep: SDL_Delay(TEST_HIDLOSS_HOLD_MS); break;
+	}
+	const uint64_t done_us = TestHidLossNowUs();
+	LOGF("TestHidLoss: done t_us=%" PRIu64 "\n", done_us);
+	g_test_hidloss_done_us.store(done_us, std::memory_order_release);
+}
+
+// Main thread.
+static void TestHidLossStat(TestHidLossMode mode) {
+	g_test_hidloss.window.store(false, std::memory_order_relaxed);
+	Controller::TestHidLossWindow(false);
+	const auto pad = Controller::TestHidLossPadStats();
+	const auto get = [](const std::atomic<uint64_t>& value) {
+		return static_cast<unsigned long long>(value.load(std::memory_order_relaxed));
+	};
+	const auto u = [](uint64_t value) { return static_cast<unsigned long long>(value); };
+	LOGF("TestHidLoss: stat mode=%s main_late_max_us=%llu probes_posted=%llu probes_run=%llu pad_calls=%llu pad_vib=%llu "
+	     "pad_led=%llu pad_trig=%llu pad_wait_max_us=%llu po_applied=%llu po_wait_max_us=%llu guest_sdl=%llu removed=%llu "
+	     "vp_rumble=%llu vp_led=%llu vp_effect=%llu\n",
+	     TestHidLossModeName(mode), get(g_test_hidloss.main_late_max_us), get(g_test_hidloss.probes_posted),
+	     get(g_test_hidloss.probes_run), u(pad.pad_vib + pad.pad_led + pad.pad_trig), u(pad.pad_vib), u(pad.pad_led),
+	     u(pad.pad_trig), u(pad.pad_wait_max_us), u(pad.po_applied), u(pad.po_wait_max_us), u(pad.guest_sdl),
+	     get(g_test_hidloss.removed), get(g_test_hidloss.vp_rumble), get(g_test_hidloss.vp_led),
+	     get(g_test_hidloss.vp_effect));
+}
+
+static bool TestHidLossPost(std::function<void()> task) {
+	auto* context = g_window.get();
+	if (context == nullptr) {
+		return false;
+	}
+	context->PostToMainThread(std::move(task));
+	return true;
+}
+
+// The stand thread (detached).
+static void TestHidLossRun(TestHidLossConfig cfg, uint64_t armed_us) {
+	const auto at = [armed_us](double s) { return armed_us + static_cast<uint64_t>((s > 0.0 ? s : 0.0) * 1000000.0); };
+	const auto sleep_until = [](uint64_t t_us) {
+		const uint64_t now = TestHidLossNowUs();
+		if (t_us > now) {
+			std::this_thread::sleep_for(std::chrono::microseconds(t_us - now));
+		}
+	};
+	sleep_until(at(cfg.delay_s - TEST_HIDLOSS_PRE_S));
+	if (!TestHidLossPost([] { TestHidLossAttach(); })) {
+		return;
+	}
+	sleep_until(at(cfg.delay_s - 1.0));
+	Controller::TestHidLossWindow(true);
+	g_test_hidloss.window.store(true, std::memory_order_release);
+	const uint64_t fire_us = at(cfg.delay_s);
+	bool           fired   = false;
+	for (;;) {
+		const uint64_t now = TestHidLossNowUs();
+		if (!fired && now >= fire_us) {
+			if (!TestHidLossPost([mode = cfg.mode] { TestHidLossFire(mode); })) {
+				return;
+			}
+			fired = true;
+		}
+		const uint64_t done_us = g_test_hidloss_done_us.load(std::memory_order_acquire);
+		if (done_us != 0 && now >= done_us + 2000000) {
+			break;
+		}
+		g_test_hidloss.probes_posted.fetch_add(1, std::memory_order_relaxed);
+		const uint64_t posted_ns = Common::FrameStats::NowNs();
+		if (!TestHidLossPost([posted_ns] {
+			    const uint64_t age_us = (Common::FrameStats::NowNs() - posted_ns) / 1000;
+			    uint64_t current = g_test_hidloss.main_late_max_us.load(std::memory_order_relaxed);
+			    while (age_us > current && !g_test_hidloss.main_late_max_us.compare_exchange_weak(
+			                                   current, age_us, std::memory_order_relaxed)) {
+			    }
+			    g_test_hidloss.probes_run.fetch_add(1, std::memory_order_relaxed);
+		    })) {
+			return;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(TEST_HIDLOSS_PROBE_MS));
+	}
+	TestHidLossPost([mode = cfg.mode] { TestHidLossStat(mode); });
+}
+
+static void WindowTestHidLossNoteGuestText(const char* text, size_t size) {
+	static const TestHidLossConfig cfg = TestHidLossReadConfig();
+	static std::atomic<bool>       armed {false};
+	if (!cfg.on || text == nullptr || armed.load(std::memory_order_relaxed)) {
+		return;
+	}
+	if (!TestMinimizeIsLevelEntry(std::string_view(text, size)) || armed.exchange(true, std::memory_order_acq_rel)) {
+		return;
+	}
+	const uint64_t armed_us = TestHidLossNowUs();
+	LOGF("TestHidLoss: armed t_us=%" PRIu64 "\n", armed_us);
+	std::thread([armed_us] { TestHidLossRun(cfg, armed_us); }).detach();
+}
+
 // Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): KYTY_TEST_MINIMIZE=<s>:<dur> - <s> seconds after the
 // game's first level entry line "Level has started: <level>" with a non-blank level name (F5a2, item 280(v): the
 // earlier line with an empty name does not arm; TestMinimizeIsLevelEntry) the emulator minimizes its own window
@@ -1045,6 +1301,7 @@ void WindowShutdown() {
 // Unset or empty - nothing (one getenv, then a static flag per guest log write).  The timer is a detached thread that
 // sleeps; the SDL calls are posted to the main thread.  A process that ends inside the window never restores it.
 void WindowTestMinimizeNoteGuestText(const char* text, size_t size) {
+	WindowTestHidLossNoteGuestText(text, size); // Track F, F19c, KYTY_TEST_HIDLOSS (item 451(c))
 	struct TestMinimize {
 		bool   on      = false;
 		double delay_s = 0.0;

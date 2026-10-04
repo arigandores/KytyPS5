@@ -1,0 +1,19 @@
+F23a (HPP-578, ROADMAP s122 item 483(e)): P(0) / expected outcome BEFORE data (Emu Engineer). Written 2026-10-04T16:59:40Z (date -u),
+before any count over the corpus or eboot.bin; code read so far: ShaderDecoder.cpp, VectorAluOps.cpp, ShaderCFG.cpp:2071-2090,
+Control.cpp:309-349, Translate.cpp:249-341 and 1017-1045, PredicationElimination.cpp (main dd7c6b33, src = c31f91b6).
+
+Facts known before data [c code]: DecodeProgram is a linear sweep to the terminal S_ENDPGM (not a reachability walk); BuildGraph
+EXITs on ANY UNSUPPORTED instruction of the decoded range, reachable or not. Hence every program the game translated without EXIT
+has 0 unsupported instructions in its decoded range; register row B7: 0 'opcode is not implemented' lines in 1574 logs.
+
+B7
+ - T1 corpus (programs the game itself translated in the G arms of S4): P(>= 1 program with an unimplemented VOP1/VOP2/VOP3/VOPC
+   opcode in the decoded range) = 0.02 [I] (only if a dumped program was not the translated range, e.g. dump longer than the range).
+ - Whole eboot.bin (all AMDGPU ELFs, about 10x the corpus, levels never entered included): P(>= 1) = 0.35 [I].
+ - Expected outcome by item 483(e): 0 in T1 (expected); eboot: undecided, lean 0 -> candidate NE DEFEKT 0.65, defekt 0.35 [I].
+B8
+ - P(>= 1 T1 program with a surviving "exec ? new : old" VGPR-write select) = 0.95 [I] (nested exec regions in PS keep them unless
+   PredicationElimination proves them discardable).
+ - P(>= 1 T1 program of the driver form: old = live operand of an earlier image sample, new = result of a later sample) = 0.30 [I].
+ - Expected candidate: NE DEFEKT on corpus 0.65 / not determined (GPU test gate in F23b) 0.35 [I].
+Program estimates are wrong 2-20x; these too. Candidates are not verdicts (F23b decides).

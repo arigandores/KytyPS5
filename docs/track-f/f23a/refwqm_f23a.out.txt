@@ -1,0 +1,4 @@
+normal rc 0 IR-before 162247d15cb9f98a (8718 B, SelectU32/F32 33, WqmU64 1, Ballot 1) IR-after 70248ad892e9c3dd SPIR-V f62b88f82f1ca942
+nowqm  rc 0 IR-before 162247d15cb9f98a (8718 B, SelectU32/F32 33, WqmU64 1, Ballot 1) IR-after 70248ad892e9c3dd SPIR-V f62b88f82f1ca942
+reference PS: IR before EQUAL, IR after EQUAL, SPIR-V EQUAL
+census rows with SPIR-V in both variants 269, different 0

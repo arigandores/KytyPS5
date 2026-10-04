@@ -1,0 +1,5 @@
+set t1 real decoder programs 337 own 337 crashes 0
+VALU histogram equal 337 different 0 ; instruction count equal 337
+real decoder UNSUPPORTED instructions 0 in programs 0
+real decoder VALU instructions 168687 distinct family:op 158
+ALL OK

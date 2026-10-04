@@ -1,0 +1,16 @@
+watch: start 2026-10-04T18:55:19Z child 11464 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+tables from dd7c6b33 VectorAluOps.cpp sha256 aea33fd70088506a sizes {'VOP2_OPCODE_LIST': 50, 'VOP1_OPCODE_LIST': 54, 'VOP3_ENCODED_VOP1_OPCODE_LIST': 49, 'VOPC_OPCODE_LIST': 95, 'VOP3_OPCODE_LIST': 73, 'VOP3P_OPCODE_LIST': 22, 'VOP3_VOP2_ALIAS_UNSUPPORTED': 7} not-implemented sites [('VOPC', 'VOPC'), ('VOP2', 'VOP2'), ('VOP1', 'VOP1'), ('VOPC', 'VOPC'), ('VOP3', 'VOP3'), ('VOP3P', 'VOP3P'), ('VINTRP', 'VINTRP')]
+eboot.bin: AMDGPU ELF .text 6087 unique 5698 sha256 3b5100797fe83663
+calibration T1 dumps vs eboot .text prefix: {'equal': 331, 'dump_not_in_eboot': 6}
+T1 base hashes in eboot: 532 of 538
+eboot programs with unsupported: in T1 0 outside T1 0
+walk status {'OK': 5690, 'FRONT_OK': 8}
+programs with opcode-level unsupported VOP1/VOP2/VOP3/VOPC: 0 instructions 0
+programs with extra (VOP3P / VINTRP / DPP8): 0 Counter()
+EXEC writers by stage (stage, writes_exec): count {('?', False): 25, ('?', True): 5141, ('cs', False): 26, ('cs', True): 91, ('cs,ms', True): 1, ('ps', False): 14, ('ps', True): 235, ('vs', True): 165}
+VALU histogram: distinct (family:op) 167 instructions 4692078
+  control VOP2:8 v_mul_f32 1251280 instr in 5579 programs
+  control VOP3:141 v_mad_f32 642242 instr in 5540 programs
+  control VOP2:1 v_cndmask_b32 99537 instr in 4863 programs
+  control VOP3:14b v_fma_f32 7861 instr in 2945 programs
+rc=0 end 2026-10-04T18:55:25Z

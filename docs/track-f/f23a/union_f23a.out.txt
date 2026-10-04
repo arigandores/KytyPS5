@@ -1,0 +1,16 @@
+=== normal (program = hash16; rows A + C/D)
+  cs: translated 119; with surviving exec selects 102 (top-level 15, nested 90); driver form A 18, B 2; selects created 89782 -> surviving 38301 (top 186 / nested 38115)
+     depth (listed items, top): n 186, depth 0: 99, 1-3: 87, 4-9: 0, >=10: 0, max 3
+     depth (listed items, nested): n 30242, depth 0: 8, 1-3: 3357, 4-9: 13091, >=10: 13786, max 31
+  ps: translated 247; with surviving exec selects 246 (top-level 45, nested 232); driver form A 20, B 14; selects created 216978 -> surviving 77554 (top 689 / nested 76865)
+     depth (listed items, top): n 685, depth 0: 418, 1-3: 186, 4-9: 81, >=10: 0, max 8
+     depth (listed items, nested): n 74944, depth 0: 12123, 1-3: 11672, 4-9: 25171, >=10: 25978, max 28
+  total form A programs 38 (top-level item in 1: ['3a8772dbc6934b1c']), form B 16
+=== predoff (program = hash16; rows A + C/D)
+  cs: translated 119; with surviving exec selects 102 (top-level 15, nested 90); driver form A 35, B 2; selects created 89782 -> surviving 81258 (top 700 / nested 80558)
+     depth (listed items, top): n 700, depth 0: 219, 1-3: 481, 4-9: 0, >=10: 0, max 3
+     depth (listed items, nested): n 39981, depth 0: 29, 1-3: 9042, 4-9: 18756, >=10: 12154, max 31
+  ps: translated 247; with surviving exec selects 247 (top-level 46, nested 232); driver form A 146, B 13; selects created 216978 -> surviving 216740 (top 2862 / nested 213878)
+     depth (listed items, top): n 2844, depth 0: 1143, 1-3: 1117, 4-9: 584, >=10: 0, max 8
+     depth (listed items, nested): n 140487, depth 0: 31691, 1-3: 33174, 4-9: 51848, >=10: 23774, max 24
+  total form A programs 181 (top-level item in 6: ['19f4b92426d374f7', '3a8772dbc6934b1c', '4ddddb2acd03de9f', '5a34b303576ee324', '70b33a567dcba0d6', 'e6f2016ca60e1fc5']), form B 15

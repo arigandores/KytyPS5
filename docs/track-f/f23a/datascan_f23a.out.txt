@@ -1,0 +1,35 @@
+extensions 33 files 156231
+anim       files  55756 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+gnfp       files  27821 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+odxb       files  18338 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+jxm        files  15357 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+szd        files  12358 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 1 high-entropy 0
+pfbhk      files   8058 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 1 high-entropy 0
+skel       files   6947 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+jpx        files   3299 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+lvx        files   2236 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+cdx        files   1700 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+prefab     files   1179 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+lox        files    977 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+xml        files    536 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+spx        files    414 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+szd1       files    171 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 3
+szd2       files    171 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 5
+mp4        files    166 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 12
+cx         files    164 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+jmt        files    161 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+mdx        files    161 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+wav        files    126 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 8
+agx        files     52 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+txt        files     36 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+otf        files     14 sampled 12 AMDGPU-ELF hits 0 files-with-endpgm-word 4 high-entropy 0
+apx        files      8 sampled  8 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+json       files      8 sampled  8 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+png        files      5 sampled  5 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 3
+sxd        files      3 sampled  3 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+ttf        files      2 sampled  2 AMDGPU-ELF hits 0 files-with-endpgm-word 1 high-entropy 0
+odx        files      2 sampled  2 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+prx        files      2 sampled  2 AMDGPU-ELF hits 0 files-with-endpgm-word 1 high-entropy 0
+esbak      files      2 sampled  2 AMDGPU-ELF hits 0 files-with-endpgm-word 1 high-entropy 0
+(none)     files      1 sampled  1 AMDGPU-ELF hits 0 files-with-endpgm-word 0 high-entropy 0
+total {'sampled': 321, 'elf': 0, 'endpgm_files': 9}

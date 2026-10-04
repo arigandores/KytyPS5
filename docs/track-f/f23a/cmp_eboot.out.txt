@@ -1,0 +1,5 @@
+set eboot real decoder programs 5698 own 5698 crashes 0
+VALU histogram equal 5698 different 0 ; instruction count equal 5698
+real decoder UNSUPPORTED instructions 0 in programs 0
+real decoder VALU instructions 4692078 distinct family:op 167
+ALL OK

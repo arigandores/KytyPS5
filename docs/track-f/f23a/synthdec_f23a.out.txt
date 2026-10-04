@@ -1,0 +1,9 @@
+rc 0
+zero_clean                   U lines 0 ok 
+pos_vop2_mul_legacy          U lines 1 ok 0x00000004: unsupported family=VOP2 opcode=0x07 raw=[0x0e020503] reason=VOP2 opcode is not implemented
+pos_vop2_fmac_legacy         U lines 1 ok 0x00000000: unsupported family=VOP2 opcode=0x06 raw=[0x0c020503] reason=VOP2 opcode is not implemented
+pos_vop3_mul_legacy          U lines 1 ok 0x00000000: unsupported family=VOP3 opcode=0x107 raw=[0xd5070001 0x00020503] reason=VOP3 opcode is not implemented
+pos_after_branch_dead        U lines 1 ok 0x00000004: unsupported family=VOP2 opcode=0x07 raw=[0x0e020503] reason=VOP2 opcode is not implemented
+zero_after_endpgm            U lines 0 ok 
+pos_fwd_target_after_endpgm  U lines 1 ok 0x00000008: unsupported family=VOP2 opcode=0x07 raw=[0x0e020503] reason=VOP2 opcode is not implemented
+ALL OK

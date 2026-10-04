@@ -1,0 +1,10 @@
+tables from dd7c6b33 VectorAluOps.cpp sha256 aea33fd70088506a sizes {'VOP2_OPCODE_LIST': 50, 'VOP1_OPCODE_LIST': 54, 'VOP3_ENCODED_VOP1_OPCODE_LIST': 49, 'VOPC_OPCODE_LIST': 95, 'VOP3_OPCODE_LIST': 73, 'VOP3P_OPCODE_LIST': 22, 'VOP3_VOP2_ALIAS_UNSUPPORTED': 7} not-implemented sites [('VOPC', 'VOPC'), ('VOP2', 'VOP2'), ('VOP1', 'VOP1'), ('VOPC', 'VOPC'), ('VOP3', 'VOP3'), ('VOP3P', 'VOP3P'), ('VINTRP', 'VINTRP')]
+zero_clean                   status OK     unsup [] exec_writes 0 -> ok
+pos_vop2_mul_legacy          status OK     unsup [('VOP2', '0x7', 'v_mul_legacy_f32')] exec_writes 0 -> ok
+pos_vop2_fmac_legacy         status OK     unsup [('VOP2', '0x6', 'v_fmac_legacy_f32')] exec_writes 0 -> ok
+pos_vop3_mul_legacy          status OK     unsup [('VOP3', '0x107', 'v_mul_legacy_f32_e64')] exec_writes 0 -> ok
+pos_after_branch_dead        status OK     unsup [('VOP2', '0x7', 'v_mul_legacy_f32')] exec_writes 0 -> ok
+zero_after_endpgm            status OK     unsup [] exec_writes 0 -> ok
+pos_fwd_target_after_endpgm  status OK     unsup [('VOP2', '0x7', 'v_mul_legacy_f32')] exec_writes 0 -> ok
+exec_writer                  status OK     unsup [] exec_writes 1 -> ok
+ALL OK

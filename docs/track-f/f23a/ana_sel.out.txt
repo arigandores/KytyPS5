@@ -1,0 +1,38 @@
+=== variant normal : status rows 840 rc0 269 ; diag lines 263 ; rc0 rows by stage {'cs': 111, 'ps': 158}
+  stage cs: rows 107 (survive 95); programs 90, with surviving selects 79 (top 13, nested 69); driver form A 10, B 1; selects created 51773, surviving 21290 (top 161, nested 21129)
+    form A programs: ['0078153a1c1fb171', '1f16e50eea0c89e3', '3a8772dbc6934b1c', '503d7f066a496c3c', '5323c4ef4f785055', '56a15431999c5a2d', 'cd94166bf3f2bb81', 'ea8e2d64dfe34ed9', 'f88d0f630ac5b35d', 'ff8ee744ffa4dcdc']
+    form B programs: ['1f16e50eea0c89e3']
+  stage ps: rows 156 (survive 155); programs 132, with surviving selects 131 (top 28, nested 121); driver form A 10, B 7; selects created 107553, surviving 38097 (top 537, nested 37560)
+    form A programs: ['1974d0d59ab6429f', '255ce6193a9e7938', '2e2ae33a4d374e8f', '32ecf7344a6cc938', '3f494f02a1b0b483', '52276fe1ba080bea', '74bb8628d64f534c', 'be4c35a2031fd3f4', 'e14edf4a78d1a517', 'f47c0c097c598a36']
+    form B programs: ['1974d0d59ab6429f', '255ce6193a9e7938', '2e2ae33a4d374e8f', '32ecf7344a6cc938', '52276fe1ba080bea', '74bb8628d64f534c', 'e14edf4a78d1a517']
+  depth histogram (items listed) cs nested: {0: 8, 1: 1083, 2: 664, 3: 866, 4: 763, 5: 2544, 6: 680, 7: 732, 8: 373, 9: 1289, 10: 1024, 11: 638, 12: 1842, 13: 705, 14: 297, 15: 339, 16: 296, 17: 95, 18: 184, 19: 272, 20: 152, 21: 102, 22: 54, 23: 67, 24: 60, 25: 90, 26: 33, 27: 37, 28: 11, 29: 18, 30: 15, 31: 7}
+  depth histogram (items listed) cs top: {0: 80, 1: 48, 2: 13, 3: 20}
+  depth histogram (items listed) ps nested: {0: 5743, 1: 1044, 2: 3302, 3: 1685, 4: 1415, 5: 1989, 6: 1846, 7: 2230, 8: 1979, 9: 1290, 10: 1391, 11: 1368, 12: 951, 13: 2232, 14: 879, 15: 765, 16: 1061, 17: 876, 18: 366, 19: 496, 20: 634, 21: 341, 22: 761, 23: 589, 24: 755, 25: 311, 26: 465, 27: 210, 28: 126}
+  depth histogram (items listed) ps top: {0: 333, 1: 44, 2: 71, 3: 45, 4: 17, 5: 8, 7: 10, 8: 6}
+  REF e197e307a5f2cb39 perm 0: created 30 survive 7 top 0 nested 7 formA 0 formB 0
+=== variant nowqm : status rows 840 rc0 269 ; diag lines 263 ; rc0 rows by stage {'cs': 111, 'ps': 158}
+  stage cs: rows 107 (survive 95); programs 90, with surviving selects 79 (top 13, nested 69); driver form A 10, B 1; selects created 51773, surviving 21290 (top 161, nested 21129)
+    form A programs: ['0078153a1c1fb171', '1f16e50eea0c89e3', '3a8772dbc6934b1c', '503d7f066a496c3c', '5323c4ef4f785055', '56a15431999c5a2d', 'cd94166bf3f2bb81', 'ea8e2d64dfe34ed9', 'f88d0f630ac5b35d', 'ff8ee744ffa4dcdc']
+    form B programs: ['1f16e50eea0c89e3']
+  stage ps: rows 156 (survive 155); programs 132, with surviving selects 131 (top 28, nested 121); driver form A 10, B 7; selects created 107553, surviving 38097 (top 537, nested 37560)
+    form A programs: ['1974d0d59ab6429f', '255ce6193a9e7938', '2e2ae33a4d374e8f', '32ecf7344a6cc938', '3f494f02a1b0b483', '52276fe1ba080bea', '74bb8628d64f534c', 'be4c35a2031fd3f4', 'e14edf4a78d1a517', 'f47c0c097c598a36']
+    form B programs: ['1974d0d59ab6429f', '255ce6193a9e7938', '2e2ae33a4d374e8f', '32ecf7344a6cc938', '52276fe1ba080bea', '74bb8628d64f534c', 'e14edf4a78d1a517']
+  depth histogram (items listed) cs nested: {0: 8, 1: 1083, 2: 664, 3: 866, 4: 763, 5: 2544, 6: 680, 7: 732, 8: 373, 9: 1289, 10: 1024, 11: 638, 12: 1842, 13: 705, 14: 297, 15: 339, 16: 296, 17: 95, 18: 184, 19: 272, 20: 152, 21: 102, 22: 54, 23: 67, 24: 60, 25: 90, 26: 33, 27: 37, 28: 11, 29: 18, 30: 15, 31: 7}
+  depth histogram (items listed) cs top: {0: 80, 1: 48, 2: 13, 3: 20}
+  depth histogram (items listed) ps nested: {0: 5743, 1: 1044, 2: 3302, 3: 1685, 4: 1415, 5: 1989, 6: 1846, 7: 2230, 8: 1979, 9: 1290, 10: 1391, 11: 1368, 12: 951, 13: 2232, 14: 879, 15: 765, 16: 1061, 17: 876, 18: 366, 19: 496, 20: 634, 21: 341, 22: 761, 23: 589, 24: 755, 25: 311, 26: 465, 27: 210, 28: 126}
+  depth histogram (items listed) ps top: {0: 333, 1: 44, 2: 71, 3: 45, 4: 17, 5: 8, 7: 10, 8: 6}
+  REF e197e307a5f2cb39 perm 0: created 30 survive 7 top 0 nested 7 formA 0 formB 0
+=== variant predoff : status rows 840 rc0 269 ; diag lines 263 ; rc0 rows by stage {'cs': 111, 'ps': 158}
+  stage cs: rows 107 (survive 95); programs 90, with surviving selects 79 (top 13, nested 69); driver form A 20, B 1; selects created 51773, surviving 45151 (top 649, nested 44502)
+    form A programs: ['0078153a1c1fb171', '03d8402a8c5446ce', '1f16e50eea0c89e3', '380bb9d636390bae', '3a8772dbc6934b1c', '503d7f066a496c3c', '5323c4ef4f785055', '56a15431999c5a2d', '5bb5e709d757909d', '61af1b156ea8362d', '64c594ef9823e03b', '657ad04626bf9d55', 'a5315d3bb530aee7', 'cae1421118b2e920', 'cd94166bf3f2bb81', 'd97f248195e22298', 'ea8e2d64dfe34ed9', 'f88d0f630ac5b35d', 'fb9a249e435e4cf0', 'ff8ee744ffa4dcdc']
+    form B programs: ['03d8402a8c5446ce']
+  stage ps: rows 156 (survive 156); programs 132, with surviving selects 132 (top 29, nested 121); driver form A 67, B 4; selects created 107553, surviving 107463 (top 2040, nested 105423)
+    form A programs: ['02bdfb9ab4872b18', '09bbe18686d987f7', '0d12d410cec0c50d', '11acd4c05adcba5c', '13db9f7200632c02', '16f9df575a3aa74f', '18ced3fc6fba62ac', '1974d0d59ab6429f', '19f4b92426d374f7', '2190adcc312b2e6e', '255ce6193a9e7938', '29a1cf326c96db87', '2e2ae33a4d374e8f', '32ecf7344a6cc938', '3f494f02a1b0b483', '43cdacd2807376b8', '45942b26d9ffbe8e', '47306eefdb1d6181', '47cfa37a404040d5', '4c2f796d5951b12e', '4dcbd39a14bd2e70', '4ddddb2acd03de9f', '52276fe1ba080bea', '52d7f981a9506915', '53913e1a0e962495', '5457609506174517', '55dcd484fab4c947', '5702634974996107', '57611e7a373cf2d1', '5a34b303576ee324', '6d289d31eb63a3a4', '70b33a567dcba0d6', '74bb8628d64f534c', '7a46be05e11e081b', '7ffaad20e559f847', '82e0dd90a5b657bc', '845e6beb25c48d83', '8a250ffe8348963b', '8d80c0f15ea6562d', '9221b45c14fbe20b', '99c16b687dc7a74e', '9efa7951e382fce0', 'ab3583abbc20f2ae', 'aba5381e7b4d42bc', 'b4c5e673efcaf520', 'b6f28a2e771d2665', 'b96c2898f05637df', 'be4c35a2031fd3f4', 'c0c617c477cc9fe8', 'c54d5912f56c0abe', 'c58a2418d811c873', 'c68f1c9a103b140c', 'd607561f0debb616', 'd97878ab848ab3ea', 'd985ff0c7b8009aa', 'dd05e409b33d411c', 'e14edf4a78d1a517', 'e197e307a5f2cb39', 'e224ba09c832a7db', 'e369f47d288c52ad', 'e3c32a8c5b12bc41', 'eadf3bbe9e2416a0', 'f47c0c097c598a36', 'f53f1c8aceb295d5', 'f6d0ec662d8faadc', 'fa23206819e321ce', 'fc4314dad69463cc']
+    form B programs: ['32ecf7344a6cc938', '5a34b303576ee324', '74bb8628d64f534c', '99c16b687dc7a74e']
+  depth histogram (items listed) cs nested: {0: 29, 1: 2327, 2: 2166, 3: 1385, 4: 1974, 5: 3093, 6: 1344, 7: 1146, 8: 558, 9: 1874, 10: 1702, 11: 1201, 12: 590, 13: 1209, 14: 304, 15: 190, 16: 842, 17: 62, 18: 41, 19: 145, 20: 70, 21: 130, 22: 66, 23: 100, 24: 70, 25: 190, 26: 34, 27: 57, 28: 2, 29: 38, 30: 34, 31: 21}
+  depth histogram (items listed) cs top: {0: 176, 1: 401, 2: 43, 3: 29}
+  depth histogram (items listed) ps nested: {0: 13643, 1: 3404, 2: 10326, 3: 4765, 4: 3051, 5: 5373, 6: 4589, 7: 4653, 8: 4107, 9: 2295, 10: 1463, 11: 2813, 12: 1171, 13: 1289, 14: 966, 15: 908, 16: 1139, 17: 774, 18: 272, 19: 201, 20: 469, 21: 16, 22: 53, 23: 100, 24: 102}
+  depth histogram (items listed) ps top: {0: 864, 1: 340, 2: 493, 3: 148, 4: 44, 5: 12, 7: 86, 8: 42}
+  REF e197e307a5f2cb39 perm 0: created 30 survive 30 top 0 nested 30 formA 2 formB 0
+     A item {'b': 1, 'i': 89, 'lvl': 'nested', 'depth': 0, 'new': 'ImageSampleRaw', 'old': 'SelectU32', 'A': 1, 'B': 0}
+     A item {'b': 1, 'i': 95, 'lvl': 'nested', 'depth': 0, 'new': 'ImageSampleRaw', 'old': 'SelectU32', 'A': 1, 'B': 0}

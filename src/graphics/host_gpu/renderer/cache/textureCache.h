@@ -175,6 +175,10 @@ public:
 	void               TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_value);
 	// Called after the fill dispatch is recorded: stamps the PendingDcc entry with its write sequence.
 	void StampPendingDccFill();
+	// Track F, F16k2 (KYTY_DIAG_F5ID, RC3, ROADMAP s122 item 496(b)(3)): called at the end of DispatchDirect (its
+	// F5IdCsHolder): a fill stamp TrackDccFill left and StampPendingDccFill has not taken (the dispatch returned before
+	// it) counts stamp_late once; the stamp itself is unchanged. Nothing without DiagF5Id::On().
+	void F5IdNoteStampLate();
 	[[nodiscard]] bool TouchMeta(uint64_t address, uint32_t slice, bool is_clear);
 	// A shader binding (T# with META_COMPRESS and a metadata address) may be the only user of a
 	// surface that the guest fast-cleared through a metadata fill without ever binding it as a
@@ -347,6 +351,7 @@ private:
 	// Track F, F16k (KYTY_DIAG_F5ID): the last fill of any entry type, stamped for DiagF5Id::NoteFillSeq (wr_after).
 	uint64_t                                          m_f5id_stamp_address = 0;
 	uint64_t                                          m_f5id_stamp_size    = 0;
+	bool                                              m_f5id_stamp_late    = false; // F16k2: stamp_late counted
 	Common::SlotVector<Image>                         m_slot_images;
 	ImagePageTable                                    m_image_page_table;
 	// Gate "texfaulthint": images per page of m_image_page_table. Written under m_lock (raised

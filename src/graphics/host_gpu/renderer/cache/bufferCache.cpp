@@ -2903,6 +2903,14 @@ BufferCache::ExactWriteSeq BufferCache::LastGpuWriteSeqExact(uint64_t vaddr, uin
 	return answer;
 }
 
+uint64_t BufferCache::F5IdRangeWriteEpoch(uint64_t vaddr, uint64_t size) {
+	// Track F, F16k2 (item 496(b)(2)): never the EXIT of MemoryTracker::ValidateRange on a range made from registers.
+	if (size == 0 || !GuestRange {vaddr, size}.Valid()) {
+		return 0;
+	}
+	return m_memory_tracker.RangeWriteEpoch(vaddr, size);
+}
+
 uint64_t BufferCache::LastGpuWriteSeq(uint64_t vaddr, uint64_t size, bool include_large) const {
 	auto       result = include_large ? m_large_write_seq : uint64_t {0};
 	const auto first  = vaddr >> HotBucketBits;

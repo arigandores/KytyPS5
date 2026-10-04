@@ -487,6 +487,11 @@ private:
 		bool     fallback = false;
 	};
 	[[nodiscard]] ExactWriteSeq LastGpuWriteSeqExact(uint64_t vaddr, uint64_t size, uint64_t since) const;
+	// Track F, F16k2 (KYTY_DIAG_F5ID, ROADMAP s122 item 496(b)(1)-(2)): the sequence number of the last GPU write larger
+	// than 16 MB (m_large_write_seq: no bucket, no ring, any address), and MemoryTracker::RangeWriteEpoch of a range
+	// (0 - an empty or invalid range, or a region not tracked; lock free). Measurement only: no decision reads them.
+	[[nodiscard]] uint64_t LargeGpuWriteSeq() const noexcept { return m_large_write_seq; }
+	[[nodiscard]] uint64_t F5IdRangeWriteEpoch(uint64_t vaddr, uint64_t size);
 
  private:
 

@@ -1902,16 +1902,23 @@ public:
 					DiagF5::Add(DiagF5::Counter::F5CmuKept);
 					DiagF5::Add(DiagF5::Counter::F5CmuKeptApplied);
 					break;
-				case DiagF5::CmuFix::ExactStale: DiagF5::Add(DiagF5::Counter::F5CmuExactStale); break;
+				case DiagF5::CmuFix::ExactStale:
+					DiagF5::Add(DiagF5::Counter::F5CmuExactStale);
+					if (m_probe.cpu) {
+						DiagF5::Add(DiagF5::Counter::F5CmuExactCpu); // Track F, F16k2 (RC4)
+					}
+					break;
 				case DiagF5::CmuFix::Fallback: DiagF5::Add(DiagF5::Counter::F5CmuFallback); break;
 				default: break;
 			}
 		}
 		if (m_out != nullptr) [[unlikely]] {
 			m_out->fix = fix;
+			// Track F, F16k2 (RC4): an exact_stale decision set by a CPU-modified page says why=cpu.
 			m_out->why = fix == DiagF5::CmuFix::Kept
 			                 ? (m_why != DiagF5::CmuWhy::None ? m_why : DiagF5::CmuWhy::NoLayer)
-			                 : DiagF5::CmuWhy::None;
+			             : fix == DiagF5::CmuFix::ExactStale && m_probe.cpu ? DiagF5::CmuWhy::Cpu
+			                                                                 : DiagF5::CmuWhy::None;
 		}
 	}
 	F5CmuScope(const F5CmuScope&)            = delete;
@@ -3449,8 +3456,13 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
 		// stamped for wr_after (StampPendingDccFill).
 		if (DiagF5Id::On()) [[unlikely]] {
 			DiagF5Id::NoteFill(address);
+			// Track F, F16k2 (RC3): the stamp of an earlier fill was not taken by its dispatch and not counted at its end.
+			if (m_f5id_stamp_address != 0 && !m_f5id_stamp_late) {
+				DiagF5Id::NoteStampLate();
+			}
 			m_f5id_stamp_address = address;
 			m_f5id_stamp_size    = size;
+			m_f5id_stamp_late    = false;
 		}
 	}
 	BumpMetaEpoch(); // the try_emplace above may have inserted as well
@@ -3461,10 +3473,13 @@ void TextureCache::StampPendingDccFill() {
 	// Track F, F16k (KYTY_DIAG_F5ID): the write sequence of the last fill of any entry type (wr_after); 0 with the knob
 	// off (only TrackDccFill sets the address, under the knob).
 	if (m_f5id_stamp_address != 0) [[unlikely]] {
+		// Track F, F16k2 (RC2): with the CPU write epoch of the fill range at this stamp (cpu_mod).
 		DiagF5Id::NoteFillSeq(m_f5id_stamp_address,
-		                      m_buffer_cache.LastGpuWriteSeq(m_f5id_stamp_address, m_f5id_stamp_size, false));
+		                      m_buffer_cache.LastGpuWriteSeq(m_f5id_stamp_address, m_f5id_stamp_size, false),
+		                      m_buffer_cache.F5IdRangeWriteEpoch(m_f5id_stamp_address, m_f5id_stamp_size));
 		m_f5id_stamp_address = 0;
 		m_f5id_stamp_size    = 0;
+		m_f5id_stamp_late    = false;
 	}
 	if (m_fill_stamp_address == 0) {
 		return;
@@ -3477,6 +3492,17 @@ void TextureCache::StampPendingDccFill() {
 	}
 	m_fill_stamp_address = 0;
 	m_fill_stamp_size    = 0;
+}
+
+void TextureCache::F5IdNoteStampLate() {
+	if (!DiagF5Id::On()) {
+		return;
+	}
+	std::scoped_lock lock {m_lock};
+	if (m_f5id_stamp_address != 0 && !m_f5id_stamp_late) {
+		m_f5id_stamp_late = true;
+		DiagF5Id::NoteStampLate();
+	}
 }
 
 bool TextureCache::PendingDccFillStale(uint64_t address, const MetaDataInfo& meta,
@@ -3503,6 +3529,7 @@ bool TextureCache::PendingDccFillStale(uint64_t address, const MetaDataInfo& met
 		f5_probe->bucket_stale = true;
 		if (cpu_written) {
 			f5_probe->exact_stale = true;
+			f5_probe->cpu         = true; // Track F, F16k2 (RC4): why=cpu
 		} else {
 			const auto exact      = m_buffer_cache.LastGpuWriteSeqExact(address, meta.fill_size, meta.fill_seq);
 			f5_probe->exact_stale = exact.seq != 0;

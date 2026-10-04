@@ -122,6 +122,9 @@ enum class Counter : uint32_t {
 	DccStaleBucketOnly,
 	DccStaleFallback,
 	CmaskRtBucketOnly,
+	// Track F, F16k2 (RC4, ROADMAP s122 item 496(b)(4)): the f5cmu_exact_stale decisions set by a CPU-modified page of the
+	// fill (PendingDccFillStale's cpu_written; the event line says why=cpu): f5cmu_exact_cpu <= f5cmu_exact_stale.
+	F5CmuExactCpu,
 	Count
 };
 
@@ -196,7 +199,9 @@ enum class CmuFix : uint8_t { Off, Fresh, ExactStale, Kept, KeptApplied, Fallbac
 // Why a kept call returned without ClearImage, in the order of PrepareCmaskClear's returns: the fill value is not 0,
 // the clear mask is 0, the metadata range is empty, the fill is shorter than the range, DecodePackedColorClear failed,
 // the view is not representable in the mask, no bit of the view layers was set (the loop cleared nothing).
-enum class CmuWhy : uint8_t { None, Value, Mask, Range, Partial, Decode, Layers, NoLayer };
+// Track F, F16k2 (RC4, item 496(b)(4)): Cpu - an ExactStale decision set by a CPU write (a CPU-modified page of the
+// fill), not by a crossing GPU write.
+enum class CmuWhy : uint8_t { None, Value, Mask, Range, Partial, Decode, Layers, NoLayer, Cpu };
 [[nodiscard]] const char* CmuFixName(CmuFix fix);
 [[nodiscard]] const char* CmuWhyName(CmuWhy why);
 struct CmuEvent {
@@ -214,6 +219,8 @@ struct StaleProbe {
 	bool bucket_stale  = false;
 	bool exact_stale   = false;
 	bool fallback      = false;
+	// Track F, F16k2 (RC4): exact_stale was set by cpu_written (a CPU-modified page of the fill), not by a GPU write.
+	bool cpu           = false;
 };
 [[nodiscard]] inline bool StaleBucketOnly(const StaleProbe& probe) {
 	return probe.bucket_stale && !probe.exact_stale && !probe.fallback;
@@ -243,6 +250,13 @@ struct CmuEventLine {
 };
 [[nodiscard]] std::string FormatCmuEvent(uint64_t n, const CmuEventLine& line);
 bool                      NoteCmuEvent(const CmuEventLine& line);
+// Track F, F16k2 (RC5, ROADMAP s122 item 496(b)(5)): the event line of a decision of the FCE acquisition that has no
+// cmask_fce line (no B42 hit: the target carried CMASK metadata already - FixB42Probe answered None - or a drawn
+// fill), KYTY_DIAG_F5=1 and fix not off / fresh: "DiagF5Ev: cmask_fce_nohit n=<k> b42=<none|drawn> present=<n>
+// gpu=<n> image=0x... cmask=0x... extent=<w>x<h> fix=<..> [why=<..>]" (`applied` is not printed); its own limit -
+// the first 64 (k = 1..64), counted after.
+[[nodiscard]] std::string FormatCmuNoHit(uint64_t n, const CmuEventLine& line, bool drawn);
+bool                      NoteCmuNoHit(const CmuEventLine& line, bool drawn);
 
 // Test site: the F16k lines printed so far (DiagF5Ev, FixF5Cmu, DiagF5Id; at most the last 4096) and a reset of that
 // list.
@@ -280,7 +294,9 @@ struct DccMiss {
 // (-1: none).
 [[nodiscard]] DccMiss ScanReason(uint32_t candidates, bool dcc_other, uint64_t dcc_other_address, int other_kind);
 
-enum class WrAfter : uint8_t { None, Exact, Fallback, Na };
+// Track F, F16k2 (RC1, item 496(b)(1)): Large - no recorded bucket write crosses the range after `since`, but a GPU
+// write larger than 16 MB (no bucket, no ring, any address) is newer than `since`.
+enum class WrAfter : uint8_t { None, Exact, Fallback, Na, Large };
 struct FceEvent {
 	uint32_t frame        = 0;
 	uint32_t present      = 0;
@@ -357,9 +373,15 @@ enum class ApplySite : uint8_t { DccRt, CmaskRt, Mat, Fce };
 void NoteClearApplied(ApplySite site, uint64_t meta_address, uint64_t image_address, uint32_t frame);
 // TrackDccFill at `address`: a new fill drops the mark there.
 void NoteFill(uint64_t address);
-// The fill's GPU write sequence (StampPendingDccFill's answer for any entry type), for wr_after.
-void     NoteFillSeq(uint64_t address, uint64_t seq);
+// The fill's GPU write sequence (StampPendingDccFill's answer for any entry type), for wr_after; Track F, F16k2 (RC2,
+// item 496(b)(2)): with the CPU write epoch of the fill range at the stamp (MemoryTracker::RangeWriteEpoch; 0 - not
+// tracked), for cpu_mod. FillCpuEpoch: false - no fill was stamped at `address`.
+void     NoteFillSeq(uint64_t address, uint64_t seq, uint64_t cpu_epoch);
 [[nodiscard]] uint64_t FillSeq(uint64_t address);
+[[nodiscard]] bool     FillCpuEpoch(uint64_t address, uint64_t* cpu_epoch);
+// Track F, F16k2 (RC3, item 496(b)(3)): a fill stamp its dispatch left untaken (TextureCache::F5IdNoteStampLate at the
+// end of DispatchDirect, or TrackDccFill over it) - the counter stamp_late of the sum line, once per stamp.
+void NoteStampLate();
 
 // The sum line "DiagF5Id: sum frame=<n> ..." (with the DiagF5 counters dcc_fce_no_image, meta_cs_untracked,
 // meta_cs_tracked copied in the same pass, and the identities id_fce / id_cs) and the key lines of the keys that

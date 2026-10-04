@@ -215,6 +215,7 @@ constexpr const char* F5Names[] = {
     "dcc_stale_bucket_only",
     "dcc_stale_fallback",
     "cmask_rt_bucket_only",
+    "f5cmu_exact_cpu",
 };
 static_assert(std::size(F5Names) == static_cast<size_t>(DiagF5::Counter::Count));
 
@@ -249,6 +250,7 @@ constexpr const char* IdNames[] = {
     "changed_na",   "marks_set",   "marks_dropped", "marks_overflow", "stale_apply",   "next_texture",
     "next_target",  "next_none",   "next_exit",    "next_cleared", "next_bufreads",   "next_merged",
     "next_overflow", "keys_fce",   "keys_cs",      "overflow_fce", "overflow_cs",
+    "stamp_late",
 };
 enum IdCounter : uint32_t {
 	kFce,
@@ -286,6 +288,7 @@ enum IdCounter : uint32_t {
 	kKeysCs,
 	kOverflowFce,
 	kOverflowCs,
+	kStampLate, // Track F, F16k2 (RC3)
 	kIdCount
 };
 static_assert(std::size(IdNames) == kIdCount);
@@ -348,6 +351,7 @@ struct IdState {
 	std::vector<IdOpen>             open;
 	std::map<uint64_t, IdMark>      marks;
 	std::map<uint64_t, uint64_t>    fill_seq;
+	std::map<uint64_t, uint64_t>    fill_cpu_epoch; // Track F, F16k2 (RC2): RangeWriteEpoch of the fill at its stamp
 	uint64_t                        stale_lines = 0;
 	bool                            printed     = false;
 	uint32_t                        last_frame  = 0;
@@ -381,6 +385,7 @@ const char* WrAfterName(Id::WrAfter wr) {
 		case Id::WrAfter::Exact: return "exact";
 		case Id::WrAfter::Fallback: return "fallback";
 		case Id::WrAfter::Na: return "na";
+		case Id::WrAfter::Large: return "large";
 	}
 	return "na";
 }
@@ -609,6 +614,7 @@ const char* CmuWhyName(CmuWhy why) {
 		case CmuWhy::Decode: return "decode";
 		case CmuWhy::Layers: return "layers";
 		case CmuWhy::NoLayer: return "nolayer";
+		case CmuWhy::Cpu: return "cpu";
 	}
 	return "none";
 }
@@ -623,6 +629,7 @@ void NoteDccStaleProbe(const StaleProbe& probe) {
 namespace {
 std::atomic<uint32_t> g_present {0};
 std::atomic<uint64_t> g_cmu_events {0};
+std::atomic<uint64_t> g_cmu_nohit_events {0}; // Track F, F16k2 (RC5): the lines cmask_fce_nohit
 } // namespace
 
 void NotePresent(uint32_t present) {
@@ -650,6 +657,26 @@ bool NoteCmuEvent(const CmuEventLine& line) {
 		return false;
 	}
 	EmitLine(FormatCmuEvent(n, line));
+	return true;
+}
+
+std::string FormatCmuNoHit(uint64_t n, const CmuEventLine& line, bool drawn) {
+	auto text = fmt::format("DiagF5Ev: cmask_fce_nohit n={} b42={} present={} gpu={} image=0x{:016x} cmask=0x{:016x} "
+	                        "extent={}x{} fix={}",
+	                        n, drawn ? "drawn" : "none", line.present, line.gpu, line.image, line.cmask, line.width,
+	                        line.height, CmuFixName(line.event.fix));
+	if (line.event.why != CmuWhy::None) {
+		text += fmt::format(" why={}", CmuWhyName(line.event.why));
+	}
+	return text;
+}
+
+bool NoteCmuNoHit(const CmuEventLine& line, bool drawn) {
+	const auto n = g_cmu_nohit_events.fetch_add(1, std::memory_order_relaxed) + 1;
+	if (n > 64) {
+		return false;
+	}
+	EmitLine(FormatCmuNoHit(n, line, drawn));
 	return true;
 }
 
@@ -938,10 +965,11 @@ void NoteFill(uint64_t address) {
 	}
 }
 
-void NoteFillSeq(uint64_t address, uint64_t seq) {
+void NoteFillSeq(uint64_t address, uint64_t seq, uint64_t cpu_epoch) {
 	auto&            s = IdS();
 	std::scoped_lock lock {s.mutex};
-	s.fill_seq[address] = seq;
+	s.fill_seq[address]       = seq;
+	s.fill_cpu_epoch[address] = cpu_epoch;
 }
 
 uint64_t FillSeq(uint64_t address) {
@@ -949,6 +977,23 @@ uint64_t FillSeq(uint64_t address) {
 	std::scoped_lock lock {s.mutex};
 	const auto       found = s.fill_seq.find(address);
 	return found == s.fill_seq.end() ? 0 : found->second;
+}
+
+bool FillCpuEpoch(uint64_t address, uint64_t* cpu_epoch) {
+	auto&            s = IdS();
+	std::scoped_lock lock {s.mutex};
+	const auto       found = s.fill_cpu_epoch.find(address);
+	if (found == s.fill_cpu_epoch.end()) {
+		return false;
+	}
+	*cpu_epoch = found->second;
+	return true;
+}
+
+void NoteStampLate() {
+	auto&            s = IdS();
+	std::scoped_lock lock {s.mutex};
+	s.cnt[kStampLate]++;
 }
 
 bool Service(bool exit) {
@@ -1061,6 +1106,7 @@ void ResetForTest() {
 	s.open.clear();
 	s.marks.clear();
 	s.fill_seq.clear();
+	s.fill_cpu_epoch.clear();
 	s.stale_lines = 0;
 	s.printed     = false;
 	s.last_frame  = 0;

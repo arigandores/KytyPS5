@@ -10504,10 +10504,12 @@ public:
                   std::string(DiagF5::CmuWhyName(W::Decode)) == "decode" &&
                   std::string(DiagF5::CmuWhyName(W::Layers)) == "layers" &&
                   std::string(DiagF5::CmuWhyName(W::NoLayer)) == "nolayer" &&
+                  std::string(DiagF5::CmuWhyName(W::Cpu)) == "cpu" &&
                   std::string(DiagF5Id::MetaTypeName(DiagF5Id::MetaType::Absent)) == "absent" &&
                   std::string(DiagF5Id::MetaTypeName(DiagF5Id::MetaType::Dcc)) == "Dcc" &&
                   std::string(DiagF5::Name(C::F5CmuKept)) == "f5cmu_kept" &&
-                  std::string(DiagF5::Name(C::CmaskRtBucketOnly)) == "cmask_rt_bucket_only",
+                  std::string(DiagF5::Name(C::CmaskRtBucketOnly)) == "cmask_rt_bucket_only" &&
+                  std::string(DiagF5::Name(C::F5CmuExactCpu)) == "f5cmu_exact_cpu",
               "a name of the new enums or counters");
       DiagF5::StaleProbe p{};
       const bool fresh = !DiagF5::StaleBucketOnly(p);
@@ -10527,6 +10529,22 @@ public:
                       "extent=1920x1080 applied=0 fix=kept why=decode",
               "the event line: " + line);
       F16kOk("pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line)");
+      // Track F, F16k2 (RC5, item 496(b)(5)): the line of a decision without a B42 hit (no `applied`, b42 none / drawn).
+      const auto nohit = DiagF5::FormatCmuNoHit(5, {.present = 7, .gpu = 9, .image = 0x10, .cmask = 0x20, .width = 1024,
+                                                    .height = 1024, .applied = true,
+                                                    .event = {F::KeptApplied, W::None}},
+                                                false);
+      const auto nohit_cpu = DiagF5::FormatCmuNoHit(6, {.present = 1, .gpu = 2, .image = 0x10, .cmask = 0x20, .width = 8,
+                                                        .height = 8, .applied = false,
+                                                        .event = {F::ExactStale, W::Cpu}},
+                                                    true);
+      Require(name, "no-hit line form",
+              nohit == "DiagF5Ev: cmask_fce_nohit n=5 b42=none present=7 gpu=9 image=0x0000000000000010 "
+                       "cmask=0x0000000000000020 extent=1024x1024 fix=kept_applied" &&
+                  nohit_cpu == "DiagF5Ev: cmask_fce_nohit n=6 b42=drawn present=1 gpu=2 image=0x0000000000000010 "
+                               "cmask=0x0000000000000020 extent=8x8 fix=exact_stale why=cpu",
+              "the no-hit line: " + nohit + " | " + nohit_cpu);
+      F16kOk("F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form)");
     }
 
     EnsureRuntimeContext();
@@ -10649,7 +10667,8 @@ public:
       };
       struct Case {
         const char *stage;
-        int writes; // 0 none, 1 neighbour, 2 crossing, 3 nine neighbours, 4 neighbour + no packed decoding
+        int writes; // 0 none, 1 neighbour, 2 crossing, 3 nine neighbours, 4 neighbour + no packed decoding,
+                    // 5 a CPU write on the page of the fill (F16k2, RC4)
         const char *fix_on;
         bool applied_on;
         bool applied_off; // the old path
@@ -10663,6 +10682,8 @@ public:
           {"K3 crossing write: stale by both", 2, "exact_stale", false, false, "<none>", {{C::F5CmuExactStale, 1}}},
           {"K4 K+1 neighbours: ring fallback", 3, "fallback", false, false, "<none>", {{C::F5CmuFallback, 1}}},
           {"K5 kept without a clear (decode refused)", 4, "kept", false, false, "decode", {{C::F5CmuKept, 1}}},
+          {"K8 CPU-modified CMASK page, no crossing GPU write: why=cpu", 5, "exact_stale", false, false, "cpu",
+           {{C::F5CmuExactStale, 1}, {C::F5CmuExactCpu, 1}}},
       };
       for (const auto &k : cases) {
         arm_fill();
@@ -10674,6 +10695,8 @@ public:
           for (uint32_t i = 0; i < 9; i++) {
             BTA::F16kNoteGpuWrite(buffers, meta + 0x2000 + i * 0x100, 0x100);
           }
+        } else if (k.writes == 5) {
+          buffers.InvalidateMemory(meta + 0x100, 4); // a CPU write on the page of the fill, announced as a fault would
         }
         auto &image = TTA::F16dImage(cache, tid);
         const auto backing_format = image.backing.format;
@@ -10695,7 +10718,8 @@ public:
         for (const auto &[counter, amount] : k.counters_on) {
           want.push_back({counter, cmu && f5 ? amount : 0u});
         }
-        for (const auto counter : {C::F5CmuKept, C::F5CmuKeptApplied, C::F5CmuExactStale, C::F5CmuFallback}) {
+        for (const auto counter :
+             {C::F5CmuKept, C::F5CmuKeptApplied, C::F5CmuExactStale, C::F5CmuFallback, C::F5CmuExactCpu}) {
           if (std::none_of(k.counters_on.begin(), k.counters_on.end(),
                            [&](const auto &p) { return p.first == counter; })) {
             want.push_back({counter, 0});
@@ -10721,6 +10745,10 @@ public:
         }
         F16kOk(k.stage);
       }
+      // F16k2: K8 left the CMASK page CPU-modified - a read acquisition uploads it again (K6 sees GPU writes only).
+      (void)buffers.ObtainBuffer(meta, 0x10000, false, false);
+      Require(name, "K8 CPU-clean again", !buffers.IsRegionCpuModified(meta, 0x10000),
+              "the metadata range is still CPU-modified after a read acquisition");
       // K6: a draw-path acquisition of a CMASK target is not decided by the exact check (item 492(b), V-F16i-1): the
       // bucket answer drops the fill with KYTY_FIX_F5CMU on as well; KYTY_DIAG_F5ID counts cmask_rt_bucket_only.
       {
@@ -10747,6 +10775,86 @@ public:
                 event.fix == DiagF5::CmuFix::Off && event.why == DiagF5::CmuWhy::None, "fix != off");
         F16kOk("K6 draw acquisition: old decision, cmask_rt_bucket_only only");
       }
+      RTA::ResetBindings(executor);
+      context.UnmapMemory(base, allocation_size);
+      scheduler.Finish();
+    }
+
+    // ---- K7 (Track F, F16k2, RC5, ROADMAP s122 item 496(b)(5)): an FCE acquisition without a B42 hit - a 1024x1024
+    // target carries CMASK metadata from its registers, so FixB42Probe answers None (cmask_fce_meta) and no cmask_fce
+    // line is printed; a PendingDcc fill of 0 at its CMASK address and a neighbour write in the bucket: with
+    // KYTY_FIX_F5CMU the fill is kept and cleared (kept_applied) and the line cmask_fce_nohit is printed; without it the
+    // old decision (the fill is dropped) and no line.
+    {
+      constexpr uint64_t color = base + 0x1000000;
+      constexpr uint64_t meta = base + 0x1600000;
+      RenderContext context(m_runtime_context);
+      auto &scheduler = context.GetCommandScheduler();
+      HW::Context registers{};
+      HW::UserConfig user_config{};
+      HW::Shader shaders{};
+      registers.SetColorBase(0, {.addr = color});
+      registers.SetColorInfo(0, {.cmask_fast_clear_enable = true,
+                                 .format = Prospero::ChannelLayout::k8_8_8_8,
+                                 .channel_type = Prospero::ChannelType::kUNorm,
+                                 .channel_order = Prospero::ChannelOrder::kStandard});
+      registers.SetColorAttrib2(0, {.height = 1023, .width = 1023});
+      registers.SetColorAttrib3(0, {.tile_mode = Prospero::TileMode::kRenderTarget, .dimension = 1,
+                                    .metadata_pipe_aligned = true});
+      registers.SetColorCmask(0, {.addr = meta});
+      registers.SetColorClearWord0(0, {.word0 = 0xff000000u});
+      registers.SetColorClearWord1(0, {.word1 = 0});
+      registers.SetRenderTargetMask(0x0f);
+      scheduler.Begin(registers, user_config, shaders);
+      context.MapMemory(base, allocation_size);
+      auto &cache = context.GetTextureCache();
+      auto &executor = context.GetRenderExecutor();
+      auto &buffers = context.GetBufferCache();
+      RenderColorInfo target{};
+      RTA::ResolveRenderColorTarget(executor, scheduler.Current(), target, 0);
+      Require(name, "K7 target",
+              target.image_id && target.desc.info.metadata.kind == ImageMetadataKind::Cmask &&
+                  target.desc.info.metadata.range.address == meta && target.desc.info.metadata.range.size == 0x2000,
+              fmt::format("the 1024x1024 CMASK target (kind {} size 0x{:x})",
+                          static_cast<int>(target.desc.info.metadata.kind), target.desc.info.metadata.range.size));
+      const auto tid = target.image_id;
+      (void)buffers.ObtainBuffer(meta, 0x10000, false, false);
+      Require(name, "K7 CPU-clean metadata", !buffers.IsRegionCpuModified(meta, 0x10000),
+              "the metadata range is still CPU-modified after a read acquisition");
+      TTA::F16kEraseMeta(cache, meta);
+      cache.TrackDccFill(meta, 0x2000, 0);
+      BTA::F16kNoteGpuWrite(buffers, meta, 0x2000);
+      cache.StampPendingDccFill();
+      BTA::F16kNoteGpuWrite(buffers, meta + 0x2000, 0x100); // a neighbour in the 64 KB bucket, no overlap
+      const auto lines = F16kCount("DiagF5Ev:");
+      const auto before = F16kRead();
+      RTA::MaterializeColorClears(executor, scheduler.Current());
+      const auto after = cache.QueryMetaFill(meta, tid);
+      const bool applied = after.found && after.cmask && after.fill_value == 0 && after.clear_mask != UINT32_MAX;
+      Require(name, "K7 decision", applied == cmu,
+              fmt::format("applied {} != expected {} (fill 0x{:x} mask 0x{:x})", applied, cmu, after.fill_value,
+                          after.clear_mask));
+      F16kDelta("K7 decision", before,
+                {{C::CmaskFce, f5 ? 1u : 0u}, {C::CmaskFceMeta, f5 ? 1u : 0u}, {C::CmaskFceB42, 0},
+                 {C::CmaskFceUnapplied, 0}, {C::F5CmuKept, cmu && f5 ? 1u : 0u},
+                 {C::F5CmuKeptApplied, cmu && f5 ? 1u : 0u}, {C::F5CmuExactStale, 0}, {C::F5CmuFallback, 0},
+                 {C::F5CmuExactCpu, 0}});
+      if (f5 && cmu) {
+        const auto line = F16kLast("DiagF5Ev: cmask_fce_nohit ");
+        Require(name, "K7 no-hit line",
+                F16kCount("DiagF5Ev:") == lines + 1 && F16kField(line, "b42") == "none" &&
+                    F16kField(line, "fix") == "kept_applied" && F16kField(line, "why") == "<none>" &&
+                    F16kField(line, "applied") == "<none>" && F16kField(line, "n") != "<none>" &&
+                    F16kField(line, "image") == fmt::format("0x{:016x}", color) &&
+                    F16kField(line, "cmask") == fmt::format("0x{:016x}", meta) &&
+                    F16kField(line, "extent") == "1024x1024" && F16kField(line, "present") != "<none>" &&
+                    F16kField(line, "gpu") != "<none>",
+                "the no-hit line: " + line);
+      } else {
+        Require(name, "K7 no line without KYTY_FIX_F5CMU and KYTY_DIAG_F5", F16kCount("DiagF5Ev:") == lines,
+                "a DiagF5Ev line of a decision without a B42 hit: " + F16kLast("DiagF5Ev:"));
+      }
+      F16kOk("K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line");
       RTA::ResetBindings(executor);
       context.UnmapMemory(base, allocation_size);
       scheduler.Finish();
@@ -10987,6 +11095,92 @@ public:
           F16kOk("D12 no DiagF5Id service with the knob off");
         }
       }
+      // D18-D20 (Track F, F16k2, ROADMAP s122 item 496(b)(1)-(3)): wr_after=large, cpu_mod by the CPU write epoch since
+      // the fill, stamp_late. The FCE scan of D11 (slot 1 = `plain`, a DCC address with no entry: R5).
+      {
+        constexpr uint64_t dx_large = base + 0xec0000;
+        constexpr uint64_t dx_cpu = base + 0xed0000;
+        constexpr uint64_t dx_nofill = base + 0xee0000;
+        constexpr uint64_t dx_late = base + 0xef0000;
+        const auto scan2 = [&](uint64_t dcc_address, uint32_t frame) {
+          registers.SetColorDccAddr(1, {.addr = dcc_address});
+          GpuTimeProfiler::SetFrame(frame);
+          RTA::MaterializeColorClears(executor, scheduler.Current());
+          return F16kLast("DiagF5Id: fce ");
+        };
+        for (const auto a : {dx_large, dx_cpu, dx_nofill}) {
+          (void)buffers.ObtainBuffer(a, 0x10000, false, false); // a 64 KB read acquisition uploads (as D0)
+        }
+        Require(name, "D18 CPU-clean ranges",
+                !buffers.IsRegionCpuModified(dx_large, 0x1000) && !buffers.IsRegionCpuModified(dx_cpu, 0x1000) &&
+                    !buffers.IsRegionCpuModified(dx_nofill, 0x1000),
+                "a range is still CPU-modified after a read acquisition");
+        const auto fce0 = F16kCount("DiagF5Id: fce ");
+        // D18: a GPU write of 16 MB + 1 before the fill is not after it (none); one after the fill - large
+        BTA::F16kNoteGpuWrite(buffers, base, 0x1000001);
+        stamp_fill(dx_large, 0x1000, 0);
+        TTA::F16kEraseMeta(cache, dx_large); // no entry: R5, `since` from the module's stamp
+        const auto g1 = scan2(dx_large, 6000);
+        BTA::F16kNoteGpuWrite(buffers, base, 0x1000001); // 16 MB + 1 after the fill
+        const auto g2 = scan2(dx_large, 6001);
+        // D19: cpu_mod - no CPU write after the fill: 0; a CPU write after the fill and a read acquisition that uploads
+        // it (CPU-clean again): 1; no fill stamped at the address: 1
+        stamp_fill(dx_cpu, 0x1000, 0);
+        TTA::F16kEraseMeta(cache, dx_cpu);
+        const auto c1 = scan2(dx_cpu, 6002);
+        buffers.InvalidateMemory(dx_cpu + 0x10, 4);
+        (void)buffers.ObtainBuffer(dx_cpu, 0x10000, false, false);
+        const bool clean_again = !buffers.IsRegionCpuModified(dx_cpu, 0x1000);
+        const auto c2 = scan2(dx_cpu, 6003);
+        const auto c3 = scan2(dx_nofill, 6004);
+        if (id) {
+          Require(name, "D18 wr_after=large",
+                  F16kField(g1, "dcc") == fmt::format("0x{:016x}", dx_large) && F16kField(g1, "wr_after") == "none" &&
+                      F16kField(g2, "dcc") == fmt::format("0x{:016x}", dx_large) &&
+                      F16kField(g2, "wr_after") == "large",
+                  "the fce lines: " + g1 + " | " + g2);
+          F16kOk("D18 wr_after=large after a GPU write of 16 MB + 1 (none before the fill)");
+          Require(name, "D19 cpu_mod by the CPU write epoch since the fill",
+                  clean_again && F16kField(c1, "dcc") == fmt::format("0x{:016x}", dx_cpu) &&
+                      F16kField(c1, "cpu_mod") == "0" && F16kField(c2, "dcc") == fmt::format("0x{:016x}", dx_cpu) &&
+                      F16kField(c2, "cpu_mod") == "1" &&
+                      F16kField(c3, "dcc") == fmt::format("0x{:016x}", dx_nofill) && F16kField(c3, "cpu_mod") == "1",
+                  fmt::format("clean again {} | {} | {} | {}", clean_again, c1, c2, c3));
+          F16kOk("D19 cpu_mod: 0 without a CPU write, 1 after a CPU write and its upload, 1 without a fill");
+        } else {
+          Require(name, "D18-D19 nothing with KYTY_DIAG_F5ID off", F16kCount("DiagF5Id: fce ") == fce0,
+                  "an fce line with the knob off");
+          F16kOk("D18-D19 no fce line with KYTY_DIAG_F5ID off");
+        }
+        // D20: stamp_late - a fill whose dispatch returned before StampPendingDccFill (the end of DispatchDirect calls
+        // F5IdNoteStampLate): counted once; a stamped fill: not counted; TrackDccFill over a stamp not taken: counted.
+        cache.StampPendingDccFill();
+        const auto late0 = DiagF5Id::Count("stamp_late");
+        cache.TrackDccFill(dx_late, 0x1000, 0);
+        cache.F5IdNoteStampLate();
+        cache.F5IdNoteStampLate();
+        const auto late1 = DiagF5Id::Count("stamp_late") - late0;
+        cache.TrackDccFill(dx_late + 0x1000, 0x1000, 0); // over the stamp counted above: not again
+        cache.StampPendingDccFill();
+        cache.F5IdNoteStampLate();
+        const auto late2 = DiagF5Id::Count("stamp_late") - late0;
+        cache.TrackDccFill(dx_late + 0x2000, 0x1000, 0);
+        cache.TrackDccFill(dx_late + 0x3000, 0x1000, 0); // finds a stamp not taken and not counted
+        cache.StampPendingDccFill();
+        const auto late3 = DiagF5Id::Count("stamp_late") - late0;
+        Require(name, "D20 stamp_late", late1 == (id ? 1u : 0u) && late2 == late1 && late3 == (id ? 2u : 0u),
+                fmt::format("late {} {} {}", late1, late2, late3));
+        if (id) {
+          (void)DiagF5Id::ServiceAt(8000, true); // >= 600 frames before the sum line of S3 (frame 9000)
+          const auto sum = F16kLast("DiagF5Id: sum ");
+          const auto at_late = sum.find(" stamp_late=");
+          Require(name, "D20 stamp_late in the sum line",
+                  F16kField(sum, "stamp_late") == std::to_string(late0 + 2) && at_late != std::string::npos &&
+                      at_late > sum.find(" overflow_cs=") && at_late < sum.find(" marks="),
+                  "sum: " + sum);
+        }
+        F16kOk("D20 stamp_late: once per stamp not taken, the last counter of the sum line");
+      }
       // D17: the refused entry and the buffer size in the KYTY_DIAG_F5ID side of TryConsumeComputeMetaClear
       {
         cache.TrackDccFill(dcc, msize, 0x20202020u); // the DCC entry of the target (type Dcc after D1-D3)
@@ -11156,9 +11350,11 @@ public:
       const auto g = [](C c) { return DiagF5::Get(c); };
       Require(name, "Z f5cmu_* only with KYTY_FIX_F5CMU and KYTY_DIAG_F5",
               (cmu && f5) || (g(C::F5CmuKept) == 0 && g(C::F5CmuKeptApplied) == 0 && g(C::F5CmuExactStale) == 0 &&
-                              g(C::F5CmuFallback) == 0),
+                              g(C::F5CmuFallback) == 0 && g(C::F5CmuExactCpu) == 0),
               "an f5cmu counter moved");
       Require(name, "Z identity kept_applied <= kept", g(C::F5CmuKeptApplied) <= g(C::F5CmuKept), "kept_applied > kept");
+      Require(name, "Z identity exact_cpu <= exact_stale (F16k2)", g(C::F5CmuExactCpu) <= g(C::F5CmuExactStale),
+              "f5cmu_exact_cpu > f5cmu_exact_stale");
       Require(name, "Z F26 only with KYTY_DIAG_F5ID",
               id || (g(C::DccStaleBucketOnly) == 0 && g(C::DccStaleFallback) == 0 && g(C::CmaskRtBucketOnly) == 0),
               "an F26 counter moved");

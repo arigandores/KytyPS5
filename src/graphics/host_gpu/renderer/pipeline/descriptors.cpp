@@ -3882,10 +3882,22 @@ void F5IdNoteFceMiss(TextureCache& cache, BufferCache& buffers, uint32_t slot, c
 	if (e.dcc_size != 0) {
 		const auto since = std::max(before.fill_seq, DiagF5Id::FillSeq(e.dcc));
 		const auto exact = buffers.LastGpuWriteSeqExact(e.dcc, e.dcc_size, since);
+		// Track F, F16k2 (RC1, ROADMAP s122 item 496(b)(1)): no crossing bucket write after `since`, but a GPU write larger
+		// than 16 MB (no bucket, no ring, any address) is newer than `since` - wr_after=large.
+		const bool large = exact.seq == 0 && buffers.LargeGpuWriteSeq() > since;
 		e.wr_after       = exact.seq != 0    ? DiagF5Id::WrAfter::Exact
+		                   : large          ? DiagF5Id::WrAfter::Large
 		                   : exact.fallback ? DiagF5Id::WrAfter::Fallback
 		                                    : DiagF5Id::WrAfter::None;
-		e.cpu_mod        = buffers.IsRegionCpuModified(e.dcc, e.dcc_size) ? 1 : 0;
+		// Track F, F16k2 (RC2, item 496(b)(2)): CPU-modified now, or the CPU write epoch of the range moved since the epoch
+		// stamped with the last fill at `dcc`; no fill stamped there, or an untracked range at the stamp - 1 (the tracker
+		// has no epoch of the process start: a region is created lazily with every page CPU-dirty).
+		uint64_t   fill_epoch = 0;
+		const bool seen       = DiagF5Id::FillCpuEpoch(e.dcc, &fill_epoch);
+		const bool cpu_now    = buffers.IsRegionCpuModified(e.dcc, e.dcc_size);
+		e.cpu_mod = cpu_now || !seen || fill_epoch == 0 || buffers.F5IdRangeWriteEpoch(e.dcc, e.dcc_size) != fill_epoch
+		                ? 1
+		                : 0;
 	}
 	DiagF5Id::NoteFce(e);
 }
@@ -3976,6 +3988,21 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 				               (f5_info.extent.width % 1024u == 0 && f5_info.extent.height % 1024u == 0))
 				                ? DiagF5::Counter::CmaskFceLayout
 				                : DiagF5::Counter::CmaskFceNoFill);
+			}
+			// Track F, F16k2 (RC5, ROADMAP s122 item 496(b)(5)): a decision of the FCE acquisition above without a B42 hit (no
+			// cmask_fce line): the target carried CMASK metadata already (FixB42Probe answered None) or a drawn fill; printed
+			// when the decision is not off / fresh, under its own limit of 64.
+			if (DiagF5::On() && b42.kind != FixB42Kind::Hit && f5_cmu.fix != DiagF5::CmuFix::Off &&
+			    f5_cmu.fix != DiagF5::CmuFix::Fresh) [[unlikely]] {
+				(void)DiagF5::NoteCmuNoHit({.present = DiagF5::Present(),
+				                            .gpu     = GpuTimeProfiler::Frame(),
+				                            .image   = color.desc.info.data.address,
+				                            .cmask   = rt.cmask.addr,
+				                            .width   = color.desc.info.extent.width,
+				                            .height  = color.desc.info.extent.height,
+				                            .applied = false,
+				                            .event   = f5_cmu},
+				                           b42.kind == FixB42Kind::Drawn);
 			}
 			continue;
 		}

@@ -80,12 +80,16 @@ public:
 	~F5IdCsHolder() {
 		if (m_d) [[unlikely]] {
 			DiagF5Id::Emit(*m_d, m_refusals);
+			// Track F, F16k2 (RC3, ROADMAP s122 item 496(b)(3)): the end of DispatchDirect - a fill stamp this dispatch left
+			// untaken (a return before StampPendingDccFill) counts stamp_late (m_lock after the render mutex, as the stamp).
+			m_cache->F5IdNoteStampLate();
 		}
 	}
 	F5IdCsHolder(const F5IdCsHolder&)            = delete;
 	F5IdCsHolder& operator=(const F5IdCsHolder&) = delete;
 
-	void Arm(const ShaderComputeInputInfo& input) {
+	void Arm(const ShaderComputeInputInfo& input, TextureCache& cache) {
+		m_cache = &cache;
 		m_d.emplace();
 		m_d->shader      = input.stage.program->shader_hash;
 		m_d->frame       = GpuTimeProfiler::Frame();
@@ -120,6 +124,7 @@ public:
 private:
 	const DiagF5::CsRefusals&           m_refusals;
 	std::optional<DiagF5Id::CsDispatch> m_d;
+	TextureCache*                       m_cache = nullptr; // Track F, F16k2: set by Arm
 };
 
 bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& input,
@@ -630,7 +635,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	// dispatch's outcome (F5IdCsHolder); nothing is built with the knob off.
 	F5IdCsHolder f5id {f5_refusals};
 	if (DiagF5Id::On()) [[unlikely]] {
-		f5id.Arm(input_info);
+		f5id.Arm(input_info, m_context.GetTextureCache());
 	}
 	if (!indirect && !floor_clear_skip &&
 	    TryConsumeComputeMetaClear(input_info, buffer, f5_on ? &f5_refusals : nullptr, f5id.Get())) {

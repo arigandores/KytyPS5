@@ -1,0 +1,19 @@
+2 res['hold_us'] >= HOLD_MIN_US -> res['hold_us'] > HOLD_MIN_US
+1 s.replace('/', '\\').endswith('\\' + DIR_FIX) -> ('_fixf19' in s)
+1 if dt >= K2_US: -> if dt > K2_US:
+2 (res['idx_records'] or 0) >= VIDEO_MIN -> (res['idx_records'] or 0) > VIDEO_MIN
+1 not res['gamepatch'] -> True
+1 res['vkw'] > 0 -> True
+2 sha_b == WANT -> True
+1 len(rc) == (res['rdc_n'] or 0) -> True
+3 if c['A'] > 0 or c['D'] > 0: -> if c['D'] > 0:
+1 if c['A'] > 0 or c['D'] > 0: -> if c['A'] > 0:
+1 cen == '1' and cop == LEQ and mag == LIN and mn == LIN -> cen == '1' and cop == LEQ and mag == LIN
+1 cen == '1' and cop == LEQ and mag == LIN and mn == LIN -> cen == '1' and mag == LIN and mn == LIN
+1 if c['records'] == 0: -> if False:
+1 if c['B'] >= 1 and c['C'] == c['B']: -> if c['C'] == c['B']:
+2 res['sum_records'] == recs and -> True or
+1 if b'06479' in raw: -> if False:
+5 if vf == D16: -> if vf in (D16, 'VK_FORMAT_D32_SFLOAT'):
+5 k01[0]['letter'] == 'ACTS_IN_FRAME' -> True
+SENS ALL OK

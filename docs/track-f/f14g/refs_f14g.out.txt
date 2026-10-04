@@ -1,0 +1,9 @@
+OK   19f7b753:docs/ROADMAP.md:21621 anchor 975cfc6c8a0d plus1 e56ccb12318f
+OK   19f7b753:docs/ROADMAP.md:21696 anchor c6687594d236 plus1 e928dde15b48
+OK   19f7b753:docs/ROADMAP.md:21703 anchor ef62a0a70229 plus1 de22e8a41c12
+OK   19f7b753:docs/ROADMAP.md:22412 anchor 43dd6782a6cd plus1 ae6800ac34aa
+OK   2251af73:docs/track-f/f12f.md:203 anchor 56213827e6ad plus1 b497728a4e4e
+OK   2251af73:docs/track-f/f12f.md:40 anchor 93e9fe1f98ab plus1 fd6042a16521
+OK   1c40a04a:docs/track-f/f14c/rd_cmp_f14c.py:1 anchor 48a2c6707762 plus1 9d4cf8d1dc9e
+refs 7
+ALL OK

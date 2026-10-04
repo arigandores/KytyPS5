@@ -1,0 +1,17 @@
+groups	37
+paths	220017
+events	1791120
+next_call_events	1791120
+class HIT_OTHER_DIR	paths 3324	events 111479
+class HIT_OTHER_EXT	paths 216	events 193032
+class STEM_ELSEWHERE	paths 179767	events 1166803
+class NOWHERE	paths 36710	events 319806
+ext .odx	paths 100599	events 975508
+ext .odxb	paths 101556	events 685593
+ext .anim	paths 16029	events 87312
+ext <dir or no ext>	paths 1244	events 25767
+ext .json	paths 524	events 16788
+ext .lvx	paths 54	events 118
+ext .jxm	paths 10	events 32
+ext .cx	paths 1	events 2
+ALL OK

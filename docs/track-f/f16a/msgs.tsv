@@ -1,0 +1,29 @@
+message	logs	lines	distinct_texts
+align_base	282	7318	0
+align_size	282	7600	0
+color_meta	282	282	1
+ds_unbound	268	268	0
+meta_addr	282	282	1
+no_texture	293	586	2
+round_mode	282	282	0
+stereo	282	4512	1
+zero_disp	282	8736	12
+
+message	text	logs	lines	first
+color_meta	RenderTarget: temporary: ignoring PS5 color metadata fast_clear=false dcc=true cmask=0x0000000000000000 dcc_addr=0x000000056d88c000	282	282	C:/kyty/f287/f10e/log_f10e_r1.txt:118806
+meta_addr	RenderTarget: temporary: ignoring PS5 metadata addresses cmask=0x0000000000000000 fmask=0x0000000000000000 dcc=0x000000056d88c000	282	282	C:/kyty/f287/f10e/log_f10e_r1.txt:118808
+no_texture	Format vk::Format::eB8G8R8A8Srgb cannot be used as texture	293	293	C:/kyty/f287/f10e/log_f10e_r1.txt:63
+no_texture	Format vk::Format::eR8G8B8A8Srgb cannot be used as texture	293	293	C:/kyty/f287/f10e/log_f10e_r1.txt:62
+stereo	warning: ignoring indirect uc reg GE_STEREO_CNTL at 0x25f, value = 0x00000000	282	4512	C:/kyty/f287/f10e/log_f10e_r1.txt:55593
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x00002041 shader=0x0000000500763300	282	810	C:/kyty/f287/f10e/log_f10e_r1.txt:314582
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x00002041 shader=0x0000000500764a00	282	810	C:/kyty/f287/f10e/log_f10e_r1.txt:314584
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x00002041 shader=0x0000000500766900	282	810	C:/kyty/f287/f10e/log_f10e_r1.txt:314586
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x00008041 shader=0x0000000500760b00	282	810	C:/kyty/f287/f10e/log_f10e_r1.txt:314579
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x00008041 shader=0x000000050076a700	282	564	C:/kyty/f287/f10e/log_f10e_r1.txt:314590
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x0000a041 shader=0x000000050075b700	282	810	C:/kyty/f287/f10e/log_f10e_r1.txt:302186
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x0000a041 shader=0x000000050075cc00	282	810	C:/kyty/f287/f10e/log_f10e_r1.txt:303002
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x0000a041 shader=0x0000000500761600	282	810	C:/kyty/f287/f10e/log_f10e_r1.txt:314581
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x0000a041 shader=0x0000000500768200	282	810	C:/kyty/f287/f10e/log_f10e_r1.txt:314587
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x0000a041 shader=0x0000000500768d00	282	564	C:/kyty/f287/f10e/log_f10e_r1.txt:314588
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x0000a041 shader=0x0000000500769a00	282	564	C:/kyty/f287/f10e/log_f10e_r1.txt:314589
+zero_disp	GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=0x1x1 mode=0x0000a041 shader=0x000000050076c100	282	564	C:/kyty/f287/f10e/log_f10e_r1.txt:314591

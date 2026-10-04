@@ -1,0 +1,76 @@
+logs	298
+odx_stem_log_pairs_enoent_file_in_package	51851
+odx_stem_log_pairs_reached	4831
+odx_stem_log_pairs_unreached	47020
+odx_stem_log_pairs_enoent_no_file_in_package	119241
+odx_unreached_distinct_stems	46
+open_enoent_distinct_paths	99
+open_enoent_requests	27649
+open_enoent_next_kinds	{"open_other": 27320, "stat_other": 329}
+open_enoent_max_requests_one_path_one_log	2
+
+unreached stems (stem, logs, first log):
+nx_ui_worldmap_bot_icon~~185	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~186	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~191	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~192	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~196	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~197	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~199	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~202	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~203	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~204	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~205	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~208	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~210	280	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~120	279	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~105	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~106	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~118	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~128	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~129	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~131	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~132	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~133	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~15	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~156	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~158	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~159	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~161	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~162	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~173	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~174	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~179	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~18	278	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~153	277	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~154	277	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~195	277	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~112	276	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~113	276	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~167	275	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~169	275	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~10	194	C:/kyty/f287/f11f/log_d11_bh.txt
+nx_ui_worldmap_bot_icon~~211	118	C:/kyty/f287/f10e/log_f10e_r1.txt
+nx_ui_worldmap_bot_icon~~212	24	C:/kyty/f287/f6e/log_f6e_b1.txt
+nx_ui_worldmap_bot_icon~~213	4	C:/kyty/s143/log_v143_10.txt
+nx_ui_worldmap_bot_icon~~214	2	C:/kyty/s143/log_v143_10.txt
+nx_ui_worldmap_bot_icon~~215	2	C:/kyty/s143/log_v143_10.txt
+nx_ui_worldmap_bot_icon~~347	2	C:/kyty/s146/log_v146_07.txt
+
+empty resource names (path, logs, events, max events one log) and samples:
+/app0/.anim	43	2968	245
+    C:/kyty/f287/f11f/log_d11_bh.txt line 155726 prev: KernelOpen /app0/data/prein/levels/big_hand_pirate_island/layers/wildlife_layer/anim/8B234FC0-C7EC-4599-9F54-705AA6DD0B52.anim next: KernelStat /app0/data/prein/levels/big_hand_pirate_island/cinematics/controllership_landing/anim/AE87BB34-4FB7-6A17-3110-3ABEE94798CB_1.anim
+    C:/kyty/f287/f11f/log_d11_ef.txt line 158047 prev: KernelStat /app0/data/prein/bg/gfx/light_flare_default.jxm next: KernelStat /app0/data/prein/levels/enemy_final/cinematics/fake_death_cinematics_c01/anim/EAF0ED36-485A-8C0A-9C18-8587655A57BF_1.anim
+    C:/kyty/f287/f11f/log_d11_ef.txt line 158055 prev: KernelStat /app0/data/prein/common/anim/level_object_locator_anim_initial.anim next: KernelStat /app0/data/prein/levels/enemy_final/cinematics/fake_death_cinematics_c01/anim/73864363-49A0-080A-192F-7191EFAA474B_1.anim
+    C:/kyty/f287/f12f/log_f12_bh.txt line 270466 prev: KernelOpen /app0/data/prein/levels/big_hand_pirate_island/layers/wildlife_layer/anim/8B234FC0-C7EC-4599-9F54-705AA6DD0B52.anim next: KernelStat /app0/data/prein/levels/big_hand_pirate_island/cinematics/controllership_landing/anim/AE87BB34-4FB7-6A17-3110-3ABEE94798CB_1.anim
+    C:/kyty/f287/f13a/log_f13_k.txt line 101081 prev: KernelOpen /app0/data/prein/characters/gfx/mup_ch_tex_enemy_ropeboss_eyes_d.gnfp next: KernelStat /app0/data/prein/levels/ending_boss_after_credit/cinematics/ending_boss_after_credit/anim/50EC5222-47DB-6FFC-B03E-F3BC053618C5_1.anim
+    C:/kyty/f287/f13a/log_f13_k.txt line 101086 prev: KernelStat /app0/data/prein/common/anim/level_object_locator_anim_initial.anim next: KernelStat /app0/data/prein/levels/ending_boss_after_credit/cinematics/ending_boss_after_credit/anim/155B5D3E-41E4-2F21-47E1-D6847E03120A_1.anim
+/app0/data/prein/save_data/.xml	282	564	2
+    C:/kyty/f287/f10e/log_f10e_r1.txt line 258837 prev: KernelOpen /app0/data/prein/save_data/atlantis_eel.xml next: KernelOpen /app0/data/prein/save_data/balloon_platform.xml
+    C:/kyty/f287/f10e/log_f10e_r1.txt line 259799 prev: KernelOpen /app0/data/prein/save_data/enemy_silkhat.xml next: KernelOpen /app0/data/prein/save_data/enemy_smoke.xml
+    C:/kyty/f287/f10e/log_f10e_w.txt line 250812 prev: KernelOpen /app0/data/prein/save_data/atlantis_eel.xml next: KernelOpen /app0/data/prein/save_data/balloon_platform.xml
+    C:/kyty/f287/f10e/log_f10e_w.txt line 251711 prev: KernelOpen /app0/data/prein/save_data/enemy_silkhat.xml next: KernelOpen /app0/data/prein/save_data/enemy_smoke.xml
+    C:/kyty/f287/f11f/log_d11_bh.txt line 163360 prev: KernelOpen /app0/data/prein/save_data/atlantis_eel.xml next: KernelOpen /app0/data/prein/save_data/balloon_platform.xml
+    C:/kyty/f287/f11f/log_d11_bh.txt line 164259 prev: KernelOpen /app0/data/prein/save_data/enemy_silkhat.xml next: KernelOpen /app0/data/prein/save_data/enemy_smoke.xml
+
+ALL OK

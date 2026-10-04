@@ -1,0 +1,42 @@
+logs_in_sweep	386
+duplicate_sha256	88
+distinct_logs	298
+bytes	105121339272
+lines	490053680
+logs_with_file_not_found	282
+file_not_found_lines	1791120
+kernelstat_lines	2509917
+kernelstat_app_mount	2509917
+kernelstat_app_absent_from_package	1791120
+absent_but_next_line_not_nf	301608
+present_but_next_line_nf	523
+nf_lines_not_after_kernelstat	301085
+logs_with_thread_headers_KernelStat	0
+enoent_stat_distinct_paths	220017
+enoent_stat_events	1791120
+enoent_stat_events_other_mounts	0
+logs_identity_events_eq_nf_lines	298
+logs_identity_broken	0
+paths_exact_in_package	0
+paths_parent_dir_exists	194022
+paths_same_name_other_dir	3324
+paths_same_stem_other_ext_same_dir	278
+paths_same_stem_other_ext_anywhere	181299
+paths_other_mount	0
+paths_by_mount	{"app0": 220017}
+paths_no_candidate_at_all	36710
+families	219029
+next_call_kinds	{"open_other": 117132, "stat_family": 310387, "stat_other": 188425, "stat_samestem": 1175176}
+next_call_events	1791120
+kernelopen_requests	6481464
+kernelopen_unmatched_distinct	99
+kernelopen_unmatched_by_package	{"absent": 98, "exact": 1}
+msg_logs	{"align_base": 282, "align_size": 282, "color_meta": 282, "ds_unbound": 268, "meta_addr": 282, "no_texture": 293, "round_mode": 282, "stereo": 282, "zero_disp": 282}
+msg_lines	{"align_base": 7318, "align_size": 7600, "color_meta": 282, "ds_unbound": 268, "meta_addr": 282, "no_texture": 586, "round_mode": 282, "stereo": 4512, "zero_disp": 8736}
+other_mount_roots_found	["_DownloadData", "_TempData", "_SaveData"]
+package_files	156253
+package_dirs	1952
+
+identity broken (path, nf_lines, events, miss_noadj, adj_inpkg, nf_unattr):
+
+ALL OK

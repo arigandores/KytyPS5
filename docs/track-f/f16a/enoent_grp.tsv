@@ -1,0 +1,38 @@
+dir	ext	paths	events	logs_max	max_events_one_path_one_log	parent_dir_absent	paths_HIT_OTHER_DIR	paths_HIT_OTHER_EXT	paths_STEM_ELSEWHERE	paths_NOWHERE	stat_same	stat_family	stat_samestem	stat_other	open_same	open_samestem	open_other	none	sample	first
+/app0/data/prein/ui/odx	.odx	12816	434436	282	13	0	0	171	11206	1439	0	310387	73549	1873	0	0	48627	0	/app0/data/prein/ui/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odx	C:/kyty/s145/log_v145_06.txt:347887
+/app0/data/prein/odx	.odxb	13034	105843	282	2016	13034	532	0	11204	1298	0	0	101602	24	0	0	4217	0	/app0/data/prein/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odxb	C:/kyty/s145/log_v145_06.txt:347864
+/app0/data/prein/common/odx	.odxb	13002	102854	282	2016	0	500	0	11204	1298	0	0	99303	28	0	0	3523	0	/app0/data/prein/common/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odxb	C:/kyty/s145/log_v145_06.txt:347868
+/app0/data/prein/bg/odx	.odxb	12715	89469	282	1306	0	213	0	11204	1298	0	0	85578	14	0	0	3877	0	/app0/data/prein/bg/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odxb	C:/kyty/s145/log_v145_06.txt:347872
+/app0/data/prein/characters/odx	.odxb	12528	77451	208	21	0	26	0	11204	1298	0	0	73802	22	0	0	3627	0	/app0/data/prein/characters/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odxb	C:/kyty/s145/log_v145_06.txt:347876
+/app0/data/prein/odx	.odx	12501	77246	235	13	12501	0	0	11208	1293	0	0	73804	13	0	0	3429	0	/app0/data/prein/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odx	C:/kyty/s145/log_v145_06.txt:347866
+/app0/data/prein/effects/odx	.odxb	12520	77041	208	21	0	18	0	11204	1298	0	0	73460	18	0	0	3563	0	/app0/data/prein/effects/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odxb	C:/kyty/s145/log_v145_06.txt:347880
+/app0/data/prein/bg/odx	.odx	12500	77011	208	13	0	0	0	11207	1293	0	0	73630	12	0	0	3369	0	/app0/data/prein/bg/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odx	C:/kyty/s145/log_v145_06.txt:347874
+/app0/data/prein/characters/odx	.odx	12500	77011	208	13	0	0	0	11207	1293	0	0	73597	10	0	0	3404	0	/app0/data/prein/characters/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odx	C:/kyty/s145/log_v145_06.txt:347878
+/app0/data/prein/ui/odx	.odxb	12506	76907	208	13	0	4	0	11204	1298	0	0	73596	12	0	0	3299	0	/app0/data/prein/ui/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odxb	C:/kyty/s145/log_v145_06.txt:347885
+/app0/data/prein/effects/odx	.odx	12499	76860	208	13	0	0	0	11206	1293	0	0	73415	22	0	0	3423	0	/app0/data/prein/effects/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odx	C:/kyty/s145/log_v145_06.txt:347883
+/app0/data/prein/common/odx	.odx	12498	76857	208	5	0	0	0	11205	1293	0	0	73546	12	0	0	3299	0	/app0/data/prein/common/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odx	C:/kyty/s145/log_v145_06.txt:347870
+/app0/data/prein/text/odx	.odxb	12503	76750	208	10	0	1	0	11204	1298	0	0	73677	14	0	0	3059	0	/app0/data/prein/text/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odxb	C:/kyty/s145/log_v145_06.txt:347889
+/app0/data/prein/proto/odx	.odxb	12502	76747	208	10	0	0	0	11204	1298	0	0	73404	27	0	0	3316	0	/app0/data/prein/proto/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odxb	C:/kyty/s145/log_v145_06.txt:347893
+/app0/data/prein/proto/odx	.odx	12497	76706	208	5	0	0	0	11204	1293	0	0	41	65509	0	0	11156	0	/app0/data/prein/proto/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odx	C:/kyty/s145/log_v145_06.txt:347895
+/app0/data/prein/text/odx	.odx	12497	76706	208	5	0	0	0	11204	1293	0	0	73601	14	0	0	3091	0	/app0/data/prein/text/odx/0001311F-4583-67F6-2198-91B5D8F2C2B9.odx	C:/kyty/s145/log_v145_06.txt:347891
+/app0/data/prein/levels/*/anim	.anim	12033	72390	86	1	450	0	0	0	12033	0	0	0	72180	0	0	210	0	/app0/data/prein/levels/armadillo_challenge_1/anim/111BDE80-4880-1C13-604A-6EBB2BF06927_1.anim	C:/kyty/s146/log_v146_16.txt:97762
+/app0/data/prein/levels/*	<dir or no ext>	152	19946	282	66	0	152	0	0	0	0	0	0	18252	0	0	1694	0	/app0/data/prein/levels/armadillo_challenge_1/cinematics	C:/kyty/s146/log_v146_16.txt:85799
+/app0/data/prein/levels/*	.json	98	12019	282	184	0	98	0	0	0	0	0	0	6967	0	0	5052	0	/app0/data/prein/levels/armadillo_challenge_1/settings.json	C:/kyty/s146/log_v146_16.txt:85555
+/app0/data/prein/levels/*/cinematics/*/anim	.anim	3292	7833	11	2	6	204	0	0	3088	0	0	0	7820	0	0	13	0	/app0/data/prein/levels/big_hand_pirate_island/cinematics/controllership_landing/anim/AE87BB34-4FB7-6A17-3110-3ABEE94798CB.anim	C:/kyty/f287/f11f/log_d11_bh.txt:158882
+/app0/data/prein/levels/*/layers/*	<dir or no ext>	967	5454	86	6	0	967	0	0	0	0	0	326	5124	0	0	4	0	/app0/data/prein/levels/armadillo_challenge_1/layers/prompt_layer/anim	C:/kyty/s146/log_v146_16.txt:85722
+/app0/data/prein/levels/*/layers/*/anim	.anim	703	4121	86	1	0	0	0	0	703	0	0	0	4078	0	0	43	0	/app0/data/prein/levels/big_hand_pirate_island/layers/astro_behaviour_layer/anim/1A55D8C6-4D17-578B-772B-908414AD4D11_1.anim	C:/kyty/f287/f11f/log_d11_bh.txt:146011
+/app0/data/prein/levels/*/layers/*	.json	363	3459	86	318	0	363	0	0	0	0	0	0	2016	0	0	1443	0	/app0/data/prein/levels/armadillo_challenge_1/layers/prompt_layer/settings.json	C:/kyty/s146/log_v146_16.txt:85724
+/app0	.anim	1	2968	43	245	0	0	0	0	1	0	0	0	2964	0	0	4	0	/app0/.anim	C:/kyty/f287/f11f/log_d11_bh.txt:155726
+/app0/data/prein/generated/odx	.odx	275	1715	86	5	0	0	45	230	0	0	0	1712	1	0	0	2	0	/app0/data/prein/generated/odx/00A95AF7-4E1B-ECD0-DE3C-01B612DE2B23.odx	C:/kyty/s143/log_v143_01.txt:131086
+/app0/data/prein/generated/odx	.odxb	230	1571	86	5	0	0	0	230	0	0	0	1568	0	0	0	3	0	/app0/data/prein/generated/odx/00A95AF7-4E1B-ECD0-DE3C-01B612DE2B23.odxb	C:/kyty/s143/log_v143_01.txt:131088
+/app0/data/prein/haptics	.json	1	1128	282	4	0	0	0	0	1	0	0	0	867	0	0	261	0	/app0/data/prein/haptics/haptics_list.json	C:/kyty/f287/f10e/log_f10e_r1.txt:143005
+/app0/data	.odx	14	806	235	3	0	0	0	14	0	0	0	806	0	0	0	0	0	/app0/data/credits_voxel_face.odx	C:/kyty/s145/log_v145_06.txt:150134
+/app0/data	.odxb	14	806	235	3	0	2	0	12	0	0	0	806	0	0	0	0	0	/app0/data/credits_voxel_face.odxb	C:/kyty/s145/log_v145_06.txt:150132
+/app0/data/prein/levels/*/cinematics/*	<dir or no ext>	125	367	11	1	0	125	0	0	0	0	0	140	224	0	0	3	0	/app0/data/prein/levels/big_hand_pirate_island/cinematics/controllership_landing/cinematics	C:/kyty/f287/f11f/log_d11_bh.txt:89019
+/app0/data/prein/levels/*/cinematics/*	.json	62	182	11	1	0	62	0	0	0	0	0	0	182	0	0	0	0	/app0/data/prein/levels/big_hand_pirate_island/cinematics/controllership_landing/settings.json	C:/kyty/f287/f11f/log_d11_bh.txt:89015
+/app0/data/prein/texts/odx	.odx	2	154	11	13	2	0	0	2	0	0	0	63	0	0	0	91	0	/app0/data/prein/texts/odx/big_hand_block_coin.odx	C:/kyty/f287/f11f/log_d11_bh.txt:226107
+/app0/data/prein/texts/odx	.odxb	2	154	11	13	2	2	0	0	0	0	0	146	0	0	0	8	0	/app0/data/prein/texts/odx/big_hand_block_coin.odxb	C:/kyty/f287/f11f/log_d11_bh.txt:226103
+/app0/data/prein/levels/*/cinematics/*	.lvx	52	114	7	1	0	52	0	0	0	0	0	0	114	0	0	0	0	/app0/data/prein/levels/enemy_bird/cinematics/aloy_cinematics_c02_a/level.lvx	C:/kyty/s145/log_v145_15.txt:86976
+/app0/data/prein/characters/gfx	.jxm	10	32	5	1	0	0	0	0	10	0	0	0	10	0	0	22	0	/app0/data/prein/characters/gfx/prop_chloe_costume.lod0.jxm	C:/kyty/s146/log_v146_06.txt:336180
+/app0/data/prein/levels/*/layers/*	.lvx	2	4	2	1	0	2	0	0	0	0	0	4	0	0	0	0	0	/app0/data/prein/levels/hub_crashsite/layers/gfx/level.lvx	C:/kyty/s146/log_v146_07.txt:1818615
+/app0/data/prein/levels/*/cinematics/*	.cx	1	2	2	1	0	1	0	0	0	0	0	0	2	0	0	0	0	/app0/data/prein/levels/non_interactive_credit/cinematics/ending_boss_after_credit/cinematics.cx	C:/kyty/s146/log_v146_07.txt:88540

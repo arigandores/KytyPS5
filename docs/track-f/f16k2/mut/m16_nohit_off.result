@@ -1,0 +1,5 @@
+=== arm f5 (KYTY_DIAG_F5=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at K7 no line without KYTY_FIX_F5CMU and KYTY_DIAG_F5: a DiagF5Ev line of a decision without a B42 hit: DiagF5Ev: cmask_fce_nohit n=1 b42=none present=0 gpu=0 image=0x0000000208000000 cmask=0x0000000208600000 extent=1024x1024 fix=off
+=== arm f5_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at K7 no line without KYTY_FIX_F5CMU and KYTY_DIAG_F5: a DiagF5Ev line of a decision without a B42 hit: DiagF5Ev: cmask_fce_nohit n=1 b42=none present=0 gpu=0 image=0x0000000208000000 cmask=0x0000000208600000 extent=1024x1024 fix=off
+CAUGHT

@@ -1,0 +1,80 @@
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.h:127 | F5CmuExactCpu, | +1: Count
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.h:204 | enum class CmuWhy : uint8_t { None, Value, Mask, Range, Partial, Decod | +1: [[nodiscard]] const char* CmuFixName(CmuFix fix);
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.h:223 | bool cpu           = false; | +1: };
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.h:258 | [[nodiscard]] std::string FormatCmuNoHit(uint64_t n, const CmuEventLin | +1: bool                      NoteCmuNoHit(const CmuEventLine& line, bool drawn);
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.h:259 | bool                      NoteCmuNoHit(const CmuEventLine& line, bool  | +1: 
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.h:299 | enum class WrAfter : uint8_t { None, Exact, Fallback, Na, Large }; | +1: struct FceEvent {
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.h:379 | void     NoteFillSeq(uint64_t address, uint64_t seq, uint64_t cpu_epoc | +1: [[nodiscard]] uint64_t FillSeq(uint64_t address);
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.h:381 | [[nodiscard]] bool     FillCpuEpoch(uint64_t address, uint64_t* cpu_ep | +1: // Track F, F16k2 (RC3, item 496(b)(3)): a fill stamp its dispatch left untaken (TextureCa
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.h:384 | void NoteStampLate(); | +1: 
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:218 | "f5cmu_exact_cpu", | +1: };
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:253 | "stamp_late", | +1: };
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:291 | kStampLate, // Track F, F16k2 (RC3) | +1: kIdCount
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:354 | std::map<uint64_t, uint64_t>    fill_cpu_epoch; | +1: uint64_t                        stale_lines = 0;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:388 | case Id::WrAfter::Large: return "large"; | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:617 | case CmuWhy::Cpu: return "cpu"; | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:632 | std::atomic<uint64_t> g_cmu_nohit_events {0}; | +1: } // namespace
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:663 | std::string FormatCmuNoHit(uint64_t n, const CmuEventLine& line, bool  | +1: auto text = fmt::format("DiagF5Ev: cmask_fce_nohit n={} b42={} present={} gpu={} image=0x{
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:674 | bool NoteCmuNoHit(const CmuEventLine& line, bool drawn) { | +1: const auto n = g_cmu_nohit_events.fetch_add(1, std::memory_order_relaxed) + 1;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:968 | void NoteFillSeq(uint64_t address, uint64_t seq, uint64_t cpu_epoch) { | +1: auto&            s = IdS();
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:982 | bool FillCpuEpoch(uint64_t address, uint64_t* cpu_epoch) { | +1: auto&            s = IdS();
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:993 | void NoteStampLate() { | +1: auto&            s = IdS();
+OK  ed4f96d8:src/graphics/host_gpu/renderer/diagF5.cpp:1109 | s.fill_cpu_epoch.clear(); | +1: s.stale_lines = 0;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/bufferCache.h:493 | [[nodiscard]] uint64_t LargeGpuWriteSeq() const noexcept { return m_la | +1: [[nodiscard]] uint64_t F5IdRangeWriteEpoch(uint64_t vaddr, uint64_t size);
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/bufferCache.h:494 | [[nodiscard]] uint64_t F5IdRangeWriteEpoch(uint64_t vaddr, uint64_t si | +1: 
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2856 | if (size > (16u << 20)) { | +1: m_large_write_seq = seq;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2906 | uint64_t BufferCache::F5IdRangeWriteEpoch(uint64_t vaddr, uint64_t siz | +1: // Track F, F16k2 (item 496(b)(2)): never the EXIT of MemoryTracker::ValidateRange on a ra
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.h:181 | void F5IdNoteStampLate(); | +1: [[nodiscard]] bool TouchMeta(uint64_t address, uint32_t slice, bool is_clear);
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.h:354 | bool                                              m_f5id_stamp_late    | +1: Common::SlotVector<Image>                         m_slot_images;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1908 | DiagF5::Add(DiagF5::Counter::F5CmuExactCpu); // Track F, F16k2 (RC4) | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1920 | : fix == DiagF5::CmuFix::ExactStale && m_probe.cpu ? DiagF5::CmuWhy::C | +1: : DiagF5::CmuWhy::None;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3460 | if (m_f5id_stamp_address != 0 && !m_f5id_stamp_late) { | +1: DiagF5Id::NoteStampLate();
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3461 | DiagF5Id::NoteStampLate(); | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3465 | m_f5id_stamp_late    = false; | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3477 | DiagF5Id::NoteFillSeq(m_f5id_stamp_address, | +1: m_buffer_cache.LastGpuWriteSeq(m_f5id_stamp_address, m_f5id_stamp_size, false),
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3479 | m_buffer_cache.F5IdRangeWriteEpoch(m_f5id_stamp_address, m_f5id_stamp_ | +1: m_f5id_stamp_address = 0;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3482 | m_f5id_stamp_late    = false; | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3497 | void TextureCache::F5IdNoteStampLate() { | +1: if (!DiagF5Id::On()) {
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3503 | m_f5id_stamp_late = true; | +1: DiagF5Id::NoteStampLate();
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3504 | DiagF5Id::NoteStampLate(); | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3530 | if (cpu_written) { | +1: f5_probe->exact_stale = true;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3532 | f5_probe->cpu         = true; // Track F, F16k2 (RC4): why=cpu | +1: } else {
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3538 | if (f5_probe->exact_decides && !f5_probe->exact_stale && !f5_probe->fa | +1: return false;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2599 | PrepareCmaskClear(id, desc, fce_materialize, f5cmu); | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3942 | (void)cache.FindRenderTarget( | +1: color.image_id, color.desc,
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3708 | if (!color.image_id || info.metadata.kind != ImageMetadataKind::None | | +1: info.resources.levels != 1 || info.IsVolume() ||
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3729 | probe.kind = FixB42Kind::Drawn; | +1: return probe;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3859 | void F5IdNoteFceMiss(TextureCache& cache, BufferCache& buffers, uint32 | +1: const DiagF5Id::MetaSnap& before, const DiagF5Id::DccMiss& miss) {
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3887 | const bool large = exact.seq == 0 && buffers.LargeGpuWriteSeq() > sinc | +1: e.wr_after       = exact.seq != 0    ? DiagF5Id::WrAfter::Exact
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3896 | const bool seen       = DiagF5Id::FillCpuEpoch(e.dcc, &fill_epoch); | +1: const bool cpu_now    = buffers.IsRegionCpuModified(e.dcc, e.dcc_size);
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3898 | e.cpu_mod = cpu_now || !seen || fill_epoch == 0 || buffers.F5IdRangeWr | +1: ? 1
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3928 | color.desc.info.metadata.kind              = ImageMetadataKind::Cmask; | +1: color.desc.info.metadata.range             = {rt.cmask.addr, b42.cmask_size};
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3934 | if (color.image_id && color.desc.info.metadata.kind == ImageMetadataKi | +1: // Session 71, candidate C3 (counters only): the second entrance into
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3967 | if (DiagF5::On() && b42.kind == FixB42Kind::Hit) [[unlikely]] { | +1: // Track F, F16k (item 492(v)(4)): the event line of a B42 hit - the last present number o
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3995 | if (DiagF5::On() && b42.kind != FixB42Kind::Hit && f5_cmu.fix != DiagF | +1: f5_cmu.fix != DiagF5::CmuFix::Fresh) [[unlikely]] {
+OK  ed4f96d8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3997 | (void)DiagF5::NoteCmuNoHit({.present = DiagF5::Present(), | +1: .gpu     = GpuTimeProfiler::Frame(),
+OK  ed4f96d8:src/graphics/host_gpu/renderer/renderCompute.cpp:85 | m_cache->F5IdNoteStampLate(); | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/renderCompute.cpp:91 | void Arm(const ShaderComputeInputInfo& input, TextureCache& cache) { | +1: m_cache = &cache;
+OK  ed4f96d8:src/graphics/host_gpu/renderer/renderCompute.cpp:493 | Common::LockGuard            lock(m_context.GetMutex()); | +1: Common::FrameStats::MutexMark lock_mark(lock_t0);
+OK  ed4f96d8:src/graphics/host_gpu/renderer/renderCompute.cpp:636 | F5IdCsHolder f5id {f5_refusals}; | +1: if (DiagF5Id::On()) [[unlikely]] {
+OK  ed4f96d8:src/graphics/host_gpu/renderer/renderCompute.cpp:638 | f5id.Arm(input_info, m_context.GetTextureCache()); | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/renderCompute.cpp:1049 | return; | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/renderCompute.cpp:1103 | return; | +1: }
+OK  ed4f96d8:src/graphics/host_gpu/renderer/renderCompute.cpp:1267 | m_context.GetTextureCache().StampPendingDccFill(); | +1: f5id.After(m_context.GetTextureCache()); // Track F, F16k (KYTY_DIAG_F5ID): the entries af
+OK  ed4f96d8:src/graphics/host_gpu/renderer/renderCompute.cpp:1294 | m_context.GetTextureCache().StampPendingDccFill(); | +1: f5id.After(m_context.GetTextureCache()); // Track F, F16k (KYTY_DIAG_F5ID): the entries af
+OK  ed4f96d8:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:454 | desc.info.metadata.kind = ImageMetadataKind::Cmask; | +1: desc.info.metadata.range = {rt.cmask.addr,
+OK  ed4f96d8:src/graphics/host_gpu/regionManager.h:129 | m_cpu_dirty.Fill(); | +1: m_writable.Fill();
+OK  ed4f96d8:src/graphics/host_gpu/regionManager.h:618 | std::atomic<uint64_t>  m_epoch {1}; | +1: // The dirty maps are read without the lock (IsModifiedRelaxed); give them their own
+OK  ed4f96d8:src/graphics/host_gpu/memoryTracker.cpp:59 | RegionManager* MemoryTracker::GetOrCreateRegion(uint64_t index) { | +1: if (auto* manager = m_regions[index].load(std::memory_order_acquire); manager != nullptr) 
+OK  ed4f96d8:src/graphics/host_gpu/memoryTracker.h:35 | [[nodiscard]] uint64_t RangeWriteEpoch(uint64_t vaddr, uint64_t size)  | +1: ValidateRange(vaddr, size);
+OK  ed4f96d8:src/graphics/host_gpu/memoryTracker.h:45 | return 0; // an untracked region is CPU-dirty by definition | +1: }
+OK  ed4f96d8:tests/ShaderRecompilerComputeTests.cpp:10448 | void CheckF16k() { | +1: constexpr const char *name = "F16k";
+OK  ed4f96d8:tests/ShaderRecompilerComputeTests.cpp:10541 | Require(name, "no-hit line form", | +1: nohit == "DiagF5Ev: cmask_fce_nohit n=5 b42=none present=7 gpu=9 image=0x0000000000000010 
+OK  ed4f96d8:tests/ShaderRecompilerComputeTests.cpp:10685 | {"K8 CPU-modified CMASK page, no crossing GPU write: why=cpu" | +1: {{C::F5CmuExactStale, 1}, {C::F5CmuExactCpu, 1}}},
+OK  ed4f96d8:tests/ShaderRecompilerComputeTests.cpp:10783 | // ---- K7 (Track F, F16k2, RC5, ROADMAP s122 item 496(b)(5)) | +1: // target carries CMASK metadata from its registers, so FixB42Probe answers None (cmask_fc
+OK  ed4f96d8:tests/ShaderRecompilerComputeTests.cpp:11098 | // D18-D20 (Track F, F16k2, ROADMAP s122 item 496(b)(1)-(3)) | +1: // the fill, stamp_late. The FCE scan of D11 (slot 1 = `plain`, a DCC address with no entr
+OK  ed4f96d8:tests/ShaderRecompilerComputeTests.cpp:11177 | Require(name, "D20 stamp_late in the sum line", | +1: F16kField(sum, "stamp_late") == std::to_string(late0 + 2) && at_late != std::string::npos 
+OK  ed4f96d8:tests/ShaderRecompilerComputeTests.cpp:11356 | Require(name, "Z identity exact_cpu <= exact_stale (F16k2)" | +1: "f5cmu_exact_cpu > f5cmu_exact_stale");
+OK  ed4f96d8:tests/ShaderRecompilerComputeTests.cpp:34592 | if (argc == 2 && std::strcmp(argv[1], "--f16k-only") == 0) { | +1: // Track F, F16k (HPP-583): the KYTY_FIX_F5CMU / KYTY_DIAG_F5ID test site; run with the kn
+refs 78
+ALL OK

@@ -1,0 +1,18 @@
+fb45aea5	docs/ROADMAP.md	22265	430. **Звено S14d трека S (`HPP-527`, Probe Designer; приёмка лида на стадии review): S14d	(а) **Приёмка строкой:** (е)(1) §8 — база S12a `4d9e8ab7`, `snap1` = `s13/cat/k_19` при ра
+fb45aea5	docs/ROADMAP.md	22268	(в) **Классы (ответ на вопрос 1, первая часть) — принят новый состав:** `cls_b` = тип стад	(г) **Член (0′) — до кода фазы A (ответ на вопрос 1, вторая часть; дополняет п. 423(г)(1),
+fb45aea5	docs/ROADMAP.md	22271	(2) **S14k (Probe Designer):** скрипт `docs/track-s/s14k/c0p_s14k.py` по дампу S14j и шест	(3) **Правило исхода (0′) — до данных.** `C_mod^spec(cls_b)` — верхняя граница `C_mod` для
+fb45aea5	docs/ROADMAP.md	22272	(3) **Правило исхода (0′) — до данных.** `C_mod^spec(cls_b)` — верхняя граница `C_mod` для	(д) **Ответы на вопросы 2–7:**
+fb45aea5	docs/ROADMAP.md	22276	(3) **Момент записи (вопрос 4) — принят как чтение п. 423(г):** m(r) = max(момент ключа, п	(4) **Опережение PM4 (вопрос 5) — принят:** пять плеч DIAG=1 S14h идут с `KYTY_LAG_TRACE=1
+fb45aea5	docs/ROADMAP.md	22278	(5) **Свой хэш цели (вопрос 6) — принят вариант исполнителя:** A3 считает по букве п. 423(	(6) **Положительный контроль A3 (вопрос 7) — принят с дополнением:** фикстура ровно с 2 пе
+236cf189	docs/ROADMAP.md	22365	439. **Звено S14j трека S (`HPP-533`, Emu Engineer; приёмка лида на стадии review): S14j П	(а) **Приёмка строкой:** режим под `KYTY_TEST_SPECDUMP_DIR` / `KYTY_TEST_SPECDUMP_OUT`, шт
+236cf189	docs/ROADMAP.md	22368	(в) **Ответ на вопрос — вариант исполнителя принят (чтение п. 430(г)(1)–(2), не новая конс	(г) **Долги звена (правило п. 324(и)(5)):** (1) список 14 прежних падений `HANDOFF.md` §4 
+236cf189	docs/ROADMAP.md	22369	(г) **Долги звена (правило п. 324(и)(5)):** (1) список 14 прежних падений `HANDOFF.md` §4 	(д) **Звенья:** S14j `HPP-533` — `done` этим пунктом (approve review). S14k `HPP-534` (Pro
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4034	LOGF("AvTrace: shader-spec %s hash=0x%016" PRIx64 " perm=%zu%s\n", label, params.hash,	entry->second.permutations.size(), spec.c_str());
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6380	LOGF("ShaderRegister: hash=%016" PRIx64 " type=%u size=%u scratch=%u code=%016" PRIx64	" header=%016" PRIx64 " host_us=%" PRIu64 "%s\n", mapped.hash, header.type,
+ff953d4f	tests/shaderCfgTests.cpp	14086	std::fprintf(out, "SpecDump: file=%s stage=%s hash=0x%016llx perm=%zu spec=%s\n", name.c_s	static_cast<unsigned long long>(key.hash), i + 1, spec.c_str());
+ff953d4f	tests/shaderCfgTests.cpp	14070	if (!ShaderTranslationCache::ReadFileUnchecked(path, key, entry)) {	totals.all.failed++;
+ff953d4f	src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp	652	if (std::memcmp(data.data(), m_signature.data(), m_signature.size()) != 0) {	return false;
+65bcebcc	docs/track-s/s14a-design.md	595	### 15.2. Серии и веса — сверка со скорером	
+65bcebcc	docs/track-s/s14a-design.md	601	### 15.3. Вариант исполнителя: более слабое необходимое условие вычислено — класс не пуст 	
+65bcebcc	docs/track-s/s14a-design.md	630	Справка (не граница): среди 22 различных compile-записей шести логов у одного хэша всегда 	хэшами — 2, пар «разные хэши одного класса» 2, с равной специализацией 1.
+65bcebcc	docs/track-s/s14a-design.md	252	3. *Предсказание* — запись r\* с наибольшим m(r) < t_reg(T) среди записей той же стадии и 	исключается (буква п. 423(г)); вариант «без своего хэша» — справка (вопрос 6 §12). Записи 

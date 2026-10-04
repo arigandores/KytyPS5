@@ -1,0 +1,5 @@
+2026-10-04T10:36:09Z S14k start: lock absent, STOP absent; HPP-533 done (blocker lifted), checkout in_progress; API in_progress: HPP-506 (Red Team review), HPP-514 (Emu code), HPP-537 (Harness, harness rework - no run series), HPP-535 (Probe, offline)
+2026-10-04T10:40:33Z c0p_s14k final run ok (fixtures ALL OK, wall wall 3.3 s); 3 draft runs before it in the run scratch dir (fixture F9 split, references R1-R6, S14j cross-check)
+2026-10-04T10:40:41Z refs_s14k gen + check ALL OK
+2026-10-04T10:42:24Z design revision 2a: section 17 and the row of section 14 added (docs/track-s/s14a-design.md)
+2026-10-04T10:42:56Z section S14k appended to C:/kyty/s288/FACTS.md

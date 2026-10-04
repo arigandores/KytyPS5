@@ -1,0 +1,158 @@
+S14k member (0') - upper bound C_mod^spec(cls_b), form "existence" (ROADMAP s122 items 430(g)(2), 439(v)); threshold 0.8
+script sha256 4530b223f2a5e18c4002662996ebe25217f0e1c33af831a9eb9165a6cd0e0d8a
+
+== fixtures
+  fixture F1 positive: class-mate of the dump, equal spec            predicted True  other-hash True  -> ok
+  fixture F2 negative: target spec replaced by an unseen string      predicted False other-hash False -> ok
+  fixture F3a prefix only: candidate longer than the target          predicted False other-hash False -> ok
+  fixture F3b prefix only: target longer than the candidate          predicted False other-hash False -> ok
+  fixture F4a alternating specs in the class, last one differs       predicted True  other-hash True  -> ok
+  fixture F4b alternating classes of the candidate hash (4, 8, 4, 8) predicted True  other-hash True  -> ok
+  fixture F4c class of the candidate equals only AFTER T             predicted False other-hash False -> ok
+  fixture F5 another class, equal spec                               predicted False other-hash False -> ok
+  fixture F6 candidate hash registered only after T                  predicted False other-hash False -> ok
+  fixture F7a another stage (PS record, VS target)                   predicted False other-hash False -> ok
+  fixture F7b MS and CS records are not candidates                   predicted False other-hash False -> ok
+  fixture F8 record of another file signature (item 439(v))          predicted False other-hash False -> ok
+  fixture F9a own hash, registered twice before the compile          predicted True  other-hash False -> ok
+  fixture F9b own hash, single registration (= T): letter - no       predicted False other-hash False -> ok
+  fixture F9c own hash, single registration, reference incl: yes     predicted True  other-hash False -> ok
+  fixture F10a compile record of a class-mate before T               predicted True  other-hash True  -> ok
+  fixture F10b compile record of a class-mate after T                predicted False other-hash False -> ok
+  fixture F10c own hash compiled twice, re-registered between        predicted True  other-hash False -> ok
+  fixture F10d the target is not its own candidate                   predicted False other-hash False -> ok
+  fixture F10e compile record before the entry line counts           predicted True  other-hash True  -> ok
+  fixture F11a generous T = last registration: found                 predicted True  other-hash True  -> ok
+  fixture F11b reference T = first registration: not found           predicted False other-hash False -> ok
+  fixture F12a generous "before" by host_us: found                   predicted True  other-hash True  -> ok
+  fixture F12b strict line order: not found                          predicted False other-hash False -> ok
+  fixture F12c reference late: class-mate compiled after T, before   predicted True  other-hash True  -> ok
+  fixture F12d reference nocls: another class counts                 predicted True  other-hash True  -> ok
+  fixture F12e reference nocls + nomoment: unregistered hash counts  predicted True  other-hash True  -> ok
+  fixture F12f nocls + nomoment still needs the equal spec           predicted False other-hash False -> ok
+  fixture F13 target without a registration before its compile       predicted False other-hash False -> ok
+  fixture F14a both series predicted                                 C = 8 / 8 (want 8 / 8), series weights [3, 5] -> ok
+  fixture F14b one of two modules of series 1 unpredicted            C = 5 / 8 (want 5 / 8), series weights [3, 5] -> ok
+  fixture F14c series 2 unpredicted                                  C = 3 / 8 (want 3 / 8), series weights [3, 5] -> ok
+  fixture F15 one parser: 5 good and 7 bad tails, both line kinds    -> ok
+  fixture F16a clean inputs are computable                           -> ok
+  fixture F16b dump failed > 0                                       -> ok
+  fixture F16c dump failed > 0 on stage VS                           -> ok
+  fixture F16d log of another translation signature                  -> ok
+  fixture F16e fixture failure                                       -> ok
+  fixture F16f unparsed spec line in a log                           -> ok
+  fixture F16g unparsed spec line in the dump                        -> ok
+  fixture F16h dump sha256 differs from the accepted                 -> ok
+  fixture F16i candidates counted by signature                       -> ok
+fixtures: 42 lines, failed 0
+ALL OK
+
+== inputs
+dump C:/kyty/s288/s14j/specdump_snap0.txt: lines 2854 sha256 050a77129b5b0c475846052a1fb1fd6e50ef7797787df61464d09c3577d64478 (accepted 050a7712: EQUAL); totals files=707 read=707 failed=0 perms=1187; stage lines {'CS': 'files=121 read=121 failed=0 perms=146', 'PS': 'files=220 read=220 failed=0 perms=247', 'VS': 'files=366 read=366 failed=0 perms=794'}
+dump records (permutation lines) 1187: {'CS': 141, 'MS': 5, 'PS': 247, 'VS': 794}; specialization lines parsed by parse_spec 1187 of 1187 (100.0 %); file-sig lines 1181, groups [('699c1e4b', 707), ('780ea8ac', 438), ('2db9065a', 29), ('646b501f', 5), ('8347ce22', 1), ('1693ffd7', 1)]; records without a file-sig line 0
+t2_1 hero_kratos: lines 968824 sha256 c469daae5b002fb3ef1d89e7ba1febf38e48b3a782d80a408908a98c1ad22c6b; entry line 249452; translation signature ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] (lines with it 1; equals 699c1e4b: YES); dump records VS/PS by file signature: {'699c1e4b': 1041} -> candidates (i) 1041; shader-spec lines parsed 16 of 16 (100.0 %); compile lines 16, unpaired 0
+t2_2 hero_drake: lines 861418 sha256 3096467dda8489320e4573650613ce21724eeb3d00f9540a38b21ba9cdb555f3; entry line 241429; translation signature ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] (lines with it 1; equals 699c1e4b: YES); dump records VS/PS by file signature: {'699c1e4b': 1041} -> candidates (i) 1041; shader-spec lines parsed 4 of 4 (100.0 %); compile lines 4, unpaired 0
+t2_4 armadillo_challenge_2: lines 874582 sha256 54933d1429eca940dfa1882f99498f992837a9ae50f48c016139da5ba2786fe1; entry line 180994; translation signature ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] (lines with it 1; equals 699c1e4b: YES); dump records VS/PS by file signature: {'699c1e4b': 1041} -> candidates (i) 1041; shader-spec lines parsed 2 of 2 (100.0 %); compile lines 2, unpaired 0
+t2_5 fragile_battle_4: lines 1200976 sha256 22a7b9ad6c100b86374921f37e342e575937b23e66ed1813aaa366611121e888; entry line 177626; translation signature ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] (lines with it 1; equals 699c1e4b: YES); dump records VS/PS by file signature: {'699c1e4b': 1041} -> candidates (i) 1041; shader-spec lines parsed 6 of 6 (100.0 %); compile lines 6, unpaired 0
+t2_7 fragile_battle_5: lines 1202070 sha256 6be077120752ae172bbf20df65c8a9f20b55c137798c7f48c2b3211be4f42d4b; entry line 179380; translation signature ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] (lines with it 1; equals 699c1e4b: YES); dump records VS/PS by file signature: {'699c1e4b': 1041} -> candidates (i) 1041; shader-spec lines parsed 7 of 7 (100.0 %); compile lines 7, unpaired 0
+t2_cs0 hero_kratos: lines 962495 sha256 b94f2862cfb8783d689ee8ae6bade1f0011d3d233d575183cdf5978286c13a76; entry line 247749; translation signature ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] (lines with it 1; equals 699c1e4b: YES); dump records VS/PS by file signature: {'699c1e4b': 1041} -> candidates (i) 1041; shader-spec lines parsed 16 of 16 (100.0 %); compile lines 16, unpaired 0
+
+== series and weights (same rule as S14d c0_s14d.py; scorer domain)
+t2_1: first scene frame n 280; skip rows 31 held 34 (fin_summary 31 / 34: EQUAL); series [(282, 299, 'w=35', 'VS/PS mods=13'), (317, 334, 'w=30', 'VS/PS mods=2')]
+t2_2: first scene frame n 217; skip rows 1 held 2 (fin_summary 1 / 2: EQUAL); series [(217, 218, 'w=3', 'VS/PS mods=3')]
+t2_4: first scene frame n 136; skip rows 1 held 1 (fin_summary 1 / 1: EQUAL); series [(138, 138, 'w=2', 'VS/PS mods=2')]
+t2_5: first scene frame n 162; skip rows 6 held 9 (fin_summary 6 / 9: EQUAL); series [(164, 172, 'w=15', 'VS/PS mods=6')]
+t2_7: first scene frame n 146; skip rows 9 held 9 (fin_summary 9 / 9: EQUAL); series [(147, 156, 'w=18', 'VS/PS mods=7')]
+t2_cs0: first scene frame n 215; skip rows 30 held 32 (fin_summary 30 / 32: EQUAL); series [(215, 232, 'w=31', 'VS/PS mods=13'), (252, 269, 'w=31', 'VS/PS mods=2')]
+five counted arms: series weights [35, 30, 3, 2, 15, 18] (rule: [35, 30, 3, 2, 15, 18]), sum 103; targets 33 (rule: 33)
+
+== targets (decisive: T = last registration before the compile, "before" = line order OR host_us, own hash allowed)
+t2_1 series n 282..299 weight 35: new VS/PS modules 13, predicted 11 (by another hash 10) -> series predicted False
+    VS 04e7f84bca841dde perm 1 line 252405 frame 282: T line 56009 host 527157887980; classes 1; spec 6 tokens sha 1128d67ce8bb; dump records of the stage with the equal spec: hashes 12, registered before T 1; candidates of the class with the equal spec: {'dump-other': 1} -> PREDICTED
+    PS fc041b757d59dc0d perm 1 line 257673 frame 282: T line 108069 host 527159279147; classes 1; spec 22 tokens sha 86a269e215b1; dump records of the stage with the equal spec: hashes 3, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 9a06bdb14a60db73 perm 1 line 258953 frame 282: T line 108065 host 527159279105; classes 1; spec 6 tokens sha 1128d67ce8bb; dump records of the stage with the equal spec: hashes 12, registered before T 4; candidates of the class with the equal spec: {'dump-other': 4} -> PREDICTED
+    PS bed231cd6418e61a perm 1 line 265787 frame 282: T line 105462 host 527159120354; classes 1; spec 39 tokens sha aa0a434fa731; dump records of the stage with the equal spec: hashes 2, registered before T 2; candidates of the class with the equal spec: {'dump-other': 2} -> PREDICTED
+    VS 6b7fec42ce0c1a18 perm 1 line 267998 frame 282: T line 108028 host 527159276273; classes 1; spec 8 tokens sha 8d7f95cd67ca; dump records of the stage with the equal spec: hashes 14, registered before T 8; candidates of the class with the equal spec: {'dump-other': 8} -> PREDICTED
+    PS 305e04c3806f2776 perm 1 line 271841 frame 282: T line 131102 host 527160107343; classes 1; spec 19 tokens sha b5aa54fdc029; dump records of the stage with the equal spec: hashes 5, registered before T 2; candidates of the class with the equal spec: {'dump-other': 2} -> PREDICTED
+    VS daad82ee49424515 perm 1 line 275532 frame 282: T line 131098 host 527160107309; classes 1; spec 8 tokens sha 0e817ae53acc; dump records of the stage with the equal spec: hashes 4, registered before T 3; candidates of the class with the equal spec: {'dump-other': 2, 'dump-own': 1} -> PREDICTED
+    PS aa83bf664326246b perm 1 line 280806 frame 282: T line 105497 host 527159121649; classes 1; spec 19 tokens sha b5aa54fdc029; dump records of the stage with the equal spec: hashes 5, registered before T 2; candidates of the class with the equal spec: {'dump-other': 2} -> PREDICTED
+    VS 7705f8eecaae52e9 perm 1 line 282503 frame 282: T line 131123 host 527160109231; classes 1; spec 7 tokens sha 6f7a7d946f06; dump records of the stage with the equal spec: hashes 1, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 89627e5304245d9c perm 1 line 286345 frame 282: T line 131090 host 527160107237; classes 1; spec 8 tokens sha 8d7f95cd67ca; dump records of the stage with the equal spec: hashes 14, registered before T 9; candidates of the class with the equal spec: {'dump-other': 9} -> PREDICTED
+    VS 89627e5304245d9c perm 1 line 290232 frame 282: T line 131090 host 527160107237; classes 1; spec 8 tokens sha 8d7f95cd67ca; dump records of the stage with the equal spec: hashes 14, registered before T 9; candidates of the class with the equal spec: {'dump-other': 9} -> PREDICTED
+    VS 2335532b8e5ee2bd perm 4 line 291672 frame 282: T line 131106 host 527160107363; classes 1; spec 7 tokens sha 0fee17f353a1; dump records of the stage with the equal spec: hashes 1, registered before T 1; candidates of the class with the equal spec: {'dump-own': 1} -> PREDICTED (own hash only)
+    VS fefefe95679d8b8b perm 2 line 294685 frame 282: T line 140171 host 527160375626; classes 1; spec 8 tokens sha 0e817ae53acc; dump records of the stage with the equal spec: hashes 4, registered before T 3; candidates of the class with the equal spec: {'dump-other': 2, 'dump-own': 1} -> PREDICTED
+t2_1 series n 317..334 weight 30: new VS/PS modules 2, predicted 0 (by another hash 0) -> series predicted False
+    PS 828215ad31a7f2ca perm 1 line 305712 frame 317: T line 131047 host 527160100949; classes 1; spec 20 tokens sha 58de137d84f8; dump records of the stage with the equal spec: hashes 0, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS acee300df6a19856 perm 1 line 309830 frame 317: T line 131043 host 527160100914; classes 1; spec 8 tokens sha 08efb19a1f3a; dump records of the stage with the equal spec: hashes 0, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+t2_2 series n 217..218 weight 3: new VS/PS modules 3, predicted 3 (by another hash 3) -> series predicted True
+    PS bed231cd6418e61a perm 1 line 249806 frame 217: T line 127817 host 527738139982; classes 1; spec 39 tokens sha aa0a434fa731; dump records of the stage with the equal spec: hashes 2, registered before T 1; candidates of the class with the equal spec: {'dump-other': 1} -> PREDICTED
+    VS 1b18cd50ab8b4bf8 perm 1 line 252431 frame 217: T line 151197 host 527738864840; classes 1; spec 8 tokens sha 8d7f95cd67ca; dump records of the stage with the equal spec: hashes 14, registered before T 9; candidates of the class with the equal spec: {'dump-other': 8, 'dump-own': 1} -> PREDICTED
+    VS 1b18cd50ab8b4bf8 perm 1 line 255221 frame 217: T line 151197 host 527738864840; classes 1; spec 8 tokens sha 8d7f95cd67ca; dump records of the stage with the equal spec: hashes 14, registered before T 9; candidates of the class with the equal spec: {'dump-other': 8, 'dump-own': 1} -> PREDICTED
+t2_4 series n 138..138 weight 2: new VS/PS modules 2, predicted 0 (by another hash 0) -> series predicted False
+    PS f8e63959c2c8f447 perm 1 line 183342 frame 138: T line 99455 host 528320657463; classes 1; spec 9 tokens sha 4c53c0f04f28; dump records of the stage with the equal spec: hashes 1, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 027467899081bd5c perm 1 line 191426 frame 138: T line 99444 host 528320657429; classes 1; spec 9 tokens sha 03c4635565a6; dump records of the stage with the equal spec: hashes 1, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+t2_5 series n 164..172 weight 15: new VS/PS modules 6, predicted 2 (by another hash 2) -> series predicted False
+    VS 06c0b6a2f0f5743e perm 1 line 183059 frame 164: T line 80764 host 528612816948; classes 1; spec 6 tokens sha 7d1939fa4f83; dump records of the stage with the equal spec: hashes 8, registered before T 2; candidates of the class with the equal spec: {'dump-other': 2} -> PREDICTED
+    VS 49e03cde74bf0a50 perm 1 line 185046 frame 164: T line 94639 host 528613569212; classes 1; spec 8 tokens sha 7c3e0ba472b5; dump records of the stage with the equal spec: hashes 2, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 9cef70d99e129f56 perm 1 line 195007 frame 164: T line 94649 host 528613569314; classes 1; spec 10 tokens sha a7f8c7e3bc7b; dump records of the stage with the equal spec: hashes 1, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    PS 720d1f629e89e619 perm 1 line 197436 frame 164: T line 94672 host 528613569450; classes 1; spec 15 tokens sha ab3fd63bef75; dump records of the stage with the equal spec: hashes 0, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 9d04340df2d39aad perm 1 line 206852 frame 164: T line 94668 host 528613569421; classes 1; spec 10 tokens sha a7f8c7e3bc7b; dump records of the stage with the equal spec: hashes 1, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 06c0b6a2f0f5743e perm 1 line 209006 frame 167: T line 80764 host 528612816948; classes 1; spec 6 tokens sha 7d1939fa4f83; dump records of the stage with the equal spec: hashes 8, registered before T 2; candidates of the class with the equal spec: {'dump-other': 2} -> PREDICTED
+t2_7 series n 147..156 weight 18: new VS/PS modules 7, predicted 3 (by another hash 3) -> series predicted False
+    VS 1b18cd50ab8b4bf8 perm 1 line 182867 frame 147: T line 93298 host 529278991030; classes 1; spec 8 tokens sha 8d7f95cd67ca; dump records of the stage with the equal spec: hashes 14, registered before T 9; candidates of the class with the equal spec: {'dump-other': 8, 'dump-own': 1} -> PREDICTED
+    VS 06c0b6a2f0f5743e perm 1 line 184295 frame 148: T line 80554 host 529278359641; classes 1; spec 6 tokens sha 7d1939fa4f83; dump records of the stage with the equal spec: hashes 8, registered before T 2; candidates of the class with the equal spec: {'dump-other': 2} -> PREDICTED
+    VS 49e03cde74bf0a50 perm 1 line 186246 frame 148: T line 93783 host 529279008043; classes 1; spec 8 tokens sha 7c3e0ba472b5; dump records of the stage with the equal spec: hashes 2, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 9cef70d99e129f56 perm 1 line 196335 frame 148: T line 93794 host 529279008244; classes 1; spec 10 tokens sha a7f8c7e3bc7b; dump records of the stage with the equal spec: hashes 1, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    PS 720d1f629e89e619 perm 1 line 198757 frame 148: T line 93828 host 529279008393; classes 1; spec 15 tokens sha ab3fd63bef75; dump records of the stage with the equal spec: hashes 0, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 9d04340df2d39aad perm 1 line 208243 frame 148: T line 93814 host 529279008349; classes 1; spec 10 tokens sha a7f8c7e3bc7b; dump records of the stage with the equal spec: hashes 1, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 06c0b6a2f0f5743e perm 1 line 210702 frame 151: T line 80554 host 529278359641; classes 1; spec 6 tokens sha 7d1939fa4f83; dump records of the stage with the equal spec: hashes 8, registered before T 2; candidates of the class with the equal spec: {'dump-other': 2} -> PREDICTED
+t2_cs0 series n 215..232 weight 31: new VS/PS modules 13, predicted 11 (by another hash 10) -> series predicted False
+    PS bed231cd6418e61a perm 1 line 256128 frame 215: T line 104303 host 527445493338; classes 1; spec 39 tokens sha aa0a434fa731; dump records of the stage with the equal spec: hashes 2, registered before T 2; candidates of the class with the equal spec: {'dump-other': 2} -> PREDICTED
+    VS 04e7f84bca841dde perm 1 line 257557 frame 217: T line 54039 host 527444477200; classes 1; spec 6 tokens sha 1128d67ce8bb; dump records of the stage with the equal spec: hashes 12, registered before T 1; candidates of the class with the equal spec: {'dump-other': 1} -> PREDICTED
+    PS fc041b757d59dc0d perm 1 line 262749 frame 217: T line 107183 host 527445567838; classes 1; spec 22 tokens sha 86a269e215b1; dump records of the stage with the equal spec: hashes 3, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 9a06bdb14a60db73 perm 1 line 264018 frame 217: T line 107179 host 527445567797; classes 1; spec 6 tokens sha 1128d67ce8bb; dump records of the stage with the equal spec: hashes 12, registered before T 4; candidates of the class with the equal spec: {'dump-other': 4} -> PREDICTED
+    VS 6b7fec42ce0c1a18 perm 1 line 266269 frame 217: T line 107170 host 527445567111; classes 1; spec 8 tokens sha 8d7f95cd67ca; dump records of the stage with the equal spec: hashes 14, registered before T 8; candidates of the class with the equal spec: {'dump-other': 8} -> PREDICTED
+    PS 305e04c3806f2776 perm 1 line 270091 frame 217: T line 132093 host 527445947605; classes 1; spec 19 tokens sha b5aa54fdc029; dump records of the stage with the equal spec: hashes 5, registered before T 2; candidates of the class with the equal spec: {'dump-other': 2} -> PREDICTED
+    VS daad82ee49424515 perm 1 line 273770 frame 217: T line 132082 host 527445947565; classes 1; spec 8 tokens sha 0e817ae53acc; dump records of the stage with the equal spec: hashes 4, registered before T 3; candidates of the class with the equal spec: {'dump-other': 2, 'dump-own': 1} -> PREDICTED
+    PS aa83bf664326246b perm 1 line 279021 frame 217: T line 104347 host 527445494189; classes 1; spec 19 tokens sha b5aa54fdc029; dump records of the stage with the equal spec: hashes 5, registered before T 2; candidates of the class with the equal spec: {'dump-other': 2} -> PREDICTED
+    VS 7705f8eecaae52e9 perm 1 line 280930 frame 217: T line 132349 host 527445950614; classes 1; spec 7 tokens sha 6f7a7d946f06; dump records of the stage with the equal spec: hashes 1, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS 89627e5304245d9c perm 1 line 284758 frame 217: T line 132067 host 527445947481; classes 1; spec 8 tokens sha 8d7f95cd67ca; dump records of the stage with the equal spec: hashes 14, registered before T 9; candidates of the class with the equal spec: {'dump-other': 9} -> PREDICTED
+    VS 89627e5304245d9c perm 1 line 288561 frame 217: T line 132067 host 527445947481; classes 1; spec 8 tokens sha 8d7f95cd67ca; dump records of the stage with the equal spec: hashes 14, registered before T 9; candidates of the class with the equal spec: {'dump-other': 9} -> PREDICTED
+    VS 2335532b8e5ee2bd perm 4 line 290001 frame 217: T line 132097 host 527445947623; classes 1; spec 7 tokens sha 0fee17f353a1; dump records of the stage with the equal spec: hashes 1, registered before T 1; candidates of the class with the equal spec: {'dump-own': 1} -> PREDICTED (own hash only)
+    VS fefefe95679d8b8b perm 2 line 293000 frame 217: T line 137624 host 527446053293; classes 1; spec 8 tokens sha 0e817ae53acc; dump records of the stage with the equal spec: hashes 4, registered before T 3; candidates of the class with the equal spec: {'dump-other': 2, 'dump-own': 1} -> PREDICTED
+t2_cs0 series n 252..269 weight 31: new VS/PS modules 2, predicted 0 (by another hash 0) -> series predicted False
+    PS 828215ad31a7f2ca perm 1 line 306806 frame 252: T line 131587 host 527445941684; classes 1; spec 20 tokens sha 58de137d84f8; dump records of the stage with the equal spec: hashes 0, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+    VS acee300df6a19856 perm 1 line 310950 frame 252: T line 131580 host 527445941643; classes 1; spec 8 tokens sha 08efb19a1f3a; dump records of the stage with the equal spec: hashes 0, registered before T 0; candidates of the class with the equal spec: none -> not predicted
+five counted arms: targets 33, predicted 19 (by another hash 18, by the own hash only 1), not predicted 14; targets with more than one class among their registrations 0
+
+== reference pair of the design 15.3 (different hashes of one class with equal specialization): found if its second record is a target
+   matching level = class and exact spec equality with the moment member of candidate (ii) switched off (switch late); rule level = the
+   letter of candidate (ii): the first record must enter the table before T (the last registration of the target before its compile)
+t2_5: second record 9d04340df2d39aad compile line 206852 is a target (T line 94668 host 528613569421); first record 9cef70d99e129f56 compile line 195007 host bracket 528614839744; equal spec: found at the matching level True; found by the rule False - the first record is compiled 100339 lines AFTER T, it is not in the table at the registration of the target
+t2_7: second record 9d04340df2d39aad compile line 208243 is a target (T line 93814 host 529279008349); first record 9cef70d99e129f56 compile line 196335 host bracket 529280178802; equal spec: found at the matching level True; found by the rule False - the first record is compiled 102521 lines AFTER T, it is not in the table at the registration of the target
+reference pair: cases with the second record a target 2; matching level ALL FOUND; rule level NOT FOUND (moment member)
+
+== references (do not enter the rule)
+R1 strict "before" (line order only): C_mod^spec 0.0291 (3 / 103), without the own hash 0.0291 (3 / 103); targets predicted 19 of 33, by another hash 18; weights of the predicted series [3]
+R2 T = FIRST registration of the target (predictor B, design 6.1 A3): C_mod^spec 0.0291 (3 / 103), without the own hash 0.0291 (3 / 103); targets predicted 18 of 33, by another hash 18; weights of the predicted series [3]
+R3 own hash available at T itself (m(r) <= T; executor variant, more generous): C_mod^spec 0.0291 (3 / 103), without the own hash 0.0291 (3 / 103); targets predicted 20 of 33, by another hash 18; weights of the predicted series [3]
+R4 = R3 + a compile record counts up to the compile line of the target: C_mod^spec 0.0291 (3 / 103), without the own hash 0.0291 (3 / 103); targets predicted 22 of 33, by another hash 20; weights of the predicted series [3]
+R5 class ignored (type only), moments by the letter: C_mod^spec 0.0291 (3 / 103), without the own hash 0.0291 (3 / 103); targets predicted 19 of 33, by another hash 18; weights of the predicted series [3]
+R6 ceiling: class ignored, no moment (any dump record of the stage and signature, any earlier compile): C_mod^spec 0.3883 (40 / 103), without the own hash 0.0291 (3 / 103); targets predicted 29 of 33, by another hash 27; weights of the predicted series [35, 3, 2]
+class-free: targets whose spec string exists in the dump for the stage (any hash, any moment) 29 of 33; with a hash registered before T 19
+t2_cs0 (repeat of hero_kratos, not in the sum): C_mod^spec 0.0000 (0 / 62), without the own hash 0.0000 (0 / 62); targets predicted 11 of 15
+targets compiled although the dump holds a record of the SAME hash with the equal spec string: 12 of 33 (t2_1 04e7f84b, t2_1 daad82ee, t2_1 2335532b, t2_1 fefefe95, t2_2 1b18cd50, t2_2 1b18cd50, t2_4 02746789, t2_5 06c0b6a2, t2_5 06c0b6a2, t2_7 1b18cd50, t2_7 06c0b6a2, t2_7 06c0b6a2) - the spec string is not the whole key of a module (the file name carries the hash of the key: <stage>_<hash>_<key hash>.bin), so equality of the strings is more generous than equality of the keys
+cross-check t2_1: shader-spec lines (all stages) 16; a dump record of the same stage, hash, permutation number and spec string 3 - S14j xcheck_s10.out.txt EQUAL 3: EQUAL; of the same stage, hash and spec string under any permutation number 4
+cross-check t2_2: shader-spec lines (all stages) 4; a dump record of the same stage, hash, permutation number and spec string 2 - S14j xcheck_s10.out.txt EQUAL 2: EQUAL; of the same stage, hash and spec string under any permutation number 2
+cross-check t2_4: shader-spec lines (all stages) 2; a dump record of the same stage, hash, permutation number and spec string 1 - S14j xcheck_s10.out.txt EQUAL 1: EQUAL; of the same stage, hash and spec string under any permutation number 1
+cross-check t2_5: shader-spec lines (all stages) 6; a dump record of the same stage, hash, permutation number and spec string 2 - S14j xcheck_s10.out.txt EQUAL 2: EQUAL; of the same stage, hash and spec string under any permutation number 2
+cross-check t2_7: shader-spec lines (all stages) 7; a dump record of the same stage, hash, permutation number and spec string 3 - S14j xcheck_s10.out.txt EQUAL 3: EQUAL; of the same stage, hash and spec string under any permutation number 3
+cross-check t2_cs0: shader-spec lines (all stages) 16; a dump record of the same stage, hash, permutation number and spec string 3 - S14j xcheck_s10.out.txt EQUAL 3: EQUAL; of the same stage, hash and spec string under any permutation number 4
+
+== outcome
+C_mod^spec(cls_b) = 0.0291 (3 / 103) - decisive (own hash allowed); without the own hash 0.0291 (3 / 103) - reference
+robustness: the most generous reference R6 (class ignored, no moment) 0.3883 < 0.8
+OUTCOME: C_mod^spec(cls_b) 0.0291 < 0.8 -> by item 430(g)(3) the candidate is "killed without the code of phase A" (read by the lead at the acceptance of S14e, if Red Team does not find that the number is not an upper bound)
+QUESTION TO THE LEAD (the outcome above is the executor reading): the control "the reference pair of 15.3 is found if its second record is a target" holds at the matching level only; by the rule the pair is not a prediction (the first record enters the table after T).  If the control is read as "found by the rule", the outcome is NOT COMPUTED
+
+wall 3.3 s

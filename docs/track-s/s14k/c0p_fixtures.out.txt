@@ -1,0 +1,43 @@
+  fixture F1 positive: class-mate of the dump, equal spec            predicted True  other-hash True  -> ok
+  fixture F2 negative: target spec replaced by an unseen string      predicted False other-hash False -> ok
+  fixture F3a prefix only: candidate longer than the target          predicted False other-hash False -> ok
+  fixture F3b prefix only: target longer than the candidate          predicted False other-hash False -> ok
+  fixture F4a alternating specs in the class, last one differs       predicted True  other-hash True  -> ok
+  fixture F4b alternating classes of the candidate hash (4, 8, 4, 8) predicted True  other-hash True  -> ok
+  fixture F4c class of the candidate equals only AFTER T             predicted False other-hash False -> ok
+  fixture F5 another class, equal spec                               predicted False other-hash False -> ok
+  fixture F6 candidate hash registered only after T                  predicted False other-hash False -> ok
+  fixture F7a another stage (PS record, VS target)                   predicted False other-hash False -> ok
+  fixture F7b MS and CS records are not candidates                   predicted False other-hash False -> ok
+  fixture F8 record of another file signature (item 439(v))          predicted False other-hash False -> ok
+  fixture F9a own hash, registered twice before the compile          predicted True  other-hash False -> ok
+  fixture F9b own hash, single registration (= T): letter - no       predicted False other-hash False -> ok
+  fixture F9c own hash, single registration, reference incl: yes     predicted True  other-hash False -> ok
+  fixture F10a compile record of a class-mate before T               predicted True  other-hash True  -> ok
+  fixture F10b compile record of a class-mate after T                predicted False other-hash False -> ok
+  fixture F10c own hash compiled twice, re-registered between        predicted True  other-hash False -> ok
+  fixture F10d the target is not its own candidate                   predicted False other-hash False -> ok
+  fixture F10e compile record before the entry line counts           predicted True  other-hash True  -> ok
+  fixture F11a generous T = last registration: found                 predicted True  other-hash True  -> ok
+  fixture F11b reference T = first registration: not found           predicted False other-hash False -> ok
+  fixture F12a generous "before" by host_us: found                   predicted True  other-hash True  -> ok
+  fixture F12b strict line order: not found                          predicted False other-hash False -> ok
+  fixture F12c reference late: class-mate compiled after T, before   predicted True  other-hash True  -> ok
+  fixture F12d reference nocls: another class counts                 predicted True  other-hash True  -> ok
+  fixture F12e reference nocls + nomoment: unregistered hash counts  predicted True  other-hash True  -> ok
+  fixture F12f nocls + nomoment still needs the equal spec           predicted False other-hash False -> ok
+  fixture F13 target without a registration before its compile       predicted False other-hash False -> ok
+  fixture F14a both series predicted                                 C = 8 / 8 (want 8 / 8), series weights [3, 5] -> ok
+  fixture F14b one of two modules of series 1 unpredicted            C = 5 / 8 (want 5 / 8), series weights [3, 5] -> ok
+  fixture F14c series 2 unpredicted                                  C = 3 / 8 (want 3 / 8), series weights [3, 5] -> ok
+  fixture F15 one parser: 5 good and 7 bad tails, both line kinds    -> ok
+  fixture F16a clean inputs are computable                           -> ok
+  fixture F16b dump failed > 0                                       -> ok
+  fixture F16c dump failed > 0 on stage VS                           -> ok
+  fixture F16d log of another translation signature                  -> ok
+  fixture F16e fixture failure                                       -> ok
+  fixture F16f unparsed spec line in a log                           -> ok
+  fixture F16g unparsed spec line in the dump                        -> ok
+  fixture F16h dump sha256 differs from the accepted                 -> ok
+  fixture F16i candidates counted by signature                       -> ok
+ALL OK

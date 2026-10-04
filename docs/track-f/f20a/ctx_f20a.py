@@ -1,6 +1,8 @@
 # F20a (HPP-551): context table - the B2 game moment (idx 770..782 after the first scene frame of Sky Garden) in every
 # unique log without validation and RenderDoc, by binary: entries that reach idx 782, entries with a frame >= 100 ms
 # there, the interval marks of those frames and the gate schedule of the tag json.
+# RC1: the last column counts the entries whose tag json has the last '--shader-validation true' (entries / with the
+# frame), every frame row carries 'sval <value>'; the first columns are those of the submitted table (ctx_f20a.txt).
 # Usage: python ctx_f20a.py [dir]
 import collections, json, re, sys
 D = (sys.argv[1] if len(sys.argv) > 1 else 'C:/kyty/f287/f20a').rstrip('/') + '/'
@@ -21,25 +23,35 @@ for r in sorted(recs, key=lambda r: r['path']):
     b = (m['binary_sha256'] or 'none')[:8]
     if m['validation'] != 'false' or m['rd'] or r['cnt']['vk'] >= 100:
         continue
+    sv = m.get('shader_validation') == 'true'
     for i, s in enumerate(r['scenes']):
         if s['level'] != 'underwater_aerial_garden' or s['first_n'] is None or s['frames'] < 782:
             continue
         hits = [x for x in r['slow'] if x['scene'] == i and x['q'] == 0 and 770 <= x['idx'] <= 782]
-        e = tab.setdefault(b, {'n': 0, 'k': 0, 'rows': [], 'sess': set()})
+        e = tab.setdefault(b, {'n': 0, 'k': 0, 'rows': [], 'sess': set(), 'sn': 0, 'sk': 0})
         e['n'] += 1
         e['k'] += bool(hits)
+        e['sn'] += sv
+        e['sk'] += sv and bool(hits)
         e['sess'].add(r['path'].split('/')[2])
         for x in hits:
             env = m['env'] or {}
-            e['rows'].append('%s idx %d n %d dt_us %d prio %d/%d ir %d pcs %d sched %s' % (r['path'].replace('C:/kyty/', ''), x['idx'], x['n'], x['dt_us'], x['prio'], x['prio_us'], x['ir'], x['pcs'],
-                                                                                 env.get('KYTY_GATE_SCHEDULE', '-')))
-print('binary | course | roots | Sky Garden entries that reach idx 782 | with a frame >= 100 ms at idx 770..782')
-tn = tk = 0
+            e['rows'].append('%s idx %d n %d dt_us %d prio %d/%d ir %d pcs %d sched %s sval %s' % (
+                r['path'].replace('C:/kyty/', ''), x['idx'], x['n'], x['dt_us'], x['prio'], x['prio_us'], x['ir'], x['pcs'],
+                env.get('KYTY_GATE_SCHEDULE', '-'), m.get('shader_validation')))
+print('binary | course | roots | Sky Garden entries that reach idx 782 | with a frame >= 100 ms at idx 770..782 | of them with the last --shader-validation true: entries / with the frame')
+tn = tk = cn = ck = csn = csk = 0
 for b, e in sorted(tab.items(), key=lambda kv: (kv[0] not in COURSE, -kv[1]['k'], kv[0])):
-    print('%s | %s | %s | %d | %d' % (b, 'yes' if b in COURSE else 'no', ','.join(sorted(e['sess'])), e['n'], e['k']))
+    print('%s | %s | %s | %d | %d | %d / %d' % (b, 'yes' if b in COURSE else 'no', ','.join(sorted(e['sess'])), e['n'], e['k'], e['sn'], e['sk']))
     for x in e['rows']:
         print('      ' + x)
     if b not in COURSE:
         tn += e['n']
         tk += e['k']
+    else:
+        cn += e['n']
+        ck += e['k']
+        csn += e['sn']
+        csk += e['sk']
 print('other binaries together: entries %d, with the frame %d' % (tn, tk))
+print('course binaries together: entries %d, with the frame %d; without the --shader-validation true logs: entries %d, with the frame %d' % (cn, ck, cn - csn, ck - csk))

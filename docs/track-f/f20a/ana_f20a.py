@@ -6,10 +6,21 @@
 #            no stand line in the header (TestMinimize / GamePatch applied / PVar armed)
 #   wide   - strict + the trace / cache-state knobs of track S (SOFT)
 #   out    - everything else, with the first reason
-# Usage: python ana_f20a.py [dir]
+# RC1 (review of the lead, HPP-551): the emulator flag '--shader-validation true' (the LAST occurrence in the cmdline of
+# the tag json, field shader_validation of meta_f20a.py) runs the built-in SPIR-V check on every new translation, i.e. on
+# the frames with a translation dump - a knob that changes the frame time.  Two variants of the sample:
+#   nosval - (main) a log with the flag true is out, reason 'flag --shader-validation true'
+#   asis   - (reference) as submitted in 0a9adb84: the flag is not read
+# Every section heading carries the variant in brackets.  '--classes' prints one 'CLASS' line per unique log.
+# Usage: python ana_f20a.py [dir] [nosval|asis] [--classes]
 import collections, glob, json, math, os, re, sys
 
-D = (sys.argv[1] if len(sys.argv) > 1 else 'C:/kyty/f287/f20a').rstrip('/') + '/'
+ARGS = [a for a in sys.argv[1:] if not a.startswith('--')]
+D = (ARGS[0] if ARGS else 'C:/kyty/f287/f20a').rstrip('/') + '/'
+VARIANT = ARGS[1] if len(ARGS) > 1 else 'nosval'
+assert VARIANT in ('nosval', 'asis'), VARIANT
+V = '[%s] ' % VARIANT
+SVAL = 'flag --shader-validation true'
 TAB = chr(9)
 COURSE = ('9235a7ac', 'dac02fb9', 'bbad499c', '4aa62e95', '540c035a', '31cbfee8', '631ff987', 'adb0c82f')
 SG, INTRO = 'underwater_aerial_garden', 'intro_next'
@@ -75,7 +86,7 @@ def cp(k, n, lo=True):
     return (x + y) / 2
 
 
-print('(0) LIST')
+print(V + '(0) LIST')
 print('  rows', len(rows), 'distinct paths', len(set(paths)), 'records', len(recs), 'missing', sum(1 for p in paths if recs[p].get('missing')))
 roots = collections.OrderedDict()
 for p, s, mt, root, js in rows:
@@ -107,6 +118,8 @@ def classify(p):
         return 'out', 'validation'
     if m['rd']:
         return 'out', 'RenderDoc'
+    if VARIANT == 'nosval' and m.get('shader_validation') == 'true':
+        return 'out', SVAL
     env = m['env'] or {}
     soft = False
     for k in sorted(env):
@@ -128,7 +141,7 @@ def classify(p):
 
 cls = {p: classify(p) for p in uniq}
 print()
-print('(1) EXCLUSION CASCADE (unique logs by sha256: %d)' % len(uniq))
+print(V + '(1) EXCLUSION CASCADE (unique logs by sha256: %d)' % len(uniq))
 c = collections.Counter()
 for p in uniq:
     k, why = cls[p]
@@ -154,6 +167,19 @@ for p in uniq:
 print('    logs', ncb)
 for (k, kl), v in sorted(ek.items()):
     print('    %-34s %-22s %d' % (k, kl, v))
+print()
+print(V + '(1a) FLAG --shader-validation true (the last occurrence in the cmdline of the tag json)')
+sv = [p for p in uniq if meta[p].get('shader_validation') == 'true']
+svc = [p for p in sv if (meta[p]['binary_sha256'] or '')[:8] in COURSE and meta[p]['validation'] == 'false' and not meta[p]['rd'] and not FXDIR.search(p)]
+print('  unique logs with the flag true: %d; of them on course binaries without validation, RenderDoc and fixtures: %d' % (len(sv), len(svc)))
+for p in sorted(svc):
+    print('    %s %s class %s %s levels %s' % (tag(p), meta[p]['binary_sha256'][:8], cls[p][0], cls[p][1] or '-', [s['level'] for s in recs[p]['scenes']]))
+nsv = sum(1 for p in uniq if cls[p][0] != 'out' and meta[p].get('shader_validation') == 'true')
+print('  logs of the sample (strict or wide) with the flag true: %d' % nsv)
+assert VARIANT != 'nosval' or nsv == 0, nsv
+if '--classes' in sys.argv:
+    for p in sorted(uniq):
+        print('CLASS' + TAB + p + TAB + cls[p][0] + TAB + (cls[p][1] or '-'))
 
 
 def scenes_of(p, level):
@@ -180,7 +206,7 @@ def marks(x):
 
 
 print()
-print('(2) SAMPLE LOGS (strict and wide; every Sky Garden / intro_next scene with a first scene frame)')
+print(V + '(2) SAMPLE LOGS (strict and wide; every Sky Garden / intro_next scene with a first scene frame)')
 print('  class | log | binary | copies | level | first_n | last_n | scene s | hold s | frames | k100 window / hold | k1s w/h | max w/h us | slow rows over')
 sample = [p for p in uniq if cls[p][0] in ('strict', 'wide')]
 other = collections.Counter()
@@ -204,7 +230,7 @@ print('  sample logs without a scene of the two (other levels by -lvl):', dict(o
 for which in ('strict', 'wide'):
     S = [p for p in uniq if cls[p][0] == 'strict' or (which == 'wide' and cls[p][0] == 'wide')]
     print()
-    print('(3) B2, sample %s: Sky Garden entries with first_n < 900 and last_n >= 1100; frames dt >= 100 ms with n 900..1000' % which)
+    print(V + '(3) B2, sample %s: Sky Garden entries with first_n < 900 and last_n >= 1100; frames dt >= 100 ms with n 900..1000' % which)
     ent = []
     for p in S:
         for i, s in scenes_of(p, SG):
@@ -225,7 +251,7 @@ for which in ('strict', 'wide'):
     print('  slow_over of these logs:', sum(recs[e[0]]['slow_over'] for e in ent))
     for level in (SG, INTRO):
         print()
-        print('(4) B32, sample %s, %s: holds with scene time >= 300 s; frames dt >= 100 ms that START at or after 10 s of scene time' % (which, level))
+        print(V + '(4) B32, sample %s, %s: holds with scene time >= 300 s; frames dt >= 100 ms that START at or after 10 s of scene time' % (which, level))
         H = []
         for p in S:
             for i, s in scenes_of(p, level):
@@ -262,14 +288,14 @@ for which in ('strict', 'wide'):
         print('  frames that start inside the window and end after 10 s:', [(tag(p), x['n'], x['dt_us']) for p, x in st])
 
 print()
-print('(5) CONTEXT, not the sample: every other unique log with a Sky Garden scene (first_n < 900, last_n >= 1100) - B2 window n 900..1000')
+print(V + '(5) CONTEXT, not the sample: every other unique log with a Sky Garden scene (first_n < 900, last_n >= 1100) - B2 window n 900..1000')
 ctx = collections.OrderedDict()
 for p in uniq:
     if cls[p][0] != 'out':
         continue
     b = (meta[p]['binary_sha256'] or 'none')[:8]
     why = cls[p][1]
-    grp = 'course binary, ' + ('validation' if why == 'validation' else 'RenderDoc' if why == 'RenderDoc' else 'knob / stand') if b in COURSE else 'other binary' if b != 'none' else 'no json'
+    grp = 'course binary, ' + ('validation' if why == 'validation' else 'RenderDoc' if why == 'RenderDoc' else '--shader-validation true' if why == SVAL else 'knob / stand') if b in COURSE else 'other binary' if b != 'none' else 'no json'
     if FXDIR.search(p):
         continue
     for i, s in scenes_of(p, SG):
@@ -283,7 +309,7 @@ for g, L in ctx.items():
         for x in hits:
             print('      ', tag(p), b, 'first_n', s['first_n'], 'n', x['n'], 'dt_us', x['dt_us'], 'idx', x['idx'], '|', marks(x), '|', attr(x, b))
 print()
-print('(6) CONTEXT: holds >= 300 s of the two scenes in the logs OUT of the sample, by group; hold frames >= 100 ms by attribution')
+print(V + '(6) CONTEXT: holds >= 300 s of the two scenes in the logs OUT of the sample, by group; hold frames >= 100 ms by attribution')
 for level in (SG, INTRO):
     g = collections.OrderedDict()
     for p in uniq:
@@ -291,7 +317,7 @@ for level in (SG, INTRO):
             continue
         b = (meta[p]['binary_sha256'] or 'none')[:8]
         why = cls[p][1]
-        grp = ('course binary, ' + ('validation' if why == 'validation' else 'RenderDoc' if why == 'RenderDoc' else 'knob / stand')) if b in COURSE else 'other binary' if b != 'none' else 'no json'
+        grp = ('course binary, ' + ('validation' if why == 'validation' else 'RenderDoc' if why == 'RenderDoc' else '--shader-validation true' if why == SVAL else 'knob / stand')) if b in COURSE else 'other binary' if b != 'none' else 'no json'
         for i, s in scenes_of(p, level):
             if s['sum_us'] >= 300000000:
                 hs = [x for x in recs[p]['slow'] if x['scene'] == i and x['q'] == 0 and x['t_before_us'] >= 10000000]
@@ -306,7 +332,7 @@ print('  intro_next scenes with a first scene frame in ALL unique logs:', sum(le
 print('  levels of the logs of course binaries without -lvl in the guest args:', collections.Counter(
     str(meta[p]['guest_args']) for p in uniq if (meta[p]['binary_sha256'] or '')[:8] in COURSE and '-lvl' not in (meta[p]['guest_args'] or '')))
 print()
-print('(7) SAMPLE: frames >= 100 ms inside the entry window (first 10 s), by idx and attribution (context of the border of B2)')
+print(V + '(7) SAMPLE: frames >= 100 ms inside the entry window (first 10 s), by idx and attribution (context of the border of B2)')
 for p in sorted(sample):
     b = meta[p]['binary_sha256'][:8]
     for i, s in scenes_of(p, SG):

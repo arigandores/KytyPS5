@@ -1,0 +1,34 @@
+logs 123 (course binaries, no validation, no RenderDoc, no fixture directory; unique by sha256)
+flag | value of the last occurrence | logs | form
+--command-buffer-dump | false | 123 | harness V (modal)
+--command-buffer-dump-folder | _Buffers | 123 | harness V (modal)
+--console-language | 1 | 123 | harness V (modal)
+--game | <...>/games/PPSA21564-app | 123 | harness V (modal)
+--present-mode | Fifo | 123 | harness V (modal)
+--printf-direction | File | 123 | harness V (modal)
+--printf-output-file | _kyty.txt | 123 | harness V (modal)
+--screen-height | 720 | 123 | harness V (modal)
+--screen-width | 1280 | 123 | harness V (modal)
+--shader-log-direction | File | 123 | harness V (modal)
+--shader-log-folder | _Shaders | 123 | harness V (modal)
+--shader-optimization-type | Size | 123 | harness V (modal)
+--shader-validation | false | 120 | harness V (modal)
+--shader-validation | true | 3 | DIFFERS
+--spirv-debug-printf | false | 123 | harness V (modal)
+--user-id | 1000 | 123 | harness V (modal)
+--user-name | Player | 123 | harness V (modal)
+--vblank-frequency | 60 | 123 | harness V (modal)
+--vulkan-validation | false | 123 | harness V (modal)
+flags absent in some log: none
+logs with a value that differs from the modal one:
+  f287/fs4c/log_fs4_hb.txt 31cbfee8 --shader-validation true
+  f287/fs4c/log_fs4_r1.txt 31cbfee8 --shader-validation true
+  f287/fs5/fs5c/log_fs5_r1.txt 631ff987 --shader-validation true
+  logs 3
+flags given more than once (all values in the order of the line):
+  f287/fs4c/log_fs4_hb.txt 31cbfee8 --shader-validation: false -> true
+  f287/fs4c/log_fs4_r1.txt 31cbfee8 --shader-validation: false -> true
+  f287/fs5/fs5c/log_fs5_r1.txt 631ff987 --shader-validation: false -> true
+  rows 3
+--shader-validation true: 3 logs; equal to the field shader_validation of meta_f20a.jsonl: yes
+ALL OK

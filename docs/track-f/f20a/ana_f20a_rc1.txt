@@ -1,0 +1,170 @@
+[nosval] (0) LIST
+  rows 498 distinct paths 498 records 498 missing 0
+  roots 18 : s146:46 f287:95 s143:30 p283:133 s144:34 s288:40 s142:12 s145:34 play:1 s128:6 s129:13 s133:4 s136:12 s137:11 s134:7 s135:4 s131:8 s130:8
+  distinct sha256 (stored file) 409 ; distinct sha256 of the text (xz unpacked) 409 ; repeated copies 89
+  bytes 136693428160 lines 703821727 frames 4221367 frame time h 32.9
+  directories with fx in a path component (fixtures, out of the sample): ['/fxcopy/', '/lead_skipfx/', '/skipfx_root/']
+
+[nosval] (1) EXCLUSION CASCADE (unique logs by sha256: 409)
+   177 out: binary not of the course line
+    87 strict
+    75 out: validation
+    26 out: no tag json (binary unknown)
+    21 out: knob
+    12 wide
+     5 out: fixture directory (synthetic log)
+     3 out: RenderDoc
+     3 out: flag --shader-validation true
+  knobs that put a log of a course binary (no validation, no RenderDoc) out, first knob in name order:
+      6 knob KYTY_AUDIO_SYNC=0
+      3 knob KYTY_DUMP_GCN=1
+      1 knob KYTY_FIX_B1B=0
+      5 knob KYTY_GAME_PATCH
+      4 knob KYTY_POKE
+      1 knob KYTY_S_PCW=0
+      1 knob KYTY_TEST_MINIMIZE=60:10
+  env keys of the logs of course binaries without validation and RenderDoc (unique logs), class and count:
+    logs 123
+    KYTY_AUDIO_SYNC                    OUT                    6
+    KYTY_AV_TRACE                      soft (wide only)       15
+    KYTY_CACHE_MODE                    soft (wide only)       5
+    KYTY_DUMP_GCN                      OUT                    3
+    KYTY_FIX_B1B                       OUT                    1
+    KYTY_FRAME_TRACE                   harness                123
+    KYTY_GAME_PATCH                    OUT                    5
+    KYTY_GATE_FILE                     harness                123
+    KYTY_GPU_CLOCK_PIN                 harness                123
+    KYTY_GPU_HANG_ABORT_S              harness                123
+    KYTY_GPU_MARKERS                   harness                123
+    KYTY_GUEST_ARGS                    harness                123
+    KYTY_KEYS                          input                  9
+    KYTY_PIPELINE_SALT                 soft (wide only)       1
+    KYTY_POKE                          OUT                    15
+    KYTY_PVAR                          default of the binary  1
+    KYTY_QUEUE_TRACE                   harness                123
+    KYTY_REC                           harness                120
+    KYTY_SAMPLE_GATE                   harness                123
+    KYTY_SHADER_REGISTER_TRACE         soft (wide only)       15
+    KYTY_SHADER_SEED_PATH              soft (wide only)       5
+    KYTY_S_PCW                         OUT                    1
+    KYTY_S_PCW                         default of the binary  3
+    KYTY_TEST_MINIMIZE                 OUT                    1
+
+[nosval] (1a) FLAG --shader-validation true (the last occurrence in the cmdline of the tag json)
+  unique logs with the flag true: 5; of them on course binaries without validation, RenderDoc and fixtures: 3
+    f287/fs4c/log_fs4_hb.txt 31cbfee8 class out flag --shader-validation true levels ['hoover_beach']
+    f287/fs4c/log_fs4_r1.txt 31cbfee8 class out flag --shader-validation true levels ['underwater_aerial_garden']
+    f287/fs5/fs5c/log_fs5_r1.txt 631ff987 class out flag --shader-validation true levels ['underwater_aerial_garden']
+  logs of the sample (strict or wide) with the flag true: 0
+
+[nosval] (2) SAMPLE LOGS (strict and wide; every Sky Garden / intro_next scene with a first scene frame)
+  class | log | binary | copies | level | first_n | last_n | scene s | hold s | frames | k100 window / hold | k1s w/h | max w/h us | slow rows over
+  strict | s128/log_shp128.txt.xz | 9235a7ac | 1 | underwater_aerial_garden | 362 | 4015 | 124.3 | 114.3 | 3653 | 1 / 0 | 0/0 | 200818/53343 | 0
+  strict | s142/log_v142.txt | 9235a7ac | 1 | underwater_aerial_garden | 380 | 10556 | 334.1 | 324.1 | 10176 | 1 / 0 | 0/0 | 180521/69048 | 0
+  strict | f287/fsc/log_fs_b.txt | dac02fb9 | 1 | underwater_aerial_garden | 189 | 9942 | 334.3 | 324.3 | 9753 | 1 / 1 | 0/0 | 183385/164655 | 0
+  strict | s146/log_i146_v.txt | dac02fb9 | 1 | underwater_aerial_garden | 376 | 9925 | 334.6 | 324.6 | 9549 | 3 / 3 | 0/0 | 461979/247414 | 0
+  strict | f287/fs3/fs3c/log_fs3_v.txt | 540c035a | 1 | underwater_aerial_garden | 192 | 10161 | 334.2 | 324.1 | 9969 | 1 / 0 | 0/0 | 182388/67070 | 0
+  strict | f287/fs4c/log_fs4_v.txt | 31cbfee8 | 1 | underwater_aerial_garden | 371 | 10277 | 334.4 | 324.3 | 9906 | 1 / 0 | 0/0 | 201571/66239 | 0
+  strict | f287/fs5/fs5c/log_fs5_v.txt | 631ff987 | 1 | underwater_aerial_garden | 360 | 10317 | 334.3 | 324.3 | 9957 | 3 / 3 | 0/0 | 374813/248803 | 0
+  strict | f287/fs5/fs5e/log_fs5_i.txt | 631ff987 | 1 | underwater_aerial_garden | 365 | 10329 | 334.4 | 324.4 | 9964 | 2 / 2 | 0/0 | 459233/240327 | 0
+  strict | s288/s12/log_s12_v.txt | adb0c82f | 1 | underwater_aerial_garden | 194 | 10097 | 334.4 | 324.4 | 9903 | 1 / 0 | 0/0 | 201036/66077 | 0
+        env beyond the harness constants: {'KYTY_S_PCW': '1'}
+  wide | s288/s10/log_u_1.txt | 4aa62e95 | 1 | underwater_aerial_garden | 228 | 3887 | 124.1 | 114.1 | 3659 | 1 / 0 | 0/0 | 180451/53301 | 0
+        env beyond the harness constants: {'KYTY_AV_TRACE': '1', 'KYTY_CACHE_MODE': 'prepare-cold', 'KYTY_SHADER_REGISTER_TRACE': '1', 'KYTY_SHADER_SEED_PATH': 'C:/kyty/s288/s9/seeds'}
+  sample logs without a scene of the two (other levels by -lvl): {'strict': 78, 'wide': 11}
+
+[nosval] (3) B2, sample strict: Sky Garden entries with first_n < 900 and last_n >= 1100; frames dt >= 100 ms with n 900..1000
+  entries N = 9; entries with >= 1 frame: 0; frames: 0
+  p = 0/9 = 0.000, 95 % interval (Clopper-Pearson) [0.000; 0.336]
+  by binary: {'9235a7ac': 2, 'dac02fb9': 2, 'adb0c82f': 1, '31cbfee8': 1, '540c035a': 1, '631ff987': 2}
+  first_n of the entries: [189, 192, 194, 360, 362, 365, 371, 376, 380]
+  slow_over of these logs: 0
+
+[nosval] (4) B32, sample strict, underwater_aerial_garden: holds with scene time >= 300 s; frames dt >= 100 ms that START at or after 10 s of scene time
+  holds N = 8; by binary: {'9235a7ac': 1, 'dac02fb9': 2, 'adb0c82f': 1, '31cbfee8': 1, '540c035a': 1, '631ff987': 2}
+    FRAME s146/log_i146_v.txt dac02fb9 n 826 dt_us 162056 t_before 18.5 s draws 7376 | il 140 io 97 pcs 1/111345 trip 0 prio 0/0 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | B33 | top [('FaultTrace-gpu: addr=X rip=+X access=X u', 4), ('CsPretranslate structured CFG success: b', 3), ('CsPretranslate phase end: stage=CS hash=', 3), ('CsPretranslate phase begin: stage=CS has', 3)]
+    FRAME s146/log_i146_v.txt dac02fb9 n 1269 dt_us 119563 t_before 36.3 s draws 6741 | il 11893 io 155 pcs 0/0 trip 0 prio 1/69030 ir 7833 gcn 0 skip 0 cs 0 mtl 0 win 0 | B5 | top [('X: V_MUL_FX vX, vX, vX', 213), ('X: V_MAC_FX vX, vX, vX', 166), ('X: S_WAITCNT X', 155), ('Block $X pc=X..X', 154)]
+    FRAME s146/log_i146_v.txt dac02fb9 n 2553 dt_us 247414 t_before 82.0 s draws 6798 | il 22214 io 165 pcs 1/95961 trip 0 prio 1/53700 ir 14634 gcn 0 skip 16 cs 0 mtl 0 win 0 | B33 | top [('X: V_MAC_FX vX, vX, vX', 605), ('X: V_MUL_FX vX, vX, vX', 529), ('X: S_WAITCNT X', 375), ('ReferenceUX %X (Void; uses=X)', 236)]
+    FRAME f287/fsc/log_fs_b.txt dac02fb9 n 2357 dt_us 164655 t_before 79.2 s draws 4938 | il 8657 io 114 pcs 1/84805 trip 0 prio 1/136047 ir 5046 gcn 0 skip 18 cs 0 mtl 0 win 0 | B33 | top [('X: V_MAC_FX vX, vX, vX', 722), ('X: V_MUL_FX vX, vX, vX', 351), ('X: V_MAD_FX vX, vX, vX, vX', 190), ('X: S_WAITCNT X', 126)]
+    FRAME f287/fs5/fs5c/log_fs5_v.txt 631ff987 n 810 dt_us 159323 t_before 17.8 s draws 8039 | il 151 io 134 pcs 1/107698 trip 0 prio 0/0 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | B33 | top [('FaultTrace-gpu: addr=X rip=+X access=X u', 4), ('[X][X:X:X.X] libkernel::libkernel::Pthre', 3), ('Vulkan pipeline cache: saved X bytes to ', 1), ('AsyncPipelines: flip X held (incomplete ', 1)]
+    FRAME f287/fs5/fs5c/log_fs5_v.txt 631ff987 n 1134 dt_us 102163 t_before 29.7 s draws 7416 | il 9819 io 142 pcs 0/0 trip 0 prio 1/64627 ir 7267 gcn 0 skip 0 cs 0 mtl 0 win 0 | B5 | top [('X: V_MAC_FX vX, vX, vX', 248), ('X: V_MUL_FX vX, vX, vX', 226), ('X: S_WAITCNT X', 100), ('X: V_MAD_FX vX, vX, vX, vX', 95)]
+    FRAME f287/fs5/fs5c/log_fs5_v.txt 631ff987 n 2507 dt_us 248803 t_before 76.1 s draws 4673 | il 22147 io 92 pcs 1/106538 trip 0 prio 1/55811 ir 14634 gcn 0 skip 21 cs 0 mtl 0 win 0 | B33 | top [('X: V_MAC_FX vX, vX, vX', 605), ('X: V_MUL_FX vX, vX, vX', 529), ('X: S_WAITCNT X', 375), ('ReferenceUX %X (Void; uses=X)', 236)]
+    FRAME f287/fs5/fs5e/log_fs5_i.txt 631ff987 n 815 dt_us 170232 t_before 17.6 s draws 7547 | il 107 io 90 pcs 1/118660 trip 0 prio 0/0 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | B33 | top [('FaultTrace-gpu: addr=X rip=+X access=X u', 4), ('[X][X:X:X.X] libkernel::libkernel::Pthre', 3), ('Vulkan pipeline cache: saved X bytes to ', 1), ('AsyncPipelines: flip X held (incomplete ', 1)]
+    FRAME f287/fs5/fs5e/log_fs5_i.txt 631ff987 n 2533 dt_us 240327 t_before 76.6 s draws 4953 | il 21425 io 35 pcs 1/107144 trip 0 prio 1/57214 ir 14270 gcn 0 skip 20 cs 0 mtl 0 win 0 | B33 | top [('X: V_MAC_FX vX, vX, vX', 588), ('X: V_MUL_FX vX, vX, vX', 519), ('X: S_WAITCNT X', 359), ('ReferenceUX %X (Void; uses=X)', 236)]
+  frames by attribution: {'B33': 7, 'B5': 2}
+  holds with >= 1 frame: 4 of 8
+  holds with >= 1 frame WITHOUT attribution (nothing): 0 of 8, p = 0.000 [0.000; 0.369]
+  holds with >= 1 frame without attribution or with PriorityStall only: 0 of 8, p = 0.000 [0.000; 0.369]
+  hold time of these holds, s: 2594.6
+  frames that start inside the window and end after 10 s: []
+
+[nosval] (4) B32, sample strict, intro_next: holds with scene time >= 300 s; frames dt >= 100 ms that START at or after 10 s of scene time
+  holds N = 0; by binary: {}
+  frames by attribution: {}
+  frames that start inside the window and end after 10 s: []
+
+[nosval] (3) B2, sample wide: Sky Garden entries with first_n < 900 and last_n >= 1100; frames dt >= 100 ms with n 900..1000
+  entries N = 10; entries with >= 1 frame: 0; frames: 0
+  p = 0/10 = 0.000, 95 % interval (Clopper-Pearson) [0.000; 0.308]
+  by binary: {'9235a7ac': 2, 'dac02fb9': 2, '4aa62e95': 1, 'adb0c82f': 1, '31cbfee8': 1, '540c035a': 1, '631ff987': 2}
+  first_n of the entries: [189, 192, 194, 228, 360, 362, 365, 371, 376, 380]
+  slow_over of these logs: 0
+
+[nosval] (4) B32, sample wide, underwater_aerial_garden: holds with scene time >= 300 s; frames dt >= 100 ms that START at or after 10 s of scene time
+  holds N = 8; by binary: {'9235a7ac': 1, 'dac02fb9': 2, 'adb0c82f': 1, '31cbfee8': 1, '540c035a': 1, '631ff987': 2}
+    FRAME s146/log_i146_v.txt dac02fb9 n 826 dt_us 162056 t_before 18.5 s draws 7376 | il 140 io 97 pcs 1/111345 trip 0 prio 0/0 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | B33 | top [('FaultTrace-gpu: addr=X rip=+X access=X u', 4), ('CsPretranslate structured CFG success: b', 3), ('CsPretranslate phase end: stage=CS hash=', 3), ('CsPretranslate phase begin: stage=CS has', 3)]
+    FRAME s146/log_i146_v.txt dac02fb9 n 1269 dt_us 119563 t_before 36.3 s draws 6741 | il 11893 io 155 pcs 0/0 trip 0 prio 1/69030 ir 7833 gcn 0 skip 0 cs 0 mtl 0 win 0 | B5 | top [('X: V_MUL_FX vX, vX, vX', 213), ('X: V_MAC_FX vX, vX, vX', 166), ('X: S_WAITCNT X', 155), ('Block $X pc=X..X', 154)]
+    FRAME s146/log_i146_v.txt dac02fb9 n 2553 dt_us 247414 t_before 82.0 s draws 6798 | il 22214 io 165 pcs 1/95961 trip 0 prio 1/53700 ir 14634 gcn 0 skip 16 cs 0 mtl 0 win 0 | B33 | top [('X: V_MAC_FX vX, vX, vX', 605), ('X: V_MUL_FX vX, vX, vX', 529), ('X: S_WAITCNT X', 375), ('ReferenceUX %X (Void; uses=X)', 236)]
+    FRAME f287/fsc/log_fs_b.txt dac02fb9 n 2357 dt_us 164655 t_before 79.2 s draws 4938 | il 8657 io 114 pcs 1/84805 trip 0 prio 1/136047 ir 5046 gcn 0 skip 18 cs 0 mtl 0 win 0 | B33 | top [('X: V_MAC_FX vX, vX, vX', 722), ('X: V_MUL_FX vX, vX, vX', 351), ('X: V_MAD_FX vX, vX, vX, vX', 190), ('X: S_WAITCNT X', 126)]
+    FRAME f287/fs5/fs5c/log_fs5_v.txt 631ff987 n 810 dt_us 159323 t_before 17.8 s draws 8039 | il 151 io 134 pcs 1/107698 trip 0 prio 0/0 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | B33 | top [('FaultTrace-gpu: addr=X rip=+X access=X u', 4), ('[X][X:X:X.X] libkernel::libkernel::Pthre', 3), ('Vulkan pipeline cache: saved X bytes to ', 1), ('AsyncPipelines: flip X held (incomplete ', 1)]
+    FRAME f287/fs5/fs5c/log_fs5_v.txt 631ff987 n 1134 dt_us 102163 t_before 29.7 s draws 7416 | il 9819 io 142 pcs 0/0 trip 0 prio 1/64627 ir 7267 gcn 0 skip 0 cs 0 mtl 0 win 0 | B5 | top [('X: V_MAC_FX vX, vX, vX', 248), ('X: V_MUL_FX vX, vX, vX', 226), ('X: S_WAITCNT X', 100), ('X: V_MAD_FX vX, vX, vX, vX', 95)]
+    FRAME f287/fs5/fs5c/log_fs5_v.txt 631ff987 n 2507 dt_us 248803 t_before 76.1 s draws 4673 | il 22147 io 92 pcs 1/106538 trip 0 prio 1/55811 ir 14634 gcn 0 skip 21 cs 0 mtl 0 win 0 | B33 | top [('X: V_MAC_FX vX, vX, vX', 605), ('X: V_MUL_FX vX, vX, vX', 529), ('X: S_WAITCNT X', 375), ('ReferenceUX %X (Void; uses=X)', 236)]
+    FRAME f287/fs5/fs5e/log_fs5_i.txt 631ff987 n 815 dt_us 170232 t_before 17.6 s draws 7547 | il 107 io 90 pcs 1/118660 trip 0 prio 0/0 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | B33 | top [('FaultTrace-gpu: addr=X rip=+X access=X u', 4), ('[X][X:X:X.X] libkernel::libkernel::Pthre', 3), ('Vulkan pipeline cache: saved X bytes to ', 1), ('AsyncPipelines: flip X held (incomplete ', 1)]
+    FRAME f287/fs5/fs5e/log_fs5_i.txt 631ff987 n 2533 dt_us 240327 t_before 76.6 s draws 4953 | il 21425 io 35 pcs 1/107144 trip 0 prio 1/57214 ir 14270 gcn 0 skip 20 cs 0 mtl 0 win 0 | B33 | top [('X: V_MAC_FX vX, vX, vX', 588), ('X: V_MUL_FX vX, vX, vX', 519), ('X: S_WAITCNT X', 359), ('ReferenceUX %X (Void; uses=X)', 236)]
+  frames by attribution: {'B33': 7, 'B5': 2}
+  holds with >= 1 frame: 4 of 8
+  holds with >= 1 frame WITHOUT attribution (nothing): 0 of 8, p = 0.000 [0.000; 0.369]
+  holds with >= 1 frame without attribution or with PriorityStall only: 0 of 8, p = 0.000 [0.000; 0.369]
+  hold time of these holds, s: 2594.6
+  frames that start inside the window and end after 10 s: []
+
+[nosval] (4) B32, sample wide, intro_next: holds with scene time >= 300 s; frames dt >= 100 ms that START at or after 10 s of scene time
+  holds N = 0; by binary: {}
+  frames by attribution: {}
+  frames that start inside the window and end after 10 s: []
+
+[nosval] (5) CONTEXT, not the sample: every other unique log with a Sky Garden scene (first_n < 900, last_n >= 1100) - B2 window n 900..1000
+  course binary, validation: entries 12, with a frame 0
+  course binary, knob / stand: entries 13, with a frame 1
+       f287/fsc/log_fs_d.txt dac02fb9 first_n 214 n 936 dt_us 166361 idx 722 | il 2959 io 155 pcs 1/98928 trip 0 prio 1/121974 ir 1701 gcn 0 skip 0 cs 0 mtl 0 win 0 | B33
+  other binary: entries 118, with a frame 8
+       f287/f2c/log_f2c_a.txt 5821482a first_n 327 n 908 dt_us 151459 idx 581 | il 1637 io 89 pcs 1/111174 trip 0 prio 1/130504 ir 992 gcn 0 skip 0 cs 0 mtl 0 win 0 | B33
+       f287/f2c/log_f2c_c.txt 5821482a first_n 187 n 909 dt_us 150868 idx 722 | il 2962 io 159 pcs 1/87322 trip 0 prio 1/105617 ir 1701 gcn 0 skip 0 cs 0 mtl 0 win 0 | B33
+       s129/log_ack129.txt.xz edd17418 first_n 177 n 954 dt_us 183252 idx 777 | il 273 io 258 pcs 0/0 trip 0 prio 1/154844 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | prio only
+       s130/log_ack130.txt.xz 0d23f161 first_n 177 n 954 dt_us 194034 idx 777 | il 239 io 223 pcs 0/0 trip 0 prio 1/153928 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | prio only
+       s130/log_s12s130.txt.xz 3f4af2c3 first_n 176 n 951 dt_us 194568 idx 775 | il 287 io 272 pcs 0/0 trip 0 prio 1/157220 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | prio only
+       s131/log_lw4s131.txt.xz d19a4f8a first_n 175 n 950 dt_us 189871 idx 775 | il 179 io 164 pcs 0/0 trip 0 prio 1/150312 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | prio only
+       s131/log_lw5s131.txt.xz d19a4f8a first_n 172 n 949 dt_us 188648 idx 777 | il 179 io 164 pcs 0/0 trip 0 prio 1/153550 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | prio only
+       s131/log_lw6s131.txt.xz d19a4f8a first_n 177 n 954 dt_us 197021 idx 777 | il 342 io 323 pcs 0/0 trip 0 prio 2/153448 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | prio only
+       s131/log_lw6s131.txt.xz d19a4f8a first_n 177 n 983 dt_us 103754 idx 806 | il 173 io 160 pcs 0/0 trip 0 prio 0/0 ir 0 gcn 0 skip 0 cs 0 mtl 0 win 0 | nothing [U]
+  course binary, --shader-validation true: entries 2, with a frame 1
+       f287/fs4c/log_fs4_r1.txt 31cbfee8 first_n 194 n 968 dt_us 117451 idx 774 | il 9893 io 218 pcs 0/0 trip 0 prio 1/76245 ir 7267 gcn 0 skip 0 cs 0 mtl 0 win 0 | B5
+  no json: entries 1, with a frame 0
+
+[nosval] (6) CONTEXT: holds >= 300 s of the two scenes in the logs OUT of the sample, by group; hold frames >= 100 ms by attribution
+  underwater_aerial_garden: {'course binary, validation': (12, 12, {'prio only': 98, 'nothing [U]': 3919, 'B33': 7, 'B5': 10}), 'course binary, knob / stand': (11, 5, {'B33': 4, 'B5': 1, 'prio only': 1, 'pcs on adb0c82f': 1}), 'other binary': (70, 39, {'prio only': 60, 'nothing [U]': 4304, 'B33': 102, 'B5': 24}), 'course binary, --shader-validation true': (2, 2, {'B33': 4, 'B5': 3}), 'no json': (1, 1, {'nothing [U]': 6, 'B33': 4})}
+  intro_next: {'other binary': (1, 0, {})}
+  intro_next scenes with a first scene frame in ALL unique logs: 9 ; of them on course binaries: 0 ; the longest scene time, s: 327.6
+  levels of the logs of course binaries without -lvl in the guest args: Counter()
+
+[nosval] (7) SAMPLE: frames >= 100 ms inside the entry window (first 10 s), by idx and attribution (context of the border of B2)
+   f287/fs3/fs3c/log_fs3_v.txt 540c035a first_n 192 hold_first_n 443 [(194, 182388, 'nothing [U]')]
+   f287/fs4c/log_fs4_v.txt 31cbfee8 first_n 371 hold_first_n 621 [(373, 201571, 'prio only')]
+   f287/fs5/fs5c/log_fs5_v.txt 631ff987 first_n 360 hold_first_n 601 [(361, 374813, 'B5'), (362, 160555, 'B5'), (427, 133058, 'B5')]
+   f287/fs5/fs5e/log_fs5_i.txt 631ff987 first_n 365 hold_first_n 608 [(366, 459233, 'B5'), (432, 137926, 'B5')]
+   f287/fsc/log_fs_b.txt dac02fb9 first_n 189 hold_first_n 440 [(191, 183385, 'nothing [U]')]
+   s128/log_shp128.txt.xz 9235a7ac first_n 362 hold_first_n 604 [(364, 200818, 'nothing [U]')]
+   s142/log_v142.txt 9235a7ac first_n 380 hold_first_n 639 [(382, 180521, 'nothing [U]')]
+   s146/log_i146_v.txt dac02fb9 first_n 376 hold_first_n 606 [(377, 461979, 'B5'), (378, 110986, 'B5'), (443, 152919, 'B5')]
+   s288/s10/log_u_1.txt 4aa62e95 first_n 228 hold_first_n 492 [(230, 180451, 'nothing [U]')]
+   s288/s12/log_s12_v.txt adb0c82f first_n 194 hold_first_n 449 [(196, 201036, 'nothing [U]')]

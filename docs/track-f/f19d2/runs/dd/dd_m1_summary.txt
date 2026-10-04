@@ -1,0 +1,10 @@
+# dd m1 (reference): cycles expected 1000, present 1000, missing 0, repeated 0, beyond n 0
+crashed 1000 of 1000 (rc != 0, no END, marker or no both_returned): {'rc=3 terminate': 1000}
+not clean 1000; scenario not met (calls before unlock and po_wait_max_us >= 200000) 1000
+call_a_wall_us n=0
+call_b_wall_us n=0
+start_skew_us n=0
+po_wait_max_us n=0
+po_applied n=0
+rumble_calls n=0
+REFERENCE (not a member): crashes 1000 of 1000

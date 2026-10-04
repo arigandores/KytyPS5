@@ -1,0 +1,3 @@
+1e760a52e3bee1f6165de4185e217fb841746f8ad0a3cedf1946ce842fcb61db *new/b24_pad_stand_own.exe
+a1029054be561b22dcdb8c96bfdd7a4c7752897e1afff4067eada97064dcd695 *mut/b24_pad_stand_m1.exe
+c554ffeb45b247c026dd35e51ad05213be457ef60f79b09c6f0b58f37fe0b565 *mut/b24_pad_stand_m3.exe

@@ -1,0 +1,12 @@
+15:43:19 try cfg configure rc=7
+15:44:33 try cfg configure rc=7
+15:49:19 try cfg configure rc=7
+15:50:42 try cfg configure rc=7
+15:50:58 try cfg configure rc=5
+15:55:33 try cfg configure rc=7
+15:56:55 try cfg configure rc=7
+15:57:11 try cfg configure rc=3
+16:02:59 try cfg configure rc=0
+16:04:59 try stand target b24_pad_stand rc=0
+16:35:51 try m1 target b24_pad_stand rc=0
+16:47:34 try m3 target b24_pad_stand rc=0

@@ -1,0 +1,136 @@
+watch: start 2026-10-04T16:36:05Z child 43192 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 0..29 not clean 30
+rc=0 end 2026-10-04T16:36:23Z
+16:36:23 batch 0..29 rc=0
+watch: start 2026-10-04T16:36:25Z child 53852 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 30..59 not clean 30
+rc=0 end 2026-10-04T16:36:40Z
+16:36:40 batch 30..59 rc=0
+watch: start 2026-10-04T16:36:42Z child 64432 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 60..89 not clean 30
+rc=0 end 2026-10-04T16:36:59Z
+16:36:59 batch 60..89 rc=0
+watch: start 2026-10-04T16:37:03Z child 37604 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 90..119 not clean 30
+rc=0 end 2026-10-04T16:37:18Z
+16:37:19 batch 90..119 rc=0
+watch: start 2026-10-04T16:37:21Z child 43156 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 120..149 not clean 30
+rc=0 end 2026-10-04T16:37:36Z
+16:37:37 batch 120..149 rc=0
+watch: start 2026-10-04T16:37:38Z child 35760 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 150..179 not clean 30
+rc=0 end 2026-10-04T16:37:56Z
+16:37:56 batch 150..179 rc=0
+watch: start 2026-10-04T16:37:59Z child 68804 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 180..209 not clean 30
+rc=0 end 2026-10-04T16:38:15Z
+16:38:16 batch 180..209 rc=0
+watch: start 2026-10-04T16:38:18Z child 31716 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 210..239 not clean 30
+rc=0 end 2026-10-04T16:38:34Z
+16:38:34 batch 210..239 rc=0
+watch: start 2026-10-04T16:38:36Z child 75808 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 240..269 not clean 30
+rc=0 end 2026-10-04T16:38:51Z
+16:38:51 batch 240..269 rc=0
+watch: start 2026-10-04T16:38:53Z child 76840 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 270..299 not clean 30
+rc=0 end 2026-10-04T16:39:07Z
+16:39:07 batch 270..299 rc=0
+watch: start 2026-10-04T16:39:09Z child 40964 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 300..329 not clean 30
+rc=0 end 2026-10-04T16:39:25Z
+16:39:26 batch 300..329 rc=0
+watch: start 2026-10-04T16:39:30Z child 57328 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 330..359 not clean 30
+rc=0 end 2026-10-04T16:39:44Z
+16:39:44 batch 330..359 rc=0
+watch: start 2026-10-04T16:39:47Z child 25352 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 360..389 not clean 30
+rc=0 end 2026-10-04T16:39:59Z
+16:39:59 batch 360..389 rc=0
+watch: start 2026-10-04T16:40:00Z child 57828 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 390..419 not clean 30
+rc=0 end 2026-10-04T16:40:15Z
+16:40:16 batch 390..419 rc=0
+watch: start 2026-10-04T16:40:17Z child 42152 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 420..449 not clean 30
+rc=0 end 2026-10-04T16:40:36Z
+16:40:36 batch 420..449 rc=0
+watch: start 2026-10-04T16:40:40Z child 46860 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 450..479 not clean 30
+rc=0 end 2026-10-04T16:41:00Z
+16:41:01 batch 450..479 rc=0
+watch: start 2026-10-04T16:41:04Z child 24840 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 480..509 not clean 30
+rc=0 end 2026-10-04T16:41:19Z
+16:41:19 batch 480..509 rc=0
+watch: start 2026-10-04T16:41:21Z child 31828 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 510..539 not clean 30
+rc=0 end 2026-10-04T16:41:34Z
+16:41:34 batch 510..539 rc=0
+watch: start 2026-10-04T16:41:35Z child 68760 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 540..569 not clean 30
+rc=0 end 2026-10-04T16:41:52Z
+16:41:52 batch 540..569 rc=0
+watch: start 2026-10-04T16:41:54Z child 49776 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 570..599 not clean 30
+rc=0 end 2026-10-04T16:42:11Z
+16:42:11 batch 570..599 rc=0
+watch: start 2026-10-04T16:42:13Z child 67348 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 600..629 not clean 30
+rc=0 end 2026-10-04T16:42:29Z
+16:42:30 batch 600..629 rc=0
+watch: start 2026-10-04T16:42:32Z child 42084 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 630..659 not clean 30
+rc=0 end 2026-10-04T16:42:46Z
+16:42:46 batch 630..659 rc=0
+watch: start 2026-10-04T16:42:48Z child 49036 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 660..689 not clean 30
+rc=0 end 2026-10-04T16:43:03Z
+16:43:03 batch 660..689 rc=0
+watch: start 2026-10-04T16:43:06Z child 28976 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 690..719 not clean 30
+rc=0 end 2026-10-04T16:43:21Z
+16:43:21 batch 690..719 rc=0
+watch: start 2026-10-04T16:43:23Z child 63748 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 720..749 not clean 30
+rc=0 end 2026-10-04T16:43:36Z
+16:43:36 batch 720..749 rc=0
+watch: start 2026-10-04T16:43:37Z child 63720 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 750..779 not clean 30
+rc=0 end 2026-10-04T16:43:55Z
+16:43:55 batch 750..779 rc=0
+watch: start 2026-10-04T16:43:59Z child 72372 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 780..809 not clean 30
+rc=0 end 2026-10-04T16:44:17Z
+16:44:17 batch 780..809 rc=0
+watch: start 2026-10-04T16:44:18Z child 34072 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 810..839 not clean 30
+rc=0 end 2026-10-04T16:44:33Z
+16:44:33 batch 810..839 rc=0
+watch: start 2026-10-04T16:44:34Z child 30760 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 840..869 not clean 30
+rc=0 end 2026-10-04T16:44:49Z
+16:44:50 batch 840..869 rc=0
+watch: start 2026-10-04T16:45:41Z child 73280 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 870..899 not clean 30
+rc=0 end 2026-10-04T16:46:00Z
+16:46:00 batch 870..899 rc=0
+watch: start 2026-10-04T16:46:03Z child 62748 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 900..929 not clean 30
+rc=0 end 2026-10-04T16:46:21Z
+16:46:22 batch 900..929 rc=0
+watch: start 2026-10-04T16:46:23Z child 75184 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 930..959 not clean 30
+rc=0 end 2026-10-04T16:46:40Z
+16:46:40 batch 930..959 rc=0
+watch: start 2026-10-04T16:46:42Z child 39592 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 960..989 not clean 30
+rc=0 end 2026-10-04T16:47:00Z
+16:47:00 batch 960..989 rc=0
+watch: start 2026-10-04T16:47:04Z child 27704 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd m1 cycles 990..999 not clean 10
+rc=0 end 2026-10-04T16:47:08Z
+16:47:09 batch 990..999 rc=0

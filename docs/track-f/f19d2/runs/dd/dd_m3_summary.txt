@@ -1,0 +1,10 @@
+# dd m3 (reference): cycles expected 1000, present 1000, missing 0, repeated 0, beyond n 0
+crashed 22 of 1000 (rc != 0, no END, marker or no both_returned): {'rc=3 terminate': 22}
+not clean 22; scenario not met (calls before unlock and po_wait_max_us >= 200000) 22
+call_a_wall_us n=978 min=328803 median=330363 max=332241
+call_b_wall_us n=978 min=328813 median=330361 max=332248
+start_skew_us n=978 min=0 median=0 max=2
+po_wait_max_us n=978 min=300023 median=300504 max=301686
+po_applied n=978 min=1 median=1 max=1
+rumble_calls n=978 min=2 median=2 max=2
+REFERENCE (not a member): crashes 22 of 1000

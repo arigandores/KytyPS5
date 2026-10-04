@@ -1,5 +1,6 @@
 """Track S link S13a2 (HPP-498; ROADMAP "SESSION 122" item 408 (l), item 229 (e)(1), (3), item 414, item 428), reworked by S13a3
-(HPP-537, item 436 (b)(1)-(7)): mutants of s13/sc_s13.py -
+(HPP-537, item 436 (b)(1)-(7)) and S13a4 (HPP-553, item 452 (b), (c): RC1 the data of item 446 (b), RC2 the class "after the
+arm"): mutants of s13/sc_s13.py -
 each must be killed by s13/test_sc_s13.py.  Run through the frozen mutlib v4.1 FULL (never --changed-from), ONE counted run on
 the final text:
     python C:/kyty/KytyPS5/docs/session-116/mutlib_v41/mutlib.py --scorer C:/kyty/s288/s13/sc_s13.py
@@ -15,7 +16,10 @@ skipped-draw line); report texts no fixture reads (read_k, the detail strings); 
 (a FrameTrace row is never a preparation line); "pe.get('later') is None or" dropped in entry_state (later None => rows_after
 None); "not r.get('entered')" dropped in e1_gate (a not entered arm has no f1); the bounds of skip_lines in split_at at the
 first scene change row (no fixture line sits in the group of the change row - the change line is not a skipped draw); mw_dual_none (the row reads "'dual_before' in r", false only without
-a log - then the RC2 gate is "missing" and every W member but E3-death is undetermined whatever the row says).
+a log - then the RC2 gate is "missing" and every W member but E3-death is undetermined whatever the row says).  S13a4: "x[4] >
+later" -> ">=" in nopb_data (a FrameTrace row is never a preparation line); the anchor "$" and ".+?" -> ".*?" in _rx (no
+admission name of one list is a prefix of a name of another, and no template part is empty); "nopb=None" dropped in the no-log
+return of score_arm (r.get('nopb') is None either way).
 """
 MUTANTS = [
     # constants
@@ -89,13 +93,13 @@ MUTANTS = [
     ('si_hex', "RX_HEX64 = re.compile(r'^[0-9a-f]{64}$')", "RX_HEX64 = re.compile(r'^[0-9a-f]{63}')"),
     ('si_sig', "sig and sig.startswith('KytySC3:') and var", "sig and var"),
     ('si_var', "var and var.startswith('variant_'):", "var:"),
-    ('ed_lines', "    rows.append(('edition 12b: every line of 12 but \"installed:\" / \"edition:\" is in 12b, in order, nothing else', ka == kb,",
-     "    rows.append(('edition 12b: every line of 12 but \"installed:\" / \"edition:\" is in 12b, in order, nothing else', True,"),
-    ('ed_order', "    rows.append(('edition 12b: every line of 12 but \"installed:\" / \"edition:\" is in 12b, in order, nothing else', ka == kb,",
-     "    rows.append(('edition 12b: every line of 12 but \"installed:\" / \"edition:\" is in 12b, in order, nothing else', sorted(ka) == sorted(kb),"),
+    ('ed_lines', "    rows.append(('edition 13b: every line of 13 but \"installed:\" / \"edition:\" is in 13b, in order, nothing else', ka == kb,",
+     "    rows.append(('edition 13b: every line of 13 but \"installed:\" / \"edition:\" is in 13b, in order, nothing else', True,"),
+    ('ed_order', "    rows.append(('edition 13b: every line of 13 but \"installed:\" / \"edition:\" is in 13b, in order, nothing else', ka == kb,",
+     "    rows.append(('edition 13b: every line of 13 but \"installed:\" / \"edition:\" is in 13b, in order, nothing else', sorted(ka) == sorted(kb),"),
     ('ed_pend', "ia is not None and\n                 ia[0] == 'PENDING' and ib", "ia is not None and\n                 True and ib"),
     ('ed_named', "and ib is not None and ib[0] != 'PENDING'", "and ib is not None"),
-    ('ed_nobase', "        return [('edition 12b: the seal 12 exists', False, base)]", "        return []"),
+    ('ed_nobase', "        return [('edition 13b: the seal 13 exists', False, base)]", "        return []"),
     # item 436 (b)(6), RC6: the line "edition: base pred/12_s.md sha256 <sha>"
     ('ed6_count', "m = RX_EDBASE.match(eb[0]) if len(eb) == 1 else None", "m = RX_EDBASE.match(eb[0]) if len(eb) >= 1 else None"),
     ('ed6_sha', "m is not None and m.group(1) == base_rel and m.group(2) == bsha,", "m is not None and m.group(1) == base_rel,"),
@@ -103,7 +107,7 @@ MUTANTS = [
     ('ed6_end', "RX_EDBASE = re.compile(r'^edition: base (\\S+) sha256 ([0-9a-f]{64})$')",
      "RX_EDBASE = re.compile(r'^edition: base (\\S+) sha256 ([0-9a-f]{64})')"),
     ('ed6_base_noed', "not any(x.startswith('edition:') for x in a),", "True,"),
-    ('ed6_rel', "SEAL_BASE_REL = 'pred/12_s.md' ", "SEAL_BASE_REL = 'pred/11_s.md' "),
+    ('ed6_rel', "SEAL_BASE_REL = 'pred/13_s.md' ", "SEAL_BASE_REL = 'pred/12_s.md' "),
     ('ed_rx', "RX_EDITION = re.compile(r'^(installed|edition): ')", "RX_EDITION = re.compile(r'^(installed): ')"),
     ('cs_names', "    for name in SEALED_NAMES:\n        if name not in seen:", "    for name in ():\n        if name not in seen:"),
     ('cs_me', "    rows.append(('this scorer in the seal', seen.get('s13/sc_s13.py') == mine, mine[:16]))", ""),
@@ -255,9 +259,6 @@ MUTANTS = [
      "+ sum(1 for x in fz['series'] if x['gap_pipe_us'] >= A.K3_US)"),
     ('d1_split_long', "if lo <= x['i'] < hi and A.counted_row(x) and x['dt'] >= A.K3_US and", "if A.counted_row(x) and x['dt'] >= A.K3_US and"),
     # item 436 (b)(2), RC2: the admission gate
-    ('g2_npre', "    r['n_pre'] = len(r['admit'])            #", "    r['n_pre'] = 0            #"),
-    ('g2_pre_slice', "    pre = [a[0] for a in r['admit'][:r.get('n_pre', len(r['admit']))] if not a[1]]",
-     "    pre = [a[0] for a in r['admit'] if not a[1]]"),
     ('g2_pre', "    if pre:\n        return 'pre', pre", "    if False:\n        return 'pre', pre"),
     ('g2_diff', "    if dif:\n        return 'differs', dif", "    if False:\n        return 'differs', dif"),
     ('g2_miss', "    if mis:\n        return 'missing', mis", "    if False:\n        return 'missing', mis"),
@@ -298,8 +299,8 @@ MUTANTS = [
      "gl['video_frames'] >= FRAMES_VIDEO and gl['glitches'] == 0,"),
     ('mu_death', "    out.append(('E3-death', not r['marks'] and not r['ended'] and not r['exited'],\n                ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']\n                                                              else 'none')))\n    return gated(out, r)\n\n\ndef members_w",
      "    out.append(('E3-death', True,\n                ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']\n                                                              else 'none')))\n    return gated(out, r)\n\n\ndef members_w"),
-    ('mw_gate', "    out = [('catalogue installed (gates)', True if g else None, gw)]\n    if not ok_arm(r) or not r.get('entered') or not g:",
-     "    out = [('catalogue installed (gates)', True, gw)]\n    if not ok_arm(r) or not r.get('entered') or not g:"),
+    ('mw_gate', "    out = [('catalogue installed (gates)', True if g else None, gw)]\n    if gating_fail(r) or not r.get('entered') or not g:",
+     "    out = [('catalogue installed (gates)', True, gw)]\n    if gating_fail(r) or not r.get('entered') or not g:"),
     ('mw_held', "held >= HOLD_W_US if r.get('first') else None,", "held > HOLD_W_US if r.get('first') else None,"),
     ('mw_held_first', "held >= HOLD_W_US if r.get('first') else None,", "held >= HOLD_W_US,"),
     ('mw_vke', "    out.append(('W 0 [Vulkan][E] (log + stdout)', (r.get('vke') or 0) == 0, r.get('vke')))",
@@ -351,6 +352,64 @@ MUTANTS = [
     ('al_gate', "            if not g:\n                return 6, '%s: %s' % (t, gw)", "            if False:\n                return 6, '%s: %s' % (t, gw)"),
     ('al_gate_w', "    if spec['group'] in ('u', 'w'):\n        for t in U_TAGS:", "    if spec['group'] in ('u',):\n        for t in U_TAGS:"),
     ('al_made', "    if made(tag):\n        return 1, 'already made'", "    if False:\n        return 1, 'already made'"),
+    # item 452 (b), RC1 of S13r2: the data of the reading of item 446 (b)
+    ('n1_created', "    if cr is not None:\n        why = 'not counted: the line", "    if False:\n        why = 'not counted: the line"),
+    ('n1_ready', "    elif rd is None:\n        why = 'not counted: no line", "    elif False:\n        why = 'not counted: no line"),
+    ('n1_nopb', "    elif nb is None:\n        why = 'not counted: no line", "    elif False:\n        why = 'not counted: no line"),
+    ('n1_max_rd', "    later = None if why is not None else max(rd, nb)\n", "    later = None if why is not None else rd\n"),
+    ('n1_max_nb', "    later = None if why is not None else max(rd, nb)\n", "    later = None if why is not None else nb\n"),
+    ('n1_max_min', "    later = None if why is not None else max(rd, nb)\n", "    later = None if why is not None else min(rd, nb)\n"),
+    ('n1_rows_ft', "    rows = None if later is None else sum(1 for x in s['rows'] if x[4] > later)",
+     "    rows = None if later is None else len(s['rows'])"),
+    ('n1_text', "                r['nopb_text'] = line.rstrip().decode('ascii', 'backslashreplace')\n", ""),
+    ('n1_text_esc', "r['nopb_text'] = line.rstrip().decode('ascii', 'backslashreplace')",
+     "r['nopb_text'] = line.rstrip().decode('ascii', 'replace')"),
+    ('n1_var', "        var = len(parts) >= 2 and parts[-2] == inst[2]", "        var = len(parts) >= 2"),
+    ('n1_var_slash', "        parts = path.replace('/', chr(92)).split(chr(92))", "        parts = path.split(chr(92))"),
+    ('n1_var_inst', "    if tx is not None and inst is not None and inst[2]:", "    if tx is not None and inst is not None:"),
+    ('n1_line', "    return dict(line=nb, text=tx,", "    return dict(line=rd, text=tx,"),
+    ('n1_fmt_text', "    i = 'line %d \"%s\"' % (d['line'], d['text']) if d['line'] is not None else 'none'",
+     "    i = 'line %d' % d['line'] if d['line'] is not None else 'none'"),
+    ('n1_fmt_rows', "    ii = '%d' % d['rows_after'] if d['why'] is None else d['why']", "    ii = d['why'] or '-'"),
+    ('n1_fmt_var', "{True: 'yes', False: 'NO', None: 'n/a'}[d['variant']]", "{True: 'yes', False: 'yes', None: 'n/a'}[d['variant']]"),
+    ('n1_pr_arm', "    o.append('  data of item 446 (b) (item 452 (b), no outcome reads it): %s' % fmt_nopb(r))\n", ""),
+    ('n1_pr_k', "        out.append('%s data of item 446 (b) (item 452 (b), no outcome reads it): %s' % (t, fmt_nopb(r)))\n        out.append('%s rows after the arm (item 452 (c)): %s' % (t, fmt_post(r)))\n    return out",
+     "        out.append('%s rows after the arm (item 452 (c)): %s' % (t, fmt_post(r)))\n    return out"),
+    ('n1_pr_u', "        out.append('%s data of item 446 (b) (item 452 (b), no outcome reads it): %s' % (t, fmt_nopb(r)))\n        out.append('%s rows after the arm (item 452 (c)): %s' % (t, fmt_post(r)))\n    rw = get('w13')",
+     "        out.append('%s rows after the arm (item 452 (c)): %s' % (t, fmt_post(r)))\n    rw = get('w13')"),
+    ('n1_pr_w', "    out.append('w13 data of item 446 (b) (item 452 (b), no outcome reads it): %s' % fmt_nopb(rw))\n", ""),
+    # item 452 (c), RC2 of S13r2: the class "after the arm" by an explicit list of names
+    ('n2_pre_cls', "if not a[1] and row_class(a[0]) in (C_PRE, None)]", "if not a[1] and row_class(a[0]) != C_LOG]"),
+    ('n2_uncl', "if not a[1] and row_class(a[0]) in (C_PRE, None)]", "if not a[1] and row_class(a[0]) == C_PRE]"),
+    ('n2_post_cls', "C_PRE, C_LOG, C_POST = 'before the run', 'by the log', 'after the arm'",
+     "C_PRE, C_LOG, C_POST = 'before the run', 'by the log', 'before the run'"),
+    ('n2_glc_drop', "ADMIT_POST = ('return_app after the arm = its copy', 'return_glc after the arm = its copy',",
+     "ADMIT_POST = ('return_app after the arm = its copy',"),
+    ('n2_glc_pre', "ADMIT_PRE = ('one attempt (--attempts 1, no warmup)',",
+     "ADMIT_PRE = ('return_glc after the arm = its copy', 'one attempt (--attempts 1, no warmup)',"),
+    ('n2_app_drop', "ADMIT_POST = ('return_app after the arm = its copy', 'return_glc", "ADMIT_POST = ('return_glc"),
+    ('n2_bin_drop', "              'installed binary after the arm = before the arm (item 250 (b))',\n", ""),
+    ('n2_mpa_drop', "              'manifest man_post_app recorded', 'manifest man_post_glc recorded',",
+     "              'manifest man_post_glc recorded',"),
+    ('n2_mpg_drop', "              'manifest man_post_app recorded', 'manifest man_post_glc recorded',",
+     "              'manifest man_post_app recorded',"),
+    ('n2_apc_drop', "              'app_post_copy recorded (cat/{}, the next arm restores it)')", "              )"),
+    ('n2_pre_inst_drop', "             'installed binary before the arm = the seal line \"installed:\" (S9r2 observation 3)',\n", ""),
+    ('n2_log_drop', "             '0 lines GamePatch: in the log (item 342 (e))',\n", ""),
+    ('n2_amb', "    return hits[0] if len(hits) == 1 else None", "    return hits[0] if hits else None"),
+    ('n2_postfail', "    return [a[0] for a in r['admit'] if not a[1] and row_class(a[0]) == C_POST]", "    return []"),
+    ('n2_gating', "    return [x for x in r['fail'] if x not in post]", "    return list(r['fail'])"),
+    ('n2_mw', "    if gating_fail(r) or not r.get('entered') or not g:", "    if r['fail'] or not r.get('entered') or not g:"),
+    ('n2_pr_arm', "    o.append('  rows after the arm (item 452 (c)): %s' % fmt_post(r))\n", ""),
+    ('n2_pr_cls', "row_class(name) or 'UNCLASSED', name, det))", "'before the run', name, det))"),
+    ('n2_pr_uncl', "row_class(name) or 'UNCLASSED', name, det))", "row_class(name) or 'before the run', name, det))"),
+    ('n2_fmt_ok', "    return 'ok' if not pf else 'FAIL %s - entry_state void, the members not gated' % '; '.join(pf)",
+     "    return 'FAIL %s - entry_state void, the members not gated' % '; '.join(pf)"),
+    ('n2_pr_k', "        out.append('%s data of item 446 (b) (item 452 (b), no outcome reads it): %s' % (t, fmt_nopb(r)))\n        out.append('%s rows after the arm (item 452 (c)): %s' % (t, fmt_post(r)))\n    return out",
+     "        out.append('%s data of item 446 (b) (item 452 (b), no outcome reads it): %s' % (t, fmt_nopb(r)))\n    return out"),
+    ('n2_pr_u', "        out.append('%s data of item 446 (b) (item 452 (b), no outcome reads it): %s' % (t, fmt_nopb(r)))\n        out.append('%s rows after the arm (item 452 (c)): %s' % (t, fmt_post(r)))\n    rw = get('w13')",
+     "        out.append('%s data of item 446 (b) (item 452 (b), no outcome reads it): %s' % (t, fmt_nopb(r)))\n    rw = get('w13')"),
+    ('n2_pr_w', "    out.append('w13 rows after the arm (item 452 (c)): %s' % fmt_post(rw))\n", ""),
     ('mf_attempt', "or os.path.isfile(os.path.join(root, 'attempt_%s.txt' % t))", ""),
     # main
     ('m_inst_rc', "        return 0 if inst is not None else 1", "        return 0"),

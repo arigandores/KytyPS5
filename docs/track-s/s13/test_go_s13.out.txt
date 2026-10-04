@@ -1,4 +1,4 @@
-suite test_go_s13.py sha256 3eef5c0de9460d2284489081bbc3d30fd3bec0c84f73a9de5a6e1b4b4c2d24b2 target go_s13.sh sha256 32bd0acf2fb955a244ab70c791bf305be3b837b908290228b39a8486df52abde
+suite test_go_s13.py sha256 044006a40bd0eaf063958b46c19c12d79f7ae328e914ae346d01a1b72612177b target go_s13.sh sha256 1e4c10456d35733da1eea4415d94ca7e51db74c8f01c3cb8a33591f76bcb81c7
 PASS G1 go_s13.sh is ASCII only
 PASS G2 a tag with other characters -> rc 2 usage
 PASS G3 the stop file -> rc 4 BUSY before anything

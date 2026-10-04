@@ -13,7 +13,7 @@ the lock; S9r2 observation 1 - a failed return leaves IN_ARM and RETURN_FAILED; 
 S13a2 (item 419 (v) Z3, item 428 (v)(1)): every plan of the 39 arms names KYTY_S_PCW=1 once; the caller's KYTY_S_PCW,
 KYTY_S_PCW_FORCE_MS and KYTY_FIX_* never reach the game, KYTY_S_PCW=1 goes positionally to enter_scene_s9.py.
 S13a3 (item 436 (b)(5), RC5): the guards are any <root>/*/RETURN_FAILED and <root>/*/IN_ARM - s12 (S12c) and a link directory
-never named before refuse rc 1 before the lock (G5, GL15-GL17); a file one level deeper is not a guard (G5b); the seal is 12.
+never named before refuse rc 1 before the lock (G5, GL15-GL17); a file one level deeper is not a guard (G5b); S13a4 (item 452 (d)(2)): the seal is 13.
 The first output line names this suite and the harness by sha256; the output ends with ALL OK.
     python C:/kyty/s288/s13/test_go_s13.py
 """
@@ -54,11 +54,11 @@ def stub_real(base, seal_rel):
     return ("import importlib.util, sys\n"
             "s = importlib.util.spec_from_file_location('sc13', %r)\nm = importlib.util.module_from_spec(s)\n"
             "s.loader.exec_module(m)\nm.ROOT = %r\nm.SEAL_BASE = %r\nm.SEAL_B = %r\n"
-            "sys.exit(m.main(sys.argv[1:], %r))\n" % (SC13, base.as_posix(), (base / 'pred' / '12_s.md').as_posix(),
-                                                     (base / 'pred' / '12b_s.md').as_posix(), (base / 's13').as_posix()))
+            "sys.exit(m.main(sys.argv[1:], %r))\n" % (SC13, base.as_posix(), (base / 'pred' / '13_s.md').as_posix(),
+                                                     (base / 'pred' / '13b_s.md').as_posix(), (base / 's13').as_posix()))
 
 
-(BASE / 's13' / 'sc_s13.py').write_bytes(stub_real(BASE, 'pred/12_s.md').encode('ascii'))
+(BASE / 's13' / 'sc_s13.py').write_bytes(stub_real(BASE, 'pred/13_s.md').encode('ascii'))
 BASH = shutil.which('bash') or 'C:/Program Files/Git/bin/bash.exe'
 N = [0]
 
@@ -78,7 +78,7 @@ def go(tag, dry='1', plwait='540', base=BASE):
     return p.returncode, (p.stdout + p.stderr).replace('bash.exe: warning: could not find /tmp, please create!' + NL, '')
 
 
-def seal(lines, name='12_s.md'):
+def seal(lines, name='13_s.md'):
     (BASE / 'pred' / name).write_text(NL.join(lines) + NL, encoding='ascii')
 
 
@@ -128,15 +128,15 @@ seal(CALLS)
 rc, o = go('k_01')
 ok &= case('G9 no line "installed:" -> rc 1', rc == 1 and 'no installed line' in o)
 seal(CALLS + ['installed: PENDING'])
-seal(CALLS[1:] + ['installed: %s %s %s' % (INST, SIG, VAR)], '12b_s.md')
+seal(CALLS[1:] + ['installed: %s %s %s' % (INST, SIG, VAR)], '13b_s.md')
 rc, o = go('k_01')
 ok &= case('G10 the edition 12b in force without the call line of k_01 -> rc 1 (PLWAIT differs from the seal)', rc == 1 and
            'PLWAIT differs' in o)
-seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '12b_s.md')
-seal(CALLS[:1] + CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '12b_s.md')
+seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '13b_s.md')
+seal(CALLS[:1] + CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '13b_s.md')
 rc, o = go('k_01')
 ok &= case('G11 two call lines of one tag -> rc 1', rc == 1)
-seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '12b_s.md')
+seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '13b_s.md')
 rc, o = go('k_01', plwait='300')
 ok &= case('G12 PLWAIT other than the call line -> rc 1', rc == 1 and 'PLWAIT differs' in o)
 out = dict((t, go(t)) for t in ('k_01', 'k_02', 'k_19', 'u_01', 'u_19', 'w13'))
@@ -150,7 +150,7 @@ ok &= case('G14 k_01: class M (no trace), mode cat, the app caches from s13/empt
            ('restore app <- %s/s13/empty_app;' % B) in k1 and 'glc as found' in k1 and '--hold 180 ' in k1 and
            '--stable-draws 100 --timeout 600' in k1 and ' --rec ' not in k1 and 'vulkan-validation' not in k1 and
            'KYTY_AV_TRACE' not in k1 and 'SEED_PATH' not in k1 and '--level title_controller_ship' in k1 and
-           ('--pred %s/pred/12b_s.md' % B) in k1 and ('%s/s9/enter_scene_s9.py k_01' % B) in k1 and
+           ('--pred %s/pred/13b_s.md' % B) in k1 and ('%s/s9/enter_scene_s9.py k_01' % B) in k1 and
            ('--root %s/s13' % B) in k1 and 'KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0' in k1)
 ok &= case('G15 k_02 from the post copy cat/k_01; k_19 from cat/k_18 on enemy_gorilla', ('restore app <- %s/s13/cat/k_01;' % B) in k2
            and ('restore app <- %s/s13/cat/k_18;' % B) in k19 and '--level enemy_gorilla' in k19)
@@ -172,7 +172,7 @@ plans2 = dict((tg, go(tg, dry='2')) for tg in TAGS)
 ok &= case('G18b DRY=2 of all 39 arms: rc 0, each plan names KYTY_S_PCW=1 once and no other S knob', len(plans2) == 39 and all(
     v[0] == 0 and v[1].count(' KYTY_S_PCW=1 ') == 1 and v[1].count('KYTY_S_PCW') == 1 for v in plans2.values()))
 rc, o = go('k_01', dry='2')
-ok &= case('G19 DRY=2 right after the lock check prints the plan', rc == 0 and o.startswith('PLAN k_01: link s13, seal pred/12b_s.md'))
+ok &= case('G19 DRY=2 right after the lock check prints the plan', rc == 0 and o.startswith('PLAN k_01: link s13, seal pred/13b_s.md'))
 (BASE / 's13' / 'attempt_k_01.txt').write_text('x')
 rc, o = go('k_01')
 ok &= case('G20 an attempt already made -> rc 1, no repeat', rc == 1 and 'attempt already made' in o)
@@ -229,7 +229,7 @@ for name, body in (('procload.py', 'import sys' + NL + 'sys.exit(0)' + NL), ('id
     put2(B2 / name, body.encode('ascii'))
 put2(B2 / 'bin' / 'powershell', ('#!/bin/sh' + NL + 'echo 0' + NL).encode('ascii'))
 shutil.copy2('C:/kyty/s288/cachex_s.py', B2 / 'cachex_s.py')
-REAL = stub_real(B2, 'pred/12_s.md').replace('sys.exit(m.main(', 'REAL = lambda: sys.exit(m.main(')
+REAL = stub_real(B2, 'pred/13_s.md').replace('sys.exit(m.main(', 'REAL = lambda: sys.exit(m.main(')
 put2(B2 / 's13' / 'sc_s13.py', (REAL +
                                 "import os\na = sys.argv[1:]\n"
                                 "if a[:1] in (['--plan'], ['--seal-path'], ['--installed']):\n    REAL()\n"
@@ -267,7 +267,7 @@ for a, b in (('ROOT=C:/kyty/s288' + NL, 'ROOT=%s' % B2.as_posix() + NL), ('LOCK=
     text2 = text2.replace(a, b)
 (B2 / 's13' / 'go_s13.sh').write_bytes(text2.encode('ascii'))
 TAGS2 = ('k_01', 'k_02', 'u_01', 'w13', 'k_03')
-(B2 / 'pred' / '12_s.md').write_bytes((''.join('go_s13 call: PLWAIT=540 bash C:/kyty/s288/s13/go_s13.sh %s\n' % t for t in TAGS2) +
+(B2 / 'pred' / '13_s.md').write_bytes((''.join('go_s13 call: PLWAIT=540 bash C:/kyty/s288/s13/go_s13.sh %s\n' % t for t in TAGS2) +
                                        'installed: %s %s %s\n' % (INSTX, SIG, VAR)).encode('ascii'))
 BINP = '/' + B2.as_posix()[0].lower() + B2.as_posix()[2:] + '/bin'
 
@@ -357,7 +357,7 @@ ok &= case('GL10 KYTY_GAME_PATCH of the caller not seen by the game; a GamePatch
            GAME2.read_bytes() == b'installed build X' and not Path(LOCK2).exists())
 lk = js2('k_01').get('lock') or ''
 ok &= case('GL11 S9r2 observation 2: the lock line the game saw begins "go_s.sh k_01 " and names go_s13.sh and the seal file in '
-           'force', lk.startswith('go_s.sh k_01 pid ') and '(go_s13.sh seal pred/12_s.md)' in lk)
+           'force', lk.startswith('go_s.sh k_01 pid ') and '(go_s13.sh seal pred/13_s.md)' in lk)
 (B2 / 's13' / 'IN_ARM').write_text('IN_ARM k_03 2026-10-04T00:00:00Z pid 1 - a hard kill left it' + NL)
 n_lock = len(lockrows())
 rc, o = go2('k_03')

@@ -1,0 +1,5 @@
+target sc_s13.py sha256 a0c66cc9ae2efe53272724d05dbb9a3f72e22cc000af2945d10029d559b06237
+s12_gw log C:/kyty/s288/s12/log_s12_gw.txt sha256 fa85dc9437332efdccfc5dc7390b907f70598dcd0da0996c2fade244cc3aa7e0 rows 20150 ready 3798 created None nopb 85
+s12_gw data of item 446 (b): (i) "PipelinePrecache: no <path> yet": line 85 "PipelinePrecache: no _ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10\pipelines.bin yet"; (ii) FrameTrace rows after max(ShaderPreparation: ready line 3798, "no ... yet" line 85): 20150; the parent directory of the path = the variant of the seal line "installed:" (executor's addition): yes
+s12_w log C:/kyty/s288/s12/log_s12_w.txt sha256 86f1f77fe242ed30058432b705579462cbda144170c68acf581ca8d575ecc475 rows 2918 ready 4203 created 495 nopb None
+s12_w data of item 446 (b): (i) "PipelinePrecache: no <path> yet": none; (ii) FrameTrace rows after max(ShaderPreparation: ready line 4203, "no ... yet" line None): not counted: the line "PipelinePrecache: all pipelines created" is present (line 495); the parent directory of the path = the variant of the seal line "installed:" (executor's addition): n/a

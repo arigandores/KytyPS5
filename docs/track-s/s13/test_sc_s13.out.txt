@@ -1,4 +1,4 @@
-suite test_sc_s13.py sha256 2a50a3a57bf377a26361021457730cb484e86f0482e79d0d7fba4402f13dd47f target sc_s13.py sha256 29d95e9c2f562a049817716000687817f4477f647fb4a8d7cbc2f7066e1a0ad1
+suite test_sc_s13.py sha256 5dce91548441322e9b41746880b3d1188c37f852ed2f23ef164eccf0d0cb8c7d target sc_s13.py sha256 a0c66cc9ae2efe53272724d05dbb9a3f72e22cc000af2945d10029d559b06237
 PASS A1 the inherited sc_s9.py is refused when its sha256 is not the pinned one
 PASS A2 sc_s13.py is ASCII only
 PASS B1 39 arms: k_01 .. k_19, u_01 .. u_19, w13 in this order
@@ -25,23 +25,23 @@ PASS E1 "installed: PENDING" -> (PENDING, None, None)
 PASS E2 "installed: <sha> <sig> <variant>" -> the triple
 PASS E3 malformed: a short sha, a signature not KytySC3:, a variant not variant_, two lines, none, PENDING with more
 PASS E4 no seal file -> None
-PASS E5 current_seal: 12 while 12b is absent; edition rows empty
-PASS E6 the edition 12b exists: current_seal = 12b; the same lines but installed / edition, 12 PENDING, 12b named, one line "edition: base pred/12_s.md sha256 <sha of 12>" -> ok
-PASS E6b RC6: no line "edition:" in 12b -> the edition row FAILS (only it)
+PASS E5 current_seal: 13 while 13b is absent; edition rows empty
+PASS E6 the edition 13b exists: current_seal = 13b; the same lines but installed / edition, 13 PENDING, 13b named, one line "edition: base pred/13_s.md sha256 <sha of 13>" -> ok
+PASS E6b RC6: no line "edition:" in 13b -> the edition row FAILS (only it)
 PASS E6c RC6: two lines "edition:" (even equal) -> the edition row FAILS
-PASS E6d RC6: the sha of the line is not the sha of the seal 12 -> FAILS
+PASS E6d RC6: the sha of the line is not the sha of the seal 13 -> FAILS
 PASS E6e RC6: the line names another seal file -> FAILS
 PASS E6f RC6: the line with a trailing blank (not the form) -> FAILS
-PASS E6g the seal 12 itself carries a line "edition:" -> that row FAILS
+PASS E6g the seal 13 itself carries a line "edition:" -> that row FAILS
 PASS E7 11b with an extra line -> the line row FAILS
 PASS E8 11b with the lines in another order -> FAILS
 PASS E9 11b still PENDING -> the installed row FAILS
 PASS E10 11 not PENDING -> the installed row FAILS
-PASS E11 edition rows with 12b but no 12 -> one failing row
+PASS E11 edition rows with 13b but no 13 -> one failing row
 PASS F1 check_seal: every sealed file, this scorer, "installed: PENDING" -> PASS (no binary row while PENDING)
 PASS F2 a sealed name without its line -> FAIL
 PASS F3 no line "installed:" -> FAIL (S9r2 observation 3)
-PASS F4 the edition 12b in force: check_seal reads it, its edition rows pass (4, the line "edition:" among them), the installed binary now = its line -> PASS
+PASS F4 the edition 13b in force: check_seal reads it, its edition rows pass (4, the line "edition:" among them), the installed binary now = its line -> PASS
 PASS F5 the installed binary now != the line "installed:" -> FAIL
 PASS F6 a sealed file changed (this scorer) -> FAIL
 PASS F6b the running scorer is not the sealed s13/sc_s13.py (the sealed files unchanged) -> FAIL on that row only
@@ -151,7 +151,7 @@ PASS S5 RC2 a row by the log missing (no compatibility line) WITHOUT a death mar
 PASS S6 RC2 a window event (an interference, item 273 (z)) with a death marker -> every member UNDETERMINED
 PASS S7 RC2 w13 with the translation cache line missing and a death marker -> E3-death FAILS, the rest UNDETERMINED, the arm FAIL
 PASS S8 RC2 the order of the gate: a row before the run FAILS and a row by the log missing -> "pre"
-PASS S9 RC2 the split: 5 rows by the log (S-pcw, GamePatch, compatibility, variant, window), the rest before the run; fmt_arm names each row "before the run" / "by the log" and prints the gate "ok"
+PASS S9 RC2 (item 452 (c)) the split by name: 5 rows by the log (S-pcw, GamePatch, compatibility, variant, window), 5 rows after the arm (return_app, return_glc, the binary after, man_post_app, man_post_glc), the rest before the run, none UNCLASSED; fmt_arm names the class of each row, prints the gate "ok" and the rows after the arm "ok"
 PASS S10 RC2 a GamePatch: line -> by the log "differs" (every member UNDETERMINED)
 PASS S11 RC7 the sha of man_launch_glc printed per arm (fmt_arm) - a data line (not man_post_glc)
 PASS S12 the catalogue not installed: the E1 members undetermined (not read), the gate row undetermined
@@ -209,6 +209,24 @@ PASS T9 RC4 the edge: exactly one FrameTrace row after the later line -> no
 PASS T9b RC4 the LATER of the two lines counts: "all pipelines created" early, "ready" after the last FrameTrace row -> 0 rows after the later -> void
 PASS T10 RC4 the empty-set form (the line "PipelinePrecache: no ... pipelines.bin yet" instead of "all pipelines created", as in s12_gw) -> void by the letter, the reason names the line of "no pipelines.bin yet" (a question to the lead)
 PASS T11 RC4 u_04 stuck on the preparation screen (no ready line, timeout) -> void, ps_logo in the denominator, its E1-screen FAILS (lower bound 600 s) -> KNOWN_SCENES_ENTERED FAIL on 19 (the failure is seen by its word)
+PASS Y1 RC1 the empty-set form on k_01: (i) the line number and the whole text of "no ... yet"; (ii) the FrameTrace rows after max(ready, "no ... yet") = every row of the log (both lines in the header); the parent directory = the variant of the seal line; one data line in fmt_arm with the text and the count
+PASS Y2 RC1 the data change no outcome: the empty-set k_01 stays "void" (the preparation screen not passed by RC4), its RC4 count None (the reading of item 446 (b) is the lead's)
+PASS Y3 RC1 the edge: both lines after the last FrameTrace row -> (ii) 0 (counted, not "not counted"); both before the last row -> (ii) 1
+PASS Y4 RC1 the LATER of the two lines: "no ... yet" after the ready line -> counted after "no ... yet" (1); "no ... yet" before the ready line -> counted after the ready line (1)
+PASS Y5 RC1 the path with another variant directory -> its text printed whole, the variant NO, (ii) counted; a path with slashes and the variant of the seal -> yes; the seal PENDING -> n/a
+PASS Y6 RC1 the form with both lines of the end of the preparation screen (the clean U arm) -> (ii) "not counted" naming the line "all pipelines created", (i) "none"; the RC4 count unchanged (every row after the later of ready / created); the same with a "no ... yet" line too -> not counted, (i) printed
+PASS Y7 RC1 not counted: no ready line (with "no ... yet") -> the reason names the ready line; neither "all pipelines created" nor "no ... yet" -> the reason names "no ... yet"
+PASS Y8 RC1 a path with a byte above 127 -> the text in ASCII with backslash escapes, the arm output ASCII (strict cp1250); the members of the U arm = those of the clean arm (the data change no member)
+PASS Y9 RC1 --read prints the data line per made k arm, per U arm and for w13; a not made k arm prints no data line
+PASS Z1 RC2 a crash and a failing return_glc (after the arm) -> the gate "ok", E3-death FAILS, the arm FAIL, "entered" void; fmt_arm prints the row FAIL with its class and the line of the rows after the arm
+PASS Z2 RC2 no death marker and a failing man_post_app -> the members as without it (= the clean arm, PASS), the reference too; "entered" void (the clean arm "yes")
+PASS Z3 RC2 the edge of the old letter: a failing row of the cache protocol BEFORE the arm (man_pre_app, restore_app, return_prev, glc_pre_copy, the binary before, man_launch_glc) with a crash -> every member UNDETERMINED
+PASS Z4 RC2 each row after the arm alone (return_app, return_glc, the binary after, man_post_app, man_post_glc) -> gate ok, the members = the clean arm, "entered" void
+PASS Z5 RC2 k_02 without app_post_copy (after the arm) -> "entered" void (the same arm with it: "no"), the gate ok; read_k prints the row FAIL
+PASS Z6 RC2 w13 with a failing return_app -> the W members as without it (no row "W admitted and entered", PASS = the clean W), "entered" void
+PASS Z7 RC2 every admission row of every arm kind (u, k_01, k_02, w13, no cache json, the rows by the log of whole arms) is in exactly one list - UNCLASSED none (a new row without a class fails here); "after the arm" = return_app, return_glc, the binary after, man_post_app, man_post_glc, app_post_copy of k_01 / k_02; the 5 rows by the log are "by the log"
+PASS Z8 RC2 an UNCLASSED failing row is read as before the run (every member UNDETERMINED) and printed UNCLASSED; a name in two lists is UNCLASSED
+PASS Z9 RC2 a U arm with a failing row after the arm only: KNOWN_SCENES PASS (its members PASS), its line "rows after the arm" FAIL in --read, its level in the denominator (entered void) -> KNOWN_SCENES_ENTERED PASS on 19
 PASS O1 k_01 first -> allowed; k_02 before k_01 -> rc 1; an unknown tag rc 2; a made tag rc 1
 PASS O2 u_01 after k_19 with the export OK -> 0; without the export -> rc 6
 PASS O3 a death marker in an earlier arm -> rc 6 (the series stops)
@@ -222,5 +240,5 @@ PASS P1 main: --plan rc 0 / unknown 2; --installed prints the seal line; --seal-
 PASS P2 --read prints the collection, the export and the known scenes with the word
 PASS P3 the output of main is ASCII
 PASS P4 the output of --plan, --installed, --seal-path, --tag, --read encodes in strict cp1250 (no process started: mutlib keeps its workers)
-checks: 223
+checks: 241
 ALL OK

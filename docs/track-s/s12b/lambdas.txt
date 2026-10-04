@@ -1,0 +1,26 @@
+1408a7d60:     	subq	$0x28, %rsp
+1408a7d64:     	leaq	0xaa7753(%rip), %rcx    # 0x14134f4be
+1408a7d6b:     	callq	*0xc055ff(%rip)         # 0x1414ad370
+1408a7d71:     	testq	%rax, %rax
+1408a7d74:     	je	0x1408a7d87 <.text+0x8a6d87>
+1408a7d76:     	cmpb	$0x0, (%rax)
+1408a7d79:     	je	0x1408a7d87 <.text+0x8a6d87>
+1408a7d7b:     	movq	%rax, %rcx
+1408a7d7e:     	addq	$0x28, %rsp
+1408a7d82:     	jmp	0x14072a7d0 <.text+0x7297d0>
+1408a7d87:     	movb	$0x1, %al
+1408a7d89:     	addq	$0x28, %rsp
+1408a7d8d:     	retq
+1408a7e00:     	subq	$0x28, %rsp
+1408a7e04:     	leaq	0xaa76ea(%rip), %rcx    # 0x14134f4f5
+1408a7e0b:     	callq	*0xc0555f(%rip)         # 0x1414ad370
+1408a7e11:     	testq	%rax, %rax
+1408a7e14:     	je	0x1408a7e27 <.text+0x8a6e27>
+1408a7e16:     	cmpb	$0x0, (%rax)
+1408a7e19:     	je	0x1408a7e27 <.text+0x8a6e27>
+1408a7e1b:     	movq	%rax, %rcx
+1408a7e1e:     	addq	$0x28, %rsp
+1408a7e22:     	jmp	0x14072a7d0 <.text+0x7297d0>
+1408a7e27:     	movb	$0x1, %al
+1408a7e29:     	addq	$0x28, %rsp
+1408a7e2d:     	retq

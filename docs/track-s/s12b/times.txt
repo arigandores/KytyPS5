@@ -1,0 +1,13 @@
+2026-10-04T07:43:13Z start S12b heartbeat; lock none; series api checked
+2026-10-04T07:43:19Z series active HPP-511 FS5c (Harness Engineer, run adab6aef) -> rule 30: no command > 60 s, no own build
+2026-10-04T07:46:00Z bincmp_s12b.py -> bincmp.out.txt b73f5f67
+2026-10-04T07:57:58Z waited foreign lock FS5c HPP-511 fs5_v (seen 07:52:47Z locked since 07:51:17Z per lock file, free 07:57:50Z); no processes/files meanwhile
+2026-10-04T08:06:08Z waited foreign lock FS5c fs5_w (seen 08:00:01Z, lock 07:59:13Z, free 08:06:02Z)
+2026-10-04T08:06:10Z dumps_s12b.sh -> pub/sc/mods/lambdas/sha_s12b.txt 26bf52eb
+2026-10-04T08:06:19Z sc_s12b.py -> sc_s12b.out.txt baa375e3
+2026-10-04T08:06:22Z shift_s12b.py -> shift.out.txt 9adfb2bd
+2026-10-04T08:06:23Z outside_s12b.py -> outside.out.txt 03091ce0
+2026-10-04T08:13:43Z waited foreign lock FS5c fs5_r1 (seen 08:07:34Z, lock 08:06:21Z, free 08:13:36Z)
+2026-10-04T08:13:44Z refs_s12b.py -> refs.out.txt ALL OK 5904ea57
+2026-10-04T08:21:12Z waited foreign lock FS5c fs5_hb (seen 08:16:00Z, lock 08:14:10Z, free 08:21:03Z)
+2026-10-04T08:21:14Z FACTS.md S12b section appended eb9fe727; review eca6ac32

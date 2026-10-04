@@ -1,0 +1,4 @@
+before LO (delta 0): runs 38899, <=4 bytes 38899, >4 bytes 0, bytes in >4 runs 0
+  4 KiB blocks with >4-byte runs: 0
+after HI (delta 368): runs 135908, <=4 bytes 135908, >4 bytes 0, bytes in >4 runs 0
+  4 KiB blocks with >4-byte runs: 0

@@ -1,0 +1,5 @@
+bc229841da4a2052ff4840bd3b931e94a87143c67cbec66e68c95a1e7b6485ba *C:/kyty/s288/s12a/build/kyty_emulator.pdb
+03adace94b327d2dfc9f85d71b290ad4e4c16bef55fd4c66cfe37839413bdbb9 *C:/kyty/f287/fs5/fs5a/build/kyty_emulator.pdb
+adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 *C:/kyty/s288/bin/kyty_emulator_adb0c82f.exe
+631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17 *C:/kyty/f287/bin/kyty_emulator_631ff987.exe
+adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 *C:/kyty/s288/s12a/build/install/kyty_emulator.exe

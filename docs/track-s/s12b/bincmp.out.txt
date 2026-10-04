@@ -1,0 +1,122 @@
+sha256 adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 24668160 C:/kyty/s288/bin/kyty_emulator_adb0c82f.exe
+sha256 adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 24668160 C:/kyty/s288/s12a/build/install/kyty_emulator.exe
+sha256 631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17 24668672 C:/kyty/f287/bin/kyty_emulator_631ff987.exe
+sha256 f65c27983717593b7e6a2779f6a1387b42021aefeedf96534a77d037eaacc52c 24668672 C:/kyty/f287/fs5/fs5b/build/install/kyty_emulator.exe
+copy == worktree install: True
+=== A = S12 adb0c82f, B = C:/kyty/f287/bin/kyty_emulator_631ff987.exe
+  .text    vsize A   18162278 B   18162646 DIFF
+  .rdata   vsize A    4988116 B    4988756 DIFF
+  .data    vsize A   36579936 B   36579936 equal
+  .pdata   vsize A     455580 B     455568 DIFF
+  .retplne vsize A        164 B        164 equal
+  .tls     vsize A     479234 B     479234 equal
+  .rsrc    vsize A        424 B        424 equal
+  .reloc   vsize A      41988 B      41996 DIFF
+  .rdata strings>=8 only A 144 only B 144
+    A only b'SDL-KytyPS5-2026-09-15-6a2987a-1877-g4d9e8ab7'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\3rdparty\\SDL2\\src\\render\\opengl\\SDL_render_gl.c'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\3rdparty\\SDL2\\src\\render\\opengles2\\SDL_render_gles2.c'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\3rdparty\\SDL2\\src\\render\\software\\SDL_render_sw.c'
+    A only b'KytyPS5-2026-09-15-6a2987a-1877-g4d9e8ab7'
+    A only b'0000000000000000C:\\kyty\\s288\\s12a\\wt\\src\\graphics\\guest_gpu\\command_processor\\pm4Handlers.cpp'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\src\\graphics\\guest_gpu\\graphicsRun.cpp'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\src\\graphics\\guest_gpu\\pm4.cpp'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\src\\graphics\\guest_gpu\\tile.cpp'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\src\\graphics\\host_gpu\\memoryTracker.cpp'
+    B only b'SDL-KytyPS5-2026-09-15-6a2987a-1875-g8a56dc2a'
+    B only b'C:\\kyty\\f287\\fs5\\fs5a\\wt\\3rdparty\\SDL2\\src\\render\\opengl\\SDL_render_gl.c'
+    B only b'C:\\kyty\\f287\\fs5\\fs5a\\wt\\3rdparty\\SDL2\\src\\render\\opengles2\\SDL_render_gles2.c'
+    B only b'C:\\kyty\\f287\\fs5\\fs5a\\wt\\3rdparty\\SDL2\\src\\render\\software\\SDL_render_sw.c'
+    B only b'KytyPS5-2026-09-15-6a2987a-1876-g0e72bc19'
+    B only b'0000000000000000C:\\kyty\\f287\\fs5\\fs5a\\wt\\src\\graphics\\guest_gpu\\command_processor\\pm4Handlers.cpp'
+    B only b'C:\\kyty\\f287\\fs5\\fs5a\\wt\\src\\graphics\\guest_gpu\\graphicsRun.cpp'
+    B only b'C:\\kyty\\f287\\fs5\\fs5a\\wt\\src\\graphics\\guest_gpu\\pm4.cpp'
+    B only b'C:\\kyty\\f287\\fs5\\fs5a\\wt\\src\\graphics\\guest_gpu\\tile.cpp'
+    B only b'C:\\kyty\\f287\\fs5\\fs5a\\wt\\src\\graphics\\host_gpu\\memoryTracker.cpp'
+  .data strings>=8 only A 194 only B 194
+    A only b'.?AV?$_Func_impl_no_alloc@V<lambda_4>@?0??ValidateShaderSpirv@?A0xBD5D39EE@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$all'
+    A only b'.?AV<lambda_4>@?0??ValidateShaderSpirv@?A0xBD5D39EE@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$allocator@I@std@@@std@@@Z@'
+    A only b'.?AV?$_Func_impl_no_alloc@V<lambda_1>@?0??TrimRecycledImages@?A0x19C679D9@Graphics@Libs@@YAX_K_N@Z@X$$V@std@@'
+    A only b'.?AV<lambda_1>@?0??TrimRecycledImages@?A0x19C679D9@Graphics@Libs@@YAX_K_N@Z@'
+    A only b'.?AV?$_Ref_count_obj2@VNativeSrtCode@?A0x56D11DA1@IR@ShaderRecompiler@Graphics@Libs@@@std@@'
+    A only b'.?AVNativeSrtCode@?A0x56D11DA1@IR@ShaderRecompiler@Graphics@Libs@@'
+    A only b'.?AV?$_Ref_count_obj2@UPortableAddressEntry@?A0xBC3D3B7E@SyncOnAddress@LibKernel@Libs@@@std@@'
+    A only b'.?AVRawFormatter@?A0x353C34D6@@'
+    A only b'.?AV?$_Func_impl_no_alloc@V<lambda_0>@?0??ValidateBinaryUsingContextAndValidationState@?A0x50E73550@val@spvtools@@YA?AW4'
+    A only b'.?AV<lambda_0>@?0??ValidateBinaryUsingContextAndValidationState@?A0x50E73550@val@spvtools@@YA?AW4spv_result_t@@AEBUspv_c'
+    B only b'.?AV?$_Func_impl_no_alloc@V<lambda_4>@?0??ValidateShaderSpirv@?A0x545B7187@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$all'
+    B only b'.?AV<lambda_4>@?0??ValidateShaderSpirv@?A0x545B7187@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$allocator@I@std@@@std@@@Z@'
+    B only b'.?AV?$_Func_impl_no_alloc@V<lambda_1>@?0??TrimRecycledImages@?A0x4194A41D@Graphics@Libs@@YAX_K_N@Z@X$$V@std@@'
+    B only b'.?AV<lambda_1>@?0??TrimRecycledImages@?A0x4194A41D@Graphics@Libs@@YAX_K_N@Z@'
+    B only b'.?AV?$_Ref_count_obj2@VNativeSrtCode@?A0xA7C15EE1@IR@ShaderRecompiler@Graphics@Libs@@@std@@'
+    B only b'.?AVNativeSrtCode@?A0xA7C15EE1@IR@ShaderRecompiler@Graphics@Libs@@'
+    B only b'.?AV?$_Ref_count_obj2@UPortableAddressEntry@?A0xDDC5D3D3@SyncOnAddress@LibKernel@Libs@@@std@@'
+    B only b'.?AVRawFormatter@?A0x7DBE4339@@'
+    B only b'.?AV?$_Func_impl_no_alloc@V<lambda_0>@?0??ValidateBinaryUsingContextAndValidationState@?A0x2B9C3B5A@val@spvtools@@YA?AW4'
+    B only b'.?AV<lambda_0>@?0??ValidateBinaryUsingContextAndValidationState@?A0x2B9C3B5A@val@spvtools@@YA?AW4spv_result_t@@AEBUspv_c'
+  .text differing runs 318692 bytes 8991195
+  first run RVA 0x455d len 1; last run RVA 0x1153262 len 2
+  run length histogram (9 = >=9) [(1, 32427), (2, 35827), (3, 8953), (4, 8835), (5, 10852), (6, 13838), (7, 7759), (8, 5604), (9, 194597)]
+  runs > 4 bytes: 232650 ['0x8818d2:34', '0x8818f5:6', '0x881909:58', '0x881948:159', '0x8819e8:28', '0x881a05:51', '0x881a3b:47', '0x881a6f:56', '0x881aad:16', '0x881abe:6', '0x881ac5:10', '0x881ad0:33', '0x881af2:79', '0x881b42:79', '0x881b92:89', '0x881bec:8', '0x881bf5:16', '0x881c06:53', '0x881c3c:37', '0x881c62:79']
+  span of runs > 4 bytes: 0x8818d2 .. 0x1150236 (9234788 bytes)
+=== A = S12 adb0c82f, B = C:/kyty/f287/fs5/fs5b/build/install/kyty_emulator.exe
+  .text    vsize A   18162278 B   18162646 DIFF
+  .rdata   vsize A    4988116 B    4988756 DIFF
+  .data    vsize A   36579936 B   36579936 equal
+  .pdata   vsize A     455580 B     455568 DIFF
+  .retplne vsize A        164 B        164 equal
+  .tls     vsize A     479234 B     479234 equal
+  .rsrc    vsize A        424 B        424 equal
+  .reloc   vsize A      41988 B      41996 DIFF
+  .rdata strings>=8 only A 143 only B 143
+    A only b'SDL-KytyPS5-2026-09-15-6a2987a-1877-g4d9e8ab7'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\3rdparty\\SDL2\\src\\render\\opengl\\SDL_render_gl.c'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\3rdparty\\SDL2\\src\\render\\opengles2\\SDL_render_gles2.c'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\3rdparty\\SDL2\\src\\render\\software\\SDL_render_sw.c'
+    A only b'KytyPS5-2026-09-15-6a2987a-1877-g4d9e8ab7'
+    A only b'0000000000000000C:\\kyty\\s288\\s12a\\wt\\src\\graphics\\guest_gpu\\command_processor\\pm4Handlers.cpp'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\src\\graphics\\guest_gpu\\graphicsRun.cpp'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\src\\graphics\\guest_gpu\\pm4.cpp'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\src\\graphics\\guest_gpu\\tile.cpp'
+    A only b'C:\\kyty\\s288\\s12a\\wt\\src\\graphics\\host_gpu\\memoryTracker.cpp'
+    B only b'SDL-KytyPS5-2026-09-15-6a2987a-1876-g0e72bc19'
+    B only b'C:\\kyty\\f287\\fs5\\fs5b\\wt\\3rdparty\\SDL2\\src\\render\\opengl\\SDL_render_gl.c'
+    B only b'C:\\kyty\\f287\\fs5\\fs5b\\wt\\3rdparty\\SDL2\\src\\render\\opengles2\\SDL_render_gles2.c'
+    B only b'C:\\kyty\\f287\\fs5\\fs5b\\wt\\3rdparty\\SDL2\\src\\render\\software\\SDL_render_sw.c'
+    B only b'KytyPS5-2026-09-15-6a2987a-1876-g0e72bc19'
+    B only b'0000000000000000C:\\kyty\\f287\\fs5\\fs5b\\wt\\src\\graphics\\guest_gpu\\command_processor\\pm4Handlers.cpp'
+    B only b'C:\\kyty\\f287\\fs5\\fs5b\\wt\\src\\graphics\\guest_gpu\\graphicsRun.cpp'
+    B only b'C:\\kyty\\f287\\fs5\\fs5b\\wt\\src\\graphics\\guest_gpu\\pm4.cpp'
+    B only b'C:\\kyty\\f287\\fs5\\fs5b\\wt\\src\\graphics\\guest_gpu\\tile.cpp'
+    B only b'C:\\kyty\\f287\\fs5\\fs5b\\wt\\src\\graphics\\host_gpu\\memoryTracker.cpp'
+  .data strings>=8 only A 194 only B 194
+    A only b'.?AV?$_Func_impl_no_alloc@V<lambda_4>@?0??ValidateShaderSpirv@?A0xBD5D39EE@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$all'
+    A only b'.?AV<lambda_4>@?0??ValidateShaderSpirv@?A0xBD5D39EE@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$allocator@I@std@@@std@@@Z@'
+    A only b'.?AV?$_Func_impl_no_alloc@V<lambda_1>@?0??TrimRecycledImages@?A0x19C679D9@Graphics@Libs@@YAX_K_N@Z@X$$V@std@@'
+    A only b'.?AV<lambda_1>@?0??TrimRecycledImages@?A0x19C679D9@Graphics@Libs@@YAX_K_N@Z@'
+    A only b'.?AV?$_Ref_count_obj2@VNativeSrtCode@?A0x56D11DA1@IR@ShaderRecompiler@Graphics@Libs@@@std@@'
+    A only b'.?AVNativeSrtCode@?A0x56D11DA1@IR@ShaderRecompiler@Graphics@Libs@@'
+    A only b'.?AV?$_Ref_count_obj2@UPortableAddressEntry@?A0xBC3D3B7E@SyncOnAddress@LibKernel@Libs@@@std@@'
+    A only b'.?AVRawFormatter@?A0x353C34D6@@'
+    A only b'.?AV?$_Func_impl_no_alloc@V<lambda_0>@?0??ValidateBinaryUsingContextAndValidationState@?A0x50E73550@val@spvtools@@YA?AW4'
+    A only b'.?AV<lambda_0>@?0??ValidateBinaryUsingContextAndValidationState@?A0x50E73550@val@spvtools@@YA?AW4spv_result_t@@AEBUspv_c'
+    B only b'.?AV?$_Func_impl_no_alloc@V<lambda_4>@?0??ValidateShaderSpirv@?A0x11AF1845@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$all'
+    B only b'.?AV<lambda_4>@?0??ValidateShaderSpirv@?A0x11AF1845@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$allocator@I@std@@@std@@@Z@'
+    B only b'.?AV?$_Func_impl_no_alloc@V<lambda_1>@?0??TrimRecycledImages@?A0x3F3E0737@Graphics@Libs@@YAX_K_N@Z@X$$V@std@@'
+    B only b'.?AV<lambda_1>@?0??TrimRecycledImages@?A0x3F3E0737@Graphics@Libs@@YAX_K_N@Z@'
+    B only b'.?AV?$_Ref_count_obj2@VNativeSrtCode@?A0x9F26C8CF@IR@ShaderRecompiler@Graphics@Libs@@@std@@'
+    B only b'.?AVNativeSrtCode@?A0x9F26C8CF@IR@ShaderRecompiler@Graphics@Libs@@'
+    B only b'.?AV?$_Ref_count_obj2@UPortableAddressEntry@?A0x84437A59@SyncOnAddress@LibKernel@Libs@@@std@@'
+    B only b'.?AVRawFormatter@?A0xFA20B413@@'
+    B only b'.?AV?$_Func_impl_no_alloc@V<lambda_0>@?0??ValidateBinaryUsingContextAndValidationState@?A0xA01BBA31@val@spvtools@@YA?AW4'
+    B only b'.?AV<lambda_0>@?0??ValidateBinaryUsingContextAndValidationState@?A0xA01BBA31@val@spvtools@@YA?AW4spv_result_t@@AEBUspv_c'
+  .text differing runs 318692 bytes 8991195
+  first run RVA 0x455d len 1; last run RVA 0x1153262 len 2
+  run length histogram (9 = >=9) [(1, 32427), (2, 35827), (3, 8953), (4, 8835), (5, 10852), (6, 13838), (7, 7759), (8, 5604), (9, 194597)]
+  runs > 4 bytes: 232650 ['0x8818d2:34', '0x8818f5:6', '0x881909:58', '0x881948:159', '0x8819e8:28', '0x881a05:51', '0x881a3b:47', '0x881a6f:56', '0x881aad:16', '0x881abe:6', '0x881ac5:10', '0x881ad0:33', '0x881af2:79', '0x881b42:79', '0x881b92:89', '0x881bec:8', '0x881bf5:16', '0x881c06:53', '0x881c3c:37', '0x881c62:79']
+  span of runs > 4 bytes: 0x8818d2 .. 0x1150236 (9234788 bytes)
+KYTY_GIT_REVISION 4d9e8ab7 in S12: 0
+SDL_REVISION in S12: [b'SDL-KytyPS5-2026-09-15-6a2987a-1877-g4d9e8ab7']
+signature 26ce5fc7 in S12: 1
+S-pcw format string in S12: 1
+ALL OK

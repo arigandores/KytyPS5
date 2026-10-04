@@ -1,0 +1,20 @@
+OK  66da0c76:docs/ROADMAP.md:22312
+OK  98f11816:docs/track-f/f18a.md:7
+OK  98f11816:docs/track-f/f18a.md:43
+OK  98f11816:docs/track-f/f18a.md:158
+OK  98f11816:docs/track-f/f18a.md:173
+OK  98f11816:docs/track-f/f18a.md:192
+OK  98f11816:docs/track-f/f18a.md:238
+OK  95440108:src/libs/controller.cpp:145
+OK  95440108:src/libs/audio.cpp:435
+OK  95440108:src/libs/audio.cpp:833
+OK  95440108:src/libs/audio.cpp:855
+OK  95440108:src/libs/controller.cpp:500
+OK  95440108:src/libs/controller.cpp:765
+OK  4b69833b:src/SDL.c:119
+OK  95440108:src/graphics/presentation/window/window.cpp:380
+OK  95440108:src/graphics/presentation/window/window.cpp:749
+OK  98f11816:docs/track-f/register.md:144
+OK  98f11816:docs/track-f/register.md:175
+refs 18 of 18
+ALL OK

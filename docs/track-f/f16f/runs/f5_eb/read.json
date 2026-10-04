@@ -1,0 +1,276 @@
+{
+ "tag": "f5_eb",
+ "kind": "diag",
+ "level": "ending_boss_after_credit",
+ "log": "C:/kyty/f287/f16f\\log_f5_eb.txt",
+ "log_sha256": "f201b99c358b3bcf8aabb3d6691c296e458f73edfc1ed32de43c2ddd40f72d19",
+ "log_lines": 1864070,
+ "stdout_sha256": "2fd2febef6b9f9fa5289b137ef454f20770ad766e364c70f1d8bb296c8dfbc5d",
+ "rev": [
+  [
+   "log",
+   526,
+   "4950557"
+  ]
+ ],
+ "rev_row": "YES",
+ "installed_sha": "4ad735ad70b7504df85560dc6b6c2e3520f0256aa655a4ff4db03f71122b09f6",
+ "installed_before": "adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421",
+ "installed_after": "adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421",
+ "sha_ok": true,
+ "version_ok": true,
+ "before_ok": true,
+ "after_ok": true,
+ "env": {
+  "KYTY_DIAG_F5": "1",
+  "KYTY_DIAG_F6": "1"
+ },
+ "env_ok": true,
+ "stc": [
+  "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10"
+ ],
+ "dir_ok": true,
+ "warm_txt": "warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T17:30:29Z; entries of _ShaderCache/PPSA21564: 1347",
+ "warm_ok": true,
+ "guest_first": 12071,
+ "entry_line": 147967,
+ "scene_change_line": null,
+ "first_scene_n": 141,
+ "hold_s": 333.6,
+ "hold_min_s": 300,
+ "hold_len_ok": true,
+ "k2_after": 0,
+ "dt_max_after": 134348,
+ "hold_ok": true,
+ "close_info": "outcome ok hold_exit None hold_s 330.2 close_rc 0 close_killed False",
+ "death": [],
+ "stdout_present": true,
+ "vke": 0,
+ "skipped_draw": 0,
+ "win": {
+  "lost keyboard focus": 1
+ },
+ "recovering": 0,
+ "gamepatch": 0,
+ "manifest": "manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a",
+ "manifest_ok": true,
+ "f5_any": 170,
+ "f6_any": 170,
+ "f5": {
+  "mode": [
+   74
+  ],
+  "mode_n": 1,
+  "lines": 169,
+  "malformed": 0,
+  "ident_bad": [],
+  "ident_bad_n": 0,
+  "mono_bad": [],
+  "mono_bad_n": 0,
+  "last": {
+   "rt_resolves": 6132,
+   "dcc_rt": 420,
+   "rtcheck_meta": 405638,
+   "dcc_rt_pending": 4186,
+   "dcc_rt_cleared": 4186,
+   "dcc_rt_skip_levels": 0,
+   "dcc_rt_skip_partial": 0,
+   "dcc_rt_skip_decode": 0,
+   "dcc_rt_skip_layers": 0,
+   "dcc_mat_pending": 18870,
+   "dcc_mat_cleared": 18870,
+   "dcc_mat_undecoded": 0,
+   "dcc_fce": 101316,
+   "dcc_fce_image": 81184,
+   "dcc_fce_no_image": 20132,
+   "dcc_fill_all": 206973,
+   "dcc_fill_meta": 62046,
+   "dcc_fill_clear": 62046,
+   "dcc_fill_uncompressed": 0,
+   "dcc_fill_unknown": 0,
+   "dcc_reset_stale": 12,
+   "dcc_reset_type": 0,
+   "meta_refused_known": 267140,
+   "meta_cs_tracked": 206900,
+   "meta_cs_untracked": 60240,
+   "meta_dma_untracked": 0,
+   "meta_dma_noclear": 0,
+   "cmask_rt_pending": 39004,
+   "cmask_rt_cleared": 39004,
+   "cmask_rt_skip_value": 0,
+   "cmask_rt_skip_partial": 0,
+   "cmask_rt_skip_decode": 0,
+   "cmask_rt_skip_layers": 0,
+   "cmask_fce": 40255,
+   "cmask_fce_noimage": 0,
+   "cmask_fce_meta": 20122,
+   "cmask_fce_msaa": 0,
+   "cmask_fce_layout": 0,
+   "cmask_fce_nofill": 0,
+   "cmask_fce_drawn": 1247,
+   "cmask_fce_b42": 18882,
+   "cmask_fce_unapplied": 4,
+   "fmask_read": 0,
+   "round_unorm": 0,
+   "round_float": 146224,
+   "round_other": 0,
+   "ds_unbound": 0,
+   "ds_unbound_clear": 0,
+   "stereo_writes": 290753,
+   "stereo_nonzero": 0,
+   "zero_disp": 239832,
+   "frame": 20120
+  },
+  "last_lineno": 1862443,
+  "mode_ok": true,
+  "mismatch_letter": {
+   "meta": 0,
+   "round": 0,
+   "ds": 0,
+   "stereo": 0,
+   "zero": 0,
+   "fill": 0,
+   "counts": {
+    "meta": 1,
+    "round": 1,
+    "ds": 0,
+    "stereo": 16,
+    "zero": 32,
+    "fill": 32
+   }
+  },
+  "mismatch_variant": {
+   "meta": 0,
+   "round": 0,
+   "ds": 0,
+   "stereo": 0,
+   "zero": 0,
+   "fill": 0,
+   "counts": {
+    "meta": 1,
+    "round": 1,
+    "ds": 0,
+    "stereo": 16,
+    "zero": 32,
+    "fill": 32
+   }
+  },
+  "b": {
+   "dcc_fill_unknown": 0,
+   "dcc_rt_skip_levels": 0,
+   "dcc_rt_skip_partial": 0,
+   "dcc_rt_skip_decode": 0,
+   "dcc_rt_skip_layers": 0,
+   "dcc_mat_undecoded": 0,
+   "dcc_fce_no_image": 20132,
+   "meta_cs_untracked": 60240,
+   "meta_dma_untracked": 0,
+   "cmask_rt_skip_value": 0,
+   "cmask_rt_skip_partial": 0,
+   "cmask_rt_skip_decode": 0,
+   "cmask_rt_skip_layers": 0,
+   "cmask_fce_msaa": 0,
+   "cmask_fce_nofill": 0,
+   "cmask_fce_unapplied": 4,
+   "cmask_fce_layout": 0
+  },
+  "b_sum": 80376,
+  "parents_zero": [],
+  "control": [
+   [
+    "DiagF5: mode=1 before the first GuestOut",
+    true
+   ],
+   [
+    "rt_resolves > 0 (last line)",
+    true
+   ],
+   [
+    "line_mismatch_* = 0, all six (LETTER: whole log)",
+    true
+   ],
+   [
+    "identities (7 families =, 3 pairs <=) hold on every line, 0 malformed lines",
+    true
+   ],
+   [
+    "monotone over the lines",
+    true
+   ],
+   [
+    "cmask_fce_noimage = 0 (family invariant, items 458 (v), 470 (b))",
+    true
+   ]
+  ],
+  "control_alive": true
+ },
+ "f6": {
+  "mode": [
+   75
+  ],
+  "mode_n": 1,
+  "lines": 169,
+  "malformed": 0,
+  "ident_bad": [],
+  "ident_bad_n": 0,
+  "mono_bad": [],
+  "mono_bad_n": 0,
+  "last": {
+   "draws": 1322853,
+   "draws_idx": 1149406,
+   "draws_auto": 123732,
+   "draws_ind": 0,
+   "draws_mesh": 49715,
+   "ps_draws": 773522,
+   "s_bound": 1245623,
+   "s_addr0_fmt": 0,
+   "s_addr0_nofmt": 0,
+   "s_mask0_addr": 196126,
+   "s_empty": 9141075,
+   "h_bound": 1245623,
+   "bound_missing": 0,
+   "bound_extra": 0,
+   "w_total": 1247456,
+   "w_bound": 1235239,
+   "w_mask0": 12217,
+   "w_addr0_fmt": 0,
+   "w_addr0_nofmt": 0,
+   "w_ge8": 0,
+   "frame": 20120
+  },
+  "last_lineno": 1862444,
+  "mode_ok": true,
+  "control": [
+   [
+    "DiagF6: mode=1 before the first GuestOut",
+    true
+   ],
+   [
+    "draws > 0, s_bound > 0, ps_draws > 0",
+    true
+   ],
+   [
+    "w_mask0 + w_addr0_fmt + w_addr0_nofmt > 0",
+    true
+   ],
+   [
+    "identities (4 =, 1 <=) hold on every line, 0 malformed lines",
+    true
+   ],
+   [
+    "monotone over the lines",
+    true
+   ]
+  ],
+  "inputs": {
+   "w_addr0_fmt": 0,
+   "bound_missing": 0,
+   "bound_extra": 0,
+   "w_ge8": 0,
+   "s_addr0_fmt": 0
+  },
+  "control_alive": true
+ },
+ "null_ok": false,
+ "interference": false
+}

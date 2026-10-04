@@ -1,0 +1,106 @@
+{
+ "tag": "f5_sg0",
+ "kind": "null",
+ "level": "underwater_aerial_garden",
+ "log": "C:/kyty/f287/f16f\\log_f5_sg0.txt",
+ "log_sha256": "b969e49ff37fddca578ef37e2abb11e4dabc76c2ddce504b90c1025f2fe45146",
+ "log_lines": 517551,
+ "stdout_sha256": "349a85827dbe2e20ddc095af7039e69361d7d0d525323233414f11a07f2bdde8",
+ "rev": [
+  [
+   "log",
+   524,
+   "4950557"
+  ]
+ ],
+ "rev_row": "YES",
+ "installed_sha": "4ad735ad70b7504df85560dc6b6c2e3520f0256aa655a4ff4db03f71122b09f6",
+ "installed_before": "adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421",
+ "installed_after": "adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421",
+ "sha_ok": true,
+ "version_ok": true,
+ "before_ok": true,
+ "after_ok": true,
+ "env": {},
+ "env_ok": true,
+ "stc": [
+  "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10"
+ ],
+ "dir_ok": true,
+ "warm_txt": "warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T17:39:52Z; entries of _ShaderCache/PPSA21564: 1347",
+ "warm_ok": true,
+ "guest_first": 12297,
+ "entry_line": 224310,
+ "scene_change_line": null,
+ "first_scene_n": 215,
+ "hold_s": 94.3,
+ "hold_min_s": 60,
+ "hold_len_ok": true,
+ "k2_after": 0,
+ "dt_max_after": 188554,
+ "hold_ok": true,
+ "close_info": "outcome ok hold_exit None hold_s 90.2 close_rc 0 close_killed False",
+ "death": [],
+ "stdout_present": true,
+ "vke": 0,
+ "skipped_draw": 0,
+ "win": {
+  "lost keyboard focus": 1
+ },
+ "recovering": 0,
+ "gamepatch": 0,
+ "manifest": "manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a",
+ "manifest_ok": true,
+ "f5_any": 0,
+ "f6_any": 0,
+ "f5": {
+  "mode": [],
+  "mode_n": 0,
+  "lines": 0,
+  "malformed": 0,
+  "ident_bad": [],
+  "ident_bad_n": 0,
+  "mono_bad": [],
+  "mono_bad_n": 0,
+  "last": null,
+  "last_lineno": null,
+  "mode_ok": false,
+  "control": [
+   [
+    "a parseable DiagF5 frame line exists",
+    false
+   ],
+   [
+    "DiagF5: mode=1 before the first GuestOut",
+    false
+   ]
+  ],
+  "control_alive": false
+ },
+ "f6": {
+  "mode": [],
+  "mode_n": 0,
+  "lines": 0,
+  "malformed": 0,
+  "ident_bad": [],
+  "ident_bad_n": 0,
+  "mono_bad": [],
+  "mono_bad_n": 0,
+  "last": null,
+  "last_lineno": null,
+  "mode_ok": false,
+  "control": [
+   [
+    "a parseable DiagF6 frame line exists",
+    false
+   ],
+   [
+    "DiagF6: mode=1 before the first GuestOut",
+    false
+   ]
+  ],
+  "control_alive": false
+ },
+ "null_ok": true,
+ "interference": false
+}

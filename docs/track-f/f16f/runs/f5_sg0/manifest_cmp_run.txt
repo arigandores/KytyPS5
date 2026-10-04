@@ -1,0 +1,4 @@
+manifest cmp DIFFER only-before 1 only-after 2
+  before-only _ShaderCache	PPSA21564/variant_fixb26_fixb1b_fixf10/pipelines.bin	3945014	8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22
+  after-only _ShaderCache	PPSA21564/variant_fixb26_fixb1b_fixf10/pipelines.bin	3956645	3ecff0c8134f330d97f0eb1a921aeb5867ad8a2559f66eaa1443d5aed5d409a6
+  after-only _ShaderCache	PPSA21564/variant_fixb26_fixb1b_fixf10/vs_4aab2ea48e75a85f_340c40118b40a594.bin	11078	53465d70c5a0ea9b65cf8c1dc82298622f07074f24551ed2f7d7dae7168bbd7f

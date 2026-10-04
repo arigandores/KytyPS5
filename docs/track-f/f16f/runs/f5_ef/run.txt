@@ -1,0 +1,17 @@
+prereg: f16f_seal.md  19435 bytes  sha256 f8cc35297f2f3b16  mtime 2026-10-04T18:43:57  mtime-ctime +0.000 s
+pre_run: host 393 processes, top by CPU: <app>:18388 45119s, <app>:37780 24919s, <app>:7304 12837s, <app>:23460 11175s, <app>:10308 5491s, <app>:25836 3566s
+pre_run: GPU 5.0 % busy, 27.3 W, 2206 MiB used, SM 1822.0 MHz, 26 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f16f\cpuclk.py is not there
+--- attempt 1: launching
+9.7 s  LevelDocument Loaded: enemy_final
+13.9 s  Level has started: enemy_final
+16.0 s  scene stable at frame 440 (90 frames with draws >= 300)
+holding the run for 330 s
+hold end: ft_total 20254, ft_tail 301 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 4.2, 'close_wait_s': 40}
+hold_gpu: median 59.0 % busy over 647 rows (2026/10/04 19:11:26.340 .. 2026/10/04 19:16:56.388), a row, not a guard
+copied C:\kyty\f287\f16f\log_f5_ef.txt
+copied C:\kyty\f287\f16f\stdout_f5_ef.txt
+
+attempt 1  ok               document=9.7 s started=13.9 s stable=16.0 s 
+VERDICT: enemy_final in 16.0 s - PASS (acceptance <= 90 s)

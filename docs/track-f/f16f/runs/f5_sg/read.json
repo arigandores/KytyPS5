@@ -1,0 +1,284 @@
+{
+ "tag": "f5_sg",
+ "kind": "diag",
+ "level": "underwater_aerial_garden",
+ "log": "C:/kyty/f287/f16f\\log_f5_sg.txt",
+ "log_sha256": "74cf440bd9185179f95c8f0db79cf15deeb7e8be02de9d992d7f2cfd68f5b51b",
+ "log_lines": 1153968,
+ "stdout_sha256": "6fe1840f889f7e97ec5944d1ff02e240136f03b8166564be63e3d88f592bd2b4",
+ "rev": [
+  [
+   "log",
+   526,
+   "4950557"
+  ]
+ ],
+ "rev_row": "YES",
+ "installed_sha": "4ad735ad70b7504df85560dc6b6c2e3520f0256aa655a4ff4db03f71122b09f6",
+ "installed_before": "adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421",
+ "installed_after": "adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421",
+ "sha_ok": true,
+ "version_ok": true,
+ "before_ok": true,
+ "after_ok": true,
+ "env": {
+  "KYTY_DIAG_F5": "1",
+  "KYTY_DIAG_F6": "1"
+ },
+ "env_ok": true,
+ "stc": [
+  "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10"
+ ],
+ "dir_ok": true,
+ "warm_txt": "warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T17:03:11Z; entries of _ShaderCache/PPSA21564: 1347",
+ "warm_ok": true,
+ "guest_first": 12297,
+ "entry_line": 229423,
+ "scene_change_line": null,
+ "first_scene_n": 390,
+ "hold_s": 334.2,
+ "hold_min_s": 300,
+ "hold_len_ok": true,
+ "k2_after": 0,
+ "dt_max_after": 182139,
+ "hold_ok": true,
+ "close_info": "outcome ok hold_exit None hold_s 330.1 close_rc 0 close_killed False",
+ "death": [],
+ "stdout_present": true,
+ "vke": 0,
+ "skipped_draw": 0,
+ "win": {
+  "lost keyboard focus": 2
+ },
+ "recovering": 0,
+ "gamepatch": 0,
+ "manifest": "manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a",
+ "manifest_ok": true,
+ "f5_any": 171,
+ "f6_any": 171,
+ "f5": {
+  "mode": [
+   74
+  ],
+  "mode_n": 1,
+  "lines": 170,
+  "malformed": 0,
+  "ident_bad": [],
+  "ident_bad_n": 0,
+  "mono_bad": [],
+  "mono_bad_n": 0,
+  "last": {
+   "rt_resolves": 93882,
+   "dcc_rt": 44889,
+   "rtcheck_meta": 32899731,
+   "dcc_rt_pending": 39100,
+   "dcc_rt_cleared": 39100,
+   "dcc_rt_skip_levels": 0,
+   "dcc_rt_skip_partial": 0,
+   "dcc_rt_skip_decode": 0,
+   "dcc_rt_skip_layers": 0,
+   "dcc_mat_pending": 9999,
+   "dcc_mat_cleared": 9999,
+   "dcc_mat_undecoded": 0,
+   "dcc_fce": 59891,
+   "dcc_fce_image": 59489,
+   "dcc_fce_no_image": 402,
+   "dcc_fill_all": 149764,
+   "dcc_fill_meta": 59489,
+   "dcc_fill_clear": 59489,
+   "dcc_fill_uncompressed": 0,
+   "dcc_fill_unknown": 0,
+   "dcc_reset_stale": 14,
+   "dcc_reset_type": 0,
+   "meta_refused_known": 216696,
+   "meta_cs_tracked": 149675,
+   "meta_cs_untracked": 67021,
+   "meta_dma_untracked": 0,
+   "meta_dma_noclear": 0,
+   "cmask_rt_pending": 10403,
+   "cmask_rt_cleared": 10403,
+   "cmask_rt_skip_value": 0,
+   "cmask_rt_skip_partial": 0,
+   "cmask_rt_skip_decode": 0,
+   "cmask_rt_skip_layers": 0,
+   "cmask_fce": 20020,
+   "cmask_fce_noimage": 0,
+   "cmask_fce_meta": 10005,
+   "cmask_fce_msaa": 0,
+   "cmask_fce_layout": 0,
+   "cmask_fce_nofill": 0,
+   "cmask_fce_drawn": 9613,
+   "cmask_fce_b42": 398,
+   "cmask_fce_unapplied": 4,
+   "fmask_read": 0,
+   "round_unorm": 0,
+   "round_float": 6220935,
+   "round_other": 0,
+   "ds_unbound": 9601,
+   "ds_unbound_clear": 0,
+   "stereo_writes": 274901,
+   "stereo_nonzero": 0,
+   "zero_disp": 115404,
+   "frame": 10004
+  },
+  "last_lineno": 1151853,
+  "mode_ok": true,
+  "mismatch_letter": {
+   "meta": 0,
+   "round": 0,
+   "ds": 0,
+   "stereo": 0,
+   "zero": 0,
+   "fill": 0,
+   "counts": {
+    "meta": 1,
+    "round": 1,
+    "ds": 1,
+    "stereo": 16,
+    "zero": 32,
+    "fill": 32
+   }
+  },
+  "mismatch_variant": {
+   "meta": 0,
+   "round": 0,
+   "ds": 0,
+   "stereo": 0,
+   "zero": 0,
+   "fill": 0,
+   "counts": {
+    "meta": 1,
+    "round": 1,
+    "ds": 1,
+    "stereo": 16,
+    "zero": 32,
+    "fill": 32
+   }
+  },
+  "b": {
+   "dcc_fill_unknown": 0,
+   "dcc_rt_skip_levels": 0,
+   "dcc_rt_skip_partial": 0,
+   "dcc_rt_skip_decode": 0,
+   "dcc_rt_skip_layers": 0,
+   "dcc_mat_undecoded": 0,
+   "dcc_fce_no_image": 402,
+   "meta_cs_untracked": 67021,
+   "meta_dma_untracked": 0,
+   "cmask_rt_skip_value": 0,
+   "cmask_rt_skip_partial": 0,
+   "cmask_rt_skip_decode": 0,
+   "cmask_rt_skip_layers": 0,
+   "cmask_fce_msaa": 0,
+   "cmask_fce_nofill": 0,
+   "cmask_fce_unapplied": 4,
+   "cmask_fce_layout": 0
+  },
+  "b_sum": 67427,
+  "parents_zero": [],
+  "control": [
+   [
+    "DiagF5: mode=1 before the first GuestOut",
+    true
+   ],
+   [
+    "rt_resolves > 0 (last line)",
+    true
+   ],
+   [
+    "line_mismatch_* = 0, all six (LETTER: whole log)",
+    true
+   ],
+   [
+    "identities (7 families =, 3 pairs <=) hold on every line, 0 malformed lines",
+    true
+   ],
+   [
+    "monotone over the lines",
+    true
+   ],
+   [
+    "cmask_fce_noimage = 0 (family invariant, items 458 (v), 470 (b))",
+    true
+   ],
+   [
+    "f5_sg: dcc_rt >= 1 and dcc_rt_pending >= 1 (items 421 (g), 427 (g)(2))",
+    true
+   ]
+  ],
+  "control_alive": true
+ },
+ "f6": {
+  "mode": [
+   75
+  ],
+  "mode_n": 1,
+  "lines": 170,
+  "malformed": 0,
+  "ident_bad": [],
+  "ident_bad_n": 0,
+  "mono_bad": [],
+  "mono_bad_n": 0,
+  "last": {
+   "draws": 49201698,
+   "draws_idx": 47259130,
+   "draws_auto": 254469,
+   "draws_ind": 19226,
+   "draws_mesh": 1668873,
+   "ps_draws": 37652478,
+   "s_bound": 122956328,
+   "s_addr0_fmt": 0,
+   "s_addr0_nofmt": 0,
+   "s_mask0_addr": 20095744,
+   "s_empty": 250561512,
+   "h_bound": 122956328,
+   "bound_missing": 0,
+   "bound_extra": 0,
+   "w_total": 125157914,
+   "w_bound": 121571253,
+   "w_mask0": 3586661,
+   "w_addr0_fmt": 0,
+   "w_addr0_nofmt": 0,
+   "w_ge8": 0,
+   "frame": 10004
+  },
+  "last_lineno": 1151854,
+  "mode_ok": true,
+  "control": [
+   [
+    "DiagF6: mode=1 before the first GuestOut",
+    true
+   ],
+   [
+    "draws > 0, s_bound > 0, ps_draws > 0",
+    true
+   ],
+   [
+    "w_mask0 + w_addr0_fmt + w_addr0_nofmt > 0",
+    true
+   ],
+   [
+    "identities (4 =, 1 <=) hold on every line, 0 malformed lines",
+    true
+   ],
+   [
+    "monotone over the lines",
+    true
+   ],
+   [
+    "f5_sg: draws_mesh > 0 (item 433 (v))",
+    true
+   ]
+  ],
+  "inputs": {
+   "w_addr0_fmt": 0,
+   "bound_missing": 0,
+   "bound_extra": 0,
+   "w_ge8": 0,
+   "s_addr0_fmt": 0
+  },
+  "control_alive": true
+ },
+ "null_ok": false,
+ "interference": false
+}

@@ -1,0 +1,17 @@
+prereg: f16f_seal.md  19435 bytes  sha256 f8cc35297f2f3b16  mtime 2026-10-04T18:43:57  mtime-ctime +0.000 s
+pre_run: host 402 processes, top by CPU: <app>:18388 45263s, <app>:37780 24955s, <app>:7304 12858s, <app>:23460 11189s, <app>:10308 5498s, <app>:25836 3566s
+pre_run: GPU 10.0 % busy, 36.3 W, 2397 MiB used, SM 1680.0 MHz, 26 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f16f\cpuclk.py is not there
+--- attempt 1: launching
+10.4 s  LevelDocument Loaded: big_hand_pirate_island
+13.6 s  Level has started: big_hand_pirate_island
+16.1 s  scene stable at frame 397 (90 frames with draws >= 100)
+holding the run for 330 s
+hold end: ft_total 9547, ft_tail 140 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 3.6, 'close_wait_s': 40}
+hold_gpu: median 46.0 % busy over 650 rows (2026/10/04 19:19:16.297 .. 2026/10/04 19:24:46.450), a row, not a guard
+copied C:\kyty\f287\f16f\log_f5_bh.txt
+copied C:\kyty\f287\f16f\stdout_f5_bh.txt
+
+attempt 1  ok               document=10.4 s started=13.6 s stable=16.1 s 
+VERDICT: big_hand_pirate_island in 16.1 s - PASS (acceptance <= 90 s)

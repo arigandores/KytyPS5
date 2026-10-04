@@ -1,0 +1,6 @@
+SET f5_sg underwater_aerial_garden admission OK F5 ALIVE F6 ALIVE B_sum 67427 B>0 dcc_fce_no_image,meta_cs_untracked,cmask_fce_unapplied F6_inputs bound_extra=0 bound_missing=0 s_addr0_fmt=0 w_addr0_fmt=0 w_ge8=0
+SET f5_ef enemy_final admission OK F5 ALIVE F6 ALIVE B_sum 119955 B>0 dcc_fce_no_image,meta_cs_untracked,cmask_fce_unapplied F6_inputs bound_extra=0 bound_missing=0 s_addr0_fmt=0 w_addr0_fmt=0 w_ge8=0
+SET f5_bh big_hand_pirate_island admission OK F5 ALIVE F6 ALIVE B_sum 106157 B>0 dcc_fce_no_image,meta_cs_untracked,cmask_fce_unapplied F6_inputs bound_extra=0 bound_missing=0 s_addr0_fmt=0 w_addr0_fmt=0 w_ge8=0
+SET f5_eb ending_boss_after_credit admission OK F5 ALIVE F6 ALIVE B_sum 80376 B>0 dcc_fce_no_image,meta_cs_untracked,cmask_fce_unapplied F6_inputs bound_extra=0 bound_missing=0 s_addr0_fmt=0 w_addr0_fmt=0 w_ge8=0
+SET f5_sg0 underwater_aerial_garden admission OK NULL HOLDS
+SET diag tags 4; F5 control alive on 4; F6 control alive on 4; tags with B > 0: f5_sg,f5_ef,f5_bh,f5_eb

@@ -1,0 +1,18 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-04T17:39:45Z F16f go_f16f f5_sg0 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T17:39:46Z F16f go_f16f f5_sg0 installed binary inside the lock before the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T17:39:47Z F16f go_f16f f5_sg0 manifest before: manifest C:/kyty/f287/f16f/runs/f5_sg0/manifest_before.tsv files 3323 bytes 921076874 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a
+2026-10-04T17:39:51Z F16f go_f16f f5_sg0 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (192/172/5/520/ MB)
+2026-10-04T17:39:54Z F16f go_f16f f5_sg0 warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T17:39:52Z; entries of _ShaderCache/PPSA21564: 1347
+2026-10-04T17:39:55Z F16f go_f16f f5_sg0 installed the F16d2 copy: 4ad735ad70b7504df85560dc6b6c2e3520f0256aa655a4ff4db03f71122b09f6
+2026-10-04T17:39:55Z F16f go_f16f f5_sg0 enter_scene start (level underwater_aerial_garden, SD 300, hold 90, pairs: none KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-04T17:41:52Z F16f go_f16f f5_sg0 enter_scene rc 0
+2026-10-04T17:41:56Z F16f go_f16f f5_sg0 run: close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 3.9, 'close_wait_s': 40}
+2026-10-04T17:41:56Z F16f go_f16f f5_sg0 log_f5_sg0.txt sha256 b969e49ff37fddca578ef37e2abb11e4dabc76c2ddce504b90c1025f2fe45146
+2026-10-04T17:41:57Z F16f go_f16f f5_sg0 installed binary returned from the pinned copy
+2026-10-04T17:41:58Z F16f go_f16f f5_sg0 installed binary after the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T17:42:00Z F16f go_f16f f5_sg0 manifest of the run state (before the return): manifest C:/kyty/f287/f16f/runs/f5_sg0/manifest_run.tsv files 3324 bytes 921099583 listsha cd3e76633d0270ea172c73a1bafd09029c6c6c1705db813e12d63a197423b250; run vs before: manifest cmp DIFFER only-before 1 only-after 2
+2026-10-04T17:42:02Z F16f go_f16f f5_sg0 caches, saves and GLCache returned
+2026-10-04T17:42:06Z F16f go_f16f f5_sg0 manifest after: manifest C:/kyty/f287/f16f/runs/f5_sg0/manifest_after.tsv files 3323 bytes 921076874 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a; cmp: manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a
+2026-10-04T17:42:06Z F16f go_f16f f5_sg0 lock released (rc 0)
+rc=0

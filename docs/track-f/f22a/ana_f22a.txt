@@ -1,0 +1,426 @@
+== 0. Identities (lines = F21a per path, size unchanged, xz_rc 0, drf_n = len(drf) + drf_bad, drf_n <= 32, levels_over 0)
+records 422 failures 0 [] - IDENTITIES ALL OK
+invariant drf_bad over all records 0 ; addrlen_other 0 ; rd_other 0
+
+== sample: 201 logs
+logs by binary: {'540c035a': 6, '631ff987': 5, '9235a7ac': 120, 'dac02fb9': 42, '4aa62e95': 14, 'adb0c82f': 5, '31cbfee8': 4, 'bbad499c': 5}
+lines 370032158
+-- 1. KernelRead: direct read failed
+logs with >= 1 line 4 of 201 ; lines 17 ; logs at the cap 32 0
+by binary (logs with / lines): {'9235a7ac': (2, 2), 'dac02fb9': (2, 15)}
+request sizes: n 17 min 623248 median 6750096 max 40627200 ; >= 64 KiB 17 ; page multiple 0
+next Read line after it: none 0 ; form {'file': 10, 'pos': 7} ; n == 0 0 ; n == request size 12 ; 0 < n < request 5 ; distance in lines max 167
+levels of the lines: {'worldmap': 10, 'non_interactive_credit': 5, 'ice_iceberg': 2}
+levels (distinct, excl. before level): 3
+   s142/log_c142_05.txt                                    9235a7ac drf  1 levels ['ice_iceberg'] sizes ['0x98290'] next [['file', 623248]]
+   s144/log_w144_14.txt                                    9235a7ac drf  1 levels ['ice_iceberg'] sizes ['0x98290'] next [['file', 623248]]
+   s146/log_v146_07.txt                                    dac02fb9 drf  7 levels ['non_interactive_credit', 'worldmap'] sizes ['0x1c324c0', '0x26bec00', '0x342420', '0xa37ad0', '0x300340', '0xa909e0'] next [['pos', 29566144], ['pos', 40627200], ['pos', 3417120], ['file', 131072], ['file', 131072], ['file', 131072]]
+   s146/log_w146_07.txt                                    dac02fb9 drf  8 levels ['non_interactive_credit', 'worldmap'] sizes ['0x26bec00', '0x110cd60', '0x318c20', '0x66ff90', '0x13e83c0', '0x2ef1e0'] next [['pos', 40627200], ['pos', 17878368], ['pos', 3247136], ['pos', 6750096], ['file', 131072], ['file', 3076576]]
+-- 2. Read lines (the file paths are exercised): KernelRead 2730993 (n=0: 0 ) ; KernelPread 1505549 (n=0: 0 ) ; directory 0 ; random 0
+logs with KernelRead lines 191 ; with KernelPread lines 191
+-- 3. sockets: Recvfrom blocks 0 in 0 logs ; Sendto blocks 0 in 0 logs
+-- 4. APR/AMPR/AMM lines {}
+-- 5. PRINT_NAME: logs with lines 191 ; lines 4843749
+   read-ish functions {}
+   f287/f12f/log_f12_rd.txt                                540c035a pn 2456 funcs 14 read-ish {}
+   f287/fs5/fs5c/log_fs5_hb.txt                            631ff987 pn 41920 funcs 14 read-ish {}
+   p283/lead/p6chk/log_pa0_A0.txt                          9235a7ac pn 24737 funcs 14 read-ish {}
+   s142/log_c142_03.txt                                    9235a7ac pn 16183 funcs 13 read-ish {}
+   s143/log_v143_07.txt                                    9235a7ac pn 36292 funcs 14 read-ish {}
+   s144/log_v144_11.txt                                    9235a7ac pn 28097 funcs 14 read-ish {}
+   s144/log_w144_06.txt                                    9235a7ac pn 10520 funcs 14 read-ish {}
+   s145/log_v145_03.txt                                    9235a7ac pn 40619 funcs 14 read-ish {}
+   s145/log_w145_01.txt                                    9235a7ac pn 11054 funcs 14 read-ish {}
+   s146/log_i146_v.txt                                     dac02fb9 pn 23900 funcs 14 read-ish {}
+   s146/log_v146_16.txt                                    dac02fb9 pn 41456 funcs 13 read-ish {}
+   s146/log_w146_16.txt                                    dac02fb9 pn 18847 funcs 13 read-ish {}
+   s288/s4/log_c3_0.txt                                    9235a7ac pn 10295 funcs 14 read-ish {}
+   f287/f13a/log_f13_k.txt                                 540c035a pn 32218 funcs 13 read-ish {}
+   f287/fs5/fs5c/log_fs5_r1.txt                            631ff987 pn 23853 funcs 14 read-ish {}
+   p283/lead/p6chk/log_pa_A.txt                            9235a7ac pn 24829 funcs 14 read-ish {}
+   s142/log_c142_04.txt                                    9235a7ac pn 16166 funcs 13 read-ish {}
+   s143/log_v143_08.txt                                    9235a7ac pn 40363 funcs 14 read-ish {}
+   s144/log_v144_12.txt                                    9235a7ac pn 22786 funcs 14 read-ish {}
+   s144/log_w144_07.txt                                    9235a7ac pn 11079 funcs 13 read-ish {}
+   s145/log_v145_04.txt                                    9235a7ac pn 42748 funcs 14 read-ish {}
+   s145/log_w145_02.txt                                    9235a7ac pn 9309 funcs 14 read-ish {}
+   s146/log_r146_01.txt                                    dac02fb9 pn 41945 funcs 14 read-ish {}
+   s146/log_v146_17.txt                                    dac02fb9 pn 42928 funcs 14 read-ish {}
+   s146/log_w146_17.txt                                    dac02fb9 pn 15314 funcs 14 read-ish {}
+   s288/s4/log_c4_0.txt                                    9235a7ac pn 10786 funcs 14 read-ish {}
+   f287/fs3/fs3c/log_fs3_v.txt                             540c035a pn 24495 funcs 14 read-ish {}
+   p283/lead/p10chk/log_pc_hoover_beach.txt                9235a7ac pn 10250 funcs 14 read-ish {}
+   p283/p24/log_iv_sponge_dirty_bath.txt                   4aa62e95 pn 10966 funcs 14 read-ish {}
+   s143/log_v143_01.txt                                    9235a7ac pn 24252 funcs 14 read-ish {}
+   s144/log_w144_00.txt                                    9235a7ac pn 8043 funcs 14 read-ish {}
+   s144/log_w144_16.txt                                    9235a7ac pn 15956 funcs 14 read-ish {}
+   s145/log_v145_13.txt                                    9235a7ac pn 42078 funcs 14 read-ish {}
+   s145/log_w145_12.txt                                    9235a7ac pn 19018 funcs 14 read-ish {}
+   s146/log_v146_10.txt                                    dac02fb9 pn 41291 funcs 13 read-ish {}
+   s146/log_w146_10.txt                                    dac02fb9 pn 39193 funcs 13 read-ish {}
+   s288/s12/log_s12_gw.txt                                 adb0c82f pn 41350 funcs 14 read-ish {}
+   f287/fs3/fs3c/log_fs3_w.txt                             540c035a pn 7899 funcs 14 read-ish {}
+   p283/lead/p10chk/log_pc_sponge_dirty_bath.txt           9235a7ac pn 9786 funcs 14 read-ish {}
+   p283/p24/log_iw_V3.txt                                  4aa62e95 pn 8169 funcs 14 read-ish {}
+   s143/log_v143_02.txt                                    9235a7ac pn 29494 funcs 14 read-ish {}
+   s144/log_w144_01.txt                                    9235a7ac pn 7917 funcs 14 read-ish {}
+   s144/log_w144_17.txt                                    9235a7ac pn 11867 funcs 14 read-ish {}
+   s145/log_v145_14.txt                                    9235a7ac pn 35216 funcs 14 read-ish {}
+   s145/log_w145_13.txt                                    9235a7ac pn 11196 funcs 14 read-ish {}
+   s146/log_v146_11.txt                                    dac02fb9 pn 85935 funcs 13 read-ish {}
+   s146/log_w146_11.txt                                    dac02fb9 pn 107142 funcs 13 read-ish {}
+   s288/s12/log_s12_v.txt                                  adb0c82f pn 24017 funcs 14 read-ish {}
+   f287/fs4c/log_fs4_hb.txt                                31cbfee8 pn 41727 funcs 14 read-ish {}
+   p283/lead/p10chk/log_pn_hoover_beach.txt                9235a7ac pn 15740 funcs 14 read-ish {}
+   p283/p24/log_ix_sha.txt                                 4aa62e95 pn 6376 funcs 14 read-ish {}
+   s143/log_v143_03.txt                                    9235a7ac pn 30220 funcs 14 read-ish {}
+   s144/log_w144_02.txt                                    9235a7ac pn 8381 funcs 14 read-ish {}
+   s144/log_w144_18.txt                                    9235a7ac pn 20504 funcs 13 read-ish {}
+   s145/log_v145_15.txt                                    9235a7ac pn 42812 funcs 14 read-ish {}
+   s145/log_w145_14.txt                                    9235a7ac pn 9189 funcs 14 read-ish {}
+   s146/log_v146_12.txt                                    dac02fb9 pn 58596 funcs 13 read-ish {}
+   s146/log_w146_12.txt                                    dac02fb9 pn 71891 funcs 13 read-ish {}
+   s288/s12/log_s12_v0.txt                                 adb0c82f pn 24378 funcs 14 read-ish {}
+   f287/fs4c/log_fs4_r1.txt                                31cbfee8 pn 24615 funcs 14 read-ish {}
+   p283/lead/p10chk/log_pn_sponge_dirty_bath.txt           9235a7ac pn 10353 funcs 14 read-ish {}
+   s128/log_shp128.txt.xz                                  9235a7ac pn 10871 funcs 14 read-ish {}
+   s143/log_v143_04.txt                                    9235a7ac pn 38444 funcs 14 read-ish {}
+   s144/log_w144_03.txt                                    9235a7ac pn 9052 funcs 14 read-ish {}
+   s144/log_w144_19.txt                                    9235a7ac pn 10391 funcs 14 read-ish {}
+   s145/log_v145_16.txt                                    9235a7ac pn 27790 funcs 14 read-ish {}
+   s145/log_w145_15.txt                                    9235a7ac pn 18761 funcs 14 read-ish {}
+   s146/log_v146_13.txt                                    dac02fb9 pn 60246 funcs 14 read-ish {}
+   s146/log_w146_13.txt                                    dac02fb9 pn 72864 funcs 14 read-ish {}
+   s288/s12/log_s12_w.txt                                  adb0c82f pn 8235 funcs 14 read-ish {}
+   f287/fs4c/log_fs4_v.txt                                 31cbfee8 pn 24584 funcs 14 read-ish {}
+   p283/lead/p10chk/log_pr_C.txt                           9235a7ac pn 22836 funcs 14 read-ish {}
+   s142/log_c142_01.txt                                    9235a7ac pn 11602 funcs 14 read-ish {}
+   s143/log_v143_05.txt                                    9235a7ac pn 27183 funcs 14 read-ish {}
+   s144/log_v144_09.txt                                    9235a7ac pn 35349 funcs 14 read-ish {}
+   s144/log_w144_04.txt                                    9235a7ac pn 11563 funcs 14 read-ish {}
+   s144/log_w144_20.txt                                    9235a7ac pn 1657 funcs 13 read-ish {}
+   s145/log_v145_17.txt                                    9235a7ac pn 41278 funcs 13 read-ish {}
+   s145/log_w145_16.txt                                    9235a7ac pn 9416 funcs 14 read-ish {}
+   s146/log_v146_14.txt                                    dac02fb9 pn 42979 funcs 14 read-ish {}
+   s146/log_w146_14.txt                                    dac02fb9 pn 16856 funcs 14 read-ish {}
+   s288/s4/log_c1_0.txt                                    9235a7ac pn 10632 funcs 14 read-ish {}
+   f287/fs4c/log_fs4_w.txt                                 31cbfee8 pn 7876 funcs 14 read-ish {}
+   p283/lead/p10chk/log_pw_C.txt                           9235a7ac pn 7769 funcs 14 read-ish {}
+   s142/log_c142_02.txt                                    9235a7ac pn 10075 funcs 14 read-ish {}
+   s143/log_v143_06.txt                                    9235a7ac pn 36168 funcs 14 read-ish {}
+   s144/log_v144_10.txt                                    9235a7ac pn 40015 funcs 14 read-ish {}
+   s144/log_w144_05.txt                                    9235a7ac pn 7999 funcs 14 read-ish {}
+   s145/log_v145_02.txt                                    9235a7ac pn 27923 funcs 14 read-ish {}
+   s145/log_w145_00.txt                                    9235a7ac pn 8138 funcs 14 read-ish {}
+   s145/log_w145_17.txt                                    9235a7ac pn 38702 funcs 13 read-ish {}
+   s146/log_v146_15.txt                                    dac02fb9 pn 42438 funcs 13 read-ish {}
+   s146/log_w146_15.txt                                    dac02fb9 pn 38657 funcs 13 read-ish {}
+   s288/s4/log_c2_0.txt                                    9235a7ac pn 10292 funcs 14 read-ish {}
+   f287/f13a/log_f13_rd.txt                                540c035a pn 29688 funcs 13 read-ish {}
+   f287/fs5/fs5c/log_fs5_v.txt                             631ff987 pn 24358 funcs 14 read-ish {}
+   p283/lead/p6chk/log_pb0_B0.txt                          9235a7ac pn 23960 funcs 14 read-ish {}
+   s142/log_c142_05.txt                                    9235a7ac pn 15770 funcs 13 read-ish {}
+   s143/log_v143_09.txt                                    9235a7ac pn 39065 funcs 13 read-ish {}
+   s144/log_v144_13.txt                                    9235a7ac pn 43284 funcs 13 read-ish {}
+   s144/log_w144_08.txt                                    9235a7ac pn 7520 funcs 13 read-ish {}
+   s145/log_v145_05.txt                                    9235a7ac pn 44721 funcs 14 read-ish {}
+   s145/log_w145_03.txt                                    9235a7ac pn 14625 funcs 14 read-ish {}
+   s146/log_r146_02.txt                                    dac02fb9 pn 23686 funcs 14 read-ish {}
+   s146/log_v146_18.txt                                    dac02fb9 pn 42054 funcs 13 read-ish {}
+   s146/log_w146_18.txt                                    dac02fb9 pn 38669 funcs 13 read-ish {}
+   s288/s4/log_g_1.txt                                     9235a7ac pn 10300 funcs 14 read-ish {}
+   f287/f7a/log_f7a_1.txt                                  dac02fb9 pn 22457 funcs 13 read-ish {}
+   f287/fs5/fs5c/log_fs5_w.txt                             631ff987 pn 8014 funcs 14 read-ish {}
+   p283/lead/p6chk/log_pb_B.txt                            9235a7ac pn 21239 funcs 14 read-ish {}
+   s142/log_c142_06.txt                                    9235a7ac pn 10281 funcs 14 read-ish {}
+   s143/log_v143_10.txt                                    9235a7ac pn 28952 funcs 13 read-ish {}
+   s144/log_v144_14.txt                                    9235a7ac pn 41075 funcs 13 read-ish {}
+   s144/log_w144_09.txt                                    9235a7ac pn 4626 funcs 14 read-ish {}
+   s145/log_v145_06.txt                                    9235a7ac pn 46771 funcs 13 read-ish {}
+   s145/log_w145_04.txt                                    9235a7ac pn 13561 funcs 14 read-ish {}
+   s146/log_r146_03.txt                                    dac02fb9 pn 42057 funcs 13 read-ish {}
+   s146/log_v146_19.txt                                    dac02fb9 pn 43034 funcs 14 read-ish {}
+   s146/log_w146_19.txt                                    dac02fb9 pn 17150 funcs 14 read-ish {}
+   s288/s4/log_g_2.txt                                     9235a7ac pn 10256 funcs 14 read-ish {}
+   f287/fs2c/log_fs2_t.txt                                 bbad499c pn 17312 funcs 13 read-ish {}
+   f287/fs5/fs5e/log_fs5_i.txt                             631ff987 pn 24347 funcs 14 read-ish {}
+   p283/p24/log_ia_A3.txt                                  4aa62e95 pn 23674 funcs 14 read-ish {}
+   s142/log_c142_07.txt                                    9235a7ac pn 16633 funcs 14 read-ish {}
+   s144/log_v144_15.txt                                    9235a7ac pn 24323 funcs 14 read-ish {}
+   s144/log_w144_10.txt                                    9235a7ac pn 11774 funcs 14 read-ish {}
+   s145/log_v145_07.txt                                    9235a7ac pn 48398 funcs 14 read-ish {}
+   s145/log_w145_05.txt                                    9235a7ac pn 22034 funcs 14 read-ish {}
+   s146/log_r146_04.txt                                    dac02fb9 pn 32489 funcs 14 read-ish {}
+   s146/log_w146_00.txt                                    dac02fb9 pn 7969 funcs 14 read-ish {}
+   s288/s10/log_u_1.txt                                    4aa62e95 pn 10419 funcs 14 read-ish {}
+   s288/s4/log_g_3_0.txt                                   9235a7ac pn 10248 funcs 14 read-ish {}
+   f287/fs2c/log_fs2_tw.txt                                bbad499c pn 9330 funcs 13 read-ish {}
+   f287/fsc/log_fs_a.txt                                   dac02fb9 pn 8155 funcs 14 read-ish {}
+   p283/p24/log_in_hoover_beach.txt                        4aa62e95 pn 16627 funcs 14 read-ish {}
+   s142/log_c142_08.txt                                    9235a7ac pn 16304 funcs 14 read-ish {}
+   s144/log_v144_16.txt                                    9235a7ac pn 41636 funcs 14 read-ish {}
+   s144/log_w144_11.txt                                    9235a7ac pn 8372 funcs 14 read-ish {}
+   s145/log_v145_08.txt                                    9235a7ac pn 35841 funcs 14 read-ish {}
+   s145/log_w145_07.txt                                    9235a7ac pn 15905 funcs 14 read-ish {}
+   s146/log_v146_05.txt                                    dac02fb9 pn 41540 funcs 13 read-ish {}
+   s146/log_w146_05.txt                                    dac02fb9 pn 33909 funcs 13 read-ish {}
+   s288/s10/log_u_2.txt                                    4aa62e95 pn 16677 funcs 14 read-ish {}
+   s288/s4/log_sw_m1.txt                                   9235a7ac pn 10210 funcs 14 read-ish {}
+   f287/fs2c/log_fs2_v.txt                                 bbad499c pn 24509 funcs 14 read-ish {}
+   f287/fsc/log_fs_b.txt                                   dac02fb9 pn 24209 funcs 14 read-ish {}
+   p283/p24/log_in_sponge_dirty_bath.txt                   4aa62e95 pn 10347 funcs 14 read-ish {}
+   s142/log_c142_09.txt                                    9235a7ac pn 16396 funcs 13 read-ish {}
+   s144/log_v144_17.txt                                    9235a7ac pn 41421 funcs 14 read-ish {}
+   s144/log_w144_12.txt                                    9235a7ac pn 7990 funcs 14 read-ish {}
+   s145/log_v145_09.txt                                    9235a7ac pn 31573 funcs 14 read-ish {}
+   s145/log_w145_08.txt                                    9235a7ac pn 23571 funcs 14 read-ish {}
+   s146/log_v146_06.txt                                    dac02fb9 pn 41272 funcs 14 read-ish {}
+   s146/log_w146_06.txt                                    dac02fb9 pn 30842 funcs 14 read-ish {}
+   s288/s10/log_u_3.txt                                    4aa62e95 pn 15947 funcs 13 read-ish {}
+   s288/s4/log_sw_m2.txt                                   9235a7ac pn 16478 funcs 13 read-ish {}
+   f287/fs2c/log_fs2_w.txt                                 bbad499c pn 7889 funcs 14 read-ish {}
+   f287/fsc/log_fs_d.txt                                   dac02fb9 pn 24264 funcs 14 read-ish {}
+   p283/p24/log_iv_5.txt                                   4aa62e95 pn 29374 funcs 14 read-ish {}
+   s142/log_c142_10.txt                                    9235a7ac pn 14417 funcs 14 read-ish {}
+   s144/log_v144_18.txt                                    9235a7ac pn 41460 funcs 13 read-ish {}
+   s144/log_w144_13.txt                                    9235a7ac pn 12791 funcs 13 read-ish {}
+   s145/log_v145_10.txt                                    9235a7ac pn 25071 funcs 14 read-ish {}
+   s145/log_w145_09.txt                                    9235a7ac pn 9682 funcs 14 read-ish {}
+   s146/log_v146_07.txt                                    dac02fb9 pn 63809 funcs 16 read-ish {}
+   s146/log_w146_07.txt                                    dac02fb9 pn 52743 funcs 16 read-ish {}
+   s288/s10/log_u_4.txt                                    4aa62e95 pn 16011 funcs 14 read-ish {}
+   s288/s4/log_sw_m3.txt                                   9235a7ac pn 16052 funcs 13 read-ish {}
+   f287/fs2c/log_fs2_w0.txt                                bbad499c pn 3215 funcs 14 read-ish {}
+   f287/fsc/log_fs_g.txt                                   dac02fb9 pn 41360 funcs 13 read-ish {}
+   p283/p24/log_iv_6.txt                                   4aa62e95 pn 27640 funcs 14 read-ish {}
+   s142/log_v142.txt                                       9235a7ac pn 24956 funcs 14 read-ish {}
+   s144/log_v144_19.txt                                    9235a7ac pn 37016 funcs 14 read-ish {}
+   s144/log_w144_14.txt                                    9235a7ac pn 12520 funcs 13 read-ish {}
+   s145/log_v145_11.txt                                    9235a7ac pn 43756 funcs 13 read-ish {}
+   s145/log_w145_10.txt                                    9235a7ac pn 8264 funcs 14 read-ish {}
+   s146/log_v146_08.txt                                    dac02fb9 pn 44267 funcs 13 read-ish {}
+   s146/log_w146_08.txt                                    dac02fb9 pn 38434 funcs 13 read-ish {}
+   s288/s10/log_u_5.txt                                    4aa62e95 pn 16631 funcs 14 read-ish {}
+   s288/s4/log_sw_t1.txt                                   9235a7ac pn 10106 funcs 14 read-ish {}
+   f287/fs3/fs3c/log_fs3_hb.txt                            540c035a pn 41847 funcs 14 read-ish {}
+   f287/fsc/log_fs_v.txt                                   dac02fb9 pn 13402 funcs 13 read-ish {}
+   p283/p24/log_iv_hoover_beach.txt                        4aa62e95 pn 16505 funcs 14 read-ish {}
+   s142/log_w142.txt                                       9235a7ac pn 7930 funcs 14 read-ish {}
+   s144/log_v144_20.txt                                    9235a7ac pn 41476 funcs 13 read-ish {}
+   s144/log_w144_15.txt                                    9235a7ac pn 7534 funcs 14 read-ish {}
+   s145/log_v145_12.txt                                    9235a7ac pn 41634 funcs 14 read-ish {}
+   s145/log_w145_11.txt                                    9235a7ac pn 39769 funcs 13 read-ish {}
+   s146/log_v146_09.txt                                    dac02fb9 pn 58752 funcs 13 read-ish {}
+   s146/log_w146_09.txt                                    dac02fb9 pn 71645 funcs 13 read-ish {}
+   s288/s12/log_s12_gr.txt                                 adb0c82f pn 16020 funcs 14 read-ish {}
+-- 6. stdout SysFileRead: ReadFile failed: logs with a stdout file 201 ; stdout files 432 ; logs with >= 1 line 4
+   lines by error {'1784': 8, '998': 9} ; inside the log (sfr_log) 0
+   pairs (drf_n, max stdout sfr_n) where either > 0: [((1, 1), 2), ((7, 7), 1), ((8, 8), 1)]
+   logs with drf > 0 and stdout sfr = 0: 0 ; drf = 0 and sfr > 0: 0
+-- 7. StreamRead lines 0 TORN 0 ; fatal lines 1 in 1 logs
+-- 8. distinct levels in these logs 54
+
+== ctx: 221 logs
+logs by binary: {'36e2b042': 2, '-': 33, '2e6df8f0': 8, 'd8756dce': 8, '56ee1914': 12, '4bb8bceb': 10, 'ff16284f': 13, '9235a7ac': 5, 'edd17418': 13, 'd19a4f8a': 8, '74032561': 4, '05431dad': 12, 'f3b3aa3b': 19, 'c01bde0c': 4, '35c4a754': 4, 'c9a5e198': 4, '6bad00f3': 10, '0d23f161': 5, '33f5a15a': 7, '6f495a65': 4, '03ce7a92': 10, '5821482a': 3, 'b97efad4': 4, '45d36512': 2, 'b037d3dd': 2, 'cf414f46': 4, '3f4af2c3': 3, 'b714f5c4': 4, '907569f6': 1, '24efead3': 2, 'ee2287ed': 1}
+lines 234397722
+-- 1. KernelRead: direct read failed
+logs with >= 1 line 0 of 221 ; lines 0 ; logs at the cap 32 0
+by binary (logs with / lines): {}
+next Read line after it: none 0 ; form {} ; n == 0 0 ; n == request size 0 ; 0 < n < request 0 ; distance in lines max 0
+levels of the lines: {}
+levels (distinct, excl. before level): 0
+-- 2. Read lines (the file paths are exercised): KernelRead 3298805 (n=0: 0 ) ; KernelPread 1472184 (n=0: 0 ) ; directory 0 ; random 0
+logs with KernelRead lines 183 ; with KernelPread lines 183
+-- 3. sockets: Recvfrom blocks 0 in 0 logs ; Sendto blocks 0 in 0 logs
+-- 4. APR/AMPR/AMM lines {}
+-- 5. PRINT_NAME: logs with lines 183 ; lines 3252192
+   read-ish functions {}
+   f287/f10e/log_f10e_r1.txt                               36e2b042 pn 24079 funcs 14 read-ish {}
+   f287/f3d/log_f3d_a2.txt                                 2e6df8f0 pn 9210 funcs 14 read-ish {}
+   f287/f6e/log_f6e_a2.txt                                 d8756dce pn 16582 funcs 13 read-ish {}
+   p283/p15/log_qa_A.txt                                   56ee1914 pn 24681 funcs 14 read-ish {}
+   p283/p31/log_hn_sponge_dirty_bath.txt                   4bb8bceb pn 10293 funcs 14 read-ish {}
+   p283/p41/log_ka_A6.txt                                  ff16284f pn 23514 funcs 14 read-ish {}
+   s129/log_s7s129.txt.xz                                  edd17418 pn 24217 funcs 14 read-ish {}
+   s131/log_lw4s131.txt.xz                                 d19a4f8a pn 11820 funcs 14 read-ish {}
+   s135/log_s2s135.txt.xz                                  74032561 pn 12228 funcs 14 read-ish {}
+   s137/log_kp137b.txt.xz                                  05431dad pn 21912 funcs 14 read-ish {}
+   s288/s10/log_t2_2.txt                                   f3b3aa3b pn 16366 funcs 14 read-ish {}
+   f287/f10e/log_f10e_w.txt                                36e2b042 pn 7957 funcs 14 read-ish {}
+   f287/f3d/log_f3d_a3.txt                                 2e6df8f0 pn 16278 funcs 13 read-ish {}
+   f287/f6e/log_f6e_b1.txt                                 d8756dce pn 12224 funcs 14 read-ish {}
+   p283/p15/log_qn_hoover_beach.txt                        56ee1914 pn 16661 funcs 14 read-ish {}
+   p283/p31/log_hv_0.txt                                   4bb8bceb pn 24511 funcs 14 read-ish {}
+   p283/p41/log_ka_A7.txt                                  ff16284f pn 24294 funcs 14 read-ish {}
+   play/20261002T221534Z/log.txt                           - pn 45045 funcs 14 read-ish {}
+   s129/log_s8s129.txt.xz                                  edd17418 pn 12705 funcs 14 read-ish {}
+   s131/log_lw5s131.txt.xz                                 d19a4f8a pn 20460 funcs 14 read-ish {}
+   s135/log_s3s135.txt.xz                                  74032561 pn 4976 funcs 14 read-ish {}
+   s137/log_kp137c.txt.xz                                  05431dad pn 21353 funcs 14 read-ish {}
+   s288/s10/log_t2_3.txt                                   f3b3aa3b pn 16002 funcs 13 read-ish {}
+   f287/f14g/log_f19_ef.txt                                c01bde0c pn 41315 funcs 13 read-ish {}
+   f287/f18e/log_f8_s0.txt                                 35c4a754 pn 23483 funcs 14 read-ish {}
+   f287/f4c/log_f4c_v.txt                                  c9a5e198 pn 12247 funcs 13 read-ish {}
+   p283/p19/log_qv_4.txt                                   56ee1914 pn 28536 funcs 14 read-ish {}
+   p283/p36/log_jn_sponge_dirty_bath.txt                   6bad00f3 pn 10293 funcs 14 read-ish {}
+   p283/p41/log_kw_V6.txt                                  ff16284f pn 8069 funcs 14 read-ish {}
+   s129/log_s1s129.txt.xz                                  edd17418 pn 16000 funcs 14 read-ish {}
+   s130/log_shp130.txt.xz                                  0d23f161 pn 10616 funcs 14 read-ish {}
+   s134/log_s3s134.txt.xz                                  33f5a15a pn 24224 funcs 14 read-ish {}
+   s136/log_s4cs136.txt.xz                                 05431dad pn 11510 funcs 14 read-ish {}
+   s288/s10/log_c5_0.txt                                   f3b3aa3b pn 10602 funcs 14 read-ish {}
+   s288/s6/log_pcw_4.txt                                   f3b3aa3b pn 24284 funcs 14 read-ish {}
+   f287/f14g/log_f19_rd.txt                                c01bde0c pn 6005 funcs 14 read-ish {}
+   f287/f18e/log_f8_s1.txt                                 35c4a754 pn 24227 funcs 14 read-ish {}
+   f287/f5c/log_f5c_a.txt                                  6f495a65 pn 8222 funcs 14 read-ish {}
+   p283/p19/log_qw_V2.txt                                  56ee1914 pn 7871 funcs 14 read-ish {}
+   p283/p36/log_jv_0.txt                                   6bad00f3 pn 25987 funcs 14 read-ish {}
+   p283/p41/log_kx_sha.txt                                 ff16284f pn 6359 funcs 14 read-ish {}
+   s129/log_s2s129.txt.xz                                  edd17418 pn 11888 funcs 14 read-ish {}
+   s131/log_dd131.txt.xz                                   d19a4f8a pn 22697 funcs 14 read-ish {}
+   s134/log_s4s134.txt.xz                                  33f5a15a pn 11500 funcs 14 read-ish {}
+   s136/log_s4s136.txt.xz                                  03ce7a92 pn 11751 funcs 14 read-ish {}
+   s288/s10/log_pi_r0.txt                                  f3b3aa3b pn 10341 funcs 14 read-ish {}
+   s288/s6/log_pcw_int.txt                                 f3b3aa3b pn 10234 funcs 14 read-ish {}
+   f287/f14g/log_f19_v1.txt                                c01bde0c pn 24502 funcs 14 read-ish {}
+   f287/f2c/log_f2c_a.txt                                  5821482a pn 23820 funcs 14 read-ish {}
+   f287/f5c/log_f5c_b.txt                                  6f495a65 pn 3132 funcs 14 read-ish {}
+   p283/p31/log_ha_A4.txt                                  4bb8bceb pn 23875 funcs 14 read-ish {}
+   p283/p36/log_jv_1.txt                                   6bad00f3 pn 22414 funcs 14 read-ish {}
+   p283/p41/log_kz_A7.txt                                  ff16284f pn 24410 funcs 14 read-ish {}
+   s129/log_s3s129.txt.xz                                  edd17418 pn 24316 funcs 14 read-ish {}
+   s131/log_dds131.txt.xz                                  d19a4f8a pn 12295 funcs 14 read-ish {}
+   s134/log_s5s134.txt.xz                                  33f5a15a pn 11832 funcs 14 read-ish {}
+   s136/log_s5s136.txt.xz                                  03ce7a92 pn 11368 funcs 14 read-ish {}
+   s288/s10/log_pi_r1.txt                                  f3b3aa3b pn 10419 funcs 14 read-ish {}
+   s288/s6/log_pcw_val.txt                                 f3b3aa3b pn 7896 funcs 14 read-ish {}
+   f287/f14g/log_f19_w1.txt                                c01bde0c pn 7990 funcs 14 read-ish {}
+   f287/f2c/log_f2c_b.txt                                  5821482a pn 7863 funcs 14 read-ish {}
+   f287/f5c/log_f5c_g.txt                                  6f495a65 pn 23657 funcs 14 read-ish {}
+   p283/p31/log_hh_hoover_beach.txt                        4bb8bceb pn 15711 funcs 14 read-ish {}
+   p283/p36/log_jv_2.txt                                   6bad00f3 pn 22511 funcs 14 read-ish {}
+   s129/log_s4s129.txt.xz                                  edd17418 pn 12561 funcs 14 read-ish {}
+   s131/log_lw1s131.txt.xz                                 d19a4f8a pn 21827 funcs 14 read-ish {}
+   s134/log_s6s134.txt.xz                                  33f5a15a pn 5048 funcs 14 read-ish {}
+   s136/log_s6s136.txt.xz                                  03ce7a92 pn 5186 funcs 14 read-ish {}
+   s288/s10/log_pi_w0.txt                                  f3b3aa3b pn 24791 funcs 14 read-ish {}
+   f287/f2c/log_f2c_c.txt                                  5821482a pn 10185 funcs 14 read-ish {}
+   f287/f5c/log_f5c_v.txt                                  6f495a65 pn 22908 funcs 14 read-ish {}
+   p283/p31/log_hh_sponge_dirty_bath.txt                   4bb8bceb pn 10081 funcs 14 read-ish {}
+   p283/p36/log_jw_V5.txt                                  6bad00f3 pn 7730 funcs 14 read-ish {}
+   s129/log_s5s129.txt.xz                                  edd17418 pn 5033 funcs 14 read-ish {}
+   s131/log_lw2s131.txt.xz                                 d19a4f8a pn 45234 funcs 14 read-ish {}
+   s135/log_rs135.txt.xz                                   74032561 pn 21384 funcs 14 read-ish {}
+   s137/log_kk137.txt.xz                                   05431dad pn 20752 funcs 14 read-ish {}
+   s288/s10/log_pi_w1.txt                                  f3b3aa3b pn 25092 funcs 14 read-ish {}
+   f287/f3d/log_f3d_a1.txt                                 2e6df8f0 pn 9202 funcs 14 read-ish {}
+   f287/f6e/log_f6e_a1.txt                                 d8756dce pn 16713 funcs 13 read-ish {}
+   p283/p31/log_hn_hoover_beach.txt                        4bb8bceb pn 16657 funcs 14 read-ish {}
+   p283/p36/log_jx_sha.txt                                 6bad00f3 pn 6569 funcs 14 read-ish {}
+   s129/log_s6s129.txt.xz                                  edd17418 pn 5007 funcs 14 read-ish {}
+   s131/log_lw3s131.txt.xz                                 d19a4f8a pn 11839 funcs 14 read-ish {}
+   s135/log_s1s135.txt.xz                                  74032561 pn 11847 funcs 14 read-ish {}
+   s137/log_kp137a.txt.xz                                  05431dad pn 21410 funcs 14 read-ish {}
+   s288/s10/log_t2_1.txt                                   f3b3aa3b pn 16097 funcs 14 read-ish {}
+   f287/f11f/log_d11_bh.txt                                b97efad4 pn 21986 funcs 14 read-ish {}
+   f287/f3d/log_f3d_a4.txt                                 2e6df8f0 pn 16271 funcs 13 read-ish {}
+   f287/f6e/log_f6e_c1.txt                                 d8756dce pn 17086 funcs 13 read-ish {}
+   p283/p15/log_qn_sponge_dirty_bath.txt                   56ee1914 pn 10421 funcs 14 read-ish {}
+   p283/p31/log_hv_1.txt                                   4bb8bceb pn 24221 funcs 14 read-ish {}
+   p283/p41/log_kh_hoover_beach.txt                        ff16284f pn 15483 funcs 14 read-ish {}
+   s128/log_pd128.txt.xz                                   45d36512 pn 23223 funcs 14 read-ish {}
+   s129/log_s9s129.txt.xz                                  edd17418 pn 24306 funcs 14 read-ish {}
+   s131/log_lw6s131.txt.xz                                 d19a4f8a pn 9178 funcs 14 read-ish {}
+   s136/log_kk136.txt.xz                                   03ce7a92 pn 20372 funcs 14 read-ish {}
+   s137/log_kp137d.txt.xz                                  05431dad pn 21448 funcs 14 read-ish {}
+   s288/s10/log_t2_4.txt                                   f3b3aa3b pn 17074 funcs 13 read-ish {}
+   f287/f11f/log_d11_ef.txt                                b97efad4 pn 41323 funcs 13 read-ish {}
+   f287/f3d/log_f3d_bv.txt                                 2e6df8f0 pn 21002 funcs 14 read-ish {}
+   f287/f6e/log_f6e_c2.txt                                 d8756dce pn 11913 funcs 14 read-ish {}
+   p283/p15/log_qv_1.txt                                   56ee1914 pn 30755 funcs 14 read-ish {}
+   p283/p31/log_hv_2.txt                                   4bb8bceb pn 24089 funcs 14 read-ish {}
+   p283/p41/log_kh_sponge_dirty_bath.txt                   ff16284f pn 10449 funcs 14 read-ish {}
+   s128/log_s1s128.txt.xz                                  b037d3dd pn 6081 funcs 14 read-ish {}
+   s130/log_ack130.txt.xz                                  0d23f161 pn 21246 funcs 14 read-ish {}
+   s133/log_bc133.txt.xz                                   cf414f46 pn 22288 funcs 14 read-ish {}
+   s136/log_kp136.txt.xz                                   03ce7a92 pn 21273 funcs 14 read-ish {}
+   s137/log_kp137e.txt.xz                                  05431dad pn 21908 funcs 14 read-ish {}
+   s288/s10/log_t2_5.txt                                   f3b3aa3b pn 16694 funcs 14 read-ish {}
+   f287/f11f/log_d11_sg.txt                                b97efad4 pn 23694 funcs 14 read-ish {}
+   f287/f3d/log_f3d_bw.txt                                 2e6df8f0 pn 7421 funcs 14 read-ish {}
+   f287/f6e/log_f6e_w1.txt                                 d8756dce pn 9405 funcs 13 read-ish {}
+   p283/p15/log_qv_2.txt                                   56ee1914 pn 28691 funcs 14 read-ish {}
+   p283/p31/log_hw_V4.txt                                  4bb8bceb pn 7935 funcs 14 read-ish {}
+   p283/p41/log_kn_hoover_beach.txt                        ff16284f pn 16634 funcs 14 read-ish {}
+   s128/log_s2s128.txt.xz                                  b037d3dd pn 2321 funcs 14 read-ish {}
+   s130/log_s10s130.txt.xz                                 3f4af2c3 pn 12263 funcs 14 read-ish {}
+   s133/log_s1s133.txt.xz                                  cf414f46 pn 12122 funcs 14 read-ish {}
+   s136/log_kv136.txt.xz                                   03ce7a92 pn 9845 funcs 14 read-ish {}
+   s137/log_kp137f.txt.xz                                  05431dad pn 21713 funcs 14 read-ish {}
+   s288/s10/log_t2_6.txt                                   f3b3aa3b pn 16156 funcs 13 read-ish {}
+   f287/f11f/log_d11_vw.txt                                b97efad4 pn 41413 funcs 13 read-ish {}
+   f287/f3d/log_f3d_c1.txt                                 2e6df8f0 pn 8840 funcs 14 read-ish {}
+   f287/f6e/log_f6e_w2.txt                                 d8756dce pn 6860 funcs 14 read-ish {}
+   p283/p15/log_qv_hoover_beach.txt                        56ee1914 pn 16629 funcs 14 read-ish {}
+   p283/p31/log_hx_sha.txt                                 4bb8bceb pn 6588 funcs 14 read-ish {}
+   p283/p41/log_kn_sponge_dirty_bath.txt                   ff16284f pn 10520 funcs 14 read-ish {}
+   s128/log_s4s128.txt.xz                                  45d36512 pn 12344 funcs 14 read-ish {}
+   s130/log_s11s130.txt.xz                                 3f4af2c3 pn 24326 funcs 14 read-ish {}
+   s133/log_s2s133.txt.xz                                  cf414f46 pn 12082 funcs 14 read-ish {}
+   s136/log_kw136.txt.xz                                   03ce7a92 pn 9792 funcs 14 read-ish {}
+   s137/log_kp137g.txt.xz                                  05431dad pn 21371 funcs 14 read-ish {}
+   s288/s10/log_t2_7.txt                                   f3b3aa3b pn 16631 funcs 14 read-ish {}
+   f287/f12f/log_f12_bh.txt                                b714f5c4 pn 21398 funcs 14 read-ish {}
+   f287/f3d/log_f3d_c2.txt                                 2e6df8f0 pn 16526 funcs 13 read-ish {}
+   f287/f6e/series1/log_f6e_a1.txt                         d8756dce pn 16918 funcs 13 read-ish {}
+   p283/p15/log_qv_sponge_dirty_bath.txt                   56ee1914 pn 10548 funcs 14 read-ish {}
+   p283/p36/log_ja_A5.txt                                  6bad00f3 pn 23998 funcs 14 read-ish {}
+   p283/p41/log_kv_0.txt                                   ff16284f pn 26846 funcs 14 read-ish {}
+   s129/log_ac129.txt.xz                                   edd17418 pn 23728 funcs 14 read-ish {}
+   s130/log_s12s130.txt.xz                                 3f4af2c3 pn 11767 funcs 14 read-ish {}
+   s133/log_s3s133.txt.xz                                  cf414f46 pn 4980 funcs 14 read-ish {}
+   s136/log_s1s136.txt.xz                                  03ce7a92 pn 15260 funcs 14 read-ish {}
+   s137/log_kp137h.txt.xz                                  05431dad pn 21559 funcs 14 read-ish {}
+   s288/s10/log_t2_cs0.txt                                 f3b3aa3b pn 16046 funcs 14 read-ish {}
+   f287/f12f/log_f12_v.txt                                 b714f5c4 pn 23858 funcs 14 read-ish {}
+   f287/f15e/log_b4_v.txt                                  907569f6 pn 24120 funcs 14 read-ish {}
+   f287/f4c/log_f4c_a.txt                                  c9a5e198 pn 8077 funcs 14 read-ish {}
+   f287/f9/f9g/log_f9g_hb.txt                              24efead3 pn 41902 funcs 14 read-ish {}
+   p283/p15/log_qw_V.txt                                   56ee1914 pn 8162 funcs 14 read-ish {}
+   p283/p36/log_jh_hoover_beach.txt                        6bad00f3 pn 15060 funcs 14 read-ish {}
+   p283/p41/log_kv_1.txt                                   ff16284f pn 24568 funcs 14 read-ish {}
+   s129/log_ack129.txt.xz                                  edd17418 pn 21802 funcs 14 read-ish {}
+   s130/log_s1s130.txt.xz                                  0d23f161 pn 12369 funcs 14 read-ish {}
+   s134/log_kp134.txt.xz                                   33f5a15a pn 21699 funcs 14 read-ish {}
+   s136/log_s2s136.txt.xz                                  03ce7a92 pn 11539 funcs 14 read-ish {}
+   s137/log_s4cs137.txt.xz                                 05431dad pn 11655 funcs 14 read-ish {}
+   s288/s6/log_pcw_1.txt                                   f3b3aa3b pn 24005 funcs 14 read-ish {}
+   f287/f12f/log_f12_vw.txt                                b714f5c4 pn 41428 funcs 13 read-ish {}
+   f287/f18e/log_f8_n0.txt                                 35c4a754 pn 58618 funcs 14 read-ish {}
+   f287/f9/f9g/log_f9g_sg.txt                              24efead3 pn 24302 funcs 14 read-ish {}
+   p283/p19/log_qa_A2.txt                                  56ee1914 pn 24453 funcs 14 read-ish {}
+   p283/p36/log_jh_sponge_dirty_bath.txt                   6bad00f3 pn 9326 funcs 14 read-ish {}
+   p283/p41/log_kv_2.txt                                   ff16284f pn 23733 funcs 14 read-ish {}
+   s129/log_acv129.txt.xz                                  edd17418 pn 10554 funcs 14 read-ish {}
+   s130/log_s2s130.txt.xz                                  0d23f161 pn 24501 funcs 14 read-ish {}
+   s134/log_s1s134.txt.xz                                  33f5a15a pn 15408 funcs 14 read-ish {}
+   s136/log_s3s136.txt.xz                                  03ce7a92 pn 24213 funcs 14 read-ish {}
+   s137/log_s6s137.txt.xz                                  05431dad pn 5007 funcs 14 read-ish {}
+   s288/s6/log_pcw_2.txt                                   f3b3aa3b pn 24598 funcs 14 read-ish {}
+   f287/f12f/log_f12_w.txt                                 b714f5c4 pn 7611 funcs 14 read-ish {}
+   f287/f18e/log_f8_n1.txt                                 35c4a754 pn 57906 funcs 14 read-ish {}
+   f287/f4c/log_f4c_g.txt                                  c9a5e198 pn 40502 funcs 13 read-ish {}
+   p283/p19/log_qv_3.txt                                   56ee1914 pn 25031 funcs 14 read-ish {}
+   p283/p36/log_jn_hoover_beach.txt                        6bad00f3 pn 16642 funcs 14 read-ish {}
+   p283/p41/log_kv_3.txt                                   ff16284f pn 24231 funcs 14 read-ish {}
+   s129/log_acw129.txt.xz                                  edd17418 pn 10665 funcs 14 read-ish {}
+   s130/log_s3s130.txt.xz                                  0d23f161 pn 24416 funcs 14 read-ish {}
+   s134/log_s2s134.txt.xz                                  33f5a15a pn 11755 funcs 14 read-ish {}
+   s136/log_s4bs136.txt.xz                                 ee2287ed pn 11775 funcs 14 read-ish {}
+   s288/s6/log_pcw_3.txt                                   f3b3aa3b pn 24648 funcs 14 read-ish {}
+-- 6. stdout SysFileRead: ReadFile failed: logs with a stdout file 183 ; stdout files 404 ; logs with >= 1 line 2
+   lines by error {'6': 2} ; inside the log (sfr_log) 0
+   pairs (drf_n, max stdout sfr_n) where either > 0: [((0, 1), 2)]
+   logs with drf > 0 and stdout sfr = 0: 0 ; drf = 0 and sfr > 0: 2
+-- 7. StreamRead lines 0 TORN 0 ; fatal lines 3 in 3 logs
+-- 8. distinct levels in these logs 18

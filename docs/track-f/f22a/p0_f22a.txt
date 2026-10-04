@@ -1,0 +1,8 @@
+2026-10-04T14:42:51Z F22a HPP-576 expected outcome BEFORE DATA (written after reading the code of the read paths at 62920bc6, before any log sweep and before the host stand; Probe Designer):
+ code read so far: KernelRead/KernelPread call ReadGuestWithRetry; AIO read and Posix::pread go through KernelPread; read() of a file goes through KernelRead; APR reads into a host buffer and memcpy; directory and /dev/random are user-mode writes; sockets (recv/recvfrom, getsockopt) pass the guest pointer to the host call with no workaround; no readv/preadv HLE; no file mapping into guest memory.
+ (a) lines 'KernelRead: direct read failed' in the sample of the course binaries: P(0) = 0 by construction (s142/log_c142_05 is 9235a7ac, register row F4); expected share of sample logs with >= 1 line: 0.05-0.15; print is capped at 32 lines per process.
+ (b) witness of the socket read path (block of Net::Recvfrom LOGF) in the sample: P(0) ~ 0.9.
+ (c) 'Read 0 bytes' next after a 'direct read failed' line (fallback also returned 0): P(0) ~ 0.95.
+ (d) host stand ReadFile into a buffer with a protected page: all-or-nothing (FALSE, 0 bytes) expected; P(partial success > 0 and < requested) ~ 0.1.
+ (e) logs with KYTY_PRINT_NAMES among the course binaries: P(0) ~ 0.8.
+ candidate outcome by item 474(e): P(NE DEFEKT by the letter) ~ 0.25; P(F4a 'not determined': path without workaround, no witness of a call) ~ 0.6; P(defekt: path without workaround or defect of the workaround with a witness) ~ 0.15.

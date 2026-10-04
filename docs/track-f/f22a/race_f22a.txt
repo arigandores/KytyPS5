@@ -1,0 +1,6 @@
+F22a race stand: reads per size 400 ; file 16777216 bytes; Windows 26200
+size 65536    flag 0x00000000 reads 400 flips 1025 wall 0.0 s classes {'fail_zero': 173, 'ok_full': 227} errors {1784: 29, 998: 144}
+size 1048576  flag 0x00000000 reads 400 flips 3258 wall 0.0 s classes {'fail_zero': 330, 'ok_full': 70} errors {1784: 68, 998: 262}
+size 8388608  flag 0x00000000 reads 400 flips 91755 wall 0.2 s classes {'ok_full': 110, 'fail_zero': 290} errors {998: 236, 1784: 54}
+size 8388608  flag 0x10000000 reads 400 flips 89482 wall 0.2 s classes {'ok_full': 100, 'fail_zero': 300} errors {998: 246, 1784: 54}
+size 8388608  flag 0x20000000 reads 400 flips 70849 wall 0.1 s classes {'fail_zero': 292, 'ok_full': 108} errors {1784: 41, 998: 251}

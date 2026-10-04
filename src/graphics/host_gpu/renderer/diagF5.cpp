@@ -11,7 +11,7 @@
 #include <mutex>
 
 // Track F, F16d (HPP-521): see diagF5.h. Nothing here is reachable with both knobs off except On() (a static read once)
-// and the early returns of LogMode / Tick / NoteDraw.
+// and the early returns of LogMode / Tick / Service / NoteDraw (F16d2: Service is not even called - graphicsRun.cpp).
 
 namespace Libs::Graphics {
 
@@ -22,11 +22,26 @@ struct DiagSet {
 	static constexpr uint32_t                         N = static_cast<uint32_t>(CounterEnum::Count);
 	std::array<std::atomic<uint64_t>, N>              counters {};
 	std::atomic<bool>                                 mode_logged {false};
+	// Track F, F16d2: the request of the flip tick (PresentThread -> GuestGpu); the mutex is held only to write or take
+	// it, never while the counters are copied - the vblank waits at most for one take.
+	std::mutex                                        request_mutex;
+	bool                                              has_request   = false;
+	uint32_t                                          request_frame = 0;
+	uint64_t                                          request_ms    = 0;
+	// The state of the line: written only by Service (GuestGpu thread) under print_mutex; read by the test site.
 	std::mutex                                        print_mutex;
 	uint64_t                                          last_sum   = 0;
 	uint64_t                                          last_ms    = 0;
 	bool                                              printed    = false;
+	uint64_t                                          lines      = 0;
+	std::string                                       last_line;
 };
+
+// Track F, F16d2: the test site's window hook (nullptr in the emulator; diagF5.h).
+DiagF5::WindowHook g_window_hook = nullptr;
+
+template <typename CounterEnum>
+using Snapshot = std::array<uint64_t, DiagSet<CounterEnum>::N>;
 
 uint64_t NowMs() {
 	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -34,36 +49,87 @@ uint64_t NowMs() {
 	                                 .count());
 }
 
+// One copy of all counters (relaxed loads in index order). Track F, F16d2: called only by Service on the GuestGpu
+// thread (and by the test site), so it sees exactly the increments of the windows already closed on that thread.
 template <typename CounterEnum>
-std::string FormatSet(const char* tag, DiagSet<CounterEnum>& set, const char* const* names, uint32_t frame) {
+Snapshot<CounterEnum> CopySet(const DiagSet<CounterEnum>& set) {
+	Snapshot<CounterEnum> snapshot {};
+	for (uint32_t i = 0; i < DiagSet<CounterEnum>::N; i++) {
+		snapshot[i] = set.counters[i].load(std::memory_order_relaxed);
+	}
+	return snapshot;
+}
+
+template <typename CounterEnum>
+std::string FormatSet(const char* tag, const Snapshot<CounterEnum>& snapshot, const char* const* names, uint32_t frame) {
 	std::string line = fmt::format("{}: frame={}", tag, frame);
 	for (uint32_t i = 0; i < DiagSet<CounterEnum>::N; i++) {
-		line += fmt::format(" {}={}", names[i], set.counters[i].load(std::memory_order_relaxed));
+		line += fmt::format(" {}={}", names[i], snapshot[i]);
 	}
 	return line;
 }
 
-// The flip tick (item 427(e)): a line of all counters when one grew since the last line and >= 2000 ms passed since it.
+// The flip tick (PresentThread; item 470(v)(1), form (a)): publishes the request only - no counter is read here.
 template <typename CounterEnum>
-bool TickSet(bool on, const char* tag, DiagSet<CounterEnum>& set, const char* const* names, uint32_t frame,
-             uint64_t now_ms) {
+bool PublishSet(bool on, DiagSet<CounterEnum>& set, uint32_t frame, uint64_t now_ms) {
 	if (!on) {
 		return false;
 	}
+	std::scoped_lock lock {set.request_mutex};
+	set.request_frame = frame;
+	set.request_ms    = now_ms;
+	set.has_request   = true;
+	return true;
+}
+
+// The line (item 427(e)) on the GuestGpu thread outside every window: the pending request, one copy of all counters,
+// then the condition "a counter grew since the last line and >= 2000 ms passed since it" and the line - both from that
+// copy.
+template <typename CounterEnum>
+bool ServiceSet(bool on, const char* tag, DiagSet<CounterEnum>& set, const char* const* names) {
+	if (!on) {
+		return false;
+	}
+	uint32_t frame  = 0;
+	uint64_t now_ms = 0;
+	{
+		std::scoped_lock lock {set.request_mutex};
+		if (!set.has_request) {
+			return false;
+		}
+		frame           = set.request_frame;
+		now_ms          = set.request_ms;
+		set.has_request = false;
+	}
 	std::scoped_lock lock {set.print_mutex};
-	uint64_t         sum = 0;
-	for (const auto& counter: set.counters) {
-		sum += counter.load(std::memory_order_relaxed);
+	const auto       snapshot = CopySet(set);
+	uint64_t         sum      = 0;
+	for (const auto value: snapshot) {
+		sum += value;
 	}
 	if (sum == set.last_sum || (set.printed && now_ms - set.last_ms < 2000u)) {
 		return false;
 	}
-	const auto line = FormatSet(tag, set, names, frame);
+	auto line = FormatSet<CounterEnum>(tag, snapshot, names, frame);
 	LOGF("%s\n", line.c_str());
-	set.last_sum = sum;
-	set.last_ms  = now_ms;
-	set.printed  = true;
+	set.last_sum  = sum;
+	set.last_ms   = now_ms;
+	set.printed   = true;
+	set.last_line = std::move(line);
+	set.lines++;
 	return true;
+}
+
+template <typename CounterEnum>
+uint64_t LinesSet(DiagSet<CounterEnum>& set) {
+	std::scoped_lock lock {set.print_mutex};
+	return set.lines;
+}
+
+template <typename CounterEnum>
+std::string LastLineSet(DiagSet<CounterEnum>& set) {
+	std::scoped_lock lock {set.print_mutex};
+	return set.last_line;
 }
 
 template <typename CounterEnum>
@@ -157,7 +223,11 @@ bool On() {
 }
 
 void Add(Counter counter) {
-	F5().counters[static_cast<uint32_t>(counter)].fetch_add(1, std::memory_order_relaxed);
+	const auto index = static_cast<uint32_t>(counter);
+	F5().counters[index].fetch_add(1, std::memory_order_relaxed);
+	if (g_window_hook != nullptr) [[unlikely]] {
+		g_window_hook(5, index); // Track F, F16d2: the test site's tick inside the window (nullptr in the emulator)
+	}
 }
 
 uint64_t Get(Counter counter) {
@@ -180,11 +250,27 @@ bool Tick(uint32_t frame) {
 }
 
 bool TickAt(uint32_t frame, uint64_t now_ms) {
-	return TickSet(On(), "DiagF5", F5(), F5Names, frame, now_ms);
+	return PublishSet(On(), F5(), frame, now_ms);
+}
+
+bool Service() {
+	return ServiceSet(On(), "DiagF5", F5(), F5Names);
 }
 
 std::string FormatLine(uint32_t frame) {
-	return FormatSet("DiagF5", F5(), F5Names, frame);
+	return FormatSet<Counter>("DiagF5", CopySet(F5()), F5Names, frame);
+}
+
+uint64_t Lines() {
+	return LinesSet(F5());
+}
+
+std::string LastLine() {
+	return LastLineSet(F5());
+}
+
+void SetWindowHook(WindowHook hook) {
+	g_window_hook = hook;
 }
 
 uint32_t ViewLayerBits(uint32_t first, uint32_t count) {
@@ -266,11 +352,23 @@ bool Tick(uint32_t frame) {
 }
 
 bool TickAt(uint32_t frame, uint64_t now_ms) {
-	return TickSet(On(), "DiagF6", F6(), F6Names, frame, now_ms);
+	return PublishSet(On(), F6(), frame, now_ms);
+}
+
+bool Service() {
+	return ServiceSet(On(), "DiagF6", F6(), F6Names);
 }
 
 std::string FormatLine(uint32_t frame) {
-	return FormatSet("DiagF6", F6(), F6Names, frame);
+	return FormatSet<Counter>("DiagF6", CopySet(F6()), F6Names, frame);
+}
+
+uint64_t Lines() {
+	return LinesSet(F6());
+}
+
+std::string LastLine() {
+	return LastLineSet(F6());
 }
 
 void NoteDraw(const HW::Context& hw, const uint32_t* host_slots, uint32_t host_count, bool ps, const uint32_t* mrt,
@@ -339,6 +437,9 @@ void NoteDraw(const HW::Context& hw, const uint32_t* host_slots, uint32_t host_c
 	for (uint32_t i = 0; i < N; i++) {
 		if (add[i] != 0) {
 			set.counters[i].fetch_add(add[i], std::memory_order_relaxed);
+			if (g_window_hook != nullptr) [[unlikely]] {
+				g_window_hook(6, i); // Track F, F16d2: the test site's tick inside the window (nullptr in the emulator)
+			}
 		}
 	}
 }

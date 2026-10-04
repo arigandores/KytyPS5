@@ -16,6 +16,7 @@
 #include "graphics/guest_gpu/pm4.h"
 #include "graphics/guest_gpu/sliceCensus.h"
 #include "graphics/host_gpu/renderer/commandRecorder.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
@@ -695,8 +696,19 @@ void GuestGpu::ThreadRun(void* data) {
 	// Session 123, knob "skipceil": this is the thread that latches and tests it (the m4baton relay is not).
 	Common::SkipCeil::t_gpu = true;
 	Common::SkipCeil::t_w3  = false;
+	// Track F, F16d2 (KYTY_DIAG_F5 / KYTY_DIAG_F6, HPP-569, ROADMAP s122 item 470(v)(1), form (a)): the lines DiagF5: /
+	// DiagF6: are copied and printed HERE, at the top of the loop, from the request the flip tick published (videoOut.cpp).
+	// No command, submission slice or m4baton range of this thread runs at this point, and every window "parent added,
+	// children not yet" of a site opens and closes inside one call of a site function made from the loop body below (or
+	// on the relay while this thread is parked in BatonRelayRun) - so the copy is one consistent snapshot. Knobs off: two
+	// On() reads once per thread start and one test of a local per iteration; no call, no atomic operation.
+	const bool diag_f56 = DiagF5::On() || DiagF6::On();
 
 	for (;;) {
+		if (diag_f56) [[unlikely]] {
+			(void)DiagF5::Service();
+			(void)DiagF6::Service();
+		}
 		Submission                   submission;
 		Common::UniqueFunction<void> command;
 		bool                         has_submission = false;

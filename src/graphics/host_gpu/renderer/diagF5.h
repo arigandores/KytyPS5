@@ -10,7 +10,11 @@
 // knob off not even an atomic operation runs. Outside the translation cache signature set (the shader tree,
 // shaderTranslationCache.cpp, gpu_format.h, gpu_defs.h): the signature and the variant directory do not change.
 // The line "DiagF5: mode=1" / "DiagF6: mode=1" is printed once at device creation; "DiagF5: frame=<n> <name>=<value> ..."
-// (all counters) on a flip tick when a counter grew since the last line and >= 2 s passed (item 427(e)).
+// (all counters) when a counter grew since the last line and >= 2 s passed (item 427(e)). Track F, F16d2 (HPP-569,
+// item 470(v)(1), form (a)): the flip tick (PresentThread) only publishes a request (frame, clock) and reads no counter;
+// the counters are copied once and the line is printed by Service() on the GuestGpu thread at the top of the
+// GuestGpu::ThreadRun loop, where no window "parent added, children not yet" of a site is open (graphicsRun.cpp) - the
+// line is one consistent snapshot.
 
 #include "graphics/guest_gpu/hardwareContext.h"
 
@@ -91,11 +95,24 @@ void                      Add(Counter counter);
 [[nodiscard]] const char* Name(Counter counter);
 // "DiagF5: mode=1" once per process when On(); true when this call printed it.
 bool LogMode();
-// The flip tick: prints the line when On(), a counter grew since the last line and >= 2000 ms passed since it (the
-// first line: at the first tick with a growth). TickAt takes the clock as an argument (test site); Tick reads it.
+// The flip tick (PresentThread): when On(), publishes the request for a line - the frame and the clock - and reads no
+// counter; true when published (a newer request replaces one not served yet). TickAt takes the clock as an argument
+// (test site); Tick reads it.
 bool Tick(uint32_t frame);
 bool TickAt(uint32_t frame, uint64_t now_ms);
+// Track F, F16d2: the line. Called on the GuestGpu thread outside every window (GuestGpu::ThreadRun, graphicsRun.cpp):
+// takes the pending request, copies all counters once and prints the line from the copy when On(), a counter grew
+// since the last line and >= 2000 ms (request clock) passed since it (the first line: at the first request with a
+// growth); true when it printed.
+bool Service();
 [[nodiscard]] std::string FormatLine(uint32_t frame);
+// Test site: the number of lines Service printed and the last of them.
+[[nodiscard]] uint64_t    Lines();
+[[nodiscard]] std::string LastLine();
+// Test site only (nullptr in the emulator): called on the site's thread right after each counter increment of Add
+// (`set` 5) and of DiagF6::NoteDraw (`set` 6) - inside a window of the site.
+using WindowHook = void (*)(uint32_t set, uint32_t counter);
+void SetWindowHook(WindowHook hook);
 
 // The layer bits of a view [first, first + count) inside the 32-bit clear mask; UINT32_MAX when the range is not
 // representable there (first >= 32 or count > 32 - first: the code returns without a clear, every mask bit counts).
@@ -166,7 +183,10 @@ enum class DrawKind : uint8_t { Indexed, Auto, Indirect, Mesh };
 bool                      LogMode();
 bool                      Tick(uint32_t frame);
 bool                      TickAt(uint32_t frame, uint64_t now_ms);
+bool                      Service(); // Track F, F16d2: as DiagF5::Service
 [[nodiscard]] std::string FormatLine(uint32_t frame);
+[[nodiscard]] uint64_t    Lines();
+[[nodiscard]] std::string LastLine();
 
 // `host_slots` - the guest slots of the host colour attachments of the draw (RenderColorInfo::target_slot of
 // state.color_info[0, host_count)); `mrt` - the guest MRT indices the pixel program exports (only with `ps`).

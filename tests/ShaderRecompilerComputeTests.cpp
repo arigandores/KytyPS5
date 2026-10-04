@@ -97,6 +97,7 @@
 #include <sstream>
 #include <string>
 #include <string_view>
+#include <thread>
 #include <vector>
 
 #if KYTY_PLATFORM != KYTY_PLATFORM_WINDOWS
@@ -9426,7 +9427,7 @@ public:
     std::array<uint64_t, static_cast<size_t>(DiagF5::Counter::Count)> f5{};
     std::array<uint64_t, static_cast<size_t>(DiagF6::Counter::Count)> f6{};
   };
-  static F16dSnap F16dTake() {
+  static F16dSnap F16d2Read() {
     F16dSnap snap;
     for (uint32_t i = 0; i < snap.f5.size(); i++) {
       snap.f5[i] = DiagF5::Get(static_cast<DiagF5::Counter>(i));
@@ -9434,6 +9435,13 @@ public:
     for (uint32_t i = 0; i < snap.f6.size(); i++) {
       snap.f6[i] = DiagF6::Get(static_cast<DiagF6::Counter>(i));
     }
+    return snap;
+  }
+  // Called at quiescent points only (before and after a step): F16d2 keeps it as the state the window hook compares
+  // a line with.
+  static F16dSnap F16dTake() {
+    const auto snap = F16d2Read();
+    F16d2Base() = snap;
     return snap;
   }
   using F16dWant5 = std::vector<std::pair<DiagF5::Counter, uint64_t>>;
@@ -9470,6 +9478,7 @@ public:
               fmt::format("{}: delta {} != expected {}", DiagF6::Name(static_cast<DiagF6::Counter>(i)), got,
                           want));
     }
+    F16d2Service(stage);
     f16d_checks++;
     std::printf("[f16d]    %-44s ok\n", stage);
   }
@@ -9511,6 +9520,176 @@ public:
                 h(D::PsDraws) <= h(D::Draws),
             "an identity of DiagF6 is broken");
     std::printf("[f16d]    %-44s ok\n", stage);
+  }
+
+  // Track F, F16d2 (HPP-569, ROADMAP s122 item 470(v)(3)): the flip tick between a parent and its child. The window hook
+  // (DiagF5::SetWindowHook: called on the site's thread right after each counter increment, i.e. inside every window of
+  // the sites) runs the flip tick on ANOTHER thread and joins it. A line printed meanwhile must be consistent with the
+  // last quiescent state: every family difference "parent - children" and every DiagF6 identity difference as there,
+  // the "<=" pairs held ("no line, or a consistent line"); with form (a) the tick only publishes. After each step the
+  // GuestGpu service runs at the quiescent point: it prints iff a window tick of that set was published during the step,
+  // and the line is exactly the counters.
+  using F16d2Family = std::pair<DiagF5::Counter, std::vector<DiagF5::Counter>>;
+  static const std::vector<F16d2Family> &F16d2Families() {
+    using C = DiagF5::Counter;
+    static const std::vector<F16d2Family> families = {
+        {C::DccRtPending,
+         {C::DccRtCleared, C::DccRtSkipLevels, C::DccRtSkipPartial, C::DccRtSkipDecode, C::DccRtSkipLayers}},
+        {C::DccMatPending, {C::DccMatCleared, C::DccMatUndecoded}},
+        {C::DccFce, {C::DccFceImage, C::DccFceNoImage}},
+        {C::DccFillMeta, {C::DccFillClear, C::DccFillUncompressed, C::DccFillUnknown}},
+        {C::MetaRefusedKnown, {C::MetaCsTracked, C::MetaCsUntracked, C::MetaDmaUntracked, C::MetaDmaNoClear}},
+        {C::CmaskRtPending,
+         {C::CmaskRtCleared, C::CmaskRtSkipValue, C::CmaskRtSkipPartial, C::CmaskRtSkipDecode, C::CmaskRtSkipLayers}},
+        {C::CmaskFce,
+         {C::CmaskFceNoImage, C::CmaskFceMeta, C::CmaskFceMsaa, C::CmaskFceLayout, C::CmaskFceNoFill, C::CmaskFceDrawn,
+          C::CmaskFceB42, C::CmaskFceUnapplied}}};
+    return families;
+  }
+  static constexpr size_t F16d2DccFillMeta = 3;      // index in F16d2Families()
+  static constexpr size_t F16d2MetaRefusedKnown = 4;
+  static constexpr size_t F16d2CmaskFce = 6;
+  using F16d2V5 = std::array<uint64_t, static_cast<size_t>(DiagF5::Counter::Count)>;
+  using F16d2V6 = std::array<uint64_t, static_cast<size_t>(DiagF6::Counter::Count)>;
+  static std::vector<int64_t> F16d2Diff5(const F16d2V5 &v) {
+    std::vector<int64_t> out;
+    for (const auto &[parent, children] : F16d2Families()) {
+      int64_t d = static_cast<int64_t>(v[static_cast<size_t>(parent)]);
+      for (const auto child : children) {
+        d -= static_cast<int64_t>(v[static_cast<size_t>(child)]);
+      }
+      out.push_back(d);
+    }
+    return out;
+  }
+  static std::vector<int64_t> F16d2Diff6(const F16d2V6 &v) {
+    using D = DiagF6::Counter;
+    const auto h = [&v](D d) { return static_cast<int64_t>(v[static_cast<size_t>(d)]); };
+    return {h(D::SBound) + h(D::SAddr0Fmt) + h(D::SAddr0NoFmt) + h(D::SMask0Addr) + h(D::SEmpty) - 8 * h(D::Draws),
+            h(D::HBound) + h(D::BoundMissing) - h(D::SBound) - h(D::BoundExtra),
+            h(D::WTotal) - h(D::WBound) - h(D::WMask0) - h(D::WAddr0Fmt) - h(D::WAddr0NoFmt) - h(D::WGe8),
+            h(D::DrawsIdx) + h(D::DrawsAuto) + h(D::DrawsInd) + h(D::DrawsMesh) - h(D::Draws)};
+  }
+  static bool F16d2Le5(const F16d2V5 &v) {
+    using C = DiagF5::Counter;
+    const auto g = [&v](C c) { return v[static_cast<size_t>(c)]; };
+    return g(C::DccRt) <= g(C::RtResolves) && g(C::StereoNonzero) <= g(C::StereoWrites) &&
+           g(C::DsUnboundClear) <= g(C::DsUnbound);
+  }
+  static bool F16d2Le6(const F16d2V6 &v) {
+    return v[static_cast<size_t>(DiagF6::Counter::PsDraws)] <= v[static_cast<size_t>(DiagF6::Counter::Draws)];
+  }
+  // The values of a line "<tag>: frame=<n> <name>=<value> ..." in counter order; false when a name is missing.
+  template <typename Counter, size_t N>
+  static bool F16d2Parse(const std::string &line, const char *(*name)(Counter), std::array<uint64_t, N> &out) {
+    for (size_t i = 0; i < N; i++) {
+      const auto key = fmt::format(" {}=", name(static_cast<Counter>(i)));
+      const auto at = line.find(key);
+      if (at == std::string::npos) {
+        return false;
+      }
+      out[i] = std::strtoull(line.c_str() + at + key.size(), nullptr, 10);
+    }
+    return true;
+  }
+  static F16dSnap &F16d2Base() { // the last quiescent state (F16dTake); a function: the class is incomplete here
+    static F16dSnap base;
+    return base;
+  }
+  inline static uint64_t f16d2_clock = 1000000; // the clock of the window ticks: +10 s a tick, 2000 ms never holds
+  inline static uint32_t f16d2_ticks5 = 0;      // window ticks at a DiagF5 increment since the last service
+  inline static uint32_t f16d2_ticks6 = 0;      // window ticks at a DiagF6 increment since the last service
+  inline static uint32_t f16d2_total5 = 0;
+  inline static uint32_t f16d2_total6 = 0;
+  inline static uint32_t f16d2_inner = 0;       // lines printed by a window tick (none with form (a))
+  inline static uint32_t f16d2_services = 0;    // service lines checked against the counters
+  inline static std::array<uint32_t, 7> f16d2_seen{}; // window ticks at each family parent (F16d2Families order)
+  inline static uint32_t f16d2_seen_draw = 0;   // window ticks inside NoteDraw
+  inline static uint32_t f16d2_nested_cmask = 0; // ticks at cmask_rt_pending inside an open cmask_fce window
+  inline static uint32_t f16d2_nested_meta = 0; // ticks at dcc_fill_meta inside an open meta_refused_known window
+  inline static int64_t f16d2_meta_open = 0;    // the most meta_refused_known parents open at one tick
+
+  static void F16d2Hook(uint32_t set, uint32_t counter) {
+    const auto now = F16d2Read(); // this thread: exact; minus the quiescent state = the windows open now
+    const auto open5 = F16d2Diff5(now.f5);
+    const auto base5 = F16d2Diff5(F16d2Base().f5);
+    const auto base6 = F16d2Diff6(F16d2Base().f6);
+    if (set == 5) {
+      f16d2_ticks5++;
+      f16d2_total5++;
+      const auto &families = F16d2Families();
+      for (size_t k = 0; k < families.size(); k++) {
+        if (static_cast<uint32_t>(families[k].first) == counter) {
+          f16d2_seen[k]++;
+        }
+      }
+      if (counter == static_cast<uint32_t>(DiagF5::Counter::CmaskRtPending) &&
+          open5[F16d2CmaskFce] > base5[F16d2CmaskFce]) {
+        f16d2_nested_cmask++;
+      }
+      if (counter == static_cast<uint32_t>(DiagF5::Counter::DccFillMeta) &&
+          open5[F16d2MetaRefusedKnown] > base5[F16d2MetaRefusedKnown]) {
+        f16d2_nested_meta++;
+      }
+      f16d2_meta_open = std::max(f16d2_meta_open, open5[F16d2MetaRefusedKnown] - base5[F16d2MetaRefusedKnown]);
+    } else {
+      f16d2_ticks6++;
+      f16d2_total6++;
+      f16d2_seen_draw++;
+    }
+    const auto lines5 = DiagF5::Lines();
+    const auto lines6 = DiagF6::Lines();
+    f16d2_clock += 10000;
+    const auto clock = f16d2_clock;
+    std::thread vblank([clock] {
+      (void)DiagF5::TickAt(static_cast<uint32_t>(clock / 1000), clock);
+      (void)DiagF6::TickAt(static_cast<uint32_t>(clock / 1000), clock);
+    });
+    vblank.join();
+    if (DiagF5::Lines() != lines5) {
+      f16d2_inner++;
+      F16d2V5 v{};
+      const auto line = DiagF5::LastLine();
+      Require("DiagF5", "tick inside a window",
+              F16d2Parse(line, &DiagF5::Name, v) && F16d2Diff5(v) == base5 && F16d2Le5(v),
+              "a line printed by the flip tick inside a window is not consistent: " + line);
+    }
+    if (DiagF6::Lines() != lines6) {
+      f16d2_inner++;
+      F16d2V6 v{};
+      const auto line = DiagF6::LastLine();
+      Require("DiagF6", "tick inside a window",
+              F16d2Parse(line, &DiagF6::Name, v) && F16d2Diff6(v) == base6 && F16d2Le6(v),
+              "a line printed by the flip tick inside a window is not consistent: " + line);
+    }
+  }
+
+  static void F16d2Service(const char *stage) {
+    const auto t5 = f16d2_ticks5;
+    const auto t6 = f16d2_ticks6;
+    f16d2_ticks5 = 0;
+    f16d2_ticks6 = 0;
+    const bool p5 = DiagF5::Service();
+    const bool p6 = DiagF6::Service();
+    Require("DiagF5", stage, p5 == (DiagF5::On() && t5 > 0),
+            fmt::format("the service printed {} after {} window ticks of DiagF5", p5, t5));
+    Require("DiagF6", stage, p6 == (DiagF6::On() && t6 > 0),
+            fmt::format("the service printed {} after {} window ticks of DiagF6", p6, t6));
+    const auto now = F16d2Read();
+    if (p5) {
+      F16d2V5 v{};
+      const auto line = DiagF5::LastLine();
+      Require("DiagF5", stage, F16d2Parse(line, &DiagF5::Name, v) && v == now.f5,
+              "the service line is not the counters at the quiescent point: " + line);
+      f16d2_services++;
+    }
+    if (p6) {
+      F16d2V6 v{};
+      const auto line = DiagF6::LastLine();
+      Require("DiagF6", stage, F16d2Parse(line, &DiagF6::Name, v) && v == now.f6,
+              "the service line is not the counters at the quiescent point: " + line);
+      f16d2_services++;
+    }
   }
 
   void CheckDiagF5F6() {
@@ -9566,7 +9745,10 @@ public:
       F16dExpect("dma refusal classes", before, {{C::MetaDmaUntracked, 2}, {C::MetaDmaNoClear, 2}});
     }
 
-    // ---- DiagF6: a synthetic draw state (item 433(g)): a slot of every class, an export into every class
+    // ---- DiagF6: a synthetic draw state (item 433(g)): a slot of every class, an export into every class. F16d2 (item
+    // 470(v)(4), RC2 of F16e): asymmetric by format - two slots "format valid, base 0, mask on" (1 and 4) against one
+    // kInvalid (2), exports into them 2 (MRT 1, 4) against 1 (MRT 2), so an inverted format test of a slot or of an
+    // export (diagF5.cpp) changes the deltas.
     {
       using D = DiagF6::Counter;
       HW::Context hw{};
@@ -9579,13 +9761,15 @@ public:
       hw.SetColorInfo(2, {.format = Prospero::ChannelLayout::kInvalid});
       hw.SetColorBase(3, {.addr = 0x0000000300100000ull});
       hw.SetColorInfo(3, {.format = fmt8888});
-      hw.SetRenderTargetMask(0x0fffu); // slots 0-2 masked on, slot 3 masked off (base set), 4-7 empty
+      hw.SetColorBase(4, {.addr = 0});
+      hw.SetColorInfo(4, {.format = fmt8888});
+      hw.SetRenderTargetMask(0x000f0fffu); // slots 0-2 and 4 masked on, slot 3 masked off (base set), 5-7 empty
       const uint32_t host_ok[] = {0};
       const uint32_t host_extra[] = {0, 3};
-      const uint32_t mrt[] = {0, 1, 2, 3, 4, 9};
-      const F16dWant6 slots_once = {{D::SBound, 1}, {D::SAddr0Fmt, 1}, {D::SAddr0NoFmt, 1}, {D::SMask0Addr, 1},
-                                    {D::SEmpty, 4}};
-      const F16dWant6 writes = {{D::PsDraws, 1}, {D::WTotal, 6}, {D::WBound, 1}, {D::WAddr0Fmt, 1},
+      const uint32_t mrt[] = {0, 1, 2, 3, 4, 5, 9};
+      const F16dWant6 slots_once = {{D::SBound, 1}, {D::SAddr0Fmt, 2}, {D::SAddr0NoFmt, 1}, {D::SMask0Addr, 1},
+                                    {D::SEmpty, 3}};
+      const F16dWant6 writes = {{D::PsDraws, 1}, {D::WTotal, 7}, {D::WBound, 1}, {D::WAddr0Fmt, 2},
                                 {D::WAddr0NoFmt, 1}, {D::WMask0, 2}, {D::WGe8, 1}};
       const auto plus = [](F16dWant6 a, const F16dWant6 &b) {
         a.insert(a.end(), b.begin(), b.end());
@@ -9597,12 +9781,12 @@ public:
                                                       {DiagF6::DrawKind::Mesh, D::DrawsMesh}};
       for (const auto &[kind, counter] : kinds) {
         const auto before = F16dTake();
-        DiagF6::NoteDraw(hw, host_ok, 1, true, mrt, 6, kind);
+        DiagF6::NoteDraw(hw, host_ok, 1, true, mrt, 7, kind);
         F16dExpect(fmt::format("f6 draw kind {} with ps", static_cast<uint32_t>(kind)).c_str(), before, {},
                    plus(plus({{D::Draws, 1}, {counter, 1}, {D::HBound, 1}}, slots_once), writes));
       }
       auto before = F16dTake();
-      DiagF6::NoteDraw(hw, host_ok, 1, false, mrt, 6, DiagF6::DrawKind::Indexed);
+      DiagF6::NoteDraw(hw, host_ok, 1, false, mrt, 7, DiagF6::DrawKind::Indexed);
       F16dExpect("f6 draw without ps: no export counted", before, {},
                  plus({{D::Draws, 1}, {D::DrawsIdx, 1}, {D::HBound, 1}}, slots_once));
       before = F16dTake();
@@ -9633,22 +9817,62 @@ public:
               "the mode line is printed more than once, or with the knob off");
       // Counters grew above with the knob on (NoteCsRefusals, NoteDraw): the first tick prints, a tick < 2 s later
       // with a growth does not, a tick >= 2 s later with a growth does, a tick without a growth does not.
-      const bool t1 = DiagF5::TickAt(1, 100000);
+      // F16d2 (item 470(v)(1), form (a)): the tick only publishes the request - no line, no counter read; the line is
+      // printed by Service (the GuestGpu thread) from the latest request; no request - no line.
+      const auto lines5 = DiagF5::Lines();
+      const auto lines6 = DiagF6::Lines();
+      const bool s0 = DiagF5::Service() || DiagF6::Service();
+      const bool p1 = DiagF5::TickAt(1, 100000);
+      Require(name, "tick publishes only",
+              p1 == DiagF5::On() && DiagF5::Lines() == lines5 && DiagF6::Lines() == lines6 && !s0,
+              "the flip tick printed a line, or a service printed without a request");
+      const bool t1 = DiagF5::Service();
       if (DiagF5::On()) {
         DiagF5::NoteDmaRefusal(DiagF5::RefusalCmask, 0);
       }
-      const bool t2 = DiagF5::TickAt(2, 101999);
-      const bool t3 = DiagF5::TickAt(3, 102000);
-      const bool t4 = DiagF5::TickAt(4, 200000);
-      const bool u1 = DiagF6::TickAt(1, 100000);
-      const bool u2 = DiagF6::TickAt(2, 300000);
+      const auto tick5 = [](uint32_t frame, uint64_t ms) {
+        (void)DiagF5::TickAt(frame, ms);
+        return DiagF5::Service();
+      };
+      const auto tick6 = [](uint32_t frame, uint64_t ms) {
+        (void)DiagF6::TickAt(frame, ms);
+        return DiagF6::Service();
+      };
+      const bool t2 = tick5(2, 101999);
+      const bool t3 = tick5(3, 102000);
+      const auto line3 = DiagF5::LastLine();
+      const bool t4 = tick5(4, 200000);
+      const bool t5 = DiagF5::Service();
+      const bool u1 = tick6(1, 100000);
+      const bool u2 = tick6(2, 300000);
       Require(name, "tick",
-              DiagF5::On() ? (t1 && !t2 && t3 && !t4) : (!t1 && !t2 && !t3 && !t4),
-              fmt::format("DiagF5 tick {} {} {} {}", t1, t2, t3, t4));
+              DiagF5::On() ? (t1 && !t2 && t3 && !t4 && !t5) : (!t1 && !t2 && !t3 && !t4 && !t5),
+              fmt::format("DiagF5 tick {} {} {} {} {}", t1, t2, t3, t4, t5));
       Require(name, "tick f6", DiagF6::On() ? (u1 && !u2) : (!u1 && !u2),
               fmt::format("DiagF6 tick {} {}", u1, u2));
+      Require(name, "the line of the request",
+              DiagF5::On() ? line3.rfind("DiagF5: frame=3 rt_resolves=", 0) == 0 : line3.empty(),
+              "the line does not carry the frame of the request it served: " + line3);
       std::printf("[f16d]    %-44s ok (mode line first call: f5=%d f6=%d)\n", "tick and mode line", first5 ? 1 : 0,
                   first6 ? 1 : 0);
+    }
+
+    // ---- F16d2 (item 470(v)(3)): the flip tick inside a window. From here to the end of C the window hook runs the
+    // flip tick on another thread inside every window of the sites (F16d2Hook); first inside NoteDraw.
+    DiagF5::SetWindowHook(&F16d2Hook);
+    {
+      using D = DiagF6::Counter;
+      HW::Context hw{};
+      hw.SetColorBase(0, {.addr = 0x0000000300000000ull});
+      hw.SetColorInfo(0, {.format = Prospero::ChannelLayout::k8_8_8_8});
+      hw.SetRenderTargetMask(0x0fu);
+      const uint32_t host[] = {0};
+      const uint32_t mrt1[] = {0};
+      const auto before = F16dTake();
+      DiagF6::NoteDraw(hw, host, 1, true, mrt1, 1, DiagF6::DrawKind::Indexed);
+      F16dExpect("H6 tick inside NoteDraw (F16d2)", before, {},
+                 {{D::Draws, 1}, {D::DrawsIdx, 1}, {D::SBound, 1}, {D::SEmpty, 7}, {D::HBound, 1}, {D::PsDraws, 1},
+                  {D::WTotal, 1}, {D::WBound, 1}});
     }
 
     EnsureRuntimeContext();
@@ -9886,6 +10110,40 @@ public:
         DiagF5::NoteCsRefusals(refusals, dcc);
       }
       F16dExpect("A15c meta_cs_tracked", before, {{C::MetaCsTracked, 1}});
+      // F16d2 (item 470(v)(3)): k = 3 parents of meta_refused_known open at once and a dcc_fill_meta window inside them,
+      // in the order of DispatchDirect (TryConsumeComputeMetaClear, the TrackDccFill of TryConsumeComputeImageClear,
+      // NoteCsRefusals).
+      before = F16dTake();
+      ShaderRecompiler::IR::CompiledShaderInfo program3{};
+      program3.stage = ShaderType::Compute;
+      ShaderComputeInputInfo input3{};
+      input3.stage.program = &program3;
+      for (const uint64_t address : {dcc, cmask_entry, dcc}) {
+        program3.info.buffers.push_back(resource);
+        ShaderBufferResource descriptor3{};
+        descriptor3.UpdateAddress48(address);
+        descriptor3.fields[1] |= 16u << 16u;
+        descriptor3.fields[2] = 8;
+        descriptor3.fields[3] =
+            DstSel(4, 5, 6, 7) | (static_cast<uint32_t>(Prospero::BufferFormat::k32_32_32_32UInt) << 12u);
+        ShaderRecompiler::IR::DescriptorValue value3{};
+        value3.dword_count = 4;
+        std::copy_n(descriptor3.fields, value3.dword_count, value3.dwords.begin());
+        input3.stage.resources.buffers.push_back(value3);
+      }
+      DiagF5::CsRefusals refusals3;
+      const bool consumed3 =
+          RenderExecutorTestAccess::F16dMetaClear(executor, input3, scheduler.Current(), &refusals3);
+      cache.TrackDccFill(dcc, msize, 0);
+      if (DiagF5::On()) {
+        DiagF5::NoteCsRefusals(refusals3, dcc);
+      }
+      F16dExpect("A15d 3 refusals open, a fill inside (F16d2)", before,
+                 {{C::MetaRefusedKnown, 3}, {C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillClear, 1},
+                  {C::MetaCsTracked, 2}, {C::MetaCsUntracked, 1}});
+      Require(name, "A15d list",
+              !consumed3 && (DiagF5::On() ? refusals3.count == 3 : refusals3.count == 0),
+              "the three refused addresses were not handed to the dispatch");
 
       RenderExecutorTestAccess::ResetBindings(executor);
       context.UnmapMemory(base, allocation_size);
@@ -10078,6 +10336,28 @@ public:
     Require(name, "release",
             Libs::LibKernel::Memory::KernelReleaseDirectMemory(direct, allocation_size) == 0,
             "F16d test release failed");
+    // ---- F16d2: a window tick reached every family with a window, the nested windows and NoteDraw (item 470(v)(3))
+    DiagF5::SetWindowHook(nullptr);
+    F16d2Service("F16d2 after the last scenario");
+    if (DiagF5::On()) {
+      const auto &families = F16d2Families();
+      for (size_t k = 0; k < families.size(); k++) {
+        Require(name, "window tick per family", f16d2_seen[k] > 0,
+                fmt::format("no flip tick inside a window of {}", DiagF5::Name(families[k].first)));
+      }
+      Require(name, "nested windows", f16d2_nested_cmask > 0 && f16d2_nested_meta > 0 && f16d2_meta_open >= 3,
+              fmt::format("nested cmask {} meta {} open meta parents {}", f16d2_nested_cmask, f16d2_nested_meta,
+                          f16d2_meta_open));
+    }
+    Require(name, "window tick in NoteDraw", !DiagF6::On() || f16d2_seen_draw > 0, "no flip tick inside NoteDraw");
+    Require(name, "no line with the knob off",
+            (DiagF5::On() || DiagF5::Lines() == 0) && (DiagF6::On() || DiagF6::Lines() == 0) &&
+                (DiagF5::On() || DiagF6::On() || (f16d2_total5 == 0 && f16d2_total6 == 0)),
+            "a line was printed or a window hook ran with the knob off");
+    std::printf("[f16d]    %-44s ok (window ticks f5 %u f6 %u; lines by a window tick %u; service lines %u; "
+                "nested cmask %u meta %u; open meta parents max %lld)\n",
+                "F16d2 tick inside a window", f16d2_total5, f16d2_total6, f16d2_inner, f16d2_services,
+                f16d2_nested_cmask, f16d2_nested_meta, static_cast<long long>(f16d2_meta_open));
     // A13 adds 2 parents without a child; the pure CS / DMA calls (2 + 2 + 4), the tick (1) and A15c (1) add 10
     // children without a parent: children - parents = 8 beyond the balanced sites.
     F16dIdentities("identities after all scenarios", DiagF5::On() ? 8 : 0);

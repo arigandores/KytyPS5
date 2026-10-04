@@ -1241,6 +1241,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 	}
 	Graphics::GpuTimeProfiler::SetFrame(static_cast<uint32_t>(r.cfg->flip_status.count));
 	// Track F, F16d (KYTY_DIAG_F5 / KYTY_DIAG_F6, item 427(e)): the flip tick - a line on growth, at most every 2 s.
+	// F16d2 (item 470(v)(1), form (a)): the tick only publishes the request; the line is copied and printed on the
+	// GuestGpu thread outside every window of the sites (GuestGpu::ThreadRun, graphicsRun.cpp).
 	Graphics::DiagF5::Tick(static_cast<uint32_t>(r.cfg->flip_status.count));
 	Graphics::DiagF6::Tick(static_cast<uint32_t>(r.cfg->flip_status.count));
 	const uint64_t poll_t0 = Common::FrameStats::NowNs();

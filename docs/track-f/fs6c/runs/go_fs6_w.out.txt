@@ -1,0 +1,18 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-04T15:13:07Z FS6c go_fs6c fs6_w lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T15:13:08Z FS6c go_fs6c fs6_w installed binary inside the lock before the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T15:13:10Z FS6c go_fs6c fs6_w manifest before: manifest C:/kyty/f287/fs6c/runs/fs6_w/manifest_before.tsv files 3323 bytes 921076874 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a
+2026-10-04T15:13:13Z FS6c go_fs6c fs6_w caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (192/172/5/520/ MB)
+2026-10-04T15:13:13Z FS6c go_fs6c fs6_w warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T15:13:13Z; entries of _ShaderCache/PPSA21564: 1347
+2026-10-04T15:13:15Z FS6c go_fs6c fs6_w installed the FS6 copy: 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2
+2026-10-04T15:13:15Z FS6c go_fs6c fs6_w enter_scene start (level underwater_aerial_garden, W of item 295 (b), hold 310, defaults of FS6)
+2026-10-04T15:19:04Z FS6c go_fs6c fs6_w enter_scene rc 0
+2026-10-04T15:19:04Z FS6c go_fs6c fs6_w run: close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 3.4, 'close_wait_s': 40}
+2026-10-04T15:19:05Z FS6c go_fs6c fs6_w log_fs6_w.txt sha256 804db67319191e57475d08a229ea14e26816ccbfcbde654b30119d6a36360023
+2026-10-04T15:19:09Z FS6c go_fs6c fs6_w installed binary returned from the pinned copy
+2026-10-04T15:19:09Z FS6c go_fs6c fs6_w installed binary after the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T15:19:13Z FS6c go_fs6c fs6_w manifest of the run state (before the return): manifest C:/kyty/f287/fs6c/runs/fs6_w/manifest_run.tsv files 3323 bytes 921076874 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a; run vs before: manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a
+2026-10-04T15:19:13Z FS6c go_fs6c fs6_w caches, saves and GLCache returned
+2026-10-04T15:19:17Z FS6c go_fs6c fs6_w manifest after: manifest C:/kyty/f287/fs6c/runs/fs6_w/manifest_after.tsv files 3323 bytes 921076874 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a; cmp: manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a
+2026-10-04T15:19:18Z FS6c go_fs6c fs6_w lock released (rc 0)
+rc=0

@@ -1,0 +1,2 @@
+C:/kyty/f287/fs6c/rec_fs6_v.mp4: 10305 frames 960x540, index entries 10305
+one-frame glitches: 0

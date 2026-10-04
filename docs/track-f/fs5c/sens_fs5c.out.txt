@@ -1,0 +1,15 @@
+2 res['hold_us'] >= HOLD_MIN_US
+1 s.replace('/', '\\').endswith('\\' + DIR_FIX)
+1 if dt >= K2_US:
+3 (res['idx_records'] or 0) >= VIDEO_MIN
+1 not res['gamepatch']
+1 res['vkw'] > 0
+1 sha_b == WANT
+2 sha_a == WANT
+2 ('R1: 0 lines SPIR-V validation failed (member)', nfail == 0)
+1 nfail = res['fail_log'] + res['fail_stdout']
+4 all(m == 1 and u == 1 for _, m, u in r['fs'])
+1 (r['guest_first'] is None or r['fs'][0][0] < r['guest_first'])
+1 and DIR_FIX in pf)
+2 res['manifest_ref_ok']))
+SENS ALL OK

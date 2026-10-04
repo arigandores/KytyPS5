@@ -1,0 +1,32 @@
+FS5C probe_fs4_r1 kind r1 level underwater_aerial_garden log sha256 45bd88b9051253f75df86414f8f3f1fb3ac4193868aa5bb86e92d010483ad7ed lines 2605178 stdout sha256 f8355e34e744624bd06407b62a4cf91189c437b81249d6324011952946b90fe6
+  binary: tag 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5 (expected 631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17); installed before None after None (expected 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5); revision texts [('log', 121, '3d0e46d')]
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b']; first PipelinePrecache line 'PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b\\pipelines.bin yet'; form: cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b absent at 2026-10-03T10:24:44Z; the other entries of _ShaderCache/PPSA21564: 1345
+  FixSval lines [(79, 1, 1)] (first GuestOut line 11893); FixSvalStat lines 1, last (749815, 256, 0)
+  SPIR-V validation failed: log lines 0 (first []), stdout lines 0, hashes []
+  process end before the timeout: NO (outcome ok detail None hold_exit None hold_s 330.1 stable_s 25.1)
+  entry line 348440; scene change line None; first scene frame n 194; hold (sum dt after it) 334.9 s; frames >= 1 s after it 0 (max dt_us 518936)
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; GamePatch lines 0; AsyncPipelines: skipped draw 919 (reference)
+  video: index records 10176; one-frame glitches 0; sheet: C:/kyty/f287/fs4c/runs/fs4_r1/sheet_fs4_r1.png frames 10176 step 212 tiles 8x6
+  W: [Vulkan][E] 0; [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)]
+  manifest: manifest cmp EQUAL files 2920 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88; vs the reference of the first tag: 
+  ROW binary sha256 of the tag = 631ff987 (FS5 copy): NO
+  ROW installed 31cbfee8 before the tag: NO
+  ROW installed 31cbfee8 after the return: NO
+  ROW revision text names 0e72bc1 (reference): NO
+  ROW translation cache directory variant_fixb26_fixb1b_fixf10 in every line (member): NO
+  ROW cold form: variant_fixb26_fixb1b_fixf10 absent before the start, PipelinePrecache: no ... yet (reference): NO
+  ROW entered (entry line of underwater_aerial_garden): YES
+  ROW hold >= 300 s (sum dt after the first scene frame): YES
+  ROW no process end before the timeout: YES
+  ROW frames >= 1 s after the first scene frame = 0 (REPORT, not a gate - cold entry): YES
+  ROW R1: FixSval mode=1 ubo_std_layout=1 before the first GuestOut (member): YES
+  ROW R1: 0 lines SPIR-V validation failed (member): YES
+  ROW R1: FixSvalStat line present (reference): YES
+  ROW 0 death markers: YES
+  ROW video index records >= 3000: YES
+  ROW 0 one-frame glitches: YES
+  ROW sheet for the lead made: YES
+  ROW manifest of the caches before = after the return: YES
+  ROW manifest after the return = reference of the first tag (RC6): NO
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch line (else not read as an outcome, question to the lead): YES

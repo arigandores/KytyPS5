@@ -1,0 +1,39 @@
+watch: start 2026-10-04T20:25:16Z child 47584 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+captures 16 (63.7 GB) in ['C:/kyty/KytyPS5/ps5 em/_RenderDoc', 'C:/kyty/f287', 'C:/kyty/s288']
+  C:/kyty/f287/f12f/f12_rd_k01.rdc: cached
+  C:/kyty/f287/f12f/f12_rd_k02.rdc: scanned 261 modules in 12.9 s
+  C:/kyty/f287/f12f/f12_rd_k05.rdc: scanned 257 modules in 21.5 s
+  C:/kyty/f287/f12f/f12_rd_k04.rdc: scanned 271 modules in 22.4 s
+  C:/kyty/f287/f12f/f12_rd_k03.rdc: scanned 246 modules in 22.7 s
+  C:/kyty/f287/f13a/f13_rd.rdc: scanned 54 modules in 10.9 s
+  C:/kyty/f287/f14g/f19_rd_k01.rdc: scanned 41 modules in 7.5 s
+  C:/kyty/f287/f12f/f12_rd_k06.rdc: scanned 252 modules in 28.4 s
+  C:/kyty/f287/f12f/f12_rd_k08.rdc: scanned 252 modules in 28.1 s
+  C:/kyty/f287/f12f/f12_rd_k07.rdc: scanned 256 modules in 29.3 s
+  C:/kyty/f287/f7a/enemy_final_600.rdc: scanned 112 modules in 13.9 s
+  C:/kyty/f287/f14g/f19_rd_k02.rdc: scanned 256 modules in 32.5 s
+  C:/kyty/f287/f9/runs/f9a_rd3/rd3_a.rdc: scanned 22 modules in 23.1 s
+  C:/kyty/f287/f9/runs/f9a_rd2/rd2_f4191.rdc: scanned 169 modules in 29.0 s
+  C:/kyty/f287/f9/runs/f9a_rd2/rd2_f3951.rdc: scanned 171 modules in 30.4 s
+  C:/kyty/f287/f9/runs/f9a_rd3/rd3_b.rdc: scanned 152 modules in 20.3 s
+scan wall 94.1 s
+index: cache files 77434, distinct contents 6998, distinct SPIR-V 1625, built in 40.3 s
+f12_rd_k01.rdc           0.41 GB  section renderdoc/internal/framecapture flags 2  decompressed 4.7 GB  modules 39  identified 36 (92.3 %)  form-A programs 4  control 380b no  1f16e50eea0c89e3,503d7f066a496c3c,f88d0f630ac5b35d,ff8ee744ffa4dcdc
+f12_rd_k02.rdc           1.97 GB  section renderdoc/internal/framecapture flags 2  decompressed 8.6 GB  modules 261  identified 252 (96.6 %)  form-A programs 11  control 380b yes  0078153a1c1fb171,255ce6193a9e7938,2e2ae33a4d374e8f,52276fe1ba080bea,5323c4ef4f785055,56a15431999c5a2d,74bb8628d64f534c,be4c35a2031fd3f4,cd94166bf3f2bb81,e14edf4a78d1a517,ea8e2d64dfe34ed9
+f12_rd_k03.rdc           4.00 GB  section renderdoc/internal/framecapture flags 2  decompressed 15.1 GB  modules 246  identified 239 (97.2 %)  form-A programs 12  control 380b yes  0078153a1c1fb171,255ce6193a9e7938,2e2ae33a4d374e8f,3a8772dbc6934b1c,52276fe1ba080bea,5323c4ef4f785055,56a15431999c5a2d,74bb8628d64f534c,be4c35a2031fd3f4,cd94166bf3f2bb81,e14edf4a78d1a517,ea8e2d64dfe34ed9
+f12_rd_k04.rdc           4.55 GB  section renderdoc/internal/framecapture flags 2  decompressed 15.5 GB  modules 271  identified 265 (97.8 %)  form-A programs 12  control 380b yes  0078153a1c1fb171,255ce6193a9e7938,2e2ae33a4d374e8f,3a8772dbc6934b1c,52276fe1ba080bea,5323c4ef4f785055,56a15431999c5a2d,74bb8628d64f534c,be4c35a2031fd3f4,cd94166bf3f2bb81,e14edf4a78d1a517,ea8e2d64dfe34ed9
+f12_rd_k05.rdc           4.12 GB  section renderdoc/internal/framecapture flags 2  decompressed 15.2 GB  modules 257  identified 250 (97.3 %)  form-A programs 13  control 380b no  0078153a1c1fb171,255ce6193a9e7938,2e2ae33a4d374e8f,3a8772dbc6934b1c,52276fe1ba080bea,5323c4ef4f785055,56a15431999c5a2d,74bb8628d64f534c,be4c35a2031fd3f4,cd94166bf3f2bb81,e14edf4a78d1a517,ea8e2d64dfe34ed9,f47c0c097c598a36
+f12_rd_k06.rdc           5.20 GB  section renderdoc/internal/framecapture flags 2  decompressed 16.4 GB  modules 252  identified 246 (97.6 %)  form-A programs 13  control 380b no  0078153a1c1fb171,255ce6193a9e7938,2e2ae33a4d374e8f,3a8772dbc6934b1c,52276fe1ba080bea,5323c4ef4f785055,56a15431999c5a2d,74bb8628d64f534c,be4c35a2031fd3f4,cd94166bf3f2bb81,e14edf4a78d1a517,ea8e2d64dfe34ed9,f47c0c097c598a36
+f12_rd_k07.rdc           5.78 GB  section renderdoc/internal/framecapture flags 2  decompressed 16.6 GB  modules 256  identified 249 (97.3 %)  form-A programs 13  control 380b no  0078153a1c1fb171,255ce6193a9e7938,2e2ae33a4d374e8f,3a8772dbc6934b1c,52276fe1ba080bea,5323c4ef4f785055,56a15431999c5a2d,74bb8628d64f534c,be4c35a2031fd3f4,cd94166bf3f2bb81,e14edf4a78d1a517,ea8e2d64dfe34ed9,f47c0c097c598a36
+f12_rd_k08.rdc           5.44 GB  section renderdoc/internal/framecapture flags 2  decompressed 15.9 GB  modules 252  identified 246 (97.6 %)  form-A programs 13  control 380b no  0078153a1c1fb171,255ce6193a9e7938,2e2ae33a4d374e8f,3a8772dbc6934b1c,52276fe1ba080bea,5323c4ef4f785055,56a15431999c5a2d,74bb8628d64f534c,be4c35a2031fd3f4,cd94166bf3f2bb81,e14edf4a78d1a517,ea8e2d64dfe34ed9,f47c0c097c598a36
+f13_rd.rdc               1.33 GB  section renderdoc/internal/framecapture flags 2  decompressed 6.6 GB  modules 54  identified 51 (94.4 %)  form-A programs 5  control 380b no  0078153a1c1fb171,1f16e50eea0c89e3,503d7f066a496c3c,f88d0f630ac5b35d,ff8ee744ffa4dcdc
+f19_rd_k01.rdc           0.41 GB  section renderdoc/internal/framecapture flags 2  decompressed 4.7 GB  modules 41  identified 33 (80.5 %)  form-A programs 0  control 380b no  
+f19_rd_k02.rdc           5.77 GB  section renderdoc/internal/framecapture flags 2  decompressed 15.0 GB  modules 256  identified 222 (86.7 %)  form-A programs 4  control 380b no  0078153a1c1fb171,3a8772dbc6934b1c,e14edf4a78d1a517,f47c0c097c598a36
+enemy_final_600.rdc      1.96 GB  section renderdoc/internal/framecapture flags 2  decompressed 7.5 GB  modules 112  identified 109 (97.3 %)  form-A programs 5  control 380b no  0078153a1c1fb171,5323c4ef4f785055,56a15431999c5a2d,cd94166bf3f2bb81,ea8e2d64dfe34ed9
+rd2_f3951.rdc            5.91 GB  section renderdoc/internal/framecapture flags 2  decompressed 13.8 GB  modules 171  identified 165 (96.5 %)  form-A programs 9  control 380b no  0078153a1c1fb171,2e2ae33a4d374e8f,3a8772dbc6934b1c,5323c4ef4f785055,56a15431999c5a2d,74bb8628d64f534c,cd94166bf3f2bb81,ea8e2d64dfe34ed9,f47c0c097c598a36
+rd2_f4191.rdc            5.89 GB  section renderdoc/internal/framecapture flags 2  decompressed 13.7 GB  modules 169  identified 163 (96.4 %)  form-A programs 9  control 380b no  0078153a1c1fb171,2e2ae33a4d374e8f,3a8772dbc6934b1c,5323c4ef4f785055,56a15431999c5a2d,74bb8628d64f534c,cd94166bf3f2bb81,ea8e2d64dfe34ed9,f47c0c097c598a36
+rd3_a.rdc                4.69 GB  section renderdoc/internal/framecapture flags 2  decompressed 11.3 GB  modules 22  identified 21 (95.5 %)  form-A programs 2  control 380b no  0078153a1c1fb171,74bb8628d64f534c
+rd3_b.rdc                6.25 GB  section renderdoc/internal/framecapture flags 2  decompressed 13.9 GB  modules 152  identified 148 (97.4 %)  form-A programs 8  control 380b no  0078153a1c1fb171,2e2ae33a4d374e8f,3a8772dbc6934b1c,5323c4ef4f785055,56a15431999c5a2d,74bb8628d64f534c,cd94166bf3f2bb81,ea8e2d64dfe34ed9
+form-A programs present in >= 1 capture: 17 of 38 (PS 7 of 20, CS 10 of 18)
+form-A programs with >= 1 SPIR-V in the index: 38 of 38
+rc=0 end 2026-10-04T20:27:32Z

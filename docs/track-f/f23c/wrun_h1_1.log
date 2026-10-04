@@ -1,0 +1,17 @@
+watch: start 2026-10-04T20:12:31Z child 28620 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+F23c H run 2026-10-04T20:12:31Z; runner sha256 cffb14017c77d97263a651e191b10d6547d01d1e736787c454e31949e043e95b; vs_tri 02b8bf84911ffd66e631f88127ff00a3427124c00aa87c10636c061007dcc37d; vs_diamond bbb7c888e67f1baefdd329d92f66c3060ad88ae96e5444d9ac8ee13b9d7e7167
+form-A select %286: new chain %285=CompositeExtract <- %284=CompositeConstruct <- %277=Bitcast <- %276=CompositeExtract <- %275=ImageSampleImplicitLod
+form-A select %306: new chain %305=CompositeExtract <- %304=CompositeConstruct <- %297=Bitcast <- %296=CompositeExtract <- %295=ImageSampleImplicitLod
+variant sens_both: swapped [286, 306], spirv-val rc 0 , sha256 30547b7539755744cc95a5a8383b7446a91aadab95bb26d0323b9b1142dd614a
+variant sens_286: swapped [286], spirv-val rc 0 , sha256 a07ebc7d88c82911c7915b37503d3a331740983cf6b4b6a410d2d090060ddf20
+variant sens_306: swapped [306], spirv-val rc 0 , sha256 a010da146a5e7ed13a5219492e07ed07a46ad9a770a7b28753b700db6b3b276f
+spirv normal: sha256 f62b88f82f1ca942c01d0f4de3c64a5b8d20ed124503c1e316995a43d7b077d9, 10444 bytes, spirv-val rc 0
+spirv normal2: sha256 f62b88f82f1ca942c01d0f4de3c64a5b8d20ed124503c1e316995a43d7b077d9, 10444 bytes, spirv-val rc 0
+spirv predoff: sha256 83341d3d9940dbc824a1935a6bf7ce845d8eca264f5c5bef4da943bcc39ad46c, 11604 bytes, spirv-val rc 0
+spirv predoff2: sha256 83341d3d9940dbc824a1935a6bf7ce845d8eca264f5c5bef4da943bcc39ad46c, 11604 bytes, spirv-val rc 0
+c01 noise 3840x2160 nearest fmt32 tri     rc 0 9.4 s val=off | null 0/0 | H 8260701 | sens both/286/306 8294400/8293908/8292910 | noopt n/p/p-vs-n 0/0/8260701 | unwritten 0 of 8294400 | R -0.9688..1.9873 G -0.4417..1.4639 B -1.1289..2.1465 A 1.0000..1.0000 distinct-R 12660
+   device 0: NVIDIA GeForce RTX 5080 Laptop GPU type 2 vendor 0x10de device 0x2c59 api 1.4.351 driverVersion 0x9a0e0000 driverName 'NVIDIA' driverInfo '616.56'
+   picked device 0: subgroupSize 32 fragment-subgroup 1 ballot 1 signedZeroInfNanPreserveF32 1
+SUMMARY: configurations 1, controls alive in all True, H total 8260701, H > 0 in 1 configurations
+ALL OK
+rc=0 end 2026-10-04T20:12:44Z

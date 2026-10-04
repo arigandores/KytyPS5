@@ -1,0 +1,29 @@
+== KYTY_PRED_ELIM=0: Y sample %251 at (%224, %196); U sample %275 -> form-A %286 = select(%167, U, %196 = Y y-coordinate); V sample %295 -> form-A %306 = select(%167, V, %224 = Y x-coordinate) (ref_predoff.spvasm)
+  287: %167 = OpINotEqual %bool %166 %uint_0
+  312: %196 = OpSelect %uint %167 %195 %139
+  338: %224 = OpSelect %uint %167 %223 %209
+  355: %241 = OpCompositeConstruct %v2float %239 %240
+  361: %251 = OpImageSampleImplicitLod %v4float %249 %241
+  371: %261 = OpCompositeExtract %uint %260 0
+  372: %262 = OpSelect %uint %167 %261 %172
+  379: %269 = OpCompositeConstruct %v2float %267 %268
+  385: %275 = OpImageSampleImplicitLod %v4float %274 %269
+  395: %285 = OpCompositeExtract %uint %284 0
+  396: %286 = OpSelect %uint %167 %285 %196
+  399: %289 = OpCompositeConstruct %v2float %287 %288
+  405: %295 = OpImageSampleImplicitLod %v4float %294 %289
+  415: %305 = OpCompositeExtract %uint %304 0
+  416: %306 = OpSelect %uint %167 %305 %224
+== default (PredicationElimination): sample results %232 (Y), %255 (U), %274 (V) used directly - no select on them (ref_normal.spvasm)
+  287: %167 = OpINotEqual %bool %166 %uint_0
+  306: %190 = OpSelect %uint %167 %189 %139
+  315: %201 = OpSelect %uint %167 %200 %uint_0
+  326: %212 = OpCompositeConstruct %v2float %210 %211
+  332: %222 = OpImageSampleImplicitLod %v4float %220 %212
+  342: %232 = OpCompositeExtract %uint %231 0
+  349: %239 = OpCompositeConstruct %v2float %237 %238
+  355: %245 = OpImageSampleImplicitLod %v4float %244 %239
+  365: %255 = OpCompositeExtract %uint %254 0
+  368: %258 = OpCompositeConstruct %v2float %256 %257
+  374: %264 = OpImageSampleImplicitLod %v4float %263 %258
+  384: %274 = OpCompositeExtract %uint %273 0

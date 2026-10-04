@@ -1,0 +1,2 @@
+recompile C:/kyty/s288/s4/gcn/g_1/ps_e197e307a5f2cb39.bin: ps hash=e197e307a5f2cb39 wave=64 local=0x0x0 lds=0 inputs=1 permutations=1 buffer_align=[16c] translate=0.5ms emit=0.3ms spirv=2901 words (cached 2611) -> C:/kyty/f287/f23c/work/ref_predoff2.spv
+recompile-identity: permutation=0 words=2901 stored_words=2611 identical=0

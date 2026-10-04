@@ -1,0 +1,10 @@
+OK   700208ce:docs/ROADMAP.md:22771 anchor yes +1 yes
+OK   700208ce:docs/ROADMAP.md:22779 anchor yes +1 yes
+OK   0c806367:docs/track-f/f23a/b8_forms_normal.tsv:1 anchor yes +1 yes
+OK   b6858d6d:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:314 anchor yes +1 yes
+OK   b6858d6d:src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:336 anchor yes +1 yes
+OK   b6858d6d:tests/shaderCfgTests.cpp:15148 anchor yes +1 yes
+OK   b6858d6d:docs/agent/HANDOFF.md:5249 anchor yes +1 yes
+OK   b6858d6d:docs/track-f/f12f.md:210 anchor yes +1 yes
+refs 8, ok 8
+ALL OK

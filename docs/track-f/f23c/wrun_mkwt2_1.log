@@ -1,0 +1,32 @@
+watch: start 2026-10-04T20:03:44Z child 47284 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD b6858d6d)
+Updating files:  38% (2706/6987)Updating files:  39% (2725/6987)Updating files:  40% (2795/6987)Updating files:  41% (2865/6987)Updating files:  42% (2935/6987)Updating files:  43% (3005/6987)Updating files:  44% (3075/6987)Updating files:  45% (3145/6987)Updating files:  46% (3215/6987)Updating files:  47% (3284/6987)Updating files:  48% (3354/6987)Updating files:  49% (3424/6987)Updating files:  50% (3494/6987)Updating files:  51% (3564/6987)Updating files:  52% (3634/6987)Updating files:  53% (3704/6987)Updating files:  54% (3773/6987)Updating files:  55% (3843/6987)Updating files:  56% (3913/6987)Updating files:  57% (3983/6987)Updating files:  58% (4053/6987)Updating files:  59% (4123/6987)Updating files:  60% (4193/6987)Updating files:  61% (4263/6987)Updating files:  62% (4332/6987)Updating files:  63% (4402/6987)Updating files:  64% (4472/6987)Updating files:  65% (4542/6987)Updating files:  66% (4612/6987)Updating files:  67% (4682/6987)Updating files:  68% (4752/6987)Updating files:  69% (4822/6987)Updating files:  70% (4891/6987)Updating files:  71% (4961/6987)Updating files:  72% (5031/6987)Updating files:  73% (5101/6987)Updating files:  74% (5171/6987)Updating files:  75% (5241/6987)Updating files:  76% (5311/6987)Updating files:  77% (5380/6987)Updating files:  78% (5450/6987)Updating files:  79% (5520/6987)Updating files:  80% (5590/6987)Updating files:  81% (5660/6987)Updating files:  82% (5730/6987)Updating files:  83% (5800/6987)Updating files:  84% (5870/6987)Updating files:  85% (5939/6987)Updating files:  86% (6009/6987)Updating files:  87% (6079/6987)Updating files:  88% (6149/6987)Updating files:  88% (6198/6987)Updating files:  89% (6219/6987)Updating files:  90% (6289/6987)Updating files:  91% (6359/6987)Updating files:  92% (6429/6987)Updating files:  93% (6498/6987)Updating files:  94% (6568/6987)Updating files:  95% (6638/6987)Updating files:  96% (6708/6987)Updating files:  97% (6778/6987)Updating files:  98% (6848/6987)Updating files:  99% (6918/6987)Updating files: 100% (6987/6987)Updating files: 100% (6987/6987), done.
+HEAD is now at b6858d6d ROADMAP p.495 (lead, HPP-583 review): F16k accepted - code 810909e3 KYTY_FIX_F5CMU and KYTY_DIAG_F5ID, report 470c54cf, test binary 9040a667 (not installed) go to F16l unchanged; lead checks: no file of the CMakeLists.txt:156 signature set touched, binary sha256, decision changes only with exact_decides (FCE and knob); letter amendments accepted (ring fallback only when count > K, wr_after since = max, exec mark on PendingDcc, meta_clear in identity, kind=exit, n= field) with reading rule; V-F16k-1: sheet window p-1..p+2 for pair (e)(3)-(4),(6); V-F16k-2 accepted; refs 5/5
+--- worktree HEAD
+b6858d6dde8f4b8657cba3835ea376ce8fe7d425 ROADMAP p.495 (lead, HPP-583 review): F16k accepted - code 810909e3 KYTY_FIX_F5
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+b6858d6dde8f4b8657cba3835ea376ce8fe7d425 9618762ed84a1b438f41f1bb8acd781a37bfe396 ROADMAP p.495 (lead, HPP-583 review): F16k accepted - code 810909e3 KYTY_FIX_F
+9618762ed84a1b438f41f1bb8acd781a37bfe396 700208cea71e2107a032356821e9876ba5284916 ROADMAP p.494 (lead, HPP-579): fact of p.493(zh) - HPP-587 F23c (Emu Engineer,
+700208cea71e2107a032356821e9876ba5284916 470c54cf0c6cc0e9e4b28b5717e7ef2ba6ca0758 ROADMAP p.493 (lead, HPP-579): F23b - F23a accepted; B7 NE DEFEKT by p.228(d) 
+470c54cf0c6cc0e9e4b28b5717e7ef2ba6ca0758 0c806367a84124c405205dbc14bd649e6ee2fee2 track F link F16k (HPP-583), report: docs/track-f/f16k.md and docs/track-f/f16
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 458 with CR 0
+WT OK
+rc=0 end 2026-10-04T20:04:02Z

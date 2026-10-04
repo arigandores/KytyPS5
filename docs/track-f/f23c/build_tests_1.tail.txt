@@ -1,0 +1,4 @@
+1 warning generated.
+[783/784] Linking CXX executable shader_cfg_tests.exe
+BUILD OK: C:\kyty\f287\f23c\build\shader_cfg_tests.exe
+rc=0 end 2026-10-04T20:07:43Z

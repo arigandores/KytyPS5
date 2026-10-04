@@ -1,0 +1,5 @@
+reference PS C:/kyty/s288/s4/gcn/g_1/ps_e197e307a5f2cb39.bin: 148 words, walk OK, 51 instructions
+pc  17 SOP1 op 0x0a (S_WQM_B32/B64 [I]) sdst 126  raw befe0a7e
+pc  39 MIMG op 0x20 dmask 0x1 vdata v2 vaddr v3,v1,v0,v0,v0 srsrc s[0] ssamp s[8]  raw f080010a 00400203 00000001
+pc  44 MIMG op 0x20 dmask 0x1 vdata v1 vaddr v6 srsrc s[0] ssamp s[8]  raw f0800108 00400106
+pc  46 MIMG op 0x20 dmask 0x1 vdata v3 vaddr v5,v7,v0,v0,v0 srsrc s[0] ssamp s[8]  raw f080010a 00400305 00000007

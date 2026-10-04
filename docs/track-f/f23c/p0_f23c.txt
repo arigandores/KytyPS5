@@ -1,0 +1,20 @@
+F23c (HPP-587, ROADMAP s122 item 493(g)(1)-(3)) - P(0) before any data of this link (Emu Engineer).
+Written before: the worktree, the translation of the reference PS by main, any GPU run, any snapshot listing.
+
+H = N_diff between the reference PS 0xe197e307a5f2cb39 translated by main with KYTY_PRED_ELIM=0 (form A at 2 selects)
+and by default (form A 0), both executed on this machine's GPU on equal synthetic NV12 inputs.
+
+P(H > 0 with live controls)                          = 0.30  (the miscompile was seen on an older translator and an
+                                                               older driver; the driver has been updated since [U];
+                                                               the select shape of predoff is not byte-equal to the
+                                                               historical one - the WQM fold era emitted it before
+                                                               PredicationElimination existed [I])
+P(null control != 0)                                 = 0.03  (non-determinism of implicit-LOD sampling is not expected)
+P(sensitivity control = 0)                           = 0.05  (swapping a select on a sample result must change pixels
+                                                               unless the swapped value is dead on every pixel)
+P(dead control => outcome (iii))                     = 0.08
+Expected candidate by rule 493(g): (ii) H = 0        = 0.62; (i) H > 0 = 0.30; (iii) = 0.08
+
+Coverage of the 38 form-A programs by existing RenderDoc snapshots (by guest hash or SPIR-V sha):
+P(>= 1 program covered)  = 0.70; expected covered count = 8 of 38 (snapshots are of Sky Garden, enemy_final,
+big_hand_pirate_island and similar scenes; the BVH CS of F11a/F12 are likely there) [I].

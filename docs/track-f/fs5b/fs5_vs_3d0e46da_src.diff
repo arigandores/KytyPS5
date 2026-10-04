@@ -1,0 +1,176 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+index f578da41..36ea97fe 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+@@ -575,10 +575,13 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
+ 	// translations of =1 and =0 never share a signature or a directory.
+ 	// Track F, F3b (ROADMAP p.259(e)(3)): KYTY_FIX_B1B=1 (the default) adds ":fixb1b" the same way;
+ 	// with KYTY_FIX_B26 the four combinations get four distinct signatures and directories.
++	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 (the default since FS5a, p.410(g)(1)) adds ":fixf10" last, so
++	// =0 and =1 never share a signature or a directory.
+ 	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
+ 	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "") +
+ 	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "") +
+-	                            (ShaderRecompiler::Decoder::FixB1BEnabled() ? ":fixb1b" : "");
++	                            (ShaderRecompiler::Decoder::FixB1BEnabled() ? ":fixb1b" : "") +
++	                            (ShaderRecompiler::Decoder::FixF10Enabled() ? ":fixf10" : "");
+ 	if (!variant.empty()) {
+ 		std::string folder = "variant" + variant;
+ 		std::replace(folder.begin(), folder.end(), ':', '_');
+diff --git a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+index 8973a23d..53684794 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
++++ b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+@@ -2229,7 +2229,15 @@ uint32_t EmitBvhIntersectRay(ValueEmitContext& ctx, const IR::Inst& inst) {
+ 	}
+ 	const auto is_box16 = ieq(node_type, U(4u));
+ 	const auto is_box32 = ieq(node_type, U(5u));
+-	const auto is_tri   = Binary(state, OpULessThan, boolt, node_type, U(2u));
++	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 - node types 2 and 3 are triangles too (GPURT b89f22aa
++	// IsTriangleNode, F12a section 1.2); =0 keeps the pre-fix lines (same calls, same ids).
++	const bool fix_f10  = Decoder::FixF10Enabled();
++	uint32_t   is_tri   = 0;
++	if (fix_f10) {
++		is_tri = Binary(state, OpULessThan, boolt, node_type, U(4u));
++	} else {
++		is_tri = Binary(state, OpULessThan, boolt, node_type, U(2u));
++	}
+ 	const auto is_tri1  = ieq(node_type, U(1u));
+ 
+ 	// --- Loads: `dwords` consecutive dwords from `address` (64-byte aligned) as 128-bit loads.
+@@ -2378,9 +2386,28 @@ uint32_t EmitBvhIntersectRay(ValueEmitContext& ctx, const IR::Inst& inst) {
+ 		const Vec3 v1    = vertex(1);
+ 		const Vec3 v2    = vertex(2);
+ 		const Vec3 v3    = vertex(3);
+-		const Vec3 tri_a = vsel(is_tri1, v1, v0);
+-		const Vec3 tri_b = vsel(is_tri1, v3, v1);
+-		const Vec3 tri_c = v2;
++		Vec3       tri_a {};
++		Vec3       tri_b {};
++		Vec3       tri_c {};
++		if (fix_f10) {
++			// Type 0 = (V0, V1, V2), 1 = (V1, V3, V2), 2 = (V2, V3, V4), 3 = (V2, V4, V0) (GPURT b89f22aa
++			// CalcTriangleVertexOffsets; F12a section 1.2); V4 is dwords 12..14 of the 16 loaded above.
++			const auto is_tri2  = ieq(node_type, U(2u));
++			const auto is_tri3  = ieq(node_type, U(3u));
++			const auto is_tri23 = lor(is_tri2, is_tri3);
++			const auto is_tri12 = lor(is_tri1, is_tri2);
++			const Vec3 v4       = vertex(4);
++			const Vec3 a01      = vsel(is_tri1, v1, v0);
++			tri_a               = vsel(is_tri23, v2, a01);
++			const Vec3 b012     = vsel(is_tri12, v3, v1);
++			tri_b               = vsel(is_tri3, v4, b012);
++			const Vec3 c013     = vsel(is_tri3, v0, v2);
++			tri_c               = vsel(is_tri2, v4, c013);
++		} else {
++			tri_a = vsel(is_tri1, v1, v0);
++			tri_b = vsel(is_tri1, v3, v1);
++			tri_c = v2;
++		}
+ 		const Vec3 e1    = vsub(tri_b, tri_a);
+ 		const Vec3 e2    = vsub(tri_c, tri_a);
+ 		const Vec3 e3    = vsub(origin, tri_a);
+diff --git a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+index 393ba54f..b9fa8ccf 100644
+--- a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
++++ b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+@@ -349,6 +349,16 @@ bool FixB1BEnabled() {
+ 	return enabled;
+ }
+ 
++bool FixF10Enabled() {
++	// Track F, FS5a (HPP-509, ROADMAP s122 item 410(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
++	// other value as EnvValueOn (the form of FS4a 17adaf80).
++	static const bool enabled = [] {
++		const char* value = std::getenv("KYTY_FIX_F10");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
++	return enabled;
++}
++
+ Family GetInstructionFamily(uint32_t word) {
+ 	if ((word & 0x80000000u) == 0u) {
+ 		switch ((word >> 25u) & 0x3fu) {
+diff --git a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+index 6b0f9834..a7742762 100644
+--- a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
++++ b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+@@ -756,6 +756,14 @@ Opcode GateFixB26(Opcode opcode);
+ // exactly as before the fix (dword0 | (dword1 & 0xffff) << 32, no shift). Read once per process;
+ // the translation cache keys the value in its signature and directory (shaderTranslationCache.cpp).
+ bool   FixB1BEnabled();
++// Track F, F12d (HPP-477, ROADMAP p.391(v)): KYTY_FIX_F10, default ON since FS5a (HPP-509, ROADMAP p.410(g)(1): unset
++// or empty = on; 0, false, off, no = off; any other value as Common::EnvValueOn). On: IMAGE_BVH_INTERSECT_RAY treats
++// node types 2 and 3 as triangles, as the GPURT software
++// path of the instruction does (b89f22aa IsTriangleNode / CalcTriangleVertexOffsets): type 2 = (V2, V3, V4), type
++// 3 = (V2, V4, V0), V4 at node dwords 12..14. Off: types 2 and 3 answer 0xffffffff x4 exactly as before the fix.
++// Read once per process; the translation cache keys the value in its signature and directory
++// (shaderTranslationCache.cpp).
++bool   FixF10Enabled();
+ std::string OperandToString(const Operand& operand);
+ const char* ImageDimensionToString(ImageDimension dimension);
+ std::string InstructionToString(const Instruction& inst);
+diff --git a/src/graphics/shader/recompiler/frontend/translate/Memory.cpp b/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+index 0592dff4..bbc0dcd1 100644
+--- a/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
++++ b/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+@@ -699,8 +699,8 @@ bool Translator::IMAGE_GATHER(const Decoder::Instruction& inst) {
+ // The hardware tests one ray against one BVH node and returns 4 dwords:
+ //   box node (types 4 = fp16 boxes, 5 = fp32 boxes): the 4 child node pointers whose boxes
+ //     were hit, optionally sorted by the descriptor box sort heuristic, misses = 0xffffffff;
+-//   triangle node (types 0 and 1): {t_num, t_denom, i_num, j_num} as raw floats, a miss is
+-//     encoded as {+inf, 1.0, ...};
++//   triangle node (types 0 and 1; KYTY_FIX_F10=1: types 0..3): {t_num, t_denom, i_num, j_num} as
++//     raw floats, a miss is encoded as {+inf, 1.0, ...};
+ //   anything else: 0xffffffff x4.
+ // The node layouts and the intersection math follow the software fallback in the AMD GPURT
+ // library (IntersectCommon.hlsl), which is what the closed hardware implements.
+@@ -886,7 +886,15 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool
+ 
+ 	const IR::U1 is_box16 = ir.IEqual(node_type, U32C(4u));
+ 	const IR::U1 is_box32 = ir.IEqual(node_type, U32C(5u));
+-	const IR::U1 is_tri   = ir.ULessThan(node_type, U32C(2u));
++	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 - node types 2 and 3 are triangles too (GPURT b89f22aa
++	// IsTriangleNode, F12a section 1.2); =0 keeps the pre-fix lines.
++	const bool   fix_f10 = Decoder::FixF10Enabled();
++	IR::U1       is_tri;
++	if (fix_f10) {
++		is_tri = ir.ULessThan(node_type, U32C(4u));
++	} else {
++		is_tri = ir.ULessThan(node_type, U32C(2u));
++	}
+ 
+ 	// --- Node memory: dwords 0..15 cover fp16 box nodes (64 bytes) and triangle nodes (64
+ 	// bytes); fp32 box nodes are 128 bytes, so dwords 16..27 are only read for them.
+@@ -1011,9 +1019,28 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool
+ 	const Vec3 v1    = vertex(1);
+ 	const Vec3 v2    = vertex(2);
+ 	const Vec3 v3    = vertex(3);
+-	const Vec3 tri_a = vsel(is_tri1, v1, v0);
+-	const Vec3 tri_b = vsel(is_tri1, v3, v1);
+-	const Vec3 tri_c = v2;
++	Vec3       tri_a {};
++	Vec3       tri_b {};
++	Vec3       tri_c {};
++	if (fix_f10) {
++		// Type 2 = (v2, v3, v4), type 3 = (v2, v4, v0), v4 = dwords 12..14 (GPURT b89f22aa
++		// CalcTriangleVertexOffsets; F12a section 1.2).
++		const IR::U1 is_tri2  = ir.IEqual(node_type, U32C(2u));
++		const IR::U1 is_tri3  = ir.IEqual(node_type, U32C(3u));
++		const IR::U1 is_tri23 = ir.LogicalOr(is_tri2, is_tri3);
++		const IR::U1 is_tri12 = ir.LogicalOr(is_tri1, is_tri2);
++		const Vec3   v4       = vertex(4);
++		const Vec3   a01      = vsel(is_tri1, v1, v0);
++		tri_a                 = vsel(is_tri23, v2, a01);
++		const Vec3   b012     = vsel(is_tri12, v3, v1);
++		tri_b                 = vsel(is_tri3, v4, b012);
++		const Vec3   c013     = vsel(is_tri3, v0, v2);
++		tri_c                 = vsel(is_tri2, v4, c013);
++	} else {
++		tri_a = vsel(is_tri1, v1, v0);
++		tri_b = vsel(is_tri1, v3, v1);
++		tri_c = v2;
++	}
+ 
+ 	const Vec3    e1     = vsub(tri_b, tri_a);
+ 	const Vec3    e2     = vsub(tri_c, tri_a);

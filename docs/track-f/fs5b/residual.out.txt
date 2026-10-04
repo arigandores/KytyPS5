@@ -1,0 +1,25 @@
+residual runs 316
+  class anon-ns region .data runs 240
+  class debug-dir region .rdata runs 2
+  class other region .data runs 74
+  OTHER off 0x168a036 len 10 .data A b'dateVariable@?A0x4858C598@val@spvtools@@YA' B b'dateVariable@?A0xBCD93A9@val@spvtools@@YA?'
+  OTHER off 0x168a041 len 3 .data A b'e@?A0x4858C598@val@spvtools@@YA?AW4' B b'e@?A0xBCD93A9@val@spvtools@@YA?AW4s'
+  OTHER off 0x168a045 len 19 .data A b'0x4858C598@val@spvtools@@YA?AW4spv_result_t@@AEAVVa' B b'0xBCD93A9@val@spvtools@@YA?AW4spv_result_t@@AEAVVal'
+  OTHER off 0x168a059 len 4 .data A b'ols@@YA?AW4spv_result_t@@AEAVValidat' B b'ls@@YA?AW4spv_result_t@@AEAVValidati'
+  OTHER off 0x168a05e len 39 .data A b'YA?AW4spv_result_t@@AEAVValidationState_t@34@PEBVInstruction@34@@Z@_NPE' B b'A?AW4spv_result_t@@AEAVValidationState_t@34@PEBVInstruction@34@@Z@_NPEB'
+  OTHER off 0x168a086 len 12 .data A b't@34@PEBVInstruction@34@@Z@_NPEBV734@@std@@\x00' B b'@34@PEBVInstruction@34@@Z@_NPEBV734@@std@@\x00\x00'
+  OTHER off 0x168a093 len 4 .data A b'ruction@34@@Z@_NPEBV734@@std@@\x00\x00\x00\x00\x00\x00' B b'uction@34@@Z@_NPEBV734@@std@@\x00\x00\x00\x00\x00\x00\x00'
+  OTHER off 0x168a098 len 1 .data A b'on@34@@Z@_NPEBV734@@std@@\x00\x00\x00\x00\x00\x00\x00\x80' B b'n@34@@Z@_NPEBV734@@std@@\x00\x00\x00\x00\x00\x00\x00\x00\x80'
+  OTHER off 0x168a0df len 10 .data A b'dateVariable@?A0x4858C598@val@spvtools@@YA' B b'dateVariable@?A0xBCD93A9@val@spvtools@@YA?'
+  OTHER off 0x168a0ea len 3 .data A b'e@?A0x4858C598@val@spvtools@@YA?AW4' B b'e@?A0xBCD93A9@val@spvtools@@YA?AW4s'
+  OTHER off 0x168a0ee len 19 .data A b'0x4858C598@val@spvtools@@YA?AW4spv_result_t@@AEAVVa' B b'0xBCD93A9@val@spvtools@@YA?AW4spv_result_t@@AEAVVal'
+  OTHER off 0x168a102 len 4 .data A b'ols@@YA?AW4spv_result_t@@AEAVValidat' B b'ls@@YA?AW4spv_result_t@@AEAVValidati'
+  OTHER off 0x168a107 len 39 .data A b'YA?AW4spv_result_t@@AEAVValidationState_t@23@PEBVInstruction@23@@Z@\x00\x00\x00\x00' B b'A?AW4spv_result_t@@AEAVValidationState_t@23@PEBVInstruction@23@@Z@\x00\x00\x00\x00\x00'
+  OTHER off 0x168a12f len 3 .data A b't@23@PEBVInstruction@23@@Z@\x00\x00\x00\x00\x00\x00\x00\x00' B b'@23@PEBVInstruction@23@@Z@\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+  OTHER off 0x168a196 len 10 .data A b'dateVariable@?A0x4858C598@val@spvtools@@YA' B b'dateVariable@?A0xBCD93A9@val@spvtools@@YA?'
+  OTHER off 0x168a1a1 len 3 .data A b'e@?A0x4858C598@val@spvtools@@YA?AW4' B b'e@?A0xBCD93A9@val@spvtools@@YA?AW4s'
+  OTHER off 0x168a1a5 len 19 .data A b'0x4858C598@val@spvtools@@YA?AW4spv_result_t@@AEAVVa' B b'0xBCD93A9@val@spvtools@@YA?AW4spv_result_t@@AEAVVal'
+  OTHER off 0x168a1b9 len 4 .data A b'ols@@YA?AW4spv_result_t@@AEAVValidat' B b'ls@@YA?AW4spv_result_t@@AEAVValidati'
+  OTHER off 0x168a1be len 39 .data A b'YA?AW4spv_result_t@@AEAVValidationState_t@34@PEBVInstruction@34@@Z@_NPE' B b'A?AW4spv_result_t@@AEAVValidationState_t@34@PEBVInstruction@34@@Z@_NPEB'
+  OTHER off 0x168a1e6 len 12 .data A b't@34@PEBVInstruction@34@@Z@_NPEBV734@@std@@\x00' B b'@34@PEBVInstruction@34@@Z@_NPEBV734@@std@@\x00\x00'
+RESIDUAL OTHER 74

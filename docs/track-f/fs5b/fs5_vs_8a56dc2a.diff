@@ -1,0 +1,49 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+index a7fd553d..36ea97fe 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+@@ -575,8 +575,8 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
+ 	// translations of =1 and =0 never share a signature or a directory.
+ 	// Track F, F3b (ROADMAP p.259(e)(3)): KYTY_FIX_B1B=1 (the default) adds ":fixb1b" the same way;
+ 	// with KYTY_FIX_B26 the four combinations get four distinct signatures and directories.
+-	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 (default 0) adds ":fixf10" last, so =0 and =1 never
+-	// share a signature or a directory.
++	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 (the default since FS5a, p.410(g)(1)) adds ":fixf10" last, so
++	// =0 and =1 never share a signature or a directory.
+ 	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
+ 	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "") +
+ 	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "") +
+diff --git a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+index 62832226..b9fa8ccf 100644
+--- a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
++++ b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+@@ -350,7 +350,12 @@ bool FixB1BEnabled() {
+ }
+ 
+ bool FixF10Enabled() {
+-	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_F10"));
++	// Track F, FS5a (HPP-509, ROADMAP s122 item 410(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
++	// other value as EnvValueOn (the form of FS4a 17adaf80).
++	static const bool enabled = [] {
++		const char* value = std::getenv("KYTY_FIX_F10");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
+ 	return enabled;
+ }
+ 
+diff --git a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+index c7aa2437..a7742762 100644
+--- a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
++++ b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+@@ -756,8 +756,9 @@ Opcode GateFixB26(Opcode opcode);
+ // exactly as before the fix (dword0 | (dword1 & 0xffff) << 32, no shift). Read once per process;
+ // the translation cache keys the value in its signature and directory (shaderTranslationCache.cpp).
+ bool   FixB1BEnabled();
+-// Track F, F12d (HPP-477, ROADMAP p.391(v)): KYTY_FIX_F10, default OFF (unset, empty, 0, false, off, no = off, as
+-// Common::EnvValueOn). On: IMAGE_BVH_INTERSECT_RAY treats node types 2 and 3 as triangles, as the GPURT software
++// Track F, F12d (HPP-477, ROADMAP p.391(v)): KYTY_FIX_F10, default ON since FS5a (HPP-509, ROADMAP p.410(g)(1): unset
++// or empty = on; 0, false, off, no = off; any other value as Common::EnvValueOn). On: IMAGE_BVH_INTERSECT_RAY treats
++// node types 2 and 3 as triangles, as the GPURT software
+ // path of the instruction does (b89f22aa IsTriangleNode / CalcTriangleVertexOffsets): type 2 = (V2, V3, V4), type
+ // 3 = (V2, V4, V0), V4 at node dwords 12..14. Off: types 2 and 3 answer 0xffffffff x4 exactly as before the fix.
+ // Read once per process; the translation cache keys the value in its signature and directory

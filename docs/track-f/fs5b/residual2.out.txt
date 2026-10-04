@@ -1,0 +1,5 @@
+residual runs 316
+  class anon-ns region .data runs 240
+  class anon-ns-str region .data runs 74
+  class debug-dir region .rdata runs 2
+RESIDUAL2 ALL OK

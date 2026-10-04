@@ -1,0 +1,105 @@
+bash.exe: warning: could not find /tmp, please create!
+== parents
+0e72bc19 8a56dc2a track F link FS5a (HPP-509): KYTY_FIX_F10 default 0 -> 1 (ROADMAP s122 item 410(g)(1))
+8a56dc2a 3d0e46da track F link F12d (HPP-477): KYTY_FIX_F10 (default 0) - IMAGE_BVH_INTERSECT_RAY treats node types 2-3 as triangles (ROADMA
+3d0e46da 92d11340 track F link FS4a (HPP-470): KYTY_FIX_SVAL default 0 -> 1 (ROADMAP s122 item 378(g)(1))
+92d11340 d515b901 track F link F10c (HPP-451): KYTY_FIX_SVAL (default 0) - ValidateShaderSpirv with ValidatorOptions SetUniformBufferStandar
+== git diff --stat 3d0e46da 0e72bc19 (whole tree)
+ .../renderer/pipeline/shaderTranslationCache.cpp   |   5 +-
+ .../backend/spirv/spirvEmitterMemory.cpp           |  35 ++-
+ .../recompiler/frontend/decode/ShaderDecoder.cpp   |  10 +
+ .../recompiler/frontend/decode/ShaderDecoder.h     |   8 +
+ .../recompiler/frontend/translate/Memory.cpp       |  39 ++-
+ tests/ShaderRecompilerComputeTests.cpp             | 266 +++++++++++++++++++++
+ 6 files changed, 352 insertions(+), 11 deletions(-)
+== files of 1833ee28 / c3eb8fe8 / 8a56dc2a / 0e72bc19
+-- 1833ee28
+src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+tests/ShaderRecompilerComputeTests.cpp
+-- c3eb8fe8
+src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+-- 8a56dc2a
+src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+tests/ShaderRecompilerComputeTests.cpp
+-- 0e72bc19
+src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+== 6 files of 1833ee28 on 1833ee28^ vs 3d0e46da (EQUAL = cherry-pick on the same text)
+EQUAL
+== 6 files: 8a56dc2a vs 1833ee28 (EQUAL = F12d copied verbatim)
+EQUAL
+== 6 files: 0e72bc19 vs main c3eb8fe8 (EQUAL = FS5a copied verbatim)
+EQUAL
+== diff 1833ee28 c3eb8fe8 -- 6 files (= FS5a change only)
+ src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp | 4 ++--
+ src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp   | 7 ++++++-
+ src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h     | 5 +++--
+ 3 files changed, 11 insertions(+), 5 deletions(-)
+== patch-id
+db491819255ed975d73634bfa74b7ee1527854b3 1833ee280ec177b65feb6c4a97f626b0d4ce1b9f
+db491819255ed975d73634bfa74b7ee1527854b3 8a56dc2a1b30f141493f827610845d843c0ffe2c
+187a3c1f783b6b6dc0643880444be32fb567204a c3eb8fe83bf67c66d8b391cffe47f9639f04b39e
+187a3c1f783b6b6dc0643880444be32fb567204a 0e72bc19c9ec9a2a2a2c6871b5ab572a2b47f6c9
+== track F16 / B42 / P-var files: 3d0e46da vs 0e72bc19 (EQUAL = untouched)
+EQUAL src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+ABSENT src/graphics/host_gpu/renderer/graphicContext.h
+ABSENT src/graphics/host_gpu/vulkanWindow.cpp
+ABSENT src/graphics/host_gpu/renderer/descriptors.cpp
+ABSENT src/graphics/host_gpu/renderer/textureCache.cpp
+ABSENT src/graphics/host_gpu/renderer/textureCache.h
+EQUAL src/kernel/pvar.cpp
+EQUAL src/kernel/pvar.h
+EQUAL src/loader/gamePatch.cpp
+EQUAL src/loader/gamePatch.h
+EQUAL src/loader/gamePatchFile.cpp
+EQUAL src/loader/gamePatchFile.h
+== git cherry -v 0e72bc19 <c> <c>^ ('-' = equal change in history)
+4e72289e: - 4e72289e879b6a8375eada8fb0359037388e5d8c track F link FS3a (HPP-447): KYTY_FIX_B42 default 0 -> 1 
+68602c4f: - 68602c4f301e8d424af0581d11039437ec4a958f track F link F10c (HPP-451): KYTY_FIX_SVAL (default 0) - 
+17adaf80: - 17adaf801069088b68275276c96574b7f8bf5dc3 track F link FS4a (HPP-470): KYTY_FIX_SVAL default 0 -> 1
+1833ee28: - 1833ee280ec177b65feb6c4a97f626b0d4ce1b9f track F link F12d (HPP-477): KYTY_FIX_F10 (default 0) - I
+c3eb8fe8: - c3eb8fe83bf67c66d8b391cffe47f9639f04b39e track F link FS5a (HPP-509): KYTY_FIX_F10 default 0 -> 1 
+741e3312: + 741e3312ab005ece2587cec0410ba7607116aa76 track P link P35 (HPP-438): the descent constant N of KYT
+c9b4268e: + c9b4268e0b47625ff4ec556057b4c0267601ddd0 track P link P40 (HPP-461): growing hold at kt 3 of KYTY_
+fcaf141b: + fcaf141b6f8d5c78b3d009bcab4c807c731921e0 tests: B11 fix - IMAGE_SAMPLE_C/_LZ probes with k32Float,
+== merge-base --is-ancestor <c> 0e72bc19
+4414e235 yes
+722c5e7f yes
+d515b901 yes
+92d11340 yes
+3d0e46da yes
+8a56dc2a yes
+== uses of FixF10Enabled / KYTY_FIX_F10 in 0e72bc19 src
+0e72bc19:src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:578:	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 (the default since FS5a, p.410(g)(1)) adds ":fixf10" last, so
+0e72bc19:src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:584:	                            (ShaderRecompiler::Decoder::FixF10Enabled() ? ":fixf10" : "");
+0e72bc19:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:2232:	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 - node types 2 and 3 are triangles too (GPURT b89f22aa
+0e72bc19:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:2234:	const bool fix_f10  = Decoder::FixF10Enabled();
+0e72bc19:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:352:bool FixF10Enabled() {
+0e72bc19:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:356:		const char* value = std::getenv("KYTY_FIX_F10");
+0e72bc19:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h:759:// Track F, F12d (HPP-477, ROADMAP p.391(v)): KYTY_FIX_F10, default ON since FS5a (HPP-509, ROADMAP p.410(g)(1): unset
+0e72bc19:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h:766:bool   FixF10Enabled();
+0e72bc19:src/graphics/shader/recompiler/frontend/translate/Memory.cpp:702://   triangle node (types 0 and 1; KYTY_FIX_F10=1: types 0..3): {t_num, t_denom, i_num, j_num} as
+0e72bc19:src/graphics/shader/recompiler/frontend/translate/Memory.cpp:889:	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 - node types 2 and 3 are triangles too (GPURT b89f22aa
+0e72bc19:src/graphics/shader/recompiler/frontend/translate/Memory.cpp:891:	const bool   fix_f10 = Decoder::FixF10Enabled();
+== KYTY_GIT_REVISION and signature of the two build trees
+#define KYTY_GIT_REVISION "0e72bc19c9ec9a2a2a2c6871b5ab572a2b47f6c9"
+#define KYTY_SHADER_SOURCE_HASH "26ce5fc78ea3b20be537c7696be041f5e97d9e58"
+#define KYTY_GIT_REVISION "0e72bc19c9ec9a2a2a2c6871b5ab572a2b47f6c9"
+#define KYTY_SHADER_SOURCE_HASH "26ce5fc78ea3b20be537c7696be041f5e97d9e58"
+LINEAGE DONE
+EQUAL src/graphics/host_gpu/graphicContext.h
+EQUAL src/graphics/host_gpu/renderer/cache/textureCache.cpp
+EQUAL src/graphics/host_gpu/renderer/cache/textureCache.h
+EQUAL src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+EQUAL src/graphics/presentation/window/vulkanWindow.cpp

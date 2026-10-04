@@ -1,0 +1,51 @@
+#!/bin/bash
+# FS5b (HPP-510, Red Team, ROADMAP s122 item 410(g)(2)): own clean worktree on the FS5a worktree commit 0e72bc19 (3d0e46da + 8a56dc2a + 0e72bc19); copy of my FS4b script with WT and C changed. Was:
+# FS4b (HPP-471, Red Team, ROADMAP s122 item 378(g)(2)): own clean worktree on the FS4a worktree commit 3d0e46da (d515b901 + 92d11340 + 3d0e46da); copy of my FS3b script with WT and C changed. Was:
+# FS3b (HPP-448, Red Team, ROADMAP s122 item 367(g)(2)): own clean worktree on the FS3a worktree commit d515b901; copy of the FS3a script with WT and C changed.
+# FS3a (HPP-447, ROADMAP s122 item 367(g)(1)): copy of mk_wt_f9e2c.sh on the F9e2c worktree commit 722c5e7f, no cherry-pick
+# (the FS3a commit is cherry-picked after the main commit). Was:
+# F9e2c (HPP-436, ROADMAP s122 item 357(g)(4)): copy of mk_wt_f9e2b.sh + cherry-pick of the F9e2b worktree commit 0cbaa644.
+# Was: F9e2b (HPP-429, ROADMAP s122 item 353(g)(4)): clean detached worktree on 4414e235 (P23 code) + the F9e2 commit 23a0b3f2
+# (cherry-pick) for KYTY_FIX_B42 M2c F9e2b; copy of C:/kyty/f287/f9/f9e2/mk_wt_f9e2.sh, itself a copy of
+# C:/kyty/p283/p30b/mk_wt_p30b.sh with the base and the path changed: LF as in git
+# (core.autocrlf=false), submodules as P23 (git archive of the gitlinks, ffmpeg-core as a local --shared clone).
+[ -e C:/kyty/SEALED_RUN.lock ] && { echo LOCKED; exit 5; }
+[ -e C:/kyty/f287/STOP ] && exit 4
+set -e
+export PATH=/usr/bin:/mingw64/bin:$PATH
+G="/c/Program Files/Git/cmd/git.exe"
+SRC=C:/kyty/KytyPS5
+WT=C:/kyty/f287/fs5/fs5b/wt
+C=0e72bc19
+cd $SRC
+"$G" -c core.autocrlf=false worktree add --detach $WT $C
+echo "--- worktree HEAD"
+"$G" -C $WT log -1 --format='%H %s' | cut -c1-120
+"$G" ls-tree $C 3rdparty/ | while read mode type sha path; do
+	[ "$type" = commit ] || continue
+	if [ "$path" = 3rdparty/ffmpeg-core ]; then
+		rm -rf "$WT/$path"
+		"$G" clone -q --shared --no-checkout "$SRC/$path" "$WT/$path"
+		"$G" -C "$WT/$path" checkout -q "$sha"
+	else
+		mkdir -p "$WT/$path"
+		"$G" -C "$SRC/$path" archive "$sha" | tar -x -C "$WT/$path"
+	fi
+	echo "submodule $path $sha"
+done
+"$G" -C $WT log -4 --format='%H %P %s' | cut -c1-160
+echo "--- git status --short (worktree vs its HEAD; 0 = clean)"
+"$G" -C $WT status --short --ignore-submodules=all | wc -l
+echo "--- CR bytes in src/ (worktree files)"
+python - "$WT" <<'PYEOF'
+import os, sys
+root = os.path.join(sys.argv[1], "src")
+n = files = 0
+for d, _, fs in os.walk(root):
+    for f in fs:
+        files += 1
+        if b"\r" in open(os.path.join(d, f), "rb").read():
+            n += 1
+print("files", files, "with CR", n)
+PYEOF
+echo WT OK

@@ -1,0 +1,10 @@
+bash.exe: warning: could not find /tmp, please create!
+KYTY_* in environment before: none
+VK_* in environment: 
+cfg rc=0
+gate f10=unset nat=0 rc=0 last=ALL OK
+gate f10=unset nat=1 rc=0 last=ALL OK
+gate f10=0 nat=0 rc=0 last=ALL OK
+gate f10=0 nat=1 rc=0 last=ALL OK
+gate f10=1 nat=0 rc=0 last=ALL OK
+gate f10=1 nat=1 rc=0 last=ALL OK

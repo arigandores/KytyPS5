@@ -1,0 +1,103 @@
+2026-10-04T07:09:18Z F14d lead: links F14e HPP-505, F14f HPP-506, F14g HPP-507, F14h HPP-508 created (stages OK); HPP-287 blocked on HPP-482, HPP-492, HPP-508 (ROOT_OK); fact p.411
+2026-10-04T11:15:51Z F14g start (HPP-507, wake issue_commented aced1ed5: p.443(d) - installed adb0c82f, identify c01bde0c by sha256 and KytyPS5 version ...-2113-g082d1612; SDL_REVISION g9df15713 not read); blocker HPP-506 done (API 11:04:29Z); lock absent, STOP absent; in_progress Harness Engineer other than this link: none (API 11:04:29Z)
+2026-10-04T11:15:51Z F14g pinned C:/kyty/s288/bin/kyty_emulator_adb0c82f.exe sha256 = installed = adb0c82f1a75...1421; F14e copy c01bde0c sha256 c01bde0cbe61...e2d7; version strings in the copy: KytyPS5-2026-09-15-6a2987a-2113-g082d1612 and Fork build 082d161 (SDL-...-2103-g9df15713 present, not read); _ShaderCache/PPSA21564: variant_fixb26_fixb1b, variant_fixb26_fixb1b_fixf10, 1347 entries, no _fixf19
+2026-10-04T11:15:51Z F14g cold data for the capture frame (log_f12_v.txt of F12f, cold _fixf10): AsyncPipelines skipped draw after the level entry (frame 359): 2082 lines, all at level frame +28; at +9: 0 -> seal: KYTY_RD_LEVEL_FRAME=9,300 (+9 letter = f12_rd k03 form; +300 executor variant)
+2026-10-04T11:16:06Z F14g seal written: C:/kyty/f287/f14g/pred/f14g_seal.md = docs/track-f/f14g.md sha256 00d2161e05c18037; harness files C:/kyty/f287/f14g/ (SHA256SUMS_seal.txt); test_f14g_read 150 ALL OK, sens 18 SENS ALL OK, refs 7 ALL OK
+2026-10-04T11:16:25Z F14g seal commit cc396ca5 (docs/track-f/f14g.md, docs/track-f/f14g/)
+2026-10-04T11:16:45Z F14g API check before f19_rd: in_progress Harness Engineer: HPP-507 only (this link); new comments of HPP-507 after aced1ed5: own db88832f only; lock absent, STOP absent
+2026-10-04T11:16:45Z F14g launch_f14g detached call: bash C:/kyty/f287/f14g/go_f14g.sh f19_rd
+2026-10-04T11:17:04Z F14g go_f14g f19_rd lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T11:17:04Z F14g go_f14g f19_rd installed binary inside the lock before the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T11:17:07Z F14g go_f14g f19_rd manifest before: manifest C:/kyty/f287/f14g/runs/f19_rd/manifest_before.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:17:07Z F14g go_f14g f19_rd reference manifest of the first tag written: runs/ref_manifest.tsv sha256 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:17:08Z F14g go_f14g f19_rd standing copy cache_ref/ made (739 MB)
+2026-10-04T11:17:08Z F14g go_f14g f19_rd before vs reference: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:17:10Z F14g go_f14g f19_rd caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (192/172/5/520/ MB)
+2026-10-04T11:17:10Z F14g go_f14g f19_rd cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-04T11:17:10Z; entries of _ShaderCache/PPSA21564: 1347
+2026-10-04T11:17:11Z F14g go_f14g f19_rd installed the F14e copy: c01bde0cbe61b94599b1aabdc1bcb03c883f49fe6fa8a23b161adb3f0afbe2d7
+2026-10-04T11:17:11Z F14g go_f14g f19_rd enter_scene start (level underwater_aerial_garden, --rd, KYTY_RD_LEVEL_FRAME=9,300, KYTY_RD_FLIPS=2, hold 120, KYTY_FIX_F19=1)
+2026-10-04T11:19:50Z F14g go_f14g f19_rd enter_scene rc 0
+2026-10-04T11:19:50Z F14g go_f14g f19_rd run: VERDICT: underwater_aerial_garden in 30.9 s - PASS (acceptance <= 90 s)
+2026-10-04T11:19:51Z F14g go_f14g f19_rd log_f19_rd.txt sha256 a528eca52efb1b864866068bffe5c31f9b1c47e665e97ccc6d995a28920628f1
+2026-10-04T11:19:52Z F14g go_f14g f19_rd new captures in _RenderDoc: 2
+2026-10-04T11:19:53Z F14g go_f14g f19_rd capture k01 kyty_1791112645584006_capture.rdc moved to f19_rd_k01.rdc bytes 409262212
+2026-10-04T11:19:54Z F14g go_f14g f19_rd capture k02 kyty_1791112681218567_capture.rdc moved to f19_rd_k02.rdc bytes 5771085356
+2026-10-04T11:20:07Z F14g go_f14g f19_rd capture sha256 list runs/f19_rd/rdc_sha.txt lines 2
+2026-10-04T11:20:10Z F14g go_f14g f19_rd installed binary returned from the pinned copy
+2026-10-04T11:20:10Z F14g go_f14g f19_rd installed binary after the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T11:20:14Z F14g go_f14g f19_rd manifest of the run state (before the return): manifest C:/kyty/f287/f14g/runs/f19_rd/manifest_run.tsv files 3710 bytes 981540634 listsha b1064cef3f42f6ca12ba93f0a9b48256b42be8767c1b506b1c9d2b686ef33231; run vs before: manifest cmp DIFFER only-before 3 only-after 390
+2026-10-04T11:20:18Z F14g go_f14g f19_rd caches, saves and GLCache returned
+2026-10-04T11:20:20Z F14g go_f14g f19_rd manifest after: manifest C:/kyty/f287/f14g/runs/f19_rd/manifest_after.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; cmp: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; cmp with the reference of the first tag: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:20:20Z F14g go_f14g f19_rd lock released (rc 0)
+2026-10-04T11:20:41Z F14g post_f14g read start k01 (rd_cmp_f14c.py, no replay) f19_rd_k01.rdc
+2026-10-04T11:20:51Z F14g post_f14g read end k01 rc 0: rdrun end after ~6 s why=none out=43 lines; SUMMARY draws_dispatches 122 with_compare_sites 10 modules 42 modules_with_sites 5 samplers 8 views 74 pipelines 37 agg_rows 7 records 252 unresolved 0 descriptor_copies 0
+2026-10-04T11:20:56Z F14g post_f14g read start k02 (rd_cmp_f14c.py, no replay) f19_rd_k02.rdc
+2026-10-04T11:21:39Z F14g post_f14g read end k02 rc 0: rdrun end after ~32 s why=none out=273 lines; SUMMARY draws_dispatches 17993 with_compare_sites 1157 modules 356 modules_with_sites 27 samplers 26 views 1237 pipelines 321 agg_rows 50 records 20946 unresolved 0 descriptor_copies 0
+2026-10-04T11:21:45Z F14g post_f14g f19_rd: read.txt 0b16499558462bf0, ROWS NO/NOT_READ: 0, glitch: 
+2026-10-04T11:21:57Z F14g API check before f19_v1: in_progress Harness Engineer ['HPP-507']; new comments of HPP-507 after db88832f: 1; lock absent, STOP absent
+2026-10-04T11:21:58Z F14g launch_f14g detached call: bash C:/kyty/f287/f14g/go_f14g.sh f19_v1
+2026-10-04T11:22:08Z F14g correction of the API check line before f19_v1: the 1 comment returned by comments?after=db88832f is aced1ed5 (11:04:05Z, already applied); no new comment; STOP absent
+2026-10-04T11:22:17Z F14g go_f14g f19_v1 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T11:22:19Z F14g go_f14g f19_v1 installed binary inside the lock before the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T11:22:21Z F14g go_f14g f19_v1 manifest before: manifest C:/kyty/f287/f14g/runs/f19_v1/manifest_before.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:22:21Z F14g go_f14g f19_v1 before vs reference: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:22:25Z F14g go_f14g f19_v1 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (192/172/5/520/ MB)
+2026-10-04T11:22:26Z F14g go_f14g f19_v1 cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-04T11:22:26Z; entries of _ShaderCache/PPSA21564: 1347
+2026-10-04T11:22:27Z F14g go_f14g f19_v1 installed the F14e copy: c01bde0cbe61b94599b1aabdc1bcb03c883f49fe6fa8a23b161adb3f0afbe2d7
+2026-10-04T11:22:27Z F14g go_f14g f19_v1 enter_scene start (level underwater_aerial_garden, SD 300, --rec, hold 330, KYTY_FIX_F19=1)
+2026-10-04T11:28:35Z F14g go_f14g f19_v1 enter_scene rc 0
+2026-10-04T11:28:35Z F14g go_f14g f19_v1 run: VERDICT: underwater_aerial_garden in 26.6 s - PASS (acceptance <= 90 s)
+2026-10-04T11:28:36Z F14g go_f14g f19_v1 log_f19_v1.txt sha256 ad7013ad5610de48f62c2f67060470dc18264ef36e1a9d1c5f579f6fb65933d1
+2026-10-04T11:28:37Z F14g go_f14g f19_v1 installed binary returned from the pinned copy
+2026-10-04T11:28:37Z F14g go_f14g f19_v1 installed binary after the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T11:28:39Z F14g go_f14g f19_v1 manifest of the run state (before the return): manifest C:/kyty/f287/f14g/runs/f19_v1/manifest_run.tsv files 3716 bytes 982262560 listsha 8dd5a5a3d7877575f49019116df278808503c5e565322969d66fcefe656cc3a5; run vs before: manifest cmp DIFFER only-before 3 only-after 396
+2026-10-04T11:28:40Z F14g go_f14g f19_v1 caches, saves and GLCache returned
+2026-10-04T11:28:42Z F14g go_f14g f19_v1 manifest after: manifest C:/kyty/f287/f14g/runs/f19_v1/manifest_after.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; cmp: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; cmp with the reference of the first tag: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:28:43Z F14g go_f14g f19_v1 lock released (rc 0)
+2026-10-04T11:28:51Z F14e2: build fix_tests KILLED procload 11:12:46Z (watchdog); F14g gate C:/kyty/f287/f14g/procload.py --wait-s 120 seen alive 11:22:02Z; wait loop ([ -e lock ] + sleep 10, python only without lock) free at 11:28:44Z; no process, no write under the lock
+2026-10-04T11:29:04Z F15e seal committed KytyPS5 1dcae741; HPP-516 -> in_progress; tag b4_v waits for the F14g series (HPP-507) in the lock queue
+2026-10-04T11:29:47Z F14g post_f14g f19_v1: read.txt 717523be0b458150, ROWS NO/NOT_READ: 0, glitch: one-frame glitches: 0
+2026-10-04T11:30:02Z F14g API check before f19_w1: in_progress Harness Engineer ['HPP-516', 'HPP-507']; comments of HPP-507 (all ids): ['db88832f', 'aced1ed5']; lock absent, STOP absent
+2026-10-04T11:30:03Z F14g launch_f14g detached call: bash C:/kyty/f287/f14g/go_f14g.sh f19_w1
+2026-10-04T11:30:28Z F14g go_f14g f19_w1 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T11:30:29Z F14g go_f14g f19_w1 installed binary inside the lock before the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T11:30:32Z F14g go_f14g f19_w1 manifest before: manifest C:/kyty/f287/f14g/runs/f19_w1/manifest_before.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:30:34Z F14g go_f14g f19_w1 before vs reference: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:30:40Z F14g go_f14g f19_w1 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (192/172/5/520/ MB)
+2026-10-04T11:30:40Z F14g go_f14g f19_w1 cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-04T11:30:40Z; entries of _ShaderCache/PPSA21564: 1347
+2026-10-04T11:30:41Z F14g go_f14g f19_w1 installed the F14e copy: c01bde0cbe61b94599b1aabdc1bcb03c883f49fe6fa8a23b161adb3f0afbe2d7
+2026-10-04T11:30:42Z F14g go_f14g f19_w1 enter_scene start (level underwater_aerial_garden, W of item 295 (b), hold 310, KYTY_FIX_F19=1)
+2026-10-04T11:36:42Z F14g go_f14g f19_w1 enter_scene rc 0
+2026-10-04T11:36:42Z F14g go_f14g f19_w1 run: VERDICT: underwater_aerial_garden in 39.2 s - PASS (acceptance <= 90 s)
+2026-10-04T11:36:43Z F14g go_f14g f19_w1 log_f19_w1.txt sha256 ace3d9cc9be1d9baa16ca9f857dc3bee1407535c62e98760aee3e156e9045c2e
+2026-10-04T11:36:44Z F14g go_f14g f19_w1 installed binary returned from the pinned copy
+2026-10-04T11:36:44Z F14g go_f14g f19_w1 installed binary after the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T11:36:46Z F14g go_f14g f19_w1 manifest of the run state (before the return): manifest C:/kyty/f287/f14g/runs/f19_w1/manifest_run.tsv files 3720 bytes 983161737 listsha e3d5b5e9274fcee0a242d29f9b30e47cd90593397a96372dd076c7a8b7ecefd0; run vs before: manifest cmp DIFFER only-before 3 only-after 400
+2026-10-04T11:36:47Z F14g go_f14g f19_w1 caches, saves and GLCache returned
+2026-10-04T11:36:49Z F14g go_f14g f19_w1 manifest after: manifest C:/kyty/f287/f14g/runs/f19_w1/manifest_after.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; cmp: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; cmp with the reference of the first tag: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:36:49Z F14g go_f14g f19_w1 lock released (rc 0)
+2026-10-04T11:37:13Z F14g post_f14g f19_w1: read.txt 87cba2d8ab2016da, ROWS NO/NOT_READ: 0, glitch: 
+2026-10-04T11:37:28Z F14g API check before f19_ef: in_progress Harness Engineer [('HPP-516', True), ('HPP-507', True)] (HPP-516 F15e - same track F, waits on the lock); comments of HPP-507: ['db88832f', 'aced1ed5']; lock absent, STOP absent
+2026-10-04T11:37:28Z F14g launch_f14g detached call: bash C:/kyty/f287/f14g/go_f14g.sh f19_ef
+2026-10-04T11:37:29Z F20a start (HPP-551, Probe Designer): first command of the heartbeat refused rc 3 on the lock of F14g f19_w1 (11:30:25Z..11:36:49Z); under the lock - only the file-read tool, then a wait loop ([ -e lock ] + sleep 10); API check 11:36:57Z: in_progress Harness Engineer links [HPP-516(run=y,series),HPP-507(run=y,series)], lock absent, STOP absent
+2026-10-04T11:37:43Z F16d: worktree C:/kyty/f287/f16d/wt = 4d9e8ab7 clean (mk_wt under watchdog 11:29:41Z-11:30:07Z, rc 0); configure refused/killed by the watchdog (procload of series HPP-507 F14g and HPP-516 F15e, 11:30:18Z REFUSED, 11:37:31Z KILLED); link set blocked on HPP-507, HPP-516 (general rule 30, item 431(v))
+2026-10-04T11:37:44Z F14g go_f14g f19_ef lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T11:37:44Z F14g go_f14g f19_ef installed binary inside the lock before the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T11:37:46Z F14g go_f14g f19_ef manifest before: manifest C:/kyty/f287/f14g/runs/f19_ef/manifest_before.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:37:46Z F14g go_f14g f19_ef before vs reference: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:37:48Z F14g go_f14g f19_ef caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (192/172/5/520/ MB)
+2026-10-04T11:37:48Z F14g go_f14g f19_ef cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-04T11:37:48Z; entries of _ShaderCache/PPSA21564: 1347
+2026-10-04T11:37:49Z F14g go_f14g f19_ef installed the F14e copy: c01bde0cbe61b94599b1aabdc1bcb03c883f49fe6fa8a23b161adb3f0afbe2d7
+2026-10-04T11:37:49Z F14g go_f14g f19_ef enter_scene start (level enemy_final, SD 100, --rec, hold 330, KYTY_FIX_F19=1)
+2026-10-04T11:43:51Z F14g go_f14g f19_ef enter_scene rc 0
+2026-10-04T11:43:51Z F14g go_f14g f19_ef run: VERDICT: enemy_final in 21.3 s - PASS (acceptance <= 90 s)
+2026-10-04T11:43:53Z F14g go_f14g f19_ef log_f19_ef.txt sha256 11db0920dea28e5a8fb92485be39326956f4fb9711d64198f28ae272d10b691b
+2026-10-04T11:43:54Z F14g go_f14g f19_ef installed binary returned from the pinned copy
+2026-10-04T11:43:55Z F14g go_f14g f19_ef installed binary after the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T11:43:59Z F14g go_f14g f19_ef manifest of the run state (before the return): manifest C:/kyty/f287/f14g/runs/f19_ef/manifest_run.tsv files 3478 bytes 949035189 listsha 9691044be5e6aa63a19133347c3830471cfede1ce8683f10ff028d1dd93aedfa; run vs before: manifest cmp DIFFER only-before 3 only-after 158
+2026-10-04T11:44:00Z F14g go_f14g f19_ef caches, saves and GLCache returned
+2026-10-04T11:44:02Z F14g go_f14g f19_ef manifest after: manifest C:/kyty/f287/f14g/runs/f19_ef/manifest_after.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; cmp: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; cmp with the reference of the first tag: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:44:03Z F14g go_f14g f19_ef lock released (rc 0)
+2026-10-04T11:44:27Z F18d-lead p.453 (KytyPS5 f55f7e03) F18d accepted PASS RC 0 (decision 11:44:15 UTC); binary 35c4a754 to F18e; N5/N1 -> F18e admission/reading; lead: 3 read-only commands ~11:30Z without first-line lock check (sed/grep ROADMAP, ls), possibly under F14g lock f19_w1 11:30:25Z; waited locks f19_w1/f19_ef 11:31:08Z-11:36:54Z, 11:38:35Z-11:44:06Z with lock-check+sleep loop, no writes
+2026-10-04T11:45:38Z F14g post_f14g f19_ef: read.txt 41d623cd815e80b1, ROWS NO/NOT_READ: 0, glitch: one-frame glitches: 0
+2026-10-04T11:47:35Z F14g FACTS section written (C:/kyty/f287/FACTS.md); report section 8 appended to docs/track-f/f14g.md

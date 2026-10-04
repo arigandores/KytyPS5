@@ -1,0 +1,26 @@
+F14G f19_w1 kind w1 level underwater_aerial_garden log sha256 ace3d9cc9be1d9baa16ca9f857dc3bee1407535c62e98760aee3e156e9045c2e lines 3654177 stdout sha256 a3dae07b0b06b922aeda9abd96f13ba8a066d07778d82281e84edcd324a2d2e9
+  binary: tag c01bde0cbe61b94599b1aabdc1bcb03c883f49fe6fa8a23b161adb3f0afbe2d7 (expected c01bde0cbe61b94599b1aabdc1bcb03c883f49fe6fa8a23b161adb3f0afbe2d7); installed before adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 after adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421; revision texts [('log', 125, '082d161')]
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']; form: cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-04T11:30:40Z; entries of _ShaderCache/PPSA21564: 1347
+  process end before the timeout: NO (outcome ok detail None hold_exit None hold_s 310.2 stable_s 39.2)
+  entry line 348255; scene change line None; first scene frame n 185; hold (sum dt after it) 324.6 s; frames >= 1 s after it 0 (max dt_us 704504)
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; GamePatch lines 0; AsyncPipelines: skipped draw 2055 (reference)
+  W: [Vulkan][E] 0 (VUID-06479 0); [Vulkan][W] 925381; last-time-reporting lines 0; DualSrcBlend [(76, 1, 1)]
+  manifest: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; vs the reference of the first tag: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+  ROW binary sha256 of the tag = c01bde0c (F14e copy): YES
+  ROW installed adb0c82f before the tag: YES
+  ROW installed adb0c82f after the return: YES
+  ROW revision text names 082d161 (reference): YES
+  ROW translation cache directory variant_fixb26_fixb1b_fixf10_fixf19 in every line (member): YES
+  ROW cold form: variant_fixb26_fixb1b_fixf10_fixf19 absent before the start (reference): YES
+  ROW entered (entry line of underwater_aerial_garden): YES
+  ROW hold >= 300 s (sum dt after the first scene frame): YES
+  ROW no process end before the timeout: YES
+  ROW frames >= 1 s after the first scene frame = 0 (REPORT, not a gate - cold entry): YES
+  ROW 0 [Vulkan][E] (VUID-06479 included): YES
+  ROW positive control of the layer, [Vulkan][W] > 0: YES
+  ROW DualSrcBlend supported=1 enabled=1 before the first GuestOut: YES
+  ROW 0 death markers (reference): YES
+  ROW manifest of the caches before = after the return: YES
+  ROW manifest after the return = reference of the first tag (RC6): YES
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch line (else not read as an outcome, question to the lead): YES

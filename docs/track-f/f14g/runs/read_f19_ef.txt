@@ -1,0 +1,27 @@
+F14G f19_ef kind ef level enemy_final log sha256 11db0920dea28e5a8fb92485be39326956f4fb9711d64198f28ae272d10b691b lines 2304632 stdout sha256 6eb898bb6cbaa50005dc3d97c94cae130a26237a0b99dd08cf23c2f782f3f494
+  binary: tag c01bde0cbe61b94599b1aabdc1bcb03c883f49fe6fa8a23b161adb3f0afbe2d7 (expected c01bde0cbe61b94599b1aabdc1bcb03c883f49fe6fa8a23b161adb3f0afbe2d7); installed before adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 after adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421; revision texts [('log', 121, '082d161')]
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']; form: cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-04T11:37:48Z; entries of _ShaderCache/PPSA21564: 1347
+  process end before the timeout: NO (outcome ok detail None hold_exit None hold_s 330.2 stable_s 21.3)
+  entry line 342402; scene change line None; first scene frame n 323; hold (sum dt after it) 332.3 s; frames >= 1 s after it 0 (max dt_us 317409)
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; GamePatch lines 0; AsyncPipelines: skipped draw 173 (reference)
+  video: index records 20248; one-frame glitches 0; sheet: C:/kyty/f287/f14g/runs/f19_ef/sheet_f19_ef.png frames 20248 step 421 tiles 8x6
+  W: [Vulkan][E] 0 (VUID-06479 0); [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)]
+  manifest: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; vs the reference of the first tag: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+  ROW binary sha256 of the tag = c01bde0c (F14e copy): YES
+  ROW installed adb0c82f before the tag: YES
+  ROW installed adb0c82f after the return: YES
+  ROW revision text names 082d161 (reference): YES
+  ROW translation cache directory variant_fixb26_fixb1b_fixf10_fixf19 in every line (member): YES
+  ROW cold form: variant_fixb26_fixb1b_fixf10_fixf19 absent before the start (reference): YES
+  ROW entered (entry line of enemy_final): YES
+  ROW hold >= 300 s (sum dt after the first scene frame): YES
+  ROW no process end before the timeout: YES
+  ROW frames >= 1 s after the first scene frame = 0 (REPORT, not a gate - cold entry): YES
+  ROW 0 death markers: YES
+  ROW video index records >= 3000: YES
+  ROW 0 one-frame glitches: YES
+  ROW sheet for the lead made: YES
+  ROW manifest of the caches before = after the return: YES
+  ROW manifest after the return = reference of the first tag (RC6): YES
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch line (else not read as an outcome, question to the lead): YES

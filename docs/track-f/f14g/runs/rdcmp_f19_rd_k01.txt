@@ -1,0 +1,43 @@
+capture C:/kyty/f287/f14g/f19_rd_k01.rdc
+chunks 2390 buffers 247
+MODULE ResourceId::509 sha=beaedc39811a523ce99bff0716456f759257264421b73aa2e8b67e9698c24ae8 bytes=168572 manual=0 native=18 sites=native/DrefExplicitLod/- img=0:25[0] smp=0:44[0] x18
+MODULE ResourceId::516 sha=3b8a4f966c3e3aa33ef71cf3c5cd5bb702f8ee0552584d228b7ebb34dddd9bbd bytes=627668 manual=0 native=18 sites=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] x18
+MODULE ResourceId::519 sha=26b0fd526d554c3df1fe19c509475c52f17398e23ed16e7eb232ae37575e4a78 bytes=663544 manual=0 native=18 sites=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] x18
+MODULE ResourceId::523 sha=e1fa109a66ba906452e45213f042a32d7c5a8a920063886dcc4c42585e9b59e1 bytes=689368 manual=0 native=36 sites=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] x18;native/DrefExplicitLod/- img=0:25[1] smp=0:44[1] x18
+MODULE ResourceId::524 sha=2ef7a34a7c6c81af479e8c1f1a4b65667850208bf8db8768ee0f56b2c1808490 bytes=712136 manual=0 native=36 sites=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] x18;native/DrefExplicitLod/- img=0:25[1] smp=0:44[1] x18
+DRAWX chunk=1118 call=vkCmdDispatch cb=ResourceId::900 pipe=ResourceId::522 stage=CS mod=beaedc39811a523c site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[0] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1118 call=vkCmdDispatch cb=ResourceId::900 pipe=ResourceId::522 stage=CS mod=beaedc39811a523c site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[0] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1118 call=vkCmdDispatch cb=ResourceId::900 pipe=ResourceId::522 stage=CS mod=beaedc39811a523c site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[0] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1235 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::552 stage=CS mod=3b8a4f966c3e3aa3 site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1235 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::552 stage=CS mod=3b8a4f966c3e3aa3 site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1235 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::552 stage=CS mod=3b8a4f966c3e3aa3 site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1251 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::607 stage=CS mod=26b0fd526d554c3d site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1251 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::607 stage=CS mod=26b0fd526d554c3d site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1251 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::607 stage=CS mod=26b0fd526d554c3d site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1266 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::613 stage=CS mod=e1fa109a66ba9064 site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1266 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::613 stage=CS mod=e1fa109a66ba9064 site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1266 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::613 stage=CS mod=e1fa109a66ba9064 site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1266 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::613 stage=CS mod=e1fa109a66ba9064 site=native/DrefExplicitLod/- img=0:25[1] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::619
+DRAWX chunk=1266 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::613 stage=CS mod=e1fa109a66ba9064 site=native/DrefExplicitLod/- img=0:25[1] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::619
+DRAWX chunk=1266 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::613 stage=CS mod=e1fa109a66ba9064 site=native/DrefExplicitLod/- img=0:25[1] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::619
+DRAWX chunk=1281 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::624 stage=CS mod=2ef7a34a7c6c81af site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1281 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::624 stage=CS mod=2ef7a34a7c6c81af site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1281 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::624 stage=CS mod=2ef7a34a7c6c81af site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::538
+DRAWX chunk=1281 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::624 stage=CS mod=2ef7a34a7c6c81af site=native/DrefExplicitLod/- img=0:25[1] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::619
+DRAWX chunk=1281 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::624 stage=CS mod=2ef7a34a7c6c81af site=native/DrefExplicitLod/- img=0:25[1] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::619
+DRAWX chunk=1281 call=vkCmdDispatchIndirect cb=ResourceId::900 pipe=ResourceId::624 stage=CS mod=2ef7a34a7c6c81af site=native/DrefExplicitLod/- img=0:25[1] smp=0:44[1] sampler=ResourceId::533 view=ResourceId::619
+PIPE ResourceId::522 CS:ResourceId::509:beaedc39811a523c
+PIPE ResourceId::552 CS:ResourceId::516:3b8a4f966c3e3aa3
+PIPE ResourceId::607 CS:ResourceId::519:26b0fd526d554c3d
+PIPE ResourceId::613 CS:ResourceId::523:e1fa109a66ba9064
+PIPE ResourceId::624 CS:ResourceId::524:2ef7a34a7c6c81af
+AGG stage=CS mod=26b0fd526d554c3d site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] depthflag=1 mag=VK_FILTER_LINEAR min=VK_FILTER_LINEAR mip=VK_SAMPLER_MIPMAP_MODE_NEAREST cmpEnable=1 cmpOp=VK_COMPARE_OP_LESS_OR_EQUAL aniso=0 smp_pnext=- view_format=VK_FORMAT_D16_UNORM aspect=VK_IMAGE_ASPECT_DEPTH_BIT image_format=VK_FORMAT_D16_UNORM src=set1/set1 n=36
+AGG stage=CS mod=2ef7a34a7c6c81af site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] depthflag=1 mag=VK_FILTER_LINEAR min=VK_FILTER_LINEAR mip=VK_SAMPLER_MIPMAP_MODE_NEAREST cmpEnable=1 cmpOp=VK_COMPARE_OP_LESS_OR_EQUAL aniso=0 smp_pnext=- view_format=VK_FORMAT_D16_UNORM aspect=VK_IMAGE_ASPECT_DEPTH_BIT image_format=VK_FORMAT_D16_UNORM src=set1/set1 n=36
+AGG stage=CS mod=2ef7a34a7c6c81af site=native/DrefExplicitLod/- img=0:25[1] smp=0:44[1] depthflag=1 mag=VK_FILTER_LINEAR min=VK_FILTER_LINEAR mip=VK_SAMPLER_MIPMAP_MODE_NEAREST cmpEnable=1 cmpOp=VK_COMPARE_OP_LESS_OR_EQUAL aniso=0 smp_pnext=- view_format=VK_FORMAT_D32_SFLOAT aspect=VK_IMAGE_ASPECT_DEPTH_BIT image_format=VK_FORMAT_D32_SFLOAT src=set1/set1 n=36
+AGG stage=CS mod=3b8a4f966c3e3aa3 site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] depthflag=1 mag=VK_FILTER_LINEAR min=VK_FILTER_LINEAR mip=VK_SAMPLER_MIPMAP_MODE_NEAREST cmpEnable=1 cmpOp=VK_COMPARE_OP_LESS_OR_EQUAL aniso=0 smp_pnext=- view_format=VK_FORMAT_D16_UNORM aspect=VK_IMAGE_ASPECT_DEPTH_BIT image_format=VK_FORMAT_D16_UNORM src=set1/set1 n=36
+AGG stage=CS mod=beaedc39811a523c site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[0] depthflag=1 mag=VK_FILTER_LINEAR min=VK_FILTER_LINEAR mip=VK_SAMPLER_MIPMAP_MODE_NEAREST cmpEnable=1 cmpOp=VK_COMPARE_OP_LESS_OR_EQUAL aniso=0 smp_pnext=- view_format=VK_FORMAT_D16_UNORM aspect=VK_IMAGE_ASPECT_DEPTH_BIT image_format=VK_FORMAT_D16_UNORM src=fresh/fresh n=36
+AGG stage=CS mod=e1fa109a66ba9064 site=native/DrefExplicitLod/- img=0:25[0] smp=0:44[1] depthflag=1 mag=VK_FILTER_LINEAR min=VK_FILTER_LINEAR mip=VK_SAMPLER_MIPMAP_MODE_NEAREST cmpEnable=1 cmpOp=VK_COMPARE_OP_LESS_OR_EQUAL aniso=0 smp_pnext=- view_format=VK_FORMAT_D16_UNORM aspect=VK_IMAGE_ASPECT_DEPTH_BIT image_format=VK_FORMAT_D16_UNORM src=set1/set1 n=36
+AGG stage=CS mod=e1fa109a66ba9064 site=native/DrefExplicitLod/- img=0:25[1] smp=0:44[1] depthflag=1 mag=VK_FILTER_LINEAR min=VK_FILTER_LINEAR mip=VK_SAMPLER_MIPMAP_MODE_NEAREST cmpEnable=1 cmpOp=VK_COMPARE_OP_LESS_OR_EQUAL aniso=0 smp_pnext=- view_format=VK_FORMAT_D32_SFLOAT aspect=VK_IMAGE_ASPECT_DEPTH_BIT image_format=VK_FORMAT_D32_SFLOAT src=set1/set1 n=36
+TYPES kind=native img_descriptor=VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE smp_descriptor=VK_DESCRIPTOR_TYPE_SAMPLER n=252
+SUMMARY draws_dispatches 122 with_compare_sites 10 modules 42 modules_with_sites 5 samplers 8 views 74 pipelines 37 agg_rows 7 records 252 unresolved 0 descriptor_copies 0
+done

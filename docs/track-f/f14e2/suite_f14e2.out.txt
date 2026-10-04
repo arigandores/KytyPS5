@@ -1,0 +1,65 @@
+watch: start 2026-10-04T11:46:40Z child 73664 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+base rc=0 wall=0.3 s exe=a4e9cb20 KYTY_FIX_F19=unset
+b1 rc=0 wall=0.7 s exe=a4e9cb20 KYTY_FIX_F19=1
+f0 rc=0 wall=0.6 s exe=bab555a8 KYTY_FIX_F19=0
+fu rc=0 wall=0.5 s exe=bab555a8 KYTY_FIX_F19=unset
+f1 rc=0 wall=0.5 s exe=bab555a8 KYTY_FIX_F19=1
+base: tests 129, failing 0 [], spv 176
+    [f19] k16UNorm KYTY_FIX_F19=0: C dref=0 manual=1, C_LZ dref=0 manual=1
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+b1: tests 129, failing 0 [], spv 176
+    [f19] k16UNorm KYTY_FIX_F19=1: C dref=1 manual=0, C_LZ dref=1 manual=0
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=1: images=2 members=2 dref=2 manual=0 plain_explicit=0
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2
+f0: tests 130, failing 0 [], spv 180
+    [f19] k16UNorm KYTY_FIX_F19=0: C dref=0 manual=1, C_LZ dref=0 manual=1
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+    [f19] null T# alone C KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+    [f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+    [f19] null T# alone C_LZ KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+    [f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+fu: tests 130, failing 0 [], spv 180
+    [f19] k16UNorm KYTY_FIX_F19=0: C dref=0 manual=1, C_LZ dref=0 manual=1
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+    [f19] null T# alone C KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+    [f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+    [f19] null T# alone C_LZ KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+    [f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+f1: tests 130, failing 0 [], spv 180
+    [f19] k16UNorm KYTY_FIX_F19=1: C dref=1 manual=0, C_LZ dref=1 manual=0
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=1: images=2 members=2 dref=2 manual=0 plain_explicit=0
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] null T# alone C KYTY_FIX_F19=1: images=1 native=1 manual_images=0 dref=1 manual=0
+    [f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=1: images=2 native=2 manual_images=0 dref=2 manual=0
+    [f19] null T# alone C_LZ KYTY_FIX_F19=1: images=1 native=1 manual_images=0 dref=1 manual=0
+    [f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=1: images=2 native=2 manual_images=0 dref=2 manual=0
+(r1) f0 tests 130 = base 129 + 1: True
+(r1) fu tests 130 = base 129 + 1: True
+(r1) f1 tests 130 = base 129 + 1: True
+(r1) b1 spv 176 = base 176: True
+(r2) f0: files 0..175 vs base - differing 0 
+(r2) fu: files 0..175 vs base - differing 0 
+(r2) f1: files 0..175 vs b1 - differing 0 
+(r3) f0: spv 180 = 176 + 4: True
+(r3) fu: spv 180 = 176 + 4: True
+(r3) f1: spv 180 = 176 + 4: True
+(r3) new files f0 vs fu - differing 0 
+(r4) 176.spv (alone): f1 == f0: True
+(r4) 177.spv (shared): f1 != f0: True
+(r4) 178.spv (alone): f1 == f0: True
+(r4) 179.spv (shared): f1 != f0: True
+(r5) f1 null lines 4, as expected: True
+(r5) f0 null lines 4, as expected: True
+(r5) fu null lines 4, as expected: True
+base exe C:/kyty/f287/f14e2/base/shader_cfg_tests_base.exe a4e9cb20b2d8d612d87f38cbc51506e5aed3d4d6ecb93c795a5dcf8e128ea5ca
+link exe C:/kyty/f287/f14e2/bin/shader_cfg_tests.exe bab555a8df3bfd7bf3667d06bf0d96a546e2b54394762f9d50874c41db7693b3
+ALL OK
+rc=0 end 2026-10-04T11:46:43Z

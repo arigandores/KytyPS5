@@ -1,0 +1,6 @@
+CMakeLists.txt:156 replace (1 lines)
+CMakeLists.txt written, crlf False
+tests/shaderCfgTests.cpp:5742 before (91 lines)
+tests/shaderCfgTests.cpp:15701 after (1 lines)
+tests/shaderCfgTests.cpp written, crlf False
+PATCH OK

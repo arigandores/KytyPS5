@@ -1,0 +1,5 @@
+C:/kyty/f287/bin/kyty_emulator_c01bde0c.exe: OK
+fix_shader_cfg_tests.exe: OK
+base/shader_cfg_tests.exe: OK
+build/shader_recompiler_compute_tests.exe: OK
+build/shader_cfg_tests.exe: OK

@@ -1,0 +1,20 @@
+OK   19f7b753:docs/ROADMAP.md:22407 anchor True +1 True
+OK   e975327c:docs/track-f/f14f-review.md:124 anchor True +1 True
+OK   e975327c:docs/track-f/f14f-review.md:137 anchor True +1 True
+OK   082d1612:CMakeLists.txt:155 anchor True +1 True
+OK   f98e842c:CMakeLists.txt:156 anchor True +1 True
+OK   f98e842c:tests/shaderCfgTests.cpp:5757 anchor True +1 True
+OK   f98e842c:tests/shaderCfgTests.cpp:5803 anchor True +1 True
+OK   f98e842c:tests/shaderCfgTests.cpp:15702 anchor True +1 True
+OK   f98e842c:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:39 anchor True +1 True
+OK   f98e842c:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:603 anchor True +1 True
+OK   f98e842c:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:605 anchor True +1 True
+OK   f98e842c:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:1207 anchor True +1 True
+OK   f98e842c:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1336 anchor True +1 True
+OK   f98e842c:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1339 anchor True +1 True
+OK   a015bb9f:docs/track-f/f14a.md:69 anchor True +1 True
+OK   f18022a5:docs/track-f/f14e.md:191 anchor True +1 True
+OK   f18022a5:docs/track-f/f14e.md:193 anchor True +1 True
+OK   f18022a5:docs/track-f/f14e/bin_f14e.sha256.txt:2 anchor True +1 True
+18 refs
+ALL OK

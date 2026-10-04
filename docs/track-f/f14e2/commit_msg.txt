@@ -1,0 +1,15 @@
+track F link F14e2 (HPP-545): RC1 and RC3 of the F14f review (ROADMAP s122 item 443(b)) - imageInfo.h in the translation signature, null T# comparison probes
+
+RC1: CMakeLists.txt adds graphics/host_gpu/renderer/image/imageInfo.h to SHADER_CACHE_EXTRA_FILES, the file
+set of KYTY_SHADER_SOURCE_HASH. At KYTY_FIX_F19=1 the SPIR-V depends on DEPTH_FORMAT_POLICIES of that file
+(FixF19ManualDepthCompare); before this a table edit left the signature unchanged and the translation cache
+served the old manual/native decision. Only this line of CMakeLists.txt changes; no source file changes.
+
+RC3: shader_cfg_tests TestF19NullComparisonImage (run last, so the SPIR-V dumps of the set keep their numbers):
+a null T# with IMAGE_SAMPLE_C / _C_LZ - native OpImageSampleDref* (the renderer binds the D32 placeholder of
+NullTextureDesc) at any KYTY_FIX_F19; a null T# and a k16UNorm T# on one sampler - both native at =1, both
+the manual compare at =0. Mutant M5 of F14f (the =1 rule without !null_descriptor) fails the probes at =1.
+
+Not run in the game; no emulator binary is built or installed by this link.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

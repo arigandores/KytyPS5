@@ -1,0 +1,13 @@
+diff --git a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+index 4f74127a..31139356 100644
+--- a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
++++ b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+@@ -37,7 +37,7 @@ bool FixF19Enabled() {
+ }
+ 
+ bool FixF19ManualDepthCompare(Prospero::BufferFormat format, bool null_descriptor) {
+-	return !null_descriptor && FindGuestDepthFormatPolicy(format) == nullptr;
++	return FindGuestDepthFormatPolicy(format) == nullptr;
+ }
+ 
+ void FixF19MergeIndirectTables(std::vector<ResourceSpecialization::Image>& images) {

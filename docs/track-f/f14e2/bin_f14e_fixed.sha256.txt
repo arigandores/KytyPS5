@@ -1,0 +1,6 @@
+c01bde0cbe61b94599b1aabdc1bcb03c883f49fe6fa8a23b161adb3f0afbe2d7 *C:/kyty/f287/bin/kyty_emulator_c01bde0c.exe
+feffeec71bd6a434552b9d03051a0153b9b43bd5632070f8a2aafd97889f7924 *fix_shader_cfg_tests.exe
+e575f0fca9d9e1be372d8fa7ff358407da940c21d9c92775449fd6df12f427bc *base/shader_cfg_tests.exe
+3dd0c31990818877e8a95317a610046c746131c3725c19d89fa95b832cf3a544 *build/shader_recompiler_compute_tests.exe
+feffeec71bd6a434552b9d03051a0153b9b43bd5632070f8a2aafd97889f7924 *build/shader_cfg_tests.exe
+# F14e2 (HPP-545, ROADMAP s122 item 443(b), RC2): replaces lines 2, 4, 5 of docs/track-f/f14e/bin_f14e.sha256.txt; relative paths are under C:/kyty/f287/f14e. 4833a35f/9b254b77 are builds before the commit 082d1612 (10:05Z, 10:09Z); on 4833a35f only corpus_slice1.out.txt was taken. Check: cd C:/kyty/f287/f14e && sha256sum -c <this file> (this line is reported as improperly formatted).

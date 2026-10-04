@@ -1,0 +1,16 @@
+#!/bin/bash
+# F14e2 (HPP-545; copy of the F14e script of HPP-505, ROADMAP s122 item 431(v),(d)): one build step (build_f14e2.cmd <args>) under the watchdog watch_f14e2.py,
+# 540 s step limit (exit 6 -> rerun the step, ninja is incremental); an API check line in times.txt before the step.
+# Usage: bstep.sh <log name> [build_f14e2.cmd args...]
+[ -e C:/kyty/SEALED_RUN.lock ] && { echo LOCKED; exit 3; }
+[ -e C:/kyty/f287/STOP ] && exit 4
+export PATH=/usr/bin:/mingw64/bin:$PATH PYTHONIOENCODING=utf-8
+cd C:/kyty/f287/f14e2
+N=$1; shift
+bash api_chk.sh "build $N $*" > /dev/null || exit $?
+python watch_f14e2.py --limit 540 --tag "build $N $*" -- cmd //c "C:\\kyty\\f287\\f14e2\\build_f14e2.cmd" "$@" > "build_$N.log" 2>&1
+RC=$?
+echo "rc=$RC"
+grep -aE "^(watch:|rc=|KILLED|STOPPED|REFUSED|BUILD OK)|error|FAILED" "build_$N.log" | grep -v "warning" | head -20
+tail -2 "build_$N.log"
+exit $RC

@@ -1,0 +1,31 @@
+# Git copy: the author e-mail is cut (privacy check of rule 28).
+main HEAD before: d5d0076a35063ebd6a1034f4b50bfc85b0d12366
+main HEAD after: f98e842ca322198e16d0d8faa38c736116ccc385
+working CMakeLists.txt: RC1 line at 156, crlf False
+--- git show --stat HEAD
+f98e842ca322198e16d0d8faa38c736116ccc385 d5d0076a35063ebd6a1034f4b50bfc85b0d12366
+Emu Engineer
+track F link F14e2 (HPP-545): RC1 and RC3 of the F14f review (ROADMAP s122 item 443(b)) - imageInfo.h in the translation signature, null T# comparison probes
+
+ CMakeLists.txt           |  2 +-
+ tests/shaderCfgTests.cpp | 92 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 93 insertions(+), 1 deletion(-)
+--- cached (expect empty)
+--- working diff of my paths vs new HEAD (expect only the foreign hunk of CMakeLists.txt)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b3eec1c4..c3fb8325 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -440,6 +440,11 @@ endfunction()
+ 
+ add_kyty_full_emulator_test(shader_cfg_tests "${KYTY_TESTS_DIR}/shaderCfgTests.cpp")
+ 
++# Track F, B24 pad output stand (F19c; ROADMAP s122 item 451(e)(1)): run by docs/track-f/f19c/run_stand_f19c.py, not by
++# ctest.
++add_kyty_full_emulator_test(b24_pad_stand
++	"${KYTY_TESTS_DIR}/B24PadStand.cpp")
++
+ add_executable(scalar_provenance_tests EXCLUDE_FROM_ALL
+ 	"${KYTY_TESTS_DIR}/ScalarProvenanceTests.cpp"
+ 	"${KYTY_SOURCE_DIR}/graphics/host_gpu/hostMemory.cpp"
+TRANSPLANT OK

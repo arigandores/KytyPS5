@@ -1,0 +1,19 @@
+m5 KYTY_FIX_F19=1 rc=0 tests=130 failing_lines=4
+ShaderCfgTests: failed: null comparison T# must be native Dref (D32 placeholder) at any KYTY_FIX_F19
+ShaderCfgTests: failed: null T# + k16UNorm on one sampler must both be native Dref at KYTY_FIX_F19=1
+ShaderCfgTests: failed: null comparison T# must be native Dref (D32 placeholder) at any KYTY_FIX_F19
+ShaderCfgTests: failed: null T# + k16UNorm on one sampler must both be native Dref at KYTY_FIX_F19=1
+[f19] null T# alone C KYTY_FIX_F19=1: images=1 native=0 manual_images=1 dref=0 manual=1
+[f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=1: images=2 native=0 manual_images=2 dref=0 manual=2
+[f19] null T# alone C_LZ KYTY_FIX_F19=1: images=1 native=0 manual_images=1 dref=0 manual=1
+[f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=1: images=2 native=0 manual_images=2 dref=0 manual=2
+m5 KYTY_FIX_F19=0 rc=0 tests=130 failing_lines=0
+[f19] null T# alone C KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+[f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+[f19] null T# alone C_LZ KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+[f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+m5 KYTY_FIX_F19=u rc=0 tests=130 failing_lines=0
+[f19] null T# alone C KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+[f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+[f19] null T# alone C_LZ KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+[f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2

@@ -1,0 +1,1 @@
+git status --short lines after revert: 0; HEAD cde1106c4b12f414182231544224c340fafd7801

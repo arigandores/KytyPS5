@@ -1,0 +1,42 @@
+--- orig/test_go_s9.py
++++ s9/test_go_s9.py
+@@ -46,7 +46,7 @@
+ (BASE / 's9' / 'sc_s9.py').write_bytes(("import importlib.util, sys\n"
+                                         "s = importlib.util.spec_from_file_location('sc9', %r)\nm = importlib.util.module_from_spec(s)\n"
+                                         "s.loader.exec_module(m)\nsys.exit(m.main(sys.argv[1:], %r, %r))\n" % (
+-                                            SC9, (BASE / 's10').as_posix(), (BASE / 'pred' / '06b_s.md').as_posix())
++                                            SC9, (BASE / 's10').as_posix(), (BASE / 'pred' / '07_s.md').as_posix())
+                                         ).encode('ascii'))
+ BASH = shutil.which('bash') or 'C:/Program Files/Git/bin/bash.exe'
+ N = [0]
+@@ -72,7 +72,7 @@
+ 
+ 
+ def seal(lines):
+-    (BASE / 'pred' / '06b_s.md').write_text('\n'.join(lines) + '\n', encoding='ascii')
++    (BASE / 'pred' / '07_s.md').write_text('\n'.join(lines) + '\n', encoding='ascii')
+ 
+ 
+ ok = True
+@@ -159,10 +159,10 @@
+            and '$ROOT/s4/RETURN_FAILED $ROOT/s6/RETURN_FAILED $ROOT/s10/RETURN_FAILED' in src_t and
+            'echo "go_s.sh $T pid $$ started' in src_t)
+ ok &= case('G23 item 371 (g), item 377 (b): the shipped harness guards s10/IN_ARM with the RETURN_FAILED guards and pins '
+-           'INST_WANT = 540c035a (item 374 (g)), not 4aa62e95; the seal is pred/06b_s.md',
++           'INST_WANT = 540c035a (item 374 (g)), not 4aa62e95; the seal is pred/07_s.md',
+            '$ROOT/s10/RETURN_FAILED $ROOT/s10/IN_ARM; do' in src_t and
+            'INST_WANT="540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1"\n' in src_t and 'INST_WANT="4aa62e95' not in src_t and
+-           'PRED=pred/06b_s.md\n' in src_t and src_t.count('guardfiles\n') == 2)
++           'PRED=pred/07_s.md\n' in src_t and src_t.count('guardfiles\n') == 2)
+ 
+ # ============================================================== part 2: the path INSIDE the lock, stubbed
+ B2 = Path('C:/kyty/s288/s9/fx_go_lock9')
+@@ -247,7 +247,7 @@
+     text2 = text2.replace(a, b)
+ (B2 / 's9' / 'go_s9.sh').write_bytes(text2.encode('ascii'))
+ TAGS2 = ('pi_w1', 'pi_r1', 'u_1', 'c5_0', 'pi_w0')
+-(B2 / 'pred' / '06b_s.md').write_bytes((''.join('go_s9 call: PLWAIT=540 bash C:/kyty/s288/s9/go_s9.sh %s\n' % t for t in TAGS2) +
++(B2 / 'pred' / '07_s.md').write_bytes((''.join('go_s9 call: PLWAIT=540 bash C:/kyty/s288/s9/go_s9.sh %s\n' % t for t in TAGS2) +
+                                        's binary: %s %s\nu binary: %s %s\n' % (sha2(PINS), PINS.as_posix(), sha2(PINU),
+                                                                                PINU.as_posix())).encode('ascii'))
+ BINP = '/' + B2.as_posix()[0].lower() + B2.as_posix()[2:] + '/bin'

@@ -1,0 +1,35 @@
+suite test_r404.py sha256 f7bd50f9a8833ec2ddcc40b54766461e103303c925b7d339772f1d84ec537299 target sc_s9.py sha256 db65fdc89ba728e1d5e01ac2f393389dc69ef7b9d4e7936a75cfa0347f8fd670
+PASS R0 the original scorer is b8f5e3fa and the seal 06b is 605ebfa5 (not changed)
+scored c5_0 in 2.5 s: original FAIL ['identity: T-1 sum skc_ap_skip = skipped-draw lines', 'identity: T-6 distinct frame= of skipped draws = sum skc_held_inc (main)'], new PASS []
+  new PASS ident T-1 sum skc_ap_skip = skipped-draw lines, on the domain frame >= the first scene frame 240 (item 404) (4183 / 4183 (lines without frame= 0))
+  new PASS ident T-6 distinct frame= of skipped draws = sum skc_held_inc (main), on the domain frame >= the first scene frame 240 (item 404) (150 / 150)
+  new n/a  ident T-1 / T-6 whole log (data, item 404) (T-1 4251 / 4271; T-6 171 / 170)
+scored pi_w1 in 5.3 s: original PASS [], new PASS []
+  new PASS ident T-1 sum skc_ap_skip = skipped-draw lines, on the domain frame >= the first scene frame 316 (item 404) (0 / 0 (lines without frame= 0))
+  new PASS ident T-6 distinct frame= of skipped draws = sum skc_held_inc (main), on the domain frame >= the first scene frame 316 (item 404) (0 / 0)
+  new n/a  ident T-1 / T-6 whole log (data, item 404) (T-1 0 / 0; T-6 0 / 0)
+scored pi_r1 in 2.6 s: original PASS [], new PASS []
+  new PASS ident T-1 sum skc_ap_skip = skipped-draw lines, on the domain frame >= the first scene frame 220 (item 404) (0 / 0 (lines without frame= 0))
+  new PASS ident T-6 distinct frame= of skipped draws = sum skc_held_inc (main), on the domain frame >= the first scene frame 220 (item 404) (0 / 0)
+  new n/a  ident T-1 / T-6 whole log (data, item 404) (T-1 0 / 0; T-6 0 / 0)
+scored pi_w0 in 5.3 s: original PASS [], new PASS []
+  new PASS ident T-1 sum skc_ap_skip = skipped-draw lines, on the domain frame >= the first scene frame 369 (item 404) (0 / 0 (lines without frame= 0))
+  new PASS ident T-6 distinct frame= of skipped draws = sum skc_held_inc (main), on the domain frame >= the first scene frame 369 (item 404) (0 / 0)
+  new n/a  ident T-1 / T-6 whole log (data, item 404) (T-1 0 / 0; T-6 0 / 0)
+scored pi_r0 in 2.5 s: original PASS [], new PASS []
+  new PASS ident T-1 sum skc_ap_skip = skipped-draw lines, on the domain frame >= the first scene frame 205 (item 404) (0 / 0 (lines without frame= 0))
+  new PASS ident T-6 distinct frame= of skipped draws = sum skc_held_inc (main), on the domain frame >= the first scene frame 205 (item 404) (0 / 0)
+  new n/a  ident T-1 / T-6 whole log (data, item 404) (T-1 0 / 0; T-6 0 / 0)
+PASS R1a c5_0 log sha256 138f4efe (the log of the arm, not changed)
+PASS R1b c5_0 original: FAIL on T-1 and T-6 only (4251 / 4271, 171 / 170)
+PASS R1c c5_0 new: T-1 on the domain frame >= 240 PASS 4183 / 4183 (0 lines without frame=), T-6 PASS 150 / 150
+PASS R1d c5_0 new: the data row of the whole log T-1 4251 / 4271; T-6 171 / 170, not a member (n/a)
+PASS R1e c5_0 new: admitted (no failure), entered, the first scene frame n 240
+PASS R1f c5_0: every other printed line equal (the outcome line PASS / FAIL apart)
+PASS R1g c5_0 C5 reading by the letter of item 355 (d): 630 creations median 215 -> NO -> form APP
+PASS R5 pi_w1: the outcome and every printed member equal (original PASS, new PASS); T-1 / T-6 PASS on the domain; the data row = the original rows (0 / 0; 0 / 0)
+PASS R5 pi_r1: the outcome and every printed member equal (original PASS, new PASS); T-1 / T-6 PASS on the domain; the data row = the original rows (0 / 0; 0 / 0)
+PASS R5 pi_w0: the outcome and every printed member equal (original PASS, new PASS); T-1 / T-6 PASS on the domain; the data row = the original rows (0 / 0; 0 / 0)
+PASS R5 pi_r0: the outcome and every printed member equal (original PASS, new PASS); T-1 / T-6 PASS on the domain; the data row = the original rows (0 / 0; 0 / 0)
+checks: 12
+ALL OK

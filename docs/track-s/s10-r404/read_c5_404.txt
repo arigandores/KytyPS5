@@ -1,0 +1,4 @@
+READ C5 (item 355 (d))
+c5_0 (shuriken_ninja_castle, KYTY_PIPELINE_SALT=c5_0, KYTY_PIPELINE_PRECACHE=0): in-game creations (AvTrace: pipeline without "precache", with a us field) 630, median us 215.0; lines without a us field 28; sc_s creations 630 ('WARM', 215.0)
+salt without precache neutralises (>= 10 creations, median >= 20000 us): NO
+T2 form (item 355 (d)): APP "cold of the application" - full return, precache by default, no salt; the driver cache is not neutralised [U]; the base reads the application side

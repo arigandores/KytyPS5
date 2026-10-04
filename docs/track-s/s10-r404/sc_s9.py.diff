@@ -1,0 +1,84 @@
+--- orig/sc_s9.py
++++ s9/sc_s9.py
+@@ -6,6 +6,8 @@
+ sha256 check; it loads C:/kyty/s142/sc142.py the same way.  Its scan_s(), scan_stdout(), locate(), identities(), freeze(),
+ assign_prep(), attributed*(), unattributed(), gates(), early(), pcw_arm(), pcw_trace(), creations(), cold_class(), env_rows
+ logic are used as they are; this file only adds the arms of S10, their admission and the readings of item 355.
++Item 404: on an entered arm the identities T-1 and T-6 are read on the domain from the first scene frame (ident_domain);
++the whole-log values are a data row; a not entered arm keeps the whole-log identities.
+ 
+ ARMS (item 355 (k), order of S10): pi_w1 pi_r1 pi_w0 pi_r0 (item 355 (g), binary f3b3aa3b), c5_0 (item 355 (d), binary f3b3aa3b),
+ t2_1 .. t2_10 (t2_6 .. t2_10 reserves) and t2_cs0 (item 355 (d), binary f3b3aa3b), u_1 .. u_5 (item 355 (e), the pinned 4aa62e95
+@@ -82,7 +84,10 @@
+ 
+ ROOT = 'C:/kyty/s288'
+ LINK_DIR = 'C:/kyty/s288/s10'
+-PRED_PATH = 'C:/kyty/s288/pred/06b_s.md'                       # item 371 (g), item 377 (b)(4)
++PRED_PATH = 'C:/kyty/s288/pred/07_s.md'                        # item 371 (g), item 377 (b)(4), item 404 (g)
++PRIOR_PATH = 'C:/kyty/s288/pred/06b_s.md'                      # item 404 (g): the seal the five made arms ran under
++PRIOR_SHA = '605ebfa5440ea1ac318749250c625b022f873d0237b37294cc97ffb069e3560b'
++PRIOR_TAGS = ('pi_w1', 'pi_r1', 'pi_w0', 'pi_r0', 'c5_0')
+ BIN_S = 'f3b3aa3bef3f0ceadf668d0fc8bd68230ab1e3158d87bbc0b4c66b92a6651ca3'   # S5c, item 340 (v), item 355 (g)
+ BIN_U = '4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac'   # binary u: the pinned copy, item 342, item 355 (e)
+ INST_WANT = '540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1'   # installed before every arm, item 374 (g), item 377 (b)(1)
+@@ -290,6 +295,40 @@
+         return pre == 0 and q is None, '%d / %s (KYTY_PIPELINE_PRECACHE=0: no queue)' % (pre, 'no queued line' if q is None else
+                                                                                         q[1] + q[2])
+     return q is not None and pre == q[1] + q[2], '%d / %s' % (pre, (q[1] + q[2]) if q else 'no queued line')
++
++
++def ident_domain(ident, s, fi):
++    """Item 404 (v): on an entered arm (a first scene frame, row fi) the rows T-1 and T-6 of sc_s.identities() are replaced by
++    the same identities on the domain of the arm: T-1 - the lines "AsyncPipelines: skipped draw" with frame= >= the first scene
++    frame n = the sum of skc_ap_skip of the FrameTrace rows with n >= it; T-6 - the distinct frame= >= it = the sum of
++    skc_held_inc of the same rows.  The threshold SKIP_LINES_MAX of sc_s is unchanged (it counts the lines of the whole log: the
++    emulator stops the lines per process).  The whole-log values of sc_s are printed beside as one data row ("T-1 / T-6 whole
++    log (data, item 404)", ok None - not a member).  A not entered arm (fi None) keeps the whole-log rows (item 404 (v))."""
++    if fi is None:
++        return ident
++    f0 = s['rows'][fi][0]
++    xs = [s['x'].get(r[0]) for r in s['rows'] if r[0] >= f0]
++    sk = sum((t[0] or 0) for t in xs if t)
++    hi = sum((t[1] or 0) for t in xs if t)
++    dom = [e for e in s['skips'] if e[1] is not None and e[1] >= f0]
++    frames = set(e[1] for e in dom)
++    nof = sum(1 for e in s['skips'] if e[1] is None)
++    under = len(s['skips']) < A.SKIP_LINES_MAX
++    out = []
++    whole = []
++    for name, ok, det in ident:
++        if name.startswith('T-1 '):
++            whole.append('T-1 %s' % det)
++            out.append(('T-1 sum skc_ap_skip = skipped-draw lines, on the domain frame >= the first scene frame %d (item 404)' % f0,
++                        (sk == len(dom)) if under else None, '%d / %d (lines without frame= %d)' % (sk, len(dom), nof)))
++        elif name.startswith('T-6 '):
++            whole.append('T-6 %s' % det)
++            out.append(('T-6 distinct frame= of skipped draws = sum skc_held_inc (main), on the domain frame >= the first scene '
++                        'frame %d (item 404)' % f0, (len(frames) == hi) if under else None, '%d / %d' % (len(frames), hi)))
++        else:
++            out.append((name, ok, det))
++    out.append(('T-1 / T-6 whole log (data, item 404)', None, '; '.join(whole)))
++    return out
+ 
+ 
+ def gate9(g, spec, reading=None):
+@@ -517,7 +556,10 @@
+     add('every KYTY_* key = the seal (executor variant, stricter)', so, sd)
+     add('hold --hold %d' % spec['hold'], js.get('hold_s') == spec['hold'], js.get('hold_s'))
+     pr = js.get('prereg') or {}
+-    add('prereg = the seal now', pred_sha is not None and pr.get('sha256') == pred_sha and
++    prior = spec['tag'] in PRIOR_TAGS and pr.get('sha256') == PRIOR_SHA and \
++        (pr.get('path') or '').replace('\\', '/') == PRIOR_PATH                      # item 404 (g)
++    add('prereg = the seal now (or the seal 06b for the five arms made under it, item 404 (g))',
++        prior or pred_sha is not None and pr.get('sha256') == pred_sha and
+         (pr.get('path') or '').replace('\\', '/') == pred_path, (pr.get('sha256') or '')[:8])
+     add('no pipeline-cache retry', not any(a.get('pipeline_cache_off') for a in at), '')
+     rows.extend(cache_rows(spec, cj, cjs_of))
+@@ -562,6 +604,7 @@
+     r['present_rows'] = len(s['rows'])
+     r['first'] = None if fi is None else (s['rows'][fi][0], s['rows'][fi][1], s['rows'][fi][2])
+     ident = [x for x in A.identities(s, std, spec['cls']) if not x[0].startswith('T-4')]
++    ident = ident_domain(ident, s, fi)                                     # item 404 (v)
+     if spec['cls'] == 'T':
+         ok4, d4 = ident_t4(s, spec)
+         ident.append(('T-4 AvTrace pipeline precache lines = G + C queued (KYTY_PIPELINE_PRECACHE=0: 0 = no queue)', ok4, d4))

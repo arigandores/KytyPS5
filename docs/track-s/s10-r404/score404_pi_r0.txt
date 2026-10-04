@@ -1,0 +1,60 @@
+ARM pi_r0 level underwater_aerial_garden class T form None: PASS; sc142 outcome HOLDS_120 (held); log 763d44703cf436ff
+  PASS admit one attempt (--attempts 1, no warmup) (1)
+  PASS admit binary f3b3aa3b (f3b3aa3b)
+  PASS admit guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)
+  PASS admit gates empty (shipped defaults) ('')
+  PASS admit no KYTY_GPU_CHECKPOINTS ()
+  PASS admit no KYTY_GATE_SCHEDULE ()
+  PASS admit no KYTY_GAME_PATCH (item 342 (e)) ()
+  PASS admit video KYTY_REC rec_pi_r0.mp4 (C:\kyty\s288\s10\rec_pi_r0.mp4)
+  PASS admit --vulkan-validation false (false)
+  PASS admit KYTY_* families = the seal (item 241 (v)(6), letter) (-)
+  PASS admit every KYTY_* key = the seal (executor variant, stricter) (-)
+  PASS admit hold --hold 120 (120)
+  PASS admit prereg = the seal now (or the seal 06b for the five arms made under it, item 404 (g)) (605ebfa5)
+  PASS admit no pipeline-cache retry ()
+  PASS admit restore of the app caches = app_post of pi_w0 (d8ca8c8efb60b43b / d8ca8c8efb60b43b)
+  PASS admit restore of GLCache = glc_post of pi_w0 (5238757c9f4f6489 / 5238757c9f4f6489)
+  PASS admit man_launch_glc right before the game = restore_glc.got (item 250 (zh)) (5238757c9f4f6489 / 5238757c9f4f6489)
+  PASS admit return_app after the arm = its copy (749b1b24472c38d3 / 749b1b24472c38d3)
+  PASS admit return_glc after the arm = its copy (3b5287287146ed9e / 3b5287287146ed9e)
+  PASS admit installed binary after the arm = installed before the arm (item 250 (b)) (540c035ac09f428a / 540c035ac09f428a)
+  PASS admit installed binary before the arm = the installed 540c035a of item 374 (g) (item 371 (g), RC1) (540c035ac09f428a)
+  PASS admit return_prev_ok (no RETURN_FAILED guard before the arm, item 250 (v)) (1)
+  PASS admit manifest man_pre_app recorded (749b1b24472c38d3)
+  PASS admit manifest man_pre_glc recorded (3b5287287146ed9e)
+  PASS admit manifest man_post_app recorded (d8ca8c8efb60b43b)
+  PASS admit manifest man_post_glc recorded (5238757c9f4f6489)
+  PASS admit manifest glc_pre_copy recorded (3b5287287146ed9e)
+  PASS admit the knob line "S-pcw: KYTY_S_PCW=0 KYTY_S_PCW_FORCE_MS=15000" of f3b3aa3b (patch line 96) (S-pcw: KYTY_S_PCW=0 KYTY_S_PCW_FORCE_MS=15000)
+  PASS admit 0 lines GamePatch: in the log (item 342 (e)) (0)
+  PASS ident T-1 sum skc_ap_skip = skipped-draw lines, on the domain frame >= the first scene frame 205 (item 404) (0 / 0 (lines without frame= 0))
+  PASS ident T-2 min(64, sum skc_held_inc) = flip held lines (0 / 0)
+  PASS ident T-6 distinct frame= of skipped draws = sum skc_held_inc (main), on the domain frame >= the first scene frame 205 (item 404) (0 / 0)
+  PASS ident sum skc_held (skip-ceil holds) = 0 (0)
+  PASS ident rows without FrameTrace-x or a field = 0 (0)
+  PASS ident torn FrameTrace rows = 0 (0)
+  PASS ident gaps of n = 0 (0)
+  PASS ident T-3 AvTrace: shader lines = stdout Shaders: lines (0 / 0)
+  n/a  ident info skc_bad (unreachable by code, RC5; printed, no control) (0)
+  n/a  ident info shown_skip by the +-2 rows rule (secondary to T-6, RC5) (0)
+  n/a  ident T-1 / T-6 whole log (data, item 404) (T-1 0 / 0; T-6 0 / 0)
+  PASS ident T-4 AvTrace pipeline precache lines = G + C queued (KYTY_PIPELINE_PRECACHE=0: 0 = no queue) (1801 / 1801)
+  PASS ident scan_x rows = scan_s rows (the group index of BvhLoopCapTrip / CsPretranslate) (3807 / 3807)
+  PASS ident scan_x lines = scan_s lines (the line numbers of the in-game creations, item 362 (b)) (625867 / 625867)
+  PASS ident first scene frame and rows after it = the inherited sc142.derive ((205, 19965, 422) / (205, 19965, 422))
+  PASS ident T-5 partition (reading 1) (124295550 / 124295550)
+  PASS ident T-5 partition (reading 2) (124295550 / 124295550)
+  entered yes; first scene frame (n, dt, draws) (205, 19965, 422); attribution DETERMINED
+  reading 1 window: rows 599, held 0, skip rows 0, skipped draws 0, dt >= 100 ms 4 (presented 4), >= 1 s 0 (presented 0); gap_pipe >= 100 ms 0, >= 1 s 0
+  reading 1 hold: rows 3004, held 0, skip rows 0, skipped draws 0, dt >= 100 ms 6 (presented 6), >= 1 s 0 (presented 0); gap_pipe >= 100 ms 0, >= 1 s 0
+  frames dt >= 100 ms (n dt part class attribution PREP held BvhLoopCapTrip(i-1..i)): 207 218136 window GPUTHR not 0 - 0; 215 103299 window GPUTHR not 0 - 0; 295 129954 window PCW not 0 - 0; 695 131647 window PCW not 0 - 0; 1094 134830 hold PCW not 0 - 0; 1532 114533 hold PCW not 0 - 0; 1980 116955 hold PCW not 0 - 0; 2447 131339 hold PCW not 0 - 0; 2906 151479 hold PCW not 0 - 0; 3353 135356 hold PCW not 0 - 0
+  attributed >= 100 ms 8 (PCW 8), >= 1 s 0; not attributed 2 (WAIT 0, GPUTHR 2, PRIO 0; attribution "not" on all); series gap >= X with gap_pipe < X 0
+  cold gate (item 362 (b)) level not cold, by the letter (with the recipe) level not cold, executor variant level not cold; gates {'cold': False, 'cold_word': 'level not cold', 'perm_after': 0, 'rec_new_after': 0, 'skip_after': 0, 'warm': True, 'stdout_shaders': 0, 'rec_start': 1842, 'rec_end': 1842, 'attr_ok': True, 'create_after': 0}
+  in-game creations (letter of item 355 (d)) 0 median None, without us 0; sc_s creations 0 ('NOTHING', None)
+  preparation: queued (1842, 1660, 141, 41) created 499 ms ready (1842, 1842, 41) wait 83 ms; driver cache loaded [94435637] disabled 0; seed installed 0 ignored 0; Cache test mode 0 (prepare-cold 0); screen from the process start: created 3.1 s, ready 7.6 s
+  skip lines after the first scene frame 0 (inside the scene 0); held flips after it 0; CsPretranslate [('ready', 432), ('skipped', 137)]
+  driver cache writes 9 (forced 8, last 94435637 bytes), failures 0, Incomplete 0; S-pcw hold {'writes': 6, 'forced': 6, 'frames': 6, 'last_bytes': 94435637, 'fail': 0, 'incomplete': 0, 'loaded': 94435637, 'disabled': 0}
+  S-early: registers 1124, first uses 290, leads 286; events 0, known 0, lead < cost 0 (PREP-only 0)
+  haze: frames 3830 median 0.4502 low 322 series [[350, 447], [501, 530], [689, 883]]; after 1002: [] (variant [])
+  video: 3830 frames, 0 glitches; death markers none; [Vulkan][E] 0

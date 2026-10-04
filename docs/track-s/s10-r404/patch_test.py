@@ -1,0 +1,122 @@
+"""Item 404 (g): the synthetic fixtures of the domain identities and of the prior seal in s9/test_sc_s9.py (LF, write_bytes)."""
+import hashlib
+import os
+import shutil
+import sys
+
+P = 'C:/kyty/s288/s9/test_sc_s9.py'
+ORIG = '104626d1fb34e0134a1da1ec1dca677a26a547722b4e46a84afbbacf24df344e'
+b = open(P, 'rb').read()
+if hashlib.sha256(b).hexdigest() != ORIG:
+    sys.exit('test_sc_s9.py is not 104626d1 - refuse')
+os.makedirs('C:/kyty/s288/s10/r404/orig', exist_ok=True)
+shutil.copyfile(P, 'C:/kyty/s288/s10/r404/orig/test_sc_s9.py')
+t = b.decode('ascii')
+assert '\r' not in t
+
+A1 = """ok &= case('A6 paths: link C:/kyty/s288/s10, seal pred/06b_s.md (item 377 (b)(4)), Sky Garden, L0 shuriken_ninja_castle',
+           S.LINK_DIR == 'C:/kyty/s288/s10' and S.PRED_PATH == 'C:/kyty/s288/pred/06b_s.md' and S.SKY == 'underwater_aerial_garden'"""
+assert t.count(A1) == 1
+t = t.replace(A1, """ok &= case('A6 paths: link C:/kyty/s288/s10, seal pred/07_s.md (item 404 (g)), Sky Garden, L0 shuriken_ninja_castle',
+           S.LINK_DIR == 'C:/kyty/s288/s10' and S.PRED_PATH == 'C:/kyty/s288/pred/07_s.md' and S.SKY == 'underwater_aerial_garden'""", 1)
+
+NEW = r'''
+# ---- item 404: T-1 / T-6 on the domain of an entered arm (frame >= the first scene frame), the whole-log data row
+ID1 = 'T-1 sum skc_ap_skip = skipped-draw lines'
+ID6 = 'T-6 distinct frame= of skipped draws = sum skc_held_inc (main)'
+DATA = 'T-1 / T-6 whole log (data, item 404)'
+
+
+def idrows(r):
+    """(T-1 row, T-6 row, data row or None) of an arm: (ok, detail) by the row name prefix."""
+    d = dict((n.split(',')[0] if n.startswith(('T-1 sum', 'T-6 distinct')) else n, (o, x)) for n, o, x in r['ident'])
+    return d.get(ID1), d.get(ID6), d.get(DATA)
+
+
+def dom_names(r):
+    return [n for n, o, x in r['ident'] if n.startswith(('T-1', 'T-6'))]
+
+
+PRE_SKIP = [SKIP(3), SKIP(3)]                                   # before row 1 (the splash): no skc on any row
+PRE_ENTRY = [SKIP(6)]                                           # after the entry line, frame 6 = the loading row (n 6 < 7)
+FIRST_SK = (15000, dict(skip=1, held=1, ev=[SKIP(7)]))          # the first scene frame n 7 carries one counted skip
+mkarm('c5_0', scene(S.L0, [(16000, dict(ev=C5_EV + [SKIP(8), SKIP(8)], skip=2, held=1))] + rows(10), header=HEADER_P0 + PRE_SKIP,
+                    pre_entry=PRE_ENTRY, first=FIRST_SK))
+d0 = getter()('c5_0')
+t1, t6, dd = idrows(d0)
+ok &= case('D1 item 404 (1)/(3): skip lines before the first scene frame (frame 3 before row 1, frame 6 on the loading row) do '
+           'not change the admission: T-1 on the domain 3 / 3 and T-6 2 / 2 PASS (frames 7, 8 counted on both sides), the first '
+           'scene frame n 7, the arm PASS; the whole-log rows (6 / 3 lines, 4 / 2 frames) are one data row, not a member',
+           d0['first'][0] == 7 and not d0['fail'] and t1 == (True, '3 / 3 (lines without frame= 0)') and t6 == (True, '2 / 2') and
+           dd == (None, 'T-1 3 / 6; T-6 4 / 2') and 'first scene frame 7 (item 404)' in dom_names(d0)[0] and
+           len(dom_names(d0)) == 3 and S.read_c5(getter())[:2] == ('c5', 'YES'))
+mkarm('c5_0', scene(S.L0, [(16000, dict(ev=C5_EV + [SKIP(8), SKIP(8), SKIP(8)], skip=2, held=1))] + rows(10),
+                    header=HEADER_P0 + PRE_SKIP, pre_entry=PRE_ENTRY, first=FIRST_SK))
+d1 = getter()('c5_0')
+t1, t6, dd = idrows(d1)
+ok &= case('D2 item 404 (2): one extra skipped-draw line in the domain (frame 8) -> FAIL T-1 (3 / 4), T-6 holds (2 / 2) -> '
+           'the arm FAILs -> C5 UNDETERMINED', t1 == (False, '3 / 4 (lines without frame= 0)') and t6 == (True, '2 / 2') and
+           ['identity: ' + n for n in dom_names(d1)[:1]] == [x for x in d1['fail'] if x.startswith('identity:')] and
+           S.read_c5(getter())[:2] == (None, 'UNDETERMINED'))
+mkarm('c5_0', scene(S.L0, [(16000, dict(ev=C5_EV + [SKIP(8), SKIP(9)], skip=2, held=1))] + rows(10),
+                    header=HEADER_P0 + PRE_SKIP, pre_entry=PRE_ENTRY, first=FIRST_SK))
+d2 = getter()('c5_0')
+t1, t6, dd = idrows(d2)
+ok &= case('D3 item 404 (2): an extra frame= in the domain (frame 9, the line count kept) -> T-1 holds (3 / 3), FAIL T-6 '
+           '(3 / 2)', t1 == (True, '3 / 3 (lines without frame= 0)') and t6 == (False, '3 / 2') and
+           [x for x in d2['fail'] if x.startswith('identity:')] == ['identity: ' + dom_names(d2)[1]])
+mkarm('c5_0', scene(S.L0, [(16000, dict(ev=C5_EV + [SKIP(8), SKIP(8)], skip=2, held=1))] + rows(10),
+                    header=HEADER_P0 + PRE_SKIP, pre_entry=PRE_ENTRY, first=(15000, dict(skip=1, held=1))))
+d3 = getter()('c5_0')
+t1, t6, dd = idrows(d3)
+ok &= case('D4 item 404 (2), the edge: the first scene frame (n 7) counted by skc but its line missing -> FAIL T-1 (3 / 2) and '
+           'T-6 (1 / 2); the domain starts at the first scene frame itself (>=)', t1 == (False, '3 / 2 (lines without frame= 0)')
+           and t6 == (False, '1 / 2'))
+mkarm('c5_0', scene('other_level', [(16000, dict(ev=C5_EV + [SKIP(8), SKIP(8)], skip=2, held=1))] + rows(10),
+                    header=HEADER_P0 + PRE_SKIP, pre_entry=PRE_ENTRY, first=FIRST_SK))
+d4 = getter()('c5_0')
+ok &= case('D5 item 404 (4): a not entered arm keeps the whole-log identities (T-1 3 / 6, T-6 4 / 2 FAIL), no data row',
+           not d4['entered'] and [(n, o, x) for n, o, x in d4['ident'] if n.startswith(('T-1', 'T-6'))] ==
+           [(ID1, False, '3 / 6'), (ID6, False, '4 / 2')])
+SLM = S.A.SKIP_LINES_MAX
+S.A.SKIP_LINES_MAX = 6
+mkarm('c5_0', scene(S.L0, [(16000, dict(ev=C5_EV + [SKIP(8), SKIP(8)], skip=2, held=1))] + rows(10), header=HEADER_P0 + PRE_SKIP,
+                    pre_entry=PRE_ENTRY, first=FIRST_SK))
+d5 = getter()('c5_0')
+S.A.SKIP_LINES_MAX = 5
+d5b = getter()('c5_0')
+S.A.SKIP_LINES_MAX = SLM
+ok &= case('D6 item 404 (v): the threshold SKIP_LINES_MAX of sc_s counts the whole log - 6 lines at a threshold 6 -> the domain '
+           'rows n/a although the domain has 3 lines; at 5 the same; the data row keeps the whole-log values',
+           idrows(d5)[0] == (None, '3 / 3 (lines without frame= 0)') and idrows(d5)[1] == (None, '2 / 2') and
+           idrows(d5b)[0][0] is None and idrows(d5)[2] == (None, 'T-1 3 / 6; T-6 4 / 2'))
+S.A.SKIP_LINES_MAX = 7
+d5c = getter()('c5_0')
+S.A.SKIP_LINES_MAX = SLM
+ok &= case('D7 item 404 (v): below the threshold (6 lines < 7) the domain rows are members (PASS)',
+           idrows(d5c)[0] == (True, '3 / 3 (lines without frame= 0)') and idrows(d5c)[1] == (True, '2 / 2'))
+ok &= case('D8 item 404 (5): an arm without skipped draws (J1) - the domain rows 0 / 0 PASS, the data row 0 / 0; ident_domain '
+           'on fi None returns the rows unchanged',
+           idrows(c5) == ((True, '0 / 0 (lines without frame= 0)'), (True, '0 / 0'), (None, 'T-1 0 / 0; T-6 0 / 0')) and
+           S.ident_domain([('x', True, 'y')], dict(rows=[], skips=[], x={}), None) == [('x', True, 'y')])
+'''
+
+A2 = """ok &= case('J10 a GamePatch: line in the log -> admission FAIL (item 342 (e))', any('GamePatch' in x for x in getter()('c5_0')['fail']))
+"""
+assert t.count(A2) == 1
+t = t.replace(A2, A2 + NEW, 1)
+
+NEWG = r'''PRIOR = dict(path='C:/kyty/s288/pred/06b_s.md', sha256='605ebfa5440ea1ac318749250c625b022f873d0237b37294cc97ffb069e3560b')
+ok &= case('G3b item 404 (g): the five arms made under seal 06b (pi_w1, pi_r1, pi_w0, pi_r0, c5_0) admitted with its path and '
+           'sha256; any other tag (t2_1, t2_cs0, u_1), another sha or another path -> the prereg row FAILs',
+           all(not adm(tg, prereg=PRIOR) for tg in ('pi_w1', 'pi_r1', 'pi_w0', 'pi_r0', 'c5_0')) and
+           adm('t2_1', 'app', prereg=PRIOR) and adm('t2_cs0', 'app', prereg=PRIOR) and adm('u_1', prereg=PRIOR) and
+           adm('c5_0', prereg=dict(PRIOR, sha256='00' * 32)) and adm('pi_r0', prereg=dict(PRIOR, path='C:/kyty/s288/pred/06_s.md'))
+           and adm('pi_w1', prereg=dict(PRIOR, path='C:\\kyty\\s288\\pred\\06b_s.md')) == [] and
+           S.PRIOR_TAGS == ('pi_w1', 'pi_r1', 'pi_w0', 'pi_r0', 'c5_0'))
+'''
+A3 = "ok &= case('G4 a T2 arm admitted against its form:"
+assert t.count(A3) == 1
+t = t.replace(A3, NEWG + A3, 1)
+open(P, 'wb').write(t.encode('ascii'))
+print('patched sha256', hashlib.sha256(t.encode('ascii')).hexdigest())

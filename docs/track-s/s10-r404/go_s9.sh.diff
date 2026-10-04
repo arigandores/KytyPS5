@@ -1,0 +1,20 @@
+--- orig/go_s9.sh
++++ s9/go_s9.sh
+@@ -14,7 +14,7 @@
+ #     u_k            T, form U: the app caches mirrored from s10/empty_app (empty, MANIFEST sha EMPTY_SHA), GLCache NOT
+ #                    restored (copied before, returned after), KYTY_SHADER_SEED_PATH=C:/kyty/s288/s9/seeds
+ #                    KYTY_CACHE_MODE=prepare-cold, binary u (the pinned copy 4aa62e95), the catalogue checked by sha before
+-#   BINARIES: the seal lines "s binary: <sha> <path>" (f3b3aa3b) and "u binary: <sha> <path>" (4aa62e95) of pred/06b_s.md (item 377 (b)).
++#   BINARIES: the seal lines "s binary: <sha> <path>" (f3b3aa3b) and "u binary: <sha> <path>" (4aa62e95) of pred/07_s.md (item 377 (b), item 404 (g)).
+ #   GUARD s10/IN_ARM (item 371 (g), RC1 of S9r): written before INSTALLED=1 / TOUCHED=1 (the tag, the installed sha, man_pre_app,
+ #     man_pre_glc), removed only by a successful do_return; while it exists go_s9.sh refuses rc 1 as with RETURN_FAILED (a hard kill
+ #     of an arm leaves it; the lead returns by hand).  ADMISSION: the installed binary before the arm = INST_WANT (540c035a, FS3,
+@@ -40,7 +40,7 @@
+ VIDGLITCH=C:/kyty/scripts/s51_vidglitch.py
+ S9=$ROOT/s9
+ SC=$S9/sc_s9.py
+-PRED=pred/06b_s.md
++PRED=pred/07_s.md
+ INST_WANT="540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1"
+ RSLEEP=5
+ PLMAX=540

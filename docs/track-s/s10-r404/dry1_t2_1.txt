@@ -1,0 +1,1 @@
+DRY t2_1: level hero_kratos class T mode full form app; install C:/kyty/s288/bin/kyty_emulator_f3b3aa3b.exe (f3b3aa3bef3f0ceadf668d0fc8bd68230ab1e3158d87bbc0b4c66b92a6651ca3); restore app <- C:/kyty/s288/snap0; restore glc <- C:/kyty/s288/snap0_drv; python C:/

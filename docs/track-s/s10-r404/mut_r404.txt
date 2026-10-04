@@ -1,0 +1,50 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s288\s9\sc_s9.py sha256 db65fdc89ba728e1d5e01ac2f393389dc69ef7b9d4e7936a75cfa0347f8fd670
+test    C:\kyty\s288\s9\test_sc_s9.py sha256 2767f044ebb5106c93338dc3f730f7d9e334f57f0c70f3c7cbcd8a67231894be
+mutants C:\kyty\s288\s9\mut_sc_s9.py sha256 59adcb4bde9eb0dc07fdaee5b58df57110f7091951ffed5d08299277357c298d
+mutants: format list, 297 defined (strict: every use of MUTANTS checked; statements evaluated at lines 24)
+selection: --only, 28 mutants
+suite: family V; fast on (168 guarded updates of ok); end of suite: the final exit call at line 1195
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding utf-8 (noted, not emulated)
+fixtures: replay candidates ['mkarm', 'rm_arm', 't2_app', 't2_arm', 't2c', 'u_arm', 'write_log'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 12 (spawn, one process per job), work dir C:\kyty\s288\s10\r404\mutwork\sc_s9_31116_1791091513
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.02 s in the baseline (14 of 130 calls validated; not validated: 110 x a scorer function (expected_env); 6 x it returns a dict (only immutable values are replayed))
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (24.6 s)
+BASELINE#2  SURVIVED  (24.6 s)  [fixture replay validation]
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (51.3 s)
+CONTROL CONTROL_pass_end_of_main  SURVIVED  (50.9 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (51.1 s)
+pred  KILLED by test line 303  (0.0 s)
+ad_prereg  KILLED by test line 590  (0.1 s)
+ad_prepath  KILLED by test line 590  (0.1 s)
+id_none  KILLED by FAIL  (19.9 s)
+id_f0  KILLED by FAIL  (19.7 s)
+id_rows_gt  KILLED by FAIL  (20.2 s)
+id_lines_gt  KILLED by FAIL  (19.9 s)
+id_lines_none  KILLED (crash: TypeError: '>=' not supported between instances of 'NoneType' and 'int' [sc_s9.py:313])  (21.2 s)
+id_sk_k  KILLED by FAIL  (19.9 s)
+id_hi_k  KILLED by FAIL  (20.2 s)
+id_nof  KILLED by test line 841  (21.4 s)
+id_under_all  KILLED by test line 853  (22.1 s)
+id_under_dom  KILLED by test line 853  (20.7 s)
+id_under_le  KILLED by test line 853  (20.7 s)
+id_t1_eq  KILLED by FAIL  (20.0 s)
+id_t6_eq  KILLED by FAIL  (20.3 s)
+id_t1_name  KILLED by FAIL  (20.0 s)
+id_t6_name  KILLED by FAIL  (19.2 s)
+id_data_ok  KILLED by test line 620  (0.5 s)
+id_data_drop  KILLED by PASS  (19.1 s)
+id_call  KILLED by FAIL  (18.8 s)
+pr_tags  KILLED by test line 600  (0.1 s)
+pr_tags_c5  KILLED by test line 600  (0.1 s)
+pr_sha  KILLED by test line 600  (0.1 s)
+pr_path  KILLED by test line 600  (0.1 s)
+pr_shachk  KILLED by test line 600  (0.1 s)
+pr_slash  KILLED by test line 600  (0.1 s)
+pr_or  KILLED by test line 600  (0.1 s)
+28 mutants: 28 killed (1 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+controls: 3 of 3 survived
+early exit: 27 kill(s) ended at their first failing case; they skipped a median 35 % / mean 45 % of the suite's 177 checks, about 19.8 s of the baseline's suite time per job (533 s in all)
+wall 76.8 s, worker time 547.1 s, 12 workers
+ALL KILLED (28 of 28 selected mutants killed; 297 defined in the mutant script)

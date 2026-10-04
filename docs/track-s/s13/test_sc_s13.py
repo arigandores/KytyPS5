@@ -3,6 +3,12 @@
 S13a2 (item 428): KYTY_S_PCW=1 named on every arm (absent / 0 / FORCE_MS / KYTY_FIX_* FAIL), every S-pcw: line against the env
 of the arm (a line other than the env FAILS, a line = an env of 0 passes that row), the field "entered" and the word
 KNOWN_SCENES_ENTERED at every edge (Q1-Q13).
+S13a3 (item 436 (b)): RC1 - the E1 domain by the letter (every row after the first scene frame to the end of the hold; a scene
+change does not cut it; < 120 s presented without a death marker -> UNDETERMINED; the reference of Red Team beside: R1-R12);
+RC2 - the admission gate before the run / by the log (S1-S10); RC3 - entry_state void on a failing admission or identity row
+(T1-T4); RC4 - 'no' only after both lines of the end of the preparation screen and a guest frame (T5-T10); RC6 - the line
+"edition: base pred/12_s.md sha256 <sha>" (E6-E6g); RC7 - the line man_launch_glc (S11).  Every synthetic U arm of a level other
+than Sky Garden is padded by 1 213 rows of 99 000 us (120.087 s) after its post rows (scene(pad=...)).
 One case per term and per edge of the new code: the inheritance check; the arms of S13b (order, levels, classes, modes, the chain
 of the collection sources, holds, video, validation); the environment of every arm kind with the family / strict rows; the plan
 lines; the seal line "installed:" (PENDING, named, malformed, repeated) and the edition 11b (S9r2 observation 3); scan_y (the
@@ -116,9 +122,16 @@ HEADER_T = HEAD0 + [QUEUED(100), GFX(300, 'precache'), CSL(300)] + PREP_LINES
 HEADER_M = HEAD0 + [QUEUED(100)] + PREP_LINES
 
 
-def scene(level, post, header=(), pre_entry=(), tail=(), first=None, loading=()):
+PAD = [(99000, {})] * 1213          # 120.087 s presented, every row below 100 ms (item 436 (b)(1): the domain >= 120 s)
+
+
+def scene(level, post, header=(), pre_entry=(), tail=(), first=None, loading=(), pad=None):
     """header, boot rows 1-3, start '', rows 4-5, the entry line, loading row 6 (draws 20), the first scene frame 7, then post
-    rows 8...; a row is (dt, dict(cg, skip, held, ev, draws))."""
+    rows 8...; a row is (dt, dict(cg, skip, held, ev, draws)); pad (default: every level but Sky Garden) appends PAD after the
+    post rows."""
+    if pad is None:
+        pad = level != 'underwater_aerial_garden'
+    post = list(post) + (PAD if pad else [])
     out = list(header)
     for n in range(1, 4):
         out += [FT(n, 20000, 5), FX(n)]
@@ -323,13 +336,37 @@ ok &= case('E4 no seal file -> None', S.seal_installed((BASE / 'pred' / 'none.md
 sb, sbb = BASE / 'pred' / 'e09.md', BASE / 'pred' / 'e09b.md'
 S.SEAL_BASE, S.SEAL_B = sb.as_posix(), sbb.as_posix()
 sb.write_text('seal: %s s13/sc_s13.py\ninstalled: PENDING\ngo_s13 call: x\n' % ('0' * 64), encoding='ascii')
-ok &= case('E5 current_seal: 11 while 11b is absent; edition rows empty', S.current_seal() == sb.as_posix() and
+ok &= case('E5 current_seal: 12 while 12b is absent; edition rows empty', S.current_seal() == sb.as_posix() and
            S.edition_rows() == [])
-sbb.write_text('seal: %s s13/sc_s13.py\nedition: 11b by item 999\ninstalled: %s %s %s\ngo_s13 call: x\n' % ('0' * 64, INST, SIG, VAR),
-               encoding='ascii')
-er = S.edition_rows()
-ok &= case('E6 the edition 11b exists: current_seal = 11b; the same lines but installed / edition, 11 PENDING, 11b named -> ok',
-           S.current_seal() == sbb.as_posix() and len(er) == 2 and all(x[1] for x in er))
+SBSHA = hashlib.sha256(sb.read_bytes()).hexdigest()
+EDL = 'edition: base pred/12_s.md sha256 %s' % SBSHA
+
+
+def ed_write(*mid):
+    sbb.write_text(''.join(x + NL for x in ['seal: %s s13/sc_s13.py' % ('0' * 64)] + list(mid) +
+                           ['installed: %s %s %s' % (INST, SIG, VAR), 'go_s13 call: x']), encoding='ascii')
+    return S.edition_rows()
+
+
+er = ed_write(EDL)
+ok &= case('E6 the edition 12b exists: current_seal = 12b; the same lines but installed / edition, 12 PENDING, 12b named, one '
+           'line "edition: base pred/12_s.md sha256 <sha of 12>" -> ok', S.current_seal() == sbb.as_posix() and len(er) == 4 and
+           all(x[1] for x in er))
+er = ed_write()
+ok &= case('E6b RC6: no line "edition:" in 12b -> the edition row FAILS (only it)', [x[1] for x in er] == [True, True, True, False])
+er = ed_write(EDL, EDL)
+ok &= case('E6c RC6: two lines "edition:" (even equal) -> the edition row FAILS', [x[1] for x in er] == [True, True, True, False])
+er = ed_write('edition: base pred/12_s.md sha256 %s' % ('f' + SBSHA[1:] if SBSHA[0] != 'f' else 'e' + SBSHA[1:]))
+ok &= case('E6d RC6: the sha of the line is not the sha of the seal 12 -> FAILS', [x[1] for x in er] == [True, True, True, False])
+er = ed_write('edition: base pred/11_s.md sha256 %s' % SBSHA)
+ok &= case('E6e RC6: the line names another seal file -> FAILS', [x[1] for x in er] == [True, True, True, False])
+er = ed_write('edition: base pred/12_s.md sha256 %s ' % SBSHA)
+ok &= case('E6f RC6: the line with a trailing blank (not the form) -> FAILS', [x[1] for x in er] == [True, True, True, False])
+sb.write_text('seal: %s s13/sc_s13.py\nedition: base pred/12_s.md sha256 %s\ninstalled: PENDING\ngo_s13 call: x\n' % (
+    '0' * 64, SBSHA), encoding='ascii')
+er = ed_write('edition: base pred/12_s.md sha256 %s' % hashlib.sha256(sb.read_bytes()).hexdigest())
+ok &= case('E6g the seal 12 itself carries a line "edition:" -> that row FAILS', [x[1] for x in er] == [True, True, False, True])
+sb.write_text('seal: %s s13/sc_s13.py\ninstalled: PENDING\ngo_s13 call: x\n' % ('0' * 64), encoding='ascii')
 sbb.write_text('seal: %s s13/sc_s13.py\ninstalled: %s %s %s\ngo_s13 call: x\nextra\n' % ('0' * 64, INST, SIG, VAR), encoding='ascii')
 ok &= case('E7 11b with an extra line -> the line row FAILS', not S.edition_rows()[0][1])
 sbb.write_text('go_s13 call: x\nseal: %s s13/sc_s13.py\ninstalled: %s %s %s\n' % ('0' * 64, INST, SIG, VAR), encoding='ascii')
@@ -341,8 +378,8 @@ sbb.write_text('seal: %s s13/sc_s13.py\ninstalled: %s %s %s\ngo_s13 call: x\n' %
 ok &= case('E10 11 not PENDING -> the installed row FAILS', not S.edition_rows()[1][1])
 sbb.unlink()
 sb.unlink()
-ok &= case('E11 edition rows with 11b but no 11 -> one failing row', (sbb.write_text('x\n') or True) and
-           S.edition_rows() == [('edition 11b: the seal 11 exists', False, sb.as_posix())])
+ok &= case('E11 edition rows with 12b but no 12 -> one failing row', (sbb.write_text('x\n') or True) and
+           S.edition_rows() == [('edition 12b: the seal 12 exists', False, sb.as_posix())])
 sbb.unlink()
 # check_seal on a fixture root
 CR = BASE / 'cs'
@@ -362,9 +399,9 @@ seal_lines = ['seal: %s %s' % (sha_p(n if n.startswith('C:/') else CR / n), n) f
 GAMEF = BASE / 'game.exe'
 GAMEF.write_bytes(b'installed build')
 GSHA = sha_p(GAMEF)
-cs = CR / 'pred' / '11_s.md'
+cs = CR / 'pred' / '12_s.md'
 cs.parent.mkdir(parents=True, exist_ok=True)
-S.SEAL_BASE, S.SEAL_B = cs.as_posix(), (CR / 'pred' / '11b_s.md').as_posix()
+S.SEAL_BASE, S.SEAL_B = cs.as_posix(), (CR / 'pred' / '12b_s.md').as_posix()
 cs.write_text(NL.join(seal_lines + ['installed: PENDING']) + NL, encoding='ascii')
 good, rows, inst = S.check_seal(cs.as_posix(), CR.as_posix(), (CR / 's13' / 'sc_s13.py').as_posix(), GAMEF.as_posix())
 ok &= case('F1 check_seal: every sealed file, this scorer, "installed: PENDING" -> PASS (no binary row while PENDING)', good and
@@ -376,11 +413,13 @@ cs.write_text(NL.join(seal_lines) + NL, encoding='ascii')
 ok &= case('F3 no line "installed:" -> FAIL (S9r2 observation 3)', not S.check_seal(cs.as_posix(), CR.as_posix(),
                                                                                    (CR / 's13' / 'sc_s13.py').as_posix())[0])
 cs.write_text(NL.join(seal_lines + ['installed: PENDING']) + NL, encoding='ascii')
-(CR / 'pred' / '11b_s.md').write_text(NL.join(seal_lines + ['installed: %s %s %s' % (GSHA, SIG, VAR)]) + NL, encoding='ascii')
+(CR / 'pred' / '12b_s.md').write_text(NL.join(seal_lines + ['installed: %s %s %s' % (GSHA, SIG, VAR), 'edition: base pred/12_s.md '
+                                                             'sha256 %s' % sha_p(cs)]) + NL, encoding='ascii')
 good, rows, inst = S.check_seal(None, CR.as_posix(), (CR / 's13' / 'sc_s13.py').as_posix(), GAMEF.as_posix())
-ok &= case('F4 the edition 11b in force: check_seal reads it, its edition rows pass, the installed binary now = its line -> PASS',
-           good and inst[0] == GSHA and any(r[0].startswith('the installed binary now') and r[1] for r in rows) and
-           any(r[0].startswith('edition 11b') for r in rows))
+ok &= case('F4 the edition 12b in force: check_seal reads it, its edition rows pass (4, the line "edition:" among them), the '
+           'installed binary now = its line -> PASS', good and inst[0] == GSHA and
+           any(r[0].startswith('the installed binary now') and r[1] for r in rows) and
+           sum(1 for r in rows if r[0].startswith('edition 12b') and r[1]) == 4)
 GAMEF.write_bytes(b'another build')
 ok &= case('F5 the installed binary now != the line "installed:" -> FAIL', not S.check_seal(
     None, CR.as_posix(), (CR / 's13' / 'sc_s13.py').as_posix(), GAMEF.as_posix())[0])
@@ -393,8 +432,8 @@ shutil.copy2(SRC, CR / 's13' / 'sc_s13.py')
 good, rows, inst = S.check_seal(None, CR.as_posix(), (BASE / 'other_scorer.py').as_posix(), GAMEF.as_posix())
 ok &= case('F6b the running scorer is not the sealed s13/sc_s13.py (the sealed files unchanged) -> FAIL on that row only',
            not good and [r[0] for r in rows if not r[1]] == ['this scorer in the seal'])
-(CR / 'pred' / '11b_s.md').unlink()
-S.SEAL_BASE, S.SEAL_B = (BASE / 'pred' / '11_s.md').as_posix(), PRED
+(CR / 'pred' / '12b_s.md').unlink()
+S.SEAL_BASE, S.SEAL_B = (BASE / 'pred' / '12_s.md').as_posix(), PRED
 ok &= case('F7 the sealed names cover the harness, the scorer, both suites, the mutants, the export and its suite, the list '
            'and its output, the inherited scorers, the tool, the video detector',
            all(n in S.SEALED_NAMES for n in ('s13/go_s13.sh', 's13/sc_s13.py', 's13/test_sc_s13.py', 's13/test_go_s13.py',
@@ -694,6 +733,140 @@ r = make_arm('u_01', scene(UL, post_rows(), header=HEADER_T))
 Path(ROOT, 'log_u_01.txt').unlink()
 r = S.score_arm('u_01', ROOT, PRED_SHA, PRED, INSTT)
 ok &= case('K36 no log -> fail "no log", undetermined', r['fail'] == ['no log'] and S.arm_word(S.members_u(r)) == 'UNDETERMINED')
+# ================================================================================ RC1 (item 436 (b)(1)): the E1 domain
+CHG = (16000, dict(ev=[START('hub_crashsite')]))
+r = make_arm('u_01', scene(UL, PAD + [CHG] + [(16000, dict(skip=1, held=1, ev=[SKIP(1222)]))] + post_rows(), header=HEADER_T,
+                           pad=False))
+mu, rm = S.members_u(r), S.ref_members(r)
+ok &= case('R1 RC1 the letter: a scene change (hub_crashsite) after 120.087 s and a skipped draw + a held flip after it -> '
+           'E1-skip and E1-held FAIL by the letter (the arm FAIL); the reference (to the scene change, >= 120 s) PASSES',
+           r['fail'] == [] and W('E1-skip', mu) is False and W('E1-held', mu) is False and S.arm_word(mu) == 'FAIL' and
+           [m[1] for m in rm] == [True, True, True] and [x[1] for x in r['dom']['changes']] == ['hub_crashsite'] and
+           r['dom']['ref_shown_us'] == 1213 * 99000 and r['dom']['ref_rows'] == 1213 and r['dom']['cause'] == 'hold')
+sp1 = r['split']
+ok &= case('R2 RC1 the data before / after the first scene change: before 1 213 rows, 0 skips, 0 held; after: rows with a skip 1, '
+           'skipped-draw lines 1, held flips 1, attributed 0', sp1['before'] == dict(rows=1213, skip_rows=0, skip_lines=0, held=0,
+                                                                                     attr100=0) and
+           sp1['after'] == dict(rows=2 + 10, skip_rows=1, skip_lines=1, held=1, attr100=0))
+fa = S.fmt_arm(r)
+ok &= case('R3 RC1 the print: the end of the domain and its cause, the scene change with its name, row and log line, the rows and '
+           'the presented time, before / after, the reference; the reference members line',
+           any(x.startswith('  domain: end row %d (cause: hold), rows %d, presented ' % (len(PAD) + 6 + 1 + 12, len(PAD) + 12)) and
+               'scene changes inside: hub_crashsite (row 1220, log line ' in x and 'before the first scene change: rows 1213' in x and
+               'after it: rows 12, rows with a skip 1' in x and 'reference to the first scene change: rows 1213, presented 120.087 s'
+               in x for x in fa) and any(x.startswith('  reference of Red Team (item 436 (b)(1), no decision): E1-skip ok')
+                                         for x in fa))
+r = make_arm('u_01', scene(UL, post_rows(3) + [CHG] + [(16000, dict(skip=1, held=1, ev=[SKIP(12)]))] + PAD, header=HEADER_T,
+                           pad=False))
+mu, rm = S.members_u(r), S.ref_members(r)
+ok &= case('R4 RC1 the probe P3 of S13r: a scene change after 3 rows and a skip + held after it -> the letter FAILS (E1-skip, '
+           'E1-held); the reference UNDETERMINED (its domain 0.048 s < 120 s)', W('E1-skip', mu) is False and
+           W('E1-held', mu) is False and [m[1] for m in rm] == [None, None, None] and
+           'the reference domain presents 0.048 s < 120 s' in rm[0][2])
+r = make_arm('u_01', scene(UL, [(16000, dict(skip=1, held=1, ev=[SKIP(8)]))] + post_rows(), header=HEADER_T, pad=False))
+mu = S.members_u(r)
+ok &= case('R5 RC1 the minimum: no scene change, the domain 0.176 s < 120 s without a death marker, a skip in it -> E1 '
+           'UNDETERMINED (not FAIL), the arm UNDETERMINED', [W(m, mu) for m in ('E1-skip', 'E1-held', 'E1-attr')] ==
+           [None, None, None] and 'the domain presents 0.176 s < 120 s without a death marker' in mu[1][2] and
+           S.arm_word(mu) == 'UNDETERMINED')
+r = make_arm('u_01', scene(UL, [(99000, {})] * 1212 + [(12000, {})], header=HEADER_T, pad=False))
+mu = S.members_u(r)
+ok &= case('R6 RC1 the edge: the domain presents exactly 120 000 000 us -> determined (E1 ok, the arm PASS)',
+           r['dom']['shown_us'] == 120000000 and [W(m, mu) for m in ('E1-skip', 'E1-held', 'E1-attr')] == [True, True, True])
+r = make_arm('u_01', scene(UL, [(99000, {})] * 1212 + [(11999, {})], header=HEADER_T, pad=False))
+mu = S.members_u(r)
+ok &= case('R7 RC1 the edge: 119 999 999 us -> E1 UNDETERMINED', r['dom']['shown_us'] == 119999999 and
+           [W(m, mu) for m in ('E1-skip', 'E1-held', 'E1-attr')] == [None, None, None])
+r = make_arm('u_01', scene(UL, [(16000, dict(skip=1, held=1, ev=[SKIP(8)]))] + post_rows(), header=HEADER_T, pad=False,
+                           tail=['Unhandled exception: x']))
+mu = S.members_u(r)
+ok &= case('R8 RC1 a domain < 120 s WITH a death marker -> E1 read (E1-skip FAILS), E3-death FAILS', W('E1-skip', mu) is False and
+           W('E3-death', mu) is False)
+r = make_arm('u_01', scene(UL, [(16000, dict(skip=1, held=1, ev=[SKIP(8)]))] + post_rows(), header=HEADER_T))
+mu, rm = S.members_u(r), S.ref_members(r)
+ok &= case('R9 RC1 no scene change -> both readings equal (a skip: both FAIL; the clean arm: both ok); the reference end = the end',
+           [W(m, mu) for m in ('E1-skip', 'E1-held', 'E1-attr')] == [m[1] for m in rm] == [False, False, True] and
+           r['dom']['changes'] == [] and r['dom']['ref_end'] == r['dom']['end'] and
+           [W(m, S.members_u(clean)) for m in ('E1-skip', 'E1-held', 'E1-attr')] == [m[1] for m in S.ref_members(clean)])
+r = make_arm('u_01', scene(UL, post_rows(), header=HEADER_T), js=js_for('u_01', attempt=dict(outcome='timeout')))
+ok &= case('R10 RC1 the cause of the end: the attempt ended by its hold -> "hold" (clean); otherwise -> "end of log"',
+           clean['dom']['cause'] == 'hold' and r['dom']['cause'] == 'end of log')
+r = make_arm('u_01', scene(UL, PAD + [CHG] + [(150000, dict(ev=[SH(5, 120000, 0)]))] + post_rows(), header=HEADER_T, pad=False))
+mu, rm = S.members_u(r), S.ref_members(r)
+ok &= case('R11 RC1 a SHADER frame of 150 ms after the scene change -> E1-attr FAILS by the letter (after: attributed 1), the '
+           'reference ok', W('E1-attr', mu) is False and r['split']['after']['attr100'] == 1 and
+           r['split']['before']['attr100'] == 0 and W('E1-attr', rm) is True)
+R1ARM = r
+r = make_arm('u_01', scene(UL, PAD + [CHG] + [(150000, dict(skip=1, held=1, ev=[SKIP(1222)]))] + post_rows(), header=HEADER_T,
+                           pad=False))
+ok &= case('R11b RC1 a held series of 150 ms (gap 166 ms) after the scene change -> attributed after it 1 (the series), before 0; '
+           'E1-attr FAILS by the letter, the reference ok', r['split']['after']['attr100'] == 1 and
+           r['split']['before']['attr100'] == 0 and W('E1-attr', S.members_u(r)) is False and
+           W('E1-attr', S.ref_members(r)) is True)
+# ================================================================================ RC2 (item 436 (b)(2)): the admission gate
+r = make_arm('u_01', scene(UL, post_rows(), header=HEADER_T, tail=['Unhandled exception: x']), js=js_for('u_01',
+                                                                                                         binary_sha256='cd' * 32))
+mu = S.members_u(r)
+ok &= case('S1 RC2 the probe P2 of S13r: an admission row before the run FAILS (arm binary) with a death marker -> every member '
+           'UNDETERMINED, E3-death among them (data "FAILS" beside), the arm UNDETERMINED, the gate "pre"',
+           S.admission_gate(r)[0] == 'pre' and all(m[1] is None for m in mu) and
+           'data: FAILS' in dict((m[0], m[2]) for m in mu)['E3-death'] and S.arm_word(mu) == 'UNDETERMINED' and
+           'data: ok' in dict((m[0], m[2]) for m in mu)['E1-skip'])
+r = make_arm('w13', scene(WL if 'WL' in dir() else 'underwater_aerial_garden', [(100000000, {})] * 3, header=HEADER_M,
+                          tail=['[Vulkan][E][2] error', '[Vulkan][W][2] n']),
+             js=js_for('w13', env_over=dict(KYTY_GPU_MARKERS='1')), video=False, sheet=False,
+             stdout=['Cache test mode: prepare-cold'])
+mw = S.members_w(r)
+ok &= case('S2 RC2 w13 with an environment row before the run FAILING and a [Vulkan][E] -> every W member UNDETERMINED (no FAIL)',
+           S.admission_gate(r)[0] == 'pre' and all(m[1] is None for m in mw) and S.arm_word(mw) == 'UNDETERMINED')
+r = make_arm('u_01', [x.replace(SIG, SIG.replace('fixf10', 'fixf11')) for x in
+                      scene(UL, post_rows(), header=HEADER_T, tail=['Unhandled exception: x'])])
+mu = S.members_u(r)
+ok &= case('S3 RC2 a row by the log present and not the form (the compatibility line of another signature) with a death marker -> '
+           'every member UNDETERMINED (gate "differs")', S.admission_gate(r)[0] == 'differs' and all(m[1] is None for m in mu))
+r = make_arm('u_01', [x for x in scene(UL, post_rows(), header=HEADER_T, tail=['Unhandled exception: x'])
+                      if not x.startswith('S-pcw:')])
+mu = S.members_u(r)
+ok &= case('S4 RC2 a row by the log MISSING (no S-pcw: line) with a death marker -> E3-death counted (FAILS), the rest '
+           'UNDETERMINED, the arm FAIL (a real crash of the form is not undetermined)', S.admission_gate(r)[0] == 'missing' and
+           W('E3-death', mu) is False and all(m[1] is None for m in mu if m[0] != 'E3-death') and S.arm_word(mu) == 'FAIL')
+r = make_arm('u_01', [x for x in scene(UL, post_rows(), header=HEADER_T) if not x.startswith('ShaderSeed: compatibility=')])
+mu = S.members_u(r)
+ok &= case('S5 RC2 a row by the log missing (no compatibility line) WITHOUT a death marker -> every member UNDETERMINED (variant '
+           'of the executor)', S.admission_gate(r)[0] == 'missing' and all(m[1] is None for m in mu) and
+           S.arm_word(mu) == 'UNDETERMINED')
+r = make_arm('u_01', scene(UL, post_rows(), header=HEADER_T, tail=['Window 1 minimized', 'Unhandled exception: x']))
+mu = S.members_u(r)
+ok &= case('S6 RC2 a window event (an interference, item 273 (z)) with a death marker -> every member UNDETERMINED',
+           S.admission_gate(r)[0] == 'differs' and all(m[1] is None for m in mu))
+r = make_arm('w13', [x for x in scene('underwater_aerial_garden', [(100000000, {})] * 3, header=HEADER_M,
+                                      tail=['[Vulkan][W][2] n', 'Unhandled exception: y'])
+                     if not x.startswith('Shader translation cache:')], video=False, sheet=False,
+             stdout=['Cache test mode: prepare-cold'])
+mw = S.members_w(r)
+ok &= case('S7 RC2 w13 with the translation cache line missing and a death marker -> E3-death FAILS, the rest UNDETERMINED, '
+           'the arm FAIL', S.admission_gate(r)[0] == 'missing' and W('E3-death', mw) is False and
+           all(m[1] is None for m in mw if m[0] != 'E3-death') and S.arm_word(mw) == 'FAIL')
+r = make_arm('u_01', [x for x in scene(UL, post_rows(), header=HEADER_T) if not x.startswith('S-pcw:')],
+             js=js_for('u_01', binary_sha256='cd' * 32))
+ok &= case('S8 RC2 the order of the gate: a row before the run FAILS and a row by the log missing -> "pre"',
+           S.admission_gate(r)[0] == 'pre')
+fa = S.fmt_arm(clean)
+ok &= case('S9 RC2 the split: 5 rows by the log (S-pcw, GamePatch, compatibility, variant, window), the rest before the run; '
+           'fmt_arm names each row "before the run" / "by the log" and prints the gate "ok"', len(clean['log_rows']) == 5 and
+           clean['n_pre'] == len(clean['admit']) - 5 and sum(1 for x in fa if ' admit by the log ' in x) == 5 and
+           sum(1 for x in fa if ' admit before the run ' in x) == clean['n_pre'] and
+           '  admission gate (item 436 (b)(2)): ok' in fa and all(v == 'ok' for v in clean['log_rows'].values()))
+r = make_arm('u_01', scene(UL, post_rows(), header=HEADER_T, tail=['GamePatch: applied']))
+ok &= case('S10 RC2 a GamePatch: line -> by the log "differs" (every member UNDETERMINED)', S.admission_gate(r)[0] == 'differs' and
+           all(m[1] is None for m in S.members_u(r)))
+cjg = cj_for('u_01', man_launch_glc=dict(sha='18' * 32), man_pre_glc=dict(sha='18' * 32))
+r = make_arm('u_01', scene(UL, post_rows(), header=HEADER_T), cj=cjg)
+ok &= case('S11 RC7 the sha of man_launch_glc printed per arm (fmt_arm) - a data line (not man_post_glc)', r['glc_launch'] == '18' * 32
+           and any(x == '  GLCache at the launch man_launch_glc sha256 %s (item 436 (b)(7))' % ('18' * 32) for x in S.fmt_arm(r)))
+r = make_arm('u_01', [x for x in scene(UL, post_rows(), header=HEADER_T) if not x.startswith('ShaderSeed: installed')])
+ok &= case('S12 the catalogue not installed: the E1 members undetermined (not read), the gate row undetermined',
+           [W(m, S.members_u(r)) for m in ('catalogue installed (gates)', 'E1-skip', 'E1-held', 'E1-attr')] == [None] * 4)
 # S-early: distinct events, the print
 e = dict(events=[dict(kind='frame', n=8, cost=500, cost_prep=100, lead=50), dict(kind='series', n=8, cost=900, cost_prep=900,
                                                                                  lead=None),
@@ -752,6 +925,16 @@ ok &= case('M12 W with the catalogue installed but an admission row failing (a w
            'entered" undetermined, the arm UNDETERMINED', W('W admitted and entered', S.members_w(r)) is None and
            S.arm_word(S.members_w(r)) == 'UNDETERMINED')
 ok &= case('M10 W not made -> UNDETERMINED', S.arm_word(S.members_w(None)) == 'UNDETERMINED')
+r = make_arm('w13', scene(WL, wpost, header=WH, tail=['[Vulkan][W][2] note', 'x FrameTrace: n=999 torn']), video=False,
+             sheet=False, stdout=['Cache test mode: prepare-cold'])
+ok &= case('M13 W admitted, entered, an identity row FAILS (a torn FrameTrace row) -> the row "W admitted and entered" '
+           'undetermined (the admission gate is "ok": RC2 does not cover identity)', S.admission_gate(r)[0] == 'ok' and
+           any(f.startswith('identity: torn') for f in r['fail']) and W('W admitted and entered', S.members_w(r)) is None)
+r = make_arm('w13', scene(WL, [(100000000, dict(draws=5))] * 3, header=WH, first=(15000, dict(draws=5)),
+                          tail=['[Vulkan][W][2] note']), video=False, sheet=False, stdout=['Cache test mode: prepare-cold'])
+ok &= case('M14 W entered without a first scene frame (admitted) -> ">= 300 s presented" undetermined, not FAIL',
+           r['entered'] and r['first'] is None and S.admission_gate(r)[0] == 'ok' and
+           W('W >= 300 s presented after the first scene frame', S.members_w(r)) is None)
 make_arm('w13', scene(WL, wpost, header=WH, tail=['[Vulkan][W][2] n']), video=False, sheet=False,
          stdout=['Cache test mode: prepare-cold'])
 Path(ROOT, 'log_w13.txt').unlink()
@@ -784,6 +967,18 @@ word, out = S.read_known(get_of())
 ok &= case('N1 19 clean U arms and a clean W -> KNOWN_SCENES PASS, (e)(1) PASS 19 of 19, (e)(3) PASS', word == 'PASS' and
            any(x.startswith('(e)(1) alone') and 'PASS; PASS 19 of 19' in x for x in out) and
            any(x.startswith('(e)(3) alone') and ': PASS;' in x for x in out))
+ok &= case('R12 RC1 / RC7 in the reading: per U arm a domain line with the reference word, a GLCache line man_launch_glc; the w13 '
+           'domain and GLCache lines; the REFERENCE word of (e)(1) (PASS 19 of 19 on clean arms)',
+           sum(1 for x in out if x.startswith('u_') and ' domain (item 436 (b)(1)): end row ' in x and
+               'reference (Red Team, to the scene change, no decision): (e)(1) PASS' in x) == 19 and
+           sum(1 for x in out if x.startswith('u_') and ' GLCache at the launch man_launch_glc sha256 ' + '12' * 32 in x) == 19 and
+           any(x.startswith('w13 domain (item 436 (b)(1), data; w13 carries no E1 member): end row ') for x in out) and
+           any(x.startswith('w13 GLCache at the launch man_launch_glc sha256 ') for x in out) and
+           any(x.startswith('(e)(1) REFERENCE of Red Team') and ': PASS; PASS 19 / FAIL 0 / UNDETERMINED 0 of 19' in x for x in out))
+word, out = S.read_known(get_of({'u_07': R1ARM}))
+ok &= case('R13 RC1 a scene change with a SHADER frame after it in u_07 -> KNOWN_SCENES FAIL by the letter; the REFERENCE word '
+           'PASS (printed beside, no decision)', word == 'FAIL' and
+           any(x.startswith('(e)(1) REFERENCE of Red Team') and ': PASS; PASS 19 / FAIL 0' in x for x in out))
 bad = copy.deepcopy(UCLEAN)
 bad['after']['held'] = 1
 word, out = S.read_known(get_of({'u_07': bad}))
@@ -827,7 +1022,8 @@ ok &= case('N10 E1-attr with the attribution undetermined (att100 None) on an ad
            W('E1-attr', S.members_u(r3)) is None and S.arm_word(S.members_u(r3)) == 'UNDETERMINED')
 # ================================================================================ entry (item 428 (g), V7)
 def rec(**over):
-    d = dict(entered=False, window={}, marks=[], ended=False, exited=False)
+    d = dict(entered=False, window={}, marks=[], ended=False, exited=False, fail=[],
+             prep_end=dict(ready_line=3, created_line=2, nopb_line=None, later=3, rows_after=5))
     d.update(over)
     return d
 
@@ -835,20 +1031,22 @@ def rec(**over):
 ok &= case('Q1 entry_state: not made -> void; the entry line -> yes; no log (no window field) -> void; a clean attempt without '
            'the line -> no', S.entry_state(None)[0] == 'void' and S.entry_state(rec(entered=True))[0] == 'yes' and
            S.entry_state(dict(entered=False, marks=[], ended=False, exited=False))[0] == 'void' and
-           S.entry_state(rec()) == ('no', 'no entry line in a clean attempt'))
+           S.entry_state(rec()) == ('no', 'no entry line in a clean attempt after the preparation screen'))
 ok &= case('Q2 entry_state without the line: a death marker / hold_exit (ended) / exited / minimized / Recovering -> void; '
            'restored only -> no; the entry line with a death marker -> yes',
            S.entry_state(rec(marks=[dict(kind='crash')]))[0] == 'void' and S.entry_state(rec(ended=True))[0] == 'void' and
            S.entry_state(rec(exited=True))[0] == 'void' and S.entry_state(rec(window={'minimized': 1}))[0] == 'void' and
            S.entry_state(rec(window={'recover': 1}))[0] == 'void' and S.entry_state(rec(window={'restored': 2}))[0] == 'no' and
            S.entry_state(rec(entered=True, marks=[dict(kind='crash')]))[0] == 'yes')
+(Path(ROOT) / 'runs_s').mkdir(parents=True, exist_ok=True)
+(Path(ROOT) / 'runs_s' / 'k_03.cache.json').write_text(json.dumps(cj_for('k_03')), encoding='utf-8')   # the source of k_04
 rk = make_arm('k_04', scene('other_level', post_rows(), header=HEADER_M), video=False, sheet=False,
               stdout=['Cache test mode: none'])
 ru = make_arm('u_04', scene('other_level', post_rows(), header=HEADER_T))
 ok &= case('Q3 whole arms not entering ps_logo (k_04 class M, u_04 class T, clean) -> entry no on both; fmt_arm prints the field',
            S.entry_state(rk)[0] == 'no' and S.entry_state(ru)[0] == 'no' and not rk['entered'] and
-           any(x.startswith('  entered (item 428 (g)): no (') for x in S.fmt_arm(ru)) and
-           any(x.startswith('  entered (item 428 (g)): yes (') for x in S.fmt_arm(clean)))
+           any(x.startswith('  entered (item 428 (g), item 436 (b)(3)-(4)): no (') for x in S.fmt_arm(ru)) and
+           any(x.startswith('  entered (item 428 (g), item 436 (b)(3)-(4)): yes (') for x in S.fmt_arm(clean)))
 UNO = copy.deepcopy(UCLEAN)
 UNO['entered'] = False
 ne = S.not_enterable(get_of({'k_04': rec(), 'u_04': UNO}))
@@ -903,6 +1101,70 @@ ok &= case('Q12 entered_word: a denominator 0 with w13 PASS -> UNDETERMINED; an 
 word, out = S.read_known(get_of())
 ok &= case('Q13 19 clean U arms and a clean W -> KNOWN_SCENES PASS and KNOWN_SCENES_ENTERED PASS on 19, list none',
            word == 'PASS' and ': PASS - denominator 19 of 19' in ent_line(out)[0] and ent_line(out)[0].endswith('lvl: none'))
+# ================================================================================ RC3, RC4 (item 436 (b)(3), (4))
+ok &= case('T0 the reason order: a record without a log (no window field, no fail rows) -> void "no log" before the RC3 / RC4 '
+           'reasons', S.entry_state(dict(entered=False, marks=[], ended=False, exited=False)) == ('void', 'no log'))
+ok &= case('T1 RC3 entry_state: an otherwise clean attempt without the line but with a failing admission row -> void; a failing '
+           'identity row -> void; an entered arm with a failing row -> void (item 434 (b))',
+           S.entry_state(rec(fail=['admission: arm binary = x']))[0] == 'void' and
+           'item 434 (b)' in S.entry_state(rec(fail=['admission: arm binary = x']))[1] and
+           S.entry_state(rec(fail=['identity: T-1 x']))[0] == 'void' and
+           S.entry_state(rec(entered=True, fail=['admission: x']))[0] == 'void')
+ru_bad = make_arm('u_04', scene('other_level', post_rows(), header=HEADER_T), js=js_for('u_04', binary_sha256='cd' * 32))
+ne = S.not_enterable(get_of({'k_04': rk, 'u_04': ru_bad}))
+ok &= case('T2 RC3 the probe P1 of S13r: both arms of ps_logo without the entry line, u_04 with a failing admission row (another '
+           'binary) -> u_04 void, ps_logo IN the denominator', S.entry_state(rk)[0] == 'no' and S.entry_state(ru_bad)[0] == 'void'
+           and ne[3][3] is False)
+ne = S.not_enterable(get_of({'k_04': rk, 'u_04': ru}))
+ok &= case('T3 RC3 both arms without the entry line, both admitted (whole arms) -> "not enterable" (ps_logo out of the '
+           'denominator)', rk['fail'] == [] and ru['fail'] == [] and ne[3][3] is True)
+rk_bad = make_arm('k_04', [x.replace(SIG, SIG.replace('fixf10', 'fixf11')) for x in scene('other_level', post_rows(),
+                                                                                         header=HEADER_M)],
+                  video=False, sheet=False, stdout=['Cache test mode: none'])
+ne = S.not_enterable(get_of({'k_04': rk_bad, 'u_04': ru}))
+ok &= case('T4 RC3 the k arm with a row by the log failing (the compatibility line of another signature) -> void, ps_logo in the '
+           'denominator', S.entry_state(rk_bad)[0] == 'void' and ne[3][3] is False)
+ok &= case('T5 RC4 entry_state: no line of the end of the preparation screen in the record -> void "the preparation screen not '
+           'passed"', S.entry_state(rec(prep_end={}))[0] == 'void' and
+           'the preparation screen not passed' in S.entry_state(rec(prep_end={}))[1] and
+           S.entry_state(rec(prep_end=dict(later=3, rows_after=0)))[0] == 'void' and
+           S.entry_state(rec(prep_end=dict(later=3, rows_after=1)))[0] == 'no')
+r = make_arm('u_04', [x for x in scene('other_level', post_rows(), header=HEADER_T)
+                      if not x.startswith('PipelinePrecache: all pipelines created')])
+ok &= case('T6 RC4 a whole arm without the entry line and without "PipelinePrecache: all pipelines created" -> void',
+           r['fail'] == [] and S.entry_state(r)[0] == 'void' and r['prep_end']['created_line'] is None)
+r = make_arm('u_04', [x for x in scene('other_level', post_rows(), header=HEADER_T)
+                      if not x.startswith('ShaderPreparation: ready')])
+ok &= case('T7 RC4 without "ShaderPreparation: ready" -> void', S.entry_state(r)[0] == 'void' and
+           r['prep_end']['ready_line'] is None)
+base_l = [x for x in scene('other_level', post_rows(), header=HEADER_T) if x not in PREP_LINES[:2]]
+last_ft = max(i for i, x in enumerate(base_l) if x.startswith('FrameTrace: n='))
+r = make_arm('u_04', base_l + PREP_LINES[:2])
+ok &= case('T8 RC4 both lines AFTER the last FrameTrace row (no guest frame after the later) -> void', r['fail'] == [] and
+           r['prep_end']['rows_after'] == 0 and S.entry_state(r)[0] == 'void')
+r = make_arm('u_04', base_l[:last_ft] + PREP_LINES[:2] + base_l[last_ft:])
+ok &= case('T9 RC4 the edge: exactly one FrameTrace row after the later line -> no', r['fail'] == [] and
+           r['prep_end']['rows_after'] == 1 and S.entry_state(r)[0] == 'no')
+r = make_arm('u_04', base_l[:3] + [PREP_LINES[0]] + base_l[3:] + [PREP_LINES[1]])
+ok &= case('T9b RC4 the LATER of the two lines counts: "all pipelines created" early, "ready" after the last FrameTrace row -> 0 '
+           'rows after the later -> void', r['prep_end']['created_line'] < r['prep_end']['ready_line'] and
+           r['prep_end']['rows_after'] == 0 and S.entry_state(r)[0] == 'void')
+r = make_arm('k_04', [('PipelinePrecache: no _ShaderCache' + BS + 'PPSA21564' + BS + VAR + BS + 'pipelines.bin yet'
+                       if x.startswith('PipelinePrecache: all pipelines created') else x)
+                      for x in scene('other_level', post_rows(), header=HEADER_M)], video=False, sheet=False,
+             stdout=['Cache test mode: none'])
+st = S.entry_state(r)
+ok &= case('T10 RC4 the empty-set form (the line "PipelinePrecache: no ... pipelines.bin yet" instead of "all pipelines created", '
+           'as in s12_gw) -> void by the letter, the reason names the line of "no pipelines.bin yet" (a question to the lead)',
+           st[0] == 'void' and r['prep_end']['nopb_line'] is not None and
+           ('"no pipelines.bin yet" line %d' % r['prep_end']['nopb_line']) in st[1])
+r = make_arm('u_04', [x for x in scene('other_level', post_rows(), header=HEADER_T) if not x.startswith('ShaderPreparation: ready')],
+             js=js_for('u_04', attempt=dict(prep_ready_s=None, outcome='timeout')), root=str(BASE / 't11'))
+word, out = S.read_known(get_of({'k_04': rec(), 'u_04': r}))
+ok &= case('T11 RC4 u_04 stuck on the preparation screen (no ready line, timeout) -> void, ps_logo in the denominator, its '
+           'E1-screen FAILS (lower bound 600 s) -> KNOWN_SCENES_ENTERED FAIL on 19 (the failure is seen by its word)',
+           S.entry_state(r)[0] == 'void' and W('E1-screen', S.members_u(r)) is False and
+           ': FAIL - denominator 19 of 19' in ent_line(out)[0])
 # ================================================================================ order
 OR = BASE / 'order'
 OR.mkdir()

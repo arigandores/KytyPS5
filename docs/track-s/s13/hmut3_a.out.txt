@@ -1,0 +1,4 @@
+h8 KILLED rc 1; failing cases G5 G5 G5 G5 G22 GL15 GL16 GL17 GL14; expected G5 G22 GL15 GL16 GL17
+h9 SURVIVED rc 1; failing cases G5 G5 G5 G5 G22 GL12; expected G5 G22 GL16 GL17
+h10 KILLED rc 1; failing cases G5b G22; expected G5b G22
+HMUT3: NOT ALL KILLED

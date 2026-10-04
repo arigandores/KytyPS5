@@ -10,6 +10,6 @@ r=[]
 for i in d:
     a=(i.get('assigneeAgentId') or '')[:8]
     r.append('%s/%s/%s' % (i.get('identifier'), names.get(a,a), 'run' if i.get('executionRunId') else '-'))
-he=[x for x in r if '/HarnessEng/run' in x and not x.startswith('HPP-498/')]
+he=[x for x in r if '/HarnessEng/run' in x and not x.startswith('HPP-537/')]
 print('api in_progress: %s; run links of another track with a run: %s' % (' '.join(r), ' '.join(he) or 'none'))
 "

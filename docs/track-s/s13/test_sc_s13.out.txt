@@ -1,4 +1,4 @@
-suite test_sc_s13.py sha256 50ecd371a16ce1f7f60830786b88fdc216fc9645afc4c4776f6bf5f9ce0ce1e7 target sc_s13.py sha256 1263db3b7dee6e53f9abbbe7dbcab10bade0113c4e1ab2e41f0716ed49550e8c
+suite test_sc_s13.py sha256 2a50a3a57bf377a26361021457730cb484e86f0482e79d0d7fba4402f13dd47f target sc_s13.py sha256 29d95e9c2f562a049817716000687817f4477f647fb4a8d7cbc2f7066e1a0ad1
 PASS A1 the inherited sc_s9.py is refused when its sha256 is not the pinned one
 PASS A2 sc_s13.py is ASCII only
 PASS B1 39 arms: k_01 .. k_19, u_01 .. u_19, w13 in this order
@@ -25,17 +25,23 @@ PASS E1 "installed: PENDING" -> (PENDING, None, None)
 PASS E2 "installed: <sha> <sig> <variant>" -> the triple
 PASS E3 malformed: a short sha, a signature not KytySC3:, a variant not variant_, two lines, none, PENDING with more
 PASS E4 no seal file -> None
-PASS E5 current_seal: 11 while 11b is absent; edition rows empty
-PASS E6 the edition 11b exists: current_seal = 11b; the same lines but installed / edition, 11 PENDING, 11b named -> ok
+PASS E5 current_seal: 12 while 12b is absent; edition rows empty
+PASS E6 the edition 12b exists: current_seal = 12b; the same lines but installed / edition, 12 PENDING, 12b named, one line "edition: base pred/12_s.md sha256 <sha of 12>" -> ok
+PASS E6b RC6: no line "edition:" in 12b -> the edition row FAILS (only it)
+PASS E6c RC6: two lines "edition:" (even equal) -> the edition row FAILS
+PASS E6d RC6: the sha of the line is not the sha of the seal 12 -> FAILS
+PASS E6e RC6: the line names another seal file -> FAILS
+PASS E6f RC6: the line with a trailing blank (not the form) -> FAILS
+PASS E6g the seal 12 itself carries a line "edition:" -> that row FAILS
 PASS E7 11b with an extra line -> the line row FAILS
 PASS E8 11b with the lines in another order -> FAILS
 PASS E9 11b still PENDING -> the installed row FAILS
 PASS E10 11 not PENDING -> the installed row FAILS
-PASS E11 edition rows with 11b but no 11 -> one failing row
+PASS E11 edition rows with 12b but no 12 -> one failing row
 PASS F1 check_seal: every sealed file, this scorer, "installed: PENDING" -> PASS (no binary row while PENDING)
 PASS F2 a sealed name without its line -> FAIL
 PASS F3 no line "installed:" -> FAIL (S9r2 observation 3)
-PASS F4 the edition 11b in force: check_seal reads it, its edition rows pass, the installed binary now = its line -> PASS
+PASS F4 the edition 12b in force: check_seal reads it, its edition rows pass (4, the line "edition:" among them), the installed binary now = its line -> PASS
 PASS F5 the installed binary now != the line "installed:" -> FAIL
 PASS F6 a sealed file changed (this scorer) -> FAIL
 PASS F6b the running scorer is not the sealed s13/sc_s13.py (the sealed files unchanged) -> FAIL on that row only
@@ -125,6 +131,30 @@ PASS K33 "Recovering Vulkan swapchain" -> admission FAILS
 PASS K34 a GamePatch: line -> admission FAILS
 PASS K35 an arm not made -> None; members "not made" undetermined
 PASS K36 no log -> fail "no log", undetermined
+PASS R1 RC1 the letter: a scene change (hub_crashsite) after 120.087 s and a skipped draw + a held flip after it -> E1-skip and E1-held FAIL by the letter (the arm FAIL); the reference (to the scene change, >= 120 s) PASSES
+PASS R2 RC1 the data before / after the first scene change: before 1 213 rows, 0 skips, 0 held; after: rows with a skip 1, skipped-draw lines 1, held flips 1, attributed 0
+PASS R3 RC1 the print: the end of the domain and its cause, the scene change with its name, row and log line, the rows and the presented time, before / after, the reference; the reference members line
+PASS R4 RC1 the probe P3 of S13r: a scene change after 3 rows and a skip + held after it -> the letter FAILS (E1-skip, E1-held); the reference UNDETERMINED (its domain 0.048 s < 120 s)
+PASS R5 RC1 the minimum: no scene change, the domain 0.176 s < 120 s without a death marker, a skip in it -> E1 UNDETERMINED (not FAIL), the arm UNDETERMINED
+PASS R6 RC1 the edge: the domain presents exactly 120 000 000 us -> determined (E1 ok, the arm PASS)
+PASS R7 RC1 the edge: 119 999 999 us -> E1 UNDETERMINED
+PASS R8 RC1 a domain < 120 s WITH a death marker -> E1 read (E1-skip FAILS), E3-death FAILS
+PASS R9 RC1 no scene change -> both readings equal (a skip: both FAIL; the clean arm: both ok); the reference end = the end
+PASS R10 RC1 the cause of the end: the attempt ended by its hold -> "hold" (clean); otherwise -> "end of log"
+PASS R11 RC1 a SHADER frame of 150 ms after the scene change -> E1-attr FAILS by the letter (after: attributed 1), the reference ok
+PASS R11b RC1 a held series of 150 ms (gap 166 ms) after the scene change -> attributed after it 1 (the series), before 0; E1-attr FAILS by the letter, the reference ok
+PASS S1 RC2 the probe P2 of S13r: an admission row before the run FAILS (arm binary) with a death marker -> every member UNDETERMINED, E3-death among them (data "FAILS" beside), the arm UNDETERMINED, the gate "pre"
+PASS S2 RC2 w13 with an environment row before the run FAILING and a [Vulkan][E] -> every W member UNDETERMINED (no FAIL)
+PASS S3 RC2 a row by the log present and not the form (the compatibility line of another signature) with a death marker -> every member UNDETERMINED (gate "differs")
+PASS S4 RC2 a row by the log MISSING (no S-pcw: line) with a death marker -> E3-death counted (FAILS), the rest UNDETERMINED, the arm FAIL (a real crash of the form is not undetermined)
+PASS S5 RC2 a row by the log missing (no compatibility line) WITHOUT a death marker -> every member UNDETERMINED (variant of the executor)
+PASS S6 RC2 a window event (an interference, item 273 (z)) with a death marker -> every member UNDETERMINED
+PASS S7 RC2 w13 with the translation cache line missing and a death marker -> E3-death FAILS, the rest UNDETERMINED, the arm FAIL
+PASS S8 RC2 the order of the gate: a row before the run FAILS and a row by the log missing -> "pre"
+PASS S9 RC2 the split: 5 rows by the log (S-pcw, GamePatch, compatibility, variant, window), the rest before the run; fmt_arm names each row "before the run" / "by the log" and prints the gate "ok"
+PASS S10 RC2 a GamePatch: line -> by the log "differs" (every member UNDETERMINED)
+PASS S11 RC7 the sha of man_launch_glc printed per arm (fmt_arm) - a data line (not man_post_glc)
+PASS S12 the catalogue not installed: the E1 members undetermined (not read), the gate row undetermined
 PASS L1 item 414 (g)(1): a frame event with the n of a series event is one event -> 3 distinct (the series kept), known 2, lead < cost 0 (lead = cost is not shorter)
 PASS L2 the print: a series event names its cost "async creation us", no "PREP-only" anywhere; the distinct count line
 PASS M1 a clean W: admitted, entered, 300 s after the first scene frame, 0 [Vulkan][E], the rows of item 295 (b), DualSrcBlend before GuestOut -> PASS
@@ -138,8 +168,12 @@ PASS M8 a death marker on W -> FAILS
 PASS M9 W without the catalogue installed -> UNDETERMINED, the gate row undetermined
 PASS M12 W with the catalogue installed but an admission row failing (a window minimized) -> the row "W admitted and entered" undetermined, the arm UNDETERMINED
 PASS M10 W not made -> UNDETERMINED
+PASS M13 W admitted, entered, an identity row FAILS (a torn FrameTrace row) -> the row "W admitted and entered" undetermined (the admission gate is "ok": RC2 does not cover identity)
+PASS M14 W entered without a first scene frame (admitted) -> ">= 300 s presented" undetermined, not FAIL
 PASS M11 W without a log -> DualSrcBlend and 300 s undetermined, the arm UNDETERMINED (not FAIL)
 PASS N1 19 clean U arms and a clean W -> KNOWN_SCENES PASS, (e)(1) PASS 19 of 19, (e)(3) PASS
+PASS R12 RC1 / RC7 in the reading: per U arm a domain line with the reference word, a GLCache line man_launch_glc; the w13 domain and GLCache lines; the REFERENCE word of (e)(1) (PASS 19 of 19 on clean arms)
+PASS R13 RC1 a scene change with a SHADER frame after it in u_07 -> KNOWN_SCENES FAIL by the letter; the REFERENCE word PASS (printed beside, no decision)
 PASS N2 one held flip in u_07 -> KNOWN_SCENES FAIL, (e)(1) FAIL, (e)(3) PASS; the member count line
 PASS N3 one U arm not made -> UNDETERMINED
 PASS N4 glitches in u_03 -> KNOWN_SCENES FAIL, (e)(1) PASS, (e)(3) FAIL
@@ -162,6 +196,19 @@ PASS Q10 u_04 without the line but with a window event (void) -> in the denomina
 PASS Q11 ps_logo not enterable and a [Vulkan][E] on w13 -> KNOWN_SCENES_ENTERED FAIL on 18
 PASS Q12 entered_word: a denominator 0 with w13 PASS -> UNDETERMINED; an excluded FAIL arm is not counted -> PASS; a FAIL in the denominator -> FAIL; w13 FAIL / UNDETERMINED -> FAIL / UNDETERMINED
 PASS Q13 19 clean U arms and a clean W -> KNOWN_SCENES PASS and KNOWN_SCENES_ENTERED PASS on 19, list none
+PASS T0 the reason order: a record without a log (no window field, no fail rows) -> void "no log" before the RC3 / RC4 reasons
+PASS T1 RC3 entry_state: an otherwise clean attempt without the line but with a failing admission row -> void; a failing identity row -> void; an entered arm with a failing row -> void (item 434 (b))
+PASS T2 RC3 the probe P1 of S13r: both arms of ps_logo without the entry line, u_04 with a failing admission row (another binary) -> u_04 void, ps_logo IN the denominator
+PASS T3 RC3 both arms without the entry line, both admitted (whole arms) -> "not enterable" (ps_logo out of the denominator)
+PASS T4 RC3 the k arm with a row by the log failing (the compatibility line of another signature) -> void, ps_logo in the denominator
+PASS T5 RC4 entry_state: no line of the end of the preparation screen in the record -> void "the preparation screen not passed"
+PASS T6 RC4 a whole arm without the entry line and without "PipelinePrecache: all pipelines created" -> void
+PASS T7 RC4 without "ShaderPreparation: ready" -> void
+PASS T8 RC4 both lines AFTER the last FrameTrace row (no guest frame after the later) -> void
+PASS T9 RC4 the edge: exactly one FrameTrace row after the later line -> no
+PASS T9b RC4 the LATER of the two lines counts: "all pipelines created" early, "ready" after the last FrameTrace row -> 0 rows after the later -> void
+PASS T10 RC4 the empty-set form (the line "PipelinePrecache: no ... pipelines.bin yet" instead of "all pipelines created", as in s12_gw) -> void by the letter, the reason names the line of "no pipelines.bin yet" (a question to the lead)
+PASS T11 RC4 u_04 stuck on the preparation screen (no ready line, timeout) -> void, ps_logo in the denominator, its E1-screen FAILS (lower bound 600 s) -> KNOWN_SCENES_ENTERED FAIL on 19 (the failure is seen by its word)
 PASS O1 k_01 first -> allowed; k_02 before k_01 -> rc 1; an unknown tag rc 2; a made tag rc 1
 PASS O2 u_01 after k_19 with the export OK -> 0; without the export -> rc 6
 PASS O3 a death marker in an earlier arm -> rc 6 (the series stops)
@@ -175,5 +222,5 @@ PASS P1 main: --plan rc 0 / unknown 2; --installed prints the seal line; --seal-
 PASS P2 --read prints the collection, the export and the known scenes with the word
 PASS P3 the output of main is ASCII
 PASS P4 the output of --plan, --installed, --seal-path, --tag, --read encodes in strict cp1250 (no process started: mutlib keeps its workers)
-checks: 176
+checks: 223
 ALL OK

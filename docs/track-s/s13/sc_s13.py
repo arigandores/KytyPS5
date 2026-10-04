@@ -23,8 +23,8 @@ item 428 (v)(1): every arm names KYTY_S_PCW=1 in its environment, every S-pcw: l
                 as found, KYTY_SHADER_SEED_PATH=C:/kyty/s288/s13/seeds KYTY_CACHE_MODE=prepare-cold, hold HOLD_U, video.
   w13           W of Sky Garden (item 229 (e)(3)) in form U + validation of item 295 (b): --vulkan-validation true, VK_LAYER_PATH,
                 VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000, no VK_LAYER_MESSAGE_ID_FILTER, class M, hold HOLD_W, no video.
-MEMBERS (item 229 (e)(1), (3); after the first scene frame = the FrameTrace rows i > fi of sc_s.locate and the event lines of
-groups fi < g < end):
+MEMBERS (item 229 (e)(1), (3); after the first scene frame = the FrameTrace rows fi < i < end of the domain and the event lines of
+groups fi < g < end of the domain; fi of sc_s.locate; the end of the domain = the last row of the log (item 436 (b)(1), RC1 below):
   E1-skip    0 frames with a skipped draw: rows with skc_ap_skip > 0 = 0 AND "AsyncPipelines: skipped draw" lines = 0
   E1-held    0 held flips: the sum of skc_held_inc of the rows = 0 (reading 1 of sc_s, with a held first scene frame, beside)
   E1-attr    0 attributed frames >= 100 ms (sc_s.attributed, reading 1; undetermined when the attribution is undetermined)
@@ -34,8 +34,8 @@ groups fi < g < end):
   E3-death   0 death markers (sc142: log, stdout, hold_exit / ENDED / exited)
   W          w13: entered, >= 300 s presented after the first scene frame, 0 [Vulkan][E] (log + stdout), the rows of item 295
              (b)(1)-(3), "DualSrcBlend: supported=1 enabled=1" before the first GuestOut line, 0 death markers
-  An arm FAILS on a determined failing member, is UNDETERMINED on an undetermined one (not entered, admission / identity broken,
-  catalogue not installed, no attribution, no screen measure, no video), else PASSES.  The word KNOWN_SCENES (item 229 (e)(1)
+  An arm FAILS on a determined failing member, is UNDETERMINED on an undetermined one (not entered, admission by RC2 / identity
+  broken, catalogue not installed, the domain < 120 s, no attribution, no screen measure, no video), else PASSES.  The word KNOWN_SCENES (item 229 (e)(1)
   with (3)): PASS - 19 of 19 U arms and w13 pass; FAIL - any determined failing member; else UNDETERMINED.  The words of (e)(1)
   alone and of (e)(3) alone are printed beside.  ENTRY (item 428 (g), V7): a level of the 19 is "not enterable by -lvl" when
   NEITHER its k arm NOR its u arm carries the line "Level has started: <level>" in an attempt without a death marker (nor
@@ -49,6 +49,26 @@ DATA ROWS (item 414 (g)(5)-(7), AUDIT_S3 section 6 p. 2): per arm the skipped-dr
   the first frame of a series event of the same arm is the same event); the held frames >= 100 ms with their class.
 S9r2 observations (item 382 (b), item 408 (k)(4)): (3) --check-seal reads the admission line "installed:" of the seal itself (the
   one source of the arm binary) and checks its form; (1) and (2) are in go_s13.sh.
+S13a3 (link HPP-537, item 436 (b), (v); the review S13r c4d4a7e9:docs/track-s/s13r-review.md; the seal pred/12_s.md replaces 11):
+  RC1  the domain of the members of (e)(1) (E1-skip, E1-held, E1-attr) on a U arm and on w13 is the LETTER: every row after the
+       first scene frame fi to the end of the hold of the arm (the hold exit or the end of the log) - a scene change does not cut
+       it (domain_of); the first scene frame is found as before (sc_s.locate).  Minimum: the presented time of the domain (the sum
+       of dt_us of its rows) < DOMAIN_MIN_US (120 s, item 229 (g)(3)) without a death marker -> the E1 members UNDETERMINED.  The
+       variant of Red Team (the domain to the first scene change, >= 120 s, else UNDETERMINED) is printed per arm as a REFERENCE
+       with its word beside - no decision rides on it.  Printed per U arm and w13: the end of the domain and its cause, every
+       scene change inside it (name, log line), its rows and presented time, the skips / held flips / attributed frames >= 100 ms
+       before and after the first scene change.
+  RC2  the admission rows are split: "before the run" (json, env, binary, prereg, the cache protocol) and "by the log" (S-pcw:,
+       GamePatch:, the compatibility line, the variant directory, the window event).  A failing row before the run -> every member
+       UNDETERMINED (the data beside).  A row by the log that is present and not the form, or a window event -> every member
+       UNDETERMINED.  A row by the log that is missing with a death marker -> E3-death counted, the rest UNDETERMINED; missing
+       without a death marker -> every member UNDETERMINED (executor's variant, a question to the lead).  The same on w13.
+  RC3  entry_state: a failing admission or identity row -> 'void' (item 434 (b) in the code).
+  RC4  entry_state 'no' only when the log carries both lines of the end of the preparation screen ("ShaderPreparation: ready",
+       "PipelinePrecache: all pipelines created") and >= 1 FrameTrace row after the later one; else 'void' ("the preparation
+       screen not passed").
+  RC6  the edition pred/12b_s.md carries one line "edition: base pred/12_s.md sha256 <64 hex>" = the sha256 of the seal 12.
+  RC7  the sha of the manifest man_launch_glc is printed per U arm and w13 (a data line).
 Output is ASCII only.  Logs are read in binary, streaming.
     python sc_s13.py --tag <tag> | --read | --summary | --allowed <tag> | --plan <tag> | --check-seal [--seal <p>] |
                      --seeds-check | --export-state
@@ -82,8 +102,9 @@ B = S9.B
 
 ROOT = 'C:/kyty/s288'
 LINK_DIR = 'C:/kyty/s288/s13'
-SEAL_BASE = 'C:/kyty/s288/pred/11_s.md'       # the seal of S13a2: "installed: PENDING" (item 428 (v)(4): 09 not in force)
-SEAL_B = 'C:/kyty/s288/pred/11b_s.md'         # its edition: the same lines, the line "installed:" named (a lead item)
+SEAL_BASE = 'C:/kyty/s288/pred/12_s.md'       # the seal of S13a3: "installed: PENDING" (item 436 (v)(2): 11 not in force)
+SEAL_B = 'C:/kyty/s288/pred/12b_s.md'         # its edition: the same lines, the line "installed:" named, the line "edition:"
+SEAL_BASE_REL = 'pred/12_s.md'                # the name of the seal in the line "edition: base <name> sha256 <sha>" (RC6)
 EMPTY_SHA = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
 SEEDS_PATH = 'C:/kyty/s288/s13/seeds'
 SEEDS_MANI = 'C:/kyty/s288/s13/seeds_manifest.txt'
@@ -100,6 +121,7 @@ HOLD_W = 330                     # item 229 (e)(3): >= 300 s presented
 HOLD_W_US = 300000000
 FRAMES_VIDEO = 3000              # item 229 (e)(3)
 PREP_LIMIT_S = 180               # item 229 (e)(1)
+DOMAIN_MIN_US = 120000000        # item 436 (b)(1), item 229 (g)(3): the E1 domain presents >= 120 s, else UNDETERMINED
 SPCW_ENV = '1'                   # item 419 (v) Z3, item 428 (v)(1): every arm names KYTY_S_PCW=1 (absent means 1 after S12)
 SPCW_FMT = 'S-pcw: KYTY_S_PCW=%s KYTY_S_PCW_FORCE_MS=0'           # the form of sc_s9.py: the log line = the env of the arm
 W_FORM_LINE = 'W form: limit=100000000 filter=none'
@@ -110,6 +132,9 @@ M_TCACHE = b'Shader translation cache: '
 M_VKE = b'[Vulkan][E]'
 RX_WIN = re.compile(rb'Window \d+ (minimized|restored|resized|size changed|lost keyboard focus)\b')
 M_RECOVER = b'Recovering Vulkan swapchain'
+M_READY = b'ShaderPreparation: ready'                       # item 436 (b)(4), item 229 (g)(3): the end of the preparation screen
+M_CREATED = b'PipelinePrecache: all pipelines created'
+M_NOPB = b'PipelinePrecache: no '                           # "... pipelines.bin yet" (the empty set, s12_gw) - data only
 NL = chr(10)
 FAMILIES = A.FAMILIES
 FAMILY_KEYS = A.FAMILY_KEYS
@@ -214,10 +239,21 @@ def seal_installed(pred=None):
 def scan_y(path):
     """The lines neither sc_s.scan_s nor sc_s9.scan_x keep: the compatibility line and the translation cache line (first),
     "DualSrcBlend: supported=1 enabled=1" before the first line carrying GuestOut, [Vulkan][E] lines, the window events of item
-    273 (z) by kind and the lines "Recovering Vulkan swapchain"."""
-    r = dict(compat=None, tcache=None, dual_before=False, guest_seen=False, vke=0, win={}, recover=0)
+    273 (z) by kind and the lines "Recovering Vulkan swapchain"; item 436 (b)(4): the log line numbers of the first
+    "ShaderPreparation: ready", the first "PipelinePrecache: all pipelines created" and the first "PipelinePrecache: no ...
+    pipelines.bin yet" (data)."""
+    r = dict(compat=None, tcache=None, dual_before=False, guest_seen=False, vke=0, win={}, recover=0, ready_line=None,
+             created_line=None, nopb_line=None)
+    n = 0
     with open(path, 'rb') as f:
         for line in f:
+            n += 1
+            if r['ready_line'] is None and line.startswith(M_READY):
+                r['ready_line'] = n
+            if r['created_line'] is None and line.startswith(M_CREATED):
+                r['created_line'] = n
+            if r['nopb_line'] is None and line.startswith(M_NOPB) and line.rstrip().endswith(b'pipelines.bin yet'):
+                r['nopb_line'] = n
             if not r['guest_seen'] and M_GUEST in line:
                 r['guest_seen'] = True
             if line.startswith(DUAL_LINE) and not r['guest_seen']:
@@ -402,6 +438,43 @@ def frame_rows(s, fi, end):
     return dict(skip_rows=skip_rows, skip_lines=skip_lines, held=held)
 
 
+def shown_us(s, lo, hi):
+    """The presented time of the rows lo .. hi-1 (the sum of their dt_us)."""
+    return sum(s['rows'][i][1] for i in range(lo, hi))
+
+
+def domain_of(s, level, fi, sc_end, attempt, ended, exited):
+    """Item 436 (b)(1), RC1 - the letter: the domain of the members of (e)(1) is every row after the first scene frame fi to the
+    end of the hold of the arm (the last row of the log); a scene change does not cut it.  Returns the end (row index, exclusive),
+    its cause ('hold' - the attempt ended by its hold without hold_exit / ENDED / exited; 'end of log' otherwise), the scene changes
+    inside the domain [(row index, name, log line)], its rows and presented time, and the reference domain of Red Team (to the
+    first scene change sc_end of sc_s.locate) with its rows and presented time."""
+    nrows = len(s['rows'])
+    ent = [j for j, x in enumerate(s['starts']) if x[1] == level]
+    ch = [(x[0], x[1], x[2]) for x in s['starts'][ent[0] + 1:]] if ent else []
+    cause = 'hold' if attempt == 'ok' and not ended and not exited else 'end of log'
+    return dict(end=nrows, cause=cause, changes=ch, rows=max(0, nrows - fi - 1), shown_us=shown_us(s, fi + 1, nrows),
+                ref_end=sc_end, ref_rows=max(0, sc_end - fi - 1), ref_shown_us=shown_us(s, fi + 1, sc_end))
+
+
+def split_at(s, fi, end, cut, fz, attr_ok):
+    """Item 436 (b)(1): the skips, held flips and attributed frames >= 100 ms of the domain (fi, end) before the row cut (the
+    first scene change) and from it on: dict(before=..., after=...); attributed None when the attribution is undetermined."""
+    out = {}
+    for part, lo, hi in (('before', fi + 1, min(cut, end)), ('after', max(cut, fi + 1), end)):
+        rr = range(lo, hi)
+        d = dict(rows=len(rr), skip_rows=sum(1 for i in rr if (A.xget(s, i, 0) or 0) > 0),
+                 skip_lines=sum(1 for e in s['skips'] if lo - 1 < e[0] < hi and e[0] > fi),
+                 held=sum((A.xget(s, i, 1) or 0) for i in rr))
+        if attr_ok:
+            d['attr100'] = sum(1 for x in fz['long'] if lo <= x['i'] < hi and A.counted_row(x) and x['dt'] >= A.K3_US and
+                               not x['held']) + sum(1 for x in fz['series'] if lo <= x['a'] < hi and x['gap_pipe_us'] >= A.K3_US)
+        else:
+            d['attr100'] = None
+        out[part] = d
+    return out
+
+
 def pre_domain_lines(s, level, f0):
     """Item 414 (g)(5)-(7): (skipped-draw lines after the entry line with frame= below the first scene frame n f0, skipped-draw
     lines without frame=)."""
@@ -462,9 +535,12 @@ def score_arm(tag, root=LINK_DIR, pred_sha=None, pred_path=None, inst=None):
              derive142=base['derive'], log_sha=base.get('log_sha'), sheet_file=base.get('sheet_file'),
              prep_created_s=at.get('prep_created_s'), prep_ready_s=at.get('prep_ready_s'), binary=js.get('binary_sha256'))
     r['admit'] = admit(spec, js, pred_sha, pred_path, cj, cjs_of, inst)
+    r['n_pre'] = len(r['admit'])            # item 436 (b)(2): the rows before the run; the rows by the log follow them
+    r['log_rows'] = {}                      # name -> 'ok' | 'missing' | 'differs' (item 436 (b)(2))
+    r['glc_launch'] = jget(cj, 'man_launch_glc', 'sha')     # item 436 (b)(7), RC7: a data line
     r['video'] = os.path.isfile(os.path.join(root, 'rec_%s.mp4' % tag))
     if log142 is None:
-        r.update(entered=False, ident=[], fail=['no log'])
+        r.update(entered=False, ident=[], fail=['no log'], log_rows={'the log': 'missing'})
         return r
     s = A.scan_s(lp)
     std = A.scan_stdout(sp)
@@ -491,20 +567,29 @@ def score_arm(tag, root=LINK_DIR, pred_sha=None, pred_path=None, inst=None):
     ident.append(('first scene frame and rows after it = the inherited sc142.derive', agree, '%s / %s' % (d142['first'],
                                                                                                           r['first'])))
     pv = (js.get('env') or {}).get('KYTY_S_PCW')
-    r['admit'].append(('every S-pcw: line (>= 1) = "%s" with the KYTY_S_PCW of the env of the arm (item 419 (v) Z3)' % SPCW_FMT,
-                       len(s['spcw']) >= 1 and all(x == SPCW_FMT % pv for x in s['spcw']),
-                       '%s / env %s' % (';'.join(s['spcw'][:2]) or 'none', pv)))
-    r['admit'].append(('0 lines GamePatch: in the log (item 342 (e))', sx['gamepatch'] == 0, sx['gamepatch']))
-    r['admit'].append(('the compatibility line carries the signature of the seal line "installed:"',
-                       inst is not None and sy['compat'] is not None and (':' + inst[1] + ':') in (':' + sy['compat'] + ':'),
-                       (sy['compat'] or 'none')[:120]))
-    r['admit'].append(('the translation cache line ends with the variant of the seal line "installed:"',
-                       inst is not None and sy['tcache'] is not None and sy['tcache'].endswith('/' + inst[2]),
-                       sy['tcache'] or 'none'))
+
+    def by_log(name, present, ok, detail):
+        """Item 436 (b)(2): an admission row read from the log - 'missing' (the line is not in the log), 'differs' (present and
+        not the form) or 'ok'."""
+        r['admit'].append((name, bool(present and ok), str(detail)))
+        r['log_rows'][name] = 'ok' if present and ok else ('missing' if not present else 'differs')
+    by_log('every S-pcw: line (>= 1) = "%s" with the KYTY_S_PCW of the env of the arm (item 419 (v) Z3)' % SPCW_FMT,
+           len(s['spcw']) >= 1, all(x == SPCW_FMT % pv for x in s['spcw']),
+           '%s / env %s' % (';'.join(s['spcw'][:2]) or 'none', pv))
+    by_log('0 lines GamePatch: in the log (item 342 (e))', True, sx['gamepatch'] == 0, sx['gamepatch'])
+    by_log('the compatibility line carries the signature of the seal line "installed:"', sy['compat'] is not None,
+           inst is not None and sy['compat'] is not None and (':' + inst[1] + ':') in (':' + sy['compat'] + ':'),
+           (sy['compat'] or 'none')[:120])
+    by_log('the translation cache line ends with the variant of the seal line "installed:"', sy['tcache'] is not None,
+           inst is not None and sy['tcache'] is not None and sy['tcache'].endswith('/' + inst[2]), sy['tcache'] or 'none')
     r['window'] = dict(sy['win'], recover=sy['recover'])
-    r['admit'].append(('no window event minimized / Recovering Vulkan swapchain (item 273 (z))',
-                       sy['win'].get('minimized', 0) == 0 and sy['recover'] == 0,
-                       ' '.join('%s %d' % kv for kv in sorted(r['window'].items())) or 'none'))
+    by_log('no window event minimized / Recovering Vulkan swapchain (item 273 (z))', True,
+           sy['win'].get('minimized', 0) == 0 and sy['recover'] == 0,
+           ' '.join('%s %d' % kv for kv in sorted(r['window'].items())) or 'none')
+    # item 436 (b)(4), RC4: the end of the preparation screen - both lines and >= 1 FrameTrace row after the later one
+    later = max(sy['ready_line'], sy['created_line']) if sy['ready_line'] and sy['created_line'] else None
+    r['prep_end'] = dict(ready_line=sy['ready_line'], created_line=sy['created_line'], nopb_line=sy['nopb_line'],
+                         later=later, rows_after=None if later is None else sum(1 for x in s['rows'] if x[4] > later))
     r['compat'] = sy['compat']
     r['tcache'] = sy['tcache']
     r['dual_before'] = sy['dual_before']
@@ -519,8 +604,16 @@ def score_arm(tag, root=LINK_DIR, pred_sha=None, pred_path=None, inst=None):
         r['w295'] = A.w_form_rows(dict(entered=r['entered'], vke=r['vke']), s, std, eg, end)
     if fi is not None:
         prep = A.assign_prep(s)
-        r['f1'] = A.freeze(s, fi, end, prep, attr_ok, 1)
-        r['f2'] = A.freeze(s, fi, end, prep, attr_ok, 2)
+        # item 436 (b)(1), RC1 - the letter: the domain is every row after fi to the end of the hold (the last row of the log)
+        dom = domain_of(s, spec['level'], fi, end, r['attempt'], r['ended'], r['exited'])
+        r['dom'] = dom
+        dend = dom['end']
+        r['f1'] = A.freeze(s, fi, dend, prep, attr_ok, 1)
+        r['f2'] = A.freeze(s, fi, dend, prep, attr_ok, 2)
+        r['split'] = split_at(s, fi, dend, end, r['f1'], attr_ok)
+        # the reference of Red Team (no decision): the domain to the first scene change, as sealed in pred/11_s.md
+        fr = A.freeze(s, fi, end, prep, attr_ok, 1)
+        r['ref'] = dict(after=frame_rows(s, fi, end), att100=A.attributed(fr, attr_ok, A.K3_US))
         for k, f in (('1', r['f1']), ('2', r['f2'])):
             t5a, t5b = f['T5']
             ident.append(('T-5 partition (reading %s)' % k, t5a == t5b, '%d / %d' % (t5a, t5b)))
@@ -532,7 +625,7 @@ def score_arm(tag, root=LINK_DIR, pred_sha=None, pred_path=None, inst=None):
         r['bvh'] = S9.bvh_col(sx, r['f1']['long'])
         r['early'] = S9.early9(s, r['f1'], attr_ok)
         r['early_d'] = early_distinct(r['early'])
-        r['after'] = frame_rows(s, fi, end)
+        r['after'] = frame_rows(s, fi, dend)
         r['held_r1'] = r['f1']['window']['held'] + r['f1']['hold']['held']
         r['pre_dom'], r['nof'] = pre_domain_lines(s, spec['level'], s['rows'][fi][0])
         r['held_long'] = [(x['n'], x['dt'], x['cls']) for x in r['f1']['long'] if x['held']]
@@ -558,24 +651,97 @@ def gate_word(r):
                                                                                               p.get('prepare_cold', 0))
 
 
+def admission_gate(r):
+    """Item 436 (b)(2), RC2: ('pre', rows) - a failing admission row before the run (json, env, binary, prereg, the cache
+    protocol); ('differs', rows) - a row by the log present and not the form, or a window event; ('missing', rows) - a row by the
+    log whose line is not in the log; ('ok', [])."""
+    pre = [a[0] for a in r['admit'][:r.get('n_pre', len(r['admit']))] if not a[1]]
+    if pre:
+        return 'pre', pre
+    lr = r.get('log_rows') or {}
+    dif = [k for k, v in lr.items() if v == 'differs']
+    if dif:
+        return 'differs', dif
+    mis = [k for k, v in lr.items() if v == 'missing']
+    if mis:
+        return 'missing', mis
+    return 'ok', []
+
+
+def gated(ms, r):
+    """Item 436 (b)(2): the members ms of one arm after the admission gate - every member UNDETERMINED on 'pre' and 'differs'
+    and on 'missing' without a death marker (executor's variant); on 'missing' with a death marker E3-death is counted and the
+    rest UNDETERMINED; the computed value is kept beside as data."""
+    kind, rows = admission_gate(r)
+    if kind == 'ok':
+        return ms
+    keep = ('E3-death',) if kind == 'missing' and death(r) else ()
+    why = {'pre': 'an admission row before the run FAILS', 'differs': 'an admission row by the log is not the form',
+           'missing': 'an admission row by the log is missing'}[kind]
+    out = []
+    for name, ok, det in ms:
+        if name in keep:
+            out.append((name, ok, det))
+        else:
+            out.append((name, None, 'undetermined: %s (%s); data: %s (%s)' % (
+                why, '; '.join(rows[:3]), {True: 'ok', False: 'FAILS', None: 'undetermined'}[ok], det)))
+    return out
+
+
+def ident_fail(r):
+    return [x for x in r['fail'] if x.startswith('identity: ')]
+
+
+def e1_gate(r, shown_us):
+    """Why the E1 members of a U arm are undetermined before their values (None when they are read): an identity row fails, the
+    arm is not entered, no first scene frame, the catalogue not installed, or the domain presents < 120 s without a death marker
+    (item 436 (b)(1))."""
+    g, _ = gate_word(r)
+    if ident_fail(r) or not r.get('entered') or 'f1' not in r or not g:
+        return 'identity %s; entered %s; first scene frame %s; catalogue %s' % (ident_fail(r)[:3] or 'ok', r.get('entered'),
+                                                                                r.get('first'), 'ok' if g else 'not installed')
+    if shown_us < DOMAIN_MIN_US and not death(r):
+        return 'the domain presents %.3f s < %d s without a death marker (item 436 (b)(1))' % (shown_us / 1e6,
+                                                                                              DOMAIN_MIN_US // 1000000)
+    return None
+
+
+def e1_members(r, a, att100, shown_us):
+    why = e1_gate(r, shown_us)
+    if why is not None:
+        return [(m, None, 'undetermined: %s' % why) for m in ('E1-skip', 'E1-held', 'E1-attr')]
+    return [('E1-skip', a['skip_rows'] == 0 and a['skip_lines'] == 0,
+             'rows with a skip %d, skipped-draw lines %d' % (a['skip_rows'], a['skip_lines'])),
+            ('E1-held', a['held'] == 0, 'held flips %d (reading 1 with the first scene frame %d)' % (a['held'], r['held_r1'])),
+            ('E1-attr', None if att100 is None else att100 == 0,
+             'attributed >= 100 ms %s (PCW %s)' % (att100, r.get('att_pcw100')))]
+
+
+def ref_members(r):
+    """Item 436 (b)(1): the REFERENCE of Red Team - E1 on the domain to the first scene change, >= 120 s presented else
+    UNDETERMINED; the admission gate as for the letter.  No decision rides on it."""
+    if r is None:
+        return [('arm made', None, 'not made')]
+    if 'f1' not in r:
+        return gated(e1_members(r, None, None, 0), r)
+    ms = e1_members(r, r['ref']['after'], r['ref']['att100'], r['dom']['ref_shown_us'])
+    if r['dom']['ref_shown_us'] < DOMAIN_MIN_US and e1_gate(r, DOMAIN_MIN_US) is None:
+        ms = [(m, None, 'undetermined: the reference domain presents %.3f s < %d s (item 436 (b)(1), Red Team)' % (
+            r['dom']['ref_shown_us'] / 1e6, DOMAIN_MIN_US // 1000000)) for m, _, _ in ms]
+    return gated(ms, r)
+
+
 def members_u(r):
-    """Item 229 (e)(1), (3) on one U arm: [(member, True / False / None, detail)]."""
+    """Item 229 (e)(1), (3) on one U arm: [(member, True / False / None, detail)]; E1 on the domain of item 436 (b)(1) (the
+    letter), the admission gate of item 436 (b)(2)."""
     if r is None:
         return [('arm made', None, 'not made')]
     g, gw = gate_word(r)
     out = [('catalogue installed (gates)', True if g else None, gw)]
-    if not ok_arm(r) or not r.get('entered') or 'f1' not in r or not g:
-        why = 'admission / identity %s; entered %s; first scene frame %s' % (r['fail'][:3] or 'ok', r.get('entered'),
-                                                                             r.get('first'))
-        out += [(m, None, 'undetermined: %s' % why) for m in ('E1-skip', 'E1-held', 'E1-attr')]
+    if 'f1' not in r:
+        out += e1_members(r, None, None, 0)
     else:
-        a = r['after']
-        out.append(('E1-skip', a['skip_rows'] == 0 and a['skip_lines'] == 0,
-                    'rows with a skip %d, skipped-draw lines %d' % (a['skip_rows'], a['skip_lines'])))
-        out.append(('E1-held', a['held'] == 0, 'held flips %d (reading 1 with the first scene frame %d)' % (a['held'],
-                                                                                                          r['held_r1'])))
-        out.append(('E1-attr', None if r['att100'] is None else r['att100'] == 0,
-                    'attributed >= 100 ms %s (PCW %s)' % (r['att100'], r['att_pcw100'])))
+        out += e1_members(r, r['after'], r['att100'], r['dom']['shown_us'])
     sec, kind = r.get('screen') or (None, 'none')
     if kind == 'measured':
         out.append(('E1-screen', sec <= PREP_LIMIT_S, '%.1f s' % sec))
@@ -592,7 +758,7 @@ def members_u(r):
     out.append(('E3-death', not r['marks'] and not r['ended'] and not r['exited'],
                 ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']
                                                               else 'none')))
-    return out
+    return gated(out, r)
 
 
 def members_w(r):
@@ -615,7 +781,7 @@ def members_w(r):
     out.append(('E3-death', not r['marks'] and not r['ended'] and not r['exited'],
                 ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']
                                                               else 'none')))
-    return out
+    return gated(out, r)
 
 
 def death(r):
@@ -627,19 +793,28 @@ def entry_state(r):
     """Item 428 (g), V7: the field "entered" of one arm - ('yes', why) the log carries "Level has started: <level>"; ('no', why)
     an attempt with a log, without the line, without a death marker (nor hold_exit / ENDED / exited) and without a window event
     (minimized / Recovering Vulkan swapchain); ('void', why) otherwise (not made, no log, a death marker or a window event
-    without the line) - not evidence that -lvl does not enter the level."""
+    without the line) - not evidence that -lvl does not enter the level.  Item 436 (b)(3), RC3 (item 434 (b)): a failing
+    admission or identity row -> 'void'.  Item 436 (b)(4), RC4: 'no' only when the log carries both lines of the end of the
+    preparation screen and >= 1 FrameTrace row after the later one; else 'void' ("the preparation screen not passed")."""
     if r is None:
         return 'void', 'not made'
-    if r.get('entered'):
-        return 'yes', 'Level has started'
     if 'window' not in r:
         return 'void', 'no log'
+    if r.get('fail'):
+        return 'void', 'an admission / identity row FAILS (item 434 (b)): %s' % '; '.join(r['fail'][:2])
+    if r.get('entered'):
+        return 'yes', 'Level has started'
     if death(r):
         return 'void', 'a death marker without the entry line'
     w = r.get('window') or {}
     if w.get('minimized', 0) or w.get('recover', 0):
         return 'void', 'a window event without the entry line'
-    return 'no', 'no entry line in a clean attempt'
+    pe = r.get('prep_end') or {}
+    if pe.get('later') is None or not pe.get('rows_after'):
+        return 'void', 'the preparation screen not passed (ShaderPreparation: ready line %s, PipelinePrecache: all pipelines ' \
+            'created line %s, FrameTrace rows after the later %s; "no pipelines.bin yet" line %s)' % (
+                pe.get('ready_line'), pe.get('created_line'), pe.get('rows_after'), pe.get('nopb_line'))
+    return 'no', 'no entry line in a clean attempt after the preparation screen'
 
 
 def not_enterable(get):
@@ -681,7 +856,7 @@ def sub_word(words):
 def read_known(get):
     """Item 229 (e)(1), (3): the word KNOWN_SCENES and the words of (e)(1) alone and (e)(3) alone."""
     out = []
-    w1, w3, wall = [], [], []
+    w1, w3, wall, wref = [], [], [], []
     count = {}
     for t in U_TAGS:
         r = get(t)
@@ -691,16 +866,25 @@ def read_known(get):
         w1.append(arm_word(e1))
         w3.append(arm_word(e3))
         wall.append(arm_word(ms))
+        rm = ref_members(r)
+        wref.append(arm_word([m for m in ms if m[0] in ('catalogue installed (gates)', 'E1-screen')] + rm))
         for name, ok, _ in ms:
             c = count.setdefault(name, [0, 0, 0])
             c[0 if ok is True else (1 if ok is False else 2)] += 1
         out.append('%s %-30s %s; %s' % (t, SPEC[t]['level'], wall[-1], '; '.join('%s %s (%s)' % (
             n, {True: 'ok', False: 'FAILS', None: 'undetermined'}[ok], d) for n, ok, d in ms)))
+        out.append('%s domain (item 436 (b)(1)): %s; reference (Red Team, to the scene change, no decision): (e)(1) %s (%s)' % (
+            t, fmt_dom(r), wref[-1], '; '.join('%s %s' % (n, {True: 'ok', False: 'FAILS', None: 'undetermined'}[ok])
+                                               for n, ok, _ in rm)))
+        out.append('%s GLCache at the launch man_launch_glc sha256 %s (item 436 (b)(7); not the driver cache of a first run of '
+                   'the user)' % (t, (r or {}).get('glc_launch') or '-'))
     rw = get('w13')
     mw = members_w(rw)
     ww = arm_word(mw)
     out.append('w13 %-30s %s; %s' % (SKY, ww, '; '.join('%s %s (%s)' % (n, {True: 'ok', False: 'FAILS', None: 'undetermined'}[ok], d)
                                                        for n, ok, d in mw)))
+    out.append('w13 domain (item 436 (b)(1), data; w13 carries no E1 member): %s' % fmt_dom(rw))
+    out.append('w13 GLCache at the launch man_launch_glc sha256 %s (item 436 (b)(7))' % ((rw or {}).get('glc_launch') or '-'))
     for name, (p, f, u) in count.items():
         out.append('member %s: ok %d, fails %d, undetermined %d of %d' % (name, p, f, u, len(U_TAGS)))
     word1 = sub_word(w1)
@@ -708,6 +892,9 @@ def read_known(get):
     word = sub_word(wall + [ww])
     out.append('(e)(1) alone (19 U arms, members skip / held / attr / screen): %s; PASS %d of %d' % (word1, w1.count('PASS'),
                                                                                                     N_KNOWN))
+    out.append('(e)(1) REFERENCE of Red Team (item 436 (b)(1): the E1 domain to the first scene change, >= 120 s; no decision): '
+               '%s; PASS %d / FAIL %d / UNDETERMINED %d of %d' % (sub_word(wref), wref.count('PASS'), wref.count('FAIL'),
+                                                                  wref.count('UNDETERMINED'), N_KNOWN))
     out.append('(e)(3) alone (video, death markers, W of Sky Garden): %s; W %s' % (word3, ww))
     out.append('KNOWN_SCENES (item 229 (e)(1) with (3)): %s - arms PASS %d / FAIL %d / UNDETERMINED %d of %d, W %s; the lead '
                'sheets and the decision - S13c' % (word, wall.count('PASS'), wall.count('FAIL'), wall.count('UNDETERMINED'),
@@ -778,12 +965,35 @@ def allowed(tag, made, get, export_ok):
 
 
 # ---------------------------------------------------------------------------------------------------------- printing
+def fmt_dom(r):
+    """Item 436 (b)(1): the end of the domain and its cause, the scene changes inside it (name, log line), its rows and
+    presented time, the skips / held flips / attributed >= 100 ms before and after the first scene change, the reference."""
+    if r is None:
+        return 'not made'
+    d = r.get('dom')
+    if d is None:
+        return 'no domain (entered %s, first scene frame %s)' % (r.get('entered'), r.get('first'))
+    sp = r['split']
+
+    def part(x):
+        return 'rows %d, rows with a skip %d, skipped-draw lines %d, held flips %d, attributed >= 100 ms %s' % (
+            x['rows'], x['skip_rows'], x['skip_lines'], x['held'], x['attr100'])
+    return ('end row %d (cause: %s), rows %d, presented %.3f s (minimum %d s); scene changes inside: %s; before the first '
+            'scene change: %s; after it: %s; reference to the first scene change: rows %d, presented %.3f s' % (
+                d['end'], d['cause'], d['rows'], d['shown_us'] / 1e6, DOMAIN_MIN_US // 1000000,
+                ', '.join('%s (row %d, log line %d)' % (nm or '<empty name>', g, ln) for g, nm, ln in d['changes']) or 'none',
+                part(sp['before']), part(sp['after']), d['ref_rows'], d['ref_shown_us'] / 1e6))
+
+
 def fmt_arm(r):
     o = ['ARM %s level %s class %s: %s; sc142 outcome %s (%s); log %s; binary %s' % (
         r['tag'], r['level'], r['cls'], 'PASS' if not r['fail'] else 'FAIL', r['outcome142'], r['reason142'],
         (r.get('log_sha') or 'MISSING')[:16], (r.get('binary') or '-')[:16])]
-    for name, ok, det in r['admit']:
-        o.append('  %-4s admit %s (%s)' % ('PASS' if ok else 'FAIL', name, det))
+    for j, (name, ok, det) in enumerate(r['admit']):
+        o.append('  %-4s admit %s %s (%s)' % ('PASS' if ok else 'FAIL', 'before the run' if j < r.get('n_pre', 0) else 'by the log',
+                                              name, det))
+    kind, rows = admission_gate(r)
+    o.append('  admission gate (item 436 (b)(2)): %s%s' % (kind, (' - ' + '; '.join(rows)) if rows else ''))
     for name, ok, det in r.get('ident', []):
         o.append('  %-4s ident %s (%s)' % ('n/a' if ok is None else ('PASS' if ok else 'FAIL'), name, det))
     p = r.get('prep') or {}
@@ -798,8 +1008,9 @@ def fmt_arm(r):
         o.append('  entered yes; first scene frame (n, dt, draws) %s; attribution %s' % (
             r['first'], 'DETERMINED' if r['attr_ok'] else 'UNDETERMINED'))
         a = r['after']
-        o.append('  after the first scene frame: rows with a skip %d, skipped-draw lines %d, held flips %d (reading 1 %d)' % (
-            a['skip_rows'], a['skip_lines'], a['held'], r['held_r1']))
+        o.append('  after the first scene frame, domain of item 436 (b)(1): rows with a skip %d, skipped-draw lines %d, held flips '
+                 '%d (reading 1 %d)' % (a['skip_rows'], a['skip_lines'], a['held'], r['held_r1']))
+        o.append('  domain: %s' % fmt_dom(r))
         o.append('  data (item 414 (g)(5)-(7)): skipped-draw lines after the entry line with frame= below the first scene frame %d; '
                  'skipped-draw lines without frame= %d' % (r['pre_dom'], r['nof']))
         f = r['f1']
@@ -823,7 +1034,12 @@ def fmt_arm(r):
                         x['n'], x['lead'], x['cost'], x['cost_prep']))
             o.append('  S-early: distinct events %d (item 414 (g)(1)), known %d, lead < cost %d' % (
                 len(ed['events']), ed['known'], ed['short']))
-    o.append('  entered (item 428 (g)): %s (%s)' % entry_state(r))
+    o.append('  entered (item 428 (g), item 436 (b)(3)-(4)): %s (%s)' % entry_state(r))
+    pe = r.get('prep_end') or {}
+    o.append('  end of the preparation screen (item 436 (b)(4)): ShaderPreparation: ready line %s; PipelinePrecache: all '
+             'pipelines created line %s; FrameTrace rows after the later %s; "no pipelines.bin yet" line %s' % (
+                 pe.get('ready_line'), pe.get('created_line'), pe.get('rows_after'), pe.get('nopb_line')))
+    o.append('  GLCache at the launch man_launch_glc sha256 %s (item 436 (b)(7))' % (r.get('glc_launch') or '-'))
     g = r['glitch']
     o.append('  video: %s; sheet %s; death markers %s; [Vulkan][E] %s; window %s; compatibility %s; translation cache %s' % (
         'n/a' if g is None else '%d frames, %d glitches' % (g['video_frames'], g['glitches']), r.get('sheet_file'),
@@ -832,6 +1048,8 @@ def fmt_arm(r):
     if r['group'] == 'u':
         o.append('  members: %s' % '; '.join('%s %s' % (n, {True: 'ok', False: 'FAILS', None: 'undetermined'}[ok])
                                               for n, ok, _ in members_u(r)))
+        o.append('  reference of Red Team (item 436 (b)(1), no decision): %s' % '; '.join(
+            '%s %s' % (n, {True: 'ok', False: 'FAILS', None: 'undetermined'}[ok]) for n, ok, _ in ref_members(r)))
     elif r['group'] == 'w':
         o.append('  members: %s' % '; '.join('%s %s' % (n, {True: 'ok', False: 'FAILS', None: 'undetermined'}[ok])
                                               for n, ok, _ in members_w(r)))
@@ -849,25 +1067,39 @@ SEALED_NAMES = ('s13/go_s13.sh', 's13/sc_s13.py', 's13/test_sc_s13.py', 's13/mut
 RX_EDITION = re.compile(r'^(installed|edition): ')
 
 
-def edition_rows(base=None, ed=None):
-    """The edition 11b (when it exists): every line of 11 except the lines "installed:" / "edition:" is in 11b in the same order
-    and nothing else; 11 says "installed: PENDING"; 11b names the installed binary.  Returns [(name, ok, detail)]."""
+RX_EDBASE = re.compile(r'^edition: base (\S+) sha256 ([0-9a-f]{64})$')
+
+
+def edition_rows(base=None, ed=None, base_rel=None):
+    """The edition 12b (when it exists): every line of 12 except the lines "installed:" / "edition:" is in 12b in the same order
+    and nothing else; 12 says "installed: PENDING" and carries no line "edition:"; 12b names the installed binary; item 436
+    (b)(6), RC6: 12b carries exactly one line "edition: base pred/12_s.md sha256 <64 hex>" and its sha256 = the sha256 of the
+    file of the seal 12.  Returns [(name, ok, detail)]."""
     base = base or SEAL_BASE
     ed = ed or SEAL_B
+    base_rel = base_rel or SEAL_BASE_REL
     if not os.path.isfile(ed):
         return []
     rows = []
     a = [x.rstrip(NL) for x in open(base, encoding='utf-8')] if os.path.isfile(base) else None
     b = [x.rstrip(NL) for x in open(ed, encoding='utf-8')]
     if a is None:
-        return [('edition 11b: the seal 11 exists', False, base)]
+        return [('edition 12b: the seal 12 exists', False, base)]
     ka = [x for x in a if not RX_EDITION.match(x)]
     kb = [x for x in b if not RX_EDITION.match(x)]
-    rows.append(('edition 11b: every line of 11 but "installed:" / "edition:" is in 11b, in order, nothing else', ka == kb,
+    rows.append(('edition 12b: every line of 12 but "installed:" / "edition:" is in 12b, in order, nothing else', ka == kb,
                  '%d / %d lines' % (len(ka), len(kb))))
     ia, ib = seal_installed(base), seal_installed(ed)
-    rows.append(('edition 11b: 11 says "installed: PENDING", 11b names the installed binary', ia is not None and
+    rows.append(('edition 12b: 12 says "installed: PENDING", 12b names the installed binary', ia is not None and
                  ia[0] == 'PENDING' and ib is not None and ib[0] != 'PENDING', '%s / %s' % (ia and ia[0][:16], ib and ib[0][:16])))
+    rows.append(('edition 12b: the seal 12 carries no line "edition:"', not any(x.startswith('edition:') for x in a),
+                 sum(1 for x in a if x.startswith('edition:'))))
+    eb = [x for x in b if x.startswith('edition:')]
+    m = RX_EDBASE.match(eb[0]) if len(eb) == 1 else None
+    bsha = hashlib.sha256(open(base, 'rb').read()).hexdigest()
+    rows.append(('edition 12b: one line "edition: base %s sha256 <64 hex>" = the sha256 of the seal 12 (item 436 (b)(6))' % base_rel,
+                 m is not None and m.group(1) == base_rel and m.group(2) == bsha,
+                 '%d lines "edition:"; %s / %s' % (len(eb), (m.group(2)[:16] if m else '-'), bsha[:16])))
     return rows
 
 

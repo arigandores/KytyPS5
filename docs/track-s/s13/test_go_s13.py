@@ -12,6 +12,8 @@ interference, IN_ARM written and removed, a hanging IN_ARM -> rc 1, an installed
 the lock; S9r2 observation 1 - a failed return leaves IN_ARM and RETURN_FAILED; observation 2 - the lock line names the seal.
 S13a2 (item 419 (v) Z3, item 428 (v)(1)): every plan of the 39 arms names KYTY_S_PCW=1 once; the caller's KYTY_S_PCW,
 KYTY_S_PCW_FORCE_MS and KYTY_FIX_* never reach the game, KYTY_S_PCW=1 goes positionally to enter_scene_s9.py.
+S13a3 (item 436 (b)(5), RC5): the guards are any <root>/*/RETURN_FAILED and <root>/*/IN_ARM - s12 (S12c) and a link directory
+never named before refuse rc 1 before the lock (G5, GL15-GL17); a file one level deeper is not a guard (G5b); the seal is 12.
 The first output line names this suite and the harness by sha256; the output ends with ALL OK.
     python C:/kyty/s288/s13/test_go_s13.py
 """
@@ -52,11 +54,11 @@ def stub_real(base, seal_rel):
     return ("import importlib.util, sys\n"
             "s = importlib.util.spec_from_file_location('sc13', %r)\nm = importlib.util.module_from_spec(s)\n"
             "s.loader.exec_module(m)\nm.ROOT = %r\nm.SEAL_BASE = %r\nm.SEAL_B = %r\n"
-            "sys.exit(m.main(sys.argv[1:], %r))\n" % (SC13, base.as_posix(), (base / 'pred' / '11_s.md').as_posix(),
-                                                     (base / 'pred' / '11b_s.md').as_posix(), (base / 's13').as_posix()))
+            "sys.exit(m.main(sys.argv[1:], %r))\n" % (SC13, base.as_posix(), (base / 'pred' / '12_s.md').as_posix(),
+                                                     (base / 'pred' / '12b_s.md').as_posix(), (base / 's13').as_posix()))
 
 
-(BASE / 's13' / 'sc_s13.py').write_bytes(stub_real(BASE, 'pred/11_s.md').encode('ascii'))
+(BASE / 's13' / 'sc_s13.py').write_bytes(stub_real(BASE, 'pred/12_s.md').encode('ascii'))
 BASH = shutil.which('bash') or 'C:/Program Files/Git/bin/bash.exe'
 N = [0]
 
@@ -76,7 +78,7 @@ def go(tag, dry='1', plwait='540', base=BASE):
     return p.returncode, (p.stdout + p.stderr).replace('bash.exe: warning: could not find /tmp, please create!' + NL, '')
 
 
-def seal(lines, name='11_s.md'):
+def seal(lines, name='12_s.md'):
     (BASE / 'pred' / name).write_text(NL.join(lines) + NL, encoding='ascii')
 
 
@@ -97,12 +99,21 @@ Path(FXLOCK).write_text('go_fs5c.sh fs5_v pid 1' + NL)
 rc, o = go('k_01')
 ok &= case('G4 a foreign lock -> rc 4 BUSY (lock held) before any process', rc == 4 and 'lock held: go_fs5c.sh fs5_v' in o)
 Path(FXLOCK).unlink()
-for gd in ('s4/RETURN_FAILED', 's6/RETURN_FAILED', 's10/RETURN_FAILED', 's10/IN_ARM', 's13/RETURN_FAILED', 's13/IN_ARM'):
+for gd in ('s4/RETURN_FAILED', 's6/RETURN_FAILED', 's10/RETURN_FAILED', 's10/IN_ARM', 's13/RETURN_FAILED', 's13/IN_ARM',
+           's12/RETURN_FAILED', 's12/IN_ARM', 's14z/RETURN_FAILED', 's14z/IN_ARM'):
     (BASE / gd).parent.mkdir(parents=True, exist_ok=True)
     (BASE / gd).write_text('guard' + NL)
     rc, o = go('k_01')
     ok &= case('G5 the guard %s -> rc 1 before the lock' % gd, rc == 1 and 'return failed guard' in o and gd in o)
     (BASE / gd).unlink()
+(BASE / 'sx' / 'deeper').mkdir(parents=True)
+(BASE / 'sx' / 'deeper' / 'RETURN_FAILED').write_text('not a guard' + NL)
+(BASE / 'sx' / 'deeper' / 'IN_ARM').write_text('not a guard' + NL)
+rc, o = go('k_01')
+ok &= case('G5b RC5 the edge: RETURN_FAILED / IN_ARM one level deeper (sx/deeper/) are not guards -> the call goes past the guards '
+           '(here to the seal check)', 'return failed guard' not in o and rc != 0)
+(BASE / 'sx' / 'deeper' / 'RETURN_FAILED').unlink()
+(BASE / 'sx' / 'deeper' / 'IN_ARM').unlink()
 rc, o = go('k_01', plwait='x')
 ok &= case('G6 PLWAIT not a number -> rc 2; above 540 -> rc 2', rc == 2 and 'bad PLWAIT' in o and go('k_01', plwait='541')[0] == 2)
 rc, o = go('zz_9')
@@ -117,19 +128,19 @@ seal(CALLS)
 rc, o = go('k_01')
 ok &= case('G9 no line "installed:" -> rc 1', rc == 1 and 'no installed line' in o)
 seal(CALLS + ['installed: PENDING'])
-seal(CALLS[1:] + ['installed: %s %s %s' % (INST, SIG, VAR)], '11b_s.md')
+seal(CALLS[1:] + ['installed: %s %s %s' % (INST, SIG, VAR)], '12b_s.md')
 rc, o = go('k_01')
-ok &= case('G10 the edition 11b in force without the call line of k_01 -> rc 1 (PLWAIT differs from the seal)', rc == 1 and
+ok &= case('G10 the edition 12b in force without the call line of k_01 -> rc 1 (PLWAIT differs from the seal)', rc == 1 and
            'PLWAIT differs' in o)
-seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '11b_s.md')
-seal(CALLS[:1] + CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '11b_s.md')
+seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '12b_s.md')
+seal(CALLS[:1] + CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '12b_s.md')
 rc, o = go('k_01')
 ok &= case('G11 two call lines of one tag -> rc 1', rc == 1)
-seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '11b_s.md')
+seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '12b_s.md')
 rc, o = go('k_01', plwait='300')
 ok &= case('G12 PLWAIT other than the call line -> rc 1', rc == 1 and 'PLWAIT differs' in o)
 out = dict((t, go(t)) for t in ('k_01', 'k_02', 'k_19', 'u_01', 'u_19', 'w13'))
-ok &= case('G13 DRY=1 of every arm kind -> rc 0 with a DRY line naming the installed line of the edition 11b',
+ok &= case('G13 DRY=1 of every arm kind -> rc 0 with a DRY line naming the installed line of the edition 12b',
            all(v[0] == 0 and v[1].startswith('DRY %s:' % k) and ('installed %s %s %s' % (INST, SIG, VAR)) in v[1]
                for k, v in out.items()))
 k1, k2, k19 = out['k_01'][1], out['k_02'][1], out['k_19'][1]
@@ -139,7 +150,7 @@ ok &= case('G14 k_01: class M (no trace), mode cat, the app caches from s13/empt
            ('restore app <- %s/s13/empty_app;' % B) in k1 and 'glc as found' in k1 and '--hold 180 ' in k1 and
            '--stable-draws 100 --timeout 600' in k1 and ' --rec ' not in k1 and 'vulkan-validation' not in k1 and
            'KYTY_AV_TRACE' not in k1 and 'SEED_PATH' not in k1 and '--level title_controller_ship' in k1 and
-           ('--pred %s/pred/11b_s.md' % B) in k1 and ('%s/s9/enter_scene_s9.py k_01' % B) in k1 and
+           ('--pred %s/pred/12b_s.md' % B) in k1 and ('%s/s9/enter_scene_s9.py k_01' % B) in k1 and
            ('--root %s/s13' % B) in k1 and 'KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0' in k1)
 ok &= case('G15 k_02 from the post copy cat/k_01; k_19 from cat/k_18 on enemy_gorilla', ('restore app <- %s/s13/cat/k_01;' % B) in k2
            and ('restore app <- %s/s13/cat/k_18;' % B) in k19 and '--level enemy_gorilla' in k19)
@@ -161,17 +172,19 @@ plans2 = dict((tg, go(tg, dry='2')) for tg in TAGS)
 ok &= case('G18b DRY=2 of all 39 arms: rc 0, each plan names KYTY_S_PCW=1 once and no other S knob', len(plans2) == 39 and all(
     v[0] == 0 and v[1].count(' KYTY_S_PCW=1 ') == 1 and v[1].count('KYTY_S_PCW') == 1 for v in plans2.values()))
 rc, o = go('k_01', dry='2')
-ok &= case('G19 DRY=2 right after the lock check prints the plan', rc == 0 and o.startswith('PLAN k_01: link s13, seal pred/11b_s.md'))
+ok &= case('G19 DRY=2 right after the lock check prints the plan', rc == 0 and o.startswith('PLAN k_01: link s13, seal pred/12b_s.md'))
 (BASE / 's13' / 'attempt_k_01.txt').write_text('x')
 rc, o = go('k_01')
 ok &= case('G20 an attempt already made -> rc 1, no repeat', rc == 1 and 'attempt already made' in o)
 (BASE / 's13' / 'attempt_k_01.txt').unlink()
 ok &= case('G21 no lock file was created by any DRY call', not Path(FXLOCK).exists())
 src_t = Path(SRC).read_text(encoding='ascii')
-ok &= case('G22 the shipped harness unsets KYTY_GAME_PATCH and KYTY_S_PCW, guards s4 / s6 / s10 / s13, writes the lock line '
+ok &= case('G22 the shipped harness unsets KYTY_GAME_PATCH and KYTY_S_PCW, guards any */RETURN_FAILED and */IN_ARM (item 436 '
+           '(b)(5)), writes the lock line '
            '"go_s.sh <tag> " naming the seal $PRED (S9r2 observation 2), reads the seal path from the scorer',
            'unset KYTY_GATE_SCHEDULE KYTY_GATE_SCHEDULE_ABBA VK_LAYER_MESSAGE_ID_FILTER KYTY_GAME_PATCH KYTY_S_PCW KYTY_S_PCW_FORCE_MS'
-           + NL in src_t and '$ROOT/s13/RETURN_FAILED' in src_t and '$ROOT/s13/IN_ARM; do' in src_t and
+           + NL in src_t and '  for G in $ROOT/*/RETURN_FAILED $ROOT/*/IN_ARM; do' + NL in src_t and
+           'if [ -e "$G" ]; then' in src_t and '$ROOT/s4/RETURN_FAILED' not in src_t and
            'echo "go_s.sh $T pid $$ started $(date +%Y-%m-%dT%H:%M:%S) (go_s13.sh seal $PRED)"' in src_t and
            'PRED=$(python $SC --seal-path' in src_t and src_t.count('guardfiles' + NL) == 2 and 'seal 06' not in src_t and
            'for V in $(compgen -e); do case "$V" in KYTY_FIX_*) unset "$V";; esac; done' + NL in src_t and
@@ -216,7 +229,7 @@ for name, body in (('procload.py', 'import sys' + NL + 'sys.exit(0)' + NL), ('id
     put2(B2 / name, body.encode('ascii'))
 put2(B2 / 'bin' / 'powershell', ('#!/bin/sh' + NL + 'echo 0' + NL).encode('ascii'))
 shutil.copy2('C:/kyty/s288/cachex_s.py', B2 / 'cachex_s.py')
-REAL = stub_real(B2, 'pred/11_s.md').replace('sys.exit(m.main(', 'REAL = lambda: sys.exit(m.main(')
+REAL = stub_real(B2, 'pred/12_s.md').replace('sys.exit(m.main(', 'REAL = lambda: sys.exit(m.main(')
 put2(B2 / 's13' / 'sc_s13.py', (REAL +
                                 "import os\na = sys.argv[1:]\n"
                                 "if a[:1] in (['--plan'], ['--seal-path'], ['--installed']):\n    REAL()\n"
@@ -254,7 +267,7 @@ for a, b in (('ROOT=C:/kyty/s288' + NL, 'ROOT=%s' % B2.as_posix() + NL), ('LOCK=
     text2 = text2.replace(a, b)
 (B2 / 's13' / 'go_s13.sh').write_bytes(text2.encode('ascii'))
 TAGS2 = ('k_01', 'k_02', 'u_01', 'w13', 'k_03')
-(B2 / 'pred' / '11_s.md').write_bytes((''.join('go_s13 call: PLWAIT=540 bash C:/kyty/s288/s13/go_s13.sh %s\n' % t for t in TAGS2) +
+(B2 / 'pred' / '12_s.md').write_bytes((''.join('go_s13 call: PLWAIT=540 bash C:/kyty/s288/s13/go_s13.sh %s\n' % t for t in TAGS2) +
                                        'installed: %s %s %s\n' % (INSTX, SIG, VAR)).encode('ascii'))
 BINP = '/' + B2.as_posix()[0].lower() + B2.as_posix()[2:] + '/bin'
 
@@ -344,7 +357,7 @@ ok &= case('GL10 KYTY_GAME_PATCH of the caller not seen by the game; a GamePatch
            GAME2.read_bytes() == b'installed build X' and not Path(LOCK2).exists())
 lk = js2('k_01').get('lock') or ''
 ok &= case('GL11 S9r2 observation 2: the lock line the game saw begins "go_s.sh k_01 " and names go_s13.sh and the seal file in '
-           'force', lk.startswith('go_s.sh k_01 pid ') and '(go_s13.sh seal pred/11_s.md)' in lk)
+           'force', lk.startswith('go_s.sh k_01 pid ') and '(go_s13.sh seal pred/12_s.md)' in lk)
 (B2 / 's13' / 'IN_ARM').write_text('IN_ARM k_03 2026-10-04T00:00:00Z pid 1 - a hard kill left it' + NL)
 n_lock = len(lockrows())
 rc, o = go2('k_03')
@@ -362,6 +375,16 @@ ok &= case('GL13 an installed binary other than the seal line -> rc 1 inside the
            not (B2 / 's13' / 'attempt_k_03.txt').exists() and len(lockrows()) == n_lock + 2 and not Path(LOCK2).exists() and
            ('!= %s (seal line installed:) - no arm' % INSTX) in t5)
 put2(GAME2, b'installed build X')
+for k, gd in enumerate(('s12/RETURN_FAILED', 's12/IN_ARM', 's14z/IN_ARM')):
+    (B2 / gd).parent.mkdir(parents=True, exist_ok=True)
+    (B2 / gd).write_text('guard of another link' + NL)
+    n_lock = len(lockrows())
+    rc, o = go2('k_03')
+    ok &= case('GL%d RC5 (item 436 (b)(5)): the guard %s of another link -> rc 1 before the lock: no lock row, no attempt, no '
+               'IN_ARM of s13, the guard kept' % (15 + k, gd), rc == 1 and 'return failed guard' in o and gd in o and
+               len(lockrows()) == n_lock and not (B2 / 's13' / 'attempt_k_03.txt').exists() and
+               not (B2 / 's13' / 'IN_ARM').exists() and (B2 / gd).exists())
+    (B2 / gd).unlink()
 rc, o = go2('k_03', mode='breakcx')
 ok &= case('GL14 S9r2 observation 1: a failed return (the copy installed_pre gone) -> rc 1, RETURN_FAILED written, IN_ARM KEPT '
            '(a later return of the same run does not remove it), the lock released', rc == 1 and

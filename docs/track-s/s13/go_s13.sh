@@ -1,5 +1,7 @@
 #!/bin/bash
-# Track S, link S13a (HPP-498; ROADMAP "SESSION 122" item 408 (e), (l), item 229 (e)(1), (3), item 410 (g)(6)(iii), item 414, item 419 (v) Z3, item 428 (v)):
+# Track S, link S13a (HPP-498; ROADMAP "SESSION 122" item 408 (e), (l), item 229 (e)(1), (3), item 410 (g)(6)(iii), item 414, item 419 (v) Z3, item 428 (v)),
+# reworked by S13a3 (HPP-537, item 436 (b)(5), (v)): the guards are ANY C:/kyty/s288/*/RETURN_FAILED and */IN_ARM (RC5 of S13r);
+# the seal in force is pred/12_s.md or its edition pred/12b_s.md (pred/11_s.md is not in force).
 # the game chain of link S13b - the collection arms k_01 .. k_19 into C:/kyty/s288/s13/cat, the U arms u_01 .. u_19 on the
 # exported catalogue C:/kyty/s288/s13/seeds, the W of Sky Garden w13.  Port of C:/kyty/s288/s9/go_s9.sh (seal 07): stop file,
 # lock first, RETURN_FAILED / IN_ARM guards, procload, idle, one attempt, the seal call line, the foreign-CPU row, the return of
@@ -14,10 +16,12 @@
 #     w13   M, mode u + validation (item 295 (b)): --vulkan-validation true, VK_LAYER_PATH, VK_LAYER_DUPLICATE_MESSAGE_LIMIT=
 #           100000000, no VK_LAYER_MESSAGE_ID_FILTER; hold 330, no video
 #   BINARY: the INSTALLED one - no install.  The seal line "installed: <sha256> <signature> <variant>" (sc_s13.py --installed)
-#     names it; "installed: PENDING" (seal 11, before the installation of S12d / FS5d) refuses rc 6 before the lock - an edition
+#     names it; "installed: PENDING" (seal 12, before the installation of S12d / FS5d) refuses rc 6 before the lock - an edition
 #     of the seal by a lead item names it.  Inside the lock the installed binary must be that sha, else no arm (rc 1).
 #   KNOB (item 419 (v) Z3, item 428 (v)(1)): every arm names KYTY_S_PCW=1 positionally (SPCW, after S12 an absent knob means 1);
 #     the caller's KYTY_S_PCW, KYTY_S_PCW_FORCE_MS, KYTY_GAME_PATCH and every KYTY_FIX_* are unset before the arm.
+#   GUARDS (item 436 (b)(5)): any $ROOT/*/RETURN_FAILED or $ROOT/*/IN_ARM (s4, s6, s10, s12, s13 or any later link directory)
+#     refuses rc 1 before the lock and again right before it; the own s13/IN_ARM falls under the same rule before the arm writes it.
 #   GUARD s13/IN_ARM: written before TOUCHED=1 (the tag, the installed sha, man_pre_app, man_pre_glc), removed only by a
 #     successful return; S9r2 observation 1 (item 382 (b)): after a failed return (RETURN_FAILED written) no later return of the
 #     same run removes it.  THE LOCK line begins "go_s.sh <tag> " (cachex_s.py admits a write only from that prefix) and names
@@ -63,9 +67,9 @@ lockheld() {
 }
 lockheld
 guardfiles() {
-  for G in $ROOT/s4/RETURN_FAILED $ROOT/s6/RETURN_FAILED $ROOT/s10/RETURN_FAILED $ROOT/s10/IN_ARM $ROOT/s13/RETURN_FAILED \
-           $ROOT/s13/IN_ARM; do
-    if [ -e $G ]; then
+  # item 436 (b)(5), RC5: every link directory of track S - a guard left by any harness (S12c's s12 among them) stops the arm
+  for G in $ROOT/*/RETURN_FAILED $ROOT/*/IN_ARM; do
+    if [ -e "$G" ]; then
       GT=""
       read -r GT < $G 2>/dev/null
       log0 "go_s13.sh $T refused (rc 1): the guard $G exists ($GT) - the lead removes it after the return by hand"
@@ -85,11 +89,12 @@ if [ "$PLWAIT" -gt "$PLMAX" ]; then
   log0 "go_s13.sh $T refused: PLWAIT $PLWAIT > $PLMAX"; echo "PLWAIT above $PLMAX"; exit 2
 fi
 cd "$ROOT" || exit 1
-# the seal in force: the edition pred/11b_s.md (11 with the line "installed:" named, a lead item) when it exists, else 11
+# the seal in force: the edition pred/12b_s.md (12 with the line "installed:" named and the line "edition: base pred/12_s.md
+# sha256 <sha>", a lead item) when it exists, else 12
 PRED=$(python $SC --seal-path 2>&1 | tr -d '\r')
 case "$PRED" in
-  pred/11_s.md|pred/11b_s.md) ;;
-  *) log0 "go_s13.sh $T refused: the seal path is not pred/11_s.md or pred/11b_s.md ($PRED)"; echo "seal path bad"; exit 1;;
+  pred/12_s.md|pred/12b_s.md) ;;
+  *) log0 "go_s13.sh $T refused: the seal path is not pred/12_s.md or pred/12b_s.md ($PRED)"; echo "seal path bad"; exit 1;;
 esac
 PLAN=$(python $SC --plan "$T" 2>&1 | tr -d '\r')
 case "$PLAN" in

@@ -1,0 +1,1 @@
+SEAL C:/kyty/s288/pred/12_s.md sha256 300ee9558d32d9af4ed3373c8ec0df5783f08f69a622362d6a2b98919ef7da5a lines 343; seal lines 24; call lines 39; plans 39 (each naming KYTY_S_PCW=1 once)

@@ -1,4 +1,5 @@
-"""Track S link S13a2 (HPP-498; ROADMAP "SESSION 122" item 408 (l), item 229 (e)(1), (3), item 414, item 428): mutants of s13/sc_s13.py -
+"""Track S link S13a2 (HPP-498; ROADMAP "SESSION 122" item 408 (l), item 229 (e)(1), (3), item 414, item 428), reworked by S13a3
+(HPP-537, item 436 (b)(1)-(7)): mutants of s13/sc_s13.py -
 each must be killed by s13/test_sc_s13.py.  Run through the frozen mutlib v4.1 FULL (never --changed-from), ONE counted run on
 the final text:
     python C:/kyty/KytyPS5/docs/session-116/mutlib_v41/mutlib.py --scorer C:/kyty/s288/s13/sc_s13.py
@@ -10,7 +11,11 @@ member of item 229 (e)(1), (3) and its edge, per word, per order rule, per data 
 code (sc_s9.py, sc_s.py, sc142.py) is not mutated here: it is pinned by sha256 and its own fixtures run on it.  The cheap
 failures (constants) stand before the full paths (item 112 (a)).
 Not mutated (equivalent - no input can tell the mutant): "e[5] > el" -> ">=" in pre_domain_lines (the entry line is never a
-skipped-draw line); report texts no fixture reads (read_k, the detail strings).
+skipped-draw line); report texts no fixture reads (read_k, the detail strings); S13a3: "x[4] > later" -> ">=" in the RC4 count
+(a FrameTrace row is never a preparation line); "pe.get('later') is None or" dropped in entry_state (later None => rows_after
+None); "not r.get('entered')" dropped in e1_gate (a not entered arm has no f1); the bounds of skip_lines in split_at at the
+first scene change row (no fixture line sits in the group of the change row - the change line is not a skipped draw); mw_dual_none (the row reads "'dual_before' in r", false only without
+a log - then the RC2 gate is "missing" and every W member but E3-death is undetermined whatever the row says).
 """
 MUTANTS = [
     # constants
@@ -84,13 +89,21 @@ MUTANTS = [
     ('si_hex', "RX_HEX64 = re.compile(r'^[0-9a-f]{64}$')", "RX_HEX64 = re.compile(r'^[0-9a-f]{63}')"),
     ('si_sig', "sig and sig.startswith('KytySC3:') and var", "sig and var"),
     ('si_var', "var and var.startswith('variant_'):", "var:"),
-    ('ed_lines', "    rows.append(('edition 11b: every line of 11 but \"installed:\" / \"edition:\" is in 11b, in order, nothing else', ka == kb,",
-     "    rows.append(('edition 11b: every line of 11 but \"installed:\" / \"edition:\" is in 11b, in order, nothing else', True,"),
-    ('ed_order', "    rows.append(('edition 11b: every line of 11 but \"installed:\" / \"edition:\" is in 11b, in order, nothing else', ka == kb,",
-     "    rows.append(('edition 11b: every line of 11 but \"installed:\" / \"edition:\" is in 11b, in order, nothing else', sorted(ka) == sorted(kb),"),
+    ('ed_lines', "    rows.append(('edition 12b: every line of 12 but \"installed:\" / \"edition:\" is in 12b, in order, nothing else', ka == kb,",
+     "    rows.append(('edition 12b: every line of 12 but \"installed:\" / \"edition:\" is in 12b, in order, nothing else', True,"),
+    ('ed_order', "    rows.append(('edition 12b: every line of 12 but \"installed:\" / \"edition:\" is in 12b, in order, nothing else', ka == kb,",
+     "    rows.append(('edition 12b: every line of 12 but \"installed:\" / \"edition:\" is in 12b, in order, nothing else', sorted(ka) == sorted(kb),"),
     ('ed_pend', "ia is not None and\n                 ia[0] == 'PENDING' and ib", "ia is not None and\n                 True and ib"),
     ('ed_named', "and ib is not None and ib[0] != 'PENDING'", "and ib is not None"),
-    ('ed_nobase', "        return [('edition 11b: the seal 11 exists', False, base)]", "        return []"),
+    ('ed_nobase', "        return [('edition 12b: the seal 12 exists', False, base)]", "        return []"),
+    # item 436 (b)(6), RC6: the line "edition: base pred/12_s.md sha256 <sha>"
+    ('ed6_count', "m = RX_EDBASE.match(eb[0]) if len(eb) == 1 else None", "m = RX_EDBASE.match(eb[0]) if len(eb) >= 1 else None"),
+    ('ed6_sha', "m is not None and m.group(1) == base_rel and m.group(2) == bsha,", "m is not None and m.group(1) == base_rel,"),
+    ('ed6_name', "m is not None and m.group(1) == base_rel and m.group(2) == bsha,", "m is not None and m.group(2) == bsha,"),
+    ('ed6_end', "RX_EDBASE = re.compile(r'^edition: base (\\S+) sha256 ([0-9a-f]{64})$')",
+     "RX_EDBASE = re.compile(r'^edition: base (\\S+) sha256 ([0-9a-f]{64})')"),
+    ('ed6_base_noed', "not any(x.startswith('edition:') for x in a),", "True,"),
+    ('ed6_rel', "SEAL_BASE_REL = 'pred/12_s.md' ", "SEAL_BASE_REL = 'pred/11_s.md' "),
     ('ed_rx', "RX_EDITION = re.compile(r'^(installed|edition): ')", "RX_EDITION = re.compile(r'^(installed): ')"),
     ('cs_names', "    for name in SEALED_NAMES:\n        if name not in seen:", "    for name in ():\n        if name not in seen:"),
     ('cs_me', "    rows.append(('this scorer in the seal', seen.get('s13/sc_s13.py') == mine, mine[:16]))", ""),
@@ -163,11 +176,11 @@ MUTANTS = [
     ('ad_pre_slash', "(pr.get('path') or '').replace(chr(92), '/') == pred_path,", "(pr.get('path') or '') == pred_path,"),
     ('ad_retry', "not any(a.get('pipeline_cache_off') for a in at), '')", "True, '')"),
     # score_arm
-    ('sa_spcw', "len(s['spcw']) >= 1 and all(x == SPCW_FMT % pv for x in s['spcw']),", "all(x == SPCW_FMT % pv for x in s['spcw']),"),
-    ('sa_spcw_all', "len(s['spcw']) >= 1 and all(x == SPCW_FMT % pv for x in s['spcw']),", "len(s['spcw']) >= 1,"),
+    ('sa_spcw', "len(s['spcw']) >= 1, all(x == SPCW_FMT % pv for x in s['spcw']),", "True, all(x == SPCW_FMT % pv for x in s['spcw']),"),
+    ('sa_spcw_all', "len(s['spcw']) >= 1, all(x == SPCW_FMT % pv for x in s['spcw']),", "len(s['spcw']) >= 1, True,"),
     ('sa_spcw_env', "all(x == SPCW_FMT % pv for x in s['spcw']),", "all(x == SPCW_FMT % SPCW_ENV for x in s['spcw']),"),
     ('sa_pv_key', "pv = (js.get('env') or {}).get('KYTY_S_PCW')", "pv = (js.get('env') or {}).get('KYTY_S_PCW_FORCE_MS')"),
-    ('sa_gp', "sx['gamepatch'] == 0, sx['gamepatch']))", "True, sx['gamepatch']))"),
+    ('sa_gp', "sx['gamepatch'] == 0, sx['gamepatch'])", "True, sx['gamepatch'])"),
     ('sa_compat', "(':' + inst[1] + ':') in (':' + sy['compat'] + ':'),", "True,"),
     ('sa_tcache', "sy['tcache'].endswith('/' + inst[2]),", "True,"),
     ('sa_win', "sy['win'].get('minimized', 0) == 0 and sy['recover'] == 0,", "sy['recover'] == 0,"),
@@ -208,13 +221,71 @@ MUTANTS = [
     ('sc_to', "    if r.get('attempt') == 'timeout':\n        lb.append", "    if False:\n        lb.append"),
     ('sc_lbmax', "    return (max(lb), 'lower bound') if lb else (None, 'none')", "    return (min(lb), 'lower bound') if lb else (None, 'none')"),
     # members
-    ('mu_gate', "    out = [('catalogue installed (gates)', True if g else None, gw)]\n    if not ok_arm(r) or not r.get('entered') or 'f1' not in r",
-     "    out = [('catalogue installed (gates)', True, gw)]\n    if not ok_arm(r) or not r.get('entered') or 'f1' not in r"),
-    ('mu_und', "    if not ok_arm(r) or not r.get('entered') or 'f1' not in r or not g:", "    if 'f1' not in r:"),
-    ('mu_skip_rows', "out.append(('E1-skip', a['skip_rows'] == 0 and a['skip_lines'] == 0,", "out.append(('E1-skip', a['skip_lines'] == 0,"),
-    ('mu_skip_lines', "out.append(('E1-skip', a['skip_rows'] == 0 and a['skip_lines'] == 0,", "out.append(('E1-skip', a['skip_rows'] == 0,"),
-    ('mu_held', "        out.append(('E1-held', a['held'] == 0,", "        out.append(('E1-held', r['held_r1'] == 0,"),
-    ('mu_attr_none', "None if r['att100'] is None else r['att100'] == 0,", "r['att100'] == 0,"),
+    ('mu_gate', "    out = [('catalogue installed (gates)', True if g else None, gw)]\n    if 'f1' not in r:",
+     "    out = [('catalogue installed (gates)', True, gw)]\n    if 'f1' not in r:"),
+    ('mu_und_ident', "    if ident_fail(r) or not r.get('entered') or 'f1' not in r or not g:",
+     "    if not r.get('entered') or 'f1' not in r or not g:"),
+    ('mu_und_g', "    if ident_fail(r) or not r.get('entered') or 'f1' not in r or not g:",
+     "    if ident_fail(r) or not r.get('entered') or 'f1' not in r:"),
+    ('mu_ident_pref', "    return [x for x in r['fail'] if x.startswith('identity: ')]", "    return list(r['fail'])"),
+    ('mu_skip_rows', "('E1-skip', a['skip_rows'] == 0 and a['skip_lines'] == 0,", "('E1-skip', a['skip_lines'] == 0,"),
+    ('mu_skip_lines', "('E1-skip', a['skip_rows'] == 0 and a['skip_lines'] == 0,", "('E1-skip', a['skip_rows'] == 0,"),
+    ('mu_held', "('E1-held', a['held'] == 0,", "('E1-held', r['held_r1'] == 0,"),
+    ('mu_attr_none', "None if att100 is None else att100 == 0,", "att100 == 0,"),
+    # item 436 (b)(1), RC1: the domain by the letter, its minimum, the reference
+    ('d1_min_up', "DOMAIN_MIN_US = 120000000 ", "DOMAIN_MIN_US = 120000001 "),
+    ('d1_min_down', "DOMAIN_MIN_US = 120000000 ", "DOMAIN_MIN_US = 119999999 "),
+    ('d1_min_le', "    if shown_us < DOMAIN_MIN_US and not death(r):", "    if shown_us <= DOMAIN_MIN_US and not death(r):"),
+    ('d1_min_death', "    if shown_us < DOMAIN_MIN_US and not death(r):", "    if shown_us < DOMAIN_MIN_US:"),
+    ('d1_min_off', "    if shown_us < DOMAIN_MIN_US and not death(r):", "    if False:"),
+    ('d1_end', "    return dict(end=nrows, cause=cause,", "    return dict(end=sc_end, cause=cause,"),
+    ('d1_shown', "shown_us=shown_us(s, fi + 1, nrows),", "shown_us=shown_us(s, fi, nrows),"),
+    ('d1_cause', "    cause = 'hold' if attempt == 'ok' and not ended and not exited else 'end of log'", "    cause = 'hold'"),
+    ('d1_changes', "    ch = [(x[0], x[1], x[2]) for x in s['starts'][ent[0] + 1:]] if ent else []", "    ch = []"),
+    ('d1_ref_shown', "ref_shown_us=shown_us(s, fi + 1, sc_end))", "ref_shown_us=shown_us(s, fi + 1, nrows))"),
+    ('d1_f1', "        r['f1'] = A.freeze(s, fi, dend, prep, attr_ok, 1)", "        r['f1'] = A.freeze(s, fi, end, prep, attr_ok, 1)"),
+    ('d1_after', "        r['after'] = frame_rows(s, fi, dend)", "        r['after'] = frame_rows(s, fi, end)"),
+    ('d1_ref_after', "        r['ref'] = dict(after=frame_rows(s, fi, end),", "        r['ref'] = dict(after=frame_rows(s, fi, dend),"),
+    ('d1_ref_min', "    if r['dom']['ref_shown_us'] < DOMAIN_MIN_US and e1_gate(r, DOMAIN_MIN_US) is None:", "    if False:"),
+    ('d1_split_cut', "        r['split'] = split_at(s, fi, dend, end, r['f1'], attr_ok)", "        r['split'] = split_at(s, fi, dend, dend, r['f1'], attr_ok)"),
+    ('d1_split_attr', "        if attr_ok:\n            d['attr100'] =", "        if False:\n            d['attr100'] ="),
+    ('d1_split_held', "                 held=sum((A.xget(s, i, 1) or 0) for i in rr))", "                 held=0)"),
+    ('d1_split_series', "+ sum(1 for x in fz['series'] if lo <= x['a'] < hi and x['gap_pipe_us'] >= A.K3_US)", ""),
+    ('d1_split_series_lo', "+ sum(1 for x in fz['series'] if lo <= x['a'] < hi and x['gap_pipe_us'] >= A.K3_US)",
+     "+ sum(1 for x in fz['series'] if x['gap_pipe_us'] >= A.K3_US)"),
+    ('d1_split_long', "if lo <= x['i'] < hi and A.counted_row(x) and x['dt'] >= A.K3_US and", "if A.counted_row(x) and x['dt'] >= A.K3_US and"),
+    # item 436 (b)(2), RC2: the admission gate
+    ('g2_npre', "    r['n_pre'] = len(r['admit'])            #", "    r['n_pre'] = 0            #"),
+    ('g2_pre_slice', "    pre = [a[0] for a in r['admit'][:r.get('n_pre', len(r['admit']))] if not a[1]]",
+     "    pre = [a[0] for a in r['admit'] if not a[1]]"),
+    ('g2_pre', "    if pre:\n        return 'pre', pre", "    if False:\n        return 'pre', pre"),
+    ('g2_diff', "    if dif:\n        return 'differs', dif", "    if False:\n        return 'differs', dif"),
+    ('g2_miss', "    if mis:\n        return 'missing', mis", "    if False:\n        return 'missing', mis"),
+    ('g2_ok', "    if kind == 'ok':\n        return ms", "    if kind != 'pre':\n        return ms"),
+    ('g2_keep', "    keep = ('E3-death',) if kind == 'missing' and death(r) else ()", "    keep = ()"),
+    ('g2_keep_death', "    keep = ('E3-death',) if kind == 'missing' and death(r) else ()", "    keep = ('E3-death',) if kind == 'missing' else ()"),
+    ('g2_bylog_missing', "'ok' if present and ok else ('missing' if not present else 'differs')", "'ok' if present and ok else 'differs'"),
+    ('g2_bylog_present', "        r['admit'].append((name, bool(present and ok), str(detail)))", "        r['admit'].append((name, bool(ok), str(detail)))"),
+    ('g2_compat_present', "'the compatibility line carries the signature of the seal line \"installed:\"', sy['compat'] is not None,",
+     "'the compatibility line carries the signature of the seal line \"installed:\"', True,"),
+    ('g2_tcache_present', "'the translation cache line ends with the variant of the seal line \"installed:\"', sy['tcache'] is not None,",
+     "'the translation cache line ends with the variant of the seal line \"installed:\"', True,"),
+    ('g2_u_gated', "                                                              else 'none')))\n    return gated(out, r)\n\n\ndef members_w",
+     "                                                              else 'none')))\n    return out\n\n\ndef members_w"),
+    ('g2_w_gated', "                                                              else 'none')))\n    return gated(out, r)\n\n\ndef death",
+     "                                                              else 'none')))\n    return out\n\n\ndef death"),
+    # item 436 (b)(3)-(4), RC3 / RC4: entry_state
+    ('e3_fail', "    if r.get('fail'):\n        return 'void', 'an admission", "    if False:\n        return 'void', 'an admission"),
+    ('e3_fail_entered', "    if r.get('fail'):\n        return 'void', 'an admission", "    if r.get('fail') and not r.get('entered'):\n        return 'void', 'an admission"),
+    ('e4_rows', "    if pe.get('later') is None or not pe.get('rows_after'):", "    if pe.get('later') is None:"),
+    ('e4_later_both', "later = max(sy['ready_line'], sy['created_line']) if sy['ready_line'] and sy['created_line'] else None",
+     "later = max(sy['ready_line'] or 0, sy['created_line'] or 0) or None"),
+    ('e4_later_max', "later = max(sy['ready_line'], sy['created_line']) if", "later = min(sy['ready_line'], sy['created_line']) if"),
+    ('e4_m_ready', "M_READY = b'ShaderPreparation: ready' ", "M_READY = b'ShaderPreparation: readyX' "),
+    ('e4_m_created', "M_CREATED = b'PipelinePrecache: all pipelines created'\n", "M_CREATED = b'PipelinePrecache: all pipelines createdX'\n"),
+    ('e4_nopb', "line.rstrip().endswith(b'pipelines.bin yet'):", "line.rstrip().endswith(b'pipelines.bin'):"),
+    # item 436 (b)(7), RC7
+    ('g7_glc', "    r['glc_launch'] = jget(cj, 'man_launch_glc', 'sha')", "    r['glc_launch'] = jget(cj, 'man_post_glc', 'sha')"),
     ('mu_scr_le', "        out.append(('E1-screen', sec <= PREP_LIMIT_S, '%.1f s' % sec))", "        out.append(('E1-screen', sec < PREP_LIMIT_S, '%.1f s' % sec))"),
     ('mu_scr_lb', "    elif kind == 'lower bound' and sec > PREP_LIMIT_S:", "    elif kind == 'lower bound' and sec >= PREP_LIMIT_S:"),
     ('mu_scr_lb2', "    elif kind == 'lower bound' and sec > PREP_LIMIT_S:", "    elif kind == 'lower bound':"),
@@ -225,8 +296,8 @@ MUTANTS = [
      "gl['video_frames'] >= FRAMES_VIDEO and bool(r.get('sheet_file')),"),
     ('mu_vid_sheet', "gl['video_frames'] >= FRAMES_VIDEO and gl['glitches'] == 0 and bool(r.get('sheet_file')),",
      "gl['video_frames'] >= FRAMES_VIDEO and gl['glitches'] == 0,"),
-    ('mu_death', "    out.append(('E3-death', not r['marks'] and not r['ended'] and not r['exited'],\n                ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']\n                                                              else 'none')))\n    return out\n\n\ndef members_w",
-     "    out.append(('E3-death', True,\n                ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']\n                                                              else 'none')))\n    return out\n\n\ndef members_w"),
+    ('mu_death', "    out.append(('E3-death', not r['marks'] and not r['ended'] and not r['exited'],\n                ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']\n                                                              else 'none')))\n    return gated(out, r)\n\n\ndef members_w",
+     "    out.append(('E3-death', True,\n                ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']\n                                                              else 'none')))\n    return gated(out, r)\n\n\ndef members_w"),
     ('mw_gate', "    out = [('catalogue installed (gates)', True if g else None, gw)]\n    if not ok_arm(r) or not r.get('entered') or not g:",
      "    out = [('catalogue installed (gates)', True, gw)]\n    if not ok_arm(r) or not r.get('entered') or not g:"),
     ('mw_held', "held >= HOLD_W_US if r.get('first') else None,", "held > HOLD_W_US if r.get('first') else None,"),
@@ -235,9 +306,8 @@ MUTANTS = [
      "    out.append(('W 0 [Vulkan][E] (log + stdout)', True, r.get('vke')))"),
     ('mw_295', "    for name, ok, det in r.get('w295') or []:\n        out.append((name, ok, det))", "    pass"),
     ('mw_dual', "bool(r['dual_before']) if 'dual_before' in r else None, r.get('dual_before')))", "True, r.get('dual_before')))"),
-    ('mw_dual_none', "bool(r['dual_before']) if 'dual_before' in r else None, r.get('dual_before')))", "bool(r.get('dual_before')), r.get('dual_before')))"),
-    ('mw_death', "    out.append(('E3-death', not r['marks'] and not r['ended'] and not r['exited'],\n                ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']\n                                                              else 'none')))\n    return out\n\n\ndef death",
-     "    out.append(('E3-death', True,\n                ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']\n                                                              else 'none')))\n    return out\n\n\ndef death"),
+    ('mw_death', "    out.append(('E3-death', not r['marks'] and not r['ended'] and not r['exited'],\n                ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']\n                                                              else 'none')))\n    return gated(out, r)\n\n\ndef death",
+     "    out.append(('E3-death', True,\n                ';'.join(m['kind'] for m in r['marks']) or ('hold_exit / ENDED / exited' if r['ended'] or r['exited']\n                                                              else 'none')))\n    return gated(out, r)\n\n\ndef death"),
     ('mw_und', "        out.append(('W admitted and entered', None,", "        out.append(('W admitted and entered', True,"),
     # words
     ('aw_order', "    if any(ok is False for _, ok, _ in ms):\n        return 'FAIL'\n    if any(ok is None for _, ok, _ in ms):\n        return 'UNDETERMINED'",
@@ -260,7 +330,7 @@ MUTANTS = [
     ('es_death', "    if death(r):\n        return 'void'", "    if False:\n        return 'void'"),
     ('es_min', "    if w.get('minimized', 0) or w.get('recover', 0):", "    if w.get('recover', 0):"),
     ('es_rec', "    if w.get('minimized', 0) or w.get('recover', 0):", "    if w.get('minimized', 0):"),
-    ('es_no', "    return 'no', 'no entry line in a clean attempt'", "    return 'void', 'no entry line in a clean attempt'"),
+    ('es_no', "    return 'no', 'no entry line in a clean attempt after", "    return 'void', 'no entry line in a clean attempt after"),
     ('ne_and', "rows.append((lv, ks, us, ks[0] == 'no' and us[0] == 'no'))", "rows.append((lv, ks, us, ks[0] == 'no' or us[0] == 'no'))"),
     ('ne_k', "rows.append((lv, ks, us, ks[0] == 'no' and us[0] == 'no'))", "rows.append((lv, ks, us, us[0] == 'no'))"),
     ('ne_u', "rows.append((lv, ks, us, ks[0] == 'no' and us[0] == 'no'))", "rows.append((lv, ks, us, ks[0] == 'no'))"),

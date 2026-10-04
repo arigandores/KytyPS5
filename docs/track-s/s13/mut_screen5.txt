@@ -1,0 +1,18 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s288\s13\sc_s13.py sha256 29d95e9c2f562a049817716000687817f4477f647fb4a8d7cbc2f7066e1a0ad1
+test    C:\kyty\s288\s13\test_sc_s13.py sha256 2a50a3a57bf377a26361021457730cb484e86f0482e79d0d7fba4402f13dd47f
+mutants C:\kyty\s288\s13\mut_sc_s13.py sha256 d002b571ac45ebc9581de7eb78b8fdcf307b33d301a808e154278aa5f5de077d
+mutants: format list, 281 defined (strict: every use of MUTANTS checked; statements evaluated at lines 19)
+selection: --only, 2 mutants
+suite: family V; fast on (221 guarded updates of ok); end of suite: the final exit call at line 1254
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding utf-8 (noted, not emulated)
+fixtures: every job writes its own (replay off: the scorer or the suite copies files in a way that raises no audit event (shutil.copy2 / copytree / move go through _winapi.CopyFile2): a shared read-only fixture would be copied read-only, unseen - review5 MAJOR-2; automatic --no-replay: line 391: copy2; line 430: copy2)
+workers 2 (spawn, one process per job), work dir C:\kyty\s288\s13\mutwork\sc_s13_24608_1791111181
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (8.8 s)
+mw_held_first  KILLED by FAIL  (8.4 s)
+mw_und  KILLED by PASS  (8.6 s)
+2 mutants: 2 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+early exit: 2 kill(s) ended at their first failing case; they skipped a median 24 % / mean 24 % of the suite's 223 checks, about 1.3 s of the baseline's suite time per job (3 s in all)
+wall 17.9 s, worker time 25.7 s, 2 workers
+ALL KILLED (2 of 2 selected mutants killed; 281 defined in the mutant script)

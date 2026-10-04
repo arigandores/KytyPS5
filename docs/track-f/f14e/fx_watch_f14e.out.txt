@@ -1,0 +1,9 @@
+P: rc=7 KILLED: procload 2026-10-04T10:03:08Z pids [31600]; tree [56508, 67848], alive after []; trigger->exit 1.28 s (<= 3); tree 2 processes, alive after [] => OK
+L: rc=3 KILLED: lock 2026-10-04T10:03:15Z; tree [40908, 57180], alive after []; trigger->exit 1.17 s (<= 3); tree 2 processes, alive after [] => OK
+S: rc=4 KILLED: STOP 2026-10-04T10:03:22Z; tree [50432, 58128], alive after []; trigger->exit 1.21 s (<= 3); tree 2 processes, alive after [] => OK
+R: rc=8 REFUSED: procload 2026-10-04T10:03:25Z pids [76892] => OK
+N: rc=0, KILLED lines 0, wall 15.9 s (>= 15), watchdog CPU 0.0716 s/s from start, 0.0020 s/s steady (< 0.5) => OK
+times lines (fixture file; lock line deferred by rule 27): 2 ['procload', 'STOP'] => OK
+ALL OK
+de725248f2354b8a59f8e0948c87bbeef8bd6f2ab919cb987af55c525b01333e *watch_f14e.py
+e8ec21779d522eac7617f724460cd71ea1fffc1b484a91417414723eb18f8537 *fx_watch_f14e.py

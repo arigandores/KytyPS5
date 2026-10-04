@@ -1,0 +1,16 @@
+watch: start 2026-10-04T10:17:45Z child 50764 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+t1 rows 2154 A rows OK 269 stages {'cs': 111, 'ps': 158}
+jobs 2152 done before 0 to run 2152
+ran this call 2152 remaining 0 wall 37.2 s
+G0 processes 2152 failed 0 []
+R1 rows 269 f0/fu/f0m/fum differing from base or with a stand line: 0 []
+R2 f1 != base: 0 []
+R3 rows with a stored manual place (stand manual_to_native > 0): 48 ; rows f1m16 != base: 48 ; differ - stored [] ; stored - differ [] ; differing rows with manual sites or no Dref []
+R3 N = 48 of the 48 manual rows of F14a; F14a rows matched 269
+R4 f1m8 != base: 0 []
+base exe C:/kyty/f287/f14e/base/shader_cfg_tests.exe e575f0fca9d9e1be372d8fa7ff358407da940c21d9c92775449fd6df12f427bc
+fix exe  C:/kyty/f287/f14e/fix_shader_cfg_tests.exe feffeec71bd6a434552b9d03051a0153b9b43bd5632070f8a2aafd97889f7924
+corpus_f14e.tsv rows 269 sha256 005ce65a60b9451cb773310adc5b9473ef39fba3f1bdc58b1ac9a443b926a3cc
+wall 40.2 s
+ALL OK
+rc=0 end 2026-10-04T10:18:25Z

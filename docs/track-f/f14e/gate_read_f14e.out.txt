@@ -1,0 +1,21 @@
+lines g1 96 g0 96 gu 96 (96 each)
+g1 ALL OK: True
+g0 ALL OK: True
+gu ALL OK: True
+c1 ALL OK: True
+g1 k16UNorm LINEAR native within 2^-6 of PCF, NEAREST == reference (g1, g0): violations 0
+g0 k16UNorm LINEAR manual midpoints with |out - PCF| >= 0.25: 6
+   ref=0.500 s=0.500 t=0.375 out=1.000000 pcf=0.500000
+   ref=0.500 s=0.500 t=0.625 out=1.000000 pcf=0.500000
+   ref=0.500 s=0.500 t=0.500 out=1.000000 pcf=0.500000
+   ref=0.213 s=0.500 t=0.375 out=1.000000 pcf=0.500000
+   ref=0.213 s=0.375 t=0.500 out=1.000000 pcf=0.500000
+   ref=0.213 s=0.500 t=0.500 out=1.000000 pcf=0.750000
+k32Float / k8UNorm output bits =0 vs =1 equal: 64 of 64
+gu == g0 in every field: True
+g1 cache dir _ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19
+g0 cache dir _ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10
+gu cache dir _ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10
+c0 fails with the text of the build without the fix: True
+ALL OK
+3dd0c31990818877e8a95317a610046c746131c3725c19d89fa95b832cf3a544 *build/shader_recompiler_compute_tests.exe

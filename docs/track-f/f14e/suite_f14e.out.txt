@@ -1,0 +1,32 @@
+watch: start 2026-10-04T10:17:34Z child 2456 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+base rc=0 wall=0.3 s exe=e575f0fc
+f0 rc=0 wall=0.3 s exe=feffeec7
+fu rc=0 wall=0.3 s exe=feffeec7
+f1 rc=0 wall=0.3 s exe=feffeec7
+base: tests 128, failing 0 []
+    [f19] k16UNorm KYTY_FIX_F19=0: C dref=0 manual=1, C_LZ dref=0 manual=1
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+f0: tests 128, failing 0 []
+    [f19] k16UNorm KYTY_FIX_F19=0: C dref=0 manual=1, C_LZ dref=0 manual=1
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+fu: tests 128, failing 0 []
+    [f19] k16UNorm KYTY_FIX_F19=0: C dref=0 manual=1, C_LZ dref=0 manual=1
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+f1: tests 128, failing 0 []
+    [f19] k16UNorm KYTY_FIX_F19=1: C dref=1 manual=0, C_LZ dref=1 manual=0
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=1: images=2 members=2 dref=2 manual=0 plain_explicit=0
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2
+f0: SPIR-V files 176 (base 176), differing from base 0: 
+fu: SPIR-V files 176 (base 176), differing from base 0: 
+f1: SPIR-V files 176 (base 176), differing from base 4: 109.spv 110.spv 112.spv 113.spv
+base exe C:/kyty/f287/f14e/base/shader_cfg_tests.exe e575f0fca9d9e1be372d8fa7ff358407da940c21d9c92775449fd6df12f427bc
+fix exe  C:/kyty/f287/f14e/fix_shader_cfg_tests.exe feffeec71bd6a434552b9d03051a0153b9b43bd5632070f8a2aafd97889f7924
+ALL OK
+rc=0 end 2026-10-04T10:17:36Z

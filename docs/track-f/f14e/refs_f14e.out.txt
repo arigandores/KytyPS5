@@ -12,5 +12,11 @@ OK 975927c8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3383 anchor=
 OK 975927c8:src/graphics/host_gpu/renderer/cache/samplerCache.cpp:160 anchor=True plus1=True
 OK 975927c8:tests/shaderCfgTests.cpp:14534 anchor=True plus1=True
 OK 975927c8:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h:34 anchor=True plus1=True
-refs 14 bad 0
+OK 082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:34 anchor=True plus1=True
+OK 082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:599 anchor=True plus1=True
+OK 082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:605 anchor=True plus1=True
+OK 082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:724 anchor=True plus1=True
+OK 082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:43 anchor=True plus1=True
+OK 082d1612:src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:587 anchor=True plus1=True
+refs 20 bad 0
 ALL OK

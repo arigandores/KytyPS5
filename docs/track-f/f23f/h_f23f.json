@@ -1,0 +1,77 @@
+[
+ {
+  "cfg": "c01",
+  "tex_sha": "cf573492983b3f11bd1b23d9eb44586676c41a1045f5f0f1167e75abc86f93a0",
+  "wall_s": 6.1,
+  "devices": [
+   "device 0: NVIDIA GeForce RTX 5080 Laptop GPU type 2 vendor 0x10de device 0x2c59 api 1.4.351 driverVersion 0x9a0e0000 driverName 'NVIDIA' driverInfo '616.56'",
+   "picked device 0: subgroupSize 32 fragment-subgroup 1 ballot 1 signedZeroInfNanPreserveF32 1"
+  ],
+  "sha": {
+   "normal": "f599604c4db0819187c7f4767409bcb5f561044b707c463784635ac7a0ae78d5",
+   "normal2": "f599604c4db0819187c7f4767409bcb5f561044b707c463784635ac7a0ae78d5",
+   "predoff": "650715fa2459d308271318a29abd84382eeafb6ee5dd48d65f47b00421974e87",
+   "mask": "f599604c4db0819187c7f4767409bcb5f561044b707c463784635ac7a0ae78d5",
+   "mem": "f599604c4db0819187c7f4767409bcb5f561044b707c463784635ac7a0ae78d5"
+  },
+  "null": 0,
+  "H": 8260701,
+  "mask_vs_normal": 0,
+  "mask_vs_predoff": 8260701,
+  "mem_vs_normal": 0,
+  "mem_vs_predoff": 8260701,
+  "mask_vs_mem": 0,
+  "pixels": 8294400,
+  "ok": true
+ },
+ {
+  "cfg": "c07",
+  "tex_sha": "12bfd6c474fac7c690c7be8ca995d89ba80af1a812aa04b94eedb3ff1f48316a",
+  "wall_s": 0.9,
+  "devices": [
+   "device 0: NVIDIA GeForce RTX 5080 Laptop GPU type 2 vendor 0x10de device 0x2c59 api 1.4.351 driverVersion 0x9a0e0000 driverName 'NVIDIA' driverInfo '616.56'",
+   "picked device 0: subgroupSize 32 fragment-subgroup 1 ballot 1 signedZeroInfNanPreserveF32 1"
+  ],
+  "sha": {
+   "normal": "880e06b29ecd2b554b4e71911a7796291c09bc687294880fc29c023c332b3952",
+   "normal2": "880e06b29ecd2b554b4e71911a7796291c09bc687294880fc29c023c332b3952",
+   "predoff": "3d22fe4e919ddc58200c6734cf8b122bd9c5cea89e6563dff4964fd52e19901a",
+   "mask": "880e06b29ecd2b554b4e71911a7796291c09bc687294880fc29c023c332b3952",
+   "mem": "880e06b29ecd2b554b4e71911a7796291c09bc687294880fc29c023c332b3952"
+  },
+  "null": 0,
+  "H": 2064897,
+  "mask_vs_normal": 0,
+  "mask_vs_predoff": 2064897,
+  "mem_vs_normal": 0,
+  "mem_vs_predoff": 2064897,
+  "mask_vs_mem": 0,
+  "pixels": 2073600,
+  "ok": true
+ },
+ {
+  "cfg": "c09",
+  "tex_sha": "cf573492983b3f11bd1b23d9eb44586676c41a1045f5f0f1167e75abc86f93a0",
+  "wall_s": 6.2,
+  "devices": [
+   "device 0: NVIDIA GeForce RTX 5080 Laptop GPU type 2 vendor 0x10de device 0x2c59 api 1.4.351 driverVersion 0x9a0e0000 driverName 'NVIDIA' driverInfo '616.56'",
+   "picked device 0: subgroupSize 32 fragment-subgroup 1 ballot 1 signedZeroInfNanPreserveF32 1"
+  ],
+  "sha": {
+   "normal": "c655ca94d42b77e06245f7e94851851a0bfbddb59105f55dff07c9165f2b5e6e",
+   "normal2": "c655ca94d42b77e06245f7e94851851a0bfbddb59105f55dff07c9165f2b5e6e",
+   "predoff": "991042efc474c5b9401525ad8cbe749fb39300e3d2dc7f1a9e738c7ee3522c98",
+   "mask": "c655ca94d42b77e06245f7e94851851a0bfbddb59105f55dff07c9165f2b5e6e",
+   "mem": "c655ca94d42b77e06245f7e94851851a0bfbddb59105f55dff07c9165f2b5e6e"
+  },
+  "null": 0,
+  "H": 3649805,
+  "mask_vs_normal": 0,
+  "mask_vs_predoff": 3649805,
+  "mem_vs_normal": 0,
+  "mem_vs_predoff": 3649805,
+  "mask_vs_mem": 0,
+  "pixels": 8294400,
+  "ok": true
+ }
+]

@@ -1,0 +1,18 @@
+cs 0078153a1c1fb171 captured module = S12 module (sha c8c1886330516284) - layout EQUAL by identity
+cs 1f16e50eea0c89e3 captured 3ac56719cda7c1b8 (C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_1f16e50eea0c89e3_f69183983bf9a738.bin) vs S12 e5d7e6ae315fa320: interface lines 22 / 22 -> EQUAL
+cs 3a8772dbc6934b1c captured module = S12 module (sha e91217d802b40796) - layout EQUAL by identity
+cs 503d7f066a496c3c captured d459ce284c9f5781 (C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_503d7f066a496c3c_70975964c3b7a9c4.bin) vs S12 228cf045c65c1206: interface lines 22 / 22 -> EQUAL
+cs 5323c4ef4f785055 captured e632b8e3c9c8d8be (C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_5323c4ef4f785055_c1ed6df4a815e257.bin) vs S12 6b465e0de2715d00: interface lines 22 / 22 -> EQUAL
+cs 56a15431999c5a2d captured af9448f848cdc0fc (C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_56a15431999c5a2d_7ee8623d978266cd.bin) vs S12 d06816fee6bbaa8e: interface lines 22 / 22 -> EQUAL
+cs cd94166bf3f2bb81 captured cbfd96e906235005 (C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_cd94166bf3f2bb81_29e5bf3a282c2956.bin) vs S12 67986ecf4f38862d: interface lines 22 / 22 -> EQUAL
+cs ea8e2d64dfe34ed9 captured 95bd8109d81b2bb3 (C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_ea8e2d64dfe34ed9_e80959018cfda528.bin) vs S12 1c0877737bd9b0af: interface lines 22 / 22 -> EQUAL
+cs f88d0f630ac5b35d captured 9ba469410a0c6264 (C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_f88d0f630ac5b35d_a7c7d34503e28f20.bin) vs S12 e176575ee4cdf5b9: interface lines 22 / 22 -> EQUAL
+cs ff8ee744ffa4dcdc captured ed3aaa72c10c37dc (C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_ff8ee744ffa4dcdc_8d9a17f42a196301.bin) vs S12 8c0028a8a44dfe82: interface lines 22 / 22 -> EQUAL
+ps 255ce6193a9e7938 captured module = S12 module (sha b7414a35257745a2) - layout EQUAL by identity
+ps 2e2ae33a4d374e8f captured module = S12 module (sha 2ec19fc137c69278) - layout EQUAL by identity
+ps 52276fe1ba080bea captured module = S12 module (sha f8bdb6fb8a7e099d) - layout EQUAL by identity
+ps 74bb8628d64f534c captured module = S12 module (sha 474653d176e83303) - layout EQUAL by identity
+ps be4c35a2031fd3f4 captured module = S12 module (sha ebff0feeb90b9b35) - layout EQUAL by identity
+ps e14edf4a78d1a517 captured module = S12 module (sha 53a585af9e0ae938) - layout EQUAL by identity
+ps f47c0c097c598a36 captured module = S12 module (sha adfaf707e4a9b539) - layout EQUAL by identity
+ALL EQUAL

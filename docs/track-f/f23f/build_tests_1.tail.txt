@@ -1,0 +1,30 @@
+[763/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\videoDec2Decoder.cpp.obj
+[764/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\libVideoDec2.cpp.obj
+[765/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\libs.cpp.obj
+[766/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\libJson2.cpp.obj
+[767/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\loader\symbolDatabase.cpp.obj
+[768/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\libWebBrowserDialog.cpp.obj
+[769/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\libUlt.cpp.obj
+[770/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\loader\elf.cpp.obj
+[771/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\libNet.cpp.obj
+[772/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\loader\gamePatchFile.cpp.obj
+[773/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\libKernel.cpp.obj
+C:\kyty\f287\f23f\wt\src\libs\libKernel.cpp(2146,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 2146 | }
+      | ^
+1 warning generated.
+[774/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\agc.cpp.obj
+[775/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\emulator.cpp.obj
+[776/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\loader\gamePatch.cpp.obj
+[777/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\kernel\memory.cpp.obj
+[778/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\loader\redZonePatcher.cpp.obj
+[779/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\network.cpp.obj
+[780/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\loader\systemContent.cpp.obj
+[781/783] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\loader\runtimeLinker.cpp.obj
+C:\kyty\f287\f23f\wt\src\loader\runtimeLinker.cpp(924,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  924 | }
+      | ^
+1 warning generated.
+[782/783] Linking CXX executable shader_cfg_tests.exe
+BUILD OK: C:\kyty\f287\f23f\build\shader_cfg_tests.exe
+rc=0 end 2026-10-04T21:28:53Z

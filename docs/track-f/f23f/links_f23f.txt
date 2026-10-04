@@ -1,0 +1,14 @@
+OK   7030111b:docs/ROADMAP.md:22809 anchor yes +1 yes
+OK   7030111b:docs/ROADMAP.md:22812 anchor yes +1 yes
+OK   7030111b:docs/ROADMAP.md:22814 anchor yes +1 yes
+OK   07c46693:docs/track-f/f23d-review.md:74 anchor yes +1 yes
+OK   07c46693:docs/track-f/f23d-review.md:89 anchor yes +1 yes
+OK   07c46693:docs/track-f/f23d-review.md:98 anchor yes +1 yes
+OK   07c46693:docs/track-f/f23d-review.md:115 anchor yes +1 yes
+OK   4d9e8ab7:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:314 anchor yes +1 yes
+OK   4d9e8ab7:src/graphics/shader/recompiler/ShaderRecompiler.cpp:752 anchor yes +1 yes
+OK   4d9e8ab7:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:767 anchor yes +1 yes
+OK   4d9e8ab7:tests/shaderCfgTests.cpp:14208 anchor yes +1 yes
+OK   1ab783ef:docs/track-f/f23c.md:178 anchor yes +1 yes
+refs 12, ok 12
+ALL OK

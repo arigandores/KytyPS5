@@ -1,0 +1,30 @@
+  cmake_policy command to set the policy and suppress this warning.
+
+  INTERPROCEDURAL_OPTIMIZATION property will be ignored for target
+  'SDL2main'.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at 3rdparty/SDL2/CMakeLists.txt:3534 (add_library):
+  Policy CMP0069 is not set: INTERPROCEDURAL_OPTIMIZATION is enforced when
+  enabled.  Run "cmake --help-policy CMP0069" for policy details.  Use the
+  cmake_policy command to set the policy and suppress this warning.
+
+  INTERPROCEDURAL_OPTIMIZATION property will be ignored for target
+  'SDL2-static'.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at 3rdparty/SDL2/CMakeLists.txt:3572 (add_library):
+  Policy CMP0069 is not set: INTERPROCEDURAL_OPTIMIZATION is enforced when
+  enabled.  Run "cmake --help-policy CMP0069" for policy details.  Use the
+  cmake_policy command to set the policy and suppress this warning.
+
+  INTERPROCEDURAL_OPTIMIZATION property will be ignored for target
+  'SDL2_test'.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Generating done (1.3s)
+-- Build files have been written to: C:/kyty/f287/f23f/build
+rc=0 end 2026-10-04T21:27:04Z

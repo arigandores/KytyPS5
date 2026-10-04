@@ -1,0 +1,3 @@
+watch: start 2026-10-04T22:03:48Z child 53620 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+survivors by command line 'qrenderdoc.exe': found [], alive after []
+KILLED: procload 2026-10-04T22:04:18Z pids [28388]; tree [24756, 34176, 53620], alive after []

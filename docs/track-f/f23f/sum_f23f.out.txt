@@ -1,0 +1,63 @@
+cap  eid    prog             st a b v g  entry      writes  Nnull refsEq  Ndiff(mask) Ndiff(mem) orig/def blend   sens  VALID  n_t / n_f by site  [use]  diag-selfcheck
+f13  855    503d7f066a496c3c cs 1 1 1 1        128    32252  32279 False       32235      32258    32295  32246    32231 no     [0, 0, 0, 0, 0] / [0, 0, 0, 0, 0] ['unused', 'unused', 'unused', 'unused', 'unused'] 32227
+f13  869    1f16e50eea0c89e3 cs 1 1 1 1        128        0      0 True            0          0        0      0        0 YES    [0, 0, 0, 0, 0, 0] / [0, 0, 0, 0, 0, 0] ['unused', 'unused', 'unused', 'unused', 'unused', 'unused'] 0
+f13  883    ff8ee744ffa4dcdc cs 1 1 1 1        128        0      0 True            0          0        0      0        0 YES    [0, 0, 0] / [0, 0, 0] ['unused', 'unused', 'unused'] 0
+f13  897    f88d0f630ac5b35d cs 1 1 1 1        128        0      0 True            0          0        0      0        0 YES    [0, 0, 0] / [0, 0, 0] ['unused', 'unused', 'unused'] 0
+f13  1082   0078153a1c1fb171 cs 1 1 1 1    1036800        0      0 True            0          0        0      0  1029120 YES    [1036800] / [0] ['H'] 0
+f13  1929   503d7f066a496c3c cs 1 1 1 1        128    32251  32254 False       32244      32257    32242  32243    32239 no     [0, 0, 0, 0, 0] / [0, 0, 0, 0, 0] ['unused', 'unused', 'unused', 'unused', 'unused'] 32277
+f13  1943   1f16e50eea0c89e3 cs 1 1 1 1        128        0      0 True            0          0        0      0        0 YES    [0, 0, 0, 0, 0, 0] / [0, 0, 0, 0, 0, 0] ['unused', 'unused', 'unused', 'unused', 'unused', 'unused'] 0
+f13  1957   ff8ee744ffa4dcdc cs 1 1 1 1        128        0      0 True            0          0        0      0        0 YES    [0, 0, 0] / [0, 0, 0] ['unused', 'unused', 'unused'] 0
+f13  1971   f88d0f630ac5b35d cs 1 1 1 1        128        0      0 True            0          0        0      0        0 YES    [0, 0, 0] / [0, 0, 0] ['unused', 'unused', 'unused'] 0
+f13  2152   0078153a1c1fb171 cs 1 1 1 1    1036800        0      0 True            0          0        0      0  1029120 YES    [1036800] / [0] ['H'] 0
+k05  44251  3a8772dbc6934b1c cs 1 1 1 1    4194304        0      0 True            0          0        0      0        0 YES    [0, 0] / [0, 0] ['unused', 'unused'] 0
+k05  44410  56a15431999c5a2d cs 1 1 1 1    1576448  6186747  18584 False       18583      18577    18587  12227  1686751 no     [1423168, 1423168, 1423168, 1423168, 1423168] / [0, 0, 0, 0, 0] ['H', 'H', 'H', 'H', 'H'] 22741
+k05  44424  ea8e2d64dfe34ed9 cs 1 1 1 1        768    10107    688 False        7039       7654     7098   7661     2111 no     [768, 768, 768, 768, 768, 768] / [0, 0, 0, 0, 0, 0] ['H', 'H', 'H', 'H', 'H', 'H'] 7053
+k05  44438  5323c4ef4f785055 cs 1 1 1 1       8064    32879    726 False        7112       7687     7083   7095     9609 no     [7936, 7936] / [0, 0] ['H', 'H'] 739
+k05  44452  cd94166bf3f2bb81 cs 1 1 1 1       4864    17924    711 False        7061        720     7059   7078      703 no     [4416, 4416] / [0, 0] ['H', 'H'] 7059
+k05  46220  be4c35a2031fd3f4 ps 1 1 1 1       2233      886    886 False        3553        886      886   3553     1251 no     [2187, 2187, 2187] / [0, 0, 0] ['H', 'H', 'H'] 886
+k05  46344  be4c35a2031fd3f4 ps 1 1 1 1       2281     3553   3257 False        3553          0     3257      0     3622 no     [2235, 2235, 2235] / [0, 0, 0] ['H', 'H', 'H'] 3257
+k05  46816  255ce6193a9e7938 ps 1 1 1 0         94       96      0 True         3257       3257     3257   3258     3553 no     [94] / [0] ['H'] 3553  (g: blend on (target 0-2))
+k05  49215  74bb8628d64f534c ps 1 1 1 0         42      691    676 False         672        683      677    681      676 no     [0, 42, 42, 42, 42] / [0, 0, 0, 0, 0] ['unused', 'H', 'H', 'H', 'H'] 685  (g: blend on)
+k05  49738  0078153a1c1fb171 cs 1 1 1 1    1036800  2073600      0 True            0          0        0      0    90072 YES    [1036800] / [0] ['H'] 0
+k05  81145  3a8772dbc6934b1c cs 1 1 1 1    4194304    74728      0 True            0          0        0      0        0 YES    [0, 0] / [65536, 65536] ['unused', 'unused'] 11693
+k05  81460  56a15431999c5a2d cs 1 1 1 1    1576960  5884195  12777 False       12750      12725    12762  12762  1692482 no     [1419104, 1419104, 1419104, 1419104, 1419104] / [0, 0, 0, 0, 0] ['H', 'H', 'H', 'H', 'H'] 12741
+k05  81474  ea8e2d64dfe34ed9 cs 1 1 1 1        768     3794    856 False         863        843      857    863     2323 no     [768, 768, 768, 768, 768, 768] / [0, 0, 0, 0, 0, 0] ['H', 'H', 'H', 'H', 'H', 'H'] 846
+k05  81488  5323c4ef4f785055 cs 1 1 1 1       7936    30776    727 False         745        739      733    751     3033 no     [7840, 7840] / [0, 0] ['H', 'H'] 741
+k05  81502  cd94166bf3f2bb81 cs 1 1 1 1       4864    13473    702 False         720        718      708    713      690 no     [4416, 4416] / [0, 0] ['H', 'H'] 692
+k05  83214  be4c35a2031fd3f4 ps 1 1 1 1       2235        0      0 True            0          0        0      0      355 YES    [2193, 2193, 2193] / [0, 0, 0] ['H', 'H', 'H'] 0
+k05  83338  be4c35a2031fd3f4 ps 1 1 1 1       2334        0      0 True            0          0        0      0      355 YES    [2292, 2292, 2292] / [0, 0, 0] ['H', 'H', 'H'] 0
+k05  86604  0078153a1c1fb171 cs 1 1 1 1    1036800  2073600      0 True            0          0        0      0    91719 YES    [1036800] / [0] ['H'] 0
+k05  119848 3a8772dbc6934b1c cs 1 1 1 1    4194304        0      0 True            0          0        0      0        0 YES    [0, 0] / [0, 0] ['unused', 'unused'] 0
+k05  120367 56a15431999c5a2d cs 1 1 1 1    1577216  6155449  12748 False       12774      12756    12768  12763  1760824 no     [1545312, 1545312, 1545312, 1545312, 1545312] / [0, 0, 0, 0, 0] ['H', 'H', 'H', 'H', 'H'] 12750
+k05  120381 ea8e2d64dfe34ed9 cs 1 1 1 1        768     3737    914 False         905        876      989   1176     2356 no     [768, 768, 768, 768, 768, 768] / [0, 0, 0, 0, 0, 0] ['H', 'H', 'H', 'H', 'H', 'H'] 913
+k05  120395 5323c4ef4f785055 cs 1 1 1 1       7936    31764    716 False         725        746      722    738     3056 no     [7936, 7936] / [0, 0] ['H', 'H'] 705
+k05  120409 cd94166bf3f2bb81 cs 1 1 1 1       4864    13857    696 False         702        689      703    709      705 no     [4384, 4384] / [0, 0] ['H', 'H'] 706
+k05  122326 be4c35a2031fd3f4 ps 1 1 1 1       2233        0     15 True            0          0        0      0      380 no     [2188, 2188, 2188] / [0, 0, 0] ['H', 'H', 'H'] 0
+k05  122458 be4c35a2031fd3f4 ps 1 1 1 1       2281        0      0 True            0          0        0      0      380 YES    [2236, 2236, 2236] / [0, 0, 0] ['H', 'H', 'H'] 0
+k05  125834 0078153a1c1fb171 cs 1 1 1 1    1036800  2073600      0 True            0          0        0      0    95672 YES    [1036800] / [0] ['H'] 0
+k05  35030  e14edf4a78d1a517 ps 1 1 1 0         15        0      0 True            0          0        0      0        0 no     [0, 0, 0, 0, 0] / [0, 0, 0, 0, 0] ['unused', 'unused', 'unused', 'unused', 'unused'] 0  (g: blend on (target 3; targets 0-2 write mask 0))
+k05  44633  52276fe1ba080bea ps 0 1 1 0          0     2165   2165 False        2165       4681     4681   4977     2165 no     [0] / [0] ['unused'] 4681  (g: write mask 7 (alpha not written))
+k05  47266  2e2ae33a4d374e8f ps 0 1 1 0          0     4682   4681 True         2166       2166     2165   2165     2166 no     [0] / [0] ['unused'] 4682  (g: blend on)
+k05  49598  f47c0c097c598a36 ps 1 1 1 1         -1   166857      0 False           1          0        1      0   206091 no     [] / [] [] -1
+k05  86514  f47c0c097c598a36 ps 1 1 1 1         -1   169198      0 True            0          0        0      0   210213 YES    [] / [] [] -1
+k05  125752 f47c0c097c598a36 ps 1 1 1 1         -1   251920      0 True            0          0        0      0   305552 YES    [] / [] [] -1
+
+per program: events / valid / valid with N_diff > 0 / reading of item 498(d)(iii)
+  cs 0078153a1c1fb171 events 5 valid 5 ndiff>0 0 -> not found for form H
+  cs 1f16e50eea0c89e3 events 2 valid 2 ndiff>0 0 -> not determined
+  cs 3a8772dbc6934b1c events 3 valid 3 ndiff>0 0 -> not determined
+  cs 503d7f066a496c3c events 2 valid 0 ndiff>0 0 -> not determined
+  cs 5323c4ef4f785055 events 3 valid 0 ndiff>0 0 -> not determined
+  cs 56a15431999c5a2d events 3 valid 0 ndiff>0 0 -> not determined
+  cs cd94166bf3f2bb81 events 3 valid 0 ndiff>0 0 -> not determined
+  cs ea8e2d64dfe34ed9 events 3 valid 0 ndiff>0 0 -> not determined
+  cs f88d0f630ac5b35d events 2 valid 2 ndiff>0 0 -> not determined
+  cs ff8ee744ffa4dcdc events 2 valid 2 ndiff>0 0 -> not determined
+  ps 255ce6193a9e7938 events 1 valid 0 ndiff>0 0 -> not determined
+  ps 2e2ae33a4d374e8f events 1 valid 0 ndiff>0 0 -> not determined
+  ps 52276fe1ba080bea events 1 valid 0 ndiff>0 0 -> not determined
+  ps 74bb8628d64f534c events 1 valid 0 ndiff>0 0 -> not determined
+  ps be4c35a2031fd3f4 events 6 valid 3 ndiff>0 0 -> not found for form H
+  ps e14edf4a78d1a517 events 1 valid 0 ndiff>0 0 -> not determined
+  ps f47c0c097c598a36 events 3 valid 2 ndiff>0 0 -> not determined
+candidate of item 498(d): (iii) NE DEFEKT on the population "not found"

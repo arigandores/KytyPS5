@@ -1,0 +1,30 @@
+ 6763 | void TestNewShaderRecompilerFlatOldBackedTranslation() {
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\kyty\f287\f23f\wt\tests\shaderCfgTests.cpp(6816,6): warning: unused function 'TestNewShaderRecompilerFlatSignedLoadTranslation' [-Wunused-function]
+ 6816 | void TestNewShaderRecompilerFlatSignedLoadTranslation() {
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\kyty\f287\f23f\wt\tests\shaderCfgTests.cpp(6861,6): warning: unused function 'TestNewShaderRecompilerFlatStoreTranslation' [-Wunused-function]
+ 6861 | void TestNewShaderRecompilerFlatStoreTranslation() {
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\kyty\f287\f23f\wt\tests\shaderCfgTests.cpp(6936,6): warning: unused function 'TestNewShaderRecompilerAtomicTranslation' [-Wunused-function]
+ 6936 | void TestNewShaderRecompilerAtomicTranslation() {
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\kyty\f287\f23f\wt\tests\shaderCfgTests.cpp(7192,6): warning: unused function 'TestNewShaderRecompilerDsSubDwordTranslation' [-Wunused-function]
+ 7192 | void TestNewShaderRecompilerDsSubDwordTranslation() {
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\kyty\f287\f23f\wt\tests\shaderCfgTests.cpp(7343,6): warning: unused function 'TestNewShaderRecompilerDsSwizzleTranslation' [-Wunused-function]
+ 7343 | void TestNewShaderRecompilerDsSwizzleTranslation() {
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\kyty\f287\f23f\wt\tests\shaderCfgTests.cpp(7390,6): warning: unused function 'TestNewShaderRecompilerDsAddtidTranslation' [-Wunused-function]
+ 7390 | void TestNewShaderRecompilerDsAddtidTranslation() {
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\kyty\f287\f23f\wt\tests\shaderCfgTests.cpp(7435,6): warning: unused function 'TestNewShaderRecompilerDsFloatMinMaxTranslation' [-Wunused-function]
+ 7435 | void TestNewShaderRecompilerDsFloatMinMaxTranslation() {
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\kyty\f287\f23f\wt\tests\shaderCfgTests.cpp(10222,6): warning: unused function 'TestNewShaderRecompilerExpVertexOutputs' [-Wunused-function]
+ 10222 | void TestNewShaderRecompilerExpVertexOutputs() {
+       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+332 warnings generated.
+[3/4] Linking CXX executable shader_cfg_tests.exe
+BUILD OK: C:\kyty\f287\f23f\build\shader_cfg_tests.exe
+rc=0 end 2026-10-04T21:31:10Z

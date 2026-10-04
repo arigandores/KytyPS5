@@ -1,0 +1,70 @@
+cs 0078153a1c1fb171 formA pre 1 post 1 same True spv c8c1886330516284
+  site %784 = OpSelect int32u %415 %782 %281  OK  depth 2 new ImageSampleRaw old BitCastU32F32 B 0 cond_def OpSLessThanEqual
+cs 1f16e50eea0c89e3 formA pre 6 post 6 same True spv e5d7e6ae315fa320
+  site %6220 = OpSelect int32u %2592 %6218 %4824  OK  depth 11 new ImageGatherRaw old SelectU32 B 1 cond_def OpLogicalNot
+  site %8678 = OpSelect int32u %2592 %8676 %8501  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8750 = OpSelect int32u %2592 %8748 %8515  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8786 = OpSelect int32u %2592 %8784 %8483  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8822 = OpSelect int32u %2592 %8820 %8445  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8858 = OpSelect int32u %2592 %8856 %8471  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+cs 3a8772dbc6934b1c formA pre 2 post 2 same True spv e91217d802b40796
+  site %2183 = OpSelect int32u %156 %2181 %1586  OK  depth 1 new ImageSampleRaw old SelectU32 B 0 cond_def OpUGreaterThan
+  site %2187 = OpSelect int32u %156 %2185 %1596  OK  depth 1 new ImageSampleRaw old SelectU32 B 0 cond_def OpUGreaterThan
+cs 503d7f066a496c3c formA pre 5 post 5 same True spv 228cf045c65c1206
+  site %8345 = OpSelect int32u %2508 %8343 %8168  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8381 = OpSelect int32u %2508 %8379 %8080  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8417 = OpSelect int32u %2508 %8415 %8182  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8487 = OpSelect int32u %2508 %8485 %8112  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8523 = OpSelect int32u %2508 %8521 %8138  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+cs 5323c4ef4f785055 formA pre 2 post 2 same True spv 6b465e0de2715d00
+  site %8580 = OpSelect int32u %2548 %8578 %8279  OK  depth 10 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8650 = OpSelect int32u %2548 %8648 %8267  OK  depth 10 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+cs 56a15431999c5a2d formA pre 5 post 5 same True spv d06816fee6bbaa8e
+  site %8356 = OpSelect int32u %2523 %8354 %8179  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8392 = OpSelect int32u %2523 %8390 %8091  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8428 = OpSelect int32u %2523 %8426 %8193  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8498 = OpSelect int32u %2523 %8496 %8123  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8534 = OpSelect int32u %2523 %8532 %8149  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+cs cd94166bf3f2bb81 formA pre 2 post 2 same True spv 67986ecf4f38862d
+  site %8586 = OpSelect int32u %2554 %8584 %8285  OK  depth 10 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8656 = OpSelect int32u %2554 %8654 %8273  OK  depth 10 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+cs ea8e2d64dfe34ed9 formA pre 6 post 6 same True spv 1c0877737bd9b0af
+  site %6235 = OpSelect int32u %2607 %6233 %4835  OK  depth 11 new ImageGatherRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8693 = OpSelect int32u %2607 %8691 %8516  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8765 = OpSelect int32u %2607 %8763 %8530  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8801 = OpSelect int32u %2607 %8799 %8498  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8837 = OpSelect int32u %2607 %8835 %8460  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8873 = OpSelect int32u %2607 %8871 %8486  OK  depth 9 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+cs f88d0f630ac5b35d formA pre 3 post 3 same True spv e176575ee4cdf5b9
+  site %8565 = OpSelect int32u %2557 %8563 %8264  OK  depth 10 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8601 = OpSelect int32u %2557 %8599 %8226  OK  depth 10 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8637 = OpSelect int32u %2557 %8635 %8252  OK  depth 10 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+cs ff8ee744ffa4dcdc formA pre 3 post 3 same True spv 8c0028a8a44dfe82
+  site %8559 = OpSelect int32u %2551 %8557 %8258  OK  depth 10 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8595 = OpSelect int32u %2551 %8593 %8220  OK  depth 10 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+  site %8631 = OpSelect int32u %2551 %8629 %8246  OK  depth 10 new ImageSampleRaw old SelectU32 B 0 cond_def OpLogicalNot
+ps 255ce6193a9e7938 formA pre 1 post 1 same True spv b7414a35257745a2
+  site %3511 = OpSelect int32u %371 %3510 %545  OK  depth 5 new ImageSampleRaw old Phi B 1 cond_def OpINotEqual
+ps 2e2ae33a4d374e8f formA pre 1 post 1 same True spv 2ec19fc137c69278
+  site %11589 = OpSelect int32u %10967 %11588 %9400  OK  depth 24 new ImageSampleRaw old SelectU32 B 1 cond_def OpLogicalAnd
+ps 52276fe1ba080bea formA pre 1 post 1 same True spv f8bdb6fb8a7e099d
+  site %10916 = OpSelect int32u %10292 %10915 %8727  OK  depth 22 new ImageSampleRaw old SelectU32 B 1 cond_def OpLogicalAnd
+ps 74bb8628d64f534c formA pre 5 post 5 same True spv 474653d176e83303
+  site %1241 = OpSelect int32u %619 %1240 %503  OK  depth 5 new ImageSampleRaw old SelectU32 B 1 cond_def OpINotEqual
+  site %1300 = OpSelect int32u %619 %1299 %507  OK  depth 5 new ImageSampleRaw old SelectU32 B 0 cond_def OpINotEqual
+  site %1302 = OpSelect int32u %619 %1301 %511  OK  depth 5 new ImageSampleRaw old SelectU32 B 0 cond_def OpINotEqual
+  site %1304 = OpSelect int32u %619 %1303 %499  OK  depth 5 new ImageSampleRaw old SelectU32 B 0 cond_def OpINotEqual
+  site %1306 = OpSelect int32u %619 %1305 %503  OK  depth 5 new ImageSampleRaw old SelectU32 B 0 cond_def OpINotEqual
+ps be4c35a2031fd3f4 formA pre 3 post 3 same True spv ebff0feeb90b9b35
+  site %5038 = OpSelect int32u %4515 %5037 %4464  OK  depth 11 new ImageSampleRaw old SelectU32 B 0 cond_def OpINotEqual
+  site %5040 = OpSelect int32u %4515 %5039 %4459  OK  depth 11 new ImageSampleRaw old SelectU32 B 0 cond_def OpINotEqual
+  site %5064 = OpSelect int32u %4515 %5063 %4441  OK  depth 11 new ImageSampleRaw old SelectU32 B 0 cond_def OpINotEqual
+ps e14edf4a78d1a517 formA pre 5 post 5 same True spv 53a585af9e0ae938
+  site %883 = OpSelect int32u %551 %882 %316  OK  depth 5 new ImageSampleRaw old SelectU32 B 1 cond_def OpINotEqual
+  site %885 = OpSelect int32u %551 %884 %320  OK  depth 5 new ImageSampleRaw old SelectU32 B 1 cond_def OpINotEqual
+  site %932 = OpSelect int32u %551 %931 %316  OK  depth 5 new ImageSampleRaw old SelectU32 B 0 cond_def OpINotEqual
+  site %934 = OpSelect int32u %551 %933 %320  OK  depth 5 new ImageSampleRaw old SelectU32 B 0 cond_def OpINotEqual
+  site %1198 = OpSelect int32u %551 %1197 %1002  OK  depth 3 new ImageSampleRaw old Phi B 0 cond_def OpINotEqual
+ps f47c0c097c598a36 formA pre 1 post 1 same True spv adfaf707e4a9b539
+  site %604 = OpSelect int32u %274 %603 %305  OK  depth 1 new ImageSampleRaw old Phi B 0 cond_def OpLogicalAnd
+ALL OK

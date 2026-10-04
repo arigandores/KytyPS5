@@ -1,0 +1,14 @@
+watch: start 2026-10-04T21:34:19Z child 33092 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+F23f H check 2026-10-04T21:34:19Z; stand C:/kyty/f287/f23c/f23c_hrun.exe sha256 cffb14017c77d97263a651e191b10d6547d01d1e736787c454e31949e043e95b
+input normal sha256 f62b88f82f1ca942c01d0f4de3c64a5b8d20ed124503c1e316995a43d7b077d9
+input normal2 sha256 f62b88f82f1ca942c01d0f4de3c64a5b8d20ed124503c1e316995a43d7b077d9
+input predoff sha256 83341d3d9940dbc824a1935a6bf7ce845d8eca264f5c5bef4da943bcc39ad46c
+reference mask: rewritten 2, OpSelect left at sites [], OpSelect 63 -> 61, OpPhi 0 -> 0, spirv-val rc 0 , sha256 fbc47b63c6de36585ded6a7422673c3405436b57dde5e493b29beab13d7552a5, 11988 bytes OK
+reference mem: rewritten 2, OpSelect left at sites [], OpSelect 63 -> 61, OpPhi 0 -> 0, spirv-val rc 0 , sha256 b5364c6af174e67833775c0f32d26ec3543c6e44ec2b5796f4aa634d7b4b9c6c, 12116 bytes OK
+c01 noise 3840x2160 nearest fmt32 tri 6.1 s | null 0 | H 8260701 | mask vs normal 0, vs predoff 8260701 | mem vs normal 0, vs predoff 8260701 | mask vs mem 0 | OK
+   device 0: NVIDIA GeForce RTX 5080 Laptop GPU type 2 vendor 0x10de device 0x2c59 api 1.4.351 driverVersion 0x9a0e0000 driverName 'NVIDIA' driverInfo '616.56'
+   picked device 0: subgroupSize 32 fragment-subgroup 1 ballot 1 signedZeroInfNanPreserveF32 1
+c07 noise 1920x1080 nearest fmt16 tri 0.9 s | null 0 | H 2064897 | mask vs normal 0, vs predoff 2064897 | mem vs normal 0, vs predoff 2064897 | mask vs mem 0 | OK
+c09 noise 3840x2160 nearest fmt32 diamond 6.2 s | null 0 | H 3649805 | mask vs normal 0, vs predoff 3649805 | mem vs normal 0, vs predoff 3649805 | mask vs mem 0 | OK
+ALL OK
+rc=0 end 2026-10-04T21:34:37Z

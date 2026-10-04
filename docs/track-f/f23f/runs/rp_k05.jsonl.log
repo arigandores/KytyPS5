@@ -1,0 +1,64 @@
+[    0.0] plan events 32 done 0 todo 32
+[    6.2] capture C:/kyty/f287/f12f/f12_rd_k05.rdc opened
+[   20.8] event 35030 e14edf4a78d1a517 done in 14.600000000000001 s
+[   37.1] event 44251 3a8772dbc6934b1c done in 16.3 s
+[   84.8] event 44410 56a15431999c5a2d done in 47.699999999999996 s
+[  127.8] event 44424 ea8e2d64dfe34ed9 done in 43.0 s
+[  172.2] event 44438 5323c4ef4f785055 done in 44.39999999999999 s
+[  209.8] event 44452 cd94166bf3f2bb81 done in 37.60000000000002 s
+[  225.5] event 44633 52276fe1ba080bea done in 15.699999999999989 s
+[  247.4] event 46220 be4c35a2031fd3f4 done in 21.900000000000006 s
+[  266.3] event 46344 be4c35a2031fd3f4 done in 18.900000000000006 s
+[  286.5] event 46816 255ce6193a9e7938 done in 20.19999999999999 s
+[  304.4] event 47266 2e2ae33a4d374e8f done in 17.899999999999977 s
+[  327.5] event 49215 74bb8628d64f534c done in 23.100000000000023 s
+[  344.5] event 49598 f47c0c097c598a36 done in 17.0 s
+[  362.9] event 49738 0078153a1c1fb171 done in 18.399999999999977 s
+[  380.5] event 81145 3a8772dbc6934b1c done in 17.600000000000023 s
+[  422.8] event 81460 56a15431999c5a2d done in 42.30000000000001 s
+[  458.8] event 81474 ea8e2d64dfe34ed9 done in 36.0 s
+[  495.6] event 81488 5323c4ef4f785055 done in 36.80000000000001 s
+[  533.5] event 81502 cd94166bf3f2bb81 done in 37.89999999999998 s
+[    0.0] plan events 32 done 19 todo 13
+[    6.2] capture C:/kyty/f287/f12f/f12_rd_k05.rdc opened
+[   29.3] event 83214 be4c35a2031fd3f4 done in 23.1 s
+[   50.4] event 83338 be4c35a2031fd3f4 done in 21.099999999999998 s
+[   68.5] event 86514 f47c0c097c598a36 done in 18.1 s
+[   87.6] event 86604 0078153a1c1fb171 done in 19.099999999999994 s
+[  105.7] event 119848 3a8772dbc6934b1c done in 18.10000000000001 s
+[  150.0] event 120367 56a15431999c5a2d done in 44.3 s
+[  188.8] event 120381 ea8e2d64dfe34ed9 done in 38.80000000000001 s
+[  228.0] event 120395 5323c4ef4f785055 done in 39.19999999999999 s
+[  267.2] event 120409 cd94166bf3f2bb81 done in 39.19999999999999 s
+[  289.0] event 122326 be4c35a2031fd3f4 done in 21.80000000000001 s
+[  310.7] event 122458 be4c35a2031fd3f4 done in 21.69999999999999 s
+[  330.2] event 125752 f47c0c097c598a36 done in 19.5 s
+[  351.3] event 125834 0078153a1c1fb171 done in 21.100000000000023 s
+[  351.3] done
+Traceback (most recent call last):
+  File "C:/kyty/f287/f23f/rd_f23f.py", line 321, in <module>
+    code = main()
+  File "C:/kyty/f287/f23f/rd_f23f.py", line 71, in main
+    import refs_f23f as R
+ValueError: source code string cannot contain null bytes
+[    0.0] plan events 32 done 26 todo 6
+[    6.3] capture C:/kyty/f287/f12f/f12_rd_k05.rdc opened
+[   21.3] event 35030 e14edf4a78d1a517 done in 15.0 s
+[   41.8] event 44633 52276fe1ba080bea done in 20.499999999999996 s
+[   63.1] event 47266 2e2ae33a4d374e8f done in 21.300000000000004 s
+Traceback (most recent call last):
+  File "C:/kyty/f287/f23f/rd_f23f.py", line 321, in <module>
+    code = main()
+  File "C:/kyty/f287/f23f/rd_f23f.py", line 291, in main
+    a4 = _s.unpack('<%dI' % (2 * len(sites) + 1), after)
+struct.error: unpack requires a buffer of 12 bytes
+[    0.0] plan events 32 done 29 todo 3
+[    6.4] capture C:/kyty/f287/f12f/f12_rd_k05.rdc opened
+[    0.0] plan events 32 done 29 todo 3
+[    6.4] capture C:/kyty/f287/f12f/f12_rd_k05.rdc opened
+[   32.2] done
+[    0.0] plan events 32 done 30 todo 2
+[    6.6] capture C:/kyty/f287/f12f/f12_rd_k05.rdc opened
+[   24.7] event 86514 f47c0c097c598a36 done (no diag) in 18.1 s
+[   44.3] event 125752 f47c0c097c598a36 done (no diag) in 19.599999999999998 s
+[   44.3] done

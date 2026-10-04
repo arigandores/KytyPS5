@@ -1,0 +1,575 @@
+{
+ "arms": {
+  "0078153a1c1fb171": {
+   "blend": "C:/kyty/f287/f23f/arms/cs_0078153a1c1fb171_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/cs_0078153a1c1fb171_def.spv",
+   "diag_var": "buffers",
+   "diag_var_id": 19,
+   "mask": "C:/kyty/f287/f23f/arms/cs_0078153a1c1fb171_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/cs_0078153a1c1fb171_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/cs_0078153a1c1fb171_sens.spv",
+   "sites": [
+    [
+     784,
+     415,
+     782,
+     281
+    ]
+   ]
+  },
+  "1f16e50eea0c89e3": {
+   "blend": "C:/kyty/f287/f23f/arms/cs_1f16e50eea0c89e3_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/cs_1f16e50eea0c89e3_def.spv",
+   "diag_var": "fault_buffer",
+   "diag_var_id": 72,
+   "mask": "C:/kyty/f287/f23f/arms/cs_1f16e50eea0c89e3_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/cs_1f16e50eea0c89e3_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/cs_1f16e50eea0c89e3_sens.spv",
+   "sites": [
+    [
+     6220,
+     2592,
+     6218,
+     4824
+    ],
+    [
+     8678,
+     2592,
+     8676,
+     8501
+    ],
+    [
+     8750,
+     2592,
+     8748,
+     8515
+    ],
+    [
+     8786,
+     2592,
+     8784,
+     8483
+    ],
+    [
+     8822,
+     2592,
+     8820,
+     8445
+    ],
+    [
+     8858,
+     2592,
+     8856,
+     8471
+    ]
+   ]
+  },
+  "255ce6193a9e7938": {
+   "blend": "C:/kyty/f287/f23f/arms/ps_255ce6193a9e7938_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/ps_255ce6193a9e7938_def.spv",
+   "diag_var": "buffers",
+   "diag_var_id": 35,
+   "mask": "C:/kyty/f287/f23f/arms/ps_255ce6193a9e7938_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/ps_255ce6193a9e7938_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/ps_255ce6193a9e7938_sens.spv",
+   "sites": [
+    [
+     3511,
+     371,
+     3510,
+     545
+    ]
+   ]
+  },
+  "2e2ae33a4d374e8f": {
+   "blend": "C:/kyty/f287/f23f/arms/ps_2e2ae33a4d374e8f_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/ps_2e2ae33a4d374e8f_def.spv",
+   "diag_var": "buffers",
+   "diag_var_id": 32,
+   "mask": "C:/kyty/f287/f23f/arms/ps_2e2ae33a4d374e8f_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/ps_2e2ae33a4d374e8f_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/ps_2e2ae33a4d374e8f_sens.spv",
+   "sites": [
+    [
+     11589,
+     10967,
+     11588,
+     9400
+    ]
+   ]
+  },
+  "3a8772dbc6934b1c": {
+   "blend": "C:/kyty/f287/f23f/arms/cs_3a8772dbc6934b1c_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/cs_3a8772dbc6934b1c_def.spv",
+   "diag_var": "buffers",
+   "diag_var_id": 18,
+   "mask": "C:/kyty/f287/f23f/arms/cs_3a8772dbc6934b1c_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/cs_3a8772dbc6934b1c_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/cs_3a8772dbc6934b1c_sens.spv",
+   "sites": [
+    [
+     2183,
+     156,
+     2181,
+     1586
+    ],
+    [
+     2187,
+     156,
+     2185,
+     1596
+    ]
+   ]
+  },
+  "503d7f066a496c3c": {
+   "blend": "C:/kyty/f287/f23f/arms/cs_503d7f066a496c3c_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/cs_503d7f066a496c3c_def.spv",
+   "diag_var": "fault_buffer",
+   "diag_var_id": 72,
+   "mask": "C:/kyty/f287/f23f/arms/cs_503d7f066a496c3c_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/cs_503d7f066a496c3c_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/cs_503d7f066a496c3c_sens.spv",
+   "sites": [
+    [
+     8345,
+     2508,
+     8343,
+     8168
+    ],
+    [
+     8381,
+     2508,
+     8379,
+     8080
+    ],
+    [
+     8417,
+     2508,
+     8415,
+     8182
+    ],
+    [
+     8487,
+     2508,
+     8485,
+     8112
+    ],
+    [
+     8523,
+     2508,
+     8521,
+     8138
+    ]
+   ]
+  },
+  "52276fe1ba080bea": {
+   "blend": "C:/kyty/f287/f23f/arms/ps_52276fe1ba080bea_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/ps_52276fe1ba080bea_def.spv",
+   "diag_var": "buffers",
+   "diag_var_id": 31,
+   "mask": "C:/kyty/f287/f23f/arms/ps_52276fe1ba080bea_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/ps_52276fe1ba080bea_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/ps_52276fe1ba080bea_sens.spv",
+   "sites": [
+    [
+     10916,
+     10292,
+     10915,
+     8727
+    ]
+   ]
+  },
+  "5323c4ef4f785055": {
+   "blend": "C:/kyty/f287/f23f/arms/cs_5323c4ef4f785055_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/cs_5323c4ef4f785055_def.spv",
+   "diag_var": "fault_buffer",
+   "diag_var_id": 72,
+   "mask": "C:/kyty/f287/f23f/arms/cs_5323c4ef4f785055_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/cs_5323c4ef4f785055_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/cs_5323c4ef4f785055_sens.spv",
+   "sites": [
+    [
+     8580,
+     2548,
+     8578,
+     8279
+    ],
+    [
+     8650,
+     2548,
+     8648,
+     8267
+    ]
+   ]
+  },
+  "56a15431999c5a2d": {
+   "blend": "C:/kyty/f287/f23f/arms/cs_56a15431999c5a2d_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/cs_56a15431999c5a2d_def.spv",
+   "diag_var": "fault_buffer",
+   "diag_var_id": 72,
+   "mask": "C:/kyty/f287/f23f/arms/cs_56a15431999c5a2d_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/cs_56a15431999c5a2d_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/cs_56a15431999c5a2d_sens.spv",
+   "sites": [
+    [
+     8356,
+     2523,
+     8354,
+     8179
+    ],
+    [
+     8392,
+     2523,
+     8390,
+     8091
+    ],
+    [
+     8428,
+     2523,
+     8426,
+     8193
+    ],
+    [
+     8498,
+     2523,
+     8496,
+     8123
+    ],
+    [
+     8534,
+     2523,
+     8532,
+     8149
+    ]
+   ]
+  },
+  "74bb8628d64f534c": {
+   "blend": "C:/kyty/f287/f23f/arms/ps_74bb8628d64f534c_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/ps_74bb8628d64f534c_def.spv",
+   "diag_var": "buffers",
+   "diag_var_id": 33,
+   "mask": "C:/kyty/f287/f23f/arms/ps_74bb8628d64f534c_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/ps_74bb8628d64f534c_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/ps_74bb8628d64f534c_sens.spv",
+   "sites": [
+    [
+     1241,
+     619,
+     1240,
+     503
+    ],
+    [
+     1300,
+     619,
+     1299,
+     507
+    ],
+    [
+     1302,
+     619,
+     1301,
+     511
+    ],
+    [
+     1304,
+     619,
+     1303,
+     499
+    ],
+    [
+     1306,
+     619,
+     1305,
+     503
+    ]
+   ]
+  },
+  "be4c35a2031fd3f4": {
+   "blend": "C:/kyty/f287/f23f/arms/ps_be4c35a2031fd3f4_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/ps_be4c35a2031fd3f4_def.spv",
+   "diag_var": "buffers",
+   "diag_var_id": 40,
+   "mask": "C:/kyty/f287/f23f/arms/ps_be4c35a2031fd3f4_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/ps_be4c35a2031fd3f4_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/ps_be4c35a2031fd3f4_sens.spv",
+   "sites": [
+    [
+     5038,
+     4515,
+     5037,
+     4464
+    ],
+    [
+     5040,
+     4515,
+     5039,
+     4459
+    ],
+    [
+     5064,
+     4515,
+     5063,
+     4441
+    ]
+   ]
+  },
+  "cd94166bf3f2bb81": {
+   "blend": "C:/kyty/f287/f23f/arms/cs_cd94166bf3f2bb81_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/cs_cd94166bf3f2bb81_def.spv",
+   "diag_var": "fault_buffer",
+   "diag_var_id": 72,
+   "mask": "C:/kyty/f287/f23f/arms/cs_cd94166bf3f2bb81_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/cs_cd94166bf3f2bb81_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/cs_cd94166bf3f2bb81_sens.spv",
+   "sites": [
+    [
+     8586,
+     2554,
+     8584,
+     8285
+    ],
+    [
+     8656,
+     2554,
+     8654,
+     8273
+    ]
+   ]
+  },
+  "e14edf4a78d1a517": {
+   "blend": "C:/kyty/f287/f23f/arms/ps_e14edf4a78d1a517_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/ps_e14edf4a78d1a517_def.spv",
+   "diag_var": "buffers",
+   "diag_var_id": 38,
+   "mask": "C:/kyty/f287/f23f/arms/ps_e14edf4a78d1a517_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/ps_e14edf4a78d1a517_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/ps_e14edf4a78d1a517_sens.spv",
+   "sites": [
+    [
+     883,
+     551,
+     882,
+     316
+    ],
+    [
+     885,
+     551,
+     884,
+     320
+    ],
+    [
+     932,
+     551,
+     931,
+     316
+    ],
+    [
+     934,
+     551,
+     933,
+     320
+    ],
+    [
+     1198,
+     551,
+     1197,
+     1002
+    ]
+   ]
+  },
+  "ea8e2d64dfe34ed9": {
+   "blend": "C:/kyty/f287/f23f/arms/cs_ea8e2d64dfe34ed9_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/cs_ea8e2d64dfe34ed9_def.spv",
+   "diag_var": "fault_buffer",
+   "diag_var_id": 72,
+   "mask": "C:/kyty/f287/f23f/arms/cs_ea8e2d64dfe34ed9_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/cs_ea8e2d64dfe34ed9_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/cs_ea8e2d64dfe34ed9_sens.spv",
+   "sites": [
+    [
+     6235,
+     2607,
+     6233,
+     4835
+    ],
+    [
+     8693,
+     2607,
+     8691,
+     8516
+    ],
+    [
+     8765,
+     2607,
+     8763,
+     8530
+    ],
+    [
+     8801,
+     2607,
+     8799,
+     8498
+    ],
+    [
+     8837,
+     2607,
+     8835,
+     8460
+    ],
+    [
+     8873,
+     2607,
+     8871,
+     8486
+    ]
+   ]
+  },
+  "f47c0c097c598a36": {
+   "blend": "C:/kyty/f287/f23f/arms/ps_f47c0c097c598a36_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/ps_f47c0c097c598a36_def.spv",
+   "diag_var": "buffers",
+   "diag_var_id": 24,
+   "mask": "C:/kyty/f287/f23f/arms/ps_f47c0c097c598a36_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/ps_f47c0c097c598a36_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/ps_f47c0c097c598a36_sens.spv",
+   "sites": [
+    [
+     604,
+     274,
+     603,
+     305
+    ]
+   ]
+  },
+  "f88d0f630ac5b35d": {
+   "blend": "C:/kyty/f287/f23f/arms/cs_f88d0f630ac5b35d_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/cs_f88d0f630ac5b35d_def.spv",
+   "diag_var": "fault_buffer",
+   "diag_var_id": 72,
+   "mask": "C:/kyty/f287/f23f/arms/cs_f88d0f630ac5b35d_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/cs_f88d0f630ac5b35d_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/cs_f88d0f630ac5b35d_sens.spv",
+   "sites": [
+    [
+     8565,
+     2557,
+     8563,
+     8264
+    ],
+    [
+     8601,
+     2557,
+     8599,
+     8226
+    ],
+    [
+     8637,
+     2557,
+     8635,
+     8252
+    ]
+   ]
+  },
+  "ff8ee744ffa4dcdc": {
+   "blend": "C:/kyty/f287/f23f/arms/cs_ff8ee744ffa4dcdc_blend.spv",
+   "def": "C:/kyty/f287/f23f/arms/cs_ff8ee744ffa4dcdc_def.spv",
+   "diag_var": "fault_buffer",
+   "diag_var_id": 72,
+   "mask": "C:/kyty/f287/f23f/arms/cs_ff8ee744ffa4dcdc_mask.spv",
+   "mem": "C:/kyty/f287/f23f/arms/cs_ff8ee744ffa4dcdc_mem.spv",
+   "sens": "C:/kyty/f287/f23f/arms/cs_ff8ee744ffa4dcdc_sens.spv",
+   "sites": [
+    [
+     8559,
+     2551,
+     8557,
+     8258
+    ],
+    [
+     8595,
+     2551,
+     8593,
+     8220
+    ],
+    [
+     8631,
+     2551,
+     8629,
+     8246
+    ]
+   ]
+  }
+ },
+ "events": [
+  {
+   "cap_sha": "d459ce284c9f5781a88dc30697c5be37bb4d89211829511c727ce3a7f045f0d1",
+   "eid": 855,
+   "prog": "503d7f066a496c3c",
+   "stage": "cs",
+   "valid_g_by_state": true
+  },
+  {
+   "cap_sha": "3ac56719cda7c1b8d2dacb19f56a0fbcf028a9dd4ebe54a5c3db726e3bd1bbf0",
+   "eid": 869,
+   "prog": "1f16e50eea0c89e3",
+   "stage": "cs",
+   "valid_g_by_state": true
+  },
+  {
+   "cap_sha": "ed3aaa72c10c37dc9806607d4d09930a80defa751068ba62d2ee47386b375b1b",
+   "eid": 883,
+   "prog": "ff8ee744ffa4dcdc",
+   "stage": "cs",
+   "valid_g_by_state": true
+  },
+  {
+   "cap_sha": "9ba469410a0c62649964c4fa0d4ea65450232f05d41fc4bafe9d6884d3888bcd",
+   "eid": 897,
+   "prog": "f88d0f630ac5b35d",
+   "stage": "cs",
+   "valid_g_by_state": true
+  },
+  {
+   "cap_sha": "c8c18863305162849f17e7a861764ba38f8b6138396e2ef72403d3cc4bbb8633",
+   "eid": 1082,
+   "prog": "0078153a1c1fb171",
+   "stage": "cs",
+   "valid_g_by_state": true
+  },
+  {
+   "cap_sha": "d459ce284c9f5781a88dc30697c5be37bb4d89211829511c727ce3a7f045f0d1",
+   "eid": 1929,
+   "prog": "503d7f066a496c3c",
+   "stage": "cs",
+   "valid_g_by_state": true
+  },
+  {
+   "cap_sha": "3ac56719cda7c1b8d2dacb19f56a0fbcf028a9dd4ebe54a5c3db726e3bd1bbf0",
+   "eid": 1943,
+   "prog": "1f16e50eea0c89e3",
+   "stage": "cs",
+   "valid_g_by_state": true
+  },
+  {
+   "cap_sha": "ed3aaa72c10c37dc9806607d4d09930a80defa751068ba62d2ee47386b375b1b",
+   "eid": 1957,
+   "prog": "ff8ee744ffa4dcdc",
+   "stage": "cs",
+   "valid_g_by_state": true
+  },
+  {
+   "cap_sha": "9ba469410a0c62649964c4fa0d4ea65450232f05d41fc4bafe9d6884d3888bcd",
+   "eid": 1971,
+   "prog": "f88d0f630ac5b35d",
+   "stage": "cs",
+   "valid_g_by_state": true
+  },
+  {
+   "cap_sha": "c8c18863305162849f17e7a861764ba38f8b6138396e2ef72403d3cc4bbb8633",
+   "eid": 2152,
+   "prog": "0078153a1c1fb171",
+   "stage": "cs",
+   "valid_g_by_state": true
+  }
+ ]
+}

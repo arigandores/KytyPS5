@@ -1,0 +1,1014 @@
+{
+ "0078153a1c1fb171": {
+  "diag_prefix": [
+   0,
+   0
+  ],
+  "diag_var": "buffers",
+  "diag_var_id": 19,
+  "files": {
+   "blend": {
+    "bytes": 65092,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "402bf76fc9e98bd0ff6190d1d9658c9793b15dad33993f9ff9846f29c60f31d9",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 65016,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "c8c18863305162849f17e7a861764ba38f8b6138396e2ef72403d3cc4bbb8633",
+    "sites_left": 1,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 65356,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "4cab01b888edf43f613f640897c43ab5abc38a3a45a465551f5affc34dc3e28d",
+    "sites_left": 1,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 65208,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "2f9fdccedec676b89fb5bdc3dbb2ba46d012152ca0ae7c94981265c66074fbeb",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 65304,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "1d12acbd2ec295847413abe1393b2c6ffb04cd9b9165bd316170da0a6491fdd5",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 65016,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "892da874f47b7a5b9b95de82b1c777335365d04093d104bd2f9b5e53bd05e751",
+    "sites_left": 1,
+    "val_rc": 0
+   }
+  },
+  "sites": 1,
+  "stage": "cs"
+ },
+ "1f16e50eea0c89e3": {
+  "diag_prefix": [
+   0
+  ],
+  "diag_var": "fault_buffer",
+  "diag_var_id": 72,
+  "files": {
+   "blend": {
+    "bytes": 665000,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "7f5b538a2ee649c16752f90d75283ba36e26e9cde1d22be7bdc2c4177e7ebc25",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 664624,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "e5d7e6ae315fa320e317065937e7853fb730423bf033692e1c50dea9bea20f65",
+    "sites_left": 6,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 666252,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "70cf6b7024d70d6152c44f95ffc7033294c495b80f3674d80a4b1a71b22562f0",
+    "sites_left": 6,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 665776,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "c251b40b1e3ffb2ae5847a91ef922e5a7d866d14896ac130d78d75f78cc852e2",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 666032,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "2a2d36b3bb59771d0b949cb2428b38db042383f8f098beebe2f4007c85d4a2ea",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 664624,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "c483b1ae3d7f8bb8b522ff654ba7a4b7e3c6a93600c1485425ae6847e11ff3e2",
+    "sites_left": 6,
+    "val_rc": 0
+   }
+  },
+  "sites": 6,
+  "stage": "cs"
+ },
+ "255ce6193a9e7938": {
+  "diag_prefix": [
+   0,
+   0
+  ],
+  "diag_var": "buffers",
+  "diag_var_id": 35,
+  "files": {
+   "blend": {
+    "bytes": 202636,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "0309e7b281bd44ae2e179a891e33dcbc9610425657eae2b3135542e5c46d3bb3",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 202560,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "b7414a35257745a26cfde2380d6c813f462a9f6c313be67887b1d417570e8772",
+    "sites_left": 1,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 202900,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "2033de94a72838b2eb432bd8c80c346eab6002cce619535f3eb28d1c834882f6",
+    "sites_left": 1,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 202752,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "dd2402e7f6b41f5d3f9e415b564ca181f16863cf9dc1e30f1c447eb2a376c191",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 202848,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "f2bc85bfeb7a0bf0d3fa49ee346259b42544c786767067e91b1c1951cf0fc6fa",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 202560,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "24797648e93b57b3970ef0aa29c0c6384f2b997cf983f2aee783ef8cceb5b9ff",
+    "sites_left": 1,
+    "val_rc": 0
+   }
+  },
+  "sites": 1,
+  "stage": "ps"
+ },
+ "2e2ae33a4d374e8f": {
+  "diag_prefix": [
+   0,
+   0
+  ],
+  "diag_var": "buffers",
+  "diag_var_id": 32,
+  "files": {
+   "blend": {
+    "bytes": 279368,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "f6ea5554b80d0d39d6f7dfe9337371c7fc7ca3061d569427716223101106f364",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 279292,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "2ec19fc137c692783c8642ac818899c3633e8fab103aeb5e605f6ac54048882b",
+    "sites_left": 1,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 279632,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "1dc904956d516639655a973c2f4855bd29eaab874df3299ac253b3e1595e886b",
+    "sites_left": 1,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 279484,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "3f956807fc5104ae112f541e790d0bafcb769d1c090acf853262cd0429470b73",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 279580,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "4e715fc1b398698d4d38e103be5f2b3e9764e1fa5356d88d401751c615144f58",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 279292,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "61558cd422893dd5f559b395a587eec6fc390915ddfd428437fefe12a8524f3e",
+    "sites_left": 1,
+    "val_rc": 0
+   }
+  },
+  "sites": 1,
+  "stage": "ps"
+ },
+ "3a8772dbc6934b1c": {
+  "diag_prefix": [
+   0,
+   0
+  ],
+  "diag_var": "buffers",
+  "diag_var_id": 18,
+  "files": {
+   "blend": {
+    "bytes": 54480,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "90f8798449144378fb1a9a9ac1852752053d1114a891c455005b149fcfe6600c",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 54344,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "e91217d802b407960bf9a5898350ee840f367421fa9e2dc8a8c1e6a95c51b485",
+    "sites_left": 2,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 54988,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "136cd74901f0da420864b39179b5295b07db19d94fd81c1290dbfdd6c04f8272",
+    "sites_left": 2,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 54764,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "d910bedeb2588896437a70d9b53a211d0adef86e805ad278853aac11a19b0d44",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 54892,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "7d04e6a8da4d8bcf08a6bcfe03b5b051fabeff49236f908f5db288d87a224225",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 54344,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "ecc4df6a1b17485e5b8bdd16ddad0870c376fe6499c019e4390ddfc798e84814",
+    "sites_left": 2,
+    "val_rc": 0
+   }
+  },
+  "sites": 2,
+  "stage": "cs"
+ },
+ "503d7f066a496c3c": {
+  "diag_prefix": [
+   0
+  ],
+  "diag_var": "fault_buffer",
+  "diag_var_id": 72,
+  "files": {
+   "blend": {
+    "bytes": 629064,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "ea7922979acebad95594da8fe67c5487ed1425b6a6871a5d822572666ff31429",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 628748,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "228cf045c65c1206a53a88af408f7b15dab0c38656394fcb3e5658f86a1c612f",
+    "sites_left": 5,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 630116,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "d2117e61800d5e56c62e1278a8632502b19cb3f2c74a716dcbd8125a72c4ea25",
+    "sites_left": 5,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 629708,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "1bfe769102b27318acb5f7b87f76cf9246f7e3fd190861ec73f29e6abe878b8c",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 629932,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "0a4552c4a484ddca7a99083d425aae86eba693e0f0fc91c140932791ca288514",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 628748,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "6e7580e4a407bab5d291aaf11e26f8d595f17a77df4cf08c54d2a127f55b0006",
+    "sites_left": 5,
+    "val_rc": 0
+   }
+  },
+  "sites": 5,
+  "stage": "cs"
+ },
+ "52276fe1ba080bea": {
+  "diag_prefix": [
+   0,
+   0
+  ],
+  "diag_var": "buffers",
+  "diag_var_id": 31,
+  "files": {
+   "blend": {
+    "bytes": 265800,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "cb8122b76cbb799cee0191243ba522a0bc8c54af06b418265e64deb1a0cf661f",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 265724,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "f8bdb6fb8a7e099d07e5ca0300ce8a8e35fb124a63e9ee42d5b22c84552315a6",
+    "sites_left": 1,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 266064,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "d134224592708f9da784e0fa2da770a05b87d755947142073359cbefefc5c56e",
+    "sites_left": 1,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 265916,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "6ff8b097c13012c438a29c83461b39e5ca81919bf06670cf1651d6ad1f0c29cf",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 266012,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "b4528d6349b06d04e6d08b16dbf2fdf80fc2bd96906e52f26d425b6a0903ed7f",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 265724,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "df311583cecb42622dd4a4bc718a1aa9892970073ddea3f6b87c11915ff41056",
+    "sites_left": 1,
+    "val_rc": 0
+   }
+  },
+  "sites": 1,
+  "stage": "ps"
+ },
+ "5323c4ef4f785055": {
+  "diag_prefix": [
+   0
+  ],
+  "diag_var": "fault_buffer",
+  "diag_var_id": 72,
+  "files": {
+   "blend": {
+    "bytes": 778016,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "453ca632a77c89caecea28a7ae81b9a3fedf60e860505098691c474f359f8399",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 777880,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "6b465e0de2715d00339d5fc73744821460c1aa0300e5779d003a75d9e280cf3a",
+    "sites_left": 2,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 778468,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "6d00471a45f13ebc815cad6006e1d90f49641ea2cb27f5f5ef29e7e6b5f401ec",
+    "sites_left": 2,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 778264,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "13b9a84ddf9f6d8432ad0a1dc486474758dbf9855f833a886a32aa1219c93565",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 778392,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "aeae8d593c0ca2bbb28a95a7b359924c567351f707275d21a2a4abe7ba0c3a06",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 777880,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "c26f98ecd7e652b55799ca8d8ec5190397f183553b6122e59350d005ce57b3be",
+    "sites_left": 2,
+    "val_rc": 0
+   }
+  },
+  "sites": 2,
+  "stage": "cs"
+ },
+ "56a15431999c5a2d": {
+  "diag_prefix": [
+   0
+  ],
+  "diag_var": "fault_buffer",
+  "diag_var_id": 72,
+  "files": {
+   "blend": {
+    "bytes": 712528,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "7fb658f3059f1f1ce8cf6119161ee54f5635a306724bc2d9944d5ded41257a9d",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 712212,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "d06816fee6bbaa8e85807e2e69d92103caeb30bdbcf3b3977eb21d6833038de9",
+    "sites_left": 5,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 713580,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "52fbde9daca7d108753d3c730e48c46d64757044f4b67f42e94a528b6796ae1f",
+    "sites_left": 5,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 713172,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "5a350690d9ed816589d9a63295d4f5c64b54f40bad7d48edaff98cb8f9cf9e57",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 713396,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "29ce0b1bb0110b755f6a50f781c60f8a0dafbe09c06dad94e72e9c5da5ebbddd",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 712212,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "20d4ab00a56310e491b13d2adea31f2eea40ec990768996563912bcf4d19087d",
+    "sites_left": 5,
+    "val_rc": 0
+   }
+  },
+  "sites": 5,
+  "stage": "cs"
+ },
+ "74bb8628d64f534c": {
+  "diag_prefix": [
+   0,
+   0
+  ],
+  "diag_var": "buffers",
+  "diag_var_id": 33,
+  "files": {
+   "blend": {
+    "bytes": 240660,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "0818940637582bea0950071e50bd6d47cf62e40ff79abe959d297bb8949babea",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 240344,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "474653d176e8330314a55fb5689cf754105c09a6d2740885618cbe8f3b59a200",
+    "sites_left": 5,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 241756,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "d9de08c170df0e991f7a6b8bb32b0452c669216952c2e4da9300869ae485fd03",
+    "sites_left": 5,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 241304,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "dc02ffe76003ea74c2f861fb6a86b72dbdf287a3bd74d6bbf349d224de2c6c8a",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 241528,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "13a60751388e1872737c20181d8d20eda752016bf9315b25f89e033c2e0830d1",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 240344,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "c23fabf665887a954bb7d52251ca58066abc3a5effb0a3f2f11fed3627e45c05",
+    "sites_left": 5,
+    "val_rc": 0
+   }
+  },
+  "sites": 5,
+  "stage": "ps"
+ },
+ "be4c35a2031fd3f4": {
+  "diag_prefix": [
+   0,
+   0
+  ],
+  "diag_var": "buffers",
+  "diag_var_id": 40,
+  "files": {
+   "blend": {
+    "bytes": 277720,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "6b6f38002502eb274e6a9f40511d72f777a368461231da541724bcf969a95c53",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 277524,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96",
+    "sites_left": 3,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 278400,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "f6f0be59791494415bb3cf0a51c52edb0b0275d718d89892c8079f24c4f64412",
+    "sites_left": 3,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 278100,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "ebb2b5bfe5a661bce878f51a1032ff0651fde546fde0eeba78c7724b89dad0ab",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 278260,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "798342e9dfd65cc0850f0ed00a86e5977bfd4955d7b2f3b4f119ecb73f3715fe",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 277524,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "f1799676ac76256f2fa622b825b2d4efd47b7fd84c8c7d1378422f376adafdeb",
+    "sites_left": 3,
+    "val_rc": 0
+   }
+  },
+  "sites": 3,
+  "stage": "ps"
+ },
+ "cd94166bf3f2bb81": {
+  "diag_prefix": [
+   0
+  ],
+  "diag_var": "fault_buffer",
+  "diag_var_id": 72,
+  "files": {
+   "blend": {
+    "bytes": 800784,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "110a7adabb17c9e100e26f439a0ed125a29d8e1279cdff21d8758cef26c936d7",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 800648,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "67986ecf4f38862db0dc1e31e4d6d8085fe3503920b8791e16f15541b9c651d2",
+    "sites_left": 2,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 801236,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "6bce069a0c6a0997a5f61977da87015bf7c9a58c09c25edbdf616e6623777775",
+    "sites_left": 2,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 801032,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "3e8adcd76415a4ff50d037b874cea72b4f535fb10682dd59e757ef94c72993b3",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 801160,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "32ddf22da0c5723eadadadc074e93fbb3a8d0942e6c54ed730cf9c83c33124fb",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 800648,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "fc3205f7b5edcf11b3628e02c7bfeb427696ecbf480927b46f5f66bf1778d0c8",
+    "sites_left": 2,
+    "val_rc": 0
+   }
+  },
+  "sites": 2,
+  "stage": "cs"
+ },
+ "e14edf4a78d1a517": {
+  "diag_prefix": [
+   0,
+   0
+  ],
+  "diag_var": "buffers",
+  "diag_var_id": 38,
+  "files": {
+   "blend": {
+    "bytes": 43080,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "45bbef4195016dabf6a97c5097b375d124ce0eb642f43d509981e19b676f957e",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 42764,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "53a585af9e0ae938b5217bbe04f1a5484f7b785b5deb530beaf3a8bdf04ef9cd",
+    "sites_left": 5,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 44176,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "3c236fc2ce9b0ebd1ffb12353ff825931ffb9ccb2c87bc1e99d00068db90f1bb",
+    "sites_left": 5,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 43724,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "e1f44f36f32d1829bf3a21f040b2e24219b2c751307d7de0a921233a43bf21a0",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 43948,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "09f5e29ff45a1f72ef8ad8f6f95c0b515cd039b263882a4a2507ddc0157c9388",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 42764,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "e00a12006fadca19eb78e8eaba69fe617e1fb710f3ec03eddd1f370812d438a5",
+    "sites_left": 5,
+    "val_rc": 0
+   }
+  },
+  "sites": 5,
+  "stage": "ps"
+ },
+ "ea8e2d64dfe34ed9": {
+  "diag_prefix": [
+   0
+  ],
+  "diag_var": "fault_buffer",
+  "diag_var_id": 72,
+  "files": {
+   "blend": {
+    "bytes": 752224,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "11e1d4c49062a6e8adaca219a171189b8836eae3dabd7b5c2ae98c1b785aa761",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 751848,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "1c0877737bd9b0af49d60bfde3cbae52fff5385b65c6b408f214beacaa21154e",
+    "sites_left": 6,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 753476,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "34a3ea239f9b5f7e80919ae524a5016172e6f2157bc13a225341384e5c922467",
+    "sites_left": 6,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 753000,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "0b18f0c8d8f67491c9c9c2e3270a851ad3e7802cb8506cc4d0bd0969f7d3526c",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 753256,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "319028a6ca0bb6596f3419deb24c0a88053f51686605d4b852c6b8c1b67bb77c",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 751848,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "4305f5f54c590a13b9f1d369c680e48336faf5796160f6ee72a6a85d4f224609",
+    "sites_left": 6,
+    "val_rc": 0
+   }
+  },
+  "sites": 6,
+  "stage": "cs"
+ },
+ "f47c0c097c598a36": {
+  "diag_prefix": [
+   0,
+   0
+  ],
+  "diag_var": "buffers",
+  "diag_var_id": 24,
+  "files": {
+   "blend": {
+    "bytes": 23592,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "439d3b09e374e9d86b0325c49355efead6b77b88861058695da77b004049bfea",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 23516,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "adfaf707e4a9b5393fb458325201f70f93fbd17bf3b9e8ceaa0d4555e4b75e01",
+    "sites_left": 1,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 23856,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "65bb158fd75d2712cfba62c88368b855b9d5b80941488f03a481da823fe9a389",
+    "sites_left": 1,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 23708,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "b8c0aebde6950e3c7a6f09440bb1ff5374d96d95159a1e21b4f49903348e4281",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 23804,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "7406b3f88a9e3833076ca708b199ba089f50a427945be196fd412da3dcea77cf",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 23516,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "6ac8baf66a88758298f673caf03ada302c492d3bea1f3e8dbf9c34c05d8a22e2",
+    "sites_left": 1,
+    "val_rc": 0
+   }
+  },
+  "sites": 1,
+  "stage": "ps"
+ },
+ "f88d0f630ac5b35d": {
+  "diag_prefix": [
+   0
+  ],
+  "diag_var": "fault_buffer",
+  "diag_var_id": 72,
+  "files": {
+   "blend": {
+    "bytes": 714492,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "dcf6dc05499e1a7df2278695c636d8a5b9fb4c48ff285dc940fadf378a6ef89e",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 714296,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "e176575ee4cdf5b906ba98b339a1cee4a518592b57d4eb58c82eb7958123ffce",
+    "sites_left": 3,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 715144,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "1c4493bee506d20d8b65842ee32e483f2c61377494d4c2e68b6d988324393bab",
+    "sites_left": 3,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 714872,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "c90d86a96d6f7cd8a7e2abb1f56faf5a0a0d062e6b2a5c45aadaacb95cdecee4",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 715032,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "26c76e219f1f04a966fd6b189b58d98a01db3667102f59f529ef2ac74303deb6",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 714296,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "d83dabee47f40315df7e227035047086c73277e8427dce593c557138a74c40bb",
+    "sites_left": 3,
+    "val_rc": 0
+   }
+  },
+  "sites": 3,
+  "stage": "cs"
+ },
+ "ff8ee744ffa4dcdc": {
+  "diag_prefix": [
+   0
+  ],
+  "diag_var": "fault_buffer",
+  "diag_var_id": 72,
+  "files": {
+   "blend": {
+    "bytes": 691724,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "5c460d0fc61c3d2922bb1d3d19d4dafbc2e1768b28de46bbb257bdcdc04d6b8e",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "def": {
+    "bytes": 691528,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "8c0028a8a44dfe821d2a63b1a9274207c97ef2c6d54cd7ec7ba318c0c4702f93",
+    "sites_left": 3,
+    "val_rc": 0
+   },
+   "diagT": {
+    "bytes": 692376,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "f8544a43c1ef03dfab3a1ae82856665e5f43b2aed3f52cf5159e1a71259b3051",
+    "sites_left": 3,
+    "val_rc": 0
+   },
+   "mask": {
+    "bytes": 692104,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "bd40ca43a8589cea55dc89f7ca66e30ef361e005d78fb71d7e681d70526e1c05",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "mem": {
+    "bytes": 692264,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "ef0031292d1201b3f8c0521674d4bddd39a7082ae5ec934663fd8bd7799d9ee9",
+    "sites_left": 0,
+    "val_rc": 0
+   },
+   "sens": {
+    "bytes": 691528,
+    "ok": true,
+    "phi_added": 0,
+    "sha": "093540a1f1b98abe169db708aba7179d0e003ced6f3ee74150f1b924f01b4954",
+    "sites_left": 3,
+    "val_rc": 0
+   }
+  },
+  "sites": 3,
+  "stage": "cs"
+ }
+}

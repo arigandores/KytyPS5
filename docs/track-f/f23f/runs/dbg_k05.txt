@@ -1,0 +1,16 @@
+chunk 64212 name vkCmdDispatchIndirect
+chunk 66843 name vkCmdBindIndexBuffer
+chunk 70030 name vkCmdBeginRendering
+chunk 104932 name vkCmdPipelineBarrier
+chunk 107463 name vkUpdateDescriptorSets
+chunk 110613 name vkCmdSetStencilTestEnable
+chunk 147757 name vkUpdateDescriptorSets
+chunk 150552 name vkUpdateDescriptorSets
+chunk 153794 name vkCmdPipelineBarrier2
+actions 23900
+Traceback (most recent call last):
+  File "C:/kyty/f287/f23f/rd_dbg_f23f.py", line 40, in <module>
+    code = main()
+  File "C:/kyty/f287/f23f/rd_dbg_f23f.py", line 31, in main
+    out.write('HIT chunk %d event %d action %d depth %d flags %x name %s' % h + NL)
+TypeError: %x format: an integer is required, not str

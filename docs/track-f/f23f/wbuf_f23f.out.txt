@@ -1,0 +1,17 @@
+cs 0078153a1c1fb171 storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'flattened_srt'] | {'OpImageWrite': 4}
+cs 1f16e50eea0c89e3 storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'bda_pagetable', 'fault_buffer', 'flattened_srt'] | {'OpImageWrite': 4, 'atomic:lds_dwords': 2, 'store:bda_fault_page': 2, 'store:fault_buffer': 2, 'store:lds_dwords': 52}
+cs 3a8772dbc6934b1c storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'flattened_srt'] | {'OpImageWrite': 6}
+cs 503d7f066a496c3c storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'bda_pagetable', 'fault_buffer', 'flattened_srt'] | {'OpImageWrite': 4, 'atomic:lds_dwords': 2, 'store:bda_fault_page': 2, 'store:fault_buffer': 2, 'store:lds_dwords': 54}
+cs 5323c4ef4f785055 storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'bda_pagetable', 'fault_buffer', 'flattened_srt'] | {'OpImageWrite': 4, 'atomic:lds_dwords': 2, 'store:bda_fault_page': 2, 'store:fault_buffer': 2, 'store:lds_dwords': 58}
+cs 56a15431999c5a2d storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'bda_pagetable', 'fault_buffer', 'flattened_srt'] | {'OpImageWrite': 4, 'atomic:lds_dwords': 2, 'store:bda_fault_page': 2, 'store:fault_buffer': 2, 'store:lds_dwords': 50}
+cs cd94166bf3f2bb81 storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'bda_pagetable', 'fault_buffer', 'flattened_srt'] | {'OpImageWrite': 4, 'atomic:lds_dwords': 2, 'store:bda_fault_page': 2, 'store:fault_buffer': 2, 'store:lds_dwords': 58}
+cs ea8e2d64dfe34ed9 storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'bda_pagetable', 'fault_buffer', 'flattened_srt'] | {'OpImageWrite': 4, 'atomic:lds_dwords': 2, 'store:bda_fault_page': 2, 'store:fault_buffer': 2, 'store:lds_dwords': 58}
+cs f88d0f630ac5b35d storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'bda_pagetable', 'fault_buffer', 'flattened_srt'] | {'OpImageWrite': 4, 'atomic:lds_dwords': 2, 'store:bda_fault_page': 2, 'store:fault_buffer': 2, 'store:lds_dwords': 52}
+cs ff8ee744ffa4dcdc storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'bda_pagetable', 'fault_buffer', 'flattened_srt'] | {'OpImageWrite': 4, 'atomic:lds_dwords': 2, 'store:bda_fault_page': 2, 'store:fault_buffer': 2, 'store:lds_dwords': 52}
+ps 255ce6193a9e7938 storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'flattened_srt'] | {'OpKill': 1, 'store:lds_dwords': 3, 'store:pixel_valid_mask_active': 2}
+ps 2e2ae33a4d374e8f storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'flattened_srt', 'shader_data'] | {'OpKill': 2, 'store:pixel_valid_mask_active': 3}
+ps 52276fe1ba080bea storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'flattened_srt', 'shader_data'] | {'OpKill': 2, 'store:pixel_valid_mask_active': 3}
+ps 74bb8628d64f534c storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'flattened_srt', 'shader_data'] | {'OpKill': 2, 'store:pixel_valid_mask_active': 3}
+ps be4c35a2031fd3f4 storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'flattened_srt'] | {'OpKill': 1, 'store:pixel_valid_mask_active': 2}
+ps e14edf4a78d1a517 storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'flattened_srt'] | {'OpKill': 2, 'store:pixel_valid_mask_active': 3}
+ps f47c0c097c598a36 storage-buffer variables ['buffers', 'buffers_u32x4', 'buffers_u32x2', 'shader_data'] | {'OpKill': 1, 'store:pixel_valid_mask_active': 2}

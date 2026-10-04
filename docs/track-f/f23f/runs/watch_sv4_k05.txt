@@ -1,0 +1,2 @@
+watch: start 2026-10-04T21:46:00Z child 64204 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+rc=0 end 2026-10-04T21:51:17Z

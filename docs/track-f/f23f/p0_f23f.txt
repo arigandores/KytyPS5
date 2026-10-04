@@ -1,0 +1,11 @@
+F23f (HPP-592, ROADMAP s122 item 498(g)(1)-(5)) - P(0) before any data (no translation, no GPU process, no replay yet).
+Priors of the executor [I]:
+  P(reference (a) = normal and != predoff on c01, c07, c09 at the first attempt) = 0.75
+  P(reference (b) = normal and != predoff on c01, c07, c09 at the first attempt) = 0.65
+  P(both pass at the first attempt) = 0.55; P(both pass after one method fix) = 0.80
+  P(>= 1 event valid by RC3 (a)-(g) + N_null = 0 + references equal, over the 17 programs) = 0.50
+  P(N_diff > 0 on >= 1 valid event) = 0.15
+  P(>= 1 program "not found for form H") = 0.40
+  Expected candidate of item 498(d): (i) 0.10, (ii) 0.12, (iii) 0.40, (iv) 0.38
+  Expected number of valid programs: 4 of 17 (captures were taken by FS3 540c035a / earlier binaries; the installed S12
+  translation may differ from the captured module, e.g. CS BVH programs after F10).

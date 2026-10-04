@@ -1,0 +1,52 @@
+[    5.8] capture C:/kyty/f287/f13a/f13_rd.rdc opened
+[    8.0] EVENT eid 855 chunk 1769 prog cs_503d7f066a496c3c stage cs module_sha d459ce284c9f5781a88dc30697c5be37bb4d89211829511c727ce3a7f045f0d1 bytes 626252 action vkCmdDispatchIndirect(<1, 1, 1>) numIndices 0 numInstances 0 dispatch 1x1x1
+[    8.0]   RW buf 180 bind 3 elem 0 len 536870912 off 0 size 536870912
+[    8.0]   RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[    8.0]   RW buf 204 bind 5 elem 0 len 67108864 off 67036160 size 1212
+[    8.0]   RW buf 5745 bind 0 elem 0 len 37486592 off 259216 size 129604
+[   10.4] EVENT eid 869 chunk 1785 prog cs_1f16e50eea0c89e3 stage cs module_sha 3ac56719cda7c1b8d2dacb19f56a0fbcf028a9dd4ebe54a5c3db726e3bd1bbf0 bytes 662128 action vkCmdDispatchIndirect(<1, 1, 1>) numIndices 0 numInstances 0 dispatch 1x1x1
+[   10.4]   RW buf 180 bind 3 elem 0 len 536870912 off 0 size 536870912
+[   10.4]   RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[   10.4]   RW buf 204 bind 5 elem 0 len 67108864 off 67037696 size 1248
+[   10.4]   RW buf 5745 bind 0 elem 0 len 37486592 off 388832 size 129604
+[   13.1] EVENT eid 883 chunk 1800 prog cs_ff8ee744ffa4dcdc stage cs module_sha ed3aaa72c10c37dc9806607d4d09930a80defa751068ba62d2ee47386b375b1b bytes 689032 action vkCmdDispatchIndirect(<1, 1, 1>) numIndices 0 numInstances 0 dispatch 1x1x1
+[   13.1]   RW buf 180 bind 3 elem 0 len 536870912 off 0 size 536870912
+[   13.1]   RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[   13.1]   RW buf 204 bind 5 elem 0 len 67108864 off 67039232 size 1296
+[   13.1]   RW buf 5745 bind 0 elem 0 len 37486592 off 518448 size 129604
+[   15.8] EVENT eid 897 chunk 1815 prog cs_f88d0f630ac5b35d stage cs module_sha 9ba469410a0c62649964c4fa0d4ea65450232f05d41fc4bafe9d6884d3888bcd bytes 711800 action vkCmdDispatchIndirect(<1, 1, 1>) numIndices 0 numInstances 0 dispatch 1x1x1
+[   15.8]   RW buf 180 bind 3 elem 0 len 536870912 off 0 size 536870912
+[   15.8]   RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[   15.8]   RW buf 204 bind 5 elem 0 len 67108864 off 67040768 size 1296
+[   15.8]   RW buf 5745 bind 0 elem 0 len 37486592 off 648064 size 129604
+[   16.0] EVENT eid 1082 chunk 1998 prog cs_0078153a1c1fb171 stage cs module_sha c8c18863305162849f17e7a861764ba38f8b6138396e2ef72403d3cc4bbb8633 bytes 65016 action vkCmdDispatch() numIndices 0 numInstances 0 dispatch 240x135x1
+[   16.0]   RW buf 204 bind 0 elem 0 len 67108864 off 67060160 size 32
+[   16.0]   RW buf 204 bind 1 elem 0 len 67108864 off 67060160 size 32
+[   16.0]   RW tex 6750 bind 2 elem 0 fmt R11G11B10_FLOAT w 1920 h 1080 d 1 mips 1 arr 1 bytes 8847360
+[   16.0]   RW buf 204 bind 3 elem 0 len 67108864 off 67060224 size 112
+[   16.3] EVENT eid 1929 chunk 2818 prog cs_503d7f066a496c3c stage cs module_sha d459ce284c9f5781a88dc30697c5be37bb4d89211829511c727ce3a7f045f0d1 bytes 626252 action vkCmdDispatchIndirect(<1, 1, 1>) numIndices 0 numInstances 0 dispatch 1x1x1
+[   16.3]   RW buf 180 bind 3 elem 0 len 536870912 off 0 size 536870912
+[   16.3]   RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[   16.3]   RW buf 204 bind 5 elem 0 len 67108864 off 67085312 size 1212
+[   16.3]   RW buf 5745 bind 0 elem 0 len 37486592 off 259216 size 129604
+[   16.5] EVENT eid 1943 chunk 2834 prog cs_1f16e50eea0c89e3 stage cs module_sha 3ac56719cda7c1b8d2dacb19f56a0fbcf028a9dd4ebe54a5c3db726e3bd1bbf0 bytes 662128 action vkCmdDispatchIndirect(<1, 1, 1>) numIndices 0 numInstances 0 dispatch 1x1x1
+[   16.5]   RW buf 180 bind 3 elem 0 len 536870912 off 0 size 536870912
+[   16.5]   RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[   16.5]   RW buf 204 bind 5 elem 0 len 67108864 off 67086592 size 1248
+[   16.5]   RW buf 5745 bind 0 elem 0 len 37486592 off 388832 size 129604
+[   16.8] EVENT eid 1957 chunk 2849 prog cs_ff8ee744ffa4dcdc stage cs module_sha ed3aaa72c10c37dc9806607d4d09930a80defa751068ba62d2ee47386b375b1b bytes 689032 action vkCmdDispatchIndirect(<1, 1, 1>) numIndices 0 numInstances 0 dispatch 1x1x1
+[   16.8]   RW buf 180 bind 3 elem 0 len 536870912 off 0 size 536870912
+[   16.8]   RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[   16.8]   RW buf 204 bind 5 elem 0 len 67108864 off 67087872 size 1296
+[   16.8]   RW buf 5745 bind 0 elem 0 len 37486592 off 518448 size 129604
+[   17.1] EVENT eid 1971 chunk 2864 prog cs_f88d0f630ac5b35d stage cs module_sha 9ba469410a0c62649964c4fa0d4ea65450232f05d41fc4bafe9d6884d3888bcd bytes 711800 action vkCmdDispatchIndirect(<1, 1, 1>) numIndices 0 numInstances 0 dispatch 1x1x1
+[   17.1]   RW buf 180 bind 3 elem 0 len 536870912 off 0 size 536870912
+[   17.1]   RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[   17.1]   RW buf 204 bind 5 elem 0 len 67108864 off 67089408 size 1296
+[   17.1]   RW buf 5745 bind 0 elem 0 len 37486592 off 648064 size 129604
+[   17.3] EVENT eid 2152 chunk 3043 prog cs_0078153a1c1fb171 stage cs module_sha c8c18863305162849f17e7a861764ba38f8b6138396e2ef72403d3cc4bbb8633 bytes 65016 action vkCmdDispatch() numIndices 0 numInstances 0 dispatch 240x135x1
+[   17.3]   RW buf 204 bind 0 elem 0 len 67108864 off 67108800 size 32
+[   17.3]   RW buf 204 bind 1 elem 0 len 67108864 off 67108800 size 32
+[   17.3]   RW tex 6750 bind 2 elem 0 fmt R11G11B10_FLOAT w 1920 h 1080 d 1 mips 1 arr 1 bytes 8847360
+[   17.3]   RW buf 204 bind 3 elem 0 len 67108864 off 0 size 112
+[   17.3] done

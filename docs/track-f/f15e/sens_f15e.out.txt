@@ -1,0 +1,20 @@
+suite sens_f15e.py sha256 1e1d36ee668bdcb70cfe760a76b10a7fe2fededa276ed2ff753aed8ca41c5bc3 target f15e_read.py sha256 0e9f20f0301dedf14ef8e3ab89a9ab5bac5bf443db8c8ecc9b58378be4163428
+CAUGHT hold threshold 300 s - 1 us (checks 120 failed 1)
+CAUGHT video threshold 2999 (checks 120 failed 1)
+CAUGHT frame >= 1 s threshold +1 us (checks 120 failed 1)
+CAUGHT FixB4 order vs the first GuestOut ignored (checks 120 failed 1)
+CAUGHT FixB4 mode ignored (checks 120 failed 3)
+CAUGHT fatal counted before quit too (checks 120 failed 1)
+CAUGHT m_files line not counted (checks 120 failed 1)
+CAUGHT killed ignored (checks 120 failed 1)
+CAUGHT other KYTY_FIX_ allowed (checks 120 failed 1)
+CAUGHT GAME_PATCH allowed (checks 120 failed 1)
+CAUGHT version string ignored (checks 120 failed 1)
+CAUGHT installed after not checked (checks 120 failed 2)
+CAUGHT manifest always EQUAL (checks 120 failed 2)
+CAUGHT scene change does not end the hold (checks 120 failed 1)
+CAUGHT hold_exit ignored (checks 120 failed 1)
+CAUGHT minimized not interference (checks 120 failed 1)
+CAUGHT stdout death ignored (checks 120 failed 5)
+edits 17 missed 0
+ALL OK

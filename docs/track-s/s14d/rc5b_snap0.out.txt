@@ -1,0 +1,7 @@
+index C:/kyty/s288/snap0/MANIFEST.txt: distinct hashes VS 154 PS 230
+t2_1 hero_kratos: hashes absent from snap0 10, of them in the index 0; hashes present in snap0 under another key 4, of them in the index 4 -> letter (any match) OUT; executor variant (all the absent ones match) IN
+t2_2 hero_drake: hashes absent from snap0 1, of them in the index 0; hashes present in snap0 under another key 1, of them in the index 1 -> letter (any match) OUT; executor variant (all the absent ones match) IN
+t2_4 armadillo_challenge_2: hashes absent from snap0 1, of them in the index 0; hashes present in snap0 under another key 1, of them in the index 1 -> letter (any match) OUT; executor variant (all the absent ones match) IN
+t2_5 fragile_battle_4: hashes absent from snap0 3, of them in the index 0; hashes present in snap0 under another key 2, of them in the index 2 -> letter (any match) OUT; executor variant (all the absent ones match) IN
+t2_7 fragile_battle_5: hashes absent from snap0 3, of them in the index 0; hashes present in snap0 under another key 3, of them in the index 3 -> letter (any match) OUT; executor variant (all the absent ones match) IN
+control row: hashes known to be in snap0 11, found in this index 11 (on the snap0 index the two are equal - positive control of the matcher)

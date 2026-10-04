@@ -1,0 +1,9 @@
+2026-10-04T08:34:10Z S14d start: lock absent; API in_progress: HPP-505 (Emu), HPP-520 (Red Team), HPP-525 (Probe), HPP-512 (lead), HPP-504 (lead), HPP-498 (Harness S13a, same track, no run series)
+2026-10-04T08:42:29Z c0_s14d run 1 ok 4 s
+2026-10-04T08:44:07Z c0_s14d run 2 (ladder added) ok 3 s
+2026-10-04T08:48:06Z c0_s14d run 3 (weights on the scorer domain, RC5(b) input) ok 3 s
+2026-10-04T08:48:06Z rc5b_s14d on the snap0 index (self-check) done
+2026-10-04T08:49:14Z refs_s14d gen + check ALL OK
+2026-10-04T09:00:13Z waited for a foreign lock about 5 min (appeared ~08:54Z, gone 08:59:58Z), no processes and no files meanwhile
+2026-10-04T09:00:17Z refs_s14d gen + check (40 rows) ALL OK
+2026-10-04T09:01:31Z design revision 2 assembled (662 lines) and copied to docs/track-s

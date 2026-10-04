@@ -1,0 +1,154 @@
+S14d member (0) - pre-falsifier of S-early "at registration" on the S10 logs (ROADMAP s122 item 423(g)(1)); threshold 0.8
+snap0 cache index (file names of C:/kyty/s288/snap0/MANIFEST.txt, sha256 d8ca8c8efb60b43b37c14a274a4738c83a9dc5866cc784e649e97314c5fd45c4): files VS 644 PS 408 CS 129; distinct hashes VS 154 PS 230 CS 122
+cls_b = (type, sh registers of the header in header order without offsets 6, 8, 9, 80, 88, 89, c8, c9, all cx registers in header order); cls_a is not computable from the logs (see Q1)
+
+== inputs
+t2_1 hero_kratos: lines 968824 sha256 c469daae5b002fb3ef1d89e7ba1febf38e48b3a782d80a408908a98c1ad22c6b; entry line 249452; Shader translation cache: _ShaderCache\PPSA21564; ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:c
+t2_2 hero_drake: lines 861418 sha256 3096467dda8489320e4573650613ce21724eeb3d00f9540a38b21ba9cdb555f3; entry line 241429; Shader translation cache: _ShaderCache\PPSA21564; ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:c
+t2_4 armadillo_challenge_2: lines 874582 sha256 54933d1429eca940dfa1882f99498f992837a9ae50f48c016139da5ba2786fe1; entry line 180994; Shader translation cache: _ShaderCache\PPSA21564; ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:c
+t2_5 fragile_battle_4: lines 1200976 sha256 22a7b9ad6c100b86374921f37e342e575937b23e66ed1813aaa366611121e888; entry line 177626; Shader translation cache: _ShaderCache\PPSA21564; ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:c
+t2_7 fragile_battle_5: lines 1202070 sha256 6be077120752ae172bbf20df65c8a9f20b55c137798c7f48c2b3211be4f42d4b; entry line 179380; Shader translation cache: _ShaderCache\PPSA21564; ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:c
+t2_cs0 hero_kratos: lines 962495 sha256 b94f2862cfb8783d689ee8ae6bade1f0011d3d233d575183cdf5978286c13a76; entry line 247749; Shader translation cache: _ShaderCache\PPSA21564; ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:c
+
+== Q1: does every record of the predictor-B table carry specialization, class and moment in the log?
+   sites of the table (2b1b8787 pipelineCache.cpp:2057): resolve = startup precache (Resolve :4614), cache = lazy load at the first
+   use (LoadFromTranslationCache :2227, line "AvTrace: shader-cache load" :3656), compile = Compile (:3933, lines "AvTrace: shader-spec"
+   :4034 and "AvTrace: shader" :4042).  The only line that prints a specialization is :4034, on the compile site.
+t2_1: resolve: 3456 sources loaded (line 2466, 1842 recipes) - lines per record with hash 0, with specialization 0, with a moment 0 (one summary line); cache: 0 "shader-cache load" lines, 0 permutations - specialization 0, moment field 0; compile: 16 "AvTrace: shader" lines (0 before the entry), with the paired shader-spec line 16, with a registration of the hash before it (class cls_b) 16, with a host moment bracket from the preceding flip/register line 16; shader-spec lines 16 (before the entry 0, after 16); shader-cache save 16 -> every record carries all three: NO
+t2_2: resolve: 3456 sources loaded (line 2467, 1842 recipes) - lines per record with hash 0, with specialization 0, with a moment 0 (one summary line); cache: 0 "shader-cache load" lines, 0 permutations - specialization 0, moment field 0; compile: 4 "AvTrace: shader" lines (0 before the entry), with the paired shader-spec line 4, with a registration of the hash before it (class cls_b) 4, with a host moment bracket from the preceding flip/register line 4; shader-spec lines 4 (before the entry 0, after 4); shader-cache save 4 -> every record carries all three: NO
+t2_4: resolve: 3456 sources loaded (line 2466, 1842 recipes) - lines per record with hash 0, with specialization 0, with a moment 0 (one summary line); cache: 0 "shader-cache load" lines, 0 permutations - specialization 0, moment field 0; compile: 2 "AvTrace: shader" lines (0 before the entry), with the paired shader-spec line 2, with a registration of the hash before it (class cls_b) 2, with a host moment bracket from the preceding flip/register line 2; shader-spec lines 2 (before the entry 0, after 2); shader-cache save 2 -> every record carries all three: NO
+t2_5: resolve: 3456 sources loaded (line 2467, 1842 recipes) - lines per record with hash 0, with specialization 0, with a moment 0 (one summary line); cache: 0 "shader-cache load" lines, 0 permutations - specialization 0, moment field 0; compile: 6 "AvTrace: shader" lines (0 before the entry), with the paired shader-spec line 6, with a registration of the hash before it (class cls_b) 6, with a host moment bracket from the preceding flip/register line 6; shader-spec lines 6 (before the entry 0, after 6); shader-cache save 6 -> every record carries all three: NO
+t2_7: resolve: 3456 sources loaded (line 2466, 1842 recipes) - lines per record with hash 0, with specialization 0, with a moment 0 (one summary line); cache: 0 "shader-cache load" lines, 0 permutations - specialization 0, moment field 0; compile: 7 "AvTrace: shader" lines (0 before the entry), with the paired shader-spec line 7, with a registration of the hash before it (class cls_b) 7, with a host moment bracket from the preceding flip/register line 7; shader-spec lines 7 (before the entry 0, after 7); shader-cache save 7 -> every record carries all three: NO
+t2_cs0: resolve: 3456 sources loaded (line 2466, 1842 recipes) - lines per record with hash 0, with specialization 0, with a moment 0 (one summary line); cache: 0 "shader-cache load" lines, 0 permutations - specialization 0, moment field 0; compile: 16 "AvTrace: shader" lines (0 before the entry), with the paired shader-spec line 16, with a registration of the hash before it (class cls_b) 16, with a host moment bracket from the preceding flip/register line 16; shader-spec lines 16 (before the entry 0, after 16); shader-cache save 16 -> every record carries all three: NO
+five counted arms: records of the table by site - resolve 17280 source loads without a per-record line, cache 0, compile 35; share of records without a specialization line 0.9980
+cls_a (registers + input semantics + user-data metadata): the line "ShaderRegister:" (pipelineCache.cpp:6380) prints the sh/cx registers only - input semantics and user-data metadata lines: 0 -> cls_a is not computable for any record
+Q1 ANSWER: NO -> C_mod^spec NOT COMPUTED (item 423(g)(1): phase A goes).  Missing lines [c]: (1) a per-record line of the Resolve site (startup precache: hash, key, specialization, moment) - the log has one summary line "PipelinePrecache: ... sources loaded"; (2) the specialization of a LoadFromTranslationCache record - "AvTrace: shader-cache load" prints hash, permutations and us only; (3) input semantics and user-data metadata of a registration (cls_a).  These are exactly the lines SEarlyKey src=resolve / src=cache and SEarlyReg cls_a of phase A.
+
+== series (runs of FrameTrace rows with skc_ap_skip > 0 or skc_held_inc > 0 after the entry line; a gap of 1 clean row joins) and weights
+   weight of a series = its contribution to the scorer sum of item 408(g): rows with skc_ap_skip > 0 and n > the first scene frame +
+   sum skc_held_inc of the rows with n >= it (the first scene frame n - field "first" of C:/kyty/s288/s10/runs_s/<tag>.score.json)
+t2_1: rows after the entry 7280, first scene frame n 280; skip rows 31 held 34 (fin_summary 31 / 34: EQUAL); series [(282, 299, 'w=35', 'mods=13'), (317, 334, 'w=30', 'mods=2')]; new modules after the entry 16 (VS/PS 16), inside a series 15
+t2_2: rows after the entry 6476, first scene frame n 217; skip rows 1 held 2 (fin_summary 1 / 2: EQUAL); series [(217, 218, 'w=3', 'mods=3')]; new modules after the entry 4 (VS/PS 3), inside a series 3
+t2_4: rows after the entry 7330, first scene frame n 136; skip rows 1 held 1 (fin_summary 1 / 1: EQUAL); series [(138, 138, 'w=2', 'mods=2')]; new modules after the entry 2 (VS/PS 2), inside a series 2
+t2_5: rows after the entry 7325, first scene frame n 162; skip rows 6 held 9 (fin_summary 6 / 9: EQUAL); series [(164, 172, 'w=15', 'mods=6')]; new modules after the entry 6 (VS/PS 6), inside a series 6
+t2_7: rows after the entry 7318, first scene frame n 146; skip rows 9 held 9 (fin_summary 9 / 9: EQUAL); series [(147, 156, 'w=18', 'mods=7')]; new modules after the entry 7 (VS/PS 7), inside a series 7
+t2_cs0: rows after the entry 7302, first scene frame n 215; skip rows 30 held 32 (fin_summary 30 / 32: EQUAL); series [(215, 232, 'w=31', 'mods=13'), (252, 269, 'w=31', 'mods=2')]; new modules after the entry 16 (VS/PS 16), inside a series 15
+weights equal the scorer rows of fin_summary on all arms: YES
+
+== Q2 (executor variant; NOT the C_mod^spec of the letter): C_mod^cls - the weight share of the series in which EVERY new VS/PS module
+   has a non-empty class before its registration.  Necessary for any prediction by class: C_mod <= C_mod^spec <= C_mod^cls(cls_b), and
+   cls_a refines cls_b, so C_mod^cls(cls_a) <= C_mod^cls(cls_b).  Generous on every unknown: the registration of the target = its LAST
+   one before the compile line; a class-mate counts if it is registered (line) before that one and either has a file of the stage in
+   snap0 (loaded or not - unknown from the log) or was compiled in the process before it.  Modes: "other" - a class-mate of another
+   hash (design 6.2: known=1 is not queued); "any" - or the same hash with another key in snap0; "sure" - a class-mate first-used
+   (ShaderFirstUse line) before the registration, i.e. certainly in the table (a lower side of "other").
+t2_1 series n 282..299 weight 35: new VS/PS modules 13; class non-empty for all - other False, any False, sure False
+    VS 04e7f84bca841dde perm 1 line 252405 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) True
+    PS fc041b757d59dc0d perm 1 line 257673 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 9a06bdb14a60db73 perm 1 line 258953 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    PS bed231cd6418e61a perm 1 line 265787 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) False
+    VS 6b7fec42ce0c1a18 perm 1 line 267998 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) False
+    PS 305e04c3806f2776 perm 1 line 271841 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS daad82ee49424515 perm 1 line 275532 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 2, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) True
+    PS aa83bf664326246b perm 1 line 280806 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) False
+    VS 7705f8eecaae52e9 perm 1 line 282503 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 89627e5304245d9c perm 1 line 286345 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 89627e5304245d9c perm 1 line 290232 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 2335532b8e5ee2bd perm 4 line 291672 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) True
+    VS fefefe95679d8b8b perm 2 line 294685 frame 282: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) True
+t2_1 series n 317..334 weight 30: new VS/PS modules 2; class non-empty for all - other False, any False, sure False
+    PS 828215ad31a7f2ca perm 1 line 305712 frame 317: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS acee300df6a19856 perm 1 line 309830 frame 317: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+t2_2 series n 217..218 weight 3: new VS/PS modules 3; class non-empty for all - other True, any True, sure False
+    PS bed231cd6418e61a perm 1 line 249806 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) False
+    VS 1b18cd50ab8b4bf8 perm 1 line 252431 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) True
+    VS 1b18cd50ab8b4bf8 perm 1 line 255221 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) True
+t2_4 series n 138..138 weight 2: new VS/PS modules 2; class non-empty for all - other False, any False, sure False
+    PS f8e63959c2c8f447 perm 1 line 183342 frame 138: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 027467899081bd5c perm 1 line 191426 frame 138: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) True
+t2_5 series n 164..172 weight 15: new VS/PS modules 6; class non-empty for all - other False, any False, sure False
+    VS 06c0b6a2f0f5743e perm 1 line 183059 frame 164: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) True
+    VS 49e03cde74bf0a50 perm 1 line 185046 frame 164: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) True
+    VS 9cef70d99e129f56 perm 1 line 195007 frame 164: classes of its registrations 1; class-mates of another hash registered earlier 3, of them with a snap0 file or compiled earlier 3, first-used earlier 0; same hash in snap0 (another key) False
+    PS 720d1f629e89e619 perm 1 line 197436 frame 164: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 9d04340df2d39aad perm 1 line 206852 frame 164: classes of its registrations 1; class-mates of another hash registered earlier 4, of them with a snap0 file or compiled earlier 3, first-used earlier 0; same hash in snap0 (another key) False
+    VS 06c0b6a2f0f5743e perm 1 line 209006 frame 167: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) True
+t2_7 series n 147..156 weight 18: new VS/PS modules 7; class non-empty for all - other False, any False, sure False
+    VS 1b18cd50ab8b4bf8 perm 1 line 182867 frame 147: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) True
+    VS 06c0b6a2f0f5743e perm 1 line 184295 frame 148: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) True
+    VS 49e03cde74bf0a50 perm 1 line 186246 frame 148: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) True
+    VS 9cef70d99e129f56 perm 1 line 196335 frame 148: classes of its registrations 1; class-mates of another hash registered earlier 3, of them with a snap0 file or compiled earlier 3, first-used earlier 0; same hash in snap0 (another key) False
+    PS 720d1f629e89e619 perm 1 line 198757 frame 148: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 9d04340df2d39aad perm 1 line 208243 frame 148: classes of its registrations 1; class-mates of another hash registered earlier 4, of them with a snap0 file or compiled earlier 3, first-used earlier 0; same hash in snap0 (another key) False
+    VS 06c0b6a2f0f5743e perm 1 line 210702 frame 151: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) True
+t2_cs0 series n 215..232 weight 31: new VS/PS modules 13; class non-empty for all - other False, any False, sure False
+    PS bed231cd6418e61a perm 1 line 256128 frame 215: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) False
+    VS 04e7f84bca841dde perm 1 line 257557 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) True
+    PS fc041b757d59dc0d perm 1 line 262749 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 9a06bdb14a60db73 perm 1 line 264018 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 6b7fec42ce0c1a18 perm 1 line 266269 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) False
+    PS 305e04c3806f2776 perm 1 line 270091 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS daad82ee49424515 perm 1 line 273770 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 2, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) True
+    PS aa83bf664326246b perm 1 line 279021 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 1, of them with a snap0 file or compiled earlier 1, first-used earlier 0; same hash in snap0 (another key) False
+    VS 7705f8eecaae52e9 perm 1 line 280930 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 89627e5304245d9c perm 1 line 284758 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 89627e5304245d9c perm 1 line 288561 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS 2335532b8e5ee2bd perm 4 line 290001 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) True
+    VS fefefe95679d8b8b perm 2 line 293000 frame 217: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) True
+t2_cs0 series n 252..269 weight 31: new VS/PS modules 2; class non-empty for all - other False, any False, sure False
+    PS 828215ad31a7f2ca perm 1 line 306806 frame 252: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+    VS acee300df6a19856 perm 1 line 310950 frame 252: classes of its registrations 1; class-mates of another hash registered earlier 0, of them with a snap0 file or compiled earlier 0, first-used earlier 0; same hash in snap0 (another key) False
+five counted arms: series 6, weight 103; new VS/PS modules inside the series 33: class non-empty - other 16, any 22, sure 0; with 0 class-mates registered earlier 17
+C_mod^cls(cls_b): other 0.0291 (3 / 103), any 0.0291 (3 / 103); lower side "sure" 0.0000 (0 / 103)
+Q2 READING: C_mod^cls(any) < 0.8 -> C_mod^spec < 0.8 for cls_b and for cls_a by the chain of inequalities (a bound through a weaker necessary condition; the letter of item 423(g)(1) names C_mod^spec - a question to the lead)
+
+== input of the offline check RC5(b): new_modules_s14d.tsv - distinct (arm, stage, hash) of the new VS/PS modules inside the series 29, of them with the hash present in the snap0 index under another key 11, absent 18
+
+== ladder (sensitivity of C_mod^cls to the composition of a register-only class; same rules as Q2, five counted arms)
+L0 type only: classes per arm PS/VS [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; new VS/PS modules with a non-empty class - other 33 of 33, any 33 of 33; C_mod^cls other 1.0000 (103 / 103), any 1.0000 (103 / 103)
+L1 type + RSRC2: classes per arm PS/VS [17, 12, 17, 12, 17, 12, 16, 12, 16, 12]; new VS/PS modules with a non-empty class - other 33 of 33, any 33 of 33; C_mod^cls other 1.0000 (103 / 103), any 1.0000 (103 / 103)
+L2 type + RSRC1 + RSRC2: classes per arm PS/VS [120, 105, 121, 96, 120, 92, 119, 95, 119, 94]; new VS/PS modules with a non-empty class - other 21 of 33, any 26 of 33; C_mod^cls other 0.0485 (5 / 103), any 0.0485 (5 / 103)
+L3 type + all cx: classes per arm PS/VS [105, 13, 104, 13, 102, 13, 103, 14, 102, 14]; new VS/PS modules with a non-empty class - other 31 of 33, any 31 of 33; C_mod^cls other 0.6893 (71 / 103), any 0.6893 (71 / 103)
+L4 type + RSRC1 + RSRC2 + all cx (= cls_b of S14a): classes per arm PS/VS [214, 123, 206, 114, 200, 107, 202, 114, 201, 112]; new VS/PS modules with a non-empty class - other 16 of 33, any 22 of 33; C_mod^cls other 0.0291 (3 / 103), any 0.0291 (3 / 103)
+
+== reference (not a bound): specialization of the compile-observed records by class cls_b, all six logs
+distinct (stage, hash, specialization) records 22; distinct hashes 22, of them with more than one specialization 0; classes 20, classes with two or more hashes 2
+   class of type 2 with hashes ['6b7fec42ce0c1a18', 'daad82ee49424515']: distinct specializations 2
+   class of type 2 with hashes ['9cef70d99e129f56', '9d04340df2d39aad']: distinct specializations 1
+pairs of records of different hashes in one class 2, with equal specialization 1
+
+== reference: population of cls_b among the registrations (per arm)
+t2_1 type 1 (PS): distinct hashes 278, classes 214, singleton classes 172, largest [5, 5, 5, 5, 4]; hashes with a snap0 file of the stage 137
+t2_1 type 2 (VS): distinct hashes 149, classes 123, singleton classes 106, largest [5, 4, 3, 3, 3]; hashes with a snap0 file of the stage 99
+t2_2 type 1 (PS): distinct hashes 261, classes 206, singleton classes 169, largest [5, 5, 4, 4, 4]; hashes with a snap0 file of the stage 131
+t2_2 type 2 (VS): distinct hashes 136, classes 114, singleton classes 99, largest [5, 4, 3, 3, 2]; hashes with a snap0 file of the stage 93
+t2_4 type 1 (PS): distinct hashes 246, classes 200, singleton classes 167, largest [5, 5, 4, 4, 4]; hashes with a snap0 file of the stage 117
+t2_4 type 2 (VS): distinct hashes 126, classes 107, singleton classes 94, largest [4, 4, 3, 3, 2]; hashes with a snap0 file of the stage 82
+t2_5 type 1 (PS): distinct hashes 253, classes 202, singleton classes 167, largest [5, 5, 4, 4, 4]; hashes with a snap0 file of the stage 122
+t2_5 type 2 (VS): distinct hashes 136, classes 114, singleton classes 100, largest [6, 4, 3, 3, 2]; hashes with a snap0 file of the stage 89
+t2_7 type 1 (PS): distinct hashes 250, classes 201, singleton classes 167, largest [5, 5, 4, 4, 4]; hashes with a snap0 file of the stage 121
+t2_7 type 2 (VS): distinct hashes 134, classes 112, singleton classes 98, largest [6, 4, 3, 3, 2]; hashes with a snap0 file of the stage 89
+t2_cs0 type 1 (PS): distinct hashes 278, classes 214, singleton classes 172, largest [5, 5, 5, 5, 4]; hashes with a snap0 file of the stage 137
+t2_cs0 type 2 (VS): distinct hashes 149, classes 123, singleton classes 106, largest [5, 4, 3, 3, 3]; hashes with a snap0 file of the stage 99
+
+== Q3 (member 7): the PM4 lead "guest submit -> GuestGpu processing"
+   guest side: AgcDriverSubmitAcb prints "\t acb   = " (2b1b8787 agc.cpp:4347) without a moment; the name header "[tid][time] lib::func()"
+   is printed for the libkernel functions only.  GuestGpu side: the lag "Enqueue -> first slice" exists in the code as the line "LagTrace:"
+   (graphicsRun.cpp:960) under KYTY_LAG_TRACE=1, lag >= 2000 us only; the counter da_wlag_us is the lag of the draw-ahead walk.
+t2_1: "acb =" lines 22382; timed name headers 14 kinds (16097 lines), of them agc / submit 0; "LagTrace:" lines 0; FrameTrace-draw rows with da_wlag_us 0
+t2_2: "acb =" lines 19843; timed name headers 14 kinds (16366 lines), of them agc / submit 0; "LagTrace:" lines 0; FrameTrace-draw rows with da_wlag_us 0
+t2_4: "acb =" lines 28647; timed name headers 13 kinds (17074 lines), of them agc / submit 0; "LagTrace:" lines 0; FrameTrace-draw rows with da_wlag_us 0
+t2_5: "acb =" lines 22269; timed name headers 14 kinds (16694 lines), of them agc / submit 0; "LagTrace:" lines 0; FrameTrace-draw rows with da_wlag_us 0
+t2_7: "acb =" lines 22240; timed name headers 14 kinds (16631 lines), of them agc / submit 0; "LagTrace:" lines 0; FrameTrace-draw rows with da_wlag_us 0
+t2_cs0: "acb =" lines 22315; timed name headers 14 kinds (16046 lines), of them agc / submit 0; "LagTrace:" lines 0; FrameTrace-draw rows with da_wlag_us 0
+Q3 ANSWER: NOT COMPUTABLE from the S10 logs [c]: the guest submit line has no moment (no host_us, no timed header) and the GuestGpu side line "LagTrace:" is absent (KYTY_LAG_TRACE was not set in S10).  The form "by the PM4 lead" stays parked (item 423(g))
+
+== Q4 (member 5): the worker-count line of the asynchronous creation exists already (2b1b8787 pipelineCache.cpp:4825)
+t2_1: AsyncPipelines: mode=1 workers=4 (line 80)
+t2_2: AsyncPipelines: mode=1 workers=4 (line 80)
+t2_4: AsyncPipelines: mode=1 workers=4 (line 80)
+t2_5: AsyncPipelines: mode=1 workers=4 (line 80)
+t2_7: AsyncPipelines: mode=1 workers=4 (line 80)
+t2_cs0: AsyncPipelines: mode=1 workers=4 (line 80)
+
+wall 2.7 s

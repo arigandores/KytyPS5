@@ -1,0 +1,20 @@
+[host]    LeastRecentlyUsedCache           ok
+[f10] KYTY_FIX_F10=(unset) effective=1 KYTY_FIX_B1B effective=1 KYTY_BVH_NATIVE=1
+[f10]     cache signature=KytySC3:26ce5fc78ea3b20be537c7696be041f5e97d9e58:fixb26:fixb1b:fixf10
+[f10]     cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10 fixf10_in_signature=1 fixf10_in_dir=1 last_sig=1 last_dir=1
+[compute] F10Type0Hit                      ok
+[compute] F10Type0Miss                     ok
+[compute] F10Type1Hit                      ok
+[compute] F10Type1Miss                     ok
+[compute] F10Type2Hit                      ok
+[compute] F10Type2Miss                     ok
+[compute] F10Type3Hit                      ok
+[compute] F10Type3Miss                     ok
+[compute] F10Type6                         ok
+[compute] F10Type7                         ok
+[compute] F10MixWave64                     ok
+[compute] B1bBvhNodeAddress                ok
+[compute] B1bBvhPaddingBitsIgnored         ok
+[compute] B1bBvhFieldBit32                 ok
+[compute] B1bBvh64NodePointer              ok
+ALL OK

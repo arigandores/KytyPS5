@@ -1,0 +1,4 @@
+OK src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp lf_in
+OK src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h lf_in
+OK src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp lf_in
+PATCH OK

@@ -1,0 +1,21 @@
+== git diff --stat 3d0e46da 0e72bc19
+ .../renderer/pipeline/shaderTranslationCache.cpp   |   5 +-
+ .../backend/spirv/spirvEmitterMemory.cpp           |  35 ++-
+ .../recompiler/frontend/decode/ShaderDecoder.cpp   |  10 +
+ .../recompiler/frontend/decode/ShaderDecoder.h     |   8 +
+ .../recompiler/frontend/translate/Memory.cpp       |  39 ++-
+ tests/ShaderRecompilerComputeTests.cpp             | 266 +++++++++++++++++++++
+ 6 files changed, 352 insertions(+), 11 deletions(-)
+== files of 1833ee28
+src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+tests/ShaderRecompilerComputeTests.cpp
+== files of c3eb8fe8
+src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+== diff c3eb8fe8 (main) vs 0e72bc19 on the 6 files (empty = equal)
+== diff 3d0e46da 0e72bc19 outside the 6 files (empty)

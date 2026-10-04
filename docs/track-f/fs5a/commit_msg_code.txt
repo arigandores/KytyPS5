@@ -1,0 +1,15 @@
+track F link FS5a (HPP-509): KYTY_FIX_F10 default 0 -> 1 (ROADMAP s122 item 410(g)(1))
+
+FixF10Enabled reads KYTY_FIX_F10 in the form of FS4a 17adaf80: unset or "" = ON, 0/false/off/no = OFF, any other
+value as EnvValueOn; one read (static const bool). The =1 and else branches of IMAGE_BVH_INTERSECT_RAY (native SPIR-V
+and IR paths), the ":fixf10" token and its place in the variant are unchanged; only the reading and the comments that
+state the default change (ShaderDecoder.cpp, ShaderDecoder.h, shaderTranslationCache.cpp). The edit is in
+src/graphics/shader/**: the translator signature changes (cold cache); the default directory becomes
+variant_fixb26_fixb1b_fixf10.
+
+Shipping binary FS5: clean worktree of FS4 3d0e46da (base by item 410(g)(6)(i): S12a not accepted) + cherry-pick of
+F12d 1833ee28 + cherry-pick of this commit; the track P code after 4414e235, the track S code, F14c fcaf141b and F15
+are not in it. Not claimed: that PS5 silicon answers node types 2-3 exactly as the GPURT software path, that the
+SPIR-V is correct for the device or the picture is right, that FS5 works in the game. Not installed; no game run.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

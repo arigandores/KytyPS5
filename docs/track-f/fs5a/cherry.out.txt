@@ -1,0 +1,28 @@
+== git cherry -v 0e72bc19 <c> <c>^ ('-' = equal change in history, '+' = absent)
+4e72289e: - 4e72289e879b6a8375eada8fb0359037388e5d8c track F link FS3a (HPP-447): KYTY_FIX_B42 default 0 -> 1 (ROADMAP s
+68602c4f: - 68602c4f301e8d424af0581d11039437ec4a958f track F link F10c (HPP-451): KYTY_FIX_SVAL (default 0) - ValidateSh
+17adaf80: - 17adaf801069088b68275276c96574b7f8bf5dc3 track F link FS4a (HPP-470): KYTY_FIX_SVAL default 0 -> 1 (ROADMAP 
+1833ee28: - 1833ee280ec177b65feb6c4a97f626b0d4ce1b9f track F link F12d (HPP-477): KYTY_FIX_F10 (default 0) - IMAGE_BVH_I
+c3eb8fe8: - c3eb8fe83bf67c66d8b391cffe47f9639f04b39e track F link FS5a (HPP-509): KYTY_FIX_F10 default 0 -> 1 (ROADMAP s
+741e3312: + 741e3312ab005ece2587cec0410ba7607116aa76 track P link P35 (HPP-438): the descent constant N of KYTY_PVAR_HOL
+c9b4268e: + c9b4268e0b47625ff4ec556057b4c0267601ddd0 track P link P40 (HPP-461): growing hold at kt 3 of KYTY_PVAR_HOLD 
+fcaf141b: + fcaf141b6f8d5c78b3d009bcab4c807c731921e0 tests: B11 fix - IMAGE_SAMPLE_C/_LZ probes with k32Float, manual-pa
+== merge-base --is-ancestor <c> 0e72bc19
+d515b901 yes
+92d11340 yes
+3d0e46da yes
+8a56dc2a yes
+4414e235 yes
+4e72289e no
+68602c4f no
+17adaf80 no
+1833ee28 no
+c3eb8fe8 no
+741e3312 no
+c9b4268e no
+fcaf141b no
+== patch-id
+db491819255ed975d73634bfa74b7ee1527854b3 1833ee280ec177b65feb6c4a97f626b0d4ce1b9f
+db491819255ed975d73634bfa74b7ee1527854b3 8a56dc2a1b30f141493f827610845d843c0ffe2c
+187a3c1f783b6b6dc0643880444be32fb567204a c3eb8fe83bf67c66d8b391cffe47f9639f04b39e
+187a3c1f783b6b6dc0643880444be32fb567204a 0e72bc19c9ec9a2a2a2c6871b5ab572a2b47f6c9

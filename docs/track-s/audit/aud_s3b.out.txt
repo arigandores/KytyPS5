@@ -1,0 +1,29 @@
+== S6 driver blob lines
+pcw_1 loaded ['Vulkan pipeline cache: loaded 94435637 bytes from _PipelineCache\\PPSA21564.bin'] saved n 24 last Vulkan pipeline cache: saved 94435637 bytes to _PipelineCache\PPSA21564.bin (90432 us) forced disabled 0
+pcw_2 loaded ['Vulkan pipeline cache: loaded 94435637 bytes from _PipelineCache\\PPSA21564.bin'] saved n 23 last Vulkan pipeline cache: saved 94435637 bytes to _PipelineCache\PPSA21564.bin (93566 us) forced disabled 0
+pcw_3 loaded ['Vulkan pipeline cache: loaded 94435637 bytes from _PipelineCache\\PPSA21564.bin'] saved n 23 last Vulkan pipeline cache: saved 94435637 bytes to _PipelineCache\PPSA21564.bin (114402 us) forced disabled 0
+pcw_4 loaded ['Vulkan pipeline cache: loaded 94435637 bytes from _PipelineCache\\PPSA21564.bin'] saved n 23 last Vulkan pipeline cache: saved 94435637 bytes to _PipelineCache\PPSA21564.bin (89513 us) forced disabled 0
+pcw_int loaded ['Vulkan pipeline cache: loaded 94435637 bytes from _PipelineCache\\PPSA21564.bin'] saved n 9 last Vulkan pipeline cache: saved 94435637 bytes to _PipelineCache\PPSA21564.bin (130174 us) forced disabled 0
+C:/kyty/s288/s6/app_post/pcw_3/PipelineCache/PPSA21564.bin 94435713 cc5b747c5bece91e
+== T2 cost split after the entry line (us)
+t2_1 entry line 249452 | shader lines 16 {'ShaderRecompiler VS': 11, 'ShaderRecompiler PS': 5} translate_us 134890 compile_us 78540 | async creations 15 sum us 1862422 | sync/none 6 sum us 823 | median all 45252 n 21 median after entry 45252 n 21
+    driver saves after entry (group, text): [(7549, ' saved 95135623 bytes to _PipelineCache\\PPSA21564.bin (88144 us)')]
+    recipe saves after entry: [(280, 'saved 1843 recipes (19822711 bytes)'), (7549, 'saved 1863 recipes (20062015 bytes)')]
+t2_cs0 entry line 247749 | shader lines 16 {'ShaderRecompiler PS': 5, 'ShaderRecompiler VS': 11} translate_us 136457 compile_us 80923 | async creations 15 sum us 1770022 | sync/none 6 sum us 802 | median all 36470 n 21 median after entry 36470 n 21
+    driver saves after entry (group, text): [(7506, ' saved 95135623 bytes to _PipelineCache\\PPSA21564.bin (85448 us)')]
+    recipe saves after entry: [(215, 'saved 1844 recipes (19834538 bytes)'), (7506, 'saved 1863 recipes (20062015 bytes)')]
+t2_2 entry line 241429 | shader lines 4 {'ShaderRecompiler CS': 1, 'ShaderRecompiler PS': 1, 'ShaderRecompiler VS': 2} translate_us 28261 compile_us 18387 | async creations 6 sum us 201529 | sync/none 5 sum us 1035 | median all 220 n 11 median after entry 220 n 11
+    driver saves after entry (group, text): [(6683, ' saved 94526634 bytes to _PipelineCache\\PPSA21564.bin (99544 us)')]
+    recipe saves after entry: [(213, 'saved 1843 recipes (19810617 bytes)'), (6683, 'saved 1853 recipes (19929899 bytes)')]
+t2_4 entry line 180994 | shader lines 2 {'ShaderRecompiler PS': 1, 'ShaderRecompiler VS': 1} translate_us 26636 compile_us 11709 | async creations 3 sum us 61807 | sync/none 1 sum us 191 | median all 197.5 n 4 median after entry 197.5 n 4
+    driver saves after entry (group, text): [(7458, ' saved 94459064 bytes to _PipelineCache\\PPSA21564.bin (83482 us)')]
+    recipe saves after entry: [(136, 'saved 1844 recipes (19834074 bytes)'), (7458, 'saved 1846 recipes (19857680 bytes)')]
+t2_5 entry line 177626 | shader lines 6 {'ShaderRecompiler VS': 5, 'ShaderRecompiler PS': 1} translate_us 90031 compile_us 33312 | async creations 5 sum us 542093 | sync/none 1 sum us 199 | median all 3039.5 n 6 median after entry 3039.5 n 6
+    driver saves after entry (group, text): [(7472, ' saved 94638045 bytes to _PipelineCache\\PPSA21564.bin (88535 us)')]
+    recipe saves after entry: [(162, 'saved 1843 recipes (19822399 bytes)'), (7472, 'saved 1848 recipes (19882882 bytes)')]
+t2_7 entry line 179380 | shader lines 7 {'ShaderRecompiler VS': 6, 'ShaderRecompiler PS': 1} translate_us 96411 compile_us 38905 | async creations 6 sum us 503474 | sync/none 1 sum us 158 | median all 582 n 7 median after entry 582 n 7
+    driver saves after entry (group, text): [(7457, ' saved 94638045 bytes to _PipelineCache\\PPSA21564.bin (90956 us)')]
+    recipe saves after entry: [(146, 'saved 1843 recipes (19822503 bytes)'), (7457, 'saved 1849 recipes (19895069 bytes)')]
+c5_0 entry line 220398 | shader lines 17 {'ShaderRecompiler VS': 17} translate_us 121447 compile_us 93723 | async creations 443 sum us 41750107 | sync/none 137 sum us 31030 | median all 215.0 n 630 median after entry 190.5 n 580
+    driver saves after entry (group, text): [(239, ' saved 8988259 bytes to _PipelineCache\\PPSA21564.5aacf798f52eda0d.bin (19398 us)'), (1886, ' saved 16075116 bytes to _PipelineCache\\PPSA21564.5aacf798f52eda0d.bin (18679 us)'), (4201, ' saved 16266775 bytes to _PipelineCache\\PPSA21564.5aacf798f52eda0d.bin (15065 us)')]
+    recipe saves after entry: []

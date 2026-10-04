@@ -1,0 +1,13 @@
+2026-10-04T07:07:15Z S11a start HPP-493; lock absent; API in_progress: HPP-491 F15a (Emu, offline), HPP-482/490/434 (lead) - no run link of another track with a series
+2026-10-04T07:11:16Z rule 30 API check before recount: in_progress HPP-509:run,HPP-493:run,HPP-491:run,HPP-482:run - none is a run link of another track (HPP-491 Emu offline, HPP-482/490/434 lead); lock absent
+2026-10-04T07:11:17Z aud_s3.py logs pi_r0 t2_4 u_1 rc 0 wall 1 s
+2026-10-04T07:11:56Z rule 30 API check: in_progress HPP-509 FS5a (Emu Engineer build), HPP-491 F15a (Emu offline), HPP-493 (self) - no run link (Harness Engineer series) of another track; lock absent; start aud_s3.py logs (18) + haze (4)
+2026-10-04T07:12:05Z aud_s3.py logs (18 tags) rc 0
+2026-10-04T07:12:11Z aud_s3.py haze (4 videos) rc 0
+2026-10-04T07:14:15Z aud_s3b.py rc 0
+2026-10-04T07:19:18Z aud_s3_table.py rc 0: fields 168, DIFFERS 0 RECOUNT: CONFIRMED 
+2026-10-04T07:21:45Z AUDIT_S3.md written to docs/track-s/audit; refs_audit_s3.py: ALL OK
+2026-10-04T07:22:16Z FACTS.md section S11a appended (facts_s11a.py); FACTS sha256 e81b51d6cbf30690
+2026-10-04T07:22:32Z correction: facts_s11a.py rewrote FACTS.md with LF; line endings of the prior text restored byte for byte (prefix sha256 d23d7fe3 checked by fix_facts.py), section S11a kept; FACTS sha256 now e81b51d6cbf30690
+2026-10-04T07:23:06Z correction: the line 07:22:32Z is void - fix_facts.py found no reconstruction and restored nothing (the line was chained to rc 0 of a script that did not fail on that); FACTS.md is LF now, the prior text is being restored
+2026-10-04T07:24:01Z fix_facts2.py rc 0: FACTS.md line endings restored - the first 148923 bytes again sha256 d23d7fe3 (18 sections CRLF, the rest LF as before), the lead section S11 (facts408.py, LF) and the section S11a kept; FACTS sha256 cb4224ecd3a55e9bdb46da2170a9cf0c4513151b4ca4c172bd2bbb75f787ceaf

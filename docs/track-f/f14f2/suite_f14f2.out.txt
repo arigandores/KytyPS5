@@ -1,0 +1,25 @@
+bu rc=0 exe=460fd32c KYTY_FIX_F19=unset tests=129 failed=0 spv=176
+b0 rc=0 exe=460fd32c KYTY_FIX_F19=0 tests=129 failed=0 spv=176
+b1 rc=0 exe=460fd32c KYTY_FIX_F19=1 tests=129 failed=0 spv=176
+fu rc=0 exe=53b24884 KYTY_FIX_F19=unset tests=130 failed=0 spv=180
+   [f19] null T# alone C KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+   [f19] null T# alone C_LZ KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+f0 rc=0 exe=53b24884 KYTY_FIX_F19=0 tests=130 failed=0 spv=180
+   [f19] null T# alone C KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+   [f19] null T# alone C_LZ KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+f1 rc=0 exe=53b24884 KYTY_FIX_F19=1 tests=130 failed=0 spv=180
+   [f19] null T# alone C KYTY_FIX_F19=1: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=1: images=2 native=2 manual_images=0 dref=2 manual=0
+   [f19] null T# alone C_LZ KYTY_FIX_F19=1: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=1: images=2 native=2 manual_images=0 dref=2 manual=0
+(s1) rc 0 and 0 failing lines in 6 runs: True
+(s2) link tests = base tests + TestF19NullComparisonImage last: True 129 130
+(s3) N=176; b0=bu, fu/f0 0..N-1 = bu, f1 0..N-1 = b1: True | b1 vs bu differing files 4
+(s4) link runs N+4 dumps: True
+(s5) null probe lines as decided p.443(b): True
+(s6) alone dumps f1=f0=fu, shared f0=fu and f1!=f0: True
+ALL OK

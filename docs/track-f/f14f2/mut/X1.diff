@@ -1,0 +1,13 @@
+diff --git a/tests/shaderCfgTests.cpp b/tests/shaderCfgTests.cpp
+index c72407b4..27f82aaa 100644
+--- a/tests/shaderCfgTests.cpp
++++ b/tests/shaderCfgTests.cpp
+@@ -5774,7 +5774,7 @@ F19NullProbe CompileF19NullComparison(uint32_t opcode, bool with_k16) {
+   };
+   if (with_k16) {
+     shader.push_back(EncodeMimg0(opcode, 0x1));
+-    shader.push_back(EncodeMimg1(1, 2, 4, 4)); // v1, v[4:6], T# s[8:15] (k16UNorm), S# s[16:19]
++    shader.push_back(EncodeMimg1(1, 2, 5, 4)); user_data[20] = 3u << 12u; user_data[21] = 0u; user_data[22] = 0u; user_data[23] = 0u; // F14f2 X1: own S# s[20:23]
+   }
+   shader.push_back(EncodeExp0(0x00, 0xf, true, false, true));
+   shader.push_back(EncodeExp1(0, 1, 2, 3));

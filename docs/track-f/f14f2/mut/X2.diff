@@ -1,0 +1,15 @@
+diff --git a/tests/shaderCfgTests.cpp b/tests/shaderCfgTests.cpp
+index c72407b4..caae68c8 100644
+--- a/tests/shaderCfgTests.cpp
++++ b/tests/shaderCfgTests.cpp
+@@ -5819,8 +5819,8 @@ void TestF19NullComparisonImage() {
+                 shared.dref, shared.manual);
+     Check(shared.images == 2u, "null T# + k16UNorm on one sampler did not materialize as two images");
+     if (fix_f19) {
+-      Check(shared.native_images == 2u && shared.manual_images == 0u && shared.dref == 2u &&
+-                shared.manual == 0u,
++      Check(shared.native_images == 0u && shared.manual_images == 2u && shared.dref == 0u && // F14f2 X2
++                shared.manual == 2u, // F14f2 X2
+             "null T# + k16UNorm on one sampler must both be native Dref at KYTY_FIX_F19=1");
+     } else {
+       Check(shared.native_images == 0u && shared.manual_images == 2u && shared.dref == 0u &&

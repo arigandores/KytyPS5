@@ -1,0 +1,17 @@
+f98e842c:CMakeLists.txt:156 anchor OK +1 OK
+f98e842c:src/generate_version.cmake:51 anchor OK +1 OK
+f98e842c:src/graphics/host_gpu/renderer/image/imageInfo.h:193 anchor OK +1 OK
+f98e842c:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:40 anchor OK +1 OK
+f98e842c:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:123 anchor OK +1 OK
+f98e842c:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:603 anchor OK +1 OK
+f98e842c:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:1213 anchor OK +1 OK
+f98e842c:src/graphics/shader/shaderBindings.h:101 anchor OK +1 OK
+f98e842c:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1336 anchor OK +1 OK
+f98e842c:tests/shaderCfgTests.cpp:5803 anchor OK +1 OK
+f98e842c:tests/shaderCfgTests.cpp:15702 anchor OK +1 OK
+f98e842c:tests/shaderCfgTests.cpp:15399 anchor OK +1 OK
+f98e842c:tests/shaderCfgTests.cpp:1522 anchor OK +1 OK
+574bf7ff:docs/track-f/f14e2.md:130 anchor OK +1 OK
+f18022a5:docs/track-f/f14e.md:191 anchor OK +1 OK
+15 refs
+ALL OK

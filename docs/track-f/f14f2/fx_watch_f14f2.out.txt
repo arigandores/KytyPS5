@@ -1,0 +1,8 @@
+1 gate expect gate OK
+2 gate expect gate OK
+3 gate expect gate OK
+4 not expect not OK
+5 not expect not OK
+6 not expect not OK
+7 not expect not OK
+ALL OK

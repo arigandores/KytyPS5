@@ -1,0 +1,9 @@
+cmake_list_eq_new True
+imageInfo_restored True
+git_status_lines 0
+base_clean rc 0 hash 1b5f270ab2fdf61fa3529c34c34b41e45ea74bb9
+new_clean rc 0 hash a54ae4bd03a673fe35ae89bad218132257b11383
+base_edit rc 0 hash 1b5f270ab2fdf61fa3529c34c34b41e45ea74bb9
+new_edit rc 0 hash c0d2ca7e38fad7d5559c411818bca5675aba8179
+new_revert rc 0 hash a54ae4bd03a673fe35ae89bad218132257b11383
+ALL OK

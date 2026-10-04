@@ -1,0 +1,24 @@
+applied X1 status [' M tests/shaderCfgTests.cpp']
+2026-10-04T13:16:06Z F14e2 API check before 'F14f2 build mutant X1': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_f14e2.py (p.431(v))
+build X1 rc 0 BUILD OK
+revert rc 0 status lines 0
+m_X1_1 rc=0 exe=dc63cffa KYTY_FIX_F19=1 tests=130 failed=0 spv=180
+   [f19] null T# alone C KYTY_FIX_F19=1: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=1: images=2 native=2 manual_images=0 dref=2 manual=0
+   [f19] null T# alone C_LZ KYTY_FIX_F19=1: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=1: images=2 native=2 manual_images=0 dref=2 manual=0
+m_X1_0 rc=0 exe=dc63cffa KYTY_FIX_F19=0 tests=130 failed=2 spv=180
+   failed: null T# + k16UNorm on one sampler must both be the manual compare at KYTY_FIX_F19=0
+   failed: null T# + k16UNorm on one sampler must both be the manual compare at KYTY_FIX_F19=0
+   [f19] null T# alone C KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=0: images=2 native=1 manual_images=1 dref=1 manual=1
+   [f19] null T# alone C_LZ KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=0: images=2 native=1 manual_images=1 dref=1 manual=1
+m_X1_u rc=0 exe=dc63cffa KYTY_FIX_F19=unset tests=130 failed=2 spv=180
+   failed: null T# + k16UNorm on one sampler must both be the manual compare at KYTY_FIX_F19=0
+   failed: null T# + k16UNorm on one sampler must both be the manual compare at KYTY_FIX_F19=0
+   [f19] null T# alone C KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=0: images=2 native=1 manual_images=1 dref=1 manual=1
+   [f19] null T# alone C_LZ KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+   [f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=0: images=2 native=1 manual_images=1 dref=1 manual=1
+m_X1 result 1:pass,0:fail,u:fail expect 1:pass,0:fail,u:fail -> CAUGHT

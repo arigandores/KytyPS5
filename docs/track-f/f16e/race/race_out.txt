@@ -1,0 +1,9 @@
+race_demo: seconds=5.0 draw_period_ns=5000 tick_us=1000 lines=319 draws=1002281
+race_demo: lines with sum(s_*) > 8*draws=280 (max excess 76), sum(s_*) < 8*draws=0, draws_* != draws=74, w identity broken=42, h identity broken=182
+race_demo: per-line rate of 'sum of children > parent' = 0.8777
+race_demo: seconds=5.0 draw_period_ns=20000 tick_us=1000 lines=320 draws=250049
+race_demo: lines with sum(s_*) > 8*draws=107 (max excess 16), sum(s_*) < 8*draws=0, draws_* != draws=22, w identity broken=9, h identity broken=52
+race_demo: per-line rate of 'sum of children > parent' = 0.3344
+race_demo: seconds=5.0 draw_period_ns=100000 tick_us=1000 lines=321 draws=50105
+race_demo: lines with sum(s_*) > 8*draws=23 (max excess 8), sum(s_*) < 8*draws=0, draws_* != draws=0, w identity broken=0, h identity broken=13
+race_demo: per-line rate of 'sum of children > parent' = 0.0717

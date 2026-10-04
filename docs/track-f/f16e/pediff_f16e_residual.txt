@@ -1,0 +1,32 @@
+differing bytes 4014
+  OTHER .data                              1983
+  OTHER .rdata                             10
+  OTHER header                             2
+  SDL revision string                      7
+  anon-namespace tag ?A0x<7|8 hex>@        1873
+  build dir f287\f16e                      139
+  other header 0x00000080 a=e3 b=45 ctx=b'mode.$\x00\x00PE\x00\x00d\x86\x08\x00\xe3Q\xc2j\x00\x00\x00\x00\x00\x00\x00\x00\xf0\x00"\x00'
+  other header 0x00000081 a=51 b=42 ctx=b'ode.$\x00\x00PE\x00\x00d\x86\x08\x00\xe3Q\xc2j\x00\x00\x00\x00\x00\x00\x00\x00\xf0\x00"\x00\x0b'
+  other .rdata 0x014ab9a0 a=e3 b=45 ctx=b'P\xcfJ\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe3Q\xc2j\x00\x00\x00\x00\x02\x00\x00\x00B\x00\x00\x00'
+  other .rdata 0x014ab9a1 a=51 b=42 ctx=b'\xcfJ\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xe3Q\xc2j\x00\x00\x00\x00\x02\x00\x00\x00B\x00\x00\x00\xb8'
+  other .rdata 0x014ab9bc a=2b b=65 ctx=b'B\x00\x00\x00\xb8\xcfJ\x01\xb8\xb9J\x01RSDS+\xe3\xfa\x9b\xda\xe1\xc6\xa2LLD PDB.'
+  other .rdata 0x014ab9bd a=e3 b=fa ctx=b'\x00\x00\x00\xb8\xcfJ\x01\xb8\xb9J\x01RSDS+\xe3\xfa\x9b\xda\xe1\xc6\xa2LLD PDB.\x01'
+  other .rdata 0x014ab9be a=fa b=10 ctx=b'\x00\x00\xb8\xcfJ\x01\xb8\xb9J\x01RSDS+\xe3\xfa\x9b\xda\xe1\xc6\xa2LLD PDB.\x01\x00'
+  other .rdata 0x014ab9bf a=9b b=7c ctx=b'\x00\xb8\xcfJ\x01\xb8\xb9J\x01RSDS+\xe3\xfa\x9b\xda\xe1\xc6\xa2LLD PDB.\x01\x00\x00'
+  other .rdata 0x014ab9c0 a=da b=de ctx=b'\xb8\xcfJ\x01\xb8\xb9J\x01RSDS+\xe3\xfa\x9b\xda\xe1\xc6\xa2LLD PDB.\x01\x00\x00\x00'
+  other .rdata 0x014ab9c1 a=e1 b=85 ctx=b'\xcfJ\x01\xb8\xb9J\x01RSDS+\xe3\xfa\x9b\xda\xe1\xc6\xa2LLD PDB.\x01\x00\x00\x00C'
+  other .rdata 0x014ab9c2 a=c6 b=cd ctx=b'J\x01\xb8\xb9J\x01RSDS+\xe3\xfa\x9b\xda\xe1\xc6\xa2LLD PDB.\x01\x00\x00\x00C:'
+  other .rdata 0x014ab9c3 a=a2 b=33 ctx=b'\x01\xb8\xb9J\x01RSDS+\xe3\xfa\x9b\xda\xe1\xc6\xa2LLD PDB.\x01\x00\x00\x00C:\\'
+  other .data 0x0168c1cf a=76 b=40 ctx=b'and@?A0xEC93F0B@val@spvtools@@YA'
+  other .data 0x0168c1d0 a=61 b=76 ctx=b'nd@?A0xEC93F0B@val@spvtools@@YA?'
+  other .data 0x0168c1d1 a=6c b=61 ctx=b'd@?A0xEC93F0B@val@spvtools@@YA?A'
+  other .data 0x0168c1d2 a=40 b=6c ctx=b'@?A0xEC93F0B@val@spvtools@@YA?AW'
+  other .data 0x0168c1d3 a=73 b=40 ctx=b'?A0xEC93F0B@val@spvtools@@YA?AW4'
+  other .data 0x0168c1d4 a=70 b=73 ctx=b'A0xEC93F0B@val@spvtools@@YA?AW4s'
+  other .data 0x0168c1d5 a=76 b=70 ctx=b'0xEC93F0B@val@spvtools@@YA?AW4sp'
+  other .data 0x0168c1d6 a=74 b=76 ctx=b'xEC93F0B@val@spvtools@@YA?AW4spv'
+  other .data 0x0168c1d7 a=6f b=74 ctx=b'EC93F0B@val@spvtools@@YA?AW4spv_'
+  other .data 0x0168c1d9 a=6c b=6f ctx=b'93F0B@val@spvtools@@YA?AW4spv_re'
+  other .data 0x0168c1da a=73 b=6c ctx=b'3F0B@val@spvtools@@YA?AW4spv_res'
+  other .data 0x0168c1db a=40 b=73 ctx=b'F0B@val@spvtools@@YA?AW4spv_resu'
+VERDICT .text differing bytes 0

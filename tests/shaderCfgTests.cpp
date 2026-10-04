@@ -311,6 +311,93 @@ uint32_t SpirvInstructionOpcodeCount(const std::vector<uint32_t> &binary,
   return count;
 }
 
+// The manual depth-compare path of the emitter (ManualDepthCompare and
+// CompareDepth): a non-Dref sample with sample_opcode whose result R gives
+// X = OpCompositeExtract R, a float compare with X as the second operand, and
+// OpSelect float compare 1.0 0.0. Counts the OpSelects of that shape.
+uint32_t SpirvManualDepthCompareCount(const std::vector<uint32_t> &binary,
+                                      uint32_t sample_opcode) {
+  std::unordered_set<uint32_t> float_types;
+  std::unordered_map<uint32_t, uint32_t> float_constants;
+  std::unordered_set<uint32_t> samples;
+  std::unordered_map<uint32_t, uint32_t> extracts;
+  std::unordered_map<uint32_t, uint32_t> compares;
+  std::vector<std::array<uint32_t, 4>> selects;
+  for (size_t i = 5; i < binary.size();) {
+    const uint32_t word_count = binary[i] >> 16u;
+    const uint32_t opcode = binary[i] & 0xffffu;
+    Check(word_count != 0u && i + word_count <= binary.size(),
+          "SPIR-V instruction stream is malformed");
+    if (opcode == 22u && word_count >= 3u &&
+        binary[i + 2u] == 32u) { // OpTypeFloat 32
+      float_types.insert(binary[i + 1u]);
+    } else if (opcode == 43u && word_count >= 4u &&
+               float_types.count(binary[i + 1u]) != 0u) { // OpConstant
+      float_constants[binary[i + 2u]] = binary[i + 3u];
+    } else if (opcode == sample_opcode && word_count >= 3u) {
+      samples.insert(binary[i + 2u]);
+    } else if (opcode == 81u && word_count >= 4u) { // OpCompositeExtract
+      extracts[binary[i + 2u]] = binary[i + 3u];
+    } else if (opcode >= 180u && opcode <= 191u &&
+               word_count >= 5u) { // OpFOrdEqual .. OpFUnordGreaterThanEqual
+      compares[binary[i + 2u]] = binary[i + 4u];
+    } else if (opcode == 169u && word_count >= 6u) { // OpSelect
+      selects.push_back(
+          {binary[i + 1u], binary[i + 3u], binary[i + 4u], binary[i + 5u]});
+    }
+    i += word_count;
+  }
+  uint32_t count = 0;
+  for (const auto &select: selects) {
+    const auto compare = compares.find(select[1]);
+    const auto one = float_constants.find(select[2]);
+    const auto zero = float_constants.find(select[3]);
+    if (float_types.count(select[0]) == 0u || compare == compares.end() ||
+        one == float_constants.end() || one->second != 0x3f800000u ||
+        zero == float_constants.end() || zero->second != 0u) {
+      continue;
+    }
+    const auto extract = extracts.find(compare->second);
+    if (extract != extracts.end() && samples.count(extract->second) != 0u) {
+      count++;
+    }
+  }
+  return count;
+}
+
+// OpImageSampleExplicitLod instructions whose Lod operand is the float 0.
+uint32_t SpirvExplicitLodZeroCount(const std::vector<uint32_t> &binary) {
+  std::unordered_set<uint32_t> float_types;
+  std::unordered_map<uint32_t, uint32_t> float_constants;
+  std::vector<uint32_t> lods;
+  for (size_t i = 5; i < binary.size();) {
+    const uint32_t word_count = binary[i] >> 16u;
+    const uint32_t opcode = binary[i] & 0xffffu;
+    Check(word_count != 0u && i + word_count <= binary.size(),
+          "SPIR-V instruction stream is malformed");
+    if (opcode == 22u && word_count >= 3u &&
+        binary[i + 2u] == 32u) { // OpTypeFloat 32
+      float_types.insert(binary[i + 1u]);
+    } else if (opcode == 43u && word_count >= 4u &&
+               float_types.count(binary[i + 1u]) != 0u) { // OpConstant
+      float_constants[binary[i + 2u]] = binary[i + 3u];
+    } else if (opcode == 88u && word_count >= 7u &&
+               (binary[i + 5u] & 0x3u) == 0x2u) {
+      // Lod set, Bias clear: the Lod id is the first image operand.
+      lods.push_back(binary[i + 6u]);
+    }
+    i += word_count;
+  }
+  uint32_t count = 0;
+  for (const auto lod: lods) {
+    const auto value = float_constants.find(lod);
+    if (value != float_constants.end() && value->second == 0u) {
+      count++;
+    }
+  }
+  return count;
+}
+
 void CheckSpirvPhiParents(const std::vector<uint32_t> &binary) {
   struct PhiParents {
     uint32_t target = 0;
@@ -5319,7 +5406,11 @@ void TestNewShaderRecompilerPixelImageSampleLodSelection() {
   constexpr uint32_t OpImageSampleDrefImplicitLod = 89;
   constexpr uint32_t OpImageSampleDrefExplicitLod = 90;
 
-  auto compile = [](uint32_t opcode, uint32_t dmask) {
+  // Compare samples go native (OpImageSampleDref*) only for k32Float images;
+  // other formats take the manual compare (ResourceMaterialization).
+  auto compile = [](uint32_t opcode, uint32_t dmask,
+                    Prospero::BufferFormat format =
+                        Prospero::BufferFormat::k8UNorm) {
     const uint32_t shader[] = {
         EncodeMimg0(opcode, dmask),
         EncodeMimg1(0, 0, 0, 4),
@@ -5331,6 +5422,7 @@ void TestNewShaderRecompilerPixelImageSampleLodSelection() {
     auto ps_info = RegressionPixelInputInfo();
 
     auto user_data = ImageTestUserData();
+    SetImageTestFormat(&user_data, 0, format);
     auto options = MakeCompileOptions(ShaderType::Pixel);
     options.input_info.pixel = &ps_info;
     options.dump_ir = true;
@@ -5379,7 +5471,8 @@ void TestNewShaderRecompilerPixelImageSampleLodSelection() {
           "pixel IMAGE_SAMPLE_LZ must use explicit lod");
   }
   {
-    const auto result = compile(0x28, 0x1); // image_sample_c
+    const auto result = compile(0x28, 0x1, // image_sample_c
+                                Prospero::BufferFormat::k32Float);
     Check(SpirvInstructionOpcodeCount(result.spirv,
                                       OpImageSampleDrefImplicitLod) == 1,
           "pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod");
@@ -5388,10 +5481,45 @@ void TestNewShaderRecompilerPixelImageSampleLodSelection() {
           "pixel IMAGE_SAMPLE_C unexpectedly used explicit dref lod");
   }
   {
-    const auto result = compile(0x2f, 0x1); // image_sample_c_lz
+    const auto result = compile(0x2f, 0x1, // image_sample_c_lz
+                                Prospero::BufferFormat::k32Float);
     Check(SpirvInstructionOpcodeCount(result.spirv,
                                       OpImageSampleDrefExplicitLod) == 1,
           "pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod");
+  }
+  {
+    const auto result = compile(0x28, 0x1); // image_sample_c, k8UNorm
+    Check(SpirvInstructionOpcodeCount(result.spirv,
+                                      OpImageSampleDrefImplicitLod) == 0 &&
+              SpirvInstructionOpcodeCount(result.spirv,
+                                          OpImageSampleDrefExplicitLod) == 0,
+          "manual pixel IMAGE_SAMPLE_C unexpectedly used a dref opcode");
+    Check(SpirvInstructionOpcodeCount(result.spirv,
+                                      OpImageSampleImplicitLod) == 1 &&
+              SpirvInstructionOpcodeCount(result.spirv,
+                                          OpImageSampleExplicitLod) == 0,
+          "manual pixel IMAGE_SAMPLE_C must sample with implicit lod");
+    Check(SpirvManualDepthCompareCount(result.spirv,
+                                       OpImageSampleImplicitLod) == 1,
+          "manual pixel IMAGE_SAMPLE_C must compare the texel and select");
+  }
+  {
+    const auto result = compile(0x2f, 0x1); // image_sample_c_lz, k8UNorm
+    Check(SpirvInstructionOpcodeCount(result.spirv,
+                                      OpImageSampleDrefImplicitLod) == 0 &&
+              SpirvInstructionOpcodeCount(result.spirv,
+                                          OpImageSampleDrefExplicitLod) == 0,
+          "manual pixel IMAGE_SAMPLE_C_LZ unexpectedly used a dref opcode");
+    Check(SpirvInstructionOpcodeCount(result.spirv,
+                                      OpImageSampleExplicitLod) == 1 &&
+              SpirvInstructionOpcodeCount(result.spirv,
+                                          OpImageSampleImplicitLod) == 0,
+          "manual pixel IMAGE_SAMPLE_C_LZ must sample with explicit lod");
+    Check(SpirvExplicitLodZeroCount(result.spirv) == 1,
+          "manual pixel IMAGE_SAMPLE_C_LZ must sample mip level 0");
+    Check(SpirvManualDepthCompareCount(result.spirv,
+                                       OpImageSampleExplicitLod) == 1,
+          "manual pixel IMAGE_SAMPLE_C_LZ must compare the texel and select");
   }
 }
 

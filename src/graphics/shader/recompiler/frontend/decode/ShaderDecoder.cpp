@@ -350,7 +350,12 @@ bool FixB1BEnabled() {
 }
 
 bool FixF10Enabled() {
-	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_F10"));
+	// Track F, FS5a (HPP-509, ROADMAP s122 item 410(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
+	// other value as EnvValueOn (the form of FS4a 17adaf80).
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_FIX_F10");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	return enabled;
 }
 

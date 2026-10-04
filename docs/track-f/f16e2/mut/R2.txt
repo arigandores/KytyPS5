@@ -1,0 +1,8 @@
+mutant R2 build=0 site_rc=1 tree_before=c7ae615923f362e2 tree_after=c7ae615923f362e2 REVERTED 2026-10-04T16:07:26Z
+=== arm unset rc=0 OK
+DiagF5F6 test site: ALL OK
+=== arm zero rc=0 OK
+DiagF5F6 test site: ALL OK
+=== arm one rc=3221226505 FAIL
+ShaderRecompilerComputeTests: DiagF6 failed at H6 tick inside NoteDraw (F16d2): the service printed false after 8 window ticks of DiagF6
+NOT OK

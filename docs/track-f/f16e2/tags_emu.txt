@@ -1,0 +1,7 @@
+tag occurrences A 236 B 236
+total tag hex chars A 1874 B 1697 B-A -177
+tag length histogram A [(7, 14), (8, 222)] B [(7, 191), (8, 45)]
+A .data VirtualSize 0x22e2e60
+B .data VirtualSize 0x22e2d20
+A [b'KytyPS5-2026-09-15-6a2987a-1881-g4950557a', b'SDL-KytyPS5-2026-09-15-6a2987a-1881-g4950557a']
+B [b'KytyPS5-2026-09-15-6a2987a-1881-g4950557a', b'SDL-KytyPS5-2026-09-15-6a2987a-1881-g4950557a']

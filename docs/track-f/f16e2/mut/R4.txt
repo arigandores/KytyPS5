@@ -1,0 +1,8 @@
+mutant R4 build=0 site_rc=1 tree_before=c7ae615923f362e2 tree_after=c7ae615923f362e2 REVERTED 2026-10-04T16:08:30Z
+=== arm unset rc=0 OK
+DiagF5F6 test site: ALL OK
+=== arm zero rc=0 OK
+DiagF5F6 test site: ALL OK
+=== arm one rc=3221226505 FAIL
+ShaderRecompilerComputeTests: DiagF6 failed at f6 draw kind 0 with ps: s_addr0_fmt: delta 1 != expected 2
+NOT OK

@@ -1,0 +1,6 @@
+.text differing bytes 123714 runs (4-byte windows) 61677
+runs longer than 4 bytes 0 []
+runs without a rel32 window into a non-.text section 0
+target sections {'.data': 61620, '.rdata': 57}
+distinct target shifts 20 top [('-0x140', 60892), ('-0x14000', 461), ('-0x1400000', 264), ('-0xf0', 13), ('-0x130', 12), ('-0x30', 6), ('-0x70', 5), ('-0x100', 5), ('-0x50', 4), ('-0x40', 2), ('-0xa0', 2), ('-0xc0', 2)]
+VERDICT DISPLACEMENT-ONLY

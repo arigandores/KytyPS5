@@ -1,0 +1,364 @@
+--- log
+4950557abdba71d1fa7e1840469f183011245afa 963c12e81d49dbbd4d764c4b9ba08791808c184a 9a014a3a9931fe400161cf9dcf750ab3696657ad
+963c12e81d49dbbd4d764c4b9ba08791808c184a 3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 980c6d3bf002b96e80b143cb62299b41b417534f
+3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 33679a021ac8d6130edbbfda342f9e875d9ea336 452b6a96a985942333fa15367b7a4ba20bc595e7
+--- status lines
+0
+--- git cherry -v HEAD 56b04817 (upstream=HEAD, head=56b04817: lists 56b04817 and its ancestors not in HEAD)
++ c78a3982e94396e3ac93d0da972abf395f574295 track P link P23 (HPP-404):
++ ea49b499cecc3b5265c08b2be0121fd952ff745c track P link P23 (HPP-404) 
++ b1db56f2f99552138cd70c3a12f064657a492abc track S link S4 (HPP-315) a
++ 0637ddbcaf55242d80acf64ee63b46ad7cbecd24 track P link P24 (HPP-405):
++ f7ac504f9fde73c585a28a423fef0df87f6aaf43 track P link P24 (HPP-405) 
++ 62d25438f8b43baef603c1b98c76c1f918e9d718 track P link P25 (HPP-406):
++ f96c15a1103aa406ae33c305dbad6a821cce7b62 track F link FS2c (HPP-383)
++ 8f6b6be219bfe0054323d4eaa741df488987bc78 track P link P25 (HPP-406) 
++ 21fb26452d3a47baa7833e529dcb6c94489096bd track F link FS2d (HPP-384)
++ ad2cfaf891f40edb26de93636eed57a050b2588c track F link FS2d (HPP-384)
++ fbd2731cd0a59fd3cae73970fb6585cf1fc42f34 track S link S7 (HPP-319): 
++ 7d08e50f2681089c6a4440293b684472b74582b5 track S link S7 (HPP-319) a
++ 6e45774dd9b6315119cde3afe38fef4874c1e14d track S link S6 (HPP-318): 
++ 13d3defa5f01ad643e2ff5d5643ba8405bc41b03 track P link P26 (HPP-407):
++ 1ada86215bfd7f33a619c8980157f2331ce4bcc5 track P link P26 (HPP-407) 
++ 160465c146be43afc46f8f46ce8958be7c2d1921 track P link P27 (HPP-408):
++ f866e5343e853fbe6a96963872703f45bcbceac4 track P link P27 (HPP-408):
++ d9cb35fd55ae6b998827e75a0af9b5881bb5dfb5 lead (HPP-283): ROADMAP p.3
++ 9fb0b00770b3fe6b6b9fe74b77a5334f7db2752b lead (HPP-409): ROADMAP p.3
++ 181046f22031e7a0facfd6a06d4072c00cbc7198 track F link F9 (HPP-409): 
++ b978b8967f7b305e0121dcb7c4a795a058b0aa44 lead (HPP-283): ROADMAP p.3
++ cd6972310f6f13a5f0ab9b518005a4d2c3a8f71e track P link P28 (HPP-413):
++ 9e9f7525d5fab42f08dfb466b83e683f001d0f45 track P link P29 (HPP-414):
++ f7f28dd9ed15d07f095be2b4603c097735779121 track P link P29 (HPP-414):
++ 9bbb3e2fd60e9e6b7515ec0272364056296125a6 track F link F9a (HPP-410):
++ cd4c2803ca8793cae0d7aa25d82e8082265ef657 track P link P30 (HPP-415):
++ dca3d5d9755dddaa66d9205fd02c79e63ca11f29 track P link P30 (HPP-415):
++ 1c9c60c90fc1cbbbd63e22a28a31b6513c3d9bd9 track P link P30 (HPP-415):
++ 068a4ab0c0641b35a8ef8f50abfdcf7bf5237a61 track P link P32 (HPP-417):
++ 2e3acc8f4cc36c236f9a5446cb5f405ad4e7eb03 track P link P32 (HPP-417):
++ 2bfa17c488259e2cf46f6d4b0601350bcc37fb4f track F link F9b (HPP-411):
++ 516b66d475c8ba9c89c329c8047c4e46274365af track F link F9c (HPP-412):
++ ba48675a141345ca939168794b6d8cc796bec8c8 track F link F9c (HPP-412):
++ 9d6f2f26fdab3e9f6d95cec3626b105323b0291f track P link P30b (HPP-420)
++ c0da12932795aaf42c1b6b3c320fbfdcd1fee31a track P link P30b (HPP-420)
++ 163952a08bfd0fc2bc8daf094b148124cdcb4864 track F link F9d (HPP-421):
++ 43a4f29ac6f597dd3099b50ad4255ce0e6d04f02 track P link P31 (HPP-416):
++ 25ca62667e1f541ba9bbeb6de0a9b0247cb98a46 track P link P31 (HPP-416):
++ 7f2932503ac5eae478928686b4bf1a8271977152 track F link F9e (HPP-422):
++ 00f179e0f9e0bd0ec4471abd33bab91471815b73 track F link F9e (HPP-422):
+- 5549071164939c1e5b02a42e8da0d6fc747372fa track F link F9e2 (HPP-426)
++ b481fabc74d8d8b3e803019ec776a18a426d9233 track F link F9e2 (HPP-426)
++ 6856264a3dcffe1d8331a855113f86692c3887a3 track P link P32 (HPP-417):
++ 120079de1347245fe0ce3e6ca381c4e5523f0921 track P link P32 (HPP-417):
++ dcd762d6ea5b7d32ae3becb8fa25782c9112e9a0 track F link F9f (HPP-423):
++ b0114cb123d30034b5bac143c586618e9708193e track S link S6 (HPP-318): 
++ 2b60f5470b0cda6abf89303c334c6911b9e5c155 track F link F9f (HPP-423):
++ 20605249c6414ff585f57843723d5acb9b61ce50 track S link S6 (HPP-318): 
+- 2da00d803962f63a04d058052badd9b84939ed4e track F link F9e2b (HPP-429
++ 8ac0afffa9340e94601f05b5cffe6af78992bd2a track P link P31b (HPP-427)
++ a705a8cbd2a37f22f1f38c1364f1013f2d94fdc8 track S link S8 (HPP-320): 
++ 8a1c12d231199e3b9bd6ead891706faacd61fcd1 track F link F9e2b (HPP-429
++ 48355fb1aeb792a7a7c4cb94940adefeee3c8867 track F link F9e2b (HPP-429
++ a2d9276f30adc46d218ec7123e364067631b2abe track F link F7b (HPP-398):
++ a769823e6367ec9d545592c7b75bd63a754cae59 track P link P32b (HPP-428)
++ 697ae5ea780928f62c5068e959f02b9b191eb626 track P link P32b (HPP-428)
++ dd266ea10f7ef51edfe77cacbdbb62302ad6eeee track P link P32b (HPP-428)
++ 4256e8cfe91a28419578567095da53114d029398 track F link F9f2 (HPP-430)
++ ca38fdb52cdf8193dbd91bdaf5e5d8436b4126c1 track F link F9f2 (HPP-430)
++ 3f602d6352a92afff3df7a059e8a43628deb47b0 track P link P31c (HPP-435)
++ 8747c9617b4477064d1894ca2e3e0cc1ca0b695d track P link P31c (HPP-435)
+- 0b9dc0c906401208771a2c9e3a53cde68f903e29 track F link F9e2c (HPP-436
++ 814693c7a9c731a54578f68b7c9e485cd9addf8d track F link F7b (HPP-398):
++ 77c8019942102ae804361c96b98905a0944bfff6 track F link F9e2c (HPP-436
++ 6fde3ad5b5d204cd96a3a655128a2508718b7a7f track F link F9e2c (HPP-436
++ ea30d88fa1a5ba903f45fa7c9777cdc2b89ff215 track F link F9f3 (HPP-437)
++ 78cba9f7369731528607b85643382dfe4bb0be41 track F link F9f3 (HPP-437)
++ f8d1738b1879c16f9be3e5b0aab208edc75ee880 track P link P33 (HPP-418):
++ 56da7ff520ae4ac48735196386c1320594210126 track P link P33 (HPP-418):
++ 3c0764a1cf1cc1f36e11b54d3490f09d921bf1df track F link F9g (HPP-424):
++ d6af2c7345852a1f0d682e5b877114b61cb12ad0 track S link S9 (HPP-431): 
++ df4008d8bd4878ee79232ea5bb6989ed0eece0e2 track P link P34 (HPP-419):
++ a1f02bd5fe84f71d5ffd9f762925aa344ab08fa6 track S link S9 (HPP-431): 
++ 741e3312ab005ece2587cec0410ba7607116aa76 track P link P35 (HPP-438):
++ b32c30972503476d073168cfcf05f4fbc71fd7fa track P link P35 (HPP-438):
++ 3f6bb4165e0b1b75c1aa6ee7ba701dafe6019037 track F link F9g (HPP-424):
++ 3e44d511187b63bfd2e90b2cb33328b6e5100d45 track F link F9g (HPP-424):
++ a2693644e150073f7dedac93927f6f1a76867dad track S link S9 (HPP-431): 
++ f761a1607b840ec0b8cb0200ab9bb533c1be92a0 track P link P36 (HPP-439):
++ 448a53bf2f47acc25b4f862b45a34d6771a3a781 track F link F7b (HPP-398):
++ 747a66d6060934e3526fb4bd938e98f0ca6fa913 track S link S9 (HPP-431): 
++ 24f721b4dc25815e3bae92ec2c3b860303ff810c track P link P36 (HPP-439):
++ 357d53ab64b306b22aa9c925c3a82edfbcedbb8d track F link F7c (HPP-399):
++ 17b4aed61e8ac719fce0be3542e344a1d2c29c50 track F link F9h (HPP-425):
++ e07148f959e11e4d947218293ff66d2babb3fa3c track P link P37 (HPP-440):
+- 4e72289e879b6a8375eada8fb0359037388e5d8c track F link FS3a (HPP-447)
++ 19e33445ae37a418166781280ccf08b8716eb1da track F link F10a (HPP-445)
++ 9e60a8a55625edf68cd708769485662c81ab8ff2 track P link P37 (HPP-440):
++ cd7977f7a1da919492f7dac4e1c7d5d3a2d31d8d track F link FS3a (HPP-447)
++ 18d9c792b6d0f1d2d03ad594ba0fe01030ef5e77 track F link F10b (HPP-446)
++ 465f0d8e171406abfa3d17cb62e12c8aaa88e256 track F link F7d (HPP-443):
++ a922ffed30cab5d34881eb10b0b95bfeb7bec6b2 track F link F7e (HPP-444):
+- 68602c4f301e8d424af0581d11039437ec4a958f track F link F10c (HPP-451)
++ 84223933ea77d257e0b401cc842a34defa345932 track F link FS3b (HPP-448)
++ cb9b3082b51c337b91bdeaa1ee7ce17148df5b13 track F link FS3c (HPP-449)
++ 1a588fc2fb47a431f065ec6c90c67644454b0ffb track F link F10c (HPP-451)
++ df2b3179c4e30688a7d0ce0d2e0d9965eb526b0f track S link S9r (HPP-432):
++ dcc6cbf8db076c3ab2d36c7e9220440d035932b9 track S link S9r (HPP-432) 
++ a13fec24e67664f2a1dded3424cb773430e67f0f track F link F11a (HPP-455)
++ b53451c2e703e6a5d0ccc8253af3ff2eef327d96 track F link F11a (HPP-455)
++ 8f71d516a83bc24c9a40f8c46e4b2818d10edb82 track F link F11a (HPP-455)
++ 3adc4573e7b3671467ab450e9eae2fade100d1df track P link P38 (HPP-441):
++ a1a1d971f7c41af9630a744530d3f65e1b15f030 track F link FS3c (HPP-449)
++ bc1671fe6792206c63e2857982408a46eaa5809b track P link P39 (HPP-442):
++ 571bb3a7a3637b27435a2df5620b967883544651 track F link F10d (HPP-452)
++ 8d0662f2e4cf0e657be1e1a3c02ecd41ecc9ee9d track F link F11b (HPP-456)
++ a9c38173ffa90e04f238ec8aef4ee86600d053a5 track F link F11a2 (HPP-460
++ 704c13d2cbdac6035ab3cae1377fd4cd15c2bf9c track F link FS3d (HPP-450)
++ 12cd1bcb4a2a194085e62e9d2609d8e7adea3dcc track F link FS3d (HPP-450)
++ 2eb9ac4a35981a76ea7f5cdc1afdbb256583a40a track F link FS3d (HPP-450)
++ eb15b68263e983cff2e8a88ab85139ac84cb3a3e track F link F11c (HPP-457)
++ 79e5b5729d3f3314eba5eaeb1915e14397aaaadd track F link F10e (HPP-453)
++ c9b4268e0b47625ff4ec556057b4c0267601ddd0 track P link P40 (HPP-461):
++ 93e2f9cc82814dbc201b43f317468fa4738f54ba track F link F10e (HPP-453)
++ c915d8e6c30f223edce881e48d0ed28b752bf95e track P link P40 (HPP-461):
++ b0a18f9d5634b7ff5627b0999a008b7a522b3284 track F link F10e (HPP-453)
++ 5df6fdaa82b84da3f6092ac0230a1066d664d525 track F link F10e (HPP-453)
++ da21e708cfe8c3ffebcad451a9f432c67dc6664f track S link S9b (HPP-458):
++ a387a2d49de4921a7cf10fd937e31d3a367c9ff3 track S link S9b (HPP-458):
++ 8449030a9d44c4d3db413b70c560adb48c7382e0 track F link F10f (HPP-454)
+- 17adaf801069088b68275276c96574b7f8bf5dc3 track F link FS4a (HPP-470)
++ 564c20c4b9896df70c984aaf203df677825a6b9b track S link S9b rework 1 (
++ eecd671cbc2308cf848ae33ac3d82b9347c52dd6 track F link FS4a (HPP-470)
++ c01451b051bd13a0a0deb14b79892daa16779d45 track F link F11d (HPP-466)
++ befeb824e384fb8863a0a05c406144c1bdc19a4c track F link F11d (HPP-466)
++ 8b1dfa78520ba4eb5c5ca4c964b2657210f5b486 track F link FS4a (HPP-470)
++ 4139a3a5e6dc77098bf35a8b441faf492433819a track S link S9b rework 1 (
++ 0dd8e0014c2d92dd5e2be9a4effac8bb4aa13583 track F link FS4a (HPP-470)
++ 7a5ea0be3b52280afa11bb75c9394a5c9a83b241 track F link F11d (HPP-466)
++ 3accb42a8fa3283e74f7c45915310917535aeb86 track P link P41 (HPP-462):
++ 32a7558179f75ddfcc36184c6986e2649ba3d4fe track S link S9r2 (HPP-459)
++ 8b48967b20a9e8e9609665e683aba147ace37ca9 track F link F11d (HPP-466)
++ 019c981932174eb07d4f6fc2f0399e8bff94de76 track S link S9r2 (HPP-459)
++ 17b51c7fc2b7ec2f6d27bc6175152d09225e8357 track F link FS4b (HPP-471)
++ a193028bb9c5a7aaaac482c1db35f9eb2e815d4d track F link FS4b (HPP-471)
++ 0c685d8fae898d90206b167f5b9dea51cb2bbac3 track F link F11e (HPP-467)
++ 02b840fe353759997da0aea1c9a13e43dc41544d track F link F11e (HPP-467)
++ 90f9b920ec69fe4d7029d141f898afd187a8f82b track F link F11e (HPP-467)
++ 1b28f9e39e55f69e6e6faf36c3e503f188608c22 track P link P42 (HPP-463):
++ fea2cefc5c3208a32bad3d2058bd552ee4029786 track P link P42 (HPP-463):
++ 1facd7dc3de37b12b6b617ab2fcb7bc20496312f track F link FS4c (HPP-472)
++ 380195701a1c82db49822aed8ab8c9d6ba1ebc4a track S link S10 (HPP-433):
++ e06ff13dd66739624f6db50e8e0a794a5b4c4b5f track F link F11f (HPP-468)
++ 45a93e347135e7bf6c7e1382ab21399194f52e2a track P link P43 (HPP-464):
++ a25ef3ad9ebcb658bf9538f4a5815aff201558a2 track P link P43 (HPP-464):
++ 8384c6c69065a80a8a8f746e22577920a0fb72ea track P link P44 (HPP-465):
++ 35d128b3fed73bbe2df572e780f8afae7178d214 track P link P44 (HPP-465):
++ e442ec599d0db12e6d7f637839f20c8beee5f712 track F link F11f (HPP-468)
++ 9b6cbf7aa9548b5767d6fab48875d820f36b26d8 track F link F11g (HPP-469)
++ cdf8bf9c0c5a2afbe4223a5597367d3faada0a16 track F link F11g (HPP-469)
++ 08bd2a87db3516a5233534781a75f68ee87d2a83 track F link F12a (HPP-474)
++ 99aac1e586a77239ce1026077b8122af57008cbc track F link F12b (HPP-475)
++ 22519cde8f618979d487bff3b60455cbfad14ed4 track F link F12c (HPP-476)
++ 01c8981b6edbef929d85709909e3ef5a551d968a track F link F12c (HPP-476)
+- 1833ee280ec177b65feb6c4a97f626b0d4ce1b9f track F link F12d (HPP-477)
++ 65c0fa428065815086721dcec613a1926546341f track F link F12d (HPP-477)
++ 1a08f2df94752768d57fe2a2f581f603ee626cf5 track F link F12e (HPP-478)
++ f11de18037cb5ebed2705276a14c9de3ae0e228a track F link F12e (HPP-478)
++ 2ab1459686f502e93400c62cd0fbb7272d4431cf track F link FS4c (HPP-472)
++ 2263247465c530686ea216ceb612a59f7b41e9e2 track F link FS4d (HPP-473)
++ 11cb8c2eb81d3f4e550c2006844bdab0338cc711 track F link FS4d (HPP-473)
++ e0ede9add7ccaa32f443386efbf6b0f5b312b837 track F link F13a (HPP-479)
++ 84c1f78ca2fdd42993e498f0ce6766e8ae67b16a track F link F13a (HPP-479)
++ 0ba742fba580f9ca99200db2a840d2bba7cfbfd5 track F link F13b (HPP-483)
++ 2f1dafec21bbcc1b5984cf895ecf442dc6b854c0 track F link F12f (HPP-480)
++ c5bff245a368f46ff1cf16daf5985c33199b437e track F link F13c (HPP-484)
++ ded0daf2a982508518a8da644d2d2af1e15aa8ac track F link F13c (HPP-484)
++ 9e9ed5a57239a1f8ee48c64dfb690f9d57d047ae track F link F13d (HPP-485)
++ 9b36deef1c9c914e49b145a4a724b6baa9be2908 track F link F13e (HPP-486)
++ 830be229d42559d35d309964f7ce83b7195059e3 track F link F13e (HPP-486)
++ 0ed989546a0fd25f61126133f3b602db3da31cab track F link F12f (HPP-480)
++ 2251af73eb393f1b48da74601614b2a36e435e4c track F link F12f (HPP-480)
++ a015bb9f4edca835d7f18511047ed041f0af1037 track F link F14a (HPP-487)
++ 9de665b415710f4fb07716ea64c837b49ecfe791 track F link F14b (HPP-488)
++ d446b967ea252f94e314dd8a8c011cf4d1e9e336 track F link F14b (HPP-488)
++ f7e9e7a5c2a1773166671639e7dfb30d6f702a4c track F link F14c (HPP-489)
++ 613674f29d2500bcaf2ae7433fdaefd4b5818763 track S link S10 (HPP-433):
++ 3591678cfa7cd11ca0d626a91ac8e7498a0d9cc6 track S link S10 (HPP-433):
++ c1c895223ff8f84214043be231c743c6f92eeb6e track S link S10 (HPP-433):
++ a18e2f0c07c56a7814db0e64cf85172fab10c355 track S link S10 (HPP-433):
++ d5fc8fc1603f4896273e263562034e33e2fbc822 track S link S10 (HPP-433):
++ f47f582eb2cceaeee52ab810586b1cc335263b57 track S link S10 (HPP-433):
++ 11b9e91334a05de9bcacfcebbe0be5d389bf602f track S link S10 (HPP-433):
++ 7037b1999a292df6c6eb2e38bc9a237b4a93e3eb track F link FS4d (HPP-473)
++ fcaf141b6f8d5c78b3d009bcab4c807c731921e0 tests: B11 fix - IMAGE_SAMP
++ 1c40a04ae53b8223fc59b77ecb80015e2be3b896 track F link F14c (HPP-489)
++ d1548be799974128ebd7e5f01c98aa19691603f6 track F link F12g (HPP-481)
++ bf19abaf9a2cf5740f3f6c46e2c9bc964493321b track S link S11 (HPP-434):
++ 90982b4a4b78ebf99ed827b642b3b7f1c6fedfe6 track F link F14d (HPP-490)
++ 7de178f9b28a84e1ed08b0e1ed3a42cb3e2acd3a track F link F12h (HPP-482)
++ 87230d7067674053d6a87421fc7085605014fd27 track F link F14d (HPP-490)
++ b64cc8be8c7ff4546554278392b93022119ad763 track F link F15a (HPP-491)
+- c3eb8fe83bf67c66d8b391cffe47f9639f04b39e track F link FS5a (HPP-509)
++ 975927c80692c44d9c18199ef385375378160a4a track F link FS5a (HPP-509)
++ c6083a1fc0854f16e7531eb2d87750804fd52582 track F link F15b (HPP-492)
++ f17721c6201c89a9e05235b105b600a38982ff17 track S link S11a (HPP-493)
++ 09f61da6297656fc5ba0689d06614f3e1238b80c track F link F15b (HPP-492)
++ 5929bb7d3d2504cdebcd7778f13ab6fea8139934 track F link F14e (HPP-505)
++ 8d153d940a4eb356a8c06d5b08021e042eae823f track F link F15c (HPP-514)
++ 0388cc61c78bd48b9635c2ab2270b1750dbe2f89 track S link S11a (HPP-493)
++ e67df75d76c5d0169db82fa64c43f890c7fc7331 track F link F14e question 
++ 285d78c8f0c615439196ff3fc8e2691f939aeb44 track S link S11a (HPP-493)
++ 04300c857a73dd44a526c1a9b70217c33a267765 track F link F15c (HPP-514)
+- c1732d1a7f0e7cd2836ff6c767648f71becb7cfb track S link S12a (HPP-494)
++ 1ea5e7a10e0891516e1e73db376fe7ee1bc88b03 track F link FS5b (HPP-510)
++ 5d37ef0930eed241e098d68a3bb6739b39f5a7ca track F link FS5b (HPP-510)
++ 2b1b8787f3c4b8f9015242ceee0b8d0425e1cf66 track S link S12a (HPP-494)
++ c734466dd07cff1e004b6a83f5802f5cce831846 track F link FS5c (HPP-511)
++ 2280a6b4b1df6b1c12da51c5db6703dd42b75d48 track S link S14a (HPP-502)
++ 887825c7b7204610d09b65e462b156e5521ed4f7 track S link S14a (HPP-502)
++ 9587f8dc46604f98b5a792c19da26ffef633fb1d track F link F16a (HPP-518)
++ 4cba9eed2b62c8d425e6d8dfba29db98d62e7cdc track S link S12b (HPP-495)
++ b0c8566d885e5fc8982b062fb03b6b1915fc4c68 track S link S14b (HPP-503)
++ 2eec748a4067c881df6e69265e9a419bbfce5fc4 track S link S12b (HPP-495)
++ 2443ddb0eceade6237f9a2991f992219465382a5 track F link FS5c (HPP-511)
++ 6302ea305b8d083d2500fe0e75653770cc6e5b52 track S link S14b (HPP-503)
++ 74a8700554eba6c0180fdbfbf5193984980f9e8a track F link F16b (HPP-519)
++ 9f9573ad4fa27c3af3a6af49afc49771b2d14803 track F link F16b (HPP-519)
++ 4aeb7ff6cf2b09b99ed6a53d070131c7c66ef6e7 track S link S14c (HPP-504)
++ 93a9b16dd003d70e239850f792b0cdf1d8e074ea track F link FS5d (HPP-512)
++ 014aeeda62341a6347b79878806b5f82265d7abf track F link F14e (HPP-505)
++ aaaac74416ec8d079d7c78cbe45fbd18e7733276 track F link FS5d (HPP-512)
++ c53ce656943b41b92dc99c8d2331720a04d961d7 track F link FS5e (HPP-513)
++ 07f5ffa3d88cfff5e1f5e55782132818f3b713e3 track F link F16c (HPP-520)
++ 2cb2684de8fab7d72e62e76bddc3c4ceaf7e36a7 track S link S13a (HPP-498)
++ 356b103f13ddc5f972481e569ecc8529ea275b8d track F link F16c (HPP-520)
++ eccfd2e6f2427f00f4fa1733bb8402a902da47d3 track S link S13a (HPP-498)
++ 1ccc1545a7743297232f22b251ad6125275ebad9 track F link FS5e (HPP-513)
++ 65bcebcc453870e56fdb8b6ea5bb9d9fbac78b76 track S link S14d (HPP-527)
++ 833986f76626efcbea360a389e139426c212cdfe track F link FS5e (HPP-513)
++ ddabbd982825356a12f4a8e968fd7dbf75006842 track S link S12c (HPP-496)
++ fb45aea550028abc329bb1953864fd824f0d79f3 track S link S14d (HPP-527)
++ c4024ab1f69fe54841a5712e1474ae9520afae72 track F link F14e (HPP-505)
++ ed1285419a570f9643c57ab529e9e52e33536942 track S link S12c (HPP-496)
++ 2f3e92d81725d047d7601b9e6010ee832c0f051c track F link F17a (HPP-525)
++ 2cadc203455408633076458f562aef6303d72da2 track S link S13a2 (HPP-498
++ 66da0c76348f352b283de1a015405710e41e5309 track F link F17b (HPP-526)
++ ab67b2c45583b7ce54db1e25f2e4823ac031f092 track S link S13a2 (HPP-498
++ b00170f20006fa5b44cb5a8955e6f91a391ff90a track S link S12c (HPP-496)
++ c4d4a7e936c02e3d13201d7a104c60d49c3ce7df track S link S13r (HPP-499)
++ b748241e67f43046d83ad3bf5af3e28db323194b track S link S12c (HPP-496)
++ 1cdfb74985bc79ab76f11819bd19bc366845293f track S link S13r (HPP-499)
++ 954401084cf27f59d316b10575069221cf1b8186 track S link S12d (HPP-497)
++ 1092c6141cd7e8fe6696c13a024ba9b5d137eebe track S link S12d (HPP-497)
++ 082d161214c525cc6b3a614d915733707f8eb460 track F link F14e (HPP-505)
++ f18022a5feb41fe16c69c3a52075a9b67a71dc1d track F link F14e (HPP-505)
++ ff953d4fb932ce8e78e07ea8132eff774cda4e9b track S link S14j (HPP-533)
++ 236cf189cd9aa89ed27ba32a284f7474301463f2 track S link S14j (HPP-533)
+- a86a5ad0d1a0828e60d658c427c7a22ff0a0de8e track F link F15c (HPP-514)
++ 98f118164463dcc890bffc309420ed8903a4fd74 track F link F18a (HPP-535)
++ 97f3bc4a7c984b735a301f5577ef2c83d4f6342a track F link F15c (HPP-514)
++ 3285cd99848400bba08500c532bf34b3b7b3ca61 track S link S14k (HPP-534)
++ de8815614a59d577c0aba210039a36911118a4a9 track F link F15c (HPP-514)
++ 20bda112e08d079282dc501ad84ccdd00a88307a track F link F18b (HPP-536)
++ 848ebcd411f920ef4b71ad9468854e16a81fc270 track S link S14k (HPP-534)
++ e975327c3c7cb79d17022ed5bbd5639febfa7327 track F link F14f (HPP-506)
++ c6103531fc6e247d7ba1af1555c7bd6edd050f10 track S link S14e (HPP-528)
++ 3d82993b34dd71207732bf87a740658e753344b4 track S link S13a3 (HPP-537
++ 19f7b75363d1699e406e2fa61fdb47153a4dac4b track F link F14f (HPP-506)
++ 10a4800b36fba6e7df95fcdf74aeeb3041b57fe5 track F link F18c (HPP-539)
++ 5dc643ddcf48cd439053e563368c5d3760ae560e track F link F15d (HPP-515)
++ 7698f6da9edbcc13a9516367c24a4d512f58c771 track S link S14e (HPP-528)
++ 107fc085076ef22f1501f7add59c8789d134cce1 track F link F15d (HPP-515)
++ c4c182dc44798fab4892ee6f1382ce94ff99e485 track S link S13a3 (HPP-537
++ 6c340cab89f98a68db1bbf21194838e73bf438e3 track S link S13a3 (HPP-537
++ be3201b058b0eed9326bd5ac81787be3a99cc354 track S link S13a3 (HPP-537
++ 5b5ef73903ae16dae1b63840729274324e9f09cb track F link F18c (HPP-539)
++ e4f2c54c8a13cb824f58f4467525a88b696fd3f7 track F link F18c (HPP-539)
++ af66599539871ee1f32352db13bb4b44dbc2b595 track F link F18c (HPP-539)
++ 36c885cda09eb5daf419499a475558ee3bdc8de8 track F link F18c (HPP-539)
++ cc396ca5fa3a53a4628eff95cc06d29ed42bd97b track F link F14g (HPP-507)
++ 0b065a70a27ce278d56b7277a40568d62a465a4d track F link F19a (HPP-543)
++ 1dcae741a03ce53c4f75b8865f2d4e4ef8c5eb4c track F link F15e (HPP-516)
++ f81bab8b1ad4ce0b0cc82f4dcaa7fc55f5a8be45 track F link F18d (HPP-540)
++ 457655e2b071e1a7a5e2784ed9e4f946eb5f0b77 track F link F19b (HPP-544)
++ ffae6160d929d5d2f1fa2e164872a69c3340b618 track S link S13r2 (HPP-538
++ c40c3f2b9762ac09f97a141d0861e8ae90dd964b track S link S13r2 (HPP-538
++ f55f7e03f42b99ec834121d91e1ca41d9606e00f track F link F18d (HPP-540)
++ 08008b9d26b0de63bfb6294fe778d4dce22c9029 track F link F14g (HPP-507)
++ d5d0076a35063ebd6a1034f4b50bfc85b0d12366 track F link F15e (HPP-516)
++ f98e842ca322198e16d0d8faa38c736116ccc385 track F link F14e2 (HPP-545
++ 9c726d74fc688c2aed4c0a1337c471ce42bb372a track F link F19c (HPP-547)
++ 0c1aa479e7c04a13114ac7dd5f741faf51ce6a2d track F link F15f (HPP-517)
++ 574bf7ff7135220f64c288f2e360fe5a7018582a track F link F14e2 (HPP-545
++ 1bc4302823a32427a2107e46328040b10429aa84 track F link F15f (HPP-517)
++ 45080d53685860870d084a2f6a1562b9504f612a track F link F19c (HPP-547)
++ 0d69abc5a6126b7c96354f5e7bc7956823a32c7d track F link F14e2 (HPP-545
+- 17eb924e3ff5e641a23df0f5d796ec522e8fd3ea track F link FS6a (HPP-555)
+- 381aa80a6876241309da0005352116135aba22a9 track F link F16d (HPP-521)
++ 1a666f633e3a57272cc8ccd225a5901bc1983bdd track F link F19c (HPP-547)
++ 0a9adb84f25bee72861d4272d5a43d48ca9e51ea track F link F20a (HPP-551)
++ 236b65043e6aa6bc699192338409727b83981e48 track F link F16d (HPP-521)
++ bd1f62e11357a5c988d8afe9bc51ea5608bda661 track F link F18e (HPP-541)
++ 630a8cf1b6a883467a0318a1a96e4b6d99df2949 track S link S13a4 (HPP-553
++ 00d15618e34b552db60bb47c1dd0a57e96360cee ROADMAP p.458: track F link
++ 6b090b17ab79c42a03557309603ccc73e12ca98b track F link F19d (HPP-548)
++ 1da29f1b89161f5c5a5536609066b86bfac03157 track F link FS6a (HPP-555)
++ bfeed4a16b59624af8e9bfc7aca52d9668d8a319 track S link S13a4 (HPP-553
++ db8dacef84b5c27442f722610527a7ca498900df ROADMAP p.460 (lead, HPP-54
++ 20d97cd85b60d4c76a5587a7295f6c31c115a80d track F link F20a (HPP-551)
++ d9f2af04dc0bcd3dfc6b04311e0600e7f33f2bd5 track S link S13r3 (HPP-554
++ b3dc6c3ad4d50f54bc39aee2f848829e04b8c1ca track F link F18e (HPP-541)
++ 5b7eb2813e0d347b7326822e6685a02740127295 track F link FS6a (HPP-555)
++ dafd2917e3133aae336a93824a01d86241f1b9fe ROADMAP p.462 (lead, HPP-55
++ 16e0556f4058dca0c3f1c09279238a96f6122f63 ROADMAP p.463 (lead, HPP-54
++ 8cfd8bf9d9e0d0a93d9c349187d07fd65512f37f ROADMAP p.464 (lead, HPP-55
++ 0110fd20adfe4b8466dbc4f811deb0ff1225e82c ROADMAP p.465 (lead, HPP-55
++ 3cc79cb2d416e2da63f5cd520b511325205f73ba ROADMAP p.465 (lead, HPP-55
++ be255cde17ce5dc09bd9e75759e943ba8fcb2cd4 ROADMAP p.467 (lead, HPP-54
++ c7c3ba3d279a202075608aa9fda75023a18e268a track F link F14f2 (HPP-546
++ a1926437362ca8b3735a7b1671fae3d284cdf4f1 track F link F16e (HPP-522)
++ 532851c283ddfafd1c0c827a7fe189a4637c1d9d ROADMAP p.468 (lead, HPP-54
++ e7dbec8352facf128dcbe42424b892abe7dd56b1 track F link F19e (HPP-549)
++ 5b2feb132fd66264367b678780de4357def6528a ROADMAP p.469 (lead, HPP-54
++ bdffa3d6fc5e0eef5d94732310d6d50e19575241 ROADMAP p.470 (lead, HPP-52
++ a6a250cee2cfa3ecaa5c694d4986d149b5e577de ROADMAP p.471 (lead, HPP-50
++ 2977cfb46651ffa394ec1f477aa248779cb48592 ROADMAP p.472 (lead, HPP-50
++ b1b304de4eadde51e5d2617f85e526f922228b10 ROADMAP p.473 (lead, HPP-55
++ f991424b31097fbcff90ab273b42dc414e23db83 track F link F20c (HPP-561)
++ ef4224f465a5a355e0ebe36ed11eba119f3f7b08 track F link F21a (HPP-563)
++ 58b6c5adeecc90c80c097f8880cc336d971ccbed track F link F19e (HPP-549)
++ 764617c7cb879ba13a34cf51ea1e6f4c5f4bb5ba ROADMAP p.474 (lead, HPP-56
++ 62920bc6372744668fffd54d03d547ffcc4fea3b track F register s.56 (lead
++ 29f1aa9d0708d35d45026e871ffee6daf6023455 ROADMAP p.475 (lead, HPP-56
++ 72ac19fb305e310574f64c6debe3c78fd5572925 track F link F20c (HPP-561)
++ c63d207fc09bce8c2dd51ee1563df35ebef386ee track F link FS6b (HPP-556)
++ e898ddf1fdc4b623bd89e0e7d23ae1d5414c7bea ROADMAP p.476 (lead, HPP-55
++ 919c1a19f978263cc6854879842fb8a41b9cc116 track F link F19c2 (HPP-559
++ f0fa1590bbb96c982b5d8820efe527b16cad528e track F link FS6c (HPP-557)
+- 56b048178750896567827576f62b6bc575597142 track F link F16d2 (HPP-569
+--- trees
+HEAD 9a014a3a9931fe400161cf9dcf750ab3696657ad 4950557a 9a014a3a9931fe400161cf9dcf750ab3696657ad
+--- sig set vs base 3904522d
+0
+0
+--- files vs base
+ .../guest_gpu/command_processor/pm4Handlers.cpp    |   7 +
+ src/graphics/guest_gpu/graphicsRun.cpp             |  12 +
+ .../host_gpu/renderer/cache/bufferCache.cpp        |   9 +-
+ .../host_gpu/renderer/cache/textureCache.cpp       |  91 +-
+ .../host_gpu/renderer/cache/textureCache.h         |   4 +-
+ .../host_gpu/renderer/colorRenderTarget.cpp        |   8 +
+ src/graphics/host_gpu/renderer/debug.cpp           |  10 +
+ .../host_gpu/renderer/depthRenderTarget.cpp        |   7 +
+ src/graphics/host_gpu/renderer/diagF5.cpp          | 449 ++++++++++
+ src/graphics/host_gpu/renderer/diagF5.h            | 198 +++++
+ .../host_gpu/renderer/pipeline/descriptors.cpp     |  39 +
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   |   9 +
+ src/graphics/host_gpu/renderer/render.h            |  10 +-
+ src/graphics/host_gpu/renderer/renderCompute.cpp   |  39 +-
+ src/graphics/host_gpu/renderer/renderDraw.cpp      |  35 +
+ src/graphics/presentation/videoOut.cpp             |   6 +
+ src/graphics/presentation/window/vulkanWindow.cpp  |   4 +
+ tests/ShaderRecompilerComputeTests.cpp             | 985 +++++++++++++++++++++
+ 18 files changed, 1909 insertions(+), 13 deletions(-)
+--- CR in src
+with CR 0

@@ -1,0 +1,4 @@
+.text differing bytes 123714 windows 61677 without a rel32 window 0
+distinct targets A 12342 single-valued violations 0 injective violations 0 monotone violations 0
+distinct shifts 18 ['-0x140', '-0x130', '-0x120', '-0x110', '-0x100', '-0xf0', '-0xe0', '-0xd0', '-0xc0', '-0xa0', '-0x90', '-0x80', '-0x70', '-0x50', '-0x40', '-0x30']
+VERDICT LAYOUT-SHIFT-ONLY

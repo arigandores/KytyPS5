@@ -1,0 +1,4 @@
+.text differing bytes 0 windows 0 without a rel32 window 0
+distinct targets A 0 single-valued violations 0 injective violations 0 monotone violations 0
+distinct shifts 0 []
+VERDICT LAYOUT-SHIFT-ONLY

@@ -1,0 +1,8 @@
+mutant R1 build=0 site_rc=1 tree_before=c7ae615923f362e2 tree_after=c7ae615923f362e2 REVERTED 2026-10-04T16:06:53Z
+=== arm unset rc=0 OK
+DiagF5F6 test site: ALL OK
+=== arm zero rc=0 OK
+DiagF5F6 test site: ALL OK
+=== arm one rc=3221226505 FAIL
+ShaderRecompilerComputeTests: DiagF6 failed at tick inside a window: a line printed by the flip tick inside a window is not consistent: DiagF6: frame=1020 draws=8 draws_idx=3 draws_auto=2 draws_ind=1 draws_mesh=2 ps_draws=4 s_bound=7 s_addr0_fmt=14 s_addr0_nofmt=7 s_mask0_addr=7 s_empty=21 h_bound=7 bound_missing=1 bound_extra=1 w_total=28 w_bound=4 w_mask0=8 w_addr0_fmt=8 w_addr0_nofmt=4 w_ge8=4
+NOT OK

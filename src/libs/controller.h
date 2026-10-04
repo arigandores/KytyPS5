@@ -80,6 +80,8 @@ void SetMotionSensor(int id, MotionSensor sensor, const float* data, uint64_t ti
 // Interleaved haptic PCM of an AudioOut vibration port (int16 or float).
 void PushHapticsPcm(const void* pcm, uint32_t frames, uint32_t channels, bool is_float,
                     uint32_t freq);
+// Track F, F8 stand (ROADMAP s122 item 441(g)): KYTY_TEST_AUDIOLOSS is set and valid (read once in Initialize).
+bool TestAudioLossOn();
 
 int KYTY_SYSV_ABI PadInit();
 int KYTY_SYSV_ABI PadOpen(int user_id, int type, int index, const void* param);

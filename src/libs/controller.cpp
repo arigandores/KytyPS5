@@ -8,6 +8,7 @@
 #include "common/stringUtils.h"
 #include "common/threads.h"
 #include "kernel/pthread.h"
+#include "libs/audio_internal.h"
 #include "libs/errno.h"
 #include "libs/libs.h"
 #include "libs/padData.h"
@@ -15,6 +16,7 @@
 #include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <cinttypes>
 #include <cstdlib>
 #include <cstring>
 #include <cmath>
@@ -106,6 +108,14 @@ private:
 	static uint64_t NowUs();
 	bool            OpenLocked();
 	void            CloseLocked();
+	uint64_t        TestAudioLossRetryUsLocked();
+
+	// Stand KYTY_TEST_AUDIOLOSS (item 441(g)), guarded by m_mutex.
+	enum class TestState { Idle, Armed, Firing, DonePending, Done };
+	static constexpr uint32_t TEST_ATTEMPTS = 300;
+	TestState                 m_test_state    = TestState::Idle;
+	uint64_t                  m_test_armed_us = 0;
+	uint32_t                  m_test_attempts = 0;
 
 	std::mutex           m_mutex;
 	SDL_AudioDeviceID    m_device   = 0;
@@ -118,6 +128,40 @@ private:
 
 static HapticsOutput* g_haptics = nullptr;
 
+// Track F, F8 stand (ROADMAP s122 item 441(g)): KYTY_TEST_AUDIOLOSS=<s>[:retry] - stand only, off when unset. Armed on
+// the first push to the vibration port with no pad device; <s> seconds of process time later the retry interval of
+// the pad device open (RETRY_US) is 0 for exactly 300 attempts (every push is an attempt), then RETRY_US again: the
+// same site and thread as the natural path, faster. Written once by HapticsOutput::Start (Controller::Initialize,
+// before the guest threads exist), read only afterwards.
+struct TestAudioLossConfig {
+	bool     on       = false;
+	uint64_t delay_us = 0;
+};
+
+static TestAudioLossConfig g_test_audioloss;
+
+static void ReadTestAudioLoss() {
+	const char* value = std::getenv("KYTY_TEST_AUDIOLOSS");
+	if (value == nullptr || value[0] == '\0') {
+		return;
+	}
+	char*        end     = nullptr;
+	const double delay_s = std::strtod(value, &end);
+	const bool   ok      = value[0] >= '0' && value[0] <= '9' && end != value && std::isfinite(delay_s) &&
+	                     delay_s <= 86400.0 && (end[0] == '\0' || std::strcmp(end, ":retry") == 0);
+	if (!ok) {
+		LOGF("TestAudioLoss: config invalid value=\"%s\" (expected <s>[:retry]), stand off\n", value);
+		return;
+	}
+	g_test_audioloss.on       = true;
+	g_test_audioloss.delay_us = static_cast<uint64_t>(delay_s * 1000000.0);
+	LOGF("TestAudioLoss: config on delay_s=%g mode=retry\n", delay_s);
+}
+
+bool TestAudioLossOn() {
+	return g_test_audioloss.on;
+}
+
 uint64_t HapticsOutput::NowUs() {
 	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
 	                                 std::chrono::steady_clock::now().time_since_epoch())
@@ -125,6 +169,7 @@ uint64_t HapticsOutput::NowUs() {
 }
 
 void HapticsOutput::Start() {
+	ReadTestAudioLoss();
 	if (const char* value = std::getenv("KYTY_HAPTICS"); value != nullptr && value[0] == '0') {
 		m_enabled = false;
 		LOGF("Haptics: disabled by KYTY_HAPTICS=0\n");
@@ -142,7 +187,7 @@ void HapticsOutput::Stop() {
 }
 
 bool HapticsOutput::OpenLocked() {
-	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
+	if (Audio::AudioInternal::SdlAudioSubsystemInit() < 0) {
 		return false;
 	}
 	SDL_AudioSpec want {};
@@ -178,6 +223,40 @@ void HapticsOutput::CloseLocked() {
 	}
 }
 
+// Stand step of one push with no pad device; the caller holds m_mutex. Returns the retry interval for this push. In
+// Firing every call is an attempt: with a zero interval the check in Push never returns before OpenLocked.
+uint64_t HapticsOutput::TestAudioLossRetryUsLocked() {
+	const uint64_t t = LibKernel::KernelGetProcessTime();
+	switch (m_test_state) {
+		case TestState::Idle:
+			m_test_state    = TestState::Armed;
+			m_test_armed_us = t;
+			LOGF("TestAudioLoss: armed t_us=%" PRIu64 "\n", t);
+			return RETRY_US;
+		case TestState::Armed:
+			if (t - m_test_armed_us < g_test_audioloss.delay_us) {
+				return RETRY_US;
+			}
+			m_test_state = TestState::Firing;
+			LOGF("TestAudioLoss: fire t_us=%" PRIu64 "\n", t);
+			Audio::AudioInternal::AudioStatForce();
+			[[fallthrough]];
+		case TestState::Firing:
+			if (++m_test_attempts == TEST_ATTEMPTS) {
+				m_test_state = TestState::DonePending;
+			}
+			return 0;
+		case TestState::DonePending:
+			// Logged on the push after the 300th attempt, so the line follows its SDL call.
+			m_test_state = TestState::Done;
+			LOGF("TestAudioLoss: done attempts=%u t_us=%" PRIu64 "\n", m_test_attempts, t);
+			Audio::AudioInternal::AudioStatForce();
+			return RETRY_US;
+		case TestState::Done: break;
+	}
+	return RETRY_US;
+}
+
 void HapticsOutput::Push(const void* pcm, uint32_t frames, uint32_t channels, bool is_float,
                          uint32_t freq) {
 	if (pcm == nullptr || frames == 0 || channels == 0 || freq != FREQ) {
@@ -190,8 +269,9 @@ void HapticsOutput::Push(const void* pcm, uint32_t frames, uint32_t channels, bo
 	}
 	if (m_device == 0) {
 		// Only a USB pad has this device; retry rarely, one may be plugged in later.
-		const auto now = NowUs();
-		if (m_retry_us != 0 && now - m_retry_us < RETRY_US) {
+		const auto     now      = NowUs();
+		const uint64_t retry_us = g_test_audioloss.on ? TestAudioLossRetryUsLocked() : RETRY_US;
+		if (m_retry_us != 0 && now - m_retry_us < retry_us) {
 			return;
 		}
 		m_retry_us = now;

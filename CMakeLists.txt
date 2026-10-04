@@ -537,6 +537,11 @@ add_kyty_full_emulator_test(b4_race_stand
 add_kyty_full_emulator_test(audio_propagation_tests
 	"${KYTY_TESTS_DIR}/AudioPropagationTests.cpp")
 
+# Track F, F8 SDL audio subsystem stand (F18c; ROADMAP s122 item 441(d)(1)): run by docs/track-f/f18c/run_stand_f18c.py,
+# not by ctest.
+add_kyty_full_emulator_test(f8_audio_stand
+	"${KYTY_TESTS_DIR}/F8AudioStand.cpp")
+
 add_executable(sync_on_address_tests EXCLUDE_FROM_ALL
 	"${KYTY_TESTS_DIR}/SyncOnAddressTests.cpp"
 	"${KYTY_SOURCE_DIR}/kernel/syncOnAddress.cpp"

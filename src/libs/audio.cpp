@@ -247,7 +247,7 @@ private:
 	static void            CloseSdlDevice(PortIn* port);
 	static const void*     PrepareOutputBuffer(const PortOut& port, const void* data,
 	                                           std::vector<uint8_t>* buffer);
-	static bool            QueueSdlAudio(PortOut* port, const void* data, bool blocking);
+	static bool            QueueSdlAudio(PortOut* port, int port_id, const void* data, bool blocking);
 };
 
 static Audio* g_audio = nullptr;
@@ -278,6 +278,103 @@ static void AudioUnregisterDevice(SDL_AudioDeviceID device) {
 }
 
 namespace AudioInternal {
+
+// Track F, F8 (ROADMAP s122 item 441(v)): SDL2 counts the users of a subsystem in a Uint8 (SDL.c:119); every
+// SDL_InitSubSystem(SDL_INIT_AUDIO) without a matching quit adds 1, the 256th wraps the count to 0 and the next init
+// runs SDL_AudioInit, which closes every open device (SDL_audio.c:966) while the ports keep their ids.
+static std::mutex            g_sdl_audio_mutex;
+static bool                  g_sdl_audio_acquired = false; // Guarded by g_sdl_audio_mutex.
+static std::atomic<uint64_t> g_sdl_audio_init_calls {0};
+static std::atomic<uint64_t> g_sdl_audio_acq_calls {0};
+static std::atomic<uint32_t> g_audio_stat_gen {0};
+
+static bool FixF8Enabled() {
+	static const bool enabled = [] {
+		const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_F8"));
+		if (on) {
+			LOGF("FixF8: mode=1\n");
+		}
+		return on;
+	}();
+	return enabled;
+}
+
+int SdlAudioAcquire() {
+	g_sdl_audio_acq_calls.fetch_add(1, std::memory_order_relaxed);
+	std::lock_guard<std::mutex> lock(g_sdl_audio_mutex);
+	if (g_sdl_audio_acquired) {
+		return 0;
+	}
+	g_sdl_audio_init_calls.fetch_add(1, std::memory_order_relaxed);
+	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
+		return -1;
+	}
+	g_sdl_audio_acquired = true;
+	return 0;
+}
+
+int SdlAudioSubsystemInit() {
+	if (FixF8Enabled()) {
+		return SdlAudioAcquire();
+	}
+	g_sdl_audio_init_calls.fetch_add(1, std::memory_order_relaxed);
+	return SDL_InitSubSystem(SDL_INIT_AUDIO);
+}
+
+void SdlAudioSubsystemQuit() {
+	if (FixF8Enabled()) {
+		return;
+	}
+	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+}
+
+uint64_t SdlAudioInitCalls() {
+	return g_sdl_audio_init_calls.load(std::memory_order_relaxed);
+}
+
+uint64_t SdlAudioAcquireCalls() {
+	return g_sdl_audio_acq_calls.load(std::memory_order_relaxed);
+}
+
+void AudioStatForce() {
+	g_audio_stat_gen.fetch_add(1, std::memory_order_relaxed);
+}
+
+// AudioStat (item 441(g)): with KYTY_AV_TRACE=1 or the stand KYTY_TEST_AUDIOLOSS on, one line per output port with a
+// device, at most once a second of process time and on the next push after AudioStatForce. Counters only grow.
+struct AudioStatPort {
+	std::atomic<uint64_t> pushes {0};
+	std::atomic<uint64_t> q_fail {0};
+	std::atomic<uint64_t> last_us {0};
+	std::atomic<uint32_t> gen {0};
+};
+
+static AudioStatPort g_audio_stat[OUT_PORTS_MAX];
+
+static void AudioStatPush(int port_id, SDL_AudioDeviceID dev, bool failed) {
+	if (port_id < 0 || port_id >= OUT_PORTS_MAX) {
+		return;
+	}
+	auto&          s      = g_audio_stat[port_id];
+	const uint64_t pushes = s.pushes.fetch_add(1, std::memory_order_relaxed) + 1;
+	const uint64_t q_fail = failed ? s.q_fail.fetch_add(1, std::memory_order_relaxed) + 1
+	                               : s.q_fail.load(std::memory_order_relaxed);
+	const uint64_t now    = LibKernel::KernelGetProcessTime();
+	const uint32_t gen    = g_audio_stat_gen.load(std::memory_order_relaxed);
+	uint64_t       last   = s.last_us.load(std::memory_order_relaxed);
+	if (s.gen.load(std::memory_order_relaxed) == gen && last != 0 && now < last + 1000000) {
+		return;
+	}
+	// One printer per interval: a concurrent push of the same port that lost the exchange stays silent.
+	if (!s.last_us.compare_exchange_strong(last, now != 0 ? now : 1, std::memory_order_relaxed)) {
+		return;
+	}
+	s.gen.store(gen, std::memory_order_relaxed);
+	LOGF("AudioStat: t_us=%" PRIu64 " port=%d dev=%u status=%d queued=%u pushes=%" PRIu64 " q_fail=%" PRIu64
+	     " init_calls=%" PRIu64 " acq=%" PRIu64 "\n",
+	     now, port_id, static_cast<uint32_t>(dev), static_cast<int>(SDL_GetAudioDeviceStatus(dev)),
+	     SDL_GetQueuedAudioSize(dev), pushes, q_fail, SdlAudioInitCalls(), SdlAudioAcquireCalls());
+}
 
 int AudioOutOpen(int type, uint32_t samples_num, uint32_t freq, Format format) {
 	if (g_audio == nullptr) {
@@ -432,7 +529,7 @@ static const char* ChooseOutputDevice() {
 bool Audio::OpenSdlDevice(PortOut* port) {
 	EXIT_IF(port == nullptr);
 
-	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
+	if (AudioInternal::SdlAudioSubsystemInit() < 0) {
 		LOGF("AudioOut: SDL audio init failed: %s\n", SDL_GetError());
 		return false;
 	}
@@ -549,7 +646,7 @@ const void* Audio::PrepareOutputBuffer(const PortOut& port, const void* data,
 	return buffer->data();
 }
 
-bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
+bool Audio::QueueSdlAudio(PortOut* port, int port_id, const void* data, bool blocking) {
 	EXIT_IF(port == nullptr);
 
 	if (port->audio_device == 0 || data == nullptr) {
@@ -610,6 +707,7 @@ bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
 	}
 
 	static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
+	static const bool audio_stat = av_trace || Controller::TestAudioLossOn();
 	const auto        av_queued_before = SDL_GetQueuedAudioSize(port->audio_device);
 	const auto        av_t0            = LibKernel::KernelGetProcessTime();
 	if (blocking) {
@@ -639,7 +737,13 @@ bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
 
 	if (SDL_QueueAudio(port->audio_device, queue_data, queue_size) < 0) {
 		LOGF("AudioOut: SDL_QueueAudio failed: %s\n", SDL_GetError());
+		if (audio_stat) {
+			AudioInternal::AudioStatPush(port_id, port->audio_device, true);
+		}
 		return false;
+	}
+	if (audio_stat) {
+		AudioInternal::AudioStatPush(port_id, port->audio_device, false);
 	}
 	if (av_trace) {
 		const auto now = LibKernel::KernelGetProcessTime();
@@ -815,7 +919,7 @@ uint32_t Audio::AudioOutOutputs(OutputParam* params, uint32_t num, bool blocking
 			                           static_cast<uint32_t>(port.channels_num),
 			                           FormatIsFloat(port.format), port.freq);
 		}
-		QueueSdlAudio(&port, params[i].data, blocking);
+		QueueSdlAudio(&port, params[i].handle.GetId(), params[i].data, blocking);
 	}
 
 	for (uint32_t i = 0; i < num; i++) {
@@ -830,7 +934,7 @@ void Audio::OpenSdlDevice(PortIn* port, Format format) {
 	if (name.empty()) {
 		return;
 	}
-	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
+	if (AudioInternal::SdlAudioSubsystemInit() < 0) {
 		LOGF("AudioIn: SDL init failed: %s\n", SDL_GetError());
 		return;
 	}
@@ -843,7 +947,7 @@ void Audio::OpenSdlDevice(PortIn* port, Format format) {
 	port->audio_device = SDL_OpenAudioDevice(name.c_str(), 1, &desired, nullptr, 0);
 	if (port->audio_device == 0) {
 		LOGF("AudioIn: cannot open '%s': %s; using silence\n", name.c_str(), SDL_GetError());
-		SDL_QuitSubSystem(SDL_INIT_AUDIO);
+		AudioInternal::SdlAudioSubsystemQuit();
 		return;
 	}
 	LOGF("AudioIn: opened '%s' (%u Hz, %u ch)\n", name.c_str(), port->freq, desired.channels);
@@ -852,7 +956,7 @@ void Audio::OpenSdlDevice(PortIn* port, Format format) {
 void Audio::CloseSdlDevice(PortIn* port) {
 	if (port->audio_device != 0) {
 		SDL_CloseAudioDevice(port->audio_device);
-		SDL_QuitSubSystem(SDL_INIT_AUDIO);
+		AudioInternal::SdlAudioSubsystemQuit();
 		port->audio_device = 0;
 	}
 }

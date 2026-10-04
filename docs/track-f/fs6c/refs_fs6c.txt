@@ -1,0 +1,11 @@
+suite refs_fs6c.py sha256 647a054c0176fce0521585b04d8eafeee87ebeeb450e7205febd91bdb27b80e9
+OK item 454 e898ddf1:docs/ROADMAP.md:22495 anchor OK +1 OK
+OK item 454 (g)(3) e898ddf1:docs/ROADMAP.md:22502 anchor OK +1 OK
+OK item 461 e898ddf1:docs/ROADMAP.md:22547 anchor OK +1 OK
+OK item 461 (g) e898ddf1:docs/ROADMAP.md:22551 anchor OK +1 OK
+OK item 463 (d) e898ddf1:docs/ROADMAP.md:22571 anchor OK +1 OK
+OK item 473 (b)(2) e898ddf1:docs/ROADMAP.md:22636 anchor OK +1 OK
+OK item 476 e898ddf1:docs/ROADMAP.md:22653 anchor OK +1 OK
+OK F15e seal section 3 d5d0076a:docs/track-f/f15e.md:43 anchor OK +1 OK
+refs 8 bad 0
+ALL OK

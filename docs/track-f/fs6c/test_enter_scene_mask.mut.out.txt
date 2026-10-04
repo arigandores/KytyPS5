@@ -1,0 +1,14 @@
+== mutant host
+suite test_enter_scene_mask.py sha256 2677ab90615820ba12143d
+FAIL m1_no_name_in_output 
+FAIL m2_rows_masked 
+FAIL m8_none_fields 
+FAIL m9_census_masked pre_run: host 321 processes, top by CP
+FAIL m12_gpu_apps_masked pre_run: GPU 3.0 % busy, 30.0 W, 90
+FAILED 5
+rc=1
+== mutant gpu
+suite test_enter_scene_mask.py sha256 2677ab90615820ba12143d
+FAIL m12_gpu_apps_masked pre_run: GPU 3.0 % busy, 30.0 W, 90
+FAILED 1
+rc=1

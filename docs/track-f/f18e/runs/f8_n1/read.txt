@@ -1,0 +1,40 @@
+F18E f8_n1 level underwater_aerial_garden log sha256 402b6f6ea3b1f2c5302a67342c88499e4e6f6a4432a7bfbba2e743e2f5c26c2b lines 2643920 stdout sha256 0fd47c462c0b81651bd5609f7f92b01e0acc223496556a47c93d5a5d3751954d
+  binary: json 35c4a75425bd54c5a59185c015ca47014b385ba926d10e7d849af8da3d181d29 installed 35c4a75425bd54c5a59185c015ca47014b385ba926d10e7d849af8da3d181d29 (expected 35c4a75425bd54c5a59185c015ca47014b385ba926d10e7d849af8da3d181d29); installed before adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 after adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 (expected adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421); revision texts ['79b14ef'] (expected 79b14ef)
+  seal sha256 6f228c538e12b39c1a918a674a9c3d81ee410f3607e8db8b2e15e1311b58bbc3; json prereg sha256 6f228c538e12b39c1a918a674a9c3d81ee410f3607e8db8b2e15e1311b58bbc3
+  env: {'KYTY_AV_TRACE': '1', 'KYTY_FIX_F8': '1'}
+  vibration line 17729, A 3, T_vib 8.213 s; Haptics opened 0, disabled 0; FixF8 lines [(11488, 1)]
+  stand: armed None fire None done None
+  F8 lines 0, first at line None, its stamp None s, t_us bracket [None; None]; other SDL_QueueAudio failed lines 0; F (SDL audio init failed lines) 0
+  AudioStat rows 856 (malformed 0), status 2 rows (dev != 0) 0 (reference, item 448 (v)); last row {'ln': 2643003, 't': 430035802, 'port': 2, 'dev': 4, 'status': 1, 'queued': 23040, 'pushes': 40227, 'q_fail': 0, 'init_calls': 1, 'acq': 285}
+  entry line 225159; first scene frame n 192; hold (sum dt after it) 844.0 s; attempt outcome ok hold_exit None hold_s 840.0 close_rc 0 close_killed False
+  window none, Recovering 0, GamePatch 0, skipped draw 0, [Vulkan][E] 0, Event: quit line 2643918 (reference)
+  warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T12:53:35Z; entries of _ShaderCache/PPSA21564: 1347; manifest: manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a
+  ADMIT binary: json binary_sha256 = 35c4a754 (F18c) and installed_sha.txt = 35c4a754: YES
+  ADMIT version string ...-1878-g79b14ef2 in the binary file (reference): YES
+  ADMIT pre-registration: json prereg sha256 = sha256 of the seal file: YES
+  ADMIT env: KYTY_FIX_F8=1, KYTY_TEST_AUDIOLOSS absent, KYTY_AV_TRACE=1, no KYTY_HAPTICS (N5), no other KYTY_FIX_*, no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS: YES
+  ADMIT line AudioOut: vibration port present: YES
+  ADMIT lines Haptics: pad audio device ... opened = 0: YES
+  ADMIT lines Haptics: disabled by KYTY_HAPTICS=0 = 0 (N5): YES
+  ADMIT A >= 1 and T_vib read (executor: A = 0 is F23, interference of the host): YES
+  ADMIT FixF8: mode=1 lines = 1: YES
+  ADMIT stand lines: TestAudioLoss: = 0: YES
+  ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+  FORM installed adb0c82f before the tag (inside the lock): YES
+  FORM installed adb0c82f after the return: YES
+  FORM manifest of the caches, saves and GLCache before = after the return: YES
+  MEMBER F8 lines in the whole log = 0 (0): YES
+  MEMBER init_calls <= 1 on every AudioStat row (rows > 1: []); on failure F = 0: YES
+  MEMBER acq >= 250 in the last AudioStat row (285): YES
+  MEMBER status in {1, 2} on every AudioStat row with dev != 0 (rows 856, status 2: 0, status 0 lines []): YES
+  HARM entered (entry line of underwater_aerial_garden): YES
+  HARM lived through the hold (outcome ok, hold_exit null, hold_s >= 840): YES
+  HARM 0 death markers (log and stdout) []: YES
+  HARM 0 frames >= 1 s after the first scene frame (0, max dt_us 182589): YES
+  HARM video index records >= 3000 (25725): YES
+  HARM 0 one-frame glitches (0): YES
+  HARM sheet for the lead made: YES
+  IDENT q_fail <= pushes on every row (violations at lines []): YES
+  IDENT acq = 0 on every row at =0 - not applicable at =1: NOT_READ
+  IDENT pushes, q_fail, init_calls, acq do not decrease per port (violations at lines []): YES
+  READING f8_n1 MEMBERS_PASS

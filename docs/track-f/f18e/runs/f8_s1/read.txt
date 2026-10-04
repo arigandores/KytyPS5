@@ -1,0 +1,42 @@
+F18E f8_s1 level underwater_aerial_garden log sha256 3bd8a0f0b6ba16f9a4c2265ff4ea4be6a1ba1e01b3e0401a13dfa624dc70b862 lines 1343485 stdout sha256 bd74e42ea3ae21e001840726877b4f1039fdb890c0b6c08f6c33c1283ddc35ae
+  binary: json 35c4a75425bd54c5a59185c015ca47014b385ba926d10e7d849af8da3d181d29 installed 35c4a75425bd54c5a59185c015ca47014b385ba926d10e7d849af8da3d181d29 (expected 35c4a75425bd54c5a59185c015ca47014b385ba926d10e7d849af8da3d181d29); installed before adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 after adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 (expected adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421); revision texts ['79b14ef'] (expected 79b14ef)
+  seal sha256 6f228c538e12b39c1a918a674a9c3d81ee410f3607e8db8b2e15e1311b58bbc3; json prereg sha256 6f228c538e12b39c1a918a674a9c3d81ee410f3607e8db8b2e15e1311b58bbc3
+  env: {'KYTY_AV_TRACE': '1', 'KYTY_FIX_F8': '1', 'KYTY_TEST_AUDIOLOSS': '60:retry'}
+  vibration line 16881, A 3, T_vib 8.065 s; Haptics opened 0, disabled 0; FixF8 lines [(11489, 1)]
+  stand: armed (17011, 954979) fire (621166, 60957931) done (642549, 300, 64155097)
+  F8 lines 0, first at line None, its stamp None s, t_us bracket [None; None]; other SDL_QueueAudio failed lines 0; F (SDL audio init failed lines) 0
+  AudioStat rows 340 (malformed 0), status 2 rows (dev != 0) 0 (reference, item 448 (v)); last row {'ln': 1339932, 't': 169769194, 'port': 2, 'dev': 4, 'status': 1, 'queued': 14080, 'pushes': 15827, 'q_fail': 0, 'init_calls': 1, 'acq': 413}
+  entry line 227097; first scene frame n 226; hold (sum dt after it) 334.5 s; attempt outcome ok hold_exit None hold_s 330.2 close_rc 0 close_killed False
+  window none, Recovering 0, GamePatch 0, skipped draw 0, [Vulkan][E] 0, Event: quit line 1343485 (reference)
+  warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T12:28:14Z; entries of _ShaderCache/PPSA21564: 1347; manifest: manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a
+  ADMIT binary: json binary_sha256 = 35c4a754 (F18c) and installed_sha.txt = 35c4a754: YES
+  ADMIT version string ...-1878-g79b14ef2 in the binary file (reference): YES
+  ADMIT pre-registration: json prereg sha256 = sha256 of the seal file: YES
+  ADMIT env: KYTY_FIX_F8=1, KYTY_TEST_AUDIOLOSS 60:retry, KYTY_AV_TRACE=1, no KYTY_HAPTICS (N5), no other KYTY_FIX_*, no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS: YES
+  ADMIT line AudioOut: vibration port present: YES
+  ADMIT lines Haptics: pad audio device ... opened = 0: YES
+  ADMIT lines Haptics: disabled by KYTY_HAPTICS=0 = 0 (N5): YES
+  ADMIT A >= 1 and T_vib read (executor: A = 0 is F23, interference of the host): YES
+  ADMIT FixF8: mode=1 lines = 1: YES
+  ADMIT stand lines: config on delay_s=60 mode=retry = 1, config invalid = 0: YES
+  ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+  FORM installed adb0c82f before the tag (inside the lock): YES
+  FORM installed adb0c82f after the return: YES
+  FORM manifest of the caches, saves and GLCache before = after the return: YES
+  MEMBER fire and done attempts=300 present: YES
+  MEMBER F8 lines in the whole log = 0 (0): YES
+  MEMBER init_calls <= 1 in the last AudioStat row (1); on failure F = 0: YES
+  MEMBER acq >= 300 in the last AudioStat row (413): YES
+  MEMBER status in {1, 2} on every AudioStat row with dev != 0 (rows 340, status 2: 0, status 0 lines []): YES
+  MEMBER pushes per second W2 / W1 in [0.95; 1.05] for every port [port 0 W1 54 rows 93.730/s W2 101 rows 93.739/s ratio 1.0001; port 2 W1 55 rows 93.730/s W2 101 rows 93.739/s ratio 1.0001]; sum over ports 1.0001 (executor variant): YES
+  HARM entered (entry line of underwater_aerial_garden): YES
+  HARM lived through the hold (outcome ok, hold_exit null, hold_s >= 330): YES
+  HARM 0 death markers (log and stdout) []: YES
+  HARM 0 frames >= 1 s after the first scene frame (0, max dt_us 218245): YES
+  HARM video index records >= 3000 (10152): YES
+  HARM 0 one-frame glitches (0): YES
+  HARM sheet for the lead made: YES
+  IDENT q_fail <= pushes on every row (violations at lines []): YES
+  IDENT acq = 0 on every row at =0 - not applicable at =1: NOT_READ
+  IDENT pushes, q_fail, init_calls, acq do not decrease per port (violations at lines []): YES
+  READING f8_s1 MEMBERS_PASS

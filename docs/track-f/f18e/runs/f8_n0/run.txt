@@ -1,0 +1,17 @@
+prereg: f18e_seal.md  24692 bytes  sha256 6f228c538e12b39c  mtime 2026-10-04T14:18:50  mtime-ctime +0.037 s
+pre_run: host 425 processes, top by CPU: <app> 40674s, <app> 24105s, <app> 12354s, <app> 10922s, <app> 5074s, <app> 3532s
+pre_run: GPU 1.0 % busy, 19.0 W, 1355 MiB used, SM 1515.0 MHz, 24 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f18e\cpuclk.py is not there
+--- attempt 1: launching
+9.7 s  LevelDocument Loaded: underwater_aerial_garden
+11.4 s  Level has started: underwater_aerial_garden
+15.4 s  scene stable at frame 289 (90 frames with draws >= 300)
+holding the run for 840 s
+hold end: ft_total 25062, ft_tail 129 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 4.0, 'close_wait_s': 40}
+hold_gpu: median 42.0 % busy over 1656 rows (2026/10/04 14:36:33.140 .. 2026/10/04 14:50:33.292), a row, not a guard
+copied C:\kyty\f287\f18e\log_f8_n0.txt
+copied C:\kyty\f287\f18e\stdout_f8_n0.txt
+
+attempt 1  ok               document=9.7 s started=11.4 s stable=15.4 s 
+VERDICT: underwater_aerial_garden in 15.4 s - PASS (acceptance <= 90 s)

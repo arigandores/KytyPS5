@@ -1,0 +1,12 @@
+exe C:/kyty/f287/f16d/fin/shader_cfg_tests.exe sha256 0747e5f03c4e3b0a8333c9f5186a8faaef6735184f8b2478cb04a971e0878b21
+rc=0 failing-lines=6
+ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod
+ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod
+[test] TestNewShaderRecompilerCfgFailedStructurizationPreservesGraph
+pretranslation test: ready=18 failed=1 hits=17
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfffffffe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x0)
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 3: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem3 kind=1 off=0xe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x2)
+[test] TestPixelProgramCacheBindingIdentity
+[test] TestGraphicsPushConstantPlacement
+[test] TestNewShaderRecompilerUnsupportedMemoryDecode
+ALL OK

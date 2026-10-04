@@ -1,0 +1,1998 @@
+diff --git a/src/graphics/guest_gpu/command_processor/pm4Handlers.cpp b/src/graphics/guest_gpu/command_processor/pm4Handlers.cpp
+index 9674eb8a..a6cb34a2 100644
+--- a/src/graphics/guest_gpu/command_processor/pm4Handlers.cpp
++++ b/src/graphics/guest_gpu/command_processor/pm4Handlers.cpp
+@@ -11,6 +11,7 @@
+ #include "graphics/guest_gpu/graphicsRun.h"
+ #include "graphics/host_gpu/graphicContext.h"
+ #include "graphics/host_gpu/lodStats.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/renderer/render.h"
+ #include "graphics/host_gpu/renderer/renderContext.h"
+ #include "graphics/presentation/videoOut.h"
+@@ -4012,6 +4013,12 @@ void GraphicsInitJmpTablesUcIndirect() {
+ 	};
+ 
+ 	g_hw_uc_indirect_func[Pm4::GE_STEREO_CNTL] = [](KYTY_HW_UC_INDIRECT_ARGS) {
++		if (DiagF5::On()) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::StereoWrites); // Track F, F16d (member 5, reference)
++			if (value != 0) {
++				DiagF5::Add(DiagF5::Counter::StereoNonzero);
++			}
++		}
+ 		static std::atomic<uint32_t> log_count {0};
+ 		if (log_count.fetch_add(1) < 16) {
+ 			LOGF("warning: ignoring indirect uc reg GE_STEREO_CNTL at 0x%" PRIx32
+diff --git a/src/graphics/host_gpu/renderer/cache/bufferCache.cpp b/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+index e362d38d..7c2f1a04 100644
+--- a/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+@@ -21,6 +21,7 @@
+ #include "graphics/host_gpu/renderer/cache/textureCache.h"
+ #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
+ #include "graphics/host_gpu/renderer/commandScheduler.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/renderer/render.h"
+ #include "graphics/host_gpu/renderer/renderContext.h"
+ #include "graphics/host_gpu/vulkanCommon.h"
+@@ -2259,7 +2260,13 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
+ 	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
+ 		SkcEraseRange(vaddr, size); // Session 123 (census): a DMA fill is a certain write (M)
+ 	}
+-	(void)m_texture_cache.ClearMeta(vaddr);
++	// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC2): a DMA fill never tracks a fill - a refusal of known metadata with a
++	// clear value is meta_dma_untracked. `f5_refusal` stays RefusalNone with the knob off.
++	uint8_t f5_refusal = DiagF5::RefusalNone;
++	(void)m_texture_cache.ClearMeta(vaddr, DiagF5::On() ? &f5_refusal : nullptr);
++	if (f5_refusal != DiagF5::RefusalNone) [[unlikely]] {
++		DiagF5::NoteDmaRefusal(f5_refusal, value);
++	}
+ 	if (!IsRegionGpuModified(vaddr, size)) {
+ 		// Access the guest mapping so write faults invalidate cached buffers and images.
+ 		auto* destination = reinterpret_cast<uint32_t*>(vaddr);
+diff --git a/src/graphics/host_gpu/renderer/cache/textureCache.cpp b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+index 85bca63d..893c3953 100644
+--- a/src/graphics/host_gpu/renderer/cache/textureCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+@@ -15,6 +15,7 @@
+ #include "graphics/host_gpu/graphicContext.h"
+ #include "graphics/host_gpu/renderer/cache/bufferCache.h"
+ #include "graphics/host_gpu/renderer/commandScheduler.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/renderer/image/imageView.h"
+ #include "graphics/host_gpu/renderer/image/textureCommon.h"
+ #include "graphics/host_gpu/renderer/image/tiler.h"
+@@ -1893,6 +1894,11 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
+ 		if (PendingDccFillStale(desc.info.metadata.range.address, metadata,
+ 		                        image.info.data.address)) {
+ 			metadata = MetaDataInfo {.type = MetaDataInfo::Type::Dcc};
++			if (DiagF5::On()) [[unlikely]] {
++				DiagF5::Add(DiagF5::Counter::DccResetStale); // Track F, F16d: the pending fill is dropped (RC6(7))
++			}
++		} else if (DiagF5::On()) [[unlikely]] {
++			DiagF5::NoteDccFill(metadata.fill_value); // Track F, F16d: PendingDcc -> Dcc by the stored code (RC3)
+ 		}
+ 		metadata.type = MetaDataInfo::Type::Dcc;
+ 	} else if (metadata.type != MetaDataInfo::Type::Dcc) {
+@@ -1907,14 +1913,34 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
+ 			     static_cast<uint32_t>(metadata.type));
+ 		}
+ 		metadata = MetaDataInfo {.type = MetaDataInfo::Type::Dcc};
++		if (DiagF5::On()) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::DccResetType); // Track F, F16d: an entry of another type is reset (RC6(7))
++		}
+ 	}
+ 	// Session 124 (item 47(v)): a late link to a surface with a pending clear - the remembered cleaner closes the image,
+ 	// before the materialization below.
+ 	if ((skc3_link || skc3_pend) && metadata.clear_mask != 0) [[unlikely]] {
+ 		SkcCensus::G3MetaLate(image, desc.info.metadata.range.address, metadata.clear_mask, false);
+ 	}
++	// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC4): the render-target path only, and only when the clear mask has a bit
++	// in the layers of this view (first / count as computed for the loop below); each return below is one child of
++	// dcc_rt_pending. Reads locals only.
++	const bool f5_pend = DiagF5::On() && desc.type == BindingType::RenderTarget && [&] {
++		const bool f5_volume = image.info.IsVolume() && desc.view_info.type == vk::ImageViewType::e3D;
++		const auto f5_first  = f5_volume ? 0u : desc.view_info.base_layer;
++		const auto f5_count  = f5_volume ? std::max(image.info.extent.depth >> desc.view_info.base_level, 1u)
++		                                 : desc.view_info.layer_count;
++		return (metadata.clear_mask & DiagF5::ViewLayerBits(f5_first, f5_count)) != 0;
++	}();
++	if (f5_pend) [[unlikely]] {
++		DiagF5::Add(DiagF5::Counter::DccRtPending);
++	}
+ 	if (metadata.clear_mask == 0 || image.info.resources.levels != 1 ||
+ 	    desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) {
++		if (f5_pend) [[unlikely]] {
++			DiagF5::Add(image.info.resources.levels != 1 ? DiagF5::Counter::DccRtSkipLevels
++			                                             : DiagF5::Counter::DccRtSkipPartial);
++		}
+ 		return;
+ 	}
+ 	const auto& view = desc.view_info;
+@@ -1922,6 +1948,9 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
+ 	// Upstream ea092a9: a DCC key encodes in the format the binding views the surface through,
+ 	// not in the backing format of the image; ClearImage encodes through that same view below.
+ 	if (!DecodeDccClearFill(desc, metadata.fill_value, clear.color)) {
++		if (f5_pend) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::DccRtSkipDecode);
++		}
+ 		return;
+ 	}
+ 	const bool volume_texture = image.info.IsVolume() && view.type == vk::ImageViewType::e3D;
+@@ -1934,8 +1963,14 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
+ 	const auto count = volume_texture ? std::max(image.info.extent.depth >> view.base_level, 1u)
+ 	                                  : view.layer_count;
+ 	if (first >= 32 || count > 32 - first) {
++		if (f5_pend) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::DccRtSkipLayers);
++		}
+ 		return;
+ 	}
++	if (f5_pend) [[unlikely]] {
++		DiagF5::Add(DiagF5::Counter::DccRtCleared); // a bit of the view layers is set: the loop below clears it
++	}
+ 	// The metadata fill covers the complete allocation. Consume each layer only after its
+ 	// native image contents exist; already materialized layers may have been rendered since.
+ 	for (uint32_t layer = first; layer < first + count;) {
+@@ -1999,13 +2034,40 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
+ 	if ((skc3_link || skc3_pend) && metadata.clear_mask != 0) [[unlikely]] {
+ 		SkcCensus::G3MetaLate(image, desc.info.metadata.range.address, metadata.clear_mask, false);
+ 	}
++	// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC6(1)): a clear-mask bit in the layers of the view; each return below is
++	// one child of cmask_rt_pending. Reads locals only.
++	const bool f5_pend = DiagF5::On() &&
++	                     (metadata.clear_mask &
++	                      DiagF5::ViewLayerBits(desc.view_info.base_layer, desc.view_info.layer_count)) != 0;
++	if (f5_pend) [[unlikely]] {
++		DiagF5::Add(DiagF5::Counter::CmaskRtPending);
++	}
+ 	if (metadata.fill_value != 0 || metadata.clear_mask == 0 ||
+-	    desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) return;
++	    desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) {
++		if (f5_pend) [[unlikely]] {
++			DiagF5::Add(metadata.fill_value != 0 ? DiagF5::Counter::CmaskRtSkipValue
++			                                      : DiagF5::Counter::CmaskRtSkipPartial);
++		}
++		return;
++	}
+ 	vk::ClearValue clear {};
+ 	if (!DecodePackedColorClear(image.backing.format, desc.info.metadata.cmask_clear_words[0],
+-	                           desc.info.metadata.cmask_clear_words[1], clear.color)) return;
++	                           desc.info.metadata.cmask_clear_words[1], clear.color)) {
++		if (f5_pend) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::CmaskRtSkipDecode);
++		}
++		return;
++	}
+ 	const auto& view = desc.view_info;
+-	if (view.base_level != 0 || view.base_layer >= 32 || view.layer_count > 32 - view.base_layer) return;
++	if (view.base_level != 0 || view.base_layer >= 32 || view.layer_count > 32 - view.base_layer) {
++		if (f5_pend) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::CmaskRtSkipLayers);
++		}
++		return;
++	}
++	if (f5_pend) [[unlikely]] {
++		DiagF5::Add(DiagF5::Counter::CmaskRtCleared); // a bit of the view layers is set: the loop below clears it
++	}
+ 	for (uint32_t layer = view.base_layer; layer < view.base_layer + view.layer_count; ++layer) {
+ 		if ((metadata.clear_mask & (1u << layer)) == 0) continue;
+ 		ClearImage(m_scheduler.Current(), id, image.backing.format,
+@@ -3181,13 +3243,21 @@ bool TextureCache::IsMetaCleared(uint64_t address, uint32_t slice, uint32_t* fil
+ 	return (found->second.clear_mask & (1u << slice)) != 0;
+ }
+ 
+-bool TextureCache::ClearMeta(uint64_t address) {
++bool TextureCache::ClearMeta(uint64_t address, uint8_t* f5_refusal) {
+ 	std::scoped_lock lock {m_lock};
+ 	const auto       found = m_surface_metas.find(address);
+ 	if (found == m_surface_metas.end() || found->second.type == MetaDataInfo::Type::PendingDcc ||
+ 	    found->second.type == MetaDataInfo::Type::Dcc || found->second.type == MetaDataInfo::Type::CMask) {
+ 		// DCC and CMASK need a validated fill value and coverage. Keep the legacy operation
+ 		// for FMask/HTile; an arbitrary write must not imply a color fast clear.
++		// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC2): a refusal of a known metadata address - the parent of the
++		// caller's meta_cs_* / meta_dma_*; the kind goes to the caller's local.
++		if (DiagF5::On() && found != m_surface_metas.end()) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::MetaRefusedKnown);
++			if (f5_refusal != nullptr) {
++				*f5_refusal = found->second.type == MetaDataInfo::Type::CMask ? DiagF5::RefusalCmask : DiagF5::RefusalDcc;
++			}
++		}
+ 		return false;
+ 	}
+ 	Common::DrawStat::Mark(Common::DrawStat::Meta);
+@@ -3205,6 +3275,9 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
+ 	if (!GuestRange {address, size}.Valid()) {
+ 		EXIT("TextureCache: invalid DCC fill range\n");
+ 	}
++	if (DiagF5::On()) [[unlikely]] {
++		DiagF5::Add(DiagF5::Counter::DccFillAll); // Track F, F16d: every call (line_mismatch_fill, RC3)
++	}
+ 	// DCC fills use a repeated byte code. Require all four bytes of the detected dword to agree,
+ 	// and mark only recognized deferred-clear encodings as logically clear.
+ 	const auto dcc_clear_mask = [fill_value] {
+@@ -3227,6 +3300,10 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
+ 	const auto found = m_surface_metas.try_emplace(address).first;
+ 	if (found->second.type == MetaDataInfo::Type::PendingDcc ||
+ 	    found->second.type == MetaDataInfo::Type::Dcc || found->second.type == MetaDataInfo::Type::CMask) {
++		// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC3): a fill on confirmed DCC, by its code.
++		if (DiagF5::On() && found->second.type == MetaDataInfo::Type::Dcc) [[unlikely]] {
++			DiagF5::NoteDccFill(fill_value);
++		}
+ 		found->second.clear_mask = found->second.type == MetaDataInfo::Type::CMask
+ 		    ? (fill_value == 0 ? UINT32_MAX : 0u) : dcc_clear_mask;
+ 		// Session 124, knob "skipceil" = 3 (closure census, [RC2]): a logical clear (PendingDcc: until the adoption).
+@@ -3353,11 +3430,17 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
+ 		Common::DrawStat::Mark(Common::DrawStat::Meta);
+ 		m_surface_metas.erase(found);
+ 		BumpMetaEpoch();
++		if (DiagF5::On()) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::DccResetStale); // Track F, F16d: the pending fill is dropped (RC6(7))
++		}
+ 		return false;
+ 	}
+ 	Common::DrawStat::Mark(Common::DrawStat::Meta);
+ 	BumpMetaEpoch();
+ 	found->second.type                 = MetaDataInfo::Type::Dcc;
++	if (DiagF5::On()) [[unlikely]] {
++		DiagF5::NoteDccFill(found->second.fill_value); // Track F, F16d: PendingDcc -> Dcc by the stored code (RC3)
++	}
+ 	image->info.metadata.kind          = ImageMetadataKind::Dcc;
+ 	image->info.metadata.range.address = metadata_address;
+ 	// Session 124, knob "skipceil" = 3 (closure census, [RC2], ROADMAP s122 item 44(v)): the PendingDcc clear applies now,
+diff --git a/src/graphics/host_gpu/renderer/cache/textureCache.h b/src/graphics/host_gpu/renderer/cache/textureCache.h
+index 2013825a..0ebbdd12 100644
+--- a/src/graphics/host_gpu/renderer/cache/textureCache.h
++++ b/src/graphics/host_gpu/renderer/cache/textureCache.h
+@@ -144,7 +144,9 @@ public:
+ 	[[nodiscard]] uint32_t MetaClearMask(uint64_t address, uint32_t* fill_value);
+ 	[[nodiscard]] bool IsMetaCleared(uint64_t address, uint32_t slice,
+ 	                                 uint32_t* fill_value = nullptr);
+-	[[nodiscard]] bool ClearMeta(uint64_t address);
++	// Track F, F16d (KYTY_DIAG_F5): `f5_refusal` (optional) receives the kind of a refusal of a PendingDcc / Dcc / CMask
++	// address (DiagF5::RefusalDcc / RefusalCmask), only with the knob on; the answer does not depend on it.
++	[[nodiscard]] bool ClearMeta(uint64_t address, uint8_t* f5_refusal = nullptr);
+ 	// Record deferred DCC state while the original guest dispatch writes the metadata.
+ 	// This merge kept our PendingDcc tracking instead of upstream's content-based
+ 	// MaterializeDccClear (437e69e/01df42a), so this call is the ONLY producer of PendingDcc
+diff --git a/src/graphics/host_gpu/renderer/colorRenderTarget.cpp b/src/graphics/host_gpu/renderer/colorRenderTarget.cpp
+index 52161536..0cae912b 100644
+--- a/src/graphics/host_gpu/renderer/colorRenderTarget.cpp
++++ b/src/graphics/host_gpu/renderer/colorRenderTarget.cpp
+@@ -10,6 +10,7 @@
+ #include "graphics/guest_gpu/tile.h"
+ #include "graphics/host_gpu/graphicContext.h"
+ #include "graphics/host_gpu/renderer/debug.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/renderer/image/textureCommon.h"
+ #include "graphics/host_gpu/renderer/render.h"
+ #include "graphics/host_gpu/renderer/renderContext.h"
+@@ -429,6 +430,13 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
+ 	desc.info.samples         = samples;
+ 	desc.info.tile_mode       = rt.attrib3.tile_mode;
+ 	const bool has_dcc        = rt.info.dcc_compression_enable && rt.dcc_addr.addr != 0;
++	if (DiagF5::On()) [[unlikely]] {
++		// Track F, F16d (KYTY_DIAG_F5, item 427(d)): a full resolution (memo miss) of an active slot; of those with DCC.
++		DiagF5::Add(DiagF5::Counter::RtResolves);
++		if (has_dcc) {
++			DiagF5::Add(DiagF5::Counter::DccRt);
++		}
++	}
+ 	if (has_dcc) {
+ 		TileSizeAlign metadata_size {};
+ 		(void)TileGetDccSize(width, height, volume ? depth : view.image_layers, bytes_per_element,
+diff --git a/src/graphics/host_gpu/renderer/debug.cpp b/src/graphics/host_gpu/renderer/debug.cpp
+index b1b77819..9a226799 100644
+--- a/src/graphics/host_gpu/renderer/debug.cpp
++++ b/src/graphics/host_gpu/renderer/debug.cpp
+@@ -6,6 +6,7 @@
+ #include "common/logging/log.h"
+ #include "graphics/guest_gpu/gpu_defs.h"
+ #include "graphics/guest_gpu/hardwareContext.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/renderer/render.h"
+ 
+ #include <algorithm>
+@@ -221,6 +222,9 @@ static void RtCheck(const HW::RenderTarget& rt) {
+ 		EXIT_NOT_IMPLEMENTED(rt.info.fmask_data_compression_disable != false);
+ 
+ 		if (rt.info.cmask_fast_clear_enable || rt.info.dcc_compression_enable) {
++			if (DiagF5::On()) [[unlikely]] {
++				DiagF5::Add(DiagF5::Counter::RtcheckMeta); // Track F, F16d (RC8): the condition of the line below
++			}
+ 			static bool logged = false;
+ 			if (!logged) {
+ 				LOGF("RenderTarget: temporary: ignoring PS5 color metadata fast_clear=%s dcc=%s "
+@@ -241,6 +245,12 @@ static void RtCheck(const HW::RenderTarget& rt) {
+ 		}
+ 		// EXIT_NOT_IMPLEMENTED(rt.info.blend_clamp != false);
+ 		if (rt.info.round_mode) {
++			if (DiagF5::On()) [[unlikely]] {
++				// Track F, F16d (member 3, reference): the targets with ROUND_MODE by channel type.
++				DiagF5::Add(rt.info.channel_type == Prospero::ChannelType::kUNorm   ? DiagF5::Counter::RoundUnorm
++				            : rt.info.channel_type == Prospero::ChannelType::kFloat ? DiagF5::Counter::RoundFloat
++				                                                                    : DiagF5::Counter::RoundOther);
++			}
+ 			static bool logged = false;
+ 			if (!logged) {
+ 				LOGF("RenderTarget: temporary: ignoring PS5 color round mode\n");
+diff --git a/src/graphics/host_gpu/renderer/depthRenderTarget.cpp b/src/graphics/host_gpu/renderer/depthRenderTarget.cpp
+index 8e24deaa..036d541a 100644
+--- a/src/graphics/host_gpu/renderer/depthRenderTarget.cpp
++++ b/src/graphics/host_gpu/renderer/depthRenderTarget.cpp
+@@ -18,6 +18,7 @@
+ #include "graphics/host_gpu/graphicContext.h"
+ #include "graphics/host_gpu/renderer/commandScheduler.h"
+ #include "graphics/host_gpu/renderer/debug.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/renderer/image/imageView.h"
+ #include "graphics/host_gpu/renderer/image/textureCommon.h"
+ #include "graphics/host_gpu/renderer/render.h"
+@@ -353,6 +354,12 @@ void RenderExecutor::ResolveRenderDepthTarget(CommandBuffer& buffer, RenderDepth
+ 	    !z.z_info.htile_acceleration && z.shading_rate_encoding == 0 && z.size.x_max == 0 &&
+ 	    z.size.y_max == 0;
+ 	if (attachment_unbound) {
++		if (DiagF5::On()) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::DsUnbound); // Track F, F16d (member 4, reference)
++			if (rc.depth_clear_enable || rc.stencil_clear_enable) {
++				DiagF5::Add(DiagF5::Counter::DsUnboundClear);
++			}
++		}
+ 		static std::atomic_bool logged = false;
+ 		if (!logged.exchange(true, std::memory_order_relaxed)) {
+ 			LOGF("DepthTarget: ignoring enabled depth/stencil state without a bound attachment\n");
+diff --git a/src/graphics/host_gpu/renderer/diagF5.cpp b/src/graphics/host_gpu/renderer/diagF5.cpp
+new file mode 100644
+index 00000000..288691b2
+--- /dev/null
++++ b/src/graphics/host_gpu/renderer/diagF5.cpp
+@@ -0,0 +1,348 @@
++#include "graphics/host_gpu/renderer/diagF5.h"
++
++#include "common/envFlag.h"
++#include "common/logging/log.h"
++#include "graphics/host_gpu/renderer/debug.h"
++
++#include <fmt/format.h>
++
++#include <chrono>
++#include <cstdlib>
++#include <mutex>
++
++// Track F, F16d (HPP-521): see diagF5.h. Nothing here is reachable with both knobs off except On() (a static read once)
++// and the early returns of LogMode / Tick / NoteDraw.
++
++namespace Libs::Graphics {
++
++namespace {
++
++template <typename CounterEnum>
++struct DiagSet {
++	static constexpr uint32_t                         N = static_cast<uint32_t>(CounterEnum::Count);
++	std::array<std::atomic<uint64_t>, N>              counters {};
++	std::atomic<bool>                                 mode_logged {false};
++	std::mutex                                        print_mutex;
++	uint64_t                                          last_sum   = 0;
++	uint64_t                                          last_ms    = 0;
++	bool                                              printed    = false;
++};
++
++uint64_t NowMs() {
++	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
++	                                 std::chrono::steady_clock::now().time_since_epoch())
++	                                 .count());
++}
++
++template <typename CounterEnum>
++std::string FormatSet(const char* tag, DiagSet<CounterEnum>& set, const char* const* names, uint32_t frame) {
++	std::string line = fmt::format("{}: frame={}", tag, frame);
++	for (uint32_t i = 0; i < DiagSet<CounterEnum>::N; i++) {
++		line += fmt::format(" {}={}", names[i], set.counters[i].load(std::memory_order_relaxed));
++	}
++	return line;
++}
++
++// The flip tick (item 427(e)): a line of all counters when one grew since the last line and >= 2000 ms passed since it.
++template <typename CounterEnum>
++bool TickSet(bool on, const char* tag, DiagSet<CounterEnum>& set, const char* const* names, uint32_t frame,
++             uint64_t now_ms) {
++	if (!on) {
++		return false;
++	}
++	std::scoped_lock lock {set.print_mutex};
++	uint64_t         sum = 0;
++	for (const auto& counter: set.counters) {
++		sum += counter.load(std::memory_order_relaxed);
++	}
++	if (sum == set.last_sum || (set.printed && now_ms - set.last_ms < 2000u)) {
++		return false;
++	}
++	const auto line = FormatSet(tag, set, names, frame);
++	LOGF("%s\n", line.c_str());
++	set.last_sum = sum;
++	set.last_ms  = now_ms;
++	set.printed  = true;
++	return true;
++}
++
++template <typename CounterEnum>
++bool LogModeSet(bool on, const char* tag, DiagSet<CounterEnum>& set) {
++	if (!on || set.mode_logged.exchange(true, std::memory_order_relaxed)) {
++		return false;
++	}
++	LOGF("%s: mode=1\n", tag);
++	return true;
++}
++
++DiagSet<DiagF5::Counter>& F5() {
++	static DiagSet<DiagF5::Counter> set;
++	return set;
++}
++
++DiagSet<DiagF6::Counter>& F6() {
++	static DiagSet<DiagF6::Counter> set;
++	return set;
++}
++
++constexpr const char* F5Names[] = {
++    "rt_resolves",
++    "dcc_rt",
++    "rtcheck_meta",
++    "dcc_rt_pending",
++    "dcc_rt_cleared",
++    "dcc_rt_skip_levels",
++    "dcc_rt_skip_partial",
++    "dcc_rt_skip_decode",
++    "dcc_rt_skip_layers",
++    "dcc_mat_pending",
++    "dcc_mat_cleared",
++    "dcc_mat_undecoded",
++    "dcc_fce",
++    "dcc_fce_image",
++    "dcc_fce_no_image",
++    "dcc_fill_all",
++    "dcc_fill_meta",
++    "dcc_fill_clear",
++    "dcc_fill_uncompressed",
++    "dcc_fill_unknown",
++    "dcc_reset_stale",
++    "dcc_reset_type",
++    "meta_refused_known",
++    "meta_cs_tracked",
++    "meta_cs_untracked",
++    "meta_dma_untracked",
++    "meta_dma_noclear",
++    "cmask_rt_pending",
++    "cmask_rt_cleared",
++    "cmask_rt_skip_value",
++    "cmask_rt_skip_partial",
++    "cmask_rt_skip_decode",
++    "cmask_rt_skip_layers",
++    "cmask_fce",
++    "cmask_fce_noimage",
++    "cmask_fce_meta",
++    "cmask_fce_msaa",
++    "cmask_fce_layout",
++    "cmask_fce_nofill",
++    "cmask_fce_drawn",
++    "cmask_fce_b42",
++    "cmask_fce_unapplied",
++    "fmask_read",
++    "round_unorm",
++    "round_float",
++    "round_other",
++    "ds_unbound",
++    "ds_unbound_clear",
++    "stereo_writes",
++    "stereo_nonzero",
++    "zero_disp",
++};
++static_assert(std::size(F5Names) == static_cast<size_t>(DiagF5::Counter::Count));
++
++constexpr const char* F6Names[] = {
++    "draws",   "draws_idx",    "draws_auto",    "draws_ind",     "draws_mesh", "ps_draws",  "s_bound",
++    "s_addr0_fmt", "s_addr0_nofmt", "s_mask0_addr", "s_empty", "h_bound", "bound_missing", "bound_extra",
++    "w_total", "w_bound",      "w_mask0",       "w_addr0_fmt",   "w_addr0_nofmt", "w_ge8",
++};
++static_assert(std::size(F6Names) == static_cast<size_t>(DiagF6::Counter::Count));
++
++} // namespace
++
++namespace DiagF5 {
++
++bool On() {
++	static const bool on = Common::EnvValueOn(std::getenv("KYTY_DIAG_F5"));
++	return on;
++}
++
++void Add(Counter counter) {
++	F5().counters[static_cast<uint32_t>(counter)].fetch_add(1, std::memory_order_relaxed);
++}
++
++uint64_t Get(Counter counter) {
++	return F5().counters[static_cast<uint32_t>(counter)].load(std::memory_order_relaxed);
++}
++
++const char* Name(Counter counter) {
++	return F5Names[static_cast<uint32_t>(counter)];
++}
++
++bool LogMode() {
++	return LogModeSet(On(), "DiagF5", F5());
++}
++
++bool Tick(uint32_t frame) {
++	if (!On()) {
++		return false;
++	}
++	return TickAt(frame, NowMs());
++}
++
++bool TickAt(uint32_t frame, uint64_t now_ms) {
++	return TickSet(On(), "DiagF5", F5(), F5Names, frame, now_ms);
++}
++
++std::string FormatLine(uint32_t frame) {
++	return FormatSet("DiagF5", F5(), F5Names, frame);
++}
++
++uint32_t ViewLayerBits(uint32_t first, uint32_t count) {
++	if (first >= 32 || count > 32 - first) {
++		return UINT32_MAX;
++	}
++	if (count == 0) {
++		return 0;
++	}
++	return (count >= 32 ? UINT32_MAX : (uint32_t {1} << count) - 1u) << first;
++}
++
++FillClass DccFillClassOf(uint32_t fill_value) {
++	const auto code = static_cast<uint8_t>(fill_value);
++	if (fill_value == static_cast<uint32_t>(code) * 0x01010101u) {
++		switch (code) {
++			case 0x00:
++			case 0x20:
++			case 0x40:
++			case 0x80:
++			case 0xc0: return FillClass::Clear;
++			case 0xff: return FillClass::Uncompressed;
++			default: break;
++		}
++	}
++	return FillClass::Unknown;
++}
++
++void NoteDccFill(uint32_t fill_value) {
++	Add(Counter::DccFillMeta);
++	switch (DccFillClassOf(fill_value)) {
++		case FillClass::Clear: Add(Counter::DccFillClear); break;
++		case FillClass::Uncompressed: Add(Counter::DccFillUncompressed); break;
++		case FillClass::Unknown: Add(Counter::DccFillUnknown); break;
++	}
++}
++
++void NoteCsRefusals(const CsRefusals& refusals, uint64_t tracked_address) {
++	for (uint32_t i = 0; i < refusals.count && i < CsRefusals::Max; i++) {
++		Add(tracked_address != 0 && refusals.addresses[i] == tracked_address ? Counter::MetaCsTracked
++		                                                                    : Counter::MetaCsUntracked);
++	}
++}
++
++void NoteDmaRefusal(uint8_t refusal, uint32_t value) {
++	if (refusal == RefusalDcc) {
++		Add(DccFillClassOf(value) == FillClass::Clear ? Counter::MetaDmaUntracked : Counter::MetaDmaNoClear);
++	} else if (refusal == RefusalCmask) {
++		Add(value == 0 ? Counter::MetaDmaUntracked : Counter::MetaDmaNoClear);
++	}
++}
++
++} // namespace DiagF5
++
++namespace DiagF6 {
++
++bool On() {
++	static const bool on = Common::EnvValueOn(std::getenv("KYTY_DIAG_F6"));
++	return on;
++}
++
++uint64_t Get(Counter counter) {
++	return F6().counters[static_cast<uint32_t>(counter)].load(std::memory_order_relaxed);
++}
++
++const char* Name(Counter counter) {
++	return F6Names[static_cast<uint32_t>(counter)];
++}
++
++bool LogMode() {
++	return LogModeSet(On(), "DiagF6", F6());
++}
++
++bool Tick(uint32_t frame) {
++	if (!On()) {
++		return false;
++	}
++	return TickAt(frame, NowMs());
++}
++
++bool TickAt(uint32_t frame, uint64_t now_ms) {
++	return TickSet(On(), "DiagF6", F6(), F6Names, frame, now_ms);
++}
++
++std::string FormatLine(uint32_t frame) {
++	return FormatSet("DiagF6", F6(), F6Names, frame);
++}
++
++void NoteDraw(const HW::Context& hw, const uint32_t* host_slots, uint32_t host_count, bool ps, const uint32_t* mrt,
++              uint32_t mrt_count, DrawKind kind) {
++	if (!On()) {
++		return;
++	}
++	constexpr uint32_t                                       N = static_cast<uint32_t>(Counter::Count);
++	std::array<uint64_t, N>                                  add {};
++	const auto inc = [&add](Counter counter, uint64_t n = 1) { add[static_cast<uint32_t>(counter)] += n; };
++	inc(Counter::Draws);
++	switch (kind) {
++		case DrawKind::Indexed: inc(Counter::DrawsIdx); break;
++		case DrawKind::Auto: inc(Counter::DrawsAuto); break;
++		case DrawKind::Indirect: inc(Counter::DrawsInd); break;
++		case DrawKind::Mesh: inc(Counter::DrawsMesh); break;
++	}
++	const uint32_t target_mask = hw.GetRenderTargetMask();
++	bool           mask_on[8] {};
++	bool           base_on[8] {};
++	bool           fmt_on[8] {};
++	for (uint32_t slot = 0; slot < 8; slot++) {
++		const auto& rt = hw.GetRenderTarget(slot);
++		mask_on[slot]  = render_target_mask_slot(target_mask, slot) != 0;
++		base_on[slot]  = rt.base.addr != 0;
++		fmt_on[slot]   = static_cast<uint32_t>(rt.info.format) != 0; // raw CB_COLORn_INFO.FORMAT (pm4Handlers.cpp)
++		if (mask_on[slot]) {
++			inc(base_on[slot] ? Counter::SBound : fmt_on[slot] ? Counter::SAddr0Fmt : Counter::SAddr0NoFmt);
++		} else {
++			inc(base_on[slot] ? Counter::SMask0Addr : Counter::SEmpty);
++		}
++	}
++	uint32_t host_mask = 0;
++	inc(Counter::HBound, host_count);
++	for (uint32_t i = 0; i < host_count; i++) {
++		const auto slot = host_slots[i];
++		if (slot >= 8 || !(mask_on[slot] && base_on[slot])) {
++			inc(Counter::BoundExtra);
++		}
++		if (slot < 8) {
++			host_mask |= 1u << slot;
++		}
++	}
++	for (uint32_t slot = 0; slot < 8; slot++) {
++		if (mask_on[slot] && base_on[slot] && (host_mask & (1u << slot)) == 0) {
++			inc(Counter::BoundMissing);
++		}
++	}
++	if (ps) {
++		inc(Counter::PsDraws);
++		for (uint32_t i = 0; i < mrt_count; i++) {
++			const auto index = mrt[i];
++			inc(Counter::WTotal);
++			if (index >= 8) {
++				inc(Counter::WGe8);
++			} else if (!mask_on[index]) {
++				inc(Counter::WMask0);
++			} else if (base_on[index]) {
++				inc(Counter::WBound);
++			} else {
++				inc(fmt_on[index] ? Counter::WAddr0Fmt : Counter::WAddr0NoFmt);
++			}
++		}
++	}
++	auto& set = F6();
++	for (uint32_t i = 0; i < N; i++) {
++		if (add[i] != 0) {
++			set.counters[i].fetch_add(add[i], std::memory_order_relaxed);
++		}
++	}
++}
++
++} // namespace DiagF6
++
++} // namespace Libs::Graphics
+diff --git a/src/graphics/host_gpu/renderer/diagF5.h b/src/graphics/host_gpu/renderer/diagF5.h
+new file mode 100644
+index 00000000..c1b1a6dd
+--- /dev/null
++++ b/src/graphics/host_gpu/renderer/diagF5.h
+@@ -0,0 +1,178 @@
++#ifndef EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_DIAGF5_H_
++#define EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_DIAGF5_H_
++
++// Track F, F16d (HPP-521, ROADMAP s122 items 421(g), 427, 433(v)): the diagnostic counters KYTY_DIAG_F5 (row F5,
++// members 1-6: the colour metadata branches where a clear the guest expects is not performed, and the reference
++// counters of members 3-6) and KYTY_DIAG_F6 (row F6: the colour slots of a host draw against the guest registers and
++// the MRT exports of its pixel program). MEASUREMENT ONLY, default 0: each knob is read once (unset or "" = OFF,
++// otherwise Common::EnvValueOn); a counter is a relaxed std::atomic<uint64_t> incremented under `if (On())`; the sites
++// read only values already in their scope - no cache call, no lock, no write into guest or host state - so with the
++// knob off not even an atomic operation runs. Outside the translation cache signature set (the shader tree,
++// shaderTranslationCache.cpp, gpu_format.h, gpu_defs.h): the signature and the variant directory do not change.
++// The line "DiagF5: mode=1" / "DiagF6: mode=1" is printed once at device creation; "DiagF5: frame=<n> <name>=<value> ..."
++// (all counters) on a flip tick when a counter grew since the last line and >= 2 s passed (item 427(e)).
++
++#include "graphics/guest_gpu/hardwareContext.h"
++
++#include <array>
++#include <atomic>
++#include <cstdint>
++#include <string>
++
++namespace Libs::Graphics::DiagF5 {
++
++// The order is the order of the line. Families (parent = sum of the children; checked by the test site and the reader):
++// DccRtPending (PrepareDccClear on the render-target path, a clear-mask bit in the view layers) = DccRtCleared +
++// DccRtSkip{Levels,Partial,Decode,Layers}; DccMatPending (MaterializeDeferredDccClear, a non-zero layer mask) =
++// DccMatCleared + DccMatUndecoded; DccFce (fast-clear-eliminate scan, DCC slot) = DccFceImage + DccFceNoImage;
++// DccFillMeta (a fill on confirmed DCC: TrackDccFill on a Dcc entry, or a PendingDcc -> Dcc adoption by the stored
++// code) = DccFillClear + DccFillUncompressed + DccFillUnknown; MetaRefusedKnown (ClearMeta refuses a PendingDcc / Dcc /
++// CMask address) = MetaCsTracked + MetaCsUntracked + MetaDmaUntracked + MetaDmaNoClear; CmaskRtPending
++// (PrepareCmaskClear, a clear-mask bit in the view layers) = CmaskRtCleared + CmaskRtSkip{Value,Partial,Decode,Layers};
++// CmaskFce (fast-clear-eliminate scan, CMASK slot) = CmaskFce{NoImage,Meta,Msaa,Layout,NoFill,Drawn,B42,Unapplied}.
++enum class Counter : uint32_t {
++	RtResolves,
++	DccRt,
++	RtcheckMeta,
++	DccRtPending,
++	DccRtCleared,
++	DccRtSkipLevels,
++	DccRtSkipPartial,
++	DccRtSkipDecode,
++	DccRtSkipLayers,
++	DccMatPending,
++	DccMatCleared,
++	DccMatUndecoded,
++	DccFce,
++	DccFceImage,
++	DccFceNoImage,
++	DccFillAll,
++	DccFillMeta,
++	DccFillClear,
++	DccFillUncompressed,
++	DccFillUnknown,
++	DccResetStale,
++	DccResetType,
++	MetaRefusedKnown,
++	MetaCsTracked,
++	MetaCsUntracked,
++	MetaDmaUntracked,
++	MetaDmaNoClear,
++	CmaskRtPending,
++	CmaskRtCleared,
++	CmaskRtSkipValue,
++	CmaskRtSkipPartial,
++	CmaskRtSkipDecode,
++	CmaskRtSkipLayers,
++	CmaskFce,
++	CmaskFceNoImage,
++	CmaskFceMeta,
++	CmaskFceMsaa,
++	CmaskFceLayout,
++	CmaskFceNoFill,
++	CmaskFceDrawn,
++	CmaskFceB42,
++	CmaskFceUnapplied,
++	FmaskRead,
++	RoundUnorm,
++	RoundFloat,
++	RoundOther,
++	DsUnbound,
++	DsUnboundClear,
++	StereoWrites,
++	StereoNonzero,
++	ZeroDisp,
++	Count
++};
++
++[[nodiscard]] bool        On();
++void                      Add(Counter counter);
++[[nodiscard]] uint64_t    Get(Counter counter);
++[[nodiscard]] const char* Name(Counter counter);
++// "DiagF5: mode=1" once per process when On(); true when this call printed it.
++bool LogMode();
++// The flip tick: prints the line when On(), a counter grew since the last line and >= 2000 ms passed since it (the
++// first line: at the first tick with a growth). TickAt takes the clock as an argument (test site); Tick reads it.
++bool Tick(uint32_t frame);
++bool TickAt(uint32_t frame, uint64_t now_ms);
++[[nodiscard]] std::string FormatLine(uint32_t frame);
++
++// The layer bits of a view [first, first + count) inside the 32-bit clear mask; UINT32_MAX when the range is not
++// representable there (first >= 32 or count > 32 - first: the code returns without a clear, every mask bit counts).
++[[nodiscard]] uint32_t ViewLayerBits(uint32_t first, uint32_t count);
++
++// TrackDccFill's classification of a stored fill value (textureCache.cpp: a repeated byte, codes 00/20/40/80/c0 clear).
++enum class FillClass : uint8_t { Clear, Uncompressed, Unknown };
++[[nodiscard]] FillClass DccFillClassOf(uint32_t fill_value);
++void                    NoteDccFill(uint32_t fill_value); // DccFillMeta + its child
++
++// ClearMeta's refusal kind for its callers (the optional out argument): 0 - none (accepted, or an address that is not
++// PendingDcc / Dcc / CMask), 1 - PendingDcc or Dcc, 2 - CMask.
++inline constexpr uint8_t RefusalNone  = 0;
++inline constexpr uint8_t RefusalDcc   = 1;
++inline constexpr uint8_t RefusalCmask = 2;
++
++// The written buffers of one compute dispatch that ClearMeta refused as known metadata (TryConsumeComputeMetaClear).
++struct CsRefusals {
++	static constexpr uint32_t   Max = 32; // ShaderInfo::MaxBuffers
++	uint32_t                    count = 0;
++	std::array<uint64_t, Max>   addresses; // only [0, count) is read; not zeroed per dispatch
++};
++// Per refused address: MetaCsTracked when the same dispatch tracked a fill at that address (TrackDccFill of
++// TryConsumeComputeImageClear; `tracked_address` 0 - none), otherwise MetaCsUntracked.
++void NoteCsRefusals(const CsRefusals& refusals, uint64_t tracked_address);
++// A DMA fill refused as known metadata: MetaDmaUntracked when the value is a clear for the entry kind (DCC: a clear
++// code of DccFillClassOf; CMASK: 0), otherwise MetaDmaNoClear.
++void NoteDmaRefusal(uint8_t refusal, uint32_t value);
++
++} // namespace Libs::Graphics::DiagF5
++
++namespace Libs::Graphics::DiagF6 {
++
++// One host draw at a recording site after the PrepareDrawRenderState / RtsPlaceA fork (renderDraw.cpp). Slot class by
++// (mask != 0, base != 0, raw CB_COLORn_INFO.FORMAT != 0); an export is an MRT output of the pixel program by its guest
++// index (ShaderInfo::outputs, kind Mrt). Identities: SBound + SAddr0Fmt + SAddr0NoFmt + SMask0Addr + SEmpty ==
++// 8 * Draws; HBound == SBound - BoundMissing + BoundExtra; WTotal == WBound + WMask0 + WAddr0Fmt + WAddr0NoFmt + WGe8;
++// DrawsIdx + DrawsAuto + DrawsInd + DrawsMesh == Draws; PsDraws <= Draws.
++enum class Counter : uint32_t {
++	Draws,
++	DrawsIdx,
++	DrawsAuto,
++	DrawsInd,
++	DrawsMesh,
++	PsDraws,
++	SBound,
++	SAddr0Fmt,
++	SAddr0NoFmt,
++	SMask0Addr,
++	SEmpty,
++	HBound,
++	BoundMissing,
++	BoundExtra,
++	WTotal,
++	WBound,
++	WMask0,
++	WAddr0Fmt,
++	WAddr0NoFmt,
++	WGe8,
++	Count
++};
++
++enum class DrawKind : uint8_t { Indexed, Auto, Indirect, Mesh };
++
++[[nodiscard]] bool        On();
++[[nodiscard]] uint64_t    Get(Counter counter);
++[[nodiscard]] const char* Name(Counter counter);
++bool                      LogMode();
++bool                      Tick(uint32_t frame);
++bool                      TickAt(uint32_t frame, uint64_t now_ms);
++[[nodiscard]] std::string FormatLine(uint32_t frame);
++
++// `host_slots` - the guest slots of the host colour attachments of the draw (RenderColorInfo::target_slot of
++// state.color_info[0, host_count)); `mrt` - the guest MRT indices the pixel program exports (only with `ps`).
++void NoteDraw(const HW::Context& hw, const uint32_t* host_slots, uint32_t host_count, bool ps, const uint32_t* mrt,
++              uint32_t mrt_count, DrawKind kind);
++
++} // namespace Libs::Graphics::DiagF6
++
++#endif /* EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_DIAGF5_H_ */
+diff --git a/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp b/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+index a23ded71..03afb56a 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+@@ -35,6 +35,7 @@
+ #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
+ #include "graphics/host_gpu/renderer/render.h"
+ #include "graphics/host_gpu/renderer/renderContext.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/vulkanCommon.h"
+ #include "graphics/shader/recompiler/ir/ShaderIR.h"
+ #include "graphics/shader/recompiler/ir/passes/BindingLayout.h"
+@@ -3516,6 +3517,9 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId
+ 	if (mask == 0) {
+ 		return;
+ 	}
++	if (DiagF5::On()) [[unlikely]] {
++		DiagF5::Add(DiagF5::Counter::DccMatPending); // Track F, F16d (item 427(b), RC4): a pending layer mask
++	}
+ 	if (t_sp_dcc_armed) {
+ 		t_sp_dcc_pending = true; // session 120, gate "spcen": an armed stage's loop met a pending DCC mask
+ 	}
+@@ -3576,8 +3580,14 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId
+ 		     static_cast<uint32_t>(clear_format), decoded ? 1 : 0);
+ 	}
+ 	if (!decoded) {
++		if (DiagF5::On()) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::DccMatUndecoded); // Track F, F16d: the clear is not performed (B)
++		}
+ 		return;
+ 	}
++	if (DiagF5::On()) [[unlikely]] {
++		DiagF5::Add(DiagF5::Counter::DccMatCleared);
++	}
+ 	Common::DrawStat::Mark(Common::DrawStat::ImgUp | Common::DrawStat::Meta);
+ 	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
+ 	buffer.EndRendering(RenderPassEnd::Clear);
+@@ -3765,6 +3775,9 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
+ 		const auto& rt = hw.GetRenderTarget(slot);
+ 		if (rt.base.addr != 0 && rt.cmask.addr != 0 && rt.info.cmask_fast_clear_enable &&
+ 		    !rt.info.dcc_compression_enable) {
++			if (DiagF5::On()) [[unlikely]] {
++				DiagF5::Add(DiagF5::Counter::CmaskFce); // Track F, F16d (item 427(b), RC5): FCE on a CMASK target
++			}
+ 			RenderColorInfo color {};
+ 			ResolveRenderColorTarget(buffer, color, 0, slot, true, true);
+ 			// Track F, F9e2 / F9e2b (B42): see FixB42Probe. With the fix off nothing below changes.
+@@ -3800,14 +3813,37 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
+ 				}
+ 				FixB42Note(b42, applied, color.desc.info.extent.width, color.desc.info.extent.height, rt.cmask.addr,
+ 				           rt.clear_word0.word0, rt.clear_word1.word1);
++				if (DiagF5::On()) [[unlikely]] {
++					// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC5): after FixB42Note, by the computed b42 / applied.
++					DiagF5::Add(b42.kind == FixB42Kind::Drawn ? DiagF5::Counter::CmaskFceDrawn
++					            : applied                      ? DiagF5::Counter::CmaskFceB42
++					                                           : DiagF5::Counter::CmaskFceUnapplied);
++				}
++			} else if (DiagF5::On()) [[unlikely]] {
++				// Track F, F16d: FixB42Probe answered None - the first of its tests that holds, in its order (the descriptor
++				// is not modified on this path); none of them - no tracked covering fill of 0 at the CMASK address.
++				const auto& f5_info = color.desc.info;
++				DiagF5::Add(!color.image_id                                      ? DiagF5::Counter::CmaskFceNoImage
++				            : f5_info.metadata.kind != ImageMetadataKind::None ? DiagF5::Counter::CmaskFceMeta
++				            : f5_info.samples != 1                             ? DiagF5::Counter::CmaskFceMsaa
++				            : (f5_info.resources.levels != 1 || f5_info.IsVolume() ||
++				               (f5_info.extent.width % 1024u == 0 && f5_info.extent.height % 1024u == 0))
++				                ? DiagF5::Counter::CmaskFceLayout
++				                : DiagF5::Counter::CmaskFceNoFill);
+ 			}
+ 			continue;
+ 		}
+ 		if (rt.base.addr == 0 || rt.dcc_addr.addr == 0) {
+ 			continue;
+ 		}
++		if (DiagF5::On()) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::DccFce); // Track F, F16d (item 427(b), RC6(4)): FCE on a DCC slot
++		}
+ 		const auto id = cache.FindDccSurfaceImage(rt.base.addr, rt.dcc_addr.addr);
+ 		if (!id) {
++			if (DiagF5::On()) [[unlikely]] {
++				DiagF5::Add(DiagF5::Counter::DccFceNoImage);
++			}
+ 			static std::atomic<uint32_t> miss_count = 0;
+ 			static const bool dcc_trace = Common::EnvFlagOn("KYTY_DCC_TRACE");
+ 			if (dcc_trace || miss_count++ < 32) {
+@@ -3817,6 +3853,9 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
+ 			}
+ 			continue;
+ 		}
++		if (DiagF5::On()) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::DccFceImage);
++		}
+ 		MaterializeDeferredDccClear(buffer, id);
+ 	}
+ }
+diff --git a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+index 70f8c5d0..51522dd4 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+@@ -23,6 +23,7 @@
+ #include "graphics/host_gpu/renderer/image/imageView.h"
+ #include "graphics/host_gpu/renderer/render.h"
+ #include "graphics/host_gpu/renderer/renderContext.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/memoryTracker.h"
+ #include "graphics/host_gpu/vulkanCommon.h"
+ #include "graphics/shader/recompiler/ShaderRecompiler.h"
+@@ -3900,6 +3901,14 @@ struct PipelineCache::ProgramCache {
+ 				// pg_pmf_us + pg_pm_us.  Same population as pg_pm_n: both marks fire only when a
+ 				// permutation was found.
+ 				pg_mark(Common::FrameStats::Counter::ProgLapPermFindNs);
++				if (DiagF5::On()) [[unlikely]] {
++					// Track F, F16d (KYTY_DIAG_F5, item 427(v), reference): a permutation found by specialization whose
++					// images include an FMASK image (read as the identity fragment map). Memo hits do not reach here.
++					if (std::ranges::any_of(permutation->specialization.images,
++					                        [](const auto& image) { return image.fmask; })) {
++						DiagF5::Add(DiagF5::Counter::FmaskRead);
++					}
++				}
+ 				if (memo_enabled) {
+ 					MemoStore(&entry->second, params.Base(), memo_log, resources, &*permutation,
+ 					          permutation->handle);
+diff --git a/src/graphics/host_gpu/renderer/render.h b/src/graphics/host_gpu/renderer/render.h
+index 6c334ca2..fc6a4079 100644
+--- a/src/graphics/host_gpu/renderer/render.h
++++ b/src/graphics/host_gpu/renderer/render.h
+@@ -42,6 +42,9 @@ class CommandScheduler;
+ class CommandRecorder;
+ struct RecordSubmit;
+ struct RenderExecutorTestAccess;
++namespace DiagF5 {
++struct CsRefusals; // Track F, F16d (diagF5.h)
++} // namespace DiagF5
+ 
+ enum class CommandBufferDebugOp : uint32_t {
+ 	DispatchDirect,
+@@ -483,11 +486,14 @@ private:
+ 	void                      MaterializeBoundTargetDccClears(CommandBuffer& buffer);
+ 	void                      BindRenderTarget(ImageId id);
+ 	void                      ResetBindings();
++	// Track F, F16d (KYTY_DIAG_F5): `f5_refusals` / `f5_tracked` - non-null only with the knob on (renderCompute.cpp).
+ 	[[nodiscard]] bool        TryConsumeComputeMetaClear(const ShaderComputeInputInfo& input,
+-	                                                     const CommandBuffer&          buffer);
++	                                                     const CommandBuffer&          buffer,
++	                                                     DiagF5::CsRefusals*           f5_refusals = nullptr);
+ 	[[nodiscard]] bool TryConsumeComputeImageClear(const ShaderComputeInputInfo& input,
+ 	                                              CommandBuffer& command, uint32_t group_x,
+-	                                              uint32_t group_y, uint32_t group_z, uint32_t mode);
++	                                              uint32_t group_y, uint32_t group_z, uint32_t mode,
++	                                              uint64_t* f5_tracked = nullptr);
+ 
+ 	RenderContext&                        m_context;
+ 	std::unique_ptr<IndirectArgsSanitizer> m_indirect_sanitizer;
+diff --git a/src/graphics/host_gpu/renderer/renderCompute.cpp b/src/graphics/host_gpu/renderer/renderCompute.cpp
+index 1626dcab..0239fa59 100644
+--- a/src/graphics/host_gpu/renderer/renderCompute.cpp
++++ b/src/graphics/host_gpu/renderer/renderCompute.cpp
+@@ -17,6 +17,7 @@
+ #include "graphics/guest_gpu/hardwareContext.h"
+ #include "graphics/host_gpu/graphicContext.h"
+ #include "graphics/host_gpu/renderer/commandRecorder.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
+ #include "graphics/host_gpu/renderer/image/imageInfo.h"
+ #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
+@@ -70,7 +71,8 @@ static bool FillSourcesDisjoint(std::span<const ShaderRecompiler::IR::Descriptor
+ }
+ 
+ bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& input,
+-                                                const CommandBuffer&          buffer) {
++                                                const CommandBuffer&          buffer,
++                                                DiagF5::CsRefusals*           f5_refusals) {
+ 	const auto& program   = *input.stage.program;
+ 	const auto& resources = input.stage.resources;
+ 	if (resources.buffers.size() != program.info.buffers.size()) {
+@@ -100,7 +102,8 @@ bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& in
+ 			if (resource.written) {
+ 				const auto descriptor =
+ 				    DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
+-				if (cache.ClearMeta(descriptor.Base48())) {
++				uint8_t f5_refusal = DiagF5::RefusalNone; // Track F, F16d: written by ClearMeta only with KYTY_DIAG_F5 on
++				if (cache.ClearMeta(descriptor.Base48(), f5_refusals != nullptr ? &f5_refusal : nullptr)) {
+ 					if (!all_writes) return true;
+ 					cleared_metadata = true;
+ 					static const bool trace = Common::EnvFlagOn("KYTY_CLEAR_TRACE");
+@@ -112,6 +115,9 @@ bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& in
+ 					}
+ 				} else {
+ 					other_writes = true;
++					if (f5_refusal != DiagF5::RefusalNone && f5_refusals->count < DiagF5::CsRefusals::Max) [[unlikely]] {
++						f5_refusals->addresses[f5_refusals->count++] = descriptor.Base48();
++					}
+ 				}
+ 			}
+ 		}
+@@ -167,7 +173,8 @@ bool ResolveComputeBufferFill(const ShaderComputeInputInfo& input, uint32_t grou
+ 
+ bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& input,
+                                                 CommandBuffer& command, uint32_t group_x,
+-                                                uint32_t group_y, uint32_t group_z, uint32_t mode) {
++                                                uint32_t group_y, uint32_t group_z, uint32_t mode,
++                                                uint64_t* f5_tracked) {
+ 	const auto& program   = *input.stage.program;
+ 	const auto& resources = input.stage.resources;
+ 	const auto& fill      = resources.uniform_fill;
+@@ -243,6 +250,9 @@ bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& i
+ 		// and the ASTRO BOT "crowd silhouette" flashes come back (sessions 9 and 21, gate dccstale).
+ 		// Track deferred DCC state while the original dispatch writes the metadata allocation.
+ 		cache.TrackDccFill(descriptor.Base48(), size, packed_clear);
++		if (f5_tracked != nullptr) [[unlikely]] {
++			*f5_tracked = descriptor.Base48(); // Track F, F16d: the fill tracked at this address (meta_cs_tracked)
++		}
+ 		static std::atomic<uint32_t> logged_metadata_clears {0};
+ 		if (logged_metadata_clears.fetch_add(1, std::memory_order_relaxed) < 32) {
+ 			LOGF("GraphicsRenderDispatchDirect: metadata fill shader=0x%016" PRIx64
+@@ -548,7 +558,17 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
+ 			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorClrSkip, 1);
+ 		}
+ 	}
+-	if (!indirect && !floor_clear_skip && TryConsumeComputeMetaClear(input_info, buffer)) {
++	// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC2): the written buffers ClearMeta refused as known metadata, and the
++	// address TryConsumeComputeImageClear tracked a fill at - non-null pointers only with the knob on; a refused
++	// address without that fill in this dispatch is meta_cs_untracked.
++	const bool         f5_on = DiagF5::On();
++	DiagF5::CsRefusals f5_refusals;
++	uint64_t           f5_tracked = 0;
++	if (!indirect && !floor_clear_skip &&
++	    TryConsumeComputeMetaClear(input_info, buffer, f5_on ? &f5_refusals : nullptr)) {
++		if (f5_on) [[unlikely]] {
++			DiagF5::NoteCsRefusals(f5_refusals, 0);
++		}
+ 		// Session 100, the L3 debt of session 98 (ROADMAP.md:1406): bf_clr_skip is a shape
+ 		// census of ELIGIBLE dispatches and over-counts.  This counts the consumed ones, in
+ 		// BOTH arms and behind no gate, so the base arm has a real denominator at last.
+@@ -558,11 +578,17 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
+ 	}
+ 	if (!indirect && !floor_clear_skip &&
+ 	    TryConsumeComputeImageClear(input_info, buffer, thread_group_x, thread_group_y,
+-	                                thread_group_z, mode)) {
++	                                thread_group_z, mode, f5_on ? &f5_tracked : nullptr)) {
++		if (f5_on) [[unlikely]] {
++			DiagF5::NoteCsRefusals(f5_refusals, 0);
++		}
+ 		Common::FrameStats::Add(Common::FrameStats::Counter::ClearShortcutImage, 1);
+ 		ResetBindings();
+ 		return;
+ 	}
++	if (f5_on) [[unlikely]] {
++		DiagF5::NoteCsRefusals(f5_refusals, f5_tracked);
++	}
+ 	const bool large_workgroup =
+ 	    (input_info.threads_num[0] * input_info.threads_num[1] * input_info.threads_num[2] >= 512);
+ 	const bool                   has_sampler = !program.info.samplers.empty();
+@@ -934,6 +960,9 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
+ 	}
+ 
+ 	if (!indirect && (thread_group_x == 0 || thread_group_y == 0 || thread_group_z == 0)) {
++		if (DiagF5::On()) [[unlikely]] {
++			DiagF5::Add(DiagF5::Counter::ZeroDisp); // Track F, F16d (member 6, reference)
++		}
+ 		static std::atomic<uint32_t> log_count {0};
+ 		if (log_count.fetch_add(1, std::memory_order_relaxed) < 32) {
+ 			LOGF("GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=%ux%ux%u "
+diff --git a/src/graphics/host_gpu/renderer/renderDraw.cpp b/src/graphics/host_gpu/renderer/renderDraw.cpp
+index f4219f64..4eb76be5 100644
+--- a/src/graphics/host_gpu/renderer/renderDraw.cpp
++++ b/src/graphics/host_gpu/renderer/renderDraw.cpp
+@@ -31,6 +31,7 @@
+ #include "graphics/host_gpu/renderer/render.h"
+ #include "graphics/host_gpu/renderer/renderContext.h"
+ #include "graphics/host_gpu/renderer/renderMemo.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/vulkanCommon.h"
+ #include "graphics/shader/recompiler/BufferFormat.h"
+ #include "graphics/shader/recompiler/ir/ShaderIR.h"
+@@ -696,6 +697,34 @@ struct DrawRenderState {
+ 	uint64_t prog_memo_serial = 0;
+ };
+ 
++// Track F, F16d (KYTY_DIAG_F6, ROADMAP s122 item 433(v)): one host draw at a recording site after the
++// PrepareDrawRenderState / RtsPlaceA fork - the guest slots of the host attachments and the MRT exports of the pixel
++// program by guest index (ShaderInfo::outputs, kind Mrt; the dual-source variant keeps the guest index). Reads only.
++static void DiagF6NoteDraw(const CommandBuffer& buffer, const DrawRenderState& state, bool mesh, bool indirect,
++                           bool indexed) {
++	std::array<uint32_t, RENDER_COLOR_ATTACHMENTS_MAX> host_slots {};
++	const uint32_t host_count = std::min<uint32_t>(state.color_count, RENDER_COLOR_ATTACHMENTS_MAX);
++	for (uint32_t i = 0; i < host_count; i++) {
++		host_slots[i] = state.color_info[i].target_slot;
++	}
++	const auto&              ps        = state.ps_input_info.stage;
++	const bool               ps_on     = state.ps_active && ps;
++	std::array<uint32_t, 16> mrt       = {};
++	uint32_t                 mrt_count = 0;
++	if (ps_on) {
++		for (const auto& output: ps.program->info.outputs) {
++			if (output.kind == ShaderRecompiler::IR::StageOutputKind::Mrt && mrt_count < mrt.size()) {
++				mrt[mrt_count++] = output.index;
++			}
++		}
++	}
++	const auto kind = mesh       ? DiagF6::DrawKind::Mesh
++	                 : indirect ? DiagF6::DrawKind::Indirect
++	                 : indexed  ? DiagF6::DrawKind::Indexed
++	                            : DiagF6::DrawKind::Auto;
++	DiagF6::NoteDraw(buffer.GetRegisters(), host_slots.data(), host_count, ps_on, mrt.data(), mrt_count, kind);
++}
++
+ namespace {
+ 
+ // Gate "drawstate" (session 57, B1): where a draw keeps its DrawRenderState. Off: a local
+@@ -4662,6 +4691,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
+ 			                             mesh_groups);
+ 		}
+ 		GpuMarkerTop(tail, gpu_marker);
++		if (DiagF6::On()) [[unlikely]] {
++			DiagF6NoteDraw(buffer, state, mesh_active, emit_info.indirect_buffer != nullptr, draw.IsIndexed()); // F16d
++		}
+ 		if (mesh_active) {
+ 			const uint32_t draw_data[] {
+ 			    draw.index_count,
+@@ -4811,6 +4843,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
+ 		                             emit_info.indirect_buffer != nullptr, mesh_active, mesh_groups);
+ 	}
+ 	GpuMarkerTop(vk_buffer, gpu_marker);
++	if (DiagF6::On()) [[unlikely]] {
++		DiagF6NoteDraw(buffer, state, mesh_active, emit_info.indirect_buffer != nullptr, draw.IsIndexed()); // F16d
++	}
+ 	if (mesh_active) {
+ 		const auto emit_mesh = [&](uint32_t first, uint32_t count, uint32_t instance,
+ 		                           uint32_t groups, uint32_t instances) {
+diff --git a/src/graphics/presentation/videoOut.cpp b/src/graphics/presentation/videoOut.cpp
+index 192e04b0..8eb6f3e6 100644
+--- a/src/graphics/presentation/videoOut.cpp
++++ b/src/graphics/presentation/videoOut.cpp
+@@ -16,6 +16,7 @@
+ #include "graphics/guest_gpu/graphicsRun.h"
+ #include "graphics/guest_gpu/tile.h"
+ #include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/renderer/image/imageInfo.h"
+ #include "graphics/host_gpu/renderer/render.h"
+ #include "graphics/host_gpu/renderer/renderContext.h"
+@@ -1239,6 +1240,9 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 		LibKernel::PVar::PublishFlip(r.cfg->flip_status.count);
+ 	}
+ 	Graphics::GpuTimeProfiler::SetFrame(static_cast<uint32_t>(r.cfg->flip_status.count));
++	// Track F, F16d (KYTY_DIAG_F5 / KYTY_DIAG_F6, item 427(e)): the flip tick - a line on growth, at most every 2 s.
++	Graphics::DiagF5::Tick(static_cast<uint32_t>(r.cfg->flip_status.count));
++	Graphics::DiagF6::Tick(static_cast<uint32_t>(r.cfg->flip_status.count));
+ 	const uint64_t poll_t0 = Common::FrameStats::NowNs();
+ 	Common::Gates::Poll(static_cast<uint32_t>(r.cfg->flip_status.count));
+ 	poll_ns = Common::FrameStats::NowNs() - poll_t0;
+diff --git a/src/graphics/presentation/window/vulkanWindow.cpp b/src/graphics/presentation/window/vulkanWindow.cpp
+index 3c40fa18..a277eeb1 100644
+--- a/src/graphics/presentation/window/vulkanWindow.cpp
++++ b/src/graphics/presentation/window/vulkanWindow.cpp
+@@ -32,6 +32,7 @@
+ #include "graphics/host_gpu/renderer/render.h"
+ #include "graphics/host_gpu/renderer/renderContext.h"
+ #include "graphics/host_gpu/vulkanCommon.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/presentation/presenter.h"
+ #include "graphics/presentation/systemOverlay.h"
+ #include "graphics/presentation/videoOut.h"
+@@ -675,6 +676,9 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
+ 		graphics.dual_src_blend_enabled            = dual_src_enabled;
+ 		graphics.max_fragment_dual_src_attachments = properties2.properties.limits.maxFragmentDualSrcAttachments;
+ 	}
++	// Track F, F16d (ROADMAP s122 items 421(g), 433(v)): "DiagF5: mode=1" / "DiagF6: mode=1" once, before the guest runs.
++	(void)DiagF5::LogMode();
++	(void)DiagF6::LogMode();
+ 
+ 	vk::PhysicalDeviceRobustness2FeaturesEXT robustness2 {};
+ #if defined(__APPLE__)
+diff --git a/tests/ShaderRecompilerComputeTests.cpp b/tests/ShaderRecompilerComputeTests.cpp
+index cc36316c..12716e81 100644
+--- a/tests/ShaderRecompilerComputeTests.cpp
++++ b/tests/ShaderRecompilerComputeTests.cpp
+@@ -23,6 +23,8 @@
+ #include "graphics/host_gpu/renderer/cache/textureCache.h"
+ #include "graphics/host_gpu/renderer/colorRenderTarget.h"
+ #include "graphics/host_gpu/renderer/depthRenderTarget.h"
++#include "graphics/host_gpu/renderer/diagF5.h"
++#include "common/envFlag.h"
+ #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
+ #include "graphics/host_gpu/renderer/image/blitHelper.h"
+ #include "graphics/host_gpu/renderer/image/image.h"
+@@ -407,12 +409,40 @@ struct TextureCacheTestAccess {
+   }
+ 
+   static TileManager &Tiler(TextureCache &cache) { return cache.m_tiler; }
++
++  // Track F, F16d (HPP-521): the private cache sites of KYTY_DIAG_F5, driven under the cache lock as their callers do.
++  static void F16dPrepareDccClear(TextureCache &cache, ImageId id, const TextureCache::ImageDesc &desc) {
++    auto lock = Lock(cache);
++    cache.PrepareDccClear(id, desc);
++  }
++  static void F16dPrepareCmaskClear(TextureCache &cache, ImageId id, const TextureCache::ImageDesc &desc) {
++    auto lock = Lock(cache);
++    cache.PrepareCmaskClear(id, desc);
++  }
++  static Image &F16dImage(TextureCache &cache, ImageId id) { return cache.m_slot_images[id]; }
++  static void F16dSetCmaskMeta(TextureCache &cache, uint64_t address, uint32_t fill_value, uint32_t clear_mask,
++                               uint64_t fill_size) {
++    std::lock_guard lock(cache.m_lock);
++    auto &metadata = cache.m_surface_metas[address];
++    metadata.type = TextureCache::MetaDataInfo::Type::CMask;
++    metadata.fill_value = fill_value;
++    metadata.clear_mask = clear_mask;
++    metadata.fill_size = fill_size;
++  }
+ };
+ 
+ struct RenderExecutorTestAccess {
+   static void MaterializeColorClears(RenderExecutor& executor, CommandBuffer& command) {
+     executor.MaterializeBoundTargetDccClears(command);
+   }
++  // Track F, F16d (HPP-521): MaterializeDeferredDccClear and the meta-clear shortcut with the KYTY_DIAG_F5 list.
++  static void F16dMaterialize(RenderExecutor &executor, CommandBuffer &command, ImageId id) {
++    executor.MaterializeDeferredDccClear(command, id);
++  }
++  static bool F16dMetaClear(RenderExecutor &executor, const ShaderComputeInputInfo &input,
++                            const CommandBuffer &buffer, DiagF5::CsRefusals *refusals) {
++    return executor.TryConsumeComputeMetaClear(input, buffer, refusals);
++  }
+   static bool TryConsumeComputeImageClear(RenderExecutor &executor,
+       const ShaderComputeInputInfo &input, CommandBuffer &command,
+       uint32_t x, uint32_t y, uint32_t z, uint32_t mode) {
+@@ -9385,6 +9415,674 @@ public:
+     std::printf("[gpu]     %-32s ok\n", name);
+   }
+ 
++  // Track F, F16d (HPP-521, ROADMAP s122 items 421(g), 427(g) RC1(b), 433(g)): the test site of KYTY_DIAG_F5 /
++  // KYTY_DIAG_F6 without the game. Each scenario drives one site on a synthetic cache state and checks the delta of
++  // EVERY counter: with the knob on - the named counters by the named amounts and all others 0 (every branch of set B
++  // exactly once, its own counter +1, the neighbours 0, the family identity); with the knob off (unset or "0") - no
++  // counter moves and no line is printed. The driver runs the mode three times: KYTY_DIAG_F5 / KYTY_DIAG_F6 unset,
++  // =0 and =1.
++  struct F16dSnap {
++    std::array<uint64_t, static_cast<size_t>(DiagF5::Counter::Count)> f5{};
++    std::array<uint64_t, static_cast<size_t>(DiagF6::Counter::Count)> f6{};
++  };
++  static F16dSnap F16dTake() {
++    F16dSnap snap;
++    for (uint32_t i = 0; i < snap.f5.size(); i++) {
++      snap.f5[i] = DiagF5::Get(static_cast<DiagF5::Counter>(i));
++    }
++    for (uint32_t i = 0; i < snap.f6.size(); i++) {
++      snap.f6[i] = DiagF6::Get(static_cast<DiagF6::Counter>(i));
++    }
++    return snap;
++  }
++  using F16dWant5 = std::vector<std::pair<DiagF5::Counter, uint64_t>>;
++  using F16dWant6 = std::vector<std::pair<DiagF6::Counter, uint64_t>>;
++  inline static uint32_t f16d_checks = 0;
++  static void F16dExpect(const char *stage, const F16dSnap &before, const F16dWant5 &want5,
++                         const F16dWant6 &want6 = {}) {
++    const auto now = F16dTake();
++    for (uint32_t i = 0; i < now.f5.size(); i++) {
++      uint64_t want = 0;
++      if (DiagF5::On()) {
++        for (const auto &[counter, amount] : want5) {
++          if (static_cast<uint32_t>(counter) == i) {
++            want += amount;
++          }
++        }
++      }
++      const auto got = now.f5[i] - before.f5[i];
++      Require("DiagF5", stage, got == want,
++              fmt::format("{}: delta {} != expected {}", DiagF5::Name(static_cast<DiagF5::Counter>(i)), got,
++                          want));
++    }
++    for (uint32_t i = 0; i < now.f6.size(); i++) {
++      uint64_t want = 0;
++      if (DiagF6::On()) {
++        for (const auto &[counter, amount] : want6) {
++          if (static_cast<uint32_t>(counter) == i) {
++            want += amount;
++          }
++        }
++      }
++      const auto got = now.f6[i] - before.f6[i];
++      Require("DiagF6", stage, got == want,
++              fmt::format("{}: delta {} != expected {}", DiagF6::Name(static_cast<DiagF6::Counter>(i)), got,
++                          want));
++    }
++    f16d_checks++;
++    std::printf("[f16d]    %-44s ok\n", stage);
++  }
++  // The family identities on the absolute values (item 427(g)(1)).
++  // `meta_extra` - children of meta_refused_known added by pure calls (no parent) minus parents without a child.
++  static void F16dIdentities(const char *stage, uint64_t meta_extra) {
++    using C = DiagF5::Counter;
++    const auto g = [](C c) { return DiagF5::Get(c); };
++    const auto sum = [&](std::initializer_list<C> list) {
++      uint64_t s = 0;
++      for (const auto c : list) {
++        s += g(c);
++      }
++      return s;
++    };
++    Require("DiagF5", stage,
++            g(C::DccRtPending) == sum({C::DccRtCleared, C::DccRtSkipLevels, C::DccRtSkipPartial,
++                                       C::DccRtSkipDecode, C::DccRtSkipLayers}) &&
++                g(C::DccMatPending) == sum({C::DccMatCleared, C::DccMatUndecoded}) &&
++                g(C::DccFce) == sum({C::DccFceImage, C::DccFceNoImage}) &&
++                g(C::DccFillMeta) == sum({C::DccFillClear, C::DccFillUncompressed, C::DccFillUnknown}) &&
++                g(C::MetaRefusedKnown) + meta_extra ==
++                    sum({C::MetaCsTracked, C::MetaCsUntracked, C::MetaDmaUntracked, C::MetaDmaNoClear}) &&
++                g(C::CmaskRtPending) == sum({C::CmaskRtCleared, C::CmaskRtSkipValue, C::CmaskRtSkipPartial,
++                                             C::CmaskRtSkipDecode, C::CmaskRtSkipLayers}) &&
++                g(C::CmaskFce) == sum({C::CmaskFceNoImage, C::CmaskFceMeta, C::CmaskFceMsaa, C::CmaskFceLayout,
++                                       C::CmaskFceNoFill, C::CmaskFceDrawn, C::CmaskFceB42,
++                                       C::CmaskFceUnapplied}) &&
++                g(C::DccRt) <= g(C::RtResolves),
++            "a family identity of DiagF5 is broken");
++    using D = DiagF6::Counter;
++    const auto h = [](D d) { return DiagF6::Get(d); };
++    Require("DiagF6", stage,
++            h(D::SBound) + h(D::SAddr0Fmt) + h(D::SAddr0NoFmt) + h(D::SMask0Addr) + h(D::SEmpty) ==
++                    8 * h(D::Draws) &&
++                h(D::HBound) + h(D::BoundMissing) == h(D::SBound) + h(D::BoundExtra) &&
++                h(D::WTotal) == h(D::WBound) + h(D::WMask0) + h(D::WAddr0Fmt) + h(D::WAddr0NoFmt) + h(D::WGe8) &&
++                h(D::DrawsIdx) + h(D::DrawsAuto) + h(D::DrawsInd) + h(D::DrawsMesh) == h(D::Draws) &&
++                h(D::PsDraws) <= h(D::Draws),
++            "an identity of DiagF6 is broken");
++    std::printf("[f16d]    %-44s ok\n", stage);
++  }
++
++  void CheckDiagF5F6() {
++    constexpr const char *name = "DiagF5F6";
++    using C = DiagF5::Counter;
++    const bool want5 = Common::EnvValueOn(std::getenv("KYTY_DIAG_F5"));
++    const bool want6 = Common::EnvValueOn(std::getenv("KYTY_DIAG_F6"));
++    Require(name, "knob read", DiagF5::On() == want5 && DiagF6::On() == want6,
++            "DiagF5::On / DiagF6::On do not follow KYTY_DIAG_F5 / KYTY_DIAG_F6 (unset or \"\" or 0 = OFF)");
++    std::printf("[f16d]    knobs: KYTY_DIAG_F5=%d KYTY_DIAG_F6=%d\n", DiagF5::On() ? 1 : 0, DiagF6::On() ? 1 : 0);
++
++    // ---- pure helpers
++    Require(name, "ViewLayerBits",
++            DiagF5::ViewLayerBits(0, 1) == 1u && DiagF5::ViewLayerBits(3, 2) == 0x18u &&
++                DiagF5::ViewLayerBits(0, 32) == UINT32_MAX && DiagF5::ViewLayerBits(31, 1) == 0x80000000u &&
++                DiagF5::ViewLayerBits(32, 1) == UINT32_MAX && DiagF5::ViewLayerBits(30, 3) == UINT32_MAX &&
++                DiagF5::ViewLayerBits(5, 0) == 0u,
++            "view layer bits");
++    Require(name, "DccFillClassOf",
++            DiagF5::DccFillClassOf(0) == DiagF5::FillClass::Clear &&
++                DiagF5::DccFillClassOf(0x20202020u) == DiagF5::FillClass::Clear &&
++                DiagF5::DccFillClassOf(0x40404040u) == DiagF5::FillClass::Clear &&
++                DiagF5::DccFillClassOf(0x80808080u) == DiagF5::FillClass::Clear &&
++                DiagF5::DccFillClassOf(0xc0c0c0c0u) == DiagF5::FillClass::Clear &&
++                DiagF5::DccFillClassOf(0xffffffffu) == DiagF5::FillClass::Uncompressed &&
++                DiagF5::DccFillClassOf(0x41414141u) == DiagF5::FillClass::Unknown &&
++                DiagF5::DccFillClassOf(0x00000040u) == DiagF5::FillClass::Unknown &&
++                DiagF5::DccFillClassOf(0x3f800000u) == DiagF5::FillClass::Unknown,
++            "the classification of TrackDccFill");
++    {
++      auto before = F16dTake();
++      DiagF5::CsRefusals refusals;
++      refusals.count = 2;
++      refusals.addresses[0] = 0x1000;
++      refusals.addresses[1] = 0x2000;
++      if (DiagF5::On()) {
++        DiagF5::NoteCsRefusals(refusals, 0x2000);
++      }
++      F16dExpect("cs refusals: one tracked, one not", before, {{C::MetaCsTracked, 1}, {C::MetaCsUntracked, 1}});
++      before = F16dTake();
++      if (DiagF5::On()) {
++        DiagF5::NoteCsRefusals(refusals, 0);
++      }
++      F16dExpect("cs refusals: none tracked", before, {{C::MetaCsUntracked, 2}});
++      before = F16dTake();
++      if (DiagF5::On()) {
++        DiagF5::NoteDmaRefusal(DiagF5::RefusalDcc, 0x40404040u);
++        DiagF5::NoteDmaRefusal(DiagF5::RefusalDcc, 0xffffffffu);
++        DiagF5::NoteDmaRefusal(DiagF5::RefusalCmask, 0);
++        DiagF5::NoteDmaRefusal(DiagF5::RefusalCmask, 5);
++        DiagF5::NoteDmaRefusal(DiagF5::RefusalNone, 0);
++      }
++      F16dExpect("dma refusal classes", before, {{C::MetaDmaUntracked, 2}, {C::MetaDmaNoClear, 2}});
++    }
++
++    // ---- DiagF6: a synthetic draw state (item 433(g)): a slot of every class, an export into every class
++    {
++      using D = DiagF6::Counter;
++      HW::Context hw{};
++      const auto fmt8888 = Prospero::ChannelLayout::k8_8_8_8;
++      hw.SetColorBase(0, {.addr = 0x0000000300000000ull});
++      hw.SetColorInfo(0, {.format = fmt8888});
++      hw.SetColorBase(1, {.addr = 0});
++      hw.SetColorInfo(1, {.format = fmt8888});
++      hw.SetColorBase(2, {.addr = 0});
++      hw.SetColorInfo(2, {.format = Prospero::ChannelLayout::kInvalid});
++      hw.SetColorBase(3, {.addr = 0x0000000300100000ull});
++      hw.SetColorInfo(3, {.format = fmt8888});
++      hw.SetRenderTargetMask(0x0fffu); // slots 0-2 masked on, slot 3 masked off (base set), 4-7 empty
++      const uint32_t host_ok[] = {0};
++      const uint32_t host_extra[] = {0, 3};
++      const uint32_t mrt[] = {0, 1, 2, 3, 4, 9};
++      const F16dWant6 slots_once = {{D::SBound, 1}, {D::SAddr0Fmt, 1}, {D::SAddr0NoFmt, 1}, {D::SMask0Addr, 1},
++                                    {D::SEmpty, 4}};
++      const F16dWant6 writes = {{D::PsDraws, 1}, {D::WTotal, 6}, {D::WBound, 1}, {D::WAddr0Fmt, 1},
++                                {D::WAddr0NoFmt, 1}, {D::WMask0, 2}, {D::WGe8, 1}};
++      const auto plus = [](F16dWant6 a, const F16dWant6 &b) {
++        a.insert(a.end(), b.begin(), b.end());
++        return a;
++      };
++      const std::pair<DiagF6::DrawKind, D> kinds[] = {{DiagF6::DrawKind::Indexed, D::DrawsIdx},
++                                                      {DiagF6::DrawKind::Auto, D::DrawsAuto},
++                                                      {DiagF6::DrawKind::Indirect, D::DrawsInd},
++                                                      {DiagF6::DrawKind::Mesh, D::DrawsMesh}};
++      for (const auto &[kind, counter] : kinds) {
++        const auto before = F16dTake();
++        DiagF6::NoteDraw(hw, host_ok, 1, true, mrt, 6, kind);
++        F16dExpect(fmt::format("f6 draw kind {} with ps", static_cast<uint32_t>(kind)).c_str(), before, {},
++                   plus(plus({{D::Draws, 1}, {counter, 1}, {D::HBound, 1}}, slots_once), writes));
++      }
++      auto before = F16dTake();
++      DiagF6::NoteDraw(hw, host_ok, 1, false, mrt, 6, DiagF6::DrawKind::Indexed);
++      F16dExpect("f6 draw without ps: no export counted", before, {},
++                 plus({{D::Draws, 1}, {D::DrawsIdx, 1}, {D::HBound, 1}}, slots_once));
++      before = F16dTake();
++      DiagF6::NoteDraw(hw, host_extra, 2, false, nullptr, 0, DiagF6::DrawKind::Auto);
++      F16dExpect("f6 bound_extra (slot 3 bound, mask 0)", before, {},
++                 plus({{D::Draws, 1}, {D::DrawsAuto, 1}, {D::HBound, 2}, {D::BoundExtra, 1}}, slots_once));
++      before = F16dTake();
++      DiagF6::NoteDraw(hw, nullptr, 0, false, nullptr, 0, DiagF6::DrawKind::Mesh);
++      F16dExpect("f6 bound_missing (slot 0 not bound)", before, {},
++                 plus({{D::Draws, 1}, {D::DrawsMesh, 1}, {D::BoundMissing, 1}}, slots_once));
++      F16dIdentities("identities after the pure calls", DiagF5::On() ? 8 : 0);
++    }
++
++    // ---- the flip tick and the mode line (item 427(e))
++    {
++      const auto line = DiagF5::FormatLine(7);
++      Require(name, "line form",
++              line.rfind("DiagF5: frame=7 rt_resolves=", 0) == 0 && line.find(" zero_disp=") != std::string::npos &&
++                  DiagF6::FormatLine(7).rfind("DiagF6: frame=7 draws=", 0) == 0 &&
++                  DiagF6::FormatLine(7).find(" w_ge8=") != std::string::npos,
++              "the line names every counter");
++      const bool first5 = DiagF5::LogMode();
++      const bool second5 = DiagF5::LogMode();
++      const bool first6 = DiagF6::LogMode();
++      const bool second6 = DiagF6::LogMode();
++      Require(name, "mode line once",
++              !second5 && !second6 && (DiagF5::On() || !first5) && (DiagF6::On() || !first6),
++              "the mode line is printed more than once, or with the knob off");
++      // Counters grew above with the knob on (NoteCsRefusals, NoteDraw): the first tick prints, a tick < 2 s later
++      // with a growth does not, a tick >= 2 s later with a growth does, a tick without a growth does not.
++      const bool t1 = DiagF5::TickAt(1, 100000);
++      if (DiagF5::On()) {
++        DiagF5::NoteDmaRefusal(DiagF5::RefusalCmask, 0);
++      }
++      const bool t2 = DiagF5::TickAt(2, 101999);
++      const bool t3 = DiagF5::TickAt(3, 102000);
++      const bool t4 = DiagF5::TickAt(4, 200000);
++      const bool u1 = DiagF6::TickAt(1, 100000);
++      const bool u2 = DiagF6::TickAt(2, 300000);
++      Require(name, "tick",
++              DiagF5::On() ? (t1 && !t2 && t3 && !t4) : (!t1 && !t2 && !t3 && !t4),
++              fmt::format("DiagF5 tick {} {} {} {}", t1, t2, t3, t4));
++      Require(name, "tick f6", DiagF6::On() ? (u1 && !u2) : (!u1 && !u2),
++              fmt::format("DiagF6 tick {} {}", u1, u2));
++      std::printf("[f16d]    %-44s ok (mode line first call: f5=%d f6=%d)\n", "tick and mode line", first5 ? 1 : 0,
++                  first6 ? 1 : 0);
++    }
++
++    EnsureRuntimeContext();
++    constexpr uintptr_t base = 0x0000000207000000ull;
++    constexpr uint64_t allocation_size = 0x2000000;
++    int64_t direct = -1;
++    Require(name, "allocate",
++            Libs::LibKernel::Memory::KernelAllocateDirectMemory(
++                0, Libs::LibKernel::Memory::KernelGetDirectMemorySize(), allocation_size, 0x10000, 0, &direct) == 0,
++            "F16d test allocation failed");
++    void *mapped = reinterpret_cast<void *>(base);
++    Require(name, "map",
++            Libs::LibKernel::Memory::KernelMapDirectMemory(&mapped, allocation_size, 3, 0x10, direct, 0x10000) == 0 &&
++                mapped == reinterpret_cast<void *>(base),
++            "F16d test mapping failed");
++    std::memset(mapped, 0x5a, allocation_size);
++
++    // ---- A: a DCC colour target (PrepareDccClear, MaterializeDeferredDccClear, the DCC FCE scan, fills, ClearMeta)
++    {
++      constexpr uint64_t color = base;
++      constexpr uint64_t dcc = base + 0x400000;
++      constexpr uint64_t plain = base + 0x800000;
++      constexpr uint64_t pending = base + 0xc00000;
++      constexpr uint64_t cmask_entry = base + 0xd00000;
++      constexpr uint64_t other_entry = base + 0xe00000;
++      RenderContext context(m_runtime_context);
++      LibKernel::Memory::InstallGpuResources(&context);
++      auto &scheduler = context.GetCommandScheduler();
++      HW::Context registers{};
++      HW::UserConfig user_config{};
++      HW::Shader shaders{};
++      registers.SetColorBase(0, {.addr = color});
++      registers.SetColorInfo(0, {.dcc_compression_enable = true,
++                                 .format = Prospero::ChannelLayout::k10_10_10_2,
++                                 .channel_type = Prospero::ChannelType::kUNorm,
++                                 .channel_order = Prospero::ChannelOrder::kStandard});
++      registers.SetColorAttrib2(0, {.height = 255, .width = 255});
++      registers.SetColorAttrib3(0, {.tile_mode = Prospero::TileMode::kRenderTarget, .dimension = 1,
++                                    .metadata_pipe_aligned = true});
++      registers.SetColorDccAddr(0, {.addr = dcc});
++      registers.SetColorClearWord0(0, {.word0 = 0});
++      registers.SetColorClearWord1(0, {.word1 = 0});
++      registers.SetColorBase(2, {.addr = plain});
++      registers.SetColorInfo(2, {.format = Prospero::ChannelLayout::k8_8_8_8,
++                                 .channel_type = Prospero::ChannelType::kUNorm,
++                                 .channel_order = Prospero::ChannelOrder::kStandard});
++      registers.SetColorAttrib2(2, {.height = 63, .width = 63});
++      registers.SetColorAttrib3(2, {.tile_mode = Prospero::TileMode::kRenderTarget, .dimension = 1,
++                                    .metadata_pipe_aligned = true});
++      registers.SetRenderTargetMask(0x0f0fu);
++      scheduler.Begin(registers, user_config, shaders);
++      context.MapMemory(base, allocation_size);
++      auto &cache = context.GetTextureCache();
++      auto &executor = context.GetRenderExecutor();
++
++      auto before = F16dTake();
++      RenderColorInfo target{};
++      RenderExecutorTestAccess::ResolveRenderColorTarget(executor, scheduler.Current(), target, 0);
++      F16dExpect("A0 resolve DCC target", before, {{C::RtResolves, 1}, {C::DccRt, 1}});
++      Require(name, "A0 descriptor",
++              target.image_id && target.desc.info.metadata.kind == ImageMetadataKind::Dcc &&
++                  target.desc.info.metadata.range.address == dcc && target.desc.info.metadata.range.size >= 0x200,
++              "the DCC target was not resolved with its metadata");
++      const auto id = target.image_id;
++      const auto desc = target.desc;
++      const auto msize = desc.info.metadata.range.size;
++      const F16dWant5 fill_clear = {{C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillClear, 1}};
++
++      before = F16dTake();
++      cache.TrackDccFill(dcc, msize, 0);
++      F16dExpect("A1 fill of an unknown address (PendingDcc)", before, {{C::DccFillAll, 1}});
++      before = F16dTake();
++      (void)cache.FindRenderTarget(id, desc);
++      F16dExpect("A2 PendingDcc -> Dcc, render-target clear", before,
++                 {{C::DccFillMeta, 1}, {C::DccFillClear, 1}, {C::DccRtPending, 1}, {C::DccRtCleared, 1}});
++
++      before = F16dTake();
++      cache.TrackDccFill(dcc, msize / 2, 0);
++      TextureCacheTestAccess::F16dPrepareDccClear(cache, id, desc);
++      F16dExpect("A3 B dcc_rt_skip_partial", before, {{C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillClear, 1},
++                                                    {C::DccRtPending, 1}, {C::DccRtSkipPartial, 1}});
++
++      before = F16dTake();
++      cache.TrackDccFill(dcc, msize, 0);
++      TextureCacheTestAccess::F16dImage(cache, id).info.resources.levels = 2;
++      TextureCacheTestAccess::F16dPrepareDccClear(cache, id, desc);
++      TextureCacheTestAccess::F16dImage(cache, id).info.resources.levels = 1;
++      F16dExpect("A4 B dcc_rt_skip_levels", before, {{C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillClear, 1},
++                                                   {C::DccRtPending, 1}, {C::DccRtSkipLevels, 1}});
++
++      before = F16dTake();
++      auto no_register = desc;
++      no_register.info.metadata.dcc_clear_register_valid = false;
++      cache.TrackDccFill(dcc, msize, 0x20202020u);
++      TextureCacheTestAccess::F16dPrepareDccClear(cache, id, no_register);
++      F16dExpect("A5 B dcc_rt_skip_decode", before, {{C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillClear, 1},
++                                                   {C::DccRtPending, 1}, {C::DccRtSkipDecode, 1}});
++
++      before = F16dTake();
++      auto far_layer = desc;
++      far_layer.view_info.base_layer = 32;
++      far_layer.view_info.layer_count = 1;
++      cache.TrackDccFill(dcc, msize, 0);
++      TextureCacheTestAccess::F16dPrepareDccClear(cache, id, far_layer);
++      F16dExpect("A6 B dcc_rt_skip_layers", before, {{C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillClear, 1},
++                                                   {C::DccRtPending, 1}, {C::DccRtSkipLayers, 1}});
++
++      before = F16dTake();
++      auto sampled = desc;
++      sampled.type = BindingType::Texture;
++      cache.TrackDccFill(dcc, msize / 2, 0);
++      TextureCacheTestAccess::F16dPrepareDccClear(cache, id, sampled);
++      F16dExpect("A7 texture path: no dcc_rt_* (RC4)", before, fill_clear);
++
++      before = F16dTake();
++      TextureCacheTestAccess::F16dPrepareDccClear(cache, id, desc);
++      F16dExpect("A7b render target, partial fill again", before,
++                 {{C::DccRtPending, 1}, {C::DccRtSkipPartial, 1}});
++
++      before = F16dTake();
++      cache.TrackDccFill(dcc, msize, 0xffffffffu);
++      F16dExpect("A8 fill 0xff (uncompressed)", before,
++                 {{C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillUncompressed, 1}});
++      before = F16dTake();
++      cache.TrackDccFill(dcc, msize, 0x12345678u);
++      F16dExpect("A8b B dcc_fill_unknown", before,
++                 {{C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillUnknown, 1}});
++      before = F16dTake();
++      TextureCacheTestAccess::F16dPrepareDccClear(cache, id, desc);
++      F16dExpect("A8c unknown code: nothing pending", before, {});
++
++      before = F16dTake();
++      cache.TrackDccFill(dcc, msize, 0x20202020u);
++      registers.SetColorDccAddr(0, {.addr = dcc + 0x100000});
++      RenderExecutorTestAccess::F16dMaterialize(executor, scheduler.Current(), id);
++      F16dExpect("A9 B dcc_mat_undecoded", before,
++                 {{C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillClear, 1}, {C::DccMatPending, 1},
++                  {C::DccMatUndecoded, 1}});
++      registers.SetColorDccAddr(0, {.addr = dcc});
++      before = F16dTake();
++      cache.TrackDccFill(dcc, msize, 0);
++      RenderExecutorTestAccess::F16dMaterialize(executor, scheduler.Current(), id);
++      F16dExpect("A9b materialized (code 00)", before,
++                 {{C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillClear, 1}, {C::DccMatPending, 1},
++                  {C::DccMatCleared, 1}});
++      before = F16dTake();
++      RenderExecutorTestAccess::F16dMaterialize(executor, scheduler.Current(), id);
++      F16dExpect("A9c nothing pending", before, {});
++
++      before = F16dTake();
++      registers.SetColorBase(1, {.addr = base + 0x1800000});
++      registers.SetColorDccAddr(1, {.addr = base + 0x1c00000});
++      RenderExecutorTestAccess::MaterializeColorClears(executor, scheduler.Current());
++      registers.SetColorBase(1, {.addr = 0});
++      registers.SetColorDccAddr(1, {.addr = 0});
++      F16dExpect("A10 FCE scan: DCC slot with image, B dcc_fce_no_image", before,
++                 {{C::DccFce, 2}, {C::DccFceImage, 1}, {C::DccFceNoImage, 1}});
++
++      before = F16dTake();
++      TextureCacheTestAccess::F16dSetCmaskMeta(cache, other_entry, 0, 0, 0);
++      auto other = desc;
++      other.info.metadata.range.address = other_entry;
++      TextureCacheTestAccess::F16dPrepareDccClear(cache, id, other);
++      TextureCacheTestAccess::F16dPrepareDccClear(cache, id, desc);
++      F16dExpect("A11 entry of another type reset (reference)", before, {{C::DccResetType, 1}});
++
++      before = F16dTake();
++      RenderColorInfo plain_target{};
++      RenderExecutorTestAccess::ResolveRenderColorTarget(executor, scheduler.Current(), plain_target, 2);
++      cache.TrackDccFill(pending, 0x1000, 0x40404040u);
++      const bool adopted = cache.AdoptPendingDccForTexture(plain_target.image_id, pending);
++      F16dExpect("A12 adoption PendingDcc -> Dcc for a texture", before,
++                 {{C::RtResolves, 1}, {C::DccFillAll, 1}, {C::DccFillMeta, 1}, {C::DccFillClear, 1}});
++      Require(name, "A12 adopted", adopted, "the pending fill was not adopted");
++
++      before = F16dTake();
++      TextureCacheTestAccess::F16dSetCmaskMeta(cache, cmask_entry, 0, 0, 0);
++      uint8_t k_dcc = DiagF5::RefusalNone;
++      uint8_t k_cmask = DiagF5::RefusalNone;
++      uint8_t k_none = DiagF5::RefusalNone;
++      const bool r_dcc = cache.ClearMeta(dcc, &k_dcc);
++      const bool r_cmask = cache.ClearMeta(cmask_entry, &k_cmask);
++      const bool r_none = cache.ClearMeta(base + 0x1f00000, &k_none);
++      F16dExpect("A13 ClearMeta refusals of known metadata", before, {{C::MetaRefusedKnown, 2}});
++      Require(name, "A13 kinds",
++              !r_dcc && !r_cmask && !r_none && k_none == DiagF5::RefusalNone &&
++                  (DiagF5::On() ? (k_dcc == DiagF5::RefusalDcc && k_cmask == DiagF5::RefusalCmask)
++                                : (k_dcc == DiagF5::RefusalNone && k_cmask == DiagF5::RefusalNone)),
++              "ClearMeta's answer or refusal kind");
++
++      before = F16dTake();
++      auto &buffers = context.GetBufferCache();
++      buffers.FillBuffer(dcc, 0x100, 0x40404040u, false);
++      buffers.FillBuffer(dcc, 0x100, 0xffffffffu, false);
++      buffers.FillBuffer(cmask_entry, 0x100, 0, false);
++      buffers.FillBuffer(cmask_entry, 0x100, 5, false);
++      buffers.FillBuffer(base + 0x1f00000, 0x100, 0, false);
++      F16dExpect("A14 DMA fill: B meta_dma_untracked x2, noclear x2", before,
++                 {{C::MetaRefusedKnown, 4}, {C::MetaDmaUntracked, 2}, {C::MetaDmaNoClear, 2}});
++
++      before = F16dTake();
++      ShaderRecompiler::IR::CompiledShaderInfo program{};
++      program.stage = ShaderType::Compute;
++      ShaderRecompiler::IR::BufferResource resource{};
++      resource.read = false;
++      resource.written = true;
++      resource.formatted = true;
++      program.info.buffers.push_back(resource);
++      ShaderBufferResource descriptor{};
++      descriptor.UpdateAddress48(dcc);
++      descriptor.fields[1] |= 16u << 16u;
++      descriptor.fields[2] = 8;
++      descriptor.fields[3] =
++          DstSel(4, 5, 6, 7) | (static_cast<uint32_t>(Prospero::BufferFormat::k32_32_32_32UInt) << 12u);
++      ShaderRecompiler::IR::DescriptorValue value{};
++      value.dword_count = 4;
++      std::copy_n(descriptor.fields, value.dword_count, value.dwords.begin());
++      ShaderComputeInputInfo input{};
++      input.stage.program = &program;
++      input.stage.resources.buffers.push_back(value);
++      DiagF5::CsRefusals refusals;
++      const bool consumed =
++          RenderExecutorTestAccess::F16dMetaClear(executor, input, scheduler.Current(), &refusals);
++      F16dExpect("A15 compute write refused (the parent in ClearMeta)", before, {{C::MetaRefusedKnown, 1}});
++      Require(name, "A15 list",
++              !consumed && (DiagF5::On() ? (refusals.count == 1 && refusals.addresses[0] == dcc) : refusals.count == 0),
++              "the refused address was not handed to the dispatch");
++      before = F16dTake();
++      if (DiagF5::On()) {
++        DiagF5::NoteCsRefusals(refusals, 0);
++      }
++      F16dExpect("A15b B meta_cs_untracked", before, {{C::MetaCsUntracked, 1}});
++      before = F16dTake();
++      if (DiagF5::On()) {
++        DiagF5::NoteCsRefusals(refusals, dcc);
++      }
++      F16dExpect("A15c meta_cs_tracked", before, {{C::MetaCsTracked, 1}});
++
++      RenderExecutorTestAccess::ResetBindings(executor);
++      context.UnmapMemory(base, allocation_size);
++      scheduler.Finish();
++      LibKernel::Memory::InstallGpuResources(nullptr);
++    }
++
++    // ---- B: a 1024x1024 CMASK target (PrepareCmaskClear; the FCE scan on a target with CMASK metadata)
++    {
++      constexpr uint64_t color = base + 0x1000000;
++      constexpr uint64_t meta = base + 0x1800000;
++      RenderContext context(m_runtime_context);
++      auto &scheduler = context.GetCommandScheduler();
++      HW::Context registers{};
++      HW::UserConfig user_config{};
++      HW::Shader shaders{};
++      registers.SetColorBase(0, {.addr = color});
++      registers.SetColorInfo(0, {.cmask_fast_clear_enable = true,
++                                 .format = Prospero::ChannelLayout::k16_16_16_16,
++                                 .channel_type = Prospero::ChannelType::kFloat,
++                                 .channel_order = Prospero::ChannelOrder::kStandard});
++      registers.SetColorAttrib2(0, {.height = 1023, .width = 1023});
++      registers.SetColorAttrib3(0, {.tile_mode = Prospero::TileMode::kRenderTarget, .dimension = 1,
++                                    .metadata_pipe_aligned = true});
++      registers.SetColorCmask(0, {.addr = meta});
++      registers.SetColorClearWord0(0, {.word0 = 0x38003800});
++      registers.SetColorClearWord1(0, {.word1 = 0x00005650});
++      registers.SetRenderTargetMask(0x0f);
++      scheduler.Begin(registers, user_config, shaders);
++      context.MapMemory(base, allocation_size);
++      auto &cache = context.GetTextureCache();
++      auto &executor = context.GetRenderExecutor();
++
++      auto before = F16dTake();
++      RenderColorInfo target{};
++      RenderExecutorTestAccess::ResolveRenderColorTarget(executor, scheduler.Current(), target, 0);
++      F16dExpect("B0 resolve CMASK target", before, {{C::RtResolves, 1}});
++      Require(name, "B0 descriptor",
++              target.image_id && target.desc.info.metadata.kind == ImageMetadataKind::Cmask &&
++                  target.desc.info.metadata.range.size == 0x2000,
++              "the CMASK target was not resolved with its metadata");
++      const auto id = target.image_id;
++      const auto desc = target.desc;
++
++      before = F16dTake();
++      cache.TrackDccFill(meta, 0x2000, 0);
++      (void)cache.FindRenderTarget(id, desc);
++      F16dExpect("B1 CMASK clear", before, {{C::DccFillAll, 1}, {C::CmaskRtPending, 1}, {C::CmaskRtCleared, 1}});
++
++      before = F16dTake();
++      cache.TrackDccFill(meta, 0x1000, 0);
++      TextureCacheTestAccess::F16dPrepareCmaskClear(cache, id, desc);
++      F16dExpect("B2 B cmask_rt_skip_partial", before,
++                 {{C::DccFillAll, 1}, {C::CmaskRtPending, 1}, {C::CmaskRtSkipPartial, 1}});
++
++      before = F16dTake();
++      cache.TrackDccFill(meta, 0x2000, 0);
++      auto &image = TextureCacheTestAccess::F16dImage(cache, id);
++      const auto backing_format = image.backing.format;
++      image.backing.format = vk::Format::eD32Sfloat; // no packed colour decoding for it (DecodePackedColorClear)
++      TextureCacheTestAccess::F16dPrepareCmaskClear(cache, id, desc);
++      image.backing.format = backing_format;
++      F16dExpect("B3 B cmask_rt_skip_decode", before,
++                 {{C::DccFillAll, 1}, {C::CmaskRtPending, 1}, {C::CmaskRtSkipDecode, 1}});
++
++      before = F16dTake();
++      auto mip_view = desc;
++      mip_view.view_info.base_level = 1;
++      TextureCacheTestAccess::F16dPrepareCmaskClear(cache, id, mip_view);
++      F16dExpect("B4 B cmask_rt_skip_layers", before, {{C::CmaskRtPending, 1}, {C::CmaskRtSkipLayers, 1}});
++
++      before = F16dTake();
++      TextureCacheTestAccess::F16dSetCmaskMeta(cache, meta, 1, UINT32_MAX, 0x2000);
++      TextureCacheTestAccess::F16dPrepareCmaskClear(cache, id, desc);
++      F16dExpect("B5 B cmask_rt_skip_value", before, {{C::CmaskRtPending, 1}, {C::CmaskRtSkipValue, 1}});
++
++      before = F16dTake();
++      TextureCacheTestAccess::F16dSetCmaskMeta(cache, meta, 0, 0, 0x2000);
++      TextureCacheTestAccess::F16dPrepareCmaskClear(cache, id, desc);
++      F16dExpect("B6 nothing pending", before, {});
++
++      before = F16dTake();
++      RenderExecutorTestAccess::MaterializeColorClears(executor, scheduler.Current());
++      F16dExpect("B7 FCE scan: CMASK target with metadata", before,
++                 {{C::CmaskFce, 1}, {C::RtResolves, 1}, {C::CmaskFceMeta, 1}});
++
++      RenderExecutorTestAccess::ResetBindings(executor);
++      context.UnmapMemory(base, allocation_size);
++      scheduler.Finish();
++    }
++
++    // ---- C: the FCE scan on CMASK targets without metadata (B42 class, MSAA, volume)
++    {
++      constexpr uint64_t color = base + 0x1000000;
++      constexpr uint64_t meta = base + 0x1600000;
++      RenderContext context(m_runtime_context);
++      auto &scheduler = context.GetCommandScheduler();
++      HW::Context registers{};
++      HW::UserConfig user_config{};
++      HW::Shader shaders{};
++      registers.SetColorBase(0, {.addr = color});
++      registers.SetColorInfo(0, {.cmask_fast_clear_enable = true,
++                                 .format = Prospero::ChannelLayout::k8_8_8_8,
++                                 .channel_type = Prospero::ChannelType::kUNorm,
++                                 .channel_order = Prospero::ChannelOrder::kStandard});
++      registers.SetColorAttrib2(0, {.height = 539, .width = 959});
++      registers.SetColorAttrib3(0, {.tile_mode = Prospero::TileMode::kRenderTarget, .dimension = 1,
++                                    .metadata_pipe_aligned = true});
++      registers.SetColorCmask(0, {.addr = meta});
++      registers.SetColorClearWord0(0, {.word0 = 0xff000000u});
++      registers.SetColorClearWord1(0, {.word1 = 0});
++      registers.SetRenderTargetMask(0x0f);
++      scheduler.Begin(registers, user_config, shaders);
++      context.MapMemory(base, allocation_size);
++      auto &cache = context.GetTextureCache();
++      auto &executor = context.GetRenderExecutor();
++
++      auto before = F16dTake();
++      RenderColorInfo target{};
++      RenderExecutorTestAccess::ResolveRenderColorTarget(executor, scheduler.Current(), target, 0);
++      F16dExpect("C0 resolve 960x540 CMASK target", before, {{C::RtResolves, 1}});
++      Require(name, "C0 descriptor",
++              target.image_id && target.desc.info.metadata.kind == ImageMetadataKind::None,
++              "the 960x540 target got metadata");
++      const auto id = target.image_id;
++
++      before = F16dTake();
++      RenderExecutorTestAccess::MaterializeColorClears(executor, scheduler.Current());
++      F16dExpect("C1 B cmask_fce_nofill", before, {{C::CmaskFce, 1}, {C::RtResolves, 1}, {C::CmaskFceNoFill, 1}});
++
++      before = F16dTake();
++      cache.TrackDccFill(meta, 0x1000, 0);
++      RenderExecutorTestAccess::MaterializeColorClears(executor, scheduler.Current());
++      F16dExpect("C2 B42 hit applied", before,
++                 {{C::DccFillAll, 1}, {C::CmaskFce, 1}, {C::CmaskRtPending, 1}, {C::CmaskRtCleared, 1},
++                  {C::CmaskFceB42, 1}});
++
++      before = F16dTake();
++      cache.TrackDccFill(meta, 0x1000, 0);
++      (void)cache.FindRenderTarget(id, target.desc);
++      RenderExecutorTestAccess::MaterializeColorClears(executor, scheduler.Current());
++      F16dExpect("C3 B42 drawn (reference)", before, {{C::DccFillAll, 1}, {C::CmaskFce, 1}, {C::CmaskFceDrawn, 1}});
++
++      before = F16dTake();
++      cache.TrackDccFill(meta, 0x1000, 0);
++      auto &image = TextureCacheTestAccess::F16dImage(cache, id);
++      const auto backing_format = image.backing.format;
++      image.backing.format = vk::Format::eD32Sfloat;
++      RenderExecutorTestAccess::MaterializeColorClears(executor, scheduler.Current());
++      image.backing.format = backing_format;
++      F16dExpect("C4 B cmask_fce_unapplied", before,
++                 {{C::DccFillAll, 1}, {C::CmaskFce, 1}, {C::CmaskRtPending, 1}, {C::CmaskRtSkipDecode, 1},
++                  {C::CmaskFceUnapplied, 1}});
++
++      registers.SetColorBase(0, {.addr = 0});
++      registers.SetColorBase(1, {.addr = base + 0x1200000});
++      registers.SetColorInfo(1, {.cmask_fast_clear_enable = true,
++                                 .format = Prospero::ChannelLayout::k8_8_8_8,
++                                 .channel_type = Prospero::ChannelType::kUNorm,
++                                 .channel_order = Prospero::ChannelOrder::kStandard});
++      registers.SetColorAttrib(1, {.num_samples = 2, .num_fragments = 2});
++      registers.SetColorAttrib2(1, {.height = 127, .width = 127});
++      registers.SetColorAttrib3(1, {.tile_mode = Prospero::TileMode::kRenderTarget, .dimension = 1,
++                                    .metadata_pipe_aligned = true});
++      registers.SetColorCmask(1, {.addr = base + 0x1700000});
++      before = F16dTake();
++      RenderExecutorTestAccess::MaterializeColorClears(executor, scheduler.Current());
++      F16dExpect("C5 B cmask_fce_msaa", before, {{C::CmaskFce, 1}, {C::RtResolves, 1}, {C::CmaskFceMsaa, 1}});
++
++      registers.SetColorBase(1, {.addr = 0});
++      registers.SetColorBase(2, {.addr = base + 0x1400000});
++      registers.SetColorInfo(2, {.cmask_fast_clear_enable = true,
++                                 .format = Prospero::ChannelLayout::k8_8_8_8,
++                                 .channel_type = Prospero::ChannelType::kUNorm,
++                                 .channel_order = Prospero::ChannelOrder::kStandard});
++      registers.SetColorAttrib2(2, {.height = 31, .width = 31});
++      registers.SetColorAttrib3(2, {.depth = 31, .tile_mode = Prospero::TileMode::kRenderTarget, .dimension = 2,
++                                    .metadata_pipe_aligned = true});
++      registers.SetColorCmask(2, {.addr = base + 0x1780000});
++      before = F16dTake();
++      RenderExecutorTestAccess::MaterializeColorClears(executor, scheduler.Current());
++      F16dExpect("C6 cmask_fce_layout (volume)", before,
++                 {{C::CmaskFce, 1}, {C::RtResolves, 1}, {C::CmaskFceLayout, 1}});
++
++      RenderExecutorTestAccess::ResetBindings(executor);
++      context.UnmapMemory(base, allocation_size);
++      scheduler.Finish();
++    }
++    Require(name, "unmap", Libs::LibKernel::Memory::KernelMunmap(base, allocation_size) == 0, "F16d test unmap failed");
++    Require(name, "release",
++            Libs::LibKernel::Memory::KernelReleaseDirectMemory(direct, allocation_size) == 0,
++            "F16d test release failed");
++    // A13 adds 2 parents without a child; the pure CS / DMA calls (2 + 2 + 4), the tick (1) and A15c (1) add 10
++    // children without a parent: children - parents = 8 beyond the balanced sites.
++    F16dIdentities("identities after all scenarios", DiagF5::On() ? 8 : 0);
++    std::printf("[f16d]    %-44s ok (%u checks)\n", name, f16d_checks);
++  }
++
+   void CheckCmaskRegisterClear() {
+     constexpr const char* name = "CmaskRegisterClear";
+     constexpr uintptr_t base = 0x0000000206000000ull;
+@@ -32318,6 +33016,13 @@ int main(int argc, char **argv) {
+     vulkan.CheckUnifiedTextureCacheFlow();
+     return 0;
+   }
++  if (argc == 2 && std::strcmp(argv[1], "--diag-f5-only") == 0) {
++    // Track F, F16d (HPP-521): the KYTY_DIAG_F5 / KYTY_DIAG_F6 test site; run with the knobs unset, 0 and 1.
++    VulkanHarness vulkan;
++    vulkan.CheckDiagF5F6();
++    std::printf("DiagF5F6 test site: ALL OK\n");
++    return 0;
++  }
+   if (argc == 2 && std::strcmp(argv[1], "--cmask-clear-only") == 0) {
+     VulkanHarness vulkan;
+     vulkan.CheckCmaskRegisterClear();

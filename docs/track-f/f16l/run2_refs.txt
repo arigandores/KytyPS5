@@ -1,0 +1,74 @@
+OK  c0789a34:docs/ROADMAP.md:22766
+    (з) **Критерий кода F16k (до кода):** (1) код в `main` по (в)–(г), ручки по умолчанию 0; (2) тест-сайт (г)(6) и случаи `KYTY_FIX_F5CMU` (соседняя непе
+    +1 (и) **Звенья** (стадия review лида у каждого звена исполнителя): **F16k** (Emu Engineer, `todo`; очередь исполнителя — после текущих звеньев) — код и 
+OK  b6858d6d:docs/ROADMAP.md:22788
+    (б) **Поправки буквы п. 492, принятые как решение лида (F16l проверяет каждую):** (1) откат кольца — только при числе записей корзины > K и самой стар
+    +1 (в) **Правило чтения к поправкам (дополняет п. 492(д)):** `kind=exit` — «не определено» для ключа (не (Б)); ключ класса `meta_clear` (на тегах (ж) при
+OK  b6858d6d:docs/ROADMAP.md:22789
+    (в) **Правило чтения к поправкам (дополняет п. 492(д)):** `kind=exit` — «не определено» для ключа (не (Б)); ключ класса `meta_clear` (на тегах (ж) при
+    +1 (г) **В-F16k-1 — принят вариант исполнителя.** `present=p` строки `DiagF5Ev:` — номер последнего показанного к событию кадра в счёте `.idx` [c кода `s
+OK  859d2ed8:docs/track-f/f16i-review.md:55
+    **RC3. Счётчик исполнения правки — решение, а не очистка.**
+    +1 Что не так: `kept` (`F16H:120`) растёт в `PendingDccFillStale`, до проверок `PrepareCmaskClear`, которые возвращаются без `ClearImage`:
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3922
+    if (color.image_id && color.desc.info.metadata.kind == ImageMetadataKind::Cmask) {
+    +1 // Session 71, candidate C3 (counters only): the second entrance into
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3938
+    DiagF5::On() ? &f5_cmu : nullptr); // Track F, F16k: its decision for the event line
+    +1 }
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3955
+    if (DiagF5::On() && b42.kind == FixB42Kind::Hit) [[unlikely]] {
+    +1 // Track F, F16k (item 492(v)(4)): the event line of a B42 hit - the last present number of the video
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3973
+    : f5_info.metadata.kind != ImageMetadataKind::None ? DiagF5::Counter::CmaskFceMeta
+    +1 : f5_info.samples != 1                             ? DiagF5::Counter::CmaskFceMsaa
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3883
+    const auto since = std::max(before.fill_seq, DiagF5Id::FillSeq(e.dcc));
+    +1 const auto exact = buffers.LastGpuWriteSeqExact(e.dcc, e.dcc_size, since);
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:6706
+    DiagF5Id::NoteBind(image.info.data.address, DiagF5Id::BindKind::Texture, image.info.metadata.kind,
+    +1 image.info.metadata.range.address, GpuTimeProfiler::Frame());
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1889
+    : m_out(out), m_decide(fce && DiagF5::FixCmuOn()), m_rt_count(!fce && DiagF5Id::On()) {
+    +1 m_probe.exact_decides = m_decide;
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1898
+    if (m_decide && DiagF5::On()) [[unlikely]] {
+    +1 switch (fix) {
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3511
+    if (f5_probe->exact_decides && !f5_probe->exact_stale && !f5_probe->fallback) {
+    +1 return false;
+OK  810909e3:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2866
+    if (DiagF5::ExactRingOn()) [[unlikely]] {
+    +1 for (auto bucket = first; bucket <= last; bucket++) {
+OK  810909e3:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2899
+    if (ring->second.count > ExactRing::K && oldest > since) {
+    +1 answer.fallback = true;
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:586
+    static const bool on = FixCmuOn() || DiagF5Id::On();
+    +1 return on;
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:637
+    auto text = fmt::format("DiagF5Ev: cmask_fce n={} present={} gpu={} image=0x{:016x} cmask=0x{:016x} extent={}x{} "
+    +1 "applied={} fix={}",
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:865
+    const bool known = before.type == MetaType::PendingDcc || before.type == MetaType::Dcc ||
+    +1 before.type == MetaType::CMask;
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:972
+    IdClose(s, i, "exit", frame);
+    +1 } else if (frame - rec.open_frame >= kNoneFrames) {
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:998
+    const bool id_cs  = cnt[kImgClear] + cnt[kMetaClear] + cnt[kTrackedOther] + cnt[kExecNoFill] + cnt[kExecFillClear] +
+    +1 cnt[kExecFillOther] ==
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.h:26
+    #include "graphics/host_gpu/renderer/image/imageInfo.h"
+    +1 
+OK  810909e3:CMakeLists.txt:156
+    -D SHADER_CACHE_EXTRA_FILES=${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp$<SEMICOLON>${KYTY_SOURCE_DIR}/graphics/g
+    +1 -P ${KYTY_SOURCE_DIR}/generate_version.cmake
+OK  a6114045:docs/track-f/f16f/runs/f5_ef/read.json:106
+    "cmask_fce_meta": 20163,
+    +1 "cmask_fce_msaa": 0,
+OK  a6114045:docs/track-f/f16f/f16f_read.py:101
+    return re.compile(tag + rb': frame=(\d+)' + b''.join(rb' ' + n.encode() + rb'=(\d+)' for n in names) + rb'(?=\s|$)')
+    +1 
+24 refs
+ALL OK

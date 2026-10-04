@@ -1,0 +1,376 @@
+{
+  "tag": "fs5_i",
+  "binary_sha256": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+  "started": "2026-10-04T10:58:08",
+  "launched": "2026-10-04T10:52:02",
+  "finished": "2026-10-04T10:58:08",
+  "cmdline": [
+    "C:\\kyty\\KytyPS5\\ps5 em\\kyty_emulator.exe",
+    "--screen-width",
+    "1280",
+    "--screen-height",
+    "720",
+    "--user-name",
+    "Player",
+    "--user-id",
+    "1000",
+    "--present-mode",
+    "Fifo",
+    "--vblank-frequency",
+    "60",
+    "--console-language",
+    "1",
+    "--vulkan-validation",
+    "false",
+    "--shader-validation",
+    "false",
+    "--shader-optimization-type",
+    "Size",
+    "--shader-log-direction",
+    "File",
+    "--shader-log-folder",
+    "_Shaders",
+    "--command-buffer-dump",
+    "false",
+    "--command-buffer-dump-folder",
+    "_Buffers",
+    "--printf-direction",
+    "File",
+    "--printf-output-file",
+    "_kyty.txt",
+    "--spirv-debug-printf",
+    "false",
+    "--game",
+    "C:\\kyty\\KytyPS5\\ps5 em\\games\\PPSA21564-app"
+  ],
+  "env": {
+    "KYTY_FRAME_TRACE": "lite",
+    "KYTY_GPU_HANG_ABORT_S": "8",
+    "KYTY_GATE_FILE": "C:\\kyty\\f287\\fs5\\fs5e\\gates.req",
+    "KYTY_SAMPLE_GATE": "C:\\kyty\\f287\\fs5\\fs5e\\sample.req",
+    "KYTY_QUEUE_TRACE": "1",
+    "KYTY_GUEST_ARGS": "-lvl underwater_aerial_garden",
+    "KYTY_REC": "C:\\kyty\\f287\\fs5\\fs5e\\rec_fs5_i.mp4",
+    "KYTY_GPU_CLOCK_PIN": "1",
+    "KYTY_GPU_MARKERS": "0"
+  },
+  "schedule": "",
+  "arms": [],
+  "phases": [],
+  "notes": "KYTY_GPU_TIME unset: the record thread stays live (PacketsWanted); guest command line: -lvl underwater_aerial_garden; stable = 90 consecutive FrameTrace lines with draws >= 300; ran the already installed binary (--no-install)",
+  "pre_run": {
+    "gpu_util_median": 0.0,
+    "gpu_power_median": 18.7,
+    "gpu_memory_used_mib": 1373,
+    "gpu_sm_mhz_median": 1485.0,
+    "gpu_util_samples": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gpu_apps": [
+      {
+        "pid": 10484,
+        "name": "C:\\Windows\\SystemApps\\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\\CrossDeviceResume.exe"
+      },
+      {
+        "pid": 7304,
+        "name": "C:\\Windows\\explorer.exe"
+      },
+      {
+        "pid": 4148,
+        "name": "C:\\Windows\\SystemApps\\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\\StartMenuExperienceHost.exe"
+      },
+      {
+        "pid": 11500,
+        "name": "C:\\Windows\\SystemApps\\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\\SearchHost.exe"
+      },
+      {
+        "pid": 18320,
+        "name": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\153.0.4234.48\\<foreign app>.exe"
+      },
+      {
+        "pid": 1476,
+        "name": "C:\\Program Files\\<foreign app>\\<foreign app>\\<foreign app>.exe"
+      },
+      {
+        "pid": 21192,
+        "name": "C:\\Windows\\SystemApps\\ShellExperienceHost_cw5n1h2txyewy\\ShellExperienceHost.exe"
+      },
+      {
+        "pid": 19148,
+        "name": "C:\\Program Files\\<foreign app>\\<foreign app>\\app-4.0.823\\<foreign app>.exe"
+      },
+      {
+        "pid": 21648,
+        "name": "C:\\Windows\\SystemApps\\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\\TextInputHost.exe"
+      },
+      {
+        "pid": 25780,
+        "name": "C:\\Program Files\\<foreign app>\\system_tray\\<foreign app>.exe"
+      },
+      {
+        "pid": 37408,
+        "name": "C:\\Program Files\\WindowsApps\\AdvancedMicroDevicesInc-2.AMDRadeonSoftware_10.25.10326.0_x64__0a9344xs7nr4m\\radeonsoftware\\AMDRSSrcExt.exe"
+      },
+      {
+        "pid": 37780,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.YourPhone_1.26072.255.0_x64__8wekyb3d8bbwe\\PhoneExperienceHost.exe"
+      },
+      {
+        "pid": 38076,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.YourPhone_1.26072.255.0_x64__8wekyb3d8bbwe\\YourPhoneAppProxyHost.exe"
+      },
+      {
+        "pid": 40560,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.WindowsTerminal_1.24.11911.0_x64__8wekyb3d8bbwe\\WindowsTerminal.exe"
+      },
+      {
+        "pid": 12248,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.ScreenSketch_11.2607.23.0_x64__8wekyb3d8bbwe\\SnippingTool\\SnippingTool.exe"
+      },
+      {
+        "pid": 7424,
+        "name": "C:\\Windows\\System32\\ApplicationFrameHost.exe"
+      },
+      {
+        "pid": 49864,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.GamingApp_2610.1001.4.0_x64__8wekyb3d8bbwe\\XboxPcTray.exe"
+      },
+      {
+        "pid": 46060,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.GamingApp_2610.1001.4.0_x64__8wekyb3d8bbwe\\XboxPcApp.exe"
+      },
+      {
+        "pid": 33176,
+        "name": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.37\\<foreign app>.exe"
+      },
+      {
+        "pid": 49544,
+        "name": "C:\\Program Files\\WindowsApps\\MicrosoftWindows.CrossDevice_1.26072.116.0_x64__cw5n1h2txyewy\\CrossDeviceStreamingHost.exe"
+      },
+      {
+        "pid": 36064,
+        "name": "C:\\Program Files\\WindowsApps\\<foreign app>.<foreign app>_2.14.0.0_x64__69b7b6qge1ahj\\<foreign app>\\<foreign app>.exe"
+      },
+      {
+        "pid": 3652,
+        "name": "C:\\Windows\\System32\\ShellHost.exe"
+      },
+      {
+        "pid": 49504,
+        "name": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\<foreign app>.exe"
+      },
+      {
+        "pid": 40384,
+        "name": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\<foreign app>.exe"
+      }
+    ],
+    "host": {
+      "available": true,
+      "process_count": 414,
+      "top": [
+        {
+          "name": "node",
+          "pid": 18388,
+          "cpu_s": 37166.6,
+          "ws_mib": 1421.4
+        },
+        {
+          "name": "PhoneExperienceHost",
+          "pid": 37780,
+          "cpu_s": 23865.0,
+          "ws_mib": 782.0
+        },
+        {
+          "name": "explorer",
+          "pid": 7304,
+          "cpu_s": 12068.5,
+          "ws_mib": 693.0
+        },
+        {
+          "name": "audiodg",
+          "pid": 23460,
+          "cpu_s": 10814.1,
+          "ws_mib": 31.3
+        },
+        {
+          "name": "nvcontainer",
+          "pid": 10308,
+          "cpu_s": 4703.7,
+          "ws_mib": 157.2
+        },
+        {
+          "name": "<foreign app>_agent",
+          "pid": 25836,
+          "cpu_s": 3503.3,
+          "ws_mib": 302.2
+        },
+        {
+          "name": "WindowsTerminal",
+          "pid": 40560,
+          "cpu_s": 2946.2,
+          "ws_mib": 377.2
+        },
+        {
+          "name": "CrossDeviceService",
+          "pid": 14164,
+          "cpu_s": 2855.3,
+          "ws_mib": 245.6
+        },
+        {
+          "name": "<foreign app>_agent",
+          "pid": 68992,
+          "cpu_s": 2843.3,
+          "ws_mib": 44.7
+        },
+        {
+          "name": "<foreign app>",
+          "pid": 1476,
+          "cpu_s": 2628.7,
+          "ws_mib": 282.0
+        },
+        {
+          "name": "<foreign app>",
+          "pid": 36064,
+          "cpu_s": 2628.1,
+          "ws_mib": 603.1
+        },
+        {
+          "name": "<foreign app>",
+          "pid": 21984,
+          "cpu_s": 2042.8,
+          "ws_mib": 370.5
+        },
+        {
+          "name": "codex",
+          "pid": 59172,
+          "cpu_s": 1214.9,
+          "ws_mib": 213.1
+        },
+        {
+          "name": "<foreign app>",
+          "pid": 25780,
+          "cpu_s": 1135.4,
+          "ws_mib": 252.7
+        },
+        {
+          "name": "GoogleDriveFS",
+          "pid": 32300,
+          "cpu_s": 916,
+          "ws_mib": 164.5
+        },
+        {
+          "name": "<foreign app>",
+          "pid": 23764,
+          "cpu_s": 571.4,
+          "ws_mib": 200.0
+        },
+        {
+          "name": "<foreign app>",
+          "pid": 19148,
+          "cpu_s": 521.8,
+          "ws_mib": 339.3
+        },
+        {
+          "name": "AMDRSSrcExt",
+          "pid": 37408,
+          "cpu_s": 512.3,
+          "ws_mib": 327.9
+        },
+        {
+          "name": "grep",
+          "pid": 38224,
+          "cpu_s": 499.9,
+          "ws_mib": 8.8
+        },
+        {
+          "name": "grep",
+          "pid": 46536,
+          "cpu_s": 459.8,
+          "ws_mib": 9.6
+        }
+      ],
+      "top_names": [
+        "amdrssrcext",
+        "audiodg",
+        "<foreign app>",
+        "codex",
+        "crossdeviceservice",
+        "explorer",
+        "<foreign app>_agent",
+        "<foreign app>",
+        "googledrivefs",
+        "grep",
+        "<foreign app>_agent",
+        "<foreign app>",
+        "node",
+        "nvcontainer",
+        "phoneexperiencehost",
+        "<foreign app>",
+        "windowsterminal"
+      ],
+      "sampled_at": "2026-10-04T10:52:02"
+    },
+    "sampled_at": "2026-10-04T10:52:02"
+  },
+  "hold_gpu": {
+    "available": true,
+    "source": "gpuclk csv (nvidia-smi -lms 500)",
+    "hold_from": "2026/10/04 10:52:32.713",
+    "hold_to": "2026/10/04 10:58:02.782",
+    "rows": 651,
+    "util_rows": 651,
+    "gpu_util_median": 43.0,
+    "gpu_power_median": 75.5,
+    "gpu_util_max": 49.0,
+    "note": "a row, not a guard"
+  },
+  "prereg": {
+    "path": "C:\\kyty\\f287\\fs5\\fs5e\\pred\\fs5e_seal.md",
+    "bytes": 9700,
+    "sha256": "cc1cb88efe084699b03f229a015ea871a89e11716c8eb3912acdf89dd080ee86",
+    "mtime": "2026-10-04T10:42:56",
+    "ctime": "2026-10-04T10:42:56",
+    "mtime_ctime_delta_s": 0.0,
+    "read_at": "2026-10-04T10:51:58"
+  },
+  "attempts": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 33464,
+      "level": "underwater_aerial_garden",
+      "guest_args": "-lvl underwater_aerial_garden",
+      "document_s": 15.9,
+      "started_s": 19.0,
+      "stable_s": 29.9,
+      "stable_frame": 454,
+      "outcome": "ok",
+      "detail": null,
+      "hold_from": "2026/10/04 10:52:32.713",
+      "hold_to": "2026/10/04 10:58:02.782",
+      "ft_total": 10328,
+      "ft_tail": 154,
+      "ft_tail_span_s": 5.019,
+      "ft_window_s": 5.0,
+      "hold_exit": null,
+      "hold_s": 330.1,
+      "pipeline_cache_off": false
+    }
+  ],
+  "gates": "",
+  "schedule_period": 0,
+  "schedule_start": 0,
+  "guest_args": "-lvl underwater_aerial_garden",
+  "hold_s": 330,
+  "ft_total": 10328,
+  "ft_tail": 154,
+  "ft_tail_span_s": 5.019,
+  "ft_window_s": 5.0,
+  "cpuclk_requested": true,
+  "gpuclk": "C:\\kyty\\f287\\fs5\\fs5e\\gpuclk_fs5_i.csv",
+  "cpuclk": null
+}

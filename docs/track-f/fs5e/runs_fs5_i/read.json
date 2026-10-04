@@ -1,0 +1,61 @@
+{
+ "tag": "fs5_i",
+ "level": "underwater_aerial_garden",
+ "log": "C:/kyty/f287/fs5/fs5e\\log_fs5_i.txt",
+ "log_sha256": "0543f2335293826c0ef54b5195f20be7f84d2127d5d8efc01e78d157d45239cd",
+ "log_lines": 2399015,
+ "stdout_sha256": "bb2551dc9a38b37dcf44181e15cb6f4274d9ee3ce4ade40889d66363b49bd3e6",
+ "rev": [
+  [
+   "log",
+   121,
+   "0e72bc1"
+  ]
+ ],
+ "rev_row": "YES",
+ "stc": [
+  "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10"
+ ],
+ "fixf10_ok": true,
+ "precache_first": "PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10\\pipelines.bin yet",
+ "cold_txt": "cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-04T08:51:56Z; entries of _ShaderCache/PPSA21564: 1346",
+ "cold_ok": true,
+ "warm_txt": "warm form after the tag: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 files 397; pipelines.bin present size 3945014 sha256 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f0",
+ "warm_size": 3945014,
+ "warm_ok": true,
+ "installed_sha": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+ "installed_before": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+ "sha_ok": true,
+ "fs": [
+  [
+   79,
+   1,
+   1
+  ]
+ ],
+ "fs_ok": true,
+ "fail_log": 0,
+ "fail_stdout": 0,
+ "fail_hashes": [],
+ "ended": false,
+ "end_info": "outcome ok detail None hold_exit None hold_s 330.1 stable_s 29.9",
+ "guest_first": 11892,
+ "entry_line": 351926,
+ "scene_change_line": null,
+ "first_scene_n": 365,
+ "hold_us": 334412529,
+ "hold_s": 334.41,
+ "k2_after": 0,
+ "dt_max_after": 459233,
+ "ft_rows": 10328,
+ "death": [],
+ "stdout_present": true,
+ "skipped_draw": 1996,
+ "win": {},
+ "recovering": 0,
+ "gamepatch": 0,
+ "idx_records": 10335,
+ "glitches": 0,
+ "sheet": "sheet: C:/kyty/f287/fs5/fs5e/runs/fs5_i/sheet_fs5_i.png frames 10335 step 215 tiles 8x6",
+ "verdict": "PASS"
+}

@@ -1,0 +1,16 @@
+prereg: fs5e_seal.md  9700 bytes  sha256 cc1cb88efe084699  mtime 2026-10-04T10:42:56  mtime-ctime +0.000 s
+pre_run: host 414 processes, top by CPU: node 37167s, PhoneExperienceHost 23865s, explorer 12068s, audiodg 10814s, nvcontainer 4704s, <foreign app>_agent 3503s
+pre_run: GPU 0.0 % busy, 18.7 W, 1373 MiB used, SM 1485.0 MHz, 24 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\fs5\fs5e\cpuclk.py is not there
+--- attempt 1: launching
+15.9 s  LevelDocument Loaded: underwater_aerial_garden
+19.0 s  Level has started: underwater_aerial_garden
+29.9 s  scene stable at frame 454 (90 frames with draws >= 300)
+holding the run for 330 s
+hold end: ft_total 10328, ft_tail 154 (last 5 s)
+hold_gpu: median 43.0 % busy over 651 rows (2026/10/04 10:52:32.713 .. 2026/10/04 10:58:02.782), a row, not a guard
+copied C:\kyty\f287\fs5\fs5e\log_fs5_i.txt
+copied C:\kyty\f287\fs5\fs5e\stdout_fs5_i.txt
+
+attempt 1  ok               document=15.9 s started=19.0 s stable=29.9 s 
+VERDICT: underwater_aerial_garden in 29.9 s - PASS (acceptance <= 90 s)

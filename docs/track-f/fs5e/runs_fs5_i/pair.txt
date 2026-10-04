@@ -1,0 +1,1 @@
+pair: C:/kyty/f287/fs5/fs5e/runs/fs5_i/pair_fs5_i_fs5_v.png (left fs5_i, right fs5_v)

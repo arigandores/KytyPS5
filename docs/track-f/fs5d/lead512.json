@@ -1,0 +1,359 @@
+{
+ "fs5_v": {
+  "installed_sha": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+  "installed_before": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "installed_after": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "cold": "cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-04T07:51:23Z; entries of _ShaderCache/PPSA21564: 1346",
+  "manifest_cmp": "manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393",
+  "manifest_cmp_ref": "manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393",
+  "json_binary_sha256": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+  "attempts": [
+   [
+    "ok",
+    null
+   ]
+  ],
+  "idx_lines": 10324,
+  "sha_log": "02aa3473bf1cf7375a6cac4f59334ea733532e1c0a99767353bc000e0ca4f60f",
+  "sha_out": "7713672da0ab299454d7b805fb62807fcfeb53e4e81a183c0a60061975fba553",
+  "sha_mp4": "bda089b0af7e939b89f399047d8179572e87420bac5132c6fc24c6a1444efa2e",
+  "sha_idx": "0c159ab30a113e656ae8b5b12780f465c05b5cae6cf53216e07d12148fd6c8b3",
+  "log": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [
+    [
+     79,
+     1,
+     1
+    ]
+   ],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": [
+    72,
+    "DualSrcBlend: supported=1 enabled=1"
+   ],
+   "first_guest": 11892,
+   "entry": 352347,
+   "first_scene": 1319980,
+   "hold_us": 334313681,
+   "max_dt": 374813,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 1843,
+   "pc_first": "PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10\\pipelines.bin yet",
+   "rev": [
+    "0e72bc1"
+   ],
+   "cache_dirs": [
+    "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10"
+   ],
+   "gamepatch": 0,
+   "lines": 2398775
+  },
+  "out": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": null,
+   "first_guest": null,
+   "entry": null,
+   "first_scene": null,
+   "hold_us": 0,
+   "max_dt": 0,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": null,
+   "rev": [],
+   "cache_dirs": [],
+   "gamepatch": 0,
+   "lines": 920
+  }
+ },
+ "fs5_w": {
+  "installed_sha": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+  "installed_before": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "installed_after": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "cold": "cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-04T07:59:21Z; entries of _ShaderCache/PPSA21564: 1346",
+  "manifest_cmp": "manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393",
+  "manifest_cmp_ref": "manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393",
+  "json_binary_sha256": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+  "attempts": [
+   [
+    "ok",
+    null
+   ]
+  ],
+  "sha_log": "f58eb740c7564cc8ffce6663d03ef331b7db6bc162759e0e101546d6970e0b42",
+  "sha_out": "1fc9efe363a2220a6a64badeffa11aee35b1ec5755383345648ddf17429f54ab",
+  "log": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [
+    [
+     83,
+     1,
+     1
+    ]
+   ],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 930253,
+   "last": 0,
+   "dual": [
+    76,
+    "DualSrcBlend: supported=1 enabled=1"
+   ],
+   "first_guest": 11895,
+   "entry": 348568,
+   "first_scene": 1310369,
+   "hold_us": 324234782,
+   "max_dt": 618951,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 970,
+   "pc_first": "PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10\\pipelines.bin yet",
+   "rev": [
+    "0e72bc1"
+   ],
+   "cache_dirs": [
+    "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10"
+   ],
+   "gamepatch": 0,
+   "lines": 3634303
+  },
+  "out": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": null,
+   "first_guest": null,
+   "entry": null,
+   "first_scene": null,
+   "hold_us": 0,
+   "max_dt": 0,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": null,
+   "rev": [],
+   "cache_dirs": [],
+   "gamepatch": 0,
+   "lines": 924
+  }
+ },
+ "fs5_r1": {
+  "installed_sha": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+  "installed_before": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "installed_after": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "cold": "cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-04T08:06:29Z; entries of _ShaderCache/PPSA21564: 1346",
+  "manifest_cmp": "manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393",
+  "manifest_cmp_ref": "manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393",
+  "json_binary_sha256": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+  "attempts": [
+   [
+    "ok",
+    null
+   ]
+  ],
+  "idx_lines": 10098,
+  "sha_log": "f54891a6e73fc6f765326e263e5c08416fa5aa6ea9cd42c84ca6c4d708469b2a",
+  "sha_out": "74dd83245b4b429ba20aeb54dde87d87eb717c1e53b41d63bee9a58f4a03ff95",
+  "sha_mp4": "f8e1f79c829e6a44d80a187c4272a0963b241354bb124799410e54a098b5bf36",
+  "sha_idx": "2dcde6db4dce0bcbb54e0d2333feb5943e11f613e07d0575c93194d75d6c016a",
+  "log": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [
+    [
+     79,
+     1,
+     1
+    ]
+   ],
+   "st_n": 1,
+   "st_last": [
+    768687,
+    256,
+    0
+   ],
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": [
+    72,
+    "DualSrcBlend: supported=1 enabled=1"
+   ],
+   "first_guest": 11892,
+   "entry": 348639,
+   "first_scene": 1310059,
+   "hold_us": 335064581,
+   "max_dt": 589859,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 1635,
+   "pc_first": "PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10\\pipelines.bin yet",
+   "rev": [
+    "0e72bc1"
+   ],
+   "cache_dirs": [
+    "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10"
+   ],
+   "gamepatch": 0,
+   "lines": 2525458
+  },
+  "out": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": null,
+   "first_guest": null,
+   "entry": null,
+   "first_scene": null,
+   "hold_us": 0,
+   "max_dt": 0,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": null,
+   "rev": [],
+   "cache_dirs": [],
+   "gamepatch": 0,
+   "lines": 920
+  }
+ },
+ "fs5_hb": {
+  "installed_sha": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+  "installed_before": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "installed_after": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "cold": "cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-04T08:14:18Z; entries of _ShaderCache/PPSA21564: 1346",
+  "manifest_cmp": "manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393",
+  "manifest_cmp_ref": "manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393",
+  "json_binary_sha256": "631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17",
+  "attempts": [
+   [
+    "ok",
+    null
+   ]
+  ],
+  "idx_lines": 20095,
+  "sha_log": "352b8c48b02fbca525f4a08bf2ab38218dc985eb6b71499b80317b767291a223",
+  "sha_out": "73122800fcaabb422bde9ad32cf7a4b11b248ad4f509a72eb81519ff22458bee",
+  "sha_mp4": "d04eaa42d9426691441bc872944bbf7657c115cc1b51d2a2e9bc5f7012c6afd0",
+  "sha_idx": "3db42a4424b29844db9400c9d7c82d884d6a7a577404148e95d1b4a35041e797",
+  "log": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [
+    [
+     79,
+     1,
+     1
+    ]
+   ],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": [
+    72,
+    "DualSrcBlend: supported=1 enabled=1"
+   ],
+   "first_guest": 11892,
+   "entry": 344117,
+   "first_scene": 853914,
+   "hold_us": 333408342,
+   "max_dt": 384188,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 826,
+   "pc_first": "PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10\\pipelines.bin yet",
+   "rev": [
+    "0e72bc1"
+   ],
+   "cache_dirs": [
+    "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10"
+   ],
+   "gamepatch": 0,
+   "lines": 2800543
+  },
+  "out": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": null,
+   "first_guest": null,
+   "entry": null,
+   "first_scene": null,
+   "hold_us": 0,
+   "max_dt": 0,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": null,
+   "rev": [],
+   "cache_dirs": [],
+   "gamepatch": 0,
+   "lines": 739
+  }
+ }
+}

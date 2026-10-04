@@ -1,0 +1,2 @@
+C:/kyty/f287/fs5/fs5c/rec_fs5_v.mp4: 10324 frames 960x540, index entries 10324
+one-frame glitches: 0

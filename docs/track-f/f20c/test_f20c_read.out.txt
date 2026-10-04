@@ -1,0 +1,5 @@
+watch: start 2026-10-04T13:53:15Z child 66568 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+suite test_f20c_read.py sha256 af1bf36fa18f98416253e75b351da6b005b004f42e41ec5f840d07ba5b0272b0 target f20c_read.py sha256 73e4a8fb62f7acfd812997d168cc1ee99dcdada43a1ee66e85007e171b536a2e
+checks 99, failed 0
+ALL OK
+rc=0 end 2026-10-04T13:53:17Z

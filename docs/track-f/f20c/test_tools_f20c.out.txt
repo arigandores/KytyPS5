@@ -1,0 +1,5 @@
+watch: start 2026-10-04T13:58:17Z child 30452 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+suite test_tools_f20c.py sha256 c21d855c867822b2e8642380b04779640240a7112df0f22ee74b5765fd47dae9 target enter_scene.py sha256 9df6327bd554aac7da2a51dd695270c257106f1e18052f1ed92a2b8654058604 go_f20c.sh sha256 050b80ad64a218adc8f103387de1de725a3a7d0256202c0d4e87a52bcfa34890 queue_f20c.py sha256 186e5e47b7bb69ca6d7b0ac445a9cae6bd6f2d02378b2c0517d64624c8ade026
+checks 33, failed 0
+ALL OK
+rc=0 end 2026-10-04T13:58:20Z

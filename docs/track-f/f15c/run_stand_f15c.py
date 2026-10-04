@@ -5,7 +5,7 @@
 # Halts before a trial when C:/kyty/SEALED_RUN.lock or C:/kyty/f287/STOP exists (rule 27, rule 26).
 # Classes A/B/C: FATAL207 (DeleteDescriptor EXIT_IF m_files[index] == nullptr), FATAL446 (KernelOpen EXIT_IF after
 # GetFile), FATAL_OTHER, CLEAN, CRASH (exit code not 0/77), TIMEOUT (60 s per trial, the stand itself ends in < 3 s).
-# F15a matched the fatal by the line numbers :207 / :446 of fileSystem.cpp; the fix moves them (+14 lines above both),
+# F15a matched the fatal by the line numbers :207 / :446 of fileSystem.cpp; the fix moves them (+15 and +40 lines: :207 -> :222, :446 -> :486),
 # so the class is decided by the line text of the source file the stand was built from (argument-free: the path in the
 # FATAL line is the compile-time __FILE__, read here).
 # Class D: DATA_OK (exit 0, last line 'DATA 65536 fstat=65536', file on disk = pattern byte for byte), DATA_BAD (file

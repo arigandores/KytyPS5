@@ -1,0 +1,18 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-04T11:48:13Z F15e go_f15e b4_v lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T11:48:13Z F15e go_f15e b4_v installed binary inside the lock before the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T11:48:15Z F15e go_f15e b4_v manifest before: manifest C:/kyty/f287/f15e/runs/b4_v/manifest_before.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:48:20Z F15e go_f15e b4_v caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (192/172/5/520/ MB)
+2026-10-04T11:48:24Z F15e go_f15e b4_v warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T11:48:21Z; entries of _ShaderCache/PPSA21564: 1347
+2026-10-04T11:48:24Z F15e go_f15e b4_v installed the F15c copy: 907569f641bfea9fb9881213b77588a2c8365a084512e5ef734baf5aae82aff1
+2026-10-04T11:48:25Z F15e go_f15e b4_v enter_scene start (level underwater_aerial_garden, SD 300, --rec, hold 330, KYTY_FIX_B4=1, other defaults of the binary)
+2026-10-04T11:54:22Z F15e go_f15e b4_v enter_scene rc 0
+2026-10-04T11:54:22Z F15e go_f15e b4_v run: close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 3.7, 'close_wait_s': 40}
+2026-10-04T11:54:22Z F15e go_f15e b4_v log_b4_v.txt sha256 33ae6d86b34839c3292e8bb9a47f442c56f6b61ba0c875bd4dabb32601973357
+2026-10-04T11:54:23Z F15e go_f15e b4_v installed binary returned from the pinned copy
+2026-10-04T11:54:24Z F15e go_f15e b4_v installed binary after the tag: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+2026-10-04T11:54:27Z F15e go_f15e b4_v manifest of the run state (before the return): manifest C:/kyty/f287/f15e/runs/b4_v/manifest_run.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; run vs before: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:54:31Z F15e go_f15e b4_v caches, saves and GLCache returned
+2026-10-04T11:54:34Z F15e go_f15e b4_v manifest after: manifest C:/kyty/f287/f15e/runs/b4_v/manifest_after.tsv files 3323 bytes 920979467 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44; cmp: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+2026-10-04T11:54:34Z F15e go_f15e b4_v lock released (rc 0)
+rc=0

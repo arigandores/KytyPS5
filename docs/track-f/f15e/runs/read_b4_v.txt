@@ -1,0 +1,35 @@
+F15E b4_v level underwater_aerial_garden log sha256 33ae6d86b34839c3292e8bb9a47f442c56f6b61ba0c875bd4dabb32601973357 lines 1165884 stdout sha256 8cd4cc2235ea8048b6797c91593cda1ccbd18eab349ce0f03d5a256075c95bbe
+  binary: tag 907569f641bfea9fb9881213b77588a2c8365a084512e5ef734baf5aae82aff1 (expected 907569f641bfea9fb9881213b77588a2c8365a084512e5ef734baf5aae82aff1); version string KytyPS5-2026-09-15-6a2987a-1878-g5c2c5e52 in the binary: YES; installed before adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 after adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 (expected adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421); revision texts [('log', 524, '5c2c5e5')]
+  env of the tag (KYTY_FIX_*, KYTY_GAME_PATCH, KYTY_GPU_CHECKPOINTS): {'KYTY_FIX_B4': '1'}
+  FixB4 lines 1, first [(15, 1)] (first GuestOut line 12296)
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']; warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T11:48:21Z; entries of _ShaderCache/PPSA21564: 1347
+  entry line 224541; scene change line None; first scene frame n 232; hold (sum dt after it) 334.3 s; frames >= 1 s after it 0 (max dt_us 182291)
+  death markers: 0 []; emulator stdout present
+  quit: first Event: quit line 1165884; after it in the log: --- Fatal Error --- 0, m_files[index] == nullptr 0; whole log 0 / 0; whole stdout (no quit line there) 0 / 0
+  exit: outcome ok hold_exit None hold_s 330.2 close_posted 5 close_rc 0 close_killed False close_s 3.7 close_wait_s 40; exit code 0 (0x00000000) (REPORT row, 0 expected [I])
+  _SaveData manifest (REPORT row, not a gate): before 2 files, after the tag (before the return) 2 files, equal YES, differing []
+  window: none, Recovering Vulkan swapchain 0; GamePatch lines 0; AsyncPipelines: skipped draw 0; [Vulkan][E] 0 (reference)
+  video: index records 10218; one-frame glitches 0; sheet: C:/kyty/f287/f15e/runs/b4_v/sheet_b4_v.png frames 10218 step 212 tiles 8x6
+  manifest: manifest cmp EQUAL files 3323 listsha 19df3f640a7f34044f186ad55f32925123289f4559521c882a4d0109df6dbc44
+  ROW binary sha256 of the tag = 907569f6 (F15c copy): YES
+  ROW version string ...-1878-g5c2c5e52 in the tag binary: YES
+  ROW installed adb0c82f before the tag: YES
+  ROW installed adb0c82f after the return: YES
+  ROW env: KYTY_FIX_B4=1, no other KYTY_FIX_*, no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS: YES
+  ROW revision text names 5c2c5e5 (reference): YES
+  ROW translation cache directory variant_fixb26_fixb1b_fixf10 in every line (reference): YES
+  ROW warm form: variant_fixb26_fixb1b_fixf10 present before the start (reference): YES
+  ROW FixB4: mode=1 (every line) before the first GuestOut: YES
+  ROW entered (entry line of underwater_aerial_garden): YES
+  ROW hold >= 300 s after the first scene frame: YES
+  ROW the process lived through the hold (outcome ok, hold_exit null): YES
+  ROW frames >= 1 s after the first scene frame = 0 (REPORT, not a gate): YES
+  ROW 0 death markers (log and stdout): YES
+  ROW video index records >= 3000: YES
+  ROW 0 one-frame glitches: YES
+  ROW sheet for the lead made: YES
+  ROW exit by the harness: Event: quit line in the log: YES
+  ROW after Event: quit: 0 --- Fatal Error --- and 0 m_files[index] == nullptr (log): YES
+  ROW the process ended before the harness timeout (40 s after WM_CLOSE, not killed): YES
+  ROW manifest of the caches, saves and GLCache before = after the return: YES
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch line (else not read as an outcome, question to the lead): YES

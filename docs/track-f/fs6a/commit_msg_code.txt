@@ -1,0 +1,14 @@
+track F link FS6a (HPP-555): KYTY_FIX_B4 default 0 -> 1 (ROADMAP s122 item 454(g)(1))
+
+FixB4Enabled reads KYTY_FIX_B4 in the form of FS4a 17adaf80: unset or "" = ON, 0/false/off/no = OFF, any other value
+as EnvValueOn; one reading (static const bool) as before. The line FixB4: mode=, the =1 branch of EmergencyShutdown
+(FlushAll), its else branch (CloseAll) and Shutdown() are unchanged; only the comments and the reading change. The
+header comment of the stand tests/B4RaceStand.cpp now says that unset selects the default of fileSystem.cpp. Outside
+src/graphics/shader/**: KYTY_SHADER_SOURCE_HASH unchanged.
+
+Shipping binary FS6: clean worktree of S12a 4d9e8ab7 + cherry-pick of F15c a86a5ad0 + cherry-pick of this commit;
+F14e/F14e2, F18c, F19c, the track P code after 4414e235 and F14c are not in it. Not claimed: that B4 happens in the
+game on the current builds, that the game needs the fix, that the stand p_s is the game frequency. Not installed; no
+game run.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

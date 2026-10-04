@@ -1,0 +1,15 @@
+watch: start 2026-10-04T12:18:57Z child 25044 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+base kernel_file_system_tests --filesystem-only rc=0 wall=0.6 s last=[KernelFileSystemTests: all cases passed]
+fs6 kernel_file_system_tests --filesystem-only rc=0 wall=0.9 s last=[KernelFileSystemTests: all cases passed]
+base shader_cfg_tests  rc=0 wall=0.2 s last=[[test] TestNewShaderRecompilerUnsupportedMemoryDecode]
+fs6 shader_cfg_tests  rc=0 wall=0.2 s last=[[test] TestNewShaderRecompilerUnsupportedMemoryDecode]
+kfsonly failed-lines base 0 fs6 0 equal True
+scfg failed-lines base 4 fs6 4 equal True
+    ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod
+    ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod
+    shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfffffffe](Get
+    shader resource evaluation failed: hash=0x0000000000000000 flat slot 3: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem3 kind=1 off=0xe](GetBufferR
+base scfg tail: ['pretranslation test: ready=18 failed=1 hits=17']
+fs6 scfg tail: ['pretranslation test: ready=18 failed=1 hits=17']
+ALL OK
+rc=0 end 2026-10-04T12:19:00Z

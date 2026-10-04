@@ -1,0 +1,622 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5fd5a24e..5ea9d063 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -528,6 +528,11 @@ target_include_directories(event_queue_lifetime_tests PRIVATE ${inc_headers})
+ add_kyty_full_emulator_test(kernel_file_system_tests
+ 	"${KYTY_TESTS_DIR}/KernelFileSystemTests.cpp")
+ 
++# Track F, B4 exit race stand (F15a, F15c; ROADMAP s122 item 412(v)): run by docs/track-f/f15c/run_stand_f15c.py,
++# not by ctest.
++add_kyty_full_emulator_test(b4_race_stand
++	"${KYTY_TESTS_DIR}/B4RaceStand.cpp")
++
+ # Track F, F6 (ROADMAP s122 item 287(c)(4), B9a): the AudioPropagation NIDs through the symbol database, no game.
+ add_kyty_full_emulator_test(audio_propagation_tests
+ 	"${KYTY_TESTS_DIR}/AudioPropagationTests.cpp")
+diff --git a/docs/track-f/f15c/patch_f15c_cmake.py b/docs/track-f/f15c/patch_f15c_cmake.py
+new file mode 100644
+index 00000000..d22cc38d
+--- /dev/null
++++ b/docs/track-f/f15c/patch_f15c_cmake.py
+@@ -0,0 +1,28 @@
++# F15c (HPP-514, ROADMAP s122 item 412(v)): the B4 stand target b4_race_stand in main - one CMake line after the
++# kernel_file_system_tests target (form of docs/track-f/f15a/patch_wt_f15a.py). add_kyty_full_emulator_test makes an
++# EXCLUDE_FROM_ALL executable; no add_test and no kyty_tests dependency - the stand is outside the default ctest set.
++# Anchor - whole lines; CR kept as found; fails when the anchor is not found once. Usage: python patch_f15c_cmake.py <repo root>
++import sys
++
++path = sys.argv[1] + '/CMakeLists.txt'
++data = open(path, 'rb').read()
++crlf = b'\r\n' in data
++text = data.replace(b'\r\n', b'\n').decode('utf-8')
++lines = text.split('\n')
++anchor = ['add_kyty_full_emulator_test(kernel_file_system_tests', '\t"${KYTY_TESTS_DIR}/KernelFileSystemTests.cpp")']
++hits = [i for i in range(len(lines) - 1) if lines[i] == anchor[0] and lines[i + 1] == anchor[1]]
++if len(hits) != 1:
++    print('ANCHOR hits', len(hits))
++    sys.exit(1)
++i = hits[0] + 2
++add = ['',
++       '# Track F, B4 exit race stand (F15a, F15c; ROADMAP s122 item 412(v)): run by docs/track-f/f15c/run_stand_f15c.py,',
++       '# not by ctest.',
++       'add_kyty_full_emulator_test(b4_race_stand',
++       '\t"${KYTY_TESTS_DIR}/B4RaceStand.cpp")']
++lines[i:i] = add
++out = '\n'.join(lines).encode('utf-8')
++if crlf:
++    out = out.replace(b'\n', b'\r\n')
++open(path, 'wb').write(out)
++print('PATCH OK line', i + 1, 'crlf', crlf)
+diff --git a/docs/track-f/f15c/patch_f15c_src.py b/docs/track-f/f15c/patch_f15c_src.py
+new file mode 100644
+index 00000000..5989d49e
+--- /dev/null
++++ b/docs/track-f/f15c/patch_f15c_src.py
+@@ -0,0 +1,116 @@
++# F15c (HPP-514, ROADMAP s122 items 412(v), 417(b)-(v), row B4): KYTY_FIX_B4 (default 0) in src/kernel/fileSystem.cpp.
++# Anchors - whole lines (a block replace - whole consecutive lines); CR stripped before the search and restored after;
++# fails when an anchor is not found exactly once. Usage: python patch_f15c_src.py <repo root>
++import sys
++
++root = sys.argv[1]
++path = root + '/src/kernel/fileSystem.cpp'
++data = open(path, 'rb').read()
++crlf = b'\r\n' in data
++text = data.replace(b'\r\n', b'\n').decode('utf-8')
++lines = text.split('\n')
++
++
++def find_block(block):
++    n = len(block)
++    hits = [i for i in range(len(lines) - n + 1) if lines[i:i + n] == block]
++    if len(hits) != 1:
++        print('ANCHOR hits', len(hits), repr(block[0]))
++        sys.exit(1)
++    return hits[0]
++
++
++# 1. Declaration of FlushAll after CloseAll in class FileDescriptors.
++i = find_block(['\tFile* GetFile(const std::filesystem::path& real_name);', '\tvoid  CloseAll();'])
++lines[i + 2:i + 2] = ['\tvoid  FlushAll();']
++
++# 2. The knob and the host constant after the two globals.
++i = find_block(['static MountPoints*     g_mount_points = nullptr;', 'static FileDescriptors* g_files        = nullptr;'])
++lines[i + 2:i + 2] = [
++    '',
++    '// Track F, F15c (ROADMAP s122 items 412(v), 417(b)-(v), row B4): KYTY_FIX_B4 (default 0), read once. At 1 the',
++    '// emergency exit path (at_quick_exit and atexit(KytyClose) of src/emulator.cpp, both end in EmergencyShutdown below)',
++    '// keeps every File object, slot and host descriptor: guest threads are still running there and may hold a File* from',
++    '// GetFile without m_mutex, so CloseAll deleting it races with them (DeleteDescriptor / KernelOpen EXIT_IF or a',
++    '// use-after-free). The OS closes the host descriptors at the end of the process. Unset or empty - OFF.',
++    'static bool FixB4Enabled() {',
++    '\tstatic const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_B4"));',
++    '\treturn enabled;',
++    '}',
++    '',
++    '// Host write path with a user-space buffer that _Exit does not flush: stdio fwrite on non-Windows hosts',
++    '// (sysLinuxFileIO.cpp SysFileWrite). Windows SysFileWrite is WriteFile with no user buffer (sysWindowsFileIO.cpp).',
++    'constexpr bool HOST_FILE_WRITE_BUFFERED = (KYTY_PLATFORM != KYTY_PLATFORM_WINDOWS);',
++]
++
++# 3. FlushAll definition after CloseAll (before MountPoints::Mount).
++i = find_block(['void MountPoints::Mount(const std::filesystem::path& folder, const std::string& point) {'])
++lines[i:i] = [
++    '// B4, KYTY_FIX_B4=1 (variant A\', ROADMAP s122 item 417(v)): flush the user buffer of every open writable host file',
++    '// and nothing else - no Close, no delete, no nullptr. On Windows there is no user buffer: nothing is done.',
++    'void FileDescriptors::FlushAll() {',
++    '\tif constexpr (HOST_FILE_WRITE_BUFFERED) {',
++    '\t\tCommon::LockGuard lock(m_mutex);',
++    '',
++    '\t\tfor (auto* f: m_files) {',
++    '\t\t\tif (f != nullptr && f->opened && f->writable && !f->directory &&',
++    '\t\t\t    f->special == SpecialFile::None) {',
++    '\t\t\t\tf->f.Flush();',
++    '\t\t\t}',
++    '\t\t}',
++    '\t}',
++    '}',
++    '',
++]
++
++# 4. Initialize / EmergencyShutdown / Shutdown.
++old = [
++    'void Initialize() {',
++    '\tg_mount_points = new MountPoints;',
++    '\tg_files        = new FileDescriptors;',
++    '}',
++    '',
++    'void EmergencyShutdown() {',
++    '\tif (g_files != nullptr) {',
++    '\t\tg_files->CloseAll();',
++    '\t}',
++    '}',
++    '',
++    'void Shutdown() {',
++    '\tEmergencyShutdown();',
++    '\tdelete g_files;',
++]
++new = [
++    'void Initialize() {',
++    '\tg_mount_points = new MountPoints;',
++    '\tg_files        = new FileDescriptors;',
++    '',
++    '\tLOGF("FixB4: mode=%d\\n", FixB4Enabled() ? 1 : 0);',
++    '}',
++    '',
++    'void EmergencyShutdown() {',
++    '\tif (g_files != nullptr) {',
++    '\t\tif (FixB4Enabled()) {',
++    '\t\t\t// B4: guest threads may still be inside KernelOpen/KernelClose with a File* of a slot.',
++    '\t\t\tg_files->FlushAll();',
++    '\t\t} else {',
++    '\t\t\tg_files->CloseAll();',
++    '\t\t}',
++    '\t}',
++    '}',
++    '',
++    '// Path without guest threads (Subsystems::Destroy: tests, stands): CloseAll at both values of KYTY_FIX_B4.',
++    'void Shutdown() {',
++    '\tif (g_files != nullptr) {',
++    '\t\tg_files->CloseAll();',
++    '\t}',
++    '\tdelete g_files;',
++]
++i = find_block(old)
++lines[i:i + len(old)] = new
++
++out = '\n'.join(lines).encode('utf-8')
++if crlf:
++    out = out.replace(b'\n', b'\r\n')
++open(path, 'wb').write(out)
++print('PATCH OK crlf', crlf)
+diff --git a/docs/track-f/f15c/run_stand_f15c.py b/docs/track-f/f15c/run_stand_f15c.py
+new file mode 100644
+index 00000000..741706d5
+--- /dev/null
++++ b/docs/track-f/f15c/run_stand_f15c.py
+@@ -0,0 +1,118 @@
++# F15c (HPP-514, ROADMAP s122 item 412(g)(1)-(3)): driver of the B4 stand tests/B4RaceStand.cpp (target b4_race_stand) -
++# one process per trial; copy of docs/track-f/f15a/run_stand_f15a.py with the knob, plane D and the log check added.
++# Usage: python run_stand_f15c.py <exe> <mode A|B|C|D|L> <N> <out.tsv> <fix none|0|1> [first_seed]
++# The child environment: every KYTY_* variable removed, then KYTY_FIX_B4=<fix> unless fix is 'none'.
++# Halts before a trial when C:/kyty/SEALED_RUN.lock or C:/kyty/f287/STOP exists (rule 27, rule 26).
++# Classes A/B/C: FATAL207 (DeleteDescriptor EXIT_IF m_files[index] == nullptr), FATAL446 (KernelOpen EXIT_IF after
++# GetFile), FATAL_OTHER, CLEAN, CRASH (exit code not 0/77), TIMEOUT (60 s per trial, the stand itself ends in < 3 s).
++# F15a matched the fatal by the line numbers :207 / :446 of fileSystem.cpp; the fix moves them (+14 lines above both),
++# so the class is decided by the line text of the source file the stand was built from (argument-free: the path in the
++# FATAL line is the compile-time __FILE__, read here).
++# Class D: DATA_OK (exit 0, last line 'DATA 65536 fstat=65536', file on disk = pattern byte for byte), DATA_BAD (file
++# differs or missing - first differing offset in the line), CRASH, TIMEOUT. Pattern byte i: (i*131 + seed*17 + (i>>8)) & 0xFF.
++# Class L: LOG_OK (exit 0, 'LOGCHECK' and exactly one 'FixB4: mode=<expected>' line, expected 1 for fix=1 else 0), LOG_BAD.
++import collections, hashlib, os, re, subprocess, sys, time
++
++exe, mode, n, out, fix = os.path.abspath(sys.argv[1]), sys.argv[2], int(sys.argv[3]), sys.argv[4], sys.argv[5]
++first = int(sys.argv[6]) if len(sys.argv) > 6 else 1
++assert mode in ('A', 'B', 'C', 'D', 'L') and fix in ('none', '0', '1')
++cwd = os.path.join(os.path.dirname(os.path.abspath(out)), 'cwd_' + mode)
++os.makedirs(cwd, exist_ok=True)
++sha = hashlib.sha256(open(exe, 'rb').read()).hexdigest()
++env = {k: v for k, v in os.environ.items() if not k.upper().startswith('KYTY_')}
++if fix != 'none':
++    env['KYTY_FIX_B4'] = fix
++expected_mode = '1' if fix == '1' else '0'
++fatal_line_text = {}
++
++
++def fatal_class(loc):
++    # loc = '<path>:<line>' as printed by the stand from __FILE__/__LINE__ of the fatal site.
++    path, _, line = loc.rpartition(':')
++    if not path.replace('\\', '/').endswith('kernel/fileSystem.cpp'):
++        return 'FATAL_OTHER'
++    key = (path, line)
++    if key not in fatal_line_text:
++        try:
++            src = open(path, 'rb').read().decode('utf-8', 'replace').split('\n')
++            fatal_line_text[key] = src[int(line) - 1].strip()
++        except (OSError, ValueError, IndexError):
++            fatal_line_text[key] = ''
++    t = fatal_line_text[key]
++    if t == 'EXIT_IF(m_files[index] == nullptr);':
++        return 'FATAL207'
++    if t.startswith('EXIT_IF(file == nullptr || file->opened'):
++        return 'FATAL446'
++    return 'FATAL_OTHER'
++
++
++def pattern(seed):
++    return bytes(((i * 131 + seed * 17 + (i >> 8)) & 0xFF) for i in range(65536))
++
++
++counts = collections.Counter()
++t_start = time.time()
++with open(out, 'w', encoding='utf-8', newline='\n') as f:
++    f.write('# exe %s sha256 %s mode %s N %d first_seed %d fix %s\n' % (exe, sha, mode, n, first, fix))
++    f.write('seed\trc\tclass\tline\n')
++    done = 0
++    for seed in range(first, first + n):
++        if os.path.exists('C:/kyty/SEALED_RUN.lock') or os.path.exists('C:/kyty/f287/STOP'):
++            f.write('# HALT before seed %d (lock or STOP)\n' % seed)
++            print('HALT before seed', seed)
++            break
++        dfile = os.path.join(cwd, 'stand_data', 'd_%d.bin' % seed)
++        if mode == 'D' and os.path.exists(dfile):
++            os.remove(dfile)
++        try:
++            p = subprocess.run([exe, mode, str(seed)], cwd=cwd, env=env, capture_output=True, timeout=60)
++            rc = p.returncode
++            stdout = p.stdout.decode('utf-8', 'replace')
++            text = stdout.strip().splitlines()
++            line = text[-1] if text else ''
++        except subprocess.TimeoutExpired:
++            rc, line, stdout = None, '', ''
++        if rc is None:
++            cls = 'TIMEOUT'
++        elif mode == 'L':
++            plain = re.sub(r'\x1b\[[0-9;]*m', '', stdout)
++            modes = re.findall(r'FixB4: mode=(\d+)', plain)
++            ok = rc == 0 and line == 'LOGCHECK' and modes == [expected_mode]
++            cls = 'LOG_OK' if ok else 'LOG_BAD'
++            line = '%s modes=%s' % (line, ','.join(modes))
++        elif mode == 'D':
++            if rc == 0 and line == 'DATA 65536 fstat=65536':
++                try:
++                    got = open(dfile, 'rb').read()
++                except OSError:
++                    got = None
++                want = pattern(seed)
++                if got == want:
++                    cls = 'DATA_OK'
++                else:
++                    cls = 'DATA_BAD'
++                    if got is None:
++                        line += ' file missing'
++                    else:
++                        diff = next((i for i in range(min(len(got), len(want))) if got[i] != want[i]), min(len(got), len(want)))
++                        line += ' size %d first diff %d' % (len(got), diff)
++            else:
++                cls = 'CRASH' if not line.startswith('FATAL') else fatal_class(line.split()[1])
++        elif line.startswith('FATAL'):
++            # The interceptor printed: the fatal was reached. rc may be an access violation instead of 77 when
++            # another thread faults on a freed File between the print and _Exit (F15a smoke B seed 1002) - kept in rc.
++            cls = fatal_class(line.split()[1])
++        elif rc == 0 and line.startswith('CLEAN'):
++            cls = 'CLEAN'
++        else:
++            cls = 'CRASH'
++        counts[cls] += 1
++        done += 1
++        f.write('%d\t%s\t%s\t%s\n' % (seed, rc, cls, line))
++        f.flush()
++    f.write('# done %d wall %.1f s counts %s\n' % (done, time.time() - t_start, dict(sorted(counts.items()))))
++print('exe sha256', sha)
++print('mode', mode, 'fix', fix, 'done', done, 'of', n, 'wall %.1f s' % (time.time() - t_start))
++print('counts', dict(sorted(counts.items())))
++fat = sum(v for k, v in counts.items() if k.startswith('FATAL'))
++print('fatal %d of %d -> p_s = %.4f' % (fat, done, fat / done if done else float('nan')))
+diff --git a/src/kernel/fileSystem.cpp b/src/kernel/fileSystem.cpp
+index 4a13babf..6f4926b9 100644
+--- a/src/kernel/fileSystem.cpp
++++ b/src/kernel/fileSystem.cpp
+@@ -91,6 +91,7 @@ public:
+ 	File* GetFile(int d);
+ 	File* GetFile(const std::filesystem::path& real_name);
+ 	void  CloseAll();
++	void  FlushAll();
+ 
+ private:
+ 	std::vector<File*> m_files;
+@@ -100,6 +101,26 @@ private:
+ static MountPoints*     g_mount_points = nullptr;
+ static FileDescriptors* g_files        = nullptr;
+ 
++// Track F, F15c (ROADMAP s122 items 412(v), 417(b)-(v), row B4): KYTY_FIX_B4 (default ON since FS6a, item 454(g)(1):
++// unset or "" = ON, 0/false/off/no = OFF; read once). At 1 the
++// emergency exit path (at_quick_exit and atexit(KytyClose) of src/emulator.cpp, both end in EmergencyShutdown below)
++// keeps every File object, slot and host descriptor: guest threads are still running there and may hold a File* from
++// GetFile without m_mutex, so CloseAll deleting it races with them (DeleteDescriptor / KernelOpen EXIT_IF or a
++// use-after-free). The OS closes the host descriptors at the end of the process.
++static bool FixB4Enabled() {
++	// Track F, FS6a (HPP-555, ROADMAP s122 item 454(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
++	// other value as EnvValueOn (the form of FS4a 17adaf80).
++	static const bool enabled = [] {
++		const char* value = std::getenv("KYTY_FIX_B4");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
++	return enabled;
++}
++
++// Host write path with a user-space buffer that _Exit does not flush: stdio fwrite on non-Windows hosts
++// (sysLinuxFileIO.cpp SysFileWrite). Windows SysFileWrite is WriteFile with no user buffer (sysWindowsFileIO.cpp).
++constexpr bool HOST_FILE_WRITE_BUFFERED = (KYTY_PLATFORM != KYTY_PLATFORM_WINDOWS);
++
+ static bool IsRandomDevice(const std::string& path) {
+ 	return path == "/dev/random" || path == "/dev/urandom";
+ }
+@@ -254,6 +275,21 @@ void FileDescriptors::CloseAll() {
+ 	}
+ }
+ 
++// B4, KYTY_FIX_B4=1 (variant A', ROADMAP s122 item 417(v)): flush the user buffer of every open writable host file
++// and nothing else - no Close, no delete, no nullptr. On Windows there is no user buffer: nothing is done.
++void FileDescriptors::FlushAll() {
++	if constexpr (HOST_FILE_WRITE_BUFFERED) {
++		Common::LockGuard lock(m_mutex);
++
++		for (auto* f: m_files) {
++			if (f != nullptr && f->opened && f->writable && !f->directory &&
++			    f->special == SpecialFile::None) {
++				f->f.Flush();
++			}
++		}
++	}
++}
++
+ void MountPoints::Mount(const std::filesystem::path& folder, const std::string& point) {
+ 	Common::LockGuard lock(m_mutex);
+ 
+@@ -366,16 +402,26 @@ std::filesystem::path MountPoints::ResolvePath(const std::string& mounted_name)
+ void Initialize() {
+ 	g_mount_points = new MountPoints;
+ 	g_files        = new FileDescriptors;
++
++	LOGF("FixB4: mode=%d\n", FixB4Enabled() ? 1 : 0);
+ }
+ 
+ void EmergencyShutdown() {
+ 	if (g_files != nullptr) {
+-		g_files->CloseAll();
++		if (FixB4Enabled()) {
++			// B4: guest threads may still be inside KernelOpen/KernelClose with a File* of a slot.
++			g_files->FlushAll();
++		} else {
++			g_files->CloseAll();
++		}
+ 	}
+ }
+ 
++// Path without guest threads (Subsystems::Destroy: tests, stands): CloseAll at both values of KYTY_FIX_B4.
+ void Shutdown() {
+-	EmergencyShutdown();
++	if (g_files != nullptr) {
++		g_files->CloseAll();
++	}
+ 	delete g_files;
+ 	delete g_mount_points;
+ 	g_files        = nullptr;
+diff --git a/tests/B4RaceStand.cpp b/tests/B4RaceStand.cpp
+new file mode 100644
+index 00000000..1feab9b9
+--- /dev/null
++++ b/tests/B4RaceStand.cpp
+@@ -0,0 +1,230 @@
++// Track F, B4 stand without the game (F15a HPP-491, ROADMAP s122 item 400(d)(2); moved to tests/ by F15c HPP-514,
++// item 412(v), (g)(1)-(3)): the exit race of FileSystem::EmergencyShutdown (src/kernel/fileSystem.cpp, called by the
++// at_quick_exit handler of src/emulator.cpp on the main thread) against a guest-like thread inside KernelOpen.
++// One process = one trial, as in the game: EmergencyShutdown runs once per process while the opener keeps running.
++// KYTY_FIX_B4 (read by fileSystem.cpp) selects the code under test: 0 - CloseAll, 1 - the B4 fix; unset or "" - the
++// default of fileSystem.cpp (1 since FS6a, ROADMAP s122 item 454(g)(1)).
++// Separate CMake target b4_race_stand (EXCLUDE_FROM_ALL, no add_test - not in the default ctest set); the driver is
++// docs/track-f/f15c/run_stand_f15c.py.
++//
++// Usage: b4_race_stand <mode> <seed>
++//   mode A - opener loops KernelOpen on a missing path (failure branch: CreateDescriptor, GetFile, DeleteDescriptor);
++//            the main thread calls EmergencyShutdown once at a random point.
++//   mode B - opener loops KernelOpen on an existing file + KernelFstat + KernelClose (the witness pattern of
++//            C:/kyty/s131/log_dds131.txt; KernelRead is left out - it needs the GPU memory context).
++//   mode C - control: the same loop as A, EmergencyShutdown only after the opener has stopped and joined.
++//   mode D - data arm (item 412(g)(2)): a guest-like thread creates /data/d_<seed>.bin on a writable mount (the
++//            directory stand_data under the current directory), writes 64 KiB of the seed pattern with KernelWrite in
++//            seed-sized chunks, calls KernelFstat and then waits without KernelClose; the main thread calls
++//            EmergencyShutdown and _Exit(0). The driver compares the file with the pattern after the process ends.
++//            Pattern byte i: (i * 131 + seed * 17 + (i >> 8)) & 0xFF.
++//   mode L - log line check (item 412(g)(3)): log to the console, FileSystem::Initialize, exit 0; the driver reads
++//            the line "FixB4: mode=<0|1>" from stdout.
++// Output: one line - "FATAL <file>:<line> iters=<n>" (fatal intercepted on the opener thread, process ends with
++// _Exit(77)), "CLEAN iters=<n> after=<n>" (exit 0), "DATA <bytes> fstat=<size>" (mode D, _Exit(0)) or
++// "LOGCHECK" (mode L). Any other end (access violation, abort) is seen by the driver from the exit code.
++#include "common/assert.h"
++#include "common/emulatorConfig.h"
++#include "common/logging/log.h"
++#include "common/subsystems.h"
++#include "common/threads.h"
++#include "kernel/fileSystem.h"
++
++#include <algorithm>
++#include <atomic>
++#include <chrono>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++#include <filesystem>
++#include <fstream>
++#include <random>
++#include <string>
++#include <string_view>
++#include <thread>
++#include <vector>
++
++namespace {
++
++namespace FileSystem = Libs::LibKernel::FileSystem;
++
++constexpr size_t D_SIZE = 65536;
++
++std::atomic<uint64_t> g_iters {0};
++std::atomic<bool>     g_stop {false};
++std::atomic<int>      g_data_state {0}; // mode D: 0 - running, 1 - written and fstat done, -1 - failed
++
++void OnFatal(const char* file, int line, std::string_view /*text*/) {
++	std::printf("FATAL %s:%d iters=%llu\n", file, line,
++	            static_cast<unsigned long long>(g_iters.load()));
++	std::fflush(stdout);
++	std::_Exit(77);
++}
++
++void Opener(char mode) {
++	Common::ScopedFatalInterceptor intercept(OnFatal);
++	FileSystem::FileStat st {};
++	while (!g_stop.load(std::memory_order_acquire)) {
++		if (mode == 'B') {
++			const int fd = FileSystem::KernelOpen("/app0/stand_file.bin", 0, 0);
++			if (fd >= 3) {
++				// KernelRead is not used: it calls Memory::InvalidateMemory, which needs the GPU context
++				// (memory.cpp:78 EXIT_IF without it; F15a smoke seeds 1001-1003). The witness log also has
++				// KernelFstat between Open and Close.
++				FileSystem::KernelFstat(fd, &st);
++				FileSystem::KernelClose(fd);
++			}
++		} else {
++			FileSystem::KernelOpen("/app0/missing_file.gnfp", 0, 0);
++		}
++		g_iters.fetch_add(1, std::memory_order_release);
++	}
++}
++
++uint8_t PatternByte(size_t i, uint32_t seed) {
++	return static_cast<uint8_t>((i * 131u + seed * 17u + (i >> 8u)) & 0xFFu);
++}
++
++int64_t g_fstat_size = -1;
++
++void Writer(uint32_t seed) {
++	Common::ScopedFatalInterceptor intercept(OnFatal);
++	const std::string path = "/data/d_" + std::to_string(seed) + ".bin";
++	// O_WRONLY | O_CREAT | O_TRUNC (fileSystem.cpp KernelOpen: access 0x3, creat 0x200, trunc 0x400).
++	const int fd = FileSystem::KernelOpen(path.c_str(), 0x1 | 0x200 | 0x400, 0666);
++	if (fd < 3) {
++		g_data_state.store(-1, std::memory_order_release);
++		return;
++	}
++	std::vector<uint8_t> data(D_SIZE);
++	for (size_t i = 0; i < D_SIZE; i++) {
++		data[i] = PatternByte(i, seed);
++	}
++	// Chunk size from the seed: 1 KiB .. 16 KiB.
++	std::mt19937 rng(seed);
++	size_t       pos = 0;
++	while (pos < D_SIZE) {
++		const size_t chunk = std::min<size_t>(D_SIZE - pos, 1024u * (1u + rng() % 16u));
++		if (FileSystem::KernelWrite(fd, data.data() + pos, chunk) != static_cast<int64_t>(chunk)) {
++			g_data_state.store(-1, std::memory_order_release);
++			return;
++		}
++		pos += chunk;
++	}
++	FileSystem::FileStat st {};
++	if (FileSystem::KernelFstat(fd, &st) != 0) {
++		g_data_state.store(-1, std::memory_order_release);
++		return;
++	}
++	g_fstat_size = st.st_size;
++	g_data_state.store(1, std::memory_order_release);
++	// No KernelClose: the guest is not stopped in the game; the process ends under this thread.
++	while (true) {
++		std::this_thread::sleep_for(std::chrono::seconds(1));
++	}
++}
++
++} // namespace
++
++int main(int argc, char** argv) {
++	if (argc != 3 || std::strlen(argv[1]) != 1 || std::strchr("ABCDL", argv[1][0]) == nullptr) {
++		std::fprintf(stderr, "usage: b4_race_stand A|B|C|D|L <seed>\n");
++		return 2;
++	}
++	const char mode = argv[1][0];
++	const auto seed = static_cast<uint32_t>(std::strtoul(argv[2], nullptr, 10));
++
++	Common::InitializeThreads();
++	Common::Subsystems subsystems;
++	subsystems.Initialize<Config::Lifecycle>();
++	Config::ConfigOptions options;
++	options.printf_direction = (mode == 'L' ? Config::LogDirection::Console : Config::LogDirection::Silent);
++	Config::Load(options);
++	subsystems.Initialize<Log::Lifecycle>();
++
++	if (mode == 'L') {
++		FileSystem::Initialize();
++		FileSystem::Shutdown();
++		std::printf("LOGCHECK\n");
++		std::fflush(stdout);
++		return 0;
++	}
++
++	if (mode == 'D') {
++		const auto data_root = std::filesystem::current_path() / "stand_data";
++		std::filesystem::create_directories(data_root);
++		FileSystem::Initialize();
++		FileSystem::Mount(data_root, "/data");
++		std::thread writer(Writer, seed);
++		writer.detach();
++		const auto t0 = std::chrono::steady_clock::now();
++		while (g_data_state.load(std::memory_order_acquire) == 0) {
++			if (std::chrono::steady_clock::now() - t0 > std::chrono::seconds(20)) {
++				std::printf("DATA_TIMEOUT\n");
++				std::fflush(stdout);
++				std::_Exit(3);
++			}
++			std::this_thread::yield();
++		}
++		if (g_data_state.load(std::memory_order_acquire) < 0) {
++			std::printf("DATA_FAILED\n");
++			std::fflush(stdout);
++			std::_Exit(4);
++		}
++		FileSystem::EmergencyShutdown();
++		std::printf("DATA %zu fstat=%lld\n", D_SIZE, static_cast<long long>(g_fstat_size));
++		std::fflush(stdout);
++		std::_Exit(0);
++	}
++
++	const auto root = std::filesystem::current_path() / "stand_app0";
++	std::filesystem::create_directories(root);
++	{
++		std::ofstream f(root / "stand_file.bin", std::ios::binary);
++		std::vector<char> data(65536, 'x');
++		f.write(data.data(), static_cast<std::streamsize>(data.size()));
++	}
++
++	FileSystem::Initialize();
++	FileSystem::Mount(root, "/app0");
++
++	std::thread opener(Opener, mode);
++
++	// Warm-up: the opener is in its loop.
++	while (g_iters.load(std::memory_order_acquire) < 100) {
++		std::this_thread::yield();
++	}
++
++	if (mode == 'C') {
++		g_stop.store(true, std::memory_order_release);
++		opener.join();
++		FileSystem::EmergencyShutdown();
++		std::printf("CLEAN iters=%llu after=0\n", static_cast<unsigned long long>(g_iters.load()));
++		std::fflush(stdout);
++		return 0;
++	}
++
++	// A random point of the loop: busy wait 0..999 us from the seed.
++	std::mt19937 rng(seed);
++	const auto   delay = std::chrono::microseconds(rng() % 1000);
++	const auto   t0    = std::chrono::steady_clock::now();
++	while (std::chrono::steady_clock::now() - t0 < delay) {
++	}
++
++	FileSystem::EmergencyShutdown();
++	const uint64_t at = g_iters.load(std::memory_order_acquire);
++
++	// Let the opener go on after EmergencyShutdown (the guest is not stopped in the game): 20 more iterations or 2 s.
++	const auto t1 = std::chrono::steady_clock::now();
++	while (g_iters.load(std::memory_order_acquire) < at + 20 &&
++	       std::chrono::steady_clock::now() - t1 < std::chrono::seconds(2)) {
++		std::this_thread::yield();
++	}
++	g_stop.store(true, std::memory_order_release);
++	opener.join();
++
++	std::printf("CLEAN iters=%llu after=%llu\n", static_cast<unsigned long long>(g_iters.load()),
++	            static_cast<unsigned long long>(g_iters.load() - at));
++	std::fflush(stdout);
++	return 0;
++}

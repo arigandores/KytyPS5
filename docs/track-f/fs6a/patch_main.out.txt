@@ -1,0 +1,4 @@
+patched src/kernel/fileSystem.cpp line 104 -1 +2
+patched src/kernel/fileSystem.cpp line 109 -5 +10
+patched tests/B4RaceStand.cpp line 5 -1 +2
+ALL OK

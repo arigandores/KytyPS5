@@ -1,0 +1,6 @@
+CMakeLists.txt
+docs/track-f/f15c/patch_f15c_cmake.py
+docs/track-f/f15c/patch_f15c_src.py
+docs/track-f/f15c/run_stand_f15c.py
+src/kernel/fileSystem.cpp
+tests/B4RaceStand.cpp

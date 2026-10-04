@@ -1,0 +1,7 @@
+ CMakeLists.txt                        |   5 +
+ docs/track-f/f15c/patch_f15c_cmake.py |  28 +++++
+ docs/track-f/f15c/patch_f15c_src.py   | 116 +++++++++++++++++
+ docs/track-f/f15c/run_stand_f15c.py   | 118 +++++++++++++++++
+ src/kernel/fileSystem.cpp             |  50 +++++++-
+ tests/B4RaceStand.cpp                 | 230 ++++++++++++++++++++++++++++++++++
+ 6 files changed, 545 insertions(+), 2 deletions(-)

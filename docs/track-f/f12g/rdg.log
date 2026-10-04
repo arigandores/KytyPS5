@@ -1,0 +1,4 @@
+2026-10-04T06:54:58Z start k03 chunks 61159,104876,152371 maxd 0 watchdog 520
+2026-10-04T06:54:59Z GLCache copied, manifest 079d87b663f5bf4f files 22
+2026-10-04T06:56:33Z replay end after ~80 s (): 3 dispatches
+2026-10-04T06:56:33Z GLCache after = before (cmp EQUAL)

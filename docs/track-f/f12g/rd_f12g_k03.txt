@@ -1,0 +1,353 @@
+[    0.0] spv0 C:/kyty/f287/f12d/final/corpus/spv380/cs_380bb9d636390bae_fe70c334a8301128_0_base.spv 462744 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6
+[    0.0] spv1 C:/kyty/f287/f12d/final/corpus/spv380/cs_380bb9d636390bae_fe70c334a8301128_0_f1.spv 465240 111713caa4076d3d7973f956994c66ba91764ec581030839a7b008cac8f605b3
+[    8.6] capture C:/kyty/f287/f12f/f12_rd_k03.rdc opened
+[    8.9] dispatches 1624
+[    8.9] chunk 61159 -> eid 44806
+[    8.9] chunk 104876 -> eid 84820
+[    8.9] chunk 152371 -> eid 128281
+[    9.0] === DISPATCH eid 44806 name vkCmdDispatch()
+[   10.5] shader ResourceId::1251 entry main encoding ShaderEncoding.SPIRV raw bytes 462744 sha 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6
+[   10.5] dims 1x2048x1 threads 64x1x1
+[   10.5] CONTROL_A OK len_capture 462744 len_spv0 462744 differing_bytes_in_common_length 0
+[   10.5] RW tex 21829 bind 2 elem 0 w 128 h 2048 d 1 mips 1 arr 1 fmt R16G16B16A16_FLOAT bytes 2097152
+[   10.5] RW buf 152 bind 3 elem 0 len 536870912 off 0 size 536870912
+[   10.5] RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[   10.5] RW buf 165 bind 5 elem 0 len 67108864 off 22089984 size 404
+[   10.5] RW buf 27024 bind 0 elem 1 len 2277376 off 371376 size 17904
+[   10.5] RW buf 165 bind 0 elem 3 len 67108864 off 22089616 size 16
+[   10.5] RW buf 165 bind 0 elem 4 len 67108864 off 22089632 size 112
+[   10.5] RW buf 21831 bind 1 elem 0 len 212992 off 1792 size 203616
+[   10.5] RW buf 27024 bind 1 elem 1 len 2277376 off 371376 size 17904
+[   10.5] RW buf 27024 bind 1 elem 2 len 2277376 off 344864 size 576
+[   10.5] RW buf 165 bind 1 elem 4 len 67108864 off 22089632 size 112
+[   16.0] build r0 ResourceId::1000000000000031773 errors 
+[   17.1] replaced r0 bound shader ResourceId::1251 raw sha 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 len 462744
+[   18.8] build r1 ResourceId::1000000000000031779 errors 
+[   22.5] replaced r1 bound shader ResourceId::1251 raw sha 111713caa4076d3d7973f956994c66ba91764ec581030839a7b008cac8f605b3 len 465240
+[   25.1] after remove: raw sha 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6
+[   26.5] RES tex 21829 off 1 size 0 bytes 2097152 unit 8 pre 5490eb36bab89504 o1 6d5205123f098545 o2 6d5205123f098545 r0 6d5205123f098545 r1 94460a9411e4cdfd o3 6d5205123f098545
+[   26.5]   NDIFF 21829 o1 o2 0 of 262144
+[   26.6]   NDIFF 21829 o1 pre 117158 of 262144
+[   26.6]   NDIFF 21829 o1 r0 0 of 262144
+[   26.7]   NDIFF 21829 o1 r1 14193 of 262144
+[   26.9]   NDIFF 21829 r0 r1 14193 of 262144
+[   26.9]   NDIFF 21829 o1 o3 0 of 262144
+[   27.0]   NZERO 21829 pre 0
+[   27.0]   NZERO 21829 o1 0
+[   27.1]   NZERO 21829 r0 0
+[   27.2]   NZERO 21829 r1 0
+[   27.2] RES buf 152 off 0 size 536870912 bytes 536870912 unit 4 pre 0c43e12d7d6c244c o1 0c43e12d7d6c244c o2 0c43e12d7d6c244c r0 0c43e12d7d6c244c r1 0c43e12d7d6c244c o3 0c43e12d7d6c244c
+[   27.2]   EQUAL_SHA 152 o1 o2 True
+[   27.2]   EQUAL_SHA 152 o1 pre True
+[   27.2]   EQUAL_SHA 152 o1 r0 True
+[   27.2]   EQUAL_SHA 152 o1 r1 True
+[   27.2]   EQUAL_SHA 152 r0 r1 True
+[   27.2]   EQUAL_SHA 152 o1 o3 True
+[   27.2] RES buf 138 off 0 size 8388672 bytes 8388672 unit 4 pre 3d29261424420e41 o1 2eb2c13652c5ff93 o2 2eb2c13652c5ff93 r0 2eb2c13652c5ff93 r1 2eb2c13652c5ff93 o3 2eb2c13652c5ff93
+[   27.2]   NDIFF 138 o1 o2 0 of 2097168
+[   28.1]   NDIFF 138 o1 pre 1 of 2097168
+[   28.1]   NDIFF 138 o1 r0 0 of 2097168
+[   28.1]   NDIFF 138 o1 r1 0 of 2097168
+[   28.1]   NDIFF 138 r0 r1 0 of 2097168
+[   28.1]   NDIFF 138 o1 o3 0 of 2097168
+[   29.4]   NZERO 138 pre 2097168
+[   30.4]   NZERO 138 o1 2097167
+[   31.7]   NZERO 138 r0 2097167
+[   32.9]   NZERO 138 r1 2097167
+[   32.9] RES buf 165 off 22089984 size 404 bytes 404 unit 4 pre 1fe2ae319992deaf o1 1fe2ae319992deaf o2 1fe2ae319992deaf r0 1fe2ae319992deaf r1 1fe2ae319992deaf o3 1fe2ae319992deaf
+[   32.9]   NDIFF 165 o1 o2 0 of 101
+[   32.9]   NDIFF 165 o1 pre 0 of 101
+[   32.9]   NDIFF 165 o1 r0 0 of 101
+[   32.9]   NDIFF 165 o1 r1 0 of 101
+[   32.9]   NDIFF 165 r0 r1 0 of 101
+[   32.9]   NDIFF 165 o1 o3 0 of 101
+[   32.9]   NZERO 165 pre 33
+[   32.9]   NZERO 165 o1 33
+[   32.9]   NZERO 165 r0 33
+[   32.9]   NZERO 165 r1 33
+[   32.9] RES buf 27024 off 371376 size 17904 bytes 17904 unit 4 pre 52173138a29852f8 o1 52173138a29852f8 o2 52173138a29852f8 r0 52173138a29852f8 r1 52173138a29852f8 o3 52173138a29852f8
+[   32.9]   NDIFF 27024 o1 o2 0 of 4476
+[   32.9]   NDIFF 27024 o1 pre 0 of 4476
+[   32.9]   NDIFF 27024 o1 r0 0 of 4476
+[   32.9]   NDIFF 27024 o1 r1 0 of 4476
+[   32.9]   NDIFF 27024 r0 r1 0 of 4476
+[   32.9]   NDIFF 27024 o1 o3 0 of 4476
+[   32.9]   NZERO 27024 pre 4239
+[   32.9]   NZERO 27024 o1 4239
+[   32.9]   NZERO 27024 r0 4239
+[   32.9]   NZERO 27024 r1 4239
+[   32.9] RES buf 165 off 22089616 size 16 bytes 16 unit 4 pre 90f04e4382ff0bf0 o1 90f04e4382ff0bf0 o2 90f04e4382ff0bf0 r0 90f04e4382ff0bf0 r1 90f04e4382ff0bf0 o3 90f04e4382ff0bf0
+[   32.9]   NDIFF 165 o1 o2 0 of 4
+[   32.9]   NDIFF 165 o1 pre 0 of 4
+[   32.9]   NDIFF 165 o1 r0 0 of 4
+[   32.9]   NDIFF 165 o1 r1 0 of 4
+[   32.9]   NDIFF 165 r0 r1 0 of 4
+[   32.9]   NDIFF 165 o1 o3 0 of 4
+[   32.9]   NZERO 165 pre 1
+[   32.9]   NZERO 165 o1 1
+[   32.9]   NZERO 165 r0 1
+[   32.9]   NZERO 165 r1 1
+[   32.9] RES buf 165 off 22089632 size 112 bytes 112 unit 4 pre 439dbc4f691262b4 o1 439dbc4f691262b4 o2 439dbc4f691262b4 r0 439dbc4f691262b4 r1 439dbc4f691262b4 o3 439dbc4f691262b4
+[   32.9]   NDIFF 165 o1 o2 0 of 28
+[   32.9]   NDIFF 165 o1 pre 0 of 28
+[   32.9]   NDIFF 165 o1 r0 0 of 28
+[   32.9]   NDIFF 165 o1 r1 0 of 28
+[   32.9]   NDIFF 165 r0 r1 0 of 28
+[   32.9]   NDIFF 165 o1 o3 0 of 28
+[   32.9]   NZERO 165 pre 15
+[   32.9]   NZERO 165 o1 15
+[   32.9]   NZERO 165 r0 15
+[   32.9]   NZERO 165 r1 15
+[   32.9] RES buf 21831 off 1792 size 203616 bytes 203616 unit 4 pre eff78595a35397b5 o1 eff78595a35397b5 o2 eff78595a35397b5 r0 eff78595a35397b5 r1 eff78595a35397b5 o3 eff78595a35397b5
+[   32.9]   NDIFF 21831 o1 o2 0 of 50904
+[   32.9]   NDIFF 21831 o1 pre 0 of 50904
+[   32.9]   NDIFF 21831 o1 r0 0 of 50904
+[   32.9]   NDIFF 21831 o1 r1 0 of 50904
+[   32.9]   NDIFF 21831 r0 r1 0 of 50904
+[   32.9]   NDIFF 21831 o1 o3 0 of 50904
+[   32.9]   NZERO 21831 pre 29475
+[   32.9]   NZERO 21831 o1 29475
+[   33.0]   NZERO 21831 r0 29475
+[   33.0]   NZERO 21831 r1 29475
+[   33.0] RES buf 27024 off 344864 size 576 bytes 576 unit 4 pre 6b1b1fa5c5960f8b o1 6b1b1fa5c5960f8b o2 6b1b1fa5c5960f8b r0 6b1b1fa5c5960f8b r1 6b1b1fa5c5960f8b o3 6b1b1fa5c5960f8b
+[   33.0]   NDIFF 27024 o1 o2 0 of 144
+[   33.0]   NDIFF 27024 o1 pre 0 of 144
+[   33.0]   NDIFF 27024 o1 r0 0 of 144
+[   33.0]   NDIFF 27024 o1 r1 0 of 144
+[   33.0]   NDIFF 27024 r0 r1 0 of 144
+[   33.0]   NDIFF 27024 o1 o3 0 of 144
+[   33.0]   NZERO 27024 pre 22
+[   33.0]   NZERO 27024 o1 22
+[   33.0]   NZERO 27024 r0 22
+[   33.0]   NZERO 27024 r1 22
+[   33.0] === DISPATCH eid 84820 name vkCmdDispatch()
+[   33.5] shader ResourceId::1251 entry main encoding ShaderEncoding.SPIRV raw bytes 462744 sha 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6
+[   33.5] dims 1x2048x1 threads 64x1x1
+[   33.5] CONTROL_A OK len_capture 462744 len_spv0 462744 differing_bytes_in_common_length 0
+[   33.5] RW tex 21829 bind 2 elem 0 w 128 h 2048 d 1 mips 1 arr 1 fmt R16G16B16A16_FLOAT bytes 2097152
+[   33.5] RW buf 152 bind 3 elem 0 len 536870912 off 0 size 536870912
+[   33.5] RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[   33.5] RW buf 165 bind 5 elem 0 len 67108864 off 52700672 size 404
+[   33.5] RW buf 30679 bind 0 elem 1 len 2473984 off 453296 size 17904
+[   33.5] RW buf 165 bind 0 elem 3 len 67108864 off 52700304 size 16
+[   33.5] RW buf 165 bind 0 elem 4 len 67108864 off 52700320 size 112
+[   33.5] RW buf 21831 bind 1 elem 0 len 212992 off 1792 size 203616
+[   33.5] RW buf 30679 bind 1 elem 1 len 2473984 off 453296 size 17904
+[   33.5] RW buf 30679 bind 1 elem 2 len 2473984 off 426784 size 576
+[   33.5] RW buf 165 bind 1 elem 4 len 67108864 off 52700320 size 112
+[   39.6] build r0 ResourceId::1000000000000031794 errors 
+[   40.9] replaced r0 bound shader ResourceId::1251 raw sha 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 len 462744
+[   42.8] build r1 ResourceId::1000000000000031800 errors 
+[   44.2] replaced r1 bound shader ResourceId::1251 raw sha 111713caa4076d3d7973f956994c66ba91764ec581030839a7b008cac8f605b3 len 465240
+[   47.0] after remove: raw sha 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6
+[   48.4] RES tex 21829 off 1 size 0 bytes 2097152 unit 8 pre 6d5205123f098545 o1 456b62b0792ad50c o2 456b62b0792ad50c r0 456b62b0792ad50c r1 6c841a5640b4553b o3 456b62b0792ad50c
+[   48.4]   NDIFF 21829 o1 o2 0 of 262144
+[   48.6]   NDIFF 21829 o1 pre 14402 of 262144
+[   48.6]   NDIFF 21829 o1 r0 0 of 262144
+[   48.8]   NDIFF 21829 o1 r1 14302 of 262144
+[   48.9]   NDIFF 21829 r0 r1 14302 of 262144
+[   48.9]   NDIFF 21829 o1 o3 0 of 262144
+[   49.0]   NZERO 21829 pre 0
+[   49.1]   NZERO 21829 o1 0
+[   49.2]   NZERO 21829 r0 0
+[   49.3]   NZERO 21829 r1 0
+[   49.3] RES buf 152 off 0 size 536870912 bytes 536870912 unit 4 pre 4a52b4dabe5e57b7 o1 4a52b4dabe5e57b7 o2 4a52b4dabe5e57b7 r0 4a52b4dabe5e57b7 r1 4a52b4dabe5e57b7 o3 4a52b4dabe5e57b7
+[   49.3]   EQUAL_SHA 152 o1 o2 True
+[   49.3]   EQUAL_SHA 152 o1 pre True
+[   49.3]   EQUAL_SHA 152 o1 r0 True
+[   49.3]   EQUAL_SHA 152 o1 r1 True
+[   49.3]   EQUAL_SHA 152 r0 r1 True
+[   49.3]   EQUAL_SHA 152 o1 o3 True
+[   49.3] RES buf 138 off 0 size 8388672 bytes 8388672 unit 4 pre 3d29261424420e41 o1 2eb2c13652c5ff93 o2 2eb2c13652c5ff93 r0 2eb2c13652c5ff93 r1 2eb2c13652c5ff93 o3 2eb2c13652c5ff93
+[   49.3]   NDIFF 138 o1 o2 0 of 2097168
+[   50.4]   NDIFF 138 o1 pre 1 of 2097168
+[   50.4]   NDIFF 138 o1 r0 0 of 2097168
+[   50.4]   NDIFF 138 o1 r1 0 of 2097168
+[   50.4]   NDIFF 138 r0 r1 0 of 2097168
+[   50.4]   NDIFF 138 o1 o3 0 of 2097168
+[   51.6]   NZERO 138 pre 2097168
+[   52.8]   NZERO 138 o1 2097167
+[   54.0]   NZERO 138 r0 2097167
+[   55.2]   NZERO 138 r1 2097167
+[   55.2] RES buf 165 off 52700672 size 404 bytes 404 unit 4 pre 0bee6085e07ba280 o1 0bee6085e07ba280 o2 0bee6085e07ba280 r0 0bee6085e07ba280 r1 0bee6085e07ba280 o3 0bee6085e07ba280
+[   55.2]   NDIFF 165 o1 o2 0 of 101
+[   55.2]   NDIFF 165 o1 pre 0 of 101
+[   55.2]   NDIFF 165 o1 r0 0 of 101
+[   55.2]   NDIFF 165 o1 r1 0 of 101
+[   55.2]   NDIFF 165 r0 r1 0 of 101
+[   55.2]   NDIFF 165 o1 o3 0 of 101
+[   55.2]   NZERO 165 pre 33
+[   55.2]   NZERO 165 o1 33
+[   55.2]   NZERO 165 r0 33
+[   55.2]   NZERO 165 r1 33
+[   55.2] RES buf 30679 off 453296 size 17904 bytes 17904 unit 4 pre 36f95149cc6ed5d5 o1 36f95149cc6ed5d5 o2 36f95149cc6ed5d5 r0 36f95149cc6ed5d5 r1 36f95149cc6ed5d5 o3 36f95149cc6ed5d5
+[   55.2]   NDIFF 30679 o1 o2 0 of 4476
+[   55.2]   NDIFF 30679 o1 pre 0 of 4476
+[   55.2]   NDIFF 30679 o1 r0 0 of 4476
+[   55.2]   NDIFF 30679 o1 r1 0 of 4476
+[   55.2]   NDIFF 30679 r0 r1 0 of 4476
+[   55.2]   NDIFF 30679 o1 o3 0 of 4476
+[   55.2]   NZERO 30679 pre 4240
+[   55.2]   NZERO 30679 o1 4240
+[   55.2]   NZERO 30679 r0 4240
+[   55.2]   NZERO 30679 r1 4240
+[   55.2] RES buf 165 off 52700304 size 16 bytes 16 unit 4 pre 90f04e4382ff0bf0 o1 90f04e4382ff0bf0 o2 90f04e4382ff0bf0 r0 90f04e4382ff0bf0 r1 90f04e4382ff0bf0 o3 90f04e4382ff0bf0
+[   55.2]   NDIFF 165 o1 o2 0 of 4
+[   55.2]   NDIFF 165 o1 pre 0 of 4
+[   55.2]   NDIFF 165 o1 r0 0 of 4
+[   55.2]   NDIFF 165 o1 r1 0 of 4
+[   55.2]   NDIFF 165 r0 r1 0 of 4
+[   55.2]   NDIFF 165 o1 o3 0 of 4
+[   55.2]   NZERO 165 pre 1
+[   55.2]   NZERO 165 o1 1
+[   55.2]   NZERO 165 r0 1
+[   55.2]   NZERO 165 r1 1
+[   55.2] RES buf 165 off 52700320 size 112 bytes 112 unit 4 pre 439dbc4f691262b4 o1 439dbc4f691262b4 o2 439dbc4f691262b4 r0 439dbc4f691262b4 r1 439dbc4f691262b4 o3 439dbc4f691262b4
+[   55.2]   NDIFF 165 o1 o2 0 of 28
+[   55.2]   NDIFF 165 o1 pre 0 of 28
+[   55.2]   NDIFF 165 o1 r0 0 of 28
+[   55.2]   NDIFF 165 o1 r1 0 of 28
+[   55.2]   NDIFF 165 r0 r1 0 of 28
+[   55.2]   NDIFF 165 o1 o3 0 of 28
+[   55.2]   NZERO 165 pre 15
+[   55.2]   NZERO 165 o1 15
+[   55.2]   NZERO 165 r0 15
+[   55.2]   NZERO 165 r1 15
+[   55.2] RES buf 21831 off 1792 size 203616 bytes 203616 unit 4 pre eff78595a35397b5 o1 eff78595a35397b5 o2 eff78595a35397b5 r0 eff78595a35397b5 r1 eff78595a35397b5 o3 eff78595a35397b5
+[   55.2]   NDIFF 21831 o1 o2 0 of 50904
+[   55.2]   NDIFF 21831 o1 pre 0 of 50904
+[   55.2]   NDIFF 21831 o1 r0 0 of 50904
+[   55.2]   NDIFF 21831 o1 r1 0 of 50904
+[   55.2]   NDIFF 21831 r0 r1 0 of 50904
+[   55.2]   NDIFF 21831 o1 o3 0 of 50904
+[   55.3]   NZERO 21831 pre 29475
+[   55.3]   NZERO 21831 o1 29475
+[   55.3]   NZERO 21831 r0 29475
+[   55.4]   NZERO 21831 r1 29475
+[   55.4] RES buf 30679 off 426784 size 576 bytes 576 unit 4 pre 7b289d78e9a376ec o1 7b289d78e9a376ec o2 7b289d78e9a376ec r0 7b289d78e9a376ec r1 7b289d78e9a376ec o3 7b289d78e9a376ec
+[   55.4]   NDIFF 30679 o1 o2 0 of 144
+[   55.4]   NDIFF 30679 o1 pre 0 of 144
+[   55.4]   NDIFF 30679 o1 r0 0 of 144
+[   55.4]   NDIFF 30679 o1 r1 0 of 144
+[   55.4]   NDIFF 30679 r0 r1 0 of 144
+[   55.4]   NDIFF 30679 o1 o3 0 of 144
+[   55.4]   NZERO 30679 pre 20
+[   55.4]   NZERO 30679 o1 20
+[   55.4]   NZERO 30679 r0 20
+[   55.4]   NZERO 30679 r1 20
+[   55.4] === DISPATCH eid 128281 name vkCmdDispatch()
+[   55.9] shader ResourceId::1251 entry main encoding ShaderEncoding.SPIRV raw bytes 462744 sha 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6
+[   55.9] dims 1x2048x1 threads 64x1x1
+[   55.9] CONTROL_A OK len_capture 462744 len_spv0 462744 differing_bytes_in_common_length 0
+[   55.9] RW tex 21829 bind 2 elem 0 w 128 h 2048 d 1 mips 1 arr 1 fmt R16G16B16A16_FLOAT bytes 2097152
+[   55.9] RW buf 152 bind 3 elem 0 len 536870912 off 0 size 536870912
+[   55.9] RW buf 138 bind 4 elem 0 len 8388672 off 0 size 8388672
+[   55.9] RW buf 165 bind 5 elem 0 len 67108864 off 13744384 size 404
+[   55.9] RW buf 33541 bind 0 elem 1 len 2342912 off 453296 size 17904
+[   55.9] RW buf 165 bind 0 elem 3 len 67108864 off 13744016 size 16
+[   55.9] RW buf 165 bind 0 elem 4 len 67108864 off 13744032 size 112
+[   55.9] RW buf 21831 bind 1 elem 0 len 212992 off 1792 size 203616
+[   55.9] RW buf 33541 bind 1 elem 1 len 2342912 off 453296 size 17904
+[   55.9] RW buf 33541 bind 1 elem 2 len 2342912 off 426784 size 576
+[   55.9] RW buf 165 bind 1 elem 4 len 67108864 off 13744032 size 112
+[   62.0] build r0 ResourceId::1000000000000031808 errors 
+[   63.5] replaced r0 bound shader ResourceId::1251 raw sha 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 len 462744
+[   65.5] build r1 ResourceId::1000000000000031814 errors 
+[   67.0] replaced r1 bound shader ResourceId::1251 raw sha 111713caa4076d3d7973f956994c66ba91764ec581030839a7b008cac8f605b3 len 465240
+[   69.9] after remove: raw sha 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6
+[   71.3] RES tex 21829 off 1 size 0 bytes 2097152 unit 8 pre 456b62b0792ad50c o1 5a281ce445d32655 o2 5a281ce445d32655 r0 5a281ce445d32655 r1 06aa0be94a34c3a8 o3 5a281ce445d32655
+[   71.3]   NDIFF 21829 o1 o2 0 of 262144
+[   71.4]   NDIFF 21829 o1 pre 13473 of 262144
+[   71.4]   NDIFF 21829 o1 r0 0 of 262144
+[   71.6]   NDIFF 21829 o1 r1 17793 of 262144
+[   71.7]   NDIFF 21829 r0 r1 17793 of 262144
+[   71.7]   NDIFF 21829 o1 o3 0 of 262144
+[   71.8]   NZERO 21829 pre 0
+[   71.9]   NZERO 21829 o1 0
+[   72.0]   NZERO 21829 r0 0
+[   72.1]   NZERO 21829 r1 0
+[   72.1] RES buf 152 off 0 size 536870912 bytes 536870912 unit 4 pre c4ae0ef097dbac94 o1 c4ae0ef097dbac94 o2 c4ae0ef097dbac94 r0 c4ae0ef097dbac94 r1 c4ae0ef097dbac94 o3 c4ae0ef097dbac94
+[   72.1]   EQUAL_SHA 152 o1 o2 True
+[   72.1]   EQUAL_SHA 152 o1 pre True
+[   72.1]   EQUAL_SHA 152 o1 r0 True
+[   72.1]   EQUAL_SHA 152 o1 r1 True
+[   72.1]   EQUAL_SHA 152 r0 r1 True
+[   72.1]   EQUAL_SHA 152 o1 o3 True
+[   72.1] RES buf 138 off 0 size 8388672 bytes 8388672 unit 4 pre 3d29261424420e41 o1 2eb2c13652c5ff93 o2 f8e0e06f3b2b1c8c r0 f8e0e06f3b2b1c8c r1 f8e0e06f3b2b1c8c o3 f8e0e06f3b2b1c8c
+[   73.0]   NDIFF 138 o1 o2 1 of 2097168
+[   73.8]   NDIFF 138 o1 pre 1 of 2097168
+[   74.8]   NDIFF 138 o1 r0 1 of 2097168
+[   75.7]   NDIFF 138 o1 r1 1 of 2097168
+[   75.7]   NDIFF 138 r0 r1 0 of 2097168
+[   76.6]   NDIFF 138 o1 o3 1 of 2097168
+[   77.7]   NZERO 138 pre 2097168
+[   78.8]   NZERO 138 o1 2097167
+[   79.9]   NZERO 138 r0 2097167
+[   81.0]   NZERO 138 r1 2097167
+[   81.0] RES buf 165 off 13744384 size 404 bytes 404 unit 4 pre 549434b491c3b98f o1 549434b491c3b98f o2 549434b491c3b98f r0 549434b491c3b98f r1 549434b491c3b98f o3 549434b491c3b98f
+[   81.0]   NDIFF 165 o1 o2 0 of 101
+[   81.0]   NDIFF 165 o1 pre 0 of 101
+[   81.0]   NDIFF 165 o1 r0 0 of 101
+[   81.0]   NDIFF 165 o1 r1 0 of 101
+[   81.0]   NDIFF 165 r0 r1 0 of 101
+[   81.0]   NDIFF 165 o1 o3 0 of 101
+[   81.0]   NZERO 165 pre 33
+[   81.0]   NZERO 165 o1 33
+[   81.0]   NZERO 165 r0 33
+[   81.0]   NZERO 165 r1 33
+[   81.0] RES buf 33541 off 453296 size 17904 bytes 17904 unit 4 pre 663d218ea8723d0e o1 663d218ea8723d0e o2 663d218ea8723d0e r0 663d218ea8723d0e r1 663d218ea8723d0e o3 663d218ea8723d0e
+[   81.0]   NDIFF 33541 o1 o2 0 of 4476
+[   81.0]   NDIFF 33541 o1 pre 0 of 4476
+[   81.0]   NDIFF 33541 o1 r0 0 of 4476
+[   81.0]   NDIFF 33541 o1 r1 0 of 4476
+[   81.0]   NDIFF 33541 r0 r1 0 of 4476
+[   81.0]   NDIFF 33541 o1 o3 0 of 4476
+[   81.0]   NZERO 33541 pre 4239
+[   81.0]   NZERO 33541 o1 4239
+[   81.0]   NZERO 33541 r0 4239
+[   81.0]   NZERO 33541 r1 4239
+[   81.0] RES buf 165 off 13744016 size 16 bytes 16 unit 4 pre 90f04e4382ff0bf0 o1 90f04e4382ff0bf0 o2 90f04e4382ff0bf0 r0 90f04e4382ff0bf0 r1 90f04e4382ff0bf0 o3 90f04e4382ff0bf0
+[   81.0]   NDIFF 165 o1 o2 0 of 4
+[   81.0]   NDIFF 165 o1 pre 0 of 4
+[   81.0]   NDIFF 165 o1 r0 0 of 4
+[   81.0]   NDIFF 165 o1 r1 0 of 4
+[   81.0]   NDIFF 165 r0 r1 0 of 4
+[   81.0]   NDIFF 165 o1 o3 0 of 4
+[   81.0]   NZERO 165 pre 1
+[   81.0]   NZERO 165 o1 1
+[   81.0]   NZERO 165 r0 1
+[   81.0]   NZERO 165 r1 1
+[   81.0] RES buf 165 off 13744032 size 112 bytes 112 unit 4 pre 439dbc4f691262b4 o1 439dbc4f691262b4 o2 439dbc4f691262b4 r0 439dbc4f691262b4 r1 439dbc4f691262b4 o3 439dbc4f691262b4
+[   81.0]   NDIFF 165 o1 o2 0 of 28
+[   81.0]   NDIFF 165 o1 pre 0 of 28
+[   81.0]   NDIFF 165 o1 r0 0 of 28
+[   81.0]   NDIFF 165 o1 r1 0 of 28
+[   81.0]   NDIFF 165 r0 r1 0 of 28
+[   81.0]   NDIFF 165 o1 o3 0 of 28
+[   81.0]   NZERO 165 pre 15
+[   81.0]   NZERO 165 o1 15
+[   81.0]   NZERO 165 r0 15
+[   81.0]   NZERO 165 r1 15
+[   81.0] RES buf 21831 off 1792 size 203616 bytes 203616 unit 4 pre eff78595a35397b5 o1 eff78595a35397b5 o2 eff78595a35397b5 r0 eff78595a35397b5 r1 eff78595a35397b5 o3 eff78595a35397b5
+[   81.0]   NDIFF 21831 o1 o2 0 of 50904
+[   81.0]   NDIFF 21831 o1 pre 0 of 50904
+[   81.0]   NDIFF 21831 o1 r0 0 of 50904
+[   81.0]   NDIFF 21831 o1 r1 0 of 50904
+[   81.0]   NDIFF 21831 r0 r1 0 of 50904
+[   81.0]   NDIFF 21831 o1 o3 0 of 50904
+[   81.0]   NZERO 21831 pre 29475
+[   81.1]   NZERO 21831 o1 29475
+[   81.1]   NZERO 21831 r0 29475
+[   81.1]   NZERO 21831 r1 29475
+[   81.1] RES buf 33541 off 426784 size 576 bytes 576 unit 4 pre 6ec657d84f700fab o1 6ec657d84f700fab o2 6ec657d84f700fab r0 6ec657d84f700fab r1 6ec657d84f700fab o3 6ec657d84f700fab
+[   81.1]   NDIFF 33541 o1 o2 0 of 144
+[   81.1]   NDIFF 33541 o1 pre 0 of 144
+[   81.1]   NDIFF 33541 o1 r0 0 of 144
+[   81.1]   NDIFF 33541 o1 r1 0 of 144
+[   81.1]   NDIFF 33541 r0 r1 0 of 144
+[   81.1]   NDIFF 33541 o1 o3 0 of 144
+[   81.1]   NZERO 33541 pre 20
+[   81.1]   NZERO 33541 o1 20
+[   81.1]   NZERO 33541 r0 20
+[   81.1]   NZERO 33541 r1 20
+[   81.1] done

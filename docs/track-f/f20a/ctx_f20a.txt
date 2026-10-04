@@ -1,0 +1,46 @@
+binary | course | roots | Sky Garden entries that reach idx 782 | with a frame >= 100 ms at idx 770..782
+31cbfee8 | yes | f287 | 2 | 1
+      f287/fs4c/log_fs4_r1.txt idx 774 n 968 dt_us 117451 prio 1/76245 ir 7267 pcs 0 sched -
+631ff987 | yes | f287 | 3 | 1
+      f287/fs5/fs5c/log_fs5_v.txt idx 774 n 1134 dt_us 102163 prio 1/64627 ir 7267 pcs 0 sched -
+4aa62e95 | yes | p283,s288 | 5 | 0
+540c035a | yes | f287 | 1 | 0
+9235a7ac | yes | p283,s128,s142,s288 | 8 | 0
+adb0c82f | yes | s288 | 2 | 0
+bbad499c | yes | f287 | 1 | 0
+dac02fb9 | yes | f287,s146 | 3 | 0
+d19a4f8a | no | s131 | 7 | 4
+      s131/log_lw3s131.txt.xz idx 777 n 1060 dt_us 155753 prio 1/121005 ir 0 pcs 0 sched -
+      s131/log_lw4s131.txt.xz idx 775 n 950 dt_us 189871 prio 1/150312 ir 0 pcs 0 sched -
+      s131/log_lw5s131.txt.xz idx 777 n 949 dt_us 188648 prio 1/153550 ir 0 pcs 0 sched -
+      s131/log_lw6s131.txt.xz idx 777 n 954 dt_us 197021 prio 2/153448 ir 0 pcs 0 sched -
+0d23f161 | no | s130 | 3 | 1
+      s130/log_ack130.txt.xz idx 777 n 954 dt_us 194034 prio 1/153928 ir 0 pcs 0 sched -
+2e6df8f0 | no | f287 | 1 | 1
+      f287/f3d/log_f3d_bv.txt idx 774 n 1069 dt_us 212664 prio 1/187273 ir 7267 pcs 1 sched -
+3f4af2c3 | no | s130 | 2 | 1
+      s130/log_s12s130.txt.xz idx 775 n 951 dt_us 194568 prio 1/157220 ir 0 pcs 0 sched -
+b714f5c4 | no | f287 | 1 | 1
+      f287/f12f/log_f12_v.txt idx 774 n 1162 dt_us 101338 prio 1/69061 ir 7267 pcs 0 sched -
+edd17418 | no | s129 | 8 | 1
+      s129/log_ack129.txt.xz idx 777 n 954 dt_us 183252 prio 1/154844 ir 0 pcs 0 sched -
+03ce7a92 | no | s136 | 8 | 0
+05431dad | no | s136,s137 | 11 | 0
+24efead3 | no | f287 | 1 | 0
+33f5a15a | no | s134 | 5 | 0
+36e2b042 | no | f287 | 1 | 0
+45d36512 | no | s128 | 2 | 0
+4bb8bceb | no | p283 | 5 | 0
+56ee1914 | no | p283 | 6 | 0
+5821482a | no | f287 | 2 | 0
+6bad00f3 | no | p283 | 5 | 0
+6f495a65 | no | f287 | 2 | 0
+74032561 | no | s135 | 3 | 0
+b037d3dd | no | s128 | 1 | 0
+b97efad4 | no | f287 | 1 | 0
+c01bde0c | no | f287 | 1 | 0
+cf414f46 | no | s133 | 3 | 0
+ee2287ed | no | s136 | 1 | 0
+f3b3aa3b | no | s288 | 9 | 0
+ff16284f | no | p283 | 8 | 0
+other binaries together: entries 97, with the frame 9

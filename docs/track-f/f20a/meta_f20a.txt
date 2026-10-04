@@ -1,0 +1,51 @@
+logs 498 json forms {'binary_sha256+cmdline+env': 472, 'none': 26}
+binaries [('9235a7ac', 158), ('dac02fb9', 50), ('none', 26), ('ff16284f', 26), ('56ee1914', 24), ('6bad00f3', 20), ('4bb8bceb', 20), ('f3b3aa3b', 19), ('4aa62e95', 14), ('edd17418', 13), ('05431dad', 12), ('03ce7a92', 10), ('d8756dce', 8), ('2e6df8f0', 8), ('d19a4f8a', 8), ('540c035a', 7), ('33f5a15a', 7), ('c9a5e198', 5), ('bbad499c', 5), ('adb0c82f', 5), ('631ff987', 5), ('0d23f161', 5), ('6f495a65', 4), ('31cbfee8', 4), ('b97efad4', 4), ('b714f5c4', 4), ('cf414f46', 4), ('74032561', 4), ('c01bde0c', 3), ('5821482a', 3), ('b037d3dd', 3), ('3f4af2c3', 3), ('24efead3', 2), ('36e2b042', 2), ('45d36512', 2), ('ee2287ed', 1)]
+validation [('false', 351), ('true', 121), ('None', 26)]
+rd [('False', 467), ('None', 26), ('True', 5)]
+cmd_extra [('', 493), ('--rd', 5)]
+env keys 45
+  KYTY_AUDIO_SYNC 53: 0 x53
+  KYTY_AV_TRACE 27: 1 x27
+  KYTY_BUFFER_GC_TRIGGER_SHIFT_MB 2: 1024 x2
+  KYTY_CACHE_MODE 5: prepare-cold x5
+  KYTY_CS_PRETRANSLATE 1: 0 x1
+  KYTY_DIAG_BVHNODES 4: 1 x4
+  KYTY_DUMP_GCN 3: 1 x3
+  KYTY_FIX_B1B 9: 1 x6; 0 x3
+  KYTY_FIX_B26 3: 1 x2; 0 x1
+  KYTY_FIX_B42 2: 1 x2
+  KYTY_FIX_B9A 8: 0 x4; 1 x4
+  KYTY_FIX_DUALSRC 5: 1 x3; 0 x2
+  KYTY_FIX_F10 4: 1 x4
+  KYTY_FIX_F19 3: 1 x3
+  KYTY_FIX_MINIMIZE 5: 0 x3; 1 x2
+  KYTY_FIX_SVAL 2: 1 x2
+  KYTY_FRAME_TRACE 468: lite x468
+  KYTY_GAME_PATCH 50: C:/kyty/KytyPS5/patches/PPSA21564_pvar.txt x43; C:/kyty/p283/p41/kx_patch.txt x2; C:/kyty/p283/p36/jx_patch.txt x2; C:/kyty/p283/p31/hx_patch.txt x2; C:/kyty/p283/p24/ix_patch.txt x1
+  KYTY_GATE_FILE 468: C:\kyty\s146\gates.req x44; C:\kyty\s145\gates.req x36; C:\kyty\s144\gates.req x34; C:\kyty\s143\gates.req x30; C:\kyty\p283\p41\gates.req x26; C:\kyty\p283\p36\gates.req x20
+  KYTY_GATE_SCHEDULE 33: 90+1800:bindlean=0|bindlean=1 x10; 90+1800:armcopy=2|armcopy=4 x6; 90+1800:armcopy=0|armcopy=1 x3; 90+1800:b2reuse=0|b2reuse=1 x3; 90+1800:protceil=0|protceil=2 x2; 90+1800:armcopy=0|armcopy=4 x2
+  KYTY_GATE_SCHEDULE_ABBA 33: 1 x33
+  KYTY_GPU_CLOCK_PIN 472: 1 x472
+  KYTY_GPU_HANG_ABORT_S 468: 8 x468
+  KYTY_GPU_MARKERS 468: 0 x468
+  KYTY_GUEST_ARGS 472: -lvl underwater_aerial_garden x208; -lvl hoover_beach x33; -lvl sponge_dirty_bath x28; -lvl big_hand_pirate_island x11; -lvl timestop_casino x11; -lvl voxel_world x9
+  KYTY_KEYS 76: @1500:j/@3,@1560:j/@3,@1620:j/@3,@1680:j/@3,@1740:j/@3,@1800 x71; @10:j/@6,@12:j/@6,@14:j/@6,@16:j/@6,@18:j/@6,@20:j/@6,@22:j/ x4; 75:J,90:J,105:J,120:L,135:L,150:L x1
+  KYTY_PIPELINE_PRECACHE 52: 0 x52
+  KYTY_PIPELINE_SALT 2: c5_0 x1; c4_0 x1
+  KYTY_POKE 127: 27e46c:909090909090 x72; 27e46c:909090909090,2a470b:c5fb10051ddd0a08c5fb5905b5c40a08c x35; 27e46c:909090909090,2a0ca5:c5fb1005b3f40a08,2a2788:c5fb1005d x20
+  KYTY_PVAR 35: 0 x19; 2 x16
+  KYTY_PVAR_HOLD 44: 1 x38; 0 x6
+  KYTY_QUEUE_TRACE 468: 1 x468
+  KYTY_RD_FLIPS 5: 2 x5
+  KYTY_RD_LEVEL 5: underwater_aerial_garden x3; enemy_final x1; ending_boss_after_credit x1
+  KYTY_RD_LEVEL_FRAME 5: 3,6,9,12,15,18,21,24,27,33,40,50 x2; 9,300 x1; 600 x1; 2400 x1
+  KYTY_REC 260: C:\kyty\s145\rec_v145_02.mp4 x3; C:\kyty\p283\p8\rec_pc_sponge_dirty_bath.mp4 x3; C:\kyty\p283\p8\rec_pc_hoover_beach.mp4 x3; C:\kyty\p283\p8\rec_pn_sponge_dirty_bath.mp4 x3; C:\kyty\p283\p8\rec_pn_hoover_beach.mp4 x3; C:\kyty\p283\p8\rec_pr_C.mp4 x3
+  KYTY_SAMPLE_GATE 468: C:\kyty\s146\sample.req x44; C:\kyty\s145\sample.req x36; C:\kyty\s144\sample.req x34; C:\kyty\s143\sample.req x30; C:\kyty\p283\p41\sample.req x26; C:\kyty\p283\p36\sample.req x20
+  KYTY_SHADER_REGISTER_TRACE 27: 1 x27
+  KYTY_SHADER_SEED_PATH 5: C:/kyty/s288/s9/seeds x5
+  KYTY_S_PCW 15: 1 x10; 0 x5
+  KYTY_S_PCW_FORCE_MS 10: 15000 x10
+  KYTY_TEST_MINIMIZE 7: 60:10 x7
+  VK_LAYER_DUPLICATE_MESSAGE_LIMIT 121: 1000000 x65; 100000000 x56
+  VK_LAYER_MESSAGE_ID_FILTER 6: Undefined-Value-ShaderOutputNotConsumed-DynamicRendering x6
+  VK_LAYER_PATH 121: C:/VulkanSDK/1.4.357.0/Bin x121

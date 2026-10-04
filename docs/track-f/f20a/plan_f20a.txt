@@ -1,0 +1,3 @@
+logs 498 {'other level by -lvl': 113, 'no json / no binary': 26, 'validation': 92, 'binary not of the course line': 224, 'sweep': 39, 'RenderDoc': 4}
+sweep 39 GiB 9.6 hash 459 GiB 117.7
+sweep by binary [('9235a7ac', 22), ('4aa62e95', 5), ('dac02fb9', 3), ('631ff987', 3), ('31cbfee8', 2), ('adb0c82f', 2), ('bbad499c', 1), ('540c035a', 1)]

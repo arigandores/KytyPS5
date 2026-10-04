@@ -1,0 +1,17 @@
+16e0556f	docs/ROADMAP.md	22555	462. **Звено F20b трека F (`HPP-552`, лид; приёмка F20a	(а) **Приёмка строкой. F20a ✓**
+16e0556f	docs/ROADMAP.md	22562	(ж) **Следующая итерация очереди F — F21 = Б9 (Q4)	(з) **Звенья (стадия review лида у каждого звена исполнителя):**
+16e0556f	docs/ROADMAP.md	22561	(е) **Долги F20a (п. 324(и)(5)).**	(ж) **Следующая итерация очереди F — F21 = Б9 (Q4)
+16e0556f	docs/track-f/register.md	174	| Б9 | K4 | наблюдение (проявления нет) |	| Ф8 | K4 |
+16e0556f	docs/track-f/register.md	157	| Ф3 | K4 | наблюдение по букве п. 228(б)	| Ф7 | K4 |
+16e0556f	docs/track-f/register.md	322	| Б26в (новая) | K4 (при запросе — K1) |	| Б26г (новая) |
+16e0556f	docs/track-f/register.md	323	| Б26г (новая) | K4 (при запросе — K1) |	| Ф9 (новая) |
+16e0556f	docs/track-f/register.md	402	| Б9а | K4 | дефект (путь исполняется [c]) | 16 неразрешённых импортов `AudioPropagation` из 22	| Б9б (новая) |
+16e0556f	docs/track-f/register.md	691	| Ф3 (поправка к §4, §37) | K4 |	| Б4 (поправка к §4) |
+16e0556f	docs/track-f/register.md	830	| Q4 | Б9 | K4 | наблюдение |	| Q5 | Ф4 |
+3cc79cb2	src/loader/runtimeLinker.cpp	394	LOGF("Late-resolved import: %s -> %s	resolved.name.c_str(), resolved.vaddr);
+3cc79cb2	src/loader/runtimeLinker.cpp	405	const auto log_index = g_unresolved_stub_call_log_count.fetch_add(1);	if (log_index < 1024) {
+3cc79cb2	src/loader/runtimeLinker.cpp	410	LOGF("Unresolved import stub called [%u]: patch_vaddr=	" jmprela_index=
+3cc79cb2	src/loader/runtimeLinker.cpp	1158	LOGF("Relocate: unresolved PLT import patched to stub [%u]	", %s, %s, %s, %s
+3cc79cb2	src/graphics/host_gpu/renderer/pipeline/computePretranslation.h	116	LOGF("CsPretranslate: hit hash=	hash, job->translate_us, stats.hits);
+3cc79cb2	src/graphics/host_gpu/renderer/pipeline/computePretranslation.h	130	LOGF("CsPretranslate: miss hash=	return std::nullopt;
+3cc79cb2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4002	if (ComputePretranslation::Enabled() && !Config::GraphicsDebugDumpEnabled()) {	prepared = pretranslation.Take(params.code, params.hash, input_info,

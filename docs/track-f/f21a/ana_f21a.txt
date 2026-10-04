@@ -1,0 +1,175 @@
+== 1. Scope
+list rows 511 distinct paths 511 repeated paths 0
+sweep records raw 511 paths 511 repeated equal records 0 paths of the list without a record 0 missing files 0
+bytes 139875260057 stored; lines 716310217 FrameTrace lines 4322312 frame hours 33.8 xz 73 xz_rc != 0 0
+identities: failures 0 [] - IDENTITIES ALL OK
+invariants over all records: stub_bad 0 stub_unparsed 0 stub_idx_restart 0 stub_plain 0 '=== Stubbed function' lines 0 levels_over 0
+
+== 2. Distinct logs and the sample
+distinct logs by sha256 of the text 422 repeated copies 89
+   other binary         183
+   no json              33
+   fixture dir          5
+   FS6 not installed    0
+   KYTY_FIX_B9A=0       0
+   sample               201
+KYTY_FIX_B9A values in the env of course-line logs (binary, value):  {}
+sample by binary: 9235a7ac 120 dac02fb9 42 bbad499c 5 4aa62e95 14 540c035a 6 31cbfee8 4 631ff987 5 adb0c82f 5
+sample forms: validation true 75 ; RenderDoc flag 3 ; --shader-validation true 3 ; cmd_extra {'--rd': 3, '': 198}
+sample env keys outside the harness constants (logs): KYTY_AUDIO_SYNC 7 KYTY_AV_TRACE 15 KYTY_CACHE_MODE 5 KYTY_DUMP_GCN 3 KYTY_FIX_B1B 1 KYTY_FIX_MINIMIZE 1 KYTY_GAME_PATCH 6 KYTY_KEYS 10 KYTY_PIPELINE_PRECACHE 39 KYTY_PIPELINE_SALT 1 KYTY_POKE 17 KYTY_PVAR 1 KYTY_RD_FLIPS 3 KYTY_RD_LEVEL 3 KYTY_RD_LEVEL_FRAME 3 KYTY_SHADER_REGISTER_TRACE 15 KYTY_SHADER_SEED_PATH 5 KYTY_S_PCW 5 KYTY_TEST_MINIMIZE 3 VK_LAYER_DUPLICATE_MESSAGE_LIMIT 75 VK_LAYER_MESSAGE_ID_FILTER 2 VK_LAYER_PATH 75
+sample: lines 370032158 FrameTrace lines 2170280 frame hours 15.6 logs with --- Fatal Error --- 1
+
+== 3. B9: lines "Unresolved import stub called [" in the sample
+sample logs 201 ; logs with >= 1 stub line 6 ; stub lines 6144 ; distinct symbols 4 ; distinct libraries 1
+3.1 names OUTSIDE the B9a set (library != AudioPropagation_v1):
+   (none)
+    => symbols outside the B9a set: 0; libraries: []
+3.2 the B9a set (library AudioPropagation_v1) - separate line:
+   WXMhENV2NcA[AudioPropagation_v1][AudioPropagation_v1.0][Func] = sceAudioPropagationPortalSetAttributes | lib AudioPropagation_v1 | program eboot.bin | logs 6 | lines 3225 | binaries 9235a7ac:5 dac02fb9:1 | levels mini_astro_clock_tower:2044 timestop_casino:1181 | first s142/log_c142_03.txt:242025
+   d84otraxt2s[AudioPropagation_v1][AudioPropagation_v1.0][Func] = sceAudioPropagationSourceCreate | lib AudioPropagation_v1 | program eboot.bin | logs 4 | lines 1459 | binaries 9235a7ac:3 dac02fb9:1 | levels timestop_casino:1459 | first s142/log_c142_03.txt:282260
+   G+QLTfyLMYk[AudioPropagation_v1][AudioPropagation_v1.0][Func] = sceAudioPropagationSourceGetAudioPathCount | lib AudioPropagation_v1 | program eboot.bin | logs 4 | lines 1448 | binaries 9235a7ac:3 dac02fb9:1 | levels timestop_casino:1448 | first s142/log_c142_03.txt:282261
+   b-dYXrjSNZU[AudioPropagation_v1][AudioPropagation_v1.0][Func] = sceAudioPropagationPortalCreate | lib AudioPropagation_v1 | program eboot.bin | logs 6 | lines 12 | binaries 9235a7ac:5 dac02fb9:1 | levels <before the first level line>:12 | first s142/log_c142_03.txt:239572
+    B9a logs 6 by binary {'9235a7ac': 5, 'dac02fb9': 1} lines 6144
+      9235a7ac s142/log_c142_03.txt stub_lines 1024 levels ['timestop_casino'] validation false
+      9235a7ac s143/log_v143_03.txt stub_lines 1024 levels ['mini_astro_clock_tower'] validation false
+      9235a7ac s144/log_v144_13.txt stub_lines 1024 levels ['timestop_casino'] validation false
+      9235a7ac s144/log_w144_03.txt stub_lines 1024 levels ['mini_astro_clock_tower'] validation true
+      9235a7ac s144/log_w144_13.txt stub_lines 1024 levels ['timestop_casino'] validation true
+      dac02fb9 s146/log_r146_03.txt stub_lines 1024 levels ['timestop_casino'] validation false
+    B9a lines on binaries with the default KYTY_FIX_B9A=1 (bbad499c 4aa62e95 540c035a 31cbfee8 631ff987 adb0c82f): 0
+3.3 saturated logs (stub_lines >= 1024): 6 ['s142/log_c142_03.txt', 's143/log_v143_03.txt', 's144/log_v144_13.txt', 's144/log_w144_03.txt', 's144/log_w144_13.txt', 's146/log_r146_03.txt']
+3.4 other markers in the sample: Late-resolved import lines 0 in logs 0 ; === Stubbed function lines 0
+3.5 positive control of arming: sample logs with >= 1 line "Relocate: unresolved ... patched to stub": 191 of 201 ; PLT lines 15993 non-PLT lines 0
+    not armed: 9235a7ac s143/log_w143_01.txt lines 661 ft 0 levels 0
+    not armed: 9235a7ac s143/log_w143_02.txt lines 661 ft 0 levels 0
+    not armed: 9235a7ac s143/log_w143_03.txt lines 661 ft 0 levels 0
+    not armed: 9235a7ac s143/log_w143_04.txt lines 673 ft 0 levels 0
+    not armed: 9235a7ac s143/log_w143_05.txt lines 735 ft 0 levels 0
+    not armed: 9235a7ac s143/log_w143_06.txt lines 661 ft 0 levels 0
+    not armed: 9235a7ac s143/log_w143_07.txt lines 661 ft 0 levels 0
+    not armed: 9235a7ac s143/log_w143_08.txt lines 751 ft 0 levels 0
+    not armed: 9235a7ac s143/log_w143_09.txt lines 680 ft 0 levels 0
+    not armed: 9235a7ac s143/log_w143_10.txt lines 679 ft 0 levels 0
+    libraries with stubbed imports (logs / max distinct symbols in a log / PLT lines / non-PLT lines):
+      AudioIn_v1                    191 /   1 /    191 /      0 ; symbols called in the sample: 0
+      AudioPropagation_v1           152 /  16 /   2432 /      0 ; symbols called in the sample: 4
+      ContentExport_v1              191 /   4 /    764 /      0 ; symbols called in the sample: 0
+      ConvertKeycode_v1             191 /   1 /    191 /      0 ; symbols called in the sample: 0
+      Http_v1                       191 /   2 /    382 /      0 ; symbols called in the sample: 0
+      LibcInternalExt_v1            191 /   1 /    191 /      0 ; symbols called in the sample: 0
+      Net_v1                        191 /   6 /   1146 /      0 ; symbols called in the sample: 0
+      NpSessionSignaling_v1         191 /   8 /   1528 /      0 ; symbols called in the sample: 0
+      NpWebApi2_v1                  191 /   5 /    955 /      0 ; symbols called in the sample: 0
+      PlayerInvitationDialog_v1     191 /   4 /    764 /      0 ; symbols called in the sample: 0
+      PngEnc_v1                     191 /   4 /    764 /      0 ; symbols called in the sample: 0
+      Rudp_v1                       191 /   9 /   1719 /      0 ; symbols called in the sample: 0
+      Ssl_v1                        191 /   1 /    191 /      0 ; symbols called in the sample: 0
+      VoiceChat_v1                  191 /  17 /   3247 /      0 ; symbols called in the sample: 0
+      libkernel_v1                  191 /   8 /   1528 /      0 ; symbols called in the sample: 0
+    distinct profiles (library, symbols) of the stubbed imports over the armed logs: 2 ; the most frequent covers 152 logs; stubbed symbols in it 87
+    FixB9a: lines - sample logs with >= 1 by binary: {'540c035a': 6, 'bbad499c': 5, '31cbfee8': 4, '631ff987': 5, '4aa62e95': 14, 'adb0c82f': 5} ; texts {'FixB9a: on': 39}
+
+== 4. Levels with the line "Level has started: <name>" in the sample
+(a) distinct levels in the sample (the letter of item 462(zh)): 54
+(b) distinct levels in the logs that are not saturated: 53
+(c) of (b), with >= 1 frame after the level line: 53
+(d) of (b), with >= 120 s of frames in total: 52 ; with >= 300 s: 51 ; with one log holding >= 300 s (any log): 52
+logs of the sample without a named level line: 10 ; empty level lines 195
+level | logs | logs not saturated | frames | seconds | seconds not saturated | binaries
+   armadillo_challenge_1                2   2    28703    646.6    646.6  dac02fb9
+   big_hand_pirate_island               6   6    26384   1142.5   1142.5  9235a7ac
+   bonus_path_maker_mix                 3   3    36181    980.6    980.6  9235a7ac dac02fb9
+   booster_construction                 2   2    17206    656.0    656.0  9235a7ac
+   booster_magic_lamp                   2   2    19139    655.2    655.2  9235a7ac
+   bumper_enemy_snowy_canyon            3   3    21755    777.1    777.1  9235a7ac
+   collectible_viewer                   2   2    63394   1058.4   1058.4  dac02fb9
+   cymbal_party_land                    2   2    16285    647.8    647.8  9235a7ac
+   diorama_astro_skin                   2   2    63520   1058.7   1058.7  dac02fb9
+   diorama_controller_skin              2   2    63361   1056.4   1056.4  dac02fb9
+   diorama_zoo                          2   2    63430   1057.4   1057.4  dac02fb9
+   ending_boss_after_credit             4   4    67320   1129.9   1129.9  540c035a dac02fb9
+   enemy_bird                           2   2    27921    648.6    648.6  9235a7ac
+   enemy_chameleon                      2   2    24376    650.1    650.1  9235a7ac
+   enemy_final                          3   3    49216    827.6    827.6  9235a7ac dac02fb9
+   enemy_gorilla                        3   3    28299    774.0    774.0  9235a7ac
+   enemy_snake                          2   2    28229    650.4    650.4  9235a7ac
+   enemy_taco                           2   2    25666    649.9    649.9  9235a7ac
+   final_stage                          3   3    49351   1120.9   1120.9  9235a7ac
+   fragile_battle_1                     3   3    34711    770.1    770.1  4aa62e95 dac02fb9
+   fragile_battle_2                     2   2    26642    648.4    648.4  dac02fb9
+   fragile_battle_3                     2   2    27500    647.7    647.7  dac02fb9
+   gulliver_island                      2   2    21158    652.5    652.5  9235a7ac
+   hero_kratos                          2   2    27161    459.6    459.6  adb0c82f
+   hoover_beach                        12  12   145755   2729.3   2729.3  31cbfee8 4aa62e95 540c035a 631ff987 9235a7ac dac02fb9
+   hub_crashsite_diorama                2   2    38846    650.0    650.0  dac02fb9
+   ice_iceberg                          4   4    39137    897.7    897.7  9235a7ac
+   interactive_credit_00                3   3    41938    767.1    767.1  4aa62e95 dac02fb9
+   jack_in_the_box                      2   2    29248    651.8    651.8  9235a7ac
+   light_gadget_graveyard               2   2    18639    653.1    653.1  9235a7ac
+   mini_astro_clock_tower               2   0    13400    657.6      0.0  9235a7ac
+   mini_giants_garden                   5   5    52988   1105.8   1105.8  9235a7ac dac02fb9
+   mini_rocket_chain                    2   2    28637    651.6    651.6  9235a7ac
+   non_interactive_credit               2   2    24930    419.9    419.9  dac02fb9
+   path_maker_mana_tree                 2   2    15969    657.2    657.2  9235a7ac
+   picup_light                          2   2    26726    648.6    648.6  9235a7ac
+   pot_treasure_cave                    3   3    42023    986.6    986.6  9235a7ac
+   robot_builder_next                   3   3    43801    772.3    772.3  4aa62e95 dac02fb9
+   rocket_hourglass                     4   4    38803   1077.3   1077.3  9235a7ac
+   rocket_space_station                 2   2    16643    659.5    659.5  9235a7ac
+   shuriken_ninja_castle                7   7    33182   1261.8   1261.8  9235a7ac
+   small_pot_lava                       2   2    15712    649.7    649.7  9235a7ac
+   spin_drill_natural_cave              2   2    25710    649.8    649.8  9235a7ac
+   sponge_dirty_bath                    8   8    45434   1612.2   1612.2  4aa62e95 9235a7ac dac02fb9
+   spring_punch_monster_cave            2   2    15221    658.0    658.0  9235a7ac
+   spring_punch_sky_aztec               2   2    13249    657.6    657.6  9235a7ac
+   timestop_casino                      6   2    62120   1292.3    189.0  9235a7ac bbad499c dac02fb9
+   transition_next                      2   2    31519    593.7    593.7  dac02fb9
+   underwater_aerial_garden            39  39   256523  11594.5  11594.5  31cbfee8 4aa62e95 540c035a 631ff987 9235a7ac adb0c82f bbad499c dac02fb9
+   volcano_mountain                     3   3    32100    773.2    773.2  9235a7ac
+   voxel_challenge_1                    2   2    38650    644.3    644.3  dac02fb9
+   voxel_challenge_2                    2   2    38630    643.9    643.9  dac02fb9
+   voxel_world                          4   4    44255    898.0    898.0  9235a7ac
+   worldmap                             2   2      169      3.4      3.4  dac02fb9
+
+== 5. Context outside the sample (not the sample; positive control of the marker)
+KYTY_FIX_B9A=0: logs 0; with stub lines 0; stub lines 0; saturated 0; symbols 0; outside the B9a set 0
+FS6 not installed: logs 0; with stub lines 0; stub lines 0; saturated 0; symbols 0; outside the B9a set 0
+other binary: logs 183; with stub lines 4; stub lines 4096; saturated 4; symbols 4; outside the B9a set 0
+no json: logs 33; with stub lines 0; stub lines 0; saturated 0; symbols 0; outside the B9a set 0
+fixture dir: logs 5; with stub lines 0; stub lines 0; saturated 0; symbols 0; outside the B9a set 0
+all 422 distinct logs: symbols called 4; outside the B9a set 0
+
+== 6. Witnesses of F3, B26v, B26g
+F3 target: 37 hashes of f14a_f3_hashes.tsv; union of RESTRACK + BUDGET over all swept logs 37 ; not in the 37: [] ; of the 37 not seen as skipped: []
+B26v prefix 433e4ced -> full ['433e4cede34ca4c3'] classes {'OP_VOPC_0xf3': 154, 'OP_VOPC_0xe3': 217}
+B26v prefix f8e35038 -> full ['f8e350383290ff7b'] classes {'OP_VOPC_0xf3': 154, 'OP_VOPC_0xe3': 217}
+B26v prefix 4468d530 -> full ['4468d53059c03cba'] classes {'OP_VOPC_0xf3': 154, 'OP_VOPC_0xe3': 217}
+B26v prefix 7bb50479 -> full ['7bb50479b3a32c7c'] classes {'OP_VOPC_0xf3': 154, 'OP_VOPC_0xe3': 217}
+B26g 57c4d5848e02ecdc classes {'RESTRACK_GBR1': 154, 'OP_SOP1_0x0c': 217}
+sample: logs 201; armed (>= 1 line "CsPretranslate: skipped") 191; control - logs with >= 1 miss|hit line of any hash 31, lines 1099 (miss 1084, hit 15), distinct hashes 124
+   profile (RESTRACK incl. GBR1, BUDGET) of the armed logs: {(33, 4): 81, (32, 4): 109, (0, 1): 1}
+   F3 (37 + union): miss|hit lines with these hashes: 0 in 0 logs
+   B26v: miss|hit lines with these hashes: 0 in 0 logs
+   B26g: miss|hit lines with these hashes: 0 in 0 logs
+   'shader CFG build failed' outside a 'CsPretranslate:' line: 0 lines in 0 logs
+   not armed (0 skipped lines): 10 logs; by class/binary {('sample', '9235a7ac'): 10}; with KYTY_CS_PRETRANSLATE in env 0
+all distinct logs: logs 422; armed (>= 1 line "CsPretranslate: skipped") 373; control - logs with >= 1 miss|hit line of any hash 57, lines 2635 (miss 2614, hit 21), distinct hashes 124
+   profile (RESTRACK incl. GBR1, BUDGET) of the armed logs: {(33, 4): 154, (32, 4): 217, (0, 2): 1, (0, 1): 1}
+   F3 (37 + union): miss|hit lines with these hashes: 0 in 0 logs
+   B26v: miss|hit lines with these hashes: 0 in 0 logs
+   B26g: miss|hit lines with these hashes: 0 in 0 logs
+   'shader CFG build failed' outside a 'CsPretranslate:' line: 0 lines in 0 logs
+   not armed (0 skipped lines): 49 logs; by class/binary {('no json', '-'): 32, ('sample', '9235a7ac'): 10, ('fixture dir', '9235a7ac'): 5, ('other binary', 'c9a5e198'): 1, ('other binary', 'f3b3aa3b'): 1}; with KYTY_CS_PRETRANSLATE in env 1
+sample by binary: armed logs / logs with miss|hit / B26v class
+   9235a7ac logs 120 armed 110 with miss|hit 12 ; classes of the 4 B26v hashes {'OP_VOPC_0xe3': 436} ; class of B26g {'OP_SOP1_0x0c': 109}
+   dac02fb9 logs 42 armed 42 with miss|hit 11 ; classes of the 4 B26v hashes {'OP_VOPC_0xf3': 168} ; class of B26g {'RESTRACK_GBR1': 42}
+   bbad499c logs 5 armed 5 with miss|hit 0 ; classes of the 4 B26v hashes {'OP_VOPC_0xf3': 20} ; class of B26g {'RESTRACK_GBR1': 5}
+   4aa62e95 logs 14 armed 14 with miss|hit 0 ; classes of the 4 B26v hashes {'OP_VOPC_0xf3': 56} ; class of B26g {'RESTRACK_GBR1': 14}
+   540c035a logs 6 armed 6 with miss|hit 0 ; classes of the 4 B26v hashes {'OP_VOPC_0xf3': 24} ; class of B26g {'RESTRACK_GBR1': 6}
+   31cbfee8 logs 4 armed 4 with miss|hit 2 ; classes of the 4 B26v hashes {'OP_VOPC_0xf3': 16} ; class of B26g {'RESTRACK_GBR1': 4}
+   631ff987 logs 5 armed 5 with miss|hit 5 ; classes of the 4 B26v hashes {'OP_VOPC_0xf3': 20} ; class of B26g {'RESTRACK_GBR1': 5}
+   adb0c82f logs 5 armed 5 with miss|hit 1 ; classes of the 4 B26v hashes {'OP_VOPC_0xf3': 20} ; class of B26g {'RESTRACK_GBR1': 5}
+
+== 7. Regression against f14a_f3.py (162 logs: 0 normal-path lines, control 343 lines in 23 logs, 37 hashes, 20 logs without skipped)
+paths 162; target lines 0; control lines 343 in 23 logs; target hashes 37; logs without skipped 20; cfg_out 0
+REGRESS F14A OK

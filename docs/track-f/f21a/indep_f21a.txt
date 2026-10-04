@@ -1,0 +1,18 @@
+F21a independent check (grep -a -c, fixed strings) against sweep_all.jsonl: stub lines / named level lines / miss|hit lines
+s142/log_c142_03.txt grep: stub=1024 levels=1 req=0 stub_not_b9a=0
+s143/log_v143_03.txt grep: stub=1024 levels=1 req=1 stub_not_b9a=0
+s146/log_r146_03.txt grep: stub=1024 levels=1 req=6 stub_not_b9a=0
+s288/s12/log_s12_v.txt grep: stub=0 levels=1 req=0 stub_not_b9a=0
+f287/fs5/fs5c/log_fs5_v.txt grep: stub=0 levels=1 req=98 stub_not_b9a=0
+f287/fs2c/log_fs2_t.txt grep: stub=0 levels=1 req=0 stub_not_b9a=0
+play/20261002T221534Z/log.txt grep: stub=0 levels=1 req=1 stub_not_b9a=0
+f287/f6e/log_f6e_c1.txt grep: stub=1024 levels=1 req=0 stub_not_b9a=0
+s142/log_c142_03.txt sweep (1024, 1, 0, 0) grep (1024, 1, 0, 0) ok
+s143/log_v143_03.txt sweep (1024, 1, 1, 0) grep (1024, 1, 1, 0) ok
+s146/log_r146_03.txt sweep (1024, 1, 6, 0) grep (1024, 1, 6, 0) ok
+s288/s12/log_s12_v.txt sweep (0, 1, 0, 0) grep (0, 1, 0, 0) ok
+f287/fs5/fs5c/log_fs5_v.txt sweep (0, 1, 98, 0) grep (0, 1, 98, 0) ok
+f287/fs2c/log_fs2_t.txt sweep (0, 1, 0, 0) grep (0, 1, 0, 0) ok
+play/20261002T221534Z/log.txt sweep (0, 1, 1, 0) grep (0, 1, 1, 0) ok
+f287/f6e/log_f6e_c1.txt sweep (1024, 1, 0, 0) grep (1024, 1, 0, 0) ok
+logs 8 ALL OK

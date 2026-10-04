@@ -1,0 +1,31 @@
+sample logs 201
+  9235a7ac logs 120 levels 36 frame hours 8.53 stub lines 5120
+  dac02fb9 logs 42 levels 24 frame hours 4.36 stub lines 1024
+  bbad499c logs 5 levels 2 frame hours 0.26 stub lines 0
+  4aa62e95 logs 14 levels 6 frame hours 0.71 stub lines 0
+  540c035a logs 6 levels 3 frame hours 0.45 stub lines 0
+  31cbfee8 logs 4 levels 2 frame hours 0.38 stub lines 0
+  631ff987 logs 5 levels 2 frame hours 0.48 stub lines 0
+  adb0c82f logs 5 levels 2 frame hours 0.41 stub lines 0
+binaries with the default KYTY_FIX_B9A=1: logs 39, levels 9 ['ending_boss_after_credit', 'fragile_battle_1', 'hero_kratos', 'hoover_beach', 'interactive_credit_00', 'robot_builder_next', 'sponge_dirty_bath', 'timestop_casino', 'underwater_aerial_garden'], frame hours 2.67, stub lines 0
+binaries without the B9a fix (9235a7ac, dac02fb9): logs 162, levels 53, frame hours 12.89, stub lines 6144
+sample logs with >= 1 named level 191 ; with >= 2 named levels 2 ; logs by number of named levels {1: 189, 0: 10, 3: 2}
+sample logs with KYTY_KEYS: [('540c035a', 'f287/f13a/log_f13_k.txt', ['ending_boss_after_credit']), ('9235a7ac', 'p283/lead/p10chk/log_pr_C.txt', ['underwater_aerial_garden']), ('9235a7ac', 'p283/lead/p6chk/log_pa0_A0.txt', ['underwater_aerial_garden']), ('9235a7ac', 'p283/lead/p6chk/log_pa_A.txt', ['underwater_aerial_garden']), ('9235a7ac', 'p283/lead/p6chk/log_pb0_B0.txt', ['underwater_aerial_garden']), ('9235a7ac', 'p283/lead/p6chk/log_pb_B.txt', ['underwater_aerial_garden']), ('4aa62e95', 'p283/p24/log_ia_A3.txt', ['underwater_aerial_garden']), ('4aa62e95', 'p283/p24/log_iv_5.txt', ['underwater_aerial_garden']), ('4aa62e95', 'p283/p24/log_iv_6.txt', ['underwater_aerial_garden']), ('4aa62e95', 'p283/p24/log_iw_V3.txt', ['underwater_aerial_garden'])]
+saturated sample logs: line of the level / first stub line / last stub index / lines of the log / frames after the level line
+   9235a7ac s142/log_c142_03.txt 241438 239572 1023 952602 6906 b-dYXrjSNZU:2 WXMhENV2NcA:295 d84otraxt2s:365 G+QLTfyLMYk:362
+   9235a7ac s143/log_v143_03.txt 217804 215963 1023 1346184 10516 b-dYXrjSNZU:2 WXMhENV2NcA:1022
+   9235a7ac s144/log_v144_13.txt 244667 242841 1023 1923439 19720 b-dYXrjSNZU:2 WXMhENV2NcA:296 d84otraxt2s:365 G+QLTfyLMYk:361
+   9235a7ac s144/log_w144_03.txt 217859 216128 1023 1576338 2884 b-dYXrjSNZU:2 WXMhENV2NcA:1022
+   9235a7ac s144/log_w144_13.txt 245272 243503 1023 2715791 5257 b-dYXrjSNZU:2 WXMhENV2NcA:295 d84otraxt2s:364 G+QLTfyLMYk:363
+   dac02fb9 s146/log_r146_03.txt 245188 243401 1023 2242976 19148 b-dYXrjSNZU:2 WXMhENV2NcA:295 d84otraxt2s:365 G+QLTfyLMYk:362
+context logs (outside the sample) with stub lines:
+   d8756dce f287/f6e/log_f6e_c1.txt 1024 ['timestop_casino'] KYTY_FIX_B9A 0 b-dYXrjSNZU:2 WXMhENV2NcA:296 d84otraxt2s:363 G+QLTfyLMYk:363
+   d8756dce f287/f6e/log_f6e_c2.txt 1024 ['mini_astro_clock_tower'] KYTY_FIX_B9A 0 b-dYXrjSNZU:2 WXMhENV2NcA:1022
+   d8756dce f287/f6e/log_f6e_w1.txt 1024 ['timestop_casino'] KYTY_FIX_B9A 0 b-dYXrjSNZU:2 WXMhENV2NcA:296 d84otraxt2s:363 G+QLTfyLMYk:363
+   d8756dce f287/f6e/log_f6e_w2.txt 1024 ['mini_astro_clock_tower'] KYTY_FIX_B9A 0 b-dYXrjSNZU:2 WXMhENV2NcA:1022
+context logs with KYTY_FIX_B9A in env: Counter({('d8756dce', '1'): 4, ('d8756dce', '0'): 4})
+play log: play/20261002T221534Z/log.txt lines 2614364 ft 20908 frame s 555.4 stub 0 levels [('underwater_aerial_garden', 549.1)] rel_plt 71 b9a FixB9a: on cs_req 1 cfg_out 0 skipped 137
+cs_other lines (sample): 87323 ; cs_enq 0 ; logs with a summary line 0
+miss reasons (sample, first reason per hash per log): {'not-ready': 922, 'absent': 16}
+sample logs with miss|hit by binary and validation: {('31cbfee8', 'false'): 2, ('631ff987', 'false'): 4, ('631ff987', 'true'): 1, ('dac02fb9', 'true'): 2, ('dac02fb9', 'false'): 9, ('9235a7ac', 'false'): 12, ('adb0c82f', 'false'): 1}
+all-level union over ALL distinct logs: 61

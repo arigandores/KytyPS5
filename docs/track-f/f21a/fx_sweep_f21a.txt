@@ -1,0 +1,29 @@
+ok   block 4096 == default block: {'b9a_first': 'FixB9a: on', 'b9a_n': 1, 'cfg_in': 1, 'cfg_out': 1, 'cfg_out_first': [294, 'shader CFG build failed: boom outside'], 'cs_enq': 1, 'cs_other': 0, 'cs_req': {'1111111111111111': [1, 0, 291, 'absent'], '5555555555555555': [1, 1, 292, 'not-ready']}, 'cs_skipped': {'1111111111111111': 'RESTRACK', '2222222222222222': 'BUDGET', '3333333333333333': 'OP_VOPC_0xf3', '4444444444444444': 'RESTRACK_GBR1'}, 'cs_summary': 'summary queued=4 done=0', 'fatal': 1, 'ft_n': 6, 'ft_us': 14000, 'late': ['L1[LibB_v1][LibB_v1.0][Func]'], 'late_n': 2, 'levels': [{'frames': 3, 'ft_before': 0, 'level': 'lvl_one', 'line': 135, 'stub_before': 1, 'sum_us': 3000}, {'frames': 3, 'ft_before': 3, 'level': 'lvl_two', 'line': 499, 'stub_before': 3, 'sum_us': 11000}], 'levels_over': 0, 'lines': 596, 'lvl_empty': 1, 'path': 'C:/kyty/f287/f21a/fxwork/log_fx.txt', 'rel_libs': {'Foo_v1': [0, 1, 1], 'Net_v1': [2, 0, 2]}, 'rel_nonplt': 1, 'rel_plt': 2, 'sfn': 1, 'sha256': 'f72d016e6a4d96f0291ade1de4b96963fbee2b51b41b72141f1d64bac777b1c1', 'size': 35310, 'stub': [{'bind': 'Global', 'first_idx': 0, 'first_line': 134, 'last_idx': 1, 'levels': {'': 1, 'lvl_one': 1}, 'lib': 'LibA_v1', 'module': 'LibA_v1.0', 'n': 2, 'nid': 'S1nid', 'program': 'eboot.bin', 'symbol': 'S1nid[LibA_v1][LibA_v1.0][Func]', 'type': 'Func'}, {'bind': 'Global', 'first_idx': 2, 'first_line': 290, 'last_idx': 2, 'levels': {'lvl_one': 1}, 'lib': 'AudioPropagation_v1', 'module': 'AudioPropagation_v1.0', 'n': 1, 'nid': 'S2nid', 'program': 'eboot.bin', 'symbol': 'S2nid[AudioPropagation_v1][AudioPropagation_v1.0][Func]', 'type': 'Func'}, {'bind': 'Global', 'first_idx': 0, 'first_line': 503, 'last_idx': 0, 'levels': {'lvl_two': 1}, 'lib': 'LibA_v1', 'module': 'LibA_v1.0', 'n': 1, 'nid': 'S3nid', 'program': 'eboot.bin', 'symbol': 'S3nid[LibA_v1][LibA_v1.0][Func]', 'type': 'Func'}], 'stub_bad': 1, 'stub_idx_restart': 1, 'stub_lines': 5, 'stub_max_idx': 3, 'stub_plain': 1, 'stub_unparsed': 0, 'xz': False}
+ok   xz record == plain record (but path, size, xz, sha256, sha256_text, xz_rc): {'b9a_first': 'FixB9a: on', 'b9a_n': 1, 'cfg_in': 1, 'cfg_out': 1, 'cfg_out_first': [294, 'shader CFG build failed: boom outside'], 'cs_enq': 1, 'cs_other': 0, 'cs_req': {'1111111111111111': [1, 0, 291, 'absent'], '5555555555555555': [1, 1, 292, 'not-ready']}, 'cs_skipped': {'1111111111111111': 'RESTRACK', '2222222222222222': 'BUDGET', '3333333333333333': 'OP_VOPC_0xf3', '4444444444444444': 'RESTRACK_GBR1'}, 'cs_summary': 'summary queued=4 done=0', 'fatal': 1, 'ft_n': 6, 'ft_us': 14000, 'late': ['L1[LibB_v1][LibB_v1.0][Func]'], 'late_n': 2, 'levels': [{'frames': 3, 'ft_before': 0, 'level': 'lvl_one', 'line': 135, 'stub_before': 1, 'sum_us': 3000}, {'frames': 3, 'ft_before': 3, 'level': 'lvl_two', 'line': 499, 'stub_before': 3, 'sum_us': 11000}], 'levels_over': 0, 'lines': 596, 'lvl_empty': 1, 'rel_libs': {'Foo_v1': [0, 1, 1], 'Net_v1': [2, 0, 2]}, 'rel_nonplt': 1, 'rel_plt': 2, 'sfn': 1, 'stub': [{'bind': 'Global', 'first_idx': 0, 'first_line': 134, 'last_idx': 1, 'levels': {'': 1, 'lvl_one': 1}, 'lib': 'LibA_v1', 'module': 'LibA_v1.0', 'n': 2, 'nid': 'S1nid', 'program': 'eboot.bin', 'symbol': 'S1nid[LibA_v1][LibA_v1.0][Func]', 'type': 'Func'}, {'bind': 'Global', 'first_idx': 2, 'first_line': 290, 'last_idx': 2, 'levels': {'lvl_one': 1}, 'lib': 'AudioPropagation_v1', 'module': 'AudioPropagation_v1.0', 'n': 1, 'nid': 'S2nid', 'program': 'eboot.bin', 'symbol': 'S2nid[AudioPropagation_v1][AudioPropagation_v1.0][Func]', 'type': 'Func'}, {'bind': 'Global', 'first_idx': 0, 'first_line': 503, 'last_idx': 0, 'levels': {'lvl_two': 1}, 'lib': 'LibA_v1', 'module': 'LibA_v1.0', 'n': 1, 'nid': 'S3nid', 'program': 'eboot.bin', 'symbol': 'S3nid[LibA_v1][LibA_v1.0][Func]', 'type': 'Func'}], 'stub_bad': 1, 'stub_idx_restart': 1, 'stub_lines': 5, 'stub_max_idx': 3, 'stub_plain': 1, 'stub_unparsed': 0}
+ok   sha256 of the plain log: 'f72d016e6a4d96f0291ade1de4b96963fbee2b51b41b72141f1d64bac777b1c1'
+ok   sha256_text of the xz log: 'f72d016e6a4d96f0291ade1de4b96963fbee2b51b41b72141f1d64bac777b1c1'
+ok   xz_rc: 0
+ok   lines: 596
+ok   ft_n (the text inside a line is not a frame, the last line without a newline is): 6
+ok   ft_us: 14000
+ok   stub_lines: 5
+ok   stub_plain (printf form): 1
+ok   stub_bad: 1
+ok   stub_unparsed: 0
+ok   stub_max_idx: 3
+ok   stub_idx_restart: 1
+ok   stub symbols: ['S1nid[LibA_v1][LibA_v1.0][Func]', 'S2nid[AudioPropagation_v1][AudioPropagation_v1.0][Func]', 'S3nid[LibA_v1][LibA_v1.0][Func]']
+ok   S1 n / levels / first_line / idx: (2, {'': 1, 'lvl_one': 1}, 134, 0, 1)
+ok   S2 lib / n / levels / first_line: ('AudioPropagation_v1', 1, {'lvl_one': 1}, 290)
+ok   S3 (CRLF, Windows path) program / nid / module / levels / first_line: ('eboot.bin', 'S3nid', 'LibA_v1.0', {'lvl_two': 1}, 503, 'Func', 'Global')
+ok   levels: [{'frames': 3, 'ft_before': 0, 'level': 'lvl_one', 'line': 135, 'stub_before': 1, 'sum_us': 3000}, {'frames': 3, 'ft_before': 3, 'level': 'lvl_two', 'line': 499, 'stub_before': 3, 'sum_us': 11000}]
+ok   lvl_empty: 1
+ok   cs_skipped: {'1111111111111111': 'RESTRACK', '2222222222222222': 'BUDGET', '3333333333333333': 'OP_VOPC_0xf3', '4444444444444444': 'RESTRACK_GBR1'}
+ok   cs_req: {'1111111111111111': [1, 0, 291, 'absent'], '5555555555555555': [1, 1, 292, 'not-ready']}
+ok   cs_enq / cs_summary / cs_other: (1, 'summary queued=4 done=0', 0)
+ok   cfg_in / cfg_out / first: (1, 1, [294, 'shader CFG build failed: boom outside'])
+ok   rel_plt / rel_nonplt / rel_libs: (2, 1, {'Foo_v1': [0, 1, 1], 'Net_v1': [2, 0, 2]})
+ok   late_n / late: (2, ['L1[LibB_v1][LibB_v1.0][Func]'])
+ok   sfn / b9a_n / b9a_first / fatal: (1, 1, 'FixB9a: on', 1)
+ok   identity stub_lines == sum(n) + bad + unparsed: 5
+ALL OK

@@ -32,6 +32,7 @@
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderTranslationCache.h"
+#include "graphics/shader/recompiler/ir/passes/ResourceMaterialization.h"
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
@@ -9900,6 +9901,242 @@ public:
     std::printf("[gpu]     %-32s ok\n", name);
   }
 
+
+  // Track F, F14e (HPP-505, ROADMAP s122 item 409(g)(1)): the GPU gate of KYTY_FIX_F19 at the knob value of this
+  // process (read once). A 4 x 4 linear comparison texture - k16UNorm (view D16_UNORM), k32Float (D32_SFLOAT),
+  // k8UNorm (R8_UNORM) - of depth (x < 2 ? 0.20 : 0.80) + 0.01 * y, compare LESS_EQUAL, IMAGE_SAMPLE_C_LZ at the
+  // four texel centres and four midpoints (two across the shadow edge of reference 0.5, one across the edge of
+  // reference 0.213, one between four texels), references 0.5 and 0.213, S# filter LINEAR and NEAREST, clamp to
+  // the last texel. The host sampler is made as NativeSampler (descriptors.cpp) makes it: the compare function is
+  // dropped when the translated sampler does not compare, point filtering when it is forced. Reference: float64
+  // on the CPU from the stored texels - PCF (compare the four texels, then the bilinear weights of u = 4s - 0.5,
+  // v = 4t - 0.5) and NEAREST (the texel floor(4s), floor(4t)). Checks: native LINEAR |answer - PCF| <= 2^-6;
+  // NEAREST answer == reference exactly; k16UNorm LINEAR at KYTY_FIX_F19=0 (shader compare of the filtered
+  // value) differs from PCF by >= 0.25 in at least one midpoint; manual LINEAR answers are 0 or 1. Every answer
+  // is printed ("[f19] fmt=") for the =0 / =1 comparison of k32Float and k8UNorm across processes.
+  void CheckF19PcfGate() {
+    constexpr const char *name = "F19PcfGate";
+    constexpr uintptr_t base = 0x0000000204800000ull;
+    constexpr uint64_t allocation_size = 0x20000;
+    constexpr double tolerance = 1.0 / 64.0;
+    const bool fix_f19 = ShaderRecompiler::IR::FixF19Enabled();
+    struct Point {
+      float s;
+      float t;
+      bool midpoint;
+    };
+    constexpr std::array<Point, 8> points{{{0.375f, 0.375f, false},
+                                           {0.625f, 0.375f, false},
+                                           {0.375f, 0.625f, false},
+                                           {0.625f, 0.625f, false},
+                                           {0.5f, 0.375f, true},
+                                           {0.5f, 0.625f, true},
+                                           {0.375f, 0.5f, true},
+                                           {0.5f, 0.5f, true}}};
+    constexpr std::array<float, 2> references{0.5f, 0.213f};
+    struct FormatCase {
+      Prospero::BufferFormat format;
+      uint32_t bytes;
+      uint64_t offset;
+      vk::Format view;
+      bool manual_at_0;
+      bool manual_at_1;
+      const char *label;
+    };
+    const std::array<FormatCase, 3> formats{{
+        {Prospero::BufferFormat::k16UNorm, 2, 0x0000, vk::Format::eD16Unorm, true, false, "k16UNorm"},
+        {Prospero::BufferFormat::k32Float, 4, 0x4000, vk::Format::eD32Sfloat, false, false, "k32Float"},
+        {Prospero::BufferFormat::k8UNorm, 1, 0x8000, vk::Format::eR8Unorm, true, true, "k8UNorm"},
+    }};
+    std::printf("[f19] gate KYTY_FIX_F19 effective=%d\n", fix_f19 ? 1 : 0);
+    EnsureRuntimeContext();
+    int64_t direct_offset = -1;
+    Require(name, "direct allocation",
+            Libs::LibKernel::Memory::KernelAllocateDirectMemory(
+                0, Libs::LibKernel::Memory::KernelGetDirectMemorySize(),
+                allocation_size, allocation_size, 0, &direct_offset) == 0,
+            "comparison texture allocation failed");
+    void *mapped = reinterpret_cast<void *>(base);
+    Require(name, "direct mapping",
+            Libs::LibKernel::Memory::KernelMapDirectMemory(
+                &mapped, allocation_size, 0x3, 0x10, direct_offset,
+                allocation_size) == 0 && mapped == reinterpret_cast<void *>(base),
+            "comparison texture mapping failed");
+    std::memset(mapped, 0, allocation_size);
+    RenderContext context(m_runtime_context);
+    auto &scheduler = context.GetCommandScheduler();
+    HW::Context registers{};
+    HW::UserConfig user_config{};
+    HW::Shader shaders{};
+    scheduler.Begin(registers, user_config, shaders);
+    auto &resources = context;
+    auto &cache = resources.GetTextureCache();
+    auto &executor = context.GetRenderExecutor();
+    // The texels first: the texture cache uploads them when the binding is resolved.
+    std::array<std::array<double, 16>, 3> stored{};
+    for (size_t f = 0; f < formats.size(); f++) {
+      const auto &fc = formats[f];
+      const uint32_t pitch = TileGetTexturePitch(fc.format, 4, Prospero::TileMode::kLinear);
+      for (uint32_t y = 0; y < 4; y++) {
+        for (uint32_t x = 0; x < 4; x++) {
+          const double v = (x < 2u ? 0.20 : 0.80) + 0.01 * y;
+          auto *texel = reinterpret_cast<uint8_t *>(base + fc.offset +
+                                                    (static_cast<uint64_t>(y) * pitch + x) * fc.bytes);
+          if (fc.bytes == 2u) {
+            const auto word = static_cast<uint16_t>(std::lround(v * 65535.0));
+            std::memcpy(texel, &word, sizeof(word));
+            stored[f][y * 4u + x] = word / 65535.0;
+          } else if (fc.bytes == 4u) {
+            const auto value = static_cast<float>(v);
+            std::memcpy(texel, &value, sizeof(value));
+            stored[f][y * 4u + x] = value;
+          } else {
+            const auto byte = static_cast<uint8_t>(std::lround(v * 255.0));
+            *texel = byte;
+            stored[f][y * 4u + x] = byte / 255.0;
+          }
+        }
+      }
+    }
+    resources.MapMemory(base, allocation_size);
+    bool k16_linear_midpoint_differs = false;
+    for (size_t f = 0; f < formats.size(); f++) {
+      const auto &fc = formats[f];
+      const auto texel = [&](int x, int y) {
+        x = std::clamp(x, 0, 3);
+        y = std::clamp(y, 0, 3);
+        return stored[f][static_cast<size_t>(y) * 4u + static_cast<size_t>(x)];
+      };
+      const uint64_t address = base + fc.offset;
+      ShaderTextureResource descriptor{{static_cast<uint32_t>(address >> 8u),
+          (static_cast<uint32_t>(fc.format) << 20u) | (3u << 30u), 3u << 14u,
+          0x924u | (static_cast<uint32_t>(Prospero::ImageType::kColor2D) << 28u),
+          0, 0x00700000u, 0, 0}};
+      for (const bool linear : {true, false}) {
+        const uint32_t filter = linear ? 1u : 0u;
+        ShaderSamplerResource sampler_descriptor{{2u | (2u << 3u) | (2u << 6u) | (3u << 12u), 0,
+                                                  (filter << 20u) | (filter << 22u), 0}};
+        TestCase test;
+        test.name = name;
+        test.has_user_data = true;
+        test.image_descriptor_swizzle = descriptor.DstSelXYZW();
+        std::copy_n(descriptor.fields, 8, test.user_data.begin());
+        std::copy_n(sampler_descriptor.fields, 4, test.user_data.begin() + 8);
+        test.user_data[50] = static_cast<u32>(points.size() * references.size() * sizeof(uint32_t));
+        test.opcodes = {ShaderOpcode::V_MOV_B32, ShaderOpcode::IMAGE_SAMPLE,
+                        ShaderOpcode::BUFFER_STORE_DWORD, ShaderOpcode::S_ENDPGM};
+        std::vector<double> pcf;
+        std::vector<double> nearest;
+        std::vector<double> step;
+        std::vector<const Point *> where;
+        std::vector<float> refs;
+        for (const auto reference : references) {
+          for (const auto &point : points) {
+            AppendVMovLiteral(&test.code, 20, std::bit_cast<uint32_t>(reference));
+            AppendVMovLiteral(&test.code, 21, std::bit_cast<uint32_t>(point.s));
+            AppendVMovLiteral(&test.code, 22, std::bit_cast<uint32_t>(point.t));
+            test.code.push_back(EncodeMimg0(0x2f, 1)); // image_sample_c_lz 2D
+            test.code.push_back(EncodeMimg1(0, 20, 0, 2));
+            AppendStoreVgpr(&test.code, 0, static_cast<uint32_t>(pcf.size()));
+            const double r = reference;
+            const double u = 4.0 * point.s - 0.5;
+            const double v = 4.0 * point.t - 0.5;
+            const int i0 = static_cast<int>(std::floor(u));
+            const int j0 = static_cast<int>(std::floor(v));
+            const double a = u - i0;
+            const double b = v - j0;
+            const auto pass = [&](int x, int y) { return r <= texel(x, y) ? 1.0 : 0.0; };
+            pcf.push_back((1.0 - a) * (1.0 - b) * pass(i0, j0) + a * (1.0 - b) * pass(i0 + 1, j0) +
+                          (1.0 - a) * b * pass(i0, j0 + 1) + a * b * pass(i0 + 1, j0 + 1));
+            const double filtered = (1.0 - a) * (1.0 - b) * texel(i0, j0) +
+                                    a * (1.0 - b) * texel(i0 + 1, j0) +
+                                    (1.0 - a) * b * texel(i0, j0 + 1) + a * b * texel(i0 + 1, j0 + 1);
+            step.push_back(r <= filtered ? 1.0 : 0.0);
+            nearest.push_back(pass(static_cast<int>(std::floor(4.0 * point.s)),
+                                   static_cast<int>(std::floor(4.0 * point.t))));
+            where.push_back(&point);
+            refs.push_back(reference);
+          }
+        }
+        AppendEnd(&test.code);
+        const bool manual = fix_f19 ? fc.manual_at_1 : fc.manual_at_0;
+        if (manual) {
+          test.forbidden_spirv = {"OpImageSampleDref"};
+        } else {
+          test.required_spirv = {"OpImageSampleDrefExplicitLod"};
+        }
+        const auto compiled = CompileCase(test, SubgroupSize());
+        Require(name, "comparison path",
+                compiled.program.info.images.size() == 1 &&
+                    compiled.program.info.images[0].depth_compare &&
+                    compiled.program.info.images[0].manual_depth_compare == manual &&
+                    compiled.program.info.samplers.size() == 1 &&
+                    compiled.program.info.samplers[0].depth_compare == !manual,
+                std::string("unexpected comparison path for ") + fc.label);
+        ShaderRecompiler::IR::DescriptorValue value{};
+        value.dword_count = 8;
+        std::copy_n(descriptor.fields, 8, value.dwords.begin());
+        auto binding = RenderExecutorTestAccess::ResolveTexture(
+            executor, compiled.program.info.images[0], value);
+        const auto view = cache.FindTexture(binding.image_id, binding.desc);
+        auto &image = cache.GetImage(binding.image_id);
+        Require(name, "view format",
+                view != nullptr && binding.desc.view_info.format == fc.view,
+                std::string("comparison texture view format for ") + fc.label);
+        scheduler.Finish();
+        auto host_sampler = sampler_descriptor;
+        if (!compiled.program.info.samplers[0].depth_compare) {
+          host_sampler.fields[0] &= ~(0x7u << 12u);
+        }
+        if (compiled.program.info.samplers[0].force_point_filtering) {
+          host_sampler.SetPointFiltering();
+        }
+        const auto sampler = context.GetSamplerCache().GetSampler(host_sampler);
+        auto output = CreateStorageBuffer(name, {}, pcf.size());
+        Image sampled;
+        sampled.view = view;
+        sampled.layout = image.backing.state.layout;
+        Dispatch(test, compiled, output, nullptr, &sampled, nullptr, nullptr, sampler);
+        const auto actual = ReadBuffer(name, output, pcf.size());
+        DestroyBuffer(&output);
+        for (size_t i = 0; i < pcf.size(); i++) {
+          const double answer = std::bit_cast<float>(actual[i]);
+          std::printf("[f19] fmt=%s filter=%s ref=%.3f s=%.3f t=%.3f mid=%d out=%.6f (0x%08x) pcf=%.6f "
+                      "nearest=%.0f step=%.0f path=%s\n",
+                      fc.label, linear ? "LINEAR" : "NEAREST", refs[i], where[i]->s, where[i]->t,
+                      where[i]->midpoint ? 1 : 0, answer, actual[i], pcf[i], nearest[i], step[i],
+                      manual ? "manual" : "native");
+          if (!linear) {
+            Require(name, "NEAREST reference", answer == nearest[i],
+                    std::string("NEAREST answer differs from the reference for ") + fc.label);
+          } else if (!manual) {
+            Require(name, "PCF reference", std::fabs(answer - pcf[i]) <= tolerance,
+                    std::string("native LINEAR answer differs from PCF by more than 2^-6 for ") + fc.label);
+          } else {
+            Require(name, "manual step", answer == 0.0 || answer == 1.0,
+                    std::string("manual LINEAR answer is not 0 or 1 for ") + fc.label);
+            if (fc.format == Prospero::BufferFormat::k16UNorm && where[i]->midpoint &&
+                std::fabs(answer - pcf[i]) >= 0.25) {
+              k16_linear_midpoint_differs = true;
+            }
+          }
+        }
+      }
+    }
+    if (!fix_f19) {
+      Require(name, "negative control", k16_linear_midpoint_differs,
+              "k16UNorm LINEAR at KYTY_FIX_F19=0 equals PCF in every midpoint");
+    }
+    RenderExecutorTestAccess::ResetBindings(executor);
+    resources.UnmapMemory(base, allocation_size);
+    scheduler.Finish();
+    Require(name, "unmap", Libs::LibKernel::Memory::KernelMunmap(base, allocation_size) == 0,
+            "comparison texture unmap failed");
+    Require(name, "release", Libs::LibKernel::Memory::KernelReleaseDirectMemory(
+                direct_offset, allocation_size) == 0,
+            "comparison texture release failed");
+    std::printf("[gpu]     %-32s ok\n", name);
+  }
 
   void CheckRenderExecutorColorStandardTileDiscovery() {
     constexpr const char *name = "RenderExecutorColorStandardTile";
@@ -31982,6 +32219,48 @@ int main(int argc, char **argv) {
       RunCase(&vulkan, test);
     }
     RunB1bCases(&vulkan, fix_b1b);
+    std::printf("ALL OK\n");
+    return 0;
+  }
+  if (argc == 2 && std::strcmp(argv[1], "--fix-f19-only") == 0) {
+    // Track F, F14e (HPP-505, ROADMAP s122 item 409(g)(1)): the GPU gate of KYTY_FIX_F19 at the knob value of this
+    // process (read once) and the translation cache key: ":fixf19" / "_fixf19" last exactly at =1.
+    const bool fix_on = ShaderRecompiler::IR::FixF19Enabled();
+    const char *raw_f19 = std::getenv("KYTY_FIX_F19");
+    std::printf("[f19] KYTY_FIX_F19=%s effective=%d\n", raw_f19 != nullptr ? raw_f19 : "(unset)",
+                fix_on ? 1 : 0);
+    {
+      const ShaderTranslationCache cache("PPSA21564");
+      const auto directory = Common::PathToString(cache.Directory());
+      std::string signature = cache.Signature();
+      while (!signature.empty() && (signature.back() == '\n' || signature.back() == '\r')) {
+        signature.pop_back();
+      }
+      const bool f19_sig = signature.find(":fixf19") != std::string::npos;
+      const bool f19_dir = directory.find("fixf19") != std::string::npos;
+      const bool f19_last_sig = f19_sig && signature.size() >= 7u &&
+                                signature.compare(signature.size() - 7u, 7u, ":fixf19") == 0;
+      const bool f19_last_dir = f19_dir && directory.size() >= 7u &&
+                                directory.compare(directory.size() - 7u, 7u, "_fixf19") == 0;
+      std::printf("[f19]     cache signature=%s\n", signature.c_str());
+      std::printf("[f19]     cache dir=%s fixf19_in_signature=%d fixf19_in_dir=%d last_sig=%d last_dir=%d\n",
+                  directory.c_str(), f19_sig ? 1 : 0, f19_dir ? 1 : 0, f19_last_sig ? 1 : 0,
+                  f19_last_dir ? 1 : 0);
+      Require("F19Cache", "translation cache key",
+              cache.Enabled() && f19_sig == fix_on && f19_dir == fix_on && f19_last_sig == fix_on &&
+                  f19_last_dir == fix_on,
+              "fixf19 token of the signature or directory does not follow the knob");
+    }
+    VulkanHarness vulkan;
+    vulkan.CheckF19PcfGate();
+    std::printf("ALL OK\n");
+    return 0;
+  }
+  if (argc == 2 && std::strcmp(argv[1], "--fix-f19-comparison-depth") == 0) {
+    // Track F, F14e (ROADMAP s122 item 409(g)(1)): ComparisonDepthTexture alone - passes at KYTY_FIX_F19=1, fails
+    // at 0 with the text of the build without the fix ("missing required text: OpImageSampleDrefExplicitLod").
+    VulkanHarness vulkan;
+    vulkan.CheckComparisonDepthTexture();
     std::printf("ALL OK\n");
     return 0;
   }

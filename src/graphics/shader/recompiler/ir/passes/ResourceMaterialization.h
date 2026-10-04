@@ -43,6 +43,22 @@ struct ResourceSpecialization {
 	bool operator==(const ResourceSpecialization&) const = default;
 };
 
+// Track F, F14e (HPP-505, ROADMAP s122 items 409(v), 415(b)-(v)): KYTY_FIX_F19, default OFF (unset, empty, 0, false,
+// off, no = off; any other value as Common::EnvValueOn), read once per process. On: MaterializeResources puts a
+// comparison image on the shader (manual) comparison path only by FixF19ManualDepthCompare, and an indirect image
+// table is manual as a whole when that rule makes any of its members manual (FixF19MergeIndirectTables). Off: the
+// rule before the fix, verbatim. The translation cache keys the value in its signature and directory
+// (shaderTranslationCache.cpp).
+bool FixF19Enabled();
+// The =1 rule: a comparison image is compared in the shader unless its T# is null or the renderer gives its guest
+// format a depth view - the formats of DEPTH_FORMAT_POLICIES (imageInfo.h), the table descriptors.cpp resolves the
+// host view of a comparison texture by (k16UNorm -> D16_UNORM, k32Float -> D32_SFLOAT).
+bool FixF19ManualDepthCompare(Prospero::BufferFormat format, bool null_descriptor);
+// The =1 indirect-table branch (variant O1 of item 415(b)): one opcode samples every member of an indirect image
+// table (the root decides it), so for every table (root and candidates, indirect_root) the manual_depth_compare
+// flag of all members becomes the "or" of their flags.
+void FixF19MergeIndirectTables(std::vector<ResourceSpecialization::Image>& images);
+
 // Extracts the descriptor/SRT value graph before resource specialization. The returned plan owns
 // its values and is independent of the translated shader CFG.
 ResourcePlan ExtractResourcePlan(const Program& program);

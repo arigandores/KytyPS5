@@ -3,7 +3,9 @@
 #include "common/frameStats.h"
 
 #include "common/assert.h"
+#include "common/envFlag.h"
 #include "graphics/guest_gpu/gpu_format.h"
+#include "graphics/host_gpu/renderer/image/imageInfo.h"
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
 #include "graphics/shader/shaderBindings.h"
 
@@ -26,6 +28,33 @@ bool VectorConstStaticAlignmentClass() {
 		return value == nullptr || value[0] != '2';
 	}();
 	return enabled;
+}
+
+// Track F, F14e (ROADMAP s122 items 409(v), 415(b)-(v)): see ResourceMaterialization.h.
+bool FixF19Enabled() {
+	static const bool enabled = Common::EnvFlagOn("KYTY_FIX_F19");
+	return enabled;
+}
+
+bool FixF19ManualDepthCompare(Prospero::BufferFormat format, bool null_descriptor) {
+	return !null_descriptor && FindGuestDepthFormatPolicy(format) == nullptr;
+}
+
+void FixF19MergeIndirectTables(std::vector<ResourceSpecialization::Image>& images) {
+	for (uint32_t root = 0; root < images.size(); root++) {
+		if (images[root].indirect_root != root) {
+			continue;
+		}
+		bool manual = false;
+		for (const auto& image: images) {
+			manual = manual || (image.indirect_root == root && image.manual_depth_compare);
+		}
+		for (auto& image: images) {
+			if (image.indirect_root == root) {
+				image.manual_depth_compare = manual;
+			}
+		}
+	}
 }
 
 // KYTY_CBANK_COPY (default 1): const-bank V#s are specialized as 16-byte aligned regardless of
@@ -567,8 +596,15 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
 			// The renderer resolves non-null R32F comparison textures as native D32.
 			// Other color formats require shader comparison, irrespective of byte size.
 			// Null native-comparison descriptors use a D32 placeholder at binding time.
-			image.manual_depth_compare = !NullImageDescriptor(descriptor) &&
-			                             format != Prospero::BufferFormat::k32Float;
+			if (FixF19Enabled()) {
+				// Track F, F14e (ROADMAP s122 item 409(v)): native for every format the renderer views as
+				// depth (k16UNorm joins k32Float), shader comparison for the rest.
+				image.manual_depth_compare =
+				    FixF19ManualDepthCompare(format, NullImageDescriptor(descriptor));
+			} else {
+				image.manual_depth_compare = !NullImageDescriptor(descriptor) &&
+				                             format != Prospero::BufferFormat::k32Float;
+			}
 		}
 		if (NullImageDescriptor(descriptor)) {
 			image.numeric_class = base.atomic ? Prospero::TextureNumericClass::Uint
@@ -684,6 +720,12 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
 				                program.info.images[root_index].first_use_pc));
 			}
 		}
+	}
+	if (FixF19Enabled()) {
+		// Track F, F14e (ROADMAP s122 item 415(b), variant O1): an indirect table with a shader-compared
+		// member is shader-compared as a whole; the shared-sampler pass of ApplyResourceSpecialization
+		// then runs as before.
+		FixF19MergeIndirectTables(next_specialization.images);
 	}
 	SamplerPlan sampler_plan;
 	if (!BuildSamplerPlan(program.info, next_specialization.images, sampler_plan)) {

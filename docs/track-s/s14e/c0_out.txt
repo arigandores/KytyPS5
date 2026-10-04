@@ -1,0 +1,21 @@
+dump sha256 050a77129b5b0c475846052a1fb1fd6e50ef7797787df61464d09c3577d64478 totals (707, 707, 0, 1187) records 1187 Counter({'VS': 794, 'PS': 247, 'CS': 141, 'MS': 5})
+record signatures {'KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank': 1187}
+t2_1 first 280 skip/held (31, 34) series [(282, 299, 35), (317, 334, 30)] targets 15 types {'VS': 2, 'PS': 1} unpaired spec 0
+t2_2 first 217 skip/held (1, 2) series [(217, 218, 3)] targets 3 types {'CS': 0, 'PS': 1, 'VS': 2} unpaired spec 0
+t2_4 first 136 skip/held (1, 1) series [(138, 138, 2)] targets 2 types {'PS': 1, 'VS': 2} unpaired spec 0
+t2_5 first 162 skip/held (6, 9) series [(164, 172, 15)] targets 6 types {'VS': 2, 'PS': 1} unpaired spec 0
+t2_7 first 146 skip/held (9, 9) series [(147, 156, 18)] targets 7 types {'VS': 2, 'PS': 1} unpaired spec 0
+t2_cs0 first 215 skip/held (30, 32) series [(215, 232, 31), (252, 269, 31)] targets 15 types {'PS': 1, 'VS': 2} unpaired spec 0
+MODE DEC C = 3 / 103 = 0.0291 targets predicted 19 of 33
+MODE R6 C = 40 / 103 = 0.3883 targets predicted 29 of 33
+   not predicted: [('t2_1', 317, 'PS', '828215ad'), ('t2_1', 317, 'VS', 'acee300d'), ('t2_5', 164, 'PS', '720d1f62'), ('t2_7', 147, 'PS', '720d1f62')]
+MODE ANY C = 103 / 103 = 1.0000 targets predicted 33 of 33
+   not predicted: []
+R6 with gap join 0: 69 / 103 = 0.6699
+R6 with gap join 1: 40 / 103 = 0.3883
+R6 with gap join 3: 40 / 103 = 0.3883
+R6 per row (a row is lost only if a blocked target lands on it): 98 / 103 = 0.9515
+  blocked t2_1 series 317..334 w 30 PS 828215ad31a7f2ca frame 317 row weights from frame 30
+  blocked t2_1 series 317..334 w 30 VS acee300df6a19856 frame 317 row weights from frame 30
+  blocked t2_5 series 164..172 w 15 PS 720d1f629e89e619 frame 164 row weights from frame 15
+  blocked t2_7 series 147..156 w 18 PS 720d1f629e89e619 frame 148 row weights from frame 17

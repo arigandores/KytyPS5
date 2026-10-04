@@ -1,0 +1,2 @@
+[('t2_1', 317, 334, 'held', 16, 'skip rows', 14), ('t2_5', 164, 172, 'held', 9, 'skip rows', 6), ('t2_7', 147, 156, 'held', 9, 'skip rows', 9)]
+event-level generous ceiling: held flips of the three blocked series irreducible, everything else removable: (103 - 34) / 103 = 0.6699

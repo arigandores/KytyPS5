@@ -1,0 +1,6 @@
+t2_1 c469daae5b002fb3 lines 968824 regs 1640 comp 16 ent 249452 sigs ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] wall 0.8
+t2_2 3096467dda848932 lines 861418 regs 1572 comp 4 ent 241429 sigs ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] wall 0.7
+t2_4 54933d1429eca940 lines 874582 regs 1524 comp 2 ent 180994 sigs ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] wall 0.7
+t2_5 22a7b9ad6c100b86 lines 1200976 regs 1536 comp 6 ent 177626 sigs ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] wall 1.0
+t2_7 6be077120752ae17 lines 1202070 regs 1532 comp 7 ent 179380 sigs ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] wall 1.0
+t2_cs0 b94f2862cfb8783d lines 962495 regs 1640 comp 16 ent 247749 sigs ['KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank'] wall 0.8

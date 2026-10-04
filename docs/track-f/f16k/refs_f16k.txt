@@ -1,0 +1,87 @@
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.h:118 | F5CmuKept, | +1: F5CmuKeptApplied,
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.h:124 | CmaskRtBucketOnly, | +1: Count
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.h:183 | [[nodiscard]] bool FixCmuOn(); | +1: // "FixF5Cmu: mode=1" once per process when FixCmuOn() (device creatio
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.h:212 | struct StaleProbe { | +1: bool exact_decides = false;
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.h:336 | struct CsDispatch { | +1: bool                                          emitted   = false;
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:245 | const char* IdNames[] = { | +1: "fce",          "r0",          "r1",           "r2",           "r3",  
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:571 | bool FixCmuOn() { | +1: static const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_F5CMU"
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:585 | bool ExactRingOn() { | +1: static const bool on = FixCmuOn() || DiagF5Id::On();
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:628 | void NotePresent(uint32_t present) { | +1: g_present.store(present, std::memory_order_relaxed);
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:647 | bool NoteCmuEvent(const CmuEventLine& line) { | +1: const auto n = g_cmu_events.fetch_add(1, std::memory_order_relaxed) + 
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:677 | static const bool on = Knob() && DiagF5::On(); | +1: return on;
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:715 | void NoteFce(const FceEvent& e) { | +1: auto&            s = IdS();
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:772 | void NoteBind(uint64_t image_address, BindKind kind | +1: uint32_t frame) {
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:790 | void NoteBufferAccess(uint64_t address, uint64_t size) { | +1: auto& s = IdS();
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:803 | void Emit(CsDispatch& d, const DiagF5::CsRefusals& refusals) { | +1: if (d.emitted || !d.classed) {
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:898 | void NoteClearApplied(ApplySite site | +1: auto& s = IdS();
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:929 | void NoteFill(uint64_t address) { | +1: auto& s = IdS();
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:961 | bool ServiceAt(uint32_t frame, bool exit) { | +1: if (!On()) {
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:982 | const auto cnt              = s.cnt; | +1: const auto dcc_fce_no_image = DiagF5::Get(DiagF5::Counter::DccFceNoIma
+OK  810909e3:src/graphics/host_gpu/renderer/diagF5.cpp:997 | const bool id_fce =  | +1: const bool id_cs  = cnt[kImgClear] + cnt[kMetaClear] + cnt[kTrackedOth
+OK  810909e3:src/graphics/host_gpu/renderer/cache/bufferCache.h:473 | std::unordered_map<uint64_t, ExactRing> m_bucket_write_ring; | +1: void                   NoteGpuWrite(uint64_t vaddr, uint64_t size);
+OK  810909e3:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:1459 | DiagF5Id::NoteBufferAccess(vaddr, size); | +1: }
+OK  810909e3:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2866 | if (DiagF5::ExactRingOn()) [[unlikely]] { | +1: for (auto bucket = first; bucket <= last; bucket++) {
+OK  810909e3:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2875 | BufferCache::ExactWriteSeq BufferCache::LastGpuWriteSeqExact( | +1: ExactWriteSeq answer {};
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1886 | class F5CmuScope { | +1: public:
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1893 | ~F5CmuScope() { | +1: auto fix = m_fix;
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1977 | image.info.data.address, f5id ? &f5_probe : nullptr)) { | +1: metadata = MetaDataInfo {.type = MetaDataInfo::Type::Dcc};
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2081 | DiagF5Id::NoteClearApplied(DiagF5Id::ApplySite::DccRt | +1: image.info.data.address, GpuTimeProfiler::Frame());
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2086 | void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc | +1: static const bool enabled = [] {
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2094 | F5CmuScope f5 {fce, f5cmu}; | +1: if (!enabled || desc.info.metadata.kind != ImageMetadataKind::Cmask ||
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2118 | f5.Probe())) { | +1: metadata = MetaDataInfo {};
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2121 | f5.Decided(); | +1: metadata.type = MetaDataInfo::Type::CMask;
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2179 | f5.Cleared(); | +1: static const bool trace = Common::EnvFlagOn("KYTY_CLEAR_TRACE");
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2188 | DiagF5Id::NoteClearApplied(DiagF5Id::ApplySite::CmaskRt | +1: image.info.data.address, GpuTimeProfiler::Frame());
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2592 | PrepareCmaskClear(id, desc, fce_materialize, f5cmu); | +1: }
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3370 | *f5id_snap = F5IdSnapOf(found->second); | +1: }
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3386 | void TextureCache::F5IdMetaSnap(uint64_t address, DiagF5Id::MetaSnap*  | +1: static_assert(static_cast<uint8_t>(MetaDataInfo::Type::PendingDcc) + 1
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3451 | DiagF5Id::NoteFill(address); | +1: m_f5id_stamp_address = address;
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3464 | DiagF5Id::NoteFillSeq(m_f5id_stamp_address, | +1: m_buffer_cache.LastGpuWriteSeq(m_f5id_stamp_address, m_f5id_stamp_size
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3494 | const auto last_seq    = m_buffer_cache.LastGpuWriteSeq(address, meta. | +1: const bool cpu_written = m_buffer_cache.IsRegionCpuModified(address, m
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3502 | if (f5_probe != nullptr) [[unlikely]] { | +1: f5_probe->bucket_stale = true;
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3507 | m_buffer_cache.LastGpuWriteSeqExact(address, meta.fill_size, meta.fill | +1: f5_probe->exact_stale = exact.seq != 0;
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3511 | if (f5_probe->exact_decides && !f5_probe->exact_stale && !f5_probe->fa | +1: return false;
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3527 | ImageId TextureCache::FindDccSurfaceImage(uint64_t data_address, uint6 | +1: DiagF5Id::DccMiss* f5id_miss) {
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3575 | *f5id_miss = DiagF5Id::ScanReason( | +1: }
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3580 | bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t meta | +1: std::scoped_lock lock {m_lock};
+OK  810909e3:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3616 | const bool         f5_stale = PendingDccFillStale(metadata_address | +1: f5id ? &f5_probe : nullptr);
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3470 | thread_local bool t_f5id_fce_site = false; | +1: 
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3661 | DiagF5Id::NoteClearApplied(t_f5id_fce_site | +1: image.info.data.address, GpuTimeProfiler::Frame());
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3831 | F5IdSlotSizes F5IdSlotSizesOf(const HW::RenderTarget& rt) { | +1: F5IdSlotSizes s {};
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3859 | void F5IdNoteFceMiss(TextureCache& cache, BufferCache& buffers | +1: const DiagF5Id::MetaSnap& before, const DiagF5Id::DccMiss& miss) {
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3884 | const auto exact = buffers.LastGpuWriteSeqExact(e.dcc, e.dcc_size, sin | +1: e.wr_after       = exact.seq != 0    ? DiagF5Id::WrAfter::Exact
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3888 | e.cpu_mod        = buffers.IsRegionCpuModified(e.dcc, e.dcc_size) ? 1  | +1: }
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3921 | DiagF5::CmuEvent f5_cmu {}; | +1: if (color.image_id && color.desc.info.metadata.kind == ImageMetadataKi
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3930 | (void)cache.FindRenderTarget( | +1: color.image_id, color.desc,
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3938 | DiagF5::On() ? &f5_cmu : nullptr); | +1: }
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3959 | (void)DiagF5::NoteCmuEvent({.present = DiagF5::Present(), | +1: .gpu     = GpuTimeProfiler::Frame(),
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3994 | cache.F5IdMetaSnap(rt.dcc_addr.addr, &f5id_before); | +1: }
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3996 | const auto id = cache.FindDccSurfaceImage(rt.base.addr, rt.dcc_addr.ad | +1: if (!id) {
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:4002 | F5IdNoteFceMiss(cache, m_context.GetBufferCache(), slot, rt, f5id_befo | +1: }
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:4017 | const F5IdFceSite f5id_site; | +1: MaterializeDeferredDccClear(buffer, id);
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:4029 | DiagF5Id::NoteBind(image.info.data.address, DiagF5Id::BindKind::Target | +1: image.info.metadata.range.address, GpuTimeProfiler::Frame());
+OK  810909e3:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:6706 | DiagF5Id::NoteBind(image.info.data.address, DiagF5Id::BindKind::Textur | +1: image.info.metadata.range.address, GpuTimeProfiler::Frame());
+OK  810909e3:src/graphics/host_gpu/renderer/renderCompute.cpp:77 | class F5IdCsHolder { | +1: public:
+OK  810909e3:src/graphics/host_gpu/renderer/renderCompute.cpp:160 | auto* const f5id_snap =  | +1: f5_refusals->count < DiagF5::CsRefusals::Max
+OK  810909e3:src/graphics/host_gpu/renderer/renderCompute.cpp:178 | f5id->sizes[f5_refusals->count] = descriptor.GetSize(); | +1: f5id->reads[f5_refusals->count] = resource.read;
+OK  810909e3:src/graphics/host_gpu/renderer/renderCompute.cpp:631 | F5IdCsHolder f5id {f5_refusals}; | +1: if (DiagF5Id::On()) [[unlikely]] {
+OK  810909e3:src/graphics/host_gpu/renderer/renderCompute.cpp:640 | f5id.Class(DiagF5Id::CsClass::MetaClear, 0); | +1: // Session 100, the L3 debt of session 98 (ROADMAP.md:1406): bf_clr_sk
+OK  810909e3:src/graphics/host_gpu/renderer/renderCompute.cpp:654 | f5id.Class(DiagF5Id::CsClass::ImgClear, 0); | +1: Common::FrameStats::Add(Common::FrameStats::Counter::ClearShortcutImag
+OK  810909e3:src/graphics/host_gpu/renderer/renderCompute.cpp:662 | f5id.Class(DiagF5Id::CsClass::Exec, f5_tracked); | +1: const bool large_workgroup =
+OK  810909e3:src/graphics/host_gpu/renderer/renderCompute.cpp:1263 | f5id.After(m_context.GetTextureCache()); | +1: lap.Mark(Common::FrameStats::Counter::DispatchEmitNs);
+OK  810909e3:src/graphics/host_gpu/renderer/renderCompute.cpp:1290 | f5id.After(m_context.GetTextureCache()); | +1: 
+OK  810909e3:src/graphics/guest_gpu/graphicsRun.cpp:711 | (void)DiagF5Id::Service(); | +1: }
+OK  810909e3:src/graphics/guest_gpu/graphicsRun.cpp:792 | (void)DiagF5Id::Service(true); | +1: }
+OK  810909e3:src/graphics/presentation/window/vulkanWindow.cpp:683 | (void)DiagF5::LogFixCmuMode(); | +1: (void)DiagF5Id::LogMode();
+OK  810909e3:src/graphics/presentation/window/vulkanWindow.cpp:684 | (void)DiagF5Id::LogMode(); | +1: 
+OK  810909e3:src/graphics/presentation/window/screenshot.cpp:239 | m_presents++; | +1: // Track F, F16k (KYTY_DIAG_F5, ROADMAP s122 item 492(v)(4)): the pres
+OK  810909e3:src/graphics/presentation/window/screenshot.cpp:243 | DiagF5::NotePresent(m_presents); | +1: }
+OK  810909e3:src/graphics/presentation/window/screenshot.cpp:371 | slot.present = m_presents; | +1: slot.time_s  = NowSeconds();
+OK  810909e3:src/graphics/presentation/window/screenshot.cpp:442 | job.present = slot.present; | +1: job.time_s  = slot.time_s;
+OK  810909e3:src/graphics/presentation/window/screenshot.cpp:519 | std::fprintf(m_rec_index,  | +1: std::fflush(m_rec_index);
+OK  810909e3:src/graphics/presentation/window/swapchain.cpp:947 | const bool screenshot = !preparing && m_impl->screenshot.Poll(); | +1: if (!preparing) m_impl->input_script.Poll();
+OK  810909e3:CMakeLists.txt:156 | graphics/host_gpu/renderer/image/imageInfo.h | +1: -P ${KYTY_SOURCE_DIR}/generate_version.cmake
+OK  810909e3:tests/ShaderRecompilerComputeTests.cpp:10448 | void CheckF16k() { | +1: constexpr const char *name = "F16k";
+OK  810909e3:tests/ShaderRecompilerComputeTests.cpp:34396 | if (argc == 2 && std::strcmp(argv[1], "--f16k-only") == 0) { | +1: // Track F, F16k (HPP-583): the KYTY_FIX_F5CMU / KYTY_DIAG_F5ID test s
+85 references
+ALL OK

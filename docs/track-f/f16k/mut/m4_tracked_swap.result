@@ -1,0 +1,5 @@
+=== arm f5_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at S1 classes: deltas 3 3 2 1 3 2 4 1 3 8 marks 2
+=== arm f5_fix_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at S1 classes: deltas 3 3 2 1 3 2 4 1 3 8 marks 2
+CAUGHT

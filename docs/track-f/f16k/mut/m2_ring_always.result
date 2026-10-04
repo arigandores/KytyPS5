@@ -1,0 +1,7 @@
+=== arm none () rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at R1 neighbour: bucket 2 fill 1 exact 0 fallback false
+=== arm f5 (KYTY_DIAG_F5=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at R1 neighbour: bucket 2 fill 1 exact 0 fallback false
+=== arm id_only (KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at R1 neighbour: bucket 2 fill 1 exact 0 fallback false
+CAUGHT

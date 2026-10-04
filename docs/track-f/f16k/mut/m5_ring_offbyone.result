@@ -1,0 +1,9 @@
+=== arm f5_fix (KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at R7 K writes since the start: complete history; K + 1: fallback: f8 0 true f9 0 true
+=== arm f5_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at R7 K writes since the start: complete history; K + 1: fallback: f8 0 true f9 0 true
+=== arm f5_fix_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at R7 K writes since the start: complete history; K + 1: fallback: f8 0 true f9 0 true
+=== arm fix_only (KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at R7 K writes since the start: complete history; K + 1: fallback: f8 0 true f9 0 true
+CAUGHT

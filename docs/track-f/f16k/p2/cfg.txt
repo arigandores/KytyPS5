@@ -1,0 +1,10 @@
+exe C:/kyty/f287/f16k/p2/shader_cfg_tests.exe sha256 5e2333ed117a186f48be255eb7995f4457a9efff7e5aeb27fa38d1e591da8dfe
+rc=0 failing-lines=4
+[test] TestNewShaderRecompilerCfgFailedStructurizationPreservesGraph
+pretranslation test: ready=18 failed=1 hits=17
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfffffffe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x0)
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 3: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem3 kind=1 off=0xe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x2)
+SpecDumpFixture: SpecDump: file=vs_ stage=VS hash=0x1111222233334444 perm=2 spec= b:0/0/688 b:20/13/0
+SpecDumpFixture: ALL OK
+[test] TestF19NullComparisonImage
+ALL OK

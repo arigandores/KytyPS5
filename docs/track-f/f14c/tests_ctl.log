@@ -1,0 +1,8 @@
+[test] TestNewShaderRecompilerPixelImageSampleLodSelection
+ShaderCfgTests: failed: manual pixel IMAGE_SAMPLE_C unexpectedly used a dref opcode
+ShaderCfgTests: failed: manual pixel IMAGE_SAMPLE_C must sample with implicit lod
+ShaderCfgTests: failed: manual pixel IMAGE_SAMPLE_C must compare the texel and select
+ShaderCfgTests: failed: manual pixel IMAGE_SAMPLE_C_LZ unexpectedly used a dref opcode
+ShaderCfgTests: failed: manual pixel IMAGE_SAMPLE_C_LZ must sample with explicit lod
+ShaderCfgTests: failed: manual pixel IMAGE_SAMPLE_C_LZ must sample mip level 0
+ShaderCfgTests: failed: manual pixel IMAGE_SAMPLE_C_LZ must compare the texel and select

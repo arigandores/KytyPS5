@@ -1,0 +1,83 @@
+import os, sys
+S = os.environ['PAPERCLIP_RUN_SCRATCH_DIR']
+refs = [
+ ('textureCache.cpp', 2023, 'PendingDccFillStale(desc.info.metadata.range.address'),
+ ('textureCache.cpp', 2024, 'metadata = MetaDataInfo {};'),
+ ('textureCache.cpp', 2026, 'metadata.type = MetaDataInfo::Type::CMask;'),
+ ('textureCache.cpp', 2045, 'metadata.fill_value != 0 || metadata.clear_mask == 0'),
+ ('textureCache.cpp', 3300, 'm_surface_metas.try_emplace(address)'),
+ ('textureCache.cpp', 3343, 'bool TextureCache::PendingDccFillStale'),
+ ('textureCache.cpp', 3352, 'meta.type != MetaDataInfo::Type::PendingDcc'),
+ ('textureCache.cpp', 3355, 'LastGpuWriteSeq(address, meta.fill_size, false)'),
+ ('textureCache.cpp', 3356, 'IsRegionCpuModified'),
+ ('textureCache.cpp', 3372, 'ImageId TextureCache::FindDccSurfaceImage'),
+ ('textureCache.cpp', 3424, 'found->second.type != MetaDataInfo::Type::PendingDcc'),
+ ('textureCache.cpp', 3429, 'PendingDccFillStale(metadata_address'),
+ ('textureCache.cpp', 1894, 'PendingDccFillStale(desc.info.metadata.range.address'),
+ ('textureCache.cpp', 3249, 'found == m_surface_metas.end() || found->second.type == MetaDataInfo::Type::PendingDcc'),
+ ('textureCache.cpp', 3194, 'bool TextureCache::IsMeta'),
+ ('textureCache.cpp', 2483, 'PrepareCmaskClear(id, desc);'),
+ ('bufferCache.cpp', 1735, 'NoteGpuWrite(vaddr, size);'),
+ ('bufferCache.cpp', 2849, 'void BufferCache::NoteGpuWrite'),
+ ('bufferCache.cpp', 2853, 'm_large_write_seq = seq;'),
+ ('bufferCache.cpp', 2863, 'uint64_t BufferCache::LastGpuWriteSeq'),
+ ('bufferCache.cpp', 2279, 'ObtainBuffer(vaddr, size, true, true)'),
+ ('bufferCache.cpp', 2353, 'ObtainBuffer(dst_vaddr, size, true, true'),
+ ('bufferCache.h', 453, 'HotBucketBits = 16'),
+ ('bufferCache.h', 455, 'm_bucket_write_seq;'),
+ ('descriptors.cpp', 3675, 'FixB42Hit FixB42Probe'),
+ ('descriptors.cpp', 3698, 'fill.b42_draw_seq > fill.b42_fill_seq'),
+ ('descriptors.cpp', 3836, 'rt.base.addr == 0 || rt.dcc_addr.addr == 0'),
+ ('textureCache.cpp', 2409, 'bool fce_materialize'),
+ ('textureCache.cpp', 3431, 'm_surface_metas.erase(found);'),
+ ('textureCache.cpp', 463, 'm_surface_metas.erase(metadata);'),
+ ('textureCache.cpp', 3489, 'metadata = m_surface_metas.erase(metadata);'),
+ ('textureCache.cpp', 3362, 'stale_count++ < 32'),
+ ('textureCache.cpp', 3455, 'log_count++ < 32'),
+ ('renderCompute.cpp', 231, 'return false;'),
+ ('CMakeLists.txt', 156, 'image/imageInfo.h'),
+ ('f16h.md', 60, '(16516)'),
+ ('f16h.md', 84, 'причина каждого из 4 событий'),
+ ('f16h.md', 85, 'для кадра 0 номером'),
+ ('f16h.md', 300, 'доказано для кадра 0 по схеме'),
+ ('f16h.md', 126, 'kept'),
+ ('f16h.md', 280, 'Ветвь 2: событие с `entry`'),
+ ('f16h.md', 282, 'К1, К2 и К3 на `PendingDcc`'),
+ ('f16h.md', 229, 'KYTY_FIX_F5CS=1'),
+ ('f16h.md', 113, 'Подпись трансляции'),
+ ('descriptors.cpp', 3798, 'cache.FindRenderTarget('),
+ ('renderCompute.cpp', 590, 'NoteCsRefusals(f5_refusals, f5_tracked)'),
+ ('f16h.md', 63, 'после №5'),
+ ('f16h.md', 66, 'На 4 тегах из 4'),
+ ('f16h.md', 77, 'следующего'),
+ ('f16h.md', 120, 'PendingDccFillStale'),
+ ('f16h.md', 210, 'К1:'),
+ ('f16h.md', 236, 'вне'),
+ ('f16h.md', 250, 'dcc_compression_enable'),
+ ('f16h.md', 253, 'data.address == base'),
+ ('f16h.md', 99, 'LastGpuWriteSeqExact'),
+ ('f16h.md', 159, 'До сцены'),
+ ('descriptors.cpp', 3771, 'void RenderExecutor::MaterializeBoundTargetDccClears'),
+ ('descriptors.cpp', 3811, 'applied = after.found && after.cmask && after.fill_value == 0 &&'),
+ ('descriptors.cpp', 3842, 'cache.FindDccSurfaceImage(rt.base.addr, rt.dcc_addr.addr)'),
+ ('descriptors.cpp', 901, 'ObtainBuffer(address, size, resource.written'),
+ ('renderCompute.cpp', 117, 'other_writes = true;'),
+ ('renderCompute.cpp', 126, 'return cleared_metadata && !other_writes;'),
+ ('renderCompute.cpp', 252, 'cache.TrackDccFill(descriptor.Base48(), size, packed_clear);'),
+ ('renderCompute.cpp', 583, 'DiagF5::NoteCsRefusals(f5_refusals, 0);'),
+ ('renderCompute.cpp', 973, 'return;'),
+ ('renderCompute.cpp', 1191, 'StampPendingDccFill();'),
+ ('renderCompute.cpp', 1217, 'StampPendingDccFill();'),
+ ('diagF5.cpp', 311, 'void NoteCsRefusals'),
+]
+bad = 0
+cache = {}
+for f, n, a in refs:
+    if f not in cache:
+        cache[f] = open(os.path.join(S, f), 'rb').read().decode('utf-8', 'replace').split('\n')
+    line = cache[f][n - 1]
+    ok = a in line
+    bad += not ok
+    print(('OK  ' if ok else 'BAD ') + f + ':' + str(n) + ('' if ok else '  -> ' + line.strip()[:120]))
+print('refs', len(refs), 'bad', bad)
+print('ALL OK' if bad == 0 else 'NOT OK')

@@ -1,0 +1,41 @@
+2b1b8787	src/libs/agc.cpp	622	int KYTY_SYSV_ABI AgcCreateShader(Shader** dst, void* header, const volatile void* code) {	PRINT_NAME();
+2b1b8787	src/libs/agc.cpp	672	map.hash                = ShaderComputeHash(const_cast<const void*>(code), h->shader_size);	ShaderMakeHostCopy(map);
+2b1b8787	src/libs/agc.cpp	686	*dst = h;	g_renderer->GetPipelineCache().TraceShaderRegistration(*h, map);
+2b1b8787	src/libs/agc.cpp	1326	int KYTY_SYSV_ABI AgcCreateInterpolantMapping(ShaderRegister* regs, const Shader* gs,	const Shader* ps) {
+2b1b8787	src/libs/agc.cpp	1382	int KYTY_SYSV_ABI AgcCreateInterpolantMapping2(ShaderRegister* regs, const Shader* gs,	const Shader* ps) {
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	225	int AsyncPipelinesMode() {	static const int mode = [] {
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	235	uint32_t AsyncPipelineWaitUs() {	static const uint32_t wait_us = [] {
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	243	uint32_t AsyncPipelineThreads() {	static const uint32_t threads = [] {
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2036	struct ProgramKey {	ShaderType            stage           = ShaderType::Unknown;
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2046	struct Permutation {	ShaderRecompiler::IR::ResourceSpecialization specialization;
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2145	Permutation CompilePermutation(const ShaderParams&                          params,	const ShaderRecompiler::CompileOptions&      options,
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3593	ShaderProgram Get(const ShaderParams& params, InputInfo& input_info,	uint32_t& push_data_cursor, bool tolerant = false, int kept = -1,
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3933	Compile(const ShaderParams& params, InputInfo& input_info, uint32_t& push_data_cursor,	bool tolerant, ShaderType stage, const ProgramKey& lookup_key,
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3998	auto translated = prepared ? std::move(*prepared) :	ShaderRecompiler::TranslateProgram(params.code, options);
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4014	entry->second.permutations.push_back(CompilePermutation(	params, options, std::move(translated), std::move(specialization), push_data_cursor));
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4042	LOGF("AvTrace: shader %s hash=0x%016" PRIx64 " translate_us=%" PRIu64 " compile_us=%" PRIu64	" permutations=%" PRIu64 "\n",
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5469	if (AsyncPipelinesMode() != 0 && !m_ready_shader_pairs.contains(pair_key)) {	// Everything CreatePipelineInternal reads is copied into the job: the register context and
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5503	const auto queued_at = HostMicros();	EnqueueJob([this, job, target, vs_id, ps_id, pair_key, queued_at] {
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5517	LOGF("AvTrace: pipeline gfx vs=%" PRIu64 " ps=%" PRIu64 " us=%" PRIu64	" total=%" PRIu64 " async wait_us=%" PRIu64 " pending=%u\n",
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6316	void PipelineCache::TraceShaderRegistration(const Shader& header, const ShaderMappedData& mapped) {	if (DumpGcnAtRegistration()) {
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6321	if (ComputePretranslation::Enabled() && mapped.type == Prospero::ShaderBinaryType::kCs &&	header.specials != nullptr && header.special_sizes_bytes >= sizeof(ShaderSpecialRegs) &&
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6364	if (!known) { m_program_cache->pretranslation.Enqueue({code, mapped.code_size_bytes / 4}, mapped.hash,	info, regs.cs_regs.user_sgpr,
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2057	// exactly three sites - Compile, LoadFromTranslationCache and Resolve - and each calls this on	// it right after the push_back, before its handle is indexed or its program is handed out, so
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/computePretranslation.h	19	// One-shot CPU IR cache. It never touches Vulkan, live descriptors, the ordinary ProgramCache,	// or the guest clock. Unsupported/no-longer-needed jobs are discarded, not waited on by Get.
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/computePretranslation.h	47	bool Enqueue(std::span<const uint32_t> code, uint64_t hash,	const ShaderComputeInputInfo& info, uint32_t user_data_count, bool dump_ir = false) {
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/computePretranslation.h	94	std::optional<ShaderRecompiler::TranslateResult> Take(	std::span<const uint32_t> code, uint64_t hash, const ShaderComputeInputInfo& info,
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/computePretranslation.h	212	Common::ScopedFatalInterceptor recover([](const char* file, int line, std::string_view text) {	throw std::runtime_error(fmt::format("{}:{} {}", file, line, text));
+2b1b8787	src/graphics/shader/shader.cpp	693	static bool ShaderGetStaticVertexInputInfo(uint64_t shader_addr, const HW::UserSgprInfo& user_sgpr,	uint32_t user_sgpr_num, const HW::ShaderRegisters& sh,
+2b1b8787	src/graphics/shader/shader.cpp	730	const auto* attrib = reinterpret_cast<const uint32_t*>(	static_cast<uint64_t>(user_sgpr.value[metadata.vertex_attrib_reg]) |
+2b1b8787	src/graphics/shader/shader.cpp	749	static void ShaderGetStaticInputInfoPS(	const HW::PixelShaderInfo& regs, const HW::ShaderRegisters& sh,
+2b1b8787	src/graphics/shader/shader.cpp	765	ps_info.vs_export_count      = sh.GetExportCount();	static const bool ps_inputs_trace = Common::EnvFlagOn("KYTY_VTX_TRACE");
+2b1b8787	src/graphics/shader/shader.cpp	828	ps_info.interpolator_settings[i] = sh.ps_interpolator_settings[i];	}
+2b1b8787	src/graphics/shader/shader.cpp	833	ps_info.target_export_mapping[i] = sh.target_output_mode[i] != 0	? target_export_mapping[i]
+2b1b8787	src/graphics/shader/shader.cpp	862	void BuildStageStaticKey(const ShaderVertexInputInfo& info, std::vector<uint32_t>& key) {	EXIT_IF(info.resources_num < 0 || info.resources_num > ShaderVertexInputInfo::RES_MAX);
+2b1b8787	src/graphics/shader/shader.cpp	918	void BuildStageStaticKey(const ShaderPixelInputInfo& info, std::vector<uint32_t>& key) {	EXIT_IF(info.input_num > std::size(info.interpolator_settings));
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp	565	const std::string_view translator_hash = KYTY_SHADER_SOURCE_HASH;	if (title_id.empty() || translator_hash == "unknown") {
+2b1b8787	src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp	591	m_signature = std::string("KytySC") + std::to_string(FORMAT_VERSION) + ":" +	std::string(translator_hash) +
+2b1b8787	src/graphics/host_gpu/renderer/renderDraw.cpp	4431	const bool allow_pipeline_wait =	wait_when_held || m_skipped_draws.load(std::memory_order_relaxed) == 0;
+2b1b8787	src/graphics/host_gpu/renderer/renderDraw.cpp	4449	LOGF("AsyncPipelines: skipped draw %s frame=%d vs=0x%016" PRIx64 " ps=0x%016" PRIx64	" pending=%u total_skipped=%u\n",
+2b1b8787	src/graphics/presentation/videoOut.cpp	1198	if ((r.incomplete && hold_incomplete) || r.skip_ceil) {	if (r.skip_ceil) {
+2b1b8787	src/graphics/presentation/videoOut.cpp	1216	m_presenter.Discard(*r.frame);	} else {

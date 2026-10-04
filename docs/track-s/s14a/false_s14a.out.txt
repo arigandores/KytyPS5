@@ -1,0 +1,13 @@
+t2_1: registered distinct by type {0: 660, 1: 278, 2: 149, 4: 6, 6: 6} (lines {0: 795, 1: 415, 2: 364, 4: 33, 6: 33}); first-used hashes by stage {1: 73, 2: 79, 4: 70, 5: 4}; registered and never first-used: {0: 590, 1: 199, 2: 75, 4: 6, 6: 6}; CsPretranslate {'ready': 432, 'skipped': 137} ready_us_sum 10611638
+   code bytes of registered-never-used: {0: 1994320, 1: 988352, 2: 210192, 4: 8496, 6: 60272}
+t2_2: registered distinct by type {0: 660, 1: 261, 2: 136, 4: 6, 6: 6} (lines {0: 795, 1: 381, 2: 330, 4: 33, 6: 33}); first-used hashes by stage {1: 70, 2: 81, 4: 75, 5: 4}; registered and never first-used: {0: 585, 1: 180, 2: 65, 4: 6, 6: 6}; CsPretranslate {'ready': 431, 'skipped': 137, 'miss': 1} ready_us_sum 10964756
+   code bytes of registered-never-used: {0: 1986784, 1: 790512, 2: 160448, 4: 8496, 6: 60272}
+t2_4: registered distinct by type {0: 660, 1: 246, 2: 126, 4: 6, 6: 6} (lines {0: 795, 1: 357, 2: 306, 4: 33, 6: 33}); first-used hashes by stage {1: 48, 2: 63, 4: 68, 5: 3}; registered and never first-used: {0: 592, 1: 183, 2: 77, 4: 6, 6: 6}; CsPretranslate {'ready': 432, 'skipped': 137} ready_us_sum 12290403
+   code bytes of registered-never-used: {0: 1994432, 1: 839760, 2: 221264, 4: 8496, 6: 60272}
+t2_5: registered distinct by type {0: 660, 1: 253, 2: 136, 4: 6, 6: 6} (lines {0: 795, 1: 363, 2: 312, 4: 33, 6: 33}); first-used hashes by stage {1: 63, 2: 69, 4: 71, 5: 3}; registered and never first-used: {0: 589, 1: 184, 2: 72, 4: 6, 6: 6}; CsPretranslate {'ready': 432, 'skipped': 137} ready_us_sum 11176102
+   code bytes of registered-never-used: {0: 1992208, 1: 838528, 2: 175056, 4: 8496, 6: 60272}
+t2_7: registered distinct by type {0: 660, 1: 250, 2: 134, 4: 6, 6: 6} (lines {0: 795, 1: 361, 2: 310, 4: 33, 6: 33}); first-used hashes by stage {1: 63, 2: 66, 4: 71, 5: 3}; registered and never first-used: {0: 589, 1: 184, 2: 70, 4: 6, 6: 6}; CsPretranslate {'ready': 432, 'skipped': 137} ready_us_sum 11009825
+   code bytes of registered-never-used: {0: 1992208, 1: 843840, 2: 165248, 4: 8496, 6: 60272}
+async creations after the entry with us > 4000 (five arms): n 19 us sorted [5822, 6985, 45252, 61420, 92870, 101958, 113839, 162927, 164504, 168293, 170064, 179765, 243708, 251667, 259765, 261200, 274569, 283713, 286490]; median 168293; wait_us sorted [7, 9, 9, 10, 10, 11, 12, 12, 14, 17, 22, 30, 37, 62635, 68929, 75568, 80256, 113669, 146376]
+translate+compile us of VS translated after the entry: n 25 sum 409996 mean 16400 median 10657 max 50350
+translate+compile us of PS translated after the entry: n 9 sum 143710 mean 15968 median 19501 max 23480

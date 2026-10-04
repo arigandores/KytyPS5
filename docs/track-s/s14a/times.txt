@@ -1,0 +1,12 @@
+2026-10-04T07:33:18Z S14a start: lock none, STOP none; API in_progress: HPP-494 (S12a build, track S), HPP-498 (S13a no game), HPP-518, HPP-510 - no run link of another track with a series; HPP-493 done
+2026-10-04T07:33:19Z pfx t2_4 ok 1 s
+2026-10-04T07:33:39Z xt t2_4 ok 0 s
+2026-10-04T07:33:40Z xt t2_2 ok 1 s
+2026-10-04T07:33:41Z xt t2_5 ok 1 s
+2026-10-04T07:33:51Z xt t2_1 ok 1 s
+2026-10-04T07:33:52Z xt t2_7 ok 1 s
+2026-10-04T07:33:53Z xt t2_cs0 ok 1 s
+2026-10-04T07:36:51Z split_s14a ok
+2026-10-04T07:42:21Z false_s14a ok
+2026-10-04T07:45:31Z queue_s14a ok
+2026-10-04T07:50:23Z FACTS section S14a appended

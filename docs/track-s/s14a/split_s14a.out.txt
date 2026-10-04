@@ -1,0 +1,94 @@
+== t2_1 hero_kratos: entry line 249452; ShaderRegister lines 1640 before / 0 after entry, distinct hashes 1099; ShaderFirstUse hashes 226
+  shaders translated after the entry (AvTrace: shader): stage hash translate_us compile_us perm | spec b/i | emit_us module_us | frame n | reg lines, type, first reg before entry?, lead_us = FirstUse - min Register, lead_last = FirstUse - last Register before it
+    VS 04e7f84bca841dde tr 4268 co 3270 perm 1 | spec (6, 0) | emit (1174, 22, 42, 7802) | n 282 | reg 1 types [2] distinct reg texts 1 before-entry True lead 4254861 lead_last 4254861
+    PS fc041b757d59dc0d tr 13193 co 6308 perm 1 | spec (5, 17) | emit (3260, 20, 106, 29862) | n 282 | reg 2 types [1] distinct reg texts 2 before-entry True lead 2927098 lead_last 2924267
+    VS 9a06bdb14a60db73 tr 2333 co 2775 perm 1 | spec (6, 0) | emit (704, 21, 31, 7684) | n 282 | reg 1 types [2] distinct reg texts 1 before-entry True lead 2943910 lead_last 2943910
+    PS bed231cd6418e61a tr 14087 co 8263 perm 1 | spec (6, 33) | emit (4999, 21, 78, 38400) | n 282 | reg 1 types [1] distinct reg texts 1 before-entry True lead 3113889 lead_last 3113889
+    VS 6b7fec42ce0c1a18 tr 4408 co 3433 perm 1 | spec (8, 0) | emit (1535, 22, 43, 14799) | n 282 | reg 1 types [2] distinct reg texts 1 before-entry True lead 2992194 lead_last 2992194
+    PS 305e04c3806f2776 tr 10222 co 6580 perm 1 | spec (5, 14) | emit (3681, 37, 79, 24487) | n 282 | reg 1 types [1] distinct reg texts 1 before-entry True lead 2171402 lead_last 2171402
+    VS daad82ee49424515 tr 8622 co 4302 perm 1 | spec (8, 0) | emit (2462, 21, 57, 27009) | n 282 | reg 2 types [2] distinct reg texts 2 before-entry True lead 2102165 lead_last 2095670
+    PS aa83bf664326246b tr 13649 co 6293 perm 1 | spec (5, 14) | emit (3499, 21, 62, 30835) | n 282 | reg 1 types [1] distinct reg texts 1 before-entry True lead 3188332 lead_last 3188332
+    VS 7705f8eecaae52e9 tr 3555 co 2757 perm 1 | spec (7, 0) | emit (1011, 21, 86, 11756) | n 282 | reg 2 types [2] distinct reg texts 2 before-entry True lead 2243611 lead_last 2241800
+    VS 89627e5304245d9c tr 8909 co 4912 perm 1 | spec (8, 0) | emit (2450, 22, 57, 27002) | n 282 | reg 1 types [2] distinct reg texts 1 before-entry True lead 2254942 lead_last 2254942
+    VS 89627e5304245d9c tr 8786 co 4340 perm 1 | spec (8, 0) | emit (2450, 22, 57, 27002) | n 282 | reg 1 types [2] distinct reg texts 1 before-entry True lead 2254942 lead_last 2254942
+    VS 2335532b8e5ee2bd tr 3277 co 3500 perm 4 | spec (7, 0) | emit (952, 21, 50, 10869) | n 282 | reg 2 types [2] distinct reg texts 2 before-entry True lead 4421102 lead_last 2043246
+    VS fefefe95679d8b8b tr 6663 co 3994 perm 2 | spec (8, 0) | emit (2039, 21, 59, 24608) | n 282 | reg 3 types [2] distinct reg texts 3 before-entry True lead 2597238 lead_last 2024580
+    PS 828215ad31a7f2ca tr 14818 co 8662 perm 1 | spec (5, 15) | emit (5063, 39, 94, 31042) | n 317 | reg 1 types [1] distinct reg texts 1 before-entry True lead 3040506 lead_last 3040506
+    VS acee300df6a19856 tr 8163 co 4424 perm 1 | spec (8, 0) | emit (2609, 21, 63, 28566) | n 317 | reg 1 types [2] distinct reg texts 1 before-entry True lead 3064183 lead_last 3064183
+    VS acee300df6a19856 tr 9937 co 4727 perm 1 | spec (8, 0) | emit (2752, 21, 63, 28566) | n 510 | reg 1 types [2] distinct reg texts 1 before-entry True lead 3064183 lead_last 3064183
+  bursts (runs of frames with a skipped draw or a logged held flip; a gap of 1 clean frame joins):
+    n 282..299: frames with skip/held 18 (skip lines 147, distinct vs/ps pairs 11), wall of those frames 680425 us (all frames of the run 680425 us); translation+module wall 162699 us (13 shaders); async creations 12 sum_us 1575419 max_us 283713 max(wait+us) 430089, of them us > 4000: 10; sync 6 sum_us 823; recipe saves 1 driver saves 0; model "translation removed, creation as is": frames lost 26 (lower bound 1)
+    n 317..334: frames with skip/held 17 (skip lines 22, distinct vs/ps pairs 1), wall of those frames 346330 us (all frames of the run 347510 us); translation+module wall 36067 us (2 shaders); async creations 1 sum_us 286490 max_us 286490 max(wait+us) 286502, of them us > 4000: 1; sync 0 sum_us 0; recipe saves 0 driver saves 0; model "translation removed, creation as is": frames lost 18 (lower bound 1)
+  frames dt >= 100 ms after the entry: [(282, 280351, 'held', 49)]
+  shaders translated after the entry: 16; async creations after the entry 15 (sum_us 1862422), with us > 4000: 11
+== t2_2 hero_drake: entry line 241429; ShaderRegister lines 1564 before / 8 after entry, distinct hashes 1069; ShaderFirstUse hashes 230
+  shaders translated after the entry (AvTrace: shader): stage hash translate_us compile_us perm | spec b/i | emit_us module_us | frame n | reg lines, type, first reg before entry?, lead_us = FirstUse - min Register, lead_last = FirstUse - last Register before it
+    CS 0ee8a51baca740db tr 783 co 2593 perm 1 | spec (4, 0) | emit (565, 22, 51, 3032) | n 215 | reg 1 types [0] distinct reg texts 1 before-entry True lead 4329859 lead_last 4329859
+    PS bed231cd6418e61a tr 13541 co 7812 perm 1 | spec (6, 33) | emit (4898, 20, 92, 38400) | n 217 | reg 1 types [1] distinct reg texts 1 before-entry True lead 1750441 lead_last 1750441
+    VS 1b18cd50ab8b4bf8 tr 7023 co 4324 perm 1 | spec (8, 0) | emit (1566, 21, 42, 15996) | n 217 | reg 2 types [2] distinct reg texts 2 before-entry True lead 3226285 lead_last 1061089
+    VS 1b18cd50ab8b4bf8 tr 6914 co 3658 perm 1 | spec (8, 0) | emit (1566, 21, 42, 15996) | n 217 | reg 2 types [2] distinct reg texts 2 before-entry True lead 3226285 lead_last 1061089
+  bursts (runs of frames with a skipped draw or a logged held flip; a gap of 1 clean frame joins):
+    n 217..218: frames with skip/held 2 (skip lines 30, distinct vs/ps pairs 5), wall of those frames 224900 us (all frames of the run 224900 us); translation+module wall 43272 us (3 shaders); async creations 5 sum_us 169237 max_us 168293 max(wait+us) 168305, of them us > 4000: 1; sync 3 sum_us 644; recipe saves 0 driver saves 0; model "translation removed, creation as is": frames lost 11 (lower bound 1)
+  frames dt >= 100 ms after the entry: [(217, 191248, 'held', 25)]
+  shaders translated after the entry: 4; async creations after the entry 5 (sum_us 169237), with us > 4000: 1
+== t2_4 armadillo_challenge_2: entry line 180994; ShaderRegister lines 1516 before / 8 after entry, distinct hashes 1044; ShaderFirstUse hashes 182
+  shaders translated after the entry (AvTrace: shader): stage hash translate_us compile_us perm | spec b/i | emit_us module_us | frame n | reg lines, type, first reg before entry?, lead_us = FirstUse - min Register, lead_last = FirstUse - last Register before it
+    PS f8e63959c2c8f447 tr 2410 co 3871 perm 1 | spec (3, 6) | emit (1419, 22, 41, 13652) | n 138 | reg 1 types [1] distinct reg texts 1 before-entry True lead 763041 lead_last 763041
+    VS 027467899081bd5c tr 24226 co 7838 perm 1 | spec (7, 2) | emit (5433, 21, 96, 37644) | n 138 | reg 1 types [2] distinct reg texts 1 before-entry True lead 769495 lead_last 769495
+  bursts (runs of frames with a skipped draw or a logged held flip; a gap of 1 clean frame joins):
+    n 138..138: frames with skip/held 1 (skip lines 64, distinct vs/ps pairs 2), wall of those frames 131906 us (all frames of the run 131906 us); translation+module wall 38345 us (2 shaders); async creations 2 sum_us 61603 max_us 61420 max(wait+us) 61430, of them us > 4000: 1; sync 0 sum_us 0; recipe saves 1 driver saves 0; model "translation removed, creation as is": frames lost 4 (lower bound 1)
+  frames dt >= 100 ms after the entry: [(138, 131906, 'held', 64)]
+  shaders translated after the entry: 2; async creations after the entry 3 (sum_us 61807), with us > 4000: 1
+== t2_5 fragile_battle_4: entry line 177626; ShaderRegister lines 1536 before / 0 after entry, distinct hashes 1061; ShaderFirstUse hashes 206
+  shaders translated after the entry (AvTrace: shader): stage hash translate_us compile_us perm | spec b/i | emit_us module_us | frame n | reg lines, type, first reg before entry?, lead_us = FirstUse - min Register, lead_last = FirstUse - last Register before it
+    VS 06c0b6a2f0f5743e tr 3897 co 3683 perm 1 | spec (6, 0) | emit (1173, 23, 36, 7660) | n 164 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1940110 lead_last 1940110
+    VS 49e03cde74bf0a50 tr 4237 co 3875 perm 1 | spec (8, 0) | emit (1205, 20, 40, 13293) | n 164 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1241275 lead_last 1241275
+    VS 9cef70d99e129f56 tr 40816 co 9534 perm 1 | spec (8, 2) | emit (6914, 21, 118, 47855) | n 164 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1270430 lead_last 1270430
+    PS 720d1f629e89e619 tr 3351 co 3772 perm 1 | spec (3, 12) | emit (1706, 22, 69, 17859) | n 164 | reg 1 types [1] distinct reg texts 1 before-entry True lead 1325220 lead_last 1325220
+    VS 9d04340df2d39aad tr 34145 co 9028 perm 1 | spec (8, 2) | emit (6462, 21, 80, 45903) | n 164 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1332443 lead_last 1332443
+    VS 06c0b6a2f0f5743e tr 3585 co 3420 perm 1 | spec (6, 0) | emit (695, 21, 32, 7660) | n 167 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1940110 lead_last 1940110
+  bursts (runs of frames with a skipped draw or a logged held flip; a gap of 1 clean frame joins):
+    n 164..172: frames with skip/held 9 (skip lines 253, distinct vs/ps pairs 4), wall of those frames 448070 us (all frames of the run 448070 us); translation+module wall 123343 us (6 shaders); async creations 5 sum_us 542093 max_us 274569 max(wait+us) 274591, of them us > 4000: 3; sync 1 sum_us 199; recipe saves 1 driver saves 0; model "translation removed, creation as is": frames lost 17 (lower bound 1)
+  frames dt >= 100 ms after the entry: [(164, 248206, 'held', 73)]
+  shaders translated after the entry: 6; async creations after the entry 5 (sum_us 542093), with us > 4000: 3
+== t2_7 fragile_battle_5: entry line 179380; ShaderRegister lines 1532 before / 0 after entry, distinct hashes 1056; ShaderFirstUse hashes 203
+  shaders translated after the entry (AvTrace: shader): stage hash translate_us compile_us perm | spec b/i | emit_us module_us | frame n | reg lines, type, first reg before entry?, lead_us = FirstUse - min Register, lead_last = FirstUse - last Register before it
+    VS 1b18cd50ab8b4bf8 tr 6954 co 4974 perm 1 | spec (8, 0) | emit (2009, 23, 50, 15996) | n 147 | reg 2 types [2] distinct reg texts 2 before-entry True lead 2031837 lead_last 1096593
+    VS 06c0b6a2f0f5743e tr 3201 co 2252 perm 1 | spec (6, 0) | emit (753, 20, 37, 7660) | n 148 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1718072 lead_last 1718072
+    VS 49e03cde74bf0a50 tr 3889 co 3884 perm 1 | spec (8, 0) | emit (1122, 20, 39, 13293) | n 148 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1143587 lead_last 1143587
+    VS 9cef70d99e129f56 tr 38484 co 10234 perm 1 | spec (8, 2) | emit (6951, 21, 117, 47855) | n 148 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1170558 lead_last 1170558
+    PS 720d1f629e89e619 tr 3466 co 3412 perm 1 | spec (3, 12) | emit (1649, 20, 72, 17859) | n 148 | reg 1 types [1] distinct reg texts 1 before-entry True lead 1222608 lead_last 1222608
+    VS 9d04340df2d39aad tr 35841 co 9815 perm 1 | spec (8, 2) | emit (6226, 21, 79, 45903) | n 148 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1229597 lead_last 1229597
+    VS 06c0b6a2f0f5743e tr 4576 co 4334 perm 1 | spec (6, 0) | emit (753, 28, 37, 7660) | n 151 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1718072 lead_last 1718072
+  bursts (runs of frames with a skipped draw or a logged held flip; a gap of 1 clean frame joins):
+    n 147..156: frames with skip/held 10 (skip lines 248, distinct vs/ps pairs 5), wall of those frames 463361 us (all frames of the run 463361 us); translation+module wall 135316 us (7 shaders); async creations 6 sum_us 503474 max_us 251667 max(wait+us) 251704, of them us > 4000: 3; sync 1 sum_us 158; recipe saves 1 driver saves 0; model "translation removed, creation as is": frames lost 16 (lower bound 1)
+  frames dt >= 100 ms after the entry: [(148, 232087, 'held', 37)]
+  shaders translated after the entry: 7; async creations after the entry 6 (sum_us 503474), with us > 4000: 3
+== t2_cs0 hero_kratos: entry line 247749; ShaderRegister lines 1640 before / 0 after entry, distinct hashes 1099; ShaderFirstUse hashes 226
+  shaders translated after the entry (AvTrace: shader): stage hash translate_us compile_us perm | spec b/i | emit_us module_us | frame n | reg lines, type, first reg before entry?, lead_us = FirstUse - min Register, lead_last = FirstUse - last Register before it
+    PS bed231cd6418e61a tr 21334 co 8197 perm 1 | spec (6, 33) | emit (5211, 22, 93, 38400) | n 215 | reg 1 types [1] distinct reg texts 1 before-entry True lead 2166074 lead_last 2166074
+    VS 04e7f84bca841dde tr 4136 co 2400 perm 1 | spec (6, 0) | emit (749, 20, 35, 7802) | n 217 | reg 1 types [2] distinct reg texts 1 before-entry True lead 3178108 lead_last 3178108
+    PS fc041b757d59dc0d tr 11559 co 5696 perm 1 | spec (5, 17) | emit (3109, 22, 90, 29862) | n 217 | reg 2 types [1] distinct reg texts 2 before-entry True lead 2188797 lead_last 2188113
+    VS 9a06bdb14a60db73 tr 2509 co 2499 perm 1 | spec (6, 0) | emit (717, 21, 31, 7684) | n 217 | reg 1 types [2] distinct reg texts 1 before-entry True lead 2205524 lead_last 2205524
+    VS 6b7fec42ce0c1a18 tr 4579 co 3020 perm 1 | spec (8, 0) | emit (1348, 21, 44, 14799) | n 217 | reg 1 types [2] distinct reg texts 1 before-entry True lead 2213419 lead_last 2213419
+    PS 305e04c3806f2776 tr 7880 co 4803 perm 1 | spec (5, 14) | emit (2463, 21, 60, 24487) | n 217 | reg 1 types [1] distinct reg texts 1 before-entry True lead 1843659 lead_last 1843659
+    VS daad82ee49424515 tr 8353 co 4261 perm 1 | spec (8, 0) | emit (2424, 21, 58, 27009) | n 217 | reg 2 types [2] distinct reg texts 2 before-entry True lead 1794678 lead_last 1788681
+    PS aa83bf664326246b tr 13517 co 6332 perm 1 | spec (5, 14) | emit (3348, 21, 60, 30835) | n 217 | reg 1 types [1] distinct reg texts 1 before-entry True lead 2322834 lead_last 2322834
+    VS 7705f8eecaae52e9 tr 3413 co 2600 perm 1 | spec (7, 0) | emit (1003, 21, 37, 11756) | n 217 | reg 2 types [2] distinct reg texts 2 before-entry True lead 1909410 lead_last 1906498
+    VS 89627e5304245d9c tr 8612 co 4744 perm 1 | spec (8, 0) | emit (2447, 21, 58, 27002) | n 217 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1920010 lead_last 1920010
+    VS 89627e5304245d9c tr 8364 co 4234 perm 1 | spec (8, 0) | emit (2447, 21, 58, 27002) | n 217 | reg 1 types [2] distinct reg texts 1 before-entry True lead 1920010 lead_last 1920010
+    VS 2335532b8e5ee2bd tr 3399 co 2973 perm 4 | spec (7, 0) | emit (896, 21, 35, 10869) | n 217 | reg 2 types [2] distinct reg texts 2 before-entry True lead 3420066 lead_last 1790924
+    VS fefefe95679d8b8b tr 6205 co 3855 perm 2 | spec (8, 0) | emit (2012, 21, 58, 24608) | n 217 | reg 3 types [2] distinct reg texts 3 before-entry True lead 2096874 lead_last 1850110
+    PS 828215ad31a7f2ca tr 14521 co 15694 perm 1 | spec (5, 15) | emit (3427, 21, 67, 31042) | n 252 | reg 1 types [1] distinct reg texts 1 before-entry True lead 2696403 lead_last 2696403
+    VS acee300df6a19856 tr 8200 co 4638 perm 1 | spec (8, 0) | emit (2468, 41, 64, 28566) | n 252 | reg 1 types [2] distinct reg texts 1 before-entry True lead 2726795 lead_last 2726795
+    VS acee300df6a19856 tr 9876 co 4977 perm 1 | spec (8, 0) | emit (2581, 21, 63, 28566) | n 445 | reg 1 types [2] distinct reg texts 1 before-entry True lead 2726795 lead_last 2726795
+  bursts (runs of frames with a skipped draw or a logged held flip; a gap of 1 clean frame joins):
+    n 215..232: frames with skip/held 17 (skip lines 117, distinct vs/ps pairs 11), wall of those frames 658568 us (all frames of the run 665623 us); translation+module wall 159474 us (13 shaders); async creations 12 sum_us 1485882 max_us 257932 max(wait+us) 381969, of them us > 4000: 10; sync 6 sum_us 802; recipe saves 1 driver saves 0; model "translation removed, creation as is": frames lost 23 (lower bound 1)
+    n 252..269: frames with skip/held 17 (skip lines 22, distinct vs/ps pairs 1), wall of those frames 347956 us (all frames of the run 349123 us); translation+module wall 43053 us (2 shaders); async creations 1 sum_us 283655 max_us 283655 max(wait+us) 283665, of them us > 4000: 1; sync 0 sum_us 0; recipe saves 0 driver saves 0; model "translation removed, creation as is": frames lost 18 (lower bound 1)
+  frames dt >= 100 ms after the entry: [(217, 241559, 'held', 50)]
+  shaders translated after the entry: 16; async creations after the entry 15 (sum_us 1770022), with us > 4000: 11
+== totals over the six arms (t2_cs0 is a repeat of hero_kratos): bursts 8, frames with skip/held observed 91, model frames 133 (lower bound 8), translation wall 741569 us, creation sum 4907853 us, wall of skip/held frames 3301516 us
+== shaders translated after the entry, five counted arms: 35
+  CS: 1; perm == 1: 1, perm > 1: 0; with a non-empty resource specialization (b or i entries): 1; registered (ShaderRegister with the same hash): 1; registered before the entry line: 1; lead known 1: min 4329859 median 4329859 max 4329859; lead < translate+compile: 0
+  PS: 9; perm == 1: 9, perm > 1: 0; with a non-empty resource specialization (b or i entries): 9; registered (ShaderRegister with the same hash): 9; registered before the entry line: 9; lead known 9: min 763041 median 2171402 max 3188332; lead < translate+compile: 0
+  VS: 25; perm == 1: 23, perm > 1: 2; with a non-empty resource specialization (b or i entries): 25; registered (ShaderRegister with the same hash): 25; registered before the entry line: 25; lead known 25: min 769495 median 2102165 max 4421102; lead < translate+compile: 0

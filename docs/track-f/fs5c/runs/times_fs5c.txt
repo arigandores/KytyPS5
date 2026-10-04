@@ -1,0 +1,90 @@
+2026-10-04T07:46:20Z FS5c HPP-511 harness files moved from the run scratch to C:/kyty/f287/fs5/fs5c (no lock)
+2026-10-04T07:46:29Z FS5c HPP-511 correction: the line before failed (glob of the scratch path); files moved now from the run scratch to C:/kyty/f287/fs5/fs5c (no lock)
+2026-10-04T07:46:37Z FS5c HPP-511 test_fs5c_read.py: row prefix 'R1: FixSval' -> 'R1: FixSval mode=1' (was ambiguous with the FixSvalStat row; 6 fixtures)
+2026-10-04T07:48:29Z F14e: скрипты правки (src, тесты A/B), корпуса, worktree и сборки - в C:/kyty/f287/f14e/; сухой прогон правок на копиях 5 файлов ALL OK; сборки ждут конца серии FS5c HPP-511 (Harness Engineer in_progress) и HPP-498
+2026-10-04T07:49:17Z FS5c HPP-511 seal written: docs/track-f/fs5c.md = pred/fs5c_seal.md sha256 10a6ff1d93e758e3 (no lock)
+2026-10-04T07:49:49Z FS5c HPP-511 API before fs5_v: comments of HPP-511 0 (no stop); in_progress with run: HPP-495 S12b (Red Team review), HPP-505 F14e (Emu Engineer), HPP-502 S14a, HPP-518 F16a (Probe Designer), HPP-498 S13a (Harness Engineer, track S, queue F > S) - no runs series of another track holding the lock; lock absent
+2026-10-04T07:49:50Z FS5c launch_fs5c detached call: bash C:/kyty/f287/fs5/fs5c/go_fs5c.sh fs5_v
+2026-10-04T07:50:24Z F16a sweep2 COMPLETE: 298 logs (5 calls <= 45 s; HPP-511 FS5c and HPP-498 in_progress, lock absent at every call)
+2026-10-04T07:51:17Z FS5c go_fs5c fs5_v lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T07:51:17Z FS5c go_fs5c fs5_v installed binary inside the lock before the tag: 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5
+2026-10-04T07:51:20Z FS5c go_fs5c fs5_v manifest before: manifest C:/kyty/f287/fs5/fs5c/runs/fs5_v/manifest_before.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T07:51:20Z FS5c go_fs5c fs5_v reference manifest of the first tag written: runs/ref_manifest.tsv sha256 c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T07:51:21Z FS5c go_fs5c fs5_v standing copy cache_ref/ made (684 MB)
+2026-10-04T07:51:21Z FS5c go_fs5c fs5_v before vs reference: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T07:51:23Z FS5c go_fs5c fs5_v caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (189/169/5/470/ MB)
+2026-10-04T07:51:23Z FS5c go_fs5c fs5_v cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-04T07:51:23Z; entries of _ShaderCache/PPSA21564: 1346
+2026-10-04T07:51:24Z FS5c go_fs5c fs5_v installed the FS5 copy: 631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17
+2026-10-04T07:51:24Z FS5c go_fs5c fs5_v enter_scene start (level underwater_aerial_garden, SD 300, --rec, hold 330, defaults of FS5)
+2026-10-04T07:57:34Z FS5c go_fs5c fs5_v enter_scene rc 0
+2026-10-04T07:57:35Z FS5c go_fs5c fs5_v run: VERDICT: underwater_aerial_garden in 29.9 s - PASS (acceptance <= 90 s)
+2026-10-04T07:57:35Z FS5c go_fs5c fs5_v log_fs5_v.txt sha256 02aa3473bf1cf7375a6cac4f59334ea733532e1c0a99767353bc000e0ca4f60f
+2026-10-04T07:57:36Z FS5c go_fs5c fs5_v installed binary returned from the pinned copy
+2026-10-04T07:57:36Z FS5c go_fs5c fs5_v installed binary after the tag: 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5
+2026-10-04T07:57:38Z FS5c go_fs5c fs5_v manifest of the run state (before the return): manifest C:/kyty/f287/fs5/fs5c/runs/fs5_v/manifest_run.tsv files 3321 bytes 920807927 listsha dae4d3511c29ddc4cccdd76244ff0557a7b4d726a56e2a42a6ece14db4c6be35; run vs before: manifest cmp DIFFER only-before 3 only-after 400
+2026-10-04T07:57:39Z FS5c go_fs5c fs5_v caches, saves and GLCache returned
+2026-10-04T07:57:41Z FS5c go_fs5c fs5_v manifest after: manifest C:/kyty/f287/fs5/fs5c/runs/fs5_v/manifest_after.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp with the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T07:57:41Z FS5c go_fs5c fs5_v lock released (rc 0)
+2026-10-04T07:58:45Z FS5c post_fs5c fs5_v: read.txt 7b80656256443a67, ROWS NO/NOT_READ: 0, glitch: one-frame glitches: 0
+2026-10-04T07:58:57Z FS5c HPP-511 API before fs5_w: comments of HPP-511 0 (no stop); lock absent
+2026-10-04T07:58:57Z FS5c launch_fs5c detached call: bash C:/kyty/f287/fs5/fs5c/go_fs5c.sh fs5_w
+2026-10-04T07:59:13Z FS5c go_fs5c fs5_w lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T07:59:13Z FS5c go_fs5c fs5_w installed binary inside the lock before the tag: 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5
+2026-10-04T07:59:15Z FS5c go_fs5c fs5_w manifest before: manifest C:/kyty/f287/fs5/fs5c/runs/fs5_w/manifest_before.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T07:59:15Z FS5c go_fs5c fs5_w before vs reference: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T07:59:20Z FS5c go_fs5c fs5_w caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (189/169/5/470/ MB)
+2026-10-04T07:59:22Z FS5c go_fs5c fs5_w cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-04T07:59:21Z; entries of _ShaderCache/PPSA21564: 1346
+2026-10-04T07:59:23Z FS5c go_fs5c fs5_w installed the FS5 copy: 631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17
+2026-10-04T07:59:23Z FS5c go_fs5c fs5_w enter_scene start (level underwater_aerial_garden, W of item 295 (b), hold 310, defaults of FS5)
+2026-10-04T08:05:25Z FS5c go_fs5c fs5_w enter_scene rc 0
+2026-10-04T08:05:27Z FS5c go_fs5c fs5_w run: VERDICT: underwater_aerial_garden in 41.3 s - PASS (acceptance <= 90 s)
+2026-10-04T08:05:28Z FS5c go_fs5c fs5_w log_fs5_w.txt sha256 f58eb740c7564cc8ffce6663d03ef331b7db6bc162759e0e101546d6970e0b42
+2026-10-04T08:05:29Z FS5c go_fs5c fs5_w installed binary returned from the pinned copy
+2026-10-04T08:05:29Z FS5c go_fs5c fs5_w installed binary after the tag: 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5
+2026-10-04T08:05:33Z FS5c go_fs5c fs5_w manifest of the run state (before the return): manifest C:/kyty/f287/fs5/fs5c/runs/fs5_w/manifest_run.tsv files 3321 bytes 920807929 listsha 63fc97a9645d467fc515c361dad9eab99d723e38d35cea06fac2a70ce1aa8c1f; run vs before: manifest cmp DIFFER only-before 3 only-after 400
+2026-10-04T08:05:36Z FS5c go_fs5c fs5_w caches, saves and GLCache returned
+2026-10-04T08:05:37Z FS5c go_fs5c fs5_w manifest after: manifest C:/kyty/f287/fs5/fs5c/runs/fs5_w/manifest_after.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp with the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T08:05:38Z FS5c go_fs5c fs5_w lock released (rc 0)
+2026-10-04T08:05:51Z F16a: lock waited 345 s (FS5c tag); note - refs_f16a.py was written by the Write tool between two lock checks (free at the previous command, held at the next), no atomic check
+2026-10-04T08:05:57Z FS5c post_fs5c fs5_w: read.txt 0e48043601301091, ROWS NO/NOT_READ: 0, glitch: 
+2026-10-04T08:06:06Z FS5c HPP-511 API before fs5_r1: comments of HPP-511 0 (no stop); lock absent
+2026-10-04T08:06:06Z FS5c launch_fs5c detached call: bash C:/kyty/f287/fs5/fs5c/go_fs5c.sh fs5_r1
+2026-10-04T08:06:22Z FS5c go_fs5c fs5_r1 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T08:06:22Z FS5c go_fs5c fs5_r1 installed binary inside the lock before the tag: 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5
+2026-10-04T08:06:24Z FS5c go_fs5c fs5_r1 manifest before: manifest C:/kyty/f287/fs5/fs5c/runs/fs5_r1/manifest_before.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T08:06:25Z FS5c go_fs5c fs5_r1 before vs reference: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T08:06:29Z FS5c go_fs5c fs5_r1 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (189/169/5/470/ MB)
+2026-10-04T08:06:30Z FS5c go_fs5c fs5_r1 cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-04T08:06:29Z; entries of _ShaderCache/PPSA21564: 1346
+2026-10-04T08:06:30Z FS5c go_fs5c fs5_r1 installed the FS5 copy: 631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17
+2026-10-04T08:06:30Z FS5c go_fs5c fs5_r1 enter_scene start (level underwater_aerial_garden, form fs4_r1: --shader-validation true, --rec, hold 330, defaults of FS5)
+2026-10-04T08:12:39Z FS5c go_fs5c fs5_r1 enter_scene rc 0
+2026-10-04T08:12:39Z FS5c go_fs5c fs5_r1 run: VERDICT: underwater_aerial_garden in 27.4 s - PASS (acceptance <= 90 s)
+2026-10-04T08:12:41Z FS5c go_fs5c fs5_r1 log_fs5_r1.txt sha256 f54891a6e73fc6f765326e263e5c08416fa5aa6ea9cd42c84ca6c4d708469b2a
+2026-10-04T08:12:41Z FS5c go_fs5c fs5_r1 installed binary returned from the pinned copy
+2026-10-04T08:12:41Z FS5c go_fs5c fs5_r1 installed binary after the tag: 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5
+2026-10-04T08:12:43Z FS5c go_fs5c fs5_r1 manifest of the run state (before the return): manifest C:/kyty/f287/fs5/fs5c/runs/fs5_r1/manifest_run.tsv files 3321 bytes 920807933 listsha f98ac3f971fe04a8a3b65a0194bf3b3bf9ee1fe38218a49278d630bd79b48227; run vs before: manifest cmp DIFFER only-before 3 only-after 400
+2026-10-04T08:12:44Z FS5c go_fs5c fs5_r1 caches, saves and GLCache returned
+2026-10-04T08:12:46Z FS5c go_fs5c fs5_r1 manifest after: manifest C:/kyty/f287/fs5/fs5c/runs/fs5_r1/manifest_after.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp with the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T08:12:46Z FS5c go_fs5c fs5_r1 lock released (rc 0)
+2026-10-04T08:13:01Z F16a: lock waited 330 s (FS5c tag)
+2026-10-04T08:13:49Z FS5c post_fs5c fs5_r1: read.txt fbb9928393fc351f, ROWS NO/NOT_READ: 0, glitch: one-frame glitches: 0
+2026-10-04T08:13:56Z FS5c HPP-511 API before fs5_hb: comments of HPP-511 0 (no stop); lock absent
+2026-10-04T08:13:56Z FS5c launch_fs5c detached call: bash C:/kyty/f287/fs5/fs5c/go_fs5c.sh fs5_hb
+2026-10-04T08:14:11Z FS5c go_fs5c fs5_hb lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-04T08:14:11Z FS5c go_fs5c fs5_hb installed binary inside the lock before the tag: 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5
+2026-10-04T08:14:13Z FS5c go_fs5c fs5_hb manifest before: manifest C:/kyty/f287/fs5/fs5c/runs/fs5_hb/manifest_before.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T08:14:13Z FS5c go_fs5c fs5_hb before vs reference: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T08:14:17Z FS5c go_fs5c fs5_hb caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (189/169/5/470/ MB)
+2026-10-04T08:14:19Z FS5c go_fs5c fs5_hb cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-04T08:14:18Z; entries of _ShaderCache/PPSA21564: 1346
+2026-10-04T08:14:19Z FS5c go_fs5c fs5_hb installed the FS5 copy: 631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17
+2026-10-04T08:14:20Z FS5c go_fs5c fs5_hb enter_scene start (level hoover_beach, SD 300, --rec, hold 330, defaults of FS5)
+2026-10-04T08:20:24Z FS5c go_fs5c fs5_hb enter_scene rc 0
+2026-10-04T08:20:26Z FS5c go_fs5c fs5_hb run: VERDICT: hoover_beach in 23.8 s - PASS (acceptance <= 90 s)
+2026-10-04T08:20:28Z FS5c go_fs5c fs5_hb log_fs5_hb.txt sha256 352b8c48b02fbca525f4a08bf2ab38218dc985eb6b71499b80317b767291a223
+2026-10-04T08:20:29Z FS5c go_fs5c fs5_hb installed binary returned from the pinned copy
+2026-10-04T08:20:29Z FS5c go_fs5c fs5_hb installed binary after the tag: 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5
+2026-10-04T08:20:32Z FS5c go_fs5c fs5_hb manifest of the run state (before the return): manifest C:/kyty/f287/fs5/fs5c/runs/fs5_hb/manifest_run.tsv files 3200 bytes 905945037 listsha 9680a7b179776f8d152d364bc80a898b1734bbd32e52c2fc7b56c1445df705c3; run vs before: manifest cmp DIFFER only-before 3 only-after 279
+2026-10-04T08:20:36Z FS5c go_fs5c fs5_hb caches, saves and GLCache returned
+2026-10-04T08:20:38Z FS5c go_fs5c fs5_hb manifest after: manifest C:/kyty/f287/fs5/fs5c/runs/fs5_hb/manifest_after.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp with the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-04T08:20:38Z FS5c go_fs5c fs5_hb lock released (rc 0)
+2026-10-04T08:22:20Z FS5c post_fs5c fs5_hb: read.txt c4dba44f5bc30403, ROWS NO/NOT_READ: 0, glitch: one-frame glitches: 0

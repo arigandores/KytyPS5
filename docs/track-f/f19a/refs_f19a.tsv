@@ -1,0 +1,135 @@
+K	20bda112	docs/ROADMAP.md	22379	441. **Звено F18b трека F (`HPP-536`, лид): F18a (`HPP-535`) ПРИНЯТ	(а) **Приёмка строкой. F18a ✓** (review лида — комментарий `
+K	20bda112	docs/ROADMAP.md	22393	(з) **Следующая итерация очереди F — F19 = Б24	(и) **Корень `HPP-287`** — `blocked` на `HPP-508`, `HPP-517`
+K	20bda112	docs/track-f/register.md	144	| Б24 | K2 (на удержании) | дефект | остановка главного потока 23,8 с	| Б5 | K3 | дефект; ведёт трек S | первый (холодный) вход ур
+K	20bda112	docs/track-f/register.md	867	| Б24 (поправка к §4, §48) |	
+K	95440108	src/graphics/presentation/window/window.cpp	344	#ifdef KYTY_DBG_INPUT	if (f.added || f.removed) {
+K	95440108	src/graphics/presentation/window/window.cpp	360	auto* pad = SDL_GameControllerOpen(f.id);	EXIT_NOT_IMPLEMENTED(pad == nullptr);
+K	95440108	src/graphics/presentation/window/window.cpp	375	Controller::Connect(id);	}
+K	95440108	src/graphics/presentation/window/window.cpp	378	if (f.removed) {	Controller::Disconnect(f.id);
+K	95440108	src/graphics/presentation/window/window.cpp	380	SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));	}
+K	95440108	src/graphics/presentation/window/window.cpp	749	case SDL_CONTROLLERDEVICEREMOVED:	case SDL_CONTROLLERDEVICEREMAPPED: {
+K	95440108	src/graphics/presentation/window/window.cpp	799	void WindowContext::PostToMainThread(std::function<void()> task) {	{
+K	95440108	src/graphics/presentation/window/window.cpp	829	if (age >= 50000000ull) {	static std::atomic<uint32_t> late_logged {0};
+K	95440108	src/graphics/presentation/window/window.cpp	831	if (late_logged.fetch_add(1, std::memory_order_relaxed) < 32) {	LOGF("MainTaskLate: us=%llu\n", static_cast<unsigned long lo
+K	95440108	src/graphics/presentation/window/window.cpp	854	DrainMainThreadTasks();	if (loop.paused.load(std::memory_order_acquire)) {
+K	95440108	src/graphics/presentation/window/window.cpp	863	if (!HostInputWaitEvent(&loop.event)) {	continue;
+K	95440108	src/graphics/presentation/window/window.cpp	878	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE, "1");	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5_RUMBLE, "1");
+K	95440108	src/graphics/presentation/window/window.cpp	884	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {	EXIT("%s\n", SDL_GetError());
+K	95440108	src/graphics/presentation/window/window.cpp	993	while (SDL_PollEvent(&g_window->loop.event)) {	// Keep window/controller lifecycle events, but don't forwar
+K	95440108	src/graphics/presentation/window/window.cpp	1003	g_window->loop.event.type == SDL_CONTROLLERDEVICEREMOVED) {	g_window->ProcessEvent(0);
+K	95440108	src/graphics/presentation/window/window.cpp	1019	SDL_Delay(16);	}
+K	95440108	src/graphics/presentation/window/window.cpp	1035	Controller::EmergencyShutdown();	g_window.reset();
+K	95440108	src/graphics/presentation/window/window.cpp	1047	void WindowTestMinimizeNoteGuestText(const char* text, size_t size) {	struct TestMinimize {
+K	95440108	src/graphics/presentation/window/window.cpp	1239	PostToMainThread([ms] { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); });	}
+K	95440108	src/graphics/presentation/window/window.cpp	1267	RunOnMainThread([this, text = std::move(text)] { SDL_SetWindowTitle(window, text.c_str()); });	}
+K	95440108	src/graphics/presentation/window/swapchain.cpp	632	m_window.RunOnMainThread([this] { m_window.RecreateSurface(); });	#else
+K	95440108	src/graphics/presentation/window/hostInput.cpp	424	if (SDL_WaitEvent(event) == 0) {	EXIT("%s\n", SDL_GetError());
+K	95440108	src/graphics/presentation/window/hostInput.cpp	432	if (SDL_WaitEventTimeout(event, timeout_ms) != 0) {	return true;
+K	95440108	src/libs/controller.h	19	constexpr int HOST_INPUT_CONTROLLER_ID = -1000;	
+K	95440108	src/libs/controller.cpp	31	constexpr uint32_t RUMBLE_DURATION_MS = 0xffff;	constexpr uint32_t RELEASE_FLUSH_MS   = 50;
+K	95440108	src/libs/controller.cpp	32	constexpr uint32_t RELEASE_FLUSH_MS   = 50;	
+K	95440108	src/libs/controller.cpp	145	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {	return false;
+K	95440108	src/libs/controller.cpp	461	g_controller->Connect(HOST_INPUT_CONTROLLER_ID);	}
+K	95440108	src/libs/controller.cpp	493	void GameController::Disconnect(int id) {	Common::LockGuard lock(m_mutex);
+K	95440108	src/libs/controller.cpp	500	LOGF("Controller: disconnect of unknown id %d ignored\n", id);	return;
+K	95440108	src/libs/controller.cpp	509	void GameController::CheckActive() {	int  new_active_id = -1;
+K	95440108	src/libs/controller.cpp	739	void GameController::ReleaseHostPads() {	Common::LockGuard lock(m_mutex);
+K	95440108	src/libs/controller.cpp	763	SDL_Delay(RELEASE_FLUSH_MS);	for (auto* pad: pads) {
+K	95440108	src/libs/controller.cpp	765	SDL_GameControllerClose(pad);	}
+K	95440108	src/libs/controller.cpp	772	void GameController::SetVibration(uint8_t large_motor, uint8_t small_motor) {	Common::LockGuard lock(m_mutex);
+K	95440108	src/libs/controller.cpp	775	if (m_active_id == HOST_INPUT_CONTROLLER_ID) {	return;
+K	95440108	src/libs/controller.cpp	778	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));	if (pad == nullptr) {
+K	95440108	src/libs/controller.cpp	785	if (SDL_GameControllerRumble(pad, large, small, RUMBLE_DURATION_MS) != 0) {	LOGF("\t rumble failed: %s\n", SDL_GetError());
+K	95440108	src/libs/controller.cpp	790	void GameController::SetLightBar(uint8_t r, uint8_t g, uint8_t b) {	Common::LockGuard lock(m_mutex);
+K	95440108	src/libs/controller.cpp	792	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));	pad != nullptr) {
+K	95440108	src/libs/controller.cpp	794	(void)SDL_GameControllerSetLED(pad, r, g, b);	}
+K	95440108	src/libs/controller.cpp	821	Common::LockGuard lock(m_mutex);	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL
+K	95440108	src/libs/controller.cpp	822	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));	if (pad != nullptr && SDL_GameControllerGetType(pad) == SDL_
+K	95440108	src/libs/controller.cpp	824	*sent = SDL_GameControllerSendEffect(pad, &effect, sizeof(effect)) == 0;	}
+K	95440108	src/libs/controller.cpp	839	void GameController::ReadState(ControllerState* state, bool* flag, int* count) {	EXIT_IF(flag == nullptr);
+K	95440108	src/libs/controller.cpp	844	Common::LockGuard lock(m_mutex);	RefreshMotion();
+K	95440108	src/libs/controller.cpp	858	Common::LockGuard lock(m_mutex);	RefreshMotion();
+K	95440108	src/libs/controller.cpp	1119	LOGF("\t large_motor = %d\n"	"\t small_motor = %d\n",
+K	95440108	src/libs/controller.cpp	1123	g_controller->SetVibration(param->large_motor, param->small_motor);	
+S	4b69833b	src/events/SDL_events.c	41	#define ENUMERATION_POLL_INTERVAL_MS 3000	
+S	4b69833b	src/events/SDL_events.c	44	#define EVENT_POLL_INTERVAL_MS 1	
+S	4b69833b	src/events/SDL_events.c	922	if (SDL_update_joysticks) {	SDL_JoystickUpdate();
+S	4b69833b	src/events/SDL_events.c	1006	SDL_PumpEventsInternal(SDL_TRUE);	
+S	4b69833b	src/events/SDL_events.c	968	if (SDL_NumJoysticks() > 0) {	/* If we have joysticks open, we need to poll rapidly for ev
+S	4b69833b	src/events/SDL_events.c	1062	int SDL_WaitEvent(SDL_Event *event)	{
+S	4b69833b	src/events/SDL_events.c	1077	SDL_PumpEventsInternal(SDL_TRUE);	}
+S	4b69833b	src/events/SDL_events.c	1326	SDL_CalculateShouldUpdateJoysticks(SDL_GetHintBoolean(SDL_HINT_AUTO_UPDATE_JOYSTICKS, SDL_TRUE));	#endif
+S	4b69833b	src/joystick/SDL_joystick.c	920	int SDL_JoystickAttachVirtualEx(const SDL_VirtualJoystickDesc *desc)	{
+S	4b69833b	src/joystick/SDL_joystick.c	934	int SDL_JoystickDetachVirtual(int device_index)	{
+S	4b69833b	src/joystick/SDL_joystick.c	1406	int SDL_JoystickRumble(SDL_Joystick *joystick, Uint16 low_frequency_rumble, Uint16 high_frequency_rumble, Uint32 duration_ms)	{
+S	4b69833b	src/joystick/SDL_joystick.c	1410	SDL_LockJoysticks();	{
+S	4b69833b	src/joystick/SDL_joystick.c	1414	if (low_frequency_rumble == joystick->low_frequency_rumble &&	high_frequency_rumble == joystick->high_frequency_rumble) {
+S	4b69833b	src/joystick/SDL_joystick.c	1578	void SDL_JoystickClose(SDL_Joystick *joystick)	{
+S	4b69833b	src/joystick/SDL_joystick.c	1601	joystick->driver->Close(joystick);	joystick->hwdata = NULL;
+S	4b69833b	src/joystick/SDL_joystick.c	1890	void SDL_PrivateJoystickRemoved(SDL_JoystickID device_instance)	{
+S	4b69833b	src/joystick/SDL_joystick.c	2167	void SDL_JoystickUpdate(void)	{
+S	4b69833b	src/joystick/SDL_joystick.c	2177	SDL_LockJoysticks();	
+S	4b69833b	src/joystick/SDL_joystick.c	2185	HIDAPI_UpdateDevices();	#endif /* SDL_JOYSTICK_HIDAPI */
+S	4b69833b	src/joystick/SDL_joystick.c	2193	joystick->driver->Update(joystick);	
+S	4b69833b	src/joystick/SDL_joystick.c	2225	SDL_joystick_drivers[i]->Detect();	}
+S	4b69833b	src/joystick/SDL_joystick.c	2228	SDL_UnlockJoysticks();	}
+S	4b69833b	src/joystick/SDL_gamecontroller.c	382	case SDL_JOYDEVICEREMOVED:	{
+S	4b69833b	src/joystick/SDL_gamecontroller.c	397	deviceevent.type = SDL_CONTROLLERDEVICEREMOVED;	deviceevent.cdevice.which = event->jdevice.which;
+S	4b69833b	src/joystick/SDL_gamecontroller.c	2849	SDL_GameController *SDL_GameControllerFromInstanceID(SDL_JoystickID joyid)	{
+S	4b69833b	src/joystick/SDL_gamecontroller.c	2853	SDL_LockJoysticks();	gamecontroller = SDL_gamecontrollers;
+S	4b69833b	src/joystick/SDL_gamecontroller.c	3030	void SDL_GameControllerClose(SDL_GameController *gamecontroller)	{
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	405	static void HIDAPI_CleanupDeviceDriver(SDL_HIDAPI_Device *device)	{
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	419	SDL_LockMutex(device->dev_lock);	{
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	422	SDL_hid_close(device->dev);	device->dev = NULL;
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	520	dev = SDL_hid_open_path(device->path, 0);	#endif
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	583	SDL_HIDAPI_change_count = 0;	}
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	837	void HIDAPI_JoystickDisconnected(SDL_HIDAPI_Device *device, SDL_JoystickID joystickID)	{
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	871	SDL_HIDAPI_change_count = 0;	
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	998	while (SDL_AtomicGet(&device->rumble_pending) > 0) {	SDL_Delay(10);
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	1114	devs = SDL_hid_enumerate(0, 0);	if (devs) {
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	1323	static void HIDAPI_JoystickDetect(void)	{
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	1327	if (SDL_HIDAPI_change_count != count) {	SDL_HIDAPI_change_count = count;
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	1350	if (SDL_TryLockMutex(device->dev_lock) == 0) {	device->updating = SDL_TRUE;
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	1352	device->driver->UpdateDevice(device);	device->updating = SDL_FALSE;
+S	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	1609	if (SDL_AtomicGet(&device->rumble_pending) > 0) {	SDL_Delay(10);
+S	4b69833b	src/joystick/hidapi/SDL_hidapi_ps5.c	44	#define BLUETOOTH_DISCONNECT_TIMEOUT_MS 500	
+S	4b69833b	src/joystick/hidapi/SDL_hidapi_ps5.c	416	if (ReadFeatureReport(device->dev, k_EPS5FeatureReportIdSerialNumber, data, sizeof(data)) >= 7) {	(void)SDL_snprintf(serial, sizeof(serial), "%.2x-%.2x-%.2x-%
+S	4b69833b	src/joystick/hidapi/SDL_hidapi_ps5.c	792	SDL_HIDAPI_SendRumbleAndUnlock(device, data, sizeof(data));	}
+S	4b69833b	src/joystick/hidapi/SDL_hidapi_ps5.c	1031	if (SDL_HIDAPI_SendRumbleAndUnlock(device, data, report_size) != report_size) {	return -1;
+S	4b69833b	src/joystick/hidapi/SDL_hidapi_ps5.c	1446	while ((size = SDL_hid_read_timeout(device->dev, data, sizeof(data), 0)) > 0) {	#ifdef DEBUG_PS5_PROTOCOL
+S	4b69833b	src/joystick/hidapi/SDL_hidapi_ps5.c	1531	HIDAPI_JoystickDisconnected(device, device->joysticks[0]);	}
+S	4b69833b	src/joystick/hidapi/SDL_hidapi_rumble.c	82	SDL_LockMutex(request->device->dev_lock);	if (request->device->dev) {
+S	4b69833b	src/joystick/hidapi/SDL_hidapi_rumble.c	87	SDL_hid_write(request->device->dev, request->data, request->size);	}
+S	4b69833b	src/hidapi/windows/hid.c	57	#define HID_WRITE_TIMEOUT_MILLISECONDS 500	
+S	4b69833b	src/hidapi/windows/hid.c	364	hid_enumerate(unsigned short vendor_id, unsigned short product_id)	{
+S	4b69833b	src/hidapi/windows/hid.c	480	write_handle = open_device(device_interface_detail_data->DevicePath, TRUE, FALSE);	
+S	4b69833b	src/hidapi/windows/hid.c	492	HidD_GetAttributes(write_handle, &attrib);	//wprintf(L"Product/Vendor: %x %x\n", attrib.ProductID, attr
+S	4b69833b	src/hidapi/windows/hid.c	569	hidp_res = HidD_GetSerialNumberString(write_handle, wstr, sizeof(wstr));	wstr[WSTR_LEN-1] = 0x0000;
+S	4b69833b	src/hidapi/windows/hid.c	576	hidp_res = HidD_GetManufacturerString(write_handle, wstr, sizeof(wstr));	wstr[WSTR_LEN-1] = 0x0000;
+S	4b69833b	src/hidapi/windows/hid.c	583	hidp_res = HidD_GetProductString(write_handle, wstr, sizeof(wstr));	wstr[WSTR_LEN-1] = 0x0000;
+S	4b69833b	src/hidapi/windows/hid.c	796	res = WaitForSingleObject(dev->write_ol.hEvent, milliseconds);	if (res != WAIT_OBJECT_0)
+S	4b69833b	src/hidapi/windows/hid.c	853	res = WaitForSingleObject(ev, milliseconds >= 0 ? milliseconds : INFINITE);	if (res != WAIT_OBJECT_0) {
+S	4b69833b	src/hidapi/windows/hid.c	950	res = GetOverlappedResult(dev->device_handle, &ol, &bytes_returned, TRUE/*wait*/);	if (!res) {
+S	4b69833b	src/hidapi/windows/hid.c	978	GetOverlappedResult(dev->device_handle, &dev->ol, &bytes_read, TRUE/*wait*/);	}
+S	4b69833b	src/hidapi/SDL_hidapi.c	381	if (SDL_ThreadID() == SDL_HIDAPI_discovery.m_nThreadID) {	MSG msg;
+S	4b69833b	src/hidapi/SDL_hidapi.c	1226	Uint32 SDL_hid_device_change_count(void)	{
+S	4b69833b	src/hidapi/SDL_hidapi.c	1327	raw_devs = PLATFORM_hid_enumerate(vendor_id, product_id);	#ifdef DEBUG_HIDAPI
+S	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	357	static int SDLCALL SDL_JoystickThread(void *_data)	{
+S	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	493	s_bJoystickThread = SDL_GetHintBoolean(SDL_HINT_JOYSTICK_THREAD, SDL_FALSE);	if (s_bJoystickThread) {
+S	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	529	void WINDOWS_JoystickDetect(void)	{
+S	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	534	if (!s_bWindowsDeviceChanged) {	return; /* thread hasn't signaled, nothing to do right now. 
+S	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	548	SDL_DINPUT_JoystickDetect(&pCurList);	
+S	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	551	SDL_XINPUT_JoystickDetect(&pCurList);	
+S	4b69833b	src/joystick/windows/SDL_windows_gaming_input.c	445	SDL_LockJoysticks();	
+S	4b69833b	src/joystick/windows/SDL_windows_gaming_input.c	589	SDL_LockJoysticks();	
+S	4b69833b	include/SDL_hints.h	332	#define SDL_HINT_AUTO_UPDATE_JOYSTICKS  "SDL_AUTO_UPDATE_JOYSTICKS"	
+S	4b69833b	include/SDL_hints.h	1319	#define SDL_HINT_JOYSTICK_THREAD "SDL_JOYSTICK_THREAD"	
+S	4b69833b	include/SDL_joystick.h	424	extern DECLSPEC int SDLCALL SDL_JoystickAttachVirtualEx(const SDL_VirtualJoystickDesc *desc);	
+S	4b69833b	include/SDL_joystick.h	435	extern DECLSPEC int SDLCALL SDL_JoystickDetachVirtual(int device_index);	
+S	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	240	SDL_PrivateJoystickAdded(hwdata->instance_id);	
+S	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	256	SDL_PrivateJoystickRemoved(instance_id);	return 0;
+S	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	432	result = hwdata->desc.Rumble(hwdata->desc.userdata, low_frequency_rumble, high_frequency_rumble);	} else {
+S	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	494	result = hwdata->desc.SetLED(hwdata->desc.userdata, red, green, blue);	} else {
+S	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	561	static void VIRTUAL_JoystickClose(SDL_Joystick *joystick)	{
+S	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	581	static SDL_bool VIRTUAL_JoystickGetGamepadMapping(int device_index, SDL_GamepadMapping *out)	{
+S	4b69833b	include/SDL_version.h	60	#define SDL_MINOR_VERSION   33	#define SDL_PATCHLEVEL      0

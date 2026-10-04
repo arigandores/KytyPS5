@@ -1,0 +1,82 @@
+list entries 761 distinct paths 721 distinct contents (sha256) 603 byte-identical copies dropped 118
+logs 603 missing 0 GiB stored 107.1 lines 727899927 frames 4567235 frame time h 36.4
+caps: ctl_over 0 mt_over 0 slow_over 0 lvl_over 0 win_over 0
+xz rc != 0: 0
+
+== A. controller lines
+       5 lines    5 logs | Controller #: "DualSense Wireless Controller" type=# accel=# gyro=# path=<bt>
+       5 lines    5 logs | ControllerMotion: real sensors of pad # in use
+       2 lines    1 logs | ControllerMotion: shake=# enabled=#
+       1 lines    1 logs | Controller: disconnect of unknown id # ignored
+pad logs (>= 1 connect line): 5 of 603
+  s120/cen120                        connects 1 ['<bt> id 0 type 7 line 4517 ts None'] frame time after first connect 307.4 s; unknown-id 0 motion 1 haptics-device 0; slow 0; MainTaskLate max 264395 us
+  s120/smk120                        connects 1 ['<bt> id 0 type 7 line 4496 ts None'] frame time after first connect 190.0 s; unknown-id 0 motion 1 haptics-device 0; slow 0; MainTaskLate max 325430 us
+  s122/bsky122                       connects 1 ['<bt> id 0 type 7 line 4497 ts None'] frame time after first connect 209.9 s; unknown-id 0 motion 1 haptics-device 0; slow 0; MainTaskLate max 360038 us
+  s122/eatl122                       connects 1 ['<bt> id 0 type 7 line 4497 ts None'] frame time after first connect 127.1 s; unknown-id 0 motion 1 haptics-device 0; slow 1; MainTaskLate max 262149 us
+  s122/edes122                       connects 1 ['<bt> id 0 type 7 line 4508 ts None'] frame time after first connect 145.4 s; unknown-id 0 motion 1 haptics-device 0; slow 1; MainTaskLate max 23812688 us
+logs with "disconnect of unknown id": [('s116/obs116', [(4490, None, 0)])]
+logs with "Haptics: pad audio device": []
+
+== B. MainTaskLate
+logs with MainTaskLate >= 1 s: 12
+  play/20261002T221534Z/log          max 1126716 us; before the first frame: yes; main-thread lines: [(4315, None, 0, 'MainTaskLate: us=1126716')]
+  s114/ctl114a                       max 3001715 us; before the first frame: NO; main-thread lines: [(633, None, 0, 'MainStallTest: frame=3000 ms=3000'), (500347, 99962, 2970, 'MainStallTest: queued frame=3000 ms=3000'), (501472, 99976, 2970, 'MainTaskLate: us=3001715'), (501473, 99976, 2970, 'MainThreadWait: us=3001826 frame=3000 titleasync=0')]
+  s114/ctl114b                       max 3000429 us; before the first frame: NO; main-thread lines: [(633, None, 0, 'MainStallTest: frame=3000 ms=3000'), (565530, 103210, 2973, 'MainStallTest: queued frame=3000 ms=3000'), (576459, 106201, 3071, 'MainTaskLate: us=3000429')]
+  s115/boot115a                      max 10341415 us; before the first frame: yes; main-thread lines: [(4284, None, 0, 'PrepareHold: ms=10000'), (4306, None, 0, 'MainTaskLate: us=10341415')]
+  s115/boot115c                      max 10268377 us; before the first frame: yes; main-thread lines: [(4284, None, 0, 'PrepareHold: ms=10000'), (4305, None, 0, 'MainTaskLate: us=10268377')]
+  s122/edes122                       max 23812688 us; before the first frame: NO; main-thread lines: [(642264, 90075, 4943, 'MainTaskLate: us=23812688')]
+  s288/s10/u_1                       max 20419483 us; before the first frame: yes; main-thread lines: [(5701, None, 0, 'MainTaskLate: us=20419483')]
+  s288/s10/u_2                       max 20175451 us; before the first frame: yes; main-thread lines: [(5691, None, 0, 'MainTaskLate: us=20175451')]
+  s288/s10/u_3                       max 20054203 us; before the first frame: yes; main-thread lines: [(5691, None, 0, 'MainTaskLate: us=20054203')]
+  s288/s10/u_4                       max 20652158 us; before the first frame: yes; main-thread lines: [(5692, None, 0, 'MainTaskLate: us=20652158')]
+  s288/s10/u_5                       max 20640394 us; before the first frame: yes; main-thread lines: [(5702, None, 0, 'MainTaskLate: us=20640394')]
+  s288/s4/c4_0                       max 25535846 us; before the first frame: yes; main-thread lines: [(6225, None, 0, 'MainTaskLate: us=25535846')]
+logs with any MainTaskLate line: 434 ; with MainStallTest: 2 ; with PrepareHold: 8 ; with TestMinimize: 7
+
+== C. slow frames (dt_us >= 1 s)
+slow frames: 106 in logs: 81
+  phase boot  frames    0 logs    0 ; in pad logs 0 ; near a controller line 0 ; with MainTaskLate >= 1 s within 2000 lines 0
+  phase entry frames   76 logs   71 ; in pad logs 1 ; near a controller line 1 ; with MainTaskLate >= 1 s within 2000 lines 0
+  phase hold  frames   30 logs   11 ; in pad logs 1 ; near a controller line 0 ; with MainTaskLate >= 1 s within 2000 lines 2
+slow frames near a controller line (any phase):
+  s122/eatl122                       phase entry lvl penguin_atlantis n 191 dt_us 1391088 line 483671 ts_end 12272 near ['Controller 0: "DualSense Wireless Contro']
+slow frames on hold:
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    397 dt_us   3424890 line   246800 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    398 dt_us   1580178 line   249785 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    399 dt_us  14118553 line   252968 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    400 dt_us   1237749 line   252987 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    401 dt_us   1149979 line   253293 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    402 dt_us   8505781 line   254368 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    403 dt_us   5391007 line   255449 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    404 dt_us   2239347 line   256232 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    405 dt_us  12602310 line   257247 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    407 dt_us   1262448 line   257586 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    408 dt_us  12651608 line   258379 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    409 dt_us   1127433 line   258391 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    411 dt_us  13454239 line   259993 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    413 dt_us   1198450 line   260332 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    414 dt_us  11241693 line   261155 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    415 dt_us   1088793 line   261168 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f12f/f12_rd                   lvl underwater_aerial_garden     n    417 dt_us   7260633 line   262813 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f13a/f13_rd                   lvl ending_boss_after_credit     n   2592 dt_us   1017975 line   349136 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f13a/f13_rd                   lvl ending_boss_after_credit     n   2594 dt_us   4219890 line   349302 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f6e/series1/f6e_a1            lvl timestop_casino              n    972 dt_us   2484592 line  1408375 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f7a/f7a_1                     lvl enemy_final                  n    877 dt_us   1125617 line   280821 pad_log 0 near_ctl 0 main_late>=1s 0
+  f287/f7a/f7a_1                     lvl enemy_final                  n    879 dt_us   4610763 line   282080 pad_log 0 near_ctl 0 main_late>=1s 0
+  play/20261002T221534Z/log          lvl underwater_aerial_garden     n    869 dt_us  19150054 line   377404 pad_log 0 near_ctl 0 main_late>=1s 0
+  play/20261002T221534Z/log          lvl underwater_aerial_garden     n   2414 dt_us  37082770 line   624206 pad_log 0 near_ctl 0 main_late>=1s 0
+  s113/vbn113k                       lvl underwater_aerial_garden     n   9672 dt_us   3032310 line  1258720 pad_log 0 near_ctl 0 main_late>=1s 0
+  s114/ctl114a                       lvl underwater_aerial_garden     n   2972 dt_us   3034886 line   501474 pad_log 0 near_ctl 0 main_late>=1s 1
+  s122/edes122                       lvl intro_next                   n   4945 dt_us  23796476 line   642532 pad_log 1 near_ctl 0 main_late>=1s 1
+  s143/v143_08                       lvl pot_treasure_cave            n  14701 dt_us   6614314 line  1442453 pad_log 0 near_ctl 0 main_late>=1s 0
+  s145/v145_14                       lvl bonus_path_maker_mix         n   7249 dt_us   4624510 line   977077 pad_log 0 near_ctl 0 main_late>=1s 0
+  s146/r146_03                       lvl timestop_casino              n    931 dt_us   1844729 line   666533 pad_log 0 near_ctl 0 main_late>=1s 0
+slow frames in pad logs (any phase):
+  s122/eatl122                       phase entry lvl penguin_atlantis n 191 dt_us 1391088 line 483671 near_ctl ['Controller 0: "DualSense Wireless Contro']
+  s122/edes122                       phase hold lvl intro_next n 4945 dt_us 23796476 line 642532 near_ctl []
+
+== D. exposure
+pad logs: frame time after the first connect line, s: 979.8
+logs without a pad: 598, frame time h 36.1
+by root (logs / pad logs / slow frames / logs with MainTaskLate >= 1 s):
+  f287:86/0/52/0 p283:68/0/7/0 play:1/0/2/1 s106:4/0/0/0 s107:2/0/0/0 s108:8/0/0/0 s109:18/0/0/0 s110:19/0/0/0 s111:6/0/0/0 s112:3/0/0/0 s113:11/0/1/0 s114:9/0/1/2 s115:7/0/0/2 s116:1/0/0/0 s117:59/0/0/0 s118:5/0/0/0 s119:4/0/0/0 s120:2/2/0/0 s121:2/0/0/0 s122:13/3/2/1 s123:5/0/0/0 s124:5/0/0/0 s126:8/0/0/0 s127:10/0/0/0 s128:5/0/0/0 s129:13/0/0/0 s130:8/0/0/0 s131:8/0/0/0 s133:4/0/0/0 s134:7/0/0/0 s135:4/0/0/0 s136:12/0/0/0 s137:11/0/0/0 s142:12/0/0/0 s143:20/0/2/0 s144:33/0/17/0 s145:33/0/12/0 s146:37/0/5/0 s288:40/0/5/6

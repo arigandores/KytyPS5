@@ -1,0 +1,19 @@
+regress_s12.py sha256 b43486b818ec5758520eb5bd26c80950bbf4495e55f91f5a5f15f678c994f039 target sc_s12.py sha256 8fe158365ff820dd633d8bc55c122896b0a8eef4111886b738fb314a38a11b3d
+log C:/kyty/f287/fs5/fs5c/log_fs5_w.txt sha256 f58eb740c7564cc8ffce6663d03ef331b7db6bc162759e0e101546d6970e0b42 lines 3634303
+PASS fs5_w W rows (E 0/0 W 930253 limit 0 dual [(76, 1, 1)] guest_first 11895)
+PASS fs5_w hold and frames >= 1 s (hold 324.2 k2 0 death 0)
+log C:/kyty/f287/fs5/fs5c/log_fs5_v.txt sha256 02aa3473bf1cf7375a6cac4f59334ea733532e1c0a99767353bc000e0ca4f60f lines 2398775
+PASS fs5_v V rows (hold 334.3 k2 0 first 360)
+PASS fs5_v the knob line of FS5 (S-pcw default 0 there) (['S-pcw: KYTY_S_PCW=0 KYTY_S_PCW_FORCE_MS=0'])
+log C:/kyty/s288/s10/log_pi_w1.txt sha256 353f90e873d956c1cb6f531e9aaf4cd6243ea1f87c2862a0b7ffb34eee46bf13 lines 1190958
+PASS pi_w1 saves (saved 24 last 94435637 forced 23)
+log C:/kyty/s288/s10/log_pi_r1.txt sha256 81c37079e51e674de6a2e3602de1bed03979d3c3380d30a07e9a03c4a224906e lines 667668
+PASS pi_r1 load classes (loading 1 loaded [94435637] bad [0, 0, 0, 0, 0] unknown 0)
+PASS pi_r1 knob line (['S-pcw: KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=15000'])
+PASS pi_r1 loaded = the last saved of pi_w1 = snap0 size - 76 (94435637 94435637 94435637)
+log C:/kyty/s288/s10/log_t2_1.txt sha256 c469daae5b002fb3ef1d89e7ba1febf38e48b3a782d80a408908a98c1ad22c6b lines 968824
+t2_1 held: 1 held: n 282 280.4 ms PCW/SHADER-partly recipes-lines 0 hold_us 0 +recipes-save; shown >= 100 ms 0; attribution on (T-3 True, T-4 True)
+t2_1 recipes: NOT_EVALUABLE (no "AvTrace: pcw recipes" line)
+PASS t2_1 one held frame of 280 351 us of class PCW (AUDIT_S3 MINOR-2) ([{'n': 282, 'dt_ms': 280.4, 'cls': 'PCW', 'attr': 'SHADER-partly', 'rec_n': 0, 'rec_hold_us': 0, 'rsave': True}])
+PASS t2_1 no pcw recipes line (KYTY_S_PCW=0) -> NOT_EVALUABLE (0)
+ALL OK

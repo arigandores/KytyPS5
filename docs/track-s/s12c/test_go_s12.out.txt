@@ -1,0 +1,40 @@
+suite test_go_s12.py sha256 e2ce89e39485c687a70bf6ea34609aaf7b009ff75ce9bbbd40dd0d6ac0f9eb4f target go_s12.sh sha256 44db6f1dc12ce90ca54b8cf087a282b91238d9154a60dcd73b14ebbea77f6d87
+PASS G1 go_s12.sh is ASCII only (item 175 (v))
+PASS G2 a tag with other characters -> rc 2 usage
+PASS G2b no tag -> rc 2 usage
+PASS G3 the stop file -> rc 4 BUSY before anything
+PASS G4 a foreign lock -> rc 4 BUSY (lock held) before any process
+PASS G5 PLWAIT not a number -> rc 2
+PASS G6 PLWAIT above 540 -> rc 2
+PASS G7 an unknown tag -> rc 2
+PASS G8 no seal call line -> rc 1
+PASS G9 the call line with another PLWAIT -> rc 1
+PASS G10 two call lines -> rc 1
+PASS G11 a call line but no "s12 binary:" line -> rc 1
+PASS G12 DRY=1 of every arm -> rc 0 with a DRY line naming the S12 copy
+PASS G13 DRY=2 of every arm -> rc 0 with a PLAN line
+PASS G14 s12_w: W of item 295 (b) - validation, VK_LAYER_PATH, the limit, no video, hold 310, timeout 600, caches as found
+PASS G15 s12_v: M, video, hold 330, timeout 480, stable 300, KYTY_S_PCW=1, no validation, caches as found
+PASS G16 s12_v0: as s12_v with KYTY_S_PCW=0 named (Z3)
+PASS G17 s12_gw: T, hero_kratos, snap0 + snap0_drv, video, hold 330, stable 100
+PASS G18 s12_gr: T, the post copies of s12_gw, video, hold 120
+PASS G19 no arm names the stand, a patch file, the checkpoints, a salt or PRECACHE
+PASS G20 the enter_scene line: the s9 driver, the s12 root, one attempt, no install, require idle, the seal 08
+PASS G21 an attempt already made -> rc 1, no repeat
+PASS G22 no lock file was created by any DRY call
+PASS G23 the shipped harness unsets every KYTY_* / VK_LAYER_* of the shell, guards s4 / s6 / s10 / s12, writes the lock line "go_s.sh <tag> " for cachex_s.py, the seal is pred/08_s.md, INST_FS4 31cbfee8 and INST_FS5 631ff987
+PASS GL1 s12_w inside the lock: the S12 stand-in installed for the game and the installed build back after it
+PASS GL2 s12_w caches as found: the game saw the installed variant file and GLCache as found, no restore rows, man_launch_glc = man_pre_glc, both back after
+PASS GL3 the shell KYTY_GAME_PATCH / KYTY_S_PCW_FORCE_MS / VK_LAYER_MESSAGE_ID_FILTER not seen by the game; the validation arguments passed
+PASS GL4 s12_gw: the game saw snap0 (not the installed variant file), restore rows snap0 / snap0_drv, everything back after
+PASS GL5 s12_gw post copies hold what the game left; the Z2 row in times.txt names PPSA21564.bin
+PASS GL6 s12_gr: the game saw the driver cache s12_gw left and its GLCache; restore = the post copies; everything back after
+PASS GL7 s12_v0 is not run by the gw / gr copies: s12_gr app_post not made (only s12_gw has post copies)
+PASS GL8 three arms - three taken / released pairs in lock.log, no lock file, no guard
+PASS GL9 IN_ARM: the game saw it (the tag, the installed sha) and the successful return removed it
+PASS GL10 the installed FS5 stand-in (INST_FS5) admitted: the arm runs, installed_before = Y, Y back after
+PASS GL11 an installed binary other than FS4 / FS5 -> rc 1 inside the lock: nothing installed, no IN_ARM, no attempt, the lock taken and released, the row in times.txt
+PASS GL12 a hanging IN_ARM -> rc 1 "return failed guard" before the lock: no lock row, no attempt, the guard kept
+PASS GL13 a GamePatch: log line -> rc 7, the caches and the binary returned
+checks: 37
+ALL OK

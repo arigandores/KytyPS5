@@ -1,0 +1,185 @@
+suite test_sc_s12.py sha256 f2b79b96723f95d7cbd5dd73eb889a8af8843ef664fbb7d9295f85a644db28c4 target sc_s12.py sha256 8fe158365ff820dd633d8bc55c122896b0a8eef4111886b738fb314a38a11b3d
+PASS order
+PASS plan s12_w
+PASS plan s12_v
+PASS plan s12_gw
+PASS plan s12_gr
+PASS plan s12_v0
+PASS constants
+PASS BLOB_PREFIX = snap0 size - the loaded N of the integrity arms of S10 (94 435 713 - 94 435 637)
+PASS env exact s12_w
+PASS env exact s12_v
+PASS env exact s12_gw
+PASS env exact s12_gr
+PASS env exact s12_v0
+PASS env W carries the VK keys
+PASS env T carries AV trace
+PASS env v0 names KYTY_S_PCW=0
+PASS env W has no KYTY_REC
+PASS env extra key fails
+PASS env missing KYTY_S_PCW fails (Z3)
+PASS env KYTY_S_PCW=0 on s12_v fails
+PASS env filter key fails
+PASS env limit value fails
+PASS env rec path suffix fails
+PASS env gate path suffix fails
+PASS env checkpoints fails
+PASS W clean PASS
+PASS W binary named by binary_sha256, installed before printed apart
+PASS W hold below 300 s FAIL
+PASS W [Vulkan][E] in log FAIL
+PASS W [Vulkan][E] in stdout FAIL
+PASS W without [Vulkan][W] FAIL (positive control)
+PASS W limit line in log FAIL
+PASS W limit line in stdout FAIL
+PASS W DualSrcBlend after the first GuestOut FAIL
+PASS W DualSrcBlend between the first GuestOut and the entry FAIL
+PASS W DualSrcBlend enabled=0 FAIL
+PASS W DualSrcBlend supported=0 FAIL
+PASS W death marker FAIL
+PASS W without validation NOT_ADMITTED
+PASS V with validation NOT_ADMITTED
+PASS V clean PASS
+PASS V hold exactly 300 000 000 us PASS
+PASS V another level starting before the entry is not the entry PASS
+PASS V glitch file without its line NOT_EVALUABLE
+PASS V video 2999 FAIL
+PASS V video 3000 PASS
+PASS V no index NOT_EVALUABLE
+PASS V one glitch FAIL
+PASS V glitch unread NOT_EVALUABLE
+PASS V no sheet FAIL
+PASS V sheet output without its sheet line FAIL
+PASS V frame of exactly 1 s FAIL
+PASS V frame of 999 999 us PASS
+PASS V death in stdout FAIL
+PASS V hold below 300 s FAIL
+PASS V hold stops at a scene change FAIL
+PASS V not entered NOT_EVALUABLE
+PASS V entry without a scene frame (draws 99) NOT_EVALUABLE
+PASS V scene frame at draws 100 PASS
+PASS v0 clean REFERENCE_PASS
+PASS v0 glitch REFERENCE_FAIL
+PASS V knob line =0 NOT_ADMITTED (Z3)
+PASS v0 knob line =1 NOT_ADMITTED (Z3)
+PASS V knob line FORCE_MS=15000 NOT_ADMITTED
+PASS V no knob line NOT_ADMITTED
+PASS V a second knob line =0 NOT_ADMITTED
+PASS V arm binary FS4 by binary_sha256 NOT_ADMITTED
+PASS V installed before FS5 PASS
+PASS V installed before 540c035a NOT_ADMITTED
+PASS V installed before = the arm binary NOT_ADMITTED
+PASS V installed after != before NOT_ADMITTED
+PASS V return_app differs NOT_ADMITTED
+PASS V return_glc missing got NOT_ADMITTED
+PASS V return_glc empty NOT_ADMITTED
+PASS V return_prev 0 NOT_ADMITTED
+PASS V asis with a restore NOT_ADMITTED
+PASS V asis man_launch_glc != man_pre_glc NOT_ADMITTED
+PASS V no cache json NOT_ADMITTED
+PASS V two attempts NOT_ADMITTED
+PASS V pipeline cache retry NOT_ADMITTED
+PASS V hold 331 NOT_ADMITTED
+PASS V gates not empty NOT_ADMITTED
+PASS V guest args NOT_ADMITTED
+PASS V prereg sha NOT_ADMITTED
+PASS V prereg path with backslashes PASS
+PASS V prereg path of another seal NOT_ADMITTED
+PASS V env with KYTY_GAME_PATCH NOT_ADMITTED
+PASS V window minimized INTERFERENCE
+PASS V window restored / focus alone PASS
+PASS V Recovering Vulkan swapchain INTERFERENCE
+PASS V GamePatch line INTERFERENCE
+PASS V GamePatch inside a line is not the line PASS
+PASS V stdout missing NOT_EVALUABLE
+PASS V json missing NOT_EVALUABLE
+PASS V log missing NOT_EVALUABLE
+PASS gw blob grown PASS
+PASS gw data: saves 2 last 94436637, loaded [94435637]
+PASS gw data: pcw recipes NOT_EVALUABLE when none
+PASS gw data: held frames NOT_EVALUABLE when none
+PASS gw sha = snap0 FAIL
+PASS gw size = snap0 FAIL
+PASS gw size = snap0 + 1 PASS
+PASS gw bin absent, no tmp FAIL (the present row fails)
+PASS gw bin absent with tmp INTERFERENCE (Z2)
+PASS gw bin present with tmp PASS, tmp printed
+PASS gw no manifest FAIL
+PASS gw death FAIL
+PASS gw post copies not recorded NOT_ADMITTED
+PASS gw restore app != snap0 NOT_ADMITTED
+PASS gw restore glc != snap0_drv NOT_ADMITTED
+PASS gw man_launch_glc != restore NOT_ADMITTED
+PASS gw save classes counted (Z1)
+PASS gr loaded = last saved = size - 76 PASS
+PASS gr loaded != the last saved (state (e)) FAIL
+PASS gr loaded = the LAST saved, not the first PASS
+PASS gr size - 76 != N FAIL
+PASS gr no gw manifest FAIL
+PASS gr no gw saved line FAIL
+PASS gr no loaded line: FAIL with the cause named
+PASS gr no load line at all: FAIL, cause named
+PASS gr two loaded lines FAIL: the one-loaded row and the N rows fail
+PASS gr two loading lines FAIL
+PASS gr no loading line FAIL
+PASS gr bad class "initializing x" FAIL
+PASS gr bad class "initialized empty" FAIL
+PASS gr bad class "invalidating x" FAIL
+PASS gr bad class "driver rejected x" FAIL
+PASS gr bad class "disabled" FAIL
+PASS gr death FAIL
+PASS gr glitch unread NOT_EVALUABLE
+PASS gr no sheet FAIL
+PASS gr restore app != the post copy of gw NOT_ADMITTED
+PASS gr without the gw cache json NOT_ADMITTED
+PASS 414 (g)(2): a held 150 ms frame with a recipes save is PCW with its hold_us
+PASS 414 (g)(2): pcw recipes line counted
+PASS held_data attribution on (T-3 0 = 0, T-4 no queue and no precache line)
+PASS held_data not entered -> None
+PASS fmt_held None
+PASS fmt_rec empty
+PASS no 414 data line on an M arm
+PASS vc_class loading / loaded / saved / save failed
+PASS vc_class initializing / initialized empty
+PASS vc_class unknown None
+PASS blob_state reads bin and tmp
+PASS blob_state without manifest
+PASS allowed s12_w first
+PASS allowed s12_v before s12_w -> 1
+PASS allowed unknown -> 1
+PASS allowed s12_w made -> 1
+PASS allowed s12_v after s12_w
+PASS allowed after a FAIL without death
+PASS allowed stops after a death marker (rc 6)
+PASS allowed stops after INTERFERENCE (rc 6)
+PASS allowed refuses an unscored previous arm (rc 6)
+PASS allowed s12_gr after gw PASS
+PASS allowed s12_gr after gw FAIL
+PASS allowed s12_gr refused after gw NOT_ADMITTED (rc 6)
+PASS allowed s12_gr refused after gw NOT_EVALUABLE (rc 6)
+PASS allowed s12_gr refused without the post copies (rc 6)
+PASS allowed s12_v0 last
+PASS allowed s12_v0 after a NOT_EVALUABLE arm
+PASS check_seal OK
+PASS check_seal a sha differs
+PASS check_seal a name missing
+PASS check_seal an absolute name missing
+PASS check_seal no binary line
+PASS check_seal another binary
+PASS check_seal no file
+PASS sealed names
+PASS main --plan
+PASS main --plan unknown rc 2
+PASS main --tag writes the score json
+PASS main --tag output ASCII (cp1250 strict)
+PASS main --tag first line
+PASS main --tag writes the death count
+PASS main --summary pair NOT PASS when s12_gr fails
+PASS main --summary pair PASS
+PASS main --allowed
+PASS main --allowed refuses out of order (rc 1, no)
+PASS main --summary
+PASS main no option rc 2
+PASS asc
+cases: 182
+ALL OK

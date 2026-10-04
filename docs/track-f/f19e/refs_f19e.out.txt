@@ -1,0 +1,26 @@
+suite refs_f19e.py sha256 9b0ededd4e9319aa4e3f77850cb4519349760aa3b7eeda3fab77a8f3de5ab359
+OK db8dacef:docs/ROADMAP.md:22463
+OK db8dacef:docs/ROADMAP.md:22468
+OK db8dacef:docs/ROADMAP.md:22469
+OK db8dacef:docs/ROADMAP.md:22470
+OK db8dacef:docs/ROADMAP.md:22471
+OK db8dacef:docs/ROADMAP.md:22472
+OK db8dacef:docs/ROADMAP.md:22473
+OK db8dacef:docs/ROADMAP.md:22474
+OK db8dacef:docs/ROADMAP.md:22539
+OK db8dacef:docs/ROADMAP.md:22544
+OK 0b065a70:docs/track-f/f19a.md:181
+OK 0b065a70:docs/track-f/f19a.md:199
+OK 9c726d74:src/graphics/presentation/window/window.cpp:394
+OK 9c726d74:src/graphics/presentation/window/window.cpp:405
+OK 9c726d74:src/graphics/presentation/window/window.cpp:1123
+OK 9c726d74:src/graphics/presentation/window/window.cpp:1129
+OK 9c726d74:src/graphics/presentation/window/window.cpp:1175
+OK 9c726d74:src/graphics/presentation/window/window.cpp:1180
+OK 9c726d74:src/graphics/presentation/window/window.cpp:1203
+OK 9c726d74:src/graphics/presentation/window/window.cpp:1216
+OK 9c726d74:src/graphics/presentation/window/window.cpp:1292
+OK 9c726d74:src/libs/controller.cpp:831
+OK 9c726d74:src/libs/controller.cpp:1604
+refs 23 of 23
+ALL OK

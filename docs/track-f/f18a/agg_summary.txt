@@ -1,0 +1,121 @@
+== old: the logs of sessions 45-105 with the F8 line: 20
+path | sha256 | lines | qfail (inv) | opens before vib | vib_s | fail_s | delta_s | predicted_s | per retry s | scene | tail_s | qfail/s | opens after | pad lines | ev_over
+C:/kyty/log_s45_gcn.txt.xz | 81831bbc9a75be9c | 12006154 | 85208 (85208) | 3 | 12.0 | 775.1 | 763.13 | 759 | 3.0163 | transition_next | 63.7 | 1338 | 0 | 0 | 0
+C:/kyty/s100/log_cen100b.txt.xz | 8ab87f589fad5fe9 | 2687558 | 364656 (364656) | 3 | 8.1 | 771.8 | 763.73 | 759 | 3.0187 | underwater_aerial_garden | 146.3 | 2493 | 0 | 0 | 0
+C:/kyty/s100/log_mov100b_entry1.txt.xz | 9ed50c5bfc3257f5 | 2655522 | 367574 (367574) | 3 | 6.2 | 769.9 | 763.76 | 759 | 3.0188 | underwater_aerial_garden | 147.1 | 2499 | 0 | 0 | 0
+C:/kyty/s101/log_cm101d.txt.xz | 7e9c16e790b36e82 | 3702673 | 432507 (432507) | 3 | 7.9 | 769.7 | 761.83 | 759 | 3.0112 | underwater_aerial_garden | 145.3 | 2977 | 0 | 0 | 0
+C:/kyty/s105/log_abb105.txt.xz | 1c903fa919158685 | 3806712 | 438760 (438760) | 3 | 7.4 | 769.1 | 761.69 | 759 | 3.0106 | underwater_aerial_garden | 145.5 | 3016 | 0 | 0 | 0
+C:/kyty/s50/log_validate.txt.xz | 4189019dbe9604aa | 3190927 | 617318 (617318) | 3 | 10.3 | 775.6 | 765.38 | 759 | 3.0252 | intro_next | 443.3 | 1393 | 0 | 0 | 0
+C:/kyty/s56/log_sky61.txt.xz | 59df5db9e252c9b6 | 3772643 | 274708 (274708) | 3 | 6.2 | 768.4 | 762.15 | 759 | 3.0125 | underwater_aerial_garden | 136.0 | 2020 | 0 | 0 | 0
+C:/kyty/s57/log_sky1.txt.xz | 8f4026c5a5724285 | 3950474 | 150435 (150435) | 3 | 10.1 | 772.7 | 762.60 | 759 | 3.0142 | underwater_aerial_garden | 66.2 | 2274 | 0 | 0 | 0
+C:/kyty/s57/log_sky2.txt.xz | 41076db91f6b5aea | 6975167 | 1211080 (1211080) | 3 | 8.0 | 769.5 | 761.50 | 759 | 3.0099 | underwater_aerial_garden | 534.4 | 2266 | 0 | 0 | 0
+C:/kyty/s58/log_sky58c.txt.xz | 2fd92eff796c92d4 | 6396180 | 1388888 (1388888) | 3 | 6.9 | 769.2 | 762.22 | 759 | 3.0127 | underwater_aerial_garden | 562.5 | 2469 | 0 | 0 | 0
+C:/kyty/s59/log_val.txt.xz | f4c0655808d048be | 2777525 | 34874 (34874) | 3 | 10.7 | 778.4 | 767.70 | 759 | 3.0344 | intro_next | 19.2 | 1814 | 0 | 0 | 0
+C:/kyty/s60/log_sky60.txt.xz | c8cb2b24adbed8bb | 3624811 | 30664 (30664) | 3 | 8.2 | 770.1 | 761.88 | 759 | 3.0114 | underwater_aerial_garden | 11.0 | 2775 | 0 | 0 | 0
+C:/kyty/s61/log_sky61c.txt.xz | 81a604b1b8670e33 | 3976136 | 362504 (362504) | 3 | 9.6 | 773.8 | 764.18 | 759 | 3.0205 | underwater_aerial_garden | 160.2 | 2263 | 0 | 0 | 0
+C:/kyty/s61/log_sky61d.txt.xz | a3d2c824c6ede488 | 5241497 | 807187 (807187) | 3 | 7.9 | 769.5 | 761.64 | 759 | 3.0104 | underwater_aerial_garden | 327.0 | 2469 | 0 | 0 | 0
+C:/kyty/s63/log_sky63a.txt.xz | 8ad4615ac76abcc6 | 4116083 | 73064 (73064) | 3 | 7.0 | 768.9 | 761.88 | 759 | 3.0114 | underwater_aerial_garden | 25.7 | 2841 | 0 | 0 | 0
+C:/kyty/s64/log_sky64a.txt.xz | c409cd83a5f840a8 | 3888872 | 79770 (79770) | 3 | 6.3 | 768.3 | 762.01 | 759 | 3.0119 | underwater_aerial_garden | 30.3 | 2637 | 0 | 0 | 0
+C:/kyty/s99/log_bf99e.txt.xz | 0e5a373cba19f0e3 | 2434008 | 370483 (370483) | 3 | 7.7 | 771.3 | 763.57 | 759 | 3.0181 | underwater_aerial_garden | 152.8 | 2424 | 0 | 0 | 0
+C:/kyty/s99/log_bf99g.txt.xz | a9422bebb226a277 | 2734915 | 370174 (370174) | 3 | 7.7 | 771.1 | 763.47 | 759 | 3.0177 | underwater_aerial_garden | 149.9 | 2469 | 0 | 0 | 0
+C:/kyty/s99/log_bf99h.txt.xz | 977dd9943e1c9d3d | 2666922 | 357098 (357098) | 3 | 7.8 | 771.3 | 763.43 | 759 | 3.0175 | underwater_aerial_garden | 153.8 | 2322 | 0 | 0 | 0
+C:/kyty/s99/log_vis99base.txt.xz | 47df31a301fd19f4 | 2673386 | 369949 (369949) | 3 | 8.0 | 771.7 | 763.72 | 759 | 3.0187 | underwater_aerial_garden | 152.8 | 2421 | 0 | 0 | 0
+last window / event line before the first qfail line (gap in s of process time), and sound lines in the 60 context lines:
+  C:/kyty/log_s45_gcn.txt.xz | Window 1 lost keyboard focus | gap_s 172.6 | context lines 60, with sound/window/device words 0
+  C:/kyty/s100/log_cen100b.txt.xz | Window 1 exposed | gap_s - | context lines 60, with sound/window/device words 0
+  C:/kyty/s100/log_mov100b_entry1.txt.xz | Window 1 exposed | gap_s - | context lines 60, with sound/window/device words 0
+  C:/kyty/s101/log_cm101d.txt.xz | Window 1 exposed | gap_s - | context lines 60, with sound/window/device words 0
+  C:/kyty/s105/log_abb105.txt.xz | Window 1 exposed | gap_s - | context lines 60, with sound/window/device words 0
+  C:/kyty/s50/log_validate.txt.xz | Window 1 lost keyboard focus | gap_s 34.5 | context lines 60, with sound/window/device words 0
+  C:/kyty/s56/log_sky61.txt.xz | Window 1 lost keyboard focus | gap_s 187.8 | context lines 60, with sound/window/device words 0
+  C:/kyty/s57/log_sky1.txt.xz | Window 1 lost keyboard focus | gap_s 178.1 | context lines 60, with sound/window/device words 0
+  C:/kyty/s57/log_sky2.txt.xz | Window 1 lost keyboard focus | gap_s 10.5 | context lines 60, with sound/window/device words 0
+  C:/kyty/s58/log_sky58c.txt.xz | Window 1 lost keyboard focus | gap_s 182.2 | context lines 60, with sound/window/device words 0
+  C:/kyty/s59/log_val.txt.xz | Window 1 lost keyboard focus | gap_s 13.3 | context lines 60, with sound/window/device words 0
+  C:/kyty/s60/log_sky60.txt.xz | Window 1 lost keyboard focus | gap_s 470.0 | context lines 60, with sound/window/device words 0
+  C:/kyty/s61/log_sky61c.txt.xz | Window 1 lost keyboard focus | gap_s 380.7 | context lines 60, with sound/window/device words 0
+  C:/kyty/s61/log_sky61d.txt.xz | Window 1 lost keyboard focus | gap_s 286.9 | context lines 60, with sound/window/device words 0
+  C:/kyty/s63/log_sky63a.txt.xz | Window 1 exposed | gap_s 474.3 | context lines 60, with sound/window/device words 0
+  C:/kyty/s64/log_sky64a.txt.xz | Window 1 lost keyboard focus | gap_s 41.2 | context lines 60, with sound/window/device words 0
+  C:/kyty/s99/log_bf99e.txt.xz | Window 1 exposed | gap_s - | context lines 60, with sound/window/device words 0
+  C:/kyty/s99/log_bf99g.txt.xz | Window 1 exposed | gap_s - | context lines 60, with sound/window/device words 0
+  C:/kyty/s99/log_bf99h.txt.xz | Window 1 exposed | gap_s - | context lines 60, with sound/window/device words 0
+  C:/kyty/s99/log_vis99base.txt.xz | Window 1 exposed | gap_s 500.0 | context lines 60, with sound/window/device words 0
+delta_s: n 20 min 761.50 median 762.87 max 767.70; per retry s: min 3.0099 median 3.0153 max 3.0344
+identities old: qfail == sum(qtexts)+over: True; qfail_inv == qfail: True
+qtexts old: ['Invalid audio device ID']
+
+== mid: the other logs of sessions <= 105 (C:/kyty root files and C:/kyty/s<NN>, NN <= 105; the 20 above excluded): 907
+qfail lines 0 in 0 logs; logs with the vibration port line 568; with it and timestamps 568
+life after the vibration port line, s: median 275.3, max 733.8 (C:/kyty/s56/log_vala.txt.xz); >= 600 s: 17; >= 700 s: 5; >= 759 s: 0
+  697.5 s  qfail 0  C:/kyty/s54/log_sky54.txt.xz
+  704.7 s  qfail 0  C:/kyty/s55/log_sky56.txt.xz
+  706.6 s  qfail 0  C:/kyty/s59/log_sky59.txt.xz
+  707.9 s  qfail 0  C:/kyty/s58/log_fin.txt.xz
+  725.0 s  qfail 0  C:/kyty/s60/log_val.txt.xz
+  733.8 s  qfail 0  C:/kyty/s56/log_vala.txt.xz
+logs with "Haptics: pad audio device ... opened": 4; sound line texts with "failed": []
+xz rc != 0: 0; missing: 0; ev_over logs: 0
+separation: min delta of the 20 = 761.50 s; max life without the line (mid + new) = see the two max values
+
+== new: logs of sessions 106+, tracks f287 / p283 / s288, play: 738
+root | logs | distinct sha256 | GiB stored | lines | qfail lines | logs with qfail | logs with vibration port | logs >= wrap time after the vibration port | logs without timestamps
+s106 | 4 | 4 | 0.05 | 5621867 | 0 | 0 | 4 | 0 | 0
+s107 | 2 | 2 | 0.03 | 3468883 | 0 | 0 | 2 | 0 | 0
+s108 | 8 | 8 | 0.07 | 10570701 | 0 | 0 | 8 | 0 | 0
+s109 | 18 | 18 | 0.11 | 15637254 | 0 | 0 | 18 | 0 | 0
+s110 | 19 | 19 | 0.11 | 15642920 | 0 | 0 | 19 | 0 | 0
+s111 | 6 | 6 | 0.06 | 7167320 | 0 | 0 | 6 | 0 | 0
+s112 | 3 | 3 | 0.03 | 3850870 | 0 | 0 | 3 | 0 | 0
+s113 | 11 | 11 | 0.11 | 14099843 | 0 | 0 | 11 | 0 | 0
+s114 | 12 | 8 | 0.06 | 7130349 | 0 | 0 | 6 | 0 | 6
+s115 | 10 | 8 | 0.02 | 2191614 | 0 | 0 | 4 | 0 | 6
+s116 | 1 | 1 | 0.01 | 1139914 | 0 | 0 | 1 | 0 | 0
+s117 | 81 | 59 | 0.05 | 3870166 | 0 | 0 | 5 | 0 | 76
+s118 | 6 | 5 | 0.04 | 5343881 | 0 | 0 | 6 | 0 | 0
+s119 | 4 | 4 | 0.03 | 4117790 | 0 | 0 | 4 | 0 | 0
+s120 | 2 | 2 | 0.02 | 1889332 | 0 | 0 | 2 | 0 | 0
+s121 | 2 | 2 | 0.02 | 2117024 | 0 | 0 | 2 | 0 | 0
+s122 | 13 | 13 | 3.03 | 16191113 | 0 | 0 | 13 | 0 | 0
+s123 | 5 | 5 | 0.05 | 5794301 | 0 | 0 | 5 | 0 | 0
+s124 | 5 | 5 | 0.03 | 4194077 | 0 | 0 | 5 | 0 | 0
+s126 | 8 | 8 | 0.04 | 5822611 | 0 | 0 | 8 | 0 | 0
+s127 | 10 | 10 | 0.06 | 9397237 | 0 | 0 | 10 | 0 | 0
+s128 | 6 | 5 | 0.03 | 3514334 | 0 | 0 | 6 | 0 | 0
+s129 | 13 | 13 | 0.09 | 13132336 | 0 | 0 | 13 | 0 | 0
+s130 | 8 | 8 | 0.06 | 7528005 | 0 | 0 | 8 | 0 | 0
+s131 | 8 | 8 | 0.07 | 8019055 | 0 | 0 | 8 | 0 | 0
+s133 | 4 | 4 | 0.03 | 3726659 | 0 | 0 | 4 | 0 | 0
+s134 | 7 | 7 | 0.06 | 6748197 | 0 | 0 | 7 | 0 | 0
+s135 | 4 | 4 | 0.03 | 4029952 | 0 | 0 | 4 | 0 | 0
+s136 | 12 | 12 | 0.10 | 10189392 | 0 | 0 | 12 | 0 | 0
+s137 | 11 | 11 | 0.13 | 12318256 | 0 | 0 | 11 | 0 | 0
+s142 | 12 | 12 | 2.34 | 12573344 | 0 | 0 | 12 | 0 | 0
+s143 | 30 | 20 | 3.62 | 16896732 | 0 | 0 | 10 | 0 | 20
+s144 | 34 | 33 | 12.80 | 70015973 | 0 | 0 | 34 | 0 | 0
+s145 | 34 | 33 | 16.44 | 85805739 | 0 | 0 | 34 | 0 | 0
+s146 | 46 | 37 | 30.84 | 120781820 | 0 | 0 | 44 | 0 | 2
+s288 | 78 | 39 | 15.63 | 78437414 | 0 | 0 | 78 | 0 | 0
+f287 | 67 | 65 | 19.77 | 110226508 | 0 | 0 | 65 | 0 | 2
+p283 | 133 | 68 | 31.23 | 167415994 | 0 | 0 | 129 | 0 | 4
+play | 1 | 1 | 0.61 | 2614364 | 0 | 0 | 1 | 0 | 0
+TOTAL | 738 | 581 | 137.93 | 879233141 | 0 | 0 | 622 | 0 | 116
+life after the vibration port line, s: logs 622, median 307.1, max 609.7 (C:/kyty/s114/log_ttl114b.txt.xz); >= 400 s: 32; >= 600 s: 11; >= 759 s: 0
+logs by the number of "opened SDL device" lines: {0: 125, 3: 613}
+logs with "Haptics: pad audio device ... opened": 0 ; with "Haptics: disabled": 0
+logs with "AudioOut: SDL_OpenAudioDevice failed":
+  C:/kyty/f287/f3d/log_f3d_a1.txt | lines 3 | first at 7.3 s | opened lines 0 | qfail 0 | big_hand_pirate_island | AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:
+  C:/kyty/f287/f3d/log_f3d_a2.txt | lines 3 | first at 7.4 s | opened lines 0 | qfail 0 | big_hand_pirate_island | AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:
+  C:/kyty/f287/f3d/log_f3d_a3.txt | lines 3 | first at 7.6 s | opened lines 0 | qfail 0 | voxel_world | AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:
+  C:/kyty/f287/f3d/log_f3d_a4.txt | lines 3 | first at 7.2 s | opened lines 0 | qfail 0 | voxel_world | AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:
+  C:/kyty/f287/f3d/log_f3d_bv.txt | lines 3 | first at 6.7 s | opened lines 0 | qfail 0 | underwater_aerial_garden | AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:
+  C:/kyty/f287/f3d/log_f3d_bw.txt | lines 3 | first at 9.9 s | opened lines 0 | qfail 0 | underwater_aerial_garden | AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:
+  C:/kyty/f287/f3d/log_f3d_c1.txt | lines 3 | first at 7.7 s | opened lines 0 | qfail 0 | big_hand_pirate_island | AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:
+  C:/kyty/f287/f3d/log_f3d_c2.txt | lines 3 | first at 8.2 s | opened lines 0 | qfail 0 | voxel_world | AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:
+  C:/kyty/f287/f4c/log_f4c_g.txt | lines 3 | first at 7.0 s | opened lines 0 | qfail 0 | mini_giants_garden | AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:
+logs that ran past the wrap time (after_s >= (256 - opens) * 3 s after the vibration port line):
+distinct sound line texts (distinct logs): 3
+       1485 lines  495 logs  AudioOut: opened SDL device "(system default)" (# Hz, # ch, format #x#)
+        504 lines  504 logs  AudioOut: vibration port # (# Hz, # ch, # frames, float) -> pad haptics
+         27 lines    9 logs  AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:
+snd_over logs: 0 ev_over logs: 0 xz rc != 0: 0 missing: 0

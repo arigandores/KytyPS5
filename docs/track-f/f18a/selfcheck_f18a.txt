@@ -1,0 +1,32 @@
+ok   sweep rc 0 and COMPLETE
+ok   A qfail 5
+ok   A qfail_inv 4
+ok   A qtexts sum == qfail
+ok   A qfirst line 12
+ok   A qfirst ts 774500
+ok   A qfirst ft 2 / 33000
+ok   A qlast line 20 ts 790250 ft 3 / 53000
+ok   A ctx ends with the line before
+ok   A after
+ok   A ev texts
+ok   A ev lines increase
+ok   A vibration ev line 6 ts 12000
+ok   A snd
+ok   A lvl
+ok   A ts first/last
+ok   A ft
+ok   A lines 23
+ok   B qfail 0, no ctx
+ok   B ts_last 300000
+ok   C qfail 2 across the block border
+ok   C qfirst line
+ok   C qfirst ts 1200000 ft 2 / 33000
+ok   C ctx last line
+ok   C after: trailer without newline
+ok   C lines
+ok   D (xz) == A but path, size, sha, xz
+ok   D sha256_text == sha256 of the plain log
+ok   missing file record
+ok   second call: left 0
+ok   lock: rc 3, nothing written
+ALL OK

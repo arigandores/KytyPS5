@@ -1,0 +1,4 @@
+lines	logs	first_log	text
+1485	495	C:/kyty/f287/f12f/log_f12_rd.txt	AudioOut: opened SDL device "(system default)" (# Hz, # ch, format #x#)
+504	504	C:/kyty/f287/f12f/log_f12_rd.txt	AudioOut: vibration port # (# Hz, # ch, # frames, float) -> pad haptics
+27	9	C:/kyty/f287/f3d/log_f3d_bv.txt	AudioOut: SDL_OpenAudioDevice failed: WASAPI can't initialize audio client:

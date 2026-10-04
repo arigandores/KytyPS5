@@ -1,0 +1,52 @@
+F19E b24_h1 level underwater_aerial_garden log sha256 f95af1e8ab42268935e3face423e45bfcd18514b7c49632f7f28ba2f6ff8272e lines 1373365 stdout sha256 8e46a74a777db2ba51a5f30f31119d8bb9e7d418a1dd2e20de4cc2fb8b75d88c
+  binary: json 9b00ad40acc836a0302ce5123f77661eccf46042f25fd3739809e5c4e8511244 installed 9b00ad40acc836a0302ce5123f77661eccf46042f25fd3739809e5c4e8511244 (expected 9b00ad40acc836a0302ce5123f77661eccf46042f25fd3739809e5c4e8511244); installed before adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 after adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 (expected adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421); revision texts ['52d2f54'] (expected 52d2f54)
+  seal sha256 7b8663510c94aabb1e71fde7df6267acabde5450fee8f9ae8661843be8756ae9; json prereg sha256 7b8663510c94aabb1e71fde7df6267acabde5450fee8f9ae8661843be8756ae9
+  env: {'KYTY_FIX_B24': '1', 'KYTY_TEST_HIDLOSS': '60:hold'}
+  FixB24 lines [(16, 1)]; TestHidLoss lines 6; config on [(12297, '60', 'hold', '3000')]; attach failed 0, detach failed 0 (reference)
+  stand: armed (224485, 556594740630) attach (399560, 556644741470) fire (434146, 556654754331, 'hold') done (444542, 556657754579)
+  stat: mode=hold ln=451972 main_late_max_us=3000289 probes_posted=292 probes_run=292 pad_calls=362 pad_vib=181 pad_led=181 pad_trig=0 pad_wait_max_us=10 po_applied=186 po_wait_max_us=2973393 guest_sdl=0 removed=0 vp_rumble=0 vp_led=1 vp_effect=0
+  pad lines [(399561, 0, 'KYTY test pad')]; removed lines []
+  stand window frames (wide, strict) [181, 151]; frames >= 1 s there: wide n [], strict n []
+  N3 (item 460 (d)): the field sent= of PadTriggerEffect lines is not delivery - not read
+  entry line 224484; first scene frame n 192; hold (sum dt after it) 334.8 s; attempt outcome ok hold_exit None hold_s 330.2 close_rc 0 close_killed False
+  window none, Recovering 0, GamePatch 0, skipped draw 0, [Vulkan][E] 0, Event: quit line 1373308 (reference)
+  warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T13:45:55Z; entries of _ShaderCache/PPSA21564: 1347; manifest: manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a
+  ADMIT binary: json binary_sha256 = 9b00ad40 (F19c) and installed_sha.txt = 9b00ad40: YES
+  ADMIT version string ...-1878-g52d2f546 in the binary file (reference): YES
+  ADMIT pre-registration: json prereg sha256 = sha256 of the seal file: YES
+  ADMIT env: KYTY_FIX_B24=1, KYTY_TEST_HIDLOSS 60:hold, no other KYTY_FIX_*, no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS: YES
+  ADMIT FixB24: mode=1 lines = 1 ([(16, 1)]): YES
+  ADMIT pad lines of another pad = 0 ([]): YES
+  ADMIT config on delay_s=60 mode=hold hold_ms=3000 exactly 1 line, config invalid 0 ([(12297, '60', 'hold', '3000')]): YES
+  ADMIT armed exactly 1 line (1): YES
+  ADMIT attach exactly 1 line (1; attach failed 0): YES
+  ADMIT emulator pad line "KYTY test pad" exactly 1 (1): YES
+  ADMIT fire mode=hold exactly 1 line ([(434146, 556654754331, 'hold')]): YES
+  ADMIT done exactly 1 line (1): YES
+  ADMIT stat mode=hold exactly 1 line, all 15 fields (1, malformed 0): YES
+  ADMIT pad_calls >= 1 (362; N1: tautology, the member stays): YES
+  ADMIT probes_posted - probes_run = 0 (0): YES
+  ADMIT N5 (item 460 (d)): the tag does not end inside the stand window (attach line 399560 < stat line 451972, quit line 1373308 after it): YES
+  ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+  FORM installed adb0c82f before the tag (inside the lock): YES
+  FORM installed adb0c82f after the return: YES
+  FORM manifest of the caches, saves and GLCache before = after the return: YES
+  MEMBER main_late_max_us >= 2700000 (3000289): YES
+  MEMBER po_wait_max_us >= 2700000 (2973393; the block moved to PadOutput): YES
+  MEMBER pad_wait_max_us < 50000 (10; N1: informative with po_wait_max_us >= 2700000): YES
+  MEMBER guest_sdl = 0 (0; N1: tautology at =1, the member stays): YES
+  MEMBER frames >= 1 s in the stand window (wide 0 of 181 frames, strict 0 of 151; max dt_us 51613) = 0: YES
+  MEMBER line FixB24: mode=1 (1): YES
+  HARM entered (entry line of underwater_aerial_garden): YES
+  HARM lived through the hold (outcome ok, hold_exit null, hold_s >= 330): YES
+  HARM 0 death markers (log and stdout) []: YES
+  HARM 0 frames >= 1 s after the first scene frame outside the stand window (wide: 0, strict: 0; in scene 0): YES
+  HARM video index records >= 3000 (10121): YES
+  HARM 0 one-frame glitches (0): YES
+  HARM sheet for the lead made: YES
+  IDENT pad_calls = pad_vib + pad_led + pad_trig: YES
+  IDENT probes_run <= probes_posted: YES
+  IDENT removed = 0 in hold: YES
+  IDENT t_us armed < attach < fire <= done ([556594740630, 556644741470, 556654754331, 556657754579]): YES
+  IDENT invariant guest_sdl = 0 at =1: YES
+  READING b24_h1 MEMBERS_PASS

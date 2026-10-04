@@ -1,0 +1,49 @@
+F19E b24_d0 level underwater_aerial_garden log sha256 68f145b6e8c6d4a4f106d72145df5a9ba9bfaea405a271c916cfe758b39f6954 lines 686614 stdout sha256 cb077bc5eb0ff2e0f20e86a8362fca87195be822713b139bd0aac9bd5ab5b5e9
+  binary: json 9b00ad40acc836a0302ce5123f77661eccf46042f25fd3739809e5c4e8511244 installed 9b00ad40acc836a0302ce5123f77661eccf46042f25fd3739809e5c4e8511244 (expected 9b00ad40acc836a0302ce5123f77661eccf46042f25fd3739809e5c4e8511244); installed before adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 after adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 (expected adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421); revision texts ['52d2f54'] (expected 52d2f54)
+  seal sha256 7b8663510c94aabb1e71fde7df6267acabde5450fee8f9ae8661843be8756ae9; json prereg sha256 7b8663510c94aabb1e71fde7df6267acabde5450fee8f9ae8661843be8756ae9
+  env: {'KYTY_FIX_B24': '0', 'KYTY_TEST_HIDLOSS': '60:detach'}
+  FixB24 lines []; TestHidLoss lines 6; config on [(12296, '60', 'detach', '3000')]; attach failed 0, detach failed 0 (reference)
+  stand: armed (226982, 557105693827) attach (383642, 557155694906) fire (412754, 557165710820, 'detach') done (412755, 557165710832)
+  stat: mode=detach ln=418587 main_late_max_us=258 probes_posted=146 probes_run=146 pad_calls=180 pad_vib=90 pad_led=90 pad_trig=0 pad_wait_max_us=7 po_applied=0 po_wait_max_us=0 guest_sdl=180 removed=1 vp_rumble=0 vp_led=0 vp_effect=0
+  pad lines [(383643, 0, 'KYTY test pad')]; removed lines [(412756, 0)]
+  stand window frames (wide, strict) [89, 59]; frames >= 1 s there: wide n [], strict n []
+  N3 (item 460 (d)): the field sent= of PadTriggerEffect lines is not delivery - not read
+  entry line 226885; first scene frame n 316; hold (sum dt after it) 154.2 s; attempt outcome ok hold_exit None hold_s 150.2 close_rc 0 close_killed False
+  window none, Recovering 0, GamePatch 0, skipped draw 0, [Vulkan][E] 0, Event: quit line 686614 (reference)
+  warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T13:54:23Z; entries of _ShaderCache/PPSA21564: 1347; manifest: manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a
+  ADMIT binary: json binary_sha256 = 9b00ad40 (F19c) and installed_sha.txt = 9b00ad40: YES
+  ADMIT version string ...-1878-g52d2f546 in the binary file (reference): YES
+  ADMIT pre-registration: json prereg sha256 = sha256 of the seal file: YES
+  ADMIT env: KYTY_FIX_B24=0, KYTY_TEST_HIDLOSS 60:detach, no other KYTY_FIX_*, no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS: YES
+  ADMIT FixB24: mode=1 lines = 0 ([]): YES
+  ADMIT pad lines of another pad = 0 ([]): YES
+  ADMIT config on delay_s=60 mode=detach hold_ms=3000 exactly 1 line, config invalid 0 ([(12296, '60', 'detach', '3000')]): YES
+  ADMIT armed exactly 1 line (1): YES
+  ADMIT attach exactly 1 line (1; attach failed 0): YES
+  ADMIT emulator pad line "KYTY test pad" exactly 1 (1): YES
+  ADMIT fire mode=detach exactly 1 line ([(412754, 557165710820, 'detach')]): YES
+  ADMIT done exactly 1 line (1): YES
+  ADMIT stat mode=detach exactly 1 line, all 15 fields (1, malformed 0): YES
+  ADMIT pad_calls >= 1 (180; N1: tautology, the member stays): YES
+  ADMIT probes_posted - probes_run = 0 (0): YES
+  ADMIT N5 (item 460 (d)): the tag does not end inside the stand window (attach line 383642 < stat line 418587, quit line 686614 after it): YES
+  ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+  FORM installed adb0c82f before the tag (inside the lock): YES
+  FORM installed adb0c82f after the return: YES
+  FORM manifest of the caches, saves and GLCache before = after the return: YES
+  MEMBER removed = 1 (1): YES
+  MEMBER lines Controller <id>: removed = 1 (1): YES
+  MEMBER frames >= 1 s in the stand window (wide 0 of 89 frames, strict 0 of 59; max dt_us 51049) = 0: YES
+  HARM-REF entered (entry line of underwater_aerial_garden): YES
+  HARM-REF lived through the hold (outcome ok, hold_exit null, hold_s >= 150): YES
+  HARM-REF 0 death markers (log and stdout) []: YES
+  HARM-REF 0 frames >= 1 s after the first scene frame outside the stand window (wide: 0, strict: 0; in scene 0): YES
+  HARM-REF video index records >= 3000 (4818): YES
+  HARM-REF 0 one-frame glitches (0): YES
+  HARM-REF sheet for the lead made: YES
+  IDENT pad_calls = pad_vib + pad_led + pad_trig: YES
+  IDENT probes_run <= probes_posted: YES
+  IDENT removed = 1 in detach: YES
+  IDENT t_us armed < attach < fire <= done ([557105693827, 557155694906, 557165710820, 557165710832]): YES
+  IDENT invariant po_applied = 0 and po_wait_max_us = 0 at =0: YES
+  READING b24_d0 MEMBERS_PASS

@@ -1,0 +1,35 @@
+F19E b24_n1 level underwater_aerial_garden log sha256 d7f263824bcee0aea6ca2ac83829a306da4b1c8ff13ec8df996648fd19665543 lines 1295358 stdout sha256 2f052a152769918f7ab1e3aacae280c0a00c2b6d6f0ede9ed11e7ca3695cced9
+  binary: json 9b00ad40acc836a0302ce5123f77661eccf46042f25fd3739809e5c4e8511244 installed 9b00ad40acc836a0302ce5123f77661eccf46042f25fd3739809e5c4e8511244 (expected 9b00ad40acc836a0302ce5123f77661eccf46042f25fd3739809e5c4e8511244); installed before adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 after adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 (expected adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421); revision texts ['52d2f54'] (expected 52d2f54)
+  seal sha256 7b8663510c94aabb1e71fde7df6267acabde5450fee8f9ae8661843be8756ae9; json prereg sha256 7b8663510c94aabb1e71fde7df6267acabde5450fee8f9ae8661843be8756ae9
+  env: {'KYTY_FIX_B24': '1'}
+  FixB24 lines [(16, 1)]; TestHidLoss lines 0; config on []; attach failed 0, detach failed 0 (reference)
+  stand: armed None attach None fire None done None
+  stat: None
+  pad lines []; removed lines []
+  stand window frames (wide, strict) [None, None]; frames >= 1 s there: wide n None, strict n None
+  N3 (item 460 (d)): the field sent= of PadTriggerEffect lines is not delivery - not read
+  entry line 224403; first scene frame n 192; hold (sum dt after it) 334.2 s; attempt outcome ok hold_exit None hold_s 330.1 close_rc 0 close_killed False
+  window none, Recovering 0, GamePatch 0, skipped draw 0, [Vulkan][E] 0, Event: quit line 1295358 (reference)
+  warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T14:03:09Z; entries of _ShaderCache/PPSA21564: 1347; manifest: manifest cmp EQUAL files 3323 listsha a9bc3256ad5889a18c7bda7c9f04cd4777e292dccfbdce500981e8bd86cd6b8a
+  ADMIT binary: json binary_sha256 = 9b00ad40 (F19c) and installed_sha.txt = 9b00ad40: YES
+  ADMIT version string ...-1878-g52d2f546 in the binary file (reference): YES
+  ADMIT pre-registration: json prereg sha256 = sha256 of the seal file: YES
+  ADMIT env: KYTY_FIX_B24=1, KYTY_TEST_HIDLOSS absent, no other KYTY_FIX_*, no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS: YES
+  ADMIT FixB24: mode=1 lines = 1 ([(16, 1)]): YES
+  ADMIT pad lines of another pad = 0 ([]): YES
+  ADMIT lines TestHidLoss: = 0 (0): YES
+  ADMIT pad lines = 0 (0): YES
+  ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+  FORM installed adb0c82f before the tag (inside the lock): YES
+  FORM installed adb0c82f after the return: YES
+  FORM manifest of the caches, saves and GLCache before = after the return: YES
+  MEMBER line FixB24: mode=1 (1): YES
+  MEMBER lines TestHidLoss: = 0 (0): YES
+  HARM entered (entry line of underwater_aerial_garden): YES
+  HARM lived through the hold (outcome ok, hold_exit null, hold_s >= 330): YES
+  HARM 0 death markers (log and stdout) []: YES
+  HARM 0 frames >= 1 s after the first scene frame outside the stand window (wide: 0, strict: 0; in scene 0): YES
+  HARM video index records >= 3000 (9918): YES
+  HARM 0 one-frame glitches (0): YES
+  HARM sheet for the lead made: YES
+  READING b24_n1 MEMBERS_PASS

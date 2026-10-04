@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/f19e/runs/b24_s0/sheet_b24_s0.png frames 4850 step 101 tiles 8x6

@@ -1,0 +1,103 @@
+# exe C:\kyty\f287\f15d\mut1\b4_race_stand.exe sha256 1384c350de30093b063e789dbc3633eada2c1adffef6531a2ee882c6c040dcd9 mode B N 100 first_seed 1001 fix 1
+seed	rc	class	line
+1001	3221225477	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=106
+1002	0	CLEAN	CLEAN iters=131 after=21
+1003	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=111
+1004	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=100
+1005	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=112
+1006	3221226356	CRASH	
+1007	3221226356	CRASH	
+1008	0	CLEAN	CLEAN iters=146 after=21
+1009	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=123
+1010	0	CLEAN	CLEAN iters=142 after=21
+1011	0	CLEAN	CLEAN iters=146 after=21
+1012	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=122
+1013	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=117
+1014	3221225477	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=129
+1015	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=108
+1016	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=109
+1017	3221225477	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=107
+1018	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=123
+1019	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=126
+1020	3221226356	CRASH	
+1021	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=119
+1022	0	CLEAN	CLEAN iters=135 after=21
+1023	0	CLEAN	CLEAN iters=147 after=21
+1024	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=116
+1025	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=100
+1026	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=102
+1027	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=127
+1028	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=117
+1029	3221226356	CRASH	
+1030	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=124
+1031	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=105
+1032	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=124
+1033	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=117
+1034	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=115
+1035	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=113
+1036	0	CLEAN	CLEAN iters=139 after=21
+1037	0	CLEAN	CLEAN iters=152 after=21
+1038	3221225477	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=117
+1039	3221226356	CRASH	
+1040	3221226356	CRASH	
+1041	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=118
+1042	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=114
+1043	0	CLEAN	CLEAN iters=142 after=21
+1044	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=121
+1045	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=121
+1046	0	CLEAN	CLEAN iters=128 after=21
+1047	3221225477	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=104
+1048	0	CLEAN	CLEAN iters=138 after=21
+1049	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=126
+1050	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=109
+1051	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=101
+1052	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=108
+1053	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=102
+1054	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=102
+1055	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=123
+1056	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=124
+1057	0	CLEAN	CLEAN iters=141 after=21
+1058	3221226356	CRASH	
+1059	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=130
+1060	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=114
+1061	0	CLEAN	CLEAN iters=133 after=21
+1062	0	CLEAN	CLEAN iters=133 after=21
+1063	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=125
+1064	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=104
+1065	3221225477	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=123
+1066	0	CLEAN	CLEAN iters=134 after=21
+1067	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=115
+1068	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=102
+1069	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=102
+1070	0	CLEAN	CLEAN iters=144 after=21
+1071	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=115
+1072	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=107
+1073	3221226356	CRASH	
+1074	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=115
+1075	3221226356	CRASH	
+1076	0	CLEAN	CLEAN iters=140 after=21
+1077	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=103
+1078	0	CLEAN	CLEAN iters=126 after=21
+1079	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=108
+1080	0	CLEAN	CLEAN iters=140 after=21
+1081	0	CLEAN	CLEAN iters=125 after=21
+1082	3221225477	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=104
+1083	0	CLEAN	CLEAN iters=147 after=21
+1084	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=117
+1085	None	TIMEOUT	
+1086	0	CLEAN	CLEAN iters=127 after=21
+1087	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=101
+1088	0	CLEAN	CLEAN iters=131 after=21
+1089	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=100
+1090	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=315
+1091	0	CLEAN	CLEAN iters=994 after=777
+1092	0	CLEAN	CLEAN iters=121 after=21
+1093	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=110
+1094	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=108
+1095	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=103
+1096	0	CLEAN	CLEAN iters=128 after=21
+1097	0	CLEAN	CLEAN iters=129 after=21
+1098	77	FATAL207	FATAL C:\kyty\f287\f15d\wt\src\kernel\fileSystem.cpp:222 iters=110
+1099	3221226356	CRASH	
+1100	3221226356	CRASH	
+# done 100 wall 85.8 s counts {'CLEAN': 27, 'CRASH': 11, 'FATAL207': 61, 'TIMEOUT': 1}

@@ -1,0 +1,2 @@
+differing bytes 2 {'(3) header/debug stamp+GUID': 2} OTHER 0 {}
+VERDICT EXPLAINED

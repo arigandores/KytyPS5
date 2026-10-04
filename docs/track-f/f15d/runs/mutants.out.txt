@@ -1,0 +1,4 @@
+mut1 A 1 100 1001 rc=0 # done 100 wall 15.5 s counts {'FATAL207': 100}
+mut1 B 1 100 1001 rc=0 # done 100 wall 85.8 s counts {'CLEAN': 27, 'CRASH': 11, 'FATAL207': 61, 'TIMEOUT': 1}
+mut2 A 1 100 1001 rc=0 # done 100 wall 25.9 s counts {'CRASH': 100}
+mut2 B 1 100 1001 rc=0 # done 100 wall 8.0 s counts {'CRASH': 100}

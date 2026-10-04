@@ -1,0 +1,4 @@
+# exe C:\kyty\f287\f15d\fix\b4_race_stand.exe sha256 40c3d39d8a654bc3ce46d9082bf1a85b7c47f9041eb1837c3c594885f63674a7 mode L N 1 first_seed 1 fix none
+seed	rc	class	line
+1	0	LOG_OK	LOGCHECK modes=0
+# done 1 wall 0.1 s counts {'LOG_OK': 1}

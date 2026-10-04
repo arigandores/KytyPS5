@@ -1,0 +1,35 @@
+base: tests 128, failure lines 0, spv 176
+    [f19] k16UNorm KYTY_FIX_F19=0: C dref=0 manual=1, C_LZ dref=0 manual=1
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+f0: tests 128, failure lines 4, spv 176
+    FAIL ShaderCfgTests: failed: k16UNorm IMAGE_SAMPLE_C must be the manual compare at KYTY_FIX_F19=0
+    FAIL ShaderCfgTests: failed: k16UNorm IMAGE_SAMPLE_C_LZ must be the manual compare at KYTY_FIX_F19=0
+    FAIL ShaderCfgTests: failed: indirect comparison table must be the manual compare for every member
+    FAIL ShaderCfgTests: failed: indirect comparison table must be the manual compare for every member
+    [f19] k16UNorm KYTY_FIX_F19=0: C dref=1 manual=0, C_LZ dref=1 manual=0
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+fu: tests 128, failure lines 4, spv 176
+    FAIL ShaderCfgTests: failed: k16UNorm IMAGE_SAMPLE_C must be the manual compare at KYTY_FIX_F19=0
+    FAIL ShaderCfgTests: failed: k16UNorm IMAGE_SAMPLE_C_LZ must be the manual compare at KYTY_FIX_F19=0
+    FAIL ShaderCfgTests: failed: indirect comparison table must be the manual compare for every member
+    FAIL ShaderCfgTests: failed: indirect comparison table must be the manual compare for every member
+    [f19] k16UNorm KYTY_FIX_F19=0: C dref=1 manual=0, C_LZ dref=1 manual=0
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+f1: tests 128, failure lines 0, spv 176
+    [f19] k16UNorm KYTY_FIX_F19=1: C dref=1 manual=0, C_LZ dref=1 manual=0
+    [f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2
+    [f19] indirect k16UNorm+k32Float KYTY_FIX_F19=1: images=2 members=2 dref=2 manual=0 plain_explicit=0
+    [f19] indirect k32Float+k8UNorm KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2
+f0: SPIR-V differing from base 4: 109.spv 110.spv 111.spv 112.spv
+fu: SPIR-V differing from base 4: 109.spv 110.spv 111.spv 112.spv
+f1: SPIR-V differing from base 4: 109.spv 110.spv 112.spv 113.spv
+f1 probe lines as expected: [True, True, True, True]
+f0 probe lines as expected: [False, False, False, True]
+fu probe lines as expected: [False, False, False, True]
+NOT OK

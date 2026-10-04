@@ -1,0 +1,15 @@
+diff --git a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+index 4f74127a..9fd50a05 100644
+--- a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
++++ b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+@@ -602,8 +602,8 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
+ 				image.manual_depth_compare =
+ 				    FixF19ManualDepthCompare(format, NullImageDescriptor(descriptor));
+ 			} else {
+-				image.manual_depth_compare = !NullImageDescriptor(descriptor) &&
+-				                             format != Prospero::BufferFormat::k32Float;
++				image.manual_depth_compare =
++				    FixF19ManualDepthCompare(format, NullImageDescriptor(descriptor));
+ 			}
+ 		}
+ 		if (NullImageDescriptor(descriptor)) {

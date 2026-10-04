@@ -1,0 +1,20 @@
+theirs c01bde0c
+    b''
+    b'1b5f270ab2fdf61fa3529c34c34b41e45ea74bb9'
+    b'Fork build arigandores/KytyPS5 082d161'
+    count b'g9df15713' 1
+    count b'g082d1612' 1
+    count b'082d161214c5' 0
+    count b'9df15713' 1
+    count b'-dirty' 8
+    count b'1b5f270ab2fdf61f' 1
+mine (wt f14f, 082d1612)
+    b''
+    b'1b5f270ab2fdf61fa3529c34c34b41e45ea74bb9'
+    b'Fork build arigandores/KytyPS5 082d161'
+    count b'g9df15713' 0
+    count b'g082d1612' 2
+    count b'082d161214c5' 0
+    count b'9df15713' 0
+    count b'-dirty' 8
+    count b'1b5f270ab2fdf61f' 1

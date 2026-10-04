@@ -1,0 +1,16 @@
+diff --git a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+index 4f74127a..77d7cc3a 100644
+--- a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
++++ b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+@@ -45,9 +45,9 @@ void FixF19MergeIndirectTables(std::vector<ResourceSpecialization::Image>& image
+ 		if (images[root].indirect_root != root) {
+ 			continue;
+ 		}
+-		bool manual = false;
++		bool manual = true;
+ 		for (const auto& image: images) {
+-			manual = manual || (image.indirect_root == root && image.manual_depth_compare);
++			manual = manual && (image.indirect_root != root || image.manual_depth_compare);
+ 		}
+ 		for (auto& image: images) {
+ 			if (image.indirect_root == root) {

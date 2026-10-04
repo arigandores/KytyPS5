@@ -1,0 +1,13 @@
+rows 269 jobs 1614 F14a rows 269 F14a manual>0 48
+processes 1614 failed 0 [] wall 36.9 s
+f0     rows != base: 0
+fu     rows != base: 0
+f1     rows != base: 0
+f1m16  rows != base: 48
+f1m8   rows != base: 0
+f1m16 changed 48 F14a manual rows 48 changed-manual [] manual-changed [] rows not in F14a 0
+invariant Dref +k / plain -k per changed row: violations 0 []
+sum k over changed rows 884
+base exe e575f0fca9d9e1be372d8fa7ff358407da940c21d9c92775449fd6df12f427bc
+fix exe  1852caf5511a9514693793923ed37d6ee8aa2473febc081d29ae95d7686d0f42
+ALL OK

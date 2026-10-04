@@ -1,0 +1,2 @@
+17502825dd3325a4d8e6ad84db77cc0420ff5e2b3053524e5559d4993d8ab1d0 *build/shader_cfg_tests.exe
+91f93c85014fb2584936bac07b26ca636152337d6c8c92ba2c304e958d2ddb51 *build/shader_recompiler_compute_tests.exe

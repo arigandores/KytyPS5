@@ -1,0 +1,15 @@
+diff --git a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+index 4f74127a..e1b70af1 100644
+--- a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
++++ b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+@@ -599,8 +599,8 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
+ 			if (FixF19Enabled()) {
+ 				// Track F, F14e (ROADMAP s122 item 409(v)): native for every format the renderer views as
+ 				// depth (k16UNorm joins k32Float), shader comparison for the rest.
+-				image.manual_depth_compare =
+-				    FixF19ManualDepthCompare(format, NullImageDescriptor(descriptor));
++				image.manual_depth_compare = !NullImageDescriptor(descriptor) &&
++				                             format != Prospero::BufferFormat::k32Float;
+ 			} else {
+ 				image.manual_depth_compare = !NullImageDescriptor(descriptor) &&
+ 				                             format != Prospero::BufferFormat::k32Float;

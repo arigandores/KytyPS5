@@ -1,0 +1,22 @@
+ok  082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:34 anchor True +1 True
+ok  082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:39 anchor True +1 True
+ok  082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:43 anchor True +1 True
+ok  082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:599 anchor True +1 True
+ok  082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:605 anchor True +1 True
+ok  082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:724 anchor True +1 True
+ok  082d1612:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:1207 anchor True +1 True
+ok  082d1612:src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:587 anchor True +1 True
+ok  082d1612:CMakeLists.txt:155 anchor True +1 True
+ok  082d1612:src/graphics/host_gpu/renderer/image/imageInfo.h:193 anchor True +1 True
+ok  082d1612:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3073 anchor True +1 True
+ok  082d1612:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3383 anchor True +1 True
+ok  082d1612:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1336 anchor True +1 True
+ok  082d1612:src/graphics/host_gpu/renderer/cache/samplerCache.cpp:160 anchor True +1 True
+ok  082d1612:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1584 anchor True +1 True
+ok  082d1612:src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:683 anchor True +1 True
+ok  082d1612:tests/shaderCfgTests.cpp:14775 anchor True +1 True
+ok  082d1612:tests/ShaderRecompilerComputeTests.cpp:10069 anchor True +1 True
+ok  f18022a5:docs/track-f/f14e/bin_f14e.sha256.txt:2 anchor True +1 True
+ok  f18022a5:docs/track-f/f14e/bin_f14e.sha256.txt:4 anchor True +1 True
+refs 20
+ALL OK

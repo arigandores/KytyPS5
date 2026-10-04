@@ -1,0 +1,3 @@
+f0 spv theirs-exe vs mine-exe differing 0 [] | my run of their exe vs F14e run differing 0
+fu spv theirs-exe vs mine-exe differing 0 [] | my run of their exe vs F14e run differing 0
+f1 spv theirs-exe vs mine-exe differing 0 [] | my run of their exe vs F14e run differing 0

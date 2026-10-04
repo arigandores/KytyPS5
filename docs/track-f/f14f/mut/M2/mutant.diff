@@ -1,0 +1,13 @@
+diff --git a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+index 4f74127a..0351d7c4 100644
+--- a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
++++ b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+@@ -725,7 +725,7 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
+ 		// Track F, F14e (ROADMAP s122 item 415(b), variant O1): an indirect table with a shader-compared
+ 		// member is shader-compared as a whole; the shared-sampler pass of ApplyResourceSpecialization
+ 		// then runs as before.
+-		FixF19MergeIndirectTables(next_specialization.images);
++		(void)next_specialization;
+ 	}
+ 	SamplerPlan sampler_plan;
+ 	if (!BuildSamplerPlan(program.info, next_specialization.images, sampler_plan)) {

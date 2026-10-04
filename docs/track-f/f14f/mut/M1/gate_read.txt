@@ -1,0 +1,11 @@
+A8.g1 FAIL fmt lines 0 rc 3221226505
+A8.g0 ok fmt lines 96 rc 0
+A8.gu ok fmt lines 96 rc 0
+A1 FAIL k16 LINEAR native within 2^-6 of own PCF: 0 of 0
+A2 ok k16 LINEAR =0 midpoints off own PCF by >= 0.25: 6
+A3 FAIL NEAREST == own reference: 48 of 48
+A4 FAIL k32Float/k8UNorm bits =0 == =1: 0 of 64
+A5 ok gu fmt lines == g0
+A6 ok dirs g1 _ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19 g0 _ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10 gu _ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10
+A7 FAIL c1 rc 3221226505, c0 rc 3221226505
+NOT OK: A8.g1 A1 A3 A4 A7

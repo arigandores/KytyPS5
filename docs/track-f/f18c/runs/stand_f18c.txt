@@ -1,0 +1,14 @@
+# exe C:\kyty\f287\f18c\fix\f8_audio_stand.exe sha256 74134c1b7c90c8c77963a1717ad7a9759e68c00e907afe84111a9445072369ae
+PASS i_disk3_fix0 rc=0 fixf8_lines=0 open_failed=0 wall=0.2s devices_opened=3 first_fail_call=254 fail_devices_at_first=3 queue_failed=141 first_error=Invalid audio device ID init_calls=303 acq=0 was_init=16 driver=disk
+PASS i_dummy1_fix0 rc=0 fixf8_lines=0 open_failed=0 wall=0.1s devices_opened=1 first_fail_call=256 fail_devices_at_first=1 queue_failed=45 first_error=Invalid audio device ID init_calls=301 acq=0 was_init=16 driver=dummy
+PASS i_dummy3_fix0 rc=0 fixf8_lines=0 open_failed=2 wall=0.1s devices_opened=1 first_fail_call=254 fail_devices_at_first=1 queue_failed=47 first_error=Invalid audio device ID init_calls=303 acq=0 was_init=16 driver=dummy
+PASS i_disk3_unset rc=0 fixf8_lines=0 open_failed=0 wall=0.7s devices_opened=3 first_fail_call=254 fail_devices_at_first=3 queue_failed=141 first_error=Invalid audio device ID init_calls=303 acq=0 was_init=16 driver=disk
+PASS ii_disk3_fix1 rc=0 fixf8_lines=1 open_failed=0 wall=0.0s devices_opened=3 first_fail_call=0 fail_devices_at_first=0 queue_failed=0 first_error= init_calls=1 acq=10003 was_init=16 driver=disk
+PASS ii_dummy1_fix1 rc=0 fixf8_lines=1 open_failed=0 wall=0.0s devices_opened=1 first_fail_call=0 fail_devices_at_first=0 queue_failed=0 first_error= init_calls=1 acq=10001 was_init=16 driver=dummy
+PASS iii_dummy1_fix1 rc=0 fixf8_lines=1 open_failed=0 wall=0.0s devices_opened=1 first_error= init_calls=1 acq=10001 was_init=16 init_calls_after_threads=1 acq_after_threads=10000 acquire_failed=0 driver=dummy
+PASS iii_disk3_fix1 rc=0 fixf8_lines=1 open_failed=0 wall=0.0s devices_opened=3 first_error= init_calls=1 acq=10003 was_init=16 init_calls_after_threads=1 acq_after_threads=10000 acquire_failed=0 driver=disk
+PASS i_disk3_fix1 rc=0 fixf8_lines=1 open_failed=0 wall=0.0s devices_opened=3 first_fail_call=0 fail_devices_at_first=0 queue_failed=0 first_error= init_calls=1 acq=303 was_init=16 driver=disk
+PASS i_dummy1_fix1 rc=0 fixf8_lines=1 open_failed=0 wall=0.0s devices_opened=1 first_fail_call=0 fail_devices_at_first=0 queue_failed=0 first_error= init_calls=1 acq=301 was_init=16 driver=dummy
+PASS refuse rc=3 fixf8_lines=0 open_failed=0 wall=0.0s 
+PASS refuse_host rc=3 fixf8_lines=0 open_failed=0 wall=0.5s 
+ALL OK

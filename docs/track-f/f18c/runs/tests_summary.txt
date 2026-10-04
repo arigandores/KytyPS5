@@ -1,0 +1,5 @@
+runs/tests/audio_propagation_tests_1.txt tests=0 failed_lines=0 failed_md5=d41d8cd98f00b204e9800998ecf8427e last=ALL OK
+runs/tests/audio_propagation_tests_none.txt tests=0 failed_lines=0 failed_md5=d41d8cd98f00b204e9800998ecf8427e last=ALL OK
+runs/tests/shader_cfg_tests_1.txt tests=127 failed_lines=4 failed_md5=616a52fc8f7e5ca11d29f75bdc0b60b9 last=[test] TestNewShaderRecompilerUnsupportedMemoryDecode
+runs/tests/shader_cfg_tests_none.txt tests=127 failed_lines=4 failed_md5=616a52fc8f7e5ca11d29f75bdc0b60b9 last=[test] TestNewShaderRecompilerUnsupportedMemoryDecode
+base C:/kyty/s288/s12a/cfgtests_defaults.log tests=127 failed_lines=4 failed_md5=616a52fc8f7e5ca11d29f75bdc0b60b9

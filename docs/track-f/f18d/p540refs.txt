@@ -1,0 +1,23 @@
+OK  10a4800b:src/libs/audio.cpp:291 | static bool FixF8Enabled() { | +1 static const bool enabled = [] {
+OK  10a4800b:src/libs/audio.cpp:302 | int SdlAudioAcquire() { | +1 g_sdl_audio_acq_calls.fetch_add(1, std::memory_order_relaxed);
+OK  10a4800b:src/libs/audio.cpp:316 | int SdlAudioSubsystemInit() { | +1 if (FixF8Enabled()) {
+OK  10a4800b:src/libs/audio.cpp:324 | void SdlAudioSubsystemQuit() { | +1 if (FixF8Enabled()) {
+OK  10a4800b:src/libs/audio.cpp:354 | static void AudioStatPush(int port_id, SDL_AudioDeviceID dev, bool failed) { | +1 if (port_id < 0 || port_id >= OUT_PORTS_MAX) {
+OK  10a4800b:src/libs/audio.cpp:532 | if (AudioInternal::SdlAudioSubsystemInit() < 0) { | +1 LOGF("AudioOut: SDL audio init failed: %s\n", SDL_GetError());
+OK  10a4800b:src/libs/audio.cpp:710 | static const bool audio_stat = av_trace || Controller::TestAudioLossOn(); | +1 const auto        av_queued_before = SDL_GetQueuedAudioSize(port->audio_device);
+OK  10a4800b:src/libs/audio.cpp:922 | QueueSdlAudio(&port, params[i].handle.GetId(), params[i].data, blocking); | +1 }
+OK  10a4800b:src/libs/audio.cpp:937 | if (AudioInternal::SdlAudioSubsystemInit() < 0) { | +1 LOGF("AudioIn: SDL init failed: %s\n", SDL_GetError());
+OK  10a4800b:src/libs/audio.cpp:950 | AudioInternal::SdlAudioSubsystemQuit(); | +1 return;
+OK  10a4800b:src/libs/audio.cpp:959 | AudioInternal::SdlAudioSubsystemQuit(); | +1 port->audio_device = 0;
+OK  10a4800b:src/libs/controller.cpp:172 | ReadTestAudioLoss(); | +1 if (const char* value = std::getenv("KYTY_HAPTICS"); value != nullptr && value[0] == '0') {
+OK  10a4800b:src/libs/controller.cpp:190 | if (Audio::AudioInternal::SdlAudioSubsystemInit() < 0) { | +1 return false;
+OK  10a4800b:src/libs/controller.cpp:228 | uint64_t HapticsOutput::TestAudioLossRetryUsLocked() { | +1 const uint64_t t = LibKernel::KernelGetProcessTime();
+OK  10a4800b:src/libs/controller.cpp:273 | const uint64_t retry_us = g_test_audioloss.on ? TestAudioLossRetryUsLocked() : RETRY_US; | +1 if (m_retry_us != 0 && now - m_retry_us < retry_us) {
+OK  10a4800b:src/emulator.cpp:165 | subsystems.Initialize<Libs::Controller::Lifecycle>(); | +1 subsystems.Initialize<Libs::Audio::Lifecycle>();
+OK  10a4800b:src/graphics/presentation/window/window.cpp:884 | if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) { | +1 EXIT("%s\n", SDL_GetError());
+OK  10a4800b:src/launcher/src/configurationEditDialog.cpp:176 | if (SDL_InitSubSystem(SDL_INIT_AUDIO) == 0) { | +1 const int device_count = SDL_GetNumAudioDevices(SDL_TRUE);
+OK  10a4800b:tests/F8AudioStand.cpp:131 | if (mode == "iii") { | +1 std::atomic<int>  ready {0};
+OK  4b69833b:src/SDL.c:292 | if (SDL_PrivateShouldInitSubsystem(SDL_INIT_AUDIO)) { | +1 /* audio implies events */
+OK  4b69833b:src/SDL.c:302 | SDL_PrivateSubsystemRefCountIncr(SDL_INIT_AUDIO); | +1 flags_initialized |= SDL_INIT_AUDIO;
+refs 21 of 21
+ALL OK

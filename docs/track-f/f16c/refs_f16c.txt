@@ -1,0 +1,58 @@
+OK  887825c7:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:113 | if (FastRenderMemoEnabled() && !graphics_debug_dump_enabled() && | +1: (rt.base.addr == 0 || mask == 0)) {
+OK  887825c7:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:133 | if (memo_slot->valid && memo_slot->extra == memo_extra && memo_slot->regs == memo_regs) { | +1: // Gate "rtfast": `r` still holds this slot's info from an earlier draw (the same
+OK  887825c7:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:164 | return; | +1: }
+OK  887825c7:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:431 | const bool has_dcc        = rt.info.dcc_compression_enable && rt.dcc_addr.addr != 0; | +1: if (has_dcc) {
+OK  887825c7:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:434 | (void)TileGetDccSize(width, height, volume ? depth : view.image_layers, bytes_per_element, | +1: levels, rt.attrib3.tile_mode, metadata_size, rt.attrib.num_fragments);
+OK  887825c7:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:441 | } else if (rt.info.cmask_fast_clear_enable && rt.cmask.addr != 0 && samples == 1 && | +1: levels == 1 && !volume && width % 1024 == 0 && height % 1024 == 0) {
+OK  887825c7:src/graphics/host_gpu/renderer/debug.cpp:210 | if (rt.info.fmask_compression_enable) { | +1: EXIT_NOT_IMPLEMENTED(rt.attrib.num_samples == 0 && rt.attrib.num_fragments == 0);
+OK  887825c7:src/graphics/host_gpu/renderer/debug.cpp:223 | if (rt.info.cmask_fast_clear_enable || rt.info.dcc_compression_enable) { | +1: static bool logged = false;
+OK  887825c7:src/graphics/host_gpu/renderer/debug.cpp:856 | const auto  rt_slot = render_target_first_bound_slot(buffer); | +1: const auto& rt      = hw.GetRenderTarget(rt_slot);
+OK  887825c7:src/graphics/host_gpu/renderer/debug.cpp:879 | RtCheck(rt); | +1: log_phase("vp");
+OK  887825c7:src/graphics/host_gpu/renderer/renderDraw.cpp:2887 | ResolveRenderColorTarget(buffer, state.color_info[state.color_count], | +1: render_target_slice_offset, slot);
+OK  887825c7:src/graphics/host_gpu/renderer/renderDraw.cpp:5008 | if (ConsumeMetadataColorOperation(buffer)) { | +1: MaterializeBoundTargetDccClears(buffer);
+OK  887825c7:src/graphics/host_gpu/renderer/renderDraw.cpp:5072 | hw_check(buffer); | +1: }
+OK  887825c7:src/graphics/host_gpu/renderer/renderDraw.cpp:5295 | hw_check(buffer); | +1: }
+OK  887825c7:src/graphics/host_gpu/renderer/renderDraw.cpp:5390 | ResolveRenderColorTarget(buffer, src, render_target_slice_offset, 0, true, true); | +1: ResolveRenderColorTarget(buffer, dst, render_target_slice_offset, 1, true, true);
+OK  887825c7:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3541 | if (code == 0x20) { | +1: // Register-backed clear: use the clear word of the colour slot that still addresses
+OK  887825c7:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3578 | if (!decoded) { | +1: return;
+OK  887825c7:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3596 | const vk::ImageSubresourceRange range {vk::ImageAspectFlagBits::eColor, 0, | +1: image.info.resources.levels, layer, count};
+OK  887825c7:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3665 | FixB42Hit FixB42Probe(TextureCache& cache, const HW::RenderTarget& rt, const RenderColorInfo& color) { | +1: FixB42Hit   probe {};
+OK  887825c7:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3688 | if (fill.b42_draw_seq > fill.b42_fill_seq) { | +1: probe.kind = FixB42Kind::Drawn;
+OK  887825c7:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3769 | ResolveRenderColorTarget(buffer, color, 0, slot, true, true); | +1: // Track F, F9e2 / F9e2b (B42): see FixB42Probe. With the fix off nothing below changes.
+OK  887825c7:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3772 | if (b42.kind == FixB42Kind::Hit && FixB42Enabled()) { | +1: color.desc.info.metadata.kind              = ImageMetadataKind::Cmask;
+OK  887825c7:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3810 | if (!id) { | +1: static std::atomic<uint32_t> miss_count = 0;
+OK  887825c7:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:6498 | MaterializeDeferredDccClear(buffer, descriptors.images[i].image_id, image); | +1: }
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1893 | if (PendingDccFillStale(desc.info.metadata.range.address, metadata, | +1: image.info.data.address)) {
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1898 | } else if (metadata.type != MetaDataInfo::Type::Dcc) { | +1: Common::DrawStat::Mark(Common::DrawStat::Meta);
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1916 | if (metadata.clear_mask == 0 || image.info.resources.levels != 1 || | +1: desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) 
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1924 | if (!DecodeDccClearFill(desc, metadata.fill_value, clear.color)) { | +1: return;
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1936 | if (first >= 32 || count > 32 - first) { | +1: return;
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2002 | if (metadata.fill_value != 0 || metadata.clear_mask == 0 || | +1: desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) 
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2005 | if (!DecodePackedColorClear(image.backing.format, desc.info.metadata.cmask_clear_words[0], | +1: desc.info.metadata.cmask_clear_words[1], clear.color)) return;
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2008 | if (view.base_level != 0 || view.base_layer >= 32 || view.layer_count > 32 - view.base_layer) return; | +1: for (uint32_t layer = view.base_layer; layer < view.base_layer + view.layer_count; ++layer
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2297 | PrepareDccClear(id, desc); | +1: }
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2420 | PrepareDccClear(id, desc); | +1: PrepareCmaskClear(id, desc);
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3184 | bool TextureCache::ClearMeta(uint64_t address) { | +1: std::scoped_lock lock {m_lock};
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3188 | found->second.type == MetaDataInfo::Type::Dcc || found->second.type == MetaDataInfo::Type::CMask) { | +1: // DCC and CMASK need a validated fill value and coverage. Keep the legacy operation
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3204 | void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_value) { | +1: if (!GuestRange {address, size}.Valid()) {
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3227 | const auto found = m_surface_metas.try_emplace(address).first; | +1: if (found->second.type == MetaDataInfo::Type::PendingDcc ||
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.h:188 | Type     type       = Type::PendingDcc; | +1: uint32_t clear_mask = 0;
+OK  887825c7:src/graphics/host_gpu/renderer/cache/textureCache.h:312 | TrackingSpinLock                                  m_lock; | +1: PageManager&                                      m_page_manager;
+OK  887825c7:src/graphics/host_gpu/renderer/renderCompute.cpp:85 | if ((!resource.written || resource.read) && cache.IsMeta(descriptor.Base48())) { | +1: return false;
+OK  887825c7:src/graphics/host_gpu/renderer/renderCompute.cpp:103 | if (cache.ClearMeta(descriptor.Base48())) { | +1: if (!all_writes) return true;
+OK  887825c7:src/graphics/host_gpu/renderer/renderCompute.cpp:114 | other_writes = true; | +1: }
+OK  887825c7:src/graphics/host_gpu/renderer/renderCompute.cpp:245 | cache.TrackDccFill(descriptor.Base48(), size, packed_clear); | +1: static std::atomic<uint32_t> logged_metadata_clears {0};
+OK  887825c7:src/graphics/host_gpu/renderer/renderCompute.cpp:248 | LOGF("GraphicsRenderDispatchDirect: metadata fill shader=0x%016" PRIx64 | +1: " addr=0x%016" PRIx64 " size=0x%016" PRIx64 " value=0x%08" PRIx32 "\n",
+OK  887825c7:src/graphics/host_gpu/renderer/renderCompute.cpp:551 | if (!indirect && !floor_clear_skip && TryConsumeComputeMetaClear(input_info, buffer)) { | +1: // Session 100, the L3 debt of session 98 (ROADMAP.md:1406): bf_clr_skip is a shape
+OK  887825c7:src/graphics/host_gpu/renderer/renderCompute.cpp:560 | TryConsumeComputeImageClear(input_info, buffer, thread_group_x, thread_group_y, | +1: thread_group_z, mode)) {
+OK  887825c7:src/graphics/host_gpu/renderer/renderCompute.cpp:936 | if (!indirect && (thread_group_x == 0 || thread_group_y == 0 || thread_group_z == 0)) { | +1: static std::atomic<uint32_t> log_count {0};
+OK  887825c7:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2262 | (void)m_texture_cache.ClearMeta(vaddr); | +1: if (!IsRegionGpuModified(vaddr, size)) {
+OK  887825c7:src/graphics/host_gpu/renderer/depthRenderTarget.cpp:355 | if (attachment_unbound) { | +1: static std::atomic_bool logged = false;
+OK  887825c7:src/graphics/host_gpu/regionManager.h:38 | EXIT("recursive region tracking lock\n"); | +1: }
+OK  887825c7:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:4014 | g_hw_uc_indirect_func[Pm4::GE_STEREO_CNTL] = [](KYTY_HW_UC_INDIRECT_ARGS) { | +1: static std::atomic<uint32_t> log_count {0};
+OK  887825c7:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:599 | image.fmask             = Prospero::IsFmaskTextureFormat(format); | +1: if (image.fmask) {
+OK  887825c7:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:1197 | if (specialization.images[memory.resource].fmask) { | +1: EXIT_IF(inst.GetOpcode() != ValueOpcode::ImageRead || memory.data_bits != 32u);
+OK  887825c7:src/generate_version.cmake:43 | set(KYTY_SHADER_SOURCE_HASH "unknown") | +1: if(SHADER_SOURCE_DIR)
+OK  887825c7:CMakeLists.txt:156 | -D SHADER_CACHE_EXTRA_FILES=${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp$ | +1: -P ${KYTY_SOURCE_DIR}/generate_version.cmake
+refs 56
+ALL OK

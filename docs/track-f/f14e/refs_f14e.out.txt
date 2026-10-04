@@ -1,0 +1,16 @@
+OK 90982b4a:docs/ROADMAP.md:21621 anchor=True plus1=True
+OK 975927c8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3073 anchor=True plus1=True
+OK 975927c8:src/graphics/host_gpu/renderer/image/imageInfo.h:193 anchor=True plus1=True
+OK 975927c8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1336 anchor=True plus1=True
+OK 975927c8:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:570 anchor=True plus1=True
+OK 975927c8:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:1165 anchor=True plus1=True
+OK 975927c8:src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:683 anchor=True plus1=True
+OK 975927c8:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:456 anchor=True plus1=True
+OK 975927c8:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:676 anchor=True plus1=True
+OK 975927c8:src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:907 anchor=True plus1=True
+OK 975927c8:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3383 anchor=True plus1=True
+OK 975927c8:src/graphics/host_gpu/renderer/cache/samplerCache.cpp:160 anchor=True plus1=True
+OK 975927c8:tests/shaderCfgTests.cpp:14534 anchor=True plus1=True
+OK 975927c8:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h:34 anchor=True plus1=True
+refs 14 bad 0
+ALL OK

@@ -1,0 +1,3 @@
+rows scanned 269 image sample results 4343 OpPhi total 75961 phi over image samples 0
+rows with phi-of-sample 0
+ALL OK

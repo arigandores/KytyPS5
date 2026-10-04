@@ -1,0 +1,7 @@
+table rows 391
+records D16_UNORM 62985 D32_SFLOAT 60753
+D32 records with a D16 record on the same sampler binding (capture, module): 60753
+D32 rows without such a D16 row: 0
+modules with view formats D16_UNORM: 6
+modules with view formats D16_UNORM+D32_SFLOAT: 27
+ALL OK

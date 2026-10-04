@@ -91,6 +91,7 @@ public:
 	File* GetFile(int d);
 	File* GetFile(const std::filesystem::path& real_name);
 	void  CloseAll();
+	void  FlushAll();
 
 private:
 	std::vector<File*> m_files;
@@ -99,6 +100,20 @@ private:
 
 static MountPoints*     g_mount_points = nullptr;
 static FileDescriptors* g_files        = nullptr;
+
+// Track F, F15c (ROADMAP s122 items 412(v), 417(b)-(v), row B4): KYTY_FIX_B4 (default 0), read once. At 1 the
+// emergency exit path (at_quick_exit and atexit(KytyClose) of src/emulator.cpp, both end in EmergencyShutdown below)
+// keeps every File object, slot and host descriptor: guest threads are still running there and may hold a File* from
+// GetFile without m_mutex, so CloseAll deleting it races with them (DeleteDescriptor / KernelOpen EXIT_IF or a
+// use-after-free). The OS closes the host descriptors at the end of the process. Unset or empty - OFF.
+static bool FixB4Enabled() {
+	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_B4"));
+	return enabled;
+}
+
+// Host write path with a user-space buffer that _Exit does not flush: stdio fwrite on non-Windows hosts
+// (sysLinuxFileIO.cpp SysFileWrite). Windows SysFileWrite is WriteFile with no user buffer (sysWindowsFileIO.cpp).
+constexpr bool HOST_FILE_WRITE_BUFFERED = (KYTY_PLATFORM != KYTY_PLATFORM_WINDOWS);
 
 static bool IsRandomDevice(const std::string& path) {
 	return path == "/dev/random" || path == "/dev/urandom";
@@ -254,6 +269,21 @@ void FileDescriptors::CloseAll() {
 	}
 }
 
+// B4, KYTY_FIX_B4=1 (variant A', ROADMAP s122 item 417(v)): flush the user buffer of every open writable host file
+// and nothing else - no Close, no delete, no nullptr. On Windows there is no user buffer: nothing is done.
+void FileDescriptors::FlushAll() {
+	if constexpr (HOST_FILE_WRITE_BUFFERED) {
+		Common::LockGuard lock(m_mutex);
+
+		for (auto* f: m_files) {
+			if (f != nullptr && f->opened && f->writable && !f->directory &&
+			    f->special == SpecialFile::None) {
+				f->f.Flush();
+			}
+		}
+	}
+}
+
 void MountPoints::Mount(const std::filesystem::path& folder, const std::string& point) {
 	Common::LockGuard lock(m_mutex);
 
@@ -366,16 +396,26 @@ std::filesystem::path MountPoints::ResolvePath(const std::string& mounted_name) 
 void Initialize() {
 	g_mount_points = new MountPoints;
 	g_files        = new FileDescriptors;
+
+	LOGF("FixB4: mode=%d\n", FixB4Enabled() ? 1 : 0);
 }
 
 void EmergencyShutdown() {
 	if (g_files != nullptr) {
-		g_files->CloseAll();
+		if (FixB4Enabled()) {
+			// B4: guest threads may still be inside KernelOpen/KernelClose with a File* of a slot.
+			g_files->FlushAll();
+		} else {
+			g_files->CloseAll();
+		}
 	}
 }
 
+// Path without guest threads (Subsystems::Destroy: tests, stands): CloseAll at both values of KYTY_FIX_B4.
 void Shutdown() {
-	EmergencyShutdown();
+	if (g_files != nullptr) {
+		g_files->CloseAll();
+	}
 	delete g_files;
 	delete g_mount_points;
 	g_files        = nullptr;

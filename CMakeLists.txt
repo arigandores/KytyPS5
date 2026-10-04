@@ -528,6 +528,11 @@ target_include_directories(event_queue_lifetime_tests PRIVATE ${inc_headers})
 add_kyty_full_emulator_test(kernel_file_system_tests
 	"${KYTY_TESTS_DIR}/KernelFileSystemTests.cpp")
 
+# Track F, B4 exit race stand (F15a, F15c; ROADMAP s122 item 412(v)): run by docs/track-f/f15c/run_stand_f15c.py,
+# not by ctest.
+add_kyty_full_emulator_test(b4_race_stand
+	"${KYTY_TESTS_DIR}/B4RaceStand.cpp")
+
 # Track F, F6 (ROADMAP s122 item 287(c)(4), B9a): the AudioPropagation NIDs through the symbol database, no game.
 add_kyty_full_emulator_test(audio_propagation_tests
 	"${KYTY_TESTS_DIR}/AudioPropagationTests.cpp")

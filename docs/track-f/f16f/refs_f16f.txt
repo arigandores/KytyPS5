@@ -1,0 +1,15 @@
+OK   39fba40d:docs/ROADMAP.md:22134
+OK   39fba40d:docs/ROADMAP.md:22240
+OK   39fba40d:docs/ROADMAP.md:22242
+OK   39fba40d:docs/ROADMAP.md:22245
+OK   39fba40d:docs/ROADMAP.md:22309
+OK   39fba40d:docs/ROADMAP.md:22527
+OK   39fba40d:docs/ROADMAP.md:22610
+OK   39fba40d:docs/ROADMAP.md:22679
+OK   39fba40d:docs/ROADMAP.md:22689
+OK   a24bb060:docs/track-f/f16d2.md:7
+OK   56b04817:src/graphics/host_gpu/renderer/diagF5.cpp:74
+OK   56b04817:src/graphics/host_gpu/renderer/diagF5.cpp:89
+OK   56b04817:src/graphics/guest_gpu/graphicsRun.cpp:705
+refs 13, failed 0
+ALL OK

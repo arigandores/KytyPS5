@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """sc_s13.py - the scorer of track S, fourth wave, the catalogue of the 19 known levels (link S13a, HPP-498; ROADMAP "SESSION
 122" item 408 (e), (l), item 229 (e)(1), (3), item 355 (e), item 371 (v), item 410 (g)(6)(iii), item 414 (b), (g)(1), (g)(5)-(7),
-(d)(2)); the arms run in link S13b under the lock, files in C:/kyty/s288/s13.
+(d)(2), item 419 (v) Z3, item 428 (v), (g)); the arms run in link S13b under the lock, files in C:/kyty/s288/s13.
 
 INHERITANCE: C:/kyty/s288/s9/sc_s9.py (the scorer of seal 07, sha256 SHA_SC_S9) is loaded UNCHANGED from its own path after a
 sha256 check; it loads sc_s.py (seal 04) and sc142.py the same way.  Used as they are: sc_s scan_s(), scan_stdout(), locate(),
@@ -10,7 +10,8 @@ scan_stdout_x(), ident_domain() (item 404), ident_t4(), early9(), bvh_col(); sc1
 the arms of S13b, their admission, the members of item 229 (e)(1), (3) and the data rows of item 414 (g)(5)-(7).
 
 ARMS (S13b, in this order; the binary of every arm is the INSTALLED one, named by the seal line "installed: <sha256> <signature>
-<variant>" - no install; item 414 (b): the arm binary is read from the field binary_sha256 of <tag>.json):
+<variant>" - no install; item 414 (b): the arm binary is read from the field binary_sha256 of <tag>.json; item 419 (v) Z3,
+item 428 (v)(1): every arm names KYTY_S_PCW=1 in its environment, every S-pcw: line of its log = that value):
   k_01 .. k_19  collection (item 408 (l), item 228 (v)): class M, the level K<NN> of lvl_s13.out.txt, hold HOLD_K; the app caches
                 (_ShaderCache/PPSA21564, _PipelineCache) mirrored before the arm from the post copy of the previous k arm
                 (k_01: from the empty set, MANIFEST sha EMPTY_SHA) - the catalogue grows in C:/kyty/s288/s13/cat/<tag>, never in
@@ -36,7 +37,12 @@ groups fi < g < end):
   An arm FAILS on a determined failing member, is UNDETERMINED on an undetermined one (not entered, admission / identity broken,
   catalogue not installed, no attribution, no screen measure, no video), else PASSES.  The word KNOWN_SCENES (item 229 (e)(1)
   with (3)): PASS - 19 of 19 U arms and w13 pass; FAIL - any determined failing member; else UNDETERMINED.  The words of (e)(1)
-  alone and of (e)(3) alone are printed beside.  Decisions are the lead's (S13c).
+  alone and of (e)(3) alone are printed beside.  ENTRY (item 428 (g), V7): a level of the 19 is "not enterable by -lvl" when
+  NEITHER its k arm NOR its u arm carries the line "Level has started: <level>" in an attempt without a death marker (nor
+  hold_exit / ENDED / exited) and without a window event (minimized / Recovering Vulkan swapchain) - entry_state 'no' on both;
+  the word KNOWN_SCENES_ENTERED over the U arms of the levels outside "not enterable": PASS - every one PASS and w13 PASS with
+  a denominator >= 1; FAIL - any FAIL; else UNDETERMINED; printed beside KNOWN_SCENES (unchanged) with the list "not
+  enterable".  Decisions are the lead's (S13c).
 DATA ROWS (item 414 (g)(5)-(7), AUDIT_S3 section 6 p. 2): per arm the skipped-draw lines after the entry line whose frame= is below
   the first scene frame, and the lines without frame=; the S-early events with the series cost named "async creation us" (no
   "PREP-only" column for an event of kind series); the S-early count over DISTINCT events (item 414 (g)(1): a frame event whose n is
@@ -76,8 +82,8 @@ B = S9.B
 
 ROOT = 'C:/kyty/s288'
 LINK_DIR = 'C:/kyty/s288/s13'
-SEAL_BASE = 'C:/kyty/s288/pred/09_s.md'       # the seal of S13a: the line "installed: PENDING"
-SEAL_B = 'C:/kyty/s288/pred/09b_s.md'         # its edition: the same lines, the line "installed:" named (a lead item)
+SEAL_BASE = 'C:/kyty/s288/pred/11_s.md'       # the seal of S13a2: "installed: PENDING" (item 428 (v)(4): 09 not in force)
+SEAL_B = 'C:/kyty/s288/pred/11b_s.md'         # its edition: the same lines, the line "installed:" named (a lead item)
 EMPTY_SHA = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
 SEEDS_PATH = 'C:/kyty/s288/s13/seeds'
 SEEDS_MANI = 'C:/kyty/s288/s13/seeds_manifest.txt'
@@ -94,7 +100,8 @@ HOLD_W = 330                     # item 229 (e)(3): >= 300 s presented
 HOLD_W_US = 300000000
 FRAMES_VIDEO = 3000              # item 229 (e)(3)
 PREP_LIMIT_S = 180               # item 229 (e)(1)
-SPCW_LINE = 'S-pcw: KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0'          # item 408 (l): the arms run with the knobs S = 1 (S12d)
+SPCW_ENV = '1'                   # item 419 (v) Z3, item 428 (v)(1): every arm names KYTY_S_PCW=1 (absent means 1 after S12)
+SPCW_FMT = 'S-pcw: KYTY_S_PCW=%s KYTY_S_PCW_FORCE_MS=0'           # the form of sc_s9.py: the log line = the env of the arm
 W_FORM_LINE = 'W form: limit=100000000 filter=none'
 DUAL_LINE = b'DualSrcBlend: supported=1 enabled=1'
 M_GUEST = b'GuestOut'
@@ -132,7 +139,8 @@ U_TAGS = [x['tag'] for x in ARMS if x['group'] == 'u']
 
 def expected_env(spec):
     e = dict(KYTY_FRAME_TRACE='lite', KYTY_GPU_HANG_ABORT_S='8', KYTY_QUEUE_TRACE='1',
-             KYTY_GUEST_ARGS='-lvl %s' % spec['level'], KYTY_GPU_CLOCK_PIN='1', KYTY_GPU_MARKERS='0')
+             KYTY_GUEST_ARGS='-lvl %s' % spec['level'], KYTY_GPU_CLOCK_PIN='1', KYTY_GPU_MARKERS='0',
+             KYTY_S_PCW=SPCW_ENV)
     if spec['cls'] == 'T':
         e.update(KYTY_AV_TRACE='1', KYTY_SHADER_REGISTER_TRACE='1')
     if spec['mode'] == 'u':
@@ -177,7 +185,7 @@ RX_HEX64 = re.compile(r'^[0-9a-f]{64}$')
 
 
 def current_seal():
-    """The seal in force: the edition 09b when it exists, else 09."""
+    """The seal in force: the edition 11b when it exists, else 11."""
     return SEAL_B if os.path.isfile(SEAL_B) else SEAL_BASE
 
 
@@ -353,9 +361,11 @@ def admit(spec, js, pred_sha, pred_path, cj, cjs_of, inst):
     add('no KYTY_GPU_CHECKPOINTS', 'KYTY_GPU_CHECKPOINTS' not in env, '')
     add('no KYTY_GATE_SCHEDULE', 'KYTY_GATE_SCHEDULE' not in env and 'KYTY_GATE_SCHEDULE_ABBA' not in env, '')
     add('no KYTY_GAME_PATCH (item 342 (e))', 'KYTY_GAME_PATCH' not in env, env.get('KYTY_GAME_PATCH') or '')
-    add('no KYTY_S_PCW / KYTY_FIX_* in the env (the shipped defaults of the installed binary)',
-        not any(k.startswith(('KYTY_S_PCW', 'KYTY_FIX_')) for k in env), ','.join(k for k in env if
-                                                                              k.startswith(('KYTY_S_PCW', 'KYTY_FIX_'))))
+    add('KYTY_S_PCW=%s named in the env (item 419 (v) Z3, item 428 (v)(2))' % SPCW_ENV, env.get('KYTY_S_PCW') == SPCW_ENV,
+        env.get('KYTY_S_PCW') or 'absent')
+    add('no KYTY_S_PCW_FORCE_MS / KYTY_FIX_* in the env (item 428 (v)(1))',
+        not any(k == 'KYTY_S_PCW_FORCE_MS' or k.startswith('KYTY_FIX_') for k in env),
+        ','.join(k for k in env if k == 'KYTY_S_PCW_FORCE_MS' or k.startswith('KYTY_FIX_')))
     rec = env.get('KYTY_REC')
     if spec['rec']:
         add('video KYTY_REC rec_%s.mp4' % spec['tag'], rec is not None and
@@ -480,8 +490,10 @@ def score_arm(tag, root=LINK_DIR, pred_sha=None, pred_path=None, inst=None):
         and d142['frames_after_first'] == end - fi - 1)
     ident.append(('first scene frame and rows after it = the inherited sc142.derive', agree, '%s / %s' % (d142['first'],
                                                                                                           r['first'])))
-    r['admit'].append(('the knob line "%s" (S12d: knobs S = 1), every S-pcw: line' % SPCW_LINE,
-                       len(s['spcw']) >= 1 and all(x == SPCW_LINE for x in s['spcw']), ';'.join(s['spcw'][:2]) or 'none'))
+    pv = (js.get('env') or {}).get('KYTY_S_PCW')
+    r['admit'].append(('every S-pcw: line (>= 1) = "%s" with the KYTY_S_PCW of the env of the arm (item 419 (v) Z3)' % SPCW_FMT,
+                       len(s['spcw']) >= 1 and all(x == SPCW_FMT % pv for x in s['spcw']),
+                       '%s / env %s' % (';'.join(s['spcw'][:2]) or 'none', pv)))
     r['admit'].append(('0 lines GamePatch: in the log (item 342 (e))', sx['gamepatch'] == 0, sx['gamepatch']))
     r['admit'].append(('the compatibility line carries the signature of the seal line "installed:"',
                        inst is not None and sy['compat'] is not None and (':' + inst[1] + ':') in (':' + sy['compat'] + ':'),
@@ -606,6 +618,50 @@ def members_w(r):
     return out
 
 
+def death(r):
+    """A death marker of sc142 or hold_exit / ENDED / exited (the predicate of E3-death)."""
+    return bool(r.get('marks')) or bool(r.get('ended')) or bool(r.get('exited'))
+
+
+def entry_state(r):
+    """Item 428 (g), V7: the field "entered" of one arm - ('yes', why) the log carries "Level has started: <level>"; ('no', why)
+    an attempt with a log, without the line, without a death marker (nor hold_exit / ENDED / exited) and without a window event
+    (minimized / Recovering Vulkan swapchain); ('void', why) otherwise (not made, no log, a death marker or a window event
+    without the line) - not evidence that -lvl does not enter the level."""
+    if r is None:
+        return 'void', 'not made'
+    if r.get('entered'):
+        return 'yes', 'Level has started'
+    if 'window' not in r:
+        return 'void', 'no log'
+    if death(r):
+        return 'void', 'a death marker without the entry line'
+    w = r.get('window') or {}
+    if w.get('minimized', 0) or w.get('recover', 0):
+        return 'void', 'a window event without the entry line'
+    return 'no', 'no entry line in a clean attempt'
+
+
+def not_enterable(get):
+    """Item 428 (g): per level of the 19 (level, entry of k_NN, entry of u_NN, not enterable) - not enterable by -lvl when both
+    arms are 'no' [c of two logs]."""
+    rows = []
+    for lv, kt, ut in zip(LIST13, K_TAGS, U_TAGS):
+        ks, us = entry_state(get(kt)), entry_state(get(ut))
+        rows.append((lv, ks, us, ks[0] == 'no' and us[0] == 'no'))
+    return rows
+
+
+def entered_word(excl, wall, ww):
+    """Item 428 (g): (word, words of the U arms in the denominator) - the U arms of the levels outside "not enterable": PASS
+    when every one and w13 PASS with a denominator >= 1; FAIL on any FAIL (w13 included); else UNDETERMINED."""
+    den = [w for w, x in zip(wall, excl) if not x]
+    word = sub_word(den + [ww])
+    if word == 'PASS' and not den:
+        word = 'UNDETERMINED'
+    return word, den
+
+
 def arm_word(ms):
     if any(ok is False for _, ok, _ in ms):
         return 'FAIL'
@@ -656,6 +712,15 @@ def read_known(get):
     out.append('KNOWN_SCENES (item 229 (e)(1) with (3)): %s - arms PASS %d / FAIL %d / UNDETERMINED %d of %d, W %s; the lead '
                'sheets and the decision - S13c' % (word, wall.count('PASS'), wall.count('FAIL'), wall.count('UNDETERMINED'),
                                                    N_KNOWN, ww))
+    ent = not_enterable(get)
+    for (lv, ks, us, x), t in zip(ent, U_TAGS):
+        out.append('entry %s %-30s k %s (%s), u %s (%s) -> %s' % (t, lv, ks[0], ks[1], us[0], us[1],
+                                                                 'NOT ENTERABLE by -lvl' if x else 'in the denominator'))
+    wE, den = entered_word([x for _, _, _, x in ent], wall, ww)
+    out.append('KNOWN_SCENES_ENTERED (item 428 (g), V7: the levels outside "not enterable"): %s - denominator %d of %d, arms '
+               'PASS %d / FAIL %d / UNDETERMINED %d, W %s; not enterable by -lvl: %s' % (
+                   wE, len(den), N_KNOWN, den.count('PASS'), den.count('FAIL'), den.count('UNDETERMINED'), ww,
+                   ' '.join(lv for lv, _, _, x in ent if x) or 'none'))
     return word, out
 
 
@@ -669,9 +734,9 @@ def read_k(get):
             continue
         p = r.get('prep') or {}
         out.append('%s %-30s arm %s; entered %s first %s; recipes saved lines %s last %s; created %s ms; death markers %s; '
-                   'window %s' % (t, r['level'], 'PASS' if ok_arm(r) else 'FAIL %s' % r['fail'][:3], r.get('entered'),
+                   'window %s; entry %s' % (t, r['level'], 'PASS' if ok_arm(r) else 'FAIL %s' % r['fail'][:3], r.get('entered'),
                                   r.get('first'), p.get('rsave'), p.get('rec_last'), p.get('created_ms'),
-                                  ';'.join(m['kind'] for m in r['marks']) or 'none', r.get('window')))
+                                  ';'.join(m['kind'] for m in r['marks']) or 'none', r.get('window'), entry_state(r)))
     return out
 
 
@@ -758,6 +823,7 @@ def fmt_arm(r):
                         x['n'], x['lead'], x['cost'], x['cost_prep']))
             o.append('  S-early: distinct events %d (item 414 (g)(1)), known %d, lead < cost %d' % (
                 len(ed['events']), ed['known'], ed['short']))
+    o.append('  entered (item 428 (g)): %s (%s)' % entry_state(r))
     g = r['glitch']
     o.append('  video: %s; sheet %s; death markers %s; [Vulkan][E] %s; window %s; compatibility %s; translation cache %s' % (
         'n/a' if g is None else '%d frames, %d glitches' % (g['video_frames'], g['glitches']), r.get('sheet_file'),
@@ -784,8 +850,8 @@ RX_EDITION = re.compile(r'^(installed|edition): ')
 
 
 def edition_rows(base=None, ed=None):
-    """The edition 09b (when it exists): every line of 09 except the lines "installed:" / "edition:" is in 09b in the same order
-    and nothing else; 09 says "installed: PENDING"; 09b names the installed binary.  Returns [(name, ok, detail)]."""
+    """The edition 11b (when it exists): every line of 11 except the lines "installed:" / "edition:" is in 11b in the same order
+    and nothing else; 11 says "installed: PENDING"; 11b names the installed binary.  Returns [(name, ok, detail)]."""
     base = base or SEAL_BASE
     ed = ed or SEAL_B
     if not os.path.isfile(ed):
@@ -794,13 +860,13 @@ def edition_rows(base=None, ed=None):
     a = [x.rstrip(NL) for x in open(base, encoding='utf-8')] if os.path.isfile(base) else None
     b = [x.rstrip(NL) for x in open(ed, encoding='utf-8')]
     if a is None:
-        return [('edition 09b: the seal 09 exists', False, base)]
+        return [('edition 11b: the seal 11 exists', False, base)]
     ka = [x for x in a if not RX_EDITION.match(x)]
     kb = [x for x in b if not RX_EDITION.match(x)]
-    rows.append(('edition 09b: every line of 09 but "installed:" / "edition:" is in 09b, in order, nothing else', ka == kb,
+    rows.append(('edition 11b: every line of 11 but "installed:" / "edition:" is in 11b, in order, nothing else', ka == kb,
                  '%d / %d lines' % (len(ka), len(kb))))
     ia, ib = seal_installed(base), seal_installed(ed)
-    rows.append(('edition 09b: 09 says "installed: PENDING", 09b names the installed binary', ia is not None and
+    rows.append(('edition 11b: 11 says "installed: PENDING", 11b names the installed binary', ia is not None and
                  ia[0] == 'PENDING' and ib is not None and ib[0] != 'PENDING', '%s / %s' % (ia and ia[0][:16], ib and ib[0][:16])))
     return rows
 

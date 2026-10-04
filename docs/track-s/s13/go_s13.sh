@@ -1,5 +1,5 @@
 #!/bin/bash
-# Track S, link S13a (HPP-498; ROADMAP "SESSION 122" item 408 (e), (l), item 229 (e)(1), (3), item 410 (g)(6)(iii), item 414):
+# Track S, link S13a (HPP-498; ROADMAP "SESSION 122" item 408 (e), (l), item 229 (e)(1), (3), item 410 (g)(6)(iii), item 414, item 419 (v) Z3, item 428 (v)):
 # the game chain of link S13b - the collection arms k_01 .. k_19 into C:/kyty/s288/s13/cat, the U arms u_01 .. u_19 on the
 # exported catalogue C:/kyty/s288/s13/seeds, the W of Sky Garden w13.  Port of C:/kyty/s288/s9/go_s9.sh (seal 07): stop file,
 # lock first, RETURN_FAILED / IN_ARM guards, procload, idle, one attempt, the seal call line, the foreign-CPU row, the return of
@@ -14,8 +14,10 @@
 #     w13   M, mode u + validation (item 295 (b)): --vulkan-validation true, VK_LAYER_PATH, VK_LAYER_DUPLICATE_MESSAGE_LIMIT=
 #           100000000, no VK_LAYER_MESSAGE_ID_FILTER; hold 330, no video
 #   BINARY: the INSTALLED one - no install.  The seal line "installed: <sha256> <signature> <variant>" (sc_s13.py --installed)
-#     names it; "installed: PENDING" (seal 09, before the installation of S12d / FS5d) refuses rc 6 before the lock - an edition
+#     names it; "installed: PENDING" (seal 11, before the installation of S12d / FS5d) refuses rc 6 before the lock - an edition
 #     of the seal by a lead item names it.  Inside the lock the installed binary must be that sha, else no arm (rc 1).
+#   KNOB (item 419 (v) Z3, item 428 (v)(1)): every arm names KYTY_S_PCW=1 positionally (SPCW, after S12 an absent knob means 1);
+#     the caller's KYTY_S_PCW, KYTY_S_PCW_FORCE_MS, KYTY_GAME_PATCH and every KYTY_FIX_* are unset before the arm.
 #   GUARD s13/IN_ARM: written before TOUCHED=1 (the tag, the installed sha, man_pre_app, man_pre_glc), removed only by a
 #     successful return; S9r2 observation 1 (item 382 (b)): after a failed return (RETURN_FAILED written) no later return of the
 #     same run removes it.  THE LOCK line begins "go_s.sh <tag> " (cachex_s.py admits a write only from that prefix) and names
@@ -72,8 +74,10 @@ guardfiles() {
   done
 }
 guardfiles
-# item 342 (e): no S13b arm names a patch file; the knobs of the installed binary stay at their shipped defaults
+# item 342 (e): no S13b arm names a patch file; item 428 (v)(1): the caller's S knobs and KYTY_FIX_* never reach an arm
 unset KYTY_GATE_SCHEDULE KYTY_GATE_SCHEDULE_ABBA VK_LAYER_MESSAGE_ID_FILTER KYTY_GAME_PATCH KYTY_S_PCW KYTY_S_PCW_FORCE_MS
+for V in $(compgen -e); do case "$V" in KYTY_FIX_*) unset "$V";; esac; done
+SPCW=1   # item 419 (v) Z3, item 428 (v)(1): every arm names KYTY_S_PCW=1 itself (after S12 an absent knob means 1, not 0)
 case "$PLWAIT" in
   ''|*[!0-9]*) log0 "go_s13.sh $T refused: PLWAIT '$PLWAIT' is not a number of seconds"; echo "bad PLWAIT"; exit 2;;
 esac
@@ -81,11 +85,11 @@ if [ "$PLWAIT" -gt "$PLMAX" ]; then
   log0 "go_s13.sh $T refused: PLWAIT $PLWAIT > $PLMAX"; echo "PLWAIT above $PLMAX"; exit 2
 fi
 cd "$ROOT" || exit 1
-# the seal in force: the edition pred/09b_s.md (09 with the line "installed:" named, a lead item) when it exists, else 09
+# the seal in force: the edition pred/11b_s.md (11 with the line "installed:" named, a lead item) when it exists, else 11
 PRED=$(python $SC --seal-path 2>&1 | tr -d '\r')
 case "$PRED" in
-  pred/09_s.md|pred/09b_s.md) ;;
-  *) log0 "go_s13.sh $T refused: the seal path is not pred/09_s.md or pred/09b_s.md ($PRED)"; echo "seal path bad"; exit 1;;
+  pred/11_s.md|pred/11b_s.md) ;;
+  *) log0 "go_s13.sh $T refused: the seal path is not pred/11_s.md or pred/11b_s.md ($PRED)"; echo "seal path bad"; exit 1;;
 esac
 PLAN=$(python $SC --plan "$T" 2>&1 | tr -d '\r')
 case "$PLAN" in
@@ -105,7 +109,7 @@ case "$MODE" in
   u) RSRC_APP="$LD/empty_app";;
   *) echo "usage: bad mode $MODE"; exit 2;;
 esac
-ENTER="python $ENTERPY $T --root $LD --level $LEVEL --attempts 1 --stable-draws $SDRAWS --timeout $TOUT --no-install --require-idle --gates-file $ROOT/gates_default.txt --pred $ROOT/$PRED $RECX --hold $HOLD $VALX KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 $CLSX $UX $VALE"
+ENTER="python $ENTERPY $T --root $LD --level $LEVEL --attempts 1 --stable-draws $SDRAWS --timeout $TOUT --no-install --require-idle --gates-file $ROOT/gates_default.txt --pred $ROOT/$PRED $RECX --hold $HOLD $VALX KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_S_PCW=$SPCW $CLSX $UX $VALE"
 if [ "${DRY:-0}" = "2" ]; then
   echo "PLAN $T: link s13, seal $PRED, binary the installed one named by the line 'installed:' of $PRED; mode $MODE; restore app <- $RSRC_APP; glc as found; $ENTER"
   exit 0

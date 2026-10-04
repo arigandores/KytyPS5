@@ -1,0 +1,61 @@
+sc_s13.py: 09b_s -> 11b_s 1
+sc_s13.py: 09_s -> 11_s 1
+sc_s13.py: \b09b\b -> 11b 9: he seal in force: the edition 09b when it e |  ed=None):     """The edition 09b (when it  | nstalled:" / "edition:" is in 09b in the sa | 09 says "installed: PENDING"; 09b names the | ne:         return [('edition 09b: the seal | x)]     rows.append(('edition 09b: every li | nstalled:" / "edition:" is in 09b, in order | ed)     rows.append(('edition 09b: 09 says  | 09 says "installed: PENDING", 09b names the
+sc_s13.py: \b09\b -> 11 6: tion 11b when it exists, else 09."""     r | hen it exists): every line of 09 except th | e order     and nothing else; 09 says "ins | turn [('edition 11b: the seal 09 exists',  | (('edition 11b: every line of 09 but "inst |    rows.append(('edition 11b: 09 says "ins
+sc_s13.py: replaced 1 x '(d)(2)); the arms run in link S13b under the lock, files in C:/kyty/s2'
+sc_s13.py: replaced 1 x '<variant>" - no install; item 414 (b): the arm binary is read from the'
+sc_s13.py: replaced 1 x '  alone and of (e)(3) alone are printed beside.  Decisions are the lea'
+sc_s13.py: replaced 1 x "SEAL_BASE = 'C:/kyty/s288/pred/11_s.md'       # the seal of S13a: the "
+sc_s13.py: replaced 1 x "SPCW_LINE = 'S-pcw: KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0'          # ite"
+sc_s13.py: replaced 1 x "             KYTY_GUEST_ARGS='-lvl %s' % spec['level'], KYTY_GPU_CLOCK"
+sc_s13.py: replaced 1 x "    add('no KYTY_S_PCW / KYTY_FIX_* in the env (the shipped defaults o"
+sc_s13.py: replaced 1 x '    r[\'admit\'].append((\'the knob line "%s" (S12d: knobs S = 1), every '
+sc_s13.py: replaced 1 x '\n\ndef arm_word(ms):\n'
+sc_s13.py: replaced 1 x '                                                   N_KNOWN, ww))\n    r'
+sc_s13.py: replaced 1 x "        out.append('%s %-30s arm %s; entered %s first %s; recipes save"
+sc_s13.py: replaced 1 x "                                  ';'.join(m['kind'] for m in r['marks"
+sc_s13.py: replaced 1 x "    g = r['glitch']\n    o.append('  video:"
+go_s13.sh: 09b_s -> 11b_s 3
+go_s13.sh: 09_s -> 11_s 2
+go_s13.sh: \b09b\b -> 11b 0: 
+go_s13.sh: \b09\b -> 11 3: t; "installed: PENDING" (seal 09, before t | e: the edition pred/11b_s.md (09 with the  | ad item) when it exists, else 09 PRED=$(py
+go_s13.sh: replaced 1 x 'item 410 (g)(6)(iii), item 414):\n'
+go_s13.sh: replaced 1 x '#   GUARD s13/IN_ARM:'
+go_s13.sh: replaced 1 x '# item 342 (e): no S13b arm names a patch file; the knobs of the insta'
+go_s13.sh: replaced 1 x 'KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 $CLSX $UX $VALE"'
+test_sc_s13.py: 09b_s -> 11b_s 4
+test_sc_s13.py: 09_s -> 11_s 2
+test_sc_s13.py: \b09b\b -> 11b 13: ed, repeated) and the edition 09b (S9r2 obs | se('E5 current_seal: 09 while 09b is absent | l: %s s13/sc_s13.py\nedition: 09b by item 9 | () ok &= case('E6 the edition 09b exists: c | on 09b exists: current_seal = 09b; the same | talled / edition, 09 PENDING, 09b named ->  | oding='ascii') ok &= case('E7 09b with an e | oding='ascii') ok &= case('E8 09b with the  | oding='ascii') ok &= case('E9 09b still PEN | = case('E11 edition rows with 09b but no 09 | .edition_rows() == [('edition 09b: the seal | )) ok &= case('F4 the edition 09b in force: |  any(r[0].startswith('edition 09b') for r i
+test_sc_s13.py: \b09\b -> 11 5:  ok &= case('E5 current_seal: 09 while 11b | ines but installed / edition, 09 PENDING,  | ding='ascii') ok &= case('E10 09 not PENDI |  edition rows with 11b but no 09 -> one fa | ) == [('edition 11b: the seal 09 exists', 
+test_sc_s13.py: replaced 1 x '(e), item 371 (v), item 410 (g)(6)(iii), item 414 (b), (g)(1), (g)(5)-'
+test_sc_s13.py: replaced 1 x "ok &= case('C1 environment k: the base + CLOCK_PIN + MARKERS, no trace"
+test_sc_s13.py: replaced 1 x "ok &= case('C9 a KYTY_FIX_* key in the env: the family row FAILS', not"
+test_sc_s13.py: replaced 1 x "R_KNOB = 'no KYTY_S_PCW / KYTY_FIX_* in the env (the shipped defaults "
+test_sc_s13.py: replaced 1 x "ok &= case('J6 KYTY_S_PCW=1 / KYTY_FIX_B42=1 set in the env -> the kno"
+test_sc_s13.py: replaced 1 x "ok &= case('K28 the knob line KYTY_S_PCW=0 -> admission FAILS (knobs S"
+test_sc_s13.py: replaced 1 x "ok &= case('K29 no knob line -> admission FAILS', any('S-pcw' in f for"
+test_sc_s13.py: replaced 1 x '# ===================================================================='
+test_sc_s13.py: replaced 1 x "           'READ collection arms' in o2 and 'READ export:' in o2 and '"
+test_go_s13.py: 09b_s -> 11b_s 7
+test_go_s13.py: 09_s -> 11_s 6
+test_go_s13.py: \b09b\b -> 11b 3: ) ok &= case('G10 the edition 09b in force  | installed line of the edition 09b',         | ation, no seed path; the seal 09b', 'mode c
+test_go_s13.py: \b09\b -> 11 0: 
+test_go_s13.py: replaced 1 x 'interference, IN_ARM written and removed, a hanging IN_ARM -> rc 1, an'
+test_go_s13.py: replaced 1 x 'the lock; S9r2 observation 1 - a failed return leaves IN_ARM and RETUR'
+test_go_s13.py: replaced 1 x "ok &= case('G18 no arm names KYTY_GAME_PATCH, KYTY_S_PCW or KYTY_FIX_'"
+test_go_s13.py: replaced 1 x "           'PRED=$(python $SC --seal-path' in src_t and src_t.count('g"
+test_go_s13.py: replaced 1 x '"json.dump({\'tag\': tag, \'gp\': os.environ.get(\'KYTY_GAME_PATCH\'), \'spcw'
+test_go_s13.py: replaced 1 x "rc, o = go2('k_01', KYTY_S_PCW='0')\n"
+test_go_s13.py: replaced 1 x "ok &= case('GL2 k_01: the game saw NO app cache file (the empty set), "
+test_go_s13.py: replaced 1 x "           '--emu-arg=--vulkan-validation' in j.get('argv', []) and 'V"
+mut_sc_s13.py: 09b_s -> 11b_s 0
+mut_sc_s13.py: 09_s -> 11_s 0
+mut_sc_s13.py: \b09b\b -> 11b 9: ', "    rows.append(('edition 09b: every li | alled:\" / \"edition:\" is in 09b, in order |    "    rows.append(('edition 09b: every li | alled:\" / \"edition:\" is in 09b, in order | ', "    rows.append(('edition 09b: every li | alled:\" / \"edition:\" is in 09b, in order |    "    rows.append(('edition 09b: every li | alled:\" / \"edition:\" is in 09b, in order | ', "        return [('edition 09b: the seal
+mut_sc_s13.py: \b09\b -> 11 5: (('edition 11b: every line of 09 but \"ins | (('edition 11b: every line of 09 but \"ins | (('edition 11b: every line of 09 but \"ins | (('edition 11b: every line of 09 but \"ins | turn [('edition 11b: the seal 09 exists', 
+mut_sc_s13.py: replaced 1 x 'Track S link S13a (HPP-498; ROADMAP "SESSION 122" item 408 (l), item 2'
+mut_sc_s13.py: replaced 1 x '    (\'spcw\', "SPCW_LINE = \'S-pcw: KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0\'"'
+mut_sc_s13.py: replaced 1 x '    (\'env_pin\', "KYTY_GPU_CLOCK_PIN=\'1\', KYTY_GPU_MARKERS=\'0\')", "KYTY'
+mut_sc_s13.py: replaced 1 x '    (\'ad_knobs\', "        not any(k.startswith((\'KYTY_S_PCW\', \'KYTY_FI'
+mut_sc_s13.py: replaced 1 x '    (\'sa_spcw\', "len(s[\'spcw\']) >= 1 and all(x == SPCW_LINE for x in s'
+mut_sc_s13.py: replaced 1 x '    # order\n'
+P428: OK

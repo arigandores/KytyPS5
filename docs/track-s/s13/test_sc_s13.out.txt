@@ -1,4 +1,4 @@
-suite test_sc_s13.py sha256 06a1517caadeaf64b1e6a5d46821adbaec40340fd21ba39e5edab2ec845b1aba target sc_s13.py sha256 e96dc8222ab239833490f5a8ba4b2ad367ae5c5910e6adfcd95cf15ea1da1621
+suite test_sc_s13.py sha256 50ecd371a16ce1f7f60830786b88fdc216fc9645afc4c4776f6bf5f9ce0ce1e7 target sc_s13.py sha256 1263db3b7dee6e53f9abbbe7dbcab10bade0113c4e1ab2e41f0716ed49550e8c
 PASS A1 the inherited sc_s9.py is refused when its sha256 is not the pinned one
 PASS A2 sc_s13.py is ASCII only
 PASS B1 39 arms: k_01 .. k_19, u_01 .. u_19, w13 in this order
@@ -7,7 +7,7 @@ PASS B3 LIST13 of the scorer = the line LIST13 of lvl_s13.out.txt
 PASS B4 k arms: class M, mode cat, hold 180, no video, no validation; k_01 from the empty set, k_02 from k_01, k_19 from k_18; level K<NN>
 PASS B5 u arms: class T, mode u, hold 120, video, no validation; w13: Sky Garden, class M, mode u, hold 330, validation, no video
 PASS B6 constants: HOLD_K 180, HOLD_U 120, HOLD_W 330, HOLD_W_US 300 s, FRAMES_VIDEO 3000, PREP_LIMIT_S 180
-PASS C1 environment k: the base + CLOCK_PIN + MARKERS, no trace, no seed path, no cache mode
+PASS C1 environment k: the base + CLOCK_PIN + MARKERS + KYTY_S_PCW=1 (item 428 (v)(1)), no trace, no seed path, no cache mode
 PASS C2 environment u: + AV_TRACE, REGISTER_TRACE, the seed path s13/seeds, prepare-cold
 PASS C3 environment w13: the seed path and prepare-cold, no trace
 PASS C4 env rows of a clean u arm: family and strict PASS
@@ -16,23 +16,26 @@ PASS C6 a non-family key differs: family PASS, strict FAILS
 PASS C7 a u arm without KYTY_REC: strict FAILS
 PASS C8 a k arm with KYTY_REC: strict FAILS; without it PASS with no difference named
 PASS C9 a KYTY_FIX_* key in the env: the family row FAILS
+PASS C10 no KYTY_S_PCW in the env (item 428 (v)(1)) -> the family row FAILS naming it
+PASS C11 KYTY_S_PCW_FORCE_MS in the env -> the family row FAILS naming it
+PASS C12 every arm (k, u, w13) expects KYTY_S_PCW=1
 PASS D1 plan k_01 / k_02: "s13 <level> M cat 180 empty|k_01 100 600 0 0"
 PASS D2 plan u_19 "s13 enemy_gorilla T u 120 - 100 600 1 0"; w13 "s13 underwater_aerial_garden M u 330 - 300 600 0 1"
 PASS E1 "installed: PENDING" -> (PENDING, None, None)
 PASS E2 "installed: <sha> <sig> <variant>" -> the triple
 PASS E3 malformed: a short sha, a signature not KytySC3:, a variant not variant_, two lines, none, PENDING with more
 PASS E4 no seal file -> None
-PASS E5 current_seal: 09 while 09b is absent; edition rows empty
-PASS E6 the edition 09b exists: current_seal = 09b; the same lines but installed / edition, 09 PENDING, 09b named -> ok
-PASS E7 09b with an extra line -> the line row FAILS
-PASS E8 09b with the lines in another order -> FAILS
-PASS E9 09b still PENDING -> the installed row FAILS
-PASS E10 09 not PENDING -> the installed row FAILS
-PASS E11 edition rows with 09b but no 09 -> one failing row
+PASS E5 current_seal: 11 while 11b is absent; edition rows empty
+PASS E6 the edition 11b exists: current_seal = 11b; the same lines but installed / edition, 11 PENDING, 11b named -> ok
+PASS E7 11b with an extra line -> the line row FAILS
+PASS E8 11b with the lines in another order -> FAILS
+PASS E9 11b still PENDING -> the installed row FAILS
+PASS E10 11 not PENDING -> the installed row FAILS
+PASS E11 edition rows with 11b but no 11 -> one failing row
 PASS F1 check_seal: every sealed file, this scorer, "installed: PENDING" -> PASS (no binary row while PENDING)
 PASS F2 a sealed name without its line -> FAIL
 PASS F3 no line "installed:" -> FAIL (S9r2 observation 3)
-PASS F4 the edition 09b in force: check_seal reads it, its edition rows pass, the installed binary now = its line -> PASS
+PASS F4 the edition 11b in force: check_seal reads it, its edition rows pass, the installed binary now = its line -> PASS
 PASS F5 the installed binary now != the line "installed:" -> FAIL
 PASS F6 a sealed file changed (this scorer) -> FAIL
 PASS F6b the running scorer is not the sealed s13/sc_s13.py (the sealed files unchanged) -> FAIL on that row only
@@ -68,7 +71,8 @@ PASS J2 json binary != the seal line -> that row FAILS (item 414 (b))
 PASS J3 two attempts -> FAILS
 PASS J4 another -lvl -> FAILS
 PASS J5 KYTY_GAME_PATCH -> its row FAILS
-PASS J6 KYTY_S_PCW=1 / KYTY_FIX_B42=1 set in the env -> the knob row FAILS (shipped defaults)
+PASS J6 KYTY_S_PCW absent (u_01) / =0 (w13) / empty (k_01) in the env -> the row "KYTY_S_PCW=1 named" FAILS; =1 passes (J1)
+PASS J6b KYTY_S_PCW_FORCE_MS / KYTY_FIX_B42 in the env -> the force row FAILS; KYTY_FIXED (not the prefix KYTY_FIX_) -> not that row
 PASS J7 KYTY_GPU_CHECKPOINTS / KYTY_GATE_SCHEDULE / KYTY_GATE_SCHEDULE_ABBA -> their rows FAIL
 PASS J8 the video of another tag -> the video row FAILS; a k arm with a video -> "no video" FAILS
 PASS J9 --vulkan-validation true on a u arm / false on w13 -> FAILS
@@ -108,8 +112,12 @@ PASS K25 progress 180 000 ms -> not above 180: undetermined
 PASS K26 no line, the attempt ended by timeout -> the bound is --timeout 600 s: FAILS
 PASS K26b progress 1 000 ms and the timeout -> the bound is the larger, 600 s: FAILS
 PASS K27 neither the lines nor progress nor timeout -> undetermined
-PASS K28 the knob line KYTY_S_PCW=0 -> admission FAILS (knobs S = 1); the E1 members undetermined, the arm UNDETERMINED
+PASS K28 the log line KYTY_S_PCW=0 against the env 1 -> the S-pcw: row FAILS (the log != the env); the E1 members undetermined, the arm UNDETERMINED
 PASS K29 no knob line -> admission FAILS
+PASS K28b env KYTY_S_PCW=0 and the log line =0: the S-pcw: row PASSES (the log = the env), the env row FAILS (=0)
+PASS K28c no KYTY_S_PCW in the env, the log line =1 -> the env row and the S-pcw: row FAIL
+PASS K28d two S-pcw: lines, the second =0 against the env 1 -> the S-pcw: row FAILS (every line)
+PASS K28e the log line with KYTY_S_PCW_FORCE_MS=15000 -> the S-pcw: row FAILS
 PASS K30 the compatibility line on another signature -> admission FAILS
 PASS K31 the translation cache of another variant -> admission FAILS
 PASS K32 a window minimized -> admission FAILS (item 273 (z)); restored only -> PASS
@@ -141,6 +149,19 @@ PASS N7 a FAIL and an UNDETERMINED arm -> FAIL
 PASS N8 sub_word / arm_word
 PASS N9 E1-skip fails on a row with a skip alone and on a skipped-draw line alone
 PASS N10 E1-attr with the attribution undetermined (att100 None) on an admitted arm -> undetermined, not a failure
+PASS Q1 entry_state: not made -> void; the entry line -> yes; no log (no window field) -> void; a clean attempt without the line -> no
+PASS Q2 entry_state without the line: a death marker / hold_exit (ended) / exited / minimized / Recovering -> void; restored only -> no; the entry line with a death marker -> yes
+PASS Q3 whole arms not entering ps_logo (k_04 class M, u_04 class T, clean) -> entry no on both; fmt_arm prints the field
+PASS Q4 not_enterable: ps_logo with k_04 and u_04 both no -> True; the other 18 (k not made) -> False
+PASS Q5 ps_logo not entered in k_04 and u_04 (both clean) -> not enterable: KNOWN_SCENES UNDETERMINED (unchanged), KNOWN_SCENES_ENTERED PASS on 18 of 19, the list names ps_logo, the entry line of u_04 NOT ENTERABLE
+PASS Q6 entered in k_04 only -> in the denominator: u_04 UNDETERMINED -> KNOWN_SCENES_ENTERED UNDETERMINED on 19
+PASS Q7 k_04 no but u_04 entered -> in the denominator: PASS on 19
+PASS Q8 k_04 not made (void) and u_04 no -> in the denominator: UNDETERMINED on 19
+PASS Q9 u_04 without the line but with a death marker (void) -> in the denominator; its E3-death FAILS -> FAIL on 19
+PASS Q10 u_04 without the line but with a window event (void) -> in the denominator: UNDETERMINED on 19
+PASS Q11 ps_logo not enterable and a [Vulkan][E] on w13 -> KNOWN_SCENES_ENTERED FAIL on 18
+PASS Q12 entered_word: a denominator 0 with w13 PASS -> UNDETERMINED; an excluded FAIL arm is not counted -> PASS; a FAIL in the denominator -> FAIL; w13 FAIL / UNDETERMINED -> FAIL / UNDETERMINED
+PASS Q13 19 clean U arms and a clean W -> KNOWN_SCENES PASS and KNOWN_SCENES_ENTERED PASS on 19, list none
 PASS O1 k_01 first -> allowed; k_02 before k_01 -> rc 1; an unknown tag rc 2; a made tag rc 1
 PASS O2 u_01 after k_19 with the export OK -> 0; without the export -> rc 6
 PASS O3 a death marker in an earlier arm -> rc 6 (the series stops)
@@ -154,5 +175,5 @@ PASS P1 main: --plan rc 0 / unknown 2; --installed prints the seal line; --seal-
 PASS P2 --read prints the collection, the export and the known scenes with the word
 PASS P3 the output of main is ASCII
 PASS P4 the output of --plan, --installed, --seal-path, --tag, --read encodes in strict cp1250 (no process started: mutlib keeps its workers)
-checks: 155
+checks: 176
 ALL OK

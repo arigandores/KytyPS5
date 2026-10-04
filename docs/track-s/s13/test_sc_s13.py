@@ -1,8 +1,11 @@
 """Offline fixtures of sc_s13.py (track S, link S13a, HPP-498; ROADMAP "SESSION 122" item 408 (l), item 229 (e)(1), (3), item 355
-(e), item 371 (v), item 410 (g)(6)(iii), item 414 (b), (g)(1), (g)(5)-(7)).
+(e), item 371 (v), item 410 (g)(6)(iii), item 414 (b), (g)(1), (g)(5)-(7), item 419 (v) Z3, item 428 (v), (g)).
+S13a2 (item 428): KYTY_S_PCW=1 named on every arm (absent / 0 / FORCE_MS / KYTY_FIX_* FAIL), every S-pcw: line against the env
+of the arm (a line other than the env FAILS, a line = an env of 0 passes that row), the field "entered" and the word
+KNOWN_SCENES_ENTERED at every edge (Q1-Q13).
 One case per term and per edge of the new code: the inheritance check; the arms of S13b (order, levels, classes, modes, the chain
 of the collection sources, holds, video, validation); the environment of every arm kind with the family / strict rows; the plan
-lines; the seal line "installed:" (PENDING, named, malformed, repeated) and the edition 09b (S9r2 observation 3); scan_y (the
+lines; the seal line "installed:" (PENDING, named, malformed, repeated) and the edition 11b (S9r2 observation 3); scan_y (the
 compatibility and translation cache lines, DualSrcBlend before / after the first GuestOut, [Vulkan][E], the window events);
 the export state; the cache protocol rows per mode; admission; whole arms through score_arm (a clean U arm, a skip after the
 first scene frame, a held first scene frame, the data rows of item 414 (g)(5)-(7): a line after the entry with frame= below the
@@ -47,7 +50,7 @@ shutil.rmtree(BASE, ignore_errors=True)
 BASE.mkdir(parents=True)
 ROOT = str(BASE / 's13')
 (BASE / 'pred').mkdir()
-PRED = (BASE / 'pred' / '09b_s.md').as_posix()
+PRED = (BASE / 'pred' / '11b_s.md').as_posix()
 Path(PRED).write_bytes(('installed: %s %s %s\n' % (INST, SIG, VAR)).encode('ascii'))
 PRED_SHA = hashlib.sha256(Path(PRED).read_bytes()).hexdigest()
 INSTT = (INST, SIG, VAR)
@@ -263,9 +266,10 @@ ok &= case('B6 constants: HOLD_K 180, HOLD_U 120, HOLD_W 330, HOLD_W_US 300 s, F
            (S.HOLD_K, S.HOLD_U, S.HOLD_W, S.HOLD_W_US, S.FRAMES_VIDEO, S.PREP_LIMIT_S) ==
            (180, 120, 330, 300000000, 3000, 180))
 e = S.expected_env(k1)
-ok &= case('C1 environment k: the base + CLOCK_PIN + MARKERS, no trace, no seed path, no cache mode',
-           e == dict(KYTY_FRAME_TRACE='lite', KYTY_GPU_HANG_ABORT_S='8', KYTY_QUEUE_TRACE='1',
-                     KYTY_GUEST_ARGS='-lvl title_controller_ship', KYTY_GPU_CLOCK_PIN='1', KYTY_GPU_MARKERS='0'))
+ok &= case('C1 environment k: the base + CLOCK_PIN + MARKERS + KYTY_S_PCW=1 (item 428 (v)(1)), no trace, no seed path, no '
+           'cache mode', e == dict(KYTY_FRAME_TRACE='lite', KYTY_GPU_HANG_ABORT_S='8', KYTY_QUEUE_TRACE='1',
+                                 KYTY_GUEST_ARGS='-lvl title_controller_ship', KYTY_GPU_CLOCK_PIN='1', KYTY_GPU_MARKERS='0',
+                                 KYTY_S_PCW='1'))
 e = S.expected_env(u1)
 ok &= case('C2 environment u: + AV_TRACE, REGISTER_TRACE, the seed path s13/seeds, prepare-cold',
            e.get('KYTY_AV_TRACE') == '1' and e.get('KYTY_SHADER_REGISTER_TRACE') == '1' and
@@ -286,6 +290,12 @@ ok &= case('C8 a k arm with KYTY_REC: strict FAILS; without it PASS with no diff
            S.env_rows(k1, env_for('k_01'))[1] == (True, '-'))
 (fo, fd), (so, sd) = S.env_rows(u1, env_for('u_01', KYTY_FIX_B42='1'))
 ok &= case('C9 a KYTY_FIX_* key in the env: the family row FAILS', not fo)
+(fo, fd), (so, sd) = S.env_rows(u1, env_for('u_01', KYTY_S_PCW=None))
+ok &= case('C10 no KYTY_S_PCW in the env (item 428 (v)(1)) -> the family row FAILS naming it', not fo and 'KYTY_S_PCW' in fd)
+(fo, fd), (so, sd) = S.env_rows(u1, env_for('u_01', KYTY_S_PCW_FORCE_MS='0'))
+ok &= case('C11 KYTY_S_PCW_FORCE_MS in the env -> the family row FAILS naming it', not fo and 'KYTY_S_PCW_FORCE_MS' in fd)
+ok &= case('C12 every arm (k, u, w13) expects KYTY_S_PCW=1', all(S.expected_env(S.SPEC[t]).get('KYTY_S_PCW') == '1'
+                                                             for t in S.SEQ) and S.SPCW_ENV == '1')
 ok &= case('D1 plan k_01 / k_02: "s13 <level> M cat 180 empty|k_01 100 600 0 0"',
            S.plan(k1) == 's13 title_controller_ship M cat 180 empty 100 600 0 0' and
            S.plan(k2) == 's13 intro_next M cat 180 k_01 100 600 0 0')
@@ -313,26 +323,26 @@ ok &= case('E4 no seal file -> None', S.seal_installed((BASE / 'pred' / 'none.md
 sb, sbb = BASE / 'pred' / 'e09.md', BASE / 'pred' / 'e09b.md'
 S.SEAL_BASE, S.SEAL_B = sb.as_posix(), sbb.as_posix()
 sb.write_text('seal: %s s13/sc_s13.py\ninstalled: PENDING\ngo_s13 call: x\n' % ('0' * 64), encoding='ascii')
-ok &= case('E5 current_seal: 09 while 09b is absent; edition rows empty', S.current_seal() == sb.as_posix() and
+ok &= case('E5 current_seal: 11 while 11b is absent; edition rows empty', S.current_seal() == sb.as_posix() and
            S.edition_rows() == [])
-sbb.write_text('seal: %s s13/sc_s13.py\nedition: 09b by item 999\ninstalled: %s %s %s\ngo_s13 call: x\n' % ('0' * 64, INST, SIG, VAR),
+sbb.write_text('seal: %s s13/sc_s13.py\nedition: 11b by item 999\ninstalled: %s %s %s\ngo_s13 call: x\n' % ('0' * 64, INST, SIG, VAR),
                encoding='ascii')
 er = S.edition_rows()
-ok &= case('E6 the edition 09b exists: current_seal = 09b; the same lines but installed / edition, 09 PENDING, 09b named -> ok',
+ok &= case('E6 the edition 11b exists: current_seal = 11b; the same lines but installed / edition, 11 PENDING, 11b named -> ok',
            S.current_seal() == sbb.as_posix() and len(er) == 2 and all(x[1] for x in er))
 sbb.write_text('seal: %s s13/sc_s13.py\ninstalled: %s %s %s\ngo_s13 call: x\nextra\n' % ('0' * 64, INST, SIG, VAR), encoding='ascii')
-ok &= case('E7 09b with an extra line -> the line row FAILS', not S.edition_rows()[0][1])
+ok &= case('E7 11b with an extra line -> the line row FAILS', not S.edition_rows()[0][1])
 sbb.write_text('go_s13 call: x\nseal: %s s13/sc_s13.py\ninstalled: %s %s %s\n' % ('0' * 64, INST, SIG, VAR), encoding='ascii')
-ok &= case('E8 09b with the lines in another order -> FAILS', not S.edition_rows()[0][1])
+ok &= case('E8 11b with the lines in another order -> FAILS', not S.edition_rows()[0][1])
 sbb.write_text('seal: %s s13/sc_s13.py\ninstalled: PENDING\ngo_s13 call: x\n' % ('0' * 64), encoding='ascii')
-ok &= case('E9 09b still PENDING -> the installed row FAILS', not S.edition_rows()[1][1])
+ok &= case('E9 11b still PENDING -> the installed row FAILS', not S.edition_rows()[1][1])
 sb.write_text('seal: %s s13/sc_s13.py\ninstalled: %s %s %s\ngo_s13 call: x\n' % ('0' * 64, INST, SIG, VAR), encoding='ascii')
 sbb.write_text('seal: %s s13/sc_s13.py\ninstalled: %s %s %s\ngo_s13 call: x\n' % ('0' * 64, INST, SIG, VAR), encoding='ascii')
-ok &= case('E10 09 not PENDING -> the installed row FAILS', not S.edition_rows()[1][1])
+ok &= case('E10 11 not PENDING -> the installed row FAILS', not S.edition_rows()[1][1])
 sbb.unlink()
 sb.unlink()
-ok &= case('E11 edition rows with 09b but no 09 -> one failing row', (sbb.write_text('x\n') or True) and
-           S.edition_rows() == [('edition 09b: the seal 09 exists', False, sb.as_posix())])
+ok &= case('E11 edition rows with 11b but no 11 -> one failing row', (sbb.write_text('x\n') or True) and
+           S.edition_rows() == [('edition 11b: the seal 11 exists', False, sb.as_posix())])
 sbb.unlink()
 # check_seal on a fixture root
 CR = BASE / 'cs'
@@ -352,9 +362,9 @@ seal_lines = ['seal: %s %s' % (sha_p(n if n.startswith('C:/') else CR / n), n) f
 GAMEF = BASE / 'game.exe'
 GAMEF.write_bytes(b'installed build')
 GSHA = sha_p(GAMEF)
-cs = CR / 'pred' / '09_s.md'
+cs = CR / 'pred' / '11_s.md'
 cs.parent.mkdir(parents=True, exist_ok=True)
-S.SEAL_BASE, S.SEAL_B = cs.as_posix(), (CR / 'pred' / '09b_s.md').as_posix()
+S.SEAL_BASE, S.SEAL_B = cs.as_posix(), (CR / 'pred' / '11b_s.md').as_posix()
 cs.write_text(NL.join(seal_lines + ['installed: PENDING']) + NL, encoding='ascii')
 good, rows, inst = S.check_seal(cs.as_posix(), CR.as_posix(), (CR / 's13' / 'sc_s13.py').as_posix(), GAMEF.as_posix())
 ok &= case('F1 check_seal: every sealed file, this scorer, "installed: PENDING" -> PASS (no binary row while PENDING)', good and
@@ -366,11 +376,11 @@ cs.write_text(NL.join(seal_lines) + NL, encoding='ascii')
 ok &= case('F3 no line "installed:" -> FAIL (S9r2 observation 3)', not S.check_seal(cs.as_posix(), CR.as_posix(),
                                                                                    (CR / 's13' / 'sc_s13.py').as_posix())[0])
 cs.write_text(NL.join(seal_lines + ['installed: PENDING']) + NL, encoding='ascii')
-(CR / 'pred' / '09b_s.md').write_text(NL.join(seal_lines + ['installed: %s %s %s' % (GSHA, SIG, VAR)]) + NL, encoding='ascii')
+(CR / 'pred' / '11b_s.md').write_text(NL.join(seal_lines + ['installed: %s %s %s' % (GSHA, SIG, VAR)]) + NL, encoding='ascii')
 good, rows, inst = S.check_seal(None, CR.as_posix(), (CR / 's13' / 'sc_s13.py').as_posix(), GAMEF.as_posix())
-ok &= case('F4 the edition 09b in force: check_seal reads it, its edition rows pass, the installed binary now = its line -> PASS',
+ok &= case('F4 the edition 11b in force: check_seal reads it, its edition rows pass, the installed binary now = its line -> PASS',
            good and inst[0] == GSHA and any(r[0].startswith('the installed binary now') and r[1] for r in rows) and
-           any(r[0].startswith('edition 09b') for r in rows))
+           any(r[0].startswith('edition 11b') for r in rows))
 GAMEF.write_bytes(b'another build')
 ok &= case('F5 the installed binary now != the line "installed:" -> FAIL', not S.check_seal(
     None, CR.as_posix(), (CR / 's13' / 'sc_s13.py').as_posix(), GAMEF.as_posix())[0])
@@ -383,8 +393,8 @@ shutil.copy2(SRC, CR / 's13' / 'sc_s13.py')
 good, rows, inst = S.check_seal(None, CR.as_posix(), (BASE / 'other_scorer.py').as_posix(), GAMEF.as_posix())
 ok &= case('F6b the running scorer is not the sealed s13/sc_s13.py (the sealed files unchanged) -> FAIL on that row only',
            not good and [r[0] for r in rows if not r[1]] == ['this scorer in the seal'])
-(CR / 'pred' / '09b_s.md').unlink()
-S.SEAL_BASE, S.SEAL_B = (BASE / 'pred' / '09_s.md').as_posix(), PRED
+(CR / 'pred' / '11b_s.md').unlink()
+S.SEAL_BASE, S.SEAL_B = (BASE / 'pred' / '11_s.md').as_posix(), PRED
 ok &= case('F7 the sealed names cover the harness, the scorer, both suites, the mutants, the export and its suite, the list '
            'and its output, the inherited scorers, the tool, the video detector',
            all(n in S.SEALED_NAMES for n in ('s13/go_s13.sh', 's13/sc_s13.py', 's13/test_sc_s13.py', 's13/test_go_s13.py',
@@ -491,7 +501,8 @@ def adm(tag, js):
 
 
 R_BIN = 'arm binary = binary_sha256 of the json = the seal line "installed:" (item 414 (b))'
-R_KNOB = 'no KYTY_S_PCW / KYTY_FIX_* in the env (the shipped defaults of the installed binary)'
+R_SPCW = 'KYTY_S_PCW=1 named in the env (item 419 (v) Z3, item 428 (v)(2))'
+R_FORCE = 'no KYTY_S_PCW_FORCE_MS / KYTY_FIX_* in the env (item 428 (v)(1))'
 ok &= case('J1 admission of a clean u arm and a clean w13 -> no failing row', adm('u_01', js_for('u_01')) == [] and
            adm('w13', js_for('w13')) == [] and adm('k_01', js_for('k_01')) == [])
 ok &= case('J2 json binary != the seal line -> that row FAILS (item 414 (b))', adm('u_01', js_for('u_01', binary_sha256='0' * 64))
@@ -501,8 +512,14 @@ ok &= case('J3 two attempts -> FAILS', adm('u_01', js_for('u_01', attempts=[{'la
 ok &= case('J4 another -lvl -> FAILS', adm('u_01', js_for('u_01', guest_args='-lvl x')) == ['guest args -lvl title_controller_ship'])
 ok &= case('J5 KYTY_GAME_PATCH -> its row FAILS', 'no KYTY_GAME_PATCH (item 342 (e))' in adm('u_01', js_for('u_01', env_over=dict(
     KYTY_GAME_PATCH='p.txt'))))
-ok &= case('J6 KYTY_S_PCW=1 / KYTY_FIX_B42=1 set in the env -> the knob row FAILS (shipped defaults)', R_KNOB in adm(
-    'u_01', js_for('u_01', env_over=dict(KYTY_S_PCW='1'))) and R_KNOB in adm('u_01', js_for('u_01', env_over=dict(KYTY_FIX_B42='1'))))
+ok &= case('J6 KYTY_S_PCW absent (u_01) / =0 (w13) / empty (k_01) in the env -> the row "KYTY_S_PCW=1 named" FAILS; =1 passes '
+           '(J1)', R_SPCW in adm('u_01', js_for('u_01', env_over=dict(KYTY_S_PCW=None))) and
+           R_SPCW in adm('w13', js_for('w13', env_over=dict(KYTY_S_PCW='0'))) and
+           R_SPCW in adm('k_01', js_for('k_01', env_over=dict(KYTY_S_PCW=''))) and R_SPCW not in adm('u_01', js_for('u_01')))
+ok &= case('J6b KYTY_S_PCW_FORCE_MS / KYTY_FIX_B42 in the env -> the force row FAILS; KYTY_FIXED (not the prefix KYTY_FIX_) -> not '
+           'that row', R_FORCE in adm('u_01', js_for('u_01', env_over=dict(KYTY_S_PCW_FORCE_MS='0'))) and
+           R_FORCE in adm('u_01', js_for('u_01', env_over=dict(KYTY_FIX_B42='1'))) and
+           R_FORCE not in adm('u_01', js_for('u_01', env_over=dict(KYTY_FIXED='1'))))
 ok &= case('J7 KYTY_GPU_CHECKPOINTS / KYTY_GATE_SCHEDULE / KYTY_GATE_SCHEDULE_ABBA -> their rows FAIL', 'no KYTY_GPU_CHECKPOINTS' in
            adm('u_01', js_for('u_01', env_over=dict(KYTY_GPU_CHECKPOINTS='1'))) and 'no KYTY_GATE_SCHEDULE' in
            adm('u_01', js_for('u_01', env_over=dict(KYTY_GATE_SCHEDULE='x'))) and 'no KYTY_GATE_SCHEDULE' in
@@ -641,11 +658,25 @@ r = make_arm('u_01', lines, js=js_for('u_01', attempt=dict(prep_ready_s=None)))
 ok &= case('K27 neither the lines nor progress nor timeout -> undetermined', r['screen'] == (None, 'none') and
            W('E1-screen', S.members_u(r)) is None)
 r = make_arm('u_01', [x.replace('KYTY_S_PCW=1', 'KYTY_S_PCW=0') for x in scene(UL, post_rows(), header=HEADER_T)])
-ok &= case('K28 the knob line KYTY_S_PCW=0 -> admission FAILS (knobs S = 1); the E1 members undetermined, the arm UNDETERMINED',
+ok &= case('K28 the log line KYTY_S_PCW=0 against the env 1 -> the S-pcw: row FAILS (the log != the env); the E1 members '
+           'undetermined, the arm UNDETERMINED',
            any('S-pcw' in f for f in r['fail']) and W('E1-skip', S.members_u(r)) is None and
            S.arm_word(S.members_u(r)) == 'UNDETERMINED')
 r = make_arm('u_01', [x for x in scene(UL, post_rows(), header=HEADER_T) if not x.startswith('S-pcw:')])
 ok &= case('K29 no knob line -> admission FAILS', any('S-pcw' in f for f in r['fail']))
+r = make_arm('u_01', [x.replace('KYTY_S_PCW=1', 'KYTY_S_PCW=0') for x in scene(UL, post_rows(), header=HEADER_T)],
+             js=js_for('u_01', env_over=dict(KYTY_S_PCW='0')))
+ok &= case('K28b env KYTY_S_PCW=0 and the log line =0: the S-pcw: row PASSES (the log = the env), the env row FAILS (=0)',
+           ('admission: ' + R_SPCW) in r['fail'] and not any('S-pcw:' in f for f in r['fail']))
+r = make_arm('u_01', scene(UL, post_rows(), header=HEADER_T), js=js_for('u_01', env_over=dict(KYTY_S_PCW=None)))
+ok &= case('K28c no KYTY_S_PCW in the env, the log line =1 -> the env row and the S-pcw: row FAIL',
+           ('admission: ' + R_SPCW) in r['fail'] and any('S-pcw:' in f for f in r['fail']))
+r = make_arm('u_01', scene(UL, post_rows(), header=HEADER_T + ['S-pcw: KYTY_S_PCW=0 KYTY_S_PCW_FORCE_MS=0']))
+ok &= case('K28d two S-pcw: lines, the second =0 against the env 1 -> the S-pcw: row FAILS (every line)',
+           any('S-pcw:' in f for f in r['fail']) and not ('admission: ' + R_SPCW) in r['fail'])
+r = make_arm('u_01', [x.replace('KYTY_S_PCW_FORCE_MS=0', 'KYTY_S_PCW_FORCE_MS=15000') for x in
+                      scene(UL, post_rows(), header=HEADER_T)])
+ok &= case('K28e the log line with KYTY_S_PCW_FORCE_MS=15000 -> the S-pcw: row FAILS', any('S-pcw:' in f for f in r['fail']))
 r = make_arm('u_01', [x.replace(SIG, SIG.replace('fixf10', 'fixf11')) for x in scene(UL, post_rows(), header=HEADER_T)])
 ok &= case('K30 the compatibility line on another signature -> admission FAILS', any('compatibility' in f for f in r['fail']))
 r = make_arm('u_01', [x.replace(VAR, 'variant_fixb26_fixb1b') for x in scene(UL, post_rows(), header=HEADER_T)])
@@ -794,6 +825,84 @@ r3 = copy.deepcopy(UCLEAN)
 r3['att100'] = None
 ok &= case('N10 E1-attr with the attribution undetermined (att100 None) on an admitted arm -> undetermined, not a failure',
            W('E1-attr', S.members_u(r3)) is None and S.arm_word(S.members_u(r3)) == 'UNDETERMINED')
+# ================================================================================ entry (item 428 (g), V7)
+def rec(**over):
+    d = dict(entered=False, window={}, marks=[], ended=False, exited=False)
+    d.update(over)
+    return d
+
+
+ok &= case('Q1 entry_state: not made -> void; the entry line -> yes; no log (no window field) -> void; a clean attempt without '
+           'the line -> no', S.entry_state(None)[0] == 'void' and S.entry_state(rec(entered=True))[0] == 'yes' and
+           S.entry_state(dict(entered=False, marks=[], ended=False, exited=False))[0] == 'void' and
+           S.entry_state(rec()) == ('no', 'no entry line in a clean attempt'))
+ok &= case('Q2 entry_state without the line: a death marker / hold_exit (ended) / exited / minimized / Recovering -> void; '
+           'restored only -> no; the entry line with a death marker -> yes',
+           S.entry_state(rec(marks=[dict(kind='crash')]))[0] == 'void' and S.entry_state(rec(ended=True))[0] == 'void' and
+           S.entry_state(rec(exited=True))[0] == 'void' and S.entry_state(rec(window={'minimized': 1}))[0] == 'void' and
+           S.entry_state(rec(window={'recover': 1}))[0] == 'void' and S.entry_state(rec(window={'restored': 2}))[0] == 'no' and
+           S.entry_state(rec(entered=True, marks=[dict(kind='crash')]))[0] == 'yes')
+rk = make_arm('k_04', scene('other_level', post_rows(), header=HEADER_M), video=False, sheet=False,
+              stdout=['Cache test mode: none'])
+ru = make_arm('u_04', scene('other_level', post_rows(), header=HEADER_T))
+ok &= case('Q3 whole arms not entering ps_logo (k_04 class M, u_04 class T, clean) -> entry no on both; fmt_arm prints the field',
+           S.entry_state(rk)[0] == 'no' and S.entry_state(ru)[0] == 'no' and not rk['entered'] and
+           any(x.startswith('  entered (item 428 (g)): no (') for x in S.fmt_arm(ru)) and
+           any(x.startswith('  entered (item 428 (g)): yes (') for x in S.fmt_arm(clean)))
+UNO = copy.deepcopy(UCLEAN)
+UNO['entered'] = False
+ne = S.not_enterable(get_of({'k_04': rec(), 'u_04': UNO}))
+ok &= case('Q4 not_enterable: ps_logo with k_04 and u_04 both no -> True; the other 18 (k not made) -> False',
+           len(ne) == 19 and ne[3][0] == 'ps_logo' and ne[3][3] is True and ne[3][1][0] == 'no' and ne[3][2][0] == 'no' and
+           [x[3] for x in ne].count(True) == 1 and ne[0][1][0] == 'void' and ne[0][2][0] == 'yes')
+
+
+def ent_line(out):
+    return [x for x in out if x.startswith('KNOWN_SCENES_ENTERED')]
+
+
+word, out = S.read_known(get_of({'k_04': rec(), 'u_04': UNO}))
+el = ent_line(out)
+ok &= case('Q5 ps_logo not entered in k_04 and u_04 (both clean) -> not enterable: KNOWN_SCENES UNDETERMINED (unchanged), '
+           'KNOWN_SCENES_ENTERED PASS on 18 of 19, the list names ps_logo, the entry line of u_04 NOT ENTERABLE',
+           word == 'UNDETERMINED' and len(el) == 1 and ': PASS - denominator 18 of 19' in el[0] and
+           el[0].endswith('not enterable by -lvl: ps_logo') and
+           any(x.startswith('entry u_04 ps_logo') and x.endswith('NOT ENTERABLE by -lvl') for x in out) and
+           any(x.startswith('entry u_01 ') and x.endswith('in the denominator') for x in out))
+word, out = S.read_known(get_of({'k_04': rec(entered=True), 'u_04': UNO}))
+ok &= case('Q6 entered in k_04 only -> in the denominator: u_04 UNDETERMINED -> KNOWN_SCENES_ENTERED UNDETERMINED on 19',
+           ': UNDETERMINED - denominator 19 of 19' in ent_line(out)[0] and ent_line(out)[0].endswith('lvl: none'))
+word, out = S.read_known(get_of({'k_04': rec(), 'u_04': copy.deepcopy(UCLEAN)}))
+ok &= case('Q7 k_04 no but u_04 entered -> in the denominator: PASS on 19', ': PASS - denominator 19 of 19' in ent_line(out)[0])
+word, out = S.read_known(get_of({'u_04': UNO}))
+ok &= case('Q8 k_04 not made (void) and u_04 no -> in the denominator: UNDETERMINED on 19',
+           ': UNDETERMINED - denominator 19 of 19' in ent_line(out)[0])
+UDEAD = copy.deepcopy(UNO)
+UDEAD['marks'] = [dict(kind='crash')]
+word, out = S.read_known(get_of({'k_04': rec(), 'u_04': UDEAD}))
+ok &= case('Q9 u_04 without the line but with a death marker (void) -> in the denominator; its E3-death FAILS -> FAIL on 19',
+           ': FAIL - denominator 19 of 19' in ent_line(out)[0])
+UWIN = copy.deepcopy(UNO)
+UWIN['window'] = {'minimized': 1}
+word, out = S.read_known(get_of({'k_04': rec(), 'u_04': UWIN}))
+ok &= case('Q10 u_04 without the line but with a window event (void) -> in the denominator: UNDETERMINED on 19',
+           ': UNDETERMINED - denominator 19 of 19' in ent_line(out)[0])
+bad = copy.deepcopy(w_ok)
+bad['vke'] = 1
+word, out = S.read_known(get_of({'k_04': rec(), 'u_04': UNO}, bad))
+ok &= case('Q11 ps_logo not enterable and a [Vulkan][E] on w13 -> KNOWN_SCENES_ENTERED FAIL on 18',
+           ': FAIL - denominator 18 of 19' in ent_line(out)[0])
+ok &= case('Q12 entered_word: a denominator 0 with w13 PASS -> UNDETERMINED; an excluded FAIL arm is not counted -> PASS; a FAIL '
+           'in the denominator -> FAIL; w13 FAIL / UNDETERMINED -> FAIL / UNDETERMINED',
+           S.entered_word([True] * 19, ['UNDETERMINED'] * 19, 'PASS') == ('UNDETERMINED', []) and
+           S.entered_word([True] + [False] * 18, ['FAIL'] + ['PASS'] * 18, 'PASS') == ('PASS', ['PASS'] * 18) and
+           S.entered_word([False] * 19, ['PASS'] * 18 + ['FAIL'], 'PASS')[0] == 'FAIL' and
+           S.entered_word([True] * 19, ['PASS'] * 19, 'FAIL')[0] == 'FAIL' and
+           S.entered_word([False] * 19, ['PASS'] * 19, 'UNDETERMINED')[0] == 'UNDETERMINED' and
+           S.entered_word([False] * 19, ['PASS'] * 19, 'PASS') == ('PASS', ['PASS'] * 19))
+word, out = S.read_known(get_of())
+ok &= case('Q13 19 clean U arms and a clean W -> KNOWN_SCENES PASS and KNOWN_SCENES_ENTERED PASS on 19, list none',
+           word == 'PASS' and ': PASS - denominator 19 of 19' in ent_line(out)[0] and ent_line(out)[0].endswith('lvl: none'))
 # ================================================================================ order
 OR = BASE / 'order'
 OR.mkdir()
@@ -867,7 +976,8 @@ with contextlib.redirect_stdout(buf):
     rc8 = S.main(['--read'], ROOT, PRED)
 o2 = buf.getvalue()
 ok &= case('P2 --read prints the collection, the export and the known scenes with the word', rc8 == 0 and
-           'READ collection arms' in o2 and 'READ export:' in o2 and 'KNOWN_SCENES (item 229 (e)(1) with (3)): UNDETERMINED' in o2)
+           'READ collection arms' in o2 and 'READ export:' in o2 and 'KNOWN_SCENES (item 229 (e)(1) with (3)): UNDETERMINED' in o2
+           and 'KNOWN_SCENES_ENTERED (item 428 (g)' in o2 and 'entry u_04 ps_logo' in o2)
 ok &= case('P3 the output of main is ASCII', all(ord(c) < 128 for c in o + o2))
 try:
     (o + o2).encode('cp1250', 'strict')

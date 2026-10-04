@@ -1,0 +1,5 @@
+h1 KILLED rc 1; failing cases G23 GL14; expected G23 GL14
+h2 KILLED rc 1; failing cases G22 GL11; expected GL11
+h3 KILLED rc 1; failing cases GL13 GL14; expected GL13
+h4 KILLED rc 1; failing cases G18 G18b G22 GL2 GL6; expected G18 G18b G22 GL2
+HMUT2: ALL KILLED

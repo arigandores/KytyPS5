@@ -1,0 +1,6 @@
+pediff3: differing bytes 2020 {'(3) header/debug stamp+GUID': 12, '(1) build dir name': 139, '(2) anon-namespace tag': 1673} OTHER 196 {'.data': 196}
+pediff3 OTHER bytes 196 by section {'.data': 196}
+  reclassified (2b) anon-namespace string section .data bytes 196
+.text differing bytes (never reclassified): 0
+left OTHER 0 {}
+VERDICT EXPLAINED

@@ -1,0 +1,6 @@
+watch: start 2026-10-04T14:31:42Z child 56956 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+exe sha256 fbe316a61c121078dd5a268ce4e579f42b4c421d96f7d11ec42c575ac07ef957
+mode L fix 1 done 1 of 1 wall 0.1 s
+counts {'LOG_OK': 1}
+fatal 0 of 1 -> p_s = 0.0000
+rc=0 end 2026-10-04T14:31:44Z

@@ -1,0 +1,30 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 3904522d)
+Updating files:  47% (2028/4262)Updating files:  48% (2046/4262)Updating files:  49% (2089/4262)Updating files:  50% (2131/4262)Updating files:  51% (2174/4262)Updating files:  52% (2217/4262)Updating files:  53% (2259/4262)Updating files:  54% (2302/4262)Updating files:  55% (2345/4262)Updating files:  56% (2387/4262)Updating files:  57% (2430/4262)Updating files:  58% (2472/4262)Updating files:  59% (2515/4262)Updating files:  60% (2558/4262)Updating files:  61% (2600/4262)Updating files:  62% (2643/4262)Updating files:  63% (2686/4262)Updating files:  64% (2728/4262)Updating files:  65% (2771/4262)Updating files:  66% (2813/4262)Updating files:  67% (2856/4262)Updating files:  68% (2899/4262)Updating files:  69% (2941/4262)Updating files:  70% (2984/4262)Updating files:  71% (3027/4262)Updating files:  72% (3069/4262)Updating files:  73% (3112/4262)Updating files:  74% (3154/4262)Updating files:  75% (3197/4262)Updating files:  76% (3240/4262)Updating files:  77% (3282/4262)Updating files:  78% (3325/4262)Updating files:  79% (3367/4262)Updating files:  80% (3410/4262)Updating files:  81% (3453/4262)Updating files:  82% (3495/4262)Updating files:  83% (3538/4262)Updating files:  84% (3581/4262)Updating files:  85% (3623/4262)Updating files:  86% (3666/4262)Updating files:  87% (3708/4262)Updating files:  88% (3751/4262)Updating files:  89% (3794/4262)Updating files:  90% (3836/4262)Updating files:  91% (3879/4262)Updating files:  92% (3922/4262)Updating files:  93% (3964/4262)Updating files:  94% (4007/4262)Updating files:  95% (4049/4262)Updating files:  96% (4092/4262)Updating files:  97% (4135/4262)Updating files:  98% (4177/4262)Updating files:  99% (4220/4262)Updating files: 100% (4262/4262)Updating files: 100% (4262/4262), done.
+HEAD is now at 3904522d track F link FS6a (HPP-555): KYTY_FIX_B4 default 0 -> 1 (ROADMAP s122 item 454(g)(1))
+--- worktree HEAD
+3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 track F link FS6a (HPP-555): KYTY_FIX_B4 default 0 -> 1 (ROADMAP s122 item 454(
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 33679a021ac8d6130edbbfda342f9e875d9ea336 track F link FS6a (HPP-555): KYTY_FIX_B4 default 0 -> 1 (ROADMAP s122 item 454
+33679a021ac8d6130edbbfda342f9e875d9ea336 4d9e8ab709b4911a935e76cd90303562b2ecf174 track F link F15c (HPP-514): KYTY_FIX_B4 (default 0) - the emergency exit path
+4d9e8ab709b4911a935e76cd90303562b2ecf174 0e72bc19c9ec9a2a2a2c6871b5ab572a2b47f6c9 track S link S12a (HPP-494): KYTY_S_PCW default 0 -> 1 (ROADMAP s122 item 408(
+0e72bc19c9ec9a2a2a2c6871b5ab572a2b47f6c9 8a56dc2a1b30f141493f827610845d843c0ffe2c track F link FS5a (HPP-509): KYTY_FIX_F10 default 0 -> 1 (ROADMAP s122 item 41
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 456 with CR 0
+WT OK

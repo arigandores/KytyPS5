@@ -1,0 +1,5 @@
+fx1 (fake fx/procload.py as argv, started ~5 s after watch start):
+watch: start 2026-10-04T13:21:14Z child 48576 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T13:21:19Z pids [28040]; tree [48576], alive after []
+fx2 (text 'procload.py' only inside a bash -c string): rc=0, child ran to the end
+ALL OK

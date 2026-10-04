@@ -1,0 +1,93 @@
+### diff --stat 4d9e8ab7 3904522d
+ CMakeLists.txt                        |   5 +
+ docs/track-f/f15c/patch_f15c_cmake.py |  28 +++++
+ docs/track-f/f15c/patch_f15c_src.py   | 116 +++++++++++++++++
+ docs/track-f/f15c/run_stand_f15c.py   | 118 +++++++++++++++++
+ src/kernel/fileSystem.cpp             |  50 +++++++-
+ tests/B4RaceStand.cpp                 | 230 ++++++++++++++++++++++++++++++++++
+ 6 files changed, 545 insertions(+), 2 deletions(-)
+### files a86a5ad0
+CMakeLists.txt
+docs/track-f/f15c/patch_f15c_cmake.py
+docs/track-f/f15c/patch_f15c_src.py
+docs/track-f/f15c/run_stand_f15c.py
+src/kernel/fileSystem.cpp
+tests/B4RaceStand.cpp
+### files 17eb924e
+src/kernel/fileSystem.cpp
+tests/B4RaceStand.cpp
+### diff 33679a02 3904522d (FS6a in wt)
+diff --git a/src/kernel/fileSystem.cpp b/src/kernel/fileSystem.cpp
+index 92de736a..6f4926b9 100644
+--- a/src/kernel/fileSystem.cpp
++++ b/src/kernel/fileSystem.cpp
+@@ -101,13 +101,19 @@ private:
+ static MountPoints*     g_mount_points = nullptr;
+ static FileDescriptors* g_files        = nullptr;
+ 
+-// Track F, F15c (ROADMAP s122 items 412(v), 417(b)-(v), row B4): KYTY_FIX_B4 (default 0), read once. At 1 the
++// Track F, F15c (ROADMAP s122 items 412(v), 417(b)-(v), row B4): KYTY_FIX_B4 (default ON since FS6a, item 454(g)(1):
++// unset or "" = ON, 0/false/off/no = OFF; read once). At 1 the
+ // emergency exit path (at_quick_exit and atexit(KytyClose) of src/emulator.cpp, both end in EmergencyShutdown below)
+ // keeps every File object, slot and host descriptor: guest threads are still running there and may hold a File* from
+ // GetFile without m_mutex, so CloseAll deleting it races with them (DeleteDescriptor / KernelOpen EXIT_IF or a
+-// use-after-free). The OS closes the host descriptors at the end of the process. Unset or empty - OFF.
++// use-after-free). The OS closes the host descriptors at the end of the process.
+ static bool FixB4Enabled() {
+-	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_B4"));
++	// Track F, FS6a (HPP-555, ROADMAP s122 item 454(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
++	// other value as EnvValueOn (the form of FS4a 17adaf80).
++	static const bool enabled = [] {
++		const char* value = std::getenv("KYTY_FIX_B4");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
+ 	return enabled;
+ }
+ 
+diff --git a/tests/B4RaceStand.cpp b/tests/B4RaceStand.cpp
+index 3caf8b2c..1feab9b9 100644
+--- a/tests/B4RaceStand.cpp
++++ b/tests/B4RaceStand.cpp
+@@ -2,7 +2,8 @@
+ // item 412(v), (g)(1)-(3)): the exit race of FileSystem::EmergencyShutdown (src/kernel/fileSystem.cpp, called by the
+ // at_quick_exit handler of src/emulator.cpp on the main thread) against a guest-like thread inside KernelOpen.
+ // One process = one trial, as in the game: EmergencyShutdown runs once per process while the opener keeps running.
+-// KYTY_FIX_B4 (read by fileSystem.cpp) selects the code under test: unset/0 - CloseAll, 1 - the B4 fix.
++// KYTY_FIX_B4 (read by fileSystem.cpp) selects the code under test: 0 - CloseAll, 1 - the B4 fix; unset or "" - the
++// default of fileSystem.cpp (1 since FS6a, ROADMAP s122 item 454(g)(1)).
+ // Separate CMake target b4_race_stand (EXCLUDE_FROM_ALL, no add_test - not in the default ctest set); the driver is
+ // docs/track-f/f15c/run_stand_f15c.py.
+ //
+### diff a86a5ad0 33679a02 -- src tests CMakeLists.txt (F15c main vs wt copy)
+ .../renderer/pipeline/shaderTranslationCache.cpp   |   5 +-
+ .../ir/passes/ResourceMaterialization.cpp          |  46 +-
+ .../recompiler/ir/passes/ResourceMaterialization.h |  16 -
+ src/kernel/pvar.cpp                                | 138 +---
+ src/kernel/pvar.h                                  | 173 +---
+ tests/ShaderRecompilerComputeTests.cpp             | 279 -------
+ tests/shaderCfgTests.cpp                           | 891 +--------------------
+ 7 files changed, 19 insertions(+), 1529 deletions(-)
+### 17eb924e vs 3904522d src/kernel/fileSystem.cpp tests/B4RaceStand.cpp
+### git cherry
+a86a5ad0 - 
+17eb924e - 
+082d1612 + 
+f98e842c + 
+10a4800b + 
+9c726d74 + 
+fcaf141b + 
+741e3312 + 
+c9b4268e + 
+1833ee28 - 
+c3eb8fe8 - 
+68602c4f - 
+17adaf80 - 
+4e72289e - 
+c1732d1a - 
+### ancestors
+4d9e8ab7 ancestor
+0e72bc19 ancestor
+3d0e46da ancestor
+4414e235 ancestor
+722c5e7f ancestor
+d515b901 ancestor

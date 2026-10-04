@@ -1,0 +1,5 @@
+def rc 0 wall 0.5 failed-lines 0 last KernelFileSystemTests: all cases passed
+fix0 rc 0 wall 0.7 failed-lines 0 last KernelFileSystemTests: all cases passed
+own default log == FS6a fs6_kfsonly.txt: False
+own =0 log == own default log: True
+b'ernelFileSystemTests: all cases passed\r\n' b'ernelFileSystemTests: all cases passed\r\n' True

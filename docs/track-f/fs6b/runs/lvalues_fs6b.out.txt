@@ -1,0 +1,11 @@
+KYTY_FIX_B4=(unset)  rc=0 last=LOGCHECK modes=['1'] want=1 ok
+KYTY_FIX_B4=''       rc=0 last=LOGCHECK modes=['1'] want=1 ok
+KYTY_FIX_B4='0'      rc=0 last=LOGCHECK modes=['0'] want=0 ok
+KYTY_FIX_B4='false'  rc=0 last=LOGCHECK modes=['0'] want=0 ok
+KYTY_FIX_B4='OFF'    rc=0 last=LOGCHECK modes=['0'] want=0 ok
+KYTY_FIX_B4='no'     rc=0 last=LOGCHECK modes=['0'] want=0 ok
+KYTY_FIX_B4='1'      rc=0 last=LOGCHECK modes=['1'] want=1 ok
+KYTY_FIX_B4='2'      rc=0 last=LOGCHECK modes=['1'] want=1 ok
+KYTY_FIX_B4='true'   rc=0 last=LOGCHECK modes=['1'] want=1 ok
+KYTY_FIX_B4=' 0'     rc=0 last=LOGCHECK modes=['1'] want=1 ok
+LVALUES ALL OK

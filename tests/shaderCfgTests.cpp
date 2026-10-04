@@ -34,6 +34,8 @@
 #include "spirv-tools/libspirv.hpp"
 #include "xxhash.h"
 
+#include <fmt/format.h>
+
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -43,6 +45,10 @@
 #include <cstdlib>
 #include <cstring>
 #include <deque>
+#include <filesystem>
+#include <fstream>
+#include <map>
+#include <set>
 #include <initializer_list>
 #include <iterator>
 #include <span>
@@ -13898,6 +13904,502 @@ void TestNewShaderRecompilerSpirvSizeBaselines() {
 } // namespace
 } // namespace Libs::Graphics
 
+// Track S, S14j (HPP-533, ROADMAP s122 item 430(g)(1)): offline dump of the resource specializations stored in a shader
+// translation cache directory, without the game. KYTY_TEST_SPECDUMP_DIR=<directory> KYTY_TEST_SPECDUMP_OUT=<file>: every
+// regular file of the directory (not recursive, sorted by name) whose name has the cache file form
+// <vs|ps|cs>_<16 hex>_<16 hex>.bin is opened read-only by the regular reader ShaderTranslationCache::ReadFileUnchecked;
+// one line per permutation
+//   SpecDump: file=<name> stage=<VS|PS|CS|MS> hash=0x<16 hex> perm=<i> spec=<s>
+// where the stage is the one of the stored key (MS - mesh, files named cs_), i counts from 1 (as perm= of the
+// AvTrace: shader-spec line) and <s> is the specialization tail of the AvTrace: shader-spec line (pipelineCache.cpp):
+// " b:..." per buffer, " i:..." per image, leading spaces included, empty without resources. Before them a
+// "SpecDump: file-sig file=<name> sig=<signature line>" line per cache file; with KYTY_TEST_SPECDUMP_SIG=<translator hash>
+// a file of another translator hash is not decoded ("SpecDump: other-sig"). Also "SpecDump: failed file=..." /
+// "SpecDump: skipped file=..." lines, per-stage totals (by the file name), the alias count (spec strings that stand for
+// more than one full specialization: the AvTrace text omits some image fields) and the last line
+// "SpecDump: files=<N> read=<N> failed=<N> perms=<N>". Nothing is written into the directory.
+namespace Libs::Graphics {
+namespace {
+
+// Copy of the specialization text of the AvTrace: shader-spec line (pipelineCache.cpp, the loop before
+// LOGF("AvTrace: shader-spec ...")); TestSpecDumpRoundTrip pins it with literal strings.
+std::string SpecDumpSpecString(const ShaderRecompiler::IR::ResourceSpecialization &specialization) {
+  std::string spec;
+  for (const auto &b : specialization.buffers) {
+    spec += fmt::format(" b:{:x}/{}/{:x}", b.packed_stride, static_cast<int>(b.descriptor_format),
+                        b.descriptor_swizzle);
+  }
+  for (const auto &i : specialization.images) {
+    spec += fmt::format(" i:{}/{}/{}/{}/{:x}/{}", static_cast<int>(i.numeric_class), static_cast<int>(i.dimension),
+                        i.mip_count, static_cast<int>(i.conversion_format), i.shader_swizzle, i.indirect_root);
+  }
+  return spec;
+}
+
+// Every field of the specialization (alias count only).
+std::string SpecDumpFullString(const ShaderRecompiler::IR::ResourceSpecialization &specialization) {
+  std::string full;
+  for (const auto &b : specialization.buffers) {
+    full += fmt::format(" b:{:x}/{}/{:x}", b.packed_stride, static_cast<int>(b.descriptor_format),
+                        b.descriptor_swizzle);
+  }
+  for (const auto &i : specialization.images) {
+    full += fmt::format(" i:{}/{}/{}/{}/{:x}/{}/{}/{}/{}/{}/{}/{}", static_cast<int>(i.numeric_class),
+                        static_cast<int>(i.dimension), i.mip_count, static_cast<int>(i.conversion_format),
+                        i.shader_swizzle, i.indirect_root, i.indirect_mapping_offset, i.indirect_search_iterations,
+                        i.cube ? 1 : 0, i.manual_depth_compare ? 1 : 0, i.depth_compare_op, i.fmask ? 1 : 0);
+  }
+  return full;
+}
+
+std::string SpecDumpStageName(uint32_t stage) {
+  if (stage == static_cast<uint32_t>(ShaderType::Vertex)) {
+    return "VS";
+  }
+  if (stage == static_cast<uint32_t>(ShaderType::Pixel)) {
+    return "PS";
+  }
+  if (stage == static_cast<uint32_t>(ShaderType::Compute)) {
+    return "CS";
+  }
+  if (stage == static_cast<uint32_t>(ShaderType::Mesh)) {
+    return "MS"; // guest geometry shaders, host mesh stage; PathOf names their files cs_
+  }
+  return fmt::format("ST{}", stage);
+}
+
+// The signature line of a cache file ("KytySC<version>:<translator hash>[:flags]"), "" when unreadable.
+std::string SpecDumpSignature(const std::filesystem::path &path) {
+  std::ifstream f(path, std::ios::binary);
+  std::string line;
+  if (!f || !std::getline(f, line) || line.rfind("KytySC", 0) != 0) {
+    return {};
+  }
+  return line;
+}
+
+// The translator hash of a signature line: the field after the first ':'.
+std::string SpecDumpTranslatorHash(const std::string &signature) {
+  const auto colon = signature.find(':');
+  if (colon == std::string::npos) {
+    return {};
+  }
+  const auto end = signature.find(':', colon + 1);
+  return signature.substr(colon + 1, end == std::string::npos ? std::string::npos : end - colon - 1);
+}
+
+// "VS" / "PS" / "CS" for a name of the form ShaderTranslationCache::PathOf writes, "" otherwise.
+std::string SpecDumpNameStage(const std::string &name) {
+  const auto is_hex = [&](size_t from) {
+    for (size_t k = from; k < from + 16; k++) {
+      const char c = name[k];
+      if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'))) {
+        return false;
+      }
+    }
+    return true;
+  };
+  if (name.size() != 40 || name[2] != '_' || name[19] != '_' || name.compare(36, 4, ".bin") != 0 || !is_hex(3) ||
+      !is_hex(20)) {
+    return {};
+  }
+  const auto prefix = name.substr(0, 2);
+  return prefix == "vs" ? "VS" : prefix == "ps" ? "PS" : prefix == "cs" ? "CS" : "";
+}
+
+struct SpecDumpCounts {
+  uint32_t files = 0;
+  uint32_t read = 0;
+  uint32_t failed = 0;
+  uint32_t perms = 0;
+};
+
+struct SpecDumpTotals {
+  SpecDumpCounts all;
+  std::map<std::string, SpecDumpCounts> stages; // by the stage of the file name
+  uint32_t skipped = 0;
+  uint32_t other_sig = 0;
+  uint32_t stage_mismatch = 0;
+  uint32_t spec_strings = 0;
+  uint32_t spec_strings_aliased = 0;
+};
+
+// false when the directory cannot be listed; the lines go to out. sig_filter (KYTY_TEST_SPECDUMP_SIG): when not empty,
+// a cache file whose translator hash differs is not decoded (line other-sig, not in files/read/failed/perms) - the reader
+// of this tree decodes only files of its own serialization; files of other translators may decode to garbage or stop
+// the process in an ASSERT of ReadPlan (snap0: one of the 474 files of older signatures does).
+bool RunSpecDump(const std::filesystem::path &dir, FILE *out, SpecDumpTotals &totals, const std::string &sig_filter) {
+  std::error_code ec;
+  std::vector<std::filesystem::path> files;
+  std::filesystem::directory_iterator it(dir, ec);
+  if (ec) {
+    return false;
+  }
+  for (; it != std::filesystem::directory_iterator(); it.increment(ec)) {
+    if (ec) {
+      return false;
+    }
+    std::error_code type_ec;
+    if (it->is_regular_file(type_ec)) {
+      files.push_back(it->path());
+    }
+  }
+  std::sort(files.begin(), files.end(),
+            [](const auto &a, const auto &b) { return a.filename().string() < b.filename().string(); });
+  std::map<std::pair<std::string, std::string>, std::set<std::string>> by_spec;
+  for (const auto &path : files) {
+    const auto name = path.filename().string();
+    const auto name_stage = SpecDumpNameStage(name);
+    if (name_stage.empty()) {
+      totals.skipped++;
+      std::fprintf(out, "SpecDump: skipped file=%s\n", name.c_str());
+      continue;
+    }
+    const auto signature = SpecDumpSignature(path);
+    std::fprintf(out, "SpecDump: file-sig file=%s sig=%s\n", name.c_str(), signature.c_str());
+    if (!sig_filter.empty() && SpecDumpTranslatorHash(signature) != sig_filter) {
+      totals.other_sig++;
+      std::fprintf(out, "SpecDump: other-sig file=%s sig=%s\n", name.c_str(), SpecDumpTranslatorHash(signature).c_str());
+      continue;
+    }
+    auto &stage_counts = totals.stages[name_stage];
+    totals.all.files++;
+    stage_counts.files++;
+    ShaderTranslationCache::StoredKey key;
+    ShaderTranslationCache::Entry entry;
+    if (!ShaderTranslationCache::ReadFileUnchecked(path, key, entry)) {
+      totals.all.failed++;
+      stage_counts.failed++;
+      std::fprintf(out, "SpecDump: failed file=%s stage=%s\n", name.c_str(), name_stage.c_str());
+      continue;
+    }
+    totals.all.read++;
+    stage_counts.read++;
+    const auto stage = SpecDumpStageName(key.stage);
+    if (stage != name_stage) {
+      totals.stage_mismatch++;
+      std::fprintf(out, "SpecDump: stage-mismatch file=%s key_stage=%s\n", name.c_str(), stage.c_str());
+    }
+    for (size_t i = 0; i < entry.permutations.size(); i++) {
+      const auto &specialization = entry.permutations[i].specialization;
+      const auto spec = SpecDumpSpecString(specialization);
+      std::fprintf(out, "SpecDump: file=%s stage=%s hash=0x%016llx perm=%zu spec=%s\n", name.c_str(), stage.c_str(),
+                   static_cast<unsigned long long>(key.hash), i + 1, spec.c_str());
+      totals.all.perms++;
+      stage_counts.perms++;
+      by_spec[{stage, spec}].insert(SpecDumpFullString(specialization));
+    }
+  }
+  totals.spec_strings = static_cast<uint32_t>(by_spec.size());
+  for (const auto &[spec, fulls] : by_spec) {
+    totals.spec_strings_aliased += fulls.size() > 1 ? 1u : 0u;
+  }
+  for (const auto &[stage, c] : totals.stages) {
+    std::fprintf(out, "SpecDump: stage=%s files=%u read=%u failed=%u perms=%u\n", stage.c_str(), c.files, c.read,
+                 c.failed, c.perms);
+  }
+  std::fprintf(out, "SpecDump: sig_filter=%s\n", sig_filter.empty() ? "none" : sig_filter.c_str());
+  std::fprintf(out, "SpecDump: skipped=%u other_sig=%u stage_mismatch=%u spec_strings=%u spec_strings_aliased=%u\n",
+               totals.skipped, totals.other_sig, totals.stage_mismatch, totals.spec_strings,
+               totals.spec_strings_aliased);
+  std::fprintf(out, "SpecDump: files=%u read=%u failed=%u perms=%u\n", totals.all.files, totals.all.read,
+               totals.all.failed, totals.all.perms);
+  return true;
+}
+
+// 0 - dumped, every cache file read; 2 - dumped, some failed; 1 - the directory or the output failed.
+int SpecDumpMain(const char *dir, const char *out_path, const char *sig_filter) {
+  FILE *out = std::fopen(out_path, "wb");
+  if (out == nullptr) {
+    std::fprintf(stderr, "SpecDump: cannot write %s\n", out_path);
+    return 1;
+  }
+  SpecDumpTotals totals;
+  const bool listed =
+      RunSpecDump(std::filesystem::path(dir), out, totals, sig_filter != nullptr ? std::string(sig_filter) : std::string());
+  const bool closed = std::fclose(out) == 0;
+  if (!listed || !closed) {
+    std::fprintf(stderr, "SpecDump: %s\n", listed ? "cannot close the output" : "cannot list the directory");
+    return 1;
+  }
+  std::printf("SpecDump: other_sig=%u\n", totals.other_sig);
+  std::printf("SpecDump: files=%u read=%u failed=%u perms=%u\n", totals.all.files, totals.all.read, totals.all.failed,
+              totals.all.perms);
+  return totals.all.failed == 0 ? 0 : 2;
+}
+
+// Positive control of the dump (ROADMAP s122 item 430(g)(1)): files written by the regular writer
+// ShaderTranslationCache::Save with known specializations (VS 2 permutations, PS 2, CS 1, MS 1) -> RunSpecDump -> the spec
+// text equals literal strings in the AvTrace: shader-spec form; a corrupted copy counts as failed, a foreign name as
+// skipped, the mesh file (named cs_) as a stage mismatch, the signature filter drops every file of another translator
+// hash and keeps the own; the files are byte-for-byte the same after the dump; ends with "SpecDumpFixture: ALL OK".
+void TestSpecDumpRoundTrip() {
+  namespace fs = std::filesystem;
+  using Spec = ShaderRecompiler::IR::ResourceSpecialization;
+  using Cache = ShaderTranslationCache;
+  int failures = 0;
+  const auto expect = [&](bool value, const char *text) {
+    if (!value) {
+      failures++;
+    }
+    Check(value, text);
+  };
+  const auto make_buffer = [](uint32_t stride, uint32_t format, uint32_t swizzle) {
+    Spec::Buffer b;
+    b.packed_stride = stride;
+    b.descriptor_format = static_cast<decltype(b.descriptor_format)>(format);
+    b.descriptor_swizzle = swizzle;
+    return b;
+  };
+  const auto make_image = [](int numeric_class, uint32_t dimension, uint32_t mips, uint32_t format, uint32_t swizzle,
+                             uint32_t root) {
+    Spec::Image i;
+    i.numeric_class = static_cast<decltype(i.numeric_class)>(numeric_class);
+    i.dimension = static_cast<decltype(i.dimension)>(dimension);
+    i.mip_count = mips;
+    i.conversion_format = static_cast<decltype(i.conversion_format)>(format);
+    i.shader_swizzle = swizzle;
+    i.indirect_root = root;
+    return i;
+  };
+  const auto make_permutation = [](ShaderType stage, uint64_t hash, Spec spec) {
+    Cache::Permutation p;
+    p.specialization = std::move(spec);
+    p.program.stage = stage;
+    p.program.shader_hash = hash;
+    p.spirv = {0x07230203u, 0x00010600u, 0u, 1u, 0u};
+    return p;
+  };
+
+  // Known specializations and the text the AvTrace: shader-spec line prints for them.
+  Spec vs1;
+  vs1.buffers = {make_buffer(0x10, 77, 0xfac)};
+  vs1.images = {make_image(1, 1, 11, 0, 0xd1a, 3)};
+  Spec vs2;
+  vs2.buffers = {make_buffer(0, 0, 0x688), make_buffer(0x20, 13, 0)};
+  Spec ps1;
+  ps1.images = {make_image(2, 2, 1, 36, 0xfac, 0xffffffffu)};
+  Spec ps2 = ps1;
+  ps2.images[0].cube = true; // not in the AvTrace text: the same spec string, a different full specialization
+  ps2.buffers = {make_buffer(4, 20, 0xc)};
+  Spec cs1; // no resources: "spec=" ends the line
+  Spec ms1;
+  ms1.buffers = {make_buffer(8, 1, 0x688)};
+  expect(SpecDumpSpecString(vs1) == " b:10/77/fac i:1/1/11/0/d1a/3", "SpecDump: VS perm 1 spec text");
+  expect(SpecDumpSpecString(vs2) == " b:0/0/688 b:20/13/0", "SpecDump: VS perm 2 spec text");
+  expect(SpecDumpSpecString(ps1) == " i:2/2/1/36/fac/4294967295", "SpecDump: PS perm 1 spec text");
+  expect(SpecDumpSpecString(ps2) == " b:4/20/c i:2/2/1/36/fac/4294967295", "SpecDump: PS perm 2 spec text");
+  expect(SpecDumpSpecString(cs1).empty(), "SpecDump: CS perm 1 spec text");
+  expect(SpecDumpSpecString(ms1) == " b:8/1/688", "SpecDump: MS perm 1 spec text");
+
+  std::error_code ec;
+  const auto root = fs::temp_directory_path(ec) /
+                    fmt::format("kyty_specdump_{:x}", std::chrono::steady_clock::now().time_since_epoch().count());
+  fs::create_directories(root, ec);
+  expect(!ec, "SpecDump: fixture directory");
+  const auto saved_cwd = fs::current_path(ec);
+  fs::current_path(root, ec); // the cache directory is relative (_ShaderCache/<title>/...)
+  expect(!ec, "SpecDump: fixture cwd");
+  fs::path directory;
+  {
+    Cache cache("SPECDUMPFIX");
+    expect(cache.Enabled(), "SpecDump: the regular writer is enabled");
+    const uint64_t vs_hash = 0x1111222233334444ull;
+    const uint64_t ps_hash = 0x5555666677778888ull;
+    const uint64_t cs_hash = 0x99990000aaaabbbbull;
+    const std::vector<uint32_t> vs_state = {0, 1, 2, 3, 4, 5, 6, 7};
+    const std::vector<uint32_t> ps_state(30, 9u);
+    const std::vector<uint32_t> cs_state(14, 64u);
+    ShaderRecompiler::IR::ResourcePlan plan;
+    const std::vector<Cache::Permutation> vs_perms = {make_permutation(ShaderType::Vertex, vs_hash, vs1),
+                                                      make_permutation(ShaderType::Vertex, vs_hash, vs2)};
+    const std::vector<Cache::Permutation> ps_perms = {make_permutation(ShaderType::Pixel, ps_hash, ps1),
+                                                      make_permutation(ShaderType::Pixel, ps_hash, ps2)};
+    const std::vector<Cache::Permutation> cs_perms = {make_permutation(ShaderType::Compute, cs_hash, cs1)};
+    const std::vector<Cache::Permutation> ms_perms = {make_permutation(ShaderType::Mesh, 0x2222, ms1)};
+    plan.stage = ShaderType::Vertex;
+    plan.shader_hash = vs_hash;
+    expect(cache.Save({static_cast<uint32_t>(ShaderType::Vertex), vs_hash, 4, 64, vs_state}, plan, vs_perms),
+           "SpecDump: save VS");
+    plan.stage = ShaderType::Pixel;
+    plan.shader_hash = ps_hash;
+    expect(cache.Save({static_cast<uint32_t>(ShaderType::Pixel), ps_hash, 8, 128, ps_state}, plan, ps_perms),
+           "SpecDump: save PS");
+    plan.stage = ShaderType::Compute;
+    plan.shader_hash = cs_hash;
+    expect(cache.Save({static_cast<uint32_t>(ShaderType::Compute), cs_hash, 2, 32, cs_state}, plan, cs_perms),
+           "SpecDump: save CS");
+    plan.stage = ShaderType::Mesh;
+    plan.shader_hash = 0x2222;
+    expect(cache.Save({static_cast<uint32_t>(ShaderType::Mesh), 0x2222, 2, 16, cs_state}, plan, ms_perms),
+           "SpecDump: save MS");
+    expect(cache.Saved() == 4, "SpecDump: four files saved");
+    directory = root / cache.Directory();
+  }
+  fs::current_path(saved_cwd, ec);
+  expect(!ec, "SpecDump: cwd restored");
+
+  // Negative members: a corrupted copy of the PS file (cache name form) and a foreign file name.
+  fs::path ps_file;
+  for (const auto &e : fs::directory_iterator(directory, ec)) {
+    if (e.path().filename().string().rfind("ps_", 0) == 0) {
+      ps_file = e.path();
+    }
+  }
+  expect(!ps_file.empty(), "SpecDump: PS file present");
+  const auto corrupt = directory / fmt::format("ps_{:016x}_ffffffffffffffff.bin", 0x5555666677778888ull);
+  fs::copy_file(ps_file, corrupt, ec);
+  expect(!ec, "SpecDump: corrupt copy");
+  {
+    std::fstream f(corrupt, std::ios::in | std::ios::out | std::ios::binary);
+    f.seekg(-1, std::ios::end);
+    char c = 0;
+    f.read(&c, 1);
+    c = static_cast<char>(c ^ 0x5a);
+    f.seekp(-1, std::ios::end);
+    f.write(&c, 1);
+  }
+  {
+    std::ofstream f(directory / "pipelines.bin", std::ios::binary);
+    f << "not a translation file";
+  }
+
+  // Read-only: hash every file before and after.
+  const auto hash_files = [&]() {
+    std::map<std::string, uint64_t> hashes;
+    for (const auto &e : fs::directory_iterator(directory, ec)) {
+      std::ifstream f(e.path(), std::ios::binary);
+      std::string bytes((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+      hashes[e.path().filename().string()] = XXH3_64bits(bytes.data(), bytes.size());
+    }
+    return hashes;
+  };
+  const auto before = hash_files();
+
+  const auto out_path = root / "specdump.txt";
+  SpecDumpTotals totals;
+  {
+    FILE *out = std::fopen(out_path.string().c_str(), "wb");
+    expect(out != nullptr, "SpecDump: fixture output");
+    if (out != nullptr) {
+      expect(RunSpecDump(directory, out, totals, {}), "SpecDump: directory listed");
+      std::fclose(out);
+    }
+  }
+  expect(hash_files() == before && before.size() == 6, "SpecDump: files unchanged by the dump");
+
+  std::vector<std::string> lines;
+  {
+    std::ifstream f(out_path, std::ios::binary);
+    for (std::string line; std::getline(f, line);) {
+      lines.push_back(line);
+    }
+  }
+  // Permutation lines, file name dropped (the state hash part of the name is the writer's).
+  std::vector<std::string> perm_lines;
+  for (const auto &line : lines) {
+    if (line.rfind("SpecDump: file=", 0) == 0) {
+      const auto stage_at = line.find(" stage=");
+      perm_lines.push_back(line.substr(0, 18) + line.substr(stage_at));
+    }
+  }
+  const std::vector<std::string> expected = {
+      "SpecDump: file=cs_ stage=MS hash=0x0000000000002222 perm=1 spec= b:8/1/688",
+      "SpecDump: file=cs_ stage=CS hash=0x99990000aaaabbbb perm=1 spec=",
+      "SpecDump: file=ps_ stage=PS hash=0x5555666677778888 perm=1 spec= i:2/2/1/36/fac/4294967295",
+      "SpecDump: file=ps_ stage=PS hash=0x5555666677778888 perm=2 spec= b:4/20/c i:2/2/1/36/fac/4294967295",
+      "SpecDump: file=vs_ stage=VS hash=0x1111222233334444 perm=1 spec= b:10/77/fac i:1/1/11/0/d1a/3",
+      "SpecDump: file=vs_ stage=VS hash=0x1111222233334444 perm=2 spec= b:0/0/688 b:20/13/0",
+  };
+  expect(perm_lines == expected, "SpecDump: permutation lines equal the known specializations");
+  for (const auto &line : perm_lines) {
+    std::fprintf(stderr, "SpecDumpFixture: %s\n", line.c_str());
+  }
+  const auto has_line = [&](const std::string &text) {
+    return std::find(lines.begin(), lines.end(), text) != lines.end();
+  };
+  expect(has_line(fmt::format("SpecDump: failed file={} stage=PS", corrupt.filename().string())),
+         "SpecDump: corrupted copy failed");
+  expect(has_line("SpecDump: skipped file=pipelines.bin"), "SpecDump: foreign name skipped");
+  expect(has_line("SpecDump: stage=PS files=2 read=1 failed=1 perms=2"), "SpecDump: PS totals");
+  expect(has_line("SpecDump: stage=VS files=1 read=1 failed=0 perms=2"), "SpecDump: VS totals");
+  expect(has_line("SpecDump: stage=CS files=2 read=2 failed=0 perms=2"), "SpecDump: CS totals (the mesh file is cs_)");
+  expect(has_line("SpecDump: sig_filter=none"), "SpecDump: no filter line");
+  expect(has_line("SpecDump: skipped=1 other_sig=0 stage_mismatch=1 spec_strings=6 spec_strings_aliased=0"),
+         "SpecDump: alias line (ps1 and ps2 differ in the buffer), one stage mismatch (MS)");
+  expect(std::count_if(lines.begin(), lines.end(),
+                       [](const std::string &l) { return l.rfind("SpecDump: file-sig file=", 0) == 0; }) == 5,
+         "SpecDump: a signature line per cache file");
+  expect(!lines.empty() && lines.back() == "SpecDump: files=5 read=4 failed=1 perms=6", "SpecDump: totals line last");
+
+  // Signature filter: a foreign translator hash drops every file, the own hash keeps the unfiltered result.
+  {
+    std::string own;
+    for (const auto &e : fs::directory_iterator(directory, ec)) {
+      if (e.path().filename().string().rfind("vs_", 0) == 0) {
+        own = SpecDumpTranslatorHash(SpecDumpSignature(e.path()));
+      }
+    }
+    expect(own.size() == 40 && own != std::string(40, '0'), "SpecDump: own translator hash");
+    const auto run = [&](const std::string &filter, SpecDumpTotals &t) {
+      const auto path = root / "specdump_sig.txt";
+      FILE *f = std::fopen(path.string().c_str(), "wb");
+      if (f != nullptr) {
+        RunSpecDump(directory, f, t, filter);
+        std::fclose(f);
+      }
+    };
+    SpecDumpTotals foreign;
+    run(std::string(40, '0'), foreign);
+    expect(foreign.other_sig == 5 && foreign.all.files == 0 && foreign.all.perms == 0 && foreign.skipped == 1,
+           "SpecDump: foreign signature filter drops every cache file");
+    SpecDumpTotals mine;
+    run(own, mine);
+    expect(mine.other_sig == 0 && mine.all.files == 5 && mine.all.read == 4 && mine.all.failed == 1 &&
+               mine.all.perms == 6,
+           "SpecDump: own signature filter keeps the unfiltered result");
+  }
+  expect(hash_files() == before, "SpecDump: files unchanged by the filtered dumps");
+
+  // Alias member: a file whose two permutations differ only in a field the AvTrace text omits.
+  {
+    fs::current_path(root, ec);
+    Cache cache("SPECDUMPFIX_ALIAS");
+    Spec a = ps1;
+    Spec b = ps1;
+    b.images[0].cube = true;
+    const std::vector<uint32_t> ps_state(30, 1u);
+    const std::vector<Cache::Permutation> perms = {make_permutation(ShaderType::Pixel, 7, a),
+                                                   make_permutation(ShaderType::Pixel, 7, b)};
+    ShaderRecompiler::IR::ResourcePlan plan;
+    plan.stage = ShaderType::Pixel;
+    plan.shader_hash = 7;
+    expect(cache.Save({static_cast<uint32_t>(ShaderType::Pixel), 7, 8, 128, ps_state}, plan, perms),
+           "SpecDump: save alias PS");
+    const auto alias_dir = root / cache.Directory();
+    fs::current_path(saved_cwd, ec);
+    const auto alias_out = root / "specdump_alias.txt";
+    FILE *out = std::fopen(alias_out.string().c_str(), "wb");
+    SpecDumpTotals alias_totals;
+    if (out != nullptr) {
+      RunSpecDump(alias_dir, out, alias_totals, {});
+      std::fclose(out);
+    }
+    expect(alias_totals.spec_strings == 1 && alias_totals.spec_strings_aliased == 1 && alias_totals.all.perms == 2,
+           "SpecDump: alias counted");
+  }
+
+  fs::remove_all(root, ec);
+  if (failures == 0) {
+    std::fprintf(stderr, "SpecDumpFixture: ALL OK\n");
+  } else {
+    std::fprintf(stderr, "SpecDumpFixture: FAILED %d\n", failures);
+  }
+}
+
+} // namespace
+} // namespace Libs::Graphics
+
 // KYTY_TESTS_VERBOSE=1 prints the name of every test before it runs;
 // KYTY_TESTS_FILTER=<substring> runs only the matching tests.
 #define RUN(test)                                                              \
@@ -14543,6 +15045,15 @@ int main() {
   using namespace Libs::Graphics;
 
   EnsureConfigInitialized();
+  if (const char *specdump_dir = std::getenv("KYTY_TEST_SPECDUMP_DIR"); specdump_dir != nullptr) {
+    // Track S, S14j (HPP-533): offline dump of a translation cache directory (SpecDumpMain above), read-only.
+    const char *specdump_out = std::getenv("KYTY_TEST_SPECDUMP_OUT");
+    if (specdump_out == nullptr || specdump_out[0] == 0) {
+      std::fprintf(stderr, "KYTY_TEST_SPECDUMP_DIR=<translation cache directory> needs KYTY_TEST_SPECDUMP_OUT=<file>\n");
+      return 1;
+    }
+    return SpecDumpMain(specdump_dir, specdump_out, std::getenv("KYTY_TEST_SPECDUMP_SIG"));
+  }
   if (const char *recompile = std::getenv("KYTY_RECOMPILE"); recompile != nullptr) {
     // Offline recompilation: KYTY_RECOMPILE="<gcn.bin>;<cache.bin>;<out.spv>[;<permutation>]"
     // translates a raw GCN dump (_Shaders/original) with the current translator and emits the
@@ -15096,6 +15607,7 @@ int main() {
   RUN(TestPixelProgramCacheBindingIdentity);
   RUN(TestGraphicsPushConstantPlacement);
   RUN(TestNewShaderRecompilerUnsupportedMemoryDecode);
+  RUN(TestSpecDumpRoundTrip);
 
   return 0;
 }

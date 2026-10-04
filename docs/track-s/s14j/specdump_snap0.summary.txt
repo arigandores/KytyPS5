@@ -1,0 +1,16 @@
+input specdump_snap0.txt sha256 050a77129b5b0c475846052a1fb1fd6e50ef7797787df61464d09c3577d64478
+last line: SpecDump: files=707 read=707 failed=0 perms=1187
+stage CS: perms 141, files 116, distinct hashes 114
+stage MS: perms 5, files 5, distinct hashes 5
+stage PS: perms 247, files 220, distinct hashes 217
+stage VS: perms 794, files 366, distinct hashes 146
+perms total 1187 (VS+PS+CS+MS); VS+PS 1041
+distinct (stage, hash) 482
+files with >= k permutations: 1:707, 2:210, 3:161, 4:60, 5:24, 6:22, 7:1, 8:1, 9:1
+signature groups (file-sig lines): 699c1e4b 707, 780ea8ac 438, 2db9065a 29, 646b501f 5, 8347ce22 1, 1693ffd7 1
+distinct (stage, spec string) 340
+spec strings shared by >= 2 permutations: 137 (permutations in them 984)
+reference: PipelinePrecache "3456 sources loaded" (S10 logs on 699c1e4b, e.g. s10/log_t2_1.txt:2466) counts loads per recipe - pipelineCache.cpp loaded_sources += vs_loaded + ps_loaded per graphics recipe, + cs_loaded per compute recipe - with repetition; 1660 graphics + 141 compute recipes give at most 1660 * 2 + 141 = 3461; the dump counts distinct permutations per file (1187), so equality is not expected
+letter run specdump_snap0_all.txt sha256 e78a383283d59eca6c9cd82abbb6557b2508b6d5e6ff584874995d9ef9c85650
+letter run: last line SpecDump: file-sig file=cs_2b3be82b8235ac05_8456cf406019b56d.bin sig=KytySC3:780ea8acc4dd17525bed7c23661f649f50ce4d79:robust:ftz:cbank
+letter run: perm lines 27, files with perm lines 23, file-sig lines 24 (no totals line: the process stopped)

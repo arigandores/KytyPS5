@@ -1,0 +1,17 @@
+PASS negative rc=0 (rc=0, 6.1 s) rc=0 end 2026-10-04T09:16:51Z
+PASS procload exit 7 (rc=7)
+PASS procload KILLED line KILLED: procload 2026-10-04T09:16:58Z
+PASS procload within 3 s (1.25 s)
+PASS procload tree dead (tree [56112], alive [])
+PASS lock exit 3 (rc=3)
+PASS lock KILLED line KILLED: lock 2026-10-04T09:17:04Z
+PASS lock within 3 s (0.20 s)
+PASS lock tree dead (tree [35112], alive [])
+PASS STOP exit 4 (rc=4)
+PASS STOP KILLED line KILLED: STOP 2026-10-04T09:17:09Z
+PASS STOP within 3 s (0.24 s)
+PASS STOP tree dead (tree [9020], alive [])
+PASS refuse lock exit 5 REFUSED: lock 2026-10-04T09:17:10Z
+PASS refuse procload exit 7 REFUSED: procload pid 49688 2026-10-04T09:17:11Z
+PASS limit exit 6 STOPPED: 3 s step limit 2026-10-04T09:17:15Z
+ALL OK

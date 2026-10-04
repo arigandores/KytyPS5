@@ -1,0 +1,14 @@
+dump C:/kyty/s288/s14j/specdump_snap0.txt sha256 050a77129b5b0c475846052a1fb1fd6e50ef7797787df61464d09c3577d64478, (stage, hash) 482
+C:/kyty/s288/s10/log_pi_r0.txt sha256 763d44703cf436ff08d609b2b0bde599c971ff093250b7e7d49b27b81b3ddbd8: 
+C:/kyty/s288/s10/log_pi_r1.txt sha256 81c37079e51e674de6a2e3602de1bed03979d3c3380d30a07e9a03c4a224906e: 
+C:/kyty/s288/s10/log_pi_w0.txt sha256 e7aebb14c9a564d97dbd0a8541fd8adb918c54f0957bf2811ad64348dca75082: 
+C:/kyty/s288/s10/log_pi_w1.txt sha256 353f90e873d956c1cb6f531e9aaf4cd6243ea1f87c2862a0b7ffb34eee46bf13: 
+C:/kyty/s288/s10/log_t2_1.txt sha256 c469daae5b002fb3ef1d89e7ba1febf38e48b3a782d80a408908a98c1ad22c6b: EQUAL 3, hash not in dump 12, lines 16, perm not in dump 1
+C:/kyty/s288/s10/log_t2_2.txt sha256 3096467dda8489320e4573650613ce21724eeb3d00f9540a38b21ba9cdb555f3: EQUAL 2, hash not in dump 2, lines 4
+C:/kyty/s288/s10/log_t2_3.txt sha256 9c5e4e4a281564f5c9b9a1718272408a68cbd94df3408bee01c821f34ec563b1: 
+C:/kyty/s288/s10/log_t2_4.txt sha256 54933d1429eca940dfa1882f99498f992837a9ae50f48c016139da5ba2786fe1: EQUAL 1, hash not in dump 1, lines 2
+C:/kyty/s288/s10/log_t2_5.txt sha256 22a7b9ad6c100b86374921f37e342e575937b23e66ed1813aaa366611121e888: EQUAL 2, hash not in dump 4, lines 6
+C:/kyty/s288/s10/log_t2_6.txt sha256 8b1365bac174390a31aad8b3650d18410806060acba1d20aed005872d8042ce5: 
+C:/kyty/s288/s10/log_t2_7.txt sha256 6be077120752ae172bbf20df65c8a9f20b55c137798c7f48c2b3211be4f42d4b: EQUAL 3, hash not in dump 4, lines 7
+C:/kyty/s288/s10/log_t2_cs0.txt sha256 b94f2862cfb8783d689ee8ae6bade1f0011d3d233d575183cdf5978286c13a76: EQUAL 3, hash not in dump 12, lines 16, perm not in dump 1
+TOTAL: EQUAL 14, hash not in dump 35, lines 51, perm not in dump 2

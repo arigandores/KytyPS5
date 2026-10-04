@@ -1,0 +1,4 @@
+# exe C:\kyty\f287\f19c2\new\b24_pad_stand_new.exe sha256 a513ff66b90d55f8828baf444ea1c2869e94a962cb871103f7af98fbdb4b2c5c
+PASS trig_fix1 rc=0 wall=4.3s pad_vendor=0x054c pad_product=0x0ce6 pad_type=7 pad_type_ps5=1 wall_trig_a_us=210 wall_trig_b_us=19 trig_ok=1 y_done_before_unlock=1 effect_calls_before_unlock=0 effect_calls_after_unlock=2 effect_latency_us=15611 ref_seen=1 payload_size=32 last_eq_b=1 a_ne_b=1 pad_trig=4 guest_sdl=0 po_applied=4 po_wait_max_us=2800213 effect_calls=4 sent=#1:1,#2:1,#3:1,#4:1
+PASS trig_fix0 rc=0 wall=3.9s pad_vendor=0x054c pad_product=0x0ce6 pad_type=7 pad_type_ps5=1 wall_trig_a_us=2799111 wall_trig_b_us=31 trig_ok=1 y_done_before_unlock=0 effect_calls_before_unlock=0 effect_calls_after_unlock=2 effect_latency_us=346 ref_seen=1 payload_size=32 last_eq_b=1 a_ne_b=1 pad_trig=4 guest_sdl=12 po_applied=0 po_wait_max_us=0 effect_calls=4 sent=#1:1,#2:1,#3:1,#4:1
+ALL OK

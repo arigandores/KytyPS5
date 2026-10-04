@@ -1,0 +1,172 @@
+watch: start 2026-10-04T13:53:02Z child 74044 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 0..29 not clean 0
+rc=0 end 2026-10-04T13:53:28Z
+13:53:28 batch 0..29 rc=0
+watch: start 2026-10-04T13:53:30Z child 7536 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 30..59 not clean 0
+rc=0 end 2026-10-04T13:53:48Z
+13:53:49 batch 30..59 rc=0
+watch: start 2026-10-04T13:53:51Z child 18932 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T13:54:03Z pids [63356]; tree [18932, 51468], alive after []
+13:54:03 batch 60..89 rc=0
+watch: start 2026-10-04T13:57:45Z child 61932 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 80..109 not clean 0
+rc=0 end 2026-10-04T13:58:07Z
+13:58:07 batch 80..109 rc=0
+watch: start 2026-10-04T13:58:09Z child 49992 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 110..139 not clean 0
+rc=0 end 2026-10-04T13:58:30Z
+13:58:32 batch 110..139 rc=0
+watch: start 2026-10-04T14:02:19Z child 33404 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 140..169 not clean 0
+rc=0 end 2026-10-04T14:02:40Z
+14:02:40 batch 140..169 rc=0
+watch: start 2026-10-04T14:02:44Z child 48628 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:02:51Z pids [7980]; tree [31484, 48628], alive after []
+14:02:51 batch 170..199 rc=7
+watch: start 2026-10-04T14:09:27Z child 33148 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 178..207 not clean 0
+rc=0 end 2026-10-04T14:09:48Z
+14:09:49 batch 178..207 rc=0
+watch: start 2026-10-04T14:09:53Z child 74812 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 208..237 not clean 0
+rc=0 end 2026-10-04T14:10:13Z
+14:10:13 batch 208..237 rc=0
+watch: start 2026-10-04T14:10:15Z child 25564 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 238..267 not clean 0
+rc=0 end 2026-10-04T14:10:31Z
+14:10:32 batch 238..267 rc=0
+watch: start 2026-10-04T14:10:34Z child 11016 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 268..297 not clean 0
+rc=0 end 2026-10-04T14:10:50Z
+14:10:50 batch 268..297 rc=0
+watch: start 2026-10-04T14:10:52Z child 49840 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 298..327 not clean 0
+rc=0 end 2026-10-04T14:11:12Z
+14:11:12 batch 298..327 rc=0
+watch: start 2026-10-04T14:11:26Z child 25496 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 328..357 not clean 0
+rc=0 end 2026-10-04T14:11:48Z
+14:11:49 batch 328..357 rc=0
+watch: start 2026-10-04T14:11:52Z child 24940 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:12:03Z pids [57788]; tree [24940, 46324], alive after []
+14:12:03 batch 358..387 rc=7
+watch: start 2026-10-04T14:12:10Z child 51872 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 372..401 not clean 0
+rc=0 end 2026-10-04T14:12:32Z
+14:12:33 batch 372..401 rc=0
+watch: start 2026-10-04T14:12:35Z child 34848 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 402..431 not clean 0
+rc=0 end 2026-10-04T14:12:58Z
+14:12:58 batch 402..431 rc=0
+watch: start 2026-10-04T14:13:02Z child 51916 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 432..461 not clean 0
+rc=0 end 2026-10-04T14:13:24Z
+14:13:25 batch 432..461 rc=0
+watch: start 2026-10-04T14:13:30Z child 67488 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 462..491 not clean 0
+rc=0 end 2026-10-04T14:13:58Z
+14:13:58 batch 462..491 rc=0
+watch: start 2026-10-04T14:14:01Z child 18588 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 492..521 not clean 0
+rc=0 end 2026-10-04T14:14:18Z
+14:14:18 batch 492..521 rc=0
+watch: start 2026-10-04T14:14:20Z child 57644 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 522..551 not clean 0
+rc=0 end 2026-10-04T14:14:38Z
+14:14:38 batch 522..551 rc=0
+watch: start 2026-10-04T14:14:40Z child 53260 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 552..581 not clean 0
+rc=0 end 2026-10-04T14:15:01Z
+14:15:01 batch 552..581 rc=0
+watch: start 2026-10-04T14:15:04Z child 28260 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:15:18Z pids [6296]; tree [23708, 28260], alive after []
+14:15:18 batch 582..611 rc=7
+watch: start 2026-10-04T14:15:36Z child 57096 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 598..627 not clean 0
+rc=0 end 2026-10-04T14:15:49Z
+14:15:49 batch 598..627 rc=0
+watch: start 2026-10-04T14:15:50Z child 22028 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:15:55Z pids [28940]; tree [22028, 46392], alive after []
+14:15:55 batch 628..657 rc=7
+watch: start 2026-10-04T14:20:37Z child 56316 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 638..667 not clean 0
+rc=0 end 2026-10-04T14:20:57Z
+14:20:57 batch 638..667 rc=0
+watch: start 2026-10-04T14:21:00Z child 70592 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:21:07Z pids [19828]; tree [70592], alive after []
+14:21:07 batch 668..697 rc=7
+watch: start 2026-10-04T14:21:24Z child 6104 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+HALT lock or STOP
+KILLED: lock 2026-10-04T14:21:24Z; tree [6104], alive after []
+times line deferred: lock present
+14:21:24 batch 678..707 rc=3
+watch: start 2026-10-04T14:25:51Z child 55816 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:25:58Z pids [74560]; tree [14620, 55816], alive after []
+14:25:58 batch 678..707 rc=7
+watch: start 2026-10-04T14:26:16Z child 47220 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 687..716 not clean 0
+rc=0 end 2026-10-04T14:26:38Z
+14:26:39 batch 687..716 rc=0
+watch: start 2026-10-04T14:26:41Z child 61980 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:26:47Z pids [29080]; tree [10396, 61980], alive after []
+14:26:47 batch 717..746 rc=7
+watch: start 2026-10-04T14:31:39Z child 59512 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:31:43Z pids [11668]; tree [33464, 59512], alive after []
+14:31:43 batch 727..756 rc=7
+watch: start 2026-10-04T14:31:59Z child 3444 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 731..760 not clean 0
+rc=0 end 2026-10-04T14:32:20Z
+14:32:20 batch 731..760 rc=0
+watch: start 2026-10-04T14:32:24Z child 10460 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 761..790 not clean 0
+rc=0 end 2026-10-04T14:32:44Z
+14:32:44 batch 761..790 rc=0
+watch: start 2026-10-04T14:33:00Z child 65260 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+HALT lock or STOP
+rc=3 end 2026-10-04T14:33:02Z
+14:33:02 batch 791..820 rc=3
+watch: start 2026-10-04T14:37:23Z child 76412 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:37:35Z pids [75640]; tree [76412], alive after []
+14:37:36 batch 792..821 rc=7
+watch: start 2026-10-04T14:37:55Z child 48752 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 810..839 not clean 0
+rc=0 end 2026-10-04T14:38:12Z
+14:38:12 batch 810..839 rc=0
+watch: start 2026-10-04T14:38:13Z child 17144 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 840..869 not clean 0
+rc=0 end 2026-10-04T14:38:27Z
+14:38:27 batch 840..869 rc=0
+watch: start 2026-10-04T14:38:29Z child 63860 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:38:30Z pids [66668]; tree [58656, 63860], alive after []
+14:38:30 batch 870..899 rc=7
+watch: start 2026-10-04T14:43:03Z child 31908 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:43:07Z pids [46644]; tree [31908, 40964], alive after []
+14:43:07 batch 873..902 rc=7
+watch: start 2026-10-04T14:43:21Z child 23100 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 879..908 not clean 0
+rc=0 end 2026-10-04T14:43:36Z
+14:43:38 batch 879..908 rc=0
+watch: start 2026-10-04T14:43:40Z child 60528 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 909..938 not clean 0
+rc=0 end 2026-10-04T14:44:01Z
+14:44:01 batch 909..938 rc=0
+watch: start 2026-10-04T14:44:05Z child 69816 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:44:08Z pids [52956]; tree [42972, 69816], alive after []
+14:44:08 batch 939..968 rc=7
+watch: start 2026-10-04T14:44:24Z child 60452 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+HALT lock or STOP
+KILLED: lock 2026-10-04T14:44:24Z; tree [60452], alive after []
+times line deferred: lock present
+14:44:24 batch 942..971 rc=3
+watch: start 2026-10-04T14:48:44Z child 52932 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-04T14:48:55Z pids [60604]; tree [30148, 52932], alive after []
+14:48:56 batch 942..971 rc=7
+watch: start 2026-10-04T14:49:10Z child 46176 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 962..991 not clean 0
+rc=0 end 2026-10-04T14:49:31Z
+14:49:31 batch 962..991 rc=0
+watch: start 2026-10-04T14:49:37Z child 64680 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd new cycles 992..999 not clean 0
+rc=0 end 2026-10-04T14:49:43Z
+14:49:43 batch 992..999 rc=0

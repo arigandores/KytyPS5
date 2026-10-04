@@ -1,0 +1,10 @@
+# dd new (member): cycles expected 1000, present 1000, missing 0, repeated 0, beyond n 0
+crashed 0 of 1000 (rc != 0, no END, marker or no both_returned): {}
+not clean 0; scenario not met (calls before unlock and po_wait_max_us >= 200000) 0
+call_a_wall_us n=1000 min=248072 median=330421 max=346759
+call_b_wall_us n=1000 min=247976 median=330420 max=346751
+start_skew_us n=1000 min=0 median=0 max=16718
+po_wait_max_us n=1000 min=275788 median=300550 max=301824
+po_applied n=1000 min=1 median=1 max=1
+rumble_calls n=1000 min=2 median=2 max=2
+ALL OK

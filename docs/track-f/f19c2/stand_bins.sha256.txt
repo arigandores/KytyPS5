@@ -1,0 +1,3 @@
+c739cdfa98432ca4ded995bf749613fed4982b1c19ac6990c0a9c61f04340c01 *ref/b24_pad_stand_ref.exe
+a513ff66b90d55f8828baf444ea1c2869e94a962cb871103f7af98fbdb4b2c5c *new/b24_pad_stand_new.exe
+worktree wt base main 20d97cd85b60d4c76a5587a7295f6c31c115a80d + patch_f19c2_stand.py (ref) / + patch_f19c2_src.py (new)

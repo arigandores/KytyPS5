@@ -1,0 +1,21 @@
+FixB24: mode=1
+case=i
+num_joysticks_at_init=0
+	 large_motor = 17
+	 small_motor = 34
+fix_b24=1
+connected=1
+wall_vib_us=38
+pad_vib=1
+pad_led=0
+pad_trig=0
+pad_wait_max_us=3
+po_applied=1
+po_wait_max_us=2799557
+guest_sdl=0
+rumble_calls=1
+rumble_bad=0
+led_calls=0
+effect_calls=0
+shutdown_ok=1
+END

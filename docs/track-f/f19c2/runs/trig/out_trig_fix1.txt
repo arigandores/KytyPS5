@@ -1,0 +1,37 @@
+FixB24: mode=1
+case=trig
+num_joysticks_at_init=0
+PadTriggerEffect: #1 mask=0x01 L=1[02 05 00 00] R=0[00 00 00 00] ok=1 sent=1
+fix_b24=1
+connected=1
+pad_vendor=0x054c
+pad_product=0x0ce6
+pad_type=7
+pad_type_ps5=1
+PadTriggerEffect: #2 mask=0x02 L=0[00 00 00 00] R=1[03 07 00 00] ok=1 sent=1
+PadTriggerEffect: #3 mask=0x01 L=1[02 05 00 00] R=0[00 00 00 00] ok=1 sent=1
+PadTriggerEffect: #4 mask=0x02 L=0[00 00 00 00] R=1[03 07 00 00] ok=1 sent=1
+wall_trig_a_us=210
+wall_trig_b_us=19
+trig_ok=1
+y_done_before_unlock=1
+effect_calls_before_unlock=0
+effect_calls_after_unlock=2
+effect_latency_us=15611
+ref_seen=1
+payload_size=32
+last_eq_b=1
+a_ne_b=1
+pad_vib=0
+pad_led=0
+pad_trig=4
+pad_wait_max_us=24
+po_applied=4
+po_wait_max_us=2800213
+guest_sdl=0
+rumble_calls=0
+rumble_bad=0
+led_calls=0
+effect_calls=4
+shutdown_ok=1
+END

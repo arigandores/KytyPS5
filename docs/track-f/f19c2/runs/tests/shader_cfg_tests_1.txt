@@ -1,0 +1,150 @@
+Shader: emitted zero-position clip guard
+[f19] k16UNorm KYTY_FIX_F19=0: C dref=0 manual=1, C_LZ dref=0 manual=1
+[f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+[f19] indirect k16UNorm+k32Float KYTY_FIX_F19=0: images=2 members=2 dref=0 manual=1 plain_explicit=2
+[f19] indirect k32Float+k8UNorm KYTY_FIX_F19=0: images=2 members=2 dref=2 manual=0 plain_explicit=0
+[f19] null T# alone C KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+[f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+[f19] null T# alone C_LZ KYTY_FIX_F19=0: images=1 native=1 manual_images=0 dref=1 manual=0
+[f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=0: images=2 native=0 manual_images=2 dref=0 manual=2
+[test] TestResourceDescriptorClassification
+[test] TestShaderBufferResourceSize
+[test] TestNativeShaderResourceDependencies
+[test] TestNormalizedImageContracts
+[test] TestSpirvRequirementsAnalysis
+[test] TestTypedSpirvSerialization
+[test] TestDeferredSpirvPhiPatching
+[test] TestCompilerStageInputOwnership
+[test] TestSpirvEmissionOwnsRequirements
+[test] TestRepeatedExportsHaveOneInterface
+[test] TestNewShaderRecompilerSpirvSizeBaselines
+[test] TestDemandDrivenSpirvDeclarations
+[test] TestNewShaderRecompilerSMovB32
+[test] TestNewShaderRecompilerClipDisabledPosition
+[test] TestNewShaderRecompilerAuxPositionExports
+[test] TestNewShaderRecompilerNativeWideScalarMemoryIr
+[test] TestNewShaderRecompilerNativeWideBufferIr
+[test] TestNewShaderRecompilerScalarB64LaneTranslation
+[test] TestNewShaderRecompilerMubufFormatTranslation
+[test] TestNewShaderRecompilerTypedBufferTranslation
+[test] TestNewShaderRecompilerDsReadWrite2Translation
+[test] TestNewShaderRecompilerDsWideAndAtomicTranslation
+[test] TestNewShaderRecompilerCapturedVop1SdwaByteConvert
+[test] TestNewShaderRecompilerScalarMemoryBindingDomains
+[test] TestNewShaderDecoderArchitecture
+[test] TestImageAddressOperands
+[test] TestSopkCompareImmediateExtension
+[test] TestNewShaderRecompilerCapturedVopcSdwaCmpxClass
+[test] TestNewShaderRecompilerCapturedVopcSdwaCmpxLtU16
+[test] TestNewShaderRecompilerIrLookupMissFailsExplicitly
+[test] TestNewShaderRecompilerRejectsDppOn64BitCompares
+[test] TestPsInputCountRegisterDecode
+[test] TestPixelAncillaryLayerInput
+[test] TestNewShaderRecompilerUnbasedFlatUsesBda
+[test] TestNewShaderRecompilerFlatUserPointerUsesDma
+[test] TestNewShaderRecompilerFlatAddressDomainsUseDma
+[test] TestNewShaderRecompilerCfgStraightLine
+[test] TestNewShaderRecompilerCfgIfElse
+[test] TestNewShaderRecompilerCfgConsecutiveNativePhis
+[test] TestNewShaderRecompilerStructuredU64Phi
+[test] TestNewShaderRecompilerCfgTerminalExitMergePS
+[test] TestNewShaderRecompilerCfgPostEndTargetMergePS
+[test] TestNewShaderRecompilerCfgLoopBreakContinue
+[test] TestNewShaderRecompilerCfgLoopHeaderDsAppendConsumeStructured
+[test] TestNewShaderRecompilerCfgLoopHeaderDsReadStructured
+[test] TestNewShaderRecompilerCfgLoopHeaderDsRead2B64Structured
+[test] TestNewShaderRecompilerCfgSharedOuterAndLoopMerge
+[test] TestNewShaderRecompilerCfgLoopEarlyBreakNoSelection
+[test] TestNewShaderRecompilerCfgNestedLoopNonlocalExitDispatcher
+[test] TestNewShaderRecompilerCfgNestedLoopLocalExitNoSelection
+[test] TestNewShaderRecompilerCfgNestedLoopExitTailMergeSplit
+[test] TestNewShaderRecompilerCfgMixedContinueNonmergeExitDispatcher
+[test] TestNewShaderRecompilerCfgConditionalLatchNoSelection
+[test] TestNewShaderRecompilerCfgDirectConditionalLatchNoSelection
+[test] TestNewShaderRecompilerCfgLoopEarlyContinuesNoSelection
+[test] TestNewShaderRecompilerCfgLoopGatewaySelection
+[test] TestNewShaderRecompilerCfgConditionalLoopHeaderSelection
+[test] TestNewShaderRecompilerCfgMultipleLoopLatches
+[test] TestNewShaderRecompilerCfgDuplicateMergeStructuredSplit
+[test] TestNewShaderRecompilerCfgNestedEarlyExitLoopForwarders
+[test] TestNewShaderRecompilerCfgExecSccSharedArm
+[test] TestNewShaderRecompilerCfgAstroBotEarlyExitLadderPS
+ASTRO BOT PS 5457 structurize: ok=1 blocks=160 elapsed_ms=18 reason=
+[test] TestCfgTerminalCloneRetryClearsFailure
+[test] TestSharedReturnPreservesDescriptorDominance
+[test] TestNewShaderRecompilerCfgNestedTailEarlyExit
+[test] TestNewShaderRecompilerCfgSharedReturnAfterNestedSelections
+[test] TestNewShaderRecompilerCfgAlternatingSharedReturns
+[test] TestNewShaderRecompilerCfgLoopSharedRegion
+[test] TestNewShaderRecompilerCfgSharedRegionBeforeEarlyBreakLoop
+[test] TestNewShaderRecompilerCfgOverlappingEarlyExitLadder
+[test] TestNewShaderRecompilerCfgNestedEarlyExitSharedTerminal
+[test] TestNewShaderRecompilerCfgSharedTerminalEarlyExit
+[test] TestNewShaderRecompilerCfgPrunesUnreachableSelectionEntry
+[test] TestNewShaderRecompilerCfgFailedStructurizationPreservesGraph
+[test] TestNewShaderRecompilerCfgIrreducibleDispatcher
+[test] TestNewShaderRecompilerDispatcherSpillsU32x3
+[test] TestNewShaderRecompilerPlanningOnlyLoads
+[test] TestNewShaderRecompilerU64PairTranslation
+[test] TestComputeDispatchWaveSize
+[test] TestNewShaderRecompilerBufferLoadsGuardedByExec
+[test] TestNewShaderRecompilerBufferAtomicsGuardedByBounds
+[test] TestCapturedBufferAtomicsX2
+[test] TestNewShaderRecompilerPixelImageSampleLodSelection
+[test] TestF19IndirectComparisonTable
+[test] TestNewShaderRecompilerBranchConditionForms
+[test] TestNewShaderRecompilerSetpcBranch
+[test] TestFusedShaderHandoffPreservesRegisters
+[test] TestMeshExportStorage
+[test] TestMergedShaderUserDataSnapshot
+[test] TestMeshInputAssembly
+[test] TestEmbeddedFetchPreservesSharedScalarLoad
+[test] TestEmbeddedVertexFormatSwizzle
+[test] TestNewShaderRecompilerSetpcJumpTable
+[test] TestNewShaderRecompilerPrunesUnreachableSetpcMetadata
+[test] TestNewShaderRecompilerSetpcDwordJumpTable
+[test] TestTypedEntryStateIsMinimal
+[test] TestValuePhiValidation
+[test] TestU64ShiftConstantPropagation
+[test] TestNewShaderRecompilerZeroInitialRegisterState
+[test] TestNewShaderRecompilerVertexSystemInputsWithoutMirrors
+[test] TestNewShaderRecompilerVertexExportUsesInvocationExecMask
+[test] TestNggPassthroughVertexSubgroupHeader
+[test] TestComputePretranslation
+pretranslation test: ready=18 failed=1 hits=17
+[test] TestNewShaderRecompilerPerInvocationMasksWithoutMirrors
+[test] TestNewShaderRecompilerPerInvocationU64Complement
+[test] TestNewShaderRecompilerExpPixelOutputs
+[test] TestRenderTargetReverseExportMapping
+[test] TestNewShaderRecompilerEarlyZDisabledWhenPixelKillEnabled
+[test] TestTypedDescriptorRealWideMoveTranslation
+[test] TestComputeImageFill
+[test] TestTypedDescriptorRealCarryAndScalarLoads
+[test] TestSrtWalkerRealSmemTranslation
+[test] TestSrtWalkerVccBaseTranslation
+[test] TestSrtWalkerRealSBufferTranslation
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 3: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem3 kind=1 off=0xe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x2)
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfffffffe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x0)
+[test] TestScalarMemorySourcesCapturedBeforeWrites
+[test] TestScalarMemoryLoadCrossesIntoVcc
+[test] TestScalarMemoryUnusedTailDce
+[test] TestResourceTrackingRealDensePatching
+[test] TestDirectTranslationResetsAnalysisState
+[test] TestNewShaderRecompilerNativeBindingPlan
+[test] TestNewShaderRecompilerStageInputInfo
+[test] TestCustomVintrpMovTranslation
+[test] TestGraphicsCreateInterpolantMapping
+[test] TestNewShaderRecompilerPixelPipelineEntry
+[test] TestComputeLdsAllocationIdentity
+[test] TestPixelProgramCacheBindingIdentity
+[test] TestGraphicsPushConstantPlacement
+[test] TestNewShaderRecompilerUnsupportedMemoryDecode
+[test] TestSpecDumpRoundTrip
+SpecDumpFixture: SpecDump: file=cs_ stage=MS hash=0x0000000000002222 perm=1 spec= b:8/1/688
+SpecDumpFixture: SpecDump: file=cs_ stage=CS hash=0x99990000aaaabbbb perm=1 spec=
+SpecDumpFixture: SpecDump: file=ps_ stage=PS hash=0x5555666677778888 perm=1 spec= i:2/2/1/36/fac/4294967295
+SpecDumpFixture: SpecDump: file=ps_ stage=PS hash=0x5555666677778888 perm=2 spec= b:4/20/c i:2/2/1/36/fac/4294967295
+SpecDumpFixture: SpecDump: file=vs_ stage=VS hash=0x1111222233334444 perm=1 spec= b:10/77/fac i:1/1/11/0/d1a/3
+SpecDumpFixture: SpecDump: file=vs_ stage=VS hash=0x1111222233334444 perm=2 spec= b:0/0/688 b:20/13/0
+SpecDumpFixture: ALL OK
+[test] TestF19NullComparisonImage

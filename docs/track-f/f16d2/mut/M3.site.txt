@@ -1,0 +1,171 @@
+exe C:/kyty/f287/f16d2/build/shader_recompiler_compute_tests.exe sha256 a4db8535a245633468efd96c33a560a891115a29719ed2202b0a9e6c485d2055
+=== arm unset rc=0 OK
+[f16d]    knobs: KYTY_DIAG_F5=0 KYTY_DIAG_F6=0
+[f16d]    cs refusals: one tracked, one not            ok
+[f16d]    cs refusals: none tracked                    ok
+[f16d]    dma refusal classes                          ok
+[f16d]    f6 draw kind 0 with ps                       ok
+[f16d]    f6 draw kind 1 with ps                       ok
+[f16d]    f6 draw kind 2 with ps                       ok
+[f16d]    f6 draw kind 3 with ps                       ok
+[f16d]    f6 draw without ps: no export counted        ok
+[f16d]    f6 bound_extra (slot 3 bound, mask 0)        ok
+[f16d]    f6 bound_missing (slot 0 not bound)          ok
+[f16d]    identities after the pure calls              ok
+[f16d]    tick and mode line                           ok (mode line first call: f5=0 f6=0)
+[f16d]    H6 tick inside NoteDraw (F16d2)              ok
+[f16d]    A0 resolve DCC target                        ok
+[f16d]    A1 fill of an unknown address (PendingDcc)   ok
+[f16d]    A2 PendingDcc -> Dcc, render-target clear    ok
+[f16d]    A3 B dcc_rt_skip_partial                     ok
+[f16d]    A4 B dcc_rt_skip_levels                      ok
+[f16d]    A5 B dcc_rt_skip_decode                      ok
+[f16d]    A6 B dcc_rt_skip_layers                      ok
+[f16d]    A7 texture path: no dcc_rt_* (RC4)           ok
+[f16d]    A7b render target, partial fill again        ok
+[f16d]    A8 fill 0xff (uncompressed)                  ok
+[f16d]    A8b B dcc_fill_unknown                       ok
+[f16d]    A8c unknown code: nothing pending            ok
+[f16d]    A9 B dcc_mat_undecoded                       ok
+[f16d]    A9b materialized (code 00)                   ok
+[f16d]    A9c nothing pending                          ok
+[f16d]    A10 FCE scan: DCC slot with image, B dcc_fce_no_image ok
+[f16d]    A11 entry of another type reset (reference)  ok
+[f16d]    A12 adoption PendingDcc -> Dcc for a texture ok
+[f16d]    A13 ClearMeta refusals of known metadata     ok
+[f16d]    A14 DMA fill: B meta_dma_untracked x2, noclear x2 ok
+[f16d]    A15 compute write refused (the parent in ClearMeta) ok
+[f16d]    A15b B meta_cs_untracked                     ok
+[f16d]    A15c meta_cs_tracked                         ok
+[f16d]    A15d 3 refusals open, a fill inside (F16d2)  ok
+[f16d]    B0 resolve CMASK target                      ok
+[f16d]    B1 CMASK clear                               ok
+[f16d]    B2 B cmask_rt_skip_partial                   ok
+[f16d]    B3 B cmask_rt_skip_decode                    ok
+[f16d]    B4 B cmask_rt_skip_layers                    ok
+[f16d]    B5 B cmask_rt_skip_value                     ok
+[f16d]    B6 nothing pending                           ok
+[f16d]    B7 FCE scan: CMASK target with metadata      ok
+[f16d]    C0 resolve 960x540 CMASK target              ok
+[f16d]    C1 B cmask_fce_nofill                        ok
+[f16d]    C2 B42 hit applied                           ok
+[f16d]    C3 B42 drawn (reference)                     ok
+[f16d]    C4 B cmask_fce_unapplied                     ok
+[f16d]    C5 B cmask_fce_msaa                          ok
+[f16d]    C6 cmask_fce_layout (volume)                 ok
+[f16d]    F16d2 tick inside a window                   ok (window ticks f5 0 f6 0; lines by a window tick 0; service lines 0; nested cmask 0 meta 0; open meta parents max 0)
+[f16d]    identities after all scenarios               ok
+[f16d]    DiagF5F6                                     ok (50 checks)
+DiagF5F6 test site: ALL OK
+=== arm zero rc=0 OK
+[f16d]    knobs: KYTY_DIAG_F5=0 KYTY_DIAG_F6=0
+[f16d]    cs refusals: one tracked, one not            ok
+[f16d]    cs refusals: none tracked                    ok
+[f16d]    dma refusal classes                          ok
+[f16d]    f6 draw kind 0 with ps                       ok
+[f16d]    f6 draw kind 1 with ps                       ok
+[f16d]    f6 draw kind 2 with ps                       ok
+[f16d]    f6 draw kind 3 with ps                       ok
+[f16d]    f6 draw without ps: no export counted        ok
+[f16d]    f6 bound_extra (slot 3 bound, mask 0)        ok
+[f16d]    f6 bound_missing (slot 0 not bound)          ok
+[f16d]    identities after the pure calls              ok
+[f16d]    tick and mode line                           ok (mode line first call: f5=0 f6=0)
+[f16d]    H6 tick inside NoteDraw (F16d2)              ok
+[f16d]    A0 resolve DCC target                        ok
+[f16d]    A1 fill of an unknown address (PendingDcc)   ok
+[f16d]    A2 PendingDcc -> Dcc, render-target clear    ok
+[f16d]    A3 B dcc_rt_skip_partial                     ok
+[f16d]    A4 B dcc_rt_skip_levels                      ok
+[f16d]    A5 B dcc_rt_skip_decode                      ok
+[f16d]    A6 B dcc_rt_skip_layers                      ok
+[f16d]    A7 texture path: no dcc_rt_* (RC4)           ok
+[f16d]    A7b render target, partial fill again        ok
+[f16d]    A8 fill 0xff (uncompressed)                  ok
+[f16d]    A8b B dcc_fill_unknown                       ok
+[f16d]    A8c unknown code: nothing pending            ok
+[f16d]    A9 B dcc_mat_undecoded                       ok
+[f16d]    A9b materialized (code 00)                   ok
+[f16d]    A9c nothing pending                          ok
+[f16d]    A10 FCE scan: DCC slot with image, B dcc_fce_no_image ok
+[f16d]    A11 entry of another type reset (reference)  ok
+[f16d]    A12 adoption PendingDcc -> Dcc for a texture ok
+[f16d]    A13 ClearMeta refusals of known metadata     ok
+[f16d]    A14 DMA fill: B meta_dma_untracked x2, noclear x2 ok
+[f16d]    A15 compute write refused (the parent in ClearMeta) ok
+[f16d]    A15b B meta_cs_untracked                     ok
+[f16d]    A15c meta_cs_tracked                         ok
+[f16d]    A15d 3 refusals open, a fill inside (F16d2)  ok
+[f16d]    B0 resolve CMASK target                      ok
+[f16d]    B1 CMASK clear                               ok
+[f16d]    B2 B cmask_rt_skip_partial                   ok
+[f16d]    B3 B cmask_rt_skip_decode                    ok
+[f16d]    B4 B cmask_rt_skip_layers                    ok
+[f16d]    B5 B cmask_rt_skip_value                     ok
+[f16d]    B6 nothing pending                           ok
+[f16d]    B7 FCE scan: CMASK target with metadata      ok
+[f16d]    C0 resolve 960x540 CMASK target              ok
+[f16d]    C1 B cmask_fce_nofill                        ok
+[f16d]    C2 B42 hit applied                           ok
+[f16d]    C3 B42 drawn (reference)                     ok
+[f16d]    C4 B cmask_fce_unapplied                     ok
+[f16d]    C5 B cmask_fce_msaa                          ok
+[f16d]    C6 cmask_fce_layout (volume)                 ok
+[f16d]    F16d2 tick inside a window                   ok (window ticks f5 0 f6 0; lines by a window tick 0; service lines 0; nested cmask 0 meta 0; open meta parents max 0)
+[f16d]    identities after all scenarios               ok
+[f16d]    DiagF5F6                                     ok (50 checks)
+DiagF5F6 test site: ALL OK
+=== arm one rc=3221226505 FAIL
+[f16d]    knobs: KYTY_DIAG_F5=1 KYTY_DIAG_F6=1
+[f16d]    cs refusals: one tracked, one not            ok
+[f16d]    cs refusals: none tracked                    ok
+[f16d]    dma refusal classes                          ok
+[f16d]    f6 draw kind 0 with ps                       ok
+[f16d]    f6 draw kind 1 with ps                       ok
+[f16d]    f6 draw kind 2 with ps                       ok
+[f16d]    f6 draw kind 3 with ps                       ok
+[f16d]    f6 draw without ps: no export counted        ok
+[f16d]    f6 bound_extra (slot 3 bound, mask 0)        ok
+[f16d]    f6 bound_missing (slot 0 not bound)          ok
+[f16d]    identities after the pure calls              ok
+[f16d]    tick and mode line                           ok (mode line first call: f5=1 f6=1)
+[f16d]    H6 tick inside NoteDraw (F16d2)              ok
+[f16d]    A0 resolve DCC target                        ok
+[f16d]    A1 fill of an unknown address (PendingDcc)   ok
+[f16d]    A2 PendingDcc -> Dcc, render-target clear    ok
+[f16d]    A3 B dcc_rt_skip_partial                     ok
+[f16d]    A4 B dcc_rt_skip_levels                      ok
+[f16d]    A5 B dcc_rt_skip_decode                      ok
+[f16d]    A6 B dcc_rt_skip_layers                      ok
+[f16d]    A7 texture path: no dcc_rt_* (RC4)           ok
+[f16d]    A7b render target, partial fill again        ok
+[f16d]    A8 fill 0xff (uncompressed)                  ok
+[f16d]    A8b B dcc_fill_unknown                       ok
+[f16d]    A8c unknown code: nothing pending            ok
+[f16d]    A9 B dcc_mat_undecoded                       ok
+[f16d]    A9b materialized (code 00)                   ok
+[f16d]    A9c nothing pending                          ok
+[f16d]    A10 FCE scan: DCC slot with image, B dcc_fce_no_image ok
+[f16d]    A11 entry of another type reset (reference)  ok
+[f16d]    A12 adoption PendingDcc -> Dcc for a texture ok
+[f16d]    A13 ClearMeta refusals of known metadata     ok
+[f16d]    A14 DMA fill: B meta_dma_untracked x2, noclear x2 ok
+[f16d]    A15 compute write refused (the parent in ClearMeta) ok
+[f16d]    A15b B meta_cs_untracked                     ok
+[f16d]    A15c meta_cs_tracked                         ok
+[f16d]    A15d 3 refusals open, a fill inside (F16d2)  ok
+[f16d]    B0 resolve CMASK target                      ok
+[f16d]    B1 CMASK clear                               ok
+[f16d]    B2 B cmask_rt_skip_partial                   ok
+[f16d]    B3 B cmask_rt_skip_decode                    ok
+[f16d]    B4 B cmask_rt_skip_layers                    ok
+[f16d]    B5 B cmask_rt_skip_value                     ok
+[f16d]    B6 nothing pending                           ok
+[f16d]    B7 FCE scan: CMASK target with metadata      ok
+[f16d]    C0 resolve 960x540 CMASK target              ok
+[f16d]    C1 B cmask_fce_nofill                        ok
+[f16d]    C2 B42 hit applied                           ok
+[f16d]    C3 B42 drawn (reference)                     ok
+[f16d]    C4 B cmask_fce_unapplied                     ok
+ShaderRecompilerComputeTests: DiagF5 failed at C5 B cmask_fce_msaa: cmask_fce_msaa: delta 0 != expected 1
+NOT OK

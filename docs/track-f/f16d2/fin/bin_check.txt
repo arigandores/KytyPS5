@@ -1,0 +1,7 @@
+4ad735ad70b7504df85560dc6b6c2e3520f0256aa655a4ff4db03f71122b09f6 *C:/kyty/f287/bin/kyty_emulator_4ad735ad.exe
+count '26ce5fc78ea3b20be537c7696be041f5e97d9e58': 1
+count 'KytyPS5-2026-09-15-6a2987a-1881-g4950557a': 2
+count 'SDL-KytyPS5-2026-09-15-6a2987a-1881-g4950557a': 1
+count '{}: frame={}': 1
+count '%s: mode=1': 1
+installed: adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 *C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe

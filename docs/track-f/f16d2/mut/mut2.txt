@@ -1,0 +1,8 @@
+mutant mut2 build=0 site_rc=1 tree_before=1131ed097ef7d06a tree_after=1131ed097ef7d06a REVERTED 2026-10-04T15:20:04Z
+=== arm unset rc=3221226505 FAIL
+ShaderRecompilerComputeTests: DiagF5 failed at A9 B dcc_mat_undecoded: dcc_mat_pending: delta 1 != expected 0
+=== arm zero rc=3221226505 FAIL
+ShaderRecompilerComputeTests: DiagF5 failed at A9 B dcc_mat_undecoded: dcc_mat_pending: delta 1 != expected 0
+=== arm one rc=0 OK
+DiagF5F6 test site: ALL OK
+NOT OK

@@ -1,0 +1,8 @@
+mutant Ma2 build=0 site_rc=1 tree_before=1131ed097ef7d06a tree_after=1131ed097ef7d06a REVERTED 2026-10-04T15:02:18Z
+=== arm unset rc=0 OK
+DiagF5F6 test site: ALL OK
+=== arm zero rc=0 OK
+DiagF5F6 test site: ALL OK
+=== arm one rc=3221226505 FAIL
+ShaderRecompilerComputeTests: DiagF5 failed at A0 resolve DCC target: the service printed false after 2 window ticks of DiagF5
+NOT OK

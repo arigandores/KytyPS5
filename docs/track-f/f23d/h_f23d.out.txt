@@ -1,0 +1,30 @@
+F23d H repeat 2026-10-04T20:56:43Z
+sha256 f23c_hrun.exe              cffb14017c77d97263a651e191b10d6547d01d1e736787c454e31949e043e95b OK
+sha256 work/vs_tri.spv            02b8bf84911ffd66e631f88127ff00a3427124c00aa87c10636c061007dcc37d OK
+sha256 work/ref_normal.spv        f62b88f82f1ca942c01d0f4de3c64a5b8d20ed124503c1e316995a43d7b077d9 OK
+sha256 work/ref_predoff.spv       83341d3d9940dbc824a1935a6bf7ce845d8eca264f5c5bef4da943bcc39ad46c OK
+sha256 work/ref_ctrue_formA.spv   73ce291295c8d674100d93edf1161208cf90fe297a84a173c24b3eeeb653ef16 OK
+sha256 work/ref_blend_formA.spv   0c775634c6c73dfc0bf9556bcea55b0db909ea45fb8b331c3b4c62505084dd7f OK
+sha256 work/ref_sens_both.spv     30547b7539755744cc95a5a8383b7446a91aadab95bb26d0323b9b1142dd614a OK
+word diff ctrue_formA vs predoff: 2 words at [1725, 1820], expected [1725, 1820] -> OK
+word diff sens_both vs predoff: 4 words at [1726, 1727, 1821, 1822], expected [1726, 1727, 1821, 1822] -> OK
+runner rc 0 wall 1.5 s killed None
+   device 0: NVIDIA GeForce RTX 5080 Laptop GPU type 2 vendor 0x10de device 0x2c59 api 1.4.351 driverVersion 0x9a0e0000 driverName 'NVIDIA' driverInfo '616.56'
+   picked device 0: subgroupSize 32 fragment-subgroup 1 ballot 1 signedZeroInfNanPreserveF32 1
+   validation errors 0
+job 0 predoff      sha256 3d22fe4e919ddc58200c6734cf8b122bd9c5cea89e6563dff4964fd52e19901a pixels 2073600
+job 1 ctrue_formA  sha256 880e06b29ecd2b554b4e71911a7796291c09bc687294880fc29c023c332b3952 pixels 2073600
+job 2 blend_formA  sha256 880e06b29ecd2b554b4e71911a7796291c09bc687294880fc29c023c332b3952 pixels 2073600
+job 3 sens_both    sha256 f536a37646a424bcf83792c699e5f8645a474a1baab9a8ab5ba03f0e11dfe946 pixels 2073600
+job 4 normal       sha256 880e06b29ecd2b554b4e71911a7796291c09bc687294880fc29c023c332b3952 pixels 2073600
+job 5 predoff      sha256 3d22fe4e919ddc58200c6734cf8b122bd9c5cea89e6563dff4964fd52e19901a pixels 2073600
+job 6 normal       sha256 880e06b29ecd2b554b4e71911a7796291c09bc687294880fc29c023c332b3952 pixels 2073600
+null normal (job 4 vs 6)           N_diff         0  expect == 0 -> OK
+null predoff (job 0 vs 5)          N_diff         0  expect == 0 -> OK
+H normal vs predoff (job 4 vs 0)   N_diff   2064897  expect > 0 -> OK
+ctrue_formA vs normal (1 vs 4)     N_diff         0  expect == 0 -> OK
+blend_formA vs normal (2 vs 4)     N_diff         0  expect == 0 -> OK
+sens_both vs predoff (3 vs 0)      N_diff   2073600  expect > 0 -> OK
+sens_both vs normal (3 vs 4)       N_diff   2073600  expect > 0 -> OK
+F23c c07 for comparison: H 2064897, null 0/0, ctrue_formA 0, blend_formA 0, sens_both(vs predoff) 2073600
+ALL OK

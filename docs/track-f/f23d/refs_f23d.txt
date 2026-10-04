@@ -1,0 +1,20 @@
+OK  700208ce:docs/ROADMAP.md:22782 anchor yes +1 yes
+OK  700208ce:docs/ROADMAP.md:22779 anchor yes +1 yes
+OK  700208ce:docs/ROADMAP.md:22781 anchor yes +1 yes
+OK  700208ce:docs/ROADMAP.md:22781 anchor yes +1 n/a
+OK  1ab783ef:docs/track-f/f23c.md:178 anchor yes +1 yes
+OK  1ab783ef:docs/track-f/f23c.md:177 anchor yes +1 n/a
+OK  1ab783ef:docs/track-f/f23c.md:183 anchor yes +1 yes
+OK  1ab783ef:docs/track-f/f23c.md:138 anchor yes +1 yes
+OK  1ab783ef:docs/track-f/f23c.md:164 anchor yes +1 yes
+OK  1ab783ef:docs/track-f/f23c.md:46 anchor yes +1 yes
+OK  1ab783ef:docs/track-f/f23c.md:121 anchor yes +1 yes
+OK  1ab783ef:docs/track-f/f23c/f23c_hrun.cpp:443 anchor yes +1 yes
+OK  1ab783ef:docs/track-f/f23c/f23c_hrun.cpp:518 anchor yes +1 yes
+OK  C:/kyty/f287/f23c/work/ref_predoff.spvasm:253 %127 = OpLoad %bool %gl_HelperInvocation
+OK  C:/kyty/f287/f23c/work/ref_predoff.spvasm:256 %130 = OpGroupNonUniformBallot %v4uint %uint_3 %129
+OK  C:/kyty/f287/f23c/work/ref_predoff.spvasm:287 %167 = OpINotEqual %bool %166 %uint_0
+OK  C:/kyty/f287/f23c/work/ref_predoff.spvasm:396 %286 = OpSelect %uint %167 %285 %196
+OK  C:/kyty/f287/f23c/work/ref_predoff.spvasm:416 %306 = OpSelect %uint %167 %305 %224
+sha256 C:/kyty/f287/f23c/work/ref_predoff.spvasm 8bd587f35388b1adfcbfc9c23a93f0b147b90882cf1b6cd2478822f78696261d
+ALL OK

@@ -1,0 +1,2 @@
+C:/kyty/s288/s12/rec_s12_v0.mp4: 10169 frames 960x540, index entries 10169
+one-frame glitches: 0

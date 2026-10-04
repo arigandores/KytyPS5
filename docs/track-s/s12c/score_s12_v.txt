@@ -1,0 +1,35 @@
+ARM s12_v level underwater_aerial_garden kind v: PASS
+  binary of the arm (binary_sha256) adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421; installed before 631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17
+  ADMIT PASS one attempt (--attempts 1, no warmup) (1)
+  ADMIT PASS the binary of the arm (binary_sha256 of the json, item 414 (b)) = S12 adb0c82f (adb0c82f1a752805)
+  ADMIT PASS prereg = the seal 08 (5f64d06c1c95451f)
+  ADMIT PASS guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)
+  ADMIT PASS gates empty (shipped defaults) ('')
+  ADMIT PASS environment: every KYTY_* and VK_* key = the seal (KYTY_S_PCW=1 named, Z3) (every KYTY_* / VK_* key = the seal)
+  ADMIT PASS --vulkan-validation false (false)
+  ADMIT PASS hold --hold 330 (330)
+  ADMIT PASS no pipeline-cache retry ()
+  ADMIT PASS installed binary before the arm in {FS4 31cbfee8, FS5 631ff987} (a row of the return, not the arm binary) (631ff98723f08112)
+  ADMIT PASS installed binary after the arm = before the arm (631ff98723f08112 / 631ff98723f08112)
+  ADMIT PASS return_prev_ok (no guard before the arm) (1)
+  ADMIT PASS return_app after the arm = its copy before the arm (9050818777aa1ec2 / 9050818777aa1ec2)
+  ADMIT PASS return_glc after the arm = its copy before the arm (08e9d2f386107a9a / 08e9d2f386107a9a)
+  ADMIT PASS caches as found: no restore before the arm (False False)
+  ADMIT PASS man_launch_glc = man_pre_glc (GLCache as found) (08e9d2f386107a9a)
+  ADMIT PASS the knob line "S-pcw: KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0" = the environment of the arm (Z3) (S-pcw: KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0)
+  MEMBER PASS entered (entry line of underwater_aerial_garden and a first scene frame)
+  MEMBER PASS hold >= 300 s after the first scene frame
+  MEMBER PASS video index records >= 3000
+  MEMBER PASS 0 one-frame glitches
+  MEMBER PASS the sheet for the lead made
+  MEMBER PASS 0 death markers
+  MEMBER PASS 0 frames >= 1 s after the first scene frame
+  DATA log C:/kyty/s288/s12\log_s12_v.txt sha256 66a46ff28d854d22100ae051d0a78bd400b5c0de601cad343a5370bc69898a13 lines 1308112; stdout sha256 f04e2ec87f5c9d2094fa290dbbdbf9cb3ecfb37aa0d5251432df53ed05471e57
+  DATA entry line 224644; scene change line None; first scene frame n 194; hold 334.4 s; frames >= 1 s after it 0, >= 100 ms 1 (max dt_us 201036)
+  DATA death markers 0 []
+  DATA window none; Recovering Vulkan swapchain 0; GamePatch lines 0; skipped draw lines 0
+  DATA Vulkan pipeline cache lines by class: loading 1, loaded 1, initializing 0, initialized empty 0, invalidating 0, driver rejected 0, disabled 0, saved 1, save failed 0, failed to write 0, failed to create cache directory 0; unknown 0
+  DATA saves: 1, last 114970357 bytes, forced 0, save failed 0, failed to write 0, failed to create cache directory 0; loaded [114970357]
+  DATA translation cache directories ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']; first PipelinePrecache line 'PipelinePrecache: 429 recipes -> 331 graphics + 98 compute pipelines queued, 0 skipped, 738 sources loaded, complete, 139 ms (scratch: 0 pipelines, max 0 dwords/thread)'
+  DATA [Vulkan][E] log 0 stdout 0; [Vulkan][W] 0; limit lines 0 / 0; DualSrcBlend [(72, 1, 1)] (first GuestOut line 12295)
+  DATA video: index records 10108; one-frame glitches 0; sheet True

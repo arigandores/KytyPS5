@@ -1,0 +1,39 @@
+ARM s12_gw level hero_kratos kind gw: PASS
+  binary of the arm (binary_sha256) adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421; installed before 631ff98723f08112755137fdb12b993aa94d3169fb872affd96c7a3c6eaa9c17
+  ADMIT PASS one attempt (--attempts 1, no warmup) (1)
+  ADMIT PASS the binary of the arm (binary_sha256 of the json, item 414 (b)) = S12 adb0c82f (adb0c82f1a752805)
+  ADMIT PASS prereg = the seal 08 (5f64d06c1c95451f)
+  ADMIT PASS guest args -lvl hero_kratos (-lvl hero_kratos)
+  ADMIT PASS gates empty (shipped defaults) ('')
+  ADMIT PASS environment: every KYTY_* and VK_* key = the seal (KYTY_S_PCW=1 named, Z3) (every KYTY_* / VK_* key = the seal)
+  ADMIT PASS --vulkan-validation false (false)
+  ADMIT PASS hold --hold 330 (330)
+  ADMIT PASS no pipeline-cache retry ()
+  ADMIT PASS installed binary before the arm in {FS4 31cbfee8, FS5 631ff987} (a row of the return, not the arm binary) (631ff98723f08112)
+  ADMIT PASS installed binary after the arm = before the arm (631ff98723f08112 / 631ff98723f08112)
+  ADMIT PASS return_prev_ok (no guard before the arm) (1)
+  ADMIT PASS return_app after the arm = its copy before the arm (9050818777aa1ec2 / 9050818777aa1ec2)
+  ADMIT PASS return_glc after the arm = its copy before the arm (08e9d2f386107a9a / 08e9d2f386107a9a)
+  ADMIT PASS restore of the app caches = snap0 d8ca8c8e / snap0_drv 1767ca0a (d8ca8c8efb60b43b / d8ca8c8efb60b43b)
+  ADMIT PASS restore of GLCache = snap0 d8ca8c8e / snap0_drv 1767ca0a (1767ca0a975f26c1 / 1767ca0a975f26c1)
+  ADMIT PASS man_launch_glc = restore_glc.got (1767ca0a975f26c1)
+  ADMIT PASS app_post_copy recorded (s12_gr restores it) (7f7dbd0153aff48e)
+  ADMIT PASS glc_post_copy recorded (s12_gr restores it) (2d4812f996d6c048)
+  ADMIT PASS the knob line "S-pcw: KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0" = the environment of the arm (Z3) (S-pcw: KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0)
+  MEMBER PASS entered (entry line of hero_kratos and a first scene frame)
+  MEMBER PASS PPSA21564.bin present after the arm (Z2)
+  MEMBER PASS its sha256 != snap0 cc5b747c
+  MEMBER PASS its size > snap0 94435713 bytes
+  MEMBER PASS 0 death markers
+  DATA log C:/kyty/s288/s12\log_s12_gw.txt sha256 fa85dc9437332efdccfc5dc7390b907f70598dcd0da0996c2fade244cc3aa7e0 lines 2814205; stdout sha256 df7316c7d5e53ec2dac61a78cf46426724d0f40492977ec48e86723d4023864e
+  DATA entry line 371797; scene change line None; first scene frame n 284; hold 335.2 s; frames >= 1 s after it 1, >= 100 ms 1 (max dt_us 3351759)
+  DATA death markers 0 []
+  DATA window none; Recovering Vulkan swapchain 0; GamePatch lines 0; skipped draw lines 410
+  DATA Vulkan pipeline cache lines by class: loading 1, loaded 1, initializing 0, initialized empty 0, invalidating 0, driver rejected 0, disabled 0, saved 2, save failed 0, failed to write 0, failed to create cache directory 0; unknown 0
+  DATA saves: 2, last 97864859 bytes, forced 0, save failed 0, failed to write 0, failed to create cache directory 0; loaded [94435637]
+  DATA translation cache directories ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']; first PipelinePrecache line 'PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10\\pipelines.bin yet'
+  DATA [Vulkan][E] log 0 stdout 0; [Vulkan][W] 0; limit lines 0 / 0; DualSrcBlend [(72, 1, 1)] (first GuestOut line 13263)
+  DATA video: index records 20139; one-frame glitches 0; sheet True
+  DATA Z2 manifest after the arm (app_post/s12_gw/MANIFEST.txt True): PPSA21564.bin present True sha256 8952f88c8206b045a198be163e297b4b266249a4680648cbaee837f295c79849 size 97864935; PPSA21564.bin.tmp present False
+  DATA item 414 (g)(2) pcw recipes: lines 3, hold_us sum 845 max 520, lock_us max 7024, copied sum 2084893
+  DATA item 414 (g)(2) held frames >= 100 ms with the class of item 241 (v)(3): NOT_EVALUABLE (no held frame >= 100 ms after the first scene frame; shown >= 100 ms 1)

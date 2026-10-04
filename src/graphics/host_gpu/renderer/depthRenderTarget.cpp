@@ -18,6 +18,7 @@
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
 #include "graphics/host_gpu/renderer/debug.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/renderer/image/imageView.h"
 #include "graphics/host_gpu/renderer/image/textureCommon.h"
 #include "graphics/host_gpu/renderer/render.h"
@@ -353,6 +354,12 @@ void RenderExecutor::ResolveRenderDepthTarget(CommandBuffer& buffer, RenderDepth
 	    !z.z_info.htile_acceleration && z.shading_rate_encoding == 0 && z.size.x_max == 0 &&
 	    z.size.y_max == 0;
 	if (attachment_unbound) {
+		if (DiagF5::On()) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::DsUnbound); // Track F, F16d (member 4, reference)
+			if (rc.depth_clear_enable || rc.stencil_clear_enable) {
+				DiagF5::Add(DiagF5::Counter::DsUnboundClear);
+			}
+		}
 		static std::atomic_bool logged = false;
 		if (!logged.exchange(true, std::memory_order_relaxed)) {
 			LOGF("DepthTarget: ignoring enabled depth/stencil state without a bound attachment\n");

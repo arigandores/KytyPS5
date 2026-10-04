@@ -6,6 +6,7 @@
 #include "common/logging/log.h"
 #include "graphics/guest_gpu/gpu_defs.h"
 #include "graphics/guest_gpu/hardwareContext.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/renderer/render.h"
 
 #include <algorithm>
@@ -221,6 +222,9 @@ static void RtCheck(const HW::RenderTarget& rt) {
 		EXIT_NOT_IMPLEMENTED(rt.info.fmask_data_compression_disable != false);
 
 		if (rt.info.cmask_fast_clear_enable || rt.info.dcc_compression_enable) {
+			if (DiagF5::On()) [[unlikely]] {
+				DiagF5::Add(DiagF5::Counter::RtcheckMeta); // Track F, F16d (RC8): the condition of the line below
+			}
 			static bool logged = false;
 			if (!logged) {
 				LOGF("RenderTarget: temporary: ignoring PS5 color metadata fast_clear=%s dcc=%s "
@@ -241,6 +245,12 @@ static void RtCheck(const HW::RenderTarget& rt) {
 		}
 		// EXIT_NOT_IMPLEMENTED(rt.info.blend_clamp != false);
 		if (rt.info.round_mode) {
+			if (DiagF5::On()) [[unlikely]] {
+				// Track F, F16d (member 3, reference): the targets with ROUND_MODE by channel type.
+				DiagF5::Add(rt.info.channel_type == Prospero::ChannelType::kUNorm   ? DiagF5::Counter::RoundUnorm
+				            : rt.info.channel_type == Prospero::ChannelType::kFloat ? DiagF5::Counter::RoundFloat
+				                                                                    : DiagF5::Counter::RoundOther);
+			}
 			static bool logged = false;
 			if (!logged) {
 				LOGF("RenderTarget: temporary: ignoring PS5 color round mode\n");

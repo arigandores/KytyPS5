@@ -31,6 +31,7 @@
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/host_gpu/renderer/renderMemo.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 #include "graphics/shader/recompiler/BufferFormat.h"
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
@@ -695,6 +696,34 @@ struct DrawRenderState {
 	// served from this object; 0 for a state no call has seen (a nested draw's local).
 	uint64_t prog_memo_serial = 0;
 };
+
+// Track F, F16d (KYTY_DIAG_F6, ROADMAP s122 item 433(v)): one host draw at a recording site after the
+// PrepareDrawRenderState / RtsPlaceA fork - the guest slots of the host attachments and the MRT exports of the pixel
+// program by guest index (ShaderInfo::outputs, kind Mrt; the dual-source variant keeps the guest index). Reads only.
+static void DiagF6NoteDraw(const CommandBuffer& buffer, const DrawRenderState& state, bool mesh, bool indirect,
+                           bool indexed) {
+	std::array<uint32_t, RENDER_COLOR_ATTACHMENTS_MAX> host_slots {};
+	const uint32_t host_count = std::min<uint32_t>(state.color_count, RENDER_COLOR_ATTACHMENTS_MAX);
+	for (uint32_t i = 0; i < host_count; i++) {
+		host_slots[i] = state.color_info[i].target_slot;
+	}
+	const auto&              ps        = state.ps_input_info.stage;
+	const bool               ps_on     = state.ps_active && ps;
+	std::array<uint32_t, 16> mrt       = {};
+	uint32_t                 mrt_count = 0;
+	if (ps_on) {
+		for (const auto& output: ps.program->info.outputs) {
+			if (output.kind == ShaderRecompiler::IR::StageOutputKind::Mrt && mrt_count < mrt.size()) {
+				mrt[mrt_count++] = output.index;
+			}
+		}
+	}
+	const auto kind = mesh       ? DiagF6::DrawKind::Mesh
+	                 : indirect ? DiagF6::DrawKind::Indirect
+	                 : indexed  ? DiagF6::DrawKind::Indexed
+	                            : DiagF6::DrawKind::Auto;
+	DiagF6::NoteDraw(buffer.GetRegisters(), host_slots.data(), host_count, ps_on, mrt.data(), mrt_count, kind);
+}
 
 namespace {
 
@@ -4662,6 +4691,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 			                             mesh_groups);
 		}
 		GpuMarkerTop(tail, gpu_marker);
+		if (DiagF6::On()) [[unlikely]] {
+			DiagF6NoteDraw(buffer, state, mesh_active, emit_info.indirect_buffer != nullptr, draw.IsIndexed()); // F16d
+		}
 		if (mesh_active) {
 			const uint32_t draw_data[] {
 			    draw.index_count,
@@ -4811,6 +4843,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		                             emit_info.indirect_buffer != nullptr, mesh_active, mesh_groups);
 	}
 	GpuMarkerTop(vk_buffer, gpu_marker);
+	if (DiagF6::On()) [[unlikely]] {
+		DiagF6NoteDraw(buffer, state, mesh_active, emit_info.indirect_buffer != nullptr, draw.IsIndexed()); // F16d
+	}
 	if (mesh_active) {
 		const auto emit_mesh = [&](uint32_t first, uint32_t count, uint32_t instance,
 		                           uint32_t groups, uint32_t instances) {

@@ -21,6 +21,7 @@
 #include "graphics/host_gpu/renderer/cache/textureCache.h"
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/host_gpu/vulkanCommon.h"
@@ -2259,7 +2260,13 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcEraseRange(vaddr, size); // Session 123 (census): a DMA fill is a certain write (M)
 	}
-	(void)m_texture_cache.ClearMeta(vaddr);
+	// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC2): a DMA fill never tracks a fill - a refusal of known metadata with a
+	// clear value is meta_dma_untracked. `f5_refusal` stays RefusalNone with the knob off.
+	uint8_t f5_refusal = DiagF5::RefusalNone;
+	(void)m_texture_cache.ClearMeta(vaddr, DiagF5::On() ? &f5_refusal : nullptr);
+	if (f5_refusal != DiagF5::RefusalNone) [[unlikely]] {
+		DiagF5::NoteDmaRefusal(f5_refusal, value);
+	}
 	if (!IsRegionGpuModified(vaddr, size)) {
 		// Access the guest mapping so write faults invalidate cached buffers and images.
 		auto* destination = reinterpret_cast<uint32_t*>(vaddr);

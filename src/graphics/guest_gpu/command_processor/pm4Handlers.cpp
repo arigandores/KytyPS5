@@ -11,6 +11,7 @@
 #include "graphics/guest_gpu/graphicsRun.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/lodStats.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/presentation/videoOut.h"
@@ -4012,6 +4013,12 @@ void GraphicsInitJmpTablesUcIndirect() {
 	};
 
 	g_hw_uc_indirect_func[Pm4::GE_STEREO_CNTL] = [](KYTY_HW_UC_INDIRECT_ARGS) {
+		if (DiagF5::On()) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::StereoWrites); // Track F, F16d (member 5, reference)
+			if (value != 0) {
+				DiagF5::Add(DiagF5::Counter::StereoNonzero);
+			}
+		}
 		static std::atomic<uint32_t> log_count {0};
 		if (log_count.fetch_add(1) < 16) {
 			LOGF("warning: ignoring indirect uc reg GE_STEREO_CNTL at 0x%" PRIx32

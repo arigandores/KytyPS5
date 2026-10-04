@@ -35,6 +35,7 @@
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
 #include "graphics/shader/recompiler/ir/passes/BindingLayout.h"
@@ -3516,6 +3517,9 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	if (mask == 0) {
 		return;
 	}
+	if (DiagF5::On()) [[unlikely]] {
+		DiagF5::Add(DiagF5::Counter::DccMatPending); // Track F, F16d (item 427(b), RC4): a pending layer mask
+	}
 	if (t_sp_dcc_armed) {
 		t_sp_dcc_pending = true; // session 120, gate "spcen": an armed stage's loop met a pending DCC mask
 	}
@@ -3576,7 +3580,13 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 		     static_cast<uint32_t>(clear_format), decoded ? 1 : 0);
 	}
 	if (!decoded) {
+		if (DiagF5::On()) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::DccMatUndecoded); // Track F, F16d: the clear is not performed (B)
+		}
 		return;
+	}
+	if (DiagF5::On()) [[unlikely]] {
+		DiagF5::Add(DiagF5::Counter::DccMatCleared);
 	}
 	Common::DrawStat::Mark(Common::DrawStat::ImgUp | Common::DrawStat::Meta);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
@@ -3765,6 +3775,9 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 		const auto& rt = hw.GetRenderTarget(slot);
 		if (rt.base.addr != 0 && rt.cmask.addr != 0 && rt.info.cmask_fast_clear_enable &&
 		    !rt.info.dcc_compression_enable) {
+			if (DiagF5::On()) [[unlikely]] {
+				DiagF5::Add(DiagF5::Counter::CmaskFce); // Track F, F16d (item 427(b), RC5): FCE on a CMASK target
+			}
 			RenderColorInfo color {};
 			ResolveRenderColorTarget(buffer, color, 0, slot, true, true);
 			// Track F, F9e2 / F9e2b (B42): see FixB42Probe. With the fix off nothing below changes.
@@ -3800,14 +3813,37 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 				}
 				FixB42Note(b42, applied, color.desc.info.extent.width, color.desc.info.extent.height, rt.cmask.addr,
 				           rt.clear_word0.word0, rt.clear_word1.word1);
+				if (DiagF5::On()) [[unlikely]] {
+					// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC5): after FixB42Note, by the computed b42 / applied.
+					DiagF5::Add(b42.kind == FixB42Kind::Drawn ? DiagF5::Counter::CmaskFceDrawn
+					            : applied                      ? DiagF5::Counter::CmaskFceB42
+					                                           : DiagF5::Counter::CmaskFceUnapplied);
+				}
+			} else if (DiagF5::On()) [[unlikely]] {
+				// Track F, F16d: FixB42Probe answered None - the first of its tests that holds, in its order (the descriptor
+				// is not modified on this path); none of them - no tracked covering fill of 0 at the CMASK address.
+				const auto& f5_info = color.desc.info;
+				DiagF5::Add(!color.image_id                                      ? DiagF5::Counter::CmaskFceNoImage
+				            : f5_info.metadata.kind != ImageMetadataKind::None ? DiagF5::Counter::CmaskFceMeta
+				            : f5_info.samples != 1                             ? DiagF5::Counter::CmaskFceMsaa
+				            : (f5_info.resources.levels != 1 || f5_info.IsVolume() ||
+				               (f5_info.extent.width % 1024u == 0 && f5_info.extent.height % 1024u == 0))
+				                ? DiagF5::Counter::CmaskFceLayout
+				                : DiagF5::Counter::CmaskFceNoFill);
 			}
 			continue;
 		}
 		if (rt.base.addr == 0 || rt.dcc_addr.addr == 0) {
 			continue;
 		}
+		if (DiagF5::On()) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::DccFce); // Track F, F16d (item 427(b), RC6(4)): FCE on a DCC slot
+		}
 		const auto id = cache.FindDccSurfaceImage(rt.base.addr, rt.dcc_addr.addr);
 		if (!id) {
+			if (DiagF5::On()) [[unlikely]] {
+				DiagF5::Add(DiagF5::Counter::DccFceNoImage);
+			}
 			static std::atomic<uint32_t> miss_count = 0;
 			static const bool dcc_trace = Common::EnvFlagOn("KYTY_DCC_TRACE");
 			if (dcc_trace || miss_count++ < 32) {
@@ -3816,6 +3852,9 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 				     slot, rt.base.addr, rt.dcc_addr.addr);
 			}
 			continue;
+		}
+		if (DiagF5::On()) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::DccFceImage);
 		}
 		MaterializeDeferredDccClear(buffer, id);
 	}

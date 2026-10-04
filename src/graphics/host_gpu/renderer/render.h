@@ -42,6 +42,9 @@ class CommandScheduler;
 class CommandRecorder;
 struct RecordSubmit;
 struct RenderExecutorTestAccess;
+namespace DiagF5 {
+struct CsRefusals; // Track F, F16d (diagF5.h)
+} // namespace DiagF5
 
 enum class CommandBufferDebugOp : uint32_t {
 	DispatchDirect,
@@ -483,11 +486,14 @@ private:
 	void                      MaterializeBoundTargetDccClears(CommandBuffer& buffer);
 	void                      BindRenderTarget(ImageId id);
 	void                      ResetBindings();
+	// Track F, F16d (KYTY_DIAG_F5): `f5_refusals` / `f5_tracked` - non-null only with the knob on (renderCompute.cpp).
 	[[nodiscard]] bool        TryConsumeComputeMetaClear(const ShaderComputeInputInfo& input,
-	                                                     const CommandBuffer&          buffer);
+	                                                     const CommandBuffer&          buffer,
+	                                                     DiagF5::CsRefusals*           f5_refusals = nullptr);
 	[[nodiscard]] bool TryConsumeComputeImageClear(const ShaderComputeInputInfo& input,
 	                                              CommandBuffer& command, uint32_t group_x,
-	                                              uint32_t group_y, uint32_t group_z, uint32_t mode);
+	                                              uint32_t group_y, uint32_t group_z, uint32_t mode,
+	                                              uint64_t* f5_tracked = nullptr);
 
 	RenderContext&                        m_context;
 	std::unique_ptr<IndirectArgsSanitizer> m_indirect_sanitizer;

@@ -23,6 +23,7 @@
 #include "graphics/host_gpu/renderer/image/imageView.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/memoryTracker.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 #include "graphics/shader/recompiler/ShaderRecompiler.h"
@@ -3900,6 +3901,14 @@ struct PipelineCache::ProgramCache {
 				// pg_pmf_us + pg_pm_us.  Same population as pg_pm_n: both marks fire only when a
 				// permutation was found.
 				pg_mark(Common::FrameStats::Counter::ProgLapPermFindNs);
+				if (DiagF5::On()) [[unlikely]] {
+					// Track F, F16d (KYTY_DIAG_F5, item 427(v), reference): a permutation found by specialization whose
+					// images include an FMASK image (read as the identity fragment map). Memo hits do not reach here.
+					if (std::ranges::any_of(permutation->specialization.images,
+					                        [](const auto& image) { return image.fmask; })) {
+						DiagF5::Add(DiagF5::Counter::FmaskRead);
+					}
+				}
 				if (memo_enabled) {
 					MemoStore(&entry->second, params.Base(), memo_log, resources, &*permutation,
 					          permutation->handle);

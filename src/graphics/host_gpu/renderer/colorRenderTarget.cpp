@@ -10,6 +10,7 @@
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/debug.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/renderer/image/textureCommon.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
@@ -429,6 +430,13 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 	desc.info.samples         = samples;
 	desc.info.tile_mode       = rt.attrib3.tile_mode;
 	const bool has_dcc        = rt.info.dcc_compression_enable && rt.dcc_addr.addr != 0;
+	if (DiagF5::On()) [[unlikely]] {
+		// Track F, F16d (KYTY_DIAG_F5, item 427(d)): a full resolution (memo miss) of an active slot; of those with DCC.
+		DiagF5::Add(DiagF5::Counter::RtResolves);
+		if (has_dcc) {
+			DiagF5::Add(DiagF5::Counter::DccRt);
+		}
+	}
 	if (has_dcc) {
 		TileSizeAlign metadata_size {};
 		(void)TileGetDccSize(width, height, volume ? depth : view.image_layers, bytes_per_element,

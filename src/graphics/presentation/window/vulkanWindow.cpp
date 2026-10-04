@@ -32,6 +32,7 @@
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/host_gpu/vulkanCommon.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/presentation/presenter.h"
 #include "graphics/presentation/systemOverlay.h"
 #include "graphics/presentation/videoOut.h"
@@ -675,6 +676,9 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
 		graphics.dual_src_blend_enabled            = dual_src_enabled;
 		graphics.max_fragment_dual_src_attachments = properties2.properties.limits.maxFragmentDualSrcAttachments;
 	}
+	// Track F, F16d (ROADMAP s122 items 421(g), 433(v)): "DiagF5: mode=1" / "DiagF6: mode=1" once, before the guest runs.
+	(void)DiagF5::LogMode();
+	(void)DiagF6::LogMode();
 
 	vk::PhysicalDeviceRobustness2FeaturesEXT robustness2 {};
 #if defined(__APPLE__)

@@ -15,6 +15,7 @@
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/cache/bufferCache.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/renderer/image/imageView.h"
 #include "graphics/host_gpu/renderer/image/textureCommon.h"
 #include "graphics/host_gpu/renderer/image/tiler.h"
@@ -1893,6 +1894,11 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		if (PendingDccFillStale(desc.info.metadata.range.address, metadata,
 		                        image.info.data.address)) {
 			metadata = MetaDataInfo {.type = MetaDataInfo::Type::Dcc};
+			if (DiagF5::On()) [[unlikely]] {
+				DiagF5::Add(DiagF5::Counter::DccResetStale); // Track F, F16d: the pending fill is dropped (RC6(7))
+			}
+		} else if (DiagF5::On()) [[unlikely]] {
+			DiagF5::NoteDccFill(metadata.fill_value); // Track F, F16d: PendingDcc -> Dcc by the stored code (RC3)
 		}
 		metadata.type = MetaDataInfo::Type::Dcc;
 	} else if (metadata.type != MetaDataInfo::Type::Dcc) {
@@ -1907,14 +1913,34 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 			     static_cast<uint32_t>(metadata.type));
 		}
 		metadata = MetaDataInfo {.type = MetaDataInfo::Type::Dcc};
+		if (DiagF5::On()) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::DccResetType); // Track F, F16d: an entry of another type is reset (RC6(7))
+		}
 	}
 	// Session 124 (item 47(v)): a late link to a surface with a pending clear - the remembered cleaner closes the image,
 	// before the materialization below.
 	if ((skc3_link || skc3_pend) && metadata.clear_mask != 0) [[unlikely]] {
 		SkcCensus::G3MetaLate(image, desc.info.metadata.range.address, metadata.clear_mask, false);
 	}
+	// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC4): the render-target path only, and only when the clear mask has a bit
+	// in the layers of this view (first / count as computed for the loop below); each return below is one child of
+	// dcc_rt_pending. Reads locals only.
+	const bool f5_pend = DiagF5::On() && desc.type == BindingType::RenderTarget && [&] {
+		const bool f5_volume = image.info.IsVolume() && desc.view_info.type == vk::ImageViewType::e3D;
+		const auto f5_first  = f5_volume ? 0u : desc.view_info.base_layer;
+		const auto f5_count  = f5_volume ? std::max(image.info.extent.depth >> desc.view_info.base_level, 1u)
+		                                 : desc.view_info.layer_count;
+		return (metadata.clear_mask & DiagF5::ViewLayerBits(f5_first, f5_count)) != 0;
+	}();
+	if (f5_pend) [[unlikely]] {
+		DiagF5::Add(DiagF5::Counter::DccRtPending);
+	}
 	if (metadata.clear_mask == 0 || image.info.resources.levels != 1 ||
 	    desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) {
+		if (f5_pend) [[unlikely]] {
+			DiagF5::Add(image.info.resources.levels != 1 ? DiagF5::Counter::DccRtSkipLevels
+			                                             : DiagF5::Counter::DccRtSkipPartial);
+		}
 		return;
 	}
 	const auto& view = desc.view_info;
@@ -1922,6 +1948,9 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	// Upstream ea092a9: a DCC key encodes in the format the binding views the surface through,
 	// not in the backing format of the image; ClearImage encodes through that same view below.
 	if (!DecodeDccClearFill(desc, metadata.fill_value, clear.color)) {
+		if (f5_pend) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::DccRtSkipDecode);
+		}
 		return;
 	}
 	const bool volume_texture = image.info.IsVolume() && view.type == vk::ImageViewType::e3D;
@@ -1934,7 +1963,13 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	const auto count = volume_texture ? std::max(image.info.extent.depth >> view.base_level, 1u)
 	                                  : view.layer_count;
 	if (first >= 32 || count > 32 - first) {
+		if (f5_pend) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::DccRtSkipLayers);
+		}
 		return;
+	}
+	if (f5_pend) [[unlikely]] {
+		DiagF5::Add(DiagF5::Counter::DccRtCleared); // a bit of the view layers is set: the loop below clears it
 	}
 	// The metadata fill covers the complete allocation. Consume each layer only after its
 	// native image contents exist; already materialized layers may have been rendered since.
@@ -1999,13 +2034,40 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 	if ((skc3_link || skc3_pend) && metadata.clear_mask != 0) [[unlikely]] {
 		SkcCensus::G3MetaLate(image, desc.info.metadata.range.address, metadata.clear_mask, false);
 	}
+	// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC6(1)): a clear-mask bit in the layers of the view; each return below is
+	// one child of cmask_rt_pending. Reads locals only.
+	const bool f5_pend = DiagF5::On() &&
+	                     (metadata.clear_mask &
+	                      DiagF5::ViewLayerBits(desc.view_info.base_layer, desc.view_info.layer_count)) != 0;
+	if (f5_pend) [[unlikely]] {
+		DiagF5::Add(DiagF5::Counter::CmaskRtPending);
+	}
 	if (metadata.fill_value != 0 || metadata.clear_mask == 0 ||
-	    desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) return;
+	    desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) {
+		if (f5_pend) [[unlikely]] {
+			DiagF5::Add(metadata.fill_value != 0 ? DiagF5::Counter::CmaskRtSkipValue
+			                                      : DiagF5::Counter::CmaskRtSkipPartial);
+		}
+		return;
+	}
 	vk::ClearValue clear {};
 	if (!DecodePackedColorClear(image.backing.format, desc.info.metadata.cmask_clear_words[0],
-	                           desc.info.metadata.cmask_clear_words[1], clear.color)) return;
+	                           desc.info.metadata.cmask_clear_words[1], clear.color)) {
+		if (f5_pend) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::CmaskRtSkipDecode);
+		}
+		return;
+	}
 	const auto& view = desc.view_info;
-	if (view.base_level != 0 || view.base_layer >= 32 || view.layer_count > 32 - view.base_layer) return;
+	if (view.base_level != 0 || view.base_layer >= 32 || view.layer_count > 32 - view.base_layer) {
+		if (f5_pend) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::CmaskRtSkipLayers);
+		}
+		return;
+	}
+	if (f5_pend) [[unlikely]] {
+		DiagF5::Add(DiagF5::Counter::CmaskRtCleared); // a bit of the view layers is set: the loop below clears it
+	}
 	for (uint32_t layer = view.base_layer; layer < view.base_layer + view.layer_count; ++layer) {
 		if ((metadata.clear_mask & (1u << layer)) == 0) continue;
 		ClearImage(m_scheduler.Current(), id, image.backing.format,
@@ -3181,13 +3243,21 @@ bool TextureCache::IsMetaCleared(uint64_t address, uint32_t slice, uint32_t* fil
 	return (found->second.clear_mask & (1u << slice)) != 0;
 }
 
-bool TextureCache::ClearMeta(uint64_t address) {
+bool TextureCache::ClearMeta(uint64_t address, uint8_t* f5_refusal) {
 	std::scoped_lock lock {m_lock};
 	const auto       found = m_surface_metas.find(address);
 	if (found == m_surface_metas.end() || found->second.type == MetaDataInfo::Type::PendingDcc ||
 	    found->second.type == MetaDataInfo::Type::Dcc || found->second.type == MetaDataInfo::Type::CMask) {
 		// DCC and CMASK need a validated fill value and coverage. Keep the legacy operation
 		// for FMask/HTile; an arbitrary write must not imply a color fast clear.
+		// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC2): a refusal of a known metadata address - the parent of the
+		// caller's meta_cs_* / meta_dma_*; the kind goes to the caller's local.
+		if (DiagF5::On() && found != m_surface_metas.end()) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::MetaRefusedKnown);
+			if (f5_refusal != nullptr) {
+				*f5_refusal = found->second.type == MetaDataInfo::Type::CMask ? DiagF5::RefusalCmask : DiagF5::RefusalDcc;
+			}
+		}
 		return false;
 	}
 	Common::DrawStat::Mark(Common::DrawStat::Meta);
@@ -3204,6 +3274,9 @@ bool TextureCache::ClearMeta(uint64_t address) {
 void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_value) {
 	if (!GuestRange {address, size}.Valid()) {
 		EXIT("TextureCache: invalid DCC fill range\n");
+	}
+	if (DiagF5::On()) [[unlikely]] {
+		DiagF5::Add(DiagF5::Counter::DccFillAll); // Track F, F16d: every call (line_mismatch_fill, RC3)
 	}
 	// DCC fills use a repeated byte code. Require all four bytes of the detected dword to agree,
 	// and mark only recognized deferred-clear encodings as logically clear.
@@ -3227,6 +3300,10 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
 	const auto found = m_surface_metas.try_emplace(address).first;
 	if (found->second.type == MetaDataInfo::Type::PendingDcc ||
 	    found->second.type == MetaDataInfo::Type::Dcc || found->second.type == MetaDataInfo::Type::CMask) {
+		// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC3): a fill on confirmed DCC, by its code.
+		if (DiagF5::On() && found->second.type == MetaDataInfo::Type::Dcc) [[unlikely]] {
+			DiagF5::NoteDccFill(fill_value);
+		}
 		found->second.clear_mask = found->second.type == MetaDataInfo::Type::CMask
 		    ? (fill_value == 0 ? UINT32_MAX : 0u) : dcc_clear_mask;
 		// Session 124, knob "skipceil" = 3 (closure census, [RC2]): a logical clear (PendingDcc: until the adoption).
@@ -3353,11 +3430,17 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		m_surface_metas.erase(found);
 		BumpMetaEpoch();
+		if (DiagF5::On()) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::DccResetStale); // Track F, F16d: the pending fill is dropped (RC6(7))
+		}
 		return false;
 	}
 	Common::DrawStat::Mark(Common::DrawStat::Meta);
 	BumpMetaEpoch();
 	found->second.type                 = MetaDataInfo::Type::Dcc;
+	if (DiagF5::On()) [[unlikely]] {
+		DiagF5::NoteDccFill(found->second.fill_value); // Track F, F16d: PendingDcc -> Dcc by the stored code (RC3)
+	}
 	image->info.metadata.kind          = ImageMetadataKind::Dcc;
 	image->info.metadata.range.address = metadata_address;
 	// Session 124, knob "skipceil" = 3 (closure census, [RC2], ROADMAP s122 item 44(v)): the PendingDcc clear applies now,

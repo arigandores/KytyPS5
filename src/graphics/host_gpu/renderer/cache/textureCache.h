@@ -144,7 +144,9 @@ public:
 	[[nodiscard]] uint32_t MetaClearMask(uint64_t address, uint32_t* fill_value);
 	[[nodiscard]] bool IsMetaCleared(uint64_t address, uint32_t slice,
 	                                 uint32_t* fill_value = nullptr);
-	[[nodiscard]] bool ClearMeta(uint64_t address);
+	// Track F, F16d (KYTY_DIAG_F5): `f5_refusal` (optional) receives the kind of a refusal of a PendingDcc / Dcc / CMask
+	// address (DiagF5::RefusalDcc / RefusalCmask), only with the knob on; the answer does not depend on it.
+	[[nodiscard]] bool ClearMeta(uint64_t address, uint8_t* f5_refusal = nullptr);
 	// Record deferred DCC state while the original guest dispatch writes the metadata.
 	// This merge kept our PendingDcc tracking instead of upstream's content-based
 	// MaterializeDccClear (437e69e/01df42a), so this call is the ONLY producer of PendingDcc

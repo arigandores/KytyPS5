@@ -17,6 +17,7 @@
 #include "graphics/guest_gpu/hardwareContext.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/commandRecorder.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
@@ -70,7 +71,8 @@ static bool FillSourcesDisjoint(std::span<const ShaderRecompiler::IR::Descriptor
 }
 
 bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& input,
-                                                const CommandBuffer&          buffer) {
+                                                const CommandBuffer&          buffer,
+                                                DiagF5::CsRefusals*           f5_refusals) {
 	const auto& program   = *input.stage.program;
 	const auto& resources = input.stage.resources;
 	if (resources.buffers.size() != program.info.buffers.size()) {
@@ -100,7 +102,8 @@ bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& in
 			if (resource.written) {
 				const auto descriptor =
 				    DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
-				if (cache.ClearMeta(descriptor.Base48())) {
+				uint8_t f5_refusal = DiagF5::RefusalNone; // Track F, F16d: written by ClearMeta only with KYTY_DIAG_F5 on
+				if (cache.ClearMeta(descriptor.Base48(), f5_refusals != nullptr ? &f5_refusal : nullptr)) {
 					if (!all_writes) return true;
 					cleared_metadata = true;
 					static const bool trace = Common::EnvFlagOn("KYTY_CLEAR_TRACE");
@@ -112,6 +115,9 @@ bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& in
 					}
 				} else {
 					other_writes = true;
+					if (f5_refusal != DiagF5::RefusalNone && f5_refusals->count < DiagF5::CsRefusals::Max) [[unlikely]] {
+						f5_refusals->addresses[f5_refusals->count++] = descriptor.Base48();
+					}
 				}
 			}
 		}
@@ -167,7 +173,8 @@ bool ResolveComputeBufferFill(const ShaderComputeInputInfo& input, uint32_t grou
 
 bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& input,
                                                 CommandBuffer& command, uint32_t group_x,
-                                                uint32_t group_y, uint32_t group_z, uint32_t mode) {
+                                                uint32_t group_y, uint32_t group_z, uint32_t mode,
+                                                uint64_t* f5_tracked) {
 	const auto& program   = *input.stage.program;
 	const auto& resources = input.stage.resources;
 	const auto& fill      = resources.uniform_fill;
@@ -243,6 +250,9 @@ bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& i
 		// and the ASTRO BOT "crowd silhouette" flashes come back (sessions 9 and 21, gate dccstale).
 		// Track deferred DCC state while the original dispatch writes the metadata allocation.
 		cache.TrackDccFill(descriptor.Base48(), size, packed_clear);
+		if (f5_tracked != nullptr) [[unlikely]] {
+			*f5_tracked = descriptor.Base48(); // Track F, F16d: the fill tracked at this address (meta_cs_tracked)
+		}
 		static std::atomic<uint32_t> logged_metadata_clears {0};
 		if (logged_metadata_clears.fetch_add(1, std::memory_order_relaxed) < 32) {
 			LOGF("GraphicsRenderDispatchDirect: metadata fill shader=0x%016" PRIx64
@@ -548,7 +558,17 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorClrSkip, 1);
 		}
 	}
-	if (!indirect && !floor_clear_skip && TryConsumeComputeMetaClear(input_info, buffer)) {
+	// Track F, F16d (KYTY_DIAG_F5, item 427(b), RC2): the written buffers ClearMeta refused as known metadata, and the
+	// address TryConsumeComputeImageClear tracked a fill at - non-null pointers only with the knob on; a refused
+	// address without that fill in this dispatch is meta_cs_untracked.
+	const bool         f5_on = DiagF5::On();
+	DiagF5::CsRefusals f5_refusals;
+	uint64_t           f5_tracked = 0;
+	if (!indirect && !floor_clear_skip &&
+	    TryConsumeComputeMetaClear(input_info, buffer, f5_on ? &f5_refusals : nullptr)) {
+		if (f5_on) [[unlikely]] {
+			DiagF5::NoteCsRefusals(f5_refusals, 0);
+		}
 		// Session 100, the L3 debt of session 98 (ROADMAP.md:1406): bf_clr_skip is a shape
 		// census of ELIGIBLE dispatches and over-counts.  This counts the consumed ones, in
 		// BOTH arms and behind no gate, so the base arm has a real denominator at last.
@@ -558,10 +578,16 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	}
 	if (!indirect && !floor_clear_skip &&
 	    TryConsumeComputeImageClear(input_info, buffer, thread_group_x, thread_group_y,
-	                                thread_group_z, mode)) {
+	                                thread_group_z, mode, f5_on ? &f5_tracked : nullptr)) {
+		if (f5_on) [[unlikely]] {
+			DiagF5::NoteCsRefusals(f5_refusals, 0);
+		}
 		Common::FrameStats::Add(Common::FrameStats::Counter::ClearShortcutImage, 1);
 		ResetBindings();
 		return;
+	}
+	if (f5_on) [[unlikely]] {
+		DiagF5::NoteCsRefusals(f5_refusals, f5_tracked);
 	}
 	const bool large_workgroup =
 	    (input_info.threads_num[0] * input_info.threads_num[1] * input_info.threads_num[2] >= 512);
@@ -934,6 +960,9 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	}
 
 	if (!indirect && (thread_group_x == 0 || thread_group_y == 0 || thread_group_z == 0)) {
+		if (DiagF5::On()) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::ZeroDisp); // Track F, F16d (member 6, reference)
+		}
 		static std::atomic<uint32_t> log_count {0};
 		if (log_count.fetch_add(1, std::memory_order_relaxed) < 32) {
 			LOGF("GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=%ux%ux%u "

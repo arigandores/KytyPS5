@@ -2,6 +2,7 @@
 
 #include "common/logging/log.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
+#include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/renderer/render.h"
 
 #include <algorithm>
@@ -236,6 +237,11 @@ bool ScreenshotGrabber::Poll() {
 
 bool ScreenshotGrabber::PollScreenshot() {
 	m_presents++;
+	// Track F, F16k (KYTY_DIAG_F5, ROADMAP s122 item 492(v)(4)): the present number the video index writes (.idx, the
+	// second column: slot.present = m_presents of this present) for the event lines.
+	if (DiagF5::On()) [[unlikely]] {
+		DiagF5::NotePresent(m_presents);
+	}
 	const auto now = NowSeconds();
 	if (m_first_present_s < 0.0) {
 		m_first_present_s = now;

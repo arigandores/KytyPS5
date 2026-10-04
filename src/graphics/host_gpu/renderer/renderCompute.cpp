@@ -70,9 +70,62 @@ static bool FillSourcesDisjoint(std::span<const ShaderRecompiler::IR::Descriptor
 	return true;
 }
 
+// Track F, F16k (KYTY_DIAG_F5ID, ROADMAP s122 item 492(g)(3)): the holder of one dispatch's DiagF5Id::CsDispatch in
+// DispatchDirect - empty unless Arm ran (the knob on); emitted once: at once for img_clear / meta_clear, after the
+// recorded write for the other classes (After, at StampPendingDccFill), or by the destructor on any other return
+// (changed=na). Holds a reference to DispatchDirect's DiagF5::CsRefusals (declared before it, destroyed after it).
+class F5IdCsHolder {
+public:
+	explicit F5IdCsHolder(const DiagF5::CsRefusals& refusals): m_refusals(refusals) {}
+	~F5IdCsHolder() {
+		if (m_d) [[unlikely]] {
+			DiagF5Id::Emit(*m_d, m_refusals);
+		}
+	}
+	F5IdCsHolder(const F5IdCsHolder&)            = delete;
+	F5IdCsHolder& operator=(const F5IdCsHolder&) = delete;
+
+	void Arm(const ShaderComputeInputInfo& input) {
+		m_d.emplace();
+		m_d->shader      = input.stage.program->shader_hash;
+		m_d->frame       = GpuTimeProfiler::Frame();
+		const auto& fill = input.stage.resources.uniform_fill;
+		m_d->sub   = fill.kind == ShaderRecompiler::IR::UniformFillKind::None ? DiagF5Id::CsSub::NoFill
+		                                                                     : DiagF5Id::CsSub::FillShape;
+		m_d->value = fill.value;
+	}
+	[[nodiscard]] DiagF5Id::CsDispatch* Get() { return m_d ? &*m_d : nullptr; }
+	void                                Class(DiagF5Id::CsClass outcome, uint64_t tracked) {
+		if (!m_d) [[likely]] {
+			return;
+		}
+		m_d->classed = true;
+		m_d->outcome = outcome;
+		m_d->tracked = tracked;
+		if (outcome != DiagF5Id::CsClass::Exec) {
+			DiagF5Id::Emit(*m_d, m_refusals);
+		}
+	}
+	void After(TextureCache& cache) {
+		if (!m_d || !m_d->classed || m_d->emitted) [[likely]] {
+			return;
+		}
+		for (uint32_t i = 0; i < m_refusals.count && i < DiagF5::CsRefusals::Max; i++) {
+			cache.F5IdMetaSnap(m_refusals.addresses[i], &m_d->after[i]);
+		}
+		m_d->has_after = true;
+		DiagF5Id::Emit(*m_d, m_refusals);
+	}
+
+private:
+	const DiagF5::CsRefusals&           m_refusals;
+	std::optional<DiagF5Id::CsDispatch> m_d;
+};
+
 bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& input,
                                                 const CommandBuffer&          buffer,
-                                                DiagF5::CsRefusals*           f5_refusals) {
+                                                DiagF5::CsRefusals*           f5_refusals,
+                                                DiagF5Id::CsDispatch*         f5id) {
 	const auto& program   = *input.stage.program;
 	const auto& resources = input.stage.resources;
 	if (resources.buffers.size() != program.info.buffers.size()) {
@@ -103,7 +156,12 @@ bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& in
 				const auto descriptor =
 				    DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 				uint8_t f5_refusal = DiagF5::RefusalNone; // Track F, F16d: written by ClearMeta only with KYTY_DIAG_F5 on
-				if (cache.ClearMeta(descriptor.Base48(), f5_refusals != nullptr ? &f5_refusal : nullptr)) {
+				// Track F, F16k (KYTY_DIAG_F5ID): the refused entry goes straight into the slot of this refusal.
+				auto* const f5id_snap = f5id != nullptr && f5_refusals != nullptr &&
+				                                f5_refusals->count < DiagF5::CsRefusals::Max
+				                            ? &f5id->before[f5_refusals->count]
+				                            : nullptr;
+				if (cache.ClearMeta(descriptor.Base48(), f5_refusals != nullptr ? &f5_refusal : nullptr, f5id_snap)) {
 					if (!all_writes) return true;
 					cleared_metadata = true;
 					static const bool trace = Common::EnvFlagOn("KYTY_CLEAR_TRACE");
@@ -116,6 +174,10 @@ bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& in
 				} else {
 					other_writes = true;
 					if (f5_refusal != DiagF5::RefusalNone && f5_refusals->count < DiagF5::CsRefusals::Max) [[unlikely]] {
+						if (f5id != nullptr) {
+							f5id->sizes[f5_refusals->count] = descriptor.GetSize(); // Track F, F16k
+							f5id->reads[f5_refusals->count] = resource.read;
+						}
 						f5_refusals->addresses[f5_refusals->count++] = descriptor.Base48();
 					}
 				}
@@ -564,11 +626,18 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	const bool         f5_on = DiagF5::On();
 	DiagF5::CsRefusals f5_refusals;
 	uint64_t           f5_tracked = 0;
+	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(3)): the per-address side of the refusals and their class by this
+	// dispatch's outcome (F5IdCsHolder); nothing is built with the knob off.
+	F5IdCsHolder f5id {f5_refusals};
+	if (DiagF5Id::On()) [[unlikely]] {
+		f5id.Arm(input_info);
+	}
 	if (!indirect && !floor_clear_skip &&
-	    TryConsumeComputeMetaClear(input_info, buffer, f5_on ? &f5_refusals : nullptr)) {
+	    TryConsumeComputeMetaClear(input_info, buffer, f5_on ? &f5_refusals : nullptr, f5id.Get())) {
 		if (f5_on) [[unlikely]] {
 			DiagF5::NoteCsRefusals(f5_refusals, 0);
 		}
+		f5id.Class(DiagF5Id::CsClass::MetaClear, 0);
 		// Session 100, the L3 debt of session 98 (ROADMAP.md:1406): bf_clr_skip is a shape
 		// census of ELIGIBLE dispatches and over-counts.  This counts the consumed ones, in
 		// BOTH arms and behind no gate, so the base arm has a real denominator at last.
@@ -582,6 +651,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		if (f5_on) [[unlikely]] {
 			DiagF5::NoteCsRefusals(f5_refusals, 0);
 		}
+		f5id.Class(DiagF5Id::CsClass::ImgClear, 0);
 		Common::FrameStats::Add(Common::FrameStats::Counter::ClearShortcutImage, 1);
 		ResetBindings();
 		return;
@@ -589,6 +659,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	if (f5_on) [[unlikely]] {
 		DiagF5::NoteCsRefusals(f5_refusals, f5_tracked);
 	}
+	f5id.Class(DiagF5Id::CsClass::Exec, f5_tracked);
 	const bool large_workgroup =
 	    (input_info.threads_num[0] * input_info.threads_num[1] * input_info.threads_num[2] >= 512);
 	const bool                   has_sampler = !program.info.samplers.empty();
@@ -1189,6 +1260,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		tail.shaderAccessBarrier(vk::PipelineStageFlagBits::eComputeShader);
 		tail.Commit(true);
 		m_context.GetTextureCache().StampPendingDccFill();
+		f5id.After(m_context.GetTextureCache()); // Track F, F16k (KYTY_DIAG_F5ID): the entries after the write
 		lap.Mark(Common::FrameStats::Counter::DispatchEmitNs);
 		dc_lap.Mark(Common::FrameStats::Counter::DcPhEmitNs);
 		dc_lap.Recorded();
@@ -1215,6 +1287,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Dispatch, program.shader_hash,
 	                           indirect ? 1u : 0u);
 	m_context.GetTextureCache().StampPendingDccFill();
+	f5id.After(m_context.GetTextureCache()); // Track F, F16k (KYTY_DIAG_F5ID): the entries after the write
 
 	// The removed host fence also ordered read-only dispatches before later writers.
 	buffer.CheckNoPublish(publish_mark);

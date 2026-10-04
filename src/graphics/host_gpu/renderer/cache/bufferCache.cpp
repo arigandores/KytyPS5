@@ -1454,6 +1454,10 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	Common::FrameStats::MutScope mutate_scope(
 	    Common::Gates::Enabled(Common::Gates::Gate::MutateTime));
 	Common::FrameStats::Add(Common::FrameStats::Counter::ObtainBufs, 1);
+	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(2)): buf_reads of an open fce_next record (any buffer acquisition).
+	if (DiagF5Id::On()) [[unlikely]] {
+		DiagF5Id::NoteBufferAccess(vaddr, size);
+	}
 	// Gate "buffast": a read-only binding asking for a guest range it already asked for takes the
 	// buffer the previous request resolved, instead of FindBuffer + TouchBuffer +
 	// SynchronizeBuffer, while nothing those would act on has happened:
@@ -2858,6 +2862,45 @@ void BufferCache::NoteGpuWrite(uint64_t vaddr, uint64_t size) {
 	for (auto bucket = first; bucket <= last; bucket++) {
 		m_bucket_write_seq[bucket] = seq;
 	}
+	// Track F, F16k (KYTY_FIX_F5CMU / KYTY_DIAG_F5ID, item 492(v)(3)): the exact journal of the same buckets.
+	if (DiagF5::ExactRingOn()) [[unlikely]] {
+		for (auto bucket = first; bucket <= last; bucket++) {
+			auto& ring                              = m_bucket_write_ring[bucket];
+			ring.writes[ring.count % ExactRing::K] = {vaddr, vaddr + size, seq};
+			ring.count++;
+		}
+	}
+}
+
+BufferCache::ExactWriteSeq BufferCache::LastGpuWriteSeqExact(uint64_t vaddr, uint64_t size, uint64_t since) const {
+	ExactWriteSeq answer {};
+	const auto    first = vaddr >> HotBucketBits;
+	const auto    last  = (vaddr + size - 1) >> HotBucketBits;
+	const auto    end   = vaddr + size;
+	for (auto bucket = first; bucket <= last; bucket++) {
+		const auto it = m_bucket_write_seq.find(bucket);
+		if (it == m_bucket_write_seq.end() || it->second <= since) {
+			continue; // no write of this bucket after `since` - the bucket answer and the exact one agree
+		}
+		const auto ring = m_bucket_write_ring.find(bucket);
+		if (ring == m_bucket_write_ring.end()) {
+			answer.fallback = true;
+			continue;
+		}
+		const auto kept   = std::min<uint64_t>(ring->second.count, ExactRing::K);
+		uint64_t   oldest = UINT64_MAX;
+		for (uint64_t i = 0; i < kept; i++) {
+			const auto& write = ring->second.writes[i];
+			oldest            = std::min(oldest, write.seq);
+			if (write.seq > since && write.lo < end && vaddr < write.hi) {
+				answer.seq = std::max(answer.seq, write.seq);
+			}
+		}
+		if (ring->second.count > ExactRing::K && oldest > since) {
+			answer.fallback = true;
+		}
+	}
+	return answer;
 }
 
 uint64_t BufferCache::LastGpuWriteSeq(uint64_t vaddr, uint64_t size, bool include_large) const {

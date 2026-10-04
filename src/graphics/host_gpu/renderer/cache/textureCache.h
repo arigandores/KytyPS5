@@ -29,6 +29,14 @@ class CommandBuffer;
 class CommandScheduler;
 class RenderExecutor;
 struct TextureCacheTestAccess;
+namespace DiagF5 {
+struct CmuEvent;   // Track F, F16k (diagF5.h)
+struct StaleProbe; // Track F, F16k (diagF5.h)
+} // namespace DiagF5
+namespace DiagF5Id {
+struct MetaSnap; // Track F, F16k (diagF5.h)
+struct DccMiss;  // Track F, F16k (diagF5.h)
+} // namespace DiagF5Id
 
 class TextureCache {
 public:
@@ -71,9 +79,13 @@ public:
 	// fast-clear-eliminate register scan RenderExecutor::MaterializeBoundTargetDccClears (descriptors.cpp), the only
 	// caller that passes true. Every other acquisition is a draw-path colour target and stamps the image with the B42
 	// sequence (m_b42_draw_seq); the flag changes nothing else.
+	// Track F, F16k (KYTY_FIX_F5CMU, ROADMAP s122 item 492(v)): `fce_materialize` also tells PrepareCmaskClear that this is
+	// the FCE acquisition (the only one where KYTY_FIX_F5CMU decides); `f5cmu` (non-null only with KYTY_DIAG_F5, from
+	// the FCE scan) receives that call's decision for the event line.
 	[[nodiscard]] vk::ImageView FindRenderTarget(ImageId id, const ImageDesc& desc,
 	                                             uint32_t guest_clear_regs = 0,
-	                                             bool     fce_materialize  = false);
+	                                             bool     fce_materialize  = false,
+	                                             DiagF5::CmuEvent* f5cmu   = nullptr);
 	[[nodiscard]] vk::ImageView FindDepthTarget(ImageId id, const ImageDesc& desc,
 	                                            uint32_t guest_clear_regs = 0);
 	// Gate "rtfast": see m_meta_epoch.
@@ -146,7 +158,12 @@ public:
 	                                 uint32_t* fill_value = nullptr);
 	// Track F, F16d (KYTY_DIAG_F5): `f5_refusal` (optional) receives the kind of a refusal of a PendingDcc / Dcc / CMask
 	// address (DiagF5::RefusalDcc / RefusalCmask), only with the knob on; the answer does not depend on it.
-	[[nodiscard]] bool ClearMeta(uint64_t address, uint8_t* f5_refusal = nullptr);
+	// Track F, F16k (KYTY_DIAG_F5ID): `f5id_snap` (optional) receives the refused entry in the same branch, under m_lock.
+	[[nodiscard]] bool ClearMeta(uint64_t address, uint8_t* f5_refusal = nullptr,
+	                             DiagF5Id::MetaSnap* f5id_snap = nullptr);
+	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)): a read-only copy of the entry at `address` taken under m_lock (Absent
+	// when there is none); nothing is inserted, bumped or consumed.
+	void F5IdMetaSnap(uint64_t address, DiagF5Id::MetaSnap* out);
 	// Record deferred DCC state while the original guest dispatch writes the metadata.
 	// This merge kept our PendingDcc tracking instead of upstream's content-based
 	// MaterializeDccClear (437e69e/01df42a), so this call is the ONLY producer of PendingDcc
@@ -164,11 +181,15 @@ public:
 	// colour target. Promote a PendingDcc fill at that address to DCC state owned by the image so
 	// the deferred clear becomes visible to MaterializeDeferredDccClear. Returns true when the
 	// image now carries DCC metadata for `metadata_address`.
-	[[nodiscard]] bool AdoptPendingDccForTexture(ImageId id, uint64_t metadata_address);
+	// Track F, F16k (KYTY_DIAG_F5ID): `f5id_miss` (optional) receives the reason of a false answer (DiagF5Id::Miss).
+	[[nodiscard]] bool AdoptPendingDccForTexture(ImageId id, uint64_t metadata_address,
+	                                             DiagF5Id::DccMiss* f5id_miss = nullptr);
 	// The registered colour image that starts at `data_address` and owns (or, for a lone
 	// metadata-less candidate, adopts) the DCC allocation at `metadata_address`. Empty when
 	// there is no such image or the ownership is ambiguous.
-	[[nodiscard]] ImageId FindDccSurfaceImage(uint64_t data_address, uint64_t metadata_address);
+	// Track F, F16k (KYTY_DIAG_F5ID): `f5id_miss` (optional) receives the reason of an empty answer (DiagF5Id::Miss).
+	[[nodiscard]] ImageId FindDccSurfaceImage(uint64_t data_address, uint64_t metadata_address,
+	                                          DiagF5Id::DccMiss* f5id_miss = nullptr);
 
 	void UnmapMemory(uint64_t address, uint64_t size);
 	void ProcessDownloadImages();
@@ -255,7 +276,10 @@ private:
 	// use of the image completes the upload first.
 	void                        RefreshImage(ImageId id, bool allow_partial = false);
 	void                        PrepareDccClear(ImageId id, const ImageDesc& desc);
-	void                        PrepareCmaskClear(ImageId id, const ImageDesc& desc);
+	// Track F, F16k (item 492(v)): `fce` - the FCE acquisition (FindRenderTarget's fce_materialize); `f5cmu` - see
+	// FindRenderTarget.
+	void                        PrepareCmaskClear(ImageId id, const ImageDesc& desc, bool fce = false,
+	                                              DiagF5::CmuEvent* f5cmu = nullptr);
 	// Caller holds m_lock (IsMetaCleared / MetaClearMask take it themselves and the
 	// TrackingSpinLock EXITs on recursion). Session 71, C3 premise: is there an unconsumed
 	// metadata FILL - the state PrepareDccClear / PrepareCmaskClear act on - for a bound layer?
@@ -263,8 +287,10 @@ private:
 	[[nodiscard]] bool          MetaFillPendingLocked(const ImageDesc& desc) const;
 	// Caller holds m_lock. A PendingDcc fill that the GPU or CPU has overwritten since (streamed
 	// textures fill new mips' metadata and then DMA the real one) must not be adopted as a clear.
+	// Track F, F16k (item 492(v)(2)): `f5_probe` (nullptr - the old call exactly) - see DiagF5::StaleProbe; the answer
+	// changes only with f5_probe->exact_decides (KYTY_FIX_F5CMU at the FCE acquisition).
 	[[nodiscard]] bool          PendingDccFillStale(uint64_t address, const MetaDataInfo& meta,
-	                                                uint64_t image_address);
+	                                                uint64_t image_address, DiagF5::StaleProbe* f5_probe = nullptr);
 	void                        InitializeImage(ImageId id, bool allow_defer = true);
 	[[nodiscard]] TextureTransfer
 	BuildTextureTransfer(const Image& image, BindingType binding, TransferDirection direction) const;
@@ -318,6 +344,9 @@ private:
 	BufferCache&                                      m_buffer_cache;
 	uint64_t                                          m_fill_stamp_address = 0;
 	uint64_t                                          m_fill_stamp_size    = 0;
+	// Track F, F16k (KYTY_DIAG_F5ID): the last fill of any entry type, stamped for DiagF5Id::NoteFillSeq (wr_after).
+	uint64_t                                          m_f5id_stamp_address = 0;
+	uint64_t                                          m_f5id_stamp_size    = 0;
 	Common::SlotVector<Image>                         m_slot_images;
 	ImagePageTable                                    m_image_page_table;
 	// Gate "texfaulthint": images per page of m_image_page_table. Written under m_lock (raised

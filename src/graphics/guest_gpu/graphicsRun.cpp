@@ -708,6 +708,7 @@ void GuestGpu::ThreadRun(void* data) {
 		if (diag_f56) [[unlikely]] {
 			(void)DiagF5::Service();
 			(void)DiagF6::Service();
+			(void)DiagF5Id::Service(); // Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(1)): the sum line, same point
 		}
 		Submission                   submission;
 		Common::UniqueFunction<void> command;
@@ -787,6 +788,9 @@ void GuestGpu::ThreadRun(void* data) {
 			}
 		}
 		if (should_stop) {
+			if (diag_f56) [[unlikely]] {
+				(void)DiagF5Id::Service(true); // Track F, F16k (KYTY_DIAG_F5ID): the line at exit (records kind=exit)
+			}
 			gpu->m_gfx_cp->BufferWait();
 			g_gpu_state  = nullptr;
 			g_gpu_thread = false;

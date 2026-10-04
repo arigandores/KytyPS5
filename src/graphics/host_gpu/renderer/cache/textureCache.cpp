@@ -1866,6 +1866,85 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 	}
 }
 
+namespace {
+
+// Track F, F16k (KYTY_DIAG_F5ID): a MetaDataInfo as DiagF5Id::MetaSnap (MetaType = Type + 1; checked in F5IdMetaSnap).
+template <typename Meta>
+DiagF5Id::MetaSnap F5IdSnapOf(const Meta& meta) {
+	return {.type       = static_cast<DiagF5Id::MetaType>(static_cast<uint8_t>(meta.type) + 1u),
+	        .clear_mask = meta.clear_mask,
+	        .fill_value = meta.fill_value,
+	        .fill_size  = meta.fill_size,
+	        .fill_seq   = meta.fill_seq};
+}
+
+// Track F, F16k (KYTY_FIX_F5CMU / KYTY_DIAG_F5ID, ROADMAP s122 item 492(v), (g)(5)): one PrepareCmaskClear call.
+// `decide` - KYTY_FIX_F5CMU at the FCE acquisition: the probe's exact answer is the answer (PendingDccFillStale);
+// `rt_count` - KYTY_DIAG_F5ID at any other acquisition: the probe only counts cmask_rt_bucket_only. Neither: Probe() is
+// nullptr (the old call). The destructor (every return of the call) counts f5cmu_* (KYTY_DIAG_F5 on, `decide`) and
+// writes the decision into `out` (when non-null): fix and, for a kept fill, why the call returned without ClearImage.
+class F5CmuScope {
+public:
+	F5CmuScope(bool fce, DiagF5::CmuEvent* out)
+	    : m_out(out), m_decide(fce && DiagF5::FixCmuOn()), m_rt_count(!fce && DiagF5Id::On()) {
+		m_probe.exact_decides = m_decide;
+		m_fix                 = m_decide ? DiagF5::CmuFix::Fresh : DiagF5::CmuFix::Off;
+	}
+	~F5CmuScope() {
+		auto fix = m_fix;
+		if (fix == DiagF5::CmuFix::Kept && m_cleared) {
+			fix = DiagF5::CmuFix::KeptApplied;
+		}
+		if (m_decide && DiagF5::On()) [[unlikely]] {
+			switch (fix) {
+				case DiagF5::CmuFix::Kept: DiagF5::Add(DiagF5::Counter::F5CmuKept); break;
+				case DiagF5::CmuFix::KeptApplied:
+					DiagF5::Add(DiagF5::Counter::F5CmuKept);
+					DiagF5::Add(DiagF5::Counter::F5CmuKeptApplied);
+					break;
+				case DiagF5::CmuFix::ExactStale: DiagF5::Add(DiagF5::Counter::F5CmuExactStale); break;
+				case DiagF5::CmuFix::Fallback: DiagF5::Add(DiagF5::Counter::F5CmuFallback); break;
+				default: break;
+			}
+		}
+		if (m_out != nullptr) [[unlikely]] {
+			m_out->fix = fix;
+			m_out->why = fix == DiagF5::CmuFix::Kept
+			                 ? (m_why != DiagF5::CmuWhy::None ? m_why : DiagF5::CmuWhy::NoLayer)
+			                 : DiagF5::CmuWhy::None;
+		}
+	}
+	F5CmuScope(const F5CmuScope&)            = delete;
+	F5CmuScope& operator=(const F5CmuScope&) = delete;
+
+	[[nodiscard]] DiagF5::StaleProbe* Probe() { return m_decide || m_rt_count ? &m_probe : nullptr; }
+	// After PendingDccFillStale (the PendingDcc branch only).
+	void Decided() {
+		if (m_rt_count && DiagF5::StaleBucketOnly(m_probe)) [[unlikely]] {
+			DiagF5::Add(DiagF5::Counter::CmaskRtBucketOnly);
+		}
+		if (m_decide && m_probe.bucket_stale) [[unlikely]] {
+			m_fix = m_probe.exact_stale ? DiagF5::CmuFix::ExactStale
+			        : m_probe.fallback  ? DiagF5::CmuFix::Fallback
+			                            : DiagF5::CmuFix::Kept;
+		}
+	}
+	void               Why(DiagF5::CmuWhy why) { m_why = why; }
+	void               Cleared() { m_cleared = true; }
+	[[nodiscard]] bool AnyCleared() const { return m_cleared; }
+
+private:
+	DiagF5::CmuEvent*  m_out;
+	bool               m_decide;
+	bool               m_rt_count;
+	DiagF5::StaleProbe m_probe {};
+	DiagF5::CmuFix     m_fix     = DiagF5::CmuFix::Off;
+	DiagF5::CmuWhy     m_why     = DiagF5::CmuWhy::None;
+	bool               m_cleared = false;
+};
+
+} // namespace
+
 void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	if (desc.info.metadata.kind != ImageMetadataKind::Dcc) {
 		return;
@@ -1891,14 +1970,20 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	if (!inserted && metadata.type == MetaDataInfo::Type::PendingDcc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		BumpMetaEpoch();
+		// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(5), F26): the probe only counts - the decision is the old one.
+		DiagF5::StaleProbe f5_probe {};
+		const bool         f5id = DiagF5Id::On();
 		if (PendingDccFillStale(desc.info.metadata.range.address, metadata,
-		                        image.info.data.address)) {
+		                        image.info.data.address, f5id ? &f5_probe : nullptr)) {
 			metadata = MetaDataInfo {.type = MetaDataInfo::Type::Dcc};
 			if (DiagF5::On()) [[unlikely]] {
 				DiagF5::Add(DiagF5::Counter::DccResetStale); // Track F, F16d: the pending fill is dropped (RC6(7))
 			}
 		} else if (DiagF5::On()) [[unlikely]] {
 			DiagF5::NoteDccFill(metadata.fill_value); // Track F, F16d: PendingDcc -> Dcc by the stored code (RC3)
+		}
+		if (f5id) [[unlikely]] {
+			DiagF5::NoteDccStaleProbe(f5_probe);
 		}
 		metadata.type = MetaDataInfo::Type::Dcc;
 	} else if (metadata.type != MetaDataInfo::Type::Dcc) {
@@ -1971,6 +2056,7 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	if (f5_pend) [[unlikely]] {
 		DiagF5::Add(DiagF5::Counter::DccRtCleared); // a bit of the view layers is set: the loop below clears it
 	}
+	const uint32_t f5id_mask0 = metadata.clear_mask; // Track F, F16k (KYTY_DIAG_F5ID): NoteClearApplied below
 	// The metadata fill covers the complete allocation. Consume each layer only after its
 	// native image contents exist; already materialized layers may have been rendered since.
 	for (uint32_t layer = first; layer < first + count;) {
@@ -1990,13 +2076,22 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		metadata.clear_mask &= ~mask;
 		BumpMetaEpoch();
 	}
+	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(2)-(3)): a clear ran here - a stale mark, `cleared` of an open record.
+	if (DiagF5Id::On() && metadata.clear_mask != f5id_mask0) [[unlikely]] {
+		DiagF5Id::NoteClearApplied(DiagF5Id::ApplySite::DccRt, desc.info.metadata.range.address,
+		                           image.info.data.address, GpuTimeProfiler::Frame());
+	}
 }
 
-void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
+void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc, bool fce, DiagF5::CmuEvent* f5cmu) {
 	static const bool enabled = [] {
 		const auto* value = std::getenv("KYTY_CMASK_CLEAR");
 		return value == nullptr || value[0] != '0';
 	}();
+	// Track F, F16k (KYTY_FIX_F5CMU / KYTY_DIAG_F5ID, ROADMAP s122 item 492(v), (g)(5)): this call's stale probe, its
+	// decision for the event line and its counters (F5CmuScope). Both knobs off: no probe is passed, nothing is counted,
+	// and `f5cmu` (non-null only with KYTY_DIAG_F5) only receives fix=off.
+	F5CmuScope f5 {fce, f5cmu};
 	if (!enabled || desc.info.metadata.kind != ImageMetadataKind::Cmask ||
 	    desc.type != BindingType::RenderTarget || desc.info.samples != 1 ||
 	    desc.info.resources.levels != 1 || desc.info.IsVolume()) return;
@@ -2020,9 +2115,10 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 	if (!inserted && metadata.type == MetaDataInfo::Type::PendingDcc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		BumpMetaEpoch();
-		if (PendingDccFillStale(desc.info.metadata.range.address, metadata, image.info.data.address)) {
+		if (PendingDccFillStale(desc.info.metadata.range.address, metadata, image.info.data.address, f5.Probe())) {
 			metadata = MetaDataInfo {};
 		}
+		f5.Decided(); // Track F, F16k: fix / cmask_rt_bucket_only by the probe
 		metadata.type = MetaDataInfo::Type::CMask;
 		if (metadata.fill_value != 0) metadata.clear_mask = 0;
 	} else if (metadata.type != MetaDataInfo::Type::CMask) {
@@ -2048,6 +2144,10 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 			DiagF5::Add(metadata.fill_value != 0 ? DiagF5::Counter::CmaskRtSkipValue
 			                                      : DiagF5::Counter::CmaskRtSkipPartial);
 		}
+		f5.Why(metadata.fill_value != 0              ? DiagF5::CmuWhy::Value
+		       : metadata.clear_mask == 0             ? DiagF5::CmuWhy::Mask
+		       : desc.info.metadata.range.size == 0   ? DiagF5::CmuWhy::Range
+		                                              : DiagF5::CmuWhy::Partial);
 		return;
 	}
 	vk::ClearValue clear {};
@@ -2056,6 +2156,7 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 		if (f5_pend) [[unlikely]] {
 			DiagF5::Add(DiagF5::Counter::CmaskRtSkipDecode);
 		}
+		f5.Why(DiagF5::CmuWhy::Decode);
 		return;
 	}
 	const auto& view = desc.view_info;
@@ -2063,6 +2164,7 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 		if (f5_pend) [[unlikely]] {
 			DiagF5::Add(DiagF5::Counter::CmaskRtSkipLayers);
 		}
+		f5.Why(DiagF5::CmuWhy::Layers);
 		return;
 	}
 	if (f5_pend) [[unlikely]] {
@@ -2074,11 +2176,17 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 		           {vk::ImageAspectFlagBits::eColor, 0, 1, layer, 1}, clear);
 		metadata.clear_mask &= ~(1u << layer);
 		BumpMetaEpoch();
+		f5.Cleared(); // Track F, F16k: kept_applied
 		static const bool trace = Common::EnvFlagOn("KYTY_CLEAR_TRACE");
 		if (trace) LOGF("CmaskClear: frame=%u image=0x%016" PRIx64 " meta=0x%016" PRIx64
 		               " layer=%u words=%08x/%08x\n", GpuTimeProfiler::Frame(), image.info.data.address,
 		               desc.info.metadata.range.address, layer, desc.info.metadata.cmask_clear_words[0],
 		               desc.info.metadata.cmask_clear_words[1]);
+	}
+	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(3)): a clear ran here - a stale mark of branch 3.
+	if (DiagF5Id::On() && f5.AnyCleared()) [[unlikely]] {
+		DiagF5Id::NoteClearApplied(DiagF5Id::ApplySite::CmaskRt, desc.info.metadata.range.address,
+		                           image.info.data.address, GpuTimeProfiler::Frame());
 	}
 }
 
@@ -2406,7 +2514,8 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 }
 
 vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc,
-                                             uint32_t guest_clear_regs, bool fce_materialize) {
+                                             uint32_t guest_clear_regs, bool fce_materialize,
+                                             DiagF5::CmuEvent* f5cmu) {
 	if (desc.type != BindingType::RenderTarget) {
 		EXIT("TextureCache: invalid color-target binding\n");
 	}
@@ -2480,7 +2589,7 @@ vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc,
 		// clear at a target acquisition or a fast-clear eliminate is no write event (an Lt write of the trigger).
 		const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyMat);
 		PrepareDccClear(id, desc);
-		PrepareCmaskClear(id, desc);
+		PrepareCmaskClear(id, desc, fce_materialize, f5cmu); // Track F, F16k: the FCE acquisition and its decision
 	}
 	// Those two calls are the ONLY thing between the observation and the upload decision, so an
 	// image that left the population here left it because a recognised guest clear cancelled its
@@ -3243,7 +3352,7 @@ bool TextureCache::IsMetaCleared(uint64_t address, uint32_t slice, uint32_t* fil
 	return (found->second.clear_mask & (1u << slice)) != 0;
 }
 
-bool TextureCache::ClearMeta(uint64_t address, uint8_t* f5_refusal) {
+bool TextureCache::ClearMeta(uint64_t address, uint8_t* f5_refusal, DiagF5Id::MetaSnap* f5id_snap) {
 	std::scoped_lock lock {m_lock};
 	const auto       found = m_surface_metas.find(address);
 	if (found == m_surface_metas.end() || found->second.type == MetaDataInfo::Type::PendingDcc ||
@@ -3257,6 +3366,9 @@ bool TextureCache::ClearMeta(uint64_t address, uint8_t* f5_refusal) {
 			if (f5_refusal != nullptr) {
 				*f5_refusal = found->second.type == MetaDataInfo::Type::CMask ? DiagF5::RefusalCmask : DiagF5::RefusalDcc;
 			}
+			if (f5id_snap != nullptr) {
+				*f5id_snap = F5IdSnapOf(found->second); // Track F, F16k (KYTY_DIAG_F5ID): the refused entry
+			}
 		}
 		return false;
 	}
@@ -3269,6 +3381,18 @@ bool TextureCache::ClearMeta(uint64_t address, uint8_t* f5_refusal) {
 	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 	BumpMetaEpoch();
 	return true;
+}
+
+void TextureCache::F5IdMetaSnap(uint64_t address, DiagF5Id::MetaSnap* out) {
+	static_assert(static_cast<uint8_t>(MetaDataInfo::Type::PendingDcc) + 1u ==
+	                  static_cast<uint8_t>(DiagF5Id::MetaType::PendingDcc) &&
+	              static_cast<uint8_t>(MetaDataInfo::Type::CMask) + 1u == static_cast<uint8_t>(DiagF5Id::MetaType::CMask) &&
+	              static_cast<uint8_t>(MetaDataInfo::Type::FMask) + 1u == static_cast<uint8_t>(DiagF5Id::MetaType::FMask) &&
+	              static_cast<uint8_t>(MetaDataInfo::Type::HTile) + 1u == static_cast<uint8_t>(DiagF5Id::MetaType::HTile) &&
+	              static_cast<uint8_t>(MetaDataInfo::Type::Dcc) + 1u == static_cast<uint8_t>(DiagF5Id::MetaType::Dcc));
+	std::scoped_lock lock {m_lock};
+	const auto       found = m_surface_metas.find(address);
+	*out                   = found == m_surface_metas.end() ? DiagF5Id::MetaSnap {} : F5IdSnapOf(found->second);
 }
 
 void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_value) {
@@ -3321,12 +3445,27 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
 			m_fill_stamp_address   = address;
 			m_fill_stamp_size      = size;
 		}
+		// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(2)-(3)): a new fill drops the stale mark at this address and is
+		// stamped for wr_after (StampPendingDccFill).
+		if (DiagF5Id::On()) [[unlikely]] {
+			DiagF5Id::NoteFill(address);
+			m_f5id_stamp_address = address;
+			m_f5id_stamp_size    = size;
+		}
 	}
 	BumpMetaEpoch(); // the try_emplace above may have inserted as well
 }
 
 void TextureCache::StampPendingDccFill() {
 	std::scoped_lock lock {m_lock};
+	// Track F, F16k (KYTY_DIAG_F5ID): the write sequence of the last fill of any entry type (wr_after); 0 with the knob
+	// off (only TrackDccFill sets the address, under the knob).
+	if (m_f5id_stamp_address != 0) [[unlikely]] {
+		DiagF5Id::NoteFillSeq(m_f5id_stamp_address,
+		                      m_buffer_cache.LastGpuWriteSeq(m_f5id_stamp_address, m_f5id_stamp_size, false));
+		m_f5id_stamp_address = 0;
+		m_f5id_stamp_size    = 0;
+	}
 	if (m_fill_stamp_address == 0) {
 		return;
 	}
@@ -3341,7 +3480,7 @@ void TextureCache::StampPendingDccFill() {
 }
 
 bool TextureCache::PendingDccFillStale(uint64_t address, const MetaDataInfo& meta,
-                                       uint64_t image_address) {
+                                       uint64_t image_address, DiagF5::StaleProbe* f5_probe) {
 	// A streamed texture's metadata is filled when its mips are allocated and rewritten (DMA of
 	// the real metadata, or CPU) before the texture is bound: adopting that fill would clear the
 	// whole image for a frame. Only a fill nothing overwrote since is still meaningful.
@@ -3357,6 +3496,22 @@ bool TextureCache::PendingDccFillStale(uint64_t address, const MetaDataInfo& met
 	if (last_seq <= meta.fill_seq && !cpu_written) {
 		return false;
 	}
+	// Track F, F16k (KYTY_FIX_F5CMU / KYTY_DIAG_F5ID, ROADMAP s122 item 492(v)(2)-(3)): the bucket answer is stale; the
+	// exact one asks whether a newer GPU write crosses [address, address + fill_size) (a CPU write stays stale, as
+	// before). Only `exact_decides` changes the answer: kept - false, without the stale line.
+	if (f5_probe != nullptr) [[unlikely]] {
+		f5_probe->bucket_stale = true;
+		if (cpu_written) {
+			f5_probe->exact_stale = true;
+		} else {
+			const auto exact      = m_buffer_cache.LastGpuWriteSeqExact(address, meta.fill_size, meta.fill_seq);
+			f5_probe->exact_stale = exact.seq != 0;
+			f5_probe->fallback    = !f5_probe->exact_stale && exact.fallback;
+		}
+		if (f5_probe->exact_decides && !f5_probe->exact_stale && !f5_probe->fallback) {
+			return false;
+		}
+	}
 	static std::atomic<uint32_t> stale_count = 0;
 	static const bool dcc_trace_stale = Common::EnvFlagOn("KYTY_DCC_TRACE");
 	if (dcc_trace_stale || stale_count++ < 32) {
@@ -3369,13 +3524,21 @@ bool TextureCache::PendingDccFillStale(uint64_t address, const MetaDataInfo& met
 	return true;
 }
 
-ImageId TextureCache::FindDccSurfaceImage(uint64_t data_address, uint64_t metadata_address) {
+ImageId TextureCache::FindDccSurfaceImage(uint64_t data_address, uint64_t metadata_address,
+                                          DiagF5Id::DccMiss* f5id_miss) {
 	if (data_address == 0 || metadata_address == 0) {
+		if (f5id_miss != nullptr) [[unlikely]] {
+			*f5id_miss = {DiagF5Id::Miss::R1, 0};
+		}
 		return {};
 	}
 	ImageId  owner {};
 	ImageId  candidate {};
 	uint32_t candidates = 0;
+	// Track F, F16k (KYTY_DIAG_F5ID): what the scan saw besides the candidates (read only for `f5id_miss`).
+	bool     f5id_dcc_other         = false;
+	uint64_t f5id_dcc_other_address = 0;
+	int      f5id_other_kind        = -1;
 	{
 		std::scoped_lock lock {m_lock};
 		for (const auto id: FindImagesInRegion(data_address, 1, false)) {
@@ -3390,48 +3553,80 @@ ImageId TextureCache::FindDccSurfaceImage(uint64_t data_address, uint64_t metada
 					owner = id;
 					break;
 				}
+				f5id_dcc_other         = true;
+				f5id_dcc_other_address = image->info.metadata.range.address;
 				continue;
 			}
 			if (image->info.metadata.kind == ImageMetadataKind::None) {
 				candidate = id;
 				candidates++;
+			} else {
+				f5id_other_kind = static_cast<int>(image->info.metadata.kind);
 			}
 		}
 	}
 	if (owner) {
 		return owner;
 	}
-	if (candidates == 1 && AdoptPendingDccForTexture(candidate, metadata_address)) {
+	if (candidates == 1 && AdoptPendingDccForTexture(candidate, metadata_address, f5id_miss)) {
 		return candidate;
+	}
+	if (f5id_miss != nullptr && candidates != 1) [[unlikely]] {
+		*f5id_miss = DiagF5Id::ScanReason(candidates, f5id_dcc_other, f5id_dcc_other_address, f5id_other_kind);
 	}
 	return {};
 }
 
-bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_address) {
+bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_address, DiagF5Id::DccMiss* f5id_miss) {
 	std::scoped_lock lock {m_lock};
 	auto*            image = m_slot_images.try_get(id);
 	if (image == nullptr || !image->registered || image->info.data.Empty() ||
 	    image->info.IsDepth() || image->depth_id || metadata_address == 0) {
+		if (f5id_miss != nullptr) [[unlikely]] {
+			*f5id_miss = {DiagF5Id::Miss::R1, 0}; // Track F, F16k: no usable colour image
+		}
 		return false;
 	}
 	if (image->info.metadata.kind == ImageMetadataKind::Dcc) {
+		if (f5id_miss != nullptr && image->info.metadata.range.address != metadata_address) [[unlikely]] {
+			*f5id_miss = {DiagF5Id::Miss::R2, image->info.metadata.range.address};
+		}
 		return image->info.metadata.range.address == metadata_address;
 	}
 	if (image->info.metadata.kind != ImageMetadataKind::None) {
+		if (f5id_miss != nullptr) [[unlikely]] {
+			*f5id_miss = {DiagF5Id::Miss::R3, static_cast<uint64_t>(image->info.metadata.kind)};
+		}
 		return false;
 	}
 	const auto found = m_surface_metas.find(metadata_address);
 	if (found == m_surface_metas.end() || found->second.type != MetaDataInfo::Type::PendingDcc) {
 		// Only a fill observed through TrackDccFill proves the address is DCC metadata;
 		// never classify an untouched address from a T# alone.
+		if (f5id_miss != nullptr) [[unlikely]] {
+			*f5id_miss = found == m_surface_metas.end()
+			                 ? DiagF5Id::DccMiss {DiagF5Id::Miss::R5, 0}
+			                 : DiagF5Id::DccMiss {DiagF5Id::Miss::R6, static_cast<uint64_t>(found->second.type) + 1u};
+		}
 		return false;
 	}
-	if (PendingDccFillStale(metadata_address, found->second, image->info.data.address)) {
+	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(5), F26): the probe only counts - the decision is the old one.
+	DiagF5::StaleProbe f5_probe {};
+	const bool         f5id     = DiagF5Id::On();
+	const bool         f5_stale = PendingDccFillStale(metadata_address, found->second, image->info.data.address,
+	                                                  f5id ? &f5_probe : nullptr);
+	if (f5id) [[unlikely]] {
+		DiagF5::NoteDccStaleProbe(f5_probe);
+	}
+	if (f5_stale) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		m_surface_metas.erase(found);
 		BumpMetaEpoch();
 		if (DiagF5::On()) [[unlikely]] {
 			DiagF5::Add(DiagF5::Counter::DccResetStale); // Track F, F16d: the pending fill is dropped (RC6(7))
+		}
+		if (f5id_miss != nullptr) [[unlikely]] {
+			*f5id_miss = {DiagF5Id::Miss::R7, 0};
 		}
 		return false;
 	}

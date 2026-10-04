@@ -3465,6 +3465,30 @@ namespace {
 // parameter in render.h and drop this hint.
 thread_local vk::Format g_dcc_clear_view_format = vk::Format::eUndefined;
 
+// Track F, F16k (KYTY_DIAG_F5ID, ROADMAP s122 item 492(g)(3)): set by the FCE scan around its MaterializeDeferredDccClear
+// call (stale_apply site=fce; site=mat otherwise). Only with the knob on; restored on scope exit.
+thread_local bool t_f5id_fce_site = false;
+
+class F5IdFceSite {
+public:
+	F5IdFceSite() noexcept: m_saved(t_f5id_fce_site), m_on(DiagF5Id::On()) {
+		if (m_on) [[unlikely]] {
+			t_f5id_fce_site = true;
+		}
+	}
+	~F5IdFceSite() {
+		if (m_on) [[unlikely]] {
+			t_f5id_fce_site = m_saved;
+		}
+	}
+	F5IdFceSite(const F5IdFceSite&)            = delete;
+	F5IdFceSite& operator=(const F5IdFceSite&) = delete;
+
+private:
+	bool m_saved;
+	bool m_on;
+};
+
 class DccClearViewFormat {
 public:
 	explicit DccClearViewFormat(vk::Format format) noexcept : m_saved(g_dcc_clear_view_format) {
@@ -3631,6 +3655,12 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(b)): the materialized layers (every level).
 	const SkcCensus::SubScope skc3_sub(SkcCensus::Sub {0, UINT32_MAX, 0, 0, mask, 1});
 	cache.MarkGpuWritten(id);
+	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(2)-(3)): the clear ran - a stale mark at `address`, `cleared` of an open
+	// record at the image.
+	if (DiagF5Id::On()) [[unlikely]] {
+		DiagF5Id::NoteClearApplied(t_f5id_fce_site ? DiagF5Id::ApplySite::Fce : DiagF5Id::ApplySite::Mat, address,
+		                           image.info.data.address, GpuTimeProfiler::Frame());
+	}
 }
 
 namespace {
@@ -3760,6 +3790,106 @@ void FixB42Note(const FixB42Hit& probe, bool applied, uint32_t width, uint32_t h
 	     cmask, word0, word1);
 }
 
+// Track F, F16k (KYTY_DIAG_F5ID, ROADMAP s122 item 492(g)(2)): the sizes of a DCC colour slot from its registers, for
+// the measurement only - wr_after / cpu_mod over [dcc, dcc + dcc) and buf_reads over [base, base + surface). Never
+// EXITs: an element size the table does not know is taken as 16 bytes (the largest DCC and surface - an over-estimate
+// of both ranges); a surface that is not a single-level render-target-tiled or linear one is 0 (buf_reads=na); a DCC
+// layout TileGetDccSize refuses is 0 (the entry's fill size is used, else wr_after=na).
+struct F5IdSlotSizes {
+	uint32_t width   = 0;
+	uint32_t height  = 0;
+	uint32_t pitch   = 0;
+	uint64_t surface = 0;
+	uint64_t dcc     = 0;
+};
+
+uint32_t F5IdBytesPerElement(Prospero::ChannelLayout layout) {
+	using L = Prospero::ChannelLayout;
+	switch (layout) {
+		case L::k8: return 1;
+		case L::k16:
+		case L::k8_8:
+		case L::k5_6_5:
+		case L::k5_5_5_1:
+		case L::k1_5_5_5:
+		case L::k4_4_4_4: return 2;
+		case L::k32:
+		case L::k16_16:
+		case L::k11_11_10:
+		case L::k10_11_11:
+		case L::k2_10_10_10:
+		case L::k10_10_10_2:
+		case L::k8_8_8_8:
+		case L::k10_10_10_2Float:
+		case L::k9_9_9_5: return 4;
+		case L::k32_32:
+		case L::k16_16_16_16: return 8;
+		default: return 16;
+	}
+}
+
+F5IdSlotSizes F5IdSlotSizesOf(const HW::RenderTarget& rt) {
+	F5IdSlotSizes s {};
+	s.width               = rt.attrib2.width + 1u;
+	s.height              = rt.attrib2.height + 1u;
+	const uint32_t levels = rt.attrib2.num_mip_levels + 1u;
+	const bool     volume = rt.attrib3.dimension == 2;
+	const uint32_t layers = volume ? rt.attrib3.depth + 1u : rt.view.last_array_slice_index + 1u;
+	const uint32_t bpe    = F5IdBytesPerElement(rt.info.format);
+	const uint32_t frags  = rt.attrib.num_fragments;
+	TileSizeAlign  dcc {};
+	if (TileGetDccSize(s.width, s.height, layers, bpe, levels, rt.attrib3.tile_mode, dcc, frags)) {
+		s.dcc = dcc.size;
+	}
+	if (levels == 1 && rt.attrib3.tile_mode == Prospero::TileMode::kRenderTarget) {
+		s.pitch = TileGetRenderTargetPitch(s.width, bpe, frags);
+		TileSizeAlign total {};
+		if (s.pitch != 0 && TileGetRenderTargetSize(s.width, s.height, s.pitch, bpe, total, frags)) {
+			s.surface = static_cast<uint64_t>(total.size) * layers;
+		}
+	} else if (levels == 1 && rt.attrib3.tile_mode == Prospero::TileMode::kLinear) {
+		s.pitch   = (s.width + 255u) & ~255u;
+		s.surface = static_cast<uint64_t>(s.pitch) * s.height * bpe * (uint64_t {1} << frags) * layers;
+	}
+	return s;
+}
+
+// The event of branch 2 (dcc_fce_no_image): the slot registers, the entry before (`before`, taken before
+// FindDccSurfaceImage) and after, the reason, wr_after / cpu_mod over the DCC range since the last fill there.
+void F5IdNoteFceMiss(TextureCache& cache, BufferCache& buffers, uint32_t slot, const HW::RenderTarget& rt,
+                     const DiagF5Id::MetaSnap& before, const DiagF5Id::DccMiss& miss) {
+	DiagF5Id::FceEvent e {};
+	e.frame            = GpuTimeProfiler::Frame();
+	e.present          = DiagF5::Present();
+	e.slot             = slot;
+	e.base             = rt.base.addr;
+	e.dcc              = rt.dcc_addr.addr;
+	e.fmt              = static_cast<uint32_t>(rt.info.format);
+	e.nfmt             = static_cast<uint32_t>(rt.info.channel_type);
+	const auto sizes   = F5IdSlotSizesOf(rt);
+	e.width            = sizes.width;
+	e.height           = sizes.height;
+	e.pitch            = sizes.pitch;
+	e.surface_size     = sizes.surface;
+	e.dcc_size         = sizes.dcc != 0 ? sizes.dcc : before.fill_size;
+	e.clear0           = rt.clear_word0.word0;
+	e.clear1           = rt.clear_word1.word1;
+	e.dcc_en           = rt.info.dcc_compression_enable;
+	e.key_en           = rt.dcc.dcc_clear_key_enable;
+	e.miss             = miss;
+	e.before           = before;
+	cache.F5IdMetaSnap(rt.dcc_addr.addr, &e.after);
+	if (e.dcc_size != 0) {
+		const auto since = std::max(before.fill_seq, DiagF5Id::FillSeq(e.dcc));
+		const auto exact = buffers.LastGpuWriteSeqExact(e.dcc, e.dcc_size, since);
+		e.wr_after       = exact.seq != 0    ? DiagF5Id::WrAfter::Exact
+		                   : exact.fallback ? DiagF5Id::WrAfter::Fallback
+		                                    : DiagF5Id::WrAfter::None;
+		e.cpu_mod        = buffers.IsRegionCpuModified(e.dcc, e.dcc_size) ? 1 : 0;
+	}
+	DiagF5Id::NoteFce(e);
+}
+
 } // namespace
 
 // A fast-clear-eliminate / DCC-decompress draw (CB_COLOR_CONTROL.MODE 2/6) binds the surface as
@@ -3787,6 +3917,8 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 				color.desc.info.metadata.range             = {rt.cmask.addr, b42.cmask_size};
 				color.desc.info.metadata.cmask_clear_words = {rt.clear_word0.word0, rt.clear_word1.word1};
 			}
+			// Track F, F16k (KYTY_FIX_F5CMU, item 492(v)(4)): the decision of the FCE acquisition below (KYTY_DIAG_F5).
+			DiagF5::CmuEvent f5_cmu {};
 			if (color.image_id && color.desc.info.metadata.kind == ImageMetadataKind::Cmask) {
 				// Session 71, candidate C3 (counters only): the second entrance into
 				// FindRenderTarget, which rt_fast_no never sees. Hand it the same registers the
@@ -3802,7 +3934,8 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 				        (rt.info.dcc_compression_enable ? TextureCache::kRegColorDccEnable : 0u) |
 				        (rt.dcc_addr.addr != 0 ? TextureCache::kRegColorDccAddr : 0u) |
 				        (rt.dcc.dcc_clear_key_enable ? TextureCache::kRegColorDccKey : 0u),
-				    true); // Track F, F9e2b (B42): the FCE acquisition - no draw stamp
+				    true, // Track F, F9e2b (B42): the FCE acquisition - no draw stamp
+				    DiagF5::On() ? &f5_cmu : nullptr); // Track F, F16k: its decision for the event line
 			}
 			if (b42.kind != FixB42Kind::None) {
 				bool applied = false;
@@ -3818,6 +3951,19 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 					DiagF5::Add(b42.kind == FixB42Kind::Drawn ? DiagF5::Counter::CmaskFceDrawn
 					            : applied                      ? DiagF5::Counter::CmaskFceB42
 					                                           : DiagF5::Counter::CmaskFceUnapplied);
+				}
+				if (DiagF5::On() && b42.kind == FixB42Kind::Hit) [[unlikely]] {
+					// Track F, F16k (item 492(v)(4)): the event line of a B42 hit - the last present number of the video
+					// index, the GPU frame, `applied` as above and the decision of the acquisition (fix=off without
+					// KYTY_FIX_F5CMU, or without the acquisition: KYTY_FIX_B42=0).
+					(void)DiagF5::NoteCmuEvent({.present = DiagF5::Present(),
+					                            .gpu     = GpuTimeProfiler::Frame(),
+					                            .image   = color.desc.info.data.address,
+					                            .cmask   = rt.cmask.addr,
+					                            .width   = color.desc.info.extent.width,
+					                            .height  = color.desc.info.extent.height,
+					                            .applied = applied,
+					                            .event   = f5_cmu});
 				}
 			} else if (DiagF5::On()) [[unlikely]] {
 				// Track F, F16d: FixB42Probe answered None - the first of its tests that holds, in its order (the descriptor
@@ -3839,10 +3985,21 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 		if (DiagF5::On()) [[unlikely]] {
 			DiagF5::Add(DiagF5::Counter::DccFce); // Track F, F16d (item 427(b), RC6(4)): FCE on a DCC slot
 		}
-		const auto id = cache.FindDccSurfaceImage(rt.base.addr, rt.dcc_addr.addr);
+		// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(2)): the entry at the DCC address before the call and the reason of
+		// a miss; nothing is read with the knob off.
+		const bool         f5id = DiagF5Id::On();
+		DiagF5Id::MetaSnap f5id_before {};
+		DiagF5Id::DccMiss  f5id_miss {};
+		if (f5id) [[unlikely]] {
+			cache.F5IdMetaSnap(rt.dcc_addr.addr, &f5id_before);
+		}
+		const auto id = cache.FindDccSurfaceImage(rt.base.addr, rt.dcc_addr.addr, f5id ? &f5id_miss : nullptr);
 		if (!id) {
 			if (DiagF5::On()) [[unlikely]] {
 				DiagF5::Add(DiagF5::Counter::DccFceNoImage);
+			}
+			if (f5id) [[unlikely]] {
+				F5IdNoteFceMiss(cache, m_context.GetBufferCache(), slot, rt, f5id_before, f5id_miss);
 			}
 			static std::atomic<uint32_t> miss_count = 0;
 			static const bool dcc_trace = Common::EnvFlagOn("KYTY_DCC_TRACE");
@@ -3856,7 +4013,10 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 		if (DiagF5::On()) [[unlikely]] {
 			DiagF5::Add(DiagF5::Counter::DccFceImage);
 		}
-		MaterializeDeferredDccClear(buffer, id);
+		{
+			const F5IdFceSite f5id_site; // Track F, F16k (KYTY_DIAG_F5ID): a clear of this call is the FCE site's
+			MaterializeDeferredDccClear(buffer, id);
+		}
 	}
 }
 
@@ -3864,6 +4024,11 @@ void RenderExecutor::BindRenderTarget(ImageId id) {
 	auto& image             = m_context.GetTextureCache().GetImage(id);
 	image.binding.is_target = true;
 	m_bound_images.push_back(id);
+	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(2)): a target binding of an image whose data starts at an open base.
+	if (DiagF5Id::On()) [[unlikely]] {
+		DiagF5Id::NoteBind(image.info.data.address, DiagF5Id::BindKind::Target, image.info.metadata.kind,
+		                   image.info.metadata.range.address, GpuTimeProfiler::Frame());
+	}
 }
 
 void RenderExecutor::ResetBindings() {
@@ -6535,6 +6700,11 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 				// see the hint above MaterializeDeferredDccClear).
 				const DccClearViewFormat clear_view {descriptors.images[i].desc.view_info.format};
 				MaterializeDeferredDccClear(buffer, descriptors.images[i].image_id, image);
+			}
+			// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(2)): a shader binding of an image whose data starts at an open base.
+			if (DiagF5Id::On()) [[unlikely]] {
+				DiagF5Id::NoteBind(image.info.data.address, DiagF5Id::BindKind::Texture, image.info.metadata.kind,
+				                   image.info.metadata.range.address, GpuTimeProfiler::Frame());
 			}
 			auto& binding = descriptors.images[i];
 			const auto&                 view = binding.desc.view_info;

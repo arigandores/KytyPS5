@@ -455,12 +455,38 @@ private:
 	std::unordered_map<uint64_t, uint64_t>  m_bucket_write_seq;
 	uint64_t                                m_gpu_write_seq   = 0;
 	uint64_t                                m_large_write_seq = 0;
+	// Track F, F16k (KYTY_FIX_F5CMU / KYTY_DIAG_F5ID, ROADMAP s122 item 492(v)(3)): the exact write journal - the last K
+	// GPU writes {lo, hi, seq} of each 64 KB bucket, beside m_bucket_write_seq and written by NoteGpuWrite in the same
+	// place (the GuestGpu thread), only while DiagF5::ExactRingOn() (read once: the journal holds every write of the
+	// process or none). A write larger than 16 MB touches no bucket and no ring, as before. Read only by
+	// LastGpuWriteSeqExact; no decision of the cache reads it.
+	struct ExactWrite {
+		uint64_t lo  = 0;
+		uint64_t hi  = 0;
+		uint64_t seq = 0;
+	};
+	struct ExactRing {
+		static constexpr uint32_t K = 8;
+		std::array<ExactWrite, K> writes {};
+		uint64_t                  count = 0; // writes recorded in this bucket; writes[(count - 1) % K] is the last
+	};
+	std::unordered_map<uint64_t, ExactRing> m_bucket_write_ring;
 	void                   NoteGpuWrite(uint64_t vaddr, uint64_t size);
 
  public:
 	// Sequence number of the last GPU write to the 64 KB buckets of the range (include_large: also the
 	// floor set by any write larger than 16 MB, which is not tracked per bucket).
 	[[nodiscard]] uint64_t LastGpuWriteSeq(uint64_t vaddr, uint64_t size, bool include_large = true) const;
+	// Track F, F16k (item 492(v)(3)): the exact form of LastGpuWriteSeq(vaddr, size, false) after `since`. `seq` - the
+	// newest recorded write with seq > since that crosses [vaddr, vaddr + size) (0 - none). `fallback` - a bucket of the
+	// range has a write newer than `since` while its ring holds K writes all newer than `since` and older ones were
+	// dropped (the history since `since` may be incomplete): only the bucket answer is safe there. Needs
+	// DiagF5::ExactRingOn(); a bucket without a ring (not possible then) is a fallback.
+	struct ExactWriteSeq {
+		uint64_t seq      = 0;
+		bool     fallback = false;
+	};
+	[[nodiscard]] ExactWriteSeq LastGpuWriteSeqExact(uint64_t vaddr, uint64_t size, uint64_t since) const;
 
  private:
 

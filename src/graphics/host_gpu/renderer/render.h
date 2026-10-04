@@ -45,6 +45,9 @@ struct RenderExecutorTestAccess;
 namespace DiagF5 {
 struct CsRefusals; // Track F, F16d (diagF5.h)
 } // namespace DiagF5
+namespace DiagF5Id {
+struct CsDispatch; // Track F, F16k (diagF5.h)
+} // namespace DiagF5Id
 
 enum class CommandBufferDebugOp : uint32_t {
 	DispatchDirect,
@@ -487,9 +490,11 @@ private:
 	void                      BindRenderTarget(ImageId id);
 	void                      ResetBindings();
 	// Track F, F16d (KYTY_DIAG_F5): `f5_refusals` / `f5_tracked` - non-null only with the knob on (renderCompute.cpp).
+	// Track F, F16k (KYTY_DIAG_F5ID): `f5id` - non-null only with DiagF5Id::On(); its entries follow `f5_refusals`.
 	[[nodiscard]] bool        TryConsumeComputeMetaClear(const ShaderComputeInputInfo& input,
 	                                                     const CommandBuffer&          buffer,
-	                                                     DiagF5::CsRefusals*           f5_refusals = nullptr);
+	                                                     DiagF5::CsRefusals*           f5_refusals = nullptr,
+	                                                     DiagF5Id::CsDispatch*         f5id        = nullptr);
 	[[nodiscard]] bool TryConsumeComputeImageClear(const ShaderComputeInputInfo& input,
 	                                              CommandBuffer& command, uint32_t group_x,
 	                                              uint32_t group_y, uint32_t group_z, uint32_t mode,

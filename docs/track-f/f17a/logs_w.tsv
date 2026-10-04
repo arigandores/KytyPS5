@@ -1,0 +1,89 @@
+path	sha256_16	size	scene	ver	vulkan_w	vulkan_e	f6	last_report	dualsrc	rtskip_mode_line	runs	run_keys	copies
+C:/kyty/f287/f10e/log_f10e_w.txt	4b655a65deabeb46	469621974	underwater_aerial_garden	Fork build arigandores/KytyPS5 68602c4	937205	0	937204	0	DualSrcBlend: supported=# enabled=#	1	882893	14	1
+C:/kyty/f287/f12f/log_f12_w.txt	80ea585dc64b8bf0	447679061	underwater_aerial_garden	Fork build arigandores/KytyPS5 1833ee2	890593	0	890592	0	DualSrcBlend: supported=# enabled=#	1	840522	14	1
+C:/kyty/f287/f2c/log_f2c_b.txt	b85553e509a0fab9	399500972	underwater_aerial_garden	Fork build arigandores/KytyPS5 ba3be48-dirty	930063	0	930062	0	-	1	874879	13	1
+C:/kyty/f287/f3d/log_f3d_bw.txt	954520f5239e8c8d	352536608	underwater_aerial_garden	Fork build arigandores/KytyPS5 16e506f-dirty	822726	0	822725	0	DualSrcBlend: supported=# enabled=#	1	776878	12	1
+C:/kyty/f287/f4c/log_f4c_a.txt	1184c6f163a3d685	369417224	underwater_aerial_garden	Fork build arigandores/KytyPS5 06f049f-dirty	882503	0	882502	0	DualSrcBlend: supported=# enabled=#;DualSrcBlend: patched ps	1	835336	13	1
+C:/kyty/f287/f4c/log_f4c_b.txt	242965587e923a2b	53715	-	-	1	1	0	0	DualSrcBlend: supported=# enabled=#	0	0	0	2
+C:/kyty/f287/f4c/log_f4c_v.txt	f9a9bab1a87804bd	425307344	mini_giants_garden	Fork build arigandores/KytyPS5 06f049f-dirty	843000	0	842999	0	DualSrcBlend: supported=# enabled=#;DualSrcBlend: patched ps	1	842999	3	1
+C:/kyty/f287/f5c/log_f5c_a.txt	e0b28937efb15021	95848365	underwater_aerial_garden	Fork build arigandores/KytyPS5 af7e5ff-dirty	1	0	0	0	-	1	0	0	1
+C:/kyty/f287/f5c/log_f5c_b.txt	b53ea355bd67376f	30643543	underwater_aerial_garden	Fork build arigandores/KytyPS5 af7e5ff-dirty	1	1	0	0	-	1	0	0	1
+C:/kyty/f287/fs2c/log_fs2_w.txt	c78d4a4dab292bcd	389339139	underwater_aerial_garden	Fork build arigandores/KytyPS5 9c9d86a	911995	0	911994	0	DualSrcBlend: supported=# enabled=#	1	859962	14	1
+C:/kyty/f287/fs2c/log_fs2_w0.txt	04c04f121dbc90b2	82361472	underwater_aerial_garden	Fork build arigandores/KytyPS5 9c9d86a	151563	1	151562	0	DualSrcBlend: supported=# enabled=#	1	146668	8	1
+C:/kyty/f287/fs3/fs3c/log_fs3_w.txt	0bfc15f5e7dd94bf	406674304	underwater_aerial_garden	Fork build arigandores/KytyPS5 d515b90	943625	0	943624	0	DualSrcBlend: supported=# enabled=#	1	885511	14	1
+C:/kyty/f287/fs4c/log_fs4_w.txt	5b4a0a0d753d9a72	387898546	underwater_aerial_garden	Fork build arigandores/KytyPS5 3d0e46d	899186	0	899185	0	DualSrcBlend: supported=# enabled=#	1	847042	15	1
+C:/kyty/f287/fs5/fs5c/log_fs5_w.txt	f58eb740c7564cc8	463628034	underwater_aerial_garden	Fork build arigandores/KytyPS5 0e72bc1	930253	0	930252	0	DualSrcBlend: supported=# enabled=#	1	875671	13	1
+C:/kyty/f287/fsc/log_fs_a.txt	2b20970b9f53a177	167428060	underwater_aerial_garden	Fork build arigandores/KytyPS5 95eec77	1	0	0	0	DualSrcBlend: supported=# enabled=#	1	0	0	1
+C:/kyty/f287/fsc/log_fs_v.txt	eb49dd5a6d09b45e	202332322	mini_giants_garden	Fork build arigandores/KytyPS5 95eec77	1	0	0	0	DualSrcBlend: supported=# enabled=#;DualSrcBlend: patched ps	1	0	0	1
+C:/kyty/p283/lead/p10chk/log_pw_C.txt	6eb46dd1b348885f	380197793	underwater_aerial_garden	Fork build arigandores/KytyPS5 4fc501f-dirty	884372	0	884371	0	-	1	822133	15	3
+C:/kyty/p283/p15/log_qw_V.txt	bdafa806f3de0e9a	101759601	underwater_aerial_garden	Fork build arigandores/KytyPS5 4b7665e-dirty	1	0	0	0	-	1	0	0	2
+C:/kyty/p283/p19/log_qw_V2.txt	47723998fe9f7abb	379114138	underwater_aerial_garden	Fork build arigandores/KytyPS5 4b7665e-dirty	866166	0	866165	0	-	1	799995	9	2
+C:/kyty/p283/p24/log_iw_V3.txt	e688bbe54e827129	399619291	underwater_aerial_garden	Fork build arigandores/KytyPS5 4414e23	898497	0	898496	0	DualSrcBlend: supported=# enabled=#	1	830719	12	1
+C:/kyty/p283/p31/log_hw_V4.txt	d29ca79a967e3808	396420683	underwater_aerial_garden	Fork build arigandores/KytyPS5 142f384	884110	0	884109	0	DualSrcBlend: supported=# enabled=#	1	820550	15	2
+C:/kyty/p283/p36/log_jw_V5.txt	c6f3e7dd5bd93f14	409346895	underwater_aerial_garden	Fork build arigandores/KytyPS5 8768519	949920	0	949919	0	DualSrcBlend: supported=# enabled=#	1	885137	15	2
+C:/kyty/p283/p41/log_kw_V6.txt	f89a8075f19ce298	395350105	underwater_aerial_garden	Fork build arigandores/KytyPS5 40e52dc	891577	0	891576	0	DualSrcBlend: supported=# enabled=#	1	824222	14	2
+C:/kyty/s143/log_w143_01.txt	7851fa47d1612b6c	52138	-	-	1	1	0	0	-	0	0	0	2
+C:/kyty/s143/log_w143_02.txt	a42ca54eb1cac832	52139	-	-	1	1	0	0	-	0	0	0	2
+C:/kyty/s143/log_w143_03.txt	f7857e0c7078b8c2	52141	-	-	1	1	0	0	-	0	0	0	2
+C:/kyty/s143/log_w143_04.txt	00c151d9fa4b825d	53097	-	-	1	1	0	0	-	0	0	0	2
+C:/kyty/s143/log_w143_05.txt	a484f58768611519	58227	-	-	1	1	0	0	-	0	0	0	2
+C:/kyty/s143/log_w143_06.txt	9c12781a4e972b5e	52140	-	-	1	1	0	0	-	0	0	0	2
+C:/kyty/s143/log_w143_07.txt	8a9553a1a94fe7b6	52141	-	-	1	1	0	0	-	0	0	0	2
+C:/kyty/s143/log_w143_08.txt	0997e63c0891cc98	59505	-	-	1	1	0	0	-	0	0	0	2
+C:/kyty/s143/log_w143_09.txt	cf1eded5d1365929	53673	-	-	1	1	0	0	-	0	0	0	2
+C:/kyty/s143/log_w143_10.txt	45d4d85d9459a980	53560	-	-	1	1	0	0	-	0	0	0	2
+C:/kyty/s144/log_w144_00.txt	2698b03decde184a	390979784	underwater_aerial_garden	Fork build arigandores/KytyPS5 4fc501f-dirty	936280	0	936279	0	-	1	881453	13	1
+C:/kyty/s144/log_w144_01.txt	280636d7ae05f940	398011245	spring_punch_sky_aztec	Fork build arigandores/KytyPS5 4fc501f-dirty	951148	0	951147	0	-	1	951147	3	1
+C:/kyty/s144/log_w144_02.txt	3f83a47e48af1c5f	439143901	booster_construction	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	947279	19	1
+C:/kyty/s144/log_w144_03.txt	a146ae165f424fd6	257777962	mini_astro_clock_tower	Fork build arigandores/KytyPS5 4fc501f-dirty	496684	0	496683	0	-	1	488055	4	1
+C:/kyty/s144/log_w144_04.txt	b0b1c20fe446a543	346120934	path_maker_mana_tree	Fork build arigandores/KytyPS5 4fc501f-dirty	668730	0	668729	0	-	1	622475	15	1
+C:/kyty/s144/log_w144_05.txt	202033f4e7e013d5	441241749	spring_punch_monster_cave	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	990759	6	1
+C:/kyty/s144/log_w144_06.txt	80dcc8947e6d5f2b	453376944	gulliver_island	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	913690	21	1
+C:/kyty/s144/log_w144_07.txt	1fe11b676a5bc99f	450099377	booster_magic_lamp	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	935513	14	1
+C:/kyty/s144/log_w144_08.txt	6c567d954a8f9ed0	431810129	rocket_space_station	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	988032	12	1
+C:/kyty/s144/log_w144_09.txt	08c3a71f11ab48fa	288183319	rocket_hourglass	Fork build arigandores/KytyPS5 4fc501f-dirty	722001	1	722000	0	-	1	649573	16	1
+C:/kyty/s144/log_w144_10.txt	a15ff15222355e58	456066254	pot_treasure_cave	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	915485	11	1
+C:/kyty/s144/log_w144_11.txt	a6cb2c3bcbf3b5f8	435447974	bumper_enemy_snowy_canyon	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	933774	9	1
+C:/kyty/s144/log_w144_12.txt	c4cc4451bd5397f4	415077235	big_hand_pirate_island	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	928357	17	1
+C:/kyty/s144/log_w144_13.txt	b1831b72047e49aa	475466222	timestop_casino	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	999999	4	1
+C:/kyty/s144/log_w144_14.txt	02f2c2629a9b1239	490211276	ice_iceberg	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	820758	16	1
+C:/kyty/s144/log_w144_15.txt	dc4a51be7beea7b6	414471331	sponge_dirty_bath	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	999999	3	1
+C:/kyty/s144/log_w144_16.txt	8c3b987f9765109e	521864681	hoover_beach	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	893851	12	1
+C:/kyty/s144/log_w144_17.txt	5951e5ca2c670dc9	492384566	volcano_mountain	Fork build arigandores/KytyPS5 4fc501f-dirty	1000001	0	999999	1	-	1	931380	17	1
+C:/kyty/s144/log_w144_18.txt	1d75b73e455e9a65	383246210	voxel_world	Fork build arigandores/KytyPS5 4fc501f-dirty	402918	0	402917	0	-	1	402917	3	1
+C:/kyty/s144/log_w144_19.txt	5266a235bc813af7	253209569	enemy_gorilla	Fork build arigandores/KytyPS5 4fc501f-dirty	383433	0	383432	0	-	1	370200	5	1
+C:/kyty/s144/log_w144_20.txt	516d801a05776cf0	22149107	mini_giants_garden	Fork build arigandores/KytyPS5 4fc501f-dirty	1	1	0	0	-	1	0	0	2
+C:/kyty/s145/log_w145_00.txt	85973479da1e029d	389015811	underwater_aerial_garden	Fork build arigandores/KytyPS5 4fc501f-dirty	922749	0	922748	0	-	1	871017	12	1
+C:/kyty/s145/log_w145_01.txt	c4bcfc62ad884335	841029170	rocket_hourglass	Fork build arigandores/KytyPS5 4fc501f-dirty	2137239	0	2137238	0	-	1	1824766	17	1
+C:/kyty/s145/log_w145_02.txt	c2d2787da68c1896	516143030	small_pot_lava	Fork build arigandores/KytyPS5 4fc501f-dirty	1267106	0	1267105	0	-	1	1220924	8	1
+C:/kyty/s145/log_w145_03.txt	f6186a172626c270	424529363	spin_drill_natural_cave	Fork build arigandores/KytyPS5 4fc501f-dirty	756788	0	756787	0	-	1	756348	9	1
+C:/kyty/s145/log_w145_04.txt	8edd81fb0c5b3daa	539952042	enemy_taco	Fork build arigandores/KytyPS5 4fc501f-dirty	1162348	0	1162347	0	-	1	1050402	13	1
+C:/kyty/s145/log_w145_05.txt	b82cfd91db51382f	454729495	jack_in_the_box	Fork build arigandores/KytyPS5 4fc501f-dirty	639161	0	639160	0	-	1	639160	3	1
+C:/kyty/s145/log_w145_07.txt	81cd4651668cc472	241688288	picup_light	Fork build arigandores/KytyPS5 4fc501f-dirty	179182	0	179181	0	-	1	179181	3	1
+C:/kyty/s145/log_w145_08.txt	efe82ccbb1fb6432	797775813	enemy_snake	Fork build arigandores/KytyPS5 4fc501f-dirty	1555844	0	1555843	0	-	1	1555843	3	1
+C:/kyty/s145/log_w145_09.txt	21e4a3ac7a866144	468560148	light_gadget_graveyard	Fork build arigandores/KytyPS5 4fc501f-dirty	1086276	0	1086275	0	-	1	1059044	5	1
+C:/kyty/s145/log_w145_10.txt	69e4e584eb172035	600495642	shuriken_ninja_castle	Fork build arigandores/KytyPS5 4fc501f-dirty	1590124	0	1590123	0	-	1	1552987	5	1
+C:/kyty/s145/log_w145_11.txt	40156adae8e085a5	969808993	final_stage	Fork build arigandores/KytyPS5 4fc501f-dirty	1787710	0	1787709	0	-	1	1787709	3	1
+C:/kyty/s145/log_w145_12.txt	f9d09d2ac6a2fd55	574942254	mini_rocket_chain	Fork build arigandores/KytyPS5 4fc501f-dirty	1033838	0	1033837	0	-	1	774079	12	1
+C:/kyty/s145/log_w145_13.txt	66244ff9614e1aa3	444322822	enemy_chameleon	Fork build arigandores/KytyPS5 4fc501f-dirty	961413	0	961412	0	-	1	961412	3	1
+C:/kyty/s145/log_w145_14.txt	ad56b63125647958	1022477871	bonus_path_maker_mix	Fork build arigandores/KytyPS5 4fc501f-dirty	2790242	0	2790241	0	-	1	2790241	4	1
+C:/kyty/s145/log_w145_15.txt	9467a31b3f7a0bbc	576501985	enemy_bird	Fork build arigandores/KytyPS5 4fc501f-dirty	1035677	0	1035676	0	-	1	1035676	3	1
+C:/kyty/s145/log_w145_16.txt	bb2d455dbeb58a55	367415246	cymbal_party_land	Fork build arigandores/KytyPS5 4fc501f-dirty	811702	0	811701	0	-	1	811701	3	1
+C:/kyty/s145/log_w145_17.txt	a1b5246d43186f34	575910136	enemy_final	Fork build arigandores/KytyPS5 4fc501f-dirty	277702	0	277701	0	-	1	277701	3	1
+C:/kyty/s146/log_w146_00.txt	396cd049a54159a3	394949293	underwater_aerial_garden	Fork build arigandores/KytyPS5 95eec77	906041	0	906040	0	DualSrcBlend: supported=# enabled=#	1	853377	14	1
+C:/kyty/s146/log_w146_05.txt	2e92757f61679549	505219819	robot_builder_next	Fork build arigandores/KytyPS5 95eec77	59625	0	59624	0	DualSrcBlend: supported=# enabled=#	1	59624	3	1
+C:/kyty/s146/log_w146_06.txt	8b4ff1aec3a0fb64	655328835	interactive_credit_00	Fork build arigandores/KytyPS5 95eec77	649830	0	649829	0	DualSrcBlend: supported=# enabled=#	1	649829	4	1
+C:/kyty/s146/log_w146_07.txt	ca905b27f4fd71e8	1691577402	non_interactive_credit	Fork build arigandores/KytyPS5 95eec77	2807553	0	2807552	0	DualSrcBlend: supported=# enabled=#	1	2807552	4	1
+C:/kyty/s146/log_w146_08.txt	7d94bcf641198a4f	545735344	ending_boss_after_credit	Fork build arigandores/KytyPS5 95eec77	12218	0	12217	0	DualSrcBlend: supported=# enabled=#	1	12217	3	1
+C:/kyty/s146/log_w146_09.txt	767dd40e23192234	1037984331	collectible_viewer	Fork build arigandores/KytyPS5 95eec77	70413	0	70412	0	DualSrcBlend: supported=# enabled=#	1	70412	1	2
+C:/kyty/s146/log_w146_10.txt	246472bb511e52b1	560983539	hub_crashsite_diorama	Fork build arigandores/KytyPS5 95eec77	1	0	0	0	DualSrcBlend: supported=# enabled=#	1	0	0	1
+C:/kyty/s146/log_w146_11.txt	836637eac2f8a277	1211266004	diorama_controller_skin	Fork build arigandores/KytyPS5 95eec77	586766	0	586765	0	DualSrcBlend: supported=# enabled=#	1	586765	3	2
+C:/kyty/s146/log_w146_12.txt	88545342749fc514	1079698632	diorama_astro_skin	Fork build arigandores/KytyPS5 95eec77	178508	0	178507	0	DualSrcBlend: supported=# enabled=#	1	178507	2	2
+C:/kyty/s146/log_w146_13.txt	a3342b111ed896d8	1176762970	diorama_zoo	Fork build arigandores/KytyPS5 95eec77	462252	0	462251	0	DualSrcBlend: supported=# enabled=#	1	462251	3	2
+C:/kyty/s146/log_w146_14.txt	ba386a0af4e0d014	675935059	fragile_battle_1	Fork build arigandores/KytyPS5 95eec77	1397487	0	1397486	0	DualSrcBlend: supported=# enabled=#	1	1397486	3	1
+C:/kyty/s146/log_w146_15.txt	599985d36eda5d71	697195210	voxel_challenge_1	Fork build arigandores/KytyPS5 95eec77	459647	0	459646	0	DualSrcBlend: supported=# enabled=#	1	459646	3	1
+C:/kyty/s146/log_w146_16.txt	b132597c549fcdcf	443863388	armadillo_challenge_1	Fork build arigandores/KytyPS5 95eec77	543548	0	543547	0	DualSrcBlend: supported=# enabled=#	1	540706	9	1
+C:/kyty/s146/log_w146_17.txt	a57e9d08218d9b3a	597638190	fragile_battle_2	Fork build arigandores/KytyPS5 95eec77	1010813	0	1010812	0	DualSrcBlend: supported=# enabled=#	1	1010812	3	1
+C:/kyty/s146/log_w146_18.txt	bec5c69625c98cb6	697037854	voxel_challenge_2	Fork build arigandores/KytyPS5 95eec77	459447	0	459446	0	DualSrcBlend: supported=# enabled=#	1	459446	3	1
+C:/kyty/s146/log_w146_19.txt	0d14bf1a0d94ca62	643902765	fragile_battle_3	Fork build arigandores/KytyPS5 95eec77	1286067	0	1286066	0	DualSrcBlend: supported=# enabled=#	1	1286066	3	1
+C:/kyty/s288/s6/log_pcw_val.txt	4dc7e1d0620c84b6	387998889	underwater_aerial_garden	Fork build arigandores/KytyPS5 4fc501f-dirty	927447	0	927446	0	-	1	875131	12	1

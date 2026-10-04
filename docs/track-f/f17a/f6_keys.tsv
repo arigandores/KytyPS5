@@ -1,0 +1,17 @@
+types	command	location	name	attachment_index	null_handle	lines	logs
+2	vkCmdDrawIndexed	1	out_mrt_1	1	0	30010364	69
+2	vkCmdDrawMeshTasksEXT	1	out_mrt_1	1	0	26313983	69
+2	vkCmdDrawIndexed	1	out_mrt_1	1	1	4356752	68
+2	vkCmdDrawIndexed	4	out_mrt_4	4	0	640360	38
+2	vkCmdDrawIndexed	0	out_mrt_0	0	1	590098	28
+2	vkCmdDrawIndexed	3	out_mrt_3	3	0	428963	30
+2	vkCmdDrawIndexedIndirect	4	out_mrt_4	4	0	346056	14
+2	vkCmdDrawIndexedIndirect	0	out_mrt_0	0	1	293348	11
+2	vkCmdDrawIndexedIndirect	1	out_mrt_1	1	1	284376	11
+2	vkCmdDrawIndexed	2	out_mrt_2	2	1	206040	24
+2	vkCmdDrawIndexedIndirect	3	out_mrt_3	3	0	183049	11
+2	vkCmdDrawIndexedIndirect	2	out_mrt_2	2	1	151427	6
+2	vkCmdDrawIndexed	2	out_mrt_2	2	0	45932	6
+2	vkCmdDrawIndexedIndirect	1	out_mrt_1	1	0	19911	5
+2	vkCmdDrawIndexedIndirect	2	out_mrt_2	2	0	19911	5
+2	vkCmdDrawIndexed	3	out_mrt_3	3	1	671	1

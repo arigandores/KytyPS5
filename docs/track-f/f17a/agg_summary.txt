@@ -1,0 +1,109 @@
+logs 379 GiB 121.0 distinct by sha256 291
+validation logs 111 distinct 88 by root {'f287': 17, 'p283': 14, 's143': 20, 's144': 22, 's145': 17, 's146': 20, 's288': 1}
+distinct validation logs: with F6 lines 70 without 18 (of them with [Vulkan][E]: 13 )
+logs without validation that have [Vulkan][W] lines 0
+identity f6_sum + last_report == f6_broad fails in 0 logs
+identity vw == f6_sum + sum(wo) fails in 0 logs
+F6 lines, distinct validation logs 63891241 ; all validation logs 70549687
+[Vulkan][W] lines, distinct validation logs 63891342 ; [Vulkan][E] 15
+logs with the duplicate limit reached (last_report > 0), distinct 13
+
+== lines of the binding paths, all 379 logs ==
+cnt fb_skip 0 in 0 logs
+cnt guest_out 18431274 in 355 logs
+cnt last_report 13 in 13 logs
+cnt mrt_state 0 in 0 logs
+cnt nco 0 in 0 logs
+cnt rct_decision 44886 in 351 logs
+cnt rts_mismatch 0 in 0 logs
+nco {}
+mrt {}
+rct_slots {'0': 37746, '1': 3403, '2': 1134, '3': 670, '4': 1933}
+txt cb_shader_mask distinct texts 0
+txt dualsrc distinct texts 2
+    logs 184 (validation 41 ) DualSrcBlend: supported=# enabled=#
+    logs 5 (validation 3 ) DualSrcBlend: patched ps=#e#f#a#df#
+txt exit_changed distinct texts 0
+txt exit_mixed distinct texts 0
+txt exit_rt_hyphen distinct texts 0
+txt exit_rt_space distinct texts 0
+txt exit_tile distinct texts 0
+txt rts_mode distinct texts 1
+    logs 351 (validation 89 ) RtSkip: mode # ctx_slots=# groups=# rec_bytes=#
+txt rts_refused distinct texts 0
+
+== other [Vulkan][W] texts (digits -> #) ==
+lines 111 logs 111 | Removing layer <app> (<app>) because it is a duplicate of <app> (<app>)
+lines 13 logs 13 | (Warning - This VUID has now been reported # times, which is the duplicate_message_limit value, this will be the last time reporting it).
+wo_over 0
+
+== F6 keys (types|command|Location|name|attachment index|null), distinct validation logs ==
+2|vkCmdDrawIndexed|1|out_mrt_1|1|0 30010364 logs 69
+2|vkCmdDrawMeshTasksEXT|1|out_mrt_1|1|0 26313983 logs 69
+2|vkCmdDrawIndexed|1|out_mrt_1|1|1 4356752 logs 68
+2|vkCmdDrawIndexed|4|out_mrt_4|4|0 640360 logs 38
+2|vkCmdDrawIndexed|0|out_mrt_0|0|1 590098 logs 28
+2|vkCmdDrawIndexed|3|out_mrt_3|3|0 428963 logs 30
+2|vkCmdDrawIndexedIndirect|4|out_mrt_4|4|0 346056 logs 14
+2|vkCmdDrawIndexedIndirect|0|out_mrt_0|0|1 293348 logs 11
+2|vkCmdDrawIndexedIndirect|1|out_mrt_1|1|1 284376 logs 11
+2|vkCmdDrawIndexed|2|out_mrt_2|2|1 206040 logs 24
+2|vkCmdDrawIndexedIndirect|3|out_mrt_3|3|0 183049 logs 11
+2|vkCmdDrawIndexedIndirect|2|out_mrt_2|2|1 151427 logs 6
+2|vkCmdDrawIndexed|2|out_mrt_2|2|0 45932 logs 6
+2|vkCmdDrawIndexedIndirect|1|out_mrt_1|1|0 19911 logs 5
+2|vkCmdDrawIndexedIndirect|2|out_mrt_2|2|0 19911 logs 5
+2|vkCmdDrawIndexed|3|out_mrt_3|3|1 671 logs 1
+distinct (command, Location) 11 ; distinct Location [0, 1, 2, 3, 4] ; name == out_mrt_<Location> and index == Location in every key: True ; types ['2']
+
+== draw runs (sweep2), distinct validation logs with F6 ==
+logs with F6 not in sweep2 0 []
+identity sweep2 f6 == sweep f6_sum fails in 0 logs
+runs 61073831 distinct keys 55 run_over 0
+vkCmdDrawIndexed:1                                   runs  29994618 logs  69 scenes  49  colorAttachmentCount in [0, 1]  holes -
+vkCmdDrawMeshTasksEXT:1                              runs  26313983 logs  69 scenes  49  colorAttachmentCount in [0, 1]  holes -
+vkCmdDrawIndexed:1n                                  runs   3775289 logs  68 scenes  48  colorAttachmentCount in [2, 8]  holes [1]
+vkCmdDrawIndexed:0n,1n,3,4                           runs    373917 logs  24 scenes   6  colorAttachmentCount in [2, 3]  holes [0, 1]
+vkCmdDrawIndexed:0n,1n,2n,4                          runs    205216 logs  23 scenes   4  colorAttachmentCount in [3, 4]  holes [0, 1, 2]
+vkCmdDrawIndexedIndirect:0n,1n,2n,4                  runs    141035 logs   4 scenes   3  colorAttachmentCount in [3, 4]  holes [0, 1, 2]
+vkCmdDrawIndexedIndirect:0n,1n,3,4                   runs    136000 logs   9 scenes   8  colorAttachmentCount in [2, 3]  holes [0, 1]
+vkCmdDrawIndexed:2,3,4                               runs     28006 logs   5 scenes   5  colorAttachmentCount in [0, 2]  holes -
+vkCmdDrawIndexedIndirect:1,2,3,4                     runs     19860 logs   5 scenes   5  colorAttachmentCount in [0, 1]  holes -
+vkCmdDrawIndexedIndirect:0n,3,4                      runs     16166 logs   7 scenes   6  colorAttachmentCount in [1, 3]  holes [0]
+vkCmdDrawIndexed:1,2,3,4                             runs     15713 logs   4 scenes   4  colorAttachmentCount in [0, 1]  holes -
+vkCmdDrawIndexedIndirect:4                           runs     11678 logs  10 scenes   9  colorAttachmentCount in [0, 4]  holes -
+vkCmdDrawIndexedIndirect:3,4                         runs     10118 logs   5 scenes   5  colorAttachmentCount in [0, 3]  holes -
+vkCmdDrawIndexed:4                                   runs      7007 logs  36 scenes  18  colorAttachmentCount in [0, 4]  holes -
+vkCmdDrawIndexed:0n,3,4                              runs      6863 logs   3 scenes   3  colorAttachmentCount in [1, 3]  holes [0]
+vkCmdDrawIndexedIndirect:1n,2n,4                     runs      6399 logs   4 scenes   3  colorAttachmentCount in [3, 4]  holes [1, 2]
+vkCmdDrawIndexedIndirect:2n,4                        runs      3959 logs   4 scenes   3  colorAttachmentCount in [3, 4]  holes [2]
+vkCmdDrawIndexed:0n,2,3,4                            runs      2077 logs   1 scenes   1  colorAttachmentCount in [1, 2]  holes [0]
+vkCmdDrawIndexed:3,4                                 runs      1040 logs  25 scenes  10  colorAttachmentCount in [0, 3]  holes -
+vkCmdDrawIndexed:0n                                  runs       971 logs  28 scenes   9  colorAttachmentCount in [1, 8]  holes [0]
+vkCmdDrawIndexedIndirect:1n,3,4                      runs       830 logs   3 scenes   3  colorAttachmentCount in [2, 3]  holes [1]
+vkCmdDrawIndexed:1n,2n,3n                            runs       671 logs   1 scenes   1  colorAttachmentCount in [4, 8]  holes [1, 2, 3]
+vkCmdDrawIndexed:0n,1n                               runs       594 logs  26 scenes   8  colorAttachmentCount in [2, 8]  holes [0, 1]
+vkCmdDrawIndexed:1n,3,4                              runs       446 logs  22 scenes   6  colorAttachmentCount in [2, 3]  holes [1]
+vkCmdDrawIndexed:0n,1n,3                             runs       392 logs  20 scenes   6  colorAttachmentCount in [2, 3]  holes [0, 1]
+vkCmdDrawIndexed:3                                   runs       309 logs   7 scenes   7  colorAttachmentCount in [0, 3]  holes -
+vkCmdDrawIndexed:1n,3                                runs       117 logs   4 scenes   4  colorAttachmentCount in [2, 3]  holes [1]
+vkCmdDrawIndexed:0n,1n,2n                            runs        57 logs  19 scenes   4  colorAttachmentCount in [3, 8]  holes [0, 1, 2]
+vkCmdDrawIndexed:2,3                                 runs        52 logs   3 scenes   3  colorAttachmentCount in [0, 2]  holes -
+vkCmdDrawIndexedIndirect:0n                          runs        50 logs   6 scenes   5  colorAttachmentCount in [1, 8]  holes [0]
+vkCmdDrawIndexedIndirect:0n,1n                       runs        49 logs   8 scenes   7  colorAttachmentCount in [2, 8]  holes [0, 1]
+vkCmdDrawIndexed:2                                   runs        45 logs   3 scenes   3  colorAttachmentCount in [0, 2]  holes -
+vkCmdDrawIndexed:1n,2n,4                             runs        41 logs  18 scenes   3  colorAttachmentCount in [3, 4]  holes [1, 2]
+vkCmdDrawIndexed:2n,4                                runs        34 logs  16 scenes   4  colorAttachmentCount in [3, 4]  holes [2]
+vkCmdDrawIndexed:1,2,3                               runs        24 logs   2 scenes   2  colorAttachmentCount in [0, 1]  holes -
+vkCmdDrawIndexedIndirect:0n,1n,3                     runs        23 logs   5 scenes   5  colorAttachmentCount in [2, 3]  holes [0, 1]
+vkCmdDrawIndexedIndirect:1,2                         runs        22 logs   1 scenes   1  colorAttachmentCount in [0, 1]  holes -
+vkCmdDrawIndexedIndirect:0n,1n,2n                    runs        21 logs   4 scenes   3  colorAttachmentCount in [3, 8]  holes [0, 1, 2]
+vkCmdDrawIndexedIndirect:1                           runs        20 logs   1 scenes   1  colorAttachmentCount in [0, 1]  holes -
+vkCmdDrawIndexedIndirect:3                           runs        19 logs   6 scenes   6  colorAttachmentCount in [0, 3]  holes -
+runs with an impossible count range (two draws merged by the ascending rule) 0 keys, 0 runs
+runs whose count range allows only 0 colour attachments (Location 0 reported as at-or-above count) 0
+
+== per distinct validation log: logs_w.tsv ==
+scenes among distinct validation logs with F6: 50 {'underwater_aerial_garden': 20, 'rocket_hourglass': 2, 'mini_giants_garden': 1, 'spring_punch_sky_aztec': 1, 'booster_construction': 1, 'mini_astro_clock_tower': 1, 'path_maker_mana_tree': 1, 'spring_punch_monster_cave': 1, 'gulliver_island': 1, 'booster_magic_lamp': 1, 'rocket_space_station': 1, 'pot_treasure_cave': 1, 'bumper_enemy_snowy_canyon': 1, 'big_hand_pirate_island': 1, 'timestop_casino': 1, 'ice_iceberg': 1, 'sponge_dirty_bath': 1, 'hoover_beach': 1, 'volcano_mountain': 1, 'voxel_world': 1, 'enemy_gorilla': 1, 'small_pot_lava': 1, 'spin_drill_natural_cave': 1, 'enemy_taco': 1, 'jack_in_the_box': 1, 'picup_light': 1, 'enemy_snake': 1, 'light_gadget_graveyard': 1, 'shuriken_ninja_castle': 1, 'final_stage': 1, 'mini_rocket_chain': 1, 'enemy_chameleon': 1, 'bonus_path_maker_mix': 1, 'enemy_bird': 1, 'cymbal_party_land': 1, 'enemy_final': 1, 'robot_builder_next': 1, 'interactive_credit_00': 1, 'non_interactive_credit': 1, 'ending_boss_after_credit': 1, 'collectible_viewer': 1, 'diorama_controller_skin': 1, 'diorama_astro_skin': 1, 'diorama_zoo': 1, 'fragile_battle_1': 1, 'voxel_challenge_1': 1, 'armadillo_challenge_1': 1, 'fragile_battle_2': 1, 'voxel_challenge_2': 1, 'fragile_battle_3': 1}
+validation logs with F6 and the RtSkip mode line: 70 of 70
+validation logs with F6 by DualSrcBlend text: {'DualSrcBlend: supported=# enabled=#': 27, '-': 41, 'DualSrcBlend: supported=# enabled=#;DualSrcBlend: ': 2}

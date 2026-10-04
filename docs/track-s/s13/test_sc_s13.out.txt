@@ -1,0 +1,158 @@
+suite test_sc_s13.py sha256 06a1517caadeaf64b1e6a5d46821adbaec40340fd21ba39e5edab2ec845b1aba target sc_s13.py sha256 e96dc8222ab239833490f5a8ba4b2ad367ae5c5910e6adfcd95cf15ea1da1621
+PASS A1 the inherited sc_s9.py is refused when its sha256 is not the pinned one
+PASS A2 sc_s13.py is ASCII only
+PASS B1 39 arms: k_01 .. k_19, u_01 .. u_19, w13 in this order
+PASS B2 the 19 levels = LIST13 of lvl_s13.out.txt in order (first title_controller_ship, 6th Sky Garden, last enemy_gorilla)
+PASS B3 LIST13 of the scorer = the line LIST13 of lvl_s13.out.txt
+PASS B4 k arms: class M, mode cat, hold 180, no video, no validation; k_01 from the empty set, k_02 from k_01, k_19 from k_18; level K<NN>
+PASS B5 u arms: class T, mode u, hold 120, video, no validation; w13: Sky Garden, class M, mode u, hold 330, validation, no video
+PASS B6 constants: HOLD_K 180, HOLD_U 120, HOLD_W 330, HOLD_W_US 300 s, FRAMES_VIDEO 3000, PREP_LIMIT_S 180
+PASS C1 environment k: the base + CLOCK_PIN + MARKERS, no trace, no seed path, no cache mode
+PASS C2 environment u: + AV_TRACE, REGISTER_TRACE, the seed path s13/seeds, prepare-cold
+PASS C3 environment w13: the seed path and prepare-cold, no trace
+PASS C4 env rows of a clean u arm: family and strict PASS
+PASS C5 a missing KYTY_CACHE_MODE: the family row FAILS
+PASS C6 a non-family key differs: family PASS, strict FAILS
+PASS C7 a u arm without KYTY_REC: strict FAILS
+PASS C8 a k arm with KYTY_REC: strict FAILS; without it PASS with no difference named
+PASS C9 a KYTY_FIX_* key in the env: the family row FAILS
+PASS D1 plan k_01 / k_02: "s13 <level> M cat 180 empty|k_01 100 600 0 0"
+PASS D2 plan u_19 "s13 enemy_gorilla T u 120 - 100 600 1 0"; w13 "s13 underwater_aerial_garden M u 330 - 300 600 0 1"
+PASS E1 "installed: PENDING" -> (PENDING, None, None)
+PASS E2 "installed: <sha> <sig> <variant>" -> the triple
+PASS E3 malformed: a short sha, a signature not KytySC3:, a variant not variant_, two lines, none, PENDING with more
+PASS E4 no seal file -> None
+PASS E5 current_seal: 09 while 09b is absent; edition rows empty
+PASS E6 the edition 09b exists: current_seal = 09b; the same lines but installed / edition, 09 PENDING, 09b named -> ok
+PASS E7 09b with an extra line -> the line row FAILS
+PASS E8 09b with the lines in another order -> FAILS
+PASS E9 09b still PENDING -> the installed row FAILS
+PASS E10 09 not PENDING -> the installed row FAILS
+PASS E11 edition rows with 09b but no 09 -> one failing row
+PASS F1 check_seal: every sealed file, this scorer, "installed: PENDING" -> PASS (no binary row while PENDING)
+PASS F2 a sealed name without its line -> FAIL
+PASS F3 no line "installed:" -> FAIL (S9r2 observation 3)
+PASS F4 the edition 09b in force: check_seal reads it, its edition rows pass, the installed binary now = its line -> PASS
+PASS F5 the installed binary now != the line "installed:" -> FAIL
+PASS F6 a sealed file changed (this scorer) -> FAIL
+PASS F6b the running scorer is not the sealed s13/sc_s13.py (the sealed files unchanged) -> FAIL on that row only
+PASS F7 the sealed names cover the harness, the scorer, both suites, the mutants, the export and its suite, the list and its output, the inherited scorers, the tool, the video detector
+PASS G1 scan_y: the first compatibility line, the translation cache with "/", DualSrcBlend before GuestOut, 2 [Vulkan][E], window events by kind, 1 recover
+PASS G2 DualSrcBlend after the first GuestOut line -> dual_before False
+PASS G3 "enabled=0" before GuestOut -> dual_before False
+PASS H1 export state OK: EXPORT: OK, manifest line = the file = the live catalogue, source = app_post_copy of k_19; duplicates and compatibility read
+PASS H2 no export output -> NOT OK
+PASS H3 the last line is not EXPORT: OK -> NOT OK
+PASS H4 the manifest line differs from the file -> NOT OK
+PASS H5 the source of another arm or another sha -> NOT OK
+PASS H6 the live catalogue changed after the export -> NOT OK
+PASS H7 the manifest format "<name> <bytes> <sha256>" sorted (as seedexp)
+PASS I1 k_02: restore = app_post_copy of k_01 -> every row PASS
+PASS I2 k_02 restored from the empty set (not the post copy of k_01) -> the restore row FAILS
+PASS I2b k_02: expected = the post copy of k_01 but the live set got another sha -> the restore row FAILS
+PASS I3 k_01: restore = the empty set; app_post_copy recorded
+PASS I4 k_01 without app_post_copy -> FAILS
+PASS I5 u_01: the empty set, GLCache as found, the catalogue = seeds_manifest.txt -> PASS
+PASS I6 u_01 with another catalogue sha -> FAILS
+PASS I7 GLCache restored before a U arm -> FAILS
+PASS I8 man_launch_glc != man_pre_glc -> FAILS
+PASS I9 return_app != its copy -> FAILS
+PASS I10 installed after != before -> FAILS
+PASS I11 installed before = after but != the seal line -> FAILS only that row
+PASS I12 return_prev not ok -> FAILS
+PASS I13 a manifest not recorded -> FAILS
+PASS I14 no cache json -> one failing row
+PASS I15 the seal PENDING (inst None) -> the installed row FAILS
+PASS J1 admission of a clean u arm and a clean w13 -> no failing row
+PASS J2 json binary != the seal line -> that row FAILS (item 414 (b))
+PASS J3 two attempts -> FAILS
+PASS J4 another -lvl -> FAILS
+PASS J5 KYTY_GAME_PATCH -> its row FAILS
+PASS J6 KYTY_S_PCW=1 / KYTY_FIX_B42=1 set in the env -> the knob row FAILS (shipped defaults)
+PASS J7 KYTY_GPU_CHECKPOINTS / KYTY_GATE_SCHEDULE / KYTY_GATE_SCHEDULE_ABBA -> their rows FAIL
+PASS J8 the video of another tag -> the video row FAILS; a k arm with a video -> "no video" FAILS
+PASS J9 --vulkan-validation true on a u arm / false on w13 -> FAILS
+PASS J10 W form: another limit, a message filter -> the form row FAILS; no VK_LAYER_PATH -> its row FAILS
+PASS J11 another hold / gates / prereg sha / a pipeline-cache retry -> exactly that row FAILS
+PASS J12 prereg with back slashes of the same path -> PASS
+PASS K1 a clean U arm: PASS, entered, attribution determined, 0 / 0 / 0 after the first scene frame, data rows 0 / 0
+PASS K2 the members of the clean arm: all ok, the arm word PASS
+PASS K3 a skipped draw and a held flip on frame 8 (after the first scene frame) -> E1-skip and E1-held FAIL, the arm FAIL
+PASS K3b a skipped draw without a held flip on frame 8: rows with a skip 1, lines 1, held 0 (T-6 broken -> the arm FAILS, the members undetermined)
+PASS K4 the edge: a skipped draw (frame= 9 = n + 2) and a held flip ON the first scene frame -> not after it: E1-skip and E1-held ok, reading 1 with the first frame = 1 (data), identities PASS
+PASS K5 item 414 (g)(5): a skipped-draw line after the entry line with frame= 6 below the first scene frame 7 -> data row 1, identities PASS, members ok
+PASS K5b the edge: frame= 7 = the first scene frame is not below it -> the data row 0
+PASS K5c a skipped-draw line BEFORE the entry line (frame= 1) -> not in the data row "after the entry line" (0), the domain identities PASS
+PASS K6 MINOR-7: a line without frame= counted by skc_ap_skip in the domain -> the domain T-1 FAILS (the arm FAILS, the members undetermined), the data row "without frame=" = 1
+PASS K7 MINOR-6, the edge of the domain with frame= = n + 2: a line in the group of row 6 counted there (below the domain) but labelled frame= 8 -> the domain T-1 FAILS (a false FAIL, the safe direction)
+PASS K8 the data rows of item 414 (g)(5)-(7) are printed by fmt_arm
+PASS K9 a presented frame of 150 ms with PREP 120 ms (SHADER) -> attributed 1, E1-attr FAILS
+PASS K10 the edge 99 999 us -> not >= 100 ms: E1-attr ok
+PASS K11 T-3 broken (an AvTrace shader line without its stdout line) -> attribution undetermined, the arm FAILS, members undetermined
+PASS K11b T-4 broken (2 precache lines, 3 queued) -> attribution undetermined, the arm FAILS
+PASS K12 no "ShaderSeed: installed" -> CATALOGUE NOT INSTALLED: undetermined, the arm UNDETERMINED
+PASS K13 no "Cache test mode: prepare-cold" in stdout -> CATALOGUE NOT INSTALLED
+PASS K14 not entered (another level) -> E1 members undetermined, the arm UNDETERMINED
+PASS K15 a death marker -> E3-death FAILS, the arm FAIL
+PASS K16 a video of 2 999 frames -> E3-video FAILS; 3 000 ok (K1)
+PASS K17 one one-frame glitch -> E3-video FAILS
+PASS K18 no sheet -> E3-video FAILS
+PASS K19 no video -> E3-video undetermined
+PASS K19b a glitch file but no video file -> E3-video undetermined
+PASS K20 the screen 180.0 s (later of the two) -> ok
+PASS K21 the screen 180.1 s -> FAILS
+PASS K22 the later line 180.1 s (ready) -> FAILS
+PASS K23 no ready line, the maximum progress 181 000 ms (not the last) -> lower bound > 180 s: FAILS
+PASS K24 progress 179 000 ms -> undetermined
+PASS K25 progress 180 000 ms -> not above 180: undetermined
+PASS K26 no line, the attempt ended by timeout -> the bound is --timeout 600 s: FAILS
+PASS K26b progress 1 000 ms and the timeout -> the bound is the larger, 600 s: FAILS
+PASS K27 neither the lines nor progress nor timeout -> undetermined
+PASS K28 the knob line KYTY_S_PCW=0 -> admission FAILS (knobs S = 1); the E1 members undetermined, the arm UNDETERMINED
+PASS K29 no knob line -> admission FAILS
+PASS K30 the compatibility line on another signature -> admission FAILS
+PASS K31 the translation cache of another variant -> admission FAILS
+PASS K32 a window minimized -> admission FAILS (item 273 (z)); restored only -> PASS
+PASS K33 "Recovering Vulkan swapchain" -> admission FAILS
+PASS K34 a GamePatch: line -> admission FAILS
+PASS K35 an arm not made -> None; members "not made" undetermined
+PASS K36 no log -> fail "no log", undetermined
+PASS L1 item 414 (g)(1): a frame event with the n of a series event is one event -> 3 distinct (the series kept), known 2, lead < cost 0 (lead = cost is not shorter)
+PASS L2 the print: a series event names its cost "async creation us", no "PREP-only" anywhere; the distinct count line
+PASS M1 a clean W: admitted, entered, 300 s after the first scene frame, 0 [Vulkan][E], the rows of item 295 (b), DualSrcBlend before GuestOut -> PASS
+PASS M2 299 999 999 us after the first scene frame -> FAILS
+PASS M3 a [Vulkan][E] line -> FAILS
+PASS M4 a layer limit line -> the row 295 (b)(1) FAILS
+PASS M5 no validation-layer line -> the row 295 (b)(2) FAILS (and (b)(3))
+PASS M6 the last layer line 100 s before the end of the hold -> the row 295 (b)(3) FAILS
+PASS M7 DualSrcBlend only after the first GuestOut line -> FAILS
+PASS M8 a death marker on W -> FAILS
+PASS M9 W without the catalogue installed -> UNDETERMINED, the gate row undetermined
+PASS M12 W with the catalogue installed but an admission row failing (a window minimized) -> the row "W admitted and entered" undetermined, the arm UNDETERMINED
+PASS M10 W not made -> UNDETERMINED
+PASS M11 W without a log -> DualSrcBlend and 300 s undetermined, the arm UNDETERMINED (not FAIL)
+PASS N1 19 clean U arms and a clean W -> KNOWN_SCENES PASS, (e)(1) PASS 19 of 19, (e)(3) PASS
+PASS N2 one held flip in u_07 -> KNOWN_SCENES FAIL, (e)(1) FAIL, (e)(3) PASS; the member count line
+PASS N3 one U arm not made -> UNDETERMINED
+PASS N4 glitches in u_03 -> KNOWN_SCENES FAIL, (e)(1) PASS, (e)(3) FAIL
+PASS N5 a [Vulkan][E] on W -> KNOWN_SCENES FAIL, (e)(3) FAIL
+PASS N6 W not made -> UNDETERMINED
+PASS N7 a FAIL and an UNDETERMINED arm -> FAIL
+PASS N8 sub_word / arm_word
+PASS N9 E1-skip fails on a row with a skip alone and on a skipped-draw line alone
+PASS N10 E1-attr with the attribution undetermined (att100 None) on an admitted arm -> undetermined, not a failure
+PASS O1 k_01 first -> allowed; k_02 before k_01 -> rc 1; an unknown tag rc 2; a made tag rc 1
+PASS O2 u_01 after k_19 with the export OK -> 0; without the export -> rc 6
+PASS O3 a death marker in an earlier arm -> rc 6 (the series stops)
+PASS O4 a window event (minimized / recover) in an earlier arm -> rc 6
+PASS O5 u_02 after u_01 with the catalogue not installed -> rc 6; installed -> 0
+PASS O6 w13 after u_19 -> 0; before u_19 -> rc 1
+PASS O6b w13 after u_19 with the catalogue not installed in u_03 -> rc 6
+PASS O7 made_fn: an attempt marker or a json counts as made
+PASS P0 --seal-path prints the seal relative to the root, one line; --installed on a malformed seal -> rc 1
+PASS P1 main: --plan rc 0 / unknown 2; --installed prints the seal line; --seal-path relative to the root; --tag of a failing arm rc 1, of a passing arm rc 0, both write the score json; of a not made arm NO_RUN rc 1; usage rc 2
+PASS P2 --read prints the collection, the export and the known scenes with the word
+PASS P3 the output of main is ASCII
+PASS P4 the output of --plan, --installed, --seal-path, --tag, --read encodes in strict cp1250 (no process started: mutlib keeps its workers)
+checks: 155
+ALL OK

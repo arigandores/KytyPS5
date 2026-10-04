@@ -1,0 +1,39 @@
+lvl_s13 start 2026-10-04T07:38:20Z; T0 2026-09-30T23:41:52Z; self sha256 d541535e84af543e8d96e0835e6871f452aeff1c0cd1bdbca086d6dbd0a00ace
+inventory C:/kyty/s141/step1b/inventory141_r2.md sha256 4e13daa41f94607929af4a2b6899c017c7ad44de94e246649781ac1a7817728c rows 114; entry "da": 9 title_controller_ship intro_next worldmap ps_logo hub_crashsite underwater_aerial_garden penguin_atlantis time_stopper_ghost_world rotating_level_day_and_night
+sc142 C:/kyty/s142/go142a.sh sha256 d9af55aeb8a335934562440bb8625ab30b3c59bd8fb8a1e8840488e0fadfc41b census levels: 10 bumper_enemy_snowy_canyon big_hand_pirate_island timestop_casino mini_giants_garden ice_iceberg sponge_dirty_bath hoover_beach volcano_mountain voxel_world enemy_gorilla
+in both lists: none
+logs since T0 (> 1 MiB, .txt/.log): 443 files, 142.5 GB; .xz files not read: 8978
+unreadable logs: 0 []
+logs whose compatibility line carries KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b:: 182, of them with writes (not a returning root): 51
+logs whose compatibility line carries KytySC3:26ce5fc78ea3b20be537c7696be041f5e97d9e58:: 0, of them with writes (not a returning root): 0
+THE 19 (item 229 (e)(1)):
+  K01 title_controller_ship          inventory141 FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 0 logs
+  K02 intro_next                     inventory141 FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 0 logs
+  K03 worldmap                       inventory141 FS4 sig: IN (2 logs with writes, first C:/kyty/s146/log_v146_07.txt); FS5 sig: NOT in the catalogue; entry line since T0 in 2 logs (first C:/kyty/s146/log_v146_07.txt)
+  K04 ps_logo                        inventory141 FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 0 logs
+  K05 hub_crashsite                  inventory141 FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 0 logs
+  K06 underwater_aerial_garden       inventory141 FS4 sig: IN (9 logs with writes, first C:/kyty/s146/fx_i146/neg/log_i146_v.txt); FS5 sig: NOT in the catalogue; entry line since T0 in 156 logs (first C:/kyty/f287/f10e/log_f10e_r1.txt)
+  K07 penguin_atlantis               inventory141 FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 0 logs
+  K08 time_stopper_ghost_world       inventory141 FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 0 logs
+  K09 rotating_level_day_and_night   inventory141 FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 0 logs
+  K10 bumper_enemy_snowy_canyon      sc142        FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 2 logs (first C:/kyty/s144/log_v144_11.txt)
+  K11 big_hand_pirate_island         sc142        FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 10 logs (first C:/kyty/f287/f11f/log_d11_bh.txt)
+  K12 timestop_casino                sc142        FS4 sig: IN (1 logs with writes, first C:/kyty/s146/log_r146_03.txt); FS5 sig: NOT in the catalogue; entry line since T0 in 11 logs (first C:/kyty/f287/f6e/fx/real2/log_f6e_c1.txt)
+  K13 mini_giants_garden             sc142        FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 7 logs (first C:/kyty/f287/f4c/log_f4c_g.txt)
+  K14 ice_iceberg                    sc142        FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 3 logs (first C:/kyty/s144/log_v144_14.txt)
+  K15 sponge_dirty_bath              sc142        FS4 sig: IN (1 logs with writes, first C:/kyty/s146/log_r146_02.txt); FS5 sig: NOT in the catalogue; entry line since T0 in 27 logs (first C:/kyty/p283/lead/p10chk/log_pc_sponge_dirty_bath.txt)
+  K16 hoover_beach                   sc142        FS4 sig: IN (1 logs with writes, first C:/kyty/s146/log_r146_01.txt); FS5 sig: NOT in the catalogue; entry line since T0 in 31 logs (first C:/kyty/f287/f9/f9g/log_f9g_hb.txt)
+  K17 volcano_mountain               sc142        FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 2 logs (first C:/kyty/s144/log_v144_17.txt)
+  K18 voxel_world                    sc142        FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 8 logs (first C:/kyty/f287/f11f/log_d11_vw.txt)
+  K19 enemy_gorilla                  sc142        FS4 sig: NOT in the catalogue; FS5 sig: NOT in the catalogue; entry line since T0 in 2 logs (first C:/kyty/s144/log_v144_19.txt)
+LIST13 title_controller_ship intro_next worldmap ps_logo hub_crashsite underwater_aerial_garden penguin_atlantis time_stopper_ghost_world rotating_level_day_and_night bumper_enemy_snowy_canyon big_hand_pirate_island timestop_casino mini_giants_garden ice_iceberg sponge_dirty_bath hoover_beach volcano_mountain voxel_world enemy_gorilla
+IN_FS4 5: worldmap underwater_aerial_garden timestop_casino sponge_dirty_bath hoover_beach
+PLAN_FS4 14: title_controller_ship intro_next ps_logo hub_crashsite penguin_atlantis time_stopper_ghost_world rotating_level_day_and_night bumper_enemy_snowy_canyon big_hand_pirate_island mini_giants_garden ice_iceberg volcano_mountain voxel_world enemy_gorilla
+IN_FS5 0: -
+PLAN_FS5 19: title_controller_ship intro_next worldmap ps_logo hub_crashsite underwater_aerial_garden penguin_atlantis time_stopper_ghost_world rotating_level_day_and_night bumper_enemy_snowy_canyon big_hand_pirate_island timestop_casino mini_giants_garden ice_iceberg sponge_dirty_bath hoover_beach volcano_mountain voxel_world enemy_gorilla
+never entered since T0 (any signature): title_controller_ship intro_next ps_logo hub_crashsite penguin_atlantis time_stopper_ghost_world rotating_level_day_and_night
+S9 export compatibility.txt C:/kyty/s288/s9/seeds/PPSA21564/compatibility.txt sha256 2ff6aa36d65a968ee44b39655f78d155328e25f65a901ba9a9755ebaba74a5d7: KytySeed1:PPSA21564:01.007.000:KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b::10288:376:216:44:516:125:000010de:00002c59
+FS4 log C:/kyty/f287/fs4c/log_fs4_v.txt sha256 7ec2b2de288dd671635dc38be03c3acc6687b3d5603724c41fbe4e5b35e413f8 line 83 (json C:/kyty/f287/fs4c/fs4_v.json binary 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5, KYTY_GAME_PATCH None): KytySeed1:PPSA21564:01.007.000:KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b::10288:376:216:44:516:125:000010de:00002c59
+COMPAT the S9 export against the installed FS4 31cbfee8: EQUAL
+lvl_s13 end 2026-10-04T07:39:27Z
+ALL DONE

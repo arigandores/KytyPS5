@@ -1,0 +1,44 @@
+suite test_go_s13.py sha256 c8817022dd2bf0efac5a9a0157e594543730a700cadc4eabdd4ec78fd470c2ae target go_s13.sh sha256 51d9cd8a4cab7a5fff5b386220a3c295c99acf0b5811732589b975080757fd4d
+PASS G1 go_s13.sh is ASCII only
+PASS G2 a tag with other characters -> rc 2 usage
+PASS G3 the stop file -> rc 4 BUSY before anything
+PASS G4 a foreign lock -> rc 4 BUSY (lock held) before any process
+PASS G5 the guard s4/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s6/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s10/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s10/IN_ARM -> rc 1 before the lock
+PASS G5 the guard s13/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s13/IN_ARM -> rc 1 before the lock
+PASS G6 PLWAIT not a number -> rc 2; above 540 -> rc 2
+PASS G7 an unknown tag -> rc 2
+PASS G8 the seal line "installed: PENDING" -> rc 6 before the lock (an edition names the binary)
+PASS G9 no line "installed:" -> rc 1
+PASS G10 the edition 09b in force without the call line of k_01 -> rc 1 (PLWAIT differs from the seal)
+PASS G11 two call lines of one tag -> rc 1
+PASS G12 PLWAIT other than the call line -> rc 1
+PASS G13 DRY=1 of every arm kind -> rc 0 with a DRY line naming the installed line of the edition 09b
+PASS G14 k_01: class M (no trace), mode cat, the app caches from s13/empty_app, GLCache as found, hold 180, stable 100, timeout 600, no video, no validation, no seed path; the seal 09b
+PASS G15 k_02 from the post copy cat/k_01; k_19 from cat/k_18 on enemy_gorilla
+PASS G16 u_01: class T, the empty app caches, the seed path s13/seeds and prepare-cold, video, hold 120, no validation
+PASS G17 w13: validation true, VK_LAYER_PATH and the duplicate limit 100000000, the seed path and prepare-cold, no video, hold 330, stable 300, Sky Garden
+PASS G18 no arm names KYTY_GAME_PATCH, KYTY_S_PCW or KYTY_FIX_
+PASS G19 DRY=2 right after the lock check prints the plan
+PASS G20 an attempt already made -> rc 1, no repeat
+PASS G21 no lock file was created by any DRY call
+PASS G22 the shipped harness unsets KYTY_GAME_PATCH and KYTY_S_PCW, guards s4 / s6 / s10 / s13, writes the lock line "go_s.sh <tag> " naming the seal $PRED (S9r2 observation 2), reads the seal path from the scorer
+PASS G23 S9r2 observation 1 in the shipped harness: return_failed sets RETFAIL=1 and the guard is removed only with RETFAIL=0
+PASS GL1 k_01 inside the lock: the installed binary NOT replaced (the game ran it), checked before and after
+PASS GL2 k_01: the game saw NO app cache file (the empty set), GLCache as found (no restore), KYTY_S_PCW of the caller not seen; the installed caches and GLCache back after
+PASS GL3 k_01: the post copy s13/cat/k_01 holds what the game wrote (its variant file) and app_post_copy is noted
+PASS GL4 k_02: the game saw the catalogue k_01 left (restore = app_post_copy of k_01); cat/k_02 holds both files; everything back after
+PASS GL5 u_01 form U: the empty app caches, GLCache as found, the catalogue sha noted, no post copy, the seed path in the call, everything back after
+PASS GL6 w13: validation passed to enter_scene (--emu-arg), VK_LAYER_* positional
+PASS GL7 four arms - four taken / released pairs, no lock file, no guard
+PASS GL8 IN_ARM: the game saw it (the tag, the installed sha, man_pre_app / man_pre_glc) and the successful return removed it
+PASS GL9 a u arm with a catalogue other than seeds_manifest.txt -> rc 1 "seeds bad" before the lock
+PASS GL10 KYTY_GAME_PATCH of the caller not seen by the game; a GamePatch: log line -> rc 7, the caches returned
+PASS GL11 S9r2 observation 2: the lock line the game saw begins "go_s.sh k_01 " and names go_s13.sh and the seal file in force
+PASS GL12 a hanging IN_ARM -> rc 1 before the lock: no lock row, no attempt, the guard kept
+FAIL GL13 an installed binary other than the seal line -> rc 1 inside the lock: no IN_ARM, no attempt, the lock taken and released, the row in times.txt
+FAIL GL14 S9r2 observation 1: a failed return (the copy installed_pre gone) -> rc 1, RETURN_FAILED written, IN_ARM KEPT (a later return of the same run does not remove it), the lock released
+checks: 42

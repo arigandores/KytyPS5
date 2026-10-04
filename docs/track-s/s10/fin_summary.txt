@@ -1,0 +1,49 @@
+READ repeat of integrity (item 355 (g))
+pi_w1: readable (executor variant: readable); video frames 10527, present rows 10499, one-frame glitches 0; haze frames 10527 median 0.4505 low 367 series [[300, 343], [465, 563], [617, 645], [805, 999]]; after frame 1002 (letter: start > 1002) []; variant (any frame > 1002) []
+pi_r1: readable (executor variant: readable); video frames 3868, present rows 3856, one-frame glitches 0; haze frames 3868 median 0.4504 low 360 series [[347, 451], [505, 533], [693, 918]]; after frame 1002 (letter: start > 1002) []; variant (any frame > 1002) []
+pi_w0: readable (executor variant: readable); video frames 10419, present rows 10408, one-frame glitches 0; haze frames 10419 median 0.4498 low 435 series [[300, 380], [485, 599], [655, 681], [842, 1051]]; after frame 1002 (letter: start > 1002) []; variant (any frame > 1002) [[842, 1051]]
+pi_r0: readable (executor variant: readable); video frames 3830, present rows 3807, one-frame glitches 0; haze frames 3830 median 0.4502 low 322 series [[350, 447], [501, 530], [689, 883]]; after frame 1002 (letter: start > 1002) []; variant (any frame > 1002) []
+W arms presented >= 300 s after the first scene frame: {'pi_w1': True, 'pi_w0': True}
+pi_r1 loaded 94435637 bytes = last write of pi_w1 94435637, disabled 0 -> PASS
+pi_r0 loaded 94435637 bytes = last write of pi_w0 94435637, disabled 0 -> PASS
+(z)(1) on pi_r1: undetermined (RC1 S5d: 0 "AvTrace: pcw overlap wait gfx|cs" lines; printed beside FIXED, not a member - item 355 (g))
+series after 1002: pi_w1 False pi_r1 False pi_w0 False pi_r0 False; loaded both R True
+reading (variant: a series with any frame after 1002): READ_3 - DIFFERS (edge 1 002)
+reading of the executor (READ_3 without the loaded member of (2), rejected by item 362 (v)): READ_2
+executor variant (seal 05b: + video >= 3000 frames and 0 one-frame glitches as members; not members by item 371 (b)): READ_2
+repeat of integrity (item 355 (g)): READ_2 - (2) the event of pcw_int is not tied to the blob =1 - B33 FIXED by item 355 (g)(2) (decision S11); the lead sheet of every series after frame 1002
+READ C5 (item 355 (d))
+c5_0 (shuriken_ninja_castle, KYTY_PIPELINE_SALT=c5_0, KYTY_PIPELINE_PRECACHE=0): in-game creations (AvTrace: pipeline without "precache", with a us field) 630, median us 215.0; lines without a us field 28; sc_s creations 630 ('WARM', 215.0)
+salt without precache neutralises (>= 10 creations, median >= 20000 us): NO
+T2 form (item 355 (d)): APP "cold of the application" - full return, precache by default, no salt; the driver cache is not neutralised [U]; the base reads the application side
+READ T2 (item 355 (d), (zh))
+T2 form: app; the gate counts by the p362 reading (T2_GATE_READING)
+t2_1 hero_kratos: COUNTED; arm PASS; gate (item 362 (b)) cold, by the letter (with the recipe) cold, executor variant cold; in-game creations after the entry 21; skip rows 31 held 34 presented >= 100 ms 0; attributed >= 100 ms 2 (PCW 0), >= 1 s 0; not attributed 0 (WAIT 0, GPUTHR 0, PRIO 0; attribution "not" on all); series gap >= X with gap_pipe < X 0; sc142 HOLDS_120; BvhLoopCapTrip in i-1..i of frames >= 100 ms [(282, 0)]; S-early lead<cost 0 (PREP only 0) of 3
+t2_2 hero_drake: COUNTED; arm PASS; gate (item 362 (b)) cold, by the letter (with the recipe) cold, executor variant cold; in-game creations after the entry 11; skip rows 1 held 2 presented >= 100 ms 0; attributed >= 100 ms 1 (PCW 0), >= 1 s 0; not attributed 0 (WAIT 0, GPUTHR 0, PRIO 0; attribution "not" on all); series gap >= X with gap_pipe < X 0; sc142 HOLDS_120; BvhLoopCapTrip in i-1..i of frames >= 100 ms []; S-early lead<cost 0 (PREP only 0) of 1
+t2_3 voxel_challenge_3: OUT; arm PASS; gate (item 362 (b)) level not cold, by the letter (with the recipe) level not cold, executor variant level not cold; in-game creations after the entry 0; skip rows 0 held 0 presented >= 100 ms 0; attributed >= 100 ms 0 (PCW 0), >= 1 s 0; not attributed 0 (WAIT 0, GPUTHR 0, PRIO 0; attribution "not" on all); series gap >= X with gap_pipe < X 0; sc142 HOLDS_120; BvhLoopCapTrip in i-1..i of frames >= 100 ms []; S-early lead<cost 0 (PREP only 0) of 0
+t2_4 armadillo_challenge_2: COUNTED; arm PASS; gate (item 362 (b)) cold, by the letter (with the recipe) cold, executor variant cold; in-game creations after the entry 4; skip rows 1 held 1 presented >= 100 ms 0; attributed >= 100 ms 1 (PCW 0), >= 1 s 0; not attributed 0 (WAIT 0, GPUTHR 0, PRIO 0; attribution "not" on all); series gap >= X with gap_pipe < X 0; sc142 HOLDS_120; BvhLoopCapTrip in i-1..i of frames >= 100 ms [(138, 0)]; S-early lead<cost 0 (PREP only 0) of 2
+t2_5 fragile_battle_4: COUNTED; arm PASS; gate (item 362 (b)) cold, by the letter (with the recipe) cold, executor variant cold; in-game creations after the entry 6; skip rows 6 held 9 presented >= 100 ms 0; attributed >= 100 ms 1 (PCW 0), >= 1 s 0; not attributed 0 (WAIT 0, GPUTHR 0, PRIO 0; attribution "not" on all); series gap >= X with gap_pipe < X 0; sc142 HOLDS_120; BvhLoopCapTrip in i-1..i of frames >= 100 ms [(164, 0)]; S-early lead<cost 0 (PREP only 0) of 2
+t2_6 voxel_challenge_4: OUT; arm PASS; gate (item 362 (b)) level not cold, by the letter (with the recipe) level not cold, executor variant level not cold; in-game creations after the entry 0; skip rows 0 held 0 presented >= 100 ms 0; attributed >= 100 ms 0 (PCW 0), >= 1 s 0; not attributed 0 (WAIT 0, GPUTHR 0, PRIO 0; attribution "not" on all); series gap >= X with gap_pipe < X 0; sc142 HOLDS_120; BvhLoopCapTrip in i-1..i of frames >= 100 ms []; S-early lead<cost 0 (PREP only 0) of 0
+t2_7 fragile_battle_5: COUNTED; arm PASS; gate (item 362 (b)) cold, by the letter (with the recipe) cold, executor variant cold; in-game creations after the entry 7; skip rows 9 held 9 presented >= 100 ms 0; attributed >= 100 ms 1 (PCW 0), >= 1 s 0; not attributed 0 (WAIT 0, GPUTHR 0, PRIO 0; attribution "not" on all); series gap >= X with gap_pipe < X 0; sc142 HOLDS_120; BvhLoopCapTrip in i-1..i of frames >= 100 ms [(148, 0)]; S-early lead<cost 0 (PREP only 0) of 2
+T2 counted 5 of 5 needed (item 362 (b)); by the letter (with the recipe) 5; executor variant 5
+  S-early t2_1 frame n 282 lead 2102165 cost 716732 (PREP-only 163522)
+  S-early t2_1 series n 282 lead 2102165 cost 1575419 (PREP-only 1575419)
+  S-early t2_1 series n 319 lead 3040506 cost 286490 (PREP-only 286490)
+  S-early t2_2 series n 217 lead 1750441 cost 169237 (PREP-only 169237)
+  S-early t2_4 frame n 138 lead 763041 cost 99948 (PREP-only 38345)
+  S-early t2_4 series n 138 lead 763041 cost 61603 (PREP-only 61603)
+  S-early t2_5 frame n 164 lead 1241275 cost 122604 (PREP-only 116537)
+  S-early t2_5 series n 164 lead 1241275 cost 542093 (PREP-only 542093)
+  S-early t2_7 frame n 148 lead 1143587 cost 134410 (PREP-only 126564)
+  S-early t2_7 series n 148 lead 1143587 cost 503195 (PREP-only 503195)
+S-early first half (item 241 (b)(4)): lead < cost in 0 of 10 events -> < 50 %; PREP-only reading 0 of 10; the second half (p95 of linking) - S11
+t2_cs0 (KYTY_CS_PRETRANSLATE=0) against t2_1 (data rows, decision S11): skip rows -1 (30 / 31), held flips -2 (32 / 34), presented frames >= 100 ms +0 (0 / 0); CsPretranslate lines t2_1 [('ready', 432), ('skipped', 137)], t2_cs0 []
+READ S-cat probe (item 355 (e))
+u_1 underwater_aerial_garden: gates ok; S-cat member holds; stdout Shaders: 0, rec_new_after 0, perm_after 0, skip lines after the first scene frame 0; preparation screen 28.1 s (PipelinePrecache: all pipelines created 28.1 s, ShaderPreparation: ready 28.1 s; progress lines 21, max elapsed_ms 20198; attempt ok; log created 27162 ms, startup wait 20222 ms); skip lines after the first scene frame 0 (inside the scene 0), attributed >= 100 ms 0
+u_2 hoover_beach: gates ok; S-cat member holds; stdout Shaders: 0, rec_new_after 0, perm_after 0, skip lines after the first scene frame 0; preparation screen 28.1 s (PipelinePrecache: all pipelines created 28.1 s, ShaderPreparation: ready 28.1 s; progress lines 20, max elapsed_ms 19184; attempt ok; log created 27060 ms, startup wait 20019 ms); skip lines after the first scene frame 0 (inside the scene 0), attributed >= 100 ms 0
+u_3 robot_builder_next: gates ok; S-cat member holds; stdout Shaders: 0, rec_new_after 0, perm_after 0, skip lines after the first scene frame 0; preparation screen 28.5 s (PipelinePrecache: all pipelines created 28.5 s, ShaderPreparation: ready 28.5 s; progress lines 20, max elapsed_ms 19184; attempt ok; log created 27007 ms, startup wait 19888 ms); skip lines after the first scene frame 0 (inside the scene 0), attributed >= 100 ms 0
+u_4 interactive_credit_00: gates ok; S-cat member holds; stdout Shaders: 0, rec_new_after 0, perm_after 0, skip lines after the first scene frame 0; preparation screen 29.1 s (PipelinePrecache: all pipelines created 29.1 s, ShaderPreparation: ready 29.1 s; progress lines 21, max elapsed_ms 20083; attempt ok; log created 27939 ms, startup wait 20448 ms); skip lines after the first scene frame 0 (inside the scene 0), attributed >= 100 ms 0
+u_5 fragile_battle_1: gates ok; S-cat member holds; stdout Shaders: 0, rec_new_after 0, perm_after 0, skip lines after the first scene frame 0; preparation screen 28.6 s (PipelinePrecache: all pipelines created 28.6 s, ShaderPreparation: ready 28.6 s; progress lines 21, max elapsed_ms 20170; attempt ok; log created 27743 ms, startup wait 20442 ms); skip lines after the first scene frame 0 (inside the scene 0), attributed >= 100 ms 0
+S-cat (item 229 (d)(2), item 355 (e), item 371 (v)): failing members 0 of 5 (kill at >= 2), a screen > 180 s False, arms without a screen measure 0 -> ALIVE_BY_PROBE_5
+by the letter of item 355 (e) ("else alive": an arm without a screen measure is alive, its failure counts): ALIVE_BY_PROBE_5
+executor variant (a failing arm without a screen measure counts among the failing, 0 failing): ALIVE_BY_PROBE_5

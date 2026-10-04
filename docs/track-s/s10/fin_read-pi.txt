@@ -1,0 +1,14 @@
+READ repeat of integrity (item 355 (g))
+pi_w1: readable (executor variant: readable); video frames 10527, present rows 10499, one-frame glitches 0; haze frames 10527 median 0.4505 low 367 series [[300, 343], [465, 563], [617, 645], [805, 999]]; after frame 1002 (letter: start > 1002) []; variant (any frame > 1002) []
+pi_r1: readable (executor variant: readable); video frames 3868, present rows 3856, one-frame glitches 0; haze frames 3868 median 0.4504 low 360 series [[347, 451], [505, 533], [693, 918]]; after frame 1002 (letter: start > 1002) []; variant (any frame > 1002) []
+pi_w0: readable (executor variant: readable); video frames 10419, present rows 10408, one-frame glitches 0; haze frames 10419 median 0.4498 low 435 series [[300, 380], [485, 599], [655, 681], [842, 1051]]; after frame 1002 (letter: start > 1002) []; variant (any frame > 1002) [[842, 1051]]
+pi_r0: readable (executor variant: readable); video frames 3830, present rows 3807, one-frame glitches 0; haze frames 3830 median 0.4502 low 322 series [[350, 447], [501, 530], [689, 883]]; after frame 1002 (letter: start > 1002) []; variant (any frame > 1002) []
+W arms presented >= 300 s after the first scene frame: {'pi_w1': True, 'pi_w0': True}
+pi_r1 loaded 94435637 bytes = last write of pi_w1 94435637, disabled 0 -> PASS
+pi_r0 loaded 94435637 bytes = last write of pi_w0 94435637, disabled 0 -> PASS
+(z)(1) on pi_r1: undetermined (RC1 S5d: 0 "AvTrace: pcw overlap wait gfx|cs" lines; printed beside FIXED, not a member - item 355 (g))
+series after 1002: pi_w1 False pi_r1 False pi_w0 False pi_r0 False; loaded both R True
+reading (variant: a series with any frame after 1002): READ_3 - DIFFERS (edge 1 002)
+reading of the executor (READ_3 without the loaded member of (2), rejected by item 362 (v)): READ_2
+executor variant (seal 05b: + video >= 3000 frames and 0 one-frame glitches as members; not members by item 371 (b)): READ_2
+repeat of integrity (item 355 (g)): READ_2 - (2) the event of pcw_int is not tied to the blob =1 - B33 FIXED by item 355 (g)(2) (decision S11); the lead sheet of every series after frame 1002

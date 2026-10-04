@@ -1,0 +1,160 @@
+19440 	 op    = 0x00000fff
+19441 	 state = 0x00000000
+19442 	 header = 0x0000000500784290
+19443 	 code   = 0x0000000500783700
+19444 	 base   = 0x0000000500783700
+19445 	 header = 0x0000000500785bd0
+19446 	 code   = 0x0000000500785100
+19447 	 base   = 0x0000000500785100
+19448 	 path = /app0/data/prein/common/anim/cursor_3d_anim_hidden.anim
+19449 	 flags = 00000000
+19450 	 mode = 016d
+19451 	call = 8, return = 0x0000000000000000
+19452 	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_hidden.anim, [ok]
+19453 	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_hidden.anim
+19454 	Read 1072 bytes (pos = 0) from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_hidden.anim
+19455 	 op    = 0x00000182
+19456 	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_hidden.anim
+19457 	 path = /app0/data/prein/common/anim/cursor_3d_anim_idle.anim
+19458 	 flags = 00000000
+19459 	 mode = 016d
+19460 	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle.anim, [ok]
+19461 	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle.anim
+19462 	Read 9120 bytes (pos = 0) from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle.anim
+19463 	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle.anim
+19464 	 path = /app0/data/prein/common/anim/cursor_3d_anim_idle_fast.anim
+19465 	 flags = 00000000
+19466 	 mode = 016d
+19467 	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_fast.anim, [ok]
+19468 	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_fast.anim
+19469 	Read 15248 bytes (pos = 0) from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_fast.anim
+19470 	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_fast.anim
+19471 	 path = /app0/data/prein/common/anim/cursor_3d_anim_idle_middle.anim
+19472 	 flags = 00000000
+19473 	 mode = 016d
+19474 	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_middle.anim, [ok]
+19475 	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_middle.anim
+19476 	Read 28032 bytes (pos = 0) from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_middle.anim
+19477 	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_middle.anim
+19478 	 path = /app0/data/prein/common/anim/cursor_3d_anim_idle_middle_fast.anim
+19479 	 flags = 00000000
+19480 	 mode = 016d
+19481 	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_middle_fast.anim, [ok]
+19482 	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_middle_fast.anim
+19483 	Read 28096 bytes (pos = 0) from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_middle_fast.anim
+19484 	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_middle_fast.anim
+19485 	 path = /app0/data/prein/common/anim/cursor_3d_anim_idle_small.anim
+19486 	 flags = 00000000
+19487 	 mode = 016d
+19488 	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_small.anim, [ok]
+19489 	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_small.anim
+19490 	Read 16416 bytes (pos = 0) from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_small.anim
+19491 	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_small.anim
+19492 	 path = /app0/data/prein/common/anim/cursor_3d_anim_idle_small_fast.anim
+19493 	 flags = 00000000
+19494 	 mode = 016d
+19495 	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_small_fast.anim, [ok]
+19496 	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_small_fast.anim
+19497 	Read 22288 bytes (pos = 0) from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_small_fast.anim
+19498 	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_idle_small_fast.anim
+19499 	 path = /app0/data/prein/common/anim/cursor_3d_anim_start.anim
+19500 	 flags = 00000000
+19501 	 mode = 016d
+19502 	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start.anim, [ok]
+19503 	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start.anim
+19504 	Read 7216 bytes (pos = 0) from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start.anim
+19505 	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start.anim
+19506 	 path = /app0/data/prein/common/anim/cursor_3d_anim_start_middle.anim
+19507 	 flags = 00000000
+19508 	 mode = 016d
+19509 	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start_middle.anim, [ok]
+19510 	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start_middle.anim
+19511 	Read 22112 bytes (pos = 0) from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start_middle.anim
+19512 	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start_middle.anim
+19513 	 path = /app0/data/prein/common/anim/cursor_3d_anim_start_small.anim
+19514 	 flags = 00000000
+19515 	 mode = 016d
+19516 	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start_small.anim, [ok]
+19517 	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start_small.anim
+19518 	Read 12640 bytes (pos = 0) from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start_small.anim
+19519 	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/common/anim/cursor_3d_anim_start_small.anim
+19520 	 data_offset = 0x0
+19521 	 flags       = 0x00000001
+19522 	 data_offset = 0x0
+19523 	 flags       = 0x00000001
+19524 	 data_offset = 0x0
+19525 	 flags       = 0x00000001
+19526 	 data_offset = 0x0
+19527 	 flags       = 0x00000001
+19528 	 video_out_handle     = 1
+19529 	 display_buffer_index = 0
+19530 	 cache_policy                      = 0x00
+19531 	 buffer                            = 0x0000000000000000
+19532 	 buffer_size_in_bytes              = 0
+19533 	 reset_count                       = 0
+19534 	 force_reset                       = 0x00
+19535 	 report_and_reset                  = 0x00
+19536 	 reporting_interval_in_100k_clocks = 0
+19537 	 cache_policy                      = 0x00
+19538 	 buffer                            = 0x00000004007c8bc0
+19539 	 buffer_size_in_bytes              = 2112
+19540 	 reset_count                       = 0
+19541 	 force_reset                       = 0x00
+19542 	 report_and_reset                  = 0x01
+19543 	 reporting_interval_in_100k_clocks = 0
+19544 	 flipPendingNum = 0
+19545 	 queue  = 0x00000040
+19546 	 packet = 0x0000000313a77eb8
+19547 	 acb   = 0x0000000400345640
+19548 	 size  = 0x00000467
+19549 	 flags = 0x00
+19550 	 queue  = 0x00000048
+19551 	 packet = 0x0000000313a77eb8
+19552 	 acb   = 0x0000000400526840
+19553 	 size  = 0x00000159
+19554 	 flags = 0x00
+19555 [23][00:00:08.041] libkernel::libkernel::PthreadCondWait()
+19556 AsyncCompute: lookahead walk packets=193 dispatches=9 us=34
+19557 AsyncCompute: lookahead walk packets=501 dispatches=13 us=18
+19558 AsyncCompute: lookahead walk packets=63 dispatches=3 us=6
+19559 AsyncCompute: lookahead walk packets=114 dispatches=1 us=1
+19560 RenderColorTarget: slot=0 addr=0x0539100000 size=0x00000000001e0000 extent=608x342x1 view_mip=0 view_extent=608x342 levels=1 pitch=640 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 tile=tiled
+19561 FixB42Ext: mode=1 extent=608x342 hit=1 applied=1 drawn=0 rearm=0 frame=4
+19562 FixB42: mode=1 hit=1 applied=1 drawn=0 rearm=0 hit_all=6 last_frame=4 extent=608x342 cmask=0x570787000 clear=00000000/00000000
+19563 MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+19564 RenderColorTarget: slot=0 addr=0x0519df0000 size=0x0000000000800000 extent=1024x1024x1 view_mip=0 view_extent=1024x1024 levels=1 pitch=1024 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 tile=tiled
+19565 AsyncCompute dispatch: queue=0x48 frame=7 submit=31 groups=30x17x1 mode=0x00000041 cs=0x0000000500544600 indirect=0x0000000000000000
+19566 GraphicsRenderDispatchDirect: frame=7 shader=0x0000000500544600 groups=30x17x1 mode=0x00000041 local=8x8x1 buffers=5 textures=3 sampled=2 storage=1 samplers=1 push=128
+19567   CS buffer[0]: source=0 usage=read-only addr=0x0004005a6720 stride=16 records=9 format=77
+19568   CS buffer[1]: source=1 usage=read-only addr=0x00050e430250 stride=16 records=36 format=77
+19569   CS buffer[2]: source=2 usage=read-only addr=0x0004005a66a0 stride=16 records=8 format=77
+19570   CS buffer[3]: source=3 usage=read-only addr=0x0004005a6640 stride=16 records=6 format=77
+19571   CS buffer[4]: source=4 usage=read-only addr=0x00050e4369c0 stride=16 records=1119 format=77
+19572   CS texture[0]: source=5 usage=read-only sampled=true addr=0x055e7e0000 type=9 fmt=65 extent=256x64 depth=1 levels=1 tile=27
+19573   CS texture[1]: source=7 usage=read-only sampled=true addr=0x050740e000 type=9 fmt=71 extent=32x32 depth=1 levels=1 tile=5
+19574   CS texture[2]: source=8 usage=read-write sampled=false addr=0x055d700000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+19575   CS sampler[0]: source=6 clamp=0/0/0 filter=1/1/2 mip=1 lod=0-4095 bias=0
+19576 AsyncCompute dispatch: queue=0x48 frame=7 submit=31 groups=30x17x8 mode=0x00000041 cs=0x0000000500543700 indirect=0x0000000000000000
+19577 GraphicsRenderDispatchDirect: frame=7 shader=0x0000000500543700 groups=30x17x8 mode=0x00000041 local=8x8x8 buffers=1 textures=3 sampled=2 storage=1 samplers=1 push=128
+19578   CS buffer[0]: source=0 usage=read-only addr=0x0004005a6530 stride=16 records=12 format=77
+19579   CS texture[0]: source=1 usage=read-only sampled=true addr=0x055d700000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+19580   CS texture[1]: source=2 usage=read-only sampled=true addr=0x055c620000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+19581   CS texture[2]: source=1 usage=read-write sampled=false addr=0x055d700000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+19582   CS sampler[0]: source=3 clamp=2/2/2 filter=1/1/2 mip=1 lod=0-4095 bias=0
+19583 AsyncCompute dispatch: queue=0x48 frame=7 submit=31 groups=30x17x8 mode=0x00000041 cs=0x0000000500546800 indirect=0x0000000000000000
+19584 GraphicsRenderDispatchDirect: frame=7 shader=0x0000000500546800 groups=30x17x8 mode=0x00000041 local=8x8x8 buffers=1 textures=2 sampled=1 storage=1 samplers=0 push=128
+19585   CS buffer[0]: source=0 usage=read-only addr=0x0004005a64e0 stride=16 records=1 format=77
+19586   CS texture[0]: source=1 usage=read-only sampled=true addr=0x055d700000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+19587   CS texture[1]: source=2 usage=read-write sampled=false addr=0x0525b10000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+19588 MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000511650000 dcc=0x000000057072f000
+19589 RenderColorTarget: slot=0 addr=0x0513d80000 size=0x0000000001a20000 extent=2432x1368x1 view_mip=0 view_extent=2432x1368 levels=1 pitch=2432 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 tile=tiled
+19590 TextureCache: stale pending DCC fill ignored image=0x0000000513d80000 dcc=0x000000057075c000 fill=0x00000000 size=0x9000 seq=188 last=189 cpu=0
+19591 FixB42Ext: mode=1 extent=2432x1368 hit=1 applied=0 drawn=0 rearm=0 frame=4
+19592 FixB42: mode=1 hit=1 applied=0 drawn=0 rearm=0 hit_all=7 last_frame=4 extent=2432x1368 cmask=0x57075c000 clear=00000000/00000000
+19593 MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000511650000 dcc=0x000000057072f000
+19594 AsyncCompute dispatch: queue=0x40 frame=7 submit=30 groups=192x1x1 mode=0x00000041 cs=0x000000050740a700 indirect=0x0000000000000000
+19595 GraphicsRenderDispatchDirect: frame=7 shader=0x000000050740a700 groups=192x1x1 mode=0x00000041 local=64x1x1 buffers=6 textures=1 sampled=1 storage=0 samplers=1 push=128
+19596   CS buffer[0]: source=0 usage=read-only addr=0x0004003c55f0 stride=16 records=1 format=77
+19597   CS buffer[1]: source=1 usage=read-only addr=0x000400904180 stride=8 records=12288 format=5
+19598   CS buffer[2]: source=2 usage=read-only addr=0x000553c41dd0 stride=128 records=12288 format=5
+19599   CS buffer[3]: source=3 usage=read-only addr=0x000400bec340 stride=276 records=16384 format=5

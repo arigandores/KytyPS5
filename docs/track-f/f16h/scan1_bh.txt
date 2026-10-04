@@ -1,0 +1,211 @@
+== MaterializeBoundTargetDccClears count=32
+16397: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+16623: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000510d10000 dcc=0x000000056d898000
+16650: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000510d10000 dcc=0x000000056d898000
+17050: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+17544: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+18702: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+19566: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+19591: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000511650000 dcc=0x000000057072f000
+19597: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000511650000 dcc=0x000000057072f000
+19889: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+20683: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+21743: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+23072: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+25773: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+27811: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+27852: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000511650000 dcc=0x0000000570aee000
+27856: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000511650000 dcc=0x0000000570aee000
+29921: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+32349: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+35880: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+36779: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+39488: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+40589: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+40614: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000512cf0000 dcc=0x0000000570fa2000
+40619: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000512cf0000 dcc=0x0000000570fa2000
+41000: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+41449: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+42769: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+44460: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+46148: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+47079: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+47111: MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000513bf0000 dcc=0x0000000571540000
+== adopted pending DCC count=0
+== stale pending DCC count=19
+16628: TextureCache: stale pending DCC fill ignored image=0x0000000512570000 dcc=0x000000056c058000 fill=0x00000000 size=0x6000 seq=5 last=11 cpu=0
+16696: TextureCache: stale pending DCC fill ignored image=0x0000000510d10000 dcc=0x000000056d898000 fill=0x20202020 size=0x14000 seq=3 last=6 cpu=0
+16818: TextureCache: stale pending DCC fill ignored image=0x0000000514080000 dcc=0x000000056d8b8000 fill=0x00000000 size=0x14000 seq=1 last=6 cpu=0
+19594: TextureCache: stale pending DCC fill ignored image=0x0000000513d80000 dcc=0x000000057075c000 fill=0x00000000 size=0x9000 seq=188 last=189 cpu=0
+19628: TextureCache: stale pending DCC fill ignored image=0x0000000511650000 dcc=0x000000057072f000 fill=0x20202020 size=0x1e000 seq=186 last=189 cpu=0
+19700: TextureCache: stale pending DCC fill ignored image=0x00000005168c0000 dcc=0x0000000570765000 fill=0x00000000 size=0x1e000 seq=184 last=192 cpu=0
+27854: TextureCache: stale pending DCC fill ignored image=0x0000000513d80000 dcc=0x0000000570b1b000 fill=0x00000000 size=0x9000 seq=452 last=453 cpu=0
+27925: TextureCache: stale pending DCC fill ignored image=0x0000000511650000 dcc=0x0000000570aee000 fill=0x20202020 size=0x1e000 seq=450 last=453 cpu=0
+28062: TextureCache: stale pending DCC fill ignored image=0x00000005168c0000 dcc=0x0000000570b24000 fill=0x00000000 size=0x1e000 seq=449 last=456 cpu=0
+40616: TextureCache: stale pending DCC fill ignored image=0x0000000517610000 dcc=0x0000000570ff6000 fill=0x00000000 size=0x10000 seq=715 last=716 cpu=0
+40651: TextureCache: stale pending DCC fill ignored image=0x0000000512cf0000 dcc=0x0000000570fa2000 fill=0x20202020 size=0x38000 seq=713 last=716 cpu=0
+40721: TextureCache: stale pending DCC fill ignored image=0x000000051c630000 dcc=0x0000000571006000 fill=0x00000000 size=0x38000 seq=711 last=719 cpu=0
+47178: TextureCache: stale pending DCC fill ignored image=0x0000000513bf0000 dcc=0x0000000571540000 fill=0x20202020 size=0x48000 seq=976 last=979 cpu=0
+47308: TextureCache: stale pending DCC fill ignored image=0x0000000520440000 dcc=0x00000005715c4000 fill=0x00000000 size=0x48000 seq=974 last=982 cpu=0
+318691: TextureCache: stale pending DCC fill ignored image=0x000000051c630000 dcc=0x0000000571006000 fill=0x00000000 size=0x38000 seq=13771 last=13868 cpu=0
+360775: TextureCache: stale pending DCC fill ignored image=0x000000051c630000 dcc=0x0000000571006000 fill=0x00000000 size=0x38000 seq=36314 last=36414 cpu=0
+362677: TextureCache: stale pending DCC fill ignored image=0x0000000511650000 dcc=0x0000000570aee000 fill=0x20202020 size=0x1e000 seq=37483 last=37486 cpu=0
+362756: TextureCache: stale pending DCC fill ignored image=0x00000005168c0000 dcc=0x0000000570b24000 fill=0x00000000 size=0x1e000 seq=37389 last=37489 cpu=0
+553111: TextureCache: stale pending DCC fill ignored image=0x0000000510d10000 dcc=0x000000056d898000 fill=0x20202020 size=0x14000 seq=39860 last=39863 cpu=0
+== metadata fill count=32
+16343: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056d8b8000 size=0x0000000000014000 value=0x00000000
+16345: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x0000000514050000 size=0x0000000000030000 value=0xfffffff0
+16367: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x0000000000014000 value=0x20202020
+16369: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x0000000000006000 value=0xffffffff
+16372: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x0000000000006000 value=0x00000000
+16374: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0x000000000000c000 value=0x00000000
+16379: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x0000000000001000 value=0x00000000
+16390: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056c05e000 size=0x0000000000002000 value=0x00000000
+16392: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x00000005637f0000 size=0x0000000000008000 value=0x00000000
+16394: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055c00d000 size=0x0000000000002000 value=0xffffffff
+16417: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x0000000513dd0000 size=0x0000000000280000 value=0x00000000
+16605: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x00000005150c0000 size=0x0000000000140000 value=0xffffffff
+16736: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055c050000 size=0x0000000000030000 value=0xfffffff0
+16740: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055c080000 size=0x0000000000030000 value=0xfffffff0
+16744: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055c0b0000 size=0x0000000000030000 value=0xfffffff0
+16959: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x0000000513dd0000 size=0x0000000000280000 value=0x00000000
+16973: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000053b9f0000 size=0x0000000000480000 value=0x00000000
+16975: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000053be70000 size=0x0000000000870000 value=0x00000000
+17013: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x0000000507410000 size=0x0000000001fe0000 value=0x00000000
+17030: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056d8b8000 size=0x0000000000014000 value=0x00000000
+17034: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x0000000000014000 value=0x20202020
+17037: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x0000000000006000 value=0xffffffff
+17039: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x0000000000006000 value=0x00000000
+17041: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0x000000000000c000 value=0x00000000
+17043: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056c05e000 size=0x0000000000002000 value=0x00000000
+17045: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x00000005637f0000 size=0x0000000000008000 value=0x00000000
+17047: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055c00d000 size=0x0000000000002000 value=0xffffffff
+17159: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x00000005150c0000 size=0x0000000000140000 value=0xffffffff
+17253: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055c050000 size=0x0000000000030000 value=0xfffffff0
+17254: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055c080000 size=0x0000000000030000 value=0xfffffff0
+17255: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055c0b0000 size=0x0000000000030000 value=0xfffffff0
+17528: GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x00000005093f0000 size=0x0000000001fe0000 value=0x00000000
+== compute image clear count=32
+17052: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x0000000513dd0000 size=0x0000000000280000 value=0x00000000
+17493: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x0000000513dd0000 size=0x0000000000280000 value=0x00000000
+17505: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053b9f0000 size=0x0000000000480000 value=0x00000000
+17506: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053be70000 size=0x0000000000870000 value=0x00000000
+17549: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x0000000513dd0000 size=0x0000000000280000 value=0x00000000
+17788: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x0000000513dd0000 size=0x0000000000280000 value=0x00000000
+17789: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053b9f0000 size=0x0000000000480000 value=0x00000000
+17790: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053be70000 size=0x0000000000870000 value=0x00000000
+17793: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x0000000507410000 size=0x0000000001fe0000 value=0x00000000
+18710: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x0000000513dd0000 size=0x0000000000280000 value=0x00000000
+19017: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x0000000513dd0000 size=0x0000000000280000 value=0x00000000
+19025: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053b9f0000 size=0x0000000000480000 value=0x00000000
+19027: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053be70000 size=0x0000000000870000 value=0x00000000
+19890: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x00000005164b0000 size=0x00000000003c0000 value=0x00000000
+20124: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x00000005164b0000 size=0x00000000003c0000 value=0x00000000
+20125: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053d4a0000 size=0x00000000006e0000 value=0x00000000
+20126: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053db80000 size=0x0000000000d10000 value=0x00000000
+20684: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x00000005164b0000 size=0x00000000003c0000 value=0x00000000
+20960: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x00000005164b0000 size=0x00000000003c0000 value=0x00000000
+20963: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053d4a0000 size=0x00000000006e0000 value=0x00000000
+20964: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053db80000 size=0x0000000000d10000 value=0x00000000
+21746: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x00000005164b0000 size=0x00000000003c0000 value=0x00000000
+22012: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x00000005164b0000 size=0x00000000003c0000 value=0x00000000
+22020: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053d4a0000 size=0x00000000006e0000 value=0x00000000
+22021: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053db80000 size=0x0000000000d10000 value=0x00000000
+23075: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x00000005164b0000 size=0x00000000003c0000 value=0x00000000
+23338: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x00000005164b0000 size=0x00000000003c0000 value=0x00000000
+23339: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053d4a0000 size=0x00000000006e0000 value=0x00000000
+23340: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053db80000 size=0x0000000000d10000 value=0x00000000
+25775: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x00000005164b0000 size=0x00000000003c0000 value=0x00000000
+26069: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x00000005164b0000 size=0x00000000003c0000 value=0x00000000
+26081: GraphicsRenderDispatchDirect: compute image clear shader=0xa572ee17a880e71c addr=0x000000053d4a0000 size=0x00000000006e0000 value=0x00000000
+== FixB42 count=279
+16384: FixB42Ext: mode=1 extent=480x270 hit=1 applied=1 drawn=0 rearm=0 frame=0
+16385: FixB42: mode=1 hit=1 applied=1 drawn=0 rearm=0 hit_all=1 last_frame=0 extent=480x270 cmask=0x55675f000 clear=00000000/00000000
+16644: FixB42Ext: mode=1 extent=1920x1080 hit=1 applied=0 drawn=0 rearm=0 frame=0
+16645: FixB42: mode=1 hit=1 applied=0 drawn=0 rearm=0 hit_all=2 last_frame=0 extent=1920x1080 cmask=0x56c058000 clear=70e270e2/00000000
+17162: FixB42: mode=1 hit=2 applied=1 drawn=0 rearm=1 hit_all=3 last_frame=0 extent=1920x1080 cmask=0x56c058000 clear=00000000/00000000
+17576: FixB42: mode=1 hit=3 applied=2 drawn=0 rearm=2 hit_all=4 last_frame=1 extent=1920x1080 cmask=0x56c058000 clear=00000000/00000000
+18749: FixB42: mode=1 hit=4 applied=3 drawn=0 rearm=3 hit_all=5 last_frame=3 extent=1920x1080 cmask=0x56c058000 clear=00000000/00000000
+19564: FixB42Ext: mode=1 extent=608x342 hit=1 applied=1 drawn=0 rearm=0 frame=4
+19565: FixB42: mode=1 hit=1 applied=1 drawn=0 rearm=0 hit_all=6 last_frame=4 extent=608x342 cmask=0x570787000 clear=00000000/00000000
+19595: FixB42Ext: mode=1 extent=2432x1368 hit=1 applied=0 drawn=0 rearm=0 frame=4
+19596: FixB42: mode=1 hit=1 applied=0 drawn=0 rearm=0 hit_all=7 last_frame=4 extent=2432x1368 cmask=0x57075c000 clear=00000000/00000000
+19915: FixB42: mode=1 hit=2 applied=1 drawn=0 rearm=1 hit_all=8 last_frame=4 extent=2432x1368 cmask=0x57075c000 clear=00000000/00000000
+20716: FixB42: mode=1 hit=3 applied=2 drawn=0 rearm=2 hit_all=9 last_frame=5 extent=2432x1368 cmask=0x57075c000 clear=00000000/00000000
+21776: FixB42: mode=1 hit=4 applied=3 drawn=0 rearm=3 hit_all=10 last_frame=6 extent=2432x1368 cmask=0x57075c000 clear=00000000/00000000
+23107: FixB42: mode=1 hit=5 applied=4 drawn=0 rearm=4 hit_all=11 last_frame=7 extent=2432x1368 cmask=0x57075c000 clear=00000000/00000000
+25812: FixB42: mode=1 hit=6 applied=5 drawn=0 rearm=5 hit_all=12 last_frame=8 extent=2432x1368 cmask=0x57075c000 clear=00000000/00000000
+27810: FixB42: mode=1 hit=2 applied=2 drawn=0 rearm=0 hit_all=13 last_frame=9 extent=608x342 cmask=0x570b46000 clear=00000000/00000000
+27855: FixB42: mode=1 hit=7 applied=5 drawn=0 rearm=5 hit_all=14 last_frame=9 extent=2432x1368 cmask=0x570b1b000 clear=00000000/00000000
+29993: FixB42: mode=1 hit=8 applied=6 drawn=0 rearm=6 hit_all=15 last_frame=10 extent=2432x1368 cmask=0x570b1b000 clear=00000000/00000000
+32412: FixB42: mode=1 hit=9 applied=7 drawn=0 rearm=7 hit_all=16 last_frame=11 extent=2432x1368 cmask=0x570b1b000 clear=00000000/00000000
+35913: FixB42: mode=1 hit=10 applied=8 drawn=0 rearm=8 hit_all=17 last_frame=12 extent=2432x1368 cmask=0x570b1b000 clear=00000000/00000000
+36811: FixB42: mode=1 hit=11 applied=9 drawn=0 rearm=9 hit_all=18 last_frame=13 extent=2432x1368 cmask=0x570b1b000 clear=00000000/00000000
+39515: FixB42: mode=1 hit=12 applied=10 drawn=0 rearm=10 hit_all=19 last_frame=14 extent=2432x1368 cmask=0x570b1b000 clear=00000000/00000000
+40587: FixB42Ext: mode=1 extent=832x468 hit=1 applied=1 drawn=0 rearm=0 frame=15
+40588: FixB42: mode=1 hit=1 applied=1 drawn=0 rearm=0 hit_all=20 last_frame=15 extent=832x468 cmask=0x57112e000 clear=00000000/00000000
+40617: FixB42Ext: mode=1 extent=3328x1872 hit=1 applied=0 drawn=0 rearm=0 frame=15
+40618: FixB42: mode=1 hit=1 applied=0 drawn=0 rearm=0 hit_all=21 last_frame=15 extent=3328x1872 cmask=0x570ff6000 clear=00000000/00000000
+41031: FixB42: mode=1 hit=2 applied=1 drawn=0 rearm=1 hit_all=22 last_frame=15 extent=3328x1872 cmask=0x570ff6000 clear=00000000/00000000
+41494: FixB42: mode=1 hit=3 applied=2 drawn=0 rearm=2 hit_all=23 last_frame=16 extent=3328x1872 cmask=0x570ff6000 clear=00000000/00000000
+42817: FixB42: mode=1 hit=4 applied=3 drawn=0 rearm=3 hit_all=24 last_frame=17 extent=3328x1872 cmask=0x570ff6000 clear=00000000/00000000
+44518: FixB42: mode=1 hit=5 applied=4 drawn=0 rearm=4 hit_all=25 last_frame=18 extent=3328x1872 cmask=0x570ff6000 clear=00000000/00000000
+46208: FixB42: mode=1 hit=6 applied=5 drawn=0 rearm=5 hit_all=26 last_frame=19 extent=3328x1872 cmask=0x570ff6000 clear=00000000/00000000
+47077: FixB42Ext: mode=1 extent=960x540 hit=1 applied=1 drawn=0 rearm=0 frame=20
+47078: FixB42: mode=1 hit=1 applied=1 drawn=0 rearm=0 hit_all=27 last_frame=20 extent=960x540 cmask=0x571728000 clear=00000000/00000000
+47126: FixB42Ext: mode=1 extent=3840x2160 hit=1 applied=1 drawn=0 rearm=0 frame=20
+47127: FixB42: mode=1 hit=1 applied=1 drawn=0 rearm=0 hit_all=28 last_frame=20 extent=3840x2160 cmask=0x5715b0000 clear=00000000/00000000
+48186: FixB42: mode=1 hit=2 applied=2 drawn=0 rearm=1 hit_all=29 last_frame=21 extent=3840x2160 cmask=0x5715b0000 clear=00000000/00000000
+49818: FixB42: mode=1 hit=3 applied=3 drawn=0 rearm=2 hit_all=30 last_frame=22 extent=3840x2160 cmask=0x5715b0000 clear=00000000/00000000
+50729: FixB42: mode=1 hit=4 applied=4 drawn=0 rearm=3 hit_all=31 last_frame=23 extent=3840x2160 cmask=0x5715b0000 clear=00000000/00000000
+51395: FixB42: mode=1 hit=5 applied=5 drawn=0 rearm=4 hit_all=32 last_frame=24 extent=3840x2160 cmask=0x5715b0000 clear=00000000/00000000
+== Level has started count=2
+206786: GuestOut: Level has started:
+240916: GuestOut: Level has started: big_hand_pirate_island
+== MetaClearTrace count=0
+== BufferFillTrace count=0
+== DCC clear count=0
+== DccClear count=32
+17160: MaterializeDeferredDccClear: image=0x0000000510d10000 dcc=0x000000056d898000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+17575: MaterializeDeferredDccClear: image=0x0000000510d10000 dcc=0x000000056d898000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+18748: MaterializeDeferredDccClear: image=0x0000000510d10000 dcc=0x000000056d898000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+19914: MaterializeDeferredDccClear: image=0x0000000511650000 dcc=0x000000057072f000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+20715: MaterializeDeferredDccClear: image=0x0000000511650000 dcc=0x000000057072f000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+21775: MaterializeDeferredDccClear: image=0x0000000511650000 dcc=0x000000057072f000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+23106: MaterializeDeferredDccClear: image=0x0000000511650000 dcc=0x000000057072f000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+25811: MaterializeDeferredDccClear: image=0x0000000511650000 dcc=0x000000057072f000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+29989: MaterializeDeferredDccClear: image=0x0000000511650000 dcc=0x0000000570aee000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+32404: MaterializeDeferredDccClear: image=0x0000000511650000 dcc=0x0000000570aee000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+35912: MaterializeDeferredDccClear: image=0x0000000511650000 dcc=0x0000000570aee000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+36809: MaterializeDeferredDccClear: image=0x0000000511650000 dcc=0x0000000570aee000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+39514: MaterializeDeferredDccClear: image=0x0000000511650000 dcc=0x0000000570aee000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+41030: MaterializeDeferredDccClear: image=0x0000000512cf0000 dcc=0x0000000570fa2000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+41493: MaterializeDeferredDccClear: image=0x0000000512cf0000 dcc=0x0000000570fa2000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+42816: MaterializeDeferredDccClear: image=0x0000000512cf0000 dcc=0x0000000570fa2000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+44517: MaterializeDeferredDccClear: image=0x0000000512cf0000 dcc=0x0000000570fa2000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+46202: MaterializeDeferredDccClear: image=0x0000000512cf0000 dcc=0x0000000570fa2000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+48184: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+49817: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+50728: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+51394: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+52530: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+53812: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+60532: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+64975: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+65284: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+65795: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+66240: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+66720: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+67291: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+68196: MaterializeDeferredDccClear: image=0x0000000513bf0000 dcc=0x0000000571540000 code=0x20 layers=0x00000001 format=97 view=97 decoded=1
+== Cmask count=1
+16621: Push marker: Resolve Cmask for lighting
+== CMASK count=0
+== DiagF5: mode count=1
+73: DiagF5: mode=1
+== PendingDcc count=0
+== FastClear count=0
+== fast clear count=0
+== DMA fill count=0
+== DmaFill count=0
+== TrackDcc count=0

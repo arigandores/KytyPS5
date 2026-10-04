@@ -1,0 +1,370 @@
+16330 Push marker: Draw Geometry_1
+16331 GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)
+16332 Push marker: IblUpdate
+16333 Pop marker
+16334 Push marker: Common_0
+16335 Push marker: DynamicTexture_0
+16336 Pop marker
+16337 Pop marker
+16338 Push marker: Geometry_0_0
+16339 Push marker: Clear_0
+16340 BindFloorClear: mode 0
+16341 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056d8b8000 size=0x0000000000014000 value=0x00000000
+16342 GraphicsRenderDispatchDirect: use-thread-dimensions 5120x1x1 / 64x1x1 -> groups 80x1x1
+16343 AsyncCompute: lookahead walk packets=114 dispatches=1 us=10
+16344 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x0000000514050000 size=0x0000000000030000 value=0xfffffff0
+16345 GraphicsRenderDispatchDirect: use-thread-dimensions 12288x1x1 / 64x1x1 -> groups 192x1x1
+16346 Pop marker
+16347 Push marker: AtmosphereUpdate_0
+16348 Pop marker
+16349 Push marker: Spray_0
+16350 Pop marker
+16351 Push marker: WriteAsyncLabelAtmosphere_0
+16352 Pop marker
+16353 Push marker: StampDisplacementMap_0
+16354 Push marker: ProcessGfxCommand
+16355 Pop marker
+16356 Push marker: ProcessInitialMap
+16357 Pop marker
+16358 Push marker: ProcessFeedbackQuery
+16359 Pop marker
+16360 Push marker: ProcessDisplay
+16361 Pop marker
+16362 Pop marker
+16363 Push marker: ClearGBuffer_0
+16364 Push marker: Deformer
+16365 Pop marker
+16366 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x0000000000014000 value=0x20202020
+16367 GraphicsRenderDispatchDirect: use-thread-dimensions 5120x1x1 / 64x1x1 -> groups 80x1x1
+16368 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x0000000000006000 value=0xffffffff
+16369 GraphicsRenderDispatchDirect: use-thread-dimensions 1536x1x1 / 64x1x1 -> groups 24x1x1
+16370 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x0000000000006000 value=0x00000000
+16371 GraphicsRenderDispatchDirect: use-thread-dimensions 1536x1x1 / 64x1x1 -> groups 24x1x1
+16372 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0x000000000000c000 value=0x00000000
+16373 GraphicsRenderDispatchDirect: use-thread-dimensions 3072x1x1 / 64x1x1 -> groups 48x1x1
+16374 Pop marker
+16375 Push marker: Ripple_0
+16376 GraphicsRenderDispatchDirect: use-thread-dimensions 81920x1x1 / 64x1x1 -> groups 1280x1x1
+16377 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x0000000000001000 value=0x00000000
+16378 GraphicsRenderDispatchDirect: use-thread-dimensions 256x1x1 / 64x1x1 -> groups 4x1x1
+16379 warning: ignoring indirect uc reg GE_STEREO_CNTL at 0x25f, value = 0x00000000
+16380 RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192
+16381 RenderColorTarget: slot=0 addr=0x0538bc0000 size=0x0000000000140000 extent=480x270x1 view_mip=0 view_extent=480x270 levels=1 pitch=512 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 tile=tiled
+16382 FixB42Ext: mode=1 extent=480x270 hit=1 applied=1 drawn=0 rearm=0 frame=0
+16383 FixB42: mode=1 hit=1 applied=1 drawn=0 rearm=0 hit_all=1 last_frame=0 extent=480x270 cmask=0x55675f000 clear=00000000/00000000
+16384 Pop marker
+16385 Push marker: Wind_0
+16386 GraphicsRenderDispatchDirect: use-thread-dimensions 524288x1x1 / 64x1x1 -> groups 8192x1x1
+16387 GraphicsRenderDispatchDirect: use-thread-dimensions 524288x1x1 / 64x1x1 -> groups 8192x1x1
+16388 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000056c05e000 size=0x0000000000002000 value=0x00000000
+16389 GraphicsRenderDispatchDirect: use-thread-dimensions 512x1x1 / 64x1x1 -> groups 8x1x1
+16390 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x00000005637f0000 size=0x0000000000008000 value=0x00000000
+16391 GraphicsRenderDispatchDirect: use-thread-dimensions 2048x1x1 / 64x1x1 -> groups 32x1x1
+16392 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055c00d000 size=0x0000000000002000 value=0xffffffff
+16393 GraphicsRenderDispatchDirect: use-thread-dimensions 512x1x1 / 64x1x1 -> groups 8x1x1
+16394 warning: ignoring indirect uc reg GE_STEREO_CNTL at 0x25f, value = 0x00000000
+16395 MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000563800000 dcc=0x00000005637f0000
+16396 warning: ignoring indirect uc reg GE_STEREO_CNTL at 0x25f, value = 0x00000000
+16397 RenderColorTarget: slot=0 addr=0x0516830000 size=0x0000000000800000 extent=1024x1024x1 view_mip=0 view_extent=1024x1024 levels=1 pitch=1024 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 tile=tiled
+16398 	 PthreadSetprio: 61, 700
+16399 	 user_id = 1000
+16400 	 large_motor = 0
+16401 	 small_motor = 0
+16402 	 handle = 1
+16403 	 handle = 1
+16404 	 data   = 0x00000007efdf28c0
+16405 	 num    = 8
+16406 [3][00:00:07.940] libkernel::libkernel::PthreadMutexInitNamed()
+16407 	mutex init: Haptics, 0
+16408 Pop marker
+16409 Push marker: DebugMaterial_0
+16410 Pop marker
+16411 Push marker: OutputGBuffer_0
+16412 Push marker: CheckerboardStencil
+16413 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x0000000513dd0000 size=0x0000000000280000 value=0x00000000
+16414 GraphicsRenderDispatchDirect: use-thread-dimensions 163840x1x1 / 64x1x1 -> groups 2560x1x1
+16415 	 PS5 vertex attrib semantic 0 uses attrib format 311 -> buffer format 77, offset 0, buffer index 0
+16416 	 PS5 vertex attrib semantic 1 uses attrib format 257 -> buffer format 64, offset 16, buffer index 0
+16417 Pop marker
+16418 Pop marker
+16419 Push marker: LinkedList_0
+16420 Pop marker
+16421 Push marker: ExportGrassColor_0
+16422 Pop marker
+16423 Push marker: FluidParticleClipOpaque_0
+16424 Pop marker
+16425 Push marker: SsrDepth_0
+16426 Pop marker
+16427 Push marker: FluidParticleClip_0
+16428 Pop marker
+16429 Push marker: FluidVolumeOpaque_0
+16430 Pop marker
+16431 Push marker: WriteAsyncLabelFluidOpaque_0
+16432 Pop marker
+16433 Push marker: FluidVolume_0
+16434 Pop marker
+16435 Push marker: WriteAsyncLabelFluidTrans_0
+16436 Pop marker
+16437 Pop marker
+16438 Pop marker
+16439 BindFloorGcAudit: mode0
+16440 Push marker: FroxelUpdate
+16441 Push marker: ComputeContextInternal::Dispatch()
+16442 AsyncCompute dispatch: queue=0x48 frame=3 submit=2 groups=30x17x1 mode=0x00000041 cs=0x0000000500544600 indirect=0x0000000000000000
+16443 GraphicsRenderDispatchDirect: frame=3 shader=0x0000000500544600 groups=30x17x1 mode=0x00000041 local=8x8x1 buffers=5 textures=3 sampled=2 storage=1 samplers=1 push=128
+16444   CS buffer[0]: source=0 usage=read-only addr=0x0004005066a0 stride=16 records=9 format=77
+16445   CS buffer[1]: source=1 usage=read-only addr=0x00050cc36710 stride=16 records=36 format=77
+16446   CS buffer[2]: source=2 usage=read-only addr=0x000400506620 stride=16 records=8 format=77
+16447   CS buffer[3]: source=3 usage=read-only addr=0x0004005065c0 stride=16 records=6 format=77
+16448   CS buffer[4]: source=4 usage=read-only addr=0x00050cc378f0 stride=16 records=1119 format=77
+16449   CS texture[0]: source=5 usage=read-only sampled=true addr=0x055e7e0000 type=9 fmt=65 extent=256x64 depth=1 levels=1 tile=27
+16450   CS texture[1]: source=7 usage=read-only sampled=true addr=0x050740e000 type=9 fmt=71 extent=32x32 depth=1 levels=1 tile=5
+16451   CS texture[2]: source=8 usage=read-write sampled=false addr=0x055d700000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+16452   CS sampler[0]: source=6 clamp=0/0/0 filter=1/1/2 mip=1 lod=0-4095 bias=0
+16453 Pop marker
+16454 Pop marker
+16455 Push marker: FroxelReprojection
+16456 Push marker: ComputeContextInternal::Dispatch()
+16457 AsyncCompute dispatch: queue=0x48 frame=3 submit=2 groups=30x17x8 mode=0x00000041 cs=0x0000000500543700 indirect=0x0000000000000000
+16458 GraphicsRenderDispatchDirect: frame=3 shader=0x0000000500543700 groups=30x17x8 mode=0x00000041 local=8x8x8 buffers=1 textures=3 sampled=2 storage=1 samplers=1 push=128
+16459   CS buffer[0]: source=0 usage=read-only addr=0x0004005064b0 stride=16 records=12 format=77
+16460   CS texture[0]: source=1 usage=read-only sampled=true addr=0x055d700000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+16461   CS texture[1]: source=2 usage=read-only sampled=true addr=0x055c620000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+16462   CS texture[2]: source=1 usage=read-write sampled=false addr=0x055d700000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+16463   CS sampler[0]: source=3 clamp=2/2/2 filter=1/1/2 mip=1 lod=0-4095 bias=0
+16464 Pop marker
+16465 Pop marker
+16466 Push marker: FroxelCopy
+16467 Push marker: ComputeContextInternal::Dispatch()
+16468 AsyncCompute dispatch: queue=0x48 frame=3 submit=2 groups=30x17x8 mode=0x00000041 cs=0x0000000500546800 indirect=0x0000000000000000
+16469 GraphicsRenderDispatchDirect: frame=3 shader=0x0000000500546800 groups=30x17x8 mode=0x00000041 local=8x8x8 buffers=1 textures=2 sampled=1 storage=1 samplers=0 push=128
+16470   CS buffer[0]: source=0 usage=read-only addr=0x000400506460 stride=16 records=1 format=77
+16471   CS texture[0]: source=1 usage=read-only sampled=true addr=0x055d700000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+16472   CS texture[1]: source=2 usage=read-write sampled=false addr=0x0525b10000 type=10 fmt=71 extent=240x135 depth=64 levels=1 tile=0
+16473 Pop marker
+16474 Pop marker
+16475 Pop marker
+16476 Push marker: Draw Extra Geometry_1
+16477 Push marker: ExtraGeometry_0_0
+16478 Push marker: Clear_0
+16479 Pop marker
+16480 Push marker: Spray_0
+16481 Pop marker
+16482 Push marker: StampDisplacementMap_0
+16483 Pop marker
+16484 Push marker: ClearGBuffer_0
+16485 Pop marker
+16486 Push marker: Ripple_0
+16487 Pop marker
+16488 Push marker: Wind_0
+16489 Pop marker
+16490 Push marker: DebugMaterial_0
+16491 Pop marker
+16492 Push marker: OutputGBuffer2_0
+16493 Pop marker
+16494 Push marker: LinkedList_0
+16495 Pop marker
+16496 Push marker: ExportGrassColor_0
+16497 Pop marker
+16498 Push marker: SsrDepth_0
+16499 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x00000005150c0000 size=0x0000000000140000 value=0xffffffff
+16500 GraphicsRenderDispatchDirect: use-thread-dimensions 81920x1x1 / 64x1x1 -> groups 1280x1x1
+16501 Pop marker
+16502 Pop marker
+16503 Pop marker
+16504 Push marker: Draw Decal_1
+16505 Push marker: Decal_0_0
+16506 	 PthreadSetprio: 59, 700
+16507 Push marker: Decal_0
+16508 Push marker: Resolve Cmask for lighting
+16509 [53][00:00:07.947] libkernel::libkernel::PthreadSetprio()
+16510 warning: ignoring indirect uc reg GE_STEREO_CNTL at 0x25f, value = 0x00000000
+16511 MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000510d10000 dcc=0x000000056d898000
+16512 warning: ignoring indirect uc reg GE_STEREO_CNTL at 0x25f, value = 0x00000000
+16513 	 PthreadSetprio: 53, 700
+16514 RenderColorTarget: slot=0 addr=0x0512570000 size=0x0000000000ff0000 extent=1920x1080x1 view_mip=0 view_extent=1920x1080 levels=1 pitch=1920 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 tile=tiled
+16515 [53][00:00:07.947] libkernel::libkernel::PthreadSetaffinity()
+16516 TextureCache: stale pending DCC fill ignored image=0x0000000512570000 dcc=0x000000056c058000 fill=0x00000000 size=0x6000 seq=5 last=11 cpu=0
+16517 FixB42Ext: mode=1 extent=1920x1080 hit=1 applied=0 drawn=0 rearm=0 frame=0
+16518 FixB42: mode=1 hit=1 applied=0 drawn=0 rearm=0 hit_all=2 last_frame=0 extent=1920x1080 cmask=0x56c058000 clear=70e270e2/00000000
+16519 Pop marker
+16520 Pop marker
+16521 Pop marker
+16522 warning: ignoring indirect uc reg GE_STEREO_CNTL at 0x25f, value = 0x00000000
+16523 MaterializeBoundTargetDccClears: no image for slot=0 base=0x0000000510d10000 dcc=0x000000056d898000
+16524 Pop marker
+16525 Push marker: JsParticleUpdate_Async
+16526 AsyncCompute dispatch: queue=0x40 frame=3 submit=1 groups=192x1x1 mode=0x00000041 cs=0x000000050740a700 indirect=0x0000000000000000
+16527 GraphicsRenderDispatchDirect: frame=3 shader=0x000000050740a700 groups=192x1x1 mode=0x00000041 local=64x1x1 buffers=6 textures=1 sampled=1 storage=0 samplers=1 push=128
+16528   CS buffer[0]: source=0 usage=read-only addr=0x000400325570 stride=16 records=1 format=77
+16529   CS buffer[1]: source=1 usage=read-only addr=0x000400904180 stride=8 records=12288 format=5
+16530   CS buffer[2]: source=2 usage=read-only addr=0x000553c41dd0 stride=128 records=12288 format=5
+16531   CS buffer[3]: source=3 usage=read-only addr=0x000400bec340 stride=276 records=16384 format=5
+16532   CS buffer[4]: source=4 usage=read-only addr=0x00040082c140 stride=432 records=2048 format=5
+16533   CS buffer[5]: source=7 usage=read-write addr=0x000553dc1dd0 stride=128 records=12288 format=5
+16534   CS texture[0]: source=5 usage=read-only sampled=true addr=0x0555f59000 type=9 fmt=71 extent=1024x1024 depth=1 levels=1 tile=0
+16535   CS sampler[0]: source=6 clamp=0/0/0 filter=1/1/1 mip=2 lod=0-4095 bias=0
+16536 	 op    = 0x00000fff
+16537 	 state = 0x00000000
+16538 	 op    = 0x00000fff
+16539 	 state = 0x00000000
+16540 	 op    = 0x00000fff
+16541 	 state = 0x00000000
+16542 	 op    = 0x00000182
+16543 	 op    = 0x00000fff
+16544 	 state = 0x00000000
+16545 	 op    = 0x00000182
+16546 	 op    = 0x00000fff
+16547 	 state = 0x00000000
+16548 	 thread_group_x = 12288
+16549 	 thread_group_y = 1
+16550 	 thread_group_z = 1
+16551 	 modifier       = 0x00000021
+16552 	 thread_group_x = 12288
+16553 	 thread_group_y = 1
+16554 	 thread_group_z = 1
+16555 	 modifier       = 0x00000021
+16556 	 thread_group_x = 12288
+16557 	 thread_group_y = 1
+16558 	 thread_group_z = 1
+16559 	 modifier       = 0x00000021
+16560 	 thread_group_x = 81920
+16561 	 thread_group_y = 1
+16562 	 thread_group_z = 1
+16563 	 modifier       = 0x00000021
+16564 	 thread_group_x = 5120
+16565 	 thread_group_y = 1
+16566 	 thread_group_z = 1
+16567 	 modifier       = 0x00000021
+16568 	 thread_group_x = 192
+16569 	 thread_group_y = 1
+16570 	 thread_group_z = 1
+16571 	 modifier       = 0x00000001
+16572 	 thread_group_x = 12288
+16573 	 thread_group_y = 1
+16574 	 thread_group_z = 1
+16575 	 modifier       = 0x00000021
+16576 	 thread_group_x = 192
+16577 	 thread_group_y = 1
+16578 	 thread_group_z = 1
+16579 	 modifier       = 0x00000001
+16580 	 thread_group_x = 30
+16581 	 thread_group_y = 17
+16582 	 thread_group_z = 1
+16583 	 modifier       = 0x00000001
+16584 	 thread_group_x = 30
+16585 	 thread_group_y = 17
+16586 	 thread_group_z = 8
+16587 	 modifier       = 0x00000001
+16588 	 thread_group_x = 30
+16589 	 thread_group_y = 17
+16590 	 thread_group_z = 8
+16591 	 modifier       = 0x00000001
+16592 	 thread_group_x = 5120
+16593 	 thread_group_y = 1
+16594 	 thread_group_z = 1
+16595 	 modifier       = 0x00000021
+16596 	 thread_group_x = 1536
+16597 	 thread_group_y = 1
+16598 	 thread_group_z = 1
+16599 	 modifier       = 0x00000021
+16600 	 thread_group_x = 1536
+16601 	 thread_group_y = 1
+16602 	 thread_group_z = 1
+16603 	 modifier       = 0x00000021
+16604 	 thread_group_x = 3072
+16605 	 thread_group_y = 1
+16606 	 thread_group_z = 1
+16607 	 modifier       = 0x00000021
+16608 	 thread_group_x = 512
+16609 	 thread_group_y = 1
+16610 	 thread_group_z = 1
+16611 	 modifier       = 0x00000021
+16612 	 thread_group_x = 2048
+16613 	 thread_group_y = 1
+16614 	 thread_group_z = 1
+16615 	 modifier       = 0x00000021
+16616 	 thread_group_x = 512
+16617 	 thread_group_y = 1
+16618 	 thread_group_z = 1
+16619 	 modifier       = 0x00000021
+16620 	call = 5, return = 0x0000000000000000
+16621 	 thread_group_x = 64
+16622 	 thread_group_y = 64
+16623 	 thread_group_z = 1
+16624 	 modifier       = 0x00000001
+16625 	 thread_group_x = 163840
+16626 	 thread_group_y = 1
+16627 	 thread_group_z = 1
+16628 	 modifier       = 0x00000021
+16629 	 thread_group_x = 6
+16630 	 thread_group_y = 4
+16631 	 thread_group_z = 8
+16632 	 modifier       = 0x00000001
+16633 AsyncCompute dispatch: queue=0x40 frame=3 submit=1 groups=192x1x1 mode=0x00000041 cs=0x0000000555f4f500 indirect=0x0000000000000000
+16634 GraphicsRenderDispatchDirect: frame=3 shader=0x0000000555f4f500 groups=192x1x1 mode=0x00000041 local=64x1x1 buffers=5 textures=1 sampled=1 storage=0 samplers=1 push=128
+16635   CS buffer[0]: source=0 usage=read-only addr=0x0004003254b0 stride=16 records=2 format=77
+16636   CS buffer[1]: source=1 usage=read-write addr=0x000553dc1dd0 stride=128 records=12288 format=5
+16637   CS buffer[2]: source=2 usage=read-only addr=0x000400bec340 stride=276 records=16384 format=5
+16638   CS buffer[3]: source=3 usage=read-only addr=0x00040082c140 stride=432 records=2048 format=5
+16639   CS buffer[4]: source=4 usage=read-write addr=0x000554f41dd0 stride=64 records=262144 format=5
+16640   CS texture[0]: source=5 usage=read-only sampled=true addr=0x0555f59000 type=9 fmt=71 extent=1024x1024 depth=1 levels=1 tile=0
+16641   CS sampler[0]: source=6 clamp=0/0/0 filter=1/1/1 mip=2 lod=0-4095 bias=0
+16642 	 data_offset = 0x0
+16643 	 flags       = 0x00000001
+16644 	 data_offset = 0x0
+16645 	 flags       = 0x00000001
+16646 	 data_offset = 0x0
+16647 	 flags       = 0x00000001
+16648 	 data_offset = 0x0
+16649 	 flags       = 0x00000001
+16650 	 video_out_handle     = 1
+16651 	 display_buffer_index = 1
+16652 	 cache_policy                      = 0x00
+16653 	 buffer                            = 0x0000000000000000
+16654 	 buffer_size_in_bytes              = 0
+16655 	 reset_count                       = 0
+16656 	 force_reset                       = 0x00
+16657 	 report_and_reset                  = 0x00
+16658 	 reporting_interval_in_100k_clocks = 0
+16659 	 cache_policy                      = 0x00
+16660 	 buffer                            = 0x00000004007aff00
+16661 	 buffer_size_in_bytes              = 2112
+16662 	 reset_count                       = 0
+16663 	 force_reset                       = 0x00
+16664 	 report_and_reset                  = 0x01
+16665 	 reporting_interval_in_100k_clocks = 0
+16666 	 flipPendingNum = 0
+16667 	 user_id = 1000, handle = 0x0000000000000002
+16668 AsyncCompute: lookahead walk packets=213 dispatches=3 us=7
+16669 Pop marker
+16670 Push marker: ResizeDepthOnAsync
+16671 Push marker: ComputeContextInternal::Dispatch()
+16672 AsyncCompute dispatch: queue=0x40 frame=3 submit=1 groups=120x68x1 mode=0x00000041 cs=0x00000005006c6a00 indirect=0x0000000000000000
+16673 Pop marker
+16674 Pop marker
+16675 Push marker: ResizeDepthOnAsync
+16676 Push marker: ComputeContextInternal::Dispatch()
+16677 AsyncCompute dispatch: queue=0x40 frame=3 submit=1 groups=60x34x1 mode=0x00000041 cs=0x00000005006c6a00 indirect=0x0000000000000000
+16678 Pop marker
+16679 Pop marker
+16680 Push marker: SSAO_Async
+16681 Push marker: ComputeContextInternal::Dispatch()
+16682 AsyncCompute dispatch: queue=0x40 frame=3 submit=1 groups=30x68x1 mode=0x00000041 cs=0x0000000500666700 indirect=0x0000000000000000
+16683 GraphicsRenderDispatchDirect: frame=3 shader=0x0000000500666700 groups=30x68x1 mode=0x00000041 local=16x4x1 buffers=3 textures=3 sampled=2 storage=1 samplers=1 push=128
+16684   CS buffer[0]: source=0 usage=read-only addr=0x0004003252e0 stride=16 records=3 format=77
+16685   CS buffer[1]: source=1 usage=read-only addr=0x00050cc36710 stride=16 records=36 format=77
+16686   CS buffer[2]: source=4 usage=read-only addr=0x000400325310 stride=16 records=2 format=77
+16687   CS texture[0]: source=2 usage=read-only sampled=true addr=0x053ac40000 type=9 fmt=22 extent=480x270 depth=1 levels=1 tile=24
+16688   CS texture[1]: source=5 usage=read-only sampled=true addr=0x0510d10000 type=9 fmt=71 extent=1920x1080 depth=1 levels=1 tile=27
+16689   CS texture[2]: source=6 usage=read-write sampled=false addr=0x0538d00000 type=9 fmt=1 extent=480x270 depth=1 levels=1 tile=27
+16690   CS sampler[0]: source=3 clamp=2/2/2 filter=0/0/1 mip=1 lod=0-4095 bias=0
+16691 TextureCache: stale pending DCC fill ignored image=0x0000000510d10000 dcc=0x000000056d898000 fill=0x20202020 size=0x14000 seq=3 last=6 cpu=0
+16692 Pop marker
+16693 Pop marker
+16694 Push marker: resize_normal
+16695 Push marker: ComputeContextInternal::Dispatch()
+16696 AsyncCompute dispatch: queue=0x40 frame=3 submit=1 groups=120x68x1 mode=0x00000041 cs=0x00000005006f7700 indirect=0x0000000000000000
+16697 GraphicsRenderDispatchDirect: frame=3 shader=0x00000005006f7700 groups=120x68x1 mode=0x00000041 local=8x8x1 buffers=1 textures=4 sampled=2 storage=2 samplers=1 push=128
+16698   CS buffer[0]: source=0 usage=read-only addr=0x000400325240 stride=16 records=1 format=77
+16699   CS texture[0]: source=1 usage=read-only sampled=true addr=0x0510d10000 type=9 fmt=71 extent=1920x1080 depth=1 levels=1 tile=27

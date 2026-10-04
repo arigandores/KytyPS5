@@ -1,0 +1,28 @@
+logs 474
+build	logs	with_quit	fatal_after_quit	nullptr_after_quit	nullptr_any
+(none)	137	59	0	0	0
+Fork build arigandores/KytyPS5 4fc501f-dirty	128	123	0	0	0
+Fork build arigandores/KytyPS5 95eec77	50	34	0	0	0
+Fork build arigandores/KytyPS5 40e52dc	26	26	0	0	0
+Fork build arigandores/KytyPS5 4b7665e-dirty	24	24	0	0	0
+Fork build arigandores/KytyPS5 142f384	20	20	0	0	0
+Fork build arigandores/KytyPS5 8768519	20	20	0	0	0
+Fork build arigandores/KytyPS5 4414e23	14	14	0	0	0
+Fork build arigandores/KytyPS5 16e506f-dirty	8	8	0	0	0
+Fork build arigandores/KytyPS5 5f67f82	8	8	0	0	0
+Fork build arigandores/KytyPS5 d515b90	7	5	0	0	0
+Fork build arigandores/KytyPS5 9c9d86a	5	4	0	0	0
+Fork build arigandores/KytyPS5 c01451b	4	4	0	0	0
+Fork build arigandores/KytyPS5 1833ee2	4	4	0	0	0
+Fork build arigandores/KytyPS5 06f049f-dirty	4	4	0	0	0
+Fork build arigandores/KytyPS5 af7e5ff-dirty	4	3	0	0	0
+Fork build arigandores/KytyPS5 3d0e46d	4	4	0	0	0
+Fork build arigandores/KytyPS5 ba3be48-dirty	3	3	0	0	0
+Fork build arigandores/KytyPS5 68602c4	2	2	0	0	0
+Fork build arigandores/KytyPS5 722c5e7	2	2	0	0	0
+TOTAL	474	371	0	0	0
+--- logs with fatal after quit
+--- logs with nullptr any
+--- logs with fatal (any)
+C:/kyty/f287/f12f/log_f12_rd.txt Fork build arigandores/KytyPS5 d515b90 quit -1 fat 1 fatq 0
+C:/kyty/f287/f12f/log_f12_rd_a1.txt Fork build arigandores/KytyPS5 d515b90 quit -1 fat 1 fatq 0

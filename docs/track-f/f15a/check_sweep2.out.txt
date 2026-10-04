@@ -1,0 +1,4 @@
+C:/kyty/s131/log_dds131.txt.xz line [1, 1, 1, 1, True] block64M [1, 1, 1, 1, True] block64K [1, 1, 1, 1, True] OK
+C:/kyty/f287/f12f/log_f12_rd.txt line [0, 0, 1, 0, False] block64M [0, 0, 1, 0, False] block64K [0, 0, 1, 0, False] OK
+C:/kyty/s143/log_v143_05.txt line [0, 0, 0, 0, True] block64M [0, 0, 0, 0, True] block64K [0, 0, 0, 0, True] OK
+ALL OK

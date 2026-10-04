@@ -1,0 +1,6 @@
+# exe C:\kyty\f287\f15a\build\b4_race_stand.exe sha256 c1b7033a644aa50639b70da2db893588f5e3256bfe686f9c6a93931411c9563a mode C N 3 first_seed 1001
+seed	rc	class	line
+1001	0	CLEAN	CLEAN iters=101 after=0
+1002	0	CLEAN	CLEAN iters=101 after=0
+1003	0	CLEAN	CLEAN iters=101 after=0
+# done 3 wall 0.1 s counts {'CLEAN': 3}

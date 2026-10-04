@@ -1,0 +1,156 @@
+EVENT_QUIT line 718956 Event: quit
+FATAL line 718962
+NULLPTR line 718963 Error: condition (m_files[index] == nullptr) is true in C:\kyty\KytyPS5\src\kernel\fileSystem.cpp:207
+--- ring of the last 150 lines before and with the fatal
+   718814  	 flags       = 0x00000001
+   718815  	 data_offset = 0x0
+   718816  	 flags       = 0x00000001
+   718817  	 data_offset = 0x0
+   718818  	 flags       = 0x00000001
+   718819  	 data_offset = 0x0
+   718820  	 flags       = 0x00000001
+   718821  	 data_offset = 0x0
+   718822  	 flags       = 0x00000001
+   718823  	 video_out_handle     = 1
+   718824  	 display_buffer_index = 1
+   718825  	 cache_policy                      = 0x00
+   718826  	 buffer                            = 0x0000000000000000
+   718827  	 buffer_size_in_bytes              = 0
+   718828  	 reset_count                       = 0
+   718829  	 force_reset                       = 0x00
+   718830  	 report_and_reset                  = 0x00
+   718831  	 reporting_interval_in_100k_clocks = 0
+   718832  	 cache_policy                      = 0x00
+   718833  	 buffer                            = 0x00000004007b2000
+   718834  	 buffer_size_in_bytes              = 2112
+   718835  	 reset_count                       = 0
+   718836  	 force_reset                       = 0x00
+   718837  	 report_and_reset                  = 0x01
+   718838  	 reporting_interval_in_100k_clocks = 0
+   718839  [23][00:02:44.334] libkernel::libkernel::PthreadCondWait()
+   718840  FrameTrace: n=4672 dt_us=33081 lat_us=10885 gpu_proc=0 gpu_idle=0 gpu_blocked=0 submits=34 submit_us=81 semwaits=26 semwait_us=29125 downloads=1 download_us=0 draws=5090 draw_us=0 dispatches=270 dispatch_us=0 faults=1229
+   718841  FrameTrace-draw: n=4672 logs=54 log_us=237 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat
+   718842  FrameTrace-rp: n=4672 ends=190 restarts=65 end_state=5 end_target=87 end_binding=2 end_gds=0 end_shader_write=35 end_dispatch=11 end_buf_upload=21 end_buf_copy=1 end_img_upload=0 end_tiler=3 end_clear=3 end_sanitize=0 en
+   718843  FrameTrace-x: n=4672 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=2663 rec_pack=5048 rec_pack_cs=248 rec_bind=5296 rec_pack_kb=6138 rec_direct_busy=24 rec_spin_us=27111 rec_sleep=3 prot_spin_us=210 prot_spin_calls=42 prot_spin
+   718844  FrameTrace-wait: other=29202/26
+   718845  FrameTrace-submit: other=52/1 slice-end-compute=1/4 release-mem-data1=6/8 release-mem-irq=13/10 slice-end-gfx=2/5 wait-flip-done=0/1 flip=0/1 download-stale=3/4
+   718846  FrameTrace-pm4: gc=23/5 prefetch=24/5
+   718847  FrameTrace-pops: +0x836cbd=9/5 +0x7a4ad5=2/2 +0x7c09cd=11/5 +0x837fad=1/2
+   718848  FrameTrace-direct: +0x968773=26/1 +0x7bcc09=10/17 +0x7bc7b5=12/41 +0x782db4=1/67 +0x7ccc40=5/13 +0x7cccb2=0/10 +0x8370cb=0/10 +0x82d13a=5/351 +0x835f7c=0/7 +0x82d5a1=0/5 +0x85d1b0=1/45 +0x83a602=0/13 +0x80e8f1=40/122 +0x
+   718849  	 flipPendingNum = 0
+   718850  [42][00:02:44.337] libkernel::libkernel::PthreadCondWait()
+   718851  	 queue  = 0x00000040
+   718852  	 packet = 0x0000000313a57eb8
+   718853  	 acb   = 0x0000000400205540
+   718854  	 size  = 0x00000c5e
+   718855  	 flags = 0x00
+   718856  	 queue  = 0x00000048
+   718857  	 packet = 0x0000000313a57eb8
+   718858  	 acb   = 0x00000004003e6740
+   718859  	 size  = 0x0000015a
+   718860  	 flags = 0x00
+   718861  [23][00:02:44.359] libkernel::libkernel::PthreadCondWait()
+   718862  	 user_id = 1000
+   718863  	 large_motor = 0
+   718864  	 small_motor = 0
+   718865  	 handle = 1
+   718866  	 handle = 1
+   718867  	 data   = 0x00000007efdf28c0
+   718868  	 num    = 8
+   718869  	 op    = 0x00000182
+   718870  	 queue  = 0x00000046
+   718871  	 packet = 0x0000000339d2fe68
+   718872  	 acb   = 0x00000004006679c0
+   718873  	 size  = 0x00000421
+   718874  	 flags = 0x00
+   718875  	 path = /app0/data/prein/characters/gfx/enemy_electric_n.gnfp
+   718876  	 flags = 00000000
+   718877  	 mode = 016d
+   718878  	 handle = 1
+   718879  	 handle = 1
+   718880  	 handle = 1
+   718881  	 handle = 1
+   718882  	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/characters/gfx/enemy_electric_n.gnfp, [ok]
+   718883  	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/characters/gfx/enemy_electric_n.gnfp
+   718884  	 op    = 0x00000182
+   718885  	 op    = 0x00000fff
+   718886  	 state = 0x00000000
+   718887  	 op    = 0x00000fff
+   718888  	 state = 0x00000000
+   718889  	 op    = 0x00000fff
+   718890  	 state = 0x00000000
+   718891  	 op    = 0x00000fff
+   718892  	 state = 0x00000000
+   718893  	 op    = 0x00000fff
+   718894  	 state = 0x00000000
+   718895  	 op    = 0x00000182
+   718896  	Read 5701632 bytes from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/characters/gfx/enemy_electric_n.gnfp
+   718897  	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/characters/gfx/enemy_electric_n.gnfp
+   718898  	 indirect_args = 0x00000005074063c0
+   718899  	 modifier      = 0x00000001
+   718900  	 indirect_args = 0x00000005074063e0
+   718901  	 modifier      = 0x00000001
+   718902  	 indirect_args = 0x00000005074063e0
+   718903  	 modifier      = 0x00000001
+   718904  	 data_offset = 0x0
+   718905  	 flags       = 0x00000001
+   718906  	 data_offset = 0x0
+   718907  	 flags       = 0x00000001
+   718908  	 data_offset = 0x0
+   718909  	 flags       = 0x00000001
+   718910  	 data_offset = 0x0
+   718911  	 flags       = 0x00000001
+   718912  	 data_offset = 0x0
+   718913  	 flags       = 0x00000001
+   718914  	 data_offset = 0x0
+   718915  	 flags       = 0x00000001
+   718916  	 data_offset = 0x0
+   718917  	 flags       = 0x00000001
+   718918  	 data_offset = 0x0
+   718919  	 flags       = 0x00000001
+   718920  	 handle = 1
+   718921  	 handle = 1
+   718922  FrameTrace: n=4673 dt_us=33407 lat_us=8963 gpu_proc=0 gpu_idle=0 gpu_blocked=0 submits=34 submit_us=77 semwaits=26 semwait_us=30971 downloads=1 download_us=0 draws=4715 draw_us=0 dispatches=266 dispatch_us=0 faults=1177 
+   718923  FrameTrace-draw: n=4673 logs=50 log_us=75 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=
+   718924  FrameTrace-rp: n=4673 ends=171 restarts=50 end_state=4 end_target=87 end_binding=2 end_gds=0 end_shader_write=19 end_dispatch=10 end_buf_upload=21 end_buf_copy=1 end_img_upload=0 end_tiler=4 end_clear=3 end_sanitize=0 en
+   718925  FrameTrace-x: n=4673 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=2400 rec_pack=4675 rec_pack_cs=246 rec_bind=4921 rec_pack_kb=5647 rec_direct_busy=17 rec_spin_us=27154 rec_sleep=3 prot_spin_us=102 prot_spin_calls=41 prot_spin
+   718926  FrameTrace-wait: other=30701/25
+   718927  FrameTrace-submit: other=48/1 slice-end-compute=1/5 release-mem-data1=7/8 release-mem-irq=12/8 slice-end-gfx=3/5 wait-flip-done=0/1 flip=0/1 download-stale=3/4
+   718928  FrameTrace-pm4: gc=39/5 prefetch=32/5
+   718929  FrameTrace-pops: +0x836cbd=8/6 +0x7a4ad5=1/2 +0x7c09cd=16/6 +0x837fad=2/2
+   718930  FrameTrace-direct: +0x968773=19/1 +0x7bcc09=14/16 +0x7bc7b5=10/42 +0x782db4=1/92 +0x7ccc40=2/12 +0x7cccb2=0/9 +0x8370cb=0/10 +0x82d13a=6/320 +0x835f7c=0/8 +0x82d5a1=0/6 +0x85d1b0=0/13 +0x83a602=0/13 +0x80e8f1=3/122 +0x96
+   718931  	 video_out_handle     = 1
+   718932  	 display_buffer_index = 0
+   718933  	 cache_policy                      = 0x00
+   718934  	 buffer                            = 0x0000000000000000
+   718935  	 buffer_size_in_bytes              = 0
+   718936  	 reset_count                       = 0
+   718937  	 force_reset                       = 0x00
+   718938  	 report_and_reset                  = 0x00
+   718939  	 reporting_interval_in_100k_clocks = 0
+   718940  	 cache_policy                      = 0x00
+   718941  	 buffer                            = 0x00000004007ba440
+   718942  	 buffer_size_in_bytes              = 2112
+   718943  	 reset_count                       = 0
+   718944  	 force_reset                       = 0x00
+   718945  	 report_and_reset                  = 0x01
+   718946  	 reporting_interval_in_100k_clocks = 0
+   718947  	 flipPendingNum = 0
+   718948  	 path = /app0/data/prein/characters/gfx/mup_ch_tex_npc_botrope_n.gnfp
+   718949  	 flags = 00000000
+   718950  	 mode = 016d
+   718951  	Open: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/characters/gfx/mup_ch_tex_npc_botrope_n.gnfp, [ok]
+   718952  	KernelFstat: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/characters/gfx/mup_ch_tex_npc_botrope_n.gnfp
+   718953  	Read 1507328 bytes from: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/characters/gfx/mup_ch_tex_npc_botrope_n.gnfp
+   718954  	Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/prein/characters/gfx/mup_ch_tex_npc_botrope_n.gnfp
+   718955  Window 1 closed
+   718956  Event: quit
+   718957  	 path = /app0/data/prein/bg/gfx/veg_tree_ponpon_4v_n.gnfp
+   718958  	 flags = 00000000
+   718959  	 mode = 016d
+   718960  --- Build ---
+   718961  Fork build arigandores/KytyPS5 9bb1e2e-dirty
+   718962  --- Fatal Error ---
+   718963  Error: condition (m_files[index] == nullptr) is true in C:\kyty\KytyPS5\src\kernel\fileSystem.cpp:207
+TOTAL lines 718963
+--- thread headers after Event: quit (tid: last line, time, function)

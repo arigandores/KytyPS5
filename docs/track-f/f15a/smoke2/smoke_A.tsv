@@ -1,0 +1,6 @@
+# exe C:\kyty\f287\f15a\build\b4_race_stand.exe sha256 c1b7033a644aa50639b70da2db893588f5e3256bfe686f9c6a93931411c9563a mode A N 3 first_seed 1001
+seed	rc	class	line
+1001	77	FATAL207	FATAL C:\kyty\f287\f15a\wt\src\kernel\fileSystem.cpp:207 iters=116
+1002	77	FATAL207	FATAL C:\kyty\f287\f15a\wt\src\kernel\fileSystem.cpp:207 iters=138
+1003	77	FATAL207	FATAL C:\kyty\f287\f15a\wt\src\kernel\fileSystem.cpp:207 iters=129
+# done 3 wall 0.1 s counts {'FATAL207': 3}

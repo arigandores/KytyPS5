@@ -202,7 +202,8 @@ private:
 	static void ApplyLightBar(int id, uint8_t r, uint8_t g, uint8_t b);
 	static void ApplyTriggerEffect(int id, const DualSenseEffects& effect);
 
-	// Everything below is guarded by m_mutex; m_thread is touched only by Start and Stop.
+	// Everything below is guarded by m_mutex. m_thread is set by Start (once, before the object is shared) and
+	// moved out under m_mutex by Stop (F19c2, ROADMAP s122 item 460(v)(1)), so concurrent Stop calls join it once.
 	std::mutex              m_mutex;
 	std::condition_variable m_cv;
 	std::thread             m_thread;
@@ -224,16 +225,21 @@ void PadOutput::Start() {
 }
 
 void PadOutput::Stop() {
+	// Track F, F19c2 (ROADMAP s122 item 460(v)(1), RC1 of the F19d review): two emergency exits at once call Stop
+	// concurrently. The thread object is moved out under m_mutex with m_stop = true, so exactly one call owns it and
+	// joins it outside the lock; every other call gets an empty (not joinable) thread and returns.
+	std::thread thread;
 	{
 		std::lock_guard lock(m_mutex);
 		m_stop = true;
+		thread = std::move(m_thread);
 	}
 	m_cv.notify_all();
-	if (m_thread.joinable()) {
-		if (m_thread.get_id() == std::this_thread::get_id()) {
-			m_thread.detach();
+	if (thread.joinable()) {
+		if (thread.get_id() == std::this_thread::get_id()) {
+			thread.detach();
 		} else {
-			m_thread.join();
+			thread.join();
 		}
 	}
 }

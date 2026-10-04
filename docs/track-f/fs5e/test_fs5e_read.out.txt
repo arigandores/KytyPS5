@@ -1,0 +1,3 @@
+suite test_fs5e_read.py sha256 8d9fe64e9c9fc22cbbff9f14554d861ad4d1a82e0aa8b27eba5c460083b9a2e3 target fs5e_read.py sha256 0908a11735502887a7b34c472b1c968f1766ebc0a7d20e99c65404a1dc1035c7
+checks 59 fails 0
+ALL OK

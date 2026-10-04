@@ -1,0 +1,14 @@
+watch: start 2026-10-04T10:37:56Z child 40732 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+base kernel_file_system_tests fix=none rc=3221226505 wall=0.6 s last=[abort() was called: std::terminate on a thread without a report, or an explicit abort] fail_lines=1
+base kernel_file_system_tests fix=0 rc=3221226505 wall=0.6 s last=[abort() was called: std::terminate on a thread without a report, or an explicit abort] fail_lines=1
+base kernel_file_system_tests fix=1 rc=3221226505 wall=0.4 s last=[abort() was called: std::terminate on a thread without a report, or an explicit abort] fail_lines=1
+fix kernel_file_system_tests fix=none rc=3221226505 wall=0.4 s last=[abort() was called: std::terminate on a thread without a report, or an explicit abort] fail_lines=1
+fix kernel_file_system_tests fix=0 rc=3221226505 wall=0.7 s last=[abort() was called: std::terminate on a thread without a report, or an explicit abort] fail_lines=1
+fix kernel_file_system_tests fix=1 rc=3221226505 wall=0.4 s last=[abort() was called: std::terminate on a thread without a report, or an explicit abort] fail_lines=1
+base shader_cfg_tests fix=none rc=0 wall=0.2 s last=[[test] TestNewShaderRecompilerUnsupportedMemoryDecode] fail_lines=8
+base shader_cfg_tests fix=0 rc=0 wall=0.2 s last=[[test] TestNewShaderRecompilerUnsupportedMemoryDecode] fail_lines=8
+base shader_cfg_tests fix=1 rc=0 wall=0.2 s last=[[test] TestNewShaderRecompilerUnsupportedMemoryDecode] fail_lines=8
+fix shader_cfg_tests fix=none rc=0 wall=0.2 s last=[[test] TestNewShaderRecompilerUnsupportedMemoryDecode] fail_lines=8
+fix shader_cfg_tests fix=0 rc=0 wall=0.6 s last=[[test] TestNewShaderRecompilerUnsupportedMemoryDecode] fail_lines=8
+fix shader_cfg_tests fix=1 rc=0 wall=0.2 s last=[[test] TestNewShaderRecompilerUnsupportedMemoryDecode] fail_lines=8
+rc=0 end 2026-10-04T10:38:02Z

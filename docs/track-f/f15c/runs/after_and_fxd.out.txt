@@ -1,0 +1,6 @@
+runs/stand_A_1_1.tsv rows 200 CLEAN with after 200 min after 21 after<20 0
+runs/stand_B_1_1.tsv rows 200 CLEAN with after 200 min after 21 after<20 0
+runs/stand_A_0_1.tsv rows 200 CLEAN with after 3 min after 21 after<20 0
+runs/stand_B_0_1.tsv rows 200 CLEAN with after 51 min after 21 after<20 0
+D seed 20 on disk = pattern(20): True ; = pattern(19): False
+one byte flipped = pattern(20): False ; truncated = pattern(20): False

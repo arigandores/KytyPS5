@@ -1,0 +1,18 @@
+watch: start 2026-10-04T10:38:22Z child 41868 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+base kernel_file_system_tests --filesystem-only fix=none rc=0 last=[KernelFileSystemTests: all cases passed]
+base kernel_file_system_tests --filesystem-only fix=0 rc=0 last=[KernelFileSystemTests: all cases passed]
+base kernel_file_system_tests --filesystem-only fix=1 rc=0 last=[KernelFileSystemTests: all cases passed]
+fix kernel_file_system_tests --filesystem-only fix=none rc=0 last=[KernelFileSystemTests: all cases passed]
+fix kernel_file_system_tests --filesystem-only fix=0 rc=0 last=[KernelFileSystemTests: all cases passed]
+fix kernel_file_system_tests --filesystem-only fix=1 rc=0 last=[KernelFileSystemTests: all cases passed]
+kernel_file_system_tests fix=none failed-lines base 1 fix 1 equal True ['KernelFileSystemTests: failed: guest PEEK and WAITALL preserve the wake bytes']
+kernel_file_system_tests fix=0 failed-lines base 1 fix 1 equal True ['KernelFileSystemTests: failed: guest PEEK and WAITALL preserve the wake bytes']
+kernel_file_system_tests fix=1 failed-lines base 1 fix 1 equal True ['KernelFileSystemTests: failed: guest PEEK and WAITALL preserve the wake bytes']
+shader_cfg_tests fix=none failed-lines base 4 fix 4 equal True ['ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod', 'ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod', 'shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfffffffe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x0)']
+shader_cfg_tests fix=0 failed-lines base 4 fix 4 equal True ['ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod', 'ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod', 'shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfffffffe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x0)']
+shader_cfg_tests fix=1 failed-lines base 4 fix 4 equal True ['ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod', 'ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod', 'shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfffffffe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x0)']
+kfsonly fix=none failed-lines base 0 fix 0 equal True []
+kfsonly fix=0 failed-lines base 0 fix 0 equal True []
+kfsonly fix=1 failed-lines base 0 fix 0 equal True []
+ALL OK
+rc=0 end 2026-10-04T10:38:27Z

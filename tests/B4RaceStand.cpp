@@ -2,7 +2,8 @@
 // item 412(v), (g)(1)-(3)): the exit race of FileSystem::EmergencyShutdown (src/kernel/fileSystem.cpp, called by the
 // at_quick_exit handler of src/emulator.cpp on the main thread) against a guest-like thread inside KernelOpen.
 // One process = one trial, as in the game: EmergencyShutdown runs once per process while the opener keeps running.
-// KYTY_FIX_B4 (read by fileSystem.cpp) selects the code under test: unset/0 - CloseAll, 1 - the B4 fix.
+// KYTY_FIX_B4 (read by fileSystem.cpp) selects the code under test: 0 - CloseAll, 1 - the B4 fix; unset or "" - the
+// default of fileSystem.cpp (1 since FS6a, ROADMAP s122 item 454(g)(1)).
 // Separate CMake target b4_race_stand (EXCLUDE_FROM_ALL, no add_test - not in the default ctest set); the driver is
 // docs/track-f/f15c/run_stand_f15c.py.
 //

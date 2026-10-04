@@ -101,13 +101,19 @@ private:
 static MountPoints*     g_mount_points = nullptr;
 static FileDescriptors* g_files        = nullptr;
 
-// Track F, F15c (ROADMAP s122 items 412(v), 417(b)-(v), row B4): KYTY_FIX_B4 (default 0), read once. At 1 the
+// Track F, F15c (ROADMAP s122 items 412(v), 417(b)-(v), row B4): KYTY_FIX_B4 (default ON since FS6a, item 454(g)(1):
+// unset or "" = ON, 0/false/off/no = OFF; read once). At 1 the
 // emergency exit path (at_quick_exit and atexit(KytyClose) of src/emulator.cpp, both end in EmergencyShutdown below)
 // keeps every File object, slot and host descriptor: guest threads are still running there and may hold a File* from
 // GetFile without m_mutex, so CloseAll deleting it races with them (DeleteDescriptor / KernelOpen EXIT_IF or a
-// use-after-free). The OS closes the host descriptors at the end of the process. Unset or empty - OFF.
+// use-after-free). The OS closes the host descriptors at the end of the process.
 static bool FixB4Enabled() {
-	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_B4"));
+	// Track F, FS6a (HPP-555, ROADMAP s122 item 454(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
+	// other value as EnvValueOn (the form of FS4a 17adaf80).
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_FIX_B4");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	return enabled;
 }
 

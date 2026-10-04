@@ -1,0 +1,12 @@
+track S link S12a (HPP-494): KYTY_S_PCW default 0 -> 1 (ROADMAP s122 item 408(l), 410(g)(6))
+
+SPcwMode reads KYTY_S_PCW in the form of FS4a 17adaf80: unset or "" = ON, 0/false/off/no = OFF, any other value as
+EnvValueOn; still one static const bool per process, the "S-pcw:" constructor line unchanged. The writer thread
+(PcwLoop), the KYTY_S_PCW_FORCE_MS stand and every SPcwMode() branch are unchanged; only the reading and its comment
+change. Outside the translation signature set (pipelineCache.cpp): KYTY_SHADER_SOURCE_HASH stays the base's.
+
+Shipping binary S12: clean worktree of the FS5 worktree commit 0e72bc19 (base by item 410(g)(6)(i): FS5a accepted by
+the lead first) + cherry-pick of this commit. Not claimed: that the write of the growing blob by the =1 path is intact
+(S12c), that the cache write causes cold-entry freezes, that any number is a gain. Not installed; no game run.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

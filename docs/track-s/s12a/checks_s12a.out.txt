@@ -1,0 +1,30 @@
+== (1) git diff --stat 0e72bc19 4d9e8ab7
+ src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+files: ['src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp']
+== (2) git cherry -v 4d9e8ab7 <c> <c>^
+4e72289e: - 4e72289e879b6a8375eada8fb0359037388e5d8c track F link FS3a (HPP-447): KYTY_FIX_B42 default 0 -> 1 (ROADMAP s122 item 367(g)(1))  | want - -> ok
+68602c4f: - 68602c4f301e8d424af0581d11039437ec4a958f track F link F10c (HPP-451): KYTY_FIX_SVAL (default 0) - ValidateShaderSpirv with Valid | want - -> ok
+17adaf80: - 17adaf801069088b68275276c96574b7f8bf5dc3 track F link FS4a (HPP-470): KYTY_FIX_SVAL default 0 -> 1 (ROADMAP s122 item 378(g)(1)) | want - -> ok
+1833ee28: - 1833ee280ec177b65feb6c4a97f626b0d4ce1b9f track F link F12d (HPP-477): KYTY_FIX_F10 (default 0) - IMAGE_BVH_INTERSECT_RAY treats  | want - -> ok
+c3eb8fe8: - c3eb8fe83bf67c66d8b391cffe47f9639f04b39e track F link FS5a (HPP-509): KYTY_FIX_F10 default 0 -> 1 (ROADMAP s122 item 410(g)(1)) | want - -> ok
+c1732d1a: - c1732d1a7f0e7cd2836ff6c767648f71becb7cfb track S link S12a (HPP-494): KYTY_S_PCW default 0 -> 1 (ROADMAP s122 item 408(l), 410(g | want - -> ok
+e11a297b: (ancestor of tip) | want - -> ok
+2ce6326e: (ancestor of tip) | want - -> ok
+741e3312: + 741e3312ab005ece2587cec0410ba7607116aa76 track P link P35 (HPP-438): the descent constant N of KYTY_PVAR_HOLD 30 -> 90 - ROADMAP | want + -> ok
+c9b4268e: + c9b4268e0b47625ff4ec556057b4c0267601ddd0 track P link P40 (HPP-461): growing hold at kt 3 of KYTY_PVAR_HOLD - ROADMAP s122 p.373 | want + -> ok
+fcaf141b: + fcaf141b6f8d5c78b3d009bcab4c807c731921e0 tests: B11 fix - IMAGE_SAMPLE_C/_LZ probes with k32Float, manual-path probes with k8UNo | want + -> ok
+b64cc8be: + b64cc8be8c7ff4546554278392b93022119ad763 track F link F15a (HPP-491): B4 exit race - mechanism on main [c] (CloseAll from at_qui | want + -> ok
+== (3a) wt_s5c files (f3b3aa3b tree) vs 4fc501f4 + S-pcw patch
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp: wt_s5c vs 4fc501f4 +313 -13; patch net +313 -13; equal: True
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.h: wt_s5c vs 4fc501f4 +29 -1; patch net +29 -1; equal: True
+== (3b) S-pcw lines of 2ce6326e and hunks of git diff 2ce6326e 4d9e8ab7
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp: S-pcw lines in 2ce6326e: 313
+  PCW hunk @@ -273,2 +273,3 @@ bool AvTraceEnabled() {
+  PCW hunk @@ -275,0 +277,2 @@ bool SPcwMode() {
+  PCW hunk @@ -278 +281 @@ bool SPcwMode() {
+  hunks 10, touching S-pcw lines: 3
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.h: S-pcw lines in 2ce6326e: 29
+  hunks 1, touching S-pcw lines: 0
+PCW hunks total: 3
+ALL OK

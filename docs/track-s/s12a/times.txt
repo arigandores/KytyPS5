@@ -1,0 +1,16 @@
+2026-10-04T07:33:02Z start S12a (HPP-494): blockers resolved (HPP-493 done); FS5a HPP-509 accepted by lead 2026-10-04T07:21:13Z (comment) -> base by item 410(g)(6)(i) = FS5 worktree commit 0e72bc19; lock none, STOP none; in_progress HE-series of other tracks: none (HPP-498 S13a track S, no game)
+2026-10-04T07:33:45Z main commit S12a code c1732d1a (pipelineCache.cpp only)
+2026-10-04T07:34:29Z rule 30 check before mk_wt: in_progress: HPP-505:Emu_Engineer:ae817548 HPP-502:Probe_Designer:abc428e5 HPP-494:Emu_Engineer:c1c21138 HPP-498:Harness_Engineer:fa462a6e HPP-518:Probe_Designer:37c05321 | HE series: HPP-498 | comments of task: 2
+2026-10-04T07:34:43Z mk_wt_s12a.sh rc=0
+2026-10-04T07:34:48Z configure start
+2026-10-04T07:35:38Z configure rc=0
+2026-10-04T07:35:43Z rule 30 check before build: in_progress: HPP-505:Emu_Engineer:ae817548 HPP-502:Probe_Designer:abc428e5 HPP-494:Emu_Engineer:c1c21138 HPP-498:Harness_Engineer:fa462a6e HPP-518:Probe_Designer:37c05321 | HE series: HPP-498 | comments of task: 2
+2026-10-04T07:36:47Z build step 1 rc=0
+2026-10-04T07:37:25Z build shader_cfg_tests rc=0
+2026-10-04T07:37:31Z binary sha256 adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421, copy C:/kyty/s288/bin/kyty_emulator_adb0c82f.exe
+2026-10-04T07:37:43Z shader_cfg_tests at defaults done: cfg rc=0
+2026-10-04T07:38:02Z knobs_s12a.py 4d9e8ab7: 
+2026-10-04T07:38:13Z knobs_s12a.py 4d9e8ab7: ALL OK
+2026-10-04T07:39:18Z checks_s12a.py 4d9e8ab7: ALL OK
+2026-10-04T07:39:44Z check_gate_order.py --src wt/src: GATE ORDER: clean
+2026-10-04T07:40:58Z report and FACTS section written; commit next

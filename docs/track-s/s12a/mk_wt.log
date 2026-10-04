@@ -1,0 +1,34 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 0e72bc19)
+Updating files:  65% (2793/4258)Updating files:  66% (2811/4258)Updating files:  67% (2853/4258)Updating files:  68% (2896/4258)Updating files:  69% (2939/4258)Updating files:  70% (2981/4258)Updating files:  71% (3024/4258)Updating files:  72% (3066/4258)Updating files:  73% (3109/4258)Updating files:  74% (3151/4258)Updating files:  75% (3194/4258)Updating files:  76% (3237/4258)Updating files:  77% (3279/4258)Updating files:  78% (3322/4258)Updating files:  79% (3364/4258)Updating files:  80% (3407/4258)Updating files:  81% (3449/4258)Updating files:  82% (3492/4258)Updating files:  83% (3535/4258)Updating files:  84% (3577/4258)Updating files:  85% (3620/4258)Updating files:  86% (3662/4258)Updating files:  87% (3705/4258)Updating files:  88% (3748/4258)Updating files:  89% (3790/4258)Updating files:  90% (3833/4258)Updating files:  91% (3875/4258)Updating files:  92% (3918/4258)Updating files:  93% (3960/4258)Updating files:  94% (4003/4258)Updating files:  95% (4046/4258)Updating files:  96% (4088/4258)Updating files:  97% (4131/4258)Updating files:  98% (4173/4258)Updating files:  99% (4216/4258)Updating files: 100% (4258/4258)Updating files: 100% (4258/4258), done.
+HEAD is now at 0e72bc19 track F link FS5a (HPP-509): KYTY_FIX_F10 default 0 -> 1 (ROADMAP s122 item 410(g)(1))
+--- worktree HEAD
+0e72bc19c9ec9a2a2a2c6871b5ab572a2b47f6c9 track F link FS5a (HPP-509): KYTY_FIX_F10 default 0 -> 1 (ROADMAP s122 item 410
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+--- cherry-pick S12a c1732d1a
+[detached HEAD 4d9e8ab7] track S link S12a (HPP-494): KYTY_S_PCW default 0 -> 1 (ROADMAP s122 item 408(l), 410(g)(6))
+ Date: Sun Oct 4 09:33:45 2026 +0200
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+4d9e8ab709b4911a935e76cd90303562b2ecf174 0e72bc19c9ec9a2a2a2c6871b5ab572a2b47f6c9 track S link S12a (HPP-494): KYTY_S_PCW default 0 -> 1 (ROADMAP s122 item 408(
+0e72bc19c9ec9a2a2a2c6871b5ab572a2b47f6c9 8a56dc2a1b30f141493f827610845d843c0ffe2c track F link FS5a (HPP-509): KYTY_FIX_F10 default 0 -> 1 (ROADMAP s122 item 41
+8a56dc2a1b30f141493f827610845d843c0ffe2c 3d0e46daf83ff77584b88fb9a786ed64320cb3b4 track F link F12d (HPP-477): KYTY_FIX_F10 (default 0) - IMAGE_BVH_INTERSECT_RA
+3d0e46daf83ff77584b88fb9a786ed64320cb3b4 92d11340ae1a4fc34445b6e886fd55a201953d00 track F link FS4a (HPP-470): KYTY_FIX_SVAL default 0 -> 1 (ROADMAP s122 item 3
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 456 with CR 0
+WT OK

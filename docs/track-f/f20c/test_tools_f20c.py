@@ -91,6 +91,38 @@ if not os.path.isdir(os.path.join(HERE, 'runs', 'f20_v01')):
     check('go: f20_v02 before f20_v01 refused (order, or lock rc 3)', p.returncode in (2, 3) and ('order' in p.stdout or p.returncode == 3))
 p = subprocess.run([BASH, os.path.join(HERE, 'launch_f20c.sh'), 'f20_v31'], capture_output=True, text=True)
 check('launch: f20_v31 refused', p.returncode == 2)
+# --- FS6b window of item 473: fresh file -> rc 6 + times line, no launch; expired -> times line and on (dry run); absent -> on, no line
+import tempfile  # noqa: E402
+import time  # noqa: E402
+TD = tempfile.mkdtemp()
+WF, TF = os.path.join(TD, 'FS6B_WINDOW'), os.path.join(TD, 'times.txt')
+ENV = dict(os.environ, F20C_FS6B_WINDOW=WF, F20C_TIMES=TF, F20C_DRYRUN='1')
+
+
+def launch_w(age):
+    if os.path.exists(TF):
+        os.remove(TF)
+    if age is None:
+        if os.path.exists(WF):
+            os.remove(WF)
+    else:
+        open(WF, 'w').close()
+        t = time.time() - age
+        os.utime(WF, (t, t))
+    p = subprocess.run([BASH, os.path.join(HERE, 'launch_f20c.sh'), 'f20_v30'], capture_output=True, text=True, env=ENV)
+    tl = open(TF).read() if os.path.exists(TF) else ''
+    return p.returncode, p.stdout, tl
+
+
+rc, out, tl = launch_w(0)
+check('window: fresh 0 s -> rc 6, not launched, times active', rc == 6 and 'launched' not in out and 'window active' in tl and 'f20_v30' in tl)
+rc, out, tl = launch_w(890)
+check('window: 890 s -> rc 6', rc == 6 and 'window active' in tl)
+rc, out, tl = launch_w(910)
+check('window: 910 s -> expired line, goes (dry run), file kept', rc == 0 and 'dryrun' in out and 'window expired' in tl and os.path.exists(WF))
+rc, out, tl = launch_w(None)
+check('window: absent -> goes (dry run), no window line', rc == 0 and 'dryrun' in out and 'window' not in tl)
+shutil.rmtree(TD, ignore_errors=True)
 for nm in ('post_f20c.sh', 'wait_f20c.sh', 'launch_f20c.sh', 'go_f20c.sh'):
     s = open(os.path.join(HERE, nm), encoding='ascii').read()
     check('%s: tags f20_v01..f20_v30 only' % nm, nm == 'wait_f20c.sh' or 'f20_v0[1-9]|f20_v[12][0-9]|f20_v30' in s)

@@ -1,0 +1,19 @@
+sha256 b9e0ee0092ca1504979ebd674abb21c8d67015fd030bc33615eb2c87acb90f91 C:/kyty/f287/bin/kyty_emulator_b9e0ee00.exe
+9177b4267de1fb8bac7d1113afd8733210addfac 1
+1892-g61b410bf 1
+kq_n= 1
+kq_us= 2
+m5r_us= 1
+kq_budget_div= 1
+kq_near_us= 1
+slot_full_w= 1
+torn_w= 1
+ring_drop_w= 1
+sgap_bad_w= 1
+lines_cut_w= 1
+req_miss_w= 1
+sub_miss_w= 1
+ASubmit 1
+DiagB32-x: n= 1
+KYTY_DIAG_B32 1
+KYTY_TEST_B32 1

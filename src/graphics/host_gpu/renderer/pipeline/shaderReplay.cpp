@@ -577,6 +577,37 @@ const IR::DescriptorValue* DescriptorOf(const IR::ResourceSnapshot& snapshot, co
 	return flow.index < array.size() ? &array[flow.index] : nullptr;
 }
 
+// S17a3 (HPP-620, ROADMAP s122 item 537(g)(2)): the two perturbations of the role (bit 8, bit 0) do not test the
+// substitution the canonical form makes - INERT 0x45f -> 0x10f flips bits 4, 6, 8, 10 (the canon_self rejects of the
+// s17c_c2 tag). The canonical value of one word is taken only when the walk with this one word in that value (all other
+// words raw) is the same: ok, complete, the live specialization and the same requests; an address word (PTR_*, V_*)
+// may move requests, each by exactly the substitution in its half of the address (the walk adds offsets to the
+// address it reads through; the canonical forms keep bits 0..3, so the masks of the walk do not change the move).
+bool SubstitutionHolds(const IR::ResourcePlan& plan, const std::vector<Word>& raw, size_t user_words, size_t i,
+                       Role role, uint32_t value, const RunResult& base, const IR::ResourceSpecialization& live) {
+	auto path     = raw;
+	path[i].value = value;
+	const auto now = Run(plan, path, user_words, true);
+	if (!now.ok || !now.complete || !(now.specialization == live) || now.requested.size() != base.requested.size()) {
+		return false;
+	}
+	const uint64_t difference = static_cast<uint64_t>(value) - static_cast<uint64_t>(raw[i].value);
+	uint64_t       shift      = 0;
+	switch (role) {
+		case ROLE_PTR_LO:
+		case ROLE_V_LO: shift = difference; break;
+		case ROLE_PTR_HI:
+		case ROLE_V_HI: shift = difference << 32u; break;
+		default: break;
+	}
+	for (size_t j = 0; j < base.requested.size(); j++) {
+		if (now.requested[j] != base.requested[j] && (shift == 0 || now.requested[j] - base.requested[j] != shift)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 std::atomic<bool> g_canon_stand_done {false};
 
 } // namespace
@@ -605,8 +636,10 @@ bool Canonicalize(const IR::ResourcePlan& plan, const Trace& trace, const IR::Re
 		why = "base";
 		return false;
 	}
-	// Role of every word: two perturbations (bit 8, bit 0), each replayed in full.
-	std::vector<Word> canonical = raw;
+	// Role of every word: two perturbations (bit 8, bit 0), each replayed in full; then the canonical substitution of the
+	// word alone (S17a3, SubstitutionHolds) - a word it changes the walk of is kept as read.
+	std::vector<Word>    canonical = raw;
+	std::vector<uint8_t> kept_address(raw.size(), 0u);
 	for (size_t i = 0; i < raw.size(); i++) {
 		if ((raw[i].flags & WORD_OK) == 0) {
 			continue; // a failed read answers 0 and fails again; nothing to keep
@@ -663,8 +696,16 @@ bool Canonicalize(const IR::ResourcePlan& plan, const Trace& trace, const IR::Re
 		} else if (!sensitive && !ptr_lo) {
 			role = ROLE_INERT;
 		}
+		uint32_t value = Canonical(role, raw[i].value, descriptor);
+		if (value != raw[i].value && !SubstitutionHolds(plan, raw, user_words, i, role, value, base, live)) {
+			// Kept as read (ROLE_KEEP). A word the classifier took for an address (any role but INERT) may not reach the
+			// catalogue as read: the record is rejected below (residual, item 537(g)(3)).
+			kept_address[i] = role != ROLE_INERT ? 1u : 0u;
+			role            = ROLE_KEEP;
+			value           = raw[i].value;
+		}
 		canonical[i].role  = role;
-		canonical[i].value = Canonical(role, raw[i].value, descriptor);
+		canonical[i].value = value;
 	}
 	// KYTY_S_REPLAY_TEST=canon: one canonical T# base field spoiled (a non-null T# made null) - the self-check below must
 	// reject it (canon_mismatch > 0, member K3). S17a2 (item 532(d)(a), RC4(a) of the S17b review): the stand is spent
@@ -713,7 +754,8 @@ bool Canonicalize(const IR::ResourcePlan& plan, const Trace& trace, const IR::Re
 		return false;
 	}
 	// No word kept as read may carry a guest address the walk used (lower 32 bits of a read address or of a non-null
-	// descriptor base); small values are not compared.
+	// descriptor base); small values are not compared. S17a3: nor may an address word whose canonical substitution
+	// failed (kept_address), whatever its value - the exact-value comparison does not see a pointer read at offsets.
 	std::unordered_set<uint32_t> addresses;
 	for (const auto address: base.requested) {
 		addresses.insert(static_cast<uint32_t>(address));
@@ -731,8 +773,10 @@ bool Canonicalize(const IR::ResourcePlan& plan, const Trace& trace, const IR::Re
 			addresses.insert(d.dwords[7]);
 		}
 	}
-	for (const auto& word: canonical) {
-		if (word.role == ROLE_KEEP && word.value >= 0x10000u && addresses.contains(word.value)) {
+	for (size_t i = 0; i < canonical.size(); i++) {
+		const auto& word = canonical[i];
+		if (kept_address[i] != 0u ||
+		    (word.role == ROLE_KEEP && word.value >= 0x10000u && addresses.contains(word.value))) {
 			why = "residual";
 			return false;
 		}

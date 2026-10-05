@@ -326,7 +326,9 @@ private:
 };
 
 // Canonicalization of one read path (writer thread; also used by the tests). Returns false when the path cannot be
-// recorded; `why` = "base", "big", "self" or "residual". On success `words` holds the canonical path.
+// recorded; `why` = "base", "big", "self" or "residual". On success `words` holds the canonical path. A word gets the
+// canonical value of its role only when the walk with that one word substituted is the same (S17a3, item 537(g)(2));
+// otherwise it is kept as read, and an address word kept as read rejects the record ("residual").
 constexpr size_t MaxPathWords = 4096;
 bool Canonicalize(const ShaderRecompiler::IR::ResourcePlan& plan, const Trace& trace,
                   const ShaderRecompiler::IR::ResourceSpecialization& live, std::vector<Word>& words,

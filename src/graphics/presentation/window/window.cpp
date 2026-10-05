@@ -18,6 +18,7 @@
 #include "SDL_touch.h"
 #include "SDL_video.h"
 #include "SDL_vulkan.h"
+#include "common/diagB32.h"
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
@@ -1305,6 +1306,11 @@ static void WindowTestHidLossNoteGuestText(const char* text, size_t size) {
 // sleeps; the SDL calls are posted to the main thread.  A process that ends inside the window never restores it.
 void WindowTestMinimizeNoteGuestText(const char* text, size_t size) {
 	WindowTestHidLossNoteGuestText(text, size); // Track F, F19c, KYTY_TEST_HIDLOSS (item 451(c))
+	if (Common::DiagB32::g_test_on && text != nullptr) [[unlikely]] { // Track F, F20j: KYTY_TEST_B32 arms on the same line
+		if (TestMinimizeIsLevelEntry(std::string_view(text, size))) {
+			Common::DiagB32::TestArm();
+		}
+	}
 	struct TestMinimize {
 		bool   on      = false;
 		double delay_s = 0.0;

@@ -1,5 +1,6 @@
 #include "graphics/host_gpu/renderer/masterSemaphore.h"
 
+#include "common/diagB32.h"
 #include "common/assert.h"
 #include "common/drawStat.h"
 #include "common/frameStats.h"
@@ -96,6 +97,10 @@ void MasterSemaphore::Wait(uint64_t tick) {
 		                        GpuQueueTraceEnabled() || m_graphics.gpu_markers_enabled;
 		bool reported = false;
 		uint32_t timeouts = 0;
+		Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M3 H:semwait - vkWaitSemaphores)
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginH(Common::DiagB32::Call::SemWait);
+		}
 		do {
 			result = m_graphics.device.waitSemaphores(&wait_info,
 			    diagnostic ? uint64_t {2000000000} : UINT64_MAX);
@@ -144,6 +149,7 @@ void MasterSemaphore::Wait(uint64_t tick) {
 				reported = true;
 			}
 		} while (diagnostic && result == vk::Result::eTimeout);
+		b32.End(0, false);
 		if (t0 != 0) {
 			const auto ns = FS::NowNs() - t0;
 			FS::Add(FS::Counter::SemWaitNs, ns);

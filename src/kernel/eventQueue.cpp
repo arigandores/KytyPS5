@@ -1,5 +1,6 @@
 #include "kernel/eventQueue.h"
 
+#include "common/diagB32.h"
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/frameStats.h"
@@ -65,6 +66,8 @@ private:
 	std::string                  m_name;
 	KernelEqueue                 m_handle = KERNEL_EQUEUE_INVALID;
 	bool                         m_closed = false;
+	// Track F, F20j (KYTY_DIAG_B32, M2 event queue): DiagB32::PackSig of the last TriggerEvent / AddEvent; =1 only.
+	std::atomic<uint64_t> m_b32_sig {0};
 };
 
 KernelEqueuePrivate::~KernelEqueuePrivate() {
@@ -176,10 +179,18 @@ int KernelEqueuePrivate::WaitForEvents(KernelEvent* ev, int num, uint32_t micros
 	Common::Timer t;
 	t.Start();
 
+	// Track F, F20j (KYTY_DIAG_B32, M2 event queue): W:eq over the wait; the waker - the last trigger in the wait.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginW(Common::DiagB32::Wait::Eq, this, 0, micros);
+	}
 	for (;;) {
 		int ret = GetTriggeredEvents(ev, num);
 
 		if (ret != 0 || (elapsed >= micros && micros != 0)) {
+			if (b32.Active()) [[unlikely]] {
+				b32.End(ret > 0 ? Common::DiagB32::SigWaker(m_b32_sig.load(std::memory_order_relaxed), b32.SinceNs()) : 0, ret == 0);
+			}
 			return ret;
 		}
 
@@ -219,6 +230,9 @@ int KernelEqueuePrivate::AddEvent(const KernelEqueueEvent& event) {
 		m_events.push_back(event);
 	}
 
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 event queue)
+	}
 	m_cond_var.Signal();
 	return OK;
 }
@@ -241,6 +255,9 @@ int KernelEqueuePrivate::TriggerEvent(uintptr_t ident, int16_t filter, void* tri
 			event.triggered = true;
 		}
 
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 event queue)
+		}
 		m_cond_var.Signal();
 
 		return OK;

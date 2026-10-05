@@ -5,6 +5,7 @@
 #include <map>
 #include <cstdlib>
 
+#include "common/diagB32.h"
 #include "common/assert.h"
 #include "common/drawStat.h"
 #include "common/envFlag.h"
@@ -924,7 +925,12 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 	CtxTick::RecordBlock("submit-sync");
 	// Synchronous: everything queued before goes first, including commands no record thread has
 	// written yet. After it the handle belongs to this thread again.
+	Common::DiagB32::Mark b32_drain; // Track F, F20j (KYTY_DIAG_B32 M3 H:drain)
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32_drain.BeginH(Common::DiagB32::Call::Drain);
+	}
 	DrainAsyncSubmits();
+	b32_drain.End(0, false);
 	const auto buffer = m_command.m_buffer;
 	EXIT_IF(buffer == nullptr);
 	if (submit.present) {
@@ -935,7 +941,12 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 
 	vk::Result result;
 	{
+		Common::DiagB32::Mark b32_q; // Track F, F20j (KYTY_DIAG_B32 M3 H:qlock - the wait for graphics.queue_mutex)
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32_q.BeginH(Common::DiagB32::Call::QLock);
+		}
 		Common::LockGuard lock(graphics.queue_mutex);
+		b32_q.End(0, false);
 		tick = m_master.NextTick();
 		submit.AddSignal(m_master.Handle(), tick);
 
@@ -956,7 +967,11 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 		submit_info.pSignalSemaphores    = submit.signal_semaphores.data();
 
 		RecordGpuSubmission(this, m_master.Handle(), tick, submit, false, vk::Result::eNotReady);
+		if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (KYTY_DIAG_B32 M3 H:qsubmit)
+			b32_q.BeginH(Common::DiagB32::Call::QSubmit);
+		}
 		result = graphics.queue.submit(1, &submit_info, nullptr);
+		b32_q.End(0, false);
 		RecordGpuSubmission(this, m_master.Handle(), tick, submit, true, result);
 	}
 

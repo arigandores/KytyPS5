@@ -1,4 +1,5 @@
 #include "common/frameStats.h"
+#include "common/diagB32.h"
 
 #include "common/common.h"
 #include "common/envFlag.h"
@@ -231,6 +232,11 @@ uint32_t TakeMax(Gauge gauge) {
 void RegisterCurrentThread(ThreadRole role) {
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 	t_role = role;
+	// Track F, F20j (KYTY_DIAG_B32, RC2): the role's slot of the B32 sampler (Main, Gpu, Present, Record).
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		static constexpr const char* names[] = {"Main", "Gpu", "Present", "Record"};
+		Common::DiagB32::RegisterRole(static_cast<size_t>(role) < 4 ? names[static_cast<size_t>(role)] : "emu");
+	}
 	StartSampler(role);
 	if (!Enabled()) {
 		return;
@@ -630,6 +636,14 @@ uint64_t ThreadCpuNs(ThreadRole role) {
 #else
 	(void)role;
 	return 0;
+#endif
+}
+
+double CpuCyclesPerNs() {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	return TscCyclesPerNs();
+#else
+	return 0.0;
 #endif
 }
 

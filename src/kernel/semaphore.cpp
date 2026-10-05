@@ -1,5 +1,6 @@
 #include "kernel/semaphore.h"
 
+#include "common/diagB32.h"
 #include "common/assert.h"
 #include "common/logging/log.h"
 #include "common/stringUtils.h"
@@ -70,6 +71,8 @@ private:
 	int                         m_count;
 	int                         m_init_count;
 	int                         m_max_count;
+	// Track F, F20j (KYTY_DIAG_B32, M2 sem): DiagB32::PackSig of the last Signal / Cancel; written only at =1.
+	std::atomic<uint64_t> m_b32_sig {0};
 };
 
 KernelSemaPrivate::~KernelSemaPrivate() {
@@ -143,6 +146,9 @@ KernelSemaPrivate::Result KernelSemaPrivate::Signal(int signal_count) {
 
 	m_count += signal_count;
 
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 sem)
+	}
 	WakeWaiters();
 
 	m_cond_var.SignalAll();
@@ -221,11 +227,17 @@ KernelSemaPrivate::Result KernelSemaPrivate::Wait(int need_count, uint32_t* ptr_
 	waiter.priority   = (m_fifo_order ? 0 : Libs::LibKernel::PthreadGetCurrentPriorityForKernel());
 	waiter.need_count = need_count;
 	AddWaiter(&waiter);
+	// Track F, F20j (KYTY_DIAG_B32, M2 sem): W:sem on the blocking path; the waker - the last Signal.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginW(Common::DiagB32::Wait::Sem, this, 0, infinitely ? 0 : static_cast<uint64_t>(micros));
+	}
 
 	while (!waiter.ready) {
 		if ((elapsed >= micros && !infinitely)) {
 			RemoveWaiter(&waiter);
 			*ptr_micros = 0;
+			b32.End(0, true);
 			return Result::TimedOut;
 		}
 
@@ -242,6 +254,10 @@ KernelSemaPrivate::Result KernelSemaPrivate::Wait(int need_count, uint32_t* ptr_
 		elapsed = static_cast<uint32_t>(t.GetTimeS() * 1000000.0);
 	}
 
+	if (b32.Active()) [[unlikely]] {
+		b32.End(waiter.result == Result::Ok ? Common::DiagB32::SigWaker(m_b32_sig.load(std::memory_order_relaxed), b32.SinceNs()) : 0,
+		        false);
+	}
 	RemoveWaiter(&waiter);
 
 	if (ptr_micros != nullptr) {
@@ -407,8 +423,14 @@ public:
 		Common::Timer timer;
 		timer.Start();
 
+		// Track F, F20j (KYTY_DIAG_B32, M2 sem): W:psem on the blocking path; the waker - the last Post.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on && m_count <= 0) [[unlikely]] {
+			b32.BeginW(Common::DiagB32::Wait::PSem, this, 0, timed_wait ? static_cast<uint64_t>(*micros) : 0);
+		}
 		while (m_count <= 0) {
 			if (timed_wait && elapsed >= *micros) {
+				b32.End(0, true);
 				SyncGuest();
 				return POSIX_ETIMEDOUT;
 			}
@@ -430,6 +452,9 @@ public:
 			elapsed = static_cast<uint32_t>(timer.GetTimeS() * 1000000.0);
 		}
 
+		if (b32.Active()) [[unlikely]] {
+			b32.End(Common::DiagB32::SigWaker(m_b32_sig.load(std::memory_order_relaxed), b32.SinceNs()), false);
+		}
 		m_count--;
 		SyncGuest();
 
@@ -457,6 +482,9 @@ public:
 			return POSIX_EOVERFLOW;
 		}
 
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 sem)
+		}
 		m_count++;
 		SyncGuest();
 		m_cond_var.Signal();
@@ -488,6 +516,8 @@ private:
 	PosixSemGuest*  m_guest   = nullptr;
 	int             m_count   = 0;
 	uint32_t        m_waiters = 0;
+	// Track F, F20j (KYTY_DIAG_B32): DiagB32::PackSig of the last Post (host object); written only at =1.
+	std::atomic<uint64_t> m_b32_sig {0};
 };
 
 Common::Mutex                                        g_posix_sem_mutex;

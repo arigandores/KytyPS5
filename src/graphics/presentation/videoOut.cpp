@@ -1,6 +1,7 @@
 #include "graphics/presentation/videoOut.h"
 
 #include "common/abi.h"
+#include "common/diagB32.h"
 #include "common/assert.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
@@ -543,6 +544,9 @@ static int ReserveFlipRequest(VideoOutDriver::Impl& driver, int handle, int inde
 	}
 	if (!driver.GetFlipQueue().Reserve(*video_out, index, flip_arg, source, request_id)) {
 		return VIDEO_OUT_ERROR_FLIP_QUEUE_FULL;
+	}
+	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (M2 flip request): who requested this flip (flip_tid)
+		Common::DiagB32::NoteFlipRequest(request_id, source == FlipRequestSource::Cpu);
 	}
 	return OK;
 }
@@ -1220,7 +1224,16 @@ bool FlipQueue::Flip(uint32_t micros) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::SkcBad, 1); // a skipceil request presented
 		}
 		const uint64_t present_t0 = Common::FrameStats::NowNs();
+		// Track F, F20j (KYTY_DIAG_B32 M3 H:present; stand KYTY_TEST_B32 mode present sleeps inside the mark): one flag.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_present_site) [[unlikely]] {
+			if (Common::DiagB32::g_on) {
+				b32.BeginH(Common::DiagB32::Call::Present);
+			}
+			Common::DiagB32::TestPresentPoint();
+		}
 		m_presenter.Present(*r.frame);
+		b32.End(0, false);
 		present_ns = Common::FrameStats::NowNs() - present_t0;
 		Common::FrameStats::Add(Common::FrameStats::Counter::SkcPresNs, present_ns); // Session 123, S_live ([RC12/O12])
 		Common::FrameStats::Add(Common::FrameStats::Counter::SkcPresN, 1);
@@ -1235,6 +1248,11 @@ bool FlipQueue::Flip(uint32_t micros) {
 	m_requests.pop_front();
 
 	r.cfg->flip_status.count++;
+	// Track F, F20j (KYTY_DIAG_B32): the window boundary for the B32 sampler (n = FrameTrace: n= of this flip); the
+	// reports the sampler has closed are printed here, outside m_mutex.
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		Common::DiagB32::OnFlip(r.cfg->flip_status.count, r.id, r.reserve_host_ns);
+	}
 	// Track P, KYTY_PVAR=2 (kernel/pvar.h): the key n of the PVar line (= FrameTrace: n= of this flip).
 	if (LibKernel::PVar::Publishing()) {
 		LibKernel::PVar::PublishFlip(r.cfg->flip_status.count);

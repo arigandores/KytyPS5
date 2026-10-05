@@ -1,3 +1,4 @@
+#include "common/diagB32.h"
 #include "common/assert.h"
 
 #include "common/frameStats.h"
@@ -653,10 +654,15 @@ Swapchain::Status Swapchain::AcquireNextImage(CommandScheduler& scheduler) {
 	// its previous wait must finish before acquire signals it again.
 	m_acquire_ticks.resize(m_image_acquired.size());
 	scheduler.Wait(m_acquire_ticks[m_frame_index]);
+	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M3 H:acquire)
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginH(Common::DiagB32::Call::Acquire);
+	}
 	m_image_index     = static_cast<uint32_t>(-1);
 	const auto result = m_window.graphic_ctx.device.acquireNextImageKHR(
 	    m_handle, std::numeric_limits<uint64_t>::max(), m_image_acquired[m_frame_index], nullptr,
 	    &m_image_index);
+	b32.End(0, false);
 	switch (result) {
 		case vk::Result::eSuccess: break;
 		case vk::Result::eSuboptimalKHR:

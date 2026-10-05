@@ -1,5 +1,6 @@
 #include "kernel/pthread.h"
 
+#include "common/diagB32.h"
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/dateTime.h"
@@ -482,6 +483,10 @@ struct PthreadPrivate {
 	uint64_t              cond_sequence = 0;
 	std::condition_variable cond_cv;
 	std::atomic<uint64_t> pending_signal_mask {0};
+	// Track F, F20j (KYTY_DIAG_B32): host-heap fields, never seen by the guest (the guest sees `guest` only); written
+	// only at KYTY_DIAG_B32=1 (value-initialized with the object like every other field).
+	std::atomic<int32_t>  b32_slot1 {0}; // DiagB32 slot + 1 of this thread
+	std::atomic<uint64_t> b32_waker {0}; // DiagB32::PackSig of the thread whose Signal/Broadcast advanced cond_sequence
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 	uintptr_t guest_host_gs8;
 	uintptr_t guest_host_gs10;
@@ -570,6 +575,9 @@ static void CondWakeWaiter(PthreadCondPrivate* cond, Pthread thread) {
 
 	cond->waiters.erase(it);
 	thread->cond_sequence++;
+	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (M2 cond): the waker of this waiter
+		thread->b32_waker.store(Common::DiagB32::PackSig(), std::memory_order_relaxed);
+	}
 	// Notify while holding cond->m so the selected waiter cannot exit and be freed first.
 	thread->cond_cv.notify_one();
 }
@@ -1103,6 +1111,10 @@ void PthreadInitSelfForMainThread() {
 	g_pthread_self->name            = "MainThread";
 	g_pthread_self->guest.thread_id = ++g_pthread_thread_id;
 	g_pthread_self->unique_id       = Common::Thread::GetThreadIdUnique();
+	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j: the guest main thread's slot (registered as role Main)
+		g_pthread_self->b32_slot1.store(Common::DiagB32::RegisterGuest(g_pthread_self->unique_id, "MainThread"),
+		                                 std::memory_order_relaxed);
+	}
 	g_pthread_self->free            = false;
 	g_pthread_self->detached        = false;
 	g_pthread_self->almost_done     = false;
@@ -1370,6 +1382,13 @@ static int NativeMutexLock(PthreadMutexPrivate* mutex, KernelUseconds* timeout_u
 		return EDEADLK;
 	}
 
+	// Track F, F20j (KYTY_DIAG_B32, RC5(a)): W:mutex only on the slow path (another thread owns the mutex) - this also
+	// covers NativeMutexLockRecurse, the re-lock after a cond wait. The peer is the owner at entry.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && mutex->owner != nullptr && (timeout_us == nullptr || *timeout_us > 0)) [[unlikely]] {
+		b32.BeginW(Common::DiagB32::Wait::Mutex, mutex, mutex->owner->b32_slot1.load(std::memory_order_relaxed),
+		           timeout_us != nullptr ? static_cast<uint64_t>(*timeout_us) : 0);
+	}
 	if (timeout_us == nullptr) {
 		while (mutex->owner != nullptr) {
 			mutex->cv.wait_for(lock, std::chrono::microseconds(SIGNAL_APC_POLL_MICROS));
@@ -1389,6 +1408,7 @@ static int NativeMutexLock(PthreadMutexPrivate* mutex, KernelUseconds* timeout_u
 		while (mutex->owner != nullptr) {
 			const auto now = std::chrono::steady_clock::now();
 			if (now >= deadline) {
+				b32.EndWithPeer(true);
 				return ETIMEDOUT;
 			}
 
@@ -1406,6 +1426,7 @@ static int NativeMutexLock(PthreadMutexPrivate* mutex, KernelUseconds* timeout_u
 		}
 	}
 
+	b32.EndWithPeer(false);
 	mutex->owner = self;
 	mutex->count = 1;
 	return OK;
@@ -1478,6 +1499,13 @@ static int NativeMutexLockRecurse(PthreadMutexPrivate* mutex, uint32_t recurse) 
 		mutex->count = std::max<uint32_t>(recurse, 1);
 	}
 	return result;
+}
+
+// Track F, F20j (KYTY_DIAG_B32): the requested time of an absolute cond wait, us (0 if already past).
+static uint64_t B32ReqUs(std::chrono::steady_clock::time_point deadline) {
+	const auto now = std::chrono::steady_clock::now();
+	return deadline > now ? static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(deadline - now).count())
+	                      : 0;
 }
 
 static bool NativeCondDeadlineFromAbs(KernelClockid clock_id, const KernelTimespec* abstime,
@@ -2824,6 +2852,9 @@ int KYTY_SYSV_ABI PthreadCondBroadcast(PthreadCond* cond) {
 	std::lock_guard lock((*cond)->m);
 	for (auto* thread: (*cond)->waiters) {
 		thread->cond_sequence++;
+		if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (M2 cond): the waker of every waiter
+			thread->b32_waker.store(Common::DiagB32::PackSig(), std::memory_order_relaxed);
+		}
 		thread->cond_cv.notify_one();
 	}
 	(*cond)->waiters.clear();
@@ -2974,6 +3005,12 @@ int KYTY_SYSV_ABI PthreadCondTimedwait(PthreadCond* cond, PthreadMutex* mutex,
 
 	const auto deadline = std::chrono::steady_clock::now() + std::chrono::microseconds(usec);
 	auto ready = [thread, thread_sequence] { return thread->cond_sequence != thread_sequence; };
+	// Track F, F20j (KYTY_DIAG_B32, M2 cond): W:cond over the wait loop; the waker - the thread whose Signal / Broadcast
+	// advanced cond_sequence (b32_waker); a timeout has none.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginW(Common::DiagB32::Wait::Cond, cond_value, 0, static_cast<uint64_t>(usec));
+	}
 
 	if (usec == 0) {
 		result = ETIMEDOUT;
@@ -2999,6 +3036,10 @@ int KYTY_SYSV_ABI PthreadCondTimedwait(PthreadCond* cond, PthreadMutex* mutex,
 		}
 
 		result = (ready() ? OK : ETIMEDOUT);
+	}
+	if (b32.Active()) [[unlikely]] {
+		b32.End(ready() ? Common::DiagB32::SigWaker(thread->b32_waker.load(std::memory_order_relaxed), b32.SinceNs()) : 0,
+		        !ready());
 	}
 	CondRemoveWaiter(cond_value, thread);
 	cond_lock.unlock();
@@ -3062,6 +3103,12 @@ int KYTY_SYSV_ABI PthreadCondTimedwaitAbs(PthreadCond* cond, PthreadMutex* mutex
 	}
 
 	auto ready = [thread, thread_sequence] { return thread->cond_sequence != thread_sequence; };
+	// Track F, F20j (KYTY_DIAG_B32, M2 cond): W:cond over the wait loop; the waker - the thread whose Signal / Broadcast
+	// advanced cond_sequence (b32_waker); a timeout has none.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginW(Common::DiagB32::Wait::Cond, cond_value, 0, B32ReqUs(deadline));
+	}
 
 	while (!ready()) {
 		const auto now = std::chrono::steady_clock::now();
@@ -3084,6 +3131,10 @@ int KYTY_SYSV_ABI PthreadCondTimedwaitAbs(PthreadCond* cond, PthreadMutex* mutex
 	}
 
 	result = (ready() ? OK : ETIMEDOUT);
+	if (b32.Active()) [[unlikely]] {
+		b32.End(ready() ? Common::DiagB32::SigWaker(thread->b32_waker.load(std::memory_order_relaxed), b32.SinceNs()) : 0,
+		        !ready());
+	}
 	CondRemoveWaiter(cond_value, thread);
 	cond_lock.unlock();
 
@@ -3138,6 +3189,12 @@ int KYTY_SYSV_ABI PthreadCondWait(PthreadCond* cond, PthreadMutex* mutex) {
 	}
 
 	auto ready = [thread, thread_sequence] { return thread->cond_sequence != thread_sequence; };
+	// Track F, F20j (KYTY_DIAG_B32, M2 cond): W:cond over the wait loop; the waker - the thread whose Signal / Broadcast
+	// advanced cond_sequence (b32_waker); a timeout has none.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginW(Common::DiagB32::Wait::Cond, cond_value, 0, 0);
+	}
 
 	while (!ready()) {
 		thread->cond_cv.wait_for(cond_lock, std::chrono::microseconds(SIGNAL_APC_POLL_MICROS));
@@ -3146,6 +3203,10 @@ int KYTY_SYSV_ABI PthreadCondWait(PthreadCond* cond, PthreadMutex* mutex) {
 			KernelDispatchPendingSignalForCurrentThread();
 			cond_lock.lock();
 		}
+	}
+	if (b32.Active()) [[unlikely]] {
+		b32.End(ready() ? Common::DiagB32::SigWaker(thread->b32_waker.load(std::memory_order_relaxed), b32.SinceNs()) : 0,
+		        !ready());
 	}
 	CondRemoveWaiter(cond_value, thread);
 	cond_lock.unlock();
@@ -3281,6 +3342,9 @@ static void CleanupThread(void* arg) {
 	if (thread->attr != nullptr) {
 		Memory::UnregisterGuestStack(reinterpret_cast<uint64_t>(thread->attr->stack_addr));
 	}
+	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j: the slot stops being sampled
+		Common::DiagB32::Unregister();
+	}
 	thread->almost_done = true;
 }
 
@@ -3346,6 +3410,10 @@ static void* RunThread(void* arg) {
 	     reinterpret_cast<uint64_t>(thread->entry), reinterpret_cast<uint64_t>(thread->arg),
 	     reinterpret_cast<uint64_t>(thread->attr->stack_addr),
 	     static_cast<uint64_t>(thread->attr->stack_size));
+	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (KYTY_DIAG_B32): the guest thread's slot, name and id
+		thread->b32_slot1.store(Common::DiagB32::RegisterGuest(thread->unique_id, thread->name.c_str()),
+		                        std::memory_order_relaxed);
+	}
 	{
 		static const char* gate_name = std::getenv("KYTY_RET_TRACE_AFTER_THREAD");
 		if (gate_name != nullptr && !g_ret_trace_gate.load(std::memory_order_relaxed) &&
@@ -4151,7 +4219,12 @@ void KYTY_SYSV_ABI KernelSetThreadDtors(thread_dtors_func_t dtors) {
 int KYTY_SYSV_ABI KernelUsleep(KernelUseconds microseconds) {
 	Common::Timer t;
 	t.Start();
+	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32, RC5(b)): W:sleep with the requested time, no waker
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginW(Common::DiagB32::Wait::Sleep, nullptr, 0, static_cast<uint64_t>(microseconds));
+	}
 	SleepMicroWithSignalPoll(microseconds);
+	b32.End(0, true);
 	// double ts = t.GetTimeS();
 	// LOGF("\tactual: %g microseconds\n", ts * 1000000.0);
 	return OK;
@@ -4162,7 +4235,12 @@ unsigned int KYTY_SYSV_ABI KernelSleep(unsigned int seconds) {
 	LOGF("\tsleep: %u\n", seconds);
 	Common::Timer t;
 	t.Start();
+	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32, RC5(b)): W:sleep with the requested time, no waker
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginW(Common::DiagB32::Wait::Sleep, nullptr, 0, static_cast<uint64_t>(seconds) * 1000000ull);
+	}
 	SleepMicroWithSignalPoll(static_cast<uint64_t>(seconds) * 1000000ull);
+	b32.End(0, true);
 	double ts = t.GetTimeS();
 	LOGF("\tactual: %g seconds\n", ts);
 	return OK;
@@ -4191,7 +4269,12 @@ int KYTY_SYSV_ABI KernelNanosleep(const KernelTimespec* rqtp, KernelTimespec* rm
 
 	Common::Timer t;
 	t.Start();
+	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32, RC5(b)): W:sleep with the requested time, no waker
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginW(Common::DiagB32::Wait::Sleep, nullptr, 0, nanos / 1000u);
+	}
 	SleepNanoWithSignalPoll(nanos);
+	b32.End(0, true);
 	double ts = t.GetTimeS();
 	LOGF("\tactual: %g nanoseconds\n", ts * 1000000000.0);
 

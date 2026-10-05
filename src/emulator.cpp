@@ -3,6 +3,7 @@
 
 #include "common/abi.h"
 #include "common/assert.h"
+#include "common/diagB32.h"
 #include "common/emulatorConfig.h"
 #include "common/file.h"
 #include "common/logging/log.h"
@@ -200,6 +201,8 @@ static void Execute(const std::filesystem::path& game_patch) {
 }
 
 void Run(const RunOptions& options) {
+	// Track F, F20j: KYTY_DIAG_B32 / KYTY_TEST_B32 are read here once, before any guest thread (RC10).
+	Common::DiagB32::Init();
 	// Process-local test overrides: no cache files are removed or modified by the cold mode.
 	// prepare-cold retains the known shader catalogue but forces fresh driver compilation.
 	if (const char* mode = std::getenv("KYTY_CACHE_MODE"); mode != nullptr && mode[0] != 0) {
@@ -231,6 +234,7 @@ void Run(const RunOptions& options) {
 	ClearDebugTextureFolder();
 
 	PrintSystemInfo();
+	Common::DiagB32::LogHeader(); // Track F, F20j: "DiagB32: mode=1 ..." / "TestB32: config ..." once
 	std::string title_id;
 	if (Loader::SystemContentParamSfoGetString("TITLE_ID", &title_id) && !title_id.empty()) {
 		Log::WriteToConsoleAndLog(fmt::format("Title ID: {}\n", title_id));

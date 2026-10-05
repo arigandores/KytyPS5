@@ -10,6 +10,7 @@
 #include <windows.h> // IWYU pragma: keep
 
 #include "common/assert.h"
+#include "common/diagB32.h"
 #include "common/platform/sysVirtual.h"
 #include "common/virtualMemory.h"
 
@@ -318,6 +319,10 @@ bool SysVirtualFreeRange(uint64_t address, uint64_t size) {
 
 bool SysVirtualProtect(uint64_t address, uint64_t size, VirtualMemory::Mode mode) {
 	DWORD old_protect = 0;
+	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M3 H:protect - VirtualProtect, ends with the scope)
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginH(Common::DiagB32::Call::Protect);
+	}
 	if (VirtualProtect(reinterpret_cast<LPVOID>(static_cast<uintptr_t>(address)), size,
 	                   GetProtectionFlag(mode), &old_protect) == 0) {
 		printf("VirtualProtect() failed: 0x%08" PRIx32 "\n", static_cast<uint32_t>(GetLastError()));

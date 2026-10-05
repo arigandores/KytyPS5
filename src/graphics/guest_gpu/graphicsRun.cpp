@@ -1,5 +1,6 @@
 #include "graphics/guest_gpu/graphicsRun.h"
 
+#include "common/diagB32.h"
 #include "common/assert.h"
 #include "common/drawStat.h"
 #include "common/emulatorConfig.h"
@@ -672,6 +673,9 @@ void GuestGpu::Enqueue(Submission submission) {
 	    std::chrono::duration_cast<std::chrono::nanoseconds>(
 	        std::chrono::steady_clock::now().time_since_epoch())
 	        .count());
+	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (M4): the last guest submission - waker of W:gpu_idle
+		Common::DiagB32::NoteSubmit(submission.bf.seq);
+	}
 	m_queues[submission.queue_id].push_back(std::move(submission));
 	m_submission_count++;
 	m_work_available.Signal();
@@ -710,6 +714,9 @@ void GuestGpu::ThreadRun(void* data) {
 			(void)DiagF6::Service();
 			(void)DiagF5Id::Service(); // Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(1)): the sum line, same point
 		}
+		if (Common::DiagB32::g_test_gpusleep) [[unlikely]] { // Track F, F20j: stand KYTY_TEST_B32 gpusleep, outside every mark
+			Common::DiagB32::TestGpuSleepPoint();
+		}
 		Submission                   submission;
 		Common::UniqueFunction<void> command;
 		bool                         has_submission = false;
@@ -724,7 +731,14 @@ void GuestGpu::ThreadRun(void* data) {
 					Common::FrameStats::Scope idle_scope(Common::FrameStats::Counter::GpuThreadIdleNs);
 					Common::FrameStats::WallSpan wall(true, Common::FrameStats::Counter::GpuWallIdleNs,
 					                                  Common::FrameStats::Counter::GpuWallIdleN);
+					Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M4 W:gpu_idle; waker - the last guest submission)
+					if (Common::DiagB32::g_on) [[unlikely]] {
+						b32.BeginW(Common::DiagB32::Wait::GpuIdle, gpu, 0, 0);
+					}
 					gpu->m_work_available.Wait(&gpu->m_queue_mutex);
+					if (b32.Active()) [[unlikely]] {
+						b32.End(Common::DiagB32::LastSubmitWaker(b32.SinceNs()), false);
+					}
 				}
 			}
 			if (gpu->m_stopping && gpu->m_commands.empty() && gpu->m_submission_count == 0) {
@@ -759,7 +773,12 @@ void GuestGpu::ThreadRun(void* data) {
 						Common::FrameStats::Scope blocked_scope(Common::FrameStats::Counter::GpuThreadBlockedNs);
 						Common::FrameStats::WallSpan wall(true, Common::FrameStats::Counter::GpuWallBlockedNs,
 						                                  Common::FrameStats::Counter::GpuWallBlockedN);
+						Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M4 W:gpu_regmem - all queues on WAIT_REG_MEM)
+						if (Common::DiagB32::g_on) [[unlikely]] {
+							b32.BeginW(Common::DiagB32::Wait::GpuRegmem, gpu, 0, 100000);
+						}
 						gpu->m_work_available.WaitFor(&gpu->m_queue_mutex, 100);
+						b32.End(0, false);
 					}
 					if (trace_sched) {
 						const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -780,6 +799,9 @@ void GuestGpu::ThreadRun(void* data) {
 				}
 				auto& queue = gpu->m_queues[static_cast<uint32_t>(selected_queue)];
 				submission  = std::move(queue.front());
+				if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j: the submission whose flip packet names flip_tid
+					Common::DiagB32::NoteCurrentSubmission(submission.bf.seq);
+				}
 				queue.pop_front();
 				gpu->m_submission_count--;
 				gpu->m_next_queue = (static_cast<uint32_t>(selected_queue) + 1) % QueueCount;

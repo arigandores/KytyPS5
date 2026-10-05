@@ -547,6 +547,14 @@ add_kyty_full_emulator_test(audio_propagation_tests
 add_kyty_full_emulator_test(f8_audio_stand
 	"${KYTY_TESTS_DIR}/F8AudioStand.cpp")
 
+# Track F, F20j (KYTY_DIAG_B32 core: partition, I1, I2', I3, window, lines, counters; ROADMAP s122 item 550(z)(4)):
+# run by docs/track-f/f20j/run_tests_f20j.py, not by ctest.
+add_executable(diag_b32_tests EXCLUDE_FROM_ALL
+	"${KYTY_TESTS_DIR}/DiagB32Tests.cpp"
+)
+target_link_libraries(diag_b32_tests common fmt::fmt)
+target_include_directories(diag_b32_tests PRIVATE ${inc_headers})
+
 add_executable(sync_on_address_tests EXCLUDE_FROM_ALL
 	"${KYTY_TESTS_DIR}/SyncOnAddressTests.cpp"
 	"${KYTY_SOURCE_DIR}/kernel/syncOnAddress.cpp"

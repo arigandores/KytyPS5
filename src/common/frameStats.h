@@ -2949,6 +2949,8 @@ void                   RegisterCurrentThread(ThreadRole role);
 [[nodiscard]] ThreadRole CurrentRole(); // ThreadRole::Count if the thread is not registered
 [[nodiscard]] uint64_t ThreadCpuNs(ThreadRole role); // 0 if unknown
 [[nodiscard]] uint64_t ProcessCpuNs();
+// Track F, F20j (KYTY_DIAG_B32, RC4): the TSC calibration ThreadCpuNs converts QueryThreadCycleTime with (0 off Windows).
+[[nodiscard]] double     CpuCyclesPerNs();
 
 // Adds the elapsed time to `ns` and increments `count` (Counter::Count = none) when destroyed.
 class Scope {

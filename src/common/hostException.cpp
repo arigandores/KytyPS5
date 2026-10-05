@@ -4,6 +4,7 @@
 
 #include "common/envFlag.h"
 #include "common/frameStats.h"
+#include "common/diagB32.h"
 
 #include <atomic>
 #include <cstdio>
@@ -170,7 +171,12 @@ static LONG WINAPI ExceptionFilter(PEXCEPTION_POINTERS exception) noexcept {
 		// KYTY_FAULT_TRACE=1: every resolved fault, all threads (host tid, RIP, address, time).
 		static const bool fault_trace = Common::EnvFlagOn("KYTY_FAULT_TRACE");
 		const auto t0       = (Common::FrameStats::Enabled() || fault_trace) ? Common::FrameStats::NowNs() : 0;
+		Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M3 H:fault - the guest exception handler)
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginH(Common::DiagB32::Call::Fault);
+		}
 		const bool resolved = handler(info);
+		b32.End(0, false);
 		if (t0 != 0 && fault_trace && info.type == ExceptionType::AccessViolation) {
 			static std::atomic<uint32_t> logged {0};
 			if (logged.fetch_add(1, std::memory_order_relaxed) < 3000000) {

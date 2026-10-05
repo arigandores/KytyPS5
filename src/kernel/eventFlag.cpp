@@ -1,5 +1,6 @@
 #include "kernel/eventFlag.h"
 
+#include "common/diagB32.h"
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/logging/log.h"
@@ -48,6 +49,8 @@ private:
 	std::string     m_name;
 	bool            m_single_thread = false;
 	uint64_t        m_bits          = 0;
+	// Track F, F20j (KYTY_DIAG_B32, M2 event flag): DiagB32::PackSig of the last Set; written only at =1.
+	std::atomic<uint64_t> m_b32_sig {0};
 };
 
 namespace {
@@ -120,6 +123,7 @@ KernelEventFlagPrivate::Result KernelEventFlagPrivate::Wait(uint64_t bits, WaitM
 		}
 	};
 
+	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32): begun below only on the blocking path
 	if (m_single_thread && m_waiting_threads > 0) {
 		return Result::AlreadyWaiting;
 	}
@@ -130,10 +134,15 @@ KernelEventFlagPrivate::Result KernelEventFlagPrivate::Wait(uint64_t bits, WaitM
 			if (result != nullptr) {
 				*result = m_bits;
 			}
+			b32.End(0, true);
 			update_timeout();
 			return Result::TimedOut;
 		}
 
+		// Track F, F20j (KYTY_DIAG_B32, M2 event flag): W:evf from the first blocking pass; the waker - the last Set.
+		if (Common::DiagB32::g_on && !b32.Active()) [[unlikely]] {
+			b32.BeginW(Common::DiagB32::Wait::Evf, this, 0, infinitely ? 0 : static_cast<uint64_t>(micros));
+		}
 		m_waiting_threads++;
 
 		if (infinitely) {
@@ -163,6 +172,9 @@ KernelEventFlagPrivate::Result KernelEventFlagPrivate::Wait(uint64_t bits, WaitM
 		}
 	}
 
+	if (b32.Active()) [[unlikely]] {
+		b32.End(Common::DiagB32::SigWaker(m_b32_sig.load(std::memory_order_relaxed), b32.SinceNs()), false);
+	}
 	if (result != nullptr) {
 		*result = m_bits;
 	}
@@ -189,6 +201,9 @@ void KernelEventFlagPrivate::Set(uint64_t bits) {
 	}
 
 	m_bits |= bits;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 event flag)
+	}
 
 	m_cond_var.SignalAll();
 }

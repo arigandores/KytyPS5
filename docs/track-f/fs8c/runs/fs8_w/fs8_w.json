@@ -1,0 +1,359 @@
+{
+  "tag": "fs8_w",
+  "binary_sha256": "2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b",
+  "started": "2026-10-05T08:39:39",
+  "launched": "2026-10-05T08:33:38",
+  "finished": "2026-10-05T08:39:39",
+  "cmdline": [
+    "C:\\kyty\\KytyPS5\\ps5 em\\kyty_emulator.exe",
+    "--screen-width",
+    "1280",
+    "--screen-height",
+    "720",
+    "--user-name",
+    "Player",
+    "--user-id",
+    "1000",
+    "--present-mode",
+    "Fifo",
+    "--vblank-frequency",
+    "60",
+    "--console-language",
+    "1",
+    "--vulkan-validation",
+    "false",
+    "--shader-validation",
+    "false",
+    "--shader-optimization-type",
+    "Size",
+    "--shader-log-direction",
+    "File",
+    "--shader-log-folder",
+    "_Shaders",
+    "--command-buffer-dump",
+    "false",
+    "--command-buffer-dump-folder",
+    "_Buffers",
+    "--printf-direction",
+    "File",
+    "--printf-output-file",
+    "_kyty.txt",
+    "--spirv-debug-printf",
+    "false",
+    "--game",
+    "C:\\kyty\\KytyPS5\\ps5 em\\games\\PPSA21564-app",
+    "--vulkan-validation",
+    "true"
+  ],
+  "env": {
+    "KYTY_FRAME_TRACE": "lite",
+    "KYTY_GPU_HANG_ABORT_S": "8",
+    "KYTY_GATE_FILE": "C:\\kyty\\f287\\fs8c\\gates.req",
+    "KYTY_SAMPLE_GATE": "C:\\kyty\\f287\\fs8c\\sample.req",
+    "KYTY_QUEUE_TRACE": "1",
+    "KYTY_GUEST_ARGS": "-lvl underwater_aerial_garden",
+    "VK_LAYER_PATH": "C:/VulkanSDK/1.4.357.0/Bin",
+    "VK_LAYER_DUPLICATE_MESSAGE_LIMIT": "100000000",
+    "KYTY_GPU_CLOCK_PIN": "1",
+    "KYTY_GPU_MARKERS": "0"
+  },
+  "schedule": "",
+  "arms": [],
+  "phases": [],
+  "notes": "KYTY_GPU_TIME unset: the record thread stays live (PacketsWanted); guest command line: -lvl underwater_aerial_garden; stable = 90 consecutive FrameTrace lines with draws >= 300; ran the already installed binary (--no-install); extra emulator arguments: --vulkan-validation true",
+  "pre_run": {
+    "gpu_util_median": 0.0,
+    "gpu_power_median": 18.2,
+    "gpu_memory_used_mib": 1312,
+    "gpu_sm_mhz_median": 1485.0,
+    "gpu_util_samples": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gpu_apps": [
+      {
+        "pid": 10484,
+        "name": "<app>"
+      },
+      {
+        "pid": 7304,
+        "name": "<app>"
+      },
+      {
+        "pid": 4148,
+        "name": "<app>"
+      },
+      {
+        "pid": 11500,
+        "name": "<app>"
+      },
+      {
+        "pid": 18320,
+        "name": "<app>"
+      },
+      {
+        "pid": 1476,
+        "name": "<app>"
+      },
+      {
+        "pid": 21192,
+        "name": "<app>"
+      },
+      {
+        "pid": 19148,
+        "name": "<app>"
+      },
+      {
+        "pid": 21648,
+        "name": "<app>"
+      },
+      {
+        "pid": 25780,
+        "name": "<app>"
+      },
+      {
+        "pid": 37408,
+        "name": "<app>"
+      },
+      {
+        "pid": 37780,
+        "name": "<app>"
+      },
+      {
+        "pid": 38076,
+        "name": "<app>"
+      },
+      {
+        "pid": 40560,
+        "name": "<app>"
+      },
+      {
+        "pid": 12248,
+        "name": "<app>"
+      },
+      {
+        "pid": 7424,
+        "name": "<app>"
+      },
+      {
+        "pid": 49864,
+        "name": "<app>"
+      },
+      {
+        "pid": 46060,
+        "name": "<app>"
+      },
+      {
+        "pid": 33176,
+        "name": "<app>"
+      },
+      {
+        "pid": 49544,
+        "name": "<app>"
+      },
+      {
+        "pid": 36064,
+        "name": "<app>"
+      },
+      {
+        "pid": 47140,
+        "name": "<app>"
+      }
+    ],
+    "gpu_apps_masked": true,
+    "host": {
+      "available": true,
+      "process_count": 353,
+      "top": [
+        {
+          "name": "<app>",
+          "pid": 18388,
+          "cpu_s": 57489.1,
+          "ws_mib": 1509.6
+        },
+        {
+          "name": "<app>",
+          "pid": 37780,
+          "cpu_s": 27916.0,
+          "ws_mib": 655.4
+        },
+        {
+          "name": "<app>",
+          "pid": 7304,
+          "cpu_s": 13963.5,
+          "ws_mib": 632.9
+        },
+        {
+          "name": "<app>",
+          "pid": 23460,
+          "cpu_s": 12238.8,
+          "ws_mib": 33.3
+        },
+        {
+          "name": "<app>",
+          "pid": 10308,
+          "cpu_s": 6437.7,
+          "ws_mib": 127.4
+        },
+        {
+          "name": "<app>",
+          "pid": 68992,
+          "cpu_s": 4244,
+          "ws_mib": 36.9
+        },
+        {
+          "name": "<app>",
+          "pid": 25836,
+          "cpu_s": 3637.5,
+          "ws_mib": 329.1
+        },
+        {
+          "name": "<app>",
+          "pid": 14164,
+          "cpu_s": 3506.9,
+          "ws_mib": 241.0
+        },
+        {
+          "name": "<app>",
+          "pid": 40560,
+          "cpu_s": 3328,
+          "ws_mib": 314.5
+        },
+        {
+          "name": "<app>",
+          "pid": 36064,
+          "cpu_s": 3040.6,
+          "ws_mib": 623.4
+        },
+        {
+          "name": "<app>",
+          "pid": 1476,
+          "cpu_s": 3018.5,
+          "ws_mib": 215.9
+        },
+        {
+          "name": "<app>",
+          "pid": 21984,
+          "cpu_s": 2335.5,
+          "ws_mib": 279.0
+        },
+        {
+          "name": "<app>",
+          "pid": 59172,
+          "cpu_s": 1522.8,
+          "ws_mib": 165.1
+        },
+        {
+          "name": "<app>",
+          "pid": 25780,
+          "cpu_s": 1329.6,
+          "ws_mib": 192.3
+        },
+        {
+          "name": "<app>",
+          "pid": 32300,
+          "cpu_s": 1086.8,
+          "ws_mib": 130.8
+        },
+        {
+          "name": "<app>",
+          "pid": 23764,
+          "cpu_s": 660.8,
+          "ws_mib": 146.3
+        },
+        {
+          "name": "<app>",
+          "pid": 19148,
+          "cpu_s": 621.8,
+          "ws_mib": 256.6
+        },
+        {
+          "name": "<app>",
+          "pid": 38224,
+          "cpu_s": 605.9,
+          "ws_mib": 7.2
+        },
+        {
+          "name": "<app>",
+          "pid": 49544,
+          "cpu_s": 605.7,
+          "ws_mib": 223.2
+        },
+        {
+          "name": "<app>",
+          "pid": 37408,
+          "cpu_s": 601.4,
+          "ws_mib": 244.2
+        }
+      ],
+      "names_masked": true,
+      "sampled_at": "2026-10-05T08:33:38"
+    },
+    "sampled_at": "2026-10-05T08:33:38"
+  },
+  "hold_gpu": {
+    "available": true,
+    "source": "gpuclk csv (nvidia-smi -lms 500)",
+    "hold_from": "2026/10/05 08:34:23.361",
+    "hold_to": "2026/10/05 08:39:33.399",
+    "rows": 610,
+    "util_rows": 610,
+    "gpu_util_median": 11.0,
+    "gpu_power_median": 34.7,
+    "gpu_util_max": 21.0,
+    "note": "a row, not a guard"
+  },
+  "prereg": {
+    "path": "C:\\kyty\\f287\\fs8c\\pred\\fs8c_seal.md",
+    "bytes": 26358,
+    "sha256": "c7b605b22b426738d7fb7bd66059f1d6151e6283bb2adca80c51b52743467dce",
+    "mtime": "2026-10-05T08:23:15",
+    "ctime": "2026-10-05T08:23:15",
+    "mtime_ctime_delta_s": 0.0,
+    "read_at": "2026-10-05T08:33:33"
+  },
+  "attempts": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 50532,
+      "level": "underwater_aerial_garden",
+      "guest_args": "-lvl underwater_aerial_garden",
+      "document_s": 19.9,
+      "started_s": 23.0,
+      "stable_s": 45.0,
+      "stable_frame": 433,
+      "outcome": "ok",
+      "detail": null,
+      "hold_from": "2026/10/05 08:34:23.361",
+      "hold_to": "2026/10/05 08:39:33.399",
+      "ft_total": 2868,
+      "ft_tail": 41,
+      "ft_tail_span_s": 5.022,
+      "ft_window_s": 5.0,
+      "hold_exit": null,
+      "hold_s": 310.0,
+      "close_posted": 5,
+      "close_rc": 0,
+      "close_killed": false,
+      "close_s": 4.0,
+      "close_wait_s": 40,
+      "pipeline_cache_off": false
+    }
+  ],
+  "gates": "",
+  "schedule_period": 0,
+  "schedule_start": 0,
+  "guest_args": "-lvl underwater_aerial_garden",
+  "hold_s": 310,
+  "ft_total": 2868,
+  "ft_tail": 41,
+  "ft_tail_span_s": 5.022,
+  "ft_window_s": 5.0,
+  "cpuclk_requested": true,
+  "gpuclk": "C:\\kyty\\f287\\fs8c\\gpuclk_fs8_w.csv",
+  "cpuclk": null
+}

@@ -1,0 +1,17 @@
+prereg: fs8c_seal.md  26358 bytes  sha256 c7b605b22b426738  mtime 2026-10-05T08:23:15  mtime-ctime +0.000 s
+pre_run: host 360 processes, top by CPU: <app>:18388 57645s, <app>:37780 27928s, <app>:7304 13977s, <app>:23460 12246s, <app>:10308 6445s, <app>:68992 4253s
+pre_run: GPU 0.0 % busy, 18.4 W, 1312 MiB used, SM 1462.0 MHz, 22 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\fs8c\cpuclk.py is not there
+--- attempt 1: launching
+12.9 s  LevelDocument Loaded: enemy_final
+17.1 s  Level has started: enemy_final
+22.3 s  scene stable at frame 442 (90 frames with draws >= 100)
+holding the run for 330 s
+hold end: ft_total 20262, ft_tail 301 (last 5 s)
+close: {'close_posted': 4, 'close_rc': 0, 'close_killed': False, 'close_s': 3.9, 'close_wait_s': 40}
+hold_gpu: median 55.0 % busy over 649 rows (2026/10/05 08:42:30.106 .. 2026/10/05 08:48:00.302), a row, not a guard
+copied C:\kyty\f287\fs8c\log_fs8_ef.txt
+copied C:\kyty\f287\fs8c\stdout_fs8_ef.txt
+
+attempt 1  ok               document=12.9 s started=17.1 s stable=22.3 s 
+VERDICT: enemy_final in 22.3 s - PASS (acceptance <= 90 s)

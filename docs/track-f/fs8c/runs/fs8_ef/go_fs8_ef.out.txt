@@ -1,0 +1,18 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-05T06:41:52Z FS8c go_fs8c fs8_ef lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-05T06:41:52Z FS8c go_fs8c fs8_ef installed binary inside the lock before the tag: 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2
+2026-10-05T06:41:55Z FS8c go_fs8c fs8_ef manifest before: manifest C:/kyty/f287/fs8c/runs/fs8_ef/manifest_before.tsv files 3325 bytes 921309523 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+2026-10-05T06:41:59Z FS8c go_fs8c fs8_ef caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (192/172/5/520/ MB)
+2026-10-05T06:42:00Z FS8c go_fs8c fs8_ef cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-05T06:41:59Z; entries of _ShaderCache/PPSA21564: 1347
+2026-10-05T06:42:00Z FS8c go_fs8c fs8_ef installed the FS8 copy: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-05T06:42:00Z FS8c go_fs8c fs8_ef enter_scene start (level enemy_final, SD 100, --rec, hold 330, defaults of FS8 - no KYTY_FIX_*)
+2026-10-05T06:48:06Z FS8c go_fs8c fs8_ef enter_scene rc 0
+2026-10-05T06:48:07Z FS8c go_fs8c fs8_ef run: VERDICT: enemy_final in 22.3 s - PASS (acceptance <= 90 s)
+2026-10-05T06:48:08Z FS8c go_fs8c fs8_ef log_fs8_ef.txt sha256 9a02e0322d7ce9ed7aefa433f2610ddd95491950855b66afafa490d56413c467
+2026-10-05T06:48:09Z FS8c go_fs8c fs8_ef installed binary returned from the pinned copy
+2026-10-05T06:48:11Z FS8c go_fs8c fs8_ef installed binary after the tag: 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2
+2026-10-05T06:48:13Z FS8c go_fs8c fs8_ef manifest of the run state (before the return): manifest C:/kyty/f287/fs8c/runs/fs8_ef/manifest_run.tsv files 3480 bytes 949365247 listsha a607b0364b717139348c88720eb3ce69e6b8f81c73d6bbc96f2a92d151e9cbd2; run vs before: manifest cmp DIFFER only-before 3 only-after 158
+2026-10-05T06:48:14Z FS8c go_fs8c fs8_ef caches, saves and GLCache returned
+2026-10-05T06:48:17Z FS8c go_fs8c fs8_ef manifest after: manifest C:/kyty/f287/fs8c/runs/fs8_ef/manifest_after.tsv files 3325 bytes 921309523 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621; cmp: manifest cmp EQUAL files 3325 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+2026-10-05T06:48:17Z FS8c go_fs8c fs8_ef lock released (rc 0)
+rc=0

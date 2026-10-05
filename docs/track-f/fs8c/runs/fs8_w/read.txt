@@ -1,0 +1,37 @@
+FS8C fs8_w kind w level underwater_aerial_garden log sha256 93f5f87e0db45b803854bf066532d2afb3f5132991b665ee9e1db24d557b9ea6 lines 3662434 stdout sha256 1038c550597da5fc431dc553523f39e7973a99ff1b28066fbbabe089a4c24d40
+  binary: json 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b installed_sha 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b (expected 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b); installed before 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2 after 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2 (expected 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2); revision texts [('log', 127, '302347b')]
+  prereg c7b605b22b426738d7fb7bd66059f1d6151e6283bb2adca80c51b52743467dce seal c7b605b22b426738d7fb7bd66059f1d6151e6283bb2adca80c51b52743467dce; env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'VK_LAYER_DUPLICATE_MESSAGE_LIMIT', 'VK_LAYER_PATH']; offending []
+  Shader translation cache lines 1 ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']; form: cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-05T06:33:32Z; entries of _ShaderCache/PPSA21564: 1347
+  Fix lines (line, mode): B4 [(15, '1')] F8 [(10623, '1')] B24 [(17, '1')]; first GuestOut line 11898
+  entry line 351792; scene change line None; first scene frame n 344; hold (sum dt after it) 324.4 s; frames >= 1 s after it 0 (max dt_us 764051); FrameTrace rows 2868
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; GamePatch lines 0; AsyncPipelines: skipped draw 2058
+  W: [Vulkan][E] 0 (VUID-06479 0); [Vulkan][W] 934190; last-time-reporting lines 0; DualSrcBlend [(78, 1, 1)]
+  manifest: manifest cmp EQUAL files 3325 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+  EXIT (report): {'outcome': 'ok', 'detail': None, 'hold_exit': None, 'hold_s': 310.0, 'stable_s': 45.0, 'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 4.0, 'close_wait_s': 40}; Event: quit line 3662432
+  ADMIT binary sha256 of the tag = 2c9b69b9 (json binary_sha256 and installed_sha.txt; N1 item 530 (g)): YES
+  ADMIT version string ...-1889-g302347b4 in the binary file (N1): YES
+  ADMIT every revision text of the log and stdout = 302347b (N1; SDL_REVISION never read) ['302347b']: YES
+  ADMIT prereg sha256 of the json = sha256 of the seal file: YES
+  ADMIT environment and command line of the form (no KYTY_FIX_*, no KYTY_GAME_PATCH / KYTY_GPU_CHECKPOINTS; W of item 295 (b)): YES
+  ADMIT cold form: variant_fixb26_fixb1b_fixf10_fixf19 absent before the start: YES
+  ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+  FORM installed FS6 9325446c before the tag: YES
+  FORM installed FS6 9325446c after the return: YES
+  FORM manifest of the caches before = after the return (manifest cmp EQUAL): YES
+  MEMBER entered (entry line of underwater_aerial_garden): YES
+  MEMBER translation cache directory variant_fixb26_fixb1b_fixf10_fixf19 in every line (>= 1 line) ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']: YES
+  MEMBER FixB4: mode=1 before the first GuestOut (mode=1 lines [15], other form lines [], first GuestOut line 11898): YES
+  MEMBER FixF8: mode=1 before the first GuestOut, letter of item 471 (g)(3) (mode=1 lines [10623], other form lines [], first GuestOut line 11898): YES
+  MEMBER hold >= 300 s (sum dt after the first scene frame): YES
+  MEMBER the process lived to the end of the hold (outcome ok, hold_exit null, hold_s >= 310): YES
+  MEMBER 0 [Vulkan][E] (VUID-06479 lines 0): YES
+  MEMBER positive control of the layer, [Vulkan][W] > 0: YES
+  MEMBER DualSrcBlend supported=1 enabled=1 before the first GuestOut: YES
+  REPORT frames >= 1 s after the first scene frame = 0, max dt_us 764051 (REPORT, not a gate - cold entry): YES
+  REPORT FixF8 by the reading of item 518 (v)(4): exactly 1 line mode=1, order not a gate (REPORT, executor variant): YES
+  REPORT FixB24: mode=1 before the first GuestOut (REPORT, base FS7 control beyond item 471 (g)(3); mode=1 lines [17], other form lines [], first GuestOut line 11898): YES
+  REPORT AsyncPipelines: skipped draw lines = 2058 (REPORT): NO
+  REPORT last-time-reporting lines of the layer = 0 (REPORT): YES
+  REPORT 0 death markers (REPORT for W) []: YES
+  READING MEMBERS_PASS

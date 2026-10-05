@@ -1,0 +1,1 @@
+pair: C:/kyty/f287/fs8c/runs/fs8_v/pair_fs8_v_over_f19_v1.jpg rc 0 (top fs8_v, bottom f19_v1)

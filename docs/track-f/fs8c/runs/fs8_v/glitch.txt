@@ -1,0 +1,2 @@
+C:/kyty/f287/fs8c/rec_fs8_v.mp4: 10081 frames 960x540, index entries 10081
+one-frame glitches: 0

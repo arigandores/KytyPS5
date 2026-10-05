@@ -1,0 +1,110 @@
+0df13a66:src/common/frameStats.cpp:236	if (Common::DiagB32::g_on) [[unlikely]] {	static constexpr const char* names[] = {"Main", "Gpu", "Present", "Record"};
+0df13a66:src/common/frameStats.cpp:238	Common::DiagB32::RegisterRole(static_cast<size_t>(role) < 4 ? names[static_cast<size_t>(role)] : "emu");	}
+0df13a66:src/common/hostException.cpp:174	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M3 H:fault - the guest exception handler)	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/common/hostException.cpp:175	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginH(Common::DiagB32::Call::Fault);
+0df13a66:src/common/hostException.cpp:176	b32.BeginH(Common::DiagB32::Call::Fault);	}
+0df13a66:src/common/platform/sysWindowsVirtual.cpp:322	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M3 H:protect - VirtualProtect, ends with the scope)	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/common/platform/sysWindowsVirtual.cpp:323	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginH(Common::DiagB32::Call::Protect);
+0df13a66:src/common/platform/sysWindowsVirtual.cpp:324	b32.BeginH(Common::DiagB32::Call::Protect);	}
+0df13a66:src/emulator.cpp:205	Common::DiagB32::Init();	// Process-local test overrides: no cache files are removed or modified by the cold mode.
+0df13a66:src/emulator.cpp:237	Common::DiagB32::LogHeader(); // Track F, F20j: "DiagB32: mode=1 ..." / "TestB32: config ..." once	std::string title_id;
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:675	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (M4): the last guest submission - waker of W:gpu_idle	Common::DiagB32::NoteSubmit(submission.bf.seq);
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:676	Common::DiagB32::NoteSubmit(submission.bf.seq);	}
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:704	if (Common::DiagB32::g_test_gpusleep) [[unlikely]] { // Track F, F20j: stand KYTY_TEST_B32 gpusleep, outside every mark	Common::DiagB32::TestGpuSleepPoint();
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:705	Common::DiagB32::TestGpuSleepPoint();	}
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:721	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M4 W:gpu_idle; waker - the last guest submission)	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:722	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::GpuIdle, gpu, 0, 0);
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:723	b32.BeginW(Common::DiagB32::Wait::GpuIdle, gpu, 0, 0);	}
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:727	b32.End(Common::DiagB32::LastSubmitWaker(b32.SinceNs()), false);	}
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:763	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M4 W:gpu_regmem - all queues on WAIT_REG_MEM)	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:764	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::GpuRegmem, gpu, 0, 100000);
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:765	b32.BeginW(Common::DiagB32::Wait::GpuRegmem, gpu, 0, 100000);	}
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:789	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j: the submission whose flip packet names flip_tid	Common::DiagB32::NoteCurrentSubmission(submission.bf.seq);
+0df13a66:src/graphics/guest_gpu/graphicsRun.cpp:790	Common::DiagB32::NoteCurrentSubmission(submission.bf.seq);	}
+0df13a66:src/graphics/host_gpu/renderer/commandScheduler.cpp:928	Common::DiagB32::Mark b32_drain; // Track F, F20j (KYTY_DIAG_B32 M3 H:drain)	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/graphics/host_gpu/renderer/commandScheduler.cpp:929	if (Common::DiagB32::g_on) [[unlikely]] {	b32_drain.BeginH(Common::DiagB32::Call::Drain);
+0df13a66:src/graphics/host_gpu/renderer/commandScheduler.cpp:930	b32_drain.BeginH(Common::DiagB32::Call::Drain);	}
+0df13a66:src/graphics/host_gpu/renderer/commandScheduler.cpp:944	Common::DiagB32::Mark b32_q; // Track F, F20j (KYTY_DIAG_B32 M3 H:qlock - the wait for graphics.queue_mutex)	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/graphics/host_gpu/renderer/commandScheduler.cpp:945	if (Common::DiagB32::g_on) [[unlikely]] {	b32_q.BeginH(Common::DiagB32::Call::QLock);
+0df13a66:src/graphics/host_gpu/renderer/commandScheduler.cpp:946	b32_q.BeginH(Common::DiagB32::Call::QLock);	}
+0df13a66:src/graphics/host_gpu/renderer/commandScheduler.cpp:970	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (KYTY_DIAG_B32 M3 H:qsubmit)	b32_q.BeginH(Common::DiagB32::Call::QSubmit);
+0df13a66:src/graphics/host_gpu/renderer/commandScheduler.cpp:971	b32_q.BeginH(Common::DiagB32::Call::QSubmit);	}
+0df13a66:src/graphics/host_gpu/renderer/masterSemaphore.cpp:100	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M3 H:semwait - vkWaitSemaphores)	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/graphics/host_gpu/renderer/masterSemaphore.cpp:101	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginH(Common::DiagB32::Call::SemWait);
+0df13a66:src/graphics/host_gpu/renderer/masterSemaphore.cpp:102	b32.BeginH(Common::DiagB32::Call::SemWait);	}
+0df13a66:src/graphics/presentation/videoOut.cpp:547	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (M2 flip request): who requested this flip (flip_tid)	Common::DiagB32::NoteFlipRequest(request_id, source == FlipRequestSource::Cpu);
+0df13a66:src/graphics/presentation/videoOut.cpp:548	Common::DiagB32::NoteFlipRequest(request_id, source == FlipRequestSource::Cpu);	}
+0df13a66:src/graphics/presentation/videoOut.cpp:1227	Common::DiagB32::Mark b32;	if (Common::DiagB32::g_present_site) [[unlikely]] {
+0df13a66:src/graphics/presentation/videoOut.cpp:1228	if (Common::DiagB32::g_present_site) [[unlikely]] {	if (Common::DiagB32::g_on) {
+0df13a66:src/graphics/presentation/videoOut.cpp:1229	if (Common::DiagB32::g_on) {	b32.BeginH(Common::DiagB32::Call::Present);
+0df13a66:src/graphics/presentation/videoOut.cpp:1230	b32.BeginH(Common::DiagB32::Call::Present);	}
+0df13a66:src/graphics/presentation/videoOut.cpp:1232	Common::DiagB32::TestPresentPoint();	}
+0df13a66:src/graphics/presentation/videoOut.cpp:1252	if (Common::DiagB32::g_on) [[unlikely]] {	Common::DiagB32::OnFlip(r.cfg->flip_status.count, r.id, r.reserve_host_ns);
+0df13a66:src/graphics/presentation/videoOut.cpp:1253	Common::DiagB32::OnFlip(r.cfg->flip_status.count, r.id, r.reserve_host_ns);	}
+0df13a66:src/graphics/presentation/window/swapchain.cpp:657	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M3 H:acquire)	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/graphics/presentation/window/swapchain.cpp:658	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginH(Common::DiagB32::Call::Acquire);
+0df13a66:src/graphics/presentation/window/swapchain.cpp:659	b32.BeginH(Common::DiagB32::Call::Acquire);	}
+0df13a66:src/graphics/presentation/window/window.cpp:1306	if (Common::DiagB32::g_test_on && text != nullptr) [[unlikely]] { // Track F, F20j: KYTY_TEST_B32 arms on the same line	if (TestMinimizeIsLevelEntry(std::string_view(text, size))) {
+0df13a66:src/graphics/presentation/window/window.cpp:1308	Common::DiagB32::TestArm();	}
+0df13a66:src/kernel/eventFlag.cpp:126	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32): begun below only on the blocking path	if (m_single_thread && m_waiting_threads > 0) {
+0df13a66:src/kernel/eventFlag.cpp:143	if (Common::DiagB32::g_on && !b32.Active()) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::Evf, this, 0, infinitely ? 0 : static_cast<uint64_t>(micros));
+0df13a66:src/kernel/eventFlag.cpp:144	b32.BeginW(Common::DiagB32::Wait::Evf, this, 0, infinitely ? 0 : static_cast<uint64_t>(micros));	}
+0df13a66:src/kernel/eventFlag.cpp:176	b32.End(Common::DiagB32::SigWaker(m_b32_sig.load(std::memory_order_relaxed), b32.SinceNs()), false);	}
+0df13a66:src/kernel/eventFlag.cpp:204	if (Common::DiagB32::g_on) [[unlikely]] {	m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 event flag)
+0df13a66:src/kernel/eventFlag.cpp:205	m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 event flag)	}
+0df13a66:src/kernel/eventQueue.cpp:183	Common::DiagB32::Mark b32;	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/kernel/eventQueue.cpp:184	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::Eq, this, 0, micros);
+0df13a66:src/kernel/eventQueue.cpp:185	b32.BeginW(Common::DiagB32::Wait::Eq, this, 0, micros);	}
+0df13a66:src/kernel/eventQueue.cpp:192	b32.End(ret > 0 ? Common::DiagB32::SigWaker(m_b32_sig.load(std::memory_order_relaxed), b32.SinceNs()) : 0, ret == 0);	}
+0df13a66:src/kernel/eventQueue.cpp:233	if (Common::DiagB32::g_on) [[unlikely]] {	m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 event queue)
+0df13a66:src/kernel/eventQueue.cpp:234	m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 event queue)	}
+0df13a66:src/kernel/eventQueue.cpp:258	if (Common::DiagB32::g_on) [[unlikely]] {	m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 event queue)
+0df13a66:src/kernel/eventQueue.cpp:259	m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 event queue)	}
+0df13a66:src/kernel/pthread.cpp:488	std::atomic<int32_t>  b32_slot1 {0}; // DiagB32 slot + 1 of this thread	std::atomic<uint64_t> b32_waker {0}; // DiagB32::PackSig of the thread whose Signal/Broadcast advanced cond_sequence
+0df13a66:src/kernel/pthread.cpp:489	std::atomic<uint64_t> b32_waker {0}; // DiagB32::PackSig of the thread whose Signal/Broadcast advanced cond_sequence	#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+0df13a66:src/kernel/pthread.cpp:578	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (M2 cond): the waker of this waiter	thread->b32_waker.store(Common::DiagB32::PackSig(), std::memory_order_relaxed);
+0df13a66:src/kernel/pthread.cpp:579	thread->b32_waker.store(Common::DiagB32::PackSig(), std::memory_order_relaxed);	}
+0df13a66:src/kernel/pthread.cpp:1114	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j: the guest main thread's slot (registered as role Main)	g_pthread_self->b32_slot1.store(Common::DiagB32::RegisterGuest(g_pthread_self->unique_id, "MainThread"),
+0df13a66:src/kernel/pthread.cpp:1115	g_pthread_self->b32_slot1.store(Common::DiagB32::RegisterGuest(g_pthread_self->unique_id, "MainThread"),	std::memory_order_relaxed);
+0df13a66:src/kernel/pthread.cpp:1387	Common::DiagB32::Mark b32;	if (Common::DiagB32::g_on && mutex->owner != nullptr && (timeout_us == nullptr || *timeout_us > 0)) [[unlikely]] {
+0df13a66:src/kernel/pthread.cpp:1388	if (Common::DiagB32::g_on && mutex->owner != nullptr && (timeout_us == nullptr || *timeout_us > 0)) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::Mutex, mutex, mutex->owner->b32_slot1.load(std::memory_order_relaxed),
+0df13a66:src/kernel/pthread.cpp:1389	b32.BeginW(Common::DiagB32::Wait::Mutex, mutex, mutex->owner->b32_slot1.load(std::memory_order_relaxed),	timeout_us != nullptr ? static_cast<uint64_t>(*timeout_us) : 0);
+0df13a66:src/kernel/pthread.cpp:2855	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (M2 cond): the waker of every waiter	thread->b32_waker.store(Common::DiagB32::PackSig(), std::memory_order_relaxed);
+0df13a66:src/kernel/pthread.cpp:2856	thread->b32_waker.store(Common::DiagB32::PackSig(), std::memory_order_relaxed);	}
+0df13a66:src/kernel/pthread.cpp:3010	Common::DiagB32::Mark b32;	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/kernel/pthread.cpp:3011	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::Cond, cond_value, 0, static_cast<uint64_t>(usec));
+0df13a66:src/kernel/pthread.cpp:3012	b32.BeginW(Common::DiagB32::Wait::Cond, cond_value, 0, static_cast<uint64_t>(usec));	}
+0df13a66:src/kernel/pthread.cpp:3041	b32.End(ready() ? Common::DiagB32::SigWaker(thread->b32_waker.load(std::memory_order_relaxed), b32.SinceNs()) : 0,	!ready());
+0df13a66:src/kernel/pthread.cpp:3108	Common::DiagB32::Mark b32;	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/kernel/pthread.cpp:3109	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::Cond, cond_value, 0, B32ReqUs(deadline));
+0df13a66:src/kernel/pthread.cpp:3110	b32.BeginW(Common::DiagB32::Wait::Cond, cond_value, 0, B32ReqUs(deadline));	}
+0df13a66:src/kernel/pthread.cpp:3135	b32.End(ready() ? Common::DiagB32::SigWaker(thread->b32_waker.load(std::memory_order_relaxed), b32.SinceNs()) : 0,	!ready());
+0df13a66:src/kernel/pthread.cpp:3194	Common::DiagB32::Mark b32;	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/kernel/pthread.cpp:3195	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::Cond, cond_value, 0, 0);
+0df13a66:src/kernel/pthread.cpp:3196	b32.BeginW(Common::DiagB32::Wait::Cond, cond_value, 0, 0);	}
+0df13a66:src/kernel/pthread.cpp:3208	b32.End(ready() ? Common::DiagB32::SigWaker(thread->b32_waker.load(std::memory_order_relaxed), b32.SinceNs()) : 0,	!ready());
+0df13a66:src/kernel/pthread.cpp:3345	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j: the slot stops being sampled	Common::DiagB32::Unregister();
+0df13a66:src/kernel/pthread.cpp:3346	Common::DiagB32::Unregister();	}
+0df13a66:src/kernel/pthread.cpp:3413	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (KYTY_DIAG_B32): the guest thread's slot, name and id	thread->b32_slot1.store(Common::DiagB32::RegisterGuest(thread->unique_id, thread->name.c_str()),
+0df13a66:src/kernel/pthread.cpp:3414	thread->b32_slot1.store(Common::DiagB32::RegisterGuest(thread->unique_id, thread->name.c_str()),	std::memory_order_relaxed);
+0df13a66:src/kernel/pthread.cpp:4222	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32, RC5(b)): W:sleep with the requested time, no waker	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/kernel/pthread.cpp:4223	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::Sleep, nullptr, 0, static_cast<uint64_t>(microseconds));
+0df13a66:src/kernel/pthread.cpp:4224	b32.BeginW(Common::DiagB32::Wait::Sleep, nullptr, 0, static_cast<uint64_t>(microseconds));	}
+0df13a66:src/kernel/pthread.cpp:4238	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32, RC5(b)): W:sleep with the requested time, no waker	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/kernel/pthread.cpp:4239	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::Sleep, nullptr, 0, static_cast<uint64_t>(seconds) * 1000000ull);
+0df13a66:src/kernel/pthread.cpp:4240	b32.BeginW(Common::DiagB32::Wait::Sleep, nullptr, 0, static_cast<uint64_t>(seconds) * 1000000ull);	}
+0df13a66:src/kernel/pthread.cpp:4272	Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32, RC5(b)): W:sleep with the requested time, no waker	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/kernel/pthread.cpp:4273	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::Sleep, nullptr, 0, nanos / 1000u);
+0df13a66:src/kernel/pthread.cpp:4274	b32.BeginW(Common::DiagB32::Wait::Sleep, nullptr, 0, nanos / 1000u);	}
+0df13a66:src/kernel/semaphore.cpp:149	if (Common::DiagB32::g_on) [[unlikely]] {	m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 sem)
+0df13a66:src/kernel/semaphore.cpp:150	m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 sem)	}
+0df13a66:src/kernel/semaphore.cpp:231	Common::DiagB32::Mark b32;	if (Common::DiagB32::g_on) [[unlikely]] {
+0df13a66:src/kernel/semaphore.cpp:232	if (Common::DiagB32::g_on) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::Sem, this, 0, infinitely ? 0 : static_cast<uint64_t>(micros));
+0df13a66:src/kernel/semaphore.cpp:233	b32.BeginW(Common::DiagB32::Wait::Sem, this, 0, infinitely ? 0 : static_cast<uint64_t>(micros));	}
+0df13a66:src/kernel/semaphore.cpp:258	b32.End(waiter.result == Result::Ok ? Common::DiagB32::SigWaker(m_b32_sig.load(std::memory_order_relaxed), b32.SinceNs()) : 0,	false);
+0df13a66:src/kernel/semaphore.cpp:427	Common::DiagB32::Mark b32;	if (Common::DiagB32::g_on && m_count <= 0) [[unlikely]] {
+0df13a66:src/kernel/semaphore.cpp:428	if (Common::DiagB32::g_on && m_count <= 0) [[unlikely]] {	b32.BeginW(Common::DiagB32::Wait::PSem, this, 0, timed_wait ? static_cast<uint64_t>(*micros) : 0);
+0df13a66:src/kernel/semaphore.cpp:429	b32.BeginW(Common::DiagB32::Wait::PSem, this, 0, timed_wait ? static_cast<uint64_t>(*micros) : 0);	}
+0df13a66:src/kernel/semaphore.cpp:456	b32.End(Common::DiagB32::SigWaker(m_b32_sig.load(std::memory_order_relaxed), b32.SinceNs()), false);	}
+0df13a66:src/kernel/semaphore.cpp:485	if (Common::DiagB32::g_on) [[unlikely]] {	m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 sem)
+0df13a66:src/kernel/semaphore.cpp:486	m_b32_sig.store(Common::DiagB32::PackSig(), std::memory_order_relaxed); // Track F, F20j (M2 sem)	}

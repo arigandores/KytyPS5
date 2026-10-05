@@ -1,0 +1,6 @@
+track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32=0 a site's End is one test of the stack object's flag, no call (ROADMAP s122 item 550(z)(1))
+
+The out-of-line part is Mark::EndSlow; the destructor calls it only when the mark is active. No change at
+KYTY_DIAG_B32=1. WIP: not run by the game; review F20k pending.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

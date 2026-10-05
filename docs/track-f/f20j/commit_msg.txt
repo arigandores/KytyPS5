@@ -1,0 +1,20 @@
+track F link F20j (HPP-629): KYTY_DIAG_B32 (default 0, measurement only) and the stand KYTY_TEST_B32 - ROADMAP s122 item 550(v),(z), design F20g s2 with RC1-RC15 of F20h
+
+KYTY_DIAG_B32=1 (read once by Emulator::Run before any guest thread into a global flag; sites test only the flag):
+a sampler thread (THREAD_PRIORITY_HIGHEST, high-resolution waitable timer, P = 5 ms, woken also by the flip) writes
+every registered thread's state into a per-slot history ring of 512 samples all the time (RC1); at every flip it
+closes the window previous flip .. flip (RC1, RC11) and for dt >= 100 ms formats DiagB32: / -t / -w / -c / -x lines
+that the present thread prints at its next flip site. Sample partition H > W > R > r > Sr > Sw > S (R - CPU of the
+interval >= 50 %, RC4; Sr / Sw:<WaitReason> from NtQuerySystemInformation(SystemProcessInformation) of the own process
+in samples >= 40 ms after the previous flip, kstate=0 if unavailable, RC3). Marks: W:mutex in the slow path of
+NativeMutexLock (RC5(a)), W:cond (waker = the thread whose Signal/Broadcast advanced cond_sequence), W:sem / psem,
+W:evf, W:eq, W:sleep in KernelUsleep / KernelSleep / KernelNanosleep (RC5(b)), W:gpu_idle (waker = the last guest
+submission, RC5(v)) and W:gpu_regmem on GuestGpu; H:present, acquire, drain, qlock, qsubmit, semwait, protect, fault.
+Wait records >= 10 ms with waker, requested time and timeout flag (RC5(v)); mandatory -t lines for the chain
+participants, cap 24 on the rest, lines_cut only for mandatory ones (RC2); instr_us (RC9); samples / sgap_max_us /
+gap3p / I2' (RC12); lines start with the prefix at column 0, no leading % and no hexadecimal first field, names
+sanitized (RC13). KYTY_TEST_B32=<s>:<present|gpusleep>:<ms>: armed by the first "Level has started: <name>", once.
+Unit tests tests/DiagB32Tests.cpp (target diag_b32_tests, not in ctest). Outside src/graphics/shader and the four
+SHADER_CACHE_EXTRA_FILES: the translation signature stays 9177b426. WIP: not run by the game; review F20k pending.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

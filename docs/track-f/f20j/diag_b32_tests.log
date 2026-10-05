@@ -1,0 +1,24 @@
+[case] partition H > W > R > r > Sr > Sw > S, exactly one
+  combinations 1800
+[case] I1: X + R + r + Sr + Sw + S + W + H = samples
+[case] I2' and gap3p, sgap_max over (previous flip, flip]
+[case] I3: other_us = sys_busy_us - proc_us (signed)
+[case] window (previous flip, flip] from the history ring; instr_us
+[case] slot_full and torn (registry)
+[case] ring_drop and torn (wait ring)
+[case] print: DiagB32 lines (RC13: prefix at column 0, no leading %, no hexadecimal first field)
+DiagB32: n=3193 dt_us=180215 instr_us=4321 samples=36 sgap_max_us=5000 gap3p=0 i2=1 kstate=1 kq=28 proc_us=515625 sys_busy_us=900000 sys_idle_us=1900000 other_us=384375 ncpu=16 snap_ok=1 snap_lag_us=0 flip_slot=2 flip_tid=23 flip_src=gpu lat_us=157043 vo_slot=0 gpu_slot=1 t_lines=7 w_lines=1 c_lines=1
+DiagB32-t: n=3193 slot=0 tid=0 os_tid=4000 name=Present role=Present must=1 X=0 R=0 r=0 Sr=0 Sw=0 S=0 W=- H=present:36 SwR=- cpu_us=0 top=H:present last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=1 tid=0 os_tid=4001 name=Gpu role=Gpu must=1 X=0 R=0 r=0 Sr=0 Sw=18 S=18 W=- H=- SwR=6:18 cpu_us=1000 top=- last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=2 tid=22 os_tid=4002 name=DrawThread role=guest must=1 X=0 R=0 r=0 Sr=0 Sw=0 S=0 W=cond:36 H=- SwR=- cpu_us=2000 top=W:cond last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=3 tid=23 os_tid=4003 name=Physics_ATQT role=guest must=1 X=0 R=0 r=0 Sr=0 Sw=18 S=18 W=- H=- SwR=6:18 cpu_us=3000 top=- last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=4 tid=24 os_tid=4004 name=_evil role=guest must=0 X=0 R=0 r=0 Sr=0 Sw=18 S=18 W=- H=- SwR=6:18 cpu_us=4000 top=- last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=5 tid=25 os_tid=4005 name=Vulkan_pipeline_cache__saved role=guest must=0 X=0 R=0 r=0 Sr=0 Sw=18 S=18 W=- H=- SwR=6:18 cpu_us=5000 top=- last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=6 tid=26 os_tid=4006 name=BvhLoopCapTrip_ role=guest must=0 X=0 R=0 r=0 Sr=0 Sw=18 S=18 W=- H=- SwR=6:18 cpu_us=6000 top=- last=- obj=0x0 since_us=0 peer=-1
+DiagB32-w: n=3193 slot=2 tid=22 kind=cond obj=0x0 start_us=20000 wait_us=159215 overlap_us=159215 waker=3 waker_tid=23 req_us=0 to=0 open=0
+DiagB32-c: n=3193 os_tid=4001 slot=1 name=Gpu cpu_us=42602
+DiagB32-x: n=3193 slots=0 slot_full=0 torn=0 ring_drop=0 sgap_bad=0 lines_cut=0 short_stalls=0 others_cut=0 w_cut=0 rep_drop=0 kq_fail=0 print_us=0 gap3p=0
+[case] RC2: mandatory -t lines, lines_cut, others_cut, sgap_bad
+[case] waker word: SigWaker against the wait start
+cases 10, failures 0
+ALL OK

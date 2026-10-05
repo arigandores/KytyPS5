@@ -1,0 +1,15 @@
+tests 133 failed_lines 0
+[replay] inline descriptors: words=66 user=64 reads=0 canonical=1 why=
+[replay] inline descriptors: roles keep=6 inert=54 ptr=0/0 v=1/1 t=1/1 meta=1/1 buffers=2 images=2
+[replay] pointer to a V# table: words=38 user=32 reads=4 canonical=1 why=
+[replay] pointer to a V# table: roles keep=4 inert=30 ptr=1/1 v=1/1 t=0/0 meta=0/0 buffers=1 images=0
+[replay] walk bits: reads=8 w=36 complete 45f=1 55f=1 45e=1 10f=0
+[replay] walk bits: canonical=1 why=
+[replay] walk bits: address roles 14:2:100 30:2:100 31:3:0 34:2:100 35:3:0
+[replay] walk bits: r_addr=0 stand_addr=6
+[replay] walk address: reads=4 low=02370980 exact=0 canonical=0 why=residual branch=addr culprit=30:role2 n=1
+[replay] walk exact: reads=8 w=36 canonical=0 why=residual branch=exact culprit=36:role0 n=1
+[replay] canon stand: unspoiled canonical=1 why=
+[replay] canon stand: address roles 2:6:1 3:7:1400000 6:4:100 7:5:100000 8:8:ffffff 9:9:0
+[replay] canon stand: spoiled canonical=0 why=self ok=1 complete=1 culprit=2:role6:00001000->00000000
+[replay] count reject: residual=26 self=1 base=1 big=1 mismatch=27 printed_residual=20 self=1 exact=0 base=1 big=1

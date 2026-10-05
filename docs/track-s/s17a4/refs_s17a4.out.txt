@@ -1,0 +1,23 @@
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:643 OK | +1 NOT OK | +1 text: for (size_t i = 0; i < raw.size(); i++) {
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:705 OK | +1 NOT OK | +1 text: role            = ROLE_KEEP;
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:796 OK | +1 NOT OK | +1 text: why = fmt::format("residual branch={} culprit={}:role{} n={}", culprit_addr ? "addr" : "ex
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:797 OK | +1 NOT OK | +1 text: culprit_addr ? static_cast<uint32_t>(kept_role[culprit]) : 0u, culprits);
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:823 OK | +1 NOT OK | +1 text: const bool residual = why.starts_with("residual");
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:824 OK | +1 NOT OK | +1 text: if (why.starts_with("self")) {
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:835 OK | +1 NOT OK | +1 text: }
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1187 OK | +1 NOT OK | +1 text: }
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1234 OK | +1 NOT OK | +1 text: // S17a4 (item 541(c)(2)-(3)): counted by the prefix of why (CountReject); residual reject
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1237 OK | +1 NOT OK | +1 text: LOGF("ShaderReplay: capture reject why=%s hash=0x%016" PRIx64 " words=%zu\n", why.c_str(),
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1238 OK | +1 NOT OK | +1 text: item.plan->shader_hash, 2 + item.trace.user_data.size() + item.trace.reads.size());
+9238a182:src/graphics/host_gpu/renderer/pipeline/shaderReplay.h:350 OK | +1 NOT OK | +1 text: 
+9238a182:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7053 OK | +1 NOT OK | +1 text: return;
+9238a182:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7082 OK | +1 NOT OK | +1 text: ShaderReplay::Catalogue initial;
+9238a182:tests/shaderCfgTests.cpp:15495 OK | +1 NOT OK | +1 text: namespace SR = ShaderReplay;
+9238a182:tests/shaderCfgTests.cpp:15663 OK | +1 NOT OK | +1 text: !Common::ContainsStr(why, raw_hex),
+9238a182:tests/shaderCfgTests.cpp:15667 OK | +1 NOT OK | +1 text: // V# C) equal to the lower word of the address of the reads of D (C base + 0x200). W is I
+9238a182:tests/shaderCfgTests.cpp:15725 OK | +1 NOT OK | +1 text: char raw_hex[16];
+9238a182:tests/shaderCfgTests.cpp:15782 OK | +1 NOT OK | +1 text: // canon_big) and in canon_mismatch; residual reject lines have their own limit of 20, the
+9238a182:tests/shaderCfgTests.cpp:15788 OK | +1 NOT OK | +1 text: }
+9238a182:tests/shaderCfgTests.cpp:16390 OK | +1 NOT OK | +1 text: 
+refs 21
+ALL OK

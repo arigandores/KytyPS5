@@ -1,0 +1,24 @@
+results lines 15967; per arm {'A1': 4938, 'A2': 4938, 'B1': 996, 'B2': 2210, 'B3': 20}
+X (crash/hang) lines 0
+jobs A 4938 B 3226 (B3 20)
+jobs without a result line: 0
+recipes 1852 end True kinds {2: 143, 1: 1709}
+perms referenced 1214; manual (executor predicate) 81; spec-flag-only 81; differ 0
+programs referenced 493; absent from eboot (or short) 6: by stage {5: 4, 4: 2}
+form K: prepared 1827 src=2 fused=23 key=0 push=0 shape=0 ident=0 translate=0 emit=0 val=0 harness 0 | identity 1852 = 1852 - 0 OK | R_B 0.9865 = 1827/1852 | b_diff jobs 0
+form C: prepared 1827 src=2 fused=23 key=0 push=0 shape=0 ident=0 translate=0 emit=0 val=0 harness 0 | identity 1852 = 1852 - 0 OK | R_B 0.9865 = 1827/1852 | b_diff jobs 0
+determinism: A ids 4938 A1 4938 A2 4938 nondet 0
+comparator perms 10 base eq 10; outcomes {('stride', 'eq'): 10, ('format', 'ne'): 10, ('spirv', 'ne'): 10}
+knobs A1: lines 536 set []; signature ['KytySC3:26ce5fc78ea3b20be537c7696be041f5e97d9e58']
+knobs A2: lines 536 set []; signature ['KytySC3:26ce5fc78ea3b20be537c7696be041f5e97d9e58']
+knobs B1: lines 544 set ['KYTY_FIX_F19=1']; signature ['KytySC3:a54ae4bd03a673fe35ae89bad218132257b11383']
+knobs B2: lines 544 set ['KYTY_FIX_F19=1']; signature ['KytySC3:a54ae4bd03a673fe35ae89bad218132257b11383']
+knobs B3: lines 544 set ['KYTY_FIX_F19=1']; signature ['KytySC3:a54ae4bd03a673fe35ae89bad218132257b11383']
+stand with B3 form K: manual perms 81, stand ok 81, f19_both 81
+stand with B3 form C: manual perms 81, stand ok 81, f19_both 81
+stand without B3 form K: manual perms 81, stand ok 76, f19_both 76
+stand without B3 form C: manual perms 81, stand ok 76, f19_both 76
+k16UNorm outcomes (form, jobs file, eq): {('C', 'jobs_B1.txt', '0'): 76, ('C', 'jobs_B3.txt', '0'): 5, ('K', 'jobs_B1.txt', '0'): 76, ('K', 'jobs_B3.txt', '0'): 5}
+arm B jobs with start != stored_start: 0 of 3226
+stored_start values over A1: {'4294967295': 2996, '0': 1872, '17': 37, '25': 9, '6': 6, '22': 3, '31': 3, '12': 3, '8': 3, '5': 3, '9': 3}
+R_B K 0.9865 C 0.9865

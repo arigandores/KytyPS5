@@ -1,0 +1,42 @@
+suite regress_fs7c.py sha256 922a044fdc80d1b2828bd284986bd8f0f5cdf69b7eafa447286c4ef5abf9cc66 target fs7c_read.py sha256 262b9f826b2bbee281d100b8819969e32891db2f5cdea35210f4f1067f4be987
+PASS h log sha256 = F19e artefact f95af1e8 (b24_h1)
+PASS h main_late_max_us 3000289
+PASS h po_wait_max_us 2973393
+PASS h pad_wait_max_us 10
+PASS h guest_sdl 0, po_applied 186
+PASS h frames >= 1 s in the wide window 0
+PASS h member main_late_max_us YES
+PASS h member po_wait_max_us YES
+PASS h member pad_wait_max_us YES
+PASS h member guest_sdl YES
+PASS h member stand window YES
+PASS h member FixB24 YES
+PASS h member FixF8 NO (F19c binary has no F8 default)
+PASS h member FixB4 NO (base S12a)
+PASS h all harm rows YES (video 10121)
+PASS h all identity rows YES
+PASS h stand admission rows YES
+PASS h binary/revision/env admission NO
+PASS h version row reads the FS7 file itself - YES
+PASS h form: installed before/after NO (adb0c82f), manifest YES
+PASS h reading NOT_ADMITTED
+PASS h exit row close_rc 0
+PASS n log sha256 = F18e artefact 402b6f6e (f8_n1)
+PASS n F8 lines 0
+PASS n max init_calls 1
+PASS n last acq 285
+PASS n AudioStat rows 856
+PASS n FixF8 line 11488 before the first GuestOut 12803 (N4 row)
+PASS n member F8 lines YES
+PASS n member init_calls <= 1 YES
+PASS n member acq >= 250 YES
+PASS n member status in YES
+PASS n member FixF8 YES
+PASS n member TestHidLoss YES
+PASS n member FixB4 NO (base S12a)
+PASS n member FixB24 NO (F18c binary)
+PASS n harm frame max 182589 and video 25725, all harm YES
+PASS n vibration admission rows YES
+PASS n reading NOT_ADMITTED
+checks 39 failed 0
+ALL OK

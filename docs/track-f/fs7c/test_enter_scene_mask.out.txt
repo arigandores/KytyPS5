@@ -1,0 +1,15 @@
+suite test_enter_scene_mask.py sha256 93beec84687443f74e5ec6dfb5e0509808239bb89ca8810d137193ddbd36374d target enter_scene.py sha256 9976f56d00c448b835bcaa749dd226857149a07c08ed066e880029a9488b7ee9
+PASS m1_no_name_in_output 
+PASS m2_rows_masked 
+PASS m3_cpu_ws_kept 
+PASS m4_line_prefix pre_run: host 321 processes, top by CPU: <app>:1000 123s, <app>:1001 122s, <app>:1002 121s, <app>:1003 120s, <app>:1004 119s, <app>:1005 118s
+PASS m5_six_rows pre_run: host 321 processes, top by CPU: <app>:1000 123s, <app>:1001 122s, <app>:1002 121s, <app>:1003 120s, <app>:1004 119s, <app>:1005 118s
+PASS m6_line_ascii 
+PASS m7_empty 
+PASS m8_none_fields 
+PASS m9_census_masked pre_run: host 321 processes, top by CPU: <app>:1000 123s, <app>:1001 122s, <app>:1002 121s, <app>:1003 120s, <app>:1004 119s, <app>:1005 118s
+PASS m10_cp1250 
+PASS m12_gpu_apps_masked pre_run: GPU 3.0 % busy, 30.0 W, 900 MiB used, SM 210 MHz, 8 process(es) on the GPU
+PASS m13_unavailable_kept 
+PASS m11_root C:\kyty\f287\fs7c
+ALL OK

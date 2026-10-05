@@ -1,0 +1,129 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = adb0c82f or FS6 9325446c (FS6 9325446c)",
+   true
+  ],
+  [
+   "installed before = after = json binary (9325446c / 9325446c)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (c34f5f2f8cf8c842 / c34f5f2f8cf8c842)",
+   true
+  ],
+  [
+   "env only harness constants (extra: [])",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "no stand / patch / gate line ([])",
+   true
+  ],
+  [
+   "scene entered (first scene frame 192)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 3325 listsha 44)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2",
+ "eval": {
+  "b2_frames": [],
+  "death": [],
+  "dt_max_after": 229331,
+  "ended_by": "quit",
+  "entered": true,
+  "entry_window": [
+   [
+    2,
+    194,
+    181524
+   ]
+  ],
+  "first_n": 192,
+  "frames": 9907,
+  "hold": true,
+  "hold_frames": [
+   {
+    "dt_us": 229331,
+    "f20a": "prio only",
+    "gcn": 0,
+    "idx": 7558,
+    "ir": 0,
+    "letter": "prio only",
+    "n": 7750,
+    "pcs": 0,
+    "prio": 1,
+    "prio_us": 202070,
+    "t_before_s": 255.812,
+    "trip": 0
+   }
+  ],
+  "k1s_after": 0,
+  "minimized": 0,
+  "recovering": 0,
+  "scene_s": 334.314,
+  "sg_levels": 1,
+  "skipped": 0,
+  "stand": [],
+  "unattr": 1,
+  "unattr_f20a": 1,
+  "warm": true,
+  "window_dump": 0,
+  "window_dump_frames": [],
+  "window_max_us": 52541,
+  "window_read": true,
+  "window_slow": []
+ },
+ "reader_sha256": "73e4a8fb62f7acfd812997d168cc1ee99dcdada43a1ee66e85007e171b536a2e",
+ "reading": "B2: warm, frames 0; B32: hold, unattributed 1 (variant F20a 1)",
+ "ref": {
+  "death_log": [],
+  "death_stdout": [],
+  "dt_max_after": 229331,
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.2,
+  "k1s_after": 0,
+  "outcome": "ok",
+  "skipped_draw": 0,
+  "video_index": 10110
+ },
+ "tag": "f20_v07"
+}

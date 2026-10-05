@@ -1,0 +1,171 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = adb0c82f or FS6 9325446c (FS6 9325446c)",
+   true
+  ],
+  [
+   "installed before = after = json binary (9325446c / 9325446c)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (c34f5f2f8cf8c842 / c34f5f2f8cf8c842)",
+   true
+  ],
+  [
+   "env only harness constants (extra: [])",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "no stand / patch / gate line ([])",
+   true
+  ],
+  [
+   "scene entered (first scene frame 211)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 3327 listsha 41)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2",
+ "eval": {
+  "b2_frames": [],
+  "death": [],
+  "dt_max_after": 347268,
+  "ended_by": "quit",
+  "entered": true,
+  "entry_window": [
+   [
+    2,
+    213,
+    182693
+   ]
+  ],
+  "first_n": 211,
+  "frames": 9778,
+  "hold": true,
+  "hold_frames": [
+   {
+    "dt_us": 138172,
+    "f20a": "nothing",
+    "gcn": 0,
+    "idx": 2617,
+    "ir": 0,
+    "letter": "nothing",
+    "n": 2828,
+    "pcs": 0,
+    "prio": 0,
+    "prio_us": 0,
+    "t_before_s": 92.367,
+    "trip": 0
+   },
+   {
+    "dt_us": 171232,
+    "f20a": "prio only",
+    "gcn": 0,
+    "idx": 2814,
+    "ir": 0,
+    "letter": "prio only",
+    "n": 3025,
+    "pcs": 0,
+    "prio": 1,
+    "prio_us": 129341,
+    "t_before_s": 99.184,
+    "trip": 0
+   },
+   {
+    "dt_us": 347268,
+    "f20a": "prio only",
+    "gcn": 0,
+    "idx": 2897,
+    "ir": 0,
+    "letter": "prio only",
+    "n": 3108,
+    "pcs": 0,
+    "prio": 1,
+    "prio_us": 239502,
+    "t_before_s": 102.17,
+    "trip": 0
+   },
+   {
+    "dt_us": 180215,
+    "f20a": "prio only",
+    "gcn": 0,
+    "idx": 2982,
+    "ir": 0,
+    "letter": "prio only",
+    "n": 3193,
+    "pcs": 0,
+    "prio": 1,
+    "prio_us": 149225,
+    "t_before_s": 105.402,
+    "trip": 0
+   }
+  ],
+  "k1s_after": 0,
+  "minimized": 0,
+  "recovering": 0,
+  "scene_s": 334.098,
+  "sg_levels": 1,
+  "skipped": 0,
+  "stand": [],
+  "unattr": 4,
+  "unattr_f20a": 4,
+  "warm": true,
+  "window_dump": 0,
+  "window_dump_frames": [],
+  "window_max_us": 52305,
+  "window_read": true,
+  "window_slow": []
+ },
+ "reader_sha256": "73e4a8fb62f7acfd812997d168cc1ee99dcdada43a1ee66e85007e171b536a2e",
+ "reading": "B2: warm, frames 0; B32: hold, unattributed 4 (variant F20a 4)",
+ "ref": {
+  "death_log": [],
+  "death_stdout": [],
+  "dt_max_after": 347268,
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.1,
+  "k1s_after": 0,
+  "outcome": "ok",
+  "skipped_draw": 0,
+  "video_index": 10000
+ },
+ "tag": "f20_v21"
+}

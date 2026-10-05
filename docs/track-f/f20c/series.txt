@@ -1,0 +1,31 @@
+f20_v01 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v02 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v03 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v04 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v05 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v06 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v07 ADMITTED B2: warm, frames 0; B32: hold, unattributed 1 (variant F20a 1)
+f20_v08 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v09 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v10 ADMITTED B2: warm, frames 0; B32: hold, unattributed 6 (variant F20a 6)
+f20_v11 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v12 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v13 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v14 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v15 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v16 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v17 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v18 ADMITTED B2: warm, frames 0; B32: hold, unattributed 1 (variant F20a 1)
+f20_v19 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v20 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v21 ADMITTED B2: warm, frames 0; B32: hold, unattributed 4 (variant F20a 4)
+f20_v22 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v23 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v24 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+BASE F20a {'warm': 6, 'b2': 0, 'holds': 8, 'unattr': 0, 'unattr_f20a': 0}
+SUM {'warm': 30, 'b2': 0, 'holds': 32, 'unattr': 4, 'unattr_f20a': 4}
+TAGS {'made': 24, 'interference': 0, 'warm': 24, 'cold': 0, 'unread': 0, 'holds': 24, 'nohold': 0}
+READING B2 (entries with >= 1 B2 frame): NOT A DEFECT candidate, 0 of 30 (upper 95 % CP 0.116)
+READING B32 Sky Garden (holds with >= 1 unattributed frame, letter): DEFECT candidate, 4 of 32, p = 0.125, 95 % CP [0.035; 0.290]
+READING B32 Sky Garden (variant F20a): DEFECT candidate, 4 of 32, p = 0.125, 95 % CP [0.035; 0.290]
+NEXT stop adding tags

@@ -1,0 +1,29 @@
+tag f20_v10  reader sha256 73e4a8fb62f7acfd812997d168cc1ee99dcdada43a1ee66e85007e171b536a2e
+  ADMISSION PASS
+    [ok] tag json present
+    [ok] json binary_sha256 = adb0c82f or FS6 9325446c (FS6 9325446c)
+    [ok] installed before = after = json binary (9325446c / 9325446c)
+    [ok] json prereg sha256 = seal sha256 (c34f5f2f8cf8c842 / c34f5f2f8cf8c842)
+    [ok] env only harness constants (extra: [])
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)
+    [ok] hold 330 s (330)
+    [ok] log present
+    [ok] no stand / patch / gate line ([])
+    [ok] scene entered (first scene frame 194)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 3325 listsha 44)
+  scene: first_n 194, frames 9654, scene 334.4 s, ended by quit, Sky Garden level lines 1
+  B2 window idx 723..828: read True, dump lines 0 [], warm True, max dt_us 52229, frames >= 100 ms [], B2 frames []
+  B32: hold True; hold frames 6; unattributed 6 (variant F20a 6)
+    FRAME idx 6771 n 6965 dt_us 188582 t 235.1 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 | nothing / nothing
+    FRAME idx 6969 n 7163 dt_us 168123 t 242.1 s | ir 0 gcn 0 pcs 0 trip 0 prio 1/100453 | prio only / prio only
+    FRAME idx 7050 n 7244 dt_us 230697 t 245.2 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 | nothing / nothing
+    FRAME idx 7051 n 7245 dt_us 101087 t 245.5 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 | nothing / nothing
+    FRAME idx 7107 n 7301 dt_us 102907 t 247.6 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 | nothing / nothing
+    FRAME idx 7142 n 7336 dt_us 117415 t 248.9 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 | nothing / nothing
+  entry window frames >= 100 ms [idx, n, dt_us]: [[2, 196, 184662]]
+  REFERENCE: death log [] stdout []; frames >= 1 s after the entry window 0 (max dt_us 230697); one-frame glitches 0; video index 9859; skipped draw 0; outcome ok, hold_exit None, hold_s 330.2
+  READING B2: warm, frames 0; B32: hold, unattributed 6 (variant F20a 6)

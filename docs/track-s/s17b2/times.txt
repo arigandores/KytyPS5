@@ -1,0 +1,6 @@
+2026-10-05T07:43:34Z start reading (after 814518ab 07:43:00Z, ROADMAP p.532-533) -
+2026-10-05T07:44:30Z exported sources a2fee0d9 to s17b2/src -
+2026-10-05T07:51:30Z anchors ALL OK 780459fe
+2026-10-05T07:51:31Z review written 931791ca
+2026-10-05T07:51:32Z diffstat be1dd931
+2026-10-05T07:51:46Z FACTS S17b2 appended 8bd9fec3

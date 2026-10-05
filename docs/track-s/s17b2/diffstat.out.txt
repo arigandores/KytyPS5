@@ -1,0 +1,6 @@
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   | 28 +++++++++++++++++-
+ .../host_gpu/renderer/pipeline/pipelineCache.h     |  3 ++
+ .../host_gpu/renderer/pipeline/shaderReplay.cpp    | 32 +++++++++++++++------
+ src/graphics/presentation/window/window.cpp        |  3 ++
+ tests/shaderCfgTests.cpp                           | 33 ++++++++++++++++++++++
+ 5 files changed, 89 insertions(+), 10 deletions(-)

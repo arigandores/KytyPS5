@@ -1,0 +1,38 @@
+suite sens_fs8c.py sha256 53e183cf79e984aa75bd0014623c4deb1ef87fc042b1e1c438a4eb960c64ff15 target fs8c_read.py sha256 5c0b52c2750d5fab0ab39a74d22f4c48346115b30fb36e4b93f20514dd34b008 test_fs8c_read.py sha256 9d850e480b3e0be17a6d44fbe9b0eadc6217b6d860b20c7c46c751a8f047439e
+EDIT binary sha not checked: CAUGHT (SOME FAILED; checks 296 fails 6)
+EDIT json binary not checked: CAUGHT (SOME FAILED; checks 296 fails 4)
+EDIT version string ignored: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT revision accepts anything: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT prereg ignored: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT KYTY_FIX_ allowed: CAUGHT (SOME FAILED; checks 296 fails 18)
+EDIT KYTY_GAME_PATCH allowed: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT first validation flag wins: CAUGHT (SOME FAILED; checks 296 fails 55)
+EDIT limit not checked: CAUGHT (SOME FAILED; checks 296 fails 2)
+EDIT filter allowed: CAUGHT (SOME FAILED; checks 296 fails 1)
+EDIT V layer allowed: CAUGHT (SOME FAILED; checks 296 fails 2)
+EDIT cold ignored: CAUGHT (SOME FAILED; checks 296 fails 6)
+EDIT minimized ignored: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT installed before ignored: CAUGHT (SOME FAILED; checks 296 fails 6)
+EDIT manifest ignored: CAUGHT (SOME FAILED; checks 296 fails 9)
+EDIT directory any: CAUGHT (SOME FAILED; checks 296 fails 13)
+EDIT FixB4 order ignored: CAUGHT (SOME FAILED; checks 296 fails 7)
+EDIT Fix other form ignored: CAUGHT (SOME FAILED; checks 296 fails 6)
+EDIT Fix two lines allowed: CAUGHT (SOME FAILED; checks 296 fails 6)
+EDIT FixB42 counted as FixB4: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT hold threshold 299 s: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT scene frame draws 99: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT hold_exit ignored: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT attempt hold_s not checked: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT stdout death ignored: CAUGHT (SOME FAILED; checks 296 fails 2)
+EDIT video 2999 accepted: CAUGHT (SOME FAILED; checks 296 fails 2)
+EDIT glitch any: CAUGHT (SOME FAILED; checks 296 fails 2)
+EDIT vke ignored: CAUGHT (SOME FAILED; checks 296 fails 2)
+EDIT vkw ignored: CAUGHT (SOME FAILED; checks 296 fails 1)
+EDIT dual order ignored: CAUGHT (SOME FAILED; checks 296 fails 1)
+EDIT word: none NOT_EVALUABLE: CAUGHT (SOME FAILED; checks 296 fails 6)
+EDIT word: form after members: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT scene change counted: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT k2 threshold 999 999: CAUGHT (SOME FAILED; checks 296 fails 3)
+EDIT non-ASCII output: CAUGHT (SOME FAILED; checks 296 fails 3)
+edits 35
+ALL OK

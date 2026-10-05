@@ -1,0 +1,3 @@
+suite test_fs8c_read.py sha256 9d850e480b3e0be17a6d44fbe9b0eadc6217b6d860b20c7c46c751a8f047439e target fs8c_read.py sha256 5c0b52c2750d5fab0ab39a74d22f4c48346115b30fb36e4b93f20514dd34b008
+checks 296 fails 0
+ALL OK

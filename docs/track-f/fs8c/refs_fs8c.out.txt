@@ -1,0 +1,10 @@
+suite refs_fs8c.py sha256 a899f63e1760b273abbb45a691336f7b1775afcfa00581d91492aa38f1ed7db5
+OK item 471 (g)(3) FS8c b151e541:docs/ROADMAP.md:22623
+OK item 471 head b151e541:docs/ROADMAP.md:22615
+OK item 530 head b151e541:docs/ROADMAP.md:23048
+OK item 530 (g) N1-N4 b151e541:docs/ROADMAP.md:23052
+OK item 530 (d) installed b151e541:docs/ROADMAP.md:23053
+OK item 518 (v)(4) N4 b151e541:docs/ROADMAP.md:22955
+OK item 295 (b) W form b151e541:docs/ROADMAP.md:15337
+refs 7
+ALL OK

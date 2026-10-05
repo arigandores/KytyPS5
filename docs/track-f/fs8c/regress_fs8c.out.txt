@@ -1,0 +1,134 @@
+suite regress_fs8c.py sha256 a65665bd26f97cb694177d81e0af38a830be819f733fd1c92182e9b4f00b7a03 target fs8c_read.py sha256 5c0b52c2750d5fab0ab39a74d22f4c48346115b30fb36e4b93f20514dd34b008
+     Fix lines (line, mode): B4 [] F8 [] B24 []; first GuestOut line 11892
+     entry line 352913; scene change line None; first scene frame n 289; hold (sum dt after it) 334.9 s; frames >= 1 s after it 0 (max dt_us 416952); FrameTrace rows 10260
+     video: index records 10255; one-frame glitches 0; sheet: C:/kyty/f287/f14g/runs/f19_v1/sheet_f19_v1.png frames 10255 step 213 tiles 8x6
+     W: [Vulkan][E] 0 (VUID-06479 0); [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)]
+     ADMIT binary sha256 of the tag = 2c9b69b9 (json binary_sha256 and installed_sha.txt; N1 item 530 (g)): NO
+     ADMIT version string ...-1889-g302347b4 in the binary file (N1): NO
+     ADMIT every revision text of the log and stdout = 302347b (N1; SDL_REVISION never read) ['082d161']: NO
+     ADMIT prereg sha256 of the json = sha256 of the seal file: YES
+     ADMIT environment and command line of the form (no KYTY_FIX_*, no KYTY_GAME_PATCH / KYTY_GPU_CHECKPOINTS; V with video, no validation): NO
+     ADMIT cold form: variant_fixb26_fixb1b_fixf10_fixf19 absent before the start: YES
+     ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+     FORM installed FS6 9325446c before the tag: NO
+     FORM installed FS6 9325446c after the return: NO
+     FORM manifest of the caches before = after the return (manifest cmp EQUAL): YES
+     MEMBER entered (entry line of underwater_aerial_garden): YES
+     MEMBER translation cache directory variant_fixb26_fixb1b_fixf10_fixf19 in every line (>= 1 line) ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']: YES
+     MEMBER FixB4: mode=1 before the first GuestOut (mode=1 lines [], other form lines [], first GuestOut line 11892): NO
+     MEMBER FixF8: mode=1 before the first GuestOut, letter of item 471 (g)(3) (mode=1 lines [], other form lines [], first GuestOut line 11892): NO
+     MEMBER hold >= 300 s (sum dt after the first scene frame): YES
+     MEMBER the process lived to the end of the hold (outcome ok, hold_exit null, hold_s >= 330): YES
+     MEMBER 0 death markers (log and stdout): YES
+     MEMBER video index records >= 3000: YES
+     MEMBER 0 one-frame glitches: YES
+     MEMBER sheet for the lead made: YES
+     REPORT frames >= 1 s after the first scene frame = 0, max dt_us 416952 (REPORT, not a gate - cold entry): YES
+     REPORT FixF8 by the reading of item 518 (v)(4): exactly 1 line mode=1, order not a gate (REPORT, executor variant): NO
+     REPORT FixB24: mode=1 before the first GuestOut (REPORT, base FS7 control beyond item 471 (g)(3); mode=1 lines [], other form lines [], first GuestOut line 11892): NO
+     REPORT AsyncPipelines: skipped draw lines = 2141 (REPORT): NO
+     REPORT last-time-reporting lines of the layer = 0 (REPORT): YES
+     READING NOT_ADMITTED
+PASS f19_v1 as fs8_v: word NOT_ADMITTED
+PASS f19_v1 binary row NO (c01bde0c)
+PASS f19_v1 version row NO (no -1889-g302347b4 in c01bde0c)
+PASS f19_v1 revision row NO (082d161)
+PASS f19_v1 prereg row YES (F14g seal)
+PASS f19_v1 env row NO (KYTY_FIX_F19=1)
+PASS f19_v1 cold row YES
+PASS f19_v1 interference row YES
+PASS f19_v1 form: installed before / after NO (adb0c82f), manifest YES
+PASS f19_v1 entered, directory _fixf19 every line, hold, lived
+PASS f19_v1 frames >= 1 s after the first scene frame 0 (F14g: 0)
+PASS f19_v1 video records 10255, glitches 0, death 0, sheet
+   Fix lines on c01bde0c (data): B4 [] F8 [] B24 [] first GuestOut 11892
+     Fix lines (line, mode): B4 [] F8 [] B24 []; first GuestOut line 11895
+     entry line 348255; scene change line None; first scene frame n 185; hold (sum dt after it) 324.6 s; frames >= 1 s after it 0 (max dt_us 704504); FrameTrace rows 2702
+     W: [Vulkan][E] 0 (VUID-06479 0); [Vulkan][W] 925381; last-time-reporting lines 0; DualSrcBlend [(76, 1, 1)]
+     ADMIT binary sha256 of the tag = 2c9b69b9 (json binary_sha256 and installed_sha.txt; N1 item 530 (g)): NO
+     ADMIT version string ...-1889-g302347b4 in the binary file (N1): NO
+     ADMIT every revision text of the log and stdout = 302347b (N1; SDL_REVISION never read) ['082d161']: NO
+     ADMIT prereg sha256 of the json = sha256 of the seal file: YES
+     ADMIT environment and command line of the form (no KYTY_FIX_*, no KYTY_GAME_PATCH / KYTY_GPU_CHECKPOINTS; W of item 295 (b)): NO
+     ADMIT cold form: variant_fixb26_fixb1b_fixf10_fixf19 absent before the start: YES
+     ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+     FORM installed FS6 9325446c before the tag: NO
+     FORM installed FS6 9325446c after the return: NO
+     FORM manifest of the caches before = after the return (manifest cmp EQUAL): YES
+     MEMBER entered (entry line of underwater_aerial_garden): YES
+     MEMBER translation cache directory variant_fixb26_fixb1b_fixf10_fixf19 in every line (>= 1 line) ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']: YES
+     MEMBER FixB4: mode=1 before the first GuestOut (mode=1 lines [], other form lines [], first GuestOut line 11895): NO
+     MEMBER FixF8: mode=1 before the first GuestOut, letter of item 471 (g)(3) (mode=1 lines [], other form lines [], first GuestOut line 11895): NO
+     MEMBER hold >= 300 s (sum dt after the first scene frame): YES
+     MEMBER the process lived to the end of the hold (outcome ok, hold_exit null, hold_s >= 310): YES
+     MEMBER 0 [Vulkan][E] (VUID-06479 lines 0): YES
+     MEMBER positive control of the layer, [Vulkan][W] > 0: YES
+     MEMBER DualSrcBlend supported=1 enabled=1 before the first GuestOut: YES
+     REPORT frames >= 1 s after the first scene frame = 0, max dt_us 704504 (REPORT, not a gate - cold entry): YES
+     REPORT FixF8 by the reading of item 518 (v)(4): exactly 1 line mode=1, order not a gate (REPORT, executor variant): NO
+     REPORT FixB24: mode=1 before the first GuestOut (REPORT, base FS7 control beyond item 471 (g)(3); mode=1 lines [], other form lines [], first GuestOut line 11895): NO
+     REPORT AsyncPipelines: skipped draw lines = 2055 (REPORT): NO
+     REPORT last-time-reporting lines of the layer = 0 (REPORT): YES
+     REPORT 0 death markers (REPORT for W) []: YES
+     READING NOT_ADMITTED
+PASS f19_w1 as fs8_w: word NOT_ADMITTED
+PASS f19_w1 binary row NO (c01bde0c)
+PASS f19_w1 version row NO (no -1889-g302347b4 in c01bde0c)
+PASS f19_w1 revision row NO (082d161)
+PASS f19_w1 prereg row YES (F14g seal)
+PASS f19_w1 env row NO (KYTY_FIX_F19=1)
+PASS f19_w1 cold row YES
+PASS f19_w1 interference row YES
+PASS f19_w1 form: installed before / after NO (adb0c82f), manifest YES
+PASS f19_w1 entered, directory _fixf19 every line, hold, lived
+PASS f19_w1 frames >= 1 s after the first scene frame 0 (F14g: 0)
+PASS f19_w1 W: [Vulkan][E] 0, VUID-06479 0, [Vulkan][W] 925 381, DualSrcBlend YES
+   Fix lines on c01bde0c (data): B4 [] F8 [] B24 [] first GuestOut 11895
+     Fix lines (line, mode): B4 [] F8 [] B24 []; first GuestOut line 11892
+     entry line 342402; scene change line None; first scene frame n 323; hold (sum dt after it) 332.3 s; frames >= 1 s after it 0 (max dt_us 317409); FrameTrace rows 20241
+     video: index records 20248; one-frame glitches 0; sheet: C:/kyty/f287/f14g/runs/f19_ef/sheet_f19_ef.png frames 20248 step 421 tiles 8x6
+     W: [Vulkan][E] 0 (VUID-06479 0); [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)]
+     ADMIT binary sha256 of the tag = 2c9b69b9 (json binary_sha256 and installed_sha.txt; N1 item 530 (g)): NO
+     ADMIT version string ...-1889-g302347b4 in the binary file (N1): NO
+     ADMIT every revision text of the log and stdout = 302347b (N1; SDL_REVISION never read) ['082d161']: NO
+     ADMIT prereg sha256 of the json = sha256 of the seal file: YES
+     ADMIT environment and command line of the form (no KYTY_FIX_*, no KYTY_GAME_PATCH / KYTY_GPU_CHECKPOINTS; V with video, no validation): NO
+     ADMIT cold form: variant_fixb26_fixb1b_fixf10_fixf19 absent before the start: YES
+     ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+     FORM installed FS6 9325446c before the tag: NO
+     FORM installed FS6 9325446c after the return: NO
+     FORM manifest of the caches before = after the return (manifest cmp EQUAL): YES
+     MEMBER entered (entry line of enemy_final): YES
+     MEMBER translation cache directory variant_fixb26_fixb1b_fixf10_fixf19 in every line (>= 1 line) ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']: YES
+     MEMBER FixB4: mode=1 before the first GuestOut (mode=1 lines [], other form lines [], first GuestOut line 11892): NO
+     MEMBER FixF8: mode=1 before the first GuestOut, letter of item 471 (g)(3) (mode=1 lines [], other form lines [], first GuestOut line 11892): NO
+     MEMBER hold >= 300 s (sum dt after the first scene frame): YES
+     MEMBER the process lived to the end of the hold (outcome ok, hold_exit null, hold_s >= 330): YES
+     MEMBER 0 death markers (log and stdout): YES
+     MEMBER video index records >= 3000: YES
+     MEMBER 0 one-frame glitches: YES
+     MEMBER sheet for the lead made: YES
+     REPORT frames >= 1 s after the first scene frame = 0, max dt_us 317409 (REPORT, not a gate - cold entry): YES
+     REPORT FixF8 by the reading of item 518 (v)(4): exactly 1 line mode=1, order not a gate (REPORT, executor variant): NO
+     REPORT FixB24: mode=1 before the first GuestOut (REPORT, base FS7 control beyond item 471 (g)(3); mode=1 lines [], other form lines [], first GuestOut line 11892): NO
+     REPORT AsyncPipelines: skipped draw lines = 173 (REPORT): NO
+     REPORT last-time-reporting lines of the layer = 0 (REPORT): YES
+     READING NOT_ADMITTED
+PASS f19_ef as fs8_ef: word NOT_ADMITTED
+PASS f19_ef binary row NO (c01bde0c)
+PASS f19_ef version row NO (no -1889-g302347b4 in c01bde0c)
+PASS f19_ef revision row NO (082d161)
+PASS f19_ef prereg row YES (F14g seal)
+PASS f19_ef env row NO (KYTY_FIX_F19=1)
+PASS f19_ef cold row YES
+PASS f19_ef interference row YES
+PASS f19_ef form: installed before / after NO (adb0c82f), manifest YES
+PASS f19_ef entered, directory _fixf19 every line, hold, lived
+PASS f19_ef frames >= 1 s after the first scene frame 0 (F14g: 0)
+PASS f19_ef video records 20248, glitches 0, death 0, sheet
+   Fix lines on c01bde0c (data): B4 [] F8 [] B24 [] first GuestOut 11892
+   fs7_h Fix lines: B4 [(15, '1')] F8 [(11024, '1')] B24 [(17, '1')] first GuestOut 12298
+PASS fs7_h (FS7 base): FixB4 YES, FixF8 YES (letter), FixB24 YES
+PASS fs7_h revision text d6ee2dc (another build for this reader)
+checks 38
+ALL OK

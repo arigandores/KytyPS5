@@ -1,0 +1,2 @@
+2b5e2ce677c557bb0dd28ccc114588aea5c4b6f56c10ab1450faadd81328d544 *C:/kyty/s288/bin/kyty_emulator_2b5e2ce6.exe
+df33f104ffb103169a28046a64e83a4713de3049b6cd4d5d01cc62587fab2e5d *C:/kyty/s288/s17a2/bin/shader_cfg_tests_df33f104.exe

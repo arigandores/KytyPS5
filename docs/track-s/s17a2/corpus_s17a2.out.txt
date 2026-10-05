@@ -1,0 +1,11 @@
+t1 rows 2154 A rows OK 269 stages {'cs': 111, 'ps': 158}
+jobs 807 done before 0 to run 807
+ran this call 807 remaining 0 wall 48.1 s
+G0 processes 807 failed 0 []
+R1 rows 269 s17a/s17a0 differing from base: 0 []
+ShaderReplay text in output: 0 []
+base exe C:/kyty/s288/s17a/buildP/shader_cfg_tests.exe 32c50dc48f8de10fe8a97f0781e77ad1042c701a71c161ae9c11b3a0e81b46b7
+s17a exe C:/kyty/s288/s17a2/bin/shader_cfg_tests_94f75275.exe 94f75275f20e1d23ccfe7fc295cc01df14592d60ad7f7f8313c212dcd9deed26
+corpus_s17a.tsv rows 269 sha256 ef3a021978469b5782a87aa13f7f600fc3028e52be05d71fcd31b28c933bde58
+wall 48.5 s
+ALL OK

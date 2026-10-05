@@ -578,7 +578,8 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
 	// with KYTY_FIX_B26 the four combinations get four distinct signatures and directories.
 	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 (the default since FS5a, p.410(g)(1)) adds ":fixf10" last, so
 	// =0 and =1 never share a signature or a directory.
-	// Track F, F14e (ROADMAP s122 item 409(v)): KYTY_FIX_F19=1 (default 0) adds ":fixf19" after ":fixf10", last.
+	// Track F, F14e (ROADMAP s122 item 409(v)): KYTY_FIX_F19=1 (the default since FS8a, p.471(g)(1)) adds ":fixf19" after
+	// ":fixf10", last.
 	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
 	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "") +
 	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "") +

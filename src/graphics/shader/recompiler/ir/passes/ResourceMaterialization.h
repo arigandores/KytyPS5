@@ -43,8 +43,9 @@ struct ResourceSpecialization {
 	bool operator==(const ResourceSpecialization&) const = default;
 };
 
-// Track F, F14e (HPP-505, ROADMAP s122 items 409(v), 415(b)-(v)): KYTY_FIX_F19, default OFF (unset, empty, 0, false,
-// off, no = off; any other value as Common::EnvValueOn), read once per process. On: MaterializeResources puts a
+// Track F, F14e (HPP-505, ROADMAP s122 items 409(v), 415(b)-(v)): KYTY_FIX_F19, default ON since FS8a (HPP-571, item
+// 471(g)(1): unset or "" = ON; 0, false, off, no = off; any other value as Common::EnvValueOn; F14e had default OFF),
+// read once per process. On: MaterializeResources puts a
 // comparison image on the shader (manual) comparison path only by FixF19ManualDepthCompare, and an indirect image
 // table is manual as a whole when that rule makes any of its members manual (FixF19MergeIndirectTables). Off: the
 // rule before the fix, verbatim. The translation cache keys the value in its signature and directory

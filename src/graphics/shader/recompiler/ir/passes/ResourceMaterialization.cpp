@@ -32,7 +32,12 @@ bool VectorConstStaticAlignmentClass() {
 
 // Track F, F14e (ROADMAP s122 items 409(v), 415(b)-(v)): see ResourceMaterialization.h.
 bool FixF19Enabled() {
-	static const bool enabled = Common::EnvFlagOn("KYTY_FIX_F19");
+	// Track F, FS8a (HPP-571, ROADMAP s122 item 471(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
+	// other value as EnvValueOn (the form of FS4a 17adaf80).
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_FIX_F19");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	return enabled;
 }
 

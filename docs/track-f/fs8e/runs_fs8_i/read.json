@@ -1,0 +1,103 @@
+{
+ "tag": "fs8_i",
+ "level": "underwater_aerial_garden",
+ "log": "C:/kyty/f287/fs8e\\log_fs8_i.txt",
+ "log_sha256": "8c846e396ddedf0c145e5d375e64e86dc3e7a93f7783cbc2487182e305b77ab9",
+ "log_lines": 2327096,
+ "stdout_sha256": "d2698e2d285940ba44410574d726a02e0dedb3e22a63f04a45f46b13b5fdaa80",
+ "stdout_present": true,
+ "rev": [
+  [
+   "log",
+   123,
+   "302347b"
+  ]
+ ],
+ "rev_ok": true,
+ "json_binary": "2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b",
+ "installed_sha": "2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b",
+ "installed_before": "2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b",
+ "sha_ok": true,
+ "version_in_bin": true,
+ "prereg": "e0f2b4752002389f6c4ce7bf6f644528eb833129e66e01d0f35fd36f55529dc8",
+ "seal_sha": "e0f2b4752002389f6c4ce7bf6f644528eb833129e66e01d0f35fd36f55529dc8",
+ "prereg_ok": true,
+ "env_ok": true,
+ "env_info": "env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_REC', 'KYTY_SAMPLE_GATE']; offending []",
+ "stc": [
+  "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19"
+ ],
+ "fixf19_ok": true,
+ "cold_txt": "cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-05T12:34:12Z; entries of _ShaderCache/PPSA21564: 1347",
+ "cold_ok": true,
+ "warm_txt": "warm form after the tag: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 files 388; pipelines.bin present size 3780051 sha256 bff7a2ddfedb4475b3064770e5387c95a9002162",
+ "warm_size": 3780051,
+ "warm_ok": true,
+ "fixl": {
+  "B4": [
+   [
+    15,
+    "1"
+   ]
+  ],
+  "F8": [
+   [
+    10622,
+    "1"
+   ]
+  ],
+  "B24": [
+   [
+    17,
+    "1"
+   ]
+  ]
+ },
+ "first_guest": 11895,
+ "fb4": [
+  true,
+  "mode=1 lines [15], other form lines [], first GuestOut line 11895"
+ ],
+ "ff8": [
+  true,
+  "mode=1 lines [10622], other form lines [], first GuestOut line 11895"
+ ],
+ "ff8v": [
+  true,
+  "mode=1 lines [10622], other form lines [], first GuestOut line 11895"
+ ],
+ "fb24": [
+  true,
+  "mode=1 lines [17], other form lines [], first GuestOut line 11895"
+ ],
+ "attempt": {
+  "outcome": "ok",
+  "detail": null,
+  "hold_exit": null,
+  "hold_s": 330.1,
+  "stable_s": 29.8,
+  "close_rc": 0,
+  "close_killed": false
+ },
+ "ended_ok": true,
+ "entry_line": 352706,
+ "scene_change_line": null,
+ "first_scene_n": 377,
+ "hold_us": 335214931,
+ "hold_s": 335.21,
+ "k2_after": 0,
+ "dt_max_after": 692089,
+ "ft_rows": 9777,
+ "death": [],
+ "skipped_draw": 2082,
+ "win": {
+  "lost keyboard focus": 1
+ },
+ "recovering": 0,
+ "gamepatch": 0,
+ "quit_line": 2327060,
+ "idx_records": 9778,
+ "glitches": 0,
+ "sheet": "sheet: C:/kyty/f287/fs8e/runs/fs8_i/sheet_fs8_i.png frames 9778 step 203 tiles 8x6",
+ "verdict": "PASS"
+}

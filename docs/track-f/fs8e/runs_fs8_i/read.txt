@@ -1,0 +1,33 @@
+FS8E fs8_i level underwater_aerial_garden log sha256 8c846e396ddedf0c145e5d375e64e86dc3e7a93f7783cbc2487182e305b77ab9 lines 2327096 stdout sha256 d2698e2d285940ba44410574d726a02e0dedb3e22a63f04a45f46b13b5fdaa80
+  binary: installed before 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b, of the tag 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b, json 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b (expected 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b); version string in the binary True; revision texts [('log', 123, '302347b')]
+  prereg e0f2b4752002389f6c4ce7bf6f644528eb833129e66e01d0f35fd36f55529dc8 seal e0f2b4752002389f6c4ce7bf6f644528eb833129e66e01d0f35fd36f55529dc8; env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_REC', 'KYTY_SAMPLE_GATE']; offending []
+  Shader translation cache lines 1 ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']; before: cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-05T12:34:12Z; entries of _ShaderCache/PPSA21564: 1347; after: warm form after the tag: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 files 388; pipelines.bin present size 3780051 sha256 bff7a2ddfedb4475b3064770e5387c95a9002162
+  Fix lines (line, mode): B4 [(15, '1')] F8 [(10622, '1')] B24 [(17, '1')]; first GuestOut line 11895
+  entry line 352706; scene change line None; first scene frame n 377; hold 335.21 s; frames >= 1 s after it 0 (max dt_us 692089); FrameTrace rows 9777
+  death markers: 0 []; emulator stdout present
+  window: {'lost keyboard focus': 1}, Recovering Vulkan swapchain 0; GamePatch lines 0; AsyncPipelines: skipped draw 2082 (reference)
+  video: index records 9778; one-frame glitches 0; sheet: C:/kyty/f287/fs8e/runs/fs8_i/sheet_fs8_i.png frames 9778 step 203 tiles 8x6
+  EXIT (report): {'outcome': 'ok', 'detail': None, 'hold_exit': None, 'hold_s': 330.1, 'stable_s': 29.8, 'close_rc': 0, 'close_killed': False}; Event: quit line 2327060
+  MEMBER binary: installed before the tag = binary of the tag = json binary_sha256 = 2c9b69b9 (installed FS8): YES
+  MEMBER version string ...-1889-g302347b4 in the installed binary file (N1): YES
+  MEMBER every revision text of the log and stdout = 302347b (N1; SDL_REVISION never read): YES
+  MEMBER translation cache directory variant_fixb26_fixb1b_fixf10_fixf19 in every line (>= 1 line): YES
+  MEMBER FixB4: mode=1 before the first GuestOut: YES
+  MEMBER FixF8: mode=1 before the first GuestOut: YES
+  MEMBER entered (entry line of underwater_aerial_garden): YES
+  MEMBER hold >= 300 s (sum dt after the first scene frame): YES
+  MEMBER the process lived to the end of the hold (outcome ok, hold_exit null, hold_s >= 330): YES
+  MEMBER 0 death markers (log and stdout): YES
+  MEMBER video index records >= 3000: YES
+  MEMBER 0 one-frame glitches: YES
+  MEMBER sheet for the lead made: YES
+  MEMBER warm form after the tag: variant_fixb26_fixb1b_fixf10_fixf19/pipelines.bin present, size > 0: YES
+  REFERENCE cold form before the tag: variant_fixb26_fixb1b_fixf10_fixf19 absent: YES
+  REFERENCE frames >= 1 s after the first scene frame = 0, max dt_us 692089 (cold entry): YES
+  REFERENCE FixB24: mode=1 before the first GuestOut: YES
+  REFERENCE FixF8 exactly 1 line mode=1, order not a gate (item 518 (v)(4)): YES
+  REFERENCE AsyncPipelines: skipped draw lines = 2082: NO
+  INTERFERENCE none: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+  INTERFERENCE none: environment and command line of the form fs8_v (no KYTY_FIX_*, KYTY_GAME_PATCH, KYTY_GPU_CHECKPOINTS, VK_LAYER_*; KYTY_REC; validation false; -lvl underwater_aerial_garden): YES
+  INTERFERENCE none: json prereg sha256 = sha256 of the seal file: YES
+WARMUP VERDICT fs8_i: PASS

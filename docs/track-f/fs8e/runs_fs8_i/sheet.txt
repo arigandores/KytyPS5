@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/fs8e/runs/fs8_i/sheet_fs8_i.png frames 9778 step 203 tiles 8x6

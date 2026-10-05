@@ -1,0 +1,17 @@
+prereg: fs8e_seal.md  11464 bytes  sha256 e0f2b4752002389f  mtime 2026-10-05T13:48:56  mtime-ctime +0.249 s
+pre_run: host 482 processes, top by CPU: <app>:18388 63541s, <app>:37780 29889s, <app>:7304 14681s, <app>:23460 12760s, <app>:10308 6805s, <app>:68992 4648s
+pre_run: GPU 2.0 % busy, 27.2 W, 2648 MiB used, SM 1867.0 MHz, 31 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\fs8e\cpuclk.py is not there
+--- attempt 1: launching
+14.8 s  LevelDocument Loaded: underwater_aerial_garden
+17.9 s  Level has started: underwater_aerial_garden
+29.8 s  scene stable at frame 466 (90 frames with draws >= 300)
+holding the run for 330 s
+hold end: ft_total 9777, ft_tail 145 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 3.8, 'close_wait_s': 40}
+hold_gpu: median 47.0 % busy over 647 rows (2026/10/05 14:34:52.620 .. 2026/10/05 14:40:22.729), a row, not a guard
+copied C:\kyty\f287\fs8e\log_fs8_i.txt
+copied C:\kyty\f287\fs8e\stdout_fs8_i.txt
+
+attempt 1  ok               document=14.8 s started=17.9 s stable=29.8 s 
+VERDICT: underwater_aerial_garden in 29.8 s - PASS (acceptance <= 90 s)

@@ -1,0 +1,1 @@
+pair: C:/kyty/f287/fs8e/runs/fs8_i/pair_fs8_i_fs8_v.png (left fs8_i, right fs8_v)

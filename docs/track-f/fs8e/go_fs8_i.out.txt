@@ -1,0 +1,20 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-05T12:34:09Z FS8e go_fs8e fs8_i lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None); seal lines checked 22
+2026-10-05T12:34:09Z FS8e go_fs8e fs8_i installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-05T12:34:12Z FS8e go_fs8e fs8_i manifest before (reference): manifest C:/kyty/f287/fs8e/runs/fs8_i/manifest_before.tsv files 3327 bytes 953248006 listsha 411ee7faf5e922fa0de8114fc237142b78be457468b13011fe2e3e80c612799a
+2026-10-05T12:34:14Z FS8e go_fs8e fs8_i cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 absent at 2026-10-05T12:34:12Z; entries of _ShaderCache/PPSA21564: 1347
+2026-10-05T12:34:15Z FS8e go_fs8e fs8_i binary of the tag (installed, not copied): 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-05T12:34:15Z FS8e go_fs8e fs8_i enter_scene start (level underwater_aerial_garden, SD 300, --rec, hold 330, defaults of FS8 - no KYTY_FIX_*, installed binary)
+2026-10-05T12:40:28Z FS8e go_fs8e fs8_i enter_scene rc 0
+2026-10-05T12:40:29Z FS8e go_fs8e fs8_i run: VERDICT: underwater_aerial_garden in 29.8 s - PASS (acceptance <= 90 s)
+2026-10-05T12:40:32Z FS8e go_fs8e fs8_i log_fs8_i.txt sha256 8c846e396ddedf0c145e5d375e64e86dc3e7a93f7783cbc2487182e305b77ab9
+2026-10-05T12:40:32Z FS8e go_fs8e fs8_i warm form after the tag: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 files 388; pipelines.bin present size 3780051 sha256 bff7a2ddfedb4475b3064770e5387c95a9002162691f9fad869bf4a2b7e77c3a
+2026-10-05T12:40:36Z FS8e go_fs8e fs8_i manifest after (reference, caches not returned): manifest C:/kyty/f287/fs8e/runs/fs8_i/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; vs before: manifest cmp DIFFER only-before 3 only-after 391
+2026-10-05T12:41:00Z FS8e go_fs8e fs8_i s51_vidglitch rc 0: one-frame glitches: 0; rec sha256 1a74d07fb9c42ffc0b3be0f19368ab4e3db0db6c8f1a13814c8549ffe91c114e
+2026-10-05T12:41:18Z FS8e go_fs8e fs8_i sheet142 rc 0: sheet: C:/kyty/f287/fs8e/runs/fs8_i/sheet_fs8_i.png frames 9778 step 203 tiles 8x6
+2026-10-05T12:41:20Z FS8e go_fs8e fs8_i pair sheet: pair: C:/kyty/f287/fs8e/runs/fs8_i/pair_fs8_i_fs8_v.png (left fs8_i, right fs8_v)
+2026-10-05T12:41:30Z FS8e go_fs8e fs8_i reader rc 0 read.txt sha256 e87fd4355f0f64a7a368849eb0fc6c588741dca49da86cb56ae78f11ec0dcef3: WARMUP VERDICT fs8_i: PASS; MEMBER NO/NOT_DETERMINED: 0
+2026-10-05T12:41:30Z FS8e go_fs8e fs8_i WARM-UP PASS - the install stays: kyty_emulator.exe sha256 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-05T12:41:31Z FS8e go_fs8e fs8_i installed binary at the end: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-05T12:41:34Z FS8e go_fs8e fs8_i lock released (rc 0)
+rc=0

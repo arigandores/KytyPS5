@@ -1,0 +1,23 @@
+watch: start 2026-10-05T03:21:41Z child 59384 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+PASS F8  value='UNSET' expected=1 FixF8_lines=1 init_calls=1 rc=0
+PASS B24 value='UNSET' expected=1 fix_b24=1 FixB24_lines=1 rc=0
+PASS F8  value='' expected=1 FixF8_lines=1 init_calls=1 rc=0
+PASS B24 value='' expected=1 fix_b24=1 FixB24_lines=1 rc=0
+PASS F8  value='0' expected=0 FixF8_lines=0 init_calls=2 rc=0
+PASS B24 value='0' expected=0 fix_b24=0 FixB24_lines=0 rc=0
+PASS F8  value='false' expected=0 FixF8_lines=0 init_calls=2 rc=0
+PASS B24 value='false' expected=0 fix_b24=0 FixB24_lines=0 rc=0
+PASS F8  value='OFF' expected=0 FixF8_lines=0 init_calls=2 rc=0
+PASS B24 value='OFF' expected=0 fix_b24=0 FixB24_lines=0 rc=0
+PASS F8  value='no' expected=0 FixF8_lines=0 init_calls=2 rc=0
+PASS B24 value='no' expected=0 fix_b24=0 FixB24_lines=0 rc=0
+PASS F8  value='1' expected=1 FixF8_lines=1 init_calls=1 rc=0
+PASS B24 value='1' expected=1 fix_b24=1 FixB24_lines=1 rc=0
+PASS F8  value='2' expected=1 FixF8_lines=1 init_calls=1 rc=0
+PASS B24 value='2' expected=1 fix_b24=1 FixB24_lines=1 rc=0
+PASS F8  value='true' expected=1 FixF8_lines=1 init_calls=1 rc=0
+PASS B24 value='true' expected=1 fix_b24=1 FixB24_lines=1 rc=0
+PASS F8  value=' 0' expected=1 FixF8_lines=1 init_calls=1 rc=0
+PASS B24 value=' 0' expected=1 fix_b24=1 FixB24_lines=1 rc=0
+LVALUES ALL OK
+rc=0 end 2026-10-05T03:22:14Z

@@ -1,0 +1,60 @@
+mode=i ndev=1 sdl_audiodriver=dummy
+devices_opened=1
+device=2
+call 256 fail 1
+call 257 fail 1
+call 258 fail 1
+call 259 fail 1
+call 260 fail 1
+call 261 fail 1
+call 262 fail 1
+call 263 fail 1
+call 264 fail 1
+call 265 fail 1
+call 266 fail 1
+call 267 fail 1
+call 268 fail 1
+call 269 fail 1
+call 270 fail 1
+call 271 fail 1
+call 272 fail 1
+call 273 fail 1
+call 274 fail 1
+call 275 fail 1
+call 276 fail 1
+call 277 fail 1
+call 278 fail 1
+call 279 fail 1
+call 280 fail 1
+call 281 fail 1
+call 282 fail 1
+call 283 fail 1
+call 284 fail 1
+call 285 fail 1
+call 286 fail 1
+call 287 fail 1
+call 288 fail 1
+call 289 fail 1
+call 290 fail 1
+call 291 fail 1
+call 292 fail 1
+call 293 fail 1
+call 294 fail 1
+call 295 fail 1
+call 296 fail 1
+call 297 fail 1
+call 298 fail 1
+call 299 fail 1
+call 300 fail 1
+calls=300
+init_failed=0
+first_fail_call=256
+fail_devices_at_first=1
+calls_with_fail=45
+queue_failed=45
+first_error="Invalid audio device ID"
+init_calls=301
+acq=0
+was_init=16
+driver=dummy
+END

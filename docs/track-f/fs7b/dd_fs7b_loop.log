@@ -1,0 +1,16 @@
+watch: start 2026-10-05T03:22:27Z child 63388 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd fs7b cycles 0..24 not clean 0
+rc=0 end 2026-10-05T03:22:39Z
+03:22:39 batch 0..24 rc=0
+watch: start 2026-10-05T03:22:40Z child 72264 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd fs7b cycles 25..49 not clean 0
+rc=0 end 2026-10-05T03:22:53Z
+03:22:53 batch 25..49 rc=0
+watch: start 2026-10-05T03:22:54Z child 69956 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd fs7b cycles 50..74 not clean 0
+rc=0 end 2026-10-05T03:23:05Z
+03:23:05 batch 50..74 rc=0
+watch: start 2026-10-05T03:23:06Z child 48836 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+dd fs7b cycles 75..99 not clean 0
+rc=0 end 2026-10-05T03:23:18Z
+03:23:18 batch 75..99 rc=0

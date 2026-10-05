@@ -1,0 +1,1 @@
+REFUSED SDL_AUDIODRIVER=(unset) (dummy or disk only)

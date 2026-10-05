@@ -1,0 +1,15 @@
+# exe C:\kyty\f287\fs7b\fix\b24_pad_stand.exe sha256 a21775275585d66cc965a2b5393d4b5cb12e396d82e54d4b0d25ddc05b6ac022
+PASS i_fix0 rc=0 fixb24_lines=0 wall=3.1s num_joysticks_at_init=0 fix_b24=0 wall_vib_us=2800550 pad_vib=1 pad_led=0 pad_trig=0 pad_wait_max_us=2800515 po_applied=0 po_wait_max_us=0 guest_sdl=2 rumble_calls=1 rumble_bad=0 led_calls=0 effect_calls=0
+FAIL i_unset rc=0 fixb24_lines=1 wall=3.1s num_joysticks_at_init=0 fix_b24=1 wall_vib_us=95 pad_vib=1 pad_led=0 pad_trig=0 pad_wait_max_us=8 po_applied=1 po_wait_max_us=2799519 guest_sdl=0 rumble_calls=1 rumble_bad=0 led_calls=0 effect_calls=0
+    failed: fix_b24 0
+    failed: FixB24 lines 0
+    failed: wall_vib_us >= 2700000
+    failed: guest_sdl >= 2
+    failed: po_applied 0
+    failed: po_wait_max_us 0
+PASS ii_fix1 rc=0 fixb24_lines=1 wall=3.4s num_joysticks_at_init=0 fix_b24=1 wall_vib_us=37 wall_led_us=7 wall_trig_us=14 y_done_before_unlock=1 latency_us=215 last_after_300ms_ok=1 pad_vib=3 pad_led=1 pad_trig=1 pad_wait_max_us=3 po_applied=4 po_wait_max_us=2799934 guest_sdl=0 rumble_calls=2 rumble_bad=0 led_calls=1 effect_calls=0
+PASS iii_fix1 rc=0 fixb24_lines=1 wall=1.2s num_joysticks_at_init=0 fix_b24=1 latency_us=1999 last_after_300ms_ok=1 writes=20000 churn_cycles=277 attaches=140 detaches=139 adds=140 removes=139 final_connected=1 pad_vib=20001 pad_led=0 pad_trig=0 pad_wait_max_us=179 po_applied=13177 po_wait_max_us=57 guest_sdl=0 rumble_calls=6543 rumble_bad=0 led_calls=0 effect_calls=0
+PASS i_fix1 rc=0 fixb24_lines=1 wall=3.1s num_joysticks_at_init=0 fix_b24=1 wall_vib_us=106 pad_vib=1 pad_led=0 pad_trig=0 pad_wait_max_us=10 po_applied=1 po_wait_max_us=2799807 guest_sdl=0 rumble_calls=1 rumble_bad=0 led_calls=0 effect_calls=0
+PASS ii_fix0 rc=0 fixb24_lines=0 wall=3.4s num_joysticks_at_init=0 fix_b24=0 wall_vib_us=2799454 wall_led_us=45 wall_trig_us=72 y_done_before_unlock=0 latency_us=298 last_after_300ms_ok=1 pad_vib=3 pad_led=1 pad_trig=1 pad_wait_max_us=2799353 po_applied=0 po_wait_max_us=0 guest_sdl=10 rumble_calls=3 rumble_bad=0 led_calls=1 effect_calls=0
+PASS iii_fix1_b rc=0 fixb24_lines=1 wall=1.2s num_joysticks_at_init=0 fix_b24=1 latency_us=2004 last_after_300ms_ok=1 writes=20000 churn_cycles=281 attaches=142 detaches=141 adds=142 removes=141 final_connected=1 pad_vib=20001 pad_led=0 pad_trig=0 pad_wait_max_us=45 po_applied=12751 po_wait_max_us=17 guest_sdl=0 rumble_calls=6300 rumble_bad=0 led_calls=0 effect_calls=0
+FAILED 1

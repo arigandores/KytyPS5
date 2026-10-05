@@ -1,0 +1,65 @@
+## log d6ee2dc8
+d6ee2dc886c98b80ab36231519dec9f7356a4691 b47033cba554f55d6ee337a61e60f03ea2f121fc track F link FS7a (HPP-565): KYTY_FIX_F8 and KYTY_FIX_B24 default 0 -> 1 (ROADMAP s122 items 467(g)(1), 487(g)(1))
+b47033cba554f55d6ee337a61e60f03ea2f121fc 915871f7c96da93e83f56b77dd8f58992f73f89e track F link F19c2 (HPP-559): RC1 of the F19d review - PadOutput::Stop moves m_thread into a local std::thread under m
+915871f7c96da93e83f56b77dd8f58992f73f89e e2a21d7408519063916b9c3871396509de2916d9 track F link F19c (HPP-547): KYTY_FIX_B24 (default 0) - member A of F19a s5.1: at 1 SetVibration/SetLightBar/SetTrigge
+e2a21d7408519063916b9c3871396509de2916d9 3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 track F link F18c (HPP-539): KYTY_FIX_F8 code (ROADMAP s122 item 441(v)-(g), (d)(1)) - not run in the game
+3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 33679a021ac8d6130edbbfda342f9e875d9ea336 track F link FS6a (HPP-555): KYTY_FIX_B4 default 0 -> 1 (ROADMAP s122 item 454(g)(1))
+## tree check: 3904522d + patches 10a4800b 9c726d74 919c1a19 ec6c4c83 via read-tree/apply --cached
+applied 10a4800b
+applied 9c726d74
+applied 919c1a19
+applied ec6c4c83
+my tree a27aba28e9ecdd87a4b22435a1c4ac2f786a2ef0
+d6ee2dc8 tree a27aba28e9ecdd87a4b22435a1c4ac2f786a2ef0
+## diff --stat 3904522d d6ee2dc8
+ CMakeLists.txt                              |  10 +
+ docs/track-f/f18c/patch_f18c_src.py         | 372 +++++++++++++
+ docs/track-f/f18c/run_stand_f18c.py         | 170 ++++++
+ docs/track-f/f19c/patch_f19c_src.py         | 803 ++++++++++++++++++++++++++++
+ docs/track-f/f19c/run_stand_f19c.py         | 161 ++++++
+ src/graphics/presentation/window/window.cpp | 257 +++++++++
+ src/libs/audio.cpp                          | 121 ++++-
+ src/libs/audio_internal.h                   |  15 +
+ src/libs/controller.cpp                     | 451 +++++++++++++++-
+ src/libs/controller.h                       |  18 +
+ tests/B24PadStand.cpp                       | 618 +++++++++++++++++++++
+ tests/F8AudioStand.cpp                      | 199 +++++++
+ 12 files changed, 3185 insertions(+), 10 deletions(-)
+## files union of 4 commits
+files EQUAL 12
+## cherry
+10a4800b - 10a4800b36
+9c726d74 - 9c726d74fc
+919c1a19 - 919c1a19f9
+ec6c4c83 - ec6c4c83d9
+a86a5ad0 - a86a5ad0d1
+17eb924e - 17eb924e3f
+c1732d1a - c1732d1a7f
+c3eb8fe8 - c3eb8fe83b
+1833ee28 - 1833ee280e
+68602c4f - 68602c4f30
+17adaf80 - 17adaf8010
+4e72289e - 4e72289e87
+082d1612 + 082d161214
+f98e842c + f98e842ca3
+fcaf141b + fcaf141b6f
+741e3312 + 741e3312ab
+c9b4268e + c9b4268e0b
+365cc3c2 + 365cc3c25f
+## ancestors
+3904522d ancestor yes
+4d9e8ab7 ancestor yes
+0e72bc19 ancestor yes
+3d0e46da ancestor yes
+4414e235 ancestor yes
+722c5e7f ancestor yes
+d515b901 ancestor yes
+## files ec6c4c83
+ec6c4c83d9cf89c996ee2c951c6e3e0a43ada4e7 Emu Engineer track F link FS7a (HPP-565): KYTY_FIX_F8 and KYTY_FIX_B24 default 0 -> 1 (ROADMAP s122 items 467(g)(1), 487(g)(1))
+
+ src/libs/audio.cpp        |  5 ++++-
+ src/libs/audio_internal.h |  7 ++++---
+ src/libs/controller.cpp   | 12 +++++++++---
+ 3 files changed, 17 insertions(+), 7 deletions(-)
+## main ec6c4c83 vs d6ee2dc8 on its 3 files
+0

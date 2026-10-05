@@ -1,0 +1,6 @@
+watch: start 2026-10-05T03:21:32Z child 34708 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+# exe C:\kyty\f287\fs7b\fix\b24_pad_stand.exe sha256 a21775275585d66cc965a2b5393d4b5cb12e396d82e54d4b0d25ddc05b6ac022
+PASS trig_fixunset rc=0 wall=3.4s pad_vendor=0x054c pad_product=0x0ce6 pad_type=7 pad_type_ps5=1 wall_trig_a_us=71 wall_trig_b_us=3 trig_ok=1 y_done_before_unlock=1 effect_calls_before_unlock=0 effect_calls_after_unlock=2 effect_latency_us=97 ref_seen=1 payload_size=32 last_eq_b=1 a_ne_b=1 pad_trig=4 guest_sdl=0 po_applied=4 po_wait_max_us=2799338 effect_calls=4 sent=#1:1,#2:1,#3:1,#4:1
+PASS trig_fix0 rc=0 wall=3.4s pad_vendor=0x054c pad_product=0x0ce6 pad_type=7 pad_type_ps5=1 wall_trig_a_us=2799011 wall_trig_b_us=16 trig_ok=1 y_done_before_unlock=0 effect_calls_before_unlock=0 effect_calls_after_unlock=2 effect_latency_us=242 ref_seen=1 payload_size=32 last_eq_b=1 a_ne_b=1 pad_trig=4 guest_sdl=12 po_applied=0 po_wait_max_us=0 effect_calls=4 sent=#1:1,#2:1,#3:1,#4:1
+ALL OK
+rc=0 end 2026-10-05T03:21:39Z

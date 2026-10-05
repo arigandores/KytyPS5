@@ -1,0 +1,36 @@
+## base files of the 12 paths: 4d9e8ab7 vs 3904522d (empty = the F18d/F19d/F19d2 reviews' context is the same)
+ CMakeLists.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+(end)
+## a86a5ad0/17eb924e files
+CMakeLists.txt
+docs/track-f/f15c/patch_f15c_cmake.py
+docs/track-f/f15c/patch_f15c_src.py
+docs/track-f/f15c/run_stand_f15c.py
+src/kernel/fileSystem.cpp
+tests/B4RaceStand.cpp
+src/kernel/fileSystem.cpp
+tests/B4RaceStand.cpp
+## b47033cb (wt F19c2) vs main 919c1a19 on the 12 paths
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+(end)
+## d6ee2dc8 vs main ec6c4c83 on the 12 paths
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+(end)
+## main commits touching the 12 paths between 10a4800b^ and ec6c4c83
+ec6c4c83 track F link FS7a (HPP-565): KYTY_FIX_F8 and KYTY_FIX_B24 default 0 -> 1 (ROADMAP s122 items 467(g)(1), 487(g)(1))
+919c1a19 track F link F19c2 (HPP-559): RC1 of the F19d review - PadOutput::Stop moves m_thread into a local std::thread under m_mutex with m
+9c726d74 track F link F19c (HPP-547): KYTY_FIX_B24 (default 0) - member A of F19a s5.1: at 1 SetVibration/SetLightBar/SetTriggerEffect call 
+f98e842c track F link F14e2 (HPP-545): RC1 and RC3 of the F14f review (ROADMAP s122 item 443(b)) - imageInfo.h in the translation signature,
+10a4800b track F link F18c (HPP-539): KYTY_FIX_F8 code (ROADMAP s122 item 441(v)-(g), (d)(1)) - not run in the game
+## patch-ids
+10a4800b 3add70bdc7f6
+e2a21d74 3add70bdc7f6
+9c726d74 875b7df3d796
+915871f7 875b7df3d796
+919c1a19 2a996c60026a
+b47033cb 2a996c60026a
+ec6c4c83 68d889d6e828
+d6ee2dc8 68d889d6e828

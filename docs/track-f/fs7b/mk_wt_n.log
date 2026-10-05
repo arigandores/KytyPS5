@@ -1,0 +1,30 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD b47033cb)
+Updating files:  91% (3903/4268)Updating files:  92% (3927/4268)Updating files:  93% (3970/4268)Updating files:  94% (4012/4268)Updating files:  95% (4055/4268)Updating files:  96% (4098/4268)Updating files:  97% (4140/4268)Updating files:  98% (4183/4268)Updating files:  99% (4226/4268)Updating files: 100% (4268/4268)Updating files: 100% (4268/4268), done.
+HEAD is now at b47033cb track F link F19c2 (HPP-559): RC1 of the F19d review - PadOutput::Stop moves m_thread into a local std::thread under m_mutex with m_stop = true, notify_all, then join (detach on its own thread) of the local outside the lock; a second or later call gets an empty thread and returns (two simultaneous emergency exits no longer join one thread twice); KYTY_FIX_B24=0 branches untouched; stand tests/B24PadStand.cpp: cases dd (double Controller::EmergencyShutdown behind a barrier while X holds SDL_LockJoysticks 300 ms during a PadOutput vibration application) and trig (trigger effect path with a virtual pad 054C:0CE6) - ROADMAP s122 item 460(v)(1),(2),(4); not run by the game, no emulator binary
+--- worktree HEAD
+b47033cba554f55d6ee337a61e60f03ea2f121fc track F link F19c2 (HPP-559): RC1 of the F19d review - PadOutput::Stop moves m_
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+b47033cba554f55d6ee337a61e60f03ea2f121fc 915871f7c96da93e83f56b77dd8f58992f73f89e track F link F19c2 (HPP-559): RC1 of the F19d review - PadOutput::Stop moves m
+915871f7c96da93e83f56b77dd8f58992f73f89e e2a21d7408519063916b9c3871396509de2916d9 track F link F19c (HPP-547): KYTY_FIX_B24 (default 0) - member A of F19a s5.1:
+e2a21d7408519063916b9c3871396509de2916d9 3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 track F link F18c (HPP-539): KYTY_FIX_F8 code (ROADMAP s122 item 441(v)-(g), (
+3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 33679a021ac8d6130edbbfda342f9e875d9ea336 track F link FS6a (HPP-555): KYTY_FIX_B4 default 0 -> 1 (ROADMAP s122 item 454
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 456 with CR 0
+WT OK

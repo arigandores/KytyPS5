@@ -1,0 +1,18 @@
+FixF8: mode=1
+mode=ii ndev=3 sdl_audiodriver=disk
+devices_opened=3
+device=2
+device=3
+device=4
+calls=10000
+init_failed=0
+first_fail_call=0
+fail_devices_at_first=0
+calls_with_fail=0
+queue_failed=0
+first_error=""
+init_calls=1
+acq=10003
+was_init=16
+driver=disk
+END

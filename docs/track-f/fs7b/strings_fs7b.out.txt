@@ -1,0 +1,63 @@
+## f98e842c files
+CMakeLists.txt
+tests/shaderCfgTests.cpp
+## kytyGitVersion.h (own build)
+#define KYTY_GIT_VERSION "KytyPS5-2026-09-15-6a2987a-1883-gd6ee2dc8"
+#define KYTY_GIT_REVISION "d6ee2dc886c98b80ab36231519dec9f7356a4691"
+#define KYTY_SHADER_SOURCE_HASH "26ce5fc78ea3b20be537c7696be041f5e97d9e58"
+## base FS6a signature (FS6b build)
+#define KYTY_SHADER_SOURCE_HASH "26ce5fc78ea3b20be537c7696be041f5e97d9e58"
+fs7b FixF8: mode= 1
+fs7b FixB24: mode= 1
+fs7b FixB4: mode= 1
+fs7b KYTY_FIX_F8 1
+fs7b KYTY_FIX_B24 1
+fs7b 26ce5fc78ea3b20be537c7696be041f5e97d9e58 1
+fs7b gd6ee2dc8 2
+fs7b KYTY_FIX_F19 0
+fs7b KYTY_FIX_F26 0
+fs7b KYTY_PVAR_HOLD 0
+fs7b KYTY_DIAG_F5 0
+fs7b KYTY_FIX_F5CMU 0
+fs7b FixB42 2
+fs7b KYTY_S_PCW 4
+fs7b KYTY_FIX_SVAL 1
+fs7b KYTY_FIX_F10 1
+fs7b KYTY_GAME_PATCH 1
+fs7a FixF8: mode= 1
+fs7a FixB24: mode= 1
+fs7a FixB4: mode= 1
+fs7a KYTY_FIX_F8 1
+fs7a KYTY_FIX_B24 1
+fs7a 26ce5fc78ea3b20be537c7696be041f5e97d9e58 1
+fs7a gd6ee2dc8 2
+fs7a KYTY_FIX_F19 0
+fs7a KYTY_FIX_F26 0
+fs7a KYTY_PVAR_HOLD 0
+fs7a KYTY_DIAG_F5 0
+fs7a KYTY_FIX_F5CMU 0
+fs7a FixB42 2
+fs7a KYTY_S_PCW 4
+fs7a KYTY_FIX_SVAL 1
+fs7a KYTY_FIX_F10 1
+fs7a KYTY_GAME_PATCH 1
+## AV_TRACE / TestAudioLossOn readings
+d6ee2dc8:src/common/frameStats.cpp:164:	                            Common::EnvFlagOn("KYTY_AV_TRACE");
+d6ee2dc8:src/common/frameStats.h:9:// KYTY_FRAME_TRACE=1 (or KYTY_AV_TRACE=1): per-flip breakdown of where the emulator spends its
+d6ee2dc8:src/common/frameStats.h:2872:// KYTY_AV_TRACE, 0 without them, and only the counters of the FrameTrace main line in the lean
+d6ee2dc8:src/common/gates.h:683:	// (neither KYTY_FRAME_TRACE nor KYTY_AV_TRACE).
+d6ee2dc8:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:267:	static const bool enabled = Common::EnvFlagOn("KYTY_AV_TRACE");
+d6ee2dc8:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:297:// "AvTrace: pcw overlap" lines of the synchronous creations (KYTY_S_PCW=1 with KYTY_AV_TRACE=1 only).
+d6ee2dc8:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5277:		// S5c, RC3 of review S5b: KYTY_S_PCW=1 with KYTY_AV_TRACE=1 - a wait that overlapped a driver cache write
+d6ee2dc8:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6301:// KYTY_S_PCW=1 with KYTY_AV_TRACE=1: a synchronous creation that overlapped a driver cache write of the wri
+d6ee2dc8:src/graphics/presentation/videoOut.cpp:1275:		static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
+d6ee2dc8:src/graphics/presentation/window/window.cpp:1103:	const char*       value = std::getenv("KYTY_TEST_HIDLOSS");
+d6ee2dc8:src/graphics/shader/recompiler/ShaderRecompiler.cpp:596:		static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
+d6ee2dc8:src/graphics/shader/recompiler/ShaderRecompiler.cpp:740:		static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
+d6ee2dc8:src/kernel/pthread.cpp:4072:	static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
+d6ee2dc8:src/libs/audio.cpp:346:// AudioStat (item 441(g)): with KYTY_AV_TRACE=1 or the stand KYTY_TEST_AUDIOLOSS on, one line per output port with a
+d6ee2dc8:src/libs/audio.cpp:712:	static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
+d6ee2dc8:src/libs/controller.cpp:439:	const char* value = std::getenv("KYTY_TEST_AUDIOLOSS");
+d6ee2dc8:src/libs/controller.cpp:456:bool TestAudioLossOn() {
+d6ee2dc8:src/libs/controller.h:100:bool TestAudioLossOn();
+d6ee2dc8:src/libs/libAudio2.cpp:511:	static const bool            av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");

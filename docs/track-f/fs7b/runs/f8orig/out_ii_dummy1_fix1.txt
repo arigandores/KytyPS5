@@ -1,0 +1,16 @@
+FixF8: mode=1
+mode=ii ndev=1 sdl_audiodriver=dummy
+devices_opened=1
+device=2
+calls=10000
+init_failed=0
+first_fail_call=0
+fail_devices_at_first=0
+calls_with_fail=0
+queue_failed=0
+first_error=""
+init_calls=1
+acq=10001
+was_init=16
+driver=dummy
+END

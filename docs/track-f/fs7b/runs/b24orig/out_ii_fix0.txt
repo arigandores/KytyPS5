@@ -1,0 +1,31 @@
+	 large_motor = 17
+	 small_motor = 34
+case=ii
+num_joysticks_at_init=0
+fix_b24=0
+connected=1
+PadTriggerEffect: #1 mask=0x01 L=1[02 05 00 00] R=0[00 00 00 00] ok=1 sent=0
+	 large_motor = 51
+	 small_motor = 68
+	 large_motor = 85
+	 small_motor = 102
+wall_vib_us=2799454
+wall_led_us=45
+wall_trig_us=72
+trig_ok=1
+y_done_before_unlock=0
+latency_us=298
+last_after_300ms_ok=1
+pad_vib=3
+pad_led=1
+pad_trig=1
+pad_wait_max_us=2799353
+po_applied=0
+po_wait_max_us=0
+guest_sdl=10
+rumble_calls=3
+rumble_bad=0
+led_calls=1
+effect_calls=0
+shutdown_ok=1
+END

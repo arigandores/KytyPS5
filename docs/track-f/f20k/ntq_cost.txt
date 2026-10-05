@@ -1,0 +1,4 @@
+status=0x00000000 need=1183120 buf=2097152
+processes=417 threads=11377
+NtQuerySystemInformation(5) n=200 min_us=3189 p50_us=10739 p90_us=13338 max_us=20601 mean_us=10579
+CreateToolhelp32Snapshot(THREAD) n=50 min_us=3562 p50_us=14280 p90_us=19597 max_us=46346 mean_us=14454

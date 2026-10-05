@@ -1,0 +1,2 @@
+log_f20_v35.txt frames=9884 level_started_after_n=291 dt>=100ms=2 of_them_100..230ms=2 max_dt_us=197446 dt>=2.56s=[]
+log_f20_v07.txt frames=10098 level_started_after_n=146 dt>=100ms=2 of_them_100..230ms=2 max_dt_us=229331 dt>=2.56s=[]

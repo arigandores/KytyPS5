@@ -816,7 +816,7 @@ void Mark::BeginW(Wait kind, const void* obj, int32_t peer_slot1, uint64_t req_u
 	m_active = true;
 }
 
-void Mark::End(int32_t waker_slot1, bool timed_out) {
+void Mark::EndSlow(int32_t waker_slot1, bool timed_out) {
 	if (!m_active) {
 		return;
 	}

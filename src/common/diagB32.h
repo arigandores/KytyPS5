@@ -75,7 +75,7 @@ public:
 	Mark() = default;
 	~Mark() {
 		if (m_active) {
-			End(0, false);
+			EndSlow(0, false);
 		}
 	}
 	Mark(const Mark&)            = delete;
@@ -84,8 +84,13 @@ public:
 	void BeginH(Call call);
 	void BeginW(Wait kind, const void* obj, int32_t peer_slot1, uint64_t req_us);
 	// Ends the mark (restores the previous one). For a W mark a wait record is pushed if it lasted >= 10 ms, with the
-	// waker (slot + 1, 0 = none) and whether it ended by its timeout.
-	void End(int32_t waker_slot1, bool timed_out);
+	// waker (slot + 1, 0 = none) and whether it ended by its timeout. Inline: at KYTY_DIAG_B32=0 (no Begin) a site's End
+	// is one test of this stack object's flag, no call.
+	void End(int32_t waker_slot1, bool timed_out) {
+		if (m_active) {
+			EndSlow(waker_slot1, timed_out);
+		}
+	}
 	// The mutex wait: the waker is the owner at entry (item 550(g)(2)(iv): "mutex - to peer").
 	void EndWithPeer(bool timed_out) {
 		if (m_active) {
@@ -97,6 +102,8 @@ public:
 	[[nodiscard]] uint64_t SinceNs() const { return m_since; }
 
 private:
+	void EndSlow(int32_t waker_slot1, bool timed_out);
+
 	bool     m_active     = false;
 	int32_t  m_slot       = -1;
 	uint32_t m_prev_mark  = 0;

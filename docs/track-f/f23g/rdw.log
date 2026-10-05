@@ -1,0 +1,15 @@
+2026-10-04T23:41:39Z start f13_1082 script C:/kyty/f287/f23g/rd_f23g.py limit 400
+2026-10-04T23:41:58Z f13_1082 watchdog rc=0: watch: start 2026-10-04T23:41:40Z child 63112 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-04T23:41:57Z 
+2026-10-04T23:41:59Z f13_1082 GLCache after = before (cmp EQUAL)
+2026-10-04T23:42:08Z start k05_83214 script C:/kyty/f287/f23g/rd_f23g.py limit 500
+2026-10-04T23:42:10Z k05_83214 watchdog rc=8: REFUSED: procload 2026-10-04T23:42:09Z pids [71216] 
+2026-10-04T23:42:10Z k05_83214 GLCache after = before (cmp EQUAL)
+2026-10-04T23:48:34Z start k05_83214b script C:/kyty/f287/f23g/rd_f23g.py limit 500
+2026-10-04T23:49:16Z k05_83214b watchdog rc=0: watch: start 2026-10-04T23:48:36Z child 75320 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-04T23:49:15Z 
+2026-10-04T23:49:18Z k05_83214b GLCache after = before (cmp EQUAL)
+2026-10-04T23:57:31Z start k05_be4c_b script C:/kyty/f287/f23g/rd_f23g.py limit 300
+2026-10-04T23:57:56Z k05_be4c_b watchdog rc=7: survivors by command line 'qrenderdoc.exe': found [], alive after [] KILLED: procload 2026-10-04T23:57:55Z pids [67696]; tree [25072, 54100, 73860], alive after [] 
+2026-10-04T23:57:59Z k05_be4c_b GLCache after = before (cmp EQUAL)
+2026-10-05T00:04:34Z start k05_be4c_c script C:/kyty/f287/f23g/rd_f23g.py limit 200
+2026-10-05T00:04:59Z k05_be4c_c watchdog rc=0: watch: start 2026-10-05T00:04:35Z child 43396 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-05T00:04:59Z 
+2026-10-05T00:05:00Z k05_be4c_c GLCache after = before (cmp EQUAL)

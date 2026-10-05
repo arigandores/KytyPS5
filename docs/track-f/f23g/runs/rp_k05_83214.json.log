@@ -1,0 +1,14 @@
+[    6.5] opened C:/kyty/f287/f12f/f12_rd_k05.rdc
+[    9.1] event 83214 be4c35a2031fd3f4 arm orig done
+[   11.4] event 83214 be4c35a2031fd3f4 arm def done
+[   13.8] event 83214 be4c35a2031fd3f4 arm def2 done
+[   16.8] event 83214 be4c35a2031fd3f4 arm sens done
+[   19.7] event 83214 be4c35a2031fd3f4 arm mask done
+[   22.8] event 83214 be4c35a2031fd3f4 arm mem done
+[   25.7] event 83214 be4c35a2031fd3f4 arm mask_inv done
+[   28.8] event 83214 be4c35a2031fd3f4 arm mem_inv done
+[   28.8] event 83214 written
+[   29.7] counters 83214 orig {'7': 675, '12': 2235, '13': 0}
+[   32.0] counters 83214 sens {'7': 675, '12': 2235, '13': 0}
+[   34.3] counters 83214 def {'7': 675, '12': 2235, '13': 0}
+[   34.3] done

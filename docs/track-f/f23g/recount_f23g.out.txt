@@ -1,0 +1,57 @@
+f13    855 503d7f066a496c3c valid=0 writes=32252 n_entry=128 n_t=[0, 0, 0, 0, 0] shared_storage_with_earlier_eid=None neg=[]
+f13    869 1f16e50eea0c89e3 valid=1 writes=0 n_entry=128 n_t=[0, 0, 0, 0, 0, 0] shared_storage_with_earlier_eid=None neg=[]
+f13    883 ff8ee744ffa4dcdc valid=1 writes=0 n_entry=128 n_t=[0, 0, 0] shared_storage_with_earlier_eid=None neg=[]
+f13    897 f88d0f630ac5b35d valid=1 writes=0 n_entry=128 n_t=[0, 0, 0] shared_storage_with_earlier_eid=None neg=[]
+f13   1082 0078153a1c1fb171 valid=1 writes=0 n_entry=1036800 n_t=[1036800] shared_storage_with_earlier_eid=None neg=[]
+f13   1929 503d7f066a496c3c valid=0 writes=32251 n_entry=128 n_t=[0, 0, 0, 0, 0] shared_storage_with_earlier_eid=855 neg=[]
+f13   1943 1f16e50eea0c89e3 valid=1 writes=0 n_entry=128 n_t=[0, 0, 0, 0, 0, 0] shared_storage_with_earlier_eid=869 neg=[]
+f13   1957 ff8ee744ffa4dcdc valid=1 writes=0 n_entry=128 n_t=[0, 0, 0] shared_storage_with_earlier_eid=883 neg=[]
+f13   1971 f88d0f630ac5b35d valid=1 writes=0 n_entry=128 n_t=[0, 0, 0] shared_storage_with_earlier_eid=897 neg=[]
+f13   2152 0078153a1c1fb171 valid=1 writes=0 n_entry=1036800 n_t=[1036800] shared_storage_with_earlier_eid=None neg=[]
+k05  35030 e14edf4a78d1a517 valid=0 writes=0 n_entry=15 n_t=[0, 0, 0, 0, 0] shared_storage_with_earlier_eid=None neg=[]
+k05  44251 3a8772dbc6934b1c valid=1 writes=0 n_entry=4194304 n_t=[0, 0] shared_storage_with_earlier_eid=None neg=[]
+k05  44410 56a15431999c5a2d valid=0 writes=6186747 n_entry=1576448 n_t=[1423168, 1423168, 1423168, 1423168, 1423168] shared_storage_with_earlier_eid=None neg=[]
+k05  44424 ea8e2d64dfe34ed9 valid=0 writes=10107 n_entry=768 n_t=[768, 768, 768, 768, 768, 768] shared_storage_with_earlier_eid=None neg=[]
+k05  44438 5323c4ef4f785055 valid=0 writes=32879 n_entry=8064 n_t=[7936, 7936] shared_storage_with_earlier_eid=None neg=[]
+k05  44452 cd94166bf3f2bb81 valid=0 writes=17924 n_entry=4864 n_t=[4416, 4416] shared_storage_with_earlier_eid=None neg=[]
+k05  44633 52276fe1ba080bea valid=0 writes=2165 n_entry=0 n_t=[0] shared_storage_with_earlier_eid=None neg=[]
+k05  46220 be4c35a2031fd3f4 valid=0 writes=886 n_entry=2233 n_t=[2187, 2187, 2187] shared_storage_with_earlier_eid=None neg=[]
+k05  46344 be4c35a2031fd3f4 valid=0 writes=3553 n_entry=2281 n_t=[2235, 2235, 2235] shared_storage_with_earlier_eid=46220 neg=[]
+k05  46816 255ce6193a9e7938 valid=0 writes=96 n_entry=94 n_t=[94] shared_storage_with_earlier_eid=None neg=[]
+k05  47266 2e2ae33a4d374e8f valid=0 writes=4682 n_entry=0 n_t=[0] shared_storage_with_earlier_eid=None neg=[]
+k05  49215 74bb8628d64f534c valid=0 writes=691 n_entry=42 n_t=[0, 42, 42, 42, 42] shared_storage_with_earlier_eid=None neg=[]
+k05  49598 f47c0c097c598a36 valid=0 writes=166857 n_entry=-1 n_t=[] shared_storage_with_earlier_eid=None neg=[]
+k05  49738 0078153a1c1fb171 valid=1 writes=2073600 n_entry=1036800 n_t=[1036800] shared_storage_with_earlier_eid=None neg=[]
+k05  81145 3a8772dbc6934b1c valid=1 writes=74728 n_entry=4194304 n_t=[0, 0] shared_storage_with_earlier_eid=None neg=[]
+k05  81460 56a15431999c5a2d valid=0 writes=5884195 n_entry=1576960 n_t=[1419104, 1419104, 1419104, 1419104, 1419104] shared_storage_with_earlier_eid=44410 neg=[]
+k05  81474 ea8e2d64dfe34ed9 valid=0 writes=3794 n_entry=768 n_t=[768, 768, 768, 768, 768, 768] shared_storage_with_earlier_eid=44424 neg=[]
+k05  81488 5323c4ef4f785055 valid=0 writes=30776 n_entry=7936 n_t=[7840, 7840] shared_storage_with_earlier_eid=44438 neg=[]
+k05  81502 cd94166bf3f2bb81 valid=0 writes=13473 n_entry=4864 n_t=[4416, 4416] shared_storage_with_earlier_eid=44452 neg=[]
+k05  83214 be4c35a2031fd3f4 valid=1 writes=0 n_entry=2235 n_t=[2193, 2193, 2193] shared_storage_with_earlier_eid=None neg=[]
+k05  83338 be4c35a2031fd3f4 valid=1 writes=0 n_entry=2334 n_t=[2292, 2292, 2292] shared_storage_with_earlier_eid=83214 neg=[]
+k05  86514 f47c0c097c598a36 valid=1 writes=169198 n_entry=-1 n_t=[] shared_storage_with_earlier_eid=None neg=[]
+k05  86604 0078153a1c1fb171 valid=1 writes=2073600 n_entry=1036800 n_t=[1036800] shared_storage_with_earlier_eid=None neg=[]
+k05 119848 3a8772dbc6934b1c valid=1 writes=0 n_entry=4194304 n_t=[0, 0] shared_storage_with_earlier_eid=None neg=[]
+k05 120367 56a15431999c5a2d valid=0 writes=6155449 n_entry=1577216 n_t=[1545312, 1545312, 1545312, 1545312, 1545312] shared_storage_with_earlier_eid=44410 neg=[]
+k05 120381 ea8e2d64dfe34ed9 valid=0 writes=3737 n_entry=768 n_t=[768, 768, 768, 768, 768, 768] shared_storage_with_earlier_eid=44424 neg=[]
+k05 120395 5323c4ef4f785055 valid=0 writes=31764 n_entry=7936 n_t=[7936, 7936] shared_storage_with_earlier_eid=44438 neg=[]
+k05 120409 cd94166bf3f2bb81 valid=0 writes=13857 n_entry=4864 n_t=[4384, 4384] shared_storage_with_earlier_eid=44452 neg=[]
+k05 122326 be4c35a2031fd3f4 valid=0 writes=0 n_entry=2233 n_t=[2188, 2188, 2188] shared_storage_with_earlier_eid=None neg=[]
+k05 122458 be4c35a2031fd3f4 valid=1 writes=0 n_entry=2281 n_t=[2236, 2236, 2236] shared_storage_with_earlier_eid=122326 neg=[]
+k05 125752 f47c0c097c598a36 valid=1 writes=251920 n_entry=-1 n_t=[] shared_storage_with_earlier_eid=None neg=[]
+k05 125834 0078153a1c1fb171 valid=1 writes=2073600 n_entry=1036800 n_t=[1036800] shared_storage_with_earlier_eid=None neg=[]
+negative N fields in all lines: 0
+valid events: 19
+program 0078153a1c1fb171: valid 5, valid with N_diff>0 0, valid with counters ok and n_t>0 5, of them with writes>0 and own counter storage 3
+program 1f16e50eea0c89e3: valid 2, valid with N_diff>0 0, valid with counters ok and n_t>0 0, of them with writes>0 and own counter storage 0
+program 3a8772dbc6934b1c: valid 3, valid with N_diff>0 0, valid with counters ok and n_t>0 0, of them with writes>0 and own counter storage 0
+program be4c35a2031fd3f4: valid 3, valid with N_diff>0 0, valid with counters ok and n_t>0 3, of them with writes>0 and own counter storage 0
+program f47c0c097c598a36: valid 2, valid with N_diff>0 0, valid with counters ok and n_t>0 0, of them with writes>0 and own counter storage 0
+program f88d0f630ac5b35d: valid 2, valid with N_diff>0 0, valid with counters ok and n_t>0 0, of them with writes>0 and own counter storage 0
+program ff8ee744ffa4dcdc: valid 2, valid with N_diff>0 0, valid with counters ok and n_t>0 0, of them with writes>0 and own counter storage 0
+own rp_f13_1082.json eid 1082: SamplesPassed 0 PSInvocations 0 CSInvocations 1036800; writes(def) 0; N(def,sens) 1029120; Npre(orig,sens) 0
+own rp_k05_83214.json eid 83214: SamplesPassed 675 PSInvocations 2235 CSInvocations 0; writes(def) 0; N(def,sens) 355; Npre(orig,sens) 355
+own rp_k05_be4c_c.json eid 83338: SamplesPassed 0 PSInvocations 99 CSInvocations 0; writes(def) 0; N(def,sens) 355; Npre(orig,sens) 355
+own rp_k05_be4c_c.json eid 122458: SamplesPassed 0 PSInvocations 48 CSInvocations 0; writes(def) 0; N(def,sens) 380; Npre(orig,sens) 380
+be4c 83214 -> 83338: storage 30679/475136 vs 30679/475136; n_entry 2235 + own PSInvocations 99 = 2334 (F23f 2334) EQUAL; n_t[0] 2193 + 99 = 2292 (F23f 2292) EQUAL
+be4c 122326 -> 122458: storage 37630/475136 vs 37630/475136; n_entry 2233 + own PSInvocations 48 = 2281 (F23f 2281) EQUAL; n_t[0] 2188 + 48 = 2236 (F23f 2236) EQUAL

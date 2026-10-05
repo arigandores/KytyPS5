@@ -1,0 +1,26 @@
+OK   7030111b:docs/ROADMAP.md:22809 anchor True +1 True
+OK   7030111b:docs/ROADMAP.md:22812 anchor True +1 True
+OK   7030111b:docs/ROADMAP.md:22814 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/rd_f23f.py:192 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/rd_f23f.py:207 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/rd_f23f.py:224 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/rd_f23f.py:291 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/sum_f23f.py:20 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/sum_f23f.py:48 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/sum_f23f.py:50 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/sum_f23f.py:56 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/sum_f23f.py:63 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f.md:27 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f.md:176 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f.md:203 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f.md:204 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f.md:212 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f.md:280 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f.md:289 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f.md:299 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f.md:356 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/sum_f23f.out.txt:28 anchor True +1 True
+OK   11311fb1:docs/track-f/f23f/sum_f23f.out.txt:36 anchor True +1 True
+OK   1ab783ef:docs/track-f/f23c.md:119 anchor True +1 True
+refs 24
+ALL OK

@@ -1,0 +1,245 @@
+{
+ "cap": "C:/kyty/f287/f13a/f13_rd.rdc",
+ "counters": [
+  {
+   "counters": {
+    "def": {
+     "12": 0,
+     "13": 1036800,
+     "7": 0
+    },
+    "orig": {
+     "12": 0,
+     "13": 1036800,
+     "7": 0
+    },
+    "sens": {
+     "12": 0,
+     "13": 1036800,
+     "7": 0
+    }
+   },
+   "eid": 1082
+  }
+ ],
+ "counters_available": [
+  "GPUCounter.SamplesPassed",
+  "GPUCounter.PSInvocations",
+  "GPUCounter.CSInvocations"
+ ],
+ "events": [
+  {
+   "N_def_def2": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "N_def_mask": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "N_def_mask_inv": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 1029120
+   },
+   "N_def_mem": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "N_def_mem_inv": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 1029120
+   },
+   "N_def_orig": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "N_def_sens": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 1029120
+   },
+   "N_mask_mem": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "N_sens_mask_inv": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "N_sens_mem_inv": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "N_writes_def": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "N_writes_orig": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "Npre_orig_def": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "Npre_orig_def2": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "Npre_orig_mask": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "Npre_orig_mask_inv": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "Npre_orig_mem": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "Npre_orig_mem_inv": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "Npre_orig_sens": {
+    "rwb204_o67060160": 0,
+    "rwb204_o67060224": 0,
+    "rwt6750_m0_s0": 0
+   },
+   "bound_def": "c8c1886330516284",
+   "bound_def2": "c8c1886330516284",
+   "bound_is_cap": true,
+   "bound_mask": "2f9fdccedec676b8",
+   "bound_mask_inv": "48209b9c8dfa18fa",
+   "bound_mem": "1d12acbd2ec29584",
+   "bound_mem_inv": "ecaaaf8c5b1c7d6f",
+   "bound_orig": "c8c1886330516284",
+   "bound_sens": "892da874f47b7a5b",
+   "bound_sha": "c8c18863305162849f17e7a861764ba38f8b6138396e2ef72403d3cc4bbb8633",
+   "eid": 1082,
+   "file_sha_def": "c8c1886330516284",
+   "file_sha_mask": "2f9fdccedec676b8",
+   "file_sha_mem": "1d12acbd2ec29584",
+   "file_sha_ok_def": true,
+   "file_sha_ok_mask": true,
+   "file_sha_ok_mem": true,
+   "file_sha_ok_sens": true,
+   "file_sha_sens": "892da874f47b7a5b",
+   "inv_patched_mask": 1,
+   "inv_patched_mem": 2,
+   "outputs": [
+    "rwb204_o67060160",
+    "rwt6750_m0_s0",
+    "rwb204_o67060224"
+   ],
+   "prog": "0078153a1c1fb171",
+   "sha_mask_inv": "48209b9c8dfa18fa",
+   "sha_mem_inv": "ecaaaf8c5b1c7d6f",
+   "sha_post_def": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_post_def2": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_post_mask": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_post_mask_inv": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "bc6ccb9c343d3677"
+   },
+   "sha_post_mem": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_post_mem_inv": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "bc6ccb9c343d3677"
+   },
+   "sha_post_orig": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_post_sens": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "bc6ccb9c343d3677"
+   },
+   "sha_pre_def": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_pre_def2": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_pre_mask": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_pre_mask_inv": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_pre_mem": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_pre_mem_inv": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_pre_orig": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "sha_pre_sens": {
+    "rwb204_o67060160": "09c0e94903d2567b",
+    "rwb204_o67060224": "8d1d37847e867dcb",
+    "rwt6750_m0_s0": "f24068c9c81b0328"
+   },
+   "stage": "cs",
+   "unit_bytes": null,
+   "units": {
+    "rwb204_o67060160": 4,
+    "rwb204_o67060224": 4,
+    "rwt6750_m0_s0": 4
+   }
+  }
+ ]
+}

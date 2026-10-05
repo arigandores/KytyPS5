@@ -1,0 +1,14 @@
+[    3.8] opened C:/kyty/f287/f13a/f13_rd.rdc
+[    4.4] event 1082 0078153a1c1fb171 arm orig done
+[    5.1] event 1082 0078153a1c1fb171 arm def done
+[    5.7] event 1082 0078153a1c1fb171 arm def2 done
+[    7.5] event 1082 0078153a1c1fb171 arm sens done
+[    8.2] event 1082 0078153a1c1fb171 arm mask done
+[    8.9] event 1082 0078153a1c1fb171 arm mem done
+[   10.7] event 1082 0078153a1c1fb171 arm mask_inv done
+[   12.2] event 1082 0078153a1c1fb171 arm mem_inv done
+[   12.3] event 1082 written
+[   12.4] counters 1082 orig {'7': 0, '12': 0, '13': 1036800}
+[   13.1] counters 1082 sens {'7': 0, '12': 0, '13': 1036800}
+[   13.8] counters 1082 def {'7': 0, '12': 0, '13': 1036800}
+[   13.8] done

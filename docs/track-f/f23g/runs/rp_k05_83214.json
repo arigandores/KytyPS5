@@ -1,0 +1,418 @@
+{
+ "cap": "C:/kyty/f287/f12f/f12_rd_k05.rdc",
+ "counters": [
+  {
+   "counters": {
+    "def": {
+     "12": 2235,
+     "13": 0,
+     "7": 675
+    },
+    "orig": {
+     "12": 2235,
+     "13": 0,
+     "7": 675
+    },
+    "sens": {
+     "12": 2235,
+     "13": 0,
+     "7": 675
+    }
+   },
+   "eid": 83214
+  }
+ ],
+ "counters_available": [
+  "GPUCounter.SamplesPassed",
+  "GPUCounter.PSInvocations",
+  "GPUCounter.CSInvocations"
+ ],
+ "events": [
+  {
+   "N_def_def2": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_def_mask": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_def_mask_inv": {
+    "depth": 0,
+    "rt0": 355,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_def_mem": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_def_mem_inv": {
+    "depth": 0,
+    "rt0": 355,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_def_orig": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_def_sens": {
+    "depth": 0,
+    "rt0": 355,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_mask_mem": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_sens_mask_inv": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_sens_mem_inv": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_writes_def": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "N_writes_orig": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "Npre_orig_def": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "Npre_orig_def2": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "Npre_orig_mask": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "Npre_orig_mask_inv": {
+    "depth": 0,
+    "rt0": 355,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "Npre_orig_mem": {
+    "depth": 0,
+    "rt0": 0,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "Npre_orig_mem_inv": {
+    "depth": 0,
+    "rt0": 355,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "Npre_orig_sens": {
+    "depth": 0,
+    "rt0": 355,
+    "rt1": 0,
+    "rt2": 0,
+    "rwb165_o21013504": 0,
+    "rwb22483_o2416": 0,
+    "rwb30679_o475136": 0
+   },
+   "bound_def": "ebff0feeb90b9b35",
+   "bound_def2": "ebff0feeb90b9b35",
+   "bound_is_cap": true,
+   "bound_mask": "ebb2b5bfe5a661bc",
+   "bound_mask_inv": "177e0a2fc9b5eb71",
+   "bound_mem": "798342e9dfd65cc0",
+   "bound_mem_inv": "c4416544fddc0bad",
+   "bound_orig": "ebff0feeb90b9b35",
+   "bound_sens": "f1799676ac76256f",
+   "bound_sha": "ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96",
+   "depthstencil": {
+    "back": {
+     "compareMask": "63",
+     "depthFailOperation": "StencilOperation.Keep",
+     "failOperation": "StencilOperation.Keep",
+     "function": "CompareFunction.AlwaysTrue",
+     "passOperation": "StencilOperation.Keep",
+     "reference": "63",
+     "writeMask": "63"
+    },
+    "boundsTest": 1,
+    "front": {
+     "compareMask": "63",
+     "depthFailOperation": "StencilOperation.Keep",
+     "failOperation": "StencilOperation.Keep",
+     "function": "CompareFunction.AlwaysTrue",
+     "passOperation": "StencilOperation.Replace",
+     "reference": "63",
+     "writeMask": "63"
+    },
+    "func": "CompareFunction.LessEqual",
+    "stencil": 1,
+    "test": 1,
+    "write": 1
+   },
+   "eid": 83214,
+   "file_sha_def": "ebff0feeb90b9b35",
+   "file_sha_mask": "ebb2b5bfe5a661bc",
+   "file_sha_mem": "798342e9dfd65cc0",
+   "file_sha_ok_def": true,
+   "file_sha_ok_mask": true,
+   "file_sha_ok_mem": true,
+   "file_sha_ok_sens": true,
+   "file_sha_sens": "f1799676ac76256f",
+   "inv_patched_mask": 3,
+   "inv_patched_mem": 6,
+   "outputs": [
+    "rt0",
+    "rt1",
+    "rt2",
+    "depth",
+    "rwb165_o21013504",
+    "rwb30679_o475136",
+    "rwb22483_o2416"
+   ],
+   "prog": "be4c35a2031fd3f4",
+   "sha_mask_inv": "177e0a2fc9b5eb71",
+   "sha_mem_inv": "c4416544fddc0bad",
+   "sha_post_def": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "8c3ef6e20ddeeea6",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_post_def2": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "8c3ef6e20ddeeea6",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_post_mask": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "8c3ef6e20ddeeea6",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_post_mask_inv": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "d17bbff6d3c6dc7e",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_post_mem": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "8c3ef6e20ddeeea6",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_post_mem_inv": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "d17bbff6d3c6dc7e",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_post_orig": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "8c3ef6e20ddeeea6",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_post_sens": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "d17bbff6d3c6dc7e",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_pre_def": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "8c3ef6e20ddeeea6",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_pre_def2": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "8c3ef6e20ddeeea6",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_pre_mask": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "8c3ef6e20ddeeea6",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_pre_mask_inv": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "d17bbff6d3c6dc7e",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_pre_mem": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "8c3ef6e20ddeeea6",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_pre_mem_inv": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "d17bbff6d3c6dc7e",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_pre_orig": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "8c3ef6e20ddeeea6",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "sha_pre_sens": {
+    "depth": "b0ca1f0ae5e962fe",
+    "rt0": "d17bbff6d3c6dc7e",
+    "rt1": "3232d8b4dbf50404",
+    "rt2": "88ec37555409d51e",
+    "rwb165_o21013504": "323612dd7883fec4",
+    "rwb22483_o2416": "078c41fde8a917b7",
+    "rwb30679_o475136": "ffe1aaa050f9faec"
+   },
+   "stage": "ps",
+   "unit_bytes": null,
+   "units": {
+    "depth": 8,
+    "rt0": 8,
+    "rt1": 8,
+    "rt2": 8,
+    "rwb165_o21013504": 4,
+    "rwb22483_o2416": 4,
+    "rwb30679_o475136": 4
+   }
+  }
+ ]
+}

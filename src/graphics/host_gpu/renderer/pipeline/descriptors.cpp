@@ -3502,6 +3502,46 @@ private:
 	vk::Format m_saved;
 };
 
+// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(3)): one MaterializeDeferredDccClear call on an
+// image that carries the deferred mark of AdoptPendingDccForTexture (event fix=kept why=deferred). The constructor
+// takes the mark (TextureCache::TakeF26Deferred - m_lock taken inside, as MetaClearMask; the call holds no cache
+// lock), so it is removed whatever the outcome; the destructor (every return of the call) reports it: cleared (>= 1
+// layer cleared) - f26_kept_applied, declined (any return without a clear) - f26_deferred_declined, and the line
+// DiagF5Ev dcc_stale_apply. Without KYTY_FIX_F26 nothing is taken (no mark exists) and nothing is reported.
+class F26ApplyScope {
+public:
+	F26ApplyScope(TextureCache& cache, ImageId id) {
+		if (DiagF5::FixF26On()) [[unlikely]] {
+			m_armed = cache.TakeF26Deferred(id, &m_mark);
+		}
+	}
+	~F26ApplyScope() {
+		if (m_armed) [[unlikely]] {
+			DiagF5::Add(m_cleared ? DiagF5::Counter::F26KeptApplied : DiagF5::Counter::F26DeferredDeclined);
+			(void)DiagF5::NoteDccStaleApply({.n       = m_mark.n,
+			                                   .present = DiagF5::Present(),
+			                                   .gpu     = GpuTimeProfiler::Frame(),
+			                                   .image   = m_mark.image,
+			                                   .dcc     = m_mark.dcc,
+			                                   .cleared = m_cleared,
+			                                   .layers  = m_layers});
+		}
+	}
+	F26ApplyScope(const F26ApplyScope&)            = delete;
+	F26ApplyScope& operator=(const F26ApplyScope&) = delete;
+
+	// The pending layer mask the call read.
+	void Layers(uint32_t mask) { m_layers = mask; }
+	// Every layer of that mask was cleared.
+	void Cleared() { m_cleared = true; }
+
+private:
+	TextureCache::F26Deferred m_mark {};
+	bool                      m_armed   = false;
+	bool                      m_cleared = false;
+	uint32_t                  m_layers  = 0;
+};
+
 } // namespace
 
 // A guest DCC fast clear only rewrites metadata, and the attachment path materializes it as a
@@ -3516,6 +3556,10 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 
 void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id, Image& image) {
 	auto& cache = m_context.GetTextureCache();
+	// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(3)): the deferred mark of an adoption is
+	// taken here, before any return; the outcome (dcc_stale_apply) is reported when the call returns. Nothing without
+	// the knob.
+	F26ApplyScope f26_apply {cache, id};
 	// Session 124, knob "skipceil" = 3 (closure census, [RC1], [RC2], ROADMAP s122 item 44(b)): not a write event - the
 	// writer stays the logical clear; under the reference policy Lt it is a write of the trigger operation.
 	const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyMat);
@@ -3538,6 +3582,7 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 			}
 		}
 	}
+	f26_apply.Layers(mask); // Track F, F16o2
 	if (mask == 0) {
 		return;
 	}
@@ -3652,6 +3697,7 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 		}
 		layer += count - 1;
 	}
+	f26_apply.Cleared(); // Track F, F16o2: every layer of the mask was cleared above
 	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(b)): the materialized layers (every level).
 	const SkcCensus::SubScope skc3_sub(SkcCensus::Sub {0, UINT32_MAX, 0, 0, mask, 1});
 	cache.MarkGpuWritten(id);

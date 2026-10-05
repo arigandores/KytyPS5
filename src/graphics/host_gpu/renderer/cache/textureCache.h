@@ -188,6 +188,19 @@ public:
 	// Track F, F16k (KYTY_DIAG_F5ID): `f5id_miss` (optional) receives the reason of a false answer (DiagF5Id::Miss).
 	[[nodiscard]] bool AdoptPendingDccForTexture(ImageId id, uint64_t metadata_address,
 	                                             DiagF5Id::DccMiss* f5id_miss = nullptr);
+	// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(2)-(3)): the one-shot deferred mark of an
+	// image. NoteF26DeferredLocked - caller holds m_lock (the F26Scope of AdoptPendingDccForTexture, event fix=kept
+	// why=deferred); a second such event on the image overwrites the mark. TakeF26Deferred - takes m_lock itself (as
+	// MetaClearMask; RenderExecutor::MaterializeDeferredDccClear holds no texture cache lock), removes and returns the
+	// mark; false without one (and without taking the lock while no image has a mark). DeleteImage drops a mark without
+	// a line. No mark exists with KYTY_FIX_F26 = 0.
+	struct F26Deferred {
+		uint64_t n     = 0; // the event number of the adopt's dcc_stale line
+		uint64_t image = 0; // image / dcc of that line
+		uint64_t dcc   = 0;
+	};
+	void               NoteF26DeferredLocked(ImageId id, const F26Deferred& mark);
+	[[nodiscard]] bool TakeF26Deferred(ImageId id, F26Deferred* mark);
 	// The registered colour image that starts at `data_address` and owns (or, for a lone
 	// metadata-less candidate, adopts) the DCC allocation at `metadata_address`. Empty when
 	// there is no such image or the ownership is ambiguous.
@@ -374,6 +387,10 @@ private:
 	// state and no epoch depends on them, with KYTY_FIX_B42 on or off.
 	uint64_t                                          m_b42_seq = 0;
 	std::unordered_map<ImageId, uint64_t>             m_b42_draw_seq;
+	// Track F, F16o2 (item 507(b)(2)): the deferred marks, under m_lock; their number - written under m_lock, read
+	// without it by TakeF26Deferred (0: the lock is not taken).
+	std::unordered_map<ImageId, F26Deferred>          m_f26_deferred;
+	std::atomic<uint32_t>                             m_f26_deferred_count {0};
 	uint64_t                                          m_total_used_memory  = 0;
 	uint64_t                                          m_trigger_gc_memory  = 0;
 	uint64_t                                          m_pressure_gc_memory = 1536ull * 1024 * 1024;

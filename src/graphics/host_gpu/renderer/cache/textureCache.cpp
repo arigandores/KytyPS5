@@ -450,6 +450,10 @@ void TextureCache::DeleteImage(ImageId id) {
 	}
 	m_download_images.erase(id);
 	m_b42_draw_seq.erase(id); // Track F, F9e2b (KYTY_FIX_B42): a recycled slot id starts without a draw stamp
+	// Track F, F16o2 (item 507(b)(2)): the deferred mark of a deleted image is dropped without a line.
+	if (m_f26_deferred_count.load(std::memory_order_relaxed) != 0 && m_f26_deferred.erase(id) != 0) [[unlikely]] {
+		m_f26_deferred_count.fetch_sub(1, std::memory_order_relaxed);
+	}
 	if (image->info.HasMetadata()) {
 		const auto metadata = m_surface_metas.find(image->info.metadata.range.address);
 		if (metadata != m_surface_metas.end() &&
@@ -1997,6 +2001,16 @@ public:
 			m_why = why_not;
 		}
 	}
+	// Track F, F16o2 (RC1 of F16p, item 507(b)(1)-(2)): AdoptPendingDccForTexture adopted the kept fill with a clear the
+	// call does not apply (RenderExecutor::MaterializeDeferredDccClear clears it later or declines): kept why=deferred;
+	// when Report() reports it as kept (KYTY_FIX_F26, KYTY_DIAG_F5), the mark of `id` in `cache` with the line's n (the
+	// scope is declared after cache->m_lock is taken and leaves before it is released).
+	void Deferred(TextureCache* cache, ImageId id) {
+		m_why         = DiagF5::CmuWhy::Deferred;
+		m_applied     = false;
+		m_defer_cache = cache;
+		m_defer_id    = id;
+	}
 
 private:
 	void Report() {
@@ -2026,7 +2040,11 @@ private:
 				default: break;
 			}
 		}
-		(void)DiagF5::NoteDccStale(m_line);
+		uint64_t n = 0;
+		(void)DiagF5::NoteDccStale(m_line, &n);
+		if (m_fix && e.fix == F::Kept && e.why == DiagF5::CmuWhy::Deferred && m_defer_cache != nullptr) {
+			m_defer_cache->NoteF26DeferredLocked(m_defer_id, {.n = n, .image = m_line.image, .dcc = m_line.dcc});
+		}
 	}
 
 	DiagF5::DccSite      m_site;
@@ -2037,6 +2055,8 @@ private:
 	DiagF5::CmuWhy       m_why      = DiagF5::CmuWhy::None;
 	DiagF5::StaleProbe   m_probe {};
 	DiagF5::DccStaleLine m_line {};
+	TextureCache*        m_defer_cache = nullptr; // Track F, F16o2: Deferred()
+	ImageId              m_defer_id {};
 };
 
 } // namespace
@@ -3767,8 +3787,14 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 	Common::DrawStat::Mark(Common::DrawStat::Meta);
 	BumpMetaEpoch();
 	found->second.type                 = MetaDataInfo::Type::Dcc;
-	// Track F, F16o (item 504(e)(3)): a kept fill is kept_applied when it is adopted with a clear (a non-zero mask).
-	f26.Applied(found->second.clear_mask != 0, DiagF5::CmuWhy::Mask);
+	// Track F, F16o (item 504(e)(3)): a kept fill adopted without a clear (mask 0) is kept why=mask. Track F, F16o2 (RC1
+	// of F16p, item 507(b)(1)): one adopted with a clear is kept why=deferred - this call clears nothing; the clear is
+	// RenderExecutor::MaterializeDeferredDccClear's, which reports it (dcc_stale_apply) by the mark Deferred() leaves.
+	if (found->second.clear_mask != 0) {
+		f26.Deferred(this, id);
+	} else {
+		f26.Applied(false, DiagF5::CmuWhy::Mask);
+	}
 	if (DiagF5::On()) [[unlikely]] {
 		DiagF5::NoteDccFill(found->second.fill_value); // Track F, F16d: PendingDcc -> Dcc by the stored code (RC3)
 	}
@@ -3789,6 +3815,30 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 		     image->info.data.address, metadata_address, found->second.fill_value,
 		     found->second.fill_size, found->second.clear_mask);
 	}
+	return true;
+}
+
+// Track F, F16o2 (KYTY_FIX_F26, item 507(b)(2)): caller holds m_lock.
+void TextureCache::NoteF26DeferredLocked(ImageId id, const F26Deferred& mark) {
+	if (m_f26_deferred.insert_or_assign(id, mark).second) {
+		m_f26_deferred_count.fetch_add(1, std::memory_order_relaxed);
+	}
+}
+
+// Track F, F16o2 (item 507(b)(3)): takes m_lock itself, as MetaClearMask; while no image has a mark the lock is not
+// taken (the count is written under m_lock by the same GPU thread that calls this [I]).
+bool TextureCache::TakeF26Deferred(ImageId id, F26Deferred* mark) {
+	if (m_f26_deferred_count.load(std::memory_order_relaxed) == 0) {
+		return false;
+	}
+	std::scoped_lock lock {m_lock};
+	const auto       found = m_f26_deferred.find(id);
+	if (found == m_f26_deferred.end()) {
+		return false;
+	}
+	*mark = found->second;
+	m_f26_deferred.erase(found);
+	m_f26_deferred_count.fetch_sub(1, std::memory_order_relaxed);
 	return true;
 }
 

@@ -129,13 +129,18 @@ enum class Counter : uint32_t {
 	// fill (PendingDccFillStale's cpu_written; the event line says why=cpu): f5cmu_exact_cpu <= f5cmu_exact_stale.
 	F5CmuExactCpu,
 	// Track F, F16o (item 504(e)(4)): KYTY_FIX_F26 at PrepareDccClear / AdoptPendingDccForTexture, where the bucket check
-	// said stale - kept (the exact check did not; kept_applied - and the same call applied the fill: >= 1 layer cleared at
-	// prepare, a non-zero clear mask adopted at adopt; kept_applied <= kept), stale by the exact check too, the ring could
+	// said stale - kept (the exact check did not; kept_applied - and the fill was applied: >= 1 layer cleared by the call
+	// at prepare; at adopt (Track F, F16o2) >= 1 layer cleared by the MaterializeDeferredDccClear that took the deferred
+	// mark; kept_applied <= kept), stale by the exact check too, the ring could
 	// not answer (fallback). With KYTY_DIAG_F5ID: f26_kept = dcc_stale_bucket_only, f26_fallback = dcc_stale_fallback.
 	F26Kept,
 	F26KeptApplied,
 	F26ExactStale,
 	F26Fallback,
+	// Track F, F16o2 (RC1 of F16p, item 507(b)(3)-(4)): a deferred clear of an adoption (fix=kept why=deferred) that
+	// RenderExecutor::MaterializeDeferredDccClear took and did not clear (result=declined); one it cleared counts
+	// f26_kept_applied. f26_kept_applied + f26_deferred_declined <= f26_kept.
+	F26DeferredDeclined,
 	Count
 };
 
@@ -214,8 +219,9 @@ enum class CmuFix : uint8_t { Off, Fresh, ExactStale, Kept, KeptApplied, Fallbac
 // Track F, F16k2 (RC4, item 496(b)(4)): Cpu - an ExactStale decision set by a CPU write (a CPU-modified page of the
 // fill), not by a crossing GPU write.
 // Track F, F16o (item 504(e)(3)): Levels - PrepareDccClear's return on an image with more than one level (the line
-// dcc_stale only).
-enum class CmuWhy : uint8_t { None, Value, Mask, Range, Partial, Decode, Layers, NoLayer, Cpu, Levels };
+// dcc_stale only). Track F, F16o2 (item 507(b)(1)): Deferred - AdoptPendingDccForTexture adopted the fill with a clear
+// the call does not apply (the line dcc_stale only; the outcome - the line dcc_stale_apply of the same n).
+enum class CmuWhy : uint8_t { None, Value, Mask, Range, Partial, Decode, Layers, NoLayer, Cpu, Levels, Deferred };
 [[nodiscard]] const char* CmuFixName(CmuFix fix);
 [[nodiscard]] const char* CmuWhyName(CmuWhy why);
 struct CmuEvent {
@@ -300,7 +306,29 @@ struct DccStaleLine {
 	CmuEvent event;
 };
 [[nodiscard]] std::string FormatDccStale(uint64_t n, const DccStaleLine& line);
-bool                      NoteDccStale(const DccStaleLine& line);
+// Track F, F16o2: `n_out` (optional) receives the event number k (past the limit too).
+bool                      NoteDccStale(const DccStaleLine& line, uint64_t* n_out = nullptr);
+
+// ---- Track F, F16o2 (HPP-599, RC1 of F16p, ROADMAP s122 item 507(b)): the deferred clear of an adoption (the
+// one-shot mark the event fix=kept why=deferred of AdoptPendingDccForTexture leaves on the image -
+// TextureCache::F26Deferred, under m_lock).
+// The outcome line of RenderExecutor::MaterializeDeferredDccClear on an image with the mark (the call takes the mark
+// whatever its outcome), KYTY_DIAG_F5=1: "DiagF5Ev: dcc_stale_apply n=<n> present=<n> gpu=<n> image=0x... dcc=0x...
+// result=<cleared|declined> layers=0x<mask>"; n, image, dcc - of the adopt's dcc_stale line; present / gpu - at the
+// outcome (sources as dcc_stale); cleared - >= 1 layer cleared; declined - any return without a clear; layers - the
+// pending layer mask the call read (0 when it returned before reading it). The limit of dcc_stale: printed when
+// n <= 256 (the adopt's own line was printed). Counting (f26_kept_applied / f26_deferred_declined) is the caller's.
+struct DccApplyLine {
+	uint64_t n       = 0;
+	uint32_t present = 0;
+	uint32_t gpu     = 0;
+	uint64_t image   = 0;
+	uint64_t dcc     = 0;
+	bool     cleared = false;
+	uint32_t layers  = 0;
+};
+[[nodiscard]] std::string FormatDccStaleApply(const DccApplyLine& line);
+bool                      NoteDccStaleApply(const DccApplyLine& line);
 
 // Test site: the F16k lines printed so far (DiagF5Ev, FixF5Cmu, DiagF5Id; at most the last 4096) and a reset of that
 // list.

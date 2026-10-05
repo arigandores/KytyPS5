@@ -220,6 +220,7 @@ constexpr const char* F5Names[] = {
     "f26_kept_applied",
     "f26_exact_stale",
     "f26_fallback",
+    "f26_deferred_declined", // Track F, F16o2 (item 507(b)(3))
 };
 static_assert(std::size(F5Names) == static_cast<size_t>(DiagF5::Counter::Count));
 
@@ -635,6 +636,7 @@ const char* CmuWhyName(CmuWhy why) {
 		case CmuWhy::NoLayer: return "nolayer";
 		case CmuWhy::Cpu: return "cpu";
 		case CmuWhy::Levels: return "levels"; // Track F, F16o
+		case CmuWhy::Deferred: return "deferred"; // Track F, F16o2
 	}
 	return "none";
 }
@@ -727,12 +729,31 @@ std::string FormatDccStale(uint64_t n, const DccStaleLine& line) {
 	return text;
 }
 
-bool NoteDccStale(const DccStaleLine& line) {
+bool NoteDccStale(const DccStaleLine& line, uint64_t* n_out) {
 	const auto n = g_dcc_stale_events.fetch_add(1, std::memory_order_relaxed) + 1;
+	if (n_out != nullptr) {
+		*n_out = n; // Track F, F16o2: the deferred mark of an adoption carries it
+	}
 	if (n > 256) {
 		return false;
 	}
 	EmitLine(FormatDccStale(n, line));
+	return true;
+}
+
+// ---- Track F, F16o2 (HPP-599, ROADMAP s122 item 507(b)(3)): the line dcc_stale_apply.
+std::string FormatDccStaleApply(const DccApplyLine& line) {
+	return fmt::format("DiagF5Ev: dcc_stale_apply n={} present={} gpu={} image=0x{:016x} dcc=0x{:016x} result={} "
+	                   "layers=0x{:08x}",
+	                   line.n, line.present, line.gpu, line.image, line.dcc, line.cleared ? "cleared" : "declined",
+	                   line.layers);
+}
+
+bool NoteDccStaleApply(const DccApplyLine& line) {
+	if (line.n == 0 || line.n > 256) { // the limit of dcc_stale: only when the adopt's line n was printed
+		return false;
+	}
+	EmitLine(FormatDccStaleApply(line));
 	return true;
 }
 

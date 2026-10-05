@@ -27,6 +27,12 @@
 
 namespace Libs::Graphics {
 
+namespace ShaderReplay {
+class Store;
+struct Catalogue;
+class Capture;
+} // namespace ShaderReplay
+
 struct GraphicContext;
 struct RenderColorInfo;
 struct RenderDepthInfo;
@@ -378,6 +384,22 @@ private:
 	void MaybeWriteRecipes();
 	void StartPrecache();
 	void PrecachePipelines();
+
+	// Track S, S17a (HPP-611, ROADMAP s122 item 524; shaderReplay.h): S-replay under KYTY_S_REPLAY. At 0 (the default)
+	// ReplayInit returns at once: every member below stays empty, null or false.
+	std::unique_ptr<ShaderReplay::Store>     m_replay_store;
+	std::unique_ptr<ShaderReplay::Catalogue> m_replay_catalogue; // the loaded generation (input of the rebuild)
+	std::unique_ptr<ShaderReplay::Capture>   m_replay_capture;
+	std::string                              m_replay_state;     // "ok", "mismatch", "absent", "corrupt"
+	bool                                     m_replay_rebuild     = false; // StartPrecache: the rebuild runs first
+	bool                                     m_replay_hits_logged = false;
+	// Source id -> permutation indices the rebuild wrote; filled on the precache thread before PrecachePipelines, read
+	// under m_mutex afterwards (ProgramCache::ReplayAdopt).
+	std::unordered_map<uint64_t, std::vector<uint32_t>> m_replay_rebuilt;
+	void ReplayInit();
+	void ReplayStop();
+	void ReplayCapturePipe(uint32_t kind, uint64_t first_id, uint64_t second_id, const GraphicsPipelineKey* key);
+	void ReplayRebuild();
 };
 
 void LogPipelineTrace(const char* phase, uint64_t vertex_program_id, uint64_t pixel_program_id);

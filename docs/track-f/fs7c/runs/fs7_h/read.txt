@@ -1,0 +1,57 @@
+FS7C fs7_h level underwater_aerial_garden log sha256 0e3bb1a1c602ae59a1057aeeeb82964ad204222d1b876550814a9d0f25037248 lines 1176819 stdout sha256 6bb30c4950a4377dcf877fe4d81adf36b5e58b9384c282299af88f4be902f24d
+  binary: json 8df61c009fbe6d7fd7f4e7576e89ab1b0989129336a26f6d1cdf8fd778fbffe7 installed 8df61c009fbe6d7fd7f4e7576e89ab1b0989129336a26f6d1cdf8fd778fbffe7 (expected 8df61c009fbe6d7fd7f4e7576e89ab1b0989129336a26f6d1cdf8fd778fbffe7); installed before 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2 after 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2 (expected 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2); revision texts ['d6ee2dc'] (expected d6ee2dc)
+  seal sha256 adbdc5d9d321ce418c80c306e8b6526c057c7fd39ff42ba116f48d1387038e2e; json prereg sha256 adbdc5d9d321ce418c80c306e8b6526c057c7fd39ff42ba116f48d1387038e2e
+  env: {'KYTY_TEST_HIDLOSS': '60:hold'}
+  Fix lines (line, mode) {'F8': [(11024, 1)], 'B24': [(17, 1)], 'B4': [(15, 1)]}; first GuestOut line 12298
+  N4 row (item 518 (v)(4)): FixF8: mode=1 line 11024, first GuestOut line 12298 (order - not a gate)
+  TestHidLoss lines 6; config on [(12299, '60', 'hold', '3000')]; attach failed 0, detach failed 0 (reference)
+  stand: armed (224293, 610084699678) attach (378213, 610134701918) fire (406405, 610144717062, 'hold') done (414836, 610147718206)
+  stat: mode=hold ln=420648 main_late_max_us=3001170 probes_posted=291 probes_run=291 pad_calls=370 pad_vib=185 pad_led=185 pad_trig=0 pad_wait_max_us=15 po_applied=190 po_wait_max_us=2992358 guest_sdl=0 removed=0 vp_rumble=0 vp_led=1 vp_effect=0
+  pad lines [(378214, 0, 'KYTY test pad')]; removed lines []
+  stand window frames (wide, strict) [185, 155]; frames >= 1 s there: wide n [], strict n []
+  N3 (item 460 (d)): the field sent= of PadTriggerEffect lines is not delivery - not read
+  entry line 224292; first scene frame n 238; hold (sum dt after it) 333.9 s; attempt outcome ok hold_exit None hold_s 330.1 close_rc 0 close_killed False
+  EXIT (report row, not a gate): close_posted 5 close_rc 0 close_s 3.5 close_killed False close_wait_s 40; Event: quit line 1176708 of 1176819
+  window none, Recovering 0, GamePatch 0, skipped draw 0, [Vulkan][E] 0 (reference)
+  warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-05T04:37:29Z; entries of _ShaderCache/PPSA21564: 1347; manifest: manifest cmp EQUAL files 3325 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+  ADMIT binary: json binary_sha256 = 8df61c00 (FS7) and installed_sha.txt = 8df61c00: YES
+  ADMIT version string ...-1883-gd6ee2dc8 in the binary file (N3): YES
+  ADMIT revision text d6ee2dc in the log (N3) ['d6ee2dc']: YES
+  ADMIT pre-registration: json prereg sha256 = sha256 of the seal file: YES
+  ADMIT env: no KYTY_FIX_* ([]), KYTY_TEST_HIDLOSS=60:hold, no KYTY_TEST_AUDIOLOSS, no KYTY_HAPTICS, no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS: YES
+  ADMIT pad lines of another pad = 0 ([]): YES
+  ADMIT config on delay_s=60 mode=hold hold_ms=3000 exactly 1 line, config invalid 0 ([(12299, '60', 'hold', '3000')]): YES
+  ADMIT armed exactly 1 line (1): YES
+  ADMIT attach exactly 1 line (1; attach failed 0): YES
+  ADMIT emulator pad line "KYTY test pad" exactly 1 (1): YES
+  ADMIT fire mode=hold exactly 1 line ([(406405, 610144717062, 'hold')]): YES
+  ADMIT done exactly 1 line (1): YES
+  ADMIT stat mode=hold exactly 1 line, all 15 fields (1, malformed 0): YES
+  ADMIT pad_calls >= 1 (370; N1 of item 460 (d): tautology, the row stays): YES
+  ADMIT probes_posted - probes_run = 0 (0): YES
+  ADMIT N5 (item 460 (d)): the tag does not end inside the stand window (attach line 378213 < stat line 420648, quit line 1176708 after it): YES
+  ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+  FORM installed FS6 9325446c before the tag (inside the lock): YES
+  FORM installed FS6 9325446c after the return: YES
+  FORM manifest of the caches, saves and GLCache before = after the return: YES
+  MEMBER main_late_max_us >= 2700000 (3001170): YES
+  MEMBER po_wait_max_us >= 2700000 (2992358; the block moved to PadOutput): YES
+  MEMBER pad_wait_max_us < 50000 (15; N1: informative with po_wait_max_us >= 2700000): YES
+  MEMBER guest_sdl = 0 (0; N1: tautology at =1, the member stays): YES
+  MEMBER frames >= 1 s in the stand window = 0 (wide 0 of 185 frames, strict 0 of 155; max dt_us 51549): YES
+  MEMBER FixB24: mode=1 before the first GuestOut (mode=1 lines [17], other lines [], first GuestOut line 12298, order: before the first GuestOut): YES
+  MEMBER FixF8: mode=1 exactly 1 line and 0 FixF8 lines of another form, order not a gate (N4 of item 518 (v)(4); mode=1 lines [11024], other lines [], first GuestOut line 12298, order: before the first GuestOut): YES
+  MEMBER FixB4: mode=1 before the first GuestOut (mode=1 lines [15], other lines [], first GuestOut line 12298, order: before the first GuestOut): YES
+  HARM entered (entry line of underwater_aerial_garden): YES
+  HARM lived through the hold (outcome ok, hold_exit null, hold_s >= 330): YES
+  HARM 0 death markers (log and stdout) []: YES
+  HARM 0 frames >= 1 s after the first scene frame outside the stand window (wide: 0, strict: 0; in scene 0): YES
+  HARM video index records >= 3000 (10337): YES
+  HARM 0 one-frame glitches (0): YES
+  HARM sheet for the lead made: YES
+  IDENT pad_calls = pad_vib + pad_led + pad_trig: YES
+  IDENT probes_run <= probes_posted: YES
+  IDENT removed = 0 in hold: YES
+  IDENT t_us armed < attach < fire <= done ([610084699678, 610134701918, 610144717062, 610147718206]): YES
+  IDENT invariant guest_sdl = 0 at =1: YES
+  READING fs7_h MEMBERS_PASS

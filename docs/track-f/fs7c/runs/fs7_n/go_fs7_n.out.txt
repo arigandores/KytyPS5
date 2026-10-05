@@ -1,0 +1,18 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-05T04:45:09Z FS7c go_fs7c fs7_n lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-05T04:45:09Z FS7c go_fs7c fs7_n installed binary inside the lock before the tag: 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2
+2026-10-05T04:45:11Z FS7c go_fs7c fs7_n manifest before: manifest C:/kyty/f287/fs7c/runs/fs7_n/manifest_before.tsv files 3325 bytes 921309523 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+2026-10-05T04:45:13Z FS7c go_fs7c fs7_n caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (192/172/5/520/ MB)
+2026-10-05T04:45:13Z FS7c go_fs7c fs7_n warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-05T04:45:13Z; entries of _ShaderCache/PPSA21564: 1347
+2026-10-05T04:45:14Z FS7c go_fs7c fs7_n installed the FS7 copy: 8df61c009fbe6d7fd7f4e7576e89ab1b0989129336a26f6d1cdf8fd778fbffe7
+2026-10-05T04:45:14Z FS7c go_fs7c fs7_n enter_scene start (level underwater_aerial_garden, SD 300, --rec, hold 840, KYTY_AV_TRACE=1, defaults of FS7 - no KYTY_FIX_*)
+2026-10-05T04:59:43Z FS7c go_fs7c fs7_n enter_scene rc 0
+2026-10-05T04:59:43Z FS7c go_fs7c fs7_n run: VERDICT: underwater_aerial_garden in 14.9 s - PASS (acceptance <= 90 s)
+2026-10-05T04:59:45Z FS7c go_fs7c fs7_n log_fs7_n.txt sha256 e403c61249654010871c44988d197ae6f34564ecbae99f1376466c1df268d8d0
+2026-10-05T04:59:46Z FS7c go_fs7c fs7_n installed binary returned from the pinned copy
+2026-10-05T04:59:47Z FS7c go_fs7c fs7_n installed binary after the tag: 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2
+2026-10-05T04:59:52Z FS7c go_fs7c fs7_n manifest of the run state (before the return): manifest C:/kyty/f287/fs7c/runs/fs7_n/manifest_run.tsv files 3325 bytes 921309523 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621; run vs before: manifest cmp EQUAL files 3325 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+2026-10-05T04:59:53Z FS7c go_fs7c fs7_n caches, saves and GLCache returned
+2026-10-05T04:59:55Z FS7c go_fs7c fs7_n manifest after: manifest C:/kyty/f287/fs7c/runs/fs7_n/manifest_after.tsv files 3325 bytes 921309523 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621; cmp: manifest cmp EQUAL files 3325 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+2026-10-05T04:59:56Z FS7c go_fs7c fs7_n lock released (rc 0)
+rc=0

@@ -1,0 +1,46 @@
+FS7C fs7_n level underwater_aerial_garden log sha256 e403c61249654010871c44988d197ae6f34564ecbae99f1376466c1df268d8d0 lines 3116029 stdout sha256 10d2a17ebbe3f6af36113b27de05dea38e3e0c1bae5bd44c140d099fbee52065
+  binary: json 8df61c009fbe6d7fd7f4e7576e89ab1b0989129336a26f6d1cdf8fd778fbffe7 installed 8df61c009fbe6d7fd7f4e7576e89ab1b0989129336a26f6d1cdf8fd778fbffe7 (expected 8df61c009fbe6d7fd7f4e7576e89ab1b0989129336a26f6d1cdf8fd778fbffe7); installed before 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2 after 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2 (expected 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2); revision texts ['d6ee2dc'] (expected d6ee2dc)
+  seal sha256 adbdc5d9d321ce418c80c306e8b6526c057c7fd39ff42ba116f48d1387038e2e; json prereg sha256 adbdc5d9d321ce418c80c306e8b6526c057c7fd39ff42ba116f48d1387038e2e
+  env: {'KYTY_AV_TRACE': '1'}
+  Fix lines (line, mode) {'F8': [(11487, 1)], 'B24': [(17, 1)], 'B4': [(15, 1)]}; first GuestOut line 12805
+  N4 row (item 518 (v)(4)): FixF8: mode=1 line 11487, first GuestOut line 12805 (order - not a gate)
+  vibration line 18293, A 3, T_vib 7.419 s; Haptics opened 0, disabled 0; TestAudioLoss lines 0; TestHidLoss lines 0
+  F8 lines 0, first at line None; other SDL_QueueAudio failed lines 0; F (SDL audio init failed lines) 0
+  AudioStat rows 850 (malformed 0), max init_calls 1, status 2 rows (dev != 0) 0 (reference); last row {'ln': 3113710, 't': 427031492, 'port': 2, 'dev': 4, 'status': 1, 'queued': 19968, 'pushes': 39946, 'q_fail': 0, 'init_calls': 1, 'acq': 285}
+  pad lines [] (reference)
+  entry line 225155; first scene frame n 192; hold (sum dt after it) 844.2 s; attempt outcome ok hold_exit None hold_s 840.1 close_rc 0 close_killed False
+  EXIT (report row, not a gate): close_posted 5 close_rc 0 close_s 3.5 close_killed False close_wait_s 40; Event: quit line 3116002 of 3116029
+  window none, Recovering 0, GamePatch 0, skipped draw 0, [Vulkan][E] 0 (reference)
+  warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-05T04:45:13Z; entries of _ShaderCache/PPSA21564: 1347; manifest: manifest cmp EQUAL files 3325 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+  ADMIT binary: json binary_sha256 = 8df61c00 (FS7) and installed_sha.txt = 8df61c00: YES
+  ADMIT version string ...-1883-gd6ee2dc8 in the binary file (N3): YES
+  ADMIT revision text d6ee2dc in the log (N3) ['d6ee2dc']: YES
+  ADMIT pre-registration: json prereg sha256 = sha256 of the seal file: YES
+  ADMIT env: no KYTY_FIX_* ([]), KYTY_AV_TRACE=1, no KYTY_TEST_HIDLOSS, no KYTY_TEST_AUDIOLOSS, no KYTY_HAPTICS, no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS: YES
+  ADMIT line AudioOut: vibration port present: YES
+  ADMIT lines Haptics: pad audio device ... opened = 0: YES
+  ADMIT lines Haptics: disabled by KYTY_HAPTICS=0 = 0 (N5 of item 453 (v)): YES
+  ADMIT A >= 1 and T_vib read (F18e section 8.3: A = 0 is F23, interference of the host): YES
+  ADMIT lines TestAudioLoss: = 0 (0): YES
+  ADMIT no interference: window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+  FORM installed FS6 9325446c before the tag (inside the lock): YES
+  FORM installed FS6 9325446c after the return: YES
+  FORM manifest of the caches, saves and GLCache before = after the return: YES
+  MEMBER F8 lines in the whole log = 0 (0): YES
+  MEMBER init_calls <= 1 on every AudioStat row (rows > 1: []); on failure F = 0: YES
+  MEMBER acq >= 250 in the last AudioStat row (285): YES
+  MEMBER status in {1, 2} on every AudioStat row with dev != 0 (rows 850, status 2: 0, status out lines []): YES
+  MEMBER FixF8: mode=1 exactly 1 line and 0 FixF8 lines of another form, order not a gate (N4 of item 518 (v)(4); mode=1 lines [11487], other lines [], first GuestOut line 12805, order: before the first GuestOut): YES
+  MEMBER FixB4: mode=1 before the first GuestOut (mode=1 lines [15], other lines [], first GuestOut line 12805, order: before the first GuestOut): YES
+  MEMBER FixB24: mode=1 before the first GuestOut (mode=1 lines [17], other lines [], first GuestOut line 12805, order: before the first GuestOut): YES
+  MEMBER lines TestHidLoss: = 0 (0): YES
+  HARM entered (entry line of underwater_aerial_garden): YES
+  HARM lived through the hold (outcome ok, hold_exit null, hold_s >= 840): YES
+  HARM 0 death markers (log and stdout) []: YES
+  HARM 0 frames >= 1 s after the first scene frame (0, max dt_us 183696): YES
+  HARM video index records >= 3000 (25558): YES
+  HARM 0 one-frame glitches (0): YES
+  HARM sheet for the lead made: YES
+  IDENT-REF q_fail <= pushes on every row (violations at lines []; reference, N2): YES
+  IDENT-REF pushes, q_fail, init_calls, acq do not decrease per port (violations at lines []; reference, N2): YES
+  READING fs7_n MEMBERS_PASS

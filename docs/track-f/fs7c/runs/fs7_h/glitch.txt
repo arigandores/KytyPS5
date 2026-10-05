@@ -1,0 +1,2 @@
+C:/kyty/f287/fs7c/rec_fs7_h.mp4: 10337 frames 960x540, index entries 10337
+one-frame glitches: 0

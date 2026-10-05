@@ -1,0 +1,37 @@
+F16Q f5cmu_1b kind pair1 level enemy_final log sha256 22b3eaa63c4392a8a7d3d1be0170c92a8af0631334eb6627a1e59cfb5bc0d168 lines 2296319 stdout sha256 d38841a578d44c32ca6be02916ffa9571602902c34ed43aedc49ff82c914c4fb
+  binary: tag d4328b0c8053d7deae0ef34691462af3e244dd3a6be07722146505b642ca203c (expected 7e4ded19f577cc9b03b2443111f40ac701a29d6234ffa3d3c9c64f4475a58fcb); version strings in the binary (reference): ['KytyPS5-2026-09-15-6a2987a-2225-gc0789a34']; installed before adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 after adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 (
+  env of the tag (KYTY_DIAG_*, KYTY_FIX_*, KYTY_GAME_PATCH, KYTY_GPU_CHECKPOINTS, KYTY_SKIP_CEILING): {'KYTY_DIAG_F5': '1', 'KYTY_FIX_F5CMU': '1'}; gate text ''
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']; variant form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T23:26:34Z; entries of _ShaderCache/PPSA21564: 1347; source hash of the tag binary a54ae4bd != installed (cold by signature, refer
+  entry line 342366; first GuestOut line 11669; scene change line None; first scene frame n 198; hold (sum dt after it) 331.7 s; frames >= 1 s after it 0 (max dt_us 95705) - REPORT
+  run record: outcome ok hold_exit None hold_s 330.1 close_rc 0 close_killed False
+  death markers (REPORT): 0 []; emulator stdout present
+  window: {'lost keyboard focus': 3}, Recovering Vulkan swapchain 0; GamePatch lines 0; cmask_fce_nohit b42=drawn lines 0; [Vulkan][E] 0; skipped draw lines 0 (AsyncPipelines 0) (reference)
+  manifest: manifest cmp EQUAL files 3325 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+  lines carrying DiagF5: 169, FixF5Cmu: 1 [75], FixF26: 0 [], DiagF5Id: 0 (mode=1 []), DiagF5Ev: 64 (malformed 0)
+  F5 frame lines 168 (malformed 168); mode lines [74] (before the first GuestOut YES); identity violations 0 []; f26 identity violations 0 []; monotonicity violations 0 []; lines with f5cmu_* != 0: 0, with f26_* != 0: 0; F5 health (REPORT) NOT OK
+  LIMIT cmask_fce (n=1024): lines 64 exhausted NO; LIMIT cmask_fce_nohit (n=64): lines 0 exhausted NO; LIMIT dcc_stale (n=256): lines 0 exhausted NO
+  cmask fix counts all {'off': 0, 'fresh': 60, 'exact_stale': 0, 'kept': 0, 'kept_applied': 4, 'fallback': 0}; in scene {'off': 0, 'fresh': 0, 'exact_stale': 0, 'kept': 0, 'kept_applied': 0, 'fallback': 0}
+  dcc_stale sites {'prepare': 0, 'adopt': 0}; fix counts all {'off': 0, 'fresh': 0, 'exact_stale': 0, 'kept': 0, 'kept_applied': 0, 'fallback': 0}; in scene {'off': 0, 'fresh': 0, 'exact_stale': 0, 'kept': 0, 'kept_applied': 0, 'fallback': 0}; dcc_stale_apply {'cleared': 0, 'declined': 0}
+  APPLY_LATE (item 515 (v)): 0 lines; apply lines without an adopt line of their n: 0
+  video: index records 20106; one-frame glitches 0 at presents []; sheet: C:/kyty/f287/f16m/runs/f5cmu_1/sheet_f5cmu_1.png frames 20106 step 418 tiles 8x6
+  first scene frame (REPORT, luma.txt): NOT_READ
+  DiagF5Id sum lines 0 (malformed 0, identity (g)(4) violations 0 - REPORT); stamp_late None
+  ROW binary sha256 of the tag = 7e4ded19 (F16o2 copy; item 507 (g), 515): NO
+  ROW installed FS6 9325446c before the tag: NO
+  ROW installed FS6 9325446c after the return: NO
+  ROW env of the form pair1 (no KYTY_SKIP_CEILING / skipceil, item 515 N1): YES
+  ROW entered (entry line of enemy_final): YES
+  ROW hold >= 300 s after the first scene frame: YES
+  ROW the process lived through the hold (outcome ok, hold_exit null): YES
+  ROW manifest of the caches, saves and GLCache before = after the return: YES
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch / b42=drawn line: YES
+  ROW video index records >= 3000: YES
+  ROW control: FixF5Cmu: mode=1 before the first GuestOut: YES
+  ROW control: cmask_fce event lines >= 1, 0 malformed DiagF5Ev lines: YES
+  ROW control: a parseable DiagF5 frame line (64 fields), 0 malformed: NO
+  ROW control: f5cmu_kept_applied <= f5cmu_kept and f5cmu_exact_cpu <= f5cmu_exact_stale on every frame line: NO
+  ROW control: 0 lines DiagF5Id: (KYTY_DIAG_F5ID not set): YES
+  ROW control: 0 lines FixF26: and f26_* = 0 on every frame line (KYTY_FIX_F26 not set): NO
+  ROW control: every dcc_stale line fix=off, 0 lines dcc_stale_apply: YES
+  CONTROL PAIR1 DEAD
+events cmask 64 dcc 0 apply 0

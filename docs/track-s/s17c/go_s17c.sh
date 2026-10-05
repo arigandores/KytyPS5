@@ -48,7 +48,7 @@ SAVE=""; H=0
 case "$T" in
   s17c_v0) PREV="";       IN=installed; FORM=v; H=330; KV="KYTY_S_REPLAY=0";;
   s17c_w0) PREV=s17c_v0;  IN=installed; FORM=w; H=310; KV="KYTY_S_REPLAY=0";;
-  s17c_c2) PREV=s17c_w0;  IN=empty_f10; FORM=v; H=330; KV="KYTY_S_REPLAY=2 KYTY_FIX_F19=0"; SAVE="replay";;
+  s17c_c2) PREV=s17c_w0;  IN=empty_f10; FORM=v; H=330; KV="KYTY_S_REPLAY=2 KYTY_FIX_F19=0"; SAVE="replay f10";;
   s17c_ca) PREV=s17c_c2;  IN=empty_f10; FORM=n; H=120; KV="KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_S_REPLAY_TEST=addr"; SAVE="replay";;
   s17c_cc) PREV=s17c_ca;  IN=empty_f10; FORM=n; H=120; KV="KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_S_REPLAY_TEST=canon"; SAVE="replay";;
   s17c_n0) PREV=s17c_cc;  IN=empty_f19; FORM=v; H=330; KV="KYTY_S_REPLAY=0 KYTY_FIX_F19=1 KYTY_AV_TRACE=1"; SAVE="f19";;
@@ -129,6 +129,7 @@ finish() {
         case $x in
           replay) if [ -d "$RP" ]; then cp -a "$RP" $G/state/$T/replay || OK=0; fi;;
           f19) if [ -d "$F19" ]; then cp -a "$F19" $G/state/$T/f19 || OK=0; fi;;
+          f10) if [ -d "$F10" ]; then cp -a "$F10" $G/state/$T/f10 || OK=0; fi;;
         esac
       done
       log "state saved to state/$T: $(ls $G/state/$T | tr '\n' ' ') ($(du -sm $G/state/$T | awk '{print $1}') MB)"

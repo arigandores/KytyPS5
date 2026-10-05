@@ -712,6 +712,14 @@ def read_tag(tag):
                     lc.get('catalogue_pipes')))
                 extra['pipes_waiting'] = num(lc, 'pipes_waiting')
                 extra['last_capture'] = lc
+            f10 = os.path.join(p['state'], 'f10')
+            if os.path.isdir(f10):
+                files, bad = tc_s17c.read_folder(f10)
+                sigs = sorted(set(x['signature'] for x in files.values()))
+                rows.r('signature of the capture folder state/s17c_c2/f10 (reference; seal section 1: = %s)' % SIG0,
+                       'files %d bad %d signatures %s equal %s' % (len(files), len(bad), sigs, sigs == [SIG0]))
+            else:
+                rows.r('signature of the capture folder state/s17c_c2/f10 (reference)', 'folder not saved')
             if cat is not None:
                 rows.r('KEEP words >= 0x10000 (reference, item 532 (e))', cat['keep_big'])
                 rows.r('catalogue sources / specs / pipes / words / keep', '%d %d %d %d %d' % (cat['sources'], cat['specs'], cat['pipes'],

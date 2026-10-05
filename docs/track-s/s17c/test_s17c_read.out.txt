@@ -1,4 +1,4 @@
-suite test_s17c_read.py sha256 a5cefc118e7818bf2344360bb4ba4802bfd8c74f58a3cb5234778b0c70fc2097 target s17c_read.py sha256 fa89dc84eadd24703c7f04502e5653143feaf1aa082f9e0a9d10148f411d4f09 tc_s17c.py sha256 f209626799ae25a4651a17cac793c50aebd2ad36f09fb39539bdfb16c9541592 state_s17c.py sha256 366b502be584e3b1278fc6c550b340fa80c4bfeb19cba676e8da4380b16a09d8 r_addr.py sha256 22693f28b609107ac358765ff4a4fc1b22cffe3f3043c660f80d6d4c81b24c51
+suite test_s17c_read.py sha256 87cddb3fd87802667d549aff659b750c09e8f2cd05171cc46ccbbf77ff5f0276 target s17c_read.py sha256 014b2d44b7e2c80994d6110720f1aa87e919f1452e9b00d58a36021f2d96f693 tc_s17c.py sha256 f209626799ae25a4651a17cac793c50aebd2ad36f09fb39539bdfb16c9541592 state_s17c.py sha256 366b502be584e3b1278fc6c550b340fa80c4bfeb19cba676e8da4380b16a09d8 r_addr.py sha256 22693f28b609107ac358765ff4a4fc1b22cffe3f3043c660f80d6d4c81b24c51
 ok   baseline s17c_v0 reads MEMBERS_PASS (got MEMBERS_PASS)
 ok   baseline s17c_w0 reads MEMBERS_PASS (got MEMBERS_PASS)
 ok   baseline s17c_c2 reads MEMBERS_PASS (got MEMBERS_PASS)
@@ -173,6 +173,7 @@ ok   k4x: a stand line without an index is not found (no exception)
 ok   k4x: missing input -> not ok
 ok   state: describe / parse round trip
 ok   canon_stand: the pair of one hash and canon_mismatch 1
+ok   c2 report: signature of the saved capture folder = SIG0
 ok   reading: no rows -> MEMBERS_PASS
 ok   reading: NO wins over NOT DETERMINED
 ok   reading: NOT DETERMINED -> NOT_EVALUABLE, report rows ignored
@@ -190,5 +191,5 @@ ok   ASCII only: test_s17c_read.py
 ok   cp1250 strict output: s17c_read.py s17c_cc (rc 0)
 ok   cp1250 strict output: s17c_read.py --table (rc 0)
 ok   cp1250 strict output: s17c_read.py s17c_r3 (rc 0)
-checks 191
+checks 192
 ALL OK

@@ -277,6 +277,7 @@ def make_root(root):
     open(binp, 'wb').write(b'MZ...' + R.VERSION + b'...')
     st = os.path.join(root, 'state')
     write_replay(os.path.join(st, 's17c_c2', 'replay'), 3, CANON)
+    write_folder(os.path.join(st, 's17c_c2', 'f10'), {FA: [PA0]}, sig=R.SIG0)
     write_replay(os.path.join(st, 's17c_ca', 'replay'), 3, RAW)
     write_replay(os.path.join(st, 's17c_cc', 'replay'), 3, CANON)
     write_folder(os.path.join(st, 's17c_n0', 'f19'), {FA: [PA0, PA1], FB: [PB0]})
@@ -754,6 +755,10 @@ st = state_s17c.parse('\n'.join(state_s17c.describe(sd)))
 check(st['f10'] == dict(present=False) and st['f19']['present'] and st['f19']['cache_files'] == 1 and st['f19']['pipelines_bin'] and
       st['replay']['cur'] == '7' and st['replay']['replay_files']['replay.7.bin'][0] == 3, 'state: describe / parse round trip')
 check(R.canon_stand(R.scan(os.path.join(BASE, 'log_s17c_cc.txt')))[0] is True, 'canon_stand: the pair of one hash and canon_mismatch 1')
+use(BASE)
+rep = dict(R.read_tag('s17c_c2')[0].rep)
+check('equal True' in rep.get('signature of the capture folder state/s17c_c2/f10 (reference; seal section 1: = %s)' % R.SIG0, ''),
+      'c2 report: signature of the saved capture folder = SIG0')
 check(R.Rows().word() == 'MEMBERS_PASS', 'reading: no rows -> MEMBERS_PASS')
 rw = R.Rows()
 rw.m('a', None)

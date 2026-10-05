@@ -1,8 +1,8 @@
-ok   1604c5704998c8fd C:/kyty/s288/s17c/go_s17c.sh
+ok   152f5db3c268a4bf C:/kyty/s288/s17c/go_s17c.sh
 ok   1112f59b2298a22a C:/kyty/s288/s17c/launch_s17c.sh
 ok   11a4f1e9919d6eeb C:/kyty/s288/s17c/wait_s17c.sh
 ok   e7bbee9a2412e2c5 C:/kyty/s288/s17c/post_s17c.sh
-ok   fa89dc84eadd2470 C:/kyty/s288/s17c/s17c_read.py
+ok   014b2d44b7e2c809 C:/kyty/s288/s17c/s17c_read.py
 ok   f209626799ae25a4 C:/kyty/s288/s17c/tc_s17c.py
 ok   366b502be584e3b1 C:/kyty/s288/s17c/state_s17c.py
 ok   22693f28b609107a C:/kyty/s288/s17c/r_addr.py
@@ -15,8 +15,8 @@ ok   a7096fd47f70419a C:/kyty/s288/s17c/manifest_fs4c.py
 ok   77e685e5543d90a0 C:/kyty/s288/s17c/run_safety99.py
 ok   c1bf9e2903c7db7a C:/kyty/s288/s17c/sheet142.py
 ok   e3b0c44298fc1c14 C:/kyty/s288/s17c/gates_default.txt
-ok   a5cefc118e7818bf C:/kyty/s288/s17c/test_s17c_read.py
-ok   3777f6d93b147061 C:/kyty/s288/s17c/test_s17c_read.out.txt
+ok   87cddb3fd8780266 C:/kyty/s288/s17c/test_s17c_read.py
+ok   9dfb9a0c9b8cb8de C:/kyty/s288/s17c/test_s17c_read.out.txt
 ok   90d8c6406109d4df C:/kyty/s288/s17c/checkseal_s17c.py
 ok   5f8cb37b54d18b94 C:/kyty/s288/s17c/mk_enter_s17c.py
 ok   2b5e2ce677c557bb C:/kyty/s288/bin/kyty_emulator_2b5e2ce6.exe

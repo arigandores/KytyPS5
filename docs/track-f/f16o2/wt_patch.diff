@@ -1,0 +1,599 @@
+diff --git a/src/graphics/host_gpu/renderer/cache/textureCache.cpp b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+index a4d51a76..1837114b 100644
+--- a/src/graphics/host_gpu/renderer/cache/textureCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+@@ -450,6 +450,10 @@ void TextureCache::DeleteImage(ImageId id) {
+ 	}
+ 	m_download_images.erase(id);
+ 	m_b42_draw_seq.erase(id); // Track F, F9e2b (KYTY_FIX_B42): a recycled slot id starts without a draw stamp
++	// Track F, F16o2 (item 507(b)(2)): the deferred mark of a deleted image is dropped without a line.
++	if (m_f26_deferred_count.load(std::memory_order_relaxed) != 0 && m_f26_deferred.erase(id) != 0) [[unlikely]] {
++		m_f26_deferred_count.fetch_sub(1, std::memory_order_relaxed);
++	}
+ 	if (image->info.HasMetadata()) {
+ 		const auto metadata = m_surface_metas.find(image->info.metadata.range.address);
+ 		if (metadata != m_surface_metas.end() &&
+@@ -1997,6 +2001,16 @@ public:
+ 			m_why = why_not;
+ 		}
+ 	}
++	// Track F, F16o2 (RC1 of F16p, item 507(b)(1)-(2)): AdoptPendingDccForTexture adopted the kept fill with a clear the
++	// call does not apply (RenderExecutor::MaterializeDeferredDccClear clears it later or declines): kept why=deferred;
++	// when Report() reports it as kept (KYTY_FIX_F26, KYTY_DIAG_F5), the mark of `id` in `cache` with the line's n (the
++	// scope is declared after cache->m_lock is taken and leaves before it is released).
++	void Deferred(TextureCache* cache, ImageId id) {
++		m_why         = DiagF5::CmuWhy::Deferred;
++		m_applied     = false;
++		m_defer_cache = cache;
++		m_defer_id    = id;
++	}
+ 
+ private:
+ 	void Report() {
+@@ -2026,7 +2040,11 @@ private:
+ 				default: break;
+ 			}
+ 		}
+-		(void)DiagF5::NoteDccStale(m_line);
++		uint64_t n = 0;
++		(void)DiagF5::NoteDccStale(m_line, &n);
++		if (m_fix && e.fix == F::Kept && e.why == DiagF5::CmuWhy::Deferred && m_defer_cache != nullptr) {
++			m_defer_cache->NoteF26DeferredLocked(m_defer_id, {.n = n, .image = m_line.image, .dcc = m_line.dcc});
++		}
+ 	}
+ 
+ 	DiagF5::DccSite      m_site;
+@@ -2037,6 +2055,8 @@ private:
+ 	DiagF5::CmuWhy       m_why      = DiagF5::CmuWhy::None;
+ 	DiagF5::StaleProbe   m_probe {};
+ 	DiagF5::DccStaleLine m_line {};
++	TextureCache*        m_defer_cache = nullptr; // Track F, F16o2: Deferred()
++	ImageId              m_defer_id {};
+ };
+ 
+ } // namespace
+@@ -3767,8 +3787,14 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
+ 	Common::DrawStat::Mark(Common::DrawStat::Meta);
+ 	BumpMetaEpoch();
+ 	found->second.type                 = MetaDataInfo::Type::Dcc;
+-	// Track F, F16o (item 504(e)(3)): a kept fill is kept_applied when it is adopted with a clear (a non-zero mask).
+-	f26.Applied(found->second.clear_mask != 0, DiagF5::CmuWhy::Mask);
++	// Track F, F16o (item 504(e)(3)): a kept fill adopted without a clear (mask 0) is kept why=mask. Track F, F16o2 (RC1
++	// of F16p, item 507(b)(1)): one adopted with a clear is kept why=deferred - this call clears nothing; the clear is
++	// RenderExecutor::MaterializeDeferredDccClear's, which reports it (dcc_stale_apply) by the mark Deferred() leaves.
++	if (found->second.clear_mask != 0) {
++		f26.Deferred(this, id);
++	} else {
++		f26.Applied(false, DiagF5::CmuWhy::Mask);
++	}
+ 	if (DiagF5::On()) [[unlikely]] {
+ 		DiagF5::NoteDccFill(found->second.fill_value); // Track F, F16d: PendingDcc -> Dcc by the stored code (RC3)
+ 	}
+@@ -3792,6 +3818,30 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
+ 	return true;
+ }
+ 
++// Track F, F16o2 (KYTY_FIX_F26, item 507(b)(2)): caller holds m_lock.
++void TextureCache::NoteF26DeferredLocked(ImageId id, const F26Deferred& mark) {
++	if (m_f26_deferred.insert_or_assign(id, mark).second) {
++		m_f26_deferred_count.fetch_add(1, std::memory_order_relaxed);
++	}
++}
++
++// Track F, F16o2 (item 507(b)(3)): takes m_lock itself, as MetaClearMask; while no image has a mark the lock is not
++// taken (the count is written under m_lock by the same GPU thread that calls this [I]).
++bool TextureCache::TakeF26Deferred(ImageId id, F26Deferred* mark) {
++	if (m_f26_deferred_count.load(std::memory_order_relaxed) == 0) {
++		return false;
++	}
++	std::scoped_lock lock {m_lock};
++	const auto       found = m_f26_deferred.find(id);
++	if (found == m_f26_deferred.end()) {
++		return false;
++	}
++	*mark = found->second;
++	m_f26_deferred.erase(found);
++	m_f26_deferred_count.fetch_sub(1, std::memory_order_relaxed);
++	return true;
++}
++
+ bool TextureCache::TouchMeta(uint64_t address, uint32_t slice, bool is_clear) {
+ 	std::scoped_lock lock {m_lock};
+ 	const auto       found = m_surface_metas.find(address);
+diff --git a/src/graphics/host_gpu/renderer/cache/textureCache.h b/src/graphics/host_gpu/renderer/cache/textureCache.h
+index 29b9a0f9..1c5cacd4 100644
+--- a/src/graphics/host_gpu/renderer/cache/textureCache.h
++++ b/src/graphics/host_gpu/renderer/cache/textureCache.h
+@@ -188,6 +188,19 @@ public:
+ 	// Track F, F16k (KYTY_DIAG_F5ID): `f5id_miss` (optional) receives the reason of a false answer (DiagF5Id::Miss).
+ 	[[nodiscard]] bool AdoptPendingDccForTexture(ImageId id, uint64_t metadata_address,
+ 	                                             DiagF5Id::DccMiss* f5id_miss = nullptr);
++	// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(2)-(3)): the one-shot deferred mark of an
++	// image. NoteF26DeferredLocked - caller holds m_lock (the F26Scope of AdoptPendingDccForTexture, event fix=kept
++	// why=deferred); a second such event on the image overwrites the mark. TakeF26Deferred - takes m_lock itself (as
++	// MetaClearMask; RenderExecutor::MaterializeDeferredDccClear holds no texture cache lock), removes and returns the
++	// mark; false without one (and without taking the lock while no image has a mark). DeleteImage drops a mark without
++	// a line. No mark exists with KYTY_FIX_F26 = 0.
++	struct F26Deferred {
++		uint64_t n     = 0; // the event number of the adopt's dcc_stale line
++		uint64_t image = 0; // image / dcc of that line
++		uint64_t dcc   = 0;
++	};
++	void               NoteF26DeferredLocked(ImageId id, const F26Deferred& mark);
++	[[nodiscard]] bool TakeF26Deferred(ImageId id, F26Deferred* mark);
+ 	// The registered colour image that starts at `data_address` and owns (or, for a lone
+ 	// metadata-less candidate, adopts) the DCC allocation at `metadata_address`. Empty when
+ 	// there is no such image or the ownership is ambiguous.
+@@ -374,6 +387,10 @@ private:
+ 	// state and no epoch depends on them, with KYTY_FIX_B42 on or off.
+ 	uint64_t                                          m_b42_seq = 0;
+ 	std::unordered_map<ImageId, uint64_t>             m_b42_draw_seq;
++	// Track F, F16o2 (item 507(b)(2)): the deferred marks, under m_lock; their number - written under m_lock, read
++	// without it by TakeF26Deferred (0: the lock is not taken).
++	std::unordered_map<ImageId, F26Deferred>          m_f26_deferred;
++	std::atomic<uint32_t>                             m_f26_deferred_count {0};
+ 	uint64_t                                          m_total_used_memory  = 0;
+ 	uint64_t                                          m_trigger_gc_memory  = 0;
+ 	uint64_t                                          m_pressure_gc_memory = 1536ull * 1024 * 1024;
+diff --git a/src/graphics/host_gpu/renderer/diagF5.cpp b/src/graphics/host_gpu/renderer/diagF5.cpp
+index b5045556..296a10d9 100644
+--- a/src/graphics/host_gpu/renderer/diagF5.cpp
++++ b/src/graphics/host_gpu/renderer/diagF5.cpp
+@@ -220,6 +220,7 @@ constexpr const char* F5Names[] = {
+     "f26_kept_applied",
+     "f26_exact_stale",
+     "f26_fallback",
++    "f26_deferred_declined", // Track F, F16o2 (item 507(b)(3))
+ };
+ static_assert(std::size(F5Names) == static_cast<size_t>(DiagF5::Counter::Count));
+ 
+@@ -635,6 +636,7 @@ const char* CmuWhyName(CmuWhy why) {
+ 		case CmuWhy::NoLayer: return "nolayer";
+ 		case CmuWhy::Cpu: return "cpu";
+ 		case CmuWhy::Levels: return "levels"; // Track F, F16o
++		case CmuWhy::Deferred: return "deferred"; // Track F, F16o2
+ 	}
+ 	return "none";
+ }
+@@ -727,8 +729,11 @@ std::string FormatDccStale(uint64_t n, const DccStaleLine& line) {
+ 	return text;
+ }
+ 
+-bool NoteDccStale(const DccStaleLine& line) {
++bool NoteDccStale(const DccStaleLine& line, uint64_t* n_out) {
+ 	const auto n = g_dcc_stale_events.fetch_add(1, std::memory_order_relaxed) + 1;
++	if (n_out != nullptr) {
++		*n_out = n; // Track F, F16o2: the deferred mark of an adoption carries it
++	}
+ 	if (n > 256) {
+ 		return false;
+ 	}
+@@ -736,6 +741,22 @@ bool NoteDccStale(const DccStaleLine& line) {
+ 	return true;
+ }
+ 
++// ---- Track F, F16o2 (HPP-599, ROADMAP s122 item 507(b)(3)): the line dcc_stale_apply.
++std::string FormatDccStaleApply(const DccApplyLine& line) {
++	return fmt::format("DiagF5Ev: dcc_stale_apply n={} present={} gpu={} image=0x{:016x} dcc=0x{:016x} result={} "
++	                   "layers=0x{:08x}",
++	                   line.n, line.present, line.gpu, line.image, line.dcc, line.cleared ? "cleared" : "declined",
++	                   line.layers);
++}
++
++bool NoteDccStaleApply(const DccApplyLine& line) {
++	if (line.n == 0 || line.n > 256) { // the limit of dcc_stale: only when the adopt's line n was printed
++		return false;
++	}
++	EmitLine(FormatDccStaleApply(line));
++	return true;
++}
++
+ std::vector<std::string> RecentLines() {
+ 	std::scoped_lock lock {g_recent_mutex};
+ 	return {g_recent.begin(), g_recent.end()};
+diff --git a/src/graphics/host_gpu/renderer/diagF5.h b/src/graphics/host_gpu/renderer/diagF5.h
+index 9a2600a7..f94dfcff 100644
+--- a/src/graphics/host_gpu/renderer/diagF5.h
++++ b/src/graphics/host_gpu/renderer/diagF5.h
+@@ -129,13 +129,18 @@ enum class Counter : uint32_t {
+ 	// fill (PendingDccFillStale's cpu_written; the event line says why=cpu): f5cmu_exact_cpu <= f5cmu_exact_stale.
+ 	F5CmuExactCpu,
+ 	// Track F, F16o (item 504(e)(4)): KYTY_FIX_F26 at PrepareDccClear / AdoptPendingDccForTexture, where the bucket check
+-	// said stale - kept (the exact check did not; kept_applied - and the same call applied the fill: >= 1 layer cleared at
+-	// prepare, a non-zero clear mask adopted at adopt; kept_applied <= kept), stale by the exact check too, the ring could
++	// said stale - kept (the exact check did not; kept_applied - and the fill was applied: >= 1 layer cleared by the call
++	// at prepare; at adopt (Track F, F16o2) >= 1 layer cleared by the MaterializeDeferredDccClear that took the deferred
++	// mark; kept_applied <= kept), stale by the exact check too, the ring could
+ 	// not answer (fallback). With KYTY_DIAG_F5ID: f26_kept = dcc_stale_bucket_only, f26_fallback = dcc_stale_fallback.
+ 	F26Kept,
+ 	F26KeptApplied,
+ 	F26ExactStale,
+ 	F26Fallback,
++	// Track F, F16o2 (RC1 of F16p, item 507(b)(3)-(4)): a deferred clear of an adoption (fix=kept why=deferred) that
++	// RenderExecutor::MaterializeDeferredDccClear took and did not clear (result=declined); one it cleared counts
++	// f26_kept_applied. f26_kept_applied + f26_deferred_declined <= f26_kept.
++	F26DeferredDeclined,
+ 	Count
+ };
+ 
+@@ -214,8 +219,9 @@ enum class CmuFix : uint8_t { Off, Fresh, ExactStale, Kept, KeptApplied, Fallbac
+ // Track F, F16k2 (RC4, item 496(b)(4)): Cpu - an ExactStale decision set by a CPU write (a CPU-modified page of the
+ // fill), not by a crossing GPU write.
+ // Track F, F16o (item 504(e)(3)): Levels - PrepareDccClear's return on an image with more than one level (the line
+-// dcc_stale only).
+-enum class CmuWhy : uint8_t { None, Value, Mask, Range, Partial, Decode, Layers, NoLayer, Cpu, Levels };
++// dcc_stale only). Track F, F16o2 (item 507(b)(1)): Deferred - AdoptPendingDccForTexture adopted the fill with a clear
++// the call does not apply (the line dcc_stale only; the outcome - the line dcc_stale_apply of the same n).
++enum class CmuWhy : uint8_t { None, Value, Mask, Range, Partial, Decode, Layers, NoLayer, Cpu, Levels, Deferred };
+ [[nodiscard]] const char* CmuFixName(CmuFix fix);
+ [[nodiscard]] const char* CmuWhyName(CmuWhy why);
+ struct CmuEvent {
+@@ -300,7 +306,29 @@ struct DccStaleLine {
+ 	CmuEvent event;
+ };
+ [[nodiscard]] std::string FormatDccStale(uint64_t n, const DccStaleLine& line);
+-bool                      NoteDccStale(const DccStaleLine& line);
++// Track F, F16o2: `n_out` (optional) receives the event number k (past the limit too).
++bool                      NoteDccStale(const DccStaleLine& line, uint64_t* n_out = nullptr);
++
++// ---- Track F, F16o2 (HPP-599, RC1 of F16p, ROADMAP s122 item 507(b)): the deferred clear of an adoption (the
++// one-shot mark the event fix=kept why=deferred of AdoptPendingDccForTexture leaves on the image -
++// TextureCache::F26Deferred, under m_lock).
++// The outcome line of RenderExecutor::MaterializeDeferredDccClear on an image with the mark (the call takes the mark
++// whatever its outcome), KYTY_DIAG_F5=1: "DiagF5Ev: dcc_stale_apply n=<n> present=<n> gpu=<n> image=0x... dcc=0x...
++// result=<cleared|declined> layers=0x<mask>"; n, image, dcc - of the adopt's dcc_stale line; present / gpu - at the
++// outcome (sources as dcc_stale); cleared - >= 1 layer cleared; declined - any return without a clear; layers - the
++// pending layer mask the call read (0 when it returned before reading it). The limit of dcc_stale: printed when
++// n <= 256 (the adopt's own line was printed). Counting (f26_kept_applied / f26_deferred_declined) is the caller's.
++struct DccApplyLine {
++	uint64_t n       = 0;
++	uint32_t present = 0;
++	uint32_t gpu     = 0;
++	uint64_t image   = 0;
++	uint64_t dcc     = 0;
++	bool     cleared = false;
++	uint32_t layers  = 0;
++};
++[[nodiscard]] std::string FormatDccStaleApply(const DccApplyLine& line);
++bool                      NoteDccStaleApply(const DccApplyLine& line);
+ 
+ // Test site: the F16k lines printed so far (DiagF5Ev, FixF5Cmu, DiagF5Id; at most the last 4096) and a reset of that
+ // list.
+diff --git a/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp b/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+index 7ce0b429..4de2fbe3 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+@@ -3502,6 +3502,46 @@ private:
+ 	vk::Format m_saved;
+ };
+ 
++// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(3)): one MaterializeDeferredDccClear call on an
++// image that carries the deferred mark of AdoptPendingDccForTexture (event fix=kept why=deferred). The constructor
++// takes the mark (TextureCache::TakeF26Deferred - m_lock taken inside, as MetaClearMask; the call holds no cache
++// lock), so it is removed whatever the outcome; the destructor (every return of the call) reports it: cleared (>= 1
++// layer cleared) - f26_kept_applied, declined (any return without a clear) - f26_deferred_declined, and the line
++// DiagF5Ev dcc_stale_apply. Without KYTY_FIX_F26 nothing is taken (no mark exists) and nothing is reported.
++class F26ApplyScope {
++public:
++	F26ApplyScope(TextureCache& cache, ImageId id) {
++		if (DiagF5::FixF26On()) [[unlikely]] {
++			m_armed = cache.TakeF26Deferred(id, &m_mark);
++		}
++	}
++	~F26ApplyScope() {
++		if (m_armed) [[unlikely]] {
++			DiagF5::Add(m_cleared ? DiagF5::Counter::F26KeptApplied : DiagF5::Counter::F26DeferredDeclined);
++			(void)DiagF5::NoteDccStaleApply({.n       = m_mark.n,
++			                                   .present = DiagF5::Present(),
++			                                   .gpu     = GpuTimeProfiler::Frame(),
++			                                   .image   = m_mark.image,
++			                                   .dcc     = m_mark.dcc,
++			                                   .cleared = m_cleared,
++			                                   .layers  = m_layers});
++		}
++	}
++	F26ApplyScope(const F26ApplyScope&)            = delete;
++	F26ApplyScope& operator=(const F26ApplyScope&) = delete;
++
++	// The pending layer mask the call read.
++	void Layers(uint32_t mask) { m_layers = mask; }
++	// Every layer of that mask was cleared.
++	void Cleared() { m_cleared = true; }
++
++private:
++	TextureCache::F26Deferred m_mark {};
++	bool                      m_armed   = false;
++	bool                      m_cleared = false;
++	uint32_t                  m_layers  = 0;
++};
++
+ } // namespace
+ 
+ // A guest DCC fast clear only rewrites metadata, and the attachment path materializes it as a
+@@ -3516,6 +3556,10 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId
+ 
+ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id, Image& image) {
+ 	auto& cache = m_context.GetTextureCache();
++	// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(3)): the deferred mark of an adoption is
++	// taken here, before any return; the outcome (dcc_stale_apply) is reported when the call returns. Nothing without
++	// the knob.
++	F26ApplyScope f26_apply {cache, id};
+ 	// Session 124, knob "skipceil" = 3 (closure census, [RC1], [RC2], ROADMAP s122 item 44(b)): not a write event - the
+ 	// writer stays the logical clear; under the reference policy Lt it is a write of the trigger operation.
+ 	const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyMat);
+@@ -3538,6 +3582,7 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId
+ 			}
+ 		}
+ 	}
++	f26_apply.Layers(mask); // Track F, F16o2
+ 	if (mask == 0) {
+ 		return;
+ 	}
+@@ -3652,6 +3697,7 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId
+ 		}
+ 		layer += count - 1;
+ 	}
++	f26_apply.Cleared(); // Track F, F16o2: every layer of the mask was cleared above
+ 	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(b)): the materialized layers (every level).
+ 	const SkcCensus::SubScope skc3_sub(SkcCensus::Sub {0, UINT32_MAX, 0, 0, mask, 1});
+ 	cache.MarkGpuWritten(id);
+diff --git a/tests/ShaderRecompilerComputeTests.cpp b/tests/ShaderRecompilerComputeTests.cpp
+index 384587e6..2d8591f5 100644
+--- a/tests/ShaderRecompilerComputeTests.cpp
++++ b/tests/ShaderRecompilerComputeTests.cpp
+@@ -432,6 +432,11 @@ struct TextureCacheTestAccess {
+     std::lock_guard lock(cache.m_lock);
+     cache.m_surface_metas.erase(address);
+   }
++  // Track F, F16o2 (HPP-599): the number of deferred marks (KYTY_FIX_F26).
++  static size_t F16o2Marks(TextureCache &cache) {
++    std::lock_guard lock(cache.m_lock);
++    return cache.m_f26_deferred.size();
++  }
+   static void F16kPrepareCmaskClear(TextureCache &cache, ImageId id, const TextureCache::ImageDesc &desc, bool fce,
+                                     DiagF5::CmuEvent *event) {
+     auto lock = Lock(cache);
+@@ -10564,7 +10569,7 @@ public:
+                   std::string(DiagF5::Name(C::F26ExactStale)) == "f26_exact_stale" &&
+                   std::string(DiagF5::Name(C::F26Fallback)) == "f26_fallback" &&
+                   static_cast<uint32_t>(C::F26Kept) == static_cast<uint32_t>(C::F5CmuExactCpu) + 1 &&
+-                  static_cast<uint32_t>(C::F26Fallback) + 1 == static_cast<uint32_t>(C::Count) &&
++                  static_cast<uint32_t>(C::F26Fallback) + 2 == static_cast<uint32_t>(C::Count) && // F16o2: +1 row
+                   std::string(DiagF5::DccSiteName(DS::Prepare)) == "prepare" &&
+                   std::string(DiagF5::DccSiteName(DS::Adopt)) == "adopt" &&
+                   std::string(DiagF5::DccExactName(DX::Na)) == "na" &&
+@@ -10590,6 +10595,30 @@ public:
+                          "dcc=0x0000000000000020 extent=8x8 exact=fresh fix=kept why=partial",
+               "the dcc_stale line: " + ds1 + " | " + ds2 + " | " + ds3);
+       F16kOk("F16o pure helpers (names, f26_* last, dcc_stale line form)");
++      // Track F, F16o2 (item 507(b)(1), (3)): why=deferred last, f26_deferred_declined last, the line dcc_stale_apply.
++      Require(name, "F16o2 names",
++              std::string(DiagF5::CmuWhyName(W::Deferred)) == "deferred" &&
++                  static_cast<uint32_t>(W::Deferred) == static_cast<uint32_t>(W::Levels) + 1 &&
++                  std::string(DiagF5::Name(C::F26DeferredDeclined)) == "f26_deferred_declined" &&
++                  static_cast<uint32_t>(C::F26DeferredDeclined) == static_cast<uint32_t>(C::F26Fallback) + 1 &&
++                  static_cast<uint32_t>(C::F26DeferredDeclined) + 1 == static_cast<uint32_t>(C::Count),
++              "a name of F16o2");
++      const auto da1 = DiagF5::FormatDccStaleApply({.n = 4, .present = 7, .gpu = 9, .image = 0x10, .dcc = 0x20,
++                                                     .cleared = true, .layers = 1});
++      const auto da2 = DiagF5::FormatDccStaleApply({.n = 5, .present = 1, .gpu = 2, .image = 0x10, .dcc = 0x20,
++                                                     .cleared = false, .layers = 0});
++      const auto ds4 = DiagF5::FormatDccStale(6, {.site = DS::Adopt, .present = 1, .gpu = 2, .image = 0x10, .dcc = 0x20,
++                                                  .width = 64, .height = 64, .exact = DX::Fresh,
++                                                  .event = {F::Kept, W::Deferred}});
++      Require(name, "F16o2 dcc_stale_apply line form",
++              da1 == "DiagF5Ev: dcc_stale_apply n=4 present=7 gpu=9 image=0x0000000000000010 dcc=0x0000000000000020 "
++                     "result=cleared layers=0x00000001" &&
++                  da2 == "DiagF5Ev: dcc_stale_apply n=5 present=1 gpu=2 image=0x0000000000000010 "
++                         "dcc=0x0000000000000020 result=declined layers=0x00000000" &&
++                  ds4 == "DiagF5Ev: dcc_stale site=adopt n=6 present=1 gpu=2 image=0x0000000000000010 "
++                         "dcc=0x0000000000000020 extent=64x64 exact=fresh fix=kept why=deferred",
++              "the dcc_stale_apply line: " + da1 + " | " + da2 + " | " + ds4);
++      F16kOk("F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form)");
+     }
+ 
+     EnsureRuntimeContext();
+@@ -10773,7 +10802,8 @@ public:
+         want.push_back({C::DccStaleBucketOnly, 0});
+         want.push_back({C::DccStaleFallback, 0});
+         want.push_back({C::CmaskRtBucketOnly, 0});
+-        for (const auto counter : {C::F26Kept, C::F26KeptApplied, C::F26ExactStale, C::F26Fallback}) {
++        for (const auto counter :
++             {C::F26Kept, C::F26KeptApplied, C::F26ExactStale, C::F26Fallback, C::F26DeferredDeclined}) {
+           want.push_back({counter, 0}); // Track F, F16o: the FCE acquisition does not read KYTY_FIX_F26
+         }
+         F16kDelta(k.stage, before, want);
+@@ -10814,7 +10844,7 @@ public:
+         F16kDelta("K6 draw acquisition", before,
+                   {{C::CmaskRtBucketOnly, id ? 1u : 0u}, {C::F5CmuKept, 0}, {C::F5CmuKeptApplied, 0},
+                    {C::F5CmuExactStale, 0}, {C::F5CmuFallback, 0}, {C::F26Kept, 0}, {C::F26KeptApplied, 0},
+-                   {C::F26ExactStale, 0}, {C::F26Fallback, 0}});
++                   {C::F26ExactStale, 0}, {C::F26Fallback, 0}, {C::F26DeferredDeclined, 0}});
+         // The same through PrepareCmaskClear with an event pointer and fce = false: fix=off whatever the knob.
+         arm_fill();
+         BTA::F16kNoteGpuWrite(buffers, meta + 0x1000, 0x100);
+@@ -10889,7 +10919,7 @@ public:
+                  {C::CmaskFceUnapplied, 0}, {C::F5CmuKept, cmu && f5 ? 1u : 0u},
+                  {C::F5CmuKeptApplied, cmu && f5 ? 1u : 0u}, {C::F5CmuExactStale, 0}, {C::F5CmuFallback, 0},
+                  {C::F5CmuExactCpu, 0}, {C::F26Kept, 0}, {C::F26KeptApplied, 0}, {C::F26ExactStale, 0},
+-                 {C::F26Fallback, 0}});
++                 {C::F26Fallback, 0}, {C::F26DeferredDeclined, 0}});
+       if (f5 && cmu) {
+         const auto line = F16kLast("DiagF5Ev: cmask_fce_nohit ");
+         Require(name, "K7 no-hit line",
+@@ -11038,7 +11068,8 @@ public:
+                      {C::F26Kept, k5 && kept && !fresh ? 1u : 0u},
+                      {C::F26KeptApplied, k5 && d.f26_counter == C::F26KeptApplied ? 1u : 0u},
+                      {C::F26ExactStale, k5 && d.f26_counter == C::F26ExactStale ? 1u : 0u},
+-                     {C::F26Fallback, k5 && d.f26_counter == C::F26Fallback ? 1u : 0u}});
++                     {C::F26Fallback, k5 && d.f26_counter == C::F26Fallback ? 1u : 0u},
++                     {C::F26DeferredDeclined, 0}});
+           if (f5 && !fresh) {
+             const auto line = F16kLast("DiagF5Ev: dcc_stale ");
+             Require(name, d.stage,
+@@ -11068,7 +11099,8 @@ public:
+           F16kOk(stage);
+         };
+         // D4: the adoption of a PendingDcc fill the bucket check finds stale (as D1-D3: without KYTY_FIX_F26 R7, the entry
+-        // erased; Track F, F16o: with it the neighbour's fill is adopted - kept_applied with a clear code, kept why=mask
++        // erased; Track F, F16o: with it the neighbour's fill is adopted - kept why=deferred with a clear code (Track F,
++        // F16o2: the clear is MaterializeDeferredDccClear's - D4 cleared, D4e declined), kept why=mask
+         // without one; a crossing write and K + 1 still R7). An adopted image goes back to no metadata and no entry (D5-D20
+         // read the plain image without one).
+         struct ACase {
+@@ -11082,13 +11114,22 @@ public:
+           uint32_t bucket_only;
+           uint32_t fallback;
+           C f26_counter;
++          bool mat;           // Track F, F16o2: MaterializeDeferredDccClear after the adoption
++          const char *result; // Track F, F16o2: of dcc_stale_apply (with the mark)
+         };
+         const ACase acases[] = {
+-            {"D4f adoption, no write after the fill: no line", 0, 0x40404040u, "-", "-", "-", true, 0, 0, C::Count},
+-            {"D4 adoption, neighbour", 1, 0x40404040u, "fresh", "kept_applied", "<none>", true, 1, 0, C::F26KeptApplied},
+-            {"D4b adoption, neighbour, no clear code", 1, 0x12345678u, "fresh", "kept", "mask", true, 1, 0, C::F26Kept},
+-            {"D4c adoption, crossing", 2, 0x40404040u, "stale", "exact_stale", "<none>", false, 0, 0, C::F26ExactStale},
+-            {"D4d adoption, K+1", 3, 0x40404040u, "fallback", "fallback", "<none>", false, 0, 1, C::F26Fallback},
++            {"D4f adoption, no write after the fill: no line", 0, 0x40404040u, "-", "-", "-", true, 0, 0, C::Count,
++             false, "-"},
++            {"D4 adoption, neighbour, code 0x40: deferred, then cleared", 1, 0x40404040u, "fresh", "kept", "deferred",
++             true, 1, 0, C::F26Kept, true, "cleared"},
++            {"D4b adoption, neighbour, no clear code", 1, 0x12345678u, "fresh", "kept", "mask", true, 1, 0, C::F26Kept,
++             false, "-"},
++            {"D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined", 1, 0x20202020u, "fresh",
++             "kept", "deferred", true, 1, 0, C::F26Kept, true, "declined"},
++            {"D4c adoption, crossing", 2, 0x40404040u, "stale", "exact_stale", "<none>", false, 0, 0, C::F26ExactStale,
++             false, "-"},
++            {"D4d adoption, K+1", 3, 0x40404040u, "fallback", "fallback", "<none>", false, 0, 1, C::F26Fallback,
++             false, "-"},
+         };
+         auto &pimage0 = TTA::F16dImage(cache, pid);
+         const auto pmeta0 = pimage0.info.metadata;
+@@ -11127,7 +11168,8 @@ public:
+                      {C::F26Kept, k5 && kept && !fresh ? 1u : 0u},
+                      {C::F26KeptApplied, k5 && a.f26_counter == C::F26KeptApplied ? 1u : 0u},
+                      {C::F26ExactStale, k5 && a.f26_counter == C::F26ExactStale ? 1u : 0u},
+-                     {C::F26Fallback, k5 && a.f26_counter == C::F26Fallback ? 1u : 0u}});
++                     {C::F26Fallback, k5 && a.f26_counter == C::F26Fallback ? 1u : 0u},
++                     {C::F26DeferredDeclined, 0}});
+           if (f5 && !fresh) {
+             const auto line = F16kLast("DiagF5Ev: dcc_stale ");
+             Require(name, a.stage,
+@@ -11143,6 +11185,40 @@ public:
+             Require(name, a.stage, F16kCount("DiagF5Ev:") == lines,
+                     "an event line with KYTY_DIAG_F5 off or of a fresh fill");
+           }
++          // Track F, F16o2 (RC1 of F16p, item 507(b)(1)-(5)): an adoption kept with a clear leaves the deferred mark (only
++          // with KYTY_FIX_F26 and KYTY_DIAG_F5 - the decision reported as kept why=deferred); MaterializeDeferredDccClear
++          // takes it and reports dcc_stale_apply of the adopt line's n - cleared (code 0x40) or declined (code 0x20: no
++          // colour slot addresses the surface). Without the knob: no mark, no line; the materialization as before.
++          const bool marked = k5 && !fresh && kept && std::string(a.why) == "deferred";
++          Require(name, a.stage, TTA::F16o2Marks(cache) == (marked ? 1u : 0u),
++                  fmt::format("deferred marks {} (expected {})", TTA::F16o2Marks(cache), marked ? 1 : 0));
++          if (a.mat) {
++            const auto adopt_n = F16kField(F16kLast("DiagF5Ev: dcc_stale "), "n");
++            const auto mlines = F16kCount("DiagF5Ev:");
++            const auto mbefore = F16kRead();
++            RTA::F16dMaterialize(executor, scheduler.Current(), pid);
++            const bool cleared = std::string(a.result) == "cleared";
++            F16kDelta(a.stage, mbefore,
++                      {{C::F26Kept, 0},
++                       {C::F26KeptApplied, marked && cleared ? 1u : 0u},
++                       {C::F26DeferredDeclined, marked && !cleared ? 1u : 0u},
++                       {C::DccMatCleared, f5 && kept && cleared ? 1u : 0u},
++                       {C::DccMatUndecoded, f5 && kept && !cleared ? 1u : 0u}});
++            Require(name, a.stage, TTA::F16o2Marks(cache) == 0, "the deferred mark was not taken");
++            if (marked) {
++              const auto line = F16kLast("DiagF5Ev: dcc_stale_apply ");
++              Require(name, a.stage,
++                      F16kCount("DiagF5Ev:") == mlines + 1 && F16kField(line, "n") == adopt_n &&
++                          F16kField(line, "result") == a.result && F16kField(line, "layers") == "0x00000001" &&
++                          F16kField(line, "image") == fmt::format("0x{:016x}", plain) &&
++                          F16kField(line, "dcc") == fmt::format("0x{:016x}", pending) &&
++                          F16kField(line, "present") != "<none>" && F16kField(line, "gpu") != "<none>",
++                      "the dcc_stale_apply line: " + line);
++              std::printf("[f16k]      %s\n[f16k]      %s\n", F16kLast("DiagF5Ev: dcc_stale ").c_str(), line.c_str());
++            } else {
++              Require(name, a.stage, F16kCount("DiagF5Ev:") == mlines, "a dcc_stale_apply line without a mark");
++            }
++          }
+           pimage0.info.metadata = pmeta0;
+           TTA::F16kEraseMeta(cache, pending);
+           F16kOk(a.stage);
+@@ -11549,10 +11625,12 @@ public:
+       // identity (form of item 496(b)(5)): the dcc_stale lines by fix = the counters (the limit 256 is not reached here).
+       Require(name, "Z f26_* only with KYTY_FIX_F26 and KYTY_DIAG_F5",
+               (f26 && f5) || (g(C::F26Kept) == 0 && g(C::F26KeptApplied) == 0 && g(C::F26ExactStale) == 0 &&
+-                              g(C::F26Fallback) == 0),
++                              g(C::F26Fallback) == 0 && g(C::F26DeferredDeclined) == 0),
+               "an f26 counter moved");
+-      Require(name, "Z identity f26_kept_applied <= f26_kept", g(C::F26KeptApplied) <= g(C::F26Kept),
+-              "f26_kept_applied > f26_kept");
++      // Track F, F16o2 (item 507(b)(4)): f26_kept_applied + f26_deferred_declined <= f26_kept.
++      Require(name, "Z identity f26_kept_applied + f26_deferred_declined <= f26_kept",
++              g(C::F26KeptApplied) + g(C::F26DeferredDeclined) <= g(C::F26Kept),
++              "f26_kept_applied + f26_deferred_declined > f26_kept");
+       Require(name, "Z identity f26_kept = dcc_stale_bucket_only, f26_fallback = dcc_stale_fallback (KYTY_DIAG_F5ID)",
+               !(f26 && id) ||
+                   (g(C::F26Kept) == g(C::DccStaleBucketOnly) && g(C::F26Fallback) == g(C::DccStaleFallback) &&
+@@ -11560,8 +11638,17 @@ public:
+               fmt::format("f26_kept {} bucket_only {} f26_fallback {} dcc_stale_fallback {}", g(C::F26Kept),
+                           g(C::DccStaleBucketOnly), g(C::F26Fallback), g(C::DccStaleFallback)));
+       {
+-        uint64_t all = 0, off = 0, kept = 0, kept_applied = 0, exact_stale = 0, fallback = 0;
++        // Track F, F16o2 (item 507(b)(4)): lines fix=kept_applied (prepare only) + result=cleared = f26_kept_applied;
++        // fix=kept + fix=kept_applied = f26_kept; result=declined = f26_deferred_declined; adopt fix=kept_applied 0.
++        uint64_t all = 0, off = 0, kept = 0, kept_applied = 0, exact_stale = 0, fallback = 0, adopt_applied = 0;
++        uint64_t cleared = 0, declined = 0;
+         for (const auto &line : DiagF5::RecentLines()) {
++          if (line.rfind("DiagF5Ev: dcc_stale_apply ", 0) == 0) {
++            const auto result = F16kField(line, "result");
++            cleared += result == "cleared" ? 1 : 0;
++            declined += result == "declined" ? 1 : 0;
++            continue;
++          }
+           if (line.rfind("DiagF5Ev: dcc_stale ", 0) != 0) {
+             continue;
+           }
+@@ -11572,14 +11659,18 @@ public:
+           kept_applied += fix == "kept_applied" ? 1 : 0;
+           exact_stale += fix == "exact_stale" ? 1 : 0;
+           fallback += fix == "fallback" ? 1 : 0;
++          adopt_applied += fix == "kept_applied" && F16kField(line, "site") == "adopt" ? 1 : 0;
+         }
+-        Require(name, "Z print identity dcc_stale lines by fix = f26_*",
+-                !f5 ? all == 0
+-                : f26 ? all == 8 && off == 0 && kept == g(C::F26Kept) && kept_applied == g(C::F26KeptApplied) &&
+-                            exact_stale == g(C::F26ExactStale) && fallback == g(C::F26Fallback)
+-                      : all == 8 && off == all,
+-                fmt::format("lines {} off {} kept {} kept_applied {} exact_stale {} fallback {}", all, off, kept,
+-                            kept_applied, exact_stale, fallback));
++        Require(name, "Z print identity dcc_stale lines by fix, dcc_stale_apply lines by result = f26_*",
++                !f5 ? all == 0 && cleared == 0 && declined == 0
++                : f26 ? all == 9 && off == 0 && kept == g(C::F26Kept) &&
++                            kept_applied + cleared == g(C::F26KeptApplied) &&
++                            declined == g(C::F26DeferredDeclined) && adopt_applied == 0 && cleared == 1 &&
++                            declined == 1 && exact_stale == g(C::F26ExactStale) && fallback == g(C::F26Fallback)
++                      : all == 9 && off == all && cleared == 0 && declined == 0,
++                fmt::format("lines {} off {} kept {} kept_applied {} (adopt {}) exact_stale {} fallback {} cleared {} "
++                            "declined {}",
++                            all, off, kept, kept_applied, adopt_applied, exact_stale, fallback, cleared, declined));
+       }
+       Require(name, "Z line FixF26", f26 || F16kCount("FixF26:") == 0, "FixF26 with its knob off");
+       F16kOk("Z counters and lines of the knobs off");
+@@ -11608,6 +11699,15 @@ public:
+                   F16kField(F16kLast("DiagF5Ev: dcc_stale "), "n") == "256",
+               fmt::format("cmask_fce {} + {} nohit {} + {} dcc_stale {} + {}", fce0, fce, nohit0, nohit, dcc0, dccs));
+       F16kOk("L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256");
++      // Track F, F16o2 (item 507(b)(3)): dcc_stale_apply is printed under the limit of dcc_stale - for n <= 256.
++      const auto apply0 = F16kCount("DiagF5Ev: dcc_stale_apply ");
++      const bool a256 = DiagF5::NoteDccStaleApply({.n = 256});
++      const bool a257 = DiagF5::NoteDccStaleApply({.n = 257});
++      Require(name, "L dcc_stale_apply limit",
++              a256 && !a257 && F16kCount("DiagF5Ev: dcc_stale_apply ") == apply0 + 1 &&
++                  F16kField(F16kLast("DiagF5Ev: dcc_stale_apply "), "n") == "256",
++              fmt::format("n=256 printed {} n=257 printed {}", a256, a257));
++      F16kOk("L F16o2 dcc_stale_apply limit (n <= 256)");
+     }
+     Require(name, "unmap", Libs::LibKernel::Memory::KernelMunmap(base, allocation_size) == 0, "F16k test unmap failed");
+     Require(name, "release",

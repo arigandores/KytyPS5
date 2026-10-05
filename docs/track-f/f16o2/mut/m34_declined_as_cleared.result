@@ -1,0 +1,7 @@
+=== arm f5_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined: f26_kept_applied: delta 1 != expected 0
+=== arm f5_f26_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined: f26_kept_applied: delta 1 != expected 0
+=== arm f5_fix_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined: f26_kept_applied: delta 1 != expected 0
+CAUGHT

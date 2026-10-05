@@ -1,0 +1,8 @@
+exe C:/kyty/f287/f16o2/fin/shader_recompiler_compute_tests.exe sha256 3ac2ac17b0316a2f14c59b9441cdcc41f3e1939d5526297e8a9c022a8a57c1b7
+mode --cmask-clear-only rc=0 last=[gpu]     CmaskRegisterClear               ok
+mode --dcc-clear-only rc=0 last=[gpu]     RenderExecutorDccFixedClearFloat ok
+mode --compute-meta-clear-only rc=3221226505 last=abort() was called: std::terminate on a thread without a report, or an explicit abort
+mode --htile-clear-only rc=3221226505 last=abort() was called: std::terminate on a thread without a report, or an explicit abort
+mode --image-overlap-only rc=3221226505 last=abort() was called: std::terminate on a thread without a report, or an explicit abort
+mode --compute-meta-classification-only rc=0 last=[host]    ComputeMetaClearClassification   ok
+NOT OK

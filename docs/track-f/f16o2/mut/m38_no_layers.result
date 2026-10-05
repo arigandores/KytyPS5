@@ -1,0 +1,7 @@
+=== arm f5_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D4 adoption, neighbour, code 0x40: deferred, then cleared: the dcc_stale_apply line: DiagF5Ev: dcc_stale_apply n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=cleared layers=0x00000000
+=== arm f5_f26_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D4 adoption, neighbour, code 0x40: deferred, then cleared: the dcc_stale_apply line: DiagF5Ev: dcc_stale_apply n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=cleared layers=0x00000000
+=== arm f5_fix_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D4 adoption, neighbour, code 0x40: deferred, then cleared: the dcc_stale_apply line: DiagF5Ev: dcc_stale_apply n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=cleared layers=0x00000000
+CAUGHT

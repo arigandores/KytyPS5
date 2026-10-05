@@ -1,0 +1,13 @@
+=== arm none () rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at L dcc_stale_apply limit: n=256 printed true n=257 printed true
+=== arm f5 (KYTY_DIAG_F5=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at L dcc_stale_apply limit: n=256 printed true n=257 printed true
+=== arm f5_fix (KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at L dcc_stale_apply limit: n=256 printed true n=257 printed true
+=== arm f5_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at L dcc_stale_apply limit: n=256 printed true n=257 printed true
+=== arm f5_fix_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at L dcc_stale_apply limit: n=256 printed true n=257 printed true
+=== arm id_only (KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at L dcc_stale_apply limit: n=256 printed true n=257 printed true
+CAUGHT

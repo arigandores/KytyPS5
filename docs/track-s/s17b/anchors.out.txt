@@ -1,0 +1,41 @@
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:37 | int Mode() { || +1 // Read once per process. Only the exact values "1", "2", "3" turn it on; unset, "", "0" o
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:670 | if (canon_stand && !g_canon_stand_done.load()) { || +1 for (auto& word: canonical) {
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:674 | g_canon_stand_done.store(true); || +1 LOGF("ShaderReplay: stand canon applied hash=0x%016" PRIx64 "\n", plan.shader_hash);
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:407 | bool Answer(Replayer* replayer, uint64_t address, uint32_t* value, bool clean) { || +1 if (replayer->requested != nullptr) {
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:721 | if (word.role == ROLE_KEEP && word.value >= 0x10000u && addresses.contains(word.value)) { || +1 why = "residual";
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:839 | bool WriteFileAtomic(const std::filesystem::path& path, const std::vector<uint8_t>& data) { || +1 auto temp = path;
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:995 | if (!WriteFileAtomic(m_directory / "replay.cur", pointer)) { || +1 return false;
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1028 | void Push(Slot slot) { || +1 if (m_stop.load(std::memory_order_acquire)) {
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1067 | const bool stopping = m_stop.load(std::memory_order_acquire); || +1 Drain();
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:97 | // (window.cpp, WindowPrepareShaders) returns and the shutdown path stores m_precache_stop. || +1 SDL_Event event {};
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1161 | if (TestStand() == Stand::Addr && !m_addr_stand_done) { || +1 // KYTY_S_REPLAY_TEST=addr (member K3, RC7): this one record keeps the values as read - th
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/shaderReplay.h:41 | constexpr uint32_t FormatVersion      = 1; || +1 constexpr uint32_t StaticKeyVersion   = 1;
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1934 | if (mode == 0) { || +1 if (applied_mode != 0) {
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7033 | if (mode == 0) { || +1 return;
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4858 | m_precache_stop.store(true); || +1 if (m_precache_thread.joinable()) {
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6861 | ReplayCapturePipe(1, vs_program.id, key.ps_shader_id, &key); // S17a || +1 }
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6946 | ReplayCapturePipe(2, program.id, 0, nullptr); // S17a || +1 }
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7567 | std::string manifest = fmt::format("# ShaderReplay rebuild manifest; signature {}", cache.Signature()); || +1 for (const auto& [id, s]: sources) {
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7390 | if (m_precache_stop.load()) { || +1 break;
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7333 | if (SR::TestStand() == SR::Stand::Spec && !spec_stand_done) { || +1 // KYTY_S_REPLAY_TEST=spec (member K4): this one permutation is emitted from a changed spe
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3807 | if (memo_entry->permutation->replay_flags != 0) [[unlikely]] { || +1 ReplayOnHit(entry->first, entry->second, *memo_entry->permutation, params, runtime); // S1
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3926 | if (permutation->replay_flags != 0) [[unlikely]] { || +1 ReplayOnHit(entry->first, entry->second, *permutation, params, runtime); // S17a
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4047 | if (replay_active) [[unlikely]] { || +1 // Track S, S17a: a new permutation is captured at once (and its source, the first time th
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7322 | if (p.specialization == specialization && || +1 layout.push_data_start_dword == PushData::StartFor(cursor, layout.ShaderDataDwords())) {
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7086 | void PipelineCache::ReplayCapturePipe(uint32_t kind, uint64_t first_id, uint64_t second_id, || +1 const GraphicsPipelineKey* key) {
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4845 | ReplayInit(); // track S, S17a: returns at once at KYTY_S_REPLAY=0 || +1 InitializeDriverCache();
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5058 | ReplayStop(); // track S, S17a: nothing at KYTY_S_REPLAY=0 || +1 PcwStop();
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6703 | if (m_replay_catalogue != nullptr) [[unlikely]] { || +1 // Track S, S17a (S16a section 3 item 2): rebuild when the catalogue is compatible and the
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6253 | if (m_replay_capture != nullptr) [[unlikely]] { || +1 ReplayCapturePipe(1, key.vertex_shader_ids[0], ps_active ? key.ps_shader_id : 0, &key); //
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6285 | if (m_replay_capture != nullptr) [[unlikely]] { || +1 ReplayCapturePipe(2, program_id, 0, nullptr); // S17a
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6860 | if (m_replay_capture != nullptr) [[unlikely]] { || +1 ReplayCapturePipe(1, vs_program.id, key.ps_shader_id, &key); // S17a
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6945 | if (m_replay_capture != nullptr) [[unlikely]] { || +1 ReplayCapturePipe(2, program.id, 0, nullptr); // S17a
+283a6ef9:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4787 | const bool ok = ShaderRecompiler::IR::MaterializeResources(source.resource_plan, recorder.Runtime(), snapshot, || +1 item->live);
+283a6ef9:src/emulator.cpp:188 | if (!Libs::Graphics::WindowPrepareShaders()) { || +1 std::quick_exit(0);
+283a6ef9:src/common/platform/sysWindowsFileIO.cpp:577 | return MoveFileW(src_wide.c_str(), dst_wide.c_str()) != 0; || +1 }
+283a6ef9:src/graphics/shader/shaderBindings.h:127 | [[nodiscard]] uint64_t MetaAddr() const { || +1 return ((fields[6] >> 24u) & 0xFFu) | (static_cast<uint64_t>(fields[7]) << 8u);
+283a6ef9:src/graphics/shader/shaderBindings.h:98 | [[nodiscard]] uint64_t Base40() const { || +1 return ((fields[0] | (static_cast<uint64_t>(fields[1]) << 32u)) & 0xFFFFFFFFFFu) << 8u;
+283a6ef9:src/graphics/shader/shaderBindings.h:66 | [[nodiscard]] uint64_t Base48() const { || +1 return (fields[0] | (static_cast<uint64_t>(fields[1]) << 32u)) & 0xFFFFFFFFFFFFu;
+283a6ef9:src/libs/agc.h:29 | static constexpr auto        shutdown   = Libs::Graphics::Shutdown; || +1 };
+283a6ef9:src/graphics/shader/recompiler/ShaderRecompiler.cpp:641 | static_cast<uint32_t>(options.user_data.size()), wave_size); || +1 if (!embedded_fetch.loads.empty()) {
+283a6ef9:docs/track-s/s17a/r_addr.py:5 | T_META6, T_META7, INERT) and whose value is not in the canonical form of that role (shaderReplay.h, Role; the  || +1 as ShaderReplay::WordCanonical). R-SRC and R-PIPE carry no address field by construction (

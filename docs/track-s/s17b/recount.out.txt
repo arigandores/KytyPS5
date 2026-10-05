@@ -1,0 +1,13 @@
+exe parent C:/kyty/s288/s17a/buildP/shader_cfg_tests.exe 32c50dc48f8de10fe8a97f0781e77ad1042c701a71c161ae9c11b3a0e81b46b7 expected
+exe s17a C:/kyty/s288/s17a/buildS/shader_cfg_tests.exe 56405997c1c0601633a280ead0a0408f2ef26296f8a9cf3e4bcf8e95e96810ee expected
+rows 269
+processes 1345 rc!=0 or no spv 0 []
+arm S rows differing from parent 0 []
+arm S0 rows differing from parent 0 []
+arm S1 rows differing from parent 0 []
+ShaderReplay text in output 0 []
+power control: parent KYTY_FIX_F19=0 rows differing from parent 0 []
+recount.tsv sha256 e70b8be6ae5defa599c816ca3a74bbaa1e0da81e4543aa154307b167000def02
+wall 48.5 s
+ALL OK
+rc=0

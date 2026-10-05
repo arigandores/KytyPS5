@@ -1,0 +1,15 @@
+pediff3: differing bytes 1624 {'(3) header/debug stamp+GUID': 12, '(1) build dir name': 139, '(2) anon-namespace tag': 1268} OTHER 205 {'.rdata': 9, '.data': 196}
+pediff3 OTHER bytes 205 by section {'.rdata': 9, '.data': 196}
+  reclassified (2b) anon-namespace string section .data bytes 196
+.text differing bytes (never reclassified): 0
+left OTHER 9 {'.rdata': 9}
+  0x0118d481 .rdata a=38 b=39 ctx_a=b'5-2026-09-15-6a2987a-1888-g0f78a' ctx_b=b'5-2026-09-15-6a2987a-1889-g30234'
+  0x0118d484 .rdata a=30 b=33 ctx_a=b'026-09-15-6a2987a-1888-g0f78a522' ctx_b=b'026-09-15-6a2987a-1889-g302347b4'
+  0x0118d485 .rdata a=66 b=30 ctx_a=b'26-09-15-6a2987a-1888-g0f78a522\x00' ctx_b=b'26-09-15-6a2987a-1889-g302347b4\x00'
+  0x0118d486 .rdata a=37 b=32 ctx_a=b'6-09-15-6a2987a-1888-g0f78a522\x00\x00' ctx_b=b'6-09-15-6a2987a-1889-g302347b4\x00\x00'
+  0x0118d487 .rdata a=38 b=33 ctx_a=b'-09-15-6a2987a-1888-g0f78a522\x00\x00\x00' ctx_b=b'-09-15-6a2987a-1889-g302347b4\x00\x00\x00'
+  0x0118d488 .rdata a=61 b=34 ctx_a=b'09-15-6a2987a-1888-g0f78a522\x00\x00\x00\x00' ctx_b=b'09-15-6a2987a-1889-g302347b4\x00\x00\x00\x00'
+  0x0118d489 .rdata a=35 b=37 ctx_a=b'9-15-6a2987a-1888-g0f78a522\x00\x00\x00\x00\x00' ctx_b=b'9-15-6a2987a-1889-g302347b4\x00\x00\x00\x00\x00'
+  0x0118d48a .rdata a=32 b=62 ctx_a=b'-15-6a2987a-1888-g0f78a522\x00\x00\x00\x00\x00\x00' ctx_b=b'-15-6a2987a-1889-g302347b4\x00\x00\x00\x00\x00\x00'
+  0x0118d48b .rdata a=32 b=34 ctx_a=b'15-6a2987a-1888-g0f78a522\x00\x00\x00\x00\x00\x00\x00' ctx_b=b'15-6a2987a-1889-g302347b4\x00\x00\x00\x00\x00\x00\x00'
+VERDICT UNEXPLAINED

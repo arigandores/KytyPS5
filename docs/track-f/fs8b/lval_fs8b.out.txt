@@ -1,0 +1,11 @@
+value=None     effective=1 expected=1 gate=ALL OK rc=0 OK
+value=''       effective=1 expected=1 gate=ALL OK rc=0 OK
+value='0'      effective=0 expected=0 gate=ALL OK rc=0 OK
+value='false'  effective=0 expected=0 gate=ALL OK rc=0 OK
+value='OFF'    effective=0 expected=0 gate=ALL OK rc=0 OK
+value='no'     effective=0 expected=0 gate=ALL OK rc=0 OK
+value='1'      effective=1 expected=1 gate=ALL OK rc=0 OK
+value='2'      effective=1 expected=1 gate=ALL OK rc=0 OK
+value='true'   effective=1 expected=1 gate=ALL OK rc=0 OK
+value=' 0'     effective=1 expected=1 gate=ALL OK rc=0 OK
+LVALUES ALL OK

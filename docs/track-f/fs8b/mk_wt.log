@@ -1,0 +1,32 @@
+watch: start 2026-10-05T05:40:11Z child 16912 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 302347b4)
+Updating files:  99% (4243/4268)Updating files: 100% (4268/4268)Updating files: 100% (4268/4268), done.
+HEAD is now at 302347b4 track F link FS8a (HPP-571): shader_cfg_tests read KYTY_FIX_F19 through FixF19Enabled() (ROADMAP s122 item 471(g)(1)(v))
+--- worktree HEAD
+302347b4f54025d48d8487cecdacb2a308c8d71a track F link FS8a (HPP-571): shader_cfg_tests read KYTY_FIX_F19 through FixF19E
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+302347b4f54025d48d8487cecdacb2a308c8d71a 0f78a522fe4844fabe51293a1c36baf4969ef2a2 track F link FS8a (HPP-571): shader_cfg_tests read KYTY_FIX_F19 through FixF19
+0f78a522fe4844fabe51293a1c36baf4969ef2a2 7a83c4e37ba24b44a3c25bf6dc31e3dc936dff20 track F link FS8a (HPP-571): KYTY_FIX_F19 default 0 -> 1 (ROADMAP s122 items 4
+7a83c4e37ba24b44a3c25bf6dc31e3dc936dff20 3b39efd16cb8b6e230d83a455450d3b911be8dc1 track F link F14e2 (HPP-545): RC1 and RC3 of the F14f review (ROADMAP s122 ite
+3b39efd16cb8b6e230d83a455450d3b911be8dc1 c85969f87d4c05dc5ee8794127ced83a622ca7f6 tests part of ff953d4f (S14j) for a clean pick of f98e842c, ROADMAP p.523(b)
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 456 with CR 0
+WT OK
+rc=0 end 2026-10-05T05:40:20Z

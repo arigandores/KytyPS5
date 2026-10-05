@@ -1,0 +1,10 @@
+48135b8f0156bb7937f99a948c4fc6f7f744919424718237054fd4f31ade9345 *build/install/kyty_emulator.exe
+48135b8f0156bb7937f99a948c4fc6f7f744919424718237054fd4f31ade9345 *build/kyty_emulator.exe
+2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b *C:/kyty/f287/bin/kyty_emulator_2c9b69b9.exe
+9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2 *C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe
+#define KYTY_GIT_VERSION "KytyPS5-2026-09-15-6a2987a-1889-g302347b4"
+#define KYTY_GIT_REVISION "302347b4f54025d48d8487cecdacb2a308c8d71a"
+#define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"
+kytyGitVersion.h == fs8a
+46dc9158d9dc2a67a8ad881ff9dbba6c92bcd21f5fea991a806a7150dbdcc3b1 *fix/kyty_emulator_neg_7a83c4e3.exe
+#define KYTY_SHADER_SOURCE_HASH "a54ae4bd03a673fe35ae89bad218132257b11383"

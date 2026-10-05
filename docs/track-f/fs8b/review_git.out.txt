@@ -1,0 +1,129 @@
+== worktree
+HEAD 302347b4f54025d48d8487cecdacb2a308c8d71a
+wt status --short empty                                      OK ''
+log 302347b4 track F link FS8a (HPP-571): shader_cfg_tests read KYTY_FIX_F19 through FixF19Enabled() (ROADMAP s122 item 471(g)(1)(v))
+    0f78a522 track F link FS8a (HPP-571): KYTY_FIX_F19 default 0 -> 1 (ROADMAP s122 items 471(g)(1), 522(d))
+    7a83c4e3 track F link F14e2 (HPP-545): RC1 and RC3 of the F14f review (ROADMAP s122 item 443(b)) - imageInfo.h in the translation signature, null T# comparison probes
+    3b39efd1 tests part of ff953d4f (S14j) for a clean pick of f98e842c, ROADMAP p.523(b)
+    c85969f8 track F link F14e (HPP-505): KYTY_FIX_F19 (default 0) - native depth comparison for every format of DEPTH_FORMAT_POLICIES, indirect tables manual as a whole (ROADMAP s122 items 409(v), 415(b)-(v), row F19)
+    05896234 tests: B11 fix - IMAGE_SAMPLE_C/_LZ probes with k32Float, manual-path probes with k8UNorm (track F, F14c HPP-489, ROADMAP p.400(b))
+== (e')(1) names d6ee2dc8..HEAD
+    CMakeLists.txt
+    src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+    src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+    src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h
+    tests/ShaderRecompilerComputeTests.cpp
+    tests/shaderCfgTests.cpp
+(e')(1) exactly 6 paths, docs 0                              OK 
+== commits and their files
+  fcaf141b tests: B11 fix - IMAGE_SAMPLE_C/_LZ probes with k32Float, manual-path probes with k8UNorm 
+      tests/shaderCfgTests.cpp
+  082d1612 track F link F14e (HPP-505): KYTY_FIX_F19 (default 0) - native depth comparison for every 
+      src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+      src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+      src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h
+      tests/ShaderRecompilerComputeTests.cpp
+      tests/shaderCfgTests.cpp
+  ff953d4f track S link S14j (HPP-533): offline spec dump of the translation cache - shader_cfg_tests
+      docs/track-s/s14j.md
+      docs/track-s/s14j/SHA256SUMS.txt
+      docs/track-s/s14j/fx_watch.out.txt
+      docs/track-s/s14j/fx_watch_s14j.py
+      docs/track-s/s14j/patch_s14j_tests.py
+      docs/track-s/s14j/specdump_snap0.summary.txt
+      docs/track-s/s14j/summary_s14j.py
+      docs/track-s/s14j/verify_snap0.py
+      docs/track-s/s14j/watch_s14j.py
+      docs/track-s/s14j/xcheck_s10.out.txt
+      docs/track-s/s14j/xcheck_s142.out.txt
+      docs/track-s/s14j/xcheck_s14j.py
+      tests/shaderCfgTests.cpp
+  f98e842c track F link F14e2 (HPP-545): RC1 and RC3 of the F14f review (ROADMAP s122 item 443(b)) - 
+      CMakeLists.txt
+      tests/shaderCfgTests.cpp
+  e46f55d4 track F link FS8a (HPP-571): KYTY_FIX_F19 default 0 -> 1 (ROADMAP s122 items 471(g)(1), 52
+      src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+      src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+      src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h
+  7719d0f2 track F link FS8a (HPP-571): shader_cfg_tests read KYTY_FIX_F19 through FixF19Enabled() (R
+      tests/shaderCfgTests.cpp
+src+CMake paths == union of 082d1612,f98e842c,e46f55d4 (non-test) OK ['CMakeLists.txt', 'src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp', 'src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp', 'src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h']
+== own chain in a temporary index from d6ee2dc8
+  apply fcaf141b  rc=0 Applied patch to 'tests/shaderCfgTests.cpp' cleanly.
+  apply 082d1612  rc=0 Applied patch to 'src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp' cleanly. | Applied patch to 'src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp' cleanly. | Applied patch to 'src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h' cleanly. | Applied patch
+  apply ff953d4f ['tests/shaderCfgTests.cpp'] rc=0 Applied patch to 'tests/shaderCfgTests.cpp' cleanly.
+  apply f98e842c  rc=0 Applied patch to 'CMakeLists.txt' cleanly. | Applied patch to 'tests/shaderCfgTests.cpp' cleanly.
+  apply e46f55d4  rc=0 Applied patch to 'src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp' cleanly. | Applied patch to 'src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp' cleanly. | Applied patch to 'src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h' cleanly.
+  apply 7719d0f2  rc=0 Applied patch to 'tests/shaderCfgTests.cpp' cleanly.
+  own tree 0b2efcb6d9fa4f6e948e0bafe7e530f7a443f564 HEAD tree 0b2efcb6d9fa4f6e948e0bafe7e530f7a443f564 own tree before 7719d0f2 15f28954c3a8baddfb1252dc6208ccbfb169d535
+own chain applies without conflicts                          OK 
+own chain tree == HEAD^{tree}                                OK 
+  0f78a522^{tree} 15f28954c3a8baddfb1252dc6208ccbfb169d535
+own tree before 7719d0f2 == 0f78a522^{tree}                  OK 
+== (e')(2) src+CMake diff vs 5e78640e
+  sha256 d6ee..HEAD 02169c8f739bae448d410b59a2da51e5c323917a9f3ec9927d4a409a7694eb74
+  sha256 d6ee..5e78 02169c8f739bae448d410b59a2da51e5c323917a9f3ec9927d4a409a7694eb74
+(e')(2) equal                                                OK 
+  apply 082d1612 ['src', 'CMakeLists.txt'] rc=0 Applied patch to 'src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp' cleanly. | Applied patch to 'src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp' cleanly. | Applied patch to 'src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h' cleanly.
+  apply f98e842c ['src', 'CMakeLists.txt'] rc=0 Applied patch to 'CMakeLists.txt' cleanly.
+  apply e46f55d4 ['src', 'CMakeLists.txt'] rc=0 Applied patch to 'src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp' cleanly. | Applied patch to 'src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp' cleanly. | Applied patch to 'src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h' cleanly.
+src+CMake of HEAD == base + src/CMake parts of 082d1612,f98e842c,e46f55d4 only OK 02169c8f739bae44
+== (e')(3)'' names 5e78640e..HEAD and patch-id
+  paths 13 non s14j: ['tests/shaderCfgTests.cpp']
+(e')(3)'' only docs/track-s/s14j* and tests/shaderCfgTests.cpp OK 
+  patch-id 5e78..HEAD tests/shaderCfgTests.cpp 8824e122111373611b8c87acfee78f3669962043
+  patch-id 7719d0f2                          8824e122111373611b8c87acfee78f3669962043
+patch-id equal                                               OK 
+== 523(d) added lines of tests/shaderCfgTests.cpp vs base
+  added lines 980 removed 3 not from the 5 commits: 0
+added lines of tests/shaderCfgTests.cpp all from fcaf141b,082d1612,ff953d4f,f98e842c,7719d0f2 OK 
+removed lines all removed by one of the 5 commits            OK 0
+tests/ShaderRecompilerComputeTests.cpp added lines from 082d1612/f98e842c OK 279
+== contains (p.380(b)): git cherry HEAD X X^
+  082d1612 ancestor=False cherry=- 082d161214c525cc6b3a614d915733707f8eb460
+contains 082d1612                                            OK 
+  f98e842c ancestor=False cherry=- f98e842ca322198e16d0d8faa38c736116ccc385
+contains f98e842c                                            OK 
+  e46f55d4 ancestor=False cherry=- e46f55d4f3019ca72b293017d6d7034fdd7a60fe
+contains e46f55d4                                            OK 
+  10a4800b ancestor=False cherry=- 10a4800b36fba6e7df95fcdf74aeeb3041b57fe5
+contains 10a4800b                                            OK 
+  ec6c4c83 ancestor=False cherry=- ec6c4c83d9cf89c996ee2c951c6e3e0a43ada4e7
+contains ec6c4c83                                            OK 
+  9c726d74 ancestor=False cherry=- 9c726d74fc688c2aed4c0a1337c471ce42bb372a
+contains 9c726d74                                            OK 
+  919c1a19 ancestor=False cherry=- 919c1a19f978263cc6854879842fb8a41b9cc116
+contains 919c1a19                                            OK 
+  fcaf141b ancestor=False cherry=- fcaf141b6f8d5c78b3d009bcab4c807c731921e0
+contains fcaf141b                                            OK 
+  7719d0f2 ancestor=False cherry=- 7719d0f2aafc7dc876032a481657d4a5f3dad8c3
+contains 7719d0f2                                            OK 
+  a86a5ad0 ancestor=False cherry=- a86a5ad0d1a0828e60d658c427c7a22ff0a0de8e
+contains a86a5ad0                                            OK 
+  17eb924e ancestor=False cherry=- 17eb924e3ff5e641a23df0f5d796ec522e8fd3ea
+contains 17eb924e                                            OK 
+  c1732d1a ancestor=False cherry=- c1732d1a7f0e7cd2836ff6c767648f71becb7cfb
+contains c1732d1a                                            OK 
+  c3eb8fe8 ancestor=False cherry=- c3eb8fe83bf67c66d8b391cffe47f9639f04b39e
+contains c3eb8fe8                                            OK 
+  1833ee28 ancestor=False cherry=- 1833ee280ec177b65feb6c4a97f626b0d4ce1b9f
+contains 1833ee28                                            OK 
+  68602c4f ancestor=False cherry=- 68602c4f301e8d424af0581d11039437ec4a958f
+contains 68602c4f                                            OK 
+  17adaf80 ancestor=False cherry=- 17adaf801069088b68275276c96574b7f8bf5dc3
+contains 17adaf80                                            OK 
+  4e72289e ancestor=False cherry=- 4e72289e879b6a8375eada8fb0359037388e5d8c
+contains 4e72289e                                            OK 
+  (not expected) ff953d4f ancestor=False cherry=+ ff953d4fb932ce8e78e07ea8132eff774cda4e9b
+  (not expected) 741e3312 ancestor=False cherry=+ 741e3312ab005ece2587cec0410ba7607116aa76
+  (not expected) c9b4268e ancestor=False cherry=+ c9b4268e0b47625ff4ec556057b4c0267601ddd0
+  (not expected) 381aa80a ancestor=False cherry=+ 381aa80a6876241309da0005352116135aba22a9
+  (not expected) 365cc3c2 ancestor=False cherry=+ 365cc3c25f75dfdd5d8b365b9c39f84921fc013d
+ancestor d6ee2dc8                                            OK 
+ancestor 3904522d                                            OK 
+ancestor 4d9e8ab7                                            OK 
+ancestor 0e72bc19                                            OK 
+ancestor 3d0e46da                                            OK 
+ancestor 4414e235                                            OK 
+ancestor d515b901                                            OK 
+ALL OK

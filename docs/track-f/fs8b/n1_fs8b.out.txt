@@ -1,0 +1,5 @@
+exists=True ${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+exists=True ${KYTY_SOURCE_DIR}/graphics/guest_gpu/gpu_format.h
+exists=True ${KYTY_SOURCE_DIR}/graphics/guest_gpu/gpu_defs.h
+exists=True ${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/image/imageInfo.h
+N1 files 4 ALL OK

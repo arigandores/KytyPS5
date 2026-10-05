@@ -1,0 +1,153 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 78fe9111..c3fb8325 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -153,7 +153,7 @@ add_custom_target(KytyGitVersion
+ 		-D GIT_EXECUTABLE=${GIT_EXECUTABLE}
+ 		-D GIT_WORKING_DIRECTORY=${CMAKE_CURRENT_SOURCE_DIR}
+ 		-D SHADER_SOURCE_DIR=${KYTY_SOURCE_DIR}/graphics/shader
+-		-D SHADER_CACHE_EXTRA_FILES=${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp$<SEMICOLON>${KYTY_SOURCE_DIR}/graphics/guest_gpu/gpu_format.h$<SEMICOLON>${KYTY_SOURCE_DIR}/graphics/guest_gpu/gpu_defs.h
++		-D SHADER_CACHE_EXTRA_FILES=${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp$<SEMICOLON>${KYTY_SOURCE_DIR}/graphics/guest_gpu/gpu_format.h$<SEMICOLON>${KYTY_SOURCE_DIR}/graphics/guest_gpu/gpu_defs.h$<SEMICOLON>${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/image/imageInfo.h
+ 		-P ${KYTY_SOURCE_DIR}/generate_version.cmake
+ 	BYPRODUCTS ${PROJECT_BINARY_DIR}/kytyGitVersion.h
+ 	COMMENT "Generate kytyGitVersion.h"
+diff --git a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+index 36ea97fe..b18bdbb0 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+@@ -6,6 +6,7 @@
+ #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
+ #include "graphics/shader/recompiler/frontend/decode/ShaderDecoder.h"
+ #include "graphics/shader/recompiler/ir/Value.h"
++#include "graphics/shader/recompiler/ir/passes/ResourceMaterialization.h"
+ #include "kytyGitVersion.h"
+ 
+ #include <algorithm>
+@@ -577,11 +578,14 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
+ 	// with KYTY_FIX_B26 the four combinations get four distinct signatures and directories.
+ 	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 (the default since FS5a, p.410(g)(1)) adds ":fixf10" last, so
+ 	// =0 and =1 never share a signature or a directory.
++	// Track F, F14e (ROADMAP s122 item 409(v)): KYTY_FIX_F19=1 (the default since FS8a, p.471(g)(1)) adds ":fixf19" after
++	// ":fixf10", last.
+ 	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
+ 	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "") +
+ 	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "") +
+ 	                            (ShaderRecompiler::Decoder::FixB1BEnabled() ? ":fixb1b" : "") +
+-	                            (ShaderRecompiler::Decoder::FixF10Enabled() ? ":fixf10" : "");
++	                            (ShaderRecompiler::Decoder::FixF10Enabled() ? ":fixf10" : "") +
++	                            (ShaderRecompiler::IR::FixF19Enabled() ? ":fixf19" : "");
+ 	if (!variant.empty()) {
+ 		std::string folder = "variant" + variant;
+ 		std::replace(folder.begin(), folder.end(), ':', '_');
+diff --git a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+index ae10fbe5..aad97f8b 100644
+--- a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
++++ b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+@@ -3,7 +3,9 @@
+ #include "common/frameStats.h"
+ 
+ #include "common/assert.h"
++#include "common/envFlag.h"
+ #include "graphics/guest_gpu/gpu_format.h"
++#include "graphics/host_gpu/renderer/image/imageInfo.h"
+ #include "graphics/shader/recompiler/ir/ShaderIR.h"
+ #include "graphics/shader/shaderBindings.h"
+ 
+@@ -28,6 +30,38 @@ bool VectorConstStaticAlignmentClass() {
+ 	return enabled;
+ }
+ 
++// Track F, F14e (ROADMAP s122 items 409(v), 415(b)-(v)): see ResourceMaterialization.h.
++bool FixF19Enabled() {
++	// Track F, FS8a (HPP-571, ROADMAP s122 item 471(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
++	// other value as EnvValueOn (the form of FS4a 17adaf80).
++	static const bool enabled = [] {
++		const char* value = std::getenv("KYTY_FIX_F19");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
++	return enabled;
++}
++
++bool FixF19ManualDepthCompare(Prospero::BufferFormat format, bool null_descriptor) {
++	return !null_descriptor && FindGuestDepthFormatPolicy(format) == nullptr;
++}
++
++void FixF19MergeIndirectTables(std::vector<ResourceSpecialization::Image>& images) {
++	for (uint32_t root = 0; root < images.size(); root++) {
++		if (images[root].indirect_root != root) {
++			continue;
++		}
++		bool manual = false;
++		for (const auto& image: images) {
++			manual = manual || (image.indirect_root == root && image.manual_depth_compare);
++		}
++		for (auto& image: images) {
++			if (image.indirect_root == root) {
++				image.manual_depth_compare = manual;
++			}
++		}
++	}
++}
++
+ // KYTY_CBANK_COPY (default 1): const-bank V#s are specialized as 16-byte aligned regardless of
+ // their base; the host copies a misaligned range into the stream ring at draw time.
+ bool ConstBankAlignedCopy() {
+@@ -567,8 +601,15 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
+ 			// The renderer resolves non-null R32F comparison textures as native D32.
+ 			// Other color formats require shader comparison, irrespective of byte size.
+ 			// Null native-comparison descriptors use a D32 placeholder at binding time.
+-			image.manual_depth_compare = !NullImageDescriptor(descriptor) &&
+-			                             format != Prospero::BufferFormat::k32Float;
++			if (FixF19Enabled()) {
++				// Track F, F14e (ROADMAP s122 item 409(v)): native for every format the renderer views as
++				// depth (k16UNorm joins k32Float), shader comparison for the rest.
++				image.manual_depth_compare =
++				    FixF19ManualDepthCompare(format, NullImageDescriptor(descriptor));
++			} else {
++				image.manual_depth_compare = !NullImageDescriptor(descriptor) &&
++				                             format != Prospero::BufferFormat::k32Float;
++			}
+ 		}
+ 		if (NullImageDescriptor(descriptor)) {
+ 			image.numeric_class = base.atomic ? Prospero::TextureNumericClass::Uint
+@@ -685,6 +726,12 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
+ 			}
+ 		}
+ 	}
++	if (FixF19Enabled()) {
++		// Track F, F14e (ROADMAP s122 item 415(b), variant O1): an indirect table with a shader-compared
++		// member is shader-compared as a whole; the shared-sampler pass of ApplyResourceSpecialization
++		// then runs as before.
++		FixF19MergeIndirectTables(next_specialization.images);
++	}
+ 	SamplerPlan sampler_plan;
+ 	if (!BuildSamplerPlan(program.info, next_specialization.images, sampler_plan)) {
+ 		return SpecializationFail("specialized sampler layout exceeds its resource limit");
+diff --git a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h
+index 033e88e0..1ac6ff09 100644
+--- a/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h
++++ b/src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h
+@@ -43,6 +43,23 @@ struct ResourceSpecialization {
+ 	bool operator==(const ResourceSpecialization&) const = default;
+ };
+ 
++// Track F, F14e (HPP-505, ROADMAP s122 items 409(v), 415(b)-(v)): KYTY_FIX_F19, default ON since FS8a (HPP-571, item
++// 471(g)(1): unset or "" = ON; 0, false, off, no = off; any other value as Common::EnvValueOn; F14e had default OFF),
++// read once per process. On: MaterializeResources puts a
++// comparison image on the shader (manual) comparison path only by FixF19ManualDepthCompare, and an indirect image
++// table is manual as a whole when that rule makes any of its members manual (FixF19MergeIndirectTables). Off: the
++// rule before the fix, verbatim. The translation cache keys the value in its signature and directory
++// (shaderTranslationCache.cpp).
++bool FixF19Enabled();
++// The =1 rule: a comparison image is compared in the shader unless its T# is null or the renderer gives its guest
++// format a depth view - the formats of DEPTH_FORMAT_POLICIES (imageInfo.h), the table descriptors.cpp resolves the
++// host view of a comparison texture by (k16UNorm -> D16_UNORM, k32Float -> D32_SFLOAT).
++bool FixF19ManualDepthCompare(Prospero::BufferFormat format, bool null_descriptor);
++// The =1 indirect-table branch (variant O1 of item 415(b)): one opcode samples every member of an indirect image
++// table (the root decides it), so for every table (root and candidates, indirect_root) the manual_depth_compare
++// flag of all members becomes the "or" of their flags.
++void FixF19MergeIndirectTables(std::vector<ResourceSpecialization::Image>& images);
++
+ // Extracts the descriptor/SRT value graph before resource specialization. The returned plan owns
+ // its values and is independent of the translated shader CFG.
+ ResourcePlan ExtractResourcePlan(const Program& program);

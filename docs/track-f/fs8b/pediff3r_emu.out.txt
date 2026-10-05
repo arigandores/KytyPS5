@@ -1,0 +1,8 @@
+pediff3: differing bytes 1624 {'(3) header/debug stamp+GUID': 12, '(1) build dir name': 139, '(2) anon-namespace tag': 1268} OTHER 205 {'.rdata': 9, '.data': 196}
+pediff3 OTHER bytes 205
+  reclassified (2b) anon-namespace string .data bytes 196
+  reclassified (2c) SDL_REVISION .rdata bytes 9
+  SDL_REVISION at 0x0118d45f: A SDL-KytyPS5-2026-09-15-6a2987a-1888-g0f78a522 | B SDL-KytyPS5-2026-09-15-6a2987a-1889-g302347b4
+.text differing bytes (never reclassified): 0
+left OTHER 0 {}
+VERDICT EXPLAINED

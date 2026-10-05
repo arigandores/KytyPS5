@@ -1,0 +1,17 @@
+watch: start 2026-10-05T06:00:21Z child 40708 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+fu rc=0 wall=0.3 s exe=0409ffaa KYTY_FIX_F19=unset
+f0 rc=0 wall=0.5 s exe=0409ffaa KYTY_FIX_F19=0
+f1 rc=0 wall=0.3 s exe=0409ffaa KYTY_FIX_F19=1
+fu: rc 0, tests 130, failed lines 0 [], spv 180
+f0: rc 0, tests 130, failed lines 0 [], spv 180
+f1: rc 0, tests 130, failed lines 0 [], spv 180
+(v1) fu: failed lines 0, rc 0: True
+(v1) f0: failed lines 0, rc 0: True
+(v1) f1: failed lines 0, rc 0: True
+(v1) test count equal in the three runs [130]: True
+(v2) fu spv 180, f1 spv 180, same names True, differing 6 109.spv 110.spv 112.spv 113.spv 177.spv 179.spv
+(v2) aggregate sha256 of the fu set (name sha lines): 358e9200605aa436b7402baf0c5c8b16fde118217021fad745794b901cc9230e
+(v3) information: f0 spv 180, differing from fu 0 
+exe C:/kyty/f287/fs8n/build/shader_cfg_tests.exe 0409ffaaad8fe3355b5061da34ecab307da1f69802c8b2de4308cabcbaf2efdb
+FAILED
+rc=1 end 2026-10-05T06:00:22Z

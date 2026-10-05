@@ -1,0 +1,14 @@
+watch: start 2026-10-05T05:58:59Z child 29740 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[host]    LeastRecentlyUsedCache           ok
+ShaderRecompilerComputeTests: ComparisonDepthTexture failed at SPIR-V disassembly: missing required text: OpImageSampleDrefExplicitLod
+
+--- abort() ---
+abort() was called: std::terminate on a thread without a report, or an explicit abort
+
+--- abort() ---
+abort() was called: std::terminate on a thread without a report, or an explicit abort
+--- Build ---
+Fork build arigandores/KytyPS5 302347b
+--- abort() ---
+SIGABRT in abort:0
+rc=3221226505 end 2026-10-05T05:59:00Z

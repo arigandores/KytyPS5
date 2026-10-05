@@ -1,0 +1,2 @@
+b9e0ee0092ca1504979ebd674abb21c8d67015fd030bc33615eb2c87acb90f91 *C:/kyty/f287/bin/kyty_emulator_b9e0ee00.exe
+b9e0ee0092ca1504979ebd674abb21c8d67015fd030bc33615eb2c87acb90f91 *build/install/kyty_emulator.exe

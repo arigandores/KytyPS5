@@ -1,0 +1,32 @@
+watch: start 2026-10-05T17:40:17Z child 57452 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 0df13a66)
+Updating files:  42% (1807/4271)Updating files:  43% (1837/4271)Updating files:  44% (1880/4271)Updating files:  45% (1922/4271)Updating files:  46% (1965/4271)Updating files:  47% (2008/4271)Updating files:  48% (2051/4271)Updating files:  49% (2093/4271)Updating files:  50% (2136/4271)Updating files:  51% (2179/4271)Updating files:  52% (2221/4271)Updating files:  53% (2264/4271)Updating files:  54% (2307/4271)Updating files:  55% (2350/4271)Updating files:  56% (2392/4271)Updating files:  57% (2435/4271)Updating files:  58% (2478/4271)Updating files:  59% (2520/4271)Updating files:  60% (2563/4271)Updating files:  61% (2606/4271)Updating files:  62% (2649/4271)Updating files:  63% (2691/4271)Updating files:  64% (2734/4271)Updating files:  65% (2777/4271)Updating files:  66% (2819/4271)Updating files:  67% (2862/4271)Updating files:  68% (2905/4271)Updating files:  69% (2947/4271)Updating files:  70% (2990/4271)Updating files:  71% (3033/4271)Updating files:  72% (3076/4271)Updating files:  73% (3118/4271)Updating files:  74% (3161/4271)Updating files:  75% (3204/4271)Updating files:  76% (3246/4271)Updating files:  77% (3289/4271)Updating files:  78% (3332/4271)Updating files:  79% (3375/4271)Updating files:  80% (3417/4271)Updating files:  81% (3460/4271)Updating files:  82% (3503/4271)Updating files:  83% (3545/4271)Updating files:  84% (3588/4271)Updating files:  85% (3631/4271)Updating files:  86% (3674/4271)Updating files:  87% (3716/4271)Updating files:  88% (3759/4271)Updating files:  89% (3802/4271)Updating files:  90% (3844/4271)Updating files:  91% (3887/4271)Updating files:  91% (3918/4271)Updating files:  92% (3930/4271)Updating files:  93% (3973/4271)Updating files:  94% (4015/4271)Updating files:  95% (4058/4271)Updating files:  96% (4101/4271)Updating files:  97% (4143/4271)Updating files:  98% (4186/4271)Updating files:  99% (4229/4271)Updating files: 100% (4271/4271)Updating files: 100% (4271/4271), done.
+HEAD is now at 0df13a66 track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32=0 a site's End is one test of the stack object's flag, no call (ROADMAP s122 item 550(z)(1))
+--- worktree HEAD
+0df13a665a68434fd3b8bca2849d2b41c34b561a track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32=
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+0df13a665a68434fd3b8bca2849d2b41c34b561a 875720c5f9763031515311f2c0fc5b76a2c91180 track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32
+875720c5f9763031515311f2c0fc5b76a2c91180 302347b4f54025d48d8487cecdacb2a308c8d71a track F link F20j (HPP-629): KYTY_DIAG_B32 (default 0, measurement only) and t
+302347b4f54025d48d8487cecdacb2a308c8d71a 0f78a522fe4844fabe51293a1c36baf4969ef2a2 track F link FS8a (HPP-571): shader_cfg_tests read KYTY_FIX_F19 through FixF19
+0f78a522fe4844fabe51293a1c36baf4969ef2a2 7a83c4e37ba24b44a3c25bf6dc31e3dc936dff20 track F link FS8a (HPP-571): KYTY_FIX_F19 default 0 -> 1 (ROADMAP s122 items 4
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 458 with CR 0
+WT OK
+rc=0 end 2026-10-05T17:40:35Z

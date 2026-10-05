@@ -1,0 +1,17 @@
+61b410bf:src/graphics/host_gpu/renderer/commandScheduler.cpp:129	if (Common::DiagB32::g_on) [[unlikely]] {	Common::DiagB32::RegisterRole("ASubmit");
+61b410bf:src/graphics/host_gpu/renderer/commandScheduler.cpp:130	Common::DiagB32::RegisterRole("ASubmit");	}
+61b410bf:src/graphics/host_gpu/renderer/commandScheduler.cpp:146	Common::DiagB32::Mark b32_q; // Track F, F20j2 (KYTY_DIAG_B32 M3 H:qlock / H:qsubmit, RC5 of F20k)	if (Common::DiagB32::g_on) [[unlikely]] {
+61b410bf:src/graphics/host_gpu/renderer/commandScheduler.cpp:147	if (Common::DiagB32::g_on) [[unlikely]] {	b32_q.BeginH(Common::DiagB32::Call::QLock);
+61b410bf:src/graphics/host_gpu/renderer/commandScheduler.cpp:148	b32_q.BeginH(Common::DiagB32::Call::QLock);	}
+61b410bf:src/graphics/host_gpu/renderer/commandScheduler.cpp:151	b32_q.End(0, false);	locked_ns    = Common::FrameStats::NowNs();
+61b410bf:src/graphics/host_gpu/renderer/commandScheduler.cpp:173	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j2 (KYTY_DIAG_B32 M3 H:qsubmit, RC5 of F20k)	b32_q.BeginH(Common::DiagB32::Call::QSubmit);
+61b410bf:src/graphics/host_gpu/renderer/commandScheduler.cpp:174	b32_q.BeginH(Common::DiagB32::Call::QSubmit);	}
+61b410bf:src/graphics/host_gpu/renderer/commandScheduler.cpp:177	b32_q.End(0, false);	RecordGpuSubmission(record.scheduler, record.master, record.tick, submit, true, result);
+61b410bf:src/graphics/presentation/systemOverlay.cpp:1075	Common::DiagB32::Mark b32_q; // Track F, F20j2 (KYTY_DIAG_B32 M3 H:qlock, RC5 of F20k)	if (Common::DiagB32::g_on) [[unlikely]] {
+61b410bf:src/graphics/presentation/systemOverlay.cpp:1076	if (Common::DiagB32::g_on) [[unlikely]] {	b32_q.BeginH(Common::DiagB32::Call::QLock);
+61b410bf:src/graphics/presentation/systemOverlay.cpp:1077	b32_q.BeginH(Common::DiagB32::Call::QLock);	}
+61b410bf:src/graphics/presentation/systemOverlay.cpp:1080	b32_q.End(0, false);	ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(),
+61b410bf:src/graphics/presentation/window/swapchain.cpp:800	Common::DiagB32::Mark b32_q;	if (Common::DiagB32::g_on) [[unlikely]] {
+61b410bf:src/graphics/presentation/window/swapchain.cpp:801	if (Common::DiagB32::g_on) [[unlikely]] {	b32_q.BeginH(Common::DiagB32::Call::QLock);
+61b410bf:src/graphics/presentation/window/swapchain.cpp:802	b32_q.BeginH(Common::DiagB32::Call::QLock);	}
+61b410bf:src/graphics/presentation/window/swapchain.cpp:805	b32_q.End(0, false);	result = m_window.graphic_ctx.queue.presentKHR(&present);

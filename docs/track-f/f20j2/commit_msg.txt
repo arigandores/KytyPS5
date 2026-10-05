@@ -1,0 +1,19 @@
+track F link F20j2 (HPP-633): KYTY_DIAG_B32 by the review F20k RC1-RC7 (ROADMAP s122 item 552(v)(1)-(7), (d))
+
+RC1: the kernel query runs only by the schedule Core::KqSchedule (>= 40 ms after the flip and (window queries + last
+cost) * 10 <= time since the flip; the first query at the first sample >= 40 ms), the absolute sample period
+Core::NextBegin, an S sample without its own snapshot split at the window close by the nearest snapshot of the same
+window <= 60 ms (Core::NearestSnapshot); fields kq_n, kq_us (DiagB32:) and kq_us of the first query (mode=1).
+RC2: the sample time is the moment the slots are read (after the kernel query), the snapshot time is its own field.
+RC3: per-window increments slot_full_w, torn_w, ring_drop_w, sgap_bad_w, lines_cut_w, req_miss_w, sub_miss_w (-x),
+rebased at every window close. RC4: the wait-ring drain stops at an unfinished position and continues on the next
+flip; torn only for a position overwritten by a later lap (WaitRing::Reserve / Write). RC5: H:qlock on the
+graphics.queue_mutex captures in Swapchain::Present (nested in H:present), the async submitter and systemOverlay;
+H:qsubmit around the async queue.submit; the async submitter registers role ASubmit, its -t line is mandatory in a
+window with an H:qlock / H:qsubmit sample. RC6: the report print time is added to instr_us of the window open during
+the print; the site comment fixed (the print runs under FlipQueue::m_mutex and VideoOutConfig::mutex). RC7: req_miss,
+sub_miss. Also m5r_us (item 552(e)(3)). KYTY_DIAG_B32=0: one test of the global flag per new site.
+Tests: diag_b32_tests 15 cases ALL OK (10 previous, the RC4 change of the ring case; schedule, nearest snapshot, _w,
+preempted writer, ASubmit). WIP: not run by the game; review F20k2 pending.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

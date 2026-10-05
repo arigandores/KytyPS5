@@ -1,0 +1,9 @@
+patched src/common/diagB32.h (LF)
+patched src/common/diagB32.cpp (LF)
+patched src/graphics/host_gpu/renderer/commandScheduler.cpp (LF)
+patched src/graphics/presentation/window/swapchain.cpp (LF)
+patched src/graphics/presentation/systemOverlay.cpp (LF)
+patched src/graphics/presentation/videoOut.cpp (LF)
+patched tests/DiagB32Tests.cpp (LF)
+edits 49
+ALL OK

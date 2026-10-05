@@ -1,0 +1,4 @@
+folder C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 files 396 perms 460 bad 0 signatures 1
+  signature KytySC3:26ce5fc78ea3b20be537c7696be041f5e97d9e58:robust:ftz:cbank:fixb26:fixb1b:fixf10 files 396
+folder C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b files 615 perms 960 bad 0 signatures 1
+  signature KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b files 615

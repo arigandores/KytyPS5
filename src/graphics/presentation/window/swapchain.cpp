@@ -795,7 +795,14 @@ Swapchain::Status Swapchain::Present() {
 
 	vk::Result result;
 	{
+		// Track F, F20j2 (KYTY_DIAG_B32 M3 H:qlock, RC5 of F20k): nested in H:present - a sample shows the innermost mark,
+		// End restores H:present.
+		Common::DiagB32::Mark b32_q;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32_q.BeginH(Common::DiagB32::Call::QLock);
+		}
 		Common::LockGuard lock(m_window.graphic_ctx.queue_mutex);
+		b32_q.End(0, false);
 		result = m_window.graphic_ctx.queue.presentKHR(&present);
 	}
 	switch (result) {

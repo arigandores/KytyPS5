@@ -2,6 +2,8 @@
 // the sample partition H > W > R > r > Sr > Sw > S (exactly one), I1, I2', I3, the window selection and instr_us, the
 // printed lines (RC13 form), the counters slot_full / torn / ring_drop / sgap_bad / lines_cut / gap3p, mandatory -t
 // lines (RC2). Target diag_b32_tests (not in ctest); prints one line per case and "ALL OK".
+// F20j2 (HPP-633; ROADMAP s122 item 552(v), (d)): plus the kernel query schedule (RC1), the nearest snapshot, the
+// per-window zero invariants _w (RC3), the drain with a preempted writer (RC4), the async submitter's line (RC5).
 
 #include "common/diagB32.h"
 
@@ -256,14 +258,21 @@ static void TestRing() {
 	out.clear();
 	w->Drain(&out, &drop, &torn);
 	CHECK(out.empty());
-	// a record whose write is in progress (odd word for its index) -> torn
+	// a record whose write is in progress (odd word for its index): F20j2 RC4 - the drain stops there and does not count
+	// it torn (F20j counted torn here); once the write is finished the next drain takes it
 	WaitRec r;
+	r.start_ns = 77;
 	w->Push(r);
 	const auto i = w->wpos.load() - 1;
 	w->e[i % kWaitRing].seq.store(2 * i + 1);
 	w->Drain(&out, &drop, &torn);
 	CHECK(out.empty());
-	CHECK(torn == 1);
+	CHECK(torn == 0);
+	CHECK(w->rpos == i);
+	w->e[i % kWaitRing].seq.store(2 * i + 2);
+	w->Drain(&out, &drop, &torn);
+	CHECK(out.size() == 1 && out[0].start_ns == 77);
+	CHECK(torn == 0);
 	delete w;
 }
 
@@ -415,9 +424,11 @@ static void TestFormat() {
 		CHECK(list("SwR") == num("Sw"));
 	}
 	// header line form
-	const auto h = HeaderLine(16, 1);
+	const auto h = HeaderLine(16, 1, 10739);
 	CHECK(StartsWith(h, "DiagB32: mode=1 period_us=5000 print_us=100000 "));
-	CHECK(h.find(" kstate=1") != std::string::npos);
+	CHECK(h.find(" kstate=1 kq_us=10739 kq_budget_div=10 kq_near_us=60000\n") != std::string::npos);
+	// F20j2: the main line carries kq_n, kq_us, m5r_us
+	CHECK(text.find(" kq=28 kq_n=0 kq_us=0 m5r_us=0 ") != std::string::npos);
 }
 
 static void TestMandatoryAndCuts() {
@@ -500,6 +511,282 @@ static void TestMandatoryAndCuts() {
 	}
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+// F20j2 (item 552(v)(1)): the sampler loop with the real schedule (KqSchedule, NextBegin) and a cost model - a sample
+// costs kBase, with the kernel query kBase + K; the sample time is after the query (RC2); flips every dt from start0,
+// processed before the next sample begins (the flip event wakes the sampler; a flip during a sample - after it).
+// windows_before = 0: the measured window is the first one with a query (last cost unknown); 3: steady state.
+struct SimOut {
+	uint32_t samples  = 0;
+	uint32_t need     = 0;
+	uint32_t kq_n     = 0;
+	uint64_t instr_ns = 0;
+	bool     i2       = false;
+	int64_t  dt_minus = 0; // dt - instr_us, ns
+};
+
+static SimOut SimWindow(uint64_t dt_ns, uint64_t k_ns, int windows_before, uint64_t phase_ns) {
+	constexpr uint64_t kBase  = 50000; // a sample without the kernel query, 0.05 ms [I] (= f20k_model.py BASE)
+	const uint64_t     start0 = 1000000000;
+	const int          nwin   = windows_before + 1;
+	struct Smp {
+		uint64_t ts;
+		uint64_t cost;
+		uint64_t q;
+	};
+	std::vector<Smp> all;
+	KqSchedule       s;
+	s.NewWindow(start0, 0);
+	int            next_flip = 1;
+	uint64_t       begin     = start0 + phase_ns;
+	const uint64_t last      = start0 + static_cast<uint64_t>(nwin) * dt_ns;
+	while (begin < last + 50000000) {
+		while (next_flip <= nwin && start0 + static_cast<uint64_t>(next_flip) * dt_ns <= begin) {
+			const uint64_t f       = start0 + static_cast<uint64_t>(next_flip) * dt_ns;
+			uint64_t       carried = 0;
+			for (auto it = all.rbegin(); it != all.rend() && it->ts > f; ++it) {
+				carried += it->q;
+			}
+			s.NewWindow(f, carried);
+			next_flip++;
+		}
+		uint64_t q = 0;
+		if (s.Due(begin)) {
+			q = k_ns;
+			s.Done(q);
+		}
+		all.push_back({begin + q, kBase + q, q});
+		begin = NextBegin(begin, begin + kBase + q);
+	}
+	const uint64_t        ws = last - dt_ns;
+	std::vector<uint64_t> t;
+	SimOut                o;
+	for (const auto& x: all) {
+		if (x.ts > ws && x.ts <= last) {
+			t.push_back(x.ts);
+			o.instr_ns += x.cost;
+			o.kq_n += x.q != 0 ? 1 : 0;
+		}
+	}
+	const auto g = Gaps(t.data(), t.size(), ws, last, kPeriodNs);
+	o.samples    = g.samples;
+	o.need       = static_cast<uint32_t>(dt_ns / (2 * kPeriodNs));
+	o.i2         = g.i2_ok && g.monotonic;
+	o.dt_minus   = static_cast<int64_t>(dt_ns) - static_cast<int64_t>(o.instr_ns);
+	return o;
+}
+
+static void TestSchedule() {
+	Case("F20j2 RC1: kernel query schedule (>= 40 ms, <= 10 % of the window, absolute period), item 552(v)(1)");
+	// KqSchedule letter: >= 40 ms; (window queries + last cost) * 10 <= time since the flip; first query - at 40 ms.
+	KqSchedule s;
+	CHECK(!s.Due(500000000)); // no flip yet
+	s.NewWindow(1000000000, 0);
+	CHECK(!s.Due(1039999999));
+	CHECK(s.Due(1040000000)); // first query of the process: last cost unknown
+	s.Done(10000000);
+	CHECK(!s.Due(1199999999)); // (10 + 10) * 10 = 200 ms
+	CHECK(s.Due(1200000000));
+	s.NewWindow(1300000000, 0);
+	CHECK(!s.Due(1399999999)); // (0 + 10) * 10 = 100 ms
+	CHECK(s.Due(1400000000));
+	s.NewWindow(1500000000, 3000000); // a query of 3 ms already after the flip
+	CHECK(!s.Due(1629999999));        // (3 + 10) * 10 = 130 ms
+	CHECK(s.Due(1630000000));
+	// absolute period: P after the begin; a long sample is followed at once
+	CHECK(NextBegin(1000000000, 1000050000) == 1005000000);
+	CHECK(NextBegin(1000000000, 1010050000) == 1010050000);
+	// item 552(v)(1): window 120 ms at K = 10 ms - dt - instr >= 100 ms and I2'; window 200 ms - I2' at 10 and 20 ms,
+	// >= 1 query at 10 ms. Both regimes, two sample phases.
+	for (uint64_t phase: {500000ull, 4500000ull}) {
+		for (int before: {0, 3}) {
+			const auto a = SimWindow(120000000, 10000000, before, phase);
+			CHECK(a.dt_minus >= 100000000);
+			CHECK(a.i2);
+			const auto b = SimWindow(200000000, 10000000, before, phase);
+			CHECK(b.i2);
+			CHECK(b.kq_n >= 1);
+			const auto c = SimWindow(200000000, 20000000, before, phase);
+			CHECK(c.i2);
+		}
+	}
+	// the table of the report f20j2.md (model, phase 2.5 ms): instr_us for windows 100..240 ms at K 3.2 / 10.7 / 13.3 / 20 ms
+	for (uint64_t k: {3200000ull, 10700000ull, 13300000ull, 20000000ull}) {
+		for (uint64_t dt: {100000000ull, 115000000ull, 120000000ull, 150000000ull, 200000000ull, 240000000ull}) {
+			for (int before: {0, 3}) {
+				const auto o = SimWindow(dt, k, before, 2500000);
+				std::printf("  sched K_ms=%.1f dt_ms=%llu regime=%s samples=%u need=%u i2=%d kq_n=%u instr_us=%llu"
+				            " dt_minus_instr_us=%lld instr_made=%d\n",
+				            static_cast<double>(k) / 1e6, static_cast<unsigned long long>(dt / 1000000u),
+				            before == 0 ? "first" : "steady", o.samples, o.need, o.i2 ? 1 : 0, o.kq_n,
+				            static_cast<unsigned long long>(o.instr_ns / 1000u), static_cast<long long>(o.dt_minus / 1000),
+				            o.dt_minus < 100000000 ? 1 : 0);
+				// item 552(d) F20k2: at K <= 13.3 ms INSTR_MADE only for windows <= 115 ms
+				if (k <= 13300000 && dt > 115000000) {
+					CHECK(o.dt_minus >= 100000000);
+				}
+			}
+		}
+	}
+}
+
+static void TestNearest() {
+	Case("F20j2: S split by the nearest snapshot of the same window <= 60 ms");
+	// samples every 5 ms from 5 to 150 ms; snapshots at sample 8 (t 45, snapshot 44) and 18 (t 95, snapshot 94)
+	std::vector<uint64_t> t;
+	std::vector<uint8_t>  kq;
+	std::vector<uint64_t> kt;
+	for (uint64_t x = 1; x <= 30; x++) {
+		t.push_back(x * 5000000);
+		kq.push_back(x == 9 || x == 19 ? 1 : 0);
+		kt.push_back(x == 9 ? 44000000 : (x == 19 ? 94000000 : 0));
+	}
+	std::vector<int32_t> out(t.size(), -2);
+	NearestSnapshot(t.data(), kq.data(), kt.data(), t.size(), kKqNearNs, out.data());
+	CHECK(out[8] == 8 && out[18] == 18); // own snapshot
+	CHECK(out[0] == 8);                  // t 5: |5 - 44| = 39
+	CHECK(out[13] == 18);                // t 70: 26 vs 24
+	CHECK(out[12] == 8);                 // t 65: 21 vs 29
+	CHECK(out[29] == 18);                // t 150: 56 <= 60
+	std::vector<uint64_t> t2 = {5000000, 10000000, 80000000};
+	std::vector<uint8_t>  q2 = {0, 1, 0};
+	std::vector<uint64_t> k2 = {0, 9000000, 0};
+	std::vector<int32_t>  o2(3, -2);
+	NearestSnapshot(t2.data(), q2.data(), k2.data(), 3, kKqNearNs, o2.data());
+	CHECK(o2[0] == 1 && o2[1] == 1);
+	CHECK(o2[2] == -1); // 71 ms > 60
+	// equal distance - the earlier snapshot
+	std::vector<uint64_t> t3 = {10000000, 20000000, 30000000};
+	std::vector<uint8_t>  q3 = {1, 0, 1};
+	std::vector<uint64_t> k3 = {10000000, 0, 30000000};
+	std::vector<int32_t>  o3(3, -2);
+	NearestSnapshot(t3.data(), q3.data(), k3.data(), 3, kKqNearNs, o3.data());
+	CHECK(o3[1] == 0);
+}
+
+static std::string Field(const std::string& text, const char* key) {
+	const auto p = text.find(std::string(" ") + key + "=");
+	if (p == std::string::npos) {
+		return "?";
+	}
+	const auto a = p + std::strlen(key) + 2;
+	const auto b = text.find_first_of(" \n", a);
+	return text.substr(a, b - a);
+}
+
+static void TestWindowDelta() {
+	Case("F20j2 RC3: zero invariants per window (_w) - an event in window k, a clean window k+1");
+	Counters c;
+	// window k: one torn read, one ring drop, one request miss, I2' broken (sgap_bad)
+	auto r = MakeReport();
+	r.gaps.i2_ok = false;
+	c.torn       = 1;
+	c.ring_drop  = 1;
+	c.req_miss   = 1;
+	const auto k = Format(&r, &c);
+	c.Rebase();
+	CHECK(Field(k, "torn") == "1" && Field(k, "torn_w") == "1");
+	CHECK(Field(k, "ring_drop") == "1" && Field(k, "ring_drop_w") == "1");
+	CHECK(Field(k, "sgap_bad") == "1" && Field(k, "sgap_bad_w") == "1");
+	CHECK(Field(k, "req_miss") == "1" && Field(k, "req_miss_w") == "1");
+	CHECK(Field(k, "sub_miss_w") == "0" && Field(k, "slot_full_w") == "0" && Field(k, "lines_cut_w") == "0");
+	// window k+1: nothing new - the cumulative values stay, every _w is 0
+	auto r2 = MakeReport();
+	r2.n    = 3194;
+	const auto k1 = Format(&r2, &c);
+	c.Rebase();
+	CHECK(Field(k1, "torn") == "1" && Field(k1, "torn_w") == "0");
+	CHECK(Field(k1, "ring_drop") == "1" && Field(k1, "ring_drop_w") == "0");
+	CHECK(Field(k1, "sgap_bad") == "1" && Field(k1, "sgap_bad_w") == "0");
+	CHECK(Field(k1, "req_miss") == "1" && Field(k1, "req_miss_w") == "0");
+	CHECK(Field(k1, "slot_full_w") == "0" && Field(k1, "lines_cut_w") == "0" && Field(k1, "sub_miss_w") == "0");
+	// a short window between (not printed, rebased by the sampler): its event is not in the next printed window's _w
+	c.sub_miss = 2;
+	c.Rebase();
+	auto       r3 = MakeReport();
+	const auto k2 = Format(&r3, &c);
+	CHECK(Field(k2, "sub_miss") == "2" && Field(k2, "sub_miss_w") == "0");
+}
+
+static void TestDrainPreempted() {
+	Case("F20j2 RC4: drain with a writer preempted between Reserve and the final word");
+	auto*    w    = new WaitRing;
+	uint64_t drop = 0;
+	uint64_t torn = 0;
+	const auto rec = [](uint64_t start) {
+		WaitRec r;
+		r.start_ns = start;
+		r.end_ns   = start + 20000000;
+		r.slot1    = 5;
+		r.waker1   = 3;
+		r.kind     = static_cast<uint8_t>(Wait::Cond);
+		return r;
+	};
+	w->Push(rec(0));
+	w->Push(rec(1));
+	const auto i = w->Reserve(); // preempted writer: the position is taken, nothing written yet
+	w->Push(rec(3));
+	std::vector<WaitRec> out;
+	w->Drain(&out, &drop, &torn);
+	CHECK(out.size() == 2 && out[0].start_ns == 0 && out[1].start_ns == 1);
+	CHECK(torn == 0 && drop == 0 && w->rpos == i);
+	// the writer resumed and wrote its first word only (in progress) - still waiting, nothing lost
+	w->e[i % kWaitRing].seq.store(2 * i + 1);
+	out.clear();
+	w->Drain(&out, &drop, &torn);
+	CHECK(out.empty() && torn == 0 && w->rpos == i);
+	// the write finishes - the next drain takes it and the record behind it, in order
+	w->Write(i, rec(2));
+	out.clear();
+	w->Drain(&out, &drop, &torn);
+	CHECK(out.size() == 2 && out[0].start_ns == 2 && out[1].start_ns == 3 && out[0].waker1 == 3);
+	CHECK(torn == 0 && drop == 0);
+	// a position overwritten by a later lap after the drain read wpos (word of index + kWaitRing) - torn, the drain goes on
+	const auto j = w->Reserve();
+	w->Push(rec(5));
+	w->e[j % kWaitRing].seq.store(2 * (j + kWaitRing) + 1);
+	out.clear();
+	w->Drain(&out, &drop, &torn);
+	CHECK(torn == 1);
+	CHECK(out.size() == 1 && out[0].start_ns == 5);
+	CHECK(w->rpos == w->wpos.load());
+	delete w;
+}
+
+static void TestASubmit() {
+	Case("F20j2 RC5: the async submitter's -t line is mandatory in a window with H:qlock / H:qsubmit");
+	auto      r = MakeReport();
+	ThreadRow a;
+	a.slot1  = 20;
+	a.os_tid = 5000;
+	a.name   = "ASubmit";
+	a.role   = "ASubmit";
+	for (int k = 0; k < 36; k++) {
+		a.agg.Add(Code(State::S, 0));
+	}
+	r.threads.push_back(a);
+	MarkMandatory(&r);
+	CHECK(!r.threads.back().must); // no qlock / qsubmit sample
+	auto b = MakeReport();
+	a.agg  = Agg {};
+	for (int k = 0; k < 36; k++) {
+		a.agg.Add(k == 7 ? Code(State::H, static_cast<uint8_t>(Call::QSubmit)) : Code(State::S, 0));
+	}
+	b.threads.push_back(a);
+	MarkMandatory(&b);
+	CHECK(b.threads.back().must);
+	auto c = MakeReport();
+	a.agg  = Agg {};
+	for (int k = 0; k < 36; k++) {
+		a.agg.Add(k == 3 ? Code(State::H, static_cast<uint8_t>(Call::QLock)) : Code(State::S, 0));
+	}
+	c.threads.push_back(a);
+	Counters   cn;
+	const auto text = Format(&c, &cn);
+	CHECK(text.find("name=ASubmit role=ASubmit must=1 ") != std::string::npos);
+	CHECK(text.find("H=qlock:1 ") != std::string::npos);
+}
+
 static void TestSig() {
 	Case("waker word: SigWaker against the wait start");
 	const uint64_t t      = 123456789000ull;
@@ -520,6 +807,11 @@ int main() {
 	TestFormat();
 	TestMandatoryAndCuts();
 	TestSig();
+	TestSchedule();
+	TestNearest();
+	TestWindowDelta();
+	TestDrainPreempted();
+	TestASubmit();
 	std::printf("cases %d, failures %d\n", g_cases, g_fail);
 	std::printf("%s\n", g_fail == 0 ? "ALL OK" : "FAILED");
 	return g_fail == 0 ? 0 : 1;

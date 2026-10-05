@@ -177,6 +177,50 @@ GapStats Gaps(const uint64_t* t, size_t n, uint64_t win_start, uint64_t win_end,
 	return g;
 }
 
+bool KqSchedule::Due(uint64_t now_ns) const {
+	if (win_start == 0 || now_ns < win_start + kKernelAfterNs) {
+		return false;
+	}
+	return (win_kq_ns + last_kq_ns) * kKqBudgetDiv <= now_ns - win_start;
+}
+
+void KqSchedule::Done(uint64_t cost_ns) {
+	win_kq_ns += cost_ns;
+	last_kq_ns = cost_ns;
+}
+
+void KqSchedule::NewWindow(uint64_t flip_ns, uint64_t carried_kq_ns) {
+	win_start = flip_ns;
+	win_kq_ns = carried_kq_ns;
+}
+
+uint64_t NextBegin(uint64_t begin_ns, uint64_t now_ns) {
+	return std::max(begin_ns + kPeriodNs, now_ns);
+}
+
+void NearestSnapshot(const uint64_t* t, const uint8_t* kq, const uint64_t* kq_t, size_t n, uint64_t max_ns,
+                     int32_t* out) {
+	for (size_t i = 0; i < n; i++) {
+		if (kq[i] != 0) {
+			out[i] = static_cast<int32_t>(i);
+			continue;
+		}
+		int32_t  best   = -1;
+		uint64_t best_d = 0;
+		for (size_t j = 0; j < n; j++) {
+			if (kq[j] == 0) {
+				continue;
+			}
+			const auto d = t[i] > kq_t[j] ? t[i] - kq_t[j] : kq_t[j] - t[i];
+			if (d <= max_ns && (best < 0 || d < best_d)) {
+				best   = static_cast<int32_t>(j);
+				best_d = d;
+			}
+		}
+		out[i] = best;
+	}
+}
+
 void WindowSamples(const uint64_t* t, const uint64_t* cost, const uint8_t* kq, uint64_t hpos, uint32_t hist,
                    uint64_t start, uint64_t end, uint64_t extra_ns, std::vector<uint64_t>* idx, uint64_t* instr_ns,
                    uint32_t* kq_n, bool* exhausted) {
@@ -276,8 +320,15 @@ bool Registry::ReadMark(int32_t idx, MarkSnap* out) {
 }
 
 void WaitRing::Push(const WaitRec& rec) {
-	const auto i = wpos.fetch_add(1, std::memory_order_acq_rel);
-	auto&      x = e[i % kWaitRing];
+	Write(Reserve(), rec);
+}
+
+uint64_t WaitRing::Reserve() {
+	return wpos.fetch_add(1, std::memory_order_acq_rel);
+}
+
+void WaitRing::Write(uint64_t i, const WaitRec& rec) {
+	auto& x = e[i % kWaitRing];
 	x.seq.store(2 * i + 1, std::memory_order_relaxed);
 	std::atomic_thread_fence(std::memory_order_release);
 	x.start.store(rec.start_ns, std::memory_order_relaxed);
@@ -297,17 +348,17 @@ void WaitRing::Drain(std::vector<WaitRec>* out, uint64_t* drop, uint64_t* torn) 
 		*drop += w - kWaitRing - rpos;
 		rpos = w - kWaitRing;
 	}
-	for (; rpos < w; rpos++) {
-		auto& x  = e[rpos % kWaitRing];
-		bool  ok = false;
-		for (int attempt = 0; attempt < 3 && !ok; attempt++) {
-			const auto s1 = x.seq.load(std::memory_order_acquire);
-			if (s1 != 2 * rpos + 2) {
-				if (s1 > 2 * rpos + 2) {
-					break; // overwritten by a later lap
-				}
-				continue;
-			}
+	while (rpos < w) {
+		auto&      x    = e[rpos % kWaitRing];
+		const auto want = 2 * rpos + 2;
+		const auto s1   = x.seq.load(std::memory_order_acquire);
+		if (s1 < want) {
+			// F20j2 (RC4): the write of this position has not finished - not started (an older lap's word) or in progress
+			// (2 * rpos + 1; the writer may be preempted between Reserve and the final word). Stop here; the next drain
+			// (the next flip) continues from this position.
+			break;
+		}
+		if (s1 == want) {
 			WaitRec r;
 			r.start_ns     = x.start.load(std::memory_order_relaxed);
 			r.end_ns       = x.end.load(std::memory_order_relaxed);
@@ -315,24 +366,19 @@ void WaitRing::Drain(std::vector<WaitRec>* out, uint64_t* drop, uint64_t* torn) 
 			r.req_us       = x.req.load(std::memory_order_relaxed);
 			const auto who = x.who.load(std::memory_order_relaxed);
 			std::atomic_thread_fence(std::memory_order_acquire);
-			if (x.seq.load(std::memory_order_relaxed) != s1) {
+			if (x.seq.load(std::memory_order_relaxed) == s1) {
+				r.slot1     = static_cast<int32_t>(who & 0xfffffu);
+				r.waker1    = static_cast<int32_t>((who >> 20u) & 0xfffffu);
+				r.kind      = static_cast<uint8_t>((who >> 40u) & 0xffu);
+				r.timed_out = static_cast<uint8_t>((who >> 48u) & 0xffu);
+				out->push_back(r);
+				rpos++;
 				continue;
 			}
-			r.slot1     = static_cast<int32_t>(who & 0xfffffu);
-			r.waker1    = static_cast<int32_t>((who >> 20u) & 0xfffffu);
-			r.kind      = static_cast<uint8_t>((who >> 40u) & 0xffu);
-			r.timed_out = static_cast<uint8_t>((who >> 48u) & 0xffu);
-			out->push_back(r);
-			ok = true;
 		}
-		if (!ok) {
-			const auto s1 = x.seq.load(std::memory_order_acquire);
-			if (s1 > 2 * rpos + 2) {
-				(*drop)++;
-			} else {
-				(*torn)++;
-			}
-		}
+		// Overwritten by a later lap before or while it was read: the record is lost (F20j2 RC4 - only this is torn).
+		(*torn)++;
+		rpos++;
 	}
 }
 
@@ -411,8 +457,11 @@ void MarkMandatory(Report* report) {
 	auto&      r       = *report;
 	const auto samples = r.gaps.samples;
 	for (auto& t: r.threads) {
+		// F20j2 RC5: the async submitter in a window where it waited for / held graphics.queue_mutex.
+		const bool asub = t.role == "ASubmit" &&
+		                  t.agg.h[static_cast<size_t>(Call::QLock)] + t.agg.h[static_cast<size_t>(Call::QSubmit)] > 0;
 		t.must = t.slot1 == r.vo_slot1 || t.slot1 == r.gpu_slot1 || t.slot1 == r.flip_slot1 ||
-		         (samples > 0 && t.agg.st[static_cast<size_t>(State::R)] * 10 >= samples);
+		         (samples > 0 && t.agg.st[static_cast<size_t>(State::R)] * 10 >= samples) || asub;
 	}
 	size_t     cut  = 0;
 	const auto pick = PickWaits(r, &cut);
@@ -528,11 +577,13 @@ std::string Format(Report* report, Counters* counters) {
 	const auto n = static_cast<unsigned long long>(r.n);
 	Append(&out,
 	       "DiagB32: n=%llu dt_us=%llu instr_us=%llu samples=%u sgap_max_us=%llu gap3p=%u i2=%d kstate=%u kq=%u"
+	       " kq_n=%u kq_us=%llu m5r_us=%llu"
 	       " proc_us=%llu sys_busy_us=%llu sys_idle_us=%llu other_us=%lld ncpu=%u snap_ok=%u snap_lag_us=%llu"
 	       " flip_slot=%d flip_tid=%d flip_src=%s lat_us=%llu vo_slot=%d gpu_slot=%d t_lines=%zu w_lines=%zu c_lines=%zu\n",
 	       n, static_cast<unsigned long long>(r.dt_us), static_cast<unsigned long long>(r.instr_us), r.gaps.samples,
 	       static_cast<unsigned long long>(r.gaps.sgap_max_ns / 1000u), r.gaps.gap3p, r.gaps.i2_ok && r.gaps.monotonic ? 1 : 0,
-	       r.kstate, r.kq, static_cast<unsigned long long>(r.proc_us), static_cast<unsigned long long>(r.sys_busy_us),
+	       r.kstate, r.kq, r.kq_n, static_cast<unsigned long long>(r.kq_us), static_cast<unsigned long long>(r.m5r_us),
+	       static_cast<unsigned long long>(r.proc_us), static_cast<unsigned long long>(r.sys_busy_us),
 	       static_cast<unsigned long long>(r.sys_idle_us), static_cast<long long>(OtherUs(r.sys_busy_us, r.proc_us)), r.ncpu,
 	       r.snap_ok, static_cast<unsigned long long>(r.snap_lag_us), SlotIndex(r.flip_slot1), r.flip_gid,
 	       r.flip_src == 1 ? "cpu" : (r.flip_src == 2 ? "gpu" : "-"), static_cast<unsigned long long>(r.lat_us),
@@ -595,12 +646,20 @@ std::string Format(Report* report, Counters* counters) {
 		Append(&out, "DiagB32-c: n=%llu os_tid=%u slot=%d name=%s cpu_us=%llu\n", n, c->os_tid, SlotIndex(c->slot1),
 		       c->name.c_str(), static_cast<unsigned long long>(c->cpu_us));
 	}
+	// F20j2 (item 552(v)(3), RC3 of F20k): every zero invariant cumulative and its increment over this window (_w).
+	const auto& b  = counters->base;
+	const auto  dw = [](uint64_t v, uint64_t base) { return static_cast<unsigned long long>(v >= base ? v - base : 0); };
 	Append(&out,
-	       "DiagB32-x: n=%llu slots=%llu slot_full=%llu torn=%llu ring_drop=%llu sgap_bad=%llu lines_cut=%llu"
-	       " short_stalls=%llu others_cut=%llu w_cut=%llu rep_drop=%llu kq_fail=%llu print_us=%llu gap3p=%u\n",
+	       "DiagB32-x: n=%llu slots=%llu slot_full=%llu slot_full_w=%llu torn=%llu torn_w=%llu ring_drop=%llu ring_drop_w=%llu"
+	       " sgap_bad=%llu sgap_bad_w=%llu lines_cut=%llu lines_cut_w=%llu req_miss=%llu req_miss_w=%llu sub_miss=%llu"
+	       " sub_miss_w=%llu short_stalls=%llu others_cut=%llu w_cut=%llu rep_drop=%llu kq_fail=%llu print_us=%llu gap3p=%u\n",
 	       n, static_cast<unsigned long long>(counters->slots), static_cast<unsigned long long>(counters->slot_full),
-	       static_cast<unsigned long long>(counters->torn), static_cast<unsigned long long>(counters->ring_drop),
-	       static_cast<unsigned long long>(counters->sgap_bad), static_cast<unsigned long long>(counters->lines_cut),
+	       dw(counters->slot_full, b.slot_full), static_cast<unsigned long long>(counters->torn), dw(counters->torn, b.torn),
+	       static_cast<unsigned long long>(counters->ring_drop), dw(counters->ring_drop, b.ring_drop),
+	       static_cast<unsigned long long>(counters->sgap_bad), dw(counters->sgap_bad, b.sgap_bad),
+	       static_cast<unsigned long long>(counters->lines_cut), dw(counters->lines_cut, b.lines_cut),
+	       static_cast<unsigned long long>(counters->req_miss), dw(counters->req_miss, b.req_miss),
+	       static_cast<unsigned long long>(counters->sub_miss), dw(counters->sub_miss, b.sub_miss),
 	       static_cast<unsigned long long>(counters->short_stalls), static_cast<unsigned long long>(counters->others_cut),
 	       static_cast<unsigned long long>(counters->w_cut), static_cast<unsigned long long>(counters->rep_drop),
 	       static_cast<unsigned long long>(counters->kq_fail), static_cast<unsigned long long>(counters->print_us),
@@ -608,14 +667,25 @@ std::string Format(Report* report, Counters* counters) {
 	return out;
 }
 
-std::string HeaderLine(uint32_t ncpu, uint32_t kstate) {
-	char buf[256];
+void Counters::Rebase() {
+	base.slot_full = slot_full;
+	base.torn      = torn;
+	base.ring_drop = ring_drop;
+	base.sgap_bad  = sgap_bad;
+	base.lines_cut = lines_cut;
+	base.req_miss  = req_miss;
+	base.sub_miss  = sub_miss;
+}
+
+std::string HeaderLine(uint32_t ncpu, uint32_t kstate, uint64_t kq_us) {
+	char buf[320];
 	std::snprintf(buf, sizeof(buf),
 	              "DiagB32: mode=1 period_us=%llu print_us=%llu wait_rec_us=%llu kernel_after_us=%llu slots=%u hist=%u"
-	              " wring=%u ncpu=%u kstate=%u\n",
+	              " wring=%u ncpu=%u kstate=%u kq_us=%llu kq_budget_div=%llu kq_near_us=%llu\n",
 	              static_cast<unsigned long long>(kPeriodNs / 1000u), static_cast<unsigned long long>(kPrintNs / 1000u),
 	              static_cast<unsigned long long>(kWaitRecNs / 1000u), static_cast<unsigned long long>(kKernelAfterNs / 1000u),
-	              kSlots, kHist, kWaitRing, ncpu, kstate);
+	              kSlots, kHist, kWaitRing, ncpu, kstate, static_cast<unsigned long long>(kq_us),
+	              static_cast<unsigned long long>(kKqBudgetDiv), static_cast<unsigned long long>(kKqNearNs / 1000u));
 	return buf;
 }
 
@@ -654,6 +724,7 @@ struct FlipEnt {
 	std::atomic<uint64_t> lat_us {0};
 	std::atomic<int32_t>  slot1 {0};
 	std::atomic<uint32_t> src {0};
+	std::atomic<uint64_t> print_ns {0}; // F20j2 RC6: the report print of the previous OnFlip - inside the window this flip closes
 };
 constexpr uint32_t    kFlipRing = 16;
 FlipEnt               g_flip[kFlipRing];
@@ -669,6 +740,10 @@ struct RepSlot {
 };
 RepSlot               g_rep[4];
 std::atomic<uint64_t> g_print_us {0};
+uint64_t              g_print_prev_ns = 0; // present thread only (OnFlip): the print time of its previous call (F20j2 RC6)
+std::atomic<uint64_t> g_req_miss {0};      // F20j2 RC7: OnFlip found the request entry overwritten
+std::atomic<uint64_t> g_sub_miss {0};      // F20j2 RC7: NoteFlipRequest found the submission entry overwritten
+std::atomic<uint64_t> g_kq_first_us {0};   // F20j2 (item 552(v)(1)): the cost of the first kernel query (start probe)
 
 uint32_t              g_ncpu = 0;
 std::atomic<uint32_t> g_kstate {0};
@@ -866,6 +941,8 @@ void NoteFlipRequest(uint64_t request_id, bool cpu_source) {
 		auto&      e   = g_submit[seq % 1024];
 		if (e.seq.load(std::memory_order_acquire) == seq) {
 			slot1 = e.slot1.load(std::memory_order_relaxed);
+		} else {
+			g_sub_miss.fetch_add(1, std::memory_order_relaxed); // F20j2 RC7: the entry was overwritten
 		}
 	}
 	auto& r = g_req[request_id % 64];
@@ -882,6 +959,8 @@ void OnFlip(uint64_t n, uint64_t request_id, uint64_t reserve_host_ns) {
 	if (r.id.load(std::memory_order_acquire) == request_id) {
 		slot1 = r.slot1.load(std::memory_order_relaxed);
 		src   = r.src.load(std::memory_order_relaxed);
+	} else {
+		g_req_miss.fetch_add(1, std::memory_order_relaxed); // F20j2 RC7: the entry was overwritten
 	}
 	const auto k = g_flip_pub.load(std::memory_order_relaxed);
 	auto&      e = g_flip[k % kFlipRing];
@@ -891,11 +970,15 @@ void OnFlip(uint64_t n, uint64_t request_id, uint64_t reserve_host_ns) {
 	               std::memory_order_relaxed);
 	e.slot1.store(slot1, std::memory_order_relaxed);
 	e.src.store(src, std::memory_order_relaxed);
+	e.print_ns.store(g_print_prev_ns, std::memory_order_relaxed);
 	g_flip_pub.store(k + 1, std::memory_order_release);
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 	SetEvent(g_flip_event);
 #endif
-	// Print the reports the sampler has closed (each one once, in the order of n).
+	// Print the reports the sampler has closed (each one once, in the order of n). F20j2 RC6: this runs under
+	// FlipQueue::m_mutex and VideoOutConfig::mutex (videoOut.cpp); the whole print time of this call lies after this
+	// flip, so it is published with the next flip and added to instr_us of the window that flip closes.
+	uint64_t print_ns = 0;
 	for (;;) {
 		RepSlot* best = nullptr;
 		for (auto& slot: g_rep) {
@@ -911,8 +994,11 @@ void OnFlip(uint64_t n, uint64_t request_id, uint64_t reserve_host_ns) {
 			::Log::Write(best->text);
 		}
 		best->state.store(0, std::memory_order_release);
-		g_print_us.store((FrameStats::NowNs() - t0) / 1000u, std::memory_order_relaxed);
+		const auto took = FrameStats::NowNs() - t0;
+		print_ns += took;
+		g_print_us.store(took / 1000u, std::memory_order_relaxed);
 	}
+	g_print_prev_ns = print_ns;
 }
 
 // ---- stand ----
@@ -1005,7 +1091,7 @@ public:
 	void Run();
 
 private:
-	void     Sample(uint64_t t0);
+	void     Sample(uint64_t begin);
 	void     ProcessFlips();
 	void     KernelQuery();
 	bool     KernelLookup(uint32_t tid, uint32_t* state, uint32_t* reason) const;
@@ -1013,7 +1099,8 @@ private:
 	void     M5Snapshot();
 	void     M1Snapshot(uint64_t* proc_us, uint64_t* busy_us, uint64_t* idle_us);
 	void     CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t flip_slot1, uint32_t src, bool snap,
-	                     uint64_t proc_us, uint64_t busy_us, uint64_t idle_us, uint64_t lag_us);
+	                     uint64_t proc_us, uint64_t busy_us, uint64_t idle_us, uint64_t lag_us, uint64_t print_ns);
+	void     RefreshCounters();
 	[[nodiscard]] uint64_t CyclesToNs(uint64_t cycles) const {
 		return m_cpn > 0.0 ? static_cast<uint64_t>(static_cast<double>(cycles) / m_cpn) : 0;
 	}
@@ -1023,6 +1110,12 @@ private:
 	uint64_t                  m_t[kHist] {};
 	uint64_t                  m_cost[kHist] {};
 	uint8_t                   m_kq[kHist] {};
+	uint64_t                  m_kqt[kHist] {};  // F20j2 RC2: the kernel snapshot time of the sample (own field)
+	uint64_t                  m_kqc[kHist] {};  // F20j2 RC1: the kernel-query time of the sample (0 - no query)
+	// F20j2 (item 552(v)(1)): per slot, the kernel-only class (Sr / Sw:<reason> / S) at the samples with a snapshot.
+	std::vector<uint16_t>     m_kcodes = std::vector<uint16_t>(static_cast<size_t>(kSlots) * kHist, 0);
+	Core::KqSchedule          m_sched;
+	uint64_t                  m_win_m5r_ns = 0;
 	uint64_t                  m_hpos   = 0;
 	uint64_t                  m_last_t = 0;
 	uint64_t                  m_prev_cyc[kSlots] {};
@@ -1106,14 +1199,24 @@ bool Sampler::KernelLookup(uint32_t tid, uint32_t* state, uint32_t* reason) cons
 	return true;
 }
 
-void Sampler::Sample(uint64_t t0) {
-	const uint64_t interval = m_last_t != 0 && t0 > m_last_t ? t0 - m_last_t : kPeriodNs;
-	bool           kq       = false;
-	if (m_kq_ok && m_win_start != 0 && t0 >= m_win_start + kKernelAfterNs) {
+void Sampler::Sample(uint64_t begin) {
+	// F20j2 (item 552(v)(1), RC1 of F20k): the kernel query only by the schedule (>= 40 ms and <= 10 % of the window).
+	bool     kq    = false;
+	uint64_t kq_ns = 0;
+	uint64_t kq_t  = 0;
+	if (m_kq_ok && m_sched.Due(begin)) {
 		KernelQuery();
-		kq = !m_kmap.empty();
+		const auto q1 = FrameStats::NowNs();
+		kq_ns         = q1 > begin ? q1 - begin : 0;
+		kq_t          = begin + kq_ns / 2; // the snapshot moment lies inside the call [I]: its middle
+		kq            = !m_kmap.empty();
+		m_sched.Done(kq_ns);
 	}
-	const auto n   = std::min<uint32_t>(g_reg->count.load(std::memory_order_acquire), kSlots);
+	// F20j2 (item 552(v)(2), RC2 of F20k): the sample time is the moment the slots are read - after the kernel query;
+	// the interval for R is between such moments.
+	const uint64_t t0       = FrameStats::NowNs();
+	const uint64_t interval = m_last_t != 0 && t0 > m_last_t ? t0 - m_last_t : kPeriodNs;
+	const auto     n        = std::min<uint32_t>(g_reg->count.load(std::memory_order_acquire), kSlots);
 	const auto pos = static_cast<size_t>(m_hpos % kHist);
 	for (uint32_t i = 0; i < n; i++) {
 		auto&    s    = g_reg->slots[i];
@@ -1136,17 +1239,26 @@ void Sampler::Sample(uint64_t t0) {
 			uint32_t kr = 0;
 			const bool known = kq && KernelLookup(s.os_tid, &ks, &kr);
 			code             = Core::Classify(ms.mark, cpu_ns, interval, known, ks, kr);
+			if (known) {
+				m_kcodes[static_cast<size_t>(i) * kHist + pos] = Core::Classify(0, 0, interval, true, ks, kr);
+			} else if (kq) {
+				m_kcodes[static_cast<size_t>(i) * kHist + pos] = Core::Code(State::S, 0);
+			}
 			if (ms.mark != 0) {
 				m_last_mark[i]     = ms;
 				m_last_mark_pos[i] = m_hpos;
 			}
+		} else if (kq) {
+			m_kcodes[static_cast<size_t>(i) * kHist + pos] = Core::Code(State::S, 0);
 		}
 		m_codes[static_cast<size_t>(i) * kHist + pos] = code;
 	}
 	m_t[pos]    = t0;
 	m_kq[pos]   = kq ? 1 : 0;
+	m_kqt[pos]  = kq_t;
+	m_kqc[pos]  = kq_ns;
 	m_last_t    = t0;
-	m_cost[pos] = FrameStats::NowNs() - t0;
+	m_cost[pos] = FrameStats::NowNs() - begin; // RC9: the whole sample, the kernel query included
 	m_hpos++;
 }
 
@@ -1251,13 +1363,37 @@ void Sampler::M1Snapshot(uint64_t* proc_us, uint64_t* busy_us, uint64_t* idle_us
 	m_m1_have   = true;
 }
 
+void Sampler::RefreshCounters() {
+	m_c.slot_full = g_reg->slot_full.load(std::memory_order_relaxed);
+	m_c.torn      = g_reg->torn.load(std::memory_order_relaxed) + m_ring_torn;
+	m_c.req_miss  = g_req_miss.load(std::memory_order_relaxed);
+	m_c.sub_miss  = g_sub_miss.load(std::memory_order_relaxed);
+}
+
 void Sampler::CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t flip_slot1, uint32_t src, bool snap,
-                          uint64_t proc_us, uint64_t busy_us, uint64_t idle_us, uint64_t lag_us) {
+                          uint64_t proc_us, uint64_t busy_us, uint64_t idle_us, uint64_t lag_us, uint64_t print_ns) {
 	const uint64_t start = m_win_start;
-	const uint64_t extra = m_win_extra_ns;
+	const uint64_t extra = m_win_extra_ns + print_ns; // F20j2 RC6: the report print inside this window
+	const uint64_t m5r   = m_win_m5r_ns;
 	m_win_start          = flip_ns;
 	m_win_extra_ns       = 0;
+	m_win_m5r_ns         = 0;
+	// F20j2 (item 552(v)(1)): the schedule's new window; queries of samples already after the flip belong to it.
+	{
+		uint64_t carried = 0;
+		for (uint64_t k = 0; k < kHist && k < m_hpos; k++) {
+			const auto h = m_hpos - 1 - k;
+			if (m_t[h % kHist] <= flip_ns) {
+				break;
+			}
+			carried += m_kqc[h % kHist];
+		}
+		m_sched.NewWindow(flip_ns, carried);
+	}
+	// F20j2 (item 552(v)(3)): the zero invariants are rebased at every window close - _w is the increment of one window.
+	RefreshCounters();
 	if (start == 0 || flip_ns <= start) {
+		m_c.Rebase();
 		return;
 	}
 	const uint64_t dt = flip_ns - start;
@@ -1265,6 +1401,7 @@ void Sampler::CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t
 		if (dt >= kShortNs) {
 			m_c.short_stalls++;
 		}
+		m_c.Rebase();
 		return;
 	}
 	// The samples of (start, flip_ns], oldest first.
@@ -1277,9 +1414,20 @@ void Sampler::CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t
 		m_c.ring_drop++; // the history ring no longer holds the start of this window
 	}
 	std::vector<uint64_t> times;
+	std::vector<uint8_t>  wkq;
+	std::vector<uint64_t> wkqt;
+	uint32_t              kq_n  = 0;
+	uint64_t              kq_ns = 0;
 	for (auto h: idx) {
 		times.push_back(m_t[h % kHist]);
+		wkq.push_back(m_kq[h % kHist]);
+		wkqt.push_back(m_kqt[h % kHist]);
+		kq_n += m_kqc[h % kHist] != 0 ? 1 : 0;
+		kq_ns += m_kqc[h % kHist];
 	}
+	// F20j2 (item 552(v)(1)): an S sample without its own snapshot is split by the nearest snapshot of this window <= 60 ms.
+	std::vector<int32_t> nearest(idx.size(), -1);
+	Core::NearestSnapshot(times.data(), wkq.data(), wkqt.data(), idx.size(), kKqNearNs, nearest.data());
 	Core::Report r;
 	r.n            = n;
 	r.dt_us        = dt / 1000u;
@@ -1289,6 +1437,9 @@ void Sampler::CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t
 	r.gaps         = Core::Gaps(times.data(), times.size(), start, flip_ns, kPeriodNs);
 	r.kstate       = g_kstate.load(std::memory_order_relaxed);
 	r.kq           = kq;
+	r.kq_n         = kq_n;
+	r.kq_us        = kq_ns / 1000u;
+	r.m5r_us       = m5r / 1000u;
 	r.proc_us      = proc_us;
 	r.sys_busy_us  = busy_us;
 	r.sys_idle_us  = idle_us;
@@ -1303,8 +1454,15 @@ void Sampler::CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t
 	const auto nslots = std::min<uint32_t>(g_reg->count.load(std::memory_order_acquire), kSlots);
 	for (uint32_t i = 0; i < nslots; i++) {
 		Core::ThreadRow row;
-		for (auto h: idx) {
-			row.agg.Add(m_codes[static_cast<size_t>(i) * kHist + h % kHist]);
+		for (size_t j = 0; j < idx.size(); j++) {
+			auto code = m_codes[static_cast<size_t>(i) * kHist + idx[j] % kHist];
+			if (Core::CodeState(code) == State::S && wkq[j] == 0 && nearest[j] >= 0) {
+				const auto kc = m_kcodes[static_cast<size_t>(i) * kHist + idx[static_cast<size_t>(nearest[j])] % kHist];
+				if (Core::CodeState(kc) == State::Sr || Core::CodeState(kc) == State::Sw) {
+					code = kc;
+				}
+			}
+			row.agg.Add(code);
 		}
 		if (row.agg.st[static_cast<size_t>(State::X)] == idx.size()) {
 			continue;
@@ -1371,11 +1529,10 @@ void Sampler::CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t
 			r.cpu.push_back(std::move(c));
 		}
 	}
-	m_c.slots     = nslots;
-	m_c.slot_full = g_reg->slot_full.load(std::memory_order_relaxed);
-	m_c.torn      = g_reg->torn.load(std::memory_order_relaxed) + m_ring_torn;
-	m_c.print_us  = g_print_us.load(std::memory_order_relaxed);
-	auto text     = Core::Format(&r, &m_c);
+	m_c.slots    = nslots;
+	m_c.print_us = g_print_us.load(std::memory_order_relaxed);
+	auto text    = Core::Format(&r, &m_c);
+	m_c.Rebase();
 	for (auto& slot: g_rep) {
 		if (slot.state.load(std::memory_order_acquire) == 0) {
 			slot.n    = n;
@@ -1397,8 +1554,10 @@ void Sampler::ProcessFlips() {
 		m_c.ring_drop += pub - m_seen_flips - kFlipRing;
 		m_seen_flips = pub - kFlipRing;
 	}
+	uint64_t m5r = 0;
 	if (t0 >= m_m5_next) {
 		M5Refresh(t0);
+		m5r = FrameStats::NowNs() - t0; // F20j2 (item 552(e)(3)): the refresh's share of the boundary work
 	}
 	M5Snapshot();
 	uint64_t proc_us = 0;
@@ -1418,9 +1577,10 @@ void Sampler::ProcessFlips() {
 		const auto lat     = e.lat_us.load(std::memory_order_relaxed);
 		const auto slot1   = e.slot1.load(std::memory_order_relaxed);
 		const auto src     = e.src.load(std::memory_order_relaxed);
+		const auto prn     = e.print_ns.load(std::memory_order_relaxed);
 		const bool last    = k + 1 == pub;
 		const auto lag_us  = t0 > ns ? (t0 - ns) / 1000u : 0;
-		CloseWindow(n, ns, lat, slot1, src, last && !batch, proc_us, busy_us, idle_us, lag_us);
+		CloseWindow(n, ns, lat, slot1, src, last && !batch, proc_us, busy_us, idle_us, lag_us, prn);
 	}
 	m_seen_flips = pub;
 	// Wait records older than 3 s before the current window start are no longer needed.
@@ -1429,6 +1589,7 @@ void Sampler::ProcessFlips() {
 	               m_recent.end());
 	// The boundary work runs after the flip: it is sampler time inside the new window (RC9 instr_us).
 	m_win_extra_ns += FrameStats::NowNs() - t0;
+	m_win_m5r_ns += m5r;
 }
 
 void Sampler::Run() {
@@ -1450,7 +1611,9 @@ void Sampler::Run() {
 	}
 	m_kmap.reserve(1024);
 	if (m_ntq != nullptr) {
+		const auto q0 = FrameStats::NowNs();
 		KernelQuery();
+		g_kq_first_us.store((FrameStats::NowNs() - q0) / 1000u, std::memory_order_relaxed); // F20j2: kq_us of mode=1
 		m_kq_ok = !m_kmap.empty();
 	}
 	g_kstate.store(m_kq_ok ? 1 : 0, std::memory_order_relaxed);
@@ -1468,11 +1631,26 @@ void Sampler::Run() {
 	SetWaitableTimerEx(timer, &due, 0, nullptr, nullptr, nullptr, 0);
 	for (;;) {
 		const DWORD r = WaitForMultipleObjects(2, handles, FALSE, 1000);
-		if (r == WAIT_OBJECT_0) {
-			Sample(FrameStats::NowNs());
-			SetWaitableTimerEx(timer, &due, 0, nullptr, nullptr, nullptr, 0);
+		if (r != WAIT_OBJECT_0) {
+			ProcessFlips();
+			continue;
 		}
-		ProcessFlips();
+		// F20j2 (item 552(v)(1), RC1(b) of F20k): the absolute period - the next sample is due P after the BEGIN of this
+		// one (Core::NextBegin); when the sample and the flips after it took P or longer, the next sample runs at once.
+		// A flip published together with the timer is taken first, so the schedule sees the current window start.
+		for (;;) {
+			ProcessFlips();
+			const auto begin = FrameStats::NowNs();
+			Sample(begin);
+			ProcessFlips();
+			const auto now  = FrameStats::NowNs();
+			const auto next = Core::NextBegin(begin, now);
+			if (next >= now + 100) {
+				due.QuadPart = -static_cast<LONGLONG>((next - now) / 100u);
+				SetWaitableTimerEx(timer, &due, 0, nullptr, nullptr, nullptr, 0);
+				break;
+			}
+		}
 	}
 }
 
@@ -1557,7 +1735,8 @@ void LogHeader() {
 	for (int i = 0; i < 200 && !g_sampler_ready.load(std::memory_order_acquire); i++) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
-	const auto text = Core::HeaderLine(g_ncpu, g_kstate.load(std::memory_order_relaxed));
+	const auto text = Core::HeaderLine(g_ncpu, g_kstate.load(std::memory_order_relaxed),
+	                                   g_kq_first_us.load(std::memory_order_relaxed));
 	if (!::Log::IsSilent()) {
 		::Log::Write(text);
 	}

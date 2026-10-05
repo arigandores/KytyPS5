@@ -37,6 +37,11 @@ constexpr uint64_t kPrintNs       = 100000000;
 constexpr uint64_t kShortNs       = 70000000;  // short_stalls: 70 <= dt < 100 ms (reference only)
 constexpr uint64_t kWaitRecNs     = 10000000;
 constexpr uint64_t kKernelAfterNs = 40000000;  // RC3: kernel thread state only in samples >= 40 ms after the previous flip
+// F20j2 (HPP-633; ROADMAP s122 item 552(v)(1), RC1 of F20k): the kernel query schedule - a query of the open window only
+// if (its kernel-query time + the last query's cost) <= window / kKqBudgetDiv; an S sample without its own query is
+// split by the nearest snapshot of the same window not farther than kKqNearNs (at the window close).
+constexpr uint64_t kKqBudgetDiv   = 10;
+constexpr uint64_t kKqNearNs      = 60000000;
 constexpr uint32_t kSlots         = 256;
 constexpr uint32_t kHist          = 512;       // per-slot history ring: 512 samples x 5 ms = 2.56 s (RC1: >= 2 s)
 constexpr uint32_t kWaitRing      = 4096;
@@ -182,6 +187,31 @@ struct GapStats {
 // t - the sample times inside (win_start, win_end], in the order they were taken.
 [[nodiscard]] GapStats Gaps(const uint64_t* t, size_t n, uint64_t win_start, uint64_t win_end, uint64_t period_ns);
 
+// F20j2 (item 552(v)(1), RC1 of F20k): the kernel query schedule of the sampler. A sample queries the kernel thread
+// state only if >= kKernelAfterNs passed since the previous flip and (the kernel-query time of the open window + the
+// cost of the last query) <= (time since the previous flip) / kKqBudgetDiv. The first query of the process (no last
+// cost yet) - at the first sample >= kKernelAfterNs. The start probe of Run (kstate) does not enter the schedule.
+struct KqSchedule {
+	uint64_t win_start  = 0; // the previous flip (0 - no flip yet: no query)
+	uint64_t win_kq_ns  = 0; // kernel-query time inside the open window
+	uint64_t last_kq_ns = 0; // the cost of the last query (0 - none yet)
+	[[nodiscard]] bool Due(uint64_t now_ns) const;
+	void               Done(uint64_t cost_ns);
+	// The window closed at flip_ns; carried_kq_ns - kernel-query time of samples already after flip_ns.
+	void NewWindow(uint64_t flip_ns, uint64_t carried_kq_ns);
+};
+
+// F20j2 (item 552(v)(1), RC1(b) of F20k): the absolute sample period. The next sample begins P after the BEGIN of the
+// previous one; a sample (with the boundary work after it) longer than P is followed at once - no catch-up of the
+// missed periods, the kernel query does not stretch the step.
+[[nodiscard]] uint64_t NextBegin(uint64_t begin_ns, uint64_t now_ns);
+
+// F20j2 (item 552(v)(1)): for the n samples of one window (t - sample times, oldest first; kq[i] - sample i has its own
+// kernel snapshot taken at kq_t[i]) out[i] = i for a sample with its own snapshot; otherwise the index of the sample
+// whose snapshot is nearest in time to t[i] and not farther than max_ns (ties - the earlier one), or -1.
+void NearestSnapshot(const uint64_t* t, const uint8_t* kq, const uint64_t* kq_t, size_t n, uint64_t max_ns,
+                     int32_t* out);
+
 // The window's samples in the history ring (RC1, RC11: the window is (start, end], start = the previous flip).
 // t / cost / kq - ring arrays of size hist, hpos - samples taken so far (the newest is hpos - 1). idx receives the ring
 // positions (absolute sample numbers) oldest first; instr_ns = extra_ns + sum(cost) of the window's samples (RC9);
@@ -250,9 +280,14 @@ struct WaitRec {
 
 class WaitRing {
 public:
-	void Push(const WaitRec& rec);
-	// Moves every record written since the previous call into out; records overwritten before this call are counted in
-	// drop, records whose write did not settle after 3 attempts in torn.
+	void Push(const WaitRec& rec); // = Write(Reserve(), rec)
+	// F20j2 (RC4 of F20k): the two halves of Push - the position, then the record (a writer can be preempted between).
+	uint64_t Reserve();
+	void     Write(uint64_t i, const WaitRec& rec);
+	// Moves every record written since the previous call into out, oldest first. Positions the reader no longer holds
+	// (more than kWaitRing behind) are counted in drop. F20j2 (item 552(v)(4), RC4 of F20k): the drain stops at a
+	// position whose write has not finished (not started, or in progress) and continues there on the next call; torn
+	// counts only a position overwritten by a later lap (before or while it is read).
 	void Drain(std::vector<WaitRec>* out, uint64_t* drop, uint64_t* torn);
 
 	struct alignas(64) Entry {
@@ -301,6 +336,22 @@ struct Counters {
 	uint64_t rep_drop     = 0;
 	uint64_t kq_fail      = 0;
 	uint64_t print_us     = 0; // wall of the previous report's print on the present thread (reference)
+	// F20j2 (item 552(v)(7), RC7 of F20k): a flip whose request entry (ring of 64) / submission entry (ring of 1024) was
+	// overwritten before it was read.
+	uint64_t req_miss     = 0;
+	uint64_t sub_miss     = 0;
+	// F20j2 (item 552(v)(3), RC3 of F20k): the zero invariants at the previous window close; Format prints
+	// <name>_w = value - base (the increment over the window) next to the cumulative value. Rebase at every close.
+	struct Base {
+		uint64_t slot_full = 0;
+		uint64_t torn      = 0;
+		uint64_t ring_drop = 0;
+		uint64_t sgap_bad  = 0;
+		uint64_t lines_cut = 0;
+		uint64_t req_miss  = 0;
+		uint64_t sub_miss  = 0;
+	} base;
+	void Rebase();
 };
 
 struct Report {
@@ -312,6 +363,9 @@ struct Report {
 	GapStats gaps;
 	uint32_t kstate       = 0; // 1 - NtQuerySystemInformation(SystemProcessInformation) available
 	uint32_t kq           = 0; // samples of the window with the kernel state
+	uint32_t kq_n         = 0; // F20j2 (item 552(v)(1)): kernel queries in the window
+	uint64_t kq_us        = 0; // F20j2: their time (inside instr_us too)
+	uint64_t m5r_us       = 0; // F20j2 (item 552(e)(3)): the thread-list refresh (CreateToolhelp32Snapshot) in the window (inside instr_us)
 	uint64_t proc_us      = 0;
 	uint64_t sys_busy_us  = 0;
 	uint64_t sys_idle_us  = 0;
@@ -331,7 +385,8 @@ struct Report {
 };
 
 // Mandatory -t lines (RC2): the present thread, GuestGpu, flip_slot, every waiting thread / waker / peer of the
-// window's -w records, every thread with R >= 10 % of the window samples. Sets ThreadRow::must.
+// window's -w records, every thread with R >= 10 % of the window samples; F20j2 (item 552(v)(5), RC5 of F20k): the async
+// submitter (role ASubmit) in a window where it has at least one H:qlock / H:qsubmit sample. Sets ThreadRow::must.
 void MarkMandatory(Report* report);
 
 // Formats the lines (RC13: every line starts at column 0 with "DiagB32", no leading '%', no hexadecimal first field).
@@ -339,7 +394,8 @@ void MarkMandatory(Report* report);
 // sgap_bad (I2' or non-monotonic samples).
 [[nodiscard]] std::string Format(Report* report, Counters* counters);
 
-[[nodiscard]] std::string HeaderLine(uint32_t ncpu, uint32_t kstate);
+// kq_us - the cost of the first kernel query of the process (the start probe of the sampler; F20j2, item 552(v)(1)).
+[[nodiscard]] std::string HeaderLine(uint32_t ncpu, uint32_t kstate, uint64_t kq_us);
 
 } // namespace Core
 

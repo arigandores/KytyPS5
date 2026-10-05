@@ -1249,7 +1249,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 
 	r.cfg->flip_status.count++;
 	// Track F, F20j (KYTY_DIAG_B32): the window boundary for the B32 sampler (n = FrameTrace: n= of this flip); the
-	// reports the sampler has closed are printed here, outside m_mutex.
+	// reports the sampler has closed are printed here, under FlipQueue::m_mutex and VideoOutConfig::mutex (F20j2, RC6 of
+	// F20k: the print time goes into instr_us of the window open during the print).
 	if (Common::DiagB32::g_on) [[unlikely]] {
 		Common::DiagB32::OnFlip(r.cfg->flip_status.count, r.id, r.reserve_host_ns);
 	}

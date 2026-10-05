@@ -124,6 +124,11 @@ public:
 
 private:
 	void Loop() {
+		// Track F, F20j2 (KYTY_DIAG_B32, RC5 of F20k): the async submitter's own slot and role (mandatory -t line in a
+		// window where it waited for or held graphics.queue_mutex).
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			Common::DiagB32::RegisterRole("ASubmit");
+		}
 		for (;;) {
 			Record record;
 			{
@@ -138,7 +143,12 @@ private:
 			vk::Result result;
 			uint64_t   locked_ns = 0;
 			{
+				Common::DiagB32::Mark b32_q; // Track F, F20j2 (KYTY_DIAG_B32 M3 H:qlock / H:qsubmit, RC5 of F20k)
+				if (Common::DiagB32::g_on) [[unlikely]] {
+					b32_q.BeginH(Common::DiagB32::Call::QLock);
+				}
 				Common::LockGuard lock(graphics.queue_mutex);
+				b32_q.End(0, false);
 				locked_ns    = Common::FrameStats::NowNs();
 				auto& submit = record.submit;
 
@@ -160,7 +170,11 @@ private:
 
 				RecordGpuSubmission(record.scheduler, record.master, record.tick, submit, false,
 				                    vk::Result::eNotReady);
+				if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j2 (KYTY_DIAG_B32 M3 H:qsubmit, RC5 of F20k)
+					b32_q.BeginH(Common::DiagB32::Call::QSubmit);
+				}
 				result = graphics.queue.submit(1, &submit_info, nullptr);
+				b32_q.End(0, false);
 				RecordGpuSubmission(record.scheduler, record.master, record.tick, submit, true, result);
 			}
 			if (result != vk::Result::eSuccess) {

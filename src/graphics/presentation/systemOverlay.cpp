@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "common/assert.h"
+#include "common/diagB32.h"
 #include "common/frameStats.h"
 #include "common/stringUtils.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -1071,7 +1072,12 @@ struct SystemOverlay::Impl {
 		// FrameTrace snapshot of the same flip; expected 0 outside IME / error box.
 		Common::FrameStats::Add(Common::FrameStats::Counter::PassOverlay, 1);
 		{
+			Common::DiagB32::Mark b32_q; // Track F, F20j2 (KYTY_DIAG_B32 M3 H:qlock, RC5 of F20k)
+			if (Common::DiagB32::g_on) [[unlikely]] {
+				b32_q.BeginH(Common::DiagB32::Call::QLock);
+			}
 			Common::LockGuard queue_lock(graphics.queue_mutex);
+			b32_q.End(0, false);
 			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(),
 			                                static_cast<VkCommandBuffer>(command));
 		}

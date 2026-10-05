@@ -1,0 +1,253 @@
+F16Q f26_0 kind f26_0 level enemy_final log sha256 a04a7e4c766b0ab7d7e4673c7bbf686e1d2034dbe64079e1d41232e4030c4388 lines 2299124 stdout sha256 e9e94433890f7d4a7ffe90abd47968c21b9d66c33de39189e85c4808b8b3f0fd
+  binary: tag 7e4ded19f577cc9b03b2443111f40ac701a29d6234ffa3d3c9c64f4475a58fcb (expected 7e4ded19f577cc9b03b2443111f40ac701a29d6234ffa3d3c9c64f4475a58fcb); version strings in the binary (reference): ['KytyPS5-2026-09-15-6a2987a-2264-g365cc3c2', 'KytyPS5-2026-09-15-6a2987a-2225-gc0789a34']; installed before 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2 after 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2 (expected 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2); revision texts [('log', 125, '365cc3c')]
+  env of the tag (KYTY_DIAG_*, KYTY_FIX_*, KYTY_GAME_PATCH, KYTY_GPU_CHECKPOINTS, KYTY_SKIP_CEILING): {'KYTY_DIAG_F5': '1', 'KYTY_DIAG_F5ID': '1', 'KYTY_FIX_F26': '0'}; gate text ''
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']; variant form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-05T04:05:43Z; entries of _ShaderCache/PPSA21564: 1347; source hash of the tag binary a54ae4bd != installed FS6 (cold by signature, r
+  entry line 342682; first GuestOut line 11897; scene change line None; first scene frame n 198; hold (sum dt after it) 332.2 s; frames >= 1 s after it 0 (max dt_us 316716) - REPORT
+  run record: outcome ok hold_exit None hold_s 330.1 close_rc 0 close_killed False
+  death markers (REPORT): 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; GamePatch lines 0; cmask_fce_nohit b42=drawn lines 0; [Vulkan][E] 0; skipped draw lines 62 (AsyncPipelines 62) (reference)
+  manifest: manifest cmp EQUAL files 3325 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+  lines carrying DiagF5: 169, FixF5Cmu: 0 [], FixF26: 0 [], DiagF5Id: 944 (mode=1 [76]), DiagF5Ev: 215 (malformed 0)
+  F5 frame lines 168 (malformed 0); mode lines [75] (before the first GuestOut YES); identity violations 0 []; f26 identity violations 0 []; monotonicity violations 0 []; lines with f5cmu_* != 0: 0, with f26_* != 0: 0; F5 health (REPORT) OK
+  F5 last line (log line 2294294): frame=20054 rt_resolves=16290 dcc_rt=2865 rtcheck_meta=4067005 dcc_rt_pending=79436 dcc_rt_cleared=79436 dcc_rt_skip_levels=0 dcc_rt_skip_partial=0 dcc_rt_skip_decode=0 dcc_rt_skip_layers=0 dcc_mat_pending=192 dcc_mat_cleared=192 dcc_mat_undecoded=0 dcc_fce=119942 dcc_fce_image=99876 dcc_fce_no_image=20066 dcc_fill_all=280426 dcc_fill_meta=99875 dcc_fill_clear=99875 dcc_fill_uncompressed=0 dcc_fill_unknown=0 dcc_reset_stale=11 dcc_reset_type=0 meta_refused_known=380053 meta_cs_tracked=280351 meta_cs_untracked=99702 meta_dma_untracked=0 meta_dma_noclear=0 cmask_rt_pending=20256 cmask_rt_cleared=20256 cmask_rt_skip_value=0 cmask_rt_skip_partial=0 cmask_rt_skip_decode=0 cmask_rt_skip_layers=0 cmask_fce=40119 cmask_fce_noimage=0 cmask_fce_meta=20056 cmask_fce_msaa=0 cmask_fce_layout=0 cmask_fce_nofill=0 cmask_fce_drawn=19859 cmask_fce_b42=200 cmask_fce_unapplied=4 fmask_read=0 round_unorm=0 round_float=1011387 round_other=0 ds_unbound=0 ds_unbound_clear=0 stereo_writes=399748 stereo_nonzero=0 zero_disp=238356 f5cmu_kept=0 f5cmu_kept_applied=0 f5cmu_exact_stale=0 f5cmu_fallback=0 dcc_stale_bucket_only=11 dcc_stale_fallback=0 cmask_rt_bucket_only=0 f5cmu_exact_cpu=0 f26_kept=0 f26_kept_applied=0 f26_exact_stale=0 f26_fallback=0 f26_deferred_declined=0
+  F5 f5cmu_*: f5cmu_kept=0 f5cmu_kept_applied=0 f5cmu_exact_stale=0 f5cmu_fallback=0 f5cmu_exact_cpu=0; f26_*: f26_kept=0 f26_kept_applied=0 f26_exact_stale=0 f26_fallback=0 f26_deferred_declined=0; F26 reference: dcc_stale_bucket_only=11 dcc_stale_fallback=0 cmask_rt_bucket_only=0; cmask_fce_b42=200 cmask_fce_unapplied=4
+  LIMIT cmask_fce (n=1024): lines 204 exhausted NO; LIMIT cmask_fce_nohit (n=64): lines 0 exhausted NO; LIMIT dcc_stale (n=256): lines 11 exhausted NO
+  cmask fix counts all {'off': 204, 'fresh': 0, 'exact_stale': 0, 'kept': 0, 'kept_applied': 0, 'fallback': 0}; in scene {'off': 5, 'fresh': 0, 'exact_stale': 0, 'kept': 0, 'kept_applied': 0, 'fallback': 0}
+  dcc_stale sites {'prepare': 11, 'adopt': 0}; fix counts all {'off': 11, 'fresh': 0, 'exact_stale': 0, 'kept': 0, 'kept_applied': 0, 'fallback': 0}; in scene {'off': 1, 'fresh': 0, 'exact_stale': 0, 'kept': 0, 'kept_applied': 0, 'fallback': 0}; dcc_stale_apply {'cleared': 0, 'declined': 0}
+  APPLY_LATE (item 515 (v)): 0 lines; apply lines without an adopt line of their n: 0
+  EVENT fce n=1 b42=hit present=10 gpu=0 image=0x0000000538bc0000 cmask=0x000000055675f000 extent=480x270 applied=1 fix=off why=- line=52505 before
+  EVENT fce n=2 b42=hit present=10 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 applied=0 fix=off why=- line=55939 before
+  EVENT fce n=3 b42=hit present=10 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 applied=1 fix=off why=- line=127549 before
+  EVENT fce n=4 b42=hit present=10 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 applied=1 fix=off why=- line=127999 before
+  EVENT fce n=5 b42=hit present=13 gpu=3 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 applied=1 fix=off why=- line=129246 before
+  EVENT fce n=6 b42=hit present=13 gpu=3 image=0x0000000539100000 cmask=0x0000000570787000 extent=608x342 applied=1 fix=off why=- line=129948 before
+  EVENT fce n=7 b42=hit present=13 gpu=3 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=0 fix=off why=- line=130036 before
+  EVENT fce n=8 b42=hit present=14 gpu=4 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=1 fix=off why=- line=131681 before
+  EVENT fce n=9 b42=hit present=15 gpu=5 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=1 fix=off why=- line=132170 before
+  EVENT fce n=10 b42=hit present=16 gpu=6 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=1 fix=off why=- line=133225 before
+  EVENT fce n=11 b42=hit present=17 gpu=7 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=1 fix=off why=- line=134265 before
+  EVENT fce n=12 b42=hit present=18 gpu=8 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=1 fix=off why=- line=135672 before
+  EVENT fce n=13 b42=hit present=19 gpu=9 image=0x000000053b6a0000 cmask=0x0000000570b46000 extent=608x342 applied=1 fix=off why=- line=138332 before
+  EVENT fce n=14 b42=hit present=19 gpu=9 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=0 fix=off why=- line=138386 before
+  EVENT fce n=15 b42=hit present=20 gpu=10 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=1 fix=off why=- line=140248 before
+  EVENT fce n=16 b42=hit present=21 gpu=11 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=1 fix=off why=- line=142699 before
+  EVENT fce n=17 b42=hit present=22 gpu=12 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=1 fix=off why=- line=144647 before
+  EVENT fce n=18 b42=hit present=22 gpu=12 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=1 fix=off why=- line=148015 before
+  EVENT fce n=19 b42=hit present=23 gpu=13 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=1 fix=off why=- line=148853 before
+  EVENT fce n=20 b42=hit present=24 gpu=14 image=0x000000053c390000 cmask=0x000000057112e000 extent=832x468 applied=1 fix=off why=- line=151637 before
+  EVENT fce n=21 b42=hit present=24 gpu=14 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=0 fix=off why=- line=151769 before
+  EVENT fce n=22 b42=hit present=25 gpu=15 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=1 fix=off why=- line=152759 before
+  EVENT fce n=23 b42=hit present=26 gpu=16 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=1 fix=off why=- line=153242 before
+  EVENT fce n=24 b42=hit present=27 gpu=17 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=1 fix=off why=- line=153693 before
+  EVENT fce n=25 b42=hit present=28 gpu=18 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=1 fix=off why=- line=155170 before
+  EVENT fce n=26 b42=hit present=29 gpu=19 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=1 fix=off why=- line=156838 before
+  EVENT fce n=27 b42=hit present=30 gpu=20 image=0x000000053cc10000 cmask=0x0000000571728000 extent=960x540 applied=1 fix=off why=- line=158452 before
+  EVENT fce n=28 b42=hit present=30 gpu=20 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=158490 before
+  EVENT fce n=29 b42=hit present=31 gpu=21 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=159275 before
+  EVENT fce n=30 b42=hit present=32 gpu=22 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=160145 before
+  EVENT fce n=31 b42=hit present=33 gpu=23 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=161703 before
+  EVENT fce n=32 b42=hit present=34 gpu=24 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=162918 before
+  EVENT fce n=33 b42=hit present=35 gpu=25 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=163373 before
+  EVENT fce n=34 b42=hit present=36 gpu=26 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=164642 before
+  EVENT fce n=35 b42=hit present=37 gpu=27 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=165889 before
+  EVENT fce n=36 b42=hit present=38 gpu=28 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=173557 before
+  EVENT fce n=37 b42=hit present=39 gpu=29 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=177175 before
+  EVENT fce n=38 b42=hit present=40 gpu=30 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=177499 before
+  EVENT fce n=39 b42=hit present=41 gpu=31 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=177936 before
+  EVENT fce n=40 b42=hit present=42 gpu=32 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=178456 before
+  EVENT fce n=41 b42=hit present=43 gpu=33 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=178897 before
+  EVENT fce n=42 b42=hit present=44 gpu=34 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=179451 before
+  EVENT fce n=43 b42=hit present=45 gpu=35 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=179938 before
+  EVENT fce n=44 b42=hit present=46 gpu=36 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=181381 before
+  EVENT fce n=45 b42=hit present=47 gpu=37 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=183235 before
+  EVENT fce n=46 b42=hit present=48 gpu=38 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=185110 before
+  EVENT fce n=47 b42=hit present=49 gpu=39 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=186240 before
+  EVENT fce n=48 b42=hit present=50 gpu=40 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=186312 before
+  EVENT fce n=49 b42=hit present=51 gpu=41 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=186785 before
+  EVENT fce n=50 b42=hit present=52 gpu=42 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=187351 before
+  EVENT fce n=51 b42=hit present=53 gpu=43 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=187634 before
+  EVENT fce n=52 b42=hit present=54 gpu=44 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=188693 before
+  EVENT fce n=53 b42=hit present=55 gpu=45 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=189179 before
+  EVENT fce n=54 b42=hit present=56 gpu=46 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=189384 before
+  EVENT fce n=55 b42=hit present=57 gpu=47 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=189618 before
+  EVENT fce n=56 b42=hit present=58 gpu=48 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=189825 before
+  EVENT fce n=57 b42=hit present=59 gpu=49 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=190011 before
+  EVENT fce n=58 b42=hit present=60 gpu=50 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=190251 before
+  EVENT fce n=59 b42=hit present=61 gpu=51 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=190960 before
+  EVENT fce n=60 b42=hit present=62 gpu=52 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=191407 before
+  EVENT fce n=61 b42=hit present=63 gpu=53 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=191699 before
+  EVENT fce n=62 b42=hit present=64 gpu=54 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=192665 before
+  EVENT fce n=63 b42=hit present=65 gpu=55 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=192992 before
+  EVENT fce n=64 b42=hit present=66 gpu=56 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=193102 before
+  EVENT fce n=65 b42=hit present=67 gpu=57 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=193174 before
+  EVENT fce n=66 b42=hit present=68 gpu=58 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=194674 before
+  EVENT fce n=67 b42=hit present=69 gpu=59 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=195342 before
+  EVENT fce n=68 b42=hit present=70 gpu=60 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=195734 before
+  EVENT fce n=69 b42=hit present=71 gpu=61 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=195933 before
+  EVENT fce n=70 b42=hit present=72 gpu=62 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=195980 before
+  EVENT fce n=71 b42=hit present=73 gpu=63 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=196159 before
+  EVENT fce n=72 b42=hit present=74 gpu=64 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=196228 before
+  EVENT fce n=73 b42=hit present=75 gpu=65 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=196438 before
+  EVENT fce n=74 b42=hit present=76 gpu=66 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=196504 before
+  EVENT fce n=75 b42=hit present=77 gpu=67 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=196610 before
+  EVENT fce n=76 b42=hit present=78 gpu=68 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=196669 before
+  EVENT fce n=77 b42=hit present=79 gpu=69 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=196784 before
+  EVENT fce n=78 b42=hit present=80 gpu=70 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=196850 before
+  EVENT fce n=79 b42=hit present=81 gpu=71 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=197353 before
+  EVENT fce n=80 b42=hit present=82 gpu=72 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=197427 before
+  EVENT fce n=81 b42=hit present=83 gpu=73 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=197467 before
+  EVENT fce n=82 b42=hit present=84 gpu=74 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=198186 before
+  EVENT fce n=83 b42=hit present=85 gpu=75 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=199143 before
+  EVENT fce n=84 b42=hit present=86 gpu=76 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=200140 before
+  EVENT fce n=85 b42=hit present=87 gpu=77 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=200755 before
+  EVENT fce n=86 b42=hit present=88 gpu=78 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=201244 before
+  EVENT fce n=87 b42=hit present=89 gpu=79 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=201873 before
+  EVENT fce n=88 b42=hit present=90 gpu=80 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=202538 before
+  EVENT fce n=89 b42=hit present=91 gpu=81 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=203853 before
+  EVENT fce n=90 b42=hit present=92 gpu=82 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=204689 before
+  EVENT fce n=91 b42=hit present=93 gpu=83 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=205850 before
+  EVENT fce n=92 b42=hit present=94 gpu=84 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=206863 before
+  EVENT fce n=93 b42=hit present=95 gpu=85 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=208208 before
+  EVENT fce n=94 b42=hit present=96 gpu=86 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=209596 before
+  EVENT fce n=95 b42=hit present=97 gpu=87 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=210714 before
+  EVENT fce n=96 b42=hit present=98 gpu=88 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=211383 before
+  EVENT fce n=97 b42=hit present=99 gpu=89 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=212823 before
+  EVENT fce n=98 b42=hit present=100 gpu=90 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=213936 before
+  EVENT fce n=99 b42=hit present=101 gpu=91 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=215068 before
+  EVENT fce n=100 b42=hit present=102 gpu=92 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=215760 before
+  EVENT fce n=101 b42=hit present=103 gpu=93 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=216604 before
+  EVENT fce n=102 b42=hit present=104 gpu=94 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=217413 before
+  EVENT fce n=103 b42=hit present=105 gpu=95 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=218472 before
+  EVENT fce n=104 b42=hit present=106 gpu=96 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=219442 before
+  EVENT fce n=105 b42=hit present=107 gpu=97 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=220224 before
+  EVENT fce n=106 b42=hit present=108 gpu=98 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=221196 before
+  EVENT fce n=107 b42=hit present=109 gpu=99 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=221696 before
+  EVENT fce n=108 b42=hit present=110 gpu=100 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=222457 before
+  EVENT fce n=109 b42=hit present=111 gpu=101 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=223742 before
+  EVENT fce n=110 b42=hit present=112 gpu=102 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=225167 before
+  EVENT fce n=111 b42=hit present=113 gpu=103 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=226180 before
+  EVENT fce n=112 b42=hit present=114 gpu=104 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=227083 before
+  EVENT fce n=113 b42=hit present=115 gpu=105 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=227299 before
+  EVENT fce n=114 b42=hit present=116 gpu=106 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=227412 before
+  EVENT fce n=115 b42=hit present=117 gpu=107 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=227568 before
+  EVENT fce n=116 b42=hit present=118 gpu=108 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=227707 before
+  EVENT fce n=117 b42=hit present=119 gpu=109 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=228872 before
+  EVENT fce n=118 b42=hit present=120 gpu=110 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=229979 before
+  EVENT fce n=119 b42=hit present=121 gpu=111 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=231455 before
+  EVENT fce n=120 b42=hit present=122 gpu=112 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=232398 before
+  EVENT fce n=121 b42=hit present=123 gpu=113 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=233652 before
+  EVENT fce n=122 b42=hit present=124 gpu=114 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=234086 before
+  EVENT fce n=123 b42=hit present=125 gpu=115 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=235497 before
+  EVENT fce n=124 b42=hit present=126 gpu=116 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=236023 before
+  EVENT fce n=125 b42=hit present=127 gpu=117 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=237311 before
+  EVENT fce n=126 b42=hit present=128 gpu=118 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=238267 before
+  EVENT fce n=127 b42=hit present=129 gpu=119 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=238555 before
+  EVENT fce n=128 b42=hit present=130 gpu=120 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=239580 before
+  EVENT fce n=129 b42=hit present=131 gpu=121 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=240881 before
+  EVENT fce n=130 b42=hit present=132 gpu=122 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=241577 before
+  EVENT fce n=131 b42=hit present=133 gpu=123 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=242442 before
+  EVENT fce n=132 b42=hit present=134 gpu=124 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=243374 before
+  EVENT fce n=133 b42=hit present=135 gpu=125 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=243594 before
+  EVENT fce n=134 b42=hit present=136 gpu=126 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=243807 before
+  EVENT fce n=135 b42=hit present=137 gpu=127 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=244892 before
+  EVENT fce n=136 b42=hit present=138 gpu=128 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=245470 before
+  EVENT fce n=137 b42=hit present=139 gpu=129 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=246830 before
+  EVENT fce n=138 b42=hit present=140 gpu=130 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=247217 before
+  EVENT fce n=139 b42=hit present=141 gpu=131 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=247600 before
+  EVENT fce n=140 b42=hit present=142 gpu=132 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=248456 before
+  EVENT fce n=141 b42=hit present=143 gpu=133 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=249672 before
+  EVENT fce n=142 b42=hit present=144 gpu=134 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=250370 before
+  EVENT fce n=143 b42=hit present=145 gpu=135 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=251552 before
+  EVENT fce n=144 b42=hit present=146 gpu=136 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=252805 before
+  EVENT fce n=145 b42=hit present=147 gpu=137 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=253223 before
+  EVENT fce n=146 b42=hit present=148 gpu=138 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=253787 before
+  EVENT fce n=147 b42=hit present=149 gpu=139 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=253984 before
+  EVENT fce n=148 b42=hit present=150 gpu=140 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=254514 before
+  EVENT fce n=149 b42=hit present=151 gpu=141 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=254645 before
+  EVENT fce n=150 b42=hit present=152 gpu=142 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=255089 before
+  EVENT fce n=151 b42=hit present=153 gpu=143 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=256156 before
+  EVENT fce n=152 b42=hit present=154 gpu=144 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=256407 before
+  EVENT fce n=153 b42=hit present=155 gpu=145 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=256622 before
+  EVENT fce n=154 b42=hit present=156 gpu=146 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=256777 before
+  EVENT fce n=155 b42=hit present=157 gpu=147 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=256912 before
+  EVENT fce n=156 b42=hit present=158 gpu=148 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=257307 before
+  EVENT fce n=157 b42=hit present=159 gpu=149 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=257559 before
+  EVENT fce n=158 b42=hit present=160 gpu=150 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=258309 before
+  EVENT fce n=159 b42=hit present=161 gpu=151 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=259548 before
+  EVENT fce n=160 b42=hit present=162 gpu=152 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=260212 before
+  EVENT fce n=161 b42=hit present=163 gpu=153 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=261297 before
+  EVENT fce n=162 b42=hit present=164 gpu=154 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=262105 before
+  EVENT fce n=163 b42=hit present=165 gpu=155 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=262516 before
+  EVENT fce n=164 b42=hit present=166 gpu=156 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=263191 before
+  EVENT fce n=165 b42=hit present=167 gpu=157 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=263993 before
+  EVENT fce n=166 b42=hit present=168 gpu=158 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=264535 before
+  EVENT fce n=167 b42=hit present=169 gpu=159 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=264935 before
+  EVENT fce n=168 b42=hit present=170 gpu=160 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=265477 before
+  EVENT fce n=169 b42=hit present=171 gpu=161 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=266154 before
+  EVENT fce n=170 b42=hit present=172 gpu=162 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=266228 before
+  EVENT fce n=171 b42=hit present=173 gpu=163 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=267055 before
+  EVENT fce n=172 b42=hit present=174 gpu=164 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=267141 before
+  EVENT fce n=173 b42=hit present=175 gpu=165 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=267198 before
+  EVENT fce n=174 b42=hit present=176 gpu=166 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=267669 before
+  EVENT fce n=175 b42=hit present=177 gpu=167 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=268517 before
+  EVENT fce n=176 b42=hit present=178 gpu=168 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=268603 before
+  EVENT fce n=177 b42=hit present=179 gpu=169 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=269537 before
+  EVENT fce n=178 b42=hit present=180 gpu=170 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=270173 before
+  EVENT fce n=179 b42=hit present=181 gpu=171 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=271352 before
+  EVENT fce n=180 b42=hit present=182 gpu=172 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=301236 before
+  EVENT fce n=181 b42=hit present=183 gpu=173 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=311540 before
+  EVENT fce n=182 b42=hit present=185 gpu=175 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=326499 before
+  EVENT fce n=183 b42=hit present=185 gpu=175 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=326614 before
+  EVENT fce n=184 b42=hit present=186 gpu=176 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=327350 before
+  EVENT fce n=185 b42=hit present=187 gpu=177 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=329169 before
+  EVENT fce n=186 b42=hit present=188 gpu=178 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=330193 before
+  EVENT fce n=187 b42=hit present=189 gpu=179 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=331531 before
+  EVENT fce n=188 b42=hit present=190 gpu=180 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=333542 before
+  EVENT fce n=189 b42=hit present=191 gpu=181 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=335862 before
+  EVENT fce n=190 b42=hit present=192 gpu=182 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=338370 before
+  EVENT fce n=191 b42=hit present=193 gpu=183 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=340768 before
+  EVENT fce n=192 b42=hit present=194 gpu=184 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=340853 before
+  EVENT fce n=193 b42=hit present=195 gpu=185 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=341210 before
+  EVENT fce n=194 b42=hit present=196 gpu=186 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=341757 before
+  EVENT fce n=195 b42=hit present=197 gpu=187 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=341887 before
+  EVENT fce n=196 b42=hit present=198 gpu=188 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=342088 before
+  EVENT fce n=197 b42=hit present=199 gpu=189 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=342298 before
+  EVENT fce n=198 b42=hit present=200 gpu=190 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=342449 before
+  EVENT fce n=199 b42=hit present=201 gpu=191 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=342593 before
+  EVENT fce n=200 b42=hit present=202 gpu=192 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=342726 scene
+  EVENT fce n=201 b42=hit present=203 gpu=193 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=342878 scene
+  EVENT fce n=202 b42=hit present=204 gpu=194 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=342973 scene
+  EVENT fce n=203 b42=hit present=207 gpu=199 image=0x000000053c390000 cmask=0x000000057112e000 extent=832x468 applied=1 fix=off why=- line=629252 scene
+  EVENT fce n=204 b42=hit present=212 gpu=204 image=0x000000053cc10000 cmask=0x0000000571728000 extent=960x540 applied=1 fix=off why=- line=630645 scene
+  EVENT dcc_stale site=prepare n=1 present=10 gpu=0 image=0x0000000510d10000 dcc=0x000000056d898000 extent=1920x1080 exact=fresh fix=off why=- line=55992 before
+  EVENT dcc_stale site=prepare n=2 present=10 gpu=0 image=0x0000000514080000 dcc=0x000000056d8b8000 extent=1920x1080 exact=fresh fix=off why=- line=119125 before
+  EVENT dcc_stale site=prepare n=3 present=14 gpu=3 image=0x0000000511650000 dcc=0x000000057072f000 extent=2432x1368 exact=fresh fix=off why=- line=130070 before
+  EVENT dcc_stale site=prepare n=4 present=14 gpu=4 image=0x00000005168c0000 dcc=0x0000000570765000 extent=2432x1368 exact=fresh fix=off why=- line=130147 before
+  EVENT dcc_stale site=prepare n=5 present=19 gpu=9 image=0x0000000511650000 dcc=0x0000000570aee000 extent=2432x1368 exact=fresh fix=off why=- line=138472 before
+  EVENT dcc_stale site=prepare n=6 present=19 gpu=9 image=0x00000005168c0000 dcc=0x0000000570b24000 extent=2432x1368 exact=fresh fix=off why=- line=138607 before
+  EVENT dcc_stale site=prepare n=7 present=24 gpu=14 image=0x0000000512cf0000 dcc=0x0000000570fa2000 extent=3328x1872 exact=fresh fix=off why=- line=151810 before
+  EVENT dcc_stale site=prepare n=8 present=25 gpu=15 image=0x000000051c630000 dcc=0x0000000571006000 extent=3328x1872 exact=fresh fix=off why=- line=152160 before
+  EVENT dcc_stale site=prepare n=9 present=30 gpu=20 image=0x0000000513bf0000 dcc=0x0000000571540000 extent=3840x2160 exact=fresh fix=off why=- line=158518 before
+  EVENT dcc_stale site=prepare n=10 present=30 gpu=20 image=0x0000000520440000 dcc=0x00000005715c4000 extent=3840x2160 exact=fresh fix=off why=- line=158588 before
+  EVENT dcc_stale site=prepare n=11 present=207 gpu=199 image=0x000000051c630000 dcc=0x0000000571006000 extent=3328x1872 exact=fresh fix=off why=- line=629377 scene
+  video: index records 20119; one-frame glitches 0 at presents []; sheet: C:/kyty/f287/f16q/runs/f26_0/sheet_f26_0.png frames 20119 step 419 tiles 8x6
+  first scene frame (REPORT, luma.txt): ['SCENE first > 5: video 207 present 208 mean 98.9', 'SCENE first > 5 held 60 frames: video 207 present 208 mean 98.9']
+  DiagF5Id sum lines 34 (malformed 0, identity (g)(4) violations 0 - REPORT); stamp_late 0
+  ROW binary sha256 of the tag = 7e4ded19 (F16o2 copy; item 507 (g), 515): YES
+  ROW installed FS6 9325446c before the tag: YES
+  ROW installed FS6 9325446c after the return: YES
+  ROW env of the form f26_0 (no KYTY_SKIP_CEILING / skipceil, item 515 N1): YES
+  ROW entered (entry line of enemy_final): YES
+  ROW hold >= 300 s after the first scene frame: YES
+  ROW the process lived through the hold (outcome ok, hold_exit null): YES
+  ROW manifest of the caches, saves and GLCache before = after the return: YES
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch / b42=drawn line: YES
+  ROW video index records >= 3000: YES
+  ROW control: 0 lines FixF26:: YES
+  ROW control: dcc_stale event lines >= 1, 0 malformed DiagF5Ev lines: YES
+  ROW control: a parseable DiagF5 frame line (64 fields), 0 malformed: YES
+  ROW control: frame-line identities of item 507 (b)(4) on every DiagF5 line (all f26_* = 0): YES
+  ROW control: every dcc_stale line fix=off, 0 lines dcc_stale_apply: YES
+  ROW control: DiagF5Id: mode=1 before the first GuestOut (KYTY_DIAG_F5ID=1): YES
+  ROW control: 0 lines FixF5Cmu: and f5cmu_* = 0 on every frame line (KYTY_FIX_F5CMU not set): YES
+  CONTROL F26_0 ALIVE

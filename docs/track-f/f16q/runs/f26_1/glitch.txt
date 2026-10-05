@@ -1,0 +1,2 @@
+C:/kyty/f287/f16q/rec_f26_1.mp4: 20122 frames 960x540, index entries 20122
+one-frame glitches: 0

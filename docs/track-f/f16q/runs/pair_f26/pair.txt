@@ -1,0 +1,83 @@
+F16Q PAIR f26 arms f26_0 / f26_1
+  DCC (key site, image, dcc) events arm0 11 arm1 11; pairs 11; unpaired arm0 0 arm1 0 (of them nohit of arm 1 0); order kept YES
+  reading classes of arm 1: kept=5 kept_applied=6; cmask event lines arm0 204 arm1 202 (reference)
+  DCC ITEM 001 PAIR class_arm1=kept fix_arm1=kept why_arm1=decode fix_arm0=off window presents 9..13
+    arm0: dcc_stale site=prepare n=1 present=10 gpu=0 image=0x0000000510d10000 dcc=0x000000056d898000 extent=1920x1080 exact=fresh fix=off before
+    arm1: dcc_stale site=prepare n=1 present=11 gpu=0 image=0x0000000510d10000 dcc=0x000000056d898000 extent=1920x1080 exact=fresh fix=kept why=decode before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 none arm1 none
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  DCC ITEM 002 PAIR class_arm1=kept_applied fix_arm1=kept_applied why_arm1=- fix_arm0=off window presents 9..13
+    arm0: dcc_stale site=prepare n=2 present=10 gpu=0 image=0x0000000514080000 dcc=0x000000056d8b8000 extent=1920x1080 exact=fresh fix=off before
+    arm1: dcc_stale site=prepare n=2 present=11 gpu=0 image=0x0000000514080000 dcc=0x000000056d8b8000 extent=1920x1080 exact=fresh fix=kept_applied before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 none arm1 none
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  DCC ITEM 003 PAIR class_arm1=kept fix_arm1=kept why_arm1=decode fix_arm0=off window presents 13..17
+    arm0: dcc_stale site=prepare n=3 present=14 gpu=3 image=0x0000000511650000 dcc=0x000000057072f000 extent=2432x1368 exact=fresh fix=off before
+    arm1: dcc_stale site=prepare n=3 present=15 gpu=4 image=0x0000000511650000 dcc=0x000000057072f000 extent=2432x1368 exact=fresh fix=kept why=decode before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 none arm1 none
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  DCC ITEM 004 PAIR class_arm1=kept_applied fix_arm1=kept_applied why_arm1=- fix_arm0=off window presents 13..17
+    arm0: dcc_stale site=prepare n=4 present=14 gpu=4 image=0x00000005168c0000 dcc=0x0000000570765000 extent=2432x1368 exact=fresh fix=off before
+    arm1: dcc_stale site=prepare n=4 present=15 gpu=4 image=0x00000005168c0000 dcc=0x0000000570765000 extent=2432x1368 exact=fresh fix=kept_applied before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 none arm1 none
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  DCC ITEM 005 PAIR class_arm1=kept fix_arm1=kept why_arm1=decode fix_arm0=off window presents 18..21
+    arm0: dcc_stale site=prepare n=5 present=19 gpu=9 image=0x0000000511650000 dcc=0x0000000570aee000 extent=2432x1368 exact=fresh fix=off before
+    arm1: dcc_stale site=prepare n=5 present=19 gpu=8 image=0x0000000511650000 dcc=0x0000000570aee000 extent=2432x1368 exact=fresh fix=kept why=decode before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 none arm1 none
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  DCC ITEM 006 PAIR class_arm1=kept_applied fix_arm1=kept_applied why_arm1=- fix_arm0=off window presents 18..21
+    arm0: dcc_stale site=prepare n=6 present=19 gpu=9 image=0x00000005168c0000 dcc=0x0000000570b24000 extent=2432x1368 exact=fresh fix=off before
+    arm1: dcc_stale site=prepare n=6 present=19 gpu=8 image=0x00000005168c0000 dcc=0x0000000570b24000 extent=2432x1368 exact=fresh fix=kept_applied before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 none arm1 none
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  DCC ITEM 007 PAIR class_arm1=kept fix_arm1=kept why_arm1=decode fix_arm0=off window presents 23..27
+    arm0: dcc_stale site=prepare n=7 present=24 gpu=14 image=0x0000000512cf0000 dcc=0x0000000570fa2000 extent=3328x1872 exact=fresh fix=off before
+    arm1: dcc_stale site=prepare n=7 present=25 gpu=14 image=0x0000000512cf0000 dcc=0x0000000570fa2000 extent=3328x1872 exact=fresh fix=kept why=decode before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 none arm1 none
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  DCC ITEM 008 PAIR class_arm1=kept_applied fix_arm1=kept_applied why_arm1=- fix_arm0=off window presents 24..28
+    arm0: dcc_stale site=prepare n=8 present=25 gpu=15 image=0x000000051c630000 dcc=0x0000000571006000 extent=3328x1872 exact=fresh fix=off before
+    arm1: dcc_stale site=prepare n=8 present=26 gpu=15 image=0x000000051c630000 dcc=0x0000000571006000 extent=3328x1872 exact=fresh fix=kept_applied before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 none arm1 none
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  DCC ITEM 009 PAIR class_arm1=kept fix_arm1=kept why_arm1=decode fix_arm0=off window presents 29..33
+    arm0: dcc_stale site=prepare n=9 present=30 gpu=20 image=0x0000000513bf0000 dcc=0x0000000571540000 extent=3840x2160 exact=fresh fix=off before
+    arm1: dcc_stale site=prepare n=9 present=31 gpu=20 image=0x0000000513bf0000 dcc=0x0000000571540000 extent=3840x2160 exact=fresh fix=kept why=decode before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 none arm1 none
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  DCC ITEM 010 PAIR class_arm1=kept_applied fix_arm1=kept_applied why_arm1=- fix_arm0=off window presents 29..33
+    arm0: dcc_stale site=prepare n=10 present=30 gpu=20 image=0x0000000520440000 dcc=0x00000005715c4000 extent=3840x2160 exact=fresh fix=off before
+    arm1: dcc_stale site=prepare n=10 present=31 gpu=20 image=0x0000000520440000 dcc=0x00000005715c4000 extent=3840x2160 exact=fresh fix=kept_applied before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 none arm1 none
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  DCC ITEM 011 PAIR class_arm1=kept_applied fix_arm1=kept_applied why_arm1=- fix_arm0=off window presents 206..210
+    arm0: dcc_stale site=prepare n=11 present=207 gpu=199 image=0x000000051c630000 dcc=0x0000000571006000 extent=3328x1872 exact=fresh fix=off scene
+    arm1: dcc_stale site=prepare n=11 present=208 gpu=198 image=0x000000051c630000 dcc=0x0000000571006000 extent=3328x1872 exact=fresh fix=kept_applied scene
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    skipped draw frames in [gpu-1, gpu+3]: arm0 [200, 201] arm1 [198]
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+SHEETS items with an event sheet 11; frames extracted arm0 77 of 77 arm1 77 of 77; files 13
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_001_kept.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_002_kept_applied.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_003_kept.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_004_kept_applied.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_005_kept.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_006_kept_applied.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_007_kept.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_008_kept_applied.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_009_kept.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_010_kept_applied.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\event_011_kept_applied.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\aligned_f26_0.png
+  SHEET C:/kyty/f287/f16q/runs/pair_f26/sheets\aligned_f26_1.png

@@ -1,0 +1,3 @@
+LUMA C:/kyty/f287/f16q/rec_f26_1.mp4: video frames 20122, idx records 20122
+SCENE first > 5: video 206 present 207 mean 69.4
+SCENE first > 5 held 60 frames: video 206 present 207 mean 69.4

@@ -1,0 +1,3 @@
+LUMA C:/kyty/f287/f16q/rec_f5cmu_0b.mp4: video frames 20113, idx records 20113
+SCENE first > 5: video 211 present 212 mean 35.1
+SCENE first > 5 held 60 frames: video 211 present 212 mean 35.1

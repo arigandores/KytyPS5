@@ -94,7 +94,8 @@ const char* StandName(Stand stand) {
 
 void StandRequestClose() {
 	// KYTY_S_REPLAY_TEST=stop: the same event a click on the close button of the window produces; the preparation loop
-	// (window.cpp, WindowPrepareShaders) returns and the shutdown path stores m_precache_stop.
+	// (window.cpp, WindowPrepareShaders) returns false after PipelineCache::ReplayCloseStop stored m_precache_stop and
+	// joined the precache/rebuild thread (S17a2, item 532(b)); then the caller ends the process by std::quick_exit.
 	SDL_Event event {};
 	event.type = SDL_QUIT;
 	SDL_PushEvent(&event);
@@ -665,20 +666,33 @@ bool Canonicalize(const IR::ResourcePlan& plan, const Trace& trace, const IR::Re
 		canonical[i].role  = role;
 		canonical[i].value = Canonical(role, raw[i].value, descriptor);
 	}
-	// KYTY_S_REPLAY_TEST=canon: one canonical T# base field spoiled (a non-null T# made null) in one record - the
-	// self-check below must reject it (canon_mismatch > 0, member K3).
+	// KYTY_S_REPLAY_TEST=canon: one canonical T# base field spoiled (a non-null T# made null) - the self-check below must
+	// reject it (canon_mismatch > 0, member K3). S17a2 (item 532(d)(a), RC4(a) of the S17b review): the stand is spent
+	// only by a record whose spoiled copy the self-check rejected; when it passes (the specialization does not depend on
+	// that T# being null) the word gets its canonical value back, the record is checked unspoiled and the stand spoils
+	// the next suitable record. The stand line carries the outcome (rejected=1|0).
+	size_t stand_word = canonical.size();
 	if (canon_stand && !g_canon_stand_done.load()) {
-		for (auto& word: canonical) {
-			if (word.role == ROLE_T_LO && word.value == 1u) {
-				word.value = 0u;
-				g_canon_stand_done.store(true);
-				LOGF("ShaderReplay: stand canon applied hash=0x%016" PRIx64 "\n", plan.shader_hash);
+		for (size_t i = 0; i < canonical.size(); i++) {
+			if (canonical[i].role == ROLE_T_LO && canonical[i].value == 1u) {
+				canonical[i].value = 0u;
+				stand_word         = i;
 				break;
 			}
 		}
 	}
 	// Self-check (S16a section 2.2, member K3): the canonical path gives the live specialization.
-	const auto check = Run(plan, canonical, user_words, false);
+	auto check = Run(plan, canonical, user_words, false);
+	if (stand_word < canonical.size()) {
+		const bool rejected = !check.ok || !check.complete || !(check.specialization == live);
+		LOGF("ShaderReplay: stand canon applied hash=0x%016" PRIx64 " rejected=%d\n", plan.shader_hash, rejected ? 1 : 0);
+		if (rejected) {
+			g_canon_stand_done.store(true);
+		} else {
+			canonical[stand_word].value = 1u;
+			check                       = Run(plan, canonical, user_words, false);
+		}
+	}
 	if (!check.ok || !check.complete || !(check.specialization == live)) {
 		// Diagnosis for the log (only on a failure): the words whose raw value alone makes the check pass.
 		why = fmt::format("self ok={} complete={}", check.ok ? 1 : 0, check.complete ? 1 : 0);

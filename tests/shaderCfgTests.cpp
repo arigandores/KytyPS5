@@ -15217,6 +15217,39 @@ void TestShaderReplayFormat() {
     Check(SR::ComputeFromKey(key, compute2, why), "replay ComputeFromKey");
     BuildStageStaticKey(compute2, again);
     Check(again == key, "replay compute key round trip");
+    // S17a2 (N2 of the S17b review): the tess branch of VertexFromKey - input -> key -> input -> key with the tess input
+    // of ShaderRecompilerComputeTests (input/output control points 3, strides 124/128, domain 1, partitioning 2,
+    // topology 2) and one resource; a key cut inside its tess part is rejected with why "tess".
+    ShaderVertexInputInfo tess_vertex {};
+    tess_vertex.tess = {.input_control_points = 3, .output_control_points = 3, .ls_stride = 124, .hs_stride = 128,
+                        .domain = 1, .partitioning = 2, .output_topology = 2};
+    tess_vertex.fetch_embedded = true;
+    tess_vertex.fetch_attrib_reg = 2;
+    tess_vertex.resources_num = 1;
+    tess_vertex.resources_dst[0].register_start = 4;
+    tess_vertex.resources_dst[0].registers_num = 4;
+    tess_vertex.resources[0].fields[1] = 16u << 16u;
+    tess_vertex.resources[0].fields[3] = 4u | (5u << 3u) | (6u << 6u) | (7u << 9u) | (77u << 12u);
+    std::vector<uint32_t> tess_key;
+    BuildStageStaticKey(tess_vertex, tess_key);
+    ShaderVertexInputInfo tess_rebuilt {};
+    Check(tess_key.size() == 7u + 1u + 7u + 13u && SR::VertexFromKey(tess_key, ShaderType::Vertex, tess_rebuilt, why),
+          "replay VertexFromKey tess");
+    std::vector<uint32_t> tess_again;
+    BuildStageStaticKey(tess_rebuilt, tess_again);
+    ShaderVertexInputInfo tess_third {};
+    std::vector<uint32_t> tess_last;
+    const bool tess_third_ok = SR::VertexFromKey(tess_again, ShaderType::Vertex, tess_third, why);
+    BuildStageStaticKey(tess_third, tess_last);
+    Check(tess_third_ok && tess_again == tess_key && tess_last == tess_key &&
+              tess_rebuilt.tess.input_control_points == 3u && tess_rebuilt.tess.output_control_points == 3u &&
+              tess_rebuilt.tess.ls_stride == 124u && tess_rebuilt.tess.hs_stride == 128u &&
+              tess_rebuilt.tess.domain == 1u && tess_rebuilt.tess.partitioning == 2u &&
+              tess_rebuilt.tess.output_topology == 2u && tess_third.tess.hs_stride == 128u,
+          "replay vertex key round trip with tess");
+    why.clear();
+    Check(!SR::VertexFromKey(std::span(tess_key).first(9), ShaderType::Vertex, tess_rebuilt, why) && why == "tess",
+          "replay VertexFromKey rejects a key cut inside its tess part");
   }
   // Generations: serialize / parse, corruption, compatibility.
   {

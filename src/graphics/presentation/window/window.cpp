@@ -1024,6 +1024,9 @@ bool WindowPrepareShaders() {
 			    (g_window->loop.event.type == SDL_WINDOWEVENT &&
 			     g_window->loop.event.window.event == SDL_WINDOWEVENT_CLOSE)) {
 				SetShaderPreparationOverlay(false);
+				// Track S, S17a2 (ROADMAP s122 item 532(b)): the caller ends the process by std::quick_exit; at
+				// KYTY_S_REPLAY 1 or 3 the precache/rebuild thread is stopped and joined first (nothing at 0 and 2).
+				cache.ReplayCloseStop();
 				return false;
 			}
 			if (g_window->loop.event.type == SDL_WINDOWEVENT || g_window->loop.event.type == SDL_DISPLAYEVENT ||

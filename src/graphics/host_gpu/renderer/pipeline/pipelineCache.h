@@ -212,6 +212,9 @@ public:
 	[[nodiscard]] PreparationStatus GetPreparationStatus() const;
 	// Called before the guest starts, once the precache producer AND its workers have finished.
 	void FinishPreparation();
+	// Track S, S17a2 (ROADMAP s122 item 532(b)): the window was closed on the preparation screen. At KYTY_S_REPLAY 1 or
+	// 3 stores m_precache_stop and joins the precache/rebuild thread; at 0 and 2 returns at once.
+	void ReplayCloseStop();
 	// Queues resource-independent CS translation and optional registration timing diagnostics.
 	void TraceShaderRegistration(const Shader& header, const ShaderMappedData& mapped);
 	// Pipelines whose compilation has not finished yet.

@@ -6607,6 +6607,26 @@ void PipelineCache::FinishPreparation() {
 	                 status.completed, status.total, status.skipped);
 }
 
+// Track S, S17a2 (HPP-618, ROADMAP s122 item 532(b), RC1 of the S17b review): WindowPrepareShaders returned false (the
+// window was closed on the preparation screen) and the caller (emulator.cpp, Execute) ends the process by
+// std::quick_exit, which runs no destructor - ~PipelineCache never stores m_precache_stop. At KYTY_S_REPLAY 1 or 3 (the
+// rebuild may run on the precache thread) this stores m_precache_stop and joins the thread: the rebuild loop stops
+// before its next R-PIPE and takes its stopped branch (translation cache files of the sources it changed saved, no
+// pipelines.bin, no manifest, line "ShaderReplay: rebuild ... pipelines_bin=stopped"); PrecachePipelines stops before
+// its next recipe. The wait is at most one R-PIPE (or one recipe). At 0 and 2 nothing is done (the old close path).
+void PipelineCache::ReplayCloseStop() {
+	if (!ShaderReplay::RebuildOn()) {
+		return;
+	}
+	const auto begin = HostMicros();
+	LOGF("ShaderReplay: close stop requested precache_active=%d\n", m_precache_active.load() ? 1 : 0);
+	m_precache_stop.store(true);
+	if (m_precache_thread.joinable()) {
+		m_precache_thread.join();
+	}
+	LOGF("ShaderReplay: close stop joined wait_ms=%" PRIu64 "\n", (HostMicros() - begin) / 1000u);
+}
+
 void PipelineCache::InstallShaderSeed() {
 	const auto& cache = m_program_cache->translation_cache;
 	const auto& properties = m_graphics.GetPhysicalDeviceProperties();
@@ -7564,7 +7584,7 @@ void PipelineCache::ReplayRebuild() {
 	// Manifest for the comparison with a live translation (member K4): file, permutation index, specialization hash,
 	// push-data start, XXH3 of the SPIR-V - every permutation a prepared recipe uses.
 	if (!stopped && count != 0) {
-		std::string manifest = fmt::format("# ShaderReplay rebuild manifest; signature {}", cache.Signature());
+		std::string manifest = fmt::format("# ShaderReplay rebuild manifest; signature {}\n", cache.Signature());
 		for (const auto& [id, s]: sources) {
 			(void)id;
 			for (const auto index: s->used) {

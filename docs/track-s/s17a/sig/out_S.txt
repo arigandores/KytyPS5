@@ -1,0 +1,4 @@
+S signature=KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19 enabled=1
+S layout=10288:376:216
+S effective robust=1 ftz=1 ftzd=0 cbank=1 cbank_cs=0 vec_const_static_class=1 cbank_aligned_copy=1 bvh_cap_token= bda_lean=0 fix_f19=1
+S done=0

@@ -1,0 +1,3 @@
+6f94cfb4f9fda5f8df713fe4e8f6cdd99e5bfccee259ce9a0f60e2f53a9f89e7 *buildS/kyty_emulator.exe
+56405997c1c0601633a280ead0a0408f2ef26296f8a9cf3e4bcf8e95e96810ee *buildS/shader_cfg_tests.exe
+32c50dc48f8de10fe8a97f0781e77ad1042c701a71c161ae9c11b3a0e81b46b7 *buildP/shader_cfg_tests.exe

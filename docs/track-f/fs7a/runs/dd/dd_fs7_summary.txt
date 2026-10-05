@@ -1,0 +1,10 @@
+# dd fs7 (member): cycles expected 100, present 100, missing 0, repeated 0, beyond n 0
+crashed 0 of 100 (rc != 0, no END, marker or no both_returned): {}
+not clean 0; scenario not met (calls before unlock and po_wait_max_us >= 200000) 0
+call_a_wall_us n=100 min=329077 median=330651 max=331721
+call_b_wall_us n=100 min=329074 median=330656 max=331732
+start_skew_us n=100 min=0 median=0 max=1
+po_wait_max_us n=100 min=300067 median=300757 max=301370
+po_applied n=100 min=1 median=1 max=1
+rumble_calls n=100 min=2 median=2 max=2
+ALL OK

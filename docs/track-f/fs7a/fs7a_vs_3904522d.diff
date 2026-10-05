@@ -1,0 +1,3569 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5ea9d063..78fe9111 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -440,6 +440,11 @@ endfunction()
+ 
+ add_kyty_full_emulator_test(shader_cfg_tests "${KYTY_TESTS_DIR}/shaderCfgTests.cpp")
+ 
++# Track F, B24 pad output stand (F19c; ROADMAP s122 item 451(e)(1)): run by docs/track-f/f19c/run_stand_f19c.py, not by
++# ctest.
++add_kyty_full_emulator_test(b24_pad_stand
++	"${KYTY_TESTS_DIR}/B24PadStand.cpp")
++
+ add_executable(scalar_provenance_tests EXCLUDE_FROM_ALL
+ 	"${KYTY_TESTS_DIR}/ScalarProvenanceTests.cpp"
+ 	"${KYTY_SOURCE_DIR}/graphics/host_gpu/hostMemory.cpp"
+@@ -537,6 +542,11 @@ add_kyty_full_emulator_test(b4_race_stand
+ add_kyty_full_emulator_test(audio_propagation_tests
+ 	"${KYTY_TESTS_DIR}/AudioPropagationTests.cpp")
+ 
++# Track F, F8 SDL audio subsystem stand (F18c; ROADMAP s122 item 441(d)(1)): run by docs/track-f/f18c/run_stand_f18c.py,
++# not by ctest.
++add_kyty_full_emulator_test(f8_audio_stand
++	"${KYTY_TESTS_DIR}/F8AudioStand.cpp")
++
+ add_executable(sync_on_address_tests EXCLUDE_FROM_ALL
+ 	"${KYTY_TESTS_DIR}/SyncOnAddressTests.cpp"
+ 	"${KYTY_SOURCE_DIR}/kernel/syncOnAddress.cpp"
+diff --git a/docs/track-f/f18c/patch_f18c_src.py b/docs/track-f/f18c/patch_f18c_src.py
+new file mode 100644
+index 00000000..47d69f96
+--- /dev/null
++++ b/docs/track-f/f18c/patch_f18c_src.py
+@@ -0,0 +1,372 @@
++# F18c (HPP-539, ROADMAP s122 item 441(v)-(g)): KYTY_FIX_F8 (one owner of the SDL audio subsystem), the stand
++# KYTY_TEST_AUDIOLOSS=<s>[:retry] and the AudioStat counters, plus the CMake target f8_audio_stand (item 441(d)(1)).
++# Every anchor is a run of whole lines that must occur exactly once; CR kept as found; output LF/CRLF as the input.
++# Usage: python patch_f18c_src.py <repo root>
++import sys
++
++root = sys.argv[1]
++
++
++def load(rel):
++    data = open(root + '/' + rel, 'rb').read()
++    crlf = b'\r\n' in data
++    return data.replace(b'\r\n', b'\n').decode('utf-8').split('\n'), crlf
++
++
++def save(rel, lines, crlf):
++    out = '\n'.join(lines).encode('utf-8')
++    if crlf:
++        out = out.replace(b'\n', b'\r\n')
++    open(root + '/' + rel, 'wb').write(out)
++
++
++def find(lines, anchor, rel):
++    hits = [i for i in range(len(lines) - len(anchor) + 1) if lines[i:i + len(anchor)] == anchor]
++    if len(hits) != 1:
++        print('ANCHOR hits', len(hits), rel, anchor[0])
++        sys.exit(1)
++    return hits[0]
++
++
++def replace(lines, anchor, new, rel):
++    i = find(lines, anchor, rel)
++    lines[i:i + len(anchor)] = new
++    return i
++
++
++def insert_after(lines, anchor, add, rel):
++    i = find(lines, anchor, rel) + len(anchor)
++    lines[i:i] = add
++    return i
++
++
++TAB = '\t'
++
++# ---------------------------------------------------------------- audio_internal.h
++rel = 'src/libs/audio_internal.h'
++L, c = load(rel)
++insert_after(L, ['uint32_t AudioOutOutputs(const OutputParam* params, uint32_t num, bool blocking = true);'], [
++    '',
++    '// Track F, F8 (ROADMAP s122 item 441(v)): the emulator call sites of SDL_InitSubSystem / SDL_QuitSubSystem with',
++    '// SDL_INIT_AUDIO (AudioOut ports, AudioIn ports, pad haptics). KYTY_FIX_F8 unset or 0: the same SDL calls as before',
++    '// (each init counted). KYTY_FIX_F8=1: init goes through SdlAudioAcquire, quit does nothing - the SDL reference count of',
++    '// the audio subsystem stays 1 for the life of the process. Read once per process; "FixF8: mode=1" once at 1.',
++    'int  SdlAudioSubsystemInit();',
++    'void SdlAudioSubsystemQuit();',
++    '// SDL_InitSubSystem(SDL_INIT_AUDIO) at most once successfully per process (own mutex; a failure is not remembered).',
++    'int SdlAudioAcquire();',
++    '// Counters of item 441(g): real SDL_InitSubSystem(SDL_INIT_AUDIO) calls of the emulator (both modes) and',
++    '// SdlAudioAcquire calls; AudioStatForce makes every output port print its AudioStat line on its next push.',
++    'uint64_t SdlAudioInitCalls();',
++    'uint64_t SdlAudioAcquireCalls();',
++    'void     AudioStatForce();',
++], rel)
++save(rel, L, c)
++print('PATCH OK', rel)
++
++# ---------------------------------------------------------------- audio.cpp
++rel = 'src/libs/audio.cpp'
++L, c = load(rel)
++replace(L, [TAB + 'static bool            QueueSdlAudio(PortOut* port, const void* data, bool blocking);'],
++        [TAB + 'static bool            QueueSdlAudio(PortOut* port, int port_id, const void* data, bool blocking);'], rel)
++
++insert_after(L, ['namespace AudioInternal {', ''], [
++    '// Track F, F8 (ROADMAP s122 item 441(v)): SDL2 counts the users of a subsystem in a Uint8 (SDL.c:119); every',
++    '// SDL_InitSubSystem(SDL_INIT_AUDIO) without a matching quit adds 1, the 256th wraps the count to 0 and the next init',
++    '// runs SDL_AudioInit, which closes every open device (SDL_audio.c:966) while the ports keep their ids.',
++    'static std::mutex            g_sdl_audio_mutex;',
++    'static bool                  g_sdl_audio_acquired = false; // Guarded by g_sdl_audio_mutex.',
++    'static std::atomic<uint64_t> g_sdl_audio_init_calls {0};',
++    'static std::atomic<uint64_t> g_sdl_audio_acq_calls {0};',
++    'static std::atomic<uint32_t> g_audio_stat_gen {0};',
++    '',
++    'static bool FixF8Enabled() {',
++    TAB + 'static const bool enabled = [] {',
++    TAB + TAB + 'const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_F8"));',
++    TAB + TAB + 'if (on) {',
++    TAB + TAB + TAB + 'LOGF("FixF8: mode=1\\n");',
++    TAB + TAB + '}',
++    TAB + TAB + 'return on;',
++    TAB + '}();',
++    TAB + 'return enabled;',
++    '}',
++    '',
++    'int SdlAudioAcquire() {',
++    TAB + 'g_sdl_audio_acq_calls.fetch_add(1, std::memory_order_relaxed);',
++    TAB + 'std::lock_guard<std::mutex> lock(g_sdl_audio_mutex);',
++    TAB + 'if (g_sdl_audio_acquired) {',
++    TAB + TAB + 'return 0;',
++    TAB + '}',
++    TAB + 'g_sdl_audio_init_calls.fetch_add(1, std::memory_order_relaxed);',
++    TAB + 'if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {',
++    TAB + TAB + 'return -1;',
++    TAB + '}',
++    TAB + 'g_sdl_audio_acquired = true;',
++    TAB + 'return 0;',
++    '}',
++    '',
++    'int SdlAudioSubsystemInit() {',
++    TAB + 'if (FixF8Enabled()) {',
++    TAB + TAB + 'return SdlAudioAcquire();',
++    TAB + '}',
++    TAB + 'g_sdl_audio_init_calls.fetch_add(1, std::memory_order_relaxed);',
++    TAB + 'return SDL_InitSubSystem(SDL_INIT_AUDIO);',
++    '}',
++    '',
++    'void SdlAudioSubsystemQuit() {',
++    TAB + 'if (FixF8Enabled()) {',
++    TAB + TAB + 'return;',
++    TAB + '}',
++    TAB + 'SDL_QuitSubSystem(SDL_INIT_AUDIO);',
++    '}',
++    '',
++    'uint64_t SdlAudioInitCalls() {',
++    TAB + 'return g_sdl_audio_init_calls.load(std::memory_order_relaxed);',
++    '}',
++    '',
++    'uint64_t SdlAudioAcquireCalls() {',
++    TAB + 'return g_sdl_audio_acq_calls.load(std::memory_order_relaxed);',
++    '}',
++    '',
++    'void AudioStatForce() {',
++    TAB + 'g_audio_stat_gen.fetch_add(1, std::memory_order_relaxed);',
++    '}',
++    '',
++    '// AudioStat (item 441(g)): with KYTY_AV_TRACE=1 or the stand KYTY_TEST_AUDIOLOSS on, one line per output port with a',
++    '// device, at most once a second of process time and on the next push after AudioStatForce. Counters only grow.',
++    'struct AudioStatPort {',
++    TAB + 'std::atomic<uint64_t> pushes {0};',
++    TAB + 'std::atomic<uint64_t> q_fail {0};',
++    TAB + 'std::atomic<uint64_t> last_us {0};',
++    TAB + 'std::atomic<uint32_t> gen {0};',
++    '};',
++    '',
++    'static AudioStatPort g_audio_stat[OUT_PORTS_MAX];',
++    '',
++    'static void AudioStatPush(int port_id, SDL_AudioDeviceID dev, bool failed) {',
++    TAB + 'if (port_id < 0 || port_id >= OUT_PORTS_MAX) {',
++    TAB + TAB + 'return;',
++    TAB + '}',
++    TAB + 'auto&          s      = g_audio_stat[port_id];',
++    TAB + 'const uint64_t pushes = s.pushes.fetch_add(1, std::memory_order_relaxed) + 1;',
++    TAB + 'const uint64_t q_fail = failed ? s.q_fail.fetch_add(1, std::memory_order_relaxed) + 1',
++    TAB + '                               : s.q_fail.load(std::memory_order_relaxed);',
++    TAB + 'const uint64_t now    = LibKernel::KernelGetProcessTime();',
++    TAB + 'const uint32_t gen    = g_audio_stat_gen.load(std::memory_order_relaxed);',
++    TAB + 'uint64_t       last   = s.last_us.load(std::memory_order_relaxed);',
++    TAB + 'if (s.gen.load(std::memory_order_relaxed) == gen && last != 0 && now < last + 1000000) {',
++    TAB + TAB + 'return;',
++    TAB + '}',
++    TAB + '// One printer per interval: a concurrent push of the same port that lost the exchange stays silent.',
++    TAB + 'if (!s.last_us.compare_exchange_strong(last, now != 0 ? now : 1, std::memory_order_relaxed)) {',
++    TAB + TAB + 'return;',
++    TAB + '}',
++    TAB + 's.gen.store(gen, std::memory_order_relaxed);',
++    TAB + 'LOGF("AudioStat: t_us=%" PRIu64 " port=%d dev=%u status=%d queued=%u pushes=%" PRIu64 " q_fail=%" PRIu64',
++    TAB + '     " init_calls=%" PRIu64 " acq=%" PRIu64 "\\n",',
++    TAB + '     now, port_id, static_cast<uint32_t>(dev), static_cast<int>(SDL_GetAudioDeviceStatus(dev)),',
++    TAB + '     SDL_GetQueuedAudioSize(dev), pushes, q_fail, SdlAudioInitCalls(), SdlAudioAcquireCalls());',
++    '}',
++    '',
++], rel)
++
++# C1 (item 441(v)): AudioOut port open.
++replace(L, [TAB + 'if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {',
++            TAB + TAB + 'LOGF("AudioOut: SDL audio init failed: %s\\n", SDL_GetError());'],
++        [TAB + 'if (AudioInternal::SdlAudioSubsystemInit() < 0) {',
++         TAB + TAB + 'LOGF("AudioOut: SDL audio init failed: %s\\n", SDL_GetError());'], rel)
++
++replace(L, ['bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {'],
++        ['bool Audio::QueueSdlAudio(PortOut* port, int port_id, const void* data, bool blocking) {'], rel)
++
++insert_after(L, [TAB + 'static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");'], [
++    TAB + 'static const bool audio_stat = av_trace || Controller::TestAudioLossOn();',
++], rel)
++
++replace(L, [TAB + 'if (SDL_QueueAudio(port->audio_device, queue_data, queue_size) < 0) {',
++            TAB + TAB + 'LOGF("AudioOut: SDL_QueueAudio failed: %s\\n", SDL_GetError());',
++            TAB + TAB + 'return false;',
++            TAB + '}'],
++        [TAB + 'if (SDL_QueueAudio(port->audio_device, queue_data, queue_size) < 0) {',
++         TAB + TAB + 'LOGF("AudioOut: SDL_QueueAudio failed: %s\\n", SDL_GetError());',
++         TAB + TAB + 'if (audio_stat) {',
++         TAB + TAB + TAB + 'AudioInternal::AudioStatPush(port_id, port->audio_device, true);',
++         TAB + TAB + '}',
++         TAB + TAB + 'return false;',
++         TAB + '}',
++         TAB + 'if (audio_stat) {',
++         TAB + TAB + 'AudioInternal::AudioStatPush(port_id, port->audio_device, false);',
++         TAB + '}'], rel)
++
++replace(L, [TAB + TAB + 'QueueSdlAudio(&port, params[i].data, blocking);'],
++        [TAB + TAB + 'QueueSdlAudio(&port, params[i].handle.GetId(), params[i].data, blocking);'], rel)
++
++# C3 (item 441(v)): AudioIn port open, and the two quits of the input port.
++replace(L, [TAB + 'if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {',
++            TAB + TAB + 'LOGF("AudioIn: SDL init failed: %s\\n", SDL_GetError());'],
++        [TAB + 'if (AudioInternal::SdlAudioSubsystemInit() < 0) {',
++         TAB + TAB + 'LOGF("AudioIn: SDL init failed: %s\\n", SDL_GetError());'], rel)
++replace(L, [TAB + TAB + 'LOGF("AudioIn: cannot open \'%s\': %s; using silence\\n", name.c_str(), SDL_GetError());',
++            TAB + TAB + 'SDL_QuitSubSystem(SDL_INIT_AUDIO);'],
++        [TAB + TAB + 'LOGF("AudioIn: cannot open \'%s\': %s; using silence\\n", name.c_str(), SDL_GetError());',
++         TAB + TAB + 'AudioInternal::SdlAudioSubsystemQuit();'], rel)
++replace(L, [TAB + TAB + 'SDL_CloseAudioDevice(port->audio_device);',
++            TAB + TAB + 'SDL_QuitSubSystem(SDL_INIT_AUDIO);'],
++        [TAB + TAB + 'SDL_CloseAudioDevice(port->audio_device);',
++         TAB + TAB + 'AudioInternal::SdlAudioSubsystemQuit();'], rel)
++save(rel, L, c)
++print('PATCH OK', rel)
++
++# ---------------------------------------------------------------- controller.h
++rel = 'src/libs/controller.h'
++L, c = load(rel)
++insert_after(L, ['void PushHapticsPcm(const void* pcm, uint32_t frames, uint32_t channels, bool is_float,',
++                 '                    uint32_t freq);'], [
++    '// Track F, F8 stand (ROADMAP s122 item 441(g)): KYTY_TEST_AUDIOLOSS is set and valid (read once in Initialize).',
++    'bool TestAudioLossOn();',
++], rel)
++save(rel, L, c)
++print('PATCH OK', rel)
++
++# ---------------------------------------------------------------- controller.cpp
++rel = 'src/libs/controller.cpp'
++L, c = load(rel)
++insert_after(L, ['#include "kernel/pthread.h"'], ['#include "libs/audio_internal.h"'], rel)
++insert_after(L, ['#include <chrono>'], ['#include <cinttypes>'], rel)
++
++replace(L, [TAB + 'static uint64_t NowUs();',
++            TAB + 'bool            OpenLocked();',
++            TAB + 'void            CloseLocked();'],
++        [TAB + 'static uint64_t NowUs();',
++         TAB + 'bool            OpenLocked();',
++         TAB + 'void            CloseLocked();',
++         TAB + 'uint64_t        TestAudioLossRetryUsLocked();',
++         '',
++         TAB + '// Stand KYTY_TEST_AUDIOLOSS (item 441(g)), guarded by m_mutex.',
++         TAB + 'enum class TestState { Idle, Armed, Firing, DonePending, Done };',
++         TAB + 'static constexpr uint32_t TEST_ATTEMPTS = 300;',
++         TAB + 'TestState                 m_test_state    = TestState::Idle;',
++         TAB + 'uint64_t                  m_test_armed_us = 0;',
++         TAB + 'uint32_t                  m_test_attempts = 0;'], rel)
++
++insert_after(L, ['static HapticsOutput* g_haptics = nullptr;'], [
++    '',
++    '// Track F, F8 stand (ROADMAP s122 item 441(g)): KYTY_TEST_AUDIOLOSS=<s>[:retry] - stand only, off when unset. Armed on',
++    '// the first push to the vibration port with no pad device; <s> seconds of process time later the retry interval of',
++    '// the pad device open (RETRY_US) is 0 for exactly 300 attempts (every push is an attempt), then RETRY_US again: the',
++    '// same site and thread as the natural path, faster. Written once by HapticsOutput::Start (Controller::Initialize,',
++    '// before the guest threads exist), read only afterwards.',
++    'struct TestAudioLossConfig {',
++    TAB + 'bool     on       = false;',
++    TAB + 'uint64_t delay_us = 0;',
++    '};',
++    '',
++    'static TestAudioLossConfig g_test_audioloss;',
++    '',
++    'static void ReadTestAudioLoss() {',
++    TAB + 'const char* value = std::getenv("KYTY_TEST_AUDIOLOSS");',
++    TAB + 'if (value == nullptr || value[0] == \'\\0\') {',
++    TAB + TAB + 'return;',
++    TAB + '}',
++    TAB + 'char*        end     = nullptr;',
++    TAB + 'const double delay_s = std::strtod(value, &end);',
++    TAB + 'const bool   ok      = value[0] >= \'0\' && value[0] <= \'9\' && end != value && std::isfinite(delay_s) &&',
++    TAB + '                     delay_s <= 86400.0 && (end[0] == \'\\0\' || std::strcmp(end, ":retry") == 0);',
++    TAB + 'if (!ok) {',
++    TAB + TAB + 'LOGF("TestAudioLoss: config invalid value=\\"%s\\" (expected <s>[:retry]), stand off\\n", value);',
++    TAB + TAB + 'return;',
++    TAB + '}',
++    TAB + 'g_test_audioloss.on       = true;',
++    TAB + 'g_test_audioloss.delay_us = static_cast<uint64_t>(delay_s * 1000000.0);',
++    TAB + 'LOGF("TestAudioLoss: config on delay_s=%g mode=retry\\n", delay_s);',
++    '}',
++    '',
++    'bool TestAudioLossOn() {',
++    TAB + 'return g_test_audioloss.on;',
++    '}',
++], rel)
++
++replace(L, ['void HapticsOutput::Start() {',
++            TAB + 'if (const char* value = std::getenv("KYTY_HAPTICS"); value != nullptr && value[0] == \'0\') {'],
++        ['void HapticsOutput::Start() {',
++         TAB + 'ReadTestAudioLoss();',
++         TAB + 'if (const char* value = std::getenv("KYTY_HAPTICS"); value != nullptr && value[0] == \'0\') {'], rel)
++
++# C2 (item 441(v)): pad haptics device open.
++replace(L, ['bool HapticsOutput::OpenLocked() {',
++            TAB + 'if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {',
++            TAB + TAB + 'return false;',
++            TAB + '}'],
++        ['bool HapticsOutput::OpenLocked() {',
++         TAB + 'if (Audio::AudioInternal::SdlAudioSubsystemInit() < 0) {',
++         TAB + TAB + 'return false;',
++         TAB + '}'], rel)
++
++insert_after(L, ['void HapticsOutput::CloseLocked() {',
++                 TAB + 'if (m_device != 0) {',
++                 TAB + TAB + 'SDL_ClearQueuedAudio(m_device);',
++                 TAB + TAB + 'SDL_CloseAudioDevice(m_device);',
++                 TAB + TAB + 'm_device = 0;',
++                 TAB + '}',
++                 '}'], [
++    '',
++    '// Stand step of one push with no pad device; the caller holds m_mutex. Returns the retry interval for this push. In',
++    '// Firing every call is an attempt: with a zero interval the check in Push never returns before OpenLocked.',
++    'uint64_t HapticsOutput::TestAudioLossRetryUsLocked() {',
++    TAB + 'const uint64_t t = LibKernel::KernelGetProcessTime();',
++    TAB + 'switch (m_test_state) {',
++    TAB + TAB + 'case TestState::Idle:',
++    TAB + TAB + TAB + 'm_test_state    = TestState::Armed;',
++    TAB + TAB + TAB + 'm_test_armed_us = t;',
++    TAB + TAB + TAB + 'LOGF("TestAudioLoss: armed t_us=%" PRIu64 "\\n", t);',
++    TAB + TAB + TAB + 'return RETRY_US;',
++    TAB + TAB + 'case TestState::Armed:',
++    TAB + TAB + TAB + 'if (t - m_test_armed_us < g_test_audioloss.delay_us) {',
++    TAB + TAB + TAB + TAB + 'return RETRY_US;',
++    TAB + TAB + TAB + '}',
++    TAB + TAB + TAB + 'm_test_state = TestState::Firing;',
++    TAB + TAB + TAB + 'LOGF("TestAudioLoss: fire t_us=%" PRIu64 "\\n", t);',
++    TAB + TAB + TAB + 'Audio::AudioInternal::AudioStatForce();',
++    TAB + TAB + TAB + '[[fallthrough]];',
++    TAB + TAB + 'case TestState::Firing:',
++    TAB + TAB + TAB + 'if (++m_test_attempts == TEST_ATTEMPTS) {',
++    TAB + TAB + TAB + TAB + 'm_test_state = TestState::DonePending;',
++    TAB + TAB + TAB + '}',
++    TAB + TAB + TAB + 'return 0;',
++    TAB + TAB + 'case TestState::DonePending:',
++    TAB + TAB + TAB + '// Logged on the push after the 300th attempt, so the line follows its SDL call.',
++    TAB + TAB + TAB + 'm_test_state = TestState::Done;',
++    TAB + TAB + TAB + 'LOGF("TestAudioLoss: done attempts=%u t_us=%" PRIu64 "\\n", m_test_attempts, t);',
++    TAB + TAB + TAB + 'Audio::AudioInternal::AudioStatForce();',
++    TAB + TAB + TAB + 'return RETRY_US;',
++    TAB + TAB + 'case TestState::Done: break;',
++    TAB + '}',
++    TAB + 'return RETRY_US;',
++    '}',
++], rel)
++
++replace(L, [TAB + TAB + 'const auto now = NowUs();',
++            TAB + TAB + 'if (m_retry_us != 0 && now - m_retry_us < RETRY_US) {',
++            TAB + TAB + TAB + 'return;',
++            TAB + TAB + '}'],
++        [TAB + TAB + 'const auto     now      = NowUs();',
++         TAB + TAB + 'const uint64_t retry_us = g_test_audioloss.on ? TestAudioLossRetryUsLocked() : RETRY_US;',
++         TAB + TAB + 'if (m_retry_us != 0 && now - m_retry_us < retry_us) {',
++         TAB + TAB + TAB + 'return;',
++         TAB + TAB + '}'], rel)
++save(rel, L, c)
++print('PATCH OK', rel)
++
++# ---------------------------------------------------------------- CMakeLists.txt
++rel = 'CMakeLists.txt'
++L, c = load(rel)
++insert_after(L, ['add_kyty_full_emulator_test(audio_propagation_tests', TAB + '"${KYTY_TESTS_DIR}/AudioPropagationTests.cpp")'], [
++    '',
++    '# Track F, F8 SDL audio subsystem stand (F18c; ROADMAP s122 item 441(d)(1)): run by docs/track-f/f18c/run_stand_f18c.py,',
++    '# not by ctest.',
++    'add_kyty_full_emulator_test(f8_audio_stand',
++    TAB + '"${KYTY_TESTS_DIR}/F8AudioStand.cpp")',
++], rel)
++save(rel, L, c)
++print('PATCH OK', rel)
++print('ALL PATCHED')
+diff --git a/docs/track-f/f18c/run_stand_f18c.py b/docs/track-f/f18c/run_stand_f18c.py
+new file mode 100644
+index 00000000..e795599a
+--- /dev/null
++++ b/docs/track-f/f18c/run_stand_f18c.py
+@@ -0,0 +1,170 @@
++# F18c (HPP-539, ROADMAP s122 item 441(d)(1)): driver of the F8 stand tests/F8AudioStand.cpp (target f8_audio_stand) -
++# one process per run, each in its own working directory under <out dir>/cwd_<run>. Child environment: every KYTY_*
++# variable removed, then KYTY_FIX_F8=<fix> unless fix is 'unset'; SDL_AUDIODRIVER set per run (dummy or disk - never a host
++# driver; the stand itself refuses anything else, run 'refuse' checks that).
++# Members (item 441(d)(1)): (i) direct path - after A init calls of the opens and 253..255 more calls the old ids queue
++# fine, after call 257 - A every opened device fails with "Invalid audio device ID"; (ii) SdlAudioAcquire - 10 000 calls,
++# 0 queue failures, SDL_WasInit(AUDIO) != 0, init_calls 1; (iii) 2 threads x 5 000 SdlAudioAcquire - init_calls 1.
++# The driver "dummy" has one output device only (SDL_dummyaudio.c:55, SDL_audio.c:1367): three devices are opened under
++# "disk" (SDL_AUDIODRIVER=disk, device name = output file in the run directory), one under "dummy"; run i_dummy3_fix0
++# shows the refusal of the 2nd and 3rd dummy open. Controls: the same loop as (i) at KYTY_FIX_F8=1 (no failure, init_calls 1),
++# KYTY_FIX_F8 unset (= 0), the driver refusal.
++# Halts before a run when C:/kyty/SEALED_RUN.lock or C:/kyty/f287/STOP exists (rules 27, 26).
++# Usage: python run_stand_f18c.py <exe> <out dir>    -> <out dir>/stand_f18c.txt, last line ALL OK or FAILED <n>
++import hashlib, os, re, subprocess, sys, time
++
++exe, outdir = os.path.abspath(sys.argv[1]), os.path.abspath(sys.argv[2])
++os.makedirs(outdir, exist_ok=True)
++sha = hashlib.sha256(open(exe, 'rb').read()).hexdigest()
++ERR = 'Invalid audio device ID'
++
++
++def run(name, args, driver, fix):
++    cwd = os.path.join(outdir, 'cwd_' + name)
++    os.makedirs(cwd, exist_ok=True)
++    env = {k: v for k, v in os.environ.items() if not k.upper().startswith('KYTY_') and k.upper() != 'SDL_AUDIODRIVER'}
++    if fix != 'unset':
++        env['KYTY_FIX_F8'] = fix
++    if driver is not None:
++        env['SDL_AUDIODRIVER'] = driver
++    t0 = time.time()
++    p = subprocess.run([exe] + args, cwd=cwd, env=env, capture_output=True, timeout=120)
++    out = p.stdout.decode('utf-8', 'replace').replace('\r\n', '\n')
++    open(os.path.join(outdir, 'out_' + name + '.txt'), 'w', encoding='utf-8', newline='\n').write(out)
++    kv = {}
++    for line in out.split('\n'):
++        m = re.match(r'^([a-z_]+)=(.*)$', line)
++        if m and m.group(1) not in kv:
++            kv[m.group(1)] = m.group(2).strip('"')
++    kv['_rc'] = p.returncode
++    kv['_fixf8_lines'] = sum(1 for line in out.split('\n') if line == 'FixF8: mode=1')
++    kv['_end'] = out.rstrip('\n').endswith('END')
++    kv['_open_failed'] = [line for line in out.split('\n') if line.startswith('open_failed=')]
++    kv['_calls'] = [tuple(map(int, m.groups())) for m in re.finditer(r'^call (\d+) fail (\d+)$', out, re.M)]
++    kv['_wall'] = time.time() - t0
++    return kv
++
++
++def num(kv, k):
++    return int(kv.get(k, '-1'))
++
++
++results = []
++
++
++def check(name, kv, conds):
++    bad = [c for c, ok in conds if not ok]
++    results.append((name, not bad, bad, kv))
++
++
++def direct(name, driver, ndev, prefix, fix, opened, inits):
++    # inits = init calls of the opens (one per open attempt, as site C1); first failure expected at call 257 - inits.
++    args = ['i', str(ndev)] + ([prefix] if prefix else [])
++    kv = run(name, args, driver, fix)
++    exp = 257 - inits
++    calls = kv['_calls']
++    check(name, kv, [
++        ('rc 0 and END', kv['_rc'] == 0 and kv['_end']),
++        ('devices_opened %d' % opened, num(kv, 'devices_opened') == opened),
++        ('open_failed %d' % (ndev - opened), len(kv['_open_failed']) == ndev - opened),
++        ('first_fail_call %d' % exp, num(kv, 'first_fail_call') == exp),
++        ('fail_devices_at_first %d of %d' % (opened, opened), num(kv, 'fail_devices_at_first') == opened),
++        ('every call >= %d fails on all devices' % exp, len(calls) == 300 - exp + 1 and all(f == opened for _, f in calls)),
++        ('first_error %s' % ERR, kv.get('first_error') == ERR),
++        ('init_calls %d' % (inits + 300), num(kv, 'init_calls') == inits + 300),
++        ('acq 0', num(kv, 'acq') == 0),
++        ('no FixF8 line', kv['_fixf8_lines'] == 0),
++        ('driver %s' % driver, kv.get('driver') == driver),
++    ])
++    return kv
++
++
++def direct_fix1(name, driver, ndev, prefix, opened):
++    args = ['i', str(ndev)] + ([prefix] if prefix else [])
++    kv = run(name, args, driver, '1')
++    check(name, kv, [
++        ('rc 0 and END', kv['_rc'] == 0 and kv['_end']),
++        ('devices_opened %d' % opened, num(kv, 'devices_opened') == opened),
++        ('first_fail_call 0', num(kv, 'first_fail_call') == 0),
++        ('queue_failed 0', num(kv, 'queue_failed') == 0),
++        ('init_failed 0', num(kv, 'init_failed') == 0),
++        ('init_calls 1', num(kv, 'init_calls') == 1),
++        ('acq %d' % (ndev + 300), num(kv, 'acq') == ndev + 300),
++        ('was_init != 0', num(kv, 'was_init') != 0),
++        ('one FixF8 line', kv['_fixf8_lines'] == 1),
++    ])
++
++
++def acquire(name, driver, ndev, prefix):
++    args = ['ii', str(ndev)] + ([prefix] if prefix else [])
++    kv = run(name, args, driver, '1')
++    check(name, kv, [
++        ('rc 0 and END', kv['_rc'] == 0 and kv['_end']),
++        ('devices_opened %d' % ndev, num(kv, 'devices_opened') == ndev),
++        ('calls 10000', num(kv, 'calls') == 10000),
++        ('queue_failed 0', num(kv, 'queue_failed') == 0),
++        ('init_failed 0', num(kv, 'init_failed') == 0),
++        ('was_init != 0', num(kv, 'was_init') != 0),
++        ('init_calls 1', num(kv, 'init_calls') == 1),
++        ('acq %d' % (ndev + 10000), num(kv, 'acq') == ndev + 10000),
++        ('one FixF8 line', kv['_fixf8_lines'] == 1),
++    ])
++
++
++def threads(name, driver, ndev, prefix):
++    args = ['iii', str(ndev)] + ([prefix] if prefix else [])
++    kv = run(name, args, driver, '1')
++    check(name, kv, [
++        ('rc 0 and END', kv['_rc'] == 0 and kv['_end']),
++        ('acquire_failed 0', num(kv, 'acquire_failed') == 0),
++        ('init_calls_after_threads 1', num(kv, 'init_calls_after_threads') == 1),
++        ('acq_after_threads 10000', num(kv, 'acq_after_threads') == 10000),
++        ('was_init_after_threads != 0', num(kv, 'was_init_after_threads') != 0),
++        ('devices_opened %d' % ndev, num(kv, 'devices_opened') == ndev),
++        ('queue_failed_after 0', num(kv, 'queue_failed_after') == 0),
++        ('init_calls 1', num(kv, 'init_calls') == 1),
++    ])
++
++
++plan = [
++    lambda: direct('i_disk3_fix0', 'disk', 3, 'dev_', '0', 3, 3),
++    lambda: direct('i_dummy1_fix0', 'dummy', 1, None, '0', 1, 1),
++    lambda: direct('i_dummy3_fix0', 'dummy', 3, None, '0', 1, 3),
++    lambda: direct('i_disk3_unset', 'disk', 3, 'dev_', 'unset', 3, 3),
++    lambda: acquire('ii_disk3_fix1', 'disk', 3, 'dev_'),
++    lambda: acquire('ii_dummy1_fix1', 'dummy', 1, None),
++    lambda: threads('iii_dummy1_fix1', 'dummy', 1, None),
++    lambda: threads('iii_disk3_fix1', 'disk', 3, 'dev_'),
++    lambda: direct_fix1('i_disk3_fix1', 'disk', 3, 'dev_', 3),
++    lambda: direct_fix1('i_dummy1_fix1', 'dummy', 1, None, 1),
++]
++
++for step in plan:
++    if os.path.exists('C:/kyty/SEALED_RUN.lock') or os.path.exists('C:/kyty/f287/STOP'):
++        print('HALT lock or STOP')
++        sys.exit(3)
++    step()
++
++kv = run('refuse', ['i', '1'], None, '0')
++check('refuse', kv, [('rc 3', kv['_rc'] == 3), ('no device opened', 'devices_opened' not in kv)])
++kv = run('refuse_host', ['i', '1'], 'directsound', '0')
++check('refuse_host', kv, [('rc 3', kv['_rc'] == 3), ('no device opened', 'devices_opened' not in kv)])
++
++with open(os.path.join(outdir, 'stand_f18c.txt'), 'w', encoding='utf-8', newline='\n') as f:
++    def w(s):
++        print(s)
++        f.write(s + '\n')
++    w('# exe %s sha256 %s' % (exe, sha))
++    nbad = 0
++    for name, ok, bad, kv in results:
++        keys = ['devices_opened', 'first_fail_call', 'fail_devices_at_first', 'queue_failed', 'first_error', 'init_calls',
++                'acq', 'was_init', 'init_calls_after_threads', 'acq_after_threads', 'acquire_failed', 'driver']
++        vals = ' '.join('%s=%s' % (k, kv[k]) for k in keys if k in kv)
++        w('%s %s rc=%s fixf8_lines=%d open_failed=%d wall=%.1fs %s' % ('PASS' if ok else 'FAIL', name, kv['_rc'],
++                                                                         kv['_fixf8_lines'], len(kv['_open_failed']),
++                                                                         kv['_wall'], vals))
++        for c in bad:
++            w('    failed: ' + c)
++        nbad += 0 if ok else 1
++    w('ALL OK' if nbad == 0 else 'FAILED %d' % nbad)
++sys.exit(0 if nbad == 0 else 1)
+diff --git a/docs/track-f/f19c/patch_f19c_src.py b/docs/track-f/f19c/patch_f19c_src.py
+new file mode 100644
+index 00000000..9cdbef97
+--- /dev/null
++++ b/docs/track-f/f19c/patch_f19c_src.py
+@@ -0,0 +1,803 @@
++# F19c (HPP-547, ROADMAP s122 item 451(c)-(d)): KYTY_FIX_B24 (member A of F19a s5.1: guest pad output through a slot and
++# the PadOutput thread) and the stand KYTY_TEST_HIDLOSS (detach / hold / sleep) - patch of src/libs/controller.h,
++# src/libs/controller.cpp, src/graphics/presentation/window/window.cpp and CMakeLists.txt (target b24_pad_stand).
++# Anchors are whole lines (or whole blocks of lines); every anchor must match exactly once. LF in, LF out (write_bytes).
++# Usage: python patch_f19c_src.py <repo root>
++import sys
++
++ROOT = sys.argv[1].rstrip('/\\') + '/'
++
++
++def load(rel):
++    b = open(ROOT + rel, 'rb').read()
++    assert b'\r' not in b, rel + ': CR found'
++    return b.decode('utf-8')
++
++
++def save(rel, text):
++    open(ROOT + rel, 'wb').write(text.encode('utf-8'))
++
++
++def once(text, old, rel):
++    n = text.count(old)
++    assert n == 1, '%s: anchor found %d times: %r' % (rel, n, old[:80])
++
++
++def insert_after(text, anchor_lines, new, rel):
++    old = anchor_lines + '\n'
++    once(text, old, rel)
++    return text.replace(old, old + new, 1)
++
++
++def insert_before(text, anchor_lines, new, rel):
++    old = anchor_lines + '\n'
++    once(text, old, rel)
++    return text.replace(old, new + old, 1)
++
++
++def replace_block(text, old, new, rel):
++    once(text, old, rel)
++    return text.replace(old, new, 1)
++
++
++# ---------------------------------------------------------------- controller.h
++rel = 'src/libs/controller.h'
++t = load(rel)
++t = insert_after(t, 'void ResetInputState();', r'''// Track F, F19c (ROADMAP s122 item 451(d)): KYTY_FIX_B24 is on (read once in Initialize).
++bool FixB24On();
++// Track F, F19c stand KYTY_TEST_HIDLOSS (item 451(c), F19a s6.1): pad output counters of the stand window.
++// TestHidLossWindow(true) zeroes them and starts counting, TestHidLossWindow(false) stops counting; outside the window a
++// pad output call does one relaxed load of a static flag and nothing else.
++struct HidLossPadStats {
++	uint64_t pad_vib         = 0;
++	uint64_t pad_led         = 0;
++	uint64_t pad_trig        = 0;
++	uint64_t pad_wait_max_us = 0;
++	uint64_t po_applied      = 0;
++	uint64_t po_wait_max_us  = 0;
++	uint64_t guest_sdl       = 0;
++};
++void            TestHidLossWindow(bool open);
++HidLossPadStats TestHidLossPadStats();
++''', rel)
++save(rel, t)
++
++# ---------------------------------------------------------------- controller.cpp
++rel = 'src/libs/controller.cpp'
++t = load(rel)
++t = insert_after(t, '#include "common/emulatorConfig.h"', '#include "common/envFlag.h"\n', rel)
++t = insert_after(t, '#include <mutex>', '#include <condition_variable>\n#include <string>\n#include <thread>\n', rel)
++
++t = insert_after(t, 'static_assert(sizeof(DualSenseEffects) == 32);', r'''
++// Track F, F19c stand KYTY_TEST_HIDLOSS (ROADMAP s122 item 451(c), F19a s6.1): pad output counters of the stand window,
++// opened and closed by the stand in window.cpp (TestHidLossWindow). Outside the window - always when the stand is unset -
++// a guest pad output call does one relaxed load of g_hidloss_window and nothing else; no guest state is written.
++static std::atomic<bool> g_hidloss_window {false};
++
++struct HidLossCounters {
++	std::atomic<uint64_t> pad_vib {0};
++	std::atomic<uint64_t> pad_led {0};
++	std::atomic<uint64_t> pad_trig {0};
++	std::atomic<uint64_t> pad_wait_max_us {0};
++	std::atomic<uint64_t> po_applied {0};
++	std::atomic<uint64_t> po_wait_max_us {0};
++	std::atomic<uint64_t> guest_sdl {0};
++};
++
++static HidLossCounters g_hidloss;
++
++static uint64_t PadNowUs() {
++	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
++	                                 std::chrono::steady_clock::now().time_since_epoch())
++	                                 .count());
++}
++
++static void PadAtomicMax(std::atomic<uint64_t>& value, uint64_t sample) {
++	uint64_t current = value.load(std::memory_order_relaxed);
++	while (sample > current && !value.compare_exchange_weak(current, sample, std::memory_order_relaxed)) {
++	}
++}
++
++// One guest pad output call (SetVibration, SetLightBar, SetTriggerEffect) inside the stand window: counts the entry, the
++// wall from entry to return (pad_wait_max_us) and every SDL call the function makes itself (guest_sdl).
++class PadCallProbe {
++public:
++	explicit PadCallProbe(std::atomic<uint64_t>& kind): m_on(g_hidloss_window.load(std::memory_order_relaxed)) {
++		if (m_on) {
++			kind.fetch_add(1, std::memory_order_relaxed);
++			m_start_us = PadNowUs();
++		}
++	}
++	~PadCallProbe() {
++		if (m_on) {
++			PadAtomicMax(g_hidloss.pad_wait_max_us, PadNowUs() - m_start_us);
++		}
++	}
++
++	KYTY_CLASS_NO_COPY(PadCallProbe);
++
++	void Sdl() {
++		if (m_on) {
++			g_hidloss.guest_sdl.fetch_add(1, std::memory_order_relaxed);
++		}
++	}
++
++private:
++	bool     m_on;
++	uint64_t m_start_us = 0;
++};
++
++void TestHidLossWindow(bool open) {
++	if (open) {
++		for (auto* counter: {&g_hidloss.pad_vib, &g_hidloss.pad_led, &g_hidloss.pad_trig, &g_hidloss.pad_wait_max_us,
++		                     &g_hidloss.po_applied, &g_hidloss.po_wait_max_us, &g_hidloss.guest_sdl}) {
++			counter->store(0, std::memory_order_relaxed);
++		}
++	}
++	g_hidloss_window.store(open, std::memory_order_release);
++}
++
++HidLossPadStats TestHidLossPadStats() {
++	HidLossPadStats stats;
++	stats.pad_vib         = g_hidloss.pad_vib.load(std::memory_order_relaxed);
++	stats.pad_led         = g_hidloss.pad_led.load(std::memory_order_relaxed);
++	stats.pad_trig        = g_hidloss.pad_trig.load(std::memory_order_relaxed);
++	stats.pad_wait_max_us = g_hidloss.pad_wait_max_us.load(std::memory_order_relaxed);
++	stats.po_applied      = g_hidloss.po_applied.load(std::memory_order_relaxed);
++	stats.po_wait_max_us  = g_hidloss.po_wait_max_us.load(std::memory_order_relaxed);
++	stats.guest_sdl       = g_hidloss.guest_sdl.load(std::memory_order_relaxed);
++	return stats;
++}
++
++// Track F, F19c (ROADMAP s122 item 451(d), member A of F19a s5.1): KYTY_FIX_B24 - unset, empty, 0/false/off/no: off
++// (Common::EnvFlagOn). Written once by Initialize before the guest threads exist, only read afterwards. At 1 the guest's
++// SetVibration, SetLightBar and SetTriggerEffect call no SDL: each puts the latest value of its kind into a slot of
++// PadOutput under the slot's own short mutex (not GameController::m_mutex; a new value overwrites the old one, every
++// kind has a generation counter) and wakes the one PadOutput thread of the process. PadOutput makes the same SDL calls
++// as the path at 0, without GameController::m_mutex, for its copy of the active pad id, which CheckActive writes under
++// GameController::m_mutex. The pad lookup and the call run under SDL_LockJoysticks (the lock every one of these SDL
++// calls takes anyway; it is recursive), so a pad closed meanwhile by the removal handler (SDL_GameControllerClose takes
++// the same lock) is never touched. PadOutput is stopped and joined by EmergencyShutdown before ReleaseHostPads.
++static bool g_fix_b24 = false;
++
++bool FixB24On() {
++	return g_fix_b24;
++}
++
++class PadOutput {
++public:
++	PadOutput() = default;
++	~PadOutput() { Stop(); }
++
++	KYTY_CLASS_NO_COPY(PadOutput);
++
++	void Start();
++	void Stop();
++	void SetActive(int id, bool ps5);
++	void PostVibration(uint8_t large_motor, uint8_t small_motor);
++	void PostLightBar(uint8_t r, uint8_t g, uint8_t b);
++	// Returns the copy of "the active pad is a PS5 pad" - the *sent of SetTriggerEffect at KYTY_FIX_B24=1.
++	bool PostTriggerEffect(const DualSenseEffects& effect);
++
++private:
++	void        Loop();
++	static void ApplyVibration(int id, uint8_t large_motor, uint8_t small_motor);
++	static void ApplyLightBar(int id, uint8_t r, uint8_t g, uint8_t b);
++	static void ApplyTriggerEffect(int id, const DualSenseEffects& effect);
++
++	// Everything below is guarded by m_mutex; m_thread is touched only by Start and Stop.
++	std::mutex              m_mutex;
++	std::condition_variable m_cv;
++	std::thread             m_thread;
++	bool                    m_stop          = false;
++	int                     m_active_id     = -1;
++	bool                    m_active_ps5    = false;
++	uint64_t                m_vibration_gen = 0;
++	uint64_t                m_light_bar_gen = 0;
++	uint64_t                m_effect_gen    = 0;
++	uint8_t                 m_vibration[2]  = {};
++	uint8_t                 m_light_bar[3]  = {};
++	DualSenseEffects        m_effect {};
++};
++
++static PadOutput* g_pad_output = nullptr;
++
++void PadOutput::Start() {
++	m_thread = std::thread([this] { Loop(); });
++}
++
++void PadOutput::Stop() {
++	{
++		std::lock_guard lock(m_mutex);
++		m_stop = true;
++	}
++	m_cv.notify_all();
++	if (m_thread.joinable()) {
++		if (m_thread.get_id() == std::this_thread::get_id()) {
++			m_thread.detach();
++		} else {
++			m_thread.join();
++		}
++	}
++}
++
++void PadOutput::SetActive(int id, bool ps5) {
++	std::lock_guard lock(m_mutex);
++	m_active_id  = id;
++	m_active_ps5 = ps5;
++}
++
++void PadOutput::PostVibration(uint8_t large_motor, uint8_t small_motor) {
++	{
++		std::lock_guard lock(m_mutex);
++		m_vibration[0] = large_motor;
++		m_vibration[1] = small_motor;
++		m_vibration_gen++;
++	}
++	m_cv.notify_one();
++}
++
++void PadOutput::PostLightBar(uint8_t r, uint8_t g, uint8_t b) {
++	{
++		std::lock_guard lock(m_mutex);
++		m_light_bar[0] = r;
++		m_light_bar[1] = g;
++		m_light_bar[2] = b;
++		m_light_bar_gen++;
++	}
++	m_cv.notify_one();
++}
++
++bool PadOutput::PostTriggerEffect(const DualSenseEffects& effect) {
++	bool ps5 = false;
++	{
++		std::lock_guard lock(m_mutex);
++		m_effect = effect;
++		m_effect_gen++;
++		ps5 = m_active_ps5;
++	}
++	m_cv.notify_one();
++	return ps5;
++}
++
++// One application of a slot on the PadOutput thread; inside the stand window counts it and its wall.
++template <typename Apply>
++static void PadOutputApply(Apply&& apply) {
++	const bool     on       = g_hidloss_window.load(std::memory_order_relaxed);
++	const uint64_t start_us = on ? PadNowUs() : 0;
++	apply();
++	if (on) {
++		g_hidloss.po_applied.fetch_add(1, std::memory_order_relaxed);
++		PadAtomicMax(g_hidloss.po_wait_max_us, PadNowUs() - start_us);
++	}
++}
++
++void PadOutput::Loop() {
++	uint64_t vibration_done = 0;
++	uint64_t light_bar_done = 0;
++	uint64_t effect_done    = 0;
++
++	std::unique_lock lock(m_mutex);
++	for (;;) {
++		m_cv.wait(lock, [&] {
++			return m_stop || m_vibration_gen != vibration_done || m_light_bar_gen != light_bar_done ||
++			       m_effect_gen != effect_done;
++		});
++		if (m_stop) {
++			return;
++		}
++		const int              id        = m_active_id;
++		const bool             vibration = m_vibration_gen != vibration_done;
++		const bool             light_bar = m_light_bar_gen != light_bar_done;
++		const bool             effect    = m_effect_gen != effect_done;
++		const uint8_t          motor[2]  = {m_vibration[0], m_vibration[1]};
++		const uint8_t          color[3]  = {m_light_bar[0], m_light_bar[1], m_light_bar[2]};
++		const DualSenseEffects effects   = m_effect;
++		vibration_done                   = m_vibration_gen;
++		light_bar_done                   = m_light_bar_gen;
++		effect_done                      = m_effect_gen;
++		lock.unlock();
++
++		if (vibration) {
++			PadOutputApply([&] { ApplyVibration(id, motor[0], motor[1]); });
++		}
++		if (light_bar) {
++			PadOutputApply([&] { ApplyLightBar(id, color[0], color[1], color[2]); });
++		}
++		if (effect) {
++			PadOutputApply([&] { ApplyTriggerEffect(id, effects); });
++		}
++
++		lock.lock();
++	}
++}
++
++// The SDL calls of GameController::SetVibration at KYTY_FIX_B24=0, for the given pad id, under SDL_LockJoysticks.
++void PadOutput::ApplyVibration(int id, uint8_t large_motor, uint8_t small_motor) {
++	if (id == HOST_INPUT_CONTROLLER_ID) {
++		return;
++	}
++	bool        failed = false;
++	std::string error;
++	SDL_LockJoysticks();
++	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id)); pad != nullptr) {
++		const auto large = static_cast<uint16_t>(large_motor * 0x101U);
++		const auto small = static_cast<uint16_t>(small_motor * 0x101U);
++		if (SDL_GameControllerRumble(pad, large, small, RUMBLE_DURATION_MS) != 0) {
++			failed = true;
++			error  = SDL_GetError();
++		}
++	}
++	SDL_UnlockJoysticks();
++	if (failed) {
++		LOGF("\t rumble failed: %s\n", error.c_str());
++	}
++}
++
++// The SDL calls of GameController::SetLightBar at KYTY_FIX_B24=0.
++void PadOutput::ApplyLightBar(int id, uint8_t r, uint8_t g, uint8_t b) {
++	SDL_LockJoysticks();
++	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id)); pad != nullptr) {
++		(void)SDL_GameControllerSetLED(pad, r, g, b);
++	}
++	SDL_UnlockJoysticks();
++}
++
++// The SDL calls of GameController::SetTriggerEffect at KYTY_FIX_B24=0.
++void PadOutput::ApplyTriggerEffect(int id, const DualSenseEffects& effect) {
++	SDL_LockJoysticks();
++	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
++	if (pad != nullptr && SDL_GameControllerGetType(pad) == SDL_CONTROLLER_TYPE_PS5) {
++		(void)SDL_GameControllerSendEffect(pad, &effect, sizeof(effect));
++	}
++	SDL_UnlockJoysticks();
++}
++''', rel)
++
++# Initialize: KYTY_FIX_B24 is read once, PadOutput is created before the first Connect (CheckActive writes its copy).
++t = insert_after(t, '\tEXIT_IF(g_controller != nullptr);\n', r'''	// Track F, F19c (ROADMAP s122 item 451(d)): KYTY_FIX_B24, read once here - before the guest threads exist.
++	g_fix_b24 = Common::EnvFlagOn("KYTY_FIX_B24");
++	if (g_fix_b24) {
++		LOGF("FixB24: mode=1\n");
++		g_pad_output = new PadOutput;
++		g_pad_output->Start();
++	}
++''', rel)
++
++t = insert_after(t, '\tdelete g_haptics;\n\tg_haptics = nullptr;', '\tdelete g_pad_output;\n\tg_pad_output = nullptr;\n', rel)
++
++t = insert_before(t, '\tif (g_controller != nullptr) {\n\t\tg_controller->ReleaseHostPads();', r'''	// Track F, F19c (item 451(d)): PadOutput is stopped and joined before the host pads are released.
++	if (g_pad_output != nullptr) {
++		g_pad_output->Stop();
++	}
++''', rel)
++
++t = insert_after(t, '\tm_orientation[3] = 1.0f;\n\tm_gyro_timestamp = 0;', r'''	if (g_pad_output != nullptr) {
++		// Track F, F19c (item 451(d)): the PadOutput copy of the active pad id and of "the active pad is a PS5 pad"
++		// (KYTY_FIX_B24=1 only; the caller holds m_mutex; no SDL call here - the type was read by Connect).
++		g_pad_output->SetActive(m_active_id,
++		                        std::find(m_ps5_ids.begin(), m_ps5_ids.end(), m_active_id) != m_ps5_ids.end());
++	}
++''', rel)
++
++t = insert_after(t, '\tuint64_t         m_gyro_timestamp = 0;', r'''	// Track F, F19c (item 451(d)): connected ids whose pad is a PS5 pad (filled at KYTY_FIX_B24=1 only).
++	std::vector<int> m_ps5_ids;
++''', rel)
++
++t = replace_block(t, r'''void GameController::Connect(int id) {
++	Common::LockGuard lock(m_mutex);
++''', r'''void GameController::Connect(int id) {
++	// Track F, F19c (item 451(d)): at KYTY_FIX_B24=1 the pad type is read here, before m_mutex (Connect runs in
++	// Initialize for the host input id and on the main thread right after SDL_GameControllerOpen), so no SDL call is made
++	// under m_mutex; CheckActive copies "the active pad is a PS5 pad" from m_ps5_ids.
++	bool ps5 = false;
++	if (g_fix_b24 && id >= 0) {
++		auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
++		ps5       = pad != nullptr && SDL_GameControllerGetType(pad) == SDL_CONTROLLER_TYPE_PS5;
++	}
++	Common::LockGuard lock(m_mutex);
++''', rel)
++t = insert_after(t, '\tm_connected_ids.push_back(id);', '\tif (ps5) {\n\t\tm_ps5_ids.push_back(id);\n\t}\n', rel)
++t = insert_after(t, '\tm_connected_ids.erase(it);', '\tm_ps5_ids.erase(std::remove(m_ps5_ids.begin(), m_ps5_ids.end(), id), m_ps5_ids.end());\n', rel)
++t = insert_after(t, '\tm_connected_ids.clear();', '\tm_ps5_ids.clear();\n', rel)
++
++t = replace_block(t, r'''void GameController::SetVibration(uint8_t large_motor, uint8_t small_motor) {
++	Common::LockGuard lock(m_mutex);
++
++	if (m_active_id == HOST_INPUT_CONTROLLER_ID) {
++		return;
++	}
++	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
++	if (pad == nullptr) {
++		return;
++	}
++
++	const auto large = static_cast<uint16_t>(large_motor * 0x101U);
++	const auto small = static_cast<uint16_t>(small_motor * 0x101U);
++	if (SDL_GameControllerRumble(pad, large, small, RUMBLE_DURATION_MS) != 0) {
++		LOGF("\t rumble failed: %s\n", SDL_GetError());
++	}
++}
++
++void GameController::SetLightBar(uint8_t r, uint8_t g, uint8_t b) {
++	Common::LockGuard lock(m_mutex);
++	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
++	    pad != nullptr) {
++		(void)SDL_GameControllerSetLED(pad, r, g, b);
++	}
++}
++
++bool GameController::SetTriggerEffect(const PadTriggerEffectParam& param, bool* sent) {
++	*sent = false;
++''', r'''void GameController::SetVibration(uint8_t large_motor, uint8_t small_motor) {
++	PadCallProbe probe(g_hidloss.pad_vib);
++	if (g_fix_b24) {
++		// Track F, F19c (item 451(d)): no SDL on the guest thread - the latest value goes to the PadOutput slot.
++		g_pad_output->PostVibration(large_motor, small_motor);
++		return;
++	}
++
++	Common::LockGuard lock(m_mutex);
++
++	if (m_active_id == HOST_INPUT_CONTROLLER_ID) {
++		return;
++	}
++	probe.Sdl();
++	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
++	if (pad == nullptr) {
++		return;
++	}
++
++	const auto large = static_cast<uint16_t>(large_motor * 0x101U);
++	const auto small = static_cast<uint16_t>(small_motor * 0x101U);
++	probe.Sdl();
++	if (SDL_GameControllerRumble(pad, large, small, RUMBLE_DURATION_MS) != 0) {
++		probe.Sdl();
++		LOGF("\t rumble failed: %s\n", SDL_GetError());
++	}
++}
++
++void GameController::SetLightBar(uint8_t r, uint8_t g, uint8_t b) {
++	PadCallProbe probe(g_hidloss.pad_led);
++	if (g_fix_b24) {
++		// Track F, F19c (item 451(d)): no SDL on the guest thread - the latest value goes to the PadOutput slot.
++		g_pad_output->PostLightBar(r, g, b);
++		return;
++	}
++
++	Common::LockGuard lock(m_mutex);
++	probe.Sdl();
++	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
++	    pad != nullptr) {
++		probe.Sdl();
++		(void)SDL_GameControllerSetLED(pad, r, g, b);
++	}
++}
++
++bool GameController::SetTriggerEffect(const PadTriggerEffectParam& param, bool* sent) {
++	PadCallProbe probe(g_hidloss.pad_trig);
++	*sent = false;
++''', rel)
++
++t = replace_block(t, r'''	if (effect.enable_bits == 0) {
++		return true;
++	}
++
++	Common::LockGuard lock(m_mutex);
++	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
++	if (pad != nullptr && SDL_GameControllerGetType(pad) == SDL_CONTROLLER_TYPE_PS5) {
++		*sent = SDL_GameControllerSendEffect(pad, &effect, sizeof(effect)) == 0;
++	}
++	return true;
++}
++''', r'''	if (effect.enable_bits == 0) {
++		return true;
++	}
++	if (g_fix_b24) {
++		// Track F, F19c (item 451(d)): no SDL on the guest thread - the effect goes to the PadOutput slot; *sent is
++		// "the active pad is a PS5 pad and the effect is in the slot".
++		*sent = g_pad_output->PostTriggerEffect(effect);
++		return true;
++	}
++
++	Common::LockGuard lock(m_mutex);
++	probe.Sdl();
++	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
++	if (pad != nullptr) {
++		probe.Sdl();
++	}
++	if (pad != nullptr && SDL_GameControllerGetType(pad) == SDL_CONTROLLER_TYPE_PS5) {
++		probe.Sdl();
++		*sent = SDL_GameControllerSendEffect(pad, &effect, sizeof(effect)) == 0;
++	}
++	return true;
++}
++''', rel)
++save(rel, t)
++
++# ---------------------------------------------------------------- window.cpp
++rel = 'src/graphics/presentation/window/window.cpp'
++t = load(rel)
++t = insert_after(t, '#include <cstdlib>', '#include <cmath>\n#include <cstring>\n', rel)
++
++t = insert_before(t, 'static void GameEventController([[maybe_unused]] const EventController& f) {', r'''// Track F, F19c stand KYTY_TEST_HIDLOSS (ROADMAP s122 item 451(c), F19a s6.1): counters of the stand window - main
++// thread probes, removal events, callbacks of the virtual pad. Counted only while window is set (from fire - 1 s to the
++// stat line); the stand itself is next to WindowTestMinimizeNoteGuestText.
++struct TestHidLossCounters {
++	std::atomic<bool>     window {false};
++	std::atomic<uint64_t> main_late_max_us {0};
++	std::atomic<uint64_t> probes_posted {0};
++	std::atomic<uint64_t> probes_run {0};
++	std::atomic<uint64_t> removed {0};
++	std::atomic<uint64_t> vp_rumble {0};
++	std::atomic<uint64_t> vp_led {0};
++	std::atomic<uint64_t> vp_effect {0};
++};
++
++static TestHidLossCounters g_test_hidloss;
++
++static void TestHidLossCount(std::atomic<uint64_t>& counter) {
++	if (g_test_hidloss.window.load(std::memory_order_relaxed)) {
++		counter.fetch_add(1, std::memory_order_relaxed);
++	}
++}
++
++''', rel)
++
++t = replace_block(t, r'''	if (f.removed) {
++		Controller::Disconnect(f.id);
++''', r'''	if (f.removed) {
++		// Track F, F19c (ROADMAP s122 item 451(c)): printed always - without it a pad lost on the host leaves no line in
++		// the log (the print above is a build option); one line on a rare event, nothing the guest sees.
++		LOGF("Controller %d: removed\n", f.id);
++		TestHidLossCount(g_test_hidloss.removed);
++		Controller::Disconnect(f.id);
++''', rel)
++
++t = insert_before(t, '// Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): KYTY_TEST_MINIMIZE=<s>:<dur> - <s> seconds after the', r'''// Track F, F19c (ROADMAP s122 item 451(c), F19a s4): KYTY_TEST_HIDLOSS=<s>[:<mode>] - stand only, off when unset or
++// empty, read once per process (first guest log write; form of KYTY_TEST_MINIMIZE). Modes: detach (default), hold,
++// sleep; any other value - line "TestHidLoss: config invalid ...", stand off. Armed by the game's first level entry line
++// (TestMinimizeIsLevelEntry). At armed + max(0, <s> - PRE_S) the main thread attaches the virtual pad "KYTY test pad"
++// (SDL_JoystickAttachVirtualEx: game controller type, 6 axes, 15 buttons; its Rumble, SetLED and SendEffect callbacks only
++// count) - the emulator then opens it through the usual controller add event. At armed + <s> the main thread runs
++// "fire": detach - SDL_JoystickDetachVirtual of the virtual pad; hold - SDL_LockJoysticks, HOLD_MS of sleep,
++// SDL_UnlockJoysticks; sleep - HOLD_MS of sleep without the lock. In hold and sleep the virtual pad stays attached until
++// the process ends. From fire - 1 s to done + 2 s the stand thread posts an empty main thread task every PROBE_MS that
++// records its age (main_late_max_us); after done + 2 s it posts the task that closes the counting window and prints the
++// line "TestHidLoss: stat ..." (main thread tasks run in posting order: every probe posted before it has run). t_us -
++// Common::FrameStats::NowNs() / 1000. The stand thread is detached; a process that ends inside the window prints no stat.
++constexpr double   TEST_HIDLOSS_PRE_S    = 10.0;
++constexpr uint32_t TEST_HIDLOSS_HOLD_MS  = 3000;
++constexpr uint32_t TEST_HIDLOSS_PROBE_MS = 20;
++
++enum class TestHidLossMode { Detach, Hold, Sleep };
++
++struct TestHidLossConfig {
++	bool            on      = false;
++	double          delay_s = 0.0;
++	TestHidLossMode mode    = TestHidLossMode::Detach;
++};
++
++static const char* TestHidLossModeName(TestHidLossMode mode) {
++	switch (mode) {
++		case TestHidLossMode::Detach: return "detach";
++		case TestHidLossMode::Hold: return "hold";
++		case TestHidLossMode::Sleep: return "sleep";
++	}
++	return "?";
++}
++
++static TestHidLossConfig TestHidLossReadConfig() {
++	TestHidLossConfig c;
++	const char*       value = std::getenv("KYTY_TEST_HIDLOSS");
++	if (value == nullptr || value[0] == '\0') {
++		return c;
++	}
++	char*        end     = nullptr;
++	const double delay_s = std::strtod(value, &end);
++	bool ok = value[0] >= '0' && value[0] <= '9' && end != value && std::isfinite(delay_s) && delay_s <= 86400.0;
++	auto mode = TestHidLossMode::Detach;
++	if (ok && end[0] != '\0') {
++		if (std::strcmp(end, ":detach") == 0) {
++			mode = TestHidLossMode::Detach;
++		} else if (std::strcmp(end, ":hold") == 0) {
++			mode = TestHidLossMode::Hold;
++		} else if (std::strcmp(end, ":sleep") == 0) {
++			mode = TestHidLossMode::Sleep;
++		} else {
++			ok = false;
++		}
++	}
++	if (!ok) {
++		LOGF("TestHidLoss: config invalid value=\"%s\" (expected <s>[:detach|hold|sleep]), stand off\n", value);
++		return c;
++	}
++	c.on      = true;
++	c.delay_s = delay_s;
++	c.mode    = mode;
++	LOGF("TestHidLoss: config on delay_s=%g mode=%s hold_ms=%u\n", delay_s, TestHidLossModeName(mode),
++	     TEST_HIDLOSS_HOLD_MS);
++	return c;
++}
++
++static uint64_t TestHidLossNowUs() {
++	return Common::FrameStats::NowNs() / 1000;
++}
++
++// Instance id of the attached virtual pad (-1: none); written and read on the main thread only.
++static SDL_JoystickID g_test_hidloss_vp = -1;
++// t_us of the "done" line, 0 until fire has finished; written by the main thread, read by the stand thread.
++static std::atomic<uint64_t> g_test_hidloss_done_us {0};
++
++static int SDLCALL TestHidLossVpRumble(void* /*userdata*/, Uint16 /*low*/, Uint16 /*high*/) {
++	TestHidLossCount(g_test_hidloss.vp_rumble);
++	return 0;
++}
++
++static int SDLCALL TestHidLossVpSetLed(void* /*userdata*/, Uint8 /*red*/, Uint8 /*green*/, Uint8 /*blue*/) {
++	TestHidLossCount(g_test_hidloss.vp_led);
++	return 0;
++}
++
++static int SDLCALL TestHidLossVpSendEffect(void* /*userdata*/, const void* /*data*/, int /*size*/) {
++	TestHidLossCount(g_test_hidloss.vp_effect);
++	return 0;
++}
++
++// Main thread.
++static void TestHidLossAttach() {
++	SDL_VirtualJoystickDesc desc {};
++	desc.version    = SDL_VIRTUAL_JOYSTICK_DESC_VERSION;
++	desc.type       = SDL_JOYSTICK_TYPE_GAMECONTROLLER;
++	desc.naxes      = 6;
++	desc.nbuttons   = 15;
++	desc.name       = "KYTY test pad";
++	desc.Rumble     = TestHidLossVpRumble;
++	desc.SetLED     = TestHidLossVpSetLed;
++	desc.SendEffect = TestHidLossVpSendEffect;
++	const int index = SDL_JoystickAttachVirtualEx(&desc);
++	if (index < 0) {
++		LOGF("TestHidLoss: attach failed error=\"%s\" t_us=%" PRIu64 "\n", SDL_GetError(), TestHidLossNowUs());
++		return;
++	}
++	g_test_hidloss_vp = SDL_JoystickGetDeviceInstanceID(index);
++	LOGF("TestHidLoss: attach index=%d t_us=%" PRIu64 "\n", index, TestHidLossNowUs());
++}
++
++// Main thread.
++static void TestHidLossFire(TestHidLossMode mode) {
++	LOGF("TestHidLoss: fire mode=%s t_us=%" PRIu64 "\n", TestHidLossModeName(mode), TestHidLossNowUs());
++	switch (mode) {
++		case TestHidLossMode::Detach: {
++			int index = -1;
++			for (int i = 0; g_test_hidloss_vp >= 0 && i < SDL_NumJoysticks(); i++) {
++				if (SDL_JoystickGetDeviceInstanceID(i) == g_test_hidloss_vp) {
++					index = i;
++					break;
++				}
++			}
++			if (index < 0 || SDL_JoystickDetachVirtual(index) != 0) {
++				LOGF("TestHidLoss: detach failed index=%d error=\"%s\"\n", index, SDL_GetError());
++			}
++			break;
++		}
++		case TestHidLossMode::Hold:
++			SDL_LockJoysticks();
++			SDL_Delay(TEST_HIDLOSS_HOLD_MS);
++			SDL_UnlockJoysticks();
++			break;
++		case TestHidLossMode::Sleep: SDL_Delay(TEST_HIDLOSS_HOLD_MS); break;
++	}
++	const uint64_t done_us = TestHidLossNowUs();
++	LOGF("TestHidLoss: done t_us=%" PRIu64 "\n", done_us);
++	g_test_hidloss_done_us.store(done_us, std::memory_order_release);
++}
++
++// Main thread.
++static void TestHidLossStat(TestHidLossMode mode) {
++	g_test_hidloss.window.store(false, std::memory_order_relaxed);
++	Controller::TestHidLossWindow(false);
++	const auto pad = Controller::TestHidLossPadStats();
++	const auto get = [](const std::atomic<uint64_t>& value) {
++		return static_cast<unsigned long long>(value.load(std::memory_order_relaxed));
++	};
++	const auto u = [](uint64_t value) { return static_cast<unsigned long long>(value); };
++	LOGF("TestHidLoss: stat mode=%s main_late_max_us=%llu probes_posted=%llu probes_run=%llu pad_calls=%llu pad_vib=%llu "
++	     "pad_led=%llu pad_trig=%llu pad_wait_max_us=%llu po_applied=%llu po_wait_max_us=%llu guest_sdl=%llu removed=%llu "
++	     "vp_rumble=%llu vp_led=%llu vp_effect=%llu\n",
++	     TestHidLossModeName(mode), get(g_test_hidloss.main_late_max_us), get(g_test_hidloss.probes_posted),
++	     get(g_test_hidloss.probes_run), u(pad.pad_vib + pad.pad_led + pad.pad_trig), u(pad.pad_vib), u(pad.pad_led),
++	     u(pad.pad_trig), u(pad.pad_wait_max_us), u(pad.po_applied), u(pad.po_wait_max_us), u(pad.guest_sdl),
++	     get(g_test_hidloss.removed), get(g_test_hidloss.vp_rumble), get(g_test_hidloss.vp_led),
++	     get(g_test_hidloss.vp_effect));
++}
++
++static bool TestHidLossPost(std::function<void()> task) {
++	auto* context = g_window.get();
++	if (context == nullptr) {
++		return false;
++	}
++	context->PostToMainThread(std::move(task));
++	return true;
++}
++
++// The stand thread (detached).
++static void TestHidLossRun(TestHidLossConfig cfg, uint64_t armed_us) {
++	const auto at = [armed_us](double s) { return armed_us + static_cast<uint64_t>((s > 0.0 ? s : 0.0) * 1000000.0); };
++	const auto sleep_until = [](uint64_t t_us) {
++		const uint64_t now = TestHidLossNowUs();
++		if (t_us > now) {
++			std::this_thread::sleep_for(std::chrono::microseconds(t_us - now));
++		}
++	};
++	sleep_until(at(cfg.delay_s - TEST_HIDLOSS_PRE_S));
++	if (!TestHidLossPost([] { TestHidLossAttach(); })) {
++		return;
++	}
++	sleep_until(at(cfg.delay_s - 1.0));
++	Controller::TestHidLossWindow(true);
++	g_test_hidloss.window.store(true, std::memory_order_release);
++	const uint64_t fire_us = at(cfg.delay_s);
++	bool           fired   = false;
++	for (;;) {
++		const uint64_t now = TestHidLossNowUs();
++		if (!fired && now >= fire_us) {
++			if (!TestHidLossPost([mode = cfg.mode] { TestHidLossFire(mode); })) {
++				return;
++			}
++			fired = true;
++		}
++		const uint64_t done_us = g_test_hidloss_done_us.load(std::memory_order_acquire);
++		if (done_us != 0 && now >= done_us + 2000000) {
++			break;
++		}
++		g_test_hidloss.probes_posted.fetch_add(1, std::memory_order_relaxed);
++		const uint64_t posted_ns = Common::FrameStats::NowNs();
++		if (!TestHidLossPost([posted_ns] {
++			    const uint64_t age_us = (Common::FrameStats::NowNs() - posted_ns) / 1000;
++			    uint64_t current = g_test_hidloss.main_late_max_us.load(std::memory_order_relaxed);
++			    while (age_us > current && !g_test_hidloss.main_late_max_us.compare_exchange_weak(
++			                                   current, age_us, std::memory_order_relaxed)) {
++			    }
++			    g_test_hidloss.probes_run.fetch_add(1, std::memory_order_relaxed);
++		    })) {
++			return;
++		}
++		std::this_thread::sleep_for(std::chrono::milliseconds(TEST_HIDLOSS_PROBE_MS));
++	}
++	TestHidLossPost([mode = cfg.mode] { TestHidLossStat(mode); });
++}
++
++static void WindowTestHidLossNoteGuestText(const char* text, size_t size) {
++	static const TestHidLossConfig cfg = TestHidLossReadConfig();
++	static std::atomic<bool>       armed {false};
++	if (!cfg.on || text == nullptr || armed.load(std::memory_order_relaxed)) {
++		return;
++	}
++	if (!TestMinimizeIsLevelEntry(std::string_view(text, size)) || armed.exchange(true, std::memory_order_acq_rel)) {
++		return;
++	}
++	const uint64_t armed_us = TestHidLossNowUs();
++	LOGF("TestHidLoss: armed t_us=%" PRIu64 "\n", armed_us);
++	std::thread([armed_us] { TestHidLossRun(cfg, armed_us); }).detach();
++}
++
++''', rel)
++
++# The guest log text reaches the stand through the F5 entry point (libC.cpp fwrite -> WindowTestMinimizeNoteGuestText),
++# so no other file changes; the call is the first statement, before the F5 early returns.
++t = insert_after(t, 'void WindowTestMinimizeNoteGuestText(const char* text, size_t size) {',
++                 '\tWindowTestHidLossNoteGuestText(text, size); // Track F, F19c, KYTY_TEST_HIDLOSS (item 451(c))\n', rel)
++save(rel, t)
++
++# ---------------------------------------------------------------- CMakeLists.txt
++rel = 'CMakeLists.txt'
++t = load(rel)
++t = insert_after(t, 'add_kyty_full_emulator_test(shader_cfg_tests "${KYTY_TESTS_DIR}/shaderCfgTests.cpp")', r'''
++# Track F, B24 pad output stand (F19c; ROADMAP s122 item 451(e)(1)): run by docs/track-f/f19c/run_stand_f19c.py, not by
++# ctest.
++add_kyty_full_emulator_test(b24_pad_stand
++	"${KYTY_TESTS_DIR}/B24PadStand.cpp")
++''', rel)
++save(rel, t)
++print('PATCH OK')
+diff --git a/docs/track-f/f19c/run_stand_f19c.py b/docs/track-f/f19c/run_stand_f19c.py
+new file mode 100644
+index 00000000..2c2a42b1
+--- /dev/null
++++ b/docs/track-f/f19c/run_stand_f19c.py
+@@ -0,0 +1,161 @@
++# F19c (HPP-547, ROADMAP s122 item 451(e)(1)): driver of the B24 stand tests/B24PadStand.cpp (target b24_pad_stand) -
++# one process per run, each in its own working directory under <out dir>/cwd_<run>. Child environment: every KYTY_* and
++# SDL_* variable removed, then KYTY_FIX_B24=<fix> unless fix is 'unset'. The stand switches the host joystick drivers off
++# by hints (only the SDL virtual driver is left); num_joysticks_at_init = 0 checks that no host device was enumerated.
++# Members (item 451(e)(1)): (i) =0: X holds SDL_LockJoysticks 3000 ms, Y calls SetVibration with new values - wall
++# >= 2 700 ms; (ii) =1, the same: each wall of SetVibration, SetLightBar, SetTriggerEffect < 50 ms, guest_sdl = 0, the
++# Rumble callback of the virtual pad holds the last written value <= 100 ms after the lock is released; (iii) =1:
++# 2 threads x 10 000 SetVibration with random values while the pad is attached and detached - no crash (rc 0 and END),
++# every received value was written (rumble_bad 0), the last applied value = the last written one.
++# Controls: (i) with KYTY_FIX_B24 unset (= 0) and at =1 (the wall falls under 50 ms); (ii) at =0 (the walls stay >= 2 700 ms
++# for the first call, guest_sdl > 0).
++# Halts before a run when C:/kyty/SEALED_RUN.lock or C:/kyty/f287/STOP exists (rules 27, 26).
++# Usage: python run_stand_f19c.py <exe> <out dir>    -> <out dir>/stand_f19c.txt, last line ALL OK or FAILED <n>
++import hashlib, os, re, subprocess, sys, time
++
++exe, outdir = os.path.abspath(sys.argv[1]), os.path.abspath(sys.argv[2])
++os.makedirs(outdir, exist_ok=True)
++sha = hashlib.sha256(open(exe, 'rb').read()).hexdigest()
++HOLD_US = 2700000
++FAST_US = 50000
++LAT_US = 100000
++
++
++def run(name, case, fix):
++    cwd = os.path.join(outdir, 'cwd_' + name)
++    os.makedirs(cwd, exist_ok=True)
++    env = {k: v for k, v in os.environ.items() if not k.upper().startswith('KYTY_') and not k.upper().startswith('SDL_')}
++    if fix != 'unset':
++        env['KYTY_FIX_B24'] = fix
++    t0 = time.time()
++    p = subprocess.run([exe, case], cwd=cwd, env=env, capture_output=True, timeout=180)
++    out = p.stdout.decode('utf-8', 'replace').replace('\r\n', '\n')
++    open(os.path.join(outdir, 'out_' + name + '.txt'), 'w', encoding='utf-8', newline='\n').write(out)
++    kv = {}
++    for line in out.split('\n'):
++        m = re.match(r'^([a-z_0-9]+)=(.*)$', line)
++        if m and m.group(1) not in kv:
++            kv[m.group(1)] = m.group(2).strip('"')
++    kv['_rc'] = p.returncode
++    kv['_fixb24_lines'] = sum(1 for line in out.split('\n') if line == 'FixB24: mode=1')
++    kv['_end'] = out.rstrip('\n').endswith('END')
++    kv['_wall'] = time.time() - t0
++    return kv
++
++
++def num(kv, k):
++    try:
++        return int(kv.get(k, '-1'))
++    except ValueError:
++        return -1
++
++
++results = []
++
++
++def check(name, kv, conds):
++    bad = [c for c, ok in conds if not ok]
++    results.append((name, not bad, bad, kv))
++
++
++def common(kv, fix1):
++    return [
++        ('rc 0 and END', kv['_rc'] == 0 and kv['_end']),
++        ('num_joysticks_at_init 0 (no host device)', num(kv, 'num_joysticks_at_init') == 0),
++        ('connected 1', num(kv, 'connected') == 1),
++        ('fix_b24 %d' % (1 if fix1 else 0), num(kv, 'fix_b24') == (1 if fix1 else 0)),
++        ('FixB24 lines %d' % (1 if fix1 else 0), kv['_fixb24_lines'] == (1 if fix1 else 0)),
++        ('shutdown_ok 1', num(kv, 'shutdown_ok') == 1),
++        ('rumble_bad 0', num(kv, 'rumble_bad') == 0),
++    ]
++
++
++def case_i(name, fix):
++    kv = run(name, 'i', fix)
++    fix1 = fix == '1'
++    conds = common(kv, fix1) + [('pad_vib 1', num(kv, 'pad_vib') == 1)]
++    if fix1:
++        conds += [('wall_vib_us < %d' % FAST_US, 0 <= num(kv, 'wall_vib_us') < FAST_US),
++                  ('guest_sdl 0', num(kv, 'guest_sdl') == 0)]
++    else:
++        conds += [('wall_vib_us >= %d' % HOLD_US, num(kv, 'wall_vib_us') >= HOLD_US),
++                  ('guest_sdl >= 2', num(kv, 'guest_sdl') >= 2),
++                  ('po_applied 0', num(kv, 'po_applied') == 0),
++                  ('po_wait_max_us 0', num(kv, 'po_wait_max_us') == 0)]
++    check(name, kv, conds)
++
++
++def case_ii(name, fix):
++    kv = run(name, 'ii', fix)
++    fix1 = fix == '1'
++    conds = common(kv, fix1) + [
++        ('pad_vib 3, pad_led 1, pad_trig 1', (num(kv, 'pad_vib'), num(kv, 'pad_led'), num(kv, 'pad_trig')) == (3, 1, 1)),
++        ('trig_ok 1', num(kv, 'trig_ok') == 1),
++        ('latency_us in [0, %d]' % LAT_US, 0 <= num(kv, 'latency_us') <= LAT_US) if fix1 else ('latency_us >= -1', True),
++        ('last_after_300ms_ok 1', num(kv, 'last_after_300ms_ok') == 1),
++    ]
++    if fix1:
++        conds += [('wall_vib_us < %d' % FAST_US, 0 <= num(kv, 'wall_vib_us') < FAST_US),
++                  ('wall_led_us < %d' % FAST_US, 0 <= num(kv, 'wall_led_us') < FAST_US),
++                  ('wall_trig_us < %d' % FAST_US, 0 <= num(kv, 'wall_trig_us') < FAST_US),
++                  ('y_done_before_unlock 1', num(kv, 'y_done_before_unlock') == 1),
++                  ('guest_sdl 0', num(kv, 'guest_sdl') == 0),
++                  ('po_wait_max_us >= 2 500 000 (PadOutput waited the lock)', num(kv, 'po_wait_max_us') >= 2500000)]
++    else:
++        conds += [('wall_vib_us >= %d' % HOLD_US, num(kv, 'wall_vib_us') >= HOLD_US),
++                  ('guest_sdl > 0', num(kv, 'guest_sdl') > 0),
++                  ('po_applied 0', num(kv, 'po_applied') == 0)]
++    check(name, kv, conds)
++
++
++def case_iii(name):
++    kv = run(name, 'iii', '1')
++    conds = common(kv, True) + [
++        ('writes 20000', num(kv, 'writes') == 20000),
++        ('pad_vib 20001', num(kv, 'pad_vib') == 20001),
++        ('guest_sdl 0', num(kv, 'guest_sdl') == 0),
++        ('churn_cycles >= 20', num(kv, 'churn_cycles') >= 20),
++        ('detaches >= 10 and removes >= 10', num(kv, 'detaches') >= 10 and num(kv, 'removes') >= 10),
++        ('final_connected 1', num(kv, 'final_connected') == 1),
++        ('latency_us in [0, %d]' % LAT_US, 0 <= num(kv, 'latency_us') <= LAT_US),
++        ('last_after_300ms_ok 1 (last applied = last written)', num(kv, 'last_after_300ms_ok') == 1),
++        ('rumble_calls > 0', num(kv, 'rumble_calls') > 0),
++    ]
++    check(name, kv, conds)
++
++
++plan = [
++    lambda: case_i('i_fix0', '0'),
++    lambda: case_i('i_unset', 'unset'),
++    lambda: case_ii('ii_fix1', '1'),
++    lambda: case_iii('iii_fix1'),
++    lambda: case_i('i_fix1', '1'),
++    lambda: case_ii('ii_fix0', '0'),
++    lambda: case_iii('iii_fix1_b'),
++]
++
++for step in plan:
++    if os.path.exists('C:/kyty/SEALED_RUN.lock') or os.path.exists('C:/kyty/f287/STOP'):
++        print('HALT lock or STOP')
++        sys.exit(3)
++    step()
++
++with open(os.path.join(outdir, 'stand_f19c.txt'), 'w', encoding='utf-8', newline='\n') as f:
++    def w(s):
++        print(s)
++        f.write(s + '\n')
++    w('# exe %s sha256 %s' % (exe, sha))
++    nbad = 0
++    keys = ['num_joysticks_at_init', 'fix_b24', 'wall_vib_us', 'wall_led_us', 'wall_trig_us', 'y_done_before_unlock',
++            'latency_us', 'last_after_300ms_ok', 'writes', 'churn_cycles', 'attaches', 'detaches', 'adds', 'removes',
++            'final_connected', 'pad_vib', 'pad_led', 'pad_trig', 'pad_wait_max_us', 'po_applied', 'po_wait_max_us',
++            'guest_sdl', 'rumble_calls', 'rumble_bad', 'led_calls', 'effect_calls']
++    for name, ok, bad, kv in results:
++        vals = ' '.join('%s=%s' % (k, kv[k]) for k in keys if k in kv)
++        w('%s %s rc=%s fixb24_lines=%d wall=%.1fs %s' % ('PASS' if ok else 'FAIL', name, kv['_rc'], kv['_fixb24_lines'],
++                                                        kv['_wall'], vals))
++        for c in bad:
++            w('    failed: ' + c)
++        nbad += 0 if ok else 1
++    w('ALL OK' if nbad == 0 else 'FAILED %d' % nbad)
++sys.exit(0 if nbad == 0 else 1)
+diff --git a/src/graphics/presentation/window/window.cpp b/src/graphics/presentation/window/window.cpp
+index 47f017e3..1addd346 100644
+--- a/src/graphics/presentation/window/window.cpp
++++ b/src/graphics/presentation/window/window.cpp
+@@ -47,6 +47,8 @@
+ #include <atomic>
+ #include <chrono>
+ #include <cstdlib>
++#include <cmath>
++#include <cstring>
+ #include <thread>
+ #include <utility>
+ #include <fmt/format.h>
+@@ -338,6 +340,28 @@ static void GameEventFinger([[maybe_unused]] const EventFinger& f) {
+ #endif
+ }
+ 
++// Track F, F19c stand KYTY_TEST_HIDLOSS (ROADMAP s122 item 451(c), F19a s6.1): counters of the stand window - main
++// thread probes, removal events, callbacks of the virtual pad. Counted only while window is set (from fire - 1 s to the
++// stat line); the stand itself is next to WindowTestMinimizeNoteGuestText.
++struct TestHidLossCounters {
++	std::atomic<bool>     window {false};
++	std::atomic<uint64_t> main_late_max_us {0};
++	std::atomic<uint64_t> probes_posted {0};
++	std::atomic<uint64_t> probes_run {0};
++	std::atomic<uint64_t> removed {0};
++	std::atomic<uint64_t> vp_rumble {0};
++	std::atomic<uint64_t> vp_led {0};
++	std::atomic<uint64_t> vp_effect {0};
++};
++
++static TestHidLossCounters g_test_hidloss;
++
++static void TestHidLossCount(std::atomic<uint64_t>& counter) {
++	if (g_test_hidloss.window.load(std::memory_order_relaxed)) {
++		counter.fetch_add(1, std::memory_order_relaxed);
++	}
++}
++
+ static void GameEventController([[maybe_unused]] const EventController& f) {
+ 	EXIT_NOT_IMPLEMENTED(f.remapped);
+ 
+@@ -376,6 +400,10 @@ static void GameEventController([[maybe_unused]] const EventController& f) {
+ 	}
+ 
+ 	if (f.removed) {
++		// Track F, F19c (ROADMAP s122 item 451(c)): printed always - without it a pad lost on the host leaves no line in
++		// the log (the print above is a build option); one line on a rare event, nothing the guest sees.
++		LOGF("Controller %d: removed\n", f.id);
++		TestHidLossCount(g_test_hidloss.removed);
+ 		Controller::Disconnect(f.id);
+ 		SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));
+ 	}
+@@ -1037,6 +1065,234 @@ void WindowShutdown() {
+ 	}
+ }
+ 
++// Track F, F19c (ROADMAP s122 item 451(c), F19a s4): KYTY_TEST_HIDLOSS=<s>[:<mode>] - stand only, off when unset or
++// empty, read once per process (first guest log write; form of KYTY_TEST_MINIMIZE). Modes: detach (default), hold,
++// sleep; any other value - line "TestHidLoss: config invalid ...", stand off. Armed by the game's first level entry line
++// (TestMinimizeIsLevelEntry). At armed + max(0, <s> - PRE_S) the main thread attaches the virtual pad "KYTY test pad"
++// (SDL_JoystickAttachVirtualEx: game controller type, 6 axes, 15 buttons; its Rumble, SetLED and SendEffect callbacks only
++// count) - the emulator then opens it through the usual controller add event. At armed + <s> the main thread runs
++// "fire": detach - SDL_JoystickDetachVirtual of the virtual pad; hold - SDL_LockJoysticks, HOLD_MS of sleep,
++// SDL_UnlockJoysticks; sleep - HOLD_MS of sleep without the lock. In hold and sleep the virtual pad stays attached until
++// the process ends. From fire - 1 s to done + 2 s the stand thread posts an empty main thread task every PROBE_MS that
++// records its age (main_late_max_us); after done + 2 s it posts the task that closes the counting window and prints the
++// line "TestHidLoss: stat ..." (main thread tasks run in posting order: every probe posted before it has run). t_us -
++// Common::FrameStats::NowNs() / 1000. The stand thread is detached; a process that ends inside the window prints no stat.
++constexpr double   TEST_HIDLOSS_PRE_S    = 10.0;
++constexpr uint32_t TEST_HIDLOSS_HOLD_MS  = 3000;
++constexpr uint32_t TEST_HIDLOSS_PROBE_MS = 20;
++
++enum class TestHidLossMode { Detach, Hold, Sleep };
++
++struct TestHidLossConfig {
++	bool            on      = false;
++	double          delay_s = 0.0;
++	TestHidLossMode mode    = TestHidLossMode::Detach;
++};
++
++static const char* TestHidLossModeName(TestHidLossMode mode) {
++	switch (mode) {
++		case TestHidLossMode::Detach: return "detach";
++		case TestHidLossMode::Hold: return "hold";
++		case TestHidLossMode::Sleep: return "sleep";
++	}
++	return "?";
++}
++
++static TestHidLossConfig TestHidLossReadConfig() {
++	TestHidLossConfig c;
++	const char*       value = std::getenv("KYTY_TEST_HIDLOSS");
++	if (value == nullptr || value[0] == '\0') {
++		return c;
++	}
++	char*        end     = nullptr;
++	const double delay_s = std::strtod(value, &end);
++	bool ok = value[0] >= '0' && value[0] <= '9' && end != value && std::isfinite(delay_s) && delay_s <= 86400.0;
++	auto mode = TestHidLossMode::Detach;
++	if (ok && end[0] != '\0') {
++		if (std::strcmp(end, ":detach") == 0) {
++			mode = TestHidLossMode::Detach;
++		} else if (std::strcmp(end, ":hold") == 0) {
++			mode = TestHidLossMode::Hold;
++		} else if (std::strcmp(end, ":sleep") == 0) {
++			mode = TestHidLossMode::Sleep;
++		} else {
++			ok = false;
++		}
++	}
++	if (!ok) {
++		LOGF("TestHidLoss: config invalid value=\"%s\" (expected <s>[:detach|hold|sleep]), stand off\n", value);
++		return c;
++	}
++	c.on      = true;
++	c.delay_s = delay_s;
++	c.mode    = mode;
++	LOGF("TestHidLoss: config on delay_s=%g mode=%s hold_ms=%u\n", delay_s, TestHidLossModeName(mode),
++	     TEST_HIDLOSS_HOLD_MS);
++	return c;
++}
++
++static uint64_t TestHidLossNowUs() {
++	return Common::FrameStats::NowNs() / 1000;
++}
++
++// Instance id of the attached virtual pad (-1: none); written and read on the main thread only.
++static SDL_JoystickID g_test_hidloss_vp = -1;
++// t_us of the "done" line, 0 until fire has finished; written by the main thread, read by the stand thread.
++static std::atomic<uint64_t> g_test_hidloss_done_us {0};
++
++static int SDLCALL TestHidLossVpRumble(void* /*userdata*/, Uint16 /*low*/, Uint16 /*high*/) {
++	TestHidLossCount(g_test_hidloss.vp_rumble);
++	return 0;
++}
++
++static int SDLCALL TestHidLossVpSetLed(void* /*userdata*/, Uint8 /*red*/, Uint8 /*green*/, Uint8 /*blue*/) {
++	TestHidLossCount(g_test_hidloss.vp_led);
++	return 0;
++}
++
++static int SDLCALL TestHidLossVpSendEffect(void* /*userdata*/, const void* /*data*/, int /*size*/) {
++	TestHidLossCount(g_test_hidloss.vp_effect);
++	return 0;
++}
++
++// Main thread.
++static void TestHidLossAttach() {
++	SDL_VirtualJoystickDesc desc {};
++	desc.version    = SDL_VIRTUAL_JOYSTICK_DESC_VERSION;
++	desc.type       = SDL_JOYSTICK_TYPE_GAMECONTROLLER;
++	desc.naxes      = 6;
++	desc.nbuttons   = 15;
++	desc.name       = "KYTY test pad";
++	desc.Rumble     = TestHidLossVpRumble;
++	desc.SetLED     = TestHidLossVpSetLed;
++	desc.SendEffect = TestHidLossVpSendEffect;
++	const int index = SDL_JoystickAttachVirtualEx(&desc);
++	if (index < 0) {
++		LOGF("TestHidLoss: attach failed error=\"%s\" t_us=%" PRIu64 "\n", SDL_GetError(), TestHidLossNowUs());
++		return;
++	}
++	g_test_hidloss_vp = SDL_JoystickGetDeviceInstanceID(index);
++	LOGF("TestHidLoss: attach index=%d t_us=%" PRIu64 "\n", index, TestHidLossNowUs());
++}
++
++// Main thread.
++static void TestHidLossFire(TestHidLossMode mode) {
++	LOGF("TestHidLoss: fire mode=%s t_us=%" PRIu64 "\n", TestHidLossModeName(mode), TestHidLossNowUs());
++	switch (mode) {
++		case TestHidLossMode::Detach: {
++			int index = -1;
++			for (int i = 0; g_test_hidloss_vp >= 0 && i < SDL_NumJoysticks(); i++) {
++				if (SDL_JoystickGetDeviceInstanceID(i) == g_test_hidloss_vp) {
++					index = i;
++					break;
++				}
++			}
++			if (index < 0 || SDL_JoystickDetachVirtual(index) != 0) {
++				LOGF("TestHidLoss: detach failed index=%d error=\"%s\"\n", index, SDL_GetError());
++			}
++			break;
++		}
++		case TestHidLossMode::Hold:
++			SDL_LockJoysticks();
++			SDL_Delay(TEST_HIDLOSS_HOLD_MS);
++			SDL_UnlockJoysticks();
++			break;
++		case TestHidLossMode::Sleep: SDL_Delay(TEST_HIDLOSS_HOLD_MS); break;
++	}
++	const uint64_t done_us = TestHidLossNowUs();
++	LOGF("TestHidLoss: done t_us=%" PRIu64 "\n", done_us);
++	g_test_hidloss_done_us.store(done_us, std::memory_order_release);
++}
++
++// Main thread.
++static void TestHidLossStat(TestHidLossMode mode) {
++	g_test_hidloss.window.store(false, std::memory_order_relaxed);
++	Controller::TestHidLossWindow(false);
++	const auto pad = Controller::TestHidLossPadStats();
++	const auto get = [](const std::atomic<uint64_t>& value) {
++		return static_cast<unsigned long long>(value.load(std::memory_order_relaxed));
++	};
++	const auto u = [](uint64_t value) { return static_cast<unsigned long long>(value); };
++	LOGF("TestHidLoss: stat mode=%s main_late_max_us=%llu probes_posted=%llu probes_run=%llu pad_calls=%llu pad_vib=%llu "
++	     "pad_led=%llu pad_trig=%llu pad_wait_max_us=%llu po_applied=%llu po_wait_max_us=%llu guest_sdl=%llu removed=%llu "
++	     "vp_rumble=%llu vp_led=%llu vp_effect=%llu\n",
++	     TestHidLossModeName(mode), get(g_test_hidloss.main_late_max_us), get(g_test_hidloss.probes_posted),
++	     get(g_test_hidloss.probes_run), u(pad.pad_vib + pad.pad_led + pad.pad_trig), u(pad.pad_vib), u(pad.pad_led),
++	     u(pad.pad_trig), u(pad.pad_wait_max_us), u(pad.po_applied), u(pad.po_wait_max_us), u(pad.guest_sdl),
++	     get(g_test_hidloss.removed), get(g_test_hidloss.vp_rumble), get(g_test_hidloss.vp_led),
++	     get(g_test_hidloss.vp_effect));
++}
++
++static bool TestHidLossPost(std::function<void()> task) {
++	auto* context = g_window.get();
++	if (context == nullptr) {
++		return false;
++	}
++	context->PostToMainThread(std::move(task));
++	return true;
++}
++
++// The stand thread (detached).
++static void TestHidLossRun(TestHidLossConfig cfg, uint64_t armed_us) {
++	const auto at = [armed_us](double s) { return armed_us + static_cast<uint64_t>((s > 0.0 ? s : 0.0) * 1000000.0); };
++	const auto sleep_until = [](uint64_t t_us) {
++		const uint64_t now = TestHidLossNowUs();
++		if (t_us > now) {
++			std::this_thread::sleep_for(std::chrono::microseconds(t_us - now));
++		}
++	};
++	sleep_until(at(cfg.delay_s - TEST_HIDLOSS_PRE_S));
++	if (!TestHidLossPost([] { TestHidLossAttach(); })) {
++		return;
++	}
++	sleep_until(at(cfg.delay_s - 1.0));
++	Controller::TestHidLossWindow(true);
++	g_test_hidloss.window.store(true, std::memory_order_release);
++	const uint64_t fire_us = at(cfg.delay_s);
++	bool           fired   = false;
++	for (;;) {
++		const uint64_t now = TestHidLossNowUs();
++		if (!fired && now >= fire_us) {
++			if (!TestHidLossPost([mode = cfg.mode] { TestHidLossFire(mode); })) {
++				return;
++			}
++			fired = true;
++		}
++		const uint64_t done_us = g_test_hidloss_done_us.load(std::memory_order_acquire);
++		if (done_us != 0 && now >= done_us + 2000000) {
++			break;
++		}
++		g_test_hidloss.probes_posted.fetch_add(1, std::memory_order_relaxed);
++		const uint64_t posted_ns = Common::FrameStats::NowNs();
++		if (!TestHidLossPost([posted_ns] {
++			    const uint64_t age_us = (Common::FrameStats::NowNs() - posted_ns) / 1000;
++			    uint64_t current = g_test_hidloss.main_late_max_us.load(std::memory_order_relaxed);
++			    while (age_us > current && !g_test_hidloss.main_late_max_us.compare_exchange_weak(
++			                                   current, age_us, std::memory_order_relaxed)) {
++			    }
++			    g_test_hidloss.probes_run.fetch_add(1, std::memory_order_relaxed);
++		    })) {
++			return;
++		}
++		std::this_thread::sleep_for(std::chrono::milliseconds(TEST_HIDLOSS_PROBE_MS));
++	}
++	TestHidLossPost([mode = cfg.mode] { TestHidLossStat(mode); });
++}
++
++static void WindowTestHidLossNoteGuestText(const char* text, size_t size) {
++	static const TestHidLossConfig cfg = TestHidLossReadConfig();
++	static std::atomic<bool>       armed {false};
++	if (!cfg.on || text == nullptr || armed.load(std::memory_order_relaxed)) {
++		return;
++	}
++	if (!TestMinimizeIsLevelEntry(std::string_view(text, size)) || armed.exchange(true, std::memory_order_acq_rel)) {
++		return;
++	}
++	const uint64_t armed_us = TestHidLossNowUs();
++	LOGF("TestHidLoss: armed t_us=%" PRIu64 "\n", armed_us);
++	std::thread([armed_us] { TestHidLossRun(cfg, armed_us); }).detach();
++}
++
+ // Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): KYTY_TEST_MINIMIZE=<s>:<dur> - <s> seconds after the
+ // game's first level entry line "Level has started: <level>" with a non-blank level name (F5a2, item 280(v): the
+ // earlier line with an empty name does not arm; TestMinimizeIsLevelEntry) the emulator minimizes its own window
+@@ -1045,6 +1301,7 @@ void WindowShutdown() {
+ // Unset or empty - nothing (one getenv, then a static flag per guest log write).  The timer is a detached thread that
+ // sleeps; the SDL calls are posted to the main thread.  A process that ends inside the window never restores it.
+ void WindowTestMinimizeNoteGuestText(const char* text, size_t size) {
++	WindowTestHidLossNoteGuestText(text, size); // Track F, F19c, KYTY_TEST_HIDLOSS (item 451(c))
+ 	struct TestMinimize {
+ 		bool   on      = false;
+ 		double delay_s = 0.0;
+diff --git a/src/libs/audio.cpp b/src/libs/audio.cpp
+index 9ec79558..33826443 100644
+--- a/src/libs/audio.cpp
++++ b/src/libs/audio.cpp
+@@ -247,7 +247,7 @@ private:
+ 	static void            CloseSdlDevice(PortIn* port);
+ 	static const void*     PrepareOutputBuffer(const PortOut& port, const void* data,
+ 	                                           std::vector<uint8_t>* buffer);
+-	static bool            QueueSdlAudio(PortOut* port, const void* data, bool blocking);
++	static bool            QueueSdlAudio(PortOut* port, int port_id, const void* data, bool blocking);
+ };
+ 
+ static Audio* g_audio = nullptr;
+@@ -279,6 +279,106 @@ static void AudioUnregisterDevice(SDL_AudioDeviceID device) {
+ 
+ namespace AudioInternal {
+ 
++// Track F, F8 (ROADMAP s122 item 441(v)): SDL2 counts the users of a subsystem in a Uint8 (SDL.c:119); every
++// SDL_InitSubSystem(SDL_INIT_AUDIO) without a matching quit adds 1, the 256th wraps the count to 0 and the next init
++// runs SDL_AudioInit, which closes every open device (SDL_audio.c:966) while the ports keep their ids.
++static std::mutex            g_sdl_audio_mutex;
++static bool                  g_sdl_audio_acquired = false; // Guarded by g_sdl_audio_mutex.
++static std::atomic<uint64_t> g_sdl_audio_init_calls {0};
++static std::atomic<uint64_t> g_sdl_audio_acq_calls {0};
++static std::atomic<uint32_t> g_audio_stat_gen {0};
++
++static bool FixF8Enabled() {
++	// Track F, FS7a (HPP-565, ROADMAP s122 item 467(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
++	// other value as EnvValueOn (the form of FS4a 17adaf80).
++	static const bool enabled = [] {
++		const char* value = std::getenv("KYTY_FIX_F8");
++		const bool  on    = value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++		if (on) {
++			LOGF("FixF8: mode=1\n");
++		}
++		return on;
++	}();
++	return enabled;
++}
++
++int SdlAudioAcquire() {
++	g_sdl_audio_acq_calls.fetch_add(1, std::memory_order_relaxed);
++	std::lock_guard<std::mutex> lock(g_sdl_audio_mutex);
++	if (g_sdl_audio_acquired) {
++		return 0;
++	}
++	g_sdl_audio_init_calls.fetch_add(1, std::memory_order_relaxed);
++	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
++		return -1;
++	}
++	g_sdl_audio_acquired = true;
++	return 0;
++}
++
++int SdlAudioSubsystemInit() {
++	if (FixF8Enabled()) {
++		return SdlAudioAcquire();
++	}
++	g_sdl_audio_init_calls.fetch_add(1, std::memory_order_relaxed);
++	return SDL_InitSubSystem(SDL_INIT_AUDIO);
++}
++
++void SdlAudioSubsystemQuit() {
++	if (FixF8Enabled()) {
++		return;
++	}
++	SDL_QuitSubSystem(SDL_INIT_AUDIO);
++}
++
++uint64_t SdlAudioInitCalls() {
++	return g_sdl_audio_init_calls.load(std::memory_order_relaxed);
++}
++
++uint64_t SdlAudioAcquireCalls() {
++	return g_sdl_audio_acq_calls.load(std::memory_order_relaxed);
++}
++
++void AudioStatForce() {
++	g_audio_stat_gen.fetch_add(1, std::memory_order_relaxed);
++}
++
++// AudioStat (item 441(g)): with KYTY_AV_TRACE=1 or the stand KYTY_TEST_AUDIOLOSS on, one line per output port with a
++// device, at most once a second of process time and on the next push after AudioStatForce. Counters only grow.
++struct AudioStatPort {
++	std::atomic<uint64_t> pushes {0};
++	std::atomic<uint64_t> q_fail {0};
++	std::atomic<uint64_t> last_us {0};
++	std::atomic<uint32_t> gen {0};
++};
++
++static AudioStatPort g_audio_stat[OUT_PORTS_MAX];
++
++static void AudioStatPush(int port_id, SDL_AudioDeviceID dev, bool failed) {
++	if (port_id < 0 || port_id >= OUT_PORTS_MAX) {
++		return;
++	}
++	auto&          s      = g_audio_stat[port_id];
++	const uint64_t pushes = s.pushes.fetch_add(1, std::memory_order_relaxed) + 1;
++	const uint64_t q_fail = failed ? s.q_fail.fetch_add(1, std::memory_order_relaxed) + 1
++	                               : s.q_fail.load(std::memory_order_relaxed);
++	const uint64_t now    = LibKernel::KernelGetProcessTime();
++	const uint32_t gen    = g_audio_stat_gen.load(std::memory_order_relaxed);
++	uint64_t       last   = s.last_us.load(std::memory_order_relaxed);
++	if (s.gen.load(std::memory_order_relaxed) == gen && last != 0 && now < last + 1000000) {
++		return;
++	}
++	// One printer per interval: a concurrent push of the same port that lost the exchange stays silent.
++	if (!s.last_us.compare_exchange_strong(last, now != 0 ? now : 1, std::memory_order_relaxed)) {
++		return;
++	}
++	s.gen.store(gen, std::memory_order_relaxed);
++	LOGF("AudioStat: t_us=%" PRIu64 " port=%d dev=%u status=%d queued=%u pushes=%" PRIu64 " q_fail=%" PRIu64
++	     " init_calls=%" PRIu64 " acq=%" PRIu64 "\n",
++	     now, port_id, static_cast<uint32_t>(dev), static_cast<int>(SDL_GetAudioDeviceStatus(dev)),
++	     SDL_GetQueuedAudioSize(dev), pushes, q_fail, SdlAudioInitCalls(), SdlAudioAcquireCalls());
++}
++
+ int AudioOutOpen(int type, uint32_t samples_num, uint32_t freq, Format format) {
+ 	if (g_audio == nullptr) {
+ 		return 0;
+@@ -432,7 +532,7 @@ static const char* ChooseOutputDevice() {
+ bool Audio::OpenSdlDevice(PortOut* port) {
+ 	EXIT_IF(port == nullptr);
+ 
+-	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
++	if (AudioInternal::SdlAudioSubsystemInit() < 0) {
+ 		LOGF("AudioOut: SDL audio init failed: %s\n", SDL_GetError());
+ 		return false;
+ 	}
+@@ -549,7 +649,7 @@ const void* Audio::PrepareOutputBuffer(const PortOut& port, const void* data,
+ 	return buffer->data();
+ }
+ 
+-bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
++bool Audio::QueueSdlAudio(PortOut* port, int port_id, const void* data, bool blocking) {
+ 	EXIT_IF(port == nullptr);
+ 
+ 	if (port->audio_device == 0 || data == nullptr) {
+@@ -610,6 +710,7 @@ bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
+ 	}
+ 
+ 	static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
++	static const bool audio_stat = av_trace || Controller::TestAudioLossOn();
+ 	const auto        av_queued_before = SDL_GetQueuedAudioSize(port->audio_device);
+ 	const auto        av_t0            = LibKernel::KernelGetProcessTime();
+ 	if (blocking) {
+@@ -639,8 +740,14 @@ bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
+ 
+ 	if (SDL_QueueAudio(port->audio_device, queue_data, queue_size) < 0) {
+ 		LOGF("AudioOut: SDL_QueueAudio failed: %s\n", SDL_GetError());
++		if (audio_stat) {
++			AudioInternal::AudioStatPush(port_id, port->audio_device, true);
++		}
+ 		return false;
+ 	}
++	if (audio_stat) {
++		AudioInternal::AudioStatPush(port_id, port->audio_device, false);
++	}
+ 	if (av_trace) {
+ 		const auto now = LibKernel::KernelGetProcessTime();
+ 		if (port->trace_first == 0) {
+@@ -815,7 +922,7 @@ uint32_t Audio::AudioOutOutputs(OutputParam* params, uint32_t num, bool blocking
+ 			                           static_cast<uint32_t>(port.channels_num),
+ 			                           FormatIsFloat(port.format), port.freq);
+ 		}
+-		QueueSdlAudio(&port, params[i].data, blocking);
++		QueueSdlAudio(&port, params[i].handle.GetId(), params[i].data, blocking);
+ 	}
+ 
+ 	for (uint32_t i = 0; i < num; i++) {
+@@ -830,7 +937,7 @@ void Audio::OpenSdlDevice(PortIn* port, Format format) {
+ 	if (name.empty()) {
+ 		return;
+ 	}
+-	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
++	if (AudioInternal::SdlAudioSubsystemInit() < 0) {
+ 		LOGF("AudioIn: SDL init failed: %s\n", SDL_GetError());
+ 		return;
+ 	}
+@@ -843,7 +950,7 @@ void Audio::OpenSdlDevice(PortIn* port, Format format) {
+ 	port->audio_device = SDL_OpenAudioDevice(name.c_str(), 1, &desired, nullptr, 0);
+ 	if (port->audio_device == 0) {
+ 		LOGF("AudioIn: cannot open '%s': %s; using silence\n", name.c_str(), SDL_GetError());
+-		SDL_QuitSubSystem(SDL_INIT_AUDIO);
++		AudioInternal::SdlAudioSubsystemQuit();
+ 		return;
+ 	}
+ 	LOGF("AudioIn: opened '%s' (%u Hz, %u ch)\n", name.c_str(), port->freq, desired.channels);
+@@ -852,7 +959,7 @@ void Audio::OpenSdlDevice(PortIn* port, Format format) {
+ void Audio::CloseSdlDevice(PortIn* port) {
+ 	if (port->audio_device != 0) {
+ 		SDL_CloseAudioDevice(port->audio_device);
+-		SDL_QuitSubSystem(SDL_INIT_AUDIO);
++		AudioInternal::SdlAudioSubsystemQuit();
+ 		port->audio_device = 0;
+ 	}
+ }
+diff --git a/src/libs/audio_internal.h b/src/libs/audio_internal.h
+index ad596ee5..2c7ed449 100644
+--- a/src/libs/audio_internal.h
++++ b/src/libs/audio_internal.h
+@@ -30,6 +30,21 @@ void     AudioOutClose(int handle);
+ bool     AudioOutHasDevice(int handle);
+ uint32_t AudioOutOutputs(const OutputParam* params, uint32_t num, bool blocking = true);
+ 
++// Track F, F8 (ROADMAP s122 item 441(v)): the emulator call sites of SDL_InitSubSystem / SDL_QuitSubSystem with
++// SDL_INIT_AUDIO (AudioOut ports, AudioIn ports, pad haptics). KYTY_FIX_F8=0: the same SDL calls as before (each init
++// counted). KYTY_FIX_F8 unset, empty or 1 (default ON since FS7a, item 467(g)(1)): init goes through SdlAudioAcquire,
++// quit does nothing - the SDL reference count of the audio subsystem stays 1 for the life of the process. Read once per
++// process; "FixF8: mode=1" once when on.
++int  SdlAudioSubsystemInit();
++void SdlAudioSubsystemQuit();
++// SDL_InitSubSystem(SDL_INIT_AUDIO) at most once successfully per process (own mutex; a failure is not remembered).
++int SdlAudioAcquire();
++// Counters of item 441(g): real SDL_InitSubSystem(SDL_INIT_AUDIO) calls of the emulator (both modes) and
++// SdlAudioAcquire calls; AudioStatForce makes every output port print its AudioStat line on its next push.
++uint64_t SdlAudioInitCalls();
++uint64_t SdlAudioAcquireCalls();
++void     AudioStatForce();
++
+ } // namespace Libs::Audio::AudioInternal
+ 
+ #endif // EMULATOR_INCLUDE_EMULATOR_AUDIO_INTERNAL_H_
+diff --git a/src/libs/controller.cpp b/src/libs/controller.cpp
+index ee670f9d..95ac3ef4 100644
+--- a/src/libs/controller.cpp
++++ b/src/libs/controller.cpp
+@@ -4,10 +4,12 @@
+ #include "common/assert.h"
+ #include "common/common.h"
+ #include "common/emulatorConfig.h"
++#include "common/envFlag.h"
+ #include "common/logging/log.h"
+ #include "common/stringUtils.h"
+ #include "common/threads.h"
+ #include "kernel/pthread.h"
++#include "libs/audio_internal.h"
+ #include "libs/errno.h"
+ #include "libs/libs.h"
+ #include "libs/padData.h"
+@@ -15,10 +17,14 @@
+ #include <algorithm>
+ #include <atomic>
+ #include <chrono>
++#include <cinttypes>
+ #include <cstdlib>
+ #include <cstring>
+ #include <cmath>
+ #include <mutex>
++#include <condition_variable>
++#include <string>
++#include <thread>
+ #include <vector>
+ 
+ namespace Libs::Controller {
+@@ -80,6 +86,297 @@ struct DualSenseEffects {
+ 
+ static_assert(sizeof(DualSenseEffects) == 32);
+ 
++// Track F, F19c stand KYTY_TEST_HIDLOSS (ROADMAP s122 item 451(c), F19a s6.1): pad output counters of the stand window,
++// opened and closed by the stand in window.cpp (TestHidLossWindow). Outside the window - always when the stand is unset -
++// a guest pad output call does one relaxed load of g_hidloss_window and nothing else; no guest state is written.
++static std::atomic<bool> g_hidloss_window {false};
++
++struct HidLossCounters {
++	std::atomic<uint64_t> pad_vib {0};
++	std::atomic<uint64_t> pad_led {0};
++	std::atomic<uint64_t> pad_trig {0};
++	std::atomic<uint64_t> pad_wait_max_us {0};
++	std::atomic<uint64_t> po_applied {0};
++	std::atomic<uint64_t> po_wait_max_us {0};
++	std::atomic<uint64_t> guest_sdl {0};
++};
++
++static HidLossCounters g_hidloss;
++
++static uint64_t PadNowUs() {
++	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
++	                                 std::chrono::steady_clock::now().time_since_epoch())
++	                                 .count());
++}
++
++static void PadAtomicMax(std::atomic<uint64_t>& value, uint64_t sample) {
++	uint64_t current = value.load(std::memory_order_relaxed);
++	while (sample > current && !value.compare_exchange_weak(current, sample, std::memory_order_relaxed)) {
++	}
++}
++
++// One guest pad output call (SetVibration, SetLightBar, SetTriggerEffect) inside the stand window: counts the entry, the
++// wall from entry to return (pad_wait_max_us) and every SDL call the function makes itself (guest_sdl).
++class PadCallProbe {
++public:
++	explicit PadCallProbe(std::atomic<uint64_t>& kind): m_on(g_hidloss_window.load(std::memory_order_relaxed)) {
++		if (m_on) {
++			kind.fetch_add(1, std::memory_order_relaxed);
++			m_start_us = PadNowUs();
++		}
++	}
++	~PadCallProbe() {
++		if (m_on) {
++			PadAtomicMax(g_hidloss.pad_wait_max_us, PadNowUs() - m_start_us);
++		}
++	}
++
++	KYTY_CLASS_NO_COPY(PadCallProbe);
++
++	void Sdl() {
++		if (m_on) {
++			g_hidloss.guest_sdl.fetch_add(1, std::memory_order_relaxed);
++		}
++	}
++
++private:
++	bool     m_on;
++	uint64_t m_start_us = 0;
++};
++
++void TestHidLossWindow(bool open) {
++	if (open) {
++		for (auto* counter: {&g_hidloss.pad_vib, &g_hidloss.pad_led, &g_hidloss.pad_trig, &g_hidloss.pad_wait_max_us,
++		                     &g_hidloss.po_applied, &g_hidloss.po_wait_max_us, &g_hidloss.guest_sdl}) {
++			counter->store(0, std::memory_order_relaxed);
++		}
++	}
++	g_hidloss_window.store(open, std::memory_order_release);
++}
++
++HidLossPadStats TestHidLossPadStats() {
++	HidLossPadStats stats;
++	stats.pad_vib         = g_hidloss.pad_vib.load(std::memory_order_relaxed);
++	stats.pad_led         = g_hidloss.pad_led.load(std::memory_order_relaxed);
++	stats.pad_trig        = g_hidloss.pad_trig.load(std::memory_order_relaxed);
++	stats.pad_wait_max_us = g_hidloss.pad_wait_max_us.load(std::memory_order_relaxed);
++	stats.po_applied      = g_hidloss.po_applied.load(std::memory_order_relaxed);
++	stats.po_wait_max_us  = g_hidloss.po_wait_max_us.load(std::memory_order_relaxed);
++	stats.guest_sdl       = g_hidloss.guest_sdl.load(std::memory_order_relaxed);
++	return stats;
++}
++
++// Track F, F19c (ROADMAP s122 item 451(d), member A of F19a s5.1): KYTY_FIX_B24 - default ON since FS7a (item 487(g)(1)):
++// unset or empty: on, 0/false/off/no: off, any other value as Common::EnvValueOn. Written once by Initialize before the
++// guest threads exist, only read afterwards. At 1 the guest's
++// SetVibration, SetLightBar and SetTriggerEffect call no SDL: each puts the latest value of its kind into a slot of
++// PadOutput under the slot's own short mutex (not GameController::m_mutex; a new value overwrites the old one, every
++// kind has a generation counter) and wakes the one PadOutput thread of the process. PadOutput makes the same SDL calls
++// as the path at 0, without GameController::m_mutex, for its copy of the active pad id, which CheckActive writes under
++// GameController::m_mutex. The pad lookup and the call run under SDL_LockJoysticks (the lock every one of these SDL
++// calls takes anyway; it is recursive), so a pad closed meanwhile by the removal handler (SDL_GameControllerClose takes
++// the same lock) is never touched. PadOutput is stopped and joined by EmergencyShutdown before ReleaseHostPads.
++static bool g_fix_b24 = false;
++
++bool FixB24On() {
++	return g_fix_b24;
++}
++
++class PadOutput {
++public:
++	PadOutput() = default;
++	~PadOutput() { Stop(); }
++
++	KYTY_CLASS_NO_COPY(PadOutput);
++
++	void Start();
++	void Stop();
++	void SetActive(int id, bool ps5);
++	void PostVibration(uint8_t large_motor, uint8_t small_motor);
++	void PostLightBar(uint8_t r, uint8_t g, uint8_t b);
++	// Returns the copy of "the active pad is a PS5 pad" - the *sent of SetTriggerEffect at KYTY_FIX_B24=1.
++	bool PostTriggerEffect(const DualSenseEffects& effect);
++
++private:
++	void        Loop();
++	static void ApplyVibration(int id, uint8_t large_motor, uint8_t small_motor);
++	static void ApplyLightBar(int id, uint8_t r, uint8_t g, uint8_t b);
++	static void ApplyTriggerEffect(int id, const DualSenseEffects& effect);
++
++	// Everything below is guarded by m_mutex. m_thread is set by Start (once, before the object is shared) and
++	// moved out under m_mutex by Stop (F19c2, ROADMAP s122 item 460(v)(1)), so concurrent Stop calls join it once.
++	std::mutex              m_mutex;
++	std::condition_variable m_cv;
++	std::thread             m_thread;
++	bool                    m_stop          = false;
++	int                     m_active_id     = -1;
++	bool                    m_active_ps5    = false;
++	uint64_t                m_vibration_gen = 0;
++	uint64_t                m_light_bar_gen = 0;
++	uint64_t                m_effect_gen    = 0;
++	uint8_t                 m_vibration[2]  = {};
++	uint8_t                 m_light_bar[3]  = {};
++	DualSenseEffects        m_effect {};
++};
++
++static PadOutput* g_pad_output = nullptr;
++
++void PadOutput::Start() {
++	m_thread = std::thread([this] { Loop(); });
++}
++
++void PadOutput::Stop() {
++	// Track F, F19c2 (ROADMAP s122 item 460(v)(1), RC1 of the F19d review): two emergency exits at once call Stop
++	// concurrently. The thread object is moved out under m_mutex with m_stop = true, so exactly one call owns it and
++	// joins it outside the lock; every other call gets an empty (not joinable) thread and returns.
++	std::thread thread;
++	{
++		std::lock_guard lock(m_mutex);
++		m_stop = true;
++		thread = std::move(m_thread);
++	}
++	m_cv.notify_all();
++	if (thread.joinable()) {
++		if (thread.get_id() == std::this_thread::get_id()) {
++			thread.detach();
++		} else {
++			thread.join();
++		}
++	}
++}
++
++void PadOutput::SetActive(int id, bool ps5) {
++	std::lock_guard lock(m_mutex);
++	m_active_id  = id;
++	m_active_ps5 = ps5;
++}
++
++void PadOutput::PostVibration(uint8_t large_motor, uint8_t small_motor) {
++	{
++		std::lock_guard lock(m_mutex);
++		m_vibration[0] = large_motor;
++		m_vibration[1] = small_motor;
++		m_vibration_gen++;
++	}
++	m_cv.notify_one();
++}
++
++void PadOutput::PostLightBar(uint8_t r, uint8_t g, uint8_t b) {
++	{
++		std::lock_guard lock(m_mutex);
++		m_light_bar[0] = r;
++		m_light_bar[1] = g;
++		m_light_bar[2] = b;
++		m_light_bar_gen++;
++	}
++	m_cv.notify_one();
++}
++
++bool PadOutput::PostTriggerEffect(const DualSenseEffects& effect) {
++	bool ps5 = false;
++	{
++		std::lock_guard lock(m_mutex);
++		m_effect = effect;
++		m_effect_gen++;
++		ps5 = m_active_ps5;
++	}
++	m_cv.notify_one();
++	return ps5;
++}
++
++// One application of a slot on the PadOutput thread; inside the stand window counts it and its wall.
++template <typename Apply>
++static void PadOutputApply(Apply&& apply) {
++	const bool     on       = g_hidloss_window.load(std::memory_order_relaxed);
++	const uint64_t start_us = on ? PadNowUs() : 0;
++	apply();
++	if (on) {
++		g_hidloss.po_applied.fetch_add(1, std::memory_order_relaxed);
++		PadAtomicMax(g_hidloss.po_wait_max_us, PadNowUs() - start_us);
++	}
++}
++
++void PadOutput::Loop() {
++	uint64_t vibration_done = 0;
++	uint64_t light_bar_done = 0;
++	uint64_t effect_done    = 0;
++
++	std::unique_lock lock(m_mutex);
++	for (;;) {
++		m_cv.wait(lock, [&] {
++			return m_stop || m_vibration_gen != vibration_done || m_light_bar_gen != light_bar_done ||
++			       m_effect_gen != effect_done;
++		});
++		if (m_stop) {
++			return;
++		}
++		const int              id        = m_active_id;
++		const bool             vibration = m_vibration_gen != vibration_done;
++		const bool             light_bar = m_light_bar_gen != light_bar_done;
++		const bool             effect    = m_effect_gen != effect_done;
++		const uint8_t          motor[2]  = {m_vibration[0], m_vibration[1]};
++		const uint8_t          color[3]  = {m_light_bar[0], m_light_bar[1], m_light_bar[2]};
++		const DualSenseEffects effects   = m_effect;
++		vibration_done                   = m_vibration_gen;
++		light_bar_done                   = m_light_bar_gen;
++		effect_done                      = m_effect_gen;
++		lock.unlock();
++
++		if (vibration) {
++			PadOutputApply([&] { ApplyVibration(id, motor[0], motor[1]); });
++		}
++		if (light_bar) {
++			PadOutputApply([&] { ApplyLightBar(id, color[0], color[1], color[2]); });
++		}
++		if (effect) {
++			PadOutputApply([&] { ApplyTriggerEffect(id, effects); });
++		}
++
++		lock.lock();
++	}
++}
++
++// The SDL calls of GameController::SetVibration at KYTY_FIX_B24=0, for the given pad id, under SDL_LockJoysticks.
++void PadOutput::ApplyVibration(int id, uint8_t large_motor, uint8_t small_motor) {
++	if (id == HOST_INPUT_CONTROLLER_ID) {
++		return;
++	}
++	bool        failed = false;
++	std::string error;
++	SDL_LockJoysticks();
++	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id)); pad != nullptr) {
++		const auto large = static_cast<uint16_t>(large_motor * 0x101U);
++		const auto small = static_cast<uint16_t>(small_motor * 0x101U);
++		if (SDL_GameControllerRumble(pad, large, small, RUMBLE_DURATION_MS) != 0) {
++			failed = true;
++			error  = SDL_GetError();
++		}
++	}
++	SDL_UnlockJoysticks();
++	if (failed) {
++		LOGF("\t rumble failed: %s\n", error.c_str());
++	}
++}
++
++// The SDL calls of GameController::SetLightBar at KYTY_FIX_B24=0.
++void PadOutput::ApplyLightBar(int id, uint8_t r, uint8_t g, uint8_t b) {
++	SDL_LockJoysticks();
++	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id)); pad != nullptr) {
++		(void)SDL_GameControllerSetLED(pad, r, g, b);
++	}
++	SDL_UnlockJoysticks();
++}
++
++// The SDL calls of GameController::SetTriggerEffect at KYTY_FIX_B24=0.
++void PadOutput::ApplyTriggerEffect(int id, const DualSenseEffects& effect) {
++	SDL_LockJoysticks();
++	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
++	if (pad != nullptr && SDL_GameControllerGetType(pad) == SDL_CONTROLLER_TYPE_PS5) {
++		(void)SDL_GameControllerSendEffect(pad, &effect, sizeof(effect));
++	}
++	SDL_UnlockJoysticks();
++}
++
+ // Haptic PCM of the guest's vibration port, streamed to the pad. A USB DualSense is a 4-channel
+ // audio device whose channels 3/4 drive the voice coils: that is how the console feels, and it
+ // needs no resampling since both sides run at 48 kHz. Over Bluetooth the pad exposes no such
+@@ -106,6 +403,14 @@ private:
+ 	static uint64_t NowUs();
+ 	bool            OpenLocked();
+ 	void            CloseLocked();
++	uint64_t        TestAudioLossRetryUsLocked();
++
++	// Stand KYTY_TEST_AUDIOLOSS (item 441(g)), guarded by m_mutex.
++	enum class TestState { Idle, Armed, Firing, DonePending, Done };
++	static constexpr uint32_t TEST_ATTEMPTS = 300;
++	TestState                 m_test_state    = TestState::Idle;
++	uint64_t                  m_test_armed_us = 0;
++	uint32_t                  m_test_attempts = 0;
+ 
+ 	std::mutex           m_mutex;
+ 	SDL_AudioDeviceID    m_device   = 0;
+@@ -118,6 +423,40 @@ private:
+ 
+ static HapticsOutput* g_haptics = nullptr;
+ 
++// Track F, F8 stand (ROADMAP s122 item 441(g)): KYTY_TEST_AUDIOLOSS=<s>[:retry] - stand only, off when unset. Armed on
++// the first push to the vibration port with no pad device; <s> seconds of process time later the retry interval of
++// the pad device open (RETRY_US) is 0 for exactly 300 attempts (every push is an attempt), then RETRY_US again: the
++// same site and thread as the natural path, faster. Written once by HapticsOutput::Start (Controller::Initialize,
++// before the guest threads exist), read only afterwards.
++struct TestAudioLossConfig {
++	bool     on       = false;
++	uint64_t delay_us = 0;
++};
++
++static TestAudioLossConfig g_test_audioloss;
++
++static void ReadTestAudioLoss() {
++	const char* value = std::getenv("KYTY_TEST_AUDIOLOSS");
++	if (value == nullptr || value[0] == '\0') {
++		return;
++	}
++	char*        end     = nullptr;
++	const double delay_s = std::strtod(value, &end);
++	const bool   ok      = value[0] >= '0' && value[0] <= '9' && end != value && std::isfinite(delay_s) &&
++	                     delay_s <= 86400.0 && (end[0] == '\0' || std::strcmp(end, ":retry") == 0);
++	if (!ok) {
++		LOGF("TestAudioLoss: config invalid value=\"%s\" (expected <s>[:retry]), stand off\n", value);
++		return;
++	}
++	g_test_audioloss.on       = true;
++	g_test_audioloss.delay_us = static_cast<uint64_t>(delay_s * 1000000.0);
++	LOGF("TestAudioLoss: config on delay_s=%g mode=retry\n", delay_s);
++}
++
++bool TestAudioLossOn() {
++	return g_test_audioloss.on;
++}
++
+ uint64_t HapticsOutput::NowUs() {
+ 	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
+ 	                                 std::chrono::steady_clock::now().time_since_epoch())
+@@ -125,6 +464,7 @@ uint64_t HapticsOutput::NowUs() {
+ }
+ 
+ void HapticsOutput::Start() {
++	ReadTestAudioLoss();
+ 	if (const char* value = std::getenv("KYTY_HAPTICS"); value != nullptr && value[0] == '0') {
+ 		m_enabled = false;
+ 		LOGF("Haptics: disabled by KYTY_HAPTICS=0\n");
+@@ -142,7 +482,7 @@ void HapticsOutput::Stop() {
+ }
+ 
+ bool HapticsOutput::OpenLocked() {
+-	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
++	if (Audio::AudioInternal::SdlAudioSubsystemInit() < 0) {
+ 		return false;
+ 	}
+ 	SDL_AudioSpec want {};
+@@ -178,6 +518,40 @@ void HapticsOutput::CloseLocked() {
+ 	}
+ }
+ 
++// Stand step of one push with no pad device; the caller holds m_mutex. Returns the retry interval for this push. In
++// Firing every call is an attempt: with a zero interval the check in Push never returns before OpenLocked.
++uint64_t HapticsOutput::TestAudioLossRetryUsLocked() {
++	const uint64_t t = LibKernel::KernelGetProcessTime();
++	switch (m_test_state) {
++		case TestState::Idle:
++			m_test_state    = TestState::Armed;
++			m_test_armed_us = t;
++			LOGF("TestAudioLoss: armed t_us=%" PRIu64 "\n", t);
++			return RETRY_US;
++		case TestState::Armed:
++			if (t - m_test_armed_us < g_test_audioloss.delay_us) {
++				return RETRY_US;
++			}
++			m_test_state = TestState::Firing;
++			LOGF("TestAudioLoss: fire t_us=%" PRIu64 "\n", t);
++			Audio::AudioInternal::AudioStatForce();
++			[[fallthrough]];
++		case TestState::Firing:
++			if (++m_test_attempts == TEST_ATTEMPTS) {
++				m_test_state = TestState::DonePending;
++			}
++			return 0;
++		case TestState::DonePending:
++			// Logged on the push after the 300th attempt, so the line follows its SDL call.
++			m_test_state = TestState::Done;
++			LOGF("TestAudioLoss: done attempts=%u t_us=%" PRIu64 "\n", m_test_attempts, t);
++			Audio::AudioInternal::AudioStatForce();
++			return RETRY_US;
++		case TestState::Done: break;
++	}
++	return RETRY_US;
++}
++
+ void HapticsOutput::Push(const void* pcm, uint32_t frames, uint32_t channels, bool is_float,
+                          uint32_t freq) {
+ 	if (pcm == nullptr || frames == 0 || channels == 0 || freq != FREQ) {
+@@ -190,8 +564,9 @@ void HapticsOutput::Push(const void* pcm, uint32_t frames, uint32_t channels, bo
+ 	}
+ 	if (m_device == 0) {
+ 		// Only a USB pad has this device; retry rarely, one may be plugged in later.
+-		const auto now = NowUs();
+-		if (m_retry_us != 0 && now - m_retry_us < RETRY_US) {
++		const auto     now      = NowUs();
++		const uint64_t retry_us = g_test_audioloss.on ? TestAudioLossRetryUsLocked() : RETRY_US;
++		if (m_retry_us != 0 && now - m_retry_us < retry_us) {
+ 			return;
+ 		}
+ 		m_retry_us = now;
+@@ -305,6 +680,8 @@ private:
+ 	uint8_t          m_next_touch_id = 1;
+ 	float            m_orientation[4] = {0.0f, 0.0f, 0.0f, 1.0f}; // integrated gyro, x y z w
+ 	uint64_t         m_gyro_timestamp = 0;
++	// Track F, F19c (item 451(d)): connected ids whose pad is a PS5 pad (filled at KYTY_FIX_B24=1 only).
++	std::vector<int> m_ps5_ids;
+ };
+ 
+ static GameController* g_controller = nullptr;
+@@ -455,6 +832,18 @@ static bool trigger_effect_to_dualsense(const PadTriggerEffectCommand& command,
+ void Initialize() {
+ 	EXIT_IF(g_controller != nullptr);
+ 
++	// Track F, F19c (ROADMAP s122 item 451(d)): KYTY_FIX_B24, read once here - before the guest threads exist.
++	// FS7a (HPP-565, ROADMAP s122 item 487(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any other value
++	// as EnvValueOn (the form of FS4a 17adaf80).
++	g_fix_b24 = [] {
++		const char* value = std::getenv("KYTY_FIX_B24");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
++	if (g_fix_b24) {
++		LOGF("FixB24: mode=1\n");
++		g_pad_output = new PadOutput;
++		g_pad_output->Start();
++	}
+ 	g_haptics = new HapticsOutput;
+ 	g_haptics->Start();
+ 	g_controller = new GameController;
+@@ -467,18 +856,32 @@ void Shutdown() {
+ 	g_controller = nullptr;
+ 	delete g_haptics;
+ 	g_haptics = nullptr;
++	delete g_pad_output;
++	g_pad_output = nullptr;
+ }
+ 
+ void EmergencyShutdown() {
+ 	if (g_haptics != nullptr) {
+ 		g_haptics->Stop();
+ 	}
++	// Track F, F19c (item 451(d)): PadOutput is stopped and joined before the host pads are released.
++	if (g_pad_output != nullptr) {
++		g_pad_output->Stop();
++	}
+ 	if (g_controller != nullptr) {
+ 		g_controller->ReleaseHostPads();
+ 	}
+ }
+ 
+ void GameController::Connect(int id) {
++	// Track F, F19c (item 451(d)): at KYTY_FIX_B24=1 the pad type is read here, before m_mutex (Connect runs in
++	// Initialize for the host input id and on the main thread right after SDL_GameControllerOpen), so no SDL call is made
++	// under m_mutex; CheckActive copies "the active pad is a PS5 pad" from m_ps5_ids.
++	bool ps5 = false;
++	if (g_fix_b24 && id >= 0) {
++		auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));
++		ps5       = pad != nullptr && SDL_GameControllerGetType(pad) == SDL_CONTROLLER_TYPE_PS5;
++	}
+ 	Common::LockGuard lock(m_mutex);
+ 
+ 	if (std::find(m_connected_ids.begin(), m_connected_ids.end(), id) != m_connected_ids.end()) {
+@@ -486,6 +889,9 @@ void GameController::Connect(int id) {
+ 	}
+ 
+ 	m_connected_ids.push_back(id);
++	if (ps5) {
++		m_ps5_ids.push_back(id);
++	}
+ 
+ 	CheckActive();
+ }
+@@ -502,6 +908,7 @@ void GameController::Disconnect(int id) {
+ 	}
+ 
+ 	m_connected_ids.erase(it);
++	m_ps5_ids.erase(std::remove(m_ps5_ids.begin(), m_ps5_ids.end(), id), m_ps5_ids.end());
+ 
+ 	CheckActive();
+ }
+@@ -536,6 +943,12 @@ void GameController::CheckActive() {
+ 	m_orientation[0] = m_orientation[1] = m_orientation[2] = 0.0f;
+ 	m_orientation[3] = 1.0f;
+ 	m_gyro_timestamp = 0;
++	if (g_pad_output != nullptr) {
++		// Track F, F19c (item 451(d)): the PadOutput copy of the active pad id and of "the active pad is a PS5 pad"
++		// (KYTY_FIX_B24=1 only; the caller holds m_mutex; no SDL call here - the type was read by Connect).
++		g_pad_output->SetActive(m_active_id,
++		                        std::find(m_ps5_ids.begin(), m_ps5_ids.end(), m_active_id) != m_ps5_ids.end());
++	}
+ }
+ 
+ void GameController::AddState() {
+@@ -767,14 +1180,23 @@ void GameController::ReleaseHostPads() {
+ 	}
+ 
+ 	m_connected_ids.clear();
++	m_ps5_ids.clear();
+ }
+ 
+ void GameController::SetVibration(uint8_t large_motor, uint8_t small_motor) {
++	PadCallProbe probe(g_hidloss.pad_vib);
++	if (g_fix_b24) {
++		// Track F, F19c (item 451(d)): no SDL on the guest thread - the latest value goes to the PadOutput slot.
++		g_pad_output->PostVibration(large_motor, small_motor);
++		return;
++	}
++
+ 	Common::LockGuard lock(m_mutex);
+ 
+ 	if (m_active_id == HOST_INPUT_CONTROLLER_ID) {
+ 		return;
+ 	}
++	probe.Sdl();
+ 	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
+ 	if (pad == nullptr) {
+ 		return;
+@@ -782,20 +1204,32 @@ void GameController::SetVibration(uint8_t large_motor, uint8_t small_motor) {
+ 
+ 	const auto large = static_cast<uint16_t>(large_motor * 0x101U);
+ 	const auto small = static_cast<uint16_t>(small_motor * 0x101U);
++	probe.Sdl();
+ 	if (SDL_GameControllerRumble(pad, large, small, RUMBLE_DURATION_MS) != 0) {
++		probe.Sdl();
+ 		LOGF("\t rumble failed: %s\n", SDL_GetError());
+ 	}
+ }
+ 
+ void GameController::SetLightBar(uint8_t r, uint8_t g, uint8_t b) {
++	PadCallProbe probe(g_hidloss.pad_led);
++	if (g_fix_b24) {
++		// Track F, F19c (item 451(d)): no SDL on the guest thread - the latest value goes to the PadOutput slot.
++		g_pad_output->PostLightBar(r, g, b);
++		return;
++	}
++
+ 	Common::LockGuard lock(m_mutex);
++	probe.Sdl();
+ 	if (auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
+ 	    pad != nullptr) {
++		probe.Sdl();
+ 		(void)SDL_GameControllerSetLED(pad, r, g, b);
+ 	}
+ }
+ 
+ bool GameController::SetTriggerEffect(const PadTriggerEffectParam& param, bool* sent) {
++	PadCallProbe probe(g_hidloss.pad_trig);
+ 	*sent = false;
+ 	if ((param.trigger_mask & ~0x03u) != 0) {
+ 		return false;
+@@ -817,10 +1251,21 @@ bool GameController::SetTriggerEffect(const PadTriggerEffectParam& param, bool*
+ 	if (effect.enable_bits == 0) {
+ 		return true;
+ 	}
++	if (g_fix_b24) {
++		// Track F, F19c (item 451(d)): no SDL on the guest thread - the effect goes to the PadOutput slot; *sent is
++		// "the active pad is a PS5 pad and the effect is in the slot".
++		*sent = g_pad_output->PostTriggerEffect(effect);
++		return true;
++	}
+ 
+ 	Common::LockGuard lock(m_mutex);
++	probe.Sdl();
+ 	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
++	if (pad != nullptr) {
++		probe.Sdl();
++	}
+ 	if (pad != nullptr && SDL_GameControllerGetType(pad) == SDL_CONTROLLER_TYPE_PS5) {
++		probe.Sdl();
+ 		*sent = SDL_GameControllerSendEffect(pad, &effect, sizeof(effect)) == 0;
+ 	}
+ 	return true;
+diff --git a/src/libs/controller.h b/src/libs/controller.h
+index b1a930cd..7058980b 100644
+--- a/src/libs/controller.h
++++ b/src/libs/controller.h
+@@ -73,6 +73,22 @@ void SetTouchPad(int id, int finger, bool down, float x, float y);
+ void SetMotionPitch(int id, float radians);
+ void SetMotionShake(int id, bool down);
+ void ResetInputState();
++// Track F, F19c (ROADMAP s122 item 451(d)): KYTY_FIX_B24 is on (read once in Initialize).
++bool FixB24On();
++// Track F, F19c stand KYTY_TEST_HIDLOSS (item 451(c), F19a s6.1): pad output counters of the stand window.
++// TestHidLossWindow(true) zeroes them and starts counting, TestHidLossWindow(false) stops counting; outside the window a
++// pad output call does one relaxed load of a static flag and nothing else.
++struct HidLossPadStats {
++	uint64_t pad_vib         = 0;
++	uint64_t pad_led         = 0;
++	uint64_t pad_trig        = 0;
++	uint64_t pad_wait_max_us = 0;
++	uint64_t po_applied      = 0;
++	uint64_t po_wait_max_us  = 0;
++	uint64_t guest_sdl       = 0;
++};
++void            TestHidLossWindow(bool open);
++HidLossPadStats TestHidLossPadStats();
+ 
+ enum class MotionSensor { Accelerometer, Gyroscope };
+ // Real pad sensor sample in SDL units: m/s^2 for the accelerometer, rad/s for the gyroscope.
+@@ -80,6 +96,8 @@ void SetMotionSensor(int id, MotionSensor sensor, const float* data, uint64_t ti
+ // Interleaved haptic PCM of an AudioOut vibration port (int16 or float).
+ void PushHapticsPcm(const void* pcm, uint32_t frames, uint32_t channels, bool is_float,
+                     uint32_t freq);
++// Track F, F8 stand (ROADMAP s122 item 441(g)): KYTY_TEST_AUDIOLOSS is set and valid (read once in Initialize).
++bool TestAudioLossOn();
+ 
+ int KYTY_SYSV_ABI PadInit();
+ int KYTY_SYSV_ABI PadOpen(int user_id, int type, int index, const void* param);
+diff --git a/tests/B24PadStand.cpp b/tests/B24PadStand.cpp
+new file mode 100644
+index 00000000..550b4e02
+--- /dev/null
++++ b/tests/B24PadStand.cpp
+@@ -0,0 +1,618 @@
++// Track F, B24 stand without the game (F19c HPP-547, ROADMAP s122 item 451(e)(1)): the guest pad output of
++// src/libs/controller.cpp (GameController through PadSetVibration / PadSetLightBar / PadSetTriggerEffect - linked from
++// the emulator sources of this build, not copied) against the SDL joystick lock. The pad is an SDL virtual pad
++// (SDL_JoystickAttachVirtualEx, game controller type), opened as a game controller and connected the way the emulator's
++// controller add event does it (window.cpp GameEventController: SDL_GameControllerOpen, Controller::Connect; removal:
++// Controller::Disconnect, SDL_GameControllerClose). SDL2 is 3rdparty/SDL2 of the same build; the host joystick drivers are
++// switched off by hints before SDL_InitSubSystem (HIDAPI, RawInput, WGI, XInput, DirectInput), so no host input device
++// is opened - the line num_joysticks_at_init (0 expected) checks it. KYTY_FIX_B24 (read by controller.cpp once per
++// process in Controller::Initialize) selects the path. Separate CMake target b24_pad_stand (EXCLUDE_FROM_ALL, no
++// add_test - not in the default ctest set); the driver is docs/track-f/f19c/run_stand_f19c.py, which runs one process per
++// case and decides PASS/FAIL from the printed values.
++//
++// Usage: b24_pad_stand <case>
++//   i   - thread X holds SDL_LockJoysticks 3000 ms; 200 ms after X has it, thread Y calls PadSetVibration with new
++//         values: wall_vib_us.
++//   ii  - the same, thread Y calls PadSetVibration, PadSetLightBar, PadSetTriggerEffect (walls) and two more
++//         PadSetVibration with new values; after X unlocks - the time until the virtual pad's Rumble callback holds the
++//         last written value (latency_us), and that value again 300 ms later.
++//   iii - 2 threads x 10 000 PadSetVibration with random values while the main thread attaches and detaches the virtual
++//         pad and handles the add / remove events as the emulator does; every value the Rumble callback receives must
++//         have been written (or be 0/0); then, with the pad attached and connected, one more value is written and must be
++//         the last one the callback receives (latency_us, and again 300 ms later).
++// Every case: the pad output counters of controller.cpp are counted (TestHidLossWindow) and printed; at the end
++// Controller::EmergencyShutdown (PadOutput stop and join, ReleaseHostPads). Output: "key=value" lines; "END" last.
++// Exit 0 unless the arguments are bad (2) or SDL fails to start (4).
++//
++// F19c2 (HPP-559, ROADMAP s122 item 460(v)(2), (4)) - two more cases; driver docs/track-f/f19c2/run_stand_f19c2.py:
++//   dd   - KYTY_FIX_B24=1, RC1 of the F19d review: X holds SDL_LockJoysticks DD_HOLD_MS; one PadSetVibration puts
++//          PadOutput into its application (it waits for the lock); DD_WRITE_MS later two threads released by one barrier
++//          call Controller::EmergencyShutdown at the same time; "both_returned=1" when both came back; then
++//          Controller::Shutdown (a third EmergencyShutdown and the deletes). One cycle per process.
++//   trig - the trigger effect path (N2 of F19d): the virtual pad has vendor_id 0x054C / product_id 0x0CE6 (pad_type is
++//          the SDL_GameControllerGetType value, pad_type_ps5 whether it is SDL_CONTROLLER_TYPE_PS5); X holds the lock
++//          HOLD_MS, Y calls PadSetTriggerEffect with effect A then effect B Y_DELAY_MS after X has it (walls); after the
++//          unlock - the SendEffect count, and the last payload compared with the payload of B sent again with the lock
++//          free (A sent again too: the two payloads must differ). "sent=" is in the PadTriggerEffect: lines.
++// A crash of a stand process (std::terminate, abort) prints terminate=1 / abort=1 and exits 3 without a dialog.
++#define SDL_MAIN_HANDLED
++#include "SDL.h"
++#include "common/emulatorConfig.h"
++#include "common/logging/log.h"
++#include "common/subsystems.h"
++#include "common/threads.h"
++#include "libs/controller.h"
++
++#include <atomic>
++#include <chrono>
++#include <cstdio>
++#include <cstdlib>
++#include <csignal>
++#include <cstring>
++#include <exception>
++#include <mutex>
++#include <random>
++#include <string>
++#include <thread>
++#include <vector>
++
++namespace Libs::Controller {
++
++// The guest parameter layouts of src/libs/controller.cpp (the header declares them only); the same definitions.
++struct PadLightBarParam {
++	uint8_t r;
++	uint8_t g;
++	uint8_t b;
++	uint8_t reserve;
++};
++
++struct PadVibrationParam {
++	uint8_t large_motor;
++	uint8_t small_motor;
++};
++
++struct PadTriggerEffectCommand {
++	uint32_t mode;
++	uint8_t  reserve[4];
++	uint8_t  data[48];
++};
++
++struct PadTriggerEffectParam {
++	uint8_t                 trigger_mask;
++	uint8_t                 reserve[7];
++	PadTriggerEffectCommand command[2];
++};
++
++static_assert(sizeof(PadTriggerEffectCommand) == 56);
++static_assert(sizeof(PadTriggerEffectParam) == 120);
++
++} // namespace Libs::Controller
++
++namespace {
++
++namespace Controller = Libs::Controller;
++
++constexpr int      PAD_HANDLE      = 1;
++constexpr uint32_t HOLD_MS         = 3000;
++constexpr uint32_t Y_DELAY_MS      = 200;
++constexpr uint8_t  FINAL_LARGE     = 0xAB;
++constexpr uint8_t  FINAL_SMALL     = 0xCD;
++constexpr int      WRITES          = 10000;
++constexpr int      WRITE_SPIN_US   = 50;
++
++uint64_t NowUs() {
++	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
++	                                 std::chrono::steady_clock::now().time_since_epoch())
++	                                 .count());
++}
++
++// Rumble callback state of the virtual pad: the last value as (low << 16) | high in SDL units, its time, counts.
++std::atomic<uint32_t> g_rumble_last {0xffffffffu};
++std::atomic<uint64_t> g_rumble_calls {0};
++std::atomic<uint64_t> g_rumble_bad {0};
++std::atomic<uint64_t> g_led_calls {0};
++std::atomic<uint64_t> g_effect_calls {0};
++// F19c2: the last SendEffect payload of the virtual pad; vendor / product of the next attach (0 - as F19c).
++std::mutex           g_effect_mutex;
++std::vector<uint8_t> g_effect_last;
++Uint16               g_vp_vendor  = 0;
++Uint16               g_vp_product = 0;
++// Values written by the stand (case iii): index large << 8 | small.
++std::atomic<bool> g_written[65536];
++
++uint32_t Packed(uint8_t large, uint8_t small_motor) {
++	return (static_cast<uint32_t>(large * 0x101U) << 16) | static_cast<uint32_t>(small_motor * 0x101U);
++}
++
++int SDLCALL VpRumble(void* /*userdata*/, Uint16 low, Uint16 high) {
++	const uint8_t large = static_cast<uint8_t>(low >> 8);
++	const uint8_t small_motor = static_cast<uint8_t>(high >> 8);
++	const bool    exact = low == large * 0x101U && high == small_motor * 0x101U;
++	if (!exact || !(g_written[(large << 8) | small_motor].load() || (low == 0 && high == 0))) {
++		g_rumble_bad.fetch_add(1);
++	}
++	g_rumble_last.store((static_cast<uint32_t>(low) << 16) | high);
++	g_rumble_calls.fetch_add(1);
++	return 0;
++}
++
++int SDLCALL VpSetLed(void* /*userdata*/, Uint8 /*red*/, Uint8 /*green*/, Uint8 /*blue*/) {
++	g_led_calls.fetch_add(1);
++	return 0;
++}
++
++int SDLCALL VpSendEffect(void* /*userdata*/, const void* data, int size) {
++	{
++		std::lock_guard lock(g_effect_mutex);
++		const auto*     bytes = static_cast<const uint8_t*>(data);
++		g_effect_last.assign(bytes, bytes + (size > 0 ? size : 0));
++	}
++	g_effect_calls.fetch_add(1);
++	return 0;
++}
++
++SDL_JoystickID g_vp_instance  = -1; // main thread only
++int            g_connected_id = -1; // main thread only
++int            g_adds         = 0;
++int            g_removes      = 0;
++int            g_attaches     = 0;
++int            g_detaches     = 0;
++
++bool Attach() {
++	SDL_VirtualJoystickDesc desc {};
++	desc.version    = SDL_VIRTUAL_JOYSTICK_DESC_VERSION;
++	desc.type       = SDL_JOYSTICK_TYPE_GAMECONTROLLER;
++	desc.naxes      = 6;
++	desc.nbuttons   = 15;
++	desc.name       = "KYTY test pad";
++	desc.Rumble     = VpRumble;
++	desc.SetLED     = VpSetLed;
++	desc.SendEffect = VpSendEffect;
++	desc.vendor_id  = g_vp_vendor;
++	desc.product_id = g_vp_product;
++	const int index = SDL_JoystickAttachVirtualEx(&desc);
++	if (index < 0) {
++		std::printf("attach_failed=\"%s\"\n", SDL_GetError());
++		return false;
++	}
++	g_vp_instance = SDL_JoystickGetDeviceInstanceID(index);
++	g_attaches++;
++	return true;
++}
++
++bool Detach() {
++	for (int i = 0; g_vp_instance >= 0 && i < SDL_NumJoysticks(); i++) {
++		if (SDL_JoystickGetDeviceInstanceID(i) == g_vp_instance) {
++			if (SDL_JoystickDetachVirtual(i) != 0) {
++				std::printf("detach_failed=\"%s\"\n", SDL_GetError());
++				return false;
++			}
++			g_vp_instance = -1;
++			g_detaches++;
++			return true;
++		}
++	}
++	return false;
++}
++
++// The controller events, handled as window.cpp GameEventController does.
++void Pump() {
++	SDL_Event e;
++	while (SDL_PollEvent(&e) != 0) {
++		if (e.type == SDL_CONTROLLERDEVICEADDED) {
++			auto* pad = SDL_GameControllerOpen(e.cdevice.which);
++			if (pad == nullptr) {
++				std::printf("open_failed=\"%s\"\n", SDL_GetError());
++				continue;
++			}
++			const int id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(pad));
++			Controller::Connect(id);
++			g_connected_id = id;
++			g_adds++;
++		} else if (e.type == SDL_CONTROLLERDEVICEREMOVED) {
++			Controller::Disconnect(e.cdevice.which);
++			SDL_GameControllerClose(SDL_GameControllerFromInstanceID(e.cdevice.which));
++			if (g_connected_id == e.cdevice.which) {
++				g_connected_id = -1;
++			}
++			g_removes++;
++		}
++	}
++}
++
++// Attach and pump until the pad is connected (Controller::Connect done); false after 2 s.
++bool AttachConnected() {
++	if (g_vp_instance < 0 && !Attach()) {
++		return false;
++	}
++	const uint64_t t0 = NowUs();
++	while (NowUs() - t0 < 2000000) {
++		Pump();
++		if (g_connected_id >= 0 && g_connected_id == g_vp_instance) {
++			return true;
++		}
++		std::this_thread::sleep_for(std::chrono::milliseconds(1));
++	}
++	return false;
++}
++
++void Vibrate(uint8_t large, uint8_t small_motor) {
++	g_written[(large << 8) | small_motor].store(true);
++	Controller::PadVibrationParam p {large, small_motor};
++	Controller::PadSetVibration(PAD_HANDLE, &p);
++}
++
++// Waits up to 1 s for the Rumble callback to hold the value; returns the time it was seen (0 if never).
++uint64_t WaitRumble(uint32_t value) {
++	const uint64_t t0 = NowUs();
++	while (NowUs() - t0 < 1000000) {
++		if (g_rumble_last.load() == value) {
++			return NowUs();
++		}
++		std::this_thread::sleep_for(std::chrono::microseconds(200));
++	}
++	return 0;
++}
++
++void SpinUs(int us) {
++	const uint64_t t0 = NowUs();
++	while (NowUs() - t0 < static_cast<uint64_t>(us)) {
++	}
++}
++
++void PrintStats() {
++	const auto s = Controller::TestHidLossPadStats();
++	std::printf("pad_vib=%llu\npad_led=%llu\npad_trig=%llu\npad_wait_max_us=%llu\npo_applied=%llu\npo_wait_max_us=%llu\n"
++	            "guest_sdl=%llu\n",
++	            static_cast<unsigned long long>(s.pad_vib), static_cast<unsigned long long>(s.pad_led),
++	            static_cast<unsigned long long>(s.pad_trig), static_cast<unsigned long long>(s.pad_wait_max_us),
++	            static_cast<unsigned long long>(s.po_applied), static_cast<unsigned long long>(s.po_wait_max_us),
++	            static_cast<unsigned long long>(s.guest_sdl));
++	std::printf("rumble_calls=%llu\nrumble_bad=%llu\nled_calls=%llu\neffect_calls=%llu\n",
++	            static_cast<unsigned long long>(g_rumble_calls.load()), static_cast<unsigned long long>(g_rumble_bad.load()),
++	            static_cast<unsigned long long>(g_led_calls.load()), static_cast<unsigned long long>(g_effect_calls.load()));
++}
++
++// Cases i and ii: X holds the joystick lock HOLD_MS, Y makes the guest calls Y_DELAY_MS after X has the lock.
++void HoldCase(bool all_kinds) {
++	std::atomic<bool> locked {false};
++	std::atomic<uint64_t> unlock_us {0};
++	std::thread x([&] {
++		SDL_LockJoysticks();
++		locked.store(true);
++		std::this_thread::sleep_for(std::chrono::milliseconds(HOLD_MS));
++		unlock_us.store(NowUs());
++		SDL_UnlockJoysticks();
++	});
++	while (!locked.load()) {
++		std::this_thread::yield();
++	}
++	std::this_thread::sleep_for(std::chrono::milliseconds(Y_DELAY_MS));
++	uint64_t wall_vib = 0;
++	uint64_t wall_led = 0;
++	uint64_t wall_trig = 0;
++	bool     trig_ok = false;
++	uint32_t last = 0;
++	std::thread y([&] {
++		uint64_t t0 = NowUs();
++		Vibrate(0x11, 0x22);
++		wall_vib = NowUs() - t0;
++		last     = Packed(0x11, 0x22);
++		if (!all_kinds) {
++			return;
++		}
++		Controller::PadLightBarParam led {10, 20, 30, 0};
++		t0 = NowUs();
++		Controller::PadSetLightBar(PAD_HANDLE, &led);
++		wall_led = NowUs() - t0;
++		Controller::PadTriggerEffectParam trig {};
++		trig.trigger_mask       = 0x01;
++		trig.command[0].mode    = 1;
++		trig.command[0].data[0] = 2;
++		trig.command[0].data[1] = 5;
++		t0 = NowUs();
++		trig_ok   = Controller::PadSetTriggerEffect(PAD_HANDLE, &trig) == 0;
++		wall_trig = NowUs() - t0;
++		Vibrate(0x33, 0x44);
++		Vibrate(0x55, 0x66);
++		last = Packed(0x55, 0x66);
++	});
++	y.join();
++	const uint64_t y_done_us = NowUs();
++	x.join();
++	std::printf("wall_vib_us=%llu\n", static_cast<unsigned long long>(wall_vib));
++	if (all_kinds) {
++		std::printf("wall_led_us=%llu\nwall_trig_us=%llu\ntrig_ok=%d\n", static_cast<unsigned long long>(wall_led),
++		            static_cast<unsigned long long>(wall_trig), trig_ok ? 1 : 0);
++		std::printf("y_done_before_unlock=%d\n", y_done_us < unlock_us.load() ? 1 : 0);
++		const uint64_t seen = WaitRumble(last);
++		std::printf("latency_us=%lld\n", seen == 0 ? -1LL : static_cast<long long>(seen - unlock_us.load()));
++		std::this_thread::sleep_for(std::chrono::milliseconds(300));
++		std::printf("last_after_300ms_ok=%d\n", g_rumble_last.load() == last ? 1 : 0);
++	}
++}
++
++void ChurnCase() {
++	std::atomic<int>  running {2};
++	std::atomic<bool> go {false};
++	std::atomic<int>  writes {0};
++	const auto        writer = [&](uint32_t seed) {
++		std::mt19937 rng(seed);
++		while (!go.load()) {
++			std::this_thread::yield();
++		}
++		for (int n = 0; n < WRITES; n++) {
++			uint8_t large = 0;
++			uint8_t small_motor = 0;
++			do {
++				const uint32_t r = rng();
++				large       = static_cast<uint8_t>(r);
++				small_motor = static_cast<uint8_t>(r >> 8);
++			} while (large == FINAL_LARGE && small_motor == FINAL_SMALL);
++			Vibrate(large, small_motor);
++			writes.fetch_add(1);
++			SpinUs(WRITE_SPIN_US);
++		}
++		running.fetch_sub(1);
++	};
++	std::thread a(writer, 1u);
++	std::thread b(writer, 2u);
++	go.store(true);
++	int cycles = 0;
++	while (running.load() != 0) {
++		if (g_vp_instance >= 0) {
++			Detach();
++		} else {
++			Attach();
++		}
++		Pump();
++		cycles++;
++		std::this_thread::sleep_for(std::chrono::milliseconds(1));
++	}
++	a.join();
++	b.join();
++	std::printf("writes=%d\nchurn_cycles=%d\n", writes.load(), cycles);
++	const bool connected = AttachConnected();
++	std::printf("final_connected=%d\n", connected ? 1 : 0);
++	std::this_thread::sleep_for(std::chrono::milliseconds(200));
++	const uint64_t t0 = NowUs();
++	Vibrate(FINAL_LARGE, FINAL_SMALL);
++	const uint64_t seen = WaitRumble(Packed(FINAL_LARGE, FINAL_SMALL));
++	std::printf("latency_us=%lld\n", seen == 0 ? -1LL : static_cast<long long>(seen - t0));
++	std::this_thread::sleep_for(std::chrono::milliseconds(300));
++	std::printf("last_after_300ms_ok=%d\n", g_rumble_last.load() == Packed(FINAL_LARGE, FINAL_SMALL) ? 1 : 0);
++	std::printf("attaches=%d\ndetaches=%d\nadds=%d\nremoves=%d\n", g_attaches, g_detaches, g_adds, g_removes);
++}
++
++// F19c2: a crash is counted by the driver - a marker line and exit 3, no dialog (the std::terminate handler is per
++// thread in the MSVC runtime: every stand thread that calls into controller.cpp sets it).
++[[noreturn]] void OnTerminate() {
++	std::printf("terminate=1\n");
++	std::fflush(stdout);
++	std::_Exit(3);
++}
++
++void OnAbort(int /*sig*/) {
++	std::printf("abort=1\n");
++	std::fflush(stdout);
++	std::_Exit(3);
++}
++
++void InstallCrashMarkers() {
++#ifdef _MSC_VER
++	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
++#endif
++	std::signal(SIGABRT, OnAbort);
++	std::set_terminate(OnTerminate);
++}
++
++constexpr uint32_t DD_HOLD_MS  = 300;
++constexpr uint32_t DD_WRITE_MS = 20;
++
++// Case dd (F19c2, item 460(v)(2)).
++void DoubleShutdownCase() {
++	std::atomic<bool>     locked {false};
++	std::atomic<uint64_t> unlock_us {0};
++	std::thread           x([&] {
++		std::set_terminate(OnTerminate);
++		SDL_LockJoysticks();
++		locked.store(true);
++		std::this_thread::sleep_for(std::chrono::milliseconds(DD_HOLD_MS));
++		unlock_us.store(NowUs());
++		SDL_UnlockJoysticks();
++	});
++	while (!locked.load()) {
++		std::this_thread::yield();
++	}
++	Vibrate(0x12, 0x34);
++	std::this_thread::sleep_for(std::chrono::milliseconds(DD_WRITE_MS));
++	std::atomic<int>  ready {0};
++	std::atomic<bool> go {false};
++	uint64_t          start[2] = {};
++	uint64_t          done[2]  = {};
++	const auto        caller   = [&](int k) {
++		std::set_terminate(OnTerminate);
++		ready.fetch_add(1);
++		while (!go.load()) {
++		}
++		start[k] = NowUs();
++		Controller::EmergencyShutdown();
++		done[k] = NowUs();
++	};
++	std::thread a(caller, 0);
++	std::thread b(caller, 1);
++	while (ready.load() != 2) {
++		std::this_thread::yield();
++	}
++	go.store(true);
++	a.join();
++	b.join();
++	x.join();
++	std::printf("both_returned=1\n");
++	const uint64_t first = start[0] < start[1] ? start[0] : start[1];
++	const uint64_t last  = start[0] < start[1] ? start[1] : start[0];
++	std::printf("call_a_wall_us=%llu\ncall_b_wall_us=%llu\nstart_skew_us=%llu\ncalls_started_before_unlock=%d\n",
++				static_cast<unsigned long long>(done[0] - start[0]), static_cast<unsigned long long>(done[1] - start[1]),
++				static_cast<unsigned long long>(last - first), last < unlock_us.load() ? 1 : 0);
++}
++
++std::vector<uint8_t> EffectLast() {
++	std::lock_guard lock(g_effect_mutex);
++	return g_effect_last;
++}
++
++// Waits up to 1 s for the SendEffect count to reach n; returns the time it was seen (0 if never).
++uint64_t WaitEffects(uint64_t n) {
++	const uint64_t t0 = NowUs();
++	while (NowUs() - t0 < 1000000) {
++		if (g_effect_calls.load() >= n) {
++			return NowUs();
++		}
++		std::this_thread::sleep_for(std::chrono::microseconds(200));
++	}
++	return 0;
++}
++
++// Effect A - left trigger, effect B - right trigger (mode 1, as case ii): different payloads.
++Controller::PadTriggerEffectParam TriggerParam(bool right) {
++	Controller::PadTriggerEffectParam p {};
++	const int                         k = right ? 1 : 0;
++	p.trigger_mask                      = right ? 0x02 : 0x01;
++	p.command[k].mode                   = 1;
++	p.command[k].data[0]                = right ? 3 : 2;
++	p.command[k].data[1]                = right ? 7 : 5;
++	return p;
++}
++
++// Case trig (F19c2, item 460(v)(4)).
++void TriggerCase() {
++	auto* pad = SDL_GameControllerFromInstanceID(g_connected_id);
++	const int type = pad != nullptr ? static_cast<int>(SDL_GameControllerGetType(pad)) : -1;
++	std::printf("pad_vendor=0x%04x\npad_product=0x%04x\npad_type=%d\npad_type_ps5=%d\n",
++				pad != nullptr ? SDL_GameControllerGetVendor(pad) : 0, pad != nullptr ? SDL_GameControllerGetProduct(pad) : 0,
++				type, type == static_cast<int>(SDL_CONTROLLER_TYPE_PS5) ? 1 : 0);
++	const auto a_param = TriggerParam(false);
++	const auto b_param = TriggerParam(true);
++	std::atomic<bool>     locked {false};
++	std::atomic<uint64_t> unlock_us {0};
++	std::atomic<uint64_t> calls_before_unlock {0};
++	std::thread           x([&] {
++		SDL_LockJoysticks();
++		locked.store(true);
++		std::this_thread::sleep_for(std::chrono::milliseconds(HOLD_MS));
++		calls_before_unlock.store(g_effect_calls.load());
++		unlock_us.store(NowUs());
++		SDL_UnlockJoysticks();
++	});
++	while (!locked.load()) {
++		std::this_thread::yield();
++	}
++	std::this_thread::sleep_for(std::chrono::milliseconds(Y_DELAY_MS));
++	uint64_t wall_a = 0;
++	uint64_t wall_b = 0;
++	bool     ok_a   = false;
++	bool     ok_b   = false;
++	std::thread y([&] {
++		std::set_terminate(OnTerminate);
++		uint64_t t0 = NowUs();
++		ok_a        = Controller::PadSetTriggerEffect(PAD_HANDLE, &a_param) == 0;
++		wall_a      = NowUs() - t0;
++		t0          = NowUs();
++		ok_b        = Controller::PadSetTriggerEffect(PAD_HANDLE, &b_param) == 0;
++		wall_b      = NowUs() - t0;
++	});
++	y.join();
++	const uint64_t y_done_us = NowUs();
++	x.join();
++	const uint64_t seen = WaitEffects(1);
++	std::this_thread::sleep_for(std::chrono::milliseconds(300));
++	const uint64_t             calls_after = g_effect_calls.load();
++	const std::vector<uint8_t> last        = EffectLast();
++	// The payloads of A and B with the lock free (the reference for "last applied = last written").
++	Controller::PadTriggerEffectParam ref = a_param;
++	Controller::PadSetTriggerEffect(PAD_HANDLE, &ref);
++	const bool                 seen_a = WaitEffects(calls_after + 1) != 0;
++	const std::vector<uint8_t> pa     = EffectLast();
++	ref                               = b_param;
++	Controller::PadSetTriggerEffect(PAD_HANDLE, &ref);
++	const bool                 seen_b = WaitEffects(calls_after + 2) != 0;
++	const std::vector<uint8_t> pb     = EffectLast();
++	std::printf("wall_trig_a_us=%llu\nwall_trig_b_us=%llu\ntrig_ok=%d\ny_done_before_unlock=%d\n",
++				static_cast<unsigned long long>(wall_a), static_cast<unsigned long long>(wall_b), ok_a && ok_b ? 1 : 0,
++				y_done_us < unlock_us.load() ? 1 : 0);
++	std::printf("effect_calls_before_unlock=%llu\neffect_calls_after_unlock=%llu\neffect_latency_us=%lld\n",
++				static_cast<unsigned long long>(calls_before_unlock.load()), static_cast<unsigned long long>(calls_after),
++				seen == 0 ? -1LL : static_cast<long long>(seen - unlock_us.load()));
++	std::printf("ref_seen=%d\npayload_size=%d\nlast_eq_b=%d\na_ne_b=%d\n", seen_a && seen_b ? 1 : 0,
++				static_cast<int>(last.size()), !last.empty() && last == pb ? 1 : 0, pa != pb ? 1 : 0);
++}
++
++} // namespace
++
++int main(int argc, char** argv) {
++	if (argc != 2 || (std::strcmp(argv[1], "i") != 0 && std::strcmp(argv[1], "ii") != 0 && std::strcmp(argv[1], "iii") != 0 &&
++					  std::strcmp(argv[1], "dd") != 0 && std::strcmp(argv[1], "trig") != 0)) {
++		std::fprintf(stderr, "usage: b24_pad_stand i|ii|iii|dd|trig\n");
++		return 2;
++	}
++	const std::string mode = argv[1];
++	InstallCrashMarkers();
++
++	Common::InitializeThreads();
++	Common::Subsystems subsystems;
++	subsystems.Initialize<Config::Lifecycle>();
++	Config::ConfigOptions options;
++	options.printf_direction = Config::LogDirection::Console;
++	Config::Load(options);
++	subsystems.Initialize<Log::Lifecycle>();
++
++	// Host joystick drivers off: only the virtual driver is left.
++	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI, "0");
++	SDL_SetHint(SDL_HINT_JOYSTICK_RAWINPUT, "0");
++	SDL_SetHint(SDL_HINT_JOYSTICK_WGI, "0");
++	SDL_SetHint(SDL_HINT_XINPUT_ENABLED, "0");
++	SDL_SetHint(SDL_HINT_DIRECTINPUT_ENABLED, "0");
++	if (SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) < 0) {
++		std::printf("sdl_init_failed=\"%s\"\nEND\n", SDL_GetError());
++		std::fflush(stdout);
++		return 4;
++	}
++	std::printf("case=%s\n", mode.c_str());
++	std::printf("num_joysticks_at_init=%d\n", SDL_NumJoysticks());
++
++	Controller::Initialize();
++	std::printf("fix_b24=%d\n", Controller::FixB24On() ? 1 : 0);
++	Controller::TestHidLossWindow(true);
++
++	if (mode == "trig") {
++		g_vp_vendor  = 0x054C;
++		g_vp_product = 0x0CE6;
++	}
++	const bool connected = AttachConnected();
++	std::printf("connected=%d\n", connected ? 1 : 0);
++	if (connected) {
++		if (mode == "iii") {
++			ChurnCase();
++		} else if (mode == "dd") {
++			DoubleShutdownCase();
++		} else if (mode == "trig") {
++			TriggerCase();
++		} else {
++			HoldCase(mode == "ii");
++		}
++	}
++	Controller::TestHidLossWindow(false);
++	PrintStats();
++	if (mode == "dd") {
++		// F19c2: the two emergency exits already ran - the normal teardown (a third EmergencyShutdown, the deletes).
++		Controller::Shutdown();
++	} else {
++		Controller::EmergencyShutdown();
++	}
++	std::printf("shutdown_ok=1\n");
++	Log::Flush();
++	std::printf("END\n");
++	std::fflush(stdout);
++	// No SDL_Quit and no subsystem teardown, as the emulator.
++	std::_Exit(0);
++}
+diff --git a/tests/F8AudioStand.cpp b/tests/F8AudioStand.cpp
+new file mode 100644
+index 00000000..8e2b5b78
+--- /dev/null
++++ b/tests/F8AudioStand.cpp
+@@ -0,0 +1,199 @@
++// Track F, F8 stand without the game (F18c HPP-539, ROADMAP s122 item 441(d)(1)): the SDL2 reference count of the audio
++// subsystem against the emulator call sites of src/libs/audio.cpp (SdlAudioSubsystemInit, SdlAudioAcquire - linked from
++// the emulator sources of this build, not copied). SDL2 is 3rdparty/SDL2 of the same build; the audio driver comes from
++// SDL_AUDIODRIVER, which must be "dummy" or "disk" (the stand refuses any other value before its first SDL call, so the
++// host sound devices are never opened). KYTY_FIX_F8 (read by audio.cpp once per process) selects the site path.
++// Separate CMake target f8_audio_stand (EXCLUDE_FROM_ALL, no add_test - not in the default ctest set); the driver is
++// docs/track-f/f18c/run_stand_f18c.py, which decides PASS/FAIL from the printed values.
++//
++// Usage: f8_audio_stand <mode> <ndev> [<name prefix>]
++//   ndev output devices are opened as the AudioOut site C1 does (SdlAudioSubsystemInit, SDL_OpenAudioDevice with a
++//   queue, unpaused); device k is opened by the name "<prefix><k>.raw" when a prefix is given (driver "disk": the name is
++//   the output file), by the default device otherwise (driver "dummy" has one output device only: SDL_dummyaudio.c:55,
++//   SDL_audio.c:1367).
++//   i   - 300 calls of SdlAudioSubsystemInit (the pad haptics site C2 without a pad), after each call one
++//         SDL_QueueAudio per device. Lines "call <k> fail <n>" for every call with n > 0 failing devices.
++//   ii  - 10 000 calls of SdlAudioAcquire, after each call one SDL_QueueAudio per device.
++//   iii - 2 threads x 5 000 calls of SdlAudioAcquire started together on a cold subsystem, then the devices are opened
++//         and one SDL_QueueAudio per device is made.
++// Output: "key=value" lines; "END" last. Exit 0 unless the arguments are bad (2) or the driver is refused (3).
++#define SDL_MAIN_HANDLED
++#include "SDL.h"
++#include "common/emulatorConfig.h"
++#include "common/logging/log.h"
++#include "common/subsystems.h"
++#include "common/threads.h"
++#include "libs/audio_internal.h"
++
++#include <atomic>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++#include <string>
++#include <thread>
++#include <vector>
++
++namespace {
++
++namespace AudioInternal = Libs::Audio::AudioInternal;
++
++std::vector<SDL_AudioDeviceID> g_devices;
++std::vector<uint8_t>           g_pcm(512, 0); // 128 frames of s16 stereo silence
++std::string                    g_first_error;
++
++int OpenDevices(int ndev, const char* prefix) {
++	int opened = 0;
++	for (int k = 0; k < ndev; k++) {
++		if (AudioInternal::SdlAudioSubsystemInit() < 0) {
++			std::printf("open_init_failed=%d error=\"%s\"\n", k, SDL_GetError());
++			continue;
++		}
++		SDL_AudioSpec desired {};
++		desired.freq     = 48000;
++		desired.format   = AUDIO_S16SYS;
++		desired.channels = 2;
++		desired.samples  = 1024;
++		desired.callback = nullptr;
++		SDL_AudioSpec     obtained {};
++		const std::string name = prefix != nullptr ? std::string(prefix) + std::to_string(k) + ".raw" : std::string();
++		const SDL_AudioDeviceID dev =
++		    SDL_OpenAudioDevice(prefix != nullptr ? name.c_str() : nullptr, 0, &desired, &obtained, SDL_AUDIO_ALLOW_ANY_CHANGE);
++		if (dev == 0) {
++			std::printf("open_failed=%d error=\"%s\"\n", k, SDL_GetError());
++			continue;
++		}
++		SDL_PauseAudioDevice(dev, 0);
++		g_devices.push_back(dev);
++		opened++;
++	}
++	std::printf("devices_opened=%d\n", opened);
++	for (const auto dev: g_devices) {
++		std::printf("device=%u\n", static_cast<uint32_t>(dev));
++	}
++	return opened;
++}
++
++// One SDL_QueueAudio per device; returns the number of failing devices and keeps the first error text.
++int QueueAll() {
++	int failed = 0;
++	for (const auto dev: g_devices) {
++		if (SDL_QueueAudio(dev, g_pcm.data(), static_cast<Uint32>(g_pcm.size())) < 0) {
++			if (g_first_error.empty()) {
++				g_first_error = SDL_GetError();
++			}
++			failed++;
++		} else {
++			SDL_ClearQueuedAudio(dev);
++		}
++	}
++	return failed;
++}
++
++void PrintCounters() {
++	std::printf("init_calls=%llu\n", static_cast<unsigned long long>(AudioInternal::SdlAudioInitCalls()));
++	std::printf("acq=%llu\n", static_cast<unsigned long long>(AudioInternal::SdlAudioAcquireCalls()));
++	std::printf("was_init=%u\n", static_cast<unsigned>(SDL_WasInit(SDL_INIT_AUDIO)));
++	const char* driver = SDL_GetCurrentAudioDriver();
++	std::printf("driver=%s\n", driver != nullptr ? driver : "(none)");
++}
++
++} // namespace
++
++int main(int argc, char** argv) {
++	if (argc < 3 || argc > 4) {
++		std::fprintf(stderr, "usage: f8_audio_stand i|ii|iii <ndev> [<name prefix>]\n");
++		return 2;
++	}
++	const std::string mode   = argv[1];
++	const int         ndev   = std::atoi(argv[2]);
++	const char*       prefix = argc == 4 ? argv[3] : nullptr;
++	if ((mode != "i" && mode != "ii" && mode != "iii") || ndev < 0 || ndev > 8) {
++		std::fprintf(stderr, "usage: f8_audio_stand i|ii|iii <ndev> [<name prefix>]\n");
++		return 2;
++	}
++	const char* want = std::getenv("SDL_AUDIODRIVER");
++	if (want == nullptr || (std::strcmp(want, "dummy") != 0 && std::strcmp(want, "disk") != 0)) {
++		std::printf("REFUSED SDL_AUDIODRIVER=%s (dummy or disk only)\n", want != nullptr ? want : "(unset)");
++		std::fflush(stdout);
++		return 3;
++	}
++
++	Common::InitializeThreads();
++	Common::Subsystems subsystems;
++	subsystems.Initialize<Config::Lifecycle>();
++	Config::ConfigOptions options;
++	options.printf_direction = Config::LogDirection::Console;
++	Config::Load(options);
++	subsystems.Initialize<Log::Lifecycle>();
++
++	std::printf("mode=%s ndev=%d sdl_audiodriver=%s\n", mode.c_str(), ndev, want);
++
++	if (mode == "iii") {
++		std::atomic<int>  ready {0};
++		std::atomic<bool> go {false};
++		std::atomic<int>  failed {0};
++		const auto        worker = [&]() {
++			ready.fetch_add(1);
++			while (!go.load(std::memory_order_acquire)) {
++			}
++			for (int n = 0; n < 5000; n++) {
++				if (AudioInternal::SdlAudioAcquire() < 0) {
++					failed.fetch_add(1);
++				}
++			}
++		};
++		std::thread a(worker);
++		std::thread b(worker);
++		while (ready.load() != 2) {
++			std::this_thread::yield();
++		}
++		go.store(true, std::memory_order_release);
++		a.join();
++		b.join();
++		std::printf("acquire_failed=%d\n", failed.load());
++		std::printf("init_calls_after_threads=%llu\n", static_cast<unsigned long long>(AudioInternal::SdlAudioInitCalls()));
++		std::printf("acq_after_threads=%llu\n", static_cast<unsigned long long>(AudioInternal::SdlAudioAcquireCalls()));
++		std::printf("was_init_after_threads=%u\n", static_cast<unsigned>(SDL_WasInit(SDL_INIT_AUDIO)));
++		OpenDevices(ndev, prefix);
++		std::printf("queue_failed_after=%d\n", QueueAll());
++	} else {
++		OpenDevices(ndev, prefix);
++		const int calls        = (mode == "i" ? 300 : 10000);
++		int       first_fail   = 0;
++		int       fail_at_first = 0;
++		int       calls_failed = 0;
++		uint64_t  queue_failed = 0;
++		int       init_failed  = 0;
++		for (int k = 1; k <= calls; k++) {
++			const int rc = (mode == "i" ? AudioInternal::SdlAudioSubsystemInit() : AudioInternal::SdlAudioAcquire());
++			if (rc < 0) {
++				init_failed++;
++			}
++			const int f = QueueAll();
++			if (f > 0) {
++				if (first_fail == 0) {
++					first_fail    = k;
++					fail_at_first = f;
++				}
++				calls_failed++;
++				queue_failed += static_cast<uint64_t>(f);
++				if (mode == "i") {
++					std::printf("call %d fail %d\n", k, f);
++				}
++			}
++		}
++		std::printf("calls=%d\n", calls);
++		std::printf("init_failed=%d\n", init_failed);
++		std::printf("first_fail_call=%d\n", first_fail);
++		std::printf("fail_devices_at_first=%d\n", fail_at_first);
++		std::printf("calls_with_fail=%d\n", calls_failed);
++		std::printf("queue_failed=%llu\n", static_cast<unsigned long long>(queue_failed));
++	}
++	std::printf("first_error=\"%s\"\n", g_first_error.c_str());
++	PrintCounters();
++	Log::Flush();
++	std::printf("END\n");
++	std::fflush(stdout);
++	// No SDL_Quit and no subsystem teardown: the emulator never quits the audio subsystem either.
++	std::_Exit(0);
++}

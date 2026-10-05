@@ -1,0 +1,64 @@
+# wt HEAD d6ee2dc886c98b80ab36231519dec9f7356a4691
+PASS wt clean 
+PASS build exe = install exe 8df61c009fbe6d7fd7f4e7576e89ab1b0989129336a26f6d1cdf8fd778fbffe7
+PASS pinned copy sha C:/kyty/f287/bin/kyty_emulator_8df61c00.exe
+installed (not touched) sha256 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2
+   #define KYTY_GIT_VERSION "KytyPS5-2026-09-15-6a2987a-1883-gd6ee2dc8"
+   #define KYTY_GIT_HASH "d6ee2dc"
+   #define KYTY_GIT_REVISION "d6ee2dc886c98b80ab36231519dec9f7356a4691"
+   #define KYTY_SHADER_SOURCE_HASH "26ce5fc78ea3b20be537c7696be041f5e97d9e58"
+   #define KYTY_BUILD_LABEL "Official build " KYTY_RELEASE_TAG
+   #define KYTY_BUILD_LABEL "Fork build " KYTY_BUILD_REPOSITORY " " KYTY_GIT_HASH
+   #define KYTY_BUILD_LABEL "Source build " KYTY_GIT_HASH
+PASS signature = 26ce5fc7 (base) 26ce5fc78ea3b20be537c7696be041f5e97d9e58
+PASS KYTY_GIT_REVISION = wt HEAD d6ee2dc886c98b80ab36231519dec9f7356a4691
+PASS signature in exe once 1
+   exe count FixF8: mode=       1
+   exe count FixB24: mode=      1
+   exe count FixB4: mode=       1
+   exe count KYTY_FIX_F8        1
+   exe count KYTY_FIX_B24       1
+   exe count KYTY_FIX_F19       0
+   exe count KYTY_PVAR_HOLD     0
+   exe count KYTY_DIAG_F5       0
+   exe count KYTY_FIX_F26       0
+   exe count KYTY_FIX_F5CMU     0
+PASS exe has FixF8 and FixB24 lines 
+PASS exe has no F19/PVAR_HOLD/DIAG_F5/F26/F5CMU 
+PASS diff files vs 3904522d = union of 10a4800b 9c726d74 919c1a19 ec6c4c83 expected 12 actual 12; extra [] missing []
+   parent of wt HEAD b47033cba554f55d6ee337a61e60f03ea2f121fc
+PASS wt chain length 4 e2a21d74 915871f7 b47033cb d6ee2dc8
+PASS patch-id 10a4800b = e2a21d74 3add70bd
+PASS patch-id 9c726d74 = 915871f7 875b7df3
+PASS patch-id 919c1a19 = b47033cb 2a996c60
+PASS patch-id ec6c4c83 = d6ee2dc8 68d889d6
+   cherry 10a4800b - 10a4800b36fba6e7df95fcdf74aeeb3041b57fe5 track F link F18c (HPP-539): KYTY_FIX_F8 code (ROADMAP s122 item 441(v)-(g), (
+   cherry 9c726d74 - 9c726d74fc688c2aed4c0a1337c471ce42bb372a track F link F19c (HPP-547): KYTY_FIX_B24 (default 0) - member A of F19a s5.1:
+   cherry 919c1a19 - 919c1a19f978263cc6854879842fb8a41b9cc116 track F link F19c2 (HPP-559): RC1 of the F19d review - PadOutput::Stop moves m
+   cherry ec6c4c83 - ec6c4c83d9cf89c996ee2c951c6e3e0a43ada4e7 track F link FS7a (HPP-565): KYTY_FIX_F8 and KYTY_FIX_B24 default 0 -> 1 (ROAD
+   cherry a86a5ad0 - a86a5ad0d1a0828e60d658c427c7a22ff0a0de8e track F link F15c (HPP-514): KYTY_FIX_B4 (default 0) - the emergency exit path
+   cherry 17eb924e - 17eb924e3ff5e641a23df0f5d796ec522e8fd3ea track F link FS6a (HPP-555): KYTY_FIX_B4 default 0 -> 1 (ROADMAP s122 item 454
+   cherry 4e72289e - 4e72289e879b6a8375eada8fb0359037388e5d8c track F link FS3a (HPP-447): KYTY_FIX_B42 default 0 -> 1 (ROADMAP s122 item 36
+   cherry 68602c4f - 68602c4f301e8d424af0581d11039437ec4a958f track F link F10c (HPP-451): KYTY_FIX_SVAL (default 0) - ValidateShaderSpirv w
+   cherry 17adaf80 - 17adaf801069088b68275276c96574b7f8bf5dc3 track F link FS4a (HPP-470): KYTY_FIX_SVAL default 0 -> 1 (ROADMAP s122 item 3
+   cherry 1833ee28 - 1833ee280ec177b65feb6c4a97f626b0d4ce1b9f track F link F12d (HPP-477): KYTY_FIX_F10 (default 0) - IMAGE_BVH_INTERSECT_RA
+   cherry c3eb8fe8 - c3eb8fe83bf67c66d8b391cffe47f9639f04b39e track F link FS5a (HPP-509): KYTY_FIX_F10 default 0 -> 1 (ROADMAP s122 item 41
+   cherry c1732d1a - c1732d1a7f0e7cd2836ff6c767648f71becb7cfb track S link S12a (HPP-494): KYTY_S_PCW default 0 -> 1 (ROADMAP s122 item 408(
+   cherry 082d1612 + 082d161214c525cc6b3a614d915733707f8eb460 track F link F14e (HPP-505): KYTY_FIX_F19 (default 0) - native depth compariso
+   cherry f98e842c + f98e842ca322198e16d0d8faa38c736116ccc385 track F link F14e2 (HPP-545): RC1 and RC3 of the F14f review (ROADMAP s122 ite
+   cherry fcaf141b + fcaf141b6f8d5c78b3d009bcab4c807c731921e0 tests: B11 fix - IMAGE_SAMPLE_C/_LZ probes with k32Float, manual-path probes w
+   cherry 741e3312 + 741e3312ab005ece2587cec0410ba7607116aa76 track P link P35 (HPP-438): the descent constant N of KYTY_PVAR_HOLD 30 -> 90 
+   cherry c9b4268e + c9b4268e0b47625ff4ec556057b4c0267601ddd0 track P link P40 (HPP-461): growing hold at kt 3 of KYTY_PVAR_HOLD - ROADMAP s
+   cherry 365cc3c2 + 365cc3c25f75dfdd5d8b365b9c39f84921fc013d track F link F16o2 (HPP-599): RC1 of F16p - adopt kept why=deferred, the mark 
+PASS contains 10a4800b 
+PASS contains 9c726d74 
+PASS contains 919c1a19 
+PASS contains ec6c4c83 
+PASS contains a86a5ad0 
+PASS contains 17eb924e 
+PASS ancestor 3904522d 
+PASS ancestor 4d9e8ab7 
+PASS ancestor 0e72bc19 
+PASS ancestor 3d0e46da 
+PASS ancestor 4414e235 
+ALL OK

@@ -1,0 +1,17 @@
+FixF8: mode=1
+mode=iii ndev=3 sdl_audiodriver=disk
+acquire_failed=0
+init_calls_after_threads=1
+acq_after_threads=10000
+was_init_after_threads=16
+devices_opened=3
+device=2
+device=3
+device=4
+queue_failed_after=0
+first_error=""
+init_calls=1
+acq=10003
+was_init=16
+driver=disk
+END

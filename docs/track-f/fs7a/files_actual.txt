@@ -1,0 +1,12 @@
+CMakeLists.txt
+docs/track-f/f18c/patch_f18c_src.py
+docs/track-f/f18c/run_stand_f18c.py
+docs/track-f/f19c/patch_f19c_src.py
+docs/track-f/f19c/run_stand_f19c.py
+src/graphics/presentation/window/window.cpp
+src/libs/audio.cpp
+src/libs/audio_internal.h
+src/libs/controller.cpp
+src/libs/controller.h
+tests/B24PadStand.cpp
+tests/F8AudioStand.cpp

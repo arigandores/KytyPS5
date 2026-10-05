@@ -1,0 +1,20 @@
+	 large_motor = 17
+	 small_motor = 34
+case=i
+num_joysticks_at_init=0
+fix_b24=0
+connected=1
+wall_vib_us=2800035
+pad_vib=1
+pad_led=0
+pad_trig=0
+pad_wait_max_us=2799934
+po_applied=0
+po_wait_max_us=0
+guest_sdl=2
+rumble_calls=1
+rumble_bad=0
+led_calls=0
+effect_calls=0
+shutdown_ok=1
+END

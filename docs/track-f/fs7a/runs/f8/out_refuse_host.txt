@@ -1,0 +1,1 @@
+REFUSED SDL_AUDIODRIVER=directsound (dummy or disk only)

@@ -1,0 +1,4 @@
+# exe C:\kyty\f287\fs7a\fix\b24_pad_stand.exe sha256 068b8eb1e8ee3e695fbef8814823e7e115a0ac6aa3cd80448cbb5ead3dfbd1d1
+PASS trig_fixunset rc=0 wall=3.4s pad_vendor=0x054c pad_product=0x0ce6 pad_type=7 pad_type_ps5=1 wall_trig_a_us=37 wall_trig_b_us=2 trig_ok=1 y_done_before_unlock=1 effect_calls_before_unlock=0 effect_calls_after_unlock=2 effect_latency_us=120 ref_seen=1 payload_size=32 last_eq_b=1 a_ne_b=1 pad_trig=4 guest_sdl=0 po_applied=4 po_wait_max_us=2800600 effect_calls=4 sent=#1:1,#2:1,#3:1,#4:1
+PASS trig_fix0 rc=0 wall=3.4s pad_vendor=0x054c pad_product=0x0ce6 pad_type=7 pad_type_ps5=1 wall_trig_a_us=2799570 wall_trig_b_us=5 trig_ok=1 y_done_before_unlock=0 effect_calls_before_unlock=0 effect_calls_after_unlock=2 effect_latency_us=160 ref_seen=1 payload_size=32 last_eq_b=1 a_ne_b=1 pad_trig=4 guest_sdl=12 po_applied=0 po_wait_max_us=0 effect_calls=4 sent=#1:1,#2:1,#3:1,#4:1
+ALL OK

@@ -1,0 +1,17 @@
+track F link FS7a (HPP-565): KYTY_FIX_F8 and KYTY_FIX_B24 default 0 -> 1 (ROADMAP s122 items 467(g)(1), 487(g)(1))
+
+FixF8Enabled (src/libs/audio.cpp) and Controller::Initialize (src/libs/controller.cpp) read KYTY_FIX_F8 / KYTY_FIX_B24
+in the form of FS4a 17adaf80: unset or "" = ON, 0/false/off/no = OFF, any other value as EnvValueOn. One reading each as
+before (F8: the static const bool of FixF8Enabled; B24: the one write of g_fix_b24 in Initialize before the guest
+threads exist). The lines "FixF8: mode=1" and "FixB24: mode=1" are printed when the fix is on - now also by default.
+The wrappers SdlAudioAcquire / SdlAudioSubsystemInit / SdlAudioSubsystemQuit, the stands KYTY_TEST_AUDIOLOSS and
+KYTY_TEST_HIDLOSS, the AudioStat counters, the pad output counters and the line "Controller <id>: removed" are
+unchanged; only the readings and the comments that named the old default change. Outside src/graphics/shader/**:
+KYTY_SHADER_SOURCE_HASH unchanged.
+
+Shipping binary FS7: clean worktree of FS6a 3904522d + cherry-pick of F18c 10a4800b, F19c 9c726d74, F19c2 919c1a19 and
+this commit; F14e/F14e2, F14c, F16 and the track P code after 4414e235 are not in it. Not claimed: that a real loss of
+the host device has the same form, that the sound is right or audible, that B24 is reproducible without the hardware.
+Not installed; no game run (WIP until FS7c).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

@@ -1,0 +1,13 @@
+watch: start 2026-10-05T03:01:37Z child 69696 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+base shader_cfg_tests rc=0 wall=0.2 s tests=127 last=[[test] TestNewShaderRecompilerUnsupportedMemoryDecode]
+fs7 shader_cfg_tests rc=0 wall=0.2 s tests=127 last=[[test] TestNewShaderRecompilerUnsupportedMemoryDecode]
+base audio_propagation_tests rc=0 wall=0.1 s tests=0 last=[ALL OK]
+fs7 audio_propagation_tests rc=0 wall=0.1 s tests=0 last=[ALL OK]
+scfg failed-lines base 4 fs7 4 equal True; [test] base 127 fs7 127; text equal (elapsed_ms masked) True
+    ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod
+    ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod
+    shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfffffffe](Get
+    shader resource evaluation failed: hash=0x0000000000000000 flat slot 3: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem3 kind=1 off=0xe](GetBufferR
+aprop failed-lines base 0 fs7 0 equal True; [test] base 0 fs7 0; text equal (elapsed_ms masked) True
+ALL OK
+rc=0 end 2026-10-05T03:01:38Z

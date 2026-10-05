@@ -1,0 +1,4 @@
+patched src/libs/audio.cpp (1 edits, crlf=False)
+patched src/libs/audio_internal.h (1 edits, crlf=False)
+patched src/libs/controller.cpp (2 edits, crlf=False)
+PATCH OK

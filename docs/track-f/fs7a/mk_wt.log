@@ -1,0 +1,57 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 3904522d)
+Updating files:  81% (3457/4262)Updating files:  82% (3495/4262)Updating files:  83% (3538/4262)Updating files:  84% (3581/4262)Updating files:  85% (3623/4262)Updating files:  86% (3666/4262)Updating files:  87% (3708/4262)Updating files:  88% (3751/4262)Updating files:  89% (3794/4262)Updating files:  90% (3836/4262)Updating files:  91% (3879/4262)Updating files:  92% (3922/4262)Updating files:  93% (3964/4262)Updating files:  94% (4007/4262)Updating files:  95% (4049/4262)Updating files:  96% (4092/4262)Updating files:  97% (4135/4262)Updating files:  98% (4177/4262)Updating files:  99% (4220/4262)Updating files: 100% (4262/4262)Updating files: 100% (4262/4262), done.
+HEAD is now at 3904522d track F link FS6a (HPP-555): KYTY_FIX_B4 default 0 -> 1 (ROADMAP s122 item 454(g)(1))
+--- worktree HEAD
+3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 track F link FS6a (HPP-555): KYTY_FIX_B4 default 0 -> 1 (ROADMAP s122 item 454(
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+--- cherry-pick 10a4800b
+[detached HEAD e2a21d74] track F link F18c (HPP-539): KYTY_FIX_F8 code (ROADMAP s122 item 441(v)-(g), (d)(1)) - not run in the game
+ Author: Roadmap Lead <lead@kyty.local>
+ Date: Sun Oct 4 13:03:26 2026 +0200
+ 8 files changed, 956 insertions(+), 10 deletions(-)
+ create mode 100644 docs/track-f/f18c/patch_f18c_src.py
+ create mode 100644 docs/track-f/f18c/run_stand_f18c.py
+ create mode 100644 tests/F8AudioStand.cpp
+--- cherry-pick 9c726d74
+Auto-merging CMakeLists.txt
+[detached HEAD 915871f7] track F link F19c (HPP-547): KYTY_FIX_B24 (default 0) - member A of F19a s5.1: at 1 SetVibration/SetLightBar/SetTriggerEffect call no SDL on the guest thread, the latest value of each kind goes to a slot under its own mutex and the one PadOutput thread makes the same SDL calls without GameController::m_mutex, lookup + call under SDL_LockJoysticks, stopped and joined before ReleaseHostPads; stand KYTY_TEST_HIDLOSS=<s>[:detach|hold|sleep] (PRE_S 10 s, HOLD_MS 3000, PROBE_MS 20, lines and counters of F19a s4.3/s6.1); line "Controller <id>: removed" always; stand without the game tests/B24PadStand.cpp (target b24_pad_stand) - ROADMAP s122 p.451(c),(d),(e)(1); WIP: not run by the game, review F19d pending
+ Date: Sun Oct 4 14:01:57 2026 +0200
+ 7 files changed, 2007 insertions(+)
+ create mode 100644 docs/track-f/f19c/patch_f19c_src.py
+ create mode 100644 docs/track-f/f19c/run_stand_f19c.py
+ create mode 100644 tests/B24PadStand.cpp
+--- cherry-pick 919c1a19
+[detached HEAD b47033cb] track F link F19c2 (HPP-559): RC1 of the F19d review - PadOutput::Stop moves m_thread into a local std::thread under m_mutex with m_stop = true, notify_all, then join (detach on its own thread) of the local outside the lock; a second or later call gets an empty thread and returns (two simultaneous emergency exits no longer join one thread twice); KYTY_FIX_B24=0 branches untouched; stand tests/B24PadStand.cpp: cases dd (double Controller::EmergencyShutdown behind a barrier while X holds SDL_LockJoysticks 300 ms during a PadOutput vibration application) and trig (trigger effect path with a virtual pad 054C:0CE6) - ROADMAP s122 item 460(v)(1),(2),(4); not run by the game, no emulator binary
+ Author: Emu Engineer <emu-engineer@paperclip.local>
+ Date: Sun Oct 4 17:00:39 2026 +0200
+ 2 files changed, 221 insertions(+), 9 deletions(-)
+--- cherry-pick ec6c4c83
+[detached HEAD d6ee2dc8] track F link FS7a (HPP-565): KYTY_FIX_F8 and KYTY_FIX_B24 default 0 -> 1 (ROADMAP s122 items 467(g)(1), 487(g)(1))
+ Date: Mon Oct 5 04:23:05 2026 +0200
+ 3 files changed, 17 insertions(+), 7 deletions(-)
+d6ee2dc886c98b80ab36231519dec9f7356a4691 b47033cba554f55d6ee337a61e60f03ea2f121fc track F link FS7a (HPP-565): KYTY_FIX_F8 and KYTY_FIX_B24 default 0 -> 1 (ROAD
+b47033cba554f55d6ee337a61e60f03ea2f121fc 915871f7c96da93e83f56b77dd8f58992f73f89e track F link F19c2 (HPP-559): RC1 of the F19d review - PadOutput::Stop moves m
+915871f7c96da93e83f56b77dd8f58992f73f89e e2a21d7408519063916b9c3871396509de2916d9 track F link F19c (HPP-547): KYTY_FIX_B24 (default 0) - member A of F19a s5.1:
+e2a21d7408519063916b9c3871396509de2916d9 3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 track F link F18c (HPP-539): KYTY_FIX_F8 code (ROADMAP s122 item 441(v)-(g), (
+3904522da9cf29a8c22c19fcb8f8a8e3ed35b791 33679a021ac8d6130edbbfda342f9e875d9ea336 track F link FS6a (HPP-555): KYTY_FIX_B4 default 0 -> 1 (ROADMAP s122 item 454
+33679a021ac8d6130edbbfda342f9e875d9ea336 4d9e8ab709b4911a935e76cd90303562b2ecf174 track F link F15c (HPP-514): KYTY_FIX_B4 (default 0) - the emergency exit path
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 456 with CR 0
+WT OK

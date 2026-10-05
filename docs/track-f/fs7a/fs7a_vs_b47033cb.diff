@@ -1,0 +1,65 @@
+diff --git a/src/libs/audio.cpp b/src/libs/audio.cpp
+index 4b28dbc9..33826443 100644
+--- a/src/libs/audio.cpp
++++ b/src/libs/audio.cpp
+@@ -289,8 +289,11 @@ static std::atomic<uint64_t> g_sdl_audio_acq_calls {0};
+ static std::atomic<uint32_t> g_audio_stat_gen {0};
+ 
+ static bool FixF8Enabled() {
++	// Track F, FS7a (HPP-565, ROADMAP s122 item 467(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
++	// other value as EnvValueOn (the form of FS4a 17adaf80).
+ 	static const bool enabled = [] {
+-		const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_F8"));
++		const char* value = std::getenv("KYTY_FIX_F8");
++		const bool  on    = value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+ 		if (on) {
+ 			LOGF("FixF8: mode=1\n");
+ 		}
+diff --git a/src/libs/audio_internal.h b/src/libs/audio_internal.h
+index 0625a9e7..2c7ed449 100644
+--- a/src/libs/audio_internal.h
++++ b/src/libs/audio_internal.h
+@@ -31,9 +31,10 @@ bool     AudioOutHasDevice(int handle);
+ uint32_t AudioOutOutputs(const OutputParam* params, uint32_t num, bool blocking = true);
+ 
+ // Track F, F8 (ROADMAP s122 item 441(v)): the emulator call sites of SDL_InitSubSystem / SDL_QuitSubSystem with
+-// SDL_INIT_AUDIO (AudioOut ports, AudioIn ports, pad haptics). KYTY_FIX_F8 unset or 0: the same SDL calls as before
+-// (each init counted). KYTY_FIX_F8=1: init goes through SdlAudioAcquire, quit does nothing - the SDL reference count of
+-// the audio subsystem stays 1 for the life of the process. Read once per process; "FixF8: mode=1" once at 1.
++// SDL_INIT_AUDIO (AudioOut ports, AudioIn ports, pad haptics). KYTY_FIX_F8=0: the same SDL calls as before (each init
++// counted). KYTY_FIX_F8 unset, empty or 1 (default ON since FS7a, item 467(g)(1)): init goes through SdlAudioAcquire,
++// quit does nothing - the SDL reference count of the audio subsystem stays 1 for the life of the process. Read once per
++// process; "FixF8: mode=1" once when on.
+ int  SdlAudioSubsystemInit();
+ void SdlAudioSubsystemQuit();
+ // SDL_InitSubSystem(SDL_INIT_AUDIO) at most once successfully per process (own mutex; a failure is not remembered).
+diff --git a/src/libs/controller.cpp b/src/libs/controller.cpp
+index f649528e..95ac3ef4 100644
+--- a/src/libs/controller.cpp
++++ b/src/libs/controller.cpp
+@@ -166,8 +166,9 @@ HidLossPadStats TestHidLossPadStats() {
+ 	return stats;
+ }
+ 
+-// Track F, F19c (ROADMAP s122 item 451(d), member A of F19a s5.1): KYTY_FIX_B24 - unset, empty, 0/false/off/no: off
+-// (Common::EnvFlagOn). Written once by Initialize before the guest threads exist, only read afterwards. At 1 the guest's
++// Track F, F19c (ROADMAP s122 item 451(d), member A of F19a s5.1): KYTY_FIX_B24 - default ON since FS7a (item 487(g)(1)):
++// unset or empty: on, 0/false/off/no: off, any other value as Common::EnvValueOn. Written once by Initialize before the
++// guest threads exist, only read afterwards. At 1 the guest's
+ // SetVibration, SetLightBar and SetTriggerEffect call no SDL: each puts the latest value of its kind into a slot of
+ // PadOutput under the slot's own short mutex (not GameController::m_mutex; a new value overwrites the old one, every
+ // kind has a generation counter) and wakes the one PadOutput thread of the process. PadOutput makes the same SDL calls
+@@ -832,7 +833,12 @@ void Initialize() {
+ 	EXIT_IF(g_controller != nullptr);
+ 
+ 	// Track F, F19c (ROADMAP s122 item 451(d)): KYTY_FIX_B24, read once here - before the guest threads exist.
+-	g_fix_b24 = Common::EnvFlagOn("KYTY_FIX_B24");
++	// FS7a (HPP-565, ROADMAP s122 item 487(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any other value
++	// as EnvValueOn (the form of FS4a 17adaf80).
++	g_fix_b24 = [] {
++		const char* value = std::getenv("KYTY_FIX_B24");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
+ 	if (g_fix_b24) {
+ 		LOGF("FixB24: mode=1\n");
+ 		g_pad_output = new PadOutput;

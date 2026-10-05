@@ -1,0 +1,8 @@
+# exe C:\kyty\f287\fs7a\fix\f8_audio_stand.exe sha256 c0cf1ea33aa250ef5dc96557c627a414b75d6b73d77575fffeee2439135586c6
+PASS i_disk3_fix0 rc=0 fixf8_lines=0 open_failed=0 wall=0.2s devices_opened=3 first_fail_call=254 fail_devices_at_first=3 queue_failed=141 first_error=Invalid audio device ID init_calls=303 acq=0 was_init=16 driver=disk
+PASS ii_disk3_unset rc=0 fixf8_lines=1 open_failed=0 wall=0.0s devices_opened=3 first_fail_call=0 fail_devices_at_first=0 queue_failed=0 first_error= init_calls=1 acq=10003 was_init=16 driver=disk
+PASS iii_disk3_unset rc=0 fixf8_lines=1 open_failed=0 wall=0.0s devices_opened=3 first_error= init_calls=1 acq=10003 was_init=16 init_calls_after_threads=1 acq_after_threads=10000 acquire_failed=0 driver=disk
+PASS i_disk3_unset rc=0 fixf8_lines=1 open_failed=0 wall=0.0s devices_opened=3 first_fail_call=0 fail_devices_at_first=0 queue_failed=0 first_error= init_calls=1 acq=303 was_init=16 driver=disk
+PASS refuse rc=3 fixf8_lines=0 open_failed=0 wall=0.0s 
+PASS refuse_host rc=3 fixf8_lines=0 open_failed=0 wall=0.0s 
+ALL OK

@@ -216,6 +216,10 @@ constexpr const char* F5Names[] = {
     "dcc_stale_fallback",
     "cmask_rt_bucket_only",
     "f5cmu_exact_cpu",
+    "f26_kept",
+    "f26_kept_applied",
+    "f26_exact_stale",
+    "f26_fallback",
 };
 static_assert(std::size(F5Names) == static_cast<size_t>(DiagF5::Counter::Count));
 
@@ -587,8 +591,23 @@ bool LogFixCmuMode() {
 	return true;
 }
 
+// ---- Track F, F16o (HPP-595, ROADMAP s122 item 504(e)(1)): KYTY_FIX_F26.
+bool FixF26On() {
+	static const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_F26"));
+	return on;
+}
+
+bool LogFixF26Mode() {
+	static std::atomic<bool> logged {false};
+	if (!FixF26On() || logged.exchange(true, std::memory_order_relaxed)) {
+		return false;
+	}
+	EmitLine("FixF26: mode=1");
+	return true;
+}
+
 bool ExactRingOn() {
-	static const bool on = FixCmuOn() || DiagF5Id::On();
+	static const bool on = FixCmuOn() || FixF26On() || DiagF5Id::On(); // Track F, F16o: KYTY_FIX_F26 too
 	return on;
 }
 
@@ -615,6 +634,7 @@ const char* CmuWhyName(CmuWhy why) {
 		case CmuWhy::Layers: return "layers";
 		case CmuWhy::NoLayer: return "nolayer";
 		case CmuWhy::Cpu: return "cpu";
+		case CmuWhy::Levels: return "levels"; // Track F, F16o
 	}
 	return "none";
 }
@@ -630,6 +650,7 @@ namespace {
 std::atomic<uint32_t> g_present {0};
 std::atomic<uint64_t> g_cmu_events {0};
 std::atomic<uint64_t> g_cmu_nohit_events {0}; // Track F, F16k2 (RC5): the lines cmask_fce_nohit
+std::atomic<uint64_t> g_dcc_stale_events {0}; // Track F, F16o (item 504(e)(3)): the lines dcc_stale
 } // namespace
 
 void NotePresent(uint32_t present) {
@@ -653,7 +674,7 @@ std::string FormatCmuEvent(uint64_t n, const CmuEventLine& line) {
 
 bool NoteCmuEvent(const CmuEventLine& line) {
 	const auto n = g_cmu_events.fetch_add(1, std::memory_order_relaxed) + 1;
-	if (n > 64) {
+	if (n > 1024) { // Track F, F16o (item 504(e)(5)): was 64; output of the measurement only
 		return false;
 	}
 	EmitLine(FormatCmuEvent(n, line));
@@ -677,6 +698,41 @@ bool NoteCmuNoHit(const CmuEventLine& line, bool drawn) {
 		return false;
 	}
 	EmitLine(FormatCmuNoHit(n, line, drawn));
+	return true;
+}
+
+// ---- Track F, F16o (HPP-595, ROADMAP s122 item 504(e)(3)): the line dcc_stale.
+const char* DccSiteName(DccSite site) {
+	return site == DccSite::Adopt ? "adopt" : "prepare";
+}
+
+const char* DccExactName(DccExact exact) {
+	switch (exact) {
+		case DccExact::Na: return "na";
+		case DccExact::Stale: return "stale";
+		case DccExact::Fresh: return "fresh";
+		case DccExact::Fallback: return "fallback";
+	}
+	return "na";
+}
+
+std::string FormatDccStale(uint64_t n, const DccStaleLine& line) {
+	auto text = fmt::format("DiagF5Ev: dcc_stale site={} n={} present={} gpu={} image=0x{:016x} dcc=0x{:016x} "
+	                        "extent={}x{} exact={} fix={}",
+	                        DccSiteName(line.site), n, line.present, line.gpu, line.image, line.dcc, line.width,
+	                        line.height, DccExactName(line.exact), CmuFixName(line.event.fix));
+	if (line.event.why != CmuWhy::None) {
+		text += fmt::format(" why={}", CmuWhyName(line.event.why));
+	}
+	return text;
+}
+
+bool NoteDccStale(const DccStaleLine& line) {
+	const auto n = g_dcc_stale_events.fetch_add(1, std::memory_order_relaxed) + 1;
+	if (n > 256) {
+		return false;
+	}
+	EmitLine(FormatDccStale(n, line));
 	return true;
 }
 

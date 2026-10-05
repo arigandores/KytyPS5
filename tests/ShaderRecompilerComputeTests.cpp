@@ -10389,6 +10389,8 @@ public:
   // without the game. The arms (run_tests_f16k.py) set KYTY_DIAG_F5 / KYTY_FIX_F5CMU / KYTY_DIAG_F5ID; every check below
   // states what it expects with the knob on and with it off: with KYTY_FIX_F5CMU off every decision is the old one (the
   // expected `applied` of the old path), with KYTY_DIAG_F5ID off nothing of DiagF5Id counts or prints.
+  // Track F, F16o (HPP-595, ROADMAP s122 item 504(e)(6)): the arms of run_tests_f16o.py add KYTY_FIX_F26 - the DCC sites
+  // (D1-D4) decide by the exact answer with it; the FCE acquisition (K) and every other decision do not change.
   inline static uint32_t f16k_checks = 0;
   static void F16kOk(const char *stage) {
     f16k_checks++;
@@ -10455,13 +10457,15 @@ public:
     const bool cmu = Common::EnvValueOn(std::getenv("KYTY_FIX_F5CMU"));
     const bool knob = Common::EnvValueOn(std::getenv("KYTY_DIAG_F5ID"));
     const bool id = knob && f5;
-    const bool ring = cmu || id;
+    // Track F, F16o (item 504(e)(1)-(2)): KYTY_FIX_F26 writes the ring too.
+    const bool f26 = Common::EnvValueOn(std::getenv("KYTY_FIX_F26"));
+    const bool ring = cmu || id || f26;
     Require(name, "knob read",
             DiagF5::On() == f5 && DiagF5::FixCmuOn() == cmu && DiagF5Id::Knob() == knob && DiagF5Id::On() == id &&
-                DiagF5::ExactRingOn() == ring,
-            "the knobs do not follow KYTY_DIAG_F5 / KYTY_FIX_F5CMU / KYTY_DIAG_F5ID");
-    std::printf("[f16k]    knobs: KYTY_DIAG_F5=%d KYTY_FIX_F5CMU=%d KYTY_DIAG_F5ID=%d (effective %d), ring %d\n", f5 ? 1 : 0,
-                cmu ? 1 : 0, knob ? 1 : 0, id ? 1 : 0, ring ? 1 : 0);
+                DiagF5::FixF26On() == f26 && DiagF5::ExactRingOn() == ring,
+            "the knobs do not follow KYTY_DIAG_F5 / KYTY_FIX_F5CMU / KYTY_DIAG_F5ID / KYTY_FIX_F26");
+    std::printf("[f16k]    knobs: KYTY_DIAG_F5=%d KYTY_FIX_F5CMU=%d KYTY_DIAG_F5ID=%d (effective %d) KYTY_FIX_F26=%d, ring %d\n",
+                f5 ? 1 : 0, cmu ? 1 : 0, knob ? 1 : 0, id ? 1 : 0, f26 ? 1 : 0, ring ? 1 : 0);
     DiagF5::ClearRecentLines();
 
     // ---- the mode lines (item 492(v)(1), (g)(1))
@@ -10476,6 +10480,11 @@ public:
                   F16kExact("DiagF5Id: mode=0 needs=KYTY_DIAG_F5") == (knob && !f5 ? 1u : 0u),
               "a mode line is missing, repeated or printed with its knob off");
       F16kOk("mode lines");
+      const bool g1 = DiagF5::LogFixF26Mode();
+      const bool g2 = DiagF5::LogFixF26Mode();
+      Require(name, "F16o mode line", g1 == f26 && !g2 && F16kExact("FixF26: mode=1") == (f26 ? 1u : 0u),
+              "FixF26: mode=1 is missing, repeated or printed with its knob off");
+      F16kOk("F16o mode line FixF26");
     }
 
     // ---- pure helpers
@@ -10545,6 +10554,42 @@ public:
                                "cmask=0x0000000000000020 extent=8x8 fix=exact_stale why=cpu",
               "the no-hit line: " + nohit + " | " + nohit_cpu);
       F16kOk("F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form)");
+      // Track F, F16o (item 504(e)(3)-(4)): the names (the counters are the last rows) and the line dcc_stale.
+      using DS = DiagF5::DccSite;
+      using DX = DiagF5::DccExact;
+      Require(name, "F16o names",
+              std::string(DiagF5::CmuWhyName(W::Levels)) == "levels" &&
+                  std::string(DiagF5::Name(C::F26Kept)) == "f26_kept" &&
+                  std::string(DiagF5::Name(C::F26KeptApplied)) == "f26_kept_applied" &&
+                  std::string(DiagF5::Name(C::F26ExactStale)) == "f26_exact_stale" &&
+                  std::string(DiagF5::Name(C::F26Fallback)) == "f26_fallback" &&
+                  static_cast<uint32_t>(C::F26Kept) == static_cast<uint32_t>(C::F5CmuExactCpu) + 1 &&
+                  static_cast<uint32_t>(C::F26Fallback) + 1 == static_cast<uint32_t>(C::Count) &&
+                  std::string(DiagF5::DccSiteName(DS::Prepare)) == "prepare" &&
+                  std::string(DiagF5::DccSiteName(DS::Adopt)) == "adopt" &&
+                  std::string(DiagF5::DccExactName(DX::Na)) == "na" &&
+                  std::string(DiagF5::DccExactName(DX::Stale)) == "stale" &&
+                  std::string(DiagF5::DccExactName(DX::Fresh)) == "fresh" &&
+                  std::string(DiagF5::DccExactName(DX::Fallback)) == "fallback",
+              "a name of F16o");
+      const auto ds1 = DiagF5::FormatDccStale(4, {.site = DS::Adopt, .present = 7, .gpu = 9, .image = 0x10, .dcc = 0x20,
+                                                  .width = 64, .height = 64, .exact = DX::Fresh,
+                                                  .event = {F::KeptApplied, W::None}});
+      const auto ds2 = DiagF5::FormatDccStale(5, {.site = DS::Prepare, .present = 1, .gpu = 2, .image = 0x10,
+                                                  .dcc = 0x20, .width = 8, .height = 8, .exact = DX::Na,
+                                                  .event = {F::Off, W::None}});
+      const auto ds3 = DiagF5::FormatDccStale(6, {.site = DS::Prepare, .present = 1, .gpu = 2, .image = 0x10,
+                                                  .dcc = 0x20, .width = 8, .height = 8, .exact = DX::Fresh,
+                                                  .event = {F::Kept, W::Partial}});
+      Require(name, "F16o dcc_stale line form",
+              ds1 == "DiagF5Ev: dcc_stale site=adopt n=4 present=7 gpu=9 image=0x0000000000000010 "
+                     "dcc=0x0000000000000020 extent=64x64 exact=fresh fix=kept_applied" &&
+                  ds2 == "DiagF5Ev: dcc_stale site=prepare n=5 present=1 gpu=2 image=0x0000000000000010 "
+                         "dcc=0x0000000000000020 extent=8x8 exact=na fix=off" &&
+                  ds3 == "DiagF5Ev: dcc_stale site=prepare n=6 present=1 gpu=2 image=0x0000000000000010 "
+                         "dcc=0x0000000000000020 extent=8x8 exact=fresh fix=kept why=partial",
+              "the dcc_stale line: " + ds1 + " | " + ds2 + " | " + ds3);
+      F16kOk("F16o pure helpers (names, f26_* last, dcc_stale line form)");
     }
 
     EnsureRuntimeContext();
@@ -10728,6 +10773,9 @@ public:
         want.push_back({C::DccStaleBucketOnly, 0});
         want.push_back({C::DccStaleFallback, 0});
         want.push_back({C::CmaskRtBucketOnly, 0});
+        for (const auto counter : {C::F26Kept, C::F26KeptApplied, C::F26ExactStale, C::F26Fallback}) {
+          want.push_back({counter, 0}); // Track F, F16o: the FCE acquisition does not read KYTY_FIX_F26
+        }
         F16kDelta(k.stage, before, want);
         if (f5) {
           const auto line = F16kLast("DiagF5Ev: cmask_fce ");
@@ -10765,7 +10813,8 @@ public:
                 fmt::format("the fill was kept on a draw acquisition (fill 0x{:x})", after.fill_value));
         F16kDelta("K6 draw acquisition", before,
                   {{C::CmaskRtBucketOnly, id ? 1u : 0u}, {C::F5CmuKept, 0}, {C::F5CmuKeptApplied, 0},
-                   {C::F5CmuExactStale, 0}, {C::F5CmuFallback, 0}});
+                   {C::F5CmuExactStale, 0}, {C::F5CmuFallback, 0}, {C::F26Kept, 0}, {C::F26KeptApplied, 0},
+                   {C::F26ExactStale, 0}, {C::F26Fallback, 0}});
         // The same through PrepareCmaskClear with an event pointer and fce = false: fix=off whatever the knob.
         arm_fill();
         BTA::F16kNoteGpuWrite(buffers, meta + 0x1000, 0x100);
@@ -10775,6 +10824,7 @@ public:
                 event.fix == DiagF5::CmuFix::Off && event.why == DiagF5::CmuWhy::None, "fix != off");
         F16kOk("K6 draw acquisition: old decision, cmask_rt_bucket_only only");
       }
+      F16kOk("K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o)");
       RTA::ResetBindings(executor);
       context.UnmapMemory(base, allocation_size);
       scheduler.Finish();
@@ -10838,7 +10888,8 @@ public:
                 {{C::CmaskFce, f5 ? 1u : 0u}, {C::CmaskFceMeta, f5 ? 1u : 0u}, {C::CmaskFceB42, 0},
                  {C::CmaskFceUnapplied, 0}, {C::F5CmuKept, cmu && f5 ? 1u : 0u},
                  {C::F5CmuKeptApplied, cmu && f5 ? 1u : 0u}, {C::F5CmuExactStale, 0}, {C::F5CmuFallback, 0},
-                 {C::F5CmuExactCpu, 0}});
+                 {C::F5CmuExactCpu, 0}, {C::F26Kept, 0}, {C::F26KeptApplied, 0}, {C::F26ExactStale, 0},
+                 {C::F26Fallback, 0}});
       if (f5 && cmu) {
         const auto line = F16kLast("DiagF5Ev: cmask_fce_nohit ");
         Require(name, "K7 no-hit line",
@@ -10922,31 +10973,90 @@ public:
         BTA::F16kNoteGpuWrite(buffers, address, size);
         cache.StampPendingDccFill();
       };
-      // D1-D3: PrepareDccClear on a stale PendingDcc fill (the decision is the old one: the fill is dropped)
+      // D1-D3: PrepareDccClear on a PendingDcc fill the bucket check finds stale: a neighbour in the bucket, K + 1
+      // neighbours, a crossing write. Without KYTY_FIX_F26 the decision is the old one (the fill is dropped); Track F,
+      // F16o (item 504(e)(2), (6)): with it the exact answer decides - the neighbour's fill is kept and cleared
+      // (kept_applied), D1b (a fill shorter than the range) is kept without a clear (why=partial), K + 1 is a fallback
+      // and the crossing write stale by the exact check (both dropped). With KYTY_DIAG_F5 each decision prints the line
+      // dcc_stale (exact by the ring, na without one; fix by the knob, off without it).
       {
-        auto before = F16kRead();
-        stamp_fill(dcc, msize, 0);
-        BTA::F16kNoteGpuWrite(buffers, dcc + msize, 0x100);
-        TTA::F16dPrepareDccClear(cache, did, desc);
-        F16kDelta("D1 PrepareDccClear, neighbour", before,
-                  {{C::DccResetStale, f5 ? 1u : 0u}, {C::DccStaleBucketOnly, id ? 1u : 0u}, {C::DccStaleFallback, 0}});
-        F16kOk("D1 F26 PrepareDccClear: dcc_stale_bucket_only");
-        before = F16kRead();
-        stamp_fill(dcc, msize, 0);
-        for (uint32_t i = 0; i < 9; i++) {
-          BTA::F16kNoteGpuWrite(buffers, dcc + 0x8000 + i * 0x100, 0x100);
+        struct DCase {
+          const char *stage;
+          int writes; // 0 none (fresh: no decision to report), 1 a neighbour, 2 a crossing write, 3 nine neighbours
+          uint64_t fill_size;
+          const char *exact; // with the ring
+          const char *fix;   // with KYTY_FIX_F26
+          const char *why;   // with KYTY_FIX_F26
+          bool kept;         // with KYTY_FIX_F26
+          bool cleared;      // with KYTY_FIX_F26
+          uint32_t bucket_only;
+          uint32_t fallback;
+          C f26_counter;
+        };
+        const DCase dcases[] = {
+            {"D0f PrepareDccClear, no write after the fill: no line", 0, msize, "-", "-", "-", true, true, 0, 0,
+             C::Count},
+            {"D1 PrepareDccClear, neighbour", 1, msize, "fresh", "kept_applied", "<none>", true, true, 1, 0,
+             C::F26KeptApplied},
+            {"D1b PrepareDccClear, neighbour, fill shorter than the range", 1, msize / 2, "fresh", "kept", "partial",
+             true, false, 1, 0, C::F26Kept},
+            {"D2 PrepareDccClear, K+1", 3, msize, "fallback", "fallback", "<none>", false, false, 0, 1, C::F26Fallback},
+            {"D3 PrepareDccClear, crossing", 2, msize, "stale", "exact_stale", "<none>", false, false, 0, 0,
+             C::F26ExactStale},
+        };
+        for (const auto &d : dcases) {
+          const auto lines = F16kCount("DiagF5Ev:");
+          const auto before = F16kRead();
+          stamp_fill(dcc, d.fill_size, 0);
+          const bool fresh = d.writes == 0;
+          if (fresh) {
+          } else if (d.writes == 1) {
+            BTA::F16kNoteGpuWrite(buffers, dcc + msize, 0x100);
+          } else if (d.writes == 2) {
+            BTA::F16kNoteGpuWrite(buffers, dcc, 0x10);
+          } else {
+            for (uint32_t i = 0; i < 9; i++) {
+              BTA::F16kNoteGpuWrite(buffers, dcc + 0x8000 + i * 0x100, 0x100);
+            }
+          }
+          TTA::F16dPrepareDccClear(cache, did, desc);
+          const bool kept = fresh || (f26 && d.kept);
+          const auto after = cache.QueryMetaFill(dcc, did);
+          Require(name, d.stage,
+                  after.found && !after.pending &&
+                      (!kept ? after.fill_value == 0xffffffffu && after.clear_mask == 0
+                       : d.cleared ? after.fill_value == 0 && after.clear_mask != UINT32_MAX && (after.clear_mask & 1u) == 0
+                                   : after.fill_value == 0 && after.clear_mask == UINT32_MAX),
+                  fmt::format("kept {} found {} fill 0x{:x} mask 0x{:x}", kept, after.found, after.fill_value,
+                              after.clear_mask));
+          const bool k5 = f26 && f5;
+          F16kDelta(d.stage, before,
+                    {{C::DccResetStale, f5 && !kept ? 1u : 0u},
+                     {C::DccRtCleared, f5 && kept && d.cleared ? 1u : 0u},
+                     {C::DccStaleBucketOnly, id ? d.bucket_only : 0u},
+                     {C::DccStaleFallback, id ? d.fallback : 0u},
+                     {C::F26Kept, k5 && kept && !fresh ? 1u : 0u},
+                     {C::F26KeptApplied, k5 && d.f26_counter == C::F26KeptApplied ? 1u : 0u},
+                     {C::F26ExactStale, k5 && d.f26_counter == C::F26ExactStale ? 1u : 0u},
+                     {C::F26Fallback, k5 && d.f26_counter == C::F26Fallback ? 1u : 0u}});
+          if (f5 && !fresh) {
+            const auto line = F16kLast("DiagF5Ev: dcc_stale ");
+            Require(name, d.stage,
+                    F16kCount("DiagF5Ev:") == lines + 1 && F16kField(line, "site") == "prepare" &&
+                        F16kField(line, "exact") == (ring ? d.exact : "na") &&
+                        F16kField(line, "fix") == (f26 ? d.fix : "off") &&
+                        F16kField(line, "why") == (f26 ? d.why : "<none>") &&
+                        F16kField(line, "image") == fmt::format("0x{:016x}", color) &&
+                        F16kField(line, "dcc") == fmt::format("0x{:016x}", dcc) && F16kField(line, "extent") == "256x256" &&
+                        F16kField(line, "n") != "<none>" && F16kField(line, "present") != "<none>" &&
+                        F16kField(line, "gpu") != "<none>",
+                    "the dcc_stale line: " + line);
+          } else {
+            Require(name, d.stage, F16kCount("DiagF5Ev:") == lines,
+                    "an event line with KYTY_DIAG_F5 off or of a fresh fill");
+          }
+          F16kOk(d.stage);
         }
-        TTA::F16dPrepareDccClear(cache, did, desc);
-        F16kDelta("D2 PrepareDccClear, K+1", before,
-                  {{C::DccResetStale, f5 ? 1u : 0u}, {C::DccStaleBucketOnly, 0}, {C::DccStaleFallback, id ? 1u : 0u}});
-        F16kOk("D2 F26 PrepareDccClear: dcc_stale_fallback");
-        before = F16kRead();
-        stamp_fill(dcc, msize, 0);
-        BTA::F16kNoteGpuWrite(buffers, dcc, 0x10);
-        TTA::F16dPrepareDccClear(cache, did, desc);
-        F16kDelta("D3 PrepareDccClear, crossing", before,
-                  {{C::DccResetStale, f5 ? 1u : 0u}, {C::DccStaleBucketOnly, 0}, {C::DccStaleFallback, 0}});
-        F16kOk("D3 F26 PrepareDccClear: crossing - not counted");
       }
       // D4-D10: the reasons of FindDccSurfaceImage / AdoptPendingDccForTexture (a function of the cache state; the
       // pointer is passed by the test in every arm).
@@ -10957,14 +11067,86 @@ public:
           Require(name, stage, cond, what);
           F16kOk(stage);
         };
-        auto before = F16kRead();
-        stamp_fill(pending, 0x1000, 0x40404040u);
-        BTA::F16kNoteGpuWrite(buffers, pending + 0x1000, 0x100);
-        m = {};
-        const bool adopted = cache.AdoptPendingDccForTexture(pid, pending, &m);
-        F16kDelta("D4 adoption of a stale fill", before,
-                  {{C::DccResetStale, f5 ? 1u : 0u}, {C::DccStaleBucketOnly, id ? 1u : 0u}});
-        check("D4 F26 adoption: R7, dcc_stale_bucket_only", !adopted && m.why == M::R7, "adoption of a stale fill");
+        // D4: the adoption of a PendingDcc fill the bucket check finds stale (as D1-D3: without KYTY_FIX_F26 R7, the entry
+        // erased; Track F, F16o: with it the neighbour's fill is adopted - kept_applied with a clear code, kept why=mask
+        // without one; a crossing write and K + 1 still R7). An adopted image goes back to no metadata and no entry (D5-D20
+        // read the plain image without one).
+        struct ACase {
+          const char *stage;
+          int writes; // 0 none (fresh), 1 a neighbour, 2 a crossing write, 3 nine neighbours (K + 1)
+          uint32_t value;
+          const char *exact;
+          const char *fix;
+          const char *why;
+          bool kept;
+          uint32_t bucket_only;
+          uint32_t fallback;
+          C f26_counter;
+        };
+        const ACase acases[] = {
+            {"D4f adoption, no write after the fill: no line", 0, 0x40404040u, "-", "-", "-", true, 0, 0, C::Count},
+            {"D4 adoption, neighbour", 1, 0x40404040u, "fresh", "kept_applied", "<none>", true, 1, 0, C::F26KeptApplied},
+            {"D4b adoption, neighbour, no clear code", 1, 0x12345678u, "fresh", "kept", "mask", true, 1, 0, C::F26Kept},
+            {"D4c adoption, crossing", 2, 0x40404040u, "stale", "exact_stale", "<none>", false, 0, 0, C::F26ExactStale},
+            {"D4d adoption, K+1", 3, 0x40404040u, "fallback", "fallback", "<none>", false, 0, 1, C::F26Fallback},
+        };
+        auto &pimage0 = TTA::F16dImage(cache, pid);
+        const auto pmeta0 = pimage0.info.metadata;
+        for (const auto &a : acases) {
+          const auto lines = F16kCount("DiagF5Ev:");
+          const auto before = F16kRead();
+          stamp_fill(pending, 0x1000, a.value);
+          const bool fresh = a.writes == 0;
+          if (fresh) {
+          } else if (a.writes == 1) {
+            BTA::F16kNoteGpuWrite(buffers, pending + 0x1000, 0x100);
+          } else if (a.writes == 2) {
+            BTA::F16kNoteGpuWrite(buffers, pending + 0x10, 0x10);
+          } else {
+            for (uint32_t i = 0; i < 9; i++) {
+              BTA::F16kNoteGpuWrite(buffers, pending + 0x2000 + i * 0x100, 0x100);
+            }
+          }
+          m = {};
+          const bool adopted = cache.AdoptPendingDccForTexture(pid, pending, &m);
+          const bool kept = fresh || (f26 && a.kept);
+          const auto after = cache.QueryMetaFill(pending, pid);
+          const bool linked = pimage0.info.metadata.kind == ImageMetadataKind::Dcc &&
+                              pimage0.info.metadata.range.address == pending;
+          Require(name, a.stage,
+                  adopted == kept && (kept ? m.why == M::None && after.found && !after.pending && after.fill_value == a.value &&
+                                                 linked
+                                           : m.why == M::R7 && !after.found && !linked),
+                  fmt::format("adopted {} kept {} why {} found {} fill 0x{:x} linked {}", adopted, kept,
+                              static_cast<int>(m.why), after.found, after.fill_value, linked));
+          const bool k5 = f26 && f5;
+          F16kDelta(a.stage, before,
+                    {{C::DccResetStale, f5 && !kept ? 1u : 0u},
+                     {C::DccStaleBucketOnly, id ? a.bucket_only : 0u},
+                     {C::DccStaleFallback, id ? a.fallback : 0u},
+                     {C::F26Kept, k5 && kept && !fresh ? 1u : 0u},
+                     {C::F26KeptApplied, k5 && a.f26_counter == C::F26KeptApplied ? 1u : 0u},
+                     {C::F26ExactStale, k5 && a.f26_counter == C::F26ExactStale ? 1u : 0u},
+                     {C::F26Fallback, k5 && a.f26_counter == C::F26Fallback ? 1u : 0u}});
+          if (f5 && !fresh) {
+            const auto line = F16kLast("DiagF5Ev: dcc_stale ");
+            Require(name, a.stage,
+                    F16kCount("DiagF5Ev:") == lines + 1 && F16kField(line, "site") == "adopt" &&
+                        F16kField(line, "exact") == (ring ? a.exact : "na") &&
+                        F16kField(line, "fix") == (f26 ? a.fix : "off") &&
+                        F16kField(line, "why") == (f26 ? a.why : "<none>") &&
+                        F16kField(line, "image") == fmt::format("0x{:016x}", plain) &&
+                        F16kField(line, "dcc") == fmt::format("0x{:016x}", pending) &&
+                        F16kField(line, "extent") == "64x64" && F16kField(line, "present") != "<none>",
+                    "the dcc_stale line: " + line);
+          } else {
+            Require(name, a.stage, F16kCount("DiagF5Ev:") == lines,
+                    "an event line with KYTY_DIAG_F5 off or of a fresh fill");
+          }
+          pimage0.info.metadata = pmeta0;
+          TTA::F16kEraseMeta(cache, pending);
+          F16kOk(a.stage);
+        }
         m = {};
         check("D5 R1 no image", !cache.FindDccSurfaceImage(base + 0x1800000, base + 0x1c00000, &m) && m.why == M::R1,
               "R1");
@@ -11362,7 +11544,70 @@ public:
               (cmu || F16kCount("FixF5Cmu:") == 0) && (f5 || F16kCount("DiagF5Ev:") == 0) &&
                   (knob || F16kCount("DiagF5Id:") == 0),
               "a line with its knob off");
+      // Track F, F16o (item 504(e)(4)): f26_* only with KYTY_FIX_F26 and KYTY_DIAG_F5; kept_applied <= kept; with
+      // KYTY_DIAG_F5ID f26_kept = dcc_stale_bucket_only and f26_fallback = dcc_stale_fallback (one condition); the print
+      // identity (form of item 496(b)(5)): the dcc_stale lines by fix = the counters (the limit 256 is not reached here).
+      Require(name, "Z f26_* only with KYTY_FIX_F26 and KYTY_DIAG_F5",
+              (f26 && f5) || (g(C::F26Kept) == 0 && g(C::F26KeptApplied) == 0 && g(C::F26ExactStale) == 0 &&
+                              g(C::F26Fallback) == 0),
+              "an f26 counter moved");
+      Require(name, "Z identity f26_kept_applied <= f26_kept", g(C::F26KeptApplied) <= g(C::F26Kept),
+              "f26_kept_applied > f26_kept");
+      Require(name, "Z identity f26_kept = dcc_stale_bucket_only, f26_fallback = dcc_stale_fallback (KYTY_DIAG_F5ID)",
+              !(f26 && id) ||
+                  (g(C::F26Kept) == g(C::DccStaleBucketOnly) && g(C::F26Fallback) == g(C::DccStaleFallback) &&
+                   g(C::F26Kept) > 0 && g(C::F26Fallback) > 0),
+              fmt::format("f26_kept {} bucket_only {} f26_fallback {} dcc_stale_fallback {}", g(C::F26Kept),
+                          g(C::DccStaleBucketOnly), g(C::F26Fallback), g(C::DccStaleFallback)));
+      {
+        uint64_t all = 0, off = 0, kept = 0, kept_applied = 0, exact_stale = 0, fallback = 0;
+        for (const auto &line : DiagF5::RecentLines()) {
+          if (line.rfind("DiagF5Ev: dcc_stale ", 0) != 0) {
+            continue;
+          }
+          const auto fix = F16kField(line, "fix");
+          all++;
+          off += fix == "off" ? 1 : 0;
+          kept += fix == "kept" || fix == "kept_applied" ? 1 : 0;
+          kept_applied += fix == "kept_applied" ? 1 : 0;
+          exact_stale += fix == "exact_stale" ? 1 : 0;
+          fallback += fix == "fallback" ? 1 : 0;
+        }
+        Require(name, "Z print identity dcc_stale lines by fix = f26_*",
+                !f5 ? all == 0
+                : f26 ? all == 8 && off == 0 && kept == g(C::F26Kept) && kept_applied == g(C::F26KeptApplied) &&
+                            exact_stale == g(C::F26ExactStale) && fallback == g(C::F26Fallback)
+                      : all == 8 && off == all,
+                fmt::format("lines {} off {} kept {} kept_applied {} exact_stale {} fallback {}", all, off, kept,
+                            kept_applied, exact_stale, fallback));
+      }
+      Require(name, "Z line FixF26", f26 || F16kCount("FixF26:") == 0, "FixF26 with its knob off");
       F16kOk("Z counters and lines of the knobs off");
+    }
+    // ---- L (Track F, F16o, item 504(e)(3), (5)): the line limits - cmask_fce 1024 (was 64), cmask_fce_nohit 64 (as
+    // before), dcc_stale 256. Every arm: the Note functions print whatever the knob (this runs after Z).
+    {
+      const auto drain = [](auto note) {
+        uint64_t printed = 0;
+        for (uint32_t i = 0; i < 1100; i++) {
+          printed += note() ? 1 : 0;
+        }
+        return printed;
+      };
+      const auto fce0 = F16kCount("DiagF5Ev: cmask_fce ");
+      const auto nohit0 = F16kCount("DiagF5Ev: cmask_fce_nohit ");
+      const auto dcc0 = F16kCount("DiagF5Ev: dcc_stale ");
+      const auto fce = drain([] { return DiagF5::NoteCmuEvent({}); });
+      const auto nohit = drain([] { return DiagF5::NoteCmuNoHit({}, false); });
+      const auto dccs = drain([] { return DiagF5::NoteDccStale({}); });
+      Require(name, "L line limits",
+              fce0 + fce == 1024 && nohit0 + nohit == 64 && dcc0 + dccs == 256 &&
+                  F16kCount("DiagF5Ev: cmask_fce ") == 1024 && F16kCount("DiagF5Ev: cmask_fce_nohit ") == 64 &&
+                  F16kCount("DiagF5Ev: dcc_stale ") == 256 &&
+                  F16kField(F16kLast("DiagF5Ev: cmask_fce "), "n") == "1024" &&
+                  F16kField(F16kLast("DiagF5Ev: dcc_stale "), "n") == "256",
+              fmt::format("cmask_fce {} + {} nohit {} + {} dcc_stale {} + {}", fce0, fce, nohit0, nohit, dcc0, dccs));
+      F16kOk("L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256");
     }
     Require(name, "unmap", Libs::LibKernel::Memory::KernelMunmap(base, allocation_size) == 0, "F16k test unmap failed");
     Require(name, "release",

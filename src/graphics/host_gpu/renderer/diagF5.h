@@ -21,6 +21,9 @@
 // KYTY_DIAG_F5). KYTY_DIAG_F5ID - measurement only of the branches dcc_fce_no_image and meta_cs_untracked (namespace
 // DiagF5Id below) and the F26 counters; effective only together with KYTY_DIAG_F5 (its identities are sums of DiagF5
 // counters). The new counter names are the last rows of the table.
+// Track F, F16o (HPP-595, ROADMAP s122 item 504(e)): KYTY_FIX_F26 - default 0, read once: the exact check decides the
+// stale question of a pending DCC fill at PrepareDccClear and AdoptPendingDccForTexture (row F26); the FCE acquisition and
+// every other PrepareCmaskClear do not read it. Its counters f26_* and the event line DiagF5Ev dcc_stale (KYTY_DIAG_F5).
 
 #include "graphics/guest_gpu/hardwareContext.h"
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
@@ -125,6 +128,14 @@ enum class Counter : uint32_t {
 	// Track F, F16k2 (RC4, ROADMAP s122 item 496(b)(4)): the f5cmu_exact_stale decisions set by a CPU-modified page of the
 	// fill (PendingDccFillStale's cpu_written; the event line says why=cpu): f5cmu_exact_cpu <= f5cmu_exact_stale.
 	F5CmuExactCpu,
+	// Track F, F16o (item 504(e)(4)): KYTY_FIX_F26 at PrepareDccClear / AdoptPendingDccForTexture, where the bucket check
+	// said stale - kept (the exact check did not; kept_applied - and the same call applied the fill: >= 1 layer cleared at
+	// prepare, a non-zero clear mask adopted at adopt; kept_applied <= kept), stale by the exact check too, the ring could
+	// not answer (fallback). With KYTY_DIAG_F5ID: f26_kept = dcc_stale_bucket_only, f26_fallback = dcc_stale_fallback.
+	F26Kept,
+	F26KeptApplied,
+	F26ExactStale,
+	F26Fallback,
 	Count
 };
 
@@ -186,8 +197,9 @@ void NoteDmaRefusal(uint8_t refusal, uint32_t value);
 [[nodiscard]] bool FixCmuOn();
 // "FixF5Cmu: mode=1" once per process when FixCmuOn() (device creation); true when this call printed it.
 bool LogFixCmuMode();
-// BufferCache writes its exact write journal (the ring of item 492(v)(3)) while this holds: FixCmuOn() or
-// DiagF5Id::On(). Both are read once, so the journal holds every write since the process start or none.
+// BufferCache writes its exact write journal (the ring of item 492(v)(3)) while this holds: FixCmuOn(), FixF26On()
+// (Track F, F16o) or DiagF5Id::On(). All are read once, so the journal holds every write since the process start or
+// none.
 [[nodiscard]] bool ExactRingOn();
 
 // The decision of one PrepareCmaskClear call for the event line (item 492(v)(4)): Off - KYTY_FIX_F5CMU is 0 or the call
@@ -201,7 +213,9 @@ enum class CmuFix : uint8_t { Off, Fresh, ExactStale, Kept, KeptApplied, Fallbac
 // the view is not representable in the mask, no bit of the view layers was set (the loop cleared nothing).
 // Track F, F16k2 (RC4, item 496(b)(4)): Cpu - an ExactStale decision set by a CPU write (a CPU-modified page of the
 // fill), not by a crossing GPU write.
-enum class CmuWhy : uint8_t { None, Value, Mask, Range, Partial, Decode, Layers, NoLayer, Cpu };
+// Track F, F16o (item 504(e)(3)): Levels - PrepareDccClear's return on an image with more than one level (the line
+// dcc_stale only).
+enum class CmuWhy : uint8_t { None, Value, Mask, Range, Partial, Decode, Layers, NoLayer, Cpu, Levels };
 [[nodiscard]] const char* CmuFixName(CmuFix fix);
 [[nodiscard]] const char* CmuWhyName(CmuWhy why);
 struct CmuEvent {
@@ -210,7 +224,8 @@ struct CmuEvent {
 };
 
 // The probe of TextureCache::PendingDccFillStale (nullptr = the old call). In: `exact_decides` - the exact answer is
-// the answer (KYTY_FIX_F5CMU at the FCE acquisition). Out, written only when the old check reached its comparison:
+// the answer (KYTY_FIX_F5CMU at the FCE acquisition; Track F, F16o: KYTY_FIX_F26 at PrepareDccClear and
+// AdoptPendingDccForTexture). Out, written only when the old check reached its comparison:
 // `bucket_stale` - the old answer was stale (a newer GPU write in a 64 KB bucket of the fill, or a CPU write);
 // `exact_stale` - a newer GPU write that crosses [address, address + fill_size), or a CPU write; `fallback` - not
 // exact_stale and the ring of a bucket had no room for the writes since the fill (all K entries newer).
@@ -236,8 +251,8 @@ void                   NotePresent(uint32_t present);
 
 // The event line (item 492(v)(4)), KYTY_DIAG_F5=1, one per B42 hit of the FCE scan:
 // "DiagF5Ev: cmask_fce n=<k> present=<n> gpu=<n> image=0x... cmask=0x... extent=<w>x<h> applied=<0|1> fix=<..>
-// [why=<..>]"; printed for the first 64 events (k = 1..64), counted after (the hits are cmask_fce_b42 +
-// cmask_fce_unapplied).
+// [why=<..>]"; printed for the first 1024 events (k = 1..1024; Track F, F16o, item 504(e)(5): was 64), counted after
+// (the hits are cmask_fce_b42 + cmask_fce_unapplied).
 struct CmuEventLine {
 	uint32_t present = 0;
 	uint32_t gpu     = 0;
@@ -257,6 +272,35 @@ bool                      NoteCmuEvent(const CmuEventLine& line);
 // the first 64 (k = 1..64), counted after.
 [[nodiscard]] std::string FormatCmuNoHit(uint64_t n, const CmuEventLine& line, bool drawn);
 bool                      NoteCmuNoHit(const CmuEventLine& line, bool drawn);
+
+// ---- Track F, F16o (HPP-595, ROADMAP s122 item 504(e)): KYTY_FIX_F26.
+// The knob (default 0, read once: unset or "" = OFF, otherwise Common::EnvValueOn).
+[[nodiscard]] bool FixF26On();
+// "FixF26: mode=1" once per process when FixF26On() (device creation); true when this call printed it.
+bool LogFixF26Mode();
+// The event line (item 504(e)(3)), KYTY_DIAG_F5=1, one per decision of PrepareDccClear / AdoptPendingDccForTexture
+// where the bucket check said stale: "DiagF5Ev: dcc_stale site=<prepare|adopt> n=<k> present=<n> gpu=<n> image=0x...
+// dcc=0x... extent=<w>x<h> exact=<stale|fresh|fallback|na> fix=<off|exact_stale|kept|kept_applied|fallback>
+// [why=<..>]"; `exact` - the ring's answer (na: the ring is not written); `fix` - off: KYTY_FIX_F26 is 0; kept: kept
+// and not applied in the same call (`why`); kept_applied: kept and applied in the same call; `present` - as cmask_fce
+// (Present()); printed for the first 256 (k = 1..256), counted after.
+enum class DccSite : uint8_t { Prepare, Adopt };
+enum class DccExact : uint8_t { Na, Stale, Fresh, Fallback };
+[[nodiscard]] const char* DccSiteName(DccSite site);
+[[nodiscard]] const char* DccExactName(DccExact exact);
+struct DccStaleLine {
+	DccSite  site    = DccSite::Prepare;
+	uint32_t present = 0;
+	uint32_t gpu     = 0;
+	uint64_t image   = 0;
+	uint64_t dcc     = 0;
+	uint32_t width   = 0;
+	uint32_t height  = 0;
+	DccExact exact   = DccExact::Na;
+	CmuEvent event;
+};
+[[nodiscard]] std::string FormatDccStale(uint64_t n, const DccStaleLine& line);
+bool                      NoteDccStale(const DccStaleLine& line);
 
 // Test site: the F16k lines printed so far (DiagF5Ev, FixF5Cmu, DiagF5Id; at most the last 4096) and a reset of that
 // list.

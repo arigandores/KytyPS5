@@ -292,7 +292,8 @@ private:
 	// Caller holds m_lock. A PendingDcc fill that the GPU or CPU has overwritten since (streamed
 	// textures fill new mips' metadata and then DMA the real one) must not be adopted as a clear.
 	// Track F, F16k (item 492(v)(2)): `f5_probe` (nullptr - the old call exactly) - see DiagF5::StaleProbe; the answer
-	// changes only with f5_probe->exact_decides (KYTY_FIX_F5CMU at the FCE acquisition).
+	// changes only with f5_probe->exact_decides (KYTY_FIX_F5CMU at the FCE acquisition; Track F, F16o: KYTY_FIX_F26 at
+	// PrepareDccClear and AdoptPendingDccForTexture).
 	[[nodiscard]] bool          PendingDccFillStale(uint64_t address, const MetaDataInfo& meta,
 	                                                uint64_t image_address, DiagF5::StaleProbe* f5_probe = nullptr);
 	void                        InitializeImage(ImageId id, bool allow_defer = true);

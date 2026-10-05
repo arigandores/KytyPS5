@@ -1950,12 +1950,103 @@ private:
 	bool               m_cleared = false;
 };
 
+// Track F, F16o (KYTY_FIX_F26, ROADMAP s122 item 504(e)(2)-(4)): one PendingDccFillStale decision of PrepareDccClear or
+// AdoptPendingDccForTexture. Arm() - the probe of the call: passed when the ring is written and KYTY_DIAG_F5 or
+// KYTY_FIX_F26 is on (KYTY_DIAG_F5ID implies both), `exact_decides` = KYTY_FIX_F26; otherwise nullptr (the old call).
+// Decided() - after the call: with KYTY_DIAG_F5 and a stale bucket answer (the probe's; without a probe the answer
+// itself, which is then the bucket one) the decision is reported when the scope leaves (every later return of the
+// site): the counters f26_* (with the knob) and the line DiagF5Ev dcc_stale. Why() / Applied() - whether a kept fill was
+// applied in the same call. Neither knob: Arm() returns nullptr and nothing is reported. Not called: inert.
+class F26Scope {
+public:
+	explicit F26Scope(DiagF5::DccSite site): m_site(site) {}
+	~F26Scope() {
+		if (m_report) [[unlikely]] {
+			Report();
+		}
+	}
+	F26Scope(const F26Scope&)            = delete;
+	F26Scope& operator=(const F26Scope&) = delete;
+
+	[[nodiscard]] DiagF5::StaleProbe* Arm() {
+		m_fix                 = DiagF5::FixF26On();
+		m_probe_on            = DiagF5::ExactRingOn() && (DiagF5::On() || m_fix);
+		m_probe.exact_decides = m_fix;
+		return m_probe_on ? &m_probe : nullptr;
+	}
+	void Decided(bool stale, uint64_t image, uint64_t dcc, uint32_t width, uint32_t height) {
+		if (DiagF5::On() && (m_probe_on ? m_probe.bucket_stale : stale)) [[unlikely]] {
+			m_report = true;
+			m_line   = {.site    = m_site,
+			            .present = DiagF5::Present(),
+			            .gpu     = GpuTimeProfiler::Frame(),
+			            .image   = image,
+			            .dcc     = dcc,
+			            .width   = width,
+			            .height  = height};
+		}
+	}
+	[[nodiscard]] const DiagF5::StaleProbe& Probe() const { return m_probe; }
+	[[nodiscard]] bool                      Reported() const { return m_report; }
+	// The return of a kept fill without applying it.
+	void Why(DiagF5::CmuWhy why) { m_why = why; }
+	// After the site applied (or not) a kept fill; `why_not` - when not applied and no Why() was given.
+	void Applied(bool applied, DiagF5::CmuWhy why_not) {
+		m_applied = applied;
+		if (!applied && m_why == DiagF5::CmuWhy::None) {
+			m_why = why_not;
+		}
+	}
+
+private:
+	void Report() {
+		using F    = DiagF5::CmuFix;
+		auto& e    = m_line.event;
+		e.fix      = !m_fix                 ? F::Off
+		            : m_probe.exact_stale  ? F::ExactStale
+		            : m_probe.fallback     ? F::Fallback
+		            : m_applied            ? F::KeptApplied
+		                                   : F::Kept;
+		m_line.exact = !m_probe_on            ? DiagF5::DccExact::Na
+		               : m_probe.exact_stale ? DiagF5::DccExact::Stale
+		               : m_probe.fallback    ? DiagF5::DccExact::Fallback
+		                                     : DiagF5::DccExact::Fresh;
+		e.why = e.fix == F::Kept ? (m_why != DiagF5::CmuWhy::None ? m_why : DiagF5::CmuWhy::NoLayer)
+		        : m_probe.cpu    ? DiagF5::CmuWhy::Cpu
+		                         : DiagF5::CmuWhy::None;
+		if (m_fix) {
+			switch (e.fix) {
+				case F::Kept: DiagF5::Add(DiagF5::Counter::F26Kept); break;
+				case F::KeptApplied:
+					DiagF5::Add(DiagF5::Counter::F26Kept);
+					DiagF5::Add(DiagF5::Counter::F26KeptApplied);
+					break;
+				case F::ExactStale: DiagF5::Add(DiagF5::Counter::F26ExactStale); break;
+				case F::Fallback: DiagF5::Add(DiagF5::Counter::F26Fallback); break;
+				default: break;
+			}
+		}
+		(void)DiagF5::NoteDccStale(m_line);
+	}
+
+	DiagF5::DccSite      m_site;
+	bool                 m_fix      = false;
+	bool                 m_probe_on = false;
+	bool                 m_report   = false;
+	bool                 m_applied  = false;
+	DiagF5::CmuWhy       m_why      = DiagF5::CmuWhy::None;
+	DiagF5::StaleProbe   m_probe {};
+	DiagF5::DccStaleLine m_line {};
+};
+
 } // namespace
 
 void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	if (desc.info.metadata.kind != ImageMetadataKind::Dcc) {
 		return;
 	}
+	// Track F, F16o (KYTY_FIX_F26, item 504(e)(2)-(3)): the decision of the PendingDcc branch below; reported at return.
+	F26Scope f26 {DiagF5::DccSite::Prepare};
 	auto& image            = m_slot_images[id];
 	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(v)): the image links to this surface now.
 	const bool skc3_link   = Common::SkipCeil::t_mode == 3 &&
@@ -1977,11 +2068,14 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	if (!inserted && metadata.type == MetaDataInfo::Type::PendingDcc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		BumpMetaEpoch();
-		// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(5), F26): the probe only counts - the decision is the old one.
-		DiagF5::StaleProbe f5_probe {};
-		const bool         f5id = DiagF5Id::On();
-		if (PendingDccFillStale(desc.info.metadata.range.address, metadata,
-		                        image.info.data.address, f5id ? &f5_probe : nullptr)) {
+		// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(5), F26): the probe counts dcc_stale_*. Track F, F16o (KYTY_FIX_F26,
+		// item 504(e)(2)): with the knob the exact answer decides - a kept fill stays and is cleared below.
+		const bool f5id     = DiagF5Id::On();
+		const bool f5_stale = PendingDccFillStale(desc.info.metadata.range.address, metadata,
+		                                          image.info.data.address, f26.Arm());
+		f26.Decided(f5_stale, image.info.data.address, desc.info.metadata.range.address, desc.info.extent.width,
+		            desc.info.extent.height);
+		if (f5_stale) {
 			metadata = MetaDataInfo {.type = MetaDataInfo::Type::Dcc};
 			if (DiagF5::On()) [[unlikely]] {
 				DiagF5::Add(DiagF5::Counter::DccResetStale); // Track F, F16d: the pending fill is dropped (RC6(7))
@@ -1990,7 +2084,7 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 			DiagF5::NoteDccFill(metadata.fill_value); // Track F, F16d: PendingDcc -> Dcc by the stored code (RC3)
 		}
 		if (f5id) [[unlikely]] {
-			DiagF5::NoteDccStaleProbe(f5_probe);
+			DiagF5::NoteDccStaleProbe(f26.Probe());
 		}
 		metadata.type = MetaDataInfo::Type::Dcc;
 	} else if (metadata.type != MetaDataInfo::Type::Dcc) {
@@ -2033,6 +2127,12 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 			DiagF5::Add(image.info.resources.levels != 1 ? DiagF5::Counter::DccRtSkipLevels
 			                                             : DiagF5::Counter::DccRtSkipPartial);
 		}
+		if (f26.Reported()) [[unlikely]] {
+			f26.Why(metadata.clear_mask == 0                ? DiagF5::CmuWhy::Mask
+			        : image.info.resources.levels != 1      ? DiagF5::CmuWhy::Levels
+			        : desc.info.metadata.range.size == 0    ? DiagF5::CmuWhy::Range
+			                                                : DiagF5::CmuWhy::Partial);
+		}
 		return;
 	}
 	const auto& view = desc.view_info;
@@ -2043,6 +2143,7 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		if (f5_pend) [[unlikely]] {
 			DiagF5::Add(DiagF5::Counter::DccRtSkipDecode);
 		}
+		f26.Why(DiagF5::CmuWhy::Decode); // Track F, F16o
 		return;
 	}
 	const bool volume_texture = image.info.IsVolume() && view.type == vk::ImageViewType::e3D;
@@ -2058,6 +2159,7 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		if (f5_pend) [[unlikely]] {
 			DiagF5::Add(DiagF5::Counter::DccRtSkipLayers);
 		}
+		f26.Why(DiagF5::CmuWhy::Layers); // Track F, F16o
 		return;
 	}
 	if (f5_pend) [[unlikely]] {
@@ -2083,6 +2185,8 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		metadata.clear_mask &= ~mask;
 		BumpMetaEpoch();
 	}
+	// Track F, F16o (item 504(e)(3)): a kept fill is kept_applied when this call cleared >= 1 layer.
+	f26.Applied(metadata.clear_mask != f5id_mask0, DiagF5::CmuWhy::NoLayer);
 	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(2)-(3)): a clear ran here - a stale mark, `cleared` of an open record.
 	if (DiagF5Id::On() && metadata.clear_mask != f5id_mask0) [[unlikely]] {
 		DiagF5Id::NoteClearApplied(DiagF5Id::ApplySite::DccRt, desc.info.metadata.range.address,
@@ -3637,13 +3741,16 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 		}
 		return false;
 	}
-	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(5), F26): the probe only counts - the decision is the old one.
-	DiagF5::StaleProbe f5_probe {};
-	const bool         f5id     = DiagF5Id::On();
-	const bool         f5_stale = PendingDccFillStale(metadata_address, found->second, image->info.data.address,
-	                                                  f5id ? &f5_probe : nullptr);
+	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(5), F26): the probe counts dcc_stale_*. Track F, F16o (KYTY_FIX_F26,
+	// item 504(e)(2)): with the knob the exact answer decides - a kept fill is adopted below. The scope reports when it
+	// leaves (each return below, m_lock still held: it is declared after the lock).
+	F26Scope   f26 {DiagF5::DccSite::Adopt};
+	const bool f5id     = DiagF5Id::On();
+	const bool f5_stale = PendingDccFillStale(metadata_address, found->second, image->info.data.address, f26.Arm());
+	f26.Decided(f5_stale, image->info.data.address, metadata_address, image->info.extent.width,
+	            image->info.extent.height);
 	if (f5id) [[unlikely]] {
-		DiagF5::NoteDccStaleProbe(f5_probe);
+		DiagF5::NoteDccStaleProbe(f26.Probe());
 	}
 	if (f5_stale) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
@@ -3660,6 +3767,8 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 	Common::DrawStat::Mark(Common::DrawStat::Meta);
 	BumpMetaEpoch();
 	found->second.type                 = MetaDataInfo::Type::Dcc;
+	// Track F, F16o (item 504(e)(3)): a kept fill is kept_applied when it is adopted with a clear (a non-zero mask).
+	f26.Applied(found->second.clear_mask != 0, DiagF5::CmuWhy::Mask);
 	if (DiagF5::On()) [[unlikely]] {
 		DiagF5::NoteDccFill(found->second.fill_value); // Track F, F16d: PendingDcc -> Dcc by the stored code (RC3)
 	}

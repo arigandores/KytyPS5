@@ -640,6 +640,7 @@ bool Canonicalize(const IR::ResourcePlan& plan, const Trace& trace, const IR::Re
 	// word alone (S17a3, SubstitutionHolds) - a word it changes the walk of is kept as read.
 	std::vector<Word>    canonical = raw;
 	std::vector<uint8_t> kept_address(raw.size(), 0u);
+	std::vector<uint8_t> kept_role(raw.size(), 0u); // S17a4: role of the classifier before ROLE_KEEP (kept_address)
 	for (size_t i = 0; i < raw.size(); i++) {
 		if ((raw[i].flags & WORD_OK) == 0) {
 			continue; // a failed read answers 0 and fails again; nothing to keep
@@ -701,6 +702,7 @@ bool Canonicalize(const IR::ResourcePlan& plan, const Trace& trace, const IR::Re
 			// Kept as read (ROLE_KEEP). A word the classifier took for an address (any role but INERT) may not reach the
 			// catalogue as read: the record is rejected below (residual, item 537(g)(3)).
 			kept_address[i] = role != ROLE_INERT ? 1u : 0u;
+			kept_role[i]    = role;
 			role            = ROLE_KEEP;
 			value           = raw[i].value;
 		}
@@ -773,13 +775,28 @@ bool Canonicalize(const IR::ResourcePlan& plan, const Trace& trace, const IR::Re
 			addresses.insert(d.dwords[7]);
 		}
 	}
+	// S17a4 (item 541(c)(1)): the reject names the branch of the first culprit (addr - kept_address, also when its value
+	// matches; exact - the exact-value comparison), its index, the role of the classifier before ROLE_KEEP (addr; 0 for
+	// exact) and the number of culprits of both branches. The raw value is not printed (the lower word of a guest
+	// address would reach the committed read files).
+	size_t   culprit      = canonical.size();
+	bool     culprit_addr = false;
+	uint32_t culprits     = 0;
 	for (size_t i = 0; i < canonical.size(); i++) {
 		const auto& word = canonical[i];
-		if (kept_address[i] != 0u ||
-		    (word.role == ROLE_KEEP && word.value >= 0x10000u && addresses.contains(word.value))) {
-			why = "residual";
-			return false;
+		const bool  addr = kept_address[i] != 0u;
+		if (addr || (word.role == ROLE_KEEP && word.value >= 0x10000u && addresses.contains(word.value))) {
+			if (culprits == 0) {
+				culprit      = i;
+				culprit_addr = addr;
+			}
+			culprits++;
 		}
+	}
+	if (culprits != 0) {
+		why = fmt::format("residual branch={} culprit={}:role{} n={}", culprit_addr ? "addr" : "exact", culprit,
+		                  culprit_addr ? static_cast<uint32_t>(kept_role[culprit]) : 0u, culprits);
+		return false;
 	}
 	words = std::move(canonical);
 	return true;
@@ -801,6 +818,21 @@ uint32_t SamePcGroups(const IR::ShaderInfo& info) {
 		groups[{1u, image.first_use_pc}]++;
 	}
 	return static_cast<uint32_t>(std::ranges::count_if(groups, [](const auto& g) { return g.second >= 2u; }));
+}
+
+bool CountReject(CaptureStats& stats, const std::string& why) {
+	const bool residual = why.starts_with("residual");
+	if (why.starts_with("self")) {
+		stats.canon_self++;
+	} else if (residual) {
+		stats.canon_residual++;
+	} else if (why == "base") {
+		stats.canon_base++;
+	} else {
+		stats.canon_big++;
+	}
+	stats.canon_mismatch = stats.canon_self + stats.canon_residual;
+	return residual ? stats.canon_residual <= 20u : stats.canon_self + stats.canon_base + stats.canon_big <= 20u;
 }
 
 // --- Catalogue and its files -----------------------------------------------------------------------------------------
@@ -1200,17 +1232,9 @@ private:
 		size_t            user_words = 0;
 		std::string       why;
 		if (!Canonicalize(*item.plan, item.trace, item.live, words, user_words, why, TestStand() == Stand::Canon)) {
-			if (why.starts_with("self")) {
-				m_stats.canon_self++;
-			} else if (why == "residual") {
-				m_stats.canon_residual++;
-			} else if (why == "base") {
-				m_stats.canon_base++;
-			} else {
-				m_stats.canon_big++;
-			}
-			m_stats.canon_mismatch = m_stats.canon_self + m_stats.canon_residual;
-			if (m_stats.canon_self + m_stats.canon_residual + m_stats.canon_base + m_stats.canon_big <= 20u) {
+			// S17a4 (item 541(c)(2)-(3)): counted by the prefix of why (CountReject); residual reject lines have their own
+			// limit of 20.
+			if (CountReject(m_stats, why)) {
 				LOGF("ShaderReplay: capture reject why=%s hash=0x%016" PRIx64 " words=%zu\n", why.c_str(),
 				     item.plan->shader_hash, 2 + item.trace.user_data.size() + item.trace.reads.size());
 			}

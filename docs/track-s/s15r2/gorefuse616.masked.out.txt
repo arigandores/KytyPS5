@@ -1,0 +1,9 @@
+42:ROOT=<scratch>/gob
+pred/14_s.md -> rc 1 | seal path bad
+pred/14b_s.md -> rc 1 | seal path bad
+pred/15_s.md -> rc 1 | seal path bad
+pred/15b_s.md -> rc 1 | seal path bad
+pred/16_s.md -> rc 0 | PLAN u_01: link s15, seal pred/16_s.md, binary the installed one named by the line 'installed:' of pred/16_s.md; mode u;
+pred/16b_s.md -> rc 0 | PLAN u_01: link s15, seal pred/16b_s.md, binary the installed one named by the line 'installed:' of pred/16b_s.md; mode 
+pred/13_s.md -> rc 1 | seal path bad
+no lock after

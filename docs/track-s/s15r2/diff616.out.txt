@@ -1,0 +1,247 @@
+seal sha256 14 9a810237993b4700be86dc0bac38ad7bff05d27e68f1f8555cc7f9b17c241a83 15 a2ffca701e3db0829742eed4c57e65f36d189f5945201cb61a0838ccff10fbab 16 a2548f95b39e2704d61b66a9cc060000609644db9fed369b410fe70ddcf7e4f3; lines 414 437 457
+==== (1a) seal 14 -> 15, raw
+14->15 hunk 1 replace a[1:1] b[1:1]
+   - # Seal 14_s - track S link S15b (HPP-603): the fifth wave S-cat - the collection of the catalogue of the 19 known levels k_01 .. k_19 (hold 300 s), the export, the U arms u_01 .. u_19 (the hold rule 1
+   + # Seal 15_s - track S link S15b (HPP-603): the fifth wave S-cat - the collection of the catalogue of the 19 known levels k_01 .. k_19 (hold 300 s), the export, the U arms u_01 .. u_19 (the hold rule 1
+14->15 hunk 2 replace a[3:3] b[3:3]
+   - Written by C:/kyty/s288/s15/mkseal_s15.py (sha256 01b975d40e9f36658b1816cc7b238451b10a969d691f160f3696c1a9cdc117dc) at 2026-10-05 05:27:28 UTC by link S15a (HPP-601), before any arm of S15b.  The port
+   + Written by C:/kyty/s288/s15a2/mkseal_s15a2.py (sha256 9a1f9b034134f095ffe32f1145f113a1128b93e2e70f628222ee5fc7d69267a6) at 2026-10-05 06:02:02 UTC by link S15a2 (HPP-615), before any arm of S15b.  Sea
+14->15 hunk 3 replace a[107:119] b[107:126]
+   - - THE U HOLD (item 511 (z)(4)): after "stable" (enter_scene: 90 rows with draws >= 100 after the entry line, unchanged) a U arm is
+   -   held while the presented time after the first scene frame (the sum of dt_us of the FrameTrace rows after it - the rows the
+   -   scorer counts; the first scene frame as sc_s.locate finds it) is < 120 s OR the video holds < 3 000 frames, but not longer than
+   -   300 s of presented time after the first scene frame; an arm with the entry line and without a first scene frame (item 511
+   -   (z)(5)) counts the presented time of every row after the entry line.  The video frames are the complete lines of
+   -   rec_<tag>.mp4.idx (the emulator writes and flushes one line per recorded frame: screenshot.cpp; S13b: index lines = the frames of
+   -   the video, 19 of 19).  The hold ends "met" (both conditions), "cap" (300 s presented), "game ended" (the process exits - E3-death
+   -   reads hold_exit) or "wall cap" (300 + 60 s of wall time from the start of the hold - a game that stops presenting; executor's
+   -   variant).  A video below 3 000 frames at the end of the hold is E3-video FAIL by the letter (unchanged member).  <tag>.json
+   -   carries hold_rule = {min_shown_s 120, video_frames 3000, cap_s 300, wall_extra_s 60, scene_draws 100} (an admission row
+   -   "before the run": the U arm carries exactly this rule, a k arm and w13 carry none); the attempt carries hold_end {cause, anchor
+   -   fi / entry, shown_us, video_frames, rows, entry_rows, first_row, closed} - a data line per U arm ("hold end (item 511 (z)(4),
+   -   data)"), no member reads it.
+   + - THE U HOLD (item 511 (z)(4); item 528 (b)(1), (c)): after "stable" (enter_scene: 90 rows with draws >= 100 after the entry
+   +   line, unchanged) a U arm is held while the presented time after the first scene frame (the sum of dt_us of the FrameTrace rows
+   +   after it - the rows the scorer counts; the first scene frame as sc_s.locate finds it) is < 120 s OR the video holds < 3 000
+   +   frames, but not longer than 300 s of presented time after the first scene frame.  An arm with the entry line of its level and
+   +   without a first scene frame (ps_logo, item 511 (z)(5)) is held by the presented time of the FrameTrace rows from the entry line
+   +   (the anchor "entry" of UHold) - A DECISION OF THE LEAD, item 528 (c) (variant (d) of the lead), not an executor's variant:
+   +   "met" - presented from the entry line >= 120 s and the video >= 3 000 frames; "cap" - presented from the entry line >= 300 s;
+   +   the wall 300 + 60 s (item 526 (b)(1)); the anchor "fi" of an arm with a first scene frame does not change; S15b, the audit and
+   +   S15c read the hold of such an arm by item 528 (c).  The video frames are the complete lines of rec_<tag>.mp4.idx (the emulator
+   +   writes and flushes one line per recorded frame: screenshot.cpp; S13b: index lines = the frames of the video, 19 of 19).  The
+   +   hold ends "met" (both conditions), "cap" (300 s presented), "game ended" (the process exits - E3-death reads hold_exit),
+   +   "wall cap" (300 + 60 s of wall time from the start of the hold - a game that stops presenting) or "error <type name>" (item 528
+   +   (b)(1): a call of UHold.poll() in the hold loop or after it raised - both calls are in try/except Exception; UHold is not
+   +   polled again, the hold ends at once and the usual path follows: hold_end, ft_*, hold_exit, close_game; the line "U hold:
+   +   UHold.poll() raised <type>: <text>" in the output of the arm).  A video below 3 000 frames at the end of the hold is E3-video
+   +   FAIL by the letter (unchanged member).  <tag>.json carries hold_rule = {min_shown_s 120, video_frames 3000, cap_s 300,
+   +   wall_extra_s 60, scene_draws 100} (an admission row "before the run": the U arm carries exactly this rule, a k arm and w13
+   +   carry none); the attempt carries hold_end {cause, anchor fi / entry, shown_us, video_frames, rows, entry_rows, first_row,
+   +   closed} - a data line per U arm ("hold end (item 511 (z)(4), data)"), no member reads it; a cause beginning with "error" is
+   +   read by item 528 (b)(5) (section 6, READING OF ITEM 528 (b)(5)).
+14->15 hunk 4 replace a[341:344] b[348:351]
+   - seal: 14fe343ee44c30b9a1351245189befd1b39998af8f4c933f1cc6e252a4e3f9ec s15/enter_scene_s15.py
+   - seal: 72f0ea1ad9562f194964a1a20144c7847ee109dc46625c927d06104cfec9ed73 s15/mk_enter_s15.py
+   - seal: 102139070602c10c79f5d6fa8717d7a69ea42d44a1a489c8bf36084128e36ac1 s15/test_enter_scene_s15.py
+   - seal: 87d52970552d11a275483735d467a12724a17eeb39c29d5aa3f37b43a58cc01c s15/hmut_s15.py
+   + seal: 6856080ca1a758ab85f701a72859c44ca5055110a9318b87e4201d1f5e0d73c7 s15/enter_scene_s15.py
+   + seal: cbe00f60dce56f098783db323ab4f3bd40ce74b76c034f07aff7b577291e8430 s15/mk_enter_s15.py
+   + seal: 0ff8324886a556494b50da803e779354d4edff3925ea58e06c351d7cd584332d s15/test_enter_scene_s15.py
+   + seal: 3862dfa93f307e5c8e81dc8f8033acd351dafb7db6bcf9714ed742d91557030d s15/hmut_s15.py
+14->15 hunk 5 insert a[402:401] b[409:424]
+   + - S15a2, item 528 (b)(1)-(3) (HPP-615): both calls of UHold.poll() of the hold in try/except Exception (enter_scene_s15.py
+   +   u_error, written by the patched mk_enter_s15.py - U15 byte for byte); fixtures of test_enter_scene_s15.py: H7 - the torn row of
+   +   the probe P1 of S15r ("FrameTrace: n=6GuestOut: x dt_us=30000 draws=3000") written by a stand-in emulator, the hold loop ->
+   +   the cause "error ValueError", no poll after the exception, close_game called once and the game closed, hold_exit recorded;
+   +   H8 - the same row met by the poll after the loop; M1 - main() with that stand-in -> no exception out of main, <tag>.json full
+   +   (the attempt with hold_end, hold_exit, ft_total, hold_s; ft_total and hold_rule of the json).  The suite: checks: 27, ALL OK
+   +   (s15/test_enter_scene_s15.out.txt sha256 d959ac772f8fcb29f193200ace3af093423369c4298ed8ed8ada11157723caac); the negative control - the suite on enter_scene_s15.py of seal 14
+   +   (sha256 14fe343ee44c30b9a1351245189befd1b39998af8f4c933f1cc6e252a4e3f9ec) fails H7, H8, M1 and U15 (s15a2/negctl.out.txt
+   +   sha256 ca6305fe669349d63f4d9d2093c94c8eab5bff5d6a296ecb72f16f8194c90b25); the hand mutants s15/hmut_s15.py enter: 21 of 21 killed - e01-e18 of S15a and e19 the except of
+   +   the loop, e20 the except after the loop, e21 the name of the cause (s15/hmut_enter.out.txt sha256 a32a7b20f630eab9a38d162a42f5d16f4249d4c9cff0d8ed296eaec8384df949);
+   +   sc_s15.py unchanged (sha256 6b3ad9c411f7053053278bf00579076d902d0c6796bcd650a6b5ddac896438b4) - no full mutant run of the
+   +   scorer (item 528 (b)(3)); go_s15.sh unchanged - its hand mutants not rerun.
+   + - READING OF ITEM 528 (b)(5) (a rule of the lead): an arm whose hold_end.cause begins with "error" or whose <tag>.stdout.txt
+   +   ends with an exception trace is a run interference: a repeat of the tag is set by a lead item and does not count in the
+   +   attempts of the level (Process p. 1 of the audit of session 144); the series goes on only after a line of times.txt that no
+   +   process kyty_emulator.exe is there and the caches, GLCache and the binary are returned by sha and manifest.
+14->15: 5 hunks
+==== (1b) seal 15 -> 16 after the substitution 14 -> 16 in 15
+15sub->16 hunk 1 replace a[1:1] b[1:1]
+   - # Seal 15_s - track S link S15b (HPP-603): the fifth wave S-cat - the collection of the catalogue of the 19 known levels k_01 .. k_19 (hold 300 s), the export, the U arms u_01 .. u_19 (the hold rule 1
+   + # Seal 16_s - track S link S15b (HPP-603): the fifth wave S-cat - the collection of the catalogue of the 19 known levels k_01 .. k_19 (hold 300 s), the export, the U arms u_01 .. u_19 (the hold rule 1
+15sub->16 hunk 2 replace a[3:3] b[3:3]
+   - Written by C:/kyty/s288/s15a2/mkseal_s15a2.py (sha256 9a1f9b034134f095ffe32f1145f113a1128b93e2e70f628222ee5fc7d69267a6) at 2026-10-05 06:02:02 UTC by link S15a2 (HPP-615), before any arm of S15b.  Sea
+   + Written by C:/kyty/s288/s15a3/mkseal_s15a3.py (sha256 e56a664ed15d97a188984b4642b9eb0799f0243e3cf2aeb01067df1df793fad9) at 2026-10-05 06:59:11 UTC by link S15a3 (HPP-617), before any arm of S15b.  Sea
+15sub->16 hunk 3 replace a[341:345] b[341:345]
+   - seal: f5c1b67ce6449c85a7af18a3df897c0e882ae8ddee2f02b3aa1e568ab6a8687a s15/go_s15.sh
+   - seal: 6b3ad9c411f7053053278bf00579076d902d0c6796bcd650a6b5ddac896438b4 s15/sc_s15.py
+   - seal: 0f2b9c4a872c3ef16eed87ae4da9549ad5b63b2b140a7d06711f7825fb07bddc s15/test_sc_s15.py
+   - seal: 1d39cb605e9ec04fcd0ff374e1491b62f35c1b94684689bdd72a86e357502ff5 s15/mut_sc_s15.py
+   - seal: b7555211a1da618a3c52eafa03e6e74ae2c2eb27e4fa61f53a9f39f46341a814 s15/test_go_s15.py
+   + seal: 1d943959fcebf8174eef33364d9ea898022fa015303206f9e34e0010598ead9a s15/go_s15.sh
+   + seal: 42859747e0b3c3d4345586b147d1d4afa49db58dc7b39173404790fbb0ab5415 s15/sc_s15.py
+   + seal: 156da412bc9249e7e9c120c79be0a44c3fea4e486b268479582455b0ccf42236 s15/test_sc_s15.py
+   + seal: aaefeabdc662315cb8c5fc6f10341f09f6bb7a2e4ea9d47596b4736416f1af69 s15/mut_sc_s15.py
+   + seal: 83dac74f9f9945bd4604d1d8f1e54c96896cc8ec5d274634ae328332a2ccede1 s15/test_go_s15.py
+15sub->16 hunk 4 insert a[425:424] b[425:444]
+   + - S15a3, item 529 (b)(1)-(3) (HPP-617): the names of the seal in the code -> pred/16_s.md / pred/16b_s.md, written by
+   +   s15a3/patch_names_s15a3.py (sha256 8991f02e9008fa8fa651b12e31da42ef13b3ccba1b414e94edc0618d162def1b; exact anchors with counts; s15a3/patch_names_s15a3.out.txt sha256
+   +   04a74be7d8379173232ab9c88ac8608d1de3b33aa3b3395a70a794958ac49115): sc_s15.py the three constants SEAL_BASE, SEAL_B, SEAL_BASE_REL; go_s15.sh the seal-path case and its
+   +   refusal text; test_sc_s15.py and test_go_s15.py the same names; mut_sc_s15.py the anchor of ed6_rel (pred/16_s.md ->
+   +   pred/15_s.md) and its comment; nothing else (s15a3/diff_names.txt sha256 48c9f35dc1f601ad4010c6915565b0c28071d6309cb56225f79a11977624b8a0) - the logic, the members
+   +   and the constants of the rules unchanged; enter_scene_s15.py, mk_enter_s15.py, test_enter_scene_s15.py, hmut_s15.py byte for
+   +   byte of seal 15.  The generator: the port tools s15/port_s15.py + s15/patch_sc_s15.py of S15a do not reproduce sc_s15.py
+   +   (their output sha256 db3dd0794c86c1c... != 6b3ad9c411f70530... of seal 15), so the names are changed in the sealed files;
+   +   the port tools do not change.  Fixtures: test_sc_s15.py checks: 266, ALL OK (s15a3/test_sc_s15.out.txt sha256
+   +   3b91b988c992140b0846aab4e505d56e6a9ad3a28f25fcfeeaf5844b60110e9b); test_go_s15.py checks: 54, ALL OK, with G18e - the edge of item 529 (b)(3): the seal path
+   +   pred/14_s.md, pred/14b_s.md, pred/15_s.md or pred/15b_s.md -> rc 1 "seal path bad" before the lock and no plan, pred/16_s.md
+   +   and pred/16b_s.md -> the DRY=2 plan naming that seal (s15a3/test_go_s15.out.txt sha256 3686490c4f3119fbe73645a02aeb14d23ef2734001ed7c505b578e9b46c6f58c);
+   +   test_enter_scene_s15.py checks: 27, ALL OK (s15a3/test_enter_scene_s15.out.txt sha256 d959ac772f8fcb29f193200ace3af093423369c4298ed8ed8ada11157723caac).
+   +   Negative controls on the code of seal 15: test_sc_s15.py on sc_s15.py 6b3ad9c4... fails E6, E6g, F4, F6b (s15a3/negctl_sc.out.txt
+   +   sha256 1ddc49a7ce8e50daca4151b980d7f03fa9f14d6d68483b23dd747b311228e0e9); test_go_s15.py on go_s15.sh f5c1b67c... fails 19 cases, G18e among them
+   +   (s15a3/negctl_go.out.txt sha256 bdf7ed98267d67b12315131af59c99052f2424b491b20d9daa2a80c141aa6869).  The hand mutants s15/hmut_s15.py go: 6 of 6 killed
+   +   (s15a3/hmut_go.out.txt sha256 99f4e12b8997ce99250625b0eae1dca39b33503fb9080ad04e9d60abc6e9bd6e).  The scorer mutants s15/mut_sc_s15.py: 359 of 359 anchors found on the
+   +   new code, only ed6_rel changed (s15a3/anch_s15a3.out.txt sha256 a695516d6daf656f9387f511811e81ca3cbdae2c90582670065394307cac308d); no full mutant run of the scorer
+   +   (item 529 (b)(2); items 84, 87 (b)(3)).  The 39 plans of section 3 = the DRY=2 plans of the new go_s15.sh (checked by this
+   +   script before the write).
+15sub->16: 4 hunks
+==== (1c) names 14_s / 14b_s / 15_s / 15b_s left in seal 16
+  16:3 14_s.md: Written by C:/kyty/s288/s15a3/mkseal_s15a3.py (sha256 e56a664ed15d97a188984b4642b9eb0799f0243e3cf2aeb01067df1df793fad9) at 2026-10-05 06:59:11 UTC by link S15a3 (HPP-617), before any arm of S15b.  Seal 15 (pred/15_s.md s
+  16:3 14b_s.md: Written by C:/kyty/s288/s15a3/mkseal_s15a3.py (sha256 e56a664ed15d97a188984b4642b9eb0799f0243e3cf2aeb01067df1df793fad9) at 2026-10-05 06:59:11 UTC by link S15a3 (HPP-617), before any arm of S15b.  Seal 15 (pred/15_s.md s
+  16:3 15_s.md: Written by C:/kyty/s288/s15a3/mkseal_s15a3.py (sha256 e56a664ed15d97a188984b4642b9eb0799f0243e3cf2aeb01067df1df793fad9) at 2026-10-05 06:59:11 UTC by link S15a3 (HPP-617), before any arm of S15b.  Seal 15 (pred/15_s.md s
+  16:429 15_s.md:   pred/15_s.md) and its comment; nothing else (s15a3/diff_names.txt sha256 48c9f35dc1f601ad4010c6915565b0c28071d6309cb56225f79a11977624b8a0) - the logic, the members
+  16:435 14_s.md:   pred/14_s.md, pred/14b_s.md, pred/15_s.md or pred/15b_s.md -> rc 1 "seal path bad" before the lock and no plan, pred/16_s.md
+  16:435 14b_s.md:   pred/14_s.md, pred/14b_s.md, pred/15_s.md or pred/15b_s.md -> rc 1 "seal path bad" before the lock and no plan, pred/16_s.md
+  16:435 15_s.md:   pred/14_s.md, pred/14b_s.md, pred/15_s.md or pred/15b_s.md -> rc 1 "seal path bad" before the lock and no plan, pred/16_s.md
+  16:435 15b_s.md:   pred/14_s.md, pred/14b_s.md, pred/15_s.md or pred/15b_s.md -> rc 1 "seal path bad" before the lock and no plan, pred/16_s.md
+==== (3) seal: lines
+seal: lines 14 30 15 30 16 30; same path sets True
+  changed 14 -> 16: s15/enter_scene_s15.py 14fe343ee44c30b9 -> 6856080ca1a758ab (15 6856080ca1a758ab)
+  changed 14 -> 16: s15/go_s15.sh f5c1b67ce6449c85 -> 1d943959fcebf817 (15 f5c1b67ce6449c85)
+  changed 14 -> 16: s15/hmut_s15.py 87d52970552d11a2 -> 3862dfa93f307e5c (15 3862dfa93f307e5c)
+  changed 14 -> 16: s15/mk_enter_s15.py 72f0ea1ad9562f19 -> cbe00f60dce56f09 (15 cbe00f60dce56f09)
+  changed 14 -> 16: s15/mut_sc_s15.py 1d39cb605e9ec04f -> aaefeabdc662315c (15 1d39cb605e9ec04f)
+  changed 14 -> 16: s15/sc_s15.py 6b3ad9c411f70530 -> 42859747e0b3c3d4 (15 6b3ad9c411f70530)
+  changed 14 -> 16: s15/test_enter_scene_s15.py 102139070602c10c -> 0ff8324886a55649 (15 0ff8324886a55649)
+  changed 14 -> 16: s15/test_go_s15.py b7555211a1da618a -> 83dac74f9f9945bd (15 b7555211a1da618a)
+  changed 14 -> 16: s15/test_sc_s15.py 0f2b9c4a872c3ef1 -> 156da412bc9249e7 (15 0f2b9c4a872c3ef1)
+seal 16 vs disk: 0 of 30 differ
+==== (2) the 5 renamed scripts: seal-15 originals vs disk
+sc_s15.py: orig 6b3ad9c411f70530 (seal 15 line 6b3ad9c411f70530) disk 42859747e0b3c3d4 (seal 16 line 42859747e0b3c3d4)
+sc_s15.py orig(sub)->disk hunk 1 replace a[4:4] b[4:4]
+   - arms of link S15b on the installed FS8 after FS8e (the seal pred/16_s.md says "installed: PENDING"; the edition pred/16b_s.md is a
+   + arms of link S15b on the installed FS8 after FS8e (the seal pred/14_s.md says "installed: PENDING"; the edition pred/14b_s.md is a
+sc_s15.py orig(sub)->disk hunk 2 replace a[81:81] b[81:81]
+   - S13a3 (link HPP-537, item 436 (b), (v); the review S13r c4d4a7e9:docs/track-s/s13r-review.md; the seal pred/16_s.md replaces 11):
+   + S13a3 (link HPP-537, item 436 (b), (v); the review S13r c4d4a7e9:docs/track-s/s13r-review.md; the seal pred/14_s.md replaces 11):
+sc_s15.py orig(sub)->disk hunk 3 replace a[99:99] b[99:99]
+   -   RC6  the edition pred/12b_s.md carries one line "edition: base pred/16_s.md sha256 <64 hex>" = the sha256 of the seal 12.
+   +   RC6  the edition pred/12b_s.md carries one line "edition: base pred/14_s.md sha256 <64 hex>" = the sha256 of the seal 12.
+sc_s15.py orig(sub)->disk hunk 4 replace a[101:101] b[101:101]
+   - S13a4 (link HPP-553, item 452 (b)-(d); the review S13r2 ffae6160:docs/track-s/s13r2-review.md section 2; the seal pred/16_s.md
+   + S13a4 (link HPP-553, item 452 (b)-(d); the review S13r2 ffae6160:docs/track-s/s13r2-review.md section 2; the seal pred/14_s.md
+sc_s15.py orig(sub)->disk hunk 5 replace a[1314:1314] b[1314:1314]
+   -     (b)(6), RC6: 13b carries exactly one line "edition: base pred/16_s.md sha256 <64 hex>" and its sha256 = the sha256 of the
+   +     (b)(6), RC6: 13b carries exactly one line "edition: base pred/14_s.md sha256 <64 hex>" and its sha256 = the sha256 of the
+sc_s15.py orig(sub)->disk: 5 hunks
+go_s15.sh: orig f5c1b67ce6449c85 (seal 15 line f5c1b67ce6449c85) disk 1d943959fcebf817 (seal 16 line 1d943959fcebf817)
+go_s15.sh orig(sub)->disk hunk 1 replace a[3:3] b[3:3]
+   - # directory C:/kyty/s288/s15, the seal pred/16_s.md or its edition pred/16b_s.md (pred/13_s.md and pred/13b_s.md are not in force
+   + # directory C:/kyty/s288/s15, the seal pred/14_s.md or its edition pred/14b_s.md (pred/13_s.md and pred/13b_s.md are not in force
+go_s15.sh orig(sub)->disk hunk 2 replace a[11:11] b[11:11]
+   - # pred/11_s.md were not in force); S15a: pred/16_s.md or pred/16b_s.md.
+   + # pred/11_s.md were not in force); S15a: pred/14_s.md or pred/14b_s.md.
+go_s15.sh orig(sub)->disk hunk 3 replace a[99:99] b[99:99]
+   - # the seal in force: the edition pred/16b_s.md (13 with the line "installed:" named and the line "edition: base pred/16_s.md
+   + # the seal in force: the edition pred/14b_s.md (13 with the line "installed:" named and the line "edition: base pred/14_s.md
+go_s15.sh orig(sub)->disk: 3 hunks
+test_sc_s15.py: orig 0f2b9c4a872c3ef1 (seal 15 line 0f2b9c4a872c3ef1) disk 156da412bc9249e7 (seal 16 line 156da412bc9249e7)
+test_sc_s15.py orig(sub)->disk hunk 1 replace a[421:421] b[421:421]
+   - cs = CR / 'pred' / '14_s.md'
+   + cs = CR / 'pred' / '16_s.md'
+test_sc_s15.py orig(sub)->disk hunk 2 replace a[423:423] b[423:423]
+   - S.SEAL_BASE, S.SEAL_B = cs.as_posix(), (CR / 'pred' / '14b_s.md').as_posix()
+   + S.SEAL_BASE, S.SEAL_B = cs.as_posix(), (CR / 'pred' / '16b_s.md').as_posix()
+test_sc_s15.py orig(sub)->disk hunk 3 replace a[435:435] b[435:435]
+   - (CR / 'pred' / '14b_s.md').write_text(NL.join(seal_lines + ['installed: %s %s %s' % (GSHA, SIG, VAR), 'edition: base pred/16_s.md '
+   + (CR / 'pred' / '16b_s.md').write_text(NL.join(seal_lines + ['installed: %s %s %s' % (GSHA, SIG, VAR), 'edition: base pred/16_s.md '
+test_sc_s15.py orig(sub)->disk hunk 4 replace a[454:455] b[454:455]
+   - (CR / 'pred' / '14b_s.md').unlink()
+   - S.SEAL_BASE, S.SEAL_B = (BASE / 'pred' / '14_s.md').as_posix(), PRED
+   + (CR / 'pred' / '16b_s.md').unlink()
+   + S.SEAL_BASE, S.SEAL_B = (BASE / 'pred' / '16_s.md').as_posix(), PRED
+test_sc_s15.py orig(sub)->disk: 4 hunks
+test_go_s15.py: orig b7555211a1da618a (seal 15 line b7555211a1da618a) disk 83dac74f9f9945bd (seal 16 line 83dac74f9f9945bd)
+test_go_s15.py orig(sub)->disk hunk 1 insert a[21:20] b[21:22]
+   + S15a3 (HPP-617, item 529 (b)(1), (3)): the names of the seal are pred/16_s.md / pred/16b_s.md; G18e - the seal path of the harness:
+   + pred/14_s.md, pred/14b_s.md, pred/15_s.md, pred/15b_s.md -> rc 1 "seal path bad"; pred/16_s.md, pred/16b_s.md -> the plan.
+test_go_s15.py orig(sub)->disk hunk 2 replace a[61:62] b[63:64]
+   -             "sys.exit(m.main(sys.argv[1:], %r))\n" % (SC13, base.as_posix(), (base / 'pred' / '14_s.md').as_posix(),
+   -                                                      (base / 'pred' / '14b_s.md').as_posix(), (base / 's15').as_posix()))
+   +             "sys.exit(m.main(sys.argv[1:], %r))\n" % (SC13, base.as_posix(), (base / 'pred' / '16_s.md').as_posix(),
+   +                                                      (base / 'pred' / '16b_s.md').as_posix(), (base / 's15').as_posix()))
+test_go_s15.py orig(sub)->disk hunk 3 replace a[87:87] b[89:89]
+   - def seal(lines, name='14_s.md'):
+   + def seal(lines, name='16_s.md'):
+test_go_s15.py orig(sub)->disk hunk 4 replace a[137:137] b[139:139]
+   - seal(CALLS[1:] + ['installed: %s %s %s' % (INST, SIG, VAR)], '14b_s.md')
+   + seal(CALLS[1:] + ['installed: %s %s %s' % (INST, SIG, VAR)], '16b_s.md')
+test_go_s15.py orig(sub)->disk hunk 5 replace a[141:142] b[143:144]
+   - seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '14b_s.md')
+   - seal(CALLS[:1] + CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '14b_s.md')
+   + seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '16b_s.md')
+   + seal(CALLS[:1] + CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '16b_s.md')
+test_go_s15.py orig(sub)->disk hunk 6 replace a[145:145] b[147:147]
+   - seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '14b_s.md')
+   + seal(CALLS + ['installed: %s %s %s' % (INST, SIG, VAR)], '16b_s.md')
+test_go_s15.py orig(sub)->disk hunk 7 insert a[202:201] b[204:216]
+   + sp_rc = {}
+   + for sp in ('pred/14_s.md', 'pred/14b_s.md', 'pred/15_s.md', 'pred/15b_s.md', 'pred/16_s.md', 'pred/16b_s.md'):
+   +     (B3 / 's15' / 'sc_s15.py').write_text(NL.join(['import sys', 'a = sys.argv[1:]', "if a[:1] == ['--seal-path']:",
+   +                                                    '    print(%r)' % sp, '    sys.exit(0)',
+   +                                                    "print('s15 lvl T u 300 - 100 600 1 0 -')", 'sys.exit(0)', '']),
+   +                                           encoding='ascii')
+   +     sp_rc[sp] = go('u_01', dry='2', base=B3)
+   + ok &= case('G18e S15a3 (item 529 (b)(3)): the seal path of --seal-path pred/14_s.md, pred/14b_s.md, pred/15_s.md or '
+   +            'pred/15b_s.md -> rc 1 "seal path bad" before the lock, no plan; pred/16_s.md and pred/16b_s.md -> rc 0, the DRY=2 plan '
+   +            'names that seal', all(sp_rc[s][0] == 1 and 'seal path bad' in sp_rc[s][1] and 'PLAN ' not in sp_rc[s][1]
+   +                                   for s in ('pred/14_s.md', 'pred/14b_s.md', 'pred/15_s.md', 'pred/15b_s.md')) and
+   +            all(sp_rc[s][0] == 0 and sp_rc[s][1].startswith('PLAN u_01: link s15, seal %s, ' % s)
+   +                for s in ('pred/16_s.md', 'pred/16b_s.md')) and not Path(FXLOCK).exists())
+test_go_s15.py orig(sub)->disk hunk 8 replace a[298:298] b[313:313]
+   - (B2 / 'pred' / '14_s.md').write_bytes((''.join('go_s15 call: PLWAIT=540 bash C:/kyty/s288/s15/go_s15.sh %s\n' % t for t in TAGS2) +
+   + (B2 / 'pred' / '16_s.md').write_bytes((''.join('go_s15 call: PLWAIT=540 bash C:/kyty/s288/s15/go_s15.sh %s\n' % t for t in TAGS2) +
+test_go_s15.py orig(sub)->disk: 8 hunks
+mut_sc_s15.py: orig 1d39cb605e9ec04f (seal 15 line 1d39cb605e9ec04f) disk aaefeabdc662315c (seal 16 line aaefeabdc662315c)
+mut_sc_s15.py orig(sub)->disk hunk 1 replace a[117:117] b[117:117]
+   -     ('ed6_rel', "SEAL_BASE_REL = 'pred/16_s.md' ", "SEAL_BASE_REL = 'pred/13_s.md' "),
+   +     ('ed6_rel', "SEAL_BASE_REL = 'pred/16_s.md' ", "SEAL_BASE_REL = 'pred/15_s.md' "),
+mut_sc_s15.py orig(sub)->disk: 1 hunks
+==== (4) enter_scene_s15.py seal 14 (s15a2/orig) -> disk
+orig 14fe343ee44c30b9 (seal 14 line 14fe343ee44c30b9) disk 6856080ca1a758ab
+enter orig->disk hunk 1 replace a[1:1] b[1:1]
+   - """enter_scene_s15.py - track S, link S15a (HPP-601; ROADMAP "SESSION 122" item 511 (z)(4)-(5)): s9/enter_scene_s9.py (seal 07, sha256 246b579b8022f6fe636d04abc
+   + """enter_scene_s15.py - track S, link S15a (HPP-601; ROADMAP "SESSION 122" item 511 (z)(4)-(5)): s9/enter_scene_s9.py (seal 07, sha256 246b579b8022f6fe636d04abc
+enter orig->disk hunk 2 insert a[318:317] b[318:324]
+   + def u_error(error):
+   +     """S15a2, item 528 (b)(1): the cause of a U hold whose UHold.poll() raised - 'error <type name>' (printed with its text)."""
+   +     print('U hold: UHold.poll() raised %s: %s - no further poll, the hold ends now (item 528 (b)(1))' % (
+   +         type(error).__name__, str(error).encode('ascii', 'replace').decode('ascii')), flush=True)
+   +     return 'error %s' % type(error).__name__
+   + 
+   + 
+enter orig->disk hunk 3 replace a[631:631] b[638:641]
+   -                         ucause = uh.poll()
+   +                         try:
+   +                             ucause = uh.poll()
+   +                         except Exception as error:   # S15a2, item 528 (b)(1): no further poll, the hold ends now
+   +                             ucause = u_error(error)
+enter orig->disk hunk 4 replace a[636:636] b[646:649]
+   -                         ucause = uh.poll() or ('game ended' if game.poll() is not None else 'wall cap')
+   +                         try:
+   +                             ucause = uh.poll() or ('game ended' if game.poll() is not None else 'wall cap')
+   +                         except Exception as error:   # S15a2, item 528 (b)(1): the poll after the loop
+   +                             ucause = u_error(error)
+enter orig->disk: 4 hunks

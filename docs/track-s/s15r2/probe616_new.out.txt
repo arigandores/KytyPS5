@@ -1,0 +1,32 @@
+probe616 target C:/kyty/s288/s15/enter_scene_s15.py sha256 6856080ca1a758ab85f701a72859c44ca5055110a9318b87e4201d1f5e0d73c7
+q1: exception out of attempt: None
+q1: outcome ok; hold_end {"anchor": "fi", "cause": "error ValueError", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 12, "shown_us": 1089000, "video_frames": 12}
+q1: close_game calls 1; stand-in alive after attempt() returned: False; hold_exit present True value None; hold_s 2.8; ft_total 13; wall 5.3 s
+q1: stdout| U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+q1: stdout| U hold: UHold.poll() raised ValueError: invalid literal for int() with base 10: b'6GuestOut:' - no further poll, the hold ends now (item 528 (b)(1))
+q1: stdout| U hold end: {"anchor": "fi", "cause": "error ValueError", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 12, "shown_us": 1089000, "video_frames": 12}
+Q1 PASS
+q2: exception out of attempt: None
+q2: outcome ok; hold_end {"anchor": "fi", "cause": "error ValueError", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 12, "shown_us": 1089000, "video_frames": 12}
+q2: close_game calls 1; stand-in alive after attempt() returned: False; hold_exit present True value 0; hold_s 1.8; ft_total 13; wall 4.3 s
+q2: stdout| U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+q2: stdout| U hold: UHold.poll() raised ValueError: invalid literal for int() with base 10: b'6GuestOut:' - no further poll, the hold ends now (item 528 (b)(1))
+q2: stdout| U hold end: {"anchor": "fi", "cause": "error ValueError", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 12, "shown_us": 1089000, "video_frames": 12}
+q2: stdout| WARNING: the game ENDED inside the hold after 1.8 s, returncode 0 (0x00000000)
+Q2 PASS
+q3: exception out of attempt: None
+q3: outcome ok; hold_end {"anchor": "fi", "cause": "error ZeroDivisionError", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 12, "shown_us": 1089000, "video_frames": 12}
+q3: close_game calls 1; stand-in alive after attempt() returned: False; hold_exit present True value None; hold_s 1.8; ft_total 13; wall 4.3 s
+q3: stdout| U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+q3: stdout| U hold: UHold.poll() raised ZeroDivisionError: probe Q3 - no further poll, the hold ends now (item 528 (b)(1))
+q3: stdout| U hold end: {"anchor": "fi", "cause": "error ZeroDivisionError", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 12, "shown_us": 1089000, "video_frames": 12}
+Q3 PASS
+q4: exception out of attempt: None
+q4: outcome ok; hold_end {"anchor": "fi", "cause": "game ended", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 12, "shown_us": 1089000, "video_frames": 12}
+q4: close_game calls 1; stand-in alive after attempt() returned: False; hold_exit present True value 0; hold_s 2.8; ft_total 12; wall 5.3 s
+q4: stdout| U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+q4: stdout| U hold end: {"anchor": "fi", "cause": "game ended", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 12, "shown_us": 1089000, "video_frames": 12}
+q4: stdout| WARNING: the game ENDED inside the hold after 2.8 s, returncode 0 (0x00000000)
+Q4 PASS
+ALL OK
+rc=0

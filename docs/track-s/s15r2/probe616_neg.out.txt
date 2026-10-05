@@ -1,0 +1,26 @@
+probe616 target C:/kyty/s288/s15a2/orig/enter_scene_s15.py sha256 14fe343ee44c30b9a1351245189befd1b39998af8f4c933f1cc6e252a4e3f9ec (negative control)
+q1: exception out of attempt: ValueError: invalid literal for int() with base 10: b'6GuestOut:'
+q1: outcome None; hold_end null
+q1: close_game calls 0; stand-in alive after attempt() returned: True; hold_exit present False value None; hold_s None; ft_total None; wall 3.3 s
+q1: stdout| U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+Q1 FAIL
+q2: exception out of attempt: ValueError: invalid literal for int() with base 10: b'6GuestOut:'
+q2: outcome None; hold_end null
+q2: close_game calls 0; stand-in alive after attempt() returned: False; hold_exit present False value None; hold_s None; ft_total None; wall 2.3 s
+q2: stdout| U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+Q2 FAIL
+q3: exception out of attempt: ZeroDivisionError: probe Q3
+q3: outcome None; hold_end null
+q3: close_game calls 0; stand-in alive after attempt() returned: True; hold_exit present False value None; hold_s None; ft_total None; wall 2.7 s
+q3: stdout| U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+Q3 FAIL
+q4: exception out of attempt: None
+q4: outcome ok; hold_end {"anchor": "fi", "cause": "game ended", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 12, "shown_us": 1089000, "video_frames": 12}
+q4: close_game calls 1; stand-in alive after attempt() returned: False; hold_exit present True value 0; hold_s 2.8; ft_total 12; wall 5.3 s
+q4: stdout| U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+q4: stdout| U hold end: {"anchor": "fi", "cause": "game ended", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 12, "shown_us": 1089000, "video_frames": 12}
+q4: stdout| WARNING: the game ENDED inside the hold after 2.8 s, returncode 0 (0x00000000)
+Q4 PASS
+NEGATIVE CONTROL: Q1-Q3 are expected to FAIL on the code of seal 14; Q4 to PASS
+NOT ALL OK
+rc=0

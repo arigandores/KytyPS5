@@ -1,0 +1,2 @@
+C:/kyty/f287/f16m/rec_f5cmu_0.mp4: 20375 frames 960x540, index entries 20375
+one-frame glitches: 0

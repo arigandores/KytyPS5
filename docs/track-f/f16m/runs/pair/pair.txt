@@ -1,0 +1,388 @@
+F16M PAIR events arm0 64 arm1 64; pairs 64; unpaired arm0 0 arm1 0 (of them nohit of arm 1 0); order kept YES
+  ITEM 01 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 9..13
+    arm0: fce n=1 present=10 gpu=0 image=0x0000000538bc0000 cmask=0x000000055675f000 extent=480x270 fix=off before
+    arm1: fce n=1 present=11 gpu=0 image=0x0000000538bc0000 cmask=0x000000055675f000 extent=480x270 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 02 PAIR fix_arm1=kept_applied why_arm1=- fix_arm0=off window presents 9..13
+    arm0: fce n=2 present=10 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 fix=off before
+    arm1: fce n=2 present=11 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 fix=kept_applied before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 03 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 9..13
+    arm0: fce n=3 present=10 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 fix=off before
+    arm1: fce n=3 present=11 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 04 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 9..13
+    arm0: fce n=4 present=10 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 fix=off before
+    arm1: fce n=4 present=11 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 05 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 10..16
+    arm0: fce n=5 present=11 gpu=1 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 fix=off before
+    arm1: fce n=5 present=14 gpu=3 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 06 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 13..17
+    arm0: fce n=6 present=14 gpu=4 image=0x0000000539100000 cmask=0x0000000570787000 extent=608x342 fix=off before
+    arm1: fce n=6 present=15 gpu=4 image=0x0000000539100000 cmask=0x0000000570787000 extent=608x342 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 07 PAIR fix_arm1=kept_applied why_arm1=- fix_arm0=off window presents 13..17
+    arm0: fce n=7 present=14 gpu=4 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=off before
+    arm1: fce n=7 present=15 gpu=4 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=kept_applied before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 08 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 13..17
+    arm0: fce n=8 present=14 gpu=4 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=off before
+    arm1: fce n=8 present=15 gpu=4 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 09 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 14..18
+    arm0: fce n=9 present=15 gpu=5 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=off before
+    arm1: fce n=9 present=16 gpu=5 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 10 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 15..19
+    arm0: fce n=10 present=16 gpu=5 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=off before
+    arm1: fce n=10 present=17 gpu=6 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 11 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 15..20
+    arm0: fce n=11 present=16 gpu=6 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=off before
+    arm1: fce n=11 present=18 gpu=7 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 12 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 16..21
+    arm0: fce n=12 present=17 gpu=7 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=off before
+    arm1: fce n=12 present=19 gpu=8 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 13 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 17..22
+    arm0: fce n=13 present=18 gpu=8 image=0x000000053b6a0000 cmask=0x0000000570b46000 extent=608x342 fix=off before
+    arm1: fce n=13 present=20 gpu=9 image=0x000000053b6a0000 cmask=0x0000000570b46000 extent=608x342 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 14 PAIR fix_arm1=kept_applied why_arm1=- fix_arm0=off window presents 17..22
+    arm0: fce n=14 present=18 gpu=8 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=off before
+    arm1: fce n=14 present=20 gpu=9 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=kept_applied before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 15 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 18..22
+    arm0: fce n=15 present=19 gpu=9 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=off before
+    arm1: fce n=15 present=20 gpu=9 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 16 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 19..23
+    arm0: fce n=16 present=20 gpu=10 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=off before
+    arm1: fce n=16 present=21 gpu=10 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 17 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 20..24
+    arm0: fce n=17 present=21 gpu=11 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=off before
+    arm1: fce n=17 present=22 gpu=11 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 18 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 21..25
+    arm0: fce n=18 present=22 gpu=12 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=off before
+    arm1: fce n=18 present=23 gpu=12 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 19 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 22..26
+    arm0: fce n=19 present=23 gpu=13 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=off before
+    arm1: fce n=19 present=24 gpu=13 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 20 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 23..27
+    arm0: fce n=20 present=24 gpu=14 image=0x000000053c390000 cmask=0x000000057112e000 extent=832x468 fix=off before
+    arm1: fce n=20 present=25 gpu=14 image=0x000000053c390000 cmask=0x000000057112e000 extent=832x468 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 21 PAIR fix_arm1=kept_applied why_arm1=- fix_arm0=off window presents 23..27
+    arm0: fce n=21 present=24 gpu=14 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=off before
+    arm1: fce n=21 present=25 gpu=14 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=kept_applied before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 22 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 24..28
+    arm0: fce n=22 present=25 gpu=15 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=off before
+    arm1: fce n=22 present=26 gpu=15 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 23 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 25..29
+    arm0: fce n=23 present=26 gpu=16 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=off before
+    arm1: fce n=23 present=27 gpu=16 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 24 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 26..30
+    arm0: fce n=24 present=27 gpu=17 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=off before
+    arm1: fce n=24 present=28 gpu=17 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 25 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 27..31
+    arm0: fce n=25 present=28 gpu=18 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=off before
+    arm1: fce n=25 present=29 gpu=18 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 26 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 28..32
+    arm0: fce n=26 present=29 gpu=19 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=off before
+    arm1: fce n=26 present=30 gpu=19 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 27 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 29..33
+    arm0: fce n=27 present=30 gpu=20 image=0x000000053cc10000 cmask=0x0000000571728000 extent=960x540 fix=off before
+    arm1: fce n=27 present=31 gpu=20 image=0x000000053cc10000 cmask=0x0000000571728000 extent=960x540 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 28 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 29..33
+    arm0: fce n=28 present=30 gpu=20 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=28 present=31 gpu=20 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 29 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 30..34
+    arm0: fce n=29 present=31 gpu=21 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=29 present=32 gpu=21 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 30 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 31..35
+    arm0: fce n=30 present=32 gpu=22 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=30 present=33 gpu=22 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 31 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 32..36
+    arm0: fce n=31 present=33 gpu=23 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=31 present=34 gpu=23 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 32 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 33..37
+    arm0: fce n=32 present=34 gpu=24 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=32 present=35 gpu=24 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 33 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 34..38
+    arm0: fce n=33 present=35 gpu=25 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=33 present=36 gpu=25 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 34 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 35..39
+    arm0: fce n=34 present=36 gpu=26 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=34 present=37 gpu=26 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 35 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 36..40
+    arm0: fce n=35 present=37 gpu=27 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=35 present=38 gpu=27 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 36 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 37..41
+    arm0: fce n=36 present=38 gpu=28 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=36 present=39 gpu=28 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 37 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 38..42
+    arm0: fce n=37 present=39 gpu=29 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=37 present=40 gpu=29 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 38 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 39..43
+    arm0: fce n=38 present=40 gpu=30 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=38 present=41 gpu=30 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 39 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 40..44
+    arm0: fce n=39 present=41 gpu=31 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=39 present=42 gpu=31 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 40 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 41..45
+    arm0: fce n=40 present=42 gpu=32 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=40 present=43 gpu=32 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 41 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 42..46
+    arm0: fce n=41 present=43 gpu=33 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=41 present=44 gpu=33 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 42 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 43..47
+    arm0: fce n=42 present=44 gpu=34 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=42 present=45 gpu=34 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 43 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 44..48
+    arm0: fce n=43 present=45 gpu=35 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=43 present=46 gpu=35 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 44 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 45..49
+    arm0: fce n=44 present=46 gpu=36 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=44 present=47 gpu=36 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 45 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 46..50
+    arm0: fce n=45 present=47 gpu=37 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=45 present=48 gpu=37 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 46 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 47..51
+    arm0: fce n=46 present=48 gpu=38 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=46 present=49 gpu=38 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 47 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 48..52
+    arm0: fce n=47 present=49 gpu=39 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=47 present=50 gpu=39 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 48 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 49..53
+    arm0: fce n=48 present=50 gpu=40 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=48 present=51 gpu=40 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 49 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 50..54
+    arm0: fce n=49 present=51 gpu=41 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=49 present=52 gpu=41 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 50 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 51..55
+    arm0: fce n=50 present=52 gpu=42 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=50 present=53 gpu=42 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 51 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 52..56
+    arm0: fce n=51 present=53 gpu=43 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=51 present=54 gpu=43 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 52 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 53..57
+    arm0: fce n=52 present=54 gpu=44 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=52 present=55 gpu=44 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 53 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 54..58
+    arm0: fce n=53 present=55 gpu=45 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=53 present=56 gpu=45 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 54 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 55..59
+    arm0: fce n=54 present=56 gpu=46 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=54 present=57 gpu=46 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 55 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 56..60
+    arm0: fce n=55 present=57 gpu=47 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=55 present=58 gpu=47 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 56 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 57..61
+    arm0: fce n=56 present=58 gpu=48 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=56 present=59 gpu=48 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 57 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 58..62
+    arm0: fce n=57 present=59 gpu=49 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=57 present=60 gpu=49 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 58 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 59..63
+    arm0: fce n=58 present=60 gpu=50 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=58 present=61 gpu=50 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 59 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 60..64
+    arm0: fce n=59 present=61 gpu=51 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=59 present=62 gpu=51 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 60 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 61..65
+    arm0: fce n=60 present=62 gpu=52 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=60 present=63 gpu=52 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 61 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 62..66
+    arm0: fce n=61 present=63 gpu=53 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=61 present=64 gpu=53 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 62 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 63..67
+    arm0: fce n=62 present=64 gpu=54 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=62 present=65 gpu=54 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 63 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 64..68
+    arm0: fce n=63 present=65 gpu=55 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=63 present=66 gpu=55 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+  ITEM 64 PAIR fix_arm1=fresh why_arm1=- fix_arm0=off window presents 65..69
+    arm0: fce n=64 present=66 gpu=56 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=off before
+    arm1: fce n=64 present=67 gpu=56 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 fix=fresh before
+    p in idx: arm0 YES arm1 YES; window presents absent from idx: arm0 [] arm1 []
+    glitches in the window: arm0 [] arm1 []; GLITCH_ONLY_1 none
+SHEETS frames extracted arm0 109 of 109 arm1 109 of 109; files 66
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_01_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_02_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_03_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_04_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_05_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_06_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_07_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_08_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_09_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_10_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_11_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_12_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_13_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_14_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_15_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_16_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_17_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_18_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_19_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_20_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_21_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_22_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_23_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_24_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_25_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_26_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_27_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_28_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_29_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_30_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_31_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_32_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_33_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_34_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_35_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_36_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_37_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_38_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_39_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_40_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_41_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_42_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_43_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_44_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_45_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_46_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_47_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_48_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_49_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_50_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_51_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_52_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_53_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_54_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_55_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_56_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_57_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_58_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_59_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_60_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_61_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_62_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_63_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\event_64_pair.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\aligned_f5cmu_0.png
+  SHEET C:/kyty/f287/f16m/runs/pair/sheets\aligned_f5cmu_1.png

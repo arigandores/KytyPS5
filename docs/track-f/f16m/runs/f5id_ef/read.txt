@@ -1,0 +1,179 @@
+F16M f5id_ef kind id level enemy_final log sha256 dd6a3c278abcfd17730fea14f6c99de17ec6d84c87f0d0f5efbd32fa9ba7eacf lines 2295713 stdout sha256 18aa7e918ce0c1c3463766191233566247e8ff76f7052a24e7369478091b7515
+  binary: tag d4328b0c8053d7deae0ef34691462af3e244dd3a6be07722146505b642ca203c (expected d4328b0c8053d7deae0ef34691462af3e244dd3a6be07722146505b642ca203c); version strings in the binary (reference, item 501 (b)(4)): ['KytyPS5-2026-09-15-6a2987a-2240-ged4f96d8', 'KytyPS5-2026-09-15-6a2987a-2225-gc0789a34']; installed before adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 after adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 (expected adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421); revision texts [('log', 124, 'ed4f96d')]
+  env of the tag (KYTY_DIAG_*, KYTY_FIX_*, KYTY_GAME_PATCH, KYTY_GPU_CHECKPOINTS): {'KYTY_DIAG_F5': '1', 'KYTY_DIAG_F5ID': '1'}
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']; variant form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 present at 2026-10-04T23:42:21Z; entries of _ShaderCache/PPSA21564: 1347; source hash of the tag binary a54ae4bd != installed (cold by signature, refer
+  entry line 341968; first GuestOut line 11894; scene change line None; first scene frame n 189; hold (sum dt after it) 332.1 s; frames >= 1 s after it 0 (max dt_us 316935) - REPORT
+  run record: outcome ok hold_exit None hold_s 330.1 close_rc 0 close_killed False
+  death markers (REPORT): 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; GamePatch lines 0; cmask_fce_nohit b42=drawn lines 0; [Vulkan][E] 0; AsyncPipelines: skipped draw 66 (reference)
+  manifest: manifest cmp EQUAL files 3325 listsha 4450f3746559f7991b1c6b2332609c95f6a50eb2252b6569ac3d703a7d821621
+  lines carrying DiagF5: 169, DiagF6: 0, FixF5Cmu: 0 [], DiagF5Id: 972 (mode=1 [75], mode=0 0), DiagF5Ev: 64 (malformed 0)
+  F5 frame lines 168 (malformed 0); mode lines [74] (before the first GuestOut YES); identity violations 0 []; monotonicity violations 0 []; lines with f5cmu_* != 0: 0; F5 health (REPORT) OK
+  F5 last line (log line 2286232): frame=19983 rt_resolves=16232 dcc_rt=2879 rtcheck_meta=4054195 dcc_rt_pending=79188 dcc_rt_cleared=79188 dcc_rt_skip_levels=0 dcc_rt_skip_partial=0 dcc_rt_skip_decode=0 dcc_rt_skip_layers=0 dcc_mat_pending=183 dcc_mat_cleared=183 dcc_mat_undecoded=0 dcc_fce=119534 dcc_fce_image=99539 dcc_fce_no_image=19995 dcc_fill_all=279454 dcc_fill_meta=99536 dcc_fill_clear=99536 dcc_fill_uncompressed=0 dcc_fill_unknown=0 dcc_reset_stale=13 dcc_reset_type=0 meta_refused_known=378749 meta_cs_tracked=279375 meta_cs_untracked=99374 meta_dma_untracked=0 meta_dma_noclear=0 cmask_rt_pending=20180 cmask_rt_cleared=20180 cmask_rt_skip_value=0 cmask_rt_skip_partial=0 cmask_rt_skip_decode=0 cmask_rt_skip_layers=0 cmask_fce=39981 cmask_fce_noimage=0 cmask_fce_meta=19985 cmask_fce_msaa=0 cmask_fce_layout=0 cmask_fce_nofill=0 cmask_fce_drawn=19797 cmask_fce_b42=195 cmask_fce_unapplied=4 fmask_read=0 round_unorm=0 round_float=1008119 round_other=0 ds_unbound=0 ds_unbound_clear=0 stereo_writes=398395 stereo_nonzero=0 zero_disp=237612 f5cmu_kept=0 f5cmu_kept_applied=0 f5cmu_exact_stale=0 f5cmu_fallback=0 dcc_stale_bucket_only=13 dcc_stale_fallback=0 cmask_rt_bucket_only=0 f5cmu_exact_cpu=0
+  F5 f5cmu_*: f5cmu_kept=0 f5cmu_kept_applied=0 f5cmu_exact_stale=0 f5cmu_fallback=0 f5cmu_exact_cpu=0; F26 (item 492 (g)(5)): dcc_stale_bucket_only=13 dcc_stale_fallback=0 cmask_rt_bucket_only=0; cmask_fce_b42=195 cmask_fce_unapplied=4 cmask_fce_meta=19985
+  DiagF5Ev: cmask_fce lines 64 (limit exhausted YES), cmask_fce_nohit lines 0 (limit exhausted NO); fix counts all {'off': 64, 'fresh': 0, 'exact_stale': 0, 'kept': 0, 'kept_applied': 0, 'fallback': 0}; in scene {'off': 0, 'fresh': 0, 'exact_stale': 0, 'kept': 0, 'kept_applied': 0, 'fallback': 0}
+  EVENT fce n=1 b42=hit present=31 gpu=0 image=0x0000000538bc0000 cmask=0x000000055675f000 extent=480x270 applied=1 fix=off why=- line=52507 before
+  EVENT fce n=2 b42=hit present=31 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 applied=0 fix=off why=- line=55941 before
+  EVENT fce n=3 b42=hit present=31 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 applied=1 fix=off why=- line=127547 before
+  EVENT fce n=4 b42=hit present=31 gpu=0 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 applied=1 fix=off why=- line=127996 before
+  EVENT fce n=5 b42=hit present=34 gpu=3 image=0x0000000512570000 cmask=0x000000056c058000 extent=1920x1080 applied=1 fix=off why=- line=129056 before
+  EVENT fce n=6 b42=hit present=35 gpu=4 image=0x0000000539100000 cmask=0x0000000570787000 extent=608x342 applied=1 fix=off why=- line=130007 before
+  EVENT fce n=7 b42=hit present=35 gpu=4 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=0 fix=off why=- line=130041 before
+  EVENT fce n=8 b42=hit present=35 gpu=4 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=1 fix=off why=- line=131693 before
+  EVENT fce n=9 b42=hit present=36 gpu=5 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=1 fix=off why=- line=132478 before
+  EVENT fce n=10 b42=hit present=37 gpu=6 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=1 fix=off why=- line=133616 before
+  EVENT fce n=11 b42=hit present=37 gpu=6 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=1 fix=off why=- line=134953 before
+  EVENT fce n=12 b42=hit present=38 gpu=7 image=0x0000000513d80000 cmask=0x000000057075c000 extent=2432x1368 applied=1 fix=off why=- line=137540 before
+  EVENT fce n=13 b42=hit present=39 gpu=8 image=0x000000053b6a0000 cmask=0x0000000570b46000 extent=608x342 applied=1 fix=off why=- line=139800 before
+  EVENT fce n=14 b42=hit present=39 gpu=8 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=0 fix=off why=- line=139851 before
+  EVENT fce n=15 b42=hit present=40 gpu=9 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=1 fix=off why=- line=141961 before
+  EVENT fce n=16 b42=hit present=41 gpu=10 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=1 fix=off why=- line=144595 before
+  EVENT fce n=17 b42=hit present=42 gpu=11 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=1 fix=off why=- line=147993 before
+  EVENT fce n=18 b42=hit present=43 gpu=12 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=1 fix=off why=- line=148951 before
+  EVENT fce n=19 b42=hit present=44 gpu=13 image=0x0000000513d80000 cmask=0x0000000570b1b000 extent=2432x1368 applied=1 fix=off why=- line=151730 before
+  EVENT fce n=20 b42=hit present=45 gpu=14 image=0x000000053c390000 cmask=0x000000057112e000 extent=832x468 applied=1 fix=off why=- line=152417 before
+  EVENT fce n=21 b42=hit present=45 gpu=14 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=0 fix=off why=- line=152449 before
+  EVENT fce n=22 b42=hit present=46 gpu=15 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=1 fix=off why=- line=152919 before
+  EVENT fce n=23 b42=hit present=47 gpu=16 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=1 fix=off why=- line=153337 before
+  EVENT fce n=24 b42=hit present=48 gpu=17 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=1 fix=off why=- line=155010 before
+  EVENT fce n=25 b42=hit present=49 gpu=18 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=1 fix=off why=- line=156802 before
+  EVENT fce n=26 b42=hit present=50 gpu=19 image=0x0000000517610000 cmask=0x0000000570ff6000 extent=3328x1872 applied=1 fix=off why=- line=158336 before
+  EVENT fce n=27 b42=hit present=51 gpu=20 image=0x000000053cc10000 cmask=0x0000000571728000 extent=960x540 applied=1 fix=off why=- line=159565 before
+  EVENT fce n=28 b42=hit present=51 gpu=20 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=159679 before
+  EVENT fce n=29 b42=hit present=52 gpu=21 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=161460 before
+  EVENT fce n=30 b42=hit present=53 gpu=22 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=162504 before
+  EVENT fce n=31 b42=hit present=54 gpu=23 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=163731 before
+  EVENT fce n=32 b42=hit present=55 gpu=24 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=164996 before
+  EVENT fce n=33 b42=hit present=56 gpu=25 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=170908 before
+  EVENT fce n=34 b42=hit present=57 gpu=26 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=176322 before
+  EVENT fce n=35 b42=hit present=58 gpu=27 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=176627 before
+  EVENT fce n=36 b42=hit present=59 gpu=28 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=177109 before
+  EVENT fce n=37 b42=hit present=60 gpu=29 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=177596 before
+  EVENT fce n=38 b42=hit present=61 gpu=30 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=178090 before
+  EVENT fce n=39 b42=hit present=62 gpu=31 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=178651 before
+  EVENT fce n=40 b42=hit present=63 gpu=32 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=179552 before
+  EVENT fce n=41 b42=hit present=64 gpu=33 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=181699 before
+  EVENT fce n=42 b42=hit present=65 gpu=34 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=183664 before
+  EVENT fce n=43 b42=hit present=66 gpu=35 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=185518 before
+  EVENT fce n=44 b42=hit present=67 gpu=36 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=185997 before
+  EVENT fce n=45 b42=hit present=68 gpu=37 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=186328 before
+  EVENT fce n=46 b42=hit present=69 gpu=38 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=187042 before
+  EVENT fce n=47 b42=hit present=70 gpu=39 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=187190 before
+  EVENT fce n=48 b42=hit present=71 gpu=40 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=188281 before
+  EVENT fce n=49 b42=hit present=72 gpu=41 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=188869 before
+  EVENT fce n=50 b42=hit present=73 gpu=42 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=189060 before
+  EVENT fce n=51 b42=hit present=74 gpu=43 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=189323 before
+  EVENT fce n=52 b42=hit present=75 gpu=44 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=189552 before
+  EVENT fce n=53 b42=hit present=76 gpu=45 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=189709 before
+  EVENT fce n=54 b42=hit present=77 gpu=46 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=189965 before
+  EVENT fce n=55 b42=hit present=78 gpu=47 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=190755 before
+  EVENT fce n=56 b42=hit present=79 gpu=48 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=191135 before
+  EVENT fce n=57 b42=hit present=80 gpu=49 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=191471 before
+  EVENT fce n=58 b42=hit present=81 gpu=50 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=192368 before
+  EVENT fce n=59 b42=hit present=82 gpu=51 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=192754 before
+  EVENT fce n=60 b42=hit present=83 gpu=52 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=192811 before
+  EVENT fce n=61 b42=hit present=84 gpu=53 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=194556 before
+  EVENT fce n=62 b42=hit present=85 gpu=54 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=195035 before
+  EVENT fce n=63 b42=hit present=86 gpu=55 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=195521 before
+  EVENT fce n=64 b42=hit present=87 gpu=56 image=0x0000000519b90000 cmask=0x00000005715b0000 extent=3840x2160 applied=1 fix=off why=- line=195592 before
+  DiagF5Id sum lines 34 (malformed sum/key lines 0; exit=1 lines 0); id violations []; monotonicity violations []
+  DiagF5Id last sum (log line 2270998): frame=19800 exit=0 fce=19812 r0=0 r1=19810 r2=2 r3=0 r4=0 r5=0 r6=0 r7=0 cs=375272 img_clear=98459 meta_clear=0 tracked=276813 tracked_other=0 exec_nofill=0 exec_fill_clear=0 exec_fill_other=0 changed=276792 changed_na=0 marks_set=78849 marks_dropped=1 marks_overflow=0 stale_apply=0 next_texture=5 next_target=0 next_none=33 next_exit=0 next_cleared=0 next_bufreads=2 next_merged=19774 next_overflow=0 keys_fce=6 keys_cs=67 overflow_fce=0 overflow_cs=0 stamp_late=0 marks=12 open=0 dcc_fce_no_image=19812 meta_cs_untracked=98459 meta_cs_tracked=276813 id_fce=ok id_cs=ok
+  stamp_late (item 496 (b)(3), 501 (b)(2)) = 0; meta_clear = 0
+  printed lines: fce 14, cs 243, fce_next 6, stale_apply 0
+  B2KEY base=0x0000000563800000 dcc=0x00000005637f0000 reason=r1 n=19802 n_at_entry>=4 in_scene<=19798 printed=4 (in scene 0) entry=PendingDcc clear_mask!=0=True dcc_en=1 wr_after=none cpu_mod=0 next=bufreads=0 cleared=0 exit=0 none=33 target=0 texture=0
+  B2KEY base=0x0000000510d10000 dcc=0x000000056d898000 reason=r1 n=2 n_at_entry>=2 in_scene<=0 printed=2 (in scene 0) entry=PendingDcc clear_mask!=0=True dcc_en=1 wr_after=none cpu_mod=0 next=bufreads=0 cleared=0 exit=0 none=0 target=0 texture=1
+  B2KEY base=0x0000000511650000 dcc=0x000000057072f000 reason=r1 n=2 n_at_entry>=2 in_scene<=0 printed=2 (in scene 0) entry=PendingDcc clear_mask!=0=True dcc_en=1 wr_after=none cpu_mod=0 next=bufreads=0 cleared=0 exit=0 none=0 target=0 texture=1
+  B2KEY base=0x0000000511650000 dcc=0x0000000570aee000 reason=r2 n=2 n_at_entry>=2 in_scene<=0 printed=2 (in scene 0) entry=PendingDcc clear_mask!=0=True dcc_en=1 wr_after=none cpu_mod=0 next=bufreads=0 cleared=0 exit=0 none=0 target=0 texture=1
+  B2KEY base=0x0000000512cf0000 dcc=0x0000000570fa2000 reason=r1 n=2 n_at_entry>=2 in_scene<=0 printed=2 (in scene 0) entry=PendingDcc clear_mask!=0=True dcc_en=1 wr_after=none cpu_mod=0 next=bufreads=1 cleared=0 exit=0 none=0 target=0 texture=1
+  B2KEY base=0x0000000513bf0000 dcc=0x0000000571540000 reason=r1 n=2 n_at_entry>=2 in_scene<=0 printed=2 (in scene 0) entry=PendingDcc clear_mask!=0=True dcc_en=1 wr_after=none cpu_mod=0 next=bufreads=1 cleared=0 exit=0 none=0 target=0 texture=1
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000513dd0000 class=tracked n=1 n_at_entry>=1 in_scene<=0 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=1
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000056d8b8000 class=tracked n=3 n_at_entry>=3 in_scene<=0 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=3
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000056d898000 class=tracked n=3 n_at_entry>=3 in_scene<=0 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=3
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000556759000 class=tracked n=3 n_at_entry>=3 in_scene<=0 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=3
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000056c058000 class=tracked n=3 n_at_entry>=3 in_scene<=0 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=3
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000056d8ac000 class=tracked n=3 n_at_entry>=3 in_scene<=0 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=3
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000056c05e000 class=tracked n=3 n_at_entry>=3 in_scene<=0 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=3
+  B3KEY shader=0xa572ee17a880e71c addr=0x00000005637f0000 class=tracked n=19801 n_at_entry>=4 in_scene<=19797 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000055c00d000 class=tracked n=19801 n_at_entry>=4 in_scene<=19797 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000513dd0000 class=img_clear n=6 n_at_entry>=4 in_scene<=2 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x00000005150c0000 class=tracked n=3 n_at_entry>=3 in_scene<=0 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=3
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000055c050000 class=tracked n=187 n_at_entry>=4 in_scene<=183 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000055c080000 class=tracked n=187 n_at_entry>=4 in_scene<=183 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000055c0b0000 class=tracked n=187 n_at_entry>=4 in_scene<=183 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000053b9f0000 class=img_clear n=3 n_at_entry>=3 in_scene<=0 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=3
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000053be70000 class=img_clear n=3 n_at_entry>=3 in_scene<=0 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=3
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000507410000 class=img_clear n=1 n_at_entry>=1 in_scene<=0 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=1
+  B3KEY shader=0xa572ee17a880e71c addr=0x00000005164b0000 class=tracked n=1 n_at_entry>=1 in_scene<=0 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=1
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570765000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000057072f000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570726000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000057075c000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000057074d000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570783000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x00000005164b0000 class=img_clear n=22 n_at_entry>=4 in_scene<=18 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000518350000 class=tracked n=11 n_at_entry>=4 in_scene<=7 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000053d4a0000 class=img_clear n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000053db80000 class=img_clear n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570b24000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570aee000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570ae5000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570b1b000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570b0c000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570b42000 class=tracked n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000053fa40000 class=img_clear n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000540120000 class=img_clear n=5 n_at_entry>=4 in_scene<=1 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000051bf30000 class=tracked n=1 n_at_entry>=1 in_scene<=0 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=1
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000571006000 class=tracked n=20 n_at_entry>=4 in_scene<=16 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570fa2000 class=tracked n=23 n_at_entry>=4 in_scene<=19 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570f92000 class=tracked n=23 n_at_entry>=4 in_scene<=19 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570ff6000 class=tracked n=23 n_at_entry>=4 in_scene<=19 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000570fda000 class=tracked n=23 n_at_entry>=4 in_scene<=19 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000057103e000 class=tracked n=23 n_at_entry>=4 in_scene<=19 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000051bf30000 class=img_clear n=64 n_at_entry>=4 in_scene<=60 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000051f7b0000 class=tracked n=7 n_at_entry>=4 in_scene<=3 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000051fb30000 class=tracked n=2 n_at_entry>=1 in_scene<=1 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=2
+  B3KEY shader=0xa572ee17a880e71c addr=0x00000005715c4000 class=tracked n=19761 n_at_entry>=4 in_scene<=19757 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000571540000 class=tracked n=19761 n_at_entry>=4 in_scene<=19757 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000057152c000 class=tracked n=19761 n_at_entry>=4 in_scene<=19757 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x00000005715b0000 class=tracked n=19760 n_at_entry>=4 in_scene<=19756 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000571588000 class=tracked n=19761 n_at_entry>=4 in_scene<=19757 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000057160c000 class=tracked n=19761 n_at_entry>=4 in_scene<=19757 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000051fb30000 class=img_clear n=59117 n_at_entry>=4 in_scene<=59113 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000524500000 class=tracked n=167 n_at_entry>=4 in_scene<=163 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000056d8f0000 class=tracked n=19613 n_at_entry>=0 in_scene<=19613 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000055ac08000 class=tracked n=19613 n_at_entry>=0 in_scene<=19613 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000055c010000 class=img_clear n=19613 n_at_entry>=0 in_scene<=19613 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=1 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000055c120000 class=tracked n=19613 n_at_entry>=0 in_scene<=19613 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000055c160000 class=tracked n=19613 n_at_entry>=0 in_scene<=19613 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x00000005716b8000 class=tracked n=19595 n_at_entry>=0 in_scene<=19595 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000571818000 class=tracked n=19594 n_at_entry>=0 in_scene<=19594 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000524500000 class=img_clear n=19594 n_at_entry>=0 in_scene<=19594 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000057112e000 class=tracked n=3 n_at_entry>=0 in_scene<=3 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=3
+  B3KEY shader=0xa572ee17a880e71c addr=0x00000005710ca000 class=tracked n=17 n_at_entry>=0 in_scene<=17 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x00000005711f0000 class=tracked n=15 n_at_entry>=0 in_scene<=15 stale_apply=0 sub=- vclass=- entry=Dcc changed=1 mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x000000051f7b0000 class=img_clear n=16 n_at_entry>=0 in_scene<=16 stale_apply=0 sub=- vclass=- entry=PendingDcc changed=- mark=0 printed=4
+  B3KEY shader=0xa572ee17a880e71c addr=0x0000000571728000 class=tracked n=3 n_at_entry>=0 in_scene<=3 stale_apply=0 sub=- vclass=- entry=CMask changed=1 mark=0 printed=3
+  FCE_NEXT base=0x0000000510d10000 kind=texture dframes=0 meta=Dcc@0x56d898000 cleared=0 buf_reads=0 merged=1 line=56028 scene=False
+  FCE_NEXT base=0x0000000511650000 kind=texture dframes=0 meta=Dcc@0x57072f000 cleared=0 buf_reads=0 merged=1 line=130101 scene=False
+  FCE_NEXT base=0x0000000511650000 kind=texture dframes=0 meta=Dcc@0x570aee000 cleared=0 buf_reads=0 merged=1 line=139983 scene=False
+  FCE_NEXT base=0x0000000512cf0000 kind=texture dframes=0 meta=Dcc@0x570fa2000 cleared=0 buf_reads=1 merged=1 line=152507 scene=False
+  FCE_NEXT base=0x0000000513bf0000 kind=texture dframes=0 meta=Dcc@0x571540000 cleared=0 buf_reads=1 merged=1 line=159885 scene=False
+  FCE_NEXT base=0x0000000563800000 kind=none dframes=600 meta=- cleared=0 buf_reads=0 merged=601 line=668360 scene=True
+  ROW binary sha256 of the tag = d4328b0c (F16k2 copy; item 501 (b)(4)): YES
+  ROW installed adb0c82f before the tag: YES
+  ROW installed adb0c82f after the return: YES
+  ROW env of the form id: YES
+  ROW entered (entry line of enemy_final): YES
+  ROW hold >= 300 s after the first scene frame: YES
+  ROW the process lived through the hold (outcome ok, hold_exit null): YES
+  ROW manifest of the caches, saves and GLCache before = after the return: YES
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch / b42=drawn line (item 273 (z), 501 (b)(1)): YES
+  ROW control: DiagF5Id: mode=1 before the first GuestOut: YES
+  ROW control: >= 1 sum line, 0 malformed DiagF5Id sum/key lines: YES
+  ROW control: identities (g)(4): id_fce=ok and id_cs=ok on every sum line, printed and recounted by the reader: YES
+  ROW control: positive: FCE site events (fce) >= 1 on the last sum line: YES
+  ROW control: positive: ClearMeta site events (cs) >= 1 on the last sum line: YES
+  ROW control: 0 lines FixF5Cmu: (KYTY_FIX_F5CMU not set): YES
+  ROW control: f5cmu_* = 0 on every frame line: YES
+  ROW control: meta_clear = 0 on the last sum line (item 495 (v)): YES
+  CONTROL ID ALIVE

@@ -1,0 +1,18 @@
+2026-10-05T06:11:15Z S15a3 (HPP-617) start; lock none, stop none; orig copies of the 5 files to s15a3/orig
+2026-10-05T06:11:17Z patch_names_s15a3 rc 0 (8991f02e9008fa8f); out 04a74be7d8379173232ab9c88ac8608d1de3b33aa3b3395a70a794958ac49115
+2026-10-05T06:11:36Z API in_progress: HPP-573 exec 61b17c94; HPP-617 exec 088d5adf; HPP-561 exec -; HPP-611 exec 6d834a58; lock none - before: test_sc_s15, test_go_s15, test_enter_scene_s15 (new code)
+2026-10-05T06:12:26Z test_sc_s15 (new code) rc 0 wall 14 s; 0 FAIL; checks: 266 ALL OK ; out sha256 3b91b988c992140b0846aab4e505d56e6a9ad3a28f25fcfeeaf5844b60110e9b
+2026-10-05T06:12:49Z negative control: test_sc_s15 (new) on s15a3/orig/sc_s15.py (seal 15) rc 1 wall 13 s; 4 FAIL (FAIL E6 the  FAIL E6g the FAIL F4 the  FAIL F6b the ); out sha256 1ddc49a7ce8e50daca4151b980d7f03fa9f14d6d68483b23dd747b311228e0e9
+2026-10-05T06:13:34Z test_enter_scene_s15 rc 0 wall 36 s; 0 FAIL; checks: 27 ALL OK ; out sha256 d959ac772f8fcb29f193200ace3af093423369c4298ed8ed8ada11157723caac
+2026-10-05T06:16:11Z mkseal_s15a3.py placed (e56a664ed15d97a1); anchors of mut_sc_s15: 359/359 found, only ed6_rel changed (anch_s15a3.out.txt a695516d6daf656f); waiting: HPP-573 FS8c (track F runs link) in_progress exec 61b17c94 - general rule 30, test_go_s15 / negctl_go / hmut go (> 60 s) wait
+2026-10-05T06:54:42Z waited 06:16:11Z-06:54:33Z (by the API poll): HPP-573 FS8c series fs8_v / fs8_w / fs8_ef under its lock (lock lines of C:/kyty/SEALED_RUN.lock seen 06:23:59Z, 06:33:22Z, 06:41:5xZ; none 06:48:39Z); HPP-573 done, executionRunId empty at 06:54:33Z; no file and no process of this link while the lock existed
+2026-10-05T06:54:42Z API in_progress: HPP-561 exec -; HPP-617 exec 088d5adf; lock none - before: test_go_s15 full (new code, G18e)
+2026-10-05T06:56:35Z test_go_s15 (new code) rc 0 wall 113 s; 0 FAIL; checks: 54 ALL OK ; out sha256 3686490c4f3119fbe73645a02aeb14d23ef2734001ed7c505b578e9b46c6f58c
+2026-10-05T06:56:41Z API in_progress: HPP-561 exec -; HPP-617 exec 088d5adf; lock none - before: negative control test_go_s15 on s15a3/orig/go_s15.sh
+2026-10-05T06:57:03Z negative control: test_go_s15 (new) on s15a3/orig/go_s15.sh (seal 15) rc 1 wall 22 s; 19 FAIL (G7 G8 G9 G10 G12 G13 G14 G15 G16 G17 G18 G18b G18c G18d G18e G19 G20 GL1 GL2 ); out sha256 bdf7ed98267d67b12315131af59c99052f2424b491b20d9daa2a80c141aa6869
+2026-10-05T06:57:11Z API in_progress: HPP-561 exec -; HPP-617 exec 088d5adf; lock none - before: hmut_s15.py go (6 hand mutants of go_s15.sh, rerun; S15a outputs of s15/hmut/hmut_g0*.txt kept in s15a3/hmut_go_s15a/)
+2026-10-05T06:59:02Z hmut go rc 0 wall 110 s: HMUT go: 6 of 6 killed; out sha256 99f4e12b8997ce99250625b0eae1dca39b33503fb9080ad04e9d60abc6e9bd6e
+2026-10-05T06:59:11Z API in_progress: HPP-618 exec 61ea080b; HPP-561 exec -; HPP-617 exec 088d5adf; lock none - before: mkseal_s15a3 (39 DRY=2 plans, seal 16)
+2026-10-05T06:59:22Z mkseal_s15a3 rc 0 wall 11 s: SEAL C:/kyty/s288/pred/16_s.md sha256 a2548f95b39e2704d61b66a9cc060000609644db9fed369b410fe70ddcf7e4f3 lines 456 (from C:/kyty/s288/pred/15_s.md a2ffca701e3db082); names 45 lines; plans 39 = DRY=2 
+2026-10-05T06:59:24Z --check-seal --seal pred/16_s.md rc 0 SEAL: PASS (out 00ccf8a9cd9735422e4f1aacc7e41125d1b6c4086344199d5c8582fff1b65b0b); negative --check-seal --seal pred/15_s.md rc 1 SEAL: FAIL (out b48ec4fd3d3b2ccfbb7c662694c64cd06d4a23d4024e0d029ea89429d7ef3787); --seal-path pred/16_s.md
+2026-10-05T07:00:11Z FACTS section S15a3 appended (facts_s15a3.md d9595291d1a4afd3)

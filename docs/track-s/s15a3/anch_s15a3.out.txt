@@ -1,0 +1,4 @@
+mutants old 359 new 359; ids equal True
+changed or count-changed mutants: [('ed6_rel', 1, 1)]
+anchors with count 0 on the new code: []
+anchors with count 0 on the old code: []

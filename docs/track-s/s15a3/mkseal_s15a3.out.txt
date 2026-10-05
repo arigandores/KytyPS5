@@ -1,0 +1,1 @@
+SEAL C:/kyty/s288/pred/16_s.md sha256 a2548f95b39e2704d61b66a9cc060000609644db9fed369b410fe70ddcf7e4f3 lines 456 (from C:/kyty/s288/pred/15_s.md a2ffca701e3db082); names 45 lines; plans 39 = DRY=2

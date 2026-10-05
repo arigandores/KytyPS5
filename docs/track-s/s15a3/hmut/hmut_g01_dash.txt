@@ -1,0 +1,25 @@
+suite test_go_s15.py sha256 83dac74f9f9945bd4604d1d8f1e54c96896cc8ec5d274634ae328332a2ccede1 target go_s15.sh sha256 c75388d80c08aee94977ed8e8d8a3a83534b771d2c9e231af28395b26675890b
+PASS G1 go_s15.sh is ASCII only
+PASS G2 a tag with other characters -> rc 2 usage
+PASS G3 the stop file -> rc 4 BUSY before anything
+PASS G4 a foreign lock -> rc 4 BUSY (lock held) before any process
+PASS G5 the guard s4/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s6/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s10/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s10/IN_ARM -> rc 1 before the lock
+PASS G5 the guard s15/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s15/IN_ARM -> rc 1 before the lock
+PASS G5 the guard s12/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s12/IN_ARM -> rc 1 before the lock
+PASS G5 the guard s14z/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s14z/IN_ARM -> rc 1 before the lock
+PASS G5b RC5 the edge: RETURN_FAILED / IN_ARM one level deeper (sx/deeper/) are not guards -> the call goes past the guards (here to the seal check)
+PASS G6 PLWAIT not a number -> rc 2; above 540 -> rc 2
+PASS G7 an unknown tag -> rc 2
+PASS G8 the seal line "installed: PENDING" -> rc 6 before the lock (an edition names the binary)
+PASS G9 no line "installed:" -> rc 1
+PASS G10 the edition 12b in force without the call line of k_01 -> rc 1 (PLWAIT differs from the seal)
+PASS G11 two call lines of one tag -> rc 1
+PASS G12 PLWAIT other than the call line -> rc 1
+PASS G13 DRY=1 of every arm kind -> rc 0 with a DRY line naming the installed line of the edition 12b
+FAIL G14 k_01: class M (no trace), mode cat, the app caches from s15/empty_app, GLCache as found, hold 180, stable 100, timeout 600, no video, no validation, no seed path; the seal 11b; item 511 (z)(3): hold 300, no --hold-u

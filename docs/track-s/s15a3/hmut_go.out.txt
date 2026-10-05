@@ -1,0 +1,7 @@
+g01_dash         KILLED by FAIL G14 k_01: class M (no trace), mode cat, the app caches from s15/empty_app, GLCache as found, hold 180, st  (output sha256 167ccddf2c805b9c)
+g02_unanchored   KILLED by FAIL G18d the hold-rule field of the plan: "-" -> no --hold-u; N:N:N -> --hold-u N:N:N; "x", "120:3000" or non  (output sha256 38ed4b5b3d5b5426)
+g03_rc           KILLED by FAIL G18d the hold-rule field of the plan: "-" -> no --hold-u; N:N:N -> --hold-u N:N:N; "x", "120:3000" or non  (output sha256 269409529dc085df)
+g04_no_hux       KILLED by FAIL G16 u_01: class T, the empty app caches, the seed path s15/seeds and prepare-cold, video, hold 300 with -  (output sha256 daa76f8467027760)
+g05_enter_s9     KILLED by FAIL G14 k_01: class M (no trace), mode cat, the app caches from s15/empty_app, GLCache as found, hold 180, st  (output sha256 fb483f7c6594c978)
+g06_field10      KILLED by FAIL G8 the seal line "installed: PENDING" -> rc 6 before the lock (an edition names the binary)  (output sha256 573ba14477b3f86a)
+HMUT go: 6 of 6 killed

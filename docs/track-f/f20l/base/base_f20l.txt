@@ -1,0 +1,48 @@
+suite b32_base.py sha256 ab8087676de58873024f736308983e06b78ba90f72f3b38f2bf81160cacf1c2d target f20e_read.py sha256 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa
+F20a log_shp128.txt.xz s128/log_shp128.txt.xz bin 9235a7ac hold False scene 124.3 s slow70 0 (variant 0) window medians 34852.5 B5 [] sha256 c5e62c5c4c84a9b5
+F20a log_v142.txt s142/log_v142.txt bin 9235a7ac hold True scene 334.1 s slow70 0 (variant 0) window medians 34000.5 B5 [] sha256 565707122e53bb50
+F20a log_fs_b.txt f287/fsc/log_fs_b.txt bin dac02fb9 hold True scene 334.3 s slow70 1 (variant 0) window medians 47340.0 B5 [] sha256 a11728c0173e0f74
+F20a log_i146_v.txt s146/log_i146_v.txt bin dac02fb9 hold True scene 334.6 s slow70 4 (variant 2) window medians 47469.5 B5 [119563] sha256 37d42b3e92384193
+F20a log_fs3_v.txt f287/fs3/fs3c/log_fs3_v.txt bin 540c035a hold True scene 334.2 s slow70 0 (variant 0) window medians 34450.5 B5 [] sha256 b4e66e3a59926f43
+F20a log_fs4_v.txt f287/fs4c/log_fs4_v.txt bin 31cbfee8 hold True scene 334.4 s slow70 0 (variant 0) window medians 34665.0 B5 [] sha256 7ec2b2de288dd671
+F20a log_fs5_v.txt f287/fs5/fs5c/log_fs5_v.txt bin 631ff987 hold True scene 334.3 s slow70 2 (variant 0) window medians 34330.0 B5 [102163] sha256 02aa3473bf1cf737
+F20a log_fs5_i.txt f287/fs5/fs5e/log_fs5_i.txt bin 631ff987 hold True scene 334.4 s slow70 2 (variant 0) window medians 34338.5 B5 [] sha256 0543f2335293826c
+F20a log_s12_v.txt s288/s12/log_s12_v.txt bin adb0c82f hold True scene 334.4 s slow70 0 (variant 0) window medians 34421.5 B5 [] sha256 66a46ff28d854d22
+F20c f20_v01 f287/f20c/log_f20_v01.txt bin 9325446c hold True scene 334.3 s slow70 0 (variant 0) window medians 35399.0 B5 [] sha256 038934986acc86ec
+F20c f20_v02 f287/f20c/log_f20_v02.txt bin 9325446c hold True scene 334.1 s slow70 0 (variant 0) window medians 35780.5 B5 [] sha256 37520d638ee9c43c
+F20c f20_v03 f287/f20c/log_f20_v03.txt bin 9325446c hold True scene 334.4 s slow70 0 (variant 0) window medians 34844.0 B5 [] sha256 396f16106a352363
+F20c f20_v04 f287/f20c/log_f20_v04.txt bin 9325446c hold True scene 334.4 s slow70 0 (variant 0) window medians 35288.0 B5 [] sha256 14f889d9b5b806df
+F20c f20_v05 f287/f20c/log_f20_v05.txt bin 9325446c hold True scene 334.6 s slow70 0 (variant 0) window medians 35325.5 B5 [] sha256 1266599649a35286
+F20c f20_v06 f287/f20c/log_f20_v06.txt bin 9325446c hold True scene 334.2 s slow70 0 (variant 0) window medians 34305.0 B5 [] sha256 2582a1949ab20718
+F20c f20_v07 f287/f20c/log_f20_v07.txt bin 9325446c hold True scene 334.3 s slow70 1 (variant 1) window medians 35339.0 B5 [] sha256 8cc63b89954d4997
+F20c f20_v09 f287/f20c/log_f20_v09.txt bin 9325446c hold True scene 334.9 s slow70 0 (variant 0) window medians 35332.0 B5 [] sha256 153742947ae95646
+F20c f20_v11 f287/f20c/log_f20_v11.txt bin 9325446c hold True scene 334.5 s slow70 0 (variant 0) window medians 34630.5 B5 [] sha256 251ea2392198ae0b
+F20c f20_v12 f287/f20c/log_f20_v12.txt bin 9325446c hold True scene 334.3 s slow70 2 (variant 2) window medians 36569.5 B5 [] sha256 06c4120d9cb7eb2c
+F20c f20_v13 f287/f20c/log_f20_v13.txt bin 9325446c hold True scene 334.0 s slow70 0 (variant 0) window medians 34200.5 B5 [] sha256 420106650b55db92
+F20c f20_v14 f287/f20c/log_f20_v14.txt bin 9325446c hold True scene 334.2 s slow70 0 (variant 0) window medians 34401.5 B5 [] sha256 632f6446979c4a9a
+F20c f20_v15 f287/f20c/log_f20_v15.txt bin 9325446c hold True scene 334.7 s slow70 0 (variant 0) window medians 34838.5 B5 [] sha256 1e5adbcc45e28670
+F20c f20_v16 f287/f20c/log_f20_v16.txt bin 9325446c hold True scene 334.5 s slow70 0 (variant 0) window medians 35033.0 B5 [] sha256 b12ad252cd273994
+F20c f20_v17 f287/f20c/log_f20_v17.txt bin 9325446c hold True scene 334.5 s slow70 0 (variant 0) window medians 35209.5 B5 [] sha256 afc57f89a164624f
+F20c f20_v18 f287/f20c/log_f20_v18.txt bin 9325446c hold True scene 334.4 s slow70 2 (variant 2) window medians 35406.0 B5 [] sha256 4e5a873ded23f3fb
+F20c f20_v19 f287/f20c/log_f20_v19.txt bin 9325446c hold True scene 334.2 s slow70 0 (variant 0) window medians 35952.5 B5 [] sha256 45fe98a1d7dbb3b5
+F20c f20_v20 f287/f20c/log_f20_v20.txt bin 9325446c hold True scene 334.2 s slow70 0 (variant 0) window medians 34592.0 B5 [] sha256 6144951e67c96852
+F20c f20_v21 f287/f20c/log_f20_v21.txt bin 9325446c hold True scene 334.1 s slow70 5 (variant 5) window medians 35288.5 B5 [] sha256 4b2649af1b55e9d0
+F20c f20_v22 f287/f20c/log_f20_v22.txt bin 9325446c hold True scene 334.3 s slow70 1 (variant 1) window medians 36712.5 B5 [] sha256 ce635301843af87b
+F20c f20_v23 f287/f20c/log_f20_v23.txt bin 9325446c hold True scene 334.7 s slow70 1 (variant 1) window medians 34746.5 B5 [] sha256 542481ec75736640
+F20c f20_v24 f287/f20c/log_f20_v24.txt bin 9325446c hold True scene 334.4 s slow70 0 (variant 0) window medians 36824.0 B5 [] sha256 9abd673a68451ec4
+F20e f20_v25 f287/f20e/log_f20_v25.txt bin 2c9b69b9 hold True scene 334.2 s slow70 0 (variant 0) window medians 36818.5 B5 [103015] sha256 61235449073956d4
+F20e f20_v26 f287/f20e/log_f20_v26.txt bin 2c9b69b9 hold True scene 334.4 s slow70 0 (variant 0) window medians 46632.0 B5 [113410] sha256 e5736ce46d1ebb14
+F20e f20_v27 f287/f20e/log_f20_v27.txt bin 2c9b69b9 hold True scene 334.6 s slow70 0 (variant 0) window medians 34904.5 B5 [] sha256 6df9957707723fe0
+F20e f20_v28 f287/f20e/log_f20_v28.txt bin 2c9b69b9 hold True scene 334.4 s slow70 0 (variant 0) window medians 35800.0 B5 [] sha256 bbf61c0bf298f029
+F20e f20_v29 f287/f20e/log_f20_v29.txt bin 2c9b69b9 hold True scene 334.3 s slow70 0 (variant 0) window medians 36171.5 B5 [129327] sha256 a3a8158269ff837d
+F20e f20_v30 f287/f20e/log_f20_v30.txt bin 2c9b69b9 hold True scene 334.3 s slow70 1 (variant 1) window medians 36082.0 B5 [116080] sha256 50da1a8608c54258
+F20e f20_v31 f287/f20e/log_f20_v31.txt bin 2c9b69b9 hold True scene 334.2 s slow70 0 (variant 0) window medians 36443.0 B5 [] sha256 488eb433bd22df1e
+F20e f20_v32 f287/f20e/log_f20_v32.txt bin 2c9b69b9 hold True scene 334.4 s slow70 0 (variant 0) window medians 35844.0 B5 [164548] sha256 17f5be3696ca1435
+F20e f20_v33 f287/f20e/log_f20_v33.txt bin 2c9b69b9 hold True scene 334.3 s slow70 0 (variant 0) window medians 35115.0 B5 [159353] sha256 3928d894099ac687
+F20e f20_v34 f287/f20e/log_f20_v34.txt bin 2c9b69b9 hold True scene 334.2 s slow70 0 (variant 0) window medians 41596.0 B5 [157641] sha256 d1c0c459d17fa55f
+F20e f20_v35 f287/f20e/log_f20_v35.txt bin 2c9b69b9 hold True scene 334.5 s slow70 1 (variant 1) window medians 45939.5 B5 [] sha256 5d5ea3a7c10e5958
+HOLDS 41 (F20a 8, F20c 22, F20e 11; want 41 = 8 + 22 + 11)
+U5(2) BASE slow70_per_hold 0.561 (23 frames / 41 holds); variant without B5, B33, B1b 0.3902
+U5(1) BASE med_dt_b2win 36171.5 (median of 11 F20e tag medians [36818.5, 46632.0, 34904.5, 35800.0, 36171.5, 36082.0, 36443.0, 35844.0, 35115.0, 41596.0, 45939.5]; mean 38304.2; pooled 36302.0)
+U5(3) BASE mean_dt_b5 134767.7 (7 B5 frames of F20e holds)
+BASE OK

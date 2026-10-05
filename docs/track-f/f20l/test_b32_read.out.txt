@@ -1,0 +1,5 @@
+watch: start 2026-10-05T19:02:36Z child 29084 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+suite test_b32_read.py sha256 f8a65b7aab4eb61ff128679c170146a37f36b8c379260773dd4c220c5f3a1aa6 target b32_read.py sha256 4f4f69cbef7b8811f541fc97b7b204cfa36df9e7dae6ec17c94ae05a688c6c75
+checks 138
+ALL OK
+rc=0 end 2026-10-05T19:02:45Z

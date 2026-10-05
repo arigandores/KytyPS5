@@ -1,0 +1,14 @@
+suite refs_f20l.py refs 11
+ok fe0bf0a0:docs/ROADMAP.md:23217
+ok fe0bf0a0:docs/ROADMAP.md:23221
+ok fe0bf0a0:docs/ROADMAP.md:23222
+ok fe0bf0a0:docs/ROADMAP.md:23224
+ok fe0bf0a0:docs/ROADMAP.md:23225
+ok aaf4504e:docs/ROADMAP.md:23237
+ok 8f3ee6ad:docs/ROADMAP.md:23246
+ok 3c2ece7b:docs/ROADMAP.md:23254
+ok 3c2ece7b:docs/ROADMAP.md:23258
+ok 61b410bf:src/common/diagB32.cpp:579
+ok 61b410bf:src/common/diagB32.cpp:653
+refs 11
+ALL OK

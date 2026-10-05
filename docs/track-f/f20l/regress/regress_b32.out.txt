@@ -1,0 +1,6 @@
+watch: start 2026-10-05T19:04:19Z child 46052 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+suite regress_b32.py target b32_read.py sha256 4f4f69cbef7b8811f541fc97b7b204cfa36df9e7dae6ec17c94ae05a688c6c75
+log_f20_v35.txt rc13 True stripped 0 hold True P_I 1 K_I 1 frames [(8487, 115041, 'nothing')] classes ['NO_SAMPLES'] sig ['9177b426'] dir ['variant_fixb26_fixb1b_fixf10_fixf19'] u5_med 45939.5 u5_slow70 1 b5 0 OK
+log_f20_v32.txt rc13 True stripped 0 hold True P_I 0 K_I 0 frames [(2442, 164548, 'B5')] classes ['NO_SAMPLES'] sig ['9177b426'] dir ['variant_fixb26_fixb1b_fixf10_fixf19'] u5_med 35844.0 u5_slow70 0 b5 1 OK
+REGRESS PASS
+rc=0 end 2026-10-05T19:04:31Z

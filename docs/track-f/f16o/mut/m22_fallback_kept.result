@@ -1,0 +1,13 @@
+=== arm f5_fix (KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at K4 K+1 neighbours: ring fallback: applied true != expected false (fill 0x0 mask 0xfffffffe)
+=== arm f5_fix_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at K4 K+1 neighbours: ring fallback: applied true != expected false (fill 0x0 mask 0xfffffffe)
+=== arm fix_only (KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at K4 K+1 neighbours: ring fallback: applied true != expected false (fill 0x0 mask 0xfffffffe)
+=== arm f5_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D2 PrepareDccClear, K+1: kept false found true fill 0x0 mask 0xfffffffe
+=== arm f5_f26_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D2 PrepareDccClear, K+1: kept false found true fill 0x0 mask 0xfffffffe
+=== arm f5_fix_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at K4 K+1 neighbours: ring fallback: applied true != expected false (fill 0x0 mask 0xfffffffe)
+CAUGHT

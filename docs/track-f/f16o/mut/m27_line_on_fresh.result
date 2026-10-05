@@ -1,0 +1,13 @@
+=== arm f5 (KYTY_DIAG_F5=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D0f PrepareDccClear, no write after the fill: no line: an event line with KYTY_DIAG_F5 off or of a fresh fill
+=== arm f5_fix (KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D0f PrepareDccClear, no write after the fill: no line: an event line with KYTY_DIAG_F5 off or of a fresh fill
+=== arm f5_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D0f PrepareDccClear, no write after the fill: no line: an event line with KYTY_DIAG_F5 off or of a fresh fill
+=== arm f5_fix_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D0f PrepareDccClear, no write after the fill: no line: an event line with KYTY_DIAG_F5 off or of a fresh fill
+=== arm f5_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D0f PrepareDccClear, no write after the fill: no line: f26_kept: delta 1 != expected 0
+=== arm f5_f26_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D0f PrepareDccClear, no write after the fill: no line: f26_kept: delta 1 != expected 0
+CAUGHT

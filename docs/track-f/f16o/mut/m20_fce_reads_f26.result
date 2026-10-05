@@ -1,0 +1,7 @@
+=== arm f5_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at K1 fresh: no write after the fill: the event line: DiagF5Ev: cmask_fce n=1 present=0 gpu=0 image=0x0000000208000000 cmask=0x0000000208600000 extent=960x540 applied=1 fix=fresh
+=== arm f5_f26_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at K1 fresh: no write after the fill: the event line: DiagF5Ev: cmask_fce n=1 present=0 gpu=0 image=0x0000000208000000 cmask=0x0000000208600000 extent=960x540 applied=1 fix=fresh
+=== arm f26_only (KYTY_FIX_F26=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at K2 neighbour: bucket stale, exact kept, cleared: applied true != expected false (fill 0x0 mask 0xfffffffe)
+CAUGHT

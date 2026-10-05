@@ -1,0 +1,2 @@
+adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421 *C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe
+46fbfa2a43b8f07eb92753c5112c957c7752911611ee3d7429d801fad873d9f3 *C:/kyty/build/install/kyty_emulator.exe

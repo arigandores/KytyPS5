@@ -1,0 +1,13 @@
+=== arm none () rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at L line limits: cmask_fce 0 + 1024 nohit 0 + 64 dcc_stale 0 + 256
+=== arm f5 (KYTY_DIAG_F5=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D1 PrepareDccClear, neighbour: the dcc_stale line: 
+=== arm f5_fix (KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D1 PrepareDccClear, neighbour: the dcc_stale line: 
+=== arm f5_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D1 PrepareDccClear, neighbour: the dcc_stale line: 
+=== arm f5_fix_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at D1 PrepareDccClear, neighbour: the dcc_stale line: 
+=== arm id_only (KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+ShaderRecompilerComputeTests: F16k failed at L line limits: cmask_fce 0 + 1024 nohit 0 + 64 dcc_stale 0 + 256
+CAUGHT

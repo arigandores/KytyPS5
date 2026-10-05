@@ -1,0 +1,13 @@
+a2fee0d9 + test only (tests 08c28dfe): failed_lines 2
+[replay] inline descriptors: words=66 user=64 reads=0 canonical=1 why=
+[replay] inline descriptors: roles keep=6 inert=54 ptr=0/0 v=1/1 t=1/1 meta=1/1 buffers=2 images=2
+[replay] pointer to a V# table: words=38 user=32 reads=4 canonical=1 why=
+[replay] pointer to a V# table: roles keep=4 inert=30 ptr=1/1 v=1/1 t=0/0 meta=0/0 buffers=1 images=0
+[replay] walk bits: reads=8 w=36 complete 45f=1 55f=1 45e=1 10f=0
+[replay] walk bits: canonical=0 why=self ok=1 complete=0 culprit=36:role1:0000045f->0000010f
+ShaderCfgTests: failed: replay walk bits: the record is rejected (canon_self of s17c_c2 reproduced)
+[replay] walk address: reads=4 low=005aa100 exact=0 canonical=0 why=self ok=0 complete=0 culprit=30:role2:005aa100->00000100
+ShaderCfgTests: failed: replay walk address: an address word kept as read did not fail the residual check
+[replay] canon stand: unspoiled canonical=1 why=
+[replay] canon stand: address roles 2:6:1 3:7:1400000 6:4:100 7:5:100000 8:8:ffffff 9:9:0
+[replay] canon stand: spoiled canonical=0 why=self ok=1 complete=1 culprit=2:role6:00001000->00000000

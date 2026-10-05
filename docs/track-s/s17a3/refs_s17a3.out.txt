@@ -1,0 +1,16 @@
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:586 OK | +1 NOT OK | +1 text: Role role, uint32_t value, const RunResult& base, const IR::ResourceSpecialization& live) 
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:615 OK | +1 NOT OK | +1 text: std::vector<Word>& words, size_t& user_words, std::string& why, bool canon_stand) {
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:642 OK | +1 NOT OK | +1 text: for (size_t i = 0; i < raw.size(); i++) {
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:651 OK | +1 NOT OK | +1 text: auto perturbed = raw;
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:699 OK | +1 NOT OK | +1 text: if (value != raw[i].value && !SubstitutionHolds(plan, raw, user_words, i, role, value, bas
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:700 OK | +1 NOT OK | +1 text: // Kept as read (ROLE_KEEP). A word the classifier took for an address (any role but INERT
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:703 OK | +1 NOT OK | +1 text: role            = ROLE_KEEP;
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:778 OK | +1 NOT OK | +1 text: (word.role == ROLE_KEEP && word.value >= 0x10000u && addresses.contains(word.value))) {
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1155 OK | +1 NOT OK | +1 text: }
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1202 OK | +1 NOT OK | +1 text: if (why.starts_with("self")) {
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7053 OK | +1 NOT OK | +1 text: return;
+9635cb0f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7082 OK | +1 NOT OK | +1 text: ShaderReplay::Catalogue initial;
+9635cb0f:tests/shaderCfgTests.cpp:15495 OK | +1 NOT OK | +1 text: namespace SR = ShaderReplay;
+9635cb0f:tests/shaderCfgTests.cpp:16295 OK | +1 NOT OK | +1 text: 
+refs 14
+ALL OK

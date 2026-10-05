@@ -1,0 +1,4 @@
+ .../host_gpu/renderer/pipeline/shaderReplay.cpp    |  56 ++++-
+ .../host_gpu/renderer/pipeline/shaderReplay.h      |   4 +-
+ tests/shaderCfgTests.cpp                           | 261 +++++++++++++++++++++
+ 3 files changed, 314 insertions(+), 7 deletions(-)

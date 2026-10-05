@@ -1,0 +1,13 @@
+ok   canonical catalogue R_ADDR 0
+ok   raw address words R_ADDR 9 (got 9)
+ok   spoiled body rejected (checksum)
+ok   trailing bytes rejected (trailing bytes 2)
+ok   canonical() = ShaderReplay::WordCanonical fixtures
+LAYOUT OK fields 37
+ok   layout check of a matching line
+LAYOUT MISMATCH spec.words scanner 36 printed 32
+LAYOUT FAIL fields 37
+ok   layout check catches a moved offset
+LAYOUT OK fields 37
+ok   layout of the build = scanner constants (C:/kyty/KytyPS5/docs/track-s/s17a3/layout_S17a3.txt)
+ALL OK

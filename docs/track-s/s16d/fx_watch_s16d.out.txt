@@ -1,0 +1,7 @@
+P: rc=7 KILLED: procload 2026-10-05T04:04:47Z pids [66152]; tree [15496, 63800], alive after []; trigger->exit 1.89 s (<= 3); tree 2 processes, alive after [] => OK
+L: rc=3 KILLED: lock 2026-10-05T04:04:55Z; tree [53680, 75884], alive after []; trigger->exit 1.80 s (<= 3); tree 2 processes, alive after [] => OK
+S: rc=4 KILLED: STOP 2026-10-05T04:05:02Z; tree [60252, 60860], alive after []; trigger->exit 0.42 s (<= 3); tree 2 processes, alive after [] => OK
+R: rc=8 REFUSED: procload 2026-10-05T04:05:04Z pids [63060] => OK
+N: rc=0, KILLED lines 0, wall 17.0 s (>= 15), watchdog CPU 0.0612 s/s from start, 0.0000 s/s steady (< 0.5) => OK
+times lines (fixture file; lock line deferred by rule 27): 2 ['procload', 'STOP'] => OK
+ALL OK

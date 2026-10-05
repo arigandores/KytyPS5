@@ -1,0 +1,47 @@
+S16d probe P-S16 (HPP-608, ROADMAP s122 item 516(v)); catalogue S13b; manifest sha256 65a95adf3de91f5f343253d3d0bdf51931411dd7dbe48518f9e28cfcaa0935fd listed 729 ok 729 bad 0 / cache files 726 parsed 726 parse_fail 0 permutations 1214 signatures {'KytySC3:26ce5fc78ea3b20be537c7696be041f5e97d9e58:robust:ftz:cbank:fixb26:fixb1b:fixf10': 726} / recipes 1852 end_ok True signature KytySC3:26ce5fc78ea3b20be537c7696be041f5e97d9e58:robust:ftz:cbank:fixb26:fixb1b:fixf10|10288:376:216:44:516:125 layout {'vs': 10288, 'ps': 376, 'cs': 216, 'rendering': 44, 'vertex_input': 516, 'static': 125} / eboot sha256 3b5100797fe83663e18a650f82f901d066acf1029ae80cfb1be638fe0839debd elf_texts 6087 unique 5698 / stage file missing 0 gcn files 487 input blobs 1135 / permutations referenced 1214 manual>0 81 manual counts {0: 1133, 1: 81}
+control manifest sha256 65a95adf3de91f5f343253d3d0bdf51931411dd7dbe48518f9e28cfcaa0935fd listed 729 ok 729 -> ok
+control catalogue signatures {'KytySC3:26ce5fc78ea3b20be537c7696be041f5e97d9e58:robust:ftz:cbank:fixb26:fixb1b:fixf10': 726} parse_fail 0 -> ok
+control recipes 1852 (denominator 1852)
+control A1 signature ['signature=KytySC3:26ce5fc78ea3b20be537c7696be041f5e97d9e58:robust:ftz:cbank:fixb26:fixb1b:fixf10'] (member) layout ['layout=10288:376:216'] knobs 67 not-default none
+  A1 S effective robust=1 ftz=1 ftzd=0 cbank=1 cbank_cs=0 vec_const_static_class=1 cbank_aligned_copy=1 bvh_cap_token= bda_lean=0
+control A2 signature ['signature=KytySC3:26ce5fc78ea3b20be537c7696be041f5e97d9e58:robust:ftz:cbank:fixb26:fixb1b:fixf10'] (member) layout ['layout=10288:376:216'] knobs 67 not-default none
+  A2 S effective robust=1 ftz=1 ftzd=0 cbank=1 cbank_cs=0 vec_const_static_class=1 cbank_aligned_copy=1 bvh_cap_token= bda_lean=0
+control B1 signature ['signature=KytySC3:a54ae4bd03a673fe35ae89bad218132257b11383:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19'] (reference) layout ['layout=10288:376:216'] knobs 68 not-default none
+  B1 S effective robust=1 ftz=1 ftzd=0 cbank=1 cbank_cs=0 vec_const_static_class=1 cbank_aligned_copy=1 bvh_cap_token= bda_lean=0 fix_f19=1
+control B2 signature ['signature=KytySC3:a54ae4bd03a673fe35ae89bad218132257b11383:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19'] (reference) layout ['layout=10288:376:216'] knobs 68 not-default none
+  B2 S effective robust=1 ftz=1 ftzd=0 cbank=1 cbank_cs=0 vec_const_static_class=1 cbank_aligned_copy=1 bvh_cap_token= bda_lean=0 fix_f19=1
+control B3 signature ['signature=KytySC3:a54ae4bd03a673fe35ae89bad218132257b11383:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19'] (reference) layout ['layout=10288:376:216'] knobs 68 not-default none
+  B3 S effective robust=1 ftz=1 ftzd=0 cbank=1 cbank_cs=0 vec_const_static_class=1 cbank_aligned_copy=1 bvh_cap_token= bda_lean=0 fix_f19=1
+arm B tree: git diff --stat 4d9e8ab7 <commit> -- <signature set>:
+  CMakeLists.txt                                     | 17 +++++++-
+   .../renderer/pipeline/shaderTranslationCache.cpp   |  5 ++-
+   .../ir/passes/ResourceMaterialization.cpp          | 46 +++++++++++++++++++++-
+   .../recompiler/ir/passes/ResourceMaterialization.h | 16 ++++++++
+   4 files changed, 80 insertions(+), 4 deletions(-)
+  set: src/graphics/shader src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp src/graphics/guest_gpu/gpu_format.h src/graphics/guest_gpu/gpu_defs.h src/graphics/host_gpu/renderer/image/imageInfo.h CMakeLists.txt src/generate_version.cmake
+determinism: arm A jobs 4938 in run 1, 4938 in run 2 (reverse order, other processes); nondet 0
+  comparator vs_00b124d0084bf058_3d72286881522fcf.bin#0 base eq stride=equal format=not_equal spirv=not_equal
+  comparator vs_00b124d0084bf058_9715e0b84b1bd2cc.bin#0 base eq stride=equal format=not_equal spirv=not_equal
+  comparator vs_027467899081bd5c_7d152e1eef86fc54.bin#0 base eq stride=equal format=not_equal spirv=not_equal
+  comparator vs_04e7f84bca841dde_018b1e2fc425cba6.bin#0 base eq stride=equal format=not_equal spirv=not_equal
+  comparator vs_04e7f84bca841dde_018b1e2fc425cba6.bin#1 base eq stride=equal format=not_equal spirv=not_equal
+  comparator vs_04e7f84bca841dde_018b1e2fc425cba6.bin#2 base eq stride=equal format=not_equal spirv=not_equal
+  comparator vs_04e7f84bca841dde_025c191283f2b47a.bin#0 base eq stride=equal format=not_equal spirv=not_equal
+  comparator vs_04e7f84bca841dde_025c191283f2b47a.bin#1 base eq stride=equal format=not_equal spirv=not_equal
+  comparator vs_04e7f84bca841dde_025c191283f2b47a.bin#2 base eq stride=equal format=not_equal spirv=not_equal
+  comparator vs_04e7f84bca841dde_8c36cb9f8b1c95e8.bin#0 base eq stride=equal format=not_equal spirv=not_equal
+comparator (letter: corrupt key word stride): not equal 0 of 10 -> FAIL; executor variant (reference): format 10 of 10, SPIR-V word 10 of 10
+F19: permutations referenced 1214, with a stored manual image 81
+F19 stand control form K: permutations 81, line wrong or absent 0 -> ok; f19_both 81 (<= 81)
+F19 stand control form C: permutations 81, line wrong or absent 0 -> ok; f19_both 81 (<= 81)
+harness (arm A0 not equal): 0 of 1852 = 0.0000 (limit 0.02) -> ok
+form K: prepared 1827 src=2 fused=23 key=0 push=0 shape=0 ident=0 translate=0 emit=0 val=0 | identity prepared + sum rejected = 1852 = 1852 - 0 -> ok; R_B = 0.9865
+form C: prepared 1827 src=2 fused=23 canon=0 push=0 shape=0 ident=0 translate=0 emit=0 val=0 | identity prepared + sum rejected = 1852 = 1852 - 0 -> ok; R_B = 0.9865
+b_diff (arm B SPIR-V != stored where (v)(9) expects equal): jobs 0; unique permutation outcomes K 0, C 0; b_push_moved K 0 C 0 (reference)
+reference form K: permutations in prepared recipes 1199 of 1214 referenced; programs 480 of 493
+reference form C: permutations in prepared recipes 1199 of 1214 referenced; programs 480 of 493
+reference k16UNorm outcomes (native comparison; not expected equal to stored), (form, kind, eq): {('C', 'control', '0'): 5, ('C', 'recipe', '0'): 293, ('K', 'control', '0'): 5, ('K', 'recipe', '0'): 293}
+jobs without result: 0
+R_B by form: K 0.9865 C 0.9865; better form K 0.9865
+NO_POWER members: comparator
+OUTCOME (word by item 516(v)(11)-(12); R_B not read before the lead reads b_diff; reading - S16f): NO_POWER

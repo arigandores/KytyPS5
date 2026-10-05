@@ -1,0 +1,6 @@
+ CMakeLists.txt                                     | 17 +++++++-
+ .../renderer/pipeline/shaderTranslationCache.cpp   |  5 ++-
+ .../ir/passes/ResourceMaterialization.cpp          | 46 +++++++++++++++++++++-
+ .../recompiler/ir/passes/ResourceMaterialization.h | 16 ++++++++
+ 4 files changed, 80 insertions(+), 4 deletions(-)
+set: src/graphics/shader src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp src/graphics/guest_gpu/gpu_format.h src/graphics/guest_gpu/gpu_defs.h src/graphics/host_gpu/renderer/image/imageInfo.h CMakeLists.txt src/generate_version.cmake

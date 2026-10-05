@@ -1,0 +1,57 @@
+ok   start_for fits
+ok   start_for zero size
+ok   start_for edge 28+4 fits
+ok   start_for edge 29+4 no
+ok   advance no push
+ok   advance push
+ok   chain mesh: PS at 6, VS at 9
+ok   chain PS without push data: VS at 0
+ok   chain compute at 0
+ok   clean world: PASS_K0
+ok   clean world: R_B K = 1
+ok   clean world: no NO_POWER members
+ok   src
+ok   fused
+ok   key (form K only)
+ok   canon by NOINPUT in form C
+ok   push: VS stored start 0 but chain gives 3
+ok   shape
+ok   ident
+ok   translate (VS after PS crashed in T)
+ok   emit
+ok   val
+ok   hang counts as translate
+ok   prepared
+ok   identity K: prepared + rejected = denominator
+ok   R_B K = prepared / denominator
+ok   KILL when R_B < 0.90 in both forms
+ok   order: key before shape
+ok   harness 1 of 100: not NO_POWER (share 0.01)
+ok   harness out of denominator: R_B = 99/99
+ok   harness row
+ok   harness 4 of 100 -> NO_POWER
+ok   R_B 0.90 exactly in both forms -> PASS_K0
+ok   R_B 0.80 both forms -> KILL
+ok   better form decides: K 0.80, C 0.90 -> PASS_K0
+ok   nondet -> NO_POWER
+ok   second run missing a job -> nondet
+ok   comparator 9 of 10 -> NO_POWER
+ok   comparator crash is not "not equal"
+ok   comparator absent -> NO_POWER
+ok   knob not default in arm A -> NO_POWER
+ok   arm B without KYTY_FIX_F19=1 -> NO_POWER
+ok   arm A signature member
+ok   layout member
+ok   arm B signature is reference only
+ok   F19 stand ok, f19_both 2
+ok   F19 stand wrong at k16 -> NO_POWER
+ok   F19 permutation count != 81 -> NO_POWER
+ok   one F19 outcome fails val -> recipe val, f19_both 0
+ok   b_diff counts non-F19 and k8 mismatches, not k16
+ok   b_diff: k8 with an indirect table is not expected equal
+ok   b_diff does not change the reason (prepared)
+ok   manifest member
+ok   catalogue signature member
+ok   denominator member
+ok   job without result -> NO_POWER
+ALL OK

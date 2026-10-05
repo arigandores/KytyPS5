@@ -1,0 +1,23 @@
+diff --git a/tests/shaderCfgTests.cpp b/tests/shaderCfgTests.cpp
+index 4da0b2ed..6c9a1d1f 100644
+--- a/tests/shaderCfgTests.cpp
++++ b/tests/shaderCfgTests.cpp
+@@ -14201,10 +14201,18 @@ BdaRewriteCounts RewriteBuffersToBda(ShaderRecompiler::IR::Program &program,
+ } // namespace
+ } // namespace Libs::Graphics
+ 
++// Track S, S16d (HPP-608, ROADMAP s122 item 516(v)): probe P-S16 of S-replay (tests/S16dProbe.inc).
++#include "S16dProbe.inc"
++
+ int main() {
+   using namespace Libs::Graphics;
+ 
+   EnsureConfigInitialized();
++  if (const char *s16d_jobs = std::getenv("KYTY_S16D_JOBS"); s16d_jobs != nullptr) {
++    // Track S, S16d (HPP-608): probe P-S16, read-only over the S13b catalogue (S16dProbe.inc).
++    const char *s16d_out = std::getenv("KYTY_S16D_OUT");
++    return s16d_out == nullptr ? 1 : S16dProbe::Main(s16d_jobs, s16d_out);
++  }
+   if (const char *recompile = std::getenv("KYTY_RECOMPILE"); recompile != nullptr) {
+     // Offline recompilation: KYTY_RECOMPILE="<gcn.bin>;<cache.bin>;<out.spv>[;<permutation>]"
+     // translates a raw GCN dump (_Shaders/original) with the current translator and emits the

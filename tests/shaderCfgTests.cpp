@@ -15132,10 +15132,19 @@ BdaRewriteCounts RewriteBuffersToBda(ShaderRecompiler::IR::Program &program,
 } // namespace
 } // namespace Libs::Graphics
 
+// Track S, S16d (HPP-608, ROADMAP s122 item 516(v)): probe P-S16 of S-replay (tests/S16dProbe.inc).
+#define KYTY_S16D_HAVE_F19 1
+#include "S16dProbe.inc"
+
 int main() {
   using namespace Libs::Graphics;
 
   EnsureConfigInitialized();
+  if (const char *s16d_jobs = std::getenv("KYTY_S16D_JOBS"); s16d_jobs != nullptr) {
+    // Track S, S16d (HPP-608): probe P-S16, read-only over the S13b catalogue (S16dProbe.inc).
+    const char *s16d_out = std::getenv("KYTY_S16D_OUT");
+    return s16d_out == nullptr ? 1 : S16dProbe::Main(s16d_jobs, s16d_out);
+  }
   if (const char *specdump_dir = std::getenv("KYTY_TEST_SPECDUMP_DIR"); specdump_dir != nullptr) {
     // Track S, S14j (HPP-533): offline dump of a translation cache directory (SpecDumpMain above), read-only.
     const char *specdump_out = std::getenv("KYTY_TEST_SPECDUMP_OUT");

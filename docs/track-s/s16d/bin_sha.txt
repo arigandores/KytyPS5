@@ -1,0 +1,2 @@
+11ea13bc116f28323fcad6b3188a58d8f3a8a083ab390e32d3411ad64a81a05d *buildA/shader_cfg_tests.exe
+2326dcf253481d6fc9edcb5f2bf42096b4e02d9f29e76e1c2a83b53713fb66f5 *buildB/shader_cfg_tests.exe

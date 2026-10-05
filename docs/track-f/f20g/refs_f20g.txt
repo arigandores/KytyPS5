@@ -1,0 +1,51 @@
+OK   R1 2d12e087:docs/ROADMAP.md:23207 | +1: (а) **Приёмка строкой. F20e ✓** Печать до первого тега: KytyPS5 `234a4d67` (12:56:50Z) раньше первог
+OK   R2 2d12e087:docs/ROADMAP.md:23211 | +1: (д) **Проект атрибуции — F20g (Probe Designer, решение лида; офлайн, без замка, без кода и без запус
+OK   R3 2d12e087:docs/ROADMAP.md:23212 | +1: (е) **Звенья (стадия review лида у звена исполнителя):** F20f `HPP-625` — `done` этим пунктом. **F20
+OK   R4 2d12e087:docs/ROADMAP.md:23160 | +1: (е) **Серия F20e (Harness Engineer, замок, последняя в очереди замка — как F20c, п. 462(г)).** Назна
+OK   R5 2d12e087:docs/ROADMAP.md:23159 | +1: (д) **Критерий «ИСПРАВЛЕНО Б32 Sky Garden» (решение лида, до кода).** На бинаре с правкой по умолчан
+OK   R6 457655e2:docs/ROADMAP.md:22463 | +1: (а) **Приёмка строкой. F19a ✓** (review лида — этот пункт; коммит F19a KytyPS5 `0b065a70`). **Провер
+OK   R7 2d12e087:docs/ROADMAP.md:22555 | +1: (а) **Приёмка строкой. F20a ✓** (review лида — комментарии `abd61c5f` (RC1) и `2430206c` (RC1 принят
+OK   R8 2d12e087:docs/ROADMAP.md:23162 | +1: (з) **Долги F20c (п. 324(и)(5)).** (1) Наблюдение §4 «первый кадр сцены после 09:16Z — n 311–347» — 
+OK   R9 2d12e087:docs/track-f/f20c.md:132 | +1: |---|---|---|---|---|---|---|
+OK   R10 2d12e087:docs/track-f/f20e.md:114 | +1: | tag | idx | n | `dt_us` | t from the first scene frame, s | class (letter / F20a) | `PriorityStall
+OK   R11 2d12e087:docs/ROADMAP.md:14328 | +1: два комментария) — принят, применение — «Процесс» 3. MINOR-2 (два комментария лида под замком) — при
+OK   C1 302347b4:src/graphics/presentation/videoOut.cpp:1384 | +1: " gpu_blocked=%llu submits=%llu submit_us=%llu semwaits=%llu semwait_us=%llu"
+OK   C2 302347b4:src/graphics/presentation/videoOut.cpp:1381 | +1: ? (cur.host_ns - r.reserve_host_ns) / 1000u
+OK   C3 302347b4:src/graphics/presentation/videoOut.cpp:1222 | +1: present_ns = Common::FrameStats::NowNs() - present_t0;
+OK   C4 302347b4:src/graphics/presentation/videoOut.cpp:1236 | +1: // Track P, KYTY_PVAR=2 (kernel/pvar.h): the key n of the PVar line (= FrameTrace: n= of this flip).
+OK   C5 302347b4:src/graphics/presentation/videoOut.cpp:3845 | +1: PRINT_NAME();
+OK   C6 302347b4:src/graphics/presentation/videoOut.cpp:2565 | +1: {"gw_idle_n", FS::Counter::GpuWallIdleN, false},
+OK   C7 302347b4:src/common/frameStats.cpp:636 | +1: #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+OK   C8 302347b4:src/common/frameStats.cpp:618 | +1: #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+OK   C9 302347b4:src/common/frameStats.cpp:607 | +1: static const bool on = [] {
+OK   C10 302347b4:src/graphics/host_gpu/renderer/commandScheduler.cpp:642 | +1: const auto wait_t0     = std::chrono::steady_clock::now();
+OK   C11 302347b4:src/graphics/host_gpu/renderer/commandScheduler.cpp:655 | +1: static_cast<unsigned long long>(operation.tick), unsubmitted ? 1 : 0,
+OK   C12 302347b4:src/graphics/host_gpu/renderer/commandScheduler.cpp:680 | +1: EXIT_IF(g_deferred_callback_scheduler == this);
+OK   C13 302347b4:src/graphics/host_gpu/renderer/commandScheduler.cpp:927 | +1: const auto buffer = m_command.m_buffer;
+OK   C14 302347b4:src/graphics/host_gpu/renderer/commandScheduler.cpp:938 | +1: tick = m_master.NextTick();
+OK   C15 302347b4:src/graphics/host_gpu/renderer/commandScheduler.cpp:959 | +1: RecordGpuSubmission(this, m_master.Handle(), tick, submit, true, result);
+OK   C16 302347b4:src/graphics/host_gpu/renderer/commandScheduler.cpp:997 | +1: FS::Add(FS::Counter::Submits, 1);
+OK   C17 302347b4:src/graphics/host_gpu/renderer/masterSemaphore.cpp:149 | +1: FS::Add(FS::Counter::SemWaits, 1);
+OK   C18 302347b4:src/common/hostException.cpp:173 | +1: if (t0 != 0 && fault_trace && info.type == ExceptionType::AccessViolation) {
+OK   C19 302347b4:src/common/platform/sysWindowsVirtual.cpp:321 | +1: GetProtectionFlag(mode), &old_protect) == 0) {
+OK   C20 302347b4:src/graphics/presentation/window/swapchain.cpp:657 | +1: m_handle, std::numeric_limits<uint64_t>::max(), m_image_acquired[m_frame_index], nullptr,
+OK   C21 302347b4:src/graphics/guest_gpu/graphicsRun.cpp:714 | +1: }
+OK   C22 302347b4:src/graphics/guest_gpu/graphicsRun.cpp:749 | +1: }
+OK   C23 302347b4:src/kernel/pthread.cpp:3104 | +1: PRINT_NAME();
+OK   C24 302347b4:src/kernel/pthread.cpp:3143 | +1: if (!ready()) {
+OK   C25 302347b4:src/kernel/pthread.cpp:2938 | +1: KernelUseconds usec) {
+OK   C26 302347b4:src/kernel/pthread.cpp:1851 | +1: 
+OK   C27 302347b4:src/kernel/pthread.cpp:2900 | +1: // PRINT_NAME();
+OK   C28 302347b4:src/kernel/pthread.cpp:2810 | +1: // PRINT_NAME();
+OK   C29 302347b4:src/kernel/pthread.cpp:4151 | +1: Common::Timer t;
+OK   C30 302347b4:src/kernel/pthread.cpp:3343 | +1: ", arg = 0x%016" PRIx64 ", stack_addr = 0x%016" PRIx64 ", stack_size = %" PRIu64 "\n",
+OK   C31 302347b4:src/kernel/semaphore.cpp:294 | +1: 
+OK   C32 302347b4:src/kernel/semaphore.cpp:336 | +1: 
+OK   C33 302347b4:src/kernel/eventFlag.cpp:300 | +1: 
+OK   C34 302347b4:src/kernel/eventFlag.cpp:350 | +1: 
+OK   C35 302347b4:src/kernel/eventQueue.cpp:416 | +1: }
+OK   C36 302347b4:src/graphics/host_gpu/pageManager.cpp:775 | +1: FS::Add(FS::Counter::ProtGpuRoN, 1);
+OK   C37 302347b4:CMakeLists.txt:155 | +1: -D SHADER_CACHE_EXTRA_FILES=${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/pipeline/shaderTranslation
+OK   C38 302347b4:src/common/frameStats.cpp:642 | +1: return 0;
+refs 49, failed 0
+ALL OK

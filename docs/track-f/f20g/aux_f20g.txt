@@ -1,0 +1,111 @@
+f20_v07 launched 2026-10-05T09:06:34 (local) env FRAME_TRACE=lite; guest threads with stamped calls in the scene: [3]=?(13), [23]=DrawThread(9455), [42]=Physics_ATQT(7584), [50]=RoomLoad_ATQT(81)
+  n=7750 dt_us=229331 last stamped call 266.041 s -> about 09:11:00.041 local (+-1 s, launch second)
+    gpuclk 2026/10/05 09:10:57.634 | 2325 MHz | 14001 MHz | 41 % | 74.21 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 09:10:58.148 | 2325 MHz | 14001 MHz | 41 % | 74.36 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 09:10:58.649 | 2340 MHz | 14001 MHz | 40 % | 74.56 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 09:10:59.166 | 2340 MHz | 14001 MHz | 40 % | 74.08 W | 68 | 0x0000000000000400
+    gpuclk 2026/10/05 09:10:59.669 | 2317 MHz | 14001 MHz | 41 % | 74.22 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 09:11:00.175 | 2325 MHz | 14001 MHz | 42 % | 74.62 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 09:11:00.680 | 2317 MHz | 14001 MHz | 40 % | 74.29 W | 68 | 0x0000000000000400
+    gpuclk 2026/10/05 09:11:01.195 | 2362 MHz | 14001 MHz | 40 % | 74.03 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 09:11:01.709 | 2377 MHz | 14001 MHz | 43 % | 64.56 W | 67 | 0x0000000000000400
+    gpuclk 2026/10/05 09:11:02.214 | 2377 MHz | 14001 MHz | 42 % | 66.51 W | 69 | 0x0000000000000400
+f20_v18 launched 2026-10-05T12:22:31 (local) env FRAME_TRACE=lite; guest threads with stamped calls in the scene: [3]=?(13), [23]=DrawThread(11030), [42]=Physics_ATQT(8905), [50]=RoomLoad_ATQT(81)
+  n=9198 dt_us=109003 last stamped call 322.204 s -> about 12:27:53.204 local (+-1 s, launch second)
+    gpuclk 2026/10/05 12:27:50.864 | 2460 MHz | 14001 MHz | 37 % | 77.02 W | 73 | 0x0000000000000400
+    gpuclk 2026/10/05 12:27:51.379 | 2497 MHz | 14001 MHz | 46 % | 84.35 W | 73 | 0x0000000000000400
+    gpuclk 2026/10/05 12:27:51.893 | 2347 MHz | 14001 MHz | 43 % | 86.60 W | 73 | 0x0000000000000400
+    gpuclk 2026/10/05 12:27:52.408 | 2460 MHz | 14001 MHz | 42 % | 83.82 W | 72 | 0x0000000000000400
+    gpuclk 2026/10/05 12:27:52.911 | 2407 MHz | 14001 MHz | 47 % | 82.96 W | 72 | 0x0000000000000400
+    gpuclk 2026/10/05 12:27:53.412 | 2460 MHz | 14001 MHz | 44 % | 84.04 W | 73 | 0x0000000000000400
+    gpuclk 2026/10/05 12:27:53.916 | 2400 MHz | 14001 MHz | 43 % | 79.78 W | 73 | 0x0000000000000400
+    gpuclk 2026/10/05 12:27:54.430 | 2182 MHz | 14001 MHz | 15 % | 75.99 W | 71 | 0x0000000000000400
+    gpuclk 2026/10/05 12:27:54.931 | 2362 MHz | 14001 MHz | 40 % | 76.61 W | 73 | 0x0000000000000400
+    gpuclk 2026/10/05 12:27:55.435 | 2475 MHz | 14001 MHz | 43 % | 82.10 W | 73 | 0x0000000000000400
+f20_v21 launched 2026-10-05T12:45:42 (local) env FRAME_TRACE=lite; guest threads with stamped calls in the scene: [3]=?(13), [23]=DrawThread(3707), [42]=Physics_ATQT(3009), [50]=RoomLoad_ATQT(81)
+  n=2828 dt_us=138172 last stamped call 104.158 s -> about 12:47:26.158 local (+-1 s, launch second)
+    gpuclk 2026/10/05 12:47:24.071 | 2422 MHz | 14001 MHz | 44 % | 81.22 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:24.584 | 2362 MHz | 14001 MHz | 43 % | 78.24 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:25.098 | 2385 MHz | 14001 MHz | 44 % | 78.74 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:25.613 | 2370 MHz | 14001 MHz | 44 % | 79.55 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:26.116 | 2385 MHz | 14001 MHz | 47 % | 80.65 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:26.630 | 2355 MHz | 14001 MHz | 43 % | 77.75 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:27.145 | 2422 MHz | 14001 MHz | 42 % | 78.26 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:27.659 | 2400 MHz | 14001 MHz | 35 % | 77.36 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:28.163 | 2377 MHz | 14001 MHz | 42 % | 78.15 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:28.668 | 2415 MHz | 14001 MHz | 43 % | 77.68 W | 70 | 0x0000000000000400
+  n=3025 dt_us=171232 last stamped call 111.084 s -> about 12:47:33.084 local (+-1 s, launch second)
+    gpuclk 2026/10/05 12:47:30.697 | 2400 MHz | 14001 MHz | 38 % | 77.37 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:31.198 | 2407 MHz | 14001 MHz | 42 % | 78.22 W | 71 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:31.700 | 2385 MHz | 14001 MHz | 41 % | 79.50 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:32.204 | 2407 MHz | 14001 MHz | 42 % | 79.52 W | 71 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:32.712 | 2407 MHz | 14001 MHz | 41 % | 79.46 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:33.218 | 2370 MHz | 14001 MHz | 42 % | 79.09 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:33.720 | 2385 MHz | 14001 MHz | 41 % | 77.17 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:34.305 | 2362 MHz | 14001 MHz | 32 % | 73.25 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:34.811 | 1935 MHz | 14001 MHz | 33 % | 66.29 W | 68 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:35.324 | 2385 MHz | 14001 MHz | 42 % | 70.71 W | 70 | 0x0000000000000400
+  n=3108 dt_us=347268 last stamped call 114.264 s -> about 12:47:36.264 local (+-1 s, launch second)
+    gpuclk 2026/10/05 12:47:33.720 | 2385 MHz | 14001 MHz | 41 % | 77.17 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:34.305 | 2362 MHz | 14001 MHz | 32 % | 73.25 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:34.811 | 1935 MHz | 14001 MHz | 33 % | 66.29 W | 68 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:35.324 | 2385 MHz | 14001 MHz | 42 % | 70.71 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:35.840 | 2362 MHz | 14001 MHz | 44 % | 81.86 W | 71 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:36.345 | 2407 MHz | 14001 MHz | 41 % | 79.93 W | 71 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:36.849 | 2325 MHz | 14001 MHz | 42 % | 77.76 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:37.381 | 2332 MHz | 14001 MHz | 34 % | 72.38 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:37.890 | 1770 MHz | 14001 MHz | 1 % | 24.46 W | 67 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:38.394 | 2385 MHz | 14001 MHz | 41 % | 78.23 W | 69 | 0x0000000000000400
+  n=3193 dt_us=180215 last stamped call 117.198 s -> about 12:47:39.198 local (+-1 s, launch second)
+    gpuclk 2026/10/05 12:47:36.849 | 2325 MHz | 14001 MHz | 42 % | 77.76 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:37.381 | 2332 MHz | 14001 MHz | 34 % | 72.38 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:37.890 | 1770 MHz | 14001 MHz | 1 % | 24.46 W | 67 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:38.394 | 2385 MHz | 14001 MHz | 41 % | 78.23 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:38.908 | 2400 MHz | 14001 MHz | 42 % | 57.79 W | 71 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:39.422 | 2385 MHz | 14001 MHz | 43 % | 78.33 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:39.939 | 2250 MHz | 14001 MHz | 25 % | 81.07 W | 69 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:40.476 | 2385 MHz | 14001 MHz | 41 % | 77.37 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:40.983 | 2377 MHz | 14001 MHz | 39 % | 79.29 W | 70 | 0x0000000000000400
+    gpuclk 2026/10/05 12:47:41.488 | 2370 MHz | 14001 MHz | 42 % | 70.61 W | 70 | 0x0000000000000400
+f20_v35 launched 2026-10-05T16:35:27 (local) env FRAME_TRACE=lite; guest threads with stamped calls in the scene: [3]=?(13), [23]=DrawThread(9983), [42]=Physics_ATQT(8178), [50]=RoomLoad_ATQT(81)
+  n=8487 dt_us=115041 last stamped call 300.110 s -> about 16:40:27.110 local (+-1 s, launch second)
+    gpuclk 2026/10/05 16:40:24.696 | 2460 MHz | 14001 MHz | 42 % | 78.53 W | 74 | 0x0000000000000400
+    gpuclk 2026/10/05 16:40:25.210 | 2452 MHz | 14001 MHz | 49 % | 82.40 W | 74 | 0x0000000000000400
+    gpuclk 2026/10/05 16:40:25.723 | 2467 MHz | 14001 MHz | 45 % | 83.25 W | 74 | 0x0000000000000400
+    gpuclk 2026/10/05 16:40:26.238 | 2482 MHz | 14001 MHz | 47 % | 82.52 W | 74 | 0x0000000000000400
+    gpuclk 2026/10/05 16:40:26.743 | 2467 MHz | 14001 MHz | 44 % | 82.52 W | 74 | 0x0000000000000400
+    gpuclk 2026/10/05 16:40:27.255 | 2482 MHz | 14001 MHz | 46 % | 83.04 W | 74 | 0x0000000000000400
+    gpuclk 2026/10/05 16:40:27.758 | 2460 MHz | 14001 MHz | 43 % | 80.87 W | 74 | 0x0000000000000400
+    gpuclk 2026/10/05 16:40:28.273 | 2452 MHz | 14001 MHz | 43 % | 82.45 W | 74 | 0x0000000000000400
+    gpuclk 2026/10/05 16:40:28.774 | 2460 MHz | 14001 MHz | 36 % | 75.78 W | 73 | 0x0000000000000400
+    gpuclk 2026/10/05 16:40:29.277 | 2452 MHz | 14001 MHz | 46 % | 78.43 W | 74 | 0x0000000000000400
+
+process CPU during the excess: (cpu_proc_us - median) / (dt_us - median), cores; cpu_gpu excess; lat excess
+  MAIN (7  v07    n=7750  dt= 229331 ex_dt= 196018 ex_proc=  -78125 cores_in_excess= -0.40 ex_gpu=  -6258 ex_lat= 192116 ex_semwait= 195555 ex_submit= 194636 ex_fault=  -3273
+  MAIN (7  v18    n=9198  dt= 109003 ex_dt=  74716 ex_proc= -156250 cores_in_excess= -2.09 ex_gpu=  12835 ex_lat=  16550 ex_semwait=  70242 ex_submit=   1049 ex_fault=  51188
+  MAIN (7  v21    n=2828  dt= 138172 ex_dt= 105195 ex_proc=  -78125 cores_in_excess= -0.74 ex_gpu=  26091 ex_lat= 105135 ex_semwait=  21820 ex_submit=    108 ex_fault=   1686
+  MAIN (7  v21    n=3025  dt= 171232 ex_dt= 137821 ex_proc=  -46875 cores_in_excess= -0.34 ex_gpu=  -1080 ex_lat=   4128 ex_semwait= 140244 ex_submit=    131 ex_fault=   9305
+  MAIN (7  v21    n=3108  dt= 347268 ex_dt= 313279 ex_proc=  140625 cores_in_excess=  0.45 ex_gpu=  22812 ex_lat=   5844 ex_semwait= 251670 ex_submit=     34 ex_fault=  28274
+  MAIN (7  v21    n=3193  dt= 180215 ex_dt= 147214 ex_proc=  125000 cores_in_excess=  0.85 ex_gpu=    583 ex_lat= 142422 ex_semwait= 142932 ex_submit=     30 ex_fault=  -6373
+  MAIN (7  v35    n=8487  dt= 115041 ex_dt=  80745 ex_proc=  234375 cores_in_excess=  2.90 ex_gpu=   9152 ex_lat=   4486 ex_semwait=   2541 ex_submit=     -8 ex_fault=  -2882
+  CONTROL  v25    n=2530  dt= 103015 ex_dt=  68863 ex_proc=  171875 cores_in_excess=  2.50 ex_gpu=  54494 ex_lat=  -3984 ex_semwait=  52950 ex_submit=    -18 ex_fault=    447
+  CONTROL  v26    n=2478  dt= 113410 ex_dt=  79934 ex_proc=  242188 cores_in_excess=  3.03 ex_gpu=  63243 ex_lat=   4681 ex_semwait=  69344 ex_submit=    -34 ex_fault=   1028
+  CONTROL  v29    n=2506  dt= 129327 ex_dt=  95890 ex_proc=  218750 cores_in_excess=  2.28 ex_gpu=  77638 ex_lat=   2973 ex_semwait=  53206 ex_submit=    -34 ex_fault=   3371
+  CONTROL  v30    n=2464  dt= 116080 ex_dt=  82429 ex_proc=  210938 cores_in_excess=  2.56 ex_gpu=  62978 ex_lat= -10188 ex_semwait=  76420 ex_submit=    -34 ex_fault=  -5326
+  CONTROL  v32    n=2442  dt= 164548 ex_dt= 130931 ex_proc=   15625 cores_in_excess=  0.12 ex_gpu=  90743 ex_lat=  -6116 ex_semwait= 111542 ex_submit=    -27 ex_fault=   5019
+  CONTROL  v33    n=2492  dt= 159353 ex_dt= 125570 ex_proc=  492188 cores_in_excess=  3.92 ex_gpu=  99262 ex_lat=   5582 ex_semwait= 112628 ex_submit=    -18 ex_fault=  -6670
+  CONTROL  v34    n=2505  dt= 157641 ex_dt= 122430 ex_proc=  343750 cores_in_excess=  2.81 ex_gpu=  92590 ex_lat=   -638 ex_semwait=  87497 ex_submit=     15 ex_fault=  -2214
+f20_v07 scene frames 7580: cores median 8.87 p05 1.85; frames with cores < 2.5: 1375 (dt of them: 14,32,35,31,32,35,34,31,33,32,33,48,32,48,33,36,32,34,33,33,32,35,51,36,35,35,34,33,32,32)
+f20_v18 scene frames 8902: cores median 8.71 p05 1.85; frames with cores < 2.5: 1728 (dt of them: 15,14,15,18,18,15,15,18,14,18,15,17,32,32,35,32,33,34,33,34,32,32,33,36,33,30,53,32,32,32)
+f20_v21 scene frames 3004: cores median 9.05 p05 1.89; frames with cores < 2.5: 430 (dt of them: 18,33,31,32,34,36,32,36,35,33,34,36,35,35,32,35,33,33,32,34,32,34,33,48,33,33,31,31,32,32)
+f20_v35 scene frames 8174: cores median 8.90 p05 1.83; frames with cores < 2.5: 1470 (dt of them: 15,14,17,15,14,17,15,18,14,14,19,33,50,32,39,31,51,31,32,32,31,31,52,31,32,32,32,32,33,31)
+
+P(0 events in N holds): fixed p and posterior Beta(4.5, 37.5) (Jeffreys on 4 of 41)
+  N= 11  P0 p=0.10 0.314  p=0.05 0.569  p=0.021 0.792  posterior 0.329 | P(<3) p=0.10 0.910 posterior 0.874
+  N= 20  P0 p=0.10 0.122  p=0.05 0.358  p=0.021 0.654  posterior 0.157 | P(<3) p=0.10 0.677 posterior 0.641
+  N= 29  P0 p=0.10 0.047  p=0.05 0.226  p=0.021 0.540  posterior 0.083 | P(<3) p=0.10 0.435 posterior 0.445
+  N= 40  P0 p=0.10 0.015  p=0.05 0.129  p=0.021 0.428  posterior 0.042 | P(<3) p=0.10 0.223 posterior 0.283
+  N= 45  P0 p=0.10 0.009  p=0.05 0.099  p=0.021 0.385  posterior 0.032 | P(<3) p=0.10 0.159 posterior 0.232
+  N= 60  P0 p=0.10 0.002  p=0.05 0.046  p=0.021 0.280  posterior 0.015 | P(<3) p=0.10 0.053 posterior 0.131
+  N= 61  P0 p=0.10 0.002  p=0.05 0.044  p=0.021 0.274  posterior 0.015 | P(<3) p=0.10 0.049 posterior 0.127
+  N= 80  P0 p=0.10 0.000  p=0.05 0.017  p=0.021 0.183  posterior 0.007 | P(<3) p=0.10 0.011 posterior 0.067

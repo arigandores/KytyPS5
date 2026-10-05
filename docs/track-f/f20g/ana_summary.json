@@ -1,0 +1,2554 @@
+[
+ {
+  "set": "MAIN (7 unattributed B32 frames)",
+  "tag": "f20_v07",
+  "n": 7750,
+  "dt": 229331,
+  "med_dt": 33313.0,
+  "row": {
+   "dt_us": [
+    229331,
+    33313.0
+   ],
+   "lat_us": [
+    206514,
+    14398.0
+   ],
+   "cpu_main_us": [
+    10430,
+    9613.0
+   ],
+   "cpu_gpu_us": [
+    25920,
+    32178.0
+   ],
+   "cpu_present_us": [
+    2543,
+    2023.5
+   ],
+   "cpu_proc_us": [
+    250000,
+    328125.0
+   ],
+   "gpu_busy_us": [
+    12671,
+    13761.5
+   ],
+   "gpu_n": [
+    36,
+    36.0
+   ],
+   "semwait_us": [
+    223889,
+    28334.0
+   ],
+   "semwaits": [
+    24,
+    27.0
+   ],
+   "submits": [
+    35,
+    35.5
+   ],
+   "submit_us": [
+    194713,
+    76.5
+   ],
+   "draws": [
+    3909,
+    5084.0
+   ],
+   "dispatches": [
+    265,
+    268.0
+   ],
+   "faults": [
+    1188,
+    1212.5
+   ],
+   "fault_us": [
+    11838,
+    15111.0
+   ],
+   "wrm_stalls": [
+    6,
+    4.0
+   ],
+   "prios": [
+    22,
+    22.0
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    19,
+    22.0
+   ],
+   "fault_gpu_us": [
+    91,
+    96.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    35,
+    34.0
+   ],
+   "42": [
+    34,
+    34.5
+   ]
+  },
+  "big": [
+   [
+    "x.gclk_adv",
+    593611467,
+    85278431.0
+   ],
+   [
+    "x.gclk_sadv",
+    291069603,
+    39480378.0
+   ],
+   [
+    "x.skc_pres_ns",
+    197499503,
+    1755363.0
+   ],
+   [
+    "wait.other_us",
+    223889,
+    28553.5
+   ],
+   [
+    "submit.other_us",
+    194678,
+    43.0
+   ],
+   [
+    "x.pres_title_ns",
+    93056,
+    23750.5
+   ]
+  ],
+  "diff": 1,
+  "raw": [
+   "PriorityStall: tick=267110 unsub=0 us=202070 site=+0x796293"
+  ]
+ },
+ {
+  "set": "MAIN (7 unattributed B32 frames)",
+  "tag": "f20_v18",
+  "n": 9198,
+  "dt": 109003,
+  "med_dt": 34287.0,
+  "row": {
+   "dt_us": [
+    109003,
+    34287.0
+   ],
+   "lat_us": [
+    29151,
+    12600.5
+   ],
+   "cpu_main_us": [
+    9785,
+    10469.5
+   ],
+   "cpu_gpu_us": [
+    45867,
+    33032.0
+   ],
+   "cpu_present_us": [
+    3441,
+    2253.0
+   ],
+   "cpu_proc_us": [
+    171875,
+    328125.0
+   ],
+   "gpu_busy_us": [
+    14511,
+    14299.0
+   ],
+   "gpu_n": [
+    53,
+    36.5
+   ],
+   "semwait_us": [
+    100876,
+    30633.5
+   ],
+   "semwaits": [
+    31,
+    26.0
+   ],
+   "submits": [
+    52,
+    37.5
+   ],
+   "submit_us": [
+    1137,
+    88.0
+   ],
+   "draws": [
+    3967,
+    4754.0
+   ],
+   "dispatches": [
+    263,
+    268.0
+   ],
+   "faults": [
+    1074,
+    1243.0
+   ],
+   "fault_us": [
+    67066,
+    15877.5
+   ],
+   "wrm_stalls": [
+    5,
+    5.0
+   ],
+   "prios": [
+    19,
+    18.5
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    23,
+    23.0
+   ],
+   "fault_gpu_us": [
+    180,
+    113.0
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    82,
+    36.0
+   ],
+   "42": [
+    45,
+    37
+   ]
+  },
+  "big": [
+   [
+    "x.gclk_sadv",
+    124076765,
+    40160962.5
+   ],
+   [
+    "x.skc_pres_ns",
+    12992074,
+    1971754.5
+   ],
+   [
+    "x.prot_gpu_ro_ns",
+    12345301,
+    1501964.0
+   ],
+   [
+    "x.pc_elig_ns",
+    11570109,
+    1462000.5
+   ],
+   [
+    "x.prot_gpu_na_ns",
+    4833499,
+    100261.0
+   ],
+   [
+    "x.stg_pool_ns",
+    2132515,
+    210176.0
+   ],
+   [
+    "x.da_wlag_us",
+    204795,
+    87256.0
+   ],
+   [
+    "wait.other_us",
+    100275,
+    30938.0
+   ],
+   [
+    "x.pb_wait_us",
+    54806,
+    10148.5
+   ],
+   [
+    "draw.da_work_us",
+    66942,
+    30066.0
+   ]
+  ],
+  "diff": 0,
+  "raw": []
+ },
+ {
+  "set": "MAIN (7 unattributed B32 frames)",
+  "tag": "f20_v21",
+  "n": 2828,
+  "dt": 138172,
+  "med_dt": 32977.0,
+  "row": {
+   "dt_us": [
+    138172,
+    32977.0
+   ],
+   "lat_us": [
+    115962,
+    10827.0
+   ],
+   "cpu_main_us": [
+    12385,
+    9530.0
+   ],
+   "cpu_gpu_us": [
+    57792,
+    31701.0
+   ],
+   "cpu_present_us": [
+    3249,
+    2505.0
+   ],
+   "cpu_proc_us": [
+    171875,
+    250000.0
+   ],
+   "gpu_busy_us": [
+    21875,
+    13791.5
+   ],
+   "gpu_n": [
+    63,
+    36.5
+   ],
+   "semwait_us": [
+    52440,
+    30620.5
+   ],
+   "semwaits": [
+    44,
+    27.0
+   ],
+   "submits": [
+    60,
+    37.0
+   ],
+   "submit_us": [
+    188,
+    80.0
+   ],
+   "draws": [
+    8732,
+    4806.0
+   ],
+   "dispatches": [
+    365,
+    268.0
+   ],
+   "faults": [
+    1178,
+    1250.5
+   ],
+   "fault_us": [
+    17053,
+    15366.5
+   ],
+   "wrm_stalls": [
+    9,
+    5.0
+   ],
+   "prios": [
+    27,
+    21.5
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    32,
+    19.5
+   ],
+   "fault_gpu_us": [
+    161,
+    95.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    32,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    34,
+    33.0
+   ],
+   "42": [
+    44,
+    35
+   ]
+  },
+  "big": [
+   [
+    "x.prot_gpu_na_ns",
+    628603,
+    96453.0
+   ],
+   [
+    "x.da_wlag_us",
+    167956,
+    82338.5
+   ],
+   [
+    "draw.cpu_record_us",
+    56128,
+    31067.0
+   ],
+   [
+    "x.rec_spin_us",
+    51956,
+    27604.5
+   ],
+   [
+    "x.rec_spin_gpu_us",
+    51587,
+    27264.5
+   ],
+   [
+    "wait.other_us",
+    52440,
+    30272.5
+   ],
+   [
+    "draw.da_work_us",
+    51145,
+    29092.5
+   ]
+  ],
+  "diff": 0,
+  "raw": []
+ },
+ {
+  "set": "MAIN (7 unattributed B32 frames)",
+  "tag": "f20_v21",
+  "n": 3025,
+  "dt": 171232,
+  "med_dt": 33411.0,
+  "row": {
+   "dt_us": [
+    171232,
+    33411.0
+   ],
+   "lat_us": [
+    18197,
+    14069.0
+   ],
+   "cpu_main_us": [
+    12282,
+    9817.0
+   ],
+   "cpu_gpu_us": [
+    31393,
+    32473.5
+   ],
+   "cpu_present_us": [
+    1712,
+    2313.0
+   ],
+   "cpu_proc_us": [
+    296875,
+    343750.0
+   ],
+   "gpu_busy_us": [
+    11857,
+    13551.0
+   ],
+   "gpu_n": [
+    37,
+    36.0
+   ],
+   "semwait_us": [
+    169847,
+    29603.5
+   ],
+   "semwaits": [
+    24,
+    26.0
+   ],
+   "submits": [
+    36,
+    35.5
+   ],
+   "submit_us": [
+    215,
+    84.0
+   ],
+   "draws": [
+    3521,
+    4992.0
+   ],
+   "dispatches": [
+    243,
+    268.0
+   ],
+   "faults": [
+    1059,
+    1213.5
+   ],
+   "fault_us": [
+    24429,
+    15124.0
+   ],
+   "wrm_stalls": [
+    3,
+    5.0
+   ],
+   "prios": [
+    19,
+    20.5
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    24,
+    20.0
+   ],
+   "fault_gpu_us": [
+    201,
+    104.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    171,
+    35.5
+   ]
+  },
+  "big": [
+   [
+    "x.gclk_adv",
+    409591500,
+    91473448.0
+   ],
+   [
+    "x.gclk_sadv",
+    183647071,
+    40431292.0
+   ],
+   [
+    "x.prot_gpu_ro_ns",
+    134187113,
+    1503153.0
+   ],
+   [
+    "x.pc_elig_ns",
+    133857167,
+    1472626.5
+   ],
+   [
+    "x.skc_pres_ns",
+    6809540,
+    1945406.0
+   ],
+   [
+    "wait.other_us",
+    169847,
+    29603.5
+   ],
+   [
+    "draw.prot_us",
+    139844,
+    3428.0
+   ],
+   [
+    "draw.prot_gpu_us",
+    134335,
+    1761.0
+   ],
+   [
+    "draw.da_work_us",
+    35411,
+    28980.0
+   ]
+  ],
+  "diff": 2,
+  "raw": [
+   "FaultTrace-gpu: addr=0x0000000502702788 rip=+0x7ffcd004c460 access=2 us=32 site=-",
+   "PriorityStall: tick=102744 unsub=1 us=129341 site=+0x92c361"
+  ]
+ },
+ {
+  "set": "MAIN (7 unattributed B32 frames)",
+  "tag": "f20_v21",
+  "n": 3108,
+  "dt": 347268,
+  "med_dt": 33989.0,
+  "row": {
+   "dt_us": [
+    347268,
+    33989.0
+   ],
+   "lat_us": [
+    17260,
+    11416.5
+   ],
+   "cpu_main_us": [
+    31356,
+    10000.0
+   ],
+   "cpu_gpu_us": [
+    55956,
+    33144.5
+   ],
+   "cpu_present_us": [
+    2646,
+    2579.0
+   ],
+   "cpu_proc_us": [
+    453125,
+    312500.0
+   ],
+   "gpu_busy_us": [
+    17704,
+    13615.0
+   ],
+   "gpu_n": [
+    49,
+    36.5
+   ],
+   "semwait_us": [
+    281127,
+    29457.0
+   ],
+   "semwaits": [
+    37,
+    26.0
+   ],
+   "submits": [
+    52,
+    36.5
+   ],
+   "submit_us": [
+    121,
+    86.5
+   ],
+   "draws": [
+    5509,
+    4765.0
+   ],
+   "dispatches": [
+    287,
+    268.0
+   ],
+   "faults": [
+    1203,
+    1209.5
+   ],
+   "fault_us": [
+    43850,
+    15576.5
+   ],
+   "wrm_stalls": [
+    5,
+    5.0
+   ],
+   "prios": [
+    28,
+    21.0
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    22,
+    21.0
+   ],
+   "fault_gpu_us": [
+    120,
+    98.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    293,
+    35.0
+   ],
+   "42": [
+    339,
+    36
+   ]
+  },
+  "big": [
+   [
+    "x.gclk_adv",
+    886601617,
+    87680667.0
+   ],
+   [
+    "x.gclk_sadv",
+    406024075,
+    38329697.0
+   ],
+   [
+    "x.mt_age_ns",
+    31038505,
+    84824.0
+   ],
+   [
+    "x.da_wlag_us",
+    1321054,
+    83102.5
+   ],
+   [
+    "x.prot_gpu_na_ns",
+    802560,
+    106598.5
+   ],
+   [
+    "wait.other_us",
+    281127,
+    29677.5
+   ],
+   [
+    "draw.rec_direct_us",
+    77315,
+    170.5
+   ],
+   [
+    "x.rec_spin_gpu_us",
+    98276,
+    26927.5
+   ],
+   [
+    "x.rec_spin_us",
+    98588,
+    27271.5
+   ],
+   [
+    "draw.da_take_us",
+    58504,
+    3384.0
+   ]
+  ],
+  "diff": 3,
+  "raw": [
+   "PriorityStall: tick=105666 unsub=1 us=239502 site=+0x92c361",
+   "FaultTrace-gpu: addr=0x000000050d4f0c30 rip=+0x749e2a access=2 us=22 site=-"
+  ]
+ },
+ {
+  "set": "MAIN (7 unattributed B32 frames)",
+  "tag": "f20_v21",
+  "n": 3193,
+  "dt": 180215,
+  "med_dt": 33001.5,
+  "row": {
+   "dt_us": [
+    180215,
+    33001.5
+   ],
+   "lat_us": [
+    157043,
+    14620.5
+   ],
+   "cpu_main_us": [
+    34769,
+    9418.0
+   ],
+   "cpu_gpu_us": [
+    32820,
+    32237.0
+   ],
+   "cpu_present_us": [
+    2446,
+    1957.5
+   ],
+   "cpu_proc_us": [
+    437500,
+    312500.0
+   ],
+   "gpu_busy_us": [
+    12470,
+    13629.5
+   ],
+   "gpu_n": [
+    37,
+    35.0
+   ],
+   "semwait_us": [
+    171151,
+    28219.0
+   ],
+   "semwaits": [
+    29,
+    26.0
+   ],
+   "submits": [
+    38,
+    35.0
+   ],
+   "submit_us": [
+    106,
+    76.5
+   ],
+   "draws": [
+    4743,
+    5023.0
+   ],
+   "dispatches": [
+    268,
+    268.0
+   ],
+   "faults": [
+    1095,
+    1202.5
+   ],
+   "fault_us": [
+    8544,
+    14917.0
+   ],
+   "wrm_stalls": [
+    5,
+    4.0
+   ],
+   "prios": [
+    22,
+    21.0
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    26,
+    20.0
+   ],
+   "fault_gpu_us": [
+    115,
+    90.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    33,
+    33.0
+   ],
+   "42": [
+    33,
+    33.0
+   ]
+  },
+  "big": [
+   [
+    "x.skc_pres_ns",
+    149231212,
+    1609510.5
+   ],
+   [
+    "x.mt_age_ns",
+    747189,
+    50671.0
+   ],
+   [
+    "x.pres_title_ns",
+    548715,
+    15955.5
+   ],
+   [
+    "draw.da_work_us",
+    462994,
+    28229.5
+   ],
+   [
+    "x.prot_gpu_na_ns",
+    463471,
+    113214.0
+   ],
+   [
+    "wait.other_us",
+    171151,
+    28219.0
+   ],
+   [
+    "draw.da_take_us",
+    143544,
+    3231.0
+   ],
+   [
+    "x.rec_spin_us",
+    44791,
+    27370.0
+   ],
+   [
+    "x.rec_spin_gpu_us",
+    43949,
+    27039.5
+   ],
+   [
+    "draw.rec_direct_us",
+    5522,
+    118.5
+   ]
+  ],
+  "diff": 10,
+  "raw": [
+   "PriorityStall: tick=108687 unsub=1 us=149225 site=+0x92c361"
+  ]
+ },
+ {
+  "set": "MAIN (7 unattributed B32 frames)",
+  "tag": "f20_v35",
+  "n": 8487,
+  "dt": 115041,
+  "med_dt": 34296.0,
+  "row": {
+   "dt_us": [
+    115041,
+    34296.0
+   ],
+   "lat_us": [
+    17108,
+    12621.5
+   ],
+   "cpu_main_us": [
+    10590,
+    10729.0
+   ],
+   "cpu_gpu_us": [
+    42602,
+    33450.0
+   ],
+   "cpu_present_us": [
+    1318,
+    2334.5
+   ],
+   "cpu_proc_us": [
+    515625,
+    281250.0
+   ],
+   "gpu_busy_us": [
+    14784,
+    14808.0
+   ],
+   "gpu_n": [
+    36,
+    35.0
+   ],
+   "semwait_us": [
+    33771,
+    31230.0
+   ],
+   "semwaits": [
+    26,
+    25.0
+   ],
+   "submits": [
+    36,
+    35.0
+   ],
+   "submit_us": [
+    79,
+    87.5
+   ],
+   "draws": [
+    5780,
+    4847.5
+   ],
+   "dispatches": [
+    268,
+    268.0
+   ],
+   "faults": [
+    1180,
+    1269.0
+   ],
+   "fault_us": [
+    14428,
+    17309.5
+   ],
+   "wrm_stalls": [
+    4,
+    5.0
+   ],
+   "prios": [
+    20,
+    20.0
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    24,
+    27.0
+   ],
+   "fault_gpu_us": [
+    125,
+    119.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    105,
+    37.5
+   ],
+   "42": [
+    112,
+    38
+   ]
+  },
+  "big": [
+   [
+    "x.gclk_adv",
+    279056708,
+    91623474.5
+   ],
+   [
+    "x.da_wlag_us",
+    346952,
+    86623.0
+   ],
+   [
+    "draw.cpu_record_us",
+    40533,
+    31583.0
+   ],
+   [
+    "x.rec_spin_us",
+    35356,
+    28581.5
+   ],
+   [
+    "x.rec_spin_gpu_us",
+    35029,
+    28257.5
+   ]
+  ],
+  "diff": 0,
+  "raw": []
+ },
+ {
+  "set": "CONTROL B5 (7 frames with IR dump in the interval)",
+  "tag": "f20_v25",
+  "n": 2530,
+  "dt": 103015,
+  "med_dt": 34152.0,
+  "row": {
+   "dt_us": [
+    103015,
+    34152.0
+   ],
+   "lat_us": [
+    10807,
+    14791.0
+   ],
+   "cpu_main_us": [
+    10734,
+    9639.0
+   ],
+   "cpu_gpu_us": [
+    87236,
+    32742.0
+   ],
+   "cpu_present_us": [
+    743,
+    1632.5
+   ],
+   "cpu_proc_us": [
+    484375,
+    312500.0
+   ],
+   "gpu_busy_us": [
+    14843,
+    14766.0
+   ],
+   "gpu_n": [
+    37,
+    35.5
+   ],
+   "semwait_us": [
+    82562,
+    29612.5
+   ],
+   "semwaits": [
+    32,
+    26.0
+   ],
+   "submits": [
+    37,
+    35.5
+   ],
+   "submit_us": [
+    49,
+    67.0
+   ],
+   "draws": [
+    5270,
+    4804.0
+   ],
+   "dispatches": [
+    268,
+    268.0
+   ],
+   "faults": [
+    1186,
+    1230.5
+   ],
+   "fault_us": [
+    15811,
+    15364.0
+   ],
+   "wrm_stalls": [
+    4,
+    4.5
+   ],
+   "prios": [
+    53,
+    19.5
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    18,
+    22.0
+   ],
+   "fault_gpu_us": [
+    103,
+    109.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    118,
+    33.0
+   ],
+   "42": [
+    78,
+    34.0
+   ]
+  },
+  "big": [
+   [
+    "x.flip_hold_ns",
+    14150754,
+    1638169.5
+   ],
+   [
+    "x.da_wlag_us",
+    253204,
+    77840.5
+   ],
+   [
+    "wait.other_us",
+    82562,
+    29612.5
+   ],
+   [
+    "x.c1_ns_dt_kb",
+    12736,
+    1280.0
+   ],
+   [
+    "x.rec_spin_gpu_us",
+    34719,
+    26751.0
+   ],
+   [
+    "draw.cpu_record_us",
+    38113,
+    30299.0
+   ],
+   [
+    "x.rec_spin_us",
+    34719,
+    27101.0
+   ],
+   [
+    "x.bda_drng",
+    2412,
+    81.5
+   ],
+   [
+    "draw.bda_scan",
+    2105,
+    51.0
+   ],
+   [
+    "x.pb2_pass",
+    1628,
+    51.0
+   ]
+  ],
+  "diff": 6410,
+  "raw": [
+   "ShaderRecompiler VS embedded vertex fetch plan: detected=12",
+   "ShaderRecompiler VS phase begin: stage=VS hash=0xb18bdaaac7f62aa9 IR TranslateProgram",
+   "ShaderRecompiler VS phase end: stage=VS hash=0xb18bdaaac7f62aa9 IR TranslateProgram blocks=15 elapsed_ms=3",
+   "ShaderRecompiler VS native IR and bindings (early):",
+   "CFG:",
+   "entry_block=0 irreducible=0 unsupported=0 failure=None failure_block=4294967295",
+   "block_0 pc=0x00000000 end=0x00000cac inst=[0,594)",
+   "block_1 pc=0x00000cac end=0x00000cc8 inst=[594,601)",
+   "block_2 pc=0x00000cc8 end=0x00000e2c inst=[601,680)",
+   "block_3 pc=0x00000e2c end=0x00000e48 inst=[680,687)"
+  ]
+ },
+ {
+  "set": "CONTROL B5 (7 frames with IR dump in the interval)",
+  "tag": "f20_v26",
+  "n": 2478,
+  "dt": 113410,
+  "med_dt": 33475.5,
+  "row": {
+   "dt_us": [
+    113410,
+    33475.5
+   ],
+   "lat_us": [
+    13570,
+    8889.0
+   ],
+   "cpu_main_us": [
+    10788,
+    10344.0
+   ],
+   "cpu_gpu_us": [
+    94850,
+    31607.0
+   ],
+   "cpu_present_us": [
+    984,
+    2729.0
+   ],
+   "cpu_proc_us": [
+    468750,
+    226562.5
+   ],
+   "gpu_busy_us": [
+    16193,
+    14739.5
+   ],
+   "gpu_n": [
+    42,
+    36.0
+   ],
+   "semwait_us": [
+    98778,
+    29433.5
+   ],
+   "semwaits": [
+    27,
+    27.0
+   ],
+   "submits": [
+    39,
+    36.0
+   ],
+   "submit_us": [
+    44,
+    78.5
+   ],
+   "draws": [
+    5032,
+    4885.0
+   ],
+   "dispatches": [
+    270,
+    268.0
+   ],
+   "faults": [
+    1292,
+    1278.0
+   ],
+   "fault_us": [
+    16101,
+    15073.0
+   ],
+   "wrm_stalls": [
+    5,
+    5.0
+   ],
+   "prios": [
+    50,
+    21.0
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    22,
+    23.0
+   ],
+   "fault_gpu_us": [
+    127,
+    107.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    111,
+    33.0
+   ],
+   "42": [
+    34,
+    34.0
+   ]
+  },
+  "big": [
+   [
+    "x.da_wlag_us",
+    195695,
+    77389.5
+   ],
+   [
+    "wait.other_us",
+    99101,
+    29272.0
+   ],
+   [
+    "x.c1_ns_dt_kb",
+    24256,
+    1280.0
+   ],
+   [
+    "draw.img_imp_kb",
+    9984,
+    0.0
+   ],
+   [
+    "x.c1_ns_dt_cp_kb",
+    10332,
+    1280.0
+   ],
+   [
+    "draw.cpu_record_us",
+    37016,
+    30049.5
+   ],
+   [
+    "x.rec_spin_gpu_us",
+    32532,
+    26528.0
+   ],
+   [
+    "x.rec_spin_us",
+    32541,
+    26894.0
+   ],
+   [
+    "draw.protw_pages",
+    2497,
+    0.0
+   ],
+   [
+    "x.bda_drng",
+    2405,
+    80.0
+   ]
+  ],
+  "diff": 7238,
+  "raw": [
+   "ShaderRecompiler VS phase begin: stage=VS hash=0x62e48cc2658639c9 code_words=1332 decode",
+   "ShaderRecompiler VS phase end: stage=VS hash=0x62e48cc2658639c9 decode instructions=930 elapsed_ms=0",
+   "ShaderRecompiler VS decoded RDNA2 (early):",
+   "0x00000000: S_INST_PREFETCH 0x00000003",
+   "0x00000004: S_BFE_U32 vcc_lo, s3, 0x00080008",
+   "0x0000000c: S_AND_B32 vcc_hi, s3, 0x000000ff",
+   "0x00000014: S_LSHL_B32 vcc_lo, vcc_lo, 12",
+   "0x00000018: S_OR_B32 m0, vcc_hi, vcc_lo",
+   "0x0000001c: S_NOP 0x00000000",
+   "0x00000020: S_SENDMSG 0x00000009"
+  ]
+ },
+ {
+  "set": "CONTROL B5 (7 frames with IR dump in the interval)",
+  "tag": "f20_v29",
+  "n": 2506,
+  "dt": 129327,
+  "med_dt": 33437.0,
+  "row": {
+   "dt_us": [
+    129327,
+    33437.0
+   ],
+   "lat_us": [
+    12754,
+    9781.0
+   ],
+   "cpu_main_us": [
+    16562,
+    9598.0
+   ],
+   "cpu_gpu_us": [
+    108788,
+    31149.5
+   ],
+   "cpu_present_us": [
+    1037,
+    1650.0
+   ],
+   "cpu_proc_us": [
+    484375,
+    265625.0
+   ],
+   "gpu_busy_us": [
+    17242,
+    14400.5
+   ],
+   "gpu_n": [
+    47,
+    37.0
+   ],
+   "semwait_us": [
+    83507,
+    30301.0
+   ],
+   "semwaits": [
+    33,
+    27.0
+   ],
+   "submits": [
+    50,
+    36.5
+   ],
+   "submit_us": [
+    48,
+    82.0
+   ],
+   "draws": [
+    5523,
+    4707.0
+   ],
+   "dispatches": [
+    288,
+    268.0
+   ],
+   "faults": [
+    1565,
+    1239.5
+   ],
+   "fault_us": [
+    19249,
+    15878.0
+   ],
+   "wrm_stalls": [
+    7,
+    5.0
+   ],
+   "prios": [
+    58,
+    19.0
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    19,
+    21.0
+   ],
+   "fault_gpu_us": [
+    103,
+    104.0
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "22": [
+    122,
+    32.5
+   ],
+   "42": [
+    82,
+    34.0
+   ]
+  },
+  "big": [
+   [
+    "x.prot_gpu_na_ns",
+    424186,
+    117504.0
+   ],
+   [
+    "x.da_wlag_us",
+    274694,
+    77503.5
+   ],
+   [
+    "wait.other_us",
+    83507,
+    30301.0
+   ],
+   [
+    "x.c1_ns_dt_kb",
+    24256,
+    1280.0
+   ],
+   [
+    "draw.cpu_record_us",
+    43720,
+    29876.0
+   ],
+   [
+    "x.rec_spin_gpu_us",
+    38877,
+    26192.5
+   ],
+   [
+    "x.rec_spin_us",
+    38881,
+    26522.5
+   ],
+   [
+    "draw.img_imp_kb",
+    9984,
+    0.0
+   ],
+   [
+    "x.c1_ns_dt_cp_kb",
+    10332,
+    1280.0
+   ],
+   [
+    "draw.da_work_us",
+    33757,
+    27282.0
+   ]
+  ],
+  "diff": 7238,
+  "raw": [
+   "ShaderRecompiler VS phase begin: stage=VS hash=0x62e48cc2658639c9 code_words=1332 decode",
+   "ShaderRecompiler VS phase end: stage=VS hash=0x62e48cc2658639c9 decode instructions=930 elapsed_ms=0",
+   "ShaderRecompiler VS decoded RDNA2 (early):",
+   "0x00000000: S_INST_PREFETCH 0x00000003",
+   "0x00000004: S_BFE_U32 vcc_lo, s3, 0x00080008",
+   "0x0000000c: S_AND_B32 vcc_hi, s3, 0x000000ff",
+   "0x00000014: S_LSHL_B32 vcc_lo, vcc_lo, 12",
+   "0x00000018: S_OR_B32 m0, vcc_hi, vcc_lo",
+   "0x0000001c: S_NOP 0x00000000",
+   "0x00000020: S_SENDMSG 0x00000009"
+  ]
+ },
+ {
+  "set": "CONTROL B5 (7 frames with IR dump in the interval)",
+  "tag": "f20_v30",
+  "n": 2464,
+  "dt": 116080,
+  "med_dt": 33651.0,
+  "row": {
+   "dt_us": [
+    116080,
+    33651.0
+   ],
+   "lat_us": [
+    1750,
+    11938.0
+   ],
+   "cpu_main_us": [
+    8932,
+    9674.5
+   ],
+   "cpu_gpu_us": [
+    94761,
+    31783.0
+   ],
+   "cpu_present_us": [
+    1153,
+    1721.5
+   ],
+   "cpu_proc_us": [
+    421875,
+    210937.5
+   ],
+   "gpu_busy_us": [
+    13974,
+    14663.5
+   ],
+   "gpu_n": [
+    34,
+    37.0
+   ],
+   "semwait_us": [
+    105101,
+    28680.5
+   ],
+   "semwaits": [
+    27,
+    27.0
+   ],
+   "submits": [
+    40,
+    36.5
+   ],
+   "submit_us": [
+    37,
+    70.5
+   ],
+   "draws": [
+    4651,
+    4852.5
+   ],
+   "dispatches": [
+    263,
+    268.0
+   ],
+   "faults": [
+    854,
+    1238.5
+   ],
+   "fault_us": [
+    10849,
+    16174.5
+   ],
+   "wrm_stalls": [
+    6,
+    5.0
+   ],
+   "prios": [
+    50,
+    19.0
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    18,
+    23.0
+   ],
+   "fault_gpu_us": [
+    107,
+    109.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    118,
+    34.0
+   ],
+   "42": [
+    32,
+    34
+   ]
+  },
+  "big": [
+   [
+    "x.da_wlag_us",
+    207660,
+    75687.5
+   ],
+   [
+    "wait.other_us",
+    105671,
+    28680.5
+   ],
+   [
+    "x.c1_ns_dt_kb",
+    24256,
+    1280.0
+   ],
+   [
+    "draw.img_imp_kb",
+    9984,
+    0.0
+   ],
+   [
+    "x.c1_ns_dt_cp_kb",
+    10332,
+    1280.0
+   ],
+   [
+    "draw.protw_pages",
+    2497,
+    0.0
+   ],
+   [
+    "x.bda_drng",
+    2388,
+    81.0
+   ],
+   [
+    "draw.bda_scan",
+    2093,
+    52.0
+   ],
+   [
+    "x.pb2_pass",
+    1617,
+    52.0
+   ],
+   [
+    "x.stg_img_in_b",
+    768,
+    0.0
+   ]
+  ],
+  "diff": 7237,
+  "raw": [
+   "ShaderRecompiler VS phase begin: stage=VS hash=0x62e48cc2658639c9 code_words=1332 decode",
+   "ShaderRecompiler VS phase end: stage=VS hash=0x62e48cc2658639c9 decode instructions=930 elapsed_ms=0",
+   "ShaderRecompiler VS decoded RDNA2 (early):",
+   "0x00000000: S_INST_PREFETCH 0x00000003",
+   "0x00000004: S_BFE_U32 vcc_lo, s3, 0x00080008",
+   "0x0000000c: S_AND_B32 vcc_hi, s3, 0x000000ff",
+   "0x00000014: S_LSHL_B32 vcc_lo, vcc_lo, 12",
+   "0x00000018: S_OR_B32 m0, vcc_hi, vcc_lo",
+   "0x0000001c: S_NOP 0x00000000",
+   "0x00000020: S_SENDMSG 0x00000009"
+  ]
+ },
+ {
+  "set": "CONTROL B5 (7 frames with IR dump in the interval)",
+  "tag": "f20_v32",
+  "n": 2442,
+  "dt": 164548,
+  "med_dt": 33617.0,
+  "row": {
+   "dt_us": [
+    164548,
+    33617.0
+   ],
+   "lat_us": [
+    9355,
+    15471.0
+   ],
+   "cpu_main_us": [
+    14864,
+    9731.0
+   ],
+   "cpu_gpu_us": [
+    122042,
+    31299.0
+   ],
+   "cpu_present_us": [
+    1086,
+    1271.0
+   ],
+   "cpu_proc_us": [
+    296875,
+    281250.0
+   ],
+   "gpu_busy_us": [
+    15175,
+    14424.5
+   ],
+   "gpu_n": [
+    40,
+    38.0
+   ],
+   "semwait_us": [
+    141493,
+    29951.5
+   ],
+   "semwaits": [
+    30,
+    27.5
+   ],
+   "submits": [
+    39,
+    37.0
+   ],
+   "submit_us": [
+    43,
+    70.0
+   ],
+   "draws": [
+    5023,
+    4651.5
+   ],
+   "dispatches": [
+    268,
+    268.0
+   ],
+   "faults": [
+    1530,
+    1261.5
+   ],
+   "fault_us": [
+    20593,
+    15574.0
+   ],
+   "wrm_stalls": [
+    5,
+    5.0
+   ],
+   "prios": [
+    40,
+    18.5
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    22,
+    26.0
+   ],
+   "fault_gpu_us": [
+    124,
+    116.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "22": [
+    160,
+    33.5
+   ],
+   "42": [
+    33,
+    35.0
+   ]
+  },
+  "big": [
+   [
+    "x.prot_gpu_na_ns",
+    406078,
+    116353.0
+   ],
+   [
+    "wait.other_us",
+    141493,
+    29951.5
+   ],
+   [
+    "x.da_wlag_us",
+    172447,
+    77972.5
+   ],
+   [
+    "draw.cpu_record_us",
+    39377,
+    29824.5
+   ],
+   [
+    "x.rec_spin_gpu_us",
+    34904,
+    26431.5
+   ],
+   [
+    "x.rec_spin_us",
+    34917,
+    26790.5
+   ],
+   [
+    "draw.da_work_us",
+    34578,
+    27917.5
+   ],
+   [
+    "draw.img_ins_us",
+    6308,
+    5.0
+   ],
+   [
+    "x.c1_ns_dt_kb",
+    4992,
+    1280.0
+   ],
+   [
+    "x.bda_drng",
+    3576,
+    91.0
+   ]
+  ],
+  "diff": 8233,
+  "raw": [
+   "ShaderRecompiler VS phase begin: stage=VS hash=0x2956017f70140e5f code_words=428 decode",
+   "ShaderRecompiler VS phase end: stage=VS hash=0x2956017f70140e5f decode instructions=235 elapsed_ms=0",
+   "ShaderRecompiler VS decoded RDNA2 (early):",
+   "0x00000000: S_INST_PREFETCH 0x00000003",
+   "0x00000004: S_BFE_U32 vcc_lo, s3, 0x00080008",
+   "0x0000000c: S_AND_B32 vcc_hi, s3, 0x000000ff",
+   "0x00000014: S_LSHL_B32 vcc_lo, vcc_lo, 12",
+   "0x00000018: S_OR_B32 m0, vcc_hi, vcc_lo",
+   "0x0000001c: S_NOP 0x00000000",
+   "0x00000020: S_SENDMSG 0x00000009"
+  ]
+ },
+ {
+  "set": "CONTROL B5 (7 frames with IR dump in the interval)",
+  "tag": "f20_v33",
+  "n": 2492,
+  "dt": 159353,
+  "med_dt": 33782.5,
+  "row": {
+   "dt_us": [
+    159353,
+    33782.5
+   ],
+   "lat_us": [
+    17226,
+    11643.5
+   ],
+   "cpu_main_us": [
+    10874,
+    10058.5
+   ],
+   "cpu_gpu_us": [
+    131701,
+    32438.5
+   ],
+   "cpu_present_us": [
+    891,
+    1334.5
+   ],
+   "cpu_proc_us": [
+    765625,
+    273437.5
+   ],
+   "gpu_busy_us": [
+    15817,
+    14877.0
+   ],
+   "gpu_n": [
+    47,
+    36.5
+   ],
+   "semwait_us": [
+    142701,
+    30073.5
+   ],
+   "semwaits": [
+    37,
+    27.0
+   ],
+   "submits": [
+    47,
+    36.0
+   ],
+   "submit_us": [
+    51,
+    69.5
+   ],
+   "draws": [
+    5831,
+    4754.5
+   ],
+   "dispatches": [
+    287,
+    268.0
+   ],
+   "faults": [
+    1179,
+    1234.5
+   ],
+   "fault_us": [
+    8632,
+    15302.5
+   ],
+   "wrm_stalls": [
+    7,
+    5.0
+   ],
+   "prios": [
+    38,
+    19.0
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    27,
+    21.5
+   ],
+   "fault_gpu_us": [
+    173,
+    105.5
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    159,
+    33.0
+   ],
+   "42": [
+    152,
+    36.0
+   ]
+  },
+  "big": [
+   [
+    "x.flip_hold_ns",
+    7855797,
+    1735973.5
+   ],
+   [
+    "x.prot_gpu_na_ns",
+    1731916,
+    107990.0
+   ],
+   [
+    "x.da_wlag_us",
+    196951,
+    76723.0
+   ],
+   [
+    "wait.other_us",
+    142701,
+    29784.5
+   ],
+   [
+    "draw.cpu_record_us",
+    49175,
+    30752.0
+   ],
+   [
+    "x.rec_spin_gpu_us",
+    43383,
+    26972.0
+   ],
+   [
+    "x.rec_spin_us",
+    43378,
+    27304.0
+   ],
+   [
+    "draw.img_ins_us",
+    6606,
+    6.5
+   ],
+   [
+    "draw.da_work_us",
+    33464,
+    26993.0
+   ],
+   [
+    "x.bda_drng",
+    3571,
+    79.0
+   ]
+  ],
+  "diff": 8227,
+  "raw": [
+   "ShaderRecompiler VS phase begin: stage=VS hash=0x09d3d79d1f2e8d48 code_words=516 decode",
+   "ShaderRecompiler VS phase end: stage=VS hash=0x09d3d79d1f2e8d48 decode instructions=296 elapsed_ms=0",
+   "PipelinePrecache: saved 416 recipes (3791854 bytes) (4712 us)",
+   "ShaderRecompiler VS decoded RDNA2 (early):",
+   "0x00000000: S_INST_PREFETCH 0x00000003",
+   "0x00000004: S_BFE_U32 vcc_lo, s3, 0x00080008",
+   "0x0000000c: S_AND_B32 vcc_hi, s3, 0x000000ff",
+   "0x00000014: S_LSHL_B32 vcc_lo, vcc_lo, 12",
+   "0x00000018: S_OR_B32 m0, vcc_hi, vcc_lo",
+   "0x0000001c: S_NOP 0x00000000"
+  ]
+ },
+ {
+  "set": "CONTROL B5 (7 frames with IR dump in the interval)",
+  "tag": "f20_v34",
+  "n": 2505,
+  "dt": 157641,
+  "med_dt": 35211.5,
+  "row": {
+   "dt_us": [
+    157641,
+    35211.5
+   ],
+   "lat_us": [
+    11078,
+    11716.0
+   ],
+   "cpu_main_us": [
+    9208,
+    10132.5
+   ],
+   "cpu_gpu_us": [
+    125854,
+    33264.0
+   ],
+   "cpu_present_us": [
+    1051,
+    1529.0
+   ],
+   "cpu_proc_us": [
+    625000,
+    281250.0
+   ],
+   "gpu_busy_us": [
+    14992,
+    15236.5
+   ],
+   "gpu_n": [
+    43,
+    36.5
+   ],
+   "semwait_us": [
+    117890,
+    30393.0
+   ],
+   "semwaits": [
+    27,
+    27.5
+   ],
+   "submits": [
+    43,
+    37.0
+   ],
+   "submit_us": [
+    83,
+    68.0
+   ],
+   "draws": [
+    4870,
+    4832.5
+   ],
+   "dispatches": [
+    268,
+    268.0
+   ],
+   "faults": [
+    956,
+    1248.0
+   ],
+   "fault_us": [
+    14059,
+    16272.5
+   ],
+   "wrm_stalls": [
+    6,
+    5.0
+   ],
+   "prios": [
+    37,
+    19.0
+   ],
+   "prio_us": [
+    0,
+    0.0
+   ],
+   "faults_gpu": [
+    22,
+    23.0
+   ],
+   "fault_gpu_us": [
+    157,
+    108.0
+   ],
+   "semwait_gpu_us": [
+    0,
+    0.0
+   ],
+   "dmas": [
+    16,
+    16.0
+   ],
+   "dma_us": [
+    0,
+    0.0
+   ],
+   "gpu_proc": [
+    0,
+    0.0
+   ],
+   "gpu_idle": [
+    0,
+    0.0
+   ],
+   "gpu_blocked": [
+    0,
+    0.0
+   ]
+  },
+  "gaps": {
+   "23": [
+    154,
+    34.0
+   ],
+   "42": [
+    58,
+    37.5
+   ]
+  },
+  "big": [
+   [
+    "x.flip_hold_ns",
+    9868329,
+    1568721.0
+   ],
+   [
+    "x.da_wlag_us",
+    186223,
+    80907.5
+   ],
+   [
+    "wait.other_us",
+    117890,
+    30414.0
+   ],
+   [
+    "draw.da_work_us",
+    41383,
+    28531.5
+   ],
+   [
+    "draw.cpu_record_us",
+    41133,
+    31969.5
+   ],
+   [
+    "x.rec_spin_gpu_us",
+    36259,
+    28146.5
+   ],
+   [
+    "x.rec_spin_us",
+    36259,
+    28483.0
+   ],
+   [
+    "x.bda_drng",
+    3549,
+    77.0
+   ],
+   [
+    "x.c1_ns_dt_kb",
+    4544,
+    1280.0
+   ],
+   [
+    "draw.bda_scan",
+    3126,
+    52.0
+   ]
+  ],
+  "diff": 8210,
+  "raw": [
+   "ShaderRecompiler VS native IR and bindings (early):",
+   "CFG:",
+   "entry_block=0 irreducible=0 unsupported=0 failure=None failure_block=4294967295",
+   "block_0 pc=0x00000000 end=0x000005c0 inst=[0,260)",
+   "block_1 pc=0x000005c0 end=0x000005e8 inst=[260,266)",
+   "block_2 pc=0x000005e8 end=0x00000600 inst=[266,270)",
+   "block_3 pc=0x00000600 end=0x00000644 inst=[270,282)",
+   "block_4 pc=0x00000644 end=0x00000644 inst=[282,282)",
+   "block_5 pc=0x00000644 end=0x000006a4 inst=[282,296)",
+   "scc blocks=[5] entries=[5] irreducible=0"
+  ]
+ }
+]

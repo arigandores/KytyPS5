@@ -1,0 +1,19 @@
+log_k_01.txt title_controller_ship sha256 525dc761e0e12e232360b69bd2a2fd7a68df3fe9de4191a1052d0cc5b429759f rows 11008 eg 96 fi 101 lo 101 n_lo 103
+  T-1 by row: sum skc_ap_skip(rows>=lo) 100 vs lines g>=lo 100; by frame>=n_lo: lines 100
+  T-6 by row: distinct frame= 2 vs sum held_inc 2
+  T-2: held lines N>=n_lo 2, before 1, total 3; sum held_inc(rows>=lo) 2; min(64-before, hi) 2
+  S13b form (frame>=n_fi 103): T-1 100 / 100; T-2 lines 2 / held_inc 2
+  held line before the first FrameTrace row: flip 1
+log_k_02.txt intro_next sha256 0d7b8e4136761ade819242c185363e55972c438967e205ba639c37d32ac2f703 rows 11013 eg 218 fi 236 lo 236 n_lo 238
+  T-1 by row: sum skc_ap_skip(rows>=lo) 325 vs lines g>=lo 325; by frame>=n_lo: lines 326
+  T-6 by row: distinct frame= 21 vs sum held_inc 21
+  T-2: held lines N>=n_lo 21, before 0, total 21; sum held_inc(rows>=lo) 21; min(64-before, hi) 21
+  S13b form (frame>=n_fi 238): T-1 326 / 325; T-2 lines 21 / held_inc 21
+  boundary skip line: group 234 (row n 236) frame=240
+s13/log_u_06.txt sha256 923ffa0f3d41ae8f fi 403: first 120 s rows 2419 presented 120.0 s frames/s 20.15 >=100ms 173
+s13/log_w13.txt sha256 a8be0f0a2c0fb5cb fi 224: first 120 s rows 868 presented 120.0 s frames/s 7.23 >=100ms 867
+s12/log_s12_v.txt sha256 66a46ff28d854d22 fi 192: first 120 s rows 3498 presented 120.0 s frames/s 29.15 >=100ms 1
+../f287/fs6c/log_fs6_v.txt sha256 249285d1d4a60859 fi 224: first 120 s rows 3550 presented 120.0 s frames/s 29.58 >=100ms 1
+../f287/fs6c/log_fs6_w.txt sha256 804db67319191e57 fi 183: first 120 s rows 857 presented 120.0 s frames/s 7.14 >=100ms 852
+s13/log_k_06.txt sha256 cb599419a51e8404 fi 224: first 120 s rows 3546 presented 120.0 s frames/s 29.55 >=100ms 3
+s10/log_u_1.txt sha256 2ea417c98b3d2eec fi 226: first 120 s rows 3537 presented 120.0 s frames/s 29.47 >=100ms 1

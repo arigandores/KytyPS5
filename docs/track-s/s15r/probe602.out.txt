@@ -1,0 +1,7 @@
+P1 UHold.poll on a torn n: EXCEPTION ValueError: invalid literal for int() with base 10: b'6GuestOut:'
+P1b sc_s.scan_s on the same log: EXCEPTION ValueError: invalid literal for int() with base 10: b'6GuestOut:'
+P2 the first "ucause = uh.poll()" at char 32928; the nearest "try:" before it at 30429, the nearest "finally:" at 31446 -> inside the finally: block of the attempt, no own try/except
+P3 fi row + 3 x 40 s, 2 999 frames -> None (shown 120000000)
+P3 + 1 frame (3 000) -> 'met'
+P4 plan field 11 and the seal PLAN line (--hold-u only on u_NN): 39 tags, mismatches 0
+rc=0

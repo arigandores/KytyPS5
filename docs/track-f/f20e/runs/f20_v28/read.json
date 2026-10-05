@@ -1,0 +1,114 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS8 2c9b69b9 (FS8 2c9b69b9)",
+   true
+  ],
+  [
+   "installed before = after = json binary (2c9b69b9 / 2c9b69b9)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (0506dc27093eb055 / 0506dc27093eb055)",
+   true
+  ],
+  [
+   "env only harness constants (extra: [])",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "no stand / patch / gate line ([])",
+   true
+  ],
+  [
+   "scene entered (first scene frame 342)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 3715 listsha 0b)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b",
+ "eval": {
+  "b2_frames": [],
+  "death": [],
+  "dt_max_after": 67649,
+  "ended_by": "quit",
+  "entered": true,
+  "entry_window": [
+   [
+    2,
+    344,
+    197009
+   ]
+  ],
+  "first_n": 342,
+  "frames": 9493,
+  "hold": true,
+  "hold_frames": [],
+  "k1s_after": 0,
+  "minimized": 0,
+  "recovering": 0,
+  "scene_s": 334.411,
+  "sg_levels": 1,
+  "skipped": 0,
+  "stand": [],
+  "unattr": 0,
+  "unattr_f20a": 0,
+  "warm": true,
+  "window_dump": 0,
+  "window_dump_frames": [],
+  "window_max_us": 52933,
+  "window_read": true,
+  "window_slow": []
+ },
+ "reader_sha256": "5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa",
+ "reading": "B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)",
+ "ref": {
+  "death_log": [],
+  "death_stdout": [],
+  "dt_max_after": 67649,
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.2,
+  "k1s_after": 0,
+  "outcome": "ok",
+  "skipped_draw": 0,
+  "video_index": 9844
+ },
+ "tag": "f20_v28"
+}

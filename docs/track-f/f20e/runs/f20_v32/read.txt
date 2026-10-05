@@ -1,0 +1,24 @@
+tag f20_v32  reader sha256 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa
+  ADMISSION PASS
+    [ok] tag json present
+    [ok] json binary_sha256 = FS8 2c9b69b9 (FS8 2c9b69b9)
+    [ok] installed before = after = json binary (2c9b69b9 / 2c9b69b9)
+    [ok] json prereg sha256 = seal sha256 (0506dc27093eb055 / 0506dc27093eb055)
+    [ok] env only harness constants (extra: [])
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)
+    [ok] hold 330 s (330)
+    [ok] log present
+    [ok] no stand / patch / gate line ([])
+    [ok] scene entered (first scene frame 328)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 3715 listsha 0b)
+  scene: first_n 328, frames 9679, scene 334.4 s, ended by quit, Sky Garden level lines 1
+  B2 window idx 723..828: read True, dump lines 0 [], warm True, max dt_us 52607, frames >= 100 ms [], B2 frames []
+  B32: hold True; hold frames 1; unattributed 0 (variant F20a 0)
+    FRAME idx 2114 n 2442 dt_us 164548 t 76.7 s | ir 14634 gcn 0 pcs 0 trip 0 prio 1/64764 | B5 / B5
+  entry window frames >= 100 ms [idx, n, dt_us]: [[2, 330, 184990]]
+  REFERENCE: death log [] stdout []; frames >= 1 s after the entry window 0 (max dt_us 164548); one-frame glitches 0; video index 10028; skipped draw 30; outcome ok, hold_exit None, hold_s 330.2
+  READING B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)

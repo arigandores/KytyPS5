@@ -1,0 +1,19 @@
+f20_v25 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v26 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v27 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v28 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v29 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v30 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v31 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v32 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v33 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 1)
+f20_v34 ADMITTED B2: warm, frames 0; B32: hold, unattributed 0 (variant F20a 0)
+f20_v35 ADMITTED B2: warm, frames 0; B32: hold, unattributed 1 (variant F20a 1)
+BASE B2 {'warm': 28, 'b2': 0} (F20a 6 + F20c 22, item 543 (g)); B32 - the F20e series alone (item 543 (e))
+SUM {'warm': 39, 'b2': 0, 'holds': 11, 'unattr': 1, 'unattr_f20a': 2}
+TAGS {'made': 11, 'interference': 0, 'warm': 11, 'cold': 0, 'unread': 0, 'holds': 11, 'nohold': 0}
+READING B2 (entries with >= 1 B2 frame; base 28 warm of F20a + F20c): NOT A DEFECT candidate, 0 of 39 (upper 95 % CP 0.090)
+READING B32 Sky Garden, F20e alone (holds with >= 1 unattributed frame, letter): 1 of 11 holds, 95 % CP [0.002; 0.413]
+READING B32 Sky Garden, F20e alone (variant F20a): 2 of 11 holds, 95 % CP [0.023; 0.518]
+STOP (i) B2 warm N 39 >= 30: yes; (ii) B32 F20e: holds 11, with unattributed 1 (stop at >= 1 or 29 clean): yes; tags made 11 of 30
+NEXT stop adding tags

@@ -1,0 +1,2 @@
+C:/kyty/f287/f20e/rec_f20_v33.mp4: 9970 frames 960x540, index entries 9970
+one-frame glitches: 0

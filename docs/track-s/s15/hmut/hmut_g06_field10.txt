@@ -1,0 +1,19 @@
+suite test_go_s15.py sha256 b7555211a1da618a3c52eafa03e6e74ae2c2eb27e4fa61f53a9f39f46341a814 target go_s15.sh sha256 4d7f6c73d4fad5354d2f91c5f2ace773282712db9865bbafd0e7ab4e1a973805
+PASS G1 go_s15.sh is ASCII only
+PASS G2 a tag with other characters -> rc 2 usage
+PASS G3 the stop file -> rc 4 BUSY before anything
+PASS G4 a foreign lock -> rc 4 BUSY (lock held) before any process
+PASS G5 the guard s4/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s6/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s10/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s10/IN_ARM -> rc 1 before the lock
+PASS G5 the guard s15/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s15/IN_ARM -> rc 1 before the lock
+PASS G5 the guard s12/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s12/IN_ARM -> rc 1 before the lock
+PASS G5 the guard s14z/RETURN_FAILED -> rc 1 before the lock
+PASS G5 the guard s14z/IN_ARM -> rc 1 before the lock
+PASS G5b RC5 the edge: RETURN_FAILED / IN_ARM one level deeper (sx/deeper/) are not guards -> the call goes past the guards (here to the seal check)
+PASS G6 PLWAIT not a number -> rc 2; above 540 -> rc 2
+PASS G7 an unknown tag -> rc 2
+FAIL G8 the seal line "installed: PENDING" -> rc 6 before the lock (an edition names the binary)

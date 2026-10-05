@@ -1,0 +1,2 @@
+suite test_enter_scene_s15.py sha256 102139070602c10c79f5d6fa8717d7a69ea42d44a1a489c8bf36084128e36ac1 target enter_scene_s15.py sha256 ac4bca11046942f521eed55e5971c147a80da1eef7f5119c8d21ca45f4953bde
+FAIL E1 parse_hold_u "120:3000:300" -> (120 000 000 us, 3 000, 300 000 000 us); the constants: scene draws 100, wall + 60 s

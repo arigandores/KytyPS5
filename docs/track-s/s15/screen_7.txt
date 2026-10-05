@@ -1,0 +1,17 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s288\s15\sc_s15.py sha256 6b3ad9c411f7053053278bf00579076d902d0c6796bcd650a6b5ddac896438b4
+test    C:\kyty\s288\s15\test_sc_s15.py sha256 0f2b9c4a872c3ef16eed87ae4da9549ad5b63b2b140a7d06711f7825fb07bddc
+mutants C:\kyty\s288\s15\mut_sc_s15.py sha256 1d39cb605e9ec04fcd0ff374e1491b62f35c1b94684689bdd72a86e357502ff5
+mutants: format list, 359 defined (strict: every use of MUTANTS checked; statements evaluated at lines 32)
+selection: --only, 1 mutants
+suite: family V; fast on (265 guarded updates of ok); end of suite: the final exit call at line 1627
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding utf-8 (noted, not emulated)
+fixtures: every job writes its own (replay off: the scorer or the suite copies files in a way that raises no audit event (shutil.copy2 / copytree / move go through _winapi.CopyFile2): a shared read-only fixture would be copied read-only, unseen - review5 MAJOR-2; automatic --no-replay: line 410: copy2; line 449: copy2)
+workers 1 (spawn, one process per job), work dir C:\kyty\s288\s15\mutwork_screen\sc_s15_60604_1791177454
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (12.9 s)
+k_hold  KILLED by test line 282  (0.0 s)
+1 mutants: 1 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+early exit: 1 kill(s) ended at their first failing case; they skipped a median 98 % / mean 98 % of the suite's 266 checks, about 12.8 s of the baseline's suite time per job (13 s in all)
+wall 13.5 s, worker time 12.9 s, 1 workers
+ALL KILLED (1 of 1 selected mutants killed; 359 defined in the mutant script)

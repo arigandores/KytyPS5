@@ -1,0 +1,7 @@
+g01_dash         KILLED by FAIL G14 k_01: class M (no trace), mode cat, the app caches from s15/empty_app, GLCache as found, hold 180, st  (hmut/hmut_g01_dash.txt sha256 5c4296dbe99df42252ba34818a97875c28cd48b7545e21bc85f600fe98001f9b)
+g02_unanchored   KILLED by FAIL G18d the hold-rule field of the plan: "-" -> no --hold-u; N:N:N -> --hold-u N:N:N; "x", "120:3000" or non  (hmut/hmut_g02_unanchored.txt sha256 43149e6d643b9cb76f9787356529d638b4dba1af0a7fd2638cb5a049dfc33b37)
+g03_rc           KILLED by FAIL G18d the hold-rule field of the plan: "-" -> no --hold-u; N:N:N -> --hold-u N:N:N; "x", "120:3000" or non  (hmut/hmut_g03_rc.txt sha256 95c8fc5fec17ad5452c8d0dea4f10a1e9c6d852a909a3b3b1cabdb6e9a52ec4f)
+g04_no_hux       KILLED by FAIL G16 u_01: class T, the empty app caches, the seed path s15/seeds and prepare-cold, video, hold 300 with -  (hmut/hmut_g04_no_hux.txt sha256 ef66c21643e731f5ce562416c49206202d9c71a36a159e85e9137b4490a7fc22)
+g05_enter_s9     KILLED by FAIL G14 k_01: class M (no trace), mode cat, the app caches from s15/empty_app, GLCache as found, hold 180, st  (hmut/hmut_g05_enter_s9.txt sha256 9b88b7ee093cb6080cd3d708cc1884c50efc9e17e93547e8b726595c6a0c1987)
+g06_field10      KILLED by FAIL G8 the seal line "installed: PENDING" -> rc 6 before the lock (an edition names the binary)  (hmut/hmut_g06_field10.txt sha256 39c37999e522ff571c4ce8a6c735e0b6f9f1368d63021712fc68801d2e791c9b)
+HMUT go: 6 of 6 killed (each output above; FX_FAST=1 - the suite stops at its first failing case)

@@ -1,0 +1,24 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s288\s15\sc_s15.py sha256 db3dd0794c86c1c05081464cb89cf11b2a3581b49e997eaa5461d49eade38378
+test    C:\kyty\s288\s15\test_sc_s15.py sha256 064e4ae8ae34e6c8357b16deeb5350e5ed0d8d597b1bbeac780af41c91f778c9
+mutants C:\kyty\s288\s15\mut_sc_s15.py sha256 0826b583e13e9def3a413e4e85c8855bd48642974ec449901bbd649a3f59c4b2
+mutants: format list, 359 defined (strict: every use of MUTANTS checked; statements evaluated at lines 24)
+selection: --only, 8 mutants
+suite: family V; fast on (264 guarded updates of ok); end of suite: the final exit call at line 1614
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding utf-8 (noted, not emulated)
+fixtures: every job writes its own (replay off: the scorer or the suite copies files in a way that raises no audit event (shutil.copy2 / copytree / move go through _winapi.CopyFile2): a shared read-only fixture would be copied read-only, unseen - review5 MAJOR-2; automatic --no-replay: line 405: copy2; line 444: copy2)
+workers 8 (spawn, one process per job), work dir C:\kyty\s288\s15\mutwork_screen\sc_s15_74536_1791170696
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (12.2 s)
+s15_i_lo_floor  KILLED by test line 1473  (19.7 s)
+s15_i_lo_order  KILLED by test line 626  (8.8 s)
+s15_i_group  KILLED by test line 621  (8.9 s)
+s15_i_frames  KILLED by test line 626  (8.9 s)
+s15_i_before  SURVIVED  (21.6 s)
+s15_i_inside  KILLED by test line 621  (9.0 s)
+s15_i_cap  KILLED by test line 1496  (20.3 s)
+s15_i_min  KILLED by test line 1496  (20.1 s)
+8 mutants: 7 killed (0 by a crash of the suite), 1 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+early exit: 7 kill(s) ended at their first failing case; they skipped a median 65 % / mean 40 % of the suite's 265 checks, about 5.3 s of the baseline's suite time per job (37 s in all)
+wall 35.0 s, worker time 129.5 s, 8 workers
+SURVIVORS: ['s15_i_before'] (7 of 8 selected mutants killed; 359 defined in the mutant script)

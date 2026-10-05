@@ -1,0 +1,28 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s288\s15\sc_s15.py sha256 db3dd0794c86c1c05081464cb89cf11b2a3581b49e997eaa5461d49eade38378
+test    C:\kyty\s288\s15\test_sc_s15.py sha256 064e4ae8ae34e6c8357b16deeb5350e5ed0d8d597b1bbeac780af41c91f778c9
+mutants C:\kyty\s288\s15\mut_sc_s15.py sha256 0826b583e13e9def3a413e4e85c8855bd48642974ec449901bbd649a3f59c4b2
+mutants: format list, 359 defined (strict: every use of MUTANTS checked; statements evaluated at lines 24)
+selection: --only, 12 mutants
+suite: family V; fast on (264 guarded updates of ok); end of suite: the final exit call at line 1614
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding utf-8 (noted, not emulated)
+fixtures: every job writes its own (replay off: the scorer or the suite copies files in a way that raises no audit event (shutil.copy2 / copytree / move go through _winapi.CopyFile2): a shared read-only fixture would be copied read-only, unseen - review5 MAJOR-2; automatic --no-replay: line 405: copy2; line 444: copy2)
+workers 12 (spawn, one process per job), work dir C:\kyty\s288\s15\mutwork_screen\sc_s15_73748_1791170639
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (12.0 s)
+s15_adm_list  KILLED by test line 871  (19.5 s)
+s15_hold_end  KILLED by PASS  (27.3 s)
+s15_fmt_hold  KILLED by PASS  (27.6 s)
+s15_pr_hold_arm  KILLED by PASS  (27.3 s)
+s15_pr_hold_read  KILLED by PASS  (28.1 s)
+s15_x_cond  KILLED (crash: KeyError: 'dom' [test_sc_s15.py:1422])  (10.8 s)  [rerun in a fresh process to confirm; first run: KILLED (crash: KeyError: 'dom' [test_sc_s15.py:1422])]
+s15_x_anc  KILLED by test line 1420  (28.0 s)
+s15_x_rd1  KILLED by test line 1464  (29.0 s)
+s15_x_kind  KILLED by test line 1420  (28.1 s)
+s15_x_dom_anchor  KILLED by test line 1420  (27.8 s)
+s15_x_fmt_anchor  KILLED by test line 1426  (28.2 s)
+s15_x_predom  KILLED by test line 1420  (27.4 s)
+12 mutants: 12 killed (1 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 1 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+early exit: 11 kill(s) ended at their first failing case; they skipped a median 11 % / mean 14 % of the suite's 265 checks, about 2.2 s of the baseline's suite time per job (24 s in all)
+wall 52.7 s, worker time 321.1 s, 12 workers
+ALL KILLED (12 of 12 selected mutants killed; 359 defined in the mutant script)

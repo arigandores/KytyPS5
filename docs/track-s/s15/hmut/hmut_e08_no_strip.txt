@@ -1,0 +1,4 @@
+suite test_enter_scene_s15.py sha256 102139070602c10c79f5d6fa8717d7a69ea42d44a1a489c8bf36084128e36ac1 target enter_scene_s15.py sha256 be848e5c5d4d4a8c2de7f1bdc00f920ade9d152e0f668387eee95fe9e9f05f30
+PASS E1 parse_hold_u "120:3000:300" -> (120 000 000 us, 3 000, 300 000 000 us); the constants: scene draws 100, wall + 60 s
+PASS E2 parse_hold_u refuses 7 of 7 other forms (two fields, letters, MIN > CAP, CAP 0, empty, None, a sign)
+FAIL U1 rows before the entry line are not counted; the entry row eg = 2; the first scene frame = the row 4 (n 5, draws 3 000)

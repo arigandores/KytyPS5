@@ -1,0 +1,20 @@
+suite test_seedexp_s15.py sha256 35283dad2208f78f71abc6f6347d34f840958c1cc476bcb86080cda1b008d930 target seedexp_s15.py sha256 69c5801000bd81f51f3665d4cd741386a7b08e625f915bc058c0053729196db0
+PASS X1 seedexp_s15.py is ASCII only
+PASS X2 the lock -> rc 5 before any write (no stage, no output)
+PASS X3 a clean export -> rc 0, EXPORT: OK, the lines export_state reads
+PASS X4 sc_s15.export_state reads the clean export as OK (the source, the manifest, the live catalogue)
+PASS X5 a second export (the output exists) -> rc 1
+PASS X6 the seal PENDING -> rc 6
+PASS X7 app_post_copy other than the post copy -> rc 1
+PASS X8 a file added to the post copy after the arm -> cachex verify fails -> rc 1
+PASS X9 no variant directory of the seal in the post copy -> rc 1
+PASS X10 the log of another binary -> rc 1
+PASS X11 a log with KYTY_GAME_PATCH -> rc 1
+PASS X12 a log on another signature -> rc 1
+PASS X13 the tool refuses -> rc 6, no code change
+PASS X14 compatibility.txt other than the log line -> CHECK FAILED rc 1
+PASS X15 a shader file with a bad checksum -> CHECK FAILED
+PASS X16 duplicate graphics keys counted (R_DUP_GFX 1 of 3 recipes with two equal keys)
+PASS X17 a tool that changes pipelines.bin -> "removed duplicates (F17): UNDETERMINED", CHECK FAILED
+checks: 17
+ALL OK

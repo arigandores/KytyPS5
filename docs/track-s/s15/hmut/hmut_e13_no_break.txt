@@ -1,0 +1,28 @@
+suite test_enter_scene_s15.py sha256 102139070602c10c79f5d6fa8717d7a69ea42d44a1a489c8bf36084128e36ac1 target enter_scene_s15.py sha256 54ddf3350de708378a8f1ae0efaeeb70871d37e5c7a6ab3cf1824bc470d54def
+PASS E1 parse_hold_u "120:3000:300" -> (120 000 000 us, 3 000, 300 000 000 us); the constants: scene draws 100, wall + 60 s
+PASS E2 parse_hold_u refuses 7 of 7 other forms (two fields, letters, MIN > CAP, CAP 0, empty, None, a sign)
+PASS U1 rows before the entry line are not counted; the entry row eg = 2; the first scene frame = the row 4 (n 5, draws 3 000)
+PASS U2 presented after the first scene frame = the rows after it only (4 x 30 s = 120 s); after the entry 220.9 s
+PASS U3 the edge 120 000 000 us and 3 000 frames -> "met"
+PASS U4 120 s and 2 999 frames -> not done (the video holds the arm)
+PASS U5 119 999 999 us and 5 000 frames -> not done (the time holds the arm)
+PASS U6 the cap: 300 000 000 us after the first scene frame with 10 frames -> "cap"
+PASS U7 299 999 999 us with 10 frames -> not done
+PASS U8 item 511 (z)(5): the next start line before any row with draws >= 100 -> no first scene frame, anchor "entry", the presented time = every row after the entry line (121.8 s); a later row of 3 000 draws does not set it
+PASS U9 no entry line -> no anchor, never done (the S9 hold rules: the wall cap)
+PASS U10 the level name is exact: "lvl_diorama" is not "lvl"; "lvl " (trailing blank) is "lvl" (the strip of sc_s)
+PASS U11 a torn row (no dt_us), a FrameTrace-x line and a line not beginning with "FrameTrace: n=" are not rows
+PASS U12 the poll in steps: an incomplete last log line is not a row until its newline; an incomplete index line is not a frame; the state after three polls = the one-shot state ("met" at the third)
+PASS U13 no video index (an arm without --rec) -> video 0: the time alone never ends it before the cap
+PASS U14 UHold rows / entry row / first scene frame / presented time = sc_s.scan_s + sc_s.locate (+ the domain of sc_s15) on 4 synthetic logs (fi, (z)(5), torn rows, the threshold 99 / 100)
+FAIL U15 the target = mk_enter_s15.py applied to s9/enter_scene_s9.py (byte for byte); ASCII only
+--- attempt 1: launching
+1.1 s  LevelDocument Loaded: lvl
+1.1 s  Level has started: lvl
+1.1 s  scene stable at frame 5 (5 frames with draws >= 100)
+holding the run for 300 s
+U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+U hold end: {"anchor": "fi", "cause": "met", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 1300, "shown_us": 128601000, "video_frames": 3000}
+hold end: ft_total 1300, ft_tail 0 (last 5 s)
+WARNING: the game ENDED inside the hold after 29.6 s, returncode 0 (0x00000000)
+FAIL H1 the stand-in: 1 300 rows of 99 ms (128.6 s after the first scene frame) and 3 000 index lines -> stable, the hold ends "met" at once (anchor fi, video 3 000), the attempt ok; the wall < 25 s

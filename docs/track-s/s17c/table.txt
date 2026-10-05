@@ -1,0 +1,40 @@
+S17c member table K2(2)-K6 (no verdict - S17d)
+  s17c_v0  K2(2)  READING MEMBERS_PASS
+      YES             K2(2) entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 352601
+      YES             K2(2) the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.0
+      YES             K2(2) shown hold after the first scene frame >= 300 s | 335.0 s
+      YES             K2(2) 0 ShaderReplay: lines (log, stdout) | 0 / 0
+      YES             K2(2) no replay folder after the run (state_out.txt) | {'present': False}
+      YES             K2(2) video index records >= 3000 | 9593
+      YES             K2(2) 0 one-frame glitches (s51_vidglitch.py 4 6) | 0
+      YES             K2(2) sheet of the lead made | sheet: C:/kyty/s288/s17c/runs/s17c_v0/sheet_s17c_v0.png frames 9593 step 199 tiles 8x6
+      YES             K2(2) 0 death markers (log, stdout) | 0
+  s17c_w0  K2(2)  READING MEMBERS_PASS
+      YES             K2(2) entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 353204
+      YES             K2(2) the process lived to the end of the hold (310 s) | outcome ok hold_exit None hold_s 310.2
+      YES             K2(2) shown hold after the first scene frame >= 300 s | 325.0 s
+      YES             K2(2) W 0 [Vulkan][E] | 0
+      YES             K2(2) W positive control of the layer: [Vulkan][W] > 0 and DualSrcBlend: supported=1 enabled=1 before the first GuestOut | W 922685, dual [(78, 1, 1)], first GuestOut 11900
+  s17c_c2  K3     READING NOT_ADMITTED
+      YES             K3 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 350819
+      YES             K3 the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.2
+      YES             K3 shown hold after the first scene frame >= 300 s | 334.8 s
+      YES             K3 mode line mode=2 compat=absent (a new catalogue) | {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'absent', 'generation': '0', 'corrupt': '0', 'sources': '0', 'specs': '0', 'pipes': '0', 'test': 'none'}
+      YES             K3 translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      NO              K3 canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 60 self 60 residual 0
+      YES             K3 canon_base = 0 (item 531 (v)(2)) | 0
+      YES             K3 dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             K3 sources > 0 | 396
+      YES             K3 specs > 0 | 400
+      YES             K3 generation file on disk = gen of the last capture line and readable | replay.cur 6 gen 6 error None
+      YES             K3 offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s17c_ca  K3     NOT READ
+  s17c_cc  K3     NOT READ
+  s17c_n0  K4/K5  NOT READ
+  s17c_r3  K4     NOT READ
+  s17c_rs  K4     NOT READ
+  s17c_e3  K5     NOT READ
+  s17c_ew  K5     NOT READ
+  s17c_ks  K6     NOT READ
+  s17c_kn  K6     NOT READ
+  s17c_kc  K6     NOT READ

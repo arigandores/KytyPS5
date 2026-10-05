@@ -289,8 +289,11 @@ static std::atomic<uint64_t> g_sdl_audio_acq_calls {0};
 static std::atomic<uint32_t> g_audio_stat_gen {0};
 
 static bool FixF8Enabled() {
+	// Track F, FS7a (HPP-565, ROADMAP s122 item 467(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
+	// other value as EnvValueOn (the form of FS4a 17adaf80).
 	static const bool enabled = [] {
-		const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_F8"));
+		const char* value = std::getenv("KYTY_FIX_F8");
+		const bool  on    = value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
 		if (on) {
 			LOGF("FixF8: mode=1\n");
 		}

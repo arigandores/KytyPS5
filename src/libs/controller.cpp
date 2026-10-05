@@ -166,8 +166,9 @@ HidLossPadStats TestHidLossPadStats() {
 	return stats;
 }
 
-// Track F, F19c (ROADMAP s122 item 451(d), member A of F19a s5.1): KYTY_FIX_B24 - unset, empty, 0/false/off/no: off
-// (Common::EnvFlagOn). Written once by Initialize before the guest threads exist, only read afterwards. At 1 the guest's
+// Track F, F19c (ROADMAP s122 item 451(d), member A of F19a s5.1): KYTY_FIX_B24 - default ON since FS7a (item 487(g)(1)):
+// unset or empty: on, 0/false/off/no: off, any other value as Common::EnvValueOn. Written once by Initialize before the
+// guest threads exist, only read afterwards. At 1 the guest's
 // SetVibration, SetLightBar and SetTriggerEffect call no SDL: each puts the latest value of its kind into a slot of
 // PadOutput under the slot's own short mutex (not GameController::m_mutex; a new value overwrites the old one, every
 // kind has a generation counter) and wakes the one PadOutput thread of the process. PadOutput makes the same SDL calls
@@ -832,7 +833,12 @@ void Initialize() {
 	EXIT_IF(g_controller != nullptr);
 
 	// Track F, F19c (ROADMAP s122 item 451(d)): KYTY_FIX_B24, read once here - before the guest threads exist.
-	g_fix_b24 = Common::EnvFlagOn("KYTY_FIX_B24");
+	// FS7a (HPP-565, ROADMAP s122 item 487(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any other value
+	// as EnvValueOn (the form of FS4a 17adaf80).
+	g_fix_b24 = [] {
+		const char* value = std::getenv("KYTY_FIX_B24");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	if (g_fix_b24) {
 		LOGF("FixB24: mode=1\n");
 		g_pad_output = new PadOutput;

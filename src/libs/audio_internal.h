@@ -31,9 +31,10 @@ bool     AudioOutHasDevice(int handle);
 uint32_t AudioOutOutputs(const OutputParam* params, uint32_t num, bool blocking = true);
 
 // Track F, F8 (ROADMAP s122 item 441(v)): the emulator call sites of SDL_InitSubSystem / SDL_QuitSubSystem with
-// SDL_INIT_AUDIO (AudioOut ports, AudioIn ports, pad haptics). KYTY_FIX_F8 unset or 0: the same SDL calls as before
-// (each init counted). KYTY_FIX_F8=1: init goes through SdlAudioAcquire, quit does nothing - the SDL reference count of
-// the audio subsystem stays 1 for the life of the process. Read once per process; "FixF8: mode=1" once at 1.
+// SDL_INIT_AUDIO (AudioOut ports, AudioIn ports, pad haptics). KYTY_FIX_F8=0: the same SDL calls as before (each init
+// counted). KYTY_FIX_F8 unset, empty or 1 (default ON since FS7a, item 467(g)(1)): init goes through SdlAudioAcquire,
+// quit does nothing - the SDL reference count of the audio subsystem stays 1 for the life of the process. Read once per
+// process; "FixF8: mode=1" once when on.
 int  SdlAudioSubsystemInit();
 void SdlAudioSubsystemQuit();
 // SDL_InitSubSystem(SDL_INIT_AUDIO) at most once successfully per process (own mutex; a failure is not remembered).

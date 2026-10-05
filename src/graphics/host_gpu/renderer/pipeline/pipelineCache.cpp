@@ -7584,7 +7584,13 @@ void PipelineCache::ReplayRebuild() {
 	// Manifest for the comparison with a live translation (member K4): file, permutation index, specialization hash,
 	// push-data start, XXH3 of the SPIR-V - every permutation a prepared recipe uses.
 	if (!stopped && count != 0) {
-		std::string manifest = fmt::format("# ShaderReplay rebuild manifest; signature {}\n", cache.Signature());
+		// S17a2 (item 532(g), RC3 of the S17b review): Signature() ends with its own newline (shaderTranslationCache.cpp);
+		// the header is one line by construction - trailing CR/LF of the signature cut, one newline added.
+		std::string signature = cache.Signature();
+		while (!signature.empty() && (signature.back() == '\n' || signature.back() == '\r')) {
+			signature.pop_back();
+		}
+		std::string manifest = fmt::format("# ShaderReplay rebuild manifest; signature {}\n", signature);
 		for (const auto& [id, s]: sources) {
 			(void)id;
 			for (const auto index: s->used) {

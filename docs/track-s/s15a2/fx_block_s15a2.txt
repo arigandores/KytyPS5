@@ -1,0 +1,131 @@
+# S15a2 (HPP-615, item 528 (b)(1)-(2)): the torn row of the probe P1 of S15r (fc60a6a1:docs/track-s/s15r-review.md section 2) -
+# UHold.poll() raises ValueError inside the hold; the hold ends "error ValueError", the usual path closes the game, the json is full
+TORN = 'FrameTrace: n=6GuestOut: x dt_us=30000 draws=3000'
+FAKE2 = BASE / 'fake_emu_torn.py'
+FAKE2.write_text('''import os, sys, time, pathlib
+emu, idxp, pidp, live = pathlib.Path(sys.argv[1]), sys.argv[2], sys.argv[3], float(sys.argv[4])
+open(pidp, 'w').write(str(os.getpid()))
+with open(emu / '_kyty.txt', 'w', newline='\\n') as f:
+    f.write('LevelDocument Loaded: lvl\\nGuestOut: Level has started: lvl\\n')
+    for n in range(10):
+        f.write('FrameTrace: n=%d dt_us=99000 lat_us=5 gpu_proc=0 draws=3000 cpu_main_us=1 cpu_gpu_us=1\\n' % (n + 1))
+    f.write('@TORN@\\n')
+with open(idxp, 'w', newline='\\n') as f:
+    for k in range(10):
+        f.write('%d %d 0.0\\n' % (k, k))
+time.sleep(live)
+'''.replace('@TORN@', TORN), encoding='ascii')
+CLOSED = []
+POLLS = []
+_kill = E.kill_game
+_UH = E.UHold
+
+
+def close_rec(game):
+    """close_game of the fixtures: records the game, then the hard kill (E.close_game = E.kill_game above)."""
+    CLOSED.append(game)
+    _kill(game)
+
+
+class CountUH(_UH):
+    """UHold that records every poll and every exception of a poll (item 528 (b)(1): no poll after the exception)."""
+
+    def poll(self):
+        POLLS.append('call')
+        try:
+            return _UH.poll(self)
+        except Exception:
+            POLLS.append('raised')
+            raise
+
+
+def reap(pidp):
+    """A stand-in left alive (a mutant without the except never closes it) is killed by its pid file."""
+    try:
+        pid = int(Path(pidp).read_text())
+    except Exception:
+        return
+    subprocess.run(['taskkill', '/F', '/T', '/PID', str(pid)], capture_output=True)
+
+
+def run_torn(tag, hold_u, live=30):
+    del CLOSED[:]
+    del POLLS[:]
+    pidp = ROOTD / ('%s.pid' % tag)
+    opts = types.SimpleNamespace(level='lvl', timeout=60, hold=300, hold_u=hold_u, rec=True)
+    args = [sys.executable, str(FAKE2), str(EMU), (ROOTD / ('rec_%s.mp4.idx' % tag)).as_posix(), str(pidp), str(live)]
+    E.close_game, E.UHold = close_rec, CountUH
+    t0 = time.monotonic()
+    try:
+        res, err = E.attempt('attempt 1', tag, opts, dict(os.environ), args, 1), None
+    except BaseException as error:      # the code without the except: the exception leaves attempt()
+        res, err = None, '%s: %s' % (type(error).__name__, error)
+    finally:
+        E.close_game, E.UHold = _kill, _UH
+    wall = time.monotonic() - t0
+    alive = [g for g in CLOSED if g.poll() is None]
+    reap(pidp)
+    return res, err, wall, alive
+
+
+res, err, wall, alive = run_torn('h7', '120:3000:300')
+he = (res or {}).get('hold_end') or {}
+print('data H7: exception out of attempt %s; hold_end %s; polls %s; closed %d; wall %.1f s' % (
+    err, json.dumps(he, sort_keys=True), POLLS, len(CLOSED), wall))
+ok &= case('H7 item 528 (b)(1)-(2): the torn row of the probe P1 (%s) in the hold loop -> UHold.poll() raises once, the cause '
+           '"error ValueError", no poll after the exception, the hold ends at once (wall < 25 s), close_game called once and the game '
+           'closed, hold_exit recorded (None: the game was alive at the end of the hold), ft_total recorded' % TORN,
+           err is None and res is not None and res['outcome'] == 'ok' and he.get('cause') == 'error ValueError' and
+           POLLS.count('raised') == 1 and POLLS[-1:] == ['raised'] and len(CLOSED) == 1 and not alive and 'hold_exit' in res and
+           res['hold_exit'] is None and res.get('ft_total') is not None and wall < 25)
+E.U_WALL_EXTRA_S = -1
+try:
+    res, err, wall, alive = run_torn('h8', '1:5:1')
+finally:
+    E.U_WALL_EXTRA_S = 60
+he = (res or {}).get('hold_end') or {}
+print('data H8: exception out of attempt %s; hold_end %s; polls %s; closed %d; wall %.1f s' % (
+    err, json.dumps(he, sort_keys=True), POLLS, len(CLOSED), wall))
+ok &= case('H8 item 528 (b)(1): the poll AFTER the loop (--hold-u 1:5:1 with the wall extra -1 s: the loop never polls) meets the '
+           'torn row -> the cause "error ValueError", one poll, close_game called once and the game closed, hold_exit recorded',
+           err is None and res is not None and res['outcome'] == 'ok' and he.get('cause') == 'error ValueError' and
+           POLLS == ['call', 'raised'] and len(CLOSED) == 1 and not alive and 'hold_exit' in res and wall < 25)
+(EMU / 'kyty_emulator.exe').write_bytes(b'stand-in of the fixture M1')
+_attempt, _sample = E.attempt, E.sample_machine
+pidm = ROOTD / 'm1.pid'
+argsm = [sys.executable, str(FAKE2), str(EMU), (ROOTD / 'rec_m1.mp4.idx').as_posix(), str(pidm), '30']
+del CLOSED[:]
+del POLLS[:]
+argv0 = sys.argv
+sys.argv = ['enter_scene_s15.py', 'm1', '--level', 'lvl', '--gates', 'fixture', '--attempts', '1', '--timeout', '60',
+            '--stable-draws', '100', '--hold', '300', '--hold-u', '120:3000:300', '--rec', '--no-install', '--no-smi',
+            '--no-cpuclk', '--root', str(ROOTD)]
+E.attempt = lambda label, tag, options, env, args, index: _attempt(label, tag, options, env, argsm, index)
+E.sample_machine = lambda: dict(available=False, error='fixture M1: no nvidia-smi sample')
+E.close_game, E.UHold = close_rec, CountUH
+try:
+    E.main()
+    merr = None
+except BaseException as error:          # the code without the except: the exception leaves main() after the json
+    merr = '%s: %s' % (type(error).__name__, error)
+finally:
+    sys.argv = argv0
+    E.attempt, E.sample_machine, E.close_game, E.UHold = _attempt, _sample, _kill, _UH
+    E.ROOT, E.STABLE_DRAWS = ROOTD, 100
+alive = [g for g in CLOSED if g.poll() is None]
+reap(pidm)
+try:
+    mj = json.loads((ROOTD / 'm1.json').read_text())
+except Exception:
+    mj = {}
+at = mj.get('attempts') or []
+a0 = at[0] if at else {}
+print('data M1: exception out of main %s; attempts %d; hold_end %s; json ft_total %s; closed %d' % (
+    merr, len(at), json.dumps(a0.get('hold_end'), sort_keys=True), mj.get('ft_total'), len(CLOSED)))
+ok &= case('M1 item 528 (b)(2): main() with the torn-row stand-in -> no exception out of main; <tag>.json full: the one attempt ok '
+           'with hold_end.cause "error ValueError", hold_exit, ft_total, hold_s; the json ft_total and hold_rule = '
+           'sc_s15.HOLD_RULE_U; close_game called once and the game closed',
+           merr is None and mj.get('tag') == 'm1' and len(at) == 1 and a0.get('outcome') == 'ok' and
+           (a0.get('hold_end') or {}).get('cause') == 'error ValueError' and 'hold_exit' in a0 and
+           a0.get('ft_total') is not None and a0.get('hold_s') is not None and mj.get('ft_total') is not None and
+           mj.get('hold_rule') == SC.HOLD_RULE_U and len(CLOSED) == 1 and not alive)

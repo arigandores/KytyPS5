@@ -1,0 +1,8 @@
+    # S15a2 (HPP-615, item 528 (b)(3)): the except of the two polls and the name of the cause
+    ('e19_no_except_loop',
+     "                        try:\n                            ucause = uh.poll()\n                        except Exception as error:   # S15a2, item 528 (b)(1): no further poll, the hold ends now\n                            ucause = u_error(error)\n",
+     "                        ucause = uh.poll()\n"),
+    ('e20_no_except_after',
+     "                        try:\n                            ucause = uh.poll() or ('game ended' if game.poll() is not None else 'wall cap')\n                        except Exception as error:   # S15a2, item 528 (b)(1): the poll after the loop\n                            ucause = u_error(error)\n",
+     "                        ucause = uh.poll() or ('game ended' if game.poll() is not None else 'wall cap')\n"),
+    ('e21_cause_name', "    return 'error %s' % type(error).__name__", "    return 'error'"),

@@ -1,0 +1,70 @@
+1c1
+< # Seal 14_s - track S link S15b (HPP-603): the fifth wave S-cat - the collection of the catalogue of the 19 known levels k_01 .. k_19 (hold 300 s), the export, the U arms u_01 .. u_19 (the hold rule 120:3000:300) and the W of Sky Garden w13 on the installed FS8 after FS8e (ROADMAP "SESSION 122" item 511 (z); item 229 (e)(1), (3), item 355 (e), item 408 (l), item 428, item 436, item 446, item 452, item 464 (d))
+---
+> # Seal 15_s - track S link S15b (HPP-603): the fifth wave S-cat - the collection of the catalogue of the 19 known levels k_01 .. k_19 (hold 300 s), the export, the U arms u_01 .. u_19 (the hold rule 120:3000:300) and the W of Sky Garden w13 on the installed FS8 after FS8e (ROADMAP "SESSION 122" item 511 (z); item 229 (e)(1), (3), item 355 (e), item 408 (l), item 428, item 436, item 446, item 452, item 464 (d))
+3c3
+< Written by C:/kyty/s288/s15/mkseal_s15.py (sha256 01b975d40e9f36658b1816cc7b238451b10a969d691f160f3696c1a9cdc117dc) at 2026-10-05 05:27:28 UTC by link S15a (HPP-601), before any arm of S15b.  The port of seal 13 (pred/13_s.md sha256 25233af3357e67efe7c6d6668c610addfebefca3eac16a38d7330b4ba2194d77, the seal of the S13b arms, closed by S13c item 511) by item 511 (z)(3)-(5), (z)(i) and N2 of item 464 (d).  After this seal the scorer, the fixtures, the mutants, the harness, enter_scene_s15.py, the export and the list do not change (a change = a new seal); the only later document is the edition pred/14b_s.md of section 1 (the lines "installed:" and "edition: base pred/14_s.md sha256 <sha>").  S15b runs only after the review S15r (HPP-602) and the lead line accepting this seal, and after FS8e (HPP-575) and the edition.  ASCII only.
+---
+> Written by C:/kyty/s288/s15a2/mkseal_s15a2.py (sha256 9a1f9b034134f095ffe32f1145f113a1128b93e2e70f628222ee5fc7d69267a6) at 2026-10-05 06:02:02 UTC by link S15a2 (HPP-615), before any arm of S15b.  Seal 14 (pred/14_s.md sha256 9a810237993b4700be86dc0bac38ad7bff05d27e68f1f8555cc7f9b17c241a83, link S15a, HPP-601) with the changes of ROADMAP "SESSION 122" item 528 (b)(1)-(5), (c) only: the title and this line; the bullet THE U HOLD (the cause "error <type name>" of item 528 (b)(1), the anchor "entry" of item 528 (c)); the sha256 lines of s15/enter_scene_s15.py, its generator s15/mk_enter_s15.py, its fixtures s15/test_enter_scene_s15.py and its hand mutants s15/hmut_s15.py; two bullets of section 6 (S15a2; the reading of item 528 (b)(5)).  Every other line of seal 14 is kept byte for byte - also the names pred/14_s.md and pred/14b_s.md, which the unchanged code reads (sc_s15.py SEAL_BASE / SEAL_B / SEAL_BASE_REL, the seal-path case of go_s15.sh; item 528 (b)(3): sc_s15.py does not change): the edition named by item 528 (d) is pred/15b_s.md, and until a lead item says how the code reaches this seal, go_s15.sh checks seal 14, which FAILS on the new sha256 of enter_scene_s15.py, and refuses every tag ("seal check failed", rc 1) - a question of S15a2 to the lead.  After this seal the scorer, the fixtures, the mutants, the harness, enter_scene_s15.py, the export and the list do not change (a change = a new seal).  S15b runs only after the narrow review S15r2 and the lead line accepting this seal, after FS8e (HPP-575) and the edition.  ASCII only.
+107,119c107,126
+< - THE U HOLD (item 511 (z)(4)): after "stable" (enter_scene: 90 rows with draws >= 100 after the entry line, unchanged) a U arm is
+<   held while the presented time after the first scene frame (the sum of dt_us of the FrameTrace rows after it - the rows the
+<   scorer counts; the first scene frame as sc_s.locate finds it) is < 120 s OR the video holds < 3 000 frames, but not longer than
+<   300 s of presented time after the first scene frame; an arm with the entry line and without a first scene frame (item 511
+<   (z)(5)) counts the presented time of every row after the entry line.  The video frames are the complete lines of
+<   rec_<tag>.mp4.idx (the emulator writes and flushes one line per recorded frame: screenshot.cpp; S13b: index lines = the frames of
+<   the video, 19 of 19).  The hold ends "met" (both conditions), "cap" (300 s presented), "game ended" (the process exits - E3-death
+<   reads hold_exit) or "wall cap" (300 + 60 s of wall time from the start of the hold - a game that stops presenting; executor's
+<   variant).  A video below 3 000 frames at the end of the hold is E3-video FAIL by the letter (unchanged member).  <tag>.json
+<   carries hold_rule = {min_shown_s 120, video_frames 3000, cap_s 300, wall_extra_s 60, scene_draws 100} (an admission row
+<   "before the run": the U arm carries exactly this rule, a k arm and w13 carry none); the attempt carries hold_end {cause, anchor
+<   fi / entry, shown_us, video_frames, rows, entry_rows, first_row, closed} - a data line per U arm ("hold end (item 511 (z)(4),
+<   data)"), no member reads it.
+---
+> - THE U HOLD (item 511 (z)(4); item 528 (b)(1), (c)): after "stable" (enter_scene: 90 rows with draws >= 100 after the entry
+>   line, unchanged) a U arm is held while the presented time after the first scene frame (the sum of dt_us of the FrameTrace rows
+>   after it - the rows the scorer counts; the first scene frame as sc_s.locate finds it) is < 120 s OR the video holds < 3 000
+>   frames, but not longer than 300 s of presented time after the first scene frame.  An arm with the entry line of its level and
+>   without a first scene frame (ps_logo, item 511 (z)(5)) is held by the presented time of the FrameTrace rows from the entry line
+>   (the anchor "entry" of UHold) - A DECISION OF THE LEAD, item 528 (c) (variant (d) of the lead), not an executor's variant:
+>   "met" - presented from the entry line >= 120 s and the video >= 3 000 frames; "cap" - presented from the entry line >= 300 s;
+>   the wall 300 + 60 s (item 526 (b)(1)); the anchor "fi" of an arm with a first scene frame does not change; S15b, the audit and
+>   S15c read the hold of such an arm by item 528 (c).  The video frames are the complete lines of rec_<tag>.mp4.idx (the emulator
+>   writes and flushes one line per recorded frame: screenshot.cpp; S13b: index lines = the frames of the video, 19 of 19).  The
+>   hold ends "met" (both conditions), "cap" (300 s presented), "game ended" (the process exits - E3-death reads hold_exit),
+>   "wall cap" (300 + 60 s of wall time from the start of the hold - a game that stops presenting) or "error <type name>" (item 528
+>   (b)(1): a call of UHold.poll() in the hold loop or after it raised - both calls are in try/except Exception; UHold is not
+>   polled again, the hold ends at once and the usual path follows: hold_end, ft_*, hold_exit, close_game; the line "U hold:
+>   UHold.poll() raised <type>: <text>" in the output of the arm).  A video below 3 000 frames at the end of the hold is E3-video
+>   FAIL by the letter (unchanged member).  <tag>.json carries hold_rule = {min_shown_s 120, video_frames 3000, cap_s 300,
+>   wall_extra_s 60, scene_draws 100} (an admission row "before the run": the U arm carries exactly this rule, a k arm and w13
+>   carry none); the attempt carries hold_end {cause, anchor fi / entry, shown_us, video_frames, rows, entry_rows, first_row,
+>   closed} - a data line per U arm ("hold end (item 511 (z)(4), data)"), no member reads it; a cause beginning with "error" is
+>   read by item 528 (b)(5) (section 6, READING OF ITEM 528 (b)(5)).
+341,344c348,351
+< seal: 14fe343ee44c30b9a1351245189befd1b39998af8f4c933f1cc6e252a4e3f9ec s15/enter_scene_s15.py
+< seal: 72f0ea1ad9562f194964a1a20144c7847ee109dc46625c927d06104cfec9ed73 s15/mk_enter_s15.py
+< seal: 102139070602c10c79f5d6fa8717d7a69ea42d44a1a489c8bf36084128e36ac1 s15/test_enter_scene_s15.py
+< seal: 87d52970552d11a275483735d467a12724a17eeb39c29d5aa3f37b43a58cc01c s15/hmut_s15.py
+---
+> seal: 6856080ca1a758ab85f701a72859c44ca5055110a9318b87e4201d1f5e0d73c7 s15/enter_scene_s15.py
+> seal: cbe00f60dce56f098783db323ab4f3bd40ce74b76c034f07aff7b577291e8430 s15/mk_enter_s15.py
+> seal: 0ff8324886a556494b50da803e779354d4edff3925ea58e06c351d7cd584332d s15/test_enter_scene_s15.py
+> seal: 3862dfa93f307e5c8e81dc8f8033acd351dafb7db6bcf9714ed742d91557030d s15/hmut_s15.py
+401a409,424
+> - S15a2, item 528 (b)(1)-(3) (HPP-615): both calls of UHold.poll() of the hold in try/except Exception (enter_scene_s15.py
+>   u_error, written by the patched mk_enter_s15.py - U15 byte for byte); fixtures of test_enter_scene_s15.py: H7 - the torn row of
+>   the probe P1 of S15r ("FrameTrace: n=6GuestOut: x dt_us=30000 draws=3000") written by a stand-in emulator, the hold loop ->
+>   the cause "error ValueError", no poll after the exception, close_game called once and the game closed, hold_exit recorded;
+>   H8 - the same row met by the poll after the loop; M1 - main() with that stand-in -> no exception out of main, <tag>.json full
+>   (the attempt with hold_end, hold_exit, ft_total, hold_s; ft_total and hold_rule of the json).  The suite: checks: 27, ALL OK
+>   (s15/test_enter_scene_s15.out.txt sha256 d959ac772f8fcb29f193200ace3af093423369c4298ed8ed8ada11157723caac); the negative control - the suite on enter_scene_s15.py of seal 14
+>   (sha256 14fe343ee44c30b9a1351245189befd1b39998af8f4c933f1cc6e252a4e3f9ec) fails H7, H8, M1 and U15 (s15a2/negctl.out.txt
+>   sha256 ca6305fe669349d63f4d9d2093c94c8eab5bff5d6a296ecb72f16f8194c90b25); the hand mutants s15/hmut_s15.py enter: 21 of 21 killed - e01-e18 of S15a and e19 the except of
+>   the loop, e20 the except after the loop, e21 the name of the cause (s15/hmut_enter.out.txt sha256 a32a7b20f630eab9a38d162a42f5d16f4249d4c9cff0d8ed296eaec8384df949);
+>   sc_s15.py unchanged (sha256 6b3ad9c411f7053053278bf00579076d902d0c6796bcd650a6b5ddac896438b4) - no full mutant run of the
+>   scorer (item 528 (b)(3)); go_s15.sh unchanged - its hand mutants not rerun.
+> - READING OF ITEM 528 (b)(5) (a rule of the lead): an arm whose hold_end.cause begins with "error" or whose <tag>.stdout.txt
+>   ends with an exception trace is a run interference: a repeat of the tag is set by a lead item and does not count in the
+>   attempts of the level (Process p. 1 of the audit of session 144); the series goes on only after a line of times.txt that no
+>   process kyty_emulator.exe is there and the caches, GLCache and the binary are returned by sha and manifest.

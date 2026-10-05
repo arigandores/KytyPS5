@@ -1,0 +1,33 @@
+OK   C:/kyty/KytyPS5/tools/shader_seed.py 7d77839f17784127
+OK   C:/kyty/s142/sc142.py 1ce612cdd036e238
+OK   C:/kyty/scripts/s51_vidglitch.py 6afe4e3335da68f2
+OK   cachex_s.py 7080ddb52879cace
+OK   fgcpu143.py b91d696dfd8ebce9
+OK   gates_default.txt e3b0c44298fc1c14
+OK   idle142.py c5ee7dc26d2a6d28
+OK   launch_run.py c750e62ae3d63549
+OK   procload.py 2666971ee4ce615e
+OK   run_safety99.py 77e685e5543d90a0
+OK   s13/lvl_s13.out.txt 2c0c4240559e1652
+OK   s13/lvl_s13.py d541535e84af543e
+OK   s15/enter_scene_s15.py 6856080ca1a758ab
+OK   s15/go_s15.sh f5c1b67ce6449c85
+OK   s15/hmut_s15.py 3862dfa93f307e5c
+OK   s15/ident_s15.py 152847152e329650
+OK   s15/mk_enter_s15.py cbe00f60dce56f09
+OK   s15/mut_sc_s15.py 1d39cb605e9ec04f
+OK   s15/sc_s15.py 6b3ad9c411f70530
+OK   s15/seedexp_s15.py 69c5801000bd81f5
+OK   s15/sg_s15.py c17f479b5ec3c2af
+OK   s15/test_enter_scene_s15.py 0ff8324886a55649
+OK   s15/test_go_s15.py b7555211a1da618a
+OK   s15/test_sc_s15.py 0f2b9c4a872c3ef1
+OK   s15/test_seedexp_s15.py 35283dad2208f78f
+OK   s7/recipes_s7.py ace0d3e2681bcb9e
+OK   s9/enter_scene_s9.py 246b579b8022f6fe
+OK   s9/sc_s9.py db65fdc89ba728e1
+OK   sc_s.py 8b0e0aff407cc82a
+OK   sheet142.py c1bf9e2903c7db7a
+OK   this scorer in the seal 6b3ad9c411f70530
+OK   one line "installed: PENDING" or "installed: <sha256> <signature> <variant>" (S9r2 observation 3) PENDING
+SEAL: PASS

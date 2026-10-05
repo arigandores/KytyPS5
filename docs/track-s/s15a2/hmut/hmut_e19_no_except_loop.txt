@@ -1,0 +1,70 @@
+suite test_enter_scene_s15.py sha256 0ff8324886a556494b50da803e779354d4edff3925ea58e06c351d7cd584332d target enter_scene_s15.py sha256 67415a3e11b36608a7fb7b9021ec5a41bd6e21a7f98ebd4fed7bb08ec36545c4
+PASS E1 parse_hold_u "120:3000:300" -> (120 000 000 us, 3 000, 300 000 000 us); the constants: scene draws 100, wall + 60 s
+PASS E2 parse_hold_u refuses 7 of 7 other forms (two fields, letters, MIN > CAP, CAP 0, empty, None, a sign)
+PASS U1 rows before the entry line are not counted; the entry row eg = 2; the first scene frame = the row 4 (n 5, draws 3 000)
+PASS U2 presented after the first scene frame = the rows after it only (4 x 30 s = 120 s); after the entry 220.9 s
+PASS U3 the edge 120 000 000 us and 3 000 frames -> "met"
+PASS U4 120 s and 2 999 frames -> not done (the video holds the arm)
+PASS U5 119 999 999 us and 5 000 frames -> not done (the time holds the arm)
+PASS U6 the cap: 300 000 000 us after the first scene frame with 10 frames -> "cap"
+PASS U7 299 999 999 us with 10 frames -> not done
+PASS U8 item 511 (z)(5): the next start line before any row with draws >= 100 -> no first scene frame, anchor "entry", the presented time = every row after the entry line (121.8 s); a later row of 3 000 draws does not set it
+PASS U9 no entry line -> no anchor, never done (the S9 hold rules: the wall cap)
+PASS U10 the level name is exact: "lvl_diorama" is not "lvl"; "lvl " (trailing blank) is "lvl" (the strip of sc_s)
+PASS U11 a torn row (no dt_us), a FrameTrace-x line and a line not beginning with "FrameTrace: n=" are not rows
+PASS U12 the poll in steps: an incomplete last log line is not a row until its newline; an incomplete index line is not a frame; the state after three polls = the one-shot state ("met" at the third)
+PASS U13 no video index (an arm without --rec) -> video 0: the time alone never ends it before the cap
+PASS U14 UHold rows / entry row / first scene frame / presented time = sc_s.scan_s + sc_s.locate (+ the domain of sc_s15) on 4 synthetic logs (fi, (z)(5), torn rows, the threshold 99 / 100)
+FAIL U15 the target = mk_enter_s15.py applied to s9/enter_scene_s9.py (byte for byte); ASCII only
+--- attempt 1: launching
+1.0 s  LevelDocument Loaded: lvl
+1.0 s  Level has started: lvl
+1.0 s  scene stable at frame 5 (5 frames with draws >= 100)
+holding the run for 300 s
+U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+U hold end: {"anchor": "fi", "cause": "met", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 1300, "shown_us": 128601000, "video_frames": 3000}
+hold end: ft_total 1300, ft_tail None (last 5 s)
+PASS H1 the stand-in: 1 300 rows of 99 ms (128.6 s after the first scene frame) and 3 000 index lines -> stable, the hold ends "met" at once (anchor fi, video 3 000), the attempt ok; the wall < 25 s
+--- attempt 1: launching
+0.5 s  LevelDocument Loaded: lvl
+0.5 s  Level has started: lvl
+0.5 s  scene stable at frame 5 (5 frames with draws >= 100)
+holding the run for 300 s
+U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+U hold end: {"anchor": "fi", "cause": "cap", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 3100, "shown_us": 306801000, "video_frames": 10}
+hold end: ft_total 3100, ft_tail None (last 5 s)
+PASS H2 3 100 rows (306.8 s) and 10 index lines -> "cap" (the video below 3 000; E3-video FAILS later by the letter)
+--- attempt 1: launching
+0.5 s  LevelDocument Loaded: lvl
+0.5 s  Level has started: lvl
+0.5 s  scene stable at frame 5 (5 frames with draws >= 100)
+holding the run for 300 s
+U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+U hold end: {"anchor": "fi", "cause": "game ended", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 200, "shown_us": 19701000, "video_frames": 10}
+hold end: ft_total 200, ft_tail None (last 5 s)
+WARNING: the game ENDED inside the hold after 3.9 s, returncode 0 (0x00000000)
+PASS H3 200 rows (19.7 s) and the stand-in exits after 4 s -> "game ended", hold_exit set (E3-death reads it)
+--- attempt 1: launching
+0.6 s  LevelDocument Loaded: lvl
+0.6 s  Level has started: lvl
+0.6 s  scene stable at frame 5 (5 frames with draws >= 100)
+holding the run for 2 s
+hold end: ft_total 200, ft_tail None (last 5 s)
+PASS H4 without --hold-u: the S9 hold (2 s), no hold_end
+--- attempt 1: launching
+1.3 s  LevelDocument Loaded: lvl
+1.3 s  Level has started: lvl
+1.3 s  scene stable at frame 5 (5 frames with draws >= 100)
+holding the run for 300 s
+U hold (item 511 (z)(4)): presented >= 1 s after the first scene frame (or the entry line) and video >= 5 frames, cap 2 s presented; wall cap 3 s
+U hold end: {"anchor": "fi", "cause": "wall cap", "closed": false, "entry_rows": 0, "first_row": 0, "rows": 5, "shown_us": 396000, "video_frames": 0}
+hold end: ft_total 5, ft_tail None (last 5 s)
+PASS H6 the wall cap: --hold-u 1:5:2 with the extra 1 s, 5 rows (0.4 s after the first scene frame), no video and a stand-in that lives 30 s -> the hold ends "wall cap" after 2 + 1 s (not at the end of the stand-in), the game alive
+--- attempt 1: launching
+0.5 s  LevelDocument Loaded: lvl
+0.5 s  Level has started: lvl
+0.5 s  scene stable at frame 5 (5 frames with draws >= 100)
+holding the run for 300 s
+U hold (item 511 (z)(4)): presented >= 120 s after the first scene frame (or the entry line) and video >= 3000 frames, cap 300 s presented; wall cap 360 s
+data H7: exception out of attempt ValueError: invalid literal for int() with base 10: b'6GuestOut:'; hold_end {}; polls ['call', 'raised']; closed 0; wall 0.8 s
+FAIL H7 item 528 (b)(1)-(2): the torn row of the probe P1 (FrameTrace: n=6GuestOut: x dt_us=30000 draws=3000) in the hold loop -> UHold.poll() raises once, the cause "error ValueError", no poll after the exception, the hold ends at once (wall < 25 s), close_game called once and the game closed, hold_exit recorded (None: the game was alive at the end of the hold), ft_total recorded

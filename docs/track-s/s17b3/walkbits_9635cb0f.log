@@ -1,0 +1,11 @@
+[test] TestShaderReplayWalkBits
+[replay] walk bits: reads=8 w=36 complete 45f=1 55f=1 45e=1 10f=0
+[replay] walk bits: canonical=1 why=
+[replay] walk bits: address roles 14:2:100 30:2:100 31:3:0 34:2:100 35:3:0
+[replay] walk bits: r_addr=0 stand_addr=6
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0x200](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), 0x0), 0x0)
+shader resource specialization failed: runtime descriptor sources could not be evaluated
+[replay] walk address: reads=4 low=006176a0 exact=0 canonical=0 why=residual
+[replay] canon stand: unspoiled canonical=1 why=
+[replay] canon stand: address roles 2:6:1 3:7:1400000 6:4:100 7:5:100000 8:8:ffffff 9:9:0
+[replay] canon stand: spoiled canonical=0 why=self ok=1 complete=1 culprit=2:role6:00001000->00000000

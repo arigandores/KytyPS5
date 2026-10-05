@@ -1,0 +1,13 @@
+2026-10-05T11:00:27Z start S17b3 read p539 5f63bbf3
+2026-10-05T11:17:35Z w1 start, from: lock released f20_v23 2026-10-05T11:17:33Z
+2026-10-05T11:17:36Z w1 start, from: lock released f20_v23 2026-10-05T11:17:33Z
+2026-10-05T11:18:11Z w1 end
+2026-10-05T11:18:12Z w1 end
+2026-10-05T11:25:21Z w2 start, from: lock released f20_v24 2026-10-05T11:25:18Z
+2026-10-05T11:25:47Z w2 end
+2026-10-05T11:30:09Z rule30 check: HPP-561 in_review (series ended, last lock released f20_v24 11:25:18Z)
+2026-10-05T11:30:10Z w3 start, from: HPP-561 in_review
+2026-10-05T11:30:12Z anchors ALL OK caa3700b
+2026-10-05T11:30:29Z privacy hit in w3.sh copy (user path) - copy removed, rerun w3
+2026-10-05T11:30:29Z w3 start, from: HPP-561 in_review
+2026-10-05T11:30:34Z anchors ALL OK caa3700b

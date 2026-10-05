@@ -1,0 +1,14 @@
+--- f20c/enter_scene.py
++++ f20e/enter_scene.py
+@@ -87,3 +87,3 @@
+ 
+-ROOT = pathlib.Path('C:/kyty/f287/f18e')
++ROOT = pathlib.Path('C:/kyty/f287/f20e')  # F20e (HPP-624, item 543 (e)): the directory
+ CLOSE_WAIT_S = 40   # the harness timeout of the exit (WM_CLOSE -> kill), F15e
+@@ -446,4 +446,4 @@
+                             creationflags=0x08000000)
+-    if os.environ.get('F20C_PIDFILE'):   # F20c item 534: the own emulator pid for guard_f20c.py (kill by pid, not by name)
+-        with open(os.environ['F20C_PIDFILE'], 'w') as pidfile:
++    if os.environ.get('F20E_PIDFILE'):   # F20c item 534: the own emulator pid for guard_f20e.py (kill by pid, not by name)
++        with open(os.environ['F20E_PIDFILE'], 'w') as pidfile:
+             pidfile.write('%d %.3f\n' % (game.pid, time.time()))

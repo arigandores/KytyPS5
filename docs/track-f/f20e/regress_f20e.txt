@@ -1,0 +1,11 @@
+s128/log_shp128.txt.xz 9235a7ac first_n 362 frames 3653 scene 124.3 s | window read True dump 0 warm True max 52897 B2 0 | hold False frames 0 unattr 0/0 []
+s142/log_v142.txt 9235a7ac first_n 380 frames 10176 scene 334.1 s | window read True dump 0 warm True max 52629 B2 0 | hold True frames 0 unattr 0/0 []
+f287/fsc/log_fs_b.txt dac02fb9 first_n 189 frames 9753 scene 334.3 s | window read True dump 0 warm True max 66292 B2 0 | hold True frames 1 unattr 0/0 [(2357, 164655, 'B33')]
+s146/log_i146_v.txt dac02fb9 first_n 376 frames 9549 scene 334.6 s | window read True dump 7267 warm False max 98971 B2 0 | hold True frames 3 unattr 0/0 [(826, 162056, 'B33'), (1269, 119563, 'B5'), (2553, 247414, 'B33')]
+f287/fs3/fs3c/log_fs3_v.txt 540c035a first_n 192 frames 9969 scene 334.2 s | window read True dump 0 warm True max 52959 B2 0 | hold True frames 0 unattr 0/0 []
+f287/fs4c/log_fs4_v.txt 31cbfee8 first_n 371 frames 9906 scene 334.4 s | window read True dump 0 warm True max 52358 B2 0 | hold True frames 0 unattr 0/0 []
+f287/fs5/fs5c/log_fs5_v.txt 631ff987 first_n 360 frames 9957 scene 334.3 s | window read True dump 7267 warm False max 102163 B2 0 | hold True frames 3 unattr 0/0 [(810, 159323, 'B33'), (1134, 102163, 'B5'), (2507, 248803, 'B33')]
+f287/fs5/fs5e/log_fs5_i.txt 631ff987 first_n 365 frames 9964 scene 334.4 s | window read True dump 7267 warm False max 99211 B2 0 | hold True frames 2 unattr 0/0 [(815, 170232, 'B33'), (2533, 240327, 'B33')]
+s288/s12/log_s12_v.txt adb0c82f first_n 194 frames 9903 scene 334.4 s | window read True dump 0 warm True max 52021 B2 0 | hold True frames 0 unattr 0/0 []
+TOTAL entries 9; N warm 6; N holds 8; B2 frames 0; unattributed 0 (variant F20a 0)
+REGRESS PASS (want N warm 6, N holds 8, B2 frames 0, unattributed 0)

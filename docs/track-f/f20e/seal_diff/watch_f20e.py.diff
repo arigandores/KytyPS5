@@ -1,0 +1,16 @@
+--- f20c/watch_f20c.py
++++ f20e/watch_f20e.py
+@@ -1,2 +1,2 @@
+-"""F20c (HPP-561; copy of f20a/watch_f20a.py, ROADMAP s122 item 431(v)): watchdog for a command longer than 60 s of a link without the lock while a
++"""F20e (HPP-624; copy of f20a/watch_f20a.py, ROADMAP s122 item 431(v)): watchdog for a command longer than 60 s of a link without the lock while a
+ Harness Engineer link of a series is in progress.
+@@ -123,3 +123,3 @@
+             print('STOPPED: limit %.0f s %s' % (limit, utc()), flush=True)
+-            times_line('F20c watchdog %s: STOPPED limit %.0f s' % (tag, limit))
++            times_line('F20e watchdog %s: STOPPED limit %.0f s' % (tag, limit))
+             return 6
+@@ -146,3 +146,3 @@
+             else:
+-                times_line('F20c watchdog %s: KILLED: %s %s%s' % (tag, reason[0], stamp, extra))
++                times_line('F20e watchdog %s: KILLED: %s %s%s' % (tag, reason[0], stamp, extra))
+             return reason[1]

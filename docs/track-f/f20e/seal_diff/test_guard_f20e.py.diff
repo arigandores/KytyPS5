@@ -1,0 +1,88 @@
+--- f20c/test_guard_f20c.py
++++ f20e/test_guard_f20e.py
+@@ -1,4 +1,4 @@
+-"""F20c (HPP-561): fixtures of the guard of the user game (ROADMAP s122 item 534, general rule 33) - guard_f20c.py members and edges, the
+-pid-only kill of enter_scene.py, the order of the guard in go_f20c.sh and the block checks of launch_f20c.sh (dry run 2).
+-usage: python test_guard_f20c.py   (ASCII only; the last line is ALL OK)"""
++"""F20e (HPP-624): fixtures of the guard of the user game (ROADMAP s122 item 534, general rule 33) - guard_f20e.py members and edges, the
++pid-only kill of enter_scene.py, the order of the guard in go_f20e.sh and the block checks of launch_f20e.sh (dry run 2).
++usage: python test_guard_f20e.py   (ASCII only; the last line is ALL OK)"""
+ import hashlib
+@@ -23,6 +23,6 @@
+ 
+-print('suite test_guard_f20c.py sha256 %s target guard_f20c.py sha256 %s go_f20c.sh sha256 %s launch_f20c.sh sha256 %s enter_scene.py sha256 %s'
+-      % (sha(os.path.abspath(__file__)), sha(os.path.join(HERE, 'guard_f20c.py')), sha(os.path.join(HERE, 'go_f20c.sh')),
+-         sha(os.path.join(HERE, 'launch_f20c.sh')), sha(os.path.join(HERE, 'enter_scene.py'))))
+-import guard_f20c as GD  # noqa: E402
++print('suite test_guard_f20e.py sha256 %s target guard_f20e.py sha256 %s go_f20e.sh sha256 %s launch_f20e.sh sha256 %s enter_scene.py sha256 %s'
++      % (sha(os.path.abspath(__file__)), sha(os.path.join(HERE, 'guard_f20e.py')), sha(os.path.join(HERE, 'go_f20e.sh')),
++         sha(os.path.join(HERE, 'launch_f20e.sh')), sha(os.path.join(HERE, 'enter_scene.py'))))
++import guard_f20e as GD  # noqa: E402
+ import enter_scene as ES  # noqa: E402
+@@ -74,3 +74,3 @@
+ ENV0 = {k: v for k, v in os.environ.items() if k != 'PYTHONIOENCODING'}
+-p = subprocess.run([sys.executable, os.path.join(HERE, 'guard_f20c.py'), 'scan', '--pidfile', PF, '--fake', FK], capture_output=True, env=ENV0)
++p = subprocess.run([sys.executable, os.path.join(HERE, 'guard_f20e.py'), 'scan', '--pidfile', PF, '--fake', FK], capture_output=True, env=ENV0)
+ out = p.stdout.decode('cp1250', 'strict')
+@@ -78,3 +78,3 @@
+ json.dump([P_OWN, P_OTHER], open(FK, 'w'))
+-p = subprocess.run([sys.executable, os.path.join(HERE, 'guard_f20c.py'), 'scan', '--pidfile', PF, '--fake', FK], capture_output=True, env=ENV0)
++p = subprocess.run([sys.executable, os.path.join(HERE, 'guard_f20e.py'), 'scan', '--pidfile', PF, '--fake', FK], capture_output=True, env=ENV0)
+ check('cli scan: own + other -> rc 0 CLEAN (cp1250)', p.returncode == 0 and p.stdout.decode('cp1250', 'strict').strip() == 'GUARD CLEAN')
+@@ -150,5 +150,5 @@
+ check('block: FOUND line between tags closes the block', GD.block_state(GD.block_lines(BF))[0] == 'closed')
+-# --- launch_f20c.sh dry run 2: block checks after the window
++# --- launch_f20e.sh dry run 2: block checks after the window
+ LB, LT = os.path.join(TD, 'lblock.txt'), os.path.join(TD, 'times.txt')
+-LENV = dict(os.environ, F20C_FS6B_WINDOW=os.path.join(TD, 'nowin'), F20C_TIMES=LT, F20C_DRYRUN='2', F20C_GUARD_BLOCK=LB, F20C_GUARD_FAKE=FK)
++LENV = dict(os.environ, F20E_FS6B_WINDOW=os.path.join(TD, 'nowin'), F20E_TIMES=LT, F20E_DRYRUN='2', F20E_GUARD_BLOCK=LB, F20E_GUARD_FAKE=FK)
+ 
+@@ -158,3 +158,3 @@
+         os.remove(LT)
+-    p = subprocess.run([BASH, os.path.join(HERE, 'launch_f20c.sh'), 'f20_v30'], capture_output=True, text=True, env=LENV)
++    p = subprocess.run([BASH, os.path.join(HERE, 'launch_f20e.sh'), 'f20_v54'], capture_output=True, text=True, env=LENV)
+     return p.returncode, p.stdout, open(LT).read() if os.path.exists(LT) else ''
+@@ -173,3 +173,3 @@
+ check('launch: block file closed after the find', GD.block_state(GD.block_lines(LB))[0] == 'closed')
+-LENV['F20C_DRYRUN'] = '1'
++LENV['F20E_DRYRUN'] = '1'
+ rc, out, tl = launch()
+@@ -200,18 +200,18 @@
+ src = open(os.path.join(HERE, 'enter_scene.py'), encoding='ascii').read()
+-check('enter_scene: pid file written after Popen', "os.environ.get('F20C_PIDFILE')" in src and src.index('F20C_PIDFILE') > src.index('game = subprocess.Popen'))
++check('enter_scene: pid file written after Popen', "os.environ.get('F20E_PIDFILE')" in src and src.index('F20E_PIDFILE') > src.index('game = subprocess.Popen'))
+ # --- no kill by image name anywhere in the harness
+-for nm in ('go_f20c.sh', 'launch_f20c.sh', 'enter_scene.py', 'guard_f20c.py', 'wait_f20c.sh', 'post_f20c.sh'):
++for nm in ('go_f20e.sh', 'launch_f20e.sh', 'enter_scene.py', 'guard_f20e.py', 'wait_f20e.sh', 'post_f20e.sh'):
+     s = open(os.path.join(HERE, nm), encoding='ascii').read()
+     check('%s: no kill by image name' % nm, '//IM' not in s and "'/IM'" not in s and '/IM ' not in s and 'taskkill //F //IM' not in s)
+-# --- order of the guard in go_f20c.sh
+-go = open(os.path.join(HERE, 'go_f20c.sh'), encoding='ascii').read()
+-i_pre = go.index('GS=$(python $G/guard_f20c.py scan) ||')
++# --- order of the guard in go_f20e.sh
++go = open(os.path.join(HERE, 'go_f20e.sh'), encoding='ascii').read()
++i_pre = go.index('GS=$(python $G/guard_f20e.py scan) ||')
+ i_mk = go.index('mkdir -p $OUT')
+ i_lock = go.index('echo "lock taken $T $(u)" >> $G/runs/lock.log')
+-i_post = go.index('GS=$(python $G/guard_f20c.py scan) ||', i_lock)
++i_post = go.index('GS=$(python $G/guard_f20e.py scan) ||', i_lock)
+ i_mf = go.index('python $G/manifest_fs4c.py $OUT/manifest_before.tsv')
+ i_cp = go.index('cp -a "$SRC"')
+-i_watch = go.index('guard_f20c.py watch')
++i_watch = go.index('guard_f20e.py watch')
+ i_es = go.index('python $G/enter_scene.py')
+-i_gone = go.index('guard_f20c.py wait-gone')
++i_gone = go.index('guard_f20e.py wait-gone')
+ i_ret = go.index('rm -rf "$LIVE"')
+@@ -222,8 +222,8 @@
+       'rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; mv $OUT $OUT.user_' in go[i_post:i_post + 400])
+-check('go: watcher started before enter_scene with the pid file', i_watch < i_es and 'F20C_PIDFILE=$OUT/game_pid.txt python $G/enter_scene.py' in go)
++check('go: watcher started before enter_scene with the pid file', i_watch < i_es and 'F20E_PIDFILE=$OUT/game_pid.txt python $G/enter_scene.py' in go)
+ check('go: wait for the user process before the run manifest and the return', i_gone < i_mrun < i_ret)
+-check('go: kill at the exit and after the run by pid file only', go.count('guard_f20c.py kill-own --pidfile $OUT/game_pid.txt') == 2)
++check('go: kill at the exit and after the run by pid file only', go.count('guard_f20e.py kill-own --pidfile $OUT/game_pid.txt') == 2)
+ check('go: USER_FOUND -> runs/<tag>.user_*, nostart -> .nostart_*', 'mv $OUT $OUT.user_' in go[go.index('if [ -e $OUT/USER_FOUND ]; then\n      UF'):]
+       and 'mv $OUT $OUT.nostart_' in go)
+-for nm in ('guard_f20c.py', 'test_guard_f20c.py', 'go_f20c.sh', 'launch_f20c.sh', 'enter_scene.py'):
++for nm in ('guard_f20e.py', 'test_guard_f20e.py', 'go_f20e.sh', 'launch_f20e.sh', 'enter_scene.py'):
+     check('%s ASCII only' % nm, all(b < 128 for b in open(os.path.join(HERE, nm), 'rb').read()))

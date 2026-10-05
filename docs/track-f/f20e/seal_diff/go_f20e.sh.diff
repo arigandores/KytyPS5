@@ -1,0 +1,109 @@
+--- f20c/go_f20c.sh
++++ f20e/go_f20e.sh
+@@ -1,4 +1,4 @@
+ #!/bin/bash
+-# Track F link F20c (HPP-561; ROADMAP s122 item 462 (g)): one V Sky Garden tag f20_vNN of the B2 / B32 series on the INSTALLED binary
+-# (S12 adb0c82f, or FS6 9325446c after the install by FS6d HPP-558) - nothing is installed.  ONE TAG = ONE LOCK.  Port of
++# Track F link F20e (HPP-624; ROADMAP s122 item 462 (g)): one V Sky Garden tag f20_vNN of the B2 / B32 series on the INSTALLED binary
++# (FS8 2c9b69b9 installed by FS8d HPP-574, ROADMAP item 545; F20e item 543 (e)) - nothing is installed.  ONE TAG = ONE LOCK.  Port of
+ # C:/kyty/f287/f18e/go_f18e.sh (F18e HPP-541): stop file, lock, live emulator, procload through the <app> mask, lock.log UTC, caches
+@@ -6,6 +6,6 @@
+ # sha256 before the tag, of the run state and after the return with the equality line; RETURN_FAILED keeps the lock.  The installed
+-# binary is read before the lock, inside the lock (installed_before.txt) and after the tag (installed_after.txt); it must be one of the
+-# two allowed and the same before and after.  Order: f20_vNN starts only when runs/f20_v(NN-1) exists; at most 30 tags (item 462 (g)).
+-# usage: bash C:/kyty/f287/f20c/go_f20c.sh f20_v01 ... f20_v30
+-#   FORM (seal docs/track-f/f20c.md = pred/f20c_seal.md; the form of the V of s12_v, item 462 (g)): enter_scene.py <tag> --level
++# binary is read before the lock, inside the lock (installed_before.txt) and after the tag (installed_after.txt); it must be FS8 (one binary
++# of the series, item 543 (e)) and the same before and after.  Order: f20_vNN starts only when runs/f20_v(NN-1) exists (f20_v25 first); at most 30 tags f20_v25..f20_v54 (item 543 (e)).
++# usage: bash C:/kyty/f287/f20e/go_f20e.sh f20_v25 ... f20_v54
++#   FORM (seal docs/track-f/f20e.md = pred/f20e_seal.md; the form of the V of s12_v, item 462 (g)): enter_scene.py <tag> --level
+ #     underwater_aerial_garden --attempts 1 --stable-draws 300 --timeout 480 --no-install --require-idle --gates-file gates_default.txt
+@@ -14,8 +14,8 @@
+ #     script unsets KYTY_* and VK_LAYER_* before the call).  Exit: WM_CLOSE at the end of the hold, CLOSE_WAIT_S 40 s.  ASCII only.
+-# EXIT: 0 tag made (read it with post_f20c.sh); 1 hard refusal / return failed; 2 usage / the tag exists / order; 3 lock / live emulator;
++# EXIT: 0 tag made (read it with post_f20e.sh); 1 hard refusal / return failed; 2 usage / the tag exists / order; 3 lock / live emulator;
+ #   4 stop file; 5 procload busy.
+-# ITEM 534 (general rule 33, incident f20_v11): no kill by image name - only the own emulator tree by its pid (guard_f20c.py kill-own, pid
+-#   file runs/<tag>/game_pid.txt written by enter_scene.py); a user emulator or launcher (guard_f20c.py scan) before the lock => not
++# ITEM 534 (general rule 33, incident f20_v11): no kill by image name - only the own emulator tree by its pid (guard_f20e.py kill-own, pid
++#   file runs/<tag>/game_pid.txt written by enter_scene.py); a user emulator or launcher (guard_f20e.py scan) before the lock => not
+ #   starting; right after the lock, before the manifest => lock released, files untouched, runs/<tag> -> <tag>.user_*, interference;
+-#   during the tag (guard_f20c.py watch) => the own emulator killed by pid, the user process untouched, caches and GLCache returned only
++#   during the tag (guard_f20e.py watch) => the own emulator killed by pid, the user process untouched, caches and GLCache returned only
+ #   after the user process is gone (wait-gone, poll 10 s, the lock stays), runs/<tag> -> <tag>.user_*, interference; a tag that never
+@@ -23,7 +23,6 @@
+ export PATH=/usr/bin:/mingw64/bin:$PATH
+-G=C:/kyty/f287/f20c; F=C:/kyty/f287; EMU="C:/kyty/KytyPS5/ps5 em"; LOCK=C:/kyty/SEALED_RUN.lock
++G=C:/kyty/f287/f20e; F=C:/kyty/f287; EMU="C:/kyty/KytyPS5/ps5 em"; LOCK=C:/kyty/SEALED_RUN.lock
+ GAME="$EMU/kyty_emulator.exe"
+-ADB=adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421
+-FS6=9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2
+-SEAL=$G/pred/f20c_seal.md
++FS8=2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
++SEAL=$G/pred/f20e_seal.md
+ GLDIR="$USERPROFILE/AppData/Local/NVIDIA/GLCache"
+@@ -36,7 +35,7 @@
+ case "$T" in
+-  f20_v0[1-9]|f20_v[12][0-9]|f20_v30) ;;
+-  *) echo "usage: go_f20c.sh f20_v01..f20_v30"; exit 2;;
++  f20_v2[5-9]|f20_v[34][0-9]|f20_v5[0-4]) ;;
++  *) echo "usage: go_f20e.sh f20_v25..f20_v54"; exit 2;;
+ esac
+ NN=$((10#${T#f20_v}))
+-if [ $NN -gt 1 ]; then PREV=$(printf 'f20_v%02d' $((NN - 1))); else PREV=""; fi
++if [ $NN -gt 25 ]; then PREV=$(printf 'f20_v%02d' $((NN - 1))); else PREV=""; fi
+ SD=300; H=330
+@@ -44,3 +43,3 @@
+ u() { date -u +%Y-%m-%dT%H:%M:%SZ; }
+-log() { echo "$(u) F20c go_f20c $T $*" | tee -a $TIMES; }
++log() { echo "$(u) F20e go_f20e $T $*" | tee -a $TIMES; }
+ mask() { sed -E "s/\('[^']*'/('<app>'/g"; }
+@@ -55,5 +54,5 @@
+ WANT=$(sha "$GAME")
+-[ "$WANT" = "$ADB" ] || [ "$WANT" = "$FS6" ] || { log "installed binary $WANT is neither adb0c82f nor FS6 9325446c - not starting"; exit 1; }
++[ "$WANT" = "$FS8" ] || { log "installed binary $WANT is not FS8 2c9b69b9 - not starting; the series stops until a lead item (item 543 (e))"; exit 1; }
+ [ -d "$GLDIR" ] || { log "no GLCache dir - not starting"; exit 1; }
+-GS=$(python $G/guard_f20c.py scan) || { python $G/guard_f20c.py close user_found > /dev/null; log "user emulator or launcher lives - not starting, block closed (item 534): $GS"; exit 3; }
++GS=$(python $G/guard_f20e.py scan) || { python $G/guard_f20e.py close user_found > /dev/null; log "user emulator or launcher lives - not starting, block closed (item 534): $GS"; exit 3; }
+ mkdir -p $OUT
+@@ -63,3 +62,3 @@
+ set -o noclobber
+-if ! { echo "F20c HPP-561 go_f20c.sh $T pid $$ $(u)" > $LOCK; } 2>/dev/null; then
++if ! { echo "F20e HPP-624 go_f20e.sh $T pid $$ $(u)" > $LOCK; } 2>/dev/null; then
+   set +o noclobber; echo "lock taken by someone else"; mv $OUT $OUT.lock_$(date -u +%H%M%S); exit 3
+@@ -68,3 +67,3 @@
+ echo "lock taken $T $(u)" >> $G/runs/lock.log
+-GS=$(python $G/guard_f20c.py scan) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; mv $OUT $OUT.user_$(date -u +%H%M%S); python $G/guard_f20c.py close user_found > /dev/null; log "user emulator or launcher found right after the lock - lock released, files untouched, block closed, interference (item 534): $GS"; exit 3; }
++GS=$(python $G/guard_f20e.py scan) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; mv $OUT $OUT.user_$(date -u +%H%M%S); python $G/guard_f20e.py close user_found > /dev/null; log "user emulator or launcher found right after the lock - lock released, files untouched, block closed, interference (item 534): $GS"; exit 3; }
+ log "lock taken; procload: $(tail -1 $OUT/procload.txt | cut -c1-120)"
+@@ -77,9 +76,9 @@
+   if [ -f $OUT/game_pid.txt ]; then
+-    KO=$(python $G/guard_f20c.py kill-own --pidfile $OUT/game_pid.txt); case "$KO" in *killed*) log "$KO (at the exit)"; sleep 5;; esac
++    KO=$(python $G/guard_f20e.py kill-own --pidfile $OUT/game_pid.txt); case "$KO" in *killed*) log "$KO (at the exit)"; sleep 5;; esac
+   fi
+   if [ -n "$COPIED" ]; then
+-    GS=$(python $G/guard_f20c.py scan --pidfile $OUT/game_pid.txt)
++    GS=$(python $G/guard_f20e.py scan --pidfile $OUT/game_pid.txt)
+     if [ $? != 0 ] || [ -e $OUT/USER_FOUND ]; then
+       log "user process at the return ($GS) - caches and GLCache wait for its exit, poll 10 s, the lock stays (item 534)"
+-      log "$(python $G/guard_f20c.py wait-gone --pidfile $OUT/game_pid.txt --poll 10 | tail -1)"
++      log "$(python $G/guard_f20e.py wait-gone --pidfile $OUT/game_pid.txt --poll 10 | tail -1)"
+     fi
+@@ -115,3 +114,3 @@
+     if [ -e $OUT/USER_FOUND ]; then
+-      UF=$(head -1 $OUT/USER_FOUND | cut -c1-160); python $G/guard_f20c.py close user_found > /dev/null
++      UF=$(head -1 $OUT/USER_FOUND | cut -c1-160); python $G/guard_f20e.py close user_found > /dev/null
+       mv $OUT $OUT.user_$(date -u +%H%M%S); log "user process during the tag ($UF) - block closed, interference, repeat by the same name (item 534)"
+@@ -138,5 +137,5 @@
+ log "enter_scene start (level $LV, SD $SD, --rec, hold $H, defaults of the installed binary $(echo $WANT | cut -c1-8))"
+-python $G/guard_f20c.py watch --pidfile $OUT/game_pid.txt --flag $OUT/USER_FOUND --stop $OUT/watch.stop > $OUT/guard_watch.txt 2>&1 &
++python $G/guard_f20e.py watch --pidfile $OUT/game_pid.txt --flag $OUT/USER_FOUND --stop $OUT/watch.stop > $OUT/guard_watch.txt 2>&1 &
+ WPID=$!
+-F20C_PIDFILE=$OUT/game_pid.txt python $G/enter_scene.py $T --level $LV --attempts 1 --stable-draws $SD --timeout 480 --no-install --require-idle \
++F20E_PIDFILE=$OUT/game_pid.txt python $G/enter_scene.py $T --level $LV --attempts 1 --stable-draws $SD --timeout 480 --no-install --require-idle \
+   --gates-file $G/gates_default.txt --pred $SEAL --rec --hold $H KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 > $OUT/run.txt 2>&1
+@@ -146,3 +145,3 @@
+ log "run: $(grep '^VERDICT: ' $OUT/run.txt | tail -1 | cut -c1-200)"
+-KO=$(python $G/guard_f20c.py kill-own --pidfile $OUT/game_pid.txt); case "$KO" in *killed*) log "own emulator still lived after the run: $KO"; sleep 5;; esac
++KO=$(python $G/guard_f20e.py kill-own --pidfile $OUT/game_pid.txt); case "$KO" in *killed*) log "own emulator still lived after the run: $KO"; sleep 5;; esac
+ [ -f $G/log_$T.txt ] && log "log_$T.txt sha256 $(sha $G/log_$T.txt)"

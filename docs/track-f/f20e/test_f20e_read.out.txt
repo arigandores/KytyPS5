@@ -1,0 +1,3 @@
+suite test_f20e_read.py sha256 1a3cd6be4849ec77416546bfec99da10e92fab81c82636ddf90080d107c63ffb target f20e_read.py sha256 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa
+checks 108, failed 0
+ALL OK

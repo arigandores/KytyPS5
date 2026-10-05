@@ -1,0 +1,107 @@
+--- f20c/test_f20c_read.py
++++ f20e/test_f20e_read.py
+@@ -1,4 +1,4 @@
+-"""F20c (HPP-561): fixtures of f20c_read.py - one per member of item 462 (g)-(d) and per edge (scene frames 722 / 723 / 828 / 829, IR in
++"""F20e (HPP-624): fixtures of f20e_read.py - one per member of item 462 (g)-(d) and per edge (scene frames 722 / 723 / 828 / 829, IR in
+ the window, cache save in the interval, only PriorityStall, dt_us = 100 000), admission members, series reading, cp1250 output.
+-usage: python test_f20c_read.py   (ASCII only; the last line is ALL OK when every check passes)"""
++usage: python test_f20e_read.py   (ASCII only; the last line is ALL OK when every check passes)"""
+ import hashlib
+@@ -13,3 +13,3 @@
+ sys.path.insert(0, HERE)
+-import f20c_read as R  # noqa: E402
++import f20e_read as R  # noqa: E402
+ 
+@@ -20,4 +20,4 @@
+ 
+-print('suite test_f20c_read.py sha256 %s target f20c_read.py sha256 %s' % (sha(os.path.abspath(__file__)), sha(R.__file__)))
+-T = tempfile.mkdtemp(prefix='f20c_fx_')
++print('suite test_f20e_read.py sha256 %s target f20e_read.py sha256 %s' % (sha(os.path.abspath(__file__)), sha(R.__file__)))
++T = tempfile.mkdtemp(prefix='f20e_fx_')
+ ADB = 'adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421'
+@@ -25,2 +25,4 @@
+ OLD = '631ff987' + '0' * 56
++FS8 = '2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b'
++FS7 = '8df61c009fbe6d7fd7f4e7576e89ab1b0989129336a26f6d1cdf8fd778fbffe7'
+ fails = []
+@@ -114,2 +116,4 @@
+ check('saved on FS6 letter -> nothing', e['hold_frames'][0]['letter'] == 'nothing')
++e = ev(mklog('pcs', iv={760: [PCS]}, dt={760: SLOW}), FS8)
++check('saved on FS8 letter -> nothing, variant unattributed', e['hold_frames'][0]['letter'] == 'nothing' and e['hold_frames'][0]['f20a'] == 'pcs after S12')
+ e = ev(mklog('pcs', iv={760: [PCS]}, dt={760: SLOW}), OLD)
+@@ -175,3 +179,3 @@
+ # --- admission (read_tag on a fixture dir)
+-def mkdir_tag(name, log_kw=None, env_extra=None, cmd_extra=(), binary=ADB, inst_b=None, inst_a=None, prereg=None, guest=None,
++def mkdir_tag(name, log_kw=None, env_extra=None, cmd_extra=(), binary=FS8, inst_b=None, inst_a=None, prereg=None, guest=None,
+               hold=330, mcmp='manifest cmp EQUAL files 3323 listsha a9', glitch='one-frame glitches: 0', drop=()):
+@@ -202,4 +206,7 @@
+ check('good reference glitches 0, video 3', res['ref']['glitches'] == 0 and res['ref']['video_index'] == 3)
+-res, _ = mkdir_tag('fs6', binary=FS6)
+-check('FS6 binary admitted', res['admitted'])
++for nm, b in (('adb', ADB), ('fs6', FS6), ('fs7', FS7)):
++    res, _ = mkdir_tag(nm, binary=b)
++    check('%s binary not admitted (FS8 only)' % nm, not res['admitted'] and res['reading'].startswith('INTERFERENCE'))
++res, _ = mkdir_tag('fs8mix', binary=FS8, inst_a=FS7)
++check('installed changed to FS7 after the tag -> not admitted', not res['admitted'])
+ BAD = (('other binary', dict(binary=OLD)), ('installed after differs', dict(inst_a=OLD)), ('installed before differs', dict(inst_b=OLD)),
+@@ -230,3 +237,3 @@
+ 
+-# --- series and reading (item 462 (d))
++# --- series, summary and stop rule (item 543 (e)): B2 base 28 warm, B32 - F20e alone
+ def fake(admitted=True, read=True, warm=True, b2=0, hold=True, un=0, unf=None):
+@@ -236,23 +243,34 @@
+ 
+-s = R.series([fake() for _ in range(24)])
+-check('base 6 + 24 warm = 30', s['sum']['warm'] == 30 and s['sum']['holds'] == 32)
+-check('B2 30 and 0 -> NOT A DEFECT', 'B2' in s['b2'] and 'NOT A DEFECT' in s['b2'] and '0 of 30' in s['b2'])
+-check('B32 32 and 0 -> NOT A DEFECT', 'NOT A DEFECT' in s['b32'] and '0 of 32' in s['b32'])
+-check('stop adding tags at warm 30', not s['need_more'])
+-s = R.series([fake() for _ in range(23)])
+-check('29 warm -> SHORTAGE', 'SHORTAGE, 0 of 29 (1 to go)' in s['b2'] and s['need_more'])
+-s = R.series([fake() for _ in range(23)] + [fake(b2=2)])
+-check('one entry with B2 frames -> DEFECT 1 of 30', 'DEFECT candidate, 1 of 30' in s['b2'] and 'p = 0.033' in s['b2'])
+-s = R.series([fake() for _ in range(22)] + [fake(un=3)])
+-check('one hold with unattributed -> B32 DEFECT', 'DEFECT candidate, 1 of 31' in s['b32'])
+-s = R.series([fake() for _ in range(22)] + [fake(un=0, unf=1)])
+-check('variant F20a counted apart', 'NOT A DEFECT' in s['b32'] and 'DEFECT candidate, 1 of 31' in s['b32_f20a'])
+-s = R.series([fake() for _ in range(23)] + [fake(admitted=False)])
+-check('interference not counted', s['sum']['warm'] == 29 and s['tags']['interference'] == 1)
+-s = R.series([fake() for _ in range(23)] + [fake(warm=False)])
+-check('cold not counted in B2, counted in B32', s['sum']['warm'] == 29 and s['sum']['holds'] == 32 and s['tags']['cold'] == 1)
+-s = R.series([fake() for _ in range(23)] + [fake(read=False, warm=False, hold=False)])
+-check('unread window and no hold', s['sum']['warm'] == 29 and s['sum']['holds'] == 31 and s['tags']['unread'] == 1)
+-s = R.series([fake(warm=False) for _ in range(30)])
+-check('30 tags made -> stop even below 30 warm', not s['need_more'] and s['sum']['warm'] == 6)
++s = R.series([])
++check('empty: warm 28, holds 0, more', s['sum']['warm'] == 28 and s['sum']['holds'] == 0 and s['need_more'] and '0 holds' in s['b32'])
++s = R.series([fake()])
++check('29 warm -> SHORTAGE 1 to go, (i) not met', 'SHORTAGE, 0 of 29 (1 to go)' in s['b2'] and not s['stop_i'] and s['need_more'])
++s = R.series([fake(), fake()])
++check('28 + 2 warm = 30 -> (i) met, B2 NOT A DEFECT candidate', s['sum']['warm'] == 30 and s['stop_i'] and 'NOT A DEFECT candidate, 0 of 30' in s['b2'])
++check('B32 holds of F20e alone = 2, (ii) not met -> more', s['sum']['holds'] == 2 and not s['stop_ii'] and s['need_more'])
++s = R.series([fake(un=1)])
++check('(ii) by one unattributed hold, (i) not met -> more', s['stop_ii'] and not s['stop_i'] and s['need_more'])
++s = R.series([fake(), fake(un=2)])
++check('(i) and (ii) by unattributed -> stop', s['stop_i'] and s['stop_ii'] and not s['need_more'] and '1 of 2 holds' in s['b32'])
++s = R.series([fake() for _ in range(28)])
++check('28 clean holds -> (ii) not met, more', s['stop_i'] and not s['stop_ii'] and s['need_more'])
++s = R.series([fake() for _ in range(29)])
++check('29 clean holds -> (ii) met, stop', s['stop_ii'] and not s['need_more'] and '0 of 29 holds' in s['b32'])
++check('one-sided upper 95 % for 0 of 29 = 0.098', 'upper 95 % 0.098' in s['b32'])
++s = R.series([fake(un=0, unf=1), fake()])
++check('variant F20a does not meet (ii)', not s['stop_ii'] and '1 of 2 holds' in s['b32_f20a'] and '0 of 2 holds' in s['b32'])
++s = R.series([fake() for _ in range(28)] + [fake(admitted=False)])
++check('interference not counted', s['sum']['holds'] == 28 and s['tags']['interference'] == 1 and not s['stop_ii'])
++s = R.series([fake(warm=False) for _ in range(29)])
++check('cold: not in B2, in B32 -> (ii) met, (i) not, more', s['sum']['warm'] == 28 and s['sum']['holds'] == 29
++      and s['tags']['cold'] == 29 and s['stop_ii'] and not s['stop_i'] and s['need_more'])
++s = R.series([fake(read=False, warm=False, hold=False)])
++check('unread window and no hold', s['sum']['warm'] == 28 and s['sum']['holds'] == 0 and s['tags']['unread'] == 1)
++s = R.series([fake(warm=False, hold=False) for _ in range(30)])
++check('30 tags made -> stop with neither met', not s['need_more'] and not s['stop_i'] and not s['stop_ii'])
++s = R.series([fake(warm=False, hold=False) for _ in range(29)])
++check('29 tags made, neither met -> more', s['need_more'])
++s = R.series([fake(b2=1), fake()])
++check('one entry with B2 frames -> DEFECT candidate 1 of 30', 'DEFECT candidate, 1 of 30' in s['b2'] and 'p = 0.033' in s['b2'])
++check('base dict is not changed by the series', R.BASE == dict(warm=28, b2=0))
+ check('CP upper for 0 of 30 = 0.116', abs(R.cp(0, 30, False) - 0.1157) < 0.001)

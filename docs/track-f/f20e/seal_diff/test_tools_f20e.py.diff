@@ -1,0 +1,91 @@
+--- f20c/test_tools_f20c.py
++++ f20e/test_tools_f20e.py
+@@ -1,4 +1,4 @@
+-"""F20c (HPP-561): fixtures of the harness tools - the <app> mask of enter_scene.py (item 463 (2); process rule of item 324 (i): no input
+-process name in the output), the procload mask of go_f20c.sh, the cheap refusals of go_f20c.sh and launch_f20c.sh, queue_f20c.py
+-reading, ASCII of every script.  usage: python test_tools_f20c.py   (ASCII only; the last line is ALL OK)"""
++"""F20e (HPP-624): fixtures of the harness tools - the <app> mask of enter_scene.py (item 463 (2); process rule of item 324 (i): no input
++process name in the output), the procload mask of go_f20e.sh, the cheap refusals of go_f20e.sh and launch_f20e.sh, queue_f20e.py
++reading, ASCII of every script.  usage: python test_tools_f20e.py   (ASCII only; the last line is ALL OK)"""
+ import contextlib
+@@ -22,7 +22,7 @@
+ 
+-print('suite test_tools_f20c.py sha256 %s target enter_scene.py sha256 %s go_f20c.sh sha256 %s queue_f20c.py sha256 %s' % (
+-    sha(os.path.abspath(__file__)), sha(os.path.join(HERE, 'enter_scene.py')), sha(os.path.join(HERE, 'go_f20c.sh')),
+-    sha(os.path.join(HERE, 'queue_f20c.py'))))
++print('suite test_tools_f20e.py sha256 %s target enter_scene.py sha256 %s go_f20e.sh sha256 %s queue_f20e.py sha256 %s' % (
++    sha(os.path.abspath(__file__)), sha(os.path.join(HERE, 'enter_scene.py')), sha(os.path.join(HERE, 'go_f20e.sh')),
++    sha(os.path.join(HERE, 'queue_f20e.py'))))
+ import enter_scene as ES  # noqa: E402
+-import queue_f20c as Q  # noqa: E402
++import queue_f20e as Q  # noqa: E402
+ 
+@@ -76,5 +76,5 @@
+ check('mask_name: emulator by base name', ES.mask_name('KYTY_EMULATOR') == 'KYTY_EMULATOR')
+-# --- procload mask of go_f20c.sh (the sed of the mask() function)
++# --- procload mask of go_f20e.sh (the sed of the mask() function)
+ line = "procload: busy [('Zoomish', 1234, 0.91), ('chromeX', 99, 0.6)]"
+-go = open(os.path.join(HERE, 'go_f20c.sh'), encoding='ascii').read()
++go = open(os.path.join(HERE, 'go_f20e.sh'), encoding='ascii').read()
+ sed = [l for l in go.splitlines() if l.startswith('mask()')][0]
+@@ -84,11 +84,18 @@
+ # --- cheap refusals (no lock taken, no process started): usage and order
+-p = subprocess.run([BASH, os.path.join(HERE, 'go_f20c.sh'), 'f20_v31'], capture_output=True, text=True)
+-check('go: f20_v31 refused (usage)', p.returncode == 2)
+-p = subprocess.run([BASH, os.path.join(HERE, 'go_f20c.sh'), 'f20_v1'], capture_output=True, text=True)
++p = subprocess.run([BASH, os.path.join(HERE, 'go_f20e.sh'), 'f20_v55'], capture_output=True, text=True)
++check('go: f20_v55 refused (usage)', p.returncode == 2)
++p = subprocess.run([BASH, os.path.join(HERE, 'go_f20e.sh'), 'f20_v1'], capture_output=True, text=True)
+ check('go: f20_v1 refused (usage)', p.returncode == 2)
+-if not os.path.isdir(os.path.join(HERE, 'runs', 'f20_v01')):
+-    p = subprocess.run([BASH, os.path.join(HERE, 'go_f20c.sh'), 'f20_v02'], capture_output=True, text=True)
+-    check('go: f20_v02 before f20_v01 refused (order, or lock rc 3)', p.returncode in (2, 3) and ('order' in p.stdout or p.returncode == 3))
+-p = subprocess.run([BASH, os.path.join(HERE, 'launch_f20c.sh'), 'f20_v31'], capture_output=True, text=True)
+-check('launch: f20_v31 refused', p.returncode == 2)
++for bad in ('f20_v24', 'f20_v01', 'f20_v30x'):
++    p = subprocess.run([BASH, os.path.join(HERE, 'go_f20e.sh'), bad], capture_output=True, text=True)
++    check('go: %s refused (usage)' % bad, p.returncode == 2)
++go_src = open(os.path.join(HERE, 'go_f20e.sh'), encoding='ascii').read()
++check('go: only FS8 admitted', 'FS8=2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b' in go_src
++      and '[ "$WANT" = "$FS8" ] ||' in go_src and 'ADB=' not in go_src and 'FS6=' not in go_src)
++check('go: order from f20_v25', 'if [ $NN -gt 25 ]; then' in go_src)
++if not os.path.isdir(os.path.join(HERE, 'runs', 'f20_v25')):
++    p = subprocess.run([BASH, os.path.join(HERE, 'go_f20e.sh'), 'f20_v26'], capture_output=True, text=True)
++    check('go: f20_v26 before f20_v25 refused (order, or lock rc 3)', p.returncode in (2, 3) and ('order' in p.stdout or p.returncode == 3))
++p = subprocess.run([BASH, os.path.join(HERE, 'launch_f20e.sh'), 'f20_v55'], capture_output=True, text=True)
++check('launch: f20_v55 refused', p.returncode == 2)
+ # --- FS6b window of item 473: fresh file -> rc 6 + times line, no launch; expired -> times line and on (dry run); absent -> on, no line
+@@ -98,3 +105,3 @@
+ WF, TF = os.path.join(TD, 'FS6B_WINDOW'), os.path.join(TD, 'times.txt')
+-ENV = dict(os.environ, F20C_FS6B_WINDOW=WF, F20C_TIMES=TF, F20C_DRYRUN='1')
++ENV = dict(os.environ, F20E_FS6B_WINDOW=WF, F20E_TIMES=TF, F20E_DRYRUN='1')
+ 
+@@ -111,3 +118,3 @@
+         os.utime(WF, (t, t))
+-    p = subprocess.run([BASH, os.path.join(HERE, 'launch_f20c.sh'), 'f20_v30'], capture_output=True, text=True, env=ENV)
++    p = subprocess.run([BASH, os.path.join(HERE, 'launch_f20e.sh'), 'f20_v54'], capture_output=True, text=True, env=ENV)
+     tl = open(TF).read() if os.path.exists(TF) else ''
+@@ -117,3 +124,3 @@
+ rc, out, tl = launch_w(0)
+-check('window: fresh 0 s -> rc 6, not launched, times active', rc == 6 and 'launched' not in out and 'window active' in tl and 'f20_v30' in tl)
++check('window: fresh 0 s -> rc 6, not launched, times active', rc == 6 and 'launched' not in out and 'window active' in tl and 'f20_v54' in tl)
+ rc, out, tl = launch_w(890)
+@@ -125,7 +132,7 @@
+ shutil.rmtree(TD, ignore_errors=True)
+-for nm in ('post_f20c.sh', 'wait_f20c.sh', 'launch_f20c.sh', 'go_f20c.sh'):
++for nm in ('post_f20e.sh', 'wait_f20e.sh', 'launch_f20e.sh', 'go_f20e.sh'):
+     s = open(os.path.join(HERE, nm), encoding='ascii').read()
+-    check('%s: tags f20_v01..f20_v30 only' % nm, nm == 'wait_f20c.sh' or 'f20_v0[1-9]|f20_v[12][0-9]|f20_v30' in s)
+-# --- queue_f20c.py reading on a fake API answer
+-ISS = [dict(identifier='HPP-561', status='in_progress', executionRunId='r'), dict(identifier='HPP-557', status='blocked', executionRunId=None),
++    check('%s: tags f20_v25..f20_v54 only' % nm, nm == 'wait_f20e.sh' or 'f20_v2[5-9]|f20_v[34][0-9]|f20_v5[0-4]' in s)
++# --- queue_f20e.py reading on a fake API answer
++ISS = [dict(identifier='HPP-624', status='in_progress', executionRunId='r'), dict(identifier='HPP-557', status='blocked', executionRunId=None),
+        dict(identifier='HPP-549', status='blocked', executionRunId='x'), dict(identifier='HPP-500', status='in_progress', executionRunId=None),
+@@ -162,4 +169,4 @@
+ Q.urllib.request.urlopen = keep_open
+-for nm in ('f20c_read.py', 'test_f20c_read.py', 'sens_f20c.py', 'go_f20c.sh', 'launch_f20c.sh', 'wait_f20c.sh', 'post_f20c.sh', 'queue_f20c.py',
+-           'watch_f20c.py', 'enter_scene.py', 'test_tools_f20c.py'):
++for nm in ('f20e_read.py', 'test_f20e_read.py', 'sens_f20e.py', 'go_f20e.sh', 'launch_f20e.sh', 'wait_f20e.sh', 'post_f20e.sh', 'queue_f20e.py',
++           'watch_f20e.py', 'enter_scene.py', 'test_tools_f20e.py'):
+     check('%s ASCII only' % nm, all(b < 128 for b in open(os.path.join(HERE, nm), 'rb').read()))

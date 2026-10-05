@@ -1,0 +1,12 @@
+--- f20c/wait_f20c.sh
++++ f20e/wait_f20e.sh
+@@ -1,3 +1,3 @@
+ #!/bin/bash
+-# Track F link F20c (HPP-561): foreground wait for the detached call of launch_f20c.sh, at most 54 x 10 s = 540 s per invocation; prints
++# Track F link F20e (HPP-624): foreground wait for the detached call of launch_f20e.sh, at most 54 x 10 s = 540 s per invocation; prints
+ # DONE and the rc line, or RUNNING (call again); the stop file ends the wait (not the call).  Port of F18e wait_f18e.sh.  ASCII only.
+@@ -5,3 +5,3 @@
+ T=$1
+-F=C:/kyty/f287/f20c/go_$T.out.txt
++F=C:/kyty/f287/f20e/go_$T.out.txt
+ S=RUNNING

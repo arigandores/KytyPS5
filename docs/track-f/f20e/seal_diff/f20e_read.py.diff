@@ -1,0 +1,115 @@
+--- f20c/f20c_read.py
++++ f20e/f20e_read.py
+@@ -1,2 +1,4 @@
+-"""Track F link F20c (HPP-561; ROADMAP s122 item 462 (g)-(d), item 451 (e)): the reader of the V Sky Garden series for B2 and B32.
++"""Track F link F20e (HPP-624; ROADMAP s122 item 543 (e); port of the F20c reader, item 462 (g)-(d), item 451 (e)): the reader of
++the V Sky Garden series F20e for B2 and B32.  Edits against F20c: binary admission (FS8 only), the stop rule and the summary of
++item 543 (e) (B2 base 28 warm, B32 - the F20e series alone); the reading rules of a tag are those of F20c.
+ Base: docs/track-f/f20a/sweep_f20a.py (interval of a frame, first scene frame), b2win_f20a.py (frame index after the first scene
+@@ -4,10 +6,11 @@
+ 
+-    python f20c_read.py <tag> [--json <out>]                 one tag of the series (files of C:/kyty/f287/f20c)
+-    python f20c_read.py --dir <fixture dir> --tag <tag> [--bin <sha256>] [--json <out>]
++    python f20e_read.py <tag> [--json <out>]                 one tag of the series (files of C:/kyty/f287/f20e)
++    python f20e_read.py --dir <fixture dir> --tag <tag> [--bin <sha256>] [--json <out>]
+                                                               fixture form: log.txt, stdout.txt, es.json, rec.idx, glitch.txt,
+                                                               installed_before.txt, installed_after.txt, manifest_cmp.txt, seal.md
+-    python f20c_read.py --regress [--out <file>]              the F20a logs of the main variant (item 462 (b)): N warm 6, N holds 8,
++    python f20e_read.py --regress [--out <file>]              the F20a logs of the main variant (item 462 (b)): N warm 6, N holds 8,
+                                                               B2 frames 0, unattributed 0 - exit 1 otherwise
+-    python f20c_read.py --series [--runs <dir>]              the series: F20a base + every read.json of runs/f20_vNN; reading (d)
+-    python f20c_read.py --check-seal [--seal <md>]            every 'seal: <sha256> <path>' line of the seal against the file
++    python f20e_read.py --series [--runs <dir>]              the series: B2 base 28 + every read.json of runs/f20_vNN; B32 of
++                                                              F20e alone; the stop rule of item 543 (e)
++    python f20e_read.py --check-seal [--seal <md>]            every 'seal: <sha256> <path>' line of the seal against the file
+ 
+@@ -29,4 +32,4 @@
+                    Unattributed = 'nothing' + 'prio only' (item 462 (b)(4)).
+-                   LETTER (main): on adb0c82f and FS6 a cache save is no attribution - the frame goes on to the next member.
+-                   VARIANT F20a (executor variant, printed beside): on adb0c82f / FS6 a frame with a cache save is unattributed.
++                   LETTER (main): on adb0c82f, FS6 and FS8 a cache save is no attribution - the frame goes on to the next member.
++                   VARIANT F20a (executor variant, printed beside): on adb0c82f / FS6 / FS8 a frame with a cache save is unattributed.
+   reference        death markers (log and stdout), frames >= 1 s after the entry window, one-frame glitches of the video,
+@@ -34,3 +37,3 @@
+ ADMISSION of a tag (item 462 (g); a failed member = interference, the tag is repeated and is not counted): json binary_sha256 =
+-  adb0c82f or FS6 9325446c; installed before = after = json binary; json prereg sha256 = sha256 of the seal; env holds only the harness
++  FS8 2c9b69b9 (one binary of the series, item 543 (e)); installed before = after = json binary; json prereg sha256 = sha256 of the seal; env holds only the harness
+   constants HARN; the last --vulkan-validation and --shader-validation are 'false', no --rd; guest args '-lvl underwater_aerial_garden';
+@@ -38,2 +41,4 @@
+   'Recovering Vulkan swapchain'; caches returned (manifest_cmp EQUAL).
++STOP RULE (item 543 (e)): tags go until both hold: (i) B2 warm N = 28 + warm tags of F20e >= 30; (ii) B32 - a hold of F20e with
++  >= 1 unattributed frame (letter) or 29 holds of F20e without one; at most 30 tags (f20_v25..f20_v54); interference is repeated.
+ """
+@@ -47,4 +52,4 @@
+ 
+-G = 'C:/kyty/f287/f20c'
+-SEAL_PATH = G + '/pred/f20c_seal.md'
++G = 'C:/kyty/f287/f20e'
++SEAL_PATH = G + '/pred/f20e_seal.md'
+ SG = b'underwater_aerial_garden'
+@@ -58,5 +63,5 @@
+ TAG_MAX = 30
+-BASE = dict(warm=6, b2=0, holds=8, unattr=0, unattr_f20a=0)    # F20a main variant, item 462 (b)-(v)
+-BIN_OK = {'adb0c82f1a752805af2cebadf892ef63639eb6862fde3eb79b6dda961c611421': 'S12 adb0c82f',
+-          '9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2': 'FS6 9325446c'}
++B32_HOLDS = 29
++BASE = dict(warm=28, b2=0)    # B2 base after F20d, item 543 (g): F20a 6 + F20c 22 warm entries, 0 B2 frames
++BIN_OK = {'2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b': 'FS8 2c9b69b9'}
+ PRE_S12 = ('9235a7ac', 'dac02fb9', 'bbad499c', '4aa62e95', '540c035a', '31cbfee8', '631ff987')
+@@ -289,3 +294,3 @@
+         ('tag json present', run is not None),
+-        ('json binary_sha256 = adb0c82f or FS6 9325446c (%s)' % (BIN_OK.get(jbin) or (jbin or '-')[:16]), jbin in BIN_OK),
++        ('json binary_sha256 = FS8 2c9b69b9 (%s)' % (BIN_OK.get(jbin) or (jbin or '-')[:16]), jbin in BIN_OK),
+         ('installed before = after = json binary (%s / %s)' % ((inst_b or '-')[:8], (inst_a or '-')[:8]),
+@@ -399,4 +404,13 @@
+ 
++def b32_line(n, k, what):
++    """B32 of the F20e series alone (item 543 (e), (zh)): k holds with >= 1 unattributed frame of n holds."""
++    if n == 0:
++        return '%s: 0 holds' % what
++    if k >= 1:
++        return '%s: %d of %d holds, 95 %% CP [%.3f; %.3f]' % (what, k, n, cp(k, n, True), cp(k, n, False))
++    return '%s: 0 of %d holds (one-sided upper 95 %% %.3f)' % (what, n, 1 - 0.05 ** (1.0 / n))
++
++
+ def series(results, base=BASE):
+-    s = dict(base)
++    s = dict(warm=base['warm'], b2=base['b2'], holds=0, unattr=0, unattr_f20a=0)    # B32: the F20e series alone
+     tags = dict(made=0, interference=0, warm=0, cold=0, unread=0, holds=0, nohold=0)
+@@ -424,6 +438,9 @@
+             tags['nohold'] += 1
+-    out = dict(sum=s, tags=tags, b2=reading(s['warm'], s['b2'], 'B2 (entries with >= 1 B2 frame)'),
+-               b32=reading(s['holds'], s['unattr'], 'B32 Sky Garden (holds with >= 1 unattributed frame, letter)'),
+-               b32_f20a=reading(s['holds'], s['unattr_f20a'], 'B32 Sky Garden (variant F20a)'),
+-               need_more=s['warm'] < N_TARGET and tags['made'] < TAG_MAX)
++    stop_b2 = s['warm'] >= N_TARGET
++    stop_b32 = s['unattr'] >= 1 or s['holds'] - s['unattr'] >= B32_HOLDS
++    out = dict(sum=s, tags=tags, b2=reading(s['warm'], s['b2'], 'B2 (entries with >= 1 B2 frame; base 28 warm of F20a + F20c)'),
++               b32=b32_line(s['holds'], s['unattr'], 'B32 Sky Garden, F20e alone (holds with >= 1 unattributed frame, letter)'),
++               b32_f20a=b32_line(s['holds'], s['unattr_f20a'], 'B32 Sky Garden, F20e alone (variant F20a)'),
++               stop_i=stop_b2, stop_ii=stop_b32,
++               need_more=not (stop_b2 and stop_b32) and tags['made'] < TAG_MAX)
+     return out
+@@ -451,3 +468,3 @@
+     if '--check-seal' in argv:
+-        seal = argv[argv.index('--seal') + 1] if '--seal' in argv else 'C:/kyty/KytyPS5/docs/track-f/f20c.md'
++        seal = argv[argv.index('--seal') + 1] if '--seal' in argv else 'C:/kyty/KytyPS5/docs/track-f/f20e.md'
+         ok = True
+@@ -502,3 +519,3 @@
+             print('%s %s %s' % (res['tag'], 'ADMITTED' if res['admitted'] else 'INTERFERENCE', res['reading']))
+-        print('BASE F20a %s' % BASE)
++        print('BASE B2 %s (F20a 6 + F20c 22, item 543 (g)); B32 - the F20e series alone (item 543 (e))' % BASE)
+         print('SUM %s' % s['sum'])
+@@ -508,3 +525,6 @@
+         print('READING %s' % s['b32_f20a'])
+-        print('NEXT %s' % ('more tags (warm N < 30, tags made < 30)' if s['need_more'] else 'stop adding tags'))
++        print('STOP (i) B2 warm N %d >= 30: %s; (ii) B32 F20e: holds %d, with unattributed %d (stop at >= 1 or %d clean): %s; tags made %d of %d'
++              % (s['sum']['warm'], 'yes' if s['stop_i'] else 'no', s['sum']['holds'], s['sum']['unattr'], B32_HOLDS,
++                 'yes' if s['stop_ii'] else 'no', s['tags']['made'], TAG_MAX))
++        print('NEXT %s' % ('more tags (item 543 (e): (i) and (ii) not both met, tags made < 30)' if s['need_more'] else 'stop adding tags'))
+         return 0
+@@ -517,3 +537,3 @@
+         if not re.match(r'^f20_v\d\d$', tag):
+-            print('usage: f20c_read.py f20_vNN | --dir D --tag T | --regress | --series | --check-seal')
++            print('usage: f20e_read.py f20_vNN | --dir D --tag T | --regress | --series | --check-seal')
+             return 2

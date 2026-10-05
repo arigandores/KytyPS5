@@ -1,0 +1,25 @@
+--- f20c/guard_f20c.py
++++ f20e/guard_f20e.py
+@@ -1,2 +1,2 @@
+-"""Track F link F20c (HPP-561): guard of the user game (ROADMAP s122 item 534, general rule 33; incident f20_v11).
++"""Track F link F20e (HPP-624): guard of the user game (ROADMAP s122 item 534, general rule 33; incident f20_v11).
+ 
+@@ -8,8 +8,8 @@
+ usage:
+-  python guard_f20c.py scan [--pidfile F]                        rc 0 'GUARD CLEAN' / rc 7 'GUARD FOUND n: ...'
+-  python guard_f20c.py kill-own --pidfile F                      kills the own emulator tree by its pid only (taskkill /F /T /PID)
+-  python guard_f20c.py watch --pidfile F --flag F2 --stop F3     poll <= 2 s during the tag; a user process seen in 2 polls in a row =>
++  python guard_f20e.py scan [--pidfile F]                        rc 0 'GUARD CLEAN' / rc 7 'GUARD FOUND n: ...'
++  python guard_f20e.py kill-own --pidfile F                      kills the own emulator tree by its pid only (taskkill /F /T /PID)
++  python guard_f20e.py watch --pidfile F --flag F2 --stop F3     poll <= 2 s during the tag; a user process seen in 2 polls in a row =>
+                                                                  flag file, the own emulator killed by pid, the user process untouched
+-  python guard_f20c.py wait-gone [--pidfile F] [--poll 10]       returns when no user process is left (poll <= 10 s; the lock stays)
+-  python guard_f20c.py check|open-block|status|tag <tag>|close <reason> [--block F]    blocks of item 534 (3)
++  python guard_f20e.py wait-gone [--pidfile F] [--poll 10]       returns when no user process is left (poll <= 10 s; the lock stays)
++  python guard_f20e.py check|open-block|status|tag <tag>|close <reason> [--block F]    blocks of item 534 (3)
+     check      scan + a line CLEAN / FOUND in the block file; FOUND closes the block (rc 7)
+@@ -29,3 +29,3 @@
+ 
+-G = 'C:/kyty/f287/f20c'
++G = 'C:/kyty/f287/f20e'
+ BLOCK = G + '/guard_block.txt'

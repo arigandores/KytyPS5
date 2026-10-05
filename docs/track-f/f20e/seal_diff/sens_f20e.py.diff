@@ -1,0 +1,54 @@
+--- f20c/sens_f20c.py
++++ f20e/sens_f20e.py
+@@ -1,3 +1,3 @@
+-"""F20c (HPP-561): manual sensitivity of test_f20c_read.py - each edit of f20c_read.py below must make the suite fail (exit != 0).
+-Form of F18e sens_f18e.py; the edits run 8 at a time.  usage: python sens_f20c.py   (ASCII only; ends with ALL OK when every edit is
++"""F20e (HPP-624): manual sensitivity of test_f20e_read.py - each edit of f20e_read.py below must make the suite fail (exit != 0).
++Form of F18e sens_f18e.py; the edits run 8 at a time.  usage: python sens_f20e.py   (ASCII only; ends with ALL OK when every edit is
+ caught)"""
+@@ -12,4 +12,4 @@
+ HERE = os.path.dirname(os.path.abspath(__file__))
+-SRC = open(os.path.join(HERE, 'f20c_read.py'), 'rb').read().decode('utf-8')
+-print('suite sens_f20c.py sha256 %s target f20c_read.py sha256 %s' % (
++SRC = open(os.path.join(HERE, 'f20e_read.py'), 'rb').read().decode('utf-8')
++print('suite sens_f20e.py sha256 %s target f20e_read.py sha256 %s' % (
+     hashlib.sha256(open(os.path.abspath(__file__), 'rb').read()).hexdigest(), hashlib.sha256(SRC.encode('utf-8')).hexdigest()))
+@@ -40,3 +40,5 @@
+     ('first flag wins', "            v = cmd[i + 1] if i + 1 < len(cmd) else ''", "            v = v or (cmd[i + 1] if i + 1 < len(cmd) else '')"),
+-    ('FS6 not admitted', "          '9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2': 'FS6 9325446c'}", '          }'),
++    ('FS8 not admitted', "BIN_OK = {'2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b': 'FS8 2c9b69b9'}", 'BIN_OK = {}'),
++    ('FS7 admitted', "BIN_OK = {'2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b': 'FS8 2c9b69b9'}",
++     "BIN_OK = {'2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b': 'FS8 2c9b69b9', '8df61c009fbe6d7fd7f4e7576e89ab1b0989129336a26f6d1cdf8fd778fbffe7': 'FS7'}"),
+     ('installed after not checked', "jbin is not None and inst_b == jbin and inst_a == jbin", "jbin is not None and inst_b == jbin"),
+@@ -55,4 +57,13 @@
+      "e['k1s_after'] = sum(1 for x in fr if x[2] >= K1S_US)"),
+-    ('base warm 5', 'BASE = dict(warm=6, b2=0, holds=8', 'BASE = dict(warm=5, b2=0, holds=8'),
+-    ('base holds 9', 'BASE = dict(warm=6, b2=0, holds=8', 'BASE = dict(warm=6, b2=0, holds=9'),
++    ('base warm 27', 'BASE = dict(warm=28, b2=0)', 'BASE = dict(warm=27, b2=0)'),
++    ('base warm 29', 'BASE = dict(warm=28, b2=0)', 'BASE = dict(warm=29, b2=0)'),
++    ('B32 base not zero', "base['b2'], holds=0, unattr=0", "base['b2'], holds=1, unattr=0"),
++    ('B32 stop at 28 clean holds', 'B32_HOLDS = 29', 'B32_HOLDS = 28'),
++    ('B32 stop at 30 clean holds', 'B32_HOLDS = 29', 'B32_HOLDS = 30'),
++    ('(ii) ignores the unattributed hold', "stop_b32 = s['unattr'] >= 1 or ", 'stop_b32 = '),
++    ('(ii) on variant F20a', "stop_b32 = s['unattr'] >= 1 or ", "stop_b32 = s['unattr_f20a'] >= 1 or "),
++    ('stop needs only (i)', 'need_more=not (stop_b2 and stop_b32)', 'need_more=not stop_b2'),
++    ('stop needs only (ii)', 'need_more=not (stop_b2 and stop_b32)', 'need_more=not stop_b32'),
++    ('stop on either', 'need_more=not (stop_b2 and stop_b32)', 'need_more=not (stop_b2 or stop_b32)'),
++    ('B32 one-sided bound 0.10', '1 - 0.05 ** (1.0 / n)', '1 - 0.10 ** (1.0 / n)'),
+     ('tag cap 31', 'TAG_MAX = 30', 'TAG_MAX = 31'),
+@@ -61,4 +72,4 @@
+ ]
+-T = tempfile.mkdtemp(prefix='f20c_sens_')
+-shutil.copy2(os.path.join(HERE, 'test_f20c_read.py'), os.path.join(T, 'test_f20c_read.py'))
++T = tempfile.mkdtemp(prefix='f20e_sens_')
++shutil.copy2(os.path.join(HERE, 'test_f20e_read.py'), os.path.join(T, 'test_f20e_read.py'))
+ 
+@@ -71,5 +82,5 @@
+     os.makedirs(d)
+-    shutil.copy2(os.path.join(T, 'test_f20c_read.py'), os.path.join(d, 'test_f20c_read.py'))
+-    open(os.path.join(d, 'f20c_read.py'), 'wb').write(SRC.replace(old, new).encode('utf-8'))
+-    p = subprocess.run([sys.executable, os.path.join(d, 'test_f20c_read.py')], capture_output=True, cwd=d)
++    shutil.copy2(os.path.join(T, 'test_f20e_read.py'), os.path.join(d, 'test_f20e_read.py'))
++    open(os.path.join(d, 'f20e_read.py'), 'wb').write(SRC.replace(old, new).encode('utf-8'))
++    p = subprocess.run([sys.executable, os.path.join(d, 'test_f20e_read.py')], capture_output=True, cwd=d)
+     nf = [x for x in p.stdout.decode('ascii', 'replace').split('\n') if x.startswith('checks ')]

@@ -1,0 +1,18 @@
+--- f20c/queue_f20c.py
++++ f20e/queue_f20e.py
+@@ -1,7 +1,7 @@
+-"""F20c (HPP-561; ROADMAP s122 item 462 (g)): the lock queue check - F20c is the last in the lock queue; a tag is taken only when no other
++"""F20e (HPP-624; ROADMAP s122 item 462 (g)): the lock queue check - F20e is the last in the lock queue; a tag is taken only when no other
+ run link of any track (P, F, S) has a ready input.  A run link is an issue of the Harness Engineer agent (the only agent that starts the
+-game) other than HPP-561; it is READY when its status is todo or in_progress, or a run of it is going (executionRunId not empty) -
++game) other than HPP-624; it is READY when its status is todo or in_progress, or a run of it is going (executionRunId not empty) -
+ a blocked link without a run is not ready.  Prints one line per open link and QUEUE FREE (exit 0) or QUEUE BUSY (exit 1); exit 2 when the
+ API does not answer.  ASCII only.
+-usage: python queue_f20c.py"""
++usage: python queue_f20e.py"""
+ import json
+@@ -11,3 +11,3 @@
+ 
+-OWN = 'HPP-561'
++OWN = 'HPP-624'
+ 

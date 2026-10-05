@@ -1,0 +1,105 @@
+watch: start 2026-10-05T05:31:09Z child 60356 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[host]    LeastRecentlyUsedCache           ok
+[f19] KYTY_FIX_F19=0 effective=0
+[f19]     cache signature=KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:fixb26:fixb1b:fixf10
+[f19]     cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10 fixf19_in_signature=0 fixf19_in_dir=0 last_sig=0 last_dir=0
+[f19] gate KYTY_FIX_F19 effective=0
+[f19] fmt=k16UNorm filter=LINEAR ref=0.500 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.500 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.500 s=0.375 t=0.625 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.500 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.500 s=0.500 t=0.375 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.500 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.500 s=0.375 t=0.500 mid=1 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.500 s=0.500 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.213 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.213 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.213 s=0.375 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.213 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.213 s=0.500 t=0.375 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.213 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.213 s=0.375 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=LINEAR ref=0.213 s=0.500 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.750000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.500 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.500 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.500 s=0.375 t=0.625 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.500 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.500 s=0.500 t=0.375 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.500 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.500 s=0.375 t=0.500 mid=1 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.500 s=0.500 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.213 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.213 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.213 s=0.375 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.213 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.213 s=0.500 t=0.375 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.213 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.213 s=0.375 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k16UNorm filter=NEAREST ref=0.213 s=0.500 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.750000 nearest=1 step=1 path=manual
+[f19] fmt=k32Float filter=LINEAR ref=0.500 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.500 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.500 s=0.375 t=0.625 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.500 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.500 s=0.500 t=0.375 mid=1 out=0.500000 (0x3f000000) pcf=0.500000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.500 s=0.500 t=0.625 mid=1 out=0.500000 (0x3f000000) pcf=0.500000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.500 s=0.375 t=0.500 mid=1 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.500 s=0.500 t=0.500 mid=1 out=0.500000 (0x3f000000) pcf=0.500000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.213 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.213 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.213 s=0.375 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.213 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.213 s=0.500 t=0.375 mid=1 out=0.500000 (0x3f000000) pcf=0.500000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.213 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.213 s=0.375 t=0.500 mid=1 out=0.500000 (0x3f000000) pcf=0.500000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=LINEAR ref=0.213 s=0.500 t=0.500 mid=1 out=0.750000 (0x3f400000) pcf=0.750000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.500 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.500 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.500 s=0.375 t=0.625 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.500 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.500 s=0.500 t=0.375 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.500 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.500 s=0.375 t=0.500 mid=1 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.500 s=0.500 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.213 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.213 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.213 s=0.375 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.213 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.213 s=0.500 t=0.375 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.213 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.213 s=0.375 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=native
+[f19] fmt=k32Float filter=NEAREST ref=0.213 s=0.500 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.750000 nearest=1 step=1 path=native
+[f19] fmt=k8UNorm filter=LINEAR ref=0.500 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.500 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.500 s=0.375 t=0.625 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.500 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.500 s=0.500 t=0.375 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.500 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.500 s=0.375 t=0.500 mid=1 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.500 s=0.500 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.213 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.213 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.213 s=0.375 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.213 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.213 s=0.500 t=0.375 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.213 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.213 s=0.375 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=LINEAR ref=0.213 s=0.500 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.750000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.500 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.500 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.500 s=0.375 t=0.625 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.500 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.500 s=0.500 t=0.375 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.500 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.500 s=0.375 t=0.500 mid=1 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.500 s=0.500 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.213 s=0.375 t=0.375 mid=0 out=0.000000 (0x00000000) pcf=0.000000 nearest=0 step=0 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.213 s=0.625 t=0.375 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.213 s=0.375 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.213 s=0.625 t=0.625 mid=0 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.213 s=0.500 t=0.375 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.213 s=0.500 t=0.625 mid=1 out=1.000000 (0x3f800000) pcf=1.000000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.213 s=0.375 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.500000 nearest=1 step=1 path=manual
+[f19] fmt=k8UNorm filter=NEAREST ref=0.213 s=0.500 t=0.500 mid=1 out=1.000000 (0x3f800000) pcf=0.750000 nearest=1 step=1 path=manual
+[gpu]     F19PcfGate                       ok
+ALL OK
+rc=0 end 2026-10-05T05:31:10Z

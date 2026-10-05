@@ -1,0 +1,3 @@
+anchors {'    // D16_UNORM). The knob is read as FixF19Enabled reads it, once per process.': 1, '    const bool fix_f19 = Common::EnvFlagOn("KYTY_FIX_F19");': 1, '  const bool fix_f19 = Common::EnvFlagOn("KYTY_FIX_F19");': 2}
+patched wt/tests/shaderCfgTests.cpp lf EnvFlagOn(KYTY_FIX_F19) left 0
+OK

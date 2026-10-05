@@ -1,0 +1,107 @@
+diff 4fc501f4 302347b4 :  64 files changed, 9876 insertions(+), 160 deletions(-)
+KYTY_* names on +/- lines: 31
+KYTY_ARM_INLINE  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:449
+   tip src/common/gates.cpp:449:{"KYTY_ARM_INLINE", "acinline", 0, 1}, | table row fallback 0
+KYTY_ARM_IN_COPY  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:445
+   tip src/common/gates.cpp:445:{"KYTY_ARM_IN_COPY", "armcopy", 0, 4}, | table row fallback 0
+KYTY_ARM_LOSS_WIN  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:453
+   tip src/common/gates.cpp:453:{"KYTY_ARM_LOSS_WIN", "lwin", 0, 3}, | table row fallback 0
+KYTY_AUDIO_SYNC  added_lines=1 removed_lines=0
+   + src/loader/gamePatchFile.cpp:70
+   tip src/kernel/pthread.cpp:182:const char* value = std::getenv("KYTY_AUDIO_SYNC"); | default-off/other (read by hand)
+   tip src/loader/gamePatchFile.cpp:70:env.audio_sync = std::getenv("KYTY_AUDIO_SYNC"); | default-off/other (read by hand)
+KYTY_B2_REUSE  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:465
+   tip src/common/gates.cpp:465:{"KYTY_B2_REUSE", "b2reuse", 0, 3}, | table row fallback 0
+KYTY_BIND_LEAN  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:473
+   tip src/common/gates.cpp:473:{"KYTY_BIND_LEAN", "bindlean", 0, 3}, | table row fallback 0
+KYTY_DISP_CEILING  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:457
+   tip src/common/gates.cpp:457:{"KYTY_DISP_CEILING", "dispceil", 0, 1}, | table row fallback 0
+KYTY_DUMP_GCN  added_lines=1 removed_lines=0
+   + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1301
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1257:const char* value = std::getenv("KYTY_DUMP_GCN"); | default-off/other (read by hand)
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1301:const char* value = std::getenv("KYTY_DUMP_GCN"); | default-off/other (read by hand)
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3635:const auto* value = std::getenv("KYTY_DUMP_GCN"); | default-off/other (read by hand)
+KYTY_FIX_B1B  added_lines=1 removed_lines=0
+   + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:346
+   tip src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:346:const char* value = std::getenv("KYTY_FIX_B1B"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_B24  added_lines=1 removed_lines=0
+   + src/libs/controller.cpp:839
+   tip src/libs/controller.cpp:839:const char* value = std::getenv("KYTY_FIX_B24"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_B26  added_lines=1 removed_lines=0
+   + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:331
+   tip src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:331:const char* value = std::getenv("KYTY_FIX_B26"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_B4  added_lines=1 removed_lines=0
+   + src/kernel/fileSystem.cpp:114
+   tip src/kernel/fileSystem.cpp:114:const char* value = std::getenv("KYTY_FIX_B4"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_B42  added_lines=1 removed_lines=0
+   + src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3650
+   tip src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3650:const char* value = std::getenv("KYTY_FIX_B42"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_B9A  added_lines=1 removed_lines=0
+   + src/libs/libAudio.cpp:374
+   tip src/libs/libAudio.cpp:374:const char* fix_b9a_value = std::getenv("KYTY_FIX_B9A"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_DUALSRC  added_lines=1 removed_lines=0
+   + src/graphics/presentation/window/vulkanWindow.cpp:666
+   tip src/graphics/presentation/window/vulkanWindow.cpp:666:const char* dual_src_value    = std::getenv("KYTY_FIX_DUALSRC"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_F10  added_lines=1 removed_lines=0
+   + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:356
+   tip src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:356:const char* value = std::getenv("KYTY_FIX_F10"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_F19  added_lines=1 removed_lines=0
+   + src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:38
+   tip src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:38:const char* value = std::getenv("KYTY_FIX_F19"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_F8  added_lines=1 removed_lines=0
+   + src/libs/audio.cpp:295
+   tip src/libs/audio.cpp:295:const char* value = std::getenv("KYTY_FIX_F8"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_MINIMIZE  added_lines=1 removed_lines=0
+   + src/graphics/presentation/window/swapchain.cpp:311
+   tip src/graphics/presentation/window/swapchain.cpp:311:const char* value = std::getenv("KYTY_FIX_MINIMIZE"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_SVAL  added_lines=1 removed_lines=0
+   + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1350
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1350:const char* value = std::getenv("KYTY_FIX_SVAL"); | DEFAULT-ON (unset = ON)
+KYTY_GAME_PATCH  added_lines=2 removed_lines=0
+   + src/emulator.cpp:253
+   + src/loader/gamePatchFile.cpp:62
+   tip src/emulator.cpp:253:if (const char* game_patch_file = std::getenv("KYTY_GAME_PATCH"); | default-off/other (read by hand)
+   tip src/loader/gamePatchFile.cpp:62:const char* path = std::getenv("KYTY_GAME_PATCH"); | default-off/other (read by hand)
+KYTY_POKE  added_lines=1 removed_lines=0
+   + src/loader/gamePatchFile.cpp:71
+   tip src/loader/gamePatchFile.cpp:71:env.poke       = std::getenv("KYTY_POKE"); | default-off/other (read by hand)
+   tip src/loader/runtimeLinker.cpp:1557:if (const char* poke = std::getenv("KYTY_POKE"); poke != nullptr && !m_programs.empty()) { | default-off/other (read by hand)
+KYTY_PROT_CEILING  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:440
+   tip src/common/gates.cpp:440:{"KYTY_PROT_CEILING", "protceil", 0, 2}, | table row fallback 0
+KYTY_PVAR  added_lines=2 removed_lines=0
+   + src/kernel/pvar.cpp:169
+   + src/loader/gamePatchFile.cpp:69
+   tip src/kernel/pvar.cpp:169:const char* value = std::getenv("KYTY_PVAR"); | default-off/other (read by hand)
+   tip src/loader/gamePatchFile.cpp:69:env.pvar       = std::getenv("KYTY_PVAR"); | default-off/other (read by hand)
+KYTY_REBIND_CENSUS  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:461
+   tip src/common/gates.cpp:461:{"KYTY_REBIND_CENSUS", "rbcen", 0, 2}, | table row fallback 0
+KYTY_REBIND_SLOW_CENSUS  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:469
+   tip src/common/gates.cpp:469:{"KYTY_REBIND_SLOW_CENSUS", "rbslow", 0, 1}, | table row fallback 0
+KYTY_S_PCW  added_lines=1 removed_lines=0
+   + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:280
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:280:const char* value = std::getenv("KYTY_S_PCW"); | DEFAULT-ON (unset = ON)
+KYTY_S_PCW_FORCE_MS  added_lines=1 removed_lines=0
+   + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:291
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:291:const char* value = std::getenv("KYTY_S_PCW_FORCE_MS"); | default-off/other (read by hand)
+KYTY_TEST_AUDIOLOSS  added_lines=1 removed_lines=0
+   + src/libs/controller.cpp:439
+   tip src/libs/controller.cpp:439:const char* value = std::getenv("KYTY_TEST_AUDIOLOSS"); | default-off/other (read by hand)
+KYTY_TEST_HIDLOSS  added_lines=1 removed_lines=0
+   + src/graphics/presentation/window/window.cpp:1103
+   tip src/graphics/presentation/window/window.cpp:1103:const char*       value = std::getenv("KYTY_TEST_HIDLOSS"); | default-off/other (read by hand)
+KYTY_TEST_MINIMIZE  added_lines=1 removed_lines=0
+   + src/graphics/presentation/window/window.cpp:1312
+   tip src/graphics/presentation/window/window.cpp:1312:const char*  value = std::getenv("KYTY_TEST_MINIMIZE"); | default-off/other (read by hand)
+DEFAULT-ON names (unset = ON): KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+expected (p.298(v) + p.327(g) + p.367(g)(1) + p.378(g)(1) + p.410(g)(1) + p.408(l) + p.454(g)(1) + p.467(g)(1) + p.487(g)(1) + p.471(g)(1)): KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+DEFAULT-ON == expected: True
+ALL OK

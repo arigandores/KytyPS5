@@ -1,0 +1,11 @@
+bash.exe: warning: could not find /tmp, please create!
+bash.exe: warning: could not find /tmp, please create!
+g1 KYTY_FIX_F19=1 --fix-f19-only watchdog/test rc=0: ALL OK 
+bash.exe: warning: could not find /tmp, please create!
+g0 KYTY_FIX_F19=0 --fix-f19-only watchdog/test rc=0: ALL OK 
+bash.exe: warning: could not find /tmp, please create!
+gu KYTY_FIX_F19=unset --fix-f19-only watchdog/test rc=0: ALL OK 
+bash.exe: warning: could not find /tmp, please create!
+c1 KYTY_FIX_F19=1 --fix-f19-comparison-depth watchdog/test rc=0: ALL OK 
+bash.exe: warning: could not find /tmp, please create!
+c0 KYTY_FIX_F19=0 --fix-f19-comparison-depth watchdog/test rc=127: ShaderRecompilerComputeTests: ComparisonDepthTexture failed at SPIR-V disassembly: missing required text: OpImageSampleDrefExplicitLod 

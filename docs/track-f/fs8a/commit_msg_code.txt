@@ -1,0 +1,8 @@
+track F link FS8a (HPP-571): KYTY_FIX_F19 default 0 -> 1 (ROADMAP s122 items 471(g)(1), 522(d))
+
+FixF19Enabled() reads KYTY_FIX_F19 once (static const bool) in the form of FS4a 17adaf80:
+unset or "" = ON, otherwise Common::EnvValueOn (0/false/off/no = OFF). Comments "default 0/OFF"
+in ResourceMaterialization.h and shaderTranslationCache.cpp follow the item. The =1 and =0 paths
+and the ":fixf19" token are unchanged; only the value for an unset variable changes.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

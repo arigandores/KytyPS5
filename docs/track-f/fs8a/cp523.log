@@ -1,0 +1,16 @@
+bash.exe: warning: could not find /tmp, please create!
+--- base
+d6ee2dc886c98b80ab36231519dec9f7356a4691 track F link FS7a (HPP-565): KYTY_FIX_F8 and KYTY_FIX_B24 d
+--- 1: cherry-pick -x fcaf141b 082d1612
+[detached HEAD 05896234] tests: B11 fix - IMAGE_SAMPLE_C/_LZ probes with k32Float, manual-path probes with k8UNorm (track F, F14c HPP-489, ROADMAP p.400(b))
+ Author: arigandores <arigandores@users.noreply.github.com>
+ Date: Sun Oct 4 08:59:01 2026 +0200
+ 1 file changed, 131 insertions(+), 3 deletions(-)
+[detached HEAD c85969f8] track F link F14e (HPP-505): KYTY_FIX_F19 (default 0) - native depth comparison for every format of DEPTH_FORMAT_POLICIES, indirect tables manual as a whole (ROADMAP s122 items 409(v), 415(b)-(v), row F19)
+ Date: Sun Oct 4 12:14:40 2026 +0200
+ 5 files changed, 588 insertions(+), 3 deletions(-)
+--- 2: cherry-pick -n ff953d4f, drop docs/track-s/s14j
+staged:
+docs/track-s/s14j.md
+tests/shaderCfgTests.cpp
+index is not only tests/shaderCfgTests.cpp

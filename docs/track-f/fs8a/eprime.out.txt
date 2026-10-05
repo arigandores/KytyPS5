@@ -1,0 +1,35 @@
+== (e')(1) git diff --name-only d6ee2dc8 HEAD
+CMakeLists.txt
+src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h
+tests/ShaderRecompilerComputeTests.cpp
+tests/shaderCfgTests.cpp
+count 6, docs 0
+== (e')(2)
+02169c8f739bae448d410b59a2da51e5c323917a9f3ec9927d4a409a7694eb74 *../ep2_head.diff
+02169c8f739bae448d410b59a2da51e5c323917a9f3ec9927d4a409a7694eb74 *../ep2_5e78.diff
+cmp EQUAL
+== (e')(3)
+HEAD^{tree} 15f28954c3a8baddfb1252dc6208ccbfb169d535 vs 5e78640e2b6481223567cda61089db84d51c5663
+docs/track-s/s14j.md
+docs/track-s/s14j/SHA256SUMS.txt
+docs/track-s/s14j/fx_watch.out.txt
+docs/track-s/s14j/fx_watch_s14j.py
+docs/track-s/s14j/patch_s14j_tests.py
+docs/track-s/s14j/specdump_snap0.summary.txt
+docs/track-s/s14j/summary_s14j.py
+docs/track-s/s14j/verify_snap0.py
+docs/track-s/s14j/watch_s14j.py
+docs/track-s/s14j/xcheck_s10.out.txt
+docs/track-s/s14j/xcheck_s142.out.txt
+docs/track-s/s14j/xcheck_s14j.py
+== letter-file check: src+CMakeLists files
+CMakeLists.txt
+src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h
+== files of 082d1612 f98e842c e46f55d4
+fatal: invalid --pretty format: -- 082d1612
+fatal: invalid --pretty format: -- f98e842c
+fatal: invalid --pretty format: -- e46f55d4

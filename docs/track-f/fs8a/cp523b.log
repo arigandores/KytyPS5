@@ -1,0 +1,27 @@
+bash.exe: warning: could not find /tmp, please create!
+--- HEAD
+c85969f87d4c05dc5ee8794127ced83a622ca7f6 track F link F14e (HPP-505): KYTY_FIX_F19 (default 0) - nat
+staged:
+tests/shaderCfgTests.cpp
+untracked/unstaged (0 expected):
+0
+--- 3: cherry-pick -x f98e842c e46f55d4
+Auto-merging CMakeLists.txt
+[detached HEAD 7a83c4e3] track F link F14e2 (HPP-545): RC1 and RC3 of the F14f review (ROADMAP s122 item 443(b)) - imageInfo.h in the translation signature, null T# comparison probes
+ Date: Sun Oct 4 13:59:03 2026 +0200
+ 2 files changed, 93 insertions(+), 1 deletion(-)
+[detached HEAD 0f78a522] track F link FS8a (HPP-571): KYTY_FIX_F19 default 0 -> 1 (ROADMAP s122 items 471(g)(1), 522(d))
+ Date: Mon Oct 5 07:14:00 2026 +0200
+ 3 files changed, 11 insertions(+), 4 deletions(-)
+--- log
+0f78a522fe4844fabe51293a1c36baf4969ef2a2 track F link FS8a (HPP-571): KYTY_FIX_F19 default 0 -> 1 (ROADMAP s122 items 471(g)(1), 5
+7a83c4e37ba24b44a3c25bf6dc31e3dc936dff20 track F link F14e2 (HPP-545): RC1 and RC3 of the F14f review (ROADMAP s122 item 443(b)) -
+3b39efd16cb8b6e230d83a455450d3b911be8dc1 tests part of ff953d4f (S14j) for a clean pick of f98e842c, ROADMAP p.523(b)
+c85969f87d4c05dc5ee8794127ced83a622ca7f6 track F link F14e (HPP-505): KYTY_FIX_F19 (default 0) - native depth comparison for every
+05896234a6df690b17a581131a698aa0b7a94b12 tests: B11 fix - IMAGE_SAMPLE_C/_LZ probes with k32Float, manual-path probes with k8UNorm
+d6ee2dc886c98b80ab36231519dec9f7356a4691 track F link FS7a (HPP-565): KYTY_FIX_F8 and KYTY_FIX_B24 default 0 -> 1 (ROADMAP s122 it
+--- status lines (0 = clean)
+0
+--- tree
+15f28954c3a8baddfb1252dc6208ccbfb169d535
+CP523 OK

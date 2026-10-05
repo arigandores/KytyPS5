@@ -1,0 +1,10 @@
+track F link FS8a (HPP-571): shader_cfg_tests read KYTY_FIX_F19 through FixF19Enabled() (ROADMAP s122 item 471(g)(1)(v))
+
+e46f55d4 made KYTY_FIX_F19 default ON (unset or "" = 1), but three F14e/F14e2 tests of shaderCfgTests.cpp
+read the knob through Common::EnvFlagOn (unset = 0): with the variable unset the translator takes the =1
+path while the tests check it against the =0 expectations (6 lines 'ShaderCfgTests: failed:' in the unset
+run of the FS8 worktree, 0 at =0 and =1; SPIR-V of the unset run = =1 byte for byte). The three reads become
+ShaderRecompiler::IR::FixF19Enabled() - the translator's own reading. Tests only: no file of src/, no
+CMakeLists.txt, not in the translation signature or the kyty_emulator target.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

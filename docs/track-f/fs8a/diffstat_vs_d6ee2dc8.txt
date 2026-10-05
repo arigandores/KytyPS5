@@ -1,0 +1,7 @@
+ CMakeLists.txt                                     |   2 +-
+ .../renderer/pipeline/shaderTranslationCache.cpp   |   6 +-
+ .../ir/passes/ResourceMaterialization.cpp          |  51 +-
+ .../recompiler/ir/passes/ResourceMaterialization.h |  17 +
+ tests/ShaderRecompilerComputeTests.cpp             | 279 ++++++
+ tests/shaderCfgTests.cpp                           | 983 ++++++++++++++++++++-
+ 6 files changed, 1331 insertions(+), 7 deletions(-)

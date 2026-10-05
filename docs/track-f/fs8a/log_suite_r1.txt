@@ -1,0 +1,17 @@
+watch: start 2026-10-05T05:28:39Z child 3612 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+fu rc=0 wall=0.3 s exe=450f1a61 KYTY_FIX_F19=unset
+f0 rc=0 wall=0.3 s exe=450f1a61 KYTY_FIX_F19=0
+f1 rc=0 wall=0.3 s exe=450f1a61 KYTY_FIX_F19=1
+fu: rc 0, tests 130, failed lines 6 [('TestNewShaderRecompilerPixelImageSampleLodSelection', 'k16UNorm IMAGE_SAMPLE_C must be the manual compare at KYTY_FIX_F19=0'), ('TestNewShaderRecompilerPixelImageSampleLodSelection', 'k16UNorm IMAGE_SAMPLE_C_LZ must be the manual compare at KYTY_FIX_F19=0'), ('TestF19IndirectComparisonTable', 'indirect comparison table must be the manual compare for every member')], spv 180
+f0: rc 0, tests 130, failed lines 0 [], spv 180
+f1: rc 0, tests 130, failed lines 0 [], spv 180
+(v1) fu: failed lines 6, rc 0: False
+(v1) f0: failed lines 0, rc 0: True
+(v1) f1: failed lines 0, rc 0: True
+(v1) test count equal in the three runs [130]: True
+(v2) fu spv 180, f1 spv 180, same names True, differing 0 
+(v2) aggregate sha256 of the fu set (name sha lines): 7fa1857d036e061041327757318722a9b5270485869571286e3b1f087532ca67
+(v3) information: f0 spv 180, differing from fu 6 109.spv 110.spv 112.spv 113.spv 177.spv 179.spv
+exe C:/kyty/f287/fs8a/build/shader_cfg_tests.exe 450f1a61c5788773e4314b519c59ae21193cb53857e51c72ede7547e8bb8b32f
+FAILED
+rc=1 end 2026-10-05T05:28:41Z

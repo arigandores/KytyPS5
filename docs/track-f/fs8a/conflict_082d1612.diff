@@ -1,0 +1,291 @@
+diff --cc tests/shaderCfgTests.cpp
+index 4da0b2ed,21a1850e..00000000
+--- a/tests/shaderCfgTests.cpp
++++ b/tests/shaderCfgTests.cpp
+@@@ -5393,6 -5489,248 +5395,286 @@@ void TestNewShaderRecompilerPixelImageS
+                                        OpImageSampleDrefExplicitLod) == 1,
+            "pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod");
+    }
+++<<<<<<< HEAD
+++||||||| parent of 082d1612 (track F link F14e (HPP-505): KYTY_FIX_F19 (default 0) - native depth comparison for every format of DEPTH_FORMAT_POLICIES, indirect tables manual as a whole (ROADMAP s122 items 409(v), 415(b)-(v), row F19))
+++  {
+++    const auto result = compile(0x28, 0x1); // image_sample_c, k8UNorm
+++    Check(SpirvInstructionOpcodeCount(result.spirv,
+++                                      OpImageSampleDrefImplicitLod) == 0 &&
+++              SpirvInstructionOpcodeCount(result.spirv,
+++                                          OpImageSampleDrefExplicitLod) == 0,
+++          "manual pixel IMAGE_SAMPLE_C unexpectedly used a dref opcode");
+++    Check(SpirvInstructionOpcodeCount(result.spirv,
+++                                      OpImageSampleImplicitLod) == 1 &&
+++              SpirvInstructionOpcodeCount(result.spirv,
+++                                          OpImageSampleExplicitLod) == 0,
+++          "manual pixel IMAGE_SAMPLE_C must sample with implicit lod");
+++    Check(SpirvManualDepthCompareCount(result.spirv,
+++                                       OpImageSampleImplicitLod) == 1,
+++          "manual pixel IMAGE_SAMPLE_C must compare the texel and select");
+++  }
+++  {
+++    const auto result = compile(0x2f, 0x1); // image_sample_c_lz, k8UNorm
+++    Check(SpirvInstructionOpcodeCount(result.spirv,
+++                                      OpImageSampleDrefImplicitLod) == 0 &&
+++              SpirvInstructionOpcodeCount(result.spirv,
+++                                          OpImageSampleDrefExplicitLod) == 0,
+++          "manual pixel IMAGE_SAMPLE_C_LZ unexpectedly used a dref opcode");
+++    Check(SpirvInstructionOpcodeCount(result.spirv,
+++                                      OpImageSampleExplicitLod) == 1 &&
+++              SpirvInstructionOpcodeCount(result.spirv,
+++                                          OpImageSampleImplicitLod) == 0,
+++          "manual pixel IMAGE_SAMPLE_C_LZ must sample with explicit lod");
+++    Check(SpirvExplicitLodZeroCount(result.spirv) == 1,
+++          "manual pixel IMAGE_SAMPLE_C_LZ must sample mip level 0");
+++    Check(SpirvManualDepthCompareCount(result.spirv,
+++                                       OpImageSampleExplicitLod) == 1,
+++          "manual pixel IMAGE_SAMPLE_C_LZ must compare the texel and select");
+++  }
+++=======
++   {
++     const auto result = compile(0x28, 0x1); // image_sample_c, k8UNorm
++     Check(SpirvInstructionOpcodeCount(result.spirv,
++                                       OpImageSampleDrefImplicitLod) == 0 &&
++               SpirvInstructionOpcodeCount(result.spirv,
++                                           OpImageSampleDrefExplicitLod) == 0,
++           "manual pixel IMAGE_SAMPLE_C unexpectedly used a dref opcode");
++     Check(SpirvInstructionOpcodeCount(result.spirv,
++                                       OpImageSampleImplicitLod) == 1 &&
++               SpirvInstructionOpcodeCount(result.spirv,
++                                           OpImageSampleExplicitLod) == 0,
++           "manual pixel IMAGE_SAMPLE_C must sample with implicit lod");
++     Check(SpirvManualDepthCompareCount(result.spirv,
++                                        OpImageSampleImplicitLod) == 1,
++           "manual pixel IMAGE_SAMPLE_C must compare the texel and select");
++   }
++   {
++     const auto result = compile(0x2f, 0x1); // image_sample_c_lz, k8UNorm
++     Check(SpirvInstructionOpcodeCount(result.spirv,
++                                       OpImageSampleDrefImplicitLod) == 0 &&
++               SpirvInstructionOpcodeCount(result.spirv,
++                                           OpImageSampleDrefExplicitLod) == 0,
++           "manual pixel IMAGE_SAMPLE_C_LZ unexpectedly used a dref opcode");
++     Check(SpirvInstructionOpcodeCount(result.spirv,
++                                       OpImageSampleExplicitLod) == 1 &&
++               SpirvInstructionOpcodeCount(result.spirv,
++                                           OpImageSampleImplicitLod) == 0,
++           "manual pixel IMAGE_SAMPLE_C_LZ must sample with explicit lod");
++     Check(SpirvExplicitLodZeroCount(result.spirv) == 1,
++           "manual pixel IMAGE_SAMPLE_C_LZ must sample mip level 0");
++     Check(SpirvManualDepthCompareCount(result.spirv,
++                                        OpImageSampleExplicitLod) == 1,
++           "manual pixel IMAGE_SAMPLE_C_LZ must compare the texel and select");
++   }
++   {
++     // Track F, F14e (HPP-505, ROADMAP s122 item 409(g)(2)): a k16UNorm T# - the shader (manual) comparison at
++     // KYTY_FIX_F19=0 (the rule before the fix), native OpImageSampleDref* at =1 (the renderer views k16UNorm as
++     // D16_UNORM). The knob is read as FixF19Enabled reads it, once per process.
++     const bool fix_f19 = Common::EnvFlagOn("KYTY_FIX_F19");
++     const auto c = compile(0x28, 0x1, Prospero::BufferFormat::k16UNorm);
++     const auto c_lz = compile(0x2f, 0x1, Prospero::BufferFormat::k16UNorm);
++     const auto dref = [](const std::vector<uint32_t> &spirv) {
++       return SpirvInstructionOpcodeCount(spirv, OpImageSampleDrefImplicitLod) +
++              SpirvInstructionOpcodeCount(spirv, OpImageSampleDrefExplicitLod);
++     };
++     const auto c_manual =
++         SpirvManualDepthCompareCount(c.spirv, OpImageSampleImplicitLod);
++     const auto c_lz_manual =
++         SpirvManualDepthCompareCount(c_lz.spirv, OpImageSampleExplicitLod);
++     std::printf("[f19] k16UNorm KYTY_FIX_F19=%d: C dref=%u manual=%u, C_LZ dref=%u manual=%u\n",
++                 fix_f19 ? 1 : 0, dref(c.spirv), c_manual, dref(c_lz.spirv), c_lz_manual);
++     if (fix_f19) {
++       Check(SpirvInstructionOpcodeCount(c.spirv,
++                                         OpImageSampleDrefImplicitLod) == 1 &&
++                 dref(c.spirv) == 1 && c_manual == 0,
++             "k16UNorm IMAGE_SAMPLE_C must be native Dref at KYTY_FIX_F19=1");
++       Check(SpirvInstructionOpcodeCount(c_lz.spirv,
++                                         OpImageSampleDrefExplicitLod) == 1 &&
++                 dref(c_lz.spirv) == 1 && c_lz_manual == 0,
++             "k16UNorm IMAGE_SAMPLE_C_LZ must be native Dref at KYTY_FIX_F19=1");
++     } else {
++       Check(dref(c.spirv) == 0 && c_manual == 1,
++             "k16UNorm IMAGE_SAMPLE_C must be the manual compare at KYTY_FIX_F19=0");
++       Check(dref(c_lz.spirv) == 0 && c_lz_manual == 1 &&
++                 SpirvExplicitLodZeroCount(c_lz.spirv) == 1,
++             "k16UNorm IMAGE_SAMPLE_C_LZ must be the manual compare at KYTY_FIX_F19=0");
++     }
++   }
++ }
++ 
++ // Track F, F14e (HPP-505, ROADMAP s122 items 409(g)(2), 415(b)): an indirect image table sampled with
++ // IMAGE_SAMPLE_C_LZ. The pixel shader reads its T# through the material/heap pattern TryMakeIndirectImage
++ // (ResourceTracking.cpp) plans: v_readfirstlane_b32 -> s_mul_i32 by the record stride -> s_buffer_load_dword
++ // key -> s_lshl_b32 5 -> s_buffer_load_dwordx8 from the heap. MaterializeResources enumerates the keys of the
++ // material table in host memory (record 0 -> key 0, record 1 -> key 1), so the table has a root (heap entry 0)
++ // and one candidate (heap entry 1). Returns the image resource count, the member count of the root table, and
++ // the Dref / manual-compare sample counts of the SPIR-V.
++ struct F19IndirectProbe {
++   size_t images = 0;
++   size_t members = 0;
++   uint32_t dref = 0;
++   uint32_t manual = 0;
++   uint32_t plain = 0;
++ };
++ 
++ // The manual compare of an indirect image table (F14e part A2): every member is sampled with sample_opcode in its
++ // own OpSwitch case, the texels are merged by OpPhi and compared once - OpSelect float compare 1.0 0.0 whose
++ // compare reads X = OpCompositeExtract P, P = OpPhi whose incoming values are all sample_opcode results.
++ uint32_t SpirvManualDepthComparePhiCount(const std::vector<uint32_t> &binary,
++                                          uint32_t sample_opcode) {
++   std::unordered_set<uint32_t> float_types;
++   std::unordered_map<uint32_t, uint32_t> float_constants;
++   std::unordered_set<uint32_t> samples;
++   std::unordered_map<uint32_t, std::vector<uint32_t>> phis;
++   std::unordered_map<uint32_t, uint32_t> extracts;
++   std::unordered_map<uint32_t, uint32_t> compares;
++   std::vector<std::array<uint32_t, 4>> selects;
++   for (size_t i = 5; i < binary.size();) {
++     const uint32_t word_count = binary[i] >> 16u;
++     const uint32_t opcode = binary[i] & 0xffffu;
++     Check(word_count != 0u && i + word_count <= binary.size(),
++           "SPIR-V instruction stream is malformed");
++     if (opcode == 22u && word_count >= 3u && binary[i + 2u] == 32u) { // OpTypeFloat 32
++       float_types.insert(binary[i + 1u]);
++     } else if (opcode == 43u && word_count >= 4u &&
++                float_types.count(binary[i + 1u]) != 0u) { // OpConstant
++       float_constants[binary[i + 2u]] = binary[i + 3u];
++     } else if (opcode == sample_opcode && word_count >= 3u) {
++       samples.insert(binary[i + 2u]);
++     } else if (opcode == 245u && word_count >= 5u) { // OpPhi type result (value parent)*
++       auto &values = phis[binary[i + 2u]];
++       for (uint32_t w = 3u; w + 1u < word_count; w += 2u) {
++         values.push_back(binary[i + w]);
++       }
++     } else if (opcode == 81u && word_count >= 4u) { // OpCompositeExtract
++       extracts[binary[i + 2u]] = binary[i + 3u];
++     } else if (opcode >= 180u && opcode <= 191u && word_count >= 5u) {
++       compares[binary[i + 2u]] = binary[i + 4u];
++     } else if (opcode == 169u && word_count >= 6u) { // OpSelect
++       selects.push_back({binary[i + 1u], binary[i + 3u], binary[i + 4u], binary[i + 5u]});
++     }
++     i += word_count;
++   }
++   uint32_t count = 0;
++   for (const auto &select: selects) {
++     const auto compare = compares.find(select[1]);
++     const auto one = float_constants.find(select[2]);
++     const auto zero = float_constants.find(select[3]);
++     if (float_types.count(select[0]) == 0u || compare == compares.end() ||
++         one == float_constants.end() || one->second != 0x3f800000u ||
++         zero == float_constants.end() || zero->second != 0u) {
++       continue;
++     }
++     const auto extract = extracts.find(compare->second);
++     if (extract == extracts.end()) {
++       continue;
++     }
++     const auto phi = phis.find(extract->second);
++     if (phi != phis.end() && !phi->second.empty() &&
++         std::all_of(phi->second.begin(), phi->second.end(),
++                     [&](uint32_t v) { return samples.count(v) != 0u; })) {
++       count++;
++     }
++   }
++   return count;
++ }
++ 
++ F19IndirectProbe CompileF19IndirectTable(Prospero::BufferFormat root_format,
++                                          Prospero::BufferFormat candidate_format) {
++   constexpr uint32_t OpImageSampleExplicitLod = 88;
++   constexpr uint32_t OpImageSampleDrefImplicitLod = 89;
++   constexpr uint32_t OpImageSampleDrefExplicitLod = 90;
++   constexpr uint32_t record_stride = 224;
++   alignas(256) static std::array<uint32_t, 256> material{};
++   alignas(256) static std::array<uint32_t, 64> heap{};
++   material.fill(0u);
++   heap.fill(0u);
++   material[record_stride / 4u] = 1u;
++   const auto set_descriptor = [&](uint32_t key, Prospero::BufferFormat format) {
++     uint32_t *d = &heap[key * 8u];
++     d[0] = 0x20u + key;
++     d[1] = (static_cast<uint32_t>(format) << 20u) | (3u << 30u); // width 4
++     d[2] = 3u << 14u;                                               // height 4
++     d[3] = DstSel(4, 5, 6, 7) |
++            (static_cast<uint32_t>(Prospero::ImageType::kColor2D) << 28u);
++   };
++   set_descriptor(0u, root_format);
++   set_descriptor(1u, candidate_format);
++   const auto material_address = reinterpret_cast<uint64_t>(material.data());
++   const auto heap_address = reinterpret_cast<uint64_t>(heap.data());
++   std::array<uint32_t, 64> user_data{};
++   user_data[0] = static_cast<uint32_t>(material_address);
++   user_data[1] = static_cast<uint32_t>((material_address >> 32u) & 0xffffu) |
++                  (record_stride << 16u);
++   user_data[2] = 2u; // two records
++   user_data[4] = static_cast<uint32_t>(heap_address);
++   user_data[5] = static_cast<uint32_t>((heap_address >> 32u) & 0xffffu) | (16u << 16u);
++   user_data[6] = 4u; // 64 bytes: two T#
++   user_data[8] = 3u << 12u; // S# s[8:11]: depth compare LESS_EQUAL
++   const uint32_t shader[] = {
++       EncodeVop1(0x02, 16, 256u + 4u),        // v_readfirstlane_b32 s16, v4
++       EncodeSop2(0x26, 17, 16, 255), record_stride, // s_mul_i32 s17, s16, 224
++       EncodeSmem0(0x08, 18, 0), 17u << 25u,   // s_buffer_load_dword s18, s[0:3], s17
++       EncodeSop2(0x1e, 19, 18, 128u + 5u),    // s_lshl_b32 s19, s18, 5
++       EncodeSmem0(0x0b, 20, 2), 19u << 25u,   // s_buffer_load_dwordx8 s[20:27], s[4:7], s19
++       EncodeMimg0(0x2f, 0x1),
++       EncodeMimg1(0, 5, 2, 4),                // image_sample_c_lz v0, v[4:6], s[20:27], s[8:11]
++       EncodeExp0(0x00, 0xf, true, false, true),
++       EncodeExp1(0, 1, 2, 3),
++       0xbf810000u,
++   };
++   auto ps_info = RegressionPixelInputInfo();
++   auto options = MakeCompileOptions(ShaderType::Pixel);
++   options.input_info.pixel = &ps_info;
++   options.dump_ir = true;
++   options.user_data = user_data;
++   auto result = RecompileForTest(shader, options);
++   CheckSpirvBinaryValidates(result.spirv);
++   F19IndirectProbe probe;
++   probe.images = result.program.info.images.size();
++   probe.members = probe.images != 0u
++                       ? result.program.info.images[0].indirect_resources.size()
++                       : 0u;
++   probe.dref = SpirvInstructionOpcodeCount(result.spirv, OpImageSampleDrefImplicitLod) +
++                SpirvInstructionOpcodeCount(result.spirv, OpImageSampleDrefExplicitLod);
++   probe.manual = SpirvManualDepthComparePhiCount(result.spirv, OpImageSampleExplicitLod);
++   probe.plain = SpirvInstructionOpcodeCount(result.spirv, OpImageSampleExplicitLod);
++   return probe;
++ }
++ 
++ void TestF19IndirectComparisonTable() {
++   using Format = Prospero::BufferFormat;
++   const bool fix_f19 = Common::EnvFlagOn("KYTY_FIX_F19");
++   struct Row {
++     Format root;
++     Format candidate;
++     bool manual_at_1; // variant O1: the "or" of the =1 rule over the table
++     bool manual_at_0; // the rule before the fix: the root decides
++     const char *name;
++   };
++   const Row rows[] = {
++       {Format::k16UNorm, Format::k8UNorm, true, true, "k16UNorm+k8UNorm"},
++       {Format::k16UNorm, Format::k32Float, false, true, "k16UNorm+k32Float"},
++       {Format::k32Float, Format::k8UNorm, true, false, "k32Float+k8UNorm"},
++   };
++   for (const auto &row : rows) {
++     const auto probe = CompileF19IndirectTable(row.root, row.candidate);
++     std::printf("[f19] indirect %s KYTY_FIX_F19=%d: images=%zu members=%zu dref=%u manual=%u "
++                 "plain_explicit=%u\n",
++                 row.name, fix_f19 ? 1 : 0, probe.images, probe.members, probe.dref,
++                 probe.manual, probe.plain);
++     Check(probe.images == 2u && probe.members == 2u,
++           "indirect comparison table did not materialize as a root and one candidate");
++     const bool manual = fix_f19 ? row.manual_at_1 : row.manual_at_0;
++     if (manual) {
++       Check(probe.dref == 0u && probe.manual == 1u && probe.plain == probe.members,
++             "indirect comparison table must be the manual compare for every member");
++     } else {
++       Check(probe.dref == probe.members && probe.manual == 0u,
++             "indirect comparison table must be native Dref for every member");
++     }
++   }
+++>>>>>>> 082d1612 (track F link F14e (HPP-505): KYTY_FIX_F19 (default 0) - native depth comparison for every format of DEPTH_FORMAT_POLICIES, indirect tables manual as a whole (ROADMAP s122 items 409(v), 415(b)-(v), row F19))
+  }
+  
+  void TestNewShaderRecompilerImageViewDimensions() {

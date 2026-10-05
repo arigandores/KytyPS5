@@ -1,0 +1,5 @@
+watch: start 2026-10-05T05:31:14Z child 71740 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[host]    LeastRecentlyUsedCache           ok
+[gpu]     ComparisonDepthTexture           ok
+ALL OK
+rc=0 end 2026-10-05T05:31:16Z

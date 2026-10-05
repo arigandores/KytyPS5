@@ -1,0 +1,4 @@
+patched src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp line 33
+patched src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h line 46
+patched src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp line 581
+PATCH OK

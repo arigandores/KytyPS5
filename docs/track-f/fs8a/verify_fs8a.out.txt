@@ -1,0 +1,43 @@
+HEAD 302347b4f54025d48d8487cecdacb2a308c8d71a base d6ee2dc886c98b80ab36231519dec9f7356a4691
+(a) SHADER_CACHE_EXTRA_FILES: 4 files
+    ${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp exists=True
+    ${KYTY_SOURCE_DIR}/graphics/guest_gpu/gpu_format.h exists=True
+    ${KYTY_SOURCE_DIR}/graphics/guest_gpu/gpu_defs.h exists=True
+    ${KYTY_SOURCE_DIR}/graphics/host_gpu/renderer/image/imageInfo.h exists=True
+(e')(1) paths 6, docs 0:
+    CMakeLists.txt
+    src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+    src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp
+    src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h
+    tests/ShaderRecompilerComputeTests.cpp
+    tests/shaderCfgTests.cpp
+(e')(1) = the 6 paths of item 523(g), docs 0: True
+(e')(2) sha256 diff BASE..HEAD src+CMakeLists 02169c8f739bae448d410b59a2da51e5c323917a9f3ec9927d4a409a7694eb74; BASE..5e78640e 02169c8f739bae448d410b59a2da51e5c323917a9f3ec9927d4a409a7694eb74; equal True
+(e')(3) HEAD^{tree} 0b2efcb6d9fa4f6e948e0bafe7e530f7a443f564 vs 5e78640e2b6481223567cda61089db84d51c5663: equal False; differing paths 13:
+    docs/track-s/s14j.md
+    docs/track-s/s14j/SHA256SUMS.txt
+    docs/track-s/s14j/fx_watch.out.txt
+    docs/track-s/s14j/fx_watch_s14j.py
+    docs/track-s/s14j/patch_s14j_tests.py
+    docs/track-s/s14j/specdump_snap0.summary.txt
+    docs/track-s/s14j/summary_s14j.py
+    docs/track-s/s14j/verify_snap0.py
+    docs/track-s/s14j/watch_s14j.py
+    docs/track-s/s14j/xcheck_s10.out.txt
+    docs/track-s/s14j/xcheck_s142.out.txt
+    docs/track-s/s14j/xcheck_s14j.py
+    tests/shaderCfgTests.cpp
+(e')(3) paths outside docs/track-s/s14j(.md|/): ['tests/shaderCfgTests.cpp']
+(zh') 082d1612 ancestor=False cherry='- 082d161214' contains=True
+(zh') f98e842c ancestor=False cherry='- f98e842ca3' contains=True
+(zh') e46f55d4 ancestor=False cherry='- e46f55d4f3' contains=True
+(zh') 10a4800b ancestor=False cherry='- 10a4800b36' contains=True
+(zh') ec6c4c83 ancestor=False cherry='- ec6c4c83d9' contains=True
+(zh') 9c726d74 ancestor=False cherry='- 9c726d74fc' contains=True
+(zh') 919c1a19 ancestor=False cherry='- 919c1a19f9' contains=True
+(zh') fcaf141b ancestor=False cherry='- fcaf141b6f' contains=True
+(zh') 7719d0f2 ancestor=False cherry='- 7719d0f2aa' contains=True
+(zh') ff953d4f as a whole: cherry='+ ff953d4fb9' (expected '+': not contained as a commit)
+(zh') tests/shaderCfgTests.cpp contains the added lines of ff953d4f: 406 distinct lines, missing 0 []
+worktree status lines: 0
+ALL OK

@@ -5532,8 +5532,8 @@ void TestNewShaderRecompilerPixelImageSampleLodSelection() {
   {
     // Track F, F14e (HPP-505, ROADMAP s122 item 409(g)(2)): a k16UNorm T# - the shader (manual) comparison at
     // KYTY_FIX_F19=0 (the rule before the fix), native OpImageSampleDref* at =1 (the renderer views k16UNorm as
-    // D16_UNORM). The knob is read as FixF19Enabled reads it, once per process.
-    const bool fix_f19 = Common::EnvFlagOn("KYTY_FIX_F19");
+    // D16_UNORM). The knob is FixF19Enabled() itself (default ON since FS8a, ROADMAP s122 item 471(g)(1)).
+    const bool fix_f19 = ShaderRecompiler::IR::FixF19Enabled();
     const auto c = compile(0x28, 0x1, Prospero::BufferFormat::k16UNorm);
     const auto c_lz = compile(0x2f, 0x1, Prospero::BufferFormat::k16UNorm);
     const auto dref = [](const std::vector<uint32_t> &spirv) {
@@ -5707,7 +5707,7 @@ F19IndirectProbe CompileF19IndirectTable(Prospero::BufferFormat root_format,
 
 void TestF19IndirectComparisonTable() {
   using Format = Prospero::BufferFormat;
-  const bool fix_f19 = Common::EnvFlagOn("KYTY_FIX_F19");
+  const bool fix_f19 = ShaderRecompiler::IR::FixF19Enabled();
   struct Row {
     Format root;
     Format candidate;
@@ -5801,7 +5801,7 @@ F19NullProbe CompileF19NullComparison(uint32_t opcode, bool with_k16) {
 }
 
 void TestF19NullComparisonImage() {
-  const bool fix_f19 = Common::EnvFlagOn("KYTY_FIX_F19");
+  const bool fix_f19 = ShaderRecompiler::IR::FixF19Enabled();
   for (const uint32_t opcode : {0x28u, 0x2fu}) { // image_sample_c, image_sample_c_lz
     const char *name = opcode == 0x28u ? "C" : "C_LZ";
     const auto alone = CompileF19NullComparison(opcode, false);

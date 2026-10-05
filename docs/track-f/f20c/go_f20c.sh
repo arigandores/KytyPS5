@@ -14,6 +14,12 @@
 #     script unsets KYTY_* and VK_LAYER_* before the call).  Exit: WM_CLOSE at the end of the hold, CLOSE_WAIT_S 40 s.  ASCII only.
 # EXIT: 0 tag made (read it with post_f20c.sh); 1 hard refusal / return failed; 2 usage / the tag exists / order; 3 lock / live emulator;
 #   4 stop file; 5 procload busy.
+# ITEM 534 (general rule 33, incident f20_v11): no kill by image name - only the own emulator tree by its pid (guard_f20c.py kill-own, pid
+#   file runs/<tag>/game_pid.txt written by enter_scene.py); a user emulator or launcher (guard_f20c.py scan) before the lock => not
+#   starting; right after the lock, before the manifest => lock released, files untouched, runs/<tag> -> <tag>.user_*, interference;
+#   during the tag (guard_f20c.py watch) => the own emulator killed by pid, the user process untouched, caches and GLCache returned only
+#   after the user process is gone (wait-gone, poll 10 s, the lock stays), runs/<tag> -> <tag>.user_*, interference; a tag that never
+#   started enter_scene => runs/<tag> -> <tag>.nostart_* (interference, repeat by the same name).
 export PATH=/usr/bin:/mingw64/bin:$PATH
 G=C:/kyty/f287/f20c; F=C:/kyty/f287; EMU="C:/kyty/KytyPS5/ps5 em"; LOCK=C:/kyty/SEALED_RUN.lock
 GAME="$EMU/kyty_emulator.exe"
@@ -49,7 +55,7 @@ MF=("_ShaderCache=$EMU/_ShaderCache" "_PipelineCache=$EMU/_PipelineCache" "_Save
 WANT=$(sha "$GAME")
 [ "$WANT" = "$ADB" ] || [ "$WANT" = "$FS6" ] || { log "installed binary $WANT is neither adb0c82f nor FS6 9325446c - not starting"; exit 1; }
 [ -d "$GLDIR" ] || { log "no GLCache dir - not starting"; exit 1; }
-tasklist //FI "IMAGENAME eq kyty_emulator.exe" | grep -qi kyty_emulator && { log "an emulator lives - not starting"; exit 3; }
+GS=$(python $G/guard_f20c.py scan) || { python $G/guard_f20c.py close user_found > /dev/null; log "user emulator or launcher lives - not starting, block closed (item 534): $GS"; exit 3; }
 mkdir -p $OUT
 python $G/procload.py --wait-s ${PLWAIT:-120} 2>&1 | mask > $OUT/procload.txt
 [ "${PIPESTATUS[0]}" = "0" ] || { log "procload busy: $(grep 'procload: busy' $OUT/procload.txt | tail -1 | cut -c1-200)"; mv $OUT $OUT.busy_$(date -u +%H%M%S); exit 5; }
@@ -60,6 +66,7 @@ if ! { echo "F20c HPP-561 go_f20c.sh $T pid $$ $(u)" > $LOCK; } 2>/dev/null; the
 fi
 set +o noclobber
 echo "lock taken $T $(u)" >> $G/runs/lock.log
+GS=$(python $G/guard_f20c.py scan) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; mv $OUT $OUT.user_$(date -u +%H%M%S); python $G/guard_f20c.py close user_found > /dev/null; log "user emulator or launcher found right after the lock - lock released, files untouched, block closed, interference (item 534): $GS"; exit 3; }
 log "lock taken; procload: $(tail -1 $OUT/procload.txt | cut -c1-120)"
 sha "$GAME" > $OUT/installed_before.txt
 log "installed binary inside the lock before the tag: $(cat $OUT/installed_before.txt)"
@@ -67,8 +74,15 @@ COPIED=""
 finish() {
   RCX=$?
   OK=1
-  if tasklist //FI "IMAGENAME eq kyty_emulator.exe" 2>/dev/null | grep -qi kyty_emulator; then
-    taskkill //F //IM kyty_emulator.exe > /dev/null 2>&1; log "kyty_emulator.exe killed at the exit (taskkill)"; sleep 5
+  if [ -f $OUT/game_pid.txt ]; then
+    KO=$(python $G/guard_f20c.py kill-own --pidfile $OUT/game_pid.txt); case "$KO" in *killed*) log "$KO (at the exit)"; sleep 5;; esac
+  fi
+  if [ -n "$COPIED" ]; then
+    GS=$(python $G/guard_f20c.py scan --pidfile $OUT/game_pid.txt)
+    if [ $? != 0 ] || [ -e $OUT/USER_FOUND ]; then
+      log "user process at the return ($GS) - caches and GLCache wait for its exit, poll 10 s, the lock stays (item 534)"
+      log "$(python $G/guard_f20c.py wait-gone --pidfile $OUT/game_pid.txt --poll 10 | tail -1)"
+    fi
   fi
   sha "$GAME" > $OUT/installed_after.txt
   log "installed binary after the tag: $(cat $OUT/installed_after.txt)"
@@ -98,6 +112,12 @@ finish() {
   fi
   if [ $OK = 1 ]; then
     rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; log "lock released (rc $RCX)"
+    if [ -e $OUT/USER_FOUND ]; then
+      UF=$(head -1 $OUT/USER_FOUND | cut -c1-160); python $G/guard_f20c.py close user_found > /dev/null
+      mv $OUT $OUT.user_$(date -u +%H%M%S); log "user process during the tag ($UF) - block closed, interference, repeat by the same name (item 534)"
+    elif [ ! -f $OUT/run.txt ]; then
+      mv $OUT $OUT.nostart_$(date -u +%H%M%S); log "enter_scene never started - interference, repeat by the same name (item 534)"
+    fi
   else
     echo "$(u) $T" > $G/RETURN_FAILED; log "return incomplete, installed binary or manifest differs - the lock stays"; RCX=1
   fi
@@ -116,10 +136,14 @@ log "caches, saves and GLCache copied:$COPIED ($(du -sm $OUT/before_* | awk '{pr
 cd "$EMU" || exit 1
 for v in $(env | grep -o '^\(KYTY\|VK_LAYER\)_[A-Z0-9_]*'); do unset $v; done
 log "enter_scene start (level $LV, SD $SD, --rec, hold $H, defaults of the installed binary $(echo $WANT | cut -c1-8))"
-python $G/enter_scene.py $T --level $LV --attempts 1 --stable-draws $SD --timeout 480 --no-install --require-idle \
+python $G/guard_f20c.py watch --pidfile $OUT/game_pid.txt --flag $OUT/USER_FOUND --stop $OUT/watch.stop > $OUT/guard_watch.txt 2>&1 &
+WPID=$!
+F20C_PIDFILE=$OUT/game_pid.txt python $G/enter_scene.py $T --level $LV --attempts 1 --stable-draws $SD --timeout 480 --no-install --require-idle \
   --gates-file $G/gates_default.txt --pred $SEAL --rec --hold $H KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 > $OUT/run.txt 2>&1
-log "enter_scene rc $?"
+ESRC=$?
+touch $OUT/watch.stop; wait $WPID
+log "enter_scene rc $ESRC; guard watch: $(tail -1 $OUT/guard_watch.txt | cut -c1-200)"
 log "run: $(grep '^VERDICT: ' $OUT/run.txt | tail -1 | cut -c1-200)"
-tasklist //FI "IMAGENAME eq kyty_emulator.exe" | grep -qi kyty_emulator && { log "an emulator still lives after the run - taskkill"; taskkill //F //IM kyty_emulator.exe > /dev/null 2>&1; sleep 5; }
+KO=$(python $G/guard_f20c.py kill-own --pidfile $OUT/game_pid.txt); case "$KO" in *killed*) log "own emulator still lived after the run: $KO"; sleep 5;; esac
 [ -f $G/log_$T.txt ] && log "log_$T.txt sha256 $(sha $G/log_$T.txt)"
 exit 0

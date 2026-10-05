@@ -1,0 +1,19 @@
+8a9,12
+> # ITEM 534 (3) (general rule 33): after the window - guard_f20c.py check (a user emulator or launcher => the block closes, a times.txt line,
+> # exit 7, interference) and status (the block must be open: two clean checks >= 600 s apart by guard_f20c.py open-block, fewer than 6 tags
+> # in it; else exit 8, a times.txt line); then a TAG line of the block and the launch.  F20C_DRYRUN=2 stops after these checks and
+> # F20C_GUARD_BLOCK / F20C_GUARD_FAKE override the block file and the process list (fixtures only).
+25a30,42
+> GA="--block ${F20C_GUARD_BLOCK:-$G/guard_block.txt}${F20C_GUARD_FAKE:+ --fake $F20C_GUARD_FAKE}"
+> GS=$(python $G/guard_f20c.py check $GA)
+> if [ $? != 0 ]; then
+>   echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F20c guard (item 534): $GS - block closed, $T not launched (interference, not an attempt)" >> "$TM"
+>   echo "user process found: $GS"; exit 7
+> fi
+> BS=$(python $G/guard_f20c.py status $GA)
+> if [ $? != 0 ]; then
+>   echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F20c guard (item 534): $BS - $T not launched (open the block: two clean checks >= 600 s apart)" >> "$TM"
+>   echo "$BS"; exit 8
+> fi
+> [ "$F20C_DRYRUN" = 2 ] && { echo "dryrun2 $BS"; exit 0; }
+> echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F20c guard (item 534): $GS; $BS; $(python $G/guard_f20c.py tag $T $GA)" >> "$TM"

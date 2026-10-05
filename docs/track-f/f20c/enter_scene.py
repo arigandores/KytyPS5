@@ -384,7 +384,7 @@ def stop_cpu(process, handle):
 
 
 def kill_game(game):
-    """Hard kill: by pid first (never disturb another emulator), image name as the last resort."""
+    """Hard kill by pid only (F20c, ROADMAP item 534, general rule 33: never by image name - it kills the user game)."""
     if game.poll() is not None:
         return
     subprocess.run(['taskkill', '/F', '/T', '/PID', str(game.pid)],
@@ -392,12 +392,11 @@ def kill_game(game):
     try:
         game.wait(timeout=20)
     except subprocess.TimeoutExpired:
-        subprocess.run(['taskkill', '/F', '/IM', 'kyty_emulator.exe'],
-                       capture_output=True, creationflags=0x08000000)
+        game.kill()
         try:
             game.wait(timeout=20)
         except subprocess.TimeoutExpired:
-            game.kill()
+            pass
 
 
 def close_game(game):
@@ -445,6 +444,9 @@ def attempt(label, tag, options, env, args, index):
     out_tail = Tail(EMU / '_run_stdout.txt')
     game = subprocess.Popen(args, cwd=EMU, env=env, stdout=stdout, stderr=subprocess.STDOUT,
                             creationflags=0x08000000)
+    if os.environ.get('F20C_PIDFILE'):   # F20c item 534: the own emulator pid for guard_f20c.py (kill by pid, not by name)
+        with open(os.environ['F20C_PIDFILE'], 'w') as pidfile:
+            pidfile.write('%d %.3f\n' % (game.pid, time.time()))
     result = dict(label=label, attempt=index, pid=game.pid, level=options.level,
                   guest_args=env.get('KYTY_GUEST_ARGS'), document_s=None, started_s=None,
                   stable_s=None, stable_frame=None, outcome='running', detail=None)

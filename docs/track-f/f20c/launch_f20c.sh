@@ -6,6 +6,10 @@
 # 900 s => the tag is not launched, a times.txt line, exit 6 (interference, not an attempt, item 473(b)(5)); the caller repeats the check
 # not more often than once per 60 s; older than 900 s => the window expired, a times.txt line, the tag goes (the file is not deleted).
 # F20C_FS6B_WINDOW / F20C_TIMES override the paths and F20C_DRYRUN=1 stops before the launch (fixtures only).  ASCII only.
+# ITEM 534 (3) (general rule 33): after the window - guard_f20c.py check (a user emulator or launcher => the block closes, a times.txt line,
+# exit 7, interference) and status (the block must be open: two clean checks >= 600 s apart by guard_f20c.py open-block, fewer than 6 tags
+# in it; else exit 8, a times.txt line); then a TAG line of the block and the launch.  F20C_DRYRUN=2 stops after these checks and
+# F20C_GUARD_BLOCK / F20C_GUARD_FAKE override the block file and the process list (fixtures only).
 export PATH=/usr/bin:/mingw64/bin:$PATH
 T=$1
 G=C:/kyty/f287/f20c
@@ -23,6 +27,19 @@ if [ -e "$W" ]; then
   echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F20c FS6b window expired (FS6B_WINDOW age ${AGE} s >= 900, p.473; file kept): series goes, $T" >> "$TM"
 fi
 [ "$F20C_DRYRUN" = 1 ] && { echo "dryrun"; exit 0; }
+GA="--block ${F20C_GUARD_BLOCK:-$G/guard_block.txt}${F20C_GUARD_FAKE:+ --fake $F20C_GUARD_FAKE}"
+GS=$(python $G/guard_f20c.py check $GA)
+if [ $? != 0 ]; then
+  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F20c guard (item 534): $GS - block closed, $T not launched (interference, not an attempt)" >> "$TM"
+  echo "user process found: $GS"; exit 7
+fi
+BS=$(python $G/guard_f20c.py status $GA)
+if [ $? != 0 ]; then
+  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F20c guard (item 534): $BS - $T not launched (open the block: two clean checks >= 600 s apart)" >> "$TM"
+  echo "$BS"; exit 8
+fi
+[ "$F20C_DRYRUN" = 2 ] && { echo "dryrun2 $BS"; exit 0; }
+echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F20c guard (item 534): $GS; $BS; $(python $G/guard_f20c.py tag $T $GA)" >> "$TM"
 if [ -e $G/go_$T.out.txt ]; then
   grep -q '^rc=' $G/go_$T.out.txt || { echo "go_$T.out.txt has no rc line - wait with wait_f20c.sh"; exit 1; }
   mkdir -p $G/old; mv $G/go_$T.out.txt $G/old/go_$T.$(date -u +%Y%m%dT%H%M%SZ).out.txt

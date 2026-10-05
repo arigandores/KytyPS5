@@ -1,0 +1,17 @@
+387c387
+<     """Hard kill: by pid first (never disturb another emulator), image name as the last resort."""
+---
+>     """Hard kill by pid only (F20c, ROADMAP item 534, general rule 33: never by image name - it kills the user game)."""
+395,396c395
+<         subprocess.run(['taskkill', '/F', '/IM', 'kyty_emulator.exe'],
+<                        capture_output=True, creationflags=0x08000000)
+---
+>         game.kill()
+400c399
+<             game.kill()
+---
+>             pass
+447a447,449
+>     if os.environ.get('F20C_PIDFILE'):   # F20c item 534: the own emulator pid for guard_f20c.py (kill by pid, not by name)
+>         with open(os.environ['F20C_PIDFILE'], 'w') as pidfile:
+>             pidfile.write('%d %.3f\n' % (game.pid, time.time()))

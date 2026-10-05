@@ -1,0 +1,2 @@
+refs 44 anchored 44 unanchored 0 bad 0
+ANCHORS ALL OK

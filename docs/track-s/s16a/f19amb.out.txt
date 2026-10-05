@@ -1,0 +1,8 @@
+files 726 parse_fail 0 files_with_depth_compare_image 80 files_with_manual_perm 74
+permutations 1214 f19_ambiguous_permutations 81
+recipes 1852 end_ok True {(2, 'clean'): 120, (1, 'clean'): 1429, (2, 'f19_ambiguous'): 23, (1, 'f19_ambiguous'): 280}
+programs (stage enum, in eboot) {(4, True): 114, (2, True): 223, (1, True): 149, (4, False): 2, (5, False): 4, (5, True): 1}
+recipes all-stage GCN in eboot (kind, found) {(2, True): 141, (2, False): 2, (1, True): 1686, (1, False): 23}
+graphics recipes with nonzero address words in used VS input slots (True/False) {True: 1642, False: 67}
+recipes (gcn_found, f19_ambiguous) {(True, False): 1534, (False, False): 15, (True, True): 293, (False, True): 10}
+ALL OK

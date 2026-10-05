@@ -1,0 +1,2 @@
+e9d3664f255f08e42756bf40aebdd26cd6a48e12196e5115bca74aae1fda1f7a *C:/kyty/s288/s17a4/bin/shader_cfg_tests_e9d3664f.exe
+ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b *C:/kyty/s288/bin/kyty_emulator_ed2686da.exe

@@ -1,0 +1,57 @@
+suite test_tools_s17c2.py sha256 a2d7fa8facb75db36c84d4250a418e042d1b4ea0b9d02fe875c9c5225eb18d0d targets aside_s17c2.sh sha256 007ddbbd3596a416342c10609c1de0a30d23fc2036ec4dffa428f75f9a344e02 go_s17c2.sh sha256 5734c9278276f5ca8a84412a5cfab1204a99435c682671c6e969758e93aa7d7d launch_s17c2.sh sha256 6a100c9539d12d2de178444e48ad834675106022b803bc6d44f7bd4b9aa96370 wait_s17c2.sh sha256 e4d9dc4f1f9e5859c8f58e63412021c1f5b855028d2a8380a713577265b613dc post_s17c2.sh sha256 e61fd64a7dcd33e6dfceb5b9236107e1204a18047a746ab3f92bd179fa8a4097 enter_scene.py sha256 06825c699e03e1f010f4a30fc67185572669a1091d97f888d58f7fd4000648bf guard_s17c2.py sha256 cf14688abefd326541d593a03d7ccb2f5d7e71e69c3d37f2fe015b1b014e4e0a mk_s17c2.py sha256 748b58c1444b63d0fde3d2beac24fe64b66361042c338b88907eba73b001b385 s17c2_read.py sha256 9a8ae4b5872f8a8a2fdd113418578d3342e397ed6be7199447e844dad9e9380d
+ok   aside refuses a carried edition 3 tag
+ok   aside refuses the reason ed2 (edition 4: rep only)
+ok   aside refuses a tag without a run
+ok   aside refuses an unknown tag
+ok   aside refuses an admitted tag
+ok   aside refuses while the call has no rc line
+ok   aside rep after NOT_ADMITTED moves runs, state and the files
+ok   aside keeps the run as runs/<tag>.rep_<UTC>
+ok   aside: the second interference of the same tag -> code 6 (question to the lead)
+ok   enter_scene.py = the S17c file except the header line and ROOT
+ok   guard_s17c2.py = guard_s17c.py except the first docstring line and G
+ok   verbatim copy of the S17c file procload.py
+ok   verbatim copy of the S17c file idle142.py
+ok   verbatim copy of the S17c file launch_run.py
+ok   verbatim copy of the S17c file manifest_fs4c.py
+ok   verbatim copy of the S17c file run_safety99.py
+ok   verbatim copy of the S17c file sheet142.py
+ok   verbatim copy of the S17c file gates_default.txt
+ok   verbatim copy of the S17c file tc_s17c.py
+ok   verbatim copy of the S17c file r_addr.py
+ok   verbatim copy of the S17c file state_s17c.py
+ok   launch_s17c2.sh names S17c2 and its tags
+ok   post_s17c2.sh reads with s17c2_read.py, video for the three v tags
+ok   wait_s17c2.sh waits for the S17c2 output
+ok   go_s17c2.sh: KYTY_SHADER_SEED=0 in every KV
+ok   go_s17c2.sh: the eight tags in order
+ok   go_s17c2.sh: order by PREV
+ok   go_s17c2.sh: binary S17a5, installed FS8
+ok   go_s17c2.sh: _ShaderSeeds in the cache manifest; S-replay manifests in and out
+ok   go_s17c2.sh: sources of the input states
+ok   go_s17c2.sh: no external timeout around the tag
+ok   ASCII only: aside_s17c2.sh
+ok   ASCII only: go_s17c2.sh
+ok   ASCII only: launch_s17c2.sh
+ok   ASCII only: wait_s17c2.sh
+ok   ASCII only: post_s17c2.sh
+ok   ASCII only: enter_scene.py
+ok   ASCII only: guard_s17c2.py
+ok   ASCII only: mk_s17c2.py
+ok   ASCII only: s17c2_read.py
+ok   ASCII only: test_s17c2_read.py
+ok   ASCII only: mut_s17c2_read.py
+ok   ASCII only: checkseal_s17c2.py
+ok   ASCII only: test_tools_s17c2.py
+ok   ASCII only: state_s17c.py
+ok   ASCII only: tc_s17c.py
+ok   ASCII only: r_addr.py
+ok   ASCII only: procload.py
+ok   ASCII only: manifest_fs4c.py
+ok   bash -n go_s17c2.sh
+ok   bash -n launch_s17c2.sh
+ok   bash -n wait_s17c2.sh
+ok   bash -n post_s17c2.sh
+ok   bash -n aside_s17c2.sh
+checks 54
+ALL OK

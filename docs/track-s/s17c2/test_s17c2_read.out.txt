@@ -1,0 +1,223 @@
+suite test_s17c2_read.py sha256 259debc20854b96f9ca3accfb439c844e14891bc12413e061009f5b6f270b878 target s17c2_read.py sha256 9a8ae4b5872f8a8a2fdd113418578d3342e397ed6be7199447e844dad9e9380d tc_s17c.py sha256 f209626799ae25a4651a17cac793c50aebd2ad36f09fb39539bdfb16c9541592 state_s17c.py sha256 366b502be584e3b1278fc6c550b340fa80c4bfeb19cba676e8da4380b16a09d8 r_addr.py sha256 22693f28b609107ac358765ff4a4fc1b22cffe3f3043c660f80d6d4c81b24c51
+ok   baseline s17c_r3b reads MEMBERS_PASS (got MEMBERS_PASS [])
+ok   baseline s17c_rsb reads MEMBERS_PASS (got MEMBERS_PASS [])
+ok   baseline s17c_ks2 reads MEMBERS_PASS (got MEMBERS_PASS [])
+ok   baseline s17c_kn2 reads MEMBERS_PASS (got MEMBERS_PASS [])
+ok   baseline s17c_c2h reads MEMBERS_PASS (got MEMBERS_PASS [])
+ok   baseline s17c_n0h reads MEMBERS_PASS (got MEMBERS_PASS [])
+ok   baseline s17c_r3h reads MEMBERS_PASS (got MEMBERS_PASS [])
+ok   baseline s17c_e3h reads MEMBERS_PASS (got MEMBERS_PASS [])
+ok   binary S17a5 43ef1cc1 (item 565 (b))
+ok   version string and revision of c0057ccb
+ok   installed FS8 only
+ok   eight tags of item 561 (d)(2) in order
+ok   carried tags of item 561 (d)(1)
+ok   KYTY_SHADER_SEED=0 in the form of every tag
+ok   constants of item 524 (z) / 561: 0.90, 0.90, 180 000 ms, 3 000 records, 300 s, 1 s
+ok   signatures, folders and levels
+ok   levels: Sky Garden x4, hoover_beach x4
+ok   forms of the tags (capture =2 F19=0, control =0 F19=1, stands, =3)
+ok   forms, holds and input states
+ok   lookup key: a difference only in the 5 padding bytes of an image is a hit (item 561 (g)(1))
+ok   raw key (reference): the padding difference is a miss
+ok   lookup key: Image field 0 differs -> miss
+ok   lookup key: Image field 1 differs -> miss
+ok   lookup key: Image field 2 differs -> miss
+ok   lookup key: Image field 3 differs -> miss
+ok   lookup key: Image field 4 differs -> miss
+ok   lookup key: Image field 5 differs -> miss
+ok   lookup key: Image field 6 differs -> miss
+ok   lookup key: Image field 7 differs -> miss
+ok   lookup key: Image field 8 differs -> miss
+ok   lookup key: Image field 9 differs -> miss
+ok   lookup key: Image field 10 differs -> miss
+ok   lookup key: Image field 11 differs -> miss
+ok   lookup key: Buffer field 0 differs -> miss
+ok   lookup key: Buffer field 1 differs -> miss
+ok   lookup key: Buffer field 2 differs -> miss
+ok   lookup key: push-data start differs -> miss
+ok   lookup key: cache file name differs -> miss
+ok   lookup key: one more image -> miss
+ok   lookup key: one more buffer -> miss
+ok   spec_fields: buffers and the 12 image fields in their order
+ok   spec_fields: None for a short, long or truncated specialization
+ok   POD sizes Buffer 12, Image 44
+ok   s17c_r3b: other binary in json -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: installed_sha.txt not 43ef1cc1 -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: version string of S17a4 in the binary copy -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: revision 9238a18 in the log -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: no revision text at all -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: prereg of other seal -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: KYTY_SHADER_SEED absent (item 561 (d)(3)) -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2h: KYTY_SHADER_SEED absent on the capture tag -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_n0h: KYTY_SHADER_SEED=1 -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_e3h: extra KYTY_SHADER_PREPARE -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_ks2: stand of the tag other than stop -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_kn2: stand on the next start -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: VK_LAYER_PATH present -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2h: guest args of the other level -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2h: v form without KYTY_REC -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: p form with KYTY_REC -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: no KYTY_GATE_FILE -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: --vulkan-validation true -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: one ShaderSeed: installed line in the log (item 561 (d)(3)) -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_n0h: one ShaderSeed: installed line in stdout -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_e3h: window minimized -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_e3h: GamePatch -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: input state name other -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: state_in.txt missing -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: replay.cur text is a report (files decide) -> MEMBERS_PASS (got MEMBERS_PASS)
+ok   s17c_r3b: cat_c2: the edition 3 saved catalogue differs from the input replay -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_ks2: cat_c2: f19 present -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3h: cat_c2h: f19 present -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2h: empty_f10 with f19 present -> MEMBERS_PASS (got MEMBERS_PASS)
+ok   s17c_c2h: empty_f10: replay present -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2h: empty_f10: f10 present -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_n0h: empty_f19: f19 present -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_e3h: rb_r3h: f19 without pipelines.bin -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3h: cat_c2h: replay differs from state/s17c_c2h -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_kn2: k_ks2: replay differs from state/s17c_ks2 -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: two attempts -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: log missing -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2h: K3 fitness: no PipelinePrecache: no ... yet -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_r3b: installed before != after -> FORM_FAIL (got FORM_FAIL)
+ok   s17c_r3b: installed not FS8 -> FORM_FAIL (got FORM_FAIL)
+ok   s17c_r3b: manifest DIFFER -> FORM_FAIL (got FORM_FAIL)
+ok   baseline r3b: lookup key 10/10 hit 10, raw key 9 hit 1 dead (the padding difference)
+ok   s17c_r3b: rb_hit 9 / 10 = 0.90 edge -> YES (got YES, reading MEMBERS_PASS)
+ok   s17c_r3b: rb_hit 8 / 10 = 0.80 -> NO (got NO, reading MEMBERS_FAIL)
+ok   r3b: the cube field of one rebuilt image differs -> one lookup miss (9 / 10), rb_dead 1
+ok   s17c_r3b: one hit with another SPIR-V -> rb_live_mismatch 1 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: manifest row without its permutation -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: manifest signature F19=0 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: a bad manifest line -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: self-check failed -> share not determined -> NOT DETERMINED (got NOT DETERMINED, reading MEMBERS_FAIL)
+ok   s17c_r3b: a specialization that does not parse into the lookup fields -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: live folder of other signature -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: rebuilt folder missing -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_r3b: generation != replay.cur -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: compat absent -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: rebuild skipped line -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: death marker -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: outcome exited -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: pipelines_bin=stopped -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: identity broken -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: partition broken -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: rej_ref counted -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: share 9 / 10 = 0.90 edge -> YES (got YES, reading MEMBERS_PASS)
+ok   s17c_r3b: share 0.80 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: pipes_waiting 1 of the edition 3 capture -> 9 / 11 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3b: no pipes_waiting -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_rsb: baseline stand spec mismatch 1 -> YES (got YES, reading MEMBERS_PASS)
+ok   s17c_rsb: no stand line -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_rsb: stand permutation not in the manifest -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_rsb: stand permutation equal -> mismatch 0 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_rsb: the stand tag has no share member -> MISSING (got MISSING, reading MEMBERS_PASS)
+ok   s17c_r3h: baseline hoover r3h lookup share -> YES (got YES, reading MEMBERS_PASS)
+ok   s17c_r3h: hoover rb_hit 8 / 10 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3h: hoover: generation of the hoover capture (c2h) is the reference -> NO (got NO, reading NOT_ADMITTED)
+ok   s17c_r3h: hoover live folder is s17c_n0h (12 live, 10 hit = 0.83) -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_r3h: hoover share uses pipes_waiting of s17c_c2h -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_ks2: baseline five lines in order -> YES (got YES, reading MEMBERS_PASS)
+ok   s17c_ks2: a stand stop timeout line -> NO -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_ks2: line applied missing -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: line requested missing -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: line seen missing -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: line stopped missing -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading MEMBERS_FAIL)
+ok   s17c_ks2: line joined missing -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: seen before close requested -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: requested before applied -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: stopped before seen -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: joined before stopped -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: P differs -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: R differs -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: P = R -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: P > R -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: P = R - 1 -> YES -> YES (got YES, reading MEMBERS_PASS)
+ok   s17c_ks2: precache_active=0 -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: one Event: quit line -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: exit code 1 -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: the harness closed it (outcome prep, no exit code) -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: rebuild written instead of stopped -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading MEMBERS_FAIL)
+ok   s17c_ks2: no stopped line -> sign NO -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_ks2: stopped before the stand -> NO -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_ks2: no stand line -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: pipelines.bin written at the break -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_ks2: no state_out -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_ks2: death marker in stdout -> NO (got NO, reading MEMBERS_FAIL)
+ok   exit_code: only an exited process with the detail exit code <n>
+ok   baseline a 3 b 5 N 8
+ok   s17c_kn2: baseline a + b = N -> YES (got YES, reading MEMBERS_PASS)
+ok   s17c_kn2: a = 0 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: a = 0 and b = N -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: b = 0 and a = N -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: a + b = N - 1 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: a + b = N + 1 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: a = 1, b = N - 1 -> YES -> YES (got YES, reading MEMBERS_PASS)
+ok   s17c_kn2: records of kn2 differ -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: records of ks2 differ -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: records of r3b differ -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: a timeout line at ks2 -> NO -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: no stand stop seen at ks2 -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: no stopped rebuild line at ks2 -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: kn2 with a skipped line -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: kn2 not written -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: kn2 no rebuild line -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: no N -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: caches returned between ks2 and kn2 (manifest after ks2 != before kn2) -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: manifest before ks2 != before r3b -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: manifest before r3b missing -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: manifest after ks2 missing -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: KYTY_S_REPLAY differs at r3b -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: KYTY_SHADER_SEED absent at ks2 -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: KYTY_SHADER_SEED=1 at r3b -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_kn2: ks2 run record missing -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   remainder: a timeout wins over everything
+ok   s17c_kn2: kn2 mode compat absent -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: kn2 not entered -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: kn2 hold 59 s -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: kn2 death -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_kn2: perms_cached 0 is only a reference -> YES (got YES, reading MEMBERS_PASS)
+ok   s17c_c2h: compat ok -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: directory of F19=1 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: canon_mismatch 1 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: canon_base 1 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: dropped_queue 2 at a soft close -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: hard close -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_c2h: sources 0 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: specs 0 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: replay.cur != gen -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: R_ADDR > 0 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: no at=stop line -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_c2h: hold 299.999996 s -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: hold_s 329 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_c2h: entry of the other level -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_n0h: no catalogue program translated after the preparation line -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_n0h: no preparation line -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_n0h: no hoover catalogue -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_n0h: live folder missing -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_n0h: live file unreadable -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_n0h: directory F19=0 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: skipped for another reason -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: a rebuild line -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: one catalogue program translated in the game -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: r3h translated a catalogue program after its preparation -> not determined -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_e3h: null control of n0h 0 -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: 180 000 ms edge -> YES (got YES, reading MEMBERS_PASS)
+ok   s17c_e3h: 180 001 ms -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: no preparation line -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_e3h: 2 999 records -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: no index -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_e3h: one glitch -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: no sheet line -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: sheet not made -> NOT DETERMINED (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s17c_e3h: death marker -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: hold below 300 s -> NO (got NO, reading MEMBERS_FAIL)
+ok   s17c_e3h: entry of the other level -> NO (got NO, reading MEMBERS_FAIL)
+ok   table: carried edition 3 tags and the 8 edition 4 tags
+ok   main s17c_kn2 in strict cp1250
+ok   main s17c_ks2 in strict cp1250
+ok   --k4x prints both keys
+ok   ASCII only: s17c2_read.py
+checks 220
+ALL OK

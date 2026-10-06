@@ -15,26 +15,95 @@ S17c member table K2(2)-K6 (no verdict - S17d)
       YES             K2(2) shown hold after the first scene frame >= 300 s | 325.0 s
       YES             K2(2) W 0 [Vulkan][E] | 0
       YES             K2(2) W positive control of the layer: [Vulkan][W] > 0 and DualSrcBlend: supported=1 enabled=1 before the first GuestOut | W 922685, dual [(78, 1, 1)], first GuestOut 11900
-  s17c_c2  K3     READING NOT_ADMITTED
-      YES             K3 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 350819
-      YES             K3 the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.2
-      YES             K3 shown hold after the first scene frame >= 300 s | 334.8 s
+  s17c_c2  K3     READING MEMBERS_PASS
+      YES             K3 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 350998
+      YES             K3 the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             K3 shown hold after the first scene frame >= 300 s | 334.6 s
       YES             K3 mode line mode=2 compat=absent (a new catalogue) | {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'absent', 'generation': '0', 'corrupt': '0', 'sources': '0', 'specs': '0', 'pipes': '0', 'test': 'none'}
       YES             K3 translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
-      NO              K3 canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 60 self 60 residual 0
+      YES             K3 canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
       YES             K3 canon_base = 0 (item 531 (v)(2)) | 0
       YES             K3 dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
-      YES             K3 sources > 0 | 396
-      YES             K3 specs > 0 | 400
-      YES             K3 generation file on disk = gen of the last capture line and readable | replay.cur 6 gen 6 error None
+      YES             K3 sources > 0 | 392
+      YES             K3 specs > 0 | 454
+      YES             K3 generation file on disk = gen of the last capture line and readable | replay.cur 7 gen 7 error None
       YES             K3 offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
-  s17c_ca  K3     NOT READ
-  s17c_cc  K3     NOT READ
-  s17c_n0  K4/K5  NOT READ
-  s17c_r3  K4     NOT READ
-  s17c_rs  K4     NOT READ
-  s17c_e3  K5     NOT READ
-  s17c_ew  K5     NOT READ
-  s17c_ks  K6     NOT READ
-  s17c_kn  K6     NOT READ
-  s17c_kc  K6     NOT READ
+  s17c_ca  K3     READING MEMBERS_PASS
+      YES             K3 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 347705
+      YES             K3 the process lived to the end of the hold (120 s) | outcome ok hold_exit None hold_s 120.1
+      YES             K3 mode line mode=2 compat=absent (a new catalogue) | {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'absent', 'generation': '0', 'corrupt': '0', 'sources': '0', 'specs': '0', 'pipes': '0', 'test': 'addr'}
+      YES             K3 translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             K3 stand addr: line stand addr applied | [(18179, 'stand addr applied spec=0x261236bfcadaf490', {'spec': '0x261236bfcadaf490'})]
+      YES             K3 stand addr: offline R_ADDR > 0 on the catalogue of the tag | 17
+  s17c_cc  K3     READING MEMBERS_PASS
+      YES             K3 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 347256
+      YES             K3 the process lived to the end of the hold (120 s) | outcome ok hold_exit None hold_s 120.2
+      YES             K3 mode line mode=2 compat=absent (a new catalogue) | {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'absent', 'generation': '0', 'corrupt': '0', 'sources': '0', 'specs': '0', 'pipes': '0', 'test': 'canon'}
+      YES             K3 translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             K3 stand canon: pair stand canon applied hash=H rejected=1 / capture reject why=self ... culprit=<i>:role6:<raw>->00000000 ... hash=H and canon_mismatch >= 1 (item 536 (b)) | hash 0xa45af05c008ab79d stand line 55328 reject line 55329 culprit=2:role6 canon_zero=1 canon_mismatch 1
+  s17c_n0  K4/K5  READING MEMBERS_PASS
+      YES             K4/K5 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 348705
+      YES             K4/K5 the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             K4/K5 shown hold after the first scene frame >= 300 s | 334.7 s
+      YES             K4 translation cache directory = variant_fixb26_fixb1b_fixf10_fixf19 (signature of KYTY_FIX_F19=1) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+      YES             K5 null control: translations of catalogue programs in the game > 0 (cold =0, empty variant folder) | catalogue programs 454 of new permutations 454 after the preparation line 3801; None
+      YES             K4 live folder saved (state/s17c_n0/f19) and every file readable | files 392 bad []
+  s17c_r3  K4     READING MEMBERS_FAIL
+      YES             K4 mode line mode=3 compat=ok generation = replay.cur of s17c_c2 | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '7', 'corrupt': '0', 'sources': '392', 'specs': '454', 'pipes': '420', 'test': 'none'} / c2 7
+      YES             K4 a rebuild line and no rebuild skipped line | rebuild 1 skipped []
+      YES             K4 0 death markers on the rebuild tag (item 531 (d)(4)) | []
+      YES             K4 the process reached the end of the preparation screen (--until-prep outcome prep) | prep
+      YES             K4 pipelines_bin=written | written
+      YES             K4 identity prepared + rejected + pending = records | 420 + 0 + 0 = 420
+      YES             K4 partition of the reasons: sum rej_* (rej_ref included, item 531 (g)) = rejected | [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] = 0
+      YES             K4 share prepared / (records + pipes_waiting of s17c_c2) >= 0.90 (item 531 (v)(3)) | share 1.0 = 420 / (420 + 0)
+      YES             K4 comparison self-checks: every file readable, every manifest row found with its start and XXH3, signatures = KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19 | live_bad 0 rb_bad 0 manifest_bad 0 bad_lines 0 manifest_sig KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19 live_sigs ['KytySC3:9177b4267de1fb8bac7d1113af
+      NO              K4 rb_hit / live_perms >= 0.90 (item 532 (zh)) | 284 / 454 = 0.6256
+      YES             K4 rb_live_mismatch = 0 on rb_hit | 0
+  s17c_rs  K4     READING MEMBERS_PASS
+      YES             K4 mode line mode=3 compat=ok generation = replay.cur of s17c_c2 | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '7', 'corrupt': '0', 'sources': '392', 'specs': '454', 'pipes': '420', 'test': 'spec'} / c2 7
+      YES             K4 a rebuild line and no rebuild skipped line | rebuild 1 skipped []
+      YES             K4 0 death markers on the rebuild tag (item 531 (d)(4)) | []
+      YES             K4 the process reached the end of the preparation screen (--until-prep outcome prep) | prep
+      YES             K4 pipelines_bin=written | written
+      YES             K4 identity prepared + rejected + pending = records | 420 + 0 + 0 = 420
+      YES             K4 partition of the reasons: sum rej_* (rej_ref included, item 531 (g)) = rejected | [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] = 0
+      YES             K4 share prepared / (records + pipes_waiting of s17c_c2) >= 0.90 (item 531 (v)(3)) | share 1.0 = 420 / (420 + 0)
+      YES             K4 comparison self-checks: every file readable, every manifest row found with its start and XXH3, signatures = KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19 | live_bad 0 rb_bad 0 manifest_bad 0 bad_lines 0 manifest_sig KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19 live_sigs ['KytySC3:9177b4267de1fb8bac7d1113af
+      YES             K4 stand spec: line stand spec applied and its (file, index) among live_perms of s17c_n0 (item 532 (d)(b)) | stand ('cs_9458e316dad715a5_0989c11b8c724533.bin', '0') in manifest True in live True
+      YES             K4 stand spec: rb_live_mismatch > 0 | 1 (stand permutation differs: True)
+  s17c_e3  K5     READING MEMBERS_PASS
+      YES             K5 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 225146
+      YES             K5 the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             K5 shown hold after the first scene frame >= 300 s | 334.1 s
+      YES             K5 fitness: rebuild skipped reason=recipes_current (the folder of s17c_r3) | skipped [(88, 'recipes_current')] rebuild lines 0
+      YES             K5 translations of catalogue programs in the game = 0 (not determined when s17c_r3 translated catalogue programs after its preparation screen) | e3 0 of 1; r3 after its preparation 0; None
+      YES             K5 null control s17c_n0 > 0 | 454
+      YES             K5 preparation screen <= 180 s (startup wait finished) | 0 ms
+      YES             K5 video index records >= 3000 | 10144
+      YES             K5 0 one-frame glitches (s51_vidglitch.py 4 6) | 0
+      YES             K5 sheet of the lead made | sheet: C:/kyty/s288/s17c/runs/s17c_e3/sheet_s17c_e3.png frames 10144 step 211 tiles 8x6
+      YES             K5 0 death markers (log, stdout) | 0
+  s17c_ew  K5     READING MEMBERS_PASS
+      YES             K5 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 224128
+      YES             K5 the process lived to the end of the hold (310 s) | outcome ok hold_exit None hold_s 310.0
+      YES             K5 shown hold after the first scene frame >= 300 s | 323.5 s
+      YES             K5 fitness: rebuild skipped reason=recipes_current (the folder of s17c_r3) | skipped [(92, 'recipes_current')] rebuild lines 0
+      YES             K5 W 0 [Vulkan][E] | 0
+      YES             K5 W positive control of the layer: [Vulkan][W] > 0 and DualSrcBlend: supported=1 enabled=1 before the first GuestOut | W 960263, dual [(78, 1, 1)]
+  s17c_ks  K6     READING MEMBERS_FAIL
+      YES             K6 stand stop applied line | [(511246, 'stand stop applied processed=210 records=420', {'processed': '210', 'records': '420'})]
+      NO              K6 sign of the break: rebuild ... pipelines_bin=stopped after stand stop applied (item 532 (b)) | stand line 511246 stopped lines []
+      NO              K6 pipelines.bin is not written at the break (state_out.txt, variant_fixb26_fixb1b_fixf10_fixf19) | {'present': True, 'files': 393, 'cache_files': 392, 'pipelines_bin': True, 'replay_files': {}, 'cur': None}
+  s17c_kn  K6     READING MEMBERS_FAIL
+      YES             K6 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 224706
+      YES             K6 the process lived to the end of the hold (60 s) | outcome ok hold_exit None hold_s 60.0
+      YES             K6 0 death markers (the game path as before) | 0
+      YES             K6 mode line mode=3 compat=ok | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '7', 'corrupt': '0', 'sources': '392', 'specs': '454', 'pipes': '420', 'test': 'none'}
+      NO              K6 the next start rebuilds the rest: a rebuild line (no skip), perms_cached > 0, pipelines_bin=written | skipped [(88, 'recipes_current')] rebuild {'records': None, 'prepared': None, 'perms_new': None, 'perms_cached': None, 'pipelines_bin': None}
+  s17c_kc  K6     READING MEMBERS_PASS
+      YES             K6 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 1423698
+      YES             K6 the process lived to the end of the hold (60 s) | outcome ok hold_exit None hold_s 60.2
+      YES             K6 0 death markers (the game path as before) | 0
+      YES             K6 stand corrupt applied generation = the current generation of s17c_c2 | stand 7 c2 7
+      YES             K6 the previous generation is loaded: mode line compat=ok generation=G-1 corrupt=G | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '6', 'corrupt': '7', 'sources': '386', 'specs': '448', 'pipes': '414', 'test': 'corrupt'}

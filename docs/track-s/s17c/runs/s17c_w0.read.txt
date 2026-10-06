@@ -2,10 +2,10 @@ S17c reader tag s17c_w0 group K2(2)
   log sha256 6f3ff544b202f6163248aa2e83cc0b6e37191ccacf0ec1842a45db010dafbd89 stdout sha256 20383f4e94c8a01a176ac8160301ed8c12904854152ad44ecd463af069055ec4
   ADMISSION
     YES             run record <tag>.json present, one attempt | attempts 1
-    YES             binary of the run = S17a2 2b5e2ce6 (json and installed_sha.txt) | 2b5e2ce677c557bb0dd28ccc114588aea5c4b6f56c10ab1450faadd81328d544 / 2b5e2ce677c557bb0dd28ccc114588aea5c4b6f56c10ab1450faadd81328d544
+    YES             binary of the run = S17a2 2b5e2ce6 (K2(2) carried from edition 2, item 548 (b)) (json and installed_sha.txt) | 2b5e2ce677c557bb0dd28ccc114588aea5c4b6f56c10ab1450faadd81328d544 / 2b5e2ce677c557bb0dd28ccc114588aea5c4b6f56c10ab1450faadd81328d544
     YES             version string KytyPS5-2026-09-15-6a2987a-2311-ga2fee0d9 in the binary copy | True
     YES             revision texts of log / stdout name a2fee0d | texts 1, other []
-    YES             prereg sha256 = the seal file | f05aa9ce80a9b0eac9d9f684a6bb79935af8257d957ca2f5fa4c1fbd7b5826af / f05aa9ce80a9b0eac9d9f684a6bb79935af8257d957ca2f5fa4c1fbd7b5826af
+    YES             prereg sha256 = the seal file (s17c_seal_ed2.md) | f05aa9ce80a9b0eac9d9f684a6bb79935af8257d957ca2f5fa4c1fbd7b5826af / f05aa9ce80a9b0eac9d9f684a6bb79935af8257d957ca2f5fa4c1fbd7b5826af
     YES             environment = the form of the tag (seal section 3; KYTY_SHADER_PREPARE absent - item 536 (v) N1) | KYTY keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'KYTY_S_REPLAY']
     YES             command line --vulkan-validation (last) = true | true
     YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0

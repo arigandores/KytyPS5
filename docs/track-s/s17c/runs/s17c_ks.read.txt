@@ -1,0 +1,37 @@
+S17c reader tag s17c_ks group K6
+  log sha256 605c196d78a1041990c0b03fc9391e81ded4c04a6ced872c8dbe186931af64ab stdout sha256 14a3469f990f07f6e6c58f5001f39ade06914db1a5879fd2e0a44cec3e8596ae
+  ADMISSION
+    YES             run record <tag>.json present, one attempt | attempts 1
+    YES             binary of the run = S17a4 ed2686da (json and installed_sha.txt) | ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b / ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+    YES             version string KytyPS5-2026-09-15-6a2987a-2336-g9238a182 in the binary copy | True
+    YES             revision texts of log / stdout name 9238a18 | texts 1, other []
+    YES             prereg sha256 = the seal file (s17c_seal.md) | e4e4075602415fa59016807e19c8d6c04669ddf56d4595668cc3beecbaa51c2b / e4e4075602415fa59016807e19c8d6c04669ddf56d4595668cc3beecbaa51c2b
+    YES             environment = the form of the tag (seal section 3; KYTY_SHADER_PREPARE absent - item 536 (v) N1) | KYTY keys ['KYTY_AV_TRACE', 'KYTY_FIX_F19', 'KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'KYTY_S_REPLAY', 'KYTY_S_REPLAY_TEST']
+    YES             command line --vulkan-validation (last) = false | false
+    YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0
+    YES             input state name = cat_c2 | cat_c2
+    YES             input state cat_c2: replay = state/s17c_c2/replay byte for byte | files 3 / saved 3
+    YES             input state cat_c2: variant_fixb26_fixb1b_fixf10_fixf19 absent (empty variant folder of the rebuild signature) | {'present': False}
+    YES             emulator log present | 605c196d78a1041990c0b03fc9391e81ded4c04a6ced872c8dbe186931af64ab
+  FORM
+    YES             installed binary before = after, FS8 | 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b / 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+    YES             manifest of the caches after the return EQUAL | manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+  MEMBERS
+    YES             K6 stand stop applied line | [(511246, 'stand stop applied processed=210 records=420', {'processed': '210', 'records': '420'})]
+    NO              K6 sign of the break: rebuild ... pipelines_bin=stopped after stand stop applied (item 532 (b)) | stand line 511246 stopped lines []
+    NO              K6 pipelines.bin is not written at the break (state_out.txt, variant_fixb26_fixb1b_fixf10_fixf19) | {'present': True, 'files': 393, 'cache_files': 392, 'pipelines_bin': True, 'replay_files': {}, 'cur': None}
+  REPORT
+    window lines: {}
+    death markers log / stdout: 0 / 0 []
+    skipped draw lines: 0
+    translation cache directory lines: ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+    exit: outcome exited detail exit code 0 hold_exit None hold_s None close_rc None close_killed None close_s None
+    preparation screen (startup wait finished): None ms at line None
+    close stop requested / joined lines: [(1220095, {'precache_active': '1'})] / [(1220100, {'wait_ms': '126'})]
+    order stand < requested, stand < stopped < joined (S17a2 section 2): None
+    wait_ms of close stop joined (reference, item 533 (b)): 126
+    rebuild_manifest.tsv after the break (S17a2: not written): True
+    translation cache files after the break (S17a2: saved): 392
+    no startup wait line (the close path): True
+    death markers: 0
+  READING MEMBERS_FAIL

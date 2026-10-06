@@ -1,0 +1,38 @@
+S17c reader tag s17c_n0 group K4/K5
+  log sha256 ba2203124a2218c33fd944a4fc9ed6d4bb4b274ccc9c568f2c8a21a374d93d1c stdout sha256 f31a1bd3d922767a57d51f981cdcb9438d6b393ab73dfd5eb13d189b9c6f974d
+  ADMISSION
+    YES             run record <tag>.json present, one attempt | attempts 1
+    YES             binary of the run = S17a4 ed2686da (json and installed_sha.txt) | ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b / ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+    YES             version string KytyPS5-2026-09-15-6a2987a-2336-g9238a182 in the binary copy | True
+    YES             revision texts of log / stdout name 9238a18 | texts 1, other []
+    YES             prereg sha256 = the seal file (s17c_seal.md) | e4e4075602415fa59016807e19c8d6c04669ddf56d4595668cc3beecbaa51c2b / e4e4075602415fa59016807e19c8d6c04669ddf56d4595668cc3beecbaa51c2b
+    YES             environment = the form of the tag (seal section 3; KYTY_SHADER_PREPARE absent - item 536 (v) N1) | KYTY keys ['KYTY_AV_TRACE', 'KYTY_FIX_F19', 'KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_REC', 'KYTY_SAMPLE_GATE', 'KYTY_S_REPLAY']
+    YES             command line --vulkan-validation (last) = false | false
+    YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0
+    YES             input state name = empty_f19 | empty_f19
+    YES             input state empty_f19: variant_fixb26_fixb1b_fixf10_fixf19 absent and replay absent | ({'present': False}, {'present': False})
+    YES             emulator log present | ba2203124a2218c33fd944a4fc9ed6d4bb4b274ccc9c568f2c8a21a374d93d1c
+  FORM
+    YES             installed binary before = after, FS8 | 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b / 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+    YES             manifest of the caches after the return EQUAL | manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+  MEMBERS
+    YES             K4/K5 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 348705
+    YES             K4/K5 the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+    YES             K4/K5 shown hold after the first scene frame >= 300 s | 334.7 s
+    YES             K4 translation cache directory = variant_fixb26_fixb1b_fixf10_fixf19 (signature of KYTY_FIX_F19=1) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+    YES             K5 null control: translations of catalogue programs in the game > 0 (cold =0, empty variant folder) | catalogue programs 454 of new permutations 454 after the preparation line 3801; None
+    YES             K4 live folder saved (state/s17c_n0/f19) and every file readable | files 392 bad []
+  REPORT
+    window lines: {}
+    death markers log / stdout: 0 / 0 []
+    skipped draw lines: 366
+    translation cache directory lines: ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+    exit: outcome ok detail None hold_exit None hold_s 330.1 close_rc 0 close_killed False close_s 3.7
+    preparation screen (startup wait finished): 0 ms at line 3801
+    frames >= 1 s after the first scene frame: 0
+    ShaderReplay: lines (log / stdout): 0 / 0
+    control (report) video index records >= 3000: YES 10008
+    control (report) 0 one-frame glitches (s51_vidglitch.py 4 6): YES 0
+    control (report) sheet of the lead made: YES sheet: C:/kyty/s288/s17c/runs/s17c_n0/sheet_s17c_n0.png frames 10008 step 208 tiles 8x6
+    control (report) 0 death markers (log, stdout): YES 0
+  READING MEMBERS_PASS

@@ -1,0 +1,36 @@
+S17c reader tag s17c_ew group K5
+  log sha256 4d222d86d1923deba65813c9b507c40e35a621b195d976a03de897eb0a582859 stdout sha256 77c822f2f8583200f34f7c9bbd6348a5a99e86cdf6cdad081249c15444aee83d
+  ADMISSION
+    YES             run record <tag>.json present, one attempt | attempts 1
+    YES             binary of the run = S17a4 ed2686da (json and installed_sha.txt) | ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b / ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+    YES             version string KytyPS5-2026-09-15-6a2987a-2336-g9238a182 in the binary copy | True
+    YES             revision texts of log / stdout name 9238a18 | texts 1, other []
+    YES             prereg sha256 = the seal file (s17c_seal.md) | e4e4075602415fa59016807e19c8d6c04669ddf56d4595668cc3beecbaa51c2b / e4e4075602415fa59016807e19c8d6c04669ddf56d4595668cc3beecbaa51c2b
+    YES             environment = the form of the tag (seal section 3; KYTY_SHADER_PREPARE absent - item 536 (v) N1) | KYTY keys ['KYTY_FIX_F19', 'KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'KYTY_S_REPLAY']
+    YES             command line --vulkan-validation (last) = true | true
+    YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0
+    YES             input state name = rb_r3 | rb_r3
+    YES             input state rb_r3: replay = state/s17c_r3/replay byte for byte | files 4 / saved 4
+    YES             input state rb_r3: variant_fixb26_fixb1b_fixf10_fixf19 present with pipelines.bin (the folder of s17c_r3) | {'present': True, 'files': 393, 'cache_files': 392, 'pipelines_bin': True, 'replay_files': {}, 'cur': None}
+    YES             emulator log present | 4d222d86d1923deba65813c9b507c40e35a621b195d976a03de897eb0a582859
+  FORM
+    YES             installed binary before = after, FS8 | 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b / 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+    YES             manifest of the caches after the return EQUAL | manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+  MEMBERS
+    YES             K5 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 224128
+    YES             K5 the process lived to the end of the hold (310 s) | outcome ok hold_exit None hold_s 310.0
+    YES             K5 shown hold after the first scene frame >= 300 s | 323.5 s
+    YES             K5 fitness: rebuild skipped reason=recipes_current (the folder of s17c_r3) | skipped [(92, 'recipes_current')] rebuild lines 0
+    YES             K5 W 0 [Vulkan][E] | 0
+    YES             K5 W positive control of the layer: [Vulkan][W] > 0 and DualSrcBlend: supported=1 enabled=1 before the first GuestOut | W 960263, dual [(78, 1, 1)]
+  REPORT
+    window lines: {}
+    death markers log / stdout: 0 / 0 []
+    skipped draw lines: 0
+    translation cache directory lines: ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+    exit: outcome ok detail None hold_exit None hold_s 310.0 close_rc 0 close_killed False close_s 3.5
+    preparation screen (startup wait finished): 0 ms at line 4208
+    frames >= 1 s after the first scene frame: 0
+    limit lines of the layer: 0
+    death markers (W): 0
+  READING MEMBERS_PASS

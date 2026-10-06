@@ -1,0 +1,2 @@
+s17c_r3 field key (variant, reference): live_perms 454 (dup 0) rebuilt 454 rb_hit 454 rb_dead 0 rb_live_mismatch 0 share 1.0000
+s17c_rs field key (variant, reference): live_perms 454 (dup 0) rebuilt 454 rb_hit 454 rb_dead 0 rb_live_mismatch 1 share 1.0000

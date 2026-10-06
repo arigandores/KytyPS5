@@ -1,0 +1,40 @@
+S17c reader tag s17c_cc group K3
+  log sha256 76e793a02aad958f903a13f4fec77647b3c021b6f791fa755acefa3587719208 stdout sha256 bd963109a854698055395165e5e0259ac42da3efd377ac4dc67edfa858e487b6
+  ADMISSION
+    YES             run record <tag>.json present, one attempt | attempts 1
+    YES             binary of the run = S17a4 ed2686da (json and installed_sha.txt) | ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b / ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+    YES             version string KytyPS5-2026-09-15-6a2987a-2336-g9238a182 in the binary copy | True
+    YES             revision texts of log / stdout name 9238a18 | texts 1, other []
+    YES             prereg sha256 = the seal file (s17c_seal.md) | e4e4075602415fa59016807e19c8d6c04669ddf56d4595668cc3beecbaa51c2b / e4e4075602415fa59016807e19c8d6c04669ddf56d4595668cc3beecbaa51c2b
+    YES             environment = the form of the tag (seal section 3; KYTY_SHADER_PREPARE absent - item 536 (v) N1) | KYTY keys ['KYTY_FIX_F19', 'KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'KYTY_S_REPLAY', 'KYTY_S_REPLAY_TEST']
+    YES             command line --vulkan-validation (last) = false | false
+    YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0
+    YES             input state name = empty_f10 | empty_f10
+    YES             input state empty_f10: variant_fixb26_fixb1b_fixf10 absent (so no pipelines.bin, item 532 (v)) and replay absent | ({'present': False}, {'present': False})
+    YES             emulator log present | 76e793a02aad958f903a13f4fec77647b3c021b6f791fa755acefa3587719208
+    YES             K3 fitness: line PipelinePrecache: no <path> yet (item 532 (v)) | [89]
+  FORM
+    YES             installed binary before = after, FS8 | 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b / 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+    YES             manifest of the caches after the return EQUAL | manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+  MEMBERS
+    YES             K3 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 347256
+    YES             K3 the process lived to the end of the hold (120 s) | outcome ok hold_exit None hold_s 120.2
+    YES             K3 mode line mode=2 compat=absent (a new catalogue) | {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'absent', 'generation': '0', 'corrupt': '0', 'sources': '0', 'specs': '0', 'pipes': '0', 'test': 'canon'}
+    YES             K3 translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+    YES             K3 stand canon: pair stand canon applied hash=H rejected=1 / capture reject why=self ... culprit=<i>:role6:<raw>->00000000 ... hash=H and canon_mismatch >= 1 (item 536 (b)) | hash 0xa45af05c008ab79d stand line 55328 reject line 55329 culprit=2:role6 canon_zero=1 canon_mismatch 1
+  REPORT
+    window lines: {}
+    death markers log / stdout: 0 / 0 []
+    skipped draw lines: 343
+    translation cache directory lines: ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+    exit: outcome ok detail None hold_exit None hold_s 120.2 close_rc 0 close_killed False close_s 3.7
+    preparation screen (startup wait finished): 0 ms at line 3802
+    frames >= 1 s after the first scene frame: 0
+    capture lines (save / stop): 7 / 1
+    last capture at=stop: {'sources': '396', 'specs': '459', 'pipes': '428', 'canon_mismatch': '1', 'dropped_queue': '0', 'bytes': '2220682', 'gen': '7', 'canon_self': '1', 'canon_residual': '0', 'canon_base': '0', 'canon_big': '0', 'pipes_waiting': '1', 'catalogue_sources': '396', 'catalogue_specs': '459', 'catalogue_pipes': '428', 'at': 'stop'}
+    capture reject lines logged by kind (self/base/big <= 20 by their sum, residual <= 20 of its own, item 546 (b)): {'self': 1}
+    residual branch:role of the first culprit (diagnostics, not a member, item 541 (g)): {}
+    capture reject lines (first 5; committed form without raw values, item 548 (v)(2)): ['why=self ok=1 complete=1 culprit=2:role6 canon_zero=1 hash=0xa45af05c008ab79d words=28']
+    shader resource specialization failed in _kyty.txt / stdout (item 531 (d)(5)): 0 / 0
+    saved catalogue: replay.cur 7 file replay.7.bin error None
+  READING MEMBERS_PASS

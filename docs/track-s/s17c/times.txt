@@ -79,3 +79,253 @@
 2026-10-06T01:55:56Z S17c ed.3: test_s17c_read.py -> ALL OK, checks 246, out sha 05375f4484a4bc92
 2026-10-06T01:56:21Z S17c ed.3: signature hash 9177b4267de1fb8bac7d1113afd8733210addfac found once in ed2686da and once in 2b5e2ce6 (grep -c -a) - K2(2) carry of item 548 (b) holds
 2026-10-06T01:57:20Z S17c ed.3 seal written: pred/s17c_seal.md = docs/track-s/s17c.md sha e4e4075602415fa5; checkseal SEAL: PASS
+2026-10-06T01:57:45Z S17c ed.3 committed KytyPS5 645a8584 (seal + mirror); git grep -P scrub on the committed paths rc 1 (no match)
+2026-10-06T01:58:13Z S17c aside_s17c s17c_c2 ed2: moved runs/s17c_c2.ed2_20261006T015812Z state/s17c_c2.ed2_20261006T015812Z aside/s17c_c2.ed2_20261006T015812Z/log_s17c_c2.txt aside/s17c_c2.ed2_20261006T015812Z/stdout_s17c_c2.txt aside/s17c_c2.ed2_20261006T015812Z/s17c_c2.json aside/s17c_c2.ed2_20261006T015812Z/rec_s17c_c2.mp4 aside/s17c_c2.ed2_20261006T015812Z/rec_s17c_c2.mp4.idx aside/s17c_c2.ed2_20261006T015812Z/gpuclk_s17c_c2.csv aside/s17c_c2.ed2_20261006T015812Z/go_s17c_c2.out.txt
+2026-10-06T01:58:14Z S17c ed.3: guard block of edition 2 closed (close seal_edition3); open-block check 1 of 2 -> 2026-10-06T01:58:12Z 1791251892 CLEAN; order S17c first - lead item 557(d)-(e) (HPP-631 blocked on HPP-613 and HPP-637)
+2026-10-06T02:08:26Z S17c ed.3: open-block check 2 -> 1791252505 CLEAN; API before the tag: HPP-631:blocked:run=None HPP-635:blocked:run=None HPP-636:blocked:run=None HPP-604:done:run=None
+2026-10-06T02:08:37Z S17c ed.3: open-block PENDING - the CLEAN of 01:58:12Z shares its second with CLOSE seal_edition3 and is not counted by the sealed guard (t > last_cut); first counted CLEAN 02:08:25Z, second check at >= 02:18:25Z
+2026-10-06T02:18:36Z S17c ed.3: open-block check -> 1791253115 OPEN; API before s17c_c2: HPP-631:blocked:run=None HPP-635:blocked:run=None HPP-636:blocked:run=None HPP-610:done:run=None
+2026-10-06T02:18:40Z S17c guard (item 534): GUARD CLEAN; block open, tags 0 of 6; tag s17c_c2 recorded, 1 of 6 in the block
+2026-10-06T02:18:40Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_c2
+2026-10-06T02:18:55Z S17c go_s17c s17c_c2 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T02:18:56Z S17c go_s17c s17c_c2 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:18:58Z S17c go_s17c s17c_c2 manifest before: manifest C:/kyty/s288/s17c/runs/s17c_c2/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:19:00Z S17c go_s17c s17c_c2 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T02:19:00Z S17c go_s17c s17c_c2 input state empty_f10: dir f10 absent;dir f19 present files 388 cache_files 387 pipelines_bin 3780051 bff7a2ddfedb4475b3064770e5387c95a9002162691f9fad869bf4a2b7e77c3a;dir replay absent;
+2026-10-06T02:19:00Z S17c go_s17c s17c_c2 installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T02:19:01Z S17c go_s17c s17c_c2 enter_scene start (form v, --timeout 480 --rec --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 )
+2026-10-06T02:25:07Z S17c go_s17c s17c_c2 enter_scene rc 0; guard watch: 2026-10-06T02:25:07Z watch end, user process seen: no
+2026-10-06T02:25:07Z S17c go_s17c s17c_c2 run: VERDICT: underwater_aerial_garden in 24.3 s - PASS (acceptance <= 90 s)
+2026-10-06T02:25:09Z S17c go_s17c s17c_c2 log_s17c_c2.txt sha256 c69ec139b029c4077ef09ac25baffd61b722e6f2be0fa1ee76be653d41b727bb
+2026-10-06T02:25:10Z S17c go_s17c s17c_c2 state after the run (before the return): dir f10 present files 393 cache_files 392 pipelines_bin 3840467 3550cc25f19d6da1fa5a6be0a8921d573087856172c4bdd3ecdf18c48da284e0;dir f19 present files 388 cache_files 387 pipelines_bin 3780051 bff7a2ddfedb4475b3064770e5387c95a9002162691f9fad869bf4a2b7e77c3a;dir replay present files 3 cache_files 0
+2026-10-06T02:25:11Z S17c go_s17c s17c_c2 state saved to state/s17c_c2: f10 replay  (54 MB)
+2026-10-06T02:25:12Z S17c go_s17c s17c_c2 installed binary returned from the pinned copy
+2026-10-06T02:25:13Z S17c go_s17c s17c_c2 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:25:18Z S17c go_s17c s17c_c2 manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_c2/manifest_run.tsv files 3714 bytes 1017895270 listsha 937521868720e1b87c7a6fa945361fe3721fa2e71a150bf1ea19b54cb6db4e3b; run vs before: manifest cmp DIFFER only-before 397 only-after 396
+2026-10-06T02:25:19Z S17c go_s17c s17c_c2 caches, saves and GLCache returned
+2026-10-06T02:25:22Z S17c go_s17c s17c_c2 manifest after: manifest C:/kyty/s288/s17c/runs/s17c_c2/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:25:22Z S17c go_s17c s17c_c2 lock released (rc 0)
+2026-10-06T02:26:19Z S17c post_s17c s17c_c2: read.txt 3a3cdbb97a39c015,   READING MEMBERS_PASS, glitch: one-frame glitches: 0
+2026-10-06T02:26:27Z S17c API before s17c_ca: HPP-631:blocked:run=None HPP-635:blocked:run=None
+2026-10-06T02:26:28Z S17c guard (item 534): GUARD CLEAN; block open, tags 1 of 6; tag s17c_ca recorded, 2 of 6 in the block
+2026-10-06T02:26:29Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_ca
+2026-10-06T02:26:47Z S17c go_s17c s17c_ca lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T02:26:48Z S17c go_s17c s17c_ca installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:26:52Z S17c go_s17c s17c_ca manifest before: manifest C:/kyty/s288/s17c/runs/s17c_ca/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:26:54Z S17c go_s17c s17c_ca caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T02:26:55Z S17c go_s17c s17c_ca input state empty_f10: dir f10 absent;dir f19 present files 388 cache_files 387 pipelines_bin 3780051 bff7a2ddfedb4475b3064770e5387c95a9002162691f9fad869bf4a2b7e77c3a;dir replay absent;
+2026-10-06T02:26:57Z S17c go_s17c s17c_ca installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T02:26:58Z S17c go_s17c s17c_ca enter_scene start (form n, --timeout 480 --hold 120, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_S_REPLAY_TEST=addr )
+2026-10-06T02:29:34Z S17c go_s17c s17c_ca enter_scene rc 0; guard watch: 2026-10-06T02:29:31Z watch end, user process seen: no
+2026-10-06T02:29:34Z S17c go_s17c s17c_ca run: VERDICT: underwater_aerial_garden in 20.9 s - PASS (acceptance <= 90 s)
+2026-10-06T02:29:35Z S17c go_s17c s17c_ca log_s17c_ca.txt sha256 3a850f11efc4f3c08379d7874fa89df313bf1cf1d5b6b4809c56ec9d64770c1c
+2026-10-06T02:29:35Z S17c go_s17c s17c_ca state after the run (before the return): dir f10 present files 388 cache_files 387 pipelines_bin 3780044 c1c671b003159cf4404f9cce01c542db31420f459c0c89f4351aea3b896b0277;dir f19 present files 388 cache_files 387 pipelines_bin 3780051 bff7a2ddfedb4475b3064770e5387c95a9002162691f9fad869bf4a2b7e77c3a;dir replay present files 3 cache_files 0
+2026-10-06T02:29:36Z S17c go_s17c s17c_ca state saved to state/s17c_ca: replay  (5 MB)
+2026-10-06T02:29:37Z S17c go_s17c s17c_ca installed binary returned from the pinned copy
+2026-10-06T02:29:38Z S17c go_s17c s17c_ca installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:29:43Z S17c go_s17c s17c_ca manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_ca/manifest_run.tsv files 3709 bytes 1017286852 listsha 5786cb38a6ece269d70fa8a1bca950101083d29b92275d2ae090155361c8f807; run vs before: manifest cmp DIFFER only-before 397 only-after 391
+2026-10-06T02:29:44Z S17c go_s17c s17c_ca caches, saves and GLCache returned
+2026-10-06T02:29:48Z S17c go_s17c s17c_ca manifest after: manifest C:/kyty/s288/s17c/runs/s17c_ca/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:29:48Z S17c go_s17c s17c_ca lock released (rc 0)
+2026-10-06T02:30:08Z S17c post_s17c s17c_ca: read.txt ecffe1c5a586570e,   READING MEMBERS_PASS, glitch: 
+2026-10-06T02:30:18Z S17c API before s17c_cc: HPP-631:blocked:run=None HPP-635:blocked:run=None
+2026-10-06T02:30:21Z S17c guard (item 534): GUARD CLEAN; block open, tags 2 of 6; tag s17c_cc recorded, 3 of 6 in the block
+2026-10-06T02:30:21Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_cc
+2026-10-06T02:30:35Z S17c go_s17c s17c_cc lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T02:30:35Z S17c go_s17c s17c_cc installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:30:38Z S17c go_s17c s17c_cc manifest before: manifest C:/kyty/s288/s17c/runs/s17c_cc/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:30:40Z S17c go_s17c s17c_cc caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T02:30:41Z S17c go_s17c s17c_cc input state empty_f10: dir f10 absent;dir f19 present files 388 cache_files 387 pipelines_bin 3780051 bff7a2ddfedb4475b3064770e5387c95a9002162691f9fad869bf4a2b7e77c3a;dir replay absent;
+2026-10-06T02:30:42Z S17c go_s17c s17c_cc installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T02:30:43Z S17c go_s17c s17c_cc enter_scene start (form n, --timeout 480 --hold 120, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_S_REPLAY_TEST=canon )
+2026-10-06T02:33:20Z S17c go_s17c s17c_cc enter_scene rc 0; guard watch: 2026-10-06T02:33:19Z watch end, user process seen: no
+2026-10-06T02:33:21Z S17c go_s17c s17c_cc run: VERDICT: underwater_aerial_garden in 20.8 s - PASS (acceptance <= 90 s)
+2026-10-06T02:33:22Z S17c go_s17c s17c_cc log_s17c_cc.txt sha256 76e793a02aad958f903a13f4fec77647b3c021b6f791fa755acefa3587719208
+2026-10-06T02:33:22Z S17c go_s17c s17c_cc state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 100ae2cc2aa31af1d3299547b44b02e4cc26ee215249c494ba9983f951d07a3c;dir f19 present files 388 cache_files 387 pipelines_bin 3780051 bff7a2ddfedb4475b3064770e5387c95a9002162691f9fad869bf4a2b7e77c3a;dir replay present files 3 cache_files 0
+2026-10-06T02:33:23Z S17c go_s17c s17c_cc state saved to state/s17c_cc: replay  (5 MB)
+2026-10-06T02:33:23Z S17c go_s17c s17c_cc installed binary returned from the pinned copy
+2026-10-06T02:33:24Z S17c go_s17c s17c_cc installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:33:29Z S17c go_s17c s17c_cc manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_cc/manifest_run.tsv files 3718 bytes 1018223860 listsha 3262bbc2f50a17629fcb46c7eb9e964e3d182005a10e0b9ae371f6ea2f5fcc67; run vs before: manifest cmp DIFFER only-before 397 only-after 400
+2026-10-06T02:33:31Z S17c go_s17c s17c_cc caches, saves and GLCache returned
+2026-10-06T02:33:35Z S17c go_s17c s17c_cc manifest after: manifest C:/kyty/s288/s17c/runs/s17c_cc/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:33:36Z S17c go_s17c s17c_cc lock released (rc 0)
+2026-10-06T02:33:55Z S17c post_s17c s17c_cc: read.txt 710a88d895259ab6,   READING MEMBERS_PASS, glitch: 
+2026-10-06T02:34:03Z S17c API before s17c_n0: HPP-631:blocked:run=None HPP-635:blocked:run=None
+2026-10-06T02:34:03Z S17c guard (item 534): GUARD CLEAN; block open, tags 3 of 6; tag s17c_n0 recorded, 4 of 6 in the block
+2026-10-06T02:34:04Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_n0
+2026-10-06T02:35:32Z S17c go_s17c s17c_n0 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T02:35:32Z S17c go_s17c s17c_n0 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:35:34Z S17c go_s17c s17c_n0 manifest before: manifest C:/kyty/s288/s17c/runs/s17c_n0/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:35:37Z S17c go_s17c s17c_n0 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T02:35:37Z S17c go_s17c s17c_n0 input state empty_f19: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay absent;
+2026-10-06T02:35:38Z S17c go_s17c s17c_n0 installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T02:35:39Z S17c go_s17c s17c_n0 enter_scene start (form v, --timeout 480 --rec --hold 330, KYTY_S_REPLAY=0 KYTY_FIX_F19=1 KYTY_AV_TRACE=1 )
+2026-10-06T02:41:46Z S17c go_s17c s17c_n0 enter_scene rc 0; guard watch: 2026-10-06T02:41:44Z watch end, user process seen: no
+2026-10-06T02:41:48Z S17c go_s17c s17c_n0 run: VERDICT: underwater_aerial_garden in 21.5 s - PASS (acceptance <= 90 s)
+2026-10-06T02:41:49Z S17c go_s17c s17c_n0 log_s17c_n0.txt sha256 ba2203124a2218c33fd944a4fc9ed6d4bb4b274ccc9c568f2c8a21a374d93d1c
+2026-10-06T02:41:50Z S17c go_s17c s17c_n0 state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 393 cache_files 392 pipelines_bin 3840474 50ca756725a39ba7568d884afb3c842a46767e5c84ea7b213175fe8ef074f919;dir replay absent;
+2026-10-06T02:41:51Z S17c go_s17c s17c_n0 state saved to state/s17c_n0: f19  (50 MB)
+2026-10-06T02:41:52Z S17c go_s17c s17c_n0 installed binary returned from the pinned copy
+2026-10-06T02:41:53Z S17c go_s17c s17c_n0 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:41:57Z S17c go_s17c s17c_n0 manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_n0/manifest_run.tsv files 3720 bytes 1014531075 listsha 29b81f9ce6dd15063ab7ffced077cd93894301f07d44515c0d069e464b1b138c; run vs before: manifest cmp DIFFER only-before 387 only-after 392
+2026-10-06T02:41:58Z S17c go_s17c s17c_n0 caches, saves and GLCache returned
+2026-10-06T02:42:01Z S17c go_s17c s17c_n0 manifest after: manifest C:/kyty/s288/s17c/runs/s17c_n0/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:42:02Z S17c go_s17c s17c_n0 lock released (rc 0)
+2026-10-06T02:43:03Z S17c post_s17c s17c_n0: read.txt ea68e9d115aefb0b,   READING MEMBERS_PASS, glitch: one-frame glitches: 0
+2026-10-06T02:43:11Z S17c API before s17c_r3: HPP-631:blocked:run=None HPP-635:blocked:run=None
+2026-10-06T02:43:13Z S17c guard (item 534): GUARD CLEAN; block open, tags 4 of 6; tag s17c_r3 recorded, 5 of 6 in the block
+2026-10-06T02:43:14Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_r3
+2026-10-06T02:43:30Z S17c go_s17c s17c_r3 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T02:43:31Z S17c go_s17c s17c_r3 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:43:32Z S17c go_s17c s17c_r3 manifest before: manifest C:/kyty/s288/s17c/runs/s17c_r3/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:43:35Z S17c go_s17c s17c_r3 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T02:43:35Z S17c go_s17c s17c_r3 input state cat_c2: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 7;file replay.6.bin 2171511 3d6032c1a4975e5c4928cfd90d163db2defe0bd638e9a1051aa
+2026-10-06T02:43:36Z S17c go_s17c s17c_r3 installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T02:43:36Z S17c go_s17c s17c_r3 enter_scene start (form p, --timeout 900 --until-prep, KYTY_S_REPLAY=3 KYTY_FIX_F19=1 KYTY_AV_TRACE=1 )
+2026-10-06T02:43:55Z S17c go_s17c s17c_r3 enter_scene rc 0; guard watch: 2026-10-06T02:43:54Z watch end, user process seen: no
+2026-10-06T02:43:56Z S17c go_s17c s17c_r3 run: VERDICT: preparation screen ended in 7.7 s (--until-prep)
+2026-10-06T02:43:57Z S17c go_s17c s17c_r3 log_s17c_r3.txt sha256 a451e7f0e8bb027322c9ab936f4191dcc3906e97080f0af1f65b120fa86b34c3
+2026-10-06T02:44:01Z S17c go_s17c s17c_r3 state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 393 cache_files 392 pipelines_bin 3840474 ae32fedae077e20aa5350fcf7ff712f6c3d4b43ccdf0f696c60c65c1d61e0567;dir replay present files 4 cache_files 0
+2026-10-06T02:44:02Z S17c go_s17c s17c_r3 state saved to state/s17c_r3: f19 replay  (54 MB)
+2026-10-06T02:44:03Z S17c go_s17c s17c_r3 installed binary returned from the pinned copy
+2026-10-06T02:44:03Z S17c go_s17c s17c_r3 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:44:06Z S17c go_s17c s17c_r3 manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_r3/manifest_run.tsv files 3724 bytes 1018949838 listsha e1d64bcfb95ec21ff01bd4468fb5a461e1b48eda416d33ec0f98531ea881cee5; run vs before: manifest cmp DIFFER only-before 389 only-after 398
+2026-10-06T02:44:07Z S17c go_s17c s17c_r3 caches, saves and GLCache returned
+2026-10-06T02:44:10Z S17c go_s17c s17c_r3 manifest after: manifest C:/kyty/s288/s17c/runs/s17c_r3/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:44:11Z S17c go_s17c s17c_r3 lock released (rc 0)
+2026-10-06T02:44:22Z S17c post_s17c s17c_r3: read.txt adca948c1b345209,   READING MEMBERS_FAIL, glitch: 
+2026-10-06T02:44:43Z S17c s17c_r3 read MEMBERS_FAIL (K4 rb_hit/live_perms 284/454 = 0.6256 < 0.90; share 420/420; rb_dead 170; rb_live_mismatch 0) - data, not a stop by the seal (only item 537 (zh) stops); API before s17c_rs: HPP-631:blocked:run=None HPP-635:blocked:run=None
+2026-10-06T02:44:44Z S17c guard (item 534): GUARD CLEAN; block open, tags 5 of 6; tag s17c_rs recorded, 6 of 6 in the block
+2026-10-06T02:44:44Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_rs
+2026-10-06T02:45:00Z S17c go_s17c s17c_rs lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T02:45:01Z S17c go_s17c s17c_rs installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:45:06Z S17c go_s17c s17c_rs manifest before: manifest C:/kyty/s288/s17c/runs/s17c_rs/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:45:07Z S17c go_s17c s17c_rs caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T02:45:08Z S17c go_s17c s17c_rs input state cat_c2: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 7;file replay.6.bin 2171511 3d6032c1a4975e5c4928cfd90d163db2defe0bd638e9a1051aa
+2026-10-06T02:45:08Z S17c go_s17c s17c_rs installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T02:45:08Z S17c go_s17c s17c_rs enter_scene start (form p, --timeout 900 --until-prep, KYTY_S_REPLAY=3 KYTY_FIX_F19=1 KYTY_AV_TRACE=1 KYTY_S_REPLAY_TEST=spec )
+2026-10-06T02:45:32Z S17c go_s17c s17c_rs enter_scene rc 0; guard watch: 2026-10-06T02:45:29Z watch end, user process seen: no
+2026-10-06T02:45:33Z S17c go_s17c s17c_rs run: VERDICT: preparation screen ended in 8.7 s (--until-prep)
+2026-10-06T02:45:33Z S17c go_s17c s17c_rs log_s17c_rs.txt sha256 be98d16719fc4bb141dad9a2b9d2f3a82e4a906ad5366939670f26b71951168d
+2026-10-06T02:45:34Z S17c go_s17c s17c_rs state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 393 cache_files 392 pipelines_bin 3840474 ae32fedae077e20aa5350fcf7ff712f6c3d4b43ccdf0f696c60c65c1d61e0567;dir replay present files 4 cache_files 0
+2026-10-06T02:45:34Z S17c go_s17c s17c_rs state saved to state/s17c_rs: f19 replay  (54 MB)
+2026-10-06T02:45:35Z S17c go_s17c s17c_rs installed binary returned from the pinned copy
+2026-10-06T02:45:35Z S17c go_s17c s17c_rs installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:45:37Z S17c go_s17c s17c_rs manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_rs/manifest_run.tsv files 3724 bytes 1018967595 listsha 47a9fe013e0eaf0776a0c8df9b327841d3054d6fdb6cf876afd2ed81ed9dfd51; run vs before: manifest cmp DIFFER only-before 389 only-after 398
+2026-10-06T02:45:38Z S17c go_s17c s17c_rs caches, saves and GLCache returned
+2026-10-06T02:45:41Z S17c go_s17c s17c_rs manifest after: manifest C:/kyty/s288/s17c/runs/s17c_rs/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:45:42Z S17c go_s17c s17c_rs lock released (rc 0)
+2026-10-06T02:45:53Z S17c post_s17c s17c_rs: read.txt aaaedc956fa94843,   READING MEMBERS_PASS, glitch: 
+2026-10-06T02:46:02Z S17c s17c_rs read MEMBERS_PASS (stand spec, rb_live_mismatch 1); block closed limit6 at 02:44:44Z; open-block check 1 -> 1791254762 CLEAN
+2026-10-06T02:47:34Z S17c diagnostics (outside the seal, not a member): the 170 rb_dead of s17c_r3 have the same file and SPIR-V XXH3 as a live permutation; 169 differ only in struct padding bytes of the specialization (no field differs); field-wise key (= operator== of ResourceSpecialization) gives r3 rb_hit 454/454 rb_dead 0 mismatch 0, rs mismatch 1 (diag/diag_k4c.out.txt); the sealed raw-bytes key is not changed - question to the lead in the report
+2026-10-06T02:56:15Z S17c open-block check 2 -> 1791255373 OPEN; API before s17c_e3: HPP-631:blocked:run=None HPP-635:blocked:run=None
+2026-10-06T02:56:20Z S17c guard (item 534): GUARD CLEAN; block open, tags 0 of 6; tag s17c_e3 recorded, 1 of 6 in the block
+2026-10-06T02:56:21Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_e3
+2026-10-06T02:56:39Z S17c go_s17c s17c_e3 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T02:56:39Z S17c go_s17c s17c_e3 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T02:56:41Z S17c go_s17c s17c_e3 manifest before: manifest C:/kyty/s288/s17c/runs/s17c_e3/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T02:56:44Z S17c go_s17c s17c_e3 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T02:56:45Z S17c go_s17c s17c_e3 input state rb_r3: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 393 cache_files 392 pipelines_bin 3840474 ae32fedae077e20aa5350fcf7ff712f6c3d4b43ccdf0f696c60c65c1d61e0567;dir replay present files 4 cache_files 0
+2026-10-06T02:56:46Z S17c go_s17c s17c_e3 installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T02:56:46Z S17c go_s17c s17c_e3 enter_scene start (form v, --timeout 480 --rec --hold 330, KYTY_S_REPLAY=3 KYTY_FIX_F19=1 KYTY_AV_TRACE=1 )
+2026-10-06T03:02:44Z S17c go_s17c s17c_e3 enter_scene rc 0; guard watch: 2026-10-06T03:02:43Z watch end, user process seen: no
+2026-10-06T03:02:45Z S17c go_s17c s17c_e3 run: VERDICT: underwater_aerial_garden in 14.9 s - PASS (acceptance <= 90 s)
+2026-10-06T03:02:46Z S17c go_s17c s17c_e3 log_s17c_e3.txt sha256 1729b02668cf07cbad02d9679e8ee133124157c7ecde22429c0f209bcddce521
+2026-10-06T03:02:50Z S17c go_s17c s17c_e3 state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 394 cache_files 393 pipelines_bin 3852105 7210e697a988908335d1055bb06c22d2b0a02fab6dc540d0e7bbe609e2bc6a61;dir replay present files 4 cache_files 0
+2026-10-06T03:02:50Z S17c go_s17c s17c_e3 installed binary returned from the pinned copy
+2026-10-06T03:02:50Z S17c go_s17c s17c_e3 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:02:52Z S17c go_s17c s17c_e3 manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_e3/manifest_run.tsv files 3725 bytes 1018972558 listsha e1eb29234c8fb9511309bd03566efe9600b7b24f1028c1e682334f30286d99fc; run vs before: manifest cmp DIFFER only-before 389 only-after 399
+2026-10-06T03:02:54Z S17c go_s17c s17c_e3 caches, saves and GLCache returned
+2026-10-06T03:02:56Z S17c go_s17c s17c_e3 manifest after: manifest C:/kyty/s288/s17c/runs/s17c_e3/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T03:02:56Z S17c go_s17c s17c_e3 lock released (rc 0)
+2026-10-06T03:03:55Z S17c post_s17c s17c_e3: read.txt 8b725bba74edb65c,   READING MEMBERS_PASS, glitch: one-frame glitches: 0
+2026-10-06T03:04:06Z S17c s17c_e3 read MEMBERS_PASS (K5: catalogue translations in game 0 vs null control 454, prep 0 ms, 10144 records 0 glitches, skipped draw 0); API before s17c_ew: HPP-631:blocked:run=None HPP-635:blocked:run=None
+2026-10-06T03:04:06Z S17c guard (item 534): GUARD CLEAN; block open, tags 1 of 6; tag s17c_ew recorded, 2 of 6 in the block
+2026-10-06T03:04:06Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_ew
+2026-10-06T03:04:24Z S17c go_s17c s17c_ew lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T03:04:24Z S17c go_s17c s17c_ew installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:04:26Z S17c go_s17c s17c_ew manifest before: manifest C:/kyty/s288/s17c/runs/s17c_ew/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T03:04:30Z S17c go_s17c s17c_ew caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T03:04:35Z S17c go_s17c s17c_ew input state rb_r3: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 393 cache_files 392 pipelines_bin 3840474 ae32fedae077e20aa5350fcf7ff712f6c3d4b43ccdf0f696c60c65c1d61e0567;dir replay present files 4 cache_files 0
+2026-10-06T03:04:35Z S17c go_s17c s17c_ew installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T03:04:35Z S17c go_s17c s17c_ew enter_scene start (form w, --timeout 600 --emu-arg=--vulkan-validation --emu-arg=true --hold 310, KYTY_S_REPLAY=3 KYTY_FIX_F19=1 VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000)
+2026-10-06T03:10:25Z S17c go_s17c s17c_ew enter_scene rc 0; guard watch: 2026-10-06T03:10:24Z watch end, user process seen: no
+2026-10-06T03:10:25Z S17c go_s17c s17c_ew run: VERDICT: underwater_aerial_garden in 27.5 s - PASS (acceptance <= 90 s)
+2026-10-06T03:10:26Z S17c go_s17c s17c_ew log_s17c_ew.txt sha256 4d222d86d1923deba65813c9b507c40e35a621b195d976a03de897eb0a582859
+2026-10-06T03:10:27Z S17c go_s17c s17c_ew state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 394 cache_files 393 pipelines_bin 3852105 5981d856cee5efde93f45be2d6a7e62d43e2ac9ed99c92a9290cf338f8f2bb40;dir replay present files 4 cache_files 0
+2026-10-06T03:10:28Z S17c go_s17c s17c_ew installed binary returned from the pinned copy
+2026-10-06T03:10:28Z S17c go_s17c s17c_ew installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:10:30Z S17c go_s17c s17c_ew manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_ew/manifest_run.tsv files 3725 bytes 1018972554 listsha 6be840b01cae250b644b955400ab7327ecbc3414baed221de6e02f9c392dbca4; run vs before: manifest cmp DIFFER only-before 389 only-after 399
+2026-10-06T03:10:32Z S17c go_s17c s17c_ew caches, saves and GLCache returned
+2026-10-06T03:10:33Z S17c go_s17c s17c_ew manifest after: manifest C:/kyty/s288/s17c/runs/s17c_ew/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T03:10:34Z S17c go_s17c s17c_ew lock released (rc 0)
+2026-10-06T03:10:55Z S17c post_s17c s17c_ew: read.txt 60aef5c74ebd6495,   READING MEMBERS_PASS, glitch: 
+2026-10-06T03:11:00Z S17c s17c_ew read   READING MEMBERS_PASS; API before s17c_ks: HPP-631:blocked:run=None HPP-635:blocked:run=None
+2026-10-06T03:11:01Z S17c guard (item 534): GUARD CLEAN; block open, tags 2 of 6; tag s17c_ks recorded, 3 of 6 in the block
+2026-10-06T03:11:01Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_ks
+2026-10-06T03:11:17Z S17c go_s17c s17c_ks lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T03:11:18Z S17c go_s17c s17c_ks installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:11:22Z S17c go_s17c s17c_ks manifest before: manifest C:/kyty/s288/s17c/runs/s17c_ks/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T03:11:25Z S17c go_s17c s17c_ks caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T03:11:26Z S17c go_s17c s17c_ks input state cat_c2: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 7;file replay.6.bin 2171511 3d6032c1a4975e5c4928cfd90d163db2defe0bd638e9a1051aa
+2026-10-06T03:11:26Z S17c go_s17c s17c_ks installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T03:11:27Z S17c go_s17c s17c_ks enter_scene start (form p, --timeout 900 --until-prep, KYTY_S_REPLAY=3 KYTY_FIX_F19=1 KYTY_AV_TRACE=1 KYTY_S_REPLAY_TEST=stop )
+2026-10-06T03:11:52Z S17c go_s17c s17c_ks enter_scene rc 1; guard watch: 2026-10-06T03:11:50Z watch end, user process seen: no
+2026-10-06T03:11:52Z S17c go_s17c s17c_ks run: VERDICT: no attempt reached underwater_aerial_garden
+2026-10-06T03:11:52Z S17c go_s17c s17c_ks log_s17c_ks.txt sha256 605c196d78a1041990c0b03fc9391e81ded4c04a6ced872c8dbe186931af64ab
+2026-10-06T03:11:53Z S17c go_s17c s17c_ks state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 393 cache_files 392 pipelines_bin 3840474 ae32fedae077e20aa5350fcf7ff712f6c3d4b43ccdf0f696c60c65c1d61e0567;dir replay present files 4 cache_files 0
+2026-10-06T03:11:54Z S17c go_s17c s17c_ks state saved to state/s17c_ks: f19 replay  (54 MB)
+2026-10-06T03:11:55Z S17c go_s17c s17c_ks installed binary returned from the pinned copy
+2026-10-06T03:11:56Z S17c go_s17c s17c_ks installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:12:00Z S17c go_s17c s17c_ks manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_ks/manifest_run.tsv files 3724 bytes 1018885745 listsha 5b2813a69ce83b34ff2ac6fff4183cdc9d3d4ef9ad915dc5af917577552ed141; run vs before: manifest cmp DIFFER only-before 388 only-after 397
+2026-10-06T03:12:01Z S17c go_s17c s17c_ks caches, saves and GLCache returned
+2026-10-06T03:12:04Z S17c go_s17c s17c_ks manifest after: manifest C:/kyty/s288/s17c/runs/s17c_ks/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T03:12:04Z S17c go_s17c s17c_ks lock released (rc 0)
+2026-10-06T03:12:17Z S17c post_s17c s17c_ks: read.txt 7787bf135be5a601,   READING MEMBERS_FAIL, glitch: 
+2026-10-06T03:12:42Z S17c s17c_ks read MEMBERS_FAIL (K6: stand stop applied processed=210 records=420 at log line 511246, no pipelines_bin=stopped line; rebuild completed prepared=420 pipelines_bin=written line 1215620; close stop requested line 1220095 after PipelinePrecache, joined wait_ms 126; exit code 0) - data, not a stop by the seal; API before s17c_kn: HPP-631:blocked:run=None HPP-635:blocked:run=None
+2026-10-06T03:12:42Z S17c guard (item 534): GUARD CLEAN; block open, tags 3 of 6; tag s17c_kn recorded, 4 of 6 in the block
+2026-10-06T03:12:43Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_kn
+2026-10-06T03:13:02Z S17c go_s17c s17c_kn lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T03:13:03Z S17c go_s17c s17c_kn installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:13:05Z S17c go_s17c s17c_kn manifest before: manifest C:/kyty/s288/s17c/runs/s17c_kn/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T03:13:07Z S17c go_s17c s17c_kn caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T03:13:08Z S17c go_s17c s17c_kn input state k_ks: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 393 cache_files 392 pipelines_bin 3840474 ae32fedae077e20aa5350fcf7ff712f6c3d4b43ccdf0f696c60c65c1d61e0567;dir replay present files 4 cache_files 0
+2026-10-06T03:13:09Z S17c go_s17c s17c_kn installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T03:13:09Z S17c go_s17c s17c_kn enter_scene start (form n, --timeout 480 --hold 60, KYTY_S_REPLAY=3 KYTY_FIX_F19=1 KYTY_AV_TRACE=1 )
+2026-10-06T03:14:38Z S17c go_s17c s17c_kn enter_scene rc 0; guard watch: 2026-10-06T03:14:38Z watch end, user process seen: no
+2026-10-06T03:14:38Z S17c go_s17c s17c_kn run: VERDICT: underwater_aerial_garden in 16.8 s - PASS (acceptance <= 90 s)
+2026-10-06T03:14:39Z S17c go_s17c s17c_kn log_s17c_kn.txt sha256 543bc1e9426fc7a6832af3edd480d96db71d07ed103d9ebe65904b33be07391f
+2026-10-06T03:14:40Z S17c go_s17c s17c_kn state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 393 cache_files 392 pipelines_bin 3840474 ae32fedae077e20aa5350fcf7ff712f6c3d4b43ccdf0f696c60c65c1d61e0567;dir replay present files 4 cache_files 0
+2026-10-06T03:14:40Z S17c go_s17c s17c_kn installed binary returned from the pinned copy
+2026-10-06T03:14:41Z S17c go_s17c s17c_kn installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:14:46Z S17c go_s17c s17c_kn manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_kn/manifest_run.tsv files 3724 bytes 1018949838 listsha 7192bd6a64b71759e1766cacf2bc131e56b0bc07924ba96e500c064c5fd95ffb; run vs before: manifest cmp DIFFER only-before 389 only-after 398
+2026-10-06T03:14:50Z S17c go_s17c s17c_kn caches, saves and GLCache returned
+2026-10-06T03:14:53Z S17c go_s17c s17c_kn manifest after: manifest C:/kyty/s288/s17c/runs/s17c_kn/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T03:14:53Z S17c go_s17c s17c_kn lock released (rc 0)
+2026-10-06T03:15:07Z S17c post_s17c s17c_kn: read.txt 1f698531c13ecd31,   READING MEMBERS_FAIL, glitch: 
+2026-10-06T03:15:08Z S17c s17c_kn read   READING MEMBERS_FAIL; API before s17c_kc: HPP-631:blocked:run=None HPP-635:blocked:run=None
+2026-10-06T03:15:09Z S17c guard (item 534): GUARD CLEAN; block open, tags 4 of 6; tag s17c_kc recorded, 5 of 6 in the block
+2026-10-06T03:15:09Z S17c launch_s17c detached call: bash C:/kyty/s288/s17c/go_s17c.sh s17c_kc
+2026-10-06T03:15:26Z S17c go_s17c s17c_kc lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T03:15:27Z S17c go_s17c s17c_kc installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:15:31Z S17c go_s17c s17c_kc manifest before: manifest C:/kyty/s288/s17c/runs/s17c_kc/manifest_before.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T03:15:33Z S17c go_s17c s17c_kc caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (227/176/5/569/ MB)
+2026-10-06T03:15:34Z S17c go_s17c s17c_kc input state cat_c2: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 7;file replay.6.bin 2171511 3d6032c1a4975e5c4928cfd90d163db2defe0bd638e9a1051aa
+2026-10-06T03:15:35Z S17c go_s17c s17c_kc installed the S17a4 copy for the tag: ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+2026-10-06T03:15:35Z S17c go_s17c s17c_kc enter_scene start (form n, --timeout 480 --hold 60, KYTY_S_REPLAY=3 KYTY_FIX_F19=1 KYTY_AV_TRACE=1 KYTY_S_REPLAY_TEST=corrupt )
+2026-10-06T03:17:06Z S17c go_s17c s17c_kc enter_scene rc 0; guard watch: 2026-10-06T03:17:05Z watch end, user process seen: no
+2026-10-06T03:17:06Z S17c go_s17c s17c_kc run: VERDICT: underwater_aerial_garden in 16.2 s - PASS (acceptance <= 90 s)
+2026-10-06T03:17:07Z S17c go_s17c s17c_kc log_s17c_kc.txt sha256 16d25c8b26cd8524fe9b38fcef5c1557a8afe592ab3243d9492eb5c2cafb8622
+2026-10-06T03:17:07Z S17c go_s17c s17c_kc state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 387 cache_files 386 pipelines_bin 3768420 e2d3cba6f45350224611d448ba22ac877c7cc13b8ac3b3811b9b5f43e3f4732f;dir replay present files 4 cache_files 0
+2026-10-06T03:17:08Z S17c go_s17c s17c_kc installed binary returned from the pinned copy
+2026-10-06T03:17:08Z S17c go_s17c s17c_kc installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:17:11Z S17c go_s17c s17c_kc manifest of the run state (before the return): manifest C:/kyty/s288/s17c/runs/s17c_kc/manifest_run.tsv files 3718 bytes 1018227446 listsha b1c2aca7faaf9438aab9ab6ae4ee3634c3414fe76611a738e60d5b32e5f5dca0; run vs before: manifest cmp DIFFER only-before 386 only-after 389
+2026-10-06T03:17:13Z S17c go_s17c s17c_kc caches, saves and GLCache returned
+2026-10-06T03:17:16Z S17c go_s17c s17c_kc manifest after: manifest C:/kyty/s288/s17c/runs/s17c_kc/manifest_after.tsv files 3715 bytes 1013831905 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9; cmp: manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+2026-10-06T03:17:16Z S17c go_s17c s17c_kc lock released (rc 0)
+2026-10-06T03:17:36Z S17c post_s17c s17c_kc: read.txt 620e597db0aaa1c1,   READING MEMBERS_PASS, glitch: 
+2026-10-06T03:17:36Z S17c s17c_kc read   READING MEMBERS_PASS; series of edition 3 ended (11 tags of 11, one attempt each, installed FS8 before = after, manifests EQUAL)
+2026-10-06T03:19:07Z S17c post_s17c s17c_v0: read.txt 4cc9b17720dcb935,   READING MEMBERS_PASS, glitch: one-frame glitches: 0
+2026-10-06T03:19:22Z S17c post_s17c s17c_w0: read.txt 93f6d25baf68c38e,   READING MEMBERS_PASS, glitch: 
+2026-10-06T03:19:22Z S17c carried K2(2) s17c_v0, s17c_w0 re-read by the edition 3 reader (post_s17c.sh; edition 2 readings kept as runs/<tag>/read_ed2.*):   READING MEMBERS_PASS /   READING MEMBERS_PASS
+2026-10-06T03:20:35Z S17c FACTS.md section '## S17c - edition 3 seal and series' appended; mirror to docs/track-s/s17c (13 readings, table, times, lock.log, diag, report_ed3.md)

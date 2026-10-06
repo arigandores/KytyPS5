@@ -1,0 +1,34 @@
+S17c reader tag s17c_w0 group K2(2)
+  log sha256 6f3ff544b202f6163248aa2e83cc0b6e37191ccacf0ec1842a45db010dafbd89 stdout sha256 20383f4e94c8a01a176ac8160301ed8c12904854152ad44ecd463af069055ec4
+  ADMISSION
+    YES             run record <tag>.json present, one attempt | attempts 1
+    YES             binary of the run = S17a2 2b5e2ce6 (json and installed_sha.txt) | 2b5e2ce677c557bb0dd28ccc114588aea5c4b6f56c10ab1450faadd81328d544 / 2b5e2ce677c557bb0dd28ccc114588aea5c4b6f56c10ab1450faadd81328d544
+    YES             version string KytyPS5-2026-09-15-6a2987a-2311-ga2fee0d9 in the binary copy | True
+    YES             revision texts of log / stdout name a2fee0d | texts 1, other []
+    YES             prereg sha256 = the seal file | f05aa9ce80a9b0eac9d9f684a6bb79935af8257d957ca2f5fa4c1fbd7b5826af / f05aa9ce80a9b0eac9d9f684a6bb79935af8257d957ca2f5fa4c1fbd7b5826af
+    YES             environment = the form of the tag (seal section 3; KYTY_SHADER_PREPARE absent - item 536 (v) N1) | KYTY keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'KYTY_S_REPLAY']
+    YES             command line --vulkan-validation (last) = true | true
+    YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0
+    YES             input state name = installed | installed
+    YES             input state installed: no replay folder before the tag | {'present': False}
+    YES             emulator log present | 6f3ff544b202f6163248aa2e83cc0b6e37191ccacf0ec1842a45db010dafbd89
+  FORM
+    YES             installed binary before = after, FS6 or FS8 | 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2 / 9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2
+    YES             manifest of the caches after the return EQUAL | manifest cmp EQUAL files 3327 listsha 7ac8fdbc90f6dc7f731fe22e9cc6a31ef969c17133f561deedd439d1ec805811
+  MEMBERS
+    YES             K2(2) entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 353204
+    YES             K2(2) the process lived to the end of the hold (310 s) | outcome ok hold_exit None hold_s 310.2
+    YES             K2(2) shown hold after the first scene frame >= 300 s | 325.0 s
+    YES             K2(2) W 0 [Vulkan][E] | 0
+    YES             K2(2) W positive control of the layer: [Vulkan][W] > 0 and DualSrcBlend: supported=1 enabled=1 before the first GuestOut | W 922685, dual [(78, 1, 1)], first GuestOut 11900
+  REPORT
+    window lines: {'lost keyboard focus': 1}
+    death markers log / stdout: 0 / 0 []
+    skipped draw lines: 2024
+    translation cache directory lines: ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+    exit: outcome ok detail None hold_exit None hold_s 310.2 close_rc 0 close_killed False close_s 3.9
+    preparation screen (startup wait finished): 0 ms at line 3804
+    frames >= 1 s after the first scene frame: 0
+    ShaderReplay: lines (log / stdout): 0 / 0
+    limit lines of the layer: 0
+  READING MEMBERS_PASS

@@ -1,0 +1,53 @@
+S17c reader tag s17c_r3 group K4
+  log sha256 a451e7f0e8bb027322c9ab936f4191dcc3906e97080f0af1f65b120fa86b34c3 stdout sha256 cb6d3e39a2a4093a07241e14eb442b7bd90ad7dd3f0092109e0775d9c13816c8
+  ADMISSION
+    YES             run record <tag>.json present, one attempt | attempts 1
+    YES             binary of the run = S17a4 ed2686da (json and installed_sha.txt) | ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b / ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
+    YES             version string KytyPS5-2026-09-15-6a2987a-2336-g9238a182 in the binary copy | True
+    YES             revision texts of log / stdout name 9238a18 | texts 1, other []
+    YES             prereg sha256 = the seal file (s17c_seal.md) | e4e4075602415fa59016807e19c8d6c04669ddf56d4595668cc3beecbaa51c2b / e4e4075602415fa59016807e19c8d6c04669ddf56d4595668cc3beecbaa51c2b
+    YES             environment = the form of the tag (seal section 3; KYTY_SHADER_PREPARE absent - item 536 (v) N1) | KYTY keys ['KYTY_AV_TRACE', 'KYTY_FIX_F19', 'KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'KYTY_S_REPLAY']
+    YES             command line --vulkan-validation (last) = false | false
+    YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0
+    YES             input state name = cat_c2 | cat_c2
+    YES             input state cat_c2: replay = state/s17c_c2/replay byte for byte | files 3 / saved 3
+    YES             input state cat_c2: variant_fixb26_fixb1b_fixf10_fixf19 absent (empty variant folder of the rebuild signature) | {'present': False}
+    YES             emulator log present | a451e7f0e8bb027322c9ab936f4191dcc3906e97080f0af1f65b120fa86b34c3
+  FORM
+    YES             installed binary before = after, FS8 | 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b / 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+    YES             manifest of the caches after the return EQUAL | manifest cmp EQUAL files 3715 listsha 0bcf0802569826e17484df691734fa65ca2ef6e112084c0ca638c26e4e65a6c9
+  MEMBERS
+    YES             K4 mode line mode=3 compat=ok generation = replay.cur of s17c_c2 | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '7', 'corrupt': '0', 'sources': '392', 'specs': '454', 'pipes': '420', 'test': 'none'} / c2 7
+    YES             K4 a rebuild line and no rebuild skipped line | rebuild 1 skipped []
+    YES             K4 0 death markers on the rebuild tag (item 531 (d)(4)) | []
+    YES             K4 the process reached the end of the preparation screen (--until-prep outcome prep) | prep
+    YES             K4 pipelines_bin=written | written
+    YES             K4 identity prepared + rejected + pending = records | 420 + 0 + 0 = 420
+    YES             K4 partition of the reasons: sum rej_* (rej_ref included, item 531 (g)) = rejected | [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] = 0
+    YES             K4 share prepared / (records + pipes_waiting of s17c_c2) >= 0.90 (item 531 (v)(3)) | share 1.0 = 420 / (420 + 0)
+    YES             K4 comparison self-checks: every file readable, every manifest row found with its start and XXH3, signatures = KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19 | live_bad 0 rb_bad 0 manifest_bad 0 bad_lines 0 manifest_sig KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19 live_sigs ['KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19'] rb_sigs ['KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19']
+    NO              K4 rb_hit / live_perms >= 0.90 (item 532 (zh)) | 284 / 454 = 0.6256
+    YES             K4 rb_live_mismatch = 0 on rb_hit | 0
+  REPORT
+    window lines: {}
+    death markers log / stdout: 0 / 0 []
+    skipped draw lines: 0
+    translation cache directory lines: ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+    exit: outcome prep detail None hold_exit None hold_s None close_rc 0 close_killed False close_s 3.5
+    preparation screen (startup wait finished): 0 ms at line 1220097
+    pending (0 after a complete rebuild, S16a section 7): 0
+    rej_ref (> 0 = code defect, read in S17d, item 531 (g)): 0
+    records vs catalogue pipes of s17c_c2: 420 / 420
+    perms_new: 454
+    perms_cached: 266
+    rb_push_moved: 0
+    rb_spec_changed: 33
+    groups_same_pc: 0
+    group_sources: 392
+    translate_ms: 5091
+    wall_ms: 5884
+    rebuild-src / rebuild-spec: {'records': '392', 'prepared': '392', 'rejected': '0', 'rej_src': '0', 'rej_key': '0', 'rej_write': '0'} / {'records': '454', 'prepared': '454', 'rejected': '0', 'rej_shape': '0'}
+    hits lines (the counter of this run, item 524 (z)): [{'rb_used': '0', 'rb_marked': '454', 'cap_skip': '0', 'at': 'save'}]
+    new permutations after the preparation line: catalogue programs / all (input of K5): 0 / 0
+    live_perms / rebuilt / rb_hit / rb_dead / rb_live_mismatch: 454 / 454 / 284 / 170 / 0
+  READING MEMBERS_FAIL

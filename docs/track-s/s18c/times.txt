@@ -1,0 +1,675 @@
+2026-10-06T07:18:54Z S18c HPP-644 start: folder s18c, helper copies from s17c2 (procload idle142 launch_run manifest_fs4c run_safety99 sheet142 r_addr tc_s17c state_s17c gates_default); no lock, no STOP
+2026-10-06T07:24:57Z S18c: s18c_read.py, go_s18c.sh, mk_s18c.py placed; mk_s18c.py derived enter_scene.py guard_s18c.py launch/wait/post/aside; bash -n and parse ok
+2026-10-06T07:37:39Z S18c API check before mutlib (general rule 30): HPP-646 F20j3 in_progress (Emu Engineer code, not a runs link), HPP-647/648/649 blocked, no runs link of another track with a series; forecast 118 mutants x 30 s / 12 x 1.3 = 384 s + control; counted full mutlib v4.1 --control --no-memo --workers 12 started
+2026-10-06T07:42:13Z S18c mutlib run 1 STOPPED by the executor at [40/121] (started 07:38Z): under 12 workers the suite exceeded the mutlib job limit of 120 s - CONTROL_comment_after_docstring, CONTROL_pass_end_of_main, CONTROL_module_pass_at_end and mutants TIMEOUT (unresolved); controls not resolved => not a counted run; processes 24424 and its 12 workers stopped by pid; next: lighter fixtures (FrameTrace rows only where the hold is read), --timeout 600, then one counted full run
+2026-10-06T07:45:10Z S18c fixtures lightened (copy only the tags the reading touches): test_s18c_read.py 282 ALL OK in 5.6 s; forecast 118 x 5.6 / 12 x 1.3 = 72 s; API: no runs link of another track in a series (HPP-648 blocked); counted full mutlib v4.1 --control --no-memo --workers 12 --timeout 300 started
+2026-10-06T07:46:50Z S18c counted mutlib finished rc 1: SURVIVORS: ['acc_ondisk_gen'] (117 of 118 selected mutants killed; 118 defined in the mutant script)
+2026-10-06T07:47:15Z S18c mutlib run 2 (full, 98.9 s): 117/118 killed, controls 3/3, survivor acc_ondisk_gen (no fixture with a readable replay.cur file != gen); fixture added (suite only, reader unchanged), test_s18c_read.py 283 ALL OK; run 3 = full run on the final text
+2026-10-06T07:49:01Z S18c mutlib run 3 (counted, final text) rc 0: ALL KILLED (118 of 118 selected mutants killed; 118 defined in the mutant script) 
+2026-10-06T07:50:25Z S18c seal committed KytyPS5 4d755301 at 07:50:17Z (sha256 64eada1c3c2ab55c412ceb8bc4eccd0d9882bdf5f303a0cc998423569c57e712, checkseal SEAL: PASS 28 files); no tag before it
+2026-10-06T08:00:45Z S18c API before s18_c01: HPP-646 done run=-; HPP-647 in_review run=bfcd311f; HPP-648 blocked run=-; HPP-649 blocked run=-;  no P/F runs link in a series (F20l2 HPP-648 blocked; P track closed); lock: none
+2026-10-06T08:00:49Z S18c guard (item 534): GUARD CLEAN; block open, tags 0 of 6; tag s18_c01 recorded, 1 of 6 in the block
+2026-10-06T08:00:49Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c01
+2026-10-06T08:01:05Z S18c go_s18c s18_c01 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T08:01:06Z S18c go_s18c s18_c01 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:01:10Z S18c go_s18c s18_c01 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c01/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:01:13Z S18c go_s18c s18_c01 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T08:01:15Z S18c go_s18c s18_c01 input state cap0: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay absent;; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c01/mf_in.tsv files 729 bytes 133838486 listsha a1fddbf8306977baa7dde8753f40fd4ef21b71884f68124c669202fde94dbe77
+2026-10-06T08:01:16Z S18c go_s18c s18_c01 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T08:01:16Z S18c go_s18c s18_c01 enter_scene start (level title_controller_ship, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T08:07:19Z S18c go_s18c s18_c01 enter_scene rc 0; guard watch: 2026-10-06T08:07:18Z watch end, user process seen: no
+2026-10-06T08:07:21Z S18c go_s18c s18_c01 run: VERDICT: title_controller_ship in 19.0 s - PASS (acceptance <= 90 s)
+2026-10-06T08:07:22Z S18c go_s18c s18_c01 log_s18_c01.txt sha256 9311299faf1aa2262b26b02c44d02f193f686d31613d43604817ab7e21b0ac1c
+2026-10-06T08:07:23Z S18c go_s18c s18_c01 state after the run (before the return): dir f10 present files 129 cache_files 128 pipelines_bin 614697 4bef8295d017ddc90226b718a2337f5565c81f220495543223d3367a05a693d0;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0
+2026-10-06T08:07:24Z S18c go_s18c s18_c01 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c01/mf_out.tsv files 731 bytes 134828711 listsha 3e8797df1fd6101d872675899e90adf93b7ec887480655f0ceab683a0b40e639
+2026-10-06T08:07:25Z S18c go_s18c s18_c01 state saved to state/s18_c01: replay  (1 MB)
+2026-10-06T08:07:27Z S18c go_s18c s18_c01 installed binary returned from the pinned copy
+2026-10-06T08:07:27Z S18c go_s18c s18_c01 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:07:30Z S18c go_s18c s18_c01 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c01/manifest_run.tsv files 4520 bytes 1213348777 listsha dadf168abe0172f95f6dd859436a317ed6c45497700334fb65bb76038c2d8b98; run vs before: manifest cmp DIFFER only-before 397 only-after 132
+2026-10-06T08:07:30Z S18c go_s18c s18_c01 caches, saves and GLCache returned
+2026-10-06T08:07:33Z S18c go_s18c s18_c01 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c01/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:07:35Z S18c go_s18c s18_c01 lock released (rc 0)
+2026-10-06T08:07:52Z S18c post_s18c s18_c01: read.txt c354094cc21f82e4,   READING MEMBERS_PASS, glitch: 
+2026-10-06T08:09:41Z S18c resume after the failed run 8485e764 (terminal access failure 08:08:00Z): s18_c01 complete (rc=0, lock released 08:07:35Z, post read MEMBERS_PASS); API before s18_c02: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 in_progress run=f91059d8 (F20j4 Emu Engineer code, not a runs link); no P/F runs link in a series; lock: none
+2026-10-06T08:09:41Z S18c guard (item 534): GUARD CLEAN; block open, tags 1 of 6; tag s18_c02 recorded, 2 of 6 in the block
+2026-10-06T08:09:42Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c02
+2026-10-06T08:10:03Z S18c go_s18c s18_c02 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T08:10:03Z S18c go_s18c s18_c02 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:10:06Z S18c go_s18c s18_c02 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c02/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:10:10Z S18c go_s18c s18_c02 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T08:10:11Z S18c go_s18c s18_c02 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 2;file replay.1.bin 381203 c0338518f30ec5d5ca45b99342149d6d75e0b14a8af2c44010c; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c02/mf_in.tsv files 731 bytes 134828711 listsha 3e8797df1fd6101d872675899e90adf93b7ec887480655f0ceab683a0b40e639
+2026-10-06T08:10:13Z S18c go_s18c s18_c02 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T08:10:14Z S18c go_s18c s18_c02 enter_scene start (level intro_next, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T08:16:17Z S18c go_s18c s18_c02 enter_scene rc 0; guard watch: 2026-10-06T08:16:14Z watch end, user process seen: no
+2026-10-06T08:16:17Z S18c go_s18c s18_c02 run: VERDICT: intro_next in 17.1 s - PASS (acceptance <= 90 s)
+2026-10-06T08:16:19Z S18c go_s18c s18_c02 log_s18_c02.txt sha256 1a7149423a4dbbdd9d8e9dbdeca862c94bee22a6c15b93b332cebf0aa076a61c
+2026-10-06T08:16:20Z S18c go_s18c s18_c02 state after the run (before the return): dir f10 present files 315 cache_files 314 pipelines_bin 2963427 df10bffe5bb3fe45bc571a2ef94992b136697b8e32ecbfa6089a55349f157735;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T08:16:21Z S18c go_s18c s18_c02 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c02/mf_out.tsv files 731 bytes 137955905 listsha 93fc150ccfaea36d19c4d723eb3997294d65ca49a2989b683f8557cdf635fa59
+2026-10-06T08:16:23Z S18c go_s18c s18_c02 state saved to state/s18_c02: replay  (4 MB)
+2026-10-06T08:16:24Z S18c go_s18c s18_c02 installed binary returned from the pinned copy
+2026-10-06T08:16:25Z S18c go_s18c s18_c02 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:16:29Z S18c go_s18c s18_c02 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c02/manifest_run.tsv files 4706 bytes 1250722180 listsha 5abf2f5f9dcb039e3ca00ce6d4554ebc219caf6817ec5191b7b884fcee21da1e; run vs before: manifest cmp DIFFER only-before 399 only-after 320
+2026-10-06T08:16:30Z S18c go_s18c s18_c02 caches, saves and GLCache returned
+2026-10-06T08:16:37Z S18c go_s18c s18_c02 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c02/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:16:37Z S18c go_s18c s18_c02 lock released (rc 0)
+2026-10-06T08:17:02Z S18c post_s18c s18_c02: read.txt 8b25d0fbd413d0a5,   READING MEMBERS_PASS, glitch: 
+2026-10-06T08:17:19Z S18c API before s18_c03: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 in_progress run=f91059d8; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T08:17:19Z S18c guard (item 534): GUARD CLEAN; block open, tags 2 of 6; tag s18_c03 recorded, 3 of 6 in the block
+2026-10-06T08:17:19Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c03
+2026-10-06T08:17:35Z S18c go_s18c s18_c03 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T08:17:36Z S18c go_s18c s18_c03 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:17:40Z S18c go_s18c s18_c03 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c03/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:17:44Z S18c go_s18c s18_c03 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T08:17:46Z S18c go_s18c s18_c03 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 7;file replay.6.bin 2043438 b9d477903212cc318a6286e186e7084174d2e71fe3f8ac8dd2; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c03/mf_in.tsv files 731 bytes 137955905 listsha 93fc150ccfaea36d19c4d723eb3997294d65ca49a2989b683f8557cdf635fa59
+2026-10-06T08:17:47Z S18c go_s18c s18_c03 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T08:17:47Z S18c go_s18c s18_c03 enter_scene start (level worldmap, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T08:23:46Z S18c go_s18c s18_c03 enter_scene rc 0; guard watch: 2026-10-06T08:23:46Z watch end, user process seen: no
+2026-10-06T08:23:46Z S18c go_s18c s18_c03 run: VERDICT: worldmap in 16.2 s - PASS (acceptance <= 90 s)
+2026-10-06T08:23:48Z S18c go_s18c s18_c03 log_s18_c03.txt sha256 29e74dbf2f2647d9c39e230881d4b3e9d9cfb658f56c572bbfcd29740d9ca108
+2026-10-06T08:23:50Z S18c go_s18c s18_c03 state after the run (before the return): dir f10 present files 171 cache_files 170 pipelines_bin 1202706 238308df33b6ef6c267661706a4637c5951dc5a5ed27007f30ec6fde846e177a;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T08:23:50Z S18c go_s18c s18_c03 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c03/mf_out.tsv files 731 bytes 138133635 listsha 18c5821ff53223d7c3bec2b5e63e89c2ac2ef7435e65dce4def4eaa3df91cd51
+2026-10-06T08:23:50Z S18c go_s18c s18_c03 state saved to state/s18_c03: replay  (5 MB)
+2026-10-06T08:23:51Z S18c go_s18c s18_c03 installed binary returned from the pinned copy
+2026-10-06T08:23:53Z S18c go_s18c s18_c03 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:23:59Z S18c go_s18c s18_c03 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c03/manifest_run.tsv files 4562 bytes 1221699894 listsha a9b3547630a131a544f5cda337979266a32d8afb8bb5b6e7b43d982172059870; run vs before: manifest cmp DIFFER only-before 399 only-after 176
+2026-10-06T08:24:01Z S18c go_s18c s18_c03 caches, saves and GLCache returned
+2026-10-06T08:24:06Z S18c go_s18c s18_c03 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c03/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:24:06Z S18c go_s18c s18_c03 lock released (rc 0)
+2026-10-06T08:24:34Z S18c post_s18c s18_c03: read.txt 96edeb90e5933930,   READING MEMBERS_PASS, glitch: 
+2026-10-06T08:24:44Z S18c API before s18_c04: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 in_progress run=f91059d8; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T08:24:44Z S18c guard (item 534): GUARD CLEAN; block open, tags 3 of 6; tag s18_c04 recorded, 4 of 6 in the block
+2026-10-06T08:24:45Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c04
+2026-10-06T08:25:02Z S18c go_s18c s18_c04 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T08:25:04Z S18c go_s18c s18_c04 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:25:07Z S18c go_s18c s18_c04 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c04/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:25:10Z S18c go_s18c s18_c04 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T08:25:13Z S18c go_s18c s18_c04 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 8;file replay.7.bin 2073979 15c75275551b97a0af5b05dc6ed68b0ce2f55ba3ce4dea6dd5; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c04/mf_in.tsv files 731 bytes 138133635 listsha 18c5821ff53223d7c3bec2b5e63e89c2ac2ef7435e65dce4def4eaa3df91cd51
+2026-10-06T08:25:16Z S18c go_s18c s18_c04 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T08:25:16Z S18c go_s18c s18_c04 enter_scene start (level ps_logo, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T08:31:33Z S18c go_s18c s18_c04 enter_scene rc 0; guard watch: 2026-10-06T08:31:30Z watch end, user process seen: no
+2026-10-06T08:31:39Z S18c go_s18c s18_c04 run: VERDICT: ps_logo in 28.8 s - PASS (acceptance <= 90 s)
+2026-10-06T08:31:40Z S18c go_s18c s18_c04 log_s18_c04.txt sha256 82072660af072432823b9cf7cc3332534eca908a29b592f2cf2c6b781b6cfd53
+2026-10-06T08:31:41Z S18c go_s18c s18_c04 state after the run (before the return): dir f10 present files 173 cache_files 172 pipelines_bin 1249350 c7ad88dcee75f4c9e2ed01fe6ca3bd737a1b22df2b846ff2e5d0e3dc56b9f96b;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T08:31:42Z S18c go_s18c s18_c04 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c04/mf_out.tsv files 731 bytes 138335317 listsha 65f568ad401c5936bbc3b4c1ce553eb61d94b259f191b7cd7aedb073073596ab
+2026-10-06T08:31:43Z S18c go_s18c s18_c04 state saved to state/s18_c04: replay  (5 MB)
+2026-10-06T08:31:45Z S18c go_s18c s18_c04 installed binary returned from the pinned copy
+2026-10-06T08:31:47Z S18c go_s18c s18_c04 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:31:59Z S18c go_s18c s18_c04 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c04/manifest_run.tsv files 4564 bytes 1222016679 listsha 5a02b3804b612a35529510c89c3ae2e9ac583f8947dcdece3233bdd168b75936; run vs before: manifest cmp DIFFER only-before 399 only-after 178
+2026-10-06T08:32:01Z S18c go_s18c s18_c04 caches, saves and GLCache returned
+2026-10-06T08:32:09Z S18c go_s18c s18_c04 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c04/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:32:10Z S18c go_s18c s18_c04 lock released (rc 0)
+2026-10-06T08:32:42Z S18c post_s18c s18_c04: read.txt 87e4b2990ecc7280,   READING MEMBERS_PASS, glitch: 
+2026-10-06T08:32:58Z S18c API before s18_c05: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 in_progress run=f91059d8; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T08:33:02Z S18c guard (item 534): GUARD CLEAN; block open, tags 4 of 6; tag s18_c05 recorded, 5 of 6 in the block
+2026-10-06T08:33:02Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c05
+2026-10-06T08:34:33Z S18c go_s18c s18_c05 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T08:34:33Z S18c go_s18c s18_c05 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:34:37Z S18c go_s18c s18_c05 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c05/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:34:43Z S18c go_s18c s18_c05 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T08:34:46Z S18c go_s18c s18_c05 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 10;file replay.10.bin 2251282 4bf4ece60a876238f1110f70eff279d9aeeb9fd15ec5395a; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c05/mf_in.tsv files 731 bytes 138335317 listsha 65f568ad401c5936bbc3b4c1ce553eb61d94b259f191b7cd7aedb073073596ab
+2026-10-06T08:34:49Z S18c go_s18c s18_c05 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T08:34:49Z S18c go_s18c s18_c05 enter_scene start (level hub_crashsite, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T08:40:57Z S18c go_s18c s18_c05 enter_scene rc 0; guard watch: 2026-10-06T08:40:56Z watch end, user process seen: no
+2026-10-06T08:40:57Z S18c go_s18c s18_c05 run: VERDICT: hub_crashsite in 23.5 s - PASS (acceptance <= 90 s)
+2026-10-06T08:40:58Z S18c go_s18c s18_c05 log_s18_c05.txt sha256 3ee8305db2f29a8126ced4681d9b0e60687275017804752e9ca2c5efbae2e27c
+2026-10-06T08:41:00Z S18c go_s18c s18_c05 state after the run (before the return): dir f10 present files 331 cache_files 330 pipelines_bin 3123356 332e58604c66432e0baa2984c953c8a8f1d33bc81abfbcf94139245be361afdd;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T08:41:02Z S18c go_s18c s18_c05 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c05/mf_out.tsv files 731 bytes 139592373 listsha 1ba3c94ab59a3eba1df318d7872de2b1191ddf53268f6c90981370605e8535cc
+2026-10-06T08:41:02Z S18c go_s18c s18_c05 state saved to state/s18_c05: replay  (6 MB)
+2026-10-06T08:41:03Z S18c go_s18c s18_c05 installed binary returned from the pinned copy
+2026-10-06T08:41:03Z S18c go_s18c s18_c05 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:41:07Z S18c go_s18c s18_c05 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c05/manifest_run.tsv files 4722 bytes 1245147405 listsha 1436eb31aa10fba8a66a766577d2b081a382b1be65127e4a17cafa5219c49026; run vs before: manifest cmp DIFFER only-before 400 only-after 337
+2026-10-06T08:41:10Z S18c go_s18c s18_c05 caches, saves and GLCache returned
+2026-10-06T08:41:15Z S18c go_s18c s18_c05 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c05/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:41:15Z S18c go_s18c s18_c05 lock released (rc 0)
+2026-10-06T08:41:40Z S18c post_s18c s18_c05: read.txt 14882d0d01ef8342,   READING MEMBERS_PASS, glitch: 
+2026-10-06T08:41:51Z S18c API before s18_c06: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 in_progress run=f91059d8; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T08:41:51Z S18c guard (item 534): GUARD CLEAN; block open, tags 5 of 6; tag s18_c06 recorded, 6 of 6 in the block
+2026-10-06T08:41:52Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c06
+2026-10-06T08:42:10Z S18c go_s18c s18_c06 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T08:42:11Z S18c go_s18c s18_c06 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:42:13Z S18c go_s18c s18_c06 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c06/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:42:17Z S18c go_s18c s18_c06 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T08:42:20Z S18c go_s18c s18_c06 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 13;file replay.12.bin 2866443 465a6ebb93b018b44a67df2d8efc223271fc5c689e2847d4; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c06/mf_in.tsv files 731 bytes 139592373 listsha 1ba3c94ab59a3eba1df318d7872de2b1191ddf53268f6c90981370605e8535cc
+2026-10-06T08:42:21Z S18c go_s18c s18_c06 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T08:42:21Z S18c go_s18c s18_c06 enter_scene start (level underwater_aerial_garden, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T08:48:34Z S18c go_s18c s18_c06 enter_scene rc 0; guard watch: 2026-10-06T08:48:32Z watch end, user process seen: no
+2026-10-06T08:48:35Z S18c go_s18c s18_c06 run: VERDICT: underwater_aerial_garden in 24.6 s - PASS (acceptance <= 90 s)
+2026-10-06T08:48:36Z S18c go_s18c s18_c06 log_s18_c06.txt sha256 51b4d75245bf04aebe8e20df69b5ed324627e0a80b82a7d79286549f081a07d8
+2026-10-06T08:48:37Z S18c go_s18c s18_c06 state after the run (before the return): dir f10 present files 388 cache_files 387 pipelines_bin 3780044 71b531da4019a8306c0d804adbe1d5b566e9fe5eb137d5e9977626134268d65d;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T08:48:40Z S18c go_s18c s18_c06 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c06/mf_out.tsv files 731 bytes 141170488 listsha b6d43ffb155905ad964aa7181c938c4076fe64bf0c778d579b4d85185cbf8fe2
+2026-10-06T08:48:40Z S18c go_s18c s18_c06 state saved to state/s18_c06: replay  (7 MB)
+2026-10-06T08:48:41Z S18c go_s18c s18_c06 installed binary returned from the pinned copy
+2026-10-06T08:48:43Z S18c go_s18c s18_c06 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T08:48:51Z S18c go_s18c s18_c06 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c06/manifest_run.tsv files 4779 bytes 1252961103 listsha 4dd84c0360ede21991e1f3d25ebd691cfaf28540c79f477f69195a3d6845a9ee; run vs before: manifest cmp DIFFER only-before 397 only-after 391
+2026-10-06T08:48:55Z S18c go_s18c s18_c06 caches, saves and GLCache returned
+2026-10-06T08:49:02Z S18c go_s18c s18_c06 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c06/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T08:49:02Z S18c go_s18c s18_c06 lock released (rc 0)
+2026-10-06T08:49:28Z S18c post_s18c s18_c06: read.txt 603eaa0c5a2b3dae,   READING MEMBERS_PASS, glitch: 
+2026-10-06T08:49:33Z S18c guard (item 534) block 2 first check: GUARD CLEAN; block PENDING
+2026-10-06T09:00:12Z S18c guard (item 534) block 2 second check: GUARD CLEAN; block OPEN
+2026-10-06T09:00:19Z S18c API before s18_c07: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 in_progress run=f91059d8; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T09:00:20Z S18c guard (item 534): GUARD CLEAN; block open, tags 0 of 6; tag s18_c07 recorded, 1 of 6 in the block
+2026-10-06T09:00:20Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c07
+2026-10-06T09:01:48Z S18c go_s18c s18_c07 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T09:01:48Z S18c go_s18c s18_c07 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:01:51Z S18c go_s18c s18_c07 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c07/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:01:55Z S18c go_s18c s18_c07 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T09:01:56Z S18c go_s18c s18_c07 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 18;file replay.17.bin 3665131 ce766516bb9e724bf98f93d8e11ed4ab9084d4302a679dc5; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c07/mf_in.tsv files 731 bytes 141170488 listsha b6d43ffb155905ad964aa7181c938c4076fe64bf0c778d579b4d85185cbf8fe2
+2026-10-06T09:01:57Z S18c go_s18c s18_c07 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T09:02:00Z S18c go_s18c s18_c07 enter_scene start (level penguin_atlantis, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T09:08:06Z S18c go_s18c s18_c07 enter_scene rc 0; guard watch: 2026-10-06T09:08:05Z watch end, user process seen: no
+2026-10-06T09:08:07Z S18c go_s18c s18_c07 run: VERDICT: penguin_atlantis in 23.1 s - PASS (acceptance <= 90 s)
+2026-10-06T09:08:09Z S18c go_s18c s18_c07 log_s18_c07.txt sha256 13009cb5316b75a4ebdcc0caf41a824492751e15109759a996cffb452c3348b6
+2026-10-06T09:08:10Z S18c go_s18c s18_c07 state after the run (before the return): dir f10 present files 258 cache_files 257 pipelines_bin 4600592 1653eeca70cf2a729407beb7d286731a74788b4ce62424ef58f6712d39e24a19;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T09:08:12Z S18c go_s18c s18_c07 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c07/mf_out.tsv files 731 bytes 141673643 listsha 66393d538e64d04ed72234ad78a64c6e56209fcb91adf927384b4d9eb7210ff7
+2026-10-06T09:08:12Z S18c go_s18c s18_c07 state saved to state/s18_c07: replay  (8 MB)
+2026-10-06T09:08:13Z S18c go_s18c s18_c07 installed binary returned from the pinned copy
+2026-10-06T09:08:14Z S18c go_s18c s18_c07 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:08:20Z S18c go_s18c s18_c07 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c07/manifest_run.tsv files 4649 bytes 1246383812 listsha 09be08bf6352380a6c233ba70a5373ae06c9a8ad81d2ca518ae24bfed981bbfa; run vs before: manifest cmp DIFFER only-before 397 only-after 261
+2026-10-06T09:08:23Z S18c go_s18c s18_c07 caches, saves and GLCache returned
+2026-10-06T09:08:32Z S18c go_s18c s18_c07 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c07/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:08:32Z S18c go_s18c s18_c07 lock released (rc 0)
+2026-10-06T09:08:57Z S18c post_s18c s18_c07: read.txt f2796df9c17e6964,   READING MEMBERS_PASS, glitch: 
+2026-10-06T09:09:06Z S18c API before s18_c08: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 in_review run=f91059d8; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T09:09:06Z S18c guard (item 534): GUARD CLEAN; block open, tags 1 of 6; tag s18_c08 recorded, 2 of 6 in the block
+2026-10-06T09:09:06Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c08
+2026-10-06T09:09:24Z S18c go_s18c s18_c08 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T09:09:24Z S18c go_s18c s18_c08 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:09:27Z S18c go_s18c s18_c08 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c08/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:09:32Z S18c go_s18c s18_c08 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T09:09:33Z S18c go_s18c s18_c08 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 20;file replay.19.bin 3850561 7ec719e41082544c815a441ab63d415b994d0a18722addf1; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c08/mf_in.tsv files 731 bytes 141673643 listsha 66393d538e64d04ed72234ad78a64c6e56209fcb91adf927384b4d9eb7210ff7
+2026-10-06T09:09:34Z S18c go_s18c s18_c08 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T09:09:36Z S18c go_s18c s18_c08 enter_scene start (level time_stopper_ghost_world, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T09:15:40Z S18c go_s18c s18_c08 enter_scene rc 0; guard watch: 2026-10-06T09:15:39Z watch end, user process seen: no
+2026-10-06T09:15:40Z S18c go_s18c s18_c08 run: VERDICT: time_stopper_ghost_world in 22.8 s - PASS (acceptance <= 90 s)
+2026-10-06T09:15:41Z S18c go_s18c s18_c08 log_s18_c08.txt sha256 ec7ba6dd37a4ffad3b7e2a22f61c468b48eef356de92de4c36372fe43060d891
+2026-10-06T09:15:44Z S18c go_s18c s18_c08 state after the run (before the return): dir f10 present files 300 cache_files 299 pipelines_bin 2665191 bffeab9a921b32c8af06765fe520377abc1700ebbe4bca92e272dd93bc7966ef;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T09:15:44Z S18c go_s18c s18_c08 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c08/mf_out.tsv files 731 bytes 142488400 listsha 78a54334728783ea26dc10ad7f4c4cdf100b0e14788f2e4044c69fff0da5f3b3
+2026-10-06T09:15:45Z S18c go_s18c s18_c08 state saved to state/s18_c08: replay  (9 MB)
+2026-10-06T09:15:45Z S18c go_s18c s18_c08 installed binary returned from the pinned copy
+2026-10-06T09:15:46Z S18c go_s18c s18_c08 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:15:51Z S18c go_s18c s18_c08 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c08/manifest_run.tsv files 4691 bytes 1243680616 listsha 098a85f6a62a538010bfa0e8e31ae3f52c5dbeb3c2949389c515490859e55d91; run vs before: manifest cmp DIFFER only-before 397 only-after 303
+2026-10-06T09:15:52Z S18c go_s18c s18_c08 caches, saves and GLCache returned
+2026-10-06T09:15:59Z S18c go_s18c s18_c08 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c08/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:15:59Z S18c go_s18c s18_c08 lock released (rc 0)
+2026-10-06T09:16:25Z S18c post_s18c s18_c08: read.txt 7a13027e8b0322de,   READING MEMBERS_PASS, glitch: 
+2026-10-06T09:16:33Z S18c API before s18_c09: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 in_review run=eb46d150; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T09:16:34Z S18c guard (item 534): GUARD CLEAN; block open, tags 2 of 6; tag s18_c09 recorded, 3 of 6 in the block
+2026-10-06T09:16:34Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c09
+2026-10-06T09:16:50Z S18c go_s18c s18_c09 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T09:16:50Z S18c go_s18c s18_c09 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:16:54Z S18c go_s18c s18_c09 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c09/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:16:58Z S18c go_s18c s18_c09 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T09:17:01Z S18c go_s18c s18_c09 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 22;file replay.21.bin 4314845 5e25eb7cc9ef452d95c9d38a28930785d5382fa2e077a4fd; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c09/mf_in.tsv files 731 bytes 142488400 listsha 78a54334728783ea26dc10ad7f4c4cdf100b0e14788f2e4044c69fff0da5f3b3
+2026-10-06T09:17:04Z S18c go_s18c s18_c09 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T09:17:05Z S18c go_s18c s18_c09 enter_scene start (level rotating_level_day_and_night, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T09:23:13Z S18c go_s18c s18_c09 enter_scene rc 0; guard watch: 2026-10-06T09:23:13Z watch end, user process seen: no
+2026-10-06T09:23:15Z S18c go_s18c s18_c09 run: VERDICT: rotating_level_day_and_night in 21.5 s - PASS (acceptance <= 90 s)
+2026-10-06T09:23:18Z S18c go_s18c s18_c09 log_s18_c09.txt sha256 e16a240cfd6bc8ad27ac8b3a7e23a6b2141d0f9a55af64fce9725445ac34e996
+2026-10-06T09:23:20Z S18c go_s18c s18_c09 state after the run (before the return): dir f10 present files 274 cache_files 273 pipelines_bin 2200508 079e4b5f4f0ae63de30a7e29c117a8ede6280ee30202439398dc1da46549298f;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T09:23:23Z S18c go_s18c s18_c09 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c09/mf_out.tsv files 731 bytes 142780829 listsha 60bd6eb9ce2e0d462d7e4bc4441102a3416994843616adde0b029f1d88e5d1c0
+2026-10-06T09:23:23Z S18c go_s18c s18_c09 state saved to state/s18_c09: replay  (9 MB)
+2026-10-06T09:23:25Z S18c go_s18c s18_c09 installed binary returned from the pinned copy
+2026-10-06T09:23:26Z S18c go_s18c s18_c09 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:23:32Z S18c go_s18c s18_c09 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c09/manifest_run.tsv files 4665 bytes 1239161248 listsha b97f7013d26203dfa3bee49aae49b34dbc442d4a639a960c6bb48c55955f23f8; run vs before: manifest cmp DIFFER only-before 397 only-after 277
+2026-10-06T09:23:34Z S18c go_s18c s18_c09 caches, saves and GLCache returned
+2026-10-06T09:23:43Z S18c go_s18c s18_c09 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c09/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:23:44Z S18c go_s18c s18_c09 lock released (rc 0)
+2026-10-06T09:24:13Z S18c post_s18c s18_c09: read.txt 4513214056561a9b,   READING MEMBERS_PASS, glitch: 
+2026-10-06T09:24:21Z S18c API before s18_c10: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 in_review run=eb46d150; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T09:24:21Z S18c guard (item 534): GUARD CLEAN; block open, tags 3 of 6; tag s18_c10 recorded, 4 of 6 in the block
+2026-10-06T09:24:21Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c10
+2026-10-06T09:24:40Z S18c go_s18c s18_c10 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T09:24:41Z S18c go_s18c s18_c10 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:24:45Z S18c go_s18c s18_c10 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c10/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:24:47Z S18c go_s18c s18_c10 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T09:24:48Z S18c go_s18c s18_c10 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 24;file replay.23.bin 4458992 667ceb81580c1d240f9d5204cca01d0a7ceb08149382a209; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c10/mf_in.tsv files 731 bytes 142780829 listsha 60bd6eb9ce2e0d462d7e4bc4441102a3416994843616adde0b029f1d88e5d1c0
+2026-10-06T09:24:49Z S18c go_s18c s18_c10 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T09:24:49Z S18c go_s18c s18_c10 enter_scene start (level bumper_enemy_snowy_canyon, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T09:31:02Z S18c go_s18c s18_c10 enter_scene rc 0; guard watch: 2026-10-06T09:30:57Z watch end, user process seen: no
+2026-10-06T09:31:02Z S18c go_s18c s18_c10 run: VERDICT: bumper_enemy_snowy_canyon in 24.8 s - PASS (acceptance <= 90 s)
+2026-10-06T09:31:03Z S18c go_s18c s18_c10 log_s18_c10.txt sha256 059ad0278249f013ed99e68790496b1942edb034db2831216da2ecd6fa10f262
+2026-10-06T09:31:04Z S18c go_s18c s18_c10 state after the run (before the return): dir f10 present files 277 cache_files 276 pipelines_bin 5121530 22ad4d8ed094acb9378f412edcbb91e02164fabfe70944aee7433f3ad8702682;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T09:31:07Z S18c go_s18c s18_c10 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c10/mf_out.tsv files 731 bytes 143345668 listsha b084277abdd7f5305b73ec533361b7d8d2506d951c98628837c761f5af8b8aab
+2026-10-06T09:31:07Z S18c go_s18c s18_c10 state saved to state/s18_c10: replay  (10 MB)
+2026-10-06T09:31:08Z S18c go_s18c s18_c10 installed binary returned from the pinned copy
+2026-10-06T09:31:09Z S18c go_s18c s18_c10 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:31:19Z S18c go_s18c s18_c10 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c10/manifest_run.tsv files 4668 bytes 1248855938 listsha c54cdd9a4a3ad9884f286c7da3f47248f53de7224362340a3e7c3122c254d1fc; run vs before: manifest cmp DIFFER only-before 397 only-after 280
+2026-10-06T09:31:20Z S18c go_s18c s18_c10 caches, saves and GLCache returned
+2026-10-06T09:31:28Z S18c go_s18c s18_c10 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c10/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:31:28Z S18c go_s18c s18_c10 lock released (rc 0)
+2026-10-06T09:31:47Z S18c post_s18c s18_c10: read.txt 57a88a97fea27946,   READING MEMBERS_PASS, glitch: 
+2026-10-06T09:31:56Z S18c API before s18_c11: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T09:31:58Z S18c guard (item 534): GUARD CLEAN; block open, tags 4 of 6; tag s18_c11 recorded, 5 of 6 in the block
+2026-10-06T09:31:58Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c11
+2026-10-06T09:32:16Z S18c go_s18c s18_c11 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T09:32:16Z S18c go_s18c s18_c11 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:32:20Z S18c go_s18c s18_c11 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c11/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:32:24Z S18c go_s18c s18_c11 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T09:32:27Z S18c go_s18c s18_c11 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 26;file replay.25.bin 4715679 7adf580057e5803c72f797d480491b83a2eb5c471f7576f5; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c11/mf_in.tsv files 731 bytes 143345668 listsha b084277abdd7f5305b73ec533361b7d8d2506d951c98628837c761f5af8b8aab
+2026-10-06T09:32:28Z S18c go_s18c s18_c11 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T09:32:28Z S18c go_s18c s18_c11 enter_scene start (level big_hand_pirate_island, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T09:38:31Z S18c go_s18c s18_c11 enter_scene rc 0; guard watch: 2026-10-06T09:38:29Z watch end, user process seen: no
+2026-10-06T09:38:31Z S18c go_s18c s18_c11 run: VERDICT: big_hand_pirate_island in 19.9 s - PASS (acceptance <= 90 s)
+2026-10-06T09:38:32Z S18c go_s18c s18_c11 log_s18_c11.txt sha256 ba2d9fe356fc3f98067d7cce0c623dc98907b82d5939eccc3854e33551f8e713
+2026-10-06T09:38:33Z S18c go_s18c s18_c11 state after the run (before the return): dir f10 present files 338 cache_files 337 pipelines_bin 7412424 e08d336b72d41e3e40da4e74af3828fdcbedf80cff85b9d7ed45225722d615c1;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T09:38:35Z S18c go_s18c s18_c11 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c11/mf_out.tsv files 731 bytes 144097240 listsha 2416e3317b78228345940ae06acc6a2ddb4cfc4c0ce40428782a38dcd59a7da4
+2026-10-06T09:38:36Z S18c go_s18c s18_c11 state saved to state/s18_c11: replay  (10 MB)
+2026-10-06T09:38:36Z S18c go_s18c s18_c11 installed binary returned from the pinned copy
+2026-10-06T09:38:38Z S18c go_s18c s18_c11 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:38:47Z S18c go_s18c s18_c11 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c11/manifest_run.tsv files 4729 bytes 1263092346 listsha 3af3338162c9e8c49a7e64670c254ea8f6d2486c40e2a627223f3a547112e6a8; run vs before: manifest cmp DIFFER only-before 397 only-after 341
+2026-10-06T09:38:48Z S18c go_s18c s18_c11 caches, saves and GLCache returned
+2026-10-06T09:38:57Z S18c go_s18c s18_c11 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c11/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:38:57Z S18c go_s18c s18_c11 lock released (rc 0)
+2026-10-06T09:39:15Z S18c post_s18c s18_c11: read.txt 4cc23ed6f0f4a597,   READING MEMBERS_PASS, glitch: 
+2026-10-06T09:39:26Z S18c API before s18_c12: HPP-646 done run=-; HPP-647 done run=-; HPP-648 blocked run=-; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T09:39:29Z S18c guard (item 534): GUARD CLEAN; block open, tags 5 of 6; tag s18_c12 recorded, 6 of 6 in the block
+2026-10-06T09:39:29Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c12
+2026-10-06T09:39:44Z S18c go_s18c s18_c12 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T09:39:44Z S18c go_s18c s18_c12 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:39:46Z S18c go_s18c s18_c12 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c12/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:39:49Z S18c go_s18c s18_c12 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T09:39:50Z S18c go_s18c s18_c12 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 31;file replay.30.bin 5129017 3131658c07e373ba2a4bf29e6252247b649d047df1e923c7; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c12/mf_in.tsv files 731 bytes 144097240 listsha 2416e3317b78228345940ae06acc6a2ddb4cfc4c0ce40428782a38dcd59a7da4
+2026-10-06T09:39:51Z S18c go_s18c s18_c12 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T09:39:51Z S18c go_s18c s18_c12 enter_scene start (level timestop_casino, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T09:45:57Z S18c go_s18c s18_c12 enter_scene rc 0; guard watch: 2026-10-06T09:45:54Z watch end, user process seen: no
+2026-10-06T09:45:58Z S18c go_s18c s18_c12 run: VERDICT: timestop_casino in 20.0 s - PASS (acceptance <= 90 s)
+2026-10-06T09:45:59Z S18c go_s18c s18_c12 log_s18_c12.txt sha256 8145227b411a51d98e3cb2f1d33753f9052d466d19ba099caab18048618d3480
+2026-10-06T09:46:00Z S18c go_s18c s18_c12 state after the run (before the return): dir f10 present files 278 cache_files 277 pipelines_bin 5951500 e28e5e9f093fe423bc18d640a00ae436df06609c8e74fbb339b758387663b314;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T09:46:02Z S18c go_s18c s18_c12 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c12/mf_out.tsv files 731 bytes 144458285 listsha d412c31b380d9f20cdc19c2e9798d0e32ee4395393b6c2cef0166594d99c28db
+2026-10-06T09:46:02Z S18c go_s18c s18_c12 state saved to state/s18_c12: replay  (11 MB)
+2026-10-06T09:46:03Z S18c go_s18c s18_c12 installed binary returned from the pinned copy
+2026-10-06T09:46:05Z S18c go_s18c s18_c12 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:46:14Z S18c go_s18c s18_c12 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c12/manifest_run.tsv files 4669 bytes 1256900670 listsha 189ee8f525e242cf341e05bcfcb6d426dcf594a2dd050be0409c75a473dd4668; run vs before: manifest cmp DIFFER only-before 397 only-after 281
+2026-10-06T09:46:15Z S18c go_s18c s18_c12 caches, saves and GLCache returned
+2026-10-06T09:46:22Z S18c go_s18c s18_c12 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c12/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:46:23Z S18c go_s18c s18_c12 lock released (rc 0)
+2026-10-06T09:46:49Z S18c post_s18c s18_c12: read.txt 0a262c7db9e7139a,   READING MEMBERS_PASS, glitch: 
+2026-10-06T09:46:50Z S18c guard (item 534) block 3 first check: GUARD CLEAN; block PENDING
+2026-10-06T09:57:14Z S18c guard (item 534) block 3 second check: GUARD CLEAN; block OPEN
+2026-10-06T09:57:22Z S18c API before s18_c13: HPP-646 done run=-; HPP-647 done run=-; HPP-648 in_progress run=3c340a84; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T09:57:22Z S18c guard (item 534): GUARD CLEAN; block open, tags 0 of 6; tag s18_c13 recorded, 1 of 6 in the block
+2026-10-06T09:57:22Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c13
+2026-10-06T09:57:39Z S18c go_s18c s18_c13 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T09:57:39Z S18c go_s18c s18_c13 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T09:57:43Z S18c go_s18c s18_c13 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c13/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T09:57:47Z S18c go_s18c s18_c13 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T09:57:49Z S18c note: HPP-648 F20l2 in_progress (run 3c340a84) seen at 09:57:22Z after the s18_c13 launch; lead line p.584(g) (KytyPS5 e8511f53): F20 last in the lock queue (p.462(g), 567) - the S18c series goes on
+2026-10-06T09:57:50Z S18c go_s18c s18_c13 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 34;file replay.33.bin 5305693 ca8ca2b4d189da37e4bdc3b13d14fcde0e3685b460813774; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c13/mf_in.tsv files 731 bytes 144458285 listsha d412c31b380d9f20cdc19c2e9798d0e32ee4395393b6c2cef0166594d99c28db
+2026-10-06T09:57:51Z S18c go_s18c s18_c13 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T09:57:52Z S18c go_s18c s18_c13 enter_scene start (level mini_giants_garden, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T10:03:58Z S18c go_s18c s18_c13 enter_scene rc 0; guard watch: 2026-10-06T10:03:56Z watch end, user process seen: no
+2026-10-06T10:03:59Z S18c go_s18c s18_c13 run: VERDICT: mini_giants_garden in 21.7 s - PASS (acceptance <= 90 s)
+2026-10-06T10:04:01Z S18c go_s18c s18_c13 log_s18_c13.txt sha256 2b49d0857a04ba6f6431e2f67db1bfa2367c6af35f29d771eeb5227651ddc69c
+2026-10-06T10:04:02Z S18c go_s18c s18_c13 state after the run (before the return): dir f10 present files 296 cache_files 295 pipelines_bin 2351114 94b45e61b1d7409b51d345d4800ee3ce1ad55d68ee41174cbbe244bd9625935a;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T10:04:05Z S18c go_s18c s18_c13 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c13/mf_out.tsv files 731 bytes 144755781 listsha 4fa7d98fbfc3f6b9fc23d423ced7f195722aafdb85a6b32ab39c49c3d8fa1188
+2026-10-06T10:04:05Z S18c go_s18c s18_c13 state saved to state/s18_c13: replay  (11 MB)
+2026-10-06T10:04:05Z S18c go_s18c s18_c13 installed binary returned from the pinned copy
+2026-10-06T10:04:06Z S18c go_s18c s18_c13 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:04:10Z S18c go_s18c s18_c13 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c13/manifest_run.tsv files 4687 bytes 1245842500 listsha 1fc0ab53a8aae19b664596334e6275824879a0501f9b88d551fb39b4bbac583b; run vs before: manifest cmp DIFFER only-before 397 only-after 299
+2026-10-06T10:04:14Z S18c go_s18c s18_c13 caches, saves and GLCache returned
+2026-10-06T10:04:18Z S18c go_s18c s18_c13 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c13/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:04:18Z S18c go_s18c s18_c13 lock released (rc 0)
+2026-10-06T10:04:36Z S18c post_s18c s18_c13: read.txt 51feb10cb95392e9,   READING MEMBERS_PASS, glitch: 
+2026-10-06T10:04:45Z S18c API before s18_c14: HPP-646 done run=-; HPP-647 done run=-; HPP-648 in_progress run=3c340a84; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T10:04:46Z S18c guard (item 534): GUARD CLEAN; block open, tags 1 of 6; tag s18_c14 recorded, 2 of 6 in the block
+2026-10-06T10:04:46Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c14
+2026-10-06T10:06:20Z S18c go_s18c s18_c14 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T10:06:20Z S18c go_s18c s18_c14 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:06:24Z S18c go_s18c s18_c14 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c14/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:06:26Z S18c go_s18c s18_c14 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T10:06:28Z S18c go_s18c s18_c14 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 36;file replay.35.bin 5457212 03226aae5640355eb533a7920e5f16a337d6b04976f8d384; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c14/mf_in.tsv files 731 bytes 144755781 listsha 4fa7d98fbfc3f6b9fc23d423ced7f195722aafdb85a6b32ab39c49c3d8fa1188
+2026-10-06T10:06:28Z S18c go_s18c s18_c14 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T10:06:28Z S18c go_s18c s18_c14 enter_scene start (level ice_iceberg, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T10:12:36Z S18c go_s18c s18_c14 enter_scene rc 0; guard watch: 2026-10-06T10:12:34Z watch end, user process seen: no
+2026-10-06T10:12:36Z S18c go_s18c s18_c14 run: VERDICT: ice_iceberg in 21.4 s - PASS (acceptance <= 90 s)
+2026-10-06T10:12:38Z S18c go_s18c s18_c14 log_s18_c14.txt sha256 5fe70f96e642a07432096d5c5fd129515f4ff11076e4670e1d5179b699fdb79a
+2026-10-06T10:12:41Z S18c go_s18c s18_c14 state after the run (before the return): dir f10 present files 317 cache_files 316 pipelines_bin 5822923 aa4a43d524cb2b650d4b410c86c66b3e4c7c5f059bb91510fa75be72e3156c6c;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T10:12:42Z S18c go_s18c s18_c14 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c14/mf_out.tsv files 731 bytes 145063310 listsha a6a9b19750d03af007cc8a29d214542f9a0c205189b346dc5e21d3f238fdcb8e
+2026-10-06T10:12:42Z S18c go_s18c s18_c14 state saved to state/s18_c14: replay  (11 MB)
+2026-10-06T10:12:47Z S18c go_s18c s18_c14 installed binary returned from the pinned copy
+2026-10-06T10:12:48Z S18c go_s18c s18_c14 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:12:53Z S18c go_s18c s18_c14 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c14/manifest_run.tsv files 4708 bytes 1259129640 listsha 11dd19870e2f8370ba46e5bd474be92744393968598ff436ebbd420e58de3f93; run vs before: manifest cmp DIFFER only-before 397 only-after 320
+2026-10-06T10:12:55Z S18c go_s18c s18_c14 caches, saves and GLCache returned
+2026-10-06T10:13:02Z S18c go_s18c s18_c14 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c14/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:13:03Z S18c go_s18c s18_c14 lock released (rc 0)
+2026-10-06T10:13:29Z S18c post_s18c s18_c14: read.txt 97395b34e1ef3868,   READING MEMBERS_PASS, glitch: 
+2026-10-06T10:13:39Z S18c API before s18_c15: HPP-646 done run=-; HPP-647 done run=-; HPP-648 in_progress run=3c340a84; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T10:13:42Z S18c guard (item 534): GUARD CLEAN; block open, tags 2 of 6; tag s18_c15 recorded, 3 of 6 in the block
+2026-10-06T10:13:42Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c15
+2026-10-06T10:13:57Z S18c go_s18c s18_c15 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T10:13:58Z S18c go_s18c s18_c15 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:14:02Z S18c go_s18c s18_c15 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c15/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:14:07Z S18c go_s18c s18_c15 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T10:14:11Z S18c go_s18c s18_c15 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 38;file replay.37.bin 5598678 1d208ce42aa929dc4ebc9b63b36c5954e4742a1530242c06; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c15/mf_in.tsv files 731 bytes 145063310 listsha a6a9b19750d03af007cc8a29d214542f9a0c205189b346dc5e21d3f238fdcb8e
+2026-10-06T10:14:11Z S18c go_s18c s18_c15 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T10:14:12Z S18c go_s18c s18_c15 enter_scene start (level sponge_dirty_bath, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T10:20:22Z S18c go_s18c s18_c15 enter_scene rc 0; guard watch: 2026-10-06T10:20:21Z watch end, user process seen: no
+2026-10-06T10:20:25Z S18c go_s18c s18_c15 run: VERDICT: sponge_dirty_bath in 23.8 s - PASS (acceptance <= 90 s)
+2026-10-06T10:20:26Z S18c go_s18c s18_c15 log_s18_c15.txt sha256 1375db5f40716b530305845a811f2aa8644b8e9583a3e42eed30f25c6321564d
+2026-10-06T10:20:26Z S18c go_s18c s18_c15 state after the run (before the return): dir f10 present files 294 cache_files 293 pipelines_bin 5970893 1d4d89df91d800f0b1e7a30b2d7b16914deb397f8adec9ea5d557899f24d1ef8;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T10:20:27Z S18c go_s18c s18_c15 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c15/mf_out.tsv files 731 bytes 145446594 listsha d35a9e0c5045637f23151bbbacba231fdc9df3246e69d4f370cc4a81a9cb8ba4
+2026-10-06T10:20:28Z S18c go_s18c s18_c15 state saved to state/s18_c15: replay  (12 MB)
+2026-10-06T10:20:29Z S18c go_s18c s18_c15 installed binary returned from the pinned copy
+2026-10-06T10:20:30Z S18c go_s18c s18_c15 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:20:35Z S18c go_s18c s18_c15 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c15/manifest_run.tsv files 4685 bytes 1257943073 listsha 35f11680ca50ab6b71f944a9f82833effd67395b590b7803802ccef339d77787; run vs before: manifest cmp DIFFER only-before 397 only-after 297
+2026-10-06T10:20:38Z S18c go_s18c s18_c15 caches, saves and GLCache returned
+2026-10-06T10:20:45Z S18c go_s18c s18_c15 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c15/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:20:45Z S18c go_s18c s18_c15 lock released (rc 0)
+2026-10-06T10:21:05Z S18c post_s18c s18_c15: read.txt ddb9f3e30a5fb566,   READING MEMBERS_PASS, glitch: 
+2026-10-06T10:21:17Z S18c API before s18_c16: HPP-646 done run=-; HPP-647 done run=-; HPP-648 in_progress run=3c340a84; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T10:21:22Z S18c guard (item 534): GUARD CLEAN; block open, tags 3 of 6; tag s18_c16 recorded, 4 of 6 in the block
+2026-10-06T10:21:22Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c16
+2026-10-06T10:22:52Z S18c go_s18c s18_c16 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T10:22:52Z S18c go_s18c s18_c16 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:22:56Z S18c go_s18c s18_c16 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c16/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:22:58Z S18c go_s18c s18_c16 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T10:22:59Z S18c go_s18c s18_c16 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 40;file replay.39.bin 5802775 dcf6da9212aa75433e7700a87d7a5c1ebc4202928a9886ee; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c16/mf_in.tsv files 731 bytes 145446594 listsha d35a9e0c5045637f23151bbbacba231fdc9df3246e69d4f370cc4a81a9cb8ba4
+2026-10-06T10:23:00Z S18c go_s18c s18_c16 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T10:23:02Z S18c go_s18c s18_c16 enter_scene start (level hoover_beach, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T10:29:09Z S18c go_s18c s18_c16 enter_scene rc 0; guard watch: 2026-10-06T10:29:08Z watch end, user process seen: no
+2026-10-06T10:29:09Z S18c go_s18c s18_c16 run: VERDICT: hoover_beach in 22.0 s - PASS (acceptance <= 90 s)
+2026-10-06T10:29:13Z S18c go_s18c s18_c16 log_s18_c16.txt sha256 b278d46b7dc37b4273c9570e76d18ac04c5539284a3648267f541029eac6349c
+2026-10-06T10:29:13Z S18c go_s18c s18_c16 state after the run (before the return): dir f10 present files 276 cache_files 275 pipelines_bin 2311988 cd64c5bbdb09a0fb9e8fd52e1fefcbfa8d08994c20a5b12856a2f7881405ca5d;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T10:29:14Z S18c go_s18c s18_c16 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c16/mf_out.tsv files 731 bytes 145547426 listsha 6f9af29818d2cb5f9fb6d9bef1b89ef67bb9cb958ec41495d6e86e6222e0616c
+2026-10-06T10:29:16Z S18c go_s18c s18_c16 state saved to state/s18_c16: replay  (12 MB)
+2026-10-06T10:29:17Z S18c go_s18c s18_c16 installed binary returned from the pinned copy
+2026-10-06T10:29:17Z S18c go_s18c s18_c16 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:29:23Z S18c go_s18c s18_c16 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c16/manifest_run.tsv files 4667 bytes 1244299736 listsha 363c3d4b5bc90d06b9dcca0242749b4081964aad04e459e94b0bf99752b58603; run vs before: manifest cmp DIFFER only-before 399 only-after 281
+2026-10-06T10:29:25Z S18c go_s18c s18_c16 caches, saves and GLCache returned
+2026-10-06T10:29:35Z S18c go_s18c s18_c16 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c16/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:29:35Z S18c go_s18c s18_c16 lock released (rc 0)
+2026-10-06T10:29:59Z S18c post_s18c s18_c16: read.txt 982d6226e1e84a42,   READING MEMBERS_PASS, glitch: 
+2026-10-06T10:30:13Z S18c API before s18_c17: HPP-646 done run=-; HPP-647 done run=-; HPP-648 in_progress run=3c340a84; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T10:30:14Z S18c guard (item 534): GUARD CLEAN; block open, tags 4 of 6; tag s18_c17 recorded, 5 of 6 in the block
+2026-10-06T10:30:15Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c17
+2026-10-06T10:30:35Z S18c go_s18c s18_c17 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T10:30:35Z S18c go_s18c s18_c17 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:30:38Z S18c go_s18c s18_c17 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c17/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:30:41Z S18c go_s18c s18_c17 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T10:30:42Z S18c go_s18c s18_c17 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 41;file replay.40.bin 5805330 64f578902932665822d0ef5bc9f82cbecf43960b90d15206; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c17/mf_in.tsv files 731 bytes 145547426 listsha 6f9af29818d2cb5f9fb6d9bef1b89ef67bb9cb958ec41495d6e86e6222e0616c
+2026-10-06T10:30:43Z S18c go_s18c s18_c17 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T10:30:43Z S18c go_s18c s18_c17 enter_scene start (level volcano_mountain, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T10:36:48Z S18c go_s18c s18_c17 enter_scene rc 0; guard watch: 2026-10-06T10:36:47Z watch end, user process seen: no
+2026-10-06T10:36:48Z S18c go_s18c s18_c17 run: VERDICT: volcano_mountain in 19.5 s - PASS (acceptance <= 90 s)
+2026-10-06T10:36:50Z S18c go_s18c s18_c17 log_s18_c17.txt sha256 69c12de6f8befbf11af7a370e3c1f8341f9ac16c4a24f0c861858f728c446de6
+2026-10-06T10:36:52Z S18c go_s18c s18_c17 state after the run (before the return): dir f10 present files 262 cache_files 261 pipelines_bin 2110615 50218dc4678e2f22df44fb9fb7858e5bb48f61a577bd53fb87abe15685929634;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T10:36:53Z S18c go_s18c s18_c17 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c17/mf_out.tsv files 731 bytes 145789507 listsha 55f202fa3a8167dd6f2ffed19fc4ac3e8e642ab4fcb54bfdf6852edbe1a56d53
+2026-10-06T10:36:53Z S18c go_s18c s18_c17 state saved to state/s18_c17: replay  (12 MB)
+2026-10-06T10:36:53Z S18c go_s18c s18_c17 installed binary returned from the pinned copy
+2026-10-06T10:36:54Z S18c go_s18c s18_c17 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:36:59Z S18c go_s18c s18_c17 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c17/manifest_run.tsv files 4653 bytes 1242498006 listsha 5d488c13fe507edaa276770d4a983e48eb2eefdead6b4d2b29bd5e226dd1b713; run vs before: manifest cmp DIFFER only-before 397 only-after 265
+2026-10-06T10:37:00Z S18c go_s18c s18_c17 caches, saves and GLCache returned
+2026-10-06T10:37:10Z S18c go_s18c s18_c17 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c17/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:37:10Z S18c go_s18c s18_c17 lock released (rc 0)
+2026-10-06T10:37:30Z S18c post_s18c s18_c17: read.txt a404bec3f6fd437b,   READING MEMBERS_PASS, glitch: 
+2026-10-06T10:37:39Z S18c API before s18_c18: HPP-646 done run=-; HPP-647 done run=-; HPP-648 in_progress run=3c340a84; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T10:37:39Z S18c guard (item 534): GUARD CLEAN; block open, tags 5 of 6; tag s18_c18 recorded, 6 of 6 in the block
+2026-10-06T10:37:40Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c18
+2026-10-06T10:37:59Z S18c go_s18c s18_c18 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T10:38:00Z S18c go_s18c s18_c18 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:38:03Z S18c go_s18c s18_c18 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c18/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:38:07Z S18c go_s18c s18_c18 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T10:38:07Z S18c go_s18c s18_c18 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 42;file replay.41.bin 5903607 4ce364fcc3c008965e63ed09f60e383f62bb4dc56d64a47b; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c18/mf_in.tsv files 731 bytes 145789507 listsha 55f202fa3a8167dd6f2ffed19fc4ac3e8e642ab4fcb54bfdf6852edbe1a56d53
+2026-10-06T10:38:08Z S18c go_s18c s18_c18 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T10:38:08Z S18c go_s18c s18_c18 enter_scene start (level voxel_world, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T10:44:09Z S18c go_s18c s18_c18 enter_scene rc 0; guard watch: 2026-10-06T10:44:08Z watch end, user process seen: no
+2026-10-06T10:44:11Z S18c go_s18c s18_c18 run: VERDICT: voxel_world in 17.2 s - PASS (acceptance <= 90 s)
+2026-10-06T10:44:13Z S18c go_s18c s18_c18 log_s18_c18.txt sha256 237797cf5f818a97ca2a609e4cf22c151614bd5621e66fba273df99de33b3c26
+2026-10-06T10:44:14Z S18c go_s18c s18_c18 state after the run (before the return): dir f10 present files 215 cache_files 214 pipelines_bin 1444973 e4f2de198a145095b60ef63164c834373c5b45991af30b9b03ea3891d5fbb4aa;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T10:44:15Z S18c go_s18c s18_c18 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c18/mf_out.tsv files 731 bytes 146126954 listsha 576adb6a88805996e066f432aedf45ee2750318f06570f73d16b0c95fed65778
+2026-10-06T10:44:17Z S18c go_s18c s18_c18 state saved to state/s18_c18: replay  (12 MB)
+2026-10-06T10:44:18Z S18c go_s18c s18_c18 installed binary returned from the pinned copy
+2026-10-06T10:44:18Z S18c go_s18c s18_c18 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:44:23Z S18c go_s18c s18_c18 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c18/manifest_run.tsv files 4606 bytes 1237243592 listsha 058f3c3e7b17de09cb49e7a42c3985fed99dda53433f83b2d2da1aceee054aab; run vs before: manifest cmp DIFFER only-before 399 only-after 220
+2026-10-06T10:44:23Z S18c go_s18c s18_c18 caches, saves and GLCache returned
+2026-10-06T10:44:31Z S18c go_s18c s18_c18 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c18/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:44:31Z S18c go_s18c s18_c18 lock released (rc 0)
+2026-10-06T10:44:59Z S18c post_s18c s18_c18: read.txt 332c7ec5ae284930,   READING MEMBERS_PASS, glitch: 
+2026-10-06T10:44:59Z S18c guard (item 534) block 4 first check: GUARD CLEAN; block PENDING
+2026-10-06T10:54:32Z S18c guard (item 534) block 4 second check: GUARD CLEAN; block PENDING
+2026-10-06T10:55:29Z S18c guard (item 534) block 4 check: GUARD CLEAN; block OPEN
+2026-10-06T10:55:37Z S18c API before s18_c19: HPP-646 done run=-; HPP-647 done run=-; HPP-648 in_progress run=3c340a84; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T10:55:37Z S18c guard (item 534): GUARD CLEAN; block open, tags 0 of 6; tag s18_c19 recorded, 1 of 6 in the block
+2026-10-06T10:55:37Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_c19
+2026-10-06T10:55:55Z S18c go_s18c s18_c19 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T10:55:55Z S18c go_s18c s18_c19 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T10:55:58Z S18c go_s18c s18_c19 manifest before: manifest C:/kyty/s288/s18c/runs/s18_c19/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T10:56:02Z S18c go_s18c s18_c19 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T10:56:03Z S18c go_s18c s18_c19 input state cap_acc: dir f10 absent;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 44;file replay.43.bin 6142440 d177dc0e8acaeda1bf979cedca692161b431c874a06bf1d7; mf_in: manifest C:/kyty/s288/s18c/runs/s18_c19/mf_in.tsv files 731 bytes 146126954 listsha 576adb6a88805996e066f432aedf45ee2750318f06570f73d16b0c95fed65778
+2026-10-06T10:56:04Z S18c go_s18c s18_c19 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T10:56:07Z S18c go_s18c s18_c19 enter_scene start (level enemy_gorilla, form c, --timeout 600 --hold 330, KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_SHADER_SEED=0 )
+2026-10-06T11:02:12Z S18c go_s18c s18_c19 enter_scene rc 0; guard watch: 2026-10-06T11:02:10Z watch end, user process seen: no
+2026-10-06T11:02:14Z S18c go_s18c s18_c19 run: VERDICT: enemy_gorilla in 17.6 s - PASS (acceptance <= 90 s)
+2026-10-06T11:02:15Z S18c go_s18c s18_c19 log_s18_c19.txt sha256 80061394f4a8b452489ca433c8ef7aacbd9e5c8fd11a1352da4303918848cbf4
+2026-10-06T11:02:19Z S18c go_s18c s18_c19 state after the run (before the return): dir f10 present files 257 cache_files 256 pipelines_bin 2028133 292dbb69e0e3ff7527d7512a3626d625ec2448fefd44dc41abf2e1607689a329;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T11:02:20Z S18c go_s18c s18_c19 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_c19/mf_out.tsv files 731 bytes 146342411 listsha 5b5edcbe10adf2c107aec51918d01f870356c95144e214d67a126de5421ec50a
+2026-10-06T11:02:23Z S18c go_s18c s18_c19 state saved to state/s18_c19: replay  (12 MB)
+2026-10-06T11:02:23Z S18c go_s18c s18_c19 installed binary returned from the pinned copy
+2026-10-06T11:02:24Z S18c go_s18c s18_c19 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T11:02:29Z S18c go_s18c s18_c19 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_c19/manifest_run.tsv files 4648 bytes 1242341751 listsha 23b2b7efa172051c9904e7e2900e7fc6d4d7dedf6025d306d62622247d0d1633; run vs before: manifest cmp DIFFER only-before 397 only-after 260
+2026-10-06T11:02:30Z S18c go_s18c s18_c19 caches, saves and GLCache returned
+2026-10-06T11:02:37Z S18c go_s18c s18_c19 manifest after: manifest C:/kyty/s288/s18c/runs/s18_c19/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T11:02:38Z S18c go_s18c s18_c19 lock released (rc 0)
+2026-10-06T11:02:59Z S18c post_s18c s18_c19: read.txt 6f2fac9c539314ab,   READING MEMBERS_PASS, glitch: 
+2026-10-06T11:03:10Z S18c catalogue (seal section 3 p.7): state/s18_c19/replay copied to s18c/replay_known; manifest C:/kyty/KytyPS5/docs/track-s/s18c/replay_known_manifest.tsv files 3 bytes 12503925 listsha 7f804f71d3e14f6fd0f74a6027026d3d4b7e48caea4a7f339f4308c0f8b19b45; source vs copy: manifest cmp EQUAL files 3 listsha 7f804f71d3e14f6fd0f74a6027026d3d4b7e48caea4a7f339f4308c0f8b19b45
+2026-10-06T11:03:23Z S18c API before s18_ks: HPP-646 done run=-; HPP-647 done run=-; HPP-648 in_progress run=3c340a84; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T11:03:24Z S18c guard (item 534): GUARD CLEAN; block open, tags 1 of 6; tag s18_ks recorded, 2 of 6 in the block
+2026-10-06T11:03:24Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_ks
+2026-10-06T11:03:42Z S18c go_s18c s18_ks lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T11:03:42Z S18c go_s18c s18_ks installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T11:03:45Z S18c go_s18c s18_ks manifest before: manifest C:/kyty/s288/s18c/runs/s18_ks/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T11:03:50Z S18c go_s18c s18_ks caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T11:03:50Z S18c go_s18c s18_ks input state cat_full: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 46;file replay.45.bin 6250527 12cb378741308d1a82133be521311882881d1bbf04aff649c; mf_in: manifest C:/kyty/s288/s18c/runs/s18_ks/mf_in.tsv files 4 bytes 12503925 listsha cefff2bb8cd2383c7eedfa4eb684b507caf1553e77ca95225ca235624f9f7d9c
+2026-10-06T11:03:50Z S18c go_s18c s18_ks installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T11:03:51Z S18c go_s18c s18_ks enter_scene start (level underwater_aerial_garden, form p, --timeout 900 --until-prep, KYTY_S_REPLAY=3 KYTY_FIX_F19=1 KYTY_AV_TRACE=1 KYTY_SHADER_SEED=0 KYTY_S_REPLAY_TEST=stop )
+2026-10-06T11:04:23Z S18c go_s18c s18_ks enter_scene rc 1; guard watch: 2026-10-06T11:04:21Z watch end, user process seen: no
+2026-10-06T11:04:25Z S18c go_s18c s18_ks run: VERDICT: no attempt reached underwater_aerial_garden
+2026-10-06T11:04:25Z S18c go_s18c s18_ks log_s18_ks.txt sha256 335c6a95661f9ed3e899e42480bf35a9f93b0e4598a09bf267262c2628b63f25
+2026-10-06T11:04:27Z S18c go_s18c s18_ks state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 609 cache_files 609 pipelines_bin absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 46;file replay.45.bin 6250527 1
+2026-10-06T11:04:30Z S18c go_s18c s18_ks S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_ks/mf_out.tsv files 612 bytes 100840626 listsha 94ab16062c31b55b3bfeae43b26538a5c36633dc2b16b721e8df27b1951f43df
+2026-10-06T11:04:31Z S18c go_s18c s18_ks state saved to state/s18_ks: f19 replay  (98 MB)
+2026-10-06T11:04:33Z S18c go_s18c s18_ks installed binary returned from the pinned copy
+2026-10-06T11:04:34Z S18c go_s18c s18_ks installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T11:04:37Z S18c go_s18c s18_ks manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_ks/manifest_run.tsv files 4669 bytes 1213521055 listsha 5599f7d37fe8b6a2874633e488ffee29020fe9234f81248459addc53bfcec765; run vs before: manifest cmp DIFFER only-before 726 only-after 610
+2026-10-06T11:04:41Z S18c go_s18c s18_ks caches, saves and GLCache returned
+2026-10-06T11:04:44Z S18c go_s18c s18_ks manifest after: manifest C:/kyty/s288/s18c/runs/s18_ks/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T11:04:44Z S18c go_s18c s18_ks lock released (rc 0)
+2026-10-06T11:05:06Z S18c post_s18c s18_ks: read.txt 49ea2a8d1839b1ce,   READING MEMBERS_PASS, glitch: 
+2026-10-06T11:05:22Z S18c API before s18_r: HPP-646 done run=-; HPP-647 done run=-; HPP-648 in_progress run=3c340a84; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T11:05:23Z S18c guard (item 534): GUARD CLEAN; block open, tags 2 of 6; tag s18_r recorded, 3 of 6 in the block
+2026-10-06T11:05:23Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_r
+2026-10-06T11:05:41Z S18c go_s18c s18_r lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T11:05:41Z S18c go_s18c s18_r installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T11:05:44Z S18c go_s18c s18_r manifest before: manifest C:/kyty/s288/s18c/runs/s18_r/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T11:05:48Z S18c go_s18c s18_r caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T11:05:49Z S18c go_s18c s18_r input state cat_full: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 46;file replay.45.bin 6250527 12cb378741308d1a82133be521311882881d1bbf04aff649c; mf_in: manifest C:/kyty/s288/s18c/runs/s18_r/mf_in.tsv files 4 bytes 12503925 listsha cefff2bb8cd2383c7eedfa4eb684b507caf1553e77ca95225ca235624f9f7d9c
+2026-10-06T11:05:49Z S18c go_s18c s18_r installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T11:05:49Z S18c go_s18c s18_r enter_scene start (level underwater_aerial_garden, form p, --timeout 900 --until-prep, KYTY_SHADER_SEED=0 )
+2026-10-06T11:05:57Z S18c go_s18c s18_r enter_scene rc 3; guard watch: 2026-10-06T11:05:55Z watch end, user process seen: no
+2026-10-06T11:05:57Z S18c go_s18c s18_r run: 
+2026-10-06T11:05:57Z S18c go_s18c s18_r state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 46;file replay.45.bin 6250527 12cb378741308d1a82133be521311882881d1bbf04aff649c
+2026-10-06T11:05:57Z S18c go_s18c s18_r S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_r/mf_out.tsv files 4 bytes 12503925 listsha cefff2bb8cd2383c7eedfa4eb684b507caf1553e77ca95225ca235624f9f7d9c
+2026-10-06T11:06:03Z S18c go_s18c s18_r state saved to state/s18_r: all replay  (965 MB)
+2026-10-06T11:06:04Z S18c go_s18c s18_r installed binary returned from the pinned copy
+2026-10-06T11:06:04Z S18c go_s18c s18_r installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T11:06:08Z S18c go_s18c s18_r manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_r/manifest_run.tsv files 4060 bytes 1125184354 listsha 99448cd0dab2d1f59a9973374f1762d0d38ac5771a123fb05109650573555d2c; run vs before: manifest cmp DIFFER only-before 728 only-after 3
+2026-10-06T11:06:10Z S18c go_s18c s18_r caches, saves and GLCache returned
+2026-10-06T11:06:13Z S18c go_s18c s18_r manifest after: manifest C:/kyty/s288/s18c/runs/s18_r/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T11:06:13Z S18c go_s18c s18_r lock released (rc 0)
+2026-10-06T11:06:26Z S18c post_s18c s18_r: read.txt 9416fc017efea238,   READING NOT_ADMITTED, glitch: 
+2026-10-06T11:07:38Z S18c s18_r interference: enter_scene rc 3 at 11:05:57Z (runs/s18_r/run.txt: pre_run REFUSED BUSY gpu_util_median 19.0 > 10, the emulator was not started); the GPU load at 11:08Z: videodecode engine of a foreign process <app> pid 68452 (not the emulator, not ours), 3D engine ~0; reading NOT_ADMITTED; one repeat by the same name (seal section 3 p.5, item 273(z)) after the GPU is idle
+2026-10-06T11:07:39Z S18c aside_s18c s18_r rep: moved runs/s18_r.rep_20261006T110738Z state/s18_r.rep_20261006T110738Z aside/s18_r.rep_20261006T110738Z/go_s18_r.out.txt
+2026-10-06T11:12:48Z S18c GPU idle again (nvidia-smi median of 5: 0 at 11:12:03Z, 11:12:24Z, 11:12:44Z); s18_r repeat by the same name
+2026-10-06T11:12:56Z S18c API before s18_r: HPP-646 done run=-; HPP-647 done run=-; HPP-648 in_progress run=3c340a84; HPP-649 blocked run=-; HPP-652 done run=-; HPP-631 done run=-; HPP-632 done run=-; lock: none
+2026-10-06T11:12:58Z S18c guard (item 534): GUARD CLEAN; block open, tags 3 of 6; tag s18_r recorded, 4 of 6 in the block
+2026-10-06T11:12:58Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_r
+2026-10-06T11:13:17Z S18c go_s18c s18_r lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T11:13:18Z S18c go_s18c s18_r installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T11:13:21Z S18c go_s18c s18_r manifest before: manifest C:/kyty/s288/s18c/runs/s18_r/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T11:13:27Z S18c go_s18c s18_r caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T11:13:28Z S18c go_s18c s18_r input state cat_full: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 46;file replay.45.bin 6250527 12cb378741308d1a82133be521311882881d1bbf04aff649c; mf_in: manifest C:/kyty/s288/s18c/runs/s18_r/mf_in.tsv files 4 bytes 12503925 listsha cefff2bb8cd2383c7eedfa4eb684b507caf1553e77ca95225ca235624f9f7d9c
+2026-10-06T11:13:32Z S18c go_s18c s18_r installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T11:13:32Z S18c go_s18c s18_r enter_scene start (level underwater_aerial_garden, form p, --timeout 900 --until-prep, KYTY_SHADER_SEED=0 )
+2026-10-06T11:13:39Z S18c go_s18c s18_r enter_scene rc 3; guard watch: 2026-10-06T11:13:39Z watch end, user process seen: no
+2026-10-06T11:13:40Z S18c go_s18c s18_r run: 
+2026-10-06T11:13:40Z S18c go_s18c s18_r state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 46;file replay.45.bin 6250527 12cb378741308d1a82133be521311882881d1bbf04aff649c
+2026-10-06T11:13:42Z S18c go_s18c s18_r S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_r/mf_out.tsv files 4 bytes 12503925 listsha cefff2bb8cd2383c7eedfa4eb684b507caf1553e77ca95225ca235624f9f7d9c
+2026-10-06T11:13:45Z S18c go_s18c s18_r state saved to state/s18_r: all replay  (965 MB)
+2026-10-06T11:13:45Z S18c go_s18c s18_r installed binary returned from the pinned copy
+2026-10-06T11:13:46Z S18c go_s18c s18_r installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T11:13:50Z S18c go_s18c s18_r manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_r/manifest_run.tsv files 4060 bytes 1125184354 listsha 99448cd0dab2d1f59a9973374f1762d0d38ac5771a123fb05109650573555d2c; run vs before: manifest cmp DIFFER only-before 728 only-after 3
+2026-10-06T11:13:51Z S18c go_s18c s18_r caches, saves and GLCache returned
+2026-10-06T11:13:54Z S18c go_s18c s18_r manifest after: manifest C:/kyty/s288/s18c/runs/s18_r/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T11:13:54Z S18c go_s18c s18_r lock released (rc 0)
+2026-10-06T11:15:02Z S18c s18_r second interference: enter_scene rc 3 at 11:13:39Z (pre_run REFUSED BUSY gpu_util_median 18.0 > 10, the emulator was not started; GPU engine 3d of the foreign process <app> pid 68452 12 % at 11:14:20Z-11:14:35Z); seal section 3 p.5 - no third call, question to the lead; series stopped before s18_r (done: s18_c01..s18_c19, s18_ks)
+2026-10-06T11:17:35Z S18c manifest commit c644e3ad (docs/track-s/s18c/replay_known_manifest.tsv); waiting for the lead answer on s18_r (comment 534d3d02)
+2026-10-06T11:20:15Z S18c aside s18_r pre (pre_run BUSY, p.585(b); one Bash command, the composition of aside_s18c.sh plus s18_r.refused.json of the 11:13:39Z refusal; the rep of 11:07:38Z counts as unspent, p.585(a)): moved runs/s18_r.pre_20261006T112015Z state/s18_r.pre_20261006T112015Z aside/s18_r.pre_20261006T112015Z/go_s18_r.out.txt aside/s18_r.pre_20261006T112015Z/s18_r.refused.json
+2026-10-06T11:20:38Z S18c API before the GPU idle window: HPP-648 in_progress run=3c340a84 (F20l2, last by p.585(d), no tags); HPP-645 blocked run=-; HPP-631 done run=-; lock: none
+2026-10-06T11:25:32Z S18c GPU idle window p.585(c) before s18_r: FAIL n 15 median 0 max 17; samples 11:20:39Z=0 11:20:59Z=6 11:21:21Z=1 11:21:42Z=1 11:22:03Z=0 11:22:24Z=0 11:22:45Z=0 11:23:07Z=0 11:23:27Z=0 11:23:49Z=0 11:24:09Z=0 11:24:29Z=0 11:24:51Z=0 11:25:12Z=1 11:25:32Z=17
+2026-10-06T11:25:48Z S18c idle_s18c.sh written (window p.585(c) as one script; previous window FAIL at 11:25:32Z, next not before 11:35:32Z)
+2026-10-06T11:40:30Z S18c GPU idle window p.585(c) before s18_r: FAIL n 15 median 11 max 17; samples 11:35:39Z=12 11:36:00Z=11 11:36:20Z=11 11:36:42Z=11 11:37:03Z=11 11:37:24Z=12 11:37:44Z=13 11:38:04Z=2 11:38:26Z=12 11:38:46Z=12 11:39:06Z=15 11:39:28Z=1 11:39:49Z=1 11:40:10Z=8 11:40:30Z=17
+2026-10-06T11:40:55Z S18c GPU window FAIL at 11:40:30Z: GPU engine counters at 11:41Z show only the foreign process <app> pid 68452; next window not before 11:50:30Z (p.585(c)); deadline 14:35:57Z (p.585(d))
+2026-10-06T11:55:27Z S18c GPU idle window p.585(c) before s18_r: FAIL n 15 median 15 max 19; samples 11:50:36Z=2 11:50:56Z=19 11:51:16Z=18 11:51:36Z=18 11:51:58Z=18 11:52:18Z=17 11:52:38Z=18 11:52:59Z=12 11:53:21Z=12 11:53:41Z=12 11:54:02Z=12 11:54:24Z=15 11:54:45Z=14 11:55:06Z=15 11:55:27Z=14
+2026-10-06T12:10:29Z S18c GPU idle window p.585(c) before s18_r: PASS n 15 median 1 max 7; samples 12:05:38Z=1 12:05:58Z=7 12:06:19Z=6 12:06:39Z=0 12:07:00Z=1 12:07:21Z=0 12:07:43Z=4 12:08:05Z=0 12:08:25Z=3 12:08:46Z=7 12:09:06Z=0 12:09:27Z=5 12:09:47Z=1 12:10:08Z=7 12:10:29Z=1
+2026-10-06T12:10:30Z S18c guard (item 534): GUARD CLEAN; block open, tags 4 of 6; tag s18_r recorded, 5 of 6 in the block
+2026-10-06T12:10:30Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_r
+2026-10-06T12:10:49Z S18c go_s18c s18_r lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T12:10:49Z S18c go_s18c s18_r installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T12:10:52Z S18c go_s18c s18_r manifest before: manifest C:/kyty/s288/s18c/runs/s18_r/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T12:10:57Z S18c go_s18c s18_r caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T12:10:58Z S18c go_s18c s18_r input state cat_full: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 46;file replay.45.bin 6250527 12cb378741308d1a82133be521311882881d1bbf04aff649c; mf_in: manifest C:/kyty/s288/s18c/runs/s18_r/mf_in.tsv files 4 bytes 12503925 listsha cefff2bb8cd2383c7eedfa4eb684b507caf1553e77ca95225ca235624f9f7d9c
+2026-10-06T12:10:59Z S18c go_s18c s18_r installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T12:10:59Z S18c go_s18c s18_r enter_scene start (level underwater_aerial_garden, form p, --timeout 900 --until-prep, KYTY_SHADER_SEED=0 )
+2026-10-06T12:11:34Z S18c go_s18c s18_r enter_scene rc 0; guard watch: 2026-10-06T12:11:34Z watch end, user process seen: no
+2026-10-06T12:11:34Z S18c go_s18c s18_r run: VERDICT: preparation screen ended in 18.7 s (--until-prep)
+2026-10-06T12:11:35Z S18c go_s18c s18_r log_s18_r.txt sha256 968f13ea986409315c806b0f20b228fb2e55bfc919db72df273f5c60d9e3bda4
+2026-10-06T12:11:35Z S18c go_s18c s18_r state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 728 cache_files 727 pipelines_bin 34901497 fa953db6c2596d78ac0d1e280d9f287fd5b2bbf8828474649ab0888c131df404;dir replay present files 4 cache_files 
+2026-10-06T12:11:37Z S18c go_s18c s18_r S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_r/mf_out.tsv files 732 bytes 161045265 listsha b4d4224979f52e8d3c08d9304d314149274bb54b6aa96b7b3c8360e9970c8fda
+2026-10-06T12:11:41Z S18c go_s18c s18_r state saved to state/s18_r: all replay  (1108 MB)
+2026-10-06T12:11:42Z S18c go_s18c s18_r installed binary returned from the pinned copy
+2026-10-06T12:11:43Z S18c go_s18c s18_r installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T12:11:48Z S18c go_s18c s18_r manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_r/manifest_run.tsv files 4789 bytes 1273725694 listsha 30707dd7efb3ad8bb3bcb5043288d43de49dcf4779172f708ba52f00b0502eb3; run vs before: manifest cmp DIFFER only-before 725 only-after 729
+2026-10-06T12:11:49Z S18c go_s18c s18_r caches, saves and GLCache returned
+2026-10-06T12:11:53Z S18c go_s18c s18_r manifest after: manifest C:/kyty/s288/s18c/runs/s18_r/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T12:11:53Z S18c go_s18c s18_r lock released (rc 0)
+2026-10-06T12:12:30Z S18c post_s18c s18_r: read.txt 51a1806496038968,   READING MEMBERS_PASS, glitch: 
+2026-10-06T12:13:06Z S18c API before s18_e1: HPP-648 blocked run=-; HPP-645 blocked run=-; HPP-631 done run=-; lock: none
+2026-10-06T12:18:04Z S18c GPU idle window p.585(c) before s18_e1: FAIL n 15 median 54 max 93; samples 12:13:11Z=33 12:13:31Z=84 12:13:52Z=92 12:14:13Z=12 12:14:34Z=57 12:14:54Z=54 12:15:14Z=54 12:15:34Z=56 12:15:56Z=87 12:16:18Z=24 12:16:38Z=89 12:17:00Z=93 12:17:22Z=19 12:17:42Z=9 12:18:04Z=9
+2026-10-06T12:18:37Z S18c post_s18c s18_r MEMBERS_PASS (share 3079/3079, prep 12330 ms, pipelines_bin=written); GPU window FAIL at 12:18:04Z before s18_e1 (median 54, max 93): GPU engine counters at 12:18Z show a second foreign process <app> pid 57332 (3d); s18_e1 not launched (not an attempt); next window not before 12:28:04Z; executor variant: p.585(c)-(d) by analogy for the tail, deadline 15:48:04Z (3.5 h from 12:18:04Z)
+2026-10-06T12:33:04Z S18c GPU idle window p.585(c) before s18_e1: FAIL n 15 median 87 max 99; samples 12:28:11Z=69 12:28:31Z=99 12:28:52Z=93 12:29:12Z=97 12:29:32Z=80 12:29:55Z=87 12:30:15Z=92 12:30:35Z=98 12:30:57Z=10 12:31:17Z=75 12:31:38Z=99 12:31:58Z=99 12:32:20Z=7 12:32:42Z=86 12:33:03Z=81
+2026-10-06T12:48:05Z S18c GPU idle window p.585(c) before s18_e1: FAIL n 15 median 10 max 85; samples 12:43:12Z=85 12:43:32Z=83 12:43:53Z=67 12:44:17Z=56 12:44:38Z=10 12:44:58Z=10 12:45:18Z=7 12:45:40Z=9 12:46:00Z=9 12:46:20Z=7 12:46:40Z=8 12:47:01Z=9 12:47:23Z=66 12:47:45Z=9 12:48:05Z=69
+2026-10-06T13:03:09Z S18c GPU idle window p.585(c) before s18_e1: FAIL n 15 median 2 max 12; samples 12:58:11Z=1 12:58:31Z=0 12:58:55Z=0 12:59:15Z=6 12:59:37Z=6 12:59:59Z=2 13:00:21Z=1 13:00:42Z=2 13:01:02Z=1 13:01:24Z=0 13:01:45Z=1 13:02:06Z=12 13:02:27Z=11 13:02:48Z=11 13:03:09Z=11
+2026-10-06T13:18:07Z S18c GPU idle window p.585(c) before s18_e1: FAIL n 15 median 11 max 12; samples 13:13:16Z=8 13:13:36Z=2 13:13:57Z=0 13:14:17Z=0 13:14:37Z=0 13:14:59Z=1 13:15:20Z=11 13:15:41Z=11 13:16:01Z=11 13:16:23Z=11 13:16:44Z=11 13:17:05Z=11 13:17:25Z=11 13:17:47Z=11 13:18:07Z=12
+2026-10-06T13:18:21Z S18c GPU windows before s18_e1 FAIL at 12:33:04Z, 12:48:05Z, 13:03:09Z, 13:18:07Z (times.txt lines above); counters at 13:18Z: <app> pid 68452 3d 12 %
+2026-10-06T13:33:08Z S18c GPU idle window p.585(c) before s18_e1: PASS n 15 median 1 max 2; samples 13:28:16Z=1 13:28:36Z=1 13:28:57Z=1 13:29:17Z=1 13:29:38Z=2 13:29:59Z=2 13:30:19Z=2 13:30:40Z=2 13:31:02Z=0 13:31:22Z=0 13:31:42Z=0 13:32:03Z=1 13:32:24Z=1 13:32:46Z=1 13:33:07Z=1
+2026-10-06T13:33:08Z S18c guard (item 534): GUARD CLEAN; block open, tags 5 of 6; tag s18_e1 recorded, 6 of 6 in the block
+2026-10-06T13:33:08Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_e1
+2026-10-06T13:33:23Z S18c go_s18c s18_e1 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T13:33:25Z S18c go_s18c s18_e1 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T13:33:29Z S18c go_s18c s18_e1 manifest before: manifest C:/kyty/s288/s18c/runs/s18_e1/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T13:33:33Z S18c go_s18c s18_e1 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T13:33:43Z S18c go_s18c s18_e1 chain input vs run state of s18_r: manifest cmp EQUAL files 4789 listsha 30707dd7efb3ad8bb3bcb5043288d43de49dcf4779172f708ba52f00b0502eb3
+2026-10-06T13:33:45Z S18c go_s18c s18_e1 input state chain: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 728 cache_files 727 pipelines_bin 34901497 fa953db6c2596d78ac0d1e280d9f287fd5b2bbf8828474649ab0888c131df404;dir replay present files 4 cache_files ; mf_in: manifest C:/kyty/s288/s18c/runs/s18_e1/mf_in.tsv files 732 bytes 161045265 listsha b4d4224979f52e8d3c08d9304d314149274bb54b6aa96b7b3c8360e9970c8fda
+2026-10-06T13:33:46Z S18c go_s18c s18_e1 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T13:33:46Z S18c go_s18c s18_e1 enter_scene start (level underwater_aerial_garden, form v, --timeout 600 --rec --hold 330, KYTY_SHADER_SEED=0 KYTY_AV_TRACE=1 )
+2026-10-06T13:39:53Z S18c go_s18c s18_e1 enter_scene rc 0; guard watch: 2026-10-06T13:39:52Z watch end, user process seen: no
+2026-10-06T13:39:53Z S18c go_s18c s18_e1 run: VERDICT: underwater_aerial_garden in 20.9 s - PASS (acceptance <= 90 s)
+2026-10-06T13:39:56Z S18c go_s18c s18_e1 log_s18_e1.txt sha256 a6d2300204e371b7b1448a88647cee67e0efddd250d61e2ec51071b30bdfc213
+2026-10-06T13:39:57Z S18c go_s18c s18_e1 state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 728 cache_files 727 pipelines_bin 34901497 fa953db6c2596d78ac0d1e280d9f287fd5b2bbf8828474649ab0888c131df404;dir replay present files 4 cache_files 
+2026-10-06T13:39:58Z S18c go_s18c s18_e1 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_e1/mf_out.tsv files 732 bytes 161045265 listsha b4d4224979f52e8d3c08d9304d314149274bb54b6aa96b7b3c8360e9970c8fda
+2026-10-06T13:40:04Z S18c go_s18c s18_e1 state saved to state/s18_e1: all replay  (1108 MB)
+2026-10-06T13:40:05Z S18c go_s18c s18_e1 installed binary returned from the pinned copy
+2026-10-06T13:40:07Z S18c go_s18c s18_e1 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T13:40:11Z S18c go_s18c s18_e1 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_e1/manifest_run.tsv files 4789 bytes 1273725694 listsha 30707dd7efb3ad8bb3bcb5043288d43de49dcf4779172f708ba52f00b0502eb3; run vs before: manifest cmp DIFFER only-before 725 only-after 729
+2026-10-06T13:40:15Z S18c go_s18c s18_e1 caches, saves and GLCache returned
+2026-10-06T13:40:22Z S18c go_s18c s18_e1 manifest after: manifest C:/kyty/s288/s18c/runs/s18_e1/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T13:40:22Z S18c go_s18c s18_e1 lock released (rc 0)
+2026-10-06T13:41:24Z S18c post_s18c s18_e1: read.txt 6064882a09d33f9b,   READING MEMBERS_PASS, glitch: one-frame glitches: 0
+2026-10-06T13:41:39Z S18c post_s18c s18_e1 MEMBERS_PASS (hold 334.2 s, frames >= 1 s 0, video 9984, glitches 0, catalogue translations 0, lost keyboard focus 2 - not an admission line); guard (item 534) block 5 first check: GUARD CLEAN; block PENDING
+2026-10-06T13:51:42Z S18c guard (item 534) block 5 second check: GUARD CLEAN; block OPEN
+2026-10-06T13:56:39Z S18c GPU idle window p.585(c) before s18_e2: PASS n 15 median 1 max 7; samples 13:51:46Z=0 13:52:08Z=1 13:52:28Z=0 13:52:49Z=0 13:53:09Z=1 13:53:30Z=6 13:53:51Z=1 13:54:11Z=2 13:54:33Z=5 13:54:55Z=2 13:55:16Z=1 13:55:36Z=7 13:55:57Z=0 13:56:18Z=0 13:56:38Z=0
+2026-10-06T13:56:40Z S18c guard (item 534): GUARD CLEAN; block open, tags 0 of 6; tag s18_e2 recorded, 1 of 6 in the block
+2026-10-06T13:56:40Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_e2
+2026-10-06T13:57:00Z S18c go_s18c s18_e2 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T13:57:00Z S18c go_s18c s18_e2 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T13:57:02Z S18c go_s18c s18_e2 manifest before: manifest C:/kyty/s288/s18c/runs/s18_e2/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T13:57:07Z S18c go_s18c s18_e2 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T13:57:17Z S18c go_s18c s18_e2 chain input vs run state of s18_e1: manifest cmp EQUAL files 4789 listsha 30707dd7efb3ad8bb3bcb5043288d43de49dcf4779172f708ba52f00b0502eb3
+2026-10-06T13:57:17Z S18c go_s18c s18_e2 input state chain: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 728 cache_files 727 pipelines_bin 34901497 fa953db6c2596d78ac0d1e280d9f287fd5b2bbf8828474649ab0888c131df404;dir replay present files 4 cache_files ; mf_in: manifest C:/kyty/s288/s18c/runs/s18_e2/mf_in.tsv files 732 bytes 161045265 listsha b4d4224979f52e8d3c08d9304d314149274bb54b6aa96b7b3c8360e9970c8fda
+2026-10-06T13:57:18Z S18c go_s18c s18_e2 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T13:57:19Z S18c go_s18c s18_e2 enter_scene start (level mini_giants_garden, form v, --timeout 600 --rec --hold 330, KYTY_SHADER_SEED=0 KYTY_AV_TRACE=1 )
+2026-10-06T14:03:27Z S18c go_s18c s18_e2 enter_scene rc 0; guard watch: 2026-10-06T14:03:27Z watch end, user process seen: no
+2026-10-06T14:03:27Z S18c go_s18c s18_e2 run: VERDICT: mini_giants_garden in 23.4 s - PASS (acceptance <= 90 s)
+2026-10-06T14:03:29Z S18c go_s18c s18_e2 log_s18_e2.txt sha256 cf9b7dbf8988b6582dfab242ae7fc78f3ac2f2cbc352b3cef6f12796c3c7840c
+2026-10-06T14:03:30Z S18c go_s18c s18_e2 state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 728 cache_files 727 pipelines_bin 34901497 fa953db6c2596d78ac0d1e280d9f287fd5b2bbf8828474649ab0888c131df404;dir replay present files 4 cache_files 
+2026-10-06T14:03:31Z S18c go_s18c s18_e2 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_e2/mf_out.tsv files 732 bytes 161045265 listsha b4d4224979f52e8d3c08d9304d314149274bb54b6aa96b7b3c8360e9970c8fda
+2026-10-06T14:03:34Z S18c go_s18c s18_e2 installed binary returned from the pinned copy
+2026-10-06T14:03:35Z S18c go_s18c s18_e2 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T14:03:39Z S18c go_s18c s18_e2 manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_e2/manifest_run.tsv files 4789 bytes 1273725694 listsha 30707dd7efb3ad8bb3bcb5043288d43de49dcf4779172f708ba52f00b0502eb3; run vs before: manifest cmp DIFFER only-before 725 only-after 729
+2026-10-06T14:03:40Z S18c go_s18c s18_e2 caches, saves and GLCache returned
+2026-10-06T14:03:47Z S18c go_s18c s18_e2 manifest after: manifest C:/kyty/s288/s18c/runs/s18_e2/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T14:03:48Z S18c go_s18c s18_e2 lock released (rc 0)
+2026-10-06T14:05:23Z S18c post_s18c s18_e2: read.txt 91bbab671910045c,   READING MEMBERS_PASS, glitch: one-frame glitches: 0
+2026-10-06T14:05:42Z S18c post_s18c s18_e2 MEMBERS_PASS (hold 332.2 s, frames >= 1 s 0, video 20424, glitches 0, catalogue translations 0); API before s18_v: HPP-648 blocked run=-; HPP-645 blocked run=-; lock: none
+2026-10-06T14:10:46Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 2 max 27; samples 14:05:45Z=2 14:06:08Z=27 14:06:30Z=27 14:06:52Z=5 14:07:14Z=1 14:07:34Z=2 14:07:55Z=2 14:08:17Z=2 14:08:40Z=2 14:09:00Z=3 14:09:22Z=2 14:09:42Z=3 14:10:03Z=2 14:10:23Z=2 14:10:46Z=25
+2026-10-06T14:25:46Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 1 max 20; samples 14:20:52Z=20 14:21:13Z=0 14:21:34Z=1 14:21:54Z=1 14:22:15Z=1 14:22:37Z=1 14:22:59Z=2 14:23:20Z=1 14:23:40Z=2 14:24:01Z=2 14:24:22Z=2 14:24:43Z=1 14:25:04Z=0 14:25:25Z=7 14:25:45Z=4
+2026-10-06T14:40:51Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 2 max 19; samples 14:35:56Z=1 14:36:17Z=0 14:36:38Z=0 14:36:59Z=5 14:37:21Z=7 14:37:42Z=4 14:38:03Z=5 14:38:24Z=2 14:38:44Z=19 14:39:05Z=19 14:39:28Z=0 14:39:50Z=1 14:40:10Z=2 14:40:31Z=2 14:40:51Z=0
+2026-10-06T14:55:54Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 19 max 20; samples 14:50:58Z=19 14:51:19Z=19 14:51:40Z=20 14:52:00Z=19 14:52:21Z=19 14:52:42Z=19 14:53:04Z=19 14:53:25Z=19 14:53:45Z=19 14:54:07Z=19 14:54:29Z=20 14:54:49Z=19 14:55:09Z=19 14:55:31Z=3 14:55:54Z=20
+2026-10-06T14:56:09Z S18c GPU windows before s18_v FAIL at 14:10:46Z, 14:25:46Z, 14:40:51Z, 14:55:54Z; counters at 14:56Z: <app> pid 68452 3d 17 % + videodecode; executor variant deadline for s18_v 17:40:46Z (3.5 h from 14:10:46Z)
+2026-10-06T15:10:58Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 99 max 99; samples 15:06:03Z=7 15:06:24Z=1 15:06:45Z=99 15:07:06Z=50 15:07:27Z=99 15:07:49Z=99 15:08:10Z=99 15:08:31Z=99 15:08:52Z=99 15:09:12Z=99 15:09:33Z=95 15:09:54Z=99 15:10:17Z=99 15:10:37Z=99 15:10:58Z=99
+2026-10-06T15:11:13Z S18c GPU window before s18_v FAIL at 15:10:58Z (median 99); counters at 15:11Z: a third foreign process <app> pid 42548 3d 64 % (not kyty_emulator)
+2026-10-06T15:25:57Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 82 max 99; samples 15:21:06Z=62 15:21:26Z=76 15:21:46Z=60 15:22:07Z=74 15:22:28Z=61 15:22:49Z=58 15:23:11Z=93 15:23:31Z=82 15:23:53Z=75 15:24:15Z=83 15:24:35Z=99 15:24:56Z=99 15:25:16Z=99 15:25:36Z=99 15:25:57Z=99
+2026-10-06T15:40:58Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 99 max 99; samples 15:36:05Z=99 15:36:27Z=99 15:36:47Z=99 15:37:07Z=99 15:37:27Z=99 15:37:48Z=99 15:38:09Z=99 15:38:29Z=99 15:38:49Z=99 15:39:09Z=97 15:39:31Z=70 15:39:55Z=99 15:40:16Z=99 15:40:37Z=99 15:40:58Z=99
+2026-10-06T15:56:07Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 96 max 99; samples 15:51:04Z=58 15:51:27Z=91 15:51:50Z=99 15:52:11Z=99 15:52:31Z=99 15:52:52Z=99 15:53:13Z=59 15:53:34Z=80 15:53:57Z=96 15:54:17Z=99 15:54:38Z=98 15:54:59Z=83 15:55:20Z=89 15:55:44Z=97 15:56:07Z=96
+2026-10-06T16:11:15Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 70 max 82; samples 16:06:14Z=47 16:06:35Z=8 16:06:57Z=66 16:07:17Z=59 16:07:39Z=67 16:08:00Z=75 16:08:21Z=79 16:08:41Z=78 16:09:02Z=79 16:09:22Z=82 16:09:44Z=70 16:10:04Z=64 16:10:25Z=49 16:10:49Z=79 16:11:13Z=77
+2026-10-06T16:26:22Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 65 max 95; samples 16:21:22Z=55 16:21:44Z=65 16:22:06Z=52 16:22:27Z=75 16:22:49Z=58 16:23:10Z=76 16:23:35Z=87 16:23:56Z=57 16:24:16Z=65 16:24:36Z=65 16:24:59Z=39 16:25:21Z=69 16:25:41Z=19 16:26:01Z=75 16:26:21Z=95
+2026-10-06T16:41:33Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 71 max 95; samples 16:36:31Z=0 16:36:52Z=75 16:37:12Z=71 16:37:34Z=51 16:37:57Z=56 16:38:17Z=69 16:38:40Z=71 16:39:02Z=58 16:39:22Z=62 16:39:45Z=95 16:40:06Z=85 16:40:28Z=75 16:40:51Z=84 16:41:11Z=72 16:41:33Z=80
+2026-10-06T16:56:40Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 60 max 75; samples 16:51:40Z=62 16:52:02Z=75 16:52:23Z=70 16:52:43Z=4 16:53:07Z=55 16:53:29Z=60 16:53:49Z=64 16:54:10Z=67 16:54:31Z=52 16:54:54Z=4 16:55:15Z=59 16:55:37Z=45 16:55:57Z=51 16:56:19Z=66 16:56:40Z=67
+2026-10-06T17:11:41Z S18c GPU idle window p.585(c) before s18_v: FAIL n 15 median 38 max 42; samples 17:06:48Z=37 17:07:08Z=41 17:07:29Z=38 17:07:50Z=38 17:08:11Z=38 17:08:31Z=37 17:08:51Z=40 17:09:12Z=39 17:09:33Z=12 17:09:54Z=39 17:10:14Z=42 17:10:37Z=38 17:10:58Z=38 17:11:20Z=38 17:11:41Z=39
+2026-10-06T17:26:44Z S18c GPU idle window p.585(c) before s18_v: PASS n 15 median 1 max 6; samples 17:21:49Z=2 17:22:11Z=1 17:22:31Z=2 17:22:51Z=2 17:23:12Z=2 17:23:34Z=2 17:23:55Z=1 17:24:16Z=1 17:24:36Z=1 17:24:56Z=1 17:25:19Z=1 17:25:40Z=1 17:26:02Z=2 17:26:22Z=1 17:26:44Z=6
+2026-10-06T17:26:44Z S18c guard (item 534): GUARD CLEAN; block open, tags 1 of 6; tag s18_v recorded, 2 of 6 in the block
+2026-10-06T17:26:45Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_v
+2026-10-06T17:27:05Z S18c go_s18c s18_v lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T17:27:05Z S18c go_s18c s18_v installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T17:27:11Z S18c go_s18c s18_v manifest before: manifest C:/kyty/s288/s18c/runs/s18_v/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T17:27:13Z S18c go_s18c s18_v caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T17:27:15Z S18c go_s18c s18_v input state inst_cat: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files ; mf_in: manifest C:/kyty/s288/s18c/runs/s18_v/mf_in.tsv files 731 bytes 146342411 listsha 5b5edcbe10adf2c107aec51918d01f870356c95144e214d67a126de5421ec50a
+2026-10-06T17:27:17Z S18c go_s18c s18_v installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T17:27:17Z S18c go_s18c s18_v enter_scene start (level underwater_aerial_garden, form v, --timeout 600 --rec --hold 330,  )
+2026-10-06T17:33:20Z S18c go_s18c s18_v enter_scene rc 0; guard watch: 2026-10-06T17:33:18Z watch end, user process seen: no
+2026-10-06T17:33:20Z S18c go_s18c s18_v run: VERDICT: underwater_aerial_garden in 17.9 s - PASS (acceptance <= 90 s)
+2026-10-06T17:33:21Z S18c go_s18c s18_v log_s18_v.txt sha256 ace54bb3306c0d8bebff6c082652d6a38c1b25fecd33f55a9f63d64bfef49028
+2026-10-06T17:33:22Z S18c go_s18c s18_v state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T17:33:24Z S18c go_s18c s18_v S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_v/mf_out.tsv files 731 bytes 146342411 listsha 5b5edcbe10adf2c107aec51918d01f870356c95144e214d67a126de5421ec50a
+2026-10-06T17:33:25Z S18c go_s18c s18_v installed binary returned from the pinned copy
+2026-10-06T17:33:26Z S18c go_s18c s18_v installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T17:33:30Z S18c go_s18c s18_v manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_v/manifest_run.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3; run vs before: manifest cmp DIFFER only-before 0 only-after 3
+2026-10-06T17:33:31Z S18c go_s18c s18_v caches, saves and GLCache returned
+2026-10-06T17:33:33Z S18c go_s18c s18_v manifest after: manifest C:/kyty/s288/s18c/runs/s18_v/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T17:33:33Z S18c go_s18c s18_v lock released (rc 0)
+2026-10-06T17:34:33Z S18c post_s18c s18_v: read.txt 2a3e47399f0153e3,   READING MEMBERS_PASS, glitch: one-frame glitches: 0
+2026-10-06T17:34:40Z S18c post_s18c s18_v MEMBERS_PASS (hold 334.3 s, frames >= 1 s 0, video 10086, glitches 0, rebuild skipped recipes_current); API before s18_w: HPP-648 blocked run=-; HPP-645 blocked run=-; lock: none
+2026-10-06T17:39:41Z S18c GPU idle window p.585(c) before s18_w: PASS n 15 median 0 max 4; samples 17:34:44Z=0 17:35:04Z=0 17:35:26Z=0 17:35:50Z=0 17:36:12Z=0 17:36:33Z=0 17:36:54Z=0 17:37:15Z=3 17:37:37Z=0 17:37:57Z=4 17:38:17Z=4 17:38:37Z=0 17:38:59Z=0 17:39:20Z=0 17:39:41Z=0
+2026-10-06T17:39:42Z S18c guard (item 534): GUARD CLEAN; block open, tags 2 of 6; tag s18_w recorded, 3 of 6 in the block
+2026-10-06T17:39:43Z S18c launch_s18c detached call: bash C:/kyty/s288/s18c/go_s18c.sh s18_w
+2026-10-06T17:41:16Z S18c go_s18c s18_w lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T17:41:16Z S18c go_s18c s18_w installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T17:41:19Z S18c go_s18c s18_w manifest before: manifest C:/kyty/s288/s18c/runs/s18_w/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T17:41:24Z S18c go_s18c s18_w caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T17:41:25Z S18c go_s18c s18_w input state cat_full: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 46;file replay.45.bin 6250527 12cb378741308d1a82133be521311882881d1bbf04aff649c; mf_in: manifest C:/kyty/s288/s18c/runs/s18_w/mf_in.tsv files 4 bytes 12503925 listsha cefff2bb8cd2383c7eedfa4eb684b507caf1553e77ca95225ca235624f9f7d9c
+2026-10-06T17:41:29Z S18c go_s18c s18_w installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T17:41:29Z S18c go_s18c s18_w enter_scene start (level underwater_aerial_garden, form w, --timeout 900 --emu-arg=--vulkan-validation --emu-arg=true --hold 310,  VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000)
+2026-10-06T17:47:26Z S18c go_s18c s18_w enter_scene rc 0; guard watch: 2026-10-06T17:47:26Z watch end, user process seen: no
+2026-10-06T17:47:27Z S18c go_s18c s18_w run: VERDICT: underwater_aerial_garden in 34.6 s - PASS (acceptance <= 90 s)
+2026-10-06T17:47:28Z S18c go_s18c s18_w log_s18_w.txt sha256 e43138e6ad3ad849daf4ad4e6fffb0b88727e25ba118d487fa5d40f85efa3028
+2026-10-06T17:47:30Z S18c go_s18c s18_w state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 728 cache_files 727 pipelines_bin 20430720 5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270;dir replay present files 3 cache_files 
+2026-10-06T17:47:31Z S18c go_s18c s18_w S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c/runs/s18_w/mf_out.tsv files 731 bytes 146342411 listsha 5b5edcbe10adf2c107aec51918d01f870356c95144e214d67a126de5421ec50a
+2026-10-06T17:47:31Z S18c go_s18c s18_w installed binary returned from the pinned copy
+2026-10-06T17:47:32Z S18c go_s18c s18_w installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T17:47:36Z S18c go_s18c s18_w manifest of the run state (before the return): manifest C:/kyty/s288/s18c/runs/s18_w/manifest_run.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3; run vs before: manifest cmp DIFFER only-before 0 only-after 3
+2026-10-06T17:47:38Z S18c go_s18c s18_w caches, saves and GLCache returned
+2026-10-06T17:47:44Z S18c go_s18c s18_w manifest after: manifest C:/kyty/s288/s18c/runs/s18_w/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T17:47:44Z S18c go_s18c s18_w lock released (rc 0)
+2026-10-06T17:48:10Z S18c post_s18c s18_w: read.txt 594902e6d8b40786,   READING MEMBERS_PASS, glitch: 
+2026-10-06T17:48:36Z S18c post_s18c s18_w MEMBERS_PASS (hold 310.2 s, [Vulkan][E] 0, [Vulkan][W] 875629, DualSrcBlend 1/1 at line 78 before GuestOut 12495); observation: ShaderSeed installed (727 shaders) at log line 90 and rebuild skipped reason=recipes_current at line 91 - the rebuild did not run under the layer (seal 4(g) premise not met); series S18c ended, F20l2 free by p.585(d)

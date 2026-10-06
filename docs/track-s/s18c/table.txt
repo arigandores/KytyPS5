@@ -1,0 +1,291 @@
+S18c member table, seal docs/track-s/s18c.md (no verdict - S18d HPP-645)
+  item 569 (d)(5) members (1)-(2): S18a ACCEPTED item 573, S18a2 ACCEPTED item 578 (KytyPS5 03e7ab2d), S18b ACCEPTED item 576 (PASS_WITH_FIXES, RC1 by code), S18b2 ACCEPTED item 579 (PASS, RC 0; KytyPS5 abd476c6)
+  s18_c01  CAP  title_controller_ship        READING MEMBERS_PASS ACCUMULATION s18_c01 OK SIGNATURE_571G3 s18_c01 OK
+      YES             CAP entered (Level has started: title_controller_ship, outcome ok) | entry line 269385
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.0
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=absent generation=0 (first tag) | {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'absent', 'generation': '0', 'corrupt': '0', 'sources': '0', 'specs': '0', 'pipes': '0', 'test': 'none'}
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 2 gen 2 readable True
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 128 / 130
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+      YES             CAP signature line = KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10 (item 571 (g)(3), the KYTY_FIX_F19=0 string of the first tag; executor reading, seal section 4) | ['KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10']
+  s18_c02  CAP  intro_next                   READING MEMBERS_PASS ACCUMULATION s18_c02 OK
+      YES             CAP entered (Level has started: intro_next, outcome ok) | entry line 339213
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c01 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '2', 'corrupt': '0', 'sources': '128', 'specs': '130', 'pipes': '112', 'test': 'none'} / previous replay
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 7 gen 7 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c01 | catalogue_sources 323 >= 128, catalogue_specs 350 >= 130
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 323 / 350
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c03  CAP  worldmap                     READING MEMBERS_PASS ACCUMULATION s18_c03 OK
+      YES             CAP entered (Level has started: worldmap, outcome ok) | entry line 306566
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.2
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c02 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '7', 'corrupt': '0', 'sources': '323', 'specs': '350', 'pipes': '371', 'test': 'none'} / previous replay
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 8 gen 8 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c02 | catalogue_sources 342 >= 323, catalogue_specs 372 >= 350
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 342 / 372
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c04  CAP  ps_logo                      READING MEMBERS_PASS ACCUMULATION s18_c04 OK
+      YES             CAP entered (Level has started: ps_logo, outcome ok) | entry line 255015
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c03 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '8', 'corrupt': '0', 'sources': '342', 'specs': '372', 'pipes': '438', 'test': 'none'} / previous replay
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 10 gen 10 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c03 | catalogue_sources 342 >= 342, catalogue_specs 372 >= 372
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 342 / 372
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c05  CAP  hub_crashsite                READING MEMBERS_PASS ACCUMULATION s18_c05 OK
+      YES             CAP entered (Level has started: hub_crashsite, outcome ok) | entry line 414832
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c04 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '10', 'corrupt': '0', 'sources': '342', 'specs': '372', 'pipes': '480', 'test': 'none'} / previous repla
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 13 gen 13 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c04 | catalogue_sources 434 >= 342, catalogue_specs 483 >= 372
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 434 / 483
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c06  CAP  underwater_aerial_garden     READING MEMBERS_PASS ACCUMULATION s18_c06 OK
+      YES             CAP entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 351715
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.2
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c05 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '13', 'corrupt': '0', 'sources': '434', 'specs': '483', 'pipes': '681', 'test': 'none'} / previous repla
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 18 gen 18 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c05 | catalogue_sources 549 >= 434, catalogue_specs 652 >= 483
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 549 / 652
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c07  CAP  penguin_atlantis             READING MEMBERS_PASS ACCUMULATION s18_c07 OK
+      YES             CAP entered (Level has started: penguin_atlantis, outcome ok) | entry line 307784
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c06 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '18', 'corrupt': '0', 'sources': '549', 'specs': '652', 'pipes': '949', 'test': 'none'} / previous repla
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 20 gen 20 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c06 | catalogue_sources 564 >= 549, catalogue_specs 781 >= 652
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 564 / 781
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c08  CAP  time_stopper_ghost_world     READING MEMBERS_PASS ACCUMULATION s18_c08 OK
+      YES             CAP entered (Level has started: time_stopper_ghost_world, outcome ok) | entry line 365479
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.2
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c07 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '20', 'corrupt': '0', 'sources': '564', 'specs': '781', 'pipes': '1242', 'test': 'none'} / previous repl
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 22 gen 22 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c07 | catalogue_sources 596 >= 564, catalogue_specs 817 >= 781
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 596 / 817
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c09  CAP  rotating_level_day_and_night READING MEMBERS_PASS ACCUMULATION s18_c09 OK
+      YES             CAP entered (Level has started: rotating_level_day_and_night, outcome ok) | entry line 360682
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.0
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c08 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '22', 'corrupt': '0', 'sources': '596', 'specs': '817', 'pipes': '1413', 'test': 'none'} / previous repl
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 24 gen 24 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c08 | catalogue_sources 608 >= 596, catalogue_specs 834 >= 817
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 608 / 834
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c10  CAP  bumper_enemy_snowy_canyon    READING MEMBERS_PASS ACCUMULATION s18_c10 OK
+      YES             CAP entered (Level has started: bumper_enemy_snowy_canyon, outcome ok) | entry line 312117
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.0
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c09 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '24', 'corrupt': '0', 'sources': '608', 'specs': '834', 'pipes': '1537', 'test': 'none'} / previous repl
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 26 gen 26 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c09 | catalogue_sources 633 >= 608, catalogue_specs 941 >= 834
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 633 / 941
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c11  CAP  big_hand_pirate_island       READING MEMBERS_PASS ACCUMULATION s18_c11 OK
+      YES             CAP entered (Level has started: big_hand_pirate_island, outcome ok) | entry line 367934
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c10 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '26', 'corrupt': '0', 'sources': '633', 'specs': '941', 'pipes': '1770', 'test': 'none'} / previous repl
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 31 gen 31 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c10 | catalogue_sources 653 >= 633, catalogue_specs 1024 >= 941
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 653 / 1024
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c12  CAP  timestop_casino              READING MEMBERS_PASS ACCUMULATION s18_c12 OK
+      YES             CAP entered (Level has started: timestop_casino, outcome ok) | entry line 367670
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.0
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c11 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '31', 'corrupt': '0', 'sources': '653', 'specs': '1024', 'pipes': '2083', 'test': 'none'} / previous rep
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 34 gen 34 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c11 | catalogue_sources 658 >= 653, catalogue_specs 1074 >= 1024
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 658 / 1074
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c13  CAP  mini_giants_garden           READING MEMBERS_PASS ACCUMULATION s18_c13 OK
+      YES             CAP entered (Level has started: mini_giants_garden, outcome ok) | entry line 339916
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c12 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '34', 'corrupt': '0', 'sources': '658', 'specs': '1074', 'pipes': '2304', 'test': 'none'} / previous rep
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 36 gen 36 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c12 | catalogue_sources 674 >= 658, catalogue_specs 1097 >= 1074
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 674 / 1097
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c14  CAP  ice_iceberg                  READING MEMBERS_PASS ACCUMULATION s18_c14 OK
+      YES             CAP entered (Level has started: ice_iceberg, outcome ok) | entry line 337034
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.2
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c13 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '36', 'corrupt': '0', 'sources': '674', 'specs': '1097', 'pipes': '2424', 'test': 'none'} / previous rep
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 38 gen 38 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c13 | catalogue_sources 684 >= 674, catalogue_specs 1140 >= 1097
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 684 / 1140
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c15  CAP  sponge_dirty_bath            READING MEMBERS_PASS ACCUMULATION s18_c15 OK
+      YES             CAP entered (Level has started: sponge_dirty_bath, outcome ok) | entry line 371593
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c14 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '38', 'corrupt': '0', 'sources': '684', 'specs': '1140', 'pipes': '2567', 'test': 'none'} / previous rep
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 40 gen 40 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c14 | catalogue_sources 701 >= 684, catalogue_specs 1190 >= 1140
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 701 / 1190
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c16  CAP  hoover_beach                 READING MEMBERS_PASS ACCUMULATION s18_c16 OK
+      YES             CAP entered (Level has started: hoover_beach, outcome ok) | entry line 346061
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.2
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c15 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '40', 'corrupt': '0', 'sources': '701', 'specs': '1190', 'pipes': '2705', 'test': 'none'} / previous rep
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 41 gen 41 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c15 | catalogue_sources 704 >= 701, catalogue_specs 1193 >= 1190
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 704 / 1193
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c17  CAP  volcano_mountain             READING MEMBERS_PASS ACCUMULATION s18_c17 OK
+      YES             CAP entered (Level has started: volcano_mountain, outcome ok) | entry line 329198
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c16 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '41', 'corrupt': '0', 'sources': '704', 'specs': '1193', 'pipes': '2819', 'test': 'none'} / previous rep
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 42 gen 42 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c16 | catalogue_sources 714 >= 704, catalogue_specs 1204 >= 1193
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 714 / 1204
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c18  CAP  voxel_world                  READING MEMBERS_PASS ACCUMULATION s18_c18 OK
+      YES             CAP entered (Level has started: voxel_world, outcome ok) | entry line 302628
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.0
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c17 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '42', 'corrupt': '0', 'sources': '714', 'specs': '1204', 'pipes': '2919', 'test': 'none'} / previous rep
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 44 gen 44 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c17 | catalogue_sources 721 >= 714, catalogue_specs 1211 >= 1204
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 721 / 1211
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_c19  CAP  enemy_gorilla                READING MEMBERS_PASS ACCUMULATION s18_c19 OK
+      YES             CAP entered (Level has started: enemy_gorilla, outcome ok) | entry line 316927
+      YES             CAP the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             CAP 0 death markers (log, stdout) | 0
+      YES             CAP translation cache directory = variant_fixb26_fixb1b_fixf10 (signature of KYTY_FIX_F19=0) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']
+      YES             CAP accumulation: mode line mode=2 and compat=ok, generation = replay.cur of s18_c18 | mode line {'mode': '2', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '44', 'corrupt': '0', 'sources': '721', 'specs': '1211', 'pipes': '2985', 'test': 'none'} / previous rep
+      YES             CAP accumulation: generation file on disk = gen of the last capture at=stop line and readable | replay.cur 46 gen 46 readable True
+      YES             CAP accumulation: catalogue_sources and catalogue_specs not decreasing against s18_c18 | catalogue_sources 727 >= 721, catalogue_specs 1218 >= 1211
+      YES             CAP canon_mismatch = 0 (canon_self + canon_residual) | canon_mismatch 0 self 0 residual 0
+      YES             CAP dropped_queue = 0 (read at a soft close, item 532 (z) N4) | dropped_queue 0 soft close True
+      YES             CAP catalogue_sources > 0 and catalogue_specs > 0 | 727 / 1218
+      YES             CAP offline R_ADDR = 0 ("the role layout agrees", item 532 (e)) | 0
+  s18_ks   KS   underwater_aerial_garden     READING MEMBERS_PASS SIGNATURE_571G3 s18_ks OK
+      YES             KS mode line mode=3 compat=ok generation = replay.cur of s18_c19 | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '46', 'corrupt': '0', 'sources': '727', 'specs': '1218', 'pipes': '3079', 'test': 'stop'} / 46
+      YES             KS the break by the real close path: applied -> close requested precache_active=1 -> stand stop seen -> rebuild pipelines_bin=stopped -> close joined, one P < R, 0 timeout, 0 Event: quit, exit code 0 (item 566 (v)) | P 1539 R 3079; applied 2566592 requested 2566593 seen 2566594 stopped 2566595 joined 2566598 quit 0 exit 0
+      YES             KS sign of the break: rebuild ... pipelines_bin=stopped after stand stop applied (item 532 (b)) | stand line 2566592 stopped line 2566595
+      YES             KS pipelines.bin is not written at the break (state_out.txt, variant_fixb26_fixb1b_fixf10_fixf19) | {'present': True, 'files': 609, 'cache_files': 609, 'pipelines_bin': False, 'replay_files': {}, 'cur': None}
+      YES             KS 0 death markers | 0
+      YES             KS signature line = KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19 (item 571 (g)(3), the first KYTY_FIX_F19=1 tag) | ['KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19']
+  s18_r    R    underwater_aerial_garden     READING MEMBERS_PASS 
+      YES             R mode line mode=3 compat=ok generation = replay.cur of s18_c19 (the default 3) | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '46', 'corrupt': '0', 'sources': '727', 'specs': '1218', 'pipes': '3079', 'test': 'none'} / 46
+      YES             R translation cache directory = variant_fixb26_fixb1b_fixf10_fixf19 (the default signature) | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+      YES             R a rebuild line and no rebuild skipped line | rebuild 1 skipped []
+      YES             R 0 death markers | []
+      YES             R the process reached the end of the preparation screen (--until-prep outcome prep) | prep
+      YES             R pipelines_bin=written | written
+      YES             R identity prepared + rejected + pending = records | 3079 + 0 + 0 = 3079
+      YES             R partition of the reasons: sum rej_* (rej_ref included) = rejected | [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] = 0
+      YES             R share prepared / records >= 0.90 (item 569 (d)(4)) | share 1.0 = 3079 / 3079
+      YES             R preparation screen <= 180 s (startup wait finished; item 229 (d)(2)) | 12330 ms
+  s18_e1   E    underwater_aerial_garden     READING MEMBERS_PASS 
+      YES             E mode line mode=3 compat=ok (the default 3) | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '46', 'corrupt': '0', 'sources': '727', 'specs': '1218', 'pipes': '3079', 'test': 'none'}
+      YES             E line rebuild skipped reason=recipes_current and no rebuild line | skipped [(87, 'recipes_current')] rebuild lines 0
+      YES             E translation cache directory = variant_fixb26_fixb1b_fixf10_fixf19 | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+      YES             E entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 231159
+      YES             E the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             E shown hold after the first scene frame >= 300 s | 334.2 s
+      YES             E 0 death markers (log, stdout) | 0
+      YES             E 0 frames >= 1 s after the first scene frame | frames 0, first scene frame n=363
+      YES             E video index records >= 3000 | 9984
+      YES             E 0 one-frame glitches (s51_vidglitch.py 4 6) | 0
+      YES             E sheet of the lead made | sheet: C:/kyty/s288/s18c/runs/s18_e1/sheet_s18_e1.png frames 9984 step 208 tiles 8x6
+      YES             E translations in the game of programs of the replay catalogue (s18_c19) = 0 (after the preparation line) | catalogue programs 0 of new permutations 0 after line 6254; None
+  s18_e2   E    mini_giants_garden           READING MEMBERS_PASS 
+      YES             E mode line mode=3 compat=ok (the default 3) | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '46', 'corrupt': '0', 'sources': '727', 'specs': '1218', 'pipes': '3079', 'test': 'none'}
+      YES             E line rebuild skipped reason=recipes_current and no rebuild line | skipped [(87, 'recipes_current')] rebuild lines 0
+      YES             E translation cache directory = variant_fixb26_fixb1b_fixf10_fixf19 | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+      YES             E entered (Level has started: mini_giants_garden, outcome ok) | entry line 227500
+      YES             E the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.1
+      YES             E shown hold after the first scene frame >= 300 s | 332.2 s
+      YES             E 0 death markers (log, stdout) | 0
+      YES             E 0 frames >= 1 s after the first scene frame | frames 0, first scene frame n=510
+      YES             E video index records >= 3000 | 20424
+      YES             E 0 one-frame glitches (s51_vidglitch.py 4 6) | 0
+      YES             E sheet of the lead made | sheet: C:/kyty/s288/s18c/runs/s18_e2/sheet_s18_e2.png frames 20424 step 425 tiles 8x6
+      YES             E translations in the game of programs of the replay catalogue (s18_c19) = 0 (after the preparation line) | catalogue programs 0 of new permutations 0 after line 6255; None
+  s18_v    V    underwater_aerial_garden     READING MEMBERS_PASS 
+      YES             V mode line mode=3 compat=ok (the default 3) | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '46', 'corrupt': '0', 'sources': '727', 'specs': '1218', 'pipes': '3079', 'test': 'none'}
+      YES             V line rebuild skipped reason=recipes_current (named by the seal), or a rebuild with a preparation screen <= 180 s | named: rebuild skipped reason=recipes_current
+      YES             V translation cache directory = variant_fixb26_fixb1b_fixf10_fixf19 | ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+      YES             V entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 227725
+      YES             V the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.2
+      YES             V shown hold after the first scene frame >= 300 s | 334.3 s
+      YES             V 0 death markers (log, stdout) | 0
+      YES             V 0 frames >= 1 s after the first scene frame | frames 0, first scene frame n=358
+      YES             V video index records >= 3000 | 10086
+      YES             V 0 one-frame glitches (s51_vidglitch.py 4 6) | 0
+      YES             V sheet of the lead made | sheet: C:/kyty/s288/s18c/runs/s18_v/sheet_s18_v.png frames 10086 step 210 tiles 8x6
+  s18_w    W    underwater_aerial_garden     READING MEMBERS_PASS 
+      YES             W entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 229028
+      YES             W the process lived to the end of the hold (310 s) | outcome ok hold_exit None hold_s 310.2
+      YES             W 0 [Vulkan][E] | 0
+      YES             W positive control of the layer: [Vulkan][W] > 0 and DualSrcBlend: supported=1 enabled=1 before the first GuestOut | W 875629, dual [(78, 1, 1)], first GuestOut 12495

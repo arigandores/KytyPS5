@@ -1,0 +1,34 @@
+wt HEAD 0005e11fee90bc42b51960573bfbb14f55694b4c
+wt parent 62ff7b5b02dc5177078d1a9de20b196991c2383c OK
+wt status lines 0
+patch-id main 643af5ffff1c8f6c7254668baf68c77017010111 wt 643af5ffff1c8f6c7254668baf68c77017010111 EQUAL
+files main ['src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp', 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.h', 'src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp', 'src/graphics/presentation/window/window.cpp']
+files wt   ['src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp', 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.h', 'src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp', 'src/graphics/presentation/window/window.cpp'] SAME
+62ff7b5b..HEAD paths ['src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp', 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.h', 'src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp', 'src/graphics/presentation/window/window.cpp'] OK
+K1(7) 302347b4..HEAD: EMPTY
+delta paths in signature set NONE
+main->wt on delta paths: +0 -15
+    -#include "graphics/host_gpu/renderer/diagF5.h"
+    -				if (DiagF5::On()) [[unlikely]] {
+    -					// Track F, F16d (KYTY_DIAG_F5, item 427(v), reference): a permutation found by specialization whose
+    -					// images include an FMASK image (read as the identity fragment map). Memo hits do not reach here.
+    -					if (std::ranges::any_of(permutation->specialization.images,
+    -					                        [](const auto& image) { return image.fmask; })) {
+    -						DiagF5::Add(DiagF5::Counter::FmaskRead);
+    -					}
+    -				}
+    -#include "common/diagB32.h"
+    -	if (Common::DiagB32::g_test_on && text != nullptr) [[unlikely]] { // Track F, F20j: KYTY_TEST_B32 arms on th
+    -		if (TestMinimizeIsLevelEntry(std::string_view(text, size))) {
+    -			Common::DiagB32::TestArm();
+    -		}
+    -	}
+exe sha256 b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a OK
+sig hash count 1
+version g0005e11f count 2 g62ff7b5b count 0
+string ShaderReplay: close stop requested 1
+string ShaderReplay: close stop joined 1
+string ShaderReplay: stand stop seen 1
+string ShaderReplay: stand stop applied 1
+string pipelines_bin= 1
+ALL OK

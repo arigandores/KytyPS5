@@ -1,0 +1,22 @@
+OK  7c31481b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6626 | if (!ShaderReplay::RebuildOn() || !m_replay_rebuild) { | return;
+OK  7c31481b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6630 | LOGF("ShaderReplay: close stop requested precache_active=%d\n", m_precache_activ | m_precache_stop.store(true);
+OK  7c31481b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6632 | while (!m_replay_rebuild_done.load(std::memory_order_acquire)) { | std::this_thread::sleep_for(std::chrono::milliseconds(1));
+OK  7c31481b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6635 | LOGF("ShaderReplay: close stop joined wait_ms=%" PRIu64 "\n", (HostMicros() - be | }
+OK  7c31481b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6752 | m_replay_rebuild = skip == nullptr; | }
+OK  7c31481b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6754 | if (!m_replay_rebuild && !Common::File::IsFileExisting(m_recipes_path)) { | LOGF("PipelinePrecache: no %s yet\n", Common::PathToString(m
+OK  7c31481b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6762 | m_replay_rebuild_done.store(true, std::memory_order_release); // S18a2: ReplayCl | }
+OK  7c31481b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6764 | if (!m_replay_rebuild || (!m_precache_stop.load() && Common::File::IsFileExistin | PrecachePipelines();
+OK  7c31481b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.h:401 | std::atomic<bool>                        m_replay_rebuild_done {false}; | bool                                     m_replay_hits_logge
+OK  7c31481b:src/graphics/presentation/window/window.cpp:1030 | cache.ReplayCloseStop(); | return false;
+OK  0005e11f:src/emulator.cpp:188 | if (!Libs::Graphics::WindowPrepareShaders()) { | std::quick_exit(0);
+OK  0005e11f:src/emulator.cpp:243 | ok = at_quick_exit(Common::Subsystems::EmergencyShutdownActive); | EXIT_NOT_IMPLEMENTED(ok != 0);
+OK  0005e11f:src/common/logging/log.h:19 | static constexpr auto        emergency_shutdown = Log::Shutdown; | };
+OK  0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4840 | StartWorkers(); | StartPrecache();
+OK  0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6717 | if (!PipelinePrecacheEnabled() || !m_program_cache->translation_cache.Enabled()) | return;
+OK  0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6727 | if (!ShaderReplay::RebuildOn()) { | skip = "mode";
+OK  0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7425 | while (!m_precache_stop.load() && HostMicros() - wait_begin < StandStopWaitMs *  | std::this_thread::sleep_for(std::chrono::milliseconds(5));
+OK  0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7542 | const bool stopped = m_precache_stop.load(); | save_dirty();
+OK  0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6815 | for (uint32_t i = 0; i < count && !r.Failed() && !m_precache_stop.load(); i++) { | const size_t record_begin = r.Pos();
+OK  0005e11f:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:59 | bool RebuildOn() { | return Mode() == 1 || Mode() == 3;
+refs 20
+ALL OK

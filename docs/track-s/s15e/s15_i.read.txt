@@ -1,0 +1,42 @@
+S15E s15_i level underwater_aerial_garden log sha256 53d13d8f971a4f74b244c84922c71fd5d480428c8985e215a710298e65eb7d11 lines 1310284 stdout sha256 d55cb72c65c2d089f02e3e797938c35f789a38faf52e3bad512a68aef68a4b20
+  binary: installed before 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b, of the tag 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b, json 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b, installed after 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b (expected 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b); version string in the binary True; revision texts [('log', 714, '302347b')]
+  prereg bc7e6d83011ba0c37f6016f243d2d801e5caa6ce0dfadbedc547b348a5959d67 seal bc7e6d83011ba0c37f6016f243d2d801e5caa6ce0dfadbedc547b348a5959d67; env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_REC', 'KYTY_SAMPLE_GATE']; offending []; banned env []
+  Shader translation cache lines 1 ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']; pre-state: PRE-STATE OK
+  catalogue compatibility first line: KytySeed1:PPSA21564:01.007.000:KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19::10288:376:216:44:516:125:000010de:00002c59
+  after state: {'pb_present': True, 'pb_size': 20430720, 'pb_sha256': '5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270', 'pb_header_sha256': '0fc7eb69909db188f8b1a923e785ee93709ad258d1a5e2386976b0c7f89e0847', 'cat_header_sha256': '0fc7eb69909db188f8b1a923e785ee93709ad258d1a5e2386976b0c7f89e0847', 'header_equal': True, 'n_trans_manifest': 727, 'n_trans_match': 727, 'n_missing': 0, 'missing': [], 'n_differ': 0, 'differ': [], 'variant_files': 728, 'manifest_sha256': '77a2389efc51228b6b85032b1f8d90edfa1484481aa9197965e2e5039d76e4bb'}
+  entry line 224717; scene change line None; first scene frame n 192; hold 334.38 s; FrameTrace rows 10087
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; GamePatch lines 0
+  video: index records 10098; one-frame glitches 0; sheet: C:/kyty/s288/s15e/runs/s15_i/sheet_s15_i.png frames 10098 step 210 tiles 8x6
+  EXIT (report): {'outcome': 'ok', 'detail': None, 'hold_exit': None, 'hold_s': 330.2, 'stable_s': 16.9, 'close_rc': 0, 'close_killed': False}; Event: quit line 1310284
+  catalogue manifest: translation .bin 727; installed lines n [727]
+  ADMIT binary: installed before = of the tag = json binary_sha256 = installed after = 2c9b69b9 (FS8): YES
+  ADMIT version string ...-1889-g302347b4 in the installed binary file (N1): YES
+  ADMIT every revision text of the log and stdout = 302347b (N1; SDL_REVISION never read): YES
+  ADMIT json prereg sha256 = sha256 of the seal file: YES
+  ADMIT environment and command line of the form fs8_v (no KYTY_FIX_*, KYTY_GAME_PATCH, KYTY_GPU_CHECKPOINTS, VK_LAYER_*; KYTY_REC; validation false; -lvl underwater_aerial_garden): YES
+  ADMIT none of KYTY_SHADER_SEED, KYTY_SHADER_SEED_PATH, KYTY_CACHE_MODE in the environment (offending []): YES
+  ADMIT pre-state of S15d before the tag (pre.txt: PRE-STATE OK): YES
+  ADMIT translation cache directory variant_fixb26_fixb1b_fixf10_fixf19 in every line (>= 1 line): YES
+  ADMIT no window minimized / Recovering Vulkan swapchain / GamePatch line: YES
+  MEMBER (1a) exactly 1 log line "ShaderSeed: installed (<n> shaders)" and it is "ShaderSeed: installed (728 shaders)" (n of the lines [727]): NO
+  MEMBER (1b) "ShaderSeed: compatibility=" lines 1, every value = the first line of the catalogue compatibility.txt: YES
+  MEMBER (2a) variant_fixb26_fixb1b_fixf10_fixf19/pipelines.bin present after the tag: YES
+  MEMBER (2b) its signature header = the header of the catalogue pipelines.bin: YES
+  MEMBER (2c) its size 20430720 >= 20430720 bytes: YES
+  MEMBER (2d) 728 translation files of the catalogue in the variant directory = seeds_manifest.txt by sha256 (match 727 of 727): NO
+  MEMBER (3a) 0 death markers (log and stdout): YES
+  MEMBER (3b) video index records >= 3000: YES
+  MEMBER (3c) 0 one-frame glitches (s51_vidglitch.py 4 6): YES
+  MEMBER (3d) sheet for the lead made: YES
+  FORM entered (entry line of underwater_aerial_garden): YES
+  FORM hold >= 300 s (sum dt after the first scene frame): YES
+  FORM the process lived to the end of the hold (outcome ok, hold_exit null, hold_s >= 330): YES
+  VARIANT (1a) exactly 1 log line "ShaderSeed: installed (<n> shaders)" with n = 727 (translation .bin of seeds_manifest.txt): YES
+  VARIANT (2d) 727 translation files of the catalogue in the variant directory = seeds_manifest.txt by sha256 (match 727 of 727): YES
+  DATA (4) after the first scene frame (log line 225932, to a scene change): AsyncPipelines: skipped draw lines 0; flip N held lines 0 (first []); frames >= 100 ms 1; frames >= 1 s 0 (max dt_us 183927); whole log: skipped draw 0, held 0
+  DATA (4) ShaderPreparation: ready [(4398, 'ShaderPreparation: ready completed=1856 total=1856 skipped=0')]; PipelinePrecache: all pipelines created [(4395, 'PipelinePrecache: all pipelines created, 7669 ms')] (ms 7669); FrameTrace rows before the latter 0 (sum dt 0.00 s)
+  DATA ShaderSeed lines [(85, 'ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19::10288:376:216:44:516:125:000010de:00002c59'), (86, 'ShaderSeed: installed (727 shaders)')]
+  DATA FixB4 [(15, '1')] FixF8 [(11217, '1')] FixB24 [(17, '1')]; first GuestOut line 12492
+READING VARIANT s15_i: MEMBERS_PASS (variant of the executor: n of the catalogue manifest for (1a), (2d))
+READING s15_i: MEMBERS_FAIL

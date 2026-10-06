@@ -1,0 +1,26 @@
+2026-10-06T03:33:07Z S15e harness ported from C:/kyty/f287/fs8e into C:/kyty/s288/s15e (lock absent, STOP absent)
+2026-10-06T03:37:33Z S15e seal C:/kyty/s288/pred/17_s.md written sha256 bc7e6d83011ba0c37f6016f243d2d801e5caa6ce0dfadbedc547b348a5959d67 (before the tag; question 727/728 to the lead before the tag)
+2026-10-06T03:38:03Z S15e question 727/728 to the lead posted in HPP-636 and HPP-3 (before the tag)
+2026-10-06T03:38:12Z S15e API check before the call: in_progress/todo = HPP-636/in_progress/2f5a0935/run=Y HPP-638/in_progress/eb15eb75/run=Y (Harness Engineer 2f5a0935 only HPP-636; no run link of another track in a series); STOP absent, lock absent, no kyty_emulator
+2026-10-06T03:38:16Z S15e launch_s15e detached call: bash C:/kyty/s288/s15e/go_s15e.sh s15_i
+2026-10-06T03:38:35Z S15e go_s15e s15_i lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None); seal lines checked 24
+2026-10-06T03:38:35Z S15e go_s15e s15_i installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:38:36Z S15e go_s15e s15_i pre-state rc 0: PRE-STATE OK; seeds dir C:/kyty/KytyPS5/ps5 em/_ShaderSeeds/PPSA21564 = manifest: YES (files 730 manifest 730; equal);compatibility first line of the seeds dir = of the catalogue: YES;variant pipelines.bin C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19\pipelines.bin absent: YES;
+2026-10-06T03:38:38Z S15e go_s15e s15_i manifest before: manifest C:/kyty/s288/s15e/runs/s15_i/manifest_before.tsv files 4444 bytes 1144011900 listsha 434f54d93a6fbf0d764fecb53af652198f17768870c0fc8f9d983041a316262d
+2026-10-06T03:38:38Z S15e go_s15e s15_i variant before: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 files 387; pipelines.bin absent
+2026-10-06T03:38:39Z S15e go_s15e s15_i binary of the tag (installed, not copied): 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:38:39Z S15e go_s15e s15_i enter_scene start (level underwater_aerial_garden, SD 300, --rec, hold 330, defaults of FS8, installed binary, no KYTY_SHADER_SEED / _PATH / KYTY_CACHE_MODE)
+2026-10-06T03:44:37Z S15e go_s15e s15_i enter_scene rc 0
+2026-10-06T03:44:37Z S15e go_s15e s15_i run: VERDICT: underwater_aerial_garden in 16.9 s - PASS (acceptance <= 90 s)
+2026-10-06T03:44:38Z S15e go_s15e s15_i log_s15_i.txt sha256 53d13d8f971a4f74b244c84922c71fd5d480428c8985e215a710298e65eb7d11
+2026-10-06T03:44:38Z S15e go_s15e s15_i after state rc 0: after: pb_present True size 20430720 header_equal True trans 727/727; after.json sha256 b201754def5ea9dc66a91f3fff59908b48663b2027f7a8df1b0cc790dc92cbe2
+2026-10-06T03:44:41Z S15e go_s15e s15_i manifest after (caches not returned): manifest C:/kyty/s288/s15e/runs/s15_i/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; vs before: manifest cmp DIFFER only-before 386 only-after 727
+2026-10-06T03:45:06Z S15e go_s15e s15_i s51_vidglitch rc 0: one-frame glitches: 0; rec sha256 afc6ca1d56e9062c94510949124e62d76cd90663108473e2f3af780974166d51
+2026-10-06T03:45:27Z S15e go_s15e s15_i sheet142 rc 0: sheet: C:/kyty/s288/s15e/runs/s15_i/sheet_s15_i.png frames 10098 step 210 tiles 8x6
+2026-10-06T03:45:27Z S15e go_s15e s15_i pair sheet: pair: C:/kyty/s288/s15e/runs/s15_i/pair_s15_i_fs8_i.png (left s15_i, right fs8_i)
+2026-10-06T03:45:36Z S15e go_s15e s15_i reader variant line: READING VARIANT s15_i: MEMBERS_PASS (variant of the executor: n of the catalogue manifest for (1a), (2d))
+2026-10-06T03:45:36Z S15e go_s15e s15_i reader rc 0 read.txt sha256 62ed12b556231e4b5e5053ccbd2ac32bbb472e7a503c10866cf37846970209f7: READING s15_i: MEMBERS_FAIL; MEMBER NO/NOT_DETERMINED: 2
+2026-10-06T03:45:37Z S15e go_s15e s15_i installed binary at the end: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T03:45:37Z S15e go_s15e s15_i READING s15_i: MEMBERS_FAIL - no rollback by this script (S15f, lead); caches not returned
+2026-10-06T03:45:37Z S15e go_s15e s15_i lock released (rc 0)
+2026-10-06T03:46:51Z S15e FACTS section ## S15e written; docs/track-s/s15e.md and docs/track-s/s15e/ copied into KytyPS5

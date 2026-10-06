@@ -1,0 +1,18 @@
+{
+ "variant": "C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19",
+ "manifest": "C:/kyty/s288/s15/seeds_manifest.txt",
+ "manifest_sha256": "77a2389efc51228b6b85032b1f8d90edfa1484481aa9197965e2e5039d76e4bb",
+ "pb_present": true,
+ "pb_size": 20430720,
+ "pb_sha256": "5392d53c4895889b9d411c113f7c4411cf7b9905eec04173df230fed81290270",
+ "pb_header_sha256": "0fc7eb69909db188f8b1a923e785ee93709ad258d1a5e2386976b0c7f89e0847",
+ "cat_header_sha256": "0fc7eb69909db188f8b1a923e785ee93709ad258d1a5e2386976b0c7f89e0847",
+ "header_equal": true,
+ "n_trans_manifest": 727,
+ "n_trans_match": 727,
+ "missing": [],
+ "n_missing": 0,
+ "differ": [],
+ "n_differ": 0,
+ "variant_files": 728
+}

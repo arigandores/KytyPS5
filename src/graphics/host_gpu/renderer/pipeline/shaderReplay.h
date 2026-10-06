@@ -3,9 +3,10 @@
 
 // Track S, S17a (HPP-611, ROADMAP "SESSION 122" item 524(e)-(z); design docs/track-s/s16a-design.md sections 2-3, 7):
 // S-replay - a catalogue of the shader translation inputs that survives a change of the translator signature.
-// Knob KYTY_S_REPLAY (read once per process): 0 (default; unset, "" or 0) - off: no file, no "ShaderReplay:" line, no
-// writer thread; 1 - capture and rebuild; 2 - capture only; 3 - rebuild only. Stands KYTY_S_REPLAY_TEST=canon|spec|addr|
-// stop|corrupt (positive controls of members K3, K4, K6).
+// Knob KYTY_S_REPLAY (read once per process): 0 (exactly "0", or any value other than "0".."3") - off: no file, no
+// "ShaderReplay:" line, no writer thread; 1 - capture and rebuild; 2 - capture only; 3 (the default since S18a, ROADMAP
+// s122 item 569(d)(1): unset or "") - rebuild only. Stands KYTY_S_REPLAY_TEST=canon|spec|addr|stop|corrupt (positive
+// controls of members K3, K4, K6).
 //
 // Not in the translator signature set (src/graphics/shader/** and SHADER_CACHE_EXTRA_FILES of CMakeLists.txt): the
 // specialization is re-derived by MaterializeResources with a synthetic SrtRuntime that answers the canonical words of
@@ -43,7 +44,8 @@ constexpr uint32_t StaticKeyVersion   = 1;
 constexpr uint32_t CanonVersion       = 1;
 constexpr uint32_t ReplayInputVersion = 1;
 
-// 0, 1, 2, 3 (see above); any other value of the variable reads as 0.
+// 0, 1, 2, 3 (see above): unset or "" reads as 3; exactly "0", "1", "2", "3" as is; any other value reads as 0.
+int  ParseMode(const char* value);
 int  Mode();
 bool CaptureOn();
 bool RebuildOn();

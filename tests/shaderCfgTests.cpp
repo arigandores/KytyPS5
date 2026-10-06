@@ -15299,9 +15299,17 @@ void TestShaderReplayFormat() {
     Check(SR::SourceId(1, 2, 3, 4, std::vector<uint32_t> {5u}) != SR::SourceId(1, 2, 3, 4, std::vector<uint32_t> {6u}),
           "replay source id keys the static state");
   }
-  // The knob is off by default (the test runs without KYTY_S_REPLAY).
+  // Track S, S18a (ROADMAP s122 item 569(d)(1)): unset or "" - 3 (rebuild only); exactly "0".."3" - as is; else 0.
+  Check(SR::ParseMode(nullptr) == 3 && SR::ParseMode("") == 3, "replay knob default 3");
+  Check(SR::ParseMode("0") == 0 && SR::ParseMode("1") == 1 && SR::ParseMode("2") == 2 && SR::ParseMode("3") == 3,
+        "replay knob exact values");
+  Check(SR::ParseMode("4") == 0 && SR::ParseMode("9") == 0 && SR::ParseMode("/") == 0 && SR::ParseMode("00") == 0 &&
+            SR::ParseMode("3 ") == 0 && SR::ParseMode(" 3") == 0 && SR::ParseMode("-1") == 0 &&
+            SR::ParseMode("true") == 0 && SR::ParseMode("on") == 0 && SR::ParseMode("off") == 0,
+        "replay knob other values 0");
+  // The test runs without KYTY_S_REPLAY: the process reads the default.
   if (std::getenv("KYTY_S_REPLAY") == nullptr) {
-    Check(SR::Mode() == 0 && !SR::CaptureOn() && !SR::RebuildOn(), "replay knob default 0");
+    Check(SR::Mode() == 3 && !SR::CaptureOn() && SR::RebuildOn(), "replay knob default 3 in the process");
   }
 }
 

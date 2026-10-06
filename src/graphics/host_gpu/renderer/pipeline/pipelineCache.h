@@ -388,8 +388,8 @@ private:
 	void StartPrecache();
 	void PrecachePipelines();
 
-	// Track S, S17a (HPP-611, ROADMAP s122 item 524; shaderReplay.h): S-replay under KYTY_S_REPLAY. At 0 (the default)
-	// ReplayInit returns at once: every member below stays empty, null or false.
+	// Track S, S17a (HPP-611, ROADMAP s122 item 524; shaderReplay.h): S-replay under KYTY_S_REPLAY (default 3 since S18a,
+	// item 569(d)(1)). At 0 ReplayInit returns at once: every member below stays empty, null or false.
 	std::unique_ptr<ShaderReplay::Store>     m_replay_store;
 	std::unique_ptr<ShaderReplay::Catalogue> m_replay_catalogue; // the loaded generation (input of the rebuild)
 	std::unique_ptr<ShaderReplay::Capture>   m_replay_capture;

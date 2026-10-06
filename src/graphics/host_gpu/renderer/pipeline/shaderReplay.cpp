@@ -34,15 +34,21 @@ namespace Libs::Graphics::ShaderReplay {
 
 namespace IR = ShaderRecompiler::IR;
 
+int ParseMode(const char* value) {
+	// Track S, S18a (ROADMAP s122 item 569(d)(1)): unset or "" - 3 (rebuild only, the shipped default); exactly "0",
+	// "1", "2" or "3" - that value; anything else - 0 (off).
+	if (value == nullptr || value[0] == '\0') {
+		return 3;
+	}
+	if (value[0] < '0' || value[0] > '3' || value[1] != '\0') {
+		return 0;
+	}
+	return value[0] - '0';
+}
+
 int Mode() {
-	// Read once per process. Only the exact values "1", "2", "3" turn it on; unset, "", "0" or anything else is 0.
-	static const int mode = [] {
-		const char* value = std::getenv("KYTY_S_REPLAY");
-		if (value == nullptr || value[0] < '1' || value[0] > '3' || value[1] != '\0') {
-			return 0;
-		}
-		return value[0] - '0';
-	}();
+	// Read once per process (ParseMode).
+	static const int mode = ParseMode(std::getenv("KYTY_S_REPLAY"));
 	return mode;
 }
 

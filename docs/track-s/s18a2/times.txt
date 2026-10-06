@@ -1,0 +1,16 @@
+2026-10-06T06:54:16Z S18a2 HPP-650 start (lock absent, STOP absent)
+2026-10-06T06:55:17Z commit main 7c31481b (gate order clean, privacy 0)
+2026-10-06T06:55:28Z cherry-pick 7c31481b -> 0005e11f in s18a/wt
+2026-10-06T06:55:52Z rule30 S18a2 API check before 'build emu1 ': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:56:43Z rule30 S18a2 API check before 'build configure configure': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:56:55Z build configure end rc=0
+2026-10-06T06:56:57Z rule30 S18a2 API check before 'build emu2 ': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:57:14Z build emu step 2 end rc=0
+2026-10-06T06:57:15Z rule30 S18a2 API check before 'build tests1 tests': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:57:41Z build tests step 1 end rc=0
+2026-10-06T06:58:26Z chk576.py end rc=ALL OK
+2026-10-06T06:58:47Z post.sh end
+2026-10-06T06:59:01Z rule30 S18a2 API check before 'suite_s18a2.py': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:59:02Z suite_s18a2.py end rc=0
+2026-10-06T07:00:37Z note: build emu step 1 ended 2026-10-06T06:56:24Z (watch line in build_emu1.log), version strings differed (SDL_REVISION g62ff7b5b) -> configure + emu2
+2026-10-06T07:00:37Z publish: FACTS section S18a2, docs/track-s/s18a2

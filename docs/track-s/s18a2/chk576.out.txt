@@ -1,0 +1,31 @@
+== (1) patch-id --stable main 7c31481b / S18a2 0005e11f: all 643af5ffff1c8f6c7254668baf68c77017010111 / 643af5ffff1c8f6c7254668baf68c77017010111, code 643af5ffff1c8f6c7254668baf68c77017010111 / 643af5ffff1c8f6c7254668baf68c77017010111 -> OK
+== main code commits between fe4b227a and 7c31481b: NONE
+== (2) git diff 7c31481b 0005e11f on 6 paths: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp src/graphics/host_gpu/renderer/pipeline/pipelineCache.h src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp src/graphics/host_gpu/renderer/pipeline/shaderReplay.h src/graphics/presentation/window/window.cpp tests/shaderCfgTests.cpp
+  src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp - F |#include "graphics/host_gpu/renderer/diagF5.h"
+  src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp - F |				if (DiagF5::On()) [[unlikely]] {
+  src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp - F |					// Track F, F16d (KYTY_DIAG_F5, item 427(v), reference): a permutation found by specialization whose
+  src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp - F |					// images include an FMASK image (read as the identity fragment map). Memo hits do not reach here.
+  src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp - F |					if (std::ranges::any_of(permutation->specialization.images,
+  src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp - F |					                        [](const auto& image) { return image.fmask; })) {
+  src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp - F |						DiagF5::Add(DiagF5::Counter::FmaskRead);
+  src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp - F |					}
+  src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp - F |				}
+  src/graphics/presentation/window/window.cpp - F |#include "common/diagB32.h"
+  src/graphics/presentation/window/window.cpp - F |	if (Common::DiagB32::g_test_on && text != nullptr) [[unlikely]] { // Track F, F20j: KYTY_TEST_B32 arms on the same line
+  src/graphics/presentation/window/window.cpp - F |		if (TestMinimizeIsLevelEntry(std::string_view(text, size))) {
+  src/graphics/presentation/window/window.cpp - F |			Common::DiagB32::TestArm();
+  src/graphics/presentation/window/window.cpp - F |		}
+  src/graphics/presentation/window/window.cpp - F |	}
+  tests/shaderCfgTests.cpp - F |// Track S, S16d (HPP-608, ROADMAP s122 item 516(v)): probe P-S16 of S-replay (tests/S16dProbe.inc).
+  tests/shaderCfgTests.cpp - F |#define KYTY_S16D_HAVE_F19 1
+  tests/shaderCfgTests.cpp - F |#include "S16dProbe.inc"
+  tests/shaderCfgTests.cpp - F |
+  tests/shaderCfgTests.cpp - F |  if (const char *s16d_jobs = std::getenv("KYTY_S16D_JOBS"); s16d_jobs != nullptr) {
+  tests/shaderCfgTests.cpp - F |    // Track S, S16d (HPP-608): probe P-S16, read-only over the S13b catalogue (S16dProbe.inc).
+  tests/shaderCfgTests.cpp - F |    const char *s16d_out = std::getenv("KYTY_S16D_OUT");
+  tests/shaderCfgTests.cpp - F |    return s16d_out == nullptr ? 1 : S16dProbe::Main(s16d_jobs, s16d_out);
+  tests/shaderCfgTests.cpp - F |  }
+  lines 24, not lines of 381aa80a/1d8d9aa6/9bd96f44: 0 -> OK
+== (3) K1(7) diff --stat 302347b4..0005e11f: EMPTY
+== (4) parent 62ff7b5b, paths changed ['src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp', 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.h', 'src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp', 'src/graphics/presentation/window/window.cpp'] = paths of 7c31481b -> OK
+ALL OK

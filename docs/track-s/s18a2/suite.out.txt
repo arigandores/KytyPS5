@@ -1,0 +1,8 @@
+fu rc=0 wall=0.3 s exe=27f69093
+S18a: rc 0, tests 133, failed lines 0 [], spv 180, lines with ShaderReplay 4
+FS8a: rc 0, tests 133, failed lines 0, spv 180
+FS8a tests missing in S18a: 0 []
+tests new in S18a: 0 
+information: SPIR-V same name 180, byte-equal by name 180; FS8a SPIR-V contents found in S18a 180 of 180
+exe C:/kyty/s288/s18a2/bin/shader_cfg_tests_27f69093.exe 27f69093724ba1ae373c18ef0eba7a549c183906c0c183a9fb8addcad152485d
+ALL OK

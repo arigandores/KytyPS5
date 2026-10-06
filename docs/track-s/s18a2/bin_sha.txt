@@ -1,0 +1,2 @@
+emu b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a C:/kyty/s288/bin/kyty_emulator_b3cee576.exe version KytyPS5-2026-09-15-6a2987a-1897-g0005e11f commit 0005e11fee90bc42b51960573bfbb14f55694b4c
+tests 27f69093724ba1ae373c18ef0eba7a549c183906c0c183a9fb8addcad152485d C:/kyty/s288/s18a2/bin/shader_cfg_tests_27f69093.exe

@@ -1,0 +1,61 @@
+2026-10-06T18:28:25Z S18c2 API before the mutlib run: HPP-648 blocked run=-; HPP-645 blocked run=-; HPP-631 done; HPP-640 done; lock: none
+2026-10-06T18:28:26Z S18c2 mutlib forecast: suite 0.8 s; forecast 8 s = 55 x 0.8 / 12 x 1.3 + control
+2026-10-06T18:28:33Z S18c2 mutlib v4.1 full counted run start
+2026-10-06T18:28:44Z S18c2 mutlib run end: ALL KILLED (54 of 54 selected mutants killed; 54 defined in the mutant script)
+2026-10-06T18:30:45Z S18c2 seal written: pred/s18c2_seal.md sha256 7149848230b1962aaed3aa3d462d71b95e91b8188c6dddf793ae31aa0eedfbbd; checkseal: SEAL: PASS
+2026-10-06T18:30:57Z S18c2 guard open-block 1 (general rule 33): GUARD CLEAN; block PENDING
+2026-10-06T18:41:16Z S18c2 guard open-block 2 (general rule 33): GUARD CLEAN; block OPEN
+2026-10-06T18:41:17Z S18c2 API before the idle window and s18_w2: HPP-648 blocked run=-; HPP-645 blocked run=-; HPP-631 done run=-; lock: none
+2026-10-06T18:46:07Z S18c2 GPU idle window p.585(c) before s18_w2: PASS n 15 median 1 max 7; samples 18:41:20Z=7 18:41:40Z=7 18:42:01Z=0 18:42:21Z=1 18:42:41Z=1 18:43:01Z=0 18:43:22Z=1 18:43:42Z=2 18:44:06Z=1 18:44:26Z=1 18:44:46Z=2 18:45:06Z=1 18:45:27Z=2 18:45:47Z=6 18:46:07Z=1
+2026-10-06T18:46:08Z S18c2 guard (item 534): GUARD CLEAN; block open, tags 0 of 6; tag s18_w2 recorded, 1 of 6 in the block
+2026-10-06T18:46:08Z S18c2 launch_s18c2 detached call: bash C:/kyty/s288/s18c2/go_s18c2.sh s18_w2
+2026-10-06T18:46:21Z S18c2 go_s18c2 s18_w2 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T18:46:21Z S18c2 go_s18c2 s18_w2 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T18:46:25Z S18c2 go_s18c2 s18_w2 manifest before: manifest C:/kyty/s288/s18c2/runs/s18_w2/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T18:46:27Z S18c2 go_s18c2 s18_w2 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T18:46:27Z S18c2 go_s18c2 s18_w2 input state cat_full: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 46;file replay.45.bin 6250527 12cb378741308d1a82133be521311882881d1bbf04aff649c; mf_in: manifest C:/kyty/s288/s18c2/runs/s18_w2/mf_in.tsv files 4 bytes 12503925 listsha cefff2bb8cd2383c7eedfa4eb684b507caf1553e77ca95225ca235624f9f7d9c
+2026-10-06T18:46:28Z S18c2 go_s18c2 s18_w2 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T18:46:28Z S18c2 go_s18c2 s18_w2 enter_scene start (level underwater_aerial_garden, form w, --timeout 900 --emu-arg=--vulkan-validation --emu-arg=true --hold 310, KYTY_SHADER_SEED=0 VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000)
+2026-10-06T18:47:00Z S18c2 go_s18c2 s18_w2 enter_scene rc 1; guard watch: 2026-10-06T18:47:00Z watch end, user process seen: no
+2026-10-06T18:47:00Z S18c2 go_s18c2 s18_w2 run: VERDICT: no attempt reached underwater_aerial_garden
+2026-10-06T18:47:01Z S18c2 go_s18c2 s18_w2 log_s18_w2.txt sha256 5bb09fdf15a22ab0028e8712400e2e506ddff2a396497a4d9f2f2e1094ffa92b
+2026-10-06T18:47:01Z S18c2 go_s18c2 s18_w2 state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 728 cache_files 727 pipelines_bin 34901497 fa953db6c2596d78ac0d1e280d9f287fd5b2bbf8828474649ab0888c131df404;dir replay present files 4 cache_files 
+2026-10-06T18:47:01Z S18c2 go_s18c2 s18_w2 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c2/runs/s18_w2/mf_out.tsv files 732 bytes 161045265 listsha 78519b24fd015a6913c64b22fd9da9190d25f3241140fe6ac98b7e57a03a340a
+2026-10-06T18:47:02Z S18c2 go_s18c2 s18_w2 installed binary returned from the pinned copy
+2026-10-06T18:47:02Z S18c2 go_s18c2 s18_w2 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T18:47:04Z S18c2 go_s18c2 s18_w2 manifest of the run state (before the return): manifest C:/kyty/s288/s18c2/runs/s18_w2/manifest_run.tsv files 4789 bytes 1273725694 listsha 454ebea77249f798378d2128f1a623b35baf5109753877a0faedf984a94a781b; run vs before: manifest cmp DIFFER only-before 724 only-after 728
+2026-10-06T18:47:05Z S18c2 go_s18c2 s18_w2 caches, saves and GLCache returned
+2026-10-06T18:47:07Z S18c2 go_s18c2 s18_w2 manifest after: manifest C:/kyty/s288/s18c2/runs/s18_w2/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T18:47:07Z S18c2 go_s18c2 s18_w2 lock released (rc 0)
+2026-10-06T19:04:03Z S18c2 wake (comment 04e67c10 'prodolzhay' 19:02:08Z): previous run 18bc3ef2 cancelled by a board operator at 18:41:50Z (platform time); its idle command and the detached s18_w2 call ran on after the cancel (times.txt 18:46:07Z..18:47:07Z)
+2026-10-06T19:04:03Z S18c2 s18_w2 attempt 1 read: emulator 20:46:31..20:46:58 local (s18_w2.json), exit code 0; log line 3441985 'ShaderReplay: rebuild records=3079 prepared=3079 rejected=0 pending=0'; then log 3442170 'Window 1 gained keyboard focus', 3442232 'Mouse entered window 1', 3442318 'Mouse left window 1', 3442331 'ShaderReplay: close stop requested precache_active=1' - the window was closed on the preparation screen (by a person: focus + mouse, no own kill); no 'Level has started' => window interference, not a level outcome; one repeat under the same name (p.273(z))
+2026-10-06T19:04:03Z S18c2 guard: block closed (user_window_close_s18_w2_a1); open-block 1 of a new block (general rule 33)
+2026-10-06T19:04:57Z S18c2 s18_w2 attempt 1 (window closed on the preparation screen) moved to s18c2/old/s18_w2_a1win/ (runs, logs, stdout, json, gpuclk, go output) before the repeat by the same name
+2026-10-06T19:05:14Z S18c2 API before the wait for the guard check 2: HPP-648 blocked run=-; HPP-645 blocked run=-; HPP-631 done; in_progress with a run: only HPP-654 (own); lock: none
+2026-10-06T19:14:23Z S18c2 guard open-block 2 of the new block (general rule 33): GUARD CLEAN; block PENDING
+2026-10-06T19:14:38Z S18c2 guard note: the CLEAN of 19:04:03Z shares the second of the CLOSE line (open_block counts CLEAN with t > last_cut strictly) - the first check of the new block is 19:14:23Z; check 2 not before 19:24:23Z (guard unchanged)
+2026-10-06T19:24:41Z S18c2 guard open-block 2 of the new block (general rule 33): GUARD CLEAN; block OPEN
+2026-10-06T19:24:42Z S18c2 API before the idle window and the repeat of s18_w2: HPP-648 blocked run=-; HPP-645 blocked run=-; HPP-631 done run=-; lock: none
+2026-10-06T19:29:38Z S18c2 GPU idle window p.585(c) before s18_w2: FAIL n 15 median 6 max 8; samples 19:24:46Z=6 19:25:06Z=6 19:25:30Z=6 19:25:50Z=6 19:26:10Z=7 19:26:30Z=4 19:26:51Z=6 19:27:11Z=6 19:27:34Z=5 19:27:54Z=6 19:28:14Z=6 19:28:34Z=7 19:28:54Z=6 19:29:18Z=6 19:29:38Z=8
+2026-10-06T19:29:51Z S18c2 decision of the executor: the GPU idle window p.585(c) is optional for W (no time members; task item (3)); after FAIL at 19:29:38Z the repeat of s18_w2 is launched without it, the enter_scene --require-idle admission stays
+2026-10-06T19:29:51Z S18c2 guard (item 534): GUARD CLEAN; block open, tags 0 of 6; tag s18_w2 recorded, 1 of 6 in the block
+2026-10-06T19:29:51Z S18c2 launch_s18c2 detached call: bash C:/kyty/s288/s18c2/go_s18c2.sh s18_w2
+2026-10-06T19:30:05Z S18c2 go_s18c2 s18_w2 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T19:30:05Z S18c2 go_s18c2 s18_w2 installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T19:30:08Z S18c2 go_s18c2 s18_w2 manifest before: manifest C:/kyty/s288/s18c2/runs/s18_w2/manifest_before.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T19:30:09Z S18c2 go_s18c2 s18_w2 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T19:30:10Z S18c2 go_s18c2 s18_w2 input state cat_full: dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 absent;dir replay present files 3 cache_files 0 pipelines_bin absent;replay.cur 46;file replay.45.bin 6250527 12cb378741308d1a82133be521311882881d1bbf04aff649c; mf_in: manifest C:/kyty/s288/s18c2/runs/s18_w2/mf_in.tsv files 4 bytes 12503925 listsha cefff2bb8cd2383c7eedfa4eb684b507caf1553e77ca95225ca235624f9f7d9c
+2026-10-06T19:30:10Z S18c2 go_s18c2 s18_w2 installed the S18a2 copy for the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T19:30:10Z S18c2 go_s18c2 s18_w2 enter_scene start (level underwater_aerial_garden, form w, --timeout 900 --emu-arg=--vulkan-validation --emu-arg=true --hold 310, KYTY_SHADER_SEED=0 VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000)
+2026-10-06T19:36:15Z S18c2 go_s18c2 s18_w2 enter_scene rc 0; guard watch: 2026-10-06T19:36:15Z watch end, user process seen: no
+2026-10-06T19:36:15Z S18c2 go_s18c2 s18_w2 run: VERDICT: underwater_aerial_garden in 45.2 s - PASS (acceptance <= 90 s)
+2026-10-06T19:36:17Z S18c2 go_s18c2 s18_w2 log_s18_w2.txt sha256 bd9fef2374a6131e6d93fe8a0c0713e1da84c4b857b1b3cb1c0e5a34b440c4c9
+2026-10-06T19:36:17Z S18c2 go_s18c2 s18_w2 state after the run (before the return): dir f10 present files 397 cache_files 396 pipelines_bin 3945014 8a7ceb21dc7b0968d9d7635b518df35bd2f5065bb0309f099c0731dbbffe1c22;dir f19 present files 728 cache_files 727 pipelines_bin 34901497 fa953db6c2596d78ac0d1e280d9f287fd5b2bbf8828474649ab0888c131df404;dir replay present files 4 cache_files 
+2026-10-06T19:36:17Z S18c2 go_s18c2 s18_w2 S-replay folders after the run (mf_out.tsv): manifest C:/kyty/s288/s18c2/runs/s18_w2/mf_out.tsv files 732 bytes 161045265 listsha 3e3e2069e2ab4d3f78e259ac30d2ca63e38dc296e03d2860ca628328a75abfcd
+2026-10-06T19:36:18Z S18c2 go_s18c2 s18_w2 installed binary returned from the pinned copy
+2026-10-06T19:36:18Z S18c2 go_s18c2 s18_w2 installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T19:36:20Z S18c2 go_s18c2 s18_w2 manifest of the run state (before the return): manifest C:/kyty/s288/s18c2/runs/s18_w2/manifest_run.tsv files 4789 bytes 1273725694 listsha bef652d3ae89bca1b40be778780d8f37290c266d6fbc9487ebc78da279d563d6; run vs before: manifest cmp DIFFER only-before 724 only-after 728
+2026-10-06T19:36:21Z S18c2 go_s18c2 s18_w2 caches, saves and GLCache returned
+2026-10-06T19:36:24Z S18c2 go_s18c2 s18_w2 manifest after: manifest C:/kyty/s288/s18c2/runs/s18_w2/manifest_after.tsv files 4785 bytes 1246518915 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4; cmp: manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+2026-10-06T19:36:24Z S18c2 go_s18c2 s18_w2 lock released (rc 0)
+2026-10-06T19:37:02Z S18c2 post_s18c2 s18_w2: read.txt 303e09161e67a691,   READING MEMBERS_PASS, glitch: 

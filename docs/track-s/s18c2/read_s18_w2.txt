@@ -1,0 +1,51 @@
+S18c2 reader over s18c_read.py sha256 16570bed3667e5a1c9a9e62a92fe2dc03f27453cb4c8d8322edca73d9c026693
+S18c reader tag s18_w2 group W2 level underwater_aerial_garden
+  log sha256 bd9fef2374a6131e6d93fe8a0c0713e1da84c4b857b1b3cb1c0e5a34b440c4c9 stdout sha256 70c2f7ca2e43cd3cfafb62a4d608f67df3e5ac92239652e89eb3385506384c35
+  ADMISSION
+    YES             run record <tag>.json present, one attempt | attempts 1
+    YES             binary of the run = S18a2 b3cee576 (json binary_sha256 and installed_sha.txt; item 579) | b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a / b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+    YES             version string KytyPS5-2026-09-15-6a2987a-1897-g0005e11f in the binary copy | True
+    YES             revision texts of log / stdout name 0005e11 | texts 1, other []
+    YES             prereg sha256 = the seal file (s18c2_seal.md) | 7149848230b1962aaed3aa3d462d71b95e91b8188c6dddf793ae31aa0eedfbbd / 7149848230b1962aaed3aa3d462d71b95e91b8188c6dddf793ae31aa0eedfbbd
+    YES             environment = the form of the tag (seal section 2; no KYTY_S_REPLAY_TEST at the shipment tags, item 576 (e)(3)) | KYTY keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'KYTY_SHADER_SEED']
+    YES             command line --vulkan-validation (last) = true | true
+    YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0
+    YES             input state name = cat_full | cat_full
+    YES             input state cat_full: replay = state/s18_c19/replay byte for byte | files 3 / saved 3
+    YES             input state cat_full: variant_fixb26_fixb1b_fixf10_fixf19 absent (empty variant folder of the default signature) | {'present': False}
+    YES             emulator log present | bd9fef2374a6131e6d93fe8a0c0713e1da84c4b857b1b3cb1c0e5a34b440c4c9
+    YES             S18c reader s18c_read.py = the S18c seal (sha256 16570bed3667e5a1) | 16570bed3667e5a1c9a9e62a92fe2dc03f27453cb4c8d8322edca73d9c026693
+    YES             catalogue replay_known = manifest c644e3ad (3 files, size, sha256) | files 3
+    YES             catalogue replay_known = state/s18_c19/replay byte for byte | files 3 / 3
+  FORM
+    YES             installed binary before = after, FS8 | 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b / 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+    YES             manifest of the caches after the return EQUAL | manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+  MEMBERS
+    YES             W2 (1) a line ShaderReplay: rebuild records= | rebuild lines 1
+    YES             W2 (1) no line rebuild skipped | []
+    YES             W2 (1) no line ShaderSeed: installed (log, stdout) | 0 / 0
+    YES             W2 (2) share prepared / records >= 0.90 | share 1.0 = 3079 / 3079
+    YES             W2 (2) identity prepared + rejected + pending = records | 3079 + 0 + 0 = 3079
+    YES             W2 (2) pipelines_bin=written | written
+    YES             W2 (3) 0 [Vulkan][E] | 0
+    YES             W2 (3) 0 limit lines of the layer | 0
+    YES             W2 (3) positive control of the layer: [Vulkan][W] > 0 and DualSrcBlend: supported=1 enabled=1 before the first GuestOut | W 901513, dual [(78, 1, 1)], first GuestOut 3450684
+    YES             W2 (3) no VALIDATION_STOP (the process ended before the end of the hold with a [Vulkan][E] line) | E 0 outcome ok hold_s 310.0
+    YES             W2 (4) entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 3667399
+    YES             W2 (4) the process lived to the end of the hold (310 s) | outcome ok hold_exit None hold_s 310.0
+    YES             W2 (4) 0 death markers (log, stdout) | []
+  REPORT
+    lines ShaderSeed: installed (log / stdout; seed at the default): 0 / 0
+    window lines: {}
+    death markers log / stdout: 0 / 0 []
+    skipped draw lines: 0
+    translation cache directory lines: ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+    signature lines (ShaderSeed: compatibility): ['KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19']
+    exit: outcome ok detail None hold_exit None hold_s 310.0 close_rc 0 close_killed False close_s 4.1
+    preparation screen (startup wait finished): 13411 ms at line 3442591
+    mode line (reference): {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '46', 'corrupt': '0', 'sources': '727', 'specs': '1218', 'pipes': '3079', 'test': 'none'}
+    translation cache directory = variant_fixb26_fixb1b_fixf10_fixf19 (reference): True
+    rebuild under the layer: records prepared rejected pending perms_new perms_cached translate_ms wall_ms: 3079 3079 0 0 1218 4656 15461 17797
+    frames >= 1 s after the first scene frame / from the entry line (under the layer, reference): 0 / 0
+    variant_fixb26_fixb1b_fixf10_fixf19 after the run (state_out.txt): {'present': True, 'files': 728, 'cache_files': 727, 'pipelines_bin': True, 'replay_files': {}, 'cur': None}
+  READING MEMBERS_PASS

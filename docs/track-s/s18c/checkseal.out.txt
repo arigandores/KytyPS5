@@ -1,0 +1,31 @@
+ok   b1d8eea1750b083e C:/kyty/s288/s18c/go_s18c.sh
+ok   3de5a8ffefc21f3f C:/kyty/s288/s18c/launch_s18c.sh
+ok   b0f28a57b3e3cc5e C:/kyty/s288/s18c/wait_s18c.sh
+ok   f52b0291e261b941 C:/kyty/s288/s18c/post_s18c.sh
+ok   0177e3907d55d925 C:/kyty/s288/s18c/aside_s18c.sh
+ok   16570bed3667e5a1 C:/kyty/s288/s18c/s18c_read.py
+ok   366b502be584e3b1 C:/kyty/s288/s18c/state_s17c.py
+ok   22693f28b609107a C:/kyty/s288/s18c/r_addr.py
+ok   a77ba7152dfdf48e C:/kyty/s288/s18c/enter_scene.py
+ok   83a24410c81e654d C:/kyty/s288/s18c/guard_s18c.py
+ok   d9e7a777404f1aa9 C:/kyty/s288/s18c/procload.py
+ok   c5ee7dc26d2a6d28 C:/kyty/s288/s18c/idle142.py
+ok   c750e62ae3d63549 C:/kyty/s288/s18c/launch_run.py
+ok   a7096fd47f70419a C:/kyty/s288/s18c/manifest_fs4c.py
+ok   77e685e5543d90a0 C:/kyty/s288/s18c/run_safety99.py
+ok   c1bf9e2903c7db7a C:/kyty/s288/s18c/sheet142.py
+ok   e3b0c44298fc1c14 C:/kyty/s288/s18c/gates_default.txt
+ok   b43fe93d0c5030f3 C:/kyty/s288/s18c/test_s18c_read.py
+ok   ae672148ce43346f C:/kyty/s288/s18c/test_s18c_read.out.txt
+ok   924dc2199677e908 C:/kyty/s288/s18c/mut_s18c_read.py
+ok   08d8c925b3b8c1b0 C:/kyty/s288/s18c/mut_s18c_read.txt
+ok   8af19576d7520f3a C:/kyty/s288/s18c/test_tools_s18c.py
+ok   9601133b4208e892 C:/kyty/s288/s18c/test_tools_s18c.out.txt
+ok   b310bb9ec42a9489 C:/kyty/s288/s18c/checkseal_s18c.py
+ok   930697e7d7d81e27 C:/kyty/s288/s18c/mk_s18c.py
+ok   b3cee576138a1553 C:/kyty/s288/bin/kyty_emulator_b3cee576.exe
+ok   6afe4e3335da68f2 C:/kyty/scripts/s51_vidglitch.py
+ok   a2548f95b39e2704 C:/kyty/KytyPS5/docs/track-s/s15a3/16_s.md
+ok   seal = C:/kyty/KytyPS5/docs/track-s/s18c.md byte for byte
+seal lines 28
+SEAL: PASS

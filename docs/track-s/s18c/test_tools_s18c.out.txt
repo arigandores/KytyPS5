@@ -1,0 +1,80 @@
+suite test_tools_s18c.py sha256 8af19576d7520f3a64e6577209c5932ce9b31dc3fbbaaeef539086122967eb55 target go_s18c.sh sha256 b1d8eea1750b083e1282b33c425e1aa20c08b45ccd2810703fc9170c4c12a545 aside_s18c.sh sha256 0177e3907d55d925ba593a26bd3cc944a01c1592ed35b0ae44d259b497a82635 mk_s18c.py sha256 930697e7d7d81e270b3ac5f881b8b207a1a6f4f42c0e9157dd503196fad3e839
+ok   go: unknown tag s18_c20 -> rc 2 usage
+ok   go: unknown tag x -> rc 2 usage
+ok   go: s18_c03 without runs/s18_c02 -> rc 2 order
+ok   go: no read.txt of s18_c02 -> rc 2 gate
+ok   go: ACCUMULATION s18_c02 BREACH -> rc 2 gate (stop of the series)
+ok   go: ACCUMULATION s18_c02 UNDETERMINED -> rc 2 gate
+ok   go: a line with a tail is not the whole gate line -> rc 2
+ok   go: gate passed, no state/s18_c02/replay -> rc 2 input state
+ok   go: s18_c03 passes every check before the seal -> rc 1 no seal (never the lock)
+ok   go: s18_c02 needs SIGNATURE_571G3 s18_c01 OK as well -> rc 2
+ok   go: s18_c02 with both lines -> rc 1 no seal
+ok   go: s18_c01 has no gate and no input folder -> rc 1 no seal
+ok   go: runs/s18_c04 exists -> rc 2 a tag runs once
+ok   go: state/s18_c05 exists -> rc 2
+ok   go: s18_ks without s18_c19 -> rc 2 order
+ok   go: s18_ks needs ACCUMULATION s18_c19 OK
+ok   s18_ks: KYTY_S_REPLAY_TEST in the caller is not refused
+ok   go: s18_ks with the gate and state/s18_c19/replay -> rc 1 no seal
+ok   go: s18_r with KYTY_S_REPLAY_TEST in the caller -> rc 2 refused (item 576 (e)(3))
+ok   go: s18_r with an empty KYTY_S_REPLAY_TEST -> rc 2 refused
+ok   go: s18_e1 with KYTY_S_REPLAY_TEST in the caller -> rc 2 refused (item 576 (e)(3))
+ok   go: s18_e1 with an empty KYTY_S_REPLAY_TEST -> rc 2 refused
+ok   go: s18_e2 with KYTY_S_REPLAY_TEST in the caller -> rc 2 refused (item 576 (e)(3))
+ok   go: s18_e2 with an empty KYTY_S_REPLAY_TEST -> rc 2 refused
+ok   go: s18_v with KYTY_S_REPLAY_TEST in the caller -> rc 2 refused (item 576 (e)(3))
+ok   go: s18_v with an empty KYTY_S_REPLAY_TEST -> rc 2 refused
+ok   go: s18_w with KYTY_S_REPLAY_TEST in the caller -> rc 2 refused (item 576 (e)(3))
+ok   go: s18_w with an empty KYTY_S_REPLAY_TEST -> rc 2 refused
+ok   go: s18_r needs SIGNATURE_571G3 s18_ks OK
+ok   go: s18_r passes -> rc 1 no seal
+ok   go: s18_e1 without state/s18_r/all -> rc 2 input state chain
+ok   go: s18_e1 without runs/s18_r/manifest_run.tsv -> rc 2
+ok   go: s18_e1 with the chain state -> rc 1 no seal
+ok   go: RETURN_FAILED -> rc 1
+ok   aside: no runs -> rc 2
+ok   aside: a MEMBERS_PASS tag is not set aside -> rc 2
+ok   aside: reason ed2 refused
+ok   aside: one repeat
+ok   aside: second interference -> rc 6 question to the lead
+ok   aside: a tag of S17c2 refused
+ok   launch: unknown tag -> rc 2 before any check
+ok   launch_s18c.sh: the tag table = the reader ORDER (25 tags)
+ok   aside_s18c.sh: the tag table = the reader ORDER (25 tags)
+ok   go_s18c.sh LEVELS = the reader LEVELS (19, in order)
+ok   go_s18c.sh: forms of the tags = the seal (capture, stand, defaults)
+ok   go_s18c.sh: binary S18a2, installed FS8, stable 100
+ok   go_s18c.sh: no external timeout command
+ok   enter_scene.py: differs from S17c2 only in 2 root line(s)
+ok   guard_s18c.py: differs from S17c2 only in 1 root line(s)
+ok   procload.py: byte copy of S17c2
+ok   idle142.py: byte copy of S17c2
+ok   launch_run.py: byte copy of S17c2
+ok   manifest_fs4c.py: byte copy of S17c2
+ok   run_safety99.py: byte copy of S17c2
+ok   sheet142.py: byte copy of S17c2
+ok   r_addr.py: byte copy of S17c2
+ok   tc_s17c.py: byte copy of S17c2
+ok   state_s17c.py: byte copy of S17c2
+ok   gates_default.txt: byte copy of S17c2
+ok   go_s18c.sh: ASCII, LF
+ok   go_s18c.sh: bash -n
+ok   launch_s18c.sh: ASCII, LF
+ok   launch_s18c.sh: bash -n
+ok   wait_s18c.sh: ASCII, LF
+ok   wait_s18c.sh: bash -n
+ok   post_s18c.sh: ASCII, LF
+ok   post_s18c.sh: bash -n
+ok   aside_s18c.sh: ASCII, LF
+ok   aside_s18c.sh: bash -n
+ok   s18c_read.py: ASCII, LF
+ok   enter_scene.py: ASCII, LF
+ok   guard_s18c.py: ASCII, LF
+ok   mk_s18c.py: ASCII, LF
+ok   test_s18c_read.py: ASCII, LF
+ok   test_tools_s18c.py: ASCII, LF
+ok   mut_s18c_read.py: ASCII, LF
+ok   checkseal_s18c.py: ASCII, LF
+checks 77
+ALL OK

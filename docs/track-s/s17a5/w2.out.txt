@@ -1,0 +1,45 @@
+bash.exe: warning: could not find /tmp, please create!
+--- wtS before
+9238a1822e6df470ca48f08447b9bfded6bda9e4
+status lines (0 = clean): 0
+[detached HEAD c0057ccb] track S link S17a5 (HPP-638): stand KYTY_S_REPLAY_TEST=stop breaks inside the S-replay rebuild (ROADMAP s122 item 561(g)(2))
+ Date: Tue Oct 6 05:45:52 2026 +0200
+ 1 file changed, 20 insertions(+)
+binary commit c0057ccb0a053b0771914e6e485400dd45d8357c (cherry-pick of 5bd93ea1 onto 9238a182)
+patch-id main: 516cff8b3a540f48952e5211b9c454ff2461e96e
+patch-id wtS : 516cff8b3a540f48952e5211b9c454ff2461e96e
+--- diff 9238a182..c0057ccb0a053b0771914e6e485400dd45d8357c (src tests CMakeLists.txt)
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp     | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+--- K1(7)
+k1_7 lines: 0
+status lines (0 = clean): 0
+configure rc=0
+tests build rc=0
+BUILD OK: C:\kyty\s288\s17a\buildS\shader_cfg_tests.exe
+emu build rc=0
+BUILD OK: C:\kyty\s288\s17a\buildS\kyty_emulator.exe
+C:\kyty\s288\s17a\wtS\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp(409,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+status after build (0 = clean): 0
+emu 43ef1cc14ec2c116fdcce9ac71f9d854d0ec6498bd6e538fa479b1ecdf57fbb3 C:/kyty/s288/bin/kyty_emulator_43ef1cc1.exe KytyPS5-2026-09-15-6a2987a-2337-gc0057ccb commit c0057ccb0a053b0771914e6e485400dd45d8357c
+tests 1fd59b285da0d66507d35bc760cbf95865499db6597386c5c555bee62868469c C:/kyty/s288/s17a5/bin/shader_cfg_tests_1fd59b28.exe
+version string occurrences: 2
+43ef1cc14ec2c116fdcce9ac71f9d854d0ec6498bd6e538fa479b1ecdf57fbb3 *C:/kyty/s288/bin/kyty_emulator_43ef1cc1.exe
+1fd59b285da0d66507d35bc760cbf95865499db6597386c5c555bee62868469c *C:/kyty/s288/s17a5/bin/shader_cfg_tests_1fd59b28.exe
+suite rc=0
+tests: 133 failed lines: 0
+--- signature probe
+probe rc=0
+S17a5: S signature=KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19 enabled=1
+S layout=10288:376:216
+S effective robust=1 ftz=1 ftzd=0 cbank=1 cbank_cs=0 vec_const_static_class=1 cbank_aligned_copy=1 bvh_cap_token= bda_lean=0 fix_f19=1
+S done=0
+S17a4: S signature=KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19 enabled=1
+S layout=10288:376:216
+S effective robust=1 ftz=1 ftzd=0 cbank=1 cbank_cs=0 vec_const_static_class=1 cbank_aligned_copy=1 bvh_cap_token= bda_lean=0 fix_f19=1
+S done=0
+sig out = S17a4
+layout = S17a4
+--- signature string in the emulator binaries
+C:/kyty/s288/bin/kyty_emulator_ed2686da.exe: translator signature hash 9177b4267de1fb8bac7d1113afd8733210addfac occurrences 1; 40-hex near it: 1
+C:/kyty/s288/bin/kyty_emulator_43ef1cc1.exe: translator signature hash 9177b4267de1fb8bac7d1113afd8733210addfac occurrences 1; 40-hex near it: 1

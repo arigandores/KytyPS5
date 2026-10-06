@@ -1,0 +1,8 @@
+s17c_ks pcw=88 stand=511246 preload=1176834 fixmin=1215593 progress=- rebuild=1215620 shown=1220093 close=1220095 wait=- preload_ms=6405 rebuild_wall_ms=6641 LOOP_DURING_REBUILD=no
+s17c_kn pcw=89 stand=- preload=943 fixmin=945 progress=- rebuild=- shown=4825 close=- wait=4624 preload_ms=6351 rebuild_wall_ms=- LOOP_DURING_REBUILD=no
+s17c_kc pcw=89 stand=- preload=1200155 fixmin=1200157 progress=- rebuild=1199326 shown=1203852 close=- wait=1203836 preload_ms=6415 rebuild_wall_ms=5783 LOOP_DURING_REBUILD=no
+s17c_r3 pcw=88 stand=- preload=1216416 fixmin=1216418 progress=- rebuild=1215581 shown=1220104 close=- wait=1220097 preload_ms=6182 rebuild_wall_ms=5884 LOOP_DURING_REBUILD=no
+s17c_rs pcw=88 stand=- preload=1186508 fixmin=1205346 progress=1254305 rebuild=1327972 shown=1254302 close=- wait=1328799 preload_ms=6208 rebuild_wall_ms=7053 LOOP_DURING_REBUILD=yes
+s17c_c2 pcw=90 stand=- preload=121 fixmin=123 progress=- rebuild=- shown=3810 close=- wait=3802 preload_ms=6298 rebuild_wall_ms=- LOOP_DURING_REBUILD=no
+s17c_n0 pcw=88 stand=- preload=119 fixmin=121 progress=- rebuild=- shown=3817 close=- wait=3801 preload_ms=6089 rebuild_wall_ms=- LOOP_DURING_REBUILD=no
+s17c_e3 pcw=89 stand=- preload=943 fixmin=945 progress=- rebuild=- shown=4805 close=- wait=4625 preload_ms=5811 rebuild_wall_ms=- LOOP_DURING_REBUILD=no

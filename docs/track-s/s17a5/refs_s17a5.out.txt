@@ -1,0 +1,51 @@
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:58 OK | +1 NOT OK | +1 text: #include <tuple>
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4850 OK | +1 NOT OK | +1 text: }
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4859 OK | +1 NOT OK | +1 text: if (m_precache_thread.joinable()) {
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6586 OK | +1 NOT OK | +1 text: return {active, m_precache_total.load(), m_precache_completed.load(), m_precache_skipped.l
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6618 OK | +1 NOT OK | +1 text: if (!ShaderReplay::RebuildOn()) {
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6619 OK | +1 NOT OK | +1 text: return;
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6624 OK | +1 NOT OK | +1 text: if (m_precache_thread.joinable()) {
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6626 OK | +1 NOT OK | +1 text: }
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6739 OK | +1 NOT OK | +1 text: skip = "recipes_current";
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6745 OK | +1 NOT OK | +1 text: }
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6751 OK | +1 NOT OK | +1 text: m_precache_thread = std::thread([this] {
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6754 OK | +1 NOT OK | +1 text: }
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6756 OK | +1 NOT OK | +1 text: PrecachePipelines();
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6759 OK | +1 NOT OK | +1 text: });
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7183 OK | +1 NOT OK | +1 text: #if defined(_WIN32)
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7324 OK | +1 NOT OK | +1 text: s.from_file = true;
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7343 OK | +1 NOT OK | +1 text: layout.push_data_start_dword == PushData::StartFor(cursor, layout.ShaderDataDwords())) {
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7345 OK | +1 NOT OK | +1 text: return static_cast<int>(i);
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7392 OK | +1 NOT OK | +1 text: s->saved_ok = false;
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7411 OK | +1 NOT OK | +1 text: break;
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7414 OK | +1 NOT OK | +1 text: stop_stand_done = true;
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7416 OK | +1 NOT OK | +1 text: SR::StandRequestClose();
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7417 OK | +1 NOT OK | +1 text: // S17a5 (HPP-638, ROADMAP s122 item 561(g)(2)): the preparation loop (window.cpp, WindowP
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7424 OK | +1 NOT OK | +1 text: const auto         wait_begin      = HostMicros();
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7426 OK | +1 NOT OK | +1 text: std::this_thread::sleep_for(std::chrono::milliseconds(5));
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7430 OK | +1 NOT OK | +1 text: LOGF("ShaderReplay: stand stop seen waited_ms=%" PRIu64 " processed=%u records=%u\n", wait
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7431 OK | +1 NOT OK | +1 text: records);
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7433 OK | +1 NOT OK | +1 text: }
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7435 OK | +1 NOT OK | +1 text: records);
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7438 OK | +1 NOT OK | +1 text: save_dirty();
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7543 OK | +1 NOT OK | +1 text: save_dirty();
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7544 OK | +1 NOT OK | +1 text: // A recipe that names a source whose file could not be saved is rejected (write), one rea
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7578 OK | +1 NOT OK | +1 text: recipes_state = "stopped";
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7579 OK | +1 NOT OK | +1 text: } else if (count == 0) {
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7600 OK | +1 NOT OK | +1 text: recipes_state = "failed";
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7606 OK | +1 NOT OK | +1 text: // S17a2 (item 532(g), RC3 of the S17b review): Signature() ends with its own newline (sha
+5bd93ea1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7635 OK | +1 NOT OK | +1 text: records, prepared, rejected_total, pending, rejected[RSrc], rejected[RFused], rejected[RKe
+9238a182:src/graphics/presentation/window/window.cpp:992 OK | +1 NOT OK | +1 text: LOGF("ShaderPreparation: startup wait disabled\n");
+9238a182:src/graphics/presentation/window/window.cpp:1020 OK | +1 NOT OK | +1 text: while (SDL_PollEvent(&g_window->loop.event)) {
+9238a182:src/graphics/presentation/window/window.cpp:1023 OK | +1 NOT OK | +1 text: (g_window->loop.event.type == SDL_WINDOWEVENT &&
+9238a182:src/graphics/presentation/window/window.cpp:1029 OK | +1 NOT OK | +1 text: return false;
+9238a182:src/emulator.cpp:167 OK | +1 NOT OK | +1 text: }
+9238a182:src/emulator.cpp:188 OK | +1 NOT OK | +1 text: std::quick_exit(0);
+9238a182:src/emulator.cpp:243 OK | +1 NOT OK | +1 text: EXIT_NOT_IMPLEMENTED(ok != 0);
+9238a182:src/graphics/presentation/window/window.cpp:1030 OK | +1 NOT OK | +1 text: }
+9238a182:src/emulator.cpp:262 OK | +1 NOT OK | +1 text: 
+9238a182:src/libs/agc.cpp:64 OK | +1 NOT OK | +1 text: auto& video_out = VideoOut::VideoOutInit(width, height, presenter);
+9238a182:src/graphics/host_gpu/renderer/cache/hostImport.cpp:56 OK | +1 NOT OK | +1 text: }
+9238a182:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:551 OK | +1 NOT OK | +1 text: m_gds_buffer(graphics, scheduler, MemoryUsage::Stream, 0, AllFlags, GdsBufferSize),
+refs 49
+ALL OK

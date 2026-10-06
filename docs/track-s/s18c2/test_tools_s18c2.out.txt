@@ -1,0 +1,75 @@
+suite test_tools_s18c2.py sha256 650ae77902fe90eeea39acdb8c52b209f4a816995ab10787a7a07821f61b39dd target go_s18c2.sh sha256 b5115989f540131002cf45c889490b2805699b729d0df808176394e5faee8622 mk_s18c2.py sha256 96bbf8e9fe563047ebcfa9d81dddc55c20ca7aa65137cf332787b6ed8fd3a6b4
+ok   go: the S18c tag s18_w -> rc 2 usage
+ok   go: unknown tag x -> rc 2 usage
+ok   go: KYTY_S_REPLAY_TEST=stop in the caller -> rc 2 refused
+ok   go: an empty KYTY_S_REPLAY_TEST in the caller -> rc 2 refused
+ok   go: no replay_known -> rc 2
+ok   go: replay_known bytes differ -> rc 2
+ok   go: an extra file in replay_known -> rc 2
+ok   go: a file missing in replay_known -> rc 2
+ok   go: one byte added to replay.cur of a copy of the real catalogue -> rc 2
+ok   go: the real catalogue passes every check before the seal -> rc 1 no seal (never the lock)
+ok   go: runs/s18_w2 exists -> rc 2 a tag runs once
+ok   go: state/s18_w2 exists -> rc 2
+ok   go: RETURN_FAILED -> rc 1
+ok   launch_s18c2.sh: the S18c tag s18_w -> rc 2 usage before any check
+ok   idle_s18c2.sh: the S18c tag s18_w -> rc 2 usage before any check
+ok   aside: no runs -> rc 2
+ok   aside: a MEMBERS_FAIL tag is not set aside -> rc 2
+ok   aside: one repeat
+ok   aside: second interference -> rc 6 question to the lead
+ok   aside: an S18c tag refused
+ok   launch_s18c2.sh: the tag table = s18_w2
+ok   aside_s18c2.sh: the tag table = s18_w2
+ok   idle_s18c2.sh: the tag table = s18_w2
+ok   go_s18c2.sh: the form of s18_w2 (Sky Garden, cat_full, w, 310 s, KYTY_SHADER_SEED=0, the layer limit 100000000)
+ok   go_s18c2.sh: binary S18a2, installed FS8, stable 100, the seal, the return manifest with _ShaderSeeds and _ShaderCache (replay/)
+ok   go_s18c2.sh: input cat_full from replay_known; no KYTY_S_REPLAY in the form
+ok   go_s18c2.sh: no external timeout command
+ok   mk_s18c2.py runs
+ok   go_s18c2.sh = the output of mk_s18c2.py byte for byte
+ok   launch_s18c2.sh = the output of mk_s18c2.py byte for byte
+ok   wait_s18c2.sh = the output of mk_s18c2.py byte for byte
+ok   post_s18c2.sh = the output of mk_s18c2.py byte for byte
+ok   aside_s18c2.sh = the output of mk_s18c2.py byte for byte
+ok   idle_s18c2.sh = the output of mk_s18c2.py byte for byte
+ok   enter_scene.py = the output of mk_s18c2.py byte for byte
+ok   guard_s18c2.py = the output of mk_s18c2.py byte for byte
+ok   procload.py = the output of mk_s18c2.py byte for byte
+ok   idle142.py = the output of mk_s18c2.py byte for byte
+ok   launch_run.py = the output of mk_s18c2.py byte for byte
+ok   manifest_fs4c.py = the output of mk_s18c2.py byte for byte
+ok   run_safety99.py = the output of mk_s18c2.py byte for byte
+ok   state_s17c.py = the output of mk_s18c2.py byte for byte
+ok   gates_default.txt = the output of mk_s18c2.py byte for byte
+ok   enter_scene.py: differs from S18c only in 2 root lines
+ok   guard_s18c2.py: differs from S18c only in 2 root lines
+ok   procload.py: byte copy of S18c
+ok   idle142.py: byte copy of S18c
+ok   launch_run.py: byte copy of S18c
+ok   manifest_fs4c.py: byte copy of S18c
+ok   run_safety99.py: byte copy of S18c
+ok   state_s17c.py: byte copy of S18c
+ok   gates_default.txt: byte copy of S18c
+ok   go_s18c2.sh: ASCII, LF
+ok   go_s18c2.sh: bash -n
+ok   launch_s18c2.sh: ASCII, LF
+ok   launch_s18c2.sh: bash -n
+ok   wait_s18c2.sh: ASCII, LF
+ok   wait_s18c2.sh: bash -n
+ok   post_s18c2.sh: ASCII, LF
+ok   post_s18c2.sh: bash -n
+ok   aside_s18c2.sh: ASCII, LF
+ok   aside_s18c2.sh: bash -n
+ok   idle_s18c2.sh: ASCII, LF
+ok   idle_s18c2.sh: bash -n
+ok   enter_scene.py: ASCII, LF
+ok   guard_s18c2.py: ASCII, LF
+ok   s18c2_read.py: ASCII, LF
+ok   mk_s18c2.py: ASCII, LF
+ok   test_s18c2_read.py: ASCII, LF
+ok   test_tools_s18c2.py: ASCII, LF
+ok   mut_s18c2_read.py: ASCII, LF
+ok   checkseal_s18c2.py: ASCII, LF
+checks 72
+ALL OK

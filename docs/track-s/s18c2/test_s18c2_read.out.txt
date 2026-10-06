@@ -1,0 +1,99 @@
+suite test_s18c2_read.py sha256 0e12e9c1e068845aae30a709066191ebee1a4d683e40e76e23fa480f35a6f702 target s18c2_read.py sha256 5fb98401b86735b04af7db876158b631fc1c3facac64d668c5ea703cad09f684 s18c_read.py sha256 16570bed3667e5a1c9a9e62a92fe2dc03f27453cb4c8d8322edca73d9c026693
+ok   KNOWN = the manifest c644e3ad of replay_known (3 files)
+ok   BASE_SHA = s18c_read.py of the S18c seal
+ok   tag s18_w2, hold 310 s
+ok   SPEC s18_w2: Sky Garden, form w, 310 s, cat_full, KYTY_SHADER_SEED=0 only
+ok   S18c tables unchanged (seed lines are member (1))
+ok   S18c constants: share, limit, binary
+ok   import: the S18c reader reads the S18c root and the S18c2 seal; the S18c2 root
+ok   the real C:/kyty/s288/s18c/replay_known = KNOWN
+ok   baseline s18_w2 reads MEMBERS_PASS (got MEMBERS_PASS [])
+ok   baseline: group W2, level Sky Garden
+ok   baseline: 13 members W2 (1)-(4), no other member
+ok   baseline: 15 admission rows (12 of S18c + 3 of S18c2) (got 15)
+ok   paths: s18_w2 under the S18c2 root, s18_c19 under the S18c root, the S18c root restored
+ok   report: the rebuild numbers under the layer
+ok   report: pipelines.bin after the run
+ok   report: directory and mode line
+ok   report: frames >= 1 s
+ok   s18_w2: S18c reader other than the seal -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: replay_known other than the manifest -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: manifest other: replay_known = state/s18_c19 still YES -> YES NOT_ADMITTED (got YES, reading NOT_ADMITTED)
+ok   s18_w2: state/s18_c19 other than replay_known -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: an extra file in replay_known -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: no replay_known -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: a subfolder of replay_known is not a file (go_s18c2.sh refuses it by ls) -> YES MEMBERS_PASS (got YES, reading MEMBERS_PASS)
+ok   s18_w2: neither replay_known nor state/s18_c19 (empty = empty is NO) -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: no KYTY_SHADER_SEED -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: KYTY_SHADER_SEED=1 -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: KYTY_S_REPLAY=3 -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: empty KYTY_S_REPLAY_TEST -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: KYTY_S_REPLAY_TEST=stop -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: KYTY_FIX_F19=1 -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: KYTY_PIPELINE_PRECACHE=0 -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: KYTY_REC at W -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: no VK_LAYER_PATH -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: layer limit 1000000 -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: a message filter -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: other level -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: validation false -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: json binary other -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: installed_sha other -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: prereg other than the seal -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: two attempts -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: input state inst_cat -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: input with _fixf19 present -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: input replay other than state/s18_c19 -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: window minimized -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: Recovering Vulkan swapchain -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: other revision -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: version string missing -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: no log -> NO NOT_ADMITTED (got NO, reading NOT_ADMITTED)
+ok   s18_w2: ShaderSeed installed is member (1), not admission -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: installed after other -> NO FORM_FAIL (got NO, reading FORM_FAIL)
+ok   s18_w2: installed before not FS8 -> NO FORM_FAIL (got NO, reading FORM_FAIL)
+ok   s18_w2: manifest DIFFER -> NO FORM_FAIL (got NO, reading FORM_FAIL)
+ok   s18_w2: no rebuild line -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: a rebuild line without records= -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: rebuild skipped instead -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: rebuild and rebuild skipped -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: ShaderSeed installed in stdout -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: share 9 / 10 = 0.90 (edge) YES -> YES (got YES, reading MEMBERS_PASS)
+ok   s18_w2: share 89 / 100 = 0.89 -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: share 90 / 100 = 0.90 YES -> YES (got YES, reading MEMBERS_PASS)
+ok   s18_w2: records 0 - not determined -> NOT DETERMINED NOT_EVALUABLE (got NOT DETERMINED, reading NOT_EVALUABLE)
+ok   s18_w2: 9 + 1 + 1 != 10 -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: 8 + 1 + 1 = 10 with pending YES -> YES (got YES, reading MEMBERS_FAIL)
+ok   s18_w2: pipelines_bin=stopped -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: the last rebuild line counts -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: a stopped line then the written one YES -> YES (got YES, reading MEMBERS_PASS)
+ok   s18_w2: no rebuild line: share not determined -> NOT DETERMINED (got NOT DETERMINED, reading MEMBERS_FAIL)
+ok   s18_w2: no rebuild line: identity not determined -> NOT DETERMINED (got NOT DETERMINED, reading MEMBERS_FAIL)
+ok   s18_w2: one error -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: one limit line -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: no warning line -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: no DualSrcBlend line -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: dual enabled 0 -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: dual supported 0 -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: DualSrcBlend after the first GuestOut -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: E and the process ended (VALIDATION_STOP) -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: E and hold 309.9 s (VALIDATION_STOP) -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: E but lived 310 s: no VALIDATION_STOP -> YES (got YES, reading MEMBERS_FAIL)
+ok   s18_w2: ended without E: no VALIDATION_STOP -> YES MEMBERS_FAIL (got YES, reading MEMBERS_FAIL)
+ok   s18_w2: not entered -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: other level started -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: outcome timeout -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: hold 309.9 s -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: hold 310.0 s (edge) -> YES (got YES, reading MEMBERS_PASS)
+ok   s18_w2: hold_exit set -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: death marker in the log -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: death marker in stdout -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   s18_w2: GpuHangAbort -> NO MEMBERS_FAIL (got NO, reading MEMBERS_FAIL)
+ok   dispatch: the S18c tag s18_w is read by the S18c W group
+ok   the S18c reader reads through the S18c2 paths and dispatch
+ok   json output of s18_w2 and the reader line
+ok   table: the 25 S18c tags (not in the synthetic root) and the row of s18_w2
+ok   no argument, the S18c tag s18_w, an unknown tag -> rc 2
+ok   output in strict cp1250 without PYTHONIOENCODING
+checks 96
+ALL OK

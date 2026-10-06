@@ -1,0 +1,47 @@
+bash.exe: warning: could not find /tmp, please create!
+1 283a6ef9 conflict files: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+tests/shaderCfgTests.cpp
+CONFLICT (content): Merge conflict in src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+CONFLICT (content): Merge conflict in tests/shaderCfgTests.cpp
+mode prefix
+conflict at line 3917: ours 0, base 8, theirs 11, kept (added by 283a6ef9) 3
+mode suffix
+conflict at line 15136: ours 0, base 4, theirs 291, kept (added by 283a6ef9) 287
+1 283a6ef9 whole-commit patch diff lines: 96
+2 29542308 conflict files: docs/track-s/s17a/README.md
+CONFLICT (modify/delete): docs/track-s/s17a/README.md deleted in fd0f6bb4252f001f1661888dc6fe0fc62a49c186 and modified in 29542308.  Version 29542308 of docs/track-s/s17a/README.md left in tree.
+2 29542308 whole-commit patch diff lines: 188
+4 9635cb0f conflict files: tests/shaderCfgTests.cpp
+CONFLICT (content): Merge conflict in tests/shaderCfgTests.cpp
+mode suffix
+conflict at line 15456: ours 0, base 4, theirs 264, kept (added by 283a6ef9) 260
+4 9635cb0f whole-commit patch diff lines: 14
+order	source	simulated	conflict	pid_src_all	pid_sim_all	eq_all	pid_src_code	pid_sim_code	eq_code
+1	283a6ef9f703bdbbc44a32be13f1a4940797c728	fd0f6bb4252f001f1661888dc6fe0fc62a49c186	content_resolve1	5e5836e66f099efc778efa6a467baca2fab36597	69987ead7ff7c56d4db6752831cf7060f2e2addb	no	ac71753f0eab32885b169803c8fdb6c62d48bf78	b7b1bd061e995af9303e13c1b2517b84257707bd	no
+2	2954230838bc29885e0799ec02162534ed37032b	f87ea3ae2007528cbd46d87311846dc1037bf3c2	docs_only_theirs	9ff7cebb42e01244ccf3dbbeaf8392a1e5200091	725a23c8a1621b3df70b9a9fdeb4ba5655897356	no	690c67932e964e60c5df09bd28a7217c97c8bc4d	690c67932e964e60c5df09bd28a7217c97c8bc4d	yes
+3	a2fee0d9c849c87d5a0d1a5bcecdba78030ceb2c	b78d12bb17c4ca3dc421ec84b65e57eadf7d67be	none	bf1eadf479d1782e0da8e227b0655f25ed7aaaee	bf1eadf479d1782e0da8e227b0655f25ed7aaaee	yes	ce222c74b7cebb0047afc08d940b4238494f2439	ce222c74b7cebb0047afc08d940b4238494f2439	yes
+4	9635cb0f8e8412a757555aecd82d7c8dbdb17678	2a467dfa9ab16bf4c45745846097ec1a22f7e71f	content_resolve1	3652dc0d3d1352c23705f5e98f19892ccc770599	17f65a1409b9a346d68b5ff2ed4b133243b3cbaa	no	3652dc0d3d1352c23705f5e98f19892ccc770599	17f65a1409b9a346d68b5ff2ed4b133243b3cbaa	no
+5	9238a1822e6df470ca48f08447b9bfded6bda9e4	c986b5a7fce7f17d6d1f115d6301a62fa4c7ed9d	none	a1405bf5dbb3a1036a1ad4246053351344f2a1b8	a1405bf5dbb3a1036a1ad4246053351344f2a1b8	yes	a1405bf5dbb3a1036a1ad4246053351344f2a1b8	a1405bf5dbb3a1036a1ad4246053351344f2a1b8	yes
+6	5bd93ea13bc03b4c700d1e9be1c0f94d6a0d146e	b9f4c59d4a74eab1507f8d1a06184b044c6a06d5	none	516cff8b3a540f48952e5211b9c454ff2461e96e	516cff8b3a540f48952e5211b9c454ff2461e96e	yes	516cff8b3a540f48952e5211b9c454ff2461e96e	516cff8b3a540f48952e5211b9c454ff2461e96e	yes
+7	fe4b227a38fa15a0f24fc0f65096841aedcf1d04	2343afbf3e04ee8b20cc13aece78087ea2eed1eb	none	8ed99b65c3017644bc6ac6924d52847c97172f27	8ed99b65c3017644bc6ac6924d52847c97172f27	yes	8ed99b65c3017644bc6ac6924d52847c97172f27	8ed99b65c3017644bc6ac6924d52847c97172f27	yes
+final sim 2343afbf3e04ee8b20cc13aece78087ea2eed1eb
+--- diff --stat 302347b4..final (src tests CMakeLists.txt)
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   |  870 +++++++++++-
+ .../host_gpu/renderer/pipeline/pipelineCache.h     |   25 +
+ .../host_gpu/renderer/pipeline/shaderReplay.cpp    | 1401 ++++++++++++++++++++
+ .../host_gpu/renderer/pipeline/shaderReplay.h      |  356 +++++
+ src/graphics/presentation/window/window.cpp        |    3 +
+ tests/shaderCfgTests.cpp                           |  687 ++++++++++
+ 6 files changed, 3340 insertions(+), 2 deletions(-)
+--- K1(7) diffstat 302347b4..final (lines)
+0
+--- final vs main fe4b227a on the paths of the 7 commits (src tests); main commits in 283a6ef9^..fe4b227a on them outside the 7
+ src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp | 9 +++++++++
+ src/graphics/presentation/window/window.cpp               | 6 ++++++
+ tests/shaderCfgTests.cpp                                  | 9 +++++++++
+ 3 files changed, 24 insertions(+)
+9bd96f44 track F link F20j (HPP-629): KYTY_DIAG_B32 (default 0, measurement only) and the stand KYTY_TEST_B32 
+--- FS8a 302347b4 vs main 283a6ef9^ on the same paths
+ src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp | 9 +++++++++
+ tests/shaderCfgTests.cpp                                  | 9 +++++++++
+ 2 files changed, 18 insertions(+)

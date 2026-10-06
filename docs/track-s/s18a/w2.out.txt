@@ -1,0 +1,33 @@
+bash.exe: warning: could not find /tmp, please create!
+worktree C:/kyty/s288/s18a/wt at 302347b4f54025d48d8487cecdacb2a308c8d71a
+1 283a6ef9 conflict, unmerged: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+tests/shaderCfgTests.cpp
+CONFLICT (content): Merge conflict in src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+CONFLICT (content): Merge conflict in tests/shaderCfgTests.cpp
+mode prefix
+conflict at line 3917: ours 0, base 8, theirs 11, kept (added by 283a6ef9) 3
+mode suffix
+conflict at line 15136: ours 0, base 4, theirs 291, kept (added by 283a6ef9) 287
+2 29542308 conflict, unmerged: docs/track-s/s17a/README.md
+CONFLICT (modify/delete): docs/track-s/s17a/README.md deleted in HEAD and modified in 29542308 (track S link S17a2 (HPP-618): S-replay fixes by RC1, RC3, RC4(a) of S17b and the N2 tess test - ROADMAP s122 item 532(b), (g), (d)(a), (z)).  Version 29542308 (track S link S17a2 (HPP-618): S-replay fixes by RC1, RC3, RC4(a) of S17b and the N2 tess test - ROADMAP s122 item 532(b), (g), (d)(a), (z)) of docs/track-s/s17a/README.md left in tree.
+  docs/track-s/s17a/README.md <- version of 29542308
+3 a2fee0d9 clean
+4 9635cb0f conflict, unmerged: tests/shaderCfgTests.cpp
+CONFLICT (content): Merge conflict in tests/shaderCfgTests.cpp
+mode suffix
+conflict at line 15456: ours 0, base 4, theirs 264, kept (added by 283a6ef9) 260
+5 9238a182 clean
+6 5bd93ea1 clean
+7 fe4b227a clean
+1	283a6ef9f703bdbbc44a32be13f1a4940797c728	2dd9f9026082e4cd1f8a95f3e51e02ba3a6d9f1f	resolve1:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp;resolve1:tests/shaderCfgTests.cpp;
+2	2954230838bc29885e0799ec02162534ed37032b	6c4903a8098ab55cda39140b03088e40fb82e24d	docs_source:docs/track-s/s17a/README.md;
+3	a2fee0d9c849c87d5a0d1a5bcecdba78030ceb2c	60f6c0068251e8b418929a4a257de347954ebabf	none
+4	9635cb0f8e8412a757555aecd82d7c8dbdb17678	a139a145c64f3d8d0a035e53e1fae36362e0e691	resolve1:tests/shaderCfgTests.cpp;
+5	9238a1822e6df470ca48f08447b9bfded6bda9e4	b738443bff32e2cd4c00906d55e8f9430eeea051	none
+6	5bd93ea13bc03b4c700d1e9be1c0f94d6a0d146e	4fbea82e8917b86fa1851fcba3cf189c2e422737	none
+7	fe4b227a38fa15a0f24fc0f65096841aedcf1d04	62ff7b5b02dc5177078d1a9de20b196991c2383c	none
+HEAD 62ff7b5b02dc5177078d1a9de20b196991c2383c tree 1f4dfcd889f5053dbc3036b308ac1b131117bb38
+sim  2343afbf3e04ee8b20cc13aece78087ea2eed1eb tree 1f4dfcd889f5053dbc3036b308ac1b131117bb38
+TREE = SIM 2343afbf
+status lines (0 = clean): 0
+W2 DONE

@@ -1,0 +1,36 @@
+2026-10-06T05:39:55Z start S18a HPP-642; lock absent, STOP absent
+2026-10-06T05:40:21Z patch_s18a.py applied to main tree
+2026-10-06T05:40:38Z main commit default fe4b227a
+2026-10-06T05:41:07Z rule30 S18a API check before 'w1 worktree + cherry-picks': in_progress Harness Engineer links: [HPP-631(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T05:42:28Z wait: HPP-631 F20l (track F harness) in_progress run=y, series admission (guard open-block >= 05:50:38Z, tags 0 of 6, lock.log absent) - by rule 30 with p.535(g) no command > 60 s and no process command outside 20 s after a lock released line; w1 (worktree + cherry-picks) and builds wait for the end of the F20l series
+2026-10-06T05:43:12Z sim.sh start (git merge-tree object-only simulation, no worktree; F20l tags 0, lock absent)
+2026-10-06T05:43:13Z sim.sh end
+2026-10-06T05:44:10Z sim2.sh start (object-only; F20l runs/ empty, lock absent)
+2026-10-06T05:44:12Z sim2.sh end
+2026-10-06T05:45:07Z sim3.sh start (object-only; F20l runs/ empty, lock absent)
+2026-10-06T05:45:14Z sim3.sh end
+2026-10-06T05:45:40Z sim3.sh v2 start (object-only; F20l runs/ empty, lock absent)
+2026-10-06T05:45:55Z sim3.sh v2 end
+2026-10-06T05:47:04Z cmp_patch.py on commits 1, 2, 4
+2026-10-06T05:47:50Z question to lead posted in HPP-642 and line in HPP-3 (cherry-pick conflicts, patch-id, signature print); no build
+2026-10-06T05:48:26Z HPP-642 status blocked (unblockDescriptor owner self: lead answer + end of F20l series); heartbeat ends
+2026-10-06T06:17:47Z lock released seen (poll 2 s); w2.sh start (worktree from 302347b4 + 7 cherry-picks, no build; item 571(d) window)
+2026-10-06T06:18:10Z w2.sh end
+2026-10-06T06:24:39Z lock released seen; chk571.py start
+2026-10-06T06:24:58Z chk571.py end
+2026-10-06T06:26:49Z scripts sub.sh bstep.sh build_s18a.cmd post.sh suite_s18a.py placed; build waits for the end of the F20l series (HPP-631 in_progress)
+2026-10-06T06:33:11Z rule30 S18a API check before 'sub.sh + configure': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:33:11Z HPP-631 F20l status in_review (series ended, API 06:33:05Z); sub.sh start
+2026-10-06T06:33:21Z sub.sh end
+2026-10-06T06:33:23Z rule30 S18a API check before 'build configure configure': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:34:42Z configure end rc=0
+2026-10-06T06:34:49Z rule30 S18a API check before 'build tests1 tests': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:35:51Z build tests step 1 end rc=0
+2026-10-06T06:35:56Z rule30 S18a API check before 'build emu1 ': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:36:31Z build emu step 1 end rc=0
+2026-10-06T06:36:37Z post.sh end
+2026-10-06T06:36:52Z rule30 S18a API check before 'suite_s18a.py': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:36:52Z suite_s18a.py end rc=0
+2026-10-06T06:37:00Z rule30 S18a API check before 'corpus_s17a.py call 1': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0
+2026-10-06T06:37:13Z corpus call 1 end rc=0
+2026-10-06T06:38:56Z publish: docs/track-s/s18a, report.md, FACTS section S18a

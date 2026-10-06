@@ -1,0 +1,26 @@
+bash.exe: warning: could not find /tmp, please create!
+worktree HEAD 62ff7b5b02dc5177078d1a9de20b196991c2383c tree 1f4dfcd889f5053dbc3036b308ac1b131117bb38
+status after build (0 = clean): 0
+build exe = install exe
+emu 0c78df030d41334720d618e8e873c7ec6d5700daa441ce2a96fc3af71f13f88a C:/kyty/s288/bin/kyty_emulator_0c78df03.exe version KytyPS5-2026-09-15-6a2987a-1896-g62ff7b5b commit 62ff7b5b02dc5177078d1a9de20b196991c2383c
+tests 2727eb3cafc098ebf55c686ae4efdfe855f67ad858e5623fe1b2c39a8166b051 C:/kyty/s288/s18a/bin/shader_cfg_tests_2727eb3c.exe
+version strings:       2 KytyPS5-2026-09-15-6a2987a-1896-g62ff7b5b
+0c78df030d41334720d618e8e873c7ec6d5700daa441ce2a96fc3af71f13f88a *C:/kyty/s288/bin/kyty_emulator_0c78df03.exe
+2727eb3cafc098ebf55c686ae4efdfe855f67ad858e5623fe1b2c39a8166b051 *C:/kyty/s288/s18a/bin/shader_cfg_tests_2727eb3c.exe
+2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b *C:/kyty/f287/bin/kyty_emulator_2c9b69b9.exe
+78137e804c0872dd669710e9fa90934b13af7d02e1ad7353fa3be51e19d5e822 *C:/kyty/f287/fs8a/build/shader_cfg_tests.exe
+--- installed binary (read only)
+2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b *C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe
+--- signature
+FS8 compatibility.txt: KytySeed1:PPSA21564:01.007.000:KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19::10288:376:216:44:516:125:000010de:00002c59
+FS8a kytyGitVersion_fs8.h: #define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"
+FS8a build kytyGitVersion.h: #define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"
+S18 build kytyGitVersion.h: #define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"
+SOURCE HASH S18 = FS8a (9177b4267de1fb8bac7d1113afd8733210addfac)
+C:/kyty/f287/bin/kyty_emulator_2c9b69b9.exe: occurrences of 9177b4267de1fb8bac7d1113afd8733210addfac: 1; of ':robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19': 0; of 'KytySC3': 0
+C:/kyty/s288/bin/kyty_emulator_0c78df03.exe: occurrences of 9177b4267de1fb8bac7d1113afd8733210addfac: 1; of ':robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19': 0; of 'KytySC3': 0
+--- gate order (worktree src)
+rc=0
+GATE ORDER: clean
+gate order wt = main (fe4b227a)
+POST DONE

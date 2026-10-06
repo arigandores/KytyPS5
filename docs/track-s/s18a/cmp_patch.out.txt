@@ -1,0 +1,33 @@
+== commit 1 (all paths)
+docs/track-s/s17a/corpus_s17a.py: changed lines 192 / 192 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/patch/p5.py: changed lines 23 / 23 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/patch/p6.py: changed lines 23 / 23 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/patch/patch_s17a.py: changed lines 376 / 376 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/patch/patch_s17a_diag.py: changed lines 74 / 74 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/patch/patch_s17a_tests.py: changed lines 167 / 167 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/patch/patch_s17a_tests2.py: changed lines 140 / 140 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/patch/patch_s17a_tests3.py: changed lines 29 / 29 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/patch/patch_s17a_tests4.py: changed lines 35 / 35 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/patch/tail_s17a.inc: changed lines 591 / 591 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/r_addr.py: changed lines 165 / 165 identical=True; context lines 0 / 0 identical=True
+docs/track-s/s17a/test_r_addr.py: changed lines 93 / 93 identical=True; context lines 0 / 0 identical=True
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp: changed lines 824 / 824 identical=True; context lines 119 / 119 identical=False
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.h: changed lines 22 / 22 identical=True; context lines 12 / 12 identical=True
+src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp: changed lines 1313 / 1313 identical=True; context lines 0 / 0 identical=True
+src/graphics/host_gpu/renderer/pipeline/shaderReplay.h: changed lines 345 / 345 identical=True; context lines 0 / 0 identical=True
+tests/shaderCfgTests.cpp: changed lines 290 / 290 identical=True; context lines 18 / 18 identical=False
+CHANGED LINES IDENTICAL
+== commit 2 (all paths)
+docs/track-s/s17a/README.md: changed lines 4 / 144 identical=False; context lines 12 / 0 identical=False
+docs/track-s/s17a2/patch/patch_s17a2.py: changed lines 189 / 189 identical=True; context lines 0 / 0 identical=True
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp: changed lines 22 / 22 identical=True; context lines 12 / 12 identical=True
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.h: changed lines 3 / 3 identical=True; context lines 6 / 6 identical=True
+src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp: changed lines 32 / 32 identical=True; context lines 18 / 18 identical=True
+src/graphics/presentation/window/window.cpp: changed lines 3 / 3 identical=True; context lines 6 / 6 identical=True
+tests/shaderCfgTests.cpp: changed lines 33 / 33 identical=True; context lines 6 / 6 identical=True
+CHANGED LINES DIFFER
+== commit 4 (all paths)
+src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp: changed lines 56 / 56 identical=True; context lines 31 / 31 identical=True
+src/graphics/host_gpu/renderer/pipeline/shaderReplay.h: changed lines 4 / 4 identical=True; context lines 6 / 6 identical=True
+tests/shaderCfgTests.cpp: changed lines 261 / 261 identical=True; context lines 12 / 12 identical=False
+CHANGED LINES IDENTICAL

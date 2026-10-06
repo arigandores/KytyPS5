@@ -1,0 +1,87 @@
+start 2026-10-06T09:46:26Z
+== present-path callers
+f2307b02:src/graphics/presentation/renderDoc.cpp:227:	DrainAsyncSubmits();
+f2307b02:src/graphics/presentation/videoOut.cpp:544:	if (!driver.GetFlipQueue().Reserve(*video_out, index, flip_arg, source, request_id)) {
+f2307b02:src/graphics/presentation/window/screenshot.cpp:398:		FlushVideoSlot(oldest);
+f2307b02:src/graphics/presentation/window/screenshot.cpp:403:void ScreenshotGrabber::FlushVideoSlot(RecSlot& slot) {
+f2307b02:src/graphics/presentation/window/screenshot.h:103:	void FlushVideoSlot(RecSlot& slot);
+f2307b02:src/graphics/presentation/window/swapchain.cpp:597:		DrainAsyncSubmits();
+f2307b02:src/graphics/presentation/window/swapchain.cpp:642:		m_window.RunOnMainThread([this] { m_window.RecreateSurface(); });
+f2307b02:src/graphics/presentation/window/swapchain.cpp:644:		m_window.RecreateSurface();
+f2307b02:src/graphics/presentation/window/swapchain.cpp:1050:		if (!preparing) m_impl->window.UpdateTitle();
+f2307b02:src/graphics/presentation/window/vulkanWindow.cpp:1275:void WindowContext::RecreateSurface() {
+f2307b02:src/graphics/presentation/window/vulkanWindow.cpp:1296:		DrainAsyncSubmits();
+f2307b02:src/graphics/presentation/window/window.cpp:1458:void WindowContext::UpdateTitle() {
+f2307b02:src/graphics/presentation/window/windowInternal.h:43:	void                                                    RecreateSurface();
+f2307b02:src/graphics/presentation/window/windowInternal.h:46:	void                                                    UpdateTitle();
+== RecreateSurface def
+f2307b02:src/graphics/presentation/window/vulkanWindow.cpp:1275:void WindowContext::RecreateSurface() {
+f2307b02:src/graphics/presentation/window/windowInternal.h:43:	void                                                    RecreateSurface();
+== UpdateTitle callers all
+f2307b02:src/graphics/presentation/window/swapchain.cpp:1050:		if (!preparing) m_impl->window.UpdateTitle();
+f2307b02:src/graphics/presentation/window/window.cpp:1458:void WindowContext::UpdateTitle() {
+f2307b02:src/graphics/presentation/window/windowInternal.h:46:	void                                                    UpdateTitle();
+== Presenter::Present def
+f2307b02:src/graphics/presentation/window/swapchain.cpp:937:void Presenter::Present(Frame& frame, bool reuse) {
+== hostException H:fault body
+	info.r13 = exception->ContextRecord->R13;
+	info.r14 = exception->ContextRecord->R14;
+	info.r15 = exception->ContextRecord->R15;
+
+	const auto handler = g_handler.load(std::memory_order_acquire);
+	if (handler != nullptr) {
+		// KYTY_FAULT_TRACE=1: every resolved fault, all threads (host tid, RIP, address, time).
+		static const bool fault_trace = Common::EnvFlagOn("KYTY_FAULT_TRACE");
+		const auto t0       = (Common::FrameStats::Enabled() || fault_trace) ? Common::FrameStats::NowNs() : 0;
+		Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M3 H:fault - the guest exception handler)
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginH(Common::DiagB32::Call::Fault);
+		}
+		const bool resolved = handler(info);
+		b32.End(0, false);
+		if (t0 != 0 && fault_trace && info.type == ExceptionType::AccessViolation) {
+			static std::atomic<uint32_t> logged {0};
+			if (logged.fetch_add(1, std::memory_order_relaxed) < 3000000) {
+				const auto ns = Common::FrameStats::NowNs() - t0;
+				LOGF("FaultTrace-t: tid=%lu rip=0x%llx addr=0x%016llx access=%d us=%llu ok=%d" "\n",
+				     static_cast<unsigned long>(GetCurrentThreadId()),
+				     static_cast<unsigned long long>(info.exception_address),
+				     static_cast<unsigned long long>(info.access_violation_vaddr),
+				     static_cast<int>(info.access_violation_type),
+				     static_cast<unsigned long long>(ns / 1000u), resolved ? 1 : 0);
+			}
+		}
+		if (t0 != 0 && Common::FrameStats::Enabled()) {
+			const auto ns = Common::FrameStats::NowNs() - t0;
+			Common::FrameStats::Add(Common::FrameStats::Counter::FaultNs, ns);
+			Common::FrameStats::Add(Common::FrameStats::Counter::Faults, 1);
+			if (Common::FrameStats::CurrentRole() == Common::FrameStats::ThreadRole::Main) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::FaultMainNs, ns);
+				Common::FrameStats::Add(Common::FrameStats::Counter::FaultsMain, 1);
+			}
+			if (Common::FrameStats::CurrentRole() == Common::FrameStats::ThreadRole::Gpu) {
+== diag Init g_on
+
+} // namespace
+#endif
+
+void Init() {
+	static bool done = false;
+	if (done) {
+		return;
+	}
+	done = true;
+	if (const char* v = std::getenv("KYTY_DIAG_B32"); v != nullptr && v[0] != '\0') {
+		if (std::strcmp(v, "1") == 0) {
+			g_on = true;
+		} else if (std::strcmp(v, "0") != 0) {
+			g_config_invalid = true;
+			std::snprintf(g_config_text, sizeof(g_config_text), "%s", v);
+		}
+	}
+	if (const char* v = std::getenv("KYTY_TEST_B32"); v != nullptr && v[0] != '\0') {
+		std::snprintf(g_test_text, sizeof(g_test_text), "%s", v);
+		char*        end   = nullptr;
+== Mark ctor/dtor at Reserve; WaitName order check
+66:	Vblank, Once, Join, Addr, Aio, Fiber, Audio, Ult, Net, Rwlock, Count
+end 2026-10-06T09:46:26Z

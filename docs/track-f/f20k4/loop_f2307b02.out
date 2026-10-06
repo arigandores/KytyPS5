@@ -1,0 +1,12 @@
+graphics/guest_gpu/graphicsRun.cpp:740	GpuIdle	OLD	L730: while (gpu->m_commands.empty() && gpu->m_submission_count == 0 && !gpu->m_stopping) { | L720: for (;;) {
+graphics/guest_gpu/graphicsRun.cpp:782	GpuRegmem	OLD	L720: for (;;) {
+graphics/host_gpu/pageManager.cpp:80	Spin	NEW	L78: while (m_lock.test_and_set(std::memory_order_acquire)) {
+graphics/host_gpu/renderer/commandRecorder.cpp:228	RecWait	NEW	L198: for (;;) {
+graphics/host_gpu/renderer/commandRecorder.cpp:1019	RecIdle	NEW	L982: for (;;) {
+graphics/host_gpu/renderer/commandScheduler.cpp:147	ASubIdle	NEW	L140: for (;;) {
+graphics/host_gpu/renderer/commandScheduler.cpp:680	OpsIdle	NEW	L673: while (!stop.stop_requested()) {
+graphics/presentation/videoOut.cpp:833	VoPace	NEW	L825: while (!token.stop_requested()) {
+graphics/presentation/window/window.cpp:903	MainIdle	NEW	L890: while (!loop.need_exit) {
+kernel/pthread.cpp:2528	Rwlock	NEW	L2491: for (;;) {
+kernel/pthread.cpp:4421	Once	NEW	L4412: for (;;) {
+libs/libAudio2.cpp:555	Audio	NEW	L524: for (;;) {

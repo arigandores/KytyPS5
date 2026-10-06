@@ -1,4 +1,4 @@
-suite test_s17c_read.py sha256 87cddb3fd87802667d549aff659b750c09e8f2cd05171cc46ccbbf77ff5f0276 target s17c_read.py sha256 014b2d44b7e2c80994d6110720f1aa87e919f1452e9b00d58a36021f2d96f693 tc_s17c.py sha256 f209626799ae25a4651a17cac793c50aebd2ad36f09fb39539bdfb16c9541592 state_s17c.py sha256 366b502be584e3b1278fc6c550b340fa80c4bfeb19cba676e8da4380b16a09d8 r_addr.py sha256 22693f28b609107ac358765ff4a4fc1b22cffe3f3043c660f80d6d4c81b24c51
+suite test_s17c_read.py sha256 7ee38cd6ad4dfe0cbd28831a45da50afe51031c16346301e06aa9696ed3edd24 target s17c_read.py sha256 969911bc060989252408dccdd858be86c4f1916c1d3cab0320eab04e2cd7ed69 tc_s17c.py sha256 f209626799ae25a4651a17cac793c50aebd2ad36f09fb39539bdfb16c9541592 state_s17c.py sha256 366b502be584e3b1278fc6c550b340fa80c4bfeb19cba676e8da4380b16a09d8 r_addr.py sha256 22693f28b609107ac358765ff4a4fc1b22cffe3f3043c660f80d6d4c81b24c51 aside_s17c.sh sha256 340dbaf9c036e99d98256a31d5ec29f5311261dda720ccdee9152520b6488857
 ok   baseline s17c_v0 reads MEMBERS_PASS (got MEMBERS_PASS)
 ok   baseline s17c_w0 reads MEMBERS_PASS (got MEMBERS_PASS)
 ok   baseline s17c_c2 reads MEMBERS_PASS (got MEMBERS_PASS)
@@ -14,9 +14,19 @@ ok   baseline s17c_kn reads MEMBERS_PASS (got MEMBERS_PASS)
 ok   baseline s17c_kc reads MEMBERS_PASS (got MEMBERS_PASS)
 ok   s17c_v0: other binary in the json -> NOT_ADMITTED (got NOT_ADMITTED)
 ok   s17c_v0: installed_sha.txt not 2b5e2ce6 -> NOT_ADMITTED (got NOT_ADMITTED)
-ok   s17c_v0: version string missing in the binary -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_v0: version string missing in the binary (carried: the S17a2 copy) -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2: edition 3: S17a4 version string missing in the binary copy -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_v0: carried tag does not read the S17a4 copy -> MEMBERS_PASS (got MEMBERS_PASS)
+ok   s17c_c2: edition 3 tag with the S17a2 binary in the json -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2: edition 3 tag made on S17a2 (json and installed_sha.txt) -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_v0: carried tag made on S17a4 -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2: edition 3 tag with the a2fee0d revision text -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2: edition 3 seal changed after the run -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_c2: edition 3 tag registered to the edition 2 seal -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_v0: carried tag does not read the edition 3 seal -> MEMBERS_PASS (got MEMBERS_PASS)
+ok   s17c_c2: edition 3: FS6 installed before and after (only FS8, items 545, 547) -> FORM_FAIL (got FORM_FAIL)
 ok   s17c_v0: other revision text -> NOT_ADMITTED (got NOT_ADMITTED)
-ok   s17c_v0: seal changed after the run -> NOT_ADMITTED (got NOT_ADMITTED)
+ok   s17c_v0: seal changed after the run (carried: the edition 2 copy) -> NOT_ADMITTED (got NOT_ADMITTED)
 ok   s17c_r3: KYTY_SHADER_PREPARE=0 at mode 3 (item 536 (v) N1) -> NOT_ADMITTED (got NOT_ADMITTED)
 ok   s17c_r3: KYTY_FIX_F19 missing -> NOT_ADMITTED (got NOT_ADMITTED)
 ok   s17c_c2: capture at the rebuild signature -> NOT_ADMITTED (got NOT_ADMITTED)
@@ -177,6 +187,44 @@ ok   c2 report: signature of the saved capture folder = SIG0
 ok   reading: no rows -> MEMBERS_PASS
 ok   reading: NO wins over NOT DETERMINED
 ok   reading: NOT DETERMINED -> NOT_EVALUABLE, report rows ignored
+ok   reject_parse residual branch=addr culprit=30:role2 n=3
+ok   reject_parse residual branch=exact culprit=36:role0 n=1
+ok   reject_parse self with raw culprit -> culprit 7 role 1 canon_zero 0
+ok   reject_parse self culprit role6 ->00000000 -> canon_zero 1
+ok   reject_parse self without culprit -> no culprit
+ok   reject_parse base
+ok   reject_parse big
+ok   reject_parse unknown prefix kept
+ok   reject_parse line without hash -> ?
+ok   reject_parse non [a-z_] prefix -> ?
+ok   reject_parse branch other than addr|exact -> none
+ok   reject_clean without raw values: why=self ok=1 complete=0 culprit=7:role1 canon_zero=0 hash=0x0000000000000013 words=42
+ok   reject_clean without raw values: why=self ok=1 complete=1 culprit=5:role6 canon_zero=1 hash=0x0000000000000014 words=43
+ok   reject_clean canon_zero 1 / 0
+ok   reject_clean residual addr
+ok   reject_summary kinds {'base': 1, 'other': 1, 'residual': 3, 'self': 1}
+ok   reject_summary residual branch:role {'addr:role2': 2, 'exact:role0': 1}
+ok   K3 reference: reject lines by kind ["{'residual': 2, 'self': 2}"]
+ok   K3 reference: residual branch:role ["{'addr:role2': 1, 'exact:role0': 1}"]
+ok   K3 member stays canon_mismatch of the at=stop line (reject lines are diagnostics)
+ok   K3 json of the tag: no raw value of the reject lines
+ok   stop537 GO on canon_mismatch 0 (s17c_c2 canon_mismatch 0, reading MEMBERS_PASS)
+ok   stop537 STOP on canon_mismatch 1 (s17c_c2 canon_mismatch 1 > 0 - the series stops after K3, question to the lead (item 537 (zh)))
+ok   stop537 STOP without an at=stop line (s17c_c2 has no capture at=stop line (K3 and K4 not determined, item 531 (v)(3)))
+ok   stop537 STOP on a NOT_ADMITTED capture (s17c_c2 reading NOT_ADMITTED (interference: one repeat by the same name, item 537 (e)))
+ok   stop537 STOP when s17c_c2 is not read (s17c_c2 not read (runs/s17c_c2/read.json missing))
+ok   aside ed2 of s17c_c2: rc 0, left []
+ok   aside ed2 keeps every file (runs, state, 7 root files + list)
+ok   aside ed2 leaves the carried K2(2) tags
+ok   aside ed2 refused for an S17a4 run
+ok   aside ed2 refused for another tag
+ok   aside refused for a carried K2(2) tag
+ok   aside refused for an unknown reason
+ok   aside refused while the call runs
+ok   aside rep refused when the tag is admitted
+ok   aside rep after NOT_ADMITTED
+ok   aside second rep of the same tag refused (question to the lead)
+ok   aside rep refused for an edition 2 run
 ok   ASCII only: s17c_read.py
 ok   ASCII only: tc_s17c.py
 ok   ASCII only: state_s17c.py
@@ -188,8 +236,14 @@ ok   ASCII only: post_s17c.sh
 ok   ASCII only: enter_scene.py
 ok   ASCII only: guard_s17c.py
 ok   ASCII only: test_s17c_read.py
+ok   ASCII only: aside_s17c.sh
 ok   cp1250 strict output: s17c_read.py s17c_cc (rc 0)
+ok   whole output of s17c_cc: no raw value of the self reject line (item 548 (v)(2)), reads MEMBERS_PASS
 ok   cp1250 strict output: s17c_read.py --table (rc 0)
 ok   cp1250 strict output: s17c_read.py s17c_r3 (rc 0)
-checks 192
+ok   cp1250 strict output: s17c_read.py s17c_v0 (rc 0)
+ok   subprocess: carried s17c_v0 read by edition 2
+ok   cp1250 strict output: s17c_read.py --stop537 (rc 0)
+ok   subprocess: --stop537 GO on the baseline
+checks 246
 ALL OK

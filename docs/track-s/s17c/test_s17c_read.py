@@ -1,5 +1,6 @@
 """S17c (HPP-613): fixtures of the S17c reader s17c_read.py, the translation cache reader tc_s17c.py, the state description
-state_s17c.py and the copy of r_addr.py.  A synthetic root with all 13 tags made (logs, run records, state folders, caches, catalogue,
+state_s17c.py, the copy of r_addr.py and aside_s17c.sh; seal edition 3 (S17a4 ed2686da; K2(2) s17c_v0/s17c_w0 carried from
+edition 2 and read by its rules, item 548 (b)).  A synthetic root with all 13 tags made (logs, run records, state folders, caches, catalogue,
 manifest) reads MEMBERS_PASS everywhere; then one change per admission row, form row and member (and every edge: 0.90 share, 0.90
 rb_hit, 180 s, 3 000 records, 300 s) gives the named word.  The first line names the suite and the targets with sha256; the last line is
 ALL OK.  ASCII only.
@@ -27,9 +28,10 @@ def sha(path):
     return hashlib.sha256(open(path, 'rb').read()).hexdigest()
 
 
-print('suite test_s17c_read.py sha256 %s target s17c_read.py sha256 %s tc_s17c.py sha256 %s state_s17c.py sha256 %s r_addr.py sha256 %s'
+print('suite test_s17c_read.py sha256 %s target s17c_read.py sha256 %s tc_s17c.py sha256 %s state_s17c.py sha256 %s r_addr.py sha256 %s '
+      'aside_s17c.sh sha256 %s'
       % (sha(os.path.join(HERE, 'test_s17c_read.py')), sha(os.path.join(HERE, 's17c_read.py')), sha(os.path.join(HERE, 'tc_s17c.py')),
-         sha(os.path.join(HERE, 'state_s17c.py')), sha(os.path.join(HERE, 'r_addr.py'))))
+         sha(os.path.join(HERE, 'state_s17c.py')), sha(os.path.join(HERE, 'r_addr.py')), sha(os.path.join(HERE, 'aside_s17c.sh'))))
 OK = [True]
 N = [0]
 
@@ -198,6 +200,7 @@ def write_replay(d, gen, words, manifest=None):
 # ------------------------------------------------------------------------------------------------ builders: one tag
 
 SEAL_TEXT = b'seal of the fixtures\n'
+SEAL_TEXT_ED2 = b'seal edition 2 of the fixtures\n'
 
 
 def env_for(tag):
@@ -216,7 +219,7 @@ def env_for(tag):
 
 
 def base_log(tag, extra_before_guest=(), extra=(), entry=True, ft=True, dirname=R.DIR1, prep=12000, av_after=()):
-    L1 = ['Fork build arigandores/KytyPS5 a2fee0d, test',
+    L1 = ['Fork build arigandores/KytyPS5 %s, test' % (R.REV_ED2 if tag in R.CARRIED else R.REV),
           'Shader translation cache: _ShaderCache' + chr(92) + 'PPSA21564' + chr(92) + dirname]
     L1 += list(extra_before_guest)
     if prep is not None:
@@ -275,6 +278,9 @@ def make_root(root):
     open(seal, 'wb').write(SEAL_TEXT)
     binp = os.path.join(root, 'bin.exe')
     open(binp, 'wb').write(b'MZ...' + R.VERSION + b'...')
+    seal2 = os.path.join(root, 'seal_ed2.md')
+    open(seal2, 'wb').write(SEAL_TEXT_ED2)
+    open(os.path.join(root, 'bin_ed2.exe'), 'wb').write(b'MZ...' + R.VERSION_ED2 + b'...')
     st = os.path.join(root, 'state')
     write_replay(os.path.join(st, 's17c_c2', 'replay'), 3, CANON)
     write_folder(os.path.join(st, 's17c_c2', 'f10'), {FA: [PA0]}, sig=R.SIG0)
@@ -339,14 +345,16 @@ def make_root(root):
         cmd = ['kyty_emulator.exe', '--vulkan-validation', 'false']
         if spec['form'] == 'w':
             cmd += ['--vulkan-validation', 'true']
-        run = dict(tag=tag, binary_sha256=R.BIN_EXPECT, env=env_for(tag), cmdline=cmd, prereg=dict(sha256=sha(seal)),
+        ed2 = tag in R.CARRIED
+        bexp = R.BIN_EXPECT_ED2 if ed2 else R.BIN_EXPECT
+        run = dict(tag=tag, binary_sha256=bexp, env=env_for(tag), cmdline=cmd, prereg=dict(sha256=sha(seal2 if ed2 else seal)),
                    attempts=[att_for(tag)])
         json.dump(run, open(os.path.join(root, '%s.json' % tag), 'w'))
         open(os.path.join(root, 'rec_%s.mp4.idx' % tag), 'w').write('f\n' * 3000)
         w = lambda n, t: open(os.path.join(d, n + '.txt'), 'w', newline='\n').write(t)  # noqa: E731
-        w('installed_sha', R.BIN_EXPECT + '\n')
-        w('installed_before', R.FS6 + '\n')
-        w('installed_after', R.FS6 + '\n')
+        w('installed_sha', bexp + '\n')
+        w('installed_before', (R.FS6 if ed2 else R.FS8) + '\n')
+        w('installed_after', (R.FS6 if ed2 else R.FS8) + '\n')
         w('manifest_cmp', 'manifest cmp EQUAL files 9 listsha 00\n')
         w('glitch', 'one-frame glitches: 0\n')
         w('sheet', 'sheet: C:/x/sheet.png\n')
@@ -364,6 +372,8 @@ def use(root):
     R.ROOT = root
     R.SEAL_PATH = os.path.join(root, 'seal.md')
     R.BIN_PATH = os.path.join(root, 'bin.exe')
+    R.SEAL_PATH_ED2 = os.path.join(root, 'seal_ed2.md')
+    R.BIN_PATH_ED2 = os.path.join(root, 'bin_ed2.exe')
 
 
 def read_all(root):
@@ -444,9 +454,33 @@ def word(tag, change, want, name):
 # ------------------------------------------------------------------------------------------------ admission and form
 word('s17c_v0', lambda r: edit_json(r, 's17c_v0', lambda d: d.update(binary_sha256='0' * 64)), 'NOT_ADMITTED', 'other binary in the json')
 word('s17c_v0', lambda r: put(r, 'runs/s17c_v0/installed_sha.txt', 'x\n'), 'NOT_ADMITTED', 'installed_sha.txt not 2b5e2ce6')
-word('s17c_v0', lambda r: open(os.path.join(r, 'bin.exe'), 'wb').write(b'MZ'), 'NOT_ADMITTED', 'version string missing in the binary')
+word('s17c_v0', lambda r: open(os.path.join(r, 'bin_ed2.exe'), 'wb').write(b'MZ'), 'NOT_ADMITTED',
+     'version string missing in the binary (carried: the S17a2 copy)')
+word('s17c_c2', lambda r: open(os.path.join(r, 'bin.exe'), 'wb').write(b'MZ' + R.VERSION_ED2), 'NOT_ADMITTED',
+     'edition 3: S17a4 version string missing in the binary copy')
+word('s17c_v0', lambda r: open(os.path.join(r, 'bin.exe'), 'wb').write(b'MZ'), 'MEMBERS_PASS',
+     'carried tag does not read the S17a4 copy')
+word('s17c_c2', lambda r: edit_json(r, 's17c_c2', lambda d: d.update(binary_sha256=R.BIN_EXPECT_ED2)), 'NOT_ADMITTED',
+     'edition 3 tag with the S17a2 binary in the json')
+word('s17c_c2', lambda r: (edit_json(r, 's17c_c2', lambda d: d.update(binary_sha256=R.BIN_EXPECT_ED2)),
+                           put(r, 'runs/s17c_c2/installed_sha.txt', R.BIN_EXPECT_ED2 + '\n')), 'NOT_ADMITTED',
+     'edition 3 tag made on S17a2 (json and installed_sha.txt)')
+word('s17c_v0', lambda r: (edit_json(r, 's17c_v0', lambda d: d.update(binary_sha256=R.BIN_EXPECT)),
+                           put(r, 'runs/s17c_v0/installed_sha.txt', R.BIN_EXPECT + '\n')), 'NOT_ADMITTED',
+     'carried tag made on S17a4')
+word('s17c_c2', lambda r: edit(r, 'log_s17c_c2.txt', 'KytyPS5 9238a18,', 'KytyPS5 a2fee0d,'), 'NOT_ADMITTED',
+     'edition 3 tag with the a2fee0d revision text')
+word('s17c_c2', lambda r: open(os.path.join(r, 'seal.md'), 'ab').write(b'x'), 'NOT_ADMITTED', 'edition 3 seal changed after the run')
+word('s17c_c2', lambda r: edit_json(r, 's17c_c2', lambda d: d['prereg'].update(sha256=sha(os.path.join(r, 'seal_ed2.md')))),
+     'NOT_ADMITTED', 'edition 3 tag registered to the edition 2 seal')
+word('s17c_v0', lambda r: open(os.path.join(r, 'seal.md'), 'ab').write(b'x'), 'MEMBERS_PASS',
+     'carried tag does not read the edition 3 seal')
+word('s17c_c2', lambda r: (put(r, 'runs/s17c_c2/installed_before.txt', R.FS6 + '\n'), put(r, 'runs/s17c_c2/installed_after.txt',
+                                                                                        R.FS6 + '\n')), 'FORM_FAIL',
+     'edition 3: FS6 installed before and after (only FS8, items 545, 547)')
 word('s17c_v0', lambda r: edit(r, 'log_s17c_v0.txt', 'KytyPS5 a2fee0d,', 'KytyPS5 302347b,'), 'NOT_ADMITTED', 'other revision text')
-word('s17c_v0', lambda r: open(os.path.join(r, 'seal.md'), 'ab').write(b'x'), 'NOT_ADMITTED', 'seal changed after the run')
+word('s17c_v0', lambda r: open(os.path.join(r, 'seal_ed2.md'), 'ab').write(b'x'), 'NOT_ADMITTED',
+     'seal changed after the run (carried: the edition 2 copy)')
 word('s17c_r3', lambda r: edit_json(r, 's17c_r3', lambda d: d['env'].update(KYTY_SHADER_PREPARE='0')), 'NOT_ADMITTED',
      'KYTY_SHADER_PREPARE=0 at mode 3 (item 536 (v) N1)')
 word('s17c_r3', lambda r: edit_json(r, 's17c_r3', lambda d: d['env'].pop('KYTY_FIX_F19')), 'NOT_ADMITTED', 'KYTY_FIX_F19 missing')
@@ -769,19 +803,167 @@ rw.m('a', None)
 rw.r('x', 'y')
 check(rw.word() == 'NOT_EVALUABLE', 'reading: NOT DETERMINED -> NOT_EVALUABLE, report rows ignored')
 
+# ------------------------------------------------------------------------------------------------ edition 3: reject lines (items 541, 548)
+RES_A = 'capture reject why=residual branch=addr culprit=30:role2 n=3 hash=0x0000000000000011 words=40'
+RES_E = 'capture reject why=residual branch=exact culprit=36:role0 n=1 hash=0x0000000000000012 words=41'
+SELF0 = 'capture reject why=self ok=1 complete=0 culprit=7:role1:0000045f->0000010f hash=0x0000000000000013 words=42'
+SELF6 = 'capture reject why=self ok=1 complete=1 culprit=5:role6:deadbeef->00000000 hash=0x0000000000000014 words=43'
+d = R.reject_parse(RES_A)
+check((d['kind'], d['branch'], d['culprit'], d['role'], d['n'], d['canon_zero']) == ('residual', 'addr', '30', '2', '3', None),
+      'reject_parse residual branch=addr culprit=30:role2 n=3')
+d = R.reject_parse(RES_E)
+check((d['kind'], d['branch'], d['culprit'], d['role'], d['n']) == ('residual', 'exact', '36', '0', '1'),
+      'reject_parse residual branch=exact culprit=36:role0 n=1')
+d = R.reject_parse(SELF0)
+check((d['kind'], d['ok'], d['complete'], d['culprit'], d['role'], d['canon_zero']) == ('self', '1', '0', '7', '1', 0),
+      'reject_parse self with raw culprit -> culprit 7 role 1 canon_zero 0')
+d = R.reject_parse(SELF6)
+check((d['culprit'], d['role'], d['canon_zero']) == ('5', '6', 1), 'reject_parse self culprit role6 ->00000000 -> canon_zero 1')
+check(R.reject_parse('capture reject why=self ok=1 complete=0 hash=0x0000000000000015 words=9')['culprit'] is None,
+      'reject_parse self without culprit -> no culprit')
+check(R.reject_parse('capture reject why=base hash=0x0000000000000016 words=9')['kind'] == 'base', 'reject_parse base')
+check(R.reject_parse('capture reject why=big hash=0x0000000000000017 words=9')['kind'] == 'big', 'reject_parse big')
+check(R.reject_parse('capture reject why=strange x=1 hash=0x0000000000000018 words=9')['kind'] == 'strange', 'reject_parse unknown prefix kept')
+check(R.reject_parse('capture reject why=residual branch=addr culprit=1:role2 n=1')['kind'] == '?', 'reject_parse line without hash -> ?')
+check(R.reject_parse('capture reject why=Weird hash=0x0000000000000019 words=9')['kind'] == '?', 'reject_parse non [a-z_] prefix -> ?')
+check(R.reject_parse('capture reject why=residual branch=other culprit=1:role2 n=1 hash=0x000000000000001a words=9')['branch'] is None,
+      'reject_parse branch other than addr|exact -> none')
+for ln in (SELF0, SELF6):
+    c = R.reject_clean(ln)
+    check('0000045f' not in c and '0000010f' not in c and 'deadbeef' not in c and '->' not in c and 'culprit=' in c,
+          'reject_clean without raw values: %s' % c)
+check(R.reject_clean(SELF6).find('canon_zero=1') > 0 and R.reject_clean(SELF0).find('canon_zero=0') > 0, 'reject_clean canon_zero 1 / 0')
+check(R.reject_clean(RES_A) == 'why=residual branch=addr culprit=30:role2 n=3 hash=0x0000000000000011 words=40', 'reject_clean residual addr')
+kinds, res = R.reject_summary([(1, RES_A), (2, RES_E), (3, RES_A), (4, SELF0),
+                               (5, 'capture reject why=strange hash=0x0000000000000018 words=9'),
+                               (6, 'capture reject why=base hash=0x0000000000000016 words=9')])
+check(kinds == {'base': 1, 'other': 1, 'residual': 3, 'self': 1}, 'reject_summary kinds %s' % kinds)
+check(res == {'addr:role2': 2, 'exact:role0': 1}, 'reject_summary residual branch:role %s' % res)
+
+
+def add_rejects(r):
+    edit(r, 'log_s17c_c2.txt', CAP % 'stop', '\n'.join('ShaderReplay: ' + x for x in (RES_A, RES_E, SELF0, SELF6)) + '\n' + CAP % 'stop')
+
+
+rows = variant(add_rejects, ['s17c_v0', 's17c_w0', 's17c_c2'])['s17c_c2']
+rv = dict(rows.rep)
+kr = [v for k, v in rv.items() if k.startswith('capture reject lines logged by kind')]
+check(kr and kr[0] == str({'residual': 2, 'self': 2}), 'K3 reference: reject lines by kind %s' % kr)
+rr = [v for k, v in rv.items() if k.startswith('residual branch:role')]
+check(rr and rr[0] == str({'addr:role2': 1, 'exact:role0': 1}), 'K3 reference: residual branch:role %s' % rr)
+check(rowval(rows, 'K3 canon_mismatch = 0') is True, 'K3 member stays canon_mismatch of the at=stop line (reject lines are diagnostics)')
+txt = json.dumps(R.to_json('s17c_c2', rows, {}))
+check('deadbeef' not in txt and '0000045f' not in txt and '0000010f' not in txt, 'K3 json of the tag: no raw value of the reject lines')
+
+# ------------------------------------------------------------------------------------------------ edition 3: --stop537 (item 537 (zh))
+
+
+def stop_after(change):
+    variant(change, ['s17c_v0', 's17c_w0', 's17c_c2'])
+    return R.stop537()
+
+
+ok, why = stop_after(lambda r: None)
+check(ok is True, 'stop537 GO on canon_mismatch 0 (%s)' % why)
+ok, why = stop_after(lambda r: edit(r, 'log_s17c_c2.txt', CAP % 'stop', (CAP % 'stop').replace('canon_mismatch=0', 'canon_mismatch=1')))
+check(ok is False and 'canon_mismatch 1' in why, 'stop537 STOP on canon_mismatch 1 (%s)' % why)
+ok, why = stop_after(lambda r: edit(r, 'log_s17c_c2.txt', 'at=stop', 'at=save'))
+check(ok is False and 'no capture at=stop' in why, 'stop537 STOP without an at=stop line (%s)' % why)
+ok, why = stop_after(lambda r: edit(r, 'log_s17c_c2.txt', 'GuestOut: hello', 'Window 1 minimized\nGuestOut: hello'))
+check(ok is False and 'NOT_ADMITTED' in why, 'stop537 STOP on a NOT_ADMITTED capture (%s)' % why)
+variant(lambda r: None, ['s17c_v0'])
+os.remove(os.path.join(R.ROOT, 'runs', 's17c_c2', 'read.json'))
+ok, why = R.stop537()
+check(ok is False and 'not read' in why, 'stop537 STOP when s17c_c2 is not read (%s)' % why)
+
+# ------------------------------------------------------------------------------------------------ edition 3: aside_s17c.sh
+ASIDE = os.path.join(HERE, 'aside_s17c.sh')
+
+
+def aside(root, *args):
+    e = dict(os.environ)
+    e['S17C_ROOT'] = root.replace(chr(92), '/')
+    p = subprocess.run([shutil.which('bash') or 'bash', ASIDE] + list(args), env=e, capture_output=True)   # not the WSL bash of System32
+    return p.returncode, p.stdout.decode('ascii', 'replace')
+
+
+def aside_root(sha_c2):
+    K[0] += 1
+    root = os.path.join(TMP, 'a%03d' % K[0])
+    shutil.copytree(BASE, root)
+    put(root, 'runs/s17c_c2/installed_sha.txt', sha_c2 + '\n')
+    for f in ('rec_s17c_c2.mp4', 'gpuclk_s17c_c2.csv'):
+        put(root, f, 'x\n')
+    put(root, 'go_s17c_c2.out.txt', 'tag\nrc=0\n')
+    put(root, 'times.txt', '')
+    return root
+
+
+root = aside_root(R.BIN_EXPECT_ED2)
+rc, out = aside(root, 's17c_c2', 'ed2')
+left = [f for f in ('runs/s17c_c2', 'state/s17c_c2', 'log_s17c_c2.txt', 'stdout_s17c_c2.txt', 's17c_c2.json', 'rec_s17c_c2.mp4',
+                    'rec_s17c_c2.mp4.idx', 'gpuclk_s17c_c2.csv', 'go_s17c_c2.out.txt') if os.path.exists(os.path.join(root, f))]
+check(rc == 0 and 'ASIDE OK s17c_c2 ed2' in out and not left, 'aside ed2 of s17c_c2: rc %d, left %s' % (rc, left))
+moved = [x for x in os.listdir(os.path.join(root, 'runs')) if x.startswith('s17c_c2.ed2_')]
+ad = os.listdir(os.path.join(root, 'aside'))
+check(len(moved) == 1 and len(ad) == 1 and len(os.listdir(os.path.join(root, 'aside', ad[0]))) == 8 and
+      any(x.startswith('s17c_c2.ed2_') for x in os.listdir(os.path.join(root, 'state'))) and
+      'aside_s17c s17c_c2 ed2' in open(os.path.join(root, 'times.txt')).read(), 'aside ed2 keeps every file (runs, state, 7 root files + list)')
+check(os.path.isdir(os.path.join(root, 'runs', 's17c_v0')) and os.path.isfile(os.path.join(root, 'log_s17c_v0.txt')),
+      'aside ed2 leaves the carried K2(2) tags')
+root = aside_root(R.BIN_EXPECT)
+rc, out = aside(root, 's17c_c2', 'ed2')
+check(rc == 2 and 'not an S17a2' in out and os.path.isdir(os.path.join(root, 'runs', 's17c_c2')), 'aside ed2 refused for an S17a4 run')
+root = aside_root(R.BIN_EXPECT_ED2)
+rc, out = aside(root, 's17c_ca', 'ed2')
+check(rc == 2 and 'ed2 is for s17c_c2 only' in out, 'aside ed2 refused for another tag')
+rc, out = aside(root, 's17c_v0', 'rep')
+check(rc == 2 and 'carried' in out, 'aside refused for a carried K2(2) tag')
+rc, out = aside(root, 's17c_c2', 'xyz')
+check(rc == 2 and 'usage' in out, 'aside refused for an unknown reason')
+root = aside_root(R.BIN_EXPECT_ED2)
+put(root, 'go_s17c_c2.out.txt', 'tag\n')
+rc, out = aside(root, 's17c_c2', 'ed2')
+check(rc == 2 and 'no rc line' in out and os.path.isdir(os.path.join(root, 'runs', 's17c_c2')), 'aside refused while the call runs')
+root = aside_root(R.BIN_EXPECT)
+put(root, 'runs/s17c_c2/read.txt', '  READING MEMBERS_PASS\n')
+rc, out = aside(root, 's17c_c2', 'rep')
+check(rc == 2 and 'NOT_ADMITTED' in out, 'aside rep refused when the tag is admitted')
+put(root, 'runs/s17c_c2/read.txt', '  READING NOT_ADMITTED\n')
+rc, out = aside(root, 's17c_c2', 'rep')
+check(rc == 0 and 'ASIDE OK s17c_c2 rep' in out and not os.path.exists(os.path.join(root, 'runs', 's17c_c2')), 'aside rep after NOT_ADMITTED')
+shutil.copytree(os.path.join(BASE, 'runs', 's17c_c2'), os.path.join(root, 'runs', 's17c_c2'))
+put(root, 'runs/s17c_c2/installed_sha.txt', R.BIN_EXPECT + '\n')
+put(root, 'runs/s17c_c2/read.txt', '  READING NOT_ADMITTED\n')
+rc, out = aside(root, 's17c_c2', 'rep')
+check(rc == 6 and 'second interference' in out and os.path.isdir(os.path.join(root, 'runs', 's17c_c2')),
+      'aside second rep of the same tag refused (question to the lead)')
+root = aside_root(R.BIN_EXPECT_ED2)
+put(root, 'runs/s17c_c2/read.txt', '  READING NOT_ADMITTED\n')
+rc, out = aside(root, 's17c_c2', 'rep')
+check(rc == 2 and 'edition 2 run' in out, 'aside rep refused for an edition 2 run')
+
 # ------------------------------------------------------------------------------------------------ ASCII and cp1250
 for name in ('s17c_read.py', 'tc_s17c.py', 'state_s17c.py', 'r_addr.py', 'go_s17c.sh', 'launch_s17c.sh', 'wait_s17c.sh', 'post_s17c.sh',
-             'enter_scene.py', 'guard_s17c.py', 'test_s17c_read.py'):
+             'enter_scene.py', 'guard_s17c.py', 'test_s17c_read.py', 'aside_s17c.sh'):
     p = os.path.join(HERE, name)
     if os.path.exists(p):
         check(all(b < 128 for b in open(p, 'rb').read()), 'ASCII only: %s' % name)
     else:
         check(False, 'ASCII only: %s present' % name)
 env = dict((k, v) for k, v in os.environ.items() if k != 'PYTHONIOENCODING')
-env.update(PYTHONIOENCODING='cp1250:strict', S17C_ROOT=BASE, S17C_SEAL=os.path.join(BASE, 'seal.md'), S17C_BIN=os.path.join(BASE, 'bin.exe'))
-for args in (['s17c_cc'], ['--table'], ['s17c_r3']):
+env.update(PYTHONIOENCODING='cp1250:strict', S17C_ROOT=BASE, S17C_SEAL=os.path.join(BASE, 'seal.md'), S17C_BIN=os.path.join(BASE, 'bin.exe'),
+           S17C_SEAL_ED2=os.path.join(BASE, 'seal_ed2.md'), S17C_BIN_ED2=os.path.join(BASE, 'bin_ed2.exe'))
+for args in (['s17c_cc'], ['--table'], ['s17c_r3'], ['s17c_v0'], ['--stop537']):
     p = subprocess.run([sys.executable, os.path.join(HERE, 's17c_read.py')] + args, env=env, capture_output=True)
     check(p.returncode == 0 and b'Traceback' not in p.stderr, 'cp1250 strict output: s17c_read.py %s (rc %d)' % (args[0], p.returncode))
+    if args[0] == 's17c_cc':
+        check(b'12345678' not in p.stdout and b'MEMBERS_PASS' in p.stdout,
+              'whole output of s17c_cc: no raw value of the self reject line (item 548 (v)(2)), reads MEMBERS_PASS')
+    if args[0] == 's17c_v0':
+        check(b'READING MEMBERS_PASS' in p.stdout and b'S17a2 2b5e2ce6' in p.stdout, 'subprocess: carried s17c_v0 read by edition 2')
+    if args[0] == '--stop537':
+        check(p.stdout.startswith(b'STOP537 GO'), 'subprocess: --stop537 GO on the baseline')
 shutil.rmtree(TMP, ignore_errors=True)
 print('checks %d' % N[0])
 print('ALL OK' if OK[0] else 'FAILED')

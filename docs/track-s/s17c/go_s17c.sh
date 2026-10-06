@@ -1,6 +1,7 @@
 #!/bin/bash
-# Track S link S17c (HPP-613; ROADMAP s122 item 524 (z)-(i), items 531-533, 536): ONE tag of the S-replay series on the S17a2 test binary
-# 2b5e2ce6 (code a2fee0d9).  ONE TAG = ONE LOCK.  Port of C:/kyty/f287/f19e/go_f19e.sh (test binary installed for the tag only, returned from
+# Track S link S17c (HPP-613; ROADMAP s122 item 524 (z)-(i), items 531-533, 536, 537, 541, 548): ONE tag of the S-replay series, seal
+# edition 3, on the S17a4 binary ed2686da (code 9238a182); K2(2) s17c_v0/s17c_w0 are carried from S17a2 2b5e2ce6 (item 548 (b)) and refused
+# here; the tags after the K3 tags start only on 's17c_read.py --stop537' GO (item 537 (zh)).  ONE TAG = ONE LOCK.  Port of C:/kyty/f287/f19e/go_f19e.sh (test binary installed for the tag only, returned from
 # the pinned copy of the installed one) with the guard of the user game of C:/kyty/f287/f20c/go_f20c.sh seal 2 (item 534, general rule 33:
 # no kill by image name, the own emulator tree by pid only; a user emulator or launcher before the lock => not starting; right after the
 # lock => lock released, files untouched, interference; during the tag => the own emulator killed by pid, caches returned after the user
@@ -27,8 +28,8 @@
 export PATH=/usr/bin:/mingw64/bin:$PATH
 G=C:/kyty/s288/s17c; S=C:/kyty/s288; EMU="C:/kyty/KytyPS5/ps5 em"; LOCK=C:/kyty/SEALED_RUN.lock
 GAME="$EMU/kyty_emulator.exe"
-BIN=C:/kyty/s288/bin/kyty_emulator_2b5e2ce6.exe
-BIN_EXPECT=2b5e2ce677c557bb0dd28ccc114588aea5c4b6f56c10ab1450faadd81328d544
+BIN=C:/kyty/s288/bin/kyty_emulator_ed2686da.exe
+BIN_EXPECT=ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b
 FS6=9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2
 FS6_PIN=C:/kyty/f287/bin/kyty_emulator_9325446c.exe
 FS8=2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
@@ -46,8 +47,7 @@ export APPDATA="${APPDATA:-$USERPROFILE\AppData\Roaming}"
 T=${1:-}
 SAVE=""; H=0
 case "$T" in
-  s17c_v0) PREV="";       IN=installed; FORM=v; H=330; KV="KYTY_S_REPLAY=0";;
-  s17c_w0) PREV=s17c_v0;  IN=installed; FORM=w; H=310; KV="KYTY_S_REPLAY=0";;
+  s17c_v0|s17c_w0) echo "$T is carried from S17a2 2b5e2ce6 without a repeat (items 537 (e), 548 (b)) - not run in seal edition 3"; exit 2;;
   s17c_c2) PREV=s17c_w0;  IN=empty_f10; FORM=v; H=330; KV="KYTY_S_REPLAY=2 KYTY_FIX_F19=0"; SAVE="replay f10";;
   s17c_ca) PREV=s17c_c2;  IN=empty_f10; FORM=n; H=120; KV="KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_S_REPLAY_TEST=addr"; SAVE="replay";;
   s17c_cc) PREV=s17c_ca;  IN=empty_f10; FORM=n; H=120; KV="KYTY_S_REPLAY=2 KYTY_FIX_F19=0 KYTY_S_REPLAY_TEST=canon"; SAVE="replay";;
@@ -80,15 +80,18 @@ if [ -n "$SRC" ]; then
   [ -f $G/state/$SRC/replay/replay.cur ] || { echo "input state $IN: state/$SRC/replay/replay.cur missing"; exit 2; }
   [ "$IN" != rb_r3 ] || [ -d $G/state/$SRC/f19 ] || { echo "input state $IN: state/$SRC/f19 missing"; exit 2; }
 fi
+case "$T" in
+  s17c_n0|s17c_r3|s17c_rs|s17c_e3|s17c_ew|s17c_ks|s17c_kn|s17c_kc)
+    S537=$(python $G/s17c_read.py --stop537) || { log "$S537 - not starting (item 537 (zh))"; exit 2; };;
+esac
 [ -f "$SEAL" ] || { echo "no seal $SEAL"; exit 1; }
 WANT=$(sha "$GAME")
 case "$WANT" in
-  $FS6) PINNED=$FS6_PIN;;
   $FS8) PINNED=$FS8_PIN;;
-  *) log "installed binary $WANT is neither FS6 9325446c nor FS8 2c9b69b9 - not starting"; exit 1;;
+  *) log "installed binary $WANT is not FS8 2c9b69b9 (seal edition 3) - not starting"; exit 1;;
 esac
 [ "$(sha $PINNED)" = "$WANT" ] || { log "pinned copy $PINNED sha != installed $WANT - not starting"; exit 1; }
-[ "$(sha $BIN)" = "$BIN_EXPECT" ] || { log "S17a2 copy $BIN sha != $BIN_EXPECT - not starting"; exit 1; }
+[ "$(sha $BIN)" = "$BIN_EXPECT" ] || { log "S17a4 copy $BIN sha != $BIN_EXPECT - not starting"; exit 1; }
 [ -d "$GLDIR" ] || { log "no GLCache dir - not starting"; exit 1; }
 GS=$(python $G/guard_s17c.py scan) || { python $G/guard_s17c.py close user_found > /dev/null; log "user emulator or launcher lives - not starting, block closed (item 534): $GS"; exit 3; }
 mkdir -p $OUT
@@ -205,9 +208,9 @@ python $G/state_s17c.py > $OUT/state_in.txt 2>&1 || { log "state_s17c.py failed 
 echo "$IN" > $OUT/state_in_name.txt
 log "input state $IN: $(tr '\n' ';' < $OUT/state_in.txt | cut -c1-300)"
 INSTALLED=1
-cp "$BIN" "$GAME" && [ "$(sha "$GAME")" = "$BIN_EXPECT" ] || { log "install of the S17a2 copy failed - not starting"; exit 1; }
+cp "$BIN" "$GAME" && [ "$(sha "$GAME")" = "$BIN_EXPECT" ] || { log "install of the S17a4 copy failed - not starting"; exit 1; }
 sha "$GAME" > $OUT/installed_sha.txt
-log "installed the S17a2 copy for the tag: $(cat $OUT/installed_sha.txt)"
+log "installed the S17a4 copy for the tag: $(cat $OUT/installed_sha.txt)"
 cd "$EMU" || exit 1
 for v in $(env | grep -o '^\(KYTY\|VK_LAYER\)_[A-Z0-9_]*'); do unset $v; done
 COMMON="--level $LV --attempts 1 --stable-draws 300 --no-install --require-idle --gates-file $G/gates_default.txt --pred $SEAL"

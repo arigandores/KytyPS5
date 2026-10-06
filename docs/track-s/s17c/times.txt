@@ -71,3 +71,11 @@
 2026-10-05T08:58:09Z S17c post_s17c s17c_c2: read.txt 5776127fdac321de,   READING NOT_ADMITTED, glitch: one-frame glitches: 0
 2026-10-05T08:58:57Z S17c series STOPPED after s17c_c2 (process rule p.273(z)): window event in the tag - 'Window 1 minimized' log line 1709199 after FrameTrace n=2762, 'restored' line 1729600 after n=2984, 10 keyboard focus changes n=2015..5856 (log_s17c_c2.txt); guard watch: no user emulator/launcher; reading NOT_ADMITTED; question to the lead (repeat of s17c_c2 and the canon_self finding) - no tag until the answer
 2026-10-05T08:59:17Z S17c FACTS.md section '## S17c - interim' appended
+2026-10-05T08:59:48Z S17c question to the lead posted in HPP-613 (repeat s17c_c2 / canon_self finding); status blocked (owner: Roadmap Lead)
+2026-10-05T12:50:26Z heartbeat (wake issue_blockers_resolved, HPP-623 done; p.548 read): HPP-624 F20e in_progress executionRunId=50cdb154, no f20e lock.log yet; 4 short commands 12:48:53Z-12:49:46Z (lock/API/ROADMAP reads) ran under F20e executionRunId outside any lock released window - breach of p.535(g) amendment to rule 30, named by executor; no lock was present; next: blocked on HPP-624, ed.3 print on ed2686da after F20e
+2026-10-05T14:52:39Z S17c ed.3: pred/s17c_seal_ed2.md = copy of edition 2 (sha f05aa9ce); s17c_read.py, go_s17c.sh patched for edition 3 (binary ed2686da, K2(2) carried, stop537, reject lines without raw values)
+2026-10-05T14:59:55Z S17c heartbeat: lock of S15b k_01 since 14:53:00Z (lock file) stopped the ed.3 work (fixtures, aside, seal not done); comment posted, status blocked on HPP-603 in the window after lock released
+2026-10-06T01:53:57Z S17c ed.3 (run 34a7cf8c): aside_s17c.sh written, test_s17c_read.py patched for edition 3 (carried K2(2), reject parsing, no raw values, --stop537, aside)
+2026-10-06T01:55:56Z S17c ed.3: test_s17c_read.py -> ALL OK, checks 246, out sha 05375f4484a4bc92
+2026-10-06T01:56:21Z S17c ed.3: signature hash 9177b4267de1fb8bac7d1113afd8733210addfac found once in ed2686da and once in 2b5e2ce6 (grep -c -a) - K2(2) carry of item 548 (b) holds
+2026-10-06T01:57:20Z S17c ed.3 seal written: pred/s17c_seal.md = docs/track-s/s17c.md sha e4e4075602415fa5; checkseal SEAL: PASS

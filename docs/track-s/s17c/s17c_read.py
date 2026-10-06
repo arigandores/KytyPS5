@@ -1,8 +1,11 @@
-"""Track S link S17c (HPP-613; ROADMAP s122 item 524 (z) K2(2)-K6, items 531 (v)(d), 532 (b)-(zh), 533 (b)(g), 536 (b)(v)): the reader of
-the S-replay tags of the S17a2 test binary 2b5e2ce6 (code a2fee0d9).  Rows and a READING word per tag, the member table K2(2)-K6 over the
-tags; NO verdict (the lead's, S17d HPP-614).  Definitions - seal docs/track-s/s17c.md section 4 (= pred/s17c_seal.md).
+"""Track S link S17c (HPP-613; ROADMAP s122 item 524 (z) K2(2)-K6, items 531 (v)(d), 532 (b)-(zh), 533 (b)(g), 536 (b)(v), 537 (e)(zh),
+541 (b)(g), 548 (b)(v)): the reader of the S-replay tags, seal edition 3 - binary S17a4 ed2686da (code 9238a182); the K2(2) tags s17c_v0 and
+s17c_w0 were made on S17a2 2b5e2ce6 (code a2fee0d9) under edition 2 and are carried without a repeat (item 548 (b)), read by the rules of
+edition 2.  Rows and a READING word per tag, the member table K2(2)-K6 over the tags; NO verdict (the lead's, S17d HPP-614).  Definitions -
+seal docs/track-s/s17c.md section 4 (= pred/s17c_seal.md).  Raw word values of reject lines never reach the output (item 548 (v)(2)).
 usage: python s17c_read.py <tag> [--json <out>]       read one made tag (runs/<tag>, log_<tag>.txt, <tag>.json, state/...)
        python s17c_read.py --table                   the member table K2(2)-K6 from runs/<tag>/read.json of every tag
+       python s17c_read.py --stop537                 exit 0 'STOP537 GO' / 1 'STOP537 STOP': item 537 (zh), canon_mismatch of s17c_c2 = 0
        python s17c_read.py --catalogue <replay.<g>.bin>   offline rows of a catalogue (R_ADDR, KEEP >= 0x10000, sources)
        python s17c_read.py --k4x <live folder> <rebuilt folder> <manifest> [--stand <file> <index>]   the K4 comparison alone
   Every path is under ROOT (default C:/kyty/s288/s17c; the fixtures set S17C_ROOT, S17C_SEAL, S17C_BIN).  ASCII output only.
@@ -25,13 +28,22 @@ import state_s17c  # noqa: E402
 
 ROOT = os.environ.get('S17C_ROOT', 'C:/kyty/s288/s17c')
 SEAL_PATH = os.environ.get('S17C_SEAL', 'C:/kyty/s288/s17c/pred/s17c_seal.md')
-BIN_PATH = os.environ.get('S17C_BIN', 'C:/kyty/s288/bin/kyty_emulator_2b5e2ce6.exe')
-BIN_EXPECT = '2b5e2ce677c557bb0dd28ccc114588aea5c4b6f56c10ab1450faadd81328d544'
-VERSION = b'KytyPS5-2026-09-15-6a2987a-2311-ga2fee0d9'
-REV = 'a2fee0d'
+BIN_PATH = os.environ.get('S17C_BIN', 'C:/kyty/s288/bin/kyty_emulator_ed2686da.exe')
+BIN_EXPECT = 'ed2686da6fc959b1b4f0f308a9cbd1bae20a2e97750b5823df70ccb8c8f41d5b'
+VERSION = b'KytyPS5-2026-09-15-6a2987a-2336-g9238a182'
+REV = '9238a18'
 FS6 = '9325446cdd3c960b83474125dbb38164390c857c998c3ccc856d5f30bf7360f2'
 FS8 = '2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b'
-INSTALLED_OK = (FS6, FS8)
+INSTALLED_OK = (FS8,)     # edition 3: the installed binary at the print (items 545, 547)
+# K2(2) carried from edition 2 (items 537 (e), 548 (b)): binary, version, revision, seal file and installed set of edition 2.
+CARRIED = ('s17c_v0', 's17c_w0')
+BIN_PATH_ED2 = os.environ.get('S17C_BIN_ED2', 'C:/kyty/s288/bin/kyty_emulator_2b5e2ce6.exe')
+BIN_EXPECT_ED2 = '2b5e2ce677c557bb0dd28ccc114588aea5c4b6f56c10ab1450faadd81328d544'
+VERSION_ED2 = b'KytyPS5-2026-09-15-6a2987a-2311-ga2fee0d9'
+REV_ED2 = 'a2fee0d'
+SEAL_PATH_ED2 = os.environ.get('S17C_SEAL_ED2', 'C:/kyty/s288/s17c/pred/s17c_seal_ed2.md')
+INSTALLED_OK_ED2 = (FS6, FS8)
+REJECT_KINDS = ('self', 'residual', 'base', 'big')
 SIG1 = 'KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10:fixf19'   # KYTY_FIX_F19=1 (rebuild)
 SIG0 = 'KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:cbank:fixb26:fixb1b:fixf10'          # KYTY_FIX_F19=0 (capture)
 DIR1 = 'variant_fixb26_fixb1b_fixf10_fixf19'
@@ -81,6 +93,8 @@ RX_AV = re.compile(rb'AvTrace: shader (.+?) hash=0x([0-9a-fA-F]+) translate_us='
 RX_KV = re.compile(rb'([a-z_]+)=([^ \r\n]*)')
 RX_PREP = re.compile(rb'ShaderPreparation: startup wait finished in (\d+) ms')
 RX_CULPRIT = re.compile(r'culprit=(\d+):role(\d+):([0-9a-f]{8})->([0-9a-f]{8})')
+RX_CULPRIT_RES = re.compile(r'culprit=(\d+):role(\d+)(?![0-9:])')
+RX_WHY = re.compile(r'^capture reject why=(.*?) hash=(0x[0-9a-fA-F]+) words=(\d+)$')
 RX_ROW = re.compile(r'((?:vs|ps|cs)_[0-9a-f]{16}_[0-9a-f]{16}\.bin)\t(\d+)\t([0-9a-f]{16})\t(\d+)\t([0-9a-f]{16})$')
 M_SR = b'ShaderReplay:'
 M_GUEST = b'GuestOut:'
@@ -134,6 +148,73 @@ def rev_text(raw):
         if m in raw:
             return raw.split(m, 1)[1].split(b',', 1)[0].strip()[:80].decode('ascii', 'replace')
     return None
+
+
+def edition(tag):
+    """(name, binary sha256, binary copy, version, revision, seal file, installed set) of the tag: edition 2 for the carried K2(2) tags."""
+    if tag in CARRIED:
+        return ('S17a2 2b5e2ce6 (K2(2) carried from edition 2, item 548 (b))', BIN_EXPECT_ED2, BIN_PATH_ED2, VERSION_ED2, REV_ED2,
+                SEAL_PATH_ED2, INSTALLED_OK_ED2)
+    return ('S17a4 ed2686da', BIN_EXPECT, BIN_PATH, VERSION, REV, SEAL_PATH, INSTALLED_OK)
+
+
+def reject_parse(body):
+    """A 'capture reject why=<why> hash=<h> words=<n>' line -> dict.  kind = the first word of why ('?' when not [a-z_]+ or no why); the
+    fields branch (addr|exact), ok, complete, n (digits); culprit <i> and role <r>; canon_zero = 1 when the self culprit goes to 00000000.
+    Raw word values are read only into canon_zero and never returned (item 548 (v)(2))."""
+    d = dict(kind='?', branch=None, culprit=None, role=None, canon_zero=None, n=None, ok=None, complete=None, hash=None, words=None)
+    m = RX_WHY.match(body.strip())
+    if not m:
+        return d
+    why = m.group(1)
+    d['hash'], d['words'] = m.group(2), m.group(3)
+    toks = why.split()
+    if toks and re.match(r'^[a-z_]+$', toks[0]):
+        d['kind'] = toks[0]
+    f = dict(x.split('=', 1) for x in toks[1:] if '=' in x)
+    if f.get('branch') in ('addr', 'exact'):
+        d['branch'] = f['branch']
+    for k in ('ok', 'complete', 'n'):
+        if re.match(r'^\d+$', f.get(k, '')):
+            d[k] = f[k]
+    c = RX_CULPRIT.search(why)
+    if c:
+        d['culprit'], d['role'], d['canon_zero'] = c.group(1), c.group(2), 1 if c.group(4) == '00000000' else 0
+    else:
+        c = RX_CULPRIT_RES.search(why)
+        if c:
+            d['culprit'], d['role'] = c.group(1), c.group(2)
+    return d
+
+
+def reject_clean(body):
+    """The committed form of a reject line - kind, branch, ok, complete, culprit <i>:role<r>, canon_zero, n, hash, words; no raw values."""
+    d = reject_parse(body)
+    out = ['why=%s' % d['kind']]
+    for k in ('branch', 'ok', 'complete'):
+        if d[k] is not None:
+            out.append('%s=%s' % (k, d[k]))
+    if d['culprit'] is not None:
+        out.append('culprit=%s:role%s' % (d['culprit'], d['role']))
+    if d['canon_zero'] is not None:
+        out.append('canon_zero=%d' % d['canon_zero'])
+    if d['n'] is not None:
+        out.append('n=%s' % d['n'])
+    out.append('hash=%s words=%s' % (d['hash'], d['words']))
+    return ' '.join(out)
+
+
+def reject_summary(rejects):
+    """(lines by kind, residual 'branch:role<r>' of the first culprit by count) of the logged reject lines (reference, item 541 (g))."""
+    kinds, res = {}, {}
+    for _, body in rejects:
+        d = reject_parse(body)
+        k = d['kind'] if d['kind'] in REJECT_KINDS else 'other'
+        kinds[k] = kinds.get(k, 0) + 1
+        if d['kind'] == 'residual':
+            key = '%s:role%s' % (d['branch'] or 'none', d['role'] if d['role'] is not None else '-')
+            res[key] = res.get(key, 0) + 1
+    return dict(sorted(kinds.items())), dict(sorted(res.items()))
 
 
 def paths(tag):
@@ -540,18 +621,20 @@ def common(tag, p, r, so, run):
     att = ((run or {}).get('attempts') or [{}])[0] if run else {}
     rows.a('run record <tag>.json present, one attempt', run is not None and len((run or {}).get('attempts') or []) == 1,
            'attempts %s' % (len((run or {}).get('attempts') or []) if run else None))
+    ename, bexp, bpath, ver, rev, seal, inst = edition(tag)
     sha = first_line(text(p['installed_sha'])) or None
-    rows.a('binary of the run = S17a2 2b5e2ce6 (json and installed_sha.txt)',
-           (run or {}).get('binary_sha256') == BIN_EXPECT and sha == BIN_EXPECT, '%s / %s' % ((run or {}).get('binary_sha256'), sha))
+    rows.a('binary of the run = %s (json and installed_sha.txt)' % ename,
+           (run or {}).get('binary_sha256') == bexp and sha == bexp, '%s / %s' % ((run or {}).get('binary_sha256'), sha))
     vb = None
-    if os.path.exists(BIN_PATH):
-        vb = VERSION in open(BIN_PATH, 'rb').read()
-    rows.a('version string %s in the binary copy' % VERSION.decode(), vb is True, vb)
+    if os.path.exists(bpath):
+        vb = ver in open(bpath, 'rb').read()
+    rows.a('version string %s in the binary copy' % ver.decode(), vb is True, vb)
     revs = r['rev'] + so['rev']
-    badrev = [x for x in revs if REV not in x[2]]
-    rows.a('revision texts of log / stdout name %s' % REV, not badrev, 'texts %d, other %s' % (len(revs), badrev[:3]))
+    badrev = [x for x in revs if rev not in x[2]]
+    rows.a('revision texts of log / stdout name %s' % rev, not badrev, 'texts %d, other %s' % (len(revs), badrev[:3]))
     pre = ((run or {}).get('prereg') or {}).get('sha256')
-    rows.a('prereg sha256 = the seal file', pre is not None and pre == sha_file(SEAL_PATH), '%s / %s' % (pre, sha_file(SEAL_PATH)))
+    rows.a('prereg sha256 = the seal file (%s)' % os.path.basename(seal), pre is not None and pre == sha_file(seal),
+           '%s / %s' % (pre, sha_file(seal)))
     env_rows(rows, tag, run)
     win = r['win'].get('minimized', 0)
     rows.a('no window minimized, no Recovering Vulkan swapchain, no GamePatch line', win == 0 and r['recovering'] == 0 and
@@ -562,7 +645,8 @@ def common(tag, p, r, so, run):
     rows.a('emulator log present', r['sha256'] is not None, r['sha256'])
     b = first_line(text(p['installed_before'])) or None
     a = first_line(text(p['installed_after'])) or None
-    rows.f('installed binary before = after, FS6 or FS8', b is not None and b == a and b in INSTALLED_OK, '%s / %s' % (b, a))
+    rows.f('installed binary before = after, %s' % ('FS6 or FS8' if inst == INSTALLED_OK_ED2 else 'FS8'),
+           b is not None and b == a and b in inst, '%s / %s' % (b, a))
     mc = first_line(text(p['manifest_cmp']))
     rows.f('manifest of the caches after the return EQUAL', mc.startswith('manifest cmp EQUAL'), mc[:120])
     rows.r('window lines', r['win'])
@@ -681,7 +765,11 @@ def read_tag(tag):
         rows.r('capture lines (save / stop)', '%d / %d' % (sum(1 for _, d in r['capture'] if d.get('at') == 'save'),
                                                           sum(1 for _, d in r['capture'] if d.get('at') == 'stop')))
         rows.r('last capture at=stop', lc)
-        rows.r('capture reject lines (<= 20 logged)', [x[1][:160] for x in r['reject'][:5]])
+        kinds, res = reject_summary(r['reject'])
+        rows.r('capture reject lines logged by kind (self/base/big <= 20 by their sum, residual <= 20 of its own, item 546 (b))', kinds)
+        rows.r('residual branch:role of the first culprit (diagnostics, not a member, item 541 (g))', res)
+        rows.r('capture reject lines (first 5; committed form without raw values, item 548 (v)(2))',
+               [reject_clean(x[1]) for x in r['reject'][:5]])
         rows.r('shader resource specialization failed in _kyty.txt / stdout (item 531 (d)(5))', '%d / %d' % (r['specfail'], so['specfail']))
         g_c, gf, cat, cerr = catalogue_of(tag)
         rows.r('saved catalogue', 'replay.cur %s file %s error %s' % (g_c, gf and os.path.basename(gf), cerr))
@@ -827,8 +915,8 @@ def canon_stand(r):
                 continue
             for m in RX_CULPRIT.finditer(body):
                 if m.group(2) == '6' and m.group(4) == '00000000':
-                    return (cm is not None and cm >= 1) or None, 'hash %s stand line %d reject line %d culprit %s canon_mismatch %s' % (
-                        h, ln, rl, m.group(0), cm)
+                    return (cm is not None and cm >= 1) or None, 'hash %s stand line %d reject line %d culprit=%s:role6 canon_zero=1 ' \
+                        'canon_mismatch %s' % (h, ln, rl, m.group(1), cm)
     return None, 'no capture reject why=self with culprit role6 ->00000000 of hash %s (reject lines %d)' % (
         [d.get('hash') for _, d in applied], len(r['reject']))
 
@@ -960,12 +1048,32 @@ def table():
     return 0
 
 
+def stop537():
+    """Item 537 (zh): the series stops after the K3 tags when the capture tag s17c_c2 gives canon_mismatch > 0 (any reason).  GO only when
+    runs/s17c_c2/read.json exists, its reading is not NOT_ADMITTED and canon_mismatch of its last capture at=stop line is 0."""
+    d = read_json_of('s17c_c2')
+    if d is None:
+        return False, 's17c_c2 not read (runs/s17c_c2/read.json missing)'
+    if d.get('reading') == 'NOT_ADMITTED':
+        return False, 's17c_c2 reading NOT_ADMITTED (interference: one repeat by the same name, item 537 (e))'
+    cm = num((d.get('extra') or {}).get('last_capture') or {}, 'canon_mismatch')
+    if cm is None:
+        return False, 's17c_c2 has no capture at=stop line (K3 and K4 not determined, item 531 (v)(3))'
+    if cm != 0:
+        return False, 's17c_c2 canon_mismatch %d > 0 - the series stops after K3, question to the lead (item 537 (zh))' % cm
+    return True, 's17c_c2 canon_mismatch 0, reading %s' % d.get('reading')
+
+
 def main(argv):
     if not argv:
         print(__doc__)
         return 2
     if argv[0] == '--table':
         return table()
+    if argv[0] == '--stop537':
+        ok, why = stop537()
+        print('STOP537 %s %s' % ('GO' if ok else 'STOP', why))
+        return 0 if ok else 1
     if argv[0] == '--catalogue':
         c = catalogue(argv[1])
         print('catalogue %s generation %d sources %d specs %d pipes %d words %d keep %d keep_big %d R_ADDR %d programs %d compat %s' % (

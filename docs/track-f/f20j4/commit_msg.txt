@@ -1,0 +1,26 @@
+track F link F20j4 (HPP-652): KYTY_DIAG_B32 review fixes RC1-RC5 of F20k3 - one rec_wait mark over the Reserve loop, TrackedMutex owner cleared at unlock and no own-slot peer, M5 time charged to its window, no W:emu_mutex under an H mark, EMU_WAIT kinds by who clears the wait and emu_join (ROADMAP s122 item 581(v)(1)-(5))
+
+The review fix of F20k3 (item 581(v), (d)); default 0, measurement only; outside src/graphics/shader and
+SHADER_CACHE_EXTRA_FILES. At KYTY_DIAG_B32=1:
+- (1) RC1: CommandRecorder::Reserve - the W:rec_wait mark is declared before the retry loop, begun at the first pass
+  that finds the arena full (!Active()), ended before the return (as Drain): one -w record per wait, not per 1 ms slice.
+- (2) RC2: TrackedMutex clears its owner before the unlock (a recursive mutex at the holder's last unlock), so a writer
+  that waits for readers and a holder not yet stored give peer 0; Mark::BeginW / BeginWReg / BeginWLock store an
+  own-slot peer as 0.
+- (3) RC3: Core::AsyncRefresh keeps [begin, end] of every M5 refresh run (a ring of 64 with a sequence word) and the
+  begin of the run in progress; Core::M5Charge gives each window the overlap of the runs with (start, flip] - a run
+  inside window k goes to k, a run across a flip is split; the sampler adds it to instr_us / m5r_us of that window.
+- (4) RC4: Mark::BeginWLock - Common::Mutex::LockB32 and TrackedMutex do not mark a contended acquisition while the
+  slot's mark is any H:<call> (H:qlock, H:present, ...); the H mark stays the state of the samples.
+- (5) RC5: enum Wait gets EmuJoin (emu_join) at the end; Common::Thread::Join is W:emu_join, PthreadJoin keeps W:join;
+  IsEmuWait: EmuMutex .. Av and vblank, audio, aio, net, emu_join; GUEST_SLEEP: the older kinds and once, join, addr,
+  fiber, ult, rwlock.
+- =0: unchanged except one test of g_on in TrackedMutex::unlock; the Reserve mark object moves before the loop (its
+  End is one test of the stack flag).
+Tests: diag_b32_tests 24 cases ALL OK (21 old - TestKinds extended to the new partition; 3 new: M5 charge model and
+the run ring, a writer waiting for two readers / own-slot peer, a contended lock inside H:qlock / H:present); the two
+new runtime cases fail on 9db7938b (control). shader_cfg_tests 130 / 0, SPIR-V 360 / 360 = FS8a.
+
+WIP: not run by the game; review F20k4 (HPP-653) pending; controls F20l2.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

@@ -1,0 +1,35 @@
+ok   src/common/diagB32.h insert_before 25 (+4)
+ok   src/common/diagB32.h replace_range 69-70 -> 4 lines
+ok   src/common/diagB32.h replace_range 76-79 -> 10 lines
+ok   src/common/diagB32.h replace_range 143-143 -> 7 lines
+ok   src/common/diagB32.h replace_range 209-264 -> 81 lines
+ok   src/common/diagB32.h replace_range 561-581 -> 43 lines
+ok   src/common/diagB32.h replace_range 606-606 -> 18 lines
+ok   src/common/diagB32.cpp replace_line x1 at 65
+ok   src/common/diagB32.cpp replace_range 749-751 -> 7 lines
+ok   src/common/diagB32.cpp replace_range 780-782 -> 65 lines
+ok   src/common/diagB32.cpp replace_line x2 at 1109,1129
+ok   src/common/diagB32.cpp insert_before 1135 (+12)
+ok   src/common/diagB32.cpp replace_line x1 at 1395
+ok   src/common/diagB32.cpp replace_range 1700-1704 -> 5 lines
+ok   src/common/diagB32.cpp replace_range 1883-1885 -> 7 lines
+ok   src/common/diagB32.cpp replace_range 1919-1922 -> 4 lines
+ok   src/common/threads.cpp replace_range 254-257 -> 5 lines
+ok   src/common/threads.cpp replace_line x1 at 337
+ok   src/common/threads.cpp replace_line x1 at 347
+ok   src/common/threads.cpp replace_line x1 at 355
+ok   src/graphics/host_gpu/renderer/commandRecorder.cpp replace_range 192-194 -> 7 lines
+ok   src/graphics/host_gpu/renderer/commandRecorder.cpp replace_range 226-235 -> 8 lines
+ok   src/graphics/host_gpu/renderer/commandRecorder.cpp replace_line x1 at 262
+ok   tests/DiagB32Tests.cpp replace_line x1 at 10
+ok   tests/DiagB32Tests.cpp insert_before 25 (+1)
+ok   tests/DiagB32Tests.cpp replace_range 830-835 -> 23 lines
+ok   tests/DiagB32Tests.cpp insert_before 1123 (+271)
+ok   tests/DiagB32Tests.cpp replace_line x1 at 1413
+ok   tests/DiagB32Tests.cpp replace_line x1 at 1416
+written src/common/diagB32.h
+written src/common/diagB32.cpp
+written src/common/threads.cpp
+written src/graphics/host_gpu/renderer/commandRecorder.cpp
+written tests/DiagB32Tests.cpp
+ALL OK

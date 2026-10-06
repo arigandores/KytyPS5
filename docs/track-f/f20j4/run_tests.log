@@ -1,0 +1,6 @@
+watch: start 2026-10-06T08:56:56Z child 78008 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+t1 diag_b32_tests rc=0 last='ALL OK' -> ok
+t2 shader_cfg_tests rc=0 tests=130 (FS8a fu 0) failed_lines=0 -> ok
+t3 SPIR-V files mine 360 ref 360 differing 0 aggregate b1376644 / b1376644 -> ok
+ALL OK
+rc=0 end 2026-10-06T08:56:59Z

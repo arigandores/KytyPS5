@@ -1,0 +1,29 @@
+ok  9db7938b:src/graphics/host_gpu/renderer/commandRecorder.cpp:194 | for (;;) { | +1 // This thread's own head: every ended record, published or staged. Th
+ok  9db7938b:src/graphics/host_gpu/renderer/commandRecorder.cpp:225 | b32.BeginWReg(Common::DiagB32::Wait::RecWait, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Record),  | +1 }
+ok  9db7938b:src/graphics/host_gpu/renderer/commandRecorder.cpp:227 | m_progress.wait_for(lock, WaitSlice, [this, head, want] { | +1 const auto in_use = head - m_tail.load(std::memory_order_acquire);
+ok  9db7938b:src/graphics/host_gpu/renderer/commandRecorder.cpp:578 | b32.BeginWReg(Common::DiagB32::Wait::RecWait, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Record),  | +1 }
+ok  9db7938b:src/common/diagB32.h:217 | void unlock() { m_m.unlock(); } | +1 void lock_shared() {
+ok  9db7938b:src/common/diagB32.h:224 | b32.BeginWReg(K, this, m_owner.load(std::memory_order_relaxed), 0); | +1 m_m.lock_shared();
+ok  9db7938b:src/common/diagB32.h:238 | b32.BeginWReg(K, this, m_owner.load(std::memory_order_relaxed), 0); | +1 m_m.lock();
+ok  9db7938b:src/common/diagB32.h:242 | m_owner.store(SelfSlotIfRegistered(), std::memory_order_relaxed); | +1 }
+ok  9db7938b:src/graphics/host_gpu/renderer/renderContext.h:99 | mutable Common::DiagB32::TrackedMutex<std::shared_mutex> m_mapped_ranges_mutex; // Track F, F20j3 (KYTY_DIAG_B | +1 RangeSet                  m_mapped_ranges;
+ok  9db7938b:src/graphics/host_gpu/renderer/renderContext.cpp:276 | std::lock_guard lock(m_mapped_ranges_mutex); | +1 m_mapped_ranges.Add(vaddr, size);
+ok  9db7938b:src/graphics/host_gpu/renderer/renderContext.cpp:325 | std::shared_lock          lock(m_mapped_ranges_mutex); | +1 static const bool         reuse = [] {
+ok  9db7938b:src/common/diagB32.cpp:1804 | const uint64_t m5r = m_m5r.TakeWorkNs(); | +1 M5Adopt();
+ok  9db7938b:src/common/diagB32.cpp:1827 | CloseWindow(n, ns, lat, slot1, src, last && !batch, proc_us, busy_us, idle_us, lag_us, prn); | +1 }
+ok  9db7938b:src/common/diagB32.cpp:1836 | m_win_extra_ns += FrameStats::NowNs() - t0 + m5r; | +1 m_win_m5r_ns += m5r;
+ok  9db7938b:src/common/diagB32.cpp:1619 | const uint64_t extra = m_win_extra_ns + print_ns; // F20j2 RC6: the report print inside this window | +1 const uint64_t m5r   = m_win_m5r_ns;
+ok  9db7938b:src/graphics/host_gpu/renderer/commandScheduler.cpp:162 | b32_q.BeginH(Common::DiagB32::Call::QLock); | +1 }
+ok  9db7938b:src/graphics/host_gpu/renderer/commandScheduler.cpp:164 | Common::LockGuard lock(graphics.queue_mutex); | +1 b32_q.End(0, false);
+ok  9db7938b:src/graphics/presentation/window/swapchain.cpp:811 | b32_q.BeginH(Common::DiagB32::Call::QLock); | +1 }
+ok  9db7938b:src/graphics/presentation/window/swapchain.cpp:813 | Common::LockGuard lock(m_window.graphic_ctx.queue_mutex); | +1 b32_q.End(0, false);
+ok  9db7938b:src/common/threads.cpp:337 | void Mutex::LockB32() { | +1 #ifdef KYTY_WIN_CS
+ok  9db7938b:src/common/threads.cpp:344 | b32.BeginWReg(DiagB32::Wait::EmuMutex, this, DiagB32::SlotOfOsTid(owner), 0); | +1 EnterCriticalSection(&m_mutex->m_cs);
+ok  9db7938b:src/common/diagB32.h:66 | Vblank, Once, Join, Addr, Aio, Fiber, Audio, Ult, Net, Rwlock, Count | +1 };
+ok  9db7938b:src/common/diagB32.h:72 | return kind >= kFirstEmuWait && kind < kFirstGuestHleWait; | +1 }
+ok  9db7938b:src/common/threads.cpp:257 | b32.BeginWReg(DiagB32::Wait::Join, this, 0, 0); | +1 }
+ok  eead6454:docs/ROADMAP.md:23220 | (в) **Разрешения RC (обязательны для F20j; проект F20g §2 читается с ними).** RC1 — сэмплер при `=1` пишет все | +1 (г) **Правило чтения (до данных).** (1) **Кадр в счёте:** `dt_us` ≥ 10
+ok  eead6454:docs/ROADMAP.md:23423 | 574. **Звено F20m трека F (`HPP-632`, лид): чтение контролей F20l по п. 550(д) — `b32_z0` ✓, ПК-B ✓, ПК-C ✗ (ц | +1 (а) **Данные лида [c]** (`C:/kyty/f287/lead/p574/lead_f20m.py` — свой 
+ok  eead6454:docs/ROADMAP.md:23428 | (д) **Поправка правила чтения п. 550(г)(2)(iv) — до кода и до данных повтора (решение лида).** Шаг по `W:<род> | +1 (е) **Повтор контролей — F20l2 (Harness Engineer; замок, F20 последним
+ok  eead6454:docs/ROADMAP.md:23459 | 580. **Звено F20j3 трека F (`HPP-646`, лид): F20j3 ПРИНЯТ — правка `KYTY_DIAG_B32` по У1 п. 550(ж) исполнена п | +1 (а) **Приёмка строкой (правило 24):** карта ссылок отчёта ✓ (54 из 54 
+ALL OK

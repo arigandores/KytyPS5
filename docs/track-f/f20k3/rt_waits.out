@@ -1,0 +1,42 @@
+hits 259 in_tsv 219 missing 40
+missing by kind {'spin': 27, 'sleep': 12, 'sem_decl': 1}
+common/frameStats.cpp	418	spin	YieldProcessor();
+common/parallelCopy.cpp	57	spin	_mm_pause();
+common/parallelCopy.cpp	59	spin	std::this_thread::yield();
+common/threads.cpp	37	sleep	static void SleepHighResolution100ns(uint64_t units_100ns) {
+common/threads.cpp	60	spin	YieldProcessor();
+common/threads.cpp	136	sleep	static void SleepHighResolutionNanos(uint64_t nanos) {
+common/threads.cpp	278	sleep	SleepHighResolution100ns(static_cast<uint64_t>(micros) * 10);
+common/threads.cpp	280	sleep	SleepHighResolutionNanos(static_cast<uint64_t>(micros) * 1000);
+common/threads.cpp	286	sleep	void Thread::SleepNano(uint64_t nanos) {
+common/threads.cpp	288	sleep	SleepHighResolution100ns((nanos + 99) / 100);
+common/threads.cpp	290	sleep	SleepHighResolutionNanos(nanos);
+common/threads.h	36	sleep	static void SleepNano(uint64_t nanos);
+graphics/guest_gpu/graphicsRun.cpp	185	sem_decl	std::binary_semaphore done {0};
+graphics/host_gpu/pageManager.cpp	121	spin	YieldProcessor();
+graphics/host_gpu/pageManager.cpp	123	spin	std::this_thread::yield();
+graphics/host_gpu/pageManager.cpp	126	spin	std::this_thread::yield();
+graphics/host_gpu/pageManager.cpp	817	spin	YieldProcessor();
+graphics/host_gpu/pageManager.cpp	1400	spin	std::this_thread::yield();
+graphics/host_gpu/pageManager.cpp	3295	spin	YieldProcessor();
+graphics/host_gpu/pageManager.cpp	3297	spin	std::this_thread::yield();
+graphics/host_gpu/pageManager.cpp	3345	spin	YieldProcessor();
+graphics/host_gpu/pageManager.cpp	3347	spin	std::this_thread::yield();
+graphics/host_gpu/regionManager.h	64	spin	YieldProcessor();
+graphics/host_gpu/renderer/commandRecorder.cpp	45	spin	_mm_pause();
+graphics/host_gpu/renderer/commandRecorder.cpp	47	spin	std::this_thread::yield();
+graphics/host_gpu/renderer/renderCompute.cpp	312	spin	_mm_pause();
+graphics/host_gpu/renderer/renderCompute.cpp	314	spin	std::this_thread::yield();
+graphics/host_gpu/renderer/shadowResolve.cpp	105	spin	YieldProcessor();
+graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2508	spin	YieldProcessor();
+graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2545	spin	YieldProcessor();
+graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2555	spin	YieldProcessor();
+graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2559	spin	SwitchToThread();
+graphics/presentation/window/window.cpp	1260	sleep	sleep_until(at(cfg.delay_s - TEST_HIDLOSS_PRE_S));
+graphics/presentation/window/window.cpp	1264	sleep	sleep_until(at(cfg.delay_s - 1.0));
+kernel/pthread.cpp	595	spin	if (SwitchToThread() == 0) {
+kernel/pthread.cpp	599	spin	std::this_thread::yield();
+kernel/pthread.cpp	637	sleep	Common::Thread::SleepNano(step);
+libs/libKernel.cpp	1903	sleep	int KYTY_SYSV_ABI nanosleep(const LibKernel::KernelTimespec* rqtp,
+libs/libKernel.cpp	2481	spin	std::this_thread::yield();
+loader/x64InstructionEmulator.cpp	570	spin	SwitchToThread();

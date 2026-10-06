@@ -1,0 +1,3 @@
+suite test_b32_read.py sha256 31f547262f8aaa1bccf0164a34a7edc927feb544970e8a13225169c47c90f770 target b32_read.py sha256 57b546c748a8f5f4dd84524d19d369ea411f2115c1011abe21dea68dd5fbf51e
+checks 236
+ALL OK

@@ -1,0 +1,4 @@
+suite regress_b32.py target b32_read.py sha256 57b546c748a8f5f4dd84524d19d369ea411f2115c1011abe21dea68dd5fbf51e
+log_f20_v35.txt rc13 True stripped 0 hold True P_I 1 K_I 1 frames [(8487, 115041, 'nothing')] classes ['NO_SAMPLES'] sig ['9177b426'] dir ['variant_fixb26_fixb1b_fixf10_fixf19'] u5_med 45939.5 u5_slow70 1 b5 0 OK
+log_f20_v32.txt rc13 True stripped 0 hold True P_I 0 K_I 0 frames [(2442, 164548, 'B5')] classes ['NO_SAMPLES'] sig ['9177b426'] dir ['variant_fixb26_fixb1b_fixf10_fixf19'] u5_med 35844.0 u5_slow70 0 b5 1 OK
+REGRESS PASS

@@ -83,6 +83,7 @@ public:
 			m_queue.push_back(std::move(record));
 			m_enqueued++;
 		}
+		Common::DiagB32::NoteSignal(&m_available); // Track F, F20j3
 		m_available.notify_one();
 		Common::FrameStats::Add(Common::FrameStats::Counter::AsyncSubmits, 1);
 		return tick;
@@ -104,6 +105,7 @@ public:
 			m_queue.push_back(std::move(record));
 			m_enqueued++;
 		}
+		Common::DiagB32::NoteSignal(&m_available); // Track F, F20j3
 		m_available.notify_one();
 		Common::FrameStats::Add(Common::FrameStats::Counter::AsyncSubmits, 1);
 	}
@@ -116,7 +118,13 @@ public:
 		}
 		EXIT_IF(std::this_thread::get_id() == m_thread.get_id());
 		const auto t0 = Common::FrameStats::NowNs();
+		// Track F, F20j3 (KYTY_DIAG_B32 W:asub_drain, item 574(g)(1)): the caller waits for the async submitter.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::ASubDrain, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::ASubmit), 0);
+		}
 		m_drained.wait(lock, [this, target] { return m_submitted >= target; });
+		b32.EndSig(&m_drained);
 		Common::FrameStats::Add(Common::FrameStats::Counter::AsyncSubmitDrains, 1);
 		Common::FrameStats::Add(Common::FrameStats::Counter::AsyncSubmitDrainNs,
 		                        Common::FrameStats::NowNs() - t0);
@@ -133,7 +141,13 @@ private:
 			Record record;
 			{
 				std::unique_lock lock(m_mutex);
+				// Track F, F20j3 (KYTY_DIAG_B32 W:asub_idle, item 574(g)(1)): the async submitter waits for work.
+				Common::DiagB32::Mark b32;
+				if (Common::DiagB32::g_on && m_queue.empty()) [[unlikely]] {
+					b32.BeginWReg(Common::DiagB32::Wait::ASubIdle, this, 0, 0);
+				}
 				m_available.wait(lock, [this] { return !m_queue.empty(); });
+				b32.EndSig(&m_available);
 				record = std::move(m_queue.front());
 				m_queue.pop_front();
 				m_busy = true;
@@ -191,6 +205,7 @@ private:
 				m_busy = false;
 				m_submitted++;
 			}
+			Common::DiagB32::NoteSignal(&m_drained); // Track F, F20j3
 			m_drained.notify_all();
 		}
 	}
@@ -387,6 +402,7 @@ void CommandScheduler::Shutdown() {
 	PopPendingOperations();
 	DrainPriorityOperations();
 	m_priority_thread.request_stop();
+	Common::DiagB32::NoteSignal(&m_operation_available); // Track F, F20j3
 	m_operation_available.notify_all();
 	if (m_priority_thread.joinable()) {
 		m_priority_thread.join();
@@ -401,6 +417,7 @@ void CommandScheduler::Shutdown() {
 		        m_priority_active);
 		m_operation_state = OperationState::Closed;
 	}
+	Common::DiagB32::NoteSignal(&m_operation_available); // Track F, F20j3
 	m_operation_available.notify_all();
 }
 
@@ -475,7 +492,7 @@ void CommandScheduler::Wait(uint64_t tick) {
 // Stable name ("+0x<rva>") for a DeferOperation call site; the RVA maps to a function through
 // the linker map like the FaultTrace-gpu RIPs.
 static const char* DeferredSiteName(const void* site) {
-	static std::mutex                             mutex;
+	static Common::DiagB32::TrackedMutex<std::mutex>                             mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	static std::map<const void*, std::string>     names;
 	std::lock_guard                               lock(mutex);
 	auto [it, inserted] = names.try_emplace(site);
@@ -493,7 +510,7 @@ namespace CtxTick {
 // "ctx-mid:<site>": the FrameTrace-submit row of a submit made inside a draw or dispatch. Keyed
 // by the site's address like the site table itself, so each name is built once.
 static const char* MidSiteName(const char* site) {
-	static std::mutex                         mutex;
+	static Common::DiagB32::TrackedMutex<std::mutex>                         mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	static std::map<const char*, std::string> names;
 	std::lock_guard                           lock(mutex);
 	auto [it, inserted] = names.try_emplace(site);
@@ -590,8 +607,14 @@ void CommandScheduler::DeferOperation(Common::UniqueFunction<void>&& operation) 
 		operation();
 		return;
 	}
+	// Track F, F20j3 (KYTY_DIAG_B32 W:ops_wait, item 574(g)(1)): the caller waits for the operations to close.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::OpsWait, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::POps), 0);
+	}
 	m_operation_available.wait(lock,
 	                           [this] { return m_operation_state == OperationState::Closed; });
+	b32.EndSig(&m_operation_available);
 	lock.unlock();
 	operation();
 }
@@ -603,6 +626,7 @@ void CommandScheduler::DeferPriorityOperation(Common::UniqueFunction<void>&& ope
 	if (m_operation_state == OperationState::Open) {
 		m_priority_operations.push({std::move(operation), CurrentTick(), __builtin_return_address(0)});
 		lock.unlock();
+		Common::DiagB32::NoteSignal(&m_operation_available); // Track F, F20j3
 		m_operation_available.notify_one();
 		return;
 	}
@@ -611,8 +635,14 @@ void CommandScheduler::DeferPriorityOperation(Common::UniqueFunction<void>&& ope
 		operation();
 		return;
 	}
+	// Track F, F20j3 (KYTY_DIAG_B32 W:ops_wait, item 574(g)(1)): the caller waits for the operations to close.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::OpsWait, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::POps), 0);
+	}
 	m_operation_available.wait(lock,
 	                           [this] { return m_operation_state == OperationState::Closed; });
+	b32.EndSig(&m_operation_available);
 	lock.unlock();
 	operation();
 }
@@ -637,13 +667,22 @@ bool CommandScheduler::UnsubmittedPriorityOperation(uint64_t* tick, const void**
 }
 
 void CommandScheduler::PriorityOperationsThread(std::stop_token stop) {
+	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j3: the slot of the priority operations thread (peer POps)
+		Common::DiagB32::RegisterRole("POps");
+	}
 	while (!stop.stop_requested()) {
 		PendingOperation operation;
 		{
 			std::unique_lock lock(m_operation_mutex);
+			// Track F, F20j3 (KYTY_DIAG_B32 W:ops_idle, item 574(g)(1)): the thread waits for a priority operation.
+			Common::DiagB32::Mark b32;
+			if (Common::DiagB32::g_on && m_priority_operations.empty()) [[unlikely]] {
+				b32.BeginWReg(Common::DiagB32::Wait::OpsIdle, this, 0, 0);
+			}
 			m_operation_available.wait(lock, [this, &stop] {
 				return stop.stop_requested() || !m_priority_operations.empty();
 			});
+			b32.EndSig(&m_operation_available);
 			if (stop.stop_requested()) {
 				return;
 			}
@@ -681,6 +720,7 @@ void CommandScheduler::PriorityOperationsThread(std::stop_token stop) {
 			m_priority_active_tick = 0;
 			m_priority_active_site = nullptr;
 		}
+		Common::DiagB32::NoteSignal(&m_operation_available); // Track F, F20j3
 		m_operation_available.notify_all();
 	}
 }
@@ -688,8 +728,14 @@ void CommandScheduler::PriorityOperationsThread(std::stop_token stop) {
 void CommandScheduler::DrainPriorityOperations() {
 	EXIT_IF(g_deferred_callback_scheduler == this);
 	std::unique_lock lock(m_operation_mutex);
+	// Track F, F20j3 (KYTY_DIAG_B32 W:ops_wait, item 574(g)(1)): the caller waits for the priority operations.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::OpsWait, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::POps), 0);
+	}
 	m_operation_available.wait(
 	    lock, [this] { return m_priority_operations.empty() && !m_priority_active; });
+	b32.EndSig(&m_operation_available);
 }
 
 void CommandScheduler::WaitPriorityOperations(uint64_t tick) {
@@ -697,12 +743,18 @@ void CommandScheduler::WaitPriorityOperations(uint64_t tick) {
 	Common::FrameStats::Scope priority_scope(Common::FrameStats::Counter::PriorityWaitNs,
 	                                         Common::FrameStats::Counter::PriorityWaits);
 	std::unique_lock lock(m_operation_mutex);
+	// Track F, F20j3 (KYTY_DIAG_B32 W:ops_wait, item 574(g)(1)): the caller waits for the priority operations <= tick.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::OpsWait, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::POps), tick);
+	}
 	m_operation_available.wait(lock, [this, tick] {
 		const bool active_before_or_at = m_priority_active && m_priority_active_tick <= tick;
 		const bool queued_before_or_at =
 		    !m_priority_operations.empty() && m_priority_operations.front().tick <= tick;
 		return !active_before_or_at && !queued_before_or_at;
 	});
+	b32.EndSig(&m_operation_available);
 }
 
 void CommandScheduler::RunOperation(Common::UniqueFunction<void>&& operation) {

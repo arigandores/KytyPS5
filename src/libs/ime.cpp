@@ -1,4 +1,5 @@
 #include "libs/ime.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "libs/errno.h"
 #include "libs/libs.h"
@@ -91,7 +92,7 @@ struct KeyboardState {
 	std::deque<QueuedEvent> events;
 };
 
-std::mutex                      g_mutex;
+Common::DiagB32::TrackedMutex<std::mutex>                      g_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 State                           g_state;
 KeyboardState                   g_keyboard_state;
 std::atomic<bool>               g_open {false};

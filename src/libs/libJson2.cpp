@@ -1,4 +1,5 @@
 #include "common/abi.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/common.h"
 #include "common/logging/log.h"
 #include "libs/libs.h"
@@ -298,7 +299,7 @@ struct JsonObjectSnapshot {
 	std::vector<JsonObjectPair>                           items;
 };
 
-static std::mutex                                       g_object_snapshot_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                                       g_object_snapshot_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::map<const JsonObject*, JsonObjectSnapshot*> g_object_snapshots;
 
 static void JsonObjectSnapshotRelease(JsonObjectSnapshot* snapshot) {
@@ -314,7 +315,7 @@ static void JsonObjectSnapshotRelease(JsonObjectSnapshot* snapshot) {
 static void JsonObjectSnapshotDrop(const JsonObject* self) {
 	JsonObjectSnapshot* snapshot = nullptr;
 	{
-		const std::lock_guard<std::mutex> lock(g_object_snapshot_mutex);
+		const std::lock_guard lock(g_object_snapshot_mutex);
 		const auto                        it = g_object_snapshots.find(self);
 		if (it == g_object_snapshots.end()) {
 			return;
@@ -335,7 +336,7 @@ static JsonObjectSnapshot* JsonObjectSnapshotFor(const JsonObject* self) {
 		signature.emplace_back(key, value);
 	}
 
-	const std::lock_guard<std::mutex> lock(g_object_snapshot_mutex);
+	const std::lock_guard lock(g_object_snapshot_mutex);
 	auto&                             slot = g_object_snapshots[self];
 	if (slot == nullptr) {
 		slot = new JsonObjectSnapshot;

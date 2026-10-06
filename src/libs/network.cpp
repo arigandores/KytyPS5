@@ -6,6 +6,7 @@
 #define NOMINMAX
 #endif
 #include <winsock2.h>
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include <windows.h>
 #include <iphlpapi.h>
 #include <ws2tcpip.h>
@@ -898,6 +899,7 @@ static void RemoveSocketFromEpolls(int id) {
 		std::erase_if(epoll.registrations,
 		              [id](const auto& registration) { return registration.id == id; });
 	}
+	Common::DiagB32::NoteSignal(&g_epoll_changed); // Track F, F20j3
 	g_epoll_changed.notify_all();
 }
 
@@ -1486,6 +1488,7 @@ int KYTY_SYSV_ABI EpollControl(int eid, int op, int id, const NetEpollEvent* eve
 		default: break;
 	}
 
+	Common::DiagB32::NoteSignal(&g_epoll_changed); // Track F, F20j3
 	g_epoll_changed.notify_all();
 	return 0;
 }
@@ -1511,11 +1514,17 @@ int KYTY_SYSV_ABI EpollWait(int eid, NetEpollEvent* events, int maxevents, int t
 				auto* current = GetEpollSlot(eid);
 				return current == nullptr || !current->registrations.empty();
 			};
+			// Track F, F20j3 (KYTY_DIAG_B32 W:net, item 574(g)(1)): epoll wait without registrations.
+			Common::DiagB32::Mark b32;
+			if (Common::DiagB32::g_on) [[unlikely]] {
+				b32.BeginWReg(Common::DiagB32::Wait::Net, slot, 0, timeout < 0 ? 0 : static_cast<uint64_t>(timeout));
+			}
 			if (timeout < 0) {
 				g_epoll_changed.wait(lock, ready);
 			} else {
 				g_epoll_changed.wait_for(lock, std::chrono::microseconds(timeout), ready);
 			}
+			b32.EndSig(&g_epoll_changed);
 			slot = GetEpollSlot(eid);
 			if (slot == nullptr) {
 				return SetGuestSocketError(Posix::POSIX_EBADF);
@@ -1623,6 +1632,7 @@ int KYTY_SYSV_ABI EpollDestroy(int eid) {
 	slot->used = false;
 	slot->name.clear();
 	slot->registrations.clear();
+	Common::DiagB32::NoteSignal(&g_epoll_changed); // Track F, F20j3
 	g_epoll_changed.notify_all();
 	return 0;
 }
@@ -2149,8 +2159,14 @@ int KYTY_SYSV_ABI Select(int nfds, void* readfds, void* writefds, void* exceptfd
 	int result = 0;
 #if defined(_WIN32)
 	if (descriptors.empty()) {
+		// Track F, F20j3 (KYTY_DIAG_B32 W:net, item 574(g)(1)): select without descriptors is a sleep.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::Net, nullptr, 0, 0);
+		}
 		Sleep(host_timeout_ptr == nullptr ? INFINITE :
 		      static_cast<DWORD>(host_timeout.tv_sec * 1000 + host_timeout.tv_usec / 1000));
+		b32.End(0, false);
 	} else
 #endif
 	{
@@ -3402,7 +3418,7 @@ struct NpRequest {
 	int            result = OK;
 };
 
-static std::mutex             g_np_request_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>             g_np_request_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::vector<NpRequest> g_np_requests;
 
 static int np_create_request(bool async) {

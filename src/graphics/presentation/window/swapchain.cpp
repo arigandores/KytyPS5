@@ -110,8 +110,17 @@ public:
 		if (m_frames.empty()) {
 			EXIT("prepared-frame pool was used before swapchain initialization\n");
 		}
+		// Track F, F20j3 (KYTY_DIAG_B32 W:frame_pool, item 574(g)(1)): PrepareFrame (GuestGpu) waits for the present
+		// thread to return a prepared frame.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on && m_free.empty()) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::FramePool, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Present), 0);
+		}
 		while (m_free.empty()) {
 			m_available.Wait(&m_mutex);
+		}
+		if (b32.Active()) [[unlikely]] {
+			b32.End(m_available.B32Waker(b32.SinceNs()), false);
 		}
 		auto* frame = m_free.front();
 		m_free.pop_front();

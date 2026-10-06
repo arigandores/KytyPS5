@@ -1,4 +1,5 @@
 #include "libs/agc.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/assert.h"
 #include "common/emulatorConfig.h"
@@ -154,7 +155,7 @@ struct RegisterDefaultsStorage {
 static constexpr uint32_t GRAPHICS_REGISTER_DEFAULTS_MAX_VERSION      = 13;
 static constexpr uint32_t GRAPHICS_REGISTER_DEFAULTS_FALLBACK_VERSION = 13;
 
-static std::mutex g_register_defaults_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex> g_register_defaults_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 
 static ShaderRegister** init_register_default_pointer_table(std::vector<ShaderRegister*>* table,
                                                             ShaderRegister*               regs,
@@ -1654,7 +1655,7 @@ static constexpr uint32_t WORKLOAD_STREAM_MAX_ID                  = 31;
 static constexpr uint32_t WORKLOAD_ID_MAX                         = 63;
 static constexpr uint32_t WORKLOAD_ACTIVE_COUNT_MAX               = 63;
 
-static std::mutex g_workload_stream_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex> g_workload_stream_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static uint32_t   g_workload_stream_mask = 0;
 static uint8_t    g_workload_streams[WORKLOAD_STREAM_MAX_ID + 1][WORKLOAD_STREAM_RECORD_SIZE] {};
 

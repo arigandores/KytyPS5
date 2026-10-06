@@ -1,4 +1,5 @@
 #include "kernel/syncOnAddress.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/threads.h"
 #include "libs/errno.h"
@@ -147,7 +148,7 @@ struct PortableAddressEntry {
 };
 
 struct PortableAddressRegistry {
-	std::mutex                                                           mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                                                           mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	std::unordered_map<uintptr_t, std::shared_ptr<PortableAddressEntry>> entries;
 };
 
@@ -196,6 +197,12 @@ int WaitPortable(volatile T* address, T expected, const WaitDeadline& deadline,
 	auto           entry      = RegisterPortableWaiter(address, &waiter);
 	bool           first_wait = true;
 	int            result     = OK;
+	// Track F, F20j3 (KYTY_DIAG_B32 W:addr, item 574(g)(1)): the guest wait on an address; waker - the last signaller of
+	// the waiter's condition (WakePortable).
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && ReadWord(address) == expected && !waiter.wake_requested) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Addr, const_cast<T*>(address), 0, 0);
+	}
 
 	while (ReadWord(address) == expected && !waiter.wake_requested) {
 		const auto slice_micros = GetWaitSliceMicros(deadline, first_wait);
@@ -219,6 +226,9 @@ int WaitPortable(volatile T* address, T expected, const WaitDeadline& deadline,
 			break;
 		}
 		first_wait = false;
+	}
+	if (b32.Active()) [[unlikely]] {
+		b32.End(waiter.condition.B32Waker(b32.SinceNs()), result == KERNEL_ERROR_ETIMEDOUT);
 	}
 
 	UnregisterPortableWaiter(address, entry, &waiter);

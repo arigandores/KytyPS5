@@ -1,4 +1,5 @@
 #include "common/parallelCopy.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/frameStats.h"
 #include "common/gates.h"
@@ -174,7 +175,13 @@ public:
 		// Help with what is left, then wait for chunks other threads are still copying.
 		Work();
 		std::unique_lock lock(m_mutex);
+		// Track F, F20j3 (KYTY_DIAG_B32 W:pcopy, item 574(g)(1)): the caller waits for the copy workers (not registered).
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::PCopy, this, 0, 0);
+		}
 		m_finished.wait(lock, [&] { return m_pending.load(std::memory_order_acquire) == 0; });
+		b32.EndSig(&m_finished);
 	}
 
 	[[nodiscard]] size_t Pending() const { return m_pending.load(std::memory_order_acquire); }
@@ -380,6 +387,7 @@ private:
 					SignalIdle();
 				}
 				std::lock_guard lock(m_mutex);
+				Common::DiagB32::NoteSignal(&m_finished); // Track F, F20j3
 				m_finished.notify_all();
 			}
 		}
@@ -472,7 +480,7 @@ private:
 		void (*signal)(uint64_t, void*);
 		void* user;
 	};
-	std::mutex          m_signal_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>          m_signal_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	std::vector<Signal> m_signals;
 	uint64_t            m_signaled = 0;
 	// Knob "copywake" is READ AT EVERY DECISION, not once per process, and this is the

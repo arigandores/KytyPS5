@@ -1,4 +1,5 @@
 #include "graphics/host_gpu/renderer/cache/textureCache.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/alignment.h"
 #include "common/assert.h"
@@ -2830,7 +2831,7 @@ void TextureCache::CommitGpuWrite(Image& image) {
 // cannot say. Print each distinct format once, at most 16 lines for the whole run.
 static void LogClearDecodeFailure(const Image& image, const char* aspect, uint32_t packed_clear,
                                   uint64_t address, uint64_t size) {
-	static std::mutex                            seen_mutex;
+	static Common::DiagB32::TrackedMutex<std::mutex>                            seen_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	static std::vector<std::pair<uint32_t, int>> seen;
 	const auto key = static_cast<uint32_t>(image.info.pixel_format);
 	{
@@ -4401,7 +4402,7 @@ thread_local uint64_t t_dw_n  = 0;
 thread_local bool           t_sub_on = false;
 thread_local SkcCensus::Sub t_sub {};
 
-std::mutex                                            g_pend_mutex;
+Common::DiagB32::TrackedMutex<std::mutex>                                            g_pend_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 std::vector<std::tuple<uint64_t, uint64_t, uint64_t>> g_pend; // id, begin, end
 std::atomic<uint32_t>                                 g_pend_n {0};
 uint64_t                                              g_pend_id = 0;

@@ -1,4 +1,5 @@
 #include "common/threads.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/assert.h"
 
@@ -194,6 +195,9 @@ struct CondVarPrivate {
 #else
 	std::condition_variable_any m_cv;
 #endif
+	// Track F, F20j3 (KYTY_DIAG_B32, item 574(g)(2)): DiagB32::PackSigIfRegistered of the last Signal / SignalAll;
+	// written only at =1 (host heap; CondVar keeps its size - the field is in the private part).
+	std::atomic<uint64_t> b32_sig {0};
 };
 
 static wait_poll_func_t g_cond_wait_poll_callback = nullptr;
@@ -227,9 +231,15 @@ void InitializeThreads() {
 
 Thread::Thread(thread_func_t func, void* arg)
     : m_thread(std::make_unique<ThreadPrivate>(func, arg)) {
+	// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): the creator waits for the new thread to start.
+	DiagB32::Mark b32;
+	if (DiagB32::g_on && !m_thread->started) [[unlikely]] {
+		b32.BeginWReg(DiagB32::Wait::Spin, this, 0, 0);
+	}
 	while (!m_thread->started) {
 		Common::Thread::SleepMicro(1000);
 	}
+	b32.End(0, false);
 }
 
 Thread::~Thread() {
@@ -241,7 +251,13 @@ Thread::~Thread() {
 void Thread::Join() {
 	EXIT_IF(m_thread->finished || m_thread->auto_delete);
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:join, item 574(g)(1)).
+	DiagB32::Mark b32;
+	if (DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(DiagB32::Wait::Join, this, 0, 0);
+	}
 	m_thread->m_thread.join();
+	b32.End(0, false);
 
 	m_thread->finished = true;
 }
@@ -304,10 +320,38 @@ Mutex::~Mutex() {
 }
 
 void Mutex::Lock() {
+	if (DiagB32::g_on) [[unlikely]] { // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, item 574(g)(1)): one test at =0
+		LockB32();
+		return;
+	}
 #ifdef KYTY_WIN_CS
 	EnterCriticalSection(&m_mutex->m_cs);
 #else
 	m_mutex->m_mutex.lock();
+#endif
+}
+
+// Track F, F20j3: a contended acquisition of a REGISTERED thread is marked W:emu_mutex; the peer is the owner at entry
+// (CRITICAL_SECTION::OwningThread - the owner's thread id, read without the lock: a holder that just released gives a
+// stale peer [I]). The waker of the record is the peer (mutex-like, item 550(g)(2)(iv)).
+void Mutex::LockB32() {
+#ifdef KYTY_WIN_CS
+	if (TryEnterCriticalSection(&m_mutex->m_cs) != 0) {
+		return;
+	}
+	const auto      owner = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(m_mutex->m_cs.OwningThread));
+	DiagB32::Mark   b32;
+	b32.BeginWReg(DiagB32::Wait::EmuMutex, this, DiagB32::SlotOfOsTid(owner), 0);
+	EnterCriticalSection(&m_mutex->m_cs);
+	b32.EndWithPeer(false);
+#else
+	if (m_mutex->m_mutex.try_lock()) {
+		return;
+	}
+	DiagB32::Mark b32;
+	b32.BeginWReg(DiagB32::Wait::EmuMutex, this, 0, 0);
+	m_mutex->m_mutex.lock();
+	b32.EndWithPeer(false);
 #endif
 }
 
@@ -399,7 +443,14 @@ bool CondVar::WaitFor(Mutex* mutex, uint32_t micros) {
 	return ok;
 }
 
+int32_t CondVar::B32Waker(uint64_t since_ns) const {
+	return DiagB32::SigWaker(m_cond_var->b32_sig.load(std::memory_order_relaxed), since_ns);
+}
+
 void CondVar::Signal() {
+	if (DiagB32::g_on) [[unlikely]] { // Track F, F20j3 (item 574(g)(2)): the last signaller
+		m_cond_var->b32_sig.store(DiagB32::PackSigIfRegistered(), std::memory_order_relaxed);
+	}
 #ifdef KYTY_WIN_CS
 	static auto func = ResolveWakeConditionVariable();
 	EXIT_NOT_IMPLEMENTED(func == nullptr);
@@ -410,6 +461,9 @@ void CondVar::Signal() {
 }
 
 void CondVar::SignalAll() {
+	if (DiagB32::g_on) [[unlikely]] { // Track F, F20j3 (item 574(g)(2)): the last signaller
+		m_cond_var->b32_sig.store(DiagB32::PackSigIfRegistered(), std::memory_order_relaxed);
+	}
 #ifdef KYTY_WIN_CS
 	static auto func = ResolveWakeAllConditionVariable();
 	EXIT_NOT_IMPLEMENTED(func == nullptr);

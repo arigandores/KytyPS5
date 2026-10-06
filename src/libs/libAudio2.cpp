@@ -1,4 +1,5 @@
 #include "common/assert.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/common.h"
 #include "common/envFlag.h"
 #include "common/logging/log.h"
@@ -518,6 +519,8 @@ int KYTY_SYSV_ABI AudioOut2ContextPush(AudioOut2ContextHandle ctx, uint32_t bloc
 		}
 	}
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:audio, item 574(g)(1)): from the first full-queue pass to the return (destructor).
+	Common::DiagB32::Mark b32;
 	for (;;) {
 		// Only a synchronous submission carrying PCM to a real device can rely on the SDL queue for
 		// pacing. Async pushes must retain queue-depth backpressure, and a handle without PCM (or a
@@ -537,6 +540,7 @@ int KYTY_SYSV_ABI AudioOut2ContextPush(AudioOut2ContextHandle ctx, uint32_t bloc
 					state->queued++;
 				}
 				g_audioout2_context_mutex.Unlock();
+				b32.End(0, false); // Track F, F20j3: the wait ends; the queueing below is not a wait
 				audioout2_queue_context_audio(ctx, blocking != 0);
 				return OK;
 			}
@@ -547,6 +551,9 @@ int KYTY_SYSV_ABI AudioOut2ContextPush(AudioOut2ContextHandle ctx, uint32_t bloc
 			return AUDIO_OUT2_ERROR_NOT_READY;
 		}
 
+		if (Common::DiagB32::g_on && !b32.Active()) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::Audio, &g_audioout2_context_mutex, 0, 0);
+		}
 		Common::Thread::SleepMicro(sleep_micros);
 	}
 }

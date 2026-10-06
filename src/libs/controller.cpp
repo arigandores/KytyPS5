@@ -1,4 +1,5 @@
 #include "libs/controller.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "SDL.h"
 #include "common/assert.h"
@@ -412,7 +413,7 @@ private:
 	uint64_t                  m_test_armed_us = 0;
 	uint32_t                  m_test_attempts = 0;
 
-	std::mutex           m_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>           m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	SDL_AudioDeviceID    m_device   = 0;
 	uint64_t             m_retry_us = 0;
 	uint64_t             m_pushes   = 0;

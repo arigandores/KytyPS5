@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_CACHE_HOSTIMPORT_H_
 
 #include "common/common.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "graphics/host_gpu/vulkanCommon.h"
 
 #include <atomic>
@@ -65,7 +66,7 @@ private:
 	uint64_t           m_chunk_size = 0;
 	bool               m_available  = false;
 	bool               m_sync       = false;
-	std::mutex         m_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>         m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	std::atomic<int>   m_in_flight {0};
 	std::vector<Chunk> m_chunks;
 };

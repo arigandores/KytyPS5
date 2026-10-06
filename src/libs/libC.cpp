@@ -1,4 +1,5 @@
 #include "common/abi.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/envFlag.h"
@@ -499,6 +500,11 @@ static KYTY_SYSV_ABI int std_execute_once(int* flag, execute_once_func_t func, v
 
 	{
 		std::unique_lock lock(g_execute_once_mutex);
+		// Track F, F20j3 (KYTY_DIAG_B32 W:once, item 574(g)(1)): another thread runs the routine.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on && *flag == once_running) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::Once, flag, 0, 0);
+		}
 		while (*flag == once_running) {
 			g_execute_once_cv.wait_for(lock, std::chrono::microseconds(10000));
 			if (*flag == once_running) {
@@ -520,6 +526,7 @@ static KYTY_SYSV_ABI int std_execute_once(int* flag, execute_once_func_t func, v
 		std::lock_guard lock(g_execute_once_mutex);
 		*flag = (result != 0 ? once_done : once_init);
 	}
+	Common::DiagB32::NoteSignal(&g_execute_once_cv); // Track F, F20j3
 	g_execute_once_cv.notify_all();
 
 	return result;

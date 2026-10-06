@@ -1,4 +1,5 @@
 #include "common/assert.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/common.h"
 #include "common/logging/log.h"
 #include "libs/ajm/aac_decoder.h"
@@ -332,7 +333,7 @@ struct AjmInstanceState {
 	std::unique_ptr<AjmDecoder> decoder;
 };
 
-static std::mutex                                     g_ajm_instances_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                                     g_ajm_instances_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::unordered_map<uint32_t, AjmInstanceState> g_ajm_instances;
 
 static bool AjmCodecIsSupported(uint32_t codec) {

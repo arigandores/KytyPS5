@@ -151,7 +151,7 @@ static uint64_t KernelReadTscRaw() {
 namespace {
 
 struct TimeFreezeState {
-	std::mutex mutex;
+	Common::DiagB32::TrackedMutex<std::mutex> mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	uint32_t   depth = 0;
 	uint64_t   start = 0;
 	uint64_t   total = 0;
@@ -217,7 +217,7 @@ static uint64_t KernelReadTscNative() {
 		return now;
 	}
 	auto&                       state = GetTimeFreezeState();
-	std::lock_guard<std::mutex> lock(state.mutex);
+	std::lock_guard lock(state.mutex);
 	return ScaledTscLocked(state, BaseTscLocked(state, now));
 }
 
@@ -675,7 +675,7 @@ struct PthreadKeyState {
 };
 
 static std::array<PthreadKeyState, KEYS_MAX>                g_pthread_keys;
-static std::mutex                                           g_pthread_keys_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                                           g_pthread_keys_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static thread_local std::unique_ptr<PthreadSpecificValue[]> g_pthread_specific;
 
 class PthreadPool {
@@ -1375,7 +1375,14 @@ static int NativeMutexLock(PthreadMutexPrivate* mutex, KernelUseconds* timeout_u
 		}
 		if (timeout_us != nullptr) {
 			if (*timeout_us > 0) {
+				// Track F, F20j3 (KYTY_DIAG_B32 W:mutex, item 574(g)(1)): a timed lock of an owned error-check mutex
+				// sleeps its timeout (no peer: the owner is this thread).
+				Common::DiagB32::Mark b32;
+				if (Common::DiagB32::g_on) [[unlikely]] {
+					b32.BeginWReg(Common::DiagB32::Wait::Mutex, mutex, 0, static_cast<uint64_t>(*timeout_us));
+				}
 				mutex->cv.wait_for(lock, std::chrono::microseconds(*timeout_us));
+				b32.End(0, true);
 			}
 			return ETIMEDOUT;
 		}
@@ -2477,6 +2484,9 @@ static int RwlockLockCooperative(PthreadRwlock rwlock, bool write, KernelUsecond
 	    (has_timeout ? std::chrono::steady_clock::now() + std::chrono::microseconds(*timeout_us)
 	                 : std::chrono::steady_clock::time_point {});
 	bool writer_wait_registered = false;
+	// Track F, F20j3 (KYTY_DIAG_B32 W:rwlock, item 574(g)(1)): from the first blocking pass to the return; peer - the
+	// writer's slot (0 if readers hold it).
+	Common::DiagB32::Mark b32;
 
 	for (;;) {
 		{
@@ -2514,6 +2524,11 @@ static int RwlockLockCooperative(PthreadRwlock rwlock, bool write, KernelUsecond
 				}
 			}
 
+			if (Common::DiagB32::g_on && !b32.Active() && !(has_timeout && *timeout_us == 0)) [[unlikely]] {
+				b32.BeginWReg(Common::DiagB32::Wait::Rwlock, rwlock,
+				              rwlock->writer != nullptr ? rwlock->writer->b32_slot1.load(std::memory_order_relaxed) : 0,
+				              has_timeout ? static_cast<uint64_t>(*timeout_us) : 0);
+			}
 			if (has_timeout) {
 				const auto now = std::chrono::steady_clock::now();
 				if (*timeout_us == 0 || now >= deadline) {
@@ -3543,7 +3558,13 @@ int KYTY_SYSV_ABI PthreadJoin(Pthread thread, void** value) {
 		return KERNEL_ERROR_EINVAL;
 	}
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:join, item 574(g)(1)): peer - the joined thread's slot.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Join, thread, thread->b32_slot1.load(std::memory_order_relaxed), 0);
+	}
 	int result = pthread_join(thread->p, value);
+	b32.End(0, false);
 
 	if (PRINT_NAME_ENABLED) {
 		LOGF("\tthread join: %s, %d\n", thread->name.c_str(), result);
@@ -4063,7 +4084,7 @@ uint64_t KernelReadTscBase() {
 		return KernelReadTscRaw();
 	}
 	auto&                       state = GetTimeFreezeState();
-	std::lock_guard<std::mutex> lock(state.mutex);
+	std::lock_guard lock(state.mutex);
 	// rdtsc INSIDE the lock: KernelTimeFreezeEnd adds (now - start) to total under this mutex, so
 	// a raw read taken before the lock could fall inside a freeze that ended meanwhile and step
 	// back.  (KernelReadTscNative keeps the shipped order; its step is scaled by the speed.)
@@ -4096,7 +4117,7 @@ void KernelTimeFreezeBegin() {
 	auto& state              = GetTimeFreezeState();
 	void (*listener)(bool)   = nullptr;
 	{
-		std::lock_guard<std::mutex> lock(state.mutex);
+		std::lock_guard lock(state.mutex);
 		if (state.depth++ == 0) {
 			state.start = KernelReadTscRaw();
 			state.count++;
@@ -4119,7 +4140,7 @@ void KernelTimeFreezeEnd() {
 	uint64_t total           = 0;
 	uint64_t count           = 0;
 	{
-		std::lock_guard<std::mutex> lock(state.mutex);
+		std::lock_guard lock(state.mutex);
 		EXIT_IF(state.depth == 0);
 		if (--state.depth == 0) {
 			const auto now = KernelReadTscRaw();
@@ -4161,7 +4182,7 @@ void KernelSetGuestSpeed(double speed) {
 	}
 	speed = std::clamp(speed, 0.1, 1.0);
 	auto&                       state = GetTimeFreezeState();
-	std::lock_guard<std::mutex> lock(state.mutex);
+	std::lock_guard lock(state.mutex);
 	const auto base = BaseTscLocked(state, KernelReadTscRaw());
 	if (!state.scaling) {
 		if (speed >= 1.0) {
@@ -4181,7 +4202,7 @@ double KernelGetGuestSpeed() {
 		return 1.0;
 	}
 	auto&                       state = GetTimeFreezeState();
-	std::lock_guard<std::mutex> lock(state.mutex);
+	std::lock_guard lock(state.mutex);
 	return state.scaling ? state.speed : 1.0;
 }
 
@@ -4190,7 +4211,7 @@ uint64_t KernelGetBaseTimeUs() {
 	auto&      state     = GetTimeFreezeState();
 	uint64_t   base      = 0;
 	{
-		std::lock_guard<std::mutex> lock(state.mutex);
+		std::lock_guard lock(state.mutex);
 		base = BaseTscLocked(state, KernelReadTscRaw());
 	}
 	if (frequency == 0) {
@@ -4202,7 +4223,7 @@ uint64_t KernelGetBaseTimeUs() {
 
 void KernelSetTimeFreezeListener(void (*listener)(bool frozen)) {
 	auto&                       state = GetTimeFreezeState();
-	std::lock_guard<std::mutex> lock(state.mutex);
+	std::lock_guard lock(state.mutex);
 	state.listener = listener;
 }
 
@@ -4383,6 +4404,7 @@ int KYTY_SYSV_ABI pthread_once(void* once_control, void(KYTY_SYSV_ABI* init_rout
 	}
 
 	auto* once = static_cast<PthreadOnce*>(once_control);
+	Common::DiagB32::Mark b32; // Track F, F20j3 (W:once below; ended by the destructor on every return)
 
 	{
 		std::unique_lock lock(g_pthread_once_mutex);
@@ -4394,6 +4416,10 @@ int KYTY_SYSV_ABI pthread_once(void* once_control, void(KYTY_SYSV_ABI* init_rout
 				case PTHREAD_ONCE_IN_PROGRESS:
 				case PTHREAD_ONCE_WAIT:
 					once->state = PTHREAD_ONCE_WAIT;
+					// Track F, F20j3 (KYTY_DIAG_B32 W:once, item 574(g)(1)): another thread runs the init routine.
+					if (Common::DiagB32::g_on && !b32.Active()) [[unlikely]] {
+						b32.BeginWReg(Common::DiagB32::Wait::Once, once, 0, 0);
+					}
 					while (once->state == PTHREAD_ONCE_WAIT) {
 						g_pthread_once_cv.wait_for(
 						    lock, std::chrono::microseconds(LibKernel::SIGNAL_APC_POLL_MICROS));
@@ -4410,12 +4436,14 @@ int KYTY_SYSV_ABI pthread_once(void* once_control, void(KYTY_SYSV_ABI* init_rout
 	}
 
 run_init:
+	b32.End(0, false); // Track F, F20j3: this thread runs the routine itself - not a wait
 	init_routine();
 
 	{
 		std::lock_guard lock(g_pthread_once_mutex);
 		once->state = PTHREAD_ONCE_DONE_INIT;
 	}
+	Common::DiagB32::NoteSignal(&g_pthread_once_cv); // Track F, F20j3
 	g_pthread_once_cv.notify_all();
 
 	return OK;

@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_COMMANDSCHEDULER_H_
 
 #include "common/common.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/gates.h"
 #include "common/uniqueFunction.h"
 #include "graphics/host_gpu/renderer/commandRecorder.h"
@@ -164,7 +165,7 @@ private:
 	uint32_t                                  m_timestamp_next      = 0;
 	int64_t                                   m_timestamp_slot      = -1;
 	std::deque<std::pair<uint64_t, uint32_t>> m_timestamp_pending;
-	std::mutex                                m_timestamp_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                                m_timestamp_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	uint64_t                                  m_last_submit_ns = 0;
 	GpuTimeProfiler                           m_gpu_time;
 	// Gate "recordthread": whether the current native buffer has a record thread (logged on change).

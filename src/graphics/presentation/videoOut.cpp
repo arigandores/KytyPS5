@@ -828,8 +828,14 @@ void VideoOutDriver::Impl::PresentThread(std::stop_token token) {
 		if (total_wait > 0) {
 			const auto remaining_us =
 			    (static_cast<uint64_t>(total_wait) * 1000000u + frequency - 1) / frequency;
+			// Track F, F20j3 (KYTY_DIAG_B32 W:vo_pace, item 574(g)(1)): the present thread's own vblank pacing sleep.
+			Common::DiagB32::Mark b32;
+			if (Common::DiagB32::g_on) [[unlikely]] {
+				b32.BeginWReg(Common::DiagB32::Wait::VoPace, this, 0, remaining_us);
+			}
 			Common::Thread::SleepMicro(static_cast<uint32_t>(
 			    std::clamp<uint64_t>(remaining_us, 1, std::numeric_limits<uint32_t>::max())));
+			b32.End(0, false);
 		}
 		if (token.stop_requested()) {
 			break;
@@ -938,8 +944,16 @@ FlipQueue::~FlipQueue() {
 void FlipQueue::Cancel(VideoOutConfig& cfg) {
 	std::vector<Graphics::Presenter::Frame*> frames;
 	m_mutex.Lock();
+	// Track F, F20j3 (KYTY_DIAG_B32 W:flip_cancel, item 574(a)(4)): Close waits for the present of its front request.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && m_processing && !m_requests.empty() && m_requests.front().cfg == &cfg) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::FlipCancel, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Present), 0);
+	}
 	while (m_processing && !m_requests.empty() && m_requests.front().cfg == &cfg) {
 		m_done_cond_var.Wait(&m_mutex);
+	}
+	if (b32.Active()) [[unlikely]] {
+		b32.End(m_done_cond_var.B32Waker(b32.SinceNs()), false);
 	}
 	for (auto* queue: {&m_requests, &m_cpu_requests}) {
 		for (auto it = queue->begin(); it != queue->end();) {
@@ -1128,11 +1142,19 @@ bool FlipQueue::MarkSkipCeil(uint64_t request_id) {
 
 void FlipQueue::WaitForSubmitSlot() {
 	Common::LockGuard lock(m_mutex);
+	// Track F, F20j3 (KYTY_DIAG_B32 W:flip_slot, item 574(a)(4)): GuestGpu waits for the present thread to free a slot.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && m_requests.size() + m_cpu_requests.size() >= VIDEO_OUT_FLIP_QUEUE_CAPACITY) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::FlipSlot, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Present), 0);
+	}
 	while (m_requests.size() + m_cpu_requests.size() >= VIDEO_OUT_FLIP_QUEUE_CAPACITY) {
 		if (m_requests.empty()) {
 			EXIT("video-out queue is saturated by CPU flips queued behind the current EOP\n");
 		}
 		m_submit_slot_cond_var.Wait(&m_mutex);
+	}
+	if (b32.Active()) [[unlikely]] {
+		b32.End(m_submit_slot_cond_var.B32Waker(b32.SinceNs()), false);
 	}
 }
 
@@ -1144,8 +1166,16 @@ void FlipQueue::Wait(VideoOutConfig& cfg, int index) {
 		return std::any_of(m_requests.begin(), m_requests.end(), matches) ||
 		       std::any_of(m_cpu_requests.begin(), m_cpu_requests.end(), matches);
 	};
+	// Track F, F20j3 (KYTY_DIAG_B32 W:flip_done, item 574(a)(4)): WaitFlipDone waits until the request is presented.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && has_request()) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::FlipDone, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Present), 0);
+	}
 	while (has_request()) {
 		m_done_cond_var.Wait(&m_mutex);
+	}
+	if (b32.Active()) [[unlikely]] {
+		b32.End(m_done_cond_var.B32Waker(b32.SinceNs()), false);
 	}
 }
 
@@ -1154,7 +1184,16 @@ bool FlipQueue::Flip(uint32_t micros) {
 
 	m_mutex.Lock();
 	if (m_requests.empty()) {
-		m_submit_cond_var.WaitFor(&m_mutex, micros);
+		// Track F, F20j3 (KYTY_DIAG_B32 W:flip_req, item 574(a)(4)): the present thread waits for a flip request; peer -
+		// GuestGpu (it supplies the GPU flip requests), waker - the last m_submit_cond_var signaller (Complete).
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::FlipReq, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Gpu), micros);
+		}
+		const bool b32_got = m_submit_cond_var.WaitFor(&m_mutex, micros);
+		if (b32.Active()) [[unlikely]] {
+			b32.End(m_submit_cond_var.B32Waker(b32.SinceNs()), !b32_got);
+		}
 
 		if (m_requests.empty()) {
 			m_mutex.Unlock();
@@ -4069,8 +4108,17 @@ KYTY_SYSV_ABI int VideoOutWaitVblank(int handle) {
 
 	Common::LockGuard lock(ctx->mutex);
 	const auto        count = ctx->vblank_status.count;
+	// Track F, F20j3 (KYTY_DIAG_B32 W:vblank, item 574(a)(4)): the guest waits for the next vblank (VblankEnd of the
+	// present thread signals) - a wait the guest asked for (GUEST_SLEEP kind group, item 574(d)).
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && ctx->opened) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Vblank, ctx, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Present), 0);
+	}
 	while (ctx->opened && ctx->vblank_status.count == count) {
 		ctx->vblank_cond.Wait(&ctx->mutex);
+	}
+	if (b32.Active()) [[unlikely]] {
+		b32.End(ctx->vblank_cond.B32Waker(b32.SinceNs()), false);
 	}
 
 	return OK;

@@ -1,4 +1,5 @@
 #include "graphics/presentation/window/hostInput.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "SDL_error.h"
 #include "SDL_events.h"

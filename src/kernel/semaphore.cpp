@@ -78,11 +78,17 @@ private:
 KernelSemaPrivate::~KernelSemaPrivate() {
 	Common::LockGuard lock(m_mutex);
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a 10 us sleep loop of the emulator object.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && (m_status != Status::Set)) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Spin, this, 0, 0);
+	}
 	while (m_status != Status::Set) {
 		m_mutex.Unlock();
 		Common::Thread::SleepMicro(10);
 		m_mutex.Lock();
 	}
+	b32.End(0, false);
 
 	m_status = Status::Deleted;
 
@@ -95,11 +101,17 @@ KernelSemaPrivate::~KernelSemaPrivate() {
 
 	m_cond_var.SignalAll();
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a 10 us sleep loop of the emulator object.
+	Common::DiagB32::Mark b32_w;
+	if (Common::DiagB32::g_on && !m_waiting_threads.empty()) [[unlikely]] {
+		b32_w.BeginWReg(Common::DiagB32::Wait::Spin, this, 0, 0);
+	}
 	while (!m_waiting_threads.empty()) {
 		m_mutex.Unlock();
 		Common::Thread::SleepMicro(10);
 		m_mutex.Lock();
 	}
+	b32_w.End(0, false);
 }
 
 KernelSemaPrivate::Result KernelSemaPrivate::Cancel(int set_count, int* num_waiting_threads) {

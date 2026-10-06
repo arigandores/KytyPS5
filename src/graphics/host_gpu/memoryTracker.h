@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_MEMORYTRACKER_H_
 
 #include "common/assert.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/gates.h"
 #include "graphics/host_gpu/pageManager.h"
 #include "graphics/host_gpu/rangeSet.h"
@@ -465,7 +466,7 @@ private:
 	std::unique_ptr<std::atomic<RegionManager*>[]> m_regions;
 	std::atomic<uint64_t>                         m_cpu_epoch {1};
 	std::vector<std::unique_ptr<RegionManager>>    m_region_storage;
-	std::mutex                                     m_region_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                                     m_region_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	PageManager&                                   m_page_manager;
 };
 

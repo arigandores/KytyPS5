@@ -10,6 +10,11 @@
 // DiagB32-w: / DiagB32-c: / DiagB32-x: which the present thread prints at its next flip site (after
 // flip_status.count++). Marks: H:<call> (host calls of the emulator, M3), W:<kind> (guest waits and the GuestGpu waits,
 // M2/M4); "last signaller" fields are atomics in emulator objects on the host heap (RC10).
+// F20j3 (HPP-646; ROADMAP s122 item 574(g)): W:<kind> also on the host waits of the emulator itself (the kinds from
+// EmuMutex on; the inventory - docs/track-f/f20j3/waits_f20j3.py): the contended Common::Mutex::Lock and TrackedMutex
+// lock (peer - the owner), the wait loops of the flip queue, GuestGpu, the async submitter, the priority operations
+// and the guest HLE calls (one mark over the whole loop; waker - the last signaller kept in the waited object, peer -
+// the thread that advances the condition by the code); the M5 thread-list refresh runs on its own thread.
 // KYTY_DIAG_B32 unset, empty or "0": nothing - no thread, no line; every site tests the global flag g_on once.
 // The knob is read ONCE by Init() at the start of Emulator::Run, before the first guest thread (RC10).
 //
@@ -51,7 +56,27 @@ constexpr uint32_t kWLinesCap     = 64;
 constexpr uint32_t kCLines        = 8;
 
 enum class Call : uint8_t { None = 0, Present, Acquire, QSubmit, QLock, Drain, SemWait, Protect, Fault, Count };
-enum class Wait : uint8_t { None = 0, Cond, Mutex, Sem, PSem, Evf, Eq, Sleep, GpuIdle, GpuRegmem, Count };
+enum class Wait : uint8_t {
+	None = 0, Cond, Mutex, Sem, PSem, Evf, Eq, Sleep, GpuIdle, GpuRegmem,
+	// F20j3 (item 574(g)(1)): appended after GpuRegmem - the older kinds keep their numbers and names.
+	// Host waits of the emulator itself, EmuMutex .. Av (item 574(d): without a waker and a peer - EMU_WAIT:<kind>):
+	EmuMutex, GpuWait, GpuCmd, FlipSlot, FlipDone, FlipCancel, FlipReq, VoPace, Relay, FramePool, RecWait, RecIdle,
+	ASubIdle, ASubDrain, OpsWait, OpsIdle, PipeWait, PCopy, PmDrain, VmaFlush, RecQueue, MainTask, MainIdle, Spin, Av,
+	// waits the guest asked for inside an HLE call (like cond / sem: GUEST_SLEEP:<kind> without a waker and a peer):
+	Vblank, Once, Join, Addr, Aio, Fiber, Audio, Ult, Net, Rwlock, Count
+};
+constexpr uint8_t kFirstEmuWait      = static_cast<uint8_t>(Wait::EmuMutex);
+constexpr uint8_t kFirstGuestHleWait = static_cast<uint8_t>(Wait::Vblank);
+// F20j3 (item 574(d)): EMU_WAIT kinds.
+[[nodiscard]] constexpr bool IsEmuWait(uint8_t kind) {
+	return kind >= kFirstEmuWait && kind < kFirstGuestHleWait;
+}
+// F20j3: a wait whose waker is its peer (the owner at entry): item 550(g)(2)(iv) "mutex - to peer".
+[[nodiscard]] constexpr bool MutexLike(uint8_t kind) {
+	return kind == static_cast<uint8_t>(Wait::Mutex) || kind == static_cast<uint8_t>(Wait::EmuMutex) ||
+	       kind == static_cast<uint8_t>(Wait::Spin) || kind == static_cast<uint8_t>(Wait::Rwlock) ||
+	       kind == static_cast<uint8_t>(Wait::Ult);
+}
 // The partition of one sample of one thread, exactly one (item 550(g)(2)): H > W > R > r > Sr > Sw > S; X - the slot
 // was not live in that sample (registered later or exited).
 enum class State : uint8_t { X = 0, H, W, R, Rr, Sr, Sw, S, Count };
@@ -67,12 +92,25 @@ void LogHeader();  // Emulator::Run after the log is up: the line "DiagB32: mode
 // ---- registry (sites) ----
 [[nodiscard]] int32_t SelfSlot();                     // slot index + 1 of this thread, registers it lazily (0 = none)
 void                  RegisterRole(const char* role); // FrameStats::RegisterCurrentThread (Main, Gpu, Present, Record)
+// F20j3 (item 574(g)(2)): the role threads that advance the conditions of the emulator waits - the "peer" of a mark.
+// RegisterRole("Present" | "Gpu" | "ASubmit" | "POps" | "Relay" | "Main" | "Record") publishes the slot.
+enum class Peer : uint8_t { Present = 0, Gpu, ASubmit, POps, Relay, Main, Record, Count };
+[[nodiscard]] int32_t PeerSlot(Peer peer);            // slot + 1 of the role thread, 0 - not registered (yet)
+[[nodiscard]] int32_t SelfSlotIfRegistered();         // slot + 1 of this thread if registered, else 0 (never registers)
+[[nodiscard]] int32_t SlotOfOsTid(uint32_t os_tid);   // slot + 1 of a registered thread by its OS id, 0 - none
 int32_t               RegisterGuest(int32_t gid, const char* name); // guest thread start; returns slot + 1
 void                  Unregister();                   // guest thread cleanup
 
 // "Last signaller" word: (NowNs >> 10) << 16 | (slot + 1). Kept in emulator objects (host heap) and read by the waiter.
 [[nodiscard]] uint64_t PackSig();
 [[nodiscard]] int32_t  SigWaker(uint64_t packed, uint64_t since_ns); // slot + 1 if the signal is not older than since
+// F20j3 (item 574(g)(2)): PackSig of a registered thread only (an unregistered signaller - slot 0, it is not registered).
+[[nodiscard]] uint64_t PackSigIfRegistered();
+// F20j3: the last signaller of a std::condition_variable (or any object without its own field) - a side table of
+// atomics on the host heap keyed by the object's address (12-bit tag in the word; another object of the same bucket
+// evicts - then SignalOf returns 0, the waker is unknown). NoteSignal - before the notify, one test of g_on.
+void                   NoteSignalSlow(const void* obj);
+[[nodiscard]] uint64_t SignalOf(const void* obj); // packed (as PackSig) or 0
 
 // ---- marks ----
 class Mark {
@@ -88,6 +126,9 @@ public:
 
 	void BeginH(Call call);
 	void BeginW(Wait kind, const void* obj, int32_t peer_slot1, uint64_t req_us);
+	// F20j3 (item 574(g)(1)): BeginW of a REGISTERED thread only (no lazy registration of worker threads); the
+	// emulator-wait sites and the primitives use it. A thread without a slot gets no mark.
+	void BeginWReg(Wait kind, const void* obj, int32_t peer_slot1, uint64_t req_us);
 	// Ends the mark (restores the previous one). For a W mark a wait record is pushed if it lasted >= 10 ms, with the
 	// waker (slot + 1, 0 = none) and whether it ended by its timeout. Inline: at KYTY_DIAG_B32=0 (no Begin) a site's End
 	// is one test of this stack object's flag, no call.
@@ -100,6 +141,12 @@ public:
 	void EndWithPeer(bool timed_out) {
 		if (m_active) {
 			End(m_peer, timed_out);
+		}
+	}
+	// F20j3: ends a wait on obj with the waker from the side table (NoteSignal of obj); at =0 one test of the flag.
+	void EndSig(const void* obj, bool timed_out = false) {
+		if (m_active) {
+			EndSlow(SigWaker(SignalOf(obj), m_since), timed_out);
 		}
 	}
 
@@ -133,6 +180,71 @@ void OnFlip(uint64_t n, uint64_t request_id, uint64_t reserve_host_ns); // prese
 void TestArm();           // window.cpp, the first "Level has started: <name>" line
 void TestPresentPoint();  // present site, inside H:present
 void TestGpuSleepPoint(); // GuestGpu loop top, outside every mark
+
+// F20j3 (item 574(g)(1)): the last signaller of obj for a std::condition_variable wait (one test of g_on).
+inline void NoteSignal(const void* obj) {
+	if (g_on) [[unlikely]] {
+		NoteSignalSlow(obj);
+	}
+}
+
+// F20j3 (item 574(g)(1)): a std mutex type whose CONTENDED acquisition is marked W:<K> (default emu_mutex) with the peer
+// = the slot of the thread that took it last (stored after each acquisition at =1; a holder is the last taker - the
+// window between its acquisition and the store is not covered [I]). KYTY_DIAG_B32=0: lock() is one test of g_on and the
+// std lock; try_lock() tests g_on only after a success; unlock() is the std unlock. Not for a mutex used with
+// std::condition_variable (that needs std::unique_lock<std::mutex>).
+template <class M, Wait K = Wait::EmuMutex>
+class TrackedMutex {
+public:
+	TrackedMutex()                               = default;
+	TrackedMutex(const TrackedMutex&)            = delete;
+	TrackedMutex& operator=(const TrackedMutex&) = delete;
+
+	void lock() {
+		if (g_on) [[unlikely]] {
+			LockSlow();
+			return;
+		}
+		m_m.lock();
+	}
+	bool try_lock() {
+		const bool ok = m_m.try_lock();
+		if (ok && g_on) [[unlikely]] {
+			m_owner.store(SelfSlotIfRegistered(), std::memory_order_relaxed);
+		}
+		return ok;
+	}
+	void unlock() { m_m.unlock(); }
+	void lock_shared() {
+		if (g_on) [[unlikely]] {
+			if (m_m.try_lock_shared()) {
+				return;
+			}
+			Mark b32;
+			b32.BeginWReg(K, this, m_owner.load(std::memory_order_relaxed), 0);
+			m_m.lock_shared();
+			b32.EndWithPeer(false);
+			return;
+		}
+		m_m.lock_shared();
+	}
+	bool try_lock_shared() { return m_m.try_lock_shared(); }
+	void unlock_shared() { m_m.unlock_shared(); }
+
+private:
+	void LockSlow() {
+		if (!m_m.try_lock()) {
+			Mark b32;
+			b32.BeginWReg(K, this, m_owner.load(std::memory_order_relaxed), 0);
+			m_m.lock();
+			b32.EndWithPeer(false);
+		}
+		m_owner.store(SelfSlotIfRegistered(), std::memory_order_relaxed);
+	}
+
+	M                    m_m;
+	std::atomic<int32_t> m_owner {0};
+};
 
 // =====================================================================================================================
 // Core: pure parts, unit-tested without the game (tests/DiagB32Tests.cpp, target diag_b32_tests).
@@ -273,6 +385,7 @@ struct WaitRec {
 	uint64_t req_us   = 0;
 	int32_t  slot1    = 0; // waiting thread, slot + 1
 	int32_t  waker1   = 0; // slot + 1, 0 = none
+	int32_t  peer1    = 0; // F20j3 (item 574(g)(2), (d)): the mark's peer, slot + 1, 0 = none
 	uint8_t  kind     = 0;
 	uint8_t  timed_out = 0;
 	uint8_t  open     = 0; // a W mark still active at the window end (not from the ring)
@@ -287,8 +400,9 @@ public:
 	// Moves every record written since the previous call into out, oldest first. Positions the reader no longer holds
 	// (more than kWaitRing behind) are counted in drop. F20j2 (item 552(v)(4), RC4 of F20k): the drain stops at a
 	// position whose write has not finished (not started, or in progress) and continues there on the next call; torn
-	// counts only a position overwritten by a later lap (before or while it is read).
-	void Drain(std::vector<WaitRec>* out, uint64_t* drop, uint64_t* torn);
+	// counts only a position overwritten by a later lap (before or while it is read). F20j3 (item 554(v)(1), Z1): held
+	// (if given) gets + the positions the drain left behind when it stopped (the stopped one and all after it).
+	void Drain(std::vector<WaitRec>* out, uint64_t* drop, uint64_t* torn, uint64_t* held = nullptr);
 
 	struct alignas(64) Entry {
 		std::atomic<uint64_t> seq {0}; // 2 * index + 1 while written, 2 * index + 2 when complete
@@ -297,6 +411,7 @@ public:
 		std::atomic<uint64_t> obj {0};
 		std::atomic<uint64_t> req {0};
 		std::atomic<uint64_t> who {0}; // slot1 | waker1 << 20 | kind << 40 | timed_out << 48
+		std::atomic<uint64_t> peer {0}; // F20j3: peer1
 	};
 	Entry                 e[kWaitRing];
 	std::atomic<uint64_t> wpos {0};
@@ -340,6 +455,8 @@ struct Counters {
 	// overwritten before it was read.
 	uint64_t req_miss     = 0;
 	uint64_t sub_miss     = 0;
+	// F20j3 (item 554(v)(1), Z1 of F20k2): wait-ring positions a drain left behind (an unfinished write stopped it).
+	uint64_t ring_hold    = 0;
 	// F20j2 (item 552(v)(3), RC3 of F20k): the zero invariants at the previous window close; Format prints
 	// <name>_w = value - base (the increment over the window) next to the cumulative value. Rebase at every close.
 	struct Base {
@@ -350,6 +467,7 @@ struct Counters {
 		uint64_t lines_cut = 0;
 		uint64_t req_miss  = 0;
 		uint64_t sub_miss  = 0;
+		uint64_t ring_hold = 0;
 	} base;
 	void Rebase();
 };
@@ -397,7 +515,38 @@ void MarkMandatory(Report* report);
 // kq_us - the cost of the first kernel query of the process (the start probe of the sampler; F20j2, item 552(v)(1)).
 [[nodiscard]] std::string HeaderLine(uint32_t ncpu, uint32_t kstate, uint64_t kq_us);
 
+// F20j3 (item 574(g)(4)): a periodic work (the M5 thread-list refresh) on its own thread, so that its cost makes no gap
+// of samples on the sampler thread. Start runs work(user) at once and then every period_ns (from the end of the
+// previous run); TakeWorkNs returns the time of the runs finished since the previous take (it goes into instr_us of
+// the window, as the refresh did on the sampler thread - RC9 unchanged).
+class AsyncRefresh {
+public:
+	using Fn = void (*)(void* user);
+	AsyncRefresh() = default;
+	~AsyncRefresh();
+	AsyncRefresh(const AsyncRefresh&)            = delete;
+	AsyncRefresh& operator=(const AsyncRefresh&) = delete;
+	void                   Start(Fn work, void* user, uint64_t period_ns);
+	void                   Stop(); // tests
+	[[nodiscard]] uint64_t TakeWorkNs();
+	[[nodiscard]] uint64_t Runs() const { return m_runs.load(std::memory_order_acquire); }
+
+private:
+	struct Impl;
+	Impl*                 m_impl = nullptr;
+	std::atomic<uint64_t> m_work_ns {0};
+	std::atomic<uint64_t> m_runs {0};
+};
+
 } // namespace Core
+
+// F20j3 (item 574(g)(3)): tests only - the registry and the wait ring as at KYTY_DIAG_B32=1 and g_on = true, without
+// the sampler thread; the slot's mark and the drained wait records are read directly.
+namespace Test {
+void InitRuntime();
+bool ReadSlotMark(int32_t slot1, Core::MarkSnap* out);
+void DrainWaits(std::vector<Core::WaitRec>* out);
+} // namespace Test
 
 } // namespace Common::DiagB32
 

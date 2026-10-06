@@ -170,8 +170,8 @@ struct VisibilityUpdate {
 };
 
 std::atomic<Uint32>          g_visibility_event {static_cast<Uint32>(-1)};
-std::mutex                   g_visibility_mutex;
-std::mutex                   g_input_mutex;
+Common::DiagB32::TrackedMutex<std::mutex>                   g_visibility_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
+Common::DiagB32::TrackedMutex<std::mutex>                   g_input_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 std::deque<InputEvent>       g_input_events;
 std::deque<VisibilityUpdate> g_visibility_updates;
 size_t                       g_missing_visibility_wakeups = 0;

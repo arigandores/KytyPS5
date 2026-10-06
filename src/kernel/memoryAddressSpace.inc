@@ -719,7 +719,7 @@ private:
 
 	uint8_t*                     m_backing_base = nullptr;
 	uint64_t                     m_size         = 0;
-	std::mutex                   m_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                   m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	std::map<uint64_t, MapEntry> m_maps;
 	std::atomic<uint64_t>        m_map_epoch {1};
 };
@@ -1483,7 +1483,7 @@ private:
 
 	// Shared for the protfast fast path (ProtectTransient), exclusive for every mutation of
 	// the map: std::lock_guard on a shared_mutex still takes it exclusively.
-	std::shared_mutex                          m_mutex;
+	Common::DiagB32::TrackedMutex<std::shared_mutex>                          m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	std::map<uint64_t, uint64_t>               m_free;
 	std::map<uint64_t, MappedRegion>            m_mapped;
 	// Incremented (under m_mutex) whenever m_mapped changes, so that a caller holding the

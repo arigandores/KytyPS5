@@ -1,4 +1,5 @@
 #include "graphics/host_gpu/gpuDirtyGen.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 
 #include "graphics/host_gpu/renderer/pipeline/shaderTranslationCache.h"
@@ -1265,7 +1266,7 @@ void DumpShaderGcn(ShaderType stage, uint64_t shader_hash, std::span<const uint3
 	if (!enabled || code.empty()) {
 		return;
 	}
-	static std::mutex                   mutex;
+	static Common::DiagB32::TrackedMutex<std::mutex>                   mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	static std::unordered_set<uint64_t> written;
 	{
 		std::lock_guard lock(mutex);
@@ -1316,7 +1317,7 @@ void DumpShaderGcnRegistered(uint8_t binary_type, uint64_t shader_hash, const vo
 		     size_bytes);
 		return;
 	}
-	static std::mutex                   mutex;
+	static Common::DiagB32::TrackedMutex<std::mutex>                   mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	static std::unordered_set<uint64_t> written;
 	{
 		std::lock_guard lock(mutex);
@@ -2634,7 +2635,7 @@ struct PipelineCache::ProgramCache {
 	std::condition_variable               ahead_cv;
 	// Session 111 ("daslot"): serialises every QueueAhead call (the walker and GuestGpu's own walks) and the
 	// allocation of the slot table; taken after PipelineCache::m_mutex when that is held too (daslot = 0).
-	std::mutex                            ahead_queue_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                            ahead_queue_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	// Slot indices waiting for a worker. A fixed ring rather than std::deque: MSVC puts four
 	// uint32_t in one heap block, so a Sky Garden frame's ~19k tasks cost ~4.7k allocations and
 	// as many frees, taken and given back under this very lock - the samples of QueueAhead inside
@@ -2941,7 +2942,7 @@ struct PipelineCache::ProgramCache {
 		if (wanted == 0) {
 			return;
 		}
-		std::lock_guard<std::mutex> queue_lock(ahead_queue_mutex);
+		std::lock_guard queue_lock(ahead_queue_mutex);
 		const auto                  generation = memo_generation.load(std::memory_order_relaxed);
 		// The walk ids grow in submission order; a walker that runs ahead (gate "dawalk") may
 		// queue a later walk while an earlier one is still pending, and the slot table protects
@@ -5034,6 +5035,7 @@ void PipelineCache::WorkerLoop() {
 			std::lock_guard<std::mutex> lock(m_job_mutex);
 			m_jobs_active--;
 			if (m_jobs.empty() && m_jobs_active == 0) {
+				Common::DiagB32::NoteSignal(&m_idle_cv); // Track F, F20j3
 				m_idle_cv.notify_all();
 			}
 		}
@@ -5050,7 +5052,14 @@ void PipelineCache::EnqueueJob(std::function<void()> job) {
 
 void PipelineCache::WaitForPendingPipelines() {
 	std::unique_lock<std::mutex> lock(m_job_mutex);
+	// Track F, F20j3 (KYTY_DIAG_B32 W:pipe_wait, item 574(g)(1)): the caller waits for the pipeline workers (no peer -
+	// the workers are not registered).
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::PipeWait, this, 0, 0);
+	}
 	m_idle_cv.wait(lock, [this] { return m_jobs.empty() && m_jobs_active == 0; });
+	b32.EndSig(&m_idle_cv);
 }
 
 void PipelineCache::Save() {
@@ -5458,8 +5467,14 @@ PipelineCache::Pipeline* PipelineCache::GetGraphicsPipeline(
 		const auto     pcw_wait_t0 = pcw_trace ? HostMicros() : 0;
 		{
 			std::unique_lock<std::mutex> lock(m_job_mutex);
+			// Track F, F20j3 (KYTY_DIAG_B32 W:pipe_wait, item 574(g)(1)): the bounded wait for an async pipeline.
+			Common::DiagB32::Mark b32;
+			if (Common::DiagB32::g_on) [[unlikely]] {
+				b32.BeginWReg(Common::DiagB32::Wait::PipeWait, entry, 0, AsyncPipelineWaitUs());
+			}
 			m_ready_cv.wait_for(lock, std::chrono::microseconds(AsyncPipelineWaitUs()),
 			                    [entry] { return entry->ready.load(std::memory_order_acquire); });
+			b32.EndSig(&m_ready_cv);
 		}
 		if (pcw_trace) {
 			PcwNoteOverlap("wait gfx", programs.vertex[0].id, ps_input_info != nullptr ? programs.pixel.id : 0,
@@ -5705,6 +5720,7 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 				std::lock_guard<std::mutex> lock(m_job_mutex);
 				target->ready.store(true, std::memory_order_release);
 			}
+			Common::DiagB32::NoteSignal(&m_ready_cv); // Track F, F20j3
 			m_ready_cv.notify_all();
 			m_pending_pipelines.fetch_sub(1, std::memory_order_relaxed);
 		});
@@ -5968,6 +5984,7 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 			std::lock_guard<std::mutex> lock(m_job_mutex);
 			target->ready.store(true, std::memory_order_release);
 		}
+		Common::DiagB32::NoteSignal(&m_ready_cv); // Track F, F20j3
 		m_ready_cv.notify_all();
 		m_pending_pipelines.fetch_sub(1, std::memory_order_relaxed);
 	});
@@ -6047,7 +6064,13 @@ PipelineCache::GetComputePipeline(const ShaderComputeInputInfo& input_info,
 	const auto                       wait_begin = HostMicros();
 	{
 		std::unique_lock<std::mutex> lock(m_job_mutex);
+		// Track F, F20j3 (KYTY_DIAG_B32 W:pipe_wait, item 574(g)(1)): a dispatch waits for its compute pipeline.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::PipeWait, pending, 0, 0);
+		}
 		m_ready_cv.wait(lock, [pending] { return pending->ready.load(std::memory_order_acquire); });
+		b32.EndSig(&m_ready_cv);
 	}
 	if (PcwOverlapTrace()) {
 		PcwNoteOverlap("wait cs", compute_program.id, 0, pcw_gen0, HostMicros() - wait_begin);
@@ -6936,6 +6959,7 @@ void PipelineCache::PrecachePipelines() {
 					std::lock_guard<std::mutex> lock(m_job_mutex);
 					target->ready.store(true, std::memory_order_release);
 				}
+				Common::DiagB32::NoteSignal(&m_ready_cv); // Track F, F20j3
 				m_ready_cv.notify_all();
 				m_pending_pipelines.fetch_sub(1, std::memory_order_relaxed);
 			m_precache_completed.fetch_add(1);
@@ -7010,6 +7034,7 @@ void PipelineCache::PrecachePipelines() {
 					std::lock_guard<std::mutex> lock(m_job_mutex);
 					target->ready.store(true, std::memory_order_release);
 				}
+				Common::DiagB32::NoteSignal(&m_ready_cv); // Track F, F20j3
 				m_ready_cv.notify_all();
 				m_pending_pipelines.fetch_sub(1, std::memory_order_relaxed);
 			m_precache_completed.fetch_add(1);

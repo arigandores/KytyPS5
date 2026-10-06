@@ -1,4 +1,5 @@
 #include "common/assert.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/common.h"
 #include "common/emulatorConfig.h"
 #include "common/logging/log.h"
@@ -324,7 +325,7 @@ static bool IsSecondSourceFactor(vk::BlendFactor factor) {
 // One "patched" and one "skip" line per PS hash for the whole run (pipelines are created on the draw,
 // worker and precache threads).
 static bool DualSourceFirstLine(uint64_t ps_hash, bool patched) {
-	static std::mutex                   mutex;
+	static Common::DiagB32::TrackedMutex<std::mutex>                   mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	static std::unordered_set<uint64_t> seen[2];
 	std::lock_guard                     lock(mutex);
 	return seen[patched ? 1 : 0].insert(ps_hash).second;

@@ -1,4 +1,5 @@
 #include "common/abi.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/dateTime.h"
 #include "common/file.h"
 #include "common/logging/log.h"
@@ -51,7 +52,7 @@ struct ResolvedPathInfo {
 	std::string host_path;
 };
 
-static std::mutex                                        g_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                                        g_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static uint32_t                                          g_next_submission_id = 1;
 static std::unordered_map<uint32_t, SubmissionState>     g_submissions;
 static std::unordered_map<uint32_t, std::string>         g_files;
@@ -767,10 +768,10 @@ struct AmmUsageStatsData {
 };
 static_assert(sizeof(AmmUsageStatsData) == 0x18);
 
-static std::mutex                                       g_command_buffer_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                                       g_command_buffer_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::unordered_map<uint64_t, CommandBufferState> g_command_buffers;
 static std::unordered_map<uint64_t, uint64_t>           g_command_buffer_aliases;
-static std::mutex                                       g_amm_auto_pool_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                                       g_amm_auto_pool_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::vector<AmmAutoPoolRange>                    g_amm_auto_pool;
 using CommandBufferIterator = std::unordered_map<uint64_t, CommandBufferState>::iterator;
 

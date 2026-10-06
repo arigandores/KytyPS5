@@ -820,8 +820,16 @@ void WindowContext::RunOnMainThread(std::function<void()> task) {
 	SDL_PushEvent(&event);
 
 	Common::LockGuard lock(main_task_mutex);
+	// Track F, F20j3 (KYTY_DIAG_B32 W:main_task, item 574(g)(1)): the caller waits for the main thread to run its task.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && main_tasks_run < ticket) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::MainTask, &main_task_done, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Main), 0);
+	}
 	while (main_tasks_run < ticket) {
 		main_task_done.Wait(&main_task_mutex);
+	}
+	if (b32.Active()) [[unlikely]] {
+		b32.End(main_task_done.B32Waker(b32.SinceNs()), false);
 	}
 }
 
@@ -889,7 +897,14 @@ void WindowContext::Run() {
 			timer.Resume();
 		}
 
-		if (!HostInputWaitEvent(&loop.event)) {
+		// Track F, F20j3 (KYTY_DIAG_B32 W:main_idle, item 574(g)(1)): the main thread waits for an SDL event.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::MainIdle, &loop, 0, 0);
+		}
+		const bool b32_event = HostInputWaitEvent(&loop.event);
+		b32.End(0, false);
+		if (!b32_event) {
 			continue;
 		}
 		ProcessEvent(timer.GetTimeS());

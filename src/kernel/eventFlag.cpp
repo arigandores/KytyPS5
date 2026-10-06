@@ -84,21 +84,33 @@ EventFlagWaitMode DecodeEventFlagWaitMode(uint32_t wait_mode) {
 KernelEventFlagPrivate::~KernelEventFlagPrivate() {
 	Common::LockGuard lock(m_mutex);
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a 10 us sleep loop of the emulator object.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && (m_status != Status::Set)) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Spin, this, 0, 0);
+	}
 	while (m_status != Status::Set) {
 		m_mutex.Unlock();
 		Common::Thread::SleepMicro(10);
 		m_mutex.Lock();
 	}
+	b32.End(0, false);
 
 	m_status = Status::Deleted;
 
 	m_cond_var.SignalAll();
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a 10 us sleep loop of the emulator object.
+	Common::DiagB32::Mark b32_w;
+	if (Common::DiagB32::g_on && m_waiting_threads > 0) [[unlikely]] {
+		b32_w.BeginWReg(Common::DiagB32::Wait::Spin, this, 0, 0);
+	}
 	while (m_waiting_threads > 0) {
 		m_mutex.Unlock();
 		Common::Thread::SleepMicro(10);
 		m_mutex.Lock();
 	}
+	b32_w.End(0, false);
 }
 
 KernelEventFlagPrivate::Result KernelEventFlagPrivate::Wait(uint64_t bits, WaitMode wait_mode,
@@ -194,11 +206,17 @@ void KernelEventFlagPrivate::Set(uint64_t bits) {
 
 	EXIT_NOT_IMPLEMENTED(m_status == Status::Deleted);
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a 10 us sleep loop of the emulator object.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && (m_status != Status::Set)) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Spin, this, 0, 0);
+	}
 	while (m_status != Status::Set) {
 		m_mutex.Unlock();
 		Common::Thread::SleepMicro(10);
 		m_mutex.Lock();
 	}
+	b32.End(0, false);
 
 	m_bits |= bits;
 	if (Common::DiagB32::g_on) [[unlikely]] {
@@ -213,11 +231,17 @@ void KernelEventFlagPrivate::Clear(uint64_t bits) {
 
 	EXIT_NOT_IMPLEMENTED(m_status == Status::Deleted);
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a 10 us sleep loop of the emulator object.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && (m_status != Status::Set)) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Spin, this, 0, 0);
+	}
 	while (m_status != Status::Set) {
 		m_mutex.Unlock();
 		Common::Thread::SleepMicro(10);
 		m_mutex.Lock();
 	}
+	b32.End(0, false);
 
 	m_bits &= bits;
 }
@@ -227,11 +251,17 @@ void KernelEventFlagPrivate::Cancel(uint64_t bits, int* num_waiting_threads) {
 
 	EXIT_NOT_IMPLEMENTED(m_status == Status::Deleted);
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a 10 us sleep loop of the emulator object.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && (m_status != Status::Set)) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Spin, this, 0, 0);
+	}
 	while (m_status != Status::Set) {
 		m_mutex.Unlock();
 		Common::Thread::SleepMicro(10);
 		m_mutex.Lock();
 	}
+	b32.End(0, false);
 
 	if (num_waiting_threads != nullptr) {
 		*num_waiting_threads = m_waiting_threads;
@@ -242,11 +272,17 @@ void KernelEventFlagPrivate::Cancel(uint64_t bits, int* num_waiting_threads) {
 
 	m_cond_var.SignalAll();
 
+	// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a 10 us sleep loop of the emulator object.
+	Common::DiagB32::Mark b32_w;
+	if (Common::DiagB32::g_on && m_waiting_threads > 0) [[unlikely]] {
+		b32_w.BeginWReg(Common::DiagB32::Wait::Spin, this, 0, 0);
+	}
 	while (m_waiting_threads > 0) {
 		m_mutex.Unlock();
 		Common::Thread::SleepMicro(10);
 		m_mutex.Lock();
 	}
+	b32_w.End(0, false);
 
 	m_status = Status::Set;
 }

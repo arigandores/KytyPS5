@@ -1,4 +1,5 @@
 #include "graphics/host_gpu/pageManager.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/alignment.h"
 #include "common/drawStat.h"
@@ -72,9 +73,15 @@ constexpr uint64_t REGION_PAGES = REGION_SIZE / PAGE_SIZE;
 class SpinGuard final {
 public:
 	explicit SpinGuard(std::atomic_flag& lock): m_lock(lock) {
+		// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a contended spin of a registered thread (no owner field).
+		Common::DiagB32::Mark b32;
 		while (m_lock.test_and_set(std::memory_order_acquire)) {
+			if (Common::DiagB32::g_on && !b32.Active()) [[unlikely]] {
+				b32.BeginWReg(Common::DiagB32::Wait::Spin, &lock, 0, 0);
+			}
 			std::atomic_signal_fence(std::memory_order_seq_cst);
 		}
+		b32.End(0, false);
 	}
 	~SpinGuard() { m_lock.clear(std::memory_order_release); }
 	KYTY_CLASS_NO_COPY(SpinGuard);
@@ -101,6 +108,11 @@ public:
 		namespace FS  = Common::FrameStats;
 		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
 		uint32_t   spins = 0;
+		// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): the apply lock is held across VirtualProtect.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::Spin, &lock, 0, 0);
+		}
 		do {
 			while (m_lock->test(std::memory_order_relaxed)) {
 				if (spins < 4096) {
@@ -115,6 +127,7 @@ public:
 				}
 			}
 		} while (m_lock->test_and_set(std::memory_order_acquire));
+		b32.End(0, false);
 		if (t0 != 0) {
 			const auto ns = FS::NowNs() - t0;
 			m_wait_ns     = ns;
@@ -2609,6 +2622,7 @@ struct PageManager::Impl {
 			ApplyPending(*item.region, item.base_addr);
 			if (inflight.fetch_sub(1, std::memory_order_acq_rel) == 1) {
 				std::lock_guard lock(queue_mutex);
+				Common::DiagB32::NoteSignal(&drain_cv); // Track F, F20j3
 				drain_cv.notify_all();
 			}
 		}
@@ -2622,7 +2636,13 @@ struct PageManager::Impl {
 		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
 		{
 			std::unique_lock lock(queue_mutex);
+			// Track F, F20j3 (KYTY_DIAG_B32 W:pm_drain, item 574(g)(1)): the caller waits for the protect workers.
+			Common::DiagB32::Mark b32;
+			if (Common::DiagB32::g_on) [[unlikely]] {
+				b32.BeginWReg(Common::DiagB32::Wait::PmDrain, this, 0, 0);
+			}
 			drain_cv.wait(lock, [this] { return inflight.load(std::memory_order_acquire) == 0; });
+			b32.EndSig(&drain_cv);
 		}
 		if (t0 != 0) {
 			FS::Add(FS::Counter::ProtectDrainNs, FS::NowNs() - t0);
@@ -2686,7 +2706,7 @@ struct PageManager::Impl {
 
 	std::unique_ptr<std::atomic<Region*>[]> regions;
 	std::vector<std::unique_ptr<Region>>    region_storage;
-	std::mutex                              region_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                              region_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 
 	std::mutex               queue_mutex;
 	std::condition_variable  queue_cv;

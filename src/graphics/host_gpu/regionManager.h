@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_REGIONMANAGER_H_
 
 #include "common/assert.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/frameStats.h"
 #include "graphics/host_gpu/pageManager.h"
 #include "graphics/host_gpu/regionDefinitions.h"
@@ -45,6 +46,12 @@ public:
 				const auto* value = std::getenv("KYTY_TRACKING_RELAXED_SPIN");
 				return value == nullptr || value[0] != '0';
 			}();
+			// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a contended spin; peer - the owner's slot.
+			Common::DiagB32::Mark b32;
+			if (Common::DiagB32::g_on) [[unlikely]] {
+				b32.BeginWReg(Common::DiagB32::Wait::Spin, this,
+				              Common::DiagB32::SlotOfOsTid(m_owner.load(std::memory_order_relaxed)), 0);
+			}
 			while (m_lock.test_and_set(std::memory_order_acquire)) {
 				if (m_owner.load(std::memory_order_relaxed) == thread) {
 					EXIT("recursive region tracking lock while contended\n");
@@ -67,6 +74,7 @@ public:
 					std::atomic_signal_fence(std::memory_order_seq_cst);
 				}
 			}
+			b32.EndWithPeer(false);
 			if (t0 != 0) {
 				const auto ns = FS::NowNs() - t0;
 				FS::Add(FS::Counter::LockSpinNs, ns);

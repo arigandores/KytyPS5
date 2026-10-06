@@ -1,4 +1,5 @@
 #include "graphics/presentation/window/screenshot.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/logging/log.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
@@ -217,6 +218,7 @@ ScreenshotGrabber::~ScreenshotGrabber() {
 			std::lock_guard lock(m_rec_mutex);
 			m_rec_stop = true;
 		}
+		Common::DiagB32::NoteSignal(&m_rec_cv); // Track F, F20j3
 		m_rec_cv.notify_all();
 		m_rec_thread.join();
 	}
@@ -444,12 +446,19 @@ void ScreenshotGrabber::FlushVideoSlot(RecSlot& slot) {
 	{
 		std::unique_lock lock(m_rec_mutex);
 		// Backpressure: the encoder keeps up at 60 fps; a deep backlog means it does not.
+		// Track F, F20j3 (KYTY_DIAG_B32 W:rec_queue, item 574(g)(1)): KYTY_REC only; the encoder thread is not registered.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on && m_rec_queue.size() >= 8) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::RecQueue, this, 0, 0);
+		}
 		m_rec_cv.wait(lock, [&] { return m_rec_queue.size() < 8; });
+		b32.EndSig(&m_rec_cv);
 		m_rec_queue.push_back(std::move(job));
 		if (!m_rec_thread.joinable()) {
 			m_rec_thread = std::thread([this] { RecorderThread(); });
 		}
 	}
+	Common::DiagB32::NoteSignal(&m_rec_cv); // Track F, F20j3
 	m_rec_cv.notify_all();
 }
 
@@ -465,6 +474,7 @@ void ScreenshotGrabber::RecorderThread() {
 			job = std::move(m_rec_queue.front());
 			m_rec_queue.pop_front();
 		}
+		Common::DiagB32::NoteSignal(&m_rec_cv); // Track F, F20j3
 		m_rec_cv.notify_all();
 		EncodeVideoFrame(job);
 		std::lock_guard lock(m_rec_mutex);

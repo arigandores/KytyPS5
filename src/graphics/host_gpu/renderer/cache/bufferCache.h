@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_BUFFERCACHE_H_
 
 #include "common/abi.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/alignment.h"
 #include "common/common.h"
 #include "common/lruCache.h"
@@ -357,7 +358,7 @@ private:
 		uint64_t tick  = 0;
 	};
 	std::vector<PendingHostRead>                       m_pending_host_reads;
-	std::mutex                                         m_pending_host_reads_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                                         m_pending_host_reads_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	std::vector<Libs::LibKernel::Memory::BackingPiece> m_import_pieces;
 	// Image address -> tick of its last upload through the import (re-upload interval heuristic).
 	std::unordered_map<uint64_t, uint64_t>              m_import_last_tick;
@@ -496,7 +497,7 @@ private:
  private:
 
 	// Stream prefetch queue (NoteStreamedRead / PrefetchStreamedRanges).
-	std::mutex                                     m_streamed_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                                     m_streamed_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	std::vector<std::pair<uint64_t, uint64_t>>     m_streamed_ranges;
 	std::vector<std::pair<uint64_t, uint64_t>>     m_streamed_pending;
 	int                                            m_streamed_frame    = -1;

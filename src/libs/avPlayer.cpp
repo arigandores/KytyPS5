@@ -1,4 +1,5 @@
 #include "common/common.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include <cstdlib>
 #include "common/envFlag.h"
 #include "common/logging/log.h"
@@ -403,21 +404,34 @@ public:
 		const auto size =
 		    value.packet == nullptr ? 0u : static_cast<size_t>(std::max(value.packet->size, 0));
 		std::unique_lock lock(mutex);
+		// Track F, F20j3 (KYTY_DIAG_B32 W:av, item 574(g)(1)): the demuxer waits for queue room.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::Av, this, 0, 0);
+		}
 		available.wait(lock, [&] {
 			return stop || bytes + size <= capacity || (queue.empty() && bytes == 0);
 		});
+		b32.EndSig(&available);
 		if (stop) {
 			return false;
 		}
 		bytes += size;
 		queue.push_back(std::move(value));
+		Common::DiagB32::NoteSignal(&available); // Track F, F20j3
 		available.notify_all();
 		return true;
 	}
 	std::optional<DemuxPacket> WaitPop(const std::atomic_bool& stop,
 	                                   const std::atomic_bool& finished) {
 		std::unique_lock lock(mutex);
+		// Track F, F20j3 (KYTY_DIAG_B32 W:av, item 574(g)(1)): a decoder waits for a packet.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::Av, this, 0, 0);
+		}
 		available.wait(lock, [&] { return stop || finished || !queue.empty(); });
+		b32.EndSig(&available);
 		if (stop || queue.empty()) {
 			return std::nullopt;
 		}
@@ -426,6 +440,7 @@ public:
 		if (value.packet != nullptr) {
 			bytes -= static_cast<size_t>(std::max(value.packet->size, 0));
 		}
+		Common::DiagB32::NoteSignal(&available); // Track F, F20j3
 		available.notify_all();
 		return value;
 	}
@@ -433,9 +448,13 @@ public:
 		std::lock_guard lock(mutex);
 		queue.clear();
 		bytes = 0;
+		Common::DiagB32::NoteSignal(&available); // Track F, F20j3
 		available.notify_all();
 	}
-	void Notify() { available.notify_all(); }
+	void Notify() {
+		Common::DiagB32::NoteSignal(&available); // Track F, F20j3
+		available.notify_all();
+	}
 
 private:
 	std::mutex              mutex;
@@ -500,6 +519,7 @@ public:
 	void Push(T value) {
 		std::lock_guard lock(mutex);
 		queue.push_back(std::move(value));
+		Common::DiagB32::NoteSignal(&available); // Track F, F20j3
 		available.notify_all();
 	}
 	std::optional<T> TryPop() {
@@ -509,6 +529,7 @@ public:
 		}
 		auto value = std::move(queue.front());
 		queue.pop_front();
+		Common::DiagB32::NoteSignal(&available); // Track F, F20j3
 		available.notify_all();
 		return value;
 	}
@@ -520,17 +541,25 @@ public:
 		}
 		auto value = std::move(queue.front());
 		queue.pop_front();
+		Common::DiagB32::NoteSignal(&available); // Track F, F20j3
 		available.notify_all();
 		return value;
 	}
 	std::optional<T> WaitPop(const std::atomic_bool& stop) {
 		std::unique_lock lock(mutex);
+		// Track F, F20j3 (KYTY_DIAG_B32 W:av, item 574(g)(1)): a consumer waits for a frame.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::Av, this, 0, 0);
+		}
 		available.wait(lock, [&] { return stop || !queue.empty(); });
+		b32.EndSig(&available);
 		if (stop || queue.empty()) {
 			return std::nullopt;
 		}
 		auto value = std::move(queue.front());
 		queue.pop_front();
+		Common::DiagB32::NoteSignal(&available); // Track F, F20j3
 		available.notify_all();
 		return value;
 	}
@@ -541,9 +570,13 @@ public:
 	void Clear() {
 		std::lock_guard lock(mutex);
 		queue.clear();
+		Common::DiagB32::NoteSignal(&available); // Track F, F20j3
 		available.notify_all();
 	}
-	void Notify() { available.notify_all(); }
+	void Notify() {
+		Common::DiagB32::NoteSignal(&available); // Track F, F20j3
+		available.notify_all();
+	}
 
 private:
 	mutable std::mutex      mutex;
@@ -1748,8 +1781,8 @@ private:
 	std::atomic_bool                         demux_eof {true};
 	std::atomic_bool                         video_done {true};
 	std::atomic_bool                         audio_done {true};
-	std::mutex                               lifecycle_mutex;
-	mutable std::mutex                       mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                               lifecycle_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
+	mutable Common::DiagB32::TrackedMutex<std::mutex>                       mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	bool                                     stopped                  = true;
 	bool                                     paused                   = false;
 	bool                                     seek_video_frame_pending = false;

@@ -2,6 +2,7 @@
 #define EMULATOR_INCLUDE_EMULATOR_GRAPHICS_GRAPHICCONTEXT_H_
 
 #include "common/abi.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/common.h"
 #include "common/threads.h"
 #include "graphics/host_gpu/vulkanCommon.h" // IWYU pragma: export
@@ -152,9 +153,9 @@ struct GraphicContext {
 	uint32_t screen_height = 0;
 
 private:
-	mutable std::mutex                                 m_format_properties_mutex;
+	mutable Common::DiagB32::TrackedMutex<std::mutex>                                 m_format_properties_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	mutable std::map<vk::Format, vk::FormatProperties> m_format_properties;
-	mutable std::mutex                                 m_image_format_properties_mutex;
+	mutable Common::DiagB32::TrackedMutex<std::mutex>                                 m_image_format_properties_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	mutable std::map<std::tuple<vk::Format, vk::ImageType, vk::ImageTiling, vk::ImageUsageFlags,
 	                            vk::ImageCreateFlags>,
 	                 std::pair<vk::Result, vk::ImageFormatProperties>>

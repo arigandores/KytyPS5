@@ -1,5 +1,6 @@
 
 #include "common/logging/log.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/frameStats.h"
 
@@ -74,7 +75,7 @@ namespace Log {
 static bool                            g_initialized = false;
 static Direction                       g_direction   = Direction::Console;
 static std::filesystem::path           g_output_file;
-static std::mutex                      g_logger_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                      g_logger_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::shared_ptr<spdlog::logger> g_logger;
 
 void Flush() {

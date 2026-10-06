@@ -64,6 +64,8 @@ public:
 	KYTY_CLASS_NO_COPY(Mutex);
 
 private:
+	void LockB32(); // Track F, F20j3 (KYTY_DIAG_B32=1): the acquisition with W:emu_mutex when contended
+
 	std::unique_ptr<MutexPrivate> m_mutex;
 };
 
@@ -76,6 +78,8 @@ public:
 	bool WaitFor(Mutex* mutex, uint32_t micros);
 	void Signal();
 	void SignalAll();
+	// Track F, F20j3 (KYTY_DIAG_B32): the slot + 1 of the last signaller if it signalled at or after since_ns, else 0.
+	[[nodiscard]] int32_t B32Waker(uint64_t since_ns) const;
 
 	static void SetWaitPollCallback(wait_poll_func_t callback);
 

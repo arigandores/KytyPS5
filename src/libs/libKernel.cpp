@@ -1,4 +1,5 @@
 #include "common/abi.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
@@ -2363,7 +2364,7 @@ static thread_local FiberObject*                  g_thread_return_fiber = nullpt
 static thread_local FiberObject*                  g_starting_fiber      = nullptr;
 static thread_local FiberObject*                  g_pending_idle_fiber  = nullptr;
 static thread_local FiberCpuContext               g_thread_fiber_context {};
-static std::mutex                                 g_fiber_owner_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                                 g_fiber_owner_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::unordered_map<FiberObject*, uint64_t> g_fiber_owner_thread;
 static std::unordered_map<uint64_t, FiberObject*> g_fiber_current_by_thread;
 
@@ -2453,6 +2454,12 @@ static bool FiberWaitAndEnterRunning(FiberObject* fiber, uint32_t* observed_stat
 	uint32_t   spin  = 0;
 	auto&      state = fiber->state;
 	auto       ref   = std::atomic_ref<uint32_t>(state);
+	// Track F, F20j3 (KYTY_DIAG_B32 W:fiber, item 574(g)(1)): the bounded (5 ms) wait for a running fiber; ended by the
+	// destructor on every return.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Fiber, fiber, 0, 5000);
+	}
 
 	for (;;) {
 		uint32_t expected = FIBER_STATE_IDLE;
@@ -3069,6 +3076,11 @@ int KYTY_SYSV_ABI KernelAioWaitRequest(int32_t id, int32_t* state, uint32_t* use
 
 	uint32_t waited  = 0;
 	auto     current = g_kernel_aio_state[id].load(std::memory_order_acquire);
+	// Track F, F20j3 (KYTY_DIAG_B32 W:aio, item 574(g)(1)): a 10 us sleep loop until the request is done.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && current == KERNEL_AIO_STATE_PROCESSING) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Aio, &g_kernel_aio_state[id], 0, usec != nullptr ? *usec : 0);
+	}
 	while (current == KERNEL_AIO_STATE_PROCESSING) {
 		if (usec != nullptr && *usec != 0 && waited >= *usec) {
 			*state = current;

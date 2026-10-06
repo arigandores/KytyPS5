@@ -1,4 +1,5 @@
 #include "graphics/host_gpu/vulkanCommon.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -160,7 +161,13 @@ public:
 
 	void Flush() {
 		std::unique_lock lock(m_mutex);
+		// Track F, F20j3 (KYTY_DIAG_B32 W:vma_flush, item 574(g)(1)): the caller waits for the VMA worker (not registered).
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::VmaFlush, this, 0, 0);
+		}
 		m_drained.wait(lock, [this] { return m_queue.empty() && !m_running; });
+		b32.EndSig(&m_drained);
 	}
 
 private:
@@ -176,6 +183,7 @@ private:
 			lock.lock();
 			m_running = false;
 			if (m_queue.empty()) {
+				Common::DiagB32::NoteSignal(&m_drained); // Track F, F20j3
 				m_drained.notify_all();
 			}
 		}
@@ -314,7 +322,7 @@ constexpr uint64_t RecycleMaxBytes = 256ull << 20u;
 constexpr size_t   RecycleMaxCount = 64;
 constexpr uint64_t RecycleMaxAgeNs = 2'000'000'000ull;
 
-std::mutex                g_recycle_mutex;
+Common::DiagB32::TrackedMutex<std::mutex>                g_recycle_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 std::deque<RecycledImage> g_recycled;
 uint64_t                  g_recycled_bytes = 0;
 

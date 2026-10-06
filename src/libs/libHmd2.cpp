@@ -1,4 +1,5 @@
 #include "common/emulatorConfig.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "graphics/guest_gpu/tile.h"
 #include "libs/agc.h"
 #include "libs/errno.h"
@@ -85,7 +86,7 @@ static_assert(offsetof(SceHmd2ReprojectionInitializeParam, reprojectionTiming) =
 static_assert(offsetof(SceHmd2ReprojectionInitializeParam, reserved) == 52);
 
 static std::atomic<bool> g_initialized = false;
-static std::mutex g_reprojection_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex> g_reprojection_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::atomic<ReprojectionState*> g_reprojection_state {nullptr};
 
 ReprojectionState* GetReprojectionState() {

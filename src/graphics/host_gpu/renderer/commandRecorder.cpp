@@ -1,4 +1,5 @@
 #include "graphics/host_gpu/renderer/commandRecorder.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/assert.h"
 #include "common/frameStats.h"
@@ -81,8 +82,9 @@ static_assert(std::is_trivially_copyable_v<Payloads::BeginBuffer>);
 static_assert(std::is_trivially_copyable_v<Payloads::Timestamp>);
 static_assert(std::is_trivially_copyable_v<Payloads::Generic>);
 
-std::mutex&                     RecordersMutex() {
-	static std::mutex mutex;
+// Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, item 574(g)(1)): the recorder list mutex is tracked.
+Common::DiagB32::TrackedMutex<std::mutex>& RecordersMutex() {
+	static Common::DiagB32::TrackedMutex<std::mutex> mutex;
 	return mutex;
 }
 
@@ -152,6 +154,7 @@ void CommandRecorder::Stop() {
 	m_stop.store(true, std::memory_order_release);
 	{
 		std::lock_guard lock(m_mutex);
+		Common::DiagB32::NoteSignal(&m_pending); // Track F, F20j3
 		m_pending.notify_all();
 	}
 	m_thread.join();
@@ -172,6 +175,7 @@ void CommandRecorder::WakeConsumer() {
 	if (m_consumer_waiting.load(std::memory_order_seq_cst)) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::RecordWakes, 1);
 		std::lock_guard lock(m_mutex);
+		Common::DiagB32::NoteSignal(&m_pending); // Track F, F20j3
 		m_pending.notify_one();
 	}
 }
@@ -179,6 +183,7 @@ void CommandRecorder::WakeConsumer() {
 void CommandRecorder::WakeWaiters() {
 	if (m_waiters.load(std::memory_order_seq_cst) != 0) {
 		std::lock_guard lock(m_mutex);
+		Common::DiagB32::NoteSignal(&m_progress); // Track F, F20j3
 		m_progress.notify_all();
 	}
 }
@@ -214,10 +219,16 @@ uint8_t* CommandRecorder::Reserve(uint32_t bytes) {
 			{
 				std::unique_lock lock(m_mutex);
 				m_waiters.fetch_add(1, std::memory_order_seq_cst);
+				// Track F, F20j3 (KYTY_DIAG_B32 W:rec_wait, item 574(g)(1)): the producer waits for the record thread.
+				Common::DiagB32::Mark b32;
+				if (Common::DiagB32::g_on) [[unlikely]] {
+					b32.BeginWReg(Common::DiagB32::Wait::RecWait, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Record), 0);
+				}
 				m_progress.wait_for(lock, WaitSlice, [this, head, want] {
 					const auto in_use = head - m_tail.load(std::memory_order_acquire);
 					return m_capacity - in_use >= want;
 				});
+				b32.EndSig(&m_progress);
 				m_waiters.fetch_sub(1, std::memory_order_seq_cst);
 			}
 			m_tail_seen = m_tail.load(std::memory_order_acquire);
@@ -560,9 +571,16 @@ void CommandRecorder::Drain() {
 		// the tail, and the record thread looks at the count after it moved the tail; it notifies
 		// under the mutex, which this thread releases only inside the wait.
 		m_waiters.fetch_add(1, std::memory_order_seq_cst);
+		// Track F, F20j3 (KYTY_DIAG_B32 W:rec_wait, item 574(g)(1)): the drain waits for the record thread - one mark
+		// over the loop of WaitSlice waits.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on && m_tail.load(std::memory_order_seq_cst) < target) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::RecWait, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Record), 0);
+		}
 		while (m_tail.load(std::memory_order_seq_cst) < target) {
 			m_progress.wait_for(lock, WaitSlice);
 		}
+		b32.EndSig(&m_progress);
 		m_waiters.fetch_sub(1, std::memory_order_seq_cst);
 	}
 	FS::Add(FS::Counter::RecordDrains, 1);
@@ -991,10 +1009,17 @@ void CommandRecorder::Loop() {
 				}
 #endif
 				std::unique_lock lock(m_mutex);
+				// Track F, F20j3 (KYTY_DIAG_B32 W:rec_idle, item 574(g)(1)): the record thread waits for records; peer -
+				// GuestGpu (the producer).
+				Common::DiagB32::Mark b32;
+				if (Common::DiagB32::g_on) [[unlikely]] {
+					b32.BeginWReg(Common::DiagB32::Wait::RecIdle, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Gpu), 0);
+				}
 				while (!m_stop.load(std::memory_order_acquire) &&
 				       m_head.load(std::memory_order_seq_cst) == tail) {
 					m_pending.wait_for(lock, SleepSlice);
 				}
+				b32.EndSig(&m_pending);
 				m_consumer_waiting.store(false, std::memory_order_seq_cst);
 			}
 			FS::Add(FS::Counter::RecordSleeps, 1);

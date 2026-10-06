@@ -1,4 +1,5 @@
 #include "common/assert.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/logging/log.h"
 #include "kernel/pthread.h"
 #include "libs/errno.h"
@@ -38,7 +39,7 @@ struct UltUlthreadRuntimeOptParam {
 };
 
 struct UltMutexState {
-	std::recursive_mutex mutex;
+	Common::DiagB32::TrackedMutex<std::recursive_mutex, Common::DiagB32::Wait::Ult> mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:ult, ROADMAP s122 item 574(g)(1))
 	uint32_t             attribute = 0;
 };
 
@@ -65,7 +66,7 @@ struct UltQueueDataResourcePoolState {
 };
 
 struct UltQueueState {
-	std::mutex                       mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                       mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	std::deque<std::vector<uint8_t>> items;
 	uint64_t                         data_size    = 0;
 	uint32_t                         capacity     = 0;
@@ -87,7 +88,7 @@ struct UltUlthreadState {
 	LibKernel::Pthread thread = nullptr;
 };
 
-static std::mutex                                                    g_ult_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                                                    g_ult_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::unordered_map<void*, std::shared_ptr<UltMutexState>>     g_ult_mutexes;
 static std::unordered_map<void*, std::shared_ptr<UltSemaphoreState>> g_ult_semaphores;
 static std::unordered_map<void*, UltResourcePoolState>               g_ult_resource_pools;
@@ -141,6 +142,7 @@ static int KYTY_SYSV_ABI UltFinalize() {
 		g_ult_ulthreads.clear();
 	}
 	for (const auto& state: semaphores) {
+		Common::DiagB32::NoteSignal(&state->available); // Track F, F20j3
 		state->available.notify_all();
 	}
 
@@ -630,7 +632,13 @@ static int KYTY_SYSV_ABI UltSemaphoreAcquire(void* semaphore, int32_t num_resour
 		return ULT_ERROR_STATE;
 	}
 	state->waiters++;
+	// Track F, F20j3 (KYTY_DIAG_B32 W:ult, item 574(g)(1)): the ULT semaphore wait.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Ult, state.get(), 0, 0);
+	}
 	state->available.wait(lock, [&] { return !state->alive || state->resources >= num_resource; });
+	b32.EndSig(&state->available);
 	state->waiters--;
 	if (!state->alive) {
 		return ULT_ERROR_STATE;
@@ -682,6 +690,7 @@ static int KYTY_SYSV_ABI UltSemaphoreRelease(void* semaphore, int32_t num_resour
 		}
 		state->resources += num_resource;
 	}
+	Common::DiagB32::NoteSignal(&state->available); // Track F, F20j3
 	state->available.notify_all();
 	return OK;
 }

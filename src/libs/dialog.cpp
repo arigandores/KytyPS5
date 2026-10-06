@@ -1,4 +1,5 @@
 #include "libs/dialog.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/emulatorConfig.h"
 #include "common/logging/log.h"
@@ -646,14 +647,14 @@ struct ErrorDialogParam {
 
 static_assert(sizeof(ErrorDialogParam) == 16);
 
-static std::mutex g_error_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex> g_error_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static int        g_error_status     = STATUS_NONE;
 static uint64_t   g_error_generation = 0;
 static uint64_t   g_error_revision   = 0;
 static int32_t    g_error_code       = 0;
 static void (*g_error_visibility_callback)() = nullptr;
 
-static void SetStatus(int status, std::unique_lock<std::mutex>& lock) {
+static void SetStatus(int status, std::unique_lock<Common::DiagB32::TrackedMutex<std::mutex>>& lock) {
 	const bool visibility_changed =
 	    (g_error_status == STATUS_RUNNING) != (status == STATUS_RUNNING);
 	g_error_status = status;

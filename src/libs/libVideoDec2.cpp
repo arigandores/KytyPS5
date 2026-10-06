@@ -1,4 +1,5 @@
 #include "common/abi.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "libs/errno.h"
 #include "libs/libs.h"
 #include "libs/videoDec2Decoder.h"
@@ -201,7 +202,7 @@ static_assert(sizeof(Videodec2OutputInfo) == 56);
 static_assert(sizeof(Videodec2FrameBuffer) == 32);
 static_assert(sizeof(Videodec2AvcPictureInfo) == 120);
 
-static std::mutex                g_decoder_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                g_decoder_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::unordered_set<void*> g_decoders;
 
 static bool IsOutputInfoSizeValid(size_t this_size) {

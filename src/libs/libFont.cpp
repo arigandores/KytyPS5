@@ -1,4 +1,5 @@
 #include "common/abi.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/logging/log.h"
@@ -375,9 +376,9 @@ struct FontWritingLineState {
 	FontWritingMetrics               metrics;
 };
 
-static std::mutex                g_glyph_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                g_glyph_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::unordered_set<void*> g_glyphs;
-static std::mutex                g_writing_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                g_writing_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::unordered_set<void*> g_writing_states;
 
 static void register_glyph(GlyphState* glyph) {

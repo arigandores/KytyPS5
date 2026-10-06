@@ -1,4 +1,5 @@
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/gates.h"
 
@@ -1426,7 +1427,7 @@ bool                  g_bf_pending_older = false; // an older submission was in 
 thread_local bool            t_bf_hold       = false;
 thread_local uint64_t        t_bf_hold_epoch = 0;
 thread_local uint64_t        t_bf_hold_ops   = 0;
-std::mutex                   g_gds_keys_mutex;
+Common::DiagB32::TrackedMutex<std::mutex>                   g_gds_keys_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 std::unordered_set<uint64_t> g_gds_keys;
 
 struct BfKey {
@@ -1489,7 +1490,7 @@ void BfAdopt(bool force) {
 }
 
 bool BfGdsKnown(uint64_t key) {
-	std::lock_guard<std::mutex> lock(g_gds_keys_mutex);
+	std::lock_guard lock(g_gds_keys_mutex);
 	return g_gds_keys.find(key) != g_gds_keys.end();
 }
 
@@ -1764,7 +1765,7 @@ void BindFloorNoteGdsBarrier() {
 	}
 	bool inserted = false;
 	{
-		std::lock_guard<std::mutex> lock(g_gds_keys_mutex);
+		std::lock_guard lock(g_gds_keys_mutex);
 		inserted = g_gds_keys.insert(key).second;
 	}
 	if (inserted) {
@@ -3797,7 +3798,7 @@ void FixB42Note(const FixB42Hit& probe, bool applied, uint32_t width, uint32_t h
 		uint32_t ext_lines      = 0; // FS3a: FixB42Ext lines of this extent
 		uint32_t ext_printed_at = 0; // FS3a: frame of the last FixB42Ext line of this extent
 	};
-	static std::mutex                                      m;
+	static Common::DiagB32::TrackedMutex<std::mutex>                                      m; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	static std::map<std::pair<uint32_t, uint32_t>, Counts> by_extent;
 	static uint64_t                                        hit_all    = 0;
 	static uint32_t                                        lines      = 0;

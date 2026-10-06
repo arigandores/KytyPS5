@@ -186,9 +186,16 @@ void GuestGpu::SendCommandSync(Common::UniqueFunction<void>&& command) {
 	std::binary_semaphore done {0};
 	SendCommand([operation = std::move(command), &done]() mutable {
 		operation();
+		Common::DiagB32::NoteSignal(&done); // Track F, F20j3: the releaser of the caller (GuestGpu)
 		done.release();
 	});
+	// Track F, F20j3 (KYTY_DIAG_B32 W:gpu_cmd, item 574(g)(1)): the caller waits until GuestGpu ran the command.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::GpuCmd, &done, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Gpu), 0);
+	}
 	done.acquire();
+	b32.EndSig(&done);
 }
 
 void GuestGpu::Submit(std::span<const uint32_t> draw_commands,
@@ -683,8 +690,18 @@ void GuestGpu::Enqueue(Submission submission) {
 
 void GuestGpu::WaitForIdle() {
 	Common::LockGuard lock(m_queue_mutex);
+	// Track F, F20j3 (KYTY_DIAG_B32 W:gpu_wait, item 574(g)(1), (a)(4)): the caller (AgcSuspendPoint -> Done) waits for
+	// GuestGpu to drain - one mark over the loop (the 10 ms poll wakeups of CondVar::Wait stay inside it); waker - the
+	// last m_idle signaller, peer - GuestGpu.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on && (m_processing || !m_commands.empty() || m_submission_count != 0)) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::GpuWait, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Gpu), 0);
+	}
 	while (m_processing || !m_commands.empty() || m_submission_count != 0) {
 		m_idle.Wait(&m_queue_mutex);
+	}
+	if (b32.Active()) [[unlikely]] {
+		b32.End(m_idle.B32Waker(b32.SinceNs()), false);
 	}
 }
 
@@ -2567,6 +2584,9 @@ struct BatonRelay {
 		namespace FS = Common::FrameStats;
 		SetThreadDescription(GetCurrentThread(), L"M4Baton");
 		g_baton_thread = true;
+		if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j3: the relay's slot - the peer of W:relay
+			Common::DiagB32::RegisterRole("Relay");
+		}
 		for (;;) {
 			CommandProcessor* job_processor = nullptr;
 			Pm4Execution*     job_execution = nullptr;
@@ -2620,12 +2640,13 @@ struct BatonRelay {
 				has_job = false;
 				done    = true;
 			}
+			Common::DiagB32::NoteSignal(&to_owner); // Track F, F20j3: the waker of W:relay
 			to_owner.notify_one();
 		}
 	}
 };
 
-std::mutex                  g_baton_mutex;
+Common::DiagB32::TrackedMutex<std::mutex>                  g_baton_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 std::unique_ptr<BatonRelay> g_baton;
 bool                        g_baton_stopped = false;
 
@@ -2636,7 +2657,7 @@ static bool BatonRelayRun(CommandProcessor& processor, Pm4Execution& execution, 
 	namespace FS = Common::FrameStats;
 	BatonRelay*  relay = nullptr;
 	{
-		std::lock_guard<std::mutex> lock(g_baton_mutex);
+		std::lock_guard lock(g_baton_mutex);
 		if (g_baton_stopped) {
 			return false;
 		}
@@ -2665,7 +2686,13 @@ static bool BatonRelayRun(CommandProcessor& processor, Pm4Execution& execution, 
 	relay->to_relay.notify_one();
 	{
 		std::unique_lock<std::mutex> lock(relay->mutex);
+		// Track F, F20j3 (KYTY_DIAG_B32 W:relay, item 574(a)(4)): GuestGpu parks while the relay runs its range.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on && !relay->done) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::Relay, relay, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Relay), 0);
+		}
 		relay->to_owner.wait(lock, [relay] { return relay->done; });
+		b32.EndSig(&relay->to_owner);
 	}
 	if (park_t0 != 0) {
 		FS::Add(FS::Counter::BatonParkNs, FS::NowNs() - park_t0);
@@ -2677,7 +2704,7 @@ static bool BatonRelayRun(CommandProcessor& processor, Pm4Execution& execution, 
 static void BatonRelayStop() {
 	std::unique_ptr<BatonRelay> relay;
 	{
-		std::lock_guard<std::mutex> lock(g_baton_mutex);
+		std::lock_guard lock(g_baton_mutex);
 		g_baton_stopped = true;
 		relay           = std::move(g_baton);
 	}

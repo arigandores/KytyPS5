@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_GPUTIMEPROFILER_H_
 
 #include "common/common.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "graphics/host_gpu/vulkanCommon.h"
 
 #include <atomic>
@@ -100,7 +101,7 @@ private:
 	uint32_t             m_next_chunk  = 0;
 	uint64_t             m_dropped     = 0;
 	std::deque<Pending>  m_pending;
-	std::mutex           m_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>           m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	// Harvest state: the previous timestamp (to compute deltas) and per-frame tables.
 	bool                 m_have_previous = false;
 	uint64_t             m_previous_ts   = 0;

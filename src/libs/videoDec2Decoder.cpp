@@ -1,4 +1,5 @@
 #include "libs/videoDec2Decoder.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "common/logging/log.h"
 
@@ -39,7 +40,7 @@ struct StoredPicture {
 	PictureInfo     info;
 };
 
-std::mutex                               g_picture_mutex;
+Common::DiagB32::TrackedMutex<std::mutex>                               g_picture_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 std::unordered_map<void*, StoredPicture> g_picture_infos;
 
 AVCodecID GetAvCodecId(uint32_t codec_type) {
@@ -344,7 +345,7 @@ private:
 	Config                    m_config;
 	AVCodecContext*           m_codec    = nullptr;
 	SwsContext*               m_sws      = nullptr;
-	std::mutex                m_mutex;
+	Common::DiagB32::TrackedMutex<std::mutex>                m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 	std::unordered_set<void*> m_picture_buffers;
 };
 

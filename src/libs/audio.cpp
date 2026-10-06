@@ -1,4 +1,5 @@
 #include "libs/audio.h"
+#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 
 #include "SDL.h"
 #include "common/assert.h"
@@ -254,12 +255,12 @@ static Audio* g_audio = nullptr;
 
 // Stall compensation (kernel/pthread.h): every open SDL output device is paused while the guest
 // clock is frozen, so audio already queued does not run ahead of the frozen simulation.
-static std::mutex                     g_frozen_devices_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>                     g_frozen_devices_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static std::vector<SDL_AudioDeviceID> g_frozen_devices;
 static bool                           g_audio_frozen = false;
 
 static void AudioTimeFreezeListener(bool frozen) {
-	std::lock_guard<std::mutex> lock(g_frozen_devices_mutex);
+	std::lock_guard lock(g_frozen_devices_mutex);
 	g_audio_frozen = frozen;
 	for (const auto device: g_frozen_devices) {
 		SDL_PauseAudioDevice(device, frozen ? 1 : 0);
@@ -267,13 +268,13 @@ static void AudioTimeFreezeListener(bool frozen) {
 }
 
 static void AudioRegisterDevice(SDL_AudioDeviceID device) {
-	std::lock_guard<std::mutex> lock(g_frozen_devices_mutex);
+	std::lock_guard lock(g_frozen_devices_mutex);
 	g_frozen_devices.push_back(device);
 	SDL_PauseAudioDevice(device, g_audio_frozen ? 1 : 0);
 }
 
 static void AudioUnregisterDevice(SDL_AudioDeviceID device) {
-	std::lock_guard<std::mutex> lock(g_frozen_devices_mutex);
+	std::lock_guard lock(g_frozen_devices_mutex);
 	std::erase(g_frozen_devices, device);
 }
 
@@ -282,7 +283,7 @@ namespace AudioInternal {
 // Track F, F8 (ROADMAP s122 item 441(v)): SDL2 counts the users of a subsystem in a Uint8 (SDL.c:119); every
 // SDL_InitSubSystem(SDL_INIT_AUDIO) without a matching quit adds 1, the 256th wraps the count to 0 and the next init
 // runs SDL_AudioInit, which closes every open device (SDL_audio.c:966) while the ports keep their ids.
-static std::mutex            g_sdl_audio_mutex;
+static Common::DiagB32::TrackedMutex<std::mutex>            g_sdl_audio_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
 static bool                  g_sdl_audio_acquired = false; // Guarded by g_sdl_audio_mutex.
 static std::atomic<uint64_t> g_sdl_audio_init_calls {0};
 static std::atomic<uint64_t> g_sdl_audio_acq_calls {0};
@@ -304,7 +305,7 @@ static bool FixF8Enabled() {
 
 int SdlAudioAcquire() {
 	g_sdl_audio_acq_calls.fetch_add(1, std::memory_order_relaxed);
-	std::lock_guard<std::mutex> lock(g_sdl_audio_mutex);
+	std::lock_guard lock(g_sdl_audio_mutex);
 	if (g_sdl_audio_acquired) {
 		return 0;
 	}
@@ -723,6 +724,11 @@ bool Audio::QueueSdlAudio(PortOut* port, int port_id, const void* data, bool blo
 		const auto min_queued_size     = static_cast<uint32_t>(
 		    std::max<uint64_t>((device_bytes_per_us * target_latency_us) / 1000000u, uint64_t {queue_size} * 2u));
 		const auto wait_start      = LibKernel::KernelGetProcessTime();
+		// Track F, F20j3 (KYTY_DIAG_B32 W:audio, item 574(g)(1)): a blocking output waits for the SDL queue to drain.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::Audio, port, 0, 200000);
+		}
 		while (SDL_GetQueuedAudioSize(port->audio_device) > min_queued_size) {
 			if (LibKernel::KernelGetProcessTime() - wait_start > 200000) {
 				port->trace_drops++;
@@ -736,6 +742,7 @@ bool Audio::QueueSdlAudio(PortOut* port, int port_id, const void* data, bool blo
 			}
 			Common::Thread::SleepMicro(1000);
 		}
+		b32.End(0, false);
 	}
 
 	if (SDL_QueueAudio(port->audio_device, queue_data, queue_size) < 0) {
@@ -911,7 +918,13 @@ uint32_t Audio::AudioOutOutputs(OutputParam* params, uint32_t num, bool blocking
 	// when a vibration port is present would rate-limit the device-backed ports to exactly 1x and
 	// prevent their SDL queues from building an underrun cushion.
 	if (blocking && max_wait_time != 0 && !any_port_has_device) {
+		// Track F, F20j3 (KYTY_DIAG_B32 W:audio, item 574(g)(1)): the output pacing sleep without a device.
+		Common::DiagB32::Mark b32;
+		if (Common::DiagB32::g_on) [[unlikely]] {
+			b32.BeginWReg(Common::DiagB32::Wait::Audio, this, 0, max_wait_time);
+		}
 		Common::Thread::SleepMicro(max_wait_time);
+		b32.End(0, false);
 	}
 
 	for (uint32_t i = 0; i < num; i++) {
@@ -1055,17 +1068,29 @@ int Audio::AudioInInput(Id handle, void* dest) {
 			wait_time = next - now;
 		}
 	}
+	// Track F, F20j3 (KYTY_DIAG_B32 W:audio, item 574(g)(1)): the input pacing sleep.
+	Common::DiagB32::Mark b32;
+	if (Common::DiagB32::g_on) [[unlikely]] {
+		b32.BeginWReg(Common::DiagB32::Wait::Audio, this, 0, wait_time);
+	}
 	Common::Thread::SleepMicro(wait_time);
+	b32.End(0, false);
 	uint32_t frames = snapshot.samples_num;
 	bool     failed = false;
 	if (dest != nullptr) {
 		if (snapshot.audio_device != 0) {
+			// Track F, F20j3 (KYTY_DIAG_B32 W:audio): the wait for captured data.
+			Common::DiagB32::Mark b32_q;
+			if (Common::DiagB32::g_on) [[unlikely]] {
+				b32_q.BeginWReg(Common::DiagB32::Wait::Audio, this, 0, 0);
+			}
 			while (!snapshot.asynchronous &&
 			       SDL_GetQueuedAudioSize(snapshot.audio_device) <
 			           frames * snapshot.bytes_per_frame &&
 			       SDL_GetAudioDeviceStatus(snapshot.audio_device) == SDL_AUDIO_PLAYING) {
 				Common::Thread::SleepMicro(1000);
 			}
+			b32_q.End(0, false);
 			failed = SDL_GetAudioDeviceStatus(snapshot.audio_device) != SDL_AUDIO_PLAYING;
 			if (!failed) {
 				if (snapshot.asynchronous) {
@@ -1852,9 +1877,15 @@ int KYTY_SYSV_ABI Audio3dPortPush(uint32_t port_id, uint32_t blocking) {
 
 		if (blocking == 1) {
 			auto wait_time = port->data_delay / 8;
+			// Track F, F20j3 (KYTY_DIAG_B32 W:audio, item 574(g)(1)): a blocking push waits for the playback thread.
+			Common::DiagB32::Mark b32;
+			if (Common::DiagB32::g_on) [[unlikely]] {
+				b32.BeginWReg(Common::DiagB32::Wait::Audio, port, 0, 0);
+			}
 			while (first_data->state != Audio3dData::State::Empty) {
 				Common::Thread::SleepMicro(wait_time);
 			}
+			b32.End(0, false);
 		}
 	}
 

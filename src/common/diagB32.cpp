@@ -62,7 +62,9 @@ const char* WaitName(uint8_t kind) {
 	                                        "flip_req", "vo_pace", "relay", "frame_pool", "rec_wait", "rec_idle",
 	                                        "asub_idle", "asub_drain", "ops_wait", "ops_idle", "pipe_wait", "pcopy",
 	                                        "pm_drain", "vma_flush", "rec_queue", "main_task", "main_idle", "spin", "av",
-	                                        "vblank", "once", "join", "addr", "aio", "fiber", "audio", "ult", "net", "rwlock"};
+	                                        "vblank", "once", "join", "addr", "aio", "fiber", "audio", "ult", "net", "rwlock",
+	                                        // F20j4 (item 581(v)(5)): Common::Thread::Join
+	                                        "emu_join"};
 	static_assert(sizeof(names) / sizeof(names[0]) == static_cast<size_t>(Wait::Count));
 	return kind < sizeof(names) / sizeof(names[0]) ? names[kind] : "?";
 }
@@ -744,8 +746,12 @@ void AsyncRefresh::Start(Fn work, void* user, uint64_t period_ns) {
 #endif
         for (;;) {
             const auto t0 = FrameStats::NowNs();
+            m_cur_begin.store(t0, std::memory_order_release); // F20j4 (RC3 of F20k3): the run in progress
             work(user);
-            m_work_ns.fetch_add(FrameStats::NowNs() - t0, std::memory_order_acq_rel);
+            const auto t1 = FrameStats::NowNs();
+            m_work_ns.fetch_add(t1 - t0, std::memory_order_acq_rel);
+            PushRun(t0, t1);
+            m_cur_begin.store(0, std::memory_order_release);
             m_runs.fetch_add(1, std::memory_order_acq_rel);
             std::unique_lock lock(impl->mutex);
             if (impl->cv.wait_for(lock, std::chrono::nanoseconds(period_ns), [impl] { return impl->stop; })) {
@@ -773,6 +779,68 @@ void AsyncRefresh::Stop() {
 
 uint64_t AsyncRefresh::TakeWorkNs() {
 	return m_work_ns.exchange(0, std::memory_order_acq_rel);
+}
+
+// F20j4 (item 581(v)(3), RC3 of F20k3): one writer (the refresher thread) - a per-entry sequence word, as WaitRing.
+void AsyncRefresh::PushRun(uint64_t begin_ns, uint64_t end_ns) {
+	const auto i = m_wpos.load(std::memory_order_relaxed);
+	auto&      e = m_ring[i % kRuns];
+	e.seq.store(2 * i + 1, std::memory_order_release);
+	e.begin.store(begin_ns, std::memory_order_relaxed);
+	e.end.store(end_ns, std::memory_order_relaxed);
+	e.seq.store(2 * i + 2, std::memory_order_release);
+	m_wpos.store(i + 1, std::memory_order_release);
+}
+
+void AsyncRefresh::TakeRuns(std::vector<Run>* out) {
+	const auto w = m_wpos.load(std::memory_order_acquire);
+	if (w - m_rpos > kRuns) {
+		m_lost += w - m_rpos - kRuns;
+		m_rpos = w - kRuns;
+	}
+	for (; m_rpos < w; m_rpos++) {
+		auto&      e  = m_ring[m_rpos % kRuns];
+		const auto s0 = e.seq.load(std::memory_order_acquire);
+		Run        r;
+		r.begin_ns = e.begin.load(std::memory_order_relaxed);
+		r.end_ns   = e.end.load(std::memory_order_relaxed);
+		std::atomic_thread_fence(std::memory_order_acquire);
+		const auto s1 = e.seq.load(std::memory_order_relaxed);
+		if (s0 != 2 * m_rpos + 2 || s1 != s0) {
+			m_lost++; // overwritten by a later lap before or while it was read
+			continue;
+		}
+		out->push_back(r);
+	}
+}
+
+void M5Charge::Add(const std::vector<AsyncRefresh::Run>& runs, uint64_t cur_begin) {
+	m_cur = cur_begin;
+	for (const auto& r: runs) {
+		if (cur_begin != 0 && r.begin_ns == cur_begin) {
+			m_cur = 0; // the run seen in progress finished before the take - the same run
+		}
+		m_runs.push_back(r);
+	}
+}
+
+uint64_t M5Charge::Window(uint64_t start, uint64_t end) const {
+	uint64_t sum = 0;
+	for (const auto& r: m_runs) {
+		const auto b = std::max(r.begin_ns, start);
+		const auto e = std::min(r.end_ns, end);
+		sum += e > b ? e - b : 0;
+	}
+	if (m_cur != 0) {
+		const auto b = std::max(m_cur, start);
+		sum += end > b ? end - b : 0;
+	}
+	return sum;
+}
+
+void M5Charge::Prune(uint64_t from) {
+	m_runs.erase(std::remove_if(m_runs.begin(), m_runs.end(), [from](const AsyncRefresh::Run& r) { return r.end_ns <= from; }),
+	             m_runs.end());
 }
 
 } // namespace Core
@@ -1038,7 +1106,7 @@ void Mark::BeginW(Wait kind, const void* obj, int32_t peer_slot1, uint64_t req_u
 	m_mark       = Core::MarkWord(State::W, static_cast<uint8_t>(kind));
 	m_obj        = reinterpret_cast<uint64_t>(obj);
 	m_since      = FrameStats::NowNs();
-	m_peer       = peer_slot1;
+	m_peer       = peer_slot1 == slot1 ? 0 : peer_slot1; // F20j4 (RC2 of F20k3): never the thread itself
 	m_req_us     = req_us;
 	g_reg->WriteMark(m_slot, m_mark, m_obj, m_since, m_peer);
 	m_active = true;
@@ -1058,10 +1126,22 @@ void Mark::BeginWReg(Wait kind, const void* obj, int32_t peer_slot1, uint64_t re
 	m_mark       = Core::MarkWord(State::W, static_cast<uint8_t>(kind));
 	m_obj        = reinterpret_cast<uint64_t>(obj);
 	m_since      = FrameStats::NowNs();
-	m_peer       = peer_slot1;
+	m_peer       = peer_slot1 == slot1 ? 0 : peer_slot1; // F20j4 (RC2 of F20k3): never the thread itself
 	m_req_us     = req_us;
 	g_reg->WriteMark(m_slot, m_mark, m_obj, m_since, m_peer);
 	m_active = true;
+}
+
+// F20j4 (item 581(v)(4), RC4 of F20k3): the slot's mark is written only by this thread - the load is exact.
+void Mark::BeginWLock(Wait kind, const void* obj, int32_t peer_slot1) {
+	const auto slot1 = SelfSlotIfRegistered();
+	if (slot1 <= 0 || g_reg == nullptr) {
+		return;
+	}
+	if ((g_reg->slots[slot1 - 1].mark.load(std::memory_order_relaxed) >> 8u) == static_cast<uint32_t>(State::H)) {
+		return;
+	}
+	BeginWReg(kind, obj, peer_slot1, 0);
 }
 
 void Mark::EndSlow(int32_t waker_slot1, bool timed_out) {
@@ -1312,7 +1392,8 @@ private:
 	// F20j2 (item 552(v)(1)): per slot, the kernel-only class (Sr / Sw:<reason> / S) at the samples with a snapshot.
 	std::vector<uint16_t>     m_kcodes = std::vector<uint16_t>(static_cast<size_t>(kSlots) * kHist, 0);
 	Core::KqSchedule          m_sched;
-	uint64_t                  m_win_m5r_ns = 0;
+	Core::M5Charge            m_m5c;          // F20j4 (item 581(v)(3), RC3 of F20k3)
+	std::vector<Core::AsyncRefresh::Run> m_m5_runs;
 	uint64_t                  m_hpos   = 0;
 	uint64_t                  m_last_t = 0;
 	uint64_t                  m_prev_cyc[kSlots] {};
@@ -1616,11 +1697,11 @@ void Sampler::RefreshCounters() {
 void Sampler::CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t flip_slot1, uint32_t src, bool snap,
                           uint64_t proc_us, uint64_t busy_us, uint64_t idle_us, uint64_t lag_us, uint64_t print_ns) {
 	const uint64_t start = m_win_start;
-	const uint64_t extra = m_win_extra_ns + print_ns; // F20j2 RC6: the report print inside this window
-	const uint64_t m5r   = m_win_m5r_ns;
+	// F20j4 (item 581(v)(3), RC3 of F20k3): the M5 refresh time inside (start, flip_ns] - this window's own (RC9).
+	const uint64_t m5r   = m_m5c.Window(start, flip_ns);
+	const uint64_t extra = m_win_extra_ns + print_ns + m5r; // F20j2 RC6: the report print inside this window
 	m_win_start          = flip_ns;
 	m_win_extra_ns       = 0;
-	m_win_m5r_ns         = 0;
 	// F20j2 (item 552(v)(1)): the schedule's new window; queries of samples already after the flip belong to it.
 	{
 		uint64_t carried = 0;
@@ -1799,9 +1880,13 @@ void Sampler::ProcessFlips() {
 		m_c.ring_drop += pub - m_seen_flips - kFlipRing;
 		m_seen_flips = pub - kFlipRing;
 	}
-	// F20j3 (item 574(g)(4)): the refresh runs on the refresher thread; its time finished since the previous flip goes
-	// into instr_us and m5r_us of the new window as before (RC9; it is no longer sampler time - no gap of samples).
-	const uint64_t m5r = m_m5r.TakeWorkNs();
+	// F20j3 (item 574(g)(4)): the refresh runs on the refresher thread (no gap of samples). F20j4 (item 581(v)(3), RC3 of
+	// F20k3): its runs are charged to the windows they ran in - the begin of the run in progress first, then the finished
+	// runs; CloseWindow takes the overlap with its own window.
+	const uint64_t m5_cur = m_m5r.CurrentBegin();
+	m_m5_runs.clear();
+	m_m5r.TakeRuns(&m_m5_runs);
+	m_m5c.Add(m_m5_runs, m5_cur);
 	M5Adopt();
 	M5Snapshot();
 	uint64_t proc_us = 0;
@@ -1831,10 +1916,10 @@ void Sampler::ProcessFlips() {
 	const auto keep_from = m_win_start > 3000000000ull ? m_win_start - 3000000000ull : 0;
 	m_recent.erase(std::remove_if(m_recent.begin(), m_recent.end(), [&](const Core::WaitRec& w) { return w.end_ns < keep_from; }),
 	               m_recent.end());
-	// The boundary work runs after the flip: it is sampler time inside the new window (RC9 instr_us); F20j3 - plus the
-	// refresh time of the refresher thread (m5r, RC9 as before).
-	m_win_extra_ns += FrameStats::NowNs() - t0 + m5r;
-	m_win_m5r_ns += m5r;
+	// The boundary work runs after the flip: it is sampler time inside the new window (RC9 instr_us). F20j4: the M5
+	// refresh time is charged by CloseWindow; the finished runs that end before the open window are dropped.
+	m_win_extra_ns += FrameStats::NowNs() - t0;
+	m_m5c.Prune(m_win_start);
 }
 
 void Sampler::Run() {

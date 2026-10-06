@@ -22,6 +22,10 @@
 // "Level has started: <non-blank name>"; once, <s> seconds after the arm, the present thread sleeps <ms> inside the
 // mark H:present (present) or the GuestGpu thread sleeps <ms> between commands outside every mark (gpusleep).
 
+// F20j4 (HPP-652; ROADMAP s122 item 581(v)): the review fixes of F20k3 - the contended lock under an H mark keeps the H
+// mark (RC4), the TrackedMutex owner is cleared at the unlock and a peer is never the waiter itself (RC2), the M5 refresh
+// time is charged to the window it ran in (RC3), the kinds vblank / audio / aio / net / emu_join are EMU_WAIT (RC5).
+
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
@@ -62,14 +66,22 @@ enum class Wait : uint8_t {
 	// Host waits of the emulator itself, EmuMutex .. Av (item 574(d): without a waker and a peer - EMU_WAIT:<kind>):
 	EmuMutex, GpuWait, GpuCmd, FlipSlot, FlipDone, FlipCancel, FlipReq, VoPace, Relay, FramePool, RecWait, RecIdle,
 	ASubIdle, ASubDrain, OpsWait, OpsIdle, PipeWait, PCopy, PmDrain, VmaFlush, RecQueue, MainTask, MainIdle, Spin, Av,
-	// waits the guest asked for inside an HLE call (like cond / sem: GUEST_SLEEP:<kind> without a waker and a peer):
-	Vblank, Once, Join, Addr, Aio, Fiber, Audio, Ult, Net, Rwlock, Count
+	// waits inside a guest HLE call (F20j3; the class of each - IsEmuWait, F20j4 item 581(v)(5)):
+	Vblank, Once, Join, Addr, Aio, Fiber, Audio, Ult, Net, Rwlock,
+	// F20j4 (item 581(v)(5), RC5 of F20k3): Common::Thread::Join of an emulator thread (was "join" with PthreadJoin).
+	EmuJoin, Count
 };
 constexpr uint8_t kFirstEmuWait      = static_cast<uint8_t>(Wait::EmuMutex);
 constexpr uint8_t kFirstGuestHleWait = static_cast<uint8_t>(Wait::Vblank);
-// F20j3 (item 574(d)): EMU_WAIT kinds.
+// F20j3 (item 574(d)): EMU_WAIT kinds. F20j4 (item 581(v)(5), RC5 of F20k3): the class is by who clears the wait
+// condition. EMU_WAIT - the device emulation, the host I/O or an emulator thread: EmuMutex .. Av, Vblank (the present
+// thread counts the vblanks), Audio (the audio device emulation sets the pace), Aio (the emulator runs the request), Net
+// (the host network), EmuJoin. GUEST_SLEEP - another guest thread or a deadline the guest asked for: the older kinds
+// (cond, mutex, sem, psem, evf, eq, sleep) and Once, Join (PthreadJoin only), Addr, Fiber, Ult, Rwlock.
 [[nodiscard]] constexpr bool IsEmuWait(uint8_t kind) {
-	return kind >= kFirstEmuWait && kind < kFirstGuestHleWait;
+	return (kind >= kFirstEmuWait && kind < kFirstGuestHleWait) || kind == static_cast<uint8_t>(Wait::Vblank) ||
+	       kind == static_cast<uint8_t>(Wait::Audio) || kind == static_cast<uint8_t>(Wait::Aio) ||
+	       kind == static_cast<uint8_t>(Wait::Net) || kind == static_cast<uint8_t>(Wait::EmuJoin);
 }
 // F20j3: a wait whose waker is its peer (the owner at entry): item 550(g)(2)(iv) "mutex - to peer".
 [[nodiscard]] constexpr bool MutexLike(uint8_t kind) {
@@ -129,6 +141,12 @@ public:
 	// F20j3 (item 574(g)(1)): BeginW of a REGISTERED thread only (no lazy registration of worker threads); the
 	// emulator-wait sites and the primitives use it. A thread without a slot gets no mark.
 	void BeginWReg(Wait kind, const void* obj, int32_t peer_slot1, uint64_t req_us);
+	// F20j4 (item 581(v)(2), RC2 of F20k3): BeginW / BeginWReg / BeginWLock store a peer equal to the thread's own slot
+	// as 0 (a thread does not wait for itself - the peer is unknown).
+	// F20j4 (item 581(v)(4), RC4 of F20k3): a contended lock acquisition (Common::Mutex::LockB32, TrackedMutex) - as
+	// BeginWReg, but no mark while the slot's current mark is any H:<call> (the H mark already names this wait: H > W of
+	// item 550(g)(2); the inputs of RC7 / RC5 of item 550(v) stay as before F20j3).
+	void BeginWLock(Wait kind, const void* obj, int32_t peer_slot1);
 	// Ends the mark (restores the previous one). For a W mark a wait record is pushed if it lasted >= 10 ms, with the
 	// waker (slot + 1, 0 = none) and whether it ended by its timeout. Inline: at KYTY_DIAG_B32=0 (no Begin) a site's End
 	// is one test of this stack object's flag, no call.
@@ -189,10 +207,14 @@ inline void NoteSignal(const void* obj) {
 }
 
 // F20j3 (item 574(g)(1)): a std mutex type whose CONTENDED acquisition is marked W:<K> (default emu_mutex) with the peer
-// = the slot of the thread that took it last (stored after each acquisition at =1; a holder is the last taker - the
-// window between its acquisition and the store is not covered [I]). KYTY_DIAG_B32=0: lock() is one test of g_on and the
-// std lock; try_lock() tests g_on only after a success; unlock() is the std unlock. Not for a mutex used with
-// std::condition_variable (that needs std::unique_lock<std::mutex>).
+// = the slot of the thread that holds it exclusively (stored after each acquisition at =1). KYTY_DIAG_B32=0: lock() is
+// one test of g_on and the std lock; try_lock() tests g_on only after a success; unlock() is one test of g_on and the
+// std unlock. Not for a mutex used with std::condition_variable (that needs std::unique_lock<std::mutex>).
+// F20j4 (item 581(v)(2), RC2 of F20k3): at =1 the owner is cleared before the unlock (a recursive mutex - at the last
+// unlock of the holder), so the peer of a waiter is the current exclusive holder or 0: a writer that waits for readers
+// (lock_shared does not set the owner) or a holder that has not stored itself yet - peer 0 (EMU_WAIT:emu_mutex by item
+// 574(d)); never a released holder, never the waiter itself (an own-slot peer is stored as 0).
+// F20j4 (item 581(v)(4), RC4 of F20k3): no W mark under an active H:<call> of the slot (Mark::BeginWLock).
 template <class M, Wait K = Wait::EmuMutex>
 class TrackedMutex {
 public:
@@ -210,18 +232,23 @@ public:
 	bool try_lock() {
 		const bool ok = m_m.try_lock();
 		if (ok && g_on) [[unlikely]] {
-			m_owner.store(SelfSlotIfRegistered(), std::memory_order_relaxed);
+			TakeOwner();
 		}
 		return ok;
 	}
-	void unlock() { m_m.unlock(); }
+	void unlock() {
+		if (g_on) [[unlikely]] {
+			ReleaseOwner();
+		}
+		m_m.unlock();
+	}
 	void lock_shared() {
 		if (g_on) [[unlikely]] {
 			if (m_m.try_lock_shared()) {
 				return;
 			}
 			Mark b32;
-			b32.BeginWReg(K, this, m_owner.load(std::memory_order_relaxed), 0);
+			b32.BeginWLock(K, this, m_owner.load(std::memory_order_relaxed));
 			m_m.lock_shared();
 			b32.EndWithPeer(false);
 			return;
@@ -235,15 +262,31 @@ private:
 	void LockSlow() {
 		if (!m_m.try_lock()) {
 			Mark b32;
-			b32.BeginWReg(K, this, m_owner.load(std::memory_order_relaxed), 0);
+			b32.BeginWLock(K, this, m_owner.load(std::memory_order_relaxed));
 			m_m.lock();
 			b32.EndWithPeer(false);
 		}
-		m_owner.store(SelfSlotIfRegistered(), std::memory_order_relaxed);
+		TakeOwner();
+	}
+	// F20j4: m_depth is touched only by the exclusive holder (under the lock); > 1 only for a recursive mutex. An
+	// acquisition made at =0 (no depth) is released like the last one: the owner is cleared.
+	void TakeOwner() {
+		if (m_depth++ == 0) {
+			m_owner.store(SelfSlotIfRegistered(), std::memory_order_relaxed);
+		}
+	}
+	void ReleaseOwner() {
+		if (m_depth > 1) {
+			m_depth--;
+			return;
+		}
+		m_depth = 0;
+		m_owner.store(0, std::memory_order_relaxed);
 	}
 
 	M                    m_m;
 	std::atomic<int32_t> m_owner {0};
+	int32_t              m_depth = 0;
 };
 
 // =====================================================================================================================
@@ -517,11 +560,19 @@ void MarkMandatory(Report* report);
 
 // F20j3 (item 574(g)(4)): a periodic work (the M5 thread-list refresh) on its own thread, so that its cost makes no gap
 // of samples on the sampler thread. Start runs work(user) at once and then every period_ns (from the end of the
-// previous run); TakeWorkNs returns the time of the runs finished since the previous take (it goes into instr_us of
-// the window, as the refresh did on the sampler thread - RC9 unchanged).
+// previous run); TakeWorkNs returns the time of the runs finished since the previous take (tests).
+// F20j4 (item 581(v)(3), RC3 of F20k3): every run's [begin, end] is kept (a ring of kRuns, one writer - the refresher
+// thread, one reader); TakeRuns moves the runs finished since the previous take, CurrentBegin is the begin of the run
+// in progress (0 - none). The sampler reads CurrentBegin BEFORE TakeRuns (a finished run with that begin is the same
+// run) and charges the runs to the windows they ran in (M5Charge).
 class AsyncRefresh {
 public:
 	using Fn = void (*)(void* user);
+	struct Run {
+		uint64_t begin_ns = 0;
+		uint64_t end_ns   = 0;
+	};
+	static constexpr uint32_t kRuns = 64;
 	AsyncRefresh() = default;
 	~AsyncRefresh();
 	AsyncRefresh(const AsyncRefresh&)            = delete;
@@ -530,12 +581,43 @@ public:
 	void                   Stop(); // tests
 	[[nodiscard]] uint64_t TakeWorkNs();
 	[[nodiscard]] uint64_t Runs() const { return m_runs.load(std::memory_order_acquire); }
+	void                   TakeRuns(std::vector<Run>* out); // the reader
+	[[nodiscard]] uint64_t CurrentBegin() const { return m_cur_begin.load(std::memory_order_acquire); }
+	[[nodiscard]] uint64_t LostRuns() const { return m_lost; } // runs overwritten before their take (the reader's count)
+	void                   PushRun(uint64_t begin_ns, uint64_t end_ns); // the writer: the refresher thread (and tests)
 
 private:
+	struct RunEnt {
+		std::atomic<uint64_t> seq {0}; // 2 * index + 1 while written, 2 * index + 2 when complete
+		std::atomic<uint64_t> begin {0};
+		std::atomic<uint64_t> end {0};
+	};
 	struct Impl;
 	Impl*                 m_impl = nullptr;
 	std::atomic<uint64_t> m_work_ns {0};
 	std::atomic<uint64_t> m_runs {0};
+	std::atomic<uint64_t> m_cur_begin {0};
+	RunEnt                m_ring[kRuns];
+	std::atomic<uint64_t> m_wpos {0};
+	uint64_t              m_rpos = 0;
+	uint64_t              m_lost = 0;
+};
+
+// F20j4 (item 581(v)(3), RC3 of F20k3): the M5 refresh time charged to the window it ran in. Add - the runs taken at a
+// flip (finished, oldest first) and the begin of the run in progress read before the take (0 - none); Window(start,
+// end) - the overlap of the finished runs and of the running one (it lasts at least until end) with (start, end];
+// Prune(from) - drops the finished runs that end at or before from. The windows close in order, so a run that crosses
+// a flip is split: the part up to the flip goes to the closed window k, the rest to k + 1.
+class M5Charge {
+public:
+	void                   Add(const std::vector<AsyncRefresh::Run>& runs, uint64_t cur_begin);
+	[[nodiscard]] uint64_t Window(uint64_t start, uint64_t end) const;
+	void                   Prune(uint64_t from);
+	[[nodiscard]] size_t   Pending() const { return m_runs.size(); }
+
+private:
+	std::vector<AsyncRefresh::Run> m_runs;
+	uint64_t                       m_cur = 0;
 };
 
 } // namespace Core

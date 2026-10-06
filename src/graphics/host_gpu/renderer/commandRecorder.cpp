@@ -191,6 +191,10 @@ void CommandRecorder::WakeWaiters() {
 uint8_t* CommandRecorder::Reserve(uint32_t bytes) {
 	EXIT_IF(bytes == 0 || (bytes % RecordAlign) != 0 ||
 	        static_cast<uint64_t>(bytes) > m_capacity / 2u);
+	// Track F, F20j4 (KYTY_DIAG_B32 W:rec_wait, item 581(v)(1), RC1 of F20k3): one mark over the whole retry loop - begun
+	// at the first pass that finds the arena full, ended before the return (as Drain); the WaitSlice waits and the work
+	// between them stay W of one record.
+	Common::DiagB32::Mark b32;
 	for (;;) {
 		// This thread's own head: every ended record, published or staged. The shared m_head line is
 		// only ever written by this thread, never read by it.
@@ -220,15 +224,13 @@ uint8_t* CommandRecorder::Reserve(uint32_t bytes) {
 				std::unique_lock lock(m_mutex);
 				m_waiters.fetch_add(1, std::memory_order_seq_cst);
 				// Track F, F20j3 (KYTY_DIAG_B32 W:rec_wait, item 574(g)(1)): the producer waits for the record thread.
-				Common::DiagB32::Mark b32;
-				if (Common::DiagB32::g_on) [[unlikely]] {
+				if (Common::DiagB32::g_on && !b32.Active()) [[unlikely]] {
 					b32.BeginWReg(Common::DiagB32::Wait::RecWait, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Record), 0);
 				}
 				m_progress.wait_for(lock, WaitSlice, [this, head, want] {
 					const auto in_use = head - m_tail.load(std::memory_order_acquire);
 					return m_capacity - in_use >= want;
 				});
-				b32.EndSig(&m_progress);
 				m_waiters.fetch_sub(1, std::memory_order_seq_cst);
 			}
 			m_tail_seen = m_tail.load(std::memory_order_acquire);
@@ -257,6 +259,7 @@ uint8_t* CommandRecorder::Reserve(uint32_t bytes) {
 			Publish();
 			continue;
 		}
+		b32.EndSig(&m_progress); // F20j4 (RC1): the end of the whole retry loop (one test of the flag at =0)
 		return m_data.get() + index;
 	}
 }

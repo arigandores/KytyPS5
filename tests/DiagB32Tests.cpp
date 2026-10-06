@@ -8,6 +8,9 @@
 // refresh off the sampler thread (an 80 ms refresh - model), a wait loop with short wakeups under one mark (W share,
 // one record, waker and peer) and the contended Common::Mutex / TrackedMutex (W:emu_mutex, peer = owner). The two
 // runtime cases run last: Test::InitRuntime turns g_on on for the rest of the process.
+// F20j4 (HPP-652; ROADMAP s122 item 581(v), (d)): plus the kind partition by who clears the wait (RC5), the M5 refresh
+// charged to the window it ran in (RC3, model and the run ring), a writer waiting for readers and an own-slot peer
+// (RC2), a contended lock inside H:qlock / H:present (RC4).
 
 #include "common/diagB32.h"
 #include "common/threads.h"
@@ -19,6 +22,7 @@
 #include <cstring>
 #include <random>
 #include <mutex>
+#include <shared_mutex>
 #include <string>
 #include <thread>
 #include <vector>
@@ -824,11 +828,28 @@ static void TestKinds() {
 	CHECK(std::string(WaitName(static_cast<uint8_t>(Wait::GpuWait))) == "gpu_wait");
 	CHECK(std::string(WaitName(static_cast<uint8_t>(Wait::FlipReq))) == "flip_req");
 	CHECK(std::string(WaitName(static_cast<uint8_t>(Wait::Rwlock))) == "rwlock");
+	// F20j4 (item 581(v)(5)): emu_join appended after rwlock; join keeps its number and name (PthreadJoin only).
+	CHECK(static_cast<uint8_t>(Wait::EmuJoin) == static_cast<uint8_t>(Wait::Rwlock) + 1);
+	CHECK(static_cast<uint8_t>(Wait::Count) == static_cast<uint8_t>(Wait::EmuJoin) + 1);
+	CHECK(std::string(WaitName(static_cast<uint8_t>(Wait::EmuJoin))) == "emu_join");
+	CHECK(std::string(WaitName(static_cast<uint8_t>(Wait::Join))) == "join");
+	// F20j4 (item 581(v)(5)): EMU_WAIT - EmuMutex .. Av and vblank, audio, aio, net, emu_join; GUEST_SLEEP - the rest.
+	const std::vector<std::string> emu_hle = {"vblank", "audio", "aio", "net", "emu_join"};
+	const std::vector<std::string> guest   = {"cond", "mutex", "sem",   "psem", "evf",   "eq",  "sleep", "gpu_idle",
+	                                          "gpu_regmem", "once", "join", "addr", "fiber", "ult", "rwlock"};
+	uint32_t n_emu = 0;
 	for (uint8_t k = 1; k < static_cast<uint8_t>(Wait::Count); k++) {
-		const bool emu = k >= static_cast<uint8_t>(Wait::EmuMutex) && k <= static_cast<uint8_t>(Wait::Av);
+		const std::string n   = WaitName(k);
+		const bool        emu = (k >= static_cast<uint8_t>(Wait::EmuMutex) && k <= static_cast<uint8_t>(Wait::Av)) ||
+		                 std::find(emu_hle.begin(), emu_hle.end(), n) != emu_hle.end();
 		CHECK(IsEmuWait(k) == emu);
+		CHECK(emu != (std::find(guest.begin(), guest.end(), n) != guest.end())); // each kind in exactly one class
+		n_emu += emu ? 1 : 0;
 	}
-	CHECK(!IsEmuWait(static_cast<uint8_t>(Wait::Vblank)) && !IsEmuWait(static_cast<uint8_t>(Wait::Cond)));
+	CHECK(n_emu == 25 + 5);
+	CHECK(!IsEmuWait(static_cast<uint8_t>(Wait::Cond)) && !IsEmuWait(static_cast<uint8_t>(Wait::Join)));
+	CHECK(IsEmuWait(static_cast<uint8_t>(Wait::Vblank)) && IsEmuWait(static_cast<uint8_t>(Wait::EmuJoin)));
+	CHECK(!IsEmuWait(0) && !IsEmuWait(static_cast<uint8_t>(Wait::Count)));
 	CHECK(MutexLike(static_cast<uint8_t>(Wait::Mutex)) && MutexLike(static_cast<uint8_t>(Wait::EmuMutex)));
 	CHECK(MutexLike(static_cast<uint8_t>(Wait::Spin)) && !MutexLike(static_cast<uint8_t>(Wait::GpuWait)));
 	CHECK(!MutexLike(static_cast<uint8_t>(Wait::Cond)) && !MutexLike(static_cast<uint8_t>(Wait::FlipDone)));
@@ -1099,6 +1120,277 @@ static void TestEmuMutexRuntime() {
 	CHECK(recs.size() == 2 && recs[0].obj == reinterpret_cast<uint64_t>(&tm) && recs[1].obj == reinterpret_cast<uint64_t>(&m));
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+// F20j4 (HPP-652; ROADMAP s122 item 581(v))
+// ---------------------------------------------------------------------------------------------------------------------
+struct RunProbe {
+	std::atomic<bool> in_work {false};
+	std::atomic<bool> release {false};
+};
+
+static void ProbeWork(void* user) {
+	auto* p = static_cast<RunProbe*>(user);
+	p->in_work.store(true);
+	while (!p->release.load()) {
+		std::this_thread::yield();
+	}
+}
+
+static void TestM5Charge() {
+	Case("F20j4 (3), RC3 of F20k3: the M5 refresh time is charged to the window it ran in (model; the run ring)");
+	const uint64_t ms = 1000000;
+	// The RC3 scenario: window k = (1000, 1150] ms (a 150 ms frame), k+1 = (1150, 1270] ms; a 76.7 ms refresh.
+	const uint64_t s0 = 1000 * ms;
+	const uint64_t f1 = 1150 * ms;
+	const uint64_t f2 = 1270 * ms;
+	{
+		M5Charge c; // a run entirely inside k, taken at the flip of k: m5r(k) = its cost, m5r(k+1) = 0
+		c.Add({{s0 + 40 * ms, s0 + 40 * ms + 76700000}}, 0);
+		CHECK(c.Window(s0, f1) == 76700000);
+		c.Prune(f1);
+		c.Add({}, 0);
+		CHECK(c.Window(f1, f2) == 0 && c.Pending() == 0);
+	}
+	{
+		M5Charge c; // a run across the flip of k, finished before the take: split by the overlap
+		c.Add({{f1 - 30 * ms, f1 + 50 * ms}}, 0);
+		CHECK(c.Window(s0, f1) == 30 * ms);
+		c.Prune(f1);
+		CHECK(c.Pending() == 1);
+		c.Add({}, 0);
+		CHECK(c.Window(f1, f2) == 50 * ms);
+		c.Prune(f2);
+		CHECK(c.Pending() == 0);
+	}
+	{
+		M5Charge       c; // a run in progress at the take of k, finished before the take of k+1: k gets its part only once
+		const uint64_t b = f1 - 30 * ms;
+		c.Add({}, b);
+		CHECK(c.Window(s0, f1) == 30 * ms);
+		c.Prune(f1);
+		c.Add({{b, f1 + 50 * ms}}, 0);
+		CHECK(c.Window(f1, f2) == 50 * ms);
+	}
+	{
+		M5Charge       c; // the run seen in progress finished before the take: counted once
+		const uint64_t b = s0 + 20 * ms;
+		c.Add({{b, b + 10 * ms}}, b);
+		CHECK(c.Window(s0, f1) == 10 * ms);
+	}
+	{
+		M5Charge c; // two windows closed at one take (a batch): a run over both and a later one
+		c.Add({{s0 + 100 * ms, f1 + 20 * ms}, {f1 + 60 * ms, f1 + 70 * ms}}, 0);
+		CHECK(c.Window(s0, f1) == 50 * ms);
+		CHECK(c.Window(f1, f2) == 30 * ms);
+		c.Prune(f2);
+		CHECK(c.Pending() == 0);
+	}
+	// The run ring of AsyncRefresh: CurrentBegin while a run is in progress, the run with [begin, end] after it.
+	RunProbe     probe;
+	AsyncRefresh ar;
+	ar.Start(&ProbeWork, &probe, 1000000000ull);
+	while (!probe.in_work.load()) {
+		std::this_thread::yield();
+	}
+	const auto                     cur = ar.CurrentBegin();
+	std::vector<AsyncRefresh::Run> runs;
+	ar.TakeRuns(&runs);
+	CHECK(cur != 0 && runs.empty());
+	std::this_thread::sleep_for(std::chrono::milliseconds(5));
+	probe.release.store(true);
+	while (ar.Runs() < 1) {
+		std::this_thread::yield();
+	}
+	ar.TakeRuns(&runs);
+	CHECK(runs.size() == 1 && runs[0].begin_ns == cur && runs[0].end_ns >= cur + 4 * ms);
+	CHECK(ar.CurrentBegin() == 0);
+	ar.Stop();
+	AsyncRefresh lap; // more than kRuns runs before a take: the oldest are counted as lost
+	for (uint64_t i = 0; i < AsyncRefresh::kRuns + 6; i++) {
+		lap.PushRun(i * 10 + 1, i * 10 + 5);
+	}
+	std::vector<AsyncRefresh::Run> got;
+	lap.TakeRuns(&got);
+	CHECK(got.size() == AsyncRefresh::kRuns && lap.LostRuns() == 6 && !got.empty() && got[0].begin_ns == 61);
+	std::printf("  m5 charge: run in progress begin=%llu, taken runs=%zu, ring lost=%llu\n", static_cast<unsigned long long>(cur),
+	            runs.size(), static_cast<unsigned long long>(lap.LostRuns()));
+}
+
+static void TestPeerSelfRuntime() {
+	Case("F20j4 (2), RC2 of F20k3: a writer waiting for two readers - peer 0; an own-slot peer is stored as 0");
+	Test::InitRuntime();
+	TrackedMutex<std::shared_mutex> sm;
+	std::atomic<int32_t>            x_slot {0};
+	std::atomic<int32_t>            self_peer {-1};
+	std::atomic<int>                readers {0};
+	std::atomic<bool>               x_first {false};
+	std::atomic<bool>               writer_waits {false};
+	std::thread                     x([&] {
+		RegisterRole("TestX");
+		x_slot.store(SelfSlotIfRegistered());
+		sm.lock(); // X is the last exclusive holder; before F20j4 its slot stayed in the owner field after the unlock
+		sm.unlock();
+		x_first.store(true);
+		while (readers.load() < 2) {
+			std::this_thread::yield();
+		}
+		writer_waits.store(true);
+		sm.lock(); // waits for the two readers (lock_shared does not set the owner)
+		sm.unlock();
+		Mark self; // a mark given the thread's own slot as the peer
+		self.BeginWReg(Wait::GpuWait, &sm, SelfSlotIfRegistered(), 0);
+		MarkSnap s;
+		if (Test::ReadSlotMark(SelfSlotIfRegistered(), &s)) {
+			self_peer.store(s.peer);
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		self.End(0, false);
+	});
+	const auto reader = [&](const char* role) {
+		RegisterRole(role);
+		while (!x_first.load()) {
+			std::this_thread::yield();
+		}
+		sm.lock_shared();
+		readers.fetch_add(1);
+		while (!writer_waits.load()) {
+			std::this_thread::yield();
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(40));
+		sm.unlock_shared();
+	};
+	std::thread r1([&] { reader("TestR1"); });
+	std::thread r2([&] { reader("TestR2"); });
+	x.join();
+	r1.join();
+	r2.join();
+	const auto recs = RecordsOf(x_slot.load());
+	std::printf("  peer: records=%zu self_peer=%d\n", recs.size(), self_peer.load());
+	CHECK(self_peer.load() == 0);
+	CHECK(recs.size() == 2);
+	if (recs.size() == 2) {
+		CHECK(recs[0].kind == static_cast<uint8_t>(Wait::EmuMutex) && recs[0].obj == reinterpret_cast<uint64_t>(&sm));
+		CHECK(recs[0].peer1 == 0 && recs[0].waker1 == 0);
+		CHECK(recs[0].end_ns - recs[0].start_ns >= 20000000);
+		CHECK(recs[1].kind == static_cast<uint8_t>(Wait::GpuWait) && recs[1].peer1 == 0);
+	}
+	for (const auto& r: recs) {
+		CHECK(r.peer1 != x_slot.load() && r.waker1 != x_slot.load()); // no record names the waiter itself
+	}
+}
+
+static void TestLockUnderHRuntime() {
+	Case("F20j4 (4), RC4 of F20k3: a contended lock inside H:qlock / H:present keeps the H mark; without H - W:emu_mutex");
+	Test::InitRuntime();
+	Common::Mutex            m;
+	TrackedMutex<std::mutex> tm;
+	// B: 1 - waits for m inside H:qlock, 2 - waits for tm inside H:present, 3 - waits for m without an H mark, 4 - done.
+	std::atomic<int>     stage {0};
+	std::atomic<bool>    a_holds {false};
+	std::atomic<bool>    b_mid {false};
+	std::atomic<bool>    a_again {false};
+	std::atomic<int32_t> a_slot {0};
+	std::atomic<int32_t> b_slot {0};
+	std::thread          a([&] {
+		RegisterRole("TestHA");
+		a_slot.store(SelfSlotIfRegistered());
+		m.Lock();
+		tm.lock();
+		a_holds.store(true);
+		while (stage.load() < 1) {
+			std::this_thread::yield();
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(40));
+		m.Unlock();
+		while (stage.load() < 2) {
+			std::this_thread::yield();
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(40));
+		tm.unlock();
+		while (!b_mid.load()) {
+			std::this_thread::yield();
+		}
+		m.Lock();
+		a_again.store(true);
+		while (stage.load() < 3) {
+			std::this_thread::yield();
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(40));
+		m.Unlock();
+	});
+	std::thread b([&] {
+		RegisterRole("TestHB");
+		b_slot.store(SelfSlotIfRegistered());
+		while (!a_holds.load()) {
+			std::this_thread::yield();
+		}
+		{
+			Mark h;
+			h.BeginH(Call::QLock);
+			stage.store(1);
+			m.Lock();
+			m.Unlock();
+			h.End(0, false);
+		}
+		{
+			Mark h;
+			h.BeginH(Call::Present);
+			stage.store(2);
+			tm.lock();
+			tm.unlock();
+			h.End(0, false);
+		}
+		b_mid.store(true);
+		while (!a_again.load()) {
+			std::this_thread::yield();
+		}
+		stage.store(3);
+		m.Lock();
+		m.Unlock();
+		stage.store(4);
+	});
+	// Samples of B's slot every 1 ms by the clock; a sample counts only if the stage did not change around it.
+	uint32_t h_ok[4] {};
+	uint32_t w_n[4] {};
+	uint32_t w_emu[4] {};
+	while (b_slot.load() == 0 || stage.load() == 0) {
+		std::this_thread::yield();
+	}
+	auto next = std::chrono::steady_clock::now();
+	while (stage.load() != 4) {
+		const int s0 = stage.load();
+		MarkSnap  snap;
+		const bool got = Test::ReadSlotMark(b_slot.load(), &snap);
+		const int s1 = stage.load();
+		if (got && s0 == s1 && s0 >= 1 && s0 <= 3) {
+			const auto st   = static_cast<State>(snap.mark >> 8u);
+			const auto kind = static_cast<uint8_t>(snap.mark & 0xffu);
+			const auto want = s0 == 1 ? static_cast<uint8_t>(Call::QLock) : static_cast<uint8_t>(Call::Present);
+			h_ok[s0] += st == State::H && kind == want ? 1 : 0;
+			w_n[s0] += st == State::W ? 1 : 0;
+			w_emu[s0] += st == State::W && kind == static_cast<uint8_t>(Wait::EmuMutex) ? 1 : 0;
+		}
+		next += std::chrono::milliseconds(1);
+		while (std::chrono::steady_clock::now() < next && stage.load() != 4) {
+			std::this_thread::yield();
+		}
+	}
+	a.join();
+	b.join();
+	const auto recs = RecordsOf(b_slot.load());
+	std::printf("  under H: qlock H=%u W=%u; present H=%u W=%u; no H W:emu_mutex=%u W=%u; records=%zu\n", h_ok[1], w_n[1],
+	            h_ok[2], w_n[2], w_emu[3], w_n[3], recs.size());
+	CHECK(h_ok[1] >= 10 && w_n[1] == 0); // inside H:qlock the samples stay H:qlock
+	CHECK(h_ok[2] >= 10 && w_n[2] == 0); // inside H:present the samples stay H:present
+	CHECK(w_emu[3] >= 10);               // the control without an H mark: W:emu_mutex
+	CHECK(recs.size() == 1);             // only the wait without an H mark is a record
+	if (recs.size() == 1) {
+		CHECK(recs[0].kind == static_cast<uint8_t>(Wait::EmuMutex) && recs[0].obj == reinterpret_cast<uint64_t>(&m));
+		CHECK(recs[0].peer1 == a_slot.load() && recs[0].waker1 == a_slot.load());
+		CHECK(recs[0].end_ns - recs[0].start_ns >= 20000000);
+	}
+}
+
 int main() {
 	TestPartition();
 	TestI1();
@@ -1119,8 +1411,11 @@ int main() {
 	TestRingHold();
 	TestPeerFields();
 	TestM5Async();
+	TestM5Charge();
 	TestWaitLoopRuntime(); // runtime cases last: g_on stays on
 	TestEmuMutexRuntime();
+	TestPeerSelfRuntime();
+	TestLockUnderHRuntime();
 	std::printf("cases %d, failures %d\n", g_cases, g_fail);
 	std::printf("%s\n", g_fail == 0 ? "ALL OK" : "FAILED");
 	return g_fail == 0 ? 0 : 1;

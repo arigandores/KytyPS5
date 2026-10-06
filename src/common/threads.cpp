@@ -251,10 +251,11 @@ Thread::~Thread() {
 void Thread::Join() {
 	EXIT_IF(m_thread->finished || m_thread->auto_delete);
 
-	// Track F, F20j3 (KYTY_DIAG_B32 W:join, item 574(g)(1)).
+	// Track F, F20j3 (KYTY_DIAG_B32, item 574(g)(1)); F20j4 (item 581(v)(5), RC5 of F20k3): W:emu_join - an emulator
+	// thread (PthreadJoin keeps W:join).
 	DiagB32::Mark b32;
 	if (DiagB32::g_on) [[unlikely]] {
-		b32.BeginWReg(DiagB32::Wait::Join, this, 0, 0);
+		b32.BeginWReg(DiagB32::Wait::EmuJoin, this, 0, 0);
 	}
 	m_thread->m_thread.join();
 	b32.End(0, false);
@@ -334,6 +335,8 @@ void Mutex::Lock() {
 // Track F, F20j3: a contended acquisition of a REGISTERED thread is marked W:emu_mutex; the peer is the owner at entry
 // (CRITICAL_SECTION::OwningThread - the owner's thread id, read without the lock: a holder that just released gives a
 // stale peer [I]). The waker of the record is the peer (mutex-like, item 550(g)(2)(iv)).
+// F20j4 (item 581(v)(4), RC4 of F20k3): BeginWLock - no W:emu_mutex while the slot's mark is any H:<call> (H:qlock around
+// the queue mutex, H:present, ...): the H mark stays the sample's state.
 void Mutex::LockB32() {
 #ifdef KYTY_WIN_CS
 	if (TryEnterCriticalSection(&m_mutex->m_cs) != 0) {
@@ -341,7 +344,7 @@ void Mutex::LockB32() {
 	}
 	const auto      owner = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(m_mutex->m_cs.OwningThread));
 	DiagB32::Mark   b32;
-	b32.BeginWReg(DiagB32::Wait::EmuMutex, this, DiagB32::SlotOfOsTid(owner), 0);
+	b32.BeginWLock(DiagB32::Wait::EmuMutex, this, DiagB32::SlotOfOsTid(owner));
 	EnterCriticalSection(&m_mutex->m_cs);
 	b32.EndWithPeer(false);
 #else
@@ -349,7 +352,7 @@ void Mutex::LockB32() {
 		return;
 	}
 	DiagB32::Mark b32;
-	b32.BeginWReg(DiagB32::Wait::EmuMutex, this, 0, 0);
+	b32.BeginWLock(DiagB32::Wait::EmuMutex, this, 0);
 	m_mutex->m_mutex.lock();
 	b32.EndWithPeer(false);
 #endif

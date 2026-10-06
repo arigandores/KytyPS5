@@ -1,0 +1,7 @@
+2026-10-06T06:42:12Z start S18b; read ROADMAP p.569,571,573 at dd5ca6fd
+2026-10-06T06:42:45Z chk_s18b.py done 8b663538
+2026-10-06T06:44:46Z qlines.py done e3b0c442
+2026-10-06T06:45:12Z qlines done bd1535e1
+2026-10-06T06:46:46Z refs_s18b done dd21454b
+2026-10-06T06:46:55Z verdict PASS_WITH_FIXES decided (RC1 close path at default 3)
+2026-10-06T06:48:29Z FACTS S18b appended; review copied 1ea96298

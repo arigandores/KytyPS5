@@ -1,0 +1,36 @@
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:40	if (value == nullptr || value[0] == '\0') {	+1: return 3;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:43	if (value[0] < '0' || value[0] > '3' || value[1] != '\0') {	+1: return 0;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:51	static const int mode = ParseMode(std::getenv("KYTY_S_REPLAY"));	+1: return mode;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:55	bool CaptureOn() {	+1: return Mode() == 1 || Mode() == 2;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:59	bool RebuildOn() {	+1: return Mode() == 1 || Mode() == 3;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:872	: m_directory(std::move(directory)), m_compat(std::move(compat)) {}	+1: 
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1049	std::ifstream pointer(m_directory / "replay.cur");	+1: uint64_t      current = 0;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1051	if (!(pointer >> current) || current == 0) {	+1: state = "absent";
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1082	if (!Common::File::CreateDirectories(m_directory)) {	+1: return false;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:1111	m_thread       = std::thread([this] { Loop(); });	+1: }
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1934	if (mode == 0) {	+1: if (applied_mode != 0) {
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7045	if (mode == 0) {	+1: return;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7064	m_replay_store       = std::make_unique<ShaderReplay::Store>(directory, compat);	+1: auto     catalogue   = std::make_unique<ShaderReplay::Catalogue>();
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7074	if (ShaderReplay::CaptureOn()) {	+1: ShaderReplay::Catalogue initial;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7085	m_program_cache->replay_active    = true;	+1: }
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6610	if (!ShaderReplay::RebuildOn()) {	+1: return;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6720	if (!ShaderReplay::RebuildOn()) {	+1: skip = "mode";
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6722	} else if (m_replay_state == "mismatch") {	+1: const auto n = static_cast<uint32_t>(m_replay_catalogue->pipes.size());
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6728	} else if (m_replay_state != "ok" || m_replay_catalogue->pipes.empty()) {	+1: skip = "no_catalogue";
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6730	} else if (RecipesFileCurrent(m_recipes_path, expected)) {	+1: skip = "recipes_current";
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6736	m_replay_rebuild = skip == nullptr;	+1: }
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6744	if (m_replay_rebuild) [[unlikely]] {	+1: ReplayRebuild();
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7615	std::ofstream file(m_replay_store->Directory() / "rebuild_manifest.tsv", std::ios::binary | std::ios::trunc);	+1: file << manifest;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6609	void PipelineCache::ReplayCloseStop() {	+1: if (!ShaderReplay::RebuildOn()) {
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4850	m_precache_stop.store(true);	+1: if (m_precache_thread.joinable()) {
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6615	m_precache_stop.store(true);	+1: if (m_precache_thread.joinable()) {
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6807	for (uint32_t i = 0; i < count && !r.Failed() && !m_precache_stop.load(); i++) {	+1: const size_t record_begin = r.Pos();
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7032	VulkanLogMemoryStats();	+1: WaitForPendingPipelines();
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5037	m_jobs.push_back(std::move(job));	+1: }
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4039	if (replay_active) [[unlikely]] {	+1: // Track S, S17a: a new permutation is captured at once (and its source, the first time the run sees it).
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4701	if (replay_capture != nullptr) {	+1: permutation.replay_flags |= ReplayCapturePending;
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6245	if (m_replay_capture != nullptr) [[unlikely]] {	+1: ReplayCapturePipe(1, key.vertex_shader_ids[0], ps_active ? key.ps_shader_id : 0, &key); // S17a
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6277	if (m_replay_capture != nullptr) [[unlikely]] {	+1: ReplayCapturePipe(2, program_id, 0, nullptr); // S17a
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6872	if (m_replay_capture != nullptr) [[unlikely]] {	+1: ReplayCapturePipe(1, vs_program.id, key.ps_shader_id, &key); // S17a
+62ff7b5b:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6957	if (m_replay_capture != nullptr) [[unlikely]] {	+1: ReplayCapturePipe(2, program.id, 0, nullptr); // S17a
+62ff7b5b:src/graphics/presentation/window/window.cpp:1029	cache.ReplayCloseStop();	+1: return false;

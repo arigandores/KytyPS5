@@ -1,0 +1,47 @@
+pair	src	pick	whole_pid	code_pid	files_eq	pm_eq_all	src_vs_pick
+283a6ef9->2dd9f902	False	False	True	True	[0	9	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp; 0	9	tests/shaderCfgTests.cpp]
+29542308->6c4903a8	False	True	True	True	[0	9	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp; 0	9	tests/shaderCfgTests.cpp]
+a2fee0d9->60f6c006	True	True	True	True	[0	9	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp]
+9635cb0f->a139a145	False	False	True	True	[0	9	tests/shaderCfgTests.cpp]
+9238a182->b738443b	True	True	True	True	[0	9	tests/shaderCfgTests.cpp]
+5bd93ea1->4fbea82e	True	True	True	True	[0	9	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp]
+fe4b227a->62ff7b5b	True	True	True	True	[0	9	tests/shaderCfgTests.cpp]
+range paths 21 not in sources []
+code paths in range: ['src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp', 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.h', 'src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp', 'src/graphics/host_gpu/renderer/pipeline/shaderReplay.h', 'src/graphics/presentation/window/window.cpp', 'tests/shaderCfgTests.cpp']
+numstat fe4b227a..HEAD on range code paths:
+0	9	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+0	6	src/graphics/presentation/window/window.cpp
+0	9	tests/shaderCfgTests.cpp
+
+removed-vs-main lines:
+   @@ -28 +27,0 @@
+   -#include "graphics/host_gpu/renderer/diagF5.h"
+   @@ -3919,8 +3917,0 @@ struct PipelineCache::ProgramCache {
+   -				if (DiagF5::On()) [[unlikely]] {
+   -					// Track F, F16d (KYTY_DIAG_F5, item 427(v), reference): a permutation found by specialization whose
+   -					// images include an FMASK image (read as the identity fragment map). Memo hits do not reach here.
+   -					if (std::ranges::any_of(permutation->specialization.images,
+   -					                        [](const auto& image) { return image.fmask; })) {
+   -						DiagF5::Add(DiagF5::Counter::FmaskRead);
+   -					}
+   -				}
+   @@ -21 +20,0 @@
+   -#include "common/diagB32.h"
+   @@ -1309,5 +1307,0 @@ void WindowTestMinimizeNoteGuestText(const char* text, size_t size) {
+   -	if (Common::DiagB32::g_test_on && text != nullptr) [[unlikely]] { // Track F, F20j: KYTY_TEST_B32 arms on the same line
+   -		if (TestMinimizeIsLevelEntry(std::string_view(text, size))) {
+   -			Common::DiagB32::TestArm();
+   -		}
+   -	}
+   @@ -15819,4 +15818,0 @@ void TestShaderReplayWalkBits() {
+   -// Track S, S16d (HPP-608, ROADMAP s122 item 516(v)): probe P-S16 of S-replay (tests/S16dProbe.inc).
+   -#define KYTY_S16D_HAVE_F19 1
+   -#include "S16dProbe.inc"
+   -
+   @@ -15827,5 +15822,0 @@ int main() {
+   -  if (const char *s16d_jobs = std::getenv("KYTY_S16D_JOBS"); s16d_jobs != nullptr) {
+   -    // Track S, S16d (HPP-608): probe P-S16, read-only over the S13b catalogue (S16dProbe.inc).
+   -    const char *s16d_out = std::getenv("KYTY_S16D_OUT");
+   -    return s16d_out == nullptr ? 1 : S16dProbe::Main(s16d_jobs, s16d_out);
+   -  }
+FAIL

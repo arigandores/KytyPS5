@@ -1,0 +1,22 @@
+== ks2 27696359
+   81 ShaderReplay: mode=3 dir=_ShaderCache\PPSA21564\replay compat=ok generation=7 corrupt=0 sources=392 specs=454 pipes=420 test=stop
+   514952 ShaderReplay: close stop requested precache_active=1
+   514954 ShaderReplay: rebuild records=420 prepared=210 rejected=0 pending=210 rej_src=0 rej_fused=0 rej_key=0 rej_version=0 rej_shape=0 rej_translate=0 rej_emit=0 rej_val=0 rej_write=0 rej_ref=0 translate_ms=1953 wall_ms=6467 perms_new=254 perms_ca
+   514957 ShaderReplay: close stop joined wait_ms=151
+== n0h 645873574
+   85 PipelinePrecache: no _ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19\pipelines.bin yet
+   3797 ShaderPreparation: ready completed=0 total=0 skipped=0
+   46539 PipelinePrecache: saved 6 recipes (1940 bytes) (1747 us)
+   2821284 PipelinePrecache: saved 277 recipes (2311995 bytes)
+== e3h 602998694
+   81 ShaderReplay: mode=3 dir=_ShaderCache\PPSA21564\replay compat=ok generation=4 corrupt=0 sources=275 specs=287 pipes=277 test=none
+   86 ShaderReplay: rebuild skipped reason=recipes_current
+   698 PipelinePrecache: 277 recipes -> 194 graphics + 83 compute pipelines queued, 0 skipped, 455 sources loaded, complete, 96 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   704 PipelinePrecache: all pipelines created, 96 ms
+   4415 ShaderPreparation: ready completed=277 total=277 skipped=0
+== kn2 115251888
+   81 ShaderReplay: mode=3 dir=_ShaderCache\PPSA21564\replay compat=ok generation=7 corrupt=0 sources=392 specs=454 pipes=420 test=none
+   704417 ShaderReplay: rebuild records=420 prepared=420 rejected=0 pending=0 rej_src=0 rej_fused=0 rej_key=0 rej_version=0 rej_shape=0 rej_translate=0 rej_emit=0 rej_val=0 rej_write=0 rej_ref=0 translate_ms=3259 wall_ms=3706 perms_new=200 perms_cach
+   705237 PipelinePrecache: 420 recipes -> 322 graphics + 98 compute pipelines queued, 0 skipped, 720 sources loaded, complete, 107 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   705241 PipelinePrecache: all pipelines created, 107 ms
+   708943 ShaderPreparation: ready completed=420 total=420 skipped=0

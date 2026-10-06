@@ -101,7 +101,8 @@ const char* StandName(Stand stand) {
 void StandRequestClose() {
 	// KYTY_S_REPLAY_TEST=stop: the same event a click on the close button of the window produces; the preparation loop
 	// (window.cpp, WindowPrepareShaders) returns false after PipelineCache::ReplayCloseStop stored m_precache_stop and
-	// joined the precache/rebuild thread (S17a2, item 532(b)); then the caller ends the process by std::quick_exit.
+	// waited for the end of the rebuild (S17a2, item 532(b); S18a2, item 576(g)); then the caller ends the process by
+	// std::quick_exit.
 	SDL_Event event {};
 	event.type = SDL_QUIT;
 	SDL_PushEvent(&event);

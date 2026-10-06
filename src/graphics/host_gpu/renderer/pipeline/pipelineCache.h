@@ -212,8 +212,9 @@ public:
 	[[nodiscard]] PreparationStatus GetPreparationStatus() const;
 	// Called before the guest starts, once the precache producer AND its workers have finished.
 	void FinishPreparation();
-	// Track S, S17a2 (ROADMAP s122 item 532(b)): the window was closed on the preparation screen. At KYTY_S_REPLAY 1 or
-	// 3 stores m_precache_stop and joins the precache/rebuild thread; at 0 and 2 returns at once.
+	// Track S, S17a2 (ROADMAP s122 item 532(b)): the window was closed on the preparation screen. S18a2 (item 576(g)):
+	// when the rebuild runs in this start, stores m_precache_stop and waits for the end of ReplayRebuild (not for
+	// PrecachePipelines); without a rebuild (any KYTY_S_REPLAY) returns at once.
 	void ReplayCloseStop();
 	// Queues resource-independent CS translation and optional registration timing diagnostics.
 	void TraceShaderRegistration(const Shader& header, const ShaderMappedData& mapped);
@@ -395,6 +396,9 @@ private:
 	std::unique_ptr<ShaderReplay::Capture>   m_replay_capture;
 	std::string                              m_replay_state;     // "ok", "mismatch", "absent", "corrupt"
 	bool                                     m_replay_rebuild     = false; // StartPrecache: the rebuild runs first
+	// S18a2 (item 576(g)(2)): stored true by the precache thread right after ReplayRebuild returned; read by
+	// ReplayCloseStop (main thread) only when m_replay_rebuild is true. Never stored back to false.
+	std::atomic<bool>                        m_replay_rebuild_done {false};
 	bool                                     m_replay_hits_logged = false;
 	// Source id -> permutation indices the rebuild wrote; filled on the precache thread before PrecachePipelines, read
 	// under m_mutex afterwards (ProgramCache::ReplayAdopt).

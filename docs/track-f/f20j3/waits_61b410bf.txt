@@ -1,0 +1,597 @@
+FAIL	A	common/parallelCopy.cpp	177	-	MARK:pcopy	FAIL		m_finished.wait(lock, [&] { return m_pending.load(std::memory_order_acquire) == 0; });
+FAIL	A	common/threads.cpp	231	Thread::Thread	MARK:spin	FAIL	creator waits for the thread start	Common::Thread::SleepMicro(1000);
+FAIL	A	common/threads.cpp	244	Thread::Join	MARK:join	FAIL		m_thread->m_thread.join();
+FAIL	A	graphics/guest_gpu/graphicsRun.cpp	190	GuestGpu::SendCommandSync	MARK:gpu_cmd	FAIL		done.acquire();
+FAIL	A	graphics/guest_gpu/graphicsRun.cpp	686	GuestGpu::WaitForIdle	MARK:gpu_wait	FAIL	item 574(a)(4)	m_idle.Wait(&m_queue_mutex);
+FAIL	A	graphics/guest_gpu/graphicsRun.cpp	2652	BatonRelayRun	MARK:relay	FAIL	item 574(a)(4)	relay->to_owner.wait(lock, [relay] { return relay->done; });
+FAIL	A	graphics/host_gpu/pageManager.cpp	2625	-	MARK:pm_drain	FAIL		drain_cv.wait(lock, [this] { return inflight.load(std::memory_order_acquire) == 0; });
+FAIL	A	graphics/host_gpu/vma.cpp	163	-	MARK:vma_flush	FAIL		m_drained.wait(lock, [this] { return m_queue.empty() && !m_running; });
+FAIL	A	graphics/host_gpu/renderer/commandRecorder.cpp	217	CommandRecorder::Reserve	MARK:rec_wait	FAIL		m_progress.wait_for(lock, WaitSlice, [this, head, want] {
+FAIL	A	graphics/host_gpu/renderer/commandRecorder.cpp	564	CommandRecorder::Drain	MARK:rec_wait	FAIL		m_progress.wait_for(lock, WaitSlice);
+FAIL	A	graphics/host_gpu/renderer/commandRecorder.cpp	996	CommandRecorder::Loop	MARK:rec_idle	FAIL		m_pending.wait_for(lock, SleepSlice);
+FAIL	A	graphics/host_gpu/renderer/commandScheduler.cpp	119	-	MARK:asub_drain	FAIL		m_drained.wait(lock, [this, target] { return m_submitted >= target; });
+FAIL	A	graphics/host_gpu/renderer/commandScheduler.cpp	136	-	MARK:asub_idle	FAIL		m_available.wait(lock, [this] { return !m_queue.empty(); });
+FAIL	A	graphics/host_gpu/renderer/commandScheduler.cpp	593	CommandScheduler::DeferOperation	MARK:ops_wait	FAIL		m_operation_available.wait(lock,
+FAIL	A	graphics/host_gpu/renderer/commandScheduler.cpp	614	CommandScheduler::DeferPriorityOperation	MARK:ops_wait	FAIL		m_operation_available.wait(lock,
+FAIL	A	graphics/host_gpu/renderer/commandScheduler.cpp	644	CommandScheduler::PriorityOperationsThread	MARK:ops_idle	FAIL		m_operation_available.wait(lock, [this, &stop] {
+FAIL	A	graphics/host_gpu/renderer/commandScheduler.cpp	691	CommandScheduler::DrainPriorityOperations	MARK:ops_wait	FAIL		m_operation_available.wait(
+FAIL	A	graphics/host_gpu/renderer/commandScheduler.cpp	700	CommandScheduler::WaitPriorityOperations	MARK:ops_wait	FAIL		m_operation_available.wait(lock, [this, tick] {
+FAIL	A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4881	PipelineCache::WaitForPendingPipelines	MARK:pipe_wait	FAIL		m_idle_cv.wait(lock, [this] { return m_jobs.empty() && m_jobs_active == 0; });
+FAIL	A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5283	PipelineCache::GetGraphicsPipeline	MARK:pipe_wait	FAIL		m_ready_cv.wait_for(lock, std::chrono::microseconds(AsyncPipelineWaitUs()),
+FAIL	A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5872	PipelineCache::GetComputePipeline	MARK:pipe_wait	FAIL		m_ready_cv.wait(lock, [pending] { return pending->ready.load(std::memory_order_acquire); });
+FAIL	A	graphics/presentation/videoOut.cpp	830	VideoOutDriver::Impl::PresentThread	MARK:vo_pace	FAIL		Common::Thread::SleepMicro(static_cast<uint32_t>(
+FAIL	A	graphics/presentation/videoOut.cpp	941	FlipQueue::Cancel	MARK:flip_cancel	FAIL	item 574(a)(4)	m_done_cond_var.Wait(&m_mutex);
+FAIL	A	graphics/presentation/videoOut.cpp	1134	FlipQueue::WaitForSubmitSlot	MARK:flip_slot	FAIL	item 574(a)(4)	m_submit_slot_cond_var.Wait(&m_mutex);
+FAIL	A	graphics/presentation/videoOut.cpp	1147	FlipQueue::Wait	MARK:flip_done	FAIL	item 574(a)(4)	m_done_cond_var.Wait(&m_mutex);
+FAIL	A	graphics/presentation/videoOut.cpp	1156	FlipQueue::Flip	MARK:flip_req	FAIL	item 574(a)(4)	m_submit_cond_var.WaitFor(&m_mutex, micros);
+FAIL	A	graphics/presentation/videoOut.cpp	4067	VideoOutWaitVblank	MARK:vblank	FAIL	item 574(a)(4)	ctx->vblank_cond.Wait(&ctx->mutex);
+FAIL	A	graphics/presentation/window/screenshot.cpp	441	ScreenshotGrabber::FlushVideoSlot	MARK:rec_queue	FAIL		m_rec_cv.wait(lock, [&] { return m_rec_queue.size() < 8; });
+FAIL	A	graphics/presentation/window/swapchain.cpp	114	-	MARK:frame_pool	FAIL		m_available.Wait(&m_mutex);
+FAIL	A	graphics/presentation/window/window.cpp	824	WindowContext::RunOnMainThread	MARK:main_task	FAIL		main_task_done.Wait(&main_task_mutex);
+FAIL	A	kernel/eventFlag.cpp	89	KernelEventFlagPrivate::~KernelEventFlagPrivate	MARK:spin	FAIL	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+FAIL	A	kernel/eventFlag.cpp	99	KernelEventFlagPrivate::~KernelEventFlagPrivate	MARK:spin	FAIL	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+FAIL	A	kernel/eventFlag.cpp	199	KernelEventFlagPrivate::Set	MARK:spin	FAIL	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+FAIL	A	kernel/eventFlag.cpp	218	KernelEventFlagPrivate::Clear	MARK:spin	FAIL	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+FAIL	A	kernel/eventFlag.cpp	232	KernelEventFlagPrivate::Cancel	MARK:spin	FAIL	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+FAIL	A	kernel/eventFlag.cpp	247	KernelEventFlagPrivate::Cancel	MARK:spin	FAIL	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+FAIL	A	kernel/pthread.cpp	1378	NativeMutexLock	MARK:mutex	FAIL	timed lock of an owned error-check mutex	mutex->cv.wait_for(lock, std::chrono::microseconds(*timeout_us));
+FAIL	A	kernel/pthread.cpp	2529	RwlockLockCooperative	MARK:rwlock	FAIL		rwlock->cv.wait_for(lock, poll);
+FAIL	A	kernel/pthread.cpp	2531	RwlockLockCooperative	MARK:rwlock	FAIL		rwlock->cv.wait_for(lock, std::chrono::microseconds(SIGNAL_APC_POLL_MICROS));
+FAIL	A	kernel/pthread.cpp	3546	PthreadJoin	MARK:join	FAIL		int result = pthread_join(thread->p, value);
+FAIL	A	kernel/pthread.cpp	4398	pthread_once	MARK:once	FAIL		g_pthread_once_cv.wait_for(
+FAIL	A	kernel/semaphore.cpp	83	KernelSemaPrivate::~KernelSemaPrivate	MARK:spin	FAIL	10 us sleep loops of the semaphore destructor	Common::Thread::SleepMicro(10);
+FAIL	A	kernel/semaphore.cpp	100	KernelSemaPrivate::~KernelSemaPrivate	MARK:spin	FAIL	10 us sleep loops of the semaphore destructor	Common::Thread::SleepMicro(10);
+FAIL	A	kernel/syncOnAddress.cpp	211	WaitPortable	MARK:addr	FAIL		(void)waiter.condition.WaitFor(&entry->mutex, slice_micros);
+FAIL	A	libs/audio.cpp	737	Audio::QueueSdlAudio	MARK:audio	FAIL		Common::Thread::SleepMicro(1000);
+FAIL	A	libs/audio.cpp	914	Audio::AudioOutOutputs	MARK:audio	FAIL		Common::Thread::SleepMicro(max_wait_time);
+FAIL	A	libs/audio.cpp	1058	Audio::AudioInInput	MARK:audio	FAIL		Common::Thread::SleepMicro(wait_time);
+FAIL	A	libs/audio.cpp	1067	Audio::AudioInInput	MARK:audio	FAIL		Common::Thread::SleepMicro(1000);
+FAIL	A	libs/audio.cpp	1856	Audio3dPortPush	MARK:audio	FAIL		Common::Thread::SleepMicro(wait_time);
+FAIL	A	libs/avPlayer.cpp	406	-	MARK:av	FAIL		available.wait(lock, [&] {
+FAIL	A	libs/avPlayer.cpp	420	-	MARK:av	FAIL		available.wait(lock, [&] { return stop || finished || !queue.empty(); });
+FAIL	A	libs/avPlayer.cpp	528	-	MARK:av	FAIL		available.wait(lock, [&] { return stop || !queue.empty(); });
+FAIL	A	libs/libAudio2.cpp	550	AudioOut2ContextPush	MARK:audio	FAIL		Common::Thread::SleepMicro(sleep_micros);
+FAIL	A	libs/libC.cpp	503	std_execute_once	MARK:once	FAIL		g_execute_once_cv.wait_for(lock, std::chrono::microseconds(10000));
+FAIL	A	libs/libKernel.cpp	2476	FiberWaitAndEnterRunning	MARK:fiber	FAIL		std::this_thread::sleep_for(std::chrono::microseconds(100));
+FAIL	A	libs/libKernel.cpp	3078	KernelAioWaitRequest	MARK:aio	FAIL		Common::Thread::SleepMicro(10);
+FAIL	A	libs/libUlt.cpp	633	UltSemaphoreAcquire	MARK:ult	FAIL		state->available.wait(lock, [&] { return !state->alive || state->resources >= num_resource; });
+FAIL	A	libs/network.cpp	1515	EpollWait	MARK:net	FAIL		g_epoll_changed.wait(lock, ready);
+FAIL	A	libs/network.cpp	1517	EpollWait	MARK:net	FAIL		g_epoll_changed.wait_for(lock, std::chrono::microseconds(timeout), ready);
+FAIL	A	libs/network.cpp	2152	Select	MARK:net	FAIL		Sleep(host_timeout_ptr == nullptr ? INFINITE :
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	93	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	129	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	143	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	153	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	168	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	200	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	GpuMutexLock lock(m_submission_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	214	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	GpuMutexLock lock(m_submission_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	227	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	GpuMutexLock lock(m_submission_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	327	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	GpuMutexLock lock(m_submission_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	666	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	684	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	712	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(gpu->m_queue_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	815	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(gpu->m_queue_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	849	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(gpu->m_queue_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	957	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(renderer.GetMutex());
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	2698	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_lookahead_mutex);
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	3713	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_renderer.GetMutex());
+FAIL	B	graphics/guest_gpu/graphicsRun.cpp	4006	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+FAIL	B	graphics/host_gpu/renderer/commandScheduler.cpp	150	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(graphics.queue_mutex);
+FAIL	B	graphics/host_gpu/renderer/commandScheduler.cpp	962	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(graphics.queue_mutex);
+FAIL	B	graphics/host_gpu/renderer/renderCompute.cpp	416	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard            lock(m_context.GetMutex());
+FAIL	B	graphics/host_gpu/renderer/renderContext.cpp	427	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_interrupt_mutex);
+FAIL	B	graphics/host_gpu/renderer/renderContext.cpp	440	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_interrupt_mutex);
+FAIL	B	graphics/host_gpu/renderer/renderContext.cpp	455	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_interrupt_mutex);
+FAIL	B	graphics/host_gpu/renderer/renderDraw.cpp	4975	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard            lock(m_context.GetMutex());
+FAIL	B	graphics/host_gpu/renderer/renderDraw.cpp	5204	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard            lock(m_context.GetMutex());
+FAIL	B	graphics/host_gpu/renderer/cache/samplerCache.cpp	45	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	91	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	100	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4888	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5188	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5515	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5679	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5779	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5815	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6204	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6242	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6396	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6619	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6668	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6707	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6740	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6764	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/renderDoc.cpp	226	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard render_lock(renderer.GetMutex());
+FAIL	B	graphics/presentation/renderDoc.cpp	228	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard queue_lock(renderer.GetGraphics().queue_mutex);
+FAIL	B	graphics/presentation/systemOverlay.cpp	1079	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard queue_lock(graphics.queue_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	362	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(state->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	376	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(video_out.events->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	411	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(video_out->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	447	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard event_lock(event_state->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	465	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard event_lock(event_state->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	480	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(video_out->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	532	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	video_out->mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	649	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	656	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard config_lock(config.mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	659	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard event_lock(config.events->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	690	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	702	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard config_lock(config.mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	712	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard event_lock(config.events->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	745	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	754	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	760	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard config_lock(config->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	769	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	775	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	780	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	ctx.mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	794	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	800	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	ctx.mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	862	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	876	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	897	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	939	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	970	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(cfg.mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	980	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	1015	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(cfg->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	1039	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	1056	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	1077	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	1106	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	1118	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	1129	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	1139	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	1154	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	1174	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	r.cfg->mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	1181	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard queue_lock(m_mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	1187	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	1242	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	3581	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(cfg.mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	3647	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(ctx->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	3769	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(ctx->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	3815	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(ctx->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	3847	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(ctx->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	3988	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	ctx->mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	4064	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(ctx->mutex);
+FAIL	B	graphics/presentation/videoOut.cpp	4085	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	ctx->mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	4177	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	ctx->mutex.Lock();
+FAIL	B	graphics/presentation/videoOut.cpp	4255	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	ctx->mutex.Lock();
+FAIL	B	graphics/presentation/window/swapchain.cpp	78	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/window/swapchain.cpp	95	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/window/swapchain.cpp	100	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/window/swapchain.cpp	109	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	graphics/presentation/window/swapchain.cpp	141	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	graphics/presentation/window/swapchain.cpp	163	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/window/swapchain.cpp	173	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	graphics/presentation/window/swapchain.cpp	456	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_window.mutex);
+FAIL	B	graphics/presentation/window/swapchain.cpp	589	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard queue_lock(graphics.queue_mutex);
+FAIL	B	graphics/presentation/window/swapchain.cpp	646	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_window.mutex);
+FAIL	B	graphics/presentation/window/swapchain.cpp	804	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_window.graphic_ctx.queue_mutex);
+FAIL	B	graphics/presentation/window/swapchain.cpp	840	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard render_lock(m_impl->renderer.GetMutex());
+FAIL	B	graphics/presentation/window/swapchain.cpp	887	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard render_lock(m_impl->renderer.GetMutex());
+FAIL	B	graphics/presentation/window/swapchain.cpp	991	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard render_lock(m_impl->renderer.GetMutex());
+FAIL	B	graphics/presentation/window/window.cpp	454	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(mutex);
+FAIL	B	graphics/presentation/window/window.cpp	811	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(main_task_mutex);
+FAIL	B	graphics/presentation/window/window.cpp	822	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(main_task_mutex);
+FAIL	B	graphics/presentation/window/window.cpp	830	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(main_task_mutex);
+FAIL	B	graphics/presentation/window/window.cpp	845	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(main_task_mutex);
+FAIL	B	graphics/presentation/window/window.cpp	867	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(main_task_mutex);
+FAIL	B	graphics/presentation/window/window.cpp	1513	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(title_mutex);
+FAIL	B	graphics/presentation/window/window.cpp	1522	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(title_mutex);
+FAIL	B	kernel/eventFlag.cpp	85	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventFlag.cpp	90	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	kernel/eventFlag.cpp	100	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	kernel/eventFlag.cpp	107	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventFlag.cpp	193	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventFlag.cpp	200	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	kernel/eventFlag.cpp	212	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventFlag.cpp	219	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	kernel/eventFlag.cpp	226	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventFlag.cpp	233	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	kernel/eventFlag.cpp	248	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	kernel/eventQueue.cpp	78	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventQueue.cpp	95	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventQueue.cpp	171	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventQueue.cpp	214	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventQueue.cpp	241	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventQueue.cpp	298	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/eventQueue.cpp	327	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_equeues_mutex);
+FAIL	B	kernel/eventQueue.cpp	340	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_equeues_mutex);
+FAIL	B	kernel/eventQueue.cpp	389	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_equeues_mutex);
+FAIL	B	kernel/eventQueue.cpp	516	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_equeues_mutex);
+FAIL	B	kernel/fileSystem.cpp	200	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/fileSystem.cpp	223	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/fileSystem.cpp	241	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/fileSystem.cpp	253	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/fileSystem.cpp	265	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/fileSystem.cpp	282	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/fileSystem.cpp	294	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/fileSystem.cpp	309	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/fileSystem.cpp	375	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/fileSystem.cpp	810	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(file->mutex);
+FAIL	B	kernel/fileSystem.cpp	826	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	file->mutex.Lock();
+FAIL	B	kernel/fileSystem.cpp	917	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	file->mutex.Lock();
+FAIL	B	kernel/fileSystem.cpp	977	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	file->mutex.Lock();
+FAIL	B	kernel/fileSystem.cpp	1041	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	file->mutex.Lock();
+FAIL	B	kernel/fileSystem.cpp	1085	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(file->mutex);
+FAIL	B	kernel/fileSystem.cpp	1220	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	file->mutex.Lock();
+FAIL	B	kernel/fileSystem.cpp	1280	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(file->mutex);
+FAIL	B	kernel/fileSystem.cpp	1379	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(file->mutex);
+FAIL	B	kernel/memory.cpp	220	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	252	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	267	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	274	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	285	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	301	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	319	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	352	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	365	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	372	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	381	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	404	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	452	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	483	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	519	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1263	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_guest_stack_gate)	g_guest_stack_gate.Lock();
+FAIL	B	kernel/memory.cpp	1276	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard gate(g_guest_stack_gate);
+FAIL	B	kernel/memory.cpp	1277	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stacks_mutex);
+FAIL	B	kernel/memory.cpp	1303	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stacks_mutex);
+FAIL	B	kernel/memory.cpp	1308	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stacks_mutex);
+FAIL	B	kernel/memory.cpp	1351	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_prt_aperture_mutex);
+FAIL	B	kernel/memory.cpp	1473	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_physical_memory)	g_physical_memory->GetMutex().Lock();
+FAIL	B	kernel/memory.cpp	1481	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_flexible_memory)	g_flexible_memory->GetMutex().Lock();
+FAIL	B	kernel/memory.cpp	1507	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1555	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1626	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1708	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1756	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1787	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1805	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1852	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1922	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1968	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	1989	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2014	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2042	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2053	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2129	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2228	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2260	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2304	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2346	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2374	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2384	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2394	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2422	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2428	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2476	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2532	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2539	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard    lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2577	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2586	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/memory.cpp	2779	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_prt_aperture_mutex);
+FAIL	B	kernel/memory.cpp	2786	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_prt_aperture_mutex);
+FAIL	B	kernel/memory.cpp	2817	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_prt_aperture_mutex);
+FAIL	B	kernel/memory.cpp	3094	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_physical_memory->GetMutex());
+FAIL	B	kernel/pthread.cpp	773	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stack_mutex);
+FAIL	B	kernel/pthread.cpp	832	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stack_mutex);
+FAIL	B	kernel/pthread.cpp	892	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stack_mutex);
+FAIL	B	kernel/pthread.cpp	1546	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/pthread.cpp	1603	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/pthread.cpp	1630	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/pthread.cpp	1652	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/semaphore.cpp	79	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/semaphore.cpp	84	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	kernel/semaphore.cpp	101	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	kernel/semaphore.cpp	106	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/semaphore.cpp	137	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/semaphore.cpp	190	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/semaphore.cpp	252	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	kernel/semaphore.cpp	419	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/semaphore.cpp	449	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+FAIL	B	kernel/semaphore.cpp	465	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/semaphore.cpp	479	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/semaphore.cpp	496	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	kernel/semaphore.cpp	536	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_posix_sem_mutex);
+FAIL	B	kernel/semaphore.cpp	556	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_posix_sem_mutex);
+FAIL	B	kernel/semaphore.cpp	585	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_posix_sem_mutex);
+FAIL	B	kernel/syncOnAddress.cpp	167	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	entry->mutex.Lock();
+FAIL	B	kernel/syncOnAddress.cpp	184	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	entry->mutex.Lock();
+FAIL	B	kernel/syncOnAddress.cpp	214	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	entry->mutex.Lock();
+FAIL	B	kernel/syncOnAddress.cpp	239	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	entry->mutex.Lock();
+FAIL	B	libs/audio.cpp	775	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	820	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	835	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	842	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	849	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	864	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	968	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	1001	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	1015	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	1030	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	1087	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/audio.cpp	1617	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (data_mutex)	port->data_mutex->Lock();
+FAIL	B	libs/audio.cpp	1762	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (data_mutex)	port->data_mutex->Lock();
+FAIL	B	libs/audio.cpp	1798	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (data_mutex)	port->data_mutex->Lock();
+FAIL	B	libs/audio.cpp	1833	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (data_mutex)	port->data_mutex->Lock();
+FAIL	B	libs/audio.cpp	2579	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(ngs->mutex);
+FAIL	B	libs/audio.cpp	2593	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard racks_lock(g_racks_mutex);
+FAIL	B	libs/audio.cpp	2672	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(ngs->mutex);
+FAIL	B	libs/audio.cpp	2723	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard racks_lock(g_racks_mutex);
+FAIL	B	libs/audio.cpp	2822	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard racks_lock(g_racks_mutex);
+FAIL	B	libs/audio.cpp	2837	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(ngs->mutex);
+FAIL	B	libs/audio.cpp	2838	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard racks_lock(g_racks_mutex);
+FAIL	B	libs/audio.cpp	2875	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (mutex)	rack->ngs->mutex.Lock();
+FAIL	B	libs/audio.cpp	2912	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(ngs->mutex);
+FAIL	B	libs/audio.cpp	2920	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard racks_lock(g_racks_mutex);
+FAIL	B	libs/audio.cpp	3279	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(voice->rack->ngs->mutex);
+FAIL	B	libs/audio.cpp	3431	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(voice->rack->ngs->mutex);
+FAIL	B	libs/audio.cpp	3489	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(voice->rack->ngs->mutex);
+FAIL	B	libs/controller.cpp	885	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	900	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	967	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	980	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1006	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1021	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1041	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1052	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1072	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1084	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1134	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1141	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1153	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1194	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1222	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1261	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1278	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1289	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/controller.cpp	1303	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/libAudio.cpp	1194	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+FAIL	B	libs/libAudio.cpp	1207	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+FAIL	B	libs/libAudio.cpp	1227	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+FAIL	B	libs/libAudio.cpp	1300	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+FAIL	B	libs/libAudio.cpp	1318	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+FAIL	B	libs/libAudio.cpp	1375	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+FAIL	B	libs/libAudio2.cpp	346	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_audioout2_port_mutex);
+FAIL	B	libs/libAudio2.cpp	360	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	429	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	463	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	472	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	500	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	528	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	563	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	588	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	596	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	630	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	666	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	695	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	717	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	776	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_speaker_array_mutex)	g_audioout2_speaker_array_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	802	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_speaker_array_mutex)	g_audioout2_speaker_array_mutex.Lock();
+FAIL	B	libs/libAudio2.cpp	889	-	PRIM:emu_mutex	FAIL	Common::Mutex .Lock() (g_audioout2_latency_mutex)	g_audioout2_latency_mutex.Lock();
+FAIL	B	libs/libDbgAsan.cpp	55	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_ctx->mutex);
+FAIL	B	libs/libDbgAsan.cpp	90	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_ctx->mutex);
+FAIL	B	libs/libSaveData.cpp	456	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_save_data_memory_mutex);
+FAIL	B	libs/libSaveData.cpp	485	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_mount_mutex);
+FAIL	B	libs/libSaveData.cpp	606	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_mount_mutex);
+FAIL	B	libs/libSaveData.cpp	661	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_save_data_memory_mutex);
+FAIL	B	libs/libSaveData.cpp	700	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_save_data_memory_mutex);
+FAIL	B	libs/libSaveData.cpp	736	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_save_data_memory_mutex);
+FAIL	B	libs/libSaveData.cpp	774	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_mount_mutex);
+FAIL	B	libs/libSaveData.cpp	804	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_mount_mutex);
+FAIL	B	libs/network.cpp	253	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	269	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	281	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	301	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	312	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	318	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	333	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	346	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	353	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	374	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	381	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	389	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	397	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	433	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	446	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	477	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	506	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	536	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	549	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	578	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	590	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	601	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	620	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	650	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	662	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	675	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	689	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	702	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	715	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	737	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	750	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	763	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	776	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	789	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	802	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	815	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	libs/network.cpp	1114	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_socket_mutex);
+FAIL	B	libs/network.cpp	1128	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_socket_mutex);
+FAIL	B	libs/network.cpp	1139	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_socket_mutex);
+FAIL	B	libs/network.cpp	1151	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_socket_mutex);
+FAIL	B	libs/network.cpp	3138	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_net_ctl_callbacks_mutex);
+FAIL	B	libs/network.cpp	3161	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_net_ctl_callbacks_mutex);
+FAIL	B	libs/network.cpp	3204	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_net_ctl_callbacks_mutex);
+FAIL	B	libs/network.cpp	3226	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(g_net_ctl_callbacks_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1316	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1329	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1344	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1392	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1402	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1416	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1442	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1485	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1500	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1624	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1654	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1750	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1802	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1819	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1833	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1922	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	1954	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	2070	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(program->tls.mutex);
+FAIL	B	loader/runtimeLinker.cpp	2113	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(program->tls.mutex);
+FAIL	B	loader/runtimeLinker.cpp	2548	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	2690	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	2698	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	2714	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/runtimeLinker.cpp	2725	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	106	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	225	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	233	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	239	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	298	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	312	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	326	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	341	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	351	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	418	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	491	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	543	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	553	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	559	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	B	loader/systemContent.cpp	569	-	PRIM:emu_mutex	FAIL	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+FAIL	C	common/parallelCopy.cpp	475	m_signal_mutex	UNCLASSIFIED	FAIL		std::mutex          m_signal_mutex;
+FAIL	C	common/logging/log.cpp	77	g_logger_mutex	UNCLASSIFIED	FAIL		static std::mutex                      g_logger_mutex;
+FAIL	C	graphics/guest_gpu/graphicsRun.cpp	2612	g_baton_mutex	UNCLASSIFIED	FAIL		std::mutex                  g_baton_mutex;
+FAIL	C	graphics/host_gpu/graphicContext.h	155	m_format_properties_mutex	UNCLASSIFIED	FAIL		mutable std::mutex                                 m_format_properties_mutex;
+FAIL	C	graphics/host_gpu/graphicContext.h	157	m_image_format_properties_mutex	UNCLASSIFIED	FAIL		mutable std::mutex                                 m_image_format_properties_mutex;
+FAIL	C	graphics/host_gpu/memoryTracker.h	468	m_region_mutex	UNCLASSIFIED	FAIL		std::mutex                                     m_region_mutex;
+FAIL	C	graphics/host_gpu/pageManager.cpp	2689	region_mutex	UNCLASSIFIED	FAIL		std::mutex                              region_mutex;
+FAIL	C	graphics/host_gpu/vma.cpp	317	g_recycle_mutex	UNCLASSIFIED	FAIL		std::mutex                g_recycle_mutex;
+FAIL	C	graphics/host_gpu/renderer/commandRecorder.cpp	85	mutex	UNCLASSIFIED	FAIL		static std::mutex mutex;
+FAIL	C	graphics/host_gpu/renderer/commandScheduler.cpp	478	mutex	UNCLASSIFIED	FAIL		static std::mutex                             mutex;
+FAIL	C	graphics/host_gpu/renderer/commandScheduler.cpp	496	mutex	UNCLASSIFIED	FAIL		static std::mutex                         mutex;
+FAIL	C	graphics/host_gpu/renderer/commandScheduler.h	167	m_timestamp_mutex	UNCLASSIFIED	FAIL		std::mutex                                m_timestamp_mutex;
+FAIL	C	graphics/host_gpu/renderer/gpuTimeProfiler.h	103	m_mutex	UNCLASSIFIED	FAIL		std::mutex           m_mutex;
+FAIL	C	graphics/host_gpu/renderer/renderContext.h	98	m_mapped_ranges_mutex	UNCLASSIFIED	FAIL		mutable std::shared_mutex m_mapped_ranges_mutex;
+FAIL	C	graphics/host_gpu/renderer/cache/bufferCache.h	360	m_pending_host_reads_mutex	UNCLASSIFIED	FAIL		std::mutex                                         m_pending_host_reads_mutex;
+FAIL	C	graphics/host_gpu/renderer/cache/bufferCache.h	468	m_streamed_mutex	UNCLASSIFIED	FAIL		std::mutex                                     m_streamed_mutex;
+FAIL	C	graphics/host_gpu/renderer/cache/hostImport.h	68	m_mutex	UNCLASSIFIED	FAIL		std::mutex         m_mutex;
+FAIL	C	graphics/host_gpu/renderer/cache/textureCache.cpp	2531	seen_mutex	UNCLASSIFIED	FAIL		static std::mutex                            seen_mutex;
+FAIL	C	graphics/host_gpu/renderer/cache/textureCache.cpp	3940	g_pend_mutex	UNCLASSIFIED	FAIL		std::mutex                                            g_pend_mutex;
+FAIL	C	graphics/host_gpu/renderer/pipeline/descriptors.cpp	1428	g_gds_keys_mutex	UNCLASSIFIED	FAIL		std::mutex                   g_gds_keys_mutex;
+FAIL	C	graphics/host_gpu/renderer/pipeline/descriptors.cpp	3714	m	UNCLASSIFIED	FAIL		static std::mutex                                      m;
+FAIL	C	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1263	mutex	UNCLASSIFIED	FAIL		static std::mutex                   mutex;
+FAIL	C	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1314	mutex	UNCLASSIFIED	FAIL		static std::mutex                   mutex;
+FAIL	C	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2624	ahead_queue_mutex	UNCLASSIFIED	FAIL		std::mutex                            ahead_queue_mutex;
+FAIL	C	graphics/host_gpu/renderer/pipeline/shaders.cpp	327	mutex	UNCLASSIFIED	FAIL		static std::mutex                   mutex;
+FAIL	C	graphics/presentation/systemOverlay.cpp	173	g_visibility_mutex	UNCLASSIFIED	FAIL		std::mutex                   g_visibility_mutex;
+FAIL	C	graphics/presentation/systemOverlay.cpp	174	g_input_mutex	UNCLASSIFIED	FAIL		std::mutex                   g_input_mutex;
+FAIL	C	kernel/fileSystem.cpp	634	g_stream_mutex	UNCLASSIFIED	FAIL		std::mutex                 g_stream_mutex;
+FAIL	C	kernel/memory.cpp	884	g_memory_operation_mutex	UNCLASSIFIED	FAIL		static std::recursive_mutex g_memory_operation_mutex;
+FAIL	C	kernel/memoryAddressSpace.inc	722	m_mutex	UNCLASSIFIED	FAIL		std::mutex                   m_mutex;
+FAIL	C	kernel/memoryAddressSpace.inc	1486	m_mutex	UNCLASSIFIED	FAIL		std::shared_mutex                          m_mutex;
+FAIL	C	kernel/pthread.cpp	154	mutex	UNCLASSIFIED	FAIL		std::mutex mutex;
+FAIL	C	kernel/pthread.cpp	678	g_pthread_keys_mutex	UNCLASSIFIED	FAIL		static std::mutex                                           g_pthread_keys_mutex;
+FAIL	C	kernel/syncOnAddress.cpp	150	mutex	UNCLASSIFIED	FAIL		std::mutex                                                           mutex;
+FAIL	C	libs/agc.cpp	157	g_register_defaults_mutex	UNCLASSIFIED	FAIL		static std::mutex g_register_defaults_mutex;
+FAIL	C	libs/agc.cpp	1657	g_workload_stream_mutex	UNCLASSIFIED	FAIL		static std::mutex g_workload_stream_mutex;
+FAIL	C	libs/ajm.cpp	335	g_ajm_instances_mutex	UNCLASSIFIED	FAIL		static std::mutex                                     g_ajm_instances_mutex;
+FAIL	C	libs/audio.cpp	257	g_frozen_devices_mutex	UNCLASSIFIED	FAIL		static std::mutex                     g_frozen_devices_mutex;
+FAIL	C	libs/audio.cpp	285	g_sdl_audio_mutex	UNCLASSIFIED	FAIL		static std::mutex            g_sdl_audio_mutex;
+FAIL	C	libs/avPlayer.cpp	1751	lifecycle_mutex	UNCLASSIFIED	FAIL		std::mutex                               lifecycle_mutex;
+FAIL	C	libs/dialog.cpp	649	g_error_mutex	UNCLASSIFIED	FAIL		static std::mutex g_error_mutex;
+FAIL	C	libs/ime.cpp	94	g_mutex	UNCLASSIFIED	FAIL		std::mutex                      g_mutex;
+FAIL	C	libs/libAmpr.cpp	54	g_mutex	UNCLASSIFIED	FAIL		static std::mutex                                        g_mutex;
+FAIL	C	libs/libAmpr.cpp	770	g_command_buffer_mutex	UNCLASSIFIED	FAIL		static std::mutex                                       g_command_buffer_mutex;
+FAIL	C	libs/libAmpr.cpp	773	g_amm_auto_pool_mutex	UNCLASSIFIED	FAIL		static std::mutex                                       g_amm_auto_pool_mutex;
+FAIL	C	libs/libFont.cpp	378	g_glyph_mutex	UNCLASSIFIED	FAIL		static std::mutex                g_glyph_mutex;
+FAIL	C	libs/libFont.cpp	380	g_writing_mutex	UNCLASSIFIED	FAIL		static std::mutex                g_writing_mutex;
+FAIL	C	libs/libHmd2.cpp	88	g_reprojection_mutex	UNCLASSIFIED	FAIL		static std::mutex g_reprojection_mutex;
+FAIL	C	libs/libJson2.cpp	301	g_object_snapshot_mutex	UNCLASSIFIED	FAIL		static std::mutex                                       g_object_snapshot_mutex;
+FAIL	C	libs/libKernel.cpp	2366	g_fiber_owner_mutex	UNCLASSIFIED	FAIL		static std::mutex                                 g_fiber_owner_mutex;
+FAIL	C	libs/libNet.cpp	1661	g_np_auth_request_mutex	UNCLASSIFIED	FAIL		static std::mutex                 g_np_auth_request_mutex;
+FAIL	C	libs/libUlt.cpp	90	g_ult_mutex	UNCLASSIFIED	FAIL		static std::mutex                                                    g_ult_mutex;
+FAIL	C	libs/libVideoDec2.cpp	204	g_decoder_mutex	UNCLASSIFIED	FAIL		static std::mutex                g_decoder_mutex;
+FAIL	C	libs/network.cpp	3405	g_np_request_mutex	UNCLASSIFIED	FAIL		static std::mutex             g_np_request_mutex;
+FAIL	C	libs/videoDec2Decoder.cpp	42	g_picture_mutex	UNCLASSIFIED	FAIL		std::mutex                               g_picture_mutex;
+FAIL	C	libs/videoDec2Decoder.cpp	347	m_mutex	UNCLASSIFIED	FAIL		std::mutex                m_mutex;
+FAIL	D	graphics/host_gpu/regionManager.h	33	TrackingSpinLock	MARK:spin	FAIL	contended spin	
+FAIL	D	graphics/host_gpu/pageManager.cpp	74	SpinGuard(std::atomic_flag& lock)	MARK:spin	FAIL	contended spin	
+FAIL	D	graphics/host_gpu/pageManager.cpp	93	ApplyGuard(std::atomic_flag& lock	MARK:spin	FAIL	contended spin	
+A CALLEE                       17
+A CALLER:evf                   1
+A CALLER:flip_done             1
+A CALLER:join                  1
+A CALLER:main_idle             2
+A CALLER:psem                  1
+A CALLER:sem                   1
+A CALLER:sleep                 2
+A EXC:debug                    2
+A EXC:decl                     3
+A EXC:instr                    5
+A EXC:platform                 1
+A EXC:rare                     1
+A EXC:shutdown                 21
+A EXC:stand                    8
+A EXC:startup                  3
+A EXC:teardown                 1
+A EXC:worker                   18
+A MARK:addr                    1
+A MARK:aio                     1
+A MARK:asub_drain              1
+A MARK:asub_idle               1
+A MARK:audio                   6
+A MARK:av                      3
+A MARK:fiber                   1
+A MARK:flip_cancel             1
+A MARK:flip_done               1
+A MARK:flip_req                1
+A MARK:flip_slot               1
+A MARK:frame_pool              1
+A MARK:gpu_cmd                 1
+A MARK:gpu_wait                1
+A MARK:join                    2
+A MARK:main_task               1
+A MARK:mutex                   1
+A MARK:net                     3
+A MARK:once                    2
+A MARK:ops_idle                1
+A MARK:ops_wait                4
+A MARK:pcopy                   1
+A MARK:pipe_wait               3
+A MARK:pm_drain                1
+A MARK:rec_idle                1
+A MARK:rec_queue               1
+A MARK:rec_wait                2
+A MARK:relay                   1
+A MARK:rwlock                  2
+A MARK:spin                    9
+A MARK:ult                     1
+A MARK:vblank                  1
+A MARK:vma_flush               1
+A MARK:vo_pace                 1
+A OLD:cond                     3
+A OLD:eq                       2
+A OLD:evf                      2
+A OLD:gpu_idle                 1
+A OLD:gpu_regmem               1
+A OLD:mutex                    2
+A OLD:psem                     2
+A OLD:sem                      2
+A OLDH:semwait                 1
+A PRIM                         14
+B PRIM:emu_mutex               402
+C EXC:cv                       25
+C EXC:debug                    4
+C EXC:instr                    6
+C EXC:knob                     1
+C EXC:layout                   3
+C EXC:platform                 1
+C EXC:shutdown                 1
+C EXC:startup                  1
+C EXC:target                   1
+C UNCLASSIFIED                 56
+D MARK:spin                    3
+places: A 179, B 402 (LockGuard 341), C 99, D 3; primitive mark FAIL; not ok 120
+FAILED

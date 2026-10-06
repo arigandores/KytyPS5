@@ -1,0 +1,154 @@
+common/diagB32.cpp:1023	TestSleepNow	std::this_thread::sleep_for(std::chrono::milliseconds(g_test_ms));
+common/diagB32.cpp:1633	Sampler::Run	const DWORD r = WaitForMultipleObjects(2, handles, FALSE, 1000);
+common/diagB32.cpp:1736	LogHeader	std::this_thread::sleep_for(std::chrono::milliseconds(5));
+common/frameStats.cpp:409	SamplerThread	std::this_thread::sleep_for(std::chrono::milliseconds(50));
+common/frameStats.cpp:414	SamplerThread	std::this_thread::sleep_for(std::chrono::microseconds(700));
+common/frameStats.cpp:870	BurnPlaceboLoop	Sleep(1);
+common/parallelCopy.cpp:177	-	m_finished.wait(lock, [&] { return m_pending.load(std::memory_order_acquire) == 0; });
+common/parallelCopy.cpp:269	-	m_wake.wait(lock, [&] { return m_stop || !m_jobs.empty(); });
+common/threads.cpp:76	SleepHighResolution100ns	WaitForSingleObject(timer, INFINITE);
+common/threads.cpp:81	SleepHighResolution100ns	std::this_thread::sleep_for(std::chrono::nanoseconds(units_100ns * 100));
+common/threads.cpp:95	-	using SleepConditionVariableCS_func_t = /*WINBASEAPI*/ BOOL    WINAPI (*)(PCONDITION_VARIABLE,
+common/threads.cpp:122	ResolveSleepConditionVariableCS	static SleepConditionVariableCS_func_t ResolveSleepConditionVariableCS() {
+common/threads.cpp:125	ResolveSleepConditionVariableCS	return reinterpret_cast<SleepConditionVariableCS_func_t>(
+common/threads.cpp:126	ResolveSleepConditionVariableCS	GetProcAddress(h, "SleepConditionVariableCS"));
+common/threads.cpp:145	SleepHighResolutionNanos	std::this_thread::sleep_for(std::chrono::nanoseconds(nanos));
+common/threads.cpp:231	hread::Thread	Common::Thread::SleepMicro(1000);
+common/threads.cpp:256	Thread::Sleep	void Thread::Sleep(uint32_t millis) {
+common/threads.cpp:257	Thread::Sleep	std::this_thread::sleep_for(std::chrono::milliseconds(millis));
+common/threads.cpp:260	Thread::SleepMicro	void Thread::SleepMicro(uint32_t micros) {
+common/threads.cpp:266	Thread::SleepMicro	std::this_thread::sleep_for(std::chrono::microseconds(micros));
+common/threads.cpp:276	Thread::SleepNano	std::this_thread::sleep_for(std::chrono::nanoseconds(nanos));
+common/threads.cpp:308	Mutex::Lock	EnterCriticalSection(&m_mutex->m_cs);
+common/threads.cpp:324	Mutex::TryLock	return (TryEnterCriticalSection(&m_mutex->m_cs) != 0);
+common/threads.cpp:348	CondVar::Wait	EnterCriticalSection(&mutex->m_mutex->m_cs);
+common/threads.cpp:356	CondVar::Wait	static auto func = ResolveSleepConditionVariableCS();
+common/threads.cpp:368	CondVar::Wait	m_cond_var->m_cv.wait(cpp_lock);
+common/threads.cpp:370	CondVar::Wait	if (m_cond_var->m_cv.wait_for(cpp_lock, std::chrono::microseconds(10000)) ==
+common/threads.cpp:389	CondVar::WaitFor	static auto func = ResolveSleepConditionVariableCS();
+common/threads.cpp:395	CondVar::WaitFor	ok = (m_cond_var->m_cv.wait_for(cpp_lock, std::chrono::microseconds(micros)) ==
+common/threads.h:34	-	static void Sleep(uint32_t millis);
+common/threads.h:35	-	static void SleepMicro(uint32_t micros);
+graphics/guest_gpu/graphicsRun.cpp:190	GuestGpu::SendCommandSync	done.acquire();
+graphics/guest_gpu/graphicsRun.cpp:686	GuestGpu::WaitForIdle	m_idle.Wait(&m_queue_mutex);
+graphics/guest_gpu/graphicsRun.cpp:725	GuestGpu::ThreadRun	gpu->m_work_available.Wait(&gpu->m_queue_mutex);
+graphics/guest_gpu/graphicsRun.cpp:767	GuestGpu::ThreadRun	gpu->m_work_available.WaitFor(&gpu->m_queue_mutex, 100);
+graphics/guest_gpu/graphicsRun.cpp:2397	-	cv.wait(lock, [&] { return stop || !jobs.empty(); });
+graphics/guest_gpu/graphicsRun.cpp:2426	-	cv.wait_for(lock, std::chrono::microseconds(200));
+graphics/guest_gpu/graphicsRun.cpp:2563	-	to_relay.wait(lock, [this] { return stop || has_job; });
+graphics/guest_gpu/graphicsRun.cpp:2652	BatonRelayRun	relay->to_owner.wait(lock, [relay] { return relay->done; });
+graphics/host_gpu/pageManager.cpp:2602	-	queue_cv.wait(lock, [this] { return worker_stop || !queue.empty(); });
+graphics/host_gpu/pageManager.cpp:2625	-	drain_cv.wait(lock, [this] { return inflight.load(std::memory_order_acquire) == 0; });
+graphics/host_gpu/renderer/cache/bufferCache.cpp:680	BufferCache::ReadMemory	m_scheduler.GetMasterSemaphore().Wait(job.tick);
+graphics/host_gpu/renderer/cache/bufferCache.cpp:2186	BufferCache::WaitPendingHostReads	m_scheduler.Wait(tick); // submits the recording command buffer when tick is current
+graphics/host_gpu/renderer/cache/faultManager.cpp:99	FaultManager::ProcessFaultBuffer	m_scheduler.Wait(wait_tick);
+graphics/host_gpu/renderer/cache/hostImport.cpp:128	ostImport::~HostImport	std::this_thread::sleep_for(std::chrono::milliseconds(1));
+graphics/host_gpu/renderer/cache/streamBuffer.cpp:366	StreamBuffer::WaitPendingOperations	Scheduler().Wait(watch.tick);
+graphics/host_gpu/renderer/commandRecorder.cpp:217	CommandRecorder::Reserve	m_progress.wait_for(lock, WaitSlice, [this, head, want] {
+graphics/host_gpu/renderer/commandRecorder.cpp:564	CommandRecorder::Drain	m_progress.wait_for(lock, WaitSlice);
+graphics/host_gpu/renderer/commandRecorder.cpp:996	CommandRecorder::Loop	m_pending.wait_for(lock, SleepSlice);
+graphics/host_gpu/renderer/commandScheduler.cpp:119	-	m_drained.wait(lock, [this, target] { return m_submitted >= target; });
+graphics/host_gpu/renderer/commandScheduler.cpp:136	-	m_available.wait(lock, [this] { return !m_queue.empty(); });
+graphics/host_gpu/renderer/commandScheduler.cpp:376	CommandScheduler::Shutdown	m_operation_available.wait(
+graphics/host_gpu/renderer/commandScheduler.cpp:386	CommandScheduler::Shutdown	m_master.Wait(CurrentTick() - 1);
+graphics/host_gpu/renderer/commandScheduler.cpp:443	CommandScheduler::FlushAndWait	m_master.Wait(tick);
+graphics/host_gpu/renderer/commandScheduler.cpp:453	CommandScheduler::Finish	m_master.Wait(CurrentTick() - 1);
+graphics/host_gpu/renderer/commandScheduler.cpp:468	CommandScheduler::Wait	m_master.Wait(tick);
+graphics/host_gpu/renderer/commandScheduler.cpp:471	CommandScheduler::Wait	m_master.Wait(tick);
+graphics/host_gpu/renderer/commandScheduler.cpp:593	CommandScheduler::DeferOperation	m_operation_available.wait(lock,
+graphics/host_gpu/renderer/commandScheduler.cpp:614	CommandScheduler::DeferPriorityOperation	m_operation_available.wait(lock,
+graphics/host_gpu/renderer/commandScheduler.cpp:644	CommandScheduler::PriorityOperationsThread	m_operation_available.wait(lock, [this, &stop] {
+graphics/host_gpu/renderer/commandScheduler.cpp:659	CommandScheduler::PriorityOperationsThread	m_master.Wait(operation.tick);
+graphics/host_gpu/renderer/commandScheduler.cpp:691	CommandScheduler::DrainPriorityOperations	m_operation_available.wait(
+graphics/host_gpu/renderer/commandScheduler.cpp:700	CommandScheduler::WaitPriorityOperations	m_operation_available.wait(lock, [this, tick] {
+graphics/host_gpu/renderer/gpuCheckpoints.cpp:1017	ReportGpuMarkers	std::this_thread::sleep_for(std::chrono::seconds(1));
+graphics/host_gpu/renderer/indirectArgsSanitizer.cpp:114	IndirectArgsSanitizer::Sanitize	m_scheduler.Wait(tick);
+graphics/host_gpu/renderer/pipeline/computePretranslation.h:137	-	cv.wait(lock, [this] { return queue.empty() && !running; });
+graphics/host_gpu/renderer/pipeline/computePretranslation.h:202	-	cv.wait(lock, [this] { return stopping || !queue.empty(); });
+graphics/host_gpu/renderer/pipeline/descriptorHeap.cpp:41	escriptorHeap::~DescriptorHeap	m_master_semaphore.Wait(pool.tick);
+graphics/host_gpu/renderer/pipeline/descriptorHeap.cpp:45	escriptorHeap::~DescriptorHeap	m_master_semaphore.Wait(m_ring_last_tick);
+graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3159	-	ahead_cv.wait(lock, [&] {
+graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4852	PipelineCache::WorkerLoop	m_job_cv.wait(lock, [this] { return m_stop_workers || !m_jobs.empty(); });
+graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4881	PipelineCache::WaitForPendingPipelines	m_idle_cv.wait(lock, [this] { return m_jobs.empty() && m_jobs_active == 0; });
+graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5283	PipelineCache::GetGraphicsPipeline	m_ready_cv.wait_for(lock, std::chrono::microseconds(AsyncPipelineWaitUs()),
+graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5872	ipelineCache::GetComputePipeline	m_ready_cv.wait(lock, [pending] { return pending->ready.load(std::memory_order_acquire); });
+graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6191	PipelineCache::PcwLoop	m_pcw_cv.wait_for(lock, std::chrono::milliseconds(100), [this] { return m_pcw_stop; });
+graphics/host_gpu/renderer/shadowResolve.cpp:125	Worker	std::this_thread::sleep_for(std::chrono::milliseconds(5));
+graphics/host_gpu/renderer/shadowResolve.cpp:148	Worker	g_wake.wait_for(lock, std::chrono::milliseconds(1));
+graphics/host_gpu/vma.cpp:163	-	m_drained.wait(lock, [this] { return m_queue.empty() && !m_running; });
+graphics/host_gpu/vma.cpp:170	-	m_available.wait(lock, [this] { return !m_queue.empty(); });
+graphics/presentation/videoOut.cpp:830	VideoOutDriver::Impl::PresentThread	Common::Thread::SleepMicro(static_cast<uint32_t>(
+graphics/presentation/videoOut.cpp:941	FlipQueue::Cancel	m_done_cond_var.Wait(&m_mutex);
+graphics/presentation/videoOut.cpp:1134	FlipQueue::WaitForSubmitSlot	m_submit_slot_cond_var.Wait(&m_mutex);
+graphics/presentation/videoOut.cpp:1147	FlipQueue::Wait	m_done_cond_var.Wait(&m_mutex);
+graphics/presentation/videoOut.cpp:1156	FlipQueue::Flip	m_submit_cond_var.WaitFor(&m_mutex, micros);
+graphics/presentation/videoOut.cpp:3928	VideoOutDriver::WaitFlipDone	m_impl->GetFlipQueue().Wait(*ctx, index);
+graphics/presentation/videoOut.cpp:4067	VideoOutWaitVblank	ctx->vblank_cond.Wait(&ctx->mutex);
+graphics/presentation/window/screenshot.cpp:403	ScreenshotGrabber::FlushVideoSlot	m_scheduler.Wait(slot.tick);
+graphics/presentation/window/screenshot.cpp:441	ScreenshotGrabber::FlushVideoSlot	m_rec_cv.wait(lock, [&] { return m_rec_queue.size() < 8; });
+graphics/presentation/window/screenshot.cpp:455	ScreenshotGrabber::RecorderThread	m_rec_cv.wait(lock, [&] { return m_rec_stop || !m_rec_queue.empty(); });
+graphics/presentation/window/screenshot.cpp:527	ScreenshotGrabber::Finish	m_scheduler.Wait(tick);
+graphics/presentation/window/swapchain.cpp:65	-	m_scheduler.Wait(m_scheduler.CurrentTick() - 1);
+graphics/presentation/window/swapchain.cpp:114	-	m_available.Wait(&m_mutex);
+graphics/presentation/window/swapchain.cpp:189	-	m_scheduler.Wait(frame.present_tick);
+graphics/presentation/window/swapchain.cpp:656	Swapchain::AcquireNextImage	scheduler.Wait(m_acquire_ticks[m_frame_index]);
+graphics/presentation/window/window.cpp:824	WindowContext::RunOnMainThread	main_task_done.Wait(&main_task_mutex);
+graphics/presentation/window/window.cpp:1242	TestHidLossRun	std::this_thread::sleep_for(std::chrono::microseconds(t_us - now));
+graphics/presentation/window/window.cpp:1278	TestHidLossRun	std::this_thread::sleep_for(std::chrono::milliseconds(TEST_HIDLOSS_PROBE_MS));
+graphics/presentation/window/window.cpp:1360	WindowTestMinimizeNoteGuestText	std::this_thread::sleep_for(std::chrono::duration<double>(cfg.delay_s));
+graphics/presentation/window/window.cpp:1362	WindowTestMinimizeNoteGuestText	std::this_thread::sleep_for(std::chrono::duration<double>(cfg.dur_s));
+graphics/presentation/window/window.cpp:1502	WindowContext::UpdateTitle	PostToMainThread([ms] { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); });
+kernel/eventFlag.cpp:89	ernelEventFlagPrivate::~KernelEventFlagPrivate	Common::Thread::SleepMicro(10);
+kernel/eventFlag.cpp:99	ernelEventFlagPrivate::~KernelEventFlagPrivate	Common::Thread::SleepMicro(10);
+kernel/eventFlag.cpp:149	KernelEventFlagPrivate::Wait	m_cond_var.Wait(&m_mutex);
+kernel/eventFlag.cpp:151	KernelEventFlagPrivate::Wait	m_cond_var.WaitFor(&m_mutex, micros - elapsed);
+kernel/eventFlag.cpp:199	KernelEventFlagPrivate::Set	Common::Thread::SleepMicro(10);
+kernel/eventFlag.cpp:218	KernelEventFlagPrivate::Clear	Common::Thread::SleepMicro(10);
+kernel/eventFlag.cpp:232	KernelEventFlagPrivate::Cancel	Common::Thread::SleepMicro(10);
+kernel/eventFlag.cpp:247	KernelEventFlagPrivate::Cancel	Common::Thread::SleepMicro(10);
+kernel/eventFlag.cpp:315	KernelWaitEventFlag	auto       result = ef->Wait(bit_pattern, mode.wait, mode.clear, result_pat, timeout);
+kernel/eventQueue.cpp:200	KernelEqueuePrivate::WaitForEvents	m_cond_var.Wait(&m_mutex);
+kernel/eventQueue.cpp:203	KernelEqueuePrivate::WaitForEvents	m_cond_var.WaitFor(&m_mutex,
+kernel/pthread.cpp:233	KernelGetTscFrequencyNative	Common::Thread::Sleep(1);
+kernel/pthread.cpp:238	KernelGetTscFrequencyNative	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+kernel/pthread.cpp:596	SchedulerBackoffOnce	Sleep(0);
+kernel/pthread.cpp:621	SleepMicroWithSignalPoll	Common::Thread::SleepMicro(step);
+kernel/pthread.cpp:1086	FreeDetachedThreads	Common::Thread::Sleep(10000);
+kernel/pthread.cpp:1378	NativeMutexLock	mutex->cv.wait_for(lock, std::chrono::microseconds(*timeout_us));
+kernel/pthread.cpp:1394	NativeMutexLock	mutex->cv.wait_for(lock, std::chrono::microseconds(SIGNAL_APC_POLL_MICROS));
+kernel/pthread.cpp:1420	NativeMutexLock	mutex->cv.wait_for(lock, poll);
+kernel/pthread.cpp:2529	RwlockLockCooperative	rwlock->cv.wait_for(lock, poll);
+kernel/pthread.cpp:2531	RwlockLockCooperative	rwlock->cv.wait_for(lock, std::chrono::microseconds(SIGNAL_APC_POLL_MICROS));
+kernel/pthread.cpp:3029	PthreadCondTimedwait	thread->cond_cv.wait_for(cond_lock, poll);
+kernel/pthread.cpp:3124	PthreadCondTimedwaitAbs	thread->cond_cv.wait_for(cond_lock, poll);
+kernel/pthread.cpp:3200	PthreadCondWait	thread->cond_cv.wait_for(cond_lock, std::chrono::microseconds(SIGNAL_APC_POLL_MICROS));
+kernel/pthread.cpp:4398	pthread_once	g_pthread_once_cv.wait_for(
+kernel/semaphore.cpp:83	ernelSemaPrivate::~KernelSemaPrivate	Common::Thread::SleepMicro(10);
+kernel/semaphore.cpp:100	ernelSemaPrivate::~KernelSemaPrivate	Common::Thread::SleepMicro(10);
+kernel/semaphore.cpp:245	KernelSemaPrivate::Wait	m_cond_var.WaitFor(&m_mutex, SIGNAL_APC_POLL_MICROS);
+kernel/semaphore.cpp:247	KernelSemaPrivate::Wait	m_cond_var.WaitFor(&m_mutex, micros - elapsed);
+kernel/semaphore.cpp:310	KernelWaitSema	auto result = sem->Wait(need, time);
+kernel/semaphore.cpp:442	-	m_cond_var.WaitFor(&m_mutex, *micros - elapsed);
+kernel/semaphore.cpp:444	-	m_cond_var.WaitFor(&m_mutex, SIGNAL_APC_POLL_MICROS);
+kernel/semaphore.cpp:611	SemTimedwaitImpl	return obj->Wait(micros);
+kernel/syncOnAddress.cpp:211	WaitPortable	(void)waiter.condition.WaitFor(&entry->mutex, slice_micros);
+libs/audio.cpp:737	Audio::QueueSdlAudio	Common::Thread::SleepMicro(1000);
+libs/audio.cpp:914	Audio::AudioOutOutputs	Common::Thread::SleepMicro(max_wait_time);
+libs/audio.cpp:1058	Audio::AudioInInput	Common::Thread::SleepMicro(wait_time);
+libs/audio.cpp:1067	Audio::AudioInInput	Common::Thread::SleepMicro(1000);
+libs/audio.cpp:1634	playback_simulate	Common::Thread::SleepMicro(port->data_delay);
+libs/audio.cpp:1856	Audio3dPortPush	Common::Thread::SleepMicro(wait_time);
+libs/avPlayer.cpp:406	-	available.wait(lock, [&] {
+libs/avPlayer.cpp:420	-	available.wait(lock, [&] { return stop || finished || !queue.empty(); });
+libs/avPlayer.cpp:528	-	available.wait(lock, [&] { return stop || !queue.empty(); });
+libs/controller.cpp:306	PadOutput::Loop	m_cv.wait(lock, [&] {
+libs/libAmpr.cpp:1983	CommandBufferWaitOnAddress	static int KYTY_SYSV_ABI CommandBufferWaitOnAddress(void* command_buffer, volatile uint64_t*,
+libs/libAudio2.cpp:550	AudioOut2ContextPush	Common::Thread::SleepMicro(sleep_micros);
+libs/libC.cpp:503	std_execute_once	g_execute_once_cv.wait_for(lock, std::chrono::microseconds(10000));
+libs/libKernel.cpp:524	WaitForSignalDispatch	Common::Thread::SleepMicro(DISPATCH_WAIT_STEP.count());
+libs/libKernel.cpp:2476	FiberWaitAndEnterRunning	std::this_thread::sleep_for(std::chrono::microseconds(100));
+libs/libKernel.cpp:3078	KernelAioWaitRequest	Common::Thread::SleepMicro(10);
+libs/libUlt.cpp:633	UltSemaphoreAcquire	state->available.wait(lock, [&] { return !state->alive || state->resources >= num_resource; });
+libs/network.cpp:1515	EpollWait	g_epoll_changed.wait(lock, ready);
+libs/network.cpp:1517	EpollWait	g_epoll_changed.wait_for(lock, std::chrono::microseconds(timeout), ready);
+libs/network.cpp:2152	Select	Sleep(host_timeout_ptr == nullptr ? INFINITE :

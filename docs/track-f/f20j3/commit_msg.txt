@@ -1,0 +1,28 @@
+track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on the host waits of the emulator with waker and peer, M5 off the sampler thread, ring_hold (ROADMAP s122 item 574(g)(1)-(6))
+
+The single code fix by U1 (item 574(v)(1)); default 0, measurement only. At KYTY_DIAG_B32=1:
+- (g)(1) W:<kind> on the host waits of the emulator (inventory docs/track-f/f20j3/waits_f20j3.py: 183 wait call
+  places, 402 Common::Mutex acquisitions, 101 std mutex declarations, 3 spin locks - each a verified mark or a line of
+  the exception table with its reason): the contended Common::Mutex::Lock (primitive, peer = CRITICAL_SECTION owner)
+  and Common::DiagB32::TrackedMutex for 60 std mutex declarations on the guest / present / GuestGpu / ASubmit paths
+  (peer = the last taker); one mark over each wait loop (short wakeups stay W) at FlipQueue::WaitForSubmitSlot / Wait /
+  Cancel / Flip (request), GuestGpu::WaitForIdle (AgcSuspendPoint), SendCommandSync, the relay, VideoOutWaitVblank, the
+  frame pool, the async submitter, the priority operations, the record thread, pipeline waits, the main thread task,
+  guest HLE waits (rwlock, once, join, wait on address, aio, fiber, audio, ult, net, avplayer) and the 10 us spin
+  loops. New kinds are appended after gpu_regmem: emu_mutex .. av are emulator waits (EMU_WAIT of item 574(d)),
+  vblank .. rwlock are waits the guest asked for. The stand gpusleep stays outside every mark.
+- (g)(2) waker: the last signaller kept in the waited object (CondVar private field; a side table keyed by the object
+  for std::condition_variable, NoteSignal before every notify of a marked cv); peer: the role thread advancing the
+  condition (Present, Gpu, ASubmit, POps, Relay, Main, Record - roles registered at =1); the -w line ends with
+  peer=<slot> peer_tid=<gid>, the peer's -t line is mandatory, open mutex-like records take the peer as the waker.
+- (g)(4) M5: the thread-list refresh (CreateToolhelp32Snapshot, 76.7 ms in b32_pp frame 1798) runs on its own thread
+  (Core::AsyncRefresh, "DiagB32M5"); its time still enters instr_us and m5r_us (RC9 unchanged).
+- (g)(5) Z1: ring_hold / ring_hold_w at the end of the -x line.
+- (g)(6) =0: every new site is one test of g_on (Mutex::Lock, TrackedMutex::lock, CondVar::Signal, NoteSignal, each
+  mark); no record, no thread. Tests: diag_b32_tests 21 cases (15 old, the -x expectation extended by ring_hold; 6 new:
+  kinds, ring_hold, peer fields, an 80 ms M5 refresh model, a wait loop with 2 ms wakeups under one mark, contended
+  Common::Mutex / TrackedMutex). Outside src/graphics/shader and SHADER_CACHE_EXTRA_FILES.
+
+WIP: not run by the game; review F20k3 (HPP-647) pending; controls F20l2.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

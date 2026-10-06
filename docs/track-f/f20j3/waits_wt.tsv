@@ -1,0 +1,690 @@
+part	file	line	function/name	status	check	detail	text
+A	common/diagB32.cpp	751	AsyncRefresh::Start	EXC:instr	ok	the M5 refresher thread (AsyncRefresh) - instrument	if (impl->cv.wait_for(lock, std::chrono::nanoseconds(period_ns), [impl] { return impl->stop; })) {
+A	common/diagB32.cpp	768	AsyncRefresh::Stop	EXC:instr	ok	the M5 refresher thread (AsyncRefresh) - instrument	m_impl->thread.join();
+A	common/diagB32.cpp	1197	TestSleepNow	EXC:stand	ok	KYTY_TEST_B32 gpusleep/present sleep - outside every mark by item 574(g)(1) (PK-C)	std::this_thread::sleep_for(std::chrono::milliseconds(g_test_ms));
+A	common/diagB32.cpp	1882	Sampler::Run	EXC:instr	ok	the sampler thread itself	const DWORD r = WaitForMultipleObjects(2, handles, FALSE, 1000);
+A	common/diagB32.cpp	2009	LogHeader	EXC:instr	ok	start-up wait for the sampler (once)	std::this_thread::sleep_for(std::chrono::milliseconds(5));
+A	common/frameStats.cpp	409	SamplerThread	EXC:instr	ok	FrameStats sampler / knob "burn" (off by default) - instruments	std::this_thread::sleep_for(std::chrono::milliseconds(50));
+A	common/frameStats.cpp	414	SamplerThread	EXC:instr	ok	FrameStats sampler / knob "burn" (off by default) - instruments	std::this_thread::sleep_for(std::chrono::microseconds(700));
+A	common/frameStats.cpp	870	BurnPlaceboLoop	EXC:instr	ok	FrameStats sampler / knob "burn" (off by default) - instruments	Sleep(1);
+A	common/parallelCopy.cpp	183	-	MARK:pcopy	ok		m_finished.wait(lock, [&] { return m_pending.load(std::memory_order_acquire) == 0; });
+A	common/parallelCopy.cpp	262	-	EXC:shutdown	ok		worker.join();
+A	common/parallelCopy.cpp	276	-	EXC:worker	ok	copy worker idle wait (workers are not registered; the caller waits W:pcopy)	m_wake.wait(lock, [&] { return m_stop || !m_jobs.empty(); });
+A	common/threads.cpp	77	SleepHighResolution100ns	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	WaitForSingleObject(timer, INFINITE);
+A	common/threads.cpp	82	SleepHighResolution100ns	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	std::this_thread::sleep_for(std::chrono::nanoseconds(units_100ns * 100));
+A	common/threads.cpp	146	SleepHighResolutionNanos	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	std::this_thread::sleep_for(std::chrono::nanoseconds(nanos));
+A	common/threads.cpp	240	Thread::Thread	MARK:spin	ok	creator waits for the thread start	Common::Thread::SleepMicro(1000);
+A	common/threads.cpp	259	Thread::Join	MARK:join	ok		m_thread->m_thread.join();
+A	common/threads.cpp	272	Thread::Sleep	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	void Thread::Sleep(uint32_t millis) {
+A	common/threads.cpp	273	Thread::Sleep	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	std::this_thread::sleep_for(std::chrono::milliseconds(millis));
+A	common/threads.cpp	276	Thread::SleepMicro	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	void Thread::SleepMicro(uint32_t micros) {
+A	common/threads.cpp	282	Thread::SleepMicro	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	std::this_thread::sleep_for(std::chrono::microseconds(micros));
+A	common/threads.cpp	292	Thread::SleepNano	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	std::this_thread::sleep_for(std::chrono::nanoseconds(nanos));
+A	common/threads.cpp	328	Mutex::Lock	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	EnterCriticalSection(&m_mutex->m_cs);
+A	common/threads.cpp	339	Mutex::LockB32	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	if (TryEnterCriticalSection(&m_mutex->m_cs) != 0) {
+A	common/threads.cpp	345	Mutex::LockB32	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	EnterCriticalSection(&m_mutex->m_cs);
+A	common/threads.cpp	368	Mutex::TryLock	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	return (TryEnterCriticalSection(&m_mutex->m_cs) != 0);
+A	common/threads.cpp	392	CondVar::Wait	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	EnterCriticalSection(&mutex->m_mutex->m_cs);
+A	common/threads.cpp	412	CondVar::Wait	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	m_cond_var->m_cv.wait(cpp_lock);
+A	common/threads.cpp	414	CondVar::Wait	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	if (m_cond_var->m_cv.wait_for(cpp_lock, std::chrono::microseconds(10000)) ==
+A	common/threads.cpp	439	CondVar::WaitFor	PRIM	ok	the primitive (CondVar / Sleep / CRITICAL_SECTION); the wait is marked at its call site, Mutex::Lock -> LockB32	ok = (m_cond_var->m_cv.wait_for(cpp_lock, std::chrono::microseconds(micros)) ==
+A	common/threads.h	34	-	EXC:decl	ok	declaration, not a call	static void Sleep(uint32_t millis);
+A	common/threads.h	35	-	EXC:decl	ok	declaration, not a call	static void SleepMicro(uint32_t micros);
+A	graphics/guest_gpu/graphicsRun.cpp	135	GuestGpu::Shutdown	EXC:shutdown	ok		m_thread.join();
+A	graphics/guest_gpu/graphicsRun.cpp	196	GuestGpu::SendCommandSync	MARK:gpu_cmd	ok		done.acquire();
+A	graphics/guest_gpu/graphicsRun.cpp	700	GuestGpu::WaitForIdle	MARK:gpu_wait	ok	item 574(a)(4)	m_idle.Wait(&m_queue_mutex);
+A	graphics/guest_gpu/graphicsRun.cpp	742	GuestGpu::ThreadRun	OLD:gpu_idle	ok		gpu->m_work_available.Wait(&gpu->m_queue_mutex);
+A	graphics/guest_gpu/graphicsRun.cpp	784	GuestGpu::ThreadRun	OLD:gpu_regmem	ok		gpu->m_work_available.WaitFor(&gpu->m_queue_mutex, 100);
+A	graphics/guest_gpu/graphicsRun.cpp	2414	-	EXC:worker	ok	draw-ahead walker thread (knob dawalk) - not registered, its waits block nobody	cv.wait(lock, [&] { return stop || !jobs.empty(); });
+A	graphics/guest_gpu/graphicsRun.cpp	2443	-	EXC:worker	ok	draw-ahead walker thread (knob dawalk) - not registered, its waits block nobody	cv.wait_for(lock, std::chrono::microseconds(200));
+A	graphics/guest_gpu/graphicsRun.cpp	2535	DrawAheadWalkerStop	EXC:shutdown	ok		walker->thread.join();
+A	graphics/guest_gpu/graphicsRun.cpp	2583	-	EXC:worker	ok	relay thread idle (waits for a job; while a job runs GuestGpu waits W:relay)	to_relay.wait(lock, [this] { return stop || has_job; });
+A	graphics/guest_gpu/graphicsRun.cpp	2678	BatonRelayRun	MARK:relay	ok	item 574(a)(4)	relay->to_owner.wait(lock, [relay] { return relay->done; });
+A	graphics/guest_gpu/graphicsRun.cpp	2704	BatonRelayStop	EXC:shutdown	ok		relay->thread.join();
+A	graphics/host_gpu/pageManager.cpp	2615	-	EXC:worker	ok	protect worker idle (not registered)	queue_cv.wait(lock, [this] { return worker_stop || !queue.empty(); });
+A	graphics/host_gpu/pageManager.cpp	2644	-	MARK:pm_drain	ok		drain_cv.wait(lock, [this] { return inflight.load(std::memory_order_acquire) == 0; });
+A	graphics/host_gpu/pageManager.cpp	2662	-	EXC:shutdown	ok		worker.join();
+A	graphics/host_gpu/vma.cpp	169	-	MARK:vma_flush	ok		m_drained.wait(lock, [this] { return m_queue.empty() && !m_running; });
+A	graphics/host_gpu/vma.cpp	177	-	EXC:worker	ok	VMA worker idle (not registered)	m_available.wait(lock, [this] { return !m_queue.empty(); });
+A	graphics/host_gpu/renderer/commandRecorder.cpp	160	CommandRecorder::Stop	EXC:shutdown	ok		m_thread.join();
+A	graphics/host_gpu/renderer/commandRecorder.cpp	227	CommandRecorder::Reserve	MARK:rec_wait	ok		m_progress.wait_for(lock, WaitSlice, [this, head, want] {
+A	graphics/host_gpu/renderer/commandRecorder.cpp	581	CommandRecorder::Drain	MARK:rec_wait	ok		m_progress.wait_for(lock, WaitSlice);
+A	graphics/host_gpu/renderer/commandRecorder.cpp	1020	CommandRecorder::Loop	MARK:rec_idle	ok		m_pending.wait_for(lock, SleepSlice);
+A	graphics/host_gpu/renderer/commandScheduler.cpp	126	-	MARK:asub_drain	ok		m_drained.wait(lock, [this, target] { return m_submitted >= target; });
+A	graphics/host_gpu/renderer/commandScheduler.cpp	149	-	MARK:asub_idle	ok		m_available.wait(lock, [this] { return !m_queue.empty(); });
+A	graphics/host_gpu/renderer/commandScheduler.cpp	391	CommandScheduler::Shutdown	EXC:shutdown	ok		m_operation_available.wait(
+A	graphics/host_gpu/renderer/commandScheduler.cpp	401	CommandScheduler::Shutdown	EXC:shutdown	ok		m_master.Wait(CurrentTick() - 1);
+A	graphics/host_gpu/renderer/commandScheduler.cpp	408	CommandScheduler::Shutdown	EXC:shutdown	ok		m_priority_thread.join();
+A	graphics/host_gpu/renderer/commandScheduler.cpp	460	CommandScheduler::FlushAndWait	CALLEE:semwait	ok	MasterSemaphore::Wait -> H:semwait	m_master.Wait(tick);
+A	graphics/host_gpu/renderer/commandScheduler.cpp	470	CommandScheduler::Finish	CALLEE:semwait	ok	MasterSemaphore::Wait -> H:semwait	m_master.Wait(CurrentTick() - 1);
+A	graphics/host_gpu/renderer/commandScheduler.cpp	485	CommandScheduler::Wait	CALLEE:semwait	ok	MasterSemaphore::Wait -> H:semwait	m_master.Wait(tick);
+A	graphics/host_gpu/renderer/commandScheduler.cpp	488	CommandScheduler::Wait	CALLEE:semwait	ok	MasterSemaphore::Wait -> H:semwait	m_master.Wait(tick);
+A	graphics/host_gpu/renderer/commandScheduler.cpp	615	CommandScheduler::DeferOperation	MARK:ops_wait	ok		m_operation_available.wait(lock,
+A	graphics/host_gpu/renderer/commandScheduler.cpp	643	CommandScheduler::DeferPriorityOperation	MARK:ops_wait	ok		m_operation_available.wait(lock,
+A	graphics/host_gpu/renderer/commandScheduler.cpp	682	CommandScheduler::PriorityOperationsThread	MARK:ops_idle	ok		m_operation_available.wait(lock, [this, &stop] {
+A	graphics/host_gpu/renderer/commandScheduler.cpp	698	CommandScheduler::PriorityOperationsThread	CALLEE:semwait	ok		m_master.Wait(operation.tick);
+A	graphics/host_gpu/renderer/commandScheduler.cpp	736	CommandScheduler::DrainPriorityOperations	MARK:ops_wait	ok		m_operation_available.wait(
+A	graphics/host_gpu/renderer/commandScheduler.cpp	751	CommandScheduler::WaitPriorityOperations	MARK:ops_wait	ok		m_operation_available.wait(lock, [this, tick] {
+A	graphics/host_gpu/renderer/commandScheduler.cpp	1055	CommandScheduler::Submit	EXC:debug	ok	KYTY_SYNC_SUBMIT=1 only (debug aid)	const auto idle = graphics.queue.waitIdle();
+A	graphics/host_gpu/renderer/gpuCheckpoints.cpp	1017	ReportGpuMarkers	EXC:debug	ok	after a device loss with KYTY_GPU_CHECKPOINTS	std::this_thread::sleep_for(std::chrono::seconds(1));
+A	graphics/host_gpu/renderer/indirectArgsSanitizer.cpp	114	IndirectArgsSanitizer::Sanitize	CALLEE:semwait	ok	CommandScheduler::Wait -> H:semwait	m_scheduler.Wait(tick);
+A	graphics/host_gpu/renderer/masterSemaphore.cpp	105	MasterSemaphore::Wait	OLDH:semwait	ok	vkWaitSemaphores inside H:semwait	result = m_graphics.device.waitSemaphores(&wait_info,
+A	graphics/host_gpu/renderer/shadowResolve.cpp	125	Worker	EXC:worker	ok	shadow resolve worker thread / join	std::this_thread::sleep_for(std::chrono::milliseconds(5));
+A	graphics/host_gpu/renderer/shadowResolve.cpp	148	Worker	EXC:worker	ok	shadow resolve worker thread / join	g_wake.wait_for(lock, std::chrono::milliseconds(1));
+A	graphics/host_gpu/renderer/shadowResolve.cpp	250	Stop	EXC:worker	ok	shadow resolve worker thread / join	thread.join();
+A	graphics/host_gpu/renderer/cache/bufferCache.cpp	680	BufferCache::ReadMemory	CALLEE:semwait	ok	MasterSemaphore::Wait / CommandScheduler::Wait -> H:semwait (masterSemaphore.cpp)	m_scheduler.GetMasterSemaphore().Wait(job.tick);
+A	graphics/host_gpu/renderer/cache/bufferCache.cpp	2186	BufferCache::WaitPendingHostReads	CALLEE:semwait	ok	MasterSemaphore::Wait / CommandScheduler::Wait -> H:semwait (masterSemaphore.cpp)	m_scheduler.Wait(tick); // submits the recording command buffer when tick is current
+A	graphics/host_gpu/renderer/cache/faultManager.cpp	99	FaultManager::ProcessFaultBuffer	CALLEE:semwait	ok	CommandScheduler::Wait -> H:semwait	m_scheduler.Wait(wait_tick);
+A	graphics/host_gpu/renderer/cache/hostImport.cpp	106	HostImport::Preload	EXC:shutdown	ok	destructor	thread.join();
+A	graphics/host_gpu/renderer/cache/hostImport.cpp	128	HostImport::~HostImport	EXC:shutdown	ok	destructor	std::this_thread::sleep_for(std::chrono::milliseconds(1));
+A	graphics/host_gpu/renderer/cache/streamBuffer.cpp	366	StreamBuffer::WaitPendingOperations	CALLEE:semwait	ok	CommandScheduler::Wait -> H:semwait	Scheduler().Wait(watch.tick);
+A	graphics/host_gpu/renderer/pipeline/computePretranslation.h	137	-	EXC:teardown	ok	"Test/teardown only. The guest path never calls this."	cv.wait(lock, [this] { return queue.empty() && !running; });
+A	graphics/host_gpu/renderer/pipeline/computePretranslation.h	146	-	EXC:worker	ok	pretranslation worker idle / join	if (worker.joinable()) { worker.join(); }
+A	graphics/host_gpu/renderer/pipeline/computePretranslation.h	202	-	EXC:worker	ok	pretranslation worker idle / join	cv.wait(lock, [this] { return stopping || !queue.empty(); });
+A	graphics/host_gpu/renderer/pipeline/descriptorHeap.cpp	41	DescriptorHeap::~DescriptorHeap	CALLEE:semwait	ok	destructor; MasterSemaphore::Wait -> H:semwait	m_master_semaphore.Wait(pool.tick);
+A	graphics/host_gpu/renderer/pipeline/descriptorHeap.cpp	45	DescriptorHeap::~DescriptorHeap	CALLEE:semwait	ok	destructor; MasterSemaphore::Wait -> H:semwait	m_master_semaphore.Wait(m_ring_last_tick);
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2776	-	EXC:shutdown	ok		thread.join();
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3160	-	EXC:worker	ok	pipeline worker / draw-ahead worker / driver-cache writer idle (not registered)	ahead_cv.wait(lock, [&] {
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4690	PipelineCache::~PipelineCache	EXC:shutdown	ok		m_precache_thread.join();
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4837	PipelineCache::StopWorkers	EXC:shutdown	ok		worker.join();
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4853	PipelineCache::WorkerLoop	EXC:worker	ok	pipeline worker / draw-ahead worker / driver-cache writer idle (not registered)	m_job_cv.wait(lock, [this] { return m_stop_workers || !m_jobs.empty(); });
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4889	PipelineCache::WaitForPendingPipelines	MARK:pipe_wait	ok		m_idle_cv.wait(lock, [this] { return m_jobs.empty() && m_jobs_active == 0; });
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5297	PipelineCache::GetGraphicsPipeline	MARK:pipe_wait	ok		m_ready_cv.wait_for(lock, std::chrono::microseconds(AsyncPipelineWaitUs()),
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5894	PipelineCache::GetComputePipeline	MARK:pipe_wait	ok		m_ready_cv.wait(lock, [pending] { return pending->ready.load(std::memory_order_acquire); });
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6192	PipelineCache::PcwStop	EXC:shutdown	ok		m_pcw_thread.join();
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6214	PipelineCache::PcwLoop	EXC:worker	ok	pipeline worker / draw-ahead worker / driver-cache writer idle (not registered)	m_pcw_cv.wait_for(lock, std::chrono::milliseconds(100), [this] { return m_pcw_stop; });
+A	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6416	PipelineCache::FinishPreparation	EXC:shutdown	ok		m_precache_thread.join();
+A	graphics/presentation/videoOut.cpp	629	VideoOutDriver::Impl::~Impl	EXC:shutdown	ok		m_present_thread.join();
+A	graphics/presentation/videoOut.cpp	835	VideoOutDriver::Impl::PresentThread	MARK:vo_pace	ok		Common::Thread::SleepMicro(static_cast<uint32_t>(
+A	graphics/presentation/videoOut.cpp	952	FlipQueue::Cancel	MARK:flip_cancel	ok	item 574(a)(4)	m_done_cond_var.Wait(&m_mutex);
+A	graphics/presentation/videoOut.cpp	1153	FlipQueue::WaitForSubmitSlot	MARK:flip_slot	ok	item 574(a)(4)	m_submit_slot_cond_var.Wait(&m_mutex);
+A	graphics/presentation/videoOut.cpp	1174	FlipQueue::Wait	MARK:flip_done	ok	item 574(a)(4)	m_done_cond_var.Wait(&m_mutex);
+A	graphics/presentation/videoOut.cpp	1192	FlipQueue::Flip	MARK:flip_req	ok	item 574(a)(4)	const bool b32_got = m_submit_cond_var.WaitFor(&m_mutex, micros);
+A	graphics/presentation/videoOut.cpp	3967	VideoOutDriver::WaitFlipDone	CALLER:flip_done	ok	calls FlipQueue::Wait (the mark is there)	m_impl->GetFlipQueue().Wait(*ctx, index);
+A	graphics/presentation/videoOut.cpp	4112	VideoOutWaitVblank	MARK:vblank	ok	item 574(a)(4)	ctx->vblank_cond.Wait(&ctx->mutex);
+A	graphics/presentation/window/hostInput.cpp	425	HostInputWaitEvent	CALLER:main_idle:graphics/presentation/window/window.cpp:const bool b32_event = HostInputWaitEvent(&loop.event);	ok	the main loop marks the call	if (SDL_WaitEvent(event) == 0) {
+A	graphics/presentation/window/hostInput.cpp	433	HostInputWaitEvent	CALLER:main_idle:graphics/presentation/window/window.cpp:const bool b32_event = HostInputWaitEvent(&loop.event);	ok	the main loop marks the call	if (SDL_WaitEventTimeout(event, timeout_ms) != 0) {
+A	graphics/presentation/window/screenshot.cpp	222	ScreenshotGrabber::~ScreenshotGrabber	EXC:shutdown	ok		m_rec_thread.join();
+A	graphics/presentation/window/screenshot.cpp	405	ScreenshotGrabber::FlushVideoSlot	CALLEE:semwait	ok	CommandScheduler::Wait -> H:semwait	m_scheduler.Wait(slot.tick);
+A	graphics/presentation/window/screenshot.cpp	448	ScreenshotGrabber::FlushVideoSlot	MARK:rec_queue	ok		m_rec_cv.wait(lock, [&] { return m_rec_queue.size() < 8; });
+A	graphics/presentation/window/screenshot.cpp	464	ScreenshotGrabber::RecorderThread	EXC:worker	ok	video encoder thread idle (KYTY_REC)	m_rec_cv.wait(lock, [&] { return m_rec_stop || !m_rec_queue.empty(); });
+A	graphics/presentation/window/screenshot.cpp	537	ScreenshotGrabber::Finish	CALLEE:semwait	ok	CommandScheduler::Wait -> H:semwait	m_scheduler.Wait(tick);
+A	graphics/presentation/window/swapchain.cpp	65	-	CALLEE:semwait	ok	CommandScheduler::Wait -> H:semwait (acquire / present ticks)	m_scheduler.Wait(m_scheduler.CurrentTick() - 1);
+A	graphics/presentation/window/swapchain.cpp	120	-	MARK:frame_pool	ok		m_available.Wait(&m_mutex);
+A	graphics/presentation/window/swapchain.cpp	198	-	CALLEE:semwait	ok	CommandScheduler::Wait -> H:semwait (acquire / present ticks)	m_scheduler.Wait(frame.present_tick);
+A	graphics/presentation/window/swapchain.cpp	599	Swapchain::Destroy	EXC:rare	ok	Swapchain::Destroy - re-creation of the swapchain (resize / minimize), not in a hold	RequireVulkanSuccess(graphics.queue.waitIdle(), "wait for swapchain queue");
+A	graphics/presentation/window/swapchain.cpp	665	Swapchain::AcquireNextImage	CALLEE:semwait	ok	CommandScheduler::Wait -> H:semwait (acquire / present ticks)	scheduler.Wait(m_acquire_ticks[m_frame_index]);
+A	graphics/presentation/window/vulkanWindow.cpp	1297	WindowContext::~WindowContext	EXC:shutdown	ok	device shutdown	RequireVulkanSuccess(graphic_ctx.device.waitIdle(), "wait for Vulkan device shutdown");
+A	graphics/presentation/window/window.cpp	829	WindowContext::RunOnMainThread	MARK:main_task	ok		main_task_done.Wait(&main_task_mutex);
+A	graphics/presentation/window/window.cpp	1063	WindowPrepareShaders	EXC:startup	ok	shader preparation screen on the main thread before the guest starts	SDL_Delay(16);
+A	graphics/presentation/window/window.cpp	1213	TestHidLossFire	EXC:stand	ok	KYTY_TEST_HIDLOSS / KYTY_TEST_MINIMIZE stands	SDL_Delay(TEST_HIDLOSS_HOLD_MS);
+A	graphics/presentation/window/window.cpp	1216	TestHidLossFire	EXC:stand	ok	KYTY_TEST_HIDLOSS / KYTY_TEST_MINIMIZE stands	case TestHidLossMode::Sleep: SDL_Delay(TEST_HIDLOSS_HOLD_MS); break;
+A	graphics/presentation/window/window.cpp	1257	TestHidLossRun	EXC:stand	ok	KYTY_TEST_HIDLOSS / KYTY_TEST_MINIMIZE stands	std::this_thread::sleep_for(std::chrono::microseconds(t_us - now));
+A	graphics/presentation/window/window.cpp	1293	TestHidLossRun	EXC:stand	ok	KYTY_TEST_HIDLOSS / KYTY_TEST_MINIMIZE stands	std::this_thread::sleep_for(std::chrono::milliseconds(TEST_HIDLOSS_PROBE_MS));
+A	graphics/presentation/window/window.cpp	1375	WindowTestMinimizeNoteGuestText	EXC:stand	ok	KYTY_TEST_HIDLOSS / KYTY_TEST_MINIMIZE stands	std::this_thread::sleep_for(std::chrono::duration<double>(cfg.delay_s));
+A	graphics/presentation/window/window.cpp	1377	WindowTestMinimizeNoteGuestText	EXC:stand	ok	KYTY_TEST_HIDLOSS / KYTY_TEST_MINIMIZE stands	std::this_thread::sleep_for(std::chrono::duration<double>(cfg.dur_s));
+A	graphics/presentation/window/window.cpp	1517	WindowContext::UpdateTitle	EXC:stand	ok	MainStallTest stand (knob)	PostToMainThread([ms] { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); });
+A	kernel/eventFlag.cpp	94	KernelEventFlagPrivate::~KernelEventFlagPrivate	MARK:spin	ok	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+A	kernel/eventFlag.cpp	110	KernelEventFlagPrivate::~KernelEventFlagPrivate	MARK:spin	ok	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+A	kernel/eventFlag.cpp	161	KernelEventFlagPrivate::Wait	OLD:evf	ok		m_cond_var.Wait(&m_mutex);
+A	kernel/eventFlag.cpp	163	KernelEventFlagPrivate::Wait	OLD:evf	ok		m_cond_var.WaitFor(&m_mutex, micros - elapsed);
+A	kernel/eventFlag.cpp	216	KernelEventFlagPrivate::Set	MARK:spin	ok	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+A	kernel/eventFlag.cpp	241	KernelEventFlagPrivate::Clear	MARK:spin	ok	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+A	kernel/eventFlag.cpp	261	KernelEventFlagPrivate::Cancel	MARK:spin	ok	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+A	kernel/eventFlag.cpp	282	KernelEventFlagPrivate::Cancel	MARK:spin	ok	10 us sleep loops of the event flag object	Common::Thread::SleepMicro(10);
+A	kernel/eventFlag.cpp	351	KernelWaitEventFlag	CALLER:evf	ok	calls KernelEventFlagPrivate::Wait	auto       result = ef->Wait(bit_pattern, mode.wait, mode.clear, result_pat, timeout);
+A	kernel/eventQueue.cpp	200	KernelEqueuePrivate::WaitForEvents	OLD:eq	ok		m_cond_var.Wait(&m_mutex);
+A	kernel/eventQueue.cpp	203	KernelEqueuePrivate::WaitForEvents	OLD:eq	ok		m_cond_var.WaitFor(&m_mutex,
+A	kernel/pthread.cpp	233	KernelGetTscFrequencyNative	EXC:startup	ok	TSC calibration at start	Common::Thread::Sleep(1);
+A	kernel/pthread.cpp	238	KernelGetTscFrequencyNative	EXC:startup	ok	TSC calibration at start	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+A	kernel/pthread.cpp	596	SchedulerBackoffOnce	CALLER:sleep	ok	inside SleepMicroWithSignalPoll (W:sleep at KernelUsleep / KernelSleep)	Sleep(0);
+A	kernel/pthread.cpp	621	SleepMicroWithSignalPoll	CALLER:sleep	ok	callers KernelUsleep / KernelSleep carry W:sleep	Common::Thread::SleepMicro(step);
+A	kernel/pthread.cpp	1086	FreeDetachedThreads	EXC:worker	ok	the reaper thread of detached guest threads (emulator thread)	Common::Thread::Sleep(10000);
+A	kernel/pthread.cpp	1384	NativeMutexLock	MARK:mutex	ok	timed lock of an owned error-check mutex	mutex->cv.wait_for(lock, std::chrono::microseconds(*timeout_us));
+A	kernel/pthread.cpp	1401	NativeMutexLock	OLD:mutex	ok		mutex->cv.wait_for(lock, std::chrono::microseconds(SIGNAL_APC_POLL_MICROS));
+A	kernel/pthread.cpp	1427	NativeMutexLock	OLD:mutex	ok		mutex->cv.wait_for(lock, poll);
+A	kernel/pthread.cpp	2544	RwlockLockCooperative	MARK:rwlock	ok		rwlock->cv.wait_for(lock, poll);
+A	kernel/pthread.cpp	2546	RwlockLockCooperative	MARK:rwlock	ok		rwlock->cv.wait_for(lock, std::chrono::microseconds(SIGNAL_APC_POLL_MICROS));
+A	kernel/pthread.cpp	3044	PthreadCondTimedwait	OLD:cond	ok		thread->cond_cv.wait_for(cond_lock, poll);
+A	kernel/pthread.cpp	3139	PthreadCondTimedwaitAbs	OLD:cond	ok		thread->cond_cv.wait_for(cond_lock, poll);
+A	kernel/pthread.cpp	3215	PthreadCondWait	OLD:cond	ok		thread->cond_cv.wait_for(cond_lock, std::chrono::microseconds(SIGNAL_APC_POLL_MICROS));
+A	kernel/pthread.cpp	3566	PthreadJoin	MARK:join	ok		int result = pthread_join(thread->p, value);
+A	kernel/pthread.cpp	4424	pthread_once	MARK:once	ok		g_pthread_once_cv.wait_for(
+A	kernel/pthread.cpp	4555	pthread_join	CALLER:join	ok	the POSIX wrapper calls PthreadJoin (W:join there)	int KYTY_SYSV_ABI pthread_join(LibKernel::Pthread thread, void** value) {
+A	kernel/pthread.h	262	pthread_join	EXC:decl	ok	declaration, not a call	int KYTY_SYSV_ABI                pthread_join(LibKernel::Pthread thread, void** value);
+A	kernel/semaphore.cpp	88	KernelSemaPrivate::~KernelSemaPrivate	MARK:spin	ok	10 us sleep loops of the semaphore destructor	Common::Thread::SleepMicro(10);
+A	kernel/semaphore.cpp	111	KernelSemaPrivate::~KernelSemaPrivate	MARK:spin	ok	10 us sleep loops of the semaphore destructor	Common::Thread::SleepMicro(10);
+A	kernel/semaphore.cpp	257	KernelSemaPrivate::Wait	OLD:sem	ok		m_cond_var.WaitFor(&m_mutex, SIGNAL_APC_POLL_MICROS);
+A	kernel/semaphore.cpp	259	KernelSemaPrivate::Wait	OLD:sem	ok		m_cond_var.WaitFor(&m_mutex, micros - elapsed);
+A	kernel/semaphore.cpp	322	KernelWaitSema	CALLER:sem	ok	calls KernelSemaPrivate::Wait	auto result = sem->Wait(need, time);
+A	kernel/semaphore.cpp	454	-	OLD:psem	ok	POSIX semaphore wait (F20j W:psem)	m_cond_var.WaitFor(&m_mutex, *micros - elapsed);
+A	kernel/semaphore.cpp	456	-	OLD:psem	ok	POSIX semaphore wait (F20j W:psem)	m_cond_var.WaitFor(&m_mutex, SIGNAL_APC_POLL_MICROS);
+A	kernel/semaphore.cpp	623	SemTimedwaitImpl	CALLER:psem	ok	calls the POSIX semaphore Wait	return obj->Wait(micros);
+A	kernel/syncOnAddress.cpp	218	WaitPortable	MARK:addr	ok		(void)waiter.condition.WaitFor(&entry->mutex, slice_micros);
+A	libs/audio.cpp	743	Audio::QueueSdlAudio	MARK:audio	ok		Common::Thread::SleepMicro(1000);
+A	libs/audio.cpp	926	Audio::AudioOutOutputs	MARK:audio	ok		Common::Thread::SleepMicro(max_wait_time);
+A	libs/audio.cpp	1076	Audio::AudioInInput	MARK:audio	ok		Common::Thread::SleepMicro(wait_time);
+A	libs/audio.cpp	1091	Audio::AudioInInput	MARK:audio	ok		Common::Thread::SleepMicro(1000);
+A	libs/audio.cpp	1659	playback_simulate	EXC:worker	ok	audio3d playback thread (emulator thread, not registered)	Common::Thread::SleepMicro(port->data_delay);
+A	libs/audio.cpp	1886	Audio3dPortPush	MARK:audio	ok		Common::Thread::SleepMicro(wait_time);
+A	libs/avPlayer.cpp	412	-	MARK:av	ok		available.wait(lock, [&] {
+A	libs/avPlayer.cpp	433	-	MARK:av	ok		available.wait(lock, [&] { return stop || finished || !queue.empty(); });
+A	libs/avPlayer.cpp	555	-	MARK:av	ok		available.wait(lock, [&] { return stop || !queue.empty(); });
+A	libs/controller.cpp	244	PadOutput::Stop	EXC:shutdown	ok	pad release flush / join at exit	thread.join();
+A	libs/controller.cpp	307	PadOutput::Loop	EXC:worker	ok	PadOutput thread idle (pad output worker, B24)	m_cv.wait(lock, [&] {
+A	libs/controller.cpp	1177	GameController::ReleaseHostPads	EXC:shutdown	ok	pad release flush / join at exit	SDL_Delay(RELEASE_FLUSH_MS);
+A	libs/libAudio2.cpp	557	AudioOut2ContextPush	MARK:audio	ok		Common::Thread::SleepMicro(sleep_micros);
+A	libs/libC.cpp	509	std_execute_once	MARK:once	ok		g_execute_once_cv.wait_for(lock, std::chrono::microseconds(10000));
+A	libs/libKernel.cpp	525	WaitForSignalDispatch	EXC:platform	ok	not compiled on Windows (#if != WINDOWS)	Common::Thread::SleepMicro(DISPATCH_WAIT_STEP.count());
+A	libs/libKernel.cpp	2483	FiberWaitAndEnterRunning	MARK:fiber	ok		std::this_thread::sleep_for(std::chrono::microseconds(100));
+A	libs/libKernel.cpp	3090	KernelAioWaitRequest	MARK:aio	ok		Common::Thread::SleepMicro(10);
+A	libs/libUlt.cpp	640	UltSemaphoreAcquire	MARK:ult	ok		state->available.wait(lock, [&] { return !state->alive || state->resources >= num_resource; });
+A	libs/network.cpp	1523	EpollWait	MARK:net	ok		g_epoll_changed.wait(lock, ready);
+A	libs/network.cpp	1525	EpollWait	MARK:net	ok		g_epoll_changed.wait_for(lock, std::chrono::microseconds(timeout), ready);
+A	libs/network.cpp	2167	Select	MARK:net	ok		Sleep(host_timeout_ptr == nullptr ? INFINITE :
+B	graphics/guest_gpu/graphicsRun.cpp	93	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	graphics/guest_gpu/graphicsRun.cpp	129	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	143	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	153	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	168	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	207	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	GpuMutexLock lock(m_submission_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	221	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	GpuMutexLock lock(m_submission_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	234	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	GpuMutexLock lock(m_submission_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	334	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	GpuMutexLock lock(m_submission_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	673	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	691	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	729	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(gpu->m_queue_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	832	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(gpu->m_queue_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	866	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(gpu->m_queue_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	974	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(renderer.GetMutex());
+B	graphics/guest_gpu/graphicsRun.cpp	2725	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_lookahead_mutex);
+B	graphics/guest_gpu/graphicsRun.cpp	3740	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_renderer.GetMutex());
+B	graphics/guest_gpu/graphicsRun.cpp	4033	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_queue_mutex);
+B	graphics/host_gpu/renderer/commandScheduler.cpp	164	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(graphics.queue_mutex);
+B	graphics/host_gpu/renderer/commandScheduler.cpp	1014	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(graphics.queue_mutex);
+B	graphics/host_gpu/renderer/renderCompute.cpp	416	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard            lock(m_context.GetMutex());
+B	graphics/host_gpu/renderer/renderContext.cpp	427	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_interrupt_mutex);
+B	graphics/host_gpu/renderer/renderContext.cpp	440	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_interrupt_mutex);
+B	graphics/host_gpu/renderer/renderContext.cpp	455	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_interrupt_mutex);
+B	graphics/host_gpu/renderer/renderDraw.cpp	4975	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard            lock(m_context.GetMutex());
+B	graphics/host_gpu/renderer/renderDraw.cpp	5204	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard            lock(m_context.GetMutex());
+B	graphics/host_gpu/renderer/cache/samplerCache.cpp	45	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	92	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	101	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4897	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5197	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5530	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5695	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5795	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5832	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6227	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6265	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6419	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6642	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6691	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6731	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6764	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6789	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/renderDoc.cpp	226	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard render_lock(renderer.GetMutex());
+B	graphics/presentation/renderDoc.cpp	228	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard queue_lock(renderer.GetGraphics().queue_mutex);
+B	graphics/presentation/systemOverlay.cpp	1079	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard queue_lock(graphics.queue_mutex);
+B	graphics/presentation/videoOut.cpp	362	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(state->mutex);
+B	graphics/presentation/videoOut.cpp	376	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(video_out.events->mutex);
+B	graphics/presentation/videoOut.cpp	411	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(video_out->mutex);
+B	graphics/presentation/videoOut.cpp	447	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard event_lock(event_state->mutex);
+B	graphics/presentation/videoOut.cpp	465	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard event_lock(event_state->mutex);
+B	graphics/presentation/videoOut.cpp	480	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(video_out->mutex);
+B	graphics/presentation/videoOut.cpp	532	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	video_out->mutex.Lock();
+B	graphics/presentation/videoOut.cpp	649	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	656	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard config_lock(config.mutex);
+B	graphics/presentation/videoOut.cpp	659	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard event_lock(config.events->mutex);
+B	graphics/presentation/videoOut.cpp	690	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	702	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard config_lock(config.mutex);
+B	graphics/presentation/videoOut.cpp	712	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard event_lock(config.events->mutex);
+B	graphics/presentation/videoOut.cpp	745	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	754	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	760	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard config_lock(config->mutex);
+B	graphics/presentation/videoOut.cpp	769	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	775	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	780	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	ctx.mutex.Lock();
+B	graphics/presentation/videoOut.cpp	794	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	800	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	ctx.mutex.Lock();
+B	graphics/presentation/videoOut.cpp	868	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	882	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	903	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	945	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	graphics/presentation/videoOut.cpp	984	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(cfg.mutex);
+B	graphics/presentation/videoOut.cpp	994	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	1029	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(cfg->mutex);
+B	graphics/presentation/videoOut.cpp	1053	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	1070	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	1091	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	graphics/presentation/videoOut.cpp	1120	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	1132	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	1143	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	1161	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	1184	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	graphics/presentation/videoOut.cpp	1213	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	r.cfg->mutex.Lock();
+B	graphics/presentation/videoOut.cpp	1220	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard queue_lock(m_mutex);
+B	graphics/presentation/videoOut.cpp	1226	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	graphics/presentation/videoOut.cpp	1281	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	graphics/presentation/videoOut.cpp	3620	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(cfg.mutex);
+B	graphics/presentation/videoOut.cpp	3686	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(ctx->mutex);
+B	graphics/presentation/videoOut.cpp	3808	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(ctx->mutex);
+B	graphics/presentation/videoOut.cpp	3854	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(ctx->mutex);
+B	graphics/presentation/videoOut.cpp	3886	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(ctx->mutex);
+B	graphics/presentation/videoOut.cpp	4027	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	ctx->mutex.Lock();
+B	graphics/presentation/videoOut.cpp	4103	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(ctx->mutex);
+B	graphics/presentation/videoOut.cpp	4133	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	ctx->mutex.Lock();
+B	graphics/presentation/videoOut.cpp	4225	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	ctx->mutex.Lock();
+B	graphics/presentation/videoOut.cpp	4303	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	ctx->mutex.Lock();
+B	graphics/presentation/window/swapchain.cpp	78	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/window/swapchain.cpp	95	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/window/swapchain.cpp	100	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/window/swapchain.cpp	109	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	graphics/presentation/window/swapchain.cpp	150	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	graphics/presentation/window/swapchain.cpp	172	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/window/swapchain.cpp	182	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	graphics/presentation/window/swapchain.cpp	465	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_window.mutex);
+B	graphics/presentation/window/swapchain.cpp	598	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard queue_lock(graphics.queue_mutex);
+B	graphics/presentation/window/swapchain.cpp	655	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_window.mutex);
+B	graphics/presentation/window/swapchain.cpp	813	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_window.graphic_ctx.queue_mutex);
+B	graphics/presentation/window/swapchain.cpp	849	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard render_lock(m_impl->renderer.GetMutex());
+B	graphics/presentation/window/swapchain.cpp	896	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard render_lock(m_impl->renderer.GetMutex());
+B	graphics/presentation/window/swapchain.cpp	1000	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard render_lock(m_impl->renderer.GetMutex());
+B	graphics/presentation/window/window.cpp	454	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(mutex);
+B	graphics/presentation/window/window.cpp	811	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(main_task_mutex);
+B	graphics/presentation/window/window.cpp	822	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(main_task_mutex);
+B	graphics/presentation/window/window.cpp	838	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(main_task_mutex);
+B	graphics/presentation/window/window.cpp	853	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(main_task_mutex);
+B	graphics/presentation/window/window.cpp	875	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(main_task_mutex);
+B	graphics/presentation/window/window.cpp	1528	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(title_mutex);
+B	graphics/presentation/window/window.cpp	1537	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(title_mutex);
+B	kernel/eventFlag.cpp	85	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventFlag.cpp	95	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	kernel/eventFlag.cpp	111	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	kernel/eventFlag.cpp	119	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventFlag.cpp	205	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventFlag.cpp	217	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	kernel/eventFlag.cpp	230	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventFlag.cpp	242	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	kernel/eventFlag.cpp	250	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventFlag.cpp	262	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	kernel/eventFlag.cpp	283	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	kernel/eventQueue.cpp	78	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventQueue.cpp	95	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventQueue.cpp	171	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventQueue.cpp	214	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventQueue.cpp	241	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventQueue.cpp	298	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/eventQueue.cpp	327	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_equeues_mutex);
+B	kernel/eventQueue.cpp	340	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_equeues_mutex);
+B	kernel/eventQueue.cpp	389	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_equeues_mutex);
+B	kernel/eventQueue.cpp	516	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_equeues_mutex);
+B	kernel/fileSystem.cpp	201	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/fileSystem.cpp	224	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/fileSystem.cpp	242	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/fileSystem.cpp	254	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/fileSystem.cpp	266	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/fileSystem.cpp	283	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/fileSystem.cpp	295	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/fileSystem.cpp	310	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/fileSystem.cpp	376	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/fileSystem.cpp	811	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(file->mutex);
+B	kernel/fileSystem.cpp	827	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	file->mutex.Lock();
+B	kernel/fileSystem.cpp	918	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	file->mutex.Lock();
+B	kernel/fileSystem.cpp	978	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	file->mutex.Lock();
+B	kernel/fileSystem.cpp	1042	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	file->mutex.Lock();
+B	kernel/fileSystem.cpp	1086	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(file->mutex);
+B	kernel/fileSystem.cpp	1221	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	file->mutex.Lock();
+B	kernel/fileSystem.cpp	1281	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(file->mutex);
+B	kernel/fileSystem.cpp	1380	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(file->mutex);
+B	kernel/memory.cpp	221	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	253	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	268	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	275	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	286	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	302	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	320	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	353	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	366	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	373	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	382	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	405	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	453	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	484	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	520	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1264	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_guest_stack_gate)	g_guest_stack_gate.Lock();
+B	kernel/memory.cpp	1277	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard gate(g_guest_stack_gate);
+B	kernel/memory.cpp	1278	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stacks_mutex);
+B	kernel/memory.cpp	1304	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stacks_mutex);
+B	kernel/memory.cpp	1309	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stacks_mutex);
+B	kernel/memory.cpp	1352	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_prt_aperture_mutex);
+B	kernel/memory.cpp	1474	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_physical_memory)	g_physical_memory->GetMutex().Lock();
+B	kernel/memory.cpp	1482	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_flexible_memory)	g_flexible_memory->GetMutex().Lock();
+B	kernel/memory.cpp	1508	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1556	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1627	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1709	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1757	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1788	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1806	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1853	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1923	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1969	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	1990	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2015	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2043	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2054	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2130	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2229	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2261	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2305	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2347	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2375	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2385	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2395	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2423	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2429	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2477	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2533	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2540	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard    lock(m_mutex);
+B	kernel/memory.cpp	2578	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2587	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/memory.cpp	2780	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_prt_aperture_mutex);
+B	kernel/memory.cpp	2787	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_prt_aperture_mutex);
+B	kernel/memory.cpp	2818	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_prt_aperture_mutex);
+B	kernel/memory.cpp	3095	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_physical_memory->GetMutex());
+B	kernel/pthread.cpp	773	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stack_mutex);
+B	kernel/pthread.cpp	832	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stack_mutex);
+B	kernel/pthread.cpp	892	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_guest_stack_mutex);
+B	kernel/pthread.cpp	1553	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/pthread.cpp	1610	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/pthread.cpp	1637	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/pthread.cpp	1659	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/semaphore.cpp	79	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/semaphore.cpp	89	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	kernel/semaphore.cpp	112	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	kernel/semaphore.cpp	118	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/semaphore.cpp	149	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/semaphore.cpp	202	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/semaphore.cpp	264	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	kernel/semaphore.cpp	431	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/semaphore.cpp	461	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (m_mutex)	m_mutex.Lock();
+B	kernel/semaphore.cpp	477	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/semaphore.cpp	491	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/semaphore.cpp	508	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	kernel/semaphore.cpp	548	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_posix_sem_mutex);
+B	kernel/semaphore.cpp	568	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_posix_sem_mutex);
+B	kernel/semaphore.cpp	597	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_posix_sem_mutex);
+B	kernel/syncOnAddress.cpp	168	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	entry->mutex.Lock();
+B	kernel/syncOnAddress.cpp	185	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	entry->mutex.Lock();
+B	kernel/syncOnAddress.cpp	221	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	entry->mutex.Lock();
+B	kernel/syncOnAddress.cpp	249	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	entry->mutex.Lock();
+B	libs/audio.cpp	782	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	827	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	842	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	849	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	856	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	871	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	981	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	1014	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	1028	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	1043	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	1112	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/audio.cpp	1642	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (data_mutex)	port->data_mutex->Lock();
+B	libs/audio.cpp	1787	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (data_mutex)	port->data_mutex->Lock();
+B	libs/audio.cpp	1823	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (data_mutex)	port->data_mutex->Lock();
+B	libs/audio.cpp	1858	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (data_mutex)	port->data_mutex->Lock();
+B	libs/audio.cpp	2610	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(ngs->mutex);
+B	libs/audio.cpp	2624	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard racks_lock(g_racks_mutex);
+B	libs/audio.cpp	2703	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(ngs->mutex);
+B	libs/audio.cpp	2754	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard racks_lock(g_racks_mutex);
+B	libs/audio.cpp	2853	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard racks_lock(g_racks_mutex);
+B	libs/audio.cpp	2868	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(ngs->mutex);
+B	libs/audio.cpp	2869	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard racks_lock(g_racks_mutex);
+B	libs/audio.cpp	2906	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (mutex)	rack->ngs->mutex.Lock();
+B	libs/audio.cpp	2943	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(ngs->mutex);
+B	libs/audio.cpp	2951	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard racks_lock(g_racks_mutex);
+B	libs/audio.cpp	3310	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(voice->rack->ngs->mutex);
+B	libs/audio.cpp	3462	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(voice->rack->ngs->mutex);
+B	libs/audio.cpp	3520	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(voice->rack->ngs->mutex);
+B	libs/controller.cpp	886	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	901	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	968	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	981	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1007	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1022	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1042	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1053	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1073	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1085	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1135	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1142	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1154	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1195	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1223	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1262	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1279	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1290	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/controller.cpp	1304	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/libAudio.cpp	1194	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+B	libs/libAudio.cpp	1207	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+B	libs/libAudio.cpp	1227	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+B	libs/libAudio.cpp	1300	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+B	libs/libAudio.cpp	1318	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+B	libs/libAudio.cpp	1375	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_audiodec_mutex);
+B	libs/libAudio2.cpp	347	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_audioout2_port_mutex);
+B	libs/libAudio2.cpp	361	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+B	libs/libAudio2.cpp	430	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+B	libs/libAudio2.cpp	464	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+B	libs/libAudio2.cpp	473	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+B	libs/libAudio2.cpp	501	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+B	libs/libAudio2.cpp	531	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+B	libs/libAudio2.cpp	570	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+B	libs/libAudio2.cpp	595	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_context_mutex)	g_audioout2_context_mutex.Lock();
+B	libs/libAudio2.cpp	603	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+B	libs/libAudio2.cpp	637	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+B	libs/libAudio2.cpp	673	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+B	libs/libAudio2.cpp	702	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+B	libs/libAudio2.cpp	724	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_port_mutex)	g_audioout2_port_mutex.Lock();
+B	libs/libAudio2.cpp	783	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_speaker_array_mutex)	g_audioout2_speaker_array_mutex.Lock();
+B	libs/libAudio2.cpp	809	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_speaker_array_mutex)	g_audioout2_speaker_array_mutex.Lock();
+B	libs/libAudio2.cpp	896	-	PRIM:emu_mutex	ok	Common::Mutex .Lock() (g_audioout2_latency_mutex)	g_audioout2_latency_mutex.Lock();
+B	libs/libDbgAsan.cpp	55	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_ctx->mutex);
+B	libs/libDbgAsan.cpp	90	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_ctx->mutex);
+B	libs/libSaveData.cpp	456	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_save_data_memory_mutex);
+B	libs/libSaveData.cpp	485	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_mount_mutex);
+B	libs/libSaveData.cpp	606	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_mount_mutex);
+B	libs/libSaveData.cpp	661	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_save_data_memory_mutex);
+B	libs/libSaveData.cpp	700	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_save_data_memory_mutex);
+B	libs/libSaveData.cpp	736	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_save_data_memory_mutex);
+B	libs/libSaveData.cpp	774	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_mount_mutex);
+B	libs/libSaveData.cpp	804	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_mount_mutex);
+B	libs/network.cpp	254	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	270	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	282	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	302	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	313	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	319	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	334	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	347	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	354	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	375	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	382	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	390	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	398	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	434	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	447	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	478	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	507	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	537	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	550	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	579	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	591	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	602	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	621	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	651	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	663	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	676	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	690	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	703	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	716	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	738	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	751	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	764	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	777	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	790	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	803	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	816	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	libs/network.cpp	1116	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_socket_mutex);
+B	libs/network.cpp	1130	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_socket_mutex);
+B	libs/network.cpp	1141	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_socket_mutex);
+B	libs/network.cpp	1153	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_socket_mutex);
+B	libs/network.cpp	3154	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_net_ctl_callbacks_mutex);
+B	libs/network.cpp	3177	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_net_ctl_callbacks_mutex);
+B	libs/network.cpp	3220	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_net_ctl_callbacks_mutex);
+B	libs/network.cpp	3242	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(g_net_ctl_callbacks_mutex);
+B	loader/runtimeLinker.cpp	1316	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1329	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1344	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1392	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1402	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1416	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1442	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1485	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1500	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1624	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1654	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1750	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1802	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1819	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1833	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1922	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	1954	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	2070	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(program->tls.mutex);
+B	loader/runtimeLinker.cpp	2113	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(program->tls.mutex);
+B	loader/runtimeLinker.cpp	2548	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	2690	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	2698	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	2714	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/runtimeLinker.cpp	2725	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	106	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	225	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	233	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	239	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	298	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	312	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	326	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	341	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	351	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	418	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	491	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	543	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	553	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	559	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+B	loader/systemContent.cpp	569	-	PRIM:emu_mutex	ok	Common::Mutex via LockGuard	Common::LockGuard lock(m_mutex);
+C	common/diagB32.cpp	718	mutex	EXC:instr	ok	the instrument (M5 refresher list / AsyncRefresh stop)	std::mutex              mutex;
+C	common/diagB32.cpp	1273	mutex	EXC:instr	ok	the instrument (M5 refresher list / AsyncRefresh stop)	std::mutex                                  mutex;    // the published list (the sampler only try_locks it)
+C	common/frameStats.cpp	44	mutex	EXC:instr	ok	FrameStats (instrument)	std::mutex                                                          mutex;
+C	common/frameStats.cpp	95	mutex	EXC:instr	ok	FrameStats (instrument)	std::mutex                                 mutex;
+C	common/frameStats.cpp	592	mutex	EXC:instr	ok	FrameStats (instrument)	static std::mutex                         mutex;
+C	common/frameStats.cpp	1139	g_alloc_mutex	EXC:instr	ok	FrameStats (instrument)	std::mutex       g_alloc_mutex;
+C	common/frameStats.cpp	1245	g_alloc_mutex	EXC:instr	ok	FrameStats (instrument)	std::mutex            g_alloc_mutex;
+C	common/frameStats.cpp	1344	g_alloc_mutex	EXC:instr	ok	FrameStats (instrument)	std::mutex            g_alloc_mutex;
+C	common/parallelCopy.cpp	464	m_mutex	EXC:cv	ok	the mutex of m_wake / m_finished (std::condition_variable needs std::mutex); the caller wait is W:pcopy	std::mutex               m_mutex;
+C	common/parallelCopy.cpp	483	m_signal_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>          m_signal_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP
+C	common/threads.cpp	181	m_mutex	EXC:platform	ok	the non-Windows Common::Mutex branch (Windows: CRITICAL_SECTION, primitive-marked)	std::recursive_mutex m_mutex;
+C	common/logging/log.cpp	78	g_logger_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                      g_logger_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W
+C	graphics/guest_gpu/graphicsRun.cpp	2397	mutex	EXC:cv	ok	walker / relay mutex of their condition variables (W:relay marks the GuestGpu wait)	std::mutex              mutex;
+C	graphics/guest_gpu/graphicsRun.cpp	2480	g_draw_ahead_walker_mutex	EXC:knob	ok	draw-ahead walker start / stop (knob dawalk)	std::mutex                       g_draw_ahead_walker_mutex;
+C	graphics/guest_gpu/graphicsRun.cpp	2559	mutex	EXC:cv	ok	walker / relay mutex of their condition variables (W:relay marks the GuestGpu wait)	std::mutex              mutex;
+C	graphics/guest_gpu/graphicsRun.cpp	2633	g_baton_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                  g_baton_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, 
+C	graphics/guest_gpu/graphicsRun.h	105	m_shutdown_mutex	EXC:shutdown	ok		std::mutex                                     m_shutdown_mutex;
+C	graphics/host_gpu/graphicContext.h	156	m_format_properties_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	mutable Common::DiagB32::TrackedMutex<std::mutex>                                 m_format_properties_mutex; // Track F,
+C	graphics/host_gpu/graphicContext.h	158	m_image_format_properties_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	mutable Common::DiagB32::TrackedMutex<std::mutex>                                 m_image_format_properties_mutex; // Tr
+C	graphics/host_gpu/memoryTracker.h	469	m_region_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                                     m_region_mutex; // Track F, F20j3 (KYTY_DI
+C	graphics/host_gpu/pageManager.cpp	2709	region_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                              region_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:
+C	graphics/host_gpu/pageManager.cpp	2711	queue_mutex	EXC:cv	ok	mutex of queue_cv / drain_cv (W:pm_drain marks the caller)	std::mutex               queue_mutex;
+C	graphics/host_gpu/vma.cpp	192	m_mutex	EXC:cv	ok	VMA worker queue cv mutex (W:vma_flush)	std::mutex                        m_mutex;
+C	graphics/host_gpu/vma.cpp	325	g_recycle_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                g_recycle_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, 
+C	graphics/host_gpu/renderer/commandRecorder.cpp	87	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex> mutex;
+C	graphics/host_gpu/renderer/commandRecorder.h	324	m_mutex	EXC:cv	ok	mutex of m_progress / m_pending (W:rec_wait / rec_idle)	alignas(64) std::mutex            m_mutex;
+C	graphics/host_gpu/renderer/commandScheduler.cpp	213	m_mutex	EXC:cv	ok	async submitter queue mutex of m_available / m_drained (W:asub_idle / asub_drain)	std::mutex              m_mutex;
+C	graphics/host_gpu/renderer/commandScheduler.cpp	495	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                             mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:e
+C	graphics/host_gpu/renderer/commandScheduler.cpp	513	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                         mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_m
+C	graphics/host_gpu/renderer/commandScheduler.h	148	m_operation_mutex	EXC:cv	ok	mutex of m_operation_available (W:ops_wait / ops_idle)	std::mutex                   m_operation_mutex;
+C	graphics/host_gpu/renderer/commandScheduler.h	168	m_timestamp_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                                m_timestamp_mutex; // Track F, F20j3 (KYTY_DIAG
+C	graphics/host_gpu/renderer/gpuCheckpoints.cpp	48	g_ring_mutex	EXC:debug	ok	KYTY_GPU_CHECKPOINTS (debug)	std::mutex                             g_ring_mutex;
+C	graphics/host_gpu/renderer/gpuCheckpoints.cpp	88	g_submission_mutex	EXC:debug	ok	KYTY_GPU_CHECKPOINTS (debug)	std::mutex g_submission_mutex;
+C	graphics/host_gpu/renderer/gpuCheckpoints.cpp	345	g_marker_mutex	EXC:debug	ok	KYTY_GPU_CHECKPOINTS (debug)	std::mutex                               g_marker_mutex;
+C	graphics/host_gpu/renderer/gpuCheckpoints.cpp	346	g_marker_report_mutex	EXC:debug	ok	KYTY_GPU_CHECKPOINTS (debug)	std::mutex                               g_marker_report_mutex;
+C	graphics/host_gpu/renderer/gpuTimeProfiler.h	104	m_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>           m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 
+C	graphics/host_gpu/renderer/renderContext.h	99	m_mapped_ranges_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	mutable Common::DiagB32::TrackedMutex<std::shared_mutex> m_mapped_ranges_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_m
+C	graphics/host_gpu/renderer/shadowResolve.cpp	42	g_mutex	EXC:cv	ok	shadow resolve worker cv mutex	std::mutex                        g_mutex;   // worker sleep and thread start
+C	graphics/host_gpu/renderer/cache/bufferCache.h	361	m_pending_host_reads_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                                         m_pending_host_reads_mutex; // Track F
+C	graphics/host_gpu/renderer/cache/bufferCache.h	469	m_streamed_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                                     m_streamed_mutex; // Track F, F20j3 (KYTY_
+C	graphics/host_gpu/renderer/cache/hostImport.h	69	m_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>         m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 it
+C	graphics/host_gpu/renderer/cache/textureCache.cpp	2532	seen_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                            seen_mutex; // Track F, F20j3 (KYTY_DIAG_B32
+C	graphics/host_gpu/renderer/cache/textureCache.cpp	3941	g_pend_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                                            g_pend_mutex; // Track F, F20j3 (KY
+C	graphics/host_gpu/renderer/pipeline/computePretranslation.h	267	mutex	EXC:cv	ok	pretranslation queue mutex of its cv (worker)	std::mutex mutex;
+C	graphics/host_gpu/renderer/pipeline/descriptors.cpp	1429	g_gds_keys_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                   g_gds_keys_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mut
+C	graphics/host_gpu/renderer/pipeline/descriptors.cpp	3715	m	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                                      m; // Track F, F20j3 (KYTY_DIAG_B3
+C	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1264	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                   mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, 
+C	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1315	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                   mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, 
+C	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2621	ahead_mutex	EXC:cv	ok	draw-ahead workers cv mutex	std::mutex                            ahead_mutex;
+C	graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2625	ahead_queue_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                            ahead_queue_mutex; // Track F, F20j3 (KYTY_DIAG_B32
+C	graphics/host_gpu/renderer/pipeline/pipelineCache.h	296	m_job_mutex	EXC:cv	ok	mutex of m_ready_cv / m_idle_cv / m_job_cv (W:pipe_wait)	std::mutex                        m_job_mutex;
+C	graphics/host_gpu/renderer/pipeline/pipelineCache.h	335	m_pcw_mutex	EXC:cv	ok	driver-cache writer cv mutex	std::mutex              m_pcw_mutex; // m_pcw_stop
+C	graphics/host_gpu/renderer/pipeline/shaders.cpp	328	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                   mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, 
+C	graphics/presentation/systemOverlay.cpp	173	g_visibility_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                   g_visibility_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_m
+C	graphics/presentation/systemOverlay.cpp	174	g_input_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                   g_input_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex,
+C	graphics/presentation/window/screenshot.h	92	m_rec_mutex	EXC:cv	ok	recorder queue cv mutex (W:rec_queue)	std::mutex              m_rec_mutex;
+C	kernel/fileSystem.cpp	635	g_stream_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                 g_stream_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, 
+C	kernel/memory.cpp	885	g_memory_operation_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::recursive_mutex> g_memory_operation_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:
+C	kernel/memoryAddressSpace.inc	722	m_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                   m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADM
+C	kernel/memoryAddressSpace.inc	1486	m_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::shared_mutex>                          m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:em
+C	kernel/pthread.cpp	154	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex> mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(
+C	kernel/pthread.cpp	429	m	EXC:layout	ok	internal mutex of a guest primitive (PthreadMutex / Rwlock / Cond private, reserved[256] first - layout kept, RC10); the guest-level waits are W:mutex / rwlock / cond	std::mutex              m;
+C	kernel/pthread.cpp	518	m	EXC:layout	ok	internal mutex of a guest primitive (PthreadMutex / Rwlock / Cond private, reserved[256] first - layout kept, RC10); the guest-level waits are W:mutex / rwlock / cond	std::mutex              m;
+C	kernel/pthread.cpp	542	m	EXC:layout	ok	internal mutex of a guest primitive (PthreadMutex / Rwlock / Cond private, reserved[256] first - layout kept, RC10); the guest-level waits are W:mutex / rwlock / cond	std::mutex              m;
+C	kernel/pthread.cpp	678	g_pthread_keys_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                                           g_pthread_keys_mutex; // Trac
+C	kernel/pthread.cpp	4396	g_pthread_once_mutex	EXC:cv	ok	mutex of g_pthread_once_cv (W:once)	static std::mutex              g_pthread_once_mutex;
+C	kernel/syncOnAddress.cpp	151	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                                                           mutex; // Track F, F
+C	libs/agc.cpp	158	g_register_defaults_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex> g_register_defaults_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex
+C	libs/agc.cpp	1658	g_workload_stream_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex> g_workload_stream_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, 
+C	libs/ajm.cpp	336	g_ajm_instances_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                                     g_ajm_instances_mutex; // Track F, 
+C	libs/audio.cpp	258	g_frozen_devices_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                     g_frozen_devices_mutex; // Track F, F20j3 (KYTY_DIA
+C	libs/audio.cpp	286	g_sdl_audio_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>            g_sdl_audio_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mu
+C	libs/avPlayer.cpp	460	mutex	EXC:cv	ok	packet / frame queue mutexes of their cv (W:av)	std::mutex              mutex;
+C	libs/avPlayer.cpp	582	mutex	EXC:cv	ok	packet / frame queue mutexes of their cv (W:av)	mutable std::mutex      mutex;
+C	libs/avPlayer.cpp	1784	lifecycle_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                               lifecycle_mutex; // Track F, F20j3 (KYTY_DIAG_B3
+C	libs/avPlayer.cpp	1785	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	mutable Common::DiagB32::TrackedMutex<std::mutex>                       mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mu
+C	libs/controller.cpp	209	m_mutex	EXC:cv	ok	PadOutput queue mutex of m_cv (worker)	std::mutex              m_mutex;
+C	libs/controller.cpp	416	m_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>           m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 
+C	libs/dialog.cpp	650	g_error_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex> g_error_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s1
+C	libs/ime.cpp	95	g_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                      g_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, RO
+C	libs/imeDialog.cpp	63	g_mutex	EXC:target	ok	imeDialog.cpp is compiled into ime_dialog_tests without common; IME dialog state, not opened in a hold	std::mutex                      g_mutex;
+C	libs/libAmpr.cpp	55	g_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                                        g_mutex; // Track F, F20j3 (KYTY
+C	libs/libAmpr.cpp	771	g_command_buffer_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                                       g_command_buffer_mutex; // Track 
+C	libs/libAmpr.cpp	774	g_amm_auto_pool_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                                       g_amm_auto_pool_mutex; // Track F
+C	libs/libC.cpp	487	g_execute_once_mutex	EXC:cv	ok	mutex of g_execute_once_cv (W:once)	static std::mutex              g_execute_once_mutex;
+C	libs/libFont.cpp	379	g_glyph_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                g_glyph_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mu
+C	libs/libFont.cpp	381	g_writing_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                g_writing_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_
+C	libs/libHmd2.cpp	89	g_reprojection_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex> g_reprojection_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROA
+C	libs/libJson2.cpp	302	g_object_snapshot_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                                       g_object_snapshot_mutex; // Track
+C	libs/libKernel.cpp	2367	g_fiber_owner_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                                 g_fiber_owner_mutex; // Track F, F20j3 
+C	libs/libNet.cpp	1662	g_np_auth_request_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                 g_np_auth_request_mutex; // Track F, F20j3 (KYTY_DIAG_B
+C	libs/libUlt.cpp	42	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::recursive_mutex, Common::DiagB32::Wait::Ult> mutex; // Track F, F20j3 (KYTY_DIAG_B32 
+C	libs/libUlt.cpp	47	mutex	EXC:cv	ok	ULT semaphore mutex of its cv (W:ult)	std::mutex              mutex;
+C	libs/libUlt.cpp	69	mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                       mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROA
+C	libs/libUlt.cpp	91	g_ult_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                                                    g_ult_mutex; // Trac
+C	libs/libVideoDec2.cpp	205	g_decoder_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>                g_decoder_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_
+C	libs/network.cpp	880	g_epoll_mutex	EXC:cv	ok	mutex of g_epoll_changed (W:net)	static std::mutex                g_epoll_mutex;
+C	libs/network.cpp	3421	g_np_request_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	static Common::DiagB32::TrackedMutex<std::mutex>             g_np_request_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_
+C	libs/videoDec2Decoder.cpp	43	g_picture_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                               g_picture_mutex; // Track F, F20j3 (KYTY_DIAG_B3
+C	libs/videoDec2Decoder.cpp	348	m_mutex	TRACKED:emu_mutex	ok	Common::DiagB32::TrackedMutex	Common::DiagB32::TrackedMutex<std::mutex>                m_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP 
+C	loader/redZonePatcher.cpp	57	mutex	EXC:startup	ok	module load time	std::mutex           mutex {};
+D	graphics/host_gpu/regionManager.h	34	TrackingSpinLock	MARK:spin	ok	contended spin	
+D	graphics/host_gpu/pageManager.cpp	75	SpinGuard(std::atomic_flag& lock)	MARK:spin	ok	contended spin	
+D	graphics/host_gpu/pageManager.cpp	100	ApplyGuard(std::atomic_flag& lock	MARK:spin	ok	contended spin	

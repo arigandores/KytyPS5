@@ -1,0 +1,90 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 2cde5ef2)
+Updating files:  42% (3750/8804)
+Updating files:  43% (3786/8804)
+Updating files:  44% (3874/8804)
+Updating files:  45% (3962/8804)
+Updating files:  46% (4050/8804)
+Updating files:  47% (4138/8804)
+Updating files:  48% (4226/8804)
+Updating files:  49% (4314/8804)
+Updating files:  50% (4402/8804)
+Updating files:  51% (4491/8804)
+Updating files:  52% (4579/8804)
+Updating files:  53% (4667/8804)
+Updating files:  54% (4755/8804)
+Updating files:  55% (4843/8804)
+Updating files:  56% (4931/8804)
+Updating files:  57% (5019/8804)
+Updating files:  58% (5107/8804)
+Updating files:  59% (5195/8804)
+Updating files:  60% (5283/8804)
+Updating files:  61% (5371/8804)
+Updating files:  62% (5459/8804)
+Updating files:  63% (5547/8804)
+Updating files:  64% (5635/8804)
+Updating files:  65% (5723/8804)
+Updating files:  66% (5811/8804)
+Updating files:  67% (5899/8804)
+Updating files:  68% (5987/8804)
+Updating files:  69% (6075/8804)
+Updating files:  70% (6163/8804)
+Updating files:  71% (6251/8804)
+Updating files:  72% (6339/8804)
+Updating files:  73% (6427/8804)
+Updating files:  74% (6515/8804)
+Updating files:  75% (6603/8804)
+Updating files:  76% (6692/8804)
+Updating files:  77% (6780/8804)
+Updating files:  78% (6868/8804)
+Updating files:  79% (6956/8804)
+Updating files:  80% (7044/8804)
+Updating files:  81% (7132/8804)
+Updating files:  82% (7220/8804)
+Updating files:  83% (7308/8804)
+Updating files:  84% (7396/8804)
+Updating files:  85% (7484/8804)
+Updating files:  86% (7572/8804)
+Updating files:  87% (7660/8804)
+Updating files:  88% (7748/8804)
+Updating files:  89% (7836/8804)
+Updating files:  90% (7924/8804)
+Updating files:  91% (8012/8804)
+Updating files:  92% (8100/8804)
+Updating files:  92% (8122/8804)
+Updating files:  93% (8188/8804)
+Updating files:  94% (8276/8804)
+Updating files:  95% (8364/8804)
+Updating files:  96% (8452/8804)
+Updating files:  97% (8540/8804)
+Updating files:  98% (8628/8804)
+Updating files:  99% (8716/8804)
+Updating files: 100% (8804/8804)
+Updating files: 100% (8804/8804), done.
+HEAD is now at 2cde5ef2 track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on the host waits of the emulator with waker and peer, M5 off the sampler thread, ring_hold (ROADMAP s122 item 574(g)(1)-(6))
+--- worktree HEAD
+2cde5ef2d7c6b7f93fcce67bec8fd326d98b6bdf track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on th
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+2cde5ef2d7c6b7f93fcce67bec8fd326d98b6bdf abd476c66d7e8aed9f244ee8ada610c2e1f459fc track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on t
+abd476c66d7e8aed9f244ee8ada610c2e1f459fc 81e7b5261e26ffde32924639305b4d3866a9d62d ROADMAP p.579 (lead, HPP-651): track S link S18b2 accepted - review PASS, 0 RC
+81e7b5261e26ffde32924639305b4d3866a9d62d 03e7ab2d364d2a955e474a78c4d3ce26e18f03cc track S link S18b2 (HPP-651): review of the S18a2 RC1 fix (main 7c31481b = che
+03e7ab2d364d2a955e474a78c4d3ce26e18f03cc c8854344fb93a905fb880b19656b60cd59d82de3 ROADMAP p.578 (lead, HPP-650): track S link S18a2 accepted - ReplayCloseStop r
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 462 with CR 0
+WT OK

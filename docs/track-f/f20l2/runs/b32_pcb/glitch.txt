@@ -1,0 +1,2 @@
+C:/kyty/f287/f20l2/rec_b32_pcb.mp4: 9582 frames 960x540, index entries 9582
+one-frame glitches: 0

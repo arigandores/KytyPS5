@@ -1,0 +1,5 @@
+prereg: f20l2_seal.md  23899 bytes  sha256 2e4c1795ef97c234  mtime 2026-10-06T21:56:27  mtime-ctime +0.000 s
+pre_run: host 386 processes, top by CPU: <app> 1181s, <app> 1165s, <app> 776s, <app> 708s, <app> 500s, <app> 482s
+pre_run: GPU 40.0 % busy, 72.9 W, 2160 MiB used, SM 2145.0 MHz, 19 process(es) on the GPU
+pre_run: WARNING - the GPU is not idle by idle142 (median 40.0 > 10 or missing); the scorer refuses this run on idle
+pre_run: REFUSED (BUSY: gpu_util_median 40.0, admission <= 10) - the emulator was not started

@@ -1,0 +1,6 @@
+| tag | adm | bin / sig | K_I / K | in count | classes (n: class) | INSTR_MADE | kq_n=0 | m5r | prev>=100 | PK-A B5 armed | U5(1) | U5(4) | load ratio | recov |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| b32_pcb | Y | 2d0c8815 / 9177b426 | 1 / 1 | 1 | 1775:UNMARKED:Gpu STAND 1775:UNMARKED:Gpu gpuSwS50=True | 0/1 | 0/1 | 0 | 0 | 0/0 | 35349.5 | 0 | - | 0 |
+| b32_pd_ref | Y | b9e0ee00 / 9177b426 | 1 / 1 | 1 | 1766:HOST_LOAD | 0/1 | 0/1 | 0 | 0 | 0/0 | 35872.0 | 0 | [0.9123] | 0 |
+| b32_ppb | Y | 2d0c8815 / 9177b426 | 1 / 1 | 1 | 1722:EMU_CALL:present>DRV_HOST STAND 1722:EMU_CALL:present>DRV_HOST gpuSwS50=False | 0/1 | 0/1 | 0 | 0 | 0/0 | 47217.5 | 0 | - | 0 |
+| b32_z0b | Y | 2d0c8815 / 9177b426 | 1 / 1 | 16 | 2400:NO_SAMPLES 2401:NO_SAMPLES 2402:NO_SAMPLES 3492:NO_SAMPLES 3493:NO_SAMPLES 3494:NO_SAMPLES 3495:NO_SAMPLES 3496:NO_SAMPLES 3497:NO_SAMPLES 3499:NO_SAMPLES 3500:NO_SAMPLES 3501:NO_SAMPLES 3502:NO_SAMPLES 3503:NO_SAMPLES 3504:NO_SAMPLES 3505:NO_SAMPLES | 0/16 | 0/16 | 0 | 13 | 0/0 | 41478.5 | 0 | - | 0 |

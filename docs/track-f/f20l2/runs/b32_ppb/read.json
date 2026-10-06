@@ -1,0 +1,980 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "theta_load from the seal C:/kyty/f287/f20l2/pred/f20l2_seal.md (0.4562)",
+   true
+  ],
+  [
+   "json binary_sha256 = F20j4 test 2d0c8815 (2d0c8815389bdc42)",
+   true
+  ],
+  [
+   "installed before = after = FS8 2c9b69b9 (2c9b69b9 / 2c9b69b9)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (2e4c1795ef97c234 / 2e4c1795ef97c234)",
+   true
+  ],
+  [
+   "env: harness constants + form [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1'), ('KYTY_TEST_B32', '60:present:200')] (extra [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1'), ('KYTY_TEST_B32', '60:present:200')])",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "scene entered (first scene frame 208)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4055 listsha ed)",
+   true
+  ],
+  [
+   "DiagB32 mode line present (1)",
+   true
+  ],
+  [
+   "no DiagB32 config invalid line",
+   true
+  ],
+  [
+   "translation signature = FS8 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "TestB32 lines armed, fire, done (['TestB32: config on value=60_present_200', 'TestB32: armed t_ms=7722719 fire_after_s', 'TestB32: fire mode=present ms=200', 'TestB32: done mode=present slept_us=2002'])",
+   true
+  ],
+  [
+   "rep_drop 0 (0)",
+   true
+  ],
+  [
+   "loader ran (None)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "2d0c8815389bdc42a2371ba813dc9460fc5565f21f89e32fad4d9e5bd2394dc7",
+ "f20e_read_sha256": "5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa",
+ "form": "b32_ppb",
+ "log": {
+  "K": 1,
+  "K_I": 1,
+  "P_I": 1,
+  "all_diag_frames": 3,
+  "all_instr_made": 1,
+  "all_kq0": 1,
+  "all_m5r": 1,
+  "bad_names": [],
+  "diag_bad_prefix": 0,
+  "diag_lines": 330,
+  "diag_n": 3,
+  "dup": 0,
+  "first_n": 208,
+  "frames": [
+   {
+    "E": 196778.5,
+    "attr": "nothing",
+    "bad_names": [],
+    "base": {
+     "dt": 34756.5,
+     "gbusy": 14445.5,
+     "k": 20,
+     "lat": 13823.5
+    },
+    "cls": "EMU_CALL:present>DRV_HOST",
+    "diag": true,
+    "diag_dt_us": 231518,
+    "dt_us": 231535,
+    "family": "DRV_HOST",
+    "gbusy_us": 22850,
+    "gpu_sw_or_s50": false,
+    "holder": "output",
+    "idx": 1514,
+    "in_count": true,
+    "instr_made": false,
+    "instr_us": 20887,
+    "kq_n": 4,
+    "kq_us": 18854,
+    "kstate": 1,
+    "lat_us": 210975,
+    "load_ratio": 0.0801,
+    "m5r_us": 0,
+    "n": 1722,
+    "note": "",
+    "p_i": true,
+    "path": [
+     "Present(Present)=H:present"
+    ],
+    "prev_slow": false,
+    "ring_hold_w": 0,
+    "samples": 44,
+    "slot_full_w": 0,
+    "steps": [
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 0,
+      "how": "holder",
+      "name": "Present",
+      "role": "Present",
+      "samples": 44,
+      "slot": 2
+     }
+    ],
+    "t_s": 59.853,
+    "term_role": "Present",
+    "zero_w": {
+     "lines_cut_w": 0,
+     "req_miss_w": 0,
+     "ring_drop_w": 0,
+     "sgap_bad_w": 0,
+     "slot_full_w": 0,
+     "sub_miss_w": 0,
+     "torn_w": 0
+    }
+   }
+  ],
+  "frames_n": 9115,
+  "hold": true,
+  "hold_class": "EMU_CALL:present>DRV_HOST",
+  "i5_bad": 0,
+  "in_count": 1,
+  "instr_made": 0,
+  "instr_share": 0.0,
+  "invalid": [],
+  "kq0": 0,
+  "kq0_share": 0.0,
+  "load": null,
+  "m5r": 0,
+  "minimized": 0,
+  "mode": [
+   "DiagB32: mode=1 period_us=5000 print_us=100000 wait_rec_us=10000 kernel_after_us=40000 slots=256 hist=512 wring=4096 ncpu=32 kstate=1 kq_us=5063 kq_budget_div=10 kq_near_us=60000"
+  ],
+  "pk_a": [],
+  "pk_a_armed": 0,
+  "prev_slow_in_count": 0,
+  "rc13_equal": true,
+  "rc13_stripped": 330,
+  "recovering": 0,
+  "rep_drop": 0,
+  "ring_hold_w_field": 3,
+  "ring_hold_w_frames": 0,
+  "ring_hold_w_sum": 0,
+  "scene_s": 334.78,
+  "sig": [
+   "9177b4267de1fb8bac7d1113afd8733210addfac"
+  ],
+  "slot_full_on_nosamples": 0,
+  "stand": [
+   {
+    "base_lat": 13823.5,
+    "cls": "EMU_CALL:present>DRV_HOST",
+    "dt_us": 231535,
+    "gpu_in_chain": false,
+    "gpu_sw_or_s50": false,
+    "gpu_sw_plus_s50": false,
+    "holder": "output",
+    "lat_us": 210975,
+    "n": 1722,
+    "note": "",
+    "path": [
+     "Present(Present)=H:present"
+    ],
+    "ring_hold_w": 0,
+    "steps": [
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 0,
+      "how": "holder",
+      "name": "Present",
+      "role": "Present",
+      "samples": 44,
+      "slot": 2
+     }
+    ],
+    "w": [
+     {
+      "kind": "emu_mutex",
+      "open": 1,
+      "overlap_us": 176621,
+      "peer": 2,
+      "req_us": 0,
+      "slot": 3,
+      "to": 0,
+      "waker": 2
+     },
+     {
+      "kind": "emu_mutex",
+      "open": 1,
+      "overlap_us": 200319,
+      "peer": 2,
+      "req_us": 0,
+      "slot": 27,
+      "to": 0,
+      "waker": 2
+     },
+     {
+      "kind": "rec_idle",
+      "open": 1,
+      "overlap_us": 176322,
+      "peer": 3,
+      "req_us": 0,
+      "slot": 66,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "vo_pace",
+      "open": 0,
+      "overlap_us": 13074,
+      "peer": -1,
+      "req_us": 13009,
+      "slot": 2,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "gpu_wait",
+      "open": 0,
+      "overlap_us": 20736,
+      "peer": 3,
+      "req_us": 0,
+      "slot": 27,
+      "to": 0,
+      "waker": 3
+     },
+     {
+      "kind": "vo_pace",
+      "open": 0,
+      "overlap_us": 15219,
+      "peer": -1,
+      "req_us": 15076,
+      "slot": 2,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "ops_idle",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 1,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 76,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 77,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 32,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 33,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 78,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 34,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 81,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "evf",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 48,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 36,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 87,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 84,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 75,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 45,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "evf",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 47,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 79,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 52,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 54,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 80,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 24,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 25,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 26,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 28,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 29,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 30,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 231518,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 31,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "main_idle",
+      "open": 0,
+      "overlap_us": 231403,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 6,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "rec_idle",
+      "open": 0,
+      "overlap_us": 230831,
+      "peer": 3,
+      "req_us": 0,
+      "slot": 4,
+      "to": 0,
+      "waker": 2
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 206423,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 35,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 206412,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 19,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 206403,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 8,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 205569,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 18,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 202625,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 23,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 202399,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 15,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 202380,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 14,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 202366,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 12,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 202300,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 17,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 202193,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 11,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 202181,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 16,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 202073,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 13,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 201331,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 22,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 200949,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 51,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 200944,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 53,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 200788,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 9,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 200672,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 72,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 200671,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 73,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 200670,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 69,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 200669,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 74,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 200668,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 71,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 200668,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 70,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 200666,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 68,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 200642,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 50,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 200372,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 21,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 200326,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 20,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "cond",
+      "open": 1,
+      "overlap_us": 196930,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 82,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 195346,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 39,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 195346,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 43,
+      "to": 0,
+      "waker": -1
+     },
+     {
+      "kind": "sem",
+      "open": 1,
+      "overlap_us": 195346,
+      "peer": -1,
+      "req_us": 0,
+      "slot": 42,
+      "to": 0,
+      "waker": -1
+     }
+    ]
+   },
+   {
+    "base_lat": 14005.0,
+    "cls": "NO_SAMPLES",
+    "dt_us": 5372,
+    "gpu_in_chain": null,
+    "gpu_sw_or_s50": null,
+    "gpu_sw_plus_s50": null,
+    "holder": null,
+    "lat_us": 4994,
+    "n": 1723,
+    "note": "no DiagB32: line",
+    "path": [],
+    "ring_hold_w": null,
+    "steps": null,
+    "w": []
+   },
+   {
+    "base_lat": 13170.0,
+    "cls": "NO_SAMPLES",
+    "dt_us": 44770,
+    "gpu_in_chain": null,
+    "gpu_sw_or_s50": null,
+    "gpu_sw_plus_s50": null,
+    "holder": null,
+    "lat_us": 15806,
+    "n": 1724,
+    "note": "no DiagB32: line",
+    "path": [],
+    "ring_hold_w": null,
+    "steps": null,
+    "w": []
+   }
+  ],
+  "test": [
+   {
+    "after_n": null,
+    "text": "TestB32: config on value=60_present_200"
+   },
+   {
+    "after_n": 201,
+    "text": "TestB32: armed t_ms=7722719 fire_after_s=60.000 mode=present ms=200"
+   },
+   {
+    "after_n": 1721,
+    "text": "TestB32: fire mode=present ms=200"
+   },
+   {
+    "after_n": 1721,
+    "text": "TestB32: done mode=present slept_us=200212"
+   }
+  ],
+  "u5_b5_mean": null,
+  "u5_b5_n": 0,
+  "u5_med_dt": 47217.5,
+  "u5_slow70": 1,
+  "variant_dir": [
+   "variant_fixb26_fixb1b_fixf10_fixf19"
+  ],
+  "x_last": {
+   "gap3p": 0,
+   "kq_fail": 0,
+   "lines_cut": 0,
+   "lines_cut_w": 0,
+   "n": 1722,
+   "others_cut": 144,
+   "print_us": 110,
+   "rep_drop": 0,
+   "req_miss": 0,
+   "req_miss_w": 0,
+   "ring_drop": 0,
+   "ring_drop_w": 0,
+   "ring_hold": 0,
+   "ring_hold_w": 0,
+   "sgap_bad": 0,
+   "sgap_bad_w": 0,
+   "short_stalls": 0,
+   "slot_full": 0,
+   "slot_full_w": 0,
+   "slots": 88,
+   "sub_miss": 0,
+   "sub_miss_w": 0,
+   "torn": 1,
+   "torn_w": 0,
+   "w_cut": 268
+  },
+  "zero_w_sum": {
+   "lines_cut_w": 0,
+   "req_miss_w": 0,
+   "ring_drop_w": 0,
+   "sgap_bad_w": 0,
+   "slot_full_w": 0,
+   "sub_miss_w": 0,
+   "torn_w": 0
+  }
+ },
+ "reader_sha256": "57b546c748a8f5f4dd84524d19d369ea411f2115c1011abe21dea68dd5fbf51e",
+ "reading": "ADMITTED (no verdict; reading - F20m)",
+ "ref": {
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.2,
+  "installed_sha": "2d0c8815389bdc42a2371ba813dc9460fc5565f21f89e32fad4d9e5bd2394dc7",
+  "outcome": "ok",
+  "signature": "9177b4267de1fb8bac7d1113afd8733210addfac",
+  "video_index": 9335
+ },
+ "tag": "b32_ppb",
+ "theta": 0.4562
+}

@@ -1,0 +1,55 @@
+tag b32_z0b (form b32_z0b)  reader sha256 57b546c748a8f5f4dd84524d19d369ea411f2115c1011abe21dea68dd5fbf51e  f20e_read sha256 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa  theta 0.4562
+  ADMISSION PASS
+    [ok] tag json present
+    [ok] theta_load from the seal C:/kyty/f287/f20l2/pred/f20l2_seal.md (0.4562)
+    [ok] json binary_sha256 = F20j4 test 2d0c8815 (2d0c8815389bdc42)
+    [ok] installed before = after = FS8 2c9b69b9 (2c9b69b9 / 2c9b69b9)
+    [ok] json prereg sha256 = seal sha256 (2e4c1795ef97c234 / 2e4c1795ef97c234)
+    [ok] env: harness constants + form [('KYTY_DIAG_B32', '0'), ('KYTY_GPU_WALL', '1')] (extra [('KYTY_DIAG_B32', '0'), ('KYTY_GPU_WALL', '1')])
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)
+    [ok] hold 330 s (330)
+    [ok] log present
+    [ok] scene entered (first scene frame 206)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4055 listsha ed)
+    [ok] DiagB32 mode line absent (0)
+    [ok] no DiagB32 config invalid line
+    [ok] translation signature = FS8 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] TestB32 lines none ([])
+    [ok] rep_drop 0 (0)
+    [ok] loader ran (None)
+  binary 2d0c8815389bdc42a2371ba813dc9460fc5565f21f89e32fad4d9e5bd2394dc7; installed during the tag 2d0c8815389bdc42a2371ba813dc9460fc5565f21f89e32fad4d9e5bd2394dc7; translation signature (ShaderSeed line of the log) 9177b4267de1fb8bac7d1113afd8733210addfac
+  scene: first_n 206, frames 9325, scene 334.1 s, hold True; DiagB32 lines 0 (windows 0, bad prefix 0, dup 0); mode []
+  RC13: F20c attribution with = without DiagB32 lines (0 stripped): EQUAL
+  K_I 1; K 1; P_I 16; in count 16; INSTR_MADE 0 share 0.0 (all frames >= 100 ms with a DiagB32 line: 0, INSTR_MADE 0)
+  kq_n = 0: 0 share 0.0 (all: 0); m5r_us > 0: 0 (all: 0); in count with the previous frame >= 100 ms: 13; Recovering Vulkan swapchain 0
+  hold class (longest frame in count): NO_SAMPLES
+    FRAME n 2400 dt_us 111205 t 81.9 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 76362.5 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 2401 dt_us 1620924 t 82.0 s attr prio only | diag False instr_us None kq_n None m5r_us None kstate None | E 1586081.5 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 2402 dt_us 163019 t 83.6 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 128176.5 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3492 dt_us 140173 t 121.7 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 106364.5 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3493 dt_us 137851 t 121.8 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 104042.5 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3494 dt_us 235410 t 122.0 s attr prio only | diag False instr_us None kq_n None m5r_us None kstate None | E 201601.5 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3495 dt_us 122775 t 122.2 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 88966.5 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3496 dt_us 169121 t 122.3 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 135312.5 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3497 dt_us 103169 t 122.5 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 69360.5 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3499 dt_us 270213 t 122.7 s attr prio only | diag False instr_us None kq_n None m5r_us None kstate None | E 235938.0 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3500 dt_us 204940 t 122.9 s attr prio only | diag False instr_us None kq_n None m5r_us None kstate None | E 170665.0 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3501 dt_us 114861 t 123.2 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 80586.0 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3502 dt_us 163940 t 123.3 s attr prio only | diag False instr_us None kq_n None m5r_us None kstate None | E 129665.0 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3503 dt_us 138465 t 123.4 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 104190.0 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3504 dt_us 171161 t 123.6 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 136886.0 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 3505 dt_us 140644 t 123.7 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 106369.0 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+  PK-A B5 frames 0, armed member (EMU_RUN:Gpu / EMU_CALL on GuestGpu) 0: []
+  U5(1) median dt_us idx 723..828 41478.5 vs F20e 36171.5: +0.1467 (member > 0.02: yes)
+  U5(2) frames >= 70 ms (>= 10 s, no B5, no INSTR_MADE) 24 per hold 1 (base 0.561, member > 1.5 x base: yes) [reference]
+  U5(3) mean dt_us of B5 frames None (n 0; base 134767.7, member > 1.25 x base: no) [reference]
+  U5(4) zero invariants, sum of _w over the tag {'slot_full_w': 0, 'torn_w': 0, 'ring_drop_w': 0, 'sgap_bad_w': 0, 'lines_cut_w': 0, 'req_miss_w': 0, 'sub_miss_w': 0}: all 0
+  debts item 552 (e): slot_full_w != 0 on a NO_SAMPLES frame 0; unprintable thread names []; rep_drop 0; I5 dt > 1 ms 0
+  ring_hold_w (Z1, reference): sum over the -x lines 0, hold frames with ring_hold_w > 0 0, -x lines with the field 0
+  -x last None
+  REFERENCE: glitches 0, video index 9542, outcome ok, hold_exit None, hold_s 330.0
+  READING ADMITTED (no verdict; reading - F20m)

@@ -1,0 +1,37 @@
+S17c2 reader tag s17c_kn2 group K6 level underwater_aerial_garden
+  log sha256 22a7a120c90d301b73e90dcc4f0e5cc6b8caee0711130c0b5a71cd2a1909ff36 stdout sha256 24cd4265c2cbb6ea061cda839411945ce55596247ac81f0f79697f9817488015
+  ADMISSION
+    YES             run record <tag>.json present, one attempt | attempts 1
+    YES             binary of the run = S17a5 43ef1cc1 (json and installed_sha.txt) | 43ef1cc14ec2c116fdcce9ac71f9d854d0ec6498bd6e538fa479b1ecdf57fbb3 / 43ef1cc14ec2c116fdcce9ac71f9d854d0ec6498bd6e538fa479b1ecdf57fbb3
+    YES             version string KytyPS5-2026-09-15-6a2987a-2337-gc0057ccb in the binary copy | True
+    YES             revision texts of log / stdout name c0057cc | texts 1, other []
+    YES             prereg sha256 = the seal file (s17c2_seal.md) | cc0427f21f86c75e2f48fa13100bd89158c4c9d1acf58a5dd1e0722c3f381530 / cc0427f21f86c75e2f48fa13100bd89158c4c9d1acf58a5dd1e0722c3f381530
+    YES             environment = the form of the tag with KYTY_SHADER_SEED=0 (seal section 2; item 561 (d)(3); KYTY_SHADER_PREPARE absent) | KYTY keys ['KYTY_AV_TRACE', 'KYTY_FIX_F19', 'KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'KYTY_SHADER_SEED', 'KYTY_S_REPLAY']
+    YES             command line --vulkan-validation (last) = false | false
+    YES             0 lines ShaderSeed: installed (log, stdout; item 561 (d)(3)) | 0 / 0
+    YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0
+    YES             input state name = k_ks2 | k_ks2
+    YES             input state k_ks2: replay = root state/s17c_ks2/replay byte for byte | files 3 / saved 3
+    YES             emulator log present | 22a7a120c90d301b73e90dcc4f0e5cc6b8caee0711130c0b5a71cd2a1909ff36
+  FORM
+    YES             installed binary before = after, FS8 | 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b / 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+    YES             manifest of the caches after the return EQUAL | manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+  MEMBERS
+    YES             K6 entered (Level has started: underwater_aerial_garden, outcome ok) | entry line 929109
+    YES             K6 the process lived to the end of the hold (60 s) | outcome ok hold_exit None hold_s 60.2
+    YES             K6 0 death markers (the game path as before) | 0
+    YES             K6 mode line mode=3 compat=ok | {'mode': '3', 'dir': '_ShaderCache\\PPSA21564\\replay', 'compat': 'ok', 'generation': '7', 'corrupt': '0', 'sources': '392', 'specs': '454', 'pipes': '420', 'test': 'none'}
+    YES             K6 the next start rebuilds the remainder: a + b = N, a >= 1, b >= 1 (item 565 (g); identity admission item 566 (g)) | a 254 b 200 N 454 records ks2/kn2/r3b 420/420/420 admission {'mf_before': True, 'mf_between': True, 'replay_same': True, 'seed0': True}
+  REPORT
+    input state k_ks2: variant_fixb26_fixb1b_fixf10_fixf19: {'present': True, 'files': 211, 'cache_files': 211, 'pipelines_bin': False, 'replay_files': {}, 'cur': None}
+    window lines: {}
+    death markers log / stdout: 0 / 0 []
+    skipped draw lines: 0
+    translation cache directory lines: ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+    exit: outcome ok detail None hold_exit None hold_s 60.2 close_rc 0 close_killed False close_s 3.4
+    preparation screen (startup wait finished): 0 ms at line 708945
+    frames >= 1 s after the first scene frame: 0
+    a / b / N: 254 / 200 / 454
+    perms_cached of the next start (reference, item 565 (g)): 520
+    rebuild line: {'records': '420', 'prepared': '420', 'rejected': '0', 'pending': '0', 'perms_new': '200', 'perms_cached': '520', 'pipelines_bin': 'written'}
+  READING MEMBERS_PASS

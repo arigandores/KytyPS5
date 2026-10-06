@@ -1,0 +1,41 @@
+S17c2 reader tag s17c_e3h group K5 level hoover_beach
+  log sha256 8e73e29e1c51b7a103a0a660dcd8c63b22cdb650a55a8bb79df074db653ac739 stdout sha256 61bbe19f409b912161f8b697172b1a6b8ad607a005c506f7ddc78e0b2ed5e906
+  ADMISSION
+    YES             run record <tag>.json present, one attempt | attempts 1
+    YES             binary of the run = S17a5 43ef1cc1 (json and installed_sha.txt) | 43ef1cc14ec2c116fdcce9ac71f9d854d0ec6498bd6e538fa479b1ecdf57fbb3 / 43ef1cc14ec2c116fdcce9ac71f9d854d0ec6498bd6e538fa479b1ecdf57fbb3
+    YES             version string KytyPS5-2026-09-15-6a2987a-2337-gc0057ccb in the binary copy | True
+    YES             revision texts of log / stdout name c0057cc | texts 1, other []
+    YES             prereg sha256 = the seal file (s17c2_seal.md) | cc0427f21f86c75e2f48fa13100bd89158c4c9d1acf58a5dd1e0722c3f381530 / cc0427f21f86c75e2f48fa13100bd89158c4c9d1acf58a5dd1e0722c3f381530
+    YES             environment = the form of the tag with KYTY_SHADER_SEED=0 (seal section 2; item 561 (d)(3); KYTY_SHADER_PREPARE absent) | KYTY keys ['KYTY_AV_TRACE', 'KYTY_FIX_F19', 'KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_REC', 'KYTY_SAMPLE_GATE', 'KYTY_SHADER_SEED', 'KYTY_S_REPLAY']
+    YES             command line --vulkan-validation (last) = false | false
+    YES             0 lines ShaderSeed: installed (log, stdout; item 561 (d)(3)) | 0 / 0
+    YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0
+    YES             input state name = rb_r3h | rb_r3h
+    YES             input state rb_r3h: replay = root state/s17c_r3h/replay byte for byte | files 4 / saved 4
+    YES             input state rb_r3h: variant_fixb26_fixb1b_fixf10_fixf19 present with pipelines.bin (the folder of s17c_r3h) | {'present': True, 'files': 276, 'cache_files': 275, 'pipelines_bin': True, 'replay_files': {}, 'cur': None}
+    YES             emulator log present | 8e73e29e1c51b7a103a0a660dcd8c63b22cdb650a55a8bb79df074db653ac739
+  FORM
+    YES             installed binary before = after, FS8 | 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b / 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+    YES             manifest of the caches after the return EQUAL | manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+  MEMBERS
+    YES             K5 entered (Level has started: hoover_beach, outcome ok) | entry line 221908
+    YES             K5 the process lived to the end of the hold (330 s) | outcome ok hold_exit None hold_s 330.0
+    YES             K5 shown hold after the first scene frame >= 300 s | 332.0 s
+    YES             K5 fitness: rebuild skipped reason=recipes_current (the folder of s17c_r3h) | skipped [(87, 'recipes_current')] rebuild lines 0
+    YES             K5 translations of catalogue programs in the game = 0 (not determined when s17c_r3h translated catalogue programs after its preparation screen) | e3h 0 of 0; r3h after its preparation 0; None
+    YES             K5 null control s17c_n0h > 0 | 287
+    YES             K5 preparation screen <= 180 s (startup wait finished) | 0 ms
+    YES             K5 video index records >= 3000 | 20056
+    YES             K5 0 one-frame glitches (s51_vidglitch.py 4 6) | 0
+    YES             K5 sheet of the lead made | sheet: C:/kyty/s288/s17c2/runs/s17c_e3h/sheet_s17c_e3h.png frames 20056 step 417 tiles 8x6
+    YES             K5 0 death markers (log, stdout) | 0
+  REPORT
+    window lines: {}
+    death markers log / stdout: 0 / 0 []
+    skipped draw lines: 0
+    translation cache directory lines: ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+    exit: outcome ok detail None hold_exit None hold_s 330.0 close_rc 0 close_killed False close_s 3.7
+    preparation screen (startup wait finished): 0 ms at line 4417
+    frames >= 1 s after the first scene frame: 0
+    new permutations before the preparation line: 0
+  READING MEMBERS_PASS

@@ -1,0 +1,37 @@
+S17c2 reader tag s17c_ks2 group K6 level underwater_aerial_garden
+  log sha256 609074ad084d230598e28cc9d3bb30775c30de88a347d9578a76841172ee9382 stdout sha256 eb99e3d7fda6c0d9d474de185633708405def3a828720116398e3e0ab338a0e6
+  ADMISSION
+    YES             run record <tag>.json present, one attempt | attempts 1
+    YES             binary of the run = S17a5 43ef1cc1 (json and installed_sha.txt) | 43ef1cc14ec2c116fdcce9ac71f9d854d0ec6498bd6e538fa479b1ecdf57fbb3 / 43ef1cc14ec2c116fdcce9ac71f9d854d0ec6498bd6e538fa479b1ecdf57fbb3
+    YES             version string KytyPS5-2026-09-15-6a2987a-2337-gc0057ccb in the binary copy | True
+    YES             revision texts of log / stdout name c0057cc | texts 1, other []
+    YES             prereg sha256 = the seal file (s17c2_seal.md) | cc0427f21f86c75e2f48fa13100bd89158c4c9d1acf58a5dd1e0722c3f381530 / cc0427f21f86c75e2f48fa13100bd89158c4c9d1acf58a5dd1e0722c3f381530
+    YES             environment = the form of the tag with KYTY_SHADER_SEED=0 (seal section 2; item 561 (d)(3); KYTY_SHADER_PREPARE absent) | KYTY keys ['KYTY_AV_TRACE', 'KYTY_FIX_F19', 'KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'KYTY_SHADER_SEED', 'KYTY_S_REPLAY', 'KYTY_S_REPLAY_TEST']
+    YES             command line --vulkan-validation (last) = false | false
+    YES             0 lines ShaderSeed: installed (log, stdout; item 561 (d)(3)) | 0 / 0
+    YES             no window minimized, no Recovering Vulkan swapchain, no GamePatch line | minimized 0 recovering 0 gamepatch 0
+    YES             input state name = cat_c2 | cat_c2
+    YES             input state cat_c2: replay = ed3 state/s17c_c2/replay byte for byte | files 3 / saved 3
+    YES             input state cat_c2: variant_fixb26_fixb1b_fixf10_fixf19 absent (empty variant folder of the rebuild signature) | {'present': False}
+    YES             emulator log present | 609074ad084d230598e28cc9d3bb30775c30de88a347d9578a76841172ee9382
+  FORM
+    YES             installed binary before = after, FS8 | 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b / 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+    YES             manifest of the caches after the return EQUAL | manifest cmp EQUAL files 4785 listsha e2e7e8226f5bd9c175bf232eae07b7bcc9aa2ea3760dce31352133953371b2d4
+  MEMBERS
+    YES             K6 the break by the real close path: applied -> close requested precache_active=1 -> stand stop seen -> rebuild pipelines_bin=stopped -> close joined, one P < R, 0 timeout, 0 Event: quit, exit code 0 (item 566 (v)) | P 210 R 420; applied 511246 requested 514953 seen 514954 stopped 514955 joined 514958 quit 0 exit 0
+    YES             K6 sign of the break: rebuild ... pipelines_bin=stopped after stand stop applied (item 532 (b)) | stand line 511246 stopped line 514955
+    YES             K6 pipelines.bin is not written at the break (state_out.txt, variant_fixb26_fixb1b_fixf10_fixf19) | {'present': True, 'files': 211, 'cache_files': 211, 'pipelines_bin': False, 'replay_files': {}, 'cur': None}
+    YES             K6 0 death markers (item 561 (g)(2)) | 0
+  REPORT
+    window lines: {}
+    death markers log / stdout: 0 / 0 []
+    skipped draw lines: 0
+    translation cache directory lines: ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']
+    exit: outcome exited detail exit code 0 hold_exit None hold_s None close_rc None close_killed None close_s None
+    preparation screen (startup wait finished): None ms at line None
+    a = perms_new of the stopped rebuild line (item 565 (g)): 254
+    stopped rebuild line: {'records': '420', 'prepared': '210', 'rejected': '0', 'pending': '210', 'perms_new': '254', 'perms_cached': '102', 'pipelines_bin': 'stopped'}
+    waited_ms of stand stop seen / wait_ms of close stop joined: 4087 / 151
+    translation cache files after the break (saved by code): 211
+    no startup wait line (the close path): True
+  READING MEMBERS_PASS

@@ -1,0 +1,17 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-06T05:57:55Z F20l go_f20l b32_pp lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T05:57:55Z F20l go_f20l b32_pp installed binary inside the lock before the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T05:57:57Z F20l go_f20l b32_pp manifest before: manifest C:/kyty/f287/f20l/runs/b32_pp/manifest_before.tsv files 4055 bytes 1112558869 listsha ed460a68e5852e9fe8ea0daf75db58242571c56078a972cf31534d1618067a80
+2026-10-06T05:58:02Z F20l go_f20l b32_pp caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (235/184/5/649/ MB)
+2026-10-06T05:58:02Z F20l go_f20l b32_pp installed the F20j2 test copy for the tag: b9e0ee0092ca1504979ebd674abb21c8d67015fd030bc33615eb2c87acb90f91
+2026-10-06T05:58:03Z F20l go_f20l b32_pp enter_scene start (level underwater_aerial_garden, SD 300, --rec, hold 330, KYTY_DIAG_B32=1 KYTY_TEST_B32=60:present:200, KYTY_GPU_WALL=1, loader none, M6)
+2026-10-06T06:04:07Z F20l go_f20l b32_pp enter_scene rc 0; guard watch: 2026-10-06T06:04:04Z watch end, user process seen: no; M6: M6 end samples=209 foreign_max=2.35 foreign_mean=1.13; loader: 
+2026-10-06T06:04:07Z F20l go_f20l b32_pp run: VERDICT: underwater_aerial_garden in 16.3 s - PASS (acceptance <= 90 s)
+2026-10-06T06:04:08Z F20l go_f20l b32_pp log_b32_pp.txt sha256 4c41494da414db3d31149c2b1a5079a7d94867e8df7bab1d64a3a83d9f1bcd77
+2026-10-06T06:04:09Z F20l go_f20l b32_pp installed binary returned from the pinned FS8 copy
+2026-10-06T06:04:09Z F20l go_f20l b32_pp installed binary after the tag: 2c9b69b906f882ce4d2e45862c870d491469fd9101cc53ba26e6ec43c8e3013b
+2026-10-06T06:04:11Z F20l go_f20l b32_pp manifest of the run state (before the return): manifest C:/kyty/f287/f20l/runs/b32_pp/manifest_run.tsv files 4055 bytes 1112558869 listsha ed460a68e5852e9fe8ea0daf75db58242571c56078a972cf31534d1618067a80; run vs before: manifest cmp EQUAL files 4055 listsha ed460a68e5852e9fe8ea0daf75db58242571c56078a972cf31534d1618067a80
+2026-10-06T06:04:12Z F20l go_f20l b32_pp caches, saves and GLCache returned
+2026-10-06T06:04:15Z F20l go_f20l b32_pp manifest after: manifest C:/kyty/f287/f20l/runs/b32_pp/manifest_after.tsv files 4055 bytes 1112558869 listsha ed460a68e5852e9fe8ea0daf75db58242571c56078a972cf31534d1618067a80; cmp: manifest cmp EQUAL files 4055 listsha ed460a68e5852e9fe8ea0daf75db58242571c56078a972cf31534d1618067a80
+2026-10-06T06:04:15Z F20l go_f20l b32_pp lock released (rc 0)
+rc=0

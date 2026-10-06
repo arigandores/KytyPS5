@@ -55,6 +55,7 @@
 #include <set>
 #include <spirv-tools/libspirv.hpp>
 #include <string_view>
+#include <thread>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -7414,6 +7415,25 @@ void PipelineCache::ReplayRebuild() {
 			stop_stand_done = true;
 			LOGF("ShaderReplay: stand stop applied processed=%u records=%u\n", processed, records);
 			SR::StandRequestClose();
+			// S17a5 (HPP-638, ROADMAP s122 item 561(g)(2)): the preparation loop (window.cpp, WindowPrepareShaders) does not
+			// wait for this thread - it starts on the main thread after the graphics init and LoadElf, and the rebuild of
+			// S17c (420 records) ended before it (K6 of S17c not measured). So the stand keeps this thread here, inside the
+			// rebuild, until the loop reads the close event and PipelineCache::ReplayCloseStop stores m_precache_stop (the
+			// real close path; ~PipelineCache stores it too); then the loop below is left with processed < records and the
+			// stopped branch runs. At most StandStopWaitMs: the line "stand stop timeout" and the rebuild goes on as before.
+			constexpr uint64_t StandStopWaitMs = 60000;
+			const auto         wait_begin      = HostMicros();
+			while (!m_precache_stop.load() && HostMicros() - wait_begin < StandStopWaitMs * 1000u) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(5));
+			}
+			const auto waited_ms = (HostMicros() - wait_begin) / 1000u;
+			if (m_precache_stop.load()) {
+				LOGF("ShaderReplay: stand stop seen waited_ms=%" PRIu64 " processed=%u records=%u\n", waited_ms, processed,
+				     records);
+				break;
+			}
+			LOGF("ShaderReplay: stand stop timeout waited_ms=%" PRIu64 " processed=%u records=%u\n", waited_ms, processed,
+			     records);
 		}
 		if (processed != 0 && processed % 128u == 0) {
 			save_dirty();

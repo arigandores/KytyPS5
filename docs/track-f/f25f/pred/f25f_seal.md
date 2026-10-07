@@ -1,4 +1,4 @@
-# F25f (`HPP-669`, Harness Engineer): серия Б36 / Б40 на бинаре B — печать до первого тега
+# F25f (`HPP-669`, Harness Engineer): серия Б36 / Б40 на бинаре B — печать 2 (п. 606) до первого тега после правки
 
 Трек F, итерация F25 (Б36 `pot_treasure_cave`, Б40 `bonus_path_maker_mix`), звено F25f по п. 596(г)–(з) с поправками п. 599(б)(1)–(7),
 (10), (11), (в) RC13–RC14, п. 600(б)(4) и п. 602(в)(2). Этот файл — печать: после её записи ридер `f25_read.py`, цепочка тега, правила
@@ -152,6 +152,34 @@ json есть; `theta_load` из печати; `binary_sha256` = B; устано
 - Число записей окна n − 1 для п. 602(в)(2) — `w_lines` заголовка окна n − 1; не напечатанное окно n − 1 — 0 (строже).
 - Холодный слой при `STOP_552G` — вопрос лиду до холодных тегов.
 
+## 4а. Печать 2 — правка харнесса по п. 606 (до первого тега после правки)
+
+Решение — п. 606 `cc389198:docs/ROADMAP.md:23673` (якорь «606. **Звено F25f трека F (`HPP-669`, Harness Engineer) — вопрос лиду»; +1 — «(а) **Факты
+звена — принимаются как данные»). Печать 1 (`3be83a68…`, KytyPS5 `ccfdb1ff`) — копия `pred/old/f25f_seal_v1_3be83a68.md`; теги `f25_c1` …
+`f25_s25` и первый вызов `f25_s26` сделаны и прочитаны по ней (их `read.txt` несут sha печати 1; повторное чтение их json сверяет печать 1).
+**Ридер `f25_read.py` (sha256 `933f36c1…`), правила чтения §3, форма тега §1 — без изменений** (п. 606(в)(8)); член допуска «кэши до =
+снимку формы» читается «= B′» (A′ у холодного слоя) с первого тега после снимка B′ (п. 606(в)(2)).
+
+- **(1) Сеанс пользователя** — `hold_f25f.py check`: процесс ВМ (имя `qemu-system*` или `emulator.exe`) или любой процесс, кроме своего
+  эмулятора, с открытым файлом папки GLCache ⇒ `HOLD USER SESSION` (имена — `<app>`). Проверка — перед замком и сразу после него в
+  `go_f25f.sh`, в `launch_f25f.sh` (отказ, блок закрывается, не попытка) и в `block_f25f.sh` (каждая проверка блока п. 534(в)(3): сеанс ⇒
+  `close user_session`, иначе `open-block`; блок открывают две чистые проверки ≥ 600 с после выхода ВМ). Во время тега `hold_f25f.py watch`
+  (опрос имён ≤ 2 с): ВМ в двух опросах подряд ⇒ флаг `VM_FOUND`, свой эмулятор убит по pid; возврат ждёт выхода ВМ под замком, GLCache
+  возвращается слиянием (`merge-return`: файлы копии до записываются тем же содержимым, файлы, которых в копии нет, остаются), тег — помеха.
+- **(2)–(5) Снимки** — `snap_f25f.py reconcile` перед каждым тегом, кроме прогревов (и перед `restoreA`): манифест L против ожидаемого
+  состояния S (`snap/STATE`: B′ до холодного слоя, A′ после); файл S изменён / удалён и не файл пользователя D, или в L файл серии (A0 / B0 /
+  A / B) вне S ⇒ `RECONCILE STOP` — `SERIES_STOP`, ничего не трогается, вопрос лиду (п. 606(в)(4)); L = S ⇒ `EQUAL`; иначе обновление
+  пользователя: новые файлы вне файлов серии, изменённые или удалённые файлы D — в ОБА снимка A и B (копии живых файлов, строки манифестов,
+  `snap/D.tsv` с sha256 каждого файла D, строка `snap/updates.log`); третье обновление ⇒ `RECONCILE LIMIT`, ничего не меняется, стоп серии по
+  п. 606(в)(5). `A0.tsv` / `B0.tsv` хранят первые A / B.
+- **(3), (6) Возвраты:** снимки A′ / B′ несут файлы D, поэтому `restore` (холодный тег, `restoreA`) их не удаляет и пишет тем же
+  содержимым; конец серии — `restoreA` = A′ (`EQUAL` с `A.tsv`); отличие A′ от A — строки `D.tsv` (в отчёт).
+- **(7)** `f25_s26`: первый вызов — помеха 1 из 6 (п. 534); второй (10:05:12Z) — не попытка и не помеха; следующий — после (1)–(2).
+- **Дифф** харнесса против печати 1 — `pred/seal2_diff.txt` (`go_f25f.sh`, `launch_f25f.sh`, `snap_f25f.py`, `test_tools_f25f.py`); новые
+  файлы — `hold_f25f.py`, `block_f25f.sh`. Фикстуры `test_tools_f25f.py` — 62 (+25: сверка — равенство, новый файл, изменённый и удалённый
+  файл D, предел 2, стопы по изменённому / удалённому / неожиданному файлу серии, `restore A′` сохраняет D, `merge-return`, проверка сеанса
+  по имени ВМ / по открытому файлу / свой pid / чужая папка, сторож без флага на одном опросе).
+
 ## 5. Не заявляется
 
 П. 596(л), п. 599(д), п. 600(г), п. 602(д) целиком; что калибровка смещения точнее задержки записи лога; что `M6_BURST` — причина кадра;
@@ -163,22 +191,22 @@ json есть; `theta_load` из печати; `binary_sha256` = B; устано
 - `test_f25_read.out.txt` (sha256 ca25ba48dc21e0fc): checks 351; ALL OK; первая строка набора: `suite test_f25_read.py sha256 a4cf6aed7ad399b8a58592980f26411d848463cb3f125b518b0e111d418969cc target f25_read.py sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf`
 - `sens_f25.out.txt` (sha256 d2171f22ca37a1d3): edits 82 caught 82 kept 0; ALL OK; первая строка набора: `suite sens_f25.py sha256 b0bfdf3e4ea0cf488386e10253e7024b6aac6813e8241652f9fc7f931a18ba27 target f25_read.py sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf test_f25_read.py sh`
 - `regress_f25.out.txt` (sha256 69b4d2fc948990c5): REGRESS PASS; ALL OK; первая строка набора: `suite regress_f25.py sha256 b29eeba58ad630b7e7868ac9a0aedb6e42170c9e3aeb6e77dbce60b52d644f9f target f25_read.py sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf`
-- `refs_f25f.out.txt` (sha256 af109de568309f13): refs 11 mismatches 0; ALL OK; первая строка набора: `suite refs_f25f.py sha256 9d8b7b7ce2e619f5d287b0b821871fb6a5d566b38431af202657c707888aa18c`
-- `refs_neg.out.txt` (sha256 8ff87d916e88b9a4): NEG CONTROL OK; ALL OK; первая строка набора: `suite refs_f25f.py sha256 9d8b7b7ce2e619f5d287b0b821871fb6a5d566b38431af202657c707888aa18c (negative control)`
-- `test_tools_f25f.out.txt` (sha256 7c7990e3feaad6ea): checks 37; ALL OK; первая строка набора: `suite test_tools_f25f.py sha256 e251cb8fd1b01d4999c3df8e01c38e9ae21535f04c96c6175443a810356705b4 target snap_f25f.py sha256 531369028ec730fe29eff532224bb8cbf3d5b5590c32ded45e28d56fca4b2592 m6_f25f.py `
+- `refs_f25f.out.txt` (sha256 a6c1bb8004ece636): refs 12 mismatches 0; ALL OK; первая строка набора: `suite refs_f25f.py sha256 6faefd7cbc9aa0be2369882be460b3a32aec43b432753c2dcf75d9f81d692eb4`
+- `refs_neg.out.txt` (sha256 e42e96822eb2a5d9): NEG CONTROL OK; ALL OK; первая строка набора: `suite refs_f25f.py sha256 6faefd7cbc9aa0be2369882be460b3a32aec43b432753c2dcf75d9f81d692eb4 (negative control)`
+- `test_tools_f25f.out.txt` (sha256 557456be6a44d2f1): checks 62; ALL OK; первая строка набора: `suite test_tools_f25f.py sha256 4aee0d8e38548630fa33453a645721932beef6a37c7ca4efbf779069faf9ad20 target snap_f25f.py sha256 7319cff0a9a909ee7912441216c2848ea837e780966575ea3659ece076bb74d7 m6_f25f.py `
 
 seal: 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf C:/kyty/f287/f25f/f25_read.py
 seal: 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa C:/kyty/f287/f25f/f20e_read.py
 seal: a4cf6aed7ad399b8a58592980f26411d848463cb3f125b518b0e111d418969cc C:/kyty/f287/f25f/test_f25_read.py
 seal: b0bfdf3e4ea0cf488386e10253e7024b6aac6813e8241652f9fc7f931a18ba27 C:/kyty/f287/f25f/sens_f25.py
 seal: b29eeba58ad630b7e7868ac9a0aedb6e42170c9e3aeb6e77dbce60b52d644f9f C:/kyty/f287/f25f/regress_f25.py
-seal: 9d8b7b7ce2e619f5d287b0b821871fb6a5d566b38431af202657c707888aa18c C:/kyty/f287/f25f/refs_f25f.py
-seal: e251cb8fd1b01d4999c3df8e01c38e9ae21535f04c96c6175443a810356705b4 C:/kyty/f287/f25f/test_tools_f25f.py
-seal: c79b6148031e61fabd757d548386c6b3bee242be71cdbc90b4327b22e11fe1ca C:/kyty/f287/f25f/f25f_seal_body.md
-seal: 531369028ec730fe29eff532224bb8cbf3d5b5590c32ded45e28d56fca4b2592 C:/kyty/f287/f25f/snap_f25f.py
+seal: 6faefd7cbc9aa0be2369882be460b3a32aec43b432753c2dcf75d9f81d692eb4 C:/kyty/f287/f25f/refs_f25f.py
+seal: 4aee0d8e38548630fa33453a645721932beef6a37c7ca4efbf779069faf9ad20 C:/kyty/f287/f25f/test_tools_f25f.py
+seal: 3abd9299efb70263ff2d9fa5c6e0c9ed741fd0dc50bb25964ed2422c06f9eb72 C:/kyty/f287/f25f/f25f_seal_body.md
+seal: 7319cff0a9a909ee7912441216c2848ea837e780966575ea3659ece076bb74d7 C:/kyty/f287/f25f/snap_f25f.py
 seal: 0dbd7c1fc5df191ffb0d253e5467466c027d5f9bc355b5fac1e188b5d475149a C:/kyty/f287/f25f/m6_f25f.py
-seal: 475fbd59e30f14a47a42b264b362fa5b47afca98394041fd09d3bddce4cf8a86 C:/kyty/f287/f25f/go_f25f.sh
-seal: 9f88f88b3b13fb5bf8dbfdaa94ae7185645c69c4c290737e35134e3cb485dd8b C:/kyty/f287/f25f/launch_f25f.sh
+seal: 089b6b5d02b1c51e42ef39d71e60bd20866152eccde463f23ade1ef81eca81fb C:/kyty/f287/f25f/go_f25f.sh
+seal: d2e12ad8b8dcb1b8c677d26b8fd95adf2db58579e0a2dd33d5cd17ea6c871546 C:/kyty/f287/f25f/launch_f25f.sh
 seal: 05ae628b209f13e17a85e8013380bff2317bb45292d6c06b2c12aec242d949ff C:/kyty/f287/f25f/wait_f25f.sh
 seal: dcb261012e129555e3888183a1f377082ac6893da89113bd209300a10aa826b0 C:/kyty/f287/f25f/post_f25f.sh
 seal: d973b14c8a9f9ed189e0d5a5eca822669d5b1f5ffd210289d30677b705a027ee C:/kyty/f287/f25f/chk_f25f.sh
@@ -194,13 +222,17 @@ seal: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 C:/kyty/f
 seal: c5ee7dc26d2a6d28501c3941fe882448176165b63e4242373fb0a4a80c697a96 C:/kyty/f287/f25f/idle142.py
 seal: 77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638 C:/kyty/f287/f25f/run_safety99.py
 seal: c750e62ae3d6354970e5be70cf5fb19c480292b78beeeb8c9bb7112106d6aa21 C:/kyty/f287/f25f/launch_run.py
-seal: 7fdd10c1163197e229eff4db92c467ff870e1a8b3111a93817a252db82ea0c08 C:/kyty/f287/f25f/mk_seal_f25f.py
+seal: c73b3c85b5b7ffffa4efd58117595f6b1cdb1da8ad4b28727262210f46e7b44a C:/kyty/f287/f25f/mk_seal_f25f.py
+seal: 7e475d67873b23d32330d9823a10edbec9a1cea64d0b6c62ab2d156ba7d7e3ed C:/kyty/f287/f25f/hold_f25f.py
+seal: 5484ae88da2429b80ca655bec931affc8e5d7024a8303da7ef9e23c33ebb3291 C:/kyty/f287/f25f/block_f25f.sh
+seal: 3250ee9957b441bb708c94bcc2e372685c13fd2c77d412d76df1615bb4f0b4b1 C:/kyty/f287/f25f/pred/seal2_diff.txt
+seal: 3be83a68ec5415bed692d42877f41fce0ef8b341c24cdcaf5ba03c55fedba75e C:/kyty/f287/f25f/pred/old/f25f_seal_v1_3be83a68.md
 seal: ca25ba48dc21e0fc32994ea8916673e066fd20295ee594424b68b1e50272eb16 C:/kyty/f287/f25f/test_f25_read.out.txt
 seal: d2171f22ca37a1d3c6b66c273fed26bf2c336eb6e290fb95b879aa24e15858bc C:/kyty/f287/f25f/sens_f25.out.txt
 seal: 69b4d2fc948990c5548e279d24c37606475d198261240a609b03bfade3628196 C:/kyty/f287/f25f/regress_f25.out.txt
-seal: af109de568309f13f504110fc6cde816feb27b8483ccc3b9ccbdd3b5d74e48b1 C:/kyty/f287/f25f/refs_f25f.out.txt
-seal: 8ff87d916e88b9a45f79b9f70583972b4364be72384d1e9d780ac62dc4d93230 C:/kyty/f287/f25f/refs_neg.out.txt
-seal: 7c7990e3feaad6ea66368b3275d88c45e4376c00ee8c2541eafe63941c47879c C:/kyty/f287/f25f/test_tools_f25f.out.txt
+seal: a6c1bb8004ece636accd150a11ff63ac14ae60f2233e511b4100cf03868df55a C:/kyty/f287/f25f/refs_f25f.out.txt
+seal: e42e96822eb2a5d9489a7c99ec8812722aa2683c5dca61bb6e584d00dd29ece0 C:/kyty/f287/f25f/refs_neg.out.txt
+seal: 557456be6a44d2f184063dae230a608d0d8f9351aa208e69cd05db1dc8884388 C:/kyty/f287/f25f/test_tools_f25f.out.txt
 seal: e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4 C:/kyty/f287/f25d/kyty_emulator_e342b839.exe
 seal: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a C:/kyty/s288/bin/kyty_emulator_b3cee576.exe
 seal: 6afe4e3335da68f28792ada0c6c4f05f741f037f78a00bf83fb1de409ee46c1c C:/kyty/scripts/s51_vidglitch.py

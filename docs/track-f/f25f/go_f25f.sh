@@ -11,6 +11,11 @@
 #   f25_z1/z2/pb/pc, f25_sNN   caches before = B (snap_cmp); copy before, return after (= B)
 #   f25_kNN         snapshot A restored before it (cold = A with GLCache); caches before = A; copy before, return after (= A)
 #   restoreA        (not a tag) the end of the series: snapshot A restored, live manifest = A (EQUAL), item 596 (g)
+# Item 606 (seal 2): before the lock and right after it hold_f25f.py check (a user VM or a process holding GLCache files = a user
+# session: no lock, no manifest, caches untouched); before every tag but the prewarms snap_f25f.py reconcile (L against B' / A': user
+# files D go into BOTH snapshots, a changed / removed series file or a third update stops the series - file SERIES_STOP); a cold tag
+# and restoreA restore A' (it carries D) and set snap/STATE A; during the tag hold_f25f.py watch (a user VM -> own emulator killed by pid,
+# the return waits for its exit and returns GLCache by merge - files not in the copy before are kept - the tag is interference).
 # usage: bash C:/kyty/f287/f25f/go_f25f.sh <tag> [pot|bonus]   (the level is fixed for c1 z1 pb = pot, c2 z2 pc = bonus; required for s, k)
 #        bash C:/kyty/f287/f25f/go_f25f.sh restoreA
 # EXIT: 0 tag made (read it with post_f25f.sh); 1 hard refusal / return failed; 2 usage / the tag exists; 3 lock / user process; 4 stop
@@ -42,12 +47,18 @@ if [ "$T" = restoreA ]; then
   [ -d $G/snap/A ] || { log "no snapshot A - nothing to restore"; exit 1; }
   [ "$(sha "$GAME")" = "$S18" ] || { log "installed binary is not S18 - not restoring (question to the lead)"; exit 1; }
   GS=$(python $G/guard_f25f.py scan) || { log "user emulator or launcher lives - not restoring: $GS"; exit 3; }
+  HS=$(python $G/hold_f25f.py check) || { python $G/guard_f25f.py close user_session > /dev/null; log "user session (item 606 (v)(1)): $HS - not restoring, block closed"; exit 3; }
   set -o noclobber
   if ! { echo "F25f HPP-669 go_f25f.sh restoreA pid $$ $(u)" > $LOCK; } 2>/dev/null; then set +o noclobber; echo "lock taken by someone else"; exit 3; fi
   set +o noclobber
   echo "lock taken restoreA $(u)" >> $G/runs/lock.log
   mkdir -p $G/runs/restoreA
+  HS=$(python $G/hold_f25f.py check) || { rm -f $LOCK; echo "lock released restoreA $(u)" >> $G/runs/lock.log; log "user session right after the lock: $HS - lock released, nothing touched"; exit 3; }
+  python $G/snap_f25f.py reconcile > $G/runs/restoreA/reconcile.txt 2>&1; RR=$?
+  log "reconcile before restore A' (item 606): $(head -1 $G/runs/restoreA/reconcile.txt)"
+  if [ $RR != 0 ]; then rm -f $LOCK; echo "lock released restoreA $(u)" >> $G/runs/lock.log; echo "$(u) restoreA reconcile rc $RR" > $G/SERIES_STOP; log "reconcile rc $RR - nothing restored, lock released, SERIES_STOP (question to the lead)"; exit 1; fi
   python $G/snap_f25f.py restore A > $G/runs/restoreA/restore.txt 2>&1; RC=$?
+  python $G/snap_f25f.py state A > /dev/null
   log "restore A: $(head -1 $G/runs/restoreA/restore.txt)"
   python $G/manifest_fs4c.py $G/runs/restoreA/manifest_after.tsv "${MF[@]}" > $G/runs/restoreA/manifest_after.txt 2>&1
   python $G/manifest_fs4c.py --cmp $G/snap/A.tsv $G/runs/restoreA/manifest_after.tsv > $G/runs/restoreA/manifest_cmp.txt 2>&1; MC=$?
@@ -84,6 +95,7 @@ OUT=$G/runs/$T; DIRS="_ShaderCache _ShaderSeeds _PipelineCache _SaveData"
 log() { echo "$(u) F25f go_f25f $T $*" | tee -a $TIMES; }
 [ -e $F/STOP ] && { log "STOP file: $(head -1 $F/STOP)"; exit 4; }
 [ -e $G/RETURN_FAILED ] && { echo "RETURN_FAILED exists"; exit 1; }
+[ -e $G/SERIES_STOP ] && { echo "SERIES_STOP exists: $(head -1 $G/SERIES_STOP)"; exit 1; }
 [ -e $LOCK ] && { echo "lock held: $(head -1 $LOCK)"; exit 3; }
 [ -e $OUT ] && { echo "$OUT exists - a tag runs once"; exit 2; }
 [ -f "$SEAL" ] || { echo "no seal $SEAL"; exit 1; }
@@ -96,6 +108,7 @@ if [ "$PRE" = C1 ] && [ ! -f $G/snap/C1.tsv ]; then log "no snapshot C1 (f25_c1 
 if [ "$EXP" = B ] && [ ! -f $G/snap/B.tsv ]; then log "no snapshot B (f25_c2 first) - not starting"; exit 1; fi
 if [ "$EXP" = A ] && [ "$B" != f25_c1 ] && [ ! -f $G/snap/A.tsv ]; then log "no snapshot A - not starting"; exit 1; fi
 GS=$(python $G/guard_f25f.py scan) || { python $G/guard_f25f.py close user_found > /dev/null; log "user emulator or launcher lives - not starting, block closed (item 534): $GS"; exit 3; }
+HS=$(python $G/hold_f25f.py check) || { python $G/guard_f25f.py close user_session > /dev/null; log "user session (item 606 (v)(1)): $HS - not starting, block closed"; exit 3; }
 mkdir -p $OUT
 echo "$LV" > $OUT/level.txt
 python $G/procload.py --wait-s ${PLWAIT:-120} 2>&1 | mask > $OUT/procload.txt
@@ -110,6 +123,7 @@ fi
 set +o noclobber
 echo "lock taken $T $(u)" >> $G/runs/lock.log
 GS=$(python $G/guard_f25f.py scan) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; mv $OUT $OUT.user_$(date -u +%H%M%S); python $G/guard_f25f.py close user_found > /dev/null; log "user emulator or launcher found right after the lock - lock released, files untouched, block closed, interference (item 534): $GS"; exit 3; }
+HS=$(python $G/hold_f25f.py check) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; mv $OUT $OUT.session_$(date -u +%H%M%S); python $G/guard_f25f.py close user_session > /dev/null; log "user session right after the lock (item 606 (v)(1)): $HS - lock released, files untouched, block closed"; exit 3; }
 log "lock taken; level $LV; procload: $(tail -1 $OUT/procload.txt | cut -c1-120)"
 sha "$GAME" > $OUT/installed_before.txt
 log "installed binary inside the lock before the tag: $(cat $OUT/installed_before.txt)"
@@ -132,6 +146,10 @@ finish() {
       log "$(python $G/guard_f25f.py wait-gone --pidfile $OUT/game_pid.txt --poll 10 | tail -1)"
     fi
   fi
+  if [ -e $OUT/VM_FOUND ]; then
+    log "user VM during the tag ($(head -1 $OUT/VM_FOUND | cut -c1-120)) - caches wait for its exit, poll 10 s, the lock stays (item 606 (v)(1))"
+    log "$(python $G/hold_f25f.py wait-gone --pidfile $OUT/game_pid.txt --poll 10 | tail -1)"
+  fi
   if [ $INSTALLED = 1 ]; then
     for i in 1 2 3; do cp "$PINNED" "$GAME" 2>/dev/null && [ "$(sha "$GAME")" = "$S18" ] && break; sleep 5; done
     if [ "$(sha "$GAME")" = "$S18" ]; then log "installed binary returned from the pinned S18 copy"; else OK=0; log "RETURN OF THE BINARY FAILED: $(sha "$GAME")"; fi
@@ -146,6 +164,10 @@ finish() {
   fi
   for d in $COPIED; do
     if [ "$d" = "GLCache" ]; then LIVE="$GLDIR"; else LIVE="$EMU/$d"; fi
+    if [ "$d" = "GLCache" ] && [ -e $OUT/VM_FOUND ]; then
+      MR=$(python $G/snap_f25f.py merge-return GLCache "$OUT/before_$d" "$LIVE") || { OK=0; log "merge return of GLCache FAILED"; }
+      log "GLCache returned by merge (item 606 (v)(3)): $MR"; continue
+    fi
     rm -rf "$LIVE" && mv "$OUT/before_$d" "$LIVE" || { OK=0; log "return of $d FAILED"; }
   done
   if [ -n "$COPIED" ]; then
@@ -172,6 +194,7 @@ finish() {
   fi
   if [ $OK = 1 ]; then
     rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; log "lock released (rc $RCX)"
+    [ -e $OUT/VM_FOUND ] && [ ! -e $OUT/USER_FOUND ] && cp $OUT/VM_FOUND $OUT/USER_FOUND
     if [ -e $OUT/USER_FOUND ]; then
       UF=$(head -1 $OUT/USER_FOUND | cut -c1-160); python $G/guard_f25f.py close user_found > /dev/null
       mv $OUT $OUT.user_$(date -u +%H%M%S); log "user process during the tag ($UF) - block closed, interference, repeat by the same name (item 534)"
@@ -184,12 +207,18 @@ finish() {
   exit $RCX
 }
 trap finish EXIT
+if [ $NORET = 0 ]; then
+  python $G/snap_f25f.py reconcile > $OUT/reconcile.txt 2>&1; RR=$?
+  log "reconcile (item 606 (v)(2)-(5)): $(head -1 $OUT/reconcile.txt | cut -c1-220)"
+  if [ $RR != 0 ]; then SNAPOK=0; echo "$(u) $T reconcile rc $RR: $(head -1 $OUT/reconcile.txt | cut -c1-160)" > $G/SERIES_STOP; log "reconcile rc $RR - nothing touched, SERIES_STOP (item 606 (v)(4)-(5)); not starting"; exit 1; fi
+fi
 if [ "$PRE" = A ] && [ ! -d $G/snap/A ]; then
   python $G/snap_f25f.py take A > $OUT/snap_pre.txt 2>&1 || { SNAPOK=0; log "snapshot A: $(head -1 $OUT/snap_pre.txt) - not starting"; exit 1; }
   log "snapshot A taken before the first tag (item 596 (g)): $(head -1 $OUT/snap_pre.txt)"
 elif [ -n "$PRE" ]; then
   python $G/snap_f25f.py restore $PRE > $OUT/snap_pre.txt 2>&1 || { SNAPOK=0; BROKEN=1; log "restore $PRE: $(head -1 $OUT/snap_pre.txt) - not starting"; exit 1; }
   log "snapshot $PRE restored before the tag: $(head -1 $OUT/snap_pre.txt)"
+  if [ "$PRE" = A ] && [ $NORET = 0 ]; then python $G/snap_f25f.py state A > /dev/null; log "snap/STATE A (cold layer, item 606 (v)(6))"; fi
 fi
 python $G/manifest_fs4c.py $OUT/manifest_before.tsv "${MF[@]}" > $OUT/manifest_before.txt 2>&1 || { log "manifest before failed - not starting"; SNAPOK=0; rm -f $OUT/manifest_before.tsv; exit 1; }
 log "manifest before: $(head -1 $OUT/manifest_before.txt | cut -c1-200)"
@@ -213,12 +242,14 @@ for v in $(env | grep -o '^\(KYTY\|VK_LAYER\)_[A-Z0-9_]*'); do unset $v; done
 log "enter_scene start (level $LV, SD $SD, --rec, hold $H, $KN, KYTY_GPU_WALL=1, KYTY_GPU_HANG_ABORT_S=22, M6 + calibration poller)"
 python $G/guard_f25f.py watch --pidfile $OUT/game_pid.txt --flag $OUT/USER_FOUND --stop $OUT/watch.stop > $OUT/guard_watch.txt 2>&1 &
 WPID=$!
+python $G/hold_f25f.py watch --pidfile $OUT/game_pid.txt --flag $OUT/VM_FOUND --stop $OUT/watch.stop > $OUT/hold_watch.txt 2>&1 &
+HPID=$!
 python $G/m6_f25f.py --pidfile $OUT/game_pid.txt --local $OUT/m6_local.txt --out $OUT/m6.txt --cal $OUT/cal.txt --stop $OUT/m6.stop --loadpids $OUT/load_pids.txt > $OUT/m6_run.txt 2>&1 &
 MPID=$!
 F20E_PIDFILE=$OUT/game_pid.txt python $G/enter_scene.py $T --level $LV --attempts 1 --stable-draws $SD --timeout 480 --no-install --require-idle \
   --gates-file $G/gates_default.txt --pred $SEAL --rec --hold $H KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_GPU_WALL=1 KYTY_GPU_HANG_ABORT_S=22 $KN > $OUT/run.txt 2>&1
 ESRC=$?
-touch $OUT/watch.stop $OUT/m6.stop; wait $WPID; wait $MPID
+touch $OUT/watch.stop $OUT/m6.stop; wait $WPID; wait $HPID; wait $MPID
 log "enter_scene rc $ESRC; guard watch: $(tail -1 $OUT/guard_watch.txt | cut -c1-200); M6: $(tail -1 $OUT/m6.txt 2>/dev/null | cut -c1-160)"
 log "run: $(grep '^VERDICT: ' $OUT/run.txt | tail -1 | cut -c1-200)"
 KO=$(python $G/guard_f25f.py kill-own --pidfile $OUT/game_pid.txt); case "$KO" in *killed*) log "own emulator still lived after the run: $KO"; sleep 5;; esac

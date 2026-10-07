@@ -19,6 +19,8 @@ ROWS = [
      '(\u0430) **\u041f\u0440\u0438\u0451\u043c\u043a\u0430 \u0441\u0442\u0440\u043e\u043a\u043e\u0439. F25d'),
     ('47d618fe', 'docs/ROADMAP.md', 23634, '602. **\u0417\u0432\u0435\u043d\u043e F25e \u0442\u0440\u0435\u043a\u0430 F (`HPP-668`, Red Team',
      '(\u0430) **\u041f\u0440\u0438\u0451\u043c\u043a\u0430 \u0441\u0442\u0440\u043e\u043a\u043e\u0439. F25e'),
+    ('cc389198', 'docs/ROADMAP.md', 23673, '606. **\u0417\u0432\u0435\u043d\u043e F25f \u0442\u0440\u0435\u043a\u0430 F (`HPP-669`',
+     '(\u0430) **\u0424\u0430\u043a\u0442\u044b \u0437\u0432\u0435\u043d\u0430'),
     ('24ce64ea', 'docs/track-f/f20l3/go_f20l3.sh', 55,
      'MF=("_ShaderCache=$EMU/_ShaderCache" "_ShaderSeeds=$EMU/_ShaderSeeds" "_PipelineCache=$EMU/_PipelineCache" "_SaveData=$EMU/_SaveData" "GLCache=$GLDIR")',
      '[ -e $F/STOP ] && { log "STOP file: $(head -1 $F/STOP)"; exit 4; }'),

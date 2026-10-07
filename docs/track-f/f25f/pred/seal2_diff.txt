@@ -1,0 +1,484 @@
+diff --git a/go_f25f.v1.sh b/go_f25f.sh
+index c5f2d36..3c6ccf1 100644
+--- a/go_f25f.v1.sh
++++ b/go_f25f.sh
+@@ -11,6 +11,11 @@
+ #   f25_z1/z2/pb/pc, f25_sNN   caches before = B (snap_cmp); copy before, return after (= B)
+ #   f25_kNN         snapshot A restored before it (cold = A with GLCache); caches before = A; copy before, return after (= A)
+ #   restoreA        (not a tag) the end of the series: snapshot A restored, live manifest = A (EQUAL), item 596 (g)
++# Item 606 (seal 2): before the lock and right after it hold_f25f.py check (a user VM or a process holding GLCache files = a user
++# session: no lock, no manifest, caches untouched); before every tag but the prewarms snap_f25f.py reconcile (L against B' / A': user
++# files D go into BOTH snapshots, a changed / removed series file or a third update stops the series - file SERIES_STOP); a cold tag
++# and restoreA restore A' (it carries D) and set snap/STATE A; during the tag hold_f25f.py watch (a user VM -> own emulator killed by pid,
++# the return waits for its exit and returns GLCache by merge - files not in the copy before are kept - the tag is interference).
+ # usage: bash C:/kyty/f287/f25f/go_f25f.sh <tag> [pot|bonus]   (the level is fixed for c1 z1 pb = pot, c2 z2 pc = bonus; required for s, k)
+ #        bash C:/kyty/f287/f25f/go_f25f.sh restoreA
+ # EXIT: 0 tag made (read it with post_f25f.sh); 1 hard refusal / return failed; 2 usage / the tag exists; 3 lock / user process; 4 stop
+@@ -42,12 +47,18 @@ if [ "$T" = restoreA ]; then
+   [ -d $G/snap/A ] || { log "no snapshot A - nothing to restore"; exit 1; }
+   [ "$(sha "$GAME")" = "$S18" ] || { log "installed binary is not S18 - not restoring (question to the lead)"; exit 1; }
+   GS=$(python $G/guard_f25f.py scan) || { log "user emulator or launcher lives - not restoring: $GS"; exit 3; }
++  HS=$(python $G/hold_f25f.py check) || { python $G/guard_f25f.py close user_session > /dev/null; log "user session (item 606 (v)(1)): $HS - not restoring, block closed"; exit 3; }
+   set -o noclobber
+   if ! { echo "F25f HPP-669 go_f25f.sh restoreA pid $$ $(u)" > $LOCK; } 2>/dev/null; then set +o noclobber; echo "lock taken by someone else"; exit 3; fi
+   set +o noclobber
+   echo "lock taken restoreA $(u)" >> $G/runs/lock.log
+   mkdir -p $G/runs/restoreA
++  HS=$(python $G/hold_f25f.py check) || { rm -f $LOCK; echo "lock released restoreA $(u)" >> $G/runs/lock.log; log "user session right after the lock: $HS - lock released, nothing touched"; exit 3; }
++  python $G/snap_f25f.py reconcile > $G/runs/restoreA/reconcile.txt 2>&1; RR=$?
++  log "reconcile before restore A' (item 606): $(head -1 $G/runs/restoreA/reconcile.txt)"
++  if [ $RR != 0 ]; then rm -f $LOCK; echo "lock released restoreA $(u)" >> $G/runs/lock.log; echo "$(u) restoreA reconcile rc $RR" > $G/SERIES_STOP; log "reconcile rc $RR - nothing restored, lock released, SERIES_STOP (question to the lead)"; exit 1; fi
+   python $G/snap_f25f.py restore A > $G/runs/restoreA/restore.txt 2>&1; RC=$?
++  python $G/snap_f25f.py state A > /dev/null
+   log "restore A: $(head -1 $G/runs/restoreA/restore.txt)"
+   python $G/manifest_fs4c.py $G/runs/restoreA/manifest_after.tsv "${MF[@]}" > $G/runs/restoreA/manifest_after.txt 2>&1
+   python $G/manifest_fs4c.py --cmp $G/snap/A.tsv $G/runs/restoreA/manifest_after.tsv > $G/runs/restoreA/manifest_cmp.txt 2>&1; MC=$?
+@@ -84,6 +95,7 @@ OUT=$G/runs/$T; DIRS="_ShaderCache _ShaderSeeds _PipelineCache _SaveData"
+ log() { echo "$(u) F25f go_f25f $T $*" | tee -a $TIMES; }
+ [ -e $F/STOP ] && { log "STOP file: $(head -1 $F/STOP)"; exit 4; }
+ [ -e $G/RETURN_FAILED ] && { echo "RETURN_FAILED exists"; exit 1; }
++[ -e $G/SERIES_STOP ] && { echo "SERIES_STOP exists: $(head -1 $G/SERIES_STOP)"; exit 1; }
+ [ -e $LOCK ] && { echo "lock held: $(head -1 $LOCK)"; exit 3; }
+ [ -e $OUT ] && { echo "$OUT exists - a tag runs once"; exit 2; }
+ [ -f "$SEAL" ] || { echo "no seal $SEAL"; exit 1; }
+@@ -96,6 +108,7 @@ if [ "$PRE" = C1 ] && [ ! -f $G/snap/C1.tsv ]; then log "no snapshot C1 (f25_c1
+ if [ "$EXP" = B ] && [ ! -f $G/snap/B.tsv ]; then log "no snapshot B (f25_c2 first) - not starting"; exit 1; fi
+ if [ "$EXP" = A ] && [ "$B" != f25_c1 ] && [ ! -f $G/snap/A.tsv ]; then log "no snapshot A - not starting"; exit 1; fi
+ GS=$(python $G/guard_f25f.py scan) || { python $G/guard_f25f.py close user_found > /dev/null; log "user emulator or launcher lives - not starting, block closed (item 534): $GS"; exit 3; }
++HS=$(python $G/hold_f25f.py check) || { python $G/guard_f25f.py close user_session > /dev/null; log "user session (item 606 (v)(1)): $HS - not starting, block closed"; exit 3; }
+ mkdir -p $OUT
+ echo "$LV" > $OUT/level.txt
+ python $G/procload.py --wait-s ${PLWAIT:-120} 2>&1 | mask > $OUT/procload.txt
+@@ -110,6 +123,7 @@ fi
+ set +o noclobber
+ echo "lock taken $T $(u)" >> $G/runs/lock.log
+ GS=$(python $G/guard_f25f.py scan) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; mv $OUT $OUT.user_$(date -u +%H%M%S); python $G/guard_f25f.py close user_found > /dev/null; log "user emulator or launcher found right after the lock - lock released, files untouched, block closed, interference (item 534): $GS"; exit 3; }
++HS=$(python $G/hold_f25f.py check) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; mv $OUT $OUT.session_$(date -u +%H%M%S); python $G/guard_f25f.py close user_session > /dev/null; log "user session right after the lock (item 606 (v)(1)): $HS - lock released, files untouched, block closed"; exit 3; }
+ log "lock taken; level $LV; procload: $(tail -1 $OUT/procload.txt | cut -c1-120)"
+ sha "$GAME" > $OUT/installed_before.txt
+ log "installed binary inside the lock before the tag: $(cat $OUT/installed_before.txt)"
+@@ -132,6 +146,10 @@ finish() {
+       log "$(python $G/guard_f25f.py wait-gone --pidfile $OUT/game_pid.txt --poll 10 | tail -1)"
+     fi
+   fi
++  if [ -e $OUT/VM_FOUND ]; then
++    log "user VM during the tag ($(head -1 $OUT/VM_FOUND | cut -c1-120)) - caches wait for its exit, poll 10 s, the lock stays (item 606 (v)(1))"
++    log "$(python $G/hold_f25f.py wait-gone --pidfile $OUT/game_pid.txt --poll 10 | tail -1)"
++  fi
+   if [ $INSTALLED = 1 ]; then
+     for i in 1 2 3; do cp "$PINNED" "$GAME" 2>/dev/null && [ "$(sha "$GAME")" = "$S18" ] && break; sleep 5; done
+     if [ "$(sha "$GAME")" = "$S18" ]; then log "installed binary returned from the pinned S18 copy"; else OK=0; log "RETURN OF THE BINARY FAILED: $(sha "$GAME")"; fi
+@@ -146,6 +164,10 @@ finish() {
+   fi
+   for d in $COPIED; do
+     if [ "$d" = "GLCache" ]; then LIVE="$GLDIR"; else LIVE="$EMU/$d"; fi
++    if [ "$d" = "GLCache" ] && [ -e $OUT/VM_FOUND ]; then
++      MR=$(python $G/snap_f25f.py merge-return GLCache "$OUT/before_$d" "$LIVE") || { OK=0; log "merge return of GLCache FAILED"; }
++      log "GLCache returned by merge (item 606 (v)(3)): $MR"; continue
++    fi
+     rm -rf "$LIVE" && mv "$OUT/before_$d" "$LIVE" || { OK=0; log "return of $d FAILED"; }
+   done
+   if [ -n "$COPIED" ]; then
+@@ -172,6 +194,7 @@ finish() {
+   fi
+   if [ $OK = 1 ]; then
+     rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; log "lock released (rc $RCX)"
++    [ -e $OUT/VM_FOUND ] && [ ! -e $OUT/USER_FOUND ] && cp $OUT/VM_FOUND $OUT/USER_FOUND
+     if [ -e $OUT/USER_FOUND ]; then
+       UF=$(head -1 $OUT/USER_FOUND | cut -c1-160); python $G/guard_f25f.py close user_found > /dev/null
+       mv $OUT $OUT.user_$(date -u +%H%M%S); log "user process during the tag ($UF) - block closed, interference, repeat by the same name (item 534)"
+@@ -184,12 +207,18 @@ finish() {
+   exit $RCX
+ }
+ trap finish EXIT
++if [ $NORET = 0 ]; then
++  python $G/snap_f25f.py reconcile > $OUT/reconcile.txt 2>&1; RR=$?
++  log "reconcile (item 606 (v)(2)-(5)): $(head -1 $OUT/reconcile.txt | cut -c1-220)"
++  if [ $RR != 0 ]; then SNAPOK=0; echo "$(u) $T reconcile rc $RR: $(head -1 $OUT/reconcile.txt | cut -c1-160)" > $G/SERIES_STOP; log "reconcile rc $RR - nothing touched, SERIES_STOP (item 606 (v)(4)-(5)); not starting"; exit 1; fi
++fi
+ if [ "$PRE" = A ] && [ ! -d $G/snap/A ]; then
+   python $G/snap_f25f.py take A > $OUT/snap_pre.txt 2>&1 || { SNAPOK=0; log "snapshot A: $(head -1 $OUT/snap_pre.txt) - not starting"; exit 1; }
+   log "snapshot A taken before the first tag (item 596 (g)): $(head -1 $OUT/snap_pre.txt)"
+ elif [ -n "$PRE" ]; then
+   python $G/snap_f25f.py restore $PRE > $OUT/snap_pre.txt 2>&1 || { SNAPOK=0; BROKEN=1; log "restore $PRE: $(head -1 $OUT/snap_pre.txt) - not starting"; exit 1; }
+   log "snapshot $PRE restored before the tag: $(head -1 $OUT/snap_pre.txt)"
++  if [ "$PRE" = A ] && [ $NORET = 0 ]; then python $G/snap_f25f.py state A > /dev/null; log "snap/STATE A (cold layer, item 606 (v)(6))"; fi
+ fi
+ python $G/manifest_fs4c.py $OUT/manifest_before.tsv "${MF[@]}" > $OUT/manifest_before.txt 2>&1 || { log "manifest before failed - not starting"; SNAPOK=0; rm -f $OUT/manifest_before.tsv; exit 1; }
+ log "manifest before: $(head -1 $OUT/manifest_before.txt | cut -c1-200)"
+@@ -213,12 +242,14 @@ for v in $(env | grep -o '^\(KYTY\|VK_LAYER\)_[A-Z0-9_]*'); do unset $v; done
+ log "enter_scene start (level $LV, SD $SD, --rec, hold $H, $KN, KYTY_GPU_WALL=1, KYTY_GPU_HANG_ABORT_S=22, M6 + calibration poller)"
+ python $G/guard_f25f.py watch --pidfile $OUT/game_pid.txt --flag $OUT/USER_FOUND --stop $OUT/watch.stop > $OUT/guard_watch.txt 2>&1 &
+ WPID=$!
++python $G/hold_f25f.py watch --pidfile $OUT/game_pid.txt --flag $OUT/VM_FOUND --stop $OUT/watch.stop > $OUT/hold_watch.txt 2>&1 &
++HPID=$!
+ python $G/m6_f25f.py --pidfile $OUT/game_pid.txt --local $OUT/m6_local.txt --out $OUT/m6.txt --cal $OUT/cal.txt --stop $OUT/m6.stop --loadpids $OUT/load_pids.txt > $OUT/m6_run.txt 2>&1 &
+ MPID=$!
+ F20E_PIDFILE=$OUT/game_pid.txt python $G/enter_scene.py $T --level $LV --attempts 1 --stable-draws $SD --timeout 480 --no-install --require-idle \
+   --gates-file $G/gates_default.txt --pred $SEAL --rec --hold $H KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_GPU_WALL=1 KYTY_GPU_HANG_ABORT_S=22 $KN > $OUT/run.txt 2>&1
+ ESRC=$?
+-touch $OUT/watch.stop $OUT/m6.stop; wait $WPID; wait $MPID
++touch $OUT/watch.stop $OUT/m6.stop; wait $WPID; wait $HPID; wait $MPID
+ log "enter_scene rc $ESRC; guard watch: $(tail -1 $OUT/guard_watch.txt | cut -c1-200); M6: $(tail -1 $OUT/m6.txt 2>/dev/null | cut -c1-160)"
+ log "run: $(grep '^VERDICT: ' $OUT/run.txt | tail -1 | cut -c1-200)"
+ KO=$(python $G/guard_f25f.py kill-own --pidfile $OUT/game_pid.txt); case "$KO" in *killed*) log "own emulator still lived after the run: $KO"; sleep 5;; esac
+diff --git a/launch_f25f.v1.sh b/launch_f25f.sh
+index cc3aa3f..cdee131 100644
+--- a/launch_f25f.v1.sh
++++ b/launch_f25f.sh
+@@ -25,6 +25,12 @@ if [ $? != 0 ]; then
+   echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F25f guard (item 534): $GS - block closed, $T not launched (interference, not an attempt)" >> "$TM"
+   echo "user process found: $GS"; exit 7
+ fi
++HS=$(python $G/hold_f25f.py check)
++if [ $? != 0 ]; then
++  python $G/guard_f25f.py close user_session $GA > /dev/null
++  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F25f hold (item 606 (v)(1)): $HS - block closed, $T not launched (not an attempt)" >> "$TM"
++  echo "user session: $HS"; exit 7
++fi
+ BS=$(python $G/guard_f25f.py status $GA)
+ if [ $? != 0 ]; then
+   echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F25f guard (item 534): $BS - $T not launched (open the block: two clean checks >= 600 s apart)" >> "$TM"
+diff --git a/snap_f25f.v1.py b/snap_f25f.py
+index c2a9e7c..e58c7c0 100644
+--- a/snap_f25f.v1.py
++++ b/snap_f25f.py
+@@ -1,19 +1,33 @@
+-"""Track F link F25f (HPP-669; ROADMAP s122 item 596 (g), item 599 (b)(6)): the cache snapshots A / C1 / B of the series.  The set is the
+-five folders of the F20l3 harness manifest (C:/kyty/f287/f20l3/go_f20l3.sh, array MF: _ShaderCache with replay/, _ShaderSeeds,
+-_PipelineCache, _SaveData and the driver GLCache) - "cold" = A together with GLCache.  Runs ONLY under the lock taken by go_f25f.sh
+-(writes the live caches on restore).  ASCII only.
++"""Track F link F25f (HPP-669; ROADMAP s122 item 596 (g), item 599 (b)(6), item 606 (v)(2)-(6)): the cache snapshots A / C1 / B of the
++series and their user-file updates A' / B'.  The set is the five folders of the F20l3 harness manifest (C:/kyty/f287/f20l3/go_f20l3.sh,
++array MF: _ShaderCache with replay/, _ShaderSeeds, _PipelineCache, _SaveData and the driver GLCache) - "cold" = A together with GLCache.
++Runs ONLY under the lock taken by go_f25f.sh (writes the live caches on restore).  ASCII only.
+ 
+   python snap_f25f.py take <name> [--replace]     copy the live set to snap/<name>/<label> and write snap/<name>.tsv (manifest of the live
+                                                   set); then the manifest of the copy is compared with it - 'SNAP TAKEN <name> ...' rc 0
+   python snap_f25f.py restore <name>              each live folder is removed and copied back from snap/<name>/<label> (an absent one stays
+                                                   absent); then the live manifest is compared with snap/<name>.tsv - 'SNAP RESTORED <name>
+-                                                  manifest cmp EQUAL ...' rc 0, else 'SNAP RESTORE FAILED' rc 1
++                                                  manifest cmp EQUAL ...' rc 0, else 'SNAP RESTORE FAILED' rc 1.  The snapshots A / B carry
++                                                  every user file D (item 606 (v)(2)), so a restore never removes a file of D (item 606 (v)(3)).
++  python snap_f25f.py reconcile                   item 606 (v)(2)-(5): the live manifest L against the expected state S (snap/STATE: 'B' -
++                                                  B', 'A' - A'; absent = 'B').  A file of S removed or changed that is not a user file D ->
++                                                  'RECONCILE STOP' rc 4 (item 606 (v)(4)); a file of L outside S that is a series file
++                                                  (A0 / B0 / A / B) and not in D -> STOP; L = S -> 'RECONCILE EQUAL' rc 0; else a user update:
++                                                  new files outside the series files, changed or removed files of D - applied to BOTH snapshots
++                                                  A and B (copies of the live user files, tsv lines, snap/D.tsv), one line in snap/updates.log -
++                                                  'RECONCILE UPDATED ...' rc 0; the third update -> 'RECONCILE LIMIT' rc 5, nothing changed
++                                                  (item 606 (v)(5)).  A0.tsv / B0.tsv keep the first A / B.
++  python snap_f25f.py state <A|B>                 writes snap/STATE
++  python snap_f25f.py merge-return <label> <before dir> <live dir>   item 606 (v)(3) for a tag that saw a user VM: every file of the
++                                                  copy before is written back (same content), live files not in the copy are KEPT and
++                                                  listed - 'MERGE RETURN kept n' rc 0
+   python snap_f25f.py manifest <out.tsv>          the live manifest (the form of manifest_fs4c.py)
+   --root <dir> (fixtures only): the snapshot folder instead of C:/kyty/f287/f25f/snap; --live <label>=<dir> ... replaces the live set.
+ """
+ import os
+ import shutil
+ import sys
++import time
+ 
+ HERE = os.path.dirname(os.path.abspath(__file__))
+ sys.path.insert(0, HERE)
+@@ -24,6 +38,7 @@ GL = os.path.join(os.environ.get('USERPROFILE', 'C:/Users/x'), 'AppData/Local/NV
+ LIVE = ['_ShaderCache=%s/_ShaderCache' % EMU, '_ShaderSeeds=%s/_ShaderSeeds' % EMU, '_PipelineCache=%s/_PipelineCache' % EMU,
+         '_SaveData=%s/_SaveData' % EMU, 'GLCache=%s' % GL]
+ ROOT = 'C:/kyty/f287/f25f/snap'
++UPDATES_MAX = 2
+ 
+ 
+ def write_manifest(out, pairs):
+@@ -34,6 +49,139 @@ def write_manifest(out, pairs):
+     return len(lines), data
+ 
+ 
++def read_tsv(path):
++    out = {}
++    if not os.path.exists(path):
++        return out
++    for l in open(path, 'rb').read().decode('utf-8').split('\n'):
++        if not l:
++            continue
++        lab, rel, size, sha = l.split('\t')
++        if rel == '<MISSING>':
++            continue
++        out[(lab, rel)] = (size, sha)
++    return out
++
++
++def write_tsv(path, d, missing_labels=()):
++    lines = ['%s\t%s\t%s\t%s' % (k[0], k[1], v[0], v[1]) for k, v in d.items()]
++    lines += ['%s\t<MISSING>\t0\t-' % lab for lab in missing_labels]
++    lines.sort()
++    with open(path, 'wb') as f:
++        f.write(('\n'.join(lines) + '\n').encode('utf-8'))
++
++
++def missing_of(path):
++    out = []
++    if os.path.exists(path):
++        for l in open(path, 'rb').read().decode('utf-8').split('\n'):
++            if l and l.split('\t')[1] == '<MISSING>':
++                out.append(l.split('\t')[0])
++    return out
++
++
++def live_dir(live, label):
++    for pair in live:
++        lab, d = pair.split('=', 1)
++        if lab == label:
++            return d
++    return None
++
++
++def reconcile(root, live):
++    st = open(os.path.join(root, 'STATE'), encoding='ascii').read().strip() if os.path.exists(os.path.join(root, 'STATE')) else 'B'
++    stsv = os.path.join(root, st + '.tsv')
++    S = read_tsv(stsv)
++    try:
++        L = dict(((x.split('\t')[0], x.split('\t')[1]), (x.split('\t')[2], x.split('\t')[3])) for x in M.manifest(live)
++                 if x.split('\t')[1] != '<MISSING>')
++    except OSError as e:
++        print('RECONCILE ERROR live manifest %s' % type(e).__name__)
++        return 6
++    series = set(read_tsv(os.path.join(root, 'A0.tsv'))) | set(read_tsv(os.path.join(root, 'B0.tsv'))) | \
++        set(read_tsv(os.path.join(root, 'A.tsv'))) | set(read_tsv(os.path.join(root, 'B.tsv')))
++    D = read_tsv(os.path.join(root, 'D.tsv'))
++    stop, new, changed, removed = [], [], [], []
++    for k, v in S.items():
++        if k not in L:
++            (removed if k in D else stop).append(k)
++        elif L[k] != v:
++            (changed if k in D else stop).append(k)
++    for k in L:
++        if k not in S:
++            if k in series and k not in D:
++                stop.append(k)
++            else:
++                new.append(k)
++    if stop:
++        print('RECONCILE STOP state %s: %d series files changed, removed or unexpected (item 606 (v)(4)): %s' % (
++            st, len(stop), ['%s/%s' % k for k in sorted(stop)[:5]]))
++        return 4
++    if not new and not changed and not removed:
++        print('RECONCILE EQUAL state %s files %d' % (st, len(L)))
++        return 0
++    ulog = os.path.join(root, 'updates.log')
++    nupd = len([l for l in open(ulog, encoding='ascii').read().splitlines() if l.strip()]) if os.path.exists(ulog) else 0
++    if nupd >= UPDATES_MAX:
++        print('RECONCILE LIMIT state %s: update %d > %d (item 606 (v)(5)) - new %d changed %d removed %d; nothing changed' % (
++            st, nupd + 1, UPDATES_MAX, len(new), len(changed), len(removed)))
++        return 5
++    for snap in ('A', 'B'):
++        if not os.path.exists(os.path.join(root, snap + '0.tsv')):
++            shutil.copy2(os.path.join(root, snap + '.tsv'), os.path.join(root, snap + '0.tsv'))
++    for snap in ('A', 'B'):
++        tsv = os.path.join(root, snap + '.tsv')
++        T = read_tsv(tsv)
++        miss = missing_of(tsv)
++        for k in new + changed:
++            src = os.path.join(live_dir(live, k[0]), k[1])
++            dst = os.path.join(root, snap, k[0], k[1])
++            os.makedirs(os.path.dirname(dst), exist_ok=True)
++            shutil.copy2(src, dst)
++            T[k] = L[k]
++        for k in removed:
++            p = os.path.join(root, snap, k[0], k[1])
++            if os.path.exists(p):
++                os.remove(p)
++            T.pop(k, None)
++        miss = [m for m in miss if not any(k[0] == m for k in new + changed)]
++        write_tsv(tsv, T, miss)
++    for k in new + changed:
++        D[k] = L[k]
++    for k in removed:
++        D.pop(k, None)
++    write_tsv(os.path.join(root, 'D.tsv'), D)
++    with open(ulog, 'a', encoding='ascii') as f:
++        f.write('%s update %d state %s new %d changed %d removed %d: %s\n' % (time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), nupd + 1, st,
++                                                                         len(new), len(changed), len(removed),
++                                                                         ['%s/%s %s' % (k[0], k[1], L[k][1][:16]) for k in sorted(new + changed)][:20]))
++    S2 = read_tsv(stsv)
++    ok = S2 == L
++    print('RECONCILE UPDATED %d of %d: state %s new %d changed %d removed %d; snapshot %s = live %s' % (
++        nupd + 1, UPDATES_MAX, st, len(new), len(changed), len(removed), st, 'EQUAL' if ok else 'DIFFER'))
++    return 0 if ok else 1
++
++
++def merge_return(before, live):
++    """Write every file of the copy before back into the live folder (same content), keep the live files not in it."""
++    kept = []
++    for dp, dn, fn in os.walk(live):
++        for f in fn:
++            p = os.path.join(dp, f)
++            rel = os.path.relpath(p, live)
++            if not os.path.exists(os.path.join(before, rel)):
++                kept.append(rel.replace(os.sep, '/'))
++    for dp, dn, fn in os.walk(before):
++        for f in fn:
++            src = os.path.join(dp, f)
++            dst = os.path.join(live, os.path.relpath(src, before))
++            os.makedirs(os.path.dirname(dst), exist_ok=True)
++            shutil.copy2(src, dst)
++    shutil.rmtree(before)
++    print('MERGE RETURN kept %d: %s' % (len(kept), kept[:10]))
++    return 0
++
++
+ def main(argv):
+     root = argv[argv.index('--root') + 1] if '--root' in argv else ROOT
+     live = LIVE
+@@ -43,13 +191,22 @@ def main(argv):
+         while i < len(argv) and '=' in argv[i]:
+             live.append(argv[i])
+             i += 1
+-    if not argv or argv[0] not in ('take', 'restore', 'manifest'):
++    if not argv or argv[0] not in ('take', 'restore', 'manifest', 'reconcile', 'state', 'merge-return'):
+         print(__doc__.split('\n')[5].strip())
+         return 2
+     if argv[0] == 'manifest':
+         n, data = write_manifest(argv[1], live)
+         print('manifest %s files %d' % (argv[1], n))
+         return 0
++    if argv[0] == 'reconcile':
++        return reconcile(root, live)
++    if argv[0] == 'state':
++        with open(os.path.join(root, 'STATE'), 'w', encoding='ascii') as f:
++            f.write(argv[1] + '\n')
++        print('STATE %s' % argv[1])
++        return 0
++    if argv[0] == 'merge-return':
++        return merge_return(argv[2], argv[3])
+     name = argv[1]
+     sd = os.path.join(root, name)
+     tsv = os.path.join(root, name + '.tsv')
+diff --git a/test_tools_f25f.v1.py b/test_tools_f25f.py
+index c9f25ce..728e2b9 100644
+--- a/test_tools_f25f.v1.py
++++ b/test_tools_f25f.py
+@@ -1,4 +1,4 @@
+-"""F25f (HPP-669): fixtures of the harness tools - snap_f25f.py (take / restore / refuse / a missing folder / the manifest equality),
++"""F25f (HPP-669): fixtures of the harness tools (seal 2: + item 606 - reconcile, merge-return, hold check) - snap_f25f.py (take / restore / refuse / a missing folder / the manifest equality),
+ m6_f25f.py (the line with emu_t and qpc_ns, the calibration poller: first sight of each FrameTrace n, a partial line, a rotated log),
+ go_f25f.sh dry run (form, level, snapshots of each tag kind; refusals), queue_f25f.py (busy only on a ready track P link), strict cp1250
+ output of every script.  ASCII only; ends with ALL OK.
+@@ -171,8 +171,116 @@ json.dump([dict(identifier='HPP-2', status='todo', title='track P link', executi
+ rc, out, _, _ = py([os.path.join(HERE, 'queue_f25f.py'), '--fake', qf])
+ check('queue: a ready P link -> QUEUE BUSY (rc 1)', rc == 1 and 'QUEUE BUSY: HPP-2' in out, out)
+ 
++# ---- item 606: reconcile (B' / A', user files D, stop, limit), restore keeps D, merge-return, hold check
++R6 = os.path.join(TMP, 'r606')
++lv6 = os.path.join(R6, 'live')
++rt6 = os.path.join(R6, 'snap')
++
++
++def put6(rel, data):
++    p = os.path.join(lv6, rel)
++    os.makedirs(os.path.dirname(p), exist_ok=True)
++    open(p, 'wb').write(data)
++
++
++put6('S/a.bin', b'a')
++put6('S/old.bin', b'old')
++put6('G/u/x.bin', b'x')
++LV6 = ['--live', 'S=%s' % os.path.join(lv6, 'S'), 'G=%s' % os.path.join(lv6, 'G')]
++SN = os.path.join(HERE, 'snap_f25f.py')
++
++
++def sn(*a):
++    return py([SN] + list(a) + ['--root', rt6] + LV6)
++
++
++check('606: take A', sn('take', 'A')[0] == 0)
++put6('S/a.bin', b'a2')             # prewarm changes a series file
++put6('S/b.bin', b'b')              # prewarm adds one
++os.remove(os.path.join(lv6, 'S/old.bin'))   # prewarm removes one
++check('606: take B', sn('take', 'B')[0] == 0)
++rc, out, err, _ = sn('reconcile')
++check('606: reconcile at B (no STATE file = B) -> EQUAL rc 0', rc == 0 and out.startswith('RECONCILE EQUAL state B'), (rc, out, err[-200:]))
++put6('G/u/vm.bin', b'vm1')         # the user VM adds a file outside A and B
++rc, out, _, _ = sn('reconcile')
++A6, B6, D6 = [SN_M.read_tsv(os.path.join(rt6, n + '.tsv')) for n in ('A', 'B', 'D')] if False else (None, None, None)
++import snap_f25f as SN_M  # noqa: E402
++A6, B6, D6 = [SN_M.read_tsv(os.path.join(rt6, n + '.tsv')) for n in ('A', 'B', 'D')]
++check("606: a new user file -> UPDATED 1 of 2 (new 1); B' = live (EQUAL); the file in A', B', D, copies in both snapshots",
++      rc == 0 and out.startswith('RECONCILE UPDATED 1 of 2: state B new 1 changed 0 removed 0; snapshot B = live EQUAL') and
++      ('G', 'u/vm.bin') in A6 and ('G', 'u/vm.bin') in B6 and ('G', 'u/vm.bin') in D6 and
++      open(os.path.join(rt6, 'A', 'G', 'u', 'vm.bin'), 'rb').read() == b'vm1' and open(os.path.join(rt6, 'B', 'G', 'u', 'vm.bin'), 'rb').read() == b'vm1',
++      (rc, out))
++check('606: A0.tsv / B0.tsv keep the first snapshots (no user file in them)', ('G', 'u/vm.bin') not in SN_M.read_tsv(os.path.join(rt6, 'A0.tsv')) and
++      ('G', 'u/vm.bin') not in SN_M.read_tsv(os.path.join(rt6, 'B0.tsv')) and len(SN_M.read_tsv(os.path.join(rt6, 'A0.tsv'))) == 3)
++check('606: reconcile again -> EQUAL', sn('reconcile')[1].startswith('RECONCILE EQUAL'))
++put6('G/u/vm.bin', b'vm2')         # the user file D changed
++rc, out, _, _ = sn('reconcile')
++check('606: a changed user file -> UPDATED 2 of 2 (changed 1)', rc == 0 and out.startswith('RECONCILE UPDATED 2 of 2: state B new 0 changed 1'), out)
++put6('G/u/vm3.bin', b'v3')
++rc, out, _, _ = sn('reconcile')
++check('606: the third update -> LIMIT rc 5, nothing changed (vm3 not in B)', rc == 5 and out.startswith('RECONCILE LIMIT') and
++      ('G', 'u/vm3.bin') not in SN_M.read_tsv(os.path.join(rt6, 'B.tsv')), (rc, out))
++os.remove(os.path.join(lv6, 'G/u/vm3.bin'))
++open(os.path.join(rt6, 'updates.log'), 'w').write('x\n')     # back to one update for the next members
++put6('S/a.bin', b'a3')             # a series file changed by someone
++rc, out, _, _ = sn('reconcile')
++check('606 (4): a changed series file -> STOP rc 4, nothing updated', rc == 4 and out.startswith('RECONCILE STOP state B: 1') and
++      SN_M.read_tsv(os.path.join(rt6, 'B.tsv'))[('S', 'a.bin')][1] != SN_M.read_tsv(os.path.join(rt6, 'B.tsv')).get(('S', 'zz'), ('', ''))[1], (rc, out))
++put6('S/a.bin', b'a2')
++os.remove(os.path.join(lv6, 'S/b.bin'))
++rc, out, _, _ = sn('reconcile')
++check('606 (4): a removed series file -> STOP rc 4', rc == 4 and 'S/b.bin' in out, (rc, out))
++put6('S/b.bin', b'b')
++put6('S/old.bin', b'old')          # a file of A (removed in B) back in the live set at state B
++rc, out, _, _ = sn('reconcile')
++check('606 (4): a series file of A unexpected at state B -> STOP rc 4', rc == 4 and 'S/old.bin' in out, (rc, out))
++os.remove(os.path.join(lv6, 'S/old.bin'))
++check('606: back to EQUAL', sn('reconcile')[1].startswith('RECONCILE EQUAL'))
++rc, out, _, _ = sn('restore', 'A')
++check("606 (3): restore A' keeps the user file with the same content and removes the files of the prewarm (b.bin)",
++      rc == 0 and open(os.path.join(lv6, 'G/u/vm.bin'), 'rb').read() == b'vm2' and not os.path.exists(os.path.join(lv6, 'S/b.bin')) and
++      open(os.path.join(lv6, 'S/old.bin'), 'rb').read() == b'old' and open(os.path.join(lv6, 'S/a.bin'), 'rb').read() == b'a', (rc, out))
++check("606: STATE A -> reconcile against A' EQUAL", sn('state', 'A')[0] == 0 and sn('reconcile')[1].startswith('RECONCILE EQUAL state A'))
++os.remove(os.path.join(lv6, 'G/u/vm.bin'))
++rc, out, _, _ = sn('reconcile')
++check("606 (3): a removed user file -> UPDATED (removed 1), dropped from A' and B' and D", rc == 0 and 'removed 1' in out and
++      ('G', 'u/vm.bin') not in SN_M.read_tsv(os.path.join(rt6, 'A.tsv')) and ('G', 'u/vm.bin') not in SN_M.read_tsv(os.path.join(rt6, 'D.tsv')),
++      (rc, out))
++mb, ml = os.path.join(R6, 'mb'), os.path.join(R6, 'ml')
++for d, files in ((mb, {'x.bin': b'1', 'sub/y.bin': b'2'}), (ml, {'x.bin': b'changed', 'vm.bin': b'v'})):
++    for f, data in files.items():
++        p = os.path.join(d, f)
++        os.makedirs(os.path.dirname(p), exist_ok=True)
++        open(p, 'wb').write(data)
++rc, out, _, _ = py([SN, 'merge-return', 'GLCache', mb, ml])
++check('606 (3): merge-return writes the copy back (x 1, sub/y 2), keeps the live file not in the copy (vm.bin), removes the copy',
++      rc == 0 and out.startswith("MERGE RETURN kept 1: ['vm.bin']") and open(os.path.join(ml, 'x.bin'), 'rb').read() == b'1' and
++      open(os.path.join(ml, 'sub/y.bin'), 'rb').read() == b'2' and open(os.path.join(ml, 'vm.bin'), 'rb').read() == b'v' and
++      not os.path.exists(mb), out)
++HD = os.path.join(HERE, 'hold_f25f.py')
++GLP = os.path.join(os.environ.get('USERPROFILE', 'C:/Users/x'), 'AppData/Local/NVIDIA/GLCache').replace('\\', '/')
++hf = os.path.join(TMP, 'hold.json')
++for procs, want_rc, want in (([dict(pid=5, name='qemu-system-x86_64.exe', files=[])], 9, 'HOLD USER SESSION 1: <app> pid 5 kind vm'),
++                             ([dict(pid=6, name='x.exe', files=[GLP + '/a/b.bin'])], 9, 'HOLD USER SESSION 1: <app> pid 6 kind holder'),
++                             ([dict(pid=7, name='emulator.exe', files=[])], 9, 'HOLD USER SESSION 1: <app> pid 7 kind vm'),
++                             ([dict(pid=10, name='kyty_emulator.exe', files=[GLP + '/a/b.bin'])], 0, 'HOLD CLEAR'),
++                             ([dict(pid=8, name='y.exe', files=['C:/other/GLCacheX/a.bin'])], 0, 'HOLD CLEAR')):
++    json.dump(procs, open(hf, 'w', encoding='ascii'))
++    rc, out, _, raw = py([HD, 'check', '--pidfile', pidf, '--fake', hf])
++    check('606 (1): hold check %s -> rc %d %s (own pid 10 excluded, names masked)' % (procs[0]['name'], want_rc, want),
++          rc == want_rc and out.strip() == want and b'qemu' not in raw and b'x.exe' not in raw, (rc, out))
++json.dump([dict(pid=5, name='qemu-system-x86_64.exe', files=[])], open(hf, 'w', encoding='ascii'))
++fl = os.path.join(TMP, 'vmflag.txt')
++rc, out, _, _ = py([HD, 'watch', '--pidfile', os.path.join(TMP, 'nopid.txt'), '--flag', fl, '--stop', os.path.join(TMP, 'nostop'), '--fake', hf])
++check('606 (1): hold watch (fake, one poll) does not flag on a single sight (2 in a row needed)', rc == 0 and not os.path.exists(fl), (rc, out))
++check('606: go_f25f.sh runs reconcile before every non-prewarm tag, the hold check before and after the lock, the VM watch and the merge',
++      all(s in open(os.path.join(HERE, 'go_f25f.sh')).read() for s in ('snap_f25f.py reconcile', 'hold_f25f.py check', 'hold_f25f.py watch',
++                                                                        'merge-return GLCache', 'SERIES_STOP', 'snap_f25f.py state A')))
++check('606: launch_f25f.sh refuses on a user session (exit 7) before the block status', 'hold_f25f.py check' in open(os.path.join(HERE, 'launch_f25f.sh')).read())
++
+ # ---- strict cp1250 output of the python scripts (usage / --help paths)
+-for s, a in (('snap_f25f.py', []), ('f25_read.py', ['x']), ('regress_f25.py', None), ('refs_f25f.py', None)):
++for s, a in (('snap_f25f.py', []), ('hold_f25f.py', []), ('f25_read.py', ['x']), ('regress_f25.py', None), ('refs_f25f.py', None)):
+     if a is None:
+         continue
+     rc, out, err, raw = py([os.path.join(HERE, s)] + a)

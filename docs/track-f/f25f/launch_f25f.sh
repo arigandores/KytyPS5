@@ -25,6 +25,12 @@ if [ $? != 0 ]; then
   echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F25f guard (item 534): $GS - block closed, $T not launched (interference, not an attempt)" >> "$TM"
   echo "user process found: $GS"; exit 7
 fi
+HS=$(python $G/hold_f25f.py check)
+if [ $? != 0 ]; then
+  python $G/guard_f25f.py close user_session $GA > /dev/null
+  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F25f hold (item 606 (v)(1)): $HS - block closed, $T not launched (not an attempt)" >> "$TM"
+  echo "user session: $HS"; exit 7
+fi
 BS=$(python $G/guard_f25f.py status $GA)
 if [ $? != 0 ]; then
   echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F25f guard (item 534): $BS - $T not launched (open the block: two clean checks >= 600 s apart)" >> "$TM"

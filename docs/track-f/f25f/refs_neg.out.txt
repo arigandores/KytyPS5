@@ -1,8 +1,9 @@
-suite refs_f25f.py sha256 9d8b7b7ce2e619f5d287b0b821871fb6a5d566b38431af202657c707888aa18c (negative control)
+suite refs_f25f.py sha256 6faefd7cbc9aa0be2369882be460b3a32aec43b432753c2dcf75d9f81d692eb4 (negative control)
 MISMATCH 47d618fe:docs/ROADMAP.md:23586
 MISMATCH 47d618fe:docs/ROADMAP.md:23600
 MISMATCH 47d618fe:docs/ROADMAP.md:23617
 MISMATCH 47d618fe:docs/ROADMAP.md:23634
+MISMATCH cc389198:docs/ROADMAP.md:23673
 MISMATCH 24ce64ea:docs/track-f/f20l3/go_f20l3.sh:55
 MISMATCH 35b454c6:src/common/diagB32.cpp:643
 MISMATCH 35b454c6:src/common/diagB32.cpp:723
@@ -10,5 +11,5 @@ MISMATCH 35b454c6:src/graphics/presentation/videoOut.cpp:1293
 MISMATCH 35b454c6:src/graphics/presentation/videoOut.cpp:1442
 MISMATCH 0005e11f:src/graphics/host_gpu/renderer/masterSemaphore.cpp:128
 MISMATCH 0005e11f:src/common/assert.cpp:40
-refs 11 mismatches 11
+refs 12 mismatches 12
 NEG CONTROL OK

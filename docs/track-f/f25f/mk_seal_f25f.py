@@ -9,7 +9,7 @@ SEAL = G + '/pred/f25f_seal.md'
 FILES = ['f25_read.py', 'f20e_read.py', 'test_f25_read.py', 'sens_f25.py', 'regress_f25.py', 'refs_f25f.py', 'test_tools_f25f.py',
          'f25f_seal_body.md', 'snap_f25f.py', 'm6_f25f.py', 'go_f25f.sh', 'launch_f25f.sh', 'wait_f25f.sh', 'post_f25f.sh', 'chk_f25f.sh',
          'guard_f25f.py', 'queue_f25f.py', 'runchk_f25f.py', 'watch_f25f.py', 'enter_scene.py', 'procload.py', 'manifest_fs4c.py',
-         'sheet142.py', 'gates_default.txt', 'idle142.py', 'run_safety99.py', 'launch_run.py', 'mk_seal_f25f.py', 'hold_f25f.py', 'block_f25f.sh', 'pred/seal2_diff.txt', 'pred/old/f25f_seal_v1_3be83a68.md',
+         'sheet142.py', 'gates_default.txt', 'idle142.py', 'run_safety99.py', 'launch_run.py', 'mk_seal_f25f.py', 'hold_f25f.py', 'block_f25f.sh', 'pred/seal2_diff.txt', 'pred/old/f25f_seal_v1_3be83a68.md', 'pred/seal3_diff.txt', 'pred/old/f25f_seal_v2_2a32d74e.md',
          'test_f25_read.out.txt', 'sens_f25.out.txt', 'regress_f25.out.txt', 'refs_f25f.out.txt', 'refs_neg.out.txt', 'test_tools_f25f.out.txt',
          'C:/kyty/f287/f25d/kyty_emulator_e342b839.exe', 'C:/kyty/s288/bin/kyty_emulator_b3cee576.exe', 'C:/kyty/scripts/s51_vidglitch.py']
 OUTS = [('test_f25_read.out.txt', 'checks '), ('sens_f25.out.txt', 'edits '), ('regress_f25.out.txt', 'REGRESS '), ('refs_f25f.out.txt', 'refs '),

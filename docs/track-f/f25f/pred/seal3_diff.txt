@@ -1,0 +1,125 @@
+--- guard_f25f.py	2026-10-07 15:14:52.184884900 +0200
++++ ../../guard_f25f.py	2026-10-07 15:14:52.214058400 +0200
+@@ -9,7 +9,9 @@
+   python guard_f20l3.py scan [--pidfile F]                        rc 0 'GUARD CLEAN' / rc 7 'GUARD FOUND n: ...'
+   python guard_f20l3.py kill-own --pidfile F                      kills the own emulator tree by its pid only (taskkill /F /T /PID)
+   python guard_f20l3.py watch --pidfile F --flag F2 --stop F3     poll <= 2 s during the tag; a user process seen in 2 polls in a row =>
+-                                                                 flag file, the own emulator killed by pid, the user process untouched
++                                                                 flag file, the own emulator killed by pid, the user process untouched;
++                                                                 seal 3: kind 'emulator' is not counted until the pid file exists
++                                                                 (<= PIDFILE_WAIT_S from the start); --polls N (fixtures) ends after N polls
+   python guard_f20l3.py wait-gone [--pidfile F] [--poll 10]       returns when no user process is left (poll <= 10 s; the lock stays)
+   python guard_f20l3.py check|open-block|status|tag <tag>|close <reason> [--block F]    blocks of item 534 (3)
+     check      scan + a line CLEAN / FOUND in the block file; FOUND closes the block (rc 7)
+@@ -35,6 +37,7 @@
+ BLOCK_TAGS = 6
+ WATCH_POLL_S = 2.0
+ GONE_POLL_S = 10.0
++PIDFILE_WAIT_S = 60.0
+ FAKE = None
+ 
+ 
+@@ -141,11 +144,24 @@
+     return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+ 
+ 
+-def watch(pidfile, flag, stop):
++def pending_own(found, own, waited):
++    """Seal 3 (harness fix): until the pid file of the own emulator exists, and at most PIDFILE_WAIT_S from the watch start, a process of kind
++    'emulator' is not counted (kind 'launcher' is).  CreateProcess of the own emulator may return seconds after the process is visible, and
++    enter_scene.py writes the pid file only after it returns: f25_s26 09:52:52Z and f25_k02 13:11:48Z - the 'user' pid = the pid of the
++    pid file.  A user emulator is still found at the first poll after the pid file exists (it is not the own pid)."""
++    if own is None and waited < PIDFILE_WAIT_S:
++        return [f for f in found if f[1] != 'emulator']
++    return found
++
++
++def watch(pidfile, flag, stop, polls=None):
+     seen = 0
+     done = False
+-    while not os.path.exists(stop):
+-        found = scan(pidfile)
++    t0 = time.time()
++    n = 0
++    while not os.path.exists(stop) and (polls is None or n < polls):
++        n += 1
++        found = pending_own(scan(pidfile), read_own(pidfile) if pidfile else None, time.time() - t0)
+         seen = seen + 1 if found else 0
+         if seen >= 2 and not done:
+             with open(flag, 'w') as f:
+@@ -238,7 +254,7 @@
+         print(kill_own(opt('--pidfile')))
+         return 0
+     if cmd == 'watch':
+-        return watch(opt('--pidfile'), opt('--flag'), opt('--stop'))
++        return watch(opt('--pidfile'), opt('--flag'), opt('--stop'), int(opt('--polls')) if opt('--polls') else None)
+     if cmd == 'wait-gone':
+         return wait_gone(opt('--pidfile'), min(float(opt('--poll', GONE_POLL_S)), GONE_POLL_S))
+     if cmd == 'check':
+--- test_tools_f25f.py	2026-10-07 15:14:52.184884900 +0200
++++ ../../test_tools_f25f.py	2026-10-07 15:14:52.215058200 +0200
+@@ -17,9 +17,10 @@
+ import m6_f25f as M6  # noqa: E402
+ 
+ TMP = os.path.join(HERE, 'fx_tools')
+-print('suite test_tools_f25f.py sha256 %s target snap_f25f.py sha256 %s m6_f25f.py sha256 %s go_f25f.sh sha256 %s' % tuple(
++print('suite test_tools_f25f.py sha256 %s target snap_f25f.py sha256 %s m6_f25f.py sha256 %s go_f25f.sh sha256 %s guard_f25f.py sha256 %s' % tuple(
+     hashlib.sha256(open(p, 'rb').read()).hexdigest() for p in (os.path.abspath(__file__), os.path.join(HERE, 'snap_f25f.py'),
+-                                                                os.path.join(HERE, 'm6_f25f.py'), os.path.join(HERE, 'go_f25f.sh'))))
++                                                                os.path.join(HERE, 'm6_f25f.py'), os.path.join(HERE, 'go_f25f.sh'),
++                                                                os.path.join(HERE, 'guard_f25f.py'))))
+ ok = True
+ nchk = 0
+ 
+@@ -279,6 +280,40 @@
+                                                                         'merge-return GLCache', 'SERIES_STOP', 'snap_f25f.py state A')))
+ check('606: launch_f25f.sh refuses on a user session (exit 7) before the block status', 'hold_f25f.py check' in open(os.path.join(HERE, 'launch_f25f.sh')).read())
+ 
++# ---- seal 3: guard watch does not count kind 'emulator' before the own pid file exists (f25_s26 09:52:52Z, f25_k02 13:11:48Z)
++GD = os.path.join(HERE, 'guard_f25f.py')
++import guard_f25f as GU  # noqa: E402
++gdir = os.path.join(TMP, 'gl')
++os.makedirs(gdir)
++open(os.path.join(gdir, 'kyty_emulator.exe'), 'wb').write(b'x')
++gf = os.path.join(TMP, 'guard.json')
++now = time.time()
++emu = dict(pid=21, name='kyty_emulator.exe', path=os.path.join(gdir, 'kyty_emulator.exe'), start=now)
++lau = dict(pid=22, name='l.exe', path=os.path.join(gdir, 'l.exe'), start=now)
++nopid = os.path.join(TMP, 'g_nopid.txt')
++pid21 = os.path.join(TMP, 'g_pid21.txt')
++open(pid21, 'w').write('21 %.3f\n' % now)
++pid99 = os.path.join(TMP, 'g_pid99.txt')
++open(pid99, 'w').write('99 %.3f\n' % now)
++for nm, plist, pf, want in (('own emulator before its pid file', [emu], nopid, False),
++                            ('own emulator after its pid file', [emu], pid21, False),
++                            ('other emulator when the pid file names another pid', [emu], pid99, True),
++                            ('launcher before the own pid file', [lau], nopid, True)):
++    json.dump(plist, open(gf, 'w', encoding='ascii'))
++    gfl = os.path.join(TMP, 'gflag_%d.txt' % len(nm))
++    if os.path.exists(gfl):
++        os.remove(gfl)
++    rc, out, _, raw = py([GD, 'watch', '--pidfile', pf, '--flag', gfl, '--stop', os.path.join(TMP, 'nostop'), '--polls', '3', '--fake', gf])
++    check('seal 3: guard watch (fake, 3 polls) %s -> flag %s' % (nm, want),
++          rc == 0 and os.path.exists(gfl) == want and ('user process seen: %s' % ('yes' if want else 'no')) in out and b'l.exe' not in raw,
++          (rc, out))
++check('seal 3: pending_own drops kind emulator only while the pid file is absent and < PIDFILE_WAIT_S',
++      GU.pending_own([(21, 'emulator'), (22, 'launcher')], None, 59.9) == [(22, 'launcher')] and
++      GU.pending_own([(21, 'emulator')], None, GU.PIDFILE_WAIT_S) == [(21, 'emulator')] and
++      GU.pending_own([(21, 'emulator')], (99, now), 1.0) == [(21, 'emulator')] and GU.PIDFILE_WAIT_S == 60.0, None)
++check('seal 3: go_f25f.sh passes the pid file to the guard watch',
++      'guard_f25f.py watch --pidfile $OUT/game_pid.txt' in open(os.path.join(HERE, 'go_f25f.sh')).read())
++
+ # ---- strict cp1250 output of the python scripts (usage / --help paths)
+ for s, a in (('snap_f25f.py', []), ('hold_f25f.py', []), ('f25_read.py', ['x']), ('regress_f25.py', None), ('refs_f25f.py', None)):
+     if a is None:
+--- mk_seal_f25f.py	2026-10-07 15:16:32.212722700 +0200
++++ ../../mk_seal_f25f.py	2026-10-07 15:16:32.243249600 +0200
+@@ -9,7 +9,7 @@
+ FILES = ['f25_read.py', 'f20e_read.py', 'test_f25_read.py', 'sens_f25.py', 'regress_f25.py', 'refs_f25f.py', 'test_tools_f25f.py',
+          'f25f_seal_body.md', 'snap_f25f.py', 'm6_f25f.py', 'go_f25f.sh', 'launch_f25f.sh', 'wait_f25f.sh', 'post_f25f.sh', 'chk_f25f.sh',
+          'guard_f25f.py', 'queue_f25f.py', 'runchk_f25f.py', 'watch_f25f.py', 'enter_scene.py', 'procload.py', 'manifest_fs4c.py',
+-         'sheet142.py', 'gates_default.txt', 'idle142.py', 'run_safety99.py', 'launch_run.py', 'mk_seal_f25f.py', 'hold_f25f.py', 'block_f25f.sh', 'pred/seal2_diff.txt', 'pred/old/f25f_seal_v1_3be83a68.md',
++         'sheet142.py', 'gates_default.txt', 'idle142.py', 'run_safety99.py', 'launch_run.py', 'mk_seal_f25f.py', 'hold_f25f.py', 'block_f25f.sh', 'pred/seal2_diff.txt', 'pred/old/f25f_seal_v1_3be83a68.md', 'pred/seal3_diff.txt', 'pred/old/f25f_seal_v2_2a32d74e.md',
+          'test_f25_read.out.txt', 'sens_f25.out.txt', 'regress_f25.out.txt', 'refs_f25f.out.txt', 'refs_neg.out.txt', 'test_tools_f25f.out.txt',
+          'C:/kyty/f287/f25d/kyty_emulator_e342b839.exe', 'C:/kyty/s288/bin/kyty_emulator_b3cee576.exe', 'C:/kyty/scripts/s51_vidglitch.py']
+ OUTS = [('test_f25_read.out.txt', 'checks '), ('sens_f25.out.txt', 'edits '), ('regress_f25.out.txt', 'REGRESS '), ('refs_f25f.out.txt', 'refs '),

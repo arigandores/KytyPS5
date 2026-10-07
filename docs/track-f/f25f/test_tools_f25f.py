@@ -17,9 +17,10 @@ sys.path.insert(0, HERE)
 import m6_f25f as M6  # noqa: E402
 
 TMP = os.path.join(HERE, 'fx_tools')
-print('suite test_tools_f25f.py sha256 %s target snap_f25f.py sha256 %s m6_f25f.py sha256 %s go_f25f.sh sha256 %s' % tuple(
+print('suite test_tools_f25f.py sha256 %s target snap_f25f.py sha256 %s m6_f25f.py sha256 %s go_f25f.sh sha256 %s guard_f25f.py sha256 %s' % tuple(
     hashlib.sha256(open(p, 'rb').read()).hexdigest() for p in (os.path.abspath(__file__), os.path.join(HERE, 'snap_f25f.py'),
-                                                                os.path.join(HERE, 'm6_f25f.py'), os.path.join(HERE, 'go_f25f.sh'))))
+                                                                os.path.join(HERE, 'm6_f25f.py'), os.path.join(HERE, 'go_f25f.sh'),
+                                                                os.path.join(HERE, 'guard_f25f.py'))))
 ok = True
 nchk = 0
 
@@ -278,6 +279,40 @@ check('606: go_f25f.sh runs reconcile before every non-prewarm tag, the hold che
       all(s in open(os.path.join(HERE, 'go_f25f.sh')).read() for s in ('snap_f25f.py reconcile', 'hold_f25f.py check', 'hold_f25f.py watch',
                                                                         'merge-return GLCache', 'SERIES_STOP', 'snap_f25f.py state A')))
 check('606: launch_f25f.sh refuses on a user session (exit 7) before the block status', 'hold_f25f.py check' in open(os.path.join(HERE, 'launch_f25f.sh')).read())
+
+# ---- seal 3: guard watch does not count kind 'emulator' before the own pid file exists (f25_s26 09:52:52Z, f25_k02 13:11:48Z)
+GD = os.path.join(HERE, 'guard_f25f.py')
+import guard_f25f as GU  # noqa: E402
+gdir = os.path.join(TMP, 'gl')
+os.makedirs(gdir)
+open(os.path.join(gdir, 'kyty_emulator.exe'), 'wb').write(b'x')
+gf = os.path.join(TMP, 'guard.json')
+now = time.time()
+emu = dict(pid=21, name='kyty_emulator.exe', path=os.path.join(gdir, 'kyty_emulator.exe'), start=now)
+lau = dict(pid=22, name='l.exe', path=os.path.join(gdir, 'l.exe'), start=now)
+nopid = os.path.join(TMP, 'g_nopid.txt')
+pid21 = os.path.join(TMP, 'g_pid21.txt')
+open(pid21, 'w').write('21 %.3f\n' % now)
+pid99 = os.path.join(TMP, 'g_pid99.txt')
+open(pid99, 'w').write('99 %.3f\n' % now)
+for nm, plist, pf, want in (('own emulator before its pid file', [emu], nopid, False),
+                            ('own emulator after its pid file', [emu], pid21, False),
+                            ('other emulator when the pid file names another pid', [emu], pid99, True),
+                            ('launcher before the own pid file', [lau], nopid, True)):
+    json.dump(plist, open(gf, 'w', encoding='ascii'))
+    gfl = os.path.join(TMP, 'gflag_%d.txt' % len(nm))
+    if os.path.exists(gfl):
+        os.remove(gfl)
+    rc, out, _, raw = py([GD, 'watch', '--pidfile', pf, '--flag', gfl, '--stop', os.path.join(TMP, 'nostop'), '--polls', '3', '--fake', gf])
+    check('seal 3: guard watch (fake, 3 polls) %s -> flag %s' % (nm, want),
+          rc == 0 and os.path.exists(gfl) == want and ('user process seen: %s' % ('yes' if want else 'no')) in out and b'l.exe' not in raw,
+          (rc, out))
+check('seal 3: pending_own drops kind emulator only while the pid file is absent and < PIDFILE_WAIT_S',
+      GU.pending_own([(21, 'emulator'), (22, 'launcher')], None, 59.9) == [(22, 'launcher')] and
+      GU.pending_own([(21, 'emulator')], None, GU.PIDFILE_WAIT_S) == [(21, 'emulator')] and
+      GU.pending_own([(21, 'emulator')], (99, now), 1.0) == [(21, 'emulator')] and GU.PIDFILE_WAIT_S == 60.0, None)
+check('seal 3: go_f25f.sh passes the pid file to the guard watch',
+      'guard_f25f.py watch --pidfile $OUT/game_pid.txt' in open(os.path.join(HERE, 'go_f25f.sh')).read())
 
 # ---- strict cp1250 output of the python scripts (usage / --help paths)
 for s, a in (('snap_f25f.py', []), ('hold_f25f.py', []), ('f25_read.py', ['x']), ('regress_f25.py', None), ('refs_f25f.py', None)):

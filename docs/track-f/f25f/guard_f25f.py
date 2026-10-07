@@ -9,7 +9,9 @@ usage:
   python guard_f20l3.py scan [--pidfile F]                        rc 0 'GUARD CLEAN' / rc 7 'GUARD FOUND n: ...'
   python guard_f20l3.py kill-own --pidfile F                      kills the own emulator tree by its pid only (taskkill /F /T /PID)
   python guard_f20l3.py watch --pidfile F --flag F2 --stop F3     poll <= 2 s during the tag; a user process seen in 2 polls in a row =>
-                                                                 flag file, the own emulator killed by pid, the user process untouched
+                                                                 flag file, the own emulator killed by pid, the user process untouched;
+                                                                 seal 3: kind 'emulator' is not counted until the pid file exists
+                                                                 (<= PIDFILE_WAIT_S from the start); --polls N (fixtures) ends after N polls
   python guard_f20l3.py wait-gone [--pidfile F] [--poll 10]       returns when no user process is left (poll <= 10 s; the lock stays)
   python guard_f20l3.py check|open-block|status|tag <tag>|close <reason> [--block F]    blocks of item 534 (3)
     check      scan + a line CLEAN / FOUND in the block file; FOUND closes the block (rc 7)
@@ -35,6 +37,7 @@ GAP_S = 600
 BLOCK_TAGS = 6
 WATCH_POLL_S = 2.0
 GONE_POLL_S = 10.0
+PIDFILE_WAIT_S = 60.0
 FAKE = None
 
 
@@ -141,11 +144,24 @@ def utc():
     return time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
 
 
-def watch(pidfile, flag, stop):
+def pending_own(found, own, waited):
+    """Seal 3 (harness fix): until the pid file of the own emulator exists, and at most PIDFILE_WAIT_S from the watch start, a process of kind
+    'emulator' is not counted (kind 'launcher' is).  CreateProcess of the own emulator may return seconds after the process is visible, and
+    enter_scene.py writes the pid file only after it returns: f25_s26 09:52:52Z and f25_k02 13:11:48Z - the 'user' pid = the pid of the
+    pid file.  A user emulator is still found at the first poll after the pid file exists (it is not the own pid)."""
+    if own is None and waited < PIDFILE_WAIT_S:
+        return [f for f in found if f[1] != 'emulator']
+    return found
+
+
+def watch(pidfile, flag, stop, polls=None):
     seen = 0
     done = False
-    while not os.path.exists(stop):
-        found = scan(pidfile)
+    t0 = time.time()
+    n = 0
+    while not os.path.exists(stop) and (polls is None or n < polls):
+        n += 1
+        found = pending_own(scan(pidfile), read_own(pidfile) if pidfile else None, time.time() - t0)
         seen = seen + 1 if found else 0
         if seen >= 2 and not done:
             with open(flag, 'w') as f:
@@ -238,7 +254,7 @@ def main(argv):
         print(kill_own(opt('--pidfile')))
         return 0
     if cmd == 'watch':
-        return watch(opt('--pidfile'), opt('--flag'), opt('--stop'))
+        return watch(opt('--pidfile'), opt('--flag'), opt('--stop'), int(opt('--polls')) if opt('--polls') else None)
     if cmd == 'wait-gone':
         return wait_gone(opt('--pidfile'), min(float(opt('--poll', GONE_POLL_S)), GONE_POLL_S))
     if cmd == 'check':

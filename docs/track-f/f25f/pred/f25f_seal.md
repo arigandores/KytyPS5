@@ -180,6 +180,26 @@ json есть; `theta_load` из печати; `binary_sha256` = B; устано
   файл D, предел 2, стопы по изменённому / удалённому / неожиданному файлу серии, `restore A′` сохраняет D, `merge-return`, проверка сеанса
   по имени ВМ / по открытому файлу / свой pid / чужая папка, сторож без флага на одном опросе).
 
+## 4б. Печать 3 — правка сторожа `guard_f25f.py` (вариант исполнителя, до первого тега после правки)
+
+Печать 2 (`2a32d74e…`, KytyPS5 `a876dbad`) — копия `pred/old/f25f_seal_v2_2a32d74e.md`; теги `f25_s26` … `f25_s34`, `f25_k01` и вызов
+`f25_k02` сделаны по ней (их json несут sha печати 2; повторное чтение их json сверяет печать 2, тег печати 1 — печать 1). **Ридер
+`f25_read.py`, правила чтения §3, форма тега §1, снимки и возвраты §4а — без изменений.**
+
+- **Дефект сторожа [c].** Обе находки «чужого эмулятора» сторожем тега — свой эмулятор: `f25_s26` (первый вызов, найден 09:52:52Z pid
+  40628) и `f25_k02` (найден 13:11:48Z pid 21416) — pid находки = pid файла `game_pid.txt` того же тега (`runs/f25_s26.user_095308/`,
+  `runs/f25_k02.user_131205/`), время записи в файле на 1,5–2,5 с позже находки. `enter_scene.py` пишет файл pid сразу после возврата
+  `Popen`, а процесс виден в списке процессов раньше (возврат `CreateProcess` задержан); два опроса подряд без файла pid ⇒ свой эмулятор
+  считался чужим и убивался по pid.
+- **Правка:** `guard_f25f.py watch` не считает процесс вида `emulator`, пока файла pid нет, но не дольше `PIDFILE_WAIT_S` = 60 с от начала
+  сторожа (вид `launcher` считается всегда); после появления файла pid чужой эмулятор находится первым же опросом (его pid ≠ своего).
+  Ключ `--polls N` — только фикстуры. Проверки блока, `scan`, `check`, `open-block` и `hold_f25f.py` — без изменений.
+- **Фикстуры** `test_tools_f25f.py` — 68 (+6: свой эмулятор до файла pid — без флага; после — без флага; файл pid называет другой pid —
+  флаг; `launcher` до файла pid — флаг; `pending_own` на краях 59,9 / 60 с и при файле pid; `go_f25f.sh` передаёт файл pid сторожу).
+  Отрицательный контроль: та же правка с `PIDFILE_WAIT_S` = 0 даёт флаг на «свой эмулятор до файла pid». Дифф — `pred/seal3_diff.txt`.
+- **Счёт помех** — вопрос лиду: по п. 606(в)(7) первый вызов `f25_s26` — помеха 1 из 6; `f25_k02` по букве харнесса — помеха. До ответа
+  ридер считает по букве (тег-помеха без `read.json` в счёт `--series` не входит); оба вызова печатаются в отчёте с фактом выше.
+
 ## 5. Не заявляется
 
 П. 596(л), п. 599(д), п. 600(г), п. 602(д) целиком; что калибровка смещения точнее задержки записи лога; что `M6_BURST` — причина кадра;
@@ -193,7 +213,7 @@ json есть; `theta_load` из печати; `binary_sha256` = B; устано
 - `regress_f25.out.txt` (sha256 69b4d2fc948990c5): REGRESS PASS; ALL OK; первая строка набора: `suite regress_f25.py sha256 b29eeba58ad630b7e7868ac9a0aedb6e42170c9e3aeb6e77dbce60b52d644f9f target f25_read.py sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf`
 - `refs_f25f.out.txt` (sha256 a6c1bb8004ece636): refs 12 mismatches 0; ALL OK; первая строка набора: `suite refs_f25f.py sha256 6faefd7cbc9aa0be2369882be460b3a32aec43b432753c2dcf75d9f81d692eb4`
 - `refs_neg.out.txt` (sha256 e42e96822eb2a5d9): NEG CONTROL OK; ALL OK; первая строка набора: `suite refs_f25f.py sha256 6faefd7cbc9aa0be2369882be460b3a32aec43b432753c2dcf75d9f81d692eb4 (negative control)`
-- `test_tools_f25f.out.txt` (sha256 557456be6a44d2f1): checks 62; ALL OK; первая строка набора: `suite test_tools_f25f.py sha256 4aee0d8e38548630fa33453a645721932beef6a37c7ca4efbf779069faf9ad20 target snap_f25f.py sha256 7319cff0a9a909ee7912441216c2848ea837e780966575ea3659ece076bb74d7 m6_f25f.py `
+- `test_tools_f25f.out.txt` (sha256 b64ffd9af71cceba): checks 68; ALL OK; первая строка набора: `suite test_tools_f25f.py sha256 bf0e14be78b667b880abd586dda1f33d9605c33396f0ea5c7f9be25d395b4450 target snap_f25f.py sha256 7319cff0a9a909ee7912441216c2848ea837e780966575ea3659ece076bb74d7 m6_f25f.py `
 
 seal: 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf C:/kyty/f287/f25f/f25_read.py
 seal: 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa C:/kyty/f287/f25f/f20e_read.py
@@ -201,8 +221,8 @@ seal: a4cf6aed7ad399b8a58592980f26411d848463cb3f125b518b0e111d418969cc C:/kyty/f
 seal: b0bfdf3e4ea0cf488386e10253e7024b6aac6813e8241652f9fc7f931a18ba27 C:/kyty/f287/f25f/sens_f25.py
 seal: b29eeba58ad630b7e7868ac9a0aedb6e42170c9e3aeb6e77dbce60b52d644f9f C:/kyty/f287/f25f/regress_f25.py
 seal: 6faefd7cbc9aa0be2369882be460b3a32aec43b432753c2dcf75d9f81d692eb4 C:/kyty/f287/f25f/refs_f25f.py
-seal: 4aee0d8e38548630fa33453a645721932beef6a37c7ca4efbf779069faf9ad20 C:/kyty/f287/f25f/test_tools_f25f.py
-seal: 3abd9299efb70263ff2d9fa5c6e0c9ed741fd0dc50bb25964ed2422c06f9eb72 C:/kyty/f287/f25f/f25f_seal_body.md
+seal: bf0e14be78b667b880abd586dda1f33d9605c33396f0ea5c7f9be25d395b4450 C:/kyty/f287/f25f/test_tools_f25f.py
+seal: 7962c0b2885ed046ed827f36c8c34bdbe74329ec7b3e3609fae33b99ebd87eb7 C:/kyty/f287/f25f/f25f_seal_body.md
 seal: 7319cff0a9a909ee7912441216c2848ea837e780966575ea3659ece076bb74d7 C:/kyty/f287/f25f/snap_f25f.py
 seal: 0dbd7c1fc5df191ffb0d253e5467466c027d5f9bc355b5fac1e188b5d475149a C:/kyty/f287/f25f/m6_f25f.py
 seal: 089b6b5d02b1c51e42ef39d71e60bd20866152eccde463f23ade1ef81eca81fb C:/kyty/f287/f25f/go_f25f.sh
@@ -210,7 +230,7 @@ seal: d2e12ad8b8dcb1b8c677d26b8fd95adf2db58579e0a2dd33d5cd17ea6c871546 C:/kyty/f
 seal: 05ae628b209f13e17a85e8013380bff2317bb45292d6c06b2c12aec242d949ff C:/kyty/f287/f25f/wait_f25f.sh
 seal: dcb261012e129555e3888183a1f377082ac6893da89113bd209300a10aa826b0 C:/kyty/f287/f25f/post_f25f.sh
 seal: d973b14c8a9f9ed189e0d5a5eca822669d5b1f5ffd210289d30677b705a027ee C:/kyty/f287/f25f/chk_f25f.sh
-seal: 4c15c545bf5573c2fe7f9bd465a6422df59af9f230d2861869cc28bce588cb33 C:/kyty/f287/f25f/guard_f25f.py
+seal: 4cf5a4e385e1cce6ac1c193eb526e69b5146c6d665c9cbc28b2f9077f696b137 C:/kyty/f287/f25f/guard_f25f.py
 seal: ba793ed8d62f4b649e5be592d543538ed927bafe738b3ef9a70ca5d25351b62c C:/kyty/f287/f25f/queue_f25f.py
 seal: 6291b7a8e0ca20ab6e5093a9f9d234f47abaa5fa30e03c5657590ba83bd0dce9 C:/kyty/f287/f25f/runchk_f25f.py
 seal: e16406d346750eda05eeafbd58e10ce444f708aa47d3f25f4d95bf5618a644c2 C:/kyty/f287/f25f/watch_f25f.py
@@ -222,17 +242,19 @@ seal: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 C:/kyty/f
 seal: c5ee7dc26d2a6d28501c3941fe882448176165b63e4242373fb0a4a80c697a96 C:/kyty/f287/f25f/idle142.py
 seal: 77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638 C:/kyty/f287/f25f/run_safety99.py
 seal: c750e62ae3d6354970e5be70cf5fb19c480292b78beeeb8c9bb7112106d6aa21 C:/kyty/f287/f25f/launch_run.py
-seal: c73b3c85b5b7ffffa4efd58117595f6b1cdb1da8ad4b28727262210f46e7b44a C:/kyty/f287/f25f/mk_seal_f25f.py
+seal: 1e81ce589905788251dccc5add3dd0edab1e86a02ee3141fdaf6e82ff8926291 C:/kyty/f287/f25f/mk_seal_f25f.py
 seal: 7e475d67873b23d32330d9823a10edbec9a1cea64d0b6c62ab2d156ba7d7e3ed C:/kyty/f287/f25f/hold_f25f.py
 seal: 5484ae88da2429b80ca655bec931affc8e5d7024a8303da7ef9e23c33ebb3291 C:/kyty/f287/f25f/block_f25f.sh
 seal: 3250ee9957b441bb708c94bcc2e372685c13fd2c77d412d76df1615bb4f0b4b1 C:/kyty/f287/f25f/pred/seal2_diff.txt
 seal: 3be83a68ec5415bed692d42877f41fce0ef8b341c24cdcaf5ba03c55fedba75e C:/kyty/f287/f25f/pred/old/f25f_seal_v1_3be83a68.md
+seal: 1984ba7308fe80f0b8b1911b06991b3f03633884e017d5959db0fae1739ddb27 C:/kyty/f287/f25f/pred/seal3_diff.txt
+seal: 2a32d74ed3857851d01fa505a1b6134cb64b88936d081d11f131ef8a8e517bd7 C:/kyty/f287/f25f/pred/old/f25f_seal_v2_2a32d74e.md
 seal: ca25ba48dc21e0fc32994ea8916673e066fd20295ee594424b68b1e50272eb16 C:/kyty/f287/f25f/test_f25_read.out.txt
 seal: d2171f22ca37a1d3c6b66c273fed26bf2c336eb6e290fb95b879aa24e15858bc C:/kyty/f287/f25f/sens_f25.out.txt
 seal: 69b4d2fc948990c5548e279d24c37606475d198261240a609b03bfade3628196 C:/kyty/f287/f25f/regress_f25.out.txt
 seal: a6c1bb8004ece636accd150a11ff63ac14ae60f2233e511b4100cf03868df55a C:/kyty/f287/f25f/refs_f25f.out.txt
 seal: e42e96822eb2a5d9489a7c99ec8812722aa2683c5dca61bb6e584d00dd29ece0 C:/kyty/f287/f25f/refs_neg.out.txt
-seal: 557456be6a44d2f184063dae230a608d0d8f9351aa208e69cd05db1dc8884388 C:/kyty/f287/f25f/test_tools_f25f.out.txt
+seal: b64ffd9af71ccebaee7ae4fc134b15482b023f308ccac4f6d5dfc868c6a621e8 C:/kyty/f287/f25f/test_tools_f25f.out.txt
 seal: e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4 C:/kyty/f287/f25d/kyty_emulator_e342b839.exe
 seal: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a C:/kyty/s288/bin/kyty_emulator_b3cee576.exe
 seal: 6afe4e3335da68f28792ada0c6c4f05f741f037f78a00bf83fb1de409ee46c1c C:/kyty/scripts/s51_vidglitch.py

@@ -1,0 +1,21 @@
+FAIL f2307b02:src/common/diagB32.h:61
+FAIL f2307b02:src/common/diagB32.cpp:188
+FAIL f2307b02:src/common/diagB32.cpp:210
+FAIL f2307b02:src/common/diagB32.cpp:230
+FAIL f2307b02:src/common/diagB32.cpp:383
+FAIL f2307b02:src/common/diagB32.cpp:428
+FAIL f2307b02:src/common/diagB32.cpp:473
+FAIL f2307b02:src/common/diagB32.cpp:493
+FAIL f2307b02:src/common/diagB32.cpp:1296
+FAIL f2307b02:src/common/diagB32.cpp:1789
+FAIL f2307b02:src/common/diagB32.cpp:1813
+FAIL f2307b02:src/common/diagB32.cpp:1877
+FAIL f2307b02:src/common/diagB32.cpp:1894
+FAIL f2307b02:src/common/diagB32.cpp:2108
+ok   35b454c6:src/graphics/presentation/videoOut.cpp:1281
+ok   35b454c6:src/graphics/presentation/videoOut.cpp:1293
+ok   24ce64ea:docs/track-f/f20l3/b32_read.py:125
+ok   24ce64ea:docs/track-f/f20l3/b32_read.py:596
+ok   24ce64ea:docs/track-f/f20l3/b32_read.py:1003
+19 references
+FAILED

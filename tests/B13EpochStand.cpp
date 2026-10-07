@@ -6,6 +6,10 @@
 // region lock, on a page of real memory. The test-build hook KYTY_B13_TEST_HOOK(point) of regionManager.h calls Hook()
 // below: point 1 - between the two epoch stores, point 2 - after both, before BdaNoteRegionWrite. The CMake target
 // b13_epoch_stand builds the order of the code, b13_epoch_stand_swap (KYTY_TEST_B13_SWAP) the reversed order.
+// Track F, F24c (HPP-662, ROADMAP s122 item 595(e)(1)): the same targets with the knob KYTY_FIX_B13 of the code under
+// test (read once per process): at 0 or unset the writer is the text of F24a (points 1 and 2; the swap target - the
+// reversed order); at 1 it is the order of the fix - region epoch, point 11, bdabits bit, point 12, global epoch, point 13
+// (the swap target has the same =1 order). A point of the other value of the knob is refused (exit 2): it is never reached.
 //
 // Reader: a model of the two places that decide without the region lock, in their order, on the real tracker reads:
 //   RenderContext::PrepareBda (src/graphics/host_gpu/renderer/renderContext.cpp): g = CpuWriteEpoch(); a hit when g is
@@ -26,9 +30,9 @@
 //                 the writer returned.
 //   mode before - control: the announcement completes before R1 (no hook action).
 //   mode after  - control: R1 completes before the announcement, R2 after it.
-//   point 1 or 2, bits 0 or 1 (the reader with or without the bdabits map).
+//   point 1 or 2 (KYTY_FIX_B13=0 or unset) or 11, 12, 13 (KYTY_FIX_B13=1), bits 0 or 1 (the reader with or without the bdabits map).
 // Every iteration starts from the state of a completed scan with nothing announced since (Reader::Resync).
-// Output: one line "B13 build=<code|swap> mode=... point=... bits=... iters=<n> lost=<n> r1=... r2=..." and exit 0;
+// Output: one line "B13 build=<code|swap> fix_b13=<0|1> mode=... point=... bits=... iters=<n> lost=<n> r1=... r2=..." and exit 0;
 // "STALL <where>" and exit 3 when a wait does not end in 10 s.
 #include "common/gates.h"
 #include "common/virtualMemory.h"
@@ -195,7 +199,7 @@ struct Reader {
 
 int main(int argc, char** argv) {
 	if (argc != 5) {
-		std::printf("usage: b13_epoch_stand <forced|free|before|after> <1|2> <0|1> <iters>\n");
+		std::printf("usage: b13_epoch_stand <forced|free|before|after> <1|2|11|12|13> <0|1> <iters>\n");
 		return 2;
 	}
 	const char*    mode  = argv[1];
@@ -206,7 +210,10 @@ int main(int argc, char** argv) {
 	const bool     free_mode = std::strcmp(mode, "free") == 0;
 	const bool     before = std::strcmp(mode, "before") == 0;
 	const bool     after  = std::strcmp(mode, "after") == 0;
-	if ((!forced && !free_mode && !before && !after) || (point != 1 && point != 2) || iters == 0) {
+	// Track F, F24c: the points of the order the knob selects (Libs::Graphics::FixB13Enabled, the read of the code).
+	const bool     fix_b13  = Libs::Graphics::FixB13Enabled();
+	const bool     point_ok = fix_b13 ? (point == 11 || point == 12 || point == 13) : (point == 1 || point == 2);
+	if ((!forced && !free_mode && !before && !after) || !point_ok || iters == 0) {
 		std::printf("bad arguments\n");
 		return 2;
 	}
@@ -305,9 +312,9 @@ int main(int argc, char** argv) {
 #else
 	const char* build = "code";
 #endif
-	std::printf("B13 build=%s mode=%s point=%d bits=%d iters=%llu lost=%llu r1=%s:%llu,%s:%llu,%s:%llu,%s:%llu "
+	std::printf("B13 build=%s fix_b13=%d mode=%s point=%d bits=%d iters=%llu lost=%llu r1=%s:%llu,%s:%llu,%s:%llu,%s:%llu "
 	            "r2=%s:%llu,%s:%llu,%s:%llu,%s:%llu gate_bdastamp=%d gate_bdabits=%d\n",
-	            build, mode, point, bits ? 1 : 0, static_cast<unsigned long long>(iters),
+	            build, fix_b13 ? 1 : 0, mode, point, bits ? 1 : 0, static_cast<unsigned long long>(iters),
 	            static_cast<unsigned long long>(lost), OUTCOME_NAMES[0], static_cast<unsigned long long>(r1[0]),
 	            OUTCOME_NAMES[1], static_cast<unsigned long long>(r1[1]), OUTCOME_NAMES[2],
 	            static_cast<unsigned long long>(r1[2]), OUTCOME_NAMES[3], static_cast<unsigned long long>(r1[3]),

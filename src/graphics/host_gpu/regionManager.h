@@ -3,6 +3,7 @@
 
 #include "common/assert.h"
 #include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "graphics/host_gpu/pageManager.h"
 #include "graphics/host_gpu/regionDefinitions.h"
@@ -34,11 +35,23 @@ namespace Libs::Graphics {
 // Track F, F24a (B13 stand, ROADMAP s122 item 593(d)(1)): test-build hooks of ChangeState<Cpu, true>. Hook() is
 // defined only by tests/B13EpochStand.cpp (CMake targets b13_epoch_stand*, KYTY_TEST_B13_HOOK); every hook and the
 // reversed order (KYTY_TEST_B13_SWAP) are inside #if blocks, so the emulator compiles the text before F24a.
+// Track F, F24c (HPP-662, ROADMAP s122 item 595(d)): the order of KYTY_FIX_B13=1 has its own points - 11 after the region
+// epoch, 12 after the bdabits bit, 13 after the global epoch; points 1 and 2 belong to the order of KYTY_FIX_B13=0.
 #if defined(KYTY_TEST_B13_HOOK)
 namespace B13Test {
 void Hook(int point) noexcept;
 } // namespace B13Test
 #endif
+
+// Track F, F24c (HPP-662, ROADMAP s122 item 595(d)): knob KYTY_FIX_B13, default 0 (unset or "" - off, otherwise
+// Common::EnvValueOn), read once per process. At 1 RegionManager::ChangeState<Cpu, true> publishes the region epoch and the
+// bdabits bit BEFORE the global CPU epoch (B13: with the global epoch first, a BDA scan that read the new global epoch could
+// read the old region stamp, skip the region and remember the new global epoch). The constructor of MemoryTracker reads it
+// before any region exists and prints "FixB13: mode=<0|1>" once per process.
+[[nodiscard]] inline bool FixB13Enabled() noexcept {
+	static const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_B13"));
+	return on;
+}
 
 class TrackingSpinLock final {
 public:
@@ -230,34 +243,67 @@ public:
 			}
 		}
 		if constexpr (source == DirtySource::Cpu && enable) {
-			// Called with the region lock held, after the bits and before the pages become
-			// writable (UpdateProtection below). Bits first, epochs second: a lock-free reader of
-			// the bits (gate "syncfree") takes its epoch snapshot before it reads them, so an
-			// announcement it missed moves the epochs after that snapshot and the next
-			// HasCurrentUpload check fails. A BDA scan observing these epochs still acquires this
-			// lock before it reads dirty bits, so the order does not matter to it.
+			if (FixB13Enabled()) {
+				// Track F, F24c (KYTY_FIX_B13=1, ROADMAP s122 item 595(d)). Called with the region lock held, after the bits and
+				// before the pages become writable (UpdateProtection below). Bits first; then the witnesses of this region - its
+				// epoch, then the bdabits bit - and the global CPU epoch LAST. A lock-free reader of the bits (gate "syncfree")
+				// takes its epoch snapshot before it reads them, so an announcement it missed moves the epochs after that snapshot
+				// and the next HasCurrentUpload check fails (either kind of epoch). The BDA preparation decides "skip this region"
+				// WITHOUT this lock: RenderContext::PrepareBda reads the global epoch (acquire) before its scan and remembers it
+				// after it, and the scan skips a region by a clear bdabits bit or an unchanged stamp
+				// (BufferCache::SynchronizeBuffersByRegion). The release store of the global epoch publishes the region epoch and
+				// the bit stored before it: a scan that reads the new global epoch sees both and walks the region; a scan that reads
+				// the old one remembers the old one, and the move it missed sends the next preparation back to the region.
+				m_epoch.fetch_add(1, std::memory_order_release);
+#if defined(KYTY_TEST_B13_HOOK)
+				B13Test::Hook(11); // Track F, F24c: after the region epoch, before the bdabits bit
+#endif
+				// Gate "bdabits": the map mirrors this epoch, so it is set here - before the global epoch, never later.
+				BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
+#if defined(KYTY_TEST_B13_HOOK)
+				B13Test::Hook(12); // Track F, F24c: after the bdabits bit, before the global epoch
+#endif
+				m_cpu_epoch.fetch_add(1, std::memory_order_release);
+#if defined(KYTY_TEST_B13_HOOK)
+				B13Test::Hook(13); // Track F, F24c: after the global epoch
+#endif
+				// Session 134, knob "b2reuse" (ROADMAP s122 item 154(b) RC1): an announced CPU write ends the interval at 1/2 -
+				// after the epochs, before UpdateProtection lets the guest write; any thread, under this region's lock.
+				if (Common::B2Reuse::ResetsLive()) [[unlikely]] {
+					Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpuw);
+				}
+			} else {
+				// Track F, F24c: KYTY_FIX_B13=0 - the text before F24c, verbatim (its last comment sentence holds for the
+				// dirty bits read under this lock, not for the lock-free skip of the BDA scan - B13, ROADMAP s122 item 595(v)(2)).
+				// Called with the region lock held, after the bits and before the pages become
+				// writable (UpdateProtection below). Bits first, epochs second: a lock-free reader of
+				// the bits (gate "syncfree") takes its epoch snapshot before it reads them, so an
+				// announcement it missed moves the epochs after that snapshot and the next
+				// HasCurrentUpload check fails. A BDA scan observing these epochs still acquires this
+				// lock before it reads dirty bits, so the order does not matter to it.
 #if defined(KYTY_TEST_B13_SWAP)
-			// Track F, F24a: the reversed order (region epoch first), test build only - the control arm of the stand.
-			m_epoch.fetch_add(1, std::memory_order_release);
-			B13Test::Hook(1);
-			m_cpu_epoch.fetch_add(1, std::memory_order_release);
+				// Track F, F24a: the reversed order (region epoch first), test build only - the control arm of the stand.
+				m_epoch.fetch_add(1, std::memory_order_release);
+				B13Test::Hook(1);
+				m_cpu_epoch.fetch_add(1, std::memory_order_release);
 #else
-			m_cpu_epoch.fetch_add(1, std::memory_order_release);
+				m_cpu_epoch.fetch_add(1, std::memory_order_release);
 #if defined(KYTY_TEST_B13_HOOK)
-			B13Test::Hook(1); // Track F, F24a: between the global and the region epoch
+				B13Test::Hook(1); // Track F, F24a: between the global and the region epoch
 #endif
-			m_epoch.fetch_add(1, std::memory_order_release);
+				m_epoch.fetch_add(1, std::memory_order_release);
 #endif
-			// Session 134, knob "b2reuse" (ROADMAP s122 item 154(b) RC1): an announced CPU write ends the interval at 1/2 -
-			// after the epochs, before UpdateProtection lets the guest write; any thread, under this region's lock.
-			if (Common::B2Reuse::ResetsLive()) [[unlikely]] {
-				Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpuw);
+				// Session 134, knob "b2reuse" (ROADMAP s122 item 154(b) RC1): an announced CPU write ends the interval at 1/2 -
+				// after the epochs, before UpdateProtection lets the guest write; any thread, under this region's lock.
+				if (Common::B2Reuse::ResetsLive()) [[unlikely]] {
+					Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpuw);
+				}
+#if defined(KYTY_TEST_B13_HOOK)
+				B13Test::Hook(2); // Track F, F24a: after both epochs, before the bdabits bit
+#endif
+				// Gate "bdabits": the map mirrors this epoch, so it is set here and never later.
+				BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
 			}
-#if defined(KYTY_TEST_B13_HOOK)
-			B13Test::Hook(2); // Track F, F24a: after both epochs, before the bdabits bit
-#endif
-			// Gate "bdabits": the map mirrors this epoch, so it is set here and never later.
-			BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
 		}
 		if constexpr (source == DirtySource::Cpu) {
 			UpdateProtection<!enable, false>();

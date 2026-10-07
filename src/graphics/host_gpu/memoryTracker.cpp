@@ -2,6 +2,7 @@
 
 #include "common/alignment.h"
 #include "common/assert.h"
+#include "common/logging/log.h"
 
 namespace Libs::Graphics {
 
@@ -11,6 +12,13 @@ MemoryTracker::MemoryTracker(PageManager& page_manager): m_page_manager(page_man
 	m_regions = std::make_unique<std::atomic<RegionManager*>[]>(REGION_COUNT);
 	const MemoryTracker* expected = nullptr;
 	s_primary.compare_exchange_strong(expected, this, std::memory_order_acq_rel);
+	// Track F, F24c (KYTY_FIX_B13, ROADMAP s122 item 595(d)): the knob is read here, before this tracker has a region (no
+	// ChangeState of it can run earlier), and its line is printed once per process.
+	static std::atomic<bool> fix_b13_logged {false};
+	const bool               fix_b13 = FixB13Enabled();
+	if (!fix_b13_logged.exchange(true, std::memory_order_relaxed)) {
+		LOGF("FixB13: mode=%d\n", fix_b13 ? 1 : 0);
+	}
 }
 
 MemoryTracker::~MemoryTracker() {

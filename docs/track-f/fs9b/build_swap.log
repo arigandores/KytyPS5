@@ -1,0 +1,53 @@
+watch: start 2026-10-07T05:32:52Z child 29784 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[0/2] Re-checking globbed directories...
+[1/8] Generate kytyGitVersion.h
+[2/6] Building CXX object CMakeFiles\b13_epoch_stand_swap.dir\tests\B13EpochStand.cpp.obj
+In file included from C:\kyty\f287\fs9b\wt\tests\B13EpochStand.cpp:40:
+In file included from C:\kyty\f287\fs9b\wt\src\graphics/host_gpu/memoryTracker.h:8:
+In file included from C:\kyty\f287\fs9b\wt\src\graphics/host_gpu/regionManager.h:5:
+C:\kyty\f287\fs9b\wt\src\common/envFlag.h(36,25): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   36 |         return EnvValueOn(std::getenv(name));
+      |                                ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+In file included from C:\kyty\f287\fs9b\wt\tests\B13EpochStand.cpp:40:
+In file included from C:\kyty\f287\fs9b\wt\src\graphics/host_gpu/memoryTracker.h:8:
+C:\kyty\f287\fs9b\wt\src\graphics/host_gpu/regionManager.h(54,28): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   54 |                 const char* value = std::getenv("KYTY_FIX_B13");
+      |                                          ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+In file included from C:\kyty\f287\fs9b\wt\tests\B13EpochStand.cpp:40:
+In file included from C:\kyty\f287\fs9b\wt\src\graphics/host_gpu/memoryTracker.h:8:
+C:\kyty\f287\fs9b\wt\src\graphics/host_gpu/regionManager.h(72,30): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   72 |                                 const auto* value = std::getenv("KYTY_TRACKING_RELAXED_SPIN");
+      |                                                          ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+3 warnings generated.
+[3/6] Building CXX object CMakeFiles\b13_epoch_stand_swap.dir\src\graphics\host_gpu\memoryTracker.cpp.obj
+[4/6] Building CXX object CMakeFiles\b13_epoch_stand_swap.dir\src\graphics\host_gpu\pageManager.cpp.obj
+[5/6] Linking CXX executable b13_epoch_stand_swap.exe
+BUILD OK: C:\kyty\f287\fs9b\build\b13_epoch_stand_swap.exe
+rc=0 end 2026-10-07T05:32:56Z

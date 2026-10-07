@@ -1,0 +1,7 @@
+5e03b34ef6553e30f9ffaecdca78bd50ae140dd8631538c2ddba1f857a144321 *build/install/kyty_emulator.exe
+1eeb23606b5e77314132565a73e7e471a7818a49cd668a6dddc565ffb418178b *build/b13_epoch_stand.exe
+5baa474487cfa117998221abe0b2633a0bf5480b60596da723d16d2690cff6a3 *build/b13_epoch_stand_swap.exe
+3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5 */c/kyty/f287/bin/kyty_emulator_3861eeea.exe
+66b59bf5c2e39edb27782bb0a00fb0d8e460a843e02e2e69c476e7bbbf9d7654 *fix/kyty_emulator_neg_21db93d1.exe
+#define KYTY_GIT_VERSION "KytyPS5-2026-09-15-6a2987a-1900-g11164d72"
+#define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"

@@ -1,0 +1,101 @@
+== chain and worktree
+11164d72 21db93d1 track F link FS9a (HPP-671): default KYTY_FIX_B13=1 (ROADMAP s122 item 604(d)(1))
+    21db93d1 0107f69e track F link F24c (HPP-662): KYTY_FIX_B13 - region epoch and bdabits bit before the global CPU epoch (ROADMAP s122 item 595(d))
+    0107f69e 0005e11f track F link F24a (HPP-658): B13 and B27 stands without the game (ROADMAP s122 item 593(d)(1))
+    0005e11f 62ff7b5b track S link S18a2 (HPP-650): RC1 of S18b - ReplayCloseStop waits only for a rebuild running in this start (ROADMAP s122 item 576(g))
+chain 11164d72 <- 21db93d1 <- 0107f69e <- 0005e11f                       OK ['11164d7258899f945', '21db93d1cf86a46ed', '0107f69e957f3d624']
+wt HEAD = 11164d72                                                       OK 
+wt status --short empty                                                  OK ''
+0107f69e message carries "cherry picked from commit 1570d110"            OK 
+21db93d1 message carries "cherry picked from commit 21f8ca76"            OK 
+11164d72 message carries "cherry picked from commit e4e5701a"            OK 
+== names BASE..HEAD
+    CMakeLists.txt
+    src/graphics/host_gpu/memoryTracker.cpp
+    src/graphics/host_gpu/regionManager.h
+    tests/B13EpochStand.cpp
+    tests/B27DaSlotStand.cpp
+   union of the three commits: ['CMakeLists.txt', 'src/graphics/host_gpu/memoryTracker.cpp', 'src/graphics/host_gpu/regionManager.h', 'tests/B13EpochStand.cpp', 'tests/B27DaSlotStand.cpp']
+diff names = union of files of 1570d110, 21f8ca76, e4e5701a              OK 
+no path under src/graphics/shader/                                       OK 
+== own rebuild in a temporary index
+apply 1570d110 on 0005e11f cleanly                                       OK 
+tree after 1570d110 = 0107f69e^{tree}                                    OK 88f03789abf7
+   apply 21f8ca76 whole (expected to fail on regionManager.h context line): 1 error: patch failed: src/graphics/host_gpu/regionManager.h:3 | error: src/graphics/host_gpu/regionManager.h: patch does not apply
+21f8ca76 whole does not apply (the conflict FS9a names exists)           OK 
+apply 21f8ca76 without regionManager.h cleanly                           OK 
+apply e4e5701a without regionManager.h cleanly                           OK 
+   main commits touching regionManager.h in 0005e11f..e4e5701a: ['e4e5701a', '21f8ca76', '1570d110', '2cde5ef2']
+they are exactly FS9A, F24C, F24A, DIAG                                  OK 
+regionManager.h: 0005e11f == 2cde5ef2^ (base = main before DIAG)         OK 
+regionManager.h: 1570d110^ == 2cde5ef2 (F24A sits right on DIAG for this file) OK 
+   2cde5ef2 on regionManager.h: +8 -0; main->FS9: +0 -8
+regionManager.h main->FS9 removes exactly the lines 2cde5ef2 added, adds none OK 
+own regionManager.h (main with the 2cde5ef2 lines deleted in order) == 11164d72 byte for byte OK 32843 / 32843 bytes, deleted 8 of 8
+own tree (base + 1570d110 + 21f8ca76 + e4e5701a, file rule above) = 11164d72^{tree} OK b0f91cede0e1
+negative control: tree without e4e5701a != 11164d72^{tree}               OK 
+== FS9 files vs main e4e5701a
+   CMakeLists.txt                                +0 -8 only KYTY_DIAG_B32 lines removed
+  CMakeLists.txt: FS9 = main minus KYTY_DIAG_B32 lines only              OK 
+   src/graphics/host_gpu/memoryTracker.cpp       +0 -0 only KYTY_DIAG_B32 lines removed
+  src/graphics/host_gpu/memoryTracker.cpp: FS9 = main                    OK 
+   src/graphics/host_gpu/regionManager.h         +0 -8 only KYTY_DIAG_B32 lines removed
+  src/graphics/host_gpu/regionManager.h: FS9 = main minus KYTY_DIAG_B32 lines only OK 
+   tests/B13EpochStand.cpp                       +0 -0 only KYTY_DIAG_B32 lines removed
+  tests/B13EpochStand.cpp: FS9 = main                                    OK 
+   tests/B27DaSlotStand.cpp                      +0 -0 only KYTY_DIAG_B32 lines removed
+  tests/B27DaSlotStand.cpp: FS9 = main                                   OK 
+== else branch (KYTY_FIX_B13=0) vs base, preprocessed for the emulator
+   else| m_cpu_epoch.fetch_add(1, std::memory_order_release);
+   else| m_epoch.fetch_add(1, std::memory_order_release);
+   else| if (Common::B2Reuse::ResetsLive()) [[unlikely]] {
+   else| Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpuw);
+   else| }
+   else| BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
+else branch code (emulator preprocessing, no comments) == base block code OK 6 / 6 lines
+   base comment lines missing in else (F24c changed the first one into "Called with the region lock held..." on its own line): []
+every base comment line present in else except the merged first line     OK 
+negative control: =1 branch code != base code                            OK 
+   =1 branch code: ['m_epoch.fetch_add(1, std::memory_order_release);', 'BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);', 'm_cpu_epoch.fetch_add(1, std::memory_order_release);', 'if (Common::B2Reuse::ResetsLive()) [[unlikely]] {', 'Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpuw);', '}']
+whole ChangeState<Cpu,true> epoch block of FS9 == block of 21f8ca76 (text) OK 
+FixB13Enabled of FS9 == main e4e5701a                                    OK 
+   [[nodiscard]] inline bool FixB13Enabled() noexcept {
+   	static const bool on = [] {
+   		const char* value = std::getenv("KYTY_FIX_B13");
+   		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+   	}();
+   	return on;
+   }
+   use: 11164d72:src/graphics/host_gpu/memoryTracker.cpp:18:	const bool               fix_b13 = FixB13Enabled();
+   use: 11164d72:src/graphics/host_gpu/regionManager.h:52:[[nodiscard]] inline bool FixB13Enabled() noexcept {
+   use: 11164d72:src/graphics/host_gpu/regionManager.h:54:		const char* value = std::getenv("KYTY_FIX_B13");
+   use: 11164d72:src/graphics/host_gpu/regionManager.h:243:			if (FixB13Enabled()) {
+   use: 11164d72:tests/B13EpochStand.cpp:215:	const bool     fix_b13  = Libs::Graphics::FixB13Enabled();
+one raw read of KYTY_FIX_B13 in src/ and tests/ (inside FixB13Enabled)   OK ['11164d72:src/graphics/host_gpu/regionManager.h:54:\t\tconst char* value = std::getenv("KYTY_FIX_B13");']
+== untouched fixes: their commits are ancestors of the base or patch-equal in it
+  4414e235 ancestor of 0005e11f                                          OK 
+  d515b901 ancestor of 0005e11f                                          OK 
+  3d0e46da ancestor of 0005e11f                                          OK 
+  0e72bc19 ancestor of 0005e11f                                          OK 
+  4d9e8ab7 ancestor of 0005e11f                                          OK 
+  3904522d ancestor of 0005e11f                                          OK 
+  d6ee2dc8 ancestor of 0005e11f                                          OK 
+  302347b4 ancestor of 0005e11f                                          OK 
+  git cherry 1833ee28 (F10) = "-"                                        OK - 1833ee280ec177b65f
+  git cherry c3eb8fe8 (F10 FS5a) = "-"                                   OK - c3eb8fe83bf67c66d8
+  git cherry 68602c4f (F16) = "-"                                        OK - 68602c4f301e8d424a
+  git cherry 17adaf80 (F16 FS4a) = "-"                                   OK - 17adaf801069088b68
+  git cherry 4e72289e (B42) = "-"                                        OK - 4e72289e879b6a8375
+  git cherry c1732d1a (B33 S12a) = "-"                                   OK - c1732d1a7f0e7cd283
+  git cherry a86a5ad0 (B4) = "-"                                         OK - a86a5ad0d1a0828e60
+  git cherry 17eb924e (B4) = "-"                                         OK - 17eb924e3ff5e641a2
+  git cherry 10a4800b (F8) = "-"                                         OK - 10a4800b36fba6e7df
+  git cherry ec6c4c83 (F8 FS7a) = "-"                                    OK - ec6c4c83d9cf89c996
+  git cherry 9c726d74 (B24) = "-"                                        OK - 9c726d74fc688c2aed
+  git cherry 919c1a19 (B24) = "-"                                        OK - 919c1a19f978263cc6
+  git cherry 082d1612 (F19) = "-"                                        OK - 082d161214c525cc6b
+  git cherry f98e842c (F19) = "-"                                        OK - f98e842ca322198e16
+  git cherry e46f55d4 (F19 FS8a) = "-"                                   OK - e46f55d4f3019ca72b
+  git cherry 7719d0f2 (F19 tests) = "-"                                  OK - 7719d0f2aafc7dc876
+src/ files of the diff only memoryTracker.cpp and regionManager.h        OK ['src/graphics/host_gpu/memoryTracker.cpp', 'src/graphics/host_gpu/regionManager.h']
+ALL OK

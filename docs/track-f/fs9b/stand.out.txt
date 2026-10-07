@@ -1,0 +1,35 @@
+watch: start 2026-10-07T05:40:09Z child 36752 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+N per arm 100000
+M1_unset_forced_p11_b0                                     OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_forced_p11_b1                                     OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_forced_p12_b0                                     OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_forced_p12_b1                                     OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_forced_p13_b0                                     OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_forced_p13_b1                                     OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_free_p11_b0                                       OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_free_p11_b1                                       OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_free_p12_b0                                       OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_free_p12_b1                                       OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_before_p11_b0                                     OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_before_p11_b1                                     OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_after_p11_b0                                      OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M1_unset_after_p11_b1                                      OK rc=0 ('code', '1', '100000', '0') FixB13=['1']
+M2_k0_forced_p1_b0 lost >= 1                               OK rc=0 ('code', '0', '100000', '100000') FixB13=['0']
+M3_unset_forced_p1_b0 refused (exit 2)                     OK rc=2 None
+M4_val_unset -> 1                                          OK rc=0 ('code', '1', '1', '0') FixB13=['1']
+M4_val_ -> 1                                               OK rc=0 ('code', '1', '1', '0') FixB13=['1']
+M4_val_1 -> 1                                              OK rc=0 ('code', '1', '1', '0') FixB13=['1']
+M4_val_2 -> 1                                              OK rc=0 ('code', '1', '1', '0') FixB13=['1']
+M4_val_true -> 1                                           OK rc=0 ('code', '1', '1', '0') FixB13=['1']
+M4_val__0 -> 1                                             OK rc=0 ('code', '1', '1', '0') FixB13=['1']
+M4_val_0 -> 0                                              OK rc=0 ('code', '0', '1', '0') FixB13=['0']
+M4_val_false -> 0                                          OK rc=0 ('code', '0', '1', '0') FixB13=['0']
+M4_val_off -> 0                                            OK rc=0 ('code', '0', '1', '0') FixB13=['0']
+M4_val_no -> 0                                             OK rc=0 ('code', '0', '1', '0') FixB13=['0']
+M4_val_OFF -> 0                                            OK rc=0 ('code', '0', '1', '0') FixB13=['0']
+M5_swap_unset_forced_p11_b0 lost 0                         OK rc=0 ('swap', '1', '100000', '0')
+M5_swap_unset_forced_p12_b0 lost 0                         OK rc=0 ('swap', '1', '100000', '0')
+M5_swap_unset_forced_p13_b0 lost 0                         OK rc=0 ('swap', '1', '100000', '0')
+M5_swap_k0_forced_p1_b0 lost 0                             OK rc=0 ('swap', '0', '100000', '0')
+ALL OK
+rc=0 end 2026-10-07T05:40:21Z

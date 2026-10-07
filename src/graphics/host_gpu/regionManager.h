@@ -43,13 +43,18 @@ void Hook(int point) noexcept;
 } // namespace B13Test
 #endif
 
-// Track F, F24c (HPP-662, ROADMAP s122 item 595(d)): knob KYTY_FIX_B13, default 0 (unset or "" - off, otherwise
-// Common::EnvValueOn), read once per process. At 1 RegionManager::ChangeState<Cpu, true> publishes the region epoch and the
-// bdabits bit BEFORE the global CPU epoch (B13: with the global epoch first, a BDA scan that read the new global epoch could
-// read the old region stamp, skip the region and remember the new global epoch). The constructor of MemoryTracker reads it
-// before any region exists and prints "FixB13: mode=<0|1>" once per process.
+// Track F, F24c (HPP-662, ROADMAP s122 item 595(d)): knob KYTY_FIX_B13, read once per process. At 1
+// RegionManager::ChangeState<Cpu, true> publishes the region epoch and the bdabits bit BEFORE the global CPU epoch (B13: with
+// the global epoch first, a BDA scan that read the new global epoch could read the old region stamp, skip the region and
+// remember the new global epoch). The constructor of MemoryTracker reads it before any region exists and prints
+// "FixB13: mode=<0|1>" once per process.
+// Track F, FS9a (HPP-671, ROADMAP s122 item 604(d)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any other
+// value as EnvValueOn (the form of FS4a 17adaf80).
 [[nodiscard]] inline bool FixB13Enabled() noexcept {
-	static const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_B13"));
+	static const bool on = [] {
+		const char* value = std::getenv("KYTY_FIX_B13");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	return on;
 }
 

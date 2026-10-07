@@ -1,0 +1,2 @@
+C:/kyty/f287/f24e/rec_b13_v.mp4: 10748 frames 960x540, index entries 10748
+one-frame glitches: 0

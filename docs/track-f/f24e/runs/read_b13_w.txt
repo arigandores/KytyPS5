@@ -1,0 +1,31 @@
+F24E b13_w form w level underwater_aerial_garden log sha256 161297a42576188350df1b3e559011bc2c4e52ea4c4ec642010966c571092b78 lines 2422664 stdout sha256 d08062b9eb168417c29da5b8add459369c3a84a86e795ccc43ac196740ea678b
+  binary: tag 91f155b70f867124781a687b0d86442f45abed90e33d4b9e749d296ccfa63e2f (expected 91f155b70f867124781a687b0d86442f45abed90e33d4b9e749d296ccfa63e2f); version string KytyPS5-2026-09-15-6a2987a-1899-gfbae3a68 in the binary: YES; installed before b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a after b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (expected b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a); revision texts [('log', 723, 'fbae3a6')]
+  env of the tag (KYTY_FIX_*, VK_LAYER_*, forbidden keys): {'KYTY_FIX_B13': '1', 'VK_LAYER_DUPLICATE_MESSAGE_LIMIT': '100000000', 'VK_LAYER_PATH': 'C:/VulkanSDK/1.4.357.0/Bin'}; offending []
+  FixB13 lines 1, first [(719, 1)] (first GuestOut line 12495)
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']; state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-07T04:27:38Z
+  entry line 224441; scene change line None; first scene frame n 192; hold (sum dt after it) 324.1 s; frames >= 1 s after it 0 (max dt_us 386328)
+  REF frame time after the first scene frame (item 603 (b)(3) N3: reference, not a member): frames 2495, mean dt_us 129913.7
+  death markers: 0 []; emulator stdout present
+  exit: outcome ok hold_exit None hold_s 310.1 close_posted 5 close_rc 0 close_killed False close_s 3.9; exit code 0 (0x00000000) (REPORT row)
+  layer: [Vulkan][E] 0, [Vulkan][W] 925085, limit lines 0, DualSrcBlend lines [(78, 1, 1)]
+  _SaveData manifest (REPORT row, not a gate): before 2 files, after the tag (before the return) 2 files, equal YES, differing []
+  window: none, Recovering Vulkan swapchain 0; GamePatch lines 0; AsyncPipelines: skipped draw 0; rebuild skipped lines 1 (reference)
+  frames >= 1 s after the first scene frame under the layer: 0 (REPORT, not a gate)
+  manifest: manifest cmp EQUAL files 4788 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+  REF revision text names fbae3a6: YES
+  REF translation cache directory variant_fixb26_fixb1b_fixf10_fixf19 in every line: YES
+  ROW binary sha256 of the tag = 91f155b7 (F24c copy): YES
+  ROW version string ...-1899-gfbae3a68 in the tag binary: YES
+  ROW installed b3cee576 before the tag: YES
+  ROW installed b3cee576 after the return: YES
+  ROW env = form w: KYTY_FIX_B13=1, other defaults of the binary, W layer form of s18_w2: YES
+  ROW FixB13: mode=1 (every line) before the first GuestOut: YES
+  ROW entered (Level has started: underwater_aerial_garden, outcome ok): YES
+  ROW the process lived to the end of the hold (outcome ok, hold_exit null, hold_s >= 310): YES
+  ROW 0 death markers (log and stdout): YES
+  ROW 0 [Vulkan][E]: YES
+  ROW 0 limit lines of the layer: YES
+  ROW positive control of the layer: [Vulkan][W] > 0 and DualSrcBlend: supported=1 enabled=1 before the first GuestOut: YES
+  ROW no VALIDATION_STOP ([Vulkan][E] and the process did not live to the end of the hold): YES
+  ROW manifest of the caches, seeds, saves and GLCache before = after the return: YES
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch line (else not read as an outcome, question to the lead): YES

@@ -1,0 +1,18 @@
+2026-10-07T04:19:42Z F24e go_f24e b13_v run check (item 587 (g)): RUN ALIVE 92512eee status in_progress
+2026-10-07T04:19:42Z F24e go_f24e b13_v lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-07T04:19:42Z F24e go_f24e b13_v installed binary inside the lock before the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T04:19:45Z F24e go_f24e b13_v manifest before: manifest C:/kyty/f287/f24e/runs/b13_v/manifest_before.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+2026-10-07T04:19:47Z F24e go_f24e b13_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (235/184/5/661/130/ MB)
+2026-10-07T04:19:48Z F24e go_f24e b13_v state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-07T04:19:48Z
+2026-10-07T04:19:48Z F24e go_f24e b13_v installed the F24c test copy for the tag: 91f155b70f867124781a687b0d86442f45abed90e33d4b9e749d296ccfa63e2f
+2026-10-07T04:19:48Z F24e go_f24e b13_v enter_scene start (level underwater_aerial_garden, form v, SD 300, --timeout 480 --rec --hold 330, KYTY_FIX_B13=1 )
+2026-10-07T04:25:53Z F24e go_f24e b13_v enter_scene rc 0; guard watch: 2026-10-07T04:25:53Z watch end, user process seen: no
+2026-10-07T04:25:53Z F24e go_f24e b13_v run: VERDICT: underwater_aerial_garden in 18.4 s - PASS (acceptance <= 90 s)
+2026-10-07T04:25:54Z F24e go_f24e b13_v log_b13_v.txt sha256 44374a71872a18deda226266d85910acdae4d915411fb863d6c8e0fa630f3aab
+2026-10-07T04:25:54Z F24e go_f24e b13_v installed binary returned from the pinned S18 copy
+2026-10-07T04:25:54Z F24e go_f24e b13_v installed binary after the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T04:25:57Z F24e go_f24e b13_v manifest of the run state (before the return): manifest C:/kyty/f287/f24e/runs/b13_v/manifest_run.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3; run vs before: manifest cmp EQUAL files 4788 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+2026-10-07T04:25:58Z F24e go_f24e b13_v caches, seeds, saves and GLCache returned
+2026-10-07T04:26:00Z F24e go_f24e b13_v manifest after: manifest C:/kyty/f287/f24e/runs/b13_v/manifest_after.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3; cmp: manifest cmp EQUAL files 4788 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+2026-10-07T04:26:00Z F24e go_f24e b13_v lock released (rc 0)
+rc=0

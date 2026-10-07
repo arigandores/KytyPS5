@@ -1,0 +1,18 @@
+2026-10-07T04:27:33Z F24e go_f24e b13_w run check (item 587 (g)): RUN ALIVE 92512eee status in_progress
+2026-10-07T04:27:33Z F24e go_f24e b13_w lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-07T04:27:34Z F24e go_f24e b13_w installed binary inside the lock before the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T04:27:36Z F24e go_f24e b13_w manifest before: manifest C:/kyty/f287/f24e/runs/b13_w/manifest_before.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+2026-10-07T04:27:38Z F24e go_f24e b13_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (235/184/5/661/130/ MB)
+2026-10-07T04:27:38Z F24e go_f24e b13_w state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-07T04:27:38Z
+2026-10-07T04:27:39Z F24e go_f24e b13_w installed the F24c test copy for the tag: 91f155b70f867124781a687b0d86442f45abed90e33d4b9e749d296ccfa63e2f
+2026-10-07T04:27:39Z F24e go_f24e b13_w enter_scene start (level underwater_aerial_garden, form w, SD 100, --timeout 900 --emu-arg=--vulkan-validation --emu-arg=true --hold 310, KYTY_FIX_B13=1 VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000)
+2026-10-07T04:33:31Z F24e go_f24e b13_w enter_scene rc 0; guard watch: 2026-10-07T04:33:31Z watch end, user process seen: no
+2026-10-07T04:33:31Z F24e go_f24e b13_w run: VERDICT: underwater_aerial_garden in 28.0 s - PASS (acceptance <= 90 s)
+2026-10-07T04:33:32Z F24e go_f24e b13_w log_b13_w.txt sha256 161297a42576188350df1b3e559011bc2c4e52ea4c4ec642010966c571092b78
+2026-10-07T04:33:33Z F24e go_f24e b13_w installed binary returned from the pinned S18 copy
+2026-10-07T04:33:33Z F24e go_f24e b13_w installed binary after the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T04:33:35Z F24e go_f24e b13_w manifest of the run state (before the return): manifest C:/kyty/f287/f24e/runs/b13_w/manifest_run.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3; run vs before: manifest cmp EQUAL files 4788 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+2026-10-07T04:33:36Z F24e go_f24e b13_w caches, seeds, saves and GLCache returned
+2026-10-07T04:33:39Z F24e go_f24e b13_w manifest after: manifest C:/kyty/f287/f24e/runs/b13_w/manifest_after.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3; cmp: manifest cmp EQUAL files 4788 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+2026-10-07T04:33:39Z F24e go_f24e b13_w lock released (rc 0)
+rc=0

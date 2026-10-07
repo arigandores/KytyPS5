@@ -1,0 +1,43 @@
+PATCH OK
+TESTS PATCH OK
+DUMP PATCH OK
+rc=0 end 2026-10-07T03:31:19Z
+w6600 bytes=94751 close_ms=1.824 open_w_lines=0 t_lines_with_Sr_or_Sw=0
+w21000 bytes=65909 close_ms=6.133 open_w_lines=0 t_lines_with_Sr_or_Sw=0
+r2000_s11 bytes=403681 close_ms=9.093 open_w_lines=90 t_lines_with_Sr_or_Sw=0
+r2000_s12 bytes=403710 close_ms=8.941 open_w_lines=90 t_lines_with_Sr_or_Sw=0
+r20000_s11 bytes=3307142 close_ms=110.101 open_w_lines=90 t_lines_with_Sr_or_Sw=0
+r20000_s15 bytes=3306831 close_ms=109.188 open_w_lines=90 t_lines_with_Sr_or_Sw=0
+r20000_open0 bytes=3291687 close_ms=109.436 open_w_lines=0 t_lines_with_Sr_or_Sw=0
+r500_s3 bytes=148471 close_ms=1.698 open_w_lines=40 t_lines_with_Sr_or_Sw=0
+m2000_kq9 bytes=415236 close_ms=9.384 open_w_lines=45 t_lines_with_Sr_or_Sw=90
+m20000_kq13 bytes=3310512 close_ms=107.773 open_w_lines=0 t_lines_with_Sr_or_Sw=90
+m300_kq1 bytes=116562 close_ms=1.663 open_w_lines=30 t_lines_with_Sr_or_Sw=0
+m300_kq40 bytes=116728 close_ms=2.247 open_w_lines=0 t_lines_with_Sr_or_Sw=90
+INDEX PATCH OK
+rc=0 end 2026-10-07T03:31:27Z
+w6600 bytes=94751 close_ms=1.468 open_w_lines=0 t_lines_with_Sr_or_Sw=0
+w21000 bytes=65909 close_ms=2.781 open_w_lines=0 t_lines_with_Sr_or_Sw=0
+r2000_s11 bytes=403681 close_ms=4.303 open_w_lines=90 t_lines_with_Sr_or_Sw=0
+r2000_s12 bytes=403710 close_ms=4.292 open_w_lines=90 t_lines_with_Sr_or_Sw=0
+r20000_s11 bytes=3307142 close_ms=20.382 open_w_lines=90 t_lines_with_Sr_or_Sw=0
+r20000_s15 bytes=3306831 close_ms=20.106 open_w_lines=90 t_lines_with_Sr_or_Sw=0
+r20000_open0 bytes=3291687 close_ms=19.961 open_w_lines=0 t_lines_with_Sr_or_Sw=0
+r500_s3 bytes=148471 close_ms=1.368 open_w_lines=40 t_lines_with_Sr_or_Sw=0
+m2000_kq9 bytes=415236 close_ms=5.635 open_w_lines=45 t_lines_with_Sr_or_Sw=90
+m20000_kq13 bytes=3310512 close_ms=20.147 open_w_lines=0 t_lines_with_Sr_or_Sw=90
+m300_kq1 bytes=116562 close_ms=1.560 open_w_lines=30 t_lines_with_Sr_or_Sw=0
+m300_kq40 bytes=116728 close_ms=1.779 open_w_lines=0 t_lines_with_Sr_or_Sw=90
+EQUAL m20000_kq13.txt 54f3e95077a5a7b7
+EQUAL m2000_kq9.txt 6fd39a83fdf43f72
+EQUAL m300_kq1.txt cf6119c0781423a7
+EQUAL m300_kq40.txt 48351e5bd382d603
+EQUAL r20000_open0.txt 44c5263456d6d7f2
+EQUAL r20000_s11.txt cb8bad6fcf4bd04e
+EQUAL r20000_s15.txt 9ecd700465fe5039
+EQUAL r2000_s11.txt 86c3d58bb15e7c21
+EQUAL r2000_s12.txt e9ff41c3766a2300
+EQUAL r500_s3.txt 63c9887995c40b89
+EQUAL w21000.txt f4ba8537481a128d
+EQUAL w6600.txt 918a5159717b18a6
+EQUIV OK

@@ -1,0 +1,26 @@
+track F link F25d (HPP-667): KYTY_DIAG_B32 F25 fix C1-C6 for the B36 / B40 series - kHist 4096, kWaitRing 65536, hist_exh, cover_us, kWLinesCap / kMustCap / kOthersCap 4096 / 256 / 256, w_cut_w, others_cut_w, flip_ns; the window close indexed (RC8 of F25c) (ROADMAP s122 items 596(v), 599(b)(8), (9), (11), (v))
+
+Measurement only; default KYTY_DIAG_B32=0 (at =0 the registry, rings and sampler are not created - the constants and
+the new fields are not executed); outside src/graphics/shader and SHADER_CACHE_EXTRA_FILES (translation signature
+unchanged). At KYTY_DIAG_B32=1:
+- C1 kHist 512 -> 4096 (a window up to (kHist - 1) x P = 20.475 s keeps its start); C2 kWaitRing 4096 -> 65536.
+- C3 hist_exh (and hist_exh_w): the window whose start the history ring no longer holds (also counted in ring_drop).
+- C4 cover_us at the end of the DiagB32: line - the flip minus the oldest sample of the window; C6 (item 599(b)(11))
+  flip_ns after it, the last field - the flip on the FrameStats::NowNs scale (TSC / calibrated cycles per ns, not QPC).
+- C5a kWLinesCap 64 -> 4096, C5b kMustCap 96 -> 256, C5g (item 599(b)(9)) kOthersCap 24 -> 256; C5v w_cut_w and
+  others_cut_w (others_cut_w last) at the end of the DiagB32-x: line after hist_exh, hist_exh_w.
+- RC8 of F25c (item 599(b)(8)): CloseWindow on 4 096 samples x 90 slots x 20 000 records took 110-121 ms with the
+  quadratic places of F20j4 (> 100 ms) - indexed: the open records matched to the closed ones by sorted keys, the
+  closure membership by a flag per record, NearestSnapshot over the samples with a snapshot only, RowOf / GidOf by a
+  slot -> row table. The same report text by construction; checked byte for byte on 12 bench inputs (equiv_f25d.sh).
+- Test hook Test::CloseWindowBench (tests only) and the marker KYTY_DIAG_B32_F25.
+Tests: diag_b32_tests 31 cases ALL OK (24 old - RC9: TestRing kWaitRing + 904, the -w cap kWLinesCap + 17, the caps
+kMustCap + 4 / kOthersCap + 6, expectations of the old form; 7 new: E1 / E2, 150 mandatory, windows 6.6 s / 21 s,
+20 000 records, the -x tail identity on 3 windows, the windows through CloseWindow, the CloseWindow time - median
+4.65 ms at 2 000 and 19.6 ms at 20 000 records). Negative control on f2307b02: the 24 old cases pass, the F25 cases
+fail 11 checks (E1, E2, lines_cut 54, ring 512, ring_drop 15904).
+
+WIP: not run by the game; review F25e (HPP-668) pending; the series binary B (S18 0005e11f + 5 KYTY_DIAG_B32 commits +
+this) is a test binary, not shipped.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

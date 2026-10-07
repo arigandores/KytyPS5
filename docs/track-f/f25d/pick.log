@@ -1,0 +1,39 @@
+Auto-merging src/graphics/presentation/window/window.cpp
+[detached HEAD edf3454a] track F link F20j (HPP-629): KYTY_DIAG_B32 (default 0, measurement only) and the stand KYTY_TEST_B32 - ROADMAP s122 item 550(v),(z), design F20g s2 with RC1-RC15 of F20h
+ Date: Mon Oct 5 18:42:20 2026 +0200
+ 19 files changed, 2690 insertions(+)
+ create mode 100644 src/common/diagB32.cpp
+ create mode 100644 src/common/diagB32.h
+ create mode 100644 tests/DiagB32Tests.cpp
+picked 875720c5 -> edf3454a390c580400ab1099bc5feb3223e8462c
+[detached HEAD acc9f3da] track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32=0 a site's End is one test of the stack object's flag, no call (ROADMAP s122 item 550(z)(1))
+ Date: Mon Oct 5 18:55:59 2026 +0200
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+picked 0df13a66 -> acc9f3da7d5065f7715cc16b13d6cdd87f5c6872
+[detached HEAD dd9a1e17] track F link F20j2 (HPP-633): KYTY_DIAG_B32 by the review F20k RC1-RC7 (ROADMAP s122 item 552(v)(1)-(7), (d))
+ Date: Mon Oct 5 19:55:45 2026 +0200
+ 7 files changed, 631 insertions(+), 76 deletions(-)
+picked 61b410bf -> dd9a1e17c494a2ea5a0e4e62e7f7fe15e5ffb359
+Auto-merging src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+Auto-merging src/graphics/presentation/window/window.cpp
+[detached HEAD dcfe3b58] track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on the host waits of the emulator with waker and peer, M5 off the sampler thread, ring_hold (ROADMAP s122 item 574(g)(1)-(6))
+ Date: Tue Oct 6 09:29:09 2026 +0200
+ 56 files changed, 1431 insertions(+), 160 deletions(-)
+picked 9db7938b -> dcfe3b58ec32ed9cdf4f76bf79b148b884ff74a4
+[detached HEAD 3d1e0045] track F link F20j4 (HPP-652): KYTY_DIAG_B32 review fixes RC1-RC5 of F20k3 - one rec_wait mark over the Reserve loop, TrackedMutex owner cleared at unlock and no own-slot peer, M5 time charged to its window, no W:emu_mutex under an H mark, EMU_WAIT kinds by who clears the wait and emu_join (ROADMAP s122 item 581(v)(1)-(5))
+ Date: Tue Oct 6 10:55:05 2026 +0200
+ 5 files changed, 507 insertions(+), 39 deletions(-)
+picked f2307b02 -> 3d1e00456bd1eac68e9ef28f900289181b85dd23
+--- git cherry 0005e11f..f2307b02 against wt HEAD
+- 875720c5f9763031515311f2c0fc5b76a2c91180 track F link F20j (HPP-629): KYTY_DIAG_B32 (default 0, measurement only) and the stand KYTY_TEST_B32 - ROADMAP s122 item 550(v),(z), design F20g s2 with RC1-RC15 of F20h
+- 0df13a665a68434fd3b8bca2849d2b41c34b561a track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32=0 a site's End is one test of the stack object's flag, no call (ROADMAP s122 item 550(z)(1))
+- 61b410bf901a740a0d424a2d11e9009c474d2396 track F link F20j2 (HPP-633): KYTY_DIAG_B32 by the review F20k RC1-RC7 (ROADMAP s122 item 552(v)(1)-(7), (d))
+- 9db7938baa46814e589a76dffd4e2fc571ede584 track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on the host waits of the emulator with waker and peer, M5 off the sampler thread, ring_hold (ROADMAP s122 item 574(g)(1)-(6))
+- f2307b02258f68ba40b9f779f585d2406e1f28de track F link F20j4 (HPP-652): KYTY_DIAG_B32 review fixes RC1-RC5 of F20k3 - one rec_wait mark over the Reserve loop, TrackedMutex owner cleared at unlock and no own-slot peer, M5 time charged to its window, no W:emu_mutex under an H mark, EMU_WAIT kinds by who clears the wait and emu_join (ROADMAP s122 item 581(v)(1)-(5))
+--- shortstat 0005e11f..HEAD vs 302347b4..f2307b02
+ 64 files changed, 5109 insertions(+), 118 deletions(-)
+ 64 files changed, 5109 insertions(+), 118 deletions(-)
+--- tree
+f09de1b76bd9cd7e331d2e7fbe80457d0df499c0
+--- diag files equal to f2307b02 (empty = equal)
+PICK OK

@@ -1,0 +1,29 @@
+MISS 0 f2307b02:src/common/diagB32.h 'constexpr uint32_t kHist          = 4096;      // per-slot history ring: 4096 samples x 5 ms = 20.48 s (F25 C1)'
+MISS 0 f2307b02:src/common/diagB32.h 'constexpr uint32_t kWaitRing      = 65536;     // F25 C2'
+MISS 0 f2307b02:src/common/diagB32.h 'constexpr uint32_t kOthersCap     = 256;       // RC2: the cap applies only to the non-mandatory -t lines (F25 C5g)'
+MISS 0 f2307b02:src/common/diagB32.h 'constexpr uint32_t kMustCap       = 256;       // a mandatory -t line beyond this is cut and counted in lines_cut (F25 C5b)'
+MISS 0 f2307b02:src/common/diagB32.h 'constexpr uint32_t kWLinesCap     = 4096;      // F25 C5a'
+MISS 0 f2307b02:src/common/diagB32.h '#define KYTY_DIAG_B32_F25 1'
+MISS 0 f2307b02:src/common/diagB32.h '\tuint64_t hist_exh     = 0;'
+MISS 0 f2307b02:src/common/diagB32.h '\tuint64_t cover_us     = 0;'
+MISS 0 f2307b02:src/common/diagB32.h 'BenchOut CloseWindowBench(const BenchIn& in);'
+MISS 0 f2307b02:src/common/diagB32.cpp '\t\tfor (const size_t j: snaps) {'
+MISS 0 f2307b02:src/common/diagB32.cpp 'class RowIndex {'
+MISS 0 f2307b02:src/common/diagB32.cpp '\tstd::vector<char> in_must(r.waits.size(), 0);'
+MISS 0 f2307b02:src/common/diagB32.cpp '\t       " cover_us=%llu flip_ns=%llu\\n", // F25d (items 596(v) C4, 599(b)(11) C6): flip_ns - the FrameStats::NowNs scale, last'
+MISS 0 f2307b02:src/common/diagB32.cpp '\t       " ring_hold=%llu ring_hold_w=%llu hist_exh=%llu hist_exh_w=%llu w_cut_w=%llu others_cut_w=%llu\\n",'
+MISS 0 f2307b02:src/common/diagB32.cpp '\tbase.hist_exh  = hist_exh;   // F25d C3'
+MISS 0 f2307b02:src/common/diagB32.cpp '\t\tm_c.hist_exh++;  // F25d (item 596(v), C3): the same event, its own counter'
+MISS 0 f2307b02:src/common/diagB32.cpp '\tr.cover_us     = times.empty() ? 0 : (flip_ns - times.front()) / 1000u; // F25d (item 596(v), C4)'
+MISS 0 f2307b02:src/common/diagB32.cpp '\t\tstd::vector<std::pair<int32_t, uint64_t>> keys;'
+MISS 0 f2307b02:src/common/diagB32.cpp 'BenchOut CloseWindowBench(const BenchIn& in) {'
+`f2307b02:src/common/diagB32.cpp:2046` (якорь «g_reg  = new Core::Registry;»; +1 — «g_ring = new Core::WaitRing;»)
+`f2307b02:src/common/frameStats.cpp:201` (якорь «uint64_t NowNs() {»; +1 — «#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS»)
+`f2307b02:src/common/frameStats.cpp:207` (якорь «return static_cast<uint64_t>(static_cast<double>(__rdtsc()) / cycles_per_ns);»; +1 — «}»)
+`f2307b02:src/common/frameStats.cpp:145` (якорь «double TscCyclesPerNs() {»; +1 — «static const double cycles_per_ns = [] {»)
+`f2307b02:src/common/frameStats.cpp:150` (якорь «while (Qpc() - q0 < f / 50) {»; +1 — «}»)
+MISS 0 f2307b02:tests/DiagB32Tests.cpp '\tconstexpr uint32_t kN = kWaitRing + 904; // F25d RC9: was 5000 at kWaitRing 4096'
+MISS 0 f2307b02:tests/DiagB32Tests.cpp '\t\tCHECK(c.w_cut == (kWLinesCap + 17) - kWLinesCap);'
+MISS 0 f2307b02:tests/DiagB32Tests.cpp '\t\tconstexpr int kMust = static_cast<int>(kMustCap) + 4;'
+MISS 0 f2307b02:tests/DiagB32Tests.cpp 'static void TestF25CloseTime() {'
+FAILED

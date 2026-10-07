@@ -1,0 +1,4 @@
+e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4 *kyty_emulator_e342b839.exe
+version KytyPS5-2026-09-15-6a2987a-1903-g35b454c6
+source 35b454c66db81443b94be689b6e45f2146cf5b1f (worktree C:/kyty/f287/f25d/wt = S18a2 0005e11f + 875720c5, 0df13a66, 61b410bf, 9db7938b, f2307b02 cherry-picked + F25d)
+shader signature 9177b4267de1fb8bac7d1113afd8733210addfac (= S18)

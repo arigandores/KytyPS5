@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/f25f/runs/f25_pc/sheet_f25_pc.png frames 16657 step 347 tiles 8x6

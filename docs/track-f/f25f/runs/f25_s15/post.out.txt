@@ -1,0 +1,63 @@
+tag f25_s15 (form f25_s15, kind series, level pot_treasure_cave)  reader sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf  f20e_read sha256 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa  theta 0.4562
+  ADMISSION PASS; STATUS ADMITTED; warm member True
+    [ok] tag json present
+    [ok] theta_load from the seal C:/kyty/f287/f25f/pred/f25f_seal.md (0.4562)
+    [ok] json binary_sha256 = binary B e342b839 (e342b839d74d5689)
+    [ok] installed before = after = S18 b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (b3cee576138a1553 / b3cee576138a1553)
+    [ok] json prereg sha256 = seal sha256 (3be83a68ec5415be / 3be83a68ec5415be)
+    [ok] env: harness constants + form [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')] (extra [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')])
+    [ok] KYTY_GPU_HANG_ABORT_S = 22 (22)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl of the tag level (-lvl pot_treasure_cave; fixed None; harness pot_treasure_cave)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] scene entered (first scene frame 191)
+    [ok] hold: scene >= 300 s (332.851 s) or GpuHangAbort after >= 10 s of the scene (None)
+    [ok] no death marker other than GpuHangAbort ([])
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0
+    [ok] DiagB32 mode line present (1)
+    [ok] no DiagB32 config invalid line
+    [ok] translation signature 9177b426 (= S18) and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] TestB32 lines none ([])
+    [ok] rep_drop 0 (0)
+    [ok] no loader (None)
+    [ok] caches before = snapshot of the form (manifest cmp EQUAL files 4806 listsha 3b64fd13e3b7)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4806 listsha 3b)
+  binary e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4; installed during the tag e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4; translation signature 9177b4267de1fb8bac7d1113afd8733210addfac
+  scene: first_n 191, frames 13458, scene 332.9 s, hold True (abort hold False); DiagB32 lines 46599 (windows 181, bad prefix 0, dup 0)
+  abort None; death markers []; replay rebuild skipped lines 1
+  RC13: F20c attribution with = without DiagB32 lines (46599 stripped): EQUAL
+  warm: dump frames (start >= 10 s) 0 []; program hashes []
+  K_I 1; K 1; K2 frames not attributed 7; in count 3; INSTR_MADE_K2 4
+  hold class (longest frame in count): HOST_LOAD; family HOST_LOAD; form FORM_SEM; all frames in count M6_BURST True
+  M6: samples 135, foreign max 23.43; calibration {'offset': -11030520262, 'n': 11100, 'pairs': 181, 'second_minus_min_ms': 0.239, 'note': ''}
+    FRAME n 3655 dt_us 144912 t 65.4 s attr nothing | key 3655(n) win 144837 instr 35953 cover 139497 sgap 8465 | E 127736.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.0775
+    FRAME n 3778 dt_us 533754 t 67.7 s attr nothing | key 3778(n) win 533802 instr 57418 cover 532459 sgap 9637 | E 516532.0 holder flip | UNMARKED:Present ref | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.0622
+    FRAME n 3912 dt_us 582079 t 70.7 s attr nothing | key 3912(n) win 582024 instr 95306 cover 578038 sgap 11023 | E 564754.5 holder flip | UNMARKED:Present ref | DrawThread(guest)=W:emu_mutex->waker > Present(Present)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.0671
+    FRAME n 3969 dt_us 209352 t 72.3 s attr nothing | key 3969(n) win 209293 instr 21042 cover 204154 sgap 9773 | E 192533.5 holder flip | UNMARKED:Present ref | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.091
+    FRAME n 4088 dt_us 101950 t 74.7 s attr nothing | key 4088(n) win 102015 instr 5928 cover 100259 sgap 10707 | E 84442.0 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.0527
+    FRAME n 11090 dt_us 1409870 t 220.4 s attr prio only | key 11090(n) win 1409904 instr 233735 cover 1407879 sgap 15656 | E 1353803.5 holder None | HOST_LOAD IN COUNT SHARED_WIN |  |  | FORM_SEM | M6_BURST True | next instr 200508 load 0.9881
+    FRAME n 11099 dt_us 1953448 t 226.6 s attr prio only | key 11099(n) win 1953474 instr 412311 cover 1952086 sgap 16100 | E 1897381.5 holder None | HOST_LOAD IN COUNT SHARED_WIN |  |  | FORM_SEM | M6_BURST True | next instr 356003 load 0.9783
+    FRAME n 11100 dt_us 1496296 t 228.5 s attr prio only | key 11100(n) win 1496315 instr 356003 cover 1491841 sgap 17179 | E 1440229.5 holder None | HOST_LOAD IN COUNT |  |  | FORM_SEM | M6_BURST True | next instr 200369 load 0.9715
+    FRAME n 11101 dt_us 1128840 t 230.0 s attr prio only | key 11101(n) win 1128981 instr 200369 cover 1127095 sgap 17196 | E 1072773.5 holder None | HOST_LOAD INSTR_MADE_K2 |  |  | FORM_SEM | M6_BURST True | next instr 94226 load 0.9792
+C:/kyty/f287/f25f/rec_f25_s15.mp4: 13659 frames 960x540, index entries 13659
+one-frame glitches: 0
+reader f25_read.py sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf
+SERIES over C:/kyty/f287/f25f\runs (tags read 21)
+BUDGET tags read 21 of 66; interference + NOT WARM 0 of 6
+CONTROL f25_z1 PASS (f25_z1)
+CONTROL f25_z2 PASS (f25_z2)
+CONTROL f25_pb PASS (f25_pb)
+CONTROL f25_pc PASS (f25_pc)
+CONTROLS PASS
+PREWARM f25_c1 (f25_c1, reference): K2 not attributed 0, in count 0, class None; B5 frames 1 armed 1
+PREWARM f25_c2 (f25_c2, reference): K2 not attributed 0, in count 0, class None; B5 frames 1 armed 0
+LEVEL pot_treasure_cave N 8 K 1 K_I 1; N_nw 0 K_nw 0; STOP RULE CONTINUE (K 1 at N 8 - up to K 3 or N 20)
+  CLASSES [('HOST_LOAD', 1)]; (i) NO_SAMPLES* + UNMARKED + UNDETERMINED 0.0; (iii) host 1.0; top ('HOST_LOAD', 1) [reference - the reading is F25g]
+LEVEL bonus_path_maker_mix N 7 K 0 K_I 0; N_nw 0 K_nw 0; STOP RULE CONTINUE (K 0 at N 7 - up to 14)
+U5(4) series tags with a bad window 0 [] (member >= 2): no
+COLD pot_treasure_cave: no tag
+COLD bonus_path_maker_mix: no tag
+NEXT see the levels; levels {'pot_treasure_cave': 'CONTINUE', 'bonus_path_maker_mix': 'CONTINUE'}

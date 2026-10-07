@@ -1,0 +1,339 @@
+{
+  "tag": "f25_s10",
+  "binary_sha256": "e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4",
+  "started": "2026-10-07T09:21:37",
+  "launched": "2026-10-07T09:15:47",
+  "finished": "2026-10-07T09:21:37",
+  "cmdline": [
+    "C:\\kyty\\KytyPS5\\ps5 em\\kyty_emulator.exe",
+    "--screen-width",
+    "1280",
+    "--screen-height",
+    "720",
+    "--user-name",
+    "Player",
+    "--user-id",
+    "1000",
+    "--present-mode",
+    "Fifo",
+    "--vblank-frequency",
+    "60",
+    "--console-language",
+    "1",
+    "--vulkan-validation",
+    "false",
+    "--shader-validation",
+    "false",
+    "--shader-optimization-type",
+    "Size",
+    "--shader-log-direction",
+    "File",
+    "--shader-log-folder",
+    "_Shaders",
+    "--command-buffer-dump",
+    "false",
+    "--command-buffer-dump-folder",
+    "_Buffers",
+    "--printf-direction",
+    "File",
+    "--printf-output-file",
+    "_kyty.txt",
+    "--spirv-debug-printf",
+    "false",
+    "--game",
+    "C:\\kyty\\KytyPS5\\ps5 em\\games\\PPSA21564-app"
+  ],
+  "env": {
+    "KYTY_FRAME_TRACE": "lite",
+    "KYTY_GPU_HANG_ABORT_S": "22",
+    "KYTY_GATE_FILE": "C:\\kyty\\f287\\f25f\\gates.req",
+    "KYTY_SAMPLE_GATE": "C:\\kyty\\f287\\f25f\\sample.req",
+    "KYTY_QUEUE_TRACE": "1",
+    "KYTY_GUEST_ARGS": "-lvl bonus_path_maker_mix",
+    "KYTY_REC": "C:\\kyty\\f287\\f25f\\rec_f25_s10.mp4",
+    "KYTY_GPU_CLOCK_PIN": "1",
+    "KYTY_GPU_MARKERS": "0",
+    "KYTY_GPU_WALL": "1",
+    "KYTY_DIAG_B32": "1"
+  },
+  "schedule": "",
+  "arms": [],
+  "phases": [],
+  "notes": "KYTY_GPU_TIME unset: the record thread stays live (PacketsWanted); guest command line: -lvl bonus_path_maker_mix; stable = 90 consecutive FrameTrace lines with draws >= 300; ran the already installed binary (--no-install)",
+  "pre_run": {
+    "gpu_util_median": 0.0,
+    "gpu_power_median": 18.5,
+    "gpu_memory_used_mib": 1190,
+    "gpu_sm_mhz_median": 1462.0,
+    "gpu_util_samples": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gpu_apps": [
+      {
+        "pid": 11352,
+        "name": "<app>"
+      },
+      {
+        "pid": 14696,
+        "name": "<app>"
+      },
+      {
+        "pid": 8048,
+        "name": "<app>"
+      },
+      {
+        "pid": 15168,
+        "name": "<app>"
+      },
+      {
+        "pid": 15264,
+        "name": "<app>"
+      },
+      {
+        "pid": 21572,
+        "name": "<app>"
+      },
+      {
+        "pid": 27352,
+        "name": "<app>"
+      },
+      {
+        "pid": 29484,
+        "name": "<app>"
+      },
+      {
+        "pid": 36324,
+        "name": "<app>"
+      },
+      {
+        "pid": 39708,
+        "name": "<app>"
+      },
+      {
+        "pid": 40112,
+        "name": "<app>"
+      },
+      {
+        "pid": 33516,
+        "name": "<app>"
+      },
+      {
+        "pid": 42076,
+        "name": "<app>"
+      },
+      {
+        "pid": 42896,
+        "name": "<app>"
+      },
+      {
+        "pid": 1972,
+        "name": "<app>"
+      },
+      {
+        "pid": 21988,
+        "name": "<app>"
+      },
+      {
+        "pid": 33612,
+        "name": "<app>"
+      }
+    ],
+    "host": {
+      "available": true,
+      "process_count": 352,
+      "top": [
+        {
+          "name": "<app>",
+          "pid": 37632,
+          "cpu_s": 4583.3,
+          "ws_mib": 1594.9
+        },
+        {
+          "name": "<app>",
+          "pid": 8048,
+          "cpu_s": 1152.0,
+          "ws_mib": 282.0
+        },
+        {
+          "name": "<app>",
+          "pid": 32708,
+          "cpu_s": 985.0,
+          "ws_mib": 15.1
+        },
+        {
+          "name": "<app>",
+          "pid": 42076,
+          "cpu_s": 894.2,
+          "ws_mib": 258.3
+        },
+        {
+          "name": "<app>",
+          "pid": 21988,
+          "cpu_s": 689.3,
+          "ws_mib": 836.4
+        },
+        {
+          "name": "<app>",
+          "pid": 13652,
+          "cpu_s": 530.6,
+          "ws_mib": 50.4
+        },
+        {
+          "name": "<app>",
+          "pid": 39708,
+          "cpu_s": 245.8,
+          "ws_mib": 231.5
+        },
+        {
+          "name": "<app>",
+          "pid": 1972,
+          "cpu_s": 167.5,
+          "ws_mib": 130.3
+        },
+        {
+          "name": "<app>",
+          "pid": 31376,
+          "cpu_s": 162.9,
+          "ws_mib": 302.5
+        },
+        {
+          "name": "<app>",
+          "pid": 27092,
+          "cpu_s": 132.8,
+          "ws_mib": 98.1
+        },
+        {
+          "name": "<app>",
+          "pid": 16272,
+          "cpu_s": 111.6,
+          "ws_mib": 150.3
+        },
+        {
+          "name": "<app>",
+          "pid": 14004,
+          "cpu_s": 106.1,
+          "ws_mib": 27.4
+        },
+        {
+          "name": "<app>",
+          "pid": 40112,
+          "cpu_s": 86.5,
+          "ws_mib": 12.8
+        },
+        {
+          "name": "<app>",
+          "pid": 39484,
+          "cpu_s": 70.5,
+          "ws_mib": 11.7
+        },
+        {
+          "name": "<app>",
+          "pid": 40224,
+          "cpu_s": 61.9,
+          "ws_mib": 53.1
+        },
+        {
+          "name": "<app>",
+          "pid": 9644,
+          "cpu_s": 55.9,
+          "ws_mib": 310.2
+        },
+        {
+          "name": "<app>",
+          "pid": 27352,
+          "cpu_s": 50.5,
+          "ws_mib": 11.0
+        },
+        {
+          "name": "<app>",
+          "pid": 28928,
+          "cpu_s": 47.6,
+          "ws_mib": 50.0
+        },
+        {
+          "name": "<app>",
+          "pid": 9140,
+          "cpu_s": 47.4,
+          "ws_mib": 5.8
+        },
+        {
+          "name": "<app>",
+          "pid": 33516,
+          "cpu_s": 46.2,
+          "ws_mib": 8.1
+        }
+      ],
+      "top_names": [
+        "<app>"
+      ],
+      "sampled_at": "2026-10-07T09:15:47"
+    },
+    "sampled_at": "2026-10-07T09:15:47"
+  },
+  "hold_gpu": {
+    "available": true,
+    "source": "gpuclk csv (nvidia-smi -lms 500)",
+    "hold_from": "2026/10/07 09:16:00.727",
+    "hold_to": "2026/10/07 09:21:30.896",
+    "rows": 647,
+    "util_rows": 647,
+    "gpu_util_median": 44.0,
+    "gpu_power_median": 82.7,
+    "gpu_util_max": 71.0,
+    "note": "a row, not a guard"
+  },
+  "prereg": {
+    "path": "C:\\kyty\\f287\\f25f\\pred\\f25f_seal.md",
+    "bytes": 30043,
+    "sha256": "3be83a68ec5415bed692d42877f41fce0ef8b341c24cdcaf5ba03c55fedba75e",
+    "mtime": "2026-10-07T06:42:36",
+    "ctime": "2026-10-07T06:42:36",
+    "mtime_ctime_delta_s": 0.0,
+    "read_at": "2026-10-07T09:15:44"
+  },
+  "attempts": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 37516,
+      "level": "bonus_path_maker_mix",
+      "guest_args": "-lvl bonus_path_maker_mix",
+      "document_s": 9.7,
+      "started_s": 11.4,
+      "stable_s": 12.9,
+      "stable_frame": 254,
+      "outcome": "ok",
+      "detail": null,
+      "hold_from": "2026/10/07 09:16:00.727",
+      "hold_to": "2026/10/07 09:21:30.896",
+      "ft_total": 16851,
+      "ft_tail": 249,
+      "ft_tail_span_s": 5.02,
+      "ft_window_s": 5.0,
+      "hold_exit": null,
+      "hold_s": 330.2,
+      "close_posted": 5,
+      "close_rc": 0,
+      "close_killed": false,
+      "close_s": 4.1,
+      "close_wait_s": 40,
+      "pipeline_cache_off": false
+    }
+  ],
+  "gates": "",
+  "schedule_period": 0,
+  "schedule_start": 0,
+  "guest_args": "-lvl bonus_path_maker_mix",
+  "hold_s": 330,
+  "ft_total": 16851,
+  "ft_tail": 249,
+  "ft_tail_span_s": 5.02,
+  "ft_window_s": 5.0,
+  "cpuclk_requested": true,
+  "gpuclk": "C:\\kyty\\f287\\f25f\\gpuclk_f25_s10.csv",
+  "cpuclk": null
+}

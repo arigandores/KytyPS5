@@ -1,0 +1,8 @@
+2026-10-07T09:52:48Z t=2.4 emu_t=- qpc_ns=56379667706400 game=0.00 loader=0.00 foreign=1.07 top=-
+2026-10-07T09:52:50Z t=4.2 emu_t=- qpc_ns=56381449139800 game=0.00 loader=0.00 foreign=0.83 top=-
+2026-10-07T09:52:52Z t=5.8 emu_t=- qpc_ns=56383094765500 game=0.00 loader=0.00 foreign=2.09 top=<app>:47016:0.99
+2026-10-07T09:52:53Z t=7.5 emu_t=3.693 qpc_ns=56384727427700 game=0.12 loader=0.00 foreign=1.31 top=<app>:47016:0.77
+2026-10-07T09:52:55Z t=9.5 emu_t=- qpc_ns=56386739949900 game=0.00 loader=0.00 foreign=0.84 top=-
+2026-10-07T09:52:57Z t=11.2 emu_t=- qpc_ns=56388435234000 game=0.00 loader=0.00 foreign=1.32 top=<app>:4:0.87
+2026-10-07T09:52:59Z t=12.8 emu_t=- qpc_ns=56390099295500 game=0.00 loader=0.00 foreign=0.44 top=-
+M6 end samples=7 foreign_max=2.09 foreign_mean=1.13 cal_lines=0

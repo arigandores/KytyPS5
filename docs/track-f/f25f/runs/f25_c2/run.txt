@@ -1,0 +1,17 @@
+prereg: f25f_seal.md  30043 bytes  sha256 3be83a68ec5415be  mtime 2026-10-07T06:42:36  mtime-ctime +0.000 s
+pre_run: host 328 processes, top by CPU: <app> 3677s, <app> 863s, <app> 845s, <app> 805s, <app> 596s, <app> 399s
+pre_run: GPU 0.0 % busy, 18.2 W, 1190 MiB used, SM 1477.0 MHz, 17 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f25f\cpuclk.py is not there
+--- attempt 1: launching
+8.7 s  LevelDocument Loaded: bonus_path_maker_mix
+10.8 s  Level has started: bonus_path_maker_mix
+12.9 s  scene stable at frame 340 (90 frames with draws >= 300)
+holding the run for 330 s
+hold end: ft_total 16851, ft_tail 252 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 4.0, 'close_wait_s': 40}
+hold_gpu: median 44.0 % busy over 647 rows (2026/10/07 07:02:13.209 .. 2026/10/07 07:07:43.210), a row, not a guard
+copied C:\kyty\f287\f25f\log_f25_c2.txt
+copied C:\kyty\f287\f25f\stdout_f25_c2.txt
+
+attempt 1  ok               document=8.7 s started=10.8 s stable=12.9 s 
+VERDICT: bonus_path_maker_mix in 12.9 s - PASS (acceptance <= 90 s)

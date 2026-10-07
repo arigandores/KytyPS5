@@ -1,0 +1,42 @@
+reader f25_read.py sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf
+SERIES over C:/kyty/f287/f25f\runs (tags read 31)
+BUDGET tags read 31 of 66; interference + NOT WARM 0 of 6
+CONTROL f25_z1 PASS (f25_z1)
+CONTROL f25_z2 PASS (f25_z2)
+CONTROL f25_pb PASS (f25_pb)
+CONTROL f25_pc PASS (f25_pc)
+CONTROLS PASS
+PREWARM f25_c1 (f25_c1, reference): K2 not attributed 0, in count 0, class None; B5 frames 1 armed 1
+PREWARM f25_c2 (f25_c2, reference): K2 not attributed 0, in count 0, class None; B5 frames 1 armed 0
+  pot_t f25_s01 (f25_s01) K 0 K_I 0 class None form None burst None | u5 0 | read eca6a10dd8312388
+  pot_t f25_s03 (f25_s03) K 0 K_I 0 class None form None burst None | u5 0 | read f82a62b0992a9527
+  pot_t f25_s05 (f25_s05) K 0 K_I 0 class None form None burst None | u5 0 | read 175c2dac46725e9e
+  pot_t f25_s07 (f25_s07) K 0 K_I 0 class None form None burst None | u5 0 | read 4eb09a4739e7bf32
+  pot_t f25_s09 (f25_s09) K 0 K_I 0 class None form None burst None | u5 0 | read fd91246f659ac117
+  pot_t f25_s11 (f25_s11) K 0 K_I 0 class None form None burst None | u5 0 | read a1cf1757974063bf
+  pot_t f25_s13 (f25_s13) K 0 K_I 0 class None form None burst None | u5 0 | read 895e4aa70463f516
+  pot_t f25_s15 (f25_s15) K 1 K_I 1 class HOST_LOAD form FORM_SEM burst True | u5 0 | read 37afe5aab599888f
+  pot_t f25_s17 (f25_s17) K 0 K_I 0 class None form None burst None | u5 0 | read 9cbaeea2d531965e
+  pot_t f25_s19 (f25_s19) K 0 K_I 0 class None form None burst None | u5 0 | read 24ddefe5b9ffb977
+  pot_t f25_s21 (f25_s21) K 0 K_I 0 class None form None burst None | u5 0 | read 4a177de5b529ced9
+  pot_t f25_s23 (f25_s23) K 0 K_I 0 class None form None burst None | u5 0 | read 751e2cd949550813
+  pot_t f25_s25 (f25_s25) K 0 K_I 0 class None form None burst None | u5 0 | read f14068a2e7e9c1af
+LEVEL pot_treasure_cave N 13 K 1 K_I 1; N_nw 0 K_nw 0; STOP RULE CONTINUE (K 1 at N 13 - up to K 3 or N 20)
+  CLASSES [('HOST_LOAD', 1)]; (i) NO_SAMPLES* + UNMARKED + UNDETERMINED 0.0; (iii) host 1.0; top ('HOST_LOAD', 1) [reference - the reading is F25g]
+  bonus f25_s02 (f25_s02) K 0 K_I 0 class None form None burst None | u5 0 | read 96afc2f81ec3bc02
+  bonus f25_s04 (f25_s04) K 0 K_I 0 class None form None burst None | u5 0 | read c2917dd45a97534e
+  bonus f25_s06 (f25_s06) K 0 K_I 0 class None form None burst None | u5 0 | read 3299e571424a6ef0
+  bonus f25_s08 (f25_s08) K 0 K_I 0 class None form None burst None | u5 0 | read a87b92e317f587f9
+  bonus f25_s10 (f25_s10) K 0 K_I 0 class None form None burst None | u5 0 | read 8d90d12059bb3db2
+  bonus f25_s12 (f25_s12) K 0 K_I 0 class None form None burst None | u5 0 | read 8ccdfbc560250457
+  bonus f25_s14 (f25_s14) K 0 K_I 0 class None form None burst None | u5 0 | read dcb5d8b919dac6b9
+  bonus f25_s16 (f25_s16) K 0 K_I 0 class None form None burst None | u5 0 | read f9d8f9d702bfe894
+  bonus f25_s18 (f25_s18) K 0 K_I 0 class None form None burst None | u5 0 | read 4f9c86c31c1da4f1
+  bonus f25_s20 (f25_s20) K 0 K_I 0 class None form None burst None | u5 0 | read c4b6824b1785c5c3
+  bonus f25_s22 (f25_s22) K 0 K_I 0 class None form None burst None | u5 0 | read c8e79c0260c794a5
+  bonus f25_s24 (f25_s24) K 0 K_I 0 class None form None burst None | u5 0 | read 8c7861fee09b21de
+LEVEL bonus_path_maker_mix N 12 K 0 K_I 0; N_nw 0 K_nw 0; STOP RULE CONTINUE (K 0 at N 12 - up to 14)
+U5(4) series tags with a bad window 0 [] (member >= 2): no
+COLD pot_treasure_cave: no tag
+COLD bonus_path_maker_mix: no tag
+NEXT see the levels; levels {'pot_treasure_cave': 'CONTINUE', 'bonus_path_maker_mix': 'CONTINUE'}

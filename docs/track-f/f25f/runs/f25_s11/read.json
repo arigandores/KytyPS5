@@ -1,0 +1,223 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "theta_load from the seal C:/kyty/f287/f25f/pred/f25f_seal.md (0.4562)",
+   true
+  ],
+  [
+   "json binary_sha256 = binary B e342b839 (e342b839d74d5689)",
+   true
+  ],
+  [
+   "installed before = after = S18 b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (b3cee576138a1553 / b3cee576138a1553)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (3be83a68ec5415be / 3be83a68ec5415be)",
+   true
+  ],
+  [
+   "env: harness constants + form [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')] (extra [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')])",
+   true
+  ],
+  [
+   "KYTY_GPU_HANG_ABORT_S = 22 (22)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl of the tag level (-lvl pot_treasure_cave; fixed None; harness pot_treasure_cave)",
+   true
+  ],
+  [
+   "hold option 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "scene entered (first scene frame 170)",
+   true
+  ],
+  [
+   "hold: scene >= 300 s (332.625 s) or GpuHangAbort after >= 10 s of the scene (None)",
+   true
+  ],
+  [
+   "no death marker other than GpuHangAbort ([])",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0",
+   true
+  ],
+  [
+   "DiagB32 mode line present (1)",
+   true
+  ],
+  [
+   "no DiagB32 config invalid line",
+   true
+  ],
+  [
+   "translation signature 9177b426 (= S18) and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "TestB32 lines none ([])",
+   true
+  ],
+  [
+   "rep_drop 0 (0)",
+   true
+  ],
+  [
+   "no loader (None)",
+   true
+  ],
+  [
+   "caches before = snapshot of the form (manifest cmp EQUAL files 4806 listsha 3b64fd13e3b7)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4806 listsha 3b)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4",
+ "control": null,
+ "f20e_read_sha256": "5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa",
+ "form": "f25_s11",
+ "kind": "series",
+ "level": "pot_treasure_cave",
+ "log": {
+  "K": 0,
+  "K_I": 0,
+  "P_I_K2": 0,
+  "abort": null,
+  "abort_hold": false,
+  "b5": [],
+  "b5_armed": 0,
+  "bad_names": [],
+  "cal": {
+   "n": 172,
+   "note": "",
+   "offset": -11163056771,
+   "pairs": 1,
+   "second_minus_min_ms": null
+  },
+  "death": [],
+  "diag_bad_prefix": 0,
+  "diag_lines": 179,
+  "diag_n": 1,
+  "dup": 0,
+  "first_n": 170,
+  "frames": [],
+  "frames_n": 18678,
+  "hold": true,
+  "hold_any": true,
+  "hold_burst": null,
+  "hold_class": null,
+  "hold_family": null,
+  "hold_form": null,
+  "in_count": 0,
+  "instr_made_k2": 0,
+  "invalid": [],
+  "level": "pot_treasure_cave",
+  "m6_foreign_max": 6.8,
+  "m6_samples": 244,
+  "med_dt": 16930.5,
+  "minimized": 0,
+  "mode": [
+   "DiagB32: mode=1 period_us=5000 print_us=100000 wait_rec_us=10000 kernel_after_us=40000 slots=256 hist=4096 wring=65536 ncpu=32 kstate=1 kq_us=4224 kq_budget_div=10 kq_near_us=60000"
+  ],
+  "rc13_equal": true,
+  "rc13_stripped": 179,
+  "recovering": 0,
+  "rep_drop": 0,
+  "replay_skipped": 1,
+  "scene_s": 332.625,
+  "sig": [
+   "9177b4267de1fb8bac7d1113afd8733210addfac"
+  ],
+  "slow70": 0,
+  "stand": null,
+  "test": [],
+  "u5_bad": [],
+  "u5_bad_n": 0,
+  "u5_excl": [],
+  "u5_h2": [],
+  "u5_tag": false,
+  "variant_dir": [
+   "variant_fixb26_fixb1b_fixf10_fixf19"
+  ],
+  "warm": true,
+  "warm_dump_frames": [],
+  "warm_dump_hashes": [],
+  "warm_dump_n": 0,
+  "x_last": {
+   "gap3p": 0,
+   "hist_exh": 0,
+   "hist_exh_w": 0,
+   "kq_fail": 0,
+   "lines_cut": 0,
+   "lines_cut_w": 0,
+   "n": 172,
+   "others_cut": 0,
+   "others_cut_w": 0,
+   "print_us": 0,
+   "rep_drop": 0,
+   "req_miss": 0,
+   "req_miss_w": 0,
+   "ring_drop": 0,
+   "ring_drop_w": 0,
+   "ring_hold": 0,
+   "ring_hold_w": 0,
+   "sgap_bad": 0,
+   "sgap_bad_w": 0,
+   "short_stalls": 0,
+   "slot_full": 0,
+   "slot_full_w": 0,
+   "slots": 84,
+   "sub_miss": 0,
+   "sub_miss_w": 0,
+   "torn": 0,
+   "torn_w": 0,
+   "w_cut": 0,
+   "w_cut_w": 0
+  }
+ },
+ "reader_sha256": "933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf",
+ "reading": "ADMITTED (no verdict; reading - F25g)",
+ "ref": {
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.0,
+  "installed_sha": "e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4",
+  "outcome": "ok",
+  "signature": "9177b4267de1fb8bac7d1113afd8733210addfac",
+  "video_index": 18858
+ },
+ "status": "ADMITTED",
+ "tag": "f25_s11",
+ "theta": 0.4562,
+ "warm_member": true
+}

@@ -1,0 +1,18 @@
+2026-10-07T08:12:47Z F25f go_f25f f25_s16 run check (item 587 (g)): RUN ALIVE cecdd2e4 status in_progress
+2026-10-07T08:12:47Z F25f go_f25f f25_s16 lock taken; level bonus_path_maker_mix; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-07T08:12:47Z F25f go_f25f f25_s16 installed binary inside the lock before the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T08:12:50Z F25f go_f25f f25_s16 manifest before: manifest C:/kyty/f287/f25f/runs/f25_s16/manifest_before.tsv files 4806 bytes 1262845576 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8
+2026-10-07T08:12:50Z F25f go_f25f f25_s16 caches before = snapshot B: manifest cmp EQUAL files 4806 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8
+2026-10-07T08:12:52Z F25f go_f25f f25_s16 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (235/184/5/664/130/ MB)
+2026-10-07T08:12:52Z F25f go_f25f f25_s16 installed the binary B copy for the tag: e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4
+2026-10-07T08:12:52Z F25f go_f25f f25_s16 enter_scene start (level bonus_path_maker_mix, SD 300, --rec, hold 330, KYTY_DIAG_B32=1, KYTY_GPU_WALL=1, KYTY_GPU_HANG_ABORT_S=22, M6 + calibration poller)
+2026-10-07T08:18:50Z F25f go_f25f f25_s16 enter_scene rc 0; guard watch: 2026-10-07T08:18:50Z watch end, user process seen: no; M6: M6 end samples=165 foreign_max=5.64 foreign_mean=1.42 cal_lines=16523
+2026-10-07T08:18:50Z F25f go_f25f f25_s16 run: VERDICT: bonus_path_maker_mix in 15.9 s - PASS (acceptance <= 90 s)
+2026-10-07T08:18:51Z F25f go_f25f f25_s16 log_f25_s16.txt sha256 4aeb63d79e70cc853751a47f27acded3e00046e93e52b426d3646661203620c2
+2026-10-07T08:18:52Z F25f go_f25f f25_s16 installed binary returned from the pinned S18 copy
+2026-10-07T08:18:52Z F25f go_f25f f25_s16 installed binary after the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T08:18:55Z F25f go_f25f f25_s16 manifest of the run state (before the return): manifest C:/kyty/f287/f25f/runs/f25_s16/manifest_run.tsv files 4806 bytes 1262845576 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8; run vs before: manifest cmp EQUAL files 4806 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8
+2026-10-07T08:18:56Z F25f go_f25f f25_s16 caches, seeds, saves and GLCache returned
+2026-10-07T08:18:58Z F25f go_f25f f25_s16 manifest after: manifest C:/kyty/f287/f25f/runs/f25_s16/manifest_after.tsv files 4806 bytes 1262845576 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8; cmp: manifest cmp EQUAL files 4806 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8
+2026-10-07T08:18:58Z F25f go_f25f f25_s16 lock released (rc 0)
+rc=0

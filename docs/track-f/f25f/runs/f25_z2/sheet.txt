@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/f25f/runs/f25_z2/sheet_f25_z2.png frames 17220 step 358 tiles 8x6

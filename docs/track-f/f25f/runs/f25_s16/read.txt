@@ -1,0 +1,41 @@
+tag f25_s16 (form f25_s16, kind series, level bonus_path_maker_mix)  reader sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf  f20e_read sha256 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa  theta 0.4562
+  ADMISSION PASS; STATUS ADMITTED; warm member True
+    [ok] tag json present
+    [ok] theta_load from the seal C:/kyty/f287/f25f/pred/f25f_seal.md (0.4562)
+    [ok] json binary_sha256 = binary B e342b839 (e342b839d74d5689)
+    [ok] installed before = after = S18 b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (b3cee576138a1553 / b3cee576138a1553)
+    [ok] json prereg sha256 = seal sha256 (3be83a68ec5415be / 3be83a68ec5415be)
+    [ok] env: harness constants + form [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')] (extra [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')])
+    [ok] KYTY_GPU_HANG_ABORT_S = 22 (22)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl of the tag level (-lvl bonus_path_maker_mix; fixed None; harness bonus_path_maker_mix)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] scene entered (first scene frame 330)
+    [ok] hold: scene >= 300 s (331.894 s) or GpuHangAbort after >= 10 s of the scene (None)
+    [ok] no death marker other than GpuHangAbort ([])
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0
+    [ok] DiagB32 mode line present (1)
+    [ok] no DiagB32 config invalid line
+    [ok] translation signature 9177b426 (= S18) and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] TestB32 lines none ([])
+    [ok] rep_drop 0 (0)
+    [ok] no loader (None)
+    [ok] caches before = snapshot of the form (manifest cmp EQUAL files 4806 listsha 3b64fd13e3b7)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4806 listsha 3b)
+  binary e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4; installed during the tag e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4; translation signature 9177b4267de1fb8bac7d1113afd8733210addfac
+  scene: first_n 330, frames 16194, scene 331.9 s, hold True (abort hold False); DiagB32 lines 1 (windows 0, bad prefix 0, dup 0)
+  abort None; death markers []; replay rebuild skipped lines 1
+  RC13: F20c attribution with = without DiagB32 lines (1 stripped): EQUAL
+  warm: dump frames (start >= 10 s) 0 []; program hashes []
+  K_I 0; K 0; K2 frames not attributed 0; in count 0; INSTR_MADE_K2 0
+  hold class (longest frame in count): None; family None; form None; all frames in count M6_BURST None
+  M6: samples 165, foreign max 5.64; calibration {'offset': None, 'pairs': 0, 'note': 'no window with flip_ns seen by the poller'}
+  B5 frames 0, armed (EMU_RUN:Gpu / EMU_CALL on GuestGpu) 0: []
+  U5 windows (dt_us <= 20475000): bad 0 []; excluded (> envelope) []; sgap_bad after a long close (reference) []
+  reference: median dt of the scene 17224.5, frames >= 70 ms after 10 s 1; unprintable names []; rep_drop 0
+  -x last None
+  REFERENCE: glitches 0, video index 16555, outcome ok, hold_exit None, hold_s 330.2
+  READING ADMITTED (no verdict; reading - F25g)

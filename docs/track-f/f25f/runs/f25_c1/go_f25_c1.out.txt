@@ -1,0 +1,17 @@
+2026-10-07T04:53:39Z F25f go_f25f f25_c1 run check (item 587 (g)): RUN ALIVE cecdd2e4 status in_progress
+2026-10-07T04:53:39Z F25f go_f25f f25_c1 lock taken; level pot_treasure_cave; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-07T04:53:39Z F25f go_f25f f25_c1 installed binary inside the lock before the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T04:53:45Z F25f go_f25f f25_c1 snapshot A taken before the first tag (item 596 (g)): SNAP TAKEN A files 4788 copy EQUAL
+2026-10-07T04:53:47Z F25f go_f25f f25_c1 manifest before: manifest C:/kyty/f287/f25f/runs/f25_c1/manifest_before.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+2026-10-07T04:53:48Z F25f go_f25f f25_c1 caches before = snapshot A: manifest cmp EQUAL files 4788 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+2026-10-07T04:53:48Z F25f go_f25f f25_c1 installed the binary B copy for the tag: e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4
+2026-10-07T04:53:48Z F25f go_f25f f25_c1 enter_scene start (level pot_treasure_cave, SD 300, --rec, hold 330, KYTY_DIAG_B32=1, KYTY_GPU_WALL=1, KYTY_GPU_HANG_ABORT_S=22, M6 + calibration poller)
+2026-10-07T04:59:47Z F25f go_f25f f25_c1 enter_scene rc 0; guard watch: 2026-10-07T04:59:47Z watch end, user process seen: no; M6: M6 end samples=255 foreign_max=2.75 foreign_mean=1.17 cal_lines=19216
+2026-10-07T04:59:47Z F25f go_f25f f25_c1 run: VERDICT: pot_treasure_cave in 13.9 s - PASS (acceptance <= 90 s)
+2026-10-07T04:59:48Z F25f go_f25f f25_c1 log_f25_c1.txt sha256 57629fbe33ec89527c9c9d644a7a697f6891335f4eef58ee4ee9dd05f63ddcfc
+2026-10-07T04:59:48Z F25f go_f25f f25_c1 installed binary returned from the pinned S18 copy
+2026-10-07T04:59:49Z F25f go_f25f f25_c1 installed binary after the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T04:59:51Z F25f go_f25f f25_c1 manifest after: manifest C:/kyty/f287/f25f/runs/f25_c1/manifest_after.tsv files 4797 bytes 1260657113 listsha f1112623c7c7494b871c4ed505ae98186a324584576a253cb662e898306999ca; cmp: manifest cmp DIFFER only-before 4 only-after 13
+2026-10-07T04:59:58Z F25f go_f25f f25_c1 NO RETURN (prewarm, item 596 (g)): snapshot C1 SNAP TAKEN C1 files 4797 copy EQUAL
+2026-10-07T04:59:58Z F25f go_f25f f25_c1 lock released (rc 0)
+rc=0

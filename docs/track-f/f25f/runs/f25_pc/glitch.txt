@@ -1,0 +1,2 @@
+C:/kyty/f287/f25f/rec_f25_pc.mp4: 16657 frames 960x540, index entries 16657
+one-frame glitches: 0

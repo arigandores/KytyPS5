@@ -1,0 +1,81 @@
+b32_pc     windows     2  max t_must  20  max t_lines  44  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 2, w_cut_d>0 2, ring_drop_w>0 0  sha256 41f768ce16ab24104b3da8202bc58dbdc938a2864562a7228a3e915930295ded
+b32_pd     windows     3  max t_must  22  max t_lines  46  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 3, w_cut_d>0 3, ring_drop_w>0 0  sha256 743eb6914de60b5d5bfd70ebafd3499ece28dd68d997bdcb32aa1a626221d16a
+b32_pd2    windows     1  max t_must  16  max t_lines  40  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 ead94c53f6391b4522815ea3160ec2fce62002b5635a776be40715b5e2f7b313
+b32_pp     windows     2  max t_must  22  max t_lines  46  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 2, w_cut_d>0 2, ring_drop_w>0 0  sha256 4c41494da414db3d31149c2b1a5079a7d94867e8df7bab1d64a3a83d9f1bcd77
+b32_z0     windows 0  sha256 c74e37f9e32a66f7fa2b5570290f3513c5443eb8e33d1b7327d6878787ff4ca7
+b32_pcb    windows     3  max t_must  21  max t_lines  45  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 3, w_cut_d>0 3, ring_drop_w>0 0  sha256 19c9dc129067a14cce4ceecbcd9714aeee7216d8a55a891b92e11cd297a41c71
+b32_ppb    windows     3  max t_must  19  max t_lines  43  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 3, w_cut_d>0 3, ring_drop_w>0 0  sha256 f6cff11d11629c657e5f5acc061cf206336217d37450b481fe7e032796e0f94d
+b32_z0b    windows 0  sha256 4d20ade2de85267d99aca47976f63fcddb1c19b1f66a7b36df24127f812d7a90
+b32_pa     windows    11  max t_must  17  max t_lines  41  max w_rec  266  windows with: lines_cut_w>0 0, others_cut_d>0 11, w_cut_d>0 10, ring_drop_w>0 1  sha256 8c26949af4006834e7fa0c54718e5f7090639bf4e48d55bf67e19be9f0e8d6e3
+b32_s01    windows     1  max t_must   8  max t_lines  32  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 d1d54fc52a41593f4f952e520187d08b2675474fe12e8869e77c6afcd5992235
+b32_s02    windows     2  max t_must  21  max t_lines  45  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 2, w_cut_d>0 2, ring_drop_w>0 0  sha256 e96e711e09b13e7ba3a0dab8d9f3e34234257fb47d429d97dad33dab4678e9d1
+b32_s03    windows     1  max t_must  19  max t_lines  43  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 ea695e11b2b9c1134722dc855648bbdbf5f2d30476d40d84f628d2fb3242a783
+b32_s04    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 e8b874ed959c2020e10f36074f529b1851149124e6d86b6f473d56057cd55210
+b32_s05    windows     2  max t_must  23  max t_lines  47  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 2, w_cut_d>0 2, ring_drop_w>0 0  sha256 258335fc4543ea5741b056f044ca01ad5f0a6af2c5336ec4da5bee5c889f990a
+b32_s06    windows     1  max t_must   9  max t_lines  33  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 43dd75ef2595ae2952ec384a550aac5f7bb9c9c4bd65177e3b156f7fd54dd929
+b32_s07    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 14606853cfa79560b1ad5f9e3c6449e4ecfb2e36e0801430e0c3a658d7dc8bed
+b32_s08    windows     1  max t_must  12  max t_lines  36  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 01f796839a536440cb8fea1b033878eb7a7d6e77297d1a3595f012f65bf4fe48
+b32_s09    windows     1  max t_must  19  max t_lines  43  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 2465d518d4ebe3140e38861f2e01fcae67bc665ae344668cf3735a49cef65116
+b32_s10    windows     1  max t_must  11  max t_lines  35  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 08b83e562cae1efd7d922464b1fe290fd04ae6fa10e0011d5886174701762b29
+b32_s11    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 d05c906f8cdc2649988ae2de8eca1122cc0a892e870fd784da28a5e33f98a5e2
+b32_s12    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 0a00fe5bae1a7e31e55848c8b6dcc54becc0046f62633532ccdca704cadab155
+b32_s13    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 00da739204df4dfb5c492a7ada820c622f3b94049941743fc14d749bd29b7bcd
+b32_s14    windows     1  max t_must  12  max t_lines  36  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 bc7a7a7ed268750866b8e5b90c518f76caa669a85c7f7b40794a39b0e84e767c
+b32_s15    windows     1  max t_must   9  max t_lines  33  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 e2608254e69f7fbdc74c67462a92d820c419d6d24df9914810dcec7a02882340
+b32_s16    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 ce27cf6e0ba85c896528ec90fbbc1424246da203aaf334a0054ffd3dd473184f
+b32_s17    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 8cb5823faca163593287ed6fee35be4ff333a7d2f6a6fd35e92470297c8bb419
+b32_s18    windows     1  max t_must  18  max t_lines  42  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 14b7809904b1659269cf77b3a5e3df1590724d9d29782b3c1a4d5b008d3e0d10
+b32_s19    windows     1  max t_must  18  max t_lines  42  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 8256e0715eb1cf61dbf56a298f950683e2976d0d63fcba0b0e51c58dfa1b0f83
+b32_s20    windows     1  max t_must  11  max t_lines  35  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 78dfb5d29f5e2d01085890e5cc0da05049f5c49b56b0dc14344fb3e0fccc03e4
+b32_s21    windows     1  max t_must  13  max t_lines  37  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 e19e076272ac819b47fbcdbbc7b625bf4ea30b07aaa790f950656199a49c8c22
+b32_s22    windows     1  max t_must   8  max t_lines  32  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 0f9a7d937a40d89207f37cb888c2952b7db273e78b158110ef165f7e1724f22d
+b32_s23    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 b6c02d14a7070f8f01fe72df49e6de9840416bd2dc384874f71f1acb84bb65d1
+b32_s24    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 d485df174ef63ba874d44f4b990be187d2881f77b84fe9c7b90b7592b062cc25
+b32_s25    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 a3f0045a0bf70743a39e176d35bd64acb0d685e5827af0b82ddf3e75257a77a0
+b32_s26    windows     1  max t_must  20  max t_lines  44  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 03babbcf053fd19b36888b356bbbdddd66e6e7e21f93de37b96bc14c5b0ef555
+b32_s27    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 8867ba19f24080969ba8e9988ee6ca65a0503b4af629950be52162f3d91a8ce9
+b32_s28    windows     1  max t_must  10  max t_lines  34  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 1, w_cut_d>0 1, ring_drop_w>0 0  sha256 b5bdd0309a8a8aa3ac65a805bcc1f043c42b56a54da73e001502e99dedaa034a
+b32_s29    windows     2  max t_must  24  max t_lines  48  max w_rec   64  windows with: lines_cut_w>0 0, others_cut_d>0 2, w_cut_d>0 2, ring_drop_w>0 0  sha256 c886c6e41e7a0c7902ccee5b1d3ec4f4ff73f679a2fc43c237bfc788929cc30d
+b32_z0c1   windows 0  sha256 65d0a0abc2d2380738be720e9d18520c7a7be5ac71e11591f24d61e90d655d30
+b32_z0c2   windows 0  sha256 d2d27d8d5b59d825936c4571e5f0ffe1b9a5e88a80dc7d71142f170086ce306c
+b32_z0c3   windows 0  sha256 4d9712f2e6863df0a9e6a489b7bfae4301acbb7f4c53a95aba5c15216caafc77
+b32_z0c4   windows 0  sha256 e1c11b7a433ec122b17fce01c7abaa4ef23aceb24246c4244f471ef978d1630d
+b32_z0c5   windows 0  sha256 cedcca34bf30bab3bda9a540904a35eba4cb24005f13a92dd970532dcbecc6af
+
+by window dt_us (all logs): bin | windows | t_must med/max | t_oth med/max | w_rec med/max | w_rec+w_cut_d max | w_cut_d>0 | others_cut_d>0 | lines_cut_w>0 | instr_us/dt max
+[0.1; 0.2) s | 43 | 11/24 | 24/24 | 64/64 | 156 | 42 | 43 | 0 | 0.690
+[0.2; 0.5) s | 11 | 11/20 | 24/24 | 64/64 | 174 | 11 | 11 | 0 | 0.504
+[0.5; 1.0) s | 1 | 7/7 | 24/24 | 64/64 | 136 | 1 | 1 | 0 | 0.137
+[1.0; 2.6) s | 1 | 4/4 | 24/24 | 64/64 | 255 | 1 | 1 | 0 | 0.134
+[2.6; 1000.0) s | 1 | 4/4 | 24/24 | 266/266 | 462 | 1 | 1 | 0 | 0.108
+
+windows dt_us >= 500 000: tag n dt_us instr_us t_must t_oth w_rec w_cut_d others_cut_d lines_cut_w ring_drop_w
+b32_pa 201 4353095 472057 4 24 266 196 56 0 1
+b32_pa 8798 2333729 313835 4 24 64 191 58 0 0
+b32_pa 8797 945170 129247 7 24 64 72 55 0 0
+
+print cost [c]: print_us at window k (gauge, the last report printed before it) against the lines of window k-1 of the same log (1 header + t_lines + w_lines + c_lines + 1 -x); pairs without another window between them
+  b32_pc n 200 -> n 1766: lines 118, print_us 48, us/line 0.41
+  b32_pd n 203 -> n 210: lines 109, print_us 98, us/line 0.90
+  b32_pd n 210 -> n 1766: lines 120, print_us 61, us/line 0.51
+  b32_pp n 201 -> n 1798: lines 120, print_us 185, us/line 1.54
+  b32_pcb n 205 -> n 212: lines 109, print_us 40, us/line 0.37
+  b32_pcb n 212 -> n 1775: lines 119, print_us 37, us/line 0.31
+  b32_ppb n 210 -> n 218: lines 109, print_us 713, us/line 6.54
+  b32_ppb n 218 -> n 1722: lines 117, print_us 110, us/line 0.94
+  b32_pa n 201 -> n 202: lines 304, print_us 107, us/line 0.35
+  b32_pa n 202 -> n 203: lines 108, print_us 41, us/line 0.38
+  b32_pa n 203 -> n 268: lines 115, print_us 71, us/line 0.62
+  b32_pa n 268 -> n 975: lines 104, print_us 135, us/line 1.30
+  b32_pa n 975 -> n 1094: lines 112, print_us 107, us/line 0.96
+  b32_pa n 1094 -> n 2372: lines 112, print_us 89, us/line 0.79
+  b32_pa n 2372 -> n 8779: lines 114, print_us 39, us/line 0.34
+  b32_pa n 8779 -> n 8797: lines 102, print_us 121, us/line 1.19
+  b32_pa n 8797 -> n 8798: lines 105, print_us 121, us/line 1.15
+  b32_pa n 8798 -> n 8819: lines 102, print_us 17, us/line 0.17
+  b32_s02 n 199 -> n 207: lines 106, print_us 50, us/line 0.47
+  b32_s05 n 204 -> n 213: lines 118, print_us 61, us/line 0.52
+  b32_s29 n 209 -> n 218: lines 108, print_us 137, us/line 1.27
+  pairs 21, us/line median 0.62, max 6.54
+
+SELF-CHECKS ALL OK

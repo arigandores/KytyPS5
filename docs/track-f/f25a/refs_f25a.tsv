@@ -26,3 +26,23 @@ f2307b02	src/graphics/presentation/videoOut.cpp	1442	LOGF("FrameTrace: n=%" PRIu
 e8ea0a57	docs/track-f/f20l3/b32_read.py	30	(i)   HOST_FREEZE  sgap_max_us >= 0.5 x E (needs the DiagB32: line)	(ii)  NO_SAMPLES   no DiagB32: line with this n, or i2 = 0
 e8ea0a57	docs/track-f/f20l3/f20e_read.py	188	def attr(fr, binary, variant):	"""Attribution of a hold frame by its interval (item 451 (e) order); variant 'letter' or 'f20a'."""
 e8ea0a57	docs/track-f/f20l3.md	44	`NO_SAMPLES` — строки `DiagB32:` нет), 8797 (860 521, `UNMARKED:Present`	0,4212), 8819 (133 361, `UNMARKED:Present`); 296,9–301,9 с сцены.
+f2307b02	src/common/diagB32.h	57	constexpr uint32_t kOthersCap     = 24;        // RC2: the cap applies only to the non-mandatory -t lines	constexpr uint32_t kMustCap       = 96;        // a mandatory -t line beyond this is cut and counted in lines_
+f2307b02	src/common/diagB32.h	59	constexpr uint32_t kWLinesCap     = 64;	constexpr uint32_t kCLines        = 8;
+f2307b02	src/common/diagB32.cpp	576	if (must.size() > kMustCap) {	counters->lines_cut += must.size() - kMustCap;
+f2307b02	src/common/diagB32.cpp	580	if (others.size() > kOthersCap) {	counters->others_cut += others.size() - kOthersCap;
+f2307b02	src/common/diagB32.cpp	422	static std::vector<size_t> PickWaits(const Report& r, size_t* cut) {	std::vector<int32_t> set;
+f2307b02	src/common/diagB32.cpp	439	for (int step = 0; step < 3; step++) {	const auto before = set.size();
+f2307b02	src/common/diagB32.cpp	465	if (out.size() < kWLinesCap) {	out.push_back(i);
+f2307b02	src/common/diagB32.cpp	592	if (cpu.size() > kCLines) {	cpu.resize(kCLines);
+f2307b02	src/common/diagB32.cpp	539	char    buf[1024];	va_list args;
+f2307b02	src/common/diagB32.cpp	474	void MarkMandatory(Report* report) {	auto&      r       = *report;
+f2307b02	src/common/diagB32.cpp	495	if (t.last.mark != 0 && t.last.peer > 0) {	if (auto* p = RowOf(&r, t.last.peer); p != nullptr && t.must) {
+f2307b02	src/common/diagB32.cpp	695	void Counters::Rebase() {	base.slot_full = slot_full;
+f2307b02	src/common/diagB32.cpp	1232	// Print the reports the sampler has closed (each one once, in the order of n). F20j2 RC6: this runs under	// FlipQueue::m_mutex and VideoOutConfig::mutex (videoOut.cpp); the whole print time of this call lies after t
+f2307b02	src/common/diagB32.cpp	1702	const uint64_t extra = m_win_extra_ns + print_ns + m5r; // F20j2 RC6: the report print inside this window	m_win_start          = flip_ns;
+f2307b02	src/common/diagB32.cpp	1253	g_print_us.store(took / 1000u, std::memory_order_relaxed);	}
+e8ea0a57	docs/track-f/f20l3/b32_read.py	377	recs = [w for w in d['w'] if w.get('slot') == cur and w.get('kind') == x]	best = max(recs, key=lambda w: (num(w.get('overlap_us'), 0) or 0)) if recs else None
+e8ea0a57	docs/track-f/f20l3/b32_read.py	392	target, how = pr, 'tpeer'	if target is None:
+e8ea0a57	docs/track-f/f20l3/b32_read.py	403	if step == 3:	return 'UNDETERMINED', 'UNDETERMINED', path, role, '> 3 steps'
+e8ea0a57	docs/track-f/f20l3/b32_read.py	351	for step in range(4):	row = rows.get(cur)
+e8ea0a57	docs/track-f/f20l3/b32_read.py	125	ZERO_W = ('slot_full_w', 'torn_w', 'ring_drop_w', 'sgap_bad_w', 'lines_cut_w', 'req_miss_w', 'sub_miss_w')	DRIVER = ('present', 'acquire', 'qsubmit', 'semwait')

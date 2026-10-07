@@ -1,0 +1,14 @@
+== F20l (5 logs)
+DiagB32: n=  lines      8  max length  338  without the last field 0
+DiagB32-t:   lines    306  max length  222  without the last field 0
+DiagB32-w:   lines    512  max length  156  without the last field 512
+DiagB32-c:   lines     64  max length   71  without the last field 0
+DiagB32-x:   lines      8  max length  273  without the last field 8
+TRUNCATED LINES FOUND
+== F20l2 + F20l3 (38 logs)
+DiagB32: n=  lines     49  max length  356  without the last field 0
+DiagB32-t:   lines   1771  max length  236  without the last field 0
+DiagB32-w:   lines   3338  max length  179  without the last field 0
+DiagB32-c:   lines    392  max length   71  without the last field 0
+DiagB32-x:   lines     49  max length  300  without the last field 0
+ALL OK

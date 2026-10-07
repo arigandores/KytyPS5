@@ -446,7 +446,7 @@ void TestLatency() {
 		CHECK(fault < 50000);
 		CHECK(text.find("VEH line: written from a vectored exception handler\n") != std::string::npos);
 		CHECK(text.find("TestLogStall: i=1 sleep_ms=2000") != std::string::npos);
-		CHECK(text.find(" on=writer\n") != std::string::npos);
+		CHECK(text.find(" on=writer tid=") != std::string::npos);
 		CHECK(stall != UINT64_MAX && stall >= 1900000);
 	}
 	Case("latency_0: =0, the stand sleeps 2 s on the caller - the negative control: a Log::Write waits");
@@ -457,7 +457,7 @@ void TestLatency() {
 		std::printf("  %s", res.c_str());
 		CHECK(Field(res, "async=") == 0);
 		CHECK(Field(res, "maxlat_us=") >= 1900000);
-		CHECK(text.find(" on=caller\n") != std::string::npos);
+		CHECK(text.find(" on=caller tid=") != std::string::npos);
 		CHECK(text.find("LogAsync:") == std::string::npos);
 	}
 }

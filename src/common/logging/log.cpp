@@ -185,6 +185,24 @@ static void ParseStand(uint64_t init_ns) {
 }
 
 // The stand point: right before a write of the sink, on the thread that writes it. One thread claims each sleep.
+static const char* RoleName() {
+	switch (Common::FrameStats::CurrentRole()) {
+		case Common::FrameStats::ThreadRole::Main: return "Main";
+		case Common::FrameStats::ThreadRole::Gpu: return "Gpu";
+		case Common::FrameStats::ThreadRole::Present: return "Present";
+		case Common::FrameStats::ThreadRole::Record: return "Record";
+		default: return "other";
+	}
+}
+
+static uint32_t OsTid() {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	return static_cast<uint32_t>(GetCurrentThreadId());
+#else
+	return 0;
+#endif
+}
+
 static void StandPoint(const std::shared_ptr<spdlog::logger>& logger) {
 	if (!g_stand.armed) {
 		return;
@@ -206,9 +224,9 @@ static void StandPoint(const std::shared_ptr<spdlog::logger>& logger) {
 	g_stand.done.store(i + 1, std::memory_order_release);
 	g_stand.next_ns.store(t1 + kStandGapNs, std::memory_order_release);
 	if (logger != nullptr) {
-		const auto line = fmt::format("TestLogStall: i={} sleep_ms={} slept_us={} t0_ms={} t1_ms={} on={}\n", i + 1,
-		                              g_stand.sleep_ms, (t1 - t0) / 1000u, t0 / 1000000u, t1 / 1000000u,
-		                              t_writer ? "writer" : "caller");
+		const auto line = fmt::format("TestLogStall: i={} sleep_ms={} slept_us={} t0_ms={} t1_ms={} on={} tid={} role={}\n",
+		                              i + 1, g_stand.sleep_ms, (t1 - t0) / 1000u, t0 / 1000000u, t1 / 1000000u,
+		                              t_writer ? "writer" : "caller", OsTid(), RoleName());
 		logger->log(spdlog::level::info, spdlog::string_view_t(line.data(), line.size()));
 	}
 }

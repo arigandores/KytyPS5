@@ -1,0 +1,74 @@
+=== tag f25_k05
+input C:/kyty/f287/f25f\log_f25_k05.txt sha256 2d448fdf9b6914fd50a953ce319d332ae8a5e4178218e21c36a65924807b9a86
+input C:/kyty/f287/f25f\runs\f25_k05\read.txt sha256 a9f9eb63e0cec0f258bf8938302348ef90f1c105543819bd1666e0f1703b46ba
+FrameTrace-draw log_us over 17878 frames: median 112 p99 491 p999 4955 max 2681557; >= 100000: 8
+objects W:vo_pace [('0xff61fe9da0', 18)]
+objects W:flip_req [('0xff61feadf8', 1)]
+base (VideoOutDriver::Impl this = W:vo_pace obj) 0xff61fe9da0
+W:flip_req obj 0xff61feadf8 offset 0x1058 name FlipQueue(this)
+Present -t windows 8; Sw wait-reason histogram over them [(0, 765), (27, 317), (37, 30)]
+frames 7; with the chain 3; in count 3
+FRAME f25_k05 n 17344 dt_us 1930657 t 316.7 | CHAIN IN_COUNT | UNMARKED:Present IN COUNT | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw
+  hdr dt_us 1930699 instr_us 292510 samples 366 proc_us 562500 other_us 4718750 kq 38
+  -t Present/Present R 0 r 3 Sr 0 Sw 352 S 11 W - H - SwR 0:352 cpu_us 2076 top - last - obj 0x0 peer -1
+  -t Gpu/Gpu R 1 r 0 Sr 0 Sw 0 S 0 W emu_mutex:365 H - SwR - cpu_us 5068 top W:emu_mutex last W:emu_mutex obj 0xff61feae00 peer 2
+  -t DrawThread/guest R 0 r 0 Sr 0 Sw 0 S 0 W gpu_wait:366 H - SwR - cpu_us 2117 top W:gpu_wait last W:gpu_wait obj 0x10010bed550 peer 3
+  -w emu_mutex waiter Gpu/Gpu(slot 3) obj 0xff61feae00 off 0x1060 FlipQueue::m_mutex start_us 4159 wait_us 1924818 waker 2(Present/Present) peer 2(Present/Present) open 0
+  FrameTrace-x n=17344 flip_hold_ns 1931485736 (hold of flip 17343) flip_hold_n 1
+  FrameTrace-draw n=17344 logs 15 log_us 1928156 log_gpu_us 0
+  FlipHold flip=17343 us 1931485 present_us 2510 poll_us 181 other_us 1928793
+FRAME f25_k05 n 17394 dt_us 2212538 t 319.7 | CHAIN IN_COUNT | UNMARKED:Present IN COUNT | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw
+  hdr dt_us 2212475 instr_us 340167 samples 419 proc_us 984375 other_us 4593750 kq 37
+  -t Present/Present R 0 r 3 Sr 0 Sw 416 S 0 W - H - SwR 0:413,27:3 cpu_us 2326 top - last - obj 0x0 peer -1
+  -t Gpu/Gpu R 1 r 0 Sr 0 Sw 0 S 0 W emu_mutex:416,rec_wait:1 H protect:1 SwR - cpu_us 12382 top W:emu_mutex last W:emu_mutex obj 0xff61feae00 peer 2
+  -t DrawThread/guest R 0 r 0 Sr 0 Sw 0 S 0 W gpu_wait:419 H - SwR - cpu_us 2472 top W:gpu_wait last W:gpu_wait obj 0x10010bed550 peer 3
+  -w emu_mutex waiter Gpu/Gpu(slot 3) obj 0xff61feae00 off 0x1060 FlipQueue::m_mutex start_us 10929 wait_us 2199301 waker 2(Present/Present) peer 2(Present/Present) open 0
+  FrameTrace-x n=17394 flip_hold_ns 2212512929 (hold of flip 17393) flip_hold_n 1
+  FrameTrace-draw n=17394 logs 16 log_us 2209589 log_gpu_us 4
+  FlipHold flip=17393 us 2212512 present_us 2286 poll_us 105 other_us 2210121
+FRAME f25_k05 n 17451 dt_us 144910 t 323.0 | - | UNMARKED:Present ref SHARED_WIN PRECURSOR | DrawThread(guest)=W:emu_mutex->waker > Present(Present)=Sw
+  hdr dt_us 145109 instr_us 13988 samples 28 proc_us 62500 other_us 468750 kq 2
+  -t Present/Present R 0 r 1 Sr 0 Sw 25 S 1 W - H present:1 SwR 37:25 cpu_us 3634 top H:present last H:present obj 0x0 peer -1
+  -t Gpu/Gpu R 3 r 0 Sr 0 Sw 0 S 0 W gpu_idle:1,emu_mutex:24 H - SwR - cpu_us 16002 top W:emu_mutex last W:gpu_idle obj 0x10010bed550 peer -1
+  -t DrawThread/guest R 0 r 1 Sr 0 Sw 25 S 1 W emu_mutex:1 H - SwR 27:25 cpu_us 2428 top W:emu_mutex last W:emu_mutex obj 0xff61fea1b8 peer 2
+  -w emu_mutex waiter Gpu/Gpu(slot 3) obj 0xff61feae00 off 0x1060 FlipQueue::m_mutex start_us 15769 wait_us 125820 waker 2(Present/Present) peer 2(Present/Present) open 0
+  FrameTrace-x n=17451 flip_hold_ns 142324512 (hold of flip 17450) flip_hold_n 1
+  FrameTrace-draw n=17451 logs 23 log_us 422290 log_gpu_us 0
+  FlipHold flip=17450 us 142324 present_us 734 poll_us 263 other_us 141326
+FRAME f25_k05 n 17452 dt_us 172711 t 323.1 | - | UNMARKED:Present ref SHARED_WIN PRECURSOR | DrawThread(guest)=W:emu_mutex->waker > Present(Present)=Sw
+  hdr dt_us 172642 instr_us 16252 samples 32 proc_us 406250 other_us 625000 kq 2
+  -t Present/Present R 0 r 1 Sr 0 Sw 23 S 1 W flip_req:4,vo_pace:3 H - SwR 27:18,37:5 cpu_us 2021 top W:flip_req last W:vo_pace obj 0xff61fe9da0 peer -1
+  -t Gpu/Gpu R 5 r 1 Sr 0 Sw 0 S 0 W gpu_idle:25 H protect:1 SwR - cpu_us 31877 top W:gpu_idle last H:protect obj 0x0 peer -1
+  -t DrawThread/guest R 0 r 0 Sr 0 Sw 0 S 0 W cond:1,sem:2,emu_mutex:25,gpu_wait:4 H - SwR - cpu_us 6996 top W:emu_mutex last W:gpu_wait obj 0x10010bed550 peer 3
+  -w emu_mutex waiter DrawThread/guest(slot 27) obj 0xff61fea1b8 off 0x418 m_video_out_ctx[1].mutex start_us -1802 wait_us 142443 waker 2(Present/Present) peer 2(Present/Present) open 0
+  FrameTrace-x n=17452 flip_hold_ns 143415863 (hold of flip 17451) flip_hold_n 1
+  FrameTrace-draw n=17452 logs 87 log_us 140355 log_gpu_us 3
+  FlipHold flip=17451 us 143415 present_us 2782 poll_us 73 other_us 140559
+FRAME f25_k05 n 17466 dt_us 146471 t 323.5 | CHAIN  | UNMARKED:Present ref PRECURSOR | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw
+  hdr dt_us 146472 instr_us 12956 samples 28 proc_us 203125 other_us 437500 kq 2
+  -t Present/Present R 0 r 2 Sr 0 Sw 23 S 3 W - H - SwR 27:23 cpu_us 4573 top - last - obj 0x0 peer -1
+  -t Gpu/Gpu R 2 r 0 Sr 0 Sw 0 S 0 W emu_mutex:26 H - SwR - cpu_us 12337 top W:emu_mutex last W:emu_mutex obj 0xff61feae00 peer 2
+  -t DrawThread/guest R 0 r 0 Sr 0 Sw 0 S 0 W gpu_wait:28 H - SwR - cpu_us 2200 top W:gpu_wait last W:gpu_wait obj 0x10010bed550 peer 3
+  -w emu_mutex waiter Gpu/Gpu(slot 3) obj 0xff61feae00 off 0x1060 FlipQueue::m_mutex start_us 7937 wait_us 133909 waker 2(Present/Present) peer 2(Present/Present) open 0
+  FrameTrace-x n=17466 flip_hold_ns 142585465 (hold of flip 17465) flip_hold_n 1
+  FrameTrace-draw n=17466 logs 23 log_us 141349 log_gpu_us 0
+  FlipHold flip=17465 us 142585 present_us 741 poll_us 116 other_us 141726
+FRAME f25_k05 n 17467 dt_us 127503 t 323.7 | - | UNMARKED:DrawThread ref PRECURSOR | DrawThread(guest)=Sw
+  hdr dt_us 127421 instr_us 9879 samples 25 proc_us 46875 other_us 390625 kq 2
+  -t Present/Present R 1 r 0 Sr 0 Sw 23 S 0 W - H present:1 SwR 27:23 cpu_us 1223 top H:present last H:present obj 0x0 peer -1
+  -t Gpu/Gpu R 3 r 0 Sr 0 Sw 0 S 0 W gpu_idle:1,emu_mutex:21 H - SwR - cpu_us 14903 top W:emu_mutex last W:gpu_idle obj 0x10010bed550 peer -1
+  -t DrawThread/guest R 0 r 2 Sr 0 Sw 23 S 0 W - H - SwR 37:23 cpu_us 2476 top - last - obj 0x0 peer -1
+  -w emu_mutex waiter MainThread/Main(slot 7) obj 0xff61fea1b8 off 0x418 m_video_out_ctx[1].mutex start_us -1925 wait_us 127959 waker 2(Present/Present) peer 2(Present/Present) open 0
+  -w emu_mutex waiter Gpu/Gpu(slot 3) obj 0xff61feae00 off 0x1060 FlipQueue::m_mutex start_us 14646 wait_us 111362 waker 2(Present/Present) peer 2(Present/Present) open 0
+  FrameTrace-x n=17467 flip_hold_ns 129993439 (hold of flip 17466) flip_hold_n 1
+  FrameTrace-draw n=17467 logs 28 log_us 250308 log_gpu_us 0
+  FlipHold flip=17466 us 129993 present_us 3987 poll_us 111 other_us 125894
+FRAME f25_k05 n 17512 dt_us 1348987 t 324.7 | IN_COUNT | UNMARKED:Gpu IN COUNT | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=Sw
+  hdr dt_us 1348851 instr_us 226984 samples 254 proc_us 375000 other_us 4968750 kq 22
+  -t Present/Present R 0 r 2 Sr 0 Sw 250 S 1 W flip_req:1 H - SwR 27:250 cpu_us 1683 top W:flip_req last W:flip_req obj 0xff61feadf8 peer 3
+  -t Gpu/Gpu R 1 r 1 Sr 0 Sw 251 S 0 W - H protect:1 SwR 37:251 cpu_us 10497 top H:protect last H:protect obj 0x0 peer -1
+  -t DrawThread/guest R 0 r 0 Sr 0 Sw 0 S 0 W gpu_wait:254 H - SwR - cpu_us 2794 top W:gpu_wait last W:gpu_wait obj 0x10010bed550 peer 3
+  FrameTrace-x n=17512 flip_hold_ns 1345997920 (hold of flip 17511) flip_hold_n 1
+  FrameTrace-draw n=17512 logs 29 log_us 2681557 log_gpu_us 1337716
+  FlipHold flip=17511 us 1345997 present_us 1646 poll_us 92 other_us 1344258
+FlipHold lines in the run 8: [17343, 17393, 17449, 17450, 17451, 17465, 17466, 17511]

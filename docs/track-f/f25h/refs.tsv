@@ -1,0 +1,52 @@
+35b454c6	src/graphics/presentation/videoOut.cpp	203	class FlipQueue {	public:
+35b454c6	src/graphics/presentation/videoOut.cpp	241	Graphics::Presenter& m_presenter;	Common::Mutex        m_mutex;
+35b454c6	src/graphics/presentation/videoOut.cpp	253	struct VideoOutDriver::Impl {	public:
+35b454c6	src/graphics/presentation/videoOut.cpp	283	Common::Mutex            m_mutex;	VideoOutConfig           m_video_out_ctx[VIDEO_OUT_NUM_MAX];
+35b454c6	src/graphics/presentation/videoOut.cpp	287	FlipQueue                m_flip_queue;	std::jthread             m_present_thread;
+35b454c6	src/graphics/presentation/videoOut.cpp	819	void VideoOutDriver::Impl::PresentThread(std::stop_token token) {	Common::FrameStats::RegisterCurrentThread(Common::FrameStats::ThreadRole::Present);
+35b454c6	src/graphics/presentation/videoOut.cpp	833	b32.BeginWReg(Common::DiagB32::Wait::VoPace, this, 0, remaining_us);	}
+35b454c6	src/graphics/presentation/videoOut.cpp	989	void FlipQueue::Prepare(uint64_t request_id, Graphics::CommandBuffer& buffer) {	VideoOutConfig* cfg        = nullptr;
+35b454c6	src/graphics/presentation/videoOut.cpp	1090	void FlipQueue::Complete(uint64_t request_id) {	m_mutex.Lock();
+35b454c6	src/graphics/presentation/videoOut.cpp	1181	bool FlipQueue::Flip(uint32_t micros) {	KYTY_PROFILER_BLOCK("FlipQueue::Flip");
+35b454c6	src/graphics/presentation/videoOut.cpp	1190	b32.BeginWReg(Common::DiagB32::Wait::FlipReq, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Gpu), micros);	}
+35b454c6	src/graphics/presentation/videoOut.cpp	1213	r.cfg->mutex.Lock();	// Session 114 (ROADMAP item 4): the hold of VideoOutConfig::mutex by phase
+35b454c6	src/graphics/presentation/videoOut.cpp	1215	const uint64_t hold_t0    = Common::FrameStats::NowNs();	uint64_t       present_ns = 0;
+35b454c6	src/graphics/presentation/videoOut.cpp	1267	if (Common::DiagB32::g_present_site) [[unlikely]] {	if (Common::DiagB32::g_on) {
+35b454c6	src/graphics/presentation/videoOut.cpp	1273	m_presenter.Present(*r.frame);	b32.End(0, false);
+35b454c6	src/graphics/presentation/videoOut.cpp	1281	m_mutex.Lock();	if (m_requests.empty() || m_requests.front().id != r.id ||
+35b454c6	src/graphics/presentation/videoOut.cpp	1293	Common::DiagB32::OnFlip(r.cfg->flip_status.count, r.id, r.reserve_host_ns);	}
+35b454c6	src/graphics/presentation/videoOut.cpp	1301	Common::Gates::Poll(static_cast<uint32_t>(r.cfg->flip_status.count));	poll_ns = Common::FrameStats::NowNs() - poll_t0;
+35b454c6	src/graphics/presentation/videoOut.cpp	1442	LOGF("FrameTrace: n=%" PRIu64 " dt_us=%llu lat_us=%llu gpu_proc=%llu gpu_idle=%llu"	" gpu_blocked=%llu submits=%llu submit_us=%llu semwaits=%llu semwait_us=%llu"
+35b454c6	src/graphics/presentation/videoOut.cpp	1473	LOGF("FrameTrace-draw: n=%" PRIu64 " logs=%llu log_us=%llu log_gpu_us=%llu d_pop=%llu"	" d_check=%llu d_rt=%llu d_prog=%llu d_bind=%llu d_vb=%llu d_acq=%llu d_pipe=%llu"
+35b454c6	src/graphics/presentation/videoOut.cpp	2705	{"flip_hold_ns", FS::Counter::FlipHoldNs, false},	{"flip_hold_n", FS::Counter::FlipHoldN, false},
+35b454c6	src/graphics/presentation/videoOut.cpp	3545	LOGF("FrameTrace-x: n=%" PRIu64 "%s" "\n", r.cfg->flip_status.count, text.c_str());	// Session 130, ac_cbad attribution
+35b454c6	src/graphics/presentation/videoOut.cpp	3585	TriggerVideoOutEvents(*r.cfg, VideoOutEventKind::Flip, reinterpret_cast<void*>(r.flip_arg));
+35b454c6	src/graphics/presentation/videoOut.cpp	3590	m_mutex.Unlock();	{
+35b454c6	src/graphics/presentation/videoOut.cpp	3593	Common::FrameStats::Add(Common::FrameStats::Counter::FlipHoldNs, hold_ns);	Common::FrameStats::Add(Common::FrameStats::Counter::FlipHoldN, 1);
+35b454c6	src/graphics/presentation/videoOut.cpp	3599	LOGF("FlipHold: us=%llu present_us=%llu poll_us=%llu other_us=%llu flip=%llu\n",	static_cast<unsigned long long>(hold_ns / 1000)
+35b454c6	src/graphics/presentation/videoOut.cpp	3607	r.cfg->mutex.Unlock();
+35b454c6	src/common/logging/log.cpp	54	std::make_shared<spdlog::sinks::basic_file_sink_mt>(Common::PathToString(path), true);	return MakeLogger(std::move(name), std::move(sink));
+35b454c6	src/common/logging/log.cpp	78	static Common::DiagB32::TrackedMutex<std::mutex>                      g_logger_mutex;	static std::shared_ptr<spdlog::logger> g_logger;
+35b454c6	src/common/logging/log.cpp	131	logger->log(spdlog::level::info, spdlog::string_view_t(text.data(), text.size()));	}
+35b454c6	src/common/logging/log.cpp	197	static void CountWrite(uint64_t t0) {	namespace FS = Common::FrameStats;
+35b454c6	src/common/logging/log.cpp	209	void Write(std::string_view text) {	const auto t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+35b454c6	src/common/threads.cpp	345	const auto      owner = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(m_mutex->m_cs.OwningThread));	DiagB32::Mark   b32;
+35b454c6	src/common/threads.cpp	346	DiagB32::Mark   b32;	b32.BeginWLock(DiagB32::Wait::EmuMutex, this, DiagB32::SlotOfOsTid(owner));
+35b454c6	src/common/diagB32.cpp	1256	void OnFlip(uint64_t n, uint64_t request_id, uint64_t reserve_host_ns) {	const auto now   = FrameStats::NowNs();
+35b454c6	src/common/diagB32.cpp	1296	::Log::Write(best->text);	}
+35b454c6	src/common/diagB32.h	100	enum class State : uint8_t { X = 0, H, W, R, Rr, Sr, Sw, S, Count };
+35b454c6	src/common/diagB32.h	225	class TrackedMutex {	public:
+35b454c6	src/common/diagB32.h	318	// WaitingForProcessOutSwap 9 -> "waits" (Sw:<WaitReason>); anything else -> S.	[[nodiscard]] bool KernelReady(uint32_t thread_state);
+35b454c6	src/common/gates.cpp	657	void PollGateFile(uint32_t frame) noexcept {	const auto* path = GateFile();
+35b454c6	src/common/gates.cpp	666	auto*                 file = std::fopen(path, "rb");	if (file == nullptr) {
+35b454c6	src/common/gates.cpp	724	void Poll(uint32_t frame) noexcept {	PollGateFile(frame);
+35b454c6	src/common/frameStats.cpp	164	static const bool enabled = Common::EnvFlagOn("KYTY_FRAME_TRACE") ||	Common::EnvFlagOn("KYTY_AV_TRACE");
+35b454c6	src/graphics/presentation/window/swapchain.cpp	937	void Presenter::Present(Frame& frame, bool reuse) {	KYTY_PROFILER_FUNCTION();
+35b454c6	src/graphics/presentation/window/swapchain.cpp	969	const bool screenshot = !preparing && m_impl->screenshot.Poll();	if (!preparing) m_impl->input_script.Poll();
+35b454c6	src/graphics/presentation/window/swapchain.cpp	1014	m_impl->screenshot.Record(command, frame.image);	recorded = true;
+35b454c6	src/graphics/presentation/window/screenshot.cpp	459	void ScreenshotGrabber::RecorderThread() {	for (;;) {
+35b454c6	src/graphics/presentation/window/screenshot.cpp	520	std::fwrite(m_rec_rgb.data(), 1, m_rec_rgb.size(), m_rec_pipe);	std::fflush(m_rec_pipe);
+35b454c6	src/libs/libAgcDriver.cpp	15	PRINT_NAME_ENABLE(true);
+35b454c6	src/kernel/pthread.cpp	1203	PRINT_NAME_ENABLE(true);
+35b454c6	src/graphics/presentation/videoOut.cpp	181	struct VideoOutConfig {	Common::Mutex                       mutex;
+35b454c6	src/graphics/presentation/videoOut.cpp	3577	LOGF("%s" "\n", line.c_str());	}

@@ -1,0 +1,28 @@
+chain frames f25_s15: 10 (reader read.txt; item 611(g): 10)
+chain frames f25_k04: 5 (reader read.txt; item 611(g): 5)
+chain frames f25_k05: 3 (reader read.txt; item 611(g): 3)
+in-count frames f25_k04: [8966] (item 611(v): [8966])
+in-count frames f25_k05: [17344, 17394, 17512] (item 611(v): [17344, 17394, 17512])
+frames of item 611(d)(2) (chain or cold in count): 20
+tag | n | dt_us | set | Gpu emu_mutex record (waiter obj wait_us waker) | Present Sw SwR H | Gpu Sw SwR | DrawThread Sw SwR | log_us log_gpu_us | FlipHold(n-1) us present poll other | other/dt
+f25_s15 | 3778 | 533754 | CHAIN | Gpu FlipQueue::m_mutex 511643 waker Present/Present | 97 0:94,27:3 present:1 | 0 - | 0 - | 514054 0 | 516204 1571 132 514499 | 0.964
+f25_s15 | 3969 | 209352 | CHAIN | Gpu FlipQueue::m_mutex 200207 waker Present/Present | 37 0:33,27:4 present:1 | 0 - | 0 - | 207421 0 | 210084 2088 80 207915 | 0.993
+f25_s15 | 4213 | 552263 | CHAIN | Gpu FlipQueue::m_mutex 535184 waker Present/Present | 98 0:98 present:2 | 0 - | 0 - | 544081 3 | 545399 888 71 544440 | 0.986
+f25_s15 | 4293 | 260645 | CHAIN | Gpu FlipQueue::m_mutex 248872 waker Present/Present | 42 0:42 - | 0 - | 0 - | 259069 0 | 261879 2313 97 259468 | 0.995
+f25_s15 | 4407 | 311840 | CHAIN | Gpu FlipQueue::m_mutex 306004 waker Present/Present | 57 0:52,27:5 present:1 | 0 - | 0 - | 307493 3 | 309008 1017 73 307917 | 0.987
+f25_s15 | 4444 | 116091 | CHAIN | Gpu FlipQueue::m_mutex 92115 waker Present/Present | 19 0:15,6:4 present:1 | 0 - | 0 - | 102766 0 | 105563 2301 105 103156 | 0.889
+f25_s15 | 4520 | 398681 | CHAIN | Gpu FlipQueue::m_mutex 390687 waker Present/Present | 74 0:74 - | 0 - | 0 - | 396650 0 | 399674 2413 107 397153 | 0.996
+f25_s15 | 4777 | 234966 | CHAIN | Gpu FlipQueue::m_mutex 213691 waker Present/Present | 41 0:38,37:3 - | 0 - | 0 - | 222337 0 | 223551 868 59 222624 | 0.947
+f25_s15 | 5478 | 101291 | CHAIN | Gpu FlipQueue::m_mutex 79121 waker Present/Present | 15 0:15 - | 0 - | 0 - | 82752 0 | 84224 1025 93 83105 | 0.820
+f25_s15 | 7540 | 148072 | CHAIN | Gpu FlipQueue::m_mutex 132531 waker Present/Present | 26 0:26 - | 0 - | 0 - | 136618 0 | 139453 2114 189 137149 | 0.926
+f25_k04 | 1608 | 197650 | CHAIN | Gpu FlipQueue::m_mutex 182848 waker Present/Present | 30 27:30 - | 0 - | 0 - | 191426 3 | 192930 918 99 191912 | 0.971
+f25_k04 | 1646 | 131982 | CHAIN | Gpu FlipQueue::m_mutex 128146 waker Present/Present | 19 27:19 - | 0 - | 0 - | 127787 2 | 130517 2047 158 128312 | 0.972
+f25_k04 | 5091 | 486224 | CHAIN | Gpu FlipQueue::m_mutex 464201 waker Present/Present | 89 27:89 present:1 | 0 - | 0 - | 956454 0 | 480086 837 91 479157 | 0.985
+f25_k04 | 6504 | 106102 | CHAIN | Gpu FlipQueue::m_mutex 102837 waker Present/Present | 18 27:18 - | 0 - | 0 - | 104221 0 | 106109 1362 109 104637 | 0.986
+f25_k04 | 8966 | 2003851 | +COUNT | Gpu FlipQueue::m_mutex 1983235 waker Present/Present | 374 0:374 present:1 | 0 - | 374 37:374 | 13998154 0 | 2001506 1026 87 2000392 | 0.998
+f25_k04 | 12357 | 328030 | CHAIN | Gpu FlipQueue::m_mutex 314846 waker Present/Present | 57 27:57 present:1 | 0 - | 0 - | 324110 5 | 327244 2532 170 324541 | 0.989
+f25_k05 | 17344 | 1930657 | CHAIN+COUNT | Gpu FlipQueue::m_mutex 1924818 waker Present/Present | 352 0:352 - | 0 - | 0 - | 1928156 0 | 1931485 2510 181 1928793 | 0.999
+f25_k05 | 17394 | 2212538 | CHAIN+COUNT | Gpu FlipQueue::m_mutex 2199301 waker Present/Present | 416 0:413,27:3 - | 0 - | 0 - | 2209589 4 | 2212512 2286 105 2210121 | 0.999
+f25_k05 | 17466 | 146471 | CHAIN | Gpu FlipQueue::m_mutex 133909 waker Present/Present | 23 27:23 - | 0 - | 0 - | 141349 0 | 142585 741 116 141726 | 0.968
+f25_k05 | 17512 | 1348987 | +COUNT | no Gpu emu_mutex record | 250 27:250 - | 251 37:251 | 0 - | 2681557 1337716 | 1345997 1646 92 1344258 | 0.996
+COUNTS OK

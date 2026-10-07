@@ -1,0 +1,49 @@
+LOG log_b32_pc.txt sha256 41f768ce16ab24104b3da8202bc58dbdc938a2864562a7228a3e915930295ded level underwater_aerial_garden windows>=100ms 2 CH 0 CH1 0 vo_pace_base -
+LOG log_b32_pd.txt sha256 743eb6914de60b5d5bfd70ebafd3499ece28dd68d997bdcb32aa1a626221d16a level underwater_aerial_garden windows>=100ms 3 CH 0 CH1 0 vo_pace_base -
+LOG log_b32_pd2.txt sha256 ead94c53f6391b4522815ea3160ec2fce62002b5635a776be40715b5e2f7b313 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base -
+LOG log_b32_pp.txt sha256 4c41494da414db3d31149c2b1a5079a7d94867e8df7bab1d64a3a83d9f1bcd77 level underwater_aerial_garden windows>=100ms 2 CH 0 CH1 0 vo_pace_base -
+LOG log_b32_z0.txt sha256 c74e37f9e32a66f7fa2b5570290f3513c5443eb8e33d1b7327d6878787ff4ca7 level underwater_aerial_garden windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_b32_pcb.txt sha256 19c9dc129067a14cce4ceecbcd9714aeee7216d8a55a891b92e11cd297a41c71 level underwater_aerial_garden windows>=100ms 3 CH 0 CH1 0 vo_pace_base 0xff61488e70
+LOG log_b32_ppb.txt sha256 f6cff11d11629c657e5f5acc061cf206336217d37450b481fe7e032796e0f94d level underwater_aerial_garden windows>=100ms 3 CH 0 CH1 1 vo_pace_base 0xff61642730
+  CH1 log_b32_ppb.txt n 1722 dt_us 231518 after_level yes obj 0xff61642b48 off 0x418 wait_us 176621 Present Sw 0/44 SwR - H present:38 W vo_pace:6 log_us 350 log_gpu_us 0 fliphold_other_us(n-1) -
+LOG log_b32_z0b.txt sha256 4d20ade2de85267d99aca47976f63fcddb1c19b1f66a7b36df24127f812d7a90 level underwater_aerial_garden windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_b32_pa.txt sha256 8c26949af4006834e7fa0c54718e5f7090639bf4e48d55bf67e19be9f0e8d6e3 level underwater_aerial_garden windows>=100ms 11 CH 3 CH1 1 vo_pace_base 0x278cf10
+  CH log_b32_pa.txt n 8779 dt_us 265594 after_level yes obj 0x278df70 off 0x1060 wait_us 235338 Present Sw 41/51 SwR 27:41 H present:1 W - log_us 775804 log_gpu_us 3 fliphold_other_us(n-1) 260337
+  CH log_b32_pa.txt n 8797 dt_us 945170 after_level yes obj 0x278df70 off 0x1060 wait_us 907157 Present Sw 179/182 SwR 27:179 H present:1 W - log_us 135 log_gpu_us 0 fliphold_other_us(n-1) 498
+  CH log_b32_pa.txt n 8819 dt_us 133438 after_level yes obj 0x278df70 off 0x1060 wait_us 97085 Present Sw 21/25 SwR 27:16,37:5 H present:1 W vo_pace:2 log_us 247576 log_gpu_us 2 fliphold_other_us(n-1) 125280
+  CH1 log_b32_pa.txt n 8798 dt_us 2333729 after_level yes obj 0x278d328 off 0x418 wait_us 1431812 Present Sw 162/443 SwR 27:162 H present:277 W vo_pace:2 log_us 4746 log_gpu_us 0 fliphold_other_us(n-1) 543
+LOG log_b32_s01.txt sha256 d1d54fc52a41593f4f952e520187d08b2675474fe12e8869e77c6afcd5992235 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0x10010477cd0
+LOG log_b32_s02.txt sha256 e96e711e09b13e7ba3a0dab8d9f3e34234257fb47d429d97dad33dab4678e9d1 level underwater_aerial_garden windows>=100ms 2 CH 0 CH1 0 vo_pace_base 0xffa2d27e80
+LOG log_b32_s03.txt sha256 ea695e11b2b9c1134722dc855648bbdbf5f2d30476d40d84f628d2fb3242a783 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0x27c6250
+LOG log_b32_s04.txt sha256 e8b874ed959c2020e10f36074f529b1851149124e6d86b6f473d56057cd55210 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xffa2d91dd0
+LOG log_b32_s05.txt sha256 258335fc4543ea5741b056f044ca01ad5f0a6af2c5336ec4da5bee5c889f990a level underwater_aerial_garden windows>=100ms 2 CH 0 CH1 0 vo_pace_base 0xffa2deef50
+LOG log_b32_s06.txt sha256 43dd75ef2595ae2952ec384a550aac5f7bb9c9c4bd65177e3b156f7fd54dd929 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0x1001075cee0
+LOG log_b32_s07.txt sha256 14606853cfa79560b1ad5f9e3c6449e4ecfb2e36e0801430e0c3a658d7dc8bed level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff616aae00
+LOG log_b32_s08.txt sha256 01f796839a536440cb8fea1b033878eb7a7d6e77297d1a3595f012f65bf4fe48 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff6170ddd0
+LOG log_b32_s09.txt sha256 2465d518d4ebe3140e38861f2e01fcae67bc665ae344668cf3735a49cef65116 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xffa2ed0fd0
+LOG log_b32_s10.txt sha256 08b83e562cae1efd7d922464b1fe290fd04ae6fa10e0011d5886174701762b29 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff616d44f0
+LOG log_b32_s11.txt sha256 d05c906f8cdc2649988ae2de8eca1122cc0a892e870fd784da28a5e33f98a5e2 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xffa2e58660
+LOG log_b32_s12.txt sha256 0a00fe5bae1a7e31e55848c8b6dcc54becc0046f62633532ccdca704cadab155 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff61579760
+LOG log_b32_s13.txt sha256 00da739204df4dfb5c492a7ada820c622f3b94049941743fc14d749bd29b7bcd level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff616a8220
+LOG log_b32_s14.txt sha256 bc7a7a7ed268750866b8e5b90c518f76caa669a85c7f7b40794a39b0e84e767c level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff617921a0
+LOG log_b32_s15.txt sha256 e2608254e69f7fbdc74c67462a92d820c419d6d24df9914810dcec7a02882340 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff61697ca0
+LOG log_b32_s16.txt sha256 ce27cf6e0ba85c896528ec90fbbc1424246da203aaf334a0054ffd3dd473184f level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0x2769840
+LOG log_b32_s17.txt sha256 8cb5823faca163593287ed6fee35be4ff333a7d2f6a6fd35e92470297c8bb419 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xffa2d10f80
+LOG log_b32_s18.txt sha256 14b7809904b1659269cf77b3a5e3df1590724d9d29782b3c1a4d5b008d3e0d10 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xffa2e342a0
+LOG log_b32_s19.txt sha256 8256e0715eb1cf61dbf56a298f950683e2976d0d63fcba0b0e51c58dfa1b0f83 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff61802290
+LOG log_b32_s20.txt sha256 78dfb5d29f5e2d01085890e5cc0da05049f5c49b56b0dc14344fb3e0fccc03e4 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xffa2d90fd0
+LOG log_b32_s21.txt sha256 e19e076272ac819b47fbcdbbc7b625bf4ea30b07aaa790f950656199a49c8c22 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0x27c94c0
+LOG log_b32_s22.txt sha256 0f9a7d937a40d89207f37cb888c2952b7db273e78b158110ef165f7e1724f22d level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0x2788190
+LOG log_b32_s23.txt sha256 b6c02d14a7070f8f01fe72df49e6de9840416bd2dc384874f71f1acb84bb65d1 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff61753fc0
+LOG log_b32_s24.txt sha256 d485df174ef63ba874d44f4b990be187d2881f77b84fe9c7b90b7592b062cc25 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff615a2a80
+LOG log_b32_s25.txt sha256 a3f0045a0bf70743a39e176d35bd64acb0d685e5827af0b82ddf3e75257a77a0 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xffa2d60e70
+LOG log_b32_s26.txt sha256 03babbcf053fd19b36888b356bbbdddd66e6e7e21f93de37b96bc14c5b0ef555 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0x100106ad2b0
+LOG log_b32_s27.txt sha256 8867ba19f24080969ba8e9988ee6ca65a0503b4af629950be52162f3d91a8ce9 level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff615bafe0
+LOG log_b32_s28.txt sha256 b5bdd0309a8a8aa3ac65a805bcc1f043c42b56a54da73e001502e99dedaa034a level underwater_aerial_garden windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff6178bfe0
+LOG log_b32_s29.txt sha256 c886c6e41e7a0c7902ccee5b1d3ec4f4ff73f679a2fc43c237bfc788929cc30d level underwater_aerial_garden windows>=100ms 2 CH 0 CH1 0 vo_pace_base 0xff616a2980
+LOG log_b32_z0c1.txt sha256 65d0a0abc2d2380738be720e9d18520c7a7be5ac71e11591f24d61e90d655d30 level underwater_aerial_garden windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_b32_z0c2.txt sha256 d2d27d8d5b59d825936c4571e5f0ffe1b9a5e88a80dc7d71142f170086ce306c level underwater_aerial_garden windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_b32_z0c3.txt sha256 4d9712f2e6863df0a9e6a489b7bfae4301acbb7f4c53a95aba5c15216caafc77 level underwater_aerial_garden windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_b32_z0c4.txt sha256 e1c11b7a433ec122b17fce01c7abaa4ef23aceb24246c4244f471ef978d1630d level underwater_aerial_garden windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_b32_z0c5.txt sha256 cedcca34bf30bab3bda9a540904a35eba4cb24005f13a92dd970532dcbecc6af level underwater_aerial_garden windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+TOTAL logs 43 windows>=100ms 57 CH 3 CH1 2

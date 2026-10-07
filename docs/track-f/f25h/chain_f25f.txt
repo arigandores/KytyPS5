@@ -1,0 +1,79 @@
+LOG log_f25_c1.txt sha256 57629fbe33ec89527c9c9d644a7a697f6891335f4eef58ee4ee9dd05f63ddcfc level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff61ff77f0
+LOG log_f25_c2.txt sha256 9d7d0025836ef494b50cbb917cc26c142f1d8929311180b0d3ddc9021519eed9 level bonus_path_maker_mix windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff620be010
+LOG log_f25_k01.txt sha256 4344182a08f241f3388ed76909772682d326bff1e1f494d8e5711706570d75f6 level pot_treasure_cave windows>=100ms 2 CH 0 CH1 0 vo_pace_base 0xff61ea47f0
+LOG log_f25_k02.txt sha256 80f924c6c77fcdf51be00feffdce78ccdd87591267ef66913685decdb9f514f6 level bonus_path_maker_mix windows>=100ms 2 CH 0 CH1 0 vo_pace_base 0xff62194830
+LOG log_f25_k02_a1.txt sha256 8239d6abb99cd91303628aa43be3583f9f7ce850d83212bf67266326eabdd701 level None windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_k03.txt sha256 1ff68d829735d6473818d62d7140bc77587ec686b123402c3da0382f03781b4a level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0x1000f8d1710
+LOG log_f25_k04.txt sha256 8a07a765f9bf1ad5453bc86fd7c13e428fadb860e2bec4e6e6bf6bd1e47584fa level bonus_path_maker_mix windows>=100ms 14 CH 11 CH1 0 vo_pace_base 0xff61eb4b70
+  CH log_f25_k04.txt n 1608 dt_us 197652 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 182848 Present Sw 30/37 SwR 27:30 H - W flip_req:1 log_us 191426 log_gpu_us 3 fliphold_other_us(n-1) 191912
+  CH log_f25_k04.txt n 1609 dt_us 100115 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 75236 Present Sw 11/19 SwR 27:11 H - W - log_us 571735 log_gpu_us 0 fliphold_other_us(n-1) 96380
+  CH log_f25_k04.txt n 1620 dt_us 117600 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 101544 Present Sw 15/22 SwR 37:15 H present:1 W - log_us 346048 log_gpu_us 0 fliphold_other_us(n-1) 112750
+  CH log_f25_k04.txt n 1621 dt_us 110720 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 91800 Present Sw 18/21 SwR 27:18 H - W - log_us 645894 log_gpu_us 0 fliphold_other_us(n-1) 108794
+  CH log_f25_k04.txt n 1634 dt_us 149229 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 124546 Present Sw 23/29 SwR 27:23 H - W vo_pace:1 log_us 961422 log_gpu_us 0 fliphold_other_us(n-1) 140561
+  CH log_f25_k04.txt n 1646 dt_us 131985 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 128146 Present Sw 19/25 SwR 27:19 H - W vo_pace:1 log_us 127787 log_gpu_us 2 fliphold_other_us(n-1) 128312
+  CH log_f25_k04.txt n 5032 dt_us 173322 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 150906 Present Sw 30/33 SwR 27:30 H present:1 W - log_us 507712 log_gpu_us 0 fliphold_other_us(n-1) 169999
+  CH log_f25_k04.txt n 5091 dt_us 486227 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 464201 Present Sw 89/92 SwR 27:89 H present:1 W - log_us 956454 log_gpu_us 0 fliphold_other_us(n-1) 479157
+  CH log_f25_k04.txt n 6504 dt_us 106103 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 102837 Present Sw 18/21 SwR 27:18 H - W flip_req:1 log_us 104221 log_gpu_us 0 fliphold_other_us(n-1) 104637
+  CH log_f25_k04.txt n 8966 dt_us 2003872 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 1983235 Present Sw 374/379 SwR 0:374 H present:1 W - log_us 13998154 log_gpu_us 0 fliphold_other_us(n-1) 2000392
+  CH log_f25_k04.txt n 12357 dt_us 328112 after_level yes obj 0xff61eb5bd0 off 0x1060 wait_us 314846 Present Sw 57/62 SwR 27:57 H present:1 W - log_us 324110 log_gpu_us 5 fliphold_other_us(n-1) 324541
+LOG log_f25_k05.txt sha256 2d448fdf9b6914fd50a953ce319d332ae8a5e4178218e21c36a65924807b9a86 level pot_treasure_cave windows>=100ms 8 CH 5 CH1 0 vo_pace_base 0xff61fe9da0
+  CH log_f25_k05.txt n 17344 dt_us 1930699 after_level yes obj 0xff61feae00 off 0x1060 wait_us 1924818 Present Sw 352/366 SwR 0:352 H - W - log_us 1928156 log_gpu_us 0 fliphold_other_us(n-1) 1928793
+  CH log_f25_k05.txt n 17394 dt_us 2212475 after_level yes obj 0xff61feae00 off 0x1060 wait_us 2199301 Present Sw 416/419 SwR 0:413,27:3 H - W - log_us 2209589 log_gpu_us 4 fliphold_other_us(n-1) 2210121
+  CH log_f25_k05.txt n 17451 dt_us 145109 after_level yes obj 0xff61feae00 off 0x1060 wait_us 125820 Present Sw 25/28 SwR 37:25 H present:1 W - log_us 422290 log_gpu_us 0 fliphold_other_us(n-1) 141326
+  CH log_f25_k05.txt n 17466 dt_us 146472 after_level yes obj 0xff61feae00 off 0x1060 wait_us 133909 Present Sw 23/28 SwR 27:23 H - W - log_us 141349 log_gpu_us 0 fliphold_other_us(n-1) 141726
+  CH log_f25_k05.txt n 17467 dt_us 127421 after_level yes obj 0xff61feae00 off 0x1060 wait_us 111362 Present Sw 23/25 SwR 27:23 H present:1 W - log_us 250308 log_gpu_us 0 fliphold_other_us(n-1) 125894
+LOG log_f25_pb.txt sha256 2a9a8e7373ac7733b84e6f7400f66e0e0a578caf6c5e307e5e1fbc750abf19e1 level pot_treasure_cave windows>=100ms 2 CH 0 CH1 1 vo_pace_base 0xff620ed380
+  CH1 log_f25_pb.txt n 3348 dt_us 3016498 after_level yes obj 0xff620ed798 off 0x418 wait_us 2990706 Present Sw 0/577 SwR - H present:574 W vo_pace:3 log_us 413 log_gpu_us 0 fliphold_other_us(n-1) -
+LOG log_f25_pc.txt sha256 d96196e7e1efe91aabba6056fbd96a66a41a6ee5585df7922bd8edb32ac2c6bb level bonus_path_maker_mix windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff6209e540
+LOG log_f25_s01.txt sha256 2333db6d8a72752d68a9d43938e3506bf323c5f19ac7e6771d882426d5595e51 level pot_treasure_cave windows>=100ms 2 CH 0 CH1 0 vo_pace_base 0xff61f40720
+LOG log_f25_s02.txt sha256 f1b002682a55abe0ca4c717cc170ac66213bb18d835dbf329f87bfe3394c32d2 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s03.txt sha256 c611965224aebe5e14fb9b7bbc48085db719410528f471e66f1c03e162a9ce69 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff620975b0
+LOG log_f25_s04.txt sha256 db18ce34a2a2e01fe9f07777bd08afcddc737ff59ea5a88c7759bac55a95d7b8 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s05.txt sha256 ea78795652c23819fda1be45476a9c871714cf7e33e6eb51314258c3e57130be level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff62082b30
+LOG log_f25_s06.txt sha256 4acbb46ab427bf29a909213307efd3212be25ef0892dbbb094baf56d63a64511 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s07.txt sha256 078bd4cd196648b88b48dd11b844975ca2c3dce2ab6bbc47bf37f0496216a3a7 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff620ccd10
+LOG log_f25_s08.txt sha256 c74d1ea167cd73cacc830665732400e8be53283d9572663665c244601db07e67 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s09.txt sha256 cc47b6d8327f26e577bf08687031a68e91c497d14da6a6982c4200e81cbae432 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff6202e6c0
+LOG log_f25_s10.txt sha256 626d3e217c2a550206bd1365cb3639b958f42b206da6721dbd33948145843fc3 level bonus_path_maker_mix windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff6200c8c0
+LOG log_f25_s11.txt sha256 1e98146334eda3dbb8db0f393df4d97146438c1663dc20691eace3ff9d42fb4f level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff61feafa0
+LOG log_f25_s12.txt sha256 cf7e550302085d1e685b488507ad5789c09f4eec8accb8fc46b4327945ebbfd4 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s13.txt sha256 7b991dc769e503294a9888a70cbc80aeb518c34c215ae514a35747fd7542be05 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff61fa7d00
+LOG log_f25_s14.txt sha256 5c2ec78a75048eea574e72361177c239dbb5a96a57cf52125cc65a0a8e165fac level bonus_path_maker_mix windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff620562e0
+LOG log_f25_s15.txt sha256 fc8f24ed01159027bc65dea306dd3d27a90c7e6b8620d557555f054cb61b220c level pot_treasure_cave windows>=100ms 181 CH 14 CH1 0 vo_pace_base 0xff62053300
+  CH log_f25_s15.txt n 3655 dt_us 144837 after_level yes obj 0xff62054360 off 0x1060 wait_us 139171 Present Sw 24/27 SwR 37:24 H - W - log_us 444980 log_gpu_us 0 fliphold_other_us(n-1) 143643
+  CH log_f25_s15.txt n 3778 dt_us 533802 after_level yes obj 0xff62054360 off 0x1060 wait_us 511643 Present Sw 97/102 SwR 0:94,27:3 H present:1 W vo_pace:2 log_us 514054 log_gpu_us 0 fliphold_other_us(n-1) 514499
+  CH log_f25_s15.txt n 3912 dt_us 582024 after_level yes obj 0xff62054360 off 0x1060 wait_us 562102 Present Sw 108/111 SwR 0:108 H - W vo_pace:1 log_us 1147846 log_gpu_us 3 fliphold_other_us(n-1) 575016
+  CH log_f25_s15.txt n 3969 dt_us 209293 after_level yes obj 0xff62054360 off 0x1060 wait_us 200207 Present Sw 37/40 SwR 0:33,27:4 H present:1 W - log_us 207421 log_gpu_us 0 fliphold_other_us(n-1) 207915
+  CH log_f25_s15.txt n 4088 dt_us 102015 after_level yes obj 0xff62054360 off 0x1060 wait_us 95202 Present Sw 18/20 SwR 37:18 H present:1 W - log_us 317986 log_gpu_us 0 fliphold_other_us(n-1) 99159
+  CH log_f25_s15.txt n 4213 dt_us 552223 after_level yes obj 0xff62054360 off 0x1060 wait_us 535184 Present Sw 98/105 SwR 0:98 H present:2 W - log_us 544081 log_gpu_us 3 fliphold_other_us(n-1) 544440
+  CH log_f25_s15.txt n 4293 dt_us 260588 after_level yes obj 0xff62054360 off 0x1060 wait_us 248872 Present Sw 42/50 SwR 0:42 H - W - log_us 259069 log_gpu_us 0 fliphold_other_us(n-1) 259468
+  CH log_f25_s15.txt n 4407 dt_us 311809 after_level yes obj 0xff62054360 off 0x1060 wait_us 306004 Present Sw 57/60 SwR 0:52,27:5 H present:1 W - log_us 307493 log_gpu_us 3 fliphold_other_us(n-1) 307917
+  CH log_f25_s15.txt n 4444 dt_us 116134 after_level yes obj 0xff62054360 off 0x1060 wait_us 92115 Present Sw 19/23 SwR 0:15,6:4 H present:1 W vo_pace:2 log_us 102766 log_gpu_us 0 fliphold_other_us(n-1) 103156
+  CH log_f25_s15.txt n 4520 dt_us 398659 after_level yes obj 0xff62054360 off 0x1060 wait_us 390687 Present Sw 74/76 SwR 0:74 H - W - log_us 396650 log_gpu_us 0 fliphold_other_us(n-1) 397153
+  CH log_f25_s15.txt n 4777 dt_us 234876 after_level yes obj 0xff62054360 off 0x1060 wait_us 213691 Present Sw 41/45 SwR 0:38,37:3 H - W flip_req:1,vo_pace:2 log_us 222337 log_gpu_us 0 fliphold_other_us(n-1) 222624
+  CH log_f25_s15.txt n 5478 dt_us 101316 after_level yes obj 0xff62054360 off 0x1060 wait_us 79121 Present Sw 15/19 SwR 0:15 H - W vo_pace:3 log_us 82752 log_gpu_us 0 fliphold_other_us(n-1) 83105
+  CH log_f25_s15.txt n 7540 dt_us 148214 after_level yes obj 0xff62054360 off 0x1060 wait_us 132531 Present Sw 26/29 SwR 0:26 H - W vo_pace:2 log_us 136618 log_gpu_us 0 fliphold_other_us(n-1) 137149
+  CH log_f25_s15.txt n 11063 dt_us 400539 after_level yes obj 0xff62054360 off 0x1060 wait_us 369146 Present Sw 67/76 SwR 0:67 H present:1 W - log_us 781009 log_gpu_us 2 fliphold_other_us(n-1) 396149
+LOG log_f25_s16.txt sha256 4aeb63d79e70cc853751a47f27acded3e00046e93e52b426d3646661203620c2 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s17.txt sha256 a048c8a00957e005d0ac17d56c20c8feca150c748ae43c976eabee654039e1b0 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff620125c0
+LOG log_f25_s18.txt sha256 c28d571a5b85356a8c7e478b850c4773f89d12d6e10e5aa613d30426a7a28e8d level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s19.txt sha256 a2f2f3eeae86c0b05a448016d23e98b83f0778bb1cbca53d17c35fc96f226ec5 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff62100570
+LOG log_f25_s20.txt sha256 3723c55e369cc15bc52c42d5c28c5ae3e6828102d4950e443ff464c426bb9e93 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s21.txt sha256 843ee33e1ef2de1e9dc0c6707b4a4f141f203017fb09e1507b486c7c4fe4c04e level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff620b2030
+LOG log_f25_s22.txt sha256 ebed65d132980d5b9edd0e8e19506ae5555bc333a02cf8a5a9742dd28cecd489 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s23.txt sha256 ae0bd7e39fa23ca8868ee04b226aaa75d267d5927ae14b88bdacc57747bd3af5 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff62105c40
+LOG log_f25_s24.txt sha256 9c98c2f5a74db0055fc3cafdc22a156b33ad4f05cf955fec03f0c908bdf2a70c level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s25.txt sha256 6683c200a69775e757e7a3ee46abe9c0ec0d2203443eca4145ed04efc4abf910 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff62008c40
+LOG log_f25_s26.txt sha256 ed3abf7e1ea5dd0679df4928e2f89b894b7a0100584488e05a16513b76a6c246 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s26_a1.txt sha256 297294cef1a3ba147a5fab268855c386568bafa3e70951e85d66303f02e1306c level None windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s27.txt sha256 ae4bad35489532ed2271c223a8c9b2e253ea97bfa8f034aa86ce86363f73f990 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff622159f0
+LOG log_f25_s28.txt sha256 114c15377066b905896c73d45a2fdcafd39721c0133431e0d68d9cd1eedbf720 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_s29.txt sha256 8b250418f47be87f02ad85b425d69f9a96aab7ee26593c3151320ba4cef1c13c level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff61e1b0c0
+LOG log_f25_s30.txt sha256 9c3f2e9b351240b07cb2a48faae1ad1f692ca972766e767359dd2c3331772de9 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff61db5fa0
+LOG log_f25_s31.txt sha256 ad19590feb27dc969116c67b3c22a0398e5e6adec9e4b347f4cb13a2b7872f8e level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff620d5890
+LOG log_f25_s32.txt sha256 4cf9675143684522667a291934c44bde6dba5306dd2e1482610b43106cdd208c level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff6214c860
+LOG log_f25_s33.txt sha256 6365a26d67ccb3e2cdc736f9a8887d92e719f7214b0566b3482fe5890c753f42 level pot_treasure_cave windows>=100ms 2 CH 0 CH1 0 vo_pace_base 0xff61f6fe10
+LOG log_f25_s34.txt sha256 eb77287b63a1c9a9531ad28ef7d8963e077dbd6ef78ad46ab38b8f87d2886346 level pot_treasure_cave windows>=100ms 1 CH 0 CH1 0 vo_pace_base 0xff61dd85a0
+LOG log_f25_z1.txt sha256 950cb39b59d295fbb21f93ab7d479b8dc16886c94fd37c77465f8147c587b86f level pot_treasure_cave windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+LOG log_f25_z2.txt sha256 17dc6c8a28968f38b3714c9aa7ebd9fc823f727c62fbfe77fcee8875899d8aa6 level bonus_path_maker_mix windows>=100ms 0 CH 0 CH1 0 vo_pace_base -
+TOTAL logs 47 windows>=100ms 236 CH 30 CH1 1

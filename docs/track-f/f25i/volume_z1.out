@@ -1,0 +1,5 @@
+log C:/kyty/f287/f25f/log_f25_z1.txt total bytes 578953116
+  frametrace  bytes    526618207 (0.9096) lines     175500
+  tab_arg     bytes     48024483 (0.0830) lines    1584746
+  guest_hdr   bytes      2452753 (0.0042) lines      41306
+  other       bytes      1857673 (0.0032) lines      20474

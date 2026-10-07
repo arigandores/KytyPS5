@@ -1,0 +1,81 @@
+--- segment FrameTrace n=17343 .. n=17344: 21 lines (non-FrameTrace shown)
+   FlipHold: us=1931485 present_us=2510 poll_us=181 other_us=1928793 flip=17343
+   	 queue  = 0x00000040
+   	 packet = 0x0000000313a77eb8
+   	 acb   = 0x0000000400345640
+   	 size  = 0x00000bff
+   	 flags = 0x00
+   	 queue  = 0x00000048
+   	 packet = 0x0000000313a77eb8
+   	 acb   = 0x0000000400526840
+   	 size  = 0x00000159
+   	 flags = 0x00
+   [23][00:05:29.713] libkernel::libkernel::PthreadCondWait()
+--- segment FrameTrace n=17450 .. n=17451: 37 lines (non-FrameTrace shown)
+   	 handle = 1
+   	 handle = 1
+   	 data_offset = 0x0
+   	 flags       = 0x00000001
+   	 data_offset = 0x0
+   	 flags       = 0x00000001
+   	 data_offset = 0x0
+   	 flags       = 0x00000001
+   	 data_offset = 0x0
+   	 flags       = 0x00000001
+   FlipHold: us=142324 present_us=734 poll_us=263 other_us=141326 flip=17450
+   	 video_out_handle     = 1
+   	 display_buffer_index = 1
+   	 cache_policy                      = 0x00
+   	 buffer                            = 0x0000000000000000
+   	 buffer_size_in_bytes              = 0
+   	 reset_count                       = 0
+   	 force_reset                       = 0x00
+   	 report_and_reset                  = 0x00
+   	 reporting_interval_in_100k_clocks = 0
+   	 cache_policy                      = 0x00
+   	 buffer                            = 0x0000000400803b40
+   	 buffer_size_in_bytes              = 2112
+   	 reset_count                       = 0
+   	 force_reset                       = 0x00
+   	 report_and_reset                  = 0x01
+   	 reporting_interval_in_100k_clocks = 0
+   [42][00:05:34.193] libkernel::libkernel::PthreadCondWait()
+--- segment FrameTrace n=17511 .. n=17512: 41 lines (non-FrameTrace shown)
+   FaultTrace-gpu: addr=0x0000000502d7afa0 rip=+0x74b11a access=2 us=32 site=-
+   FlipHold: us=1345997 present_us=1646 poll_us=92 other_us=1344258 flip=17511
+   PriorityStall: tick=404224 unsub=1 us=1337653 site=+0x950a41
+   	 queue  = 0x00000040
+   	 packet = 0x0000000313a77eb8
+   	 acb   = 0x0000000400345640
+   	 size  = 0x00000bff
+   	 flags = 0x00
+   	 queue  = 0x00000048
+   	 packet = 0x0000000313a77eb8
+   	 acb   = 0x0000000400526840
+   	 size  = 0x00000159
+   	 flags = 0x00
+   [23][00:05:37.113] libkernel::libkernel::PthreadCondWait()
+   FaultTrace-gpu: addr=0x0000000401b3c4c0 rip=+0x74ad2f access=2 us=44 site=-
+   	 user_id = 1000
+   	 large_motor = 0
+   	 small_motor = 0
+   	 handle = 1
+   	 handle = 1
+   	 data   = 0x00000007efdf28c0
+   	 num    = 8
+   	 op    = 0x00000182
+   	 queue  = 0x00000046
+   	 packet = 0x0000000339933e68
+   	 acb   = 0x0000000400707a40
+   	 size  = 0x00000421
+   	 flags = 0x00
+   	 handle = 1
+   	 handle = 1
+   	 handle = 1
+   	 handle = 1
+log C:/kyty/f287/f25f/log_f25_k05.txt total bytes 534246232
+  frametrace  bytes    482781032 (0.9037) lines     160910
+  tab_arg     bytes     45027372 (0.0843) lines    1468860
+  other       bytes      3862291 (0.0072) lines      57611
+  guest_hdr   bytes      2260649 (0.0042) lines      38050
+  diagb32     bytes       314888 (0.0006) lines       1715

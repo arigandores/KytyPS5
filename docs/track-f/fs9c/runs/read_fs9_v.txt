@@ -1,0 +1,32 @@
+FS9C fs9_v form v level underwater_aerial_garden log sha256 0621978a59d1ea31dcebe13279f8dbc90363a5cdf8c4167e53a6328386d0ecd1 lines 1180763 stdout sha256 789e15a342cd0b89c676908fd2150e54c4bb1ad7c535c9804c1d39fd4df338ba
+  binary: tag 3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5 (expected 3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5); version string KytyPS5-2026-09-15-6a2987a-1900-g11164d72 in the binary: YES; installed before b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a after b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (expected b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a); revision texts [('log', 719, '11164d7')]
+  env of the tag (KYTY_FIX_*, VK_LAYER_*, forbidden keys): {}; offending []
+  FixB13 lines 1, first [(715, 1)] (first GuestOut line 12492)
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10_fixf19']; state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-07T06:38:39Z
+  entry line 225593; scene change line None; first scene frame n 236; hold (sum dt after it) 334.2 s; frames >= 1 s after it 0 (max dt_us 184713)
+  REF frame time after the first scene frame (item 603 (b)(3) N3: reference, not a member): frames 10126, mean dt_us 33000.3
+  death markers: 0 []; emulator stdout present
+  exit: outcome ok hold_exit None hold_s 330.0 close_posted 5 close_rc 0 close_killed False close_s 3.5; exit code 0 (0x00000000) (REPORT row)
+  layer: [Vulkan][E] 0, [Vulkan][W] 0, limit lines 0, DualSrcBlend lines [(74, 1, 1)]
+  _SaveData manifest (REPORT row, not a gate): before 2 files, after the tag (before the return) 2 files, equal YES, differing []
+  window: none, Recovering Vulkan swapchain 0; GamePatch lines 0; AsyncPipelines: skipped draw 0; rebuild skipped lines 1 (reference)
+  video: index records 10373; one-frame glitches 0; sheet: C:/kyty/f287/fs9c/runs/fs9_v/sheet_fs9_v.png frames 10373 step 216 tiles 8x6
+  manifest: manifest cmp EQUAL files 4806 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8
+  REF revision text names 11164d7: YES
+  REF translation cache directory variant_fixb26_fixb1b_fixf10_fixf19 in every line: YES
+  ROW binary sha256 of the tag = 3861eeea (FS9 copy): YES
+  ROW version string ...-1900-g11164d72 in the tag binary: YES
+  ROW installed b3cee576 before the tag: YES
+  ROW installed b3cee576 after the return: YES
+  ROW env = form v: no KYTY_FIX_*, the defaults of the binary, no layer: YES
+  ROW FixB13: mode=1 (every line) before the first GuestOut: YES
+  ROW entered (Level has started: underwater_aerial_garden, outcome ok): YES
+  ROW hold >= 300 s after the first scene frame: YES
+  ROW the process lived through the hold (outcome ok, hold_exit null): YES
+  ROW 0 frames >= 1 s after the first scene frame: YES
+  ROW 0 death markers (log and stdout): YES
+  ROW video index records >= 3000: YES
+  ROW 0 one-frame glitches: YES
+  ROW sheet for the lead made: YES
+  ROW manifest of the caches, seeds, saves and GLCache before = after the return: YES
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch line (else not read as an outcome, question to the lead): YES

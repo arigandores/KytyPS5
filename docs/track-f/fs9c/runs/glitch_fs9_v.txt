@@ -1,0 +1,2 @@
+C:/kyty/f287/fs9c/rec_fs9_v.mp4: 10373 frames 960x540, index entries 10373
+one-frame glitches: 0

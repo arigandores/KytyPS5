@@ -1,0 +1,19 @@
+2026-10-07T06:45:10Z FS9c go_fs9c fs9_w run check (item 587 (g)): RUN ALIVE b97875e7 status in_progress
+2026-10-07T06:45:10Z FS9c go_fs9c fs9_w order with the F25f series (item 604 (d)(3)): ORDER FREE last foreign release f25_s06 C:/kyty/f287/f25f/runs/lock.log, 496 s ago
+2026-10-07T06:45:11Z FS9c go_fs9c fs9_w lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-07T06:45:11Z FS9c go_fs9c fs9_w installed binary inside the lock before the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T06:45:13Z FS9c go_fs9c fs9_w manifest before: manifest C:/kyty/f287/fs9c/runs/fs9_w/manifest_before.tsv files 4806 bytes 1262845576 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8
+2026-10-07T06:45:15Z FS9c go_fs9c fs9_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (235/184/5/664/130/ MB)
+2026-10-07T06:45:15Z FS9c go_fs9c fs9_w state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-07T06:45:15Z
+2026-10-07T06:45:16Z FS9c go_fs9c fs9_w installed the FS9 copy for the tag: 3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5
+2026-10-07T06:45:16Z FS9c go_fs9c fs9_w enter_scene start (level underwater_aerial_garden, form w, SD 100, --timeout 900 --emu-arg=--vulkan-validation --emu-arg=true --hold 310, defaults - no KYTY_FIX_* VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000)
+2026-10-07T06:51:07Z FS9c go_fs9c fs9_w enter_scene rc 0; guard watch: 2026-10-07T06:51:07Z watch end, user process seen: no
+2026-10-07T06:51:07Z FS9c go_fs9c fs9_w run: VERDICT: underwater_aerial_garden in 29.0 s - PASS (acceptance <= 90 s)
+2026-10-07T06:51:07Z FS9c go_fs9c fs9_w log_fs9_w.txt sha256 a423d70b7c4b6fab099bd810becfcf4265d841d1b2ad743f2fc32459ca70dcab
+2026-10-07T06:51:08Z FS9c go_fs9c fs9_w installed binary returned from the pinned S18 copy
+2026-10-07T06:51:08Z FS9c go_fs9c fs9_w installed binary after the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T06:51:11Z FS9c go_fs9c fs9_w manifest of the run state (before the return): manifest C:/kyty/f287/fs9c/runs/fs9_w/manifest_run.tsv files 4806 bytes 1262845576 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8; run vs before: manifest cmp EQUAL files 4806 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8
+2026-10-07T06:51:11Z FS9c go_fs9c fs9_w caches, seeds, saves and GLCache returned
+2026-10-07T06:51:14Z FS9c go_fs9c fs9_w manifest after: manifest C:/kyty/f287/fs9c/runs/fs9_w/manifest_after.tsv files 4806 bytes 1262845576 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8; cmp: manifest cmp EQUAL files 4806 listsha 3b64fd13e3b743f75d3ce7ced6503e15ea114fff5c8c8f96c7105004e86091b8
+2026-10-07T06:51:14Z FS9c go_fs9c fs9_w lock released (rc 0)
+rc=0

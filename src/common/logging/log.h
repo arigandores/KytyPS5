@@ -40,9 +40,17 @@ void      DrainForExit() noexcept;
 void      DrainForFault() noexcept;
 // KYTY_FIX_B36=1 in effect (the File direction): the "log_async" field of the "LongFrame:" line.
 bool      AsyncEnabled();
+// Track F, F25k2 (KYTY_LONGFRAME=1; RC2 of F25l, ROADMAP s122 item 616(b)(2)): one record of a flip >= 100 ms - stored in a
+// static array without log I/O on the calling thread; a printer thread off the frame path writes the "LongFrame:" line.
+// One producer at a time (FlipQueue::Flip under FlipQueue::m_mutex); at most 4 096 records. No-op without KYTY_LONGFRAME.
+void      LongFrameRecord(uint64_t n, uint64_t dt_us, uint64_t t_ms);
 namespace Testing {
 // log_async_tests only: the 256 MiB limit of the queue replaced.
 void SetAsyncLimit(uint64_t bytes);
+// log_async_tests only (F25k2, RC4): the next sink write by a thread that holds the sink lock outside the writer faults.
+void FaultInNextOwnerWrite();
+// log_async_tests only (F25k2, RC2): the printer thread of KYTY_LONGFRAME was created.
+bool LongFramePrinterStarted();
 } // namespace Testing
 
 namespace Color {

@@ -19,6 +19,17 @@
 //    Log::DrainForFault), EXIT with the writer asleep 8 s (> the 5 s drain - the rest written by the dying thread);
 //    the file holds the N lines in order and the marker. die_kill (the negative control of the reader): the same
 //    with TerminateProcess and no drain - lines must be missing.
+// F25k2 (HPP-682; ROADMAP s122 item 616(b)(1)-(3), (v)):
+//  * latency_0 (RC1): at =0 the stand's sleep holds the write - the second writer (the exception handler) waits too
+//    (veh_us >= 1 400 000); the "TestLogStall:" line carries line="..." (the line that took the sleep);
+//  * longframe_0 / longframe_1 (RC2): with KYTY_LONGFRAME=1 Log::LongFrameRecord does not wait while the stand holds the
+//    write (=0) or the writer (=1) - the longest record < 50 ms; the printer thread writes the "LongFrame:" lines (4 100
+//    records -> 4 096 lines, in order, the fields as recorded); longframe_off - without the measure the printer thread is
+//    not created and no line is written;
+//  * die_owner (RC4): the dying thread faults inside a write under the sink lock (the synchronous tail of a timed-out
+//    drain of EXIT): the drain of the exception filter returns at once - the child dies (0xC0000005) within 10 s. The
+//    parent kills a child alive after 40 s ("hung"). Run with "--case die_owner" on a build without the RC4 guard - the
+//    positive control (run_tests_f25k2.py t5).
 // Prints one line per case and "ALL OK". Target log_async_tests (not in ctest), run by docs/track-f/f25k/run_tests_f25k.py.
 
 #include "common/assert.h"
@@ -229,6 +240,30 @@ int Child(const std::string& mode, const std::string& path, int n) {
 		WriteSide(path, fmt::format("maxlat_us={}\n", max_us));
 		return 0;
 	}
+	if (mode == "longframe") {
+		// F25k2 (RC2): records while the stand sleeps (from the 1st second for 2 s) - the recorder does not wait.
+		std::atomic<bool> stop {false};
+		std::thread       writer([&] {
+            int i = 0;
+            while (!stop) {
+                Log::Write(fmt::format("W {}\n", i++));
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+		});
+		std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+		uint64_t max_us = 0;
+		for (int i = 0; i < n; i++) {
+			const auto t0 = NowUs();
+			Log::LongFrameRecord(static_cast<uint64_t>(i), 100000u + static_cast<uint64_t>(i), 1000u + static_cast<uint64_t>(i));
+			max_us = std::max(max_us, NowUs() - t0);
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+		stop = true;
+		writer.join();
+		WriteSide(path, fmt::format("rec_max_us={} printer={} async={}\n", max_us,
+		                            Log::Testing::LongFramePrinterStarted() ? 1 : 0, Log::AsyncEnabled() ? 1 : 0));
+		return 0;
+	}
 	if (mode == "latency") {
 		void* handle = AddVectoredExceptionHandler(1, TestVeh);
 		g_veh_page   = VirtualAlloc(nullptr, 4096, MEM_RESERVE | MEM_COMMIT, PAGE_NOACCESS);
@@ -282,6 +317,18 @@ int Child(const std::string& mode, const std::string& path, int n) {
 			Common::HostException::InstallHandler(UnresolvedHandler);
 			Log::Write("F25K-MARKER die_fault\n");
 			static_cast<volatile int*>(nullptr)[0] = 1;
+		} else if (mode == "die_owner") {
+			// F25k2 (RC4): the writer asleep 6 s in the stand; another thread keeps writing; EXIT -> WriteFatal -> the drain
+			// times out after 5 s and writes its rest under g_sink_mutex on this thread - the first write of it faults.
+			Common::HostException::InstallHandler(UnresolvedHandler);
+			std::thread([] {
+				for (int i = 0;; i++) {
+					Log::Write(fmt::format("B {}\n", i));
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				}
+			}).detach();
+			Log::Testing::FaultInNextOwnerWrite();
+			EXIT("F25K2-MARKER die_owner\n");
 		} else if (mode == "die_kill") {
 			Log::Write("F25K-MARKER die_kill\n");
 			TerminateProcess(GetCurrentProcess(), 9);
@@ -316,6 +363,41 @@ int Spawn(const char* mode, const std::string& path, int n, const char* fix, con
 	_putenv_s("KYTY_FIX_B36", "");
 	_putenv_s("KYTY_TEST_LOGSTALL", "");
 	return static_cast<int>(rc);
+}
+
+// F25k2 (RC4): the child is killed after limit_ms; *secs - its run time; returns -2 if it was killed (hung).
+int SpawnTimed(const char* mode, const std::string& path, int n, const char* fix, const char* stall, DWORD limit_ms,
+               double* secs) {
+	_putenv_s("KYTY_FIX_B36", fix != nullptr ? fix : "");
+	_putenv_s("KYTY_TEST_LOGSTALL", stall != nullptr ? stall : "");
+	_putenv_s("KYTY_FRAME_TRACE", "");
+	std::error_code ec;
+	std::filesystem::remove(path, ec);
+	const auto  ns     = std::to_string(n);
+	const char* argv[] = {g_exe.c_str(), "--child", mode, path.c_str(), ns.c_str(), nullptr};
+	const auto  t0     = NowUs();
+	const auto  h      = _spawnv(_P_NOWAIT, g_exe.c_str(), argv);
+	int         rc     = -1;
+	if (h != -1) {
+		const auto handle = reinterpret_cast<HANDLE>(h);
+		if (WaitForSingleObject(handle, limit_ms) == WAIT_TIMEOUT) {
+			TerminateProcess(handle, 9);
+			WaitForSingleObject(handle, INFINITE);
+			rc = -2;
+		} else {
+			DWORD code = 0;
+			GetExitCodeProcess(handle, &code);
+			rc = static_cast<int>(code);
+		}
+		CloseHandle(handle);
+	}
+	*secs = static_cast<double>(NowUs() - t0) / 1e6;
+	std::printf("  child %s fix=%s stall=%s rc=%d (0x%08x) %.1f s%s\n", mode, fix != nullptr ? fix : "-",
+	            stall != nullptr ? stall : "-", rc, static_cast<unsigned>(rc), *secs, rc == -2 ? " HUNG (killed)" : "");
+	std::fflush(stdout);
+	_putenv_s("KYTY_FIX_B36", "");
+	_putenv_s("KYTY_TEST_LOGSTALL", "");
+	return rc;
 }
 
 std::string Path(const char* name) {
@@ -444,12 +526,15 @@ void TestLatency() {
 		CHECK(Field(res, "async=") == 1);
 		CHECK(maxlat < 50000);
 		CHECK(fault < 50000);
+		CHECK(Field(res, "veh_us=") < 50000);
+		CHECK(text.find(" line=\"") != std::string::npos);
 		CHECK(text.find("VEH line: written from a vectored exception handler\n") != std::string::npos);
 		CHECK(text.find("TestLogStall: i=1 sleep_ms=2000") != std::string::npos);
 		CHECK(text.find(" on=writer tid=") != std::string::npos);
 		CHECK(stall != UINT64_MAX && stall >= 1900000);
 	}
-	Case("latency_0: =0, the stand sleeps 2 s on the caller - the negative control: a Log::Write waits");
+	Case("latency_0: =0, the stand sleeps 2 s holding the write - the negative control: Log::Write waits, also a second "
+	     "writer (F25k2 RC1)");
 	Spawn("latency", Path("lat0"), 0, "0", "1:2000:1");
 	{
 		const auto text = ReadFile(Path("lat0"));
@@ -457,9 +542,64 @@ void TestLatency() {
 		std::printf("  %s", res.c_str());
 		CHECK(Field(res, "async=") == 0);
 		CHECK(Field(res, "maxlat_us=") >= 1900000);
+		CHECK(Field(res, "veh_us=") != UINT64_MAX && Field(res, "veh_us=") >= 1400000);
 		CHECK(text.find(" on=caller tid=") != std::string::npos);
+		CHECK(text.find(" line=\"W ") != std::string::npos);
 		CHECK(text.find("LogAsync:") == std::string::npos);
 	}
+}
+
+// F25k2 (RC2): the KYTY_LONGFRAME records and their printer.
+void TestLongFrame() {
+	constexpr int n = 4100;
+	for (const char* fix: {"0", "1"}) {
+		const auto title = fmt::format("longframe_{}: KYTY_LONGFRAME=1, =" "{}, {} records while the stand holds the write - "
+		                               "no wait, 4 096 lines printed off the recording thread", fix, fix, n);
+		Case(title.c_str());
+		const auto path = Path(std::strcmp(fix, "0") == 0 ? "lf0" : "lf1");
+		_putenv_s("KYTY_LONGFRAME", "1");
+		Spawn("longframe", path, n, fix, "1:2000:1");
+		_putenv_s("KYTY_LONGFRAME", "");
+		const auto text  = ReadFile(path);
+		const auto res   = ReadFile(path + ".res");
+		const auto lines = Lines(text);
+		int        next  = 0;
+		bool       ok    = true;
+		const int  async = std::strcmp(fix, "1") == 0 ? 1 : 0;
+		for (const auto& l: lines) {
+			if (StartsWith(l, "LongFrame: ")) {
+				ok = ok && l == fmt::format("LongFrame: n={} dt_us={} log_async={} t_ms={}", next, 100000 + next, async,
+				                            1000 + next);
+				next++;
+			}
+		}
+		std::printf("  %s  longframe_lines=%d\n", res.c_str(), next);
+		CHECK(Field(res, "printer=") == 1);
+		CHECK(Field(res, "async=") == static_cast<uint64_t>(async));
+		CHECK(Field(res, "rec_max_us=") < 50000);
+		CHECK(ok);
+		CHECK(next == 4096);
+		CHECK(text.find("TestLogStall: i=1 sleep_ms=2000") != std::string::npos);
+	}
+	Case("longframe_off: KYTY_LONGFRAME unset - no printer thread, no line");
+	Spawn("longframe", Path("lfoff"), 10, "0", nullptr);
+	{
+		const auto text = ReadFile(Path("lfoff"));
+		const auto res  = ReadFile(Path("lfoff") + ".res");
+		std::printf("  %s", res.c_str());
+		CHECK(Field(res, "printer=") == 0);
+		CHECK(text.find("LongFrame:") == std::string::npos);
+	}
+}
+
+// F25k2 (RC4): a fault inside a write under the sink lock outside the writer - the process dies, does not hang.
+void TestDieOwner() {
+	Case("die_owner: =1, a fault inside the synchronous tail of a timed-out drain (under g_sink_mutex) - the child dies "
+	     "within 10 s (RC4)");
+	double     secs = 0;
+	const auto rc   = SpawnTimed("die_owner", Path("die_owner"), 1000, "1", "0:6000:1", 40000, &secs);
+	CHECK(rc == static_cast<int>(0xC0000005u));
+	CHECK(secs <= 10.0);
 }
 
 bool DeathFileOk(const std::string& text, int n, const char* marker, int* got) {
@@ -531,11 +671,22 @@ int main(int argc, char** argv) {
 	g_exe = std::filesystem::absolute(argv[0]).string();
 	g_dir = argc >= 2 ? argv[1] : std::filesystem::temp_directory_path().string();
 	std::filesystem::create_directories(g_dir);
+	if (argc >= 4 && std::strcmp(argv[2], "--case") == 0 && std::strcmp(argv[3], "die_owner") == 0) {
+		// F25k2: only die_owner (the positive control on a build without the RC4 guard).
+		TestDieOwner();
+		std::printf("cases=%d failures=%d\n", g_cases, g_fail);
+		if (g_fail == 0) {
+			std::printf("ALL OK\n");
+		}
+		return g_fail == 0 ? 0 : 1;
+	}
 	TestSeq0();
 	TestOrder();
 	TestFull();
 	TestLatency();
+	TestLongFrame();
 	TestDeath();
+	TestDieOwner();
 	std::printf("cases=%d failures=%d\n", g_cases, g_fail);
 	if (g_fail == 0) {
 		std::printf("ALL OK\n");

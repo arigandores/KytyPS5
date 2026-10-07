@@ -1,0 +1,4 @@
+else branch: 28 lines, parent body: 28 lines, equal after one tab: True
+=1 branch publications in order: m_epoch.fetch_add -> BdaNoteRegionWrite -> m_cpu_epoch.fetch_add: ok
+=1 branch B2Reuse reset after the global epoch: ok
+ALL OK

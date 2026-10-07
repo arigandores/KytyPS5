@@ -1,0 +1,6 @@
+exe parent memory_tracker_tests 9969e549eac0350d shader_cfg_tests 66e0007a21499170 (buildM at 238d019e)
+exe fix    memory_tracker_tests 122578cce6fda8cf shader_cfg_tests 420f0ad6cde1fc5c (buildM at 238d019e + patch_f24c.py = 21f8ca76)
+KYTY_FIX_B13=unset | parent: mtt all cases passed FixB13 lines none; sct tests 133 failed 0 | fix: mtt all cases passed FixB13 lines 0; sct tests 133 failed 0 | new failures 0, test list equal True, FixB13 line by value True: PASS
+KYTY_FIX_B13=0 | parent: mtt all cases passed FixB13 lines none; sct tests 133 failed 0 | fix: mtt all cases passed FixB13 lines 0; sct tests 133 failed 0 | new failures 0, test list equal True, FixB13 line by value True: PASS
+KYTY_FIX_B13=1 | parent: mtt all cases passed FixB13 lines none; sct tests 133 failed 0 | fix: mtt all cases passed FixB13 lines 1; sct tests 133 failed 0 | new failures 0, test list equal True, FixB13 line by value True: PASS
+ALL OK

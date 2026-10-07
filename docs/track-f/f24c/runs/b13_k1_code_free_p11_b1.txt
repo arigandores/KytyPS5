@@ -1,0 +1,8 @@
+args: C:/kyty/f287/f24c/buildM/b13_epoch_stand.exe free 11 1 1000000
+KYTY_FIX_B13: 1
+rc: 0
+seconds: 25.9
+FixB13: mode=1
+
+B13 build=code fix_b13=1 mode=free point=11 bits=1 iters=1000000 lost=0 r1=hit:3772,skip_bit:0,skip_stamp:0,scan:996228 r2=hit:996228,skip_bit:0,skip_stamp:0,scan:3772 gate_bdastamp=1 gate_bdabits=0
+

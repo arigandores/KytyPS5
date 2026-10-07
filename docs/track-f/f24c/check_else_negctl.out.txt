@@ -1,0 +1,15 @@
+negative control 1 (one character of the else branch changed):
+else branch: 28 lines, parent body: 28 lines, equal after one tab: False
+  first difference at body line 6:
+    parent: '\t\t\t// lock before it reads dirty bits, so the order does not matter to it.'
+    else:   '\t\t\t// lock before it reads dirty bits, so the order does not matter to it!'
+=1 branch publications in order: m_epoch.fetch_add -> BdaNoteRegionWrite -> m_cpu_epoch.fetch_add: ok
+=1 branch B2Reuse reset after the global epoch: ok
+FAILED
+rc=1
+negative control 2 (=1 bit and global epoch swapped):
+else branch: 28 lines, parent body: 28 lines, equal after one tab: True
+=1 branch publications in order: m_epoch.fetch_add -> m_cpu_epoch.fetch_add -> BdaNoteRegionWrite: FAIL
+=1 branch B2Reuse reset after the global epoch: ok
+FAILED
+rc=1

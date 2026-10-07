@@ -1,0 +1,170 @@
+[test] TestResourceDescriptorClassification
+[test] TestShaderBufferResourceSize
+[test] TestNativeShaderResourceDependencies
+[test] TestNormalizedImageContracts
+[test] TestSpirvRequirementsAnalysis
+[test] TestTypedSpirvSerialization
+[test] TestDeferredSpirvPhiPatching
+[test] TestCompilerStageInputOwnership
+[test] TestSpirvEmissionOwnsRequirements
+[test] TestRepeatedExportsHaveOneInterface
+Shader: emitted zero-position clip guard
+[test] TestNewShaderRecompilerSpirvSizeBaselines
+[test] TestDemandDrivenSpirvDeclarations
+[test] TestNewShaderRecompilerSMovB32
+[test] TestNewShaderRecompilerClipDisabledPosition
+[test] TestNewShaderRecompilerAuxPositionExports
+[test] TestNewShaderRecompilerNativeWideScalarMemoryIr
+[test] TestNewShaderRecompilerNativeWideBufferIr
+[test] TestNewShaderRecompilerScalarB64LaneTranslation
+[test] TestNewShaderRecompilerMubufFormatTranslation
+[test] TestNewShaderRecompilerTypedBufferTranslation
+[test] TestNewShaderRecompilerDsReadWrite2Translation
+[test] TestNewShaderRecompilerDsWideAndAtomicTranslation
+[test] TestNewShaderRecompilerCapturedVop1SdwaByteConvert
+[test] TestNewShaderRecompilerScalarMemoryBindingDomains
+[test] TestNewShaderDecoderArchitecture
+[test] TestImageAddressOperands
+[test] TestSopkCompareImmediateExtension
+[test] TestNewShaderRecompilerCapturedVopcSdwaCmpxClass
+[test] TestNewShaderRecompilerCapturedVopcSdwaCmpxLtU16
+[test] TestNewShaderRecompilerIrLookupMissFailsExplicitly
+[test] TestNewShaderRecompilerRejectsDppOn64BitCompares
+[test] TestPsInputCountRegisterDecode
+[test] TestPixelAncillaryLayerInput
+[test] TestNewShaderRecompilerUnbasedFlatUsesBda
+[test] TestNewShaderRecompilerFlatUserPointerUsesDma
+[test] TestNewShaderRecompilerFlatAddressDomainsUseDma
+[test] TestNewShaderRecompilerCfgStraightLine
+[test] TestNewShaderRecompilerCfgIfElse
+[test] TestNewShaderRecompilerCfgConsecutiveNativePhis
+[test] TestNewShaderRecompilerStructuredU64Phi
+[test] TestNewShaderRecompilerCfgTerminalExitMergePS
+[test] TestNewShaderRecompilerCfgPostEndTargetMergePS
+[test] TestNewShaderRecompilerCfgLoopBreakContinue
+[test] TestNewShaderRecompilerCfgLoopHeaderDsAppendConsumeStructured
+[test] TestNewShaderRecompilerCfgLoopHeaderDsReadStructured
+[test] TestNewShaderRecompilerCfgLoopHeaderDsRead2B64Structured
+[test] TestNewShaderRecompilerCfgSharedOuterAndLoopMerge
+[test] TestNewShaderRecompilerCfgLoopEarlyBreakNoSelection
+[test] TestNewShaderRecompilerCfgNestedLoopNonlocalExitDispatcher
+[test] TestNewShaderRecompilerCfgNestedLoopLocalExitNoSelection
+[test] TestNewShaderRecompilerCfgNestedLoopExitTailMergeSplit
+[test] TestNewShaderRecompilerCfgMixedContinueNonmergeExitDispatcher
+[test] TestNewShaderRecompilerCfgConditionalLatchNoSelection
+[test] TestNewShaderRecompilerCfgDirectConditionalLatchNoSelection
+[test] TestNewShaderRecompilerCfgLoopEarlyContinuesNoSelection
+[test] TestNewShaderRecompilerCfgLoopGatewaySelection
+[test] TestNewShaderRecompilerCfgConditionalLoopHeaderSelection
+[test] TestNewShaderRecompilerCfgMultipleLoopLatches
+[test] TestNewShaderRecompilerCfgDuplicateMergeStructuredSplit
+[test] TestNewShaderRecompilerCfgNestedEarlyExitLoopForwarders
+[test] TestNewShaderRecompilerCfgExecSccSharedArm
+[test] TestNewShaderRecompilerCfgAstroBotEarlyExitLadderPS
+ASTRO BOT PS 5457 structurize: ok=1 blocks=160 elapsed_ms=18 reason=
+[test] TestCfgTerminalCloneRetryClearsFailure
+[test] TestSharedReturnPreservesDescriptorDominance
+[test] TestNewShaderRecompilerCfgNestedTailEarlyExit
+[test] TestNewShaderRecompilerCfgSharedReturnAfterNestedSelections
+[test] TestNewShaderRecompilerCfgAlternatingSharedReturns
+[test] TestNewShaderRecompilerCfgLoopSharedRegion
+[test] TestNewShaderRecompilerCfgSharedRegionBeforeEarlyBreakLoop
+[test] TestNewShaderRecompilerCfgOverlappingEarlyExitLadder
+[test] TestNewShaderRecompilerCfgNestedEarlyExitSharedTerminal
+[test] TestNewShaderRecompilerCfgSharedTerminalEarlyExit
+[test] TestNewShaderRecompilerCfgPrunesUnreachableSelectionEntry
+[test] TestNewShaderRecompilerCfgFailedStructurizationPreservesGraph
+[test] TestNewShaderRecompilerCfgIrreducibleDispatcher
+[test] TestNewShaderRecompilerDispatcherSpillsU32x3
+[test] TestNewShaderRecompilerPlanningOnlyLoads
+[test] TestNewShaderRecompilerU64PairTranslation
+[test] TestComputeDispatchWaveSize
+[test] TestNewShaderRecompilerBufferLoadsGuardedByExec
+[test] TestNewShaderRecompilerBufferAtomicsGuardedByBounds
+[test] TestCapturedBufferAtomicsX2
+[test] TestNewShaderRecompilerPixelImageSampleLodSelection
+[test] TestF19IndirectComparisonTable
+[test] TestNewShaderRecompilerBranchConditionForms
+[test] TestNewShaderRecompilerSetpcBranch
+[test] TestFusedShaderHandoffPreservesRegisters
+[test] TestMeshExportStorage
+[test] TestMergedShaderUserDataSnapshot
+[test] TestMeshInputAssembly
+[test] TestEmbeddedFetchPreservesSharedScalarLoad
+[test] TestEmbeddedVertexFormatSwizzle
+[test] TestNewShaderRecompilerSetpcJumpTable
+[test] TestNewShaderRecompilerPrunesUnreachableSetpcMetadata
+[test] TestNewShaderRecompilerSetpcDwordJumpTable
+[test] TestTypedEntryStateIsMinimal
+[test] TestValuePhiValidation
+[test] TestU64ShiftConstantPropagation
+[test] TestNewShaderRecompilerZeroInitialRegisterState
+[test] TestNewShaderRecompilerVertexSystemInputsWithoutMirrors
+[test] TestNewShaderRecompilerVertexExportUsesInvocationExecMask
+[test] TestNggPassthroughVertexSubgroupHeader
+[test] TestComputePretranslation
+pretranslation test: ready=18 failed=1 hits=17
+[test] TestNewShaderRecompilerPerInvocationMasksWithoutMirrors
+[test] TestNewShaderRecompilerPerInvocationU64Complement
+[test] TestNewShaderRecompilerExpPixelOutputs
+[test] TestRenderTargetReverseExportMapping
+[test] TestNewShaderRecompilerEarlyZDisabledWhenPixelKillEnabled
+[test] TestTypedDescriptorRealWideMoveTranslation
+[test] TestComputeImageFill
+[test] TestTypedDescriptorRealCarryAndScalarLoads
+[test] TestSrtWalkerRealSmemTranslation
+[test] TestSrtWalkerVccBaseTranslation
+[test] TestSrtWalkerRealSBufferTranslation
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 3: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem3 kind=1 off=0xe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x2)
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfffffffe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x0)
+[test] TestScalarMemorySourcesCapturedBeforeWrites
+[test] TestScalarMemoryLoadCrossesIntoVcc
+[test] TestScalarMemoryUnusedTailDce
+[test] TestResourceTrackingRealDensePatching
+[test] TestDirectTranslationResetsAnalysisState
+[test] TestNewShaderRecompilerNativeBindingPlan
+[test] TestNewShaderRecompilerStageInputInfo
+[test] TestCustomVintrpMovTranslation
+[test] TestGraphicsCreateInterpolantMapping
+[test] TestNewShaderRecompilerPixelPipelineEntry
+[test] TestComputeLdsAllocationIdentity
+[test] TestPixelProgramCacheBindingIdentity
+[test] TestGraphicsPushConstantPlacement
+[test] TestNewShaderRecompilerUnsupportedMemoryDecode
+[test] TestSpecDumpRoundTrip
+SpecDumpFixture: SpecDump: file=cs_ stage=MS hash=0x0000000000002222 perm=1 spec= b:8/1/688
+SpecDumpFixture: SpecDump: file=cs_ stage=CS hash=0x99990000aaaabbbb perm=1 spec=
+SpecDumpFixture: SpecDump: file=ps_ stage=PS hash=0x5555666677778888 perm=1 spec= i:2/2/1/36/fac/4294967295
+SpecDumpFixture: SpecDump: file=ps_ stage=PS hash=0x5555666677778888 perm=2 spec= b:4/20/c i:2/2/1/36/fac/4294967295
+SpecDumpFixture: SpecDump: file=vs_ stage=VS hash=0x1111222233334444 perm=1 spec= b:10/77/fac i:1/1/11/0/d1a/3
+SpecDumpFixture: SpecDump: file=vs_ stage=VS hash=0x1111222233334444 perm=2 spec= b:0/0/688 b:20/13/0
+SpecDumpFixture: ALL OK
+[test] TestF19NullComparisonImage
+[test] TestShaderReplayFormat
+ShaderReplayLayout: word=6 word.value=0 word.role=4 word.flags=5 file=16 file.magic=0 file.format=8 file.compat_size=12 body=32 body.generation=0 body.body_checksum=8 body.sources=16 body.specs=20 body.pipes=24 src=72 src.src_id=0 src.hash=8 src.stage=16 src.user_data_count=20 src.code_size=24 src.static_words=28 src.code_words=32 src.back_words=36 src.sha256=40 spec=40 spec.spec_id=0 spec.src_id=8 spec.live_spec_hash=16 spec.stored_start=24 spec.user_words=28 spec.reads=32 spec.words=36 pipe=32 pipe.pipe_id=0 pipe.spec=8 pipe.kind=24 pipe.pod_size=28 versions=1:1:1:1
+[test] TestShaderReplayCanonicalPath
+[replay] inline descriptors: words=66 user=64 reads=0 canonical=1 why=
+[replay] inline descriptors: roles keep=6 inert=54 ptr=0/0 v=1/1 t=1/1 meta=1/1 buffers=2 images=2
+[replay] pointer to a V# table: words=38 user=32 reads=4 canonical=1 why=
+[replay] pointer to a V# table: roles keep=4 inert=30 ptr=1/1 v=1/1 t=0/0 meta=0/0 buffers=1 images=0
+[test] TestShaderReplayWalkBits
+[replay] walk bits: reads=8 w=36 complete 45f=1 55f=1 45e=1 10f=0
+[replay] walk bits: canonical=1 why=
+[replay] walk bits: address roles 14:2:100 30:2:100 31:3:0 34:2:100 35:3:0
+[replay] walk bits: r_addr=0 stand_addr=6
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0x200](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), 0x0), 0x0)
+shader resource specialization failed: runtime descriptor sources could not be evaluated
+[replay] walk address: reads=4 low=004eb3a0 exact=0 canonical=0 why=residual branch=addr culprit=30:role2 n=1
+[replay] walk exact: reads=8 w=36 canonical=0 why=residual branch=exact culprit=36:role0 n=1
+[replay] canon stand: unspoiled canonical=1 why=
+[replay] canon stand: address roles 2:6:1 3:7:1400000 6:4:100 7:5:100000 8:8:ffffff 9:9:0
+[replay] canon stand: spoiled canonical=0 why=self ok=1 complete=1 culprit=2:role6:00001000->00000000
+[replay] count reject: residual=26 self=1 base=1 big=1 mismatch=27 printed_residual=20 self=1 exact=0 base=1 big=1
+[f19] k16UNorm KYTY_FIX_F19=1: C dref=1 manual=0, C_LZ dref=1 manual=0
+[f19] indirect k16UNorm+k8UNorm KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2
+[f19] indirect k16UNorm+k32Float KYTY_FIX_F19=1: images=2 members=2 dref=2 manual=0 plain_explicit=0
+[f19] indirect k32Float+k8UNorm KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2
+[f19] null T# alone C KYTY_FIX_F19=1: images=1 native=1 manual_images=0 dref=1 manual=0
+[f19] null T# + k16UNorm shared sampler C KYTY_FIX_F19=1: images=2 native=2 manual_images=0 dref=2 manual=0
+[f19] null T# alone C_LZ KYTY_FIX_F19=1: images=1 native=1 manual_images=0 dref=1 manual=0
+[f19] null T# + k16UNorm shared sampler C_LZ KYTY_FIX_F19=1: images=2 native=2 manual_images=0 dref=2 manual=0

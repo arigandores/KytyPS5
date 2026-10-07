@@ -1,0 +1,52 @@
+238d019e	src/graphics/host_gpu/memoryTracker.h	160	manager->ChangeState<DirtySource::Cpu, true>(manager->GetCpuAddr() + offset, bytes);	return false;
+238d019e	src/graphics/host_gpu/memoryTracker.h	206	manager->ChangeState<DirtySource::Cpu, true>(open_begin, open_size);	Common::FrameStats::Add(Common::FrameStats::Counter::FaultWi
+238d019e	src/graphics/host_gpu/regionManager.h	211	bits.SetRangeRelaxed(start, end);	// Gate "armdefer": the pages become writable, so an arming 
+238d019e	src/common/gates.cpp	25	{"KYTY_REGION_EPOCH", "regionepoch", false},	{"KYTY_SRT_MEMO", "srtmemo", false},
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	878	return {m_memory_tracker.CpuWriteEpoch(), 0};	}
+238d019e	src/graphics/host_gpu/renderer/cache/streamBuffer.h	91	return epoch != 0 && upload_epoch == epoch && upload_epoch_kind == kind &&	address >= upload_begin && address <= upload_end && size <= 
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	876	return {m_memory_tracker.RangeWriteEpoch(vaddr, size), 1};	}
+238d019e	src/graphics/host_gpu/memoryTracker.h	48	mixed = (mixed ^ manager->Epoch()) * 0x100000001b3ull;	remaining -= bytes;
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	956	clean = m_memory_tracker.IsRegionCpuCleanFast(vaddr, size);	if (carry != nullptr && carry->mode >= 2) [[unlikely]] {
+238d019e	src/graphics/host_gpu/regionManager.h	237	// HasCurrentUpload check fails. A BDA scan observing these epochs still acquires this	// lock before it reads dirty bits, so the order does not ma
+238d019e	src/common/gates.cpp	82	{"KYTY_BUF_FAST", "buffast", false},	{"KYTY_BUF_FAST_VERIFY", "buffastcheck", false},
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	1499	fast_epoch = m_memory_tracker.RangeWriteEpoch(vaddr, size);	if (fast_slot->instance != m_instance || fast_slot->vaddr !=
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	1563	if (fast_epoch != 0 && m_memory_tracker.RangeWriteEpoch(vaddr, size) == fast_epoch) {	*fast_slot = {vaddr, size, fast_epoch, m_registration_epoch,
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	2436	const auto epoch      = m_memory_tracker.RangeWriteEpoch(vaddr, size);	const auto generation = m_stream_buffer.Generation();
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	1766	const uint64_t pre = m_memory_tracker.RangeWriteEpoch(vaddr, size);	const size_t   idx = BufFastIndex(vaddr, size);
+238d019e	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	975	regions.push_back({index, tracker->RegionWriteStamp(index)});	};
+238d019e	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1203	if (!(tracker->RegionWriteStamp(region.index) == region.stamp)) {	return false;
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	1590	const uint64_t bln_gwe = bln >= 2 ? m_memory_tracker.CpuWriteEpoch() : 0;	if (BufferUploadEpochEnabled() && !is_written && buffer != n
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	901	const bool moved_g = m_memory_tracker.CpuWriteEpoch() != carry.gwe;	Common::BindLean::Count(moved ? FS::Counter::BlnSraceA : FS:
+238d019e	src/graphics/host_gpu/renderer/renderContext.cpp	330	const auto cpu_epoch          = m_buffer_cache.CpuWriteEpoch();	const auto registration_epoch = m_buffer_cache.RegistrationE
+238d019e	src/graphics/host_gpu/renderer/renderContext.cpp	333	const bool bda_cached = reuse && cpu_epoch == m_bda_cpu_epoch &&	registration_epoch == m_bda_registration_epoch &&
+238d019e	src/graphics/host_gpu/renderer/renderContext.cpp	399	m_bda_cpu_epoch          = cpu_epoch;	m_bda_registration_epoch = registration_epoch;
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3506	const bool bit_clear = use_bits && !BdaTakeRegionWrite(index);	if (bit_clear && m_bda_region_stamps[index].generation == m_
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3530	const auto stamp = m_memory_tracker.RegionWriteStamp(index);	auto&      seen  = m_bda_region_stamps[index];
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3532	if (seen.generation == m_bda_stamp_generation && seen.stamp == stamp) {	Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegi
+238d019e	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3571	m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);	}
+238d019e	src/graphics/host_gpu/memoryTracker.cpp	73	BdaNoteRegionWrite(index);	return ptr;
+238d019e	src/graphics/host_gpu/regionManager.h	450	m_epoch.fetch_add(1, std::memory_order_release);	// Gate "bdabits": the second publisher of this epoch, so th
+238d019e	src/common/gates.cpp	96	{"KYTY_ARM_DEFER", "armdefer", false},	{"KYTY_ARM_DEFER_VERIFY", "armcheck", false},
+238d019e	src/graphics/host_gpu/regionDefinitions.h	28	g_bda_write_bits[word].fetch_or(uint64_t {1} << (index % 64u), std::memory_order_release);	}
+238d019e	src/graphics/host_gpu/regionDefinitions.h	48	if ((g_bda_write_bits[word].load(std::memory_order_acquire) & bit) == 0) {	return false;
+238d019e	src/graphics/host_gpu/memoryTracker.h	30	return m_cpu_epoch.load(std::memory_order_acquire);	}
+238d019e	src/graphics/host_gpu/regionManager.h	159	return m_epoch.load(std::memory_order_acquire);	}
+238d019e	src/common/frameStats.h	4136	RbCen::g_rb_gen.fetch_add(1, std::memory_order_release);	// Session 136 (s.7): the witness of b2reuse while it is on,
+238d019e	src/graphics/host_gpu/regionManager.h	254	Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpuw);	}
+238d019e	src/graphics/host_gpu/regionManager.h	245	m_cpu_epoch.fetch_add(1, std::memory_order_release);	#if defined(KYTY_TEST_B13_HOOK)
+21f8ca76	src/graphics/host_gpu/regionManager.h	6	#include "common/envFlag.h"	#include "common/frameStats.h"
+21f8ca76	src/graphics/host_gpu/regionManager.h	51	[[nodiscard]] inline bool FixB13Enabled() noexcept {	static const bool on = Common::EnvValueOn(std::getenv("KYTY_
+21f8ca76	src/graphics/host_gpu/regionManager.h	246	if (FixB13Enabled()) {	// Track F, F24c (KYTY_FIX_B13=1, ROADMAP s122 item 595(d)).
+21f8ca76	src/graphics/host_gpu/regionManager.h	257	m_epoch.fetch_add(1, std::memory_order_release);	#if defined(KYTY_TEST_B13_HOOK)
+21f8ca76	src/graphics/host_gpu/regionManager.h	259	B13Test::Hook(11);	#endif
+21f8ca76	src/graphics/host_gpu/regionManager.h	262	BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);	#if defined(KYTY_TEST_B13_HOOK)
+21f8ca76	src/graphics/host_gpu/regionManager.h	264	B13Test::Hook(12);	#endif
+21f8ca76	src/graphics/host_gpu/regionManager.h	266	m_cpu_epoch.fetch_add(1, std::memory_order_release);	#if defined(KYTY_TEST_B13_HOOK)
+21f8ca76	src/graphics/host_gpu/regionManager.h	268	B13Test::Hook(13);	#endif
+21f8ca76	src/graphics/host_gpu/regionManager.h	273	Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpuw);	}
+21f8ca76	src/graphics/host_gpu/regionManager.h	276	// Track F, F24c: KYTY_FIX_B13=0 - the text before F24c, verbatim	// dirty bits read under this lock, not for the lock-free sk
+21f8ca76	src/graphics/host_gpu/regionManager.h	309	UpdateProtection<!enable, false>();	} else {
+21f8ca76	src/graphics/host_gpu/memoryTracker.cpp	18	const bool               fix_b13 = FixB13Enabled();	if (!fix_b13_logged.exchange(true, std::memory_order_relaxed
+21f8ca76	src/graphics/host_gpu/memoryTracker.cpp	20	LOGF("FixB13: mode=%d	}
+21f8ca76	tests/B13EpochStand.cpp	215	const bool     point_ok =	if ((!forced && !free_mode && !before && !after) || !point_o
+1e46c4bd	docs/ROADMAP.md	23569	595. **Звено F24b трека F (`HPP-659`, лид): F24a (`HPP-658`) ПРИНЯТ	(а) **Приёмка строкой. F24a ✓** (ревью лида — комментарий `e

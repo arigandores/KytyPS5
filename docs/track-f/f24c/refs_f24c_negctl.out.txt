@@ -1,0 +1,6 @@
+negative control 1: a reference shifted by one line, no table row
+FAIL 21f8ca76:src/graphics/host_gpu/regionManager.h:267 no anchor row
+REFS 51, FAILED
+negative control 2: the same reference with a table row of the shifted line (anchor of 266 at 267)
+FAIL 21f8ca76:src/graphics/host_gpu/regionManager.h:267 anchor NO, +1 NO
+REFS 51, FAILED

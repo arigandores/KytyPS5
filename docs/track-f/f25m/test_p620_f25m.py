@@ -5,6 +5,7 @@ before every move, seal 2 required, DISPLAY_OFF branch; launch_f25m.sh: display 
 and SERIES_STOP), strict cp1250 output.  ASCII only; ends with ALL OK.
 usage: python test_p620_f25m.py"""
 import hashlib
+import json
 import lzma
 import os
 import re
@@ -157,6 +158,68 @@ for tag, form, lo, hi in (('b36_s1', 'user', 3.5, 4.5), ('b36_f0', 'harness', 3.
     else:
         check('tempo real %s: log and run.txt present' % tag, False, (lp, rp))
 
+# ---- seal 2a (item 621): the W form limit 200 ms from the plan, agreement with the launch arguments
+def wjson(name, vv):
+    p = os.path.join(TMP, name)
+    cmd = ['x', '--vulkan-validation', 'false', '--shader-validation', 'false']
+    if vv is not None:
+        cmd += ['--vulkan-validation', vv]
+    open(p, 'w', encoding='utf-8').write(json.dumps({'cmdline': cmd}))
+    return p
+
+
+JW = wjson('w.json', 'true')
+JN = wjson('n.json', None)
+for name, dts, st, rc in (('199 999 us', [199999] * 10, 'PASS', 0), ('200 000 us exactly', [200000] * 10, 'EDGE', 3),
+                          ('200 001 us', [200001] * 10, 'FAIL', 1), ('W reference 131 ms', [131440] * 20, 'PASS', 0),
+                          ('mean of mixed 100 ms / 300 ms = 200 ms', [100000, 300000], 'EDGE', 3)):
+    p = write('w_%s.txt' % name.replace(' ', '_').replace('/', '_'), harness_log(dts))
+    t = TP.tempo(p, RUN, plan_w=True, json_path=JW)
+    check('tempo W (seal 2a) %s -> %s, limit 200 000' % (name, st), t['status'] == st and t['rc'] == rc and t['limit_us'] == 200000 and
+          t['wform'] is True and t['form'] == 'harness', t)
+p131 = write('w131.txt', harness_log([131440] * 20))
+t = TP.tempo(p131, RUN, plan_w=False, json_path=JN)
+check('tempo non-W 131 ms -> FAIL, limit 100 000 (item 620 unchanged)', t['status'] == 'FAIL' and t['limit_us'] == 100000, t)
+t = TP.tempo(p131, RUN)
+check('tempo default (no plan) -> limit 100 000', t['status'] == 'FAIL' and t['limit_us'] == 100000 and t['wform'] is False, t)
+for name, fx in (('the 10 fps edge under no-W', [100000] * 10), ):
+    t = TP.tempo(write('n_edge.txt', harness_log(fx)), RUN, plan_w=False, json_path=JN)
+    check('tempo non-W %s -> EDGE' % name, t['status'] == 'EDGE', t)
+t = TP.tempo(p131, RUN, plan_w=True, json_path=JN)
+check('tempo W plan, launch --vulkan-validation false -> UNDETERMINED (disagree)', t['status'] == 'UNDETERMINED' and 'disagree' in t['why'], t)
+t = TP.tempo(p131, RUN, plan_w=False, json_path=JW)
+check('tempo no-W plan, launch --vulkan-validation true -> UNDETERMINED (disagree)', t['status'] == 'UNDETERMINED' and 'disagree' in t['why'], t)
+t = TP.tempo(p131, RUN, plan_w=True, json_path=os.path.join(TMP, 'absent.json'))
+check('tempo W plan without the run json -> UNDETERMINED', t['status'] == 'UNDETERMINED' and 'no run json' in t['why'], t)
+t = TP.tempo(p131, RUN, plan_w=True, json_path=None)
+check('tempo W plan, json not given -> UNDETERMINED', t['status'] == 'UNDETERMINED', t)
+jb = os.path.join(TMP, 'bad.json')
+open(jb, 'w').write('{not json')
+t = TP.tempo(p131, RUN, plan_w=True, json_path=jb)
+check('tempo W plan, bad run json -> UNDETERMINED', t['status'] == 'UNDETERMINED' and 'not read' in t['why'], t)
+jc = os.path.join(TMP, 'nocmd.json')
+open(jc, 'w').write('{}')
+t = TP.tempo(p131, RUN, plan_w=True, json_path=jc)
+check('tempo W plan, json without cmdline -> UNDETERMINED', t['status'] == 'UNDETERMINED' and 'without cmdline' in t['why'], t)
+t = TP.tempo(p131, RUN, plan_w=False, json_path=os.path.join(TMP, 'absent.json'))
+check('tempo no-W plan, absent json -> read by the item 620 limit', t['status'] == 'FAIL' and t['limit_us'] == 100000, t)
+t = TP.tempo(write('w_nolevel.txt', ['FrameTrace: n=1 dt_us=20000 draws=5']), RUN, plan_w=True, json_path=JW)
+check('tempo W: no level line -> UNDETERMINED', t['status'] == 'UNDETERMINED' and t['why'] == 'no level line', t)
+check('tempo last_flag: the last value counts', TP.last_flag(['a', '--vulkan-validation', 'false', '--vulkan-validation', 'true'],
+                                                             '--vulkan-validation') == 'true')
+for name, f, extra, rc, head in (('W PASS', 'w131.txt', ['--plan-w', 'yes', '--json', JW], 0, 'TEMPO PASS'),
+                                 ('W EDGE', 'w_200_000_us_exactly.txt', ['--plan-w', 'yes', '--json', JW], 3, 'TEMPO EDGE'),
+                                 ('no-W FAIL', 'w131.txt', ['--plan-w', 'no', '--json', JN], 1, 'TEMPO FAIL'),
+                                 ('W disagree', 'w131.txt', ['--plan-w', 'yes', '--json', JN], 2, 'TEMPO UNDETERMINED')):
+    r, out, err, raw = py([os.path.join(HERE, 'tempo_f25m.py'), os.path.join(TMP, f), RUN] + extra)
+    check('tempo CLI (seal 2a) %s: exit %d, %s, ASCII' % (name, rc, head), r == rc and out.startswith(head) and all(b < 128 for b in raw)
+          and not err, (r, out, err))
+r, out, err, raw = py([os.path.join(HERE, 'tempo_f25m.py'), os.path.join(TMP, 'w_200_000_us_exactly.txt'), RUN, '--plan-w', 'yes', '--json', JW])
+check('tempo CLI W EDGE names both readings (200 ms / 5 fps)', 'dt < 200 ms -> FAIL, >= 5 fps -> PASS' in out and 'limit_ms 200 (W form' in out, out)
+for bad in (['--plan-w'], ['--plan-w', 'maybe'], ['--json'], ['--zz']):
+    r, out, err, raw = py([os.path.join(HERE, 'tempo_f25m.py'), os.path.join(TMP, 'w131.txt'), RUN] + bad)
+    check('tempo CLI bad args %s -> exit 9' % bad, r == 9, (r, out))
+
 # ---- dispstate.py
 DSP = os.path.join(HERE, 'dispstate.py')
 r, out, err, raw = py([DSP])
@@ -214,7 +277,20 @@ check('launch: display check before the guard TAG line, exit 6, restoreA exempt'
       'exit 6' in LA and '"$T" != restoreA' in LA)
 check('post: tempo after the reader, SERIES_STOP on a non-PASS', PO.find('python tempo_f25m.py $G/log_$T.txt $D/run.txt') > PO.find('f25m_read.py $T --json') and
       '[ $TRC != 0 ]' in PO and '> $G/SERIES_STOP' in PO)
-check('post: W executor variant row only', 'executor variant for W (mean dt < 200 ms)' in PO)
+check('post (seal 2a): the executor variant row is gone', 'executor variant for W' not in PO)
+i_plan = PO.find('PLAN=$(F25M_DRYRUN=1 bash $G/go_f25m.sh $T 2>&1 | head -1)')
+i_pw = PO.find('*"--emu-arg=--vulkan-validation --emu-arg=true"*) PW=yes;; *) PW=no;; esac')
+i_tp = PO.find('python tempo_f25m.py $G/log_$T.txt $D/run.txt --plan-w $PW --json $G/$T.json > $D/tempo.txt 2>&1; TRC=$?')
+check('post (seal 2a): W form from the dry-run plan, then tempo with --plan-w and --json', 0 < i_plan < i_pw < i_tp, (i_plan, i_pw, i_tp))
+check('post (seal 2a): no dry-run plan -> exit 1 before tempo', 'case "$PLAN" in dryrun' in PO and PO.find('no dry-run plan for $T') < i_tp)
+check('post (seal 2a): no tag-name case for the W form', 'b36_w*)' not in PO)
+for tg, pw in (('b36_w', 'yes'), ('b36_w_r1', 'yes'), ('b36_v', 'no'), ('b36_s0_r1', 'no'), ('b36_f1', 'no'), ('b36_k07', 'no')):
+    e = dict(os.environ)
+    e['F25M_DRYRUN'] = '1'
+    rr = subprocess.run([BASH, os.path.join(HERE, 'go_f25m.sh'), tg], capture_output=True, env=e)
+    first = rr.stdout.decode('ascii', 'replace').splitlines()[:1]
+    got = 'yes' if first and '--emu-arg=--vulkan-validation --emu-arg=true' in first[0] else 'no'
+    check('post (seal 2a): the plan of %s gives W %s' % (tg, pw), first and first[0].startswith('dryrun ') and got == pw, (first, got))
 r = subprocess.run([BASH, '-n', os.path.join(HERE, 'go_f25m.sh')], capture_output=True)
 check('go: bash -n', r.returncode == 0, r.stderr)
 r = subprocess.run([BASH, '-n', os.path.join(HERE, 'launch_f25m.sh')], capture_output=True)

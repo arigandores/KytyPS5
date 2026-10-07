@@ -1,0 +1,49 @@
+Preparing worktree (detached HEAD 11164d72)
+Updating files:  95% (4106/4287)Updating files:  96% (4116/4287)Updating files:  97% (4159/4287)Updating files:  98% (4202/4287)Updating files:  99% (4245/4287)Updating files: 100% (4287/4287)Updating files: 100% (4287/4287), done.
+HEAD is now at 11164d72 track F link FS9a (HPP-671): default KYTY_FIX_B13=1 (ROADMAP s122 item 604(d)(1))
+--- worktree HEAD
+11164d7258899f9450f2b06149197e94f57d4b21 track F link FS9a (HPP-671): default KYTY_FIX_B13=1 (ROADMAP s122 item 604(d)(1
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+--- cherry-pick 0005e11f..35b454c6
+Auto-merging CMakeLists.txt
+[detached HEAD 554eaafa] track F link F20j (HPP-629): KYTY_DIAG_B32 (default 0, measurement only) and the stand KYTY_TEST_B32 - ROADMAP s122 item 550(v),(z), design F20g s2 with RC1-RC15 of F20h
+ Date: Mon Oct 5 18:42:20 2026 +0200
+ 19 files changed, 2690 insertions(+)
+ create mode 100644 src/common/diagB32.cpp
+ create mode 100644 src/common/diagB32.h
+ create mode 100644 tests/DiagB32Tests.cpp
+picked edf3454a390c580400ab1099bc5feb3223e8462c -> 554eaafa
+[detached HEAD 653ee365] track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32=0 a site's End is one test of the stack object's flag, no call (ROADMAP s122 item 550(z)(1))
+ Date: Mon Oct 5 18:55:59 2026 +0200
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+picked acc9f3da7d5065f7715cc16b13d6cdd87f5c6872 -> 653ee365
+[detached HEAD 22f645e1] track F link F20j2 (HPP-633): KYTY_DIAG_B32 by the review F20k RC1-RC7 (ROADMAP s122 item 552(v)(1)-(7), (d))
+ Date: Mon Oct 5 19:55:45 2026 +0200
+ 7 files changed, 631 insertions(+), 76 deletions(-)
+picked dd9a1e17c494a2ea5a0e4e62e7f7fe15e5ffb359 -> 22f645e1
+Auto-merging src/graphics/host_gpu/regionManager.h
+CONFLICT (content): Merge conflict in src/graphics/host_gpu/regionManager.h
+error: could not apply dcfe3b58... track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on the host waits of the emulator with waker and peer, M5 off the sampler thread, ring_hold (ROADMAP s122 item 574(g)(1)-(6))
+hint: After resolving the conflicts, mark them with
+hint: "git add/rm <pathspec>", then run
+hint: "git cherry-pick --continue".
+hint: You can instead skip this commit with "git cherry-pick --skip".
+hint: To abort and get back to the state before "git cherry-pick",
+hint: run "git cherry-pick --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+picked dcfe3b58 -> 5836f6d7 (conflict regionManager.h includes: both kept, order of main)
+picked 3d1e0045 -> 62fd092a
+picked 35b454c6 -> 929b6073

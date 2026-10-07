@@ -1,0 +1,48 @@
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'constexpr uint64_t kDefaultLimitBytes = uint64_t {256} << 20u;'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static bool g_hooks = false; // g_on or the stand armed: the only check the =0 path adds (WriteImpl, WriteFatal, Flush)'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static bool g_on    = false; // KYTY_FIX_B36=1 and the File direction (Log::Initialize, before any other thread logs)'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static void ParseStand(uint64_t init_ns) {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static void StandPoint(const std::shared_ptr<spdlog::logger>& logger) {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static void SinkWrite(const std::shared_ptr<spdlog::logger>& logger, const std::string& line) {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp '\t\t\tconst auto text = fmt::format("LogAsync: stall us={} queued_bytes={} t_ms={}\\n", ns / 1000u, left,'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static void WriterMain() {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp '\t\t\tset_fn(GetCurrentThread(), L"LogWriter");'
+MISS 0/2 7d901aee:src/common/logging/log.cpp '\t\t\t\tstd::lock_guard sink(g_sink_mutex);'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static void Enqueue(std::string_view text) {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp '\t\tt_nested.append(text.data(), text.size());'
+MISS 0/1 7d901aee:src/common/logging/log.cpp '\t\t\tstd::unique_lock lock(s.mu);'
+MISS 0/1 7d901aee:src/common/logging/log.cpp '\t\t\t\ts.cv_space.wait(lock, [&] { return s.closed || s.pending == 0 || s.pending + n <= s.limit; });'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static void Drain(bool close) {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp '\t\tconst auto done = s.cv_idle.wait_for(lock, std::chrono::nanoseconds(kDrainNs),'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static void WriteSummary() {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static void ExitDrain() {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static void Start(uint64_t limit) {'
+`7d901aee:src/common/logging/log.cpp:81` (якорь «void Flush() {»; +1 — «if (g_logger != nullptr) {»)
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static bool HookWrite(std::string_view text) {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp '\t\tif (HookWrite(text)) {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp '\t\t\tAsync::Drain(false); // F25k: the fatal text and everything before it are in the file before the caller dies'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'static void InitAsync() {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp '\t\t\tAsync::ExitDrain(); // F25k: queue -> file, writer stopped, the summary line'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'void DrainForExit() noexcept {'
+MISS 0/1 7d901aee:src/common/logging/log.cpp 'void DrainForFault() noexcept {'
+MISS 0/1 7d901aee:src/common/logging/log.h 'void      DrainForExit() noexcept;'
+MISS 0/1 7d901aee:src/common/hostException.cpp '\t\tLog::DrainForFault();'
+MISS 0/2 7d901aee:src/graphics/host_gpu/pageManager.cpp '\tLog::DrainForExit(); // Track F, F25k (KYTY_FIX_B36): the async log queue to the file; no-op at =0'
+MISS 0/1 7d901aee:src/common/parallelCopy.cpp '\t\t\tLog::DrainForExit(); // Track F, F25k (KYTY_FIX_B36): the async log queue to the file; no-op at =0'
+MISS 0/1 7d901aee:src/graphics/presentation/videoOut.cpp '\t\tstatic const bool long_frame = Common::EnvFlagOn("KYTY_LONGFRAME");'
+MISS 0/1 7d901aee:src/graphics/presentation/videoOut.cpp '\t\t\t\tLOGF("LongFrame: n=%" PRIu64 " dt_us=%llu log_async=%d t_ms=%llu\\n", r.cfg->flip_status.count,'
+`7d901aee:src/graphics/presentation/videoOut.cpp:1367` (якорь «cur.host_ns = FS::NowNs();»; +1 — «FS::NoteFrame(r.cfg->flip_status.count + 1);»)
+`7d901aee:src/graphics/presentation/videoOut.cpp:1457` (якорь «static_cast<unsigned long long>((cur.host_ns - prev.host_ns) / 1000u),»; +1 — «static_cast<unsigned long long>(lat_us), dus(FS::Counter::GpuThreadProcessNs),»)
+`7d901aee:src/graphics/presentation/videoOut.cpp:1289` (якорь «r.cfg->flip_status.count++;»; +1 — «// Track F, F20j (KYTY_DIAG_B32): the window boundary for the B32 sampler (n = FrameTrace: n= of this flip); the»)
+`7d901aee:src/common/assert.cpp:22` (якорь «static int DbgReport(const char* title, std::string_view text, const char* file, int line) {»; +1 — «if (fatal_interceptor) { fatal_interceptor(file, line, text); }»)
+`7d901aee:src/common/assert.cpp:116` (якорь «void DbgExit(int status) {»; +1 — «if (fatal_interceptor) { fatal_interceptor("DbgExit", status, "explicit fatal exit"); }»)
+`7d901aee:src/common/assert.cpp:79` (якорь «Log::WriteFatal(BuildFatalReport("--- abort() ---", "SIGABRT", "abort", 0));»; +1 — «} catch (...) {»)
+`7d901aee:src/emulator.cpp:243` (якорь «int ok = atexit(KytyClose);»; +1 — «EXIT_NOT_IMPLEMENTED(ok != 0);»)
+`7d901aee:src/emulator.cpp:247` (якорь «ok = at_quick_exit(Common::Subsystems::EmergencyShutdownActive);»; +1 — «EXIT_NOT_IMPLEMENTED(ok != 0);»)
+`7d901aee:src/emulator.cpp:199` (якорь «Libs::Graphics::WindowRun();»; +1 — «std::quick_exit(0);»)
+`7d901aee:src/emulator.cpp:148` (якорь «subsystems.Initialize<Log::Lifecycle>();»; +1 — «»)
+`7d901aee:src/graphics/host_gpu/renderer/masterSemaphore.cpp:133` (якорь «EXIT("GPU stopped completing submissions\n");»; +1 — «}»)
+MISS 0/1 7d901aee:CMakeLists.txt 'add_executable(log_async_tests EXCLUDE_FROM_ALL'
+MISS 0/1 7d901aee:tests/LogAsyncTests.cpp 'void TestDeath() {'
+MISS 0/1 7d901aee:tests/LogAsyncTests.cpp 'void TestLatency() {'
+FAILED

@@ -1,0 +1,3 @@
+track F link F25k (HPP-678): KYTY_FIX_B36 - t_in_queue by a scope guard (an exception of push_back under the queue lock no longer leaves the flag set)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

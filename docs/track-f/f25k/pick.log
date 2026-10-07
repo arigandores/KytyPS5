@@ -1,0 +1,5 @@
+Auto-merging src/graphics/presentation/videoOut.cpp
+[detached HEAD e9520c36] track F link F25k (HPP-678): KYTY_FIX_B36 (async log writer, default 0), stand KYTY_TEST_LOGSTALL, measure KYTY_LONGFRAME, tests log_async_tests (ROADMAP s122 item 613(v)(1)-(7), (g)(1))
+ Date: Wed Oct 7 17:48:34 2026 +0200
+ 8 files changed, 1073 insertions(+)
+ create mode 100644 tests/LogAsyncTests.cpp

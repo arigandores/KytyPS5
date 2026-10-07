@@ -1,0 +1,122 @@
+[case] partition H > W > R > r > Sr > Sw > S, exactly one
+  combinations 1800
+[case] I1: X + R + r + Sr + Sw + S + W + H = samples
+[case] I2' and gap3p, sgap_max over (previous flip, flip]
+[case] I3: other_us = sys_busy_us - proc_us (signed)
+[case] window (previous flip, flip] from the history ring; instr_us
+[case] slot_full and torn (registry)
+[case] ring_drop and torn (wait ring)
+[case] print: DiagB32 lines (RC13: prefix at column 0, no leading %, no hexadecimal first field)
+DiagB32: n=3193 dt_us=180215 instr_us=4321 samples=36 sgap_max_us=5000 gap3p=0 i2=1 kstate=1 kq=28 kq_n=0 kq_us=0 m5r_us=0 proc_us=515625 sys_busy_us=900000 sys_idle_us=1900000 other_us=384375 ncpu=16 snap_ok=1 snap_lag_us=0 flip_slot=2 flip_tid=23 flip_src=gpu lat_us=157043 vo_slot=0 gpu_slot=1 t_lines=7 w_lines=1 c_lines=1 cover_us=0 flip_ns=1180215000
+DiagB32-t: n=3193 slot=0 tid=0 os_tid=4000 name=Present role=Present must=1 X=0 R=0 r=0 Sr=0 Sw=0 S=0 W=- H=present:36 SwR=- cpu_us=0 top=H:present last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=1 tid=0 os_tid=4001 name=Gpu role=Gpu must=1 X=0 R=0 r=0 Sr=0 Sw=18 S=18 W=- H=- SwR=6:18 cpu_us=1000 top=- last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=2 tid=22 os_tid=4002 name=DrawThread role=guest must=1 X=0 R=0 r=0 Sr=0 Sw=0 S=0 W=cond:36 H=- SwR=- cpu_us=2000 top=W:cond last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=3 tid=23 os_tid=4003 name=Physics_ATQT role=guest must=1 X=0 R=0 r=0 Sr=0 Sw=18 S=18 W=- H=- SwR=6:18 cpu_us=3000 top=- last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=4 tid=24 os_tid=4004 name=_evil role=guest must=0 X=0 R=0 r=0 Sr=0 Sw=18 S=18 W=- H=- SwR=6:18 cpu_us=4000 top=- last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=5 tid=25 os_tid=4005 name=Vulkan_pipeline_cache__saved role=guest must=0 X=0 R=0 r=0 Sr=0 Sw=18 S=18 W=- H=- SwR=6:18 cpu_us=5000 top=- last=- obj=0x0 since_us=0 peer=-1
+DiagB32-t: n=3193 slot=6 tid=26 os_tid=4006 name=BvhLoopCapTrip_ role=guest must=0 X=0 R=0 r=0 Sr=0 Sw=18 S=18 W=- H=- SwR=6:18 cpu_us=6000 top=- last=- obj=0x0 since_us=0 peer=-1
+DiagB32-w: n=3193 slot=2 tid=22 kind=cond obj=0x0 start_us=20000 wait_us=159215 overlap_us=159215 waker=3 waker_tid=23 req_us=0 to=0 open=0 peer=-1 peer_tid=0
+DiagB32-c: n=3193 os_tid=4001 slot=1 name=Gpu cpu_us=42602
+DiagB32-x: n=3193 slots=0 slot_full=0 slot_full_w=0 torn=0 torn_w=0 ring_drop=0 ring_drop_w=0 sgap_bad=0 sgap_bad_w=0 lines_cut=0 lines_cut_w=0 req_miss=0 req_miss_w=0 sub_miss=0 sub_miss_w=0 short_stalls=0 others_cut=0 w_cut=0 rep_drop=0 kq_fail=0 print_us=0 gap3p=0 ring_hold=0 ring_hold_w=0 hist_exh=0 hist_exh_w=0 w_cut_w=0 others_cut_w=0
+[case] RC2: mandatory -t lines, lines_cut, others_cut, sgap_bad
+[case] waker word: SigWaker against the wait start
+[case] F20j2 RC1: kernel query schedule (>= 40 ms, <= 10 % of the window, absolute period), item 552(v)(1)
+  sched K_ms=3.2 dt_ms=100 regime=first samples=19 need=10 i2=1 kq_n=2 instr_us=7350 dt_minus_instr_us=92650 instr_made=1
+  sched K_ms=3.2 dt_ms=100 regime=steady samples=20 need=10 i2=1 kq_n=2 instr_us=7400 dt_minus_instr_us=92600 instr_made=1
+  sched K_ms=3.2 dt_ms=115 regime=first samples=23 need=11 i2=1 kq_n=3 instr_us=10750 dt_minus_instr_us=104250 instr_made=0
+  sched K_ms=3.2 dt_ms=115 regime=steady samples=23 need=11 i2=1 kq_n=3 instr_us=10750 dt_minus_instr_us=104250 instr_made=0
+  sched K_ms=3.2 dt_ms=120 regime=first samples=24 need=12 i2=1 kq_n=3 instr_us=10800 dt_minus_instr_us=109200 instr_made=0
+  sched K_ms=3.2 dt_ms=120 regime=steady samples=24 need=12 i2=1 kq_n=3 instr_us=10800 dt_minus_instr_us=109200 instr_made=0
+  sched K_ms=3.2 dt_ms=150 regime=first samples=30 need=15 i2=1 kq_n=4 instr_us=14300 dt_minus_instr_us=135700 instr_made=0
+  sched K_ms=3.2 dt_ms=150 regime=steady samples=30 need=15 i2=1 kq_n=4 instr_us=14300 dt_minus_instr_us=135700 instr_made=0
+  sched K_ms=3.2 dt_ms=200 regime=first samples=40 need=20 i2=1 kq_n=6 instr_us=21200 dt_minus_instr_us=178800 instr_made=0
+  sched K_ms=3.2 dt_ms=200 regime=steady samples=40 need=20 i2=1 kq_n=6 instr_us=21200 dt_minus_instr_us=178800 instr_made=0
+  sched K_ms=3.2 dt_ms=240 regime=first samples=48 need=24 i2=1 kq_n=7 instr_us=24800 dt_minus_instr_us=215200 instr_made=0
+  sched K_ms=3.2 dt_ms=240 regime=steady samples=48 need=24 i2=1 kq_n=7 instr_us=24800 dt_minus_instr_us=215200 instr_made=0
+  sched K_ms=10.7 dt_ms=100 regime=first samples=19 need=10 i2=1 kq_n=1 instr_us=11650 dt_minus_instr_us=88350 instr_made=1
+  sched K_ms=10.7 dt_ms=100 regime=steady samples=20 need=10 i2=1 kq_n=0 instr_us=1000 dt_minus_instr_us=99000 instr_made=1
+  sched K_ms=10.7 dt_ms=115 regime=first samples=22 need=11 i2=1 kq_n=1 instr_us=11800 dt_minus_instr_us=103200 instr_made=0
+  sched K_ms=10.7 dt_ms=115 regime=steady samples=21 need=11 i2=1 kq_n=0 instr_us=1050 dt_minus_instr_us=113950 instr_made=0
+  sched K_ms=10.7 dt_ms=120 regime=first samples=23 need=12 i2=1 kq_n=1 instr_us=11850 dt_minus_instr_us=108150 instr_made=0
+  sched K_ms=10.7 dt_ms=120 regime=steady samples=21 need=12 i2=1 kq_n=0 instr_us=1050 dt_minus_instr_us=118950 instr_made=0
+  sched K_ms=10.7 dt_ms=150 regime=first samples=29 need=15 i2=1 kq_n=1 instr_us=12150 dt_minus_instr_us=137850 instr_made=0
+  sched K_ms=10.7 dt_ms=150 regime=steady samples=28 need=15 i2=1 kq_n=1 instr_us=12100 dt_minus_instr_us=137900 instr_made=0
+  sched K_ms=10.7 dt_ms=200 regime=first samples=39 need=20 i2=1 kq_n=1 instr_us=12650 dt_minus_instr_us=187350 instr_made=0
+  sched K_ms=10.7 dt_ms=200 regime=steady samples=38 need=20 i2=1 kq_n=1 instr_us=12600 dt_minus_instr_us=187400 instr_made=0
+  sched K_ms=10.7 dt_ms=240 regime=first samples=46 need=24 i2=1 kq_n=2 instr_us=23700 dt_minus_instr_us=216300 instr_made=0
+  sched K_ms=10.7 dt_ms=240 regime=steady samples=46 need=24 i2=1 kq_n=2 instr_us=23700 dt_minus_instr_us=216300 instr_made=0
+  sched K_ms=13.3 dt_ms=100 regime=first samples=18 need=10 i2=1 kq_n=1 instr_us=14200 dt_minus_instr_us=85800 instr_made=1
+  sched K_ms=13.3 dt_ms=100 regime=steady samples=20 need=10 i2=1 kq_n=0 instr_us=1000 dt_minus_instr_us=99000 instr_made=1
+  sched K_ms=13.3 dt_ms=115 regime=first samples=21 need=11 i2=1 kq_n=1 instr_us=14350 dt_minus_instr_us=100650 instr_made=0
+  sched K_ms=13.3 dt_ms=115 regime=steady samples=23 need=11 i2=1 kq_n=0 instr_us=1150 dt_minus_instr_us=113850 instr_made=0
+  sched K_ms=13.3 dt_ms=120 regime=first samples=22 need=12 i2=1 kq_n=1 instr_us=14400 dt_minus_instr_us=105600 instr_made=0
+  sched K_ms=13.3 dt_ms=120 regime=steady samples=24 need=12 i2=1 kq_n=0 instr_us=1200 dt_minus_instr_us=118800 instr_made=0
+  sched K_ms=13.3 dt_ms=150 regime=first samples=28 need=15 i2=1 kq_n=1 instr_us=14700 dt_minus_instr_us=135300 instr_made=0
+  sched K_ms=13.3 dt_ms=150 regime=steady samples=27 need=15 i2=1 kq_n=0 instr_us=1350 dt_minus_instr_us=148650 instr_made=0
+  sched K_ms=13.3 dt_ms=200 regime=first samples=38 need=20 i2=1 kq_n=1 instr_us=15200 dt_minus_instr_us=184800 instr_made=0
+  sched K_ms=13.3 dt_ms=200 regime=steady samples=38 need=20 i2=1 kq_n=1 instr_us=15200 dt_minus_instr_us=184800 instr_made=0
+  sched K_ms=13.3 dt_ms=240 regime=first samples=46 need=24 i2=1 kq_n=1 instr_us=15600 dt_minus_instr_us=224400 instr_made=0
+  sched K_ms=13.3 dt_ms=240 regime=steady samples=46 need=24 i2=1 kq_n=1 instr_us=15600 dt_minus_instr_us=224400 instr_made=0
+  sched K_ms=20.0 dt_ms=100 regime=first samples=17 need=10 i2=1 kq_n=1 instr_us=20850 dt_minus_instr_us=79150 instr_made=1
+  sched K_ms=20.0 dt_ms=100 regime=steady samples=20 need=10 i2=1 kq_n=0 instr_us=1000 dt_minus_instr_us=99000 instr_made=1
+  sched K_ms=20.0 dt_ms=115 regime=first samples=20 need=11 i2=1 kq_n=1 instr_us=21000 dt_minus_instr_us=94000 instr_made=1
+  sched K_ms=20.0 dt_ms=115 regime=steady samples=23 need=11 i2=1 kq_n=0 instr_us=1150 dt_minus_instr_us=113850 instr_made=0
+  sched K_ms=20.0 dt_ms=120 regime=first samples=21 need=12 i2=1 kq_n=1 instr_us=21050 dt_minus_instr_us=98950 instr_made=1
+  sched K_ms=20.0 dt_ms=120 regime=steady samples=24 need=12 i2=1 kq_n=0 instr_us=1200 dt_minus_instr_us=118800 instr_made=0
+  sched K_ms=20.0 dt_ms=150 regime=first samples=27 need=15 i2=1 kq_n=1 instr_us=21350 dt_minus_instr_us=128650 instr_made=0
+  sched K_ms=20.0 dt_ms=150 regime=steady samples=30 need=15 i2=1 kq_n=0 instr_us=1500 dt_minus_instr_us=148500 instr_made=0
+  sched K_ms=20.0 dt_ms=200 regime=first samples=37 need=20 i2=1 kq_n=1 instr_us=21850 dt_minus_instr_us=178150 instr_made=0
+  sched K_ms=20.0 dt_ms=200 regime=steady samples=40 need=20 i2=1 kq_n=0 instr_us=2000 dt_minus_instr_us=198000 instr_made=0
+  sched K_ms=20.0 dt_ms=240 regime=first samples=45 need=24 i2=1 kq_n=1 instr_us=22250 dt_minus_instr_us=217750 instr_made=0
+  sched K_ms=20.0 dt_ms=240 regime=steady samples=45 need=24 i2=1 kq_n=1 instr_us=22250 dt_minus_instr_us=217750 instr_made=0
+[case] F20j2: S split by the nearest snapshot of the same window <= 60 ms
+[case] F20j2 RC3: zero invariants per window (_w) - an event in window k, a clean window k+1
+[case] F20j2 RC4: drain with a writer preempted between Reserve and the final word
+[case] F20j2 RC5: the async submitter's -t line is mandatory in a window with H:qlock / H:qsubmit
+[case] F20j3 wait kinds: names unique, older numbers kept, EMU_WAIT / guest HLE partition, mutex-like
+[case] F20j3 Z1: ring_hold - the positions a drain left at an unfinished write; -x ring_hold / ring_hold_w
+[case] F20j3 (2), (d): the -w line carries the record's peer; the peer's -t line is mandatory
+[case] F20j3 (4): an 80 ms M5 refresh off the sampler thread makes no gap of samples (model; control - inline)
+  m5 model: async sgap_max_us=16593 samples=29 runs=4 work_us=339723; inline sgap_max_us=100391 samples=13
+[case] F20j4 (3), RC3 of F20k3: the M5 refresh time is charged to the window it ran in (model; the run ring)
+  m5 charge: run in progress begin=78212618160641, taken runs=1, ring lost=6
+[case] F25 C5a (F25a s11.1, s11.3(a)): 3 000 records - the 4th chain thread (E1) and the -t partner (E2) are printed, w_cut 0
+  w_cut=0 w_lines=3000
+[case] F25 C5b (F25a s11.3(b)): 150 mandatory threads - lines_cut 0, 150 -t lines
+  lines_cut=0 t_lines=150
+[case] F25 C1 (F25a s2.3): window 6.6 s - the ring holds its start (hist_exh 0), sgap <= 2P, i2; window 21 s - exhausted
+  6.6 s: exhausted=0 samples=1320 sgap_max_us=5000
+  21 s: exhausted=1 samples=4096
+[case] F25 C2 (F25a s2.3): 20 000 wait records in one window - ring_drop 0
+  drained=20000 ring_drop=0
+[case] F25 C3, C5v, C5g (F25a s11.3(v)): -x tail after ring_hold_w; w_cut_w / others_cut_w = increments on 3 windows
+  window 1: w_cut=17 w_cut_w=17 others_cut=9 others_cut_w=9
+  window 2: w_cut=17 w_cut_w=0 others_cut=9 others_cut_w=0
+  window 3: w_cut=34 w_cut_w=17 others_cut=18 others_cut_w=9
+[case] F25 C1, C3, C4, C6 through Sampler::CloseWindow: 6.6 s - hist_exh_w 0, cover_us, flip_ns last; 21 s - hist_exh_w 1
+  6.6 s: dt_us=6600000 cover_us=6595000 sgap_max_us=5000 hist_exh_w=0 flip_ns=1006600000000 close_us=1449
+  21 s: dt_us=21000000 cover_us=20475000 hist_exh_w=1 ring_drop_w=1
+[case] F25 RC8 (item 599(b)(8)): CloseWindow time, 4 096 samples x 90 slots; <= 20 ms at 2 000, <= 100 ms at 20 000 records
+  records=2000 rep=0 close_ms=4.393 w_lines=2090 text_bytes=403681
+  records=2000 rep=1 close_ms=4.432 w_lines=2090 text_bytes=403710
+  records=2000 rep=2 close_ms=4.361 w_lines=2090 text_bytes=403633
+  records=2000 rep=3 close_ms=4.445 w_lines=2090 text_bytes=403592
+  records=2000 rep=4 close_ms=4.485 w_lines=2090 text_bytes=403658
+  records=2000 median_ms=4.432 worst_ms=4.485 limit_ms=20
+  records=20000 rep=0 close_ms=19.771 w_lines=20090 text_bytes=3307142
+  records=20000 rep=1 close_ms=19.668 w_lines=20090 text_bytes=3307040
+  records=20000 rep=2 close_ms=19.498 w_lines=20090 text_bytes=3306842
+  records=20000 rep=3 close_ms=19.000 w_lines=20090 text_bytes=3306857
+  records=20000 rep=4 close_ms=19.313 w_lines=20090 text_bytes=3306831
+  records=20000 median_ms=19.498 worst_ms=19.771 limit_ms=100
+[case] F20j3 (3): a wait loop with short wakeups under one mark - W >= 50 % of samples, one -w record, waker, peer
+  loop per_call=0: samples=61 W=61 wakeups=30 records=1
+  loop per_call=1: samples=61 W=61 wakeups=30 records=0
+[case] F20j3 (1): contended Common::Mutex and TrackedMutex - W:emu_mutex, waker and peer = the owner
+  emu_mutex: records=2
+[case] F20j4 (2), RC2 of F20k3: a writer waiting for two readers - peer 0; an own-slot peer is stored as 0
+  peer: records=2 self_peer=0
+[case] F20j4 (4), RC4 of F20k3: a contended lock inside H:qlock / H:present keeps the H mark; without H - W:emu_mutex
+  under H: qlock H=46 W=0; present H=46 W=0; no H W:emu_mutex=45 W=45; records=1
+cases 31, failures 0
+ALL OK

@@ -1,0 +1,3 @@
+track F link F25k (HPP-678): KYTY_TEST_LOGSTALL - the TestLogStall line names the thread that slept (tid, FrameStats role)
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

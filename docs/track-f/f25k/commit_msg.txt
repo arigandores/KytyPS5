@@ -1,0 +1,15 @@
+track F link F25k (HPP-678): KYTY_FIX_B36 (async log writer, default 0), stand KYTY_TEST_LOGSTALL, measure KYTY_LONGFRAME, tests log_async_tests (ROADMAP s122 item 613(v)(1)-(7), (g)(1))
+
+KYTY_FIX_B36=1 (File direction only): Log::Write / WriteImpl copy the line into an in-memory queue under a short lock
+(no I/O); one writer thread ("LogWriter") writes the lines in queue order; limit 256 MiB with a counted wait; a sink
+write >= 100 ms - "LogAsync: stall us=<us> queued_bytes=<b> t_ms=<ms>" (<= 256 lines); the summary line
+"LogAsync: full_waits=<n> full_wait_us=<us> ..." at the exit drain. Drain (<= 5 s, then the rest on the calling thread)
+on WriteFatal, Shutdown (DbgExit / DbgReport / at_quick_exit / atexit), Log::DrainForExit before the std::_Exit sites
+(pageManager FailFast / Fatal, parallelCopy), Log::DrainForFault in the unresolved branch of the host exception filter.
+A line of an exception handler that interrupts its thread's own push is appended after it without a lock.
+KYTY_FIX_B36=0: one static check per WriteImpl / WriteFatal / Flush / Shutdown; the file is byte for byte the old one.
+KYTY_TEST_LOGSTALL=<s>:<ms>[:<k>]: a sleep inside the sink write (caller at =0, writer at =1), "TestLogStall:" lines.
+KYTY_LONGFRAME=1: "LongFrame: n=<n> dt_us=<us> log_async=<0|1> t_ms=<ms>" on the Present thread at dt >= 100 ms
+(<= 4 096), the clock and the point of dt_us of "FrameTrace:".
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

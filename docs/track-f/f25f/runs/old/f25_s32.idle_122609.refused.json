@@ -1,0 +1,250 @@
+{
+  "tag": "f25_s32",
+  "refused": "idle",
+  "verdict": "BUSY",
+  "threshold": 10,
+  "pre_run": {
+    "gpu_util_median": 13.0,
+    "gpu_power_median": 40.7,
+    "gpu_memory_used_mib": 2309,
+    "gpu_sm_mhz_median": 1702.0,
+    "gpu_util_samples": [
+      11.0,
+      13.0,
+      13.0,
+      13.0,
+      10.0
+    ],
+    "gpu_apps": [
+      {
+        "pid": 14696,
+        "name": "<app>"
+      },
+      {
+        "pid": 8048,
+        "name": "<app>"
+      },
+      {
+        "pid": 15168,
+        "name": "<app>"
+      },
+      {
+        "pid": 15264,
+        "name": "<app>"
+      },
+      {
+        "pid": 21572,
+        "name": "<app>"
+      },
+      {
+        "pid": 27352,
+        "name": "<app>"
+      },
+      {
+        "pid": 29484,
+        "name": "<app>"
+      },
+      {
+        "pid": 36324,
+        "name": "<app>"
+      },
+      {
+        "pid": 39708,
+        "name": "<app>"
+      },
+      {
+        "pid": 40112,
+        "name": "<app>"
+      },
+      {
+        "pid": 33516,
+        "name": "<app>"
+      },
+      {
+        "pid": 42076,
+        "name": "<app>"
+      },
+      {
+        "pid": 42896,
+        "name": "<app>"
+      },
+      {
+        "pid": 1972,
+        "name": "<app>"
+      },
+      {
+        "pid": 33612,
+        "name": "<app>"
+      },
+      {
+        "pid": 18520,
+        "name": "<app>"
+      },
+      {
+        "pid": 44088,
+        "name": "<app>"
+      },
+      {
+        "pid": 18844,
+        "name": "<app>"
+      },
+      {
+        "pid": 29120,
+        "name": "<app>"
+      },
+      {
+        "pid": 36720,
+        "name": "<app>"
+      },
+      {
+        "pid": 21436,
+        "name": "<app>"
+      },
+      {
+        "pid": 37980,
+        "name": "<app>"
+      }
+    ],
+    "host": {
+      "available": true,
+      "process_count": 467,
+      "top": [
+        {
+          "name": "<app>",
+          "pid": 37632,
+          "cpu_s": 6883.4,
+          "ws_mib": 1639.2
+        },
+        {
+          "name": "<app>",
+          "pid": 42076,
+          "cpu_s": 1839.8,
+          "ws_mib": 661.3
+        },
+        {
+          "name": "<app>",
+          "pid": 8048,
+          "cpu_s": 1770.0,
+          "ws_mib": 357.4
+        },
+        {
+          "name": "<app>",
+          "pid": 18520,
+          "cpu_s": 1648.8,
+          "ws_mib": 465.3
+        },
+        {
+          "name": "<app>",
+          "pid": 32708,
+          "cpu_s": 1358.1,
+          "ws_mib": 15.2
+        },
+        {
+          "name": "<app>",
+          "pid": 13652,
+          "cpu_s": 845.6,
+          "ws_mib": 62.4
+        },
+        {
+          "name": "<app>",
+          "pid": 44088,
+          "cpu_s": 771.7,
+          "ws_mib": 1317.2
+        },
+        {
+          "name": "<app>",
+          "pid": 14992,
+          "cpu_s": 580.6,
+          "ws_mib": 512.5
+        },
+        {
+          "name": "<app>",
+          "pid": 11516,
+          "cpu_s": 373.4,
+          "ws_mib": 3195.3
+        },
+        {
+          "name": "<app>",
+          "pid": 39708,
+          "cpu_s": 363.9,
+          "ws_mib": 297.0
+        },
+        {
+          "name": "<app>",
+          "pid": 22304,
+          "cpu_s": 297.4,
+          "ws_mib": 42.3
+        },
+        {
+          "name": "<app>",
+          "pid": 1972,
+          "cpu_s": 285.9,
+          "ws_mib": 170.2
+        },
+        {
+          "name": "<app>",
+          "pid": 3164,
+          "cpu_s": 211.8,
+          "ws_mib": 573.1
+        },
+        {
+          "name": "<app>",
+          "pid": 22548,
+          "cpu_s": 199.2,
+          "ws_mib": 360.2
+        },
+        {
+          "name": "<app>",
+          "pid": 27092,
+          "cpu_s": 197.0,
+          "ws_mib": 106.0
+        },
+        {
+          "name": "<app>",
+          "pid": 43240,
+          "cpu_s": 169.7,
+          "ws_mib": 277.4
+        },
+        {
+          "name": "<app>",
+          "pid": 16272,
+          "cpu_s": 154.3,
+          "ws_mib": 165.5
+        },
+        {
+          "name": "<app>",
+          "pid": 40112,
+          "cpu_s": 124.0,
+          "ws_mib": 13.6
+        },
+        {
+          "name": "<app>",
+          "pid": 7968,
+          "cpu_s": 116.9,
+          "ws_mib": 442.8
+        },
+        {
+          "name": "<app>",
+          "pid": 30344,
+          "cpu_s": 113.9,
+          "ws_mib": 444.4
+        }
+      ],
+      "top_names": [
+        "<app>"
+      ],
+      "sampled_at": "2026-10-07T14:26:08"
+    },
+    "sampled_at": "2026-10-07T14:26:08"
+  },
+  "prereg": {
+    "path": "C:\\kyty\\f287\\f25f\\pred\\f25f_seal.md",
+    "bytes": 35326,
+    "sha256": "2a32d74ed3857851d01fa505a1b6134cb64b88936d081d11f131ef8a8e517bd7",
+    "mtime": "2026-10-07T12:17:22",
+    "ctime": "2026-10-07T12:17:22",
+    "mtime_ctime_delta_s": 0.0,
+    "read_at": "2026-10-07T14:26:04"
+  },
+  "at": "2026-10-07T14:26:08"
+}

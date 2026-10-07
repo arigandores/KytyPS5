@@ -1,0 +1,13 @@
+prereg: f25f_seal.md  35326 bytes  sha256 2a32d74ed3857851  mtime 2026-10-07T12:17:22  mtime-ctime +0.000 s
+pre_run: host 444 processes, top by CPU: <app> 7344s, <app> 2030s, <app> 1943s, <app> 1875s, <app> 1420s, <app> 945s
+pre_run: GPU 2.0 % busy, 22.3 W, 2364 MiB used, SM 1545.0 MHz, 22 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f25f\cpuclk.py is not there
+--- attempt 1: launching
+copied C:\kyty\f287\f25f\log_f25_k02_a1.txt
+copied C:\kyty\f287\f25f\stdout_f25_k02_a1.txt
+hold_gpu: median None % busy over None rows (None .. None), a row, not a guard
+copied C:\kyty\f287\f25f\log_f25_k02.txt
+copied C:\kyty\f287\f25f\stdout_f25_k02.txt
+
+attempt 1  exited           document=None s started=None s stable=None s exit code 1
+VERDICT: no attempt reached bonus_path_maker_mix

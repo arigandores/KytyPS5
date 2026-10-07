@@ -1,0 +1,3 @@
+2026-10-07T13:11:48Z GUARD FOUND 1: <app> pid 21416 kind emulator
+2026-10-07T13:11:50Z own emulator pid 21416 killed by pid (taskkill /F /T /PID rc 0)
+2026-10-07T13:11:54Z watch end, user process seen: yes

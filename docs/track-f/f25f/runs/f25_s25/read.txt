@@ -1,7 +1,7 @@
 tag f25_s25 (form f25_s25, kind series, level pot_treasure_cave)  reader sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf  f20e_read sha256 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa  theta 0.4562
   ADMISSION PASS; STATUS ADMITTED; warm member True
     [ok] tag json present
-    [ok] theta_load from the seal C:/kyty/f287/f25f/pred/f25f_seal.md (0.4562)
+    [ok] theta_load from the seal C:/kyty/f287/f25f/pred/old/f25f_seal_v1_3be83a68.md (0.4562)
     [ok] json binary_sha256 = binary B e342b839 (e342b839d74d5689)
     [ok] installed before = after = S18 b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (b3cee576138a1553 / b3cee576138a1553)
     [ok] json prereg sha256 = seal sha256 (3be83a68ec5415be / 3be83a68ec5415be)

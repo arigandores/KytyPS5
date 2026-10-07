@@ -1,0 +1,60 @@
+tag f25_k04 (form f25_k04, kind cold, level bonus_path_maker_mix)  reader sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf  f20e_read sha256 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa  theta 0.4562
+  ADMISSION PASS; STATUS ADMITTED; warm member None
+    [ok] tag json present
+    [ok] theta_load from the seal C:/kyty/f287/f25f/pred/f25f_seal.md (0.4562)
+    [ok] json binary_sha256 = binary B e342b839 (e342b839d74d5689)
+    [ok] installed before = after = S18 b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (b3cee576138a1553 / b3cee576138a1553)
+    [ok] json prereg sha256 = seal sha256 (2620a7508519f161 / 2620a7508519f161)
+    [ok] env: harness constants + form [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')] (extra [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')])
+    [ok] KYTY_GPU_HANG_ABORT_S = 22 (22)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl of the tag level (-lvl bonus_path_maker_mix; fixed None; harness bonus_path_maker_mix)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] scene entered (first scene frame 175)
+    [ok] hold: scene >= 300 s (332.276 s) or GpuHangAbort after >= 10 s of the scene (None)
+    [ok] no death marker other than GpuHangAbort ([])
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0
+    [ok] DiagB32 mode line present (1)
+    [ok] no DiagB32 config invalid line
+    [ok] translation signature 9177b426 (= S18) and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] TestB32 lines none ([])
+    [ok] rep_drop 0 (0)
+    [ok] no loader (None)
+    [ok] caches before = snapshot of the form (manifest cmp EQUAL files 4790 listsha 7718ec40caaf)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4790 listsha 77)
+  binary e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4; installed during the tag e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4; translation signature 9177b4267de1fb8bac7d1113afd8733210addfac
+  scene: first_n 175, frames 14761, scene 332.3 s, hold True (abort hold False); DiagB32 lines 2723 (windows 14, bad prefix 0, dup 0)
+  abort None; death markers []; replay rebuild skipped lines 1
+  RC13: F20c attribution with = without DiagB32 lines (2723 stripped): EQUAL
+  warm: dump frames (start >= 10 s) 0 []; program hashes []
+  K_I 1; K 1; K2 frames not attributed 1; in count 1; INSTR_MADE_K2 0
+  hold class (longest frame in count): UNMARKED:DrawThread; family UNMARKED; form FORM_NOFLIP; all frames in count M6_BURST False
+  M6: samples 152, foreign max 6.75; calibration {'offset': -11243209299, 'n': 6506, 'pairs': 14, 'second_minus_min_ms': 5.965, 'note': ''}
+    FRAME n 1608 dt_us 197650 t 30.0 s attr nothing | key 1608(n) win 197652 instr 19159 cover 195970 sgap 11788 | E 179195.5 holder flip | UNMARKED:Present ref | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr 70659 load 0.1878
+    FRAME n 1609 dt_us 100183 t 30.2 s attr nothing | key 1609(n) win 100115 instr 70659 cover 91546 sgap 8568 | E 81728.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.2292
+    FRAME n 1620 dt_us 117662 t 30.6 s attr nothing | key 1620(n) win 117600 instr 8178 cover 113998 sgap 12438 | E 99323.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr 8747 load 0.1038
+    FRAME n 1621 dt_us 110822 t 30.7 s attr nothing | key 1621(n) win 110720 instr 8747 cover 108256 sgap 12084 | E 92483.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.1235
+    FRAME n 1634 dt_us 149242 t 31.1 s attr nothing | key 1634(n) win 149229 instr 13001 cover 148014 sgap 11398 | E 131345.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr 71062 load 0.0982
+    FRAME n 8966 dt_us 2003851 t 195.1 s attr nothing | key 8966(n) win 2003872 instr 301196 cover 1999295 sgap 13112 | E 1986339.0 holder flip | UNMARKED:DrawThread IN COUNT | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.1323
+C:/kyty/f287/f25f/rec_f25_k04.mp4: 14921 frames 960x540, index entries 14921
+one-frame glitches: 0
+reader f25_read.py sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf
+SERIES over C:/kyty/f287/f25f\runs (tags read 44)
+BUDGET tags read 44 of 66; interference + NOT WARM 0 of 6
+CONTROL f25_z1 PASS (f25_z1)
+CONTROL f25_z2 PASS (f25_z2)
+CONTROL f25_pb PASS (f25_pb)
+CONTROL f25_pc PASS (f25_pc)
+CONTROLS PASS
+PREWARM f25_c1 (f25_c1, reference): K2 not attributed 0, in count 0, class None; B5 frames 1 armed 1
+PREWARM f25_c2 (f25_c2, reference): K2 not attributed 0, in count 0, class None; B5 frames 1 armed 0
+LEVEL pot_treasure_cave N 20 K 1 K_I 1; N_nw 0 K_nw 0; STOP RULE STOP_U2PRIME (K 1 at N 20)
+  CLASSES [('HOST_LOAD', 1)]; (i) NO_SAMPLES* + UNMARKED + UNDETERMINED 0.0; (iii) host 1.0; top ('HOST_LOAD', 1) [reference - the reading is F25g]
+LEVEL bonus_path_maker_mix N 14 K 0 K_I 0; N_nw 0 K_nw 0; STOP RULE STOP_U2 (K 0, K_I 0 at N 14)
+U5(4) series tags with a bad window 0 [] (member >= 2): no
+COLD pot_treasure_cave tags ['f25_k01', 'f25_k03']: CONTINUE (0 of 2)
+COLD bonus_path_maker_mix tags ['f25_k02', 'f25_k04']: STOP_REPRO (first f25_k04)
+NEXT see the levels; levels {'pot_treasure_cave': 'STOP_U2PRIME', 'bonus_path_maker_mix': 'STOP_U2'}

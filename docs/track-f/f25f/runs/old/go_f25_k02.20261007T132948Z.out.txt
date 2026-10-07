@@ -1,0 +1,24 @@
+2026-10-07T13:10:43Z F25f go_f25f f25_k02 run check (item 587 (g)): RUN ALIVE 87ed8cbc status in_progress
+2026-10-07T13:11:25Z F25f go_f25f f25_k02 lock taken; level bonus_path_maker_mix; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-07T13:11:25Z F25f go_f25f f25_k02 installed binary inside the lock before the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T13:11:27Z F25f go_f25f f25_k02 reconcile (item 606 (v)(2)-(5)): RECONCILE EQUAL state A files 4790
+2026-10-07T13:11:36Z F25f go_f25f f25_k02 snapshot A restored before the tag: SNAP RESTORED A manifest cmp EQUAL files 4790
+2026-10-07T13:11:36Z F25f go_f25f f25_k02 snap/STATE A (cold layer, item 606 (v)(6))
+2026-10-07T13:11:39Z F25f go_f25f f25_k02 manifest before: manifest C:/kyty/f287/f25f/runs/f25_k02/manifest_before.tsv files 4790 bytes 1262355163 listsha 7718ec40caaf963b62e87d7446f82f159b91ab77fc203512959a90495809c722
+2026-10-07T13:11:39Z F25f go_f25f f25_k02 caches before = snapshot A: manifest cmp EQUAL files 4790 listsha 7718ec40caaf963b62e87d7446f82f159b91ab77fc203512959a90495809c722
+2026-10-07T13:11:42Z F25f go_f25f f25_k02 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (238/184/5/662/130/ MB)
+2026-10-07T13:11:42Z F25f go_f25f f25_k02 installed the binary B copy for the tag: e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4
+2026-10-07T13:11:42Z F25f go_f25f f25_k02 enter_scene start (level bonus_path_maker_mix, SD 300, --rec, hold 330, KYTY_DIAG_B32=1, KYTY_GPU_WALL=1, KYTY_GPU_HANG_ABORT_S=22, M6 + calibration poller)
+2026-10-07T13:11:55Z F25f go_f25f f25_k02 enter_scene rc 1; guard watch: 2026-10-07T13:11:54Z watch end, user process seen: yes; M6: M6 end samples=6 foreign_max=2.95 foreign_mean=1.85 cal_lines=0
+2026-10-07T13:11:55Z F25f go_f25f f25_k02 run: VERDICT: no attempt reached bonus_path_maker_mix
+2026-10-07T13:11:55Z F25f go_f25f f25_k02 log_f25_k02.txt sha256 8239d6abb99cd91303628aa43be3583f9f7ce850d83212bf67266326eabdd701
+2026-10-07T13:11:55Z F25f go_f25f f25_k02 user process at the return (GUARD CLEAN) - binary, caches and GLCache wait for its exit, poll 10 s, the lock stays (item 534)
+2026-10-07T13:11:55Z F25f go_f25f f25_k02 2026-10-07T13:11:55Z GUARD CLEAN after 0 s
+2026-10-07T13:11:56Z F25f go_f25f f25_k02 installed binary returned from the pinned S18 copy
+2026-10-07T13:11:56Z F25f go_f25f f25_k02 installed binary after the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T13:11:58Z F25f go_f25f f25_k02 manifest of the run state (before the return): manifest C:/kyty/f287/f25f/runs/f25_k02/manifest_run.tsv files 4790 bytes 1262355163 listsha 7718ec40caaf963b62e87d7446f82f159b91ab77fc203512959a90495809c722; run vs before: manifest cmp EQUAL files 4790 listsha 7718ec40caaf963b62e87d7446f82f159b91ab77fc203512959a90495809c722
+2026-10-07T13:11:59Z F25f go_f25f f25_k02 caches, seeds, saves and GLCache returned
+2026-10-07T13:12:05Z F25f go_f25f f25_k02 manifest after: manifest C:/kyty/f287/f25f/runs/f25_k02/manifest_after.tsv files 4790 bytes 1262355163 listsha 7718ec40caaf963b62e87d7446f82f159b91ab77fc203512959a90495809c722; cmp: manifest cmp EQUAL files 4790 listsha 7718ec40caaf963b62e87d7446f82f159b91ab77fc203512959a90495809c722
+2026-10-07T13:12:05Z F25f go_f25f f25_k02 lock released (rc 0)
+2026-10-07T13:12:05Z F25f go_f25f f25_k02 user process during the tag (2026-10-07T13:11:48Z GUARD FOUND 1: <app> pid 21416 kind emulator) - block closed, interference, repeat by the same name (item 534)
+rc=0

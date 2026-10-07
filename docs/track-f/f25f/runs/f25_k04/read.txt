@@ -1,0 +1,54 @@
+tag f25_k04 (form f25_k04, kind cold, level bonus_path_maker_mix)  reader sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf  f20e_read sha256 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa  theta 0.4562
+  ADMISSION PASS; STATUS ADMITTED; warm member None
+    [ok] tag json present
+    [ok] theta_load from the seal C:/kyty/f287/f25f/pred/f25f_seal.md (0.4562)
+    [ok] json binary_sha256 = binary B e342b839 (e342b839d74d5689)
+    [ok] installed before = after = S18 b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (b3cee576138a1553 / b3cee576138a1553)
+    [ok] json prereg sha256 = seal sha256 (2620a7508519f161 / 2620a7508519f161)
+    [ok] env: harness constants + form [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')] (extra [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')])
+    [ok] KYTY_GPU_HANG_ABORT_S = 22 (22)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl of the tag level (-lvl bonus_path_maker_mix; fixed None; harness bonus_path_maker_mix)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] scene entered (first scene frame 175)
+    [ok] hold: scene >= 300 s (332.276 s) or GpuHangAbort after >= 10 s of the scene (None)
+    [ok] no death marker other than GpuHangAbort ([])
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0
+    [ok] DiagB32 mode line present (1)
+    [ok] no DiagB32 config invalid line
+    [ok] translation signature 9177b426 (= S18) and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] TestB32 lines none ([])
+    [ok] rep_drop 0 (0)
+    [ok] no loader (None)
+    [ok] caches before = snapshot of the form (manifest cmp EQUAL files 4790 listsha 7718ec40caaf)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4790 listsha 77)
+  binary e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4; installed during the tag e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4; translation signature 9177b4267de1fb8bac7d1113afd8733210addfac
+  scene: first_n 175, frames 14761, scene 332.3 s, hold True (abort hold False); DiagB32 lines 2723 (windows 14, bad prefix 0, dup 0)
+  abort None; death markers []; replay rebuild skipped lines 1
+  RC13: F20c attribution with = without DiagB32 lines (2723 stripped): EQUAL
+  warm: dump frames (start >= 10 s) 0 []; program hashes []
+  K_I 1; K 1; K2 frames not attributed 1; in count 1; INSTR_MADE_K2 0
+  hold class (longest frame in count): UNMARKED:DrawThread; family UNMARKED; form FORM_NOFLIP; all frames in count M6_BURST False
+  M6: samples 152, foreign max 6.75; calibration {'offset': -11243209299, 'n': 6506, 'pairs': 14, 'second_minus_min_ms': 5.965, 'note': ''}
+    FRAME n 1608 dt_us 197650 t 30.0 s attr nothing | key 1608(n) win 197652 instr 19159 cover 195970 sgap 11788 | E 179195.5 holder flip | UNMARKED:Present ref | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr 70659 load 0.1878
+    FRAME n 1609 dt_us 100183 t 30.2 s attr nothing | key 1609(n) win 100115 instr 70659 cover 91546 sgap 8568 | E 81728.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.2292
+    FRAME n 1620 dt_us 117662 t 30.6 s attr nothing | key 1620(n) win 117600 instr 8178 cover 113998 sgap 12438 | E 99323.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr 8747 load 0.1038
+    FRAME n 1621 dt_us 110822 t 30.7 s attr nothing | key 1621(n) win 110720 instr 8747 cover 108256 sgap 12084 | E 92483.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.1235
+    FRAME n 1634 dt_us 149242 t 31.1 s attr nothing | key 1634(n) win 149229 instr 13001 cover 148014 sgap 11398 | E 131345.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr 71062 load 0.0982
+    FRAME n 1635 dt_us 132692 t 31.2 s attr nothing | key 1635(n) win 132503 instr 71062 cover 128857 sgap 13612 | E 114795.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.1032
+    FRAME n 1646 dt_us 131982 t 31.6 s attr nothing | key 1646(n) win 131985 instr 8929 cover 128014 sgap 8881 | E 113661.5 holder flip | UNMARKED:Present ref | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.1221
+    FRAME n 5032 dt_us 173039 t 107.2 s attr nothing | key 5032(n) win 173322 instr 14996 cover 169756 sgap 12231 | E 140943.5 holder flip | UNMARKED:DrawThread ref | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.0986
+    FRAME n 5091 dt_us 486224 t 108.7 s attr nothing | key 5091(n) win 486227 instr 48699 cover 484531 sgap 13367 | E 468134.5 holder flip | UNMARKED:Present ref | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.0512
+    FRAME n 6504 dt_us 106102 t 140.4 s attr nothing | key 6504(n) win 106103 instr 7075 cover 105920 sgap 11877 | E 87601.0 holder flip | UNMARKED:Present ref | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.0276
+    FRAME n 6505 dt_us 299562 t 140.5 s attr nothing | key 6506(n+1) win 229918 instr 223095 cover 229531 sgap 11779 | E 281061.0 holder output | UNMARKED:Present ref | Present(Present)=Sw |  | FORM_OTHER | M6_BURST False | next instr None load 0.0807
+    FRAME n 8966 dt_us 2003851 t 195.1 s attr nothing | key 8966(n) win 2003872 instr 301196 cover 1999295 sgap 13112 | E 1986339.0 holder flip | UNMARKED:DrawThread IN COUNT | DrawThread(guest)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.1323
+    FRAME n 12357 dt_us 328030 t 272.7 s attr nothing | key 12357(n) win 328112 instr 30321 cover 327454 sgap 13657 | E 309180.0 holder flip | UNMARKED:Present ref | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw |  | FORM_NOFLIP | M6_BURST False | next instr None load 0.1042
+  B5 frames 1, armed (EMU_RUN:Gpu / EMU_CALL on GuestGpu) 1: [(177, 'EMU_RUN:Gpu')]
+  U5 windows (dt_us <= 20475000): bad 0 []; excluded (> envelope) []; sgap_bad after a long close (reference) []
+  reference: median dt of the scene 18003, frames >= 70 ms after 10 s 15; unprintable names []; rep_drop 0
+  -x last {'n': 12357, 'slots': 84, 'slot_full': 0, 'slot_full_w': 0, 'torn': 1, 'torn_w': 0, 'ring_drop': 0, 'ring_drop_w': 0, 'sgap_bad': 0, 'sgap_bad_w': 0, 'lines_cut': 0, 'lines_cut_w': 0, 'req_miss': 0, 'req_miss_w': 0, 'sub_miss': 0, 'sub_miss_w': 0, 'short_stalls': 4, 'others_cut': 0, 'w_cut': 0, 'rep_drop': 0, 'kq_fail': 0, 'print_us': 110, 'gap3p': 0, 'ring_hold': 0, 'ring_hold_w': 0, 'hist_exh': 0, 'hist_exh_w': 0, 'w_cut_w': 0, 'others_cut_w': 0}
+  REFERENCE: glitches 0, video index 14921, outcome ok, hold_exit None, hold_s 330.2
+  READING ADMITTED (no verdict; reading - F25g)

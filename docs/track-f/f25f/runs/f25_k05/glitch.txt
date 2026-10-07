@@ -1,0 +1,2 @@
+C:/kyty/f287/f25f/rec_f25_k05.mp4: 17883 frames 960x540, index entries 17883
+one-frame glitches: 0

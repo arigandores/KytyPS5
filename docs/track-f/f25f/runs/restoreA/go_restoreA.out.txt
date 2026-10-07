@@ -1,0 +1,5 @@
+2026-10-07T14:34:07Z F25f go_f25f restoreA reconcile before restore A' (item 606): RECONCILE EQUAL state A files 4790
+2026-10-07T14:34:16Z F25f go_f25f restoreA restore A: SNAP RESTORED A manifest cmp EQUAL files 4790
+2026-10-07T14:34:19Z F25f go_f25f restoreA live manifest against A: manifest cmp EQUAL files 4790 listsha 7718ec40caaf963b62e87d7446f82f159b91ab77fc203512959a90495809c722
+2026-10-07T14:34:19Z F25f go_f25f restoreA lock released - caches = A, installed S18
+rc=0

@@ -1,0 +1,857 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "theta_load from the seal C:/kyty/f287/f25f/pred/f25f_seal.md (0.4562)",
+   true
+  ],
+  [
+   "json binary_sha256 = binary B e342b839 (e342b839d74d5689)",
+   true
+  ],
+  [
+   "installed before = after = S18 b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (b3cee576138a1553 / b3cee576138a1553)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (2620a7508519f161 / 2620a7508519f161)",
+   true
+  ],
+  [
+   "env: harness constants + form [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')] (extra [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')])",
+   true
+  ],
+  [
+   "KYTY_GPU_HANG_ABORT_S = 22 (22)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl of the tag level (-lvl pot_treasure_cave; fixed None; harness pot_treasure_cave)",
+   true
+  ],
+  [
+   "hold option 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "scene entered (first scene frame 171)",
+   true
+  ],
+  [
+   "hold: scene >= 300 s (332.824 s) or GpuHangAbort after >= 10 s of the scene (None)",
+   true
+  ],
+  [
+   "no death marker other than GpuHangAbort ([])",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0",
+   true
+  ],
+  [
+   "DiagB32 mode line present (1)",
+   true
+  ],
+  [
+   "no DiagB32 config invalid line",
+   true
+  ],
+  [
+   "translation signature 9177b426 (= S18) and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "TestB32 lines none ([])",
+   true
+  ],
+  [
+   "rep_drop 0 (0)",
+   true
+  ],
+  [
+   "no loader (None)",
+   true
+  ],
+  [
+   "caches before = snapshot of the form (manifest cmp EQUAL files 4790 listsha 7718ec40caaf)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4790 listsha 77)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4",
+ "control": null,
+ "f20e_read_sha256": "5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa",
+ "form": "f25_k05",
+ "kind": "cold",
+ "level": "pot_treasure_cave",
+ "log": {
+  "K": 1,
+  "K_I": 1,
+  "P_I_K2": 3,
+  "abort": null,
+  "abort_hold": false,
+  "b5": [
+   {
+    "armed": true,
+    "cls": "EMU_RUN:Gpu",
+    "dt_us": 247855,
+    "n": 173,
+    "t_s": 0.016
+   }
+  ],
+  "b5_armed": 1,
+  "bad_names": [],
+  "cal": {
+   "n": 17452,
+   "note": "",
+   "offset": -10886951370,
+   "pairs": 8,
+   "second_minus_min_ms": 13.565
+  },
+  "death": [],
+  "diag_bad_prefix": 0,
+  "diag_lines": 1715,
+  "diag_n": 8,
+  "dup": 0,
+  "first_n": 171,
+  "frames": [
+   {
+    "E": 1912928.5,
+    "attr": "nothing",
+    "base": {
+     "dt": 17728.5,
+     "gbusy": 7098.0,
+     "k": 20,
+     "lat": 13996.5
+    },
+    "cls": "UNMARKED:Present",
+    "cover_us": 1930306,
+    "dt_us": 1930657,
+    "family": "UNMARKED",
+    "fh_other_us": 1928793,
+    "flip_ns": 71977736557492,
+    "form": "FORM_NOFLIP",
+    "gbusy_us": 4518,
+    "gpu_in_chain": true,
+    "gpu_sw_or_s50": false,
+    "gpu_sw_plus_s50": false,
+    "holder": "flip",
+    "idx": 17173,
+    "in_count": true,
+    "instr_made_k2": false,
+    "instr_next_us": null,
+    "instr_us": 292510,
+    "k2": true,
+    "key": 17344,
+    "key_branch": "n",
+    "key_dt_us": 1930699,
+    "lat_us": 1589,
+    "load_ratio": 0.0764,
+    "m6_burst": false,
+    "n": 17344,
+    "note": "",
+    "p_i": true,
+    "path": [
+     "DrawThread(guest)=W:gpu_wait->waker",
+     "Gpu(Gpu)=W:emu_mutex->waker",
+     "Present(Present)=Sw"
+    ],
+    "precursor": false,
+    "print_us_x": 37,
+    "samples": 366,
+    "semwait_us": 6712,
+    "sgap_max_us": 12074,
+    "shared": false,
+    "steps": [
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 0,
+      "how": "holder",
+      "name": "DrawThread",
+      "role": "guest",
+      "samples": 366,
+      "slot": 27
+     },
+     {
+      "R": 1,
+      "S": 0,
+      "Sw": 0,
+      "how": "waker",
+      "name": "Gpu",
+      "role": "Gpu",
+      "samples": 366,
+      "slot": 3
+     },
+     {
+      "R": 0,
+      "S": 11,
+      "Sw": 352,
+      "how": "waker",
+      "name": "Present",
+      "role": "Present",
+      "samples": 366,
+      "slot": 2
+     }
+    ],
+    "t_s": 316.724,
+    "t_us": 316724320,
+    "term_role": "Present",
+    "w_lines": 147,
+    "zero_w": {
+     "hist_exh_w": 0,
+     "lines_cut_w": 0,
+     "others_cut_w": 0,
+     "req_miss_w": 0,
+     "ring_drop_w": 0,
+     "sgap_bad_w": 0,
+     "slot_full_w": 0,
+     "sub_miss_w": 0,
+     "torn_w": 0,
+     "w_cut_w": 0
+    }
+   },
+   {
+    "E": 2194679.0,
+    "attr": "nothing",
+    "base": {
+     "dt": 17859.0,
+     "gbusy": 7280.5,
+     "k": 20,
+     "lat": 11959.5
+    },
+    "cls": "UNMARKED:Present",
+    "cover_us": 2212209,
+    "dt_us": 2212538,
+    "family": "UNMARKED",
+    "fh_other_us": 2210121,
+    "flip_ns": 71980968060125,
+    "form": "FORM_NOFLIP",
+    "gbusy_us": 7163,
+    "gpu_in_chain": true,
+    "gpu_sw_or_s50": false,
+    "gpu_sw_plus_s50": false,
+    "holder": "flip",
+    "idx": 17223,
+    "in_count": true,
+    "instr_made_k2": false,
+    "instr_next_us": null,
+    "instr_us": 340167,
+    "k2": true,
+    "key": 17394,
+    "key_branch": "n",
+    "key_dt_us": 2212475,
+    "lat_us": 2110,
+    "load_ratio": 0.0649,
+    "m6_burst": false,
+    "n": 17394,
+    "note": "",
+    "p_i": true,
+    "path": [
+     "DrawThread(guest)=W:gpu_wait->waker",
+     "Gpu(Gpu)=W:emu_mutex->waker",
+     "Present(Present)=Sw"
+    ],
+    "precursor": false,
+    "print_us_x": 135,
+    "samples": 419,
+    "semwait_us": 17480,
+    "sgap_max_us": 12555,
+    "shared": false,
+    "steps": [
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 0,
+      "how": "holder",
+      "name": "DrawThread",
+      "role": "guest",
+      "samples": 419,
+      "slot": 27
+     },
+     {
+      "R": 1,
+      "S": 0,
+      "Sw": 0,
+      "how": "waker",
+      "name": "Gpu",
+      "role": "Gpu",
+      "samples": 419,
+      "slot": 3
+     },
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 416,
+      "how": "waker",
+      "name": "Present",
+      "role": "Present",
+      "samples": 419,
+      "slot": 2
+     }
+    ],
+    "t_s": 319.674,
+    "t_us": 319673944,
+    "term_role": "Present",
+    "w_lines": 156,
+    "zero_w": {
+     "hist_exh_w": 0,
+     "lines_cut_w": 0,
+     "others_cut_w": 0,
+     "req_miss_w": 0,
+     "ring_drop_w": 0,
+     "sgap_bad_w": 0,
+     "slot_full_w": 0,
+     "sub_miss_w": 0,
+     "torn_w": 0,
+     "w_cut_w": 0
+    }
+   },
+   {
+    "E": 127130.5,
+    "attr": "nothing",
+    "base": {
+     "dt": 17779.5,
+     "gbusy": 7355.0,
+     "k": 20,
+     "lat": 11046.5
+    },
+    "cls": "UNMARKED:Present",
+    "cover_us": 168457,
+    "dt_us": 144910,
+    "family": "UNMARKED",
+    "fh_other_us": 141326,
+    "flip_ns": 71982388640170,
+    "form": "FORM_NOFLIP",
+    "gbusy_us": 7527,
+    "gpu_in_chain": false,
+    "gpu_sw_or_s50": false,
+    "gpu_sw_plus_s50": false,
+    "holder": "flip",
+    "idx": 17280,
+    "in_count": false,
+    "instr_made_k2": false,
+    "instr_next_us": null,
+    "instr_us": 16252,
+    "k2": false,
+    "key": 17452,
+    "key_branch": "n+1",
+    "key_dt_us": 172642,
+    "lat_us": 3405,
+    "load_ratio": 0.1131,
+    "m6_burst": false,
+    "n": 17451,
+    "note": "",
+    "p_i": true,
+    "path": [
+     "DrawThread(guest)=W:emu_mutex->waker",
+     "Present(Present)=Sw"
+    ],
+    "precursor": true,
+    "print_us_x": 67,
+    "samples": 32,
+    "semwait_us": 17598,
+    "sgap_max_us": 13246,
+    "shared": true,
+    "steps": [
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 0,
+      "how": "holder",
+      "name": "DrawThread",
+      "role": "guest",
+      "samples": 32,
+      "slot": 27
+     },
+     {
+      "R": 0,
+      "S": 1,
+      "Sw": 23,
+      "how": "waker",
+      "name": "Present",
+      "role": "Present",
+      "samples": 32,
+      "slot": 2
+     }
+    ],
+    "t_s": 322.989,
+    "t_us": 322989381,
+    "term_role": "Present",
+    "w_lines": 156,
+    "zero_w": {
+     "hist_exh_w": 0,
+     "lines_cut_w": 0,
+     "others_cut_w": 0,
+     "req_miss_w": 0,
+     "ring_drop_w": 0,
+     "sgap_bad_w": 0,
+     "slot_full_w": 0,
+     "sub_miss_w": 0,
+     "torn_w": 0,
+     "w_cut_w": 0
+    }
+   },
+   {
+    "E": 154931.5,
+    "attr": "nothing",
+    "base": {
+     "dt": 17779.5,
+     "gbusy": 7355.0,
+     "k": 20,
+     "lat": 11046.5
+    },
+    "cls": "UNMARKED:Present",
+    "cover_us": 168457,
+    "dt_us": 172711,
+    "family": "UNMARKED",
+    "fh_other_us": 140559,
+    "flip_ns": 71982388640170,
+    "form": "FORM_NOFLIP",
+    "gbusy_us": 12479,
+    "gpu_in_chain": false,
+    "gpu_sw_or_s50": false,
+    "gpu_sw_plus_s50": false,
+    "holder": "flip",
+    "idx": 17281,
+    "in_count": false,
+    "instr_made_k2": false,
+    "instr_next_us": null,
+    "instr_us": 16252,
+    "k2": false,
+    "key": 17452,
+    "key_branch": "n",
+    "key_dt_us": 172642,
+    "lat_us": 13648,
+    "load_ratio": 0.1131,
+    "m6_burst": false,
+    "n": 17452,
+    "note": "",
+    "p_i": true,
+    "path": [
+     "DrawThread(guest)=W:emu_mutex->waker",
+     "Present(Present)=Sw"
+    ],
+    "precursor": true,
+    "print_us_x": 67,
+    "samples": 32,
+    "semwait_us": 26330,
+    "sgap_max_us": 13246,
+    "shared": true,
+    "steps": [
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 0,
+      "how": "holder",
+      "name": "DrawThread",
+      "role": "guest",
+      "samples": 32,
+      "slot": 27
+     },
+     {
+      "R": 0,
+      "S": 1,
+      "Sw": 23,
+      "how": "waker",
+      "name": "Present",
+      "role": "Present",
+      "samples": 32,
+      "slot": 2
+     }
+    ],
+    "t_s": 323.134,
+    "t_us": 323134291,
+    "term_role": "Present",
+    "w_lines": 156,
+    "zero_w": {
+     "hist_exh_w": 0,
+     "lines_cut_w": 0,
+     "others_cut_w": 0,
+     "req_miss_w": 0,
+     "ring_drop_w": 0,
+     "sgap_bad_w": 0,
+     "slot_full_w": 0,
+     "sub_miss_w": 0,
+     "torn_w": 0,
+     "w_cut_w": 0
+    }
+   },
+   {
+    "E": 129050.0,
+    "attr": "nothing",
+    "base": {
+     "dt": 17421.0,
+     "gbusy": 7586.0,
+     "k": 20,
+     "lat": 7323.5
+    },
+    "cls": "UNMARKED:Present",
+    "cover_us": 146196,
+    "dt_us": 146471,
+    "family": "UNMARKED",
+    "fh_other_us": 141726,
+    "flip_ns": 71982767467347,
+    "form": "FORM_NOFLIP",
+    "gbusy_us": 6130,
+    "gpu_in_chain": true,
+    "gpu_sw_or_s50": false,
+    "gpu_sw_plus_s50": false,
+    "holder": "flip",
+    "idx": 17295,
+    "in_count": false,
+    "instr_made_k2": false,
+    "instr_next_us": 9879,
+    "instr_us": 12956,
+    "k2": false,
+    "key": 17466,
+    "key_branch": "n",
+    "key_dt_us": 146472,
+    "lat_us": 4613,
+    "load_ratio": 0.0933,
+    "m6_burst": false,
+    "n": 17466,
+    "note": "",
+    "p_i": true,
+    "path": [
+     "DrawThread(guest)=W:gpu_wait->waker",
+     "Gpu(Gpu)=W:emu_mutex->waker",
+     "Present(Present)=Sw"
+    ],
+    "precursor": true,
+    "print_us_x": 297,
+    "samples": 28,
+    "semwait_us": 13198,
+    "sgap_max_us": 11089,
+    "shared": false,
+    "steps": [
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 0,
+      "how": "holder",
+      "name": "DrawThread",
+      "role": "guest",
+      "samples": 28,
+      "slot": 27
+     },
+     {
+      "R": 2,
+      "S": 0,
+      "Sw": 0,
+      "how": "waker",
+      "name": "Gpu",
+      "role": "Gpu",
+      "samples": 28,
+      "slot": 3
+     },
+     {
+      "R": 0,
+      "S": 3,
+      "Sw": 23,
+      "how": "waker",
+      "name": "Present",
+      "role": "Present",
+      "samples": 28,
+      "slot": 2
+     }
+    ],
+    "t_s": 323.539,
+    "t_us": 323539325,
+    "term_role": "Present",
+    "w_lines": 88,
+    "zero_w": {
+     "hist_exh_w": 0,
+     "lines_cut_w": 0,
+     "others_cut_w": 0,
+     "req_miss_w": 0,
+     "ring_drop_w": 0,
+     "sgap_bad_w": 0,
+     "slot_full_w": 0,
+     "sub_miss_w": 0,
+     "torn_w": 0,
+     "w_cut_w": 0
+    }
+   },
+   {
+    "E": 110082.0,
+    "attr": "nothing",
+    "base": {
+     "dt": 17421.0,
+     "gbusy": 7586.0,
+     "k": 20,
+     "lat": 7323.5
+    },
+    "cls": "UNMARKED:DrawThread",
+    "cover_us": 126438,
+    "dt_us": 127503,
+    "family": "UNMARKED",
+    "fh_other_us": 125894,
+    "flip_ns": 71982894888758,
+    "form": "FORM_NOFLIP",
+    "gbusy_us": 8983,
+    "gpu_in_chain": false,
+    "gpu_sw_or_s50": false,
+    "gpu_sw_plus_s50": false,
+    "holder": "flip",
+    "idx": 17296,
+    "in_count": false,
+    "instr_made_k2": false,
+    "instr_next_us": null,
+    "instr_us": 9879,
+    "k2": false,
+    "key": 17467,
+    "key_branch": "n",
+    "key_dt_us": 127421,
+    "lat_us": 1500,
+    "load_ratio": 0.0958,
+    "m6_burst": false,
+    "n": 17467,
+    "note": "",
+    "p_i": true,
+    "path": [
+     "DrawThread(guest)=Sw"
+    ],
+    "precursor": true,
+    "print_us_x": 87,
+    "samples": 25,
+    "semwait_us": 20213,
+    "sgap_max_us": 9497,
+    "shared": false,
+    "steps": [
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 23,
+      "how": "holder",
+      "name": "DrawThread",
+      "role": "guest",
+      "samples": 25,
+      "slot": 27
+     }
+    ],
+    "t_s": 323.686,
+    "t_us": 323685796,
+    "term_role": "guest",
+    "w_lines": 90,
+    "zero_w": {
+     "hist_exh_w": 0,
+     "lines_cut_w": 0,
+     "others_cut_w": 0,
+     "req_miss_w": 0,
+     "ring_drop_w": 0,
+     "sgap_bad_w": 0,
+     "slot_full_w": 0,
+     "sub_miss_w": 0,
+     "torn_w": 0,
+     "w_cut_w": 0
+    }
+   },
+   {
+    "E": 1331421.0,
+    "attr": "prio only",
+    "base": {
+     "dt": 17566.0,
+     "gbusy": 7378.5,
+     "k": 20,
+     "lat": 10969.0
+    },
+    "cls": "UNMARKED:Gpu",
+    "cover_us": 1346352,
+    "dt_us": 1348987,
+    "family": "UNMARKED",
+    "fh_other_us": 1344258,
+    "flip_ns": 71985137458578,
+    "form": "FORM_SEM",
+    "gbusy_us": 3893,
+    "gpu_in_chain": true,
+    "gpu_sw_or_s50": true,
+    "gpu_sw_plus_s50": true,
+    "holder": "flip",
+    "idx": 17341,
+    "in_count": true,
+    "instr_made_k2": false,
+    "instr_next_us": null,
+    "instr_us": 226984,
+    "k2": true,
+    "key": 17512,
+    "key_branch": "n",
+    "key_dt_us": 1348851,
+    "lat_us": 2843,
+    "load_ratio": 0.1151,
+    "m6_burst": false,
+    "n": 17512,
+    "note": "",
+    "p_i": true,
+    "path": [
+     "DrawThread(guest)=W:gpu_wait->waker",
+     "Gpu(Gpu)=Sw"
+    ],
+    "precursor": false,
+    "print_us_x": 94,
+    "samples": 254,
+    "semwait_us": 1347263,
+    "sgap_max_us": 13758,
+    "shared": false,
+    "steps": [
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 0,
+      "how": "holder",
+      "name": "DrawThread",
+      "role": "guest",
+      "samples": 254,
+      "slot": 27
+     },
+     {
+      "R": 1,
+      "S": 0,
+      "Sw": 251,
+      "how": "waker",
+      "name": "Gpu",
+      "role": "Gpu",
+      "samples": 254,
+      "slot": 3
+     }
+    ],
+    "t_s": 324.707,
+    "t_us": 324706890,
+    "term_role": "Gpu",
+    "w_lines": 121,
+    "zero_w": {
+     "hist_exh_w": 0,
+     "lines_cut_w": 0,
+     "others_cut_w": 0,
+     "req_miss_w": 0,
+     "ring_drop_w": 0,
+     "sgap_bad_w": 0,
+     "slot_full_w": 0,
+     "sub_miss_w": 0,
+     "torn_w": 0,
+     "w_cut_w": 0
+    }
+   }
+  ],
+  "frames_n": 17708,
+  "hold": true,
+  "hold_any": true,
+  "hold_burst": false,
+  "hold_class": "UNMARKED:Present",
+  "hold_family": "UNMARKED",
+  "hold_form": "FORM_NOFLIP",
+  "in_count": 3,
+  "instr_made_k2": 0,
+  "invalid": [],
+  "level": "pot_treasure_cave",
+  "m6_foreign_max": 3.17,
+  "m6_samples": 177,
+  "med_dt": 17071.0,
+  "minimized": 0,
+  "mode": [
+   "DiagB32: mode=1 period_us=5000 print_us=100000 wait_rec_us=10000 kernel_after_us=40000 slots=256 hist=4096 wring=65536 ncpu=32 kstate=1 kq_us=6574 kq_budget_div=10 kq_near_us=60000"
+  ],
+  "rc13_equal": true,
+  "rc13_stripped": 1715,
+  "recovering": 0,
+  "rep_drop": 0,
+  "replay_skipped": 1,
+  "scene_s": 332.824,
+  "sig": [
+   "9177b4267de1fb8bac7d1113afd8733210addfac"
+  ],
+  "slow70": 8,
+  "stand": null,
+  "test": [],
+  "u5_bad": [],
+  "u5_bad_n": 0,
+  "u5_excl": [],
+  "u5_h2": [],
+  "u5_tag": false,
+  "variant_dir": [
+   "variant_fixb26_fixb1b_fixf10_fixf19"
+  ],
+  "warm": false,
+  "warm_dump_frames": [
+   [
+    675,
+    6031
+   ]
+  ],
+  "warm_dump_hashes": [
+   "828215ad31a7f2ca",
+   "acee300df6a19856"
+  ],
+  "warm_dump_n": 1,
+  "x_last": {
+   "gap3p": 0,
+   "hist_exh": 0,
+   "hist_exh_w": 0,
+   "kq_fail": 0,
+   "lines_cut": 0,
+   "lines_cut_w": 0,
+   "n": 17512,
+   "others_cut": 0,
+   "others_cut_w": 0,
+   "print_us": 94,
+   "rep_drop": 0,
+   "req_miss": 0,
+   "req_miss_w": 0,
+   "ring_drop": 0,
+   "ring_drop_w": 0,
+   "ring_hold": 0,
+   "ring_hold_w": 0,
+   "sgap_bad": 0,
+   "sgap_bad_w": 0,
+   "short_stalls": 2,
+   "slot_full": 0,
+   "slot_full_w": 0,
+   "slots": 84,
+   "sub_miss": 0,
+   "sub_miss_w": 0,
+   "torn": 2,
+   "torn_w": 0,
+   "w_cut": 0,
+   "w_cut_w": 0
+  }
+ },
+ "reader_sha256": "933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf",
+ "reading": "ADMITTED (no verdict; reading - F25g)",
+ "ref": {
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.1,
+  "installed_sha": "e342b839d74d5689bc4f66ee0ed04a37e9a640e60a199a2882c8e83ecf19cfa4",
+  "outcome": "ok",
+  "signature": "9177b4267de1fb8bac7d1113afd8733210addfac",
+  "video_index": 17883
+ },
+ "status": "ADMITTED",
+ "tag": "f25_k05",
+ "theta": 0.4562,
+ "warm_member": null
+}

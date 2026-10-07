@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "C:\kyty\f287\f25f\manifest_fs4c.py", line 73, in <module>
+    sys.exit(main(sys.argv[1:]))
+             ~~~~^^^^^^^^^^^^^^
+  File "C:\kyty\f287\f25f\manifest_fs4c.py", line 63, in main
+    lines = manifest(argv[1:])
+  File "C:\kyty\f287\f25f\manifest_fs4c.py", line 33, in manifest
+    lines.append('%s\t%s\t%d\t%s' % (label, rel, os.path.getsize(p), sha_file(p)))
+                                                                     ~~~~~~~~^^^
+  File "C:\kyty\f287\f25f\manifest_fs4c.py", line 14, in sha_file
+    for chunk in iter(lambda: f.read(1 << 20), b''):
+                 ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\kyty\f287\f25f\manifest_fs4c.py", line 14, in <lambda>
+    for chunk in iter(lambda: f.read(1 << 20), b''):
+                              ~~~~~~^^^^^^^^^
+PermissionError: [Errno 13] Permission denied

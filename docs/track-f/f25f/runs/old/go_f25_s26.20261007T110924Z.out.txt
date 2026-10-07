@@ -1,0 +1,8 @@
+2026-10-07T10:05:12Z F25f go_f25f f25_s26 run check (item 587 (g)): RUN ALIVE cecdd2e4 status in_progress
+2026-10-07T10:05:12Z F25f go_f25f f25_s26 lock taken; level bonus_path_maker_mix; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-07T10:05:12Z F25f go_f25f f25_s26 installed binary inside the lock before the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T10:05:15Z F25f go_f25f f25_s26 manifest before failed - not starting
+2026-10-07T10:05:15Z F25f go_f25f f25_s26 installed binary after the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-07T10:05:15Z F25f go_f25f f25_s26 lock released (rc 1)
+2026-10-07T10:05:15Z F25f go_f25f f25_s26 enter_scene never started - not a tag, repeat by the same name (item 534)
+rc=1

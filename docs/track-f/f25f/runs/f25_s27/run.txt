@@ -1,0 +1,17 @@
+prereg: f25f_seal.md  35326 bytes  sha256 2a32d74ed3857851  mtime 2026-10-07T12:17:22  mtime-ctime +0.000 s
+pre_run: host 422 processes, top by CPU: <app> 6238s, <app> 1629s, <app> 1585s, <app> 1303s, <app> 1276s, <app> 789s
+pre_run: GPU 7.0 % busy, 33.9 W, 2438 MiB used, SM 1635.0 MHz, 22 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f25f\cpuclk.py is not there
+--- attempt 1: launching
+8.8 s  LevelDocument Loaded: pot_treasure_cave
+10.9 s  Level has started: pot_treasure_cave
+13.5 s  scene stable at frame 309 (90 frames with draws >= 300)
+holding the run for 330 s
+hold end: ft_total 18271, ft_tail 269 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 4.0, 'close_wait_s': 40}
+hold_gpu: median 52.0 % busy over 647 rows (2026/10/07 13:22:56.825 .. 2026/10/07 13:28:26.845), a row, not a guard
+copied C:\kyty\f287\f25f\log_f25_s27.txt
+copied C:\kyty\f287\f25f\stdout_f25_s27.txt
+
+attempt 1  ok               document=8.8 s started=10.9 s stable=13.5 s 
+VERDICT: pot_treasure_cave in 13.5 s - PASS (acceptance <= 90 s)

@@ -3,6 +3,11 @@ reader f25_read.py sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | f25_c1 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
 | f25_c2 | bonus | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_k01 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_k02 | bonus | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_k03 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_k04 | bonus | ADMITTED | e342b839 / 9177b426 | 1 / 1 | 1 | 8966:UNMARKED:DrawThread | FORM_NOFLIP | False | 0 | - | 0 |
+| f25_k05 | pot_t | ADMITTED | e342b839 / 9177b426 | 1 / 1 | 3 | 17344:UNMARKED:Present 17394:UNMARKED:Present 17512:UNMARKED:Gpu | FORM_NOFLIP,FORM_SEM | False | 0 | - | 0 |
 | f25_pb | pot_t | ADMITTED | e342b839 / 9177b426 | 1 / 1 | 1 | 3348:EMU_CALL:present>DRV_HOST | FORM_OTHER | False | 0 | PASS | 0 |
 | f25_pc | bonus | ADMITTED | e342b839 / 9177b426 | 1 / 1 | 1 | 3260:UNMARKED:Gpu | FORM_OTHER | False | 0 | PASS | 0 |
 | f25_s01 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
@@ -30,5 +35,14 @@ reader f25_read.py sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40
 | f25_s23 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
 | f25_s24 | bonus | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
 | f25_s25 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_s26 | bonus | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_s27 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_s28 | bonus | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_s29 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_s30 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_s31 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_s32 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_s33 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
+| f25_s34 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | - | 0 |
 | f25_z1 | pot_t | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | PASS | 0 |
 | f25_z2 | bonus | ADMITTED | e342b839 / 9177b426 | 0 / 0 | 0 | - | - | - | 0 | PASS | 0 |

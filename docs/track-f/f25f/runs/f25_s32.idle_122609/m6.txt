@@ -1,0 +1,2 @@
+2026-10-07T12:26:07Z t=3.4 emu_t=- qpc_ns=65578909974400 game=0.00 loader=0.00 foreign=2.30 top=<app>:16352:1.05
+M6 end samples=1 foreign_max=2.30 foreign_mean=2.30 cal_lines=0

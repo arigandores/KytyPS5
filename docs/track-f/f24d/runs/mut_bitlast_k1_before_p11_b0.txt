@@ -1,0 +1,7 @@
+args: C:/kyty/f287/f24d/buildB/b13_epoch_stand.exe before 11 0 100000
+KYTY_FIX_B13: 1
+rc: 0
+seconds: 3.6
+FixB13: mode=1
+B13 build=code fix_b13=1 mode=before point=11 bits=0 iters=100000 lost=0 r1=hit:0,skip_bit:0,skip_stamp:0,scan:100000 r2=hit:100000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+

@@ -1,0 +1,7 @@
+pediff3: differing bytes 4180 {'(3) header/debug stamp+GUID': 12, '(1) build dir name': 139, '(2) anon-namespace tag': 1793} OTHER 2236 {'.text': 1, '.data': 2235}
+pediff3 OTHER bytes 2236 by section {'.text': 1, '.data': 2235}
+  reclassified (2b) anon-namespace string section .data bytes 2235
+.text differing bytes (never reclassified): 1
+left OTHER 1 {'.text': 1}
+  0x00001400 .text a=48 b=49 ctx_a=b'\xff\xe0\xcc\xcc\xcc\xcc\xcc\xccH\x8b\x05!\x98c\x01H\xff\xe0\xcc\xcc\xcc\xcc\xcc\xccH\x8b\x05\x19\x98c\x01H' ctx_b=b'\xff\xe0\xcc\xcc\xcc\xcc\xcc\xccH\x8b\x05!\x98c\x01H\xff\xe0\xcc\xcc\xcc\xcc\xcc\xccI\x8b\x05\x19\x98c\x01H'
+VERDICT UNEXPLAINED

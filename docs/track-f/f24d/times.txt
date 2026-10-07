@@ -1,0 +1,17 @@
+2026-10-07T03:44:37Z F24d worktree wtB at fbae3a68 created (mk_wt_f24d.sh) 3f6c644a
+2026-10-07T03:44:59Z F24d cherry-pick repro wtC (0005e11f + 1570d110 + 21f8ca76, resolve_wtB_f24c.py) tree compared with fbae3a68 9b927450
+2026-10-07T03:45:05Z F24d API check before configure+build: in_progress=[HPP-663:dc34de0a;HPP-668:dc34de0a] (no Harness Engineer series)
+2026-10-07T03:45:40Z F24d build kyty_emulator start (buildB)
+2026-10-07T03:46:27Z F24d build kyty_emulator end rc=0 579e7951
+2026-10-07T03:46:39Z F24d pediff3 own build vs 91f155b7 and negative vs installed b3cee576 3f2037b1 10a1cf1e
+2026-10-07T03:47:05Z F24d pediff3s own vs 91f155b7 EXPLAINED (.text 0), negative control (.text flip) VERDICT UNEXPLAINED bc2ce808
+2026-10-07T03:47:05Z F24d build stand targets start
+2026-10-07T03:47:13Z F24d build stand targets end 09e314dc
+2026-10-07T03:48:23Z F24d own stand matrix start (buildB, forced/controls 1e5, free 1e6)
+2026-10-07T03:51:52Z F24d own stand matrix end: ALL OK 1504b768
+2026-10-07T03:52:20Z F24d mutant g1st: MUTANT mut_g1st: member 595(e)(1) FAIL -> CAUGHT 365bba6a
+2026-10-07T03:52:43Z F24d mutant bitlast: MUTANT mut_bitlast: member 595(e)(1) FAIL -> CAUGHT 40063a73
+2026-10-07T03:53:16Z F24d stand rebuilt after mutants: b6e0ae2b vs own 09e314dc
+2026-10-07T03:53:55Z F24d else-branch check: ELSE VERBATIM OK 9e016e66
+2026-10-07T03:57:04Z F24d review written; refs check ALL OK, negctl FAILED 52d1b167
+2026-10-07T03:57:29Z F24d FACTS section appended; docs copied to KytyPS5 docs/track-f/f24d

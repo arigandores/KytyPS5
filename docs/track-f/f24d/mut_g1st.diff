@@ -1,0 +1,25 @@
+diff --git a/src/graphics/host_gpu/regionManager.h b/src/graphics/host_gpu/regionManager.h
+index a084a796..cc74a046 100644
+--- a/src/graphics/host_gpu/regionManager.h
++++ b/src/graphics/host_gpu/regionManager.h
+@@ -246,16 +246,16 @@ public:
+ 				// (BufferCache::SynchronizeBuffersByRegion). The release store of the global epoch publishes the region epoch and
+ 				// the bit stored before it: a scan that reads the new global epoch sees both and walks the region; a scan that reads
+ 				// the old one remembers the old one, and the move it missed sends the next preparation back to the region.
+-				m_epoch.fetch_add(1, std::memory_order_release);
++				// F24d MUTANT g1st
++				m_cpu_epoch.fetch_add(1, std::memory_order_release);
+ #if defined(KYTY_TEST_B13_HOOK)
+ 				B13Test::Hook(11); // Track F, F24c: after the region epoch, before the bdabits bit
+ #endif
+-				// Gate "bdabits": the map mirrors this epoch, so it is set here - before the global epoch, never later.
+-				BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
++				m_epoch.fetch_add(1, std::memory_order_release);
+ #if defined(KYTY_TEST_B13_HOOK)
+ 				B13Test::Hook(12); // Track F, F24c: after the bdabits bit, before the global epoch
+ #endif
+-				m_cpu_epoch.fetch_add(1, std::memory_order_release);
++				BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
+ #if defined(KYTY_TEST_B13_HOOK)
+ 				B13Test::Hook(13); // Track F, F24c: after the global epoch
+ #endif

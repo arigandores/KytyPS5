@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\kyty\f287\f24d\pediff3.py", line 10, in <module>
+    assert len(a) == len(b)
+           ^^^^^^^^^^^^^^^^
+AssertionError

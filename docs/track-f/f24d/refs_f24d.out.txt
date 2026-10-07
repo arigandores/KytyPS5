@@ -1,0 +1,2 @@
+REFS 43, mismatches 0, not in tsv 0
+ALL OK

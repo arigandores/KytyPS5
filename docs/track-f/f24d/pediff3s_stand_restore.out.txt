@@ -1,0 +1,5 @@
+pediff3: differing bytes 2 {'(3) header/debug stamp+GUID': 2} OTHER 0 {}
+pediff3 OTHER bytes 0 by section {}
+.text differing bytes (never reclassified): 0
+left OTHER 0 {}
+VERDICT EXPLAINED

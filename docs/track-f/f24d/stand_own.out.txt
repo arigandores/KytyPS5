@@ -1,0 +1,33 @@
+exe C:/kyty/f287/f24d/buildB/b13_epoch_stand.exe sha256 09e314dc01550913b2b2b8d22d1a81038200582120bbb81c879bc22d01caeb63
+own_k1_forced_p11_b0 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=forced point=11 bits=0 iters=100000 lost=0 r1=hit:100000,skip_bit:0,skip_stamp:0,scan:0 r2=hit:0,skip_bit:0,skip_stamp:0,scan:100000 gate_bdastamp=1 gate_bdabits=0
+own_k1_forced_p11_b1 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=forced point=11 bits=1 iters=100000 lost=0 r1=hit:100000,skip_bit:0,skip_stamp:0,scan:0 r2=hit:0,skip_bit:0,skip_stamp:0,scan:100000 gate_bdastamp=1 gate_bdabits=0
+own_k1_forced_p12_b0 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=forced point=12 bits=0 iters=100000 lost=0 r1=hit:100000,skip_bit:0,skip_stamp:0,scan:0 r2=hit:0,skip_bit:0,skip_stamp:0,scan:100000 gate_bdastamp=1 gate_bdabits=0
+own_k1_forced_p12_b1 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=forced point=12 bits=1 iters=100000 lost=0 r1=hit:100000,skip_bit:0,skip_stamp:0,scan:0 r2=hit:0,skip_bit:0,skip_stamp:0,scan:100000 gate_bdastamp=1 gate_bdabits=0
+own_k1_forced_p13_b0 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=forced point=13 bits=0 iters=100000 lost=0 r1=hit:0,skip_bit:0,skip_stamp:0,scan:100000 r2=hit:100000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+own_k1_forced_p13_b1 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=forced point=13 bits=1 iters=100000 lost=0 r1=hit:0,skip_bit:0,skip_stamp:0,scan:100000 r2=hit:100000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+own_k1_free_p11_b0 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=free point=11 bits=0 iters=1000000 lost=0 r1=hit:4047,skip_bit:0,skip_stamp:0,scan:995953 r2=hit:995953,skip_bit:0,skip_stamp:0,scan:4047 gate_bdastamp=1 gate_bdabits=0
+own_k1_free_p11_b1 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=free point=11 bits=1 iters=1000000 lost=0 r1=hit:5944,skip_bit:0,skip_stamp:0,scan:994056 r2=hit:994056,skip_bit:0,skip_stamp:0,scan:5944 gate_bdastamp=1 gate_bdabits=0
+own_k1_free_p12_b0 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=free point=12 bits=0 iters=1000000 lost=0 r1=hit:7753,skip_bit:0,skip_stamp:0,scan:992247 r2=hit:992247,skip_bit:0,skip_stamp:0,scan:7753 gate_bdastamp=1 gate_bdabits=0
+own_k1_free_p12_b1 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=free point=12 bits=1 iters=1000000 lost=0 r1=hit:6416,skip_bit:0,skip_stamp:0,scan:993584 r2=hit:993584,skip_bit:0,skip_stamp:0,scan:6416 gate_bdastamp=1 gate_bdabits=0
+own_k1_free_p13_b0 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=free point=13 bits=0 iters=1000000 lost=0 r1=hit:4218,skip_bit:0,skip_stamp:0,scan:995782 r2=hit:995782,skip_bit:0,skip_stamp:0,scan:4218 gate_bdastamp=1 gate_bdabits=0
+own_k1_free_p13_b1 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=free point=13 bits=1 iters=1000000 lost=0 r1=hit:5408,skip_bit:0,skip_stamp:0,scan:994592 r2=hit:994592,skip_bit:0,skip_stamp:0,scan:5408 gate_bdastamp=1 gate_bdabits=0
+own_k1_before_p11_b0 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=before point=11 bits=0 iters=100000 lost=0 r1=hit:0,skip_bit:0,skip_stamp:0,scan:100000 r2=hit:100000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+own_k1_before_p11_b1 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=before point=11 bits=1 iters=100000 lost=0 r1=hit:0,skip_bit:0,skip_stamp:0,scan:100000 r2=hit:100000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+own_k1_after_p11_b0 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=after point=11 bits=0 iters=100000 lost=0 r1=hit:100000,skip_bit:0,skip_stamp:0,scan:0 r2=hit:0,skip_bit:0,skip_stamp:0,scan:100000 gate_bdastamp=1 gate_bdabits=0
+own_k1_after_p11_b1 | rc=0 | FixB13: mode=1 | B13 build=code fix_b13=1 mode=after point=11 bits=1 iters=100000 lost=0 r1=hit:100000,skip_bit:0,skip_stamp:0,scan:0 r2=hit:0,skip_bit:0,skip_stamp:0,scan:100000 gate_bdastamp=1 gate_bdabits=0
+own_k0_forced_p1_b0 | rc=0 | FixB13: mode=0 | B13 build=code fix_b13=0 mode=forced point=1 bits=0 iters=100000 lost=100000 r1=hit:0,skip_bit:0,skip_stamp:100000,scan:0 r2=hit:100000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+own_ku_forced_p1_b0 | rc=0 | FixB13: mode=0 | B13 build=code fix_b13=0 mode=forced point=1 bits=0 iters=100000 lost=100000 r1=hit:0,skip_bit:0,skip_stamp:100000,scan:0 r2=hit:100000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+own_k0_forced_p2_b1 | rc=0 | FixB13: mode=0 | B13 build=code fix_b13=0 mode=forced point=2 bits=1 iters=100000 lost=100000 r1=hit:0,skip_bit:100000,skip_stamp:0,scan:0 r2=hit:100000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+REPORT k0_forced_p2_b1 lost 100000
+own_k0_free_p1_b0 | rc=0 | FixB13: mode=0 | B13 build=code fix_b13=0 mode=free point=1 bits=0 iters=1000000 lost=177 r1=hit:4503,skip_bit:0,skip_stamp:177,scan:995320 r2=hit:995497,skip_bit:0,skip_stamp:0,scan:4503 gate_bdastamp=1 gate_bdabits=0
+REPORT k0_free_p1_b0 lost 177
+own_k0_free_p1_b1 | rc=0 | FixB13: mode=0 | B13 build=code fix_b13=0 mode=free point=1 bits=1 iters=1000000 lost=455 r1=hit:3783,skip_bit:455,skip_stamp:0,scan:995762 r2=hit:996217,skip_bit:0,skip_stamp:0,scan:3783 gate_bdastamp=1 gate_bdabits=0
+REPORT k0_free_p1_b1 lost 455
+MEMBER M1-a =1 forced 11/12/13 x b0/b1 lost 0: PASS
+MEMBER M1-b =1 free 11/12 x b0/b1 lost 0: PASS
+MEMBER M1-c =1 controls before/after x b0/b1 lost 0: PASS
+MEMBER M1-d =0 forced p1 b0 lost >= 1: PASS
+MEMBER M1-e rc 0, result line, fix_b13 and FixB13 mode by knob: PASS
+REPORT =1 free p13 b0/b1 lost 0,0
+LOST k1_forced_p11_b0=0 k1_forced_p11_b1=0 k1_forced_p12_b0=0 k1_forced_p12_b1=0 k1_forced_p13_b0=0 k1_forced_p13_b1=0 k1_free_p11_b0=0 k1_free_p11_b1=0 k1_free_p12_b0=0 k1_free_p12_b1=0 k1_free_p13_b0=0 k1_free_p13_b1=0 k1_before_p11_b0=0 k1_before_p11_b1=0 k1_after_p11_b0=0 k1_after_p11_b1=0 k0_forced_p1_b0=100000 ku_forced_p1_b0=100000 k0_forced_p2_b1=100000 k0_free_p1_b0=177 k0_free_p1_b1=455
+ALL OK

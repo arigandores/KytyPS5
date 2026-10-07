@@ -1,0 +1,14 @@
+FS9 HEAD 11164d7258899f9450f2b06149197e94f57d4b21 base 0005e11fee90bc42b51960573bfbb14f55694b4c
+V1 1570d110 -> 0107f69e: changed lines 905 / 905, equal True; git cherry - 1570d1109d72b0c1899fbb65c409b524a74c739a
+V1 21f8ca76 -> 21db93d1: changed lines 115 / 115, equal True; git cherry + 21f8ca769776f5d6f445e52cb6c475d4c9b96a39
+V1 e4e5701a -> 11164d72: changed lines 24 / 24, equal True; git cherry - e4e5701abcc3cf5d8c284cf7f627fe0d21efcf68
+V1 negative controls: 21f8ca76 vs 0107f69e equal False (want False); vs its own worktree commit with one line spoiled equal False (want False)
+V2 files of diff 0005e11f..FS9: CMakeLists.txt src/graphics/host_gpu/memoryTracker.cpp src/graphics/host_gpu/regionManager.h tests/B13EpochStand.cpp tests/B27DaSlotStand.cpp
+V2 files of the three source commits: CMakeLists.txt src/graphics/host_gpu/memoryTracker.cpp src/graphics/host_gpu/regionManager.h tests/B13EpochStand.cpp tests/B27DaSlotStand.cpp
+V2 file sets equal True; signed changed lines of the diff = sum of the three commits True (lines 1000); negative control without FS9a equal False (want False)
+V3 DEFAULT-ON base (13): KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 DEFAULT-ON FS9  (14): KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 FS9 = base + KYTY_FIX_B13 only: True; negative control at 21db93d1 (before FS9a): difference empty, member there False (want False)
+V4 src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp blob base e1626ad67f22 FS9 e1626ad67f22 equal True; ParseMode unset/"" -> 3: True
+V5 paths of the diff under src/graphics/shader/: none
+ALL OK

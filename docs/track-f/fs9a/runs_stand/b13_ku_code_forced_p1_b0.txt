@@ -1,0 +1,6 @@
+args: C:/kyty/f287/fs9a/build/b13_epoch_stand.exe forced 1 0 100000
+KYTY_FIX_B13: unset
+rc: 2
+seconds: 0.0
+bad arguments
+

@@ -1,0 +1,30 @@
+watch: start 2026-10-07T04:44:35Z child 11136 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+Preparing worktree (detached HEAD 0005e11f)
+Updating files:  83% (3557/4285)Updating files:  84% (3600/4285)Updating files:  85% (3643/4285)Updating files:  86% (3686/4285)Updating files:  87% (3728/4285)Updating files:  88% (3771/4285)Updating files:  89% (3814/4285)Updating files:  90% (3857/4285)Updating files:  91% (3900/4285)Updating files:  92% (3943/4285)Updating files:  93% (3986/4285)Updating files:  94% (4028/4285)Updating files:  95% (4071/4285)Updating files:  96% (4114/4285)Updating files:  97% (4157/4285)Updating files:  98% (4200/4285)Updating files:  99% (4243/4285)Updating files: 100% (4285/4285)Updating files: 100% (4285/4285), done.
+HEAD is now at 0005e11f track S link S18a2 (HPP-650): RC1 of S18b - ReplayCloseStop waits only for a rebuild running in this start (ROADMAP s122 item 576(g))
+--- worktree HEAD
+0005e11fee90bc42b51960573bfbb14f55694b4c track S link S18a2 (HPP-650): RC1 of S18b - ReplayCloseStop waits only for a re
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+0005e11fee90bc42b51960573bfbb14f55694b4c 62ff7b5b02dc5177078d1a9de20b196991c2383c track S link S18a2 (HPP-650): RC1 of S18b - ReplayCloseStop waits only for a r
+62ff7b5b02dc5177078d1a9de20b196991c2383c 4fbea82e8917b86fa1851fcba3cf189c2e422737 track S link S18a (HPP-642): KYTY_S_REPLAY default 3 (rebuild only) - ROADMAP 
+4fbea82e8917b86fa1851fcba3cf189c2e422737 b738443bff32e2cd4c00906d55e8f9430eeea051 track S link S17a5 (HPP-638): stand KYTY_S_REPLAY_TEST=stop breaks inside the 
+b738443bff32e2cd4c00906d55e8f9430eeea051 a139a145c64f3d8d0a035e53e1fae36362e0e691 track S link S17a4 (HPP-622): RC1 of S17b3 - residual reject names branch, cul
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 458 with CR 0
+WT OK
+rc=0 end 2026-10-07T04:44:41Z

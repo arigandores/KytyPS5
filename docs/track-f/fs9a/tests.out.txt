@@ -1,0 +1,7 @@
+memory_tracker_tests defaults: base rc: 0, failed-lines 0, ShaderCfgTests failed 0, tests 0, mtt ['MemoryTrackerTests: all cases passed'], FixB13 none | fs9 rc: 0, failed-lines 0, ShaderCfgTests failed 0, tests 0, mtt ['MemoryTrackerTests: all cases passed'], FixB13 ['FixB13: mode=1'] | equal True, fs9 FixB13 mode=1 True
+  reference fs9 KYTY_FIX_B13=0: rc: 0, failed-lines 0, ShaderCfgTests failed 0, tests 0, mtt ['MemoryTrackerTests: all cases passed'], FixB13 ['FixB13: mode=0'], failed-lines = base True
+  reference fs9 KYTY_FIX_B13=1: rc: 0, failed-lines 0, ShaderCfgTests failed 0, tests 0, mtt ['MemoryTrackerTests: all cases passed'], FixB13 ['FixB13: mode=1'], failed-lines = base True
+shader_cfg_tests defaults: base rc: 0, failed-lines 5, ShaderCfgTests failed 0, tests 133, mtt [], FixB13 none | fs9 rc: 0, failed-lines 5, ShaderCfgTests failed 0, tests 133, mtt [], FixB13 [] | equal True, fs9 FixB13 mode=1 True
+  reference fs9 KYTY_FIX_B13=0: rc: 0, failed-lines 5, ShaderCfgTests failed 0, tests 133, mtt [], FixB13 [], failed-lines = base True
+  reference fs9 KYTY_FIX_B13=1: rc: 0, failed-lines 5, ShaderCfgTests failed 0, tests 133, mtt [], FixB13 [], failed-lines = base True
+ALL OK

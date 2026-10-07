@@ -1,0 +1,10 @@
+track F link FS9a (HPP-671): default KYTY_FIX_B13=1 (ROADMAP s122 item 604(d)(1))
+
+FixB13Enabled: unset or "" - ON, otherwise Common::EnvValueOn (the form of FS4a 17adaf80); the one read per process
+(static const) is kept. The line "FixB13: mode=", the =1 and else branches of RegionManager::ChangeState<Cpu, true> and
+the test-build hooks are unchanged. Stand tests/B13EpochStand.cpp: comments only - unset now selects the =1 order, and
+N4 of item 603(b)(4) (header line 6: KYTY_B13_TEST_HOOK -> KYTY_TEST_B13_HOOK). Files outside src/graphics/shader (the
+translation signature does not change); gate order clean. Ship binary FS9 (S18a2 0005e11f + 1570d110 + 21f8ca76 + this
+commit) and its members - docs/track-f/fs9a.md. Not run in the game; not installed.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

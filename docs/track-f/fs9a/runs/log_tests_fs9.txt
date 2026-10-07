@@ -1,0 +1,10 @@
+watch: start 2026-10-07T04:49:56Z child 18788 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+exe fs9 memory_tracker_tests sha256 4ac9beeb47461c94a46ea3e608be02e10edd7e6e2978a3c6925a80e79e235950
+fs9 memory_tracker_tests KYTY_FIX_B13=unset rc 0 -> C:/kyty/f287/fs9a/tests/fs9/memory_tracker_tests_unset.txt
+fs9 memory_tracker_tests KYTY_FIX_B13=0 rc 0 -> C:/kyty/f287/fs9a/tests/fs9/memory_tracker_tests_0.txt
+fs9 memory_tracker_tests KYTY_FIX_B13=1 rc 0 -> C:/kyty/f287/fs9a/tests/fs9/memory_tracker_tests_1.txt
+exe fs9 shader_cfg_tests sha256 455de8b9de48264c7ca3114a85b12cf6757ad8ffc9dfdceded3310fff0be123e
+fs9 shader_cfg_tests KYTY_FIX_B13=unset rc 0 -> C:/kyty/f287/fs9a/tests/fs9/shader_cfg_tests_unset.txt
+fs9 shader_cfg_tests KYTY_FIX_B13=0 rc 0 -> C:/kyty/f287/fs9a/tests/fs9/shader_cfg_tests_0.txt
+fs9 shader_cfg_tests KYTY_FIX_B13=1 rc 0 -> C:/kyty/f287/fs9a/tests/fs9/shader_cfg_tests_1.txt
+rc=0 end 2026-10-07T04:49:57Z

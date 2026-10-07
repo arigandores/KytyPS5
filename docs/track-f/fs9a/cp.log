@@ -1,0 +1,36 @@
+--- cherry-pick 1570d110
+Auto-merging CMakeLists.txt
+Auto-merging src/graphics/host_gpu/regionManager.h
+[detached HEAD 0107f69e] track F link F24a (HPP-658): B13 and B27 stands without the game (ROADMAP s122 item 593(d)(1))
+ Date: Wed Oct 7 04:47:27 2026 +0200
+ 4 files changed, 905 insertions(+)
+ create mode 100644 tests/B13EpochStand.cpp
+ create mode 100644 tests/B27DaSlotStand.cpp
+--- cherry-pick 21f8ca76
+Auto-merging src/graphics/host_gpu/regionManager.h
+CONFLICT (content): Merge conflict in src/graphics/host_gpu/regionManager.h
+error: could not apply 21f8ca76... track F link F24c (HPP-662): KYTY_FIX_B13 - region epoch and bdabits bit before the global CPU epoch (ROADMAP s122 item 595(d))
+hint: After resolving the conflicts, mark them with
+hint: "git add/rm <pathspec>", then run
+hint: "git cherry-pick --continue".
+hint: You can instead skip this commit with "git cherry-pick --skip".
+hint: To abort and get back to the state before "git cherry-pick",
+hint: run "git cherry-pick --abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+unmerged: src/graphics/host_gpu/regionManager.h
+resolved C:/kyty/f287/fs9a/wt/src/graphics/host_gpu/regionManager.h
+[detached HEAD 21db93d1] track F link F24c (HPP-662): KYTY_FIX_B13 - region epoch and bdabits bit before the global CPU epoch (ROADMAP s122 item 595(d))
+ Date: Wed Oct 7 05:27:28 2026 +0200
+ 3 files changed, 88 insertions(+), 27 deletions(-)
+--- cherry-pick e4e5701a
+Auto-merging src/graphics/host_gpu/regionManager.h
+[detached HEAD 11164d72] track F link FS9a (HPP-671): default KYTY_FIX_B13=1 (ROADMAP s122 item 604(d)(1))
+ Date: Wed Oct 7 06:43:52 2026 +0200
+ 2 files changed, 15 insertions(+), 9 deletions(-)
+11164d7258899f9450f2b06149197e94f57d4b21 21db93d1cf86a46ed7a938a6799bfd00dfb2a5ef track F link FS9a (HPP-671): default KYTY_FIX_B13=1 (ROADMAP s122 item 604(d)(
+21db93d1cf86a46ed7a938a6799bfd00dfb2a5ef 0107f69e957f3d624382f12c2dcaea54351a56e1 track F link F24c (HPP-662): KYTY_FIX_B13 - region epoch and bdabits bit befor
+0107f69e957f3d624382f12c2dcaea54351a56e1 0005e11fee90bc42b51960573bfbb14f55694b4c track F link F24a (HPP-658): B13 and B27 stands without the game (ROADMAP s122
+0005e11fee90bc42b51960573bfbb14f55694b4c 62ff7b5b02dc5177078d1a9de20b196991c2383c track S link S18a2 (HPP-650): RC1 of S18b - ReplayCloseStop waits only for a r
+--- git status --short (0 = clean)
+0
+CP OK

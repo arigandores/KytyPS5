@@ -1,0 +1,6 @@
+FS9 kyty_emulator.exe sha256 3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5
+copy C:/kyty/f287/bin/kyty_emulator_3861eeea.exe
+version KytyPS5-2026-09-15-6a2987a-1900-g11164d72 (worktree C:/kyty/f287/fs9a/wt HEAD 11164d72)
+#define KYTY_GIT_REVISION "11164d7258899f9450f2b06149197e94f57d4b21"
+#define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"
+base 0005e11f: #define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"

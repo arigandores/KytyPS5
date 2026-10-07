@@ -1,0 +1,3 @@
+suite test_f25m_read.py sha256 c7af1e17151ff24798786b4bf7c7abbc36f4f958d252f8cad181998aeebedc84 target f25m_read.py sha256 5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8
+checks 135
+ALL OK

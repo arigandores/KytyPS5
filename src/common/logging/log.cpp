@@ -337,9 +337,15 @@ static void Enqueue(std::string_view text) {
 		bool           notify = false;
 		{
 			std::unique_lock lock(s.mu);
-			t_in_queue = true;
+			// t_in_queue is set while this thread holds s.mu; the guard clears it on every exit of the scope (also an
+			// exception of push_back), before the lock is released (declared after it).
+			struct InQueue {
+				InQueue() { t_in_queue = true; }
+				~InQueue() { t_in_queue = false; }
+				InQueue(const InQueue&)            = delete;
+				InQueue& operator=(const InQueue&) = delete;
+			} in_queue;
 			if (s.closed) {
-				t_in_queue = false;
 				return;
 			}
 			if (!t_writer && s.pending != 0 && s.pending + n > s.limit) {
@@ -348,7 +354,6 @@ static void Enqueue(std::string_view text) {
 				s.cv_space.wait(lock, [&] { return s.closed || s.pending == 0 || s.pending + n <= s.limit; });
 				s.full_wait_ns += NowNs() - t0;
 				if (s.closed) {
-					t_in_queue = false;
 					return;
 				}
 			}
@@ -358,8 +363,7 @@ static void Enqueue(std::string_view text) {
 			s.max_pending = std::max(s.max_pending, s.pending);
 			s.lines++;
 			s.bytes += n;
-			notify     = s.writer_waiting;
-			t_in_queue = false;
+			notify = s.writer_waiting;
 		}
 		if (notify) {
 			s.cv_writer.notify_one();

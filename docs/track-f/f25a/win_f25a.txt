@@ -1,0 +1,29 @@
+win_f25a: kHist x P = 512 x 5 ms = 2.56 s (F20j4) vs 4096 x 5 ms = 20.48 s (proposed); median 17000 us
+dt_us   150000 kHist  512: samples held   30 (covers 0.15 s of 0.15 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us   150000 kHist 4096: samples held   30 (covers 0.15 s of 0.15 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us  1000000 kHist  512: samples held  200 (covers 1.00 s of 1.00 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us  1000000 kHist 4096: samples held  200 (covers 1.00 s of 1.00 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us  1478862 kHist  512: samples held  295 (covers 1.48 s of 1.48 s) exhausted 0 sgap_max_us     8862 i2 1 -> readable -> (iii)/(iv)
+dt_us  1478862 kHist 4096: samples held  295 (covers 1.48 s of 1.48 s) exhausted 0 sgap_max_us     8862 i2 1 -> readable -> (iii)/(iv)
+dt_us  2333729 kHist  512: samples held  466 (covers 2.33 s of 2.33 s) exhausted 0 sgap_max_us     8729 i2 1 -> readable -> (iii)/(iv)
+dt_us  2333729 kHist 4096: samples held  466 (covers 2.33 s of 2.33 s) exhausted 0 sgap_max_us     8729 i2 1 -> readable -> (iii)/(iv)
+dt_us  2560000 kHist  512: samples held  512 (covers 2.56 s of 2.56 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us  2560000 kHist 4096: samples held  512 (covers 2.56 s of 2.56 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us  2600000 kHist  512: samples held  512 (covers 2.56 s of 2.60 s) exhausted 1 sgap_max_us    45000 i2 1 -> NO_SAMPLES (ii) ring_drop_w=1
+dt_us  2600000 kHist 4096: samples held  520 (covers 2.60 s of 2.60 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us  4624510 kHist  512: samples held  512 (covers 2.56 s of 4.62 s) exhausted 1 sgap_max_us  2069510 i2 1 -> NO_SAMPLES (ii) ring_drop_w=1
+dt_us  4624510 kHist 4096: samples held  924 (covers 4.62 s of 4.62 s) exhausted 0 sgap_max_us     9510 i2 1 -> readable -> (iii)/(iv)
+dt_us  5100000 kHist  512: samples held  512 (covers 2.56 s of 5.10 s) exhausted 1 sgap_max_us  2545000 i2 1 -> HOST_FREEZE (i)
+dt_us  5100000 kHist 4096: samples held 1020 (covers 5.10 s of 5.10 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us  5200000 kHist  512: samples held  512 (covers 2.56 s of 5.20 s) exhausted 1 sgap_max_us  2645000 i2 0 -> HOST_FREEZE (i)
+dt_us  5200000 kHist 4096: samples held 1040 (covers 5.20 s of 5.20 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us  6614314 kHist  512: samples held  512 (covers 2.56 s of 6.61 s) exhausted 1 sgap_max_us  4059314 i2 0 -> HOST_FREEZE (i)
+dt_us  6614314 kHist 4096: samples held 1322 (covers 6.61 s of 6.61 s) exhausted 0 sgap_max_us     9314 i2 1 -> readable -> (iii)/(iv)
+dt_us 10000000 kHist  512: samples held  512 (covers 2.56 s of 10.00 s) exhausted 1 sgap_max_us  7445000 i2 0 -> HOST_FREEZE (i)
+dt_us 10000000 kHist 4096: samples held 2000 (covers 10.00 s of 10.00 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us 20000000 kHist  512: samples held  512 (covers 2.56 s of 20.00 s) exhausted 1 sgap_max_us 17445000 i2 0 -> HOST_FREEZE (i)
+dt_us 20000000 kHist 4096: samples held 4000 (covers 20.00 s of 20.00 s) exhausted 0 sgap_max_us     5000 i2 1 -> readable -> (iii)/(iv)
+dt_us 21000000 kHist  512: samples held  512 (covers 2.56 s of 21.00 s) exhausted 1 sgap_max_us 18445000 i2 0 -> HOST_FREEZE (i)
+dt_us 21000000 kHist 4096: samples held 4096 (covers 20.48 s of 21.00 s) exhausted 1 sgap_max_us   525000 i2 1 -> NO_SAMPLES (ii) ring_drop_w=1
+K2 frames of the register: B36 v143_08 n 14701 6 614 314 us, B40 v145_14 n 7249 4 624 510 us
+MODEL CHECKS ALL OK

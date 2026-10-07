@@ -1,0 +1,28 @@
+p0_f25a: fixed p
+  p 0.50: P(0 | N=5) 0.0312  P(0 | N=14) 0.0001  P(0 | N=20) 0.0000  N for P(0) <= 0.05: 5
+  p 0.40: P(0 | N=5) 0.0778  P(0 | N=14) 0.0008  P(0 | N=20) 0.0000  N for P(0) <= 0.05: 6
+  p 0.30: P(0 | N=5) 0.1681  P(0 | N=14) 0.0068  P(0 | N=20) 0.0008  N for P(0) <= 0.05: 9
+  p 0.20: P(0 | N=5) 0.3277  P(0 | N=14) 0.0440  P(0 | N=20) 0.0115  N for P(0) <= 0.05: 14
+  p 0.15: P(0 | N=5) 0.4437  P(0 | N=14) 0.1028  P(0 | N=20) 0.0388  N for P(0) <= 0.05: 19
+  p 0.10: P(0 | N=5) 0.5905  P(0 | N=14) 0.2288  P(0 | N=20) 0.1216  N for P(0) <= 0.05: 29
+  p 0.05: P(0 | N=5) 0.7738  P(0 | N=14) 0.4877  P(0 | N=20) 0.3585  N for P(0) <= 0.05: 59
+p0_f25a: posterior predictive (uniform prior + inventory)
+  pot_treasure_cave (B36) 1 of 2: Beta(2, 2); P(0 | N=5) 0.1071  P(0 | N=14) 0.0221  P(0 | N=20) 0.0119
+  bonus_path_maker_mix (B40) 1 of 2: Beta(2, 2); P(0 | N=5) 0.1071  P(0 | N=14) 0.0221  P(0 | N=20) 0.0119
+  both pooled 2 of 4: Beta(3, 3); P(0 | N=5) 0.0833  P(0 | N=14) 0.0103  P(0 | N=20) 0.0043
+  warm entries only 0 of 1 (v144_10): Beta(1, 2); P(0 | N=5) 0.2857  P(0 | N=14) 0.1250  P(0 | N=20) 0.0909
+p0_f25a: stop rule of one level (N_min 5, K=0 -> 14, K 1..2 -> K 3 or 20)
+  p 0.50: E[N] 6.44; P(READ) 1.000 P(U2_L) 0.000 P(U2prime_L) 0.000; sum 1.000000
+  p 0.30: E[N] 9.93; P(READ) 0.963 P(U2_L) 0.007 P(U2prime_L) 0.030; sum 1.000000
+  p 0.20: E[N] 13.34; P(READ) 0.790 P(U2_L) 0.044 P(U2prime_L) 0.166; sum 1.000000
+  p 0.10: E[N] 16.73; P(READ) 0.319 P(U2_L) 0.229 P(U2prime_L) 0.452; sum 1.000000
+  p 0.05: E[N] 16.70; P(READ) 0.074 P(U2_L) 0.488 P(U2prime_L) 0.438; sum 1.000000
+  p 0.00: E[N] 14.00; P(READ) 0.000 P(U2_L) 1.000 P(U2prime_L) 0.000; sum 1.000000
+p0_f25a: lock budget (7.8 min per tag)
+  minimum (p = 0.5, K = 3 at N 5 both levels): tags 16.0 -> 124.8 min = 2.08 h
+  expected at p 0.5 both: tags 18.9 -> 147.2 min = 2.45 h
+  expected at p 0.2 both: tags 32.7 -> 254.9 min = 4.25 h
+  expected at p 0.1 both: tags 39.5 -> 307.8 min = 5.13 h
+  K = 0 both levels (U2 at 14): tags 34.0 -> 265.2 min = 4.42 h
+  maximum (20 + 20 + repeats 6): tags 52.0 -> 405.6 min = 6.76 h
+CHECKS ALL OK

@@ -1,0 +1,10 @@
+find_f25a: json files read 82457 in 15.4 s
+TAG JSON (binary_sha256, outside fixture dirs): 7
+  2026-10-01T03:27Z 9235a7ac -lvl pot_treasure_cave val=false hold_s=330 C:/kyty/s143/v143_08.json
+  2026-10-01T03:30Z 9235a7ac -lvl pot_treasure_cave val=true hold_s=310 C:/kyty/s143/w143_08.json
+  2026-10-01T08:29Z 9235a7ac -lvl pot_treasure_cave val=false hold_s=330 C:/kyty/s144/v144_10.json
+  2026-10-01T08:37Z 9235a7ac -lvl pot_treasure_cave val=true hold_s=310 C:/kyty/s144/w144_10.json
+  2026-10-02T03:54Z 9235a7ac -lvl bonus_path_maker_mix val=false hold_s=330 C:/kyty/s145/v145_14.json
+  2026-10-02T04:03Z 9235a7ac -lvl bonus_path_maker_mix val=true hold_s=310 C:/kyty/s145/w145_14.json
+  2026-10-02T10:08Z dac02fb9 -lvl bonus_path_maker_mix val=false hold_s=330 C:/kyty/s146/r146_04.json
+OTHER json with a level name (fixtures, copies, score, api, lists): 40

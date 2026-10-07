@@ -1,0 +1,238 @@
+F25a inventory (opis_f25a.py sha256 218004a3a2fb89e28472661ad35ee79a3e761bda8f6c9e638b27989c4573e5c3)
+
+TAG v143_08 form V level pot_treasure_cave binary 9235a7ac course True val false shval false rd False hold_s(json) 330
+  log C:/kyty/s143/log_v143_08.txt sha256 88d81bd41fe0f4480744ba44fb7c8f707227e0d3e8a9afa2a86c950155d8ec12
+  env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_REC', 'KYTY_SAMPLE_GATE']
+  level line 195609 first scene n 239 (t from level line 0.281 s) ended quit quit True levels ['pot_treasure_cave']
+  scene 332.520 s over 18821 frames; hold True; hold dt median 16713; frames >= 70 ms on hold 4; death []
+  dump lines in scene 5515 in 1 frames; cache manifest {'before': 1298, 'after': 1303, 'added': 5, 'removed': 0, 'changed': 4, 'kinds': {'shader': 6, 'glcache': 2, 'pipeline': 1}}
+  FRAMES >= 1 s after the first scene frame: 1
+    K2 n 14701 idx 14462 dt_us 6614314 t_scene 251.340 s t_lvl 251.661 s | ir 0 gcn 0 pcs 0 trip 0 prio 1/6607732 lines 1158 skipped 0 | prio only
+      neighbours (n, dt_us) idx-3..+3: [(14698, 18587), (14699, 13027), (14700, 36200), (14701, 6614314), (14702, 34893), (14703, 14701), (14704, 17684)]
+      interval kinds: [('GpuSubmitSignal: seq=# semaphore=#', 532), ('GpuSubmitHistory: seq=# scheduler=#', 512), ('GpuSubmitWait: seq=# semaphore=#', 30), ('handle = #', 8), ('op    = #', 8), ('state = #', 5), ('data_offset = #', 4), ('flags       = #', 4), ('queue  = #', 3), ('packet = #', 3), ('acb   = #', 3), ('size  = #', 3)]
+  HOLD FRAMES >= 100 ms at >= 10 s: 3; unattributed (nothing + prio only) 3
+    n 14588 idx 14349 dt_us 199167 t 248.789 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 83 | nothing
+    n 14669 idx 14430 dt_us 170713 t 250.528 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 83 | nothing
+    n 14701 idx 14462 dt_us 6614314 t 251.340 s | ir 0 gcn 0 pcs 0 trip 0 prio 1/6607732 lines 1158 | prio only
+  PriorityStall lines in the scene: 3 (>= 50 ms 3); max 6607732 us
+    us 6607732 unsub 1 site +0x90a231 frame idx 14462 t 251.340 s
+    us 144081 unsub 1 site +0x90a231 frame idx 14431 t 250.699 s
+    us 56766 unsub 1 site +0x90a231 frame idx 504 t 11.128 s
+
+TAG v144_10 form V level pot_treasure_cave binary 9235a7ac course True val false shval false rd False hold_s(json) 330
+  log C:/kyty/s144/log_v144_10.txt sha256 16ee50b691e648bfbffe68d69869f1171795b63dca695005d79b9d3489325481
+  env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_REC', 'KYTY_SAMPLE_GATE']
+  level line 196121 first scene n 291 (t from level line 0.483 s) ended quit quit True levels ['pot_treasure_cave']
+  scene 332.558 s over 18620 frames; hold True; hold dt median 17007; frames >= 70 ms on hold 0; death []
+  dump lines in scene 0 in 0 frames; cache manifest {'before': 1321, 'after': 1321, 'added': 0, 'removed': 0, 'changed': 0, 'kinds': {}}
+  FRAMES >= 1 s after the first scene frame: 0
+  HOLD FRAMES >= 100 ms at >= 10 s: 0; unattributed (nothing + prio only) 0
+  PriorityStall lines in the scene: 0 (>= 50 ms 0); max 0 us
+
+TAG v145_14 form V level bonus_path_maker_mix binary 9235a7ac course True val false shval false rd False hold_s(json) 330
+  log C:/kyty/s145/log_v145_14.txt sha256 d7ed7266871ce45f08fcf3d6dfc29bba322ff8851b153c8d9cc518f7d31d37eb
+  env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_REC', 'KYTY_SAMPLE_GATE']
+  level line 192506 first scene n 234 (t from level line 0.600 s) ended quit quit True levels ['bonus_path_maker_mix']
+  scene 332.839 s over 16804 frames; hold True; hold dt median 17003; frames >= 70 ms on hold 5; death []
+  dump lines in scene 9881 in 1 frames; cache manifest {'before': 1350, 'after': 1355, 'added': 5, 'removed': 0, 'changed': 4, 'kinds': {'shader': 6, 'glcache': 2, 'pipeline': 1}}
+  FRAMES >= 1 s after the first scene frame: 1
+    K2 n 7249 idx 7015 dt_us 4624510 t_scene 138.163 s t_lvl 138.783 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 22 skipped 0 | nothing
+      neighbours (n, dt_us) idx-3..+3: [(7246, 31087), (7247, 15892), (7248, 19045), (7249, 4624510), (7250, 42590), (7251, 14699), (7252, 34195)]
+      interval kinds: [('queue  = #', 2), ('packet = #', 2), ('acb   = #', 2), ('size  = #', 2), ('flags = #', 2), ('FaultTrace-gpu: addr=# rip=+#', 2), ('FrameTrace-draw: n=# logs=# log_us=# log_gp', 1), ('FrameTrace-rp: n=# ends=# restarts=# end_st', 1), ('FrameTrace-x: n=# ds_ring_new=# ds_ring_grow=', 1), ('FrameTrace-wait: other=#/#', 1), ('FrameTrace-submit: other=#/# slice-end-compute=', 1), ('FrameTrace-pm#: gc=#/# prefetch=#/#', 1)]
+  HOLD FRAMES >= 100 ms at >= 10 s: 3; unattributed (nothing + prio only) 3
+    n 7188 idx 6954 dt_us 305805 t 136.427 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 60 | nothing
+    n 7216 idx 6982 dt_us 101547 t 137.278 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 127 | nothing
+    n 7249 idx 7015 dt_us 4624510 t 138.163 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 22 | nothing
+  PriorityStall lines in the scene: 2 (>= 50 ms 2); max 92213 us
+    us 92213 unsub 1 site +0x90a231 frame idx 2 t 0.014 s
+    us 90845 unsub 1 site +0x90a231 frame idx 163 t 2.934 s
+
+TAG r146_04 form V level bonus_path_maker_mix binary dac02fb9 course True val false shval false rd False hold_s(json) 330
+  log C:/kyty/s146/log_r146_04.txt sha256 aa5a510144ee97b1b962e3fa4e485f40a932106767e7c42f55a74253f93ad0a8
+  env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_REC', 'KYTY_SAMPLE_GATE']
+  level line 197652 first scene n 343 (t from level line 0.843 s) ended quit quit True levels ['bonus_path_maker_mix']
+  scene 331.960 s over 15393 frames; hold True; hold dt median 17813; frames >= 70 ms on hold 1; death []
+  dump lines in scene 2429 in 2 frames; cache manifest {'before': 1860, 'after': 1886, 'added': 26, 'removed': 0, 'changed': 2, 'kinds': {'shader': 28}}
+  FRAMES >= 1 s after the first scene frame: 0
+  HOLD FRAMES >= 100 ms at >= 10 s: 1; unattributed (nothing + prio only) 0
+    n 1923 idx 1580 dt_us 165840 t 34.166 s | ir 119 gcn 0 pcs 1 trip 0 prio 1/139605 lines 313 | B33
+  PriorityStall lines in the scene: 5 (>= 50 ms 5); max 139605 us
+    us 139605 unsub 1 site +0x92a181 frame idx 1580 t 34.166 s
+    us 85539 unsub 1 site +0x92a181 frame idx 162 t 2.763 s
+    us 69580 unsub 1 site +0x92a181 frame idx 1 t 0.000 s
+    us 54297 unsub 1 site +0x92a181 frame idx 1 t 0.000 s
+    us 50035 unsub 1 site +0x92a181 frame idx 174 t 3.143 s
+
+TAG w143_08 form W level pot_treasure_cave binary 9235a7ac course True val true shval false rd False hold_s(json) 310
+  log C:/kyty/s143/log_w143_08.txt sha256 0997e63c0891cc98d610047e9ce6cecf3938c109936b0399dbad43768d9be775
+  env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'VK_LAYER_DUPLICATE_MESSAGE_LIMIT', 'VK_LAYER_PATH']
+  level line None first scene n None (t from level line 0.000 s) ended None quit False levels []
+  scene 0.000 s over 0 frames; hold False; hold dt median None; frames >= 70 ms on hold 0; death [['--- Error ---', 748]]
+  dump lines in scene 0 in 0 frames; cache manifest {'before': 1303, 'after': 1303, 'added': 0, 'removed': 0, 'changed': 0, 'kinds': {}}
+  FRAMES >= 1 s after the first scene frame: 0
+  HOLD FRAMES >= 100 ms at >= 10 s: 0; unattributed (nothing + prio only) 0
+  PriorityStall lines in the scene: 0 (>= 50 ms 0); max 0 us
+
+TAG w144_10 form W level pot_treasure_cave binary 9235a7ac course True val true shval false rd False hold_s(json) 310
+  log C:/kyty/s144/log_w144_10.txt sha256 a15ff15222355e58d3f5f5e495058ffc95533cb9274340c62a5b8211200b78cb
+  env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_PIPELINE_PRECACHE', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'VK_LAYER_DUPLICATE_MESSAGE_LIMIT', 'VK_LAYER_PATH']
+  level line 198879 first scene n 275 (t from level line 0.202 s) ended quit quit True levels ['pot_treasure_cave']
+  scene 320.531 s over 4521 frames; hold True; hold dt median 67232; frames >= 70 ms on hold 1099; death []
+  dump lines in scene 0 in 0 frames; cache manifest {'before': 1321, 'after': 1321, 'added': 0, 'removed': 0, 'changed': 0, 'kinds': {}}
+  FRAMES >= 1 s after the first scene frame: 1
+    K2 n 276 idx 1 dt_us 1565373 t_scene 0.000 s t_lvl 0.217 s | ir 0 gcn 0 pcs 0 trip 0 prio 6/334072 lines 5888 skipped 166 | prio only
+      neighbours (n, dt_us) idx-3..+3: [(276, 1565373), (277, 202692), (278, 182369), (279, 116971)]
+      interval kinds: [('flags = #', 751), ('Close: C:/kyty/KytyPS#/ps# em/games/PPSA#-ap', 749), ('mode = #d', 748), ('Open: C:/kyty/KytyPS#/ps# em/games/PPSA#-app', 748), ('KernelFstat: C:/kyty/KytyPS#/ps# em/games/PPSA#', 748), ('Read # bytes from: C:/kyty/KytyPS#/ps# em/', 518), ('Read # bytes from: C:/kyty/KytyPS#/ps# em/g', 205), ('Spec information at https://docs.vulkan.org/spec', 144), ('AsyncPipelines: skipped draw DrawIndex frame=#', 131), ('[Vulkan][W][#]: vkCmdDrawIndexed(): Inside [VK_S', 111), ('path = /app#/data/prein/bg/gfx/treasure_cave_egy', 88), ('AsyncPipelines: skipped draw DrawIndexAuto frame', 35)]
+  HOLD FRAMES >= 100 ms at >= 10 s: 116; unattributed (nothing + prio only) 113
+    n 364 idx 89 dt_us 100867 t 10.117 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 727 | nothing
+    n 365 idx 90 dt_us 106950 t 10.217 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 690 | nothing
+    n 367 idx 92 dt_us 104321 t 10.404 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 665 | nothing
+    n 368 idx 93 dt_us 102118 t 10.508 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 694 | nothing
+    n 370 idx 95 dt_us 104147 t 10.684 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 680 | nothing
+    n 372 idx 97 dt_us 107084 t 10.868 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 681 | nothing
+    n 374 idx 99 dt_us 103852 t 11.053 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 691 | nothing
+    n 376 idx 101 dt_us 100063 t 11.240 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 663 | nothing
+    n 378 idx 103 dt_us 108775 t 11.419 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 663 | nothing
+    n 380 idx 105 dt_us 109900 t 11.601 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 661 | nothing
+    n 382 idx 107 dt_us 102156 t 11.787 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 662 | nothing
+    n 385 idx 110 dt_us 110675 t 12.050 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 751 | nothing
+    n 387 idx 112 dt_us 109397 t 12.234 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 688 | nothing
+    n 389 idx 114 dt_us 102209 t 12.419 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 657 | nothing
+    n 392 idx 117 dt_us 108779 t 12.683 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 749 | nothing
+    n 394 idx 119 dt_us 108439 t 12.867 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 687 | nothing
+    n 396 idx 121 dt_us 102407 t 13.050 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 810 | nothing
+    n 398 idx 123 dt_us 101260 t 13.234 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 818 | nothing
+    n 401 idx 126 dt_us 110249 t 13.516 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 848 | nothing
+    n 403 idx 128 dt_us 104334 t 13.704 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 816 | nothing
+    n 405 idx 130 dt_us 101937 t 13.885 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 850 | nothing
+    n 409 idx 134 dt_us 103843 t 14.250 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1176 | nothing
+    n 411 idx 136 dt_us 104670 t 14.433 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 993 | nothing
+    n 412 idx 137 dt_us 101361 t 14.538 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 816 | nothing
+    n 414 idx 139 dt_us 109216 t 14.719 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 842 | nothing
+    n 416 idx 141 dt_us 100556 t 14.901 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 887 | nothing
+    n 418 idx 143 dt_us 100534 t 15.085 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 897 | nothing
+    n 419 idx 144 dt_us 103577 t 15.185 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 856 | nothing
+    n 422 idx 147 dt_us 104716 t 15.467 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 851 | nothing
+    n 425 idx 150 dt_us 102569 t 15.737 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 815 | nothing
+    n 429 idx 154 dt_us 100459 t 16.084 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 846 | nothing
+    n 434 idx 159 dt_us 111832 t 16.517 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 966 | nothing
+    n 438 idx 163 dt_us 104397 t 16.889 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 793 | nothing
+    n 441 idx 166 dt_us 101909 t 17.150 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 830 | nothing
+    n 444 idx 169 dt_us 107453 t 17.418 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 826 | nothing
+    n 446 idx 171 dt_us 111483 t 17.600 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 857 | nothing
+    n 448 idx 173 dt_us 100279 t 17.785 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 787 | nothing
+    n 451 idx 176 dt_us 108469 t 18.051 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 815 | nothing
+    n 454 idx 179 dt_us 105537 t 18.317 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 863 | nothing
+    n 456 idx 181 dt_us 107878 t 18.500 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 905 | nothing
+    n 458 idx 183 dt_us 110627 t 18.683 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 898 | nothing
+    n 460 idx 185 dt_us 100473 t 18.867 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 894 | nothing
+    n 461 idx 186 dt_us 104587 t 18.967 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 903 | nothing
+    n 463 idx 188 dt_us 104991 t 19.152 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 866 | nothing
+    n 469 idx 194 dt_us 105287 t 19.683 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1624 | nothing
+    n 471 idx 196 dt_us 109246 t 19.867 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1254 | nothing
+    n 476 idx 201 dt_us 113481 t 20.317 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 939 | nothing
+    n 478 idx 203 dt_us 109928 t 20.501 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 924 | nothing
+    n 480 idx 205 dt_us 100983 t 20.690 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 916 | nothing
+    n 483 idx 208 dt_us 107570 t 20.951 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 969 | nothing
+    n 486 idx 211 dt_us 104316 t 21.218 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 969 | nothing
+    n 490 idx 215 dt_us 109617 t 21.566 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1100 | nothing
+    n 493 idx 218 dt_us 123215 t 21.834 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 909 | nothing
+    n 496 idx 221 dt_us 100041 t 22.126 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 884 | nothing
+    n 504 idx 229 dt_us 103124 t 22.834 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 883 | nothing
+    n 507 idx 232 dt_us 107089 t 23.100 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 906 | nothing
+    n 511 idx 236 dt_us 102319 t 23.452 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 992 | nothing
+    n 514 idx 239 dt_us 110838 t 23.717 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1008 | nothing
+    n 516 idx 241 dt_us 111595 t 23.900 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1101 | nothing
+    n 519 idx 244 dt_us 109272 t 24.184 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1045 | nothing
+  PriorityStall lines in the scene: 8 (>= 50 ms 8); max 334072 us
+    us 334072 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+    us 287403 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+    us 174520 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+    us 160189 unsub 1 site +0x90a231 frame idx 70 t 8.261 s
+    us 130102 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+    us 110415 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+    us 93954 unsub 1 site +0x90a231 frame idx 2 t 1.565 s
+    us 54953 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+
+TAG w145_14 form W level bonus_path_maker_mix binary 9235a7ac course True val true shval false rd False hold_s(json) 310
+  log C:/kyty/s145/log_w145_14.txt sha256 ad56b631256479588f06734fec44360d76fd07820af7b5d7393ed76886d4ca8b
+  env keys ['KYTY_FRAME_TRACE', 'KYTY_GATE_FILE', 'KYTY_GPU_CLOCK_PIN', 'KYTY_GPU_HANG_ABORT_S', 'KYTY_GPU_MARKERS', 'KYTY_GUEST_ARGS', 'KYTY_PIPELINE_PRECACHE', 'KYTY_QUEUE_TRACE', 'KYTY_SAMPLE_GATE', 'VK_LAYER_DUPLICATE_MESSAGE_LIMIT', 'VK_LAYER_PATH']
+  level line 196887 first scene n 156 (t from level line 0.162 s) ended quit quit True levels ['bonus_path_maker_mix']
+  scene 313.098 s over 3888 frames; hold True; hold dt median 83230; frames >= 70 ms on hold 3246; death []
+  dump lines in scene 0 in 0 frames; cache manifest {'before': 1355, 'after': 1355, 'added': 0, 'removed': 0, 'changed': 0, 'kinds': {}}
+  FRAMES >= 1 s after the first scene frame: 0
+  HOLD FRAMES >= 100 ms at >= 10 s: 194; unattributed (nothing + prio only) 192
+    n 407 idx 251 dt_us 101217 t 12.734 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 989 | nothing
+    n 436 idx 280 dt_us 103284 t 15.018 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1031 | nothing
+    n 437 idx 281 dt_us 106381 t 15.121 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 967 | nothing
+    n 455 idx 299 dt_us 105729 t 16.551 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1157 | nothing
+    n 587 idx 431 dt_us 211930 t 26.971 s | ir 0 gcn 0 pcs 1 trip 0 prio 0/0 lines 1064 | B33
+    n 1072 idx 916 dt_us 103614 t 64.034 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1479 | nothing
+    n 1075 idx 919 dt_us 105381 t 64.284 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1436 | nothing
+    n 1257 idx 1101 dt_us 103122 t 78.886 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1636 | nothing
+    n 1278 idx 1122 dt_us 101233 t 80.618 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1634 | nothing
+    n 1280 idx 1124 dt_us 104380 t 80.784 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1643 | nothing
+    n 1324 idx 1168 dt_us 100812 t 84.385 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1615 | nothing
+    n 1331 idx 1175 dt_us 103744 t 84.967 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1647 | nothing
+    n 1342 idx 1186 dt_us 100073 t 85.868 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1678 | nothing
+    n 1417 idx 1261 dt_us 100867 t 92.035 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1751 | nothing
+    n 1440 idx 1284 dt_us 100799 t 93.934 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1699 | nothing
+    n 1445 idx 1289 dt_us 102752 t 94.368 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1731 | nothing
+    n 1466 idx 1310 dt_us 101794 t 96.150 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1738 | nothing
+    n 1477 idx 1321 dt_us 104659 t 97.084 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1733 | nothing
+    n 1484 idx 1328 dt_us 102413 t 97.684 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1746 | nothing
+    n 1487 idx 1331 dt_us 102271 t 97.934 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1747 | nothing
+    n 1495 idx 1339 dt_us 101674 t 98.616 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1739 | nothing
+    n 1497 idx 1341 dt_us 100110 t 98.785 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1744 | nothing
+    n 1500 idx 1344 dt_us 100364 t 99.036 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1748 | nothing
+    n 1509 idx 1353 dt_us 105749 t 99.800 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1764 | nothing
+    n 1515 idx 1359 dt_us 102632 t 100.317 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1741 | nothing
+    n 1520 idx 1364 dt_us 103991 t 100.750 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1737 | nothing
+    n 1533 idx 1377 dt_us 102407 t 101.850 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1747 | nothing
+    n 1535 idx 1379 dt_us 101574 t 102.018 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1805 | nothing
+    n 1547 idx 1391 dt_us 102053 t 103.034 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1744 | nothing
+    n 1558 idx 1402 dt_us 100479 t 103.968 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1745 | nothing
+    n 1567 idx 1411 dt_us 105405 t 104.734 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1693 | nothing
+    n 1578 idx 1422 dt_us 101806 t 105.669 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1718 | nothing
+    n 1583 idx 1427 dt_us 125148 t 106.118 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1716 | nothing
+    n 1584 idx 1428 dt_us 115673 t 106.243 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1667 | nothing
+    n 1587 idx 1431 dt_us 125277 t 106.550 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1726 | nothing
+    n 1588 idx 1432 dt_us 100620 t 106.675 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1665 | nothing
+    n 1598 idx 1442 dt_us 104082 t 107.534 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1759 | nothing
+    n 1605 idx 1449 dt_us 104638 t 108.134 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1733 | nothing
+    n 1615 idx 1459 dt_us 100285 t 108.984 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1724 | nothing
+    n 1627 idx 1471 dt_us 101641 t 110.000 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1703 | nothing
+    n 1641 idx 1485 dt_us 102003 t 111.183 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1755 | nothing
+    n 1643 idx 1487 dt_us 100913 t 111.352 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1761 | nothing
+    n 1652 idx 1496 dt_us 101537 t 112.118 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1769 | nothing
+    n 1654 idx 1498 dt_us 102064 t 112.286 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1764 | nothing
+    n 1680 idx 1524 dt_us 104849 t 114.484 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1751 | nothing
+    n 1683 idx 1527 dt_us 105491 t 114.752 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1765 | nothing
+    n 1693 idx 1537 dt_us 102642 t 115.584 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1813 | nothing
+    n 1696 idx 1540 dt_us 101104 t 115.834 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1822 | nothing
+    n 1713 idx 1557 dt_us 102929 t 117.235 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1781 | nothing
+    n 1739 idx 1583 dt_us 213892 t 119.402 s | ir 0 gcn 0 pcs 1 trip 0 prio 0/0 lines 1710 | B33
+    n 1771 idx 1615 dt_us 103566 t 122.184 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1753 | nothing
+    n 1783 idx 1627 dt_us 102021 t 123.184 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1739 | nothing
+    n 1794 idx 1638 dt_us 105931 t 124.100 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1726 | nothing
+    n 1798 idx 1642 dt_us 103470 t 124.450 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1700 | nothing
+    n 1803 idx 1647 dt_us 103774 t 124.883 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1678 | nothing
+    n 1835 idx 1679 dt_us 102979 t 127.567 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1733 | nothing
+    n 1845 idx 1689 dt_us 103508 t 128.416 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1688 | nothing
+    n 1859 idx 1703 dt_us 100906 t 129.601 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1730 | nothing
+    n 1868 idx 1712 dt_us 106934 t 130.367 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1757 | nothing
+    n 1881 idx 1725 dt_us 104954 t 131.484 s | ir 0 gcn 0 pcs 0 trip 0 prio 0/0 lines 1732 | nothing
+  PriorityStall lines in the scene: 7 (>= 50 ms 7); max 321585 us
+    us 321585 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+    us 188703 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+    us 160526 unsub 1 site +0x90a231 frame idx 1898 t 146.100 s
+    us 122607 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+    us 68999 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+    us 68542 unsub 1 site +0x90a231 frame idx 2900 t 230.134 s
+    us 56339 unsub 1 site +0x90a231 frame idx 1 t 0.000 s
+
+P pot_treasure_cave: V holds 2 (['v143_08', 'v144_10']); with a frame >= 1 s at >= 10 s 1 -> p 0.500, 95 % CP [0.013; 0.987]; with an unattributed frame >= 100 ms at >= 10 s 1
+  reference W (validation) holds 1 (['w144_10']); with a frame >= 1 s at >= 10 s 0
+P bonus_path_maker_mix: V holds 2 (['v145_14', 'r146_04']); with a frame >= 1 s at >= 10 s 1 -> p 0.500, 95 % CP [0.013; 0.987]; with an unattributed frame >= 100 ms at >= 10 s 1
+  reference W (validation) holds 1 (['w145_14']); with a frame >= 1 s at >= 10 s 0
+P both levels: V holds 4; with a frame >= 1 s at >= 10 s 2 -> p 0.500, 95 % CP [0.068; 0.932]

@@ -1,0 +1,28 @@
+707e0d7d	docs/ROADMAP.md	23557	593. **Звено F20m3 трека F (`HPP-656`, лид): чтение ПК-A и серии F20l3	   (а) **Пересчёт лида [c]**
+707e0d7d	docs/ROADMAP.md	23562	   (д) **Следующие итерации очереди F (решение лида).**	   (е) **Правило исхода F24 (решено сейчас, до данных).**
+707e0d7d	docs/ROADMAP.md	23564	   (ж) **Долги F20l3 (п. 324(и)(5)).**	   (з) **Звенья (стадия review лида у звена исполнителя).**
+707e0d7d	docs/ROADMAP.md	23221	   (г) **Правило чтения (до данных).**	   (д) **Контроли (F20l, теги до серии; чтение — F20m).**
+707e0d7d	docs/ROADMAP.md	23222	   (д) **Контроли (F20l, теги до серии; чтение — F20m).**	   (е) **Серия и бюджет (назначает F20m после чтения контролей).**
+707e0d7d	docs/ROADMAP.md	23224	   (ж) **Убийство маршрута «атрибуция Б32 инструментом».**	   (з) **Звенья (стадия review лида у звена исполнителя).**
+707e0d7d	docs/ROADMAP.md	23241	   (г) **Поправка У2 и остановки серии п. 550(е)(2), (ж) — до данных.**	   (д) **Звенья (стадия review лида у звена исполнителя).**
+707e0d7d	docs/ROADMAP.md	23428	   (д) **Поправка правила чтения п. 550(г)(2)(iv) — до кода и до данных повтора (решение лида).**	   (е) **Повтор контролей — F20l2 (Harness Engineer
+707e0d7d	docs/ROADMAP.md	23468	   (в) **Решения по RC (решение лида).**	   (г) **Счёт У1.**
+707e0d7d	docs/track-f/register.md	305	| Б36 (новая) | K2 (на удержании) | дефект (происхождение [U]) |	| Б5а (смена класса) | **K2 (на входе)**
+707e0d7d	docs/track-f/register.md	453	| Б40 (новая) | K2 (на удержании) | дефект (происхождение [U]) |
+707e0d7d	docs/track-f/register.md	478	процесс, реальное число ≥ 1 024; у 34 прочих тегов серии 0. **Б40** — второе удержание `r146_04`	кадра ≥ 1 с ⇒ **p = 1 из 2** [c]
+f2307b02	src/common/diagB32.h	55	constexpr uint32_t kHist          = 512;	constexpr uint32_t kWaitRing      = 4096;
+f2307b02	src/common/diagB32.h	56	constexpr uint32_t kWaitRing      = 4096;	constexpr uint32_t kOthersCap     = 24;
+f2307b02	src/common/diagB32.h	58	constexpr uint32_t kMustCap       = 96;	constexpr uint32_t kWLinesCap     = 64;
+f2307b02	src/common/diagB32.h	44	constexpr uint64_t kPeriodNs      = 5000000;	constexpr uint64_t kPrintNs       = 100000000;
+f2307b02	src/common/diagB32.cpp	166	GapStats Gaps(const uint64_t* t, size_t n, uint64_t win_start, uint64_t win_end, uint64_t period_ns) {	GapStats g;
+f2307b02	src/common/diagB32.cpp	235	void WindowSamples(const uint64_t* t, const uint64_t* cost, const uint8_t* kq, uint64_t hpos, uint32_t hist,	uint64_t start, uint64_t end, uint64_t extra_ns
+f2307b02	src/common/diagB32.cpp	1737	if (exhausted) {	m_c.ring_drop++; // the history ring no longer holds the start of this window
+f2307b02	src/common/diagB32.cpp	1761	r.gaps         = Core::Gaps(times.data(), times.size(), start, flip_ns, kPeriodNs);	r.kstate       = g_kstate.load
+f2307b02	src/common/diagB32.cpp	1873	void Sampler::ProcessFlips() {	const auto pub = g_flip_pub.load(std::memory_order_acquire);
+f2307b02	src/common/diagB32.cpp	2030	ok              = end2 != mode && end2 != nullptr && *end2 == '\0' && val > 0 && val <= 60000;	ms              = static_cast<uint32_t>(val);
+f2307b02	src/graphics/presentation/videoOut.cpp	1293	Common::DiagB32::OnFlip(r.cfg->flip_status.count, r.id, r.reserve_host_ns);	}
+f2307b02	src/graphics/presentation/videoOut.cpp	1442	LOGF("FrameTrace: n=%" PRIu64 " dt_us=%llu lat_us=%llu gpu_proc=%llu gpu_idle=%llu"	" gpu_blocked=%llu submits=%llu submit_us=%llu semwaits=%llu semwait_us=%llu"
+0005e11f	src/graphics/host_gpu/renderer/masterSemaphore.cpp	131	LOGF("GpuWaitSlow: role=%u requested=%" PRIu64 " known=%" PRIu64 " current=%" PRIu64	" master=%p submit_backlog=%zu record_backlog=%zu"
+e8ea0a57	docs/track-f/f20l3/b32_read.py	30	(i)   HOST_FREEZE  sgap_max_us >= 0.5 x E (needs the DiagB32: line)	(ii)  NO_SAMPLES   no DiagB32: line with this n, or i2 = 0
+e8ea0a57	docs/track-f/f20l3/f20e_read.py	188	def attr(fr, binary, variant):	"""Attribution of a hold frame by its interval (item 451 (e) order); variant 'letter' or 'f20a'."""
+e8ea0a57	docs/track-f/f20l3.md	44	`NO_SAMPLES` — строки `DiagB32:` нет), 8797 (860 521, `UNMARKED:Present`	0,4212), 8819 (133 361, `UNMARKED:Present`); 296,9–301,9 с сцены.

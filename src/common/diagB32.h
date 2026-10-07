@@ -32,6 +32,9 @@
 #include <string>
 #include <vector>
 
+// F25d (HPP-667): the F25 fields (hist_exh, cover_us, flip_ns, w_cut_w, others_cut_w) and Test::CloseWindowBench exist.
+#define KYTY_DIAG_B32_F25 1
+
 namespace Common::DiagB32 {
 
 // ---- global flags (written once by Init before any guest thread; read by the sites) ----
@@ -52,11 +55,14 @@ constexpr uint64_t kKernelAfterNs = 40000000;  // RC3: kernel thread state only 
 constexpr uint64_t kKqBudgetDiv   = 10;
 constexpr uint64_t kKqNearNs      = 60000000;
 constexpr uint32_t kSlots         = 256;
-constexpr uint32_t kHist          = 512;       // per-slot history ring: 512 samples x 5 ms = 2.56 s (RC1: >= 2 s)
-constexpr uint32_t kWaitRing      = 4096;
-constexpr uint32_t kOthersCap     = 24;        // RC2: the cap applies only to the non-mandatory -t lines
-constexpr uint32_t kMustCap       = 96;        // a mandatory -t line beyond this is cut and counted in lines_cut
-constexpr uint32_t kWLinesCap     = 64;
+// F25d (HPP-667; ROADMAP s122 items 596(v), 599(b)(9)): C1 kHist 512 -> 4096 (20.48 s at P = 5 ms: a window up to
+// (kHist - 1) x P = 20.475 s keeps its start), C2 kWaitRing 4096 -> 65536, C5a kWLinesCap 64 -> 4096, C5b kMustCap
+// 96 -> 256 (= kSlots: lines_cut stays 0 by construction), C5g kOthersCap 24 -> 256 (= kSlots: others_cut stays 0).
+constexpr uint32_t kHist          = 4096;      // per-slot history ring: 4096 samples x 5 ms = 20.48 s (F25 C1)
+constexpr uint32_t kWaitRing      = 65536;     // F25 C2
+constexpr uint32_t kOthersCap     = 256;       // RC2: the cap applies only to the non-mandatory -t lines (F25 C5g)
+constexpr uint32_t kMustCap       = 256;       // a mandatory -t line beyond this is cut and counted in lines_cut (F25 C5b)
+constexpr uint32_t kWLinesCap     = 4096;      // F25 C5a
 constexpr uint32_t kCLines        = 8;
 
 enum class Call : uint8_t { None = 0, Present, Acquire, QSubmit, QLock, Drain, SemWait, Protect, Fault, Count };
@@ -500,6 +506,8 @@ struct Counters {
 	uint64_t sub_miss     = 0;
 	// F20j3 (item 554(v)(1), Z1 of F20k2): wait-ring positions a drain left behind (an unfinished write stopped it).
 	uint64_t ring_hold    = 0;
+	// F25d (item 596(v), C3): windows whose start the history ring no longer held (each also counts in ring_drop).
+	uint64_t hist_exh     = 0;
 	// F20j2 (item 552(v)(3), RC3 of F20k): the zero invariants at the previous window close; Format prints
 	// <name>_w = value - base (the increment over the window) next to the cumulative value. Rebase at every close.
 	struct Base {
@@ -511,6 +519,9 @@ struct Counters {
 		uint64_t req_miss  = 0;
 		uint64_t sub_miss  = 0;
 		uint64_t ring_hold = 0;
+		uint64_t hist_exh  = 0; // F25d C3
+		uint64_t w_cut     = 0; // F25d C5v: w_cut_w
+		uint64_t others_cut = 0; // F25d C5g: others_cut_w
 	} base;
 	void Rebase();
 };
@@ -539,6 +550,8 @@ struct Report {
 	uint64_t lat_us       = 0;
 	int32_t  vo_slot1     = 0;
 	int32_t  gpu_slot1    = 0;
+	// F25d (item 596(v), C4): the flip minus the time of the oldest sample of the window (0 - no sample), us.
+	uint64_t cover_us     = 0;
 	std::vector<ThreadRow> threads;
 	std::vector<WaitRec>   waits; // overlapping the window (ring records + open marks)
 	std::vector<CpuRow>    cpu;   // M5, all threads of the process (top kCLines printed)
@@ -628,6 +641,29 @@ namespace Test {
 void InitRuntime();
 bool ReadSlotMark(int32_t slot1, Core::MarkSnap* out);
 void DrainWaits(std::vector<Core::WaitRec>* out);
+// F25d (HPP-667; ROADMAP s122 item 599(b)(8), RC8 of F25c): one window of a sampler built in memory, closed once by
+// Sampler::CloseWindow and timed. nslots registered slots (a registry of its own, swapped in for the call), before
+// samples at or before the window start and nsamples samples period_ns apart after it (the last one at the flip),
+// random codes; nwaits closed wait records inside the window (the slots in turn, random wakers), open W marks on
+// nopen slots. The report text is taken out of the report slot. Tests only (not called by the emulator).
+struct BenchIn {
+	uint32_t nslots    = 90;
+	uint32_t before    = 1;
+	uint32_t nsamples  = 4096;
+	uint32_t nwaits    = 0;
+	uint32_t nopen     = 0;
+	uint32_t nmatch    = 0; // the first nmatch closed records repeat an open record's slot and start (dropped open)
+	uint32_t kq_every  = 0; // every kq_every-th sample has its own kernel snapshot (0 - none)
+	uint64_t period_ns = kPeriodNs;
+	uint32_t seed      = 1;
+};
+struct BenchOut {
+	uint64_t    close_ns = 0; // the wall of CloseWindow
+	uint64_t    start_ns = 0; // the window start (the previous flip)
+	uint64_t    flip_ns  = 0;
+	std::string text;
+};
+BenchOut CloseWindowBench(const BenchIn& in);
 } // namespace Test
 
 } // namespace Common::DiagB32

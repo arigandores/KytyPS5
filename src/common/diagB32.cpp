@@ -5,6 +5,7 @@
 #include "common/logging/log.h"
 
 #include <algorithm>
+#include <random>
 #include <chrono>
 #include <cinttypes>
 #include <cstdarg>
@@ -211,6 +212,14 @@ uint64_t NextBegin(uint64_t begin_ns, uint64_t now_ns) {
 
 void NearestSnapshot(const uint64_t* t, const uint8_t* kq, const uint64_t* kq_t, size_t n, uint64_t max_ns,
                      int32_t* out) {
+	// F25d (item 599(b)(8), RC8 of F25c): the inner loop runs over the samples with a snapshot only, in the same order
+	// (the same nearest one and the same tie - the earlier) - n x snapshots instead of n x n.
+	std::vector<size_t> snaps;
+	for (size_t j = 0; j < n; j++) {
+		if (kq[j] != 0) {
+			snaps.push_back(j);
+		}
+	}
 	for (size_t i = 0; i < n; i++) {
 		if (kq[i] != 0) {
 			out[i] = static_cast<int32_t>(i);
@@ -218,10 +227,7 @@ void NearestSnapshot(const uint64_t* t, const uint8_t* kq, const uint64_t* kq_t,
 		}
 		int32_t  best   = -1;
 		uint64_t best_d = 0;
-		for (size_t j = 0; j < n; j++) {
-			if (kq[j] == 0) {
-				continue;
-			}
+		for (const size_t j: snaps) {
 			const auto d = t[i] > kq_t[j] ? t[i] - kq_t[j] : kq_t[j] - t[i];
 			if (d <= max_ns && (best < 0 || d < best_d)) {
 				best   = static_cast<int32_t>(j);
@@ -404,16 +410,39 @@ static uint64_t Overlap(const WaitRec& w, uint64_t a, uint64_t b) {
 	return e > s ? e - s : 0;
 }
 
-static ThreadRow* RowOf(Report* r, int32_t slot1) {
-	if (slot1 <= 0) {
-		return nullptr;
-	}
-	for (auto& t: r->threads) {
-		if (t.slot1 == slot1) {
-			return &t;
+// F25d (item 599(b)(8), RC8 of F25c): slot + 1 -> the position of the FIRST thread row with it, built once per call -
+// the answer of the linear search of F20j4 (RowOf, GidOf) by construction. Rows with slot1 <= 0 are not indexed:
+// RowOf never returns them, GidOf searches them linearly (none in the sampler's reports).
+class RowIndex {
+public:
+	explicit RowIndex(const Report& r) {
+		for (size_t i = 0; i < r.threads.size(); i++) {
+			const auto s = r.threads[i].slot1;
+			if (s <= 0) {
+				m_nonpos = true;
+				continue;
+			}
+			if (static_cast<size_t>(s) >= m_pos.size()) {
+				m_pos.resize(static_cast<size_t>(s) + 1, -1);
+			}
+			if (m_pos[static_cast<size_t>(s)] < 0) {
+				m_pos[static_cast<size_t>(s)] = static_cast<int32_t>(i);
+			}
 		}
 	}
-	return nullptr;
+	[[nodiscard]] int32_t Pos(int32_t slot1) const {
+		return slot1 > 0 && static_cast<size_t>(slot1) < m_pos.size() ? m_pos[static_cast<size_t>(slot1)] : -1;
+	}
+	[[nodiscard]] bool NonPositive() const { return m_nonpos; }
+
+private:
+	std::vector<int32_t> m_pos;
+	bool                 m_nonpos = false;
+};
+
+static ThreadRow* RowOf(Report* r, const RowIndex& index, int32_t slot1) {
+	const auto p = index.Pos(slot1);
+	return p >= 0 ? &r->threads[static_cast<size_t>(p)] : nullptr;
 }
 
 // The -w records printed: the closure (3 steps) of the chain participants first (the present thread, GuestGpu,
@@ -436,11 +465,13 @@ static std::vector<size_t> PickWaits(const Report& r, size_t* cut) {
 		}
 	}
 	std::vector<size_t> must;
+	// F25d (item 599(b)(8), RC8 of F25c): a record's membership in `must` - a flag per record, not std::find over must.
+	std::vector<char> in_must(r.waits.size(), 0);
 	for (int step = 0; step < 3; step++) {
 		const auto before = set.size();
 		for (size_t i = 0; i < r.waits.size(); i++) {
-			if (std::find(set.begin(), set.end(), r.waits[i].slot1) != set.end() &&
-			    std::find(must.begin(), must.end(), i) == must.end()) {
+			if (in_must[i] == 0 && std::find(set.begin(), set.end(), r.waits[i].slot1) != set.end()) {
+				in_must[i] = 1;
 				must.push_back(i);
 				add(r.waits[i].waker1);
 				add(r.waits[i].peer1);
@@ -452,7 +483,7 @@ static std::vector<size_t> PickWaits(const Report& r, size_t* cut) {
 	}
 	std::vector<size_t> rest;
 	for (size_t i = 0; i < r.waits.size(); i++) {
-		if (std::find(must.begin(), must.end(), i) == must.end()) {
+		if (in_must[i] == 0) {
 			rest.push_back(i);
 		}
 	}
@@ -481,19 +512,20 @@ void MarkMandatory(Report* report) {
 		t.must = t.slot1 == r.vo_slot1 || t.slot1 == r.gpu_slot1 || t.slot1 == r.flip_slot1 ||
 		         (samples > 0 && t.agg.st[static_cast<size_t>(State::R)] * 10 >= samples) || asub;
 	}
-	size_t     cut  = 0;
-	const auto pick = PickWaits(r, &cut);
+	size_t         cut  = 0;
+	const auto     pick = PickWaits(r, &cut);
+	const RowIndex index(r); // F25d (item 599(b)(8))
 	for (auto i: pick) {
-		if (auto* t = RowOf(&r, r.waits[i].waker1); t != nullptr) {
+		if (auto* t = RowOf(&r, index, r.waits[i].waker1); t != nullptr) {
 			t->must = true;
 		}
-		if (auto* t = RowOf(&r, r.waits[i].peer1); t != nullptr) { // F20j3 (RC2: every waker / peer of the -w records)
+		if (auto* t = RowOf(&r, index, r.waits[i].peer1); t != nullptr) { // F20j3 (RC2: every waker / peer of the -w records)
 			t->must = true;
 		}
 	}
 	for (auto& t: r.threads) {
 		if (t.last.mark != 0 && t.last.peer > 0) {
-			if (auto* p = RowOf(&r, t.last.peer); p != nullptr && t.must) {
+			if (auto* p = RowOf(&r, index, t.last.peer); p != nullptr && t.must) {
 				p->must = true;
 			}
 		}
@@ -546,7 +578,14 @@ static void Append(std::string* out, const char* fmt, ...) {
 	}
 }
 
-static int32_t GidOf(const Report& r, int32_t slot1) {
+static int32_t GidOf(const Report& r, const RowIndex& index, int32_t slot1) {
+	if (slot1 > 0) {
+		const auto p = index.Pos(slot1);
+		return p >= 0 ? r.threads[static_cast<size_t>(p)].gid : 0;
+	}
+	if (!index.NonPositive()) {
+		return 0;
+	}
 	for (const auto& t: r.threads) {
 		if (t.slot1 == slot1) {
 			return t.gid;
@@ -600,7 +639,8 @@ std::string Format(Report* report, Counters* counters) {
 	       "DiagB32: n=%llu dt_us=%llu instr_us=%llu samples=%u sgap_max_us=%llu gap3p=%u i2=%d kstate=%u kq=%u"
 	       " kq_n=%u kq_us=%llu m5r_us=%llu"
 	       " proc_us=%llu sys_busy_us=%llu sys_idle_us=%llu other_us=%lld ncpu=%u snap_ok=%u snap_lag_us=%llu"
-	       " flip_slot=%d flip_tid=%d flip_src=%s lat_us=%llu vo_slot=%d gpu_slot=%d t_lines=%zu w_lines=%zu c_lines=%zu\n",
+	       " flip_slot=%d flip_tid=%d flip_src=%s lat_us=%llu vo_slot=%d gpu_slot=%d t_lines=%zu w_lines=%zu c_lines=%zu"
+	       " cover_us=%llu flip_ns=%llu\n", // F25d (items 596(v) C4, 599(b)(11) C6): flip_ns - the FrameStats::NowNs scale, last
 	       n, static_cast<unsigned long long>(r.dt_us), static_cast<unsigned long long>(r.instr_us), r.gaps.samples,
 	       static_cast<unsigned long long>(r.gaps.sgap_max_ns / 1000u), r.gaps.gap3p, r.gaps.i2_ok && r.gaps.monotonic ? 1 : 0,
 	       r.kstate, r.kq, r.kq_n, static_cast<unsigned long long>(r.kq_us), static_cast<unsigned long long>(r.m5r_us),
@@ -608,7 +648,8 @@ std::string Format(Report* report, Counters* counters) {
 	       static_cast<unsigned long long>(r.sys_idle_us), static_cast<long long>(OtherUs(r.sys_busy_us, r.proc_us)), r.ncpu,
 	       r.snap_ok, static_cast<unsigned long long>(r.snap_lag_us), SlotIndex(r.flip_slot1), r.flip_gid,
 	       r.flip_src == 1 ? "cpu" : (r.flip_src == 2 ? "gpu" : "-"), static_cast<unsigned long long>(r.lat_us),
-	       SlotIndex(r.vo_slot1), SlotIndex(r.gpu_slot1), must.size() + others.size(), picks.size(), cpu.size());
+	       SlotIndex(r.vo_slot1), SlotIndex(r.gpu_slot1), must.size() + others.size(), picks.size(), cpu.size(),
+	       static_cast<unsigned long long>(r.cover_us), static_cast<unsigned long long>(r.win_end_ns));
 	const auto line_t = [&](const ThreadRow* t) {
 		const auto& a   = t->agg;
 		std::string top = "-";
@@ -652,18 +693,19 @@ std::string Format(Report* report, Counters* counters) {
 	for (const auto* t: others) {
 		line_t(t);
 	}
+	const RowIndex index(r); // F25d (item 599(b)(8))
 	for (auto i: picks) {
 		const auto& w = r.waits[i];
 		// F20j3 (item 574(d)): the record's peer (slot) and its guest id at the end of the line.
 		Append(&out,
 		       "DiagB32-w: n=%llu slot=%d tid=%d kind=%s obj=0x%llx start_us=%lld wait_us=%llu overlap_us=%llu waker=%d"
 		       " waker_tid=%d req_us=%llu to=%u open=%u peer=%d peer_tid=%d\n",
-		       n, SlotIndex(w.slot1), GidOf(r, w.slot1), WaitName(w.kind), static_cast<unsigned long long>(w.obj),
+		       n, SlotIndex(w.slot1), GidOf(r, index, w.slot1), WaitName(w.kind), static_cast<unsigned long long>(w.obj),
 		       (static_cast<long long>(w.start_ns) - static_cast<long long>(r.win_start_ns)) / 1000,
 		       static_cast<unsigned long long>((w.end_ns - w.start_ns) / 1000u),
 		       static_cast<unsigned long long>(Overlap(w, r.win_start_ns, r.win_end_ns) / 1000u), SlotIndex(w.waker1),
-		       GidOf(r, w.waker1), static_cast<unsigned long long>(w.req_us), w.timed_out, w.open, SlotIndex(w.peer1),
-		       GidOf(r, w.peer1));
+		       GidOf(r, index, w.waker1), static_cast<unsigned long long>(w.req_us), w.timed_out, w.open, SlotIndex(w.peer1),
+		       GidOf(r, index, w.peer1));
 	}
 	for (const auto* c: cpu) {
 		Append(&out, "DiagB32-c: n=%llu os_tid=%u slot=%d name=%s cpu_us=%llu\n", n, c->os_tid, SlotIndex(c->slot1),
@@ -672,12 +714,13 @@ std::string Format(Report* report, Counters* counters) {
 	// F20j2 (item 552(v)(3), RC3 of F20k): every zero invariant cumulative and its increment over this window (_w).
 	const auto& b  = counters->base;
 	const auto  dw = [](uint64_t v, uint64_t base) { return static_cast<unsigned long long>(v >= base ? v - base : 0); };
-	// F20j3 (item 554(v)(1), Z1): ring_hold / ring_hold_w at the end of the line.
+	// F20j3 (item 554(v)(1), Z1): ring_hold / ring_hold_w at the end of the line. F25d (items 596(v), 599(b)(9)): then
+	// hist_exh / hist_exh_w (C3), w_cut_w (C5v), others_cut_w (C5g) - others_cut_w is the last field.
 	Append(&out,
 	       "DiagB32-x: n=%llu slots=%llu slot_full=%llu slot_full_w=%llu torn=%llu torn_w=%llu ring_drop=%llu ring_drop_w=%llu"
 	       " sgap_bad=%llu sgap_bad_w=%llu lines_cut=%llu lines_cut_w=%llu req_miss=%llu req_miss_w=%llu sub_miss=%llu"
 	       " sub_miss_w=%llu short_stalls=%llu others_cut=%llu w_cut=%llu rep_drop=%llu kq_fail=%llu print_us=%llu gap3p=%u"
-	       " ring_hold=%llu ring_hold_w=%llu\n",
+	       " ring_hold=%llu ring_hold_w=%llu hist_exh=%llu hist_exh_w=%llu w_cut_w=%llu others_cut_w=%llu\n",
 	       n, static_cast<unsigned long long>(counters->slots), static_cast<unsigned long long>(counters->slot_full),
 	       dw(counters->slot_full, b.slot_full), static_cast<unsigned long long>(counters->torn), dw(counters->torn, b.torn),
 	       static_cast<unsigned long long>(counters->ring_drop), dw(counters->ring_drop, b.ring_drop),
@@ -688,7 +731,9 @@ std::string Format(Report* report, Counters* counters) {
 	       static_cast<unsigned long long>(counters->short_stalls), static_cast<unsigned long long>(counters->others_cut),
 	       static_cast<unsigned long long>(counters->w_cut), static_cast<unsigned long long>(counters->rep_drop),
 	       static_cast<unsigned long long>(counters->kq_fail), static_cast<unsigned long long>(counters->print_us),
-	       r.gaps.gap3p, static_cast<unsigned long long>(counters->ring_hold), dw(counters->ring_hold, b.ring_hold));
+	       r.gaps.gap3p, static_cast<unsigned long long>(counters->ring_hold), dw(counters->ring_hold, b.ring_hold),
+	       static_cast<unsigned long long>(counters->hist_exh), dw(counters->hist_exh, b.hist_exh),
+	       dw(counters->w_cut, b.w_cut), dw(counters->others_cut, b.others_cut));
 	return out;
 }
 
@@ -701,6 +746,9 @@ void Counters::Rebase() {
 	base.req_miss  = req_miss;
 	base.sub_miss  = sub_miss;
 	base.ring_hold = ring_hold;
+	base.hist_exh  = hist_exh;   // F25d C3
+	base.w_cut     = w_cut;      // F25d C5v
+	base.others_cut = others_cut; // F25d C5g
 }
 
 std::string HeaderLine(uint32_t ncpu, uint32_t kstate, uint64_t kq_us) {
@@ -1366,6 +1414,8 @@ class Sampler {
 public:
 	void Run();
 
+	friend Test::BenchOut Test::CloseWindowBench(const Test::BenchIn& in); // F25d (item 599(b)(8))
+
 private:
 	void     Sample(uint64_t begin);
 	void     ProcessFlips();
@@ -1736,6 +1786,7 @@ void Sampler::CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t
 	Core::WindowSamples(m_t, m_cost, m_kq, m_hpos, kHist, start, flip_ns, extra, &idx, &instr, &kq, &exhausted);
 	if (exhausted) {
 		m_c.ring_drop++; // the history ring no longer holds the start of this window
+		m_c.hist_exh++;  // F25d (item 596(v), C3): the same event, its own counter
 	}
 	std::vector<uint64_t> times;
 	std::vector<uint8_t>  wkq;
@@ -1759,6 +1810,7 @@ void Sampler::CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t
 	r.win_end_ns   = flip_ns;
 	r.instr_us     = instr / 1000u;
 	r.gaps         = Core::Gaps(times.data(), times.size(), start, flip_ns, kPeriodNs);
+	r.cover_us     = times.empty() ? 0 : (flip_ns - times.front()) / 1000u; // F25d (item 596(v), C4)
 	r.kstate       = g_kstate.load(std::memory_order_relaxed);
 	r.kq           = kq;
 	r.kq_n         = kq_n;
@@ -1827,15 +1879,28 @@ void Sampler::CloseWindow(uint64_t n, uint64_t flip_ns, uint64_t lat_us, int32_t
 		}
 		r.threads.push_back(std::move(row));
 	}
-	for (const auto& w: m_recent) {
-		if (w.end_ns > start && w.start_ns < flip_ns) {
-			// The same wait seen open in the last sample and closed (in the ring) before the flip: keep the closed record.
-			r.waits.erase(std::remove_if(r.waits.begin(), r.waits.end(),
-			                             [&](const Core::WaitRec& o) {
-				                             return o.open != 0 && o.slot1 == w.slot1 && o.start_ns == w.start_ns;
-			                             }),
-			              r.waits.end());
-			r.waits.push_back(w);
+	// The same wait seen open in the last sample and closed (in the ring) before the flip: keep the closed record.
+	// F25d (item 599(b)(8), RC8 of F25c): one pass - an open record is dropped iff a closed record of the window has its
+	// slot and start (sorted keys, binary search); the kept open records stay first in their order, the closed ones follow
+	// in the m_recent order - the list of the per-record erase of F20j4 (r.waits holds only open records here).
+	{
+		std::vector<std::pair<int32_t, uint64_t>> keys;
+		for (const auto& w: m_recent) {
+			if (w.end_ns > start && w.start_ns < flip_ns) {
+				keys.emplace_back(w.slot1, w.start_ns);
+			}
+		}
+		std::sort(keys.begin(), keys.end());
+		r.waits.erase(std::remove_if(r.waits.begin(), r.waits.end(),
+		                             [&](const Core::WaitRec& o) {
+			                             return o.open != 0 &&
+			                                    std::binary_search(keys.begin(), keys.end(), std::make_pair(o.slot1, o.start_ns));
+		                             }),
+		              r.waits.end());
+		for (const auto& w: m_recent) {
+			if (w.end_ns > start && w.start_ns < flip_ns) {
+				r.waits.push_back(w);
+			}
 		}
 	}
 	if (snap) {
@@ -2075,6 +2140,106 @@ void DrainWaits(std::vector<Core::WaitRec>* out) {
 	if (g_ring != nullptr) {
 		g_ring->Drain(out, &drop, &torn);
 	}
+}
+
+BenchOut CloseWindowBench(const BenchIn& in) {
+	BenchOut out;
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	auto*    reg     = new Core::Registry;
+	auto*    old_reg = g_reg;
+	const auto old_vo  = g_vo_slot1.load();
+	const auto old_gpu = g_gpu_slot1.load();
+	g_reg              = reg;
+	const uint32_t nslots = std::min(in.nslots, kSlots);
+	for (uint32_t i = 0; i < nslots; i++) {
+		(void)reg->Allocate(5000 + i, nullptr, i == 0 ? "Present" : (i == 1 ? "Gpu" : "guest"), "bench", static_cast<int32_t>(i));
+	}
+	g_vo_slot1.store(nslots > 0 ? 1 : 0);
+	g_gpu_slot1.store(nslots > 1 ? 2 : 0);
+	auto*          s     = new Sampler;
+	std::mt19937   rng(in.seed);
+	const uint64_t P     = in.period_ns;
+	const uint64_t start = 1000000000000ull;
+	const uint64_t total = static_cast<uint64_t>(in.before) + in.nsamples;
+	// sample h (absolute number): h < before - at or before the start, the last of them exactly at the start
+	for (uint64_t h = 0; h < total; h++) {
+		const uint64_t th  = h < in.before ? start - (in.before - 1 - h) * P : start + (h - in.before + 1) * P;
+		const auto     pos = static_cast<size_t>(h % kHist);
+		s->m_t[pos]        = th;
+		s->m_cost[pos]     = 50000;
+		const bool     snap = in.kq_every > 0 && h % in.kq_every == 0;
+		s->m_kq[pos]       = snap ? 1 : 0;
+		s->m_kqt[pos]      = snap ? th - P / 4 : 0;
+		s->m_kqc[pos]      = snap ? 200000 : 0;
+		for (uint32_t i = 0; i < nslots; i++) {
+			const auto kk = rng() % 3u;
+			s->m_kcodes[static_cast<size_t>(i) * kHist + pos] =
+			    kk == 0 ? Core::Code(State::Sr, 0) : (kk == 1 ? Core::Code(State::Sw, static_cast<uint8_t>(rng() % 40u)) : Core::Code(State::S, 0));
+		}
+		for (uint32_t i = 0; i < nslots; i++) {
+			const auto k = rng() % 8u;
+			uint16_t   code;
+			if (k < 2) {
+				code = Core::Code(State::R, 0);
+			} else if (k < 4) {
+				code = Core::Code(State::W, static_cast<uint8_t>(1 + rng() % (static_cast<uint32_t>(Wait::Count) - 1)));
+			} else if (k == 4) {
+				code = Core::Code(State::H, static_cast<uint8_t>(1 + rng() % (static_cast<uint32_t>(Call::Count) - 1)));
+			} else {
+				code = Core::Code(State::S, 0);
+			}
+			s->m_codes[static_cast<size_t>(i) * kHist + pos] = code;
+		}
+	}
+	s->m_hpos         = total;
+	const uint64_t flip = start + static_cast<uint64_t>(in.nsamples) * P;
+	for (uint32_t i = 0; i < nslots && i < in.nopen; i++) {
+		s->m_last_mark[i].mark  = Core::MarkWord(State::W, static_cast<uint8_t>(Wait::Cond));
+		s->m_last_mark[i].since = start + P;
+		s->m_last_mark[i].peer  = static_cast<int32_t>(1 + (i + 1) % nslots);
+		s->m_last_mark_pos[i]   = total - 1;
+	}
+	const uint64_t span = flip > start ? flip - start : 1;
+	for (uint32_t k = 0; k < in.nwaits; k++) {
+		Core::WaitRec w;
+		w.start_ns = start + rng() % span;
+		w.end_ns   = std::min(flip, w.start_ns + kWaitRecNs + rng() % 40000000u);
+		w.obj      = 0x10000u + k;
+		w.slot1    = nslots > 0 ? static_cast<int32_t>(1 + k % nslots) : 0;
+		w.waker1   = nslots > 0 ? static_cast<int32_t>(1 + rng() % nslots) : 0;
+		w.peer1    = 0;
+		w.kind     = static_cast<uint8_t>(Wait::Cond);
+		if (k < in.nmatch && k < in.nopen && k < nslots) { // the open record of slot k + 1 closed before the flip
+			w.slot1    = static_cast<int32_t>(1 + k);
+			w.start_ns = start + P;
+			w.end_ns   = start + P + kWaitRecNs + 1000000;
+		}
+		s->m_recent.push_back(w);
+	}
+	s->m_win_start = start;
+	const auto t0  = std::chrono::steady_clock::now();
+	s->CloseWindow(7, flip, 0, 3, 2, false, 0, 0, 0, 0, 0);
+	const auto t1  = std::chrono::steady_clock::now();
+	out.close_ns   = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(t1 - t0).count());
+	out.start_ns   = start;
+	out.flip_ns    = flip;
+	for (auto& slot: g_rep) {
+		if (slot.state.load(std::memory_order_acquire) == 1 && slot.n == 7) {
+			out.text = std::move(slot.text);
+			slot.text.clear();
+			slot.state.store(0, std::memory_order_release);
+			break;
+		}
+	}
+	delete s;
+	g_reg = old_reg;
+	g_vo_slot1.store(old_vo);
+	g_gpu_slot1.store(old_gpu);
+	delete reg;
+#else
+	(void)in;
+#endif
+	return out;
 }
 
 } // namespace Test

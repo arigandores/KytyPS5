@@ -1,0 +1,37 @@
+watch: start 2026-10-07T16:27:04Z child 17036 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+Preparing worktree (detached HEAD 2afd998c)
+Updating files:  89% (3835/4291)Updating files:  90% (3862/4291)Updating files:  91% (3905/4291)Updating files:  92% (3948/4291)Updating files:  93% (3991/4291)Updating files:  94% (4034/4291)Updating files:  95% (4077/4291)Updating files:  96% (4120/4291)Updating files:  97% (4163/4291)Updating files:  98% (4206/4291)Updating files:  99% (4249/4291)Updating files: 100% (4291/4291)Updating files: 100% (4291/4291), done.
+HEAD is now at 2afd998c track F link F25k (HPP-678): KYTY_TEST_LOGSTALL - the TestLogStall line names the thread that slept (tid, FrameStats role)
+--- worktree HEAD
+2afd998ce738020eb258689a4cb311ade57971ec track F link F25k (HPP-678): KYTY_TEST_LOGSTALL - the TestLogStall line names t
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+2afd998c track F link F25k (HPP-678): KYTY_TEST_LOGSTALL - the TestLogStall line names the thread that slept (tid, FrameStats role)
+83eae9c6 track F link F25k (HPP-678): KYTY_FIX_B36 - t_in_queue by a scope guard (an exception of push_back under the queue lock no longer l
+e9520c36 track F link F25k (HPP-678): KYTY_FIX_B36 (async log writer, default 0), stand KYTY_TEST_LOGSTALL, measure KYTY_LONGFRAME, tests lo
+929b6073 track F link F25d (HPP-667): KYTY_DIAG_B32 F25 fix C1-C6 for the B36 / B40 series - kHist 4096, kWaitRing 65536, hist_exh, cover_us
+62fd092a track F link F20j4 (HPP-652): KYTY_DIAG_B32 review fixes RC1-RC5 of F20k3 - one rec_wait mark over the Reserve loop, TrackedMutex o
+5836f6d7 track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on the host waits of the emulator with waker and peer, M5
+22f645e1 track F link F20j2 (HPP-633): KYTY_DIAG_B32 by the review F20k RC1-RC7 (ROADMAP s122 item 552(v)(1)-(7), (d))
+653ee365 track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32=0 a site's End is one test of the stack object's fla
+554eaafa track F link F20j (HPP-629): KYTY_DIAG_B32 (default 0, measurement only) and the stand KYTY_TEST_B32 - ROADMAP s122 item 550(v),(z)
+11164d72 track F link FS9a (HPP-671): default KYTY_FIX_B13=1 (ROADMAP s122 item 604(d)(1))
+21db93d1 track F link F24c (HPP-662): KYTY_FIX_B13 - region epoch and bdabits bit before the global CPU epoch (ROADMAP s122 item 595(d))
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 460 with CR 0
+WT OK
+rc=0 end 2026-10-07T16:27:11Z

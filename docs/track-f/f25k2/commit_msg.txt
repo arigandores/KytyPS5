@@ -1,0 +1,17 @@
+track F link F25k2 (HPP-682): KYTY_FIX_B36 review fixes RC1, RC2, RC4 of F25l (ROADMAP s122 item 616(b)(1)-(3))
+
+RC1: at KYTY_FIX_B36=0 with KYTY_TEST_LOGSTALL armed the old write of the sink runs under one per-process stand lock and
+the stand's sleep is inside it before the write (every writing thread waits, as for a real delay of the file); Flush at
+=0 with the stand waits for it too; the path =0 without the stand is unchanged (one check of g_hooks). TestLogStall
+line gains line="<first <= 40 bytes of the line that took the sleep>" (non-printable, '"' and backslash -> '?').
+RC2: KYTY_LONGFRAME no longer writes the log on the Present thread: Log::LongFrameRecord stores (n, dt_us, t_ms,
+log_async) into a static array of 4 096 records published by an atomic counter; a printer thread off the frame path
+(poll 250 ms, created only with the measure on, stops at Log::Shutdown) writes the "LongFrame:" lines of the same form.
+RC4: thread_local t_sink_owner while g_sink_mutex / the stand lock is held outside the writer (the synchronous tail of
+Drain, WriteSummary, the =0 stand write); Drain / ExitDrain (DrainForFault, DrainForExit) return at once on it; Enqueue
+of such a thread does not wait for space.
+Tests log_async_tests: latency_0 checks the second writer waits (veh_us >= 1 400 000), latency_1 veh_us < 50 000 and
+line=; longframe_0 / longframe_1 / longframe_off; die_owner (fault inside the synchronous tail under g_sink_mutex - the
+child dies within 10 s; Log::Testing::FaultInNextOwnerWrite). Not run in the game (WIP until F25m).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

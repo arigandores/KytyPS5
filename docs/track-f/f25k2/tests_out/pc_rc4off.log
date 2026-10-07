@@ -1,0 +1,11 @@
+[case] die_owner: =1, a fault inside the synchronous tail of a timed-out drain (under g_sink_mutex) - the child dies within 10 s (RC4)
+--- Build ---
+Fork build arigandores/KytyPS5 0c8fcba-dirty
+--- Error ---
+F25K2-MARKER die_owner
+ in C:\kyty\f287\f25k2\wt\tests\LogAsyncTests.cpp:331
+  child die_owner fix=1 stall=0:6000:1 rc=-1073741819 (0xc0000005) 11.0 s
+FAIL C:\kyty\f287\f25k2\wt\tests\LogAsyncTests.cpp:602 secs <= 10.0
+cases=1 failures=1
+Unhandled exception: code=0xc0000005 rip=0x00007ff687097982 (+0x27982) addr=0x0000000000000000 access=2 tid=40132 rsp=0x000000000015f8e0
+Exception: code=0xe06d7363 depth=1 rip=0x00007ffb90c741ca addr=0x000000000015e560 tid=40132

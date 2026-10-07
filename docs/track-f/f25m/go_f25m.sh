@@ -18,9 +18,13 @@
 #   b36_v             V Sky Garden (form fs9_v of FS9c) + KYTY_FIX_B36=1, hold 330 s, video, warm (B)
 #   b36_w             W Sky Garden (form fs9_w of FS9c, item 295 (b)) + KYTY_FIX_B36=1, hold 310 s, warm (B)
 #   restoreA          (not a tag) the end of the series: snapshot A restored, live manifest = A' (EQUAL), installed FS9 (item 613 (g)(5))
+# SEAL 2 (item 620 (v), (g)(1)): the display must be ON by dispstate.py before the lock (else exit 6, not an attempt); the chain holds
+#   SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED) in the process 'dispstate.py --hold-until' from
+#   before the lock to after 'lock released' (then ES_CONTINUOUS; the process ends with the stop file or its own max); after 'lock
+#   released' dispstate.py again - OFF: the tag is the interference DISPLAY_OFF (runs/<tag> moved to <tag>.display_<hhmmss>).
 # usage: bash C:/kyty/f287/f25m/go_f25m.sh <tag>[_r1.._r3] | restoreA
 # EXIT: 0 tag made (read it with post_f25m.sh); 1 hard refusal / return failed; 2 usage / the tag exists; 3 lock / user process; 4 stop
-#   file; 5 procload busy.  ASCII only.
+#   file; 5 procload busy; 6 display not ON before the lock.  ASCII only.
 export PATH=/usr/bin:/mingw64/bin:$PATH
 G=C:/kyty/f287/f25m; F=C:/kyty/f287; EMU="C:/kyty/KytyPS5/ps5 em"; LOCK=${F25M_LOCK:-C:/kyty/SEALED_RUN.lock}
 GAME="$EMU/kyty_emulator.exe"
@@ -101,6 +105,7 @@ log() { echo "$(u) F25m go_f25m $T $*" | tee -a $TIMES; }
 [ -e $LOCK ] && { echo "lock held: $(head -1 $LOCK)"; exit 3; }
 [ -e $OUT ] && { echo "$OUT exists - a tag runs once"; exit 2; }
 [ -f "$SEAL" ] || { echo "no seal $SEAL"; exit 1; }
+[ -f "$G/pred/f25m_seal2.md" ] || { echo "no seal 2 $G/pred/f25m_seal2.md (item 620 (g))"; exit 1; }
 [ "$(sha "$BIN")" = "$TB" ] || { log "test binary copy $BIN is not T2 9745eb78 - not starting"; exit 1; }
 [ "$(sha "$PINNED")" = "$FS9" ] || { log "pinned FS9 copy $PINNED is not 3861eeea - not starting"; exit 1; }
 WANT=$(sha "$GAME")
@@ -116,14 +121,22 @@ python $G/procload.py --wait-s ${PLWAIT:-120} 2>&1 | mask > $OUT/procload.txt
 [ -e $LOCK ] && { echo "lock appeared: $(head -1 $LOCK)"; mv $OUT $OUT.lock_$(date -u +%H%M%S); exit 3; }
 RS=$(python $G/runchk_f25m.py) || { log "run check (item 587 (g)): $RS - not starting, files untouched"; mv $OUT $OUT.gone_$(date -u +%H%M%S); exit 3; }
 log "run check (item 587 (g)): $RS"
+DS=$(python $G/dispstate.py)
+DSRC=$?
+echo "$DS" > $OUT/disp_before.txt
+[ $DSRC = 0 ] || { log "display not ON before the lock (item 620 (g)(1)): $DS - not starting, files untouched, not an attempt"; mv $OUT $OUT.dispoff_$(date -u +%H%M%S); exit 6; }
+log "display before the lock (item 620 (g)(1)): $DS"
+python $G/dispstate.py --hold-until $OUT/disp.stop --max $((TO + 1500)) > $OUT/disp_hold.txt 2>&1 &
+DPID=$!
+stop_disp() { touch $OUT/disp.stop 2>/dev/null; wait $DPID 2>/dev/null; }
 set -o noclobber
 if ! { echo "F25m HPP-680 go_f25m.sh $T pid $$ $(u)" > $LOCK; } 2>/dev/null; then
-  set +o noclobber; echo "lock taken by someone else"; mv $OUT $OUT.lock_$(date -u +%H%M%S); exit 3
+  set +o noclobber; echo "lock taken by someone else"; stop_disp; mv $OUT $OUT.lock_$(date -u +%H%M%S); exit 3
 fi
 set +o noclobber
 echo "lock taken $T $(u)" >> $G/runs/lock.log
-GS=$(python $G/guard_f25m.py scan) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; mv $OUT $OUT.user_$(date -u +%H%M%S); python $G/guard_f25m.py close user_found > /dev/null; log "user emulator or launcher found right after the lock - lock released, files untouched, block closed, interference (item 534): $GS"; exit 3; }
-HS=$(python $G/hold_f25m.py check) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; mv $OUT $OUT.session_$(date -u +%H%M%S); python $G/guard_f25m.py close user_session > /dev/null; log "user session right after the lock (item 606 (v)(1)): $HS - lock released, files untouched, block closed"; exit 3; }
+GS=$(python $G/guard_f25m.py scan) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; stop_disp; mv $OUT $OUT.user_$(date -u +%H%M%S); python $G/guard_f25m.py close user_found > /dev/null; log "user emulator or launcher found right after the lock - lock released, files untouched, block closed, interference (item 534): $GS"; exit 3; }
+HS=$(python $G/hold_f25m.py check) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; stop_disp; mv $OUT $OUT.session_$(date -u +%H%M%S); python $G/guard_f25m.py close user_session > /dev/null; log "user session right after the lock (item 606 (v)(1)): $HS - lock released, files untouched, block closed"; exit 3; }
 log "lock taken; level $LV; procload: $(tail -1 $OUT/procload.txt | cut -c1-120)"
 sha "$GAME" > $OUT/installed_before.txt
 log "installed binary inside the lock before the tag: $(cat $OUT/installed_before.txt)"
@@ -184,14 +197,22 @@ finish() {
   fi
   if [ $OK = 1 ]; then
     rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; log "lock released (rc $RCX)"
+    DA=$(python $G/dispstate.py); DARC=$?
+    echo "$DA" > $OUT/disp_after.txt
+    stop_disp
+    log "display after lock released (item 620 (g)(1)): $DA; hold: $(grep -c '^event ' $OUT/disp_hold.txt) display events, $(grep -c '^event .* OFF' $OUT/disp_hold.txt) OFF; $(tail -1 $OUT/disp_hold.txt | cut -c1-120)"
     [ -e $OUT/VM_FOUND ] && [ ! -e $OUT/USER_FOUND ] && cp $OUT/VM_FOUND $OUT/USER_FOUND
-    if [ -e $OUT/USER_FOUND ]; then
+    if [ $DARC != 0 ] && [ -f $OUT/run.txt ]; then
+      mv $OUT $OUT.display_$(date -u +%H%M%S); echo "$(u) $T DISPLAY_OFF after the tag (item 620 (g)(1)): $DA" > $G/SERIES_STOP
+      log "display not ON after the tag - the tag is the interference DISPLAY_OFF (item 620 (g)(1)), not read; SERIES_STOP, question to the lead; repeat by the next _r name"
+    elif [ -e $OUT/USER_FOUND ]; then
       UF2=$(head -1 $OUT/USER_FOUND | cut -c1-160); python $G/guard_f25m.py close user_found > /dev/null
       mv $OUT $OUT.user_$(date -u +%H%M%S); log "user process during the tag ($UF2) - block closed, interference, repeat by the lead (item 534)"
     elif [ ! -f $OUT/run.txt ]; then
       mv $OUT $OUT.nostart_$(date -u +%H%M%S); log "enter_scene never started - not a tag, repeat by the same name (item 534)"
     fi
   else
+    stop_disp
     echo "$(u) $T" > $G/RETURN_FAILED; log "return incomplete, installed binary or manifest differs - the lock stays"; RCX=1
   fi
   exit $RCX

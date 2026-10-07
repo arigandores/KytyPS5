@@ -1,0 +1,13 @@
+reader f25m_read.py sha256 5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8
+SERIES over C:/kyty/f287/f25m\runs (tags read 0)
+INTERFERENCE 0 []
+STAND b36_s0 PENDING
+STAND b36_s1 PENDING
+STAND b36_f0 PENDING
+STAND b36_f1 PENDING
+COLD pot_treasure_cave admitted 0 of 8: K 0, K_I 0, INSTR_POLL frames 0, S 0; classes []
+COLD bonus_path_maker_mix admitted 0 of 5: K 0, K_I 0, INSTR_POLL frames 0, S 0; classes []
+COLD S (stall us >= 1 000 000) over the series 0 - no verdict, the reading of item 613 (g)(4) is F25n
+NO HARM b36_v PENDING
+NO HARM b36_w PENDING
+BUDGET tags read 0 (plan 19 + repeats)

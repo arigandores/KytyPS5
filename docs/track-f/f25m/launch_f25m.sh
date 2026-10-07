@@ -19,6 +19,15 @@ case "$T" in
 esac
 [ -e C:/kyty/f287/STOP ] && exit 4
 [ -e C:/kyty/SEALED_RUN.lock ] && { echo "lock held"; exit 3; }
+# SEAL 2 (item 620 (g)(1)): the display must be ON before the launch (exit 6, a times.txt line, not an attempt, no TAG line of the block);
+# restoreA does not need it; F25M_DISP_SKIP=1 - fixtures only.
+if [ "$T" != restoreA ] && [ "${F25M_DISP_SKIP:-}" != 1 ]; then
+  DS=$(python $G/dispstate.py)
+  if [ $? != 0 ]; then
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F25m launch_f25m display not ON (item 620 (g)(1)): $DS - $T not launched (not an attempt)" >> "$TM"
+    echo "display not ON: $DS"; exit 6
+  fi
+fi
 GA="--block ${F25M_GUARD_BLOCK:-$G/guard_block.txt}${F25M_GUARD_FAKE:+ --fake $F25M_GUARD_FAKE}"
 GS=$(python $G/guard_f25m.py check $GA)
 if [ $? != 0 ]; then

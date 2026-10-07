@@ -1,0 +1,3 @@
+reader f25m_read.py sha256 5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8
+| tag | level | status | binary_sha256 | K | K_I | in count | INSTR_POLL | S | frames >= 1 s (scene / LongFrame) | full_waits | drain_timeouts | members | glitches |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|

@@ -481,6 +481,28 @@ add_executable(memory_tracker_tests EXCLUDE_FROM_ALL
 target_link_libraries(memory_tracker_tests fmt::fmt common)
 target_include_directories(memory_tracker_tests PRIVATE ${inc_headers})
 
+# Track F, F24a (HPP-658, ROADMAP s122 item 593(d)(1)): the B13 epoch-order stand (tests/B13EpochStand.cpp) with the
+# test-build hooks of RegionManager::ChangeState - the order of the code (b13_epoch_stand) and the reversed order
+# (b13_epoch_stand_swap, KYTY_TEST_B13_SWAP); the B27 daslot protocol stand (tests/B27DaSlotStand.cpp). Run by
+# docs/track-f/f24a/run_stand_f24a.py, not by ctest.
+foreach(b13_target b13_epoch_stand b13_epoch_stand_swap)
+	add_executable(${b13_target} EXCLUDE_FROM_ALL
+		"${KYTY_TESTS_DIR}/B13EpochStand.cpp"
+		"${KYTY_SOURCE_DIR}/graphics/host_gpu/pageManager.cpp"
+		"${KYTY_SOURCE_DIR}/graphics/host_gpu/memoryTracker.cpp"
+	)
+	target_link_libraries(${b13_target} fmt::fmt common)
+	target_include_directories(${b13_target} PRIVATE ${inc_headers})
+	target_compile_definitions(${b13_target} PRIVATE KYTY_TEST_B13_HOOK=1)
+endforeach()
+target_compile_definitions(b13_epoch_stand_swap PRIVATE KYTY_TEST_B13_SWAP=1)
+
+add_executable(b27_daslot_stand EXCLUDE_FROM_ALL
+	"${KYTY_TESTS_DIR}/B27DaSlotStand.cpp"
+)
+target_link_libraries(b27_daslot_stand common)
+target_include_directories(b27_daslot_stand PRIVATE ${inc_headers})
+
 add_executable(shader_vertex_metadata_tests EXCLUDE_FROM_ALL
 	"${KYTY_TESTS_DIR}/ShaderVertexMetadataTests.cpp"
 	"${KYTY_SOURCE_DIR}/graphics/host_gpu/hostMemory.cpp"

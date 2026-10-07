@@ -31,6 +31,15 @@
 
 namespace Libs::Graphics {
 
+// Track F, F24a (B13 stand, ROADMAP s122 item 593(d)(1)): test-build hooks of ChangeState<Cpu, true>. Hook() is
+// defined only by tests/B13EpochStand.cpp (CMake targets b13_epoch_stand*, KYTY_TEST_B13_HOOK); every hook and the
+// reversed order (KYTY_TEST_B13_SWAP) are inside #if blocks, so the emulator compiles the text before F24a.
+#if defined(KYTY_TEST_B13_HOOK)
+namespace B13Test {
+void Hook(int point) noexcept;
+} // namespace B13Test
+#endif
+
 class TrackingSpinLock final {
 public:
 	void lock() noexcept {
@@ -227,13 +236,26 @@ public:
 			// announcement it missed moves the epochs after that snapshot and the next
 			// HasCurrentUpload check fails. A BDA scan observing these epochs still acquires this
 			// lock before it reads dirty bits, so the order does not matter to it.
-			m_cpu_epoch.fetch_add(1, std::memory_order_release);
+#if defined(KYTY_TEST_B13_SWAP)
+			// Track F, F24a: the reversed order (region epoch first), test build only - the control arm of the stand.
 			m_epoch.fetch_add(1, std::memory_order_release);
+			B13Test::Hook(1);
+			m_cpu_epoch.fetch_add(1, std::memory_order_release);
+#else
+			m_cpu_epoch.fetch_add(1, std::memory_order_release);
+#if defined(KYTY_TEST_B13_HOOK)
+			B13Test::Hook(1); // Track F, F24a: between the global and the region epoch
+#endif
+			m_epoch.fetch_add(1, std::memory_order_release);
+#endif
 			// Session 134, knob "b2reuse" (ROADMAP s122 item 154(b) RC1): an announced CPU write ends the interval at 1/2 -
 			// after the epochs, before UpdateProtection lets the guest write; any thread, under this region's lock.
 			if (Common::B2Reuse::ResetsLive()) [[unlikely]] {
 				Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpuw);
 			}
+#if defined(KYTY_TEST_B13_HOOK)
+			B13Test::Hook(2); // Track F, F24a: after both epochs, before the bdabits bit
+#endif
 			// Gate "bdabits": the map mirrors this epoch, so it is set here and never later.
 			BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
 		}

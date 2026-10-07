@@ -1,0 +1,36 @@
+watch: start 2026-10-07T04:16:39Z child 35592 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+suite sens_f24e.py sha256 698a5e26cf42341a88ab66626a8f2c2fb8b402e273f2e449ac42f548dc785bb6 target f24e_read.py sha256 94672886ae82e3706f70fa9837b0268b46c6ec00f503ec7207e88303ae52a1f7 suite test_f24e_read.py sha256 387effaafe1a883305136aee9264c04762fe61839d598a85f311a4748196a6ef
+control (unchanged reader): PASS
+edit 01: CAUGHT (79 failing checks) | BIN_EXPECT = '91f155b7
+edit 02: CAUGHT (80 failing checks) | VERSION = b'KytyPS5-2026-09-15-6a2987a-1899-gfbae3a68'
+edit 03: CAUGHT (80 failing checks) | WANT = 'b3cee576
+edit 04: CAUGHT (1 failing checks) | if env.get('KYTY_FIX_B13') != '1':
+edit 05: CAUGHT (1 failing checks) | if k.startswith('KYTY_FIX_') and k != 'KYTY_FIX_B13']
+edit 06: CAUGHT (1 failing checks) | NO_ENV = ('KYTY_GAME_PATCH', 'KYTY_GPU_CHECKPOINTS', 'KYTY_SHADER_SEED
+edit 07: CAUGHT (1 failing checks) | if vk.get('VK_LAYER_DUPLICATE_MESSAGE_LIMIT') != LIMIT:
+edit 08: CAUGHT (1 failing checks) |         if val != 'true':
+edit 09: CAUGHT (1 failing checks) |         bad += ['VK_LAYER_* %s' % k for k in sorted(vk)]
+edit 10: CAUGHT (1 failing checks) | and all(mm == 1 for _, mm in r['b13'])
+edit 11: CAUGHT (1 failing checks) | and r['guest_first'] is not None and r['b13'][0][0] < r['guest_first']
+edit 12: CAUGHT (2 failing checks) | if md and int(md.group(1)) >= 100:
+edit 13: CAUGHT (1 failing checks) | if dt >= K2_US:
+edit 14: CAUGHT (2 failing checks) | HOLD_V_US = 300000000
+edit 15: CAUGHT (2 failing checks) | HOLD_W_S = 310
+edit 16: CAUGHT (2 failing checks) | elif r['scene_change_line'] is None:
+edit 17: CAUGHT (1 failing checks) | lived_v = att.get('outcome') == 'ok' and att.get('hold_exit') is None
+edit 18: CAUGHT (2 failing checks) | DEATH = (b'Unhandled exception:', b'--- Fatal Error ---', b'--- Error 
+edit 19: CAUGHT (5 failing checks) | death.append(('stdout', d.decode(), i))
+edit 20: CAUGHT (2 failing checks) | VIDEO_MIN = 3000
+edit 21: CAUGHT (2 failing checks) | res['glitches'] == 0)
+edit 22: CAUGHT (4 failing checks) | if b'[Vulkan][E]' in raw:
+edit 23: CAUGHT (1 failing checks) | r['vk_limit'] += 1
+edit 24: CAUGHT (4 failing checks) | res['dual_ok']),
+edit 25: CAUGHT (2 failing checks) | and x[0] < r['guest_first'] and x[1] == 1 and x[2] == 1]
+edit 26: CAUGHT (1 failing checks) | validation_stop=None if lived_w is None else (r['vke'] > 0 and not liv
+edit 27: CAUGHT (1 failing checks) | mc.startswith('manifest cmp EQUAL')
+edit 28: CAUGHT (1 failing checks) | not res['win'].get('minimized') and not res['recovering'] and not res[
+edit 29: CAUGHT (1 failing checks) | lived_w = lived_v and (att.get('hold_s') or 0) >= HOLD_W_S
+edit 30: CAUGHT (1 failing checks) | entered = r['entry_line'] is not None and att.get('outcome') == 'ok'
+edits 30 missed 0
+ALL OK
+rc=0 end 2026-10-07T04:16:51Z

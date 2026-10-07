@@ -1,0 +1,13 @@
+OK   47d618fe:docs/ROADMAP.md:23569 anchor 595. **\u0417\u0432\u0435\u043d\u043e F24b
+OK   47d618fe:docs/ROADMAP.md:23580 anchor    (4) **\u0422\u0435\u0433\u0438 \u043f\u043e\u0434 \u0437\
+OK   47d618fe:docs/ROADMAP.md:23582 anchor    (\u0436) **\u0417\u0432\u0435\u043d\u044c\u044f F24**
+OK   47d618fe:docs/ROADMAP.md:23585 anchor    (\u043a) **\u041d\u0435 \u0437\u0430\u044f\u0432\u043b\u0
+OK   47d618fe:docs/ROADMAP.md:23644 anchor 603. **\u0417\u0432\u0435\u043d\u043e F24d
+OK   47d618fe:docs/ROADMAP.md:23649 anchor    (3) **\u041d3** (\u0446\u0435\u043d\u0430 `FixB13Enabled(
+OK   47d618fe:docs/ROADMAP.md:23651 anchor    (5) **\u041d5**
+OK   47d618fe:docs/ROADMAP.md:23506 anchor 587. **\u0417\u0432\u0435\u043d\u043e S18c2
+OK   47d618fe:docs/ROADMAP.md:23538 anchor 590. **\u0417\u0432\u0435\u043d\u043e S18d
+OK   47d618fe:docs/ROADMAP.md:23096 anchor    (\u0433) **\u041e\u0431\u0449\u0435\u0435 \u043f\u0440\u0
+negative control (line + 1): FAILED as expected
+REFS 10, mismatches 0
+ALL OK

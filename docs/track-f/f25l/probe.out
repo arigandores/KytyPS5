@@ -1,0 +1,36 @@
+--- Build ---
+Fork build arigandores/KytyPS5 2afd998-dirty
+--- Error ---
+F25L-MARKER idle_exit
+ in C:\kyty\f287\f25l\wt\tests\F25lProbe.cpp:121
+  child stand0_two k=0 gap_us=0 fix=0 stall=1:2000:1 rc=0
+RESULT stand0_two maxlat_A_us=2009732 maxlat_B_us=106 async=0  stall_line=TestLogStall: i=1 sleep_ms=2000 slept_us=2009714 t0_ms=79290214 t1_ms=79292223 on=caller tid=7180 role=other
+  child stand0_two k=0 gap_us=0 fix=1 stall=1:2000:1 rc=0
+RESULT stand1_two maxlat_A_us=17 maxlat_B_us=13 async=1
+
+  child idle_exit k=0 gap_us=0 fix=1 stall=- rc=321
+RESULT idle_exit mode=idle_exit k=0 gap_us=0 exit_to_end_ms=12 drain_timeouts=0 sync_lines=0 lines=2 marker=1 summary=1
+--- Build ---
+Fork build arigandores/KytyPS5 2afd998-dirty
+--- Error ---
+F25L-MARKER busy_exit
+ in C:\kyty\f287\f25l\wt\tests\F25lProbe.cpp:121
+  child busy_exit k=2 gap_us=2000 fix=1 stall=- rc=321
+RESULT busy_exit_2x2000 mode=busy_exit k=2 gap_us=2000 exit_to_end_ms=11 drain_timeouts=0 sync_lines=0 lines=1018 marker=1 summary=1
+--- Build ---
+Fork build arigandores/KytyPS5 2afd998-dirty
+--- Error ---
+F25L-MARKER busy_exit
+ in C:\kyty\f287\f25l\wt\tests\F25lProbe.cpp:121
+  child busy_exit k=4 gap_us=500 fix=1 stall=- rc=321
+RESULT busy_exit_4x500 mode=busy_exit k=4 gap_us=500 exit_to_end_ms=2 drain_timeouts=0 sync_lines=0 lines=8034 marker=1 summary=1
+--- Build ---
+Fork build arigandores/KytyPS5 2afd998-dirty
+--- Error ---
+F25L-MARKER busy_exit
+ in C:\kyty\f287\f25l\wt\tests\F25lProbe.cpp:121
+  child busy_exit k=4 gap_us=50 fix=1 stall=- rc=321
+RESULT busy_exit_4x50 mode=busy_exit k=4 gap_us=50 exit_to_end_ms=1 drain_timeouts=0 sync_lines=0 lines=79588 marker=1 summary=1
+  child busy_quick k=4 gap_us=500 fix=1 stall=- rc=7
+RESULT busy_quick_4x500 mode=busy_quick k=4 gap_us=500 exit_to_end_ms=1 drain_timeouts=0 sync_lines=0 lines=7994 marker=1 summary=1
+PROBE DONE

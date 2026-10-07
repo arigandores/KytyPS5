@@ -1,0 +1,32 @@
+# git log 11164d72..2afd998c (worktree C:/kyty/f287/f25k/wt)
+2afd998c track F link F25k (HPP-678): KYTY_TEST_LOGSTALL - the TestLogStall line names the thread that slept (
+83eae9c6 track F link F25k (HPP-678): KYTY_FIX_B36 - t_in_queue by a scope guard (an exception of push_back un
+e9520c36 track F link F25k (HPP-678): KYTY_FIX_B36 (async log writer, default 0), stand KYTY_TEST_LOGSTALL, me
+929b6073 track F link F25d (HPP-667): KYTY_DIAG_B32 F25 fix C1-C6 for the B36 / B40 series - kHist 4096, kWait
+62fd092a track F link F20j4 (HPP-652): KYTY_DIAG_B32 review fixes RC1-RC5 of F20k3 - one rec_wait mark over th
+5836f6d7 track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on the host waits of the em
+22f645e1 track F link F20j2 (HPP-633): KYTY_DIAG_B32 by the review F20k RC1-RC7 (ROADMAP s122 item 552(v)(1)-(
+653ee365 track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32=0 a site's End is one 
+554eaafa track F link F20j (HPP-629): KYTY_DIAG_B32 (default 0, measurement only) and the stand KYTY_TEST_B32 
+# git cherry main 2afd998c 11164d72
++ 554eaafaaf1c5034fe4d93d9e3c5775f77e7e93e
+- 653ee365ce2230b4dba1dfbf6a9f78ee1acc2c18
+- 22f645e1f29506b51e265b9bc980a938f72329d6
++ 5836f6d7663d8abf242a4d6fb17c5064290b47fd
+- 62fd092ae7e8a0a7d6de2b134403778659462966
+- 929b6073066b137d4979e9b72f853c39c85e10fc
+- e9520c369cb5ebaf4657bf7694b8f6956f597723
+- 83eae9c62ea38514dc110bc2ce81f36d2294b421
+- 2afd998ce738020eb258689a4cb311ade57971ec
+# blobs 0e4b2f5a vs 2afd998c
+same src/common/logging/log.cpp e4917b56112bffcde5d0f1f02f226993803f32ef
+same src/common/logging/log.h 9c269a2d0852fe6e58766e9b8229495cbdb3b0ac
+same src/common/hostException.cpp 4c017d13eee3a16db0bc88c5816ac12a51ffa9f9
+same src/common/parallelCopy.cpp 29bc4f87dde30a7defc33c4f2218eff8652edb2d
+same src/graphics/host_gpu/pageManager.cpp 9bea1855790f539c8cedd33c79b16d0b8a439f00
+same tests/LogAsyncTests.cpp eb7234cb18dd676011d309a127a0eb38a28e2510
+# sha256
+45fff4a3d54194217e9d0eb46d0e3ed9b9cc1995571e0e537b564213cd0fdf75 *C:/kyty/f287/f25k/kyty_emulator_45fff4a3.exe
+3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5 *C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe
+7e5f2d13c37e1c7167bf23e4a9fe48e05d84cc505cad4e61a75b0e5cfacb4060 *C:/kyty/f287/f25l/build/log_async_tests.exe
+1d69871981fcd771b1a3d4c69ff560fec2449559ea8c5fcddaf2a93c1730f277 *C:/kyty/f287/f25l/build/f25l_probe.exe

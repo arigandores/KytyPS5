@@ -1,0 +1,165 @@
+atexit src/emulator.cpp:80 Common::Subsystems::EmergencyShutdownActive();
+exit src/emulator.cpp:190 std::quick_exit(0);
+exit src/emulator.cpp:200 std::quick_exit(0);
+atexit src/emulator.cpp:243 int ok = atexit(KytyClose);
+atexit src/emulator.cpp:247 ok = at_quick_exit(Common::Subsystems::EmergencyShutdownActive);
+atexit src/common/assert.cpp:22 static int DbgReport(const char* title, std::string_view text, const char* file, int line) {
+atexit src/common/assert.cpp:25 Subsystems::EmergencyShutdownActive();
+atexit src/common/assert.cpp:29 int DbgExitIfHandler(const char* expr, const char* file, int line) {
+atexit src/common/assert.cpp:30 return DbgReport("--- Fatal Error ---", fmt::format("Error: condition ({}) is true", expr),
+atexit src/common/assert.cpp:35 return DbgReport("--- Fatal Error ---", fmt::format("Not implemented ({})", expr), file, line);
+atexit src/common/assert.cpp:38 int DbgExitHandler(const char* file, int line, std::string_view text) {
+atexit src/common/assert.cpp:44 int DbgExitHandler(const char* file, int line, fmt::text_style style, std::string_view text) {
+exit src/common/assert.cpp:50 // Session 97: std::terminate and abort() used to end the process with NOTHING on record - no
+exit src/common/assert.cpp:60 //  * AbortReport - the SIGABRT action IS process-global in the UCRT and abort() raises it
+exit src/common/assert.cpp:62 //    explicit abort(), still leaves "--- abort() ---".  raise() restores SIG_DFL before it
+exit src/common/assert.cpp:63 //    calls the handler, and returning lets abort() finish exactly as before.
+exit src/common/assert.cpp:66 // __fastfail.
+exit src/common/assert.cpp:75 static const char text[] = "\n--- abort() ---\nabort() was called: std::terminate on a "
+exit src/common/assert.cpp:79 Log::WriteFatal(BuildFatalReport("--- abort() ---", "SIGABRT", "abort", 0));
+exit src/common/assert.cpp:103 std::abort();
+atexit src/common/assert.cpp:116 void DbgExit(int status) {
+atexit src/common/assert.cpp:117 if (fatal_interceptor) { fatal_interceptor("DbgExit", status, "explicit fatal exit"); }
+atexit src/common/assert.cpp:118 Subsystems::EmergencyShutdownActive();
+exit src/common/assert.cpp:120 std::_Exit(status);
+atexit src/common/assert.h:28 int DbgExitHandler(char const* file, int line, std::string_view text)
+atexit src/common/assert.h:30 int DbgExitHandler(char const* file, int line, fmt::text_style style, std::string_view text)
+atexit src/common/assert.h:32 int DbgExitIfHandler(char const* expr, char const* file, int line)
+atexit src/common/assert.h:36 void DbgExit(int status) __attribute__((analyzer_noreturn));
+atexit src/common/assert.h:38 int  DbgExitHandler(char const* file, int line, std::string_view text);
+atexit src/common/assert.h:39 int  DbgExitHandler(char const* file, int line, fmt::text_style style, std::string_view text);
+atexit src/common/assert.h:40 int  DbgExitIfHandler(char const* expr, char const* file, int line);
+atexit src/common/assert.h:42 void DbgExit(int status);
+atexit src/common/assert.h:50 #define EXIT_HALT() (Common::DbgExit(321), 1)
+atexit src/common/assert.h:54 ((void)((x) && Common::DbgExitIfHandler(#x, __FILE__, __LINE__) != 0 && (EXIT_HALT(), 1) != 0))
+atexit src/common/assert.h:65 ((void)(Common::DbgExitHandler(__FILE__, __LINE__, ::fmt::sprintf(__VA_ARGS__)) &&         \
+atexit src/common/assert.h:71 ((void)(Common::DbgExitHandler(__FILE__, __LINE__, (style),                                \
+flush src/common/file.h:59 bool Flush();
+flush src/common/frameStats.h:4233 void Flush();
+flush src/common/frameStats.h:4242 Flush();
+veh src/common/hostException.cpp:395 if (AddVectoredExceptionHandler(0, ExceptionFilter) == nullptr) {
+veh src/common/hostException.cpp:398 printf("AddVectoredExceptionHandler() failed\n");
+exit src/common/parallelCopy.cpp:558 std::_Exit(322);
+atexit src/common/subsystems.cpp:28 void Subsystems::EmergencyShutdown() {
+atexit src/common/subsystems.cpp:37 void Subsystems::EmergencyShutdownActive() {
+atexit src/common/subsystems.cpp:39 g_active_subsystems->EmergencyShutdown();
+atexit src/common/subsystems.h:28 void EmergencyShutdown();
+atexit src/common/subsystems.h:30 static void EmergencyShutdownActive();
+atexit src/common/logging/log.cpp:99 // death and exit path (WriteFatal, Shutdown - reached by EmergencyShutdownActive from DbgExit / DbgReport / at_quick_exit
+exit src/common/logging/log.cpp:100 // / atexit, DrainForExit before the _Exit sites, the unresolved branch of the exception filter). Only the File direction
+atexit src/common/logging/log.cpp:100 // / atexit, DrainForExit before the _Exit sites, the unresolved branch of the exception filter). Only the File direction
+atexit src/common/logging/log.cpp:141 // Never destroyed: the exit paths run while static destructors may already be running (atexit) or not at all.
+flush src/common/logging/log.cpp:496 Flush();
+flush src/common/logging/log.cpp:571 Flush();
+flush src/common/logging/log.cpp:586 Flush();
+flush src/common/logging/log.cpp:601 Flush();
+flush src/common/logging/log.cpp:646 Flush();
+flush src/common/logging/log.h:35 void      Flush();
+exit src/common/logging/log.h:37 // process end that skips Log::Shutdown (the std::_Exit sites); the writer stops. No-op at KYTY_FIX_B36=0.
+flush src/graphics/guest_gpu/graphicsRun.cpp:428 GetScheduler().Flush();
+exit src/graphics/guest_gpu/graphicsRun.cpp:831 (void)DiagF5Id::Service(true); // Track F, F16k (KYTY_DIAG_F5ID): the line at exit (records kind=exit)
+flush src/graphics/guest_gpu/graphicsRun.cpp:4132 GetScheduler().Flush();
+flush src/graphics/guest_gpu/graphicsRun.cpp:4160 GetScheduler().Flush();
+flush src/graphics/guest_gpu/graphicsRun.cpp:4194 GetScheduler().Flush();
+flush src/graphics/guest_gpu/graphicsRun.cpp:4213 GetScheduler().Flush();
+flush src/graphics/host_gpu/memoryTracker.h:369 batch.Flush();
+exit src/graphics/host_gpu/pageManager.cpp:58 TerminateProcess(GetCurrentProcess(), static_cast<UINT>(EXCEPTION_NONCONTINUABLE_EXCEPTION));
+exit src/graphics/host_gpu/pageManager.cpp:60 std::_Exit(322);
+exit src/graphics/host_gpu/pageManager.cpp:72 std::_Exit(322);
+flush src/graphics/host_gpu/pageManager.cpp:2845 Flush();
+flush src/graphics/host_gpu/pageManager.cpp:2887 Flush(); // a pass that already flushed leaves nothing here; a path that forgot is covered
+flush src/graphics/host_gpu/pageManager.h:116 void Flush();
+flush src/graphics/host_gpu/vma.cpp:212 DeferredDestroyer::Instance().Flush();
+flush src/graphics/host_gpu/renderer/commandScheduler.h:46 void           Flush();
+flush src/graphics/host_gpu/renderer/gpuCheckpoints.cpp:175 Log::Flush();
+flush src/graphics/host_gpu/renderer/gpuCheckpoints.cpp:1014 Log::Flush();
+flush src/graphics/host_gpu/renderer/gpuCheckpoints.cpp:1043 Log::Flush();
+hang src/graphics/host_gpu/renderer/masterSemaphore.cpp:24 // the driver recovers. Counted in 2 s wait timeouts; KYTY_GPU_HANG_ABORT_S=0 waits forever.
+hang src/graphics/host_gpu/renderer/masterSemaphore.cpp:27 const auto* value   = std::getenv("KYTY_GPU_HANG_ABORT_S");
+flush src/graphics/host_gpu/renderer/masterSemaphore.cpp:131 Log::Flush();
+flush src/graphics/host_gpu/renderer/masterSemaphore.cpp:148 Log::Flush();
+flush src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2690 m_scheduler.Flush();
+flush src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2819 m_scheduler.Flush();
+flush src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3374 batch.Flush(); // the watchers this pass deferred
+flush src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3375 pass.Flush();  // and whatever another caller left pending on the same ranges
+flush src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5136 const bool flushed = !file.IsInvalid() && file.Flush();
+flush src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6355 const bool flushed = !file.IsInvalid() && file.Flush();
+flush src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6510 const bool flushed = !file.IsInvalid() && file.Flush();
+exit src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6636 // std::quick_exit, which runs no destructor - ~PipelineCache never stores m_precache_stop.
+flush src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7631 const bool flushed = !file.IsInvalid() && file.Flush();
+exit src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:105 // std::quick_exit.
+flush src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:944 const bool flushed = !file.IsInvalid() && file.Flush();
+flush src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:804 const bool flushed = file.Flush();
+exit src/graphics/presentation/window/window.cpp:1043 // Track S, S17a2 (ROADMAP s122 item 532(b)): the caller ends the process by std::quick_exit; a rebuild
+atexit src/graphics/presentation/window/window.cpp:1082 Controller::EmergencyShutdown();
+exit src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.cpp:107 std::abort();
+exit src/graphics/shader/recompiler/backend/spirv/spirvEmitterAnalysis.cpp:66 std::abort();
+exit src/graphics/shader/recompiler/backend/spirv/spirvEmitterAnalysis.cpp:104 std::abort();
+exit src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:104 // would be an illegal construct exit (the block belongs to no construct, or to an enclosing one).
+exit src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:819 std::abort();
+exit src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:826 std::abort();
+exit src/graphics/shader/recompiler/frontend/cfg/ShaderCFG.cpp:45 std::abort();
+exit src/graphics/shader/recompiler/ir/Program.cpp:17 std::abort();
+exit src/graphics/shader/recompiler/ir/passes/BindingLayout.cpp:15 std::abort();
+exit src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:174 std::abort();
+exit src/graphics/shader/recompiler/ir/passes/ShaderInfoCollection.cpp:14 std::abort();
+exit src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:388 std::abort();
+atexit src/kernel/fileSystem.cpp:107 // emergency exit path (at_quick_exit and atexit(KytyClose) of src/emulator.cpp, both end in EmergencyShutdown below)
+exit src/kernel/fileSystem.cpp:121 // Host write path with a user-space buffer that _Exit does not flush: stdio fwrite on non-Windows hosts
+flush src/kernel/fileSystem.cpp:288 f->f.Flush();
+atexit src/kernel/fileSystem.cpp:410 void EmergencyShutdown() {
+flush src/kernel/fileSystem.cpp:927 file->f.Flush();
+flush src/kernel/fileSystem.cpp:1050 file->f.Flush();
+atexit src/kernel/fileSystem.h:37 void EmergencyShutdown();
+atexit src/kernel/fileSystem.h:43 static constexpr auto emergency_shutdown = Libs::LibKernel::FileSystem::EmergencyShutdown;
+atexit src/libs/controller.cpp:179 // the same lock) is never touched. PadOutput is stopped and joined by EmergencyShutdown before ReleaseHostPads.
+atexit src/libs/controller.cpp:855 EmergencyShutdown();
+atexit src/libs/controller.cpp:864 void EmergencyShutdown() {
+atexit src/libs/controller.h:10 void EmergencyShutdown();
+atexit src/libs/controller.h:16 static constexpr auto        emergency_shutdown = Libs::Controller::EmergencyShutdown;
+atexit src/libs/libC.cpp:48 using atexit_func_t         = KYTY_SYSV_ABI void (*)();
+atexit src/libs/libC.cpp:58 std::list<atexit_func_t> atexit;
+exit src/libs/libC.cpp:81 static KYTY_SYSV_ABI void exit(int code) {
+exit src/libs/libC.cpp:260 EXIT("Guest abort()\n");
+exit src/libs/libC.cpp:261 std::abort();
+atexit src/libs/libC.cpp:298 static KYTY_SYSV_ABI int atexit(atexit_func_t func) {
+atexit src/libs/libC.cpp:302 Common::Singleton<CContext>::Instance()->atexit.push_front(func);
+atexit src/libs/libC.cpp:535 static KYTY_SYSV_ABI int cxa_atexit(cxa_destructor_func_t func, void* arg, void* d) {
+atexit src/libs/libC.cpp:575 using thread_atexit_destructor_t = KYTY_SYSV_ABI void (*)(void*);
+atexit src/libs/libC.cpp:578 thread_atexit_destructor_t destructor;
+atexit src/libs/libC.cpp:582 static thread_local std::vector<ThreadAtexitDestructor> g_thread_atexit_destructors;
+atexit src/libs/libC.cpp:601 int KYTY_SYSV_ABI LibcInternalExtCxaThreadAtexit(thread_atexit_destructor_t destructor,
+atexit src/libs/libC.cpp:605 g_thread_atexit_destructors.push_back({destructor, object});
+atexit src/libs/libC.cpp:611 while (!g_thread_atexit_destructors.empty()) {
+atexit src/libs/libC.cpp:612 auto destructor = g_thread_atexit_destructors.back();
+atexit src/libs/libC.cpp:613 g_thread_atexit_destructors.pop_back();
+atexit src/libs/libC.cpp:849 LIB_FUNC("tsvEmnenz48", LibC::cxa_atexit);
+atexit src/libs/libC.cpp:869 LIB_FUNC("8G2LB+A3rzg", LibC::atexit);
+atexit src/libs/libC.cpp:883 LIB_FUNC("tsvEmnenz48", LibC::cxa_atexit);
+atexit src/libs/libKernel.cpp:71 using get_thread_atexit_count_func_t = KYTY_SYSV_ABI int (*)(KernelModule);
+atexit src/libs/libKernel.cpp:72 using thread_atexit_report_func_t    = KYTY_SYSV_ABI void (*)(KernelModule);
+atexit src/libs/libKernel.cpp:363 static get_thread_atexit_count_func_t g_get_thread_atexit_count_func = nullptr;
+atexit src/libs/libKernel.cpp:364 static thread_atexit_report_func_t    g_thread_atexit_report_func    = nullptr;
+atexit src/libs/libKernel.cpp:1281 if (g_get_thread_atexit_count_func != nullptr &&
+atexit src/libs/libKernel.cpp:1282 g_get_thread_atexit_count_func(program->unique_id) > 0) {
+atexit src/libs/libKernel.cpp:1285 if (g_thread_atexit_report_func != nullptr) {
+atexit src/libs/libKernel.cpp:1286 g_thread_atexit_report_func(program->unique_id);
+exit src/libs/libKernel.cpp:1691 static void KYTY_SYSV_ABI exit(int code) {
+atexit src/libs/libKernel.cpp:1767 void KYTY_SYSV_ABI KernelSetThreadAtexitCount(get_thread_atexit_count_func_t func) {
+atexit src/libs/libKernel.cpp:1770 EXIT_NOT_IMPLEMENTED(g_get_thread_atexit_count_func != nullptr);
+atexit src/libs/libKernel.cpp:1772 g_get_thread_atexit_count_func = func;
+atexit src/libs/libKernel.cpp:1775 void KYTY_SYSV_ABI KernelSetThreadAtexitReport(thread_atexit_report_func_t func) {
+atexit src/libs/libKernel.cpp:1778 EXIT_NOT_IMPLEMENTED(g_thread_atexit_report_func != nullptr);
+atexit src/libs/libKernel.cpp:1780 g_thread_atexit_report_func = func;
+flush src/libs/libSaveData.cpp:411 const bool flushed = !file.IsInvalid() && file.Flush();
+atexit src/loader/runtimeLinker.cpp:180 using atexit_func_t = KYTY_SYSV_ABI void (*)();
+atexit src/loader/runtimeLinker.cpp:181 using entry_func_t  = KYTY_SYSV_ABI void (*)(EntryParams* params, atexit_func_t atexit_func);
+atexit src/loader/runtimeLinker.cpp:437 static KYTY_SYSV_ABI void RunEntry(uint64_t addr, EntryParams* params, atexit_func_t atexit_func,
+atexit src/loader/runtimeLinker.cpp:476 "S"(atexit_func), [guest_rsp] "r"(guest_rsp_reg), [guest_rbp] "r"(guest_rbp_reg)
+atexit src/loader/runtimeLinker.cpp:509 : [func] "r"(func_reg), "D"(params), "S"(atexit_func)
+atexit src/loader/runtimeLinker.cpp:524 "S"(atexit_func), [guest_rsp] "r"(guest_rsp), [guest_rbp] "r"(guest_rbp)
+atexit src/loader/runtimeLinker.cpp:551 "S"(atexit_func), [guest_rbp] "r"(guest_rbp_reg)
+atexit src/loader/runtimeLinker.cpp:554 "S"(atexit_func), [guest_rbp] "r"(guest_root_frame)
+atexit src/loader/runtimeLinker.cpp:567 "S"(atexit_func), [guest_rbp] "r"(guest_root_frame)
+atexit src/loader/runtimeLinker.cpp:574 reinterpret_cast<entry_func_t>(addr)(params, atexit_func);
+atexit src/loader/runtimeLinker.cpp:589 atexit_func_t /*atexit_func*/) {

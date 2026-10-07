@@ -231,6 +231,9 @@ static LONG WINAPI ExceptionFilter(PEXCEPTION_POINTERS exception) noexcept {
 		        static_cast<unsigned long>(GetCurrentThreadId()),
 		        static_cast<unsigned long long>(info.rsp));
 		fflush(stderr);
+		// Track F, F25k (KYTY_FIX_B36, ROADMAP s122 item 613(v)(4)): the queue of the async log writer reaches the file
+		// (the process may end here); no-op at KYTY_FIX_B36=0.
+		Log::DrainForFault();
 	}
 	return EXCEPTION_CONTINUE_SEARCH;
 	}

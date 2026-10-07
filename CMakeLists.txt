@@ -590,6 +590,16 @@ add_executable(image_page_table_tests EXCLUDE_FROM_ALL
 target_link_libraries(image_page_table_tests common fmt::fmt)
 target_include_directories(image_page_table_tests PRIVATE ${inc_headers})
 
+# Track F, F25k (HPP-678, ROADMAP s122 item 613(g)(1)): KYTY_FIX_B36 (the async log writer) without the game - the order
+# of the lines, the wait on overflow, the drain on every death path (child processes), =0 byte for byte; run by
+# docs/track-f/f25k/run_tests_f25k.py, not by ctest.
+add_executable(log_async_tests EXCLUDE_FROM_ALL
+	"${KYTY_TESTS_DIR}/LogAsyncTests.cpp"
+)
+target_link_libraries(log_async_tests common fmt::fmt)
+target_include_directories(log_async_tests PRIVATE ${inc_headers})
+target_compile_definitions(log_async_tests PRIVATE KYTY_LOG_ASYNC_TESTS=1)
+
 add_kyty_full_emulator_test(shader_recompiler_compute_tests "${KYTY_TESTS_DIR}/ShaderRecompilerComputeTests.cpp")
 
 set(gpu_test_generated_dir "${PROJECT_BINARY_DIR}/gpu_test_shaders")

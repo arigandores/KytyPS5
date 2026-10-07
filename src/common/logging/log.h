@@ -33,6 +33,17 @@ void      WriteToConsoleAndLog(std::string_view text);
 void      WriteFatal(std::string_view text);
 void      WriteFatal(fmt::text_style style, std::string_view text);
 void      Flush();
+// Track F, F25k (KYTY_FIX_B36, ROADMAP s122 item 613(v)(4)): the queue of the async log writer reaches the file before a
+// process end that skips Log::Shutdown (the std::_Exit sites); the writer stops. No-op at KYTY_FIX_B36=0.
+void      DrainForExit() noexcept;
+// The same without stopping the writer: the unresolved branch of the host exception filter (the process may live on).
+void      DrainForFault() noexcept;
+// KYTY_FIX_B36=1 in effect (the File direction): the "log_async" field of the "LongFrame:" line.
+bool      AsyncEnabled();
+namespace Testing {
+// log_async_tests only: the 256 MiB limit of the queue replaced.
+void SetAsyncLimit(uint64_t bytes);
+} // namespace Testing
 
 namespace Color {
 

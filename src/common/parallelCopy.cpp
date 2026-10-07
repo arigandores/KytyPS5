@@ -3,6 +3,7 @@
 
 #include "common/frameStats.h"
 #include "common/gates.h"
+#include "common/logging/log.h" // Track F, F25k (Log::DrainForExit)
 
 #include <algorithm>
 #include <atomic>
@@ -552,6 +553,7 @@ void AsyncMemcpyArmedBatch(const ArmedCopyItem* items, size_t n, const ArmedCopy
 	for (size_t i = 0; i < n; i++) {
 		if (items[i].size >= CHUNK_BYTES) {
 			std::fprintf(stderr, "CopyPool fatal: acinline: batch item of 0x%zx bytes is not one chunk\n", items[i].size);
+			Log::DrainForExit(); // Track F, F25k (KYTY_FIX_B36): the async log queue to the file; no-op at =0
 			std::fflush(stderr);
 			std::_Exit(322);
 		}

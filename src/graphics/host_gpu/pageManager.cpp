@@ -53,6 +53,7 @@ constexpr uint64_t REGION_PAGES = REGION_SIZE / PAGE_SIZE;
 	std::fputs(reason != nullptr ? reason : "invalid page state", stderr);
 	std::fputc('\n', stderr);
 	std::fflush(stderr);
+	Log::DrainForExit(); // Track F, F25k (KYTY_FIX_B36): the async log queue to the file; no-op at =0
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 	TerminateProcess(GetCurrentProcess(), static_cast<UINT>(EXCEPTION_NONCONTINUABLE_EXCEPTION));
 #endif
@@ -65,6 +66,7 @@ constexpr uint64_t REGION_PAGES = REGION_SIZE / PAGE_SIZE;
 	va_start(args, format);
 	std::vfprintf(stderr, format, args);
 	va_end(args);
+	Log::DrainForExit(); // Track F, F25k (KYTY_FIX_B36): the async log queue to the file; no-op at =0
 	std::fputc('\n', stderr);
 	std::fflush(stderr);
 	std::_Exit(322);

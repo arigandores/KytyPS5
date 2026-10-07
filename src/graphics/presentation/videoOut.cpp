@@ -1351,6 +1351,25 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     r.cfg->pace_speed);
 		}
 	}
+	// Track F, F25k (KYTY_LONGFRAME=1, ROADMAP s122 item 613(v)(7); measurement only, default 0): a flip >= 100 ms after the
+	// previous one - a "LongFrame:" line (at most 4 096), without KYTY_FRAME_TRACE. The clock and the point are those of
+	// dt_us of the "FrameTrace:" line below: Common::FrameStats::NowNs on this Present thread after flip_status.count++,
+	// under m_mutex. t_ms - the same clock, for the t0_ms / t1_ms of the stand's "TestLogStall:" line.
+	{
+		static const bool long_frame = Common::EnvFlagOn("KYTY_LONGFRAME");
+		if (long_frame) [[unlikely]] {
+			static uint64_t long_frame_prev_ns = 0;
+			static uint32_t long_frame_lines   = 0;
+			const uint64_t  now_ns             = Common::FrameStats::NowNs();
+			if (long_frame_prev_ns != 0 && now_ns - long_frame_prev_ns >= 100000000u && long_frame_lines < 4096) {
+				long_frame_lines++;
+				LOGF("LongFrame: n=%" PRIu64 " dt_us=%llu log_async=%d t_ms=%llu\n", r.cfg->flip_status.count,
+				     static_cast<unsigned long long>((now_ns - long_frame_prev_ns) / 1000u), Log::AsyncEnabled() ? 1 : 0,
+				     static_cast<unsigned long long>(now_ns / 1000000u));
+			}
+			long_frame_prev_ns = now_ns;
+		}
+	}
 	if (Common::FrameStats::Enabled()) {
 		namespace FS = Common::FrameStats;
 		struct Snapshot {

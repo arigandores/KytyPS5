@@ -1,0 +1,210 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "theta_load from the seal C:/kyty/f287/f20l3/pred/f20l3_seal.md (0.4562)",
+   true
+  ],
+  [
+   "json binary_sha256 = F20j4 test 2d0c8815 (2d0c8815389bdc42)",
+   true
+  ],
+  [
+   "installed before = after = S18 b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (b3cee576138a1553 / b3cee576138a1553)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (d80b01c1973f21cc / d80b01c1973f21cc)",
+   true
+  ],
+  [
+   "env: harness constants + form [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')] (extra [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')])",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "scene entered (first scene frame 205)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4788 listsha b9)",
+   true
+  ],
+  [
+   "DiagB32 mode line present (1)",
+   true
+  ],
+  [
+   "no DiagB32 config invalid line",
+   true
+  ],
+  [
+   "translation signature = FS8 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "TestB32 lines none ([])",
+   true
+  ],
+  [
+   "rep_drop 0 (0)",
+   true
+  ],
+  [
+   "no loader (None)",
+   true
+  ],
+  [
+   "warm form: no cold reserve files (False / False / False)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "2d0c8815389bdc42a2371ba813dc9460fc5565f21f89e32fad4d9e5bd2394dc7",
+ "f20e_read_sha256": "5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa",
+ "form": "b32_s24",
+ "log": {
+  "K": 0,
+  "K_I": 0,
+  "P_I": 0,
+  "all_diag_frames": 1,
+  "all_instr_made": 0,
+  "all_kq0": 0,
+  "all_m5r": 0,
+  "bad_names": [],
+  "diag_bad_prefix": 0,
+  "diag_lines": 109,
+  "diag_n": 1,
+  "dup": 0,
+  "first_n": 205,
+  "frames": [],
+  "frames_n": 9774,
+  "hold": true,
+  "hold_class": null,
+  "hold_family": null,
+  "i5_bad": 0,
+  "in_count": 0,
+  "instr_made": 0,
+  "instr_share": "NOT EVALUABLE",
+  "invalid": [],
+  "kq0": 0,
+  "kq0_share": "NOT EVALUABLE",
+  "load": null,
+  "m5r": 0,
+  "minimized": 0,
+  "mode": [
+   "DiagB32: mode=1 period_us=5000 print_us=100000 wait_rec_us=10000 kernel_after_us=40000 slots=256 hist=512 wring=4096 ncpu=32 kstate=1 kq_us=4111 kq_budget_div=10 kq_near_us=60000"
+  ],
+  "pk_a": [],
+  "pk_a3": [],
+  "pk_a3_armed": 0,
+  "pk_a3_instr": [],
+  "pk_a3_member": "NOT_CALLED",
+  "pk_a_armed": 0,
+  "pre_scene_slow": [],
+  "precache_no": 0,
+  "precache_recipes": 1,
+  "prev_slow_in_count": 0,
+  "rc13_equal": true,
+  "rc13_stripped": 109,
+  "recovering": 0,
+  "rep_drop": 0,
+  "ring_hold_w_field": 1,
+  "ring_hold_w_frames": 0,
+  "ring_hold_w_sum": 0,
+  "scene_s": 334.142,
+  "seed_other": [],
+  "sig": [
+   "9177b4267de1fb8bac7d1113afd8733210addfac"
+  ],
+  "slot_full_on_nosamples": 0,
+  "stand": null,
+  "test": [],
+  "u5_b5_mean": null,
+  "u5_b5_n": 0,
+  "u5_med_dt": 35387.5,
+  "u5_slow70": 0,
+  "variant_dir": [
+   "variant_fixb26_fixb1b_fixf10_fixf19"
+  ],
+  "x_last": {
+   "gap3p": 0,
+   "kq_fail": 0,
+   "lines_cut": 0,
+   "lines_cut_w": 0,
+   "n": 207,
+   "others_cut": 49,
+   "print_us": 0,
+   "rep_drop": 0,
+   "req_miss": 0,
+   "req_miss_w": 0,
+   "ring_drop": 0,
+   "ring_drop_w": 0,
+   "ring_hold": 0,
+   "ring_hold_w": 0,
+   "sgap_bad": 0,
+   "sgap_bad_w": 0,
+   "short_stalls": 0,
+   "slot_full": 0,
+   "slot_full_w": 0,
+   "slots": 84,
+   "sub_miss": 0,
+   "sub_miss_w": 0,
+   "torn": 0,
+   "torn_w": 0,
+   "w_cut": 55
+  },
+  "zero_w_sum": {
+   "lines_cut_w": 0,
+   "req_miss_w": 0,
+   "ring_drop_w": 0,
+   "sgap_bad_w": 0,
+   "slot_full_w": 0,
+   "sub_miss_w": 0,
+   "torn_w": 0
+  }
+ },
+ "reader_sha256": "1a90f561824ba53d93a905ed5db4fad05b4ac5eaca4cd6edafd13157b1b312e2",
+ "reading": "ADMITTED (no verdict; reading - F20m)",
+ "ref": {
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.1,
+  "installed_sha": "2d0c8815389bdc42a2371ba813dc9460fc5565f21f89e32fad4d9e5bd2394dc7",
+  "outcome": "ok",
+  "signature": "9177b4267de1fb8bac7d1113afd8733210addfac",
+  "video_index": 9989
+ },
+ "tag": "b32_s24",
+ "theta": 0.4562
+}

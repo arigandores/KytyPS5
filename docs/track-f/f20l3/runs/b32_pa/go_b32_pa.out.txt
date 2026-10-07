@@ -1,0 +1,21 @@
+2026-10-06T21:34:39Z F20l3 go_f20l3 b32_pa run check (item 587 (g)): RUN ALIVE 636ecb4e status in_progress
+2026-10-06T21:34:39Z F20l3 go_f20l3 b32_pa lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-06T21:34:39Z F20l3 go_f20l3 b32_pa installed binary inside the lock before the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T21:34:41Z F20l3 go_f20l3 b32_pa manifest before: manifest C:/kyty/f287/f20l3/runs/b32_pa/manifest_before.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+2026-10-06T21:34:44Z F20l3 go_f20l3 b32_pa caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (235/184/5/661/130/ MB)
+2026-10-06T21:34:45Z F20l3 go_f20l3 b32_pa cold form (item 591 (v)(1)): RESERVE MOVED files 2803 bytes 498960172 (dirs 2, root files 1345) listsha 606a56aee53e2b1764d2325ab9a23c1a748b1841ac66a4d018cf8a6a98dd0328
+2026-10-06T21:34:45Z F20l3 go_f20l3 b32_pa cold form: COLD OK
+2026-10-06T21:34:46Z F20l3 go_f20l3 b32_pa installed the F20j4 test copy for the tag: 2d0c8815389bdc42a2371ba813dc9460fc5565f21f89e32fad4d9e5bd2394dc7
+2026-10-06T21:34:46Z F20l3 go_f20l3 b32_pa enter_scene start (level underwater_aerial_garden, SD 300, --rec, hold 330, KYTY_DIAG_B32=1, KYTY_GPU_WALL=1, cold 1, M6)
+2026-10-06T21:40:48Z F20l3 go_f20l3 b32_pa enter_scene rc 0; guard watch: 2026-10-06T21:40:48Z watch end, user process seen: no; M6: M6 end samples=251 foreign_max=12.49 foreign_mean=1.29
+2026-10-06T21:40:48Z F20l3 go_f20l3 b32_pa run: VERDICT: underwater_aerial_garden in 21.4 s - PASS (acceptance <= 90 s)
+2026-10-06T21:40:49Z F20l3 go_f20l3 b32_pa log_b32_pa.txt sha256 8c26949af4006834e7fa0c54718e5f7090639bf4e48d55bf67e19be9f0e8d6e3
+2026-10-06T21:40:49Z F20l3 go_f20l3 b32_pa installed binary returned from the pinned S18 copy
+2026-10-06T21:40:49Z F20l3 go_f20l3 b32_pa installed binary after the tag: b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a
+2026-10-06T21:40:51Z F20l3 go_f20l3 b32_pa manifest of the run state (before the return): manifest C:/kyty/f287/f20l3/runs/b32_pa/manifest_run.tsv files 2378 bytes 811115707 listsha d3fa856ff8a07ebc85cc3cf84858c3a697285eab1e26e6917ec20ef5e0323661; run vs before: manifest cmp DIFFER only-before 2800 only-after 390
+2026-10-06T21:40:52Z F20l3 go_f20l3 b32_pa caches, seeds, saves and GLCache returned
+2026-10-06T21:40:54Z F20l3 go_f20l3 b32_pa manifest after: manifest C:/kyty/f287/f20l3/runs/b32_pa/manifest_after.tsv files 4788 bytes 1259022840 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3; cmp: manifest cmp EQUAL files 4788 listsha b957162f5c692050e720ef8253c4026325cf4de093691ad48d112460dd99fec3
+2026-10-06T21:40:54Z F20l3 go_f20l3 b32_pa cold reserve against manifest after: RESERVE IN AFTER 2803 of 2803
+2026-10-06T21:40:55Z F20l3 go_f20l3 b32_pa cold reserve removed (its list kept as runs/b32_pa/reserve.tsv)
+2026-10-06T21:40:55Z F20l3 go_f20l3 b32_pa lock released (rc 0)
+rc=0

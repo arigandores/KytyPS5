@@ -1,0 +1,2 @@
+C:/kyty/f287/f20l3/rec_b32_z0c2.mp4: 10341 frames 960x540, index entries 10341
+one-frame glitches: 0

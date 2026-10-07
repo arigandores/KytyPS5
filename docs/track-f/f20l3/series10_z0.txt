@@ -1,0 +1,20 @@
+reader b32_read.py sha256 1a90f561824ba53d93a905ed5db4fad05b4ac5eaca4cd6edafd13157b1b312e2
+SERIES over C:/kyty/f287/f20l3\runs: admitted series tags 10 (first 10)
+  b32_s01 (b32_s01) hold True K 0 class None family None | u5_med 35375.5 slow70 0 B5 0 | zero_w 0 | read bfbc32afb1024843
+  b32_s02 (b32_s02) hold True K 0 class None family None | u5_med 35655.5 slow70 0 B5 0 | zero_w 0 | read 2df641bcad6197fe
+  b32_s03 (b32_s03) hold True K 0 class None family None | u5_med 35095.0 slow70 0 B5 0 | zero_w 0 | read bf4aa0464b477dc7
+  b32_s04 (b32_s04) hold True K 0 class None family None | u5_med 34628.5 slow70 0 B5 0 | zero_w 0 | read 7edf29527258132b
+  b32_s05 (b32_s05) hold True K 0 class None family None | u5_med 34416.5 slow70 0 B5 0 | zero_w 0 | read d8105ff673d6b919
+  b32_s06 (b32_s06) hold True K 0 class None family None | u5_med 35698.0 slow70 0 B5 0 | zero_w 0 | read f7d7bbc4d42614c9
+  b32_s07 (b32_s07) hold True K 0 class None family None | u5_med 34291.0 slow70 0 B5 0 | zero_w 0 | read 8585c65b622f196f
+  b32_s08 (b32_s08) hold True K 0 class None family None | u5_med 34518.5 slow70 0 B5 0 | zero_w 0 | read 25f30073a28174f4
+  b32_s09 (b32_s09) hold True K 0 class None family None | u5_med 34555.5 slow70 0 B5 0 | zero_w 0 | read 9442bccfa4305949
+  b32_s10 (b32_s10) hold True K 0 class None family None | u5_med 35100.0 slow70 0 B5 0 | zero_w 0 | read 368b85f8114f4306
+HOLDS 10 K 0
+STOP RULE CONTINUE (holds 10 < 29)
+U5(1) vs F20e 11: {'n': 10, 'median': 34861.75, 'base_median': 36171.5, 'base_n': 11, 'dev': -0.0362, 'u': 8.0, 'p': 0.0003799090486396988, 'fires': True, 'second_mode': 0, 'base_second_mode': 3}
+U5(1) vs the 7 =0 tags after the catalogue ['b32_z0', 'b32_z0b', 'b32_z0c1', 'b32_z0c2', 'b32_z0c3', 'b32_z0c4', 'b32_z0c5']: {'n': 10, 'median': 34861.75, 'base_median': 34819.5, 'base_n': 7, 'dev': 0.0012, 'u': 24.0, 'p': 0.31478815302344715, 'fires': False, 'second_mode': 0, 'base_second_mode': 1}
+U5(2) frames >= 70 ms 0 per hold 0.0 (base 0.561, member > 1.5 x base): False
+U5(3) not computable (no B5 frames in the =1 series tags, item 591 (v)(6)) - not in "any of"
+U5(4) tags with a nonzero _w invariant 0 (member >= 2): False
+U5 ANY no (U5(1) by 7 =0 tags: False; U5(2) False; U5(3) None; U5(4) False)

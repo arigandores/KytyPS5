@@ -1,0 +1,58 @@
+tag b32_pa (form b32_pa)  reader sha256 1a90f561824ba53d93a905ed5db4fad05b4ac5eaca4cd6edafd13157b1b312e2  f20e_read sha256 5a986c03d161b9a5c52d589ad1da87e4676ceb9bac61acaeaa8f2131525400fa  theta 0.4562
+  ADMISSION PASS
+    [ok] tag json present
+    [ok] theta_load from the seal C:/kyty/f287/f20l3/pred/f20l3_seal.md (0.4562)
+    [ok] json binary_sha256 = F20j4 test 2d0c8815 (2d0c8815389bdc42)
+    [ok] installed before = after = S18 b3cee576138a15530eadd9afe1d67290adf12d281c09ec7c6ebf3b04ffec305a (b3cee576138a1553 / b3cee576138a1553)
+    [ok] json prereg sha256 = seal sha256 (d80b01c1973f21cc / d80b01c1973f21cc)
+    [ok] env: harness constants + form [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')] (extra [('KYTY_DIAG_B32', '1'), ('KYTY_GPU_WALL', '1')])
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden)
+    [ok] hold 330 s (330)
+    [ok] log present
+    [ok] scene entered (first scene frame 201)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4788 listsha b9)
+    [ok] DiagB32 mode line present (1)
+    [ok] no DiagB32 config invalid line
+    [ok] translation signature = FS8 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] TestB32 lines none ([])
+    [ok] rep_drop 0 (0)
+    [ok] no loader (None)
+    [ok] cold form: reserve moved (RESERVE MOVED files 2803 bytes 498960172 (dirs 2, root files)
+    [ok] cold form: live folder cold before the start (COLD OK)
+    [ok] cold form: reserve back in manifest after (RESERVE IN AFTER 2803 of 2803)
+    [ok] cold form: log PipelinePrecache no recipes yet 1, recipes loaded 0, other ShaderSeed lines []
+  binary 2d0c8815389bdc42a2371ba813dc9460fc5565f21f89e32fad4d9e5bd2394dc7; installed during the tag 2d0c8815389bdc42a2371ba813dc9460fc5565f21f89e32fad4d9e5bd2394dc7; translation signature (ShaderSeed line of the log) 9177b4267de1fb8bac7d1113afd8733210addfac
+  scene: first_n 201, frames 9557, scene 334.5 s, hold True; DiagB32 lines 1383 (windows 11, bad prefix 0, dup 0); mode ['DiagB32: mode=1 period_us=5000 print_us=100000 wait_rec_us=10000 kernel_after_us=40000 slots=256 hist=512 wring=4096 ncpu=32 kstate=1 kq_us=4319 kq_budget_div=10 kq_near_us=60000']
+  RC13: F20c attribution with = without DiagB32 lines (1383 stripped): EQUAL
+  K_I 1; K 1; P_I 5; in count 5; INSTR_MADE 0 share 0.0 (all frames >= 100 ms with a DiagB32 line: 11, INSTR_MADE 2)
+  kq_n = 0: 0 share 0.0 (all: 0); m5r_us > 0: 3 (all: 6); in count with the previous frame >= 100 ms: 2; Recovering Vulkan swapchain 0
+  hold class (longest frame in count): EMU_CALL:present>DRV_HOST
+    FRAME n 975 dt_us 100177 t 30.2 s attr B5 | diag True instr_us 5264 kq_n 1 m5r_us 0 kstate 1 | E 66002.5 holder flip | EMU_RUN:Gpu | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=R |  load 0.0
+    FRAME n 1094 dt_us 115222 t 34.9 s attr B5 | diag True instr_us 49140 kq_n 2 m5r_us 42008 kstate 1 | E 80700.5 holder flip | EMU_RUN:Gpu | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=R |  load 0.0465
+    FRAME n 2372 dt_us 120589 t 78.8 s attr B5 | diag True instr_us 8883 kq_n 2 m5r_us 0 kstate 1 | E 87608.0 holder flip | EMU_RUN:Gpu | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=R |  load 0.0081
+    FRAME n 8779 dt_us 265493 t 296.9 s attr nothing | diag True instr_us 60490 kq_n 6 m5r_us 34097 kstate 1 | E 232085.0 holder flip | UNMARKED:DrawThread IN COUNT | DrawThread(guest)=Sw |  load 0.0423
+    FRAME n 8796 dt_us 977768 t 297.8 s attr nothing | diag False instr_us None kq_n None m5r_us None kstate None | E 942065.0 holder None | NO_SAMPLES IN COUNT |  | no DiagB32: line
+    FRAME n 8797 dt_us 860521 t 298.7 s attr nothing | diag True instr_us 129247 kq_n 20 m5r_us 33036 kstate 1 | E 824818.0 holder output | UNMARKED:Present IN COUNT | Present(Present)=Sw |  load 0.4174
+    FRAME n 8798 dt_us 1478862 t 299.6 s attr nothing | diag True instr_us 313835 kq_n 47 m5r_us 69462 kstate 1 | E 1443159.0 holder output | EMU_CALL:present>DRV_HOST IN COUNT | Present(Present)=H:present |  load 0.4212
+    FRAME n 8819 dt_us 133361 t 301.9 s attr nothing | diag True instr_us 13842 kq_n 2 m5r_us 0 kstate 1 | E 85816.5 holder flip | UNMARKED:Present IN COUNT | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw |  load 0.1866
+  PK-A B5 frames 3, armed member (EMU_RUN:Gpu / EMU_CALL on GuestGpu) 3: [(975, 'EMU_RUN:Gpu'), (1094, 'EMU_RUN:Gpu'), (2372, 'EMU_RUN:Gpu')]
+  PK-A COLD DOMAIN (item 591 (v)(2)): frames 4, armed 3, member ARMED [the PK-A tag]
+    PKA n 202 idx 1 dt_us 404405 t 0.0 s instr_us 84952 | EMU_WAIT:emu_mutex | holder flip | DrawThread(guest)=W:cond->waker > Draw_Geometry(guest)=W:gpu_cmd->waker > Gpu(Gpu)=W:emu_mutex | no waker, no peer; executor variant (the -t peer for any kind): step to slot 84
+    PKA n 203 idx 2 dt_us 164014 t 0.4 s instr_us 18116 | EMU_RUN:Gpu ARMED | holder flip | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=R | 
+    PKA n 268 idx 67 dt_us 135907 t 3.3 s instr_us 10405 | EMU_RUN:Gpu ARMED | holder flip | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=R | 
+    PKA n 2372 idx 2171 dt_us 120589 t 78.8 s instr_us 8883 | EMU_RUN:Gpu ARMED | holder flip | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=R | 
+    B5 frames out of the domain (dt_us - instr_us < 100 000): [(975, 100177, 5264), (1094, 115222, 49140)]; frames >= 100 ms from the level line to the first scene frame (not attributed by F20c, reference): [(201, 4353066)]
+    PipelinePrecache: no recipes yet 1, recipes loaded 0; other ShaderSeed lines []
+  U5(1) median dt_us idx 723..828 34441.5 vs F20e 36171.5: -0.0478 (member > 0.02: yes)
+  U5(2) frames >= 70 ms (>= 10 s, no B5, no INSTR_MADE) 6 per hold 1 (base 0.561, member > 1.5 x base: yes) [reference]
+  U5(3) mean dt_us of B5 frames 111996.0 (n 3; base 134767.7, member > 1.25 x base: no) [reference]
+  U5(4) zero invariants, sum of _w over the tag {'slot_full_w': 0, 'torn_w': 0, 'ring_drop_w': 1, 'sgap_bad_w': 0, 'lines_cut_w': 0, 'req_miss_w': 0, 'sub_miss_w': 0}: NONZERO
+  debts item 552 (e): slot_full_w != 0 on a NO_SAMPLES frame 0; unprintable thread names []; rep_drop 0; I5 dt > 1 ms 2
+  ring_hold_w (Z1, reference): sum over the -x lines 0, hold frames with ring_hold_w > 0 0, -x lines with the field 11
+  -x last {'n': 8819, 'slots': 89, 'slot_full': 0, 'slot_full_w': 0, 'torn': 1, 'torn_w': 0, 'ring_drop': 1, 'ring_drop_w': 0, 'sgap_bad': 0, 'sgap_bad_w': 0, 'lines_cut': 0, 'lines_cut_w': 0, 'req_miss': 0, 'req_miss_w': 0, 'sub_miss': 0, 'sub_miss_w': 0, 'short_stalls': 2, 'others_cut': 572, 'w_cut': 796, 'rep_drop': 0, 'kq_fail': 0, 'print_us': 17, 'gap3p': 0, 'ring_hold': 0, 'ring_hold_w': 0}
+  REFERENCE: glitches 0, video index 9768, outcome ok, hold_exit None, hold_s 330.0
+  READING ADMITTED (no verdict; reading - F20m)

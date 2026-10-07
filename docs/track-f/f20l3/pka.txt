@@ -1,0 +1,4 @@
+reader b32_read.py sha256 1a90f561824ba53d93a905ed5db4fad05b4ac5eaca4cd6edafd13157b1b312e2
+PK-A ARMED on b32_pa
+  b32_pa (b32_pa): frames 4 armed 3 member ARMED
+  b32_pa2: no admitted tag

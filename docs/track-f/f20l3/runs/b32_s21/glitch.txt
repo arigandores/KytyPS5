@@ -1,0 +1,2 @@
+C:/kyty/f287/f20l3/rec_b32_s21.mp4: 10070 frames 960x540, index entries 10070
+one-frame glitches: 0

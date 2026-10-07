@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/f20l3/runs/b32_z0c4/sheet_b32_z0c4.png frames 10317 step 214 tiles 8x6

@@ -1,0 +1,5 @@
+args: C:/kyty/f287/f24a/build/b27_daslot_stand.exe producer_noguard 500000 1
+rc: 0
+seconds: 0.1
+B27 inject=producer_noguard threads=8 takes=1000000 hits=228987 late=265477 misses=505536 runs=129232 queued=208427 yields=230312 I1=0 I2=0 I3=406 I4=200 I5=0 ms=104
+

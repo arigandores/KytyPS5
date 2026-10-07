@@ -1,0 +1,46 @@
+exe b13_epoch_stand sha256 31c75c442ba63f0a090c408df9a06abc72e2e06ef8e9b21d43d2bf7159e8eb84
+exe b13_epoch_stand_swap sha256 3628828341ce4ad5f388d3e0f0544c2bdd5c112919f37530fcf3dba0dde0b87c
+exe b27_daslot_stand sha256 5116b06d7101c39171b589a3f0b3f4e60c253aca958e7c0df803497176978705
+copy 707e0d7d src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2551-2578 lines=28 SAME
+copy 0005e11f src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2549-2576 lines=28 SAME
+copy 0ddca1ee src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2412-2439 lines=28 SAME
+copy ALL OK
+MEMBER B27-4 copy of the guard primitives = code at 707e0d7d, 0005e11f, 0ddca1ee: PASS
+B13 build=code mode=forced point=1 bits=0 iters=1000000 lost=1000000 r1=hit:0,skip_bit:0,skip_stamp:1000000,scan:0 r2=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+B13 build=code mode=forced point=1 bits=1 iters=1000000 lost=1000000 r1=hit:0,skip_bit:1000000,skip_stamp:0,scan:0 r2=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+B13 build=code mode=forced point=2 bits=0 iters=1000000 lost=0 r1=hit:0,skip_bit:0,skip_stamp:0,scan:1000000 r2=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+B13 build=code mode=forced point=2 bits=1 iters=1000000 lost=1000000 r1=hit:0,skip_bit:1000000,skip_stamp:0,scan:0 r2=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+B13 build=code mode=before point=1 bits=0 iters=1000000 lost=0 r1=hit:0,skip_bit:0,skip_stamp:0,scan:1000000 r2=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+B13 build=code mode=after point=1 bits=0 iters=1000000 lost=0 r1=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 r2=hit:0,skip_bit:0,skip_stamp:0,scan:1000000 gate_bdastamp=1 gate_bdabits=0
+B13 build=code mode=free point=1 bits=0 iters=1000000 lost=242 r1=hit:4244,skip_bit:0,skip_stamp:242,scan:995514 r2=hit:995756,skip_bit:0,skip_stamp:0,scan:4244 gate_bdastamp=1 gate_bdabits=0
+B13 build=code mode=free point=1 bits=1 iters=1000000 lost=491 r1=hit:2983,skip_bit:491,skip_stamp:0,scan:996526 r2=hit:997017,skip_bit:0,skip_stamp:0,scan:2983 gate_bdastamp=1 gate_bdabits=0
+B13 build=swap mode=forced point=1 bits=0 iters=1000000 lost=0 r1=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 r2=hit:0,skip_bit:0,skip_stamp:0,scan:1000000 gate_bdastamp=1 gate_bdabits=0
+B13 build=swap mode=forced point=1 bits=1 iters=1000000 lost=0 r1=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 r2=hit:0,skip_bit:0,skip_stamp:0,scan:1000000 gate_bdastamp=1 gate_bdabits=0
+B13 build=swap mode=forced point=2 bits=0 iters=1000000 lost=0 r1=hit:0,skip_bit:0,skip_stamp:0,scan:1000000 r2=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+B13 build=swap mode=forced point=2 bits=1 iters=1000000 lost=1000000 r1=hit:0,skip_bit:1000000,skip_stamp:0,scan:0 r2=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+B13 build=swap mode=before point=1 bits=0 iters=1000000 lost=0 r1=hit:0,skip_bit:0,skip_stamp:0,scan:1000000 r2=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+B13 build=swap mode=after point=1 bits=0 iters=1000000 lost=0 r1=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 r2=hit:0,skip_bit:0,skip_stamp:0,scan:1000000 gate_bdastamp=1 gate_bdabits=0
+B13 build=swap mode=free point=1 bits=0 iters=1000000 lost=0 r1=hit:5397,skip_bit:0,skip_stamp:0,scan:994603 r2=hit:994603,skip_bit:0,skip_stamp:0,scan:5397 gate_bdastamp=1 gate_bdabits=0
+B13 build=swap mode=free point=1 bits=1 iters=1000000 lost=29 r1=hit:4197,skip_bit:29,skip_stamp:0,scan:995774 r2=hit:995803,skip_bit:0,skip_stamp:0,scan:4197 gate_bdastamp=1 gate_bdabits=0
+MEMBER B13-1 order of the code, forced point 1, bdabits 0: lost 1000000 of 1000000: PASS
+MEMBER B13-2 reversed order, forced point 1, bdabits 0: lost 0: PASS
+MEMBER B13-5 controls before/after, both orders: lost 0,0,0,0: PASS
+REPORT B13 code forced point 2 bdabits 0: lost 0 of 1000000
+REPORT B13 swap forced point 2 bdabits 0: lost 0 of 1000000
+REPORT B13 code forced point 1 bdabits 1: lost 1000000 of 1000000
+REPORT B13 swap forced point 1 bdabits 1: lost 0 of 1000000
+REPORT B13 code forced point 2 bdabits 1: lost 1000000 of 1000000
+REPORT B13 swap forced point 2 bdabits 1: lost 1000000 of 1000000
+REPORT B13 code free point 1 bdabits 0: lost 242 of 1000000
+REPORT B13 swap free point 1 bdabits 0: lost 0 of 1000000
+REPORT B13 code free point 1 bdabits 1: lost 491 of 1000000
+REPORT B13 swap free point 1 bdabits 1: lost 29 of 1000000
+B27 inject=none threads=8 takes=1000000 hits=411009 late=136162 misses=452829 runs=237981 queued=279491 yields=321318 I1=0 I2=0 I3=0 I4=0 I5=0 ms=218
+B27 inject=none threads=8 takes=1000000 hits=271345 late=198091 misses=530564 runs=125658 queued=187370 yields=230157 I1=0 I2=0 I3=0 I4=0 I5=0 ms=103
+B27 inject=none threads=8 takes=1000000 hits=246935 late=185067 misses=567998 runs=107720 queued=167087 yields=214157 I1=0 I2=0 I3=0 I4=0 I5=0 ms=107
+B27 inject=draw_noguard threads=8 takes=1000000 hits=142287 late=175533 misses=682180 runs=57630 queued=117196 yields=161706 I1=0 I2=0 I3=92 I4=203 I5=0 ms=104
+B27 inject=producer_noguard threads=8 takes=1000000 hits=228987 late=265477 misses=505536 runs=129232 queued=208427 yields=230312 I1=0 I2=0 I3=406 I4=200 I5=0 ms=104
+MEMBER B27-1 inject none, 3 seeds: takes 1000000,1000000,1000000 hits 411009,271345,246935 failures 0,0,0: PASS
+MEMBER B27-2 inject draw_noguard: failures 295 (I1..I5 0,0,92,203,0): PASS
+MEMBER B27-3 inject producer_noguard: failures 606 (I1..I5 0,0,406,200,0): PASS
+ALL OK

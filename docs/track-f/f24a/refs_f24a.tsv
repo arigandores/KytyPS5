@@ -1,0 +1,84 @@
+707e0d7d	src/graphics/host_gpu/regionManager.h	230	m_cpu_epoch.fetch_add(1, std::memory_order_release);	m_epoch.fetch_add(1, std::memory_order_release);
+707e0d7d	src/graphics/host_gpu/regionManager.h	228	HasCurrentUpload check fails. A BDA scan observing these epochs still acquires t	// lock before it reads dirty bits, so the order does not ma
+707e0d7d	src/graphics/host_gpu/regionManager.h	231	m_epoch.fetch_add(1, std::memory_order_release);	// Session 134, knob "b2reuse" (ROADMAP s122 item 154(b) RC1
+707e0d7d	src/graphics/host_gpu/regionManager.h	238	BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);	}
+707e0d7d	src/graphics/host_gpu/regionManager.h	237	// Gate "bdabits": the map mirrors this epoch, so it is set here and never later	BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
+707e0d7d	src/graphics/host_gpu/regionManager.h	150	return m_epoch.load(std::memory_order_acquire);	}
+707e0d7d	src/graphics/host_gpu/regionManager.h	202	bits.SetRangeRelaxed(start, end);	// Gate "armdefer": the pages become writable, so an arming 
+707e0d7d	src/graphics/host_gpu/memoryTracker.h	30	return m_cpu_epoch.load(std::memory_order_acquire);	}
+707e0d7d	src/graphics/host_gpu/memoryTracker.h	77	const auto* manager = m_regions[index].load(std::memory_order_acquire);	return manager == nullptr ? RegionStamp {} : RegionStamp {ma
+707e0d7d	src/graphics/host_gpu/memoryTracker.h	160	manager->ChangeState<DirtySource::Cpu, true>(manager->GetCpuAddr() + offset, byt	return false;
+707e0d7d	src/graphics/host_gpu/memoryTracker.h	206	manager->ChangeState<DirtySource::Cpu, true>(open_begin, open_size);	Common::FrameStats::Add(Common::FrameStats::Counter::FaultWi
+707e0d7d	src/graphics/host_gpu/renderer/renderContext.cpp	330	const auto cpu_epoch          = m_buffer_cache.CpuWriteEpoch();	const auto registration_epoch = m_buffer_cache.RegistrationE
+707e0d7d	src/graphics/host_gpu/renderer/renderContext.cpp	333	const bool bda_cached = reuse && cpu_epoch == m_bda_cpu_epoch &&	registration_epoch == m_bda_registration_epoch &&
+707e0d7d	src/graphics/host_gpu/renderer/renderContext.cpp	399	m_bda_cpu_epoch          = cpu_epoch;	m_bda_registration_epoch = registration_epoch;
+707e0d7d	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3506	const bool bit_clear = use_bits && !BdaTakeRegionWrite(index);	if (bit_clear && m_bda_region_stamps[index].generation == m_
+707e0d7d	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3530	const auto stamp = m_memory_tracker.RegionWriteStamp(index);	auto&      seen  = m_bda_region_stamps[index];
+707e0d7d	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3532	if (seen.generation == m_bda_stamp_generation && seen.stamp == stamp) {	Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegi
+707e0d7d	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3571	m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);	}
+707e0d7d	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3641	if (Common::Gates::Enabled(Common::Gates::Gate::BdaRegionStamps)) {	SynchronizeBuffersByRegion(scan_begin, scan_end);
+707e0d7d	src/common/gates.cpp	28	{"KYTY_BDA_REGION_STAMPS", "bdastamp", true},	{"KYTY_BACKING_PAGES", "backpages", true},
+707e0d7d	src/common/gates.cpp	199	{"KYTY_BDA_WRITE_BITS", "bdabits", false},	{"KYTY_BDA_WRITE_BITS_VERIFY", "bdabitscheck", false},
+707e0d7d	src/graphics/host_gpu/memoryTracker.cpp	219	manager->ForEachModifiedRange<DirtySource::Cpu, false>(cursor, bytes, append);	}
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2564	static void GuardSlot(AheadSlot& slot) {	uint32_t spin = 0;
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2571	Common::FrameStats::Add(Common::FrameStats::Counter::DaGuardYield, 1);	SwitchToThread();
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2650	std::vector<std::thread>              ahead_threads; // ahead_queue_mutex (Ahead	// Session 112: ahead_threads.size() for the workers, which 
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2653	std::atomic<uint32_t>                 ahead_thread_count {0};	
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2762	void AheadStartThreads(uint32_t wanted) {	if (ahead_threads.size() >= wanted) {
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2782	void AheadStopThreads() {	{
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2945	queue_lock(ahead_queue_mutex);	const auto                  generation = memo_generation.loa
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2959	AheadStartThreads(wanted);	if (FS::Enabled()) {
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3130	if (ahead_threads.size() > wanted) {	ahead_cv.notify_all();
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3186	wake_all = ahead_thread_count.load(std::memory_order_relaxed) >	Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4515	AheadStopThreads();	pretranslation.Stop();
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3358	if (!TryGuardSlot(slot)) {	FS::Add(FS::Counter::DaGuardBusy, 1);
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3405	slot.state.store(AheadTaking, std::memory_order_relaxed);	UnguardSlot(slot);
+707e0d7d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3213	if (!slot.state.compare_exchange_strong(expected, AheadRunning, std::memory_orde	return; // cancelled, or claimed through an older queue entr
+707e0d7d	src/common/gates.cpp	398	{"KYTY_DRAW_AHEAD_SLOT", "daslot", 1, 2},	// Session 112: at daslot = 0, 0 = the M1 queue skips the sl
+0005e11f	src/graphics/host_gpu/regionManager.h	222	m_cpu_epoch.fetch_add(1, std::memory_order_release);	m_epoch.fetch_add(1, std::memory_order_release);
+0005e11f	src/graphics/host_gpu/regionManager.h	220	HasCurrentUpload check fails. A BDA scan observing these epochs still acquires t	// lock before it reads dirty bits, so the order does not ma
+0005e11f	src/graphics/host_gpu/regionManager.h	223	m_epoch.fetch_add(1, std::memory_order_release);	// Session 134, knob "b2reuse" (ROADMAP s122 item 154(b) RC1
+0005e11f	src/graphics/host_gpu/regionManager.h	230	BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);	}
+0005e11f	src/graphics/host_gpu/regionManager.h	229	// Gate "bdabits": the map mirrors this epoch, so it is set here and never later	BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
+0005e11f	src/graphics/host_gpu/regionManager.h	142	return m_epoch.load(std::memory_order_acquire);	}
+0005e11f	src/graphics/host_gpu/regionManager.h	194	bits.SetRangeRelaxed(start, end);	// Gate "armdefer": the pages become writable, so an arming 
+0005e11f	src/graphics/host_gpu/memoryTracker.h	29	return m_cpu_epoch.load(std::memory_order_acquire);	}
+0005e11f	src/graphics/host_gpu/memoryTracker.h	76	const auto* manager = m_regions[index].load(std::memory_order_acquire);	return manager == nullptr ? RegionStamp {} : RegionStamp {ma
+0005e11f	src/graphics/host_gpu/memoryTracker.h	159	manager->ChangeState<DirtySource::Cpu, true>(manager->GetCpuAddr() + offset, byt	return false;
+0005e11f	src/graphics/host_gpu/memoryTracker.h	205	manager->ChangeState<DirtySource::Cpu, true>(open_begin, open_size);	Common::FrameStats::Add(Common::FrameStats::Counter::FaultWi
+0005e11f	src/graphics/host_gpu/renderer/renderContext.cpp	330	const auto cpu_epoch          = m_buffer_cache.CpuWriteEpoch();	const auto registration_epoch = m_buffer_cache.RegistrationE
+0005e11f	src/graphics/host_gpu/renderer/renderContext.cpp	333	const bool bda_cached = reuse && cpu_epoch == m_bda_cpu_epoch &&	registration_epoch == m_bda_registration_epoch &&
+0005e11f	src/graphics/host_gpu/renderer/renderContext.cpp	399	m_bda_cpu_epoch          = cpu_epoch;	m_bda_registration_epoch = registration_epoch;
+0005e11f	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3448	const bool bit_clear = use_bits && !BdaTakeRegionWrite(index);	if (bit_clear && m_bda_region_stamps[index].generation == m_
+0005e11f	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3472	const auto stamp = m_memory_tracker.RegionWriteStamp(index);	auto&      seen  = m_bda_region_stamps[index];
+0005e11f	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3474	if (seen.generation == m_bda_stamp_generation && seen.stamp == stamp) {	Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegi
+0005e11f	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3513	m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);	}
+0005e11f	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3583	if (Common::Gates::Enabled(Common::Gates::Gate::BdaRegionStamps)) {	SynchronizeBuffersByRegion(scan_begin, scan_end);
+0005e11f	src/common/gates.cpp	28	{"KYTY_BDA_REGION_STAMPS", "bdastamp", true},	{"KYTY_BACKING_PAGES", "backpages", true},
+0005e11f	src/common/gates.cpp	199	{"KYTY_BDA_WRITE_BITS", "bdabits", false},	{"KYTY_BDA_WRITE_BITS_VERIFY", "bdabitscheck", false},
+0005e11f	src/graphics/host_gpu/memoryTracker.cpp	219	manager->ForEachModifiedRange<DirtySource::Cpu, false>(cursor, bytes, append);	}
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2562	static void GuardSlot(AheadSlot& slot) {	uint32_t spin = 0;
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2569	Common::FrameStats::Add(Common::FrameStats::Counter::DaGuardYield, 1);	SwitchToThread();
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2648	std::vector<std::thread>              ahead_threads; // ahead_queue_mutex (Ahead	// Session 112: ahead_threads.size() for the workers, which 
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2651	std::atomic<uint32_t>                 ahead_thread_count {0};	
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2760	void AheadStartThreads(uint32_t wanted) {	if (ahead_threads.size() >= wanted) {
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2780	void AheadStopThreads() {	{
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2943	queue_lock(ahead_queue_mutex);	const auto                  generation = memo_generation.loa
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2957	AheadStartThreads(wanted);	if (FS::Enabled()) {
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3128	if (ahead_threads.size() > wanted) {	ahead_cv.notify_all();
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3184	wake_all = ahead_thread_count.load(std::memory_order_relaxed) >	Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4505	AheadStopThreads();	pretranslation.Stop();
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3356	if (!TryGuardSlot(slot)) {	FS::Add(FS::Counter::DaGuardBusy, 1);
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3403	slot.state.store(AheadTaking, std::memory_order_relaxed);	UnguardSlot(slot);
+0005e11f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3211	if (!slot.state.compare_exchange_strong(expected, AheadRunning, std::memory_orde	return; // cancelled, or claimed through an older queue entr
+0005e11f	src/common/gates.cpp	398	{"KYTY_DRAW_AHEAD_SLOT", "daslot", 1, 2},	// Session 112: at daslot = 0, 0 = the M1 queue skips the sl
+00c7264b	docs/ROADMAP.md	12920	| порядок эпох в `ChangeState<Cpu,true>`	| `armdefer` (выкл.): предварительная загрузка сдвигает штам
+00c7264b	docs/ROADMAP.md	12922	| долги кода `daslot`:	| проверка `daslot` шла при 42,2 мс на флип (цена `smemochec
+1570d110	src/graphics/host_gpu/regionManager.h	39	void Hook(int point) noexcept;	} // namespace B13Test
+1570d110	src/graphics/host_gpu/regionManager.h	247	B13Test::Hook(1); // Track F, F24a: between the global and the region epoch	#endif
+1570d110	src/graphics/host_gpu/regionManager.h	239	#if defined(KYTY_TEST_B13_SWAP)	// Track F, F24a: the reversed order (region epoch first), t
+1570d110	src/graphics/host_gpu/regionManager.h	257	B13Test::Hook(2); // Track F, F24a: after both epochs, before the bdabits bit	#endif
+1570d110	tests/B13EpochStand.cpp	157	Outcome Prepare(Decided&& on_decided) {	const auto g = tracker.CpuWriteEpoch(); // PrepareBda: cpu_e
+1570d110	tests/B27DaSlotStand.cpp	80	// BEGIN VERBATIM pipelineCache.cpp	// Slot guards: the draw gives up after a bounded spin (a mi
+0ddca1ee	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2432	Common::FrameStats::Add(Common::FrameStats::Counter::DaGuardYield, 1);	SwitchToThread();
+0ddca1ee	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2514	std::atomic<uint32_t>                 ahead_thread_count {0};	

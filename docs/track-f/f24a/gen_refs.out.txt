@@ -1,0 +1,84 @@
+b13_global_707e0d7d    `707e0d7d:src/graphics/host_gpu/regionManager.h:230`  hits=1  +1=m_epoch.fetch_add(1, std::memory_order_release);
+b13_comment_707e0d7d   `707e0d7d:src/graphics/host_gpu/regionManager.h:228`  hits=1  +1=// lock before it reads dirty bits, so the order does not ma
+b13_region_707e0d7d    `707e0d7d:src/graphics/host_gpu/regionManager.h:231`  hits=2  +1=// Session 134, knob "b2reuse" (ROADMAP s122 item 154(b) RC1
+b13_note_707e0d7d      `707e0d7d:src/graphics/host_gpu/regionManager.h:238`  hits=2  +1=}
+b13_bit_707e0d7d       `707e0d7d:src/graphics/host_gpu/regionManager.h:237`  hits=1  +1=BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
+b13_epoch_707e0d7d     `707e0d7d:src/graphics/host_gpu/regionManager.h:150`  hits=1  +1=}
+b13_bits_first_707e0d7d `707e0d7d:src/graphics/host_gpu/regionManager.h:202`  hits=1  +1=// Gate "armdefer": the pages become writable, so an arming 
+b13_cpuepoch_707e0d7d  `707e0d7d:src/graphics/host_gpu/memoryTracker.h:30`  hits=1  +1=}
+b13_stamp_707e0d7d     `707e0d7d:src/graphics/host_gpu/memoryTracker.h:77`  hits=2  +1=return manager == nullptr ? RegionStamp {} : RegionStamp {ma
+b13_inval_707e0d7d     `707e0d7d:src/graphics/host_gpu/memoryTracker.h:160`  hits=1  +1=return false;
+b13_fault_707e0d7d     `707e0d7d:src/graphics/host_gpu/memoryTracker.h:206`  hits=1  +1=Common::FrameStats::Add(Common::FrameStats::Counter::FaultWi
+b13_rc_epoch_707e0d7d  `707e0d7d:src/graphics/host_gpu/renderer/renderContext.cpp:330`  hits=1  +1=const auto registration_epoch = m_buffer_cache.RegistrationE
+b13_rc_cached_707e0d7d `707e0d7d:src/graphics/host_gpu/renderer/renderContext.cpp:333`  hits=1  +1=registration_epoch == m_bda_registration_epoch &&
+b13_rc_store_707e0d7d  `707e0d7d:src/graphics/host_gpu/renderer/renderContext.cpp:399`  hits=1  +1=m_bda_registration_epoch = registration_epoch;
+b13_bc_bit_707e0d7d    `707e0d7d:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3506`  hits=1  +1=if (bit_clear && m_bda_region_stamps[index].generation == m_
+b13_bc_stamp_707e0d7d  `707e0d7d:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3530`  hits=1  +1=auto&      seen  = m_bda_region_stamps[index];
+b13_bc_skip_707e0d7d   `707e0d7d:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3532`  hits=1  +1=Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegi
+b13_bc_collect_707e0d7d `707e0d7d:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3571`  hits=1  +1=}
+b13_bc_gate_707e0d7d   `707e0d7d:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3641`  hits=1  +1=SynchronizeBuffersByRegion(scan_begin, scan_end);
+b13_gate_stamp_707e0d7d `707e0d7d:src/common/gates.cpp:28`  hits=1  +1={"KYTY_BACKING_PAGES", "backpages", true},
+b13_gate_bits_707e0d7d `707e0d7d:src/common/gates.cpp:199`  hits=1  +1={"KYTY_BDA_WRITE_BITS_VERIFY", "bdabitscheck", false},
+b13_collect_lock_707e0d7d `707e0d7d:src/graphics/host_gpu/memoryTracker.cpp:219`  hits=1  +1=}
+b27_guard_707e0d7d     `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2564`  hits=1  +1=uint32_t spin = 0;
+b27_yield_707e0d7d     `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2571`  hits=1  +1=SwitchToThread();
+b27_vec_707e0d7d       `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2650`  hits=1  +1=// Session 112: ahead_threads.size() for the workers, which 
+b27_count_707e0d7d     `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2653`  hits=1  +1=
+b27_start_707e0d7d     `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2762`  hits=1  +1=if (ahead_threads.size() >= wanted) {
+b27_stop_707e0d7d      `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2782`  hits=1  +1={
+b27_qlock_707e0d7d     `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2945`  hits=1  +1=const auto                  generation = memo_generation.loa
+b27_startcall_707e0d7d `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2959`  hits=1  +1=if (FS::Enabled()) {
+b27_notify_707e0d7d    `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3130`  hits=1  +1=ahead_cv.notify_all();
+b27_wake_707e0d7d      `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3186`  hits=1  +1=Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
+b27_dtor_707e0d7d      `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4515`  hits=1  +1=pretranslation.Stop();
+b27_take_707e0d7d      `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3358`  hits=1  +1=FS::Add(FS::Counter::DaGuardBusy, 1);
+b27_taking_707e0d7d    `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3405`  hits=1  +1=UnguardSlot(slot);
+b27_run_707e0d7d       `707e0d7d:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3213`  hits=1  +1=return; // cancelled, or claimed through an older queue entr
+b27_gate_707e0d7d      `707e0d7d:src/common/gates.cpp:398`  hits=1  +1=// Session 112: at daslot = 0, 0 = the M1 queue skips the sl
+b13_global_0005e11f    `0005e11f:src/graphics/host_gpu/regionManager.h:222`  hits=1  +1=m_epoch.fetch_add(1, std::memory_order_release);
+b13_comment_0005e11f   `0005e11f:src/graphics/host_gpu/regionManager.h:220`  hits=1  +1=// lock before it reads dirty bits, so the order does not ma
+b13_region_0005e11f    `0005e11f:src/graphics/host_gpu/regionManager.h:223`  hits=2  +1=// Session 134, knob "b2reuse" (ROADMAP s122 item 154(b) RC1
+b13_note_0005e11f      `0005e11f:src/graphics/host_gpu/regionManager.h:230`  hits=2  +1=}
+b13_bit_0005e11f       `0005e11f:src/graphics/host_gpu/regionManager.h:229`  hits=1  +1=BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
+b13_epoch_0005e11f     `0005e11f:src/graphics/host_gpu/regionManager.h:142`  hits=1  +1=}
+b13_bits_first_0005e11f `0005e11f:src/graphics/host_gpu/regionManager.h:194`  hits=1  +1=// Gate "armdefer": the pages become writable, so an arming 
+b13_cpuepoch_0005e11f  `0005e11f:src/graphics/host_gpu/memoryTracker.h:29`  hits=1  +1=}
+b13_stamp_0005e11f     `0005e11f:src/graphics/host_gpu/memoryTracker.h:76`  hits=2  +1=return manager == nullptr ? RegionStamp {} : RegionStamp {ma
+b13_inval_0005e11f     `0005e11f:src/graphics/host_gpu/memoryTracker.h:159`  hits=1  +1=return false;
+b13_fault_0005e11f     `0005e11f:src/graphics/host_gpu/memoryTracker.h:205`  hits=1  +1=Common::FrameStats::Add(Common::FrameStats::Counter::FaultWi
+b13_rc_epoch_0005e11f  `0005e11f:src/graphics/host_gpu/renderer/renderContext.cpp:330`  hits=1  +1=const auto registration_epoch = m_buffer_cache.RegistrationE
+b13_rc_cached_0005e11f `0005e11f:src/graphics/host_gpu/renderer/renderContext.cpp:333`  hits=1  +1=registration_epoch == m_bda_registration_epoch &&
+b13_rc_store_0005e11f  `0005e11f:src/graphics/host_gpu/renderer/renderContext.cpp:399`  hits=1  +1=m_bda_registration_epoch = registration_epoch;
+b13_bc_bit_0005e11f    `0005e11f:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3448`  hits=1  +1=if (bit_clear && m_bda_region_stamps[index].generation == m_
+b13_bc_stamp_0005e11f  `0005e11f:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3472`  hits=1  +1=auto&      seen  = m_bda_region_stamps[index];
+b13_bc_skip_0005e11f   `0005e11f:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3474`  hits=1  +1=Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegi
+b13_bc_collect_0005e11f `0005e11f:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3513`  hits=1  +1=}
+b13_bc_gate_0005e11f   `0005e11f:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3583`  hits=1  +1=SynchronizeBuffersByRegion(scan_begin, scan_end);
+b13_gate_stamp_0005e11f `0005e11f:src/common/gates.cpp:28`  hits=1  +1={"KYTY_BACKING_PAGES", "backpages", true},
+b13_gate_bits_0005e11f `0005e11f:src/common/gates.cpp:199`  hits=1  +1={"KYTY_BDA_WRITE_BITS_VERIFY", "bdabitscheck", false},
+b13_collect_lock_0005e11f `0005e11f:src/graphics/host_gpu/memoryTracker.cpp:219`  hits=1  +1=}
+b27_guard_0005e11f     `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2562`  hits=1  +1=uint32_t spin = 0;
+b27_yield_0005e11f     `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2569`  hits=1  +1=SwitchToThread();
+b27_vec_0005e11f       `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2648`  hits=1  +1=// Session 112: ahead_threads.size() for the workers, which 
+b27_count_0005e11f     `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2651`  hits=1  +1=
+b27_start_0005e11f     `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2760`  hits=1  +1=if (ahead_threads.size() >= wanted) {
+b27_stop_0005e11f      `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2780`  hits=1  +1={
+b27_qlock_0005e11f     `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2943`  hits=1  +1=const auto                  generation = memo_generation.loa
+b27_startcall_0005e11f `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2957`  hits=1  +1=if (FS::Enabled()) {
+b27_notify_0005e11f    `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3128`  hits=1  +1=ahead_cv.notify_all();
+b27_wake_0005e11f      `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3184`  hits=1  +1=Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
+b27_dtor_0005e11f      `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4505`  hits=1  +1=pretranslation.Stop();
+b27_take_0005e11f      `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3356`  hits=1  +1=FS::Add(FS::Counter::DaGuardBusy, 1);
+b27_taking_0005e11f    `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3403`  hits=1  +1=UnguardSlot(slot);
+b27_run_0005e11f       `0005e11f:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3211`  hits=1  +1=return; // cancelled, or claimed through an older queue entr
+b27_gate_0005e11f      `0005e11f:src/common/gates.cpp:398`  hits=1  +1=// Session 112: at daslot = 0, 0 = the M1 queue skips the sl
+row_b13                `00c7264b:docs/ROADMAP.md:12920`  hits=1  +1=| `armdefer` (выкл.): предварительная загрузка сдвигает штам
+row_b27                `00c7264b:docs/ROADMAP.md:12922`  hits=1  +1=| проверка `daslot` шла при 42,2 мс на флип (цена `smemochec
+hook_decl              `1570d110:src/graphics/host_gpu/regionManager.h:39`  hits=1  +1=} // namespace B13Test
+hook_1                 `1570d110:src/graphics/host_gpu/regionManager.h:247`  hits=1  +1=#endif
+hook_swap              `1570d110:src/graphics/host_gpu/regionManager.h:239`  hits=1  +1=// Track F, F24a: the reversed order (region epoch first), t
+hook_2                 `1570d110:src/graphics/host_gpu/regionManager.h:257`  hits=1  +1=#endif
+stand_prepare          `1570d110:tests/B13EpochStand.cpp:157`  hits=1  +1=const auto g = tracker.CpuWriteEpoch(); // PrepareBda: cpu_e
+stand_verbatim         `1570d110:tests/B27DaSlotStand.cpp:80`  hits=1  +1=// Slot guards: the draw gives up after a bounded spin (a mi
+b27_commit_guard       `0ddca1ee:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2432`  hits=1  +1=SwitchToThread();
+b27_commit_count       `0ddca1ee:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2514`  hits=1  +1=

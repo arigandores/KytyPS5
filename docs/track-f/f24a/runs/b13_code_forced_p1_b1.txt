@@ -1,0 +1,5 @@
+args: C:/kyty/f287/f24a/build/b13_epoch_stand.exe forced 1 1 1000000
+rc: 0
+seconds: 0.2
+B13 build=code mode=forced point=1 bits=1 iters=1000000 lost=1000000 r1=hit:0,skip_bit:1000000,skip_stamp:0,scan:0 r2=hit:1000000,skip_bit:0,skip_stamp:0,scan:0 gate_bdastamp=1 gate_bdabits=0
+

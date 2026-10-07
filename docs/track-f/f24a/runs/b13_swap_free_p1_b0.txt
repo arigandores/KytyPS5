@@ -1,0 +1,5 @@
+args: C:/kyty/f287/f24a/build/b13_epoch_stand_swap.exe free 1 0 1000000
+rc: 0
+seconds: 24.9
+B13 build=swap mode=free point=1 bits=0 iters=1000000 lost=0 r1=hit:5397,skip_bit:0,skip_stamp:0,scan:994603 r2=hit:994603,skip_bit:0,skip_stamp:0,scan:5397 gate_bdastamp=1 gate_bdabits=0
+

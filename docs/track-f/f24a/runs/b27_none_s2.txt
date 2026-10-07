@@ -1,0 +1,5 @@
+args: C:/kyty/f287/f24a/build/b27_daslot_stand.exe none 500000 2
+rc: 0
+seconds: 0.1
+B27 inject=none threads=8 takes=1000000 hits=271345 late=198091 misses=530564 runs=125658 queued=187370 yields=230157 I1=0 I2=0 I3=0 I4=0 I5=0 ms=103
+

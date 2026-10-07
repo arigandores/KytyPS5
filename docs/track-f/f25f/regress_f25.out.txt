@@ -1,0 +1,8 @@
+watch: start 2026-10-07T04:41:04Z child 38428 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+suite regress_f25.py sha256 b29eeba58ad630b7e7868ac9a0aedb6e42170c9e3aeb6e77dbce60b52d644f9f target f25_read.py sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf
+ok s143/log_v143_08.txt sha256 88d81bd41fe0f448 | hold True scene 332.5 s K 1 K_I 1 in count [(14701, 6614314, 'NO_SAMPLES:key', 'FORM_SEM')] precursors [14588, 14669] | pot_treasure_cave
+ok s145/log_v145_14.txt sha256 d7ed7266871ce45f | hold True scene 332.8 s K 1 K_I 1 in count [(7249, 4624510, 'NO_SAMPLES:key', 'FORM_NOFLIP')] precursors [7188, 7216] | bonus_path_maker_mix
+ok s144/log_v144_10.txt sha256 16ee50b691e648bf | hold True scene 332.6 s K 0 K_I 0 in count [] precursors [] | pot_treasure_cave
+ok s146/log_r146_04.txt sha256 aa5a510144ee97b1 | hold True scene 332.0 s K 0 K_I 0 in count [] precursors [] | bonus_path_maker_mix
+REGRESS PASS
+rc=0 end 2026-10-07T04:41:49Z

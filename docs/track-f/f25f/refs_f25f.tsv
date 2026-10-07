@@ -1,0 +1,11 @@
+47d618fe	docs/ROADMAP.md	23586	596. **Звено F25b трека F (`HPP-661`	(а) **Приёмка строкой. F25a
+47d618fe	docs/ROADMAP.md	23600	599. **Звено F25c трека F (`HPP-666`	(а) **Приёмка строкой. F25c
+47d618fe	docs/ROADMAP.md	23617	600. **Звено F25d трека F (`HPP-667`	(а) **Приёмка строкой. F25d
+47d618fe	docs/ROADMAP.md	23634	602. **Звено F25e трека F (`HPP-668`, Red Team	(а) **Приёмка строкой. F25e
+24ce64ea	docs/track-f/f20l3/go_f20l3.sh	55	MF=("_ShaderCache=$EMU/_ShaderCache" "_ShaderSeeds=$EMU/_ShaderSeeds" "_PipelineCache=$EMU/_PipelineCache" "_SaveData=$EMU/_SaveData" "GLCache=$GLDIR")	[ -e $F/STOP ] && { log "STOP file: $(head -1 $F/STOP)"; exit 4; }
+35b454c6	src/common/diagB32.cpp	643	" cover_us=%llu flip_ns=%llu\n", // F25d (items 596(v) C4, 599(b)(11) C6): flip_ns - the FrameStats::NowNs scale, last	n, static_cast<unsigned long long>(r.dt_us), static_cast<unsigned long long>(r.instr_us), r.gaps.samples,
+35b454c6	src/common/diagB32.cpp	723	" ring_hold=%llu ring_hold_w=%llu hist_exh=%llu hist_exh_w=%llu w_cut_w=%llu others_cut_w=%llu\n",	n, static_cast<unsigned long long>(counters->slots), static_cast<unsigned long long>(counters->slot_full),
+35b454c6	src/graphics/presentation/videoOut.cpp	1293	Common::DiagB32::OnFlip(r.cfg->flip_status.count, r.id, r.reserve_host_ns);	}
+35b454c6	src/graphics/presentation/videoOut.cpp	1442	LOGF("FrameTrace: n=%" PRIu64 " dt_us=%llu lat_us=%llu gpu_proc=%llu gpu_idle=%llu"	" gpu_blocked=%llu submits=%llu submit_us=%llu semwaits=%llu semwait_us=%llu"
+0005e11f	src/graphics/host_gpu/renderer/masterSemaphore.cpp	128	EXIT("GPU stopped completing submissions\n");	}
+0005e11f	src/common/assert.cpp	40	Log::WriteFatal(BuildFatalReport("--- Error ---", text, file, line));	return 1;

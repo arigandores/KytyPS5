@@ -1,0 +1,18 @@
+OK   07d31ad3:docs/ROADMAP.md:23654 anchor 604. **\u0417\u0432\u0435\u043d\u043e F24f \u0442\u0440\u043
+OK   07d31ad3:docs/ROADMAP.md:23659 anchor    (\u0434) **\u041e\u0442\u0433\u0440\u0443\u0437\u043a\u04
+OK   07d31ad3:docs/ROADMAP.md:23662 anchor    (3) **FS9c (Harness Engineer, \u043f\u043e\u0434 \u0437\u
+OK   07d31ad3:docs/ROADMAP.md:23663 anchor    - `fs9_v` \u2014 \u0444\u043e\u0440\u043c\u0430 `b13_v`
+OK   07d31ad3:docs/ROADMAP.md:23664 anchor    - `fs9_w` \u2014 \u0444\u043e\u0440\u043c\u0430 `b13_w`
+OK   07d31ad3:docs/ROADMAP.md:23665 anchor    \u041e\u0434\u043d\u0430 \u043f\u043e\u043f\u044b\u0442\u
+OK   07d31ad3:docs/ROADMAP.md:23658 anchor    (\u0433) **\u0412\u044b\u0432\u043e\u0434: \u041113 `FIXE
+OK   4a1e7c97:docs/ROADMAP.md:23671 anchor    (\u0438) **\u041d\u0435 \u0437\u0430\u044f\u0432\u043b\u0
+OK   07d31ad3:docs/ROADMAP.md:23096 anchor    (\u0433) **\u041e\u0431\u0449\u0435\u0435 \u043f\u0440\u0
+OK   07d31ad3:docs/ROADMAP.md:23506 anchor 587. **\u0417\u0432\u0435\u043d\u043e S18c2
+OK   07d31ad3:docs/ROADMAP.md:23538 anchor 590. **\u0417\u0432\u0435\u043d\u043e S18d
+OK   ccfdb1ff:docs/track-f/f25f/f25f_seal_body.md:62 anchor - **\u041d\u0435\u0440\u0430\u0437\u0440\u044b\u0432\u043d\u
+OK   aee72cee:docs/track-f/f24e.md:140 anchor ## 8. \u0412\u0430\u0440\u0438\u0430\u043d\u0442\u044b \u043
+OK   aee72cee:docs/track-f/f24e.md:149 anchor ## 9. \u041e\u0442\u0447\u0451\u0442 \u0442\u0435\u0433\u043
+OK   84dbb96b:docs/track-f/fs9a.md:26 anchor - **\u0411\u0438\u043d\u0430\u0440\u044c FS9: sha256 `3861ee
+negative control (line + 1): FAILED as expected
+REFS 15, mismatches 0
+ALL OK

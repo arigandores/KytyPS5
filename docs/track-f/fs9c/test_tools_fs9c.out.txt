@@ -1,0 +1,31 @@
+suite test_tools_fs9c.py sha256 0a1317d2f08d88168023f1be4007baf57192818fd7c3789be1271f43d190f48a target order_fs9c.py sha256 fd4447b2f032a7d0c7f73359cde1569547b6d454d0fc5731796f1f7c464a4a0f
+ok   constants: gap 20 s, lock path, F25f log, own log
+ok   released 30 s ago -> FREE (ORDER FREE last foreign release f25_s01 C:/kyty/f287/fs9c/fx_tools/f25f.log, 30 s ago)
+ok   released 19 s ago -> WAIT (ORDER WAIT 19 s after the release of f25_s01 (C:/kyty/f287/fs9c/fx_tools/f25f.log), need >= 20 s)
+ok   released exactly 20 s ago -> FREE (ORDER FREE last foreign release f25_s01 C:/kyty/f287/fs9c/fx_tools/f25f.log, 20 s ago)
+ok   lock file -> LOCK rc 3 (ORDER LOCK lock file exists)
+ok   F25f last line released f25_c1 -> BLOCK even 600 s later (ORDER BLOCK F25f non-breakable block: last line of C:\kyty\f287\fs9c\fx_tools\f25c1.log is "lock released f25_c1 2026-10-07T05:36:40Z")
+ok   released f25_c1_r1 -> BLOCK
+ok   after f25_c2 released -> FREE
+ok   f25_c10 is not f25_c1 -> FREE
+ok   released f25_c1 in a log that is not the F25f log -> not BLOCK
+ok   the newest foreign release decides (5 s ago -> WAIT)
+ok   last line taken (no release line) -> FREE when no lock file
+ok   missing and junk logs -> FREE
+ok   no logs -> FREE
+ok   the own log is never read by default
+ok   main rc: WAIT 1, BLOCK 1, LOCK 3
+ok   output in strict cp1250, ASCII only
+ok   go fs9_v dry: form v, SD 300, hold 330, --rec, no layer (dryrun fs9_v base fs9_v form v sd 300 hold 330 args --timeout 480 --rec --hold 330 vk)
+ok   go fs9_w dry: form w, SD 100, hold 310, validation, layer limit 100000000 (dryrun fs9_w base fs9_w form w sd 100 hold 310 args --timeout 900 --emu-arg=--vulkan-validation --emu-arg=true --hold 310 vk VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000)
+ok   go fs9_w_r2 dry: base fs9_w
+ok   go b13_v refused (usage, rc 2)
+ok   go: no KYTY_FIX_ on the enter_scene line, FS9 sha and copy, S18 pinned, order before the lock
+ok   go_fs9c.sh: bash -n clean, ASCII only, LF only
+ok   launch_fs9c.sh: bash -n clean, ASCII only, LF only
+ok   wait_fs9c.sh: bash -n clean, ASCII only, LF only
+ok   post_fs9c.sh: bash -n clean, ASCII only, LF only
+ok   post: pair.txt read only in the form v, ends with exit 0, pair with b13_v sheet
+ok   launch: order check before the queue and the detached call, exit 10
+checks 28
+ALL OK

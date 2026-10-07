@@ -1,0 +1,31 @@
+f2307b02	src/common/diagB32.cpp	253	*exhausted = !found_le && hpos >= hist;	std::reverse(idx->begin(), idx->end());
+f2307b02	src/common/diagB32.cpp	169	uint64_t prev  = win_start;	const auto gap = [&](uint64_t a, uint64_t b) {
+f2307b02	src/common/diagB32.cpp	1830	for (const auto& w: m_recent) {	if (w.end_ns > start && w.start_ns < flip_ns) {
+f2307b02	src/common/diagB32.cpp	442	if (std::find(set.begin(), set.end(), r.waits[i].slot1) != set.end() &&	std::find(must.begin(), must.end(), i) == must.end()) {
+f2307b02	src/common/diagB32.cpp	221	for (size_t j = 0; j < n; j++) {	if (kq[j] == 0) {
+f2307b02	src/common/diagB32.cpp	1248	::Log::Write(best->text);	}
+f2307b02	src/common/diagB32.cpp	1915	// Wait records older than 3 s before the current window start are no longer needed.	const auto keep_from = m_win_start > 3000000000ull ? m_win_start - 3000000000ull : 0;
+f2307b02	src/common/diagB32.cpp	1860	auto text    = Core::Format(&r, &m_c);	m_c.Rebase();
+f2307b02	src/common/diagB32.cpp	586	counters->w_cut += w_cut;	std::vector<const CpuRow*> cpu;
+f2307b02	src/common/diagB32.cpp	1702	const uint64_t extra = m_win_extra_ns + print_ns + m5r; // F20j2 RC6: the report print inside this window	m_win_start          = flip_ns;
+f2307b02	src/common/diagB32.cpp	1736	Core::WindowSamples(m_t, m_cost, m_kq, m_hpos, kHist, start, flip_ns, extra, &idx, &instr, &kq, &exhausted);	if (exhausted) {
+f2307b02	tests/DiagB32Tests.cpp	267	CHECK(out.size() == kWaitRing);	CHECK(drop == 5000 - kWaitRing);
+f2307b02	tests/DiagB32Tests.cpp	524	CHECK(c.w_cut == 81 - kWLinesCap);	CHECK(text.find("slot=2 tid=22 kind=cond") != std::string::npos); // the flip thread's record kept
+f2307b02	src/graphics/presentation/videoOut.cpp	1271	Common::DiagB32::TestPresentPoint();	}
+f2307b02	src/graphics/presentation/videoOut.cpp	1361	cur.host_ns = FS::NowNs();	FS::NoteFrame(r.cfg->flip_status.count + 1);
+e8ea0a57	docs/track-f/f20l3/b32_read.py	326	return [k for k in ZERO_W if num(x.get(k), 0) != 0]
+e8ea0a57	docs/track-f/f20l3/b32_read.py	363	others = [t for t in d['t'] if t['slot'] != cur and t['H'].get('qlock', 0) >= 0.5 * samples]	if others:
+e8ea0a57	docs/track-f/f20l3/b32_read.py	430	if h is not None and e_us is not None and (num(h.get('sgap_max_us'), 0) or 0) >= 0.5 * e_us:	out.update(cls='HOST_FREEZE', family='HOST_FREEZE')
+234a4d67	docs/track-f/f20e/enter_scene.py	598	env.update(KYTY_FRAME_TRACE='lite', KYTY_GPU_HANG_ABORT_S='8',	KYTY_GATE_FILE=str(ROOT / 'gates.req'),
+234a4d67	docs/track-f/f20e/enter_scene.py	601	KYTY_QUEUE_TRACE='1',	KYTY_GUEST_ARGS=guest_args)
+0005e11f	src/graphics/host_gpu/renderer/masterSemaphore.cpp	95	const bool diagnostic = m_graphics.diagnostic_checkpoints_enabled || m_graphics.gpu_breadcrumbs_enabled ||	GpuQueueTraceEnabled() || m_graphics.gpu_markers_enabled;
+0005e11f	src/graphics/host_gpu/renderer/masterSemaphore.cpp	105	if (diagnostic && result == vk::Result::eTimeout && timeouts >= HangAbortTimeouts()) {	// The queue stopped completing work. Waiting longer keeps the host GPU busy with a
+0005e11f	src/graphics/host_gpu/renderer/masterSemaphore.cpp	31	return static_cast<uint32_t>((seconds + 1u) / 2u);	}();
+0005e11f	src/generate_version.cmake	47	list(APPEND SHADER_SOURCES ${SHADER_CACHE_EXTRA_FILES})	list(SORT SHADER_SOURCES)
+1707fcbc	docs/ROADMAP.md	23590	(г) **Форма и кэши (решение лида).** …	(д) **Правило чтения (до данных; база — п. 550(г) с поправками п. 552(г), 574(д), 581(в)(5)).** …
+1707fcbc	docs/ROADMAP.md	23591	(д) **Правило чтения (до данных; база — п. 550(г) с поправками п. 552(г), 574(д), 581(в)(5)).** …	(е) **Остановка и бюджет (решение лида).** …
+1707fcbc	docs/ROADMAP.md	23593	(ж) **Холодный слой (решение лида; основание — оба K2 на первом входе, вторые входы 0 [c F25a §1.2]).** …	(з) **Контроли и убийство (решение лида: F25a §5, §6 с поправками §11.4 приняты).** …
+1707fcbc	docs/ROADMAP.md	23594	(з) **Контроли и убийство (решение лида: F25a §5, §6 с поправками §11.4 приняты).** …	(и) **Звенья (стадия review лида у звена исполнителя).** …
+9c6cf4ea	docs/track-f/f25a.md	164	| C4 | `CloseWindow` | поле `cover_us` в конце строки `DiagB32:` — флип минус время самой старой выборки окна | мкс, `uint64` | `cover_us` ≤ `dt_us`; при `hist_exh_w` = 0: `cover_us` ≥ `dt_us` − 2·P |
+9c6cf4ea	docs/track-f/f25a.md	332	| `kOthersCap` 24 | необязательные `-t` (по активности) сверх 24 | `others_cut` (накопленно) | нет | нет [c]: цепочка шагает только на будящего / партнёра выбранной записи `-w` или на `-t`-партнёра обязательного — все обязательны |	| `kWLinesCap` 64 | записи `-w` **вне** замыкания сверх 64 строк в сумме; замыкание (3 итерации от потока вывода, GuestGpu, `flip_slot`, R ≥ 10 % по будящим и партнёрам) не режется и печатается целиком | `w_cut` (накопленно) | нет | шаги 0–2 — нет [c]; **два края — да [c]**: E1 — четвёртый поток цепочки (шаг 3) — его записи вне трёх итераций замыкания; E2 — поток, взятый как `-t`-партнёр мьютекса (`tpeer`) — обязателен по `-t`, но в множество замыкания `-w` не входит |
+1707fcbc	docs/ROADMAP.md	23586	596. **Звено F25b трека F (`HPP-661`, лид): приёмка проекта F25a …	(а) **Приёмка строкой. F25a ✓.** …

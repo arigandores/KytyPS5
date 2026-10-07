@@ -1,0 +1,51 @@
+base 302347b4 = merge-base(0005e11f, f2307b02): 302347b4
+-- files changed by both sides since 302347b4:
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+src/graphics/presentation/window/window.cpp
+-- sequential cherry-pick model:
+875720c5 rc=0 conflicts=0 tree=76ae29a2bf1f6307bff2431bf2baea338df6e8d8
+0df13a66 rc=0 conflicts=0 tree=59373567e8fdd8f3633a06413dada5b0fb084b97
+61b410bf rc=0 conflicts=0 tree=354b973f25dc6623da5c242f35727f9cb85437c2
+9db7938b rc=0 conflicts=0 tree=93dc15669d70fdaca7b70094c5d367dcbff5c260
+f2307b02 rc=0 conflicts=0 tree=f09de1b76bd9cd7e331d2e7fbe80457d0df499c0
+sim head tree f09de1b76bd9cd7e331d2e7fbe80457d0df499c0
+one-shot merge tree f09de1b76bd9cd7e331d2e7fbe80457d0df499c0
+-- git cherry (sim head vs the 5 commits; '-' = equivalent patch present):
+- 875720c5f9763031515311f2c0fc5b76a2c91180
+- 0df13a665a68434fd3b8bca2849d2b41c34b561a
+- 61b410bf901a740a0d424a2d11e9009c474d2396
+- 9db7938baa46814e589a76dffd4e2fc571ede584
+- f2307b02258f68ba40b9f779f585d2406e1f28de
+-- signature set diff 0005e11f..sim (src/graphics/shader + SHADER_CACHE_EXTRA_FILES of CMakeLists.txt:156):
+(empty = same signature set)
+-- diffstat 0005e11f..sim vs 302347b4..f2307b02:
+ 64 files changed, 5109 insertions(+), 118 deletions(-)
+ 64 files changed, 5109 insertions(+), 118 deletions(-)
+-- S18 hunks in the two shared files:
++++ b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+@@ -4,0 +5,2 @@
+@@ -49,0 +52 @@
+@@ -53,0 +57 @@
+@@ -2053,0 +2058,5 @@ struct PipelineCache::ProgramCache {
+@@ -2113,0 +2123,2 @@ struct PipelineCache::ProgramCache {
+@@ -2253,0 +2265 @@ struct PipelineCache::ProgramCache {
+@@ -3794,0 +3807,3 @@ struct PipelineCache::ProgramCache {
+@@ -3902,0 +3918,3 @@ struct PipelineCache::ProgramCache {
+@@ -4020,0 +4039,9 @@ struct PipelineCache::ProgramCache {
+@@ -4639,0 +4667 @@ struct PipelineCache::ProgramCache {
+@@ -4649,0 +4678,134 @@ struct PipelineCache::ProgramCache {
+@@ -4674,0 +4837 @@ PipelineCache::PipelineCache(GraphicContext& graphics)
+@@ -4886,0 +5050 @@ void PipelineCache::Save() {
+@@ -4888,0 +5053,5 @@ void PipelineCache::Save() {
+@@ -6017,0 +6187,15 @@ std::string RecipeLayoutSignature() {
+@@ -6060,0 +6245,3 @@ void PipelineCache::RecordGraphicsRecipe(const GraphicsPipelineKey&   key,
+@@ -6089,0 +6277,3 @@ void PipelineCache::RecordComputeRecipe(const ShaderComputeInputInfo& input_info
+@@ -6411,0 +6602,27 @@ void PipelineCache::FinishPreparation() {
+@@ -6505 +6722,24 @@ void PipelineCache::StartPrecache() {
+@@ -6511 +6751,7 @@ void PipelineCache::StartPrecache() {
+@@ -6633,0 +6880,3 @@ void PipelineCache::PrecachePipelines() {
+@@ -6715,0 +6965,3 @@ void PipelineCache::PrecachePipelines() {
+@@ -6793,0 +7046,622 @@ void PipelineCache::PrecachePipelines() {
++++ b/src/graphics/presentation/window/window.cpp
+@@ -1026,0 +1027,3 @@ bool WindowPrepareShaders() {
+TRANSFER CHECK DONE

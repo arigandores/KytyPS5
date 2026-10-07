@@ -1,0 +1,93 @@
+[case] seq0_0: KYTY_FIX_B36=0 - the file equals the expected bytes
+console and log
+  child seq0 fix=0 stall=- rc=0 (0.1 s)
+  bytes=133632 expected=133632
+[case] seq0_1: KYTY_FIX_B36=1 - the file without the LogAsync: lines equals the expected bytes
+console and log
+  child seq0 fix=1 stall=- rc=0 (0.0 s)
+[case] seq0_unset: KYTY_FIX_B36 unset - the file equals the =0 file
+console and log
+  child seq0 fix=- stall=- rc=0 (0.1 s)
+[case] order: 8 threads, phase A under a test lock = the global order, phase B per thread; writer stalled
+  child order fix=1 stall=0:300:3 rc=0 (0.4 s)
+  A=160000 B=160000 stand_sleeps=1
+[case] full: limit 1 MiB, writer asleep 2 s, 4 MiB of lines - waits counted, nothing lost, order kept
+  child full fix=1 stall=0:2000:1 rc=0 (2.0 s)
+  lines=4096 full_waits=5 full_wait_us=2014692 maxlat_us=2012857
+[case] latency_1: =1, the stand sleeps 2 s on the writer - callers and an exception handler do not wait
+  child latency fix=1 stall=1:2000:1 rc=0 (4.5 s)
+  maxlat_us=95 fault_us=70 veh_us=8 async=1
+  stall_us=2011057
+[case] latency_0: =0, the stand sleeps 2 s holding the write - the negative control: Log::Write waits, also a second writer (F25k2 RC1)
+  child latency fix=0 stall=1:2000:1 rc=0 (6.1 s)
+  maxlat_us=2012583 fault_us=1513819 veh_us=1513752 async=0
+[case] longframe_0: KYTY_LONGFRAME=1, =0, 4100 records while the stand holds the write - no wait, 4 096 lines printed off the recording thread
+  child longframe fix=0 stall=1:2000:1 rc=0 (4.5 s)
+  rec_max_us=20 printer=1 async=0
+  longframe_lines=4096
+[case] longframe_1: KYTY_LONGFRAME=1, =1, 4100 records while the stand holds the write - no wait, 4 096 lines printed off the recording thread
+  child longframe fix=1 stall=1:2000:1 rc=0 (4.6 s)
+  rec_max_us=56 printer=1 async=1
+  longframe_lines=4096
+[case] longframe_off: KYTY_LONGFRAME unset - no printer thread, no line
+  child longframe fix=0 stall=- rc=0 (4.6 s)
+  rec_max_us=0 printer=0 async=0
+[case] die_exit: =1, N=20000 lines with the writer asleep, then death - N lines and the marker
+--- Build ---
+Fork build arigandores/KytyPS5 0c8fcba-dirty
+--- Error ---
+F25K-MARKER die_exit
+ in C:\kyty\f287\f25l\wt\tests\LogAsyncTests.cpp:302
+  child die_exit fix=1 stall=0:1500:1 rc=321 (1.5 s)
+  lines=20000 marker=1 summary=1
+[case] die_exitif: =1, N=20000 lines with the writer asleep, then death - N lines and the marker
+--- Build ---
+Fork build arigandores/KytyPS5 0c8fcba-dirty
+--- Fatal Error ---
+Error: condition (f25k_marker_exit_if) is true in C:\kyty\f287\f25l\wt\tests\LogAsyncTests.cpp:305
+  child die_exitif fix=1 stall=0:1500:1 rc=321 (1.5 s)
+  lines=20000 marker=1 summary=1
+[case] die_quick: =1, N=20000 lines with the writer asleep, then death - N lines and the marker
+  child die_quick fix=1 stall=0:1500:1 rc=7 (1.5 s)
+  lines=20000 marker=1 summary=1
+[case] die_abort: =1, N=20000 lines with the writer asleep, then death - N lines and the marker
+
+--- abort() ---
+abort() was called: std::terminate on a thread without a report, or an explicit abort
+--- Build ---
+Fork build arigandores/KytyPS5 0c8fcba-dirty
+--- abort() ---
+SIGABRT in abort:0
+  child die_abort fix=1 stall=0:1500:1 rc=3 (1.5 s)
+  lines=20000 marker=1 summary=0
+[case] die_drainexit: =1, N=20000 lines with the writer asleep, then death - N lines and the marker
+  child die_drainexit fix=1 stall=0:1500:1 rc=322 (1.5 s)
+  lines=20000 marker=1 summary=1
+[case] die_fault: =1, N=20000 lines with the writer asleep, then death - N lines and the marker
+  child die_fault fix=1 stall=0:1500:1 rc=-1073741819 (1.5 s)
+  lines=20000 marker=1 summary=0
+[case] die_exit_long: =1, N=20000 lines with the writer asleep, then death - N lines and the marker
+--- Build ---
+Fork build arigandores/KytyPS5 0c8fcba-dirty
+--- Error ---
+F25K-MARKER die_exit_long
+ in C:\kyty\f287\f25l\wt\tests\LogAsyncTests.cpp:302
+  child die_exit_long fix=1 stall=0:8000:1 rc=321 (8.0 s)
+  lines=20000 marker=1 summary=1
+[case] die_kill: the negative control of the reader - TerminateProcess without a drain loses lines
+  child die_kill fix=1 stall=0:1500:1 rc=9 (0.0 s)
+  lines=0
+[case] die_owner: =1, a fault inside the synchronous tail of a timed-out drain (under g_sink_mutex) - the child dies within 10 s (RC4)
+--- Build ---
+Fork build arigandores/KytyPS5 0c8fcba-dirty
+--- Error ---
+F25K2-MARKER die_owner
+ in C:\kyty\f287\f25l\wt\tests\LogAsyncTests.cpp:331
+  child die_owner fix=1 stall=0:6000:1 rc=-1073741819 (0xc0000005) 6.0 s
+cases=19 failures=0
+ALL OK
+
+--- abort() ---
+abort() was called: std::terminate on a thread without a report, or an explicit abort
+Unhandled exception: code=0xc0000005 rip=0x00007ff649bf659d (+0x659d) addr=0x0000000000000000 access=2 tid=11524 rsp=0x000000000015fc50
+Unhandled exception: code=0xc0000005 rip=0x00007ff649c178e2 (+0x278e2) addr=0x0000000000000000 access=2 tid=46672 rsp=0x000000000015f8e0

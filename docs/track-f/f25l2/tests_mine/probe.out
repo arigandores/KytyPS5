@@ -1,0 +1,13 @@
+  child stand0_two fix=0 stall=1:2000:1 lf=- rc=0
+RESULT stand0_two maxlat_A_us=2005720 maxlat_B_us=2005607 async=0 longframe_lines=0 first_lf=- stall_line=TestLogStall: i=1 sleep_ms=2000 slept_us=2005569 t0_ms=81769637 t1_ms=81771642 on=caller tid=47540 role=other line="T1 1000?"
+  child stand0_two fix=1 stall=1:2000:1 lf=- rc=0
+RESULT stand1_two maxlat_A_us=27 maxlat_B_us=12 async=1 longframe_lines=0 first_lf=- stall_line=TestLogStall: i=1 sleep_ms=2000 slept_us=2008207 t0_ms=81774130 t1_ms=81776138 on=writer tid=43540 role=other line="T0 999?"
+  child stand0_flush fix=0 stall=1:2000:1 lf=- rc=0
+RESULT stand0_flush maxlat_A_us=2002985 maxlat_B_us=2002525 async=0 longframe_lines=0 first_lf=- stall_line=TestLogStall: i=1 sleep_ms=2000 slept_us=2002914 t0_ms=81778633 t1_ms=81780636 on=caller tid=39672 role=other line="T0 998?"
+  child lf_nostand fix=0 stall=- lf=1 rc=0
+RESULT lf_nostand present_max_us=0 async=0 longframe_lines=20 first_lf=LongFrame: n=0 dt_us=100000 log_async=0 t_ms=7000 stall_line=-
+  child lf_stand0 fix=0 stall=1:2000:1 lf=1 rc=0
+RESULT lf_stand0 present_max_us=1 async=0 longframe_lines=20 first_lf=LongFrame: n=0 dt_us=100000 log_async=0 t_ms=7000 stall_line=TestLogStall: i=1 sleep_ms=2000 slept_us=2010632 t0_ms=81787809 t1_ms=81789819 on=caller tid=43472 role=other line="A 1000?"
+  child lf_stand0 fix=1 stall=1:2000:1 lf=1 rc=0
+RESULT lf_stand1 present_max_us=1 async=1 longframe_lines=20 first_lf=LongFrame: n=0 dt_us=100000 log_async=1 t_ms=7000 stall_line=TestLogStall: i=1 sleep_ms=2000 slept_us=2008763 t0_ms=81792504 t1_ms=81794512 on=writer tid=42772 role=other line="A 999?"
+PROBE DONE

@@ -1,0 +1,64 @@
+== log 11164d72..0c8fcba2
+0c8fcba2 track F link F25k2 (HPP-682): KYTY_FIX_B36 review fixes RC1, RC2, RC4 of F25l (ROADMAP s122 item 616(b)(1)-(3))
+2afd998c track F link F25k (HPP-678): KYTY_TEST_LOGSTALL - the TestLogStall line names the thread that slept (tid, FrameStats role)
+83eae9c6 track F link F25k (HPP-678): KYTY_FIX_B36 - t_in_queue by a scope guard (an exception of push_back under the queue lock no longer leaves the flag set)
+e9520c36 track F link F25k (HPP-678): KYTY_FIX_B36 (async log writer, default 0), stand KYTY_TEST_LOGSTALL, measure KYTY_LONGFRAME, tests log_async_tests (ROADMAP s122 item 613(v)(1)-(7), (g)(1))
+929b6073 track F link F25d (HPP-667): KYTY_DIAG_B32 F25 fix C1-C6 for the B36 / B40 series - kHist 4096, kWaitRing 65536, hist_exh, cover_us, kWLinesCap / kMustCap / kOthersCap 4096 / 256 / 256, w_cut_w, others_cut_w, flip_ns; the window close indexed (RC8 of F25c) (ROADMAP s122 items 596(v), 599(b)(8), (9), (11), (v))
+62fd092a track F link F20j4 (HPP-652): KYTY_DIAG_B32 review fixes RC1-RC5 of F20k3 - one rec_wait mark over the Reserve loop, TrackedMutex owner cleared at unlock and no own-slot peer, M5 time charged to its window, no W:emu_mutex under an H mark, EMU_WAIT kinds by who clears the wait and emu_join (ROADMAP s122 item 581(v)(1)-(5))
+5836f6d7 track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on the host waits of the emulator with waker and peer, M5 off the sampler thread, ring_hold (ROADMAP s122 item 574(g)(1)-(6))
+22f645e1 track F link F20j2 (HPP-633): KYTY_DIAG_B32 by the review F20k RC1-RC7 (ROADMAP s122 item 552(v)(1)-(7), (d))
+653ee365 track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32=0 a site's End is one test of the stack object's flag, no call (ROADMAP s122 item 550(z)(1))
+554eaafa track F link F20j (HPP-629): KYTY_DIAG_B32 (default 0, measurement only) and the stand KYTY_TEST_B32 - ROADMAP s122 item 550(v),(z), design F20g s2 with RC1-RC15 of F20h
+== cherry
++ 554eaafaaf1c5034fe4d93d9e3c5775f77e7e93e track F link F20j (HPP-629): KYTY_DIAG_B32 (default 0, measurement only) and the stand KYTY_TEST_B32 - ROADMAP s122 item 550(v),(z), design F20g s2 with RC1-RC15 of F20h
+- 653ee365ce2230b4dba1dfbf6a9f78ee1acc2c18 track F link F20j (HPP-629): KYTY_DIAG_B32 Mark::End inline - at KYTY_DIAG_B32=0 a site's End is one test of the stack object's flag, no call (ROADMAP s122 item 550(z)(1))
+- 22f645e1f29506b51e265b9bc980a938f72329d6 track F link F20j2 (HPP-633): KYTY_DIAG_B32 by the review F20k RC1-RC7 (ROADMAP s122 item 552(v)(1)-(7), (d))
++ 5836f6d7663d8abf242a4d6fb17c5064290b47fd track F link F20j3 (HPP-646): KYTY_DIAG_B32 by U1 of item 550(zh) - marks on the host waits of the emulator with waker and peer, M5 off the sampler thread, ring_hold (ROADMAP s122 item 574(g)(1)-(6))
+- 62fd092ae7e8a0a7d6de2b134403778659462966 track F link F20j4 (HPP-652): KYTY_DIAG_B32 review fixes RC1-RC5 of F20k3 - one rec_wait mark over the Reserve loop, TrackedMutex owner cleared at unlock and no own-slot peer, M5 time charged to its window, no W:emu_mutex under an H mark, EMU_WAIT kinds by who clears the wait and emu_join (ROADMAP s122 item 581(v)(1)-(5))
+- 929b6073066b137d4979e9b72f853c39c85e10fc track F link F25d (HPP-667): KYTY_DIAG_B32 F25 fix C1-C6 for the B36 / B40 series - kHist 4096, kWaitRing 65536, hist_exh, cover_us, kWLinesCap / kMustCap / kOthersCap 4096 / 256 / 256, w_cut_w, others_cut_w, flip_ns; the window close indexed (RC8 of F25c) (ROADMAP s122 items 596(v), 599(b)(8), (9), (11), (v))
+- e9520c369cb5ebaf4657bf7694b8f6956f597723 track F link F25k (HPP-678): KYTY_FIX_B36 (async log writer, default 0), stand KYTY_TEST_LOGSTALL, measure KYTY_LONGFRAME, tests log_async_tests (ROADMAP s122 item 613(v)(1)-(7), (g)(1))
+- 83eae9c62ea38514dc110bc2ce81f36d2294b421 track F link F25k (HPP-678): KYTY_FIX_B36 - t_in_queue by a scope guard (an exception of push_back under the queue lock no longer leaves the flag set)
+- 2afd998ce738020eb258689a4cb311ade57971ec track F link F25k (HPP-678): KYTY_TEST_LOGSTALL - the TestLogStall line names the thread that slept (tid, FrameStats role)
+- 0c8fcba21a0d95ea89dfd7925ec51dfd05e6d96f track F link F25k2 (HPP-682): KYTY_FIX_B36 review fixes RC1, RC2, RC4 of F25l (ROADMAP s122 item 616(b)(1)-(3))
+== diff 2afd998c..0c8fcba2 stat
+ src/common/logging/log.cpp             | 182 +++++++++++++++++++++++++++++----
+ src/common/logging/log.h               |   8 ++
+ src/graphics/presentation/videoOut.cpp |  12 +--
+ tests/LogAsyncTests.cpp                | 153 ++++++++++++++++++++++++++-
+ 4 files changed, 327 insertions(+), 28 deletions(-)
+== blob equality main 5064c5bb vs 0c8fcba2
+src/common/logging/log.cpp f8443bcc57ab f8443bcc57ab
+src/common/logging/log.h ad8e76f732e2 ad8e76f732e2
+tests/LogAsyncTests.cpp 3f2ebce5c5b5 3f2ebce5c5b5
+== videoOut diff 5064c5bb vs 0c8fcba2
+diff --git a/src/graphics/presentation/videoOut.cpp b/src/graphics/presentation/videoOut.cpp
+index d4eb90c1..dce711c9 100644
+--- a/src/graphics/presentation/videoOut.cpp
++++ b/src/graphics/presentation/videoOut.cpp
+@@ -17,7 +17,6 @@
+ #include "graphics/guest_gpu/graphicsRun.h"
+ #include "graphics/guest_gpu/tile.h"
+ #include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
+-#include "graphics/host_gpu/renderer/diagF5.h"
+ #include "graphics/host_gpu/renderer/image/imageInfo.h"
+ #include "graphics/host_gpu/renderer/render.h"
+ #include "graphics/host_gpu/renderer/renderContext.h"
+@@ -1298,11 +1297,6 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 		LibKernel::PVar::PublishFlip(r.cfg->flip_status.count);
+ 	}
+ 	Graphics::GpuTimeProfiler::SetFrame(static_cast<uint32_t>(r.cfg->flip_status.count));
+-	// Track F, F16d (KYTY_DIAG_F5 / KYTY_DIAG_F6, item 427(e)): the flip tick - a line on growth, at most every 2 s.
+-	// F16d2 (item 470(v)(1), form (a)): the tick only publishes the request; the line is copied and printed on the
+-	// GuestGpu thread outside every window of the sites (GuestGpu::ThreadRun, graphicsRun.cpp).
+-	Graphics::DiagF5::Tick(static_cast<uint32_t>(r.cfg->flip_status.count));
+-	Graphics::DiagF6::Tick(static_cast<uint32_t>(r.cfg->flip_status.count));
+ 	const uint64_t poll_t0 = Common::FrameStats::NowNs();
+ 	Common::Gates::Poll(static_cast<uint32_t>(r.cfg->flip_status.count));
+ 	poll_ns = Common::FrameStats::NowNs() - poll_t0;
+== pinned
+9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885 *C:/kyty/f287/f25k2/kyty_emulator_9745eb78.exe
+9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885 *C:/kyty/f287/f25k2/build/install/kyty_emulator.exe
+3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5 *C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe
+/usr/bin/bash: line 1: strings: command not found
+C:/kyty/f287/f25l/build/f25l_probe.exe
+C:/kyty/f287/f25l/build/log_async_tests.exe

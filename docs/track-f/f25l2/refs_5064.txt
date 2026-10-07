@@ -1,0 +1,27 @@
+ok   5064c5bb:src/common/logging/log.cpp:149
+ok   5064c5bb:src/common/logging/log.cpp:158
+ok   5064c5bb:src/common/logging/log.cpp:163
+ok   5064c5bb:src/common/logging/log.cpp:228
+ok   5064c5bb:src/common/logging/log.cpp:273
+ok   5064c5bb:src/common/logging/log.cpp:412
+ok   5064c5bb:src/common/logging/log.cpp:447
+ok   5064c5bb:src/common/logging/log.cpp:471
+ok   5064c5bb:src/common/logging/log.cpp:500
+ok   5064c5bb:src/common/logging/log.cpp:509
+ok   5064c5bb:src/common/logging/log.cpp:548
+ok   5064c5bb:src/common/logging/log.cpp:563
+ok   5064c5bb:src/common/logging/log.cpp:589
+ok   5064c5bb:src/common/logging/log.cpp:603
+ok   5064c5bb:src/common/logging/log.cpp:641
+ok   5064c5bb:src/common/logging/log.cpp:644
+ok   5064c5bb:src/common/logging/log.cpp:648
+ok   5064c5bb:src/common/logging/log.cpp:650
+ok   5064c5bb:src/common/logging/log.cpp:675
+ok   5064c5bb:src/common/logging/log.cpp:751
+ok   5064c5bb:src/common/logging/log.cpp:754
+ok   5064c5bb:src/common/logging/log.cpp:767
+ok   5064c5bb:src/common/logging/log.cpp:852
+ok   5064c5bb:src/graphics/presentation/videoOut.cpp:1366
+ok   5064c5bb:src/emulator.cpp:148
+refs 25 miss 0
+ALL OK

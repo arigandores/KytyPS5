@@ -18,6 +18,15 @@ Runs ONLY under the lock taken by go_f25m.sh (writes the live caches on restore)
                                                   'RECONCILE UPDATED ...' rc 0; the third update -> 'RECONCILE LIMIT' rc 5, nothing changed
                                                   (item 606 (v)(5)).  A0.tsv / B0.tsv keep the first A / B.
   python snap_f25m.py state <A|B>                 writes snap/STATE
+  python snap_f25m.py promote <label/rel> ...     item 622 (v)(1)-(2): series files equal in A and B and changed outside the tags become
+                                                  user files D.  Only at STATE B; each named file is in A.tsv and B.tsv with one sha, not in
+                                                  D, present live and changed against B; the live manifest L differs from B ONLY in the named
+                                                  files - else 'PROMOTE STOP' rc 4, nothing touched (item 606 (v)(4)); a bad name - 'PROMOTE
+                                                  REFUSED' rc 2; the third update - 'PROMOTE LIMIT' rc 5.  Then the live files are copied into
+                                                  both snapshots (A', B'), their tsv lines and snap/D.tsv are written, one line in
+                                                  snap/updates.log (an update of item 606 (v)(5)) - 'PROMOTE DONE update n of 2 ...' - and
+                                                  reconcile runs: rc 0 only with 'RECONCILE EQUAL' (item 622 (v)(2)).  Afterwards a change of
+                                                  these files reads as a user update (item 622 (v)(3)).
   python snap_f25m.py merge-return <label> <before dir> <live dir>   item 606 (v)(3) for a tag that saw a user VM: every file of the
                                                   copy before is written back (same content), live files not in the copy are KEPT and
                                                   listed - 'MERGE RETURN kept n' rc 0
@@ -162,6 +171,81 @@ def reconcile(root, live):
     return 0 if ok else 1
 
 
+def promote(root, live, names):
+    """Item 622 (v)(1)-(2): the named series files (equal in A and B) changed outside the tags -> user files D in both snapshots."""
+    st = open(os.path.join(root, 'STATE'), encoding='ascii').read().strip() if os.path.exists(os.path.join(root, 'STATE')) else 'B'
+    if st != 'B':
+        print('PROMOTE REFUSED state %s - only at state B (item 622 (v)(2))' % st)
+        return 2
+    keys = []
+    for n in names:
+        if '/' not in n:
+            print('PROMOTE REFUSED bad name %s (label/rel)' % n)
+            return 2
+        keys.append(tuple(n.split('/', 1)))
+    if not keys or len(set(keys)) != len(keys):
+        print('PROMOTE REFUSED no names or a name twice')
+        return 2
+    A = read_tsv(os.path.join(root, 'A.tsv'))
+    B = read_tsv(os.path.join(root, 'B.tsv'))
+    D = read_tsv(os.path.join(root, 'D.tsv'))
+    try:
+        L = dict(((x.split('\t')[0], x.split('\t')[1]), (x.split('\t')[2], x.split('\t')[3])) for x in M.manifest(live)
+                 if x.split('\t')[1] != '<MISSING>')
+    except OSError as e:
+        print('PROMOTE ERROR live manifest %s' % type(e).__name__)
+        return 6
+    for k in keys:
+        why = None
+        if k not in A or k not in B:
+            why = 'not in both A and B'
+        elif A[k] != B[k]:
+            why = 'differs between A and B'
+        elif k in D:
+            why = 'already a user file D'
+        elif k not in L:
+            why = 'not in the live set'
+        elif L[k] == B[k]:
+            why = 'not changed against B'
+        if why:
+            print('PROMOTE REFUSED %s/%s: %s; nothing touched' % (k[0], k[1], why))
+            return 2
+    others = sorted(k for k in set(B) | set(L) if B.get(k) != L.get(k) and k not in keys)
+    if others:
+        print('PROMOTE STOP state B: %d other files differ from B (item 606 (v)(4), item 622 (v)(2)): %s; nothing touched' % (
+            len(others), ['%s/%s' % k for k in others[:5]]))
+        return 4
+    ulog = os.path.join(root, 'updates.log')
+    nupd = len([l for l in open(ulog, encoding='ascii').read().splitlines() if l.strip()]) if os.path.exists(ulog) else 0
+    if nupd >= UPDATES_MAX:
+        print('PROMOTE LIMIT state B: update %d > %d (item 606 (v)(5)); nothing touched' % (nupd + 1, UPDATES_MAX))
+        return 5
+    for snap in ('A', 'B'):
+        if not os.path.exists(os.path.join(root, snap + '0.tsv')):
+            shutil.copy2(os.path.join(root, snap + '.tsv'), os.path.join(root, snap + '0.tsv'))
+    for snap in ('A', 'B'):
+        tsv = os.path.join(root, snap + '.tsv')
+        T = read_tsv(tsv)
+        miss = missing_of(tsv)
+        for k in keys:
+            dst = os.path.join(root, snap, k[0], k[1])
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            shutil.copy2(os.path.join(live_dir(live, k[0]), k[1]), dst)
+            T[k] = L[k]
+        write_tsv(tsv, T, miss)
+    for k in keys:
+        D[k] = L[k]
+    write_tsv(os.path.join(root, 'D.tsv'), D)
+    with open(ulog, 'a', encoding='ascii') as f:
+        f.write('%s update %d state B promote %d (item 622 (v)(1)): %s\n' % (
+            time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), nupd + 1, len(keys),
+            ['%s/%s %s -> %s %s' % (k[0], k[1], B[k][0], L[k][0], L[k][1]) for k in keys]))
+    print('PROMOTE DONE update %d of %d: state B promote %d: %s' % (nupd + 1, UPDATES_MAX, len(keys),
+                                                                  ['%s/%s %s %s' % (k[0], k[1], L[k][0], L[k][1][:16]) for k in keys]))
+    rc = reconcile(root, live)
+    return 0 if rc == 0 and read_tsv(os.path.join(root, 'B.tsv')) == L else 1
+
+
 def merge_return(before, live):
     """Write every file of the copy before back into the live folder (same content), keep the live files not in it."""
     kept = []
@@ -191,7 +275,7 @@ def main(argv):
         while i < len(argv) and '=' in argv[i]:
             live.append(argv[i])
             i += 1
-    if not argv or argv[0] not in ('take', 'restore', 'manifest', 'reconcile', 'state', 'merge-return'):
+    if not argv or argv[0] not in ('take', 'restore', 'manifest', 'reconcile', 'state', 'merge-return', 'promote'):
         print(__doc__.split('\n')[5].strip())
         return 2
     if argv[0] == 'manifest':
@@ -200,6 +284,13 @@ def main(argv):
         return 0
     if argv[0] == 'reconcile':
         return reconcile(root, live)
+    if argv[0] == 'promote':
+        names = []
+        for a in argv[1:]:
+            if a.startswith('--'):
+                break
+            names.append(a)
+        return promote(root, live, names)
     if argv[0] == 'state':
         with open(os.path.join(root, 'STATE'), 'w', encoding='ascii') as f:
             f.write(argv[1] + '\n')

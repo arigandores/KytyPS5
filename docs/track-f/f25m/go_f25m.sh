@@ -17,12 +17,15 @@
 #                     snapshot A restored before; level fixed by the name: pot k01 k03 k05 k07 k09 k11 k12 k13, bonus k02 k04 k06 k08 k10
 #   b36_v             V Sky Garden (form fs9_v of FS9c) + KYTY_FIX_B36=1, hold 330 s, video, warm (B)
 #   b36_w             W Sky Garden (form fs9_w of FS9c, item 295 (b)) + KYTY_FIX_B36=1, hold 310 s, warm (B)
+#   promoteD          (not a tag, item 622 (v)(1)-(2)) under the lock, without the game: the two GLCache files f7cc8370cc259634.bin/.toc
+#                     (equal in A and B, changed by the driver outside the tags) become user files D - snap_f25m.py promote, then
+#                     reconcile EQUAL against B'; on success SERIES_STOP moves to old/; runs once
 #   restoreA          (not a tag) the end of the series: snapshot A restored, live manifest = A' (EQUAL), installed FS9 (item 613 (g)(5))
 # SEAL 2 (item 620 (v), (g)(1)): the display must be ON by dispstate.py before the lock (else exit 6, not an attempt); the chain holds
 #   SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED) in the process 'dispstate.py --hold-until' from
 #   before the lock to after 'lock released' (then ES_CONTINUOUS; the process ends with the stop file or its own max); after 'lock
 #   released' dispstate.py again - OFF: the tag is the interference DISPLAY_OFF (runs/<tag> moved to <tag>.display_<hhmmss>).
-# usage: bash C:/kyty/f287/f25m/go_f25m.sh <tag>[_r1.._r3] | restoreA
+# usage: bash C:/kyty/f287/f25m/go_f25m.sh <tag>[_r1.._r3] | restoreA | promoteD
 # EXIT: 0 tag made (read it with post_f25m.sh); 1 hard refusal / return failed; 2 usage / the tag exists; 3 lock / user process; 4 stop
 #   file; 5 procload busy; 6 display not ON before the lock.  ASCII only.
 export PATH=/usr/bin:/mingw64/bin:$PATH
@@ -45,6 +48,37 @@ u() { date -u +%Y-%m-%dT%H:%M:%SZ; }
 sha() { sha256sum "$1" 2>/dev/null | cut -c1-64; }
 mask() { sed -E "s/\('[^']*'/('<app>'/g"; }
 MF=("_ShaderCache=$EMU/_ShaderCache" "_ShaderSeeds=$EMU/_ShaderSeeds" "_PipelineCache=$EMU/_PipelineCache" "_SaveData=$EMU/_SaveData" "GLCache=$GLDIR")
+if [ "$T" = promoteD ]; then
+  log() { echo "$(u) F25m go_f25m promoteD $*" | tee -a $TIMES; }
+  PK="GLCache/a5b98c7ed42c997333c17893d7aeb05a/06243430c577c784/f7cc8370cc259634.bin GLCache/a5b98c7ed42c997333c17893d7aeb05a/06243430c577c784/f7cc8370cc259634.toc"
+  [ -e $F/STOP ] && { log "STOP file: $(head -1 $F/STOP)"; exit 4; }
+  [ -e $G/RETURN_FAILED ] && { echo "RETURN_FAILED exists"; exit 1; }
+  [ -e $LOCK ] && { echo "lock held: $(head -1 $LOCK)"; exit 3; }
+  [ -e $G/runs/promoteD ] && { echo "$G/runs/promoteD exists - promoteD runs once (a repeat by the lead)"; exit 2; }
+  [ "$(cat $G/snap/STATE 2>/dev/null)" = B ] || { log "snap/STATE is not B - not promoting (item 622 (v)(2))"; exit 1; }
+  [ "$(sha "$GAME")" = "$FS9" ] || { log "installed binary is not FS9 - not promoting (question to the lead)"; exit 1; }
+  GS=$(python $G/guard_f25m.py scan) || { log "user emulator or launcher lives - not promoting: $GS"; exit 3; }
+  HS=$(python $G/hold_f25m.py check) || { log "user session (item 606 (v)(1)): $HS - not promoting"; exit 3; }
+  set -o noclobber
+  if ! { echo "F25m HPP-680 go_f25m.sh promoteD pid $$ $(u)" > $LOCK; } 2>/dev/null; then set +o noclobber; echo "lock taken by someone else"; exit 3; fi
+  set +o noclobber
+  echo "lock taken promoteD $(u)" >> $G/runs/lock.log
+  mkdir -p $G/runs/promoteD
+  HS=$(python $G/hold_f25m.py check) || { rm -f $LOCK; echo "lock released promoteD $(u)" >> $G/runs/lock.log; log "user session right after the lock: $HS - lock released, nothing touched"; exit 3; }
+  sha "$GAME" > $G/runs/promoteD/installed_before.txt
+  for n in A B D; do cp $G/snap/$n.tsv $G/runs/promoteD/${n}_before.tsv; done
+  python $G/snap_f25m.py promote $PK > $G/runs/promoteD/promote.txt 2>&1; PR=$?
+  log "promote (item 622 (v)(1)-(2)) rc $PR: $(head -1 $G/runs/promoteD/promote.txt | cut -c1-300)"
+  log "reconcile after promote: $(sed -n 2p $G/runs/promoteD/promote.txt | cut -c1-200)"
+  for n in A B D; do cp $G/snap/$n.tsv $G/runs/promoteD/${n}_after.tsv; done
+  sha "$GAME" > $G/runs/promoteD/installed_after.txt
+  rm -f $LOCK; echo "lock released promoteD $(u)" >> $G/runs/lock.log
+  if [ $PR = 0 ] && [ "$(cat $G/runs/promoteD/installed_after.txt)" = "$FS9" ] && sed -n 2p $G/runs/promoteD/promote.txt | grep -q '^RECONCILE EQUAL state B'; then
+    mkdir -p $G/old; mv $G/SERIES_STOP $G/old/SERIES_STOP.promoteD_$(date -u +%H%M%S) 2>/dev/null
+    log "lock released - files D promoted, caches = B', installed FS9; SERIES_STOP moved to old/"; exit 0
+  fi
+  log "lock released - promote rc $PR, SERIES_STOP stays (question to the lead)"; exit 1
+fi
 if [ "$T" = restoreA ]; then
   log() { echo "$(u) F25m go_f25m restoreA $*" | tee -a $TIMES; }
   [ -e $F/STOP ] && { log "STOP file: $(head -1 $F/STOP)"; exit 4; }
@@ -79,7 +113,7 @@ fi
 case "$T" in
   b36_s[01]|b36_f[01]|b36_k0[1-9]|b36_k1[0-3]|b36_v|b36_w) ;;
   b36_s[01]_r[1-3]|b36_f[01]_r[1-3]|b36_k0[1-9]_r[1-3]|b36_k1[0-3]_r[1-3]|b36_v_r[1-3]|b36_w_r[1-3]) ;;
-  *) echo "usage: go_f25m.sh b36_s0|b36_s1|b36_f0|b36_f1|b36_k01..b36_k13|b36_v|b36_w[_r1..3] | restoreA"; exit 2;;
+  *) echo "usage: go_f25m.sh b36_s0|b36_s1|b36_f0|b36_f1|b36_k01..b36_k13|b36_v|b36_w[_r1..3] | restoreA | promoteD"; exit 2;;
 esac
 B=${T%_r[1-3]}
 POT=pot_treasure_cave; BON=bonus_path_maker_mix; SKY=underwater_aerial_garden

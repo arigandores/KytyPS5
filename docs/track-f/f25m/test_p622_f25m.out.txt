@@ -1,0 +1,3 @@
+suite test_p622_f25m.py sha256 ebc7cc471905234f031117176ed9bd2f726b5b713262c3e55f2ec6c21ad8d08f target snap_f25m.py sha256 176dbb111a2bc58519e4caa1e8de5db482dcfae87293ff7295ecefbe556b57e8 go_f25m.sh sha256 2c562a0d7aed21830e29b040ac6383f209c8e871fdb61bb068fc6d68e2aa9c05
+checks 58
+ALL OK

@@ -1,0 +1,68 @@
+suite test_f26c_read.py sha256 5c3313a55516278e7af3e6e6671c79cdff58caf9a01eb4472c3ee4f66dc2b24f target f26c_read.py sha256 9d950bad38c5e06e37a553fd67a4bdea7755310680090305c20af8ae8f1bbf5e
+ok   counted: class COUNTED
+ok   counted: frames 7200 sum 120.0 s
+ok   counted: frames before the entry not summed
+ok   detector in the log: DETECTOR, strings 1/1/1
+ok   detector single string 0: DETECTOR
+ok   detector single string 2: DETECTOR
+ok   detector single string 3: DETECTOR
+ok   detector in the stdout only: DETECTOR
+ok   detector before the entry: DETECTOR
+ok   detector without an entry: DETECTOR
+ok   detector beats a harness problem: DETECTOR
+ok   --- Error --- without the detector: INTERFERENCE
+ok   Unhandled host exception without the detector: INTERFERENCE
+ok   death 'Unhandled exception: x' in the log: INTERFERENCE
+ok   death '--- Fatal Error ---' in the log: INTERFERENCE
+ok   death 'GpuHangAbort: 8 s' in the log: INTERFERENCE
+ok   death 'ErrorDeviceLost' in the log: INTERFERENCE
+ok   death in the stdout: INTERFERENCE
+ok   no entry line: INTERFERENCE
+ok   frame 1 000 000 us after the entry: INTERFERENCE
+ok   frame 999 999 us: COUNTED
+ok   frame >= 1 s before the entry: COUNTED (not after the entry), row pre max 3000000 count 1
+ok   sum exactly 90 000 000 us: COUNTED
+ok   sum 89 999 999 us: INTERFERENCE
+ok   entry_s 60.0: COUNTED
+ok   entry_s 60.1: INTERFERENCE
+ok   entry_s None: INTERFERENCE
+ok   frames after the next level are not summed: COUNTED, max 16667
+ok   a second intro_next entry closes the sum: entries 2, max 16667
+ok   form bin: HARNESS
+ok   form rec: HARNESS
+ok   form patch: HARNESS
+ok   form fix: HARNESS
+ok   form stand: HARNESS
+ok   form val: HARNESS
+ok   form args: HARNESS
+ok   form lite: HARNESS
+ok   form hang: HARNESS
+ok   form pin: HARNESS
+ok   form mark: HARNESS
+ok   no json: HARNESS
+ok   display OFF after a clean tag: INTERFERENCE
+ok   display ON, tempo 0: COUNTED
+ok   display OFF with the detector: DETECTOR
+ok   tempo rc 1 on a counted tag: TEMPO
+ok   tempo rc 2 on a counted tag: TEMPO
+ok   tempo rc 3 on a counted tag: TEMPO
+ok   tempo rc 2 on an interference tag: INTERFERENCE (a row)
+ok   xz log: COUNTED, sum 120.0
+ok   xz log with the assert: DETECTOR
+ok   54 counted: GOING (N 59 of 60)
+ok   55 counted: COMPLETE (N 60)
+ok   4 interference: GOING
+ok   5 interference: INTERFERENCE_STOP
+ok   a detector tag: DETECTOR_STOP
+ok   a harness tag: HARNESS_STOP
+ok   a tempo tag: TEMPO_STOP
+ok   moved run folders (b25_NN.<suffix>) are not read
+ok   positive control s59: DETECTOR, strings [2, 2, 1], first line 627190 (F26a: 627192)
+ok   positive control s42: DETECTOR, strings [1, 1, 1], first line 4407362 (F26a: 4407364)
+ok   regression s18_c02: class COUNTED, frames 19775 = sweep 19775, sum 333.7 s = sweep 333.7 s
+ok   s18_c02 with its json is not the form of 630 (g): HARNESS (['binary b3cee576', 'forbidden KYTY_FIX_F19'])
+ok   cp1250 strict output: rc 0, CLASS line
+ok   no arguments: usage, rc 2
+ok   table rc 0 on GOING (ser_1: 54 counted)
+ok   table rc 1 on DETECTOR_STOP (ser_5)
+ALL OK

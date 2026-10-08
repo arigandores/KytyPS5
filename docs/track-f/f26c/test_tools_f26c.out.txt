@@ -1,0 +1,40 @@
+suite test_tools_f26c.py sha256 f14817da000af1b2f39922b8efc8f0ba694a9fc8ea97b550b5442eafc93c8411 targets go_f26c.sh a44f98a20df67553 post_f26c.sh 1ce0b0e6ffe77d06 queue_f26c.py 83c2305bae1b381d runchk_f26c.py 27472e7423c8889d guard_f26c.py ed53b4f8601e3b51 enter_scene.py 65afa7cf29b82a4c
+ok   go dry run accepts b25_01 (hold 120, timeout 60, knobs of fs10_v)
+ok   go dry run accepts b25_09 (hold 120, timeout 60, knobs of fs10_v)
+ok   go dry run accepts b25_10 (hold 120, timeout 60, knobs of fs10_v)
+ok   go dry run accepts b25_49 (hold 120, timeout 60, knobs of fs10_v)
+ok   go dry run accepts b25_50 (hold 120, timeout 60, knobs of fs10_v)
+ok   go dry run accepts b25_55 (hold 120, timeout 60, knobs of fs10_v)
+ok   go dry run accepts base (hold 120, timeout 60, knobs of fs10_v)
+ok   go dry run accepts return (hold 120, timeout 60, knobs of fs10_v)
+ok   go refuses 'b25_00' with rc 2
+ok   go refuses 'b25_56' with rc 2
+ok   go refuses 'b25_1' with rc 2
+ok   go refuses 'b25_100' with rc 2
+ok   go refuses 'fs10_v' with rc 2
+ok   go refuses '' with rc 2
+ok   post refuses a foreign tag with rc 2
+ok   queue: a ready P link -> BUSY rc 1
+ok   queue: S ready, P blocked, own skipped -> FREE rc 0
+ok   runchk: own run alive rc 0
+ok   runchk: other run -> GONE rc 1
+ok   open-block 599 s after a clean check: PENDING
+ok   open-block 600 s after a clean check: OPEN
+tag b25_01 recorded, 1 of 10 in the block
+tag b25_02 recorded, 2 of 10 in the block
+tag b25_03 recorded, 3 of 10 in the block
+tag b25_04 recorded, 4 of 10 in the block
+tag b25_05 recorded, 5 of 10 in the block
+tag b25_06 recorded, 6 of 10 in the block
+tag b25_07 recorded, 7 of 10 in the block
+tag b25_08 recorded, 8 of 10 in the block
+tag b25_09 recorded, 9 of 10 in the block
+ok   9 tags: block open
+tag b25_10 recorded, 10 of 10 in the block
+ok   10th tag closes the block (CLOSE limit10)
+ok   after the close a new block needs a fresh 600 s gap: PENDING
+ok   600 s after the clean check past the close: OPEN
+ok   a found user process closes: rc 7
+ok   enter_scene.py has --entry-at-level and ROOT f287/f26c
+ok   queue output in strict cp1250 rc 0
+ALL OK

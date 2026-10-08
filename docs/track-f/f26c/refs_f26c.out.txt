@@ -1,0 +1,15 @@
+ok   8540f311:docs/ROADMAP.md:23862
+ok   8540f311:docs/ROADMAP.md:23865
+ok   8540f311:docs/ROADMAP.md:23866
+ok   8540f311:docs/ROADMAP.md:23867
+ok   8540f311:docs/ROADMAP.md:23868
+ok   8540f311:docs/ROADMAP.md:23871
+ok   8540f311:docs/ROADMAP.md:23857
+ok   8540f311:docs/ROADMAP.md:23786
+ok   8540f311:docs/ROADMAP.md:23787
+ok   8540f311:docs/ROADMAP.md:23815
+ok   8540f311:docs/ROADMAP.md:23676
+ok   8540f311:docs/ROADMAP.md:23090
+ok   e6a39b95:docs/track-f/fs10c/go_fs10c.sh:51
+refs 13/13; negative control (shift +1) fails 13/13
+ALL OK

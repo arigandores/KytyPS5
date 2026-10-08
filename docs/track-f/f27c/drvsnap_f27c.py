@@ -14,7 +14,8 @@ hold other applications' groups that a tag does not touch), every file of both f
          inside a tag window [lock taken, lock released + SLACK_S] of lock.log - sha256 of the restored file = sha256 of the copy
          (RESTORED); changed outside every window - KEPT_USER (a user change, not touched);
        a base file changed or removed without a copy (other DXCache groups): NOT_COPIED (cannot be restored - question to the lead);
-       a new file inside a window and (GLCache or the emulator group): moved to <root>/drv_moved/<label>/<rel> (MOVED); else KEPT_NEW.
+       a new file inside a window and (GLCache or the emulator group): moved to <root>/drv_moved/<label>/<rel> (MOVED); else KEPT_NEW;
+       seal 2: a file held open by a live process at the take (copy refused, drv_held.tsv) is not copied and never touched (KEPT_HELD).
      'DRVSNAP RETURNED restored a moved b kept_user c kept_new d not_copied e failed f' - rc 0 when not_copied + failed = 0, else 1.
   --nv <dir> (fixtures only): the NVIDIA folder.
 """
@@ -84,6 +85,7 @@ def take(root, nv):
     base = walk(nv)
     write_tsv(os.path.join(root, 'drv_base.tsv'), base)
     cp = {}
+    held = {}
     bad = 0
     nbytes = 0
     for k in sorted(base):
@@ -92,7 +94,15 @@ def take(root, nv):
         src = os.path.join(nv, k[0], k[1])
         dst = os.path.join(root, 'drv_copy', k[0], k[1])
         os.makedirs(os.path.dirname(dst), exist_ok=True)
-        shutil.copy2(src, dst)
+        try:
+            shutil.copy2(src, dst)
+        except PermissionError:
+            # seal 2: a file held open (no read sharing) by a live process other than a tag - it belongs to that process, the tag cannot
+            # write it while it is held; not copied, and the return does not touch it (KEPT_HELD)
+            held[k] = base[k]
+            if os.path.exists(dst):
+                os.remove(dst)
+            continue
         a, b = sha_file(src), sha_file(dst)
         st = os.stat(src)
         if a != b or (st.st_size, st.st_mtime_ns) != base[k]:
@@ -100,9 +110,10 @@ def take(root, nv):
         cp[k] = (st.st_size, a)
         nbytes += st.st_size
     write_tsv(os.path.join(root, 'drv_copy.tsv'), cp)
-    print('DRVSNAP %s files %d (GLCache %d, DXCache %d) copied %d bytes %d mismatches %d' % (
+    write_tsv(os.path.join(root, 'drv_held.tsv'), held)
+    print('DRVSNAP %s files %d (GLCache %d, DXCache %d) copied %d bytes %d held %d mismatches %d' % (
         'TAKEN' if bad == 0 else 'TAKE FAILED', len(base), sum(1 for k in base if k[0] == 'GLCache'),
-        sum(1 for k in base if k[0] == 'DXCache'), len(cp), nbytes, bad))
+        sum(1 for k in base if k[0] == 'DXCache'), len(cp), nbytes, len(held), bad))
     return 0 if bad == 0 else 1
 
 
@@ -131,13 +142,19 @@ def inside(mtime_ns, wins):
 def ret(root, lock_log, nv):
     base = dict((k, (int(v[0]), int(v[1]))) for k, v in read_tsv(os.path.join(root, 'drv_base.tsv')).items())
     cp = read_tsv(os.path.join(root, 'drv_copy.tsv'))
+    hp = os.path.join(root, 'drv_held.tsv')
+    held = read_tsv(hp) if os.path.exists(hp) else {}
     wins = windows(lock_log)
     live = walk(nv)
-    n = dict(restored=0, moved=0, kept_user=0, kept_new=0, not_copied=0, failed=0)
+    n = dict(restored=0, moved=0, kept_user=0, kept_new=0, kept_held=0, not_copied=0, failed=0)
     rows = []
     for k, v in sorted(base.items()):
         lv = live.get(k)
         if lv == v:
+            continue
+        if k in held:
+            n['kept_held'] += 1
+            rows.append('KEPT_HELD %s/%s' % k)
             continue
         if k not in cp:
             n['not_copied'] += 1
@@ -178,8 +195,8 @@ def ret(root, lock_log, nv):
         f.write('windows %d\n' % len(wins))
         for r in rows:
             f.write(asc(r) + '\n')
-    print('DRVSNAP RETURNED restored %d moved %d kept_user %d kept_new %d not_copied %d failed %d windows %d' % (
-        n['restored'], n['moved'], n['kept_user'], n['kept_new'], n['not_copied'], n['failed'], len(wins)))
+    print('DRVSNAP RETURNED restored %d moved %d kept_user %d kept_new %d kept_held %d not_copied %d failed %d windows %d' % (
+        n['restored'], n['moved'], n['kept_user'], n['kept_new'], n['kept_held'], n['not_copied'], n['failed'], len(wins)))
     return 0 if n['not_copied'] + n['failed'] == 0 else 1
 
 

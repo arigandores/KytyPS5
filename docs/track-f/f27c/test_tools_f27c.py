@@ -80,7 +80,7 @@ def main():
         w('DXCache/%sCCCC.nvph' % DS.EMU_GROUP, b'emu-3', old)
         w('DXCache/0002a91cZZZZ.nvph', b'other', old)
         p = subprocess.run([sys.executable, os.path.join(HERE, 'drvsnap_f27c.py'), 'take', root, '--nv', nv], capture_output=True, env=env)
-        check('drvsnap take rc 0 in cp1250', p.returncode == 0 and b'DRVSNAP TAKEN files 5' in p.stdout and b'copied 4' in p.stdout, p.stdout)
+        check('drvsnap take rc 0 in cp1250', p.returncode == 0 and b'DRVSNAP TAKEN files 5' in p.stdout and b'copied 4' in p.stdout and b'held 0' in p.stdout, p.stdout)
         now = time.time()
         lock = os.path.join(root, 'lock.log')
         open(lock, 'w').write('lock taken base %s\nlock released base %s\nlock taken f27_v0 %s\nlock released f27_v0 %s\n' % (
@@ -93,7 +93,7 @@ def main():
         w('GLCache/g1/b.bin', b'gl-new', now - 1500)                                          # new outside -> KEPT_NEW
         p = subprocess.run([sys.executable, os.path.join(HERE, 'drvsnap_f27c.py'), 'return', root, lock, '--nv', nv], capture_output=True, env=env)
         out = p.stdout.decode('ascii')
-        check('drvsnap return classes', 'restored 2 moved 1 kept_user 1 kept_new 2 not_copied 0 failed 0 windows 1' in out and p.returncode == 0, out)
+        check('drvsnap return classes', 'restored 2 moved 1 kept_user 1 kept_new 2 kept_held 0 not_copied 0 failed 0 windows 1' in out and p.returncode == 0, out)
         check('restored content = copy', open(os.path.join(nv, 'DXCache', '%sAAAA.nvph' % DS.EMU_GROUP), 'rb').read() == b'emu-1')
         check('removed file restored', open(os.path.join(nv, 'DXCache', '%sCCCC.nvph' % DS.EMU_GROUP), 'rb').read() == b'emu-3')
         check('user change kept', open(os.path.join(nv, 'DXCache', '%sBBBB.nvph' % DS.EMU_GROUP), 'rb').read() == b'emu-2-changed-by-user')
@@ -103,6 +103,23 @@ def main():
         p = subprocess.run([sys.executable, os.path.join(HERE, 'drvsnap_f27c.py'), 'return', root, lock, '--nv', nv], capture_output=True, env=env)
         check('not copied group changed -> rc 1', p.returncode == 1 and b'not_copied 1' in p.stdout, p.stdout)
         check('window of a base/return mode is not a tag window', len(DS.windows(lock)) == 1)
+        open(os.path.join(root, 'drv_held.tsv'), 'wb').write(('DXCache\t0002a91cZZZZ.nvph\t5\t0\n').encode())
+        p = subprocess.run([sys.executable, os.path.join(HERE, 'drvsnap_f27c.py'), 'return', root, lock, '--nv', nv], capture_output=True, env=env)
+        check('held file changed -> KEPT_HELD, rc 0', p.returncode == 0 and b'kept_held 1 not_copied 0' in p.stdout, p.stdout)
+        # a held file at the take (copy refused) -> held 1, not a mismatch: a file opened without read sharing
+        import msvcrt  # noqa: F401
+        import ctypes
+        from ctypes import wintypes
+        k32 = ctypes.WinDLL('kernel32', use_last_error=True)
+        k32.CreateFileW.restype = wintypes.HANDLE
+        hp = os.path.join(nv, 'DXCache', '%sHELD.nvph' % DS.EMU_GROUP)
+        open(hp, 'wb').write(b'held')
+        h = k32.CreateFileW(hp, 0x80000000, 0, None, 3, 0x80, None)
+        root2 = os.path.join(tmp, 'root2')
+        os.makedirs(root2)
+        p = subprocess.run([sys.executable, os.path.join(HERE, 'drvsnap_f27c.py'), 'take', root2, '--nv', nv], capture_output=True, env=env)
+        k32.CloseHandle(h)
+        check('take with a held file: TAKEN, held 1', p.returncode == 0 and b'DRVSNAP TAKEN' in p.stdout and b'held 1' in p.stdout, p.stdout + p.stderr[-200:])
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
     # go_f27c.sh dry runs

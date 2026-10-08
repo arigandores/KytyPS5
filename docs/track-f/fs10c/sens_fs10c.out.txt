@@ -1,0 +1,25 @@
+control unmutated: rc 0 ALL OK True
+mutation 0 K2_US = 1000000: killed
+mutation 1 LF_S0_US = 2500000: killed
+mutation 2 STALL_US = 2900000: killed
+mutation 3 WIN_MS = 2000: killed
+mutation 4 EXIT_MS = 250: killed
+mutation 5 HOLD_STAND_S = 120: killed
+mutation 6 HOLD_W_S = 310: killed
+mutation 7 VIDEO_MIN = 3000: killed
+mutation 8 draws is not None and draws >= 100: killed
+mutation 9 x['mode'][0][1] < g): killed
+mutation 10 x['mode'][0][0].startswith('LogAsync: mode=1 '): killed
+mutation 11 len(lf1_after), len(lf1)), not lf1_after): killed
+mutation 12 ('full_waits 0 (%s)' % (None if summ is None else summ['full: killed
+mutation 13 ('full_waits 0 (%s)' % (None if summ is None else summ['full: killed
+mutation 14 all(s['on'] == on for s in sl) and cfg_on == [on]): killed
+mutation 15 p_ok = anchor is not None and bool(sl) and all(s['ln'] > anc: killed
+mutation 16 x is not None and x['diagb32'] == 0): killed
+mutation 17 i is not None and not ge1): killed
+mutation 18 return s['t0_ms'] - WIN_MS <= t <= s['t1_ms'] + WIN_MS: killed
+mutation 19 bool(x['b13']) and all(v == 1 for v, l in x['b13']): killed
+mutation 20 dual = [d for d in x['dual'] if d[0] and g is not None and d: killed
+mutation 21 if base != 'fs10_s0':             ok = len(x['summary']) == : killed
+mutations 22
+ALL OK

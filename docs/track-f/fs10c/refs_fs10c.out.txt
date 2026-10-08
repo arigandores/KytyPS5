@@ -1,0 +1,16 @@
+OK   80f59338:docs/ROADMAP.md:23825 anchor    (\u0435) **\u041e\u0442\u0433\u0440\u0443\u0437\u043a\u04
+OK   80f59338:docs/ROADMAP.md:23819 anchor 624. **\u0417\u0432\u0435\u043d\u043e F25n \u0442\u0440\u043
+OK   80f59338:docs/ROADMAP.md:23826 anchor    (\u0436) **\u0414\u043e\u043b\u0433\u0438 (\u043f. 324(\u
+OK   80f59338:docs/ROADMAP.md:23830 anchor    (\u043b) **\u041d\u0435 \u0437\u0430\u044f\u0432\u043b\u0
+OK   80f59338:docs/ROADMAP.md:23834 anchor    (\u0431) **\u041d1 \u2014 \u0440\u0435\u0448\u0435\u043d\
+OK   80f59338:docs/ROADMAP.md:23836 anchor    (\u0433) **\u041d3 \u2014 \u043d\u0435 \u0438\u0441\u043f
+OK   80f59338:docs/ROADMAP.md:23832 anchor 626. **\u0417\u0432\u0435\u043d\u043e FS10b \u0442\u0440\u04
+OK   80f59338:docs/ROADMAP.md:23815 anchor    (\u0432) **\u041f\u0440\u044f\u043c\u043e\u0435 \u0443\u0
+OK   80f59338:docs/ROADMAP.md:23786 anchor    (\u0433) **\u0420\u0435\u0448\u0435\u043d\u0438\u0435 3 \
+OK   80f59338:docs/ROADMAP.md:23787 anchor    (\u0434) **\u0414\u043e\u043b\u0433\u0438 \u0438 \u043f\u
+OK   80f59338:docs/ROADMAP.md:23792 anchor    (\u0431) **\u0420\u0435\u0448\u0435\u043d\u0438\u0435.** 
+OK   7fd1053f:docs/track-f/fs10a.md:34 anchor - **\u0411\u0438\u043d\u0430\u0440\u044c FS10: sha256 `abfde
+OK   e3094279:docs/track-f/f25m/go_f25m.sh:126 anchor   b36_f1) LV=$POT; PRE=B; UF=""; SD=300; H=150;
+negative control (line + 1): FAILED as expected
+REFS 13, mismatches 0
+ALL OK

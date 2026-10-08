@@ -1,0 +1,3 @@
+suite test_fs10c_read.py sha256 afde5b3f55bece12897ae4de87409a311839e8dfb6595523a0a46cb3a3449780 target fs10c_read.py sha256 a017528854a3dd4c4f393604fc514c3c92b0472097c76383acb74f5e179e3737
+checks 255 failed 0
+ALL OK

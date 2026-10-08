@@ -1,0 +1,14 @@
+regress fs10c_read.py sha256 a017528854a3dd4c4f393604fc514c3c92b0472097c76383acb74f5e179e3737
+b36_s1_r1 as fs10_s1: stand admission [True, True, True]; members ALL YES; NO [] -> as expected
+  info {"exit_gap_ms": 81987, "lf": 1, "lf_ge1s": 0, "lf_ge1s_after_entry": 0, "lf_max": 132212, "stall_ge29": 3, "summary": {"bytes": 30055703, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 484672, "max_queued_bytes": 355942, "stall_cut": 0, "stalls": 3, "sync_lines": 0}}
+b36_s0_r1 as fs10_s0: stand admission [True, True, True]; members ALL YES; NO [] -> as expected
+  info {"exit_gap_ms": 83480, "lf": 4, "lf_ge1s": 3, "lf_ge1s_after_entry": 3, "lf_max": 3017323, "per_sleep": [{"hits": [[2652, 3016981, 87542380]], "i": 1, "win": [87537352, 87544352]}, {"hits": [[2936, 3017323, 87550380]], "i": 2, "win": [87545357, 87552357]}, {"hits": [[3228, 3016721, 87558396]], "i": 3, "win": [87553362, 87560363]}], "stall_ge29": 0, "summary": null}
+b36_f1 as fs10_f1: stand admission [True, True, True]; members ALL YES; NO [] -> as expected
+  info {"first_scene_n": 190, "ge1s": 0, "ge1s_with_first": 0, "lf_ge1s_whole": 0, "max_dt": 149332, "scene_frames": 8503, "stall_ge29": 3, "summary": {"bytes": 268075545, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 596547, "max_queued_bytes": 5078175, "stall_cut": 0, "stalls": 3, "sync_lines": 0}}
+b36_v as fs10_v: stand admission []; members ALL YES; NO [] -> as expected
+  info {"first_scene_n": 268, "frames_ge1s": 0, "hold_s": 333.9, "max_dt": 181913, "summary": {"bytes": 322016293, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 722258, "max_queued_bytes": 27624, "stall_cut": 0, "stalls": 0, "sync_lines": 0}}
+b36_w as fs10_w: stand admission []; members ALL YES; NO [] -> as expected
+  info {"frames_ge1s_report": 0, "summary": {"bytes": 388806645, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 1283317, "max_queued_bytes": 58196, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "vkw": 908088}
+fs9_v as fs10_v: stand admission []; members NOT ALL YES; NO ['LogAsync: mode=1 exactly once, before the first Gu', 'summary LogAsync: full_waits= present (0)', 'drain_timeouts 0 (None)'] -> as expected
+  info {"first_scene_n": 236, "frames_ge1s": 0, "hold_s": 334.2, "max_dt": 184713, "summary": null}
+ALL OK

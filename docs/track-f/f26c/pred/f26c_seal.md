@@ -128,18 +128,29 @@
 отсутствие дефекта; что нагрузка хоста с. 42 связана с assert; что реестр полон; ни одно число — не выигрыш; 60 FPS не обещаются; цель (B)
 не меняется. Отчёт серии вердикта не пишет.
 
-## Строки seal (sha256 файлов цепочки на момент печати, 2026-10-08T05:44:58Z)
+## 8а. Печать 2 (до первого тега с игрой)
+
+Первый вызов `b25_01` (05:57Z–05:59:26Z) упал на импорте `enter_scene.py` (в порт не скопирован `run_safety99.py` — маркеры отказа
+прогрева); эмулятор не запускался, кэши `EQUAL`, установленный FS10 до и после — **не тег, не попытка, не помеха** (папка
+`runs/b25_01.noimport_*`; строка `TAG b25_01` блока сторожа остаётся — блок закроется на тег раньше). Дифф печати 2 против печати 1
+(`57518655…`): (1) добавлен `run_safety99.py` (копия FS10c без изменений); (2) `go_f26c.sh` — вызов без строки `--- attempt 1: launching`
+в `run.txt` переносится в `.nostart_*` (не тег, повтор тем же именем); (3) `test_tools_f26c.py` — фикстуры импортов (`enter_scene.py
+--help`, импорт восьми помощников) и строки (2). Ридер, правила чтения, форма тега, детектор и кэши не меняются. Повтор — `b25_01` тем же
+именем.
+
+## Строки seal (sha256 файлов цепочки на момент печати 2, 2026-10-08T06:00:14Z)
 
 ```
-seal: a44f98a20df675538ed4be4bbc2f3d0a31000a83c776ebdfebbcad0250b69381 go_f26c.sh
+seal: 95ebc8c2566441c437c740d521ba2d5415ad04d9c39ae950984db4158545d3b1 go_f26c.sh
 seal: f9c147c966ff13f8ad2ceb1aa9090ad14ab7e64f4c1ad2bf4713c80eaa463658 launch_f26c.sh
 seal: 5c8a3f11dc16fe95b95953891963335ec4dbec2bf55a4c182ca6967f90e14770 wait_f26c.sh
 seal: 1ce0b0e6ffe77d068cc054965a166198abdfaf3e187c7611283730c76b8b8007 post_f26c.sh
 seal: 394bd269668d4d32e2faf5f1b3a42f9da8368063455f9f49378f4192d707b6e3 chk_f26c.sh
 seal: 65afa7cf29b82a4c0b36a8fa4956ffd06399cfe1c0ba2f90a9cbedab763d7141 enter_scene.py
+seal: 77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638 run_safety99.py
 seal: 9d950bad38c5e06e37a553fd67a4bdea7755310680090305c20af8ae8f1bbf5e f26c_read.py
 seal: 5c3313a55516278e7af3e6e6671c79cdff58caf9a01eb4472c3ee4f66dc2b24f test_f26c_read.py
-seal: f14817da000af1b2f39922b8efc8f0ba694a9fc8ea97b550b5442eafc93c8411 test_tools_f26c.py
+seal: 55c69f2ef3b0ba3c127bd9147241be255b48dcd859b097232e51b7885407a91d test_tools_f26c.py
 seal: 8aabd2763f77b05757134c7e0100348400359fbe4c420d30745208e6f2348b28 tempo_f26c.py
 seal: ed53b4f8601e3b51244cd440e9ea64298e93d2f0b2e054c30f5b555b7e23dc58 guard_f26c.py
 seal: f8c3655beec7a9c9c3f319f894c91945e1c902c67c224d50a612663d9076b522 hold_f26c.py
@@ -155,7 +166,7 @@ seal: d058309c4ea589e699375f82a073abaa2688d5afc360bef3f76032beafb21b6f sweep_f26
 seal: 352f17009b0d5319cbf53befa9c3b4c4d89ecdda358b965c2c581c8e6290a3bb fx_sweep_f26a.py
 seal: 8aa6a5f06d7d02adf39e29b5934fe51561f5f988acbb0aded33cd210ce7485d2 refs_f26c.py
 seal: b53e027cc4f2344e0526e36a4972eff23c1fcff0e2061bbfcd266d6a48fd16bc test_f26c_read.out.txt
-seal: aeb6bc9e5659359d1e33036519c4bf7eb5e77da1c150efed16f9d64d90aadd77 test_tools_f26c.out.txt
+seal: e067857854553291e4ff4e7dcff06f033faaf09cc026a0a0884166f0d07ae7aa test_tools_f26c.out.txt
 seal: f607c4bb51e05a81c4d576d1e8da2e5bc19b15c6ddd1cdf18c1b595f8e723990 fx_sweep_f26a.out.txt
 seal: dd620c0f706ad6f7a6d2c68d73450e60c4afdd99ead7698cea49a26d357146d9 refs_f26c.out.txt
 ```

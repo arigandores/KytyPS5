@@ -182,8 +182,8 @@ finish() {
     if [ -e $OUT/USER_FOUND ] || [ -e $OUT/VM_FOUND ]; then
       python $G/guard_f26c.py close user_found > /dev/null
       mv $OUT $OUT.user_$(date -u +%H%M%S); log "user process during the tag - block closed, interference (item 534), SERIES_STOP"
-    elif [ ! -f $OUT/run.txt ]; then
-      mv $OUT $OUT.nostart_$(date -u +%H%M%S); log "enter_scene never started - not a tag, repeat by the same name (item 534)"
+    elif [ ! -f $OUT/run.txt ] || ! grep -q -- '--- attempt 1: launching' $OUT/run.txt; then
+      mv $OUT $OUT.nostart_$(date -u +%H%M%S); log "enter_scene never launched the emulator - not a tag, repeat by the same name (item 534; seal 2)"
     fi
   else
     stop_disp

@@ -70,6 +70,13 @@ rc, word = GD.open_block(W + '/b2.txt', [{'pid': 1}], 5000.0)
 check('a found user process closes: rc 7', rc == 7)
 src = open(HERE + '/enter_scene.py', encoding='utf-8').read()
 check('enter_scene.py has --entry-at-level and ROOT f287/f26c', "'--entry-at-level'" in src and "ROOT = pathlib.Path('C:/kyty/f287/f26c')" in src)
+c = run([sys.executable, HERE + '/enter_scene.py', '--help'])
+check('enter_scene.py imports resolve in f26c (--help rc 0, option --entry-at-level listed; seal 2)', c.returncode == 0 and b'--entry-at-level' in c.stdout)
+for helper in ('tempo_f26c.py', 'f26c_read.py', 'guard_f26c.py', 'hold_f26c.py', 'dispstate.py', 'procload.py', 'manifest_fs4c.py', 'runchk_f26c.py'):
+    c = run([sys.executable, '-c', 'import sys; sys.path.insert(0, %r); import %s' % (HERE, helper[:-3])])
+    check('import %s resolves' % helper, c.returncode == 0)
+src = open(HERE + '/go_f26c.sh', encoding='utf-8').read()
+check('go_f26c.sh: a run.txt without the launching line is not a tag (nostart)', "'--- attempt 1: launching'" in src)
 env = {k: v for k, v in os.environ.items() if k != 'PYTHONIOENCODING'}
 env['PYTHONIOENCODING'] = 'cp1250:strict'
 c = subprocess.run([sys.executable, HERE + '/queue_f26c.py', '--fake', q], capture_output=True, env=env)

@@ -1,4 +1,4 @@
-suite test_tools_f26c.py sha256 f14817da000af1b2f39922b8efc8f0ba694a9fc8ea97b550b5442eafc93c8411 targets go_f26c.sh a44f98a20df67553 post_f26c.sh 1ce0b0e6ffe77d06 queue_f26c.py 83c2305bae1b381d runchk_f26c.py 27472e7423c8889d guard_f26c.py ed53b4f8601e3b51 enter_scene.py 65afa7cf29b82a4c
+suite test_tools_f26c.py sha256 55c69f2ef3b0ba3c127bd9147241be255b48dcd859b097232e51b7885407a91d targets go_f26c.sh 95ebc8c2566441c4 post_f26c.sh 1ce0b0e6ffe77d06 queue_f26c.py 83c2305bae1b381d runchk_f26c.py 27472e7423c8889d guard_f26c.py ed53b4f8601e3b51 enter_scene.py 65afa7cf29b82a4c
 ok   go dry run accepts b25_01 (hold 120, timeout 60, knobs of fs10_v)
 ok   go dry run accepts b25_09 (hold 120, timeout 60, knobs of fs10_v)
 ok   go dry run accepts b25_10 (hold 120, timeout 60, knobs of fs10_v)
@@ -36,5 +36,15 @@ ok   after the close a new block needs a fresh 600 s gap: PENDING
 ok   600 s after the clean check past the close: OPEN
 ok   a found user process closes: rc 7
 ok   enter_scene.py has --entry-at-level and ROOT f287/f26c
+ok   enter_scene.py imports resolve in f26c (--help rc 0, option --entry-at-level listed; seal 2)
+ok   import tempo_f26c.py resolves
+ok   import f26c_read.py resolves
+ok   import guard_f26c.py resolves
+ok   import hold_f26c.py resolves
+ok   import dispstate.py resolves
+ok   import procload.py resolves
+ok   import manifest_fs4c.py resolves
+ok   import runchk_f26c.py resolves
+ok   go_f26c.sh: a run.txt without the launching line is not a tag (nostart)
 ok   queue output in strict cp1250 rc 0
 ALL OK

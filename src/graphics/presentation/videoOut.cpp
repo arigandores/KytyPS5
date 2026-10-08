@@ -2720,6 +2720,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"bda_nrace", FS::Counter::BdaNarrowRace, false},
 				    {"bda_b12_rewalk", FS::Counter::BdaB12Rewalk, false},
 				    {"bda_b12_rwd", FS::Counter::BdaB12Rwd, false},
+				    {"bda_b12_lskip", FS::Counter::BdaB12Lskip, false},
 				    {"prio_unsub", FS::Counter::PrioUnsub, false},
 				    {"prio_stall", FS::Counter::PrioStall, false},
 				    {"gw_idle_prio", FS::Counter::GpuIdlePrio, false},

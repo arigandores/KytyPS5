@@ -40,6 +40,10 @@
 // the passes (hook only). Counted per pass: revisits (rewalk) and the pieces among them that touch a registered
 // buffer (rwd); per iteration: scans and revisits in the passes after the first (late_*), and the minimum and
 // maximum of revisits over the passes that scanned at least one region (rw_min / rw_max; scan_passes of them).
+// Edition 2 (ROADMAP s122 item 641(v)): skipped_pass - the first visit of the pass skipped the region; a late visit
+// after a skip takes no bit and writes no witness, skips on the first visit's condition, else collects its piece
+// (lskip; late_lskips - those in the passes after the first). hlost1 - the hook page was not synchronized within the
+// pass in which the hook fired (reference: a write delayed to the next pass is not lost over the passes).
 //
 // Usage: b12_bdastamp_stand <hole|nob1|split|touch> <upper|lower|none> <passes> <iters> [hook=<upper|lower>]
 // Knobs of the code under test are read from the environment as the emulator reads them: KYTY_BDA_REGION_STAMPS
@@ -117,6 +121,7 @@ struct Cache {
 		MemoryTracker::RegionStamp stamp;
 		uint64_t                   generation = 0;
 		uint64_t                   walked_pass = 0; // F29c: KYTY_FIX_B12=1 only
+		uint64_t                   skipped_pass = 0; // F29c edition 2: KYTY_FIX_B12=1 only
 	};
 	std::vector<BdaRegionStamp> region_stamps;          // m_bda_region_stamps
 	uint64_t                    stamp_generation   = 1; // m_bda_stamp_generation
@@ -127,6 +132,7 @@ struct Cache {
 	uint64_t                    bda_pass           = 0;     // m_bda_pass (F29c)
 	bool                        bda_pass_open      = false; // m_bda_pass_open (F29c)
 	uint64_t                    rewalk = 0, rwd = 0;         // m_b12_rewalk, m_b12_rwd (F29c)
+	uint64_t                    lskip = 0;                   // m_b12_lskip (F29c edition 2)
 	// stand counters
 	uint64_t              scanned = 0, skipped = 0, bit_skipped = 0, nwould = 0, nmiss = 0, nrace = 0, syncs = 0;
 	std::vector<GuestRange> synced; // pieces synchronized since the last clear (model detector)
@@ -219,10 +225,26 @@ struct Cache {
 				cursor += bytes;
 				continue;
 			}
+			if (b12_pass && region_stamps[index].skipped_pass == bda_pass) {
+				const auto& late = region_stamps[index];
+				if (late.generation == stamp_generation && late.stamp == tracker.RegionWriteStamp(index) &&
+				    !(use_bits && Libs::Graphics::BdaRegionWritePending(index))) {
+					cursor += bytes;
+					continue;
+				}
+				tracker.CollectCpuModifiedRanges(cursor, bytes, dirty_ranges);
+				lskip++;
+				OfDirtyRanges();
+				cursor += bytes;
+				continue;
+			}
 			const bool bit_clear = use_bits && !Libs::Graphics::BdaTakeRegionWrite(index);
 			if (bit_clear && region_stamps[index].generation == stamp_generation) {
 				bit_skipped++;
 				skipped++;
+				if (b12_pass) {
+					region_stamps[index].skipped_pass = bda_pass;
+				}
 				cursor += bytes;
 				continue;
 			}
@@ -230,6 +252,9 @@ struct Cache {
 			auto&      seen  = region_stamps[index];
 			if (seen.generation == stamp_generation && seen.stamp == stamp) {
 				skipped++;
+				if (b12_pass) {
+					seen.skipped_pass = bda_pass;
+				}
 				cursor += bytes;
 				continue;
 			}
@@ -471,7 +496,9 @@ int main(int argc, char** argv) {
 	uint64_t       lost = 0, dirty = 0, both = 0, reset = 0, clean_before_bad = 0;
 	const auto     rewalk0 = cache.rewalk;
 	const auto     rwd0    = cache.rwd;
-	uint64_t       hlost = 0, hdirty = 0, hboth = 0, hfired = 0, late_scans = 0, late_rewalks = 0;
+	const auto     lskip0  = cache.lskip;
+	uint64_t       late_lskips = 0;
+	uint64_t       hlost = 0, hdirty = 0, hboth = 0, hfired = 0, late_scans = 0, late_rewalks = 0, hlost1 = 0;
 	uint64_t       scan_passes = 0, rw_min = UINT64_MAX, rw_max = 0;
 	struct HookState {
 		MemoryTracker* tracker;
@@ -480,7 +507,9 @@ int main(int argc, char** argv) {
 		size_t         synced_at;
 		Cache*         cache;
 		bool           fired;
-	} hs {&tracker, 0, page, 0, &cache, false};
+		size_t         synced_end; // the end of the pieces of the pass in which the hook fired
+		bool           pass_done;
+	} hs {&tracker, 0, page, 0, &cache, false, 0, false};
 	for (uint64_t i = 0; i < iters; i++) {
 		const uint64_t address = target + (i % (b_size / page)) * page;
 		if (!none && tracker.IsRegionCpuModified(address, page)) {
@@ -493,6 +522,7 @@ int main(int argc, char** argv) {
 		if (h_any) {
 			hs.address = h_target + ((i + 8) % (b_size / page)) * page;
 			hs.fired   = false;
+			hs.pass_done = false;
 			if (tracker.IsRegionCpuModified(hs.address, page)) {
 				clean_before_bad++;
 			}
@@ -507,7 +537,12 @@ int main(int argc, char** argv) {
 		for (uint64_t p = 0; p < passes; p++) {
 			const auto s0 = cache.scanned;
 			const auto r0 = cache.rewalk;
+			const auto l0 = cache.lskip;
 			context.Prepare();
+			if (h_any && hs.fired && !hs.pass_done) {
+				hs.synced_end = cache.synced.size();
+				hs.pass_done  = true;
+			}
 			const auto ds = cache.scanned - s0;
 			const auto dr = cache.rewalk - r0;
 			if (ds != 0) {
@@ -518,6 +553,7 @@ int main(int argc, char** argv) {
 			if (p != 0) {
 				late_scans += ds;
 				late_rewalks += dr;
+				late_lskips += cache.lskip - l0;
 			}
 		}
 		context.hook = nullptr; // a hook that found no walking pass stays unfired (counted by hook_fired)
@@ -528,6 +564,9 @@ int main(int argc, char** argv) {
 				                                    cache.synced.end());
 				const bool h_lost  = !Covered(after, hs.address, page);
 				const bool h_dirty = tracker.IsRegionCpuModified(hs.address, page);
+				const std::vector<GuestRange> in_pass(cache.synced.begin() + static_cast<std::ptrdiff_t>(hs.synced_at),
+				                                      cache.synced.begin() + static_cast<std::ptrdiff_t>(hs.synced_end));
+				hlost1 += Covered(in_pass, hs.address, page) ? 0 : 1;
 				hlost += h_lost ? 1 : 0;
 				hdirty += h_dirty ? 1 : 0;
 				hboth += (h_lost && h_dirty) ? 1 : 0;
@@ -574,14 +613,17 @@ int main(int argc, char** argv) {
 	            static_cast<unsigned>(Common::Gates::Value(Common::Gates::Knob::BdaNarrowStamps)),
 	            Libs::Graphics::FixB13Enabled() ? 1 : 0, static_cast<unsigned long long>(page));
 	std::printf("B12c fix_b12=%d hook=%s hook_fired=%llu hlost=%llu hdirty=%llu hlost_and_dirty=%llu rewalk=%llu rwd=%llu "
-	            "scan_passes=%llu rw_min=%llu rw_max=%llu late_scans=%llu late_rewalks=%llu\n",
+	            "scan_passes=%llu rw_min=%llu rw_max=%llu late_scans=%llu late_rewalks=%llu lskip=%llu late_lskips=%llu "
+	            "hlost1=%llu\n",
 	            Libs::Graphics::FixB12Enabled() ? 1 : 0, h_any ? hook_s + 5 : "none",
 	            static_cast<unsigned long long>(hfired), static_cast<unsigned long long>(hlost),
 	            static_cast<unsigned long long>(hdirty), static_cast<unsigned long long>(hboth),
 	            static_cast<unsigned long long>(cache.rewalk - rewalk0), static_cast<unsigned long long>(cache.rwd - rwd0),
 	            static_cast<unsigned long long>(scan_passes),
 	            static_cast<unsigned long long>(scan_passes == 0 ? 0 : rw_min), static_cast<unsigned long long>(rw_max),
-	            static_cast<unsigned long long>(late_scans), static_cast<unsigned long long>(late_rewalks));
+	            static_cast<unsigned long long>(late_scans), static_cast<unsigned long long>(late_rewalks),
+	            static_cast<unsigned long long>(cache.lskip - lskip0), static_cast<unsigned long long>(late_lskips),
+	            static_cast<unsigned long long>(hlost1));
 	std::fflush(stdout);
 	// The uploads armed write watchers: the tracker drops them before the PageManager is destroyed (its fail-fast on live
 	// page state), as tests/MemoryTrackerTests.cpp does.

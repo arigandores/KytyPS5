@@ -1864,6 +1864,9 @@ enum class Counter : uint32_t {
 	// collected by the BDA scan).  Raw counts; they decide nothing.
 	BdaB12Rewalk,            // bda_b12_rewalk
 	BdaB12Rwd,               // bda_b12_rwd
+	// Track F, F29c edition 2 (KYTY_FIX_B12=1, ROADMAP s122 item 641(v)(3)): late visits of a region in a BDA pass whose
+	// first visit skipped it, that found the witness or the bit moved and collected their piece.  Raw count; decides nothing.
+	BdaB12Lskip,             // bda_b12_lskip
 	// Session 113 (item 18): the priority-operation stall instrument (raw counts).  prio_unsub: priority waits that
 	// started on the recording (unsubmitted) tick; prio_stall: priority waits longer than 50 ms (PriorityStall: lines);
 	// gw_idle_prio: GuestGpu went idle or slept with every queue blocked while a priority operation sat on the

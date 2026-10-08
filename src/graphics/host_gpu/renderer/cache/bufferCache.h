@@ -384,6 +384,9 @@ private:
 		// Track F, F29c (KYTY_FIX_B12): the BDA pass (m_bda_pass) whose scanning visit last wrote this witness; 0 - none.
 		// Written and read at KYTY_FIX_B12=1 only.
 		uint64_t                   walked_pass = 0;
+		// F29c edition 2 (item 641(v)(1)): the BDA pass whose FIRST visit of this region skipped it (by the bit or by the
+		// witness); 0 - none. Never changes stamp or generation. Written and read at KYTY_FIX_B12=1 only.
+		uint64_t                   skipped_pass = 0;
 	};
 	// One entry per tracking region, filled lazily on the first incremental scan.
 	std::vector<BdaRegionStamp>                        m_bda_region_stamps;
@@ -400,9 +403,11 @@ private:
 	bool                                               m_bda_pass_open = false;
 	uint64_t                                           m_b12_rewalk    = 0;
 	uint64_t                                           m_b12_rwd       = 0;
+	uint64_t                                           m_b12_lskip     = 0; // F29c edition 2, item 641(v)(3)
 	uint64_t                                           m_b12_stat_pass   = 0;
 	uint64_t                                           m_b12_stat_rewalk = 0;
 	uint64_t                                           m_b12_stat_rwd    = 0;
+	uint64_t                                           m_b12_stat_lskip  = 0;
 	std::chrono::steady_clock::time_point              m_b12_stat_time {};
 	// Marks the stamps of the tracking regions of [vaddr, vaddr + size) stale (a buffer was registered there).
 	void MarkBdaRegions(uint64_t vaddr, uint64_t size);

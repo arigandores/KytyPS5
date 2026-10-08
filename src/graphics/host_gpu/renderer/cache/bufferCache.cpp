@@ -3481,7 +3481,8 @@ void BufferCache::BeginBdaPass() noexcept {
 void BufferCache::EndBdaPass() {
 	m_bda_pass_open = false;
 	// Item 639(g)(5): the running totals, at most once in 10 s of host time and only when one of them moved.
-	if (m_bda_pass == m_b12_stat_pass && m_b12_rewalk == m_b12_stat_rewalk && m_b12_rwd == m_b12_stat_rwd) {
+	if (m_bda_pass == m_b12_stat_pass && m_b12_rewalk == m_b12_stat_rewalk && m_b12_rwd == m_b12_stat_rwd &&
+	    m_b12_lskip == m_b12_stat_lskip) {
 		return;
 	}
 	const auto now = std::chrono::steady_clock::now();
@@ -3492,8 +3493,10 @@ void BufferCache::EndBdaPass() {
 	m_b12_stat_pass   = m_bda_pass;
 	m_b12_stat_rewalk = m_b12_rewalk;
 	m_b12_stat_rwd    = m_b12_rwd;
-	LOGF("FixB12Stat: passes=%llu rewalk=%llu rwd=%llu\n", static_cast<unsigned long long>(m_bda_pass),
-	     static_cast<unsigned long long>(m_b12_rewalk), static_cast<unsigned long long>(m_b12_rwd));
+	m_b12_stat_lskip  = m_b12_lskip;
+	LOGF("FixB12Stat: passes=%llu rewalk=%llu rwd=%llu lskip=%llu\n", static_cast<unsigned long long>(m_bda_pass),
+	     static_cast<unsigned long long>(m_b12_rewalk), static_cast<unsigned long long>(m_b12_rwd),
+	     static_cast<unsigned long long>(m_b12_lskip));
 }
 
 // Incremental variant (gate "bdastamp"): only regions that announced a CPU write since the last
@@ -3551,6 +3554,25 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 			cursor += bytes;
 			continue;
 		}
+		// F29c edition 2 (KYTY_FIX_B12=1, ROADMAP s122 item 641(v)(2)): the first visit of this pass SKIPPED the region. This
+		// late visit takes no bit, writes no witness and sets no mark - so a write that landed after the first visit (in
+		// this piece or another) is still announced to the next pass by the bit and the stamp. It skips only on the same
+		// condition as the first visit's (witness of the current generation equal to the stamp, and no pending bit when
+		// the bits are used); otherwise it collects and synchronizes its own piece.
+		if (b12_pass && m_bda_region_stamps[index].skipped_pass == m_bda_pass) {
+			const auto& late = m_bda_region_stamps[index];
+			if (late.generation == m_bda_stamp_generation && late.stamp == m_memory_tracker.RegionWriteStamp(index) &&
+			    !(use_bits && BdaRegionWritePending(index))) {
+				cursor += bytes;
+				continue;
+			}
+			m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
+			m_b12_lskip++;
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaB12Lskip, 1);
+			SynchronizeBuffersOfDirtyRanges();
+			cursor += bytes;
+			continue;
+		}
 		const bool bit_clear = use_bits && !BdaTakeRegionWrite(index);
 		if (bit_clear && m_bda_region_stamps[index].generation == m_bda_stamp_generation) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsBitSkipped, 1);
@@ -3572,6 +3594,10 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 					}
 				}
 			}
+			if (b12_pass) {
+				// Item 641(v)(1): the first visit of this pass skipped the region by the bit.
+				m_bda_region_stamps[index].skipped_pass = m_bda_pass;
+			}
 			cursor += bytes;
 			continue;
 		}
@@ -3579,6 +3605,10 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 		auto&      seen  = m_bda_region_stamps[index];
 		if (seen.generation == m_bda_stamp_generation && seen.stamp == stamp) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsSkipped, 1);
+			if (b12_pass) {
+				// Item 641(v)(1): the first visit of this pass skipped the region by the witness.
+				seen.skipped_pass = m_bda_pass;
+			}
 			cursor += bytes;
 			continue;
 		}

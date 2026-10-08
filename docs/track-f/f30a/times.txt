@@ -1,0 +1,4 @@
+2026-10-08T22:26:39Z F30a HPP-706 start (code reading); loglist_f30a 1078 logs
+2026-10-08T22:33:41Z F30a sweep_f30a start (>60 s); API in_progress: HPP-706:8e98843f:0937a848 HPP-702:eb15eb75:745b5e7b; no harness series (HPP-702 Emu Engineer code, HPP-700 lead)
+2026-10-08T22:47:38Z F30a sweep_f30a ran 22:33:41-22:35:55 (2 min 14 s, 1078 logs, ALL DONE; this line written later); analysis, code_f30a ALL OK, refs_f30a ALL OK
+2026-10-08T22:47:38Z F30a report written; FACTS section appended

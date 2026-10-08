@@ -1,0 +1,34 @@
+R1   OK  dc5d4712:src/common/gates.cpp:436  anchor x1  +1 ok
+R2   OK  dc5d4712:src/common/gates.cpp:91  anchor x1  +1 ok
+R3   OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3310  anchor x1  +1 ok
+R4   OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3342  anchor x1  +1 ok
+R5   OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3372  anchor x1  +1 ok
+R6   OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3381  anchor x1  +1 ok
+R7   OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3400  anchor x1  +1 ok
+R8   OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3484  anchor x1  +1 ok
+R9   OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3677  anchor x1  +1 ok
+R10  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3706  anchor x1  +1 ok
+R11  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3546  anchor x1  +1 ok
+R12  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3749  anchor x1  +1 ok
+R13  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3777  anchor x1  +1 ok
+R14  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:1302  anchor x1  +1 ok
+R15  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:1562  anchor x1  +1 ok
+R16  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:1570  anchor x1  +1 ok
+R17  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:1572  anchor x1  +1 ok
+R18  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:1649  anchor x1  +1 ok
+R19  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:2905  anchor x1  +1 ok
+R20  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:4383  anchor x1  +1 ok
+R21  OK  dc5d4712:src/graphics/host_gpu/renderer/renderDraw.cpp:3398  anchor x1  +1 ok
+R22  OK  dc5d4712:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2362  anchor x1  +1 ok
+R23  OK  dc5d4712:src/graphics/host_gpu/renderer/cache/textureCache.cpp:251  anchor x1  +1 ok
+R24  OK  dc5d4712:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3688  anchor x1  +1 ok
+R25  OK  dc5d4712:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3761  anchor x1  +1 ok
+R26  OK  dc5d4712:src/graphics/host_gpu/renderer/renderMemo.h:24  anchor x1  +1 ok
+R27  OK  dc5d4712:src/graphics/host_gpu/renderer/debug.cpp:57  anchor x1  +1 ok
+R28  OK  dc5d4712:src/common/frameStats.h:2468  anchor x1  +1 ok
+R29  OK  dc5d4712:src/common/frameStats.h:2470  anchor x1  +1 ok
+R30  OK  dc5d4712:src/graphics/presentation/videoOut.cpp:3154  anchor x1  +1 ok
+R31  OK  dc5d4712:src/graphics/presentation/videoOut.cpp:1450  anchor x1  +1 ok
+R32  OK  defd2c91:src/graphics/host_gpu/renderer/renderDraw.cpp:1391  anchor x1  +1 ok
+NEG rejected 2/2
+ALL OK

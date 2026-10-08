@@ -1,0 +1,1759 @@
+path	binary	course	entry	level	frames	blocks_read	mode	mean_read	min_blk	max_blk	n_old_blk	n_new_blk	hold_s	rtskip_values
+C:/kyty/s146/log_v146_11.txt	dac02fb9	1	0	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_v146_11.txt	dac02fb9	1	1	diorama_controller_skin	28130	311	NEW	28.9	22.0	107.0	0	311	469.1	1
+C:/kyty/s146/log_v146_09.txt	dac02fb9	1	0	(empty)	1	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_v146_09.txt	dac02fb9	1	1	collectible_viewer	28183	311	NEW	25.1	21.2	32.0	0	311	471.5	1
+C:/kyty/s146/log_v146_12.txt	dac02fb9	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_v146_12.txt	dac02fb9	1	1	diorama_astro_skin	28189	311	NEW	20.4	18.8	75.9	0	311	469.8	1
+C:/kyty/s145/log_w145_01.txt	9235a7ac	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s145/log_w145_01.txt	9235a7ac	1	1	rocket_hourglass	4362	47	NEW	97.4	28.1	1103.3	2	45	316.8	1
+C:/kyty/s146/log_v146_13.txt	dac02fb9	1	0	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_v146_13.txt	dac02fb9	1	1	diorama_zoo	28171	311	NEW	24.6	22.8	86.4	0	311	469.6	1
+C:/kyty/s146/log_v146_11_a1.txt	nojson:?	0	0	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_v146_11_a1.txt	nojson:?	0	1	diorama_controller_skin	28130	311	NEW	28.9	22.0	107.0	0	311	469.1	1
+C:/kyty/s145/log_w145_08.txt	9235a7ac	1	0	(empty)	33	0	SHORT				0	0	0.6	1
+C:/kyty/s145/log_w145_08.txt	9235a7ac	1	1	enemy_snake	11066	121	NEW	30.4	20.8	496.3	0	120	317.0	1
+C:/kyty/s146/log_v146_12_a1.txt	nojson:?	0	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_v146_12_a1.txt	nojson:?	0	1	diorama_astro_skin	28189	311	NEW	20.4	18.8	75.9	0	311	469.8	1
+C:/kyty/f287/f18e/log_f8_n0.txt	test:35c4a754	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f18e/log_f8_n0.txt	test:35c4a754	0	1	underwater_aerial_garden	24872	275	NEW	61.4	44.6	678.7	1	270	844.5	1
+C:/kyty/f287/fs7c/log_fs7_n.txt	FS7	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs7c/log_fs7_n.txt	FS7	1	1	underwater_aerial_garden	25364	280	NEW	60.3	44.8	624.7	1	277	844.3	1
+C:/kyty/s146/log_v146_09_a1.txt	nojson:?	0	0	(empty)	1	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_v146_09_a1.txt	nojson:?	0	1	collectible_viewer	28183	311	NEW	25.1	21.2	32.0	0	311	471.5	1
+C:/kyty/s146/log_v146_13_a1.txt	nojson:?	0	0	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_v146_13_a1.txt	nojson:?	0	1	diorama_zoo	28171	311	NEW	24.6	22.8	86.4	0	311	469.6	1
+C:/kyty/s145/log_w145_11.txt	9235a7ac	1	0	(empty)	61	0	SHORT				0	0	1.0	1
+C:/kyty/s145/log_w145_11.txt	9235a7ac	1	1	final_stage	14390	158	NEW	57.8	19.0	870.8	1	156	318.7	1
+C:/kyty/s146/log_v146_07.txt	dac02fb9	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_v146_07.txt	dac02fb9	1	1	non_interactive_credit	12462	137	NEW	25.5	18.7	144.4	0	137	208.2	1
+C:/kyty/s146/log_v146_07.txt	dac02fb9	1	2	(empty)	7	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_v146_07.txt	dac02fb9	1	3	worldmap	79	0	SHORT				0	0	1.7	1
+C:/kyty/s146/log_v146_07.txt	dac02fb9	1	4	(empty)	7	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_v146_07.txt	dac02fb9	1	5	transition_next	18487	204	NEW	23.3	20.8	98.9	0	204	308.5	1
+C:/kyty/s145/log_w145_14.txt	9235a7ac	1	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/s145/log_w145_14.txt	9235a7ac	1	1	bonus_path_maker_mix	3897	41	NEW	46.4	23.3	530.7	0	40	314.2	1
+C:/kyty/s146/log_w146_09.txt	dac02fb9	1	0	(empty)	1	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_w146_09.txt	dac02fb9	1	1	collectible_viewer	35211	389	NEW	17.0	16.8	22.3	0	389	586.9	1
+C:/kyty/s146/log_w146_09_a1.txt	nojson:?	0	0	(empty)	1	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_w146_09_a1.txt	nojson:?	0	1	collectible_viewer	35211	389	NEW	17.0	16.8	22.3	0	389	586.9	1
+C:/kyty/s146/log_w146_12.txt	dac02fb9	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_w146_12.txt	dac02fb9	1	1	diorama_astro_skin	35331	391	NEW	18.2	17.6	92.3	0	391	588.9	1
+C:/kyty/s146/log_w146_12_a1.txt	nojson:?	0	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_w146_12_a1.txt	nojson:?	0	1	diorama_astro_skin	35331	391	NEW	18.2	17.6	92.3	0	391	588.9	1
+C:/kyty/s146/log_w146_13_a1.txt	nojson:?	0	0	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_w146_13_a1.txt	nojson:?	0	1	diorama_zoo	35259	390	NEW	23.6	22.8	95.8	0	390	587.8	1
+C:/kyty/s146/log_w146_13.txt	dac02fb9	1	0	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_w146_13.txt	dac02fb9	1	1	diorama_zoo	35259	390	NEW	23.6	22.8	95.8	0	390	587.8	1
+C:/kyty/s146/log_w146_11_a1.txt	nojson:?	0	0	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_w146_11_a1.txt	nojson:?	0	1	diorama_controller_skin	35231	390	NEW	20.7	20.2	96.0	0	390	587.3	1
+C:/kyty/s146/log_w146_11.txt	dac02fb9	1	0	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_w146_11.txt	dac02fb9	1	1	diorama_controller_skin	35231	390	NEW	20.7	20.2	96.0	0	390	587.3	1
+C:/kyty/s146/log_w146_14.txt	dac02fb9	1	0	(empty)	16	0	SHORT				0	0	0.3	1
+C:/kyty/s146/log_w146_14.txt	dac02fb9	1	1	fragile_battle_1	7477	81	NEW	35.2	23.0	411.7	0	79	315.5	1
+C:/kyty/s146/log_v146_17.txt	dac02fb9	1	0	(empty)	16	0	SHORT				0	0	0.3	1
+C:/kyty/s146/log_v146_17.txt	dac02fb9	1	1	fragile_battle_2	19911	219	OLD	766.3	643.6	1012.7	219	0	332.5	1
+C:/kyty/s288/s18c/log_s18_c05.txt	S18	1	0	(empty)	32	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s18c/log_s18_c05.txt	S18	1	1	hub_crashsite	19821	218	NEW	38.3	23.0	745.6	2	214	335.6	1
+C:/kyty/s146/log_w146_15.txt	dac02fb9	1	0	(empty)	11	0	SHORT				0	0	0.2	1
+C:/kyty/s146/log_w146_15.txt	dac02fb9	1	1	voxel_challenge_1	18725	206	NEW	21.8	20.0	221.2	0	206	312.1	1
+C:/kyty/s288/s18c/log_s18_c14.txt	S18	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s18c/log_s18_c14.txt	S18	1	1	ice_iceberg	19668	217	NEW	60.6	43.8	770.9	1	214	337.9	1
+C:/kyty/s288/s18c/log_s18_c12.txt	S18	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s18c/log_s18_c12.txt	S18	1	1	timestop_casino	19614	216	NEW	38.6	30.0	757.4	1	215	334.8	1
+C:/kyty/s288/s18c/log_s18_c02.txt	S18	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s18c/log_s18_c02.txt	S18	1	1	intro_next	19775	218	NEW	35.1	15.8	629.1	1	216	333.6	1
+C:/kyty/play/20261002T221534Z/log.txt	nojson:?	0	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/play/20261002T221534Z/log.txt	nojson:?	0	1	underwater_aerial_garden	20531	226	MIXED	454.5	48.6	1471.5	83	103	549.1	1
+C:/kyty/s146/log_w146_18.txt	dac02fb9	1	0	(empty)	11	0	SHORT				0	0	0.2	1
+C:/kyty/s146/log_w146_18.txt	dac02fb9	1	1	voxel_challenge_2	18716	206	NEW	22.8	20.0	268.9	0	206	312.0	1
+C:/kyty/s288/s18c/log_s18_c07.txt	S18	1	0	(empty)	14	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s18c/log_s18_c07.txt	S18	1	1	penguin_atlantis	19887	219	NEW	35.5	28.7	443.2	0	217	337.2	1
+C:/kyty/f287/f18e/log_f8_n1.txt	test:35c4a754	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f18e/log_f8_n1.txt	test:35c4a754	0	1	underwater_aerial_garden	25529	282	OLD	1442.7	137.8	1701.6	281	1	844.1	1
+C:/kyty/s146/log_w146_06.txt	dac02fb9	1	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/s146/log_w146_06.txt	dac02fb9	1	1	interactive_credit_00	14686	161	NEW	45.5	21.8	926.7	4	156	312.3	1
+C:/kyty/s288/s18c/log_s18_c13.txt	S18	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s18c/log_s18_c13.txt	S18	1	1	mini_giants_garden	19938	220	NEW	31.2	25.6	643.7	1	219	336.8	1
+C:/kyty/s288/s17c2/log_s17c_c2h.txt	test:43ef1cc1	0	0	(empty)	29	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s17c2/log_s17c_c2h.txt	test:43ef1cc1	0	1	hoover_beach	19998	220	NEW	41.9	32.3	850.4	1	218	338.5	1
+C:/kyty/s288/s18c/log_s18_c09.txt	S18	1	0	(empty)	44	0	SHORT				0	0	0.8	1
+C:/kyty/s288/s18c/log_s18_c09.txt	S18	1	1	rotating_level_day_and_night	19168	211	NEW	34.6	27.1	787.1	1	209	335.3	1
+C:/kyty/s146/log_w146_07.txt	dac02fb9	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_w146_07.txt	dac02fb9	1	1	non_interactive_credit	12455	137	NEW	19.8	14.0	163.2	0	137	211.4	1
+C:/kyty/s146/log_w146_07.txt	dac02fb9	1	2	(empty)	6	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_w146_07.txt	dac02fb9	1	3	worldmap	77	0	SHORT				0	0	1.5	1
+C:/kyty/s146/log_w146_07.txt	dac02fb9	1	4	(empty)	6	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_w146_07.txt	dac02fb9	1	5	transition_next	13032	143	NEW	21.4	20.8	41.2	0	143	285.2	1
+C:/kyty/s288/s17c2/log_s17c_n0h.txt	test:43ef1cc1	0	0	(empty)	30	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s17c2/log_s17c_n0h.txt	test:43ef1cc1	0	1	hoover_beach	19829	218	NEW	41.5	32.5	829.9	1	216	335.3	1
+C:/kyty/s288/s12/log_s12_gw.txt	S12	1	0	(empty)	61	0	SHORT				0	0	1.0	1
+C:/kyty/s288/s12/log_s12_gw.txt	S12	1	1	hero_kratos	19880	219	NEW	35.3	24.9	410.7	0	215	337.5	1
+C:/kyty/f287/fs5/fs5c/log_fs5_hb.txt	FS5	1	0	(empty)	29	0	SHORT				0	0	0.5	1
+C:/kyty/f287/fs5/fs5c/log_fs5_hb.txt	FS5	1	1	hoover_beach	19873	219	NEW	41.6	32.0	808.5	1	217	338.2	1
+C:/kyty/s146/log_w146_19.txt	dac02fb9	1	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/s146/log_w146_19.txt	dac02fb9	1	1	fragile_battle_3	7574	82	NEW	35.7	23.0	383.7	0	81	315.4	1
+C:/kyty/s288/s18c/log_s18_c17.txt	S18	1	0	(empty)	25	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s18c/log_s18_c17.txt	S18	1	1	volcano_mountain	19870	219	NEW	38.2	26.1	1129.2	1	216	335.7	1
+C:/kyty/f287/fs4c/log_fs4_hb.txt	FS4	1	0	(empty)	29	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs4c/log_fs4_hb.txt	FS4	1	1	hoover_beach	19757	218	NEW	42.6	32.2	787.9	1	216	339.6	1
+C:/kyty/s288/s18c/log_s18_c16.txt	S18	1	0	(empty)	30	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s18c/log_s18_c16.txt	S18	1	1	hoover_beach	19668	217	NEW	42.8	31.7	885.2	1	215	335.8	1
+C:/kyty/s288/s18c/log_s18_c04.txt	S18	1	0	(empty)	2	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s18c/log_s18_c04.txt	S18	1	1	ps_logo	843	8	NEW	27.0	16.6	90.7	0	8	14.1	1
+C:/kyty/s288/s18c/log_s18_c04.txt	S18	1	2	(empty)	7	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s18c/log_s18_c04.txt	S18	1	3	worldmap	44	0	SHORT				0	0	2.1	1
+C:/kyty/s288/s18c/log_s18_c04.txt	S18	1	4	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s18c/log_s18_c04.txt	S18	1	5	transition_next	19388	214	NEW	23.4	21.1	97.9	0	214	331.5	1
+C:/kyty/s288/s18c/log_s18_c03.txt	S18	1	0	(empty)	10	0	SHORT				0	0	0.2	1
+C:/kyty/s288/s18c/log_s18_c03.txt	S18	1	1	worldmap	19	0	SHORT				0	0	1.8	1
+C:/kyty/s288/s18c/log_s18_c03.txt	S18	1	2	(empty)	8	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s18c/log_s18_c03.txt	S18	1	3	transition_next	19878	219	NEW	22.7	21.7	81.0	0	219	331.4	1
+C:/kyty/f287/f12f/log_f12_vw.txt	test:b714f5c4	0	0	(empty)	46	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f12f/log_f12_vw.txt	test:b714f5c4	0	1	voxel_world	19885	219	NEW	27.9	24.0	448.9	0	218	336.7	1
+C:/kyty/f287/f16q/log_f16q_w.txt	test:7e4ded19	0	0	(empty)	16	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f16q/log_f16q_w.txt	test:7e4ded19	0	1	enemy_final	19961	220	NEW	20.6	19.5	49.1	0	220	334.4	1
+C:/kyty/f287/f16m/log_f5cmu_0.txt	test:d4328b0c	0	0	(empty)	19	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f16m/log_f5cmu_0.txt	test:d4328b0c	0	1	enemy_final	19946	220	NEW	21.3	20.0	34.0	0	220	334.2	1
+C:/kyty/f287/f16q/log_f5cmu_1b.txt	test:7e4ded19	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f16q/log_f5cmu_1b.txt	test:7e4ded19	0	1	enemy_final	19927	220	NEW	21.4	19.7	42.7	0	220	333.8	1
+C:/kyty/f287/fs8c/log_fs8_ef.txt	FS8	1	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/f287/fs8c/log_fs8_ef.txt	FS8	1	1	enemy_final	19942	220	NEW	21.0	20.0	41.1	0	220	336.0	1
+C:/kyty/f287/f16q/log_f26_0.txt	test:7e4ded19	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f16q/log_f26_0.txt	test:7e4ded19	0	1	enemy_final	19920	220	NEW	21.3	19.9	40.0	0	220	333.8	1
+C:/kyty/f287/f16q/log_f5cmu_0b.txt	test:7e4ded19	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f16q/log_f5cmu_0b.txt	test:7e4ded19	0	1	enemy_final	19909	219	NEW	21.2	19.8	40.0	0	219	333.6	1
+C:/kyty/f287/f14g/log_f19_ef.txt	test:c01bde0c	0	0	(empty)	14	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f14g/log_f19_ef.txt	test:c01bde0c	0	1	enemy_final	19951	220	NEW	20.9	19.6	40.2	0	220	336.1	1
+C:/kyty/f287/f16q/log_f26_1.txt	test:7e4ded19	0	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f16q/log_f26_1.txt	test:7e4ded19	0	1	enemy_final	19925	220	NEW	21.0	19.8	31.0	0	220	333.8	1
+C:/kyty/f287/f16m/log_f5id_ef.txt	test:d4328b0c	0	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f16m/log_f5id_ef.txt	test:d4328b0c	0	1	enemy_final	19915	219	NEW	20.4	20.0	39.5	0	219	333.6	1
+C:/kyty/f287/f16m/log_f5cmu_1.txt	test:d4328b0c	0	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f16m/log_f5cmu_1.txt	test:d4328b0c	0	1	enemy_final	19904	219	NEW	21.2	20.0	32.4	0	219	333.5	1
+C:/kyty/s146/log_r146_01.txt	dac02fb9	1	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/s146/log_r146_01.txt	dac02fb9	1	1	hoover_beach	19827	218	NEW	42.5	31.5	948.3	2	216	333.1	1
+C:/kyty/s288/s18c/log_s18_e2.txt	S18	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s18c/log_s18_e2.txt	S18	1	1	mini_giants_garden	19929	220	NEW	30.1	24.0	487.6	0	218	332.6	1
+C:/kyty/f287/f16m/log_f5id_eb.txt	test:d4328b0c	0	0	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/f287/f16m/log_f5id_eb.txt	test:d4328b0c	0	1	ending_boss_after_credit	20007	220	NEW	18.4	16.4	100.9	0	220	335.0	1
+C:/kyty/s288/s18c/log_s18_c01.txt	S18	1	0	(empty)	4	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s18c/log_s18_c01.txt	S18	1	1	title_controller_ship	19926	220	NEW	32.0	26.6	157.2	0	220	334.3	1
+C:/kyty/s288/s17c2/log_s17c_e3h.txt	test:43ef1cc1	0	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s17c2/log_s17c_e3h.txt	test:43ef1cc1	0	1	hoover_beach	19878	219	NEW	42.1	32.4	797.9	2	217	332.2	1
+C:/kyty/f287/f11f/log_d11_ef.txt	test:b97efad4	0	0	(empty)	16	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f11f/log_d11_ef.txt	test:b97efad4	0	1	enemy_final	19939	220	NEW	20.5	19.8	39.4	0	220	332.6	1
+C:/kyty/s146/log_v146_14.txt	dac02fb9	1	0	(empty)	15	0	SHORT				0	0	0.3	1
+C:/kyty/s146/log_v146_14.txt	dac02fb9	1	1	fragile_battle_1	19915	219	NEW	27.6	22.9	373.2	0	218	332.3	1
+C:/kyty/f287/f16f/log_f5_ef.txt	test:4ad735ad	0	0	(empty)	16	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f16f/log_f5_ef.txt	test:4ad735ad	0	1	enemy_final	19939	220	NEW	20.5	19.8	39.5	0	220	332.6	1
+C:/kyty/f287/fs3/fs3c/log_fs3_hb.txt	FS3	1	0	(empty)	27	0	SHORT				0	0	0.5	1
+C:/kyty/f287/fs3/fs3c/log_fs3_hb.txt	FS3	1	1	hoover_beach	19873	219	NEW	41.3	31.4	713.4	1	217	332.0	1
+C:/kyty/f287/f11f/log_d11_vw.txt	test:b97efad4	0	0	(empty)	50	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f11f/log_d11_vw.txt	test:b97efad4	0	1	voxel_world	19922	220	NEW	28.1	24.0	483.0	0	219	333.2	1
+C:/kyty/f287/f9/f9g/log_f9g_hb.txt	test:24efead3	0	0	(empty)	31	0	SHORT				0	0	0.5	1
+C:/kyty/f287/f9/f9g/log_f9g_hb.txt	test:24efead3	0	1	hoover_beach	19826	218	NEW	42.2	31.8	828.9	2	216	332.2	1
+C:/kyty/s145/log_w145_10.txt	9235a7ac	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s145/log_w145_10.txt	9235a7ac	1	1	shuriken_ninja_castle	2899	30	NEW	90.6	33.1	655.8	1	28	316.7	1
+C:/kyty/s146/log_w146_17.txt	dac02fb9	1	0	(empty)	16	0	SHORT				0	0	0.3	1
+C:/kyty/s146/log_w146_17.txt	dac02fb9	1	1	fragile_battle_2	6731	73	NEW	38.9	23.7	431.6	0	71	315.9	1
+C:/kyty/s146/log_r146_03.txt	dac02fb9	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s146/log_r146_03.txt	dac02fb9	1	1	timestop_casino	19148	211	NEW	40.7	24.7	839.9	1	210	332.6	1
+C:/kyty/f287/fsc/log_fs_g.txt	dac02fb9	1	0	(empty)	45	0	SHORT				0	0	0.8	1
+C:/kyty/f287/fsc/log_fs_g.txt	dac02fb9	1	1	mini_giants_garden	19917	219	NEW	31.2	25.6	656.4	1	218	332.7	1
+C:/kyty/s146/log_v146_19.txt	dac02fb9	1	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/s146/log_v146_19.txt	dac02fb9	1	1	fragile_battle_3	19926	220	NEW	30.8	24.1	685.8	1	219	332.3	1
+C:/kyty/f287/f16f/log_f5_eb.txt	test:4ad735ad	0	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/f287/f16f/log_f5_eb.txt	test:4ad735ad	0	1	ending_boss_after_credit	20013	221	NEW	18.9	16.5	91.5	0	221	334.4	1
+C:/kyty/s146/log_v146_06.txt	dac02fb9	1	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/s146/log_v146_06.txt	dac02fb9	1	1	interactive_credit_00	19925	220	NEW	41.8	23.0	1021.3	3	215	332.6	1
+C:/kyty/s146/log_v146_10.txt	dac02fb9	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_v146_10.txt	dac02fb9	1	1	hub_crashsite_diorama	19986	220	NEW	20.1	17.5	105.8	0	220	335.6	1
+C:/kyty/s146/log_v146_16.txt	dac02fb9	1	0	(empty)	16	0	SHORT				0	0	0.3	1
+C:/kyty/s146/log_v146_16.txt	dac02fb9	1	1	armadillo_challenge_1	19917	219	NEW	30.0	25.7	267.3	0	219	332.2	1
+C:/kyty/s146/log_v146_05.txt	dac02fb9	1	0	(empty)	8	0	SHORT				0	0	0.1	1
+C:/kyty/s146/log_v146_05.txt	dac02fb9	1	1	robot_builder_next	20107	222	NEW	21.7	17.7	454.5	0	221	335.2	1
+C:/kyty/s288/s15/log_k_02.txt	FS8	1	0	(empty)	19	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s15/log_k_02.txt	FS8	1	1	intro_next	17955	198	NEW	37.2	16.0	570.8	0	195	304.3	1
+C:/kyty/f287/f25f/log_f25_s05.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s05.txt	test:e342b839	0	1	pot_treasure_cave	18766	207	NEW	34.0	26.0	307.6	0	206	332.9	1
+C:/kyty/f287/f25f/log_f25_s01.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s01.txt	test:e342b839	0	1	pot_treasure_cave	18796	207	NEW	34.0	26.0	357.8	0	205	332.9	1
+C:/kyty/s288/s15/log_k_17.txt	FS8	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s15/log_k_17.txt	FS8	1	1	volcano_mountain	18129	200	NEW	35.2	25.0	849.5	2	197	302.6	1
+C:/kyty/s146/log_v146_15.txt	dac02fb9	1	0	(empty)	11	0	SHORT				0	0	0.2	1
+C:/kyty/s146/log_v146_15.txt	dac02fb9	1	1	voxel_challenge_1	19925	220	NEW	25.3	20.2	217.7	0	220	332.2	1
+C:/kyty/s146/log_v146_18.txt	dac02fb9	1	0	(empty)	12	0	SHORT				0	0	0.2	1
+C:/kyty/s146/log_v146_18.txt	dac02fb9	1	1	voxel_challenge_2	19914	219	NEW	28.7	22.3	270.7	0	219	331.9	1
+C:/kyty/s146/log_v146_08.txt	dac02fb9	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_v146_08.txt	dac02fb9	1	1	ending_boss_after_credit	19945	220	NEW	21.4	18.2	91.3	0	220	332.4	1
+C:/kyty/f287/f25m/log_b36_k03.txt	test:9745eb78	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_k03.txt	test:9745eb78	0	1	pot_treasure_cave	18626	205	NEW	32.7	24.7	356.6	0	203	333.0	1
+C:/kyty/f287/f25f/log_f25_z1.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_z1.txt	test:e342b839	0	1	pot_treasure_cave	19346	213	NEW	34.1	26.4	327.8	0	212	333.0	1
+C:/kyty/s145/log_w145_15.txt	9235a7ac	1	0	(empty)	19	0	SHORT				0	0	0.4	1
+C:/kyty/s145/log_w145_15.txt	9235a7ac	1	1	enemy_bird	7981	87	NEW	30.8	22.0	342.0	0	85	316.0	1
+C:/kyty/s288/s15/log_k_04.txt	FS8	1	0	(empty)	1	0	SHORT				0	0	0.0	1
+C:/kyty/s288/s15/log_k_04.txt	FS8	1	1	ps_logo	854	8	NEW	23.3	16.2	61.8	0	8	14.2	1
+C:/kyty/s288/s15/log_k_04.txt	FS8	1	2	(empty)	7	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s15/log_k_04.txt	FS8	1	3	worldmap	77	0	SHORT				0	0	1.3	1
+C:/kyty/s288/s15/log_k_04.txt	FS8	1	4	(empty)	8	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s15/log_k_04.txt	FS8	1	5	transition_next	18052	199	NEW	23.1	21.0	106.8	0	199	301.4	1
+C:/kyty/s288/s18c/log_s18_c19.txt	S18	1	0	(empty)	33	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s18c/log_s18_c19.txt	S18	1	1	enemy_gorilla	17768	196	NEW	34.6	24.9	345.2	0	194	335.4	1
+C:/kyty/f287/f25m/log_b36_k09.txt	test:9745eb78	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_k09.txt	test:9745eb78	0	1	pot_treasure_cave	18857	208	NEW	34.1	26.0	317.6	0	207	333.3	1
+C:/kyty/s145/log_w145_17.txt	9235a7ac	1	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/s145/log_w145_17.txt	9235a7ac	1	1	enemy_final	18714	206	NEW	20.4	19.9	39.5	0	206	312.8	1
+C:/kyty/s145/log_w145_12.txt	9235a7ac	1	0	(empty)	25	0	SHORT				0	0	0.5	1
+C:/kyty/s145/log_w145_12.txt	9235a7ac	1	1	mini_rocket_chain	8714	95	NEW	38.5	25.0	577.7	0	93	319.2	1
+C:/kyty/s288/s15/log_k_05.txt	FS8	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_k_05.txt	FS8	1	1	hub_crashsite	18060	199	NEW	40.3	22.7	996.0	1	196	302.9	1
+C:/kyty/f287/f25f/log_f25_c1.txt	test:e342b839	0	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_c1.txt	test:e342b839	0	1	pot_treasure_cave	19026	210	NEW	33.9	26.0	327.6	0	208	333.1	1
+C:/kyty/f287/f25f/log_f25_pb.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_pb.txt	test:e342b839	0	1	pot_treasure_cave	18307	202	NEW	33.2	24.7	357.1	0	200	332.9	1
+C:/kyty/f287/f25f/log_f25_s03.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s03.txt	test:e342b839	0	1	pot_treasure_cave	18863	208	NEW	34.2	26.0	338.2	0	206	332.9	1
+C:/kyty/f287/f25f/log_f25_s07.txt	test:e342b839	0	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s07.txt	test:e342b839	0	1	pot_treasure_cave	18209	200	NEW	32.6	24.7	326.3	0	199	333.1	1
+C:/kyty/f287/f25m/log_b36_k13.txt	test:9745eb78	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_k13.txt	test:9745eb78	0	1	pot_treasure_cave	18468	203	NEW	35.7	27.3	329.1	0	201	333.2	1
+C:/kyty/f287/f25m/log_b36_k12.txt	test:9745eb78	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_k12.txt	test:9745eb78	0	1	pot_treasure_cave	18779	207	NEW	34.3	26.1	337.6	0	205	333.1	1
+C:/kyty/f287/f25f/log_f25_s09.txt	test:e342b839	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s09.txt	test:e342b839	0	1	pot_treasure_cave	18861	208	NEW	34.2	26.1	378.2	0	206	332.9	1
+C:/kyty/f287/f25m/log_b36_k05.txt	test:9745eb78	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_k05.txt	test:9745eb78	0	1	pot_treasure_cave	18510	204	NEW	32.9	24.7	336.9	0	201	332.8	1
+C:/kyty/s288/s18c2/log_s18_w2.txt	S18	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s18c2/log_s18_w2.txt	S18	1	1	underwater_aerial_garden	2446	25	MIXED	149.7	43.7	606.8	1	22	324.8	1
+C:/kyty/f287/f25m/log_b36_k11.txt	test:9745eb78	0	0	(empty)	24	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_k11.txt	test:9745eb78	0	1	pot_treasure_cave	18736	206	NEW	32.6	24.7	316.2	0	205	332.8	1
+C:/kyty/f287/f25m/log_b36_k07.txt	test:9745eb78	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_k07.txt	test:9745eb78	0	1	pot_treasure_cave	18692	206	NEW	34.3	26.1	378.3	0	204	332.9	1
+C:/kyty/s288/s18c/log_s18_c18.txt	S18	1	0	(empty)	44	0	SHORT				0	0	0.8	1
+C:/kyty/s288/s18c/log_s18_c18.txt	S18	1	1	voxel_world	17600	194	NEW	29.7	24.0	535.0	0	193	334.5	1
+C:/kyty/s146/log_w146_10.txt	dac02fb9	1	0	(empty)	3	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_w146_10.txt	dac02fb9	1	1	hub_crashsite_diorama	18860	208	NEW	20.0	18.6	164.1	0	208	314.4	1
+C:/kyty/f287/f25f/log_f25_s13.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s13.txt	test:e342b839	0	1	pot_treasure_cave	18681	206	NEW	34.3	26.0	358.0	0	204	333.5	1
+C:/kyty/f287/f25f/log_f25_s11.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s11.txt	test:e342b839	0	1	pot_treasure_cave	18686	206	NEW	34.2	26.0	358.0	0	205	332.8	1
+C:/kyty/f287/f25m/log_b36_k01.txt	test:9745eb78	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_k01.txt	test:9745eb78	0	1	pot_treasure_cave	18497	204	NEW	32.9	24.7	356.5	0	202	333.2	1
+C:/kyty/s288/s15/log_k_03.txt	FS8	1	0	(empty)	9	0	SHORT				0	0	0.2	1
+C:/kyty/s288/s15/log_k_03.txt	FS8	1	1	worldmap	46	0	SHORT				0	0	1.2	1
+C:/kyty/s288/s15/log_k_03.txt	FS8	1	2	(empty)	10	0	SHORT				0	0	0.2	1
+C:/kyty/s288/s15/log_k_03.txt	FS8	1	3	transition_next	18030	199	NEW	22.9	21.6	97.2	0	199	301.2	1
+C:/kyty/s288/s15/log_k_14.txt	FS8	1	0	(empty)	32	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s15/log_k_14.txt	FS8	1	1	ice_iceberg	17987	198	NEW	63.7	44.1	749.1	2	194	302.5	1
+C:/kyty/f287/f25f/log_f25_s19.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s19.txt	test:e342b839	0	1	pot_treasure_cave	18512	204	NEW	34.2	26.0	318.1	0	202	333.0	1
+C:/kyty/s288/s15/log_k_12.txt	FS8	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_k_12.txt	FS8	1	1	timestop_casino	18086	199	NEW	39.8	30.0	627.6	1	197	303.3	1
+C:/kyty/s288/s15/log_k_01.txt	FS8	1	0	(empty)	4	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s15/log_k_01.txt	FS8	1	1	title_controller_ship	18141	200	NEW	33.1	27.8	177.8	0	200	305.4	1
+C:/kyty/f287/f25f/log_f25_s21.txt	test:e342b839	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s21.txt	test:e342b839	0	1	pot_treasure_cave	18421	203	NEW	32.7	24.7	336.5	0	202	333.0	1
+C:/kyty/f287/f25f/log_f25_s25.txt	test:e342b839	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s25.txt	test:e342b839	0	1	pot_treasure_cave	17589	194	NEW	35.7	27.1	309.0	0	193	333.0	1
+C:/kyty/s288/s15/log_k_09.txt	FS8	1	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s15/log_k_09.txt	FS8	1	1	rotating_level_day_and_night	18096	199	NEW	32.1	25.8	731.7	1	197	302.3	1
+C:/kyty/s288/s15/log_k_13.txt	FS8	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_k_13.txt	FS8	1	1	mini_giants_garden	18128	200	NEW	31.8	25.6	654.8	1	199	302.5	1
+C:/kyty/s288/s15/log_k_16.txt	FS8	1	0	(empty)	25	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s15/log_k_16.txt	FS8	1	1	hoover_beach	18059	199	NEW	42.3	32.6	766.7	1	197	301.8	1
+C:/kyty/f287/f25f/log_f25_s29.txt	test:e342b839	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s29.txt	test:e342b839	0	1	pot_treasure_cave	17997	198	NEW	33.7	24.7	378.3	0	196	333.2	1
+C:/kyty/s145/log_w145_04.txt	9235a7ac	1	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/s145/log_w145_04.txt	9235a7ac	1	1	enemy_taco	5745	62	NEW	51.5	25.0	398.9	0	60	317.6	1
+C:/kyty/s146/log_w146_08.txt	dac02fb9	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s146/log_w146_08.txt	dac02fb9	1	1	ending_boss_after_credit	18627	205	NEW	17.3	15.8	148.3	0	205	312.5	1
+C:/kyty/s288/s15/log_k_18.txt	FS8	1	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s15/log_k_18.txt	FS8	1	1	voxel_world	18137	200	NEW	28.7	24.7	454.6	0	199	302.5	1
+C:/kyty/f287/f25f/log_f25_k03.txt	test:e342b839	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_k03.txt	test:e342b839	0	1	pot_treasure_cave	17797	196	NEW	34.3	26.0	338.3	0	194	333.3	1
+C:/kyty/f287/f25f/log_f25_s27.txt	test:e342b839	0	0	(empty)	25	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s27.txt	test:e342b839	0	1	pot_treasure_cave	18074	199	NEW	33.2	24.7	346.6	0	197	333.1	1
+C:/kyty/f287/f25f/log_f25_s23.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s23.txt	test:e342b839	0	1	pot_treasure_cave	18024	198	NEW	34.3	26.0	347.9	0	196	332.9	1
+C:/kyty/s288/s15/log_k_07.txt	FS8	1	0	(empty)	15	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s15/log_k_07.txt	FS8	1	1	penguin_atlantis	17232	190	NEW	36.5	28.4	496.7	0	188	305.3	1
+C:/kyty/f287/f25f/log_f25_s33.txt	test:e342b839	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s33.txt	test:e342b839	0	1	pot_treasure_cave	17907	197	NEW	34.3	26.0	327.6	0	195	333.2	1
+C:/kyty/f287/f25f/log_f25_s17.txt	test:e342b839	0	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s17.txt	test:e342b839	0	1	pot_treasure_cave	17775	196	NEW	34.6	26.0	377.8	0	194	333.2	1
+C:/kyty/f287/f25f/log_f25_s30.txt	test:e342b839	0	0	(empty)	25	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s30.txt	test:e342b839	0	1	pot_treasure_cave	17738	195	NEW	34.5	26.0	328.9	0	193	333.4	1
+C:/kyty/f287/f25f/log_f25_k05.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_k05.txt	test:e342b839	0	1	pot_treasure_cave	17717	195	NEW	34.8	26.4	347.9	0	194	333.0	1
+C:/kyty/f287/f25f/log_f25_k01.txt	test:e342b839	0	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_k01.txt	test:e342b839	0	1	pot_treasure_cave	17173	189	NEW	34.6	26.0	347.7	0	188	333.6	1
+C:/kyty/f287/f25f/log_f25_s32.txt	test:e342b839	0	0	(empty)	24	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s32.txt	test:e342b839	0	1	pot_treasure_cave	17464	192	NEW	33.7	24.7	327.6	0	190	334.0	1
+C:/kyty/f287/f25f/log_f25_s34.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s34.txt	test:e342b839	0	1	pot_treasure_cave	17362	191	NEW	34.6	26.0	348.1	0	189	332.7	1
+C:/kyty/s145/log_v145_04.txt	9235a7ac	1	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/s145/log_v145_04.txt	9235a7ac	1	1	enemy_taco	19921	220	NEW	32.9	24.7	387.3	0	217	332.3	1
+C:/kyty/s145/log_v145_12.txt	9235a7ac	1	0	(empty)	24	0	SHORT				0	0	0.4	1
+C:/kyty/s145/log_v145_12.txt	9235a7ac	1	1	mini_rocket_chain	19923	220	NEW	30.6	23.7	617.0	1	218	332.4	1
+C:/kyty/f287/f25f/log_f25_s31.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s31.txt	test:e342b839	0	1	pot_treasure_cave	17283	190	NEW	36.5	27.4	349.9	0	188	333.3	1
+C:/kyty/s144/log_w144_16.txt	9235a7ac	1	0	(empty)	29	0	SHORT				0	0	0.5	1
+C:/kyty/s144/log_w144_16.txt	9235a7ac	1	1	hoover_beach	6890	75	NEW	58.4	33.7	815.3	1	73	315.4	1
+C:/kyty/s144/log_v144_13.txt	9235a7ac	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s144/log_v144_13.txt	9235a7ac	1	1	timestop_casino	19720	217	NEW	41.3	31.3	980.0	1	216	332.2	1
+C:/kyty/s144/log_v144_14.txt	9235a7ac	1	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/s144/log_v144_14.txt	9235a7ac	1	1	ice_iceberg	19544	215	NEW	61.8	44.4	611.0	1	212	332.7	1
+C:/kyty/s144/log_v144_20.txt	9235a7ac	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_v144_20.txt	9235a7ac	1	1	mini_giants_garden	19864	219	NEW	29.7	23.8	448.8	0	217	332.7	1
+C:/kyty/s144/log_v144_17.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/s144/log_v144_17.txt	9235a7ac	1	1	volcano_mountain	19797	218	NEW	33.6	23.5	1208.5	1	215	332.4	1
+C:/kyty/s145/log_w145_02.txt	9235a7ac	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s145/log_w145_02.txt	9235a7ac	1	1	small_pot_lava	3253	34	OLD	950.6	878.4	1011.5	34	0	313.9	1
+C:/kyty/s144/log_v144_16.txt	9235a7ac	1	0	(empty)	26	0	SHORT				0	0	0.4	1
+C:/kyty/s144/log_v144_16.txt	9235a7ac	1	1	hoover_beach	19658	217	NEW	43.0	32.0	939.3	2	215	332.6	1
+C:/kyty/f287/f25f/log_f25_z2.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_z2.txt	test:e342b839	0	1	bonus_path_maker_mix	17062	188	NEW	28.6	23.1	550.8	0	187	331.9	1
+C:/kyty/f287/f25f/log_f25_c2.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_c2.txt	test:e342b839	0	1	bonus_path_maker_mix	16636	183	NEW	31.0	23.7	792.4	1	181	332.5	1
+C:/kyty/s144/log_v144_18.txt	9235a7ac	1	0	(empty)	45	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_v144_18.txt	9235a7ac	1	1	voxel_world	19910	219	NEW	28.3	24.0	437.9	0	218	332.4	1
+C:/kyty/s145/log_v145_17.txt	9235a7ac	1	0	(empty)	15	0	SHORT				0	0	0.3	1
+C:/kyty/s145/log_v145_17.txt	9235a7ac	1	1	enemy_final	19945	220	NEW	21.8	20.1	40.0	0	220	332.5	1
+C:/kyty/f287/f25m/log_b36_k02.txt	test:9745eb78	0	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25m/log_b36_k02.txt	test:9745eb78	0	1	bonus_path_maker_mix	16260	179	NEW	33.4	25.1	892.0	1	177	332.9	1
+C:/kyty/s145/log_v145_15.txt	9235a7ac	1	0	(empty)	19	0	SHORT				0	0	0.3	1
+C:/kyty/s145/log_v145_15.txt	9235a7ac	1	1	enemy_bird	19940	220	NEW	26.1	22.0	352.0	0	219	332.6	1
+C:/kyty/s145/log_v145_05.txt	9235a7ac	1	0	(empty)	14	0	SHORT				0	0	0.2	1
+C:/kyty/s145/log_v145_05.txt	9235a7ac	1	1	jack_in_the_box	19890	219	NEW	27.8	22.0	618.7	1	217	332.7	1
+C:/kyty/f287/f4c/log_f4c_g.txt	test:c9a5e198	0	0	(empty)	49	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f4c/log_f4c_g.txt	test:c9a5e198	0	1	mini_giants_garden	19308	213	NEW	30.4	24.0	668.1	1	212	332.6	1
+C:/kyty/s145/log_v145_13.txt	9235a7ac	1	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/s145/log_v145_13.txt	9235a7ac	1	1	enemy_chameleon	19705	217	NEW	32.3	22.5	516.8	0	213	332.5	1
+C:/kyty/s145/log_v145_07.txt	9235a7ac	1	0	(empty)	16	0	SHORT				0	0	0.3	1
+C:/kyty/s145/log_v145_07.txt	9235a7ac	1	1	picup_light	19935	220	NEW	24.7	20.8	405.8	0	219	332.4	1
+C:/kyty/f287/f25f/log_f25_s18.txt	test:e342b839	0	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s18.txt	test:e342b839	0	1	bonus_path_maker_mix	16331	180	NEW	32.8	24.1	948.6	1	178	332.7	1
+C:/kyty/f287/f25m/log_b36_k10.txt	test:9745eb78	0	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25m/log_b36_k10.txt	test:9745eb78	0	1	bonus_path_maker_mix	16661	183	NEW	30.5	24.4	601.6	1	182	332.3	1
+C:/kyty/f287/f25f/log_f25_s20.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s20.txt	test:e342b839	0	1	bonus_path_maker_mix	16218	178	NEW	30.8	23.1	804.5	1	176	332.5	1
+C:/kyty/f287/f25f/log_f25_s04.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s04.txt	test:e342b839	0	1	bonus_path_maker_mix	16705	184	NEW	28.7	23.4	620.0	1	183	332.3	1
+C:/kyty/f287/f25m/log_b36_k06.txt	test:9745eb78	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25m/log_b36_k06.txt	test:9745eb78	0	1	bonus_path_maker_mix	16626	183	NEW	28.4	23.1	522.1	0	182	332.6	1
+C:/kyty/s146/log_w146_05.txt	dac02fb9	1	0	(empty)	9	0	SHORT				0	0	0.2	1
+C:/kyty/s146/log_w146_05.txt	dac02fb9	1	1	robot_builder_next	16347	180	NEW	22.9	17.8	514.1	0	179	314.7	1
+C:/kyty/f287/f25f/log_f25_s08.txt	test:e342b839	0	0	(empty)	19	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s08.txt	test:e342b839	0	1	bonus_path_maker_mix	16719	184	NEW	31.3	25.1	523.1	0	182	332.3	1
+C:/kyty/f287/f25f/log_f25_s02.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s02.txt	test:e342b839	0	1	bonus_path_maker_mix	16617	183	NEW	29.0	23.1	590.0	0	181	331.8	1
+C:/kyty/f287/f25f/log_f25_s10.txt	test:e342b839	0	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s10.txt	test:e342b839	0	1	bonus_path_maker_mix	16695	184	NEW	29.0	23.3	638.8	1	183	332.1	1
+C:/kyty/f287/f25m/log_b36_k04.txt	test:9745eb78	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25m/log_b36_k04.txt	test:9745eb78	0	1	bonus_path_maker_mix	16530	182	NEW	30.5	24.7	572.7	0	181	332.3	1
+C:/kyty/f287/f25m/log_b36_k08.txt	test:9745eb78	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25m/log_b36_k08.txt	test:9745eb78	0	1	bonus_path_maker_mix	16503	182	NEW	28.4	22.8	531.7	0	181	333.0	1
+C:/kyty/s288/s15/log_k_19.txt	FS8	1	0	(empty)	29	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s15/log_k_19.txt	FS8	1	1	enemy_gorilla	16659	183	NEW	34.4	23.7	363.6	0	180	302.4	1
+C:/kyty/f287/f25f/log_f25_s06.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s06.txt	test:e342b839	0	1	bonus_path_maker_mix	16556	182	NEW	29.0	23.1	618.9	1	181	331.9	1
+C:/kyty/s144/log_w144_17.txt	9235a7ac	1	0	(empty)	24	0	SHORT				0	0	0.4	1
+C:/kyty/s144/log_w144_17.txt	9235a7ac	1	1	volcano_mountain	5029	54	NEW	58.7	25.3	788.7	2	51	317.9	1
+C:/kyty/f287/f25f/log_f25_s16.txt	test:e342b839	0	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s16.txt	test:e342b839	0	1	bonus_path_maker_mix	16246	179	NEW	34.6	25.4	1036.8	1	177	332.8	1
+C:/kyty/s146/log_r146_04.txt	dac02fb9	1	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/s146/log_r146_04.txt	dac02fb9	1	1	bonus_path_maker_mix	15443	170	NEW	33.3	24.4	948.3	1	169	332.9	1
+C:/kyty/s143/log_v143_07.txt	9235a7ac	1	0	(empty)	32	0	SHORT				0	0	0.5	1
+C:/kyty/s143/log_v143_07.txt	9235a7ac	1	1	rocket_hourglass	16881	186	NEW	47.6	28.1	1079.0	2	182	338.8	1
+C:/kyty/s144/log_w144_13.txt	9235a7ac	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s144/log_w144_13.txt	9235a7ac	1	1	timestop_casino	5257	57	NEW	61.1	30.6	823.0	1	56	316.1	1
+C:/kyty/f287/f25f/log_f25_s12.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s12.txt	test:e342b839	0	1	bonus_path_maker_mix	15902	175	NEW	28.6	23.1	540.6	0	174	332.0	1
+C:/kyty/f287/f25f/log_f25_s14.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s14.txt	test:e342b839	0	1	bonus_path_maker_mix	16161	178	NEW	30.9	23.1	919.3	1	177	332.7	1
+C:/kyty/s145/log_v145_03.txt	9235a7ac	1	0	(empty)	14	0	SHORT				0	0	0.2	1
+C:/kyty/s145/log_v145_03.txt	9235a7ac	1	1	spin_drill_natural_cave	19220	212	NEW	34.9	25.3	324.3	0	210	332.5	1
+C:/kyty/f287/f25f/log_f25_pc.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_pc.txt	test:e342b839	0	1	bonus_path_maker_mix	16496	181	NEW	30.0	24.4	552.5	0	180	332.0	1
+C:/kyty/s143/log_v143_08.txt	9235a7ac	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/s143/log_v143_08.txt	9235a7ac	1	1	pot_treasure_cave	18839	207	NEW	32.9	24.7	356.5	0	205	332.8	1
+C:/kyty/f287/f25f/log_f25_s24.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s24.txt	test:e342b839	0	1	bonus_path_maker_mix	16116	177	NEW	29.1	23.4	531.4	0	175	332.1	1
+C:/kyty/f287/f25f/log_f25_s22.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s22.txt	test:e342b839	0	1	bonus_path_maker_mix	15838	174	NEW	31.7	23.4	841.2	1	172	332.8	1
+C:/kyty/s144/log_w144_14.txt	9235a7ac	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s144/log_w144_14.txt	9235a7ac	1	1	ice_iceberg	5302	57	NEW	142.6	87.3	853.9	1	52	319.1	1
+C:/kyty/s145/log_v145_06_a1.txt	nojson:?	0	0	(empty)	59	0	SHORT				0	0	1.0	1
+C:/kyty/s145/log_v145_06_a1.txt	nojson:?	0	1	final_stage	17327	191	NEW	45.2	19.0	804.5	1	188	464.8	1
+C:/kyty/s144/log_v144_10.txt	9235a7ac	1	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/s144/log_v144_10.txt	9235a7ac	1	1	pot_treasure_cave	18650	205	NEW	36.3	27.7	380.7	0	203	333.1	1
+C:/kyty/s145/log_v145_11.txt	9235a7ac	1	0	(empty)	63	0	SHORT				0	0	1.1	1
+C:/kyty/s145/log_v145_11.txt	9235a7ac	1	1	final_stage	17634	194	NEW	46.7	19.4	874.7	1	190	337.3	1
+C:/kyty/s288/s18c/log_s18_c10.txt	S18	1	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s18c/log_s18_c10.txt	S18	1	1	bumper_enemy_snowy_canyon	13201	145	NEW	40.7	33.4	321.1	0	144	337.4	1
+C:/kyty/s145/log_v145_06.txt	9235a7ac	1	0	(empty)	59	0	SHORT				0	0	1.0	1
+C:/kyty/s145/log_v145_06.txt	9235a7ac	1	1	final_stage	17327	191	NEW	45.2	19.0	804.5	1	188	464.8	1
+C:/kyty/f287/f25f/log_f25_s28.txt	test:e342b839	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s28.txt	test:e342b839	0	1	bonus_path_maker_mix	15559	171	NEW	32.2	23.1	891.6	1	169	332.5	1
+C:/kyty/f287/fs8c/log_fs8_w.txt	FS8	1	0	(empty)	37	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs8c/log_fs8_w.txt	FS8	1	1	underwater_aerial_garden	2546	26	MIXED	159.4	41.2	578.8	0	20	332.5	1
+C:/kyty/f287/f10e/log_f10e_w.txt	test:36e2b042	0	0	(empty)	39	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f10e/log_f10e_w.txt	test:36e2b042	0	1	underwater_aerial_garden	2541	26	OLD	1513.4	1195.2	1861.9	26	0	334.3	1
+C:/kyty/s145/log_w145_09.txt	9235a7ac	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s145/log_w145_09.txt	9235a7ac	1	1	light_gadget_graveyard	3948	42	NEW	62.2	32.5	401.6	0	40	320.2	1
+C:/kyty/f287/f25f/log_f25_s26.txt	test:e342b839	0	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_s26.txt	test:e342b839	0	1	bonus_path_maker_mix	15152	167	NEW	33.0	22.8	1062.7	1	165	332.8	1
+C:/kyty/s288/s17c/log_s17c_w0.txt	test:2b5e2ce6	0	0	(empty)	36	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s17c/log_s17c_w0.txt	test:2b5e2ce6	0	1	underwater_aerial_garden	2519	26	OLD	1223.2	1014.6	1355.5	26	0	333.1	1
+C:/kyty/f287/f14g/log_f19_w1.txt	test:c01bde0c	0	0	(empty)	39	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f14g/log_f19_w1.txt	test:c01bde0c	0	1	underwater_aerial_garden	2527	26	OLD	1495.8	1192.5	1859.2	26	0	332.5	1
+C:/kyty/f287/fs5/fs5c/log_fs5_w.txt	FS5	1	0	(empty)	44	0	SHORT				0	0	0.9	1
+C:/kyty/f287/fs5/fs5c/log_fs5_w.txt	FS5	1	1	underwater_aerial_garden	2522	26	OLD	1501.5	1168.8	1824.2	26	0	332.6	1
+C:/kyty/s144/log_v144_19.txt	9235a7ac	1	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/s144/log_v144_19.txt	9235a7ac	1	1	enemy_gorilla	17485	192	NEW	34.6	25.1	344.1	0	190	332.7	1
+C:/kyty/f287/f25f/log_f25_k02.txt	test:e342b839	0	0	(empty)	19	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_k02.txt	test:e342b839	0	1	bonus_path_maker_mix	14987	165	NEW	32.4	23.4	936.4	1	163	332.6	1
+C:/kyty/s145/log_w145_05.txt	9235a7ac	1	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/s145/log_w145_05.txt	9235a7ac	1	1	jack_in_the_box	9358	102	NEW	33.3	21.0	637.0	1	100	319.1	1
+C:/kyty/s144/log_w144_06.txt	9235a7ac	1	0	(empty)	46	0	SHORT				0	0	0.8	1
+C:/kyty/s144/log_w144_06.txt	9235a7ac	1	1	gulliver_island	4137	44	OLD	918.2	810.4	1636.5	44	0	319.4	1
+C:/kyty/s144/log_w144_07.txt	9235a7ac	1	0	(empty)	59	0	SHORT				0	0	1.0	1
+C:/kyty/s144/log_w144_07.txt	9235a7ac	1	1	booster_magic_lamp	3866	41	OLD	1035.4	857.0	1398.0	41	0	321.9	1
+C:/kyty/f287/f25f/log_f25_k04.txt	test:e342b839	0	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25f/log_f25_k04.txt	test:e342b839	0	1	bonus_path_maker_mix	14768	162	NEW	29.6	23.1	580.5	0	161	332.4	1
+C:/kyty/s144/log_w144_10.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/s144/log_w144_10.txt	9235a7ac	1	1	pot_treasure_cave	4534	49	NEW	57.5	25.0	357.2	0	47	320.8	1
+C:/kyty/s145/log_w145_13.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/s145/log_w145_13.txt	9235a7ac	1	1	enemy_chameleon	4671	50	NEW	59.0	22.0	486.2	0	47	317.6	1
+C:/kyty/s145/log_v145_14.txt	9235a7ac	1	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/s145/log_v145_14.txt	9235a7ac	1	1	bonus_path_maker_mix	16841	185	NEW	31.6	23.7	870.0	1	183	333.5	1
+C:/kyty/s143/log_v143_06.txt	9235a7ac	1	0	(empty)	45	0	SHORT				0	0	0.8	1
+C:/kyty/s143/log_v143_06.txt	9235a7ac	1	1	gulliver_island	17021	187	OLD	747.9	613.5	1502.2	187	0	333.1	1
+C:/kyty/s145/log_v145_08.txt	9235a7ac	1	0	(empty)	31	0	SHORT				0	0	0.5	1
+C:/kyty/s145/log_v145_08.txt	9235a7ac	1	1	enemy_snake	17163	189	NEW	30.6	20.6	462.6	0	188	333.4	1
+C:/kyty/s144/log_v144_09.txt	9235a7ac	1	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/s144/log_v144_09.txt	9235a7ac	1	1	rocket_hourglass	16405	180	NEW	48.7	28.1	934.0	2	176	332.6	1
+C:/kyty/s146/log_w146_16.txt	dac02fb9	1	0	(empty)	16	0	SHORT				0	0	0.3	1
+C:/kyty/s146/log_w146_16.txt	dac02fb9	1	1	armadillo_challenge_1	8786	96	NEW	31.0	25.6	196.4	0	96	314.5	1
+C:/kyty/s144/log_w144_05.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s144/log_w144_05.txt	9235a7ac	1	1	spring_punch_monster_cave	2848	30	OLD	1087.0	968.6	1228.2	30	0	324.1	1
+C:/kyty/f287/f12f/log_f12_w.txt	test:b714f5c4	0	0	(empty)	39	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f12f/log_f12_w.txt	test:b714f5c4	0	1	underwater_aerial_garden	2413	25	OLD	1499.6	1195.7	1766.3	25	0	334.0	1
+C:/kyty/s144/log_w144_02.txt	9235a7ac	1	0	(empty)	57	0	SHORT				0	0	1.0	1
+C:/kyty/s144/log_w144_02.txt	9235a7ac	1	1	booster_construction	3335	35	OLD	1171.3	1097.4	1313.2	35	0	322.3	1
+C:/kyty/s288/s15/log_w13.txt	FS8	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_w13.txt	FS8	1	1	underwater_aerial_garden	2786	29	MIXED	148.6	43.1	608.0	1	25	343.9	1
+C:/kyty/s144/log_w144_11.txt	9235a7ac	1	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/s144/log_w144_11.txt	9235a7ac	1	1	bumper_enemy_snowy_canyon	3395	36	NEW	57.1	33.8	301.8	0	35	319.5	1
+C:/kyty/s288/s18c/log_s18_c08.txt	S18	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s18c/log_s18_c08.txt	S18	1	1	time_stopper_ghost_world	12358	135	OLD	1095.0	981.5	1586.0	135	0	337.3	1
+C:/kyty/s144/log_w144_08.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s144/log_w144_08.txt	9235a7ac	1	1	rocket_space_station	2948	31	OLD	874.9	690.3	1151.7	31	0	324.7	1
+C:/kyty/s288/s13/log_w13.txt	S12	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_w13.txt	S12	1	1	underwater_aerial_garden	2712	28	MIXED	149.0	41.5	651.2	1	25	343.9	1
+C:/kyty/f287/f4c/log_f4c_v.txt	test:c9a5e198	0	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f4c/log_f4c_v.txt	test:c9a5e198	0	1	mini_giants_garden	5265	57	NEW	48.7	25.7	607.9	1	55	317.2	1
+C:/kyty/f287/f13a/log_f13_k.txt	FS3	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/f287/f13a/log_f13_k.txt	FS3	1	1	ending_boss_after_credit	14527	160	NEW	20.9	17.9	99.0	0	160	242.1	1
+C:/kyty/s145/log_w145_03.txt	9235a7ac	1	0	(empty)	14	0	SHORT				0	0	0.3	1
+C:/kyty/s145/log_w145_03.txt	9235a7ac	1	1	spin_drill_natural_cave	6490	70	NEW	56.1	26.7	364.9	0	66	317.3	1
+C:/kyty/s144/log_w144_12.txt	9235a7ac	1	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_w144_12.txt	9235a7ac	1	1	big_hand_pirate_island	2470	26	OLD	1032.3	868.9	1510.8	26	0	318.7	1
+C:/kyty/s288/s17c/log_s17c_ew.txt	test:ed2686da	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s17c/log_s17c_ew.txt	test:ed2686da	0	1	underwater_aerial_garden	2566	27	OLD	1528.6	1194.1	2045.8	27	0	323.7	1
+C:/kyty/s144/log_w144_15.txt	9235a7ac	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_w144_15.txt	9235a7ac	1	1	sponge_dirty_bath	2731	29	OLD	1240.9	1001.4	1318.8	29	0	323.4	1
+C:/kyty/p283/p36/log_jw_V5.txt	test:6bad00f3	0	0	(empty)	14	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p36/log_jw_V5.txt	test:6bad00f3	0	1	underwater_aerial_garden	2617	27	OLD	1508.4	1306.9	1916.8	27	0	324.5	1
+C:/kyty/f287/f25f/log_f25_s15.txt	test:e342b839	0	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25f/log_f25_s15.txt	test:e342b839	0	1	pot_treasure_cave	13466	148	NEW	35.4	24.7	366.7	0	146	333.2	1
+C:/kyty/p283/p24/log_iv_5.txt	P23	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p24/log_iv_5.txt	P23	1	1	underwater_aerial_garden	12932	142	NEW	79.8	48.2	662.1	1	139	334.5	1
+C:/kyty/p283/p38/runs/log_jw_V5.txt	test:6bad00f3	0	0	(empty)	14	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p38/runs/log_jw_V5.txt	test:6bad00f3	0	1	underwater_aerial_garden	2617	27	OLD	1508.4	1306.9	1916.8	27	0	324.5	1
+C:/kyty/f287/fs3/fs3c/log_fs3_w.txt	FS3	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs3/fs3c/log_fs3_w.txt	FS3	1	1	underwater_aerial_garden	2536	26	OLD	1513.4	1180.6	2081.3	26	0	324.0	1
+C:/kyty/f287/f13a/log_f13_rd.txt	FS3	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/f287/f13a/log_f13_rd.txt	FS3	1	1	ending_boss_after_credit	14221	156	NEW	17.8	15.9	111.1	0	156	242.9	1
+C:/kyty/s143/log_v143_09.txt	9235a7ac	1	0	(empty)	57	0	SHORT				0	0	0.9	1
+C:/kyty/s143/log_v143_09.txt	9235a7ac	1	1	booster_magic_lamp	15273	168	NEW	51.1	29.5	714.7	1	162	333.4	1
+C:/kyty/s288/s12/log_s12_w.txt	S12	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s12/log_s12_w.txt	S12	1	1	underwater_aerial_garden	2596	27	MIXED	151.7	42.2	598.9	0	23	324.0	1
+C:/kyty/s288/s18c/log_s18_c15.txt	S18	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s18c/log_s18_c15.txt	S18	1	1	sponge_dirty_bath	11140	122	OLD	1661.6	985.9	1767.8	122	0	338.9	1
+C:/kyty/f287/f16m/log_f5id_bh.txt	test:d4328b0c	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f16m/log_f5id_bh.txt	test:d4328b0c	0	1	big_hand_pirate_island	9563	104	OLD	1071.4	867.8	1409.1	104	0	341.2	1
+C:/kyty/p283/p24/log_iw_V3.txt	P23	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p24/log_iw_V3.txt	P23	1	1	underwater_aerial_garden	2683	28	OLD	1724.5	1391.4	1979.8	28	0	324.0	1
+C:/kyty/f287/f2c/log_f2c_b.txt	test:5821482a	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f2c/log_f2c_b.txt	test:5821482a	0	1	underwater_aerial_garden	2493	26	OLD	1500.3	1149.5	1857.9	26	0	326.4	1
+C:/kyty/p283/p41/log_kv_0.txt	test:ff16284f	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p41/log_kv_0.txt	test:ff16284f	0	1	underwater_aerial_garden	11690	128	OLD	1179.0	896.5	1790.9	128	0	334.3	1
+C:/kyty/s144/log_w144_01.txt	9235a7ac	1	0	(empty)	47	0	SHORT				0	0	0.8	1
+C:/kyty/s144/log_w144_01.txt	9235a7ac	1	1	spring_punch_sky_aztec	2685	28	OLD	1059.8	962.8	1180.4	28	0	323.7	1
+C:/kyty/f287/f24e/log_b13_w.txt	test:91f155b7	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f24e/log_b13_w.txt	test:91f155b7	0	1	underwater_aerial_garden	2504	26	OLD	1502.4	1219.3	2059.1	26	0	324.3	1
+C:/kyty/p283/p43/runs/log_kv_0.txt	test:ff16284f	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p43/runs/log_kv_0.txt	test:ff16284f	0	1	underwater_aerial_garden	11690	128	OLD	1179.0	896.5	1790.9	128	0	334.3	1
+C:/kyty/f287/fs4c/log_fs4_r1.txt	FS4	1	0	(empty)	40	0	SHORT				0	0	0.8	1
+C:/kyty/f287/fs4c/log_fs4_r1.txt	FS4	1	1	underwater_aerial_garden	9986	109	OLD	1472.7	1221.8	1837.4	109	0	341.1	1
+C:/kyty/p283/p43/runs/log_kw_V6.txt	test:ff16284f	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p43/runs/log_kw_V6.txt	test:ff16284f	0	1	underwater_aerial_garden	2683	28	OLD	1734.8	1420.3	1900.9	28	0	324.1	1
+C:/kyty/f287/fs10c/log_fs10_w.txt	FS10	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs10c/log_fs10_w.txt	FS10	1	1	underwater_aerial_garden	2496	26	OLD	1288.9	1069.7	1502.4	26	0	324.1	1
+C:/kyty/f287/fs6c/log_fs6_w.txt	FS6	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs6c/log_fs6_w.txt	FS6	1	1	underwater_aerial_garden	2529	26	OLD	1510.1	1182.4	1836.8	26	0	324.2	1
+C:/kyty/f287/fs2c/log_fs2_w.txt	FS2	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs2c/log_fs2_w.txt	FS2	1	1	underwater_aerial_garden	2481	26	OLD	1505.9	1156.0	1835.2	26	0	324.1	1
+C:/kyty/s145/log_w145_00.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s145/log_w145_00.txt	9235a7ac	1	1	underwater_aerial_garden	2522	26	MIXED	151.2	41.2	600.6	1	22	326.9	1
+C:/kyty/s146/log_w146_00.txt	dac02fb9	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s146/log_w146_00.txt	dac02fb9	1	1	underwater_aerial_garden	2466	26	MIXED	159.7	44.5	561.1	0	22	325.1	1
+C:/kyty/p283/p31/log_hw_V4.txt	test:4bb8bceb	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p31/log_hw_V4.txt	test:4bb8bceb	0	1	underwater_aerial_garden	2635	27	OLD	1514.0	1443.5	1608.2	27	0	323.7	1
+C:/kyty/p283/p33/runs/log_hw_V4.txt	test:4bb8bceb	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p33/runs/log_hw_V4.txt	test:4bb8bceb	0	1	underwater_aerial_garden	2635	27	OLD	1514.0	1443.5	1608.2	27	0	323.7	1
+C:/kyty/p283/p24/log_iv_6.txt	P23	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p24/log_iv_6.txt	P23	1	1	underwater_aerial_garden	12183	134	OLD	1270.3	931.2	1851.7	134	0	334.1	1
+C:/kyty/s288/s15/log_k_10.txt	FS8	1	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s15/log_k_10.txt	FS8	1	1	bumper_enemy_snowy_canyon	12561	138	NEW	38.0	29.9	309.9	0	137	304.5	1
+C:/kyty/s288/s17c/log_s17c_n0.txt	test:ed2686da	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s17c/log_s17c_n0.txt	test:ed2686da	0	1	underwater_aerial_garden	9819	107	OLD	1479.6	1179.5	1851.0	107	0	339.5	1
+C:/kyty/s145/log_v145_09.txt	9235a7ac	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s145/log_v145_09.txt	9235a7ac	1	1	light_gadget_graveyard	14691	161	NEW	40.7	31.8	430.9	0	159	332.9	1
+C:/kyty/s288/s18c/log_s18_c11.txt	S18	1	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s18c/log_s18_c11.txt	S18	1	1	big_hand_pirate_island	9172	100	OLD	1126.2	879.4	1539.6	100	0	335.2	1
+C:/kyty/p283/p41/log_kw_V6.txt	test:ff16284f	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p41/log_kw_V6.txt	test:ff16284f	0	1	underwater_aerial_garden	2683	28	OLD	1734.8	1420.3	1900.9	28	0	324.1	1
+C:/kyty/s144/log_w144_00.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_w144_00.txt	9235a7ac	1	1	underwater_aerial_garden	2521	26	OLD	1528.3	1227.8	2038.4	26	0	326.8	1
+C:/kyty/f287/f25m/log_b36_w.txt	test:9745eb78	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f25m/log_b36_w.txt	test:9745eb78	0	1	underwater_aerial_garden	2471	26	OLD	1271.0	1103.8	1523.5	26	0	324.0	1
+C:/kyty/s288/s6/log_pcw_val.txt	test:f3b3aa3b	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s6/log_pcw_val.txt	test:f3b3aa3b	0	1	underwater_aerial_garden	2527	26	OLD	1513.5	1180.4	1857.1	26	0	326.0	1
+C:/kyty/f287/fs4c/log_fs4_w.txt	FS4	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs4c/log_fs4_w.txt	FS4	1	1	underwater_aerial_garden	2434	25	MIXED	161.0	43.9	633.4	1	21	324.5	1
+C:/kyty/f287/fs5/fs5c/log_fs5_r1.txt	FS5	1	0	(empty)	40	0	SHORT				0	0	0.8	1
+C:/kyty/f287/fs5/fs5c/log_fs5_r1.txt	FS5	1	1	underwater_aerial_garden	9904	108	OLD	1471.3	1166.3	1862.0	108	0	343.1	1
+C:/kyty/f287/f11f/log_d11_sg.txt	test:b97efad4	0	0	(empty)	38	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f11f/log_d11_sg.txt	test:b97efad4	0	1	underwater_aerial_garden	9851	108	OLD	1469.8	1108.4	1861.3	108	0	341.6	1
+C:/kyty/f287/f20l3/log_b32_pa.txt	test:2d0c8815	0	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_pa.txt	test:2d0c8815	0	1	underwater_aerial_garden	9566	104	OLD	1479.1	1188.9	2051.8	104	0	339.1	1
+C:/kyty/f287/f12f/log_f12_bh.txt	test:b714f5c4	0	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f12f/log_f12_bh.txt	test:b714f5c4	0	1	big_hand_pirate_island	9076	99	OLD	1120.5	891.0	1621.0	99	0	337.2	1
+C:/kyty/f287/f16m/log_f5id_sg.txt	test:d4328b0c	0	0	(empty)	38	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f16m/log_f5id_sg.txt	test:d4328b0c	0	1	underwater_aerial_garden	9831	107	OLD	1455.8	1164.7	1723.3	107	0	339.4	1
+C:/kyty/f287/fs9c/log_fs9_w.txt	FS9	1	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs9c/log_fs9_w.txt	FS9	1	1	underwater_aerial_garden	2432	25	OLD	1524.3	1165.5	2071.1	25	0	324.5	1
+C:/kyty/f287/fs8c/log_fs8_v.txt	FS8	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs8c/log_fs8_v.txt	FS8	1	1	underwater_aerial_garden	9902	108	OLD	1243.8	1083.9	1519.3	108	0	341.9	1
+C:/kyty/s143/log_v143_02.txt	9235a7ac	1	0	(empty)	67	0	SHORT				0	0	1.1	1
+C:/kyty/s143/log_v143_02.txt	9235a7ac	1	1	booster_construction	13871	152	OLD	1046.3	980.0	1207.8	152	0	333.7	1
+C:/kyty/f287/fs5/fs5e/log_fs5_i.txt	FS5	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs5/fs5e/log_fs5_i.txt	FS5	1	1	underwater_aerial_garden	9989	109	OLD	1461.1	1165.1	1814.9	109	0	341.3	1
+C:/kyty/s142/log_w142.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s142/log_w142.txt	9235a7ac	1	1	underwater_aerial_garden	2487	26	OLD	1489.7	1226.3	1844.2	26	0	324.3	1
+C:/kyty/s288/s13/log_k_02.txt	S12	1	0	(empty)	19	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s13/log_k_02.txt	S12	1	1	intro_next	10795	118	NEW	46.2	15.8	541.9	0	115	183.3	1
+C:/kyty/s144/log_w144_18.txt	9235a7ac	1	0	(empty)	51	0	SHORT				0	0	0.9	1
+C:/kyty/s144/log_w144_18.txt	9235a7ac	1	1	voxel_world	9460	103	NEW	32.3	24.0	494.1	0	102	315.4	1
+C:/kyty/f287/fs5/fs5c/log_fs5_v.txt	FS5	1	0	(empty)	38	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs5/fs5c/log_fs5_v.txt	FS5	1	1	underwater_aerial_garden	9980	109	NEW	83.5	46.6	635.1	1	104	341.2	1
+C:/kyty/f287/f14g/log_f19_v1.txt	test:c01bde0c	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f14g/log_f19_v1.txt	test:c01bde0c	0	1	underwater_aerial_garden	9982	109	OLD	1462.7	1163.0	2062.1	109	0	341.6	1
+C:/kyty/p283/lead/p10chk/log_pw_C.txt	9235a7ac	1	0	(empty)	20	0	SHORT				0	0	0.7	1
+C:/kyty/p283/lead/p10chk/log_pw_C.txt	9235a7ac	1	1	underwater_aerial_garden	2448	25	MIXED	144.1	42.6	809.9	1	21	327.4	1
+C:/kyty/p283/p10/runs/log_pw_C.txt	9235a7ac	1	0	(empty)	20	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p10/runs/log_pw_C.txt	9235a7ac	1	1	underwater_aerial_garden	2448	25	MIXED	144.1	42.6	809.9	1	21	327.4	1
+C:/kyty/p283/p8/log_pw_C.txt	9235a7ac	1	0	(empty)	20	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p8/log_pw_C.txt	9235a7ac	1	1	underwater_aerial_garden	2448	25	MIXED	144.1	42.6	809.9	1	21	327.4	1
+C:/kyty/f287/f10e/log_f10e_r1.txt	test:36e2b042	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f10e/log_f10e_r1.txt	test:36e2b042	0	1	underwater_aerial_garden	9966	109	OLD	1466.2	1201.3	1851.1	109	0	341.1	1
+C:/kyty/f287/fsc/log_fs_d.txt	dac02fb9	1	0	(empty)	38	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fsc/log_fs_d.txt	dac02fb9	1	1	underwater_aerial_garden	9959	109	NEW	111.6	47.9	1803.9	3	105	339.2	1
+C:/kyty/s288/s18c/log_s18_c06.txt	S18	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s18c/log_s18_c06.txt	S18	1	1	underwater_aerial_garden	9929	108	NEW	90.8	47.6	918.1	2	103	339.8	1
+C:/kyty/s288/s17c/log_s17c_c2.txt	test:ed2686da	0	0	(empty)	38	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s17c/log_s17c_c2.txt	test:ed2686da	0	1	underwater_aerial_garden	9931	109	OLD	1482.2	1223.1	1803.8	109	0	339.4	1
+C:/kyty/p283/p15/log_qv_1.txt	test:56ee1914	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p15/log_qv_1.txt	test:56ee1914	0	1	underwater_aerial_garden	13593	149	NEW	110.4	43.0	1300.8	3	141	334.4	1
+C:/kyty/p283/p19/log_qw_V2.txt	test:56ee1914	0	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p19/log_qw_V2.txt	test:56ee1914	0	1	underwater_aerial_garden	2569	27	OLD	1531.2	1453.8	1701.6	27	0	326.5	1
+C:/kyty/s288/s18c/log_s18_w.txt	S18	1	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s18c/log_s18_w.txt	S18	1	1	underwater_aerial_garden	2345	24	OLD	1308.6	1098.9	1619.9	24	0	325.0	1
+C:/kyty/p283/p17/runs/log_qv_1.txt	test:56ee1914	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p17/runs/log_qv_1.txt	test:56ee1914	0	1	underwater_aerial_garden	13593	149	NEW	110.4	43.0	1300.8	3	141	334.4	1
+C:/kyty/p283/p21/runs/log_qw_V2.txt	test:56ee1914	0	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p21/runs/log_qw_V2.txt	test:56ee1914	0	1	underwater_aerial_garden	2569	27	OLD	1531.2	1453.8	1701.6	27	0	326.5	1
+C:/kyty/s288/s15/log_k_08.txt	FS8	1	0	(empty)	33	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_k_08.txt	FS8	1	1	time_stopper_ghost_world	11785	129	OLD	1098.4	998.3	1376.0	129	0	303.6	1
+C:/kyty/s143/log_v143_10.txt	9235a7ac	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s143/log_v143_10.txt	9235a7ac	1	1	rocket_space_station	13695	150	OLD	817.3	689.1	1182.4	150	0	334.9	1
+C:/kyty/s144/log_v144_11.txt	9235a7ac	1	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/s144/log_v144_11.txt	9235a7ac	1	1	bumper_enemy_snowy_canyon	13292	146	NEW	38.5	29.8	348.6	0	145	333.0	1
+C:/kyty/p283/p31/log_hv_0.txt	test:4bb8bceb	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p31/log_hv_0.txt	test:4bb8bceb	0	1	underwater_aerial_garden	10460	114	OLD	1238.6	1023.6	1644.4	114	0	334.5	1
+C:/kyty/f287/f2c/log_f2c_a.txt	test:5821482a	0	0	(empty)	38	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f2c/log_f2c_a.txt	test:5821482a	0	1	underwater_aerial_garden	9763	107	NEW	83.3	50.8	628.6	1	103	339.7	1
+C:/kyty/p283/p33/runs/log_hv_0.txt	test:4bb8bceb	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p33/runs/log_hv_0.txt	test:4bb8bceb	0	1	underwater_aerial_garden	10460	114	OLD	1238.6	1023.6	1644.4	114	0	334.5	1
+C:/kyty/s145/log_w145_16.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.7	1
+C:/kyty/s145/log_w145_16.txt	9235a7ac	1	1	cymbal_party_land	3578	38	MIXED	111.2	28.5	712.4	2	34	315.5	1
+C:/kyty/f287/f4c/log_f4c_a.txt	test:c9a5e198	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f4c/log_f4c_a.txt	test:c9a5e198	0	1	underwater_aerial_garden	2445	25	MIXED	155.6	40.4	559.0	0	22	325.1	1
+C:/kyty/f287/f12f/log_f12_v.txt	test:b714f5c4	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f12f/log_f12_v.txt	test:b714f5c4	0	1	underwater_aerial_garden	9559	104	OLD	1449.2	737.3	1760.3	104	0	342.3	1
+C:/kyty/s288/s17c/aside/s17c_c2.ed2_20261006T015812Z/log_s17c_c2.txt	test:2b5e2ce6	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s17c/aside/s17c_c2.ed2_20261006T015812Z/log_s17c_c2.txt	test:2b5e2ce6	0	1	underwater_aerial_garden	9475	103	NEW	81.3	49.8	591.1	0	100	339.6	1
+C:/kyty/p283/p36/log_jv_0.txt	test:6bad00f3	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p36/log_jv_0.txt	test:6bad00f3	0	1	underwater_aerial_garden	11132	122	OLD	1408.3	963.3	2040.8	122	0	334.5	1
+C:/kyty/p283/p38/runs/log_jv_0.txt	test:6bad00f3	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p38/runs/log_jv_0.txt	test:6bad00f3	0	1	underwater_aerial_garden	11132	122	OLD	1408.3	963.3	2040.8	122	0	334.5	1
+C:/kyty/s146/log_r146_02.txt	dac02fb9	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s146/log_r146_02.txt	dac02fb9	1	1	sponge_dirty_bath	10777	118	OLD	1259.8	1017.0	1343.8	118	0	336.0	1
+C:/kyty/s288/s13/log_k_04.txt	S12	1	0	(empty)	1	0	SHORT				0	0	0.0	1
+C:/kyty/s288/s13/log_k_04.txt	S12	1	1	ps_logo	831	7	NEW	17.1	15.4	21.7	0	7	13.9	1
+C:/kyty/s288/s13/log_k_04.txt	S12	1	2	(empty)	7	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s13/log_k_04.txt	S12	1	3	worldmap	38	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s13/log_k_04.txt	S12	1	4	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s13/log_k_04.txt	S12	1	5	transition_next	10887	119	NEW	21.9	20.0	134.0	0	119	181.4	1
+C:/kyty/s146/log_i146_v.txt	dac02fb9	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s146/log_i146_v.txt	dac02fb9	1	1	underwater_aerial_garden	9598	105	NEW	93.0	50.5	865.6	2	101	340.4	1
+C:/kyty/f287/fs8e/log_fs8_i.txt	FS8	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs8e/log_fs8_i.txt	FS8	1	1	underwater_aerial_garden	9427	103	NEW	89.5	47.6	839.4	2	99	342.3	1
+C:/kyty/s143/log_v143_04.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s143/log_v143_04.txt	9235a7ac	1	1	path_maker_mana_tree	12226	134	NEW	63.9	32.2	630.8	1	126	334.4	1
+C:/kyty/s288/s17c/log_s17c_v0.txt	test:2b5e2ce6	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s17c/log_s17c_v0.txt	test:2b5e2ce6	0	1	underwater_aerial_garden	9252	101	NEW	99.1	46.6	1313.2	2	97	342.0	1
+C:/kyty/s288/s13/log_k_05.txt	S12	1	0	(empty)	31	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s13/log_k_05.txt	S12	1	1	hub_crashsite	10881	119	NEW	49.9	23.3	589.2	0	114	182.7	1
+C:/kyty/p283/p15/log_qv_2.txt	test:56ee1914	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p15/log_qv_2.txt	test:56ee1914	0	1	underwater_aerial_garden	12601	138	NEW	81.4	50.8	766.1	1	135	334.6	1
+C:/kyty/p283/p19/log_qv_4.txt	test:56ee1914	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p19/log_qv_4.txt	test:56ee1914	0	1	underwater_aerial_garden	12610	138	OLD	1154.8	862.9	1908.9	138	0	334.7	1
+C:/kyty/f287/f11f/log_d11_bh.txt	test:b97efad4	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f11f/log_d11_bh.txt	test:b97efad4	0	1	big_hand_pirate_island	9400	103	OLD	1072.2	867.9	1315.2	103	0	333.0	1
+C:/kyty/p283/p21/runs/log_qv_4.txt	test:56ee1914	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p21/runs/log_qv_4.txt	test:56ee1914	0	1	underwater_aerial_garden	12610	138	OLD	1154.8	862.9	1908.9	138	0	334.7	1
+C:/kyty/p283/p17/runs/log_qv_2.txt	test:56ee1914	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p17/runs/log_qv_2.txt	test:56ee1914	0	1	underwater_aerial_garden	12601	138	NEW	81.4	50.8	766.1	1	135	334.6	1
+C:/kyty/s288/s13/log_k_07.txt	S12	1	0	(empty)	13	0	SHORT				0	0	0.2	1
+C:/kyty/s288/s13/log_k_07.txt	S12	1	1	penguin_atlantis	10908	119	NEW	47.9	28.8	446.3	0	117	183.9	1
+C:/kyty/s145/log_v145_02.txt	9235a7ac	1	0	(empty)	32	0	SHORT				0	0	0.5	1
+C:/kyty/s145/log_v145_02.txt	9235a7ac	1	1	small_pot_lava	12459	137	OLD	930.7	842.8	1074.2	137	0	335.8	1
+C:/kyty/f287/f3d/log_f3d_bw.txt	test:2e6df8f0	0	0	(empty)	49	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f3d/log_f3d_bw.txt	test:2e6df8f0	0	1	underwater_aerial_garden	2223	23	OLD	1522.5	1125.7	2144.6	23	0	328.7	1
+C:/kyty/s144/log_w144_04.txt	9235a7ac	1	0	(empty)	38	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_w144_04.txt	9235a7ac	1	1	path_maker_mana_tree	3743	40	MIXED	128.6	33.4	640.8	1	32	322.9	1
+C:/kyty/s288/s13/log_k_03.txt	S12	1	0	(empty)	9	0	SHORT				0	0	0.2	1
+C:/kyty/s288/s13/log_k_03.txt	S12	1	1	worldmap	40	0	SHORT				0	0	0.9	1
+C:/kyty/s288/s13/log_k_03.txt	S12	1	2	(empty)	8	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s13/log_k_03.txt	S12	1	3	transition_next	10891	119	NEW	21.5	20.0	86.6	0	119	181.5	1
+C:/kyty/f287/f16f/log_f5_bh.txt	test:4ad735ad	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f16f/log_f5_bh.txt	test:4ad735ad	0	1	big_hand_pirate_island	9269	101	OLD	1054.8	845.1	1339.6	101	0	332.9	1
+C:/kyty/s288/s13/log_k_14.txt	S12	1	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_k_14.txt	S12	1	1	ice_iceberg	10775	118	NEW	74.8	46.5	751.1	2	115	182.7	1
+C:/kyty/s288/s13/log_k_01.txt	S12	1	0	(empty)	4	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s13/log_k_01.txt	S12	1	1	title_controller_ship	10912	119	NEW	31.3	26.0	162.9	0	119	184.5	1
+C:/kyty/p283/p41/log_kz_A7.txt	test:ff16284f	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p41/log_kz_A7.txt	test:ff16284f	0	1	underwater_aerial_garden	10128	111	MIXED	286.6	49.7	1417.9	20	88	334.4	1
+C:/kyty/p283/p41/log_kv_1.txt	test:ff16284f	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p41/log_kv_1.txt	test:ff16284f	0	1	underwater_aerial_garden	9961	109	OLD	1451.5	1194.2	1929.1	109	0	334.7	1
+C:/kyty/p283/p43/runs/log_kz_A7.txt	test:ff16284f	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p43/runs/log_kz_A7.txt	test:ff16284f	0	1	underwater_aerial_garden	10128	111	MIXED	286.6	49.7	1417.9	20	88	334.4	1
+C:/kyty/p283/p41/log_kv_2.txt	test:ff16284f	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p41/log_kv_2.txt	test:ff16284f	0	1	underwater_aerial_garden	9698	106	OLD	1332.9	1098.9	1827.3	106	0	335.0	1
+C:/kyty/p283/p43/runs/log_kv_1.txt	test:ff16284f	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p43/runs/log_kv_1.txt	test:ff16284f	0	1	underwater_aerial_garden	9961	109	OLD	1451.5	1194.2	1929.1	109	0	334.7	1
+C:/kyty/p283/p36/log_jv_2.txt	test:6bad00f3	0	0	(empty)	13	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p36/log_jv_2.txt	test:6bad00f3	0	1	underwater_aerial_garden	9173	100	OLD	1323.7	1076.3	2079.5	100	0	335.4	1
+C:/kyty/f287/fs10c/log_fs10_v.txt	FS10	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs10c/log_fs10_v.txt	FS10	1	1	underwater_aerial_garden	10077	110	NEW	81.5	46.8	623.8	1	104	334.5	1
+C:/kyty/s288/s13/log_k_13.txt	S12	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s13/log_k_13.txt	S12	1	1	mini_giants_garden	10906	119	NEW	34.2	23.8	564.5	0	118	182.5	1
+C:/kyty/s288/s13/log_k_09.txt	S12	1	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s13/log_k_09.txt	S12	1	1	rotating_level_day_and_night	10912	119	NEW	37.4	27.1	762.9	1	117	182.4	1
+C:/kyty/s288/s13/log_k_12.txt	S12	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_k_12.txt	S12	1	1	timestop_casino	10703	117	NEW	48.0	31.6	683.7	1	116	182.3	1
+C:/kyty/p283/p43/runs/log_kv_2.txt	test:ff16284f	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p43/runs/log_kv_2.txt	test:ff16284f	0	1	underwater_aerial_garden	9698	106	OLD	1332.9	1098.9	1827.3	106	0	335.0	1
+C:/kyty/p283/p38/runs/log_jv_2.txt	test:6bad00f3	0	0	(empty)	13	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p38/runs/log_jv_2.txt	test:6bad00f3	0	1	underwater_aerial_garden	9173	100	OLD	1323.7	1076.3	2079.5	100	0	335.4	1
+C:/kyty/s145/log_v145_16.txt	9235a7ac	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s145/log_v145_16.txt	9235a7ac	1	1	cymbal_party_land	12707	139	NEW	59.2	28.2	1200.8	2	134	332.3	1
+C:/kyty/s288/s13/log_k_17.txt	S12	1	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s13/log_k_17.txt	S12	1	1	volcano_mountain	10891	119	NEW	40.3	24.8	919.8	1	117	182.3	1
+C:/kyty/p283/p41/log_ka_A7.txt	test:ff16284f	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p41/log_ka_A7.txt	test:ff16284f	0	1	underwater_aerial_garden	10041	110	NEW	89.9	48.6	725.3	1	107	334.4	1
+C:/kyty/s143/log_v143_05.txt	9235a7ac	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s143/log_v143_05.txt	9235a7ac	1	1	spring_punch_monster_cave	12373	136	OLD	1184.8	1019.9	1373.5	136	0	334.0	1
+C:/kyty/p283/p43/runs/log_ka_A7.txt	test:ff16284f	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p43/runs/log_ka_A7.txt	test:ff16284f	0	1	underwater_aerial_garden	10041	110	NEW	89.9	48.6	725.3	1	107	334.4	1
+C:/kyty/p283/p31/log_hv_1.txt	test:4bb8bceb	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p31/log_hv_1.txt	test:4bb8bceb	0	1	underwater_aerial_garden	10049	110	OLD	1375.5	1179.7	1946.5	110	0	334.7	1
+C:/kyty/s288/s15/log_k_15.txt	FS8	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_k_15.txt	FS8	1	1	sponge_dirty_bath	10221	112	OLD	1264.0	1019.3	1349.3	112	0	304.0	1
+C:/kyty/f287/f20l3/log_b32_z0c3.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20l3/log_b32_z0c3.txt	test:2d0c8815	0	1	underwater_aerial_garden	10143	111	NEW	80.4	48.5	624.7	1	107	334.1	1
+C:/kyty/p283/p33/runs/log_hv_1.txt	test:4bb8bceb	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p33/runs/log_hv_1.txt	test:4bb8bceb	0	1	underwater_aerial_garden	10049	110	OLD	1375.5	1179.7	1946.5	110	0	334.7	1
+C:/kyty/s288/s13/log_k_18.txt	S12	1	0	(empty)	45	0	SHORT				0	0	0.8	1
+C:/kyty/s288/s13/log_k_18.txt	S12	1	1	voxel_world	10934	120	NEW	30.5	24.0	431.2	0	119	182.8	1
+C:/kyty/p283/p41/log_ka_A6.txt	test:ff16284f	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p41/log_ka_A6.txt	test:ff16284f	0	1	underwater_aerial_garden	9815	107	OLD	1486.9	1156.2	2066.0	107	0	334.3	1
+C:/kyty/p283/p43/runs/log_ka_A6.txt	test:ff16284f	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p43/runs/log_ka_A6.txt	test:ff16284f	0	1	underwater_aerial_garden	9815	107	OLD	1486.9	1156.2	2066.0	107	0	334.3	1
+C:/kyty/p283/p31/log_hv_2.txt	test:4bb8bceb	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p31/log_hv_2.txt	test:4bb8bceb	0	1	underwater_aerial_garden	9799	107	OLD	1312.6	1028.5	2123.7	107	0	334.7	1
+C:/kyty/p283/p33/runs/log_hv_2.txt	test:4bb8bceb	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p33/runs/log_hv_2.txt	test:4bb8bceb	0	1	underwater_aerial_garden	9799	107	OLD	1312.6	1028.5	2123.7	107	0	334.7	1
+C:/kyty/f287/f20l3/log_b32_s13.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s13.txt	test:2d0c8815	0	1	underwater_aerial_garden	9854	108	NEW	80.8	48.4	648.7	1	105	334.0	1
+C:/kyty/s288/s13/log_k_16.txt	S12	1	0	(empty)	26	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s13/log_k_16.txt	S12	1	1	hoover_beach	10660	117	NEW	48.5	32.2	775.6	1	115	182.0	1
+C:/kyty/p283/p31/log_ha_A4.txt	test:4bb8bceb	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p31/log_ha_A4.txt	test:4bb8bceb	0	1	underwater_aerial_garden	9931	109	NEW	83.4	50.0	636.4	1	105	334.4	1
+C:/kyty/p283/p33/runs/log_ha_A4.txt	test:4bb8bceb	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p33/runs/log_ha_A4.txt	test:4bb8bceb	0	1	underwater_aerial_garden	9931	109	NEW	83.4	50.0	636.4	1	105	334.4	1
+C:/kyty/f287/f20l3/log_b32_z0c2.txt	test:2d0c8815	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_z0c2.txt	test:2d0c8815	0	1	underwater_aerial_garden	10136	111	NEW	82.1	48.1	613.5	1	106	334.3	1
+C:/kyty/f287/f20l3/log_b32_s11.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s11.txt	test:2d0c8815	0	1	underwater_aerial_garden	9919	108	OLD	1464.3	1201.4	1841.0	108	0	334.4	1
+C:/kyty/f287/f24e/log_b13_v.txt	test:91f155b7	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f24e/log_b13_v.txt	test:91f155b7	0	1	underwater_aerial_garden	10435	114	NEW	79.4	46.8	613.1	1	110	334.1	1
+C:/kyty/f287/f20l3/log_b32_s15.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20l3/log_b32_s15.txt	test:2d0c8815	0	1	underwater_aerial_garden	10005	109	NEW	77.6	46.9	567.0	0	105	334.5	1
+C:/kyty/f287/f20l3/log_b32_s27.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20l3/log_b32_s27.txt	test:2d0c8815	0	1	underwater_aerial_garden	9862	108	OLD	1237.0	1112.4	1385.5	108	0	334.5	1
+C:/kyty/f287/f19e/log_b24_h1.txt	test:9b00ad40	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f19e/log_b24_h1.txt	test:9b00ad40	0	1	underwater_aerial_garden	9928	108	NEW	79.8	47.9	613.4	1	104	335.0	1
+C:/kyty/f287/f18e/log_f8_s0.txt	test:35c4a754	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f18e/log_f8_s0.txt	test:35c4a754	0	1	underwater_aerial_garden	9256	101	NEW	82.6	48.5	613.6	1	97	334.6	1
+C:/kyty/f287/f20l3/log_b32_s28.txt	test:2d0c8815	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s28.txt	test:2d0c8815	0	1	underwater_aerial_garden	9909	108	NEW	78.1	48.4	637.4	1	105	334.3	1
+C:/kyty/f287/f20l3/log_b32_z0c4.txt	test:2d0c8815	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20l3/log_b32_z0c4.txt	test:2d0c8815	0	1	underwater_aerial_garden	10116	111	NEW	103.1	45.6	1595.6	3	104	334.4	1
+C:/kyty/s288/s12/log_s12_v0.txt	S12	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s12/log_s12_v0.txt	S12	1	1	underwater_aerial_garden	9975	109	NEW	81.0	50.5	637.5	1	104	334.2	1
+C:/kyty/s288/s17c/log_s17c_e3.txt	test:ed2686da	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s17c/log_s17c_e3.txt	test:ed2686da	0	1	underwater_aerial_garden	9949	109	OLD	1467.5	1187.8	2065.0	109	0	334.2	1
+C:/kyty/f287/f20l3/log_b32_s17.txt	test:2d0c8815	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s17.txt	test:2d0c8815	0	1	underwater_aerial_garden	9870	108	OLD	1478.4	1190.7	2066.8	108	0	334.5	1
+C:/kyty/f287/fs3/fs3c/log_fs3_v.txt	FS3	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs3/fs3c/log_fs3_v.txt	FS3	1	1	underwater_aerial_garden	9976	109	OLD	1466.9	1219.2	1800.4	109	0	334.3	1
+C:/kyty/f287/f20l3/log_b32_s19.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20l3/log_b32_s19.txt	test:2d0c8815	0	1	underwater_aerial_garden	9907	108	NEW	81.5	48.1	625.0	1	104	334.1	1
+C:/kyty/f287/f20l3/log_b32_z0c5.txt	test:2d0c8815	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_z0c5.txt	test:2d0c8815	0	1	underwater_aerial_garden	10098	110	NEW	79.5	50.2	626.9	1	105	334.3	1
+C:/kyty/f287/f18e/log_f8_s1.txt	test:35c4a754	0	0	(empty)	45	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f18e/log_f8_s1.txt	test:35c4a754	0	1	underwater_aerial_garden	9924	108	NEW	84.0	50.1	647.8	1	101	334.7	1
+C:/kyty/p283/p41/log_kv_3.txt	test:ff16284f	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p41/log_kv_3.txt	test:ff16284f	0	1	underwater_aerial_garden	9862	108	OLD	1380.5	1141.4	2191.6	108	0	334.6	1
+C:/kyty/p283/p43/runs/log_kv_3.txt	test:ff16284f	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p43/runs/log_kv_3.txt	test:ff16284f	0	1	underwater_aerial_garden	9862	108	OLD	1380.5	1141.4	2191.6	108	0	334.6	1
+C:/kyty/f287/f20l3/log_b32_s09.txt	test:2d0c8815	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s09.txt	test:2d0c8815	0	1	underwater_aerial_garden	10096	110	NEW	80.4	47.2	614.6	1	106	334.4	1
+C:/kyty/f287/f20c/log_f20_v07.txt	FS6	1	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v07.txt	FS6	1	1	underwater_aerial_garden	9914	108	NEW	79.5	46.4	622.2	1	103	334.4	1
+C:/kyty/f287/f20l3/log_b32_s29.txt	test:2d0c8815	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s29.txt	test:2d0c8815	0	1	underwater_aerial_garden	9847	108	NEW	78.2	46.1	610.6	1	104	334.5	1
+C:/kyty/f287/f20l3/log_b32_s18.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20l3/log_b32_s18.txt	test:2d0c8815	0	1	underwater_aerial_garden	9971	109	NEW	79.6	50.8	582.5	0	105	334.1	1
+C:/kyty/p283/p24/log_ia_A3.txt	P23	1	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p24/log_ia_A3.txt	P23	1	1	underwater_aerial_garden	9899	108	NEW	87.1	51.3	771.6	1	105	334.3	1
+C:/kyty/f287/f20l3/log_b32_s21.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s21.txt	test:2d0c8815	0	1	underwater_aerial_garden	9863	108	NEW	82.2	47.7	603.8	1	104	334.1	1
+C:/kyty/p283/p36/log_ja_A5.txt	test:6bad00f3	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p36/log_ja_A5.txt	test:6bad00f3	0	1	underwater_aerial_garden	9944	109	OLD	1474.3	1200.6	1850.4	109	0	334.4	1
+C:/kyty/f287/f20c/log_f20_v03.txt	FS6	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v03.txt	FS6	1	1	underwater_aerial_garden	9989	109	OLD	1449.4	375.5	1690.2	108	0	334.5	1
+C:/kyty/f287/f20l3/log_b32_s01.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20l3/log_b32_s01.txt	test:2d0c8815	0	1	underwater_aerial_garden	9863	108	NEW	81.1	45.5	634.1	1	103	334.5	1
+C:/kyty/f287/f20c/log_f20_v04.txt	FS6	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20c/log_f20_v04.txt	FS6	1	1	underwater_aerial_garden	10041	110	NEW	78.7	50.4	626.1	1	106	334.6	1
+C:/kyty/f287/f20l3/log_b32_s07.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s07.txt	test:2d0c8815	0	1	underwater_aerial_garden	9845	108	NEW	77.3	46.3	609.9	1	105	334.2	1
+C:/kyty/f287/f20c/log_f20_v01.txt	FS6	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v01.txt	FS6	1	1	underwater_aerial_garden	9915	108	NEW	80.9	47.4	623.9	1	103	334.4	1
+C:/kyty/f287/f20l3/log_b32_s16.txt	test:2d0c8815	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20l3/log_b32_s16.txt	test:2d0c8815	0	1	underwater_aerial_garden	9917	108	NEW	79.5	51.3	673.1	1	105	334.6	1
+C:/kyty/f287/f20l3/log_b32_s26.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20l3/log_b32_s26.txt	test:2d0c8815	0	1	underwater_aerial_garden	9940	109	NEW	95.6	50.2	1236.5	3	106	334.4	1
+C:/kyty/f287/f7a/log_f7a_1.txt	dac02fb9	1	0	(empty)	15	0	SHORT				0	0	0.2	1
+C:/kyty/f287/f7a/log_f7a_1.txt	dac02fb9	1	1	enemy_final	10557	115	NEW	20.7	19.2	39.5	0	115	182.4	1
+C:/kyty/f287/f20c/log_f20_v02.txt	FS6	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v02.txt	FS6	1	1	underwater_aerial_garden	10017	109	NEW	83.7	50.3	638.0	1	104	334.2	1
+C:/kyty/p283/p38/runs/log_ja_A5.txt	test:6bad00f3	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p38/runs/log_ja_A5.txt	test:6bad00f3	0	1	underwater_aerial_garden	9944	109	OLD	1474.3	1200.6	1850.4	109	0	334.4	1
+C:/kyty/f287/f20l3/log_b32_s25.txt	test:2d0c8815	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s25.txt	test:2d0c8815	0	1	underwater_aerial_garden	9978	109	NEW	79.7	48.4	625.3	1	106	334.3	1
+C:/kyty/f287/f20l3/log_b32_s23.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s23.txt	test:2d0c8815	0	1	underwater_aerial_garden	9919	108	NEW	94.1	48.2	1210.8	3	104	334.0	1
+C:/kyty/f287/f20l3/log_b32_s14.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s14.txt	test:2d0c8815	0	1	underwater_aerial_garden	9847	108	NEW	81.6	41.8	626.0	1	102	334.2	1
+C:/kyty/f287/f20l3/log_b32_s02.txt	test:2d0c8815	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s02.txt	test:2d0c8815	0	1	underwater_aerial_garden	9806	107	NEW	80.8	46.3	638.5	1	104	334.5	1
+C:/kyty/f287/f20l3/log_b32_s22.txt	test:2d0c8815	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s22.txt	test:2d0c8815	0	1	underwater_aerial_garden	9847	108	NEW	79.0	45.3	622.5	1	104	334.6	1
+C:/kyty/f287/f9/f9g/log_f9g_sg.txt	test:24efead3	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f9/f9g/log_f9g_sg.txt	test:24efead3	0	1	underwater_aerial_garden	9983	109	OLD	1483.7	1220.2	1848.6	109	0	334.6	1
+C:/kyty/s288/s12/log_s12_v.txt	S12	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s12/log_s12_v.txt	S12	1	1	underwater_aerial_garden	9911	108	OLD	1468.9	1199.8	1849.8	108	0	334.5	1
+C:/kyty/s288/s15e/log_s15_i.txt	FS8	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s15e/log_s15_i.txt	FS8	1	1	underwater_aerial_garden	9903	108	OLD	1249.8	1129.9	1472.8	108	0	334.5	1
+C:/kyty/f287/fsc/log_fs_b.txt	dac02fb9	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fsc/log_fs_b.txt	dac02fb9	1	1	underwater_aerial_garden	9761	107	NEW	77.9	48.3	635.3	1	103	334.5	1
+C:/kyty/f287/f20l3/log_b32_s10.txt	test:2d0c8815	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s10.txt	test:2d0c8815	0	1	underwater_aerial_garden	10010	109	NEW	81.7	50.7	639.1	1	105	334.5	1
+C:/kyty/f287/f20l3/log_b32_s12.txt	test:2d0c8815	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s12.txt	test:2d0c8815	0	1	underwater_aerial_garden	9807	107	NEW	82.4	48.2	613.8	1	101	334.7	1
+C:/kyty/f287/f20c/log_f20_v05.txt	FS6	1	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20c/log_f20_v05.txt	FS6	1	1	underwater_aerial_garden	9953	109	NEW	79.4	48.1	613.9	1	106	334.8	1
+C:/kyty/f287/f20l3/log_b32_s08.txt	test:2d0c8815	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s08.txt	test:2d0c8815	0	1	underwater_aerial_garden	9956	109	NEW	81.2	49.3	636.9	1	105	334.4	1
+C:/kyty/p283/p36/log_jv_1.txt	test:6bad00f3	0	0	(empty)	13	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p36/log_jv_1.txt	test:6bad00f3	0	1	underwater_aerial_garden	9036	99	OLD	1257.2	1067.8	1611.7	99	0	335.0	1
+C:/kyty/f287/f25m/log_b36_v.txt	test:9745eb78	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f25m/log_b36_v.txt	test:9745eb78	0	1	underwater_aerial_garden	10184	111	NEW	83.9	51.2	639.3	1	106	334.1	1
+C:/kyty/f287/f20l3/log_b32_s20.txt	test:2d0c8815	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s20.txt	test:2d0c8815	0	1	underwater_aerial_garden	9851	108	NEW	83.6	49.7	628.5	1	103	334.1	1
+C:/kyty/f287/f20l3/log_b32_z0c1.txt	test:2d0c8815	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_z0c1.txt	test:2d0c8815	0	1	underwater_aerial_garden	10103	110	NEW	83.3	50.5	660.1	1	105	334.2	1
+C:/kyty/f287/f20c/log_f20_v21.txt	FS6	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20c/log_f20_v21.txt	FS6	1	1	underwater_aerial_garden	9785	107	OLD	1474.0	1210.7	1859.5	107	0	334.2	1
+C:/kyty/p283/p38/runs/log_jv_1.txt	test:6bad00f3	0	0	(empty)	13	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p38/runs/log_jv_1.txt	test:6bad00f3	0	1	underwater_aerial_garden	9036	99	OLD	1257.2	1067.8	1611.7	99	0	335.0	1
+C:/kyty/f287/f20c/log_f20_v13.txt	FS6	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v13.txt	FS6	1	1	underwater_aerial_garden	10034	110	NEW	80.8	47.4	577.4	0	106	334.4	1
+C:/kyty/f287/f20l3/log_b32_s05.txt	test:2d0c8815	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s05.txt	test:2d0c8815	0	1	underwater_aerial_garden	9762	107	NEW	80.7	50.8	627.9	1	103	334.4	1
+C:/kyty/f287/fs2c/log_fs2_v.txt	FS2	1	0	(empty)	45	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs2c/log_fs2_v.txt	FS2	1	1	underwater_aerial_garden	9922	108	NEW	79.3	47.2	658.8	1	104	335.2	1
+C:/kyty/f287/fs9c/log_fs9_v.txt	FS9	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs9c/log_fs9_v.txt	FS9	1	1	underwater_aerial_garden	10133	111	NEW	80.8	48.2	658.8	1	105	334.3	1
+C:/kyty/f287/f20c/log_f20_v06.txt	FS6	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20c/log_f20_v06.txt	FS6	1	1	underwater_aerial_garden	10047	110	NEW	80.6	49.2	636.7	1	106	334.3	1
+C:/kyty/f287/f20c/log_f20_v22.txt	FS6	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20c/log_f20_v22.txt	FS6	1	1	underwater_aerial_garden	9754	107	NEW	80.6	48.0	591.1	0	104	334.5	1
+C:/kyty/f287/fs7c/log_fs7_h.txt	FS7	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs7c/log_fs7_h.txt	FS7	1	1	underwater_aerial_garden	10097	110	NEW	82.9	53.2	594.8	0	105	334.1	1
+C:/kyty/f287/fs6c/log_fs6_v.txt	FS6	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs6c/log_fs6_v.txt	FS6	1	1	underwater_aerial_garden	10076	110	NEW	80.0	47.2	635.2	1	106	334.2	1
+C:/kyty/p283/p19/log_qv_3.txt	test:56ee1914	0	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p19/log_qv_3.txt	test:56ee1914	0	1	underwater_aerial_garden	10718	117	OLD	1161.2	1029.1	1403.9	117	0	334.6	1
+C:/kyty/f287/f19e/log_b24_n1.txt	test:9b00ad40	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f19e/log_b24_n1.txt	test:9b00ad40	0	1	underwater_aerial_garden	9723	106	NEW	82.2	48.0	647.3	1	101	334.3	1
+C:/kyty/p283/p21/runs/log_qv_3.txt	test:56ee1914	0	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p21/runs/log_qv_3.txt	test:56ee1914	0	1	underwater_aerial_garden	10718	117	OLD	1161.2	1029.1	1403.9	117	0	334.6	1
+C:/kyty/f287/f20l3/log_b32_s24.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s24.txt	test:2d0c8815	0	1	underwater_aerial_garden	9783	107	NEW	80.2	47.5	602.2	1	104	334.3	1
+C:/kyty/f287/f20l3/log_b32_s06.txt	test:2d0c8815	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s06.txt	test:2d0c8815	0	1	underwater_aerial_garden	9879	108	OLD	1479.4	1212.9	1795.9	108	0	334.3	1
+C:/kyty/f287/fs4c/log_fs4_v.txt	FS4	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs4c/log_fs4_v.txt	FS4	1	1	underwater_aerial_garden	9931	109	NEW	84.4	50.1	602.1	1	103	334.8	1
+C:/kyty/f287/f20c/log_f20_v17.txt	FS6	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v17.txt	FS6	1	1	underwater_aerial_garden	9952	109	NEW	81.0	49.5	604.3	1	105	334.8	1
+C:/kyty/f287/f20c/log_f20_v16.txt	FS6	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v16.txt	FS6	1	1	underwater_aerial_garden	9875	108	NEW	82.2	50.0	625.8	1	103	334.9	1
+C:/kyty/f287/f20l/log_b32_pp.txt	test:b9e0ee00	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l/log_b32_pp.txt	test:b9e0ee00	0	1	underwater_aerial_garden	9586	105	OLD	1476.6	1213.7	2077.4	105	0	334.6	1
+C:/kyty/f287/f20l/log_b32_pd2.txt	test:b9e0ee00	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l/log_b32_pd2.txt	test:b9e0ee00	0	1	underwater_aerial_garden	9528	104	OLD	1473.8	1189.6	2066.5	104	0	334.4	1
+C:/kyty/f287/f20l/log_b32_z0.txt	test:b9e0ee00	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l/log_b32_z0.txt	test:b9e0ee00	0	1	underwater_aerial_garden	9838	107	OLD	1474.7	1189.2	1794.4	107	0	334.4	1
+C:/kyty/f287/f20c/log_f20_v12.txt	FS6	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v12.txt	FS6	1	1	underwater_aerial_garden	9811	107	NEW	80.1	47.7	598.7	0	103	334.6	1
+C:/kyty/f287/f20c/log_f20_v11.txt	FS6	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v11.txt	FS6	1	1	underwater_aerial_garden	9840	108	NEW	79.9	49.6	602.3	1	103	334.8	1
+C:/kyty/f287/f20c/log_f20_v09.txt	FS6	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20c/log_f20_v09.txt	FS6	1	1	underwater_aerial_garden	9456	103	NEW	83.1	48.0	612.7	1	98	335.0	1
+C:/kyty/f287/f20c/log_f20_v19.txt	FS6	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v19.txt	FS6	1	1	underwater_aerial_garden	9839	107	NEW	81.0	50.2	624.2	1	103	334.6	1
+C:/kyty/f287/f20c/log_f20_v08.txt	FS6	1	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20c/log_f20_v08.txt	FS6	1	1	underwater_aerial_garden	9609	105	NEW	78.1	45.9	599.7	0	101	334.9	1
+C:/kyty/f287/f20l3/log_b32_s03.txt	test:2d0c8815	0	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s03.txt	test:2d0c8815	0	1	underwater_aerial_garden	9665	106	OLD	1241.0	1109.9	1472.3	106	0	334.5	1
+C:/kyty/f287/f15e/log_b4_v.txt	test:907569f6	0	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f15e/log_b4_v.txt	test:907569f6	0	1	underwater_aerial_garden	9983	109	NEW	81.3	50.7	593.5	0	105	334.5	1
+C:/kyty/s288/s18c/log_s18_v.txt	S18	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s18c/log_s18_v.txt	S18	1	1	underwater_aerial_garden	9745	106	NEW	80.3	47.9	602.0	1	103	334.8	1
+C:/kyty/f287/f20c/log_f20_v14.txt	FS6	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v14.txt	FS6	1	1	underwater_aerial_garden	9786	107	NEW	82.8	49.8	613.8	1	102	334.6	1
+C:/kyty/s288/s15/log_k_11.txt	FS8	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s15/log_k_11.txt	FS8	1	1	big_hand_pirate_island	8809	96	OLD	1051.6	867.8	1386.0	96	0	302.1	1
+C:/kyty/s288/s15/log_k_06.txt	FS8	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_k_06.txt	FS8	1	1	underwater_aerial_garden	9026	98	NEW	94.5	48.4	806.7	2	94	305.9	1
+C:/kyty/f287/f20c/log_f20_v15.txt	FS6	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v15.txt	FS6	1	1	underwater_aerial_garden	9791	107	NEW	80.2	48.5	646.5	1	102	334.8	1
+C:/kyty/f287/f20l3/log_b32_s04.txt	test:2d0c8815	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l3/log_b32_s04.txt	test:2d0c8815	0	1	underwater_aerial_garden	9688	106	OLD	1216.5	228.5	1382.0	105	1	334.0	1
+C:/kyty/f287/f20e/log_f20_v32.txt	FS8	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20e/log_f20_v32.txt	FS8	1	1	underwater_aerial_garden	9699	106	NEW	84.0	49.9	593.1	0	102	334.8	1
+C:/kyty/p283/lead/p6chk/log_pb0_B0.txt	9235a7ac	1	0	(empty)	21	0	SHORT				0	0	0.6	1
+C:/kyty/p283/lead/p6chk/log_pb0_B0.txt	9235a7ac	1	1	underwater_aerial_garden	10066	110	MIXED	395.7	44.3	1681.6	28	82	335.0	1
+C:/kyty/p283/p4/log_pb0_B0.txt	9235a7ac	1	0	(empty)	21	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p4/log_pb0_B0.txt	9235a7ac	1	1	underwater_aerial_garden	10066	110	MIXED	395.7	44.3	1681.6	28	82	335.0	1
+C:/kyty/p283/p6/runs/log_pb0_B0.txt	9235a7ac	1	0	(empty)	21	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p6/runs/log_pb0_B0.txt	9235a7ac	1	1	underwater_aerial_garden	10066	110	MIXED	395.7	44.3	1681.6	28	82	335.0	1
+C:/kyty/f287/f20c/log_f20_v20.txt	FS6	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v20.txt	FS6	1	1	underwater_aerial_garden	9742	106	NEW	81.8	47.8	577.8	0	102	334.6	1
+C:/kyty/f287/f20l/log_b32_pd.txt	test:b9e0ee00	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l/log_b32_pd.txt	test:b9e0ee00	0	1	underwater_aerial_garden	9438	103	OLD	1466.7	1153.0	1803.2	103	0	334.6	1
+C:/kyty/f287/f16f/log_f5_sg.txt	test:4ad735ad	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f16f/log_f5_sg.txt	test:4ad735ad	0	1	underwater_aerial_garden	9665	106	NEW	79.5	46.1	555.2	0	102	334.7	1
+C:/kyty/s288/s18c/log_s18_e1.txt	S18	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s18c/log_s18_e1.txt	S18	1	1	underwater_aerial_garden	9635	105	NEW	82.4	47.5	613.0	1	100	334.6	1
+C:/kyty/f287/f20e/log_f20_v27.txt	FS8	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20e/log_f20_v27.txt	FS8	1	1	underwater_aerial_garden	9568	104	NEW	80.4	45.5	644.6	1	100	335.0	1
+C:/kyty/f287/f20e/log_f20_v25.txt	FS8	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20e/log_f20_v25.txt	FS8	1	1	underwater_aerial_garden	9615	105	NEW	77.1	46.5	564.8	0	102	334.7	1
+C:/kyty/f287/f20l2/log_b32_pcb.txt	test:2d0c8815	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l2/log_b32_pcb.txt	test:2d0c8815	0	1	underwater_aerial_garden	9374	102	OLD	1475.1	1166.2	2055.4	102	0	334.7	1
+C:/kyty/f287/f20e/log_f20_v35.txt	FS8	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20e/log_f20_v35.txt	FS8	1	1	underwater_aerial_garden	9557	104	NEW	85.1	52.8	616.8	1	98	334.8	1
+C:/kyty/f287/f20e/log_f20_v33.txt	FS8	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20e/log_f20_v33.txt	FS8	1	1	underwater_aerial_garden	9654	105	NEW	85.2	50.7	590.9	0	99	334.6	1
+C:/kyty/f287/f20c/log_f20_v18.txt	FS6	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v18.txt	FS6	1	1	underwater_aerial_garden	9692	106	NEW	81.9	47.6	612.3	1	101	334.8	1
+C:/kyty/f287/f20c/log_f20_v24.txt	FS6	1	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v24.txt	FS6	1	1	underwater_aerial_garden	9651	105	NEW	81.5	50.1	624.7	1	102	334.6	1
+C:/kyty/f287/f20c/log_f20_v23.txt	FS6	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20c/log_f20_v23.txt	FS6	1	1	underwater_aerial_garden	9587	105	NEW	78.4	45.8	610.7	1	100	335.1	1
+C:/kyty/f287/f20e/log_f20_v30.txt	FS8	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20e/log_f20_v30.txt	FS8	1	1	underwater_aerial_garden	9508	104	NEW	81.0	48.3	602.0	1	100	334.5	1
+C:/kyty/f287/f20e/log_f20_v29.txt	FS8	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20e/log_f20_v29.txt	FS8	1	1	underwater_aerial_garden	9622	105	NEW	80.0	48.4	646.3	1	102	334.6	1
+C:/kyty/f287/f20e/log_f20_v34.txt	FS8	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20e/log_f20_v34.txt	FS8	1	1	underwater_aerial_garden	9593	105	NEW	82.7	46.9	611.8	1	100	334.5	1
+C:/kyty/s288/s13/log_k_19.txt	S12	1	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s13/log_k_19.txt	S12	1	1	enemy_gorilla	9955	109	NEW	41.4	25.0	298.2	0	109	182.6	1
+C:/kyty/f287/f20c/log_f20_v10.txt	FS6	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20c/log_f20_v10.txt	FS6	1	1	underwater_aerial_garden	9662	106	OLD	1234.2	1133.4	1451.8	106	0	334.5	1
+C:/kyty/f287/f20e/log_f20_v31.txt	FS8	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20e/log_f20_v31.txt	FS8	1	1	underwater_aerial_garden	9606	105	NEW	77.9	44.8	610.7	1	100	334.5	1
+C:/kyty/s144/log_v144_15.txt	9235a7ac	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_v144_15.txt	9235a7ac	1	1	sponge_dirty_bath	11097	121	OLD	1257.0	976.1	1340.9	121	0	334.3	1
+C:/kyty/f287/f20e/log_f20_v28.txt	FS8	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20e/log_f20_v28.txt	FS8	1	1	underwater_aerial_garden	9512	104	NEW	80.3	47.3	600.4	1	100	334.7	1
+C:/kyty/f287/f20l/log_b32_pc.txt	test:b9e0ee00	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l/log_b32_pc.txt	test:b9e0ee00	0	1	underwater_aerial_garden	9533	104	OLD	1483.5	1176.7	2030.2	104	0	334.5	1
+C:/kyty/f287/f20e/log_f20_v26.txt	FS8	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f20e/log_f20_v26.txt	FS8	1	1	underwater_aerial_garden	9408	103	NEW	85.7	48.9	612.3	1	98	334.7	1
+C:/kyty/f287/f20l2/log_b32_z0b.txt	test:2d0c8815	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l2/log_b32_z0b.txt	test:2d0c8815	0	1	underwater_aerial_garden	9332	102	NEW	85.9	49.2	638.8	1	96	334.2	1
+C:/kyty/s143/log_v143_03.txt	9235a7ac	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s143/log_v143_03.txt	9235a7ac	1	1	mini_astro_clock_tower	10516	115	OLD	952.4	860.2	1367.5	115	0	334.0	1
+C:/kyty/f287/f20l2/log_b32_ppb.txt	test:2d0c8815	0	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f20l2/log_b32_ppb.txt	test:2d0c8815	0	1	underwater_aerial_garden	9122	100	NEW	86.5	50.5	685.1	1	96	334.9	1
+C:/kyty/f287/f6e/series1/log_f6e_a1.txt	test:d8756dce	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f6e/series1/log_f6e_a1.txt	test:d8756dce	0	1	timestop_casino	7215	78	NEW	55.3	31.0	803.0	1	77	129.9	1
+C:/kyty/s145/log_v145_10.txt	9235a7ac	1	0	(empty)	33	0	SHORT				0	0	0.6	1
+C:/kyty/s145/log_v145_10.txt	9235a7ac	1	1	shuriken_ninja_castle	10719	117	NEW	52.4	33.4	920.4	1	115	332.5	1
+C:/kyty/s144/log_w144_09.txt	9235a7ac	1	0	(empty)	32	0	SHORT				0	0	0.6	1
+C:/kyty/s144/log_w144_09.txt	9235a7ac	1	1	rocket_hourglass	1155	11	MIXED	305.5	75.1	1220.9	1	8	89.3	1
+C:/kyty/p283/p4/log_pa0_A0.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p4/log_pa0_A0.txt	9235a7ac	1	1	underwater_aerial_garden	10093	110	NEW	83.8	49.2	602.2	1	104	334.5	1
+C:/kyty/s288/s6/log_pcw_3.txt	test:f3b3aa3b	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s6/log_pcw_3.txt	test:f3b3aa3b	0	1	underwater_aerial_garden	9938	109	MIXED	296.1	49.1	1483.2	21	86	334.2	1
+C:/kyty/s288/s10/log_pi_w1.txt	test:f3b3aa3b	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s10/log_pi_w1.txt	test:f3b3aa3b	0	1	underwater_aerial_garden	10192	111	NEW	79.6	47.9	646.8	1	107	334.4	1
+C:/kyty/p283/lead/p6chk/log_pa0_A0.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/lead/p6chk/log_pa0_A0.txt	9235a7ac	1	1	underwater_aerial_garden	10093	110	NEW	83.8	49.2	602.2	1	104	334.5	1
+C:/kyty/s142/log_v142.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s142/log_v142.txt	9235a7ac	1	1	underwater_aerial_garden	10204	112	NEW	79.7	48.7	591.1	0	108	334.6	1
+C:/kyty/p283/p4/log_pa_A.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p4/log_pa_A.txt	9235a7ac	1	1	underwater_aerial_garden	10245	112	NEW	82.1	49.8	579.9	0	106	334.5	1
+C:/kyty/p283/p15/log_qa_A.txt	test:56ee1914	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p15/log_qa_A.txt	test:56ee1914	0	1	underwater_aerial_garden	10119	111	NEW	82.9	45.4	567.8	0	106	334.6	1
+C:/kyty/f287/f3d/log_f3d_bv.txt	test:2e6df8f0	0	0	(empty)	45	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f3d/log_f3d_bv.txt	test:2e6df8f0	0	1	underwater_aerial_garden	8284	90	NEW	98.3	49.5	929.3	2	87	336.6	1
+C:/kyty/p283/p6/runs/log_pa0_A0.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p6/runs/log_pa0_A0.txt	9235a7ac	1	1	underwater_aerial_garden	10093	110	NEW	83.8	49.2	602.2	1	104	334.5	1
+C:/kyty/p283/p19/log_qa_A2.txt	test:56ee1914	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p19/log_qa_A2.txt	test:56ee1914	0	1	underwater_aerial_garden	10190	111	NEW	84.8	48.4	615.6	1	106	334.8	1
+C:/kyty/s143/log_v143_01.txt	9235a7ac	1	0	(empty)	45	0	SHORT				0	0	0.7	1
+C:/kyty/s143/log_v143_01.txt	9235a7ac	1	1	spring_punch_sky_aztec	10564	116	NEW	32.2	25.7	334.6	0	114	334.0	1
+C:/kyty/p283/p17/runs/log_qa_A.txt	test:56ee1914	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p17/runs/log_qa_A.txt	test:56ee1914	0	1	underwater_aerial_garden	10119	111	NEW	82.9	45.4	567.8	0	106	334.6	1
+C:/kyty/p283/p6/runs/log_pa_A.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p6/runs/log_pa_A.txt	9235a7ac	1	1	underwater_aerial_garden	10245	112	NEW	82.1	49.8	579.9	0	106	334.5	1
+C:/kyty/p283/p21/runs/log_qa_A2.txt	test:56ee1914	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p21/runs/log_qa_A2.txt	test:56ee1914	0	1	underwater_aerial_garden	10190	111	NEW	84.8	48.4	615.6	1	106	334.8	1
+C:/kyty/p283/lead/p6chk/log_pa_A.txt	9235a7ac	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/lead/p6chk/log_pa_A.txt	9235a7ac	1	1	underwater_aerial_garden	10245	112	NEW	82.1	49.8	579.9	0	106	334.5	1
+C:/kyty/s288/s6/log_pcw_4.txt	test:f3b3aa3b	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s6/log_pcw_4.txt	test:f3b3aa3b	0	1	underwater_aerial_garden	9939	109	OLD	1255.8	1109.9	1520.5	109	0	336.0	1
+C:/kyty/s288/s6/log_pcw_2.txt	test:f3b3aa3b	0	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s6/log_pcw_2.txt	test:f3b3aa3b	0	1	underwater_aerial_garden	9944	109	NEW	82.4	49.0	637.6	1	103	334.9	1
+C:/kyty/f287/f25m/log_b36_f1.txt	test:9745eb78	0	0	(empty)	26	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_f1.txt	test:9745eb78	0	1	pot_treasure_cave	8512	93	NEW	41.4	24.7	336.6	0	91	153.3	1
+C:/kyty/s144/log_v144_12.txt	9235a7ac	1	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_v144_12.txt	9235a7ac	1	1	big_hand_pirate_island	9696	106	OLD	1079.8	879.5	1570.4	106	0	332.8	1
+C:/kyty/s288/s6/log_pcw_1.txt	test:f3b3aa3b	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s6/log_pcw_1.txt	test:f3b3aa3b	0	1	underwater_aerial_garden	9600	105	NEW	83.1	47.8	658.7	1	99	334.3	1
+C:/kyty/f287/f5c/log_f5c_g.txt	test:6f495a65	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f5c/log_f5c_g.txt	test:6f495a65	0	1	underwater_aerial_garden	9585	105	OLD	1250.4	1119.4	1533.2	105	0	334.4	1
+C:/kyty/s288/s10/log_pi_w0.txt	test:f3b3aa3b	0	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s10/log_pi_w0.txt	test:f3b3aa3b	0	1	underwater_aerial_garden	10064	110	NEW	80.7	50.2	638.0	1	105	336.3	1
+C:/kyty/s288/s13/log_u_05.txt	S12	1	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_u_05.txt	S12	1	1	hub_crashsite	7288	79	NEW	59.5	23.0	546.6	0	75	122.2	1
+C:/kyty/f287/fs2c/log_fs2_t.txt	FS2	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs2c/log_fs2_t.txt	FS2	1	1	timestop_casino	7479	81	NEW	54.6	31.3	573.4	0	79	127.0	1
+C:/kyty/s288/s15/log_u_05.txt	FS8	1	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_u_05.txt	FS8	1	1	hub_crashsite	7206	78	NEW	60.2	23.0	557.2	0	73	120.2	1
+C:/kyty/s288/s13/log_k_08.txt	S12	1	0	(empty)	33	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s13/log_k_08.txt	S12	1	1	time_stopper_ghost_world	7207	78	OLD	1089.9	967.8	1608.9	78	0	183.4	1
+C:/kyty/s145/log_w145_07.txt	9235a7ac	1	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/s145/log_w145_07.txt	9235a7ac	1	1	picup_light	6791	74	NEW	33.0	21.0	404.8	0	72	316.2	1
+C:/kyty/p283/lead/p6chk/log_pb_B.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.6	1
+C:/kyty/p283/lead/p6chk/log_pb_B.txt	9235a7ac	1	1	underwater_aerial_garden	9146	100	OLD	1691.2	1344.1	1832.9	100	0	334.8	1
+C:/kyty/p283/p4/log_pb_B.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p4/log_pb_B.txt	9235a7ac	1	1	underwater_aerial_garden	9146	100	OLD	1691.2	1344.1	1832.9	100	0	334.8	1
+C:/kyty/s144/log_w144_03.txt	9235a7ac	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_w144_03.txt	9235a7ac	1	1	mini_astro_clock_tower	2884	30	OLD	979.8	880.3	1377.1	30	0	323.7	1
+C:/kyty/f287/f25m/log_b36_f0_r1.txt	test:9745eb78	0	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25m/log_b36_f0_r1.txt	test:9745eb78	0	1	pot_treasure_cave	8065	88	NEW	46.5	26.0	369.1	0	86	153.1	1
+C:/kyty/s144/log_w144_19.txt	9235a7ac	1	0	(empty)	31	0	SHORT				0	0	0.6	1
+C:/kyty/s144/log_w144_19.txt	9235a7ac	1	1	enemy_gorilla	4420	47	NEW	61.3	25.3	344.2	0	45	318.8	1
+C:/kyty/s288/s13/log_u_04.txt	S12	1	0	(empty)	1	0	SHORT				0	0	0.0	1
+C:/kyty/s288/s13/log_u_04.txt	S12	1	1	ps_logo	852	8	NEW	28.4	18.6	87.3	0	8	14.2	1
+C:/kyty/s288/s13/log_u_04.txt	S12	1	2	(empty)	6	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s13/log_u_04.txt	S12	1	3	worldmap	46	0	SHORT				0	0	0.8	1
+C:/kyty/s288/s13/log_u_04.txt	S12	1	4	(empty)	3	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s13/log_u_04.txt	S12	1	5	transition_next	6695	73	NEW	23.6	19.8	86.6	0	73	121.8	1
+C:/kyty/s288/s13/log_k_10.txt	S12	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s13/log_k_10.txt	S12	1	1	bumper_enemy_snowy_canyon	7574	82	NEW	42.1	30.7	310.4	0	81	183.5	1
+C:/kyty/f287/f5c/log_f5c_v.txt	test:6f495a65	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f5c/log_f5c_v.txt	test:6f495a65	0	1	underwater_aerial_garden	9256	101	OLD	1474.1	1175.3	2087.2	101	0	334.5	1
+C:/kyty/p283/lead/p10chk/log_pr_C.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.7	1
+C:/kyty/p283/lead/p10chk/log_pr_C.txt	9235a7ac	1	1	underwater_aerial_garden	9391	103	NEW	84.2	50.6	708.4	1	99	335.1	1
+C:/kyty/p283/p6/runs/log_pb_B.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p6/runs/log_pb_B.txt	9235a7ac	1	1	underwater_aerial_garden	9146	100	OLD	1691.2	1344.1	1832.9	100	0	334.8	1
+C:/kyty/p283/p10/runs/log_pr_C.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p10/runs/log_pr_C.txt	9235a7ac	1	1	underwater_aerial_garden	9391	103	NEW	84.2	50.6	708.4	1	99	335.1	1
+C:/kyty/p283/p8/log_pr_C.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p8/log_pr_C.txt	9235a7ac	1	1	underwater_aerial_garden	9391	103	NEW	84.2	50.6	708.4	1	99	335.1	1
+C:/kyty/f287/f27c/log_f27_v0b.txt	FS10	1	0	(empty)	54	0	SHORT				0	0	0.9	1
+C:/kyty/f287/f27c/log_f27_v0b.txt	FS10	1	1	rotating_level_day_and_night	7179	78	NEW	44.0	27.1	848.4	1	77	132.0	1
+C:/kyty/s288/s15/log_u_03.txt	FS8	1	0	(empty)	9	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s15/log_u_03.txt	FS8	1	1	worldmap	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_u_03.txt	FS8	1	2	(empty)	9	0	SHORT				0	0	0.2	1
+C:/kyty/s288/s15/log_u_03.txt	FS8	1	3	transition_next	7173	78	NEW	28.0	22.6	118.9	0	78	119.6	1
+C:/kyty/f287/f27c/log_f27_v1a.txt	FS10	1	0	(empty)	48	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f27c/log_f27_v1a.txt	FS10	1	1	rotating_level_day_and_night	7236	79	NEW	40.2	25.8	533.7	0	77	132.2	1
+C:/kyty/f287/f3d/log_f3d_c2.txt	test:2e6df8f0	0	0	(empty)	52	0	SHORT				0	0	0.9	1
+C:/kyty/f287/f3d/log_f3d_c2.txt	test:2e6df8f0	0	1	voxel_world	7321	80	NEW	33.7	23.7	445.5	0	79	123.2	1
+C:/kyty/p283/p31/log_hn_hoover_beach.txt	test:4bb8bceb	0	0	(empty)	27	0	SHORT				0	0	0.4	1
+C:/kyty/p283/p31/log_hn_hoover_beach.txt	test:4bb8bceb	0	1	hoover_beach	7288	79	NEW	56.6	32.8	850.3	1	77	122.4	1
+C:/kyty/p283/p33/runs/log_hn_hoover_beach.txt	test:4bb8bceb	0	0	(empty)	27	0	SHORT				0	0	0.4	1
+C:/kyty/p283/p33/runs/log_hn_hoover_beach.txt	test:4bb8bceb	0	1	hoover_beach	7288	79	NEW	56.6	32.8	850.3	1	77	122.4	1
+C:/kyty/p283/p41/log_kn_hoover_beach.txt	test:ff16284f	0	0	(empty)	27	0	SHORT				0	0	0.4	1
+C:/kyty/p283/p41/log_kn_hoover_beach.txt	test:ff16284f	0	1	hoover_beach	7262	79	NEW	57.2	32.7	808.0	1	77	122.1	1
+C:/kyty/p283/p36/log_jn_hoover_beach.txt	test:6bad00f3	0	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p36/log_jn_hoover_beach.txt	test:6bad00f3	0	1	hoover_beach	7289	79	NEW	56.1	32.9	872.5	1	77	122.4	1
+C:/kyty/p283/p43/runs/log_kn_hoover_beach.txt	test:ff16284f	0	0	(empty)	27	0	SHORT				0	0	0.4	1
+C:/kyty/p283/p43/runs/log_kn_hoover_beach.txt	test:ff16284f	0	1	hoover_beach	7262	79	NEW	57.2	32.7	808.0	1	77	122.1	1
+C:/kyty/p283/p24/log_in_hoover_beach.txt	P23	1	0	(empty)	27	0	SHORT				0	0	0.4	1
+C:/kyty/p283/p24/log_in_hoover_beach.txt	P23	1	1	hoover_beach	7258	79	NEW	55.0	32.5	743.9	1	77	122.2	1
+C:/kyty/s288/s13/log_u_07.txt	S12	1	0	(empty)	13	0	SHORT				0	0	0.2	1
+C:/kyty/s288/s13/log_u_07.txt	S12	1	1	penguin_atlantis	7325	80	NEW	46.4	28.7	441.0	0	78	123.2	1
+C:/kyty/p283/p38/runs/log_jn_hoover_beach.txt	test:6bad00f3	0	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p38/runs/log_jn_hoover_beach.txt	test:6bad00f3	0	1	hoover_beach	7289	79	NEW	56.1	32.9	872.5	1	77	122.4	1
+C:/kyty/s288/s12/log_s12_gr.txt	S12	1	0	(empty)	58	0	SHORT				0	0	1.0	1
+C:/kyty/s288/s12/log_s12_gr.txt	S12	1	1	hero_kratos	7281	79	NEW	48.9	25.0	384.0	0	75	122.1	1
+C:/kyty/f287/f3d/log_f3d_a3.txt	test:2e6df8f0	0	0	(empty)	51	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f3d/log_f3d_a3.txt	test:2e6df8f0	0	1	voxel_world	7318	79	NEW	33.7	23.7	456.5	0	78	123.2	1
+C:/kyty/f287/f6e/log_f6e_c1.txt	test:d8756dce	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f6e/log_f6e_c1.txt	test:d8756dce	0	1	timestop_casino	7372	80	NEW	55.3	31.3	684.2	1	79	127.2	1
+C:/kyty/f287/f27c/log_f27_v0.txt	FS10	1	0	(empty)	46	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f27c/log_f27_v0.txt	FS10	1	1	rotating_level_day_and_night	7254	79	NEW	40.7	24.8	596.6	0	77	132.2	1
+C:/kyty/s288/s10/log_u_2.txt	P23	1	0	(empty)	26	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s10/log_u_2.txt	P23	1	1	hoover_beach	7288	79	NEW	54.5	31.2	839.9	1	77	122.4	1
+C:/kyty/s288/s15/log_u_04.txt	FS8	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s288/s15/log_u_04.txt	FS8	1	1	ps_logo	851	8	NEW	31.0	17.7	113.4	0	8	14.2	1
+C:/kyty/s288/s15/log_u_04.txt	FS8	1	2	(empty)	6	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s15/log_u_04.txt	FS8	1	3	worldmap	43	0	SHORT				0	0	0.8	1
+C:/kyty/s288/s15/log_u_04.txt	FS8	1	4	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s288/s15/log_u_04.txt	FS8	1	5	transition_next	6302	68	NEW	27.0	22.8	88.1	0	68	105.0	1
+C:/kyty/p283/p24/log_iv_hoover_beach.txt	P23	1	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p24/log_iv_hoover_beach.txt	P23	1	1	hoover_beach	7208	78	NEW	53.8	31.7	852.5	1	76	121.9	1
+C:/kyty/f287/f26c/log_b25_11.txt	FS10	1	0	(empty)	25	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_11.txt	FS10	1	1	intro_next	7211	78	NEW	56.5	15.7	522.6	0	76	120.5	1
+C:/kyty/s288/s13/log_u_16.txt	S12	1	0	(empty)	27	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s13/log_u_16.txt	S12	1	1	hoover_beach	7272	79	NEW	57.2	31.8	946.8	1	77	122.2	1
+C:/kyty/s288/s13/log_u_13.txt	S12	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_u_13.txt	S12	1	1	mini_giants_garden	7317	79	NEW	37.5	22.7	510.8	0	78	122.2	1
+C:/kyty/s288/s10/log_u_4.txt	P23	1	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s10/log_u_4.txt	P23	1	1	interactive_credit_00	7327	80	MIXED	677.3	62.2	1169.0	71	4	122.2	1
+C:/kyty/s288/s13/log_u_02.txt	S12	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s13/log_u_02.txt	S12	1	1	intro_next	7232	79	NEW	56.3	16.0	501.5	0	77	122.3	1
+C:/kyty/s288/s13/log_u_14.txt	S12	1	0	(empty)	33	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s13/log_u_14.txt	S12	1	1	ice_iceberg	7177	78	NEW	82.3	43.1	730.7	1	75	122.3	1
+C:/kyty/f287/f26c/log_b25_38.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_38.txt	FS10	1	1	intro_next	7215	78	NEW	57.3	15.9	594.4	0	76	120.4	1
+C:/kyty/s288/s13/log_u_17.txt	S12	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s13/log_u_17.txt	S12	1	1	volcano_mountain	7332	80	NEW	48.8	26.4	661.8	2	77	122.4	1
+C:/kyty/f287/f26c/log_b25_01.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_01.txt	FS10	1	1	intro_next	7207	78	NEW	56.5	15.9	576.9	0	76	120.2	1
+C:/kyty/s288/s15/log_u_02.txt	FS8	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s15/log_u_02.txt	FS8	1	1	intro_next	7217	78	NEW	60.0	14.8	573.5	0	76	120.5	1
+C:/kyty/s288/s10/log_u_5.txt	P23	1	0	(empty)	16	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s10/log_u_5.txt	P23	1	1	fragile_battle_1	7319	79	NEW	35.1	23.0	412.1	0	77	122.2	1
+C:/kyty/s288/s13/log_u_12.txt	S12	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_u_12.txt	S12	1	1	timestop_casino	7182	78	NEW	52.6	30.3	595.1	0	76	122.1	1
+C:/kyty/f287/f26c/log_b25_48.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_48.txt	FS10	1	1	intro_next	7209	78	NEW	61.3	15.9	591.2	0	75	120.6	1
+C:/kyty/f287/f26c/log_b25_37.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_37.txt	FS10	1	1	intro_next	7187	78	NEW	59.8	16.0	500.8	0	76	120.3	1
+C:/kyty/f287/f26c/log_b25_24.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_24.txt	FS10	1	1	intro_next	7216	78	NEW	54.9	16.0	489.0	0	76	120.6	1
+C:/kyty/s288/s15/log_u_13.txt	FS8	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s15/log_u_13.txt	FS8	1	1	mini_giants_garden	7205	78	NEW	40.0	24.3	667.0	1	77	120.3	1
+C:/kyty/s288/s15/log_u_16.txt	FS8	1	0	(empty)	27	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s15/log_u_16.txt	FS8	1	1	hoover_beach	7168	78	NEW	52.7	30.0	754.7	1	76	120.2	1
+C:/kyty/f287/f26c/log_b25_06.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_06.txt	FS10	1	1	intro_next	7231	79	NEW	59.1	15.9	484.5	0	76	120.6	1
+C:/kyty/f287/f26c/log_b25_54.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_54.txt	FS10	1	1	intro_next	7225	78	NEW	58.4	15.8	427.2	0	75	120.5	1
+C:/kyty/f287/f26c/log_b25_02.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_02.txt	FS10	1	1	intro_next	7223	78	NEW	56.5	15.9	403.4	0	75	120.5	1
+C:/kyty/s288/s15/log_u_12.txt	FS8	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_u_12.txt	FS8	1	1	timestop_casino	7129	77	NEW	56.8	31.6	651.8	1	75	120.3	1
+C:/kyty/f287/f26c/log_b25_41.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_41.txt	FS10	1	1	intro_next	7229	78	NEW	59.0	16.0	446.0	0	75	120.6	1
+C:/kyty/s288/s15/log_u_09.txt	FS8	1	0	(empty)	48	0	SHORT				0	0	0.8	1
+C:/kyty/s288/s15/log_u_09.txt	FS8	1	1	rotating_level_day_and_night	7158	78	NEW	43.7	27.2	732.7	1	76	120.3	1
+C:/kyty/f287/f26c/log_b25_04.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_04.txt	FS10	1	1	intro_next	7222	78	NEW	58.3	16.2	759.9	1	76	120.5	1
+C:/kyty/f287/f26c/log_b25_12.txt	FS10	1	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_12.txt	FS10	1	1	intro_next	7214	78	NEW	57.8	16.3	493.7	0	75	120.6	1
+C:/kyty/f287/f26c/log_b25_08.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_08.txt	FS10	1	1	intro_next	7234	79	NEW	57.4	15.8	478.9	0	77	120.7	1
+C:/kyty/f287/f26c/log_b25_36.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_36.txt	FS10	1	1	intro_next	7227	78	NEW	56.7	16.3	448.4	0	76	120.5	1
+C:/kyty/f287/f26c/log_b25_45.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_45.txt	FS10	1	1	intro_next	7225	78	NEW	56.3	16.0	514.0	0	76	120.5	1
+C:/kyty/f287/f26c/log_b25_07.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_07.txt	FS10	1	1	intro_next	7221	78	NEW	55.8	16.0	556.1	0	76	120.5	1
+C:/kyty/f287/f26c/log_b25_03.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_03.txt	FS10	1	1	intro_next	7214	78	NEW	55.1	15.9	547.3	0	76	120.3	1
+C:/kyty/s288/s15/log_u_17.txt	FS8	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s15/log_u_17.txt	FS8	1	1	volcano_mountain	7204	78	NEW	55.1	25.0	842.6	2	75	120.3	1
+C:/kyty/f287/f26c/log_b25_28.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_28.txt	FS10	1	1	intro_next	7211	78	NEW	56.7	16.1	523.6	0	76	120.5	1
+C:/kyty/f287/f26c/log_b25_44.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_44.txt	FS10	1	1	intro_next	7229	78	NEW	58.4	16.1	564.4	0	76	120.6	1
+C:/kyty/f287/f26c/log_b25_09.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_09.txt	FS10	1	1	intro_next	7238	79	NEW	54.1	16.2	538.3	0	77	120.7	1
+C:/kyty/f287/f26c/log_b25_43.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_43.txt	FS10	1	1	intro_next	7227	78	NEW	57.8	15.9	601.5	1	76	120.7	1
+C:/kyty/f287/f26c/log_b25_39.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_39.txt	FS10	1	1	intro_next	7234	79	NEW	57.5	16.0	617.7	1	76	120.7	1
+C:/kyty/f287/f26c/log_b25_10.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_10.txt	FS10	1	1	intro_next	7206	78	NEW	57.3	15.9	572.0	0	76	120.1	1
+C:/kyty/f287/f26c/log_b25_46.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_46.txt	FS10	1	1	intro_next	7231	79	NEW	57.7	16.7	608.6	1	77	120.6	1
+C:/kyty/f287/f26c/log_b25_50.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_50.txt	FS10	1	1	intro_next	7220	78	NEW	57.6	16.1	468.3	0	75	120.4	1
+C:/kyty/f287/f26c/log_b25_25.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_25.txt	FS10	1	1	intro_next	7215	78	NEW	58.8	16.7	481.1	0	75	120.7	1
+C:/kyty/f287/f26c/log_b25_33.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_33.txt	FS10	1	1	intro_next	7215	78	NEW	56.1	15.8	439.1	0	76	120.5	1
+C:/kyty/s288/s15/log_u_14.txt	FS8	1	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_u_14.txt	FS8	1	1	ice_iceberg	7025	76	NEW	90.2	44.6	964.2	2	74	120.2	1
+C:/kyty/f287/f26c/log_b25_47.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_47.txt	FS10	1	1	intro_next	7226	78	NEW	56.9	15.9	548.0	0	76	120.6	1
+C:/kyty/f287/f26c/log_b25_34.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_34.txt	FS10	1	1	intro_next	7219	78	NEW	59.5	16.2	689.2	1	75	120.5	1
+C:/kyty/f287/f26c/log_b25_55.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_55.txt	FS10	1	1	intro_next	7215	78	NEW	60.3	16.0	565.9	0	75	120.3	1
+C:/kyty/f287/f26c/log_b25_19.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_19.txt	FS10	1	1	intro_next	7220	78	NEW	57.4	16.2	399.9	0	76	120.7	1
+C:/kyty/f287/f26c/log_b25_27.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_27.txt	FS10	1	1	intro_next	7206	78	NEW	59.8	16.1	575.1	0	75	120.6	1
+C:/kyty/f287/f26c/log_b25_21.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_21.txt	FS10	1	1	intro_next	7220	78	NEW	57.2	16.0	586.3	0	75	120.6	1
+C:/kyty/f287/f26c/log_b25_42.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_42.txt	FS10	1	1	intro_next	7205	78	NEW	53.2	16.2	445.4	0	76	120.6	1
+C:/kyty/f287/f26c/log_b25_23.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_23.txt	FS10	1	1	intro_next	7203	78	NEW	57.6	15.9	659.5	1	75	120.5	1
+C:/kyty/f287/f26c/log_b25_05.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_05.txt	FS10	1	1	intro_next	7221	78	NEW	59.0	16.7	411.9	0	75	120.4	1
+C:/kyty/f287/f26c/log_b25_35.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_35.txt	FS10	1	1	intro_next	7214	78	NEW	58.1	16.3	472.3	0	76	120.4	1
+C:/kyty/f287/f26c/log_b25_49.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_49.txt	FS10	1	1	intro_next	7206	78	NEW	53.7	16.0	469.5	0	76	120.6	1
+C:/kyty/f287/f26c/log_b25_15.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_15.txt	FS10	1	1	intro_next	7212	78	NEW	57.2	15.9	459.6	0	76	120.5	1
+C:/kyty/f287/f26c/log_b25_51.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_51.txt	FS10	1	1	intro_next	7196	78	NEW	54.7	16.5	469.4	0	76	120.4	1
+C:/kyty/f287/f26c/log_b25_16.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_16.txt	FS10	1	1	intro_next	7203	78	NEW	56.7	16.0	541.4	0	75	120.3	1
+C:/kyty/f287/f26c/log_b25_30.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_30.txt	FS10	1	1	intro_next	7198	78	NEW	55.6	16.1	495.2	0	76	120.4	1
+C:/kyty/f287/f26c/log_b25_32.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_32.txt	FS10	1	1	intro_next	7202	78	NEW	56.4	16.0	583.9	0	75	120.3	1
+C:/kyty/f287/f26c/log_b25_31.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_31.txt	FS10	1	1	intro_next	7203	78	NEW	59.4	16.3	460.5	0	75	120.2	1
+C:/kyty/f287/f26c/log_b25_20.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_20.txt	FS10	1	1	intro_next	7212	78	NEW	57.5	16.1	447.8	0	75	120.5	1
+C:/kyty/f287/f26c/log_b25_40.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_40.txt	FS10	1	1	intro_next	7203	78	NEW	58.5	15.9	529.9	0	76	120.7	1
+C:/kyty/f287/f26c/log_b25_13.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_13.txt	FS10	1	1	intro_next	7203	78	NEW	59.2	15.8	544.5	0	75	120.4	1
+C:/kyty/f287/f26c/log_b25_18.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_18.txt	FS10	1	1	intro_next	7198	78	NEW	56.6	16.0	466.8	0	76	120.3	1
+C:/kyty/f287/f26c/log_b25_26.txt	FS10	1	0	(empty)	20	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_26.txt	FS10	1	1	intro_next	7204	78	NEW	56.7	16.9	506.4	0	76	120.4	1
+C:/kyty/f287/f26c/log_b25_52.txt	FS10	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_52.txt	FS10	1	1	intro_next	7183	78	NEW	55.6	16.1	563.5	0	76	120.2	1
+C:/kyty/f287/f26c/log_b25_29.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_29.txt	FS10	1	1	intro_next	7180	78	NEW	54.3	16.2	569.0	0	76	120.3	1
+C:/kyty/s288/s10/log_u_3.txt	P23	1	0	(empty)	8	0	SHORT				0	0	0.1	1
+C:/kyty/s288/s10/log_u_3.txt	P23	1	1	robot_builder_next	7347	80	NEW	33.6	18.3	848.1	1	79	122.5	1
+C:/kyty/s288/s15/log_u_07.txt	FS8	1	0	(empty)	13	0	SHORT				0	0	0.2	1
+C:/kyty/s288/s15/log_u_07.txt	FS8	1	1	penguin_atlantis	7176	78	NEW	45.1	28.6	438.4	0	76	120.5	1
+C:/kyty/f287/f26c/log_b25_14.txt	FS10	1	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_14.txt	FS10	1	1	intro_next	7180	78	NEW	59.0	16.0	593.7	0	76	120.5	1
+C:/kyty/f287/f6e/log_f6e_a1.txt	test:d8756dce	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f6e/log_f6e_a1.txt	test:d8756dce	0	1	timestop_casino	7155	78	NEW	56.3	31.6	629.1	1	75	127.1	1
+C:/kyty/s288/s10/log_t2_5.txt	test:f3b3aa3b	0	0	(empty)	17	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s10/log_t2_5.txt	test:f3b3aa3b	0	1	fragile_battle_4	7325	80	NEW	40.3	23.0	465.0	0	78	122.5	1
+C:/kyty/s288/s13/log_u_18.txt	S12	1	0	(empty)	44	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s13/log_u_18.txt	S12	1	1	voxel_world	7322	80	NEW	35.8	25.3	523.6	0	79	122.3	1
+C:/kyty/f287/f26c/log_b25_22.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_22.txt	FS10	1	1	intro_next	7168	78	NEW	58.6	16.4	689.5	1	75	120.3	1
+C:/kyty/s288/s10/log_t2_7.txt	test:f3b3aa3b	0	0	(empty)	26	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s10/log_t2_7.txt	test:f3b3aa3b	0	1	fragile_battle_5	7318	79	OLD	739.5	627.2	973.0	79	0	122.3	1
+C:/kyty/f287/f26c/log_b25_53.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f26c/log_b25_53.txt	FS10	1	1	intro_next	7175	78	NEW	57.3	16.1	535.4	0	76	120.4	1
+C:/kyty/s288/s13/log_u_09.txt	S12	1	0	(empty)	45	0	SHORT				0	0	0.8	1
+C:/kyty/s288/s13/log_u_09.txt	S12	1	1	rotating_level_day_and_night	7065	77	NEW	41.3	26.4	753.5	1	76	122.5	1
+C:/kyty/f287/f26c/log_b25_17.txt	FS10	1	0	(empty)	21	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f26c/log_b25_17.txt	FS10	1	1	intro_next	7171	78	NEW	58.4	16.0	468.3	0	76	120.4	1
+C:/kyty/f287/f6e/log_f6e_a2.txt	test:d8756dce	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f6e/log_f6e_a2.txt	test:d8756dce	0	1	timestop_casino	7111	77	NEW	53.8	30.3	682.6	1	75	127.1	1
+C:/kyty/f287/f3d/log_f3d_a4.txt	test:2e6df8f0	0	0	(empty)	59	0	SHORT				0	0	1.0	1
+C:/kyty/f287/f3d/log_f3d_a4.txt	test:2e6df8f0	0	1	voxel_world	7319	79	NEW	34.3	23.8	483.1	0	78	122.3	1
+C:/kyty/p283/p31/log_hh_hoover_beach.txt	test:4bb8bceb	0	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p31/log_hh_hoover_beach.txt	test:4bb8bceb	0	1	hoover_beach	6855	74	NEW	53.2	33.2	187.9	0	74	123.9	1
+C:/kyty/s288/s13/log_u_01.txt	S12	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s288/s13/log_u_01.txt	S12	1	1	title_controller_ship	7323	80	NEW	44.1	32.9	170.7	0	80	122.0	1
+C:/kyty/s288/s15/log_u_18.txt	FS8	1	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s15/log_u_18.txt	FS8	1	1	voxel_world	7206	78	NEW	36.0	25.4	553.2	0	77	120.3	1
+C:/kyty/p283/p36/log_jh_hoover_beach.txt	test:6bad00f3	0	0	(empty)	10	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p36/log_jh_hoover_beach.txt	test:6bad00f3	0	1	hoover_beach	6558	71	NEW	46.5	28.3	111.6	0	71	123.9	1
+C:/kyty/p283/p33/runs/log_hh_hoover_beach.txt	test:4bb8bceb	0	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p33/runs/log_hh_hoover_beach.txt	test:4bb8bceb	0	1	hoover_beach	6855	74	NEW	53.2	33.2	187.9	0	74	123.9	1
+C:/kyty/p283/p41/log_kh_hoover_beach.txt	test:ff16284f	0	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p41/log_kh_hoover_beach.txt	test:ff16284f	0	1	hoover_beach	6731	73	NEW	50.7	32.4	164.6	0	73	124.0	1
+C:/kyty/s288/s15/log_u_01.txt	FS8	1	0	(empty)	2	0	SHORT				0	0	0.0	1
+C:/kyty/s288/s15/log_u_01.txt	FS8	1	1	title_controller_ship	7217	78	NEW	37.0	27.5	151.9	0	78	120.3	1
+C:/kyty/s142/log_c142_05.txt	9235a7ac	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s142/log_c142_05.txt	9235a7ac	1	1	ice_iceberg	7085	77	NEW	86.0	45.5	772.5	2	75	123.2	1
+C:/kyty/s288/s13/log_u_19.txt	S12	1	0	(empty)	29	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s13/log_u_19.txt	S12	1	1	enemy_gorilla	6503	70	NEW	50.2	25.0	326.2	0	68	122.7	1
+C:/kyty/s288/s10/log_t2_cs0.txt	test:f3b3aa3b	0	0	(empty)	60	0	SHORT				0	0	1.0	1
+C:/kyty/s288/s10/log_t2_cs0.txt	test:f3b3aa3b	0	1	hero_kratos	7302	79	NEW	50.3	25.0	415.2	0	75	122.3	1
+C:/kyty/s288/s13/log_k_15.txt	S12	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_k_15.txt	S12	1	1	sponge_dirty_bath	6331	69	OLD	1256.1	1003.9	1335.5	69	0	183.5	1
+C:/kyty/s288/s13/log_u_03.txt	S12	1	0	(empty)	9	0	SHORT				0	0	0.2	1
+C:/kyty/s288/s13/log_u_03.txt	S12	1	1	worldmap	37	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s13/log_u_03.txt	S12	1	2	(empty)	8	0	SHORT				0	0	0.2	1
+C:/kyty/s288/s13/log_u_03.txt	S12	1	3	transition_next	6692	73	NEW	27.3	21.6	97.9	0	73	121.2	1
+C:/kyty/p283/p17/runs/log_qv_hoover_beach.txt	test:56ee1914	0	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p17/runs/log_qv_hoover_beach.txt	test:56ee1914	0	1	hoover_beach	7275	79	NEW	55.1	31.9	937.3	1	77	122.2	1
+C:/kyty/p283/p38/runs/log_jh_hoover_beach.txt	test:6bad00f3	0	0	(empty)	10	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p38/runs/log_jh_hoover_beach.txt	test:6bad00f3	0	1	hoover_beach	6558	71	NEW	46.5	28.3	111.6	0	71	123.9	1
+C:/kyty/p283/p17/runs/log_qn_hoover_beach.txt	test:56ee1914	0	0	(empty)	27	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p17/runs/log_qn_hoover_beach.txt	test:56ee1914	0	1	hoover_beach	7286	79	NEW	58.4	32.5	936.7	1	77	122.2	1
+C:/kyty/p283/p15/log_qv_hoover_beach.txt	test:56ee1914	0	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p15/log_qv_hoover_beach.txt	test:56ee1914	0	1	hoover_beach	7275	79	NEW	55.1	31.9	937.3	1	77	122.2	1
+C:/kyty/s288/s10/log_t2_1.txt	test:f3b3aa3b	0	0	(empty)	58	0	SHORT				0	0	1.0	1
+C:/kyty/s288/s10/log_t2_1.txt	test:f3b3aa3b	0	1	hero_kratos	7280	79	NEW	55.2	25.0	460.7	0	75	122.3	1
+C:/kyty/p283/p15/log_qn_hoover_beach.txt	test:56ee1914	0	0	(empty)	27	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p15/log_qn_hoover_beach.txt	test:56ee1914	0	1	hoover_beach	7286	79	NEW	58.4	32.5	936.7	1	77	122.2	1
+C:/kyty/s142/log_c142_08.txt	9235a7ac	1	0	(empty)	23	0	SHORT				0	0	0.4	1
+C:/kyty/s142/log_c142_08.txt	9235a7ac	1	1	volcano_mountain	7274	79	NEW	47.6	23.5	1030.1	1	77	122.9	1
+C:/kyty/p283/p43/runs/log_kh_hoover_beach.txt	test:ff16284f	0	0	(empty)	28	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p43/runs/log_kh_hoover_beach.txt	test:ff16284f	0	1	hoover_beach	6731	73	NEW	50.7	32.4	164.6	0	73	124.0	1
+C:/kyty/s288/s13/log_k_06.txt	S12	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_k_06.txt	S12	1	1	underwater_aerial_garden	5471	59	OLD	1256.1	1123.0	1519.7	59	0	185.9	1
+C:/kyty/s142/log_c142_04.txt	9235a7ac	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s142/log_c142_04.txt	9235a7ac	1	1	mini_giants_garden	7308	79	NEW	39.9	25.4	617.8	1	78	122.5	1
+C:/kyty/s288/s4/log_sw_m3.txt	9235a7ac	1	0	(empty)	33	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s4/log_sw_m3.txt	9235a7ac	1	1	ice_iceberg	7206	78	NEW	83.1	44.7	685.4	1	76	122.7	1
+C:/kyty/s142/log_c142_07.txt	9235a7ac	1	0	(empty)	26	0	SHORT				0	0	0.4	1
+C:/kyty/s142/log_c142_07.txt	9235a7ac	1	1	hoover_beach	7263	79	NEW	56.4	32.1	807.7	2	77	122.4	1
+C:/kyty/s142/log_c142_10.txt	9235a7ac	1	0	(empty)	32	0	SHORT				0	0	0.5	1
+C:/kyty/s142/log_c142_10.txt	9235a7ac	1	1	enemy_gorilla	6394	69	NEW	50.6	23.7	343.5	0	68	122.5	1
+C:/kyty/s288/s10/log_t2_2.txt	test:f3b3aa3b	0	0	(empty)	25	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s10/log_t2_2.txt	test:f3b3aa3b	0	1	hero_drake	6476	70	NEW	102.3	40.0	1106.6	4	66	122.8	1
+C:/kyty/s288/s15/log_u_19.txt	FS8	1	0	(empty)	29	0	SHORT				0	0	0.5	1
+C:/kyty/s288/s15/log_u_19.txt	FS8	1	1	enemy_gorilla	6365	69	NEW	50.8	25.0	327.0	0	67	120.2	1
+C:/kyty/s288/s4/log_sw_m2.txt	9235a7ac	1	0	(empty)	44	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s4/log_sw_m2.txt	9235a7ac	1	1	voxel_world	7447	81	NEW	34.3	24.1	465.2	0	80	124.3	1
+C:/kyty/s288/s13/log_k_11.txt	S12	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_k_11.txt	S12	1	1	big_hand_pirate_island	5183	56	OLD	1115.4	844.7	1597.6	56	0	182.2	1
+C:/kyty/p283/p8/log_pn_hoover_beach.txt	9235a7ac	1	0	(empty)	27	0	SHORT				0	0	0.4	1
+C:/kyty/p283/p8/log_pn_hoover_beach.txt	9235a7ac	1	1	hoover_beach	6752	73	NEW	60.7	31.9	943.9	2	71	124.5	1
+C:/kyty/f287/fsc/log_fs_v.txt	dac02fb9	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fsc/log_fs_v.txt	dac02fb9	1	1	mini_giants_garden	5882	64	NEW	40.8	24.3	692.8	1	63	317.6	1
+C:/kyty/p283/lead/p10chk/log_pn_hoover_beach.txt	9235a7ac	1	0	(empty)	27	0	SHORT				0	0	0.4	1
+C:/kyty/p283/lead/p10chk/log_pn_hoover_beach.txt	9235a7ac	1	1	hoover_beach	6752	73	NEW	60.7	31.9	943.9	2	71	124.5	1
+C:/kyty/s142/log_c142_09.txt	9235a7ac	1	0	(empty)	44	0	SHORT				0	0	0.7	1
+C:/kyty/s142/log_c142_09.txt	9235a7ac	1	1	voxel_world	7438	81	NEW	33.5	24.2	421.7	0	80	125.9	1
+C:/kyty/s288/s10/log_t2_6.txt	test:f3b3aa3b	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s10/log_t2_6.txt	test:f3b3aa3b	0	1	voxel_challenge_4	7319	79	NEW	28.2	20.3	251.6	0	79	122.0	1
+C:/kyty/p283/p10/runs/log_pn_hoover_beach.txt	9235a7ac	1	0	(empty)	27	0	SHORT				0	0	0.4	1
+C:/kyty/p283/p10/runs/log_pn_hoover_beach.txt	9235a7ac	1	1	hoover_beach	6752	73	NEW	60.7	31.9	943.9	2	71	124.5	1
+C:/kyty/s288/s10/log_t2_4.txt	test:f3b3aa3b	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s10/log_t2_4.txt	test:f3b3aa3b	0	1	armadillo_challenge_2	7330	80	NEW	33.6	26.1	395.2	0	79	122.4	1
+C:/kyty/s288/s10/log_t2_3.txt	test:f3b3aa3b	0	0	(empty)	18	0	SHORT				0	0	0.3	1
+C:/kyty/s288/s10/log_t2_3.txt	test:f3b3aa3b	0	1	voxel_challenge_3	7313	79	NEW	26.2	20.1	199.0	0	79	121.9	1
+C:/kyty/s142/log_c142_03.txt	9235a7ac	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s142/log_c142_03.txt	9235a7ac	1	1	timestop_casino	6906	75	NEW	53.1	31.0	583.7	0	74	122.5	1
+C:/kyty/f287/f3d/log_f3d_c1.txt	test:2e6df8f0	0	0	(empty)	52	0	SHORT				0	0	0.9	1
+C:/kyty/f287/f3d/log_f3d_c1.txt	test:2e6df8f0	0	1	big_hand_pirate_island	2832	30	OLD	1004.0	890.3	1467.4	30	0	132.6	1
+C:/kyty/s288/s17c/log_s17c_cc.txt	test:ed2686da	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s17c/log_s17c_cc.txt	test:ed2686da	0	1	underwater_aerial_garden	3608	38	OLD	1250.6	1111.0	1452.6	38	0	129.1	1
+C:/kyty/f287/f3d/log_f3d_a1.txt	test:2e6df8f0	0	0	(empty)	49	0	SHORT				0	0	0.8	1
+C:/kyty/f287/f3d/log_f3d_a1.txt	test:2e6df8f0	0	1	big_hand_pirate_island	2998	31	OLD	1000.0	833.2	1500.9	31	0	127.9	1
+C:/kyty/s288/s17c/log_s17c_ca.txt	test:ed2686da	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s17c/log_s17c_ca.txt	test:ed2686da	0	1	underwater_aerial_garden	3609	38	OLD	1491.2	1187.9	1826.4	38	0	129.8	1
+C:/kyty/f287/f2c/log_f2c_c.txt	test:5821482a	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f2c/log_f2c_c.txt	test:5821482a	0	1	underwater_aerial_garden	3612	38	OLD	1500.0	1187.3	1771.7	38	0	129.6	1
+C:/kyty/s288/s13/log_u_10.txt	S12	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s13/log_u_10.txt	S12	1	1	bumper_enemy_snowy_canyon	4974	53	NEW	52.8	32.2	300.5	0	52	122.7	1
+C:/kyty/s288/s15/log_u_15.txt	FS8	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_u_15.txt	FS8	1	1	sponge_dirty_bath	4056	43	OLD	1255.4	1009.3	1329.5	43	0	120.4	1
+C:/kyty/s288/s15/log_u_10.txt	FS8	1	0	(empty)	21	0	SHORT				0	0	0.4	1
+C:/kyty/s288/s15/log_u_10.txt	FS8	1	1	bumper_enemy_snowy_canyon	4833	52	NEW	50.1	30.5	271.5	0	52	120.4	1
+C:/kyty/s288/s13/log_u_15.txt	S12	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_u_15.txt	S12	1	1	sponge_dirty_bath	4117	44	OLD	1248.6	1009.5	1336.5	44	0	123.4	1
+C:/kyty/p283/p38/runs/log_jn_sponge_dirty_bath.txt	test:6bad00f3	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p38/runs/log_jn_sponge_dirty_bath.txt	test:6bad00f3	0	1	sponge_dirty_bath	4150	44	OLD	1252.3	987.4	1325.6	44	0	123.6	1
+C:/kyty/p283/p31/log_hn_sponge_dirty_bath.txt	test:4bb8bceb	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p31/log_hn_sponge_dirty_bath.txt	test:4bb8bceb	0	1	sponge_dirty_bath	4148	44	OLD	1250.0	973.4	1314.3	44	0	123.4	1
+C:/kyty/p283/p41/log_kn_sponge_dirty_bath.txt	test:ff16284f	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p41/log_kn_sponge_dirty_bath.txt	test:ff16284f	0	1	sponge_dirty_bath	4258	45	OLD	1251.1	995.6	1312.6	45	0	123.7	1
+C:/kyty/p283/p36/log_jn_sponge_dirty_bath.txt	test:6bad00f3	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p36/log_jn_sponge_dirty_bath.txt	test:6bad00f3	0	1	sponge_dirty_bath	4150	44	OLD	1252.3	987.4	1325.6	44	0	123.6	1
+C:/kyty/p283/p24/log_in_sponge_dirty_bath.txt	P23	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p24/log_in_sponge_dirty_bath.txt	P23	1	1	sponge_dirty_bath	4174	45	OLD	1244.1	972.3	1333.2	45	0	123.3	1
+C:/kyty/p283/p33/runs/log_hn_sponge_dirty_bath.txt	test:4bb8bceb	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p33/runs/log_hn_sponge_dirty_bath.txt	test:4bb8bceb	0	1	sponge_dirty_bath	4148	44	OLD	1250.0	973.4	1314.3	44	0	123.4	1
+C:/kyty/p283/p43/runs/log_kn_sponge_dirty_bath.txt	test:ff16284f	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p43/runs/log_kn_sponge_dirty_bath.txt	test:ff16284f	0	1	sponge_dirty_bath	4258	45	OLD	1251.1	995.6	1312.6	45	0	123.7	1
+C:/kyty/p283/p24/log_iv_sponge_dirty_bath.txt	P23	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p24/log_iv_sponge_dirty_bath.txt	P23	1	1	sponge_dirty_bath	4469	48	OLD	1646.6	1464.8	1901.3	48	0	123.6	1
+C:/kyty/f287/f19e/log_b24_h0.txt	test:9b00ad40	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f19e/log_b24_h0.txt	test:9b00ad40	0	1	underwater_aerial_garden	4415	47	MIXED	119.3	48.8	612.7	1	42	154.5	1
+C:/kyty/f287/fs10c/log_fs10_f1.txt	FS10	1	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fs10c/log_fs10_f1.txt	FS10	1	1	underwater_aerial_garden	4582	49	MIXED	117.6	47.9	658.9	1	43	154.4	1
+C:/kyty/s288/s15/log_u_08.txt	FS8	1	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_u_08.txt	FS8	1	1	time_stopper_ghost_world	4634	50	OLD	1116.4	1008.9	1484.8	50	0	120.3	1
+C:/kyty/f287/f19e/log_b24_d1.txt	test:9b00ad40	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f19e/log_b24_d1.txt	test:9b00ad40	0	1	underwater_aerial_garden	4530	49	MIXED	120.3	50.0	637.9	1	44	154.2	1
+C:/kyty/f287/f19e/log_b24_d0.txt	test:9b00ad40	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f19e/log_b24_d0.txt	test:9b00ad40	0	1	underwater_aerial_garden	4509	48	NEW	117.3	52.3	605.4	1	45	154.5	1
+C:/kyty/s288/s13/log_u_08.txt	S12	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s13/log_u_08.txt	S12	1	1	time_stopper_ghost_world	4610	49	OLD	1124.2	1035.2	1513.7	49	0	123.1	1
+C:/kyty/s142/log_c142_01.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.4	1
+C:/kyty/s142/log_c142_01.txt	9235a7ac	1	1	bumper_enemy_snowy_canyon	5068	54	NEW	52.5	33.3	330.7	0	53	124.6	1
+C:/kyty/f287/f19e/log_b24_s0.txt	test:9b00ad40	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f19e/log_b24_s0.txt	test:9b00ad40	0	1	underwater_aerial_garden	4544	49	NEW	107.4	48.3	613.3	1	45	154.6	1
+C:/kyty/f287/fsc/log_fs_a.txt	dac02fb9	1	0	(empty)	37	0	SHORT				0	0	0.7	1
+C:/kyty/f287/fsc/log_fs_a.txt	dac02fb9	1	1	underwater_aerial_garden	2523	26	MIXED	158.5	40.7	583.6	0	22	330.8	1
+C:/kyty/p283/p15/log_qv_sponge_dirty_bath.txt	test:56ee1914	0	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p15/log_qv_sponge_dirty_bath.txt	test:56ee1914	0	1	sponge_dirty_bath	4263	46	OLD	1609.8	1398.1	1792.7	46	0	123.4	1
+C:/kyty/s288/s13/log_u_11.txt	S12	1	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s13/log_u_11.txt	S12	1	1	big_hand_pirate_island	3498	37	OLD	1030.1	867.9	1290.0	37	0	122.1	1
+C:/kyty/p283/p17/runs/log_qv_sponge_dirty_bath.txt	test:56ee1914	0	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p17/runs/log_qv_sponge_dirty_bath.txt	test:56ee1914	0	1	sponge_dirty_bath	4263	46	OLD	1609.8	1398.1	1792.7	46	0	123.4	1
+C:/kyty/s288/s15/log_u_11.txt	FS8	1	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s15/log_u_11.txt	FS8	1	1	big_hand_pirate_island	3486	37	OLD	1015.4	857.2	1300.7	37	0	120.7	1
+C:/kyty/p283/p31/log_hh_sponge_dirty_bath.txt	test:4bb8bceb	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p31/log_hh_sponge_dirty_bath.txt	test:4bb8bceb	0	1	sponge_dirty_bath	3882	41	OLD	1518.2	1416.5	1653.5	41	0	124.4	1
+C:/kyty/p283/p38/runs/log_jh_sponge_dirty_bath.txt	test:6bad00f3	0	0	(empty)	14	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p38/runs/log_jh_sponge_dirty_bath.txt	test:6bad00f3	0	1	sponge_dirty_bath	3515	37	OLD	1355.3	1193.7	1632.5	37	0	124.9	1
+C:/kyty/p283/p36/log_jh_sponge_dirty_bath.txt	test:6bad00f3	0	0	(empty)	14	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p36/log_jh_sponge_dirty_bath.txt	test:6bad00f3	0	1	sponge_dirty_bath	3515	37	OLD	1355.3	1193.7	1632.5	37	0	124.9	1
+C:/kyty/p283/p41/log_kh_sponge_dirty_bath.txt	test:ff16284f	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p41/log_kh_sponge_dirty_bath.txt	test:ff16284f	0	1	sponge_dirty_bath	3954	42	OLD	1274.8	1171.8	1533.3	42	0	124.5	1
+C:/kyty/f287/f6e/log_f6e_b1.txt	test:d8756dce	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f6e/log_f6e_b1.txt	test:d8756dce	0	1	mini_astro_clock_tower	3745	40	OLD	989.4	881.2	1387.9	40	0	129.0	1
+C:/kyty/f287/f6e/log_f6e_w1.txt	test:d8756dce	0	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f6e/log_f6e_w1.txt	test:d8756dce	0	1	timestop_casino	3622	38	NEW	78.4	30.9	900.8	1	37	62.4	1
+C:/kyty/p283/p43/runs/log_kh_sponge_dirty_bath.txt	test:ff16284f	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p43/runs/log_kh_sponge_dirty_bath.txt	test:ff16284f	0	1	sponge_dirty_bath	3954	42	OLD	1274.8	1171.8	1533.3	42	0	124.5	1
+C:/kyty/s142/log_c142_02.txt	9235a7ac	1	0	(empty)	42	0	SHORT				0	0	0.7	1
+C:/kyty/s142/log_c142_02.txt	9235a7ac	1	1	big_hand_pirate_island	3500	37	OLD	1020.0	844.6	1324.1	37	0	124.1	1
+C:/kyty/p283/p15/log_qn_sponge_dirty_bath.txt	test:56ee1914	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p15/log_qn_sponge_dirty_bath.txt	test:56ee1914	0	1	sponge_dirty_bath	4210	45	OLD	1248.7	940.9	1324.8	45	0	123.8	1
+C:/kyty/s288/s10/log_u_1.txt	P23	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s10/log_u_1.txt	P23	1	1	underwater_aerial_garden	3667	39	MIXED	129.2	50.9	639.5	1	35	124.2	1
+C:/kyty/s142/log_c142_06.txt	9235a7ac	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s142/log_c142_06.txt	9235a7ac	1	1	sponge_dirty_bath	4137	44	OLD	1252.9	964.3	1336.5	44	0	124.0	1
+C:/kyty/p283/p33/runs/log_hh_sponge_dirty_bath.txt	test:4bb8bceb	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p33/runs/log_hh_sponge_dirty_bath.txt	test:4bb8bceb	0	1	sponge_dirty_bath	3882	41	OLD	1518.2	1416.5	1653.5	41	0	124.4	1
+C:/kyty/p283/p17/runs/log_qn_sponge_dirty_bath.txt	test:56ee1914	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p17/runs/log_qn_sponge_dirty_bath.txt	test:56ee1914	0	1	sponge_dirty_bath	4210	45	OLD	1248.7	940.9	1324.8	45	0	123.8	1
+C:/kyty/f287/f14g/log_f19_rd.txt	test:c01bde0c	0	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f14g/log_f19_rd.txt	test:c01bde0c	0	1	underwater_aerial_garden	1599	16	OLD	1267.7	871.5	1497.9	16	0	140.7	1
+C:/kyty/s288/s17c/log_s17c_kc.txt	test:ed2686da	0	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s17c/log_s17c_kc.txt	test:ed2686da	0	1	underwater_aerial_garden	1807	18	OLD	1541.3	1223.3	2054.4	18	0	64.2	1
+C:/kyty/f287/f6e/log_f6e_c2.txt	test:d8756dce	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f6e/log_f6e_c2.txt	test:d8756dce	0	1	mini_astro_clock_tower	3619	38	OLD	977.5	870.6	1388.7	38	0	128.9	1
+C:/kyty/p283/lead/p10chk/log_pn_sponge_dirty_bath.txt	9235a7ac	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/lead/p10chk/log_pn_sponge_dirty_bath.txt	9235a7ac	1	1	sponge_dirty_bath	4119	44	OLD	1255.5	1001.4	1350.9	44	0	123.7	1
+C:/kyty/p283/p10/runs/log_pn_sponge_dirty_bath.txt	9235a7ac	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p10/runs/log_pn_sponge_dirty_bath.txt	9235a7ac	1	1	sponge_dirty_bath	4119	44	OLD	1255.5	1001.4	1350.9	44	0	123.7	1
+C:/kyty/p283/p8/log_pn_sponge_dirty_bath.txt	9235a7ac	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p8/log_pn_sponge_dirty_bath.txt	9235a7ac	1	1	sponge_dirty_bath	4119	44	OLD	1255.5	1001.4	1350.9	44	0	123.7	1
+C:/kyty/s288/s4/log_g_2.txt	9235a7ac	1	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s4/log_g_2.txt	9235a7ac	1	1	big_hand_pirate_island	3614	38	OLD	1015.2	902.7	1288.7	38	0	122.3	1
+C:/kyty/s288/s4/log_sw_t1.txt	9235a7ac	1	0	(empty)	41	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s4/log_sw_t1.txt	9235a7ac	1	1	big_hand_pirate_island	3552	38	OLD	1040.8	903.1	1207.4	38	0	122.0	1
+C:/kyty/s288/s4/log_c2_0.txt	9235a7ac	1	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s4/log_c2_0.txt	9235a7ac	1	1	shuriken_ninja_castle	3815	41	NEW	80.1	34.5	849.8	1	39	122.7	1
+C:/kyty/s288/s10/log_pi_r1.txt	test:f3b3aa3b	0	0	(empty)	44	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s10/log_pi_r1.txt	test:f3b3aa3b	0	1	underwater_aerial_garden	3645	39	OLD	1508.8	1187.6	2074.4	39	0	126.5	1
+C:/kyty/f287/fs2c/log_fs2_tw.txt	FS2	1	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs2c/log_fs2_tw.txt	FS2	1	1	timestop_casino	3610	38	NEW	78.1	30.3	704.3	1	36	62.0	1
+C:/kyty/s288/s4/log_c3_0.txt	9235a7ac	1	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s4/log_c3_0.txt	9235a7ac	1	1	shuriken_ninja_castle	3829	41	NEW	75.1	34.4	753.1	1	39	122.7	1
+C:/kyty/p283/lead/p10chk/log_pc_hoover_beach.txt	9235a7ac	1	0	(empty)	16	0	SHORT				0	0	0.5	1
+C:/kyty/p283/lead/p10chk/log_pc_hoover_beach.txt	9235a7ac	1	1	hoover_beach	4109	44	NEW	44.9	32.0	258.0	0	44	125.1	1
+C:/kyty/s288/s4/log_sw_m1.txt	9235a7ac	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s4/log_sw_m1.txt	9235a7ac	1	1	big_hand_pirate_island	3552	38	OLD	1006.6	843.4	1425.4	38	0	122.7	1
+C:/kyty/p283/p8/log_pc_sponge_dirty_bath.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p8/log_pc_sponge_dirty_bath.txt	9235a7ac	1	1	sponge_dirty_bath	3930	42	OLD	1447.5	1312.6	1815.8	42	0	123.9	1
+C:/kyty/s288/s4/log_c4_0.txt	9235a7ac	1	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s4/log_c4_0.txt	9235a7ac	1	1	shuriken_ninja_castle	4133	44	NEW	101.5	33.5	868.3	2	41	122.6	1
+C:/kyty/p283/lead/p10chk/log_pc_sponge_dirty_bath.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.6	1
+C:/kyty/p283/lead/p10chk/log_pc_sponge_dirty_bath.txt	9235a7ac	1	1	sponge_dirty_bath	3930	42	OLD	1447.5	1312.6	1815.8	42	0	123.9	1
+C:/kyty/s288/s4/log_c1_0.txt	9235a7ac	1	0	(empty)	34	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s4/log_c1_0.txt	9235a7ac	1	1	shuriken_ninja_castle	3961	42	NEW	75.9	33.1	732.0	1	40	122.5	1
+C:/kyty/p283/p10/runs/log_pc_sponge_dirty_bath.txt	9235a7ac	1	0	(empty)	22	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p10/runs/log_pc_sponge_dirty_bath.txt	9235a7ac	1	1	sponge_dirty_bath	3930	42	OLD	1447.5	1312.6	1815.8	42	0	123.9	1
+C:/kyty/s288/s4/log_g_3_0.txt	9235a7ac	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s4/log_g_3_0.txt	9235a7ac	1	1	shuriken_ninja_castle	3826	41	NEW	71.9	33.1	637.8	1	39	122.1	1
+C:/kyty/p283/p10/runs/log_pc_hoover_beach.txt	9235a7ac	1	0	(empty)	16	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p10/runs/log_pc_hoover_beach.txt	9235a7ac	1	1	hoover_beach	4109	44	NEW	44.9	32.0	258.0	0	44	125.1	1
+C:/kyty/s288/s10/log_c5_0.txt	test:f3b3aa3b	0	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s10/log_c5_0.txt	test:f3b3aa3b	0	1	shuriken_ninja_castle	3987	42	NEW	76.7	33.1	806.0	1	40	131.6	1
+C:/kyty/s288/s15/log_u_06.txt	FS8	1	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s15/log_u_06.txt	FS8	1	1	underwater_aerial_garden	3532	37	NEW	123.2	49.2	605.6	1	34	120.3	1
+C:/kyty/p283/p8/log_pc_hoover_beach.txt	9235a7ac	1	0	(empty)	16	0	SHORT				0	0	0.5	1
+C:/kyty/p283/p8/log_pc_hoover_beach.txt	9235a7ac	1	1	hoover_beach	4109	44	NEW	44.9	32.0	258.0	0	44	125.1	1
+C:/kyty/s288/s4/log_g_1.txt	9235a7ac	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s4/log_g_1.txt	9235a7ac	1	1	underwater_aerial_garden	3639	39	MIXED	136.6	51.1	627.8	1	34	124.1	1
+C:/kyty/f287/f3d/log_f3d_a2.txt	test:2e6df8f0	0	0	(empty)	51	0	SHORT				0	0	0.9	1
+C:/kyty/f287/f3d/log_f3d_a2.txt	test:2e6df8f0	0	1	big_hand_pirate_island	2993	31	OLD	995.8	879.5	1120.5	31	0	122.0	1
+C:/kyty/s288/s6/log_pcw_int.txt	test:f3b3aa3b	0	0	(empty)	39	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s6/log_pcw_int.txt	test:f3b3aa3b	0	1	underwater_aerial_garden	3551	38	OLD	1259.2	1063.5	1496.0	38	0	124.5	1
+C:/kyty/s288/s17c/log_s17c_kn.txt	test:ed2686da	0	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s17c/log_s17c_kn.txt	test:ed2686da	0	1	underwater_aerial_garden	1833	19	OLD	1296.8	1055.9	1550.9	19	0	64.2	1
+C:/kyty/f287/fs2c/log_fs2_w0.txt	FS2	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs2c/log_fs2_w0.txt	FS2	1	1	underwater_aerial_garden	416	3	OLD	1639.1	1545.5	1752.0	3	0	60.1	1
+C:/kyty/p283/p31/log_hx_sha.txt	test:4bb8bceb	0	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p31/log_hx_sha.txt	test:4bb8bceb	0	1	underwater_aerial_garden	1869	19	MIXED	177.9	48.3	602.3	1	16	64.5	1
+C:/kyty/p283/p36/log_jx_sha.txt	test:6bad00f3	0	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p36/log_jx_sha.txt	test:6bad00f3	0	1	underwater_aerial_garden	1862	19	MIXED	200.0	60.4	591.5	0	15	64.4	1
+C:/kyty/p283/p33/runs/log_hx_sha.txt	test:4bb8bceb	0	0	(empty)	35	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p33/runs/log_hx_sha.txt	test:4bb8bceb	0	1	underwater_aerial_garden	1869	19	MIXED	177.9	48.3	602.3	1	16	64.5	1
+C:/kyty/f287/f6e/log_f6e_w2.txt	test:d8756dce	0	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f6e/log_f6e_w2.txt	test:d8756dce	0	1	mini_astro_clock_tower	1834	19	OLD	1037.5	922.4	1388.0	19	0	64.7	1
+C:/kyty/p283/p43/runs/log_kx_sha.txt	test:ff16284f	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p43/runs/log_kx_sha.txt	test:ff16284f	0	1	underwater_aerial_garden	1819	18	MIXED	208.4	58.6	745.8	1	14	64.1	1
+C:/kyty/p283/p41/log_kx_sha.txt	test:ff16284f	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p41/log_kx_sha.txt	test:ff16284f	0	1	underwater_aerial_garden	1819	18	MIXED	208.4	58.6	745.8	1	14	64.1	1
+C:/kyty/p283/p24/log_ix_sha.txt	P23	1	0	(empty)	38	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p24/log_ix_sha.txt	P23	1	1	underwater_aerial_garden	1821	18	OLD	1562.9	1187.2	2064.1	18	0	64.4	1
+C:/kyty/p283/p38/runs/log_jx_sha.txt	test:6bad00f3	0	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/p283/p38/runs/log_jx_sha.txt	test:6bad00f3	0	1	underwater_aerial_garden	1862	19	MIXED	200.0	60.4	591.5	0	15	64.4	1
+C:/kyty/f287/f5c/log_f5c_a.txt	test:6f495a65	0	0	(empty)	38	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f5c/log_f5c_a.txt	test:6f495a65	0	1	underwater_aerial_garden	2530	26	MIXED	161.7	56.5	596.4	0	22	327.2	1
+C:/kyty/f287/f16f/log_f5_sg0.txt	test:4ad735ad	0	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f16f/log_f5_sg0.txt	test:4ad735ad	0	1	underwater_aerial_garden	2716	28	MIXED	158.9	50.8	625.4	1	24	94.4	1
+C:/kyty/p283/p17/runs/log_qw_V.txt	test:56ee1914	0	0	(empty)	38	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p17/runs/log_qw_V.txt	test:56ee1914	0	1	underwater_aerial_garden	2650	28	OLD	1734.2	1564.0	1912.7	28	0	326.5	1
+C:/kyty/p283/p15/log_qw_V.txt	test:56ee1914	0	0	(empty)	38	0	SHORT				0	0	0.7	1
+C:/kyty/p283/p15/log_qw_V.txt	test:56ee1914	0	1	underwater_aerial_garden	2650	28	OLD	1734.2	1564.0	1912.7	28	0	326.5	1
+C:/kyty/s288/s13/log_u_06.txt	S12	1	0	(empty)	39	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s13/log_u_06.txt	S12	1	1	underwater_aerial_garden	2541	26	MIXED	156.1	56.2	606.8	1	22	126.2	1
+C:/kyty/s288/s10/log_pi_r0.txt	test:f3b3aa3b	0	0	(empty)	43	0	SHORT				0	0	0.7	1
+C:/kyty/s288/s10/log_pi_r0.txt	test:f3b3aa3b	0	1	underwater_aerial_garden	3611	38	MIXED	131.1	50.8	615.9	1	33	124.4	1
+C:/kyty/f287/f25m/log_b36_f0.txt	test:9745eb78	0	0	(empty)	2	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25m/log_b36_f0.txt	test:9745eb78	0	1	pot_treasure_cave	655	5	MIXED	249.4	147.2	308.3	0	4	174.9	1
+C:/kyty/s288/s17c2/log_s17c_kn2.txt	test:43ef1cc1	0	0	(empty)	36	0	SHORT				0	0	0.6	1
+C:/kyty/s288/s17c2/log_s17c_kn2.txt	test:43ef1cc1	0	1	underwater_aerial_garden	1803	18	OLD	1525.3	1188.6	1805.1	18	0	64.3	1
+C:/kyty/s144/log_w144_20_a1.txt	nojson:?	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_w144_20_a1.txt	nojson:?	0	1	mini_giants_garden	17	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f5c/log_f5c_b.txt	test:6f495a65	0	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/f287/f5c/log_f5c_b.txt	test:6f495a65	0	1	underwater_aerial_garden	387	2	SHORT	1620.4	1544.2	1696.6	2	0	60.1	1
+C:/kyty/f287/f12f/log_f12_rd.txt	FS3	1	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f12f/log_f12_rd.txt	FS3	1	1	underwater_aerial_garden	31	0	SHORT				0	0	111.7	1
+C:/kyty/f287/fs10c/log_fs10_s1.txt	FS10	1	0	(empty)	0	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs10c/log_fs10_s1.txt	FS10	1	1	underwater_aerial_garden	0	0	SHORT				0	0	150.6	1
+C:/kyty/s144/log_w144_20.txt	9235a7ac	1	0	(empty)	40	0	SHORT				0	0	0.7	1
+C:/kyty/s144/log_w144_20.txt	9235a7ac	1	1	mini_giants_garden	17	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f12f/log_f12_rd_a1.txt	nojson:?	0	0	(empty)	37	0	SHORT				0	0	0.6	1
+C:/kyty/f287/f12f/log_f12_rd_a1.txt	nojson:?	0	1	underwater_aerial_garden	31	0	SHORT				0	0	111.7	1
+C:/kyty/f287/f25m/log_b36_s1_r1.txt	test:9745eb78	0	0	(empty)	0	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_s1_r1.txt	test:9745eb78	0	1	pot_treasure_cave	0	0	SHORT				0	0	150.4	1
+C:/kyty/f287/f25m/log_b36_s0.txt	test:9745eb78	0	0	(empty)	0	0	SHORT				0	0	0.3	1
+C:/kyty/f287/f25m/log_b36_s0.txt	test:9745eb78	0	1	pot_treasure_cave	0	0	SHORT				0	0	149.9	1
+C:/kyty/f287/fs10c/log_fs10_s0.txt	FS10	1	0	(empty)	0	0	SHORT				0	0	0.6	1
+C:/kyty/f287/fs10c/log_fs10_s0.txt	FS10	1	1	underwater_aerial_garden	0	0	SHORT				0	0	150.8	1
+C:/kyty/f287/f25m/log_b36_s1.txt	test:9745eb78	0	0	(empty)	0	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_s1.txt	test:9745eb78	0	1	pot_treasure_cave	0	0	SHORT				0	0	149.8	1
+C:/kyty/f287/f25m/log_b36_s0_r1.txt	test:9745eb78	0	0	(empty)	0	0	SHORT				0	0	0.4	1
+C:/kyty/f287/f25m/log_b36_s0_r1.txt	test:9745eb78	0	1	pot_treasure_cave	0	0	SHORT				0	0	150.3	1
+C:/kyty/s130/log_ack130.txt.xz	test:0d23f161	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s130/log_ack130.txt.xz	test:0d23f161	0	1	underwater_aerial_garden	8292	90	OLD	1498.5	1256.2	1894.1	90	0		1
+C:/kyty/s129/log_ack129.txt.xz	test:edd17418	0	0	(empty)	38	0	SHORT				0	0		1
+C:/kyty/s129/log_ack129.txt.xz	test:edd17418	0	1	underwater_aerial_garden	8446	92	OLD	1481.2	1210.1	1862.0	92	0		1
+C:/kyty/s131/log_lw5s131.txt.xz	test:d19a4f8a	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s131/log_lw5s131.txt.xz	test:d19a4f8a	0	1	underwater_aerial_garden	8133	89	OLD	1489.8	1189.7	1839.0	89	0		1
+C:/kyty/s136/log_kk136.txt.xz	test:03ce7a92	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s136/log_kk136.txt.xz	test:03ce7a92	0	1	underwater_aerial_garden	8170	89	NEW	87.6	47.5	613.1	1	83		1
+C:/kyty/s135/log_rs135.txt.xz	test:74032561	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s135/log_rs135.txt.xz	test:74032561	0	1	underwater_aerial_garden	8539	93	NEW	114.9	48.2	1484.6	3	88		1
+C:/kyty/s137/log_kk137.txt.xz	test:05431dad	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s137/log_kk137.txt.xz	test:05431dad	0	1	underwater_aerial_garden	8174	89	OLD	1481.2	1219.3	1858.2	89	0		1
+C:/kyty/s137/log_kp137d.txt.xz	test:05431dad	0	0	(empty)	38	0	SHORT				0	0		1
+C:/kyty/s137/log_kp137d.txt.xz	test:05431dad	0	1	underwater_aerial_garden	8547	93	NEW	85.9	46.8	601.3	1	89		1
+C:/kyty/s137/log_kp137h.txt.xz	test:05431dad	0	0	(empty)	38	0	SHORT				0	0		1
+C:/kyty/s137/log_kp137h.txt.xz	test:05431dad	0	1	underwater_aerial_garden	8489	92	NEW	81.2	44.8	620.3	1	88		1
+C:/kyty/s134/log_kp134.txt.xz	test:33f5a15a	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s134/log_kp134.txt.xz	test:33f5a15a	0	1	underwater_aerial_garden	8782	96	NEW	84.4	49.2	613.6	1	91		1
+C:/kyty/s131/log_dd131.txt.xz	test:d19a4f8a	0	0	(empty)	35	0	SHORT				0	0		1
+C:/kyty/s131/log_dd131.txt.xz	test:d19a4f8a	0	1	underwater_aerial_garden	9015	98	NEW	80.0	45.1	635.8	1	94		1
+C:/kyty/s131/log_lw1s131.txt.xz	test:d19a4f8a	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s131/log_lw1s131.txt.xz	test:d19a4f8a	0	1	underwater_aerial_garden	8618	94	NEW	88.9	49.3	612.0	1	88		1
+C:/kyty/s137/log_kp137f.txt.xz	test:05431dad	0	0	(empty)	38	0	SHORT				0	0		1
+C:/kyty/s137/log_kp137f.txt.xz	test:05431dad	0	1	underwater_aerial_garden	8561	93	NEW	81.7	45.0	598.8	0	89		1
+C:/kyty/s128/log_pd128.txt.xz	test:45d36512	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s128/log_pd128.txt.xz	test:45d36512	0	1	underwater_aerial_garden	9306	102	NEW	82.9	44.3	836.5	1	98		1
+C:/kyty/s136/log_kp136.txt.xz	test:03ce7a92	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s136/log_kp136.txt.xz	test:03ce7a92	0	1	underwater_aerial_garden	8376	91	NEW	84.8	46.3	612.6	1	86		1
+C:/kyty/s137/log_kp137b.txt.xz	test:05431dad	0	0	(empty)	38	0	SHORT				0	0		1
+C:/kyty/s137/log_kp137b.txt.xz	test:05431dad	0	1	underwater_aerial_garden	8747	95	NEW	84.2	43.7	666.1	1	90		1
+C:/kyty/s137/log_kp137c.txt.xz	test:05431dad	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s137/log_kp137c.txt.xz	test:05431dad	0	1	underwater_aerial_garden	8652	94	NEW	93.4	48.0	859.8	1	90		1
+C:/kyty/s137/log_kp137e.txt.xz	test:05431dad	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s137/log_kp137e.txt.xz	test:05431dad	0	1	underwater_aerial_garden	8660	94	NEW	81.8	45.9	634.5	1	91		1
+C:/kyty/s133/log_bc133.txt.xz	test:cf414f46	0	0	(empty)	35	0	SHORT				0	0		1
+C:/kyty/s133/log_bc133.txt.xz	test:cf414f46	0	1	underwater_aerial_garden	8971	98	NEW	82.0	44.2	610.2	1	94		1
+C:/kyty/s137/log_kp137a.txt.xz	test:05431dad	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s137/log_kp137a.txt.xz	test:05431dad	0	1	underwater_aerial_garden	8554	93	NEW	85.1	47.5	633.7	1	88		1
+C:/kyty/s129/log_ac129.txt.xz	test:edd17418	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s129/log_ac129.txt.xz	test:edd17418	0	1	underwater_aerial_garden	9624	105	NEW	77.4	37.3	644.6	1	100		1
+C:/kyty/s137/log_kp137g.txt.xz	test:05431dad	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s137/log_kp137g.txt.xz	test:05431dad	0	1	underwater_aerial_garden	8721	95	NEW	84.4	48.0	602.1	1	92		1
+C:/kyty/s134/log_s3s134.txt.xz	test:33f5a15a	0	0	(empty)	19	0	SHORT				0	0		1
+C:/kyty/s134/log_s3s134.txt.xz	test:33f5a15a	0	1	intro_next	10671	117	NEW	45.5	15.8	493.0	0	115		1
+C:/kyty/s136/log_s3s136.txt.xz	test:03ce7a92	0	0	(empty)	19	0	SHORT				0	0		1
+C:/kyty/s136/log_s3s136.txt.xz	test:03ce7a92	0	1	intro_next	10652	117	NEW	46.4	15.7	498.4	0	115		1
+C:/kyty/s134/log_s1s134.txt.xz	test:33f5a15a	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s134/log_s1s134.txt.xz	test:33f5a15a	0	1	underwater_aerial_garden	5894	64	NEW	101.5	49.9	638.7	1	59		1
+C:/kyty/s135/log_s1s135.txt.xz	test:74032561	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s135/log_s1s135.txt.xz	test:74032561	0	1	underwater_aerial_garden	4281	46	MIXED	116.9	47.3	634.9	1	41		1
+C:/kyty/s136/log_s1s136.txt.xz	test:03ce7a92	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s136/log_s1s136.txt.xz	test:03ce7a92	0	1	underwater_aerial_garden	5759	62	NEW	100.3	45.9	599.3	0	59		1
+C:/kyty/s134/log_s2s134.txt.xz	test:33f5a15a	0	0	(empty)	40	0	SHORT				0	0		1
+C:/kyty/s134/log_s2s134.txt.xz	test:33f5a15a	0	1	underwater_aerial_garden	4172	45	NEW	118.7	48.3	624.1	1	42		1
+C:/kyty/s136/log_s4cs136.txt.xz	test:05431dad	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s136/log_s4cs136.txt.xz	test:05431dad	0	1	underwater_aerial_garden	4165	44	MIXED	123.1	47.5	612.2	1	39		1
+C:/kyty/s134/log_s5s134.txt.xz	test:33f5a15a	0	0	(empty)	38	0	SHORT				0	0		1
+C:/kyty/s134/log_s5s134.txt.xz	test:33f5a15a	0	1	underwater_aerial_garden	4290	46	OLD	1491.5	1188.3	1849.5	46	0		1
+C:/kyty/s133/log_s2s133.txt.xz	test:cf414f46	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s133/log_s2s133.txt.xz	test:cf414f46	0	1	underwater_aerial_garden	4420	47	NEW	114.3	49.0	658.2	1	43		1
+C:/kyty/s129/log_s1s129.txt.xz	test:edd17418	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s129/log_s1s129.txt.xz	test:edd17418	0	1	underwater_aerial_garden	6172	67	MIXED	535.9	39.5	1668.9	22	42		1
+C:/kyty/s134/log_s4s134.txt.xz	test:33f5a15a	0	0	(empty)	38	0	SHORT				0	0		1
+C:/kyty/s134/log_s4s134.txt.xz	test:33f5a15a	0	1	underwater_aerial_garden	4086	44	NEW	112.3	44.8	655.0	1	41		1
+C:/kyty/s136/log_s4s136.txt.xz	test:03ce7a92	0	0	(empty)	35	0	SHORT				0	0		1
+C:/kyty/s136/log_s4s136.txt.xz	test:03ce7a92	0	1	underwater_aerial_garden	4194	45	MIXED	122.0	50.1	600.6	1	39		1
+C:/kyty/s127/log_k3k127.txt.xz	s127-98d98eee	1	0	(empty)	41	0	SHORT				0	0		2
+C:/kyty/s127/log_k3k127.txt.xz	s127-98d98eee	1	1	underwater_aerial_garden	8681	95	NEW	119.5	48.9	1796.2	3	88		2
+C:/kyty/s127/log_s1s127.txt.xz	s127-98d98eee	1	0	(empty)	37	0	SHORT				0	0		2
+C:/kyty/s127/log_s1s127.txt.xz	s127-98d98eee	1	1	underwater_aerial_garden	6178	67	NEW	102.9	48.3	800.2	1	63		2
+C:/kyty/s127/log_k3p127.txt.xz	s127-98d98eee	1	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s127/log_k3p127.txt.xz	s127-98d98eee	1	1	underwater_aerial_garden	9101	99	NEW	83.6	44.6	610.0	1	94		1
+C:/kyty/s137/log_s4cs137.txt.xz	test:05431dad	0	0	(empty)	35	0	SHORT				0	0		1
+C:/kyty/s137/log_s4cs137.txt.xz	test:05431dad	0	1	underwater_aerial_garden	4172	45	NEW	114.8	47.3	602.6	1	41		1
+C:/kyty/s136/log_s5s136.txt.xz	test:03ce7a92	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s136/log_s5s136.txt.xz	test:03ce7a92	0	1	underwater_aerial_garden	4090	44	OLD	1491.3	1166.1	1825.7	44	0		1
+C:/kyty/s130/log_s3s130.txt.xz	test:0d23f161	0	0	(empty)	20	0	SHORT				0	0		1
+C:/kyty/s130/log_s3s130.txt.xz	test:0d23f161	0	1	intro_next	10635	116	NEW	45.2	15.7	427.3	0	114		1
+C:/kyty/s130/log_s2s130.txt.xz	test:0d23f161	0	0	(empty)	18	0	SHORT				0	0		1
+C:/kyty/s130/log_s2s130.txt.xz	test:0d23f161	0	1	intro_next	10633	116	NEW	46.4	16.0	403.1	0	113		1
+C:/kyty/s130/log_s11s130.txt.xz	test:3f4af2c3	0	0	(empty)	19	0	SHORT				0	0		1
+C:/kyty/s130/log_s11s130.txt.xz	test:3f4af2c3	0	1	intro_next	10636	116	NEW	45.2	16.0	514.4	0	114		1
+C:/kyty/s133/log_s1s133.txt.xz	test:cf414f46	0	0	(empty)	35	0	SHORT				0	0		1
+C:/kyty/s133/log_s1s133.txt.xz	test:cf414f46	0	1	underwater_aerial_garden	4377	47	MIXED	116.0	47.1	590.2	0	42		1
+C:/kyty/s136/log_s2s136.txt.xz	test:03ce7a92	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s136/log_s2s136.txt.xz	test:03ce7a92	0	1	underwater_aerial_garden	4107	44	NEW	118.9	48.6	591.5	0	40		1
+C:/kyty/s131/log_dds131.txt.xz	test:d19a4f8a	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s131/log_dds131.txt.xz	test:d19a4f8a	0	1	underwater_aerial_garden	4504	48	NEW	115.8	47.1	649.3	1	44		1
+C:/kyty/s135/log_s2s135.txt.xz	test:74032561	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s135/log_s2s135.txt.xz	test:74032561	0	1	underwater_aerial_garden	4366	47	NEW	114.6	47.5	578.7	0	43		1
+C:/kyty/s131/log_lw4s131.txt.xz	test:d19a4f8a	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s131/log_lw4s131.txt.xz	test:d19a4f8a	0	1	underwater_aerial_garden	4063	43	OLD	1495.4	1143.3	2074.7	43	0		1
+C:/kyty/s136/log_s4bs136.txt.xz	test:ee2287ed	0	0	(empty)	40	0	SHORT				0	0		1
+C:/kyty/s136/log_s4bs136.txt.xz	test:ee2287ed	0	1	underwater_aerial_garden	4142	44	NEW	122.4	44.4	577.2	0	40		1
+C:/kyty/s129/log_s3s129.txt.xz	test:edd17418	0	0	(empty)	19	0	SHORT				0	0		1
+C:/kyty/s129/log_s3s129.txt.xz	test:edd17418	0	1	intro_next	10636	116	NEW	47.4	15.9	452.8	0	113		1
+C:/kyty/s129/log_s7s129.txt.xz	test:edd17418	0	0	(empty)	20	0	SHORT				0	0		1
+C:/kyty/s129/log_s7s129.txt.xz	test:edd17418	0	1	intro_next	10653	117	NEW	47.7	16.0	474.7	0	114		1
+C:/kyty/s129/log_s9s129.txt.xz	test:edd17418	0	0	(empty)	19	0	SHORT				0	0		1
+C:/kyty/s129/log_s9s129.txt.xz	test:edd17418	0	1	intro_next	10660	117	NEW	45.9	16.7	610.7	1	115		1
+C:/kyty/s127/log_s2s127.txt.xz	s127-98d98eee	1	0	(empty)	19	0	SHORT				0	0		2
+C:/kyty/s127/log_s2s127.txt.xz	s127-98d98eee	1	1	intro_next	10654	117	NEW	47.3	15.7	585.5	0	115		2
+C:/kyty/s136/log_kv136.txt.xz	test:03ce7a92	0	0	(empty)	39	0	SHORT				0	0		1
+C:/kyty/s136/log_kv136.txt.xz	test:03ce7a92	0	1	underwater_aerial_garden	3357	35	MIXED	132.3	48.3	635.7	1	31		1
+C:/kyty/s130/log_s12s130.txt.xz	test:3f4af2c3	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s130/log_s12s130.txt.xz	test:3f4af2c3	0	1	underwater_aerial_garden	4071	43	OLD	1499.3	1211.0	2075.2	43	0		1
+C:/kyty/s136/log_kw136.txt.xz	test:03ce7a92	0	0	(empty)	38	0	SHORT				0	0		1
+C:/kyty/s136/log_kw136.txt.xz	test:03ce7a92	0	1	underwater_aerial_garden	3362	36	MIXED	137.5	48.3	646.4	1	31		1
+C:/kyty/s130/log_s10s130.txt.xz	test:3f4af2c3	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s130/log_s10s130.txt.xz	test:3f4af2c3	0	1	underwater_aerial_garden	4482	48	NEW	120.3	52.7	648.8	1	44		1
+C:/kyty/s131/log_lw2s131.txt.xz	test:d19a4f8a	0	0	(empty)	18	0	SHORT				0	0		1
+C:/kyty/s131/log_lw2s131.txt.xz	test:d19a4f8a	0	1	intro_next	19641	216	NEW	35.3	15.9	525.1	0	213		1
+C:/kyty/s129/log_s4s129.txt.xz	test:edd17418	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s129/log_s4s129.txt.xz	test:edd17418	0	1	underwater_aerial_garden	4532	49	MIXED	128.1	49.0	882.8	2	44		1
+C:/kyty/s129/log_s2s129.txt.xz	test:edd17418	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s129/log_s2s129.txt.xz	test:edd17418	0	1	underwater_aerial_garden	4310	46	OLD	1471.8	1165.0	1805.5	46	0		1
+C:/kyty/s128/log_s4s128.txt.xz	test:45d36512	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s128/log_s4s128.txt.xz	test:45d36512	0	1	underwater_aerial_garden	4531	49	OLD	1506.2	1200.6	2076.0	49	0		1
+C:/kyty/s131/log_lw3s131.txt.xz	test:d19a4f8a	0	0	(empty)	35	0	SHORT				0	0		1
+C:/kyty/s131/log_lw3s131.txt.xz	test:d19a4f8a	0	1	underwater_aerial_garden	4148	44	MIXED	119.9	48.5	599.5	0	39		1
+C:/kyty/p283/p5/fxcopy/ce/log_pb_B.txt	9235a7ac	1	0	(empty)	0	0	SHORT				0	0		-
+C:/kyty/p283/p5/fxcopy/ce/log_pb_B.txt	9235a7ac	1	1	underwater_aerial_garden	0	0	SHORT				0	0		-
+C:/kyty/p283/p5/fxcopy/ab/log_pb_B.txt	9235a7ac	1	0	(empty)	0	0	SHORT				0	0		-
+C:/kyty/p283/p5/fxcopy/ab/log_pb_B.txt	9235a7ac	1	1	underwater_aerial_garden	0	0	SHORT				0	0		-
+C:/kyty/p283/p5/fxcopy/ab/log_pa_A.txt	9235a7ac	1	0	(empty)	0	0	SHORT				0	0		-
+C:/kyty/p283/p5/fxcopy/ab/log_pa_A.txt	9235a7ac	1	1	underwater_aerial_garden	0	0	SHORT				0	0		-
+C:/kyty/s129/log_s8s129.txt.xz	test:edd17418	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s129/log_s8s129.txt.xz	test:edd17418	0	1	underwater_aerial_garden	4731	51	OLD	1482.7	1213.3	2051.8	51	0		1
+C:/kyty/p283/p5/fxcopy/ce/log_pa_A.txt	9235a7ac	1	0	(empty)	0	0	SHORT				0	0		-
+C:/kyty/p283/p5/fxcopy/ce/log_pa_A.txt	9235a7ac	1	1	underwater_aerial_garden	0	0	SHORT				0	0		-
+C:/kyty/f287/f26c/fxread/log_det.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/s130/log_s1s130.txt.xz	test:0d23f161	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s130/log_s1s130.txt.xz	test:0d23f161	0	1	underwater_aerial_garden	4454	48	NEW	110.2	40.8	595.7	0	44		1
+C:/kyty/f287/f26c/fxread/log_detharness.txt	test:00000000	0	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_dispdet.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_det1_3.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_det1_0.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_nextlvl.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_nextlvl.txt	FS10	1	1	worldmap	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_hexc.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_twoentry.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_twoentry.txt	FS10	1	1	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_det1_2.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_detbefore.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_d_F.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_d_Unhan.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_d_GpuHa.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_d_Error.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_err.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_tempoi.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_f1s.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_f1sbefore.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_f1sm.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_counted.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_cp.txt	nojson:?	0	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_detso.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_dispoff.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_dispon.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_dso.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_e60.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_e601.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_enone.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_args.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_bin.txt	test:11111111	0	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_fix.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_hang.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_lite.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_mark.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_patch.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_pin.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_rec.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_stand.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_h_val.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_lay.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_tempo1.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_nojson.txt	nojson:?	0	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_tempo3.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_tempo2.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_s90.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxread/log_s90m.txt	FS10	1	0	intro_next	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f21a/fxwork/log_fx.txt	nojson:?	0	0	(empty)	0	0	SHORT				0	0		-
+C:/kyty/f287/f21a/fxwork/log_fx.txt	nojson:?	0	1	lvl_one	0	0	SHORT				0	0		-
+C:/kyty/f287/f21a/fxwork/log_fx.txt	nojson:?	0	2	lvl_two	0	0	SHORT				0	0		-
+C:/kyty/s129/log_acv129.txt.xz	test:edd17418	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s129/log_acv129.txt.xz	test:edd17418	0	1	underwater_aerial_garden	3727	40	OLD	1686.1	1279.7	2138.5	40	0		1
+C:/kyty/s130/log_shp130.txt.xz	test:0d23f161	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s130/log_shp130.txt.xz	test:0d23f161	0	1	underwater_aerial_garden	3731	40	NEW	113.2	39.6	639.2	1	36		1
+C:/kyty/s131/log_lw6s131.txt.xz	test:d19a4f8a	0	0	(empty)	38	0	SHORT				0	0		1
+C:/kyty/s131/log_lw6s131.txt.xz	test:d19a4f8a	0	1	underwater_aerial_garden	3035	32	OLD	1505.1	1246.7	1758.5	32	0		1
+C:/kyty/f287/f26a/fxwork/log_fxa.txt	nojson:?	0	0	ps_logo	0	0	SHORT				0	0	9.0	-
+C:/kyty/f287/f26a/fxwork/log_fxa.txt	nojson:?	0	1	intro_next	0	0	SHORT				0	0	110.0	-
+C:/kyty/f287/f26a/fxwork/log_fxa.txt	nojson:?	0	2	worldmap	0	0	SHORT				0	0	30.0	-
+C:/kyty/f287/f26c/fxwork/log_fxa.txt	nojson:?	0	0	ps_logo	0	0	SHORT				0	0	9.0	-
+C:/kyty/f287/f26c/fxwork/log_fxa.txt	nojson:?	0	1	intro_next	0	0	SHORT				0	0	110.0	-
+C:/kyty/f287/f26c/fxwork/log_fxa.txt	nojson:?	0	2	worldmap	0	0	SHORT				0	0	30.0	-
+C:/kyty/f287/f26a/fxwork/log_fxc.txt	nojson:?	0	0	ps_logo	0	0	SHORT				0	0	0.0	-
+C:/kyty/f287/f26c/fxwork/log_fxc.txt	nojson:?	0	0	ps_logo	0	0	SHORT				0	0	0.0	-
+C:/kyty/s134/log_s6s134.txt.xz	test:33f5a15a	0	0	(empty)	38	0	SHORT				0	0		1
+C:/kyty/s134/log_s6s134.txt.xz	test:33f5a15a	0	1	underwater_aerial_garden	1233	12	OLD	1586.5	1417.3	1813.6	12	0		1
+C:/kyty/s137/log_s6s137.txt.xz	test:05431dad	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s137/log_s6s137.txt.xz	test:05431dad	0	1	underwater_aerial_garden	1192	11	OLD	1672.1	1463.9	2085.2	11	0		1
+C:/kyty/s135/log_s3s135.txt.xz	test:74032561	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s135/log_s3s135.txt.xz	test:74032561	0	1	underwater_aerial_garden	1224	12	OLD	1617.4	1432.2	1860.4	12	0		1
+C:/kyty/s129/log_acw129.txt.xz	test:edd17418	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s129/log_acw129.txt.xz	test:edd17418	0	1	underwater_aerial_garden	3750	40	MIXED	763.8	51.6	1749.3	19	18		1
+C:/kyty/s127/log_s3s127.txt.xz	s127-98d98eee	1	0	(empty)	37	0	SHORT				0	0		3
+C:/kyty/s127/log_s3s127.txt.xz	s127-98d98eee	1	1	underwater_aerial_garden	4599	49	OLD	1488.8	1122.7	2074.5	49	0		3
+C:/kyty/s127/log_k3v127.txt.xz	s127-98d98eee	1	0	(empty)	39	0	SHORT				0	0		1
+C:/kyty/s127/log_k3v127.txt.xz	s127-98d98eee	1	1	underwater_aerial_garden	3573	38	MIXED	129.7	49.8	626.1	1	34		1
+C:/kyty/s127/log_k3w127.txt.xz	s127-98d98eee	1	0	(empty)	38	0	SHORT				0	0		-
+C:/kyty/s127/log_k3w127.txt.xz	s127-98d98eee	1	1	underwater_aerial_garden	3525	37	NEW	129.1	52.5	651.0	1	34		-
+C:/kyty/s136/log_s6s136.txt.xz	test:03ce7a92	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s136/log_s6s136.txt.xz	test:03ce7a92	0	1	underwater_aerial_garden	1198	11	MIXED	289.2	68.5	645.0	1	7		1
+C:/kyty/s128/log_shp128.txt.xz	9235a7ac	1	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s128/log_shp128.txt.xz	9235a7ac	1	1	underwater_aerial_garden	3679	39	MIXED	127.7	45.9	565.6	0	35		1
+C:/kyty/f287/f26c/fxread/log_xzd.txt.xz	FS10	1	0	intro_next	0	0	SHORT				0	0		-
+C:/kyty/s133/log_s3s133.txt.xz	test:cf414f46	0	0	(empty)	36	0	SHORT				0	0		1
+C:/kyty/s133/log_s3s133.txt.xz	test:cf414f46	0	1	underwater_aerial_garden	1203	12	OLD	1344.6	1249.7	1489.9	12	0		1
+C:/kyty/f287/f26a/fxwork/log_fxb.txt.xz	nojson:?	0	0	ps_logo	0	0	SHORT				0	0		-
+C:/kyty/f287/f26a/fxwork/log_fxb.txt.xz	nojson:?	0	1	intro_next	0	0	SHORT				0	0		-
+C:/kyty/f287/f26a/fxwork/log_fxb.txt.xz	nojson:?	0	2	worldmap	0	0	SHORT				0	0		-
+C:/kyty/s128/log_s2s128.txt.xz	test:b037d3dd	0	0	(empty)	35	0	SHORT				0	0		1
+C:/kyty/s128/log_s2s128.txt.xz	test:b037d3dd	0	1	underwater_aerial_garden	20	0	SHORT				0	0		1
+C:/kyty/s129/log_s6s129.txt.xz	test:edd17418	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s129/log_s6s129.txt.xz	test:edd17418	0	1	underwater_aerial_garden	1238	12	OLD	1594.8	1407.3	1841.6	12	0		1
+C:/kyty/s128/log_s2s128_a1.txt.xz	nojson:?	0	0	(empty)	35	0	SHORT				0	0		1
+C:/kyty/s128/log_s2s128_a1.txt.xz	nojson:?	0	1	underwater_aerial_garden	20	0	SHORT				0	0		1
+C:/kyty/s127/log_s6s127.txt.xz	s127-98d98eee	1	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s127/log_s6s127.txt.xz	s127-98d98eee	1	1	underwater_aerial_garden	1219	12	OLD	1378.1	1220.0	1672.5	12	0		1
+C:/kyty/f287/f21a/fxwork/log_fxz.txt.xz	nojson:?	0	0	(empty)	0	0	SHORT				0	0		-
+C:/kyty/f287/f21a/fxwork/log_fxz.txt.xz	nojson:?	0	1	lvl_one	0	0	SHORT				0	0		-
+C:/kyty/f287/f21a/fxwork/log_fxz.txt.xz	nojson:?	0	2	lvl_two	0	0	SHORT				0	0		-
+C:/kyty/f287/f26c/fxread/log_xzc.txt.xz	FS10	1	0	intro_next	0	0	SHORT				0	0		-
+C:/kyty/s129/log_s5s129.txt.xz	test:edd17418	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s129/log_s5s129.txt.xz	test:edd17418	0	1	underwater_aerial_garden	1242	12	OLD	1611.2	1340.4	2034.6	12	0		1
+C:/kyty/f287/f26c/fxwork/log_fxb.txt.xz	nojson:?	0	0	ps_logo	0	0	SHORT				0	0		-
+C:/kyty/f287/f26c/fxwork/log_fxb.txt.xz	nojson:?	0	1	intro_next	0	0	SHORT				0	0		-
+C:/kyty/f287/f26c/fxwork/log_fxb.txt.xz	nojson:?	0	2	worldmap	0	0	SHORT				0	0		-
+C:/kyty/s127/log_s4s127.txt.xz	s127-98d98eee	1	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s127/log_s4s127.txt.xz	s127-98d98eee	1	1	underwater_aerial_garden	1240	12	OLD	1655.2	1420.0	2044.7	12	0		1
+C:/kyty/s128/log_s1s128.txt.xz	test:b037d3dd	0	0	(empty)	37	0	SHORT				0	0		1
+C:/kyty/s128/log_s1s128.txt.xz	test:b037d3dd	0	1	underwater_aerial_garden	1720	17	MIXED	216.4	73.8	650.2	1	13		1
+C:/kyty/s127/log_s5s127.txt.xz	s127-98d98eee	1	0	(empty)	35	0	SHORT				0	0		-
+C:/kyty/s127/log_s5s127.txt.xz	s127-98d98eee	1	1	underwater_aerial_garden	1229	12	MIXED	280.7	74.6	592.0	0	7		-

@@ -1,0 +1,3 @@
+logs 1078 done 0 todo 1078
+ALL DONE
+rc=0

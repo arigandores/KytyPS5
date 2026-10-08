@@ -1,0 +1,201 @@
+logs 1078 empty 0 xz 88
+
+== (ii) RtSkip mode lines by binary (value -> logs)
+  9235a7ac                         {'1': 130, 'none': 16}
+  FS10                             {'1': 63, 'none': 46}
+  FS2                              {'1': 5}
+  FS3                              {'1': 6}
+  FS4                              {'1': 4}
+  FS5                              {'1': 5}
+  FS6                              {'1': 26}
+  FS7                              {'1': 2}
+  FS8                              {'1': 55}
+  FS9                              {'1': 2}
+  P23                              {'1': 14}
+  S12                              {'1': 44}
+  S18                              {'1': 24, 'none': 3}
+  dac02fb9                         {'1': 42}
+  nojson:?                         {'1': 13, 'none': 182}
+  s127-98d98eee                    {'2': 3, '1': 4, '3': 1, 'none': 2}
+  test:00000000                    {'none': 1}
+  test:03ce7a92                    {'1': 10}
+  test:05431dad                    {'1': 12}
+  test:0d23f161                    {'1': 5}
+  test:11111111                    {'none': 1}
+  test:24efead3                    {'1': 2}
+  test:2b5e2ce6                    {'1': 3}
+  test:2d0c8815                    {'1': 38}
+  test:2e6df8f0                    {'1': 8}
+  test:33f5a15a                    {'1': 7}
+  test:35c4a754                    {'1': 4}
+  test:36e2b042                    {'1': 2}
+  test:3f4af2c3                    {'1': 3}
+  test:43ef1cc1                    {'1': 4, 'none': 4}
+  test:45d36512                    {'1': 2}
+  test:4ad735ad                    {'1': 5}
+  test:4bb8bceb                    {'1': 20}
+  test:56ee1914                    {'1': 24}
+  test:5821482a                    {'1': 3}
+  test:6bad00f3                    {'1': 20}
+  test:6f495a65                    {'1': 4}
+  test:74032561                    {'1': 4}
+  test:7e4ded19                    {'1': 5}
+  test:907569f6                    {'1': 1}
+  test:91f155b7                    {'1': 2}
+  test:9745eb78                    {'1': 22}
+  test:9b00ad40                    {'1': 6}
+  test:b037d3dd                    {'1': 2}
+  test:b714f5c4                    {'1': 4}
+  test:b97efad4                    {'1': 4}
+  test:b9e0ee00                    {'1': 5}
+  test:c01bde0c                    {'1': 4}
+  test:c9a5e198                    {'1': 3, 'none': 1}
+  test:cf414f46                    {'1': 4}
+  test:d19a4f8a                    {'1': 8}
+  test:d4328b0c                    {'1': 6}
+  test:d8756dce                    {'1': 8}
+  test:e342b839                    {'1': 45}
+  test:ed2686da                    {'1': 8, 'none': 3}
+  test:edd17418                    {'1': 13}
+  test:ee2287ed                    {'1': 1}
+  test:f3b3aa3b                    {'1': 19}
+  test:ff16284f                    {'1': 26}
+
+== (ii) logs with RtSkip: mode 2|3, refused or RtSkipVerify:
+- C:/kyty/s127/log_k3k127.txt.xz | s127-98d98eee | xz
+    RTS: ['RtSkip: mode 2 ctx_slots=8 groups=11 rec_bytes=7192']  GATE: ['Gate: rtskip=2 frame=1'] (total 1)  GARM total 0
+    RTV lines total 0
+    RTV (mode, bits, reg) -> lines: {}
+    entry -1 (pre)                              frames   140 bda_mean 74.7 hold None | rts_n 3301 skip 0 chk 0 chk_b 0 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+    entry 0 (empty)                            frames    41 bda_mean 87.8 hold None | rts_n 943 skip 0 chk 0 chk_b 0 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+    entry 1 underwater_aerial_garden           frames  8681 bda_mean 150.8 hold None | rts_n 44638544 skip 0 chk 39814684 chk_b 39362713 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+- C:/kyty/s127/log_s1s127.txt.xz | s127-98d98eee | xz
+    RTS: ['RtSkip: mode 2 ctx_slots=8 groups=11 rec_bytes=7192']  GATE: ['Gate: rtskip=2 frame=1890', 'Gate: rtskip=0 frame=2070', 'Gate: rtskip=2 frame=2250', 'Gate: rtskip=0 frame=2430', 'Gate: rtskip=2 frame=2610', 'Gate: rtskip=0 frame=2790'] (total 25)  GARM total 51
+    RTV lines total 0
+    RTV (mode, bits, reg) -> lines: {}
+    entry -1 (pre)                              frames   141 bda_mean 63.1 hold None | rts_n 0 skip 0 chk 0 chk_b 0 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+    entry 0 (empty)                            frames    37 bda_mean 69.9 hold None | rts_n 0 skip 0 chk 0 chk_b 0 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+    entry 1 underwater_aerial_garden           frames  6178 bda_mean 147.7 hold None | rts_n 11562697 skip 0 chk 10282367 chk_b 10160118 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+- C:/kyty/s127/log_s2s127.txt.xz | s127-98d98eee | xz
+    RTS: ['RtSkip: mode 2 ctx_slots=8 groups=11 rec_bytes=7192']  GATE: ['Gate: rtskip=2 frame=1890', 'Gate: rtskip=0 frame=2070', 'Gate: rtskip=2 frame=2250', 'Gate: rtskip=0 frame=2430', 'Gate: rtskip=2 frame=2610', 'Gate: rtskip=0 frame=2790'] (total 51)  GARM total 102
+    RTV lines total 0
+    RTV (mode, bits, reg) -> lines: {}
+    entry -1 (pre)                              frames   221 bda_mean 55.2 hold None | rts_n 0 skip 0 chk 0 chk_b 0 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+    entry 0 (empty)                            frames    19 bda_mean 92.3 hold None | rts_n 0 skip 0 chk 0 chk_b 0 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+    entry 1 intro_next                         frames 10654 bda_mean 49.9 hold None | rts_n 3189131 skip 0 chk 2707287 chk_b 2705500 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+- C:/kyty/s127/log_s3s127.txt.xz | s127-98d98eee | xz
+    RTS: ['RtSkip: mode 3 ctx_slots=8 groups=11 rec_bytes=7192']  GATE: ['Gate: rtskip=3 frame=1890', 'Gate: rtskip=0 frame=2070', 'Gate: rtskip=3 frame=2250', 'Gate: rtskip=0 frame=2430', 'Gate: rtskip=3 frame=2610', 'Gate: rtskip=0 frame=2790'] (total 17)  GARM total 34
+    RTV lines total 40
+    RTV (mode, bits, reg) -> lines: {('3', '0x405', '1'): 1, ('3', '0x401', '1'): 39}
+    entry -1 (pre)                              frames   136 bda_mean 71.6 hold None | rts_n 0 skip 0 chk 0 chk_b 0 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+    entry 0 (empty)                            frames    37 bda_mean 69.6 hold None | rts_n 0 skip 0 chk 0 chk_b 0 bad 0 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 0
+    entry 1 underwater_aerial_garden           frames  4599 bda_mean 1540.0 hold None | rts_n 7241195 skip 0 chk 6731360 chk_b 6563303 bad 1121276 noreg 0 race 0 refuse 0 xthr 0 acqw 0 bad_lines 1447
+logs with mode 2|3 / refused / RTV: 4
+
+== guards over all logs (sum over entries): rts_refuse, rts_xthr, rts_acqw; rts_bad in logs without mode 2|3
+  {'rts_refuse': 0, 'rts_xthr': 0, 'rts_acqw': 0, 'rts_bad(no mode 2|3)': 0, 'rts_chk(no mode 2|3)': 0, 'rtsx_lines': 8304754}
+
+== (iii) BDA mode by entry (blocks of 90 frames, first 2 skipped, >= 3 read blocks)
+  FS10: {'SHORT': 111, 'OLD': 1, 'NEW': 59, 'MIXED': 1}
+     (empty)                              {'SHORT': 63}
+     intro_next                           {'NEW': 55, 'SHORT': 45}
+     rotating_level_day_and_night         {'NEW': 3}
+     underwater_aerial_garden             {'OLD': 1, 'NEW': 1, 'MIXED': 1, 'SHORT': 2}
+     worldmap                             {'SHORT': 1}
+  9235a7ac: {'SHORT': 139, 'NEW': 83, 'MIXED': 12, 'OLD': 34}
+     big_hand_pirate_island               {'OLD': 6}
+     booster_construction                 {'OLD': 2}
+     booster_magic_lamp                   {'OLD': 1, 'NEW': 1}
+     cymbal_party_land                    {'MIXED': 1, 'NEW': 1}
+     gulliver_island                      {'OLD': 2}
+     mini_astro_clock_tower               {'OLD': 2}
+     path_maker_mana_tree                 {'NEW': 1, 'MIXED': 1}
+     rocket_hourglass                     {'NEW': 3, 'MIXED': 1}
+     rocket_space_station                 {'OLD': 2}
+     small_pot_lava                       {'OLD': 2}
+     sponge_dirty_bath                    {'OLD': 9}
+     spring_punch_monster_cave            {'OLD': 2}
+     spring_punch_sky_aztec               {'OLD': 1, 'NEW': 1}
+     underwater_aerial_garden             {'MIXED': 9, 'OLD': 5, 'NEW': 10, 'SHORT': 4}
+  FS2: {'SHORT': 5, 'OLD': 2, 'NEW': 3}
+     underwater_aerial_garden             {'OLD': 2, 'NEW': 1}
+  FS3: {'SHORT': 7, 'NEW': 3, 'OLD': 2}
+     underwater_aerial_garden             {'OLD': 2, 'SHORT': 1}
+  FS4: {'SHORT': 4, 'NEW': 2, 'OLD': 1, 'MIXED': 1}
+     underwater_aerial_garden             {'OLD': 1, 'MIXED': 1, 'NEW': 1}
+  FS5: {'SHORT': 5, 'NEW': 2, 'OLD': 3}
+     underwater_aerial_garden             {'OLD': 3, 'NEW': 1}
+  FS6: {'SHORT': 26, 'OLD': 4, 'NEW': 22}
+     underwater_aerial_garden             {'OLD': 4, 'NEW': 22}
+  FS7: {'SHORT': 2, 'NEW': 2}
+  FS8: {'SHORT': 65, 'NEW': 47, 'MIXED': 2, 'OLD': 8}
+     big_hand_pirate_island               {'OLD': 2}
+     sponge_dirty_bath                    {'OLD': 2}
+     time_stopper_ghost_world             {'OLD': 2}
+     underwater_aerial_garden             {'MIXED': 2, 'OLD': 2, 'NEW': 14}
+  FS9: {'SHORT': 2, 'OLD': 1, 'NEW': 1}
+     underwater_aerial_garden             {'OLD': 1, 'NEW': 1}
+  P23: {'SHORT': 14, 'NEW': 7, 'OLD': 5, 'MIXED': 2}
+     interactive_credit_00                {'MIXED': 1}
+     sponge_dirty_bath                    {'OLD': 2}
+     underwater_aerial_garden             {'NEW': 2, 'OLD': 3, 'MIXED': 1}
+  S12: {'SHORT': 54, 'NEW': 35, 'MIXED': 3, 'OLD': 8}
+     big_hand_pirate_island               {'OLD': 2}
+     sponge_dirty_bath                    {'OLD': 2}
+     time_stopper_ghost_world             {'OLD': 2}
+     underwater_aerial_garden             {'MIXED': 3, 'NEW': 1, 'OLD': 2}
+  S18: {'SHORT': 29, 'NEW': 20, 'MIXED': 1, 'OLD': 4}
+     big_hand_pirate_island               {'OLD': 1}
+     sponge_dirty_bath                    {'OLD': 1}
+     time_stopper_ghost_world             {'OLD': 1}
+     underwater_aerial_garden             {'MIXED': 1, 'NEW': 3, 'OLD': 1}
+  dac02fb9: {'SHORT': 48, 'NEW': 40, 'OLD': 2, 'MIXED': 2}
+     fragile_battle_2                     {'OLD': 1, 'NEW': 1}
+     sponge_dirty_bath                    {'OLD': 1}
+     underwater_aerial_garden             {'MIXED': 2, 'NEW': 3}
+  nojson:?: {'SHORT': 38, 'NEW': 9, 'MIXED': 1}
+  s127-98d98eee: {'SHORT': 10, 'NEW': 5, 'OLD': 3, 'MIXED': 2}
+     underwater_aerial_garden             {'NEW': 4, 'OLD': 3, 'MIXED': 2}
+  test:00000000: {'SHORT': 1}
+  test:03ce7a92: {'SHORT': 10, 'NEW': 5, 'MIXED': 4, 'OLD': 1}
+  test:05431dad: {'SHORT': 12, 'OLD': 2, 'NEW': 9, 'MIXED': 1}
+  test:0d23f161: {'SHORT': 5, 'OLD': 1, 'NEW': 4}
+  test:11111111: {'SHORT': 1}
+  test:24efead3: {'SHORT': 2, 'NEW': 1, 'OLD': 1}
+  test:2b5e2ce6: {'SHORT': 3, 'OLD': 1, 'NEW': 2}
+  test:2d0c8815: {'SHORT': 38, 'OLD': 8, 'NEW': 30}
+  test:2e6df8f0: {'SHORT': 8, 'OLD': 4, 'NEW': 4}
+  test:33f5a15a: {'SHORT': 7, 'NEW': 5, 'OLD': 2}
+  test:35c4a754: {'SHORT': 4, 'NEW': 3, 'OLD': 1}
+  test:36e2b042: {'SHORT': 2, 'OLD': 2}
+  test:3f4af2c3: {'SHORT': 3, 'NEW': 2, 'OLD': 1}
+  test:43ef1cc1: {'SHORT': 4, 'NEW': 3, 'OLD': 1}
+  test:45d36512: {'SHORT': 2, 'NEW': 1, 'OLD': 1}
+  test:4ad735ad: {'SHORT': 5, 'NEW': 3, 'OLD': 1, 'MIXED': 1}
+  test:4bb8bceb: {'SHORT': 20, 'OLD': 12, 'NEW': 6, 'MIXED': 2}
+  test:56ee1914: {'SHORT': 24, 'NEW': 12, 'OLD': 12}
+  test:5821482a: {'SHORT': 3, 'OLD': 2, 'NEW': 1}
+  test:6bad00f3: {'SHORT': 20, 'OLD': 14, 'MIXED': 2, 'NEW': 4}
+  test:6f495a65: {'SHORT': 5, 'OLD': 2, 'MIXED': 1}
+  test:74032561: {'SHORT': 4, 'NEW': 2, 'MIXED': 1, 'OLD': 1}
+  test:7e4ded19: {'SHORT': 5, 'NEW': 5}
+  test:907569f6: {'SHORT': 1, 'NEW': 1}
+  test:91f155b7: {'SHORT': 2, 'OLD': 1, 'NEW': 1}
+  test:9745eb78: {'SHORT': 26, 'NEW': 16, 'MIXED': 1, 'OLD': 1}
+  test:9b00ad40: {'SHORT': 6, 'NEW': 4, 'MIXED': 2}
+  test:b037d3dd: {'SHORT': 3, 'MIXED': 1}
+  test:b714f5c4: {'SHORT': 4, 'NEW': 1, 'OLD': 3}
+  test:b97efad4: {'SHORT': 4, 'NEW': 2, 'OLD': 2}
+  test:b9e0ee00: {'SHORT': 5, 'OLD': 5}
+  test:c01bde0c: {'SHORT': 4, 'NEW': 1, 'OLD': 3}
+  test:c9a5e198: {'SHORT': 3, 'NEW': 2, 'MIXED': 1}
+  test:cf414f46: {'SHORT': 4, 'NEW': 2, 'MIXED': 1, 'OLD': 1}
+  test:d19a4f8a: {'SHORT': 8, 'OLD': 3, 'NEW': 4, 'MIXED': 1}
+  test:d4328b0c: {'SHORT': 6, 'NEW': 4, 'OLD': 2}
+  test:d8756dce: {'SHORT': 8, 'NEW': 5, 'OLD': 3}
+  test:e342b839: {'SHORT': 45, 'NEW': 45}
+  test:ed2686da: {'SHORT': 8, 'OLD': 8}
+  test:edd17418: {'SHORT': 13, 'OLD': 6, 'NEW': 4, 'MIXED': 3}
+  test:ee2287ed: {'SHORT': 1, 'NEW': 1}
+  test:f3b3aa3b: {'SHORT': 19, 'OLD': 5, 'MIXED': 2, 'NEW': 12}
+  test:ff16284f: {'SHORT': 26, 'OLD': 16, 'MIXED': 4, 'NEW': 6}

@@ -1,0 +1,41 @@
+course-line entries (>= 3 read blocks, knob 1), copies removed: 296 copies: 0
+modes: {'NEW': 243, 'MIXED': 12, 'OLD': 41}
+
+level | entries | OLD | NEW | MIXED | binaries (mode:count)
+underwater_aerial_garden | 85 | 22 | 52 | 11 | dac02fb9:M2,N3 FS2:N1,O2 P23:M1,N2,O3 FS3:O2 FS4:M1,N1,O1 FS5:N1,O3 S12:M3,N1,O2 FS6:N22,O4 FS7:N2 FS8:M2,N14,O2 S18:M1,N3,O1 FS9:N1,O1 FS10:M1,N1,O1
+sponge_dirty_bath | 8 | 8 | 0 | 0 | dac02fb9:O1 P23:O2 S12:O2 FS8:O2 S18:O1
+big_hand_pirate_island | 5 | 5 | 0 | 0 | S12:O2 FS8:O2 S18:O1
+time_stopper_ghost_world | 5 | 5 | 0 | 0 | S12:O2 FS8:O2 S18:O1
+fragile_battle_2 | 2 | 1 | 1 | 0 | dac02fb9:N1,O1
+armadillo_challenge_1 | 2 | 0 | 2 | 0 | dac02fb9:N2
+bonus_path_maker_mix | 1 | 0 | 1 | 0 | dac02fb9:N1
+bumper_enemy_snowy_canyon | 5 | 0 | 5 | 0 | S12:N2 FS8:N2 S18:N1
+collectible_viewer | 2 | 0 | 2 | 0 | dac02fb9:N2
+diorama_astro_skin | 2 | 0 | 2 | 0 | dac02fb9:N2
+diorama_controller_skin | 2 | 0 | 2 | 0 | dac02fb9:N2
+diorama_zoo | 2 | 0 | 2 | 0 | dac02fb9:N2
+ending_boss_after_credit | 4 | 0 | 4 | 0 | dac02fb9:N2 FS3:N2
+enemy_final | 2 | 0 | 2 | 0 | dac02fb9:N1 FS8:N1
+enemy_gorilla | 5 | 0 | 5 | 0 | S12:N2 FS8:N2 S18:N1
+fragile_battle_1 | 3 | 0 | 3 | 0 | dac02fb9:N2 P23:N1
+fragile_battle_3 | 2 | 0 | 2 | 0 | dac02fb9:N2
+hero_kratos | 2 | 0 | 2 | 0 | S12:N2
+hoover_beach | 12 | 0 | 12 | 0 | dac02fb9:N1 P23:N3 FS3:N1 FS4:N1 FS5:N1 S12:N2 FS8:N2 S18:N1
+hub_crashsite | 5 | 0 | 5 | 0 | S12:N2 FS8:N2 S18:N1
+hub_crashsite_diorama | 2 | 0 | 2 | 0 | dac02fb9:N2
+ice_iceberg | 5 | 0 | 5 | 0 | S12:N2 FS8:N2 S18:N1
+interactive_credit_00 | 3 | 0 | 2 | 1 | dac02fb9:N2 P23:M1
+intro_next | 60 | 0 | 60 | 0 | S12:N2 FS8:N2 S18:N1 FS10:N55
+mini_giants_garden | 8 | 0 | 8 | 0 | dac02fb9:N2 S12:N2 FS8:N2 S18:N2
+non_interactive_credit | 2 | 0 | 2 | 0 | dac02fb9:N2
+penguin_atlantis | 5 | 0 | 5 | 0 | S12:N2 FS8:N2 S18:N1
+ps_logo | 5 | 0 | 5 | 0 | S12:N2 FS8:N2 S18:N1
+robot_builder_next | 3 | 0 | 3 | 0 | dac02fb9:N2 P23:N1
+rotating_level_day_and_night | 8 | 0 | 8 | 0 | S12:N2 FS8:N2 S18:N1 FS10:N3
+timestop_casino | 8 | 0 | 8 | 0 | dac02fb9:N1 FS2:N2 S12:N2 FS8:N2 S18:N1
+title_controller_ship | 5 | 0 | 5 | 0 | S12:N2 FS8:N2 S18:N1
+transition_next | 12 | 0 | 12 | 0 | dac02fb9:N2 S12:N4 FS8:N4 S18:N2
+volcano_mountain | 5 | 0 | 5 | 0 | S12:N2 FS8:N2 S18:N1
+voxel_challenge_1 | 2 | 0 | 2 | 0 | dac02fb9:N2
+voxel_challenge_2 | 2 | 0 | 2 | 0 | dac02fb9:N2
+voxel_world | 5 | 0 | 5 | 0 | S12:N2 FS8:N2 S18:N1

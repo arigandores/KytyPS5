@@ -1859,6 +1859,11 @@ enum class Counter : uint32_t {
 	// the region lock did not - a guest write landed between the two reads (information; knob 1 walks the region on its
 	// next pass).  Raw count.
 	BdaNarrowRace,           // bda_nrace
+	// Track F, F29c (KYTY_FIX_B12=1, ROADMAP s122 item 639(g)(4)): revisits of a region in the same BDA pass, and those
+	// whose collected piece gave a dirty range overlapping a registered buffer (pages the path of 0 would not have
+	// collected by the BDA scan).  Raw counts; they decide nothing.
+	BdaB12Rewalk,            // bda_b12_rewalk
+	BdaB12Rwd,               // bda_b12_rwd
 	// Session 113 (item 18): the priority-operation stall instrument (raw counts).  prio_unsub: priority waits that
 	// started on the recording (unsubmitted) tick; prio_stall: priority waits longer than 50 ms (PriorityStall: lines);
 	// gw_idle_prio: GuestGpu went idle or slept with every queue blocked while a priority operation sat on the

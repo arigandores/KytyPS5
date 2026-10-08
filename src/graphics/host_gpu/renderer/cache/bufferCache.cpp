@@ -598,6 +598,12 @@ BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
 	LOGF("BufferGc: budget=%llu trigger=%llu critical=%llu shift_mb=%llu\n", static_cast<unsigned long long>(budget),
 	     static_cast<unsigned long long>(m_trigger_gc_memory), static_cast<unsigned long long>(m_critical_gc_memory),
 	     static_cast<unsigned long long>(shift_mb));
+	// Track F, F29c (KYTY_FIX_B12, ROADMAP s122 item 639(d)): the knob is read here, once per process, and printed once.
+	static std::atomic<bool> fix_b12_logged {false};
+	const bool               fix_b12 = FixB12Enabled();
+	if (!fix_b12_logged.exchange(true, std::memory_order_relaxed)) {
+		LOGF("FixB12: mode=%d\n", fix_b12 ? 1 : 0);
+	}
 }
 
 BufferCache::~BufferCache() {
@@ -3467,6 +3473,29 @@ bool BufferCache::DirtyRangesTouchBuffers(uint64_t* range_address, uint64_t* ran
 	return false;
 }
 
+void BufferCache::BeginBdaPass() noexcept {
+	m_bda_pass++;
+	m_bda_pass_open = true;
+}
+
+void BufferCache::EndBdaPass() {
+	m_bda_pass_open = false;
+	// Item 639(g)(5): the running totals, at most once in 10 s of host time and only when one of them moved.
+	if (m_bda_pass == m_b12_stat_pass && m_b12_rewalk == m_b12_stat_rewalk && m_b12_rwd == m_b12_stat_rwd) {
+		return;
+	}
+	const auto now = std::chrono::steady_clock::now();
+	if (m_b12_stat_pass != 0 && now - m_b12_stat_time < std::chrono::seconds(10)) {
+		return;
+	}
+	m_b12_stat_time   = now;
+	m_b12_stat_pass   = m_bda_pass;
+	m_b12_stat_rewalk = m_b12_rewalk;
+	m_b12_stat_rwd    = m_b12_rwd;
+	LOGF("FixB12Stat: passes=%llu rewalk=%llu rwd=%llu\n", static_cast<unsigned long long>(m_bda_pass),
+	     static_cast<unsigned long long>(m_b12_rewalk), static_cast<unsigned long long>(m_b12_rwd));
+}
+
 // Incremental variant (gate "bdastamp"): only regions that announced a CPU write since the last
 // scan are locked and walked. The witness is read and stored BEFORE the region is scanned, so a
 // write racing with the scan is seen by the next preparation instead of being lost.
@@ -3493,6 +3522,8 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 	                      m_bda_bits_generation == m_bda_stamp_generation;
 	const bool bits_check = use_bits && Common::Gates::Enabled(Common::Gates::Gate::BdaWriteBitsVerify);
 	m_bda_bits_generation = m_bda_stamp_generation;
+	// Track F, F29c (KYTY_FIX_B12=1, ROADMAP s122 item 639(d), (g)(3)): true only inside an open pass of PrepareBda.
+	const bool b12_pass = m_bda_pass_open;
 	for (auto cursor = scan_begin; cursor < scan_end;) {
 		const auto index = cursor / TRACKER_REGION_SIZE;
 		const auto bytes =
@@ -3503,6 +3534,23 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 		// stored under the current generation (the vector, contiguous and cheap to read). The
 		// generation half is what the first cut of this gate omitted, and omitting it skipped
 		// regions that had never been scanned at all.
+		// Track F, F29c (KYTY_FIX_B12=1, ROADMAP s122 item 639(d), (g)(1)): another mapped range walked this region in this
+		// pass and wrote its witness, but collected only its own piece. This piece is collected and synchronized now -
+		// without the bit (taking it would drop a write announced after the first visit's collect, and the next pass
+		// would skip the region on a clear bit), without the witness test and without writing the witness: a write
+		// after the first visit's stamp read moved the stamp, so the next pass walks the region again.
+		if (b12_pass && m_bda_region_stamps[index].walked_pass == m_bda_pass) {
+			m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
+			m_b12_rewalk++;
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaB12Rewalk, 1);
+			if (DirtyRangesTouchBuffers()) {
+				m_b12_rwd++;
+				Common::FrameStats::Add(Common::FrameStats::Counter::BdaB12Rwd, 1);
+			}
+			SynchronizeBuffersOfDirtyRanges();
+			cursor += bytes;
+			continue;
+		}
 		const bool bit_clear = use_bits && !BdaTakeRegionWrite(index);
 		if (bit_clear && m_bda_region_stamps[index].generation == m_bda_stamp_generation) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsBitSkipped, 1);
@@ -3537,6 +3585,10 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 		// Session 113, knob "bdanarrow" 2: the previous witness of this region, before the walk overwrites it.
 		const auto prev = seen;
 		seen = {stamp, m_bda_stamp_generation};
+		if (b12_pass) {
+			// Item 639(g)(2): after the assignment above, which resets the field; the skips above never set it.
+			seen.walked_pass = m_bda_pass;
+		}
 		Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsScanned, 1);
 		const uint64_t bda_scan_t0 =
 		    bda_split && Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;

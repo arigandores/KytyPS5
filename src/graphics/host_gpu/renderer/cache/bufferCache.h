@@ -17,6 +17,7 @@
 #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
 
 #include <atomic>
+#include <chrono>
 #include <map>
 #include <mutex>
 #include <span>
@@ -171,6 +172,11 @@ public:
 	// scanned since then are what knob 1 keeps - and whether this pass checks what knob 1 would skip (knob 2).
 	void               NoteBdaMapInvalidation() noexcept { m_bda_map_generation = m_bda_stamp_generation; }
 	void               SetBdaNarrowCheck(bool check) noexcept { m_bda_narrow_check = check; }
+	// Track F, F29c (KYTY_FIX_B12, ROADMAP s122 item 639(d), (g)(3)): called by PrepareBda at 1 only, around its
+	// m_mapped_ranges.ForEach - the pass is open between the two calls and nowhere else, so a walk outside it is the
+	// path of 0. EndBdaPass also prints "FixB12Stat:" (item 639(g)(5)).
+	void               BeginBdaPass() noexcept;
+	void               EndBdaPass();
 	// Gate "bdabits": the generation the write map was last consulted under. While it lags
 	// m_bda_stamp_generation the map is bypassed, because a generation bump invalidates stamps
 	// without any region having announced a write.
@@ -375,6 +381,9 @@ private:
 	struct BdaRegionStamp {
 		MemoryTracker::RegionStamp stamp;
 		uint64_t                   generation = 0;
+		// Track F, F29c (KYTY_FIX_B12): the BDA pass (m_bda_pass) whose scanning visit last wrote this witness; 0 - none.
+		// Written and read at KYTY_FIX_B12=1 only.
+		uint64_t                   walked_pass = 0;
 	};
 	// One entry per tracking region, filled lazily on the first incremental scan.
 	std::vector<BdaRegionStamp>                        m_bda_region_stamps;
@@ -384,6 +393,17 @@ private:
 	uint64_t                                           m_bda_map_generation = 1;
 	bool                                               m_bda_narrow_check   = false;
 	std::thread::id                                    m_bda_scan_thread {};
+	// Track F, F29c (KYTY_FIX_B12, ROADMAP s122 item 639(d)): the number of the current BDA pass and whether it is open
+	// (BeginBdaPass .. EndBdaPass); the running totals of the "FixB12Stat:" line (revisits; revisits whose collected
+	// piece overlaps a registered buffer) and the values and time of its last print. Render mutex (PrepareBda) only.
+	uint64_t                                           m_bda_pass      = 0;
+	bool                                               m_bda_pass_open = false;
+	uint64_t                                           m_b12_rewalk    = 0;
+	uint64_t                                           m_b12_rwd       = 0;
+	uint64_t                                           m_b12_stat_pass   = 0;
+	uint64_t                                           m_b12_stat_rewalk = 0;
+	uint64_t                                           m_b12_stat_rwd    = 0;
+	std::chrono::steady_clock::time_point              m_b12_stat_time {};
 	// Marks the stamps of the tracking regions of [vaddr, vaddr + size) stale (a buffer was registered there).
 	void MarkBdaRegions(uint64_t vaddr, uint64_t size);
 	// Knob 2 of "bdanarrow": whether the dirty ranges just collected overlap any registered buffer (the first overlap

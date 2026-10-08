@@ -2718,6 +2718,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"bda_nxthr", FS::Counter::BdaNarrowXthread, false},
 				    {"bgc_evict", FS::Counter::BufGcEvict, false},
 				    {"bda_nrace", FS::Counter::BdaNarrowRace, false},
+				    {"bda_b12_rewalk", FS::Counter::BdaB12Rewalk, false},
+				    {"bda_b12_rwd", FS::Counter::BdaB12Rwd, false},
 				    {"prio_unsub", FS::Counter::PrioUnsub, false},
 				    {"prio_stall", FS::Counter::PrioStall, false},
 				    {"gw_idle_prio", FS::Counter::GpuIdlePrio, false},

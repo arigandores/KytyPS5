@@ -377,9 +377,18 @@ void RenderContext::PrepareBda() {
 	const uint32_t               bda_split_frame = bda_split ? GpuTimeProfiler::Frame() : 0;
 	const bool                   bda_split_first = bda_split && t_bda_split_frame != bda_split_frame;
 	const uint64_t               bda_split_t0    = bda_split ? Common::FrameStats::NowNs() : 0;
+	// Track F, F29c (KYTY_FIX_B12, ROADMAP s122 item 639(d)): at 1 the walk below is one numbered pass, open only for
+	// the ForEach; at 0 neither call is made.
+	const bool fix_b12 = FixB12Enabled();
+	if (fix_b12) {
+		m_buffer_cache.BeginBdaPass();
+	}
 	m_mapped_ranges.ForEach([this](uint64_t start, uint64_t end) {
 		m_buffer_cache.SynchronizeBuffersInRange(start, end - start);
 	});
+	if (fix_b12) {
+		m_buffer_cache.EndBdaPass();
+	}
 	if (bda_split) {
 		const auto bda_split_spent = Common::FrameStats::NowNs() - bda_split_t0;
 		t_bda_split_frame          = bda_split_frame;

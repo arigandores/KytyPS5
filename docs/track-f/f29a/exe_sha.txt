@@ -1,0 +1,1 @@
+30599f6f747b0f017aa87a9fbb6ae7b90ae56c05457e63d57addb9d6cad994ed *build/b12_bdastamp_stand.exe

@@ -1,0 +1,17 @@
+SAME src/graphics/host_gpu/renderer/renderContext.cpp :: void RenderContext::PrepareBda() {  dc5d4712:309 (94 lines) vs 73a6e411:309
+SAME src/graphics/host_gpu/renderer/renderContext.cpp :: void RenderContext::MapMemory(uint64_t vaddr, uint64_t size) {  dc5d4712:275 (5 lines) vs 73a6e411:275
+SAME src/graphics/host_gpu/renderer/renderContext.cpp :: void RenderContext::UnmapMemory(uint64_t vaddr, uint64_t size) {  dc5d4712:281 (27 lines) vs 73a6e411:281
+SAME src/graphics/host_gpu/renderer/cache/bufferCache.cpp :: void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t s  dc5d4712:3528 (77 lines) vs 73a6e411:3586
+SAME src/graphics/host_gpu/renderer/cache/bufferCache.cpp :: void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint  dc5d4712:3415 (112 lines) vs 73a6e411:3473
+SAME src/graphics/host_gpu/renderer/cache/bufferCache.cpp :: void BufferCache::SynchronizeBuffersOfDirtyRanges() {  dc5d4712:3338 (34 lines) vs 73a6e411:3396
+SAME src/graphics/host_gpu/renderer/cache/bufferCache.cpp :: void BufferCache::SynchronizeBuffersOfDirtyRangesBatched(PageManager::  dc5d4712:3272 (64 lines) vs 73a6e411:3330
+SAME src/graphics/host_gpu/renderer/cache/bufferCache.cpp :: void BufferCache::MarkBdaRegions(uint64_t vaddr, uint64_t size) {  dc5d4712:3373 (14 lines) vs 73a6e411:3431
+SAME src/graphics/host_gpu/renderer/cache/bufferCache.cpp :: bool BufferCache::DirtyRangesTouchBuffers(uint64_t* range_address, uin  dc5d4712:3388 (23 lines) vs 73a6e411:3446
+SAME src/graphics/host_gpu/renderer/cache/bufferCache.cpp :: void BufferCache::ChangeRegister(BufferId id) {  dc5d4712:132 (54 lines) vs 73a6e411:133
+SAME src/graphics/host_gpu/memoryTracker.cpp :: void MemoryTracker::CollectCpuModifiedRanges(uint64_t vaddr, uint64_t   dc5d4712:203 (29 lines) vs 73a6e411:203
+SAME src/graphics/host_gpu/memoryTracker.cpp :: MemoryTracker::RegionStamp MemoryTracker::CollectCpuModifiedRangesStam  dc5d4712:233 (27 lines) vs 73a6e411:233
+SAME src/graphics/host_gpu/memoryTracker.h :: [[nodiscard]] RegionStamp RegionWriteStamp(uint64_t index) const noexc  dc5d4712:72 (7 lines) vs 73a6e411:73
+SAME src/graphics/host_gpu/regionManager.h :: void ChangeState(uint64_t vaddr, uint64_t size) {  dc5d4712:188 (126 lines) vs 73a6e411:196
+SAME src/graphics/host_gpu/rangeSet.h (whole file)
+SAME src/graphics/host_gpu/regionDefinitions.h (whole file)
+FS10 dc5d4712 = main 73a6e411 on the BDA stamp path: ALL OK

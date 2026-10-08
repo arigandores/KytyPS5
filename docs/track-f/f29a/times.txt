@@ -1,0 +1,14 @@
+2026-10-08 21:55:24 UTC start F29a HPP-699 (wake issue_assigned); lock no, STOP no; API in_progress: HPP-698 (Probe Designer), HPP-699 - no Harness Engineer series
+2026-10-08 22:00:01 UTC maps census trial on log_fs10_v (no HE series in API)
+2026-10-08 22:01:39 UTC census of 63 FS10 logs under watch_f29a.py (API: no Harness Engineer series)
+2026-10-08 22:05:35 UTC p0_f29a.md sealed before any stand data: sha256 bc1b8d35fd068d5f28aaf55c495aefb1c660bd90e918c2a322d01eceddaeaa98
+2026-10-08 22:05:49 UTC mk_wt_f29a.sh 299dd7f4 under watch_f29a.py (API: no Harness Engineer series)
+2026-10-08 22:06:17 UTC configure f29a build under watch_f29a.py
+2026-10-08 22:07:20 UTC build target b12_bdastamp_stand under watch_f29a.py
+2026-10-08 22:08:16 UTC stand commit in main
+2026-10-08 22:08:36 UTC worktree at 73a6e411 clean, stand built: sha256 30599f6f747b0f017aa87a9fbb6ae7b90ae56c05457e63d57addb9d6cad994ed
+2026-10-08 22:09:03 UTC matrix run_stand_f29a.py --iters 10000 under watch_f29a.py
+2026-10-08 22:09:09 UTC matrix done
+2026-10-08 22:12:02 UTC (late record) stand smoke runs before the matrix, 100 iterations each: hole/upper, hole/lower after the first build (event after build end 2026-10-08T22:07:30Z, watchdog line of build_b12.log), hole/upper, hole/lower, split/upper after the rebuild with UntrackMemory (after 22:07:53Z, build_b12_2.log); first build's binary exited 127 on PageManager fail-fast at teardown; p0 members not changed
+2026-10-08 22:12:02 UTC (late record) the census trial at 22:00:01 used a first parser that matched mprotect lines (addr/len) as decommit - a false shared pair; parser rewritten to exact consecutive field lines before the 63-log run at 22:01:39
+2026-10-08 22:13:52 UTC FACTS.md section F29a appended; report docs/track-f/f29a.md

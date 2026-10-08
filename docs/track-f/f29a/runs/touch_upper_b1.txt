@@ -1,0 +1,7 @@
+args: touch upper 1 10000
+env: {'KYTY_BDA_WRITE_BITS': '1'}
+rc: 0
+seconds: 0.0
+FixB13: mode=1
+B12 layout=touch write=upper passes=1 iters=10000 lost=0 dirty=0 lost_and_dirty=0 reset=0 warm_reset=0 clean_before_bad=0 mapped_ranges=1 same_region=1 calls=10000 hits=0 region_scans=10000 region_skips=0 bit_skips=0 nwould=0 nmiss=0 gate_bdastamp=1 gate_bdabits=1 bdanarrow=0 fix_b13=1 page=4096
+

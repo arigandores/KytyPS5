@@ -1,0 +1,7 @@
+args: hole upper 1 10000
+env: {'KYTY_BDA_WRITE_BITS': '0', 'KYTY_BDA_NARROW_STAMPS': '1', 'KYTY_FIX_B13': '0'}
+rc: 0
+seconds: 0.0
+FixB13: mode=0
+B12 layout=hole write=upper passes=1 iters=10000 lost=10000 dirty=10000 lost_and_dirty=10000 reset=10000 warm_reset=0 clean_before_bad=0 mapped_ranges=2 same_region=1 calls=10000 hits=0 region_scans=10000 region_skips=10000 bit_skips=0 nwould=0 nmiss=0 gate_bdastamp=1 gate_bdabits=0 bdanarrow=1 fix_b13=0 page=4096
+

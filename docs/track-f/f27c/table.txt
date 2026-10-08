@@ -1,0 +1,3 @@
+tag | arm | binary | admitted | saves on hold P1 (bytes, us, window) | frames >=100 ms on windows | P1..P6 | idle on hold | coincide strict/loose | interference
+f27_v0 | 0 | abfded5e | YES | ['139700517/140265/[54.475,54.615]'] | [(1907, 154288), (1908, 241198)] | P1 YES (saves on hold with P1 1) P2 YES P3 NO (variant payload YES) P4 YES P5 YES P6 YES | 0 | []/[] | []
+SERIES UNDEFINED by (v)(3)/(d)(1): v0 saves 1 frames 2 no_p1 0 - question to the lead

@@ -1,0 +1,1 @@
+DRVSNAP TAKEN files 1021 (GLCache 30, DXCache 991) copied 162 bytes 7913470295 held 12 mismatches 0

@@ -1,0 +1,176 @@
+{
+ "tag": "f27_v0",
+ "arm": 0,
+ "admitted": true,
+ "why": [],
+ "binary_sha256": "abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe",
+ "stable_frame": 415,
+ "hold_s": 120.2,
+ "hold_from": "2026/10/08 23:18:31.342",
+ "hold_to": "2026/10/08 23:20:31.554",
+ "hold_exit": null,
+ "close_rc": 0,
+ "t_s": 29.13,
+ "hold_end_log": 149.33,
+ "hold_frames": 7142,
+ "hold_ge100": [
+  [
+   1907,
+   154288
+  ],
+  [
+   1908,
+   241198
+  ]
+ ],
+ "hold_ge1s": [],
+ "hold_dt_mean_us": 16829.7,
+ "saves": [
+  {
+   "line": 395858,
+   "bytes": 139700517,
+   "us": 140265,
+   "window": [
+    54.475,
+    54.615
+   ],
+   "last_n": 1906,
+   "on_hold": true,
+   "savewin": true,
+   "p1": true,
+   "frames": [
+    1898,
+    1908
+   ],
+   "ge100_on_window": [
+    [
+     1907,
+     154288
+    ],
+    [
+     1908,
+     241198
+    ]
+   ],
+   "ge100_on_window_savewin": [
+    [
+     1907,
+     154288
+    ],
+    [
+     1908,
+     241198
+    ]
+   ],
+   "at_exit": false
+  },
+  {
+   "line": 867823,
+   "bytes": 140113774,
+   "us": 129211,
+   "window": [
+    149.398,
+    149.527
+   ],
+   "last_n": 7568,
+   "on_hold": false,
+   "savewin": true,
+   "p1": false,
+   "frames": [
+    7562,
+    7568
+   ],
+   "ge100_on_window": [],
+   "ge100_on_window_savewin": [],
+   "at_exit": true
+  }
+ ],
+ "P1": true,
+ "p1_saves": 1,
+ "frames_on_windows": [
+  [
+   1907,
+   154288
+  ],
+  [
+   1908,
+   241198
+  ]
+ ],
+ "frames_on_windows_savewin": [
+  [
+   1907,
+   154288
+  ],
+  [
+   1908,
+   241198
+  ]
+ ],
+ "counts": {
+  "error": 0,
+  "unhandled": 0,
+  "skipped_draw": 2999,
+  "held": 64,
+  "gpuhangabort": 0,
+  "level_started": 1
+ },
+ "P2": true,
+ "pcw_lines": [
+  0
+ ],
+ "salt": {
+  "salt": "f27_v0",
+  "name": "PPSA21564.8a8c623cbe775907.bin",
+  "size": "127690373",
+  "sha_src": "8981ffb7bc6e7c55d92eeada7cde6a3076a38269f2786fba50ae384e94302870",
+  "sha_copy": "8981ffb7bc6e7c55d92eeada7cde6a3076a38269f2786fba50ae384e94302870",
+  "header": "76",
+  "payload": "127690297"
+ },
+ "ns_lines": [
+  "f27_v0"
+ ],
+ "loaded_lines": [
+  [
+   127690297,
+   "_PipelineCache\\PPSA21564.8a8c623cbe775907.bin"
+  ]
+ ],
+ "P3": false,
+ "P3_variant_payload": true,
+ "p3_parts": {
+  "namespace": true,
+  "file": true,
+  "n_eq_size": false,
+  "n_eq_payload": true
+ },
+ "P4": true,
+ "precache_saved_lines": 0,
+ "p5_line": "labels EQUAL ShaderCache_PPSA21564,ShaderSeeds_PPSA21564,_PipelineCache lines 3823 sha 245f71b83500483d",
+ "interference_p5": false,
+ "P5": true,
+ "savedata_row": "labels EQUAL _SaveData lines 2 sha a2d427850e06c651",
+ "interval_rows": {
+  "1907": {
+   "spirv": 0,
+   "skipped": 10,
+   "held": 0
+  },
+  "1908": {
+   "spirv": 0,
+   "skipped": 3,
+   "held": 0
+  }
+ },
+ "P6": true,
+ "idle_on_hold": [],
+ "idle_coincide_strict": [],
+ "idle_coincide_loose": [],
+ "gpu_samples": 305,
+ "gpu_hold_samples": 236,
+ "gpu_gap_median_s": 0.512,
+ "gpu_gap_max_s": 0.516,
+ "idle_windows_run": 1,
+ "tempo": "TEMPO PASS form harness mean_dt_ms 18.21 fps 54.91 frames 7300 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after the level line 7300, span 132.9 s)"
+}

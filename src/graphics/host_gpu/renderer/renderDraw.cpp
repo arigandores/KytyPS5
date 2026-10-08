@@ -1313,12 +1313,14 @@ uint32_t Rk3VdDiff(const Rk3Vd& a, const Rk3Vd& b) {
 } // namespace
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Session 127, knob "rtskip" (KYTY_RT_SKIP, 0..3, default 0; docs/session-127/design127.md rev 2 with ROADMAP s122 items
+// Session 127, knob "rtskip" (KYTY_RT_SKIP, 0..4, default 0; docs/session-127/design127.md rev 2 with ROADMAP s122 items
 // 76(z), 77, 78, 79): the K3 prototype.  A draw of context C takes the outputs of its target resolution (place A,
 // PrepareDrawRenderState) and capture (place B, AcquireRenderTargets) from the RECORD of C - the outputs of the last full
 // draw on C - while no relevant register group was written since (s.2.1) and no non-register source moved (s.2.2).
 //   0 the previous path; 1 skip; 2 self-check: the full path always runs, the record lives exactly as at 1 ([RC1]) and
-//   every step is compared with it (s.5); 3 = 2 with the register source ignored by PA (positive control, s.6).
+//   every step is compared with it (s.5); 3 = 2 with the register source ignored by PA (positive control, s.6);
+//   4 = 2 with PB items 3 (metadata epoch) and 4 (state_serial) not applied (positive control of place B; track F, F30d,
+//   ROADMAP s122 item 643(v)).
 // The latch arms only on the GuestGpu thread; everything below touches thread-local state, its counters and one gauge.
 // The latch, places A and B and the post are RenderExecutor members (RtsLatchSlow, RtsPlaceA, RtsPlaceB, RtsPost) because
 // the replay calls TextureCache::TouchImage and reads m_slot_images, which only RenderExecutor may.
@@ -1433,7 +1435,7 @@ constinit thread_local bool        t_rts_open0    = false;   // IsRendering() be
 constinit thread_local bool        t_rts_open1    = false;
 constinit thread_local RtsGen      t_rts_gen_a {};           // the entry's generations at place A (rts_acqw)
 constinit thread_local const void* t_rts_last_ctx = nullptr; // item 79(v)(1): context of the last armed draw at A
-constinit thread_local uint32_t    t_rts_logged   = 0;       // bits 1..15: refusal printed; 17..19: mode line printed
+constinit thread_local uint32_t    t_rts_logged   = 0;       // bits 1..15: refusal printed; 17..20: mode line printed
 constinit thread_local uint32_t    t_rts_lines    = 0;       // RtSkipVerify lines printed (at most 40)
 
 RtsEntry* RtsFindOrAdd(RtsTable& t, const void* ctx) {
@@ -1595,6 +1597,13 @@ void RtsReport(uint32_t bits, int frame, uint32_t age, uint32_t colors, bool dep
 	FS::Add(FS::Counter::RtsBad, 1);
 	if (!t_rts_reg) {
 		FS::Add(FS::Counter::RtsBadNoreg, 1);
+	}
+	// Track F, F30d (ROADMAP s122 item 643(v)(2)): the place B share of rts_bad, and its R / X part.
+	if ((bits & 0x3f0u) != 0) {
+		FS::Add(FS::Counter::RtsBadB, 1);
+	}
+	if ((bits & 0x030u) != 0) {
+		FS::Add(FS::Counter::RtsBadRx, 1);
 	}
 	if (t_rts_lines < 40) {
 		t_rts_lines++;
@@ -3669,14 +3678,18 @@ RenderState RenderExecutor::RtsPlaceB(CommandBuffer& buffer, DrawRenderState& st
 			}
 			img[i] = image;
 		}
-		// 3 (N2, N4): the metadata epoch the record's fast records were taken at.
-		if (cache.MetaEpoch() != rec->meta) {
-			return C::RtsXbMeta;
-		}
-		// 4 (N3, [RC4]): no state record of a target was written since the record.
-		for (uint32_t i = 0; i < rec->nt; i++) {
-			if (img[i]->backing.state_serial != rec->t[i].state_serial) {
-				return C::RtsXbSer;
+		// Items 3 and 4 are not applied at value 4 (track F, F30d, ROADMAP s122 item 643(v)(1)): the positive control of
+		// place B - the full capture then runs against a record these two would have refused.
+		if (t_rts != 4) {
+			// 3 (N2, N4): the metadata epoch the record's fast records were taken at.
+			if (cache.MetaEpoch() != rec->meta) {
+				return C::RtsXbMeta;
+			}
+			// 4 (N3, [RC4]): no state record of a target was written since the record.
+			for (uint32_t i = 0; i < rec->nt; i++) {
+				if (img[i]->backing.state_serial != rec->t[i].state_serial) {
+					return C::RtsXbSer;
+				}
 			}
 		}
 		// 5 (N3, N5, [RC5]): sampled by this draw as the record's colour targets were; the depth target not sampled and

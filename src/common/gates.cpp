@@ -433,7 +433,9 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_RK3_CENSUS", "rk3cen", 0, 3},
     // Session 127, PROTOTYPE: the K3 skip (1), its self-check (2), the self-check with the register source ignored (3)
     // (docs/session-127/design127.md rev 2). Read once per draw at its entry and latched, so it CAN be a schedule arm.
-    {"KYTY_RT_SKIP", "rtskip", 1, 3},
+    // Track F, F30d (ROADMAP s122 item 643(v)): 4 = the self-check with PB items 3 and 4 not applied (positive control
+    // of place B).
+    {"KYTY_RT_SKIP", "rtskip", 1, 4},
     // Session 128, MEASUREMENT ONLY: skip the read-only arming of a buffer synchronization on GuestGpu (1)
     // (docs/session-128/design128.md rev 1, ROADMAP s122 items 88, 89); make every such arming and spin its duration
     // once more (2, the dose, ROADMAP s122 item 93(g)(1)). Latched once per synchronization, so it CAN be a schedule arm.

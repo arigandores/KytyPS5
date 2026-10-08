@@ -2481,6 +2481,10 @@ enum class Counter : uint32_t {
 	RtsWrObj,                // rts_wr_obj: values 2/3 - hook calls, whole-object writes
 	RtsLost,                 // rts_lost: values 2/3 - records taken at the latch and never given back
 	RtsEarly,                // rts_early: values 2/3 - draws that reached place A and not the post
+	// Track F, F30d (ROADMAP s122 item 643(v)(2)): of rts_bad (values >= 2), the mismatches with a place B bit (0x3f0) and
+	// with bit R or X (0x010 / 0x020).  Raw counts.
+	RtsBadB,                 // rts_bad_b
+	RtsBadRx,                // rts_bad_rx
 	// Session 128, knob "protceil" (docs/session-128/design128.md rev 1 s.7.1, ROADMAP s122 items 88, 89): raw ns /
 	// counts / pages. prot_gpu_* split prot_gpu / prot_gpu_us by mode at every value (T1, T2); pc_* see PageManager.
 	ProtGpuRoNs,             // prot_gpu_ro_ns: GuestGpu host protection changes to read-only (not the worker), ns

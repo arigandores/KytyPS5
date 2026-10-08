@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/fs10c/runs/fs10_f1/sheet_fs10_f1.png frames 4788 step 99 tiles 8x6

@@ -1,0 +1,43 @@
+tag fs10_f1 (form fs10_f1, kind stand_harness, level underwater_aerial_garden)  reader sha256 a017528854a3dd4c4f393604fc514c3c92b0472097c76383acb74f5e179e3737
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = FS10 abfded5e (abfded5ea629ea70)
+    [ok] installed during the tag = FS10 (abfded5ea629ea70)
+    [ok] installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)
+    [ok] json prereg sha256 = seal sha256 (0f3df8a1b930fac8 / 0f3df8a1b930fac8)
+    [ok] env = the form of the tag (exact)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 150 s (150)
+    [ok] log present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (225362)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line - no KYTY_DIAG_B32 (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4790 listsha c8)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+    [ok] TestLogStall config once: sleep_ms 3000, k 3 ([{'at_ms': 123556938, 'sleep_ms': 3000, 'k': 3, 'gap_ms': 5000, 'on': 'writer'}])
+    [ok] TestLogStall sleeps i=1,2,3, slept_us >= 2 900 000 ([(1, 3000436, 'writer'), (2, 3000559, 'writer'), (3, 3000495, 'writer')]; bad 0)
+    [ok] all sleeps after the first scene frame by log order (anchor line 226560, sleep lines [417336, 445190, 472673])
+    [ok] scene entered and scene >= 120 s (first 203, 154.3 s)
+    [ok] no death marker (log [], stdout [])
+  binary_sha256 abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe
+  SLEEP i 1 slept_us 3000436 t0_ms 123556944 t1_ms 123559944 on writer tid 32220 role other line="? queue  = 0x00000040?? packet = 0x00000"
+  SLEEP i 2 slept_us 3000559 t0_ms 123564964 t1_ms 123567965 on writer tid 32220 role other line="? queue  = 0x00000040?? packet = 0x00000"
+  SLEEP i 3 slept_us 3000495 t0_ms 123572965 t1_ms 123575965 on writer tid 32220 role other line="FrameTrace: n=2052 dt_us=33236 lat_us=16"
+  LogAsync stall lines [(3000445, 123559944, False), (3000580, 123567965, False), (3000504, 123575965, False)]; S (us >= 1 000 000) 3
+  MEMBERS fs10_f1 ALL YES
+    [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12265)
+    [YES] 3 sleeps TestLogStall ... on=writer (sleeps ['writer', 'writer', 'writer'], config ['writer'])
+    [YES] 0 FrameTrace frames dt_us >= 1 000 000 after the first scene frame (0 []; with the first frame 0; LongFrame >= 1 s whole log 0)
+    [YES] >= 3 LogAsync: stall lines us >= 2 900 000 (3: [3000445, 3000580, 3000504])
+    [YES] summary LogAsync: full_waits= present (1)
+    [YES] full_waits 0 (0)
+    [YES] drain_timeouts 0 (0)
+  INFO {"first_scene_n": 203, "ge1s": 0, "ge1s_with_first": 0, "lf_ge1s_whole": 0, "max_dt": 167271, "scene_frames": 4575, "stall_ge29": 3, "summary": {"bytes": 162630881, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 505835, "max_queued_bytes": 2977915, "stall_cut": 0, "stalls": 3, "sync_lines": 0}}
+  REFERENCE: {"bin_version_string": true, "fork_line": "version: Fork build arigandores/KytyPS5 dc5d471", "glitches": 0, "hold_exit": null, "hold_s": 150.2, "lines": 765289, "outcome": "ok", "sheet": "sheet: C:/kyty/f287/fs10c/runs/fs10_f1/sheet_fs10_f1.png frames 4788 step 99 tiles 8x6", "stable_s": 15.0, "video_index": 4788}
+  READING ADMITTED, members ALL YES (no verdict; reading - FS10d)

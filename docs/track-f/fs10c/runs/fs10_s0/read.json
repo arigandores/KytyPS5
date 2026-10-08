@@ -1,0 +1,232 @@
+{
+ "S": 0,
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS10 abfded5e (abfded5ea629ea70)",
+   true
+  ],
+  [
+   "installed during the tag = FS10 (abfded5ea629ea70)",
+   true
+  ],
+  [
+   "installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (0f3df8a1b930fac8 / 0f3df8a1b930fac8)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (223555)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line - no KYTY_DIAG_B32 (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4790 listsha c8)",
+   true
+  ],
+  [
+   "TestLogStall config once: sleep_ms 3000, k 3 ([{'at_ms': 123209813, 'sleep_ms': 3000, 'k': 3, 'gap_ms': 5000, 'on': 'caller'}])",
+   true
+  ],
+  [
+   "TestLogStall sleeps i=1,2,3, slept_us >= 2 900 000 ([(1, 3000164, 'caller'), (2, 3000424, 'caller'), (3, 3000490, 'caller')]; bad 0)",
+   true
+  ],
+  [
+   "all sleeps after the entry line by log order (anchor line 223555, sleep lines [386189, 403982, 419795])",
+   true
+  ],
+  [
+   "hold >= 120 s, lived (hold_s 150.2, hold_exit None)",
+   true
+  ],
+  [
+   "user form: 0 FrameTrace lines (0)",
+   true
+  ],
+  [
+   "no death marker (log [], stdout [])",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe",
+ "form": "fs10_s0",
+ "info": {
+  "exit_gap_ms": 79987,
+  "lf": 4,
+  "lf_ge1s": 3,
+  "lf_ge1s_after_entry": 3,
+  "lf_max": 3033908,
+  "per_sleep": [
+   {
+    "hits": [
+     [
+      1606,
+      3033134,
+      123212869
+     ]
+    ],
+    "i": 1,
+    "win": [
+     123207821,
+     123214822
+    ]
+   },
+   {
+    "hits": [
+     [
+      1764,
+      3016808,
+      123220870
+     ]
+    ],
+    "i": 2,
+    "win": [
+     123215822,
+     123222822
+    ]
+   },
+   {
+    "hits": [
+     [
+      1922,
+      3033908,
+      123228870
+     ]
+    ],
+    "i": 3,
+    "win": [
+     123223826,
+     123230826
+    ]
+   }
+  ],
+  "stall_ge29": 0,
+  "summary": null
+ },
+ "interference": null,
+ "kind": "stand_user",
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "0 LogAsync: lines (mode 0, summary 0, stall 0, other 0)",
+   true
+  ],
+  [
+   "3 sleeps TestLogStall ... on=caller (sleeps ['caller', 'caller', 'caller'], config ['caller'])",
+   true
+  ],
+  [
+   "every sleep has >= 1 LongFrame dt_us >= 2 500 000 in [t0_ms - 2 000; t1_ms + 2 000] (3 of 3 sleeps)",
+   true
+  ],
+  [
+   "exit window: estimated exit 123310813 ms - (last t1_ms 123228826 + 2 000) = 79987 >= 250",
+   true
+  ]
+ ],
+ "ok": true,
+ "reader_sha256": "a017528854a3dd4c4f393604fc514c3c92b0472097c76383acb74f5e179e3737",
+ "reading": "ADMITTED, members ALL YES (no verdict; reading - FS10d)",
+ "ref": {
+  "bin_version_string": true,
+  "fork_line": "version: Fork build arigandores/KytyPS5 dc5d471",
+  "glitches": null,
+  "hold_exit": null,
+  "hold_s": 150.2,
+  "lines": 670087,
+  "outcome": "ok",
+  "sheet": null,
+  "stable_s": 10.8,
+  "video_index": null
+ },
+ "sleeps": [
+  {
+   "i": 1,
+   "line": "? queue  = 0x00000040?? packet = 0x00000",
+   "on": "caller",
+   "role": "other",
+   "slept_us": 3000164,
+   "t0_ms": 123209821,
+   "t1_ms": 123212822,
+   "tid": 40076
+  },
+  {
+   "i": 2,
+   "line": "? handle = 1?",
+   "on": "caller",
+   "role": "Main",
+   "slept_us": 3000424,
+   "t0_ms": 123217822,
+   "t1_ms": 123220822,
+   "tid": 7204
+  },
+  {
+   "i": 3,
+   "line": "? queue  = 0x00000040?? packet = 0x00000",
+   "on": "caller",
+   "role": "other",
+   "slept_us": 3000490,
+   "t0_ms": 123225826,
+   "t1_ms": 123228826,
+   "tid": 40076
+  }
+ ],
+ "stalls": [],
+ "status": "ADMITTED",
+ "tag": "fs10_s0"
+}

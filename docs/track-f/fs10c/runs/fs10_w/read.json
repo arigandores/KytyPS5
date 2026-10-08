@@ -1,0 +1,167 @@
+{
+ "S": 0,
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS10 abfded5e (abfded5ea629ea70)",
+   true
+  ],
+  [
+   "installed during the tag = FS10 (abfded5ea629ea70)",
+   true
+  ],
+  [
+   "installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (0f3df8a1b930fac8 / 0f3df8a1b930fac8)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation true (true)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 310 s (310)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (224640)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line - no KYTY_DIAG_B32 (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4790 listsha c8)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ],
+  [
+   "no TestLogStall line (0 / 0)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe",
+ "form": "fs10_w",
+ "info": {
+  "frames_ge1s_report": 0,
+  "summary": {
+   "bytes": 395563880,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 1312996,
+   "max_queued_bytes": 72988,
+   "stall_cut": 0,
+   "stalls": 0,
+   "sync_lines": 0
+  },
+  "vkw": 922165
+ },
+ "interference": null,
+ "kind": "w",
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.0 >= 310)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "0 [Vulkan][E] (0)",
+   true
+  ],
+  [
+   "0 limit lines of the layer (0)",
+   true
+  ],
+  [
+   "positive control: [Vulkan][W] 922165 > 0",
+   true
+  ],
+  [
+   "DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)",
+   true
+  ],
+  [
+   "LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12266)",
+   true
+  ],
+  [
+   "no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)",
+   true
+  ],
+  [
+   "FixB13: mode=1 (every line) before the first GuestOut ([(1, 720)]; first GuestOut 12266) - form fs9_v / fs9_w",
+   true
+  ]
+ ],
+ "ok": true,
+ "reader_sha256": "a017528854a3dd4c4f393604fc514c3c92b0472097c76383acb74f5e179e3737",
+ "reading": "ADMITTED, members ALL YES (no verdict; reading - FS10d)",
+ "ref": {
+  "bin_version_string": true,
+  "fork_line": "version: Fork build arigandores/KytyPS5 dc5d471",
+  "glitches": null,
+  "hold_exit": null,
+  "hold_s": 310.0,
+  "lines": 2405043,
+  "outcome": "ok",
+  "sheet": null,
+  "stable_s": 26.9,
+  "video_index": null
+ },
+ "sleeps": [],
+ "stalls": [],
+ "status": "ADMITTED",
+ "tag": "fs10_w"
+}

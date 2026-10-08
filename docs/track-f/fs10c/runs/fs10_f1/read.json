@@ -1,0 +1,227 @@
+{
+ "S": 3,
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS10 abfded5e (abfded5ea629ea70)",
+   true
+  ],
+  [
+   "installed during the tag = FS10 (abfded5ea629ea70)",
+   true
+  ],
+  [
+   "installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (0f3df8a1b930fac8 / 0f3df8a1b930fac8)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (225362)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line - no KYTY_DIAG_B32 (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4790 listsha c8)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ],
+  [
+   "TestLogStall config once: sleep_ms 3000, k 3 ([{'at_ms': 123556938, 'sleep_ms': 3000, 'k': 3, 'gap_ms': 5000, 'on': 'writer'}])",
+   true
+  ],
+  [
+   "TestLogStall sleeps i=1,2,3, slept_us >= 2 900 000 ([(1, 3000436, 'writer'), (2, 3000559, 'writer'), (3, 3000495, 'writer')]; bad 0)",
+   true
+  ],
+  [
+   "all sleeps after the first scene frame by log order (anchor line 226560, sleep lines [417336, 445190, 472673])",
+   true
+  ],
+  [
+   "scene entered and scene >= 120 s (first 203, 154.3 s)",
+   true
+  ],
+  [
+   "no death marker (log [], stdout [])",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe",
+ "form": "fs10_f1",
+ "info": {
+  "first_scene_n": 203,
+  "ge1s": 0,
+  "ge1s_with_first": 0,
+  "lf_ge1s_whole": 0,
+  "max_dt": 167271,
+  "scene_frames": 4575,
+  "stall_ge29": 3,
+  "summary": {
+   "bytes": 162630881,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 505835,
+   "max_queued_bytes": 2977915,
+   "stall_cut": 0,
+   "stalls": 3,
+   "sync_lines": 0
+  }
+ },
+ "interference": null,
+ "kind": "stand_harness",
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12265)",
+   true
+  ],
+  [
+   "3 sleeps TestLogStall ... on=writer (sleeps ['writer', 'writer', 'writer'], config ['writer'])",
+   true
+  ],
+  [
+   "0 FrameTrace frames dt_us >= 1 000 000 after the first scene frame (0 []; with the first frame 0; LongFrame >= 1 s whole log 0)",
+   true
+  ],
+  [
+   ">= 3 LogAsync: stall lines us >= 2 900 000 (3: [3000445, 3000580, 3000504])",
+   true
+  ],
+  [
+   "summary LogAsync: full_waits= present (1)",
+   true
+  ],
+  [
+   "full_waits 0 (0)",
+   true
+  ],
+  [
+   "drain_timeouts 0 (0)",
+   true
+  ]
+ ],
+ "ok": true,
+ "reader_sha256": "a017528854a3dd4c4f393604fc514c3c92b0472097c76383acb74f5e179e3737",
+ "reading": "ADMITTED, members ALL YES (no verdict; reading - FS10d)",
+ "ref": {
+  "bin_version_string": true,
+  "fork_line": "version: Fork build arigandores/KytyPS5 dc5d471",
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 150.2,
+  "lines": 765289,
+  "outcome": "ok",
+  "sheet": "sheet: C:/kyty/f287/fs10c/runs/fs10_f1/sheet_fs10_f1.png frames 4788 step 99 tiles 8x6",
+  "stable_s": 15.0,
+  "video_index": 4788
+ },
+ "sleeps": [
+  {
+   "i": 1,
+   "line": "? queue  = 0x00000040?? packet = 0x00000",
+   "on": "writer",
+   "role": "other",
+   "slept_us": 3000436,
+   "t0_ms": 123556944,
+   "t1_ms": 123559944,
+   "tid": 32220
+  },
+  {
+   "i": 2,
+   "line": "? queue  = 0x00000040?? packet = 0x00000",
+   "on": "writer",
+   "role": "other",
+   "slept_us": 3000559,
+   "t0_ms": 123564964,
+   "t1_ms": 123567965,
+   "tid": 32220
+  },
+  {
+   "i": 3,
+   "line": "FrameTrace: n=2052 dt_us=33236 lat_us=16",
+   "on": "writer",
+   "role": "other",
+   "slept_us": 3000495,
+   "t0_ms": 123572965,
+   "t1_ms": 123575965,
+   "tid": 32220
+  }
+ ],
+ "stalls": [
+  [
+   3000445,
+   123559944,
+   false
+  ],
+  [
+   3000580,
+   123567965,
+   false
+  ],
+  [
+   3000504,
+   123575965,
+   false
+  ]
+ ],
+ "status": "ADMITTED",
+ "tag": "fs10_f1"
+}

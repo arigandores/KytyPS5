@@ -1,0 +1,25 @@
+fs10_s1 84 ShaderReplay: mode=3 dir=_ShaderCache\PPSA21564\replay compat=ok generation=46 corrupt=0 sources=727 specs=1218 pipes=3079 test=none
+fs10_s1 86 Vulkan pipeline cache: loaded 127690297 bytes from _PipelineCache\PPSA21564.bin
+fs10_s1 89 ShaderReplay: rebuild skipped reason=recipes_current
+fs10_s1 683 PipelinePrecache: 1856 recipes -> 1713 graphics + 143 compute pipelines queued, 0 skipped, 3521 sources loaded, complete, 519 ms (scratch: 0 pipelines, max 0 dwords/threa
+fs10_s1 686 PipelinePrecache: all pipelines created, 519 ms
+fs10_s0 83 ShaderReplay: mode=3 dir=_ShaderCache\PPSA21564\replay compat=ok generation=46 corrupt=0 sources=727 specs=1218 pipes=3079 test=none
+fs10_s0 85 Vulkan pipeline cache: loaded 127690297 bytes from _PipelineCache\PPSA21564.bin
+fs10_s0 88 ShaderReplay: rebuild skipped reason=recipes_current
+fs10_s0 682 PipelinePrecache: 1856 recipes -> 1713 graphics + 143 compute pipelines queued, 0 skipped, 3521 sources loaded, complete, 513 ms (scratch: 0 pipelines, max 0 dwords/threa
+fs10_s0 685 PipelinePrecache: all pipelines created, 513 ms
+fs10_f1 84 ShaderReplay: mode=3 dir=_ShaderCache\PPSA21564\replay compat=ok generation=46 corrupt=0 sources=727 specs=1218 pipes=3079 test=none
+fs10_f1 86 Vulkan pipeline cache: loaded 127690297 bytes from _PipelineCache\PPSA21564.bin
+fs10_f1 89 ShaderReplay: rebuild skipped reason=recipes_current
+fs10_f1 683 PipelinePrecache: 1856 recipes -> 1713 graphics + 143 compute pipelines queued, 0 skipped, 3521 sources loaded, complete, 524 ms (scratch: 0 pipelines, max 0 dwords/threa
+fs10_f1 686 PipelinePrecache: all pipelines created, 524 ms
+fs10_v 83 ShaderReplay: mode=3 dir=_ShaderCache\PPSA21564\replay compat=ok generation=46 corrupt=0 sources=727 specs=1218 pipes=3079 test=none
+fs10_v 85 Vulkan pipeline cache: loaded 127690297 bytes from _PipelineCache\PPSA21564.bin
+fs10_v 88 ShaderReplay: rebuild skipped reason=recipes_current
+fs10_v 682 PipelinePrecache: 1856 recipes -> 1713 graphics + 143 compute pipelines queued, 0 skipped, 3521 sources loaded, complete, 504 ms (scratch: 0 pipelines, max 0 dwords/threa
+fs10_v 685 PipelinePrecache: all pipelines created, 504 ms
+fs10_w 87 ShaderReplay: mode=3 dir=_ShaderCache\PPSA21564\replay compat=ok generation=46 corrupt=0 sources=727 specs=1218 pipes=3079 test=none
+fs10_w 89 Vulkan pipeline cache: loaded 127690297 bytes from _PipelineCache\PPSA21564.bin
+fs10_w 92 ShaderReplay: rebuild skipped reason=recipes_current
+fs10_w 692 PipelinePrecache: 1856 recipes -> 1713 graphics + 143 compute pipelines queued, 0 skipped, 3521 sources loaded, complete, 4336 ms (scratch: 0 pipelines, max 0 dwords/thre
+fs10_w 695 PipelinePrecache: all pipelines created, 4336 ms

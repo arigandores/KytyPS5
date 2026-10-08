@@ -1,0 +1,3 @@
+TEMPO PASS form user mean_dt_ms 32.00 fps 31.25 frames 4687 limit_ms 100 (item 620 (g)(2)) (flip records after the level line 4687 over the hold 150.0 s)
+  row: LongFrame lines after the level line 1 (< 2, no span row)
+  row: seal plan W form no (item 621)

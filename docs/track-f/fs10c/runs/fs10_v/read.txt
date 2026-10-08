@@ -1,0 +1,40 @@
+tag fs10_v (form fs10_v, kind v, level underwater_aerial_garden)  reader sha256 a017528854a3dd4c4f393604fc514c3c92b0472097c76383acb74f5e179e3737
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = FS10 abfded5e (abfded5ea629ea70)
+    [ok] installed during the tag = FS10 (abfded5ea629ea70)
+    [ok] installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)
+    [ok] json prereg sha256 = seal sha256 (0f3df8a1b930fac8 / 0f3df8a1b930fac8)
+    [ok] env = the form of the tag (exact)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (225020)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line - no KYTY_DIAG_B32 (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4790 listsha c8)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+    [ok] no TestLogStall line (0 / 0)
+  binary_sha256 abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe
+  LogAsync stall lines []; S (us >= 1 000 000) 0
+  MEMBERS fs10_v ALL YES
+    [YES] hold >= 300 s after the first scene frame (334.3 s)
+    [YES] the process lived through the hold (outcome ok, hold_exit None)
+    [YES] 0 death markers (log and stdout) []
+    [YES] 0 frames >= 1 s after the first scene frame (0; first 200)
+    [YES] video index records >= 3000 (10279)
+    [YES] 0 one-frame glitches (0)
+    [YES] sheet for the lead made (sheet: C:/kyty/f287/fs10c/runs/fs10_v/sheet_fs10_v.png frames 10279 step 214 tiles 8x6)
+    [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12254)
+    [YES] summary LogAsync: full_waits= present (1)
+    [YES] drain_timeouts 0 (0)
+    [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 716)]; first GuestOut 12254) - form fs9_v / fs9_w
+  INFO {"first_scene_n": 200, "frames_ge1s": 0, "hold_s": 334.3, "max_dt": 168052, "summary": {"bytes": 335832895, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 891309, "max_queued_bytes": 41944, "stall_cut": 0, "stalls": 0, "sync_lines": 0}}
+  REFERENCE: {"bin_version_string": true, "fork_line": "version: Fork build arigandores/KytyPS5 dc5d471", "glitches": 0, "hold_exit": null, "hold_s": 330.1, "lines": 1419083, "outcome": "ok", "sheet": "sheet: C:/kyty/f287/fs10c/runs/fs10_v/sheet_fs10_v.png frames 10279 step 214 tiles 8x6", "stable_s": 14.9, "video_index": 10279}
+  READING ADMITTED, members ALL YES (no verdict; reading - FS10d)

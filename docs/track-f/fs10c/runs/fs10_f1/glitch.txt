@@ -1,0 +1,2 @@
+C:/kyty/f287/fs10c/rec_fs10_f1.mp4: 4788 frames 960x540, index entries 4788
+one-frame glitches: 0

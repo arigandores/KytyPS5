@@ -63,11 +63,14 @@ HS=$(python $G/hold_f26c.py check) || { python $G/guard_f26c.py close user_sessi
 mkdir -p $OUT
 if [ $MODE = tag ]; then
   echo "$LV" > $OUT/level.txt
-  python $G/procload.py --wait-s ${PLWAIT:-120} 2>&1 | mask > $OUT/procload.txt
+  # item 632 (v)(1): the gate of the functional seals (item 115 #7) - 1.5 CPU s/s per process, 4 in total
+  python $G/procload.py --wait-s ${PLWAIT:-120} --max-rate 1.5 --max-total 4 2>&1 | mask > $OUT/procload.txt
   [ "${PIPESTATUS[0]}" = "0" ] || { log "procload busy: $(grep 'procload: busy' $OUT/procload.txt | tail -1 | cut -c1-200)"; mv $OUT $OUT.busy_$(date -u +%H%M%S); exit 5; }
   [ -e $LOCK ] && { echo "lock appeared: $(head -1 $LOCK)"; mv $OUT $OUT.lock_$(date -u +%H%M%S); exit 3; }
   RS=$(python $G/runchk_f26c.py) || { log "run check (item 587 (g)): $RS - not starting, files untouched"; mv $OUT $OUT.gone_$(date -u +%H%M%S); exit 3; }
   log "run check (item 587 (g)): $RS"
+  python $G/hostload_f26c.py --json $OUT/hostload_before.json > $OUT/hostload_before.txt 2>&1
+  log "host load before the tag (item 632 (v)(2)): $(head -1 $OUT/hostload_before.txt | cut -c1-200)"
   DS=$(python $G/dispstate.py); DSRC=$?
   if [ $DSRC != 0 ]; then
     WS=$(python $G/dispstate.py --wake | tr '\n' ';')
@@ -179,6 +182,9 @@ finish() {
     echo "$DA" > $OUT/disp_after.txt
     stop_disp
     log "display after lock released (item 620 (g)(1)): $DA; hold: $(grep -c '^event ' $OUT/disp_hold.txt) display events, $(grep -c '^event .* OFF' $OUT/disp_hold.txt) OFF"
+    python $G/hostload_f26c.py --json $OUT/hostload_after.json > $OUT/hostload_after.txt 2>&1
+    log "host load after the tag (item 632 (v)(2)): $(head -1 $OUT/hostload_after.txt | cut -c1-200)"
+    [ -f $G/$T.json ] && python $G/f26c_read.py --set-load $G/$T.json $OUT > $OUT/set_load.txt 2>&1 && log "$(head -1 $OUT/set_load.txt)"
     if [ -e $OUT/USER_FOUND ] || [ -e $OUT/VM_FOUND ]; then
       python $G/guard_f26c.py close user_found > /dev/null
       mv $OUT $OUT.user_$(date -u +%H%M%S); log "user process during the tag - block closed, interference (item 534), SERIES_STOP"

@@ -68,11 +68,34 @@ rc, word = GD.open_block(b, [], T1 + 700)
 check('600 s after the clean check past the close: OPEN', rc == 0)
 rc, word = GD.open_block(W + '/b2.txt', [{'pid': 1}], 5000.0)
 check('a found user process closes: rc 7', rc == 7)
+# the gate on both thresholds (item 632 (v)(4)) and hostload_f26c.py
+import procload as PL  # noqa: E402
+import hostload_f26c as HL  # noqa: E402
+seq = []
+def fake_snaps(rate_a, rate_b):
+    s = [{(1, 'idle'): 0.0, (10, 'userjob'): 0.0, (11, 'other'): 0.0}, {(1, 'idle'): 99.0, (10, 'userjob'): rate_a * PL.SPAN, (11, 'other'): rate_b * PL.SPAN}]
+    return lambda: s.pop(0)
+PL.mutlib_alive = lambda: []
+_sleep, _mono = PL.time.sleep, PL.time.monotonic
+PL.time.sleep = lambda s: None
+for ra, rb, mr, mt, want in ((0.75, 0.1, 0.5, None, 1), (0.75, 0.1, 1.5, 4.0, 0), (1.6, 0.1, 1.5, 4.0, 1), (1.4, 1.4, 1.5, 4.0, 0), (1.4, 1.4, 1.5, 2.5, 1),
+                             (0.5, 0.0, 0.5, None, 0)):
+    PL.snapshot = fake_snaps(ra, rb)
+    PL.time.monotonic = (lambda it: (lambda: next(it)))(iter([0.0, PL.SPAN]))
+    bad = PL.offenders(mr, mt)
+    check('gate rates %.2f/%.2f at %.1f/%s: offenders %d (want %d)' % (ra, rb, mr, mt, len(bad), want), len(bad) == want)
+PL.time.sleep, PL.time.monotonic = _sleep, _mono
+r = HL.measure(snap=fake_snaps(0.75, 0.2), sleep=lambda s: None, span=10.0)
+check('hostload: one process above 0.5, name masked, total 0.95', r['over05'] == 1 and r['procs'][0][0] == '<app>' and abs(r['total'] - 0.95) < 1e-6 and 'userjob' not in HL.line(r))
+r = HL.measure(snap=fake_snaps(0.5, 0.2), sleep=lambda s: None, span=10.0)
+check('hostload: exactly 0.5 is not above 0.5', r['over05'] == 0)
+c = run([BASH, '-c', 'grep -c -- "--max-rate 1.5 --max-total 4" ' + HERE + '/go_f26c.sh'])
+check('go_f26c.sh gate uses 1.5 / 4 (item 632 (v)(1))', c.stdout.strip() == b'1')
 src = open(HERE + '/enter_scene.py', encoding='utf-8').read()
 check('enter_scene.py has --entry-at-level and ROOT f287/f26c', "'--entry-at-level'" in src and "ROOT = pathlib.Path('C:/kyty/f287/f26c')" in src)
 c = run([sys.executable, HERE + '/enter_scene.py', '--help'])
 check('enter_scene.py imports resolve in f26c (--help rc 0, option --entry-at-level listed; seal 2)', c.returncode == 0 and b'--entry-at-level' in c.stdout)
-for helper in ('tempo_f26c.py', 'f26c_read.py', 'guard_f26c.py', 'hold_f26c.py', 'dispstate.py', 'procload.py', 'manifest_fs4c.py', 'runchk_f26c.py'):
+for helper in ('hostload_f26c.py', 'tempo_f26c.py', 'f26c_read.py', 'guard_f26c.py', 'hold_f26c.py', 'dispstate.py', 'procload.py', 'manifest_fs4c.py', 'runchk_f26c.py'):
     c = run([sys.executable, '-c', 'import sys; sys.path.insert(0, %r); import %s' % (HERE, helper[:-3])])
     check('import %s resolves' % helper, c.returncode == 0)
 src = open(HERE + '/go_f26c.sh', encoding='utf-8').read()

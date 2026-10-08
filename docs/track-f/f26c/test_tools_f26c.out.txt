@@ -1,4 +1,4 @@
-suite test_tools_f26c.py sha256 55c69f2ef3b0ba3c127bd9147241be255b48dcd859b097232e51b7885407a91d targets go_f26c.sh 95ebc8c2566441c4 post_f26c.sh 1ce0b0e6ffe77d06 queue_f26c.py 83c2305bae1b381d runchk_f26c.py 27472e7423c8889d guard_f26c.py ed53b4f8601e3b51 enter_scene.py 65afa7cf29b82a4c
+suite test_tools_f26c.py sha256 0714c6f6114a284ffa65d4a2b695fb1a64548f86c3c5c171371199030b980fef targets go_f26c.sh 1760ab698044811b post_f26c.sh 1ce0b0e6ffe77d06 queue_f26c.py 83c2305bae1b381d runchk_f26c.py 27472e7423c8889d guard_f26c.py ed53b4f8601e3b51 enter_scene.py 65afa7cf29b82a4c
 ok   go dry run accepts b25_01 (hold 120, timeout 60, knobs of fs10_v)
 ok   go dry run accepts b25_09 (hold 120, timeout 60, knobs of fs10_v)
 ok   go dry run accepts b25_10 (hold 120, timeout 60, knobs of fs10_v)
@@ -35,8 +35,18 @@ ok   10th tag closes the block (CLOSE limit10)
 ok   after the close a new block needs a fresh 600 s gap: PENDING
 ok   600 s after the clean check past the close: OPEN
 ok   a found user process closes: rc 7
+ok   gate rates 0.75/0.10 at 0.5/None: offenders 1 (want 1)
+ok   gate rates 0.75/0.10 at 1.5/4.0: offenders 0 (want 0)
+ok   gate rates 1.60/0.10 at 1.5/4.0: offenders 1 (want 1)
+ok   gate rates 1.40/1.40 at 1.5/4.0: offenders 0 (want 0)
+ok   gate rates 1.40/1.40 at 1.5/2.5: offenders 1 (want 1)
+ok   gate rates 0.50/0.00 at 0.5/None: offenders 0 (want 0)
+ok   hostload: one process above 0.5, name masked, total 0.95
+ok   hostload: exactly 0.5 is not above 0.5
+ok   go_f26c.sh gate uses 1.5 / 4 (item 632 (v)(1))
 ok   enter_scene.py has --entry-at-level and ROOT f287/f26c
 ok   enter_scene.py imports resolve in f26c (--help rc 0, option --entry-at-level listed; seal 2)
+ok   import hostload_f26c.py resolves
 ok   import tempo_f26c.py resolves
 ok   import f26c_read.py resolves
 ok   import guard_f26c.py resolves

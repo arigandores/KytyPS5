@@ -118,6 +118,31 @@ r = R.read('dispdet', mklog('dispdet', post=ASSERT), mkout('dispdet'), mkjson('d
 for rc in (1, 2, 3):
     r = R.read('tempo%d' % rc, mklog('tempo%d' % rc), mkout('t'), mkjson('tempo%d' % rc), disp_after='dispstate ON', tempo_rc=rc); check('tempo rc %d on a counted tag: TEMPO' % rc, r['cls'] == 'TEMPO')
 r = R.read('tempoi', mklog('tempoi', post=['--- Error ---']), mkout('t'), mkjson('tempoi'), disp_after='dispstate ON', tempo_rc=2); check('tempo rc 2 on an interference tag: INTERFERENCE (a row)', r['cls'] == 'INTERFERENCE')
+# host load layer (item 632)
+LD = W + '/load'
+def mkrun(name, files):
+    d = '%s/%s' % (LD, name)
+    os.makedirs(d, exist_ok=True)
+    for k, v in files.items():
+        open('%s/%s' % (d, k), 'w').write(v + NL)
+    return d
+CL = 'procload: clean (no process above 0.50 CPU s/s, total cap None)'
+C15 = 'procload: clean (no process above 1.50 CPU s/s, total cap 4.0)'
+H0 = 'hostload: over05 0 max 0.000 total 0.312 procs []'
+H1 = "hostload: over05 1 max 0.744 total 1.020 procs [('<app>', 44272, 0.744)]"
+check('layer: old gate 0.50 clean, no hostload lines -> CLEAN', R.layer_of(mkrun('a', {'procload.txt': CL}))[0] == 'CLEAN')
+check('layer: gate 1.50 clean, no hostload lines -> UNKNOWN', R.layer_of(mkrun('b', {'procload.txt': C15}))[0] == 'UNKNOWN')
+check('layer: hostload before 0, after 0 -> CLEAN', R.layer_of(mkrun('c', {'procload.txt': C15, 'hostload_before.txt': H0, 'hostload_after.txt': H0}))[0] == 'CLEAN')
+check('layer: hostload before 1 -> HOST_LOAD', R.layer_of(mkrun('d', {'hostload_before.txt': H1, 'hostload_after.txt': H0}))[0] == 'HOST_LOAD')
+check('layer: hostload after 1 -> HOST_LOAD', R.layer_of(mkrun('e', {'hostload_before.txt': H0, 'hostload_after.txt': H1}))[0] == 'HOST_LOAD')
+check('layer: a broken hostload line -> UNKNOWN', R.layer_of(mkrun('f', {'hostload_before.txt': 'Traceback'}))[0] == 'UNKNOWN')
+check('layer: no files -> UNKNOWN', R.layer_of(mkrun('g', {}))[0] == 'UNKNOWN')
+jp = mkjson('setload')
+R.set_load(jp, mkrun('h', {'hostload_before.txt': H1, 'hostload_after.txt': H0}))
+jj = json.load(open(jp))
+check('set-load writes host_load {layer HOST_LOAD, before, after} and keeps binary_sha256', jj['host_load']['layer'] == 'HOST_LOAD' and jj['host_load']['before'] == H1 and jj['binary_sha256'] == R.TB)
+r = R.read('lay', mklog('lay'), mkout('lay'), mkjson('lay'), rundir=mkrun('i', {'hostload_before.txt': H1, 'hostload_after.txt': H0}))
+check('a HOST_LOAD tag stays COUNTED (layer is not a member, item 632 (g))', r['cls'] == 'COUNTED' and r['layer'] == 'HOST_LOAD')
 # xz log
 p = mklog('xzc', xz=True); r = R.read('xzc', p, None, mkjson('xzc')); check('xz log: COUNTED, sum 120.0', r['cls'] == 'COUNTED' and r['sum_dt_s'] == 120.0)
 p = mklog('xzd', xz=True, post=ASSERT); r = R.read('xzd', p, None, mkjson('xzd')); check('xz log with the assert: DETECTOR', r['cls'] == 'DETECTOR')

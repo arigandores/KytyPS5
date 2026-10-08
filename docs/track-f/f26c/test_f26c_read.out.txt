@@ -1,4 +1,4 @@
-suite test_f26c_read.py sha256 5c3313a55516278e7af3e6e6671c79cdff58caf9a01eb4472c3ee4f66dc2b24f target f26c_read.py sha256 9d950bad38c5e06e37a553fd67a4bdea7755310680090305c20af8ae8f1bbf5e
+suite test_f26c_read.py sha256 1455336e0d6bafbae6a4bd5fd5ac44242ff0b2818045b00d003650eb7e78456b target f26c_read.py sha256 982f0147bb59ee48dc6e75d8462f878eace9ea18a3827c03297e4c98c11e6e6f
 ok   counted: class COUNTED
 ok   counted: frames 7200 sum 120.0 s
 ok   counted: frames before the entry not summed
@@ -47,6 +47,16 @@ ok   tempo rc 1 on a counted tag: TEMPO
 ok   tempo rc 2 on a counted tag: TEMPO
 ok   tempo rc 3 on a counted tag: TEMPO
 ok   tempo rc 2 on an interference tag: INTERFERENCE (a row)
+ok   layer: old gate 0.50 clean, no hostload lines -> CLEAN
+ok   layer: gate 1.50 clean, no hostload lines -> UNKNOWN
+ok   layer: hostload before 0, after 0 -> CLEAN
+ok   layer: hostload before 1 -> HOST_LOAD
+ok   layer: hostload after 1 -> HOST_LOAD
+ok   layer: a broken hostload line -> UNKNOWN
+ok   layer: no files -> UNKNOWN
+host_load field written: layer HOST_LOAD
+ok   set-load writes host_load {layer HOST_LOAD, before, after} and keeps binary_sha256
+ok   a HOST_LOAD tag stays COUNTED (layer is not a member, item 632 (g))
 ok   xz log: COUNTED, sum 120.0
 ok   xz log with the assert: DETECTOR
 ok   54 counted: GOING (N 59 of 60)

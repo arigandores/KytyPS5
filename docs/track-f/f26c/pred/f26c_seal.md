@@ -138,19 +138,34 @@
 --help`, импорт восьми помощников) и строки (2). Ридер, правила чтения, форма тега, детектор и кэши не меняются. Повтор — `b25_01` тем же
 именем.
 
-## Строки seal (sha256 файлов цепочки на момент печати 2, 2026-10-08T06:00:14Z)
+## 8б. Печать 3 (п. 632, до `b25_11`)
+
+Решение лида п. 632 (KytyPS5 `9c0196c8`) на вопрос о шлюзе (с 07:10Z `procload` — `BUSY` от процесса пользователя `<app>`, серия стояла
+на `b25_10`). Дифф печати 3 против печати 2: (1) `go_f26c.sh` — шлюз тега `procload.py --max-rate 1.5 --max-total 4` (порог
+функциональных печатей, п. 632(в)(1)); выше — ждать, как прежде; процесс пользователя не трогается. Проверки открытия блока п. 534(в)(3) —
+сторож процессов пользователя (`guard_f26c.py`), порога CPU в них нет [c] — член (в)(1) о них применяется пустым. (2) Новый
+`hostload_f26c.py` — строка нагрузки хоста перед тегом (после шлюза, до замка) и после тега (после `lock released`): посторонние процессы
+> 0,5 CPU·с/с (имя `<app>`), их число, максимум, сумма; `f26c_read.py --set-load` пишет в `<tag>.json` поле `host_load` {`layer`,
+`before`, `after`}. (3) Ридер — слой тега: `HOST_LOAD` — в строке до или после есть процесс > 0,5 CPU·с/с; `CLEAN` — строки есть и такого
+нет; у `b25_01`…`b25_10` строк нагрузки нет — слой по строке шлюза `procload.txt` «clean (no process above 0.50» (порог тех тегов) —
+`CLEAN`; иначе `UNKNOWN`. Слой — не член: классы и правила засчёта, остановки, темпа и дисплея не меняются (п. 632(в)(3)); таблица печатает
+слои засчитанных тегов отдельно (п. 632(г)). (4) Фикстуры: ридер — 75 проверок (слои, `--set-load`), инструменты — 48 (шлюз на обоих
+порогах, `hostload_f26c.py`, маска имён) — `ALL OK`.
+
+## Строки seal (sha256 файлов цепочки на момент печати 3, 2026-10-08T07:57:05Z)
 
 ```
-seal: 95ebc8c2566441c437c740d521ba2d5415ad04d9c39ae950984db4158545d3b1 go_f26c.sh
+seal: 1760ab698044811b3a4e1a238f177c84166fda7fbdd8f9a5591ac78177588148 go_f26c.sh
 seal: f9c147c966ff13f8ad2ceb1aa9090ad14ab7e64f4c1ad2bf4713c80eaa463658 launch_f26c.sh
 seal: 5c8a3f11dc16fe95b95953891963335ec4dbec2bf55a4c182ca6967f90e14770 wait_f26c.sh
 seal: 1ce0b0e6ffe77d068cc054965a166198abdfaf3e187c7611283730c76b8b8007 post_f26c.sh
 seal: 394bd269668d4d32e2faf5f1b3a42f9da8368063455f9f49378f4192d707b6e3 chk_f26c.sh
 seal: 65afa7cf29b82a4c0b36a8fa4956ffd06399cfe1c0ba2f90a9cbedab763d7141 enter_scene.py
 seal: 77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638 run_safety99.py
-seal: 9d950bad38c5e06e37a553fd67a4bdea7755310680090305c20af8ae8f1bbf5e f26c_read.py
-seal: 5c3313a55516278e7af3e6e6671c79cdff58caf9a01eb4472c3ee4f66dc2b24f test_f26c_read.py
-seal: 55c69f2ef3b0ba3c127bd9147241be255b48dcd859b097232e51b7885407a91d test_tools_f26c.py
+seal: 982f0147bb59ee48dc6e75d8462f878eace9ea18a3827c03297e4c98c11e6e6f f26c_read.py
+seal: 3c355a4e0512627c71712a37e0d92903a40460e96b2c0779587fa6b9737d0c52 hostload_f26c.py
+seal: 1455336e0d6bafbae6a4bd5fd5ac44242ff0b2818045b00d003650eb7e78456b test_f26c_read.py
+seal: 0714c6f6114a284ffa65d4a2b695fb1a64548f86c3c5c171371199030b980fef test_tools_f26c.py
 seal: 8aabd2763f77b05757134c7e0100348400359fbe4c420d30745208e6f2348b28 tempo_f26c.py
 seal: ed53b4f8601e3b51244cd440e9ea64298e93d2f0b2e054c30f5b555b7e23dc58 guard_f26c.py
 seal: f8c3655beec7a9c9c3f319f894c91945e1c902c67c224d50a612663d9076b522 hold_f26c.py
@@ -165,8 +180,8 @@ seal: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 gates_def
 seal: d058309c4ea589e699375f82a073abaa2688d5afc360bef3f76032beafb21b6f sweep_f26a.py
 seal: 352f17009b0d5319cbf53befa9c3b4c4d89ecdda358b965c2c581c8e6290a3bb fx_sweep_f26a.py
 seal: 8aa6a5f06d7d02adf39e29b5934fe51561f5f988acbb0aded33cd210ce7485d2 refs_f26c.py
-seal: b53e027cc4f2344e0526e36a4972eff23c1fcff0e2061bbfcd266d6a48fd16bc test_f26c_read.out.txt
-seal: e067857854553291e4ff4e7dcff06f033faaf09cc026a0a0884166f0d07ae7aa test_tools_f26c.out.txt
+seal: d0de7bb52801815363becc1e6ce63056cd30f638f3a61b6c9c58271af5055c29 test_f26c_read.out.txt
+seal: 1c66337314bc8273125fb43348b06d426ef54e1606315d8182f7535689936125 test_tools_f26c.out.txt
 seal: f607c4bb51e05a81c4d576d1e8da2e5bc19b15c6ddd1cdf18c1b595f8e723990 fx_sweep_f26a.out.txt
 seal: dd620c0f706ad6f7a6d2c68d73450e60c4afdd99ead7698cea49a26d357146d9 refs_f26c.out.txt
 ```

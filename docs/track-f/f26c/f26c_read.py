@@ -30,6 +30,7 @@ Members of item 620 (g)(1)-(2) (item 620 (d): a new harness of the track F with 
 usage:
   python f26c_read.py <tag> [--json OUT]                   reads C:/kyty/f287/f26c/{log_<tag>.txt, stdout_<tag>.txt, <tag>.json}
   python f26c_read.py --log LOG [--stdout S] [--run-json J] [--name N] [--json OUT]    (fixtures, positive controls; .xz accepted)
+  python f26c_read.py --set-load <tag>.json <run dir>       item 632 (v)(2): the field host_load {before, after, layer} into the json
   python f26c_read.py --table [--dir D]                    the table of D/runs/b25_*/read.json and the series line (exit 1 on a stop)
 ASCII only."""
 import glob
@@ -53,6 +54,38 @@ INTERF_STOP = 5
 TAGS = 55
 INVENTORY = 5
 N_RULE = 60
+OVER = 0.5
+RX_OVER = re.compile(r'^hostload: over05 (\d+) ')
+RX_BUSY = re.compile(r"\('<app>', \d+, ([0-9.]+)\)")
+
+
+def layer_of(rundir):
+    """Item 632 (v)(2), (v)(4): HOST_LOAD - a foreign process above 0.5 CPU s/s in the host load line before or after the tag; CLEAN -
+    the lines exist and name none; tags without the lines (b25_01..b25_10): the gate line of procload.txt 'clean (no process above
+    0.50' -> CLEAN (the gate of those tags was 0.5); else UNKNOWN."""
+    lines = {}
+    for k in ('hostload_before', 'hostload_after'):
+        p = os.path.join(rundir, k + '.txt')
+        if os.path.exists(p):
+            lines[k] = open(p, encoding='ascii', errors='replace').read().strip().split('\n')[0]
+    if lines:
+        over = []
+        for k, l in sorted(lines.items()):
+            m = RX_OVER.match(l)
+            if not m:
+                return 'UNKNOWN', lines
+            over.append(int(m.group(1)))
+        return ('HOST_LOAD' if any(over) else 'CLEAN'), lines
+    p = os.path.join(rundir, 'procload.txt')
+    if os.path.exists(p):
+        g = open(p, encoding='ascii', errors='replace').read().strip().split('\n')
+        last = g[-1] if g else ''
+        lines['procload'] = last
+        if last.startswith('procload: clean (no process above 0.50 '):
+            return 'CLEAN', lines
+    return 'UNKNOWN', lines
+
+
 FORM = {'KYTY_GUEST_ARGS': '-lvl intro_next', 'KYTY_FRAME_TRACE': 'lite', 'KYTY_GPU_HANG_ABORT_S': '8', 'KYTY_GPU_CLOCK_PIN': '1',
         'KYTY_GPU_MARKERS': '0'}
 FORBID_PREFIX = ('KYTY_REC', 'KYTY_GAME_PATCH', 'KYTY_FIX_', 'KYTY_TEST_')
@@ -143,7 +176,7 @@ def form_problems(j):
     return out
 
 
-def read(name, log, stdout, run_json, require_form=True, disp_after=None, tempo_rc=None):
+def read(name, log, stdout, run_json, require_form=True, disp_after=None, tempo_rc=None, rundir=None):
     lg = scan(log, True)
     so = scan(stdout, False)
     j = None
@@ -190,7 +223,8 @@ def read(name, log, stdout, run_json, require_form=True, disp_after=None, tempo_
                 pre_entry_max_dt_us=lg['pre_max_us'], pre_entry_long_frames=lg['pre_long'],
                 binary=(j or {}).get('binary_sha256'), hold_s=att.get('hold_s'), hold_exit=att.get('hold_exit'),
                 outcome=att.get('outcome'), launched=(j or {}).get('launched'), finished=(j or {}).get('finished'),
-                log=log, stdout=stdout, json=run_json, disp_after=disp_after, tempo_rc=tempo_rc)
+                log=log, stdout=stdout, json=run_json, disp_after=disp_after, tempo_rc=tempo_rc,
+                layer=layer_of(rundir)[0] if rundir else None, load_lines=layer_of(rundir)[1] if rundir else None)
 
 
 def show(r):
@@ -203,6 +237,7 @@ def show(r):
     print('  death markers %s; --- Error --- %d; Unhandled host exception %d' % (r['death'] or 0, r['error_lines'], r['host_exc']))
     print('  binary %s; hold_s %s; hold_exit %s; outcome %s; form problems %s' % ((r['binary'] or '-')[:8], r['hold_s'], r['hold_exit'], r['outcome'], r['form'] or 0))
     print('  display after %s; tempo rc %s' % (r['disp_after'], r['tempo_rc']))
+    print('  host load layer %s (item 632): %s' % (r.get('layer'), r.get('load_lines')))
     if r['reasons']:
         print('  reasons: %s' % '; '.join(r['reasons']))
 
@@ -213,17 +248,29 @@ def table(g=G):
         if os.path.basename(os.path.dirname(p)).count('.'):
             continue
         rows.append(json.load(open(p, encoding='ascii')))
-    print('| tag | binary | hold s | frames | sum dt s | max dt us | detector | class | reasons |')
-    print('|---|---|---|---|---|---|---|---|---|')
+    print('| tag | binary | hold s | frames | sum dt s | max dt us | detector | class | layer | reasons |')
+    print('|---|---|---|---|---|---|---|---|---|---|')
     for r in rows:
-        print('| %s | %s | %s | %d | %.1f | %d | %d/%d/%d | %s | %s |' % (r['tag'], (r['binary'] or '-')[:8], r['hold_s'], r['frames'], r['sum_dt_s'],
-              r['max_dt_us'], r['detector'][0], r['detector'][1], r['detector'][2], r['cls'], '; '.join(r['reasons']) or '-'))
+        print('| %s | %s | %s | %d | %.1f | %d | %d/%d/%d | %s | %s | %s |' % (r['tag'], (r['binary'] or '-')[:8], r['hold_s'], r['frames'], r['sum_dt_s'],
+              r['max_dt_us'], r['detector'][0], r['detector'][1], r['detector'][2], r['cls'], r.get('layer') or '-', '; '.join(r['reasons']) or '-'))
     c = {k: sum(1 for r in rows if r['cls'] == k) for k in ('COUNTED', 'INTERFERENCE', 'DETECTOR', 'HARNESS', 'TEMPO')}
     stop = 'DETECTOR_STOP' if c['DETECTOR'] else 'HARNESS_STOP' if c['HARNESS'] else 'TEMPO_STOP' if c['TEMPO'] else 'INTERFERENCE_STOP' if c['INTERFERENCE'] >= INTERF_STOP \
         else 'COMPLETE' if c['COUNTED'] + INVENTORY >= N_RULE else 'GOING'
     print('SERIES tags %d counted %d interference %d detector %d harness %d tempo %d; N = %d inventory + %d = %d of %d; state %s'
           % (len(rows), c['COUNTED'], c['INTERFERENCE'], c['DETECTOR'], c['HARNESS'], c['TEMPO'], INVENTORY, c['COUNTED'], INVENTORY + c['COUNTED'], N_RULE, stop))
+    lay = {k: sum(1 for r in rows if r['cls'] == 'COUNTED' and r.get('layer') == k) for k in ('CLEAN', 'HOST_LOAD', 'UNKNOWN')}
+    print('LAYERS of the counted tags (item 632 (g)): CLEAN %d HOST_LOAD %d UNKNOWN %d' % (lay['CLEAN'], lay['HOST_LOAD'], lay['UNKNOWN']))
     return stop
+
+
+def set_load(jpath, rundir):
+    j = json.load(open(jpath, encoding='utf-8'))
+    lay, lines = layer_of(rundir)
+    j['host_load'] = dict(layer=lay, before=lines.get('hostload_before'), after=lines.get('hostload_after'), item='ROADMAP s122 item 632 (v)(2)')
+    with open(jpath, 'w', encoding='utf-8') as f:
+        json.dump(j, f, indent=2)
+    print('host_load field written: layer %s' % lay)
+    return 0
 
 
 def main(argv):
@@ -231,6 +278,8 @@ def main(argv):
     if not argv:
         print(__doc__)
         return 2
+    if argv[0] == '--set-load':
+        return set_load(argv[1], argv[2])
     if argv[0] == '--table':
         stop = table(opt('--dir', G))
         return 0 if stop in ('GOING', 'COMPLETE') else 1
@@ -240,7 +289,8 @@ def main(argv):
         t = argv[0]
         da = open(opt('--disp-after'), encoding='ascii', errors='replace').read().strip() if opt('--disp-after') else None
         tr = int(opt('--tempo-rc')) if opt('--tempo-rc') is not None else None
-        r = read(t, '%s/log_%s.txt' % (G, t), '%s/stdout_%s.txt' % (G, t), '%s/%s.json' % (G, t), disp_after=da, tempo_rc=tr)
+        r = read(t, '%s/log_%s.txt' % (G, t), '%s/stdout_%s.txt' % (G, t), '%s/%s.json' % (G, t), disp_after=da, tempo_rc=tr,
+                 rundir='%s/runs/%s' % (G, t))
     show(r)
     if opt('--json'):
         with open(opt('--json'), 'w', encoding='ascii') as f:

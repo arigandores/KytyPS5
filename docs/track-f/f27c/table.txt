@@ -1,3 +1,5 @@
 tag | arm | binary | admitted | saves on hold P1 (bytes, us, window) | frames >=100 ms on windows | P1..P6 | idle on hold | coincide strict/loose | interference
-f27_v0 | 0 | abfded5e | YES | ['139700517/140265/[54.475,54.615]'] | [(1907, 154288), (1908, 241198)] | P1 YES (saves on hold with P1 1) P2 YES P3 NO (variant payload YES) P4 YES P5 YES P6 YES | 0 | []/[] | []
-SERIES UNDEFINED by (v)(3)/(d)(1): v0 saves 1 frames 2 no_p1 0 - question to the lead
+f27_v0 | 0 | abfded5e | YES | ['139700517/140265/[54.475,54.615]'] | [(1907, 154288), (1908, 241198)] | P1 YES (saves on hold with P1 1) P2 YES P3 YES (variant payload YES) P4 YES P5 YES P6 YES | 0 | []/[] | []
+f27_v0b | 0 | abfded5e | YES | ['139700464/147201/[52.083,52.230]', '140113732/145720/[146.907,147.053]'] | [(1785, 413734)] | P1 YES (saves on hold with P1 2) P2 YES P3 YES (variant payload YES) P4 YES P5 YES P6 YES | 0 | []/[] | []
+f27_v1a | 1 | abfded5e | YES | ['139739219/133851/[50.204,50.338]'] | [(1743, 239659)] | P1 YES (saves on hold with P1 1) P2 YES P3 YES (variant payload YES) P4 YES P5 YES P6 YES | 0 | []/[] | []
+SERIES STOP (d)(3): a frame >= 100 ms on a write window in a v1 tag

@@ -1,0 +1,17 @@
+prereg: f27c_seal.md  26941 bytes  sha256 af4c1d235e4c0795  mtime 2026-10-08T23:27:31  mtime-ctime +1282.846 s
+pre_run: host 408 processes, top by CPU: <app> 23146s, <app> 8016s, <app> 4379s, <app> 3987s, <app> 2711s, <app> 1892s
+pre_run: GPU 1.0 % busy, 21.4 W, 2083 MiB used, SM 1537.0 MHz, 20 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f27c\cpuclk.py is not there
+--- attempt 1: launching
+12.8 s  LevelDocument Loaded: rotating_level_day_and_night
+14.4 s  Level has started: rotating_level_day_and_night
+26.0 s  scene stable at frame 278 (90 frames with draws >= 300)
+holding the run for 120 s
+hold end: ft_total 7413, ft_tail 301 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 4.0, 'close_wait_s': 40}
+hold_gpu: median 59.0 % busy over 235 rows (2026/10/08 23:37:18.561 .. 2026/10/08 23:39:18.740), a row, not a guard
+copied C:\kyty\f287\f27c\log_f27_v1a.txt
+copied C:\kyty\f287\f27c\stdout_f27_v1a.txt
+
+attempt 1  ok               document=12.8 s started=14.4 s stable=26.0 s 
+VERDICT: rotating_level_day_and_night in 26.0 s - PASS (acceptance <= 90 s)

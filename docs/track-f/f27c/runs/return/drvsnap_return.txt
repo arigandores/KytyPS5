@@ -1,0 +1,1 @@
+DRVSNAP RETURNED restored 3 moved 0 kept_user 0 kept_new 0 kept_held 0 not_copied 0 failed 0 windows 3

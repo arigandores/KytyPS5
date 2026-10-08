@@ -1,0 +1,11 @@
+tag f27_v0b arm KYTY_S_PCW=0 binary abfded5ea629ea70 admitted YES []
+  stable frame 312 t_s 26.810 hold_s 120.2 hold log [26.810, 147.010] hold frames 7078 hold_from 2026/10/08 23:31:12.536 hold_to 2026/10/08 23:33:12.740 hold_exit None
+  save line 412320 bytes 139700464 us 147201 window [52.083, 52.230] last_n 1784 on_hold True savewin True at_exit False P1 True frames [1776, 1785] ge100 [(1785, 413734)] (savewin [(1785, 413734)])
+  save line 968439 bytes 140113732 us 145720 window [146.907, 147.053] last_n 7392 on_hold True savewin True at_exit True P1 True frames [7384, 7392] ge100 [] (savewin [])
+  frames >= 100 ms on windows (letter) [(1785, 413734)]; savewin variant [(1785, 413734)]
+  interval rows of those frames (spirv / skipped / held): {'1785': {'spirv': 0, 'skipped': 9, 'held': 0}}
+  hold frames >= 100 ms [(1785, 413734)]; >= 1 s []; mean dt 16981.7 us
+  P2 pcw lines [0]; P3 ns ['f27_v0b'] loaded [(127690297, '_PipelineCache\\PPSA21564.8dc96102b512a8cd.bin')] salt PPSA21564.8dc96102b512a8cd.bin parts {'namespace': True, 'file': True, 'n_eq_size': False, 'n_eq_payload': True, 'invalidating': False}; P4 precache saved lines 0; P5 labels EQUAL ShaderCache_PPSA21564,ShaderSeeds_PPSA21564,_PipelineCache lines 3823 sha 245f71b83500483d; _SaveData row labels EQUAL _SaveData lines 2 sha a2d427850e06c651
+  P6 gpu samples 301 in hold 235 gap median 0.512 max 0.516 s; idle windows run 1 on hold []; coincide strict [] loose []
+  counts {'error': 0, 'unhandled': 0, 'skipped_draw': 2963, 'held': 64, 'gpuhangabort': 0, 'level_started': 1}; tempo TEMPO PASS form harness mean_dt_ms 18.38 fps 54.42 frames 7233 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after the level line 7233, span 132.9 s)
+  MEMBERS f27_v0b P1 YES (saves on hold with P1 2) P2 YES P3 YES (variant payload YES) P4 YES P5 YES P6 YES

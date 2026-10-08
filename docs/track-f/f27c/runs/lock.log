@@ -4,3 +4,9 @@ lock taken base 2026-10-08T21:12:42Z
 lock released base 2026-10-08T21:15:07Z
 lock taken f27_v0 2026-10-08T21:15:51Z
 lock released f27_v0 2026-10-08T21:20:44Z
+lock taken f27_v0b 2026-10-08T21:28:36Z
+lock released f27_v0b 2026-10-08T21:33:24Z
+lock taken f27_v1a 2026-10-08T21:34:44Z
+lock released f27_v1a 2026-10-08T21:39:31Z
+lock taken return 2026-10-08T21:40:21Z
+lock released return 2026-10-08T21:42:23Z

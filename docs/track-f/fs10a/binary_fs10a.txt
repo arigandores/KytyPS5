@@ -1,0 +1,17 @@
+FS10a (HPP-684): shipping binary FS10 - worktree C:/kyty/f287/fs10a/wt HEAD dc5d47127037ec0a3c914bedf4dce01d660d2bcf
+sha256 abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe build/install/kyty_emulator.exe (24846336 bytes)
+copy C:/kyty/f287/bin/kyty_emulator_abfded5e.exe
+version strings KytyPS5-2026-09-15-6a2987a-1905-gdc5d4712
+count 'KYTY_FIX_B36' 1
+count 'KYTY_FIX_B13' 1
+count 'KYTY_DIAG_B32' 0
+count 'LogAsync: mode=' 2
+count 'KYTY_TEST_LOGSTALL' 2
+count 'KYTY_LONGFRAME' 1
+count '9177b4267de1fb8bac7d1113afd8733210addfac' 1
+kytyGitVersion_base.h: #define KYTY_GIT_REVISION "11164d7258899f9450f2b06149197e94f57d4b21"
+kytyGitVersion_base.h: #define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"
+kytyGitVersion_fs10.h: #define KYTY_GIT_REVISION "dc5d47127037ec0a3c914bedf4dce01d660d2bcf"
+kytyGitVersion_fs10.h: #define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"
+sha256 81475bdb0ed3eda94c0ee79782fcf29a505b852bfe87ffa519acc19e9f88ac77 build/log_async_tests.exe
+sha256 4e5dc06607b7bd0644f6c0e9796aae04442aa8247628bbda6a5cf29cb67db3cf build/shader_cfg_tests.exe

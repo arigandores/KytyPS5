@@ -1,0 +1,12 @@
+track F link FS10a (HPP-684): KYTY_FIX_B36 default 0 -> 1 (ROADMAP s122 item 624(e)(1))
+
+InitAsync reads KYTY_FIX_B36 in the form of FS4a 17adaf80: unset or "" = ON, 0/false/off/no = OFF, any other value as
+EnvValueOn; still one reading per process. The "LogAsync: mode=..." lines (also "mode=0 requested=1 reason=direction"),
+the stand KYTY_TEST_LOGSTALL and the measure KYTY_LONGFRAME are unchanged. The test seq0_unset of log_async_tests follows
+the default: unset is checked as seq0_1 (mode=1 line, full_waits=0, the file without the LogAsync: lines = the expected
+bytes); seq0_0 (=0) is unchanged and stays the byte-for-byte member against the reference executable of F25k.
+
+Shipping binary FS10: clean worktree of FS9 11164d72 + cherry-pick of a8ee1b05, b4ee756a, 0e4b2f5a (F25k), 5064c5bb
+(F25k2) + this commit; the KYTY_DIAG_B32 code is not in it. Not installed; no game run (WIP until FS10c).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

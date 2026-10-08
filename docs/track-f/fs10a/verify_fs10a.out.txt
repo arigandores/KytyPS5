@@ -1,0 +1,18 @@
+FS10 HEAD dc5d47127037ec0a3c914bedf4dce01d660d2bcf base 11164d7258899f9450f2b06149197e94f57d4b21
+V1 a8ee1b05 -> a42f50b1: changed lines 1073 / 1073, equal True; git cherry + a8ee1b05c8feeb8b42af039a90af83cb1834192c
+V1 b4ee756a -> 7bc87bc8: changed lines 14 / 14, equal True; git cherry - b4ee756a8c05a965ef28034723f18c5e4cb710a8
+V1 0e4b2f5a -> 64a1fa40: changed lines 28 / 28, equal True; git cherry - 0e4b2f5acd75f969557d8c9b3f920b5dfb5e13d2
+V1 5064c5bb -> 1a7eaff8: changed lines 355 / 355, equal True; git cherry - 5064c5bbfd08107ea2fbe49836cf718efbc0ed2d
+V1 7f34b1e2 -> dc5d4712: changed lines 15 / 15, equal True; git cherry - 7f34b1e2bcc1edf8b7003df7ebaacc21ac5049d8
+V1 negative controls: 5064c5bb vs a42f50b1 equal False (want False); vs its own worktree commit with one line spoiled equal False (want False)
+V2 files of diff 11164d72..FS10: CMakeLists.txt src/common/hostException.cpp src/common/logging/log.cpp src/common/logging/log.h src/common/parallelCopy.cpp src/graphics/host_gpu/pageManager.cpp src/graphics/presentation/videoOut.cpp tests/LogAsyncTests.cpp
+V2 files of the five source commits: CMakeLists.txt src/common/hostException.cpp src/common/logging/log.cpp src/common/logging/log.h src/common/parallelCopy.cpp src/graphics/host_gpu/pageManager.cpp src/graphics/presentation/videoOut.cpp tests/LogAsyncTests.cpp
+V2 file sets equal True; signed changed lines of the diff = sum of the five commits True (lines 1403); negative control without FS10a equal False (want False)
+V3 DEFAULT-ON base (14): KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 DEFAULT-ON FS10 (15): KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 FS10 = base + KYTY_FIX_B36 only: True; negative control at 1a7eaff8 (before FS10a): difference empty, member there False (want False)
+V4 src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp blob base e1626ad67f22 FS10 e1626ad67f22 equal True; ParseMode unset/"" -> 3: True
+V5 paths of the diff under src/graphics/shader/: none
+V6 added lines naming KYTY_DIAG_B32 code: 0 (comments 1); src/common/diagB32.h in base False, in FS10 False
+    // The thread name for the KYTY_DIAG_B32 thread rows (looked up as diagB32.cpp does for DiagB32M5).
+ALL OK

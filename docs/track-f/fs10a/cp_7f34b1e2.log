@@ -1,0 +1,9 @@
+--- cherry-pick 7f34b1e2
+Auto-merging src/common/logging/log.cpp
+[detached HEAD dc5d4712] track F link FS10a (HPP-684): KYTY_FIX_B36 default 0 -> 1 (ROADMAP s122 item 624(e)(1))
+ Date: Thu Oct 8 05:19:59 2026 +0200
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+dc5d47127037ec0a3c914bedf4dce01d660d2bcf 1a7eaff826ea846048b3260f78bce7f6068b9860 track F link FS10a (HPP-684): KYTY_FIX_B36 default 0 -> 1 (ROADMAP s122 item 6
+--- git status --short (0 = clean)
+0
+CP OK

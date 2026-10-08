@@ -1,0 +1,9 @@
+--- cherry-pick b4ee756a
+Auto-merging src/common/logging/log.cpp
+[detached HEAD 7bc87bc8] track F link F25k (HPP-678): KYTY_FIX_B36 - t_in_queue by a scope guard (an exception of push_back under the queue lock no longer leaves the flag set)
+ Date: Wed Oct 7 17:52:11 2026 +0200
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+7bc87bc8511cc1e45f0f13f04390f3e5be2c4cc6 a42f50b15866c207d25dbaf2e6e390e5cd128fb5 track F link F25k (HPP-678): KYTY_FIX_B36 - t_in_queue by a scope guard (an ex
+--- git status --short (0 = clean)
+0
+CP OK

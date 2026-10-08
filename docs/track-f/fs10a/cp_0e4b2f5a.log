@@ -1,0 +1,9 @@
+--- cherry-pick 0e4b2f5a
+Auto-merging src/common/logging/log.cpp
+[detached HEAD 64a1fa40] track F link F25k (HPP-678): KYTY_TEST_LOGSTALL - the TestLogStall line names the thread that slept (tid, FrameStats role)
+ Date: Wed Oct 7 17:55:11 2026 +0200
+ 2 files changed, 23 insertions(+), 5 deletions(-)
+64a1fa402d3a41450d8baf06c5b567fae110ff57 7bc87bc8511cc1e45f0f13f04390f3e5be2c4cc6 track F link F25k (HPP-678): KYTY_TEST_LOGSTALL - the TestLogStall line names 
+--- git status --short (0 = clean)
+0
+CP OK

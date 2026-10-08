@@ -1,0 +1,3 @@
+patched src/common/logging/log.cpp lf
+patched tests/LogAsyncTests.cpp lf
+ok

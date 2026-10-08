@@ -1,0 +1,28 @@
+=== ByRegion: code 57 lines, model 55 lines, diff lines 17
+--- code:726e751e
++++ model:726e751e
+@@ -8,4 +8,3 @@
+ const auto index = cursor / TRACKER_REGION_SIZE;
+-const auto bytes =
+-std::min(scan_end - cursor, TRACKER_REGION_SIZE - cursor % TRACKER_REGION_SIZE);
++const auto bytes = std::min(scan_end - cursor, TRACKER_REGION_SIZE - cursor % TRACKER_REGION_SIZE);
+ if (b12_pass && region_stamps[index].walked_pass == bda_pass) {
+@@ -31,4 +30,2 @@
+ if (bit_clear && region_stamps[index].generation == stamp_generation) {
+-if (region_stamps[index].stamp != tracker.RegionWriteStamp(index) &&
+-!BdaRegionWritePending(index)) {
+ if (b12_pass) {
+@@ -52,2 +49,3 @@
+ if (prev.stamp == locked) {
++if (DirtyRangesTouchBuffers()) {
+ } else if (prev.stamp == stamp) {
+=== BeginBdaPass: code 2 lines, model 2 lines, diff lines 0
+=== EndBdaPass(first stmt): code 1 lines, model 1 lines, diff lines 0
+=== PrepareBda(pass part): code 10 lines, model 8 lines, diff lines 6
+--- code:726e751e
++++ model:726e751e
+@@ -8,3 +8 @@
+ cache.EndBdaPass();
+-1);
+-if (lap_t != 0) {
+TOTAL DIFF LINES 23

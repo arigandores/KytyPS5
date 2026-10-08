@@ -1,0 +1,1 @@
+pairs 32 fields 8 DIFF 0

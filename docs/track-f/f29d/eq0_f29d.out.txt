@@ -1,0 +1,13 @@
+== code ByRegion: old 83 lines, new-minus-b12 83 lines, diff 0
+== code PrepareBda: old 70 lines, new-minus-b12 70 lines, diff 0
+== model ByRegion: old 44 lines, new-minus-b12 44 lines, diff 0
+== model Prepare: old 31 lines, new-minus-b12 38 lines, diff 9
+   -mapped_ranges.ForEach([this](uint64_t start, uint64_t end) { cache.InRange(start, end - start); });
+   +mapped_ranges.ForEach([this](uint64_t start, uint64_t end) {
+   +cache.InRange(start, end - start);
+   +if (hook != nullptr) {
+   +auto* fire = hook;
+   +hook       = nullptr;
+   +fire(hook_arg);
+   +}
+   +});

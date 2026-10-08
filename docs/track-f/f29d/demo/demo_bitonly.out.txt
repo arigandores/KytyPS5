@@ -1,0 +1,3 @@
+demo_clean rc=0 fix_b12=1 hook_fired=10000 lskip=10000 late_lskips=0 bit_skips=10000 region_skips=20000 region_scans=0 rewalk=0 bit1=10000
+demo_l2a rc=0 fix_b12=1 hook_fired=10000 lskip=10000 late_lskips=0 bit_skips=20000 region_skips=20000 region_scans=0 rewalk=0 bit1=0
+restored, clean stand rebuilt rc 0

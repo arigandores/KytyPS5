@@ -1,0 +1,20 @@
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3530
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3546
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3563
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3566
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3577
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3600
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3611
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3618
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3621
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3448
+BAD  726e751e:src/graphics/host_gpu/renderer/renderContext.cpp:385
+BAD  726e751e:src/graphics/host_gpu/renderer/renderContext.cpp:391
+BAD  726e751e:src/graphics/host_gpu/regionDefinitions.h:35
+BAD  726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.h:390
+BAD  726e751e:tests/B12BdaStampStand.cpp:229
+BAD  726e751e:tests/B12BdaStampStand.cpp:232
+BAD  726e751e:tests/B12BdaStampStand.cpp:535
+BAD  726e751e:src/graphics/presentation/videoOut.cpp:2724
+BAD  726e751e:src/graphics/presentation/videoOut.cpp:3567
+REFS 19, FAILED 19

@@ -1,0 +1,15 @@
+anchors 10 of 10 OK, file sha256 2454ecbad165477a
+r1_rewalk_writes_witness: caught | MEMBERS FAILED: x1_B12-10_upper_b0; x1_B12-10_upper_b1; x1_B12-10_lower_b0; x1_B12-10_lower_b1
+r2_rewalk_takes_bit: caught | MEMBERS FAILED: x1_B12-10_upper_b1; x1_B12-10_lower_b1
+r3a_scan_no_walked: caught | MEMBERS FAILED: B12-1 b0_n0_f0; B12-12 hole b0_n0_f0; B12-1 b0_n0_f1; B12-12 hole b0_n0_f1; B12-1 b0_n1_f0; B12-12 hole b0_n1_f0; B12-1 b0_n1_f1; B12-12 hole b0_n1_f1; B12-1 b0_n2_f0; B12-12 hole b0_n2_f0; B12-1 b0_n2_f1; B12-12 hole b0_n2_f1; B12-1 b1_n0_f0; B12-12 hole b1_n0_f0; B12-1 b1_n0_f1; B12-12 hole b1_n0_f1; B12-1 b1_n1_f0; B12-12 hole b1_n1_f0; B12-1 b1_n1_f1; B12-12 hole b1_n1_f1; B12-1 b1_n2_f0; B12-12 hole b1_n2_f0; B12-1 b1_n2_f1; B12-12 hole b1_n2_f1; B12-7; x1_B12-10_upper_b0; x1_B12-10_upper_b1; x1_B12-10_lower_b0; x1_B12-10_lower_b1; x1_B12-11_b0; x1_B12-11_b1
+r3b_walked_before_assign: caught | MEMBERS FAILED: B12-1 b0_n0_f0; B12-12 hole b0_n0_f0; B12-1 b0_n0_f1; B12-12 hole b0_n0_f1; B12-1 b0_n1_f0; B12-12 hole b0_n1_f0; B12-1 b0_n1_f1; B12-12 hole b0_n1_f1; B12-1 b0_n2_f0; B12-12 hole b0_n2_f0; B12-1 b0_n2_f1; B12-12 hole b0_n2_f1; B12-1 b1_n0_f0; B12-12 hole b1_n0_f0; B12-1 b1_n0_f1; B12-12 hole b1_n0_f1; B12-1 b1_n1_f0; B12-12 hole b1_n1_f0; B12-1 b1_n1_f1; B12-12 hole b1_n1_f1; B12-1 b1_n2_f0; B12-12 hole b1_n2_f0; B12-1 b1_n2_f1; B12-12 hole b1_n2_f1; B12-7; x1_B12-10_upper_b0; x1_B12-10_upper_b1; x1_B12-10_lower_b0; x1_B12-10_lower_b1; x1_B12-11_b0; x1_B12-11_b1
+r3c_skip_sets_walked: caught | MEMBERS FAILED: x1_B12-11_b0; x1_B12-11_b1
+l1_late_writes_witness: caught | MEMBERS FAILED: x1_B12-10n_b0; x1_B12-10n_b1
+l2a_late_takes_bit_at_check: NOT CAUGHT | MEMBERS ALL OK
+l2b_late_takes_bit_on_collect: caught | MEMBERS FAILED: x1_B12-10n_b1
+l3a_late_skips_without_stamp: caught | MEMBERS FAILED: x1_B12-9n_b0 hlost1 (642(v))
+l3b_late_skips_always: caught | MEMBERS FAILED: x1_B12-9n_b0 hlost1 (642(v)); x1_B12-9n_b1 hlost1 (642(v))
+l4a_bit_skip_no_mark: caught | MEMBERS FAILED: x1_B12-10n_b1
+l4b_witness_skip_no_mark: caught | MEMBERS FAILED: x1_B12-10n_b0
+x1_late_without_generation: NOT CAUGHT | MEMBERS ALL OK
+restored, clean stand rebuilt rc 0

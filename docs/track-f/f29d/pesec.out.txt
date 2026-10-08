@@ -1,0 +1,13 @@
+sections [('.text', '0x400', 18313216), ('.rdata', '0x1177400', 5012992), ('.data', '0x163f200', 538112), ('.pdata', '0x16c2800', 460800), ('.retplne', '0x1733000', 512), ('.tls', '0x1733200', 479744), ('.rsrc', '0x17a8400', 512), ('.reloc', '0x17a8600', 42496)]
+runs after normalization 450 per section {'hdr': 1, '.rdata': 4, '.data': 445}
+anonymous-namespace hash runs (?A0x...) 442
+other runs outside the PE header 7
+  ('0x1302fbb', '.rdata', b'5-2026-09-15-6a2987a-1908-g673b78', b'5-2026-09-15-6a2987a-1907-g61be23')
+  ('0x1302fbf', '.rdata', b'26-09-15-6a2987a-1908-g673b780a\x000.3.0\x00{', b'26-09-15-6a2987a-1907-g61be23e1\x000.3.0\x00{')
+  ('0x14ce3a0', '.rdata', b'\x00\x00\x00\x00@\x00\x00\x00P\xefL\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00`\x1f\xc8j\x00\x00\x00\x00\x02\x00', b'\x00\x00\x00\x00@\x00\x00\x00P\xefL\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x1f#\xc8j\x00\x00\x00\x00\x02\x00')
+  ('0x14ce3bc', '.rdata', b'\x00\x00\x00\x00\x02\x00\x00\x00C\x00\x00\x00\xb8\xefL\x01\xb8\xe3L\x01RSDSOQ~\r5N\x808LLD PDB.', b'\x00\x00\x00\x00\x02\x00\x00\x00C\x00\x00\x00\xb8\xefL\x01\xb8\xe3L\x01RSDSemqVx\xba=\xe7LLD PDB.')
+  ('0x167a6f5', '.data', b'compiler@Graphics@Libs@@@std@@\x00\x00\x00\x00\x00\x80', b'ompiler@Graphics@Libs@@@std@@\x00\x00\x00\x00\x00\x00\x80')
+  ('0x167a6fa', '.data', b'ler@Graphics@Libs@@@std@@\x00\x00\x00\x00\x00\x80\xc2\x18', b'er@Graphics@Libs@@@std@@\x00\x00\x00\x00\x00\x00\x80\xc2\x18')
+  ('0x167a751', '.data', b'ecompiler@Graphics@Libs@@\x00\x00\x00\x00\x00\x00\x00\x00', b'compiler@Graphics@Libs@@\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+sizes 24849408 24849408
+differing runs 589 bytes 1908

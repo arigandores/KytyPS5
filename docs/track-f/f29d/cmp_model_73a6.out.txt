@@ -1,0 +1,28 @@
+=== ByRegion: code 31 lines, model 29 lines, diff lines 16
+--- code:73a6e411
++++ model:73a6e411
+@@ -7,8 +7,5 @@
+ const auto index = cursor / TRACKER_REGION_SIZE;
+-const auto bytes =
+-std::min(scan_end - cursor, TRACKER_REGION_SIZE - cursor % TRACKER_REGION_SIZE);
++const auto bytes = std::min(scan_end - cursor, TRACKER_REGION_SIZE - cursor % TRACKER_REGION_SIZE);
+ const bool bit_clear = use_bits && !BdaTakeRegionWrite(index);
+ if (bit_clear && region_stamps[index].generation == stamp_generation) {
+-if (region_stamps[index].stamp != tracker.RegionWriteStamp(index) &&
+-!BdaRegionWritePending(index)) {
+ cursor += bytes;
+@@ -26,2 +23,3 @@
+ if (prev.stamp == locked) {
++if (DirtyRangesTouchBuffers()) {
+ } else if (prev.stamp == stamp) {
+=== PrepareBda(pass part): code 5 lines, model 1 lines, diff lines 9
+--- code:73a6e411
++++ model:73a6e411
+@@ -1,5 +1 @@
+-mapped_ranges.ForEach([this](uint64_t start, uint64_t end) {
+-cache.InRange(start, end - start);
+-});
+-1);
+-if (lap_t != 0) {
++mapped_ranges.ForEach([this](uint64_t start, uint64_t end) { cache.InRange(start, end - start); });
+TOTAL DIFF LINES 25

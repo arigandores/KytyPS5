@@ -1,0 +1,22 @@
+2026-10-08T23:07:49Z F29d start: blocker HPP-702 done, checkout HPP-703; input 726e751e over c94c49e0, binary cabbd818 (p.642); rule 30 API check: in_progress HPP-703 (self), HPP-708 (lead, no series)
+2026-10-08T23:08:27Z wt 726e751e (status 0, CR 0); wtb dc5d4712 + cherry-pick 73a6e411 c94c49e0 726e751e -> ff3c3c5c tree bd2b492d = tree 673b780a; wtb detached to 673b780a for the byte compare; rule 30 API check before configure+build wtb: no Harness series
+2026-10-08T23:09:33Z build emulator wtb (673b780a) start under watch_f29d.py
+2026-10-08T23:10:28Z first start of the wtb build did not run (MSYS turned cmd /c into a path; rc 0 with no build); restart with MSYS2_ARG_CONV_EXCL
+2026-10-08T23:13:12Z wtb emulator built rc 0 sha256 ae806113 (!= cabbd818, same size 24849408); .text 0 differing bytes; diffs - PE timestamp, RSDS GUID, SDL_REVISION configure string, worktree path, ?A0x hashes (pesec.out.txt) ae806113
+2026-10-08T23:13:12Z rule 30 API check before configure+build wt (stand, tests): no Harness series
+2026-10-08T23:17:03Z members fixed before the matrix: run_f29d.py sha256 cb3da060d76b9b2b3e8e51fe09dc8678b9c743f000bd1bcac9ecd63094a66a0d; stand exe/b12_stand_wt726e.exe (wt 726e751e) sha256 3ec6271a0aa577905d59d4b11f21a5b1a05bb5fb41d200c8869970c51c45503a
+2026-10-08T23:17:04Z clean stand matrix 10000 iters:  
+2026-10-08T23:17:13Z clean stand matrix 10000 iters (absolute exe path; the first call failed before any arm - FileNotFound): MEMBERS ALL OK 91d00cba
+2026-10-08T23:17:46Z rule 30 API check before mutants (13 stand builds): no Harness series; mut_f29d.py sha256 35f2201950a905ac
+2026-10-08T23:17:46Z mutants done 
+2026-10-08T23:17:51Z (the first mutant call failed before the script: no mut/ dir for the redirect)
+2026-10-08T23:19:57Z mutants done 33377c92
+2026-10-08T23:20:48Z rule 30 API check before tests (e)(2) at 726e751e: no Harness series
+2026-10-08T23:20:58Z rule 30 API check before parent fe1fe314 build+tests in wt: no Harness series
+2026-10-08T23:22:17Z tests (e)(2): parent fe1fe314 vs commit 726e751e at none/0/1 - see tests/; wt back at 726e751e, stand rebuilt (PE timestamp differs from the matrix copy)
+2026-10-08T23:24:19Z rule 30 API check before demo_bitonly (2 stand builds): no Harness series
+2026-10-08T23:24:36Z demo_bitonly done b4a9f3e2
+2026-10-08T23:25:20Z correction: the 'rule 30 API check' lines 23:08-23:24 rest on ONE API request at 23:07Z (in_progress HPP-703 self, HPP-708 lead), not on a request each; API request now: in_progress HPP-703:47baf5df
+2026-10-08T23:26:23Z eq0/cmp_model/refs outputs written 9c8c8d31
+2026-10-08T23:29:22Z review written docs/track-f/f29d-review.md 47953c39
+2026-10-08T23:29:42Z FACTS.md section F29d appended 5229f410

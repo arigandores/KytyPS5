@@ -1,0 +1,7 @@
+ednn122 save line 418364 bytes 87994470 us 86572 interval_of_n 1826 window [40.521, 40.608] frames 1820..1826 max (1826, 118647) ge100 [(1826, 118647)]
+ednn122 save line 884452 bytes 87994470 us 78595 interval_of_n exit window [134.751, 134.830] frames 7408..7412 max (7411, 18123) ge100 []
+s13_k_09 save line 421155 bytes 32875354 us 41544 interval_of_n 1767 window [37.097, 37.139] frames 1765..1768 max (1767, 17002) ge100 []
+s15_k_09 save line 412336 bytes 32851276 us 42356 interval_of_n 1836 window [38.784, 38.826] frames 1834..1838 max (1835, 16902) ge100 []
+s18_c09 save line 968705 bytes 127690297 us 129582 interval_of_n 451 window [21.033, 21.163] frames 445..452 max (451, 47981) ge100 []
+s18_c09 save line 1169177 bytes 127690297 us 160926 interval_of_n 1889 window [46.095, 46.256] frames 1883..1891 max (1883, 103947) ge100 [(1883, 103947)]
+s18_c09 save line 2961529 bytes 127690297 us 122431 interval_of_n exit window [350.722, 350.844] frames 19488..19494 max (19489, 34107) ge100 []

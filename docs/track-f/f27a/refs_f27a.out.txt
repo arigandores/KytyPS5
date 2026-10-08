@@ -1,0 +1,15 @@
+R1 25f3886:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4655  hits=1  +1 ok  | // Called with m_mutex held right after a new pipeline was created. The process is often ended
+R2 25f3886:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4658  hits=1  +1 ok  | void PipelineCache::MaybeWriteDriverCache() {
+R3 25f3886:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4806  hits=1  +1 ok  | PipelineCacheLog("Vulkan pipeline cache: saved {} bytes to {} ({} us)", payload.size(),
+R4 25f3886:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5394  hits=1  +1 ok  | LOGF("AvTrace: pipeline gfx vs=%" PRIu64 " ps=%" PRIu64 " us=%" PRIu64 " total=%" PRIu64 "\n",
+R5 25f3886:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5615  hits=1  +1 ok  | PipeLockHolder    holder(m_lock_holder, 3);
+R6 25f3886:src/graphics/host_gpu/renderer/commandScheduler.cpp:651  hits=1  +1 ok  | if (wait_us >= 50000) {
+R7 dc5d4712:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:284  hits=1  +1 ok  | const char* value = std::getenv("KYTY_S_PCW");
+R8 dc5d4712:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4971  hits=1  +1 ok  | // S-pcw: the same 20 s period; the write goes to the writer thread (one flag: requests merge).
+R8b 25f3886:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5357  hits=1  +1 ok  | " total=%" PRIu64 " async wait_us=%" PRIu64 " pending=%u\n",
+R9 dc5d4712:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6408  hits=1  +1 ok  | const bool saved = WriteDriverCache(forced ? " forced" : "");
+R10 dc5d4712:src/emulator.cpp:210  hits=1  +1 ok  | SetCacheTestEnvironment("KYTY_PIPELINE_CACHE", "0");
+R11 dc5d4712:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4883  hits=1  +1 ok  | m_driver_cache_path = std::filesystem::path("_PipelineCache") /
+R12 dc5d4712:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6204  hits=1  +1 ok  | const char* value = std::getenv("KYTY_PIPELINE_PRECACHE");
+R13 dc5d4712:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6212  hits=1  +1 ok  | void PipelineCache::RecordGraphicsRecipe(const GraphicsPipelineKey&   key,
+ALL OK

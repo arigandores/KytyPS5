@@ -1,0 +1,23 @@
+ednn122 hold 7104 frames 120.1 s; >=100ms on hold [(1826, 118647, 418421)] top3 [(1826, 118647, 418421), (4134, 37479, 611045), (2817, 36910, 501153)] transl hold/all 0 12 skipped hold 0 held flips hold 0
+   save {'line': 232423, 'interval_of_n': 217, 'dt_us': 30474, 'on_hold': False, 'text': 'PipelinePrecache: saved 980 recipes (9727570 bytes)'}
+   save {'line': 418363, 'interval_of_n': 1826, 'dt_us': 118647, 'on_hold': True, 'text': 'PipelinePrecache: saved 1010 recipes (10082476 bytes)'}
+   save {'line': 418364, 'interval_of_n': 1826, 'dt_us': 118647, 'on_hold': True, 'text': 'Vulkan pipeline cache: saved 87994470 bytes to _PipelineCache\\PPSA21564.bin (86572 us)'}
+   save {'line': 884451, 'interval_of_n': 7413, 'dt_us': None, 'on_hold': True, 'text': 'PipelinePrecache: saved 1013 recipes (10118105 bytes)'}
+   save {'line': 884452, 'interval_of_n': 7413, 'dt_us': None, 'on_hold': True, 'text': 'Vulkan pipeline cache: saved 87994470 bytes to _PipelineCache\\PPSA21564.bin (78595 us)'}
+dnn122 hold 17797 frames 300.3 s; >=100ms on hold [] top3 [(12858, 65854, 1304720), (10618, 34734, 1118010), (3438, 34397, 519374)] transl hold/all 0 0 skipped hold 0 held flips hold 0
+s13_k_09 hold 10812 frames 180.4 s; >=100ms on hold [] top3 [(1761, 48526, 420714), (1330, 33581, 370386), (8427, 33575, 1001503)] transl hold/all 5 17 skipped hold 0 held flips hold 0
+   save {'line': 233180, 'interval_of_n': 212, 'dt_us': 17814, 'on_hold': False, 'text': 'PipelinePrecache: saved 1001 recipes (10400042 bytes) (12244 us)'}
+   save {'line': 420927, 'interval_of_n': 1764, 'dt_us': 16848, 'on_hold': True, 'text': 'PipelinePrecache: saved 1036 recipes (10813383 bytes) (13449 us)'}
+   save {'line': 421155, 'interval_of_n': 1767, 'dt_us': 17002, 'on_hold': True, 'text': 'Vulkan pipeline cache: saved 32875354 bytes to _PipelineCache\\PPSA21564.bin (41544 us)'}
+s13_u_09 hold 6967 frames 120.5 s; >=100ms on hold [] top3 [(6834, 36684, 812605), (5134, 36506, 669192), (356, 36369, 256498)] transl hold/all 0 0 skipped hold 0 held flips hold 0
+s15_k_09 hold 17996 frames 300.2 s; >=100ms on hold [] top3 [(12860, 66728, 1331157), (607, 33944, 302752), (18033, 33868, 1762238)] transl hold/all 0 11 skipped hold 0 held flips hold 0
+   save {'line': 236718, 'interval_of_n': 240, 'dt_us': 226683, 'on_hold': False, 'text': 'PipelinePrecache: saved 1009 recipes (10493953 bytes) (12049 us)'}
+   save {'line': 412128, 'interval_of_n': 1834, 'dt_us': 16378, 'on_hold': True, 'text': 'PipelinePrecache: saved 1039 recipes (10848691 bytes) (15009 us)'}
+   save {'line': 412336, 'interval_of_n': 1836, 'dt_us': 16649, 'on_hold': True, 'text': 'Vulkan pipeline cache: saved 32851276 bytes to _PipelineCache\\PPSA21564.bin (42356 us)'}
+s15_u_09 hold 7060 frames 118.4 s; >=100ms on hold [] top3 [(412, 36703, 263320), (2026, 35658, 406660), (1345, 35622, 345390)] transl hold/all 0 0 skipped hold 0 held flips hold 0
+s18_c09 hold 19068 frames 330.1 s; >=100ms on hold [(1883, 103947, 1168587)] top3 [(1883, 103947, 1168587), (456, 83442, 980864), (556, 82768, 1007898)] transl hold/all 21 298 skipped hold 2 held flips hold 2
+   save {'line': 968705, 'interval_of_n': 451, 'dt_us': 47981, 'on_hold': True, 'text': 'Vulkan pipeline cache: saved 127690297 bytes to _PipelineCache\\PPSA21564.bin (129582 us)'}
+   save {'line': 1162310, 'interval_of_n': 1883, 'dt_us': 103947, 'on_hold': True, 'text': 'PipelinePrecache: saved 267 recipes (2153072 bytes) (3755 us)'}
+   save {'line': 1169177, 'interval_of_n': 1889, 'dt_us': 33400, 'on_hold': True, 'text': 'Vulkan pipeline cache: saved 127690297 bytes to _PipelineCache\\PPSA21564.bin (160926 us)'}
+   save {'line': 2961528, 'interval_of_n': 19495, 'dt_us': None, 'on_hold': True, 'text': 'PipelinePrecache: saved 271 recipes (2200508 bytes)'}
+   save {'line': 2961529, 'interval_of_n': 19495, 'dt_us': None, 'on_hold': True, 'text': 'Vulkan pipeline cache: saved 127690297 bytes to _PipelineCache\\PPSA21564.bin (122431 us)'}

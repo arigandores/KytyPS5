@@ -1,0 +1,28 @@
+n 1825 dt_us 16635 lines 82 translations(spirv) 0 decode hashes {} sum elapsed_ms 0
+  ts first/last b'[23][00:00:40.598] libkernel' b'[42][00:00:40.608] libkernel'
+n 1826 dt_us 118647 lines 66 translations(spirv) 0 decode hashes {} sum elapsed_ms 0
+  ts first/last b'[23][00:00:40.726] libkernel' b'[23][00:00:40.726] libkernel'
+   418363 PipelinePrecache: saved 1010 recipes (10082476 bytes)
+   418364 Vulkan pipeline cache: saved 87994470 bytes to _PipelineCache\PPSA21564.bin (86572 us)
+   418365 PriorityStall: tick=50347 unsub=1 us=107143 site=+0x8deb61
+n 1827 dt_us 30802 lines 132 translations(spirv) 0 decode hashes {} sum elapsed_ms 0
+  ts first/last b'[23][00:00:40.734] libkernel' b'[23][00:00:40.760] libkernel'
+n 223 dt_us 15732 lines 78 translations(spirv) 0 decode hashes {} sum elapsed_ms 0
+  ts first/last None None
+n 224 dt_us 119744 lines 436 translations(spirv) 0 decode hashes {} sum elapsed_ms 0
+  ts first/last b'[42][00:00:11.332] libkernel' b'[23][00:00:11.404] libkernel'
+n 225 dt_us 32316 lines 204 translations(spirv) 0 decode hashes {} sum elapsed_ms 0
+  ts first/last b'[42][00:00:11.419] libkernel' b'[42][00:00:11.445] libkernel'
+n 1882 dt_us 28557 lines 1846 translations(spirv) 1 decode hashes {'0x9473e4ae8c5b0c96': 1} sum elapsed_ms 4
+  ts first/last b'[23][00:00:46.016] libkernel' b'[42][00:00:46.025] libkernel'
+n 1883 dt_us 103947 lines 17227 translations(spirv) 7 decode hashes {'0x4aab2ea48e75a85f': 3, '0x148a4a385b044d0e': 1, '0xf6d0ec662d8faadc': 1, '0xcf1834bb2d5ac83d': 1, '0xc68f1c9a103b140c': 1} sum elapsed_ms 36
+  ts first/last b'[23][00:00:46.136] libkernel' b'[23][00:00:46.136] libkernel'
+   1162310 PipelinePrecache: saved 267 recipes (2153072 bytes) (3755 us)
+   1168509 AsyncPipelines: skipped draw DrawIndex frame=1885 vs=0x806af1ed2bb13852 ps=0xc68f1c9a103b140c pending=1 total_skipped=161
+   1168511 PriorityStall: tick=51214 unsub=1 us=68232 site=+0x948d31
+   1168586 AsyncPipelines: flip 1883 held (incomplete frame)
+n 1884 dt_us 17589 lines 83 translations(spirv) 0 decode hashes {} sum elapsed_ms 0
+  ts first/last b'[42][00:00:46.147] libkernel' b'[42][00:00:46.164] libkernel'
+n 1889 dt_us 33400 lines 142 translations(spirv) 0 decode hashes {} sum elapsed_ms 0
+  ts first/last b'[42][00:00:46.237] libkernel' b'[23][00:00:46.262] libkernel'
+   1169177 Vulkan pipeline cache: saved 127690297 bytes to _PipelineCache\PPSA21564.bin (160926 us)

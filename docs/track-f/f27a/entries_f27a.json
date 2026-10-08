@@ -1,0 +1,368 @@
+{
+ "ednn122": {
+  "path": "C:/kyty/s122/log_ednn122.txt",
+  "stable_frame": 308,
+  "frames": 7411,
+  "level_started": [
+   231333,
+   208
+  ],
+  "hold_frames": 7104,
+  "hold_s": 120.1,
+  "hold_ge_100ms": [
+   [
+    1826,
+    118647,
+    418421
+   ]
+  ],
+  "hold_top3": [
+   [
+    1826,
+    118647,
+    418421
+   ],
+   [
+    4134,
+    37479,
+    611045
+   ],
+   [
+    2817,
+    36910,
+    501153
+   ]
+  ],
+  "translations_all": 12,
+  "translations_hold": 0,
+  "skipped_draw_hold": 0,
+  "held_flip_hold": 0,
+  "saves": [
+   {
+    "line": 232423,
+    "interval_of_n": 217,
+    "dt_us": 30474,
+    "on_hold": false,
+    "text": "PipelinePrecache: saved 980 recipes (9727570 bytes)"
+   },
+   {
+    "line": 418363,
+    "interval_of_n": 1826,
+    "dt_us": 118647,
+    "on_hold": true,
+    "text": "PipelinePrecache: saved 1010 recipes (10082476 bytes)"
+   },
+   {
+    "line": 418364,
+    "interval_of_n": 1826,
+    "dt_us": 118647,
+    "on_hold": true,
+    "text": "Vulkan pipeline cache: saved 87994470 bytes to _PipelineCache\\PPSA21564.bin (86572 us)"
+   },
+   {
+    "line": 884451,
+    "interval_of_n": 7413,
+    "dt_us": null,
+    "on_hold": true,
+    "text": "PipelinePrecache: saved 1013 recipes (10118105 bytes)"
+   },
+   {
+    "line": 884452,
+    "interval_of_n": 7413,
+    "dt_us": null,
+    "on_hold": true,
+    "text": "Vulkan pipeline cache: saved 87994470 bytes to _PipelineCache\\PPSA21564.bin (78595 us)"
+   }
+  ]
+ },
+ "dnn122": {
+  "path": "C:/kyty/s122/log_dnn122.txt",
+  "stable_frame": 313,
+  "frames": 18109,
+  "level_started": [
+   231683,
+   213
+  ],
+  "hold_frames": 17797,
+  "hold_s": 300.3,
+  "hold_ge_100ms": [],
+  "hold_top3": [
+   [
+    12858,
+    65854,
+    1304720
+   ],
+   [
+    10618,
+    34734,
+    1118010
+   ],
+   [
+    3438,
+    34397,
+    519374
+   ]
+  ],
+  "translations_all": 0,
+  "translations_hold": 0,
+  "skipped_draw_hold": 0,
+  "held_flip_hold": 0,
+  "saves": []
+ },
+ "s13_k_09": {
+  "path": "C:/kyty/s288/s13/log_k_09.txt",
+  "stable_frame": 302,
+  "frames": 11113,
+  "level_started": [
+   231107,
+   202
+  ],
+  "hold_frames": 10812,
+  "hold_s": 180.4,
+  "hold_ge_100ms": [],
+  "hold_top3": [
+   [
+    1761,
+    48526,
+    420714
+   ],
+   [
+    1330,
+    33581,
+    370386
+   ],
+   [
+    8427,
+    33575,
+    1001503
+   ]
+  ],
+  "translations_all": 17,
+  "translations_hold": 5,
+  "skipped_draw_hold": 0,
+  "held_flip_hold": 0,
+  "saves": [
+   {
+    "line": 233180,
+    "interval_of_n": 212,
+    "dt_us": 17814,
+    "on_hold": false,
+    "text": "PipelinePrecache: saved 1001 recipes (10400042 bytes) (12244 us)"
+   },
+   {
+    "line": 420927,
+    "interval_of_n": 1764,
+    "dt_us": 16848,
+    "on_hold": true,
+    "text": "PipelinePrecache: saved 1036 recipes (10813383 bytes) (13449 us)"
+   },
+   {
+    "line": 421155,
+    "interval_of_n": 1767,
+    "dt_us": 17002,
+    "on_hold": true,
+    "text": "Vulkan pipeline cache: saved 32875354 bytes to _PipelineCache\\PPSA21564.bin (41544 us)"
+   }
+  ]
+ },
+ "s13_u_09": {
+  "path": "C:/kyty/s288/s13/log_u_09.txt",
+  "stable_frame": 327,
+  "frames": 7293,
+  "level_started": [
+   236336,
+   229
+  ],
+  "hold_frames": 6967,
+  "hold_s": 120.5,
+  "hold_ge_100ms": [],
+  "hold_top3": [
+   [
+    6834,
+    36684,
+    812605
+   ],
+   [
+    5134,
+    36506,
+    669192
+   ],
+   [
+    356,
+    36369,
+    256498
+   ]
+  ],
+  "translations_all": 0,
+  "translations_hold": 0,
+  "skipped_draw_hold": 0,
+  "held_flip_hold": 0,
+  "saves": []
+ },
+ "s15_k_09": {
+  "path": "C:/kyty/s288/s15/log_k_09.txt",
+  "stable_frame": 329,
+  "frames": 18324,
+  "level_started": [
+   232421,
+   229
+  ],
+  "hold_frames": 17996,
+  "hold_s": 300.2,
+  "hold_ge_100ms": [],
+  "hold_top3": [
+   [
+    12860,
+    66728,
+    1331157
+   ],
+   [
+    607,
+    33944,
+    302752
+   ],
+   [
+    18033,
+    33868,
+    1762238
+   ]
+  ],
+  "translations_all": 11,
+  "translations_hold": 0,
+  "skipped_draw_hold": 0,
+  "held_flip_hold": 0,
+  "saves": [
+   {
+    "line": 236718,
+    "interval_of_n": 240,
+    "dt_us": 226683,
+    "on_hold": false,
+    "text": "PipelinePrecache: saved 1009 recipes (10493953 bytes) (12049 us)"
+   },
+   {
+    "line": 412128,
+    "interval_of_n": 1834,
+    "dt_us": 16378,
+    "on_hold": true,
+    "text": "PipelinePrecache: saved 1039 recipes (10848691 bytes) (15009 us)"
+   },
+   {
+    "line": 412336,
+    "interval_of_n": 1836,
+    "dt_us": 16649,
+    "on_hold": true,
+    "text": "Vulkan pipeline cache: saved 32851276 bytes to _PipelineCache\\PPSA21564.bin (42356 us)"
+   }
+  ]
+ },
+ "s15_u_09": {
+  "path": "C:/kyty/s288/s15/log_u_09.txt",
+  "stable_frame": 326,
+  "frames": 7385,
+  "level_started": [
+   236519,
+   228
+  ],
+  "hold_frames": 7060,
+  "hold_s": 118.4,
+  "hold_ge_100ms": [],
+  "hold_top3": [
+   [
+    412,
+    36703,
+    263320
+   ],
+   [
+    2026,
+    35658,
+    406660
+   ],
+   [
+    1345,
+    35622,
+    345390
+   ]
+  ],
+  "translations_all": 0,
+  "translations_hold": 0,
+  "skipped_draw_hold": 0,
+  "held_flip_hold": 0,
+  "saves": []
+ },
+ "s18_c09": {
+  "path": "C:/kyty/s288/s18c/log_s18_c09.txt",
+  "stable_frame": 426,
+  "frames": 19493,
+  "level_started": [
+   360682,
+   326
+  ],
+  "hold_frames": 19068,
+  "hold_s": 330.1,
+  "hold_ge_100ms": [
+   [
+    1883,
+    103947,
+    1168587
+   ]
+  ],
+  "hold_top3": [
+   [
+    1883,
+    103947,
+    1168587
+   ],
+   [
+    456,
+    83442,
+    980864
+   ],
+   [
+    556,
+    82768,
+    1007898
+   ]
+  ],
+  "translations_all": 298,
+  "translations_hold": 21,
+  "skipped_draw_hold": 2,
+  "held_flip_hold": 2,
+  "saves": [
+   {
+    "line": 968705,
+    "interval_of_n": 451,
+    "dt_us": 47981,
+    "on_hold": true,
+    "text": "Vulkan pipeline cache: saved 127690297 bytes to _PipelineCache\\PPSA21564.bin (129582 us)"
+   },
+   {
+    "line": 1162310,
+    "interval_of_n": 1883,
+    "dt_us": 103947,
+    "on_hold": true,
+    "text": "PipelinePrecache: saved 267 recipes (2153072 bytes) (3755 us)"
+   },
+   {
+    "line": 1169177,
+    "interval_of_n": 1889,
+    "dt_us": 33400,
+    "on_hold": true,
+    "text": "Vulkan pipeline cache: saved 127690297 bytes to _PipelineCache\\PPSA21564.bin (160926 us)"
+   },
+   {
+    "line": 2961528,
+    "interval_of_n": 19495,
+    "dt_us": null,
+    "on_hold": true,
+    "text": "PipelinePrecache: saved 271 recipes (2200508 bytes)"
+   },
+   {
+    "line": 2961529,
+    "interval_of_n": 19495,
+    "dt_us": null,
+    "on_hold": true,
+    "text": "Vulkan pipeline cache: saved 127690297 bytes to _PipelineCache\\PPSA21564.bin (122431 us)"
+   }
+  ]
+ }
+}

@@ -1,0 +1,21 @@
+neighbours 250 frames n 1700..1950 without 1826
+EXCEEDS FrameTrace.dt_us                   n1826=118647   median=16736    max=35819
+EXCEEDS FrameTrace.semwait_us              n1826=116260   median=15306    max=34277
+EXCEEDS FrameTrace.cpu_gpu_us              n1826=96091    median=16290    max=35818
+EXCEEDS FrameTrace-draw.bda_scan           n1826=1889     median=26       max=977
+EXCEEDS FrameTrace-x.ds_ring_new           n1826=16       median=0        max=12
+EXCEEDS FrameTrace-x.ds_ring_grow          n1826=4        median=0        max=3
+EXCEEDS FrameTrace-x.pb2_pass              n1826=1469     median=26       max=770
+EXCEEDS FrameTrace-x.bda_drng              n1826=2018     median=47       max=1071
+EXCEEDS FrameTrace-x.bda_ginv_reg          n1826=2        median=0        max=1
+EXCEEDS FrameTrace-x.prio_stall            n1826=1        median=0        max=0
+BELOW/OTHER FrameTrace.draws               n1826=980      median=2636
+BELOW/OTHER FrameTrace.dispatches          n1826=182      median=265
+BELOW/OTHER FrameTrace.gpu_busy_us         n1826=7223     median=10961.5
+BELOW/OTHER FrameTrace.cpu_main_us         n1826=6959     median=7848.5
+BELOW/OTHER FrameTrace.submits             n1826=15       median=30
+BELOW/OTHER FrameTrace-draw.p_reads        n1826=136032   median=165055
+BELOW/OTHER FrameTrace-draw.m_insts        n1826=120      median=248
+LINE 418354 FrameTrace: n=1825 dt_us=16635 lat_us=16008 gpu_proc=0 gpu_idle=0 gpu_blocked=0 submits=24 submit_us=47 semwaits=18 semwait_us=13643 downloads=0 download_us=0 draws=2484 draw_us=0 dispatches=256 dispatch_us=0 faults=280 fault_us=2282 wrm_stalls=5 gpu_busy_us=9674 gpu_n=24 cpu_main_us=8374 cpu_gpu_us=16074 cpu_present_us=1734 cpu_proc_us=281250 faults_gpu=12 fault_gpu_us=42 semwait_gpu_us=0 prios=26 prio_us=0 dmas=14 
+LINE 418421 FrameTrace: n=1826 dt_us=118647 lat_us=6857 gpu_proc=0 gpu_idle=0 gpu_blocked=0 submits=15 submit_us=73 semwaits=13 semwait_us=116260 downloads=0 download_us=0 draws=980 draw_us=0 dispatches=182 dispatch_us=0 faults=241 fault_us=1702 wrm_stalls=1 gpu_busy_us=7223 gpu_n=16 cpu_main_us=6959 cpu_gpu_us=96091 cpu_present_us=3878 cpu_proc_us=375000 faults_gpu=8 fault_gpu_us=63 semwait_gpu_us=0 prios=11 prio_us=0 dmas=2 dm
+LINE 418554 FrameTrace: n=1827 dt_us=30802 lat_us=18604 gpu_proc=0 gpu_idle=0 gpu_blocked=0 submits=59 submit_us=91 semwaits=38 semwait_us=32548 downloads=0 download_us=0 draws=5029 draw_us=0 dispatches=530 dispatch_us=0 faults=501 fault_us=3089 wrm_stalls=10 gpu_busy_us=18124 gpu_n=53 cpu_main_us=15930 cpu_gpu_us=30478 cpu_present_us=1405 cpu_proc_us=78125 faults_gpu=41 fault_gpu_us=156 semwait_gpu_us=0 prios=32 prio_us=0 dmas=

@@ -1,0 +1,4 @@
+2026-10-08T21:55:59Z F28a HPP-698 start; API: no harness series in_progress (HPP-698, HPP-699, HPP-287 only)
+2026-10-08T22:04:14Z F28a sweep_f28a start (>60 s); API in_progress: HPP-698:b8662d95 HPP-699:5aaea422; no harness series
+2026-10-08T22:20:43Z F28a report written; FACTS section appended
+note: git copies of list_f28a.tsv and sweep_f28a.jsonl.xz mask one mangled directory name as SERS_user_APPDATA (F26a form)

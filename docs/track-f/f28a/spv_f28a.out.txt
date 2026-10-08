@@ -1,0 +1,29 @@
+exe C:/kyty/f287/f12d/final/shader_cfg_tests_fix.exe 68856bcf58c354fa79878c71675a1988e139c01e6dbe036fe4bce69b23e105c6
+gcn C:/kyty/s288/s4/gcn/g_1/cs_380bb9d636390bae.bin 4b2dda14411c7773df74d12eae9d148705179223643c5181864f86b8f86145c7
+cache (copy of installed FS10 _fixf19 file) C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19/cs_380bb9d636390bae_fe70c334a8301128.bin 20c8cb200f84adc9498214f833623c6f0e2f3198c5076d318a40137b9514fabc ; copy 20c8cb200f84adc9498214f833623c6f0e2f3198c5076d318a40137b9514fabc
+perm 0 def rc 0 identical 1 sha 10ddf37c1175b73d9c90366fa79836df46ec1a9df100e6f3a7ef3cc3716b2255 (0, 0, 465000)
+perm 0 c65536 rc 0 identical 1 sha 10ddf37c1175b73d9c90366fa79836df46ec1a9df100e6f3a7ef3cc3716b2255 (0, 0, 465000)
+perm 0 c0 rc 0 identical 0 sha 6bc740a91fcaa1b93c9143b360db79b9f213e502aef5d41c000d0a6d03addcd0 (0, 0, 459888)
+perm 0 c1024 rc 0 identical 0 sha 39517a7be9be03c515712fd6af9930506136a967e996c9ca1e846c9dd38e2731 (0, 0, 464984)
+perm 0 ll rc 0 identical 0 sha 6775346f416b2b592eb094a6507d79d61355b040540a88489bbde6be965205b7 (0, 0, 461288)
+perm 1 def rc 0 identical 1 sha 307206e19ac06dd582d0f4cfd901e1a7f244e3757e6dc6ee37e03af9769ae443 (0, 0, 465364)
+perm 1 c65536 rc 0 identical 1 sha 307206e19ac06dd582d0f4cfd901e1a7f244e3757e6dc6ee37e03af9769ae443 (0, 0, 465364)
+perm 1 c0 rc 0 identical 0 sha 87bc031ba0d3ff48b9080e712559828ef3d6f0b14aa410f9b336f263c6c0d45b (0, 0, 460252)
+perm 1 c1024 rc 0 identical 0 sha 522ab42d8e1b280672b11e92590a3e0b3854894c3f8f91b7bfc5e6240bcffcc8 (0, 0, 465348)
+perm 1 ll rc 0 identical 0 sha 199dc585a4ae3e4fb779229b1cb03345c870a2c0ad6d3c32bd563cee4e8cefc0 (0, 0, 461652)
+perm 2 def rc 0 identical 1 sha 10ddf37c1175b73d9c90366fa79836df46ec1a9df100e6f3a7ef3cc3716b2255 (0, 0, 465000)
+perm 2 c65536 rc 0 identical 1 sha 10ddf37c1175b73d9c90366fa79836df46ec1a9df100e6f3a7ef3cc3716b2255 (0, 0, 465000)
+perm 2 c0 rc 0 identical 0 sha 6bc740a91fcaa1b93c9143b360db79b9f213e502aef5d41c000d0a6d03addcd0 (0, 0, 459888)
+perm 2 c1024 rc 0 identical 0 sha 39517a7be9be03c515712fd6af9930506136a967e996c9ca1e846c9dd38e2731 (0, 0, 464984)
+perm 2 ll rc 0 identical 0 sha 6775346f416b2b592eb094a6507d79d61355b040540a88489bbde6be965205b7 (0, 0, 461288)
+permutations 3
+M1 rc 0 and out.spv True
+M2 def identical=1 vs FS10 cache, every permutation True
+M3 c65536 == def True
+M4 c0 != def True
+M5 c1024 != def, != c0 True
+M6 spirv-val vulkan1.3 rc 0 on def and c0 True
+  perm 0 c0 identical (stored = FS10 default): 0  sizes def/c0 465000 459888
+  perm 1 c0 identical (stored = FS10 default): 0  sizes def/c0 465364 460252
+  perm 2 c0 identical (stored = FS10 default): 0  sizes def/c0 465000 459888
+ALL OK

@@ -1,0 +1,2 @@
+{'no json': 15, 'ft_tail present': 532, 'no ft_tail field': 19}
+ft_tail = 0 with FrameTrace rows > 0: 0

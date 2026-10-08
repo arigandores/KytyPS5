@@ -1,0 +1,35 @@
+perm 0 def lines 22845 c0 lines 22535
+  shapes {'DECL': 2, 'PRE+GUARD': 9, 'abort_body_lines_21': 9, 'NEAR': 2, 'DECL_PTR_FUNCTION': 1, 'DECL_CONST %uint_65536': 1, 'DECL_CONST %uint_2097152': 1, 'DECL_CONST %uint_2097154': 1, 'DECL_CONST %uint_2097160': 1, 'DECL_CONST %uint_4096': 1, 'DECL_CONST %uint_2097153': 1}
+  effects of removed code {'GUARD OpStore budget': 9, 'GUARD OpAtomicIAdd word=TAIL scope=%uint_1 sem=%uint_0': 18, 'GUARD OpAtomicUMax word=TAIL scope=%uint_1 sem=%uint_0': 9, 'GUARD OpStore fault_bitmap(word=page>>5)': 9, 'NEAR OpAtomicIAdd word=TAIL scope=%uint_1 sem=%uint_0': 2, 'NEAR OpAtomicUMax word=TAIL scope=%uint_1 sem=%uint_0': 2}
+  remainder lines def 22535  c0 22535
+  renaming size 21846  conflicts 0  leaks of removed ids 0  substitutions used 0 on 0 labels
+  effects outside the tail/budget/bitmap flush: []
+  perm 0 EQUIVALENT-MODULO-CAP
+perm 1 def lines 22864 c0 lines 22554
+  shapes {'DECL': 2, 'PRE+GUARD': 9, 'abort_body_lines_21': 9, 'NEAR': 2, 'DECL_PTR_FUNCTION': 1, 'DECL_CONST %uint_65536': 1, 'DECL_CONST %uint_2097152': 1, 'DECL_CONST %uint_2097154': 1, 'DECL_CONST %uint_2097160': 1, 'DECL_CONST %uint_4096': 1, 'DECL_CONST %uint_2097153': 1}
+  effects of removed code {'GUARD OpStore budget': 9, 'GUARD OpAtomicIAdd word=TAIL scope=%uint_1 sem=%uint_0': 18, 'GUARD OpAtomicUMax word=TAIL scope=%uint_1 sem=%uint_0': 9, 'GUARD OpStore fault_bitmap(word=page>>5)': 9, 'NEAR OpAtomicIAdd word=TAIL scope=%uint_1 sem=%uint_0': 2, 'NEAR OpAtomicUMax word=TAIL scope=%uint_1 sem=%uint_0': 2}
+  remainder lines def 22554  c0 22554
+  renaming size 21862  conflicts 0  leaks of removed ids 0  substitutions used 0 on 0 labels
+  effects outside the tail/budget/bitmap flush: []
+  perm 1 EQUIVALENT-MODULO-CAP
+perm 2 def lines 22845 c0 lines 22535
+  shapes {'DECL': 2, 'PRE+GUARD': 9, 'abort_body_lines_21': 9, 'NEAR': 2, 'DECL_PTR_FUNCTION': 1, 'DECL_CONST %uint_65536': 1, 'DECL_CONST %uint_2097152': 1, 'DECL_CONST %uint_2097154': 1, 'DECL_CONST %uint_2097160': 1, 'DECL_CONST %uint_4096': 1, 'DECL_CONST %uint_2097153': 1}
+  effects of removed code {'GUARD OpStore budget': 9, 'GUARD OpAtomicIAdd word=TAIL scope=%uint_1 sem=%uint_0': 18, 'GUARD OpAtomicUMax word=TAIL scope=%uint_1 sem=%uint_0': 9, 'GUARD OpStore fault_bitmap(word=page>>5)': 9, 'NEAR OpAtomicIAdd word=TAIL scope=%uint_1 sem=%uint_0': 2, 'NEAR OpAtomicUMax word=TAIL scope=%uint_1 sem=%uint_0': 2}
+  remainder lines def 22535  c0 22535
+  renaming size 21846  conflicts 0  leaks of removed ids 0  substitutions used 0 on 0 labels
+  effects outside the tail/budget/bitmap flush: []
+  perm 2 EQUIVALENT-MODULO-CAP
+NEG-A def p0 vs c0 p1
+  shapes {'DECL': 2, 'PRE+GUARD': 9, 'abort_body_lines_21': 9, 'NEAR': 2, 'DECL_PTR_FUNCTION': 1, 'DECL_CONST %uint_65536': 1, 'DECL_CONST %uint_2097152': 1, 'DECL_CONST %uint_2097154': 1, 'DECL_CONST %uint_2097160': 1, 'DECL_CONST %uint_4096': 1, 'DECL_CONST %uint_2097153': 1}
+  effects of removed code {'GUARD OpStore budget': 9, 'GUARD OpAtomicIAdd word=TAIL scope=%uint_1 sem=%uint_0': 18, 'GUARD OpAtomicUMax word=TAIL scope=%uint_1 sem=%uint_0': 9, 'GUARD OpStore fault_bitmap(word=page>>5)': 9, 'NEAR OpAtomicIAdd word=TAIL scope=%uint_1 sem=%uint_0': 2, 'NEAR OpAtomicUMax word=TAIL scope=%uint_1 sem=%uint_0': 2}
+  remainder lines def 22535  c0 22554
+NEG-B def p0 vs c0 p0 with operands of line 11277 swapped: %10856 = OpIAdd %52 %10855 %1527 -> %10856 = OpIAdd %52 %1527 %10855
+  shapes {'DECL': 2, 'PRE+GUARD': 9, 'abort_body_lines_21': 9, 'NEAR': 2, 'DECL_PTR_FUNCTION': 1, 'DECL_CONST %uint_65536': 1, 'DECL_CONST %uint_2097152': 1, 'DECL_CONST %uint_2097154': 1, 'DECL_CONST %uint_2097160': 1, 'DECL_CONST %uint_4096': 1, 'DECL_CONST %uint_2097153': 1}
+  effects of removed code {'GUARD OpStore budget': 9, 'GUARD OpAtomicIAdd word=TAIL scope=%uint_1 sem=%uint_0': 18, 'GUARD OpAtomicUMax word=TAIL scope=%uint_1 sem=%uint_0': 9, 'GUARD OpStore fault_bitmap(word=page>>5)': 9, 'NEAR OpAtomicIAdd word=TAIL scope=%uint_1 sem=%uint_0': 2, 'NEAR OpAtomicUMax word=TAIL scope=%uint_1 sem=%uint_0': 2}
+  remainder lines def 22535  c0 22535
+  renaming size 21846  conflicts 2  leaks of removed ids 0  substitutions used 0 on 0 labels
+   CONFLICT (11277, '%10972 = OpIAdd %52 %10971 %1577', '%10856 = OpIAdd %52 %1527 %10855', 'map %10971->%10855 vs %1527')
+   CONFLICT (11277, '%10972 = OpIAdd %52 %10971 %1577', '%10856 = OpIAdd %52 %1527 %10855', 'map %1577->%1527 vs %10855')
+  effects outside the tail/budget/bitmap flush: []
+NEG-A refused True  NEG-B refused True
+ALL OK

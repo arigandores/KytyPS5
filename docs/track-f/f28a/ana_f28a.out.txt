@@ -1,0 +1,39 @@
+logs 990 duplicates (same size, entry positions, end time) 107
+   dup C:/kyty/f287/f26c/fxwork/log_fxc.txt = C:/kyty/f287/f26a/fxwork/log_fxc.txt
+   dup C:/kyty/f287/f26c/fxwork/log_fxa.txt = C:/kyty/f287/f26a/fxwork/log_fxa.txt
+   dup C:/kyty/f287/f26c/fxread/log_s90m.txt = C:/kyty/f287/f26c/fxread/log_s90.txt
+   dup C:/kyty/f287/f26c/fxread/log_cp.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_detso.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_dispoff.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_dso.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_dispon.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_e60.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_e601.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_enone.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_h_args.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_h_bin.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_h_fix.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_h_lite.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_h_hang.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_h_mark.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_h_patch.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_h_pin.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+   dup C:/kyty/f287/f26c/fxread/log_h_rec.txt = C:/kyty/f287/f26c/fxread/log_counted.txt
+levels with sign E in some log: 50
+fixture logs excluded 26
+reference (logs without fixb1b, before F9 or KYTY_FIX_B1B=0): {'TRIP': 177, 'BLT': 309, 'BLN': 96, 'HANG': 0, 'CRASH': 27, 'logs': 333, 'logs_with_TRIP': 10}
+logs with fixb1b: {'b1b_logs': 524, 'b1b_logs_in_scope': 524, 'TRIP in_scope': 0, 'BLT in_scope': 0, 'BLN in_scope': 0, 'HANG in_scope': 0, 'CRASH in_scope': 2}
+entries (non-empty level) on fixb1b logs 528 in scope 528
+  all        entries  528  sign E  108  L  353  none   67  markers {'TRIP': 0, 'BLT': 0, 'BLN': 0, 'HANG': 0, 'CRASH': 2}
+  hold>=120  entries  496  sign E  102  L  334  none   60  markers {'TRIP': 0, 'BLT': 0, 'BLN': 0, 'HANG': 0, 'CRASH': 0}
+  hold>=300  entries  327  sign E   56  L  226  none   45  markers {'TRIP': 0, 'BLT': 0, 'BLN': 0, 'HANG': 0, 'CRASH': 0}
+  course-line binaries, hold>=120      entries  287  E   75  L  165  none   47  logs 285
+  other binaries (tests), hold>=120    entries  209  E   27  L  169  none   13  logs 209
+  E entries by binary [('FS8', 23), ('S12', 22), ('S18', 18), ('dac02fb9 (FSa)', 5), ('FS5', 5), ('ed2686da', 4), ('b714f5c4', 4), ('P23', 3), ('c01bde0c', 3), ('FS10', 3), ('2b5e2ce6', 3), ('2e6df8f0', 2), ('b97efad4', 2), ('36e2b042', 2), ('d4328b0c', 2), ('FS4', 2), ('43ef1cc1', 2), ('d8756dce', 1), ('4ad735ad', 1), ('2d0c8815', 1)]
+  E entries by level [('underwater_aerial_garden', 32), ('big_hand_pirate_island', 10), ('hoover_beach', 8), ('worldmap', 6), ('rotating_level_day_and_night', 6), ('timestop_casino', 5), ('intro_next', 5), ('mini_giants_garden', 4), ('voxel_world', 4), ('sponge_dirty_bath', 3), ('time_stopper_ghost_world', 3), ('bumper_enemy_snowy_canyon', 3), ('enemy_gorilla', 3), ('penguin_atlantis', 3), ('ice_iceberg', 3), ('volcano_mountain', 3), ('hub_crashsite', 3), ('hero_kratos', 2), ('fragile_battle_1', 1), ('hub_crashsite_diorama', 1)]
+  E entries by sign kinds [('PF,PM,TR', 63), ('FU', 40), ('PF', 4), ('FU,PF,PM,TR', 1)]
+  E entries hold [1, 1, 1, 1, 2, 2, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 121, 121, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 123, 123, 123, 123, 123, 124, 126, 128, 129, 130, 130, 132, 132, 132, 141, 182, 183, 302, 304, 318, 329, 331, 332, 332, 333, 333, 333, 333, 333, 334, 334, 334, 335, 335, 335, 335, 335, 335, 336, 336, 336, 336, 337, 337, 337, 337, 337, 337, 338, 338, 338, 339, 339, 339, 339, 339, 339, 340, 340, 340, 340, 341, 341, 341, 341, 341, 342, 342, 342, 342, 342, 342, 343]
+  in-scope entries with any marker: 2
+     C:/kyty/f287/f12f/log_f12_rd.txt FS3 underwater_aerial_garden 111.701 L {'TRIP': 0, 'BLT': 0, 'BLN': 0, 'HANG': 0, 'CRASH': 1}
+     C:/kyty/f287/fs2c/log_fs2_w0.txt FS2 underwater_aerial_garden 60.096999999999994 L {'TRIP': 0, 'BLT': 0, 'BLN': 0, 'HANG': 0, 'CRASH': 1}
+  out-of-scope fixb1b entries with any marker: 0

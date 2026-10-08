@@ -1,0 +1,26 @@
+R1   OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:568  anchor x1  +1 ok
+R2   OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:580  anchor x1  +1 ok
+R3   OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:848  anchor x1  +1 ok
+R4   OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:207  anchor x1  +1 ok
+R5   OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:219  anchor x1  +1 ok
+R6   OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:137  anchor x1  +1 ok
+R7   OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:996  anchor x1  +1 ok
+R8   OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:148  anchor x1  +1 ok
+R9   OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1939  anchor x1  +1 ok
+R10  OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1931  anchor x1  +1 ok
+R11  OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1957  anchor x1  +1 ok
+R12  OK  dc5d4712:src/graphics/host_gpu/renderer/cache/faultManager.cpp:40  anchor x1  +1 ok
+R13  OK  dc5d4712:src/graphics/host_gpu/renderer/cache/faultManager.cpp:152  anchor x1  +1 ok
+R14  OK  dc5d4712:src/graphics/host_gpu/renderer/cache/faultManager.cpp:202  anchor x1  +1 ok
+R15  OK  dc5d4712:src/graphics/host_gpu/renderer/renderContext.cpp:407  anchor x1  +1 ok
+R16  OK  dc5d4712:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3653  anchor x1  +1 ok
+R17  OK  dc5d4712:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5924  anchor x1  +1 ok
+R18  OK  dc5d4712:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4012  anchor x1  +1 ok
+R19  OK  dc5d4712:src/graphics/host_gpu/renderer/masterSemaphore.cpp:101  anchor x1  +1 ok
+R20  OK  dc5d4712:src/graphics/host_gpu/renderer/masterSemaphore.cpp:58  anchor x1  +1 ok
+R21  OK  dc5d4712:src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:583  anchor x1  +1 ok
+R23  OK  dc5d4712:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:868  anchor x1  +1 ok
+R24  OK  dc5d4712:src/graphics/host_gpu/renderer/cache/faultManager.cpp:204  anchor x1  +1 ok
+R25  OK  dc5d4712:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:130  anchor x1  +1 ok
+R22  OK  1833ee28:tests/shaderCfgTests.cpp:14208  anchor x1  +1 ok
+ALL OK

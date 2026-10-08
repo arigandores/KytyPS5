@@ -47,6 +47,10 @@ installed `dac02fb9` 44); sessions without a shipping under (B): 0. 60 FPS is no
 9. **F3 witness re-scan** (item 400 (г)): F3 (36 CS without speculative translation) and B26г are parked until a witness scene — the closing runs
    `docs/track-f/f14a/f14a_f3.py` over the logs of the series: a `CsPretranslate: miss|hit` line with one of the 37 hashes or `shader CFG build failed`
    outside `CsPretranslate:` gives the witness scene and the class (K1 if the path ends in `EXIT`) for track F; 0 such lines — the row keeps the count.
+10. **Re-check under FS10** (item 624 (д)(3)): after FS10 is installed (`KYTY_FIX_B36=1` by default, F27 shipped — a log write stall no longer
+   stops the frame), a second V of `sponge_dirty_bath`, `timestop_casino` and `bonus_path_maker_mix` on FS10; a frame ≥ 1 s there is not F27, its class
+   is read by the series rules, and a `LogAsync: stall` line ≥ 1 s in the same log is reported (F27 debt, item 624 (ж)(3)). The s143–146 logs carry no
+   `DiagB32`/`LogAsync` lines — candidates are not chosen from them; not fixed now, read the course line as unchanged until that closing.
 
 ## Rules that stay in force on resume
 

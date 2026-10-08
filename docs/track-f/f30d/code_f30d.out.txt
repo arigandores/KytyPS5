@@ -1,0 +1,37 @@
+== commit 585d997d
+PASS C1 knob row {"KYTY_RT_SKIP", "rtskip", 1, 4} once
+PASS C2 code lines = parent + six RtsReport lines + the wrapper of PB items 3-4 (body 8 code lines, unchanged)
+PASS C3 one test of t_rts against 4 (line [3683])
+PASS C3b the skip stays at value 1 only (2 tests t_rts == 1)
+PASS C4 rts_bad_b / rts_bad_rx added once each, inside RtsReport after rts_bad
+PASS C5 enum: RtsBadB, RtsBadRx after RtsEarly
+PASS C6 FrameTrace-x table: rts_bad_b, rts_bad_rx rows once each
+PASS C7 files of the commit: ['src/common/frameStats.h', 'src/common/gates.cpp', 'src/common/gates.h', 'src/graphics/host_gpu/renderer/renderDraw.cpp', 'src/graphics/presentation/videoOut.cpp']
+PASS C8 nothing under src/graphics/shader (translation signature)
+== commit a1d1d863
+PASS C1 knob row {"KYTY_RT_SKIP", "rtskip", 1, 4} once
+PASS C2 code lines = parent + six RtsReport lines + the wrapper of PB items 3-4 (body 8 code lines, unchanged)
+PASS C3 one test of t_rts against 4 (line [3654])
+PASS C3b the skip stays at value 1 only (2 tests t_rts == 1)
+PASS C4 rts_bad_b / rts_bad_rx added once each, inside RtsReport after rts_bad
+PASS C5 enum: RtsBadB, RtsBadRx after RtsEarly
+PASS C6 FrameTrace-x table: rts_bad_b, rts_bad_rx rows once each
+PASS C7 files of the commit: ['src/common/frameStats.h', 'src/common/gates.cpp', 'src/common/gates.h', 'src/graphics/host_gpu/renderer/renderDraw.cpp', 'src/graphics/presentation/videoOut.cpp']
+PASS C8 nothing under src/graphics/shader (translation signature)
+PASS R 585d997d:src/common/gates.cpp:438
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1597
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1602
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1605
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3441
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3499
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3522
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3574
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3683
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3719
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3748
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3787
+PASS R 585d997d:src/common/frameStats.h:2486
+PASS R 585d997d:src/graphics/presentation/videoOut.cpp:3255
+PASS N1 negative control (line + 1) fails
+PASS N2 negative control (anchor "!= 3") fails
+ALL OK

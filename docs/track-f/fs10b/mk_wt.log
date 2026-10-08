@@ -1,0 +1,28 @@
+Preparing worktree (detached HEAD dc5d4712)
+Updating files:  90% (3896/4288)Updating files:  91% (3903/4288)Updating files:  92% (3945/4288)Updating files:  93% (3988/4288)Updating files:  94% (4031/4288)Updating files:  95% (4074/4288)Updating files:  96% (4117/4288)Updating files:  97% (4160/4288)Updating files:  98% (4203/4288)Updating files:  99% (4246/4288)Updating files: 100% (4288/4288)Updating files: 100% (4288/4288), done.
+HEAD is now at dc5d4712 track F link FS10a (HPP-684): KYTY_FIX_B36 default 0 -> 1 (ROADMAP s122 item 624(e)(1))
+--- worktree HEAD
+dc5d47127037ec0a3c914bedf4dce01d660d2bcf track F link FS10a (HPP-684): KYTY_FIX_B36 default 0 -> 1 (ROADMAP s122 item 62
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+dc5d47127037ec0a3c914bedf4dce01d660d2bcf 1a7eaff826ea846048b3260f78bce7f6068b9860 track F link FS10a (HPP-684): KYTY_FIX_B36 default 0 -> 1 (ROADMAP s122 item 6
+1a7eaff826ea846048b3260f78bce7f6068b9860 64a1fa402d3a41450d8baf06c5b567fae110ff57 track F link F25k2 (HPP-682): KYTY_FIX_B36 review fixes RC1, RC2, RC4 of F25l 
+64a1fa402d3a41450d8baf06c5b567fae110ff57 7bc87bc8511cc1e45f0f13f04390f3e5be2c4cc6 track F link F25k (HPP-678): KYTY_TEST_LOGSTALL - the TestLogStall line names 
+7bc87bc8511cc1e45f0f13f04390f3e5be2c4cc6 a42f50b15866c207d25dbaf2e6e390e5cd128fb5 track F link F25k (HPP-678): KYTY_FIX_B36 - t_in_queue by a scope guard (an ex
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 458 with CR 0
+WT OK

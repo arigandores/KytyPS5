@@ -1,0 +1,20 @@
+watch: start 2026-10-08T03:34:50Z child 9476 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[0/2] Re-checking globbed directories...
+[1/6] Generate kytyGitVersion.h
+[2/4] Building CXX object CMakeFiles\log_async_tests.dir\tests\LogAsyncTests.cpp.obj
+C:\kyty\f287\fs10b\wt\tests\LogAsyncTests.cpp(475,9): warning: 'sscanf' is deprecated: This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  475 |                         std::sscanf(l.c_str(), "U %d %lld", &t, &i);
+      |                              ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdio.h(2239,20): note: 'sscanf' has been explicitly marked deprecated here
+ 2239 |     _Check_return_ _CRT_INSECURE_DEPRECATE(sscanf_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+1 warning generated.
+[3/4] Linking CXX executable log_async_tests.exe
+BUILD OK: C:\kyty\f287\fs10b\build\log_async_tests.exe
+rc=0 end 2026-10-08T03:34:55Z

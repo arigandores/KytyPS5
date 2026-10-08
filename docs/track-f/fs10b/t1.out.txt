@@ -1,0 +1,32 @@
+watch: start 2026-10-08T03:43:42Z child 30300 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+exe mine c56f2c79bb2050a7 ref dfc75800039a21ff T2 29042ef9a4a058d7
+OK   T1 log_async_tests rc 0, ALL OK, failures=0 rc=0 last='ALL OK' cases=19 failures=0
+   rc ref 0 m0 0 mu 0 m1 0; sha ref d268b0b0926d5ccc m0 d268b0b0926d5ccc mu b11d5fc3bb592857 m1 b11d5fc3bb592857
+OK   T1b mine =0 == reference (code before F25k) 
+OK   T1b negative control: mine unset differs 
+OK   T1b negative control: mine =1 differs 
+OK   T1c value None -> mode=1 rc=0 first='LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_m'
+OK   T1c value '1' -> mode=1 rc=0 first='LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_m'
+OK   T1c value 'true' -> mode=1 rc=0 first='LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_m'
+OK   T1c value 'on' -> mode=1 rc=0 first='LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_m'
+OK   T1c value 'yes' -> mode=1 rc=0 first='LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_m'
+OK   T1c value '2' -> mode=1 rc=0 first='LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_m'
+OK   T1c value 'TRUE' -> mode=1 rc=0 first='LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_m'
+OK   T1c value '0' -> no LogAsync line rc=0 first=''
+OK   T1c value 'false' -> no LogAsync line rc=0 first=''
+OK   T1c value 'off' -> no LogAsync line rc=0 first=''
+OK   T1c value 'no' -> no LogAsync line rc=0 first=''
+OK   T1c value 'OFF' -> no LogAsync line rc=0 first=''
+OK   T1c value 'No' -> no LogAsync line rc=0 first=''
+OK   T1c value '' -> mode=1 rc=0 first='LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_m'
+OK   T1d T2 =0 == mine =0 byte for byte 
+OK   T1d T2 =1 vs mine mu: lines without LogAsync: equal 
+OK   T1d T2 =1 vs mine mu: mode line equal 'LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100'
+   summary T2 ['LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=1007 bytes=133711 max_queued_bytes=133711 sync_lines=0 drain_timeouts=0']
+   summary mu ['LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=1007 bytes=133711 max_queued_bytes=133711 sync_lines=0 drain_timeouts=0']; bytes equal True
+OK   T1d T2 =1 vs mine m1: lines without LogAsync: equal 
+OK   T1d T2 =1 vs mine m1: mode line equal 'LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100'
+   summary T2 ['LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=1007 bytes=133711 max_queued_bytes=133711 sync_lines=0 drain_timeouts=0']
+   summary m1 ['LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=1007 bytes=133711 max_queued_bytes=133711 sync_lines=0 drain_timeouts=0']; bytes equal True
+ALL OK
+rc=0 end 2026-10-08T03:44:35Z

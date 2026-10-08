@@ -1,0 +1,14 @@
+
+## FS10b (`HPP-685`, Red Team) — ревью бинаря отгрузки FS10 `abfded5e` (п. 624(е)(2))
+
+- Время (UTC, `date -u`): начало 2026-10-08T03:31:18Z (после `7fd1053f` отчёта FS10a и приёмки FS10a лидом 03:31:05Z; снятие блока `issue_blockers_resolved`); раздел записан @@NOW@@; замка и `STOP` не было; звеньев Harness Engineer в `in_progress` не было (строки `FS10b API check`); шаги дольше нескольких секунд — под сторожем `watch_fs10b.py`, он не срабатывал.
+- **Вердикт: PASS**, RC 0, замечаний без RC 3 (Н1–Н3). Отчёт `docs/track-f/fs10b-review.md`, файлы `docs/track-f/fs10b/`; локально `C:/kyty/f287/fs10b/`.
+- Путь `=0` = база: код F25k/F25k2 — только за `g_hooks` (0 при `=0` без стенда) и `LongFrame::g_on`; FS10 против базы удаляет 0 строк; t1b `=0` `d268b0b0…` = эталону кода до F25k.
+- Путь по умолчанию = путь `=1` T2 (`review_git_fs10b.py` `ALL OK`): G4 — T2 `0c8fcba2` минус дифф `11164d72..929b6073` (`KYTY_DIAG_B32`) плюс `7f34b1e2` = `dc5d4712^{tree}` `33923cab…`; без FS10a = `1a7eaff8^{tree}`; T1d — `seq0` FS10 по умолчанию = `seq0` T2 при `=1` байт в байт.
+- Места F25k/F25k2, касавшиеся `KYTY_DIAG_B32`: (1) тип `g_logger_mutex` (`TrackedMutex<std::mutex>` в T2 / `std::mutex` в FS10; при выключенной диагностике та же блокировка); (2) имя потока `LogWriter`/`LongFramePrinter` (код тот же, читателя нет); (3) метка `H:fault` в `ExceptionFilter` T2 рядом с `DrainForFault`; (4) метки и `OnFlip` в `FlipQueue::Flip` T2 рядом с блоком `KYTY_LONGFRAME` — в FS10 их нет, код F25k не меняется.
+- Дифф FS10 против базы: 8 путей = файлам пяти коммитов, +1 403 / −0, `src/graphics/shader/` нет; база + пять диффов `main` = `dc5d4712^{tree}` (G3); 20 коммитов фиксов (Б33, Ф10, Ф16, Ф19, Б42, Б4, Ф8, Б24, Б13, S-replay, P-var) — предки FS10.
+- Своя сборка worktree `C:/kyty/f287/fs10b/wt` (`dc5d4712`, чисто): sha256 `d9ccbcad367373d9bfea8e6a3a4a7cfd6dec9cd8dc1a3faa331c9c4f3a76a98e` ≠ `abfded5e…`; `.text` 0; 2 008 байт объяснены `pediff3r`; отрицательный контроль `1a7eaff8` (`46ede58d…`, та же длина пути) — `UNEXPLAINED`, `.text` 2 668; нулевой — 0 байт.
+- Свой t1/t1b (`run_t1_fs10b.py` `ALL OK`): t1 19 / 0; t1b `=0` = эталону, не задана и `=1` ≠; таблица значений 14/14; T2 `=0` = FS10 `=0` байт в байт.
+- Таблица умолчаний: ON-IF-UNSET — 15 = 14 FS9b + `KYTY_FIX_B36`; контроль на `11164d72` — `missing ['KYTY_FIX_B36']`; `KYTY_LONGFRAME`, `KYTY_TEST_LOGSTALL` — OFF-IF-UNSET; `KYTY_S_REPLAY` — 3 (файл базы = FS10).
+- Н1 форма харнесса при `=1` проверена стендом только на T2 с `KYTY_DIAG_B32=1` (`b36_f0`/`b36_f1`, холодная серия) — перенос на FS10 не заявляется, тег `fs10_f1` — решение лида; Н2 `git cherry` `+` у `a8ee1b05` (проверка «содержит» — изменёнными строками или деревом); Н3 долг п. 624(ж)(4) на пути по умолчанию и строка `LogAsync: mode=0 requested=1 reason=direction` при направлении `Console`.
+- Установленный `kyty_emulator.exe` FS9 `3861eeea…` звеном не тронут; `C:/kyty/build/install` и кэши не тронуты; игра не запускалась.

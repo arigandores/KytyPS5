@@ -1,0 +1,85 @@
+OK   G1 FS10 chain dc5d4712 1a7eaff8 64a1fa40 7bc87bc8 a42f50b1 11164d72
+OK   G1 T2 chain 0c8fcba2 2afd998c 83eae9c6 e9520c36 929b6073 62fd092a 5836f6d7 22f645e1 653ee365 554eaafa
+OK   G2 a8ee1b05 == FS10 a42f50b1 (1073 lines)
+OK   G2 a8ee1b05 == T2 e9520c36 (1073 lines)
+OK   G2 b4ee756a == FS10 7bc87bc8 (14 lines)
+OK   G2 b4ee756a == T2 83eae9c6 (14 lines)
+OK   G2 0e4b2f5a == FS10 64a1fa40 (28 lines)
+OK   G2 0e4b2f5a == T2 2afd998c (28 lines)
+OK   G2 5064c5bb == FS10 1a7eaff8 (355 lines)
+OK   G2 5064c5bb == T2 0c8fcba2 (355 lines)
+OK   G2 7f34b1e2 == FS10 dc5d4712 (15 lines)
+OK   G2 negative control 5064c5bb vs a42f50b1 differs 
+OK   G2 negative control flipped line differs 
+git cherry dc5d4712 (+ = patch-id differs):
+    + a8ee1b05c8feeb8b42af039a90af83cb1834192c
+    - b4ee756a8c05a965ef28034723f18c5e4cb710a8
+    - 0e4b2f5acd75f969557d8c9b3f920b5dfb5e13d2
+    - 5064c5bbfd08107ea2fbe49836cf718efbc0ed2d
+    - 7f34b1e2bcc1edf8b7003df7ebaacc21ac5049d8
+FS10 tree 33923cab16d09252b6c927c96aab0a4685204884
+    3way fallback: F a8ee1b05^..a8ee1b05 src/common/logging/log.cpp
+OK   G3 base + five main diffs == FS10 tree 33923cab16d09252b6c927c96aab0a4685204884
+    3way fallback: F a8ee1b05^..a8ee1b05 src/common/logging/log.cpp
+OK   G3 negative control without 7f34b1e2 differs e1877993fa43089bcf1f9596684d32a209b5a7cd
+    U0 fallback: R 11164d72..929b6073 src/common/logging/log.cpp
+OK   G4 T2 - KYTY_DIAG_B32 (11164d72..929b6073 reversed) + 7f34b1e2 == FS10 tree 33923cab16d09252b6c927c96aab0a4685204884
+    U0 fallback: R 11164d72..929b6073 src/common/logging/log.cpp
+OK   G4 negative control without 7f34b1e2 differs e1877993fa43089bcf1f9596684d32a209b5a7cd
+OK   G4 negative control without the reverse step differs 
+OK   G4 T2 - KYTY_DIAG_B32 == 1a7eaff8 tree e1877993fa43089bcf1f9596684d32a209b5a7cd
+OK   G5 names == union of the five commits 8 paths: CMakeLists.txt src/common/hostException.cpp src/common/logging/log.cpp src/common/logging/log.h src/common/parallelCopy.cpp src/graphics/host_gpu/pageManager.cpp src/graphics/presentation/videoOut.cpp tests/LogAsyncTests.cpp
+OK   G5 base lines removed by FS10 == 0 (+1403 -0)
+OK   G5 no path under src/graphics/shader/ 
+   G6 hit: dc5d4712:src/common/logging/log.cpp:306:// The thread name for the KYTY_DIAG_B32 thread rows (looked up as diagB32.cpp does for DiagB32M5).
+OK   G6 KYTY_DIAG_B32 symbols in FS10 - only comment lines 1 hits, 0 not comment
+OK   G6 src/common/diagB32.h absent in FS10 
+G7 (a)/(b): T2 copies of the four commits - changed lines naming B32 / hunks with B32 context:
+   (b) e9520c36 src/common/logging/log.cpp -78,7 +93,377 | ctx  static Common::DiagB32::TrackedMutex<std::mutex>                      g_logger_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item
+   (a) e9520c36 src/common/logging/log.cpp -78,7 +93,377 | +	// The thread name "LogWriter" for the KYTY_DIAG_B32 thread rows (looked up as diagB32.cpp does for DiagB32M5).
+   (a) 0c8fcba2 src/common/logging/log.cpp -267,19 +304,23 | +// The thread name for the KYTY_DIAG_B32 thread rows (looked up as diagB32.cpp does for DiagB32M5).
+   (a) 0c8fcba2 src/common/logging/log.cpp -267,19 +304,23 | -	// The thread name "LogWriter" for the KYTY_DIAG_B32 thread rows (looked up as diagB32.cpp does for DiagB32M5).
+G7 (c): T2 -> FS10 diff in the files of the four commits, hunks:
+   CMakeLists.txt -572,8 +571,0
+   src/common/hostException.cpp -7 +6,0
+   src/common/hostException.cpp -174,4 +172,0
+   src/common/hostException.cpp -179 +173,0
+   src/common/logging/log.cpp -3 +2,0
+   src/common/logging/log.cpp -93 +92
+   src/common/logging/log.cpp -733 +732,6
+   src/common/parallelCopy.cpp -2 +1,0
+   src/common/parallelCopy.cpp -179,5 +177,0
+   src/common/parallelCopy.cpp -185 +178,0
+   src/common/parallelCopy.cpp -391 +383,0
+   src/common/parallelCopy.cpp -484 +476
+   src/graphics/host_gpu/pageManager.cpp -2 +1,0
+   src/graphics/host_gpu/pageManager.cpp -78,2 +76,0
+   src/graphics/host_gpu/pageManager.cpp -81,3 +77,0
+   src/graphics/host_gpu/pageManager.cpp -86 +79,0
+   src/graphics/host_gpu/pageManager.cpp -113,5 +105,0
+   src/graphics/host_gpu/pageManager.cpp -132 +119,0
+   src/graphics/host_gpu/pageManager.cpp -2627 +2613,0
+   src/graphics/host_gpu/pageManager.cpp -2641,5 +2626,0
+   src/graphics/host_gpu/pageManager.cpp -2647 +2627,0
+   src/graphics/host_gpu/pageManager.cpp -2711 +2691
+   src/graphics/presentation/videoOut.cpp -4 +3,0
+   src/graphics/presentation/videoOut.cpp -547,3 +545,0
+   src/graphics/presentation/videoOut.cpp -830,5 +825,0
+   src/graphics/presentation/videoOut.cpp -837 +827,0
+   src/graphics/presentation/videoOut.cpp -946,5 +935,0
+   src/graphics/presentation/videoOut.cpp -954,3 +938,0
+   src/graphics/presentation/videoOut.cpp -1144,5 +1125,0
+   src/graphics/presentation/videoOut.cpp -1155,3 +1131,0
+   src/graphics/presentation/videoOut.cpp -1168,5 +1141,0
+   src/graphics/presentation/videoOut.cpp -1176,3 +1144,0
+   src/graphics/presentation/videoOut.cpp -1186,10 +1152
+   src/graphics/presentation/videoOut.cpp -1265,8 +1221,0
+   src/graphics/presentation/videoOut.cpp -1274 +1222,0
+   src/graphics/presentation/videoOut.cpp -1289,6 +1236,0
+   src/graphics/presentation/videoOut.cpp -4122,6 +4063,0
+   src/graphics/presentation/videoOut.cpp -4131,3 +4066,0
+   tests/LogAsyncTests.cpp -448 +448,2
+   tests/LogAsyncTests.cpp -450 +451,4
+OK   G8 fix commits ancestors of FS10 (or cherry -) not contained: []
+   G8 fix commits whose files meet the FS10 diff: {'a86a5ad0': ['CMakeLists.txt'], '10a4800b': ['CMakeLists.txt'], '9c726d74': ['CMakeLists.txt'], 'f98e842c': ['CMakeLists.txt']} (FS10 removes 0 base lines - G5)
+ALL OK

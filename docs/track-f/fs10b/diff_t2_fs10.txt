@@ -1,0 +1,377 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 22a92af7..71155256 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -569,14 +569,6 @@ add_kyty_full_emulator_test(audio_propagation_tests
+ add_kyty_full_emulator_test(f8_audio_stand
+ 	"${KYTY_TESTS_DIR}/F8AudioStand.cpp")
+ 
+-# Track F, F20j (KYTY_DIAG_B32 core: partition, I1, I2', I3, window, lines, counters; ROADMAP s122 item 550(z)(4)):
+-# run by docs/track-f/f20j/run_tests_f20j.py, not by ctest.
+-add_executable(diag_b32_tests EXCLUDE_FROM_ALL
+-	"${KYTY_TESTS_DIR}/DiagB32Tests.cpp"
+-)
+-target_link_libraries(diag_b32_tests common fmt::fmt)
+-target_include_directories(diag_b32_tests PRIVATE ${inc_headers})
+-
+ add_executable(sync_on_address_tests EXCLUDE_FROM_ALL
+ 	"${KYTY_TESTS_DIR}/SyncOnAddressTests.cpp"
+ 	"${KYTY_SOURCE_DIR}/kernel/syncOnAddress.cpp"
+diff --git a/src/common/hostException.cpp b/src/common/hostException.cpp
+index 4c017d13..eff9126a 100644
+--- a/src/common/hostException.cpp
++++ b/src/common/hostException.cpp
+@@ -4,7 +4,6 @@
+ 
+ #include "common/envFlag.h"
+ #include "common/frameStats.h"
+-#include "common/diagB32.h"
+ 
+ #include <atomic>
+ #include <cstdio>
+@@ -171,12 +170,7 @@ static LONG WINAPI ExceptionFilter(PEXCEPTION_POINTERS exception) noexcept {
+ 		// KYTY_FAULT_TRACE=1: every resolved fault, all threads (host tid, RIP, address, time).
+ 		static const bool fault_trace = Common::EnvFlagOn("KYTY_FAULT_TRACE");
+ 		const auto t0       = (Common::FrameStats::Enabled() || fault_trace) ? Common::FrameStats::NowNs() : 0;
+-		Common::DiagB32::Mark b32; // Track F, F20j (KYTY_DIAG_B32 M3 H:fault - the guest exception handler)
+-		if (Common::DiagB32::g_on) [[unlikely]] {
+-			b32.BeginH(Common::DiagB32::Call::Fault);
+-		}
+ 		const bool resolved = handler(info);
+-		b32.End(0, false);
+ 		if (t0 != 0 && fault_trace && info.type == ExceptionType::AccessViolation) {
+ 			static std::atomic<uint32_t> logged {0};
+ 			if (logged.fetch_add(1, std::memory_order_relaxed) < 3000000) {
+diff --git a/src/common/logging/log.cpp b/src/common/logging/log.cpp
+index f8443bcc..3206bf5a 100644
+--- a/src/common/logging/log.cpp
++++ b/src/common/logging/log.cpp
+@@ -1,6 +1,5 @@
+ 
+ #include "common/logging/log.h"
+-#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
+ 
+ #include "common/frameStats.h"
+ 
+@@ -90,7 +89,7 @@ namespace Log {
+ static bool                            g_initialized = false;
+ static Direction                       g_direction   = Direction::Console;
+ static std::filesystem::path           g_output_file;
+-static Common::DiagB32::TrackedMutex<std::mutex>                      g_logger_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
++static std::mutex                      g_logger_mutex;
+ static std::shared_ptr<spdlog::logger> g_logger;
+ 
+ // Track F, F25k (HPP-678; ROADMAP s122 item 613(v)(1)-(6)): KYTY_FIX_B36=1 - the file sink is written by one writer
+@@ -730,7 +729,12 @@ void WriteFatal(fmt::text_style style, std::string_view text) {
+ // (Log::Initialize runs on the main thread from Emulator::Init, before the guest and the host threads start).
+ static void InitAsync() {
+ 	const auto init_ns   = Async::NowNs();
+-	const bool requested = Common::EnvFlagOn("KYTY_FIX_B36");
++	// Track F, FS10a (HPP-684, ROADMAP s122 item 624(e)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
++	// other value as EnvValueOn (the form of FS4a 17adaf80); read once, here.
++	const bool requested = [] {
++		const char* value = std::getenv("KYTY_FIX_B36");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
+ 	Async::ParseStand(init_ns);
+ 	Async::g_on    = requested && g_direction == Direction::File && g_logger != nullptr;
+ 	Async::g_hooks = Async::g_on || Async::g_stand.armed;
+diff --git a/src/common/parallelCopy.cpp b/src/common/parallelCopy.cpp
+index 29bc4f87..9478d44d 100644
+--- a/src/common/parallelCopy.cpp
++++ b/src/common/parallelCopy.cpp
+@@ -1,5 +1,4 @@
+ #include "common/parallelCopy.h"
+-#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
+ 
+ #include "common/frameStats.h"
+ #include "common/gates.h"
+@@ -176,13 +175,7 @@ public:
+ 		// Help with what is left, then wait for chunks other threads are still copying.
+ 		Work();
+ 		std::unique_lock lock(m_mutex);
+-		// Track F, F20j3 (KYTY_DIAG_B32 W:pcopy, item 574(g)(1)): the caller waits for the copy workers (not registered).
+-		Common::DiagB32::Mark b32;
+-		if (Common::DiagB32::g_on) [[unlikely]] {
+-			b32.BeginWReg(Common::DiagB32::Wait::PCopy, this, 0, 0);
+-		}
+ 		m_finished.wait(lock, [&] { return m_pending.load(std::memory_order_acquire) == 0; });
+-		b32.EndSig(&m_finished);
+ 	}
+ 
+ 	[[nodiscard]] size_t Pending() const { return m_pending.load(std::memory_order_acquire); }
+@@ -388,7 +381,6 @@ private:
+ 					SignalIdle();
+ 				}
+ 				std::lock_guard lock(m_mutex);
+-				Common::DiagB32::NoteSignal(&m_finished); // Track F, F20j3
+ 				m_finished.notify_all();
+ 			}
+ 		}
+@@ -481,7 +473,7 @@ private:
+ 		void (*signal)(uint64_t, void*);
+ 		void* user;
+ 	};
+-	Common::DiagB32::TrackedMutex<std::mutex>          m_signal_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
++	std::mutex          m_signal_mutex;
+ 	std::vector<Signal> m_signals;
+ 	uint64_t            m_signaled = 0;
+ 	// Knob "copywake" is READ AT EVERY DECISION, not once per process, and this is the
+diff --git a/src/graphics/host_gpu/pageManager.cpp b/src/graphics/host_gpu/pageManager.cpp
+index 9bea1855..592ff2ff 100644
+--- a/src/graphics/host_gpu/pageManager.cpp
++++ b/src/graphics/host_gpu/pageManager.cpp
+@@ -1,5 +1,4 @@
+ #include "graphics/host_gpu/pageManager.h"
+-#include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
+ 
+ #include "common/alignment.h"
+ #include "common/drawStat.h"
+@@ -75,15 +74,9 @@ constexpr uint64_t REGION_PAGES = REGION_SIZE / PAGE_SIZE;
+ class SpinGuard final {
+ public:
+ 	explicit SpinGuard(std::atomic_flag& lock): m_lock(lock) {
+-		// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): a contended spin of a registered thread (no owner field).
+-		Common::DiagB32::Mark b32;
+ 		while (m_lock.test_and_set(std::memory_order_acquire)) {
+-			if (Common::DiagB32::g_on && !b32.Active()) [[unlikely]] {
+-				b32.BeginWReg(Common::DiagB32::Wait::Spin, &lock, 0, 0);
+-			}
+ 			std::atomic_signal_fence(std::memory_order_seq_cst);
+ 		}
+-		b32.End(0, false);
+ 	}
+ 	~SpinGuard() { m_lock.clear(std::memory_order_release); }
+ 	KYTY_CLASS_NO_COPY(SpinGuard);
+@@ -110,11 +103,6 @@ public:
+ 		namespace FS  = Common::FrameStats;
+ 		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+ 		uint32_t   spins = 0;
+-		// Track F, F20j3 (KYTY_DIAG_B32 W:spin, item 574(g)(1)): the apply lock is held across VirtualProtect.
+-		Common::DiagB32::Mark b32;
+-		if (Common::DiagB32::g_on) [[unlikely]] {
+-			b32.BeginWReg(Common::DiagB32::Wait::Spin, &lock, 0, 0);
+-		}
+ 		do {
+ 			while (m_lock->test(std::memory_order_relaxed)) {
+ 				if (spins < 4096) {
+@@ -129,7 +117,6 @@ public:
+ 				}
+ 			}
+ 		} while (m_lock->test_and_set(std::memory_order_acquire));
+-		b32.End(0, false);
+ 		if (t0 != 0) {
+ 			const auto ns = FS::NowNs() - t0;
+ 			m_wait_ns     = ns;
+@@ -2624,7 +2611,6 @@ struct PageManager::Impl {
+ 			ApplyPending(*item.region, item.base_addr);
+ 			if (inflight.fetch_sub(1, std::memory_order_acq_rel) == 1) {
+ 				std::lock_guard lock(queue_mutex);
+-				Common::DiagB32::NoteSignal(&drain_cv); // Track F, F20j3
+ 				drain_cv.notify_all();
+ 			}
+ 		}
+@@ -2638,13 +2624,7 @@ struct PageManager::Impl {
+ 		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+ 		{
+ 			std::unique_lock lock(queue_mutex);
+-			// Track F, F20j3 (KYTY_DIAG_B32 W:pm_drain, item 574(g)(1)): the caller waits for the protect workers.
+-			Common::DiagB32::Mark b32;
+-			if (Common::DiagB32::g_on) [[unlikely]] {
+-				b32.BeginWReg(Common::DiagB32::Wait::PmDrain, this, 0, 0);
+-			}
+ 			drain_cv.wait(lock, [this] { return inflight.load(std::memory_order_acquire) == 0; });
+-			b32.EndSig(&drain_cv);
+ 		}
+ 		if (t0 != 0) {
+ 			FS::Add(FS::Counter::ProtectDrainNs, FS::NowNs() - t0);
+@@ -2708,7 +2688,7 @@ struct PageManager::Impl {
+ 
+ 	std::unique_ptr<std::atomic<Region*>[]> regions;
+ 	std::vector<std::unique_ptr<Region>>    region_storage;
+-	Common::DiagB32::TrackedMutex<std::mutex>                              region_mutex; // Track F, F20j3 (KYTY_DIAG_B32 W:emu_mutex, ROADMAP s122 item 574(g)(1))
++	std::mutex                              region_mutex;
+ 
+ 	std::mutex               queue_mutex;
+ 	std::condition_variable  queue_cv;
+diff --git a/src/graphics/presentation/videoOut.cpp b/src/graphics/presentation/videoOut.cpp
+index dce711c9..2fa1efbb 100644
+--- a/src/graphics/presentation/videoOut.cpp
++++ b/src/graphics/presentation/videoOut.cpp
+@@ -1,7 +1,6 @@
+ #include "graphics/presentation/videoOut.h"
+ 
+ #include "common/abi.h"
+-#include "common/diagB32.h"
+ #include "common/assert.h"
+ #include "common/frameStats.h"
+ #include "common/gates.h"
+@@ -544,9 +543,6 @@ static int ReserveFlipRequest(VideoOutDriver::Impl& driver, int handle, int inde
+ 	if (!driver.GetFlipQueue().Reserve(*video_out, index, flip_arg, source, request_id)) {
+ 		return VIDEO_OUT_ERROR_FLIP_QUEUE_FULL;
+ 	}
+-	if (Common::DiagB32::g_on) [[unlikely]] { // Track F, F20j (M2 flip request): who requested this flip (flip_tid)
+-		Common::DiagB32::NoteFlipRequest(request_id, source == FlipRequestSource::Cpu);
+-	}
+ 	return OK;
+ }
+ 
+@@ -827,14 +823,8 @@ void VideoOutDriver::Impl::PresentThread(std::stop_token token) {
+ 		if (total_wait > 0) {
+ 			const auto remaining_us =
+ 			    (static_cast<uint64_t>(total_wait) * 1000000u + frequency - 1) / frequency;
+-			// Track F, F20j3 (KYTY_DIAG_B32 W:vo_pace, item 574(g)(1)): the present thread's own vblank pacing sleep.
+-			Common::DiagB32::Mark b32;
+-			if (Common::DiagB32::g_on) [[unlikely]] {
+-				b32.BeginWReg(Common::DiagB32::Wait::VoPace, this, 0, remaining_us);
+-			}
+ 			Common::Thread::SleepMicro(static_cast<uint32_t>(
+ 			    std::clamp<uint64_t>(remaining_us, 1, std::numeric_limits<uint32_t>::max())));
+-			b32.End(0, false);
+ 		}
+ 		if (token.stop_requested()) {
+ 			break;
+@@ -943,17 +933,9 @@ FlipQueue::~FlipQueue() {
+ void FlipQueue::Cancel(VideoOutConfig& cfg) {
+ 	std::vector<Graphics::Presenter::Frame*> frames;
+ 	m_mutex.Lock();
+-	// Track F, F20j3 (KYTY_DIAG_B32 W:flip_cancel, item 574(a)(4)): Close waits for the present of its front request.
+-	Common::DiagB32::Mark b32;
+-	if (Common::DiagB32::g_on && m_processing && !m_requests.empty() && m_requests.front().cfg == &cfg) [[unlikely]] {
+-		b32.BeginWReg(Common::DiagB32::Wait::FlipCancel, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Present), 0);
+-	}
+ 	while (m_processing && !m_requests.empty() && m_requests.front().cfg == &cfg) {
+ 		m_done_cond_var.Wait(&m_mutex);
+ 	}
+-	if (b32.Active()) [[unlikely]] {
+-		b32.End(m_done_cond_var.B32Waker(b32.SinceNs()), false);
+-	}
+ 	for (auto* queue: {&m_requests, &m_cpu_requests}) {
+ 		for (auto it = queue->begin(); it != queue->end();) {
+ 			if (it->cfg != &cfg) {
+@@ -1141,20 +1123,12 @@ bool FlipQueue::MarkSkipCeil(uint64_t request_id) {
+ 
+ void FlipQueue::WaitForSubmitSlot() {
+ 	Common::LockGuard lock(m_mutex);
+-	// Track F, F20j3 (KYTY_DIAG_B32 W:flip_slot, item 574(a)(4)): GuestGpu waits for the present thread to free a slot.
+-	Common::DiagB32::Mark b32;
+-	if (Common::DiagB32::g_on && m_requests.size() + m_cpu_requests.size() >= VIDEO_OUT_FLIP_QUEUE_CAPACITY) [[unlikely]] {
+-		b32.BeginWReg(Common::DiagB32::Wait::FlipSlot, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Present), 0);
+-	}
+ 	while (m_requests.size() + m_cpu_requests.size() >= VIDEO_OUT_FLIP_QUEUE_CAPACITY) {
+ 		if (m_requests.empty()) {
+ 			EXIT("video-out queue is saturated by CPU flips queued behind the current EOP\n");
+ 		}
+ 		m_submit_slot_cond_var.Wait(&m_mutex);
+ 	}
+-	if (b32.Active()) [[unlikely]] {
+-		b32.End(m_submit_slot_cond_var.B32Waker(b32.SinceNs()), false);
+-	}
+ }
+ 
+ void FlipQueue::Wait(VideoOutConfig& cfg, int index) {
+@@ -1165,17 +1139,9 @@ void FlipQueue::Wait(VideoOutConfig& cfg, int index) {
+ 		return std::any_of(m_requests.begin(), m_requests.end(), matches) ||
+ 		       std::any_of(m_cpu_requests.begin(), m_cpu_requests.end(), matches);
+ 	};
+-	// Track F, F20j3 (KYTY_DIAG_B32 W:flip_done, item 574(a)(4)): WaitFlipDone waits until the request is presented.
+-	Common::DiagB32::Mark b32;
+-	if (Common::DiagB32::g_on && has_request()) [[unlikely]] {
+-		b32.BeginWReg(Common::DiagB32::Wait::FlipDone, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Present), 0);
+-	}
+ 	while (has_request()) {
+ 		m_done_cond_var.Wait(&m_mutex);
+ 	}
+-	if (b32.Active()) [[unlikely]] {
+-		b32.End(m_done_cond_var.B32Waker(b32.SinceNs()), false);
+-	}
+ }
+ 
+ bool FlipQueue::Flip(uint32_t micros) {
+@@ -1183,16 +1149,7 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 
+ 	m_mutex.Lock();
+ 	if (m_requests.empty()) {
+-		// Track F, F20j3 (KYTY_DIAG_B32 W:flip_req, item 574(a)(4)): the present thread waits for a flip request; peer -
+-		// GuestGpu (it supplies the GPU flip requests), waker - the last m_submit_cond_var signaller (Complete).
+-		Common::DiagB32::Mark b32;
+-		if (Common::DiagB32::g_on) [[unlikely]] {
+-			b32.BeginWReg(Common::DiagB32::Wait::FlipReq, this, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Gpu), micros);
+-		}
+-		const bool b32_got = m_submit_cond_var.WaitFor(&m_mutex, micros);
+-		if (b32.Active()) [[unlikely]] {
+-			b32.End(m_submit_cond_var.B32Waker(b32.SinceNs()), !b32_got);
+-		}
++		m_submit_cond_var.WaitFor(&m_mutex, micros);
+ 
+ 		if (m_requests.empty()) {
+ 			m_mutex.Unlock();
+@@ -1262,16 +1219,7 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 			Common::FrameStats::Add(Common::FrameStats::Counter::SkcBad, 1); // a skipceil request presented
+ 		}
+ 		const uint64_t present_t0 = Common::FrameStats::NowNs();
+-		// Track F, F20j (KYTY_DIAG_B32 M3 H:present; stand KYTY_TEST_B32 mode present sleeps inside the mark): one flag.
+-		Common::DiagB32::Mark b32;
+-		if (Common::DiagB32::g_present_site) [[unlikely]] {
+-			if (Common::DiagB32::g_on) {
+-				b32.BeginH(Common::DiagB32::Call::Present);
+-			}
+-			Common::DiagB32::TestPresentPoint();
+-		}
+ 		m_presenter.Present(*r.frame);
+-		b32.End(0, false);
+ 		present_ns = Common::FrameStats::NowNs() - present_t0;
+ 		Common::FrameStats::Add(Common::FrameStats::Counter::SkcPresNs, present_ns); // Session 123, S_live ([RC12/O12])
+ 		Common::FrameStats::Add(Common::FrameStats::Counter::SkcPresN, 1);
+@@ -1286,12 +1234,6 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 	m_requests.pop_front();
+ 
+ 	r.cfg->flip_status.count++;
+-	// Track F, F20j (KYTY_DIAG_B32): the window boundary for the B32 sampler (n = FrameTrace: n= of this flip); the
+-	// reports the sampler has closed are printed here, under FlipQueue::m_mutex and VideoOutConfig::mutex (F20j2, RC6 of
+-	// F20k: the print time goes into instr_us of the window open during the print).
+-	if (Common::DiagB32::g_on) [[unlikely]] {
+-		Common::DiagB32::OnFlip(r.cfg->flip_status.count, r.id, r.reserve_host_ns);
+-	}
+ 	// Track P, KYTY_PVAR=2 (kernel/pvar.h): the key n of the PVar line (= FrameTrace: n= of this flip).
+ 	if (LibKernel::PVar::Publishing()) {
+ 		LibKernel::PVar::PublishFlip(r.cfg->flip_status.count);
+@@ -4119,18 +4061,9 @@ KYTY_SYSV_ABI int VideoOutWaitVblank(int handle) {
+ 
+ 	Common::LockGuard lock(ctx->mutex);
+ 	const auto        count = ctx->vblank_status.count;
+-	// Track F, F20j3 (KYTY_DIAG_B32 W:vblank, item 574(a)(4)): the guest waits for the next vblank (VblankEnd of the
+-	// present thread signals) - a wait the guest asked for (GUEST_SLEEP kind group, item 574(d)).
+-	Common::DiagB32::Mark b32;
+-	if (Common::DiagB32::g_on && ctx->opened) [[unlikely]] {
+-		b32.BeginWReg(Common::DiagB32::Wait::Vblank, ctx, Common::DiagB32::PeerSlot(Common::DiagB32::Peer::Present), 0);
+-	}
+ 	while (ctx->opened && ctx->vblank_status.count == count) {
+ 		ctx->vblank_cond.Wait(&ctx->mutex);
+ 	}
+-	if (b32.Active()) [[unlikely]] {
+-		b32.End(ctx->vblank_cond.B32Waker(b32.SinceNs()), false);
+-	}
+ 
+ 	return OK;
+ }
+diff --git a/tests/LogAsyncTests.cpp b/tests/LogAsyncTests.cpp
+index 3f2ebce5..efe6bc54 100644
+--- a/tests/LogAsyncTests.cpp
++++ b/tests/LogAsyncTests.cpp
+@@ -445,9 +445,13 @@ void TestSeq0() {
+ 	CHECK(StartsWith(f1, "LogAsync: mode=1 limit_bytes=268435456"));
+ 	CHECK(f1.find("LogAsync: full_waits=0 ") != std::string::npos);
+ 	CHECK(WithoutPrefix(f1, "LogAsync:") == expected);
+-	Case("seq0_unset: KYTY_FIX_B36 unset - the file equals the =0 file");
++	// Track F, FS10a (HPP-684, ROADMAP s122 item 624(e)(1)): KYTY_FIX_B36 is ON by default - unset is =1.
++	Case("seq0_unset: KYTY_FIX_B36 unset - default ON since FS10a - checked as seq0_1");
+ 	Spawn("seq0", Path("seq0_u"), 0, nullptr, nullptr);
+-	CHECK(ReadFile(Path("seq0_u")) == f0);
++	const auto fu = ReadFile(Path("seq0_u"));
++	CHECK(StartsWith(fu, "LogAsync: mode=1 limit_bytes=268435456"));
++	CHECK(fu.find("LogAsync: full_waits=0 ") != std::string::npos);
++	CHECK(WithoutPrefix(fu, "LogAsync:") == expected);
+ }
+ 
+ void TestOrder() {

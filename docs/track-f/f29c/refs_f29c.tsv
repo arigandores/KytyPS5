@@ -1,0 +1,36 @@
+c94c49e0	src/graphics/host_gpu/renderer/renderContext.cpp	382	const bool fix_b12 = FixB12Enabled();	if (fix_b12) {
+c94c49e0	src/graphics/host_gpu/renderer/renderContext.cpp	384	m_buffer_cache.BeginBdaPass();	}
+c94c49e0	src/graphics/host_gpu/renderer/renderContext.cpp	386	m_mapped_ranges.ForEach([this](uint64_t start, uint64_t end) {	m_buffer_cache.SynchronizeBuffersInRange(start, end - start);
+c94c49e0	src/graphics/host_gpu/renderer/renderContext.cpp	390	m_buffer_cache.EndBdaPass();	}
+c94c49e0	src/graphics/host_gpu/renderer/renderContext.cpp	343	if (bda_cached) {	// Session 83: how many of the 181 calls a frame never scan at all.
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3476	void BufferCache::BeginBdaPass() noexcept {	m_bda_pass++;
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3481	void BufferCache::EndBdaPass() {	m_bda_pass_open = false;
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3495	LOGF("FixB12Stat: passes=%llu rewalk=%llu rwd=%llu\n", static_cast<unsigned long long>(m_bda_pass),	static_cast<unsigned long long>(m_b12_rewalk), static_cast<unsigned long long>(m_b12_rwd));
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	605	LOGF("FixB12: mode=%d\n", fix_b12 ? 1 : 0);	}
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3526	const bool b12_pass = m_bda_pass_open;	for (auto cursor = scan_begin; cursor < scan_end;) {
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3542	if (b12_pass && m_bda_region_stamps[index].walked_pass == m_bda_pass) {	m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3546	if (DirtyRangesTouchBuffers()) {	m_b12_rwd++;
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3550	SynchronizeBuffersOfDirtyRanges();	cursor += bytes;
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3554	const bool bit_clear = use_bits && !BdaTakeRegionWrite(index);	if (bit_clear && m_bda_region_stamps[index].generation == m_bda_stamp_generation) {
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3587	seen = {stamp, m_bda_stamp_generation};	if (b12_pass) {
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3590	seen.walked_pass = m_bda_pass;	}
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3447	m_bda_region_stamps[index].generation = 0; // never the current generation: the next pass walks it	Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionInv, 1);
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3417	SynchronizeBuffersOfDirtyRangesBatched(pass);	return;
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	3342	EXIT("BufferCache: reentrant dirty-range pass\n");	}
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.h	386	uint64_t                   walked_pass = 0;	};
+c94c49e0	src/graphics/host_gpu/renderer/cache/bufferCache.h	399	uint64_t                                           m_bda_pass      = 0;	bool                                               m_bda_pass_open = false;
+c94c49e0	src/graphics/host_gpu/regionManager.h	67	[[nodiscard]] inline bool FixB12Enabled() noexcept {	static const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_B12"));
+c94c49e0	src/graphics/guest_gpu/graphicsRun.cpp	990	Common::LockGuard lock(renderer.GetMutex());	renderer.PrepareBda();
+c94c49e0	src/graphics/host_gpu/renderer/renderCompute.cpp	493	Common::LockGuard            lock(m_context.GetMutex());	Common::FrameStats::MutexMark lock_mark(lock_t0);
+c94c49e0	src/graphics/host_gpu/renderer/renderCompute.cpp	1143	m_context.PrepareBda();	}
+c94c49e0	src/graphics/host_gpu/renderer/renderCompute.cpp	460	void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,	uint32_t thread_group_x, uint32_t thread_group_y,
+c94c49e0	src/graphics/host_gpu/renderer/renderDraw.cpp	4973	void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,	const DrawIndexArgs& args) {
+c94c49e0	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	5477	m_context.PrepareBda();	if (rb_chain) {
+c94c49e0	src/graphics/host_gpu/renderer/renderDraw.cpp	4176	PrepareGraphicsBindings(stages, std::span {state.color_info, state.color_count});	} else {
+c94c49e0	src/common/frameStats.h	1865	BdaB12Rewalk,            // bda_b12_rewalk	BdaB12Rwd,               // bda_b12_rwd
+c94c49e0	src/graphics/presentation/videoOut.cpp	2721	{"bda_b12_rewalk", FS::Counter::BdaB12Rewalk, false},	{"bda_b12_rwd", FS::Counter::BdaB12Rwd, false},
+c94c49e0	tests/B12BdaStampStand.cpp	212	if (b12_pass && region_stamps[index].walked_pass == bda_pass) {	tracker.CollectCpuModifiedRanges(cursor, bytes, dirty_ranges);
+c94c49e0	tests/B12BdaStampStand.cpp	239	seen.walked_pass = bda_pass;	}
+c94c49e0	tests/B12BdaStampStand.cpp	355	cache.BeginBdaPass();	}
+c94c49e0	tests/B12BdaStampStand.cpp	366	cache.EndBdaPass();	}
+c94c49e0	tests/B12BdaStampStand.cpp	359	if (hook != nullptr) { // stand-only: between the first and the second range	auto* fire = hook;

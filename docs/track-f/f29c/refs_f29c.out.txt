@@ -1,0 +1,27 @@
+ok c94c49e0:src/common/frameStats.h:1865 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/regionManager.h:67 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3476 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3481 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3495 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3526 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3542 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3546 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3550 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3554 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3587 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3590 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:605 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.h:386 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/cache/bufferCache.h:399 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/renderContext.cpp:343 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/renderContext.cpp:382 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/renderContext.cpp:384 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/renderContext.cpp:386 anchor ok, +1 ok
+ok c94c49e0:src/graphics/host_gpu/renderer/renderContext.cpp:390 anchor ok, +1 ok
+ok c94c49e0:src/graphics/presentation/videoOut.cpp:2721 anchor ok, +1 ok
+ok c94c49e0:tests/B12BdaStampStand.cpp:212 anchor ok, +1 ok
+ok c94c49e0:tests/B12BdaStampStand.cpp:239 anchor ok, +1 ok
+ok c94c49e0:tests/B12BdaStampStand.cpp:355 anchor ok, +1 ok
+ok c94c49e0:tests/B12BdaStampStand.cpp:359 anchor ok, +1 ok
+ok c94c49e0:tests/B12BdaStampStand.cpp:366 anchor ok, +1 ok
+REFS 26, ALL OK

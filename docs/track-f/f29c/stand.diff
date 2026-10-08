@@ -1,0 +1,256 @@
+diff --git a/tests/B12BdaStampStand.cpp b/tests/B12BdaStampStand.cpp
+index 32e0ed17..b869cfdf 100644
+--- a/tests/B12BdaStampStand.cpp
++++ b/tests/B12BdaStampStand.cpp
+@@ -31,7 +31,17 @@
+ // still holds it CPU-dirty after the passes (real detector: MemoryTracker::IsRegionCpuModified). A lost page is then
+ // consumed outside the model (counted as reset) so that every iteration starts with B1 and B2 clean.
+ //
+-// Usage: b12_bdastamp_stand <hole|nob1|split|touch> <upper|lower> <passes> <iters>
++// Track F, F29c (HPP-702, ROADMAP s122 item 639(e)(1)): the branch KYTY_FIX_B12=1 of the model is a statement-by-statement
++// copy of the code change (BufferCache::BeginBdaPass / EndBdaPass, the revisit and walked_pass of
++// SynchronizeBuffersByRegion, the pass around the ForEach of PrepareBda); the knob is the code's own read
++// (Libs::Graphics::FixB12Enabled). The optional fifth argument hook=<upper|lower> announces one more page - of B2 / B1 -
++// between the walks of the first and the second mapped range of the FIRST pass of every iteration (stand-only
++// instrument, not a statement of the code; it fires only in a pass that walks); write=none announces no page before
++// the passes (hook only). Counted per pass: revisits (rewalk) and the pieces among them that touch a registered
++// buffer (rwd); per iteration: scans and revisits in the passes after the first (late_*), and the minimum and
++// maximum of revisits over the passes that scanned at least one region (rw_min / rw_max; scan_passes of them).
++//
++// Usage: b12_bdastamp_stand <hole|nob1|split|touch> <upper|lower|none> <passes> <iters> [hook=<upper|lower>]
+ // Knobs of the code under test are read from the environment as the emulator reads them: KYTY_BDA_REGION_STAMPS
+ // (gate "bdastamp", default on), KYTY_BDA_WRITE_BITS (gate "bdabits", default off), KYTY_BDA_NARROW_STAMPS (knob
+ // "bdanarrow", default 0), KYTY_FIX_B13 (default 1), KYTY_BDA_EPOCH_CACHE, KYTY_BDA_DIRTY_RANGES (default on).
+@@ -106,6 +116,7 @@ struct Cache {
+ 	struct BdaRegionStamp {
+ 		MemoryTracker::RegionStamp stamp;
+ 		uint64_t                   generation = 0;
++		uint64_t                   walked_pass = 0; // F29c: KYTY_FIX_B12=1 only
+ 	};
+ 	std::vector<BdaRegionStamp> region_stamps;          // m_bda_region_stamps
+ 	uint64_t                    stamp_generation   = 1; // m_bda_stamp_generation
+@@ -113,6 +124,9 @@ struct Cache {
+ 	uint64_t                    bits_generation    = 0; // m_bda_bits_generation
+ 	bool                        narrow_check       = false;
+ 	uint64_t                    registration_epoch = 1; // m_registration_epoch
++	uint64_t                    bda_pass           = 0;     // m_bda_pass (F29c)
++	bool                        bda_pass_open      = false; // m_bda_pass_open (F29c)
++	uint64_t                    rewalk = 0, rwd = 0;         // m_b12_rewalk, m_b12_rwd (F29c)
+ 	// stand counters
+ 	uint64_t              scanned = 0, skipped = 0, bit_skipped = 0, nwould = 0, nmiss = 0, nrace = 0, syncs = 0;
+ 	std::vector<GuestRange> synced; // pieces synchronized since the last clear (model detector)
+@@ -175,6 +189,15 @@ struct Cache {
+ 		}
+ 	}
+ 
++	void BeginBdaPass() {
++		bda_pass++;
++		bda_pass_open = true;
++	}
++
++	void EndBdaPass() {
++		bda_pass_open = false; // the FixB12Stat: line of the code only prints; not modelled
++	}
++
+ 	void ByRegion(uint64_t scan_begin, uint64_t scan_end) {
+ 		if (region_stamps.empty()) {
+ 			region_stamps.resize(MemoryTracker::RegionCount());
+@@ -182,9 +205,20 @@ struct Cache {
+ 		const bool use_bits = Common::Gates::Enabled(Common::Gates::Gate::BdaWriteBits) &&
+ 		                      bits_generation == stamp_generation;
+ 		bits_generation = stamp_generation;
++		const bool b12_pass = bda_pass_open;
+ 		for (auto cursor = scan_begin; cursor < scan_end;) {
+ 			const auto index = cursor / TRACKER_REGION_SIZE;
+ 			const auto bytes = std::min(scan_end - cursor, TRACKER_REGION_SIZE - cursor % TRACKER_REGION_SIZE);
++			if (b12_pass && region_stamps[index].walked_pass == bda_pass) {
++				tracker.CollectCpuModifiedRanges(cursor, bytes, dirty_ranges);
++				rewalk++;
++				if (DirtyRangesTouchBuffers()) {
++					rwd++;
++				}
++				OfDirtyRanges();
++				cursor += bytes;
++				continue;
++			}
+ 			const bool bit_clear = use_bits && !Libs::Graphics::BdaTakeRegionWrite(index);
+ 			if (bit_clear && region_stamps[index].generation == stamp_generation) {
+ 				bit_skipped++;
+@@ -201,6 +235,9 @@ struct Cache {
+ 			}
+ 			const auto prev = seen;
+ 			seen            = {stamp, stamp_generation};
++			if (b12_pass) {
++				seen.walked_pass = bda_pass;
++			}
+ 			scanned++;
+ 			if (narrow_check) {
+ 				const auto locked = tracker.CollectCpuModifiedRangesStamped(cursor, bytes, dirty_ranges);
+@@ -276,6 +313,9 @@ struct Context {
+ 	uint64_t bda_registration_epoch = 0;
+ 	uint64_t bda_mapping_epoch      = 0;
+ 	uint64_t hits = 0, calls = 0, ginv_map = 0, ginv_reg = 0, nskip = 0;
++	// Stand-only instrument (F29c): called once after the walk of the first mapped range of a walking pass, then disarmed.
++	void (*hook)(void*) = nullptr;
++	void* hook_arg      = nullptr;
+ 
+ 	void Map(uint64_t vaddr, uint64_t size) {
+ 		mapped_ranges.Add(vaddr, size);
+@@ -310,7 +350,21 @@ struct Context {
+ 				ginv_reg++;
+ 			}
+ 		}
+-		mapped_ranges.ForEach([this](uint64_t start, uint64_t end) { cache.InRange(start, end - start); });
++		const bool fix_b12 = Libs::Graphics::FixB12Enabled();
++		if (fix_b12) {
++			cache.BeginBdaPass();
++		}
++		mapped_ranges.ForEach([this](uint64_t start, uint64_t end) {
++			cache.InRange(start, end - start);
++			if (hook != nullptr) { // stand-only: between the first and the second range
++				auto* fire = hook;
++				hook       = nullptr;
++				fire(hook_arg);
++			}
++		});
++		if (fix_b12) {
++			cache.EndBdaPass();
++		}
+ 		bda_cpu_epoch          = cpu_epoch;
+ 		bda_registration_epoch = registration_epoch;
+ 		bda_mapping_epoch      = mapping_epoch;
+@@ -329,8 +383,9 @@ bool Covered(const std::vector<GuestRange>& pieces, uint64_t address, uint64_t s
+ } // namespace
+ 
+ int main(int argc, char** argv) {
+-	if (argc != 5) {
+-		std::printf("usage: b12_bdastamp_stand <hole|nob1|split|touch> <upper|lower> <passes> <iters>\n");
++	if (argc != 5 && argc != 6) {
++		std::printf("usage: b12_bdastamp_stand <hole|nob1|split|touch> <upper|lower|none> <passes> <iters> "
++		            "[hook=<upper|lower>]\n");
+ 		return 2;
+ 	}
+ 	const char*    layout = argv[1];
+@@ -343,7 +398,17 @@ int main(int argc, char** argv) {
+ 	const bool     touch  = std::strcmp(layout, "touch") == 0;
+ 	const bool     upper  = std::strcmp(write, "upper") == 0;
+ 	const bool     lower  = std::strcmp(write, "lower") == 0;
+-	if ((!hole && !nob1 && !split && !touch) || (!upper && !lower) || (nob1 && lower) || passes == 0 || iters == 0) {
++	const bool     none   = std::strcmp(write, "none") == 0;
++	const char*    hook_s = argc == 6 ? argv[5] : "";
++	const bool     h_up   = std::strcmp(hook_s, "hook=upper") == 0;
++	const bool     h_low  = std::strcmp(hook_s, "hook=lower") == 0;
++	const bool     h_any  = h_up || h_low;
++	if ((argc == 6 && !h_any) || (none && !h_any) || (nob1 && h_low)) {
++		std::printf("bad arguments\n");
++		return 2;
++	}
++	if ((!hole && !nob1 && !split && !touch) || (!upper && !lower && !none) || (nob1 && lower) || passes == 0 ||
++	    iters == 0) {
+ 		std::printf("bad arguments\n");
+ 		return 2;
+ 	}
+@@ -395,6 +460,7 @@ int main(int argc, char** argv) {
+ 	context.Prepare(); // the witnesses of the clean state
+ 
+ 	const uint64_t target      = upper ? m2 : m1;
++	const uint64_t h_target    = h_up ? m2 : m1;
+ 	const auto     scanned0    = cache.scanned;
+ 	const auto     skipped0    = cache.skipped;
+ 	const auto     bitskipped0 = cache.bit_skipped;
+@@ -403,15 +469,77 @@ int main(int argc, char** argv) {
+ 	const auto     nwould0     = cache.nwould;
+ 	const auto     nmiss0      = cache.nmiss;
+ 	uint64_t       lost = 0, dirty = 0, both = 0, reset = 0, clean_before_bad = 0;
++	const auto     rewalk0 = cache.rewalk;
++	const auto     rwd0    = cache.rwd;
++	uint64_t       hlost = 0, hdirty = 0, hboth = 0, hfired = 0, late_scans = 0, late_rewalks = 0;
++	uint64_t       scan_passes = 0, rw_min = UINT64_MAX, rw_max = 0;
++	struct HookState {
++		MemoryTracker* tracker;
++		uint64_t       address;
++		uint64_t       size;
++		size_t         synced_at;
++		Cache*         cache;
++		bool           fired;
++	} hs {&tracker, 0, page, 0, &cache, false};
+ 	for (uint64_t i = 0; i < iters; i++) {
+ 		const uint64_t address = target + (i % (b_size / page)) * page;
+-		if (tracker.IsRegionCpuModified(address, page)) {
++		if (!none && tracker.IsRegionCpuModified(address, page)) {
+ 			clean_before_bad++;
+ 		}
+-		tracker.MarkRegionAsCpuModified(address, page); // the real ChangeState<Cpu, true>: a CPU write announced
++		if (!none) {
++			tracker.MarkRegionAsCpuModified(address, page); // the real ChangeState<Cpu, true>: a CPU write announced
++		}
+ 		cache.synced.clear();
++		if (h_any) {
++			hs.address = h_target + ((i + 8) % (b_size / page)) * page;
++			hs.fired   = false;
++			if (tracker.IsRegionCpuModified(hs.address, page)) {
++				clean_before_bad++;
++			}
++			context.hook_arg = &hs;
++			context.hook     = [](void* arg) {
++				auto* s      = static_cast<HookState*>(arg);
++				s->synced_at = s->cache->synced.size();
++				s->fired     = true;
++				s->tracker->MarkRegionAsCpuModified(s->address, s->size); // the real ChangeState<Cpu, true>
++			};
++		}
+ 		for (uint64_t p = 0; p < passes; p++) {
++			const auto s0 = cache.scanned;
++			const auto r0 = cache.rewalk;
+ 			context.Prepare();
++			const auto ds = cache.scanned - s0;
++			const auto dr = cache.rewalk - r0;
++			if (ds != 0) {
++				scan_passes++;
++				rw_min = std::min(rw_min, dr);
++				rw_max = std::max(rw_max, dr);
++			}
++			if (p != 0) {
++				late_scans += ds;
++				late_rewalks += dr;
++			}
++		}
++		context.hook = nullptr; // a hook that found no walking pass stays unfired (counted by hook_fired)
++		if (h_any) {
++			if (hs.fired) {
++				hfired++;
++				const std::vector<GuestRange> after(cache.synced.begin() + static_cast<std::ptrdiff_t>(hs.synced_at),
++				                                    cache.synced.end());
++				const bool h_lost  = !Covered(after, hs.address, page);
++				const bool h_dirty = tracker.IsRegionCpuModified(hs.address, page);
++				hlost += h_lost ? 1 : 0;
++				hdirty += h_dirty ? 1 : 0;
++				hboth += (h_lost && h_dirty) ? 1 : 0;
++			}
++			if (tracker.IsRegionCpuModified(hs.address, page)) {
++				reset++;
++				(void)tracker.ForEachUploadRange(hs.address, page, false, [](uint64_t, uint64_t) noexcept {},
++				                                 []() noexcept {});
++			}
++		}
++		if (none) {
++			continue;
+ 		}
+ 		const bool is_lost  = !Covered(cache.synced, address, page);
+ 		const bool is_dirty = tracker.IsRegionCpuModified(address, page);
+@@ -445,6 +573,15 @@ int main(int argc, char** argv) {
+ 	            Common::Gates::Enabled(Common::Gates::Gate::BdaWriteBits) ? 1 : 0,
+ 	            static_cast<unsigned>(Common::Gates::Value(Common::Gates::Knob::BdaNarrowStamps)),
+ 	            Libs::Graphics::FixB13Enabled() ? 1 : 0, static_cast<unsigned long long>(page));
++	std::printf("B12c fix_b12=%d hook=%s hook_fired=%llu hlost=%llu hdirty=%llu hlost_and_dirty=%llu rewalk=%llu rwd=%llu "
++	            "scan_passes=%llu rw_min=%llu rw_max=%llu late_scans=%llu late_rewalks=%llu\n",
++	            Libs::Graphics::FixB12Enabled() ? 1 : 0, h_any ? hook_s + 5 : "none",
++	            static_cast<unsigned long long>(hfired), static_cast<unsigned long long>(hlost),
++	            static_cast<unsigned long long>(hdirty), static_cast<unsigned long long>(hboth),
++	            static_cast<unsigned long long>(cache.rewalk - rewalk0), static_cast<unsigned long long>(cache.rwd - rwd0),
++	            static_cast<unsigned long long>(scan_passes),
++	            static_cast<unsigned long long>(scan_passes == 0 ? 0 : rw_min), static_cast<unsigned long long>(rw_max),
++	            static_cast<unsigned long long>(late_scans), static_cast<unsigned long long>(late_rewalks));
+ 	std::fflush(stdout);
+ 	// The uploads armed write watchers: the tracker drops them before the PageManager is destroyed (its fail-fast on live
+ 	// page state), as tests/MemoryTrackerTests.cpp does.

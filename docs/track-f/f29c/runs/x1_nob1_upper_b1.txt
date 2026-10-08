@@ -1,0 +1,8 @@
+args: nob1 upper 1 10000
+env: {'KYTY_BDA_WRITE_BITS': '1', 'KYTY_FIX_B12': '1'}
+rc: 0
+seconds: 0.0
+FixB13: mode=1
+B12 layout=nob1 write=upper passes=1 iters=10000 lost=0 dirty=0 lost_and_dirty=0 reset=0 warm_reset=0 clean_before_bad=0 mapped_ranges=2 same_region=1 calls=10000 hits=0 region_scans=10000 region_skips=0 bit_skips=0 nwould=0 nmiss=0 gate_bdastamp=1 gate_bdabits=1 bdanarrow=0 fix_b13=1 page=4096
+B12c fix_b12=1 hook=none hook_fired=0 hlost=0 hdirty=0 hlost_and_dirty=0 rewalk=0 rwd=0 scan_passes=10000 rw_min=0 rw_max=0 late_scans=0 late_rewalks=0
+

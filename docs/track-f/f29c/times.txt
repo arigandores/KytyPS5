@@ -1,0 +1,16 @@
+2026-10-08T22:21:18Z start F29c HPP-702 heartbeat; lock no, STOP no; API: harness series in_progress none (HPP-698 Probe Designer offline, HPP-701 lead)
+2026-10-08T22:25:50Z member (e)(0) section written to docs/track-f/f29c.md before first code line (sha256 in f29c/s0_before_code.sha256); no reader broken -> code proceeds; residual race noted
+2026-10-08T22:27:08Z first code line: patch_f29c.py applied to main worktree
+2026-10-08T22:29:07Z code commit c94c49e0 in main (code + stand); gate order clean
+2026-10-08T22:30:21Z rule 30 API check before: configure wt and wtb | in_progress: HPP-706:8e98843f:run HPP-702:eb15eb75:run
+2026-10-08T22:32:14Z rule 30 API check before: build stand in wt (parent) | in_progress: HPP-706:8e98843f:run HPP-702:eb15eb75:run
+2026-10-08T22:32:29Z rule 30 API check before: build tests in wt (parent) | in_progress: HPP-706:8e98843f:run HPP-702:eb15eb75:run
+2026-10-08T22:33:43Z rule 30 API check before: tests parent | in_progress: HPP-706:8e98843f:run HPP-702:eb15eb75:run
+2026-10-08T22:34:08Z rule 30 API check before: build commit wt | in_progress: HPP-706:8e98843f:run HPP-702:eb15eb75:run
+2026-10-08T22:35:34Z trial stand runs (100 iters) before p0 - code check only
+2026-10-08T22:37:07Z p0_f29c.md sealed sha256 65bfc2bb0b4d8b16f127caed8de2137347fd3ac64a30325a55641200ca24a118 (before the matrix)
+2026-10-08T22:37:11Z matrix start (run_stand_f29c.py --iters 10000)
+2026-10-08T22:37:17Z matrix end
+2026-10-08T22:37:30Z rule 30 API check before: build emulator wtb | in_progress: HPP-706:8e98843f:run HPP-702:eb15eb75:run
+2026-10-08T22:38:36Z binary F29c sha256 7628e7ce904e584ebc51c368843661e15c44ecbd5b913cb100e4b7362f1ae6e4 copied to C:/kyty/f287/bin/kyty_emulator_7628e7ce.exe
+2026-10-08T22:42:10Z FACTS.md section F29c written; report assembled; refs ALL OK

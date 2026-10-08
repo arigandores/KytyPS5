@@ -1,0 +1,4 @@
+negative control: first reference shifted by +1 (`c94c49e0:src/graphics/host_gpu/regionManager.h:67`)
+FAIL c94c49e0:src/graphics/host_gpu/regionManager.h:68 no anchor row
+REFS 26, FAILED
+rc 1

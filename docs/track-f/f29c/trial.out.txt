@@ -1,0 +1,14 @@
+== fix_b12=0
+FixB13: mode=1
+B12 layout=hole write=upper passes=2 iters=100 lost=100 dirty=100 lost_and_dirty=100 reset=100 warm_reset=0 clean_before_bad=0 mapped_ranges=2 same_region=1 calls=200 hits=100 region_scans=100 region_skips=100 bit_skips=0 nwould=0 nmiss=0
+B12c fix_b12=0 hook=none hook_fired=0 hlost=0 hdirty=0 hlost_and_dirty=0 rewalk=0 rwd=0 scan_passes=100 rw_min=0 rw_max=0 late_scans=0 late_rewalks=0
+B12c fix_b12=0 hook=lower hook_fired=100 hlost=100 hdirty=100 hlost_and_dirty=100 rewalk=0 rwd=0 scan_passes=100 rw_min=0 rw_max=0 late_scans=0 late_rewalks=0
+B12c fix_b12=0 hook=lower hook_fired=100 hlost=100 hdirty=100 hlost_and_dirty=100 rewalk=0 rwd=0 scan_passes=100 rw_min=0 rw_max=0 late_scans=0 late_rewalks=0
+B12c fix_b12=0 hook=none hook_fired=0 hlost=0 hdirty=0 hlost_and_dirty=0 rewalk=0 rwd=0 scan_passes=100 rw_min=0 rw_max=0 late_scans=0 late_rewalks=0
+== fix_b12=1
+FixB13: mode=1
+B12 layout=hole write=upper passes=2 iters=100 lost=0 dirty=0 lost_and_dirty=0 reset=0 warm_reset=0 clean_before_bad=0 mapped_ranges=2 same_region=1 calls=200 hits=100 region_scans=100 region_skips=0 bit_skips=0 nwould=0 nmiss=0
+B12c fix_b12=1 hook=none hook_fired=0 hlost=0 hdirty=0 hlost_and_dirty=0 rewalk=100 rwd=100 scan_passes=100 rw_min=1 rw_max=1 late_scans=0 late_rewalks=0
+B12c fix_b12=1 hook=lower hook_fired=100 hlost=0 hdirty=0 hlost_and_dirty=0 rewalk=200 rwd=100 scan_passes=200 rw_min=1 rw_max=1 late_scans=100 late_rewalks=100
+B12c fix_b12=1 hook=lower hook_fired=100 hlost=100 hdirty=100 hlost_and_dirty=100 rewalk=0 rwd=0 scan_passes=100 rw_min=0 rw_max=0 late_scans=0 late_rewalks=0
+B12c fix_b12=1 hook=none hook_fired=0 hlost=0 hdirty=0 hlost_and_dirty=0 rewalk=100 rwd=100 scan_passes=100 rw_min=1 rw_max=1 late_scans=0 late_rewalks=0

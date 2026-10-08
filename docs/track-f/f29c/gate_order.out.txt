@@ -1,0 +1,5 @@
+  UNMATCHED (not a swap, check by hand): entry 44 DispCeiling <-> row KYTY_DISP_CEILING / dispceil
+  UNMATCHED (not a swap, check by hand): entry 45 RebindCensus <-> row KYTY_REBIND_CENSUS / rbcen
+  UNMATCHED (not a swap, check by hand): entry 47 RebindSlowCensus <-> row KYTY_REBIND_SLOW_CENSUS / rbslow
+
+GATE ORDER: clean

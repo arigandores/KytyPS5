@@ -1,0 +1,217 @@
+diff --git a/src/common/frameStats.h b/src/common/frameStats.h
+index de7a4e9f..c01dda64 100644
+--- a/src/common/frameStats.h
++++ b/src/common/frameStats.h
+@@ -1859,6 +1859,11 @@ enum class Counter : uint32_t {
+ 	// the region lock did not - a guest write landed between the two reads (information; knob 1 walks the region on its
+ 	// next pass).  Raw count.
+ 	BdaNarrowRace,           // bda_nrace
++	// Track F, F29c (KYTY_FIX_B12=1, ROADMAP s122 item 639(g)(4)): revisits of a region in the same BDA pass, and those
++	// whose collected piece gave a dirty range overlapping a registered buffer (pages the path of 0 would not have
++	// collected by the BDA scan).  Raw counts; they decide nothing.
++	BdaB12Rewalk,            // bda_b12_rewalk
++	BdaB12Rwd,               // bda_b12_rwd
+ 	// Session 113 (item 18): the priority-operation stall instrument (raw counts).  prio_unsub: priority waits that
+ 	// started on the recording (unsubmitted) tick; prio_stall: priority waits longer than 50 ms (PriorityStall: lines);
+ 	// gw_idle_prio: GuestGpu went idle or slept with every queue blocked while a priority operation sat on the
+diff --git a/src/graphics/host_gpu/regionManager.h b/src/graphics/host_gpu/regionManager.h
+index 476ea4e7..8e8436f4 100644
+--- a/src/graphics/host_gpu/regionManager.h
++++ b/src/graphics/host_gpu/regionManager.h
+@@ -58,6 +58,17 @@ void Hook(int point) noexcept;
+ 	return on;
+ }
+ 
++// Track F, F29c (HPP-702, ROADMAP s122 item 639(d)): knob KYTY_FIX_B12, read once per process; default OFF - unset, "",
++// 0/false/off/no = OFF (Common::EnvValueOn). At 1 the incremental BDA scan numbers its passes (RenderContext::PrepareBda),
++// and a tracking region already walked in the current pass by another mapped range is walked again for the piece of
++// this range (BufferCache::SynchronizeBuffersByRegion) - B12: the witness of the whole 4 MiB region was written by the
++// walk of the first range while only that range's piece was collected, so the second range skipped the region.
++// BufferCache's constructor prints "FixB12: mode=<0|1>" once per process.
++[[nodiscard]] inline bool FixB12Enabled() noexcept {
++	static const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_B12"));
++	return on;
++}
++
+ class TrackingSpinLock final {
+ public:
+ 	void lock() noexcept {
+diff --git a/src/graphics/host_gpu/renderer/cache/bufferCache.cpp b/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+index 9bdd86ea..580a12f6 100644
+--- a/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+@@ -598,6 +598,12 @@ BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
+ 	LOGF("BufferGc: budget=%llu trigger=%llu critical=%llu shift_mb=%llu\n", static_cast<unsigned long long>(budget),
+ 	     static_cast<unsigned long long>(m_trigger_gc_memory), static_cast<unsigned long long>(m_critical_gc_memory),
+ 	     static_cast<unsigned long long>(shift_mb));
++	// Track F, F29c (KYTY_FIX_B12, ROADMAP s122 item 639(d)): the knob is read here, once per process, and printed once.
++	static std::atomic<bool> fix_b12_logged {false};
++	const bool               fix_b12 = FixB12Enabled();
++	if (!fix_b12_logged.exchange(true, std::memory_order_relaxed)) {
++		LOGF("FixB12: mode=%d\n", fix_b12 ? 1 : 0);
++	}
+ }
+ 
+ BufferCache::~BufferCache() {
+@@ -3467,6 +3473,29 @@ bool BufferCache::DirtyRangesTouchBuffers(uint64_t* range_address, uint64_t* ran
+ 	return false;
+ }
+ 
++void BufferCache::BeginBdaPass() noexcept {
++	m_bda_pass++;
++	m_bda_pass_open = true;
++}
++
++void BufferCache::EndBdaPass() {
++	m_bda_pass_open = false;
++	// Item 639(g)(5): the running totals, at most once in 10 s of host time and only when one of them moved.
++	if (m_bda_pass == m_b12_stat_pass && m_b12_rewalk == m_b12_stat_rewalk && m_b12_rwd == m_b12_stat_rwd) {
++		return;
++	}
++	const auto now = std::chrono::steady_clock::now();
++	if (m_b12_stat_pass != 0 && now - m_b12_stat_time < std::chrono::seconds(10)) {
++		return;
++	}
++	m_b12_stat_time   = now;
++	m_b12_stat_pass   = m_bda_pass;
++	m_b12_stat_rewalk = m_b12_rewalk;
++	m_b12_stat_rwd    = m_b12_rwd;
++	LOGF("FixB12Stat: passes=%llu rewalk=%llu rwd=%llu\n", static_cast<unsigned long long>(m_bda_pass),
++	     static_cast<unsigned long long>(m_b12_rewalk), static_cast<unsigned long long>(m_b12_rwd));
++}
++
+ // Incremental variant (gate "bdastamp"): only regions that announced a CPU write since the last
+ // scan are locked and walked. The witness is read and stored BEFORE the region is scanned, so a
+ // write racing with the scan is seen by the next preparation instead of being lost.
+@@ -3493,6 +3522,8 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
+ 	                      m_bda_bits_generation == m_bda_stamp_generation;
+ 	const bool bits_check = use_bits && Common::Gates::Enabled(Common::Gates::Gate::BdaWriteBitsVerify);
+ 	m_bda_bits_generation = m_bda_stamp_generation;
++	// Track F, F29c (KYTY_FIX_B12=1, ROADMAP s122 item 639(d), (g)(3)): true only inside an open pass of PrepareBda.
++	const bool b12_pass = m_bda_pass_open;
+ 	for (auto cursor = scan_begin; cursor < scan_end;) {
+ 		const auto index = cursor / TRACKER_REGION_SIZE;
+ 		const auto bytes =
+@@ -3503,6 +3534,23 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
+ 		// stored under the current generation (the vector, contiguous and cheap to read). The
+ 		// generation half is what the first cut of this gate omitted, and omitting it skipped
+ 		// regions that had never been scanned at all.
++		// Track F, F29c (KYTY_FIX_B12=1, ROADMAP s122 item 639(d), (g)(1)): another mapped range walked this region in this
++		// pass and wrote its witness, but collected only its own piece. This piece is collected and synchronized now -
++		// without the bit (taking it would drop a write announced after the first visit's collect, and the next pass
++		// would skip the region on a clear bit), without the witness test and without writing the witness: a write
++		// after the first visit's stamp read moved the stamp, so the next pass walks the region again.
++		if (b12_pass && m_bda_region_stamps[index].walked_pass == m_bda_pass) {
++			m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
++			m_b12_rewalk++;
++			Common::FrameStats::Add(Common::FrameStats::Counter::BdaB12Rewalk, 1);
++			if (DirtyRangesTouchBuffers()) {
++				m_b12_rwd++;
++				Common::FrameStats::Add(Common::FrameStats::Counter::BdaB12Rwd, 1);
++			}
++			SynchronizeBuffersOfDirtyRanges();
++			cursor += bytes;
++			continue;
++		}
+ 		const bool bit_clear = use_bits && !BdaTakeRegionWrite(index);
+ 		if (bit_clear && m_bda_region_stamps[index].generation == m_bda_stamp_generation) {
+ 			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsBitSkipped, 1);
+@@ -3537,6 +3585,10 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
+ 		// Session 113, knob "bdanarrow" 2: the previous witness of this region, before the walk overwrites it.
+ 		const auto prev = seen;
+ 		seen = {stamp, m_bda_stamp_generation};
++		if (b12_pass) {
++			// Item 639(g)(2): after the assignment above, which resets the field; the skips above never set it.
++			seen.walked_pass = m_bda_pass;
++		}
+ 		Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsScanned, 1);
+ 		const uint64_t bda_scan_t0 =
+ 		    bda_split && Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+diff --git a/src/graphics/host_gpu/renderer/cache/bufferCache.h b/src/graphics/host_gpu/renderer/cache/bufferCache.h
+index fe835a29..f5aef294 100644
+--- a/src/graphics/host_gpu/renderer/cache/bufferCache.h
++++ b/src/graphics/host_gpu/renderer/cache/bufferCache.h
+@@ -17,6 +17,7 @@
+ #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
+ 
+ #include <atomic>
++#include <chrono>
+ #include <map>
+ #include <mutex>
+ #include <span>
+@@ -171,6 +172,11 @@ public:
+ 	// scanned since then are what knob 1 keeps - and whether this pass checks what knob 1 would skip (knob 2).
+ 	void               NoteBdaMapInvalidation() noexcept { m_bda_map_generation = m_bda_stamp_generation; }
+ 	void               SetBdaNarrowCheck(bool check) noexcept { m_bda_narrow_check = check; }
++	// Track F, F29c (KYTY_FIX_B12, ROADMAP s122 item 639(d), (g)(3)): called by PrepareBda at 1 only, around its
++	// m_mapped_ranges.ForEach - the pass is open between the two calls and nowhere else, so a walk outside it is the
++	// path of 0. EndBdaPass also prints "FixB12Stat:" (item 639(g)(5)).
++	void               BeginBdaPass() noexcept;
++	void               EndBdaPass();
+ 	// Gate "bdabits": the generation the write map was last consulted under. While it lags
+ 	// m_bda_stamp_generation the map is bypassed, because a generation bump invalidates stamps
+ 	// without any region having announced a write.
+@@ -375,6 +381,9 @@ private:
+ 	struct BdaRegionStamp {
+ 		MemoryTracker::RegionStamp stamp;
+ 		uint64_t                   generation = 0;
++		// Track F, F29c (KYTY_FIX_B12): the BDA pass (m_bda_pass) whose scanning visit last wrote this witness; 0 - none.
++		// Written and read at KYTY_FIX_B12=1 only.
++		uint64_t                   walked_pass = 0;
+ 	};
+ 	// One entry per tracking region, filled lazily on the first incremental scan.
+ 	std::vector<BdaRegionStamp>                        m_bda_region_stamps;
+@@ -384,6 +393,17 @@ private:
+ 	uint64_t                                           m_bda_map_generation = 1;
+ 	bool                                               m_bda_narrow_check   = false;
+ 	std::thread::id                                    m_bda_scan_thread {};
++	// Track F, F29c (KYTY_FIX_B12, ROADMAP s122 item 639(d)): the number of the current BDA pass and whether it is open
++	// (BeginBdaPass .. EndBdaPass); the running totals of the "FixB12Stat:" line (revisits; revisits whose collected
++	// piece overlaps a registered buffer) and the values and time of its last print. Render mutex (PrepareBda) only.
++	uint64_t                                           m_bda_pass      = 0;
++	bool                                               m_bda_pass_open = false;
++	uint64_t                                           m_b12_rewalk    = 0;
++	uint64_t                                           m_b12_rwd       = 0;
++	uint64_t                                           m_b12_stat_pass   = 0;
++	uint64_t                                           m_b12_stat_rewalk = 0;
++	uint64_t                                           m_b12_stat_rwd    = 0;
++	std::chrono::steady_clock::time_point              m_b12_stat_time {};
+ 	// Marks the stamps of the tracking regions of [vaddr, vaddr + size) stale (a buffer was registered there).
+ 	void MarkBdaRegions(uint64_t vaddr, uint64_t size);
+ 	// Knob 2 of "bdanarrow": whether the dirty ranges just collected overlap any registered buffer (the first overlap
+diff --git a/src/graphics/host_gpu/renderer/renderContext.cpp b/src/graphics/host_gpu/renderer/renderContext.cpp
+index ab2e34dc..3c138583 100644
+--- a/src/graphics/host_gpu/renderer/renderContext.cpp
++++ b/src/graphics/host_gpu/renderer/renderContext.cpp
+@@ -377,9 +377,18 @@ void RenderContext::PrepareBda() {
+ 	const uint32_t               bda_split_frame = bda_split ? GpuTimeProfiler::Frame() : 0;
+ 	const bool                   bda_split_first = bda_split && t_bda_split_frame != bda_split_frame;
+ 	const uint64_t               bda_split_t0    = bda_split ? Common::FrameStats::NowNs() : 0;
++	// Track F, F29c (KYTY_FIX_B12, ROADMAP s122 item 639(d)): at 1 the walk below is one numbered pass, open only for
++	// the ForEach; at 0 neither call is made.
++	const bool fix_b12 = FixB12Enabled();
++	if (fix_b12) {
++		m_buffer_cache.BeginBdaPass();
++	}
+ 	m_mapped_ranges.ForEach([this](uint64_t start, uint64_t end) {
+ 		m_buffer_cache.SynchronizeBuffersInRange(start, end - start);
+ 	});
++	if (fix_b12) {
++		m_buffer_cache.EndBdaPass();
++	}
+ 	if (bda_split) {
+ 		const auto bda_split_spent = Common::FrameStats::NowNs() - bda_split_t0;
+ 		t_bda_split_frame          = bda_split_frame;
+diff --git a/src/graphics/presentation/videoOut.cpp b/src/graphics/presentation/videoOut.cpp
+index d4eb90c1..91ca6c72 100644
+--- a/src/graphics/presentation/videoOut.cpp
++++ b/src/graphics/presentation/videoOut.cpp
+@@ -2718,6 +2718,8 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 				    {"bda_nxthr", FS::Counter::BdaNarrowXthread, false},
+ 				    {"bgc_evict", FS::Counter::BufGcEvict, false},
+ 				    {"bda_nrace", FS::Counter::BdaNarrowRace, false},
++				    {"bda_b12_rewalk", FS::Counter::BdaB12Rewalk, false},
++				    {"bda_b12_rwd", FS::Counter::BdaB12Rwd, false},
+ 				    {"prio_unsub", FS::Counter::PrioUnsub, false},
+ 				    {"prio_stall", FS::Counter::PrioStall, false},
+ 				    {"gw_idle_prio", FS::Counter::GpuIdlePrio, false},

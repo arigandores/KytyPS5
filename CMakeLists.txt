@@ -503,6 +503,17 @@ add_executable(b27_daslot_stand EXCLUDE_FROM_ALL
 target_link_libraries(b27_daslot_stand common)
 target_include_directories(b27_daslot_stand PRIVATE ${inc_headers})
 
+# Track F, F29a (HPP-699, ROADMAP s122 item 638(g)(2)): the B12 "bdastamp" stand (tests/B12BdaStampStand.cpp) - the real
+# MemoryTracker and RangeSet, a model of the BDA scan of RenderContext::PrepareBda. Run by
+# docs/track-f/f29a/run_stand_f29a.py, not by ctest.
+add_executable(b12_bdastamp_stand EXCLUDE_FROM_ALL
+	"${KYTY_TESTS_DIR}/B12BdaStampStand.cpp"
+	"${KYTY_SOURCE_DIR}/graphics/host_gpu/pageManager.cpp"
+	"${KYTY_SOURCE_DIR}/graphics/host_gpu/memoryTracker.cpp"
+)
+target_link_libraries(b12_bdastamp_stand fmt::fmt common)
+target_include_directories(b12_bdastamp_stand PRIVATE ${inc_headers})
+
 add_executable(shader_vertex_metadata_tests EXCLUDE_FROM_ALL
 	"${KYTY_TESTS_DIR}/ShaderVertexMetadataTests.cpp"
 	"${KYTY_SOURCE_DIR}/graphics/host_gpu/hostMemory.cpp"

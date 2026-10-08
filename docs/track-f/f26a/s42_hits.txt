@@ -1,0 +1,4 @@
+total_lines 4407369
+4407364: There are too many objects/batches in this scene.
+4407367: --- Error ---
+4407368: Unhandled host exception: type=1 code=3221225477 pc=0x00000009004a020e access=1 address=0xffffffffffffffff

@@ -1,0 +1,30 @@
+     49ff00  c5f8100df8ddea07         vmovups  xmm1, xmmword ptr [rip + 0x7eaddf8]   ; ->0x834dd00
+     49ff08  83e2fc                   and      edx, 0xfffffffc
+     49ff0b  488d058eb7a906           lea      rax, [rip + 0x6a9b78e]   ; ->0x6f3b6a0
+     49ff12  488937                   mov      qword ptr [rdi], rsi
+     49ff15  c5f857c0                 vxorps   xmm0, xmm0, xmm0
+     49ff19  4801f2                   add      rdx, rsi
+     49ff1c  4885c9                   test     rcx, rcx
+     49ff1f  480f45c1                 cmovne   rax, rcx
+     49ff23  48895708                 mov      qword ptr [rdi + 8], rdx
+     49ff27  4c0f44c1                 cmove    r8, rcx
+     49ff2b  48894720                 mov      qword ptr [rdi + 0x20], rax
+     49ff2f  48b80000000004000000     movabs   rax, 0x400000000
+     49ff39  4c894728                 mov      qword ptr [rdi + 0x28], r8
+     49ff3d  c7473000000000           mov      dword ptr [rdi + 0x30], 0
+     49ff44  48897710                 mov      qword ptr [rdi + 0x10], rsi
+     49ff48  48895718                 mov      qword ptr [rdi + 0x18], rdx
+     49ff4c  c5fc114738               vmovups  ymmword ptr [rdi + 0x38], ymm0
+     49ff51  c5fc114758               vmovups  ymmword ptr [rdi + 0x58], ymm0
+     49ff56  48c7477800000000         mov      qword ptr [rdi + 0x78], 0
+     49ff5e  4889bf80000000           mov      qword ptr [rdi + 0x80], rdi
+     49ff65  4889bf88000000           mov      qword ptr [rdi + 0x88], rdi
+     49ff6c  c687a000000000           mov      byte ptr [rdi + 0xa0], 0
+     49ff73  48c7879800000000000000   mov      qword ptr [rdi + 0x98], 0
+     49ff7e  c5fc1187a8000000         vmovups  ymmword ptr [rdi + 0xa8], ymm0
+     49ff86  c5fc1187c8000000         vmovups  ymmword ptr [rdi + 0xc8], ymm0
+     49ff8e  48c787e800000000000000   mov      qword ptr [rdi + 0xe8], 0
+     49ff99  4889bff0000000           mov      qword ptr [rdi + 0xf0], rdi
+     49ffa0  4889bff8000000           mov      qword ptr [rdi + 0xf8], rdi
+     49ffa7  c6871001000000           mov      byte ptr [rdi + 0x110], 0
+     49ffae  48c7870801000000000000   mov      qword ptr [rdi + 0x108], 0

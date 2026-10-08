@@ -1,0 +1,65 @@
+function start 0x4a55f0 (site 0x4a5637 = +0x47)
+     4a55f0  push     rbp
+     4a55f1  mov      rbp, rsp
+     4a55f4  push     r14
+     4a55f6  push     rbx
+     4a55f7  mov      rbx, rdi
+     4a55fa  mov      rax, qword ptr fs:[0]
+     4a5606  cmp      qword ptr [rax - 0x38], 0
+     4a560e  lea      r14, [rax - 0x38]
+     4a5615  jne      0x4a5726
+     4a561b  mov      rax, qword ptr [rbx]
+     4a561e  mov      rdi, rbx
+     4a5621  call     qword ptr [rax + 0x28]
+     4a5624  mov      qword ptr [r14], rbx
+     4a5627  inc      dword ptr [rbx + 0x28]
+     4a562a  mov      r14, qword ptr [rbx + 0x60]
+     4a562e  vmovups  xmm0, xmmword ptr [r14]
+     4a5633  lea      rdi, [r14 + 0x38]
+>>   4a5637  vmovups  xmmword ptr [r14 + 0x10], xmm0
+     4a563d  call     0x6f3d5a0
+     4a5642  movabs   rax, 0x400000000
+     4a564c  lea      rsi, [rbx + 8]
+     4a5650  mov      rdi, r14
+     4a5653  vxorps   xmm0, xmm0, xmm0
+     4a5657  vmovups  ymmword ptr [r14 + 0x3c8], ymm0
+     4a5660  vmovups  ymmword ptr [r14 + 0x3d8], ymm0
+     4a5669  mov      qword ptr [r14 + 0x3f8], 0xffffffffffffffff
+     4a5674  mov      dword ptr [r14 + 0x400], 0xffffffff
+     4a567f  mov      qword ptr [r14 + 0x408], 0
+     4a568a  mov      dword ptr [r14 + 0x410], 0
+     4a5695  xor      edx, edx
+     4a5697  mov      qword ptr [r14 + 0x418], rax
+     4a569e  vmovups  ymmword ptr [r14 + 0x420], ymm0
+     4a56a7  vmovups  ymmword ptr [r14 + 0x440], ymm0
+     4a56b0  vmovups  ymmword ptr [r14 + 0x460], ymm0
+     4a56b9  vmovups  ymmword ptr [r14 + 0x480], ymm0
+     4a56c2  vmovups  ymmword ptr [r14 + 0x4a0], ymm0
+     4a56cb  vmovups  ymmword ptr [r14 + 0x4c0], ymm0
+     4a56d4  mov      byte ptr [r14 + 0x90], 0
+     4a56dc  mov      byte ptr [r14 + 0x1e0], 0
+     4a56e4  mov      byte ptr [r14 + 0x250], 0
+     4a56ec  mov      byte ptr [r14 + 0x2c0], 0
+     4a56f4  mov      byte ptr [r14 + 0x330], 0
+     4a56fc  mov      byte ptr [r14 + 0x3a0], 0
+     4a5704  mov      byte ptr [r14 + 0x170], 1
+     4a570c  mov      byte ptr [r14 + 0x100], 1
+     4a5714  call     0x74edc20
+     4a5719  mov      rdi, qword ptr [rbx + 0x50]
+     4a571d  pop      rbx
+     4a571e  pop      r14
+     4a5720  pop      rbp
+     4a5721  jmp      0x47e200
+     4a5726  lea      rdi, [rip + 0x7c21d4d]   ; ->0x80c747a "D:\asobi\6.0\source\engine\app\Module\Gpu\GpuDevice.cpp"
+     4a572d  lea      rcx, [rip + 0x7bd038e]   ; ->0x8075ac2 "[Asobi Dbg]"
+     4a5734  lea      r8, [rip + 0x7c30ac6]   ; ->0x80d6201
+     4a573b  lea      r9, [rip + 0x7ce2171]   ; ->0x81878b3 "s_pTlsCommandContext == nullptr"
+     4a5742  mov      esi, 0x275
+     4a5747  mov      edx, 1
+     4a574c  xor      eax, eax
+     4a574e  call     0x1aa0
+     4a5753  test     eax, eax
+     4a5755  je       0x4a561b
+     4a575b  int      0x41
+     4a575d  jmp      0x4a561b
+     4a5762  int3     

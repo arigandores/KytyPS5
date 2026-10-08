@@ -1,0 +1,26 @@
+== (3a) sweep of 954 logs (list_f26a.tsv, roots s128+ / f287 / p283 / s288 / play); read errors 0
+logs with S1/S2/S3 (B25 signature): 0
+== (3b) intro_next entries: 14 in 14 logs
+path | sha8 | course | t_entry s | hold s (wall) | frames | sum dt s | assert | --- Error --- | Unhandled | quit | vk-val | knobs
+C:/kyty/s129/log_s3s129.txt.xz | edd17418 | - | 11.5 | 177.5 | 10636 | 177.5 | 0 | 0 | 0 | yes | false | KYTY_GATE_SCHEDULE,KYTY_GATE_SCHEDULE_ABBA
+C:/kyty/s129/log_s7s129.txt.xz | edd17418 | - | 10.9 | 177.6 | 10653 | 177.6 | 0 | 0 | 0 | yes | false | KYTY_GATE_SCHEDULE,KYTY_GATE_SCHEDULE_ABBA
+C:/kyty/s129/log_s9s129.txt.xz | edd17418 | - | 10.8 | 177.7 | 10660 | 177.7 | 0 | 0 | 0 | yes | false | KYTY_GATE_SCHEDULE,KYTY_GATE_SCHEDULE_ABBA
+C:/kyty/s130/log_s11s130.txt.xz | 3f4af2c3 | - | 11.0 | 177.6 | 10636 | 177.6 | 0 | 0 | 0 | yes | false | KYTY_GATE_SCHEDULE,KYTY_GATE_SCHEDULE_ABBA
+C:/kyty/s130/log_s2s130.txt.xz | 0d23f161 | - | 12.0 | 177.6 | 10633 | 177.6 | 0 | 0 | 0 | yes | false | KYTY_GATE_SCHEDULE,KYTY_GATE_SCHEDULE_ABBA
+C:/kyty/s130/log_s3s130.txt.xz | 0d23f161 | - | 11.8 | 177.8 | 10635 | 177.8 | 0 | 0 | 0 | yes | false | -
+C:/kyty/s131/log_lw2s131.txt.xz | d19a4f8a | - | 11.8 | 327.9 | 19641 | 327.8 | 0 | 0 | 0 | yes | false | KYTY_GATE_SCHEDULE,KYTY_GATE_SCHEDULE_ABBA
+C:/kyty/s134/log_s3s134.txt.xz | 33f5a15a | - | 11.1 | 177.9 | 10671 | 177.9 | 0 | 0 | 0 | yes | false | -
+C:/kyty/s136/log_s3s136.txt.xz | 03ce7a92 | - | 12.4 | 177.6 | 10652 | 177.6 | 0 | 0 | 0 | yes | false | -
+C:/kyty/s288/s13/log_k_02.txt | adb0c82f | S12 | 11.4 | 183.3 | 10795 | 183.3 | 0 | 0 | 0 | yes | false | KYTY_S_PCW
+C:/kyty/s288/s13/log_u_02.txt | adb0c82f | S12 | 39.7 | 122.3 | 7232 | 122.3 | 0 | 0 | 0 | yes | false | KYTY_CACHE_MODE,KYTY_SHADER_REGISTER_TRACE,KYTY_SHADER_SEED_PATH,KYTY_S_PCW
+C:/kyty/s288/s15/log_k_02.txt | 2c9b69b9 | FS8 | 12.2 | 304.3 | 17955 | 304.3 | 0 | 0 | 0 | yes | false | KYTY_S_PCW
+C:/kyty/s288/s15/log_u_02.txt | 2c9b69b9 | FS8 | 34.8 | 120.5 | 7217 | 120.5 | 0 | 0 | 0 | yes | false | KYTY_CACHE_MODE,KYTY_SHADER_REGISTER_TRACE,KYTY_SHADER_SEED_PATH,KYTY_S_PCW
+C:/kyty/s288/s18c/log_s18_c02.txt | b3cee576 | S18 | 12.5 | 333.6 | 19775 | 333.7 | 0 | 0 | 0 | yes | false | KYTY_FIX_F19,KYTY_SHADER_SEED,KYTY_S_REPLAY
+entries with hold >= 90 s: 14; on course line binaries: 5 (intact: 5); assert: 0
+course entries by binary: {'S12': 2, 'FS8': 2, 'S18': 1}
+== (3c) historical (F0 aggregate, 1738 logs, 419 non-duplicate with intro_next)
+sessions 128+    logs with intro_next    9 | intro FrameTrace sum >= 90 s    9 | no FrameTrace in intro    0 | B25 assert 0
+sessions 42-127  logs with intro_next  159 | intro FrameTrace sum >= 90 s  150 | no FrameTrace in intro    8 | B25 assert 2
+sessions <42     logs with intro_next  251 | intro FrameTrace sum >= 90 s   44 | no FrameTrace in intro   44 | B25 assert 0
+  assert log C:/kyty/log_s14_s42_merged_cold.txt session 42 bucket 42
+  assert log C:/kyty/s59/log_sig1.txt session 59 bucket 59

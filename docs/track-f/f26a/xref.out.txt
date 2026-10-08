@@ -1,0 +1,4 @@
+str 0x806738e b'D:\\asobi\\6.0\\source\\engine\\js\\src\\framework\\js\\gpu\\command\\_IMPL\\_PPR\\command_buffer_writer.ppr.cpp'
+str 0x82efc83 b'There are too many objects/batches in this scene.'
+xref lea at 0x4a01e4 -> 0x806738e b'D:\\asobi\\6.0\\source\\engine\\js\\src\\framework\\js\\gpu\\command\\_'
+xref lea at 0x4a01f2 -> 0x82efc83 b'There are too many objects/batches in this scene.'

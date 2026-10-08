@@ -1,0 +1,88 @@
+function start 0x4a5470 (site 0x4a5470 = +0x0)
+>>   4a5470  push     rbp
+     4a5471  mov      rbp, rsp
+     4a5474  push     r15
+     4a5476  push     r14
+     4a5478  push     r13
+     4a547a  push     r12
+     4a547c  push     rbx
+     4a547d  sub      rsp, 0x118
+     4a5484  mov      rax, qword ptr [rip + 0x898f07d]   ; ->0x8e34508
+     4a548b  mov      rbx, rdi
+     4a548e  lea      rsi, [rbp - 0x130]
+     4a5495  lea      rcx, [rbp - 0x134]
+     4a549c  lea      r8, [rbp - 0x138]
+     4a54a3  mov      edx, 8
+     4a54a8  mov      rax, qword ptr [rax]
+     4a54ab  mov      qword ptr [rbp - 0x30], rax
+     4a54af  mov      dword ptr [rbp - 0x134], 0
+     4a54b9  mov      dword ptr [rbp - 0x138], 0
+     4a54c3  mov      rdi, qword ptr [rdi + 0x68]
+     4a54c7  call     0x74ec950
+     4a54cc  cmp      eax, 0x8002003c
+     4a54d1  je       0x4a550a
+     4a54d3  test     eax, eax
+     4a54d5  je       0x4a550a
+     4a54d7  lea      rdi, [rip + 0x7c21f9c]   ; ->0x80c747a "D:\asobi\6.0\source\engine\app\Module\Gpu\GpuDevice.cpp"
+     4a54de  lea      rcx, [rip + 0x7bd05dd]   ; ->0x8075ac2 "[Asobi Dbg]"
+     4a54e5  lea      r8, [rip + 0x7c30d15]   ; ->0x80d6201
+     4a54ec  lea      r9, [rip + 0x7e4a7c2]   ; ->0x82efcb5 "ret == 0 || ret == -2147352516"
+     4a54f3  mov      esi, 0x261
+     4a54f8  mov      edx, 1
+     4a54fd  xor      eax, eax
+     4a54ff  call     0x1aa0
+     4a5504  test     eax, eax
+     4a5506  je       0x4a550a
+     4a5508  int      0x41
+     4a550a  mov      dword ptr [rbp - 0x138], 1
+     4a5514  mov      rax, qword ptr [rbx + 0x30]
+     4a5518  mov      ecx, dword ptr [rbx + 0x28]
+     4a551b  cmp      rax, rcx
+     4a551e  jne      0x4a5546
+     4a5520  mov      rax, qword ptr [rip + 0x898efe1]   ; ->0x8e34508
+     4a5527  mov      rax, qword ptr [rax]
+     4a552a  cmp      rax, qword ptr [rbp - 0x30]
+     4a552e  jne      0x4a55cf
+     4a5534  add      rsp, 0x118
+     4a553b  pop      rbx
+     4a553c  pop      r12
+     4a553e  pop      r13
+     4a5540  pop      r14
+     4a5542  pop      r15
+     4a5544  pop      rbp
+     4a5545  ret      
+     4a5546  lea      r14, [rbp - 0x130]
+     4a554d  lea      r15, [rbp - 0x134]
+     4a5554  lea      r12, [rbp - 0x138]
+     4a555b  lea      r13, [rip + 0x7e4a753]   ; ->0x82efcb5 "ret == 0 || ret == -2147352516"
+     4a5562  jmp      0x4a557c
+     4a5564  nop      word ptr cs:[rax + rax]
+     4a5570  mov      rax, qword ptr [rbx + 0x30]
+     4a5574  mov      ecx, dword ptr [rbx + 0x28]
+     4a5577  cmp      rax, rcx
+     4a557a  je       0x4a5520
+     4a557c  mov      rdi, qword ptr [rbx + 0x68]
+     4a5580  mov      rsi, r14
+     4a5583  mov      edx, 8
+     4a5588  mov      rcx, r15
+     4a558b  mov      r8, r12
+     4a558e  call     0x74ec950
+     4a5593  cmp      eax, 0x8002003c
+     4a5598  je       0x4a5570
+     4a559a  test     eax, eax
+     4a559c  je       0x4a5570
+     4a559e  lea      rdi, [rip + 0x7c21ed5]   ; ->0x80c747a "D:\asobi\6.0\source\engine\app\Module\Gpu\GpuDevice.cpp"
+     4a55a5  mov      esi, 0x268
+     4a55aa  mov      edx, 1
+     4a55af  lea      rcx, [rip + 0x7bd050c]   ; ->0x8075ac2 "[Asobi Dbg]"
+     4a55b6  lea      r8, [rip + 0x7c30c44]   ; ->0x80d6201
+     4a55bd  mov      r9, r13
+     4a55c0  xor      eax, eax
+     4a55c2  call     0x1aa0
+     4a55c7  test     eax, eax
+     4a55c9  je       0x4a5570
+     4a55cb  int      0x41
+     4a55cd  jmp      0x4a5570
+     4a55cf  call     0x74ec090
+     4a55d4  ud2      
+     4a55d6  int3     

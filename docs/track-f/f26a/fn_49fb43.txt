@@ -1,0 +1,78 @@
+function start 0x49fa90 (site 0x49fb43 = +0xb3)
+     49fa90  push     rbp
+     49fa91  mov      rbp, rsp
+     49fa94  push     r15
+     49fa96  push     r14
+     49fa98  push     r13
+     49fa9a  push     r12
+     49fa9c  push     rbx
+     49fa9d  sub      rsp, 0x18
+     49faa1  mov      rax, qword ptr [rdx]
+     49faa4  mov      r14, rdi
+     49faa7  mov      rdi, rdx
+     49faaa  mov      rbx, rsi
+     49faad  call     qword ptr [rax + 0x38]
+     49fab0  lea      rdx, [rbx + 0x220]
+     49fab7  lea      rcx, [rbx + 0x218]
+     49fabe  lea      rdi, [rbx + 0x140]
+     49fac5  mov      r13d, eax
+     49fac8  lea      r15, [rbx + 0x138]
+     49facf  add      r14, 0x538
+     49fad6  mov      r10d, 0xf8000000
+     49fadc  xor      r12d, r12d
+     49fadf  mov      qword ptr [rbp - 0x38], rdx
+     49fae3  mov      qword ptr [rbp - 0x30], rcx
+     49fae7  mov      qword ptr [rbp - 0x40], rdi
+     49faeb  jmp      0x49fb17
+     49faed  nop      dword ptr [rax]
+     49faf0  mov      rax, qword ptr [rax]
+     49faf3  mov      dword ptr [rax + r12], ecx
+     49faf7  vmovups  xmm0, xmmword ptr [r14 - 0x1c]
+     49fafd  mov      rax, qword ptr [rdx]
+     49fb00  vmovups  xmmword ptr [rax + r12*4], xmm0
+     49fb06  add      r12, 4
+     49fb0a  add      r14, 0x28
+     49fb0e  cmp      r12, 0x80
+     49fb15  je       0x49fb8a
+     49fb17  cmp      dword ptr [r14 - 0xc], 0
+     49fb1c  je       0x49fb06
+     49fb1e  cmp      qword ptr [r14], 0
+     49fb22  je       0x49fb06
+     49fb24  mov      rax, qword ptr [rbx + 0x18]
+     49fb28  mov      esi, dword ptr [rbx + 0x30]
+     49fb2b  mov      rcx, rax
+     49fb2e  sub      rcx, qword ptr [rbx + 0x10]
+     49fb32  shr      rcx, 2
+     49fb36  cmp      esi, ecx
+     49fb38  jb       0x49fb54
+     49fb3a  mov      rdx, qword ptr [rbx + 0x28]
+     49fb3e  inc      esi
+     49fb40  mov      rdi, rbx
+>>   49fb43  call     qword ptr [rbx + 0x20]
+     49fb46  mov      rdi, qword ptr [rbp - 0x40]
+     49fb4a  mov      rax, qword ptr [rbx + 0x18]
+     49fb4e  mov      r10d, 0xf8000000
+     49fb54  add      rax, -4
+     49fb58  mov      rdx, r15
+     49fb5b  and      rax, 0xfffffffffffffffc
+     49fb5f  mov      qword ptr [rbx + 0x18], rax
+     49fb63  mov      ecx, dword ptr [rax]
+     49fb65  and      ecx, r10d
+     49fb68  mov      dword ptr [rax], ecx
+     49fb6a  mov      rax, rdi
+     49fb6d  cmp      r13d, 1
+     49fb71  je       0x49faf0
+     49fb77  cmp      r13d, 2
+     49fb7b  jne      0x49fb06
+     49fb7d  mov      rax, qword ptr [rbp - 0x38]
+     49fb81  mov      rdx, qword ptr [rbp - 0x30]
+     49fb85  jmp      0x49faf0
+     49fb8a  add      rsp, 0x18
+     49fb8e  pop      rbx
+     49fb8f  pop      r12
+     49fb91  pop      r13
+     49fb93  pop      r14
+     49fb95  pop      r15
+     49fb97  pop      rbp
+     49fb98  ret      
+     49fb99  int3     

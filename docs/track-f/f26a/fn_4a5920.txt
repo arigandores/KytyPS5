@@ -1,0 +1,68 @@
+function start 0x4a5920 (site 0x4a5920 = +0x0)
+>>   4a5920  push     rbp
+     4a5921  mov      rbp, rsp
+     4a5924  push     r15
+     4a5926  push     r14
+     4a5928  push     r12
+     4a592a  push     rbx
+     4a592b  sub      rsp, 0x20
+     4a592f  mov      r15, qword ptr [rip + 0x898ebd2]   ; ->0x8e34508
+     4a5936  mov      rbx, rdi
+     4a5939  mov      rax, qword ptr [r15]
+     4a593c  mov      qword ptr [rbp - 0x28], rax
+     4a5940  mov      r12, qword ptr [rdi + 0x60]
+     4a5944  movzx    eax, byte ptr [rip + 0xe2af2ed]   ; ->0xe754c38
+     4a594b  test     al, al
+     4a594d  je       0x4a59d5
+     4a5953  mov      rax, qword ptr [r12]
+     4a5957  mov      rcx, qword ptr [r12 + 0x10]
+     4a595c  sub      rcx, rax
+     4a595f  shr      rcx, 2
+     4a5963  lea      edx, [rcx - 0x100000]
+     4a5969  cmp      edx, 0xfff00001
+     4a596f  jb       0x4a5985
+     4a5971  lea      rdi, [rbp - 0x38]
+     4a5975  mov      qword ptr [rbp - 0x38], rax
+     4a5979  mov      dword ptr [rbp - 0x30], ecx
+     4a597c  mov      byte ptr [rbp - 0x2c], 0
+     4a5980  call     0x74ed820
+     4a5985  mov      rax, qword ptr [rip + 0xe339fd4]   ; ->0xe7df960
+     4a598c  mov      rcx, qword ptr [rbx + 0x50]
+     4a5990  mov      r8, qword ptr [rax + 8]
+     4a5994  mov      rsi, qword ptr [rcx + 0xe50]
+     4a599b  mov      rdx, qword ptr [rcx + 0xe58]
+     4a59a2  mov      rcx, qword ptr [r8 + 0x158]
+     4a59a9  mov      rax, qword ptr [r15]
+     4a59ac  cmp      rax, qword ptr [rbp - 0x28]
+     4a59b0  jne      0x4a5a3e
+     4a59b6  lea      rdi, [r8 + 0x1110]
+     4a59bd  add      r8, 0x1f8
+     4a59c4  add      rsp, 0x20
+     4a59c8  pop      rbx
+     4a59c9  pop      r12
+     4a59cb  pop      r14
+     4a59cd  pop      r15
+     4a59cf  pop      rbp
+     4a59d0  jmp      0x4a14b0
+     4a59d5  lea      rdi, [rip + 0xe2af25c]   ; ->0xe754c38
+     4a59dc  call     0x74e7370
+     4a59e1  test     eax, eax
+     4a59e3  je       0x4a5953
+     4a59e9  mov      edi, 0x1f00
+     4a59ee  mov      byte ptr [rip + 0xe2af253], 1   ; ->0xe754c48
+     4a59f5  call     0x74e73e0
+     4a59fa  mov      rdi, rax
+     4a59fd  mov      r14, rax
+     4a5a00  call     0x2ace00
+     4a5a05  lea      rdx, [rip + 0x8b2e604]   ; ->0x8fd4010
+     4a5a0c  lea      rdi, [rip - 0x1f8c53]   ; ->0x2acdc0
+     4a5a13  lea      rsi, [rip + 0xe2af218]   ; ->0xe754c32
+     4a5a1a  mov      qword ptr [rip + 0xe2af21f], r14   ; ->0xe754c40
+     4a5a21  mov      byte ptr [rip + 0xe2af220], 0   ; ->0xe754c48
+     4a5a28  call     0x74e7360
+     4a5a2d  lea      rdi, [rip + 0xe2af204]   ; ->0xe754c38
+     4a5a34  call     0x74e7380
+     4a5a39  jmp      0x4a5953
+     4a5a3e  call     0x74ec090
+     4a5a43  ud2      
+     4a5a45  int3     

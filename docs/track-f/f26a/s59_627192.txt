@@ -1,0 +1,410 @@
+626792: 	 buffer_size_in_bytes              = 0
+626793: 	 reset_count                       = 0
+626794: 	 force_reset                       = 0x00
+626795: 	 report_and_reset                  = 0x00
+626796: 	 reporting_interval_in_100k_clocks = 0
+626797: 	 cache_policy                      = 0x00
+626798: 	 buffer                            = 0x00000004007dbd80
+626799: 	 buffer_size_in_bytes              = 2112
+626800: 	 reset_count                       = 0
+626801: 	 force_reset                       = 0x00
+626802: 	 report_and_reset                  = 0x01
+626803: 	 reporting_interval_in_100k_clocks = 0
+626804: 	 flipPendingNum = 2
+626805: [44][00:01:21.967] libkernel::libkernel::PthreadCondWait()
+626806: AvTrace: flip n=4436 t=74527228 host=25766194655 arg=4436 vblank=4564 pending=1 base=25776713429 speed=0.829
+626807: FrameTrace: n=4436 dt_us=14265 lat_us=48605 gpu_proc=0 gpu_idle=0 gpu_blocked=0 submits=24 submit_us=66 semwaits=6 semwait_us=7245 downloads=0 download_us=0 draws=1183 draw_us=0 dispatches=219 dispatch_us=0 faults=244 fault_us=1566 wrm_stalls=4 gpu_busy_us=26418 gpu_n=49 cpu_main_us=2788 cpu_gpu_us=8106 cpu_present_us=721 cpu_proc_us=46875 faults_gpu=17 fault_gpu_us=43 semwait_gpu_us=0 prios=14 prio_us=0 dmas=16 dma_us=0
+626808: FrameTrace-draw: n=4436 logs=41 log_us=275 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=52156 p_creads=59 m_eval=0 m_asm=0 m_spec=0 m_insts=192 m_fail=0 memo_hit=2295 memo_miss=0 m_read_us=0 m_wide=192 b_tex=0 b_texn=5800 b_view=0 b_viewn=1111 b_buf=0 b_smp=0 bb_find=0 bb_obtain=0 bb_sync=0 bb_upload=0 bb_n=9870 tex_hits=4800 rt_hits=3701 ob_us=0 ob_n=10296 sync_ups=41 spin_us=32 spins=48 spin_gpu_us=3 gbar=871 ibar=267 swbar=0 rp_begin=38 pops=9 pop_us=13 gbar_skip=871 faults_main=13 fault_main_us=88 img_new=2 img_free=2 img_up=2 img_up_kb=128 img_up_us=0 img_init_us=0 img_copy_us=0 cb_copy=1893 cb_copy_gpu=0 cb_copy_kb=175 acopy_wait_us=20 acopy_waits=1 prot_us=724 prot_pages=2781 protw_us=0 protw_pages=0 prot_drain_us=0 prot_drains=0 prot_calls=170 prot_ro=70 prot_ro_pages=1407 prot_na=25 prot_na_pages=226 prot_rw_us=333 prot_rw_pages=1148 prot_mask_us=0 prot_mask=0 prot_gpu_us=406 prot_gpu=106 prot_gpu_pages=1879 buf_new=0 buf_new_us=0 acopy_gpu_waits=0 img_imp=0 img_imp_kb=0 img_imp_pieces=0 hostread_waits=0 hostread_wait_us=0 img_detile=2 img_regions=2 img_defer=0 img_defer_kb=0 img_pend=0 img_pend_kb=0 img_minlod=0 bda_us=0 bda_n=8 srt_miss=24 clamp_miss=0 smemo_hit=0 smemo_miss=0 smemo_stale=0 smemo_skip=0 smemo_reads=0 bufepoch=1583 bda_scan=20 bda_skip=3262 bpage_hit=6221 bpage_miss=364 m_nodes=0 m_nodes_need=0 m_rnodes=0 m_rnodes_need=0 m_srcs=18523 m_srcs_off=1139 da_draws=1183 da_ready=1183 da_walks=5 da_walk_us=636 da_q=1850 da_nohint=118 da_present=1 da_busy=1 da_done=1852 da_fail=0 da_work_us=4588 da_hit=1856 da_stale=0 da_late=0 da_miss=1 da_words=55149 da_noplan=0 da_flip=0 da_refresh=2 da_stale_old=0 da_predicted=0 da_move=1846 da_take_us=419 da_queue_us=285 da_words_clean=9453 img_ins_us=2 img_free_us=11 img_ovl_us=31 as_n=23 as_us=679 as_lock_us=4 as_drain=0 as_drain_us=0 img_rec_hit=2 img_rec_put=4 rec_n=2881 rec_kb=1166 rec_direct=400 rec_direct_us=0 rec_drain=66 rec_drain_us=0 rec_full=0 rec_full_us=0 rec_work_us=0 rec_idle_us=0 cpu_record_us=8115 tf_free=8907 tf_lock=0 tf_bad=0 pmap_hit=0 pmap_miss=0 prot_held_us=0 gds_bar=5 gds_skip=0 img_ww_skip=0 swbar_loc=0 swbar_flush=0 ds_alloc=0 swdefer_ok=0 swdefer_no=0 swdefer_n=0 da_runs=12483 da_probe=5692
+626809: FrameTrace-rp: n=4436 ends=38 restarts=6 end_state=5 end_target=13 end_binding=2 end_gds=0 end_shader_write=0 end_dispatch=8 end_buf_upload=0 end_buf_copy=1 end_img_upload=0 end_tiler=0 end_clear=1 end_sanitize=0 end_download=0 end_submit=8 end_other=0 restart_state=5 restart_target=0 restart_binding=0 restart_gds=0 restart_shader_write=0 restart_dispatch=0 restart_buf_upload=0 restart_buf_copy=0 restart_img_upload=0 restart_tiler=0 restart_clear=0 restart_sanitize=0 restart_download=0 restart_submit=1 restart_other=0
+626810: FrameTrace-x: n=4436 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=237 rec_pack=1163 rec_pack_cs=200 rec_bind=1363 rec_pack_kb=1185 rec_direct_busy=65 rec_spin_us=5926 rec_sleep=3 prot_spin_us=130 prot_spin_calls=45 prot_spin_pages=517 prot_spin_gpu_us=119 prot_spin_gpu_calls=39 prot_spin_gpu_pages=511 sync_noop=6866 sf_skip=6866 sf_bad=0 tex_inval=237 tex_inval_empty=237 tex_hint_zero=237 pb_pages=2264 pb_flush=116 pb_runs=125 pb_kb=9056 pb_merged=1 pb_wait_us=810 pb_wait_gpu_us=0 pb_inval_flush=280 pb_refault=1 pb_stuck=0 pb_check=0 pb_bad=0 pb_bad_rw=0 da_req=1854 da_fan=2780 da_fan_canon=1854 da_unused=0 da_unused_ps=0 da_mesh_vs=4 da_px_off=465 da_classes=0 da_class_join=0 da_class_us=0 da_clone=0 da_ccd_x=0 texlru_n=31029 texlru_rep=30480 texfast_ok=4689 texfast_no=1030 texfast_no_stamp=2 texfast_no_state=0 texfast_rec=147 texfast_bad=0 texmemo_empty=5 texmemo_collide=174 texmemo_stale=5 texmemo_key_miss=0 clamp_miss_epoch=0 clamp_miss_key=0 clampvma_miss=0 smp_miss=64 pb_skip_would=126 pb_skip_would_wait_us=14 pb_skip_would_wait_gpu_us=0 pb_skip=0 pb_skip_blk_rw=151 pb_skip_blk_ro=0 pb_wait_sync_us=0 pb_wait_scope_us=6 pb_wait_range_us=803 pb_wait_worker_us=0 pb_sync_noprot=6 pb_sync_noprot_wait_us=0 pb_inflight_bad=0 fw_n=237 fw_win_same=1 fw_win_recent=4 fw_seq=0 fw_win_armed=1073 fw_widened=3555 fw_refault=0 sync_up_kb=4571 rec_pub=2881 rec_staged=0 rec_pub_forced=0 rec_wake=11 rec_drain_lock=1 rec_tail_rd=802 rec_ccd_n=12 rec_ccd_x=12 rec_sleep_gpu=2 rec_spin_gpu_us=5609 rec_fpwb=0 stk_flt=0 stk_flt_rep=0 stk_flt_same=0 stk_flt_rep_gpu=0 stk_flt_rep_img=0 stk_arm=0 stk_arm_hot=0 stk_arm_hot_bda=0 stk_arm_hot_img=0 stk_hot=0 stk_cand=0 stk_vp_save=0 stk_chk_est=0 stk_stream_hot=0 dp_between_hard=0 dp_n=0 dp_pure=0 dp_fast=0 dp_clean=0 dp_img_new=0 dp_img_up=0 dp_meta=0 dp_prot=0 dp_buf_new=0 dp_buf_up=0 dp_gpu_write=0 dp_obj_new=0 dp_sync=0 dp_tex_slow=0 dp_buf_slow=0 dp_lru=0 dp_memo=0 dp_m1=0 dp_stream_wrap=0 dp_bar=0 dp_tail_hard=0 dp_t_img_up=0 dp_t_meta=0 dp_t_prot=0 dp_t_sync=0 dp_t_bar=0 dp_stream_maps=0 dp_runs_1=0 dp_runs_2=0 dp_runs_4=0 dp_runs_8=0 dp_runs_16=0 dp_runs_32=0 dp_runs_64=0 dp_rd_1=0 dp_rd_2=0 dp_rd_4=0 dp_rd_8=0 dp_rd_16=0 dp_rd_32=0 dp_rd_64=0 hb_runs_1=0 hb_runs_2=0 hb_runs_4=0 hb_runs_8=0 hb_runs_16=0 hb_runs_32=0 hb_runs_64=0 hb_rd_1=0 hb_rd_2=0 hb_rd_4=0 hb_rd_8=0 hb_rd_16=0 hb_rd_32=0 hb_rd_64=0 hb_cut_pass=0 hb_cut_cs=0 hb_cut_bar=0 hb_cut_up=0 hb_cut_sub=0 e9_n=0 e9_push=0 e9_adj=0 e9_seen=0 e9_img=0 e9_buf=0 e9_bufr=0 e9_base=0 e9_full=0 e9_adj_base=0 e9_bufs=0 e9_stream=0 e9_rd_1=0 e9_rd_2=0 e9_rd_4=0 e9_rd_8=0 e9_rd_16=0 e9_rd_32=0 e9_rd_64=0 e9_dyn_ok=0 e9_dyn_over=0 e9_dyn_cap=0 e9_dyn_lay=0 e9_dyn_n1=0 e9_dyn_n2=0 e9_dyn_n4=0 e9_dyn_n8=0 e9_dyn_nmore=0 e9_dyn_limit=0 e9_dyn_ulimit=0 snap_keep_copy=10 snap_keep_grow=3 buflru_n=10516 buflru_rep=10293 snap_cp_b=11628 snap_cp_same_b=2564 snap_cp_vec=65 snap_cp_same_vec=27 snap_cp_eq=1 snap_last_cp=0 snap_last_b=0 bfast_hit=0 bfast_miss=0 bfast_stale=0 bfast_skip=0 bfast_bad=0 pb2_pass=20 pb2_sync=40 pb2_reg=20 pb2_vp=49 pb2_vp_pages=1103 pb2_vp_adj=23 pb2_vp_near=6 pb2_gap=0 pb2_gap_pages=0 pb2_up=0 cb_pool_n=0 cb_pool_tr_us=0 cb_pool_wr_us=0 cb_pool_em_us=0 cb_push_n=0 cb_push_tr_us=0 cb_push_wr_us=0 cb_push_em_us=0 da_wjobs=0 da_wlag_us=0 da_wdepth=0 da_wskip=0
+626811: FrameTrace-wait: other=7245/6
+626812: FrameTrace-submit: other=31/1 release-mem-irq=7/8 release-mem-data1=21/3 slice-end-gfx=2/5 slice-end-compute=2/5 wait-flip-done=0/1 flip=0/1
+626813: FrameTrace-pm4: gc=27/5 prefetch=69/5
+626814: FrameTrace-pops: +0x7e29a0=2/3 +0x77acbb=0/2 +0x79649d=10/4
+626815: 	 queue  = 0x00000040
+626816: 	 packet = 0x0000000313a77eb8
+626817: 	 acb   = 0x0000000400345640
+626818: 	 size  = 0x00000bff
+626819: 	 flags = 0x00
+626820: 	 queue  = 0x00000048
+626821: 	 packet = 0x0000000313a77eb8
+626822: 	 acb   = 0x0000000400526840
+626823: 	 size  = 0x00000159
+626824: 	 flags = 0x00
+626825: [25][00:01:21.983] libkernel::libkernel::PthreadCondWait()
+626826: 	 user_id = 1000
+626827: 	 large_motor = 0
+626828: 	 small_motor = 0
+626829: 	 handle = 1
+626830: 	 handle = 1
+626831: 	 data   = 0x00000007efdf2bc0
+626832: 	 num    = 8
+626833: 	 op    = 0x00000182
+626834: 	 queue  = 0x00000046
+626835: 	 packet = 0x000000033baffe68
+626836: 	 acb   = 0x00000004005c7940
+626837: 	 size  = 0x00000421
+626838: 	 flags = 0x00
+626839: 	 op    = 0x00000fff
+626840: 	 state = 0x00000000
+626841: 	 op    = 0x00000182
+626842: 	 op    = 0x00000fff
+626843: 	 state = 0x00000000
+626844: 	 op    = 0x00000fff
+626845: 	 state = 0x00000000
+626846: 	 op    = 0x00000fff
+626847: 	 state = 0x00000000
+626848: 	 op    = 0x00000fff
+626849: 	 state = 0x00000000
+626850: 	 op    = 0x00000182
+626851: 	 indirect_args = 0x00000005074063c0
+626852: 	 modifier      = 0x00000001
+626853: 	 indirect_args = 0x00000005074063e0
+626854: 	 modifier      = 0x00000001
+626855: 	 indirect_args = 0x00000005074063e0
+626856: 	 modifier      = 0x00000001
+626857: 	 data_offset = 0x0
+626858: 	 flags       = 0x00000001
+626859: 	 data_offset = 0x0
+626860: 	 flags       = 0x00000001
+626861: 	 data_offset = 0x0
+626862: 	 flags       = 0x00000001
+626863: 	 data_offset = 0x0
+626864: 	 flags       = 0x00000001
+626865: 	 video_out_handle     = 1
+626866: 	 display_buffer_index = 1
+626867: 	 cache_policy                      = 0x00
+626868: 	 buffer                            = 0x0000000000000000
+626869: 	 buffer_size_in_bytes              = 0
+626870: 	 reset_count                       = 0
+626871: 	 force_reset                       = 0x00
+626872: 	 report_and_reset                  = 0x00
+626873: 	 reporting_interval_in_100k_clocks = 0
+626874: 	 cache_policy                      = 0x00
+626875: 	 buffer                            = 0x00000004007e4200
+626876: 	 buffer_size_in_bytes              = 2112
+626877: 	 reset_count                       = 0
+626878: 	 force_reset                       = 0x00
+626879: 	 report_and_reset                  = 0x01
+626880: 	 reporting_interval_in_100k_clocks = 0
+626881: 	 flipPendingNum = 2
+626882: [44][00:01:21.986] libkernel::libkernel::PthreadCondWait()
+626883: AvTrace: flip n=4437 t=74542099 host=25766212604 arg=4437 vblank=4565 pending=1 base=25776731377 speed=0.836
+626884: FrameTrace: n=4437 dt_us=17953 lat_us=31545 gpu_proc=0 gpu_idle=0 gpu_blocked=0 submits=29 submit_us=65 semwaits=19 semwait_us=30704 downloads=0 download_us=0 draws=1185 draw_us=0 dispatches=219 dispatch_us=0 faults=258 fault_us=2335 wrm_stalls=4 gpu_busy_us=20577 gpu_n=24 cpu_main_us=2526 cpu_gpu_us=7806 cpu_present_us=1334 cpu_proc_us=265625 faults_gpu=12 fault_gpu_us=36 semwait_gpu_us=6252 prios=10 prio_us=0 dmas=16 dma_us=0
+626885: FrameTrace-draw: n=4437 logs=40 log_us=39 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=52216 p_creads=46 m_eval=0 m_asm=0 m_spec=0 m_insts=192 m_fail=0 memo_hit=2295 memo_miss=0 m_read_us=0 m_wide=192 b_tex=0 b_texn=5808 b_view=0 b_viewn=1102 b_buf=0 b_smp=0 bb_find=0 bb_obtain=0 bb_sync=0 bb_upload=0 bb_n=9874 tex_hits=4816 rt_hits=3704 ob_us=0 ob_n=10300 sync_ups=34 spin_us=76 spins=53 spin_gpu_us=0 gbar=871 ibar=267 swbar=0 rp_begin=40 pops=5 pop_us=12 gbar_skip=871 faults_main=12 fault_main_us=169 img_new=2 img_free=2 img_up=2 img_up_kb=128 img_up_us=0 img_init_us=0 img_copy_us=0 cb_copy=1897 cb_copy_gpu=0 cb_copy_kb=174 acopy_wait_us=23 acopy_waits=1 prot_us=931 prot_pages=2709 protw_us=0 protw_pages=0 prot_drain_us=0 prot_drains=0 prot_calls=160 prot_ro=63 prot_ro_pages=1338 prot_na=25 prot_na_pages=291 prot_rw_us=423 prot_rw_pages=1080 prot_mask_us=0 prot_mask=0 prot_gpu_us=486 prot_gpu=95 prot_gpu_pages=1796 buf_new=0 buf_new_us=0 acopy_gpu_waits=0 img_imp=0 img_imp_kb=0 img_imp_pieces=0 hostread_waits=0 hostread_wait_us=0 img_detile=2 img_regions=2 img_defer=0 img_defer_kb=0 img_pend=0 img_pend_kb=0 img_minlod=0 bda_us=0 bda_n=8 srt_miss=32 clamp_miss=0 smemo_hit=0 smemo_miss=0 smemo_stale=0 smemo_skip=0 smemo_reads=0 bufepoch=1284 bda_scan=19 bda_skip=3263 bpage_hit=6154 bpage_miss=420 m_nodes=0 m_nodes_need=0 m_rnodes=0 m_rnodes_need=0 m_srcs=18526 m_srcs_off=1137 da_draws=1185 da_ready=1185 da_walks=5 da_walk_us=496 da_q=1849 da_nohint=116 da_present=1 da_busy=0 da_done=1853 da_fail=0 da_work_us=3724 da_hit=1859 da_stale=0 da_late=0 da_miss=0 da_words=55266 da_noplan=0 da_flip=0 da_refresh=4 da_stale_old=0 da_predicted=0 da_move=1847 da_take_us=431 da_queue_us=163 da_words_clean=9466 img_ins_us=2 img_free_us=10 img_ovl_us=30 as_n=28 as_us=504 as_lock_us=3 as_drain=0 as_drain_us=0 img_rec_hit=2 img_rec_put=2 rec_n=2907 rec_kb=1170 rec_direct=395 rec_direct_us=0 rec_drain=61 rec_drain_us=0 rec_full=0 rec_full_us=0 rec_work_us=0 rec_idle_us=0 cpu_record_us=8627 tf_free=9206 tf_lock=0 tf_bad=0 pmap_hit=0 pmap_miss=0 prot_held_us=0 gds_bar=5 gds_skip=0 img_ww_skip=0 swbar_loc=0 swbar_flush=0 ds_alloc=0 swdefer_ok=0 swdefer_no=0 swdefer_n=0 da_runs=12510 da_probe=5706
+626886: FrameTrace-rp: n=4437 ends=40 restarts=8 end_state=5 end_target=13 end_binding=2 end_gds=0 end_shader_write=0 end_dispatch=7 end_buf_upload=0 end_buf_copy=1 end_img_upload=0 end_tiler=0 end_clear=1 end_sanitize=0 end_download=2 end_submit=9 end_other=0 restart_state=5 restart_target=0 restart_binding=0 restart_gds=0 restart_shader_write=0 restart_dispatch=0 restart_buf_upload=0 restart_buf_copy=0 restart_img_upload=0 restart_tiler=0 restart_clear=0 restart_sanitize=0 restart_download=2 restart_submit=1 restart_other=0
+626887: FrameTrace-x: n=4437 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=238 rec_pack=1165 rec_pack_cs=200 rec_bind=1365 rec_pack_kb=1187 rec_direct_busy=60 rec_spin_us=6651 rec_sleep=4 prot_spin_us=262 prot_spin_calls=43 prot_spin_pages=517 prot_spin_gpu_us=218 prot_spin_gpu_calls=38 prot_spin_gpu_pages=512 sync_noop=6864 sf_skip=6864 sf_bad=0 tex_inval=251 tex_inval_empty=251 tex_hint_zero=251 pb_pages=2192 pb_flush=107 pb_runs=117 pb_kb=8768 pb_merged=1 pb_wait_us=1378 pb_wait_gpu_us=0 pb_inval_flush=287 pb_refault=1 pb_stuck=0 pb_check=0 pb_bad=0 pb_bad_rw=0 da_req=1854 da_fan=2783 da_fan_canon=1854 da_unused=0 da_unused_ps=0 da_mesh_vs=4 da_px_off=467 da_classes=0 da_class_join=0 da_class_us=0 da_clone=0 da_ccd_x=0 texlru_n=31051 texlru_rep=30502 texfast_ok=4706 texfast_no=1021 texfast_no_stamp=2 texfast_no_state=0 texfast_rec=139 texfast_bad=0 texmemo_empty=5 texmemo_collide=167 texmemo_stale=5 texmemo_key_miss=0 clamp_miss_epoch=0 clamp_miss_key=0 clampvma_miss=0 smp_miss=64 pb_skip_would=123 pb_skip_would_wait_us=14 pb_skip_would_wait_gpu_us=0 pb_skip=0 pb_skip_blk_rw=160 pb_skip_blk_ro=0 pb_wait_sync_us=0 pb_wait_scope_us=9 pb_wait_range_us=1368 pb_wait_worker_us=0 pb_sync_noprot=6 pb_sync_noprot_wait_us=0 pb_inflight_bad=0 fw_n=251 fw_win_same=1 fw_win_recent=2 fw_seq=6 fw_win_armed=1008 fw_widened=3765 fw_refault=0 sync_up_kb=4554 rec_pub=2907 rec_staged=0 rec_pub_forced=0 rec_wake=18 rec_drain_lock=0 rec_tail_rd=792 rec_ccd_n=11 rec_ccd_x=11 rec_sleep_gpu=3 rec_spin_gpu_us=6329 rec_fpwb=0 stk_flt=0 stk_flt_rep=0 stk_flt_same=0 stk_flt_rep_gpu=0 stk_flt_rep_img=0 stk_arm=0 stk_arm_hot=0 stk_arm_hot_bda=0 stk_arm_hot_img=0 stk_hot=0 stk_cand=0 stk_vp_save=0 stk_chk_est=0 stk_stream_hot=0 dp_between_hard=0 dp_n=0 dp_pure=0 dp_fast=0 dp_clean=0 dp_img_new=0 dp_img_up=0 dp_meta=0 dp_prot=0 dp_buf_new=0 dp_buf_up=0 dp_gpu_write=0 dp_obj_new=0 dp_sync=0 dp_tex_slow=0 dp_buf_slow=0 dp_lru=0 dp_memo=0 dp_m1=0 dp_stream_wrap=0 dp_bar=0 dp_tail_hard=0 dp_t_img_up=0 dp_t_meta=0 dp_t_prot=0 dp_t_sync=0 dp_t_bar=0 dp_stream_maps=0 dp_runs_1=0 dp_runs_2=0 dp_runs_4=0 dp_runs_8=0 dp_runs_16=0 dp_runs_32=0 dp_runs_64=0 dp_rd_1=0 dp_rd_2=0 dp_rd_4=0 dp_rd_8=0 dp_rd_16=0 dp_rd_32=0 dp_rd_64=0 hb_runs_1=0 hb_runs_2=0 hb_runs_4=0 hb_runs_8=0 hb_runs_16=0 hb_runs_32=0 hb_runs_64=0 hb_rd_1=0 hb_rd_2=0 hb_rd_4=0 hb_rd_8=0 hb_rd_16=0 hb_rd_32=0 hb_rd_64=0 hb_cut_pass=0 hb_cut_cs=0 hb_cut_bar=0 hb_cut_up=0 hb_cut_sub=0 e9_n=0 e9_push=0 e9_adj=0 e9_seen=0 e9_img=0 e9_buf=0 e9_bufr=0 e9_base=0 e9_full=0 e9_adj_base=0 e9_bufs=0 e9_stream=0 e9_rd_1=0 e9_rd_2=0 e9_rd_4=0 e9_rd_8=0 e9_rd_16=0 e9_rd_32=0 e9_rd_64=0 e9_dyn_ok=0 e9_dyn_over=0 e9_dyn_cap=0 e9_dyn_lay=0 e9_dyn_n1=0 e9_dyn_n2=0 e9_dyn_n4=0 e9_dyn_n8=0 e9_dyn_nmore=0 e9_dyn_limit=0 e9_dyn_ulimit=0 snap_keep_copy=12 snap_keep_grow=3 buflru_n=10219 buflru_rep=10003 snap_cp_b=12308 snap_cp_same_b=2764 snap_cp_vec=77 snap_cp_same_vec=32 snap_cp_eq=1 snap_last_cp=0 snap_last_b=0 bfast_hit=0 bfast_miss=0 bfast_stale=0 bfast_skip=0 bfast_bad=0 pb2_pass=19 pb2_sync=33 pb2_reg=19 pb2_vp=43 pb2_vp_pages=1095 pb2_vp_adj=20 pb2_vp_near=4 pb2_gap=0 pb2_gap_pages=0 pb2_up=0 cb_pool_n=0 cb_pool_tr_us=0 cb_pool_wr_us=0 cb_pool_em_us=0 cb_push_n=0 cb_push_tr_us=0 cb_push_wr_us=0 cb_push_em_us=0 da_wjobs=0 da_wlag_us=0 da_wdepth=0 da_wskip=0
+626888: FrameTrace-wait: other=24451/18 present-frame=6252/1
+626889: FrameTrace-submit: other=23/1 release-mem-irq=4/8 release-mem-data1=25/3 slice-end-gfx=2/5 slice-end-compute=1/5 wait-flip-done=0/1 flip=3/1 download-stale=2/5
+626890: FrameTrace-pm4: gc=31/5 prefetch=31/5
+626891: FrameTrace-pops: +0x7e29a0=2/2 +0x77acbb=0/1 +0x79649d=9/2
+626892: 	 queue  = 0x00000040
+626893: 	 packet = 0x0000000313a77eb8
+626894: 	 acb   = 0x0000000400205540
+626895: 	 size  = 0x00000bff
+626896: 	 flags = 0x00
+626897: 	 queue  = 0x00000048
+626898: 	 packet = 0x0000000313a77eb8
+626899: 	 acb   = 0x00000004003e6740
+626900: 	 size  = 0x0000015a
+626901: 	 flags = 0x00
+626902: [25][00:01:21.999] libkernel::libkernel::PthreadCondWait()
+626903: 	 user_id = 1000
+626904: 	 large_motor = 0
+626905: 	 small_motor = 0
+626906: 	 handle = 1
+626907: 	 handle = 1
+626908: 	 data   = 0x00000007efdf2bc0
+626909: 	 num    = 8
+626910: 	 op    = 0x00000182
+626911: 	 queue  = 0x00000046
+626912: 	 packet = 0x000000033baffe68
+626913: 	 acb   = 0x00000004006679c0
+626914: 	 size  = 0x00000421
+626915: 	 flags = 0x00
+626916: 	 op    = 0x00000fff
+626917: 	 state = 0x00000000
+626918: 	 op    = 0x00000fff
+626919: 	 state = 0x00000000
+626920: 	 op    = 0x00000182
+626921: 	 op    = 0x00000fff
+626922: 	 state = 0x00000000
+626923: 	 op    = 0x00000fff
+626924: 	 state = 0x00000000
+626925: 	 op    = 0x00000182
+626926: 	 op    = 0x00000fff
+626927: 	 state = 0x00000000
+626928: 	 indirect_args = 0x00000005074063c0
+626929: 	 modifier      = 0x00000001
+626930: 	 indirect_args = 0x00000005074063e0
+626931: 	 modifier      = 0x00000001
+626932: 	 indirect_args = 0x00000005074063e0
+626933: 	 modifier      = 0x00000001
+626934: 	 data_offset = 0x0
+626935: 	 flags       = 0x00000001
+626936: 	 data_offset = 0x0
+626937: 	 flags       = 0x00000001
+626938: 	 data_offset = 0x0
+626939: 	 flags       = 0x00000001
+626940: 	 data_offset = 0x0
+626941: 	 flags       = 0x00000001
+626942: 	 video_out_handle     = 1
+626943: 	 display_buffer_index = 0
+626944: 	 cache_policy                      = 0x00
+626945: 	 buffer                            = 0x0000000000000000
+626946: 	 buffer_size_in_bytes              = 0
+626947: 	 reset_count                       = 0
+626948: 	 force_reset                       = 0x00
+626949: 	 report_and_reset                  = 0x00
+626950: 	 reporting_interval_in_100k_clocks = 0
+626951: 	 cache_policy                      = 0x00
+626952: 	 buffer                            = 0x00000004007ec680
+626953: 	 buffer_size_in_bytes              = 2112
+626954: 	 reset_count                       = 0
+626955: 	 force_reset                       = 0x00
+626956: 	 report_and_reset                  = 0x01
+626957: 	 reporting_interval_in_100k_clocks = 0
+626958: 	 flipPendingNum = 2
+626959: [44][00:01:22.003] libkernel::libkernel::PthreadCondWait()
+626960: AvTrace: flip n=4438 t=74555710 host=25766228888 arg=4438 vblank=4566 pending=1 base=25776747662 speed=0.848
+626961: FrameTrace: n=4438 dt_us=16277 lat_us=34066 gpu_proc=0 gpu_idle=0 gpu_blocked=0 submits=26 submit_us=69 semwaits=19 semwait_us=16974 downloads=0 download_us=0 draws=1183 draw_us=0 dispatches=219 dispatch_us=0 faults=259 fault_us=2044 wrm_stalls=5 gpu_busy_us=13793 gpu_n=24 cpu_main_us=2758 cpu_gpu_us=8668 cpu_present_us=1157 cpu_proc_us=312500 faults_gpu=16 fault_gpu_us=54 semwait_gpu_us=4147 prios=8 prio_us=0 dmas=16 dma_us=0
+626962: FrameTrace-draw: n=4438 logs=40 log_us=51 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=52156 p_creads=46 m_eval=0 m_asm=0 m_spec=0 m_insts=192 m_fail=0 memo_hit=2293 memo_miss=0 m_read_us=0 m_wide=192 b_tex=0 b_texn=5800 b_view=0 b_viewn=1102 b_buf=0 b_smp=0 bb_find=0 bb_obtain=0 bb_sync=0 bb_upload=0 bb_n=9870 tex_hits=4809 rt_hits=3699 ob_us=0 ob_n=10326 sync_ups=39 spin_us=40 spins=44 spin_gpu_us=2 gbar=871 ibar=267 swbar=0 rp_begin=38 pops=4 pop_us=9 gbar_skip=871 faults_main=12 fault_main_us=70 img_new=2 img_free=2 img_up=2 img_up_kb=128 img_up_us=0 img_init_us=0 img_copy_us=0 cb_copy=1863 cb_copy_gpu=0 cb_copy_kb=177 acopy_wait_us=16 acopy_waits=1 prot_us=843 prot_pages=2749 protw_us=0 protw_pages=0 prot_drain_us=0 prot_drains=0 prot_calls=169 prot_ro=69 prot_ro_pages=1407 prot_na=25 prot_na_pages=226 prot_rw_us=386 prot_rw_pages=1116 prot_mask_us=0 prot_mask=0 prot_gpu_us=483 prot_gpu=104 prot_gpu_pages=1839 buf_new=0 buf_new_us=0 acopy_gpu_waits=0 img_imp=0 img_imp_kb=0 img_imp_pieces=0 hostread_waits=0 hostread_wait_us=0 img_detile=2 img_regions=2 img_defer=0 img_defer_kb=0 img_pend=0 img_pend_kb=0 img_minlod=0 bda_us=0 bda_n=8 srt_miss=44 clamp_miss=0 smemo_hit=0 smemo_miss=0 smemo_stale=0 smemo_skip=0 smemo_reads=0 bufepoch=1585 bda_scan=20 bda_skip=3262 bpage_hit=6120 bpage_miss=433 m_nodes=0 m_nodes_need=0 m_rnodes=0 m_rnodes_need=0 m_srcs=18515 m_srcs_off=1139 da_draws=1183 da_ready=1183 da_walks=5 da_walk_us=828 da_q=1847 da_nohint=111 da_present=1 da_busy=0 da_done=1851 da_fail=0 da_work_us=4905 da_hit=1857 da_stale=0 da_late=0 da_miss=0 da_words=55206 da_noplan=0 da_flip=0 da_refresh=4 da_stale_old=0 da_predicted=0 da_move=1845 da_take_us=472 da_queue_us=347 da_words_clean=9466 img_ins_us=2 img_free_us=11 img_ovl_us=32 as_n=25 as_us=486 as_lock_us=2 as_drain=0 as_drain_us=0 img_rec_hit=2 img_rec_put=1 rec_n=2889 rec_kb=1167 rec_direct=398 rec_direct_us=0 rec_drain=58 rec_drain_us=0 rec_full=0 rec_full_us=0 rec_work_us=0 rec_idle_us=0 cpu_record_us=9107 tf_free=8926 tf_lock=0 tf_bad=0 pmap_hit=0 pmap_miss=0 prot_held_us=0 gds_bar=5 gds_skip=0 img_ww_skip=0 swbar_loc=0 swbar_flush=0 ds_alloc=0 swdefer_ok=0 swdefer_no=0 swdefer_n=0 da_runs=12497 da_probe=5679
+626963: FrameTrace-rp: n=4438 ends=38 restarts=6 end_state=5 end_target=13 end_binding=2 end_gds=0 end_shader_write=0 end_dispatch=8 end_buf_upload=0 end_buf_copy=1 end_img_upload=0 end_tiler=0 end_clear=1 end_sanitize=0 end_download=0 end_submit=8 end_other=0 restart_state=5 restart_target=0 restart_binding=0 restart_gds=0 restart_shader_write=0 restart_dispatch=0 restart_buf_upload=0 restart_buf_copy=0 restart_img_upload=0 restart_tiler=0 restart_clear=0 restart_sanitize=0 restart_download=0 restart_submit=1 restart_other=0
+626964: FrameTrace-x: n=4438 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=237 rec_pack=1163 rec_pack_cs=200 rec_bind=1363 rec_pack_kb=1185 rec_direct_busy=57 rec_spin_us=7123 rec_sleep=5 prot_spin_us=204 prot_spin_calls=46 prot_spin_pages=517 prot_spin_gpu_us=197 prot_spin_gpu_calls=40 prot_spin_gpu_pages=511 sync_noop=6882 sf_skip=6882 sf_bad=0 tex_inval=253 tex_inval_empty=253 tex_hint_zero=253 pb_pages=2232 pb_flush=114 pb_runs=123 pb_kb=8928 pb_merged=0 pb_wait_us=1074 pb_wait_gpu_us=0 pb_inval_flush=294 pb_refault=0 pb_stuck=0 pb_check=0 pb_bad=0 pb_bad_rw=0 da_req=1852 da_fan=2778 da_fan_canon=1852 da_unused=0 da_unused_ps=0 da_mesh_vs=4 da_px_off=465 da_classes=0 da_class_join=0 da_class_us=0 da_clone=0 da_ccd_x=0 texlru_n=30959 texlru_rep=30439 texfast_ok=4698 texfast_no=1021 texfast_no_stamp=2 texfast_no_state=0 texfast_rec=138 texfast_bad=0 texmemo_empty=5 texmemo_collide=165 texmemo_stale=5 texmemo_key_miss=0 clamp_miss_epoch=0 clamp_miss_key=0 clampvma_miss=0 smp_miss=64 pb_skip_would=138 pb_skip_would_wait_us=11 pb_skip_would_wait_gpu_us=0 pb_skip=0 pb_skip_blk_rw=153 pb_skip_blk_ro=0 pb_wait_sync_us=0 pb_wait_scope_us=17 pb_wait_range_us=1057 pb_wait_worker_us=0 pb_sync_noprot=6 pb_sync_noprot_wait_us=0 pb_inflight_bad=0 fw_n=253 fw_win_same=0 fw_win_recent=3 fw_seq=7 fw_win_armed=1041 fw_widened=3795 fw_refault=0 sync_up_kb=4571 rec_pub=2889 rec_staged=0 rec_pub_forced=0 rec_wake=20 rec_drain_lock=0 rec_tail_rd=798 rec_ccd_n=11 rec_ccd_x=11 rec_sleep_gpu=4 rec_spin_gpu_us=6802 rec_fpwb=0 stk_flt=0 stk_flt_rep=0 stk_flt_same=0 stk_flt_rep_gpu=0 stk_flt_rep_img=0 stk_arm=0 stk_arm_hot=0 stk_arm_hot_bda=0 stk_arm_hot_img=0 stk_hot=0 stk_cand=0 stk_vp_save=0 stk_chk_est=0 stk_stream_hot=0 dp_between_hard=0 dp_n=0 dp_pure=0 dp_fast=0 dp_clean=0 dp_img_new=0 dp_img_up=0 dp_meta=0 dp_prot=0 dp_buf_new=0 dp_buf_up=0 dp_gpu_write=0 dp_obj_new=0 dp_sync=0 dp_tex_slow=0 dp_buf_slow=0 dp_lru=0 dp_memo=0 dp_m1=0 dp_stream_wrap=0 dp_bar=0 dp_tail_hard=0 dp_t_img_up=0 dp_t_meta=0 dp_t_prot=0 dp_t_sync=0 dp_t_bar=0 dp_stream_maps=0 dp_runs_1=0 dp_runs_2=0 dp_runs_4=0 dp_runs_8=0 dp_runs_16=0 dp_runs_32=0 dp_runs_64=0 dp_rd_1=0 dp_rd_2=0 dp_rd_4=0 dp_rd_8=0 dp_rd_16=0 dp_rd_32=0 dp_rd_64=0 hb_runs_1=0 hb_runs_2=0 hb_runs_4=0 hb_runs_8=0 hb_runs_16=0 hb_runs_32=0 hb_runs_64=0 hb_rd_1=0 hb_rd_2=0 hb_rd_4=0 hb_rd_8=0 hb_rd_16=0 hb_rd_32=0 hb_rd_64=0 hb_cut_pass=0 hb_cut_cs=0 hb_cut_bar=0 hb_cut_up=0 hb_cut_sub=0 e9_n=0 e9_push=0 e9_adj=0 e9_seen=0 e9_img=0 e9_buf=0 e9_bufr=0 e9_base=0 e9_full=0 e9_adj_base=0 e9_bufs=0 e9_stream=0 e9_rd_1=0 e9_rd_2=0 e9_rd_4=0 e9_rd_8=0 e9_rd_16=0 e9_rd_32=0 e9_rd_64=0 e9_dyn_ok=0 e9_dyn_over=0 e9_dyn_cap=0 e9_dyn_lay=0 e9_dyn_n1=0 e9_dyn_n2=0 e9_dyn_n4=0 e9_dyn_n8=0 e9_dyn_nmore=0 e9_dyn_limit=0 e9_dyn_ulimit=0 snap_keep_copy=12 snap_keep_grow=2 buflru_n=10504 buflru_rep=10290 snap_cp_b=7760 snap_cp_same_b=3088 snap_cp_vec=77 snap_cp_same_vec=36 snap_cp_eq=1 snap_last_cp=0 snap_last_b=0 bfast_hit=0 bfast_miss=0 bfast_stale=0 bfast_skip=0 bfast_bad=0 pb2_pass=20 pb2_sync=38 pb2_reg=20 pb2_vp=47 pb2_vp_pages=1103 pb2_vp_adj=22 pb2_vp_near=5 pb2_gap=0 pb2_gap_pages=0 pb2_up=0 cb_pool_n=0 cb_pool_tr_us=0 cb_pool_wr_us=0 cb_pool_em_us=0 cb_push_n=0 cb_push_tr_us=0 cb_push_wr_us=0 cb_push_em_us=0 da_wjobs=0 da_wlag_us=0 da_wdepth=0 da_wskip=0
+626965: FrameTrace-wait: other=12826/18 present-frame=4147/1
+626966: FrameTrace-submit: other=28/1 release-mem-irq=10/10 release-mem-data1=17/2 slice-end-gfx=3/5 slice-end-compute=3/6 wait-flip-done=0/1 flip=5/1
+626967: FrameTrace-pm4: gc=34/5 prefetch=72/5
+626968: FrameTrace-pops: +0x7e29a0=3/2 +0x77acbb=0/1 +0x79649d=5/1
+626969: 	 queue  = 0x00000040
+626970: 	 packet = 0x0000000313a77eb8
+626971: 	 acb   = 0x00000004002a55c0
+626972: 	 size  = 0x00000bff
+626973: 	 flags = 0x00
+626974: 	 queue  = 0x00000048
+626975: 	 packet = 0x0000000313a77eb8
+626976: 	 acb   = 0x00000004004867c0
+626977: 	 size  = 0x0000015a
+626978: 	 flags = 0x00
+626979: [25][00:01:22.023] libkernel::libkernel::PthreadCondWait()
+626980: 	 user_id = 1000
+626981: 	 large_motor = 0
+626982: 	 small_motor = 0
+626983: 	 handle = 1
+626984: 	 handle = 1
+626985: 	 data   = 0x00000007efdf2bc0
+626986: 	 num    = 8
+626987: 	 op    = 0x00000182
+626988: 	 queue  = 0x00000046
+626989: 	 packet = 0x000000033baffe68
+626990: 	 acb   = 0x0000000400707a40
+626991: 	 size  = 0x00000421
+626992: 	 flags = 0x00
+626993: 	 op    = 0x00000fff
+626994: 	 state = 0x00000000
+626995: 	 op    = 0x00000fff
+626996: 	 state = 0x00000000
+626997: 	 op    = 0x00000fff
+626998: 	 state = 0x00000000
+626999: 	 op    = 0x00000182
+627000: 	 op    = 0x00000fff
+627001: 	 state = 0x00000000
+627002: 	 op    = 0x00000fff
+627003: 	 state = 0x00000000
+627004: 	 op    = 0x00000182
+627005: 	 indirect_args = 0x00000005074063c0
+627006: 	 modifier      = 0x00000001
+627007: 	 indirect_args = 0x00000005074063e0
+627008: 	 modifier      = 0x00000001
+627009: 	 indirect_args = 0x00000005074063e0
+627010: 	 modifier      = 0x00000001
+627011: 	 data_offset = 0x0
+627012: 	 flags       = 0x00000001
+627013: 	 data_offset = 0x0
+627014: 	 flags       = 0x00000001
+627015: 	 data_offset = 0x0
+627016: 	 flags       = 0x00000001
+627017: 	 data_offset = 0x0
+627018: 	 flags       = 0x00000001
+627019: 	 video_out_handle     = 1
+627020: 	 display_buffer_index = 1
+627021: 	 cache_policy                      = 0x00
+627022: 	 buffer                            = 0x0000000000000000
+627023: 	 buffer_size_in_bytes              = 0
+627024: 	 reset_count                       = 0
+627025: 	 force_reset                       = 0x00
+627026: 	 report_and_reset                  = 0x00
+627027: 	 reporting_interval_in_100k_clocks = 0
+627028: 	 cache_policy                      = 0x00
+627029: 	 buffer                            = 0x00000004007f4b00
+627030: 	 buffer_size_in_bytes              = 2112
+627031: 	 reset_count                       = 0
+627032: 	 force_reset                       = 0x00
+627033: 	 report_and_reset                  = 0x01
+627034: 	 reporting_interval_in_100k_clocks = 0
+627035: 	 flipPendingNum = 2
+627036: [44][00:01:22.028] libkernel::libkernel::PthreadCondWait()
+627037: AvTrace: flip n=4439 t=74569860 host=25766245569 arg=4439 vblank=4567 pending=1 base=25776764344 speed=0.859
+627038: FrameTrace: n=4439 dt_us=16703 lat_us=32707 gpu_proc=0 gpu_idle=0 gpu_blocked=0 submits=18 submit_us=45 semwaits=10 semwait_us=30390 downloads=0 download_us=0 draws=551 draw_us=0 dispatches=177 dispatch_us=0 faults=262 fault_us=2278 wrm_stalls=4 gpu_busy_us=22312 gpu_n=18 cpu_main_us=3489 cpu_gpu_us=4582 cpu_present_us=1332 cpu_proc_us=15625 faults_gpu=6 fault_gpu_us=30 semwait_gpu_us=11956 prios=5 prio_us=0 dmas=14 dma_us=0
+627039: FrameTrace-draw: n=4439 logs=40 log_us=65 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=32676 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=140 m_fail=0 memo_hit=1524 memo_miss=0 m_read_us=0 m_wide=140 b_tex=0 b_texn=3830 b_view=0 b_viewn=325 b_buf=0 b_smp=0 bb_find=0 bb_obtain=0 bb_sync=0 bb_upload=0 bb_n=5143 tex_hits=3540 rt_hits=2073 ob_us=0 ob_n=5497 sync_ups=1 spin_us=50 spins=53 spin_gpu_us=0 gbar=397 ibar=117 swbar=0 rp_begin=8 pops=5 pop_us=17 gbar_skip=397 faults_main=9 fault_main_us=120 img_new=1 img_free=1 img_up=1 img_up_kb=64 img_up_us=0 img_init_us=0 img_copy_us=0 cb_copy=756 cb_copy_gpu=0 cb_copy_kb=62 acopy_wait_us=0 acopy_waits=0 prot_us=593 prot_pages=1502 protw_us=0 protw_pages=0 prot_drain_us=0 prot_drains=0 prot_calls=108 prot_ro=19 prot_ro_pages=239 prot_na=25 prot_na_pages=291 prot_rw_us=345 prot_rw_pages=972 prot_mask_us=0 prot_mask=0 prot_gpu_us=259 prot_gpu=46 prot_gpu_pages=602 buf_new=0 buf_new_us=0 acopy_gpu_waits=0 img_imp=0 img_imp_kb=0 img_imp_pieces=0 hostread_waits=0 hostread_wait_us=0 img_detile=1 img_regions=1 img_defer=0 img_defer_kb=0 img_pend=0 img_pend_kb=0 img_minlod=0 bda_us=0 bda_n=0 srt_miss=0 clamp_miss=0 smemo_hit=0 smemo_miss=0 smemo_stale=0 smemo_skip=0 smemo_reads=0 bufepoch=806 bda_scan=0 bda_skip=0 bpage_hit=3414 bpage_miss=209 m_nodes=0 m_nodes_need=0 m_rnodes=0 m_rnodes_need=0 m_srcs=11361 m_srcs_off=182 da_draws=829 da_ready=829 da_walks=4 da_walk_us=418 da_q=1165 da_nohint=112 da_present=0 da_busy=0 da_done=1165 da_fail=0 da_work_us=2760 da_hit=881 da_stale=0 da_late=0 da_miss=0 da_words=34706 da_noplan=0 da_flip=0 da_refresh=0 da_stale_old=0 da_predicted=0 da_move=881 da_take_us=219 da_queue_us=133 da_words_clean=4558 img_ins_us=1 img_free_us=5 img_ovl_us=16 as_n=17 as_us=442 as_lock_us=90 as_drain=0 as_drain_us=0 img_rec_hit=1 img_rec_put=2 rec_n=1515 rec_kb=602 rec_direct=141 rec_direct_us=0 rec_drain=40 rec_drain_us=0 rec_full=0 rec_full_us=0 rec_work_us=0 rec_idle_us=0 cpu_record_us=4897 tf_free=4444 tf_lock=0 tf_bad=0 pmap_hit=0 pmap_miss=0 prot_held_us=0 gds_bar=4 gds_skip=0 img_ww_skip=0 swbar_loc=0 swbar_flush=0 ds_alloc=0 swdefer_ok=0 swdefer_no=0 swdefer_n=0 da_runs=6741 da_probe=3281
+627040: FrameTrace-rp: n=4439 ends=7 restarts=2 end_state=1 end_target=1 end_binding=0 end_gds=0 end_shader_write=0 end_dispatch=2 end_buf_upload=0 end_buf_copy=0 end_img_upload=0 end_tiler=0 end_clear=0 end_sanitize=0 end_download=0 end_submit=3 end_other=0 restart_state=1 restart_target=0 restart_binding=0 restart_gds=0 restart_shader_write=0 restart_dispatch=0 restart_buf_upload=0 restart_buf_copy=0 restart_img_upload=0 restart_tiler=0 restart_clear=0 restart_sanitize=0 restart_download=0 restart_submit=1 restart_other=0
+627041: FrameTrace-x: n=4439 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=218 rec_pack=558 rec_pack_cs=160 rec_bind=719 rec_pack_kb=612 rec_direct_busy=39 rec_spin_us=3804 rec_sleep=3 prot_spin_us=240 prot_spin_calls=43 prot_spin_pages=517 prot_spin_gpu_us=231 prot_spin_gpu_calls=39 prot_spin_gpu_pages=513 sync_noop=3303 sf_skip=3303 sf_bad=0 tex_inval=256 tex_inval_empty=256 tex_hint_zero=256 pb_pages=985 pb_flush=65 pb_runs=65 pb_kb=3940 pb_merged=2 pb_wait_us=1411 pb_wait_gpu_us=0 pb_inval_flush=259 pb_refault=2 pb_stuck=0 pb_check=0 pb_bad=0 pb_bad_rw=0 da_req=1165 da_fan=1757 da_fan_canon=1165 da_unused=0 da_unused_ps=0 da_mesh_vs=0 da_px_off=233 da_classes=0 da_class_join=0 da_class_us=0 da_clone=0 da_ccd_x=0 texlru_n=28765 texlru_rep=28276 texfast_ok=3505 texfast_no=289 texfast_no_stamp=1 texfast_no_state=0 texfast_rec=100 texfast_bad=0 texmemo_empty=1 texmemo_collide=103 texmemo_stale=4 texmemo_key_miss=0 clamp_miss_epoch=0 clamp_miss_key=0 clampvma_miss=0 smp_miss=10 pb_skip_would=91 pb_skip_would_wait_us=37 pb_skip_would_wait_gpu_us=0 pb_skip=0 pb_skip_blk_rw=162 pb_skip_blk_ro=0 pb_wait_sync_us=0 pb_wait_scope_us=36 pb_wait_range_us=1375 pb_wait_worker_us=0 pb_sync_noprot=3 pb_sync_noprot_wait_us=0 pb_inflight_bad=0 fw_n=256 fw_win_same=0 fw_win_recent=0 fw_seq=1 fw_win_armed=908 fw_widened=3840 fw_refault=0 sync_up_kb=53 rec_pub=1532 rec_staged=0 rec_pub_forced=0 rec_wake=14 rec_drain_lock=0 rec_tail_rd=284 rec_ccd_n=6 rec_ccd_x=6 rec_sleep_gpu=2 rec_spin_gpu_us=3490 rec_fpwb=0 stk_flt=0 stk_flt_rep=0 stk_flt_same=0 stk_flt_rep_gpu=0 stk_flt_rep_img=0 stk_arm=0 stk_arm_hot=0 stk_arm_hot_bda=0 stk_arm_hot_img=0 stk_hot=0 stk_cand=0 stk_vp_save=0 stk_chk_est=0 stk_stream_hot=0 dp_between_hard=0 dp_n=0 dp_pure=0 dp_fast=0 dp_clean=0 dp_img_new=0 dp_img_up=0 dp_meta=0 dp_prot=0 dp_buf_new=0 dp_buf_up=0 dp_gpu_write=0 dp_obj_new=0 dp_sync=0 dp_tex_slow=0 dp_buf_slow=0 dp_lru=0 dp_memo=0 dp_m1=0 dp_stream_wrap=0 dp_bar=0 dp_tail_hard=0 dp_t_img_up=0 dp_t_meta=0 dp_t_prot=0 dp_t_sync=0 dp_t_bar=0 dp_stream_maps=0 dp_runs_1=0 dp_runs_2=0 dp_runs_4=0 dp_runs_8=0 dp_runs_16=0 dp_runs_32=0 dp_runs_64=0 dp_rd_1=0 dp_rd_2=0 dp_rd_4=0 dp_rd_8=0 dp_rd_16=0 dp_rd_32=0 dp_rd_64=0 hb_runs_1=0 hb_runs_2=0 hb_runs_4=0 hb_runs_8=0 hb_runs_16=0 hb_runs_32=0 hb_runs_64=0 hb_rd_1=0 hb_rd_2=0 hb_rd_4=0 hb_rd_8=0 hb_rd_16=0 hb_rd_32=0 hb_rd_64=0 hb_cut_pass=0 hb_cut_cs=0 hb_cut_bar=0 hb_cut_up=0 hb_cut_sub=0 e9_n=0 e9_push=0 e9_adj=0 e9_seen=0 e9_img=0 e9_buf=0 e9_bufr=0 e9_base=0 e9_full=0 e9_adj_base=0 e9_bufs=0 e9_stream=0 e9_rd_1=0 e9_rd_2=0 e9_rd_4=0 e9_rd_8=0 e9_rd_16=0 e9_rd_32=0 e9_rd_64=0 e9_dyn_ok=0 e9_dyn_over=0 e9_dyn_cap=0 e9_dyn_lay=0 e9_dyn_n1=0 e9_dyn_n2=0 e9_dyn_n4=0 e9_dyn_n8=0 e9_dyn_nmore=0 e9_dyn_limit=0 e9_dyn_ulimit=0 snap_keep_copy=1 snap_keep_grow=1 buflru_n=5062 buflru_rep=4890 snap_cp_b=5200 snap_cp_same_b=0 snap_cp_vec=7 snap_cp_same_vec=0 snap_cp_eq=0 snap_last_cp=0 snap_last_b=0 bfast_hit=0 bfast_miss=0 bfast_stale=0 bfast_skip=0 bfast_bad=0 pb2_pass=0 pb2_sync=0 pb2_reg=0 pb2_vp=0 pb2_vp_pages=0 pb2_vp_adj=0 pb2_vp_near=0 pb2_gap=0 pb2_gap_pages=0 pb2_up=0 cb_pool_n=0 cb_pool_tr_us=0 cb_pool_wr_us=0 cb_pool_em_us=0 cb_push_n=0 cb_push_tr_us=0 cb_push_wr_us=0 cb_push_em_us=0 da_wjobs=0 da_wlag_us=0 da_wdepth=0 da_wskip=0
+627042: FrameTrace-wait: other=18434/9 present-frame=11956/1
+627043: FrameTrace-submit: other=29/1 release-mem-irq=3/5 release-mem-data1=2/2 slice-end-gfx=2/4 slice-end-compute=2/6 flip=5/1
+627044: FrameTrace-pm4: gc=78/4 prefetch=0/4
+627045: FrameTrace-pops: +0x7e29a0=4/2 +0x77acbb=0/1 +0x79649d=12/2
+627046: 	 queue  = 0x00000040
+627047: 	 packet = 0x0000000313a77eb8
+627048: 	 acb   = 0x0000000400345640
+627049: 	 size  = 0x00000bff
+627050: 	 flags = 0x00
+627051: 	 queue  = 0x00000048
+627052: 	 packet = 0x0000000313a77eb8
+627053: 	 acb   = 0x0000000400526840
+627054: 	 size  = 0x00000159
+627055: 	 flags = 0x00
+627056: [25][00:01:22.039] libkernel::libkernel::PthreadCondWait()
+627057: 	 user_id = 1000
+627058: 	 large_motor = 0
+627059: 	 small_motor = 0
+627060: 	 handle = 1
+627061: 	 handle = 1
+627062: 	 data   = 0x00000007efdf2bc0
+627063: 	 num    = 8
+627064: 	 op    = 0x00000182
+627065: 	 queue  = 0x00000046
+627066: 	 packet = 0x000000033baffe68
+627067: 	 acb   = 0x00000004005c7940
+627068: 	 size  = 0x00000421
+627069: 	 flags = 0x00
+627070: 	 op    = 0x00000fff
+627071: 	 state = 0x00000000
+627072: 	 op    = 0x00000182
+627073: 	 op    = 0x00000fff
+627074: 	 state = 0x00000000
+627075: 	 op    = 0x00000fff
+627076: 	 state = 0x00000000
+627077: 	 op    = 0x00000fff
+627078: 	 state = 0x00000000
+627079: 	 op    = 0x00000fff
+627080: 	 state = 0x00000000
+627081: 	 op    = 0x00000182
+627082: 	 indirect_args = 0x00000005074063c0
+627083: 	 modifier      = 0x00000001
+627084: 	 indirect_args = 0x00000005074063e0
+627085: 	 modifier      = 0x00000001
+627086: 	 indirect_args = 0x00000005074063e0
+627087: 	 modifier      = 0x00000001
+627088: 	 data_offset = 0x0
+627089: 	 flags       = 0x00000001
+627090: 	 data_offset = 0x0
+627091: 	 flags       = 0x00000001
+627092: 	 data_offset = 0x0
+627093: 	 flags       = 0x00000001
+627094: 	 data_offset = 0x0
+627095: 	 flags       = 0x00000001
+627096: 	 video_out_handle     = 1
+627097: 	 display_buffer_index = 0
+627098: 	 cache_policy                      = 0x00
+627099: 	 buffer                            = 0x0000000000000000
+627100: 	 buffer_size_in_bytes              = 0
+627101: 	 reset_count                       = 0
+627102: 	 force_reset                       = 0x00
+627103: 	 report_and_reset                  = 0x00
+627104: 	 reporting_interval_in_100k_clocks = 0
+627105: 	 cache_policy                      = 0x00
+627106: 	 buffer                            = 0x00000004007fcf80
+627107: 	 buffer_size_in_bytes              = 2112
+627108: 	 reset_count                       = 0
+627109: 	 force_reset                       = 0x00
+627110: 	 report_and_reset                  = 0x01
+627111: 	 reporting_interval_in_100k_clocks = 0
+627112: 	 flipPendingNum = 2
+627113: [44][00:01:22.043] libkernel::libkernel::PthreadCondWait()
+627114: AvTrace: flip n=4440 t=74584719 host=25766262876 arg=4440 vblank=4568 pending=1 base=25776781651 speed=0.866
+627115: FrameTrace: n=4440 dt_us=17287 lat_us=33774 gpu_proc=0 gpu_idle=0 gpu_blocked=0 submits=28 submit_us=78 semwaits=16 semwait_us=21390 downloads=0 download_us=0 draws=1466 draw_us=0 dispatches=233 dispatch_us=0 faults=294 fault_us=1963 wrm_stalls=6 gpu_busy_us=14880 gpu_n=30 cpu_main_us=2272 cpu_gpu_us=9750 cpu_present_us=1932 cpu_proc_us=15625 faults_gpu=19 fault_gpu_us=54 semwait_gpu_us=7315 prios=7 prio_us=0 dmas=16 dma_us=0
+627116: FrameTrace-draw: n=4440 logs=40 log_us=56 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=71320 p_creads=46 m_eval=0 m_asm=0 m_spec=0 m_insts=228 m_fail=0 memo_hit=3044 memo_miss=0 m_read_us=0 m_wide=228 b_tex=0 b_texn=5949 b_view=0 b_viewn=1154 b_buf=0 b_smp=0 bb_find=0 bb_obtain=0 bb_sync=0 bb_upload=0 bb_n=10803 tex_hits=4930 rt_hits=3983 ob_us=0 ob_n=12495 sync_ups=71 spin_us=37 spins=54 spin_gpu_us=0 gbar=984 ibar=313 swbar=0 rp_begin=48 pops=5 pop_us=13 gbar_skip=984 faults_main=21 fault_main_us=151 img_new=2 img_free=2 img_up=2 img_up_kb=128 img_up_us=0 img_init_us=0 img_copy_us=0 cb_copy=1176 cb_copy_gpu=0 cb_copy_kb=85 acopy_wait_us=31 acopy_waits=1 prot_us=903 prot_pages=3875 protw_us=0 protw_pages=0 prot_drain_us=0 prot_drains=0 prot_calls=213 prot_ro=110 prot_ro_pages=2458 prot_na=24 prot_na_pages=225 prot_rw_us=252 prot_rw_pages=1192 prot_mask_us=0 prot_mask=0 prot_gpu_us=677 prot_gpu=148 prot_gpu_pages=2962 buf_new=0 buf_new_us=0 acopy_gpu_waits=0 img_imp=0 img_imp_kb=0 img_imp_pieces=0 hostread_waits=0 hostread_wait_us=0 img_detile=2 img_regions=2 img_defer=0 img_defer_kb=0 img_pend=0 img_pend_kb=0 img_minlod=0 bda_us=0 bda_n=12 srt_miss=75 clamp_miss=0 smemo_hit=0 smemo_miss=0 smemo_stale=0 smemo_skip=0 smemo_reads=0 bufepoch=1543 bda_scan=36 bda_skip=4340 bpage_hit=6425 bpage_miss=512 m_nodes=0 m_nodes_need=0 m_rnodes=0 m_rnodes_need=0 m_srcs=25615 m_srcs_off=2101 da_draws=1544 da_ready=1544 da_walks=6 da_walk_us=949 da_q=2543 da_nohint=134 da_present=2 da_busy=0 da_done=2551 da_fail=0 da_work_us=6000 da_hit=2149 da_stale=0 da_late=0 da_miss=0 da_words=55325 da_noplan=0 da_flip=0 da_refresh=8 da_stale_old=0 da_predicted=0 da_move=2138 da_take_us=442 da_queue_us=297 da_words_clean=9481 img_ins_us=2 img_free_us=11 img_ovl_us=31 as_n=27 as_us=468 as_lock_us=2 as_drain=0 as_drain_us=0 img_rec_hit=2 img_rec_put=2 rec_n=3474 rec_kb=1310 rec_direct=479 rec_direct_us=0 rec_drain=64 rec_drain_us=0 rec_full=0 rec_full_us=0 rec_work_us=0 rec_idle_us=0 cpu_record_us=9976 tf_free=10236 tf_lock=0 tf_bad=0 pmap_hit=0 pmap_miss=0 prot_held_us=0 gds_bar=5 gds_skip=0 img_ww_skip=0 swbar_loc=0 swbar_flush=0 ds_alloc=0 swdefer_ok=0 swdefer_no=0 swdefer_n=0 da_runs=12518 da_probe=7399
+627117: FrameTrace-rp: n=4440 ends=49 restarts=10 end_state=9 end_target=14 end_binding=2 end_gds=0 end_shader_write=0 end_dispatch=11 end_buf_upload=0 end_buf_copy=1 end_img_upload=0 end_tiler=0 end_clear=1 end_sanitize=0 end_download=1 end_submit=9 end_other=1 restart_state=9 restart_target=0 restart_binding=0 restart_gds=0 restart_shader_write=0 restart_dispatch=0 restart_buf_upload=0 restart_buf_copy=0 restart_img_upload=0 restart_tiler=0 restart_clear=0 restart_sanitize=0 restart_download=0 restart_submit=1 restart_other=0
+627118: FrameTrace-x: n=4440 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=242 rec_pack=1426 rec_pack_cs=213 rec_bind=1638 rec_pack_kb=1328 rec_direct_busy=63 rec_spin_us=7642 rec_sleep=4 prot_spin_us=107 prot_spin_calls=44 prot_spin_pages=516 prot_spin_gpu_us=101 prot_spin_gpu_calls=39 prot_spin_gpu_pages=511 sync_noop=8680 sf_skip=8680 sf_bad=0 tex_inval=287 tex_inval_empty=287 tex_hint_zero=287 pb_pages=3359 pb_flush=150 pb_runs=169 pb_kb=13436 pb_merged=0 pb_wait_us=622 pb_wait_gpu_us=0 pb_inval_flush=360 pb_refault=0 pb_stuck=0 pb_check=0 pb_bad=0 pb_bad_rw=0 da_req=2553 da_fan=3822 da_fan_canon=2553 da_unused=0 da_unused_ps=0 da_mesh_vs=4 da_px_off=701 da_classes=0 da_class_join=0 da_class_us=0 da_clone=0 da_ccd_x=0 texlru_n=33340 texlru_rep=32761 texfast_ok=4795 texfast_no=1056 texfast_no_stamp=2 texfast_no_state=0 texfast_rec=150 texfast_bad=0 texmemo_empty=9 texmemo_collide=188 texmemo_stale=5 texmemo_key_miss=0 clamp_miss_epoch=0 clamp_miss_key=0 clampvma_miss=0 smp_miss=83 pb_skip_would=196 pb_skip_would_wait_us=24 pb_skip_would_wait_gpu_us=0 pb_skip=0 pb_skip_blk_rw=162 pb_skip_blk_ro=0 pb_wait_sync_us=0 pb_wait_scope_us=2 pb_wait_range_us=619 pb_wait_worker_us=0 pb_sync_noprot=6 pb_sync_noprot_wait_us=0 pb_inflight_bad=0 fw_n=287 fw_win_same=1 fw_win_recent=4 fw_seq=0 fw_win_armed=1113 fw_widened=4305 fw_refault=0 sync_up_kb=8876 rec_pub=3461 rec_staged=0 rec_pub_forced=0 rec_wake=11 rec_drain_lock=0 rec_tail_rd=960 rec_ccd_n=14 rec_ccd_x=14 rec_sleep_gpu=3 rec_spin_gpu_us=7429 rec_fpwb=0 stk_flt=0 stk_flt_rep=0 stk_flt_same=0 stk_flt_rep_gpu=0 stk_flt_rep_img=0 stk_arm=0 stk_arm_hot=0 stk_arm_hot_bda=0 stk_arm_hot_img=0 stk_hot=0 stk_cand=0 stk_vp_save=0 stk_chk_est=0 stk_stream_hot=0 dp_between_hard=0 dp_n=0 dp_pure=0 dp_fast=0 dp_clean=0 dp_img_new=0 dp_img_up=0 dp_meta=0 dp_prot=0 dp_buf_new=0 dp_buf_up=0 dp_gpu_write=0 dp_obj_new=0 dp_sync=0 dp_tex_slow=0 dp_buf_slow=0 dp_lru=0 dp_memo=0 dp_m1=0 dp_stream_wrap=0 dp_bar=0 dp_tail_hard=0 dp_t_img_up=0 dp_t_meta=0 dp_t_prot=0 dp_t_sync=0 dp_t_bar=0 dp_stream_maps=0 dp_runs_1=0 dp_runs_2=0 dp_runs_4=0 dp_runs_8=0 dp_runs_16=0 dp_runs_32=0 dp_runs_64=0 dp_rd_1=0 dp_rd_2=0 dp_rd_4=0 dp_rd_8=0 dp_rd_16=0 dp_rd_32=0 dp_rd_64=0 hb_runs_1=0 hb_runs_2=0 hb_runs_4=0 hb_runs_8=0 hb_runs_16=0 hb_runs_32=0 hb_runs_64=0 hb_rd_1=0 hb_rd_2=0 hb_rd_4=0 hb_rd_8=0 hb_rd_16=0 hb_rd_32=0 hb_rd_64=0 hb_cut_pass=0 hb_cut_cs=0 hb_cut_bar=0 hb_cut_up=0 hb_cut_sub=0 e9_n=0 e9_push=0 e9_adj=0 e9_seen=0 e9_img=0 e9_buf=0 e9_bufr=0 e9_base=0 e9_full=0 e9_adj_base=0 e9_bufs=0 e9_stream=0 e9_rd_1=0 e9_rd_2=0 e9_rd_4=0 e9_rd_8=0 e9_rd_16=0 e9_rd_32=0 e9_rd_64=0 e9_dyn_ok=0 e9_dyn_over=0 e9_dyn_cap=0 e9_dyn_lay=0 e9_dyn_n1=0 e9_dyn_n2=0 e9_dyn_n4=0 e9_dyn_n8=0 e9_dyn_nmore=0 e9_dyn_limit=0 e9_dyn_ulimit=0 snap_keep_copy=10 snap_keep_grow=2 buflru_n=11549 buflru_rep=11313 snap_cp_b=8316 snap_cp_same_b=2564 snap_cp_vec=65 snap_cp_same_vec=27 snap_cp_eq=1 snap_last_cp=0 snap_last_b=0 bfast_hit=0 bfast_miss=0 bfast_stale=0 bfast_skip=0 bfast_bad=0 pb2_pass=36 pb2_sync=70 pb2_reg=36 pb2_vp=89 pb2_vp_pages=2154 pb2_vp_adj=43 pb2_vp_near=10 pb2_gap=0 pb2_gap_pages=0 pb2_up=0 cb_pool_n=0 cb_pool_tr_us=0 cb_pool_wr_us=0 cb_pool_em_us=0 cb_push_n=0 cb_push_tr_us=0 cb_push_wr_us=0 cb_push_em_us=0 da_wjobs=0 da_wlag_us=0 da_wdepth=0 da_wskip=0
+627119: FrameTrace-wait: other=14075/15 present-frame=7315/1
+627120: FrameTrace-submit: other=24/1 release-mem-irq=7/9 release-mem-data1=157/4 slice-end-gfx=2/6 slice-end-compute=2/6 wait-flip-done=0/1 flip=6/1
+627121: FrameTrace-pm4: gc=36/6 prefetch=70/6
+627122: FrameTrace-pops: +0x7e29a0=3/2 +0x77acbb=0/1 +0x79649d=9/2
+627123: 	 queue  = 0x00000040
+627124: 	 packet = 0x0000000313a77eb8
+627125: 	 acb   = 0x0000000400205540
+627126: 	 size  = 0x00000bff
+627127: 	 flags = 0x00
+627128: 	 queue  = 0x00000048
+627129: 	 packet = 0x0000000313a77eb8
+627130: 	 acb   = 0x00000004003e6740
+627131: 	 size  = 0x0000015a
+627132: 	 flags = 0x00
+627133: [25][00:01:22.047] libkernel::libkernel::PthreadCondWait()
+627134: 	 user_id = 1000
+627135: 	 large_motor = 0
+627136: 	 small_motor = 0
+627137: 	 handle = 1
+627138: 	 handle = 1
+627139: 	 data   = 0x00000007efdf2bc0
+627140: 	 num    = 8
+627141: 	 op    = 0x00000182
+627142: 	 queue  = 0x00000046
+627143: 	 packet = 0x000000033baffe68
+627144: 	 acb   = 0x00000004006679c0
+627145: 	 size  = 0x00000421
+627146: 	 flags = 0x00
+627147: 	 op    = 0x00000fff
+627148: 	 state = 0x00000000
+627149: 	 op    = 0x00000fff
+627150: 	 state = 0x00000000
+627151: 	 op    = 0x00000182
+627152: 	 op    = 0x00000fff
+627153: 	 state = 0x00000000
+627154: 	 op    = 0x00000fff
+627155: 	 state = 0x00000000
+627156: 	 op    = 0x00000fff
+627157: 	 state = 0x00000000
+627158: 	 op    = 0x00000182
+627159: 	 indirect_args = 0x00000005074063c0
+627160: 	 modifier      = 0x00000001
+627161: 	 indirect_args = 0x00000005074063e0
+627162: 	 modifier      = 0x00000001
+627163: 	 indirect_args = 0x00000005074063e0
+627164: 	 modifier      = 0x00000001
+627165: 	 data_offset = 0x0
+627166: 	 flags       = 0x00000001
+627167: 	 data_offset = 0x0
+627168: 	 flags       = 0x00000001
+627169: 	 data_offset = 0x0
+627170: 	 flags       = 0x00000001
+627171: 	 data_offset = 0x0
+627172: 	 flags       = 0x00000001
+627173: 	 video_out_handle     = 1
+627174: 	 display_buffer_index = 1
+627175: 	 cache_policy                      = 0x00
+627176: 	 buffer                            = 0x0000000000000000
+627177: 	 buffer_size_in_bytes              = 0
+627178: 	 reset_count                       = 0
+627179: 	 force_reset                       = 0x00
+627180: 	 report_and_reset                  = 0x00
+627181: 	 reporting_interval_in_100k_clocks = 0
+627182: 	 cache_policy                      = 0x00
+627183: 	 buffer                            = 0x0000000400805400
+627184: 	 buffer_size_in_bytes              = 2112
+627185: 	 reset_count                       = 0
+627186: 	 force_reset                       = 0x00
+627187: 	 report_and_reset                  = 0x01
+627188: 	 reporting_interval_in_100k_clocks = 0
+627189: [25][00:01:22.060] libkernel::libkernel::PthreadCondWait()
+627190: ASSERT: D:\asobi\6.0\source\engine\js\src\framework\js\gpu\command\_IMPL\_PPR\command_buffer_writer.ppr.cpp:31
+627191: 
+627192: There are too many objects/batches in this scene.
+627193: ASSERT: D:\asobi\6.0\source\engine\js\src\framework\js\gpu\command\_IMPL\_PPR\command_buffer_writer.ppr.cpp:31
+627194: 
+627195: There are too many objects/batches in this scene.
+627196: [25][00:01:22.062] libkernel::libkernel::PthreadCondWait()
+627197: --- Build ---
+627198: Fork build arigandores/KytyPS5 e70db75-dirty
+627199: --- Error ---
+627200: Unhandled host exception: type=1 code=3221225477 pc=0x00000009004a020e access=1 address=0xffffffffffffffff
+627201:  in C:\kyty\KytyPS5\src\loader\runtimeLinker.cpp:844

@@ -1,0 +1,99 @@
+     49fb40  4889df                   mov      rdi, rbx
+     49fb43  ff5320                   call     qword ptr [rbx + 0x20]
+     49fb46  488b7dc0                 mov      rdi, qword ptr [rbp - 0x40]
+     49fb4a  488b4318                 mov      rax, qword ptr [rbx + 0x18]
+     49fb4e  41ba000000f8             mov      r10d, 0xf8000000
+     49fb54  4883c0fc                 add      rax, -4
+     49fb58  4c89fa                   mov      rdx, r15
+     49fb5b  4883e0fc                 and      rax, 0xfffffffffffffffc
+     49fb5f  48894318                 mov      qword ptr [rbx + 0x18], rax
+     49fb63  8b08                     mov      ecx, dword ptr [rax]
+     49fb65  4421d1                   and      ecx, r10d
+     49fb68  8908                     mov      dword ptr [rax], ecx
+     49fb6a  4889f8                   mov      rax, rdi
+     49fb6d  4183fd01                 cmp      r13d, 1
+     49fb71  0f8479ffffff             je       0x49faf0
+     49fb77  4183fd02                 cmp      r13d, 2
+     49fb7b  7589                     jne      0x49fb06
+     49fb7d  488b45c8                 mov      rax, qword ptr [rbp - 0x38]
+     49fb81  488b55d0                 mov      rdx, qword ptr [rbp - 0x30]
+     49fb85  e966ffffff               jmp      0x49faf0
+     49fb8a  4883c418                 add      rsp, 0x18
+     49fb8e  5b                       pop      rbx
+     49fb8f  415c                     pop      r12
+     49fb91  415d                     pop      r13
+     49fb93  415e                     pop      r14
+     49fb95  415f                     pop      r15
+     49fb97  5d                       pop      rbp
+     49fb98  c3                       ret      
+     49fb99  cc                       int3     
+     49fb9a  cc                       int3     
+     49fb9b  cc                       int3     
+     49fb9c  cc                       int3     
+     49fb9d  cc                       int3     
+     49fb9e  cc                       int3     
+     49fb9f  cc                       int3     
+     49fba0  488b4e10                 mov      rcx, qword ptr [rsi + 0x10]
+     49fba4  488d87e8040000           lea      rax, [rdi + 0x4e8]
+     49fbab  48898ff8040000           mov      qword ptr [rdi + 0x4f8], rcx
+     49fbb2  c5f81006                 vmovups  xmm0, xmmword ptr [rsi]
+     49fbb6  c5f81187e8040000         vmovups  xmmword ptr [rdi + 0x4e8], xmm0
+     49fbbe  4839f0                   cmp      rax, rsi
+     49fbc1  7466                     je       0x49fc29
+     49fbc3  c5f8104618               vmovups  xmm0, xmmword ptr [rsi + 0x18]
+     49fbc8  488b4620                 mov      rax, qword ptr [rsi + 0x20]
+     49fbcc  c5f8118700050000         vmovups  xmmword ptr [rdi + 0x500], xmm0
+     49fbd4  488b4e28                 mov      rcx, qword ptr [rsi + 0x28]
+     49fbd8  48898f10050000           mov      qword ptr [rdi + 0x510], rcx
+     49fbdf  c5f8104630               vmovups  xmm0, xmmword ptr [rsi + 0x30]
+     49fbe4  c5f8118718050000         vmovups  xmmword ptr [rdi + 0x518], xmm0
+     49fbec  488b4e40                 mov      rcx, qword ptr [rsi + 0x40]
+     49fbf0  48898f28050000           mov      qword ptr [rdi + 0x528], rcx
+     49fbf7  c5f8104648               vmovups  xmm0, xmmword ptr [rsi + 0x48]
+     49fbfc  c5f8118730050000         vmovups  xmmword ptr [rdi + 0x530], xmm0
+     49fc04  488b4e58                 mov      rcx, qword ptr [rsi + 0x58]
+     49fc08  48898f40050000           mov      qword ptr [rdi + 0x540], rcx
+     49fc0f  c5f8104660               vmovups  xmm0, xmmword ptr [rsi + 0x60]
+     49fc14  c5f8118748050000         vmovups  xmmword ptr [rdi + 0x548], xmm0
+     49fc1c  488b4e70                 mov      rcx, qword ptr [rsi + 0x70]
+     49fc20  48898f58050000           mov      qword ptr [rdi + 0x558], rcx
+     49fc27  eb07                     jmp      0x49fc30
+     49fc29  488b8708050000           mov      rax, qword ptr [rdi + 0x508]
+     49fc30  8b8fe8040000             mov      ecx, dword ptr [rdi + 0x4e8]
+     49fc36  c5f8100dc2e0ea07         vmovups  xmm1, xmmword ptr [rip + 0x7eae0c2]   ; ->0x834dd00
+>>   49fc3e  488d159b050000           lea      rdx, [rip + 0x59b]   ; ->0x4a01e0
+     49fc45  488907                   mov      qword ptr [rdi], rax
+     49fc48  c5f857c0                 vxorps   xmm0, xmm0, xmm0
+     49fc4c  83e1fc                   and      ecx, 0xfffffffc
+     49fc4f  4801c1                   add      rcx, rax
+     49fc52  48894f08                 mov      qword ptr [rdi + 8], rcx
+     49fc56  48895720                 mov      qword ptr [rdi + 0x20], rdx
+     49fc5a  48897f28                 mov      qword ptr [rdi + 0x28], rdi
+     49fc5e  c7473000000000           mov      dword ptr [rdi + 0x30], 0
+     49fc65  48894710                 mov      qword ptr [rdi + 0x10], rax
+     49fc69  48b80000000004000000     movabs   rax, 0x400000000
+     49fc73  48894f18                 mov      qword ptr [rdi + 0x18], rcx
+     49fc77  c5fc114738               vmovups  ymmword ptr [rdi + 0x38], ymm0
+     49fc7c  c5fc114758               vmovups  ymmword ptr [rdi + 0x58], ymm0
+     49fc81  48c7477800000000         mov      qword ptr [rdi + 0x78], 0
+     49fc89  4889bf80000000           mov      qword ptr [rdi + 0x80], rdi
+     49fc90  4889bf88000000           mov      qword ptr [rdi + 0x88], rdi
+     49fc97  c687a000000000           mov      byte ptr [rdi + 0xa0], 0
+     49fc9e  48c7879800000000000000   mov      qword ptr [rdi + 0x98], 0
+     49fca9  c5fc1187a8000000         vmovups  ymmword ptr [rdi + 0xa8], ymm0
+     49fcb1  c5fc1187c8000000         vmovups  ymmword ptr [rdi + 0xc8], ymm0
+     49fcb9  48c787e800000000000000   mov      qword ptr [rdi + 0xe8], 0
+     49fcc4  4889bff0000000           mov      qword ptr [rdi + 0xf0], rdi
+     49fccb  4889bff8000000           mov      qword ptr [rdi + 0xf8], rdi
+     49fcd2  c6871001000000           mov      byte ptr [rdi + 0x110], 0
+     49fcd9  48c7870801000000000000   mov      qword ptr [rdi + 0x108], 0
+     49fce4  c5fc118738010000         vmovups  ymmword ptr [rdi + 0x138], ymm0
+     49fcec  c5fc118718010000         vmovups  ymmword ptr [rdi + 0x118], ymm0
+     49fcf4  48c7875801000000000000   mov      qword ptr [rdi + 0x158], 0
+     49fcff  4889bf60010000           mov      qword ptr [rdi + 0x160], rdi
+     49fd06  4889bf68010000           mov      qword ptr [rdi + 0x168], rdi
+     49fd0d  c6878001000000           mov      byte ptr [rdi + 0x180], 0
+     49fd14  48c7877801000000000000   mov      qword ptr [rdi + 0x178], 0
+     49fd1f  c5fc1187a8010000         vmovups  ymmword ptr [rdi + 0x1a8], ymm0
+     49fd27  c5fc118788010000         vmovups  ymmword ptr [rdi + 0x188], ymm0
+     49fd2f  48c787c801000000000000   mov      qword ptr [rdi + 0x1c8], 0

@@ -1,0 +1,77 @@
+     4a0100  0000                     add      byte ptr [rax], al
+     4a0102  4889bf98030000           mov      qword ptr [rdi + 0x398], rdi
+     4a0109  c687b003000000           mov      byte ptr [rdi + 0x3b0], 0
+     4a0110  48c787a803000000000000   mov      qword ptr [rdi + 0x3a8], 0
+     4a011b  4889bfb8030000           mov      qword ptr [rdi + 0x3b8], rdi
+     4a0122  4889bfc0030000           mov      qword ptr [rdi + 0x3c0], rdi
+     4a0129  c5fc1187d8030000         vmovups  ymmword ptr [rdi + 0x3d8], ymm0
+     4a0131  c5fc1187c8030000         vmovups  ymmword ptr [rdi + 0x3c8], ymm0
+     4a0139  c5f8118ff8030000         vmovups  xmmword ptr [rdi + 0x3f8], xmm1
+     4a0141  48c7870804000000000000   mov      qword ptr [rdi + 0x408], 0
+     4a014c  c7871004000000000000     mov      dword ptr [rdi + 0x410], 0
+     4a0156  48898718040000           mov      qword ptr [rdi + 0x418], rax
+     4a015d  c6879000000000           mov      byte ptr [rdi + 0x90], 0
+     4a0164  c687e001000000           mov      byte ptr [rdi + 0x1e0], 0
+     4a016b  c6875002000000           mov      byte ptr [rdi + 0x250], 0
+     4a0172  c687c002000000           mov      byte ptr [rdi + 0x2c0], 0
+     4a0179  c6873003000000           mov      byte ptr [rdi + 0x330], 0
+     4a0180  c687a003000000           mov      byte ptr [rdi + 0x3a0], 0
+     4a0187  c5fc1187c0040000         vmovups  ymmword ptr [rdi + 0x4c0], ymm0
+     4a018f  c5fc1187a0040000         vmovups  ymmword ptr [rdi + 0x4a0], ymm0
+     4a0197  c5fc118780040000         vmovups  ymmword ptr [rdi + 0x480], ymm0
+     4a019f  c5fc118760040000         vmovups  ymmword ptr [rdi + 0x460], ymm0
+     4a01a7  c5fc118740040000         vmovups  ymmword ptr [rdi + 0x440], ymm0
+     4a01af  c5fc118720040000         vmovups  ymmword ptr [rdi + 0x420], ymm0
+     4a01b7  48c787e004000000000000   mov      qword ptr [rdi + 0x4e0], 0
+     4a01c2  c6877001000001           mov      byte ptr [rdi + 0x170], 1
+     4a01c9  c6870001000001           mov      byte ptr [rdi + 0x100], 1
+     4a01d0  c3                       ret      
+     4a01d1  cc                       int3     
+     4a01d2  cc                       int3     
+     4a01d3  cc                       int3     
+     4a01d4  cc                       int3     
+     4a01d5  cc                       int3     
+     4a01d6  cc                       int3     
+     4a01d7  cc                       int3     
+     4a01d8  cc                       int3     
+     4a01d9  cc                       int3     
+     4a01da  cc                       int3     
+     4a01db  cc                       int3     
+     4a01dc  cc                       int3     
+     4a01dd  cc                       int3     
+     4a01de  cc                       int3     
+     4a01df  cc                       int3     
+     4a01e0  55                       push     rbp
+     4a01e1  4889e5                   mov      rbp, rsp
+     4a01e4  488d3da371bc07           lea      rdi, [rip + 0x7bc71a3]   ; ->0x806738e "D:\asobi\6.0\source\engine\js\src\framework\js\gpu\command\_IMPL\_PPR\command_buffer_writer.ppr.cpp"
+     4a01eb  488d0df060c307           lea      rcx, [rip + 0x7c360f0]   ; ->0x80d62e2
+     4a01f2  4c8d058afae407           lea      r8, [rip + 0x7e4fa8a]   ; ->0x82efc83 "There are too many objects/batches in this scene."
+     4a01f9  be1f000000               mov      esi, 0x1f
+     4a01fe  ba01000000               mov      edx, 1
+     4a0203  31c0                     xor      eax, eax
+     4a0205  e89618b6ff               call     0x1aa0
+     4a020a  85c0                     test     eax, eax
+     4a020c  7402                     je       0x4a0210
+>>   4a020e  cd42                     int      0x42
+     4a0210  488d3dfafed207           lea      rdi, [rip + 0x7d2fefa]   ; ->0x81d0111
+     4a0217  31c0                     xor      eax, eax
+     4a0219  e84233fbff               call     0x453560
+     4a021e  cd41                     int      0x41
+     4a0220  31c0                     xor      eax, eax
+     4a0222  5d                       pop      rbp
+     4a0223  c3                       ret      
+     4a0224  cc                       int3     
+     4a0225  cc                       int3     
+     4a0226  cc                       int3     
+     4a0227  cc                       int3     
+     4a0228  cc                       int3     
+     4a0229  cc                       int3     
+     4a022a  cc                       int3     
+     4a022b  cc                       int3     
+     4a022c  cc                       int3     
+     4a022d  cc                       int3     
+     4a022e  cc                       int3     
+     4a022f  cc                       int3     
+     4a0230  c5f857c0                 vxorps   xmm0, xmm0, xmm0
+     4a0234  c5fc114758               vmovups  ymmword ptr [rdi + 0x58], ymm0
+     4a0239  c5fc114740               vmovups  ymmword ptr [rdi + 0x40], ymm0

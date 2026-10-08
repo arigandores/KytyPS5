@@ -1,0 +1,168 @@
+function start 0x47d280 (site 0x47d280 = +0x0)
+>>   47d280  push     rbp
+     47d281  mov      rbp, rsp
+     47d284  push     r15
+     47d286  push     r14
+     47d288  push     r13
+     47d28a  push     r12
+     47d28c  push     rbx
+     47d28d  sub      rsp, 0x5a8
+     47d294  mov      rax, qword ptr [rip + 0x89b726d]   ; ->0x8e34508
+     47d29b  mov      rbx, rdi
+     47d29e  mov      rax, qword ptr [rax]
+     47d2a1  mov      qword ptr [rbp - 0x30], rax
+     47d2a5  mov      qword ptr [rdi], 0
+     47d2ac  add      rdi, 8
+     47d2b0  call     0x493700
+     47d2b5  lea      rax, [rip + 0x846dbec]   ; ->0x88eaea8
+     47d2bc  lea      rdi, [rbx + 0xe50]
+     47d2c3  mov      edx, 0x590
+     47d2c8  vxorps   xmm0, xmm0, xmm0
+     47d2cc  vmovups  xmmword ptr [rbx + 0xe20], xmm0
+     47d2d4  xor      esi, esi
+     47d2d6  mov      qword ptr [rbx + 0xe30], 0
+     47d2e1  mov      word ptr [rbx + 0xe20], 0xffff
+     47d2ea  mov      qword ptr [rbx + 0xe18], rax
+     47d2f1  vmovups  xmmword ptr [rbx + 0xe38], xmm0
+     47d2f9  call     0x74ec320
+     47d2fe  vmovdqu  xmm0, xmmword ptr [rip + 0x7ebbeca]   ; ->0x83391d0
+     47d306  movabs   rax, 0x3000000010
+     47d310  vxorps   xmm1, xmm1, xmm1
+     47d314  lea      rcx, [rbx + 0x24d0]
+     47d31b  lea      rdx, [rbx + 0x2a50]
+     47d322  lea      rdi, [rbp - 0x4b0]
+     47d329  lea      r12, [rbx + 0x1450]
+     47d330  lea      r15, [rbx + 0x19d0]
+     47d337  lea      r13, [rbx + 0x1f50]
+     47d33e  xor      esi, esi
+     47d340  mov      qword ptr [rbx + 0x13e0], rax
+     47d347  mov      dword ptr [rbx + 0x13e8], 0x20
+     47d351  vmovups  xmmword ptr [rbx + 0x13bc], xmm1
+     47d359  mov      dword ptr [rbx + 0x13f0], 0
+     47d363  mov      qword ptr [rbp - 0x5b8], rcx
+     47d36a  mov      qword ptr [rbp - 0x5c0], rdx
+     47d371  lea      rcx, [rbx + 0x2fd0]
+     47d378  mov      edx, 0x480
+     47d37d  mov      qword ptr [rbp - 0x5c8], rcx
+     47d384  vmovdqu  xmmword ptr [rbx + 0x1404], xmm0
+     47d38c  mov      qword ptr [rbx + 0x1414], 0
+     47d397  mov      dword ptr [rbx + 0x1430], 1
+     47d3a1  vmovups  xmmword ptr [rbx + 0x1434], xmm1
+     47d3a9  vmovups  xmmword ptr [rbx + 0x1440], xmm1
+     47d3b1  vpcmpeqd ymm0, ymm0, ymm0
+     47d3b5  mov      rax, qword ptr [rip + 0xde53d34]   ; ->0xe2d10f0
+     47d3bc  mov      qword ptr [rbx + 0x141c], rax
+     47d3c3  mov      rax, qword ptr [rip + 0xde53d2e]   ; ->0xe2d10f8
+     47d3ca  mov      qword ptr [rbx + 0x1424], rax
+     47d3d1  mov      dword ptr [rbx + 0x142c], 0xffffffff
+     47d3db  mov      byte ptr [rbx + 0x1400], 1
+     47d3e2  mov      rax, qword ptr [rip + 0xde53d27]   ; ->0xe2d1110
+     47d3e9  mov      qword ptr [rbx + 0x13f4], rax
+     47d3f0  shr      rax, 0x20
+     47d3f4  and      eax, 0xfee6e490
+     47d3f9  or       eax, 0x242
+     47d3fe  mov      dword ptr [rbx + 0x13f8], eax
+     47d404  mov      dword ptr [rbx + 0x13fc], 0x1010101
+     47d40e  vmovdqu  ymmword ptr [rbp - 0x4d0], ymm0
+     47d416  vmovdqu  ymmword ptr [rbp - 0x4f0], ymm0
+     47d41e  vmovdqu  ymmword ptr [rbp - 0x510], ymm0
+     47d426  vmovdqu  ymmword ptr [rbp - 0x530], ymm0
+     47d42e  vmovdqu  ymmword ptr [rbp - 0x550], ymm0
+     47d436  vmovdqu  ymmword ptr [rbp - 0x570], ymm0
+     47d43e  vmovdqu  ymmword ptr [rbp - 0x590], ymm0
+     47d446  vmovdqu  ymmword ptr [rbp - 0x5b0], ymm0
+     47d44e  call     0x74ec320
+     47d453  lea      r14, [rbp - 0x5b0]
+     47d45a  mov      edx, 0x580
+     47d45f  mov      rdi, r12
+     47d462  mov      rsi, r14
+     47d465  call     0x74eca30
+     47d46a  mov      edx, 0x580
+     47d46f  mov      rdi, r15
+     47d472  mov      rsi, r14
+     47d475  call     0x74eca30
+     47d47a  mov      edx, 0x580
+     47d47f  mov      rdi, r13
+     47d482  mov      rsi, r14
+     47d485  call     0x74eca30
+     47d48a  mov      rdi, qword ptr [rbp - 0x5b8]
+     47d491  mov      edx, 0x580
+     47d496  mov      rsi, r14
+     47d499  call     0x74eca30
+     47d49e  mov      rdi, qword ptr [rbp - 0x5c0]
+     47d4a5  mov      edx, 0x580
+     47d4aa  mov      rsi, r14
+     47d4ad  call     0x74eca30
+     47d4b2  mov      rdi, qword ptr [rbp - 0x5c8]
+     47d4b9  mov      edx, 0x580
+     47d4be  mov      rsi, r14
+     47d4c1  call     0x74eca30
+     47d4c6  lea      rdx, [rbx + 0x4b50]
+     47d4cd  vpcmpeqd ymm0, ymm0, ymm0
+     47d4d1  lea      rax, [rbx + 0x45d0]
+     47d4d8  lea      rcx, [rbx + 0x50d0]
+     47d4df  lea      rdi, [rbp - 0x4b0]
+     47d4e6  lea      r12, [rbx + 0x3550]
+     47d4ed  lea      r15, [rbx + 0x3ad0]
+     47d4f4  lea      r13, [rbx + 0x4050]
+     47d4fb  xor      esi, esi
+     47d4fd  mov      qword ptr [rbp - 0x5c0], rdx
+     47d504  mov      edx, 0x480
+     47d509  mov      qword ptr [rbp - 0x5b8], rax
+     47d510  mov      qword ptr [rbp - 0x5c8], rcx
+     47d517  vmovdqu  ymmword ptr [rbp - 0x4d0], ymm0
+     47d51f  vmovdqu  ymmword ptr [rbp - 0x4f0], ymm0
+     47d527  vmovdqu  ymmword ptr [rbp - 0x510], ymm0
+     47d52f  vmovdqu  ymmword ptr [rbp - 0x530], ymm0
+     47d537  vmovdqu  ymmword ptr [rbp - 0x550], ymm0
+     47d53f  vmovdqu  ymmword ptr [rbp - 0x570], ymm0
+     47d547  vmovdqu  ymmword ptr [rbp - 0x590], ymm0
+     47d54f  vmovdqu  ymmword ptr [rbp - 0x5b0], ymm0
+     47d557  call     0x74ec320
+     47d55c  mov      edx, 0x580
+     47d561  mov      rdi, r12
+     47d564  mov      rsi, r14
+     47d567  call     0x74eca30
+     47d56c  mov      edx, 0x580
+     47d571  mov      rdi, r15
+     47d574  mov      rsi, r14
+     47d577  call     0x74eca30
+     47d57c  mov      edx, 0x580
+     47d581  mov      rdi, r13
+     47d584  mov      rsi, r14
+     47d587  call     0x74eca30
+     47d58c  mov      rdi, qword ptr [rbp - 0x5b8]
+     47d593  mov      edx, 0x580
+     47d598  mov      rsi, r14
+     47d59b  call     0x74eca30
+     47d5a0  mov      rdi, qword ptr [rbp - 0x5c0]
+     47d5a7  mov      edx, 0x580
+     47d5ac  mov      rsi, r14
+     47d5af  call     0x74eca30
+     47d5b4  mov      rdi, qword ptr [rbp - 0x5c8]
+     47d5bb  mov      edx, 0x580
+     47d5c0  mov      rsi, r14
+     47d5c3  call     0x74eca30
+     47d5c8  lea      rdi, [rbx + 0x5738]
+     47d5cf  mov      edx, 0x938
+     47d5d4  xor      esi, esi
+     47d5d6  mov      byte ptr [rbx + 0x5650], 0
+     47d5dd  vpxor    xmm0, xmm0, xmm0
+     47d5e1  vmovdqu  ymmword ptr [rbx + 0x56f8], ymm0
+     47d5e9  vmovdqu  ymmword ptr [rbx + 0x5658], ymm0
+     47d5f1  vmovdqu  ymmword ptr [rbx + 0x5678], ymm0
+     47d5f9  vmovdqu  ymmword ptr [rbx + 0x5698], ymm0
+     47d601  vmovdqu  ymmword ptr [rbx + 0x56b8], ymm0
+     47d609  vmovdqu  ymmword ptr [rbx + 0x56d8], ymm0
+     47d611  vmovdqu  ymmword ptr [rbx + 0x5711], ymm0
+     47d619  call     0x74ec320
+     47d61e  movabs   rax, 0xe000000000000000
+     47d628  mov      dword ptr [rbx + 0x5740], 0xffffffff
+     47d632  vxorps   xmm1, xmm1, xmm1
+     47d636  vmovups  ymmword ptr [rbx + 0x5748], ymm1
+     47d63e  mov      qword ptr [rbx + 0x5768], 0
+     47d649  mov      dword ptr [rbx + 0x5770], 0xffffffff
+     47d653  vmovups  ymmword ptr [rbx + 0x5778], ymm1
+     47d65b  mov      qword ptr [rbx + 0x5798], 0
+     47d666  mov      dword ptr [rbx + 0x57a0], 0xffffffff
+     47d670  vmovups  ymmword ptr [rbx + 0x57a8], ymm1

@@ -1,0 +1,2 @@
+  5833f6  cmp      dword ptr [rsi + 0xe60], 0
+  583404  mov      dword ptr [rsi + 0xe60], edi

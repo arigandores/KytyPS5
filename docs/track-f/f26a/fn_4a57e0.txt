@@ -1,0 +1,85 @@
+function start 0x4a57e0 (site 0x4a57e0 = +0x0)
+>>   4a57e0  push     rbp
+     4a57e1  mov      rbp, rsp
+     4a57e4  push     r15
+     4a57e6  push     r14
+     4a57e8  push     rbx
+     4a57e9  push     rax
+     4a57ea  mov      rbx, rdi
+     4a57ed  mov      rax, qword ptr fs:[0]
+     4a57f9  mov      r14, rax
+     4a57fc  cmp      qword ptr [rax - 0x38], rbx
+     4a5803  jne      0x4a58d9
+     4a5809  mov      r15, qword ptr [rbx + 0x60]
+     4a580d  mov      qword ptr [rbx + 0x30], 0
+     4a5815  mov      ecx, 1
+     4a581a  lea      r9, [rbx + 0x30]
+     4a581e  mov      esi, 4
+     4a5823  mov      edx, 0x30e
+     4a5828  xor      r8d, r8d
+     4a582b  mov      eax, dword ptr [rbx + 0x28]
+     4a582e  mov      rdi, r15
+     4a5831  push     0
+     4a5833  push     2
+     4a5835  push     1
+     4a5837  push     0
+     4a5839  push     rax
+     4a583a  push     2
+     4a583c  call     0x74ed9a0
+     4a5841  add      rsp, 0x30
+     4a5845  mov      rdi, r15
+     4a5848  call     0x74edc30
+     4a584d  mov      rdx, qword ptr [r15]
+     4a5850  mov      rax, qword ptr [r15 + 8]
+     4a5854  mov      rcx, qword ptr [r15 + 0x10]
+     4a5858  add      rcx, rax
+     4a585b  sub      rax, rdx
+     4a585e  add      rdx, qword ptr [r15 + 0x18]
+     4a5862  sub      rcx, rdx
+     4a5865  test     rcx, rcx
+     4a5868  js       0x4a5875
+     4a586a  vxorps   xmm0, xmm0, xmm0
+     4a586e  vcvtsi2ss xmm0, xmm0, rcx
+     4a5873  jmp      0x4a588e
+     4a5875  mov      rdx, rcx
+     4a5878  and      ecx, 1
+     4a587b  shr      rdx, 1
+     4a587e  or       rcx, rdx
+     4a5881  vxorps   xmm0, xmm0, xmm0
+     4a5885  vcvtsi2ss xmm0, xmm0, rcx
+     4a588a  vaddss   xmm0, xmm0, xmm0
+     4a588e  lea      rcx, [r14 - 0x38]
+     4a5895  test     rax, rax
+     4a5898  js       0x4a58a5
+     4a589a  vxorps   xmm1, xmm1, xmm1
+     4a589e  vcvtsi2ss xmm1, xmm1, rax
+     4a58a3  jmp      0x4a58be
+     4a58a5  mov      rdx, rax
+     4a58a8  and      eax, 1
+     4a58ab  shr      rdx, 1
+     4a58ae  or       rax, rdx
+     4a58b1  vxorps   xmm1, xmm1, xmm1
+     4a58b5  vcvtsi2ss xmm1, xmm1, rax
+     4a58ba  vaddss   xmm1, xmm1, xmm1
+     4a58be  vdivss   xmm0, xmm0, xmm1
+     4a58c2  vmovss   dword ptr [rbx + 0x70], xmm0
+     4a58c7  mov      qword ptr [rcx], 0
+     4a58ce  add      rsp, 8
+     4a58d2  pop      rbx
+     4a58d3  pop      r14
+     4a58d5  pop      r15
+     4a58d7  pop      rbp
+     4a58d8  ret      
+     4a58d9  lea      rdi, [rip + 0x7c21b9a]   ; ->0x80c747a "D:\asobi\6.0\source\engine\app\Module\Gpu\GpuDevice.cpp"
+     4a58e0  lea      rcx, [rip + 0x7bd01db]   ; ->0x8075ac2 "[Asobi Dbg]"
+     4a58e7  lea      r8, [rip + 0x7c30913]   ; ->0x80d6201
+     4a58ee  lea      r9, [rip + 0x7d5ace0]   ; ->0x82005d5 "s_pTlsCommandContext == this"
+     4a58f5  mov      esi, 0x295
+     4a58fa  mov      edx, 1
+     4a58ff  xor      eax, eax
+     4a5901  call     0x1aa0
+     4a5906  test     eax, eax
+     4a5908  je       0x4a5809
+     4a590e  int      0x41
+     4a5910  jmp      0x4a5809
+     4a5915  int3     

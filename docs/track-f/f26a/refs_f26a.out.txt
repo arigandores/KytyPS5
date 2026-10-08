@@ -1,0 +1,7 @@
+ok   1ff804b6:src/libs/agc.cpp:233
+ok   1ff804b6:src/kernel/eventQueue.cpp:404
+ok   1ff804b6:src/libs/agc.cpp:2050
+ok   1ff804b6:src/libs/agc.cpp:323
+ok   1ff804b6:src/libs/agc.cpp:288
+refs 5
+ALL OK

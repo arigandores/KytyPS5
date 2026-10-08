@@ -1,0 +1,20 @@
+rows 5 done 0 todo 5
+finished
+ok   C:/kyty/f287/f26a/fxwork/log_fxa.txt counts E=1 S1=1 S2=1 S3=1
+ok   C:/kyty/f287/f26a/fxwork/log_fxa.txt 3 levels
+ok   C:/kyty/f287/f26a/fxwork/log_fxa.txt intro t=10.0 next t=120.0
+ok   C:/kyty/f287/f26a/fxwork/log_fxa.txt intro frames 2 sum 35000 first_n 2
+ok   C:/kyty/f287/f26a/fxwork/log_fxa.txt last_t 150.0 quit line
+ok   C:/kyty/f287/f26a/fxwork/log_fxa.txt sig lines at t=110.5
+ok   C:/kyty/f287/f26a/fxwork/log_fxb.txt.xz counts E=1 S1=1 S2=1 S3=1
+ok   C:/kyty/f287/f26a/fxwork/log_fxb.txt.xz 3 levels
+ok   C:/kyty/f287/f26a/fxwork/log_fxb.txt.xz intro t=10.0 next t=120.0
+ok   C:/kyty/f287/f26a/fxwork/log_fxb.txt.xz intro frames 2 sum 35000 first_n 2
+ok   C:/kyty/f287/f26a/fxwork/log_fxb.txt.xz last_t 150.0 quit line
+ok   C:/kyty/f287/f26a/fxwork/log_fxb.txt.xz sig lines at t=110.5
+ok   no-intro log: no walk
+ok   s59 sig1: E=1 S1=2 S3=1
+ok   s59 sig1: sig at 627192 t 82.06
+ok   s42 merged_cold: E=1 S1=1 S3=1
+ok   s42 merged_cold: sig at 4407364
+ALL OK

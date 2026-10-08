@@ -1,0 +1,72 @@
+libSceAgc* imports 71, called 71
+libSceAgc        wr23dPKyWc0  Gen5::AgcCbReleaseMem                         sites  221  0x45fa18 0x45fa75 0x45fbcd 0x45fc40 0x460996 0x460c6c
+libSceAgc        k3GhuSNmBLU  Gen5::AgcCbDispatch                           sites  115  0x460b75 0x47ca94 0x483f51 0x48c1fa 0x48c563 0x48c5c9
+libSceAgc        +kSrjIVxKFE  Gen5::AgcDcbPushMarker                        sites  112  0x47d01d 0x485cd9 0x4a5714 0x4ab75b 0x4abb39 0x5acec7
+libSceAgc        H7uZqCoNuWk  Gen5::AgcDcbPopMarker                         sites  101  0x47d03b 0x485ce7 0x4a5848 0x4abab1 0x4ac2f2 0x5acfc0
+libSceAgc        cpCILPya5Zk  Gen5::AgcAcbPushMarker                        sites   78  0x460b4a 0x460bc4 0x460c86 0x4a2cda 0x4a2d49 0x4a5df4
+libSceAgc        6mFxkVqdmbQ  Gen5::AgcAcbPopMarker                         sites   78  0x460b93 0x460c34 0x460c94 0x4a2d22 0x4a2d57 0x4a5eee
+libSceAgc        f3dg2CSgRKY  Gen5::AgcCreateShader                         sites   55  0x45d5fe 0x46a1cd 0x48a8b1 0x48a8ea 0x48a923 0x48a95c
+libSceAgcDriver  W5z4eZrjEas  Gen5::AgcDriverRegisterResource               sites   54  0x48b488 0x48b4b6 0x48b4e4 0x48b512 0x48b540 0x48b56e
+libSceAgc        57labkp+rSQ  Gen5::AgcDcbAcquireMem                        sites   43  0x464e55 0x47b19d 0x48143d 0x48156f 0x6f3bbc0 0x6f42f25
+libSceAgc        UZbQjYAwwXM  Gen5::AgcCbSetShRegistersDirect               sites   38  0x45fae6 0x45fb5a 0x46aeaa 0x48c1c9 0x48c540 0x48c5a6
+libSceAgc        aJf+j5yntiU  Gen5::AgcDcbEventWrite                        sites   26  0x45cd62 0x477596 0x4775d4 0x47ce61 0x47cee5 0x484681
+libSceAgc        VmW0Tdpy420  Gen5::AgcDcbWaitRegMem                        sites   20  0x47a3f8 0x47cbb2 0x47d0e8 0x4816b9 0x483bed 0x4a1122
+libSceAgc        htn36gPnBk4  Gen5::AgcAcbWaitRegMem                        sites   16  0x45fc13 0x4a2853 0x4a632e 0x4a6670 0x6f3bb80 0x70de9d8
+libSceAgc        WmAc2MEj6Io  Gen5::AgcDcbDmaData                           sites   13  0x478d4a 0x478e1d 0x4843ae 0x485dd2 0x485e2f 0x48994d
+libSceAgc        n2fD4A+pb+g  Gen5::AgcCbSetShRegisterRangeDirect           sites   12  0x470a69 0x470b3f 0x470b7c 0x48c7b8 0x491655 0x491877
+libSceAgc        qj7QZpgr9Uw  Gen5::AgcDcbContextStateOp                    sites   11  0x48cc71 0x48ceee 0x48d29c 0x48d542 0x48d9c7 0x48dbce
+libSceAgc        i1jyy49AjXU  Gen5::AgcDcbWriteData                         sites   10  0x477582 0x47ce4d 0x48466d 0x4ac0a3 0x6f3bc00 0x6f3be52
+libSceAgc        -RnpfpxIhec  Gen5::AgcAcbDmaData                           sites    9  0x45f9e8 0x45fa45 0x460966 0x47d136 0x47d1b8 0x47d23a
+libSceAgc        tSBxhAPyytQ  Gen5::AgcDcbSetNumInstances                   sites    9  0x4803a0 0x480cae 0x482b60 0x482d30 0x483091 0x4832a1
+libSceAgc        h9z6+0hEydk  Gen5::AgcSuspendPoint                         sites    8  0x2a2646 0x2abeab 0x464e5a 0x4a5460 0x10823db 0x10828f9
+libSceAgc        V++UgBtQhn0  Gen5::AgcGetDataPacketPayloadAddress          sites    7  0x470b58 0x470b8d 0x492565 0x6f3b5f2 0x6f3b605 0x6f3c89f
+libSceAgc        KT-hTp-Ch14  Gen5::AgcAcbAcquireMem                        sites    6  0x45cd4d 0x4a5ee1 0x6f3baa0 0x6f43537 0x6f43569 0x6f43634
+libSceAgc        RmaJwLtc8rY  Gen5::AgcDcbSetBaseIndirectArgs               sites    6  0x48351d 0x4837d0 0x4839ee 0x483fd9 0x6f3bd48 0x6f3bd55
+libSceAgcDriver  gSRnr79F8tQ  Gen5Driver::AgcDriverSubmitAcb                sites    5  0x4a2128 0x4a22ce 0x4a5fc4 0x1055174 0x6f3b51b
+libSceAgcDriver  w2rJhmD+dsE  Gen5Driver::AgcDriverAddEqEvent               sites    5  0x4a31ef 0x4a32e9 0x4a34e0 0x6f3b55d 0x6f3b575
+libSceAgc        HV4j+E0MBHE  Gen5::AgcCreateInterpolantMapping             sites    5  0x45ce09 0x469283 0x469605 0x48c857 0x6f42859
+libSceAgc        D9sr1xGUriE  Gen5::AgcCreatePrimState                      sites    5  0x45ce28 0x469e27 0x46a868 0x48c886 0x6f4289a
+libSceAgc        j3EtxFkSIhQ  Gen5::AgcAcbDispatchIndirect                  sites    5  0x460c1c 0x70f48b9 0x73f4dac 0x73f5773 0x73f5cc7
+libSceAgc        u2T2DiA5hRI  Gen5::AgcDcbStallCommandBufferParser          sites    5  0x483525 0x4837d8 0x4839f6 0x483fe1 0x6f3bda0
+libSceAgcDriver  UglJIZjGssM  Gen5Driver::AgcDriverSubmitDcb                sites    4  0x464e34 0x4a5980 0x4a5adb 0x6f3b49a
+libSceAgc        cFazmnXpJOE  Gen5::AgcAcbEventWrite                        sites    4  0x45cd30 0x4a5eca 0x6f3bae2 0x6f434cd
+libSceAgc        JrtiDtKeS38  Gen5::AgcAcbResetQueue                        sites    4  0x45f664 0x10550ef 0x6f3bb96 0x6f46c6b
+libSceAgc        -HOOCn0JY48  Gen5::AgcDcbSetShRegistersIndirect            sites    4  0x48c8b2 0x48c8fd 0x6f3bc50 0x6f42aca
+libSceAgc        ZvwO9euwYzc  Gen5::AgcDcbSetCxRegistersIndirect            sites    4  0x48c8cc 0x48c922 0x6f3bc60 0x6f4297a
+libSceAgc        vuSXe69VILM  Gen5::AgcDcbGetLodStats                       sites    4  0x478d7d 0x478da2 0x6f3bcf2 0x6f3bd1c
+libSceAgcDriver  X-Nm5KLREeg  Gen5::AgcDriverRegisterOwner                  sites    3  0x48b44e 0x6f3b640 0x7046a10
+libSceAgc        LtTouSCZjHM  Gen5::AgcCbNop                                sites    3  0x492554 0x6f3b9b0 0x6f430db
+libSceAgc        bxGoVxpdSPQ  Gen5::AgcCbSetShRegisterRangeDirectGetSize    sites    3  0x49251a 0x6f3ba90 0x6f3c6d8
+libSceAgc        qzMN2XKGA4k  Gen5::AgcAcbCopyData                          sites    3  0x6f3bab0 0x6f446a3 0x6f4471b
+libSceAgc        1rZSWUv1IRc  Gen5::AgcDcbCopyData                          sites    3  0x6f3bbe0 0x6f444d3 0x6f4454b
+libSceAgc        Yw0jKSqop+E  Gen5::AgcDcbDrawIndexAuto                     sites    3  0x482c11 0x482f54 0x48ca76
+libSceAgc        t1vNu082-jM  Gen5::AgcDcbDrawIndexIndirect                 sites    3  0x48358d 0x483846 0x483a64
+libSceAgc        TRO721eVt4g  Gen5::AgcDcbResetQueue                        sites    3  0x47a2d7 0x47e238 0x6f3bdc6
+libSceAgc        YUeqkyT7mEQ  Gen5::AgcDcbSetFlip                           sites    3  0x464dc2 0x4a5aab 0x6f3bed0
+libSceAgc        Qrj4c+61z4A  Gen5::AgcSetShRegIndirectPatchSetAddress      sites    2  0x6f3b590 0x6f42b78
+libSceAgc        z2duB-hHQSM  Gen5::AgcSetShRegIndirectPatchAddRegisters    sites    2  0x6f3b5a0 0x6f42bad
+libSceAgc        vcmNN+AAXnY  Gen5::AgcSetCxRegIndirectPatchSetAddress      sites    2  0x6f3b5b0 0x6f42a28
+libSceAgc        d-6uF9sZDIU  Gen5::AgcSetCxRegIndirectPatchAddRegisters    sites    2  0x6f3b5c0 0x6f42a5d
+libSceAgc        6lNcCp+fxi4  Gen5::AgcSetUcRegIndirectPatchSetAddress      sites    2  0x6f3b5d0 0x6f42cc8
+libSceAgc        vRoArM9zaIk  Gen5::AgcSetUcRegIndirectPatchAddRegisters    sites    2  0x6f3b5e0 0x6f42cfd
+libSceAgc        3KDcnM3lrcU  Gen5::AgcWaitRegMemPatchAddress               sites    2  0x6f3b610 0x6f4327b
+libSceAgc        0fWWK5uG9rQ  Gen5::AgcQueueEndOfPipeActionPatchAddress     sites    2  0x6f3b620 0x6f43286
+libSceAgc        fPSCdQxgpSw  Gen5::AgcWriteDataPatchSetAddressOrOffset     sites    2  0x6f3b630 0x6f43270
+libSceAgc        fd5Bp5tGTgo  Gen5::AgcUnknownFuseShaderHalves              sites    2  0x4695c2 0x6f3b72d
+libSceAgc        Abendgtz+3o  Gen5::AgcCbDispatchGetSize                    sites    2  0x492522 0x6f3ba70
+libSceAgc        t7PlZ9nt5Lc  Gen5::AgcCbNopGetSize                         sites    2  0x49250d 0x6f3ba80
+libSceAgc        eZ4+17OQz4Q  Gen5::AgcAcbWriteData                         sites    2  0x6f3baf0 0x6f4358c
+libSceAgc        hvUfkUIQcOE  Gen5::AgcDcbSetUcRegistersIndirect            sites    2  0x6f3bc70 0x6f42c1a
+libSceAgc        B+aG9DUnTKA  Gen5::AgcDcbDrawIndexOffset                   sites    2  0x483145 0x4833f4
+libSceAgc        -KRzWekV120  Gen5::AgcUnknownKRzWekV120                    sites    2  0x48279a 0x6f3bd60
+libSceAgc        l4fM9K-Lyks  Gen5::AgcDcbSetIndexBuffer                    sites    2  0x481e4d 0x6f3bd70
+libSceAgc        8N2tmT3jmC8  Gen5::AgcDcbSetIndexCount                     sites    2  0x48276f 0x6f3bd80
+libSceAgc        MWiElSNE8j8  Gen5::AgcDcbWaitUntilSafeForRendering         sites    2  0x6f3bea0 0x7461cc4
+libSceAgc        2JtWUUiYBXs  Gen5::AgcGetRegisterDefaults2                 sites    1  0x6f39d24
+libSceAgc        23LRUSvYu1M  Gen5::AgcInit                                 sites    1  0x6f3b3bd
+libSceAgc        wRbq6ZjNop4  Gen5::AgcGetRegisterDefaults2Internal         sites    1  0x6f3b444
+libSceAgc        BfBDZGbti7A  Gen5::AgcGetIsTrinityMode                     sites    1  0x6f3b3ef
+libSceAgcDriver  AhGvpITrf4M  Gen5Driver::AgcDriverSubmitDcb                sites    1  0x6f3b4a9
+libSceAgc        T6xuVw0KUJo  Gen5::AgcDebugRaiseException                  sites    1  0x6f3b6ab
+libSceAgc        dolOmWH+huQ  Gen5::AgcUnknownGetFusedShaderSize            sites    1  0x469538
+libSceAgc        CtB+A9-VxO0  Gen5::AgcDcbDispatchIndirect                  sites    1  0x483fff

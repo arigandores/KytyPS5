@@ -1,0 +1,1 @@
+dispstate ON idle_s 4969 utc 2026-10-08T06:38:42Z

@@ -1,0 +1,43 @@
+{
+ "tag": "b25_11",
+ "cls": "COUNTED",
+ "detector": [
+  0,
+  0,
+  0
+ ],
+ "detector_first_line": null,
+ "entry_line": 221646,
+ "entries": 1,
+ "entry_s": 15.5,
+ "frames": 7211,
+ "sum_dt_s": 120.5,
+ "max_dt_us": 34079,
+ "max_dt_n": 1897,
+ "long_frames": 0,
+ "death": {},
+ "error_lines": 0,
+ "host_exc": 0,
+ "next_level_line": null,
+ "log_lines": 872272,
+ "reasons": [],
+ "form": [],
+ "pre_entry_max_dt_us": 33134,
+ "pre_entry_long_frames": 0,
+ "binary": "abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe",
+ "hold_s": 120.1,
+ "hold_exit": null,
+ "outcome": "ok",
+ "launched": "2026-10-08T10:33:51",
+ "finished": "2026-10-08T10:36:13",
+ "log": "C:/kyty/f287/f26c/log_b25_11.txt",
+ "stdout": "C:/kyty/f287/f26c/stdout_b25_11.txt",
+ "json": "C:/kyty/f287/f26c/b25_11.json",
+ "disp_after": "dispstate ON idle_s 0 utc 2026-10-08T08:36:21Z",
+ "tempo_rc": 0,
+ "layer": "CLEAN",
+ "load_lines": {
+  "hostload_before": "hostload: over05 0 max 0.000 total 1.050 procs []",
+  "hostload_after": "hostload: over05 0 max 0.000 total 1.105 procs []"
+ }
+}

@@ -1,0 +1,10 @@
+tag b25_19
+  CLASS COUNTED
+  detector strings (too many / writer.ppr.cpp / pc) 0 / 0 / 0, first line None
+  entry line 216137 (entries 1), entry_s 10.3, next level line None
+  after the entry: frames 7220, sum dt 120.7 s, max dt 33687 us (n 2230), frames >= 1 s 0
+  row (not a member): before the entry max dt 32629 us, frames >= 1 s 0
+  death markers 0; --- Error --- 0; Unhandled host exception 0
+  binary abfded5e; hold_s 120.1; hold_exit None; outcome ok; form problems 0
+  display after dispstate ON idle_s 58 utc 2026-10-08T09:48:21Z; tempo rc 0
+  host load layer CLEAN (item 632): {'hostload_before': 'hostload: over05 0 max 0.000 total 0.625 procs []', 'hostload_after': 'hostload: over05 0 max 0.000 total 1.022 procs []'}

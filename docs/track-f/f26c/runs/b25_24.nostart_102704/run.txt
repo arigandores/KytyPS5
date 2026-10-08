@@ -1,0 +1,5 @@
+prereg: f26c_seal.md  23929 bytes  sha256 1fa1eadab003d476  mtime 2026-10-08T09:57:07  mtime-ctime +7955.457 s
+pre_run: host 479 processes, top by CPU: <app> 17361s, <app> 5633s, <app> 3521s, <app> 3208s, <app> 2126s, <app> 1630s
+pre_run: GPU 95.0 % busy, 163.2 W, 7617 MiB used, SM 2467.0 MHz, 25 process(es) on the GPU
+pre_run: WARNING - the GPU is not idle by idle142 (median 95.0 > 10 or missing); the scorer refuses this run on idle
+pre_run: REFUSED (BUSY: gpu_util_median 95.0, admission <= 10) - the emulator was not started

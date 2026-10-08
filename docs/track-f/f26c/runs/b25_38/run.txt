@@ -1,0 +1,17 @@
+prereg: f26c_seal.md  23929 bytes  sha256 1fa1eadab003d476  mtime 2026-10-08T09:57:07  mtime-ctime +7955.457 s
+pre_run: host 426 processes, top by CPU: <app> 19471s, <app> 6593s, <app> 3844s, <app> 3532s, <app> 2915s, <app> 2119s
+pre_run: GPU 10.0 % busy, 28.2 W, 2522 MiB used, SM 1762.0 MHz, 20 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f26c\cpuclk.py is not there
+--- attempt 1: launching
+10.9 s  LevelDocument Loaded: intro_next
+13.0 s  Level has started: intro_next
+13.0 s  entry-at-level: entry at the level-started line
+holding the run for 120 s
+hold end: ft_total 7523, ft_tail 302 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 3.8, 'close_wait_s': 40}
+hold_gpu: median 63.0 % busy over 235 rows (2026/10/08 16:33:31.763 .. 2026/10/08 16:35:31.908), a row, not a guard
+copied C:\kyty\f287\f26c\log_b25_38.txt
+copied C:\kyty\f287\f26c\stdout_b25_38.txt
+
+attempt 1  ok               document=10.9 s started=13.0 s stable=13.0 s 
+VERDICT: intro_next in 13.0 s - PASS (acceptance <= 90 s)

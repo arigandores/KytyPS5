@@ -1,0 +1,10 @@
+tag b25_01
+  CLASS COUNTED
+  detector strings (too many / writer.ppr.cpp / pc) 0 / 0 / 0, first line None
+  entry line 219427 (entries 1), entry_s 16.8, next level line None
+  after the entry: frames 7207, sum dt 120.2 s, max dt 33638 us (n 3153), frames >= 1 s 0
+  row (not a member): before the entry max dt 33330 us, frames >= 1 s 0
+  death markers 0; --- Error --- 0; Unhandled host exception 0
+  binary abfded5e; hold_s 120.1; hold_exit None; outcome ok; form problems 0
+  display after dispstate ON idle_s 2985 utc 2026-10-08T06:05:37Z; tempo rc 0
+  host load layer CLEAN (item 632): {'procload': 'procload: clean (no process above 0.50 CPU s/s, total cap None)'}

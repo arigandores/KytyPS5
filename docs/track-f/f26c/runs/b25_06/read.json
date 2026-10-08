@@ -1,0 +1,42 @@
+{
+ "tag": "b25_06",
+ "cls": "COUNTED",
+ "detector": [
+  0,
+  0,
+  0
+ ],
+ "detector_first_line": null,
+ "entry_line": 216401,
+ "entries": 1,
+ "entry_s": 11.4,
+ "frames": 7231,
+ "sum_dt_s": 120.6,
+ "max_dt_us": 34109,
+ "max_dt_n": 1727,
+ "long_frames": 0,
+ "death": {},
+ "error_lines": 0,
+ "host_exc": 0,
+ "next_level_line": null,
+ "log_lines": 863731,
+ "reasons": [],
+ "form": [],
+ "pre_entry_max_dt_us": 33486,
+ "pre_entry_long_frames": 0,
+ "binary": "abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe",
+ "hold_s": 120.1,
+ "hold_exit": null,
+ "outcome": "ok",
+ "launched": "2026-10-08T08:31:03",
+ "finished": "2026-10-08T08:33:20",
+ "log": "C:/kyty/f287/f26c/log_b25_06.txt",
+ "stdout": "C:/kyty/f287/f26c/stdout_b25_06.txt",
+ "json": "C:/kyty/f287/f26c/b25_06.json",
+ "disp_after": "dispstate ON idle_s 4655 utc 2026-10-08T06:33:27Z",
+ "tempo_rc": 0,
+ "layer": "CLEAN",
+ "load_lines": {
+  "procload": "procload: clean (no process above 0.50 CPU s/s, total cap None)"
+ }
+}

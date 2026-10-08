@@ -1,0 +1,7 @@
+base PASS
+m1_pb2 FAILED by C2 code lines = parent + six RtsRep; C3 one test of t_rts against 4 (lin
+m1_pb5 FAILED by C2 code lines = parent + six RtsRep; C3 one test of t_rts against 4 (lin
+m2_b FAILED by C2 code lines = parent + six RtsRep
+m2_a FAILED by C2 code lines = parent + six RtsRep
+m3 FAILED by C2 code lines = parent + six RtsRep; C4 rts_bad_b / rts_bad_rx added onc
+ALL OK

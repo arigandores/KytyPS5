@@ -1,0 +1,29 @@
+PASS R 585d997d:src/common/frameStats.cpp:197
+PASS R 585d997d:src/common/frameStats.h:2486
+PASS R 585d997d:src/common/gates.cpp:438
+PASS R 585d997d:src/common/gates.cpp:504
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1333
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1593
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1602
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1605
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1609
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1658
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1685
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3436
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3441
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3499
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3522
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3574
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3683
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3719
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3722
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3748
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3787
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3815
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3818
+PASS R 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3954
+PASS R 585d997d:src/graphics/presentation/videoOut.cpp:3255
+PASS R 585d997d:src/graphics/presentation/videoOut.cpp:3256
+PASS N1 negative control (line + 1) fails
+PASS N2 negative control (anchor 1, 3) fails
+ALL OK

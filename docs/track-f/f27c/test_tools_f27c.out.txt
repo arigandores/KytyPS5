@@ -1,0 +1,43 @@
+suite test_tools_f27c.py sha256 655727275137f2ff1d100edc53f6744d6f40d9230f672be0b8ff7fb5fe2d8d76 target go_f27c.sh sha256 2ea4560ab06a01374b7ab7c9d808c617812ea0dffad2f28f28f7afb7151fcd2b
+ok   salt-name of the empty salt = XXH3_64 empty 2d06800538d394c2 PPSA21564.2d06800538d394c2.bin
+ok   salt-name differs per tag 
+ok   blob header = signature line + 8 {'size': 120, 'header': 20, 'payload': 100, 'sha256': '0cfa96bdecd058cac96c14c83ce7980ce084827ed48e9e8cbe7d2891e4cefb74'}
+ok   positive control: user blob payload 127 690 297 = the saved bytes of s18_c09 (F27a) {'size': 127690373, 'header': 76, 'payload': 127690297, 'sha256': '8981ffb7bc6e7c55d92eeada7cde6a3076a38269f2786fba50ae384e94302870'}
+ok   cmp-labels EQUAL on L1 
+ok   cmp-labels DIFFER on L2 
+ok   cmp-labels DIFFER on L1,L2 
+ok   drvsnap take rc 0 in cp1250 b'DRVSNAP TAKEN files 5 (GLCache 1, DXCache 4) copied 4 bytes 19 mismatches 0\r\n'
+ok   drvsnap return classes DRVSNAP RETURNED restored 2 moved 1 kept_user 1 kept_new 2 not_copied 0 failed 0 windows 1
+
+ok   restored content = copy 
+ok   removed file restored 
+ok   user change kept 
+ok   new tag file moved out 
+ok   not copied group changed -> rc 1 b'DRVSNAP RETURNED restored 0 moved 0 kept_user 1 kept_new 2 not_copied 1 failed 0 windows 1\r\n'
+ok   window of a base/return mode is not a tag window 
+ok   dry run f27_v0 knobs dryrun f27_v0 mode tag level rotating_level_day_and_night sd 300 hold 120 timeout 480 rec yes knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_PIPELINE_PRECACHE=0 KYTY_PIPELINE_SALT=f27_v0 KYTY_S_PCW=0
+ok   dry run f27_v0b knobs dryrun f27_v0b mode tag level rotating_level_day_and_night sd 300 hold 120 timeout 480 rec yes knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_PIPELINE_PRECACHE=0 KYTY_PIPELINE_SALT=f27_v0b KYTY_S_PCW=0
+ok   dry run f27_v1a knobs dryrun f27_v1a mode tag level rotating_level_day_and_night sd 300 hold 120 timeout 480 rec yes knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_PIPELINE_PRECACHE=0 KYTY_PIPELINE_SALT=f27_v1a
+ok   dry run f27_v1b knobs dryrun f27_v1b mode tag level rotating_level_day_and_night sd 300 hold 120 timeout 480 rec yes knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_PIPELINE_PRECACHE=0 KYTY_PIPELINE_SALT=f27_v1b
+ok   dry run f27_v1c knobs dryrun f27_v1c mode tag level rotating_level_day_and_night sd 300 hold 120 timeout 480 rec yes knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_PIPELINE_PRECACHE=0 KYTY_PIPELINE_SALT=f27_v1c
+ok   dry run f27_v1a_r1 knobs dryrun f27_v1a_r1 mode tag level rotating_level_day_and_night sd 300 hold 120 timeout 480 rec yes knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_PIPELINE_PRECACHE=0 KYTY_PIPELINE_SALT=f27_v1a_r1
+ok   unknown tag refused (rc 2) 
+ok   item 634: one guard scan, after the lock ([97], [91])
+ok   item 634: one hold check, after the lock [98]
+ok   item 634: the guard check before every manifest 
+ok   item 634: no block calls (open-block, status, guard tag) 
+ok   item 634: launch has no guard or hold call 
+ok   mask of the procload line b"procload: busy [('<app>', 12, 0.9)]\n"
+ok   enter_scene ROOT = f27c 
+ok   enter_scene nvidia-smi step 500 ms (P6) 
+ok   enter_scene harness constants (lite, hang abort 8) 
+ok   runchk_f27c.py OWN HPP-694 
+ok   queue_f27c.py OWN HPP-694 
+ok   guard G = f27c 
+ok   hold kills through guard_f27c 
+ok   cp1250 strict: f27c_tools.py salt-name f27_v0 b''
+ok   cp1250 strict: f27c_tools.py b''
+ok   cp1250 strict: drvsnap_f27c.py b''
+ok   cp1250 strict: f27c_read.py b''
+checks 39 failed 0
+ALL OK

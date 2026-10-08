@@ -45,7 +45,7 @@
 // (lskip; late_lskips - those in the passes after the first). hlost1 - the hook page was not synchronized within the
 // pass in which the hook fired (reference: a write delayed to the next pass is not lost over the passes).
 //
-// Usage: b12_bdastamp_stand <hole|nob1|split|touch> <upper|lower|none> <passes> <iters> [hook=<upper|lower>]
+// Usage: b12_bdastamp_stand <hole|nob1|split|touch> <upper|lower|none> <passes> <iters> [hook=<upper|lower|bitonly>]
 // Knobs of the code under test are read from the environment as the emulator reads them: KYTY_BDA_REGION_STAMPS
 // (gate "bdastamp", default on), KYTY_BDA_WRITE_BITS (gate "bdabits", default off), KYTY_BDA_NARROW_STAMPS (knob
 // "bdanarrow", default 0), KYTY_FIX_B13 (default 1), KYTY_BDA_EPOCH_CACHE, KYTY_BDA_DIRTY_RANGES (default on).
@@ -407,10 +407,16 @@ bool Covered(const std::vector<GuestRange>& pieces, uint64_t address, uint64_t s
 
 } // namespace
 
+// Track F, F29c3 (HPP-713, ROADMAP s122 item 645(v)): hook=bitonly (layout hole, write none only) - the hook announces the
+// region bit (Libs::Graphics::BdaNoteRegionWrite, the bit of the real ChangeState<Cpu, true>) with NO page write and NO
+// stamp move: at the late visit after a skip the state is "witness equal to the stamp, bit set" (in the emulator - the
+// window of a guest write whose bit is visible before its region epoch). bit1 - iterations whose region bit is still
+// pending right after the first pass (bitonly arms); late_bit_skips - first visits skipped by a clear bit in the passes
+// after the first (every arm). For bitonly no page is written: hlost / hdirty / hlost1 are not counted (0).
 int main(int argc, char** argv) {
 	if (argc != 5 && argc != 6) {
 		std::printf("usage: b12_bdastamp_stand <hole|nob1|split|touch> <upper|lower|none> <passes> <iters> "
-		            "[hook=<upper|lower>]\n");
+		            "[hook=<upper|lower|bitonly>]\n");
 		return 2;
 	}
 	const char*    layout = argv[1];
@@ -427,8 +433,9 @@ int main(int argc, char** argv) {
 	const char*    hook_s = argc == 6 ? argv[5] : "";
 	const bool     h_up   = std::strcmp(hook_s, "hook=upper") == 0;
 	const bool     h_low  = std::strcmp(hook_s, "hook=lower") == 0;
-	const bool     h_any  = h_up || h_low;
-	if ((argc == 6 && !h_any) || (none && !h_any) || (nob1 && h_low)) {
+	const bool     h_bit  = std::strcmp(hook_s, "hook=bitonly") == 0; // F29c3
+	const bool     h_any  = h_up || h_low || h_bit;
+	if ((argc == 6 && !h_any) || (none && !h_any) || (nob1 && h_low) || (h_bit && (!hole || !none))) {
 		std::printf("bad arguments\n");
 		return 2;
 	}
@@ -500,6 +507,7 @@ int main(int argc, char** argv) {
 	uint64_t       late_lskips = 0;
 	uint64_t       hlost = 0, hdirty = 0, hboth = 0, hfired = 0, late_scans = 0, late_rewalks = 0, hlost1 = 0;
 	uint64_t       scan_passes = 0, rw_min = UINT64_MAX, rw_max = 0;
+	uint64_t       bit1 = 0, late_bit_skips = 0; // F29c3
 	struct HookState {
 		MemoryTracker* tracker;
 		uint64_t       address;
@@ -509,7 +517,8 @@ int main(int argc, char** argv) {
 		bool           fired;
 		size_t         synced_end; // the end of the pieces of the pass in which the hook fired
 		bool           pass_done;
-	} hs {&tracker, 0, page, 0, &cache, false, 0, false};
+		bool           bit_only; // F29c3
+	} hs {&tracker, 0, page, 0, &cache, false, 0, false, h_bit};
 	for (uint64_t i = 0; i < iters; i++) {
 		const uint64_t address = target + (i % (b_size / page)) * page;
 		if (!none && tracker.IsRegionCpuModified(address, page)) {
@@ -531,14 +540,22 @@ int main(int argc, char** argv) {
 				auto* s      = static_cast<HookState*>(arg);
 				s->synced_at = s->cache->synced.size();
 				s->fired     = true;
-				s->tracker->MarkRegionAsCpuModified(s->address, s->size); // the real ChangeState<Cpu, true>
+				if (s->bit_only) { // F29c3: the bit alone, no page write, no stamp move
+					Libs::Graphics::BdaNoteRegionWrite(s->address / TRACKER_REGION_SIZE);
+				} else {
+					s->tracker->MarkRegionAsCpuModified(s->address, s->size); // the real ChangeState<Cpu, true>
+				}
 			};
 		}
 		for (uint64_t p = 0; p < passes; p++) {
 			const auto s0 = cache.scanned;
 			const auto r0 = cache.rewalk;
 			const auto l0 = cache.lskip;
+			const auto b0 = cache.bit_skipped;
 			context.Prepare();
+			if (p == 0 && h_bit && Libs::Graphics::BdaRegionWritePending(hs.address / TRACKER_REGION_SIZE)) {
+				bit1++;
+			}
 			if (h_any && hs.fired && !hs.pass_done) {
 				hs.synced_end = cache.synced.size();
 				hs.pass_done  = true;
@@ -554,11 +571,14 @@ int main(int argc, char** argv) {
 				late_scans += ds;
 				late_rewalks += dr;
 				late_lskips += cache.lskip - l0;
+				late_bit_skips += cache.bit_skipped - b0;
 			}
 		}
 		context.hook = nullptr; // a hook that found no walking pass stays unfired (counted by hook_fired)
 		if (h_any) {
-			if (hs.fired) {
+			if (hs.fired && h_bit) {
+				hfired++;
+			} else if (hs.fired) {
 				hfired++;
 				const std::vector<GuestRange> after(cache.synced.begin() + static_cast<std::ptrdiff_t>(hs.synced_at),
 				                                    cache.synced.end());
@@ -614,7 +634,7 @@ int main(int argc, char** argv) {
 	            Libs::Graphics::FixB13Enabled() ? 1 : 0, static_cast<unsigned long long>(page));
 	std::printf("B12c fix_b12=%d hook=%s hook_fired=%llu hlost=%llu hdirty=%llu hlost_and_dirty=%llu rewalk=%llu rwd=%llu "
 	            "scan_passes=%llu rw_min=%llu rw_max=%llu late_scans=%llu late_rewalks=%llu lskip=%llu late_lskips=%llu "
-	            "hlost1=%llu\n",
+	            "hlost1=%llu bit1=%llu late_bit_skips=%llu\n",
 	            Libs::Graphics::FixB12Enabled() ? 1 : 0, h_any ? hook_s + 5 : "none",
 	            static_cast<unsigned long long>(hfired), static_cast<unsigned long long>(hlost),
 	            static_cast<unsigned long long>(hdirty), static_cast<unsigned long long>(hboth),
@@ -623,7 +643,8 @@ int main(int argc, char** argv) {
 	            static_cast<unsigned long long>(scan_passes == 0 ? 0 : rw_min), static_cast<unsigned long long>(rw_max),
 	            static_cast<unsigned long long>(late_scans), static_cast<unsigned long long>(late_rewalks),
 	            static_cast<unsigned long long>(cache.lskip - lskip0), static_cast<unsigned long long>(late_lskips),
-	            static_cast<unsigned long long>(hlost1));
+	            static_cast<unsigned long long>(hlost1), static_cast<unsigned long long>(bit1),
+	            static_cast<unsigned long long>(late_bit_skips));
 	std::fflush(stdout);
 	// The uploads armed write watchers: the tracker drops them before the PageManager is destroyed (its fail-fast on live
 	// page state), as tests/MemoryTrackerTests.cpp does.

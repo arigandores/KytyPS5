@@ -1,0 +1,12 @@
+FixB13: mode=1
+B12 layout=hole write=none passes=2 iters=100 lost=0 dirty=0 lost_and_dirty=0 reset=0 warm_reset=0 clean_before_bad=0 mapped_ranges=2 same_region=1 calls=200 hits=0 region_scans=0 region_skips=200 bit_skips=100 nwould=0 nmiss=0 gate_bdastamp=1 gate_bdabits=1 bdanarrow=0 fix_b13=1 page=4096
+B12c fix_b12=1 hook=bitonly hook_fired=100 hlost=0 hdirty=0 hlost_and_dirty=0 rewalk=0 rwd=0 scan_passes=0 rw_min=0 rw_max=0 late_scans=0 late_rewalks=0 lskip=100 late_lskips=0 hlost1=0 bit1=100 late_bit_skips=0
+rc=0
+FixB13: mode=1
+B12 layout=hole write=none passes=2 iters=100 lost=0 dirty=0 lost_and_dirty=0 reset=0 warm_reset=0 clean_before_bad=0 mapped_ranges=2 same_region=1 calls=200 hits=0 region_scans=0 region_skips=400 bit_skips=300 nwould=0 nmiss=0 gate_bdastamp=1 gate_bdabits=1 bdanarrow=0 fix_b13=1 page=4096
+B12c fix_b12=0 hook=bitonly hook_fired=100 hlost=0 hdirty=0 hlost_and_dirty=0 rewalk=0 rwd=0 scan_passes=0 rw_min=0 rw_max=0 late_scans=0 late_rewalks=0 lskip=0 late_lskips=0 hlost1=0 bit1=0 late_bit_skips=200
+rc=0
+bad arguments
+bad-arg rc=2
+bad arguments
+bad-arg rc=2

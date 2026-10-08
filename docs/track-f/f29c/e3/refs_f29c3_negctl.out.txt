@@ -1,0 +1,10 @@
+FAIL 726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3566 anchor NO +1 NO report NO
+FAIL 726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3577 anchor NO +1 NO report NO
+FAIL 0db3b3eb:tests/B12BdaStampStand.cpp:232 anchor NO +1 NO report NO
+FAIL 0db3b3eb:tests/B12BdaStampStand.cpp:242 anchor NO +1 NO report NO
+FAIL 0db3b3eb:tests/B12BdaStampStand.cpp:437 anchor NO +1 NO report NO
+FAIL 0db3b3eb:tests/B12BdaStampStand.cpp:544 anchor NO +1 NO report NO
+FAIL 0db3b3eb:tests/B12BdaStampStand.cpp:557 anchor NO +1 NO report NO
+FAIL 0db3b3eb:tests/B12BdaStampStand.cpp:574 anchor NO +1 NO report NO
+FAIL 0db3b3eb:tests/B12BdaStampStand.cpp:580 anchor NO +1 NO report NO
+REFS 9 FAILED

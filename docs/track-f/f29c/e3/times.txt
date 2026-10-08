@@ -1,0 +1,20 @@
+2026-10-08T23:35:05Z F29c3 (HPP-713) start: read ROADMAP 645, 639, 641, 642; f29d-review.md 7 RC1; demo_bitonly.py; mut_f29d.py; run_f29d.py; stand 726e751e (main 3729fa53)
+2026-10-08T23:35:06Z rule 30 API check before: F29c3 worktree + configure + stand build | in_progress: HPP-713:eb15eb75:run
+2026-10-08T23:35:22Z worktree C:/kyty/f287/f29c3/wt on 3729fa53 (mk_wt.log)
+2026-10-08T23:35:27Z configure start
+2026-10-08T23:36:16Z configure end rc see cfg.log
+2026-10-08T23:36:21Z rule 30 API check before: baseline stand build (main 3729fa53) | in_progress: HPP-713:eb15eb75:run
+2026-10-08T23:36:28Z baseline stand built (bc0.log), copy exe/b12_stand_base_3729fa53.exe
+2026-10-08T23:37:39Z rule 30 API check before: edition 3 stand build | in_progress: HPP-713:eb15eb75:run
+2026-10-08T23:37:44Z edition 3 stand patched in wt (patch_f29c3_stand.py PATCH OK) and built (bc1.log), copy exe/b12_stand_e3.exe
+2026-10-08T23:37:52Z trial (100 iters, not the matrix): trial.out.txt
+2026-10-08T23:38:57Z SEAL before the matrix: bddbaa85e75f97bdf95e68c081c3e0879de083fd1d388449098c9b0fa7285409 *p0_f29c3.md;098ce3145ffe2c2c0fe39c6777e7d09438a55a67a74e03f27683a27571763e7b *run_f29c3.py;a908ede3b959dd03edbf2a65335b1fdfc74342080accebbead7eeb13086bcdd3 *run_stand_f29c3_e2form.py;de3ccc84dd431bb2eea6bd1f475c139bea95dbac2d5c607a592e81afd2b64d69 *mut_f29c3.py;6ec0feb93921a5c2f79bceb7ec40be64e10c295174d1e6b08cb95e4b26b11344 *exe/b12_stand_e3.exe
+2026-10-08T23:38:58Z rule 30 API check before: matrix run_f29c3.py + e2form (10000 iters) | in_progress: HPP-713:eb15eb75:run
+2026-10-08T23:39:02Z matrix done: ; e2form: MEMBER (e)(1) AT KYTY_FIX_B12=1 WITH THE CONTROL AT 0: ALL OK
+2026-10-08T23:39:08Z run_f29c3.py first call failed before any arm: relative exe path (FileNotFoundError, WinError 2), no output file; e2form ran ALL OK; rerun run_f29c3.py with the absolute exe path
+2026-10-08T23:39:13Z matrix done: MEMBERS ALL OK; e2form: MEMBER (e)(1) AT KYTY_FIX_B12=1 WITH THE CONTROL AT 0: ALL OK
+2026-10-08T23:39:20Z rule 30 API check before: mutants mut_f29c3.py (13 stand builds, 10000 iters) | in_progress: HPP-713:eb15eb75:run
+2026-10-08T23:39:20Z mutants start
+2026-10-08T23:41:16Z mutants end (mut_f29c3.out.txt)
+2026-10-08T23:42:15Z stand commit 0db3b3eb in main (tests/B12BdaStampStand.cpp only; blob = wt file a39c4517); gate order clean (gate_order_e3.out.txt)
+2026-10-08T23:43:24Z report section 'Издание 3 (стенд)' appended to docs/track-f/f29c.md, files docs/track-f/f29c/e3/; refs REFS 9 ALL OK, negctl REFS 9 FAILED

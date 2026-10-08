@@ -1,0 +1,10 @@
+OK   726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3565 anchor yes +1 yes report yes
+OK   726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3576 anchor yes +1 yes report yes
+OK   0db3b3eb:tests/B12BdaStampStand.cpp:231 anchor yes +1 yes report yes
+OK   0db3b3eb:tests/B12BdaStampStand.cpp:241 anchor yes +1 yes report yes
+OK   0db3b3eb:tests/B12BdaStampStand.cpp:436 anchor yes +1 yes report yes
+OK   0db3b3eb:tests/B12BdaStampStand.cpp:543 anchor yes +1 yes report yes
+OK   0db3b3eb:tests/B12BdaStampStand.cpp:556 anchor yes +1 yes report yes
+OK   0db3b3eb:tests/B12BdaStampStand.cpp:573 anchor yes +1 yes report yes
+OK   0db3b3eb:tests/B12BdaStampStand.cpp:579 anchor yes +1 yes report yes
+REFS 9 ALL OK

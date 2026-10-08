@@ -1,0 +1,19 @@
+F29c edition 2 (HPP-702): binary - worktree C:/kyty/f287/f29c/wtb (dc5d4712 + 73a6e411 + c94c49e0 + 726e751e cherry-picked, HEAD 673b780a)
+sha256 cabbd818397a8a299e7e64cf2d153197ad7e69e310015b5d473bb66f37802e95 buildb/install/kyty_emulator.exe (24849408 bytes)
+copy C:/kyty/f287/bin/kyty_emulator_cabbd818.exe sha256 cabbd818397a8a299e7e64cf2d153197ad7e69e310015b5d473bb66f37802e95
+version strings KytyPS5-2026-09-15-6a2987a-1907-g61be23e1
+version strings KytyPS5-2026-09-15-6a2987a-1908-g673b780a
+count 'KYTY_FIX_B12' 1
+count 'FixB12: mode=' 1
+count 'FixB12Stat: passes=' 1
+count 'rwd=%llu lskip=%llu' 1
+count 'bda_b12_rewalk' 1
+count 'bda_b12_rwd' 1
+count 'bda_b12_lskip' 1
+count 'KYTY_FIX_B36' 1
+count 'KYTY_FIX_B13' 1
+count 'KYTY_DIAG_B32' 0
+count 'LogAsync: mode=' 2
+count '9177b4267de1fb8bac7d1113afd8733210addfac' 1
+kytyGitVersion.h: #define KYTY_GIT_REVISION "673b780a96bb16f3d09e733ce10e61a66dd3432c"
+kytyGitVersion.h: #define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"

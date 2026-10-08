@@ -14,3 +14,20 @@
 2026-10-08T22:37:30Z rule 30 API check before: build emulator wtb | in_progress: HPP-706:8e98843f:run HPP-702:eb15eb75:run
 2026-10-08T22:38:36Z binary F29c sha256 7628e7ce904e584ebc51c368843661e15c44ecbd5b913cb100e4b7362f1ae6e4 copied to C:/kyty/f287/bin/kyty_emulator_7628e7ce.exe
 2026-10-08T22:42:10Z FACTS.md section F29c written; report assembled; refs ALL OK
+2026-10-08T22:43:08Z comments posted (HPP-702 report + lead question, HPP-287 line); status -> done
+2026-10-08T22:49:45Z rule 30 API check before: edition 2 start (HPP-702 changes requested, p.641) | in_progress: HPP-707:dc34de0a:run HPP-702:eb15eb75:run
+2026-10-08T22:51:02Z edition 2: patch_f29c_e2.py written (e2/; Write directly to C:/kyty path, lock checked absent before and after); applying to main worktree C:/kyty/KytyPS5 - first code line of edition 2
+2026-10-08T22:51:22Z rule 30 API check before: edition 2: build stand + tests + emulator in wt | in_progress: HPP-707:dc34de0a:run HPP-702:eb15eb75:run
+2026-10-08T22:52:38Z edition 2: stand field hlost1 (patch_f29c_e2b.py) applied to main and wt; trial stand B12-10n =1 hlost 0/100, =0 hlost 100/100 (code check only, before p0)
+2026-10-08T22:53:01Z edition 2 code commit 726e751e in main (code + stand; parent c94c49e0); gate order clean (e2/gate_order_e2.out.txt); normalize_eol.py aborted on untracked .claude/ - commit checked CR 0
+2026-10-08T22:53:46Z rule 30 API check before: edition 2: checkout wt 726e751e, build stand + memory_tracker_tests + shader_cfg_tests | in_progress: HPP-707:dc34de0a:run HPP-702:eb15eb75:run
+2026-10-08T22:54:31Z edition 2: p0_f29c_e2.md sealed sha256 4df6ca08f059ce0617727d51b2284574d924edd7dbe54ea1ade31b6b87adbafb (before the matrix); stand exe b12_stand_726e751e.exe sha256 09d824cd57479df1b6413b6d0350469b8dda33032ab0f288a22639b3bcaffb0c
+2026-10-08T22:54:31Z edition 2: matrix start (e2/run_stand_f29c_e2.py --iters 10000)
+2026-10-08T22:54:36Z edition 2: matrix end
+2026-10-08T22:54:46Z rule 30 API check before: edition 2 tests (e)(2) | in_progress: HPP-707:dc34de0a:run HPP-702:eb15eb75:run
+2026-10-08T22:54:46Z edition 2: tests (e)(2) start (wt 726e751e, label e2)
+2026-10-08T22:54:47Z edition 2: tests (e)(2) end
+2026-10-08T22:55:04Z rule 30 API check before: edition 2: cherry-pick 726e751e into wtb + build emulator | in_progress: HPP-707:dc34de0a:run HPP-702:eb15eb75:run
+2026-10-08T22:55:11Z edition 2: wtb cherry-pick 726e751e -> 673b780a (status 0, CR 0); emulator build start under watch_f29c.py
+2026-10-08T22:56:33Z rule 30 API check before: edition 2: model mutant self-check (5 stand builds) | in_progress: HPP-707:dc34de0a:run HPP-702:eb15eb75:run
+2026-10-08T22:59:53Z edition 2: report section appended to docs/track-f/f29c.md, files docs/track-f/f29c/e2/; refs REFS 43 ALL OK, negctl FAILED; FACTS.md section F29c edition 2 bullets

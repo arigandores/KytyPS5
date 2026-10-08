@@ -1,0 +1,8 @@
+args: hole lower 2 10000 hook=lower
+env: {'KYTY_BDA_WRITE_BITS': '1', 'KYTY_FIX_B12': '0'}
+rc: 0
+seconds: 0.0
+FixB13: mode=1
+B12 layout=hole write=lower passes=2 iters=10000 lost=0 dirty=0 lost_and_dirty=0 reset=10000 warm_reset=0 clean_before_bad=0 mapped_ranges=2 same_region=1 calls=20000 hits=0 region_scans=20000 region_skips=20000 bit_skips=20000 nwould=0 nmiss=0 gate_bdastamp=1 gate_bdabits=1 bdanarrow=0 fix_b13=1 page=4096
+B12c fix_b12=0 hook=lower hook_fired=10000 hlost=10000 hdirty=10000 hlost_and_dirty=10000 rewalk=0 rwd=0 scan_passes=10000 rw_min=0 rw_max=0 late_scans=0 late_rewalks=0 lskip=0 late_lskips=0 hlost1=10000
+

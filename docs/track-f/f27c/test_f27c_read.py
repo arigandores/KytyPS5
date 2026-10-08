@@ -1,6 +1,6 @@
 """F27c (HPP-694): fixtures of f27c_read.py - every member P1-P6 and every edge of the seal section 4, the restatement of savewin_f27a's
 overlap rule against savewin_f27a.out.txt on the reference log ednn122 (positive control), the import sha refusal, the series states of
-item 631 (v)(3), (d)(1), (d)(3), and the output in strict cp1250.  The set ends with ALL OK.  ASCII only.
+item 631 (v)(3), (d)(1), (d)(3) as amended by item 636 (b)-(g) (seal 3), and the output in strict cp1250.  The set ends with ALL OK.  ASCII only.
 usage: python test_f27c_read.py [--no-ref]"""
 import datetime
 import hashlib
@@ -111,7 +111,7 @@ def main(argv):
         check('P1 yes (90 MB on hold)', r['P1'] and r['p1_saves'] == 1)
         check('frame 72 120 ms on the window', r['frames_on_windows'] == [(72, 120000)], r['frames_on_windows'])
         check('P2 yes (arm 0)', r['P2'])
-        check('P3 no by letter (N = payload != size)', not r['P3'] and r['P3_variant_payload'], r['p3_parts'])
+        check('P3 yes by the loader code (N = payload, item 636 (g))', r['P3'] and not r['p3_parts']['n_eq_size'], r['p3_parts'])
         check('P4 yes', r['P4'])
         check('P5 yes', r['P5'])
         check('P6 yes (0.5 s samples)', r['P6'], (r.get('gpu_gap_median_s'), r.get('gpu_gap_max_s')))
@@ -159,12 +159,25 @@ def main(argv):
         check('P2 no: two lines', not run_reader(tmp, 'f27_v1a')['P2'])
         # 8) P3
         make(tmp, 'f27_v1a', base_frames(), [], loaded=127690373)
-        check('P3 yes when N = size of the copy', run_reader(tmp, 'f27_v1a')['P3'])
-        make(tmp, 'f27_v1a', base_frames(), [], ns='f27_f27_v1a', loaded=127690373)
+        check('P3 no when N = size of the copy (old letter, item 636 (g))', not run_reader(tmp, 'f27_v1a')['P3'])
+        make(tmp, 'f27_v1a', base_frames(), [], loaded=127690296)
+        check('P3 no when N = payload - 1', not run_reader(tmp, 'f27_v1a')['P3'])
+        make(tmp, 'f27_v1a', base_frames(), [])
+        check('P3 yes when N = payload', run_reader(tmp, 'f27_v1a')['P3'])
+        make(tmp, 'f27_v1a', base_frames(), [], ns='f27_f27_v1a')
         check('P3 no on a namespace mismatch', not run_reader(tmp, 'f27_v1a')['P3'])
-        make(tmp, 'f27_v1a', base_frames(), [], loaded=127690373, salt=dict(salt='f27_v1a', name='PPSA21564.0000000000000000.bin',
-                                                                             size='127690373', payload='127690297'))
+        make(tmp, 'f27_v1a', base_frames(), [], salt=dict(salt='f27_v1a', name='PPSA21564.0000000000000000.bin',
+                                                          size='127690373', payload='127690297'))
         check('P3 no on another file name', not run_reader(tmp, 'f27_v1a')['P3'])
+        import f27c_tools as TT
+        hn = TT.salt_name('f27_v1a')
+        make(tmp, 'f27_v1a', base_frames(), [], extra_lines=['Vulkan pipeline cache: invalidating _PipelineCache\\%s (driver, emulator, '
+                                                             'or data mismatch)' % hn])
+        r = run_reader(tmp, 'f27_v1a')
+        check('P3 no with an invalidating line for the salted path', not r['P3'] and r['p3_parts']['invalidating'], r['p3_parts'])
+        make(tmp, 'f27_v1a', base_frames(), [], extra_lines=['Vulkan pipeline cache: invalidating _PipelineCache\\PPSA21564.bin '
+                                                             '(invalid file size)'])
+        check('P3 yes with an invalidating line for another path', run_reader(tmp, 'f27_v1a')['P3'])
         # 9) P4
         make(tmp, 'f27_v1a', base_frames(), [], precache=True)
         check('P4 no with PipelinePrecache: saved', not run_reader(tmp, 'f27_v1a')['P4'])
@@ -219,7 +232,17 @@ def main(argv):
         check('series: v0 + v0b power', S([rr('f27_v0', 1, 0), rr('f27_v0b', 1, 1)]).endswith('NEXT f27_v1a'))
         check('series: without power', S([rr('f27_v0', 2, 0)]).startswith('CONTROL WITHOUT POWER'))
         check('series: NO_POWER twice', S([rr('f27_v0', 0, 0, False), rr('f27_v0b', 0, 0, False)]).startswith('NO_POWER'))
-        check('series: undefined (1 save, 1 frame)', S([rr('f27_v0', 1, 1)]).startswith('UNDEFINED'))
+        check('series: 1 save 2 frames -> NEXT f27_v0b (636 (b))', S([rr('f27_v0', 1, 2)]).startswith('NEXT f27_v0b ('))
+        check('series: v0 (1, 2) + v0b P1 -> power (636 (v)(1))', S([rr('f27_v0', 1, 2), rr('f27_v0b', 1, 0)]) ==
+              'CONTROL WITH POWER (d)(1); NEXT f27_v1a')
+        check('series: v0 (1, 2) + v0b without P1 -> not determined (636 (v)(2))',
+              S([rr('f27_v0', 1, 2), rr('f27_v0b', 0, 0, False)]).startswith('UNDEFINED item 636 (v)(2)'))
+        na = dict(tag='f27_v0b', admitted=False, why=['INTERFERENCE_P5'])
+        check('series: v0b not admitted -> NEXT f27_v0b_r1 (636 (v)(3))', S([rr('f27_v0', 1, 2), na]).startswith('NEXT f27_v0b_r1'))
+        check('series: v0b na + v0b_r1 P1 -> power', S([rr('f27_v0', 1, 2), na, rr('f27_v0b_r1', 1, 0)]).endswith('NEXT f27_v1a'))
+        na1 = dict(tag='f27_v0b_r1', admitted=False, why=['INTERFERENCE_P5'])
+        check('series: v0b na twice -> UNDEFINED (no third control)', S([rr('f27_v0', 1, 2), na, na1]).startswith('UNDEFINED by'))
+        check('series: the v0b state string matches the post_f27c stop pattern', 'UNDEFINED' in S([rr('f27_v0', 1, 2), rr('f27_v0b', 0, 0, False)]))
         check('series: undefined (no P1 once)', S([rr('f27_v0', 0, 0, False)]).startswith('UNDEFINED'))
         check('series: NEXT v1b', S([rr('f27_v0', 2, 1), rr('f27_v1a', 1, 0)]).endswith('NEXT f27_v1b'))
         check('series: v1 frame -> STOP', S([rr('f27_v0', 2, 1), rr('f27_v1a', 1, 1)]).startswith('STOP'))

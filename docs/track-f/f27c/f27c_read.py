@@ -16,9 +16,10 @@ Definitions (seal section 4):
   a save on the hold (letter) = its window intersects the hold; executor variant 'savewin' = savewin_f27a.main's filter last_n >= Ns
   (counts the save at the exit, after WM_CLOSE) - printed beside;
   P1 = >= 1 save on the hold with bytes >= 80 000 000;  P2 = the line 'S-pcw: KYTY_S_PCW=<arm>' with arm 0 (f27_v0*) / 1 (f27_v1*);
-  P3 = 'Pipeline cold-test namespace: <salt>' (salt = the tag) and 'Vulkan pipeline cache: loaded <N> bytes from
-       _PipelineCache\\PPSA21564.<xxh3(salt)>.bin'; letter N = the size of the copy (salt.txt); executor variant N = the payload of the copy
-       (size - header; the loader reads the payload only) - both printed, P3 by the letter;
+  P3 (seal 3, item 636 (g): read by the loader code) = 'Pipeline cold-test namespace: <salt>' (salt = the tag), one line 'Vulkan pipeline
+       cache: loaded <N> bytes from _PipelineCache\\PPSA21564.<xxh3(salt)>.bin' with N = the size of the copy - (signature length + 8)
+       (= the payload of salt.txt, header 76) and no line 'Vulkan pipeline cache: invalidating <that path>'; N = size of the copy (the old
+       letter of item 631 (v)(4)) is printed beside as a part only;
   P4 = no line 'PipelinePrecache: saved';  P5 = p5.txt 'labels EQUAL' (the manifest of ShaderCache_PPSA21564, ShaderSeeds_PPSA21564,
        _PipelineCache after the tag = the base) and no INTERFERENCE_P5;
   P6 = gpuclk_<tag>.csv of the run's nvidia-smi logger (-lms 500: step 0.5 s) covers [hold_from, hold_to] (first sample <= hold_from, last
@@ -72,6 +73,7 @@ RX = dict(
     pcw=re.compile(rb'^S-pcw: KYTY_S_PCW=(\d+)'),
     ns=re.compile(rb'^Pipeline cold-test namespace: (\S+)'),
     loaded=re.compile(rb'^Vulkan pipeline cache: loaded (\d+) bytes from (\S+)'),
+    invalidating=re.compile(rb'^Vulkan pipeline cache: invalidating (\S+)'),
     precache_saved=re.compile(rb'^PipelinePrecache: saved'),
     ft=re.compile(rb'^FrameTrace: n=(\d+) dt_us=(\d+)'),
 )
@@ -100,7 +102,7 @@ def overlaps(frames, w0, t_end):
 
 def lines_pass(path, frames_ge):
     """One pass: members P2-P4, counters, and per frame with dt >= 100 ms the translations / skipped / held lines of its interval."""
-    r = dict(pcw=[], ns=[], loaded=[], precache_saved=0, counts=dict((k, 0) for k in COUNT), interval={})
+    r = dict(pcw=[], ns=[], loaded=[], invalidating=[], precache_saved=0, counts=dict((k, 0) for k in COUNT), interval={})
     cur = dict(spirv=0, skipped=0, held=0)
     with open(path, 'rb') as f:
         for l in f:
@@ -130,6 +132,10 @@ def lines_pass(path, frames_ge):
             m = RX['loaded'].match(l)
             if m:
                 r['loaded'].append((int(m.group(1)), m.group(2).decode('ascii', 'replace')))
+                continue
+            m = RX['invalidating'].match(l)
+            if m:
+                r['invalidating'].append(m.group(1).decode('ascii', 'replace'))
                 continue
             if RX['precache_saved'].match(l):
                 r['precache_saved'] += 1
@@ -223,14 +229,18 @@ def read_tag(tag, root=ROOT):
     res['loaded_lines'] = lp_['loaded']
     p3_ns = lp_['ns'] == [want_ns]
     p3_file = p3_n_letter = p3_n_payload = False
+    p3_inval = False
+    res['invalidating_lines'] = lp_['invalidating']
     if salt and len(lp_['loaded']) == 1:
         n, path = lp_['loaded'][0]
-        p3_file = path.replace('\\', '/') == '_PipelineCache/' + salt.get('name', '?')
+        want_path = '_PipelineCache/' + salt.get('name', '?')
+        p3_file = path.replace('\\', '/') == want_path
         p3_n_letter = str(n) == salt.get('size')
         p3_n_payload = str(n) == salt.get('payload')
-    res['P3'] = p3_ns and p3_file and p3_n_letter
-    res['P3_variant_payload'] = p3_ns and p3_file and p3_n_payload
-    res['p3_parts'] = dict(namespace=p3_ns, file=p3_file, n_eq_size=p3_n_letter, n_eq_payload=p3_n_payload)
+        p3_inval = any(p.replace('\\', '/') == want_path for p in lp_['invalidating'])
+    res['P3'] = p3_ns and p3_file and p3_n_payload and not p3_inval
+    res['P3_variant_payload'] = res['P3']
+    res['p3_parts'] = dict(namespace=p3_ns, file=p3_file, n_eq_size=p3_n_letter, n_eq_payload=p3_n_payload, invalidating=p3_inval)
     res['P4'] = lp_['precache_saved'] == 0
     res['precache_saved_lines'] = lp_['precache_saved']
     p5 = os.path.join(d, 'p5.txt')
@@ -319,9 +329,14 @@ def print_tag(r):
 
 
 def series_state(rs):
-    """Item 631 (v)(3), (d)(1): the next tag of the series from the read tags (process helper, not a verdict)."""
+    """Item 631 (v)(3), (d)(1) as amended by item 636 (b)-(v): the next tag of the series from the read tags (process helper, not a
+    verdict).  Seal 3: f27_v0b goes when f27_v0 has exactly 1 save with P1 at any number of frames on its window (636 (b)); after f27_v0b
+    with P1 the sum >= 2 saves and >= 1 frame -> power (636 (v)(1)); f27_v0b without P1 -> sum 1 save - not determined, v1 tags do not go,
+    return (636 (v)(2)); f27_v0b without P5 (not admitted) -> one repeat f27_v0b_r1 (636 (v)(3))."""
     v0 = [r for r in rs if r['tag'].startswith('f27_v0') and r.get('admitted') and 'saves' in r]
     v1 = [r for r in rs if r['tag'].startswith('f27_v1') and r.get('admitted') and 'saves' in r]
+    tried = [r['tag'] for r in rs]
+    v0b_tried = [t for t in tried if t.startswith('f27_v0b')]
     s = sum(r['p1_saves'] for r in v0)
     fr = sum(len(r['frames_on_windows']) for r in v0)
     no_p1 = sum(1 for r in v0 if not r['P1'])
@@ -335,8 +350,12 @@ def series_state(rs):
         return 'CONTROL WITHOUT POWER (d)(1): v1 tags do not go'
     elif no_p1 >= 2:
         return 'NO_POWER (d)(1): no P1 in the control twice - stop'
-    elif len(v0) == 1 and s == 1 and fr == 0:
-        return 'NEXT f27_v0b ((v)(3): exactly 1 save with P1 and 0 frames)'
+    elif len(v0) == 1 and s == 1 and v0[0]['tag'] == 'f27_v0' and not v0b_tried:
+        return 'NEXT f27_v0b ((v)(3) as amended by item 636 (b): exactly 1 save with P1, frames on the window %d)' % fr
+    elif len(v0) == 1 and s == 1 and v0[0]['tag'] == 'f27_v0' and v0b_tried == ['f27_v0b']:
+        return 'NEXT f27_v0b_r1 (item 636 (v)(3): f27_v0b not admitted - one repeat)'
+    elif len(v0) == 2 and s == 1 and v0[0]['P1'] and not v0[1]['P1'] and v0[1]['tag'].startswith('f27_v0b'):
+        return 'UNDEFINED item 636 (v)(2) (not determined): f27_v0b without P1, sum 1 save - v1 tags do not go, return'
     else:
         return 'UNDEFINED by (v)(3)/(d)(1): v0 saves %d frames %d no_p1 %d - question to the lead' % (s, fr, no_p1)
     names = [r['tag'] for r in v1]

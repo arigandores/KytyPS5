@@ -1,10 +1,10 @@
-suite test_f27c_read.py sha256 eab3d959ee77e126f90656240cc7901e26293d6e0ace10cfeb85285f9398875f target f27c_read.py sha256 f5bc30e7c2fc6b93dc93e8a1fb26f7193016d4edd36b1b12ad9a71839fa4e627
+suite test_f27c_read.py sha256 f75f55cc88ba61f9324fe47fbe73b5ba92ea9512348d8bee576c1ed1fb474977 target f27c_read.py sha256 8d93ed76d806ba27071c99962ee139d96e658932fd9e4629b593a037a5684c85
 ok   base admitted []
 ok   t_s is the stamp of the stable frame 29.5
 ok   P1 yes (90 MB on hold) 
 ok   frame 72 120 ms on the window [(72, 120000)]
 ok   P2 yes (arm 0) 
-ok   P3 no by letter (N = payload != size) {'namespace': True, 'file': True, 'n_eq_size': False, 'n_eq_payload': True}
+ok   P3 yes by the loader code (N = payload, item 636 (g)) {'namespace': True, 'file': True, 'n_eq_size': False, 'n_eq_payload': True, 'invalidating': False}
 ok   P4 yes 
 ok   P5 yes 
 ok   P6 yes (0.5 s samples) (0.5, 0.5)
@@ -25,9 +25,13 @@ ok   save straddling the hold end is on hold
 ok   P2 no: v1 tag with KYTY_S_PCW=0 
 ok   P2 no: no line 
 ok   P2 no: two lines 
-ok   P3 yes when N = size of the copy 
+ok   P3 no when N = size of the copy (old letter, item 636 (g)) 
+ok   P3 no when N = payload - 1 
+ok   P3 yes when N = payload 
 ok   P3 no on a namespace mismatch 
 ok   P3 no on another file name 
+ok   P3 no with an invalidating line for the salted path {'namespace': True, 'file': True, 'n_eq_size': False, 'n_eq_payload': True, 'invalidating': True}
+ok   P3 yes with an invalidating line for another path 
 ok   P4 no with PipelinePrecache: saved 
 ok   P5 no on DIFFER 
 ok   P5 no and not admitted with INTERFERENCE_P5 
@@ -47,7 +51,13 @@ ok   series: power, NEXT v1a
 ok   series: v0 + v0b power 
 ok   series: without power 
 ok   series: NO_POWER twice 
-ok   series: undefined (1 save, 1 frame) 
+ok   series: 1 save 2 frames -> NEXT f27_v0b (636 (b)) 
+ok   series: v0 (1, 2) + v0b P1 -> power (636 (v)(1)) 
+ok   series: v0 (1, 2) + v0b without P1 -> not determined (636 (v)(2)) 
+ok   series: v0b not admitted -> NEXT f27_v0b_r1 (636 (v)(3)) 
+ok   series: v0b na + v0b_r1 P1 -> power 
+ok   series: v0b na twice -> UNDEFINED (no third control) 
+ok   series: the v0b state string matches the post_f27c stop pattern 
 ok   series: undefined (no P1 once) 
 ok   series: NEXT v1b 
 ok   series: v1 frame -> STOP 
@@ -59,5 +69,5 @@ ok   tag print in strict cp1250 b''
 ok   table print in strict cp1250 b''
 ok   restated rule = savewin_f27a.out.txt on ednn122 (stable 308) (['save line 418364 bytes 87994470 us 86572 frames 1820..1826 ge100 [(1826, 118647)]', 'save line 884452 bytes 87994470 us 78595 frames 7408..7412 ge100 []'], ['save line 418364 bytes 87994470 us 86572 frames 1820..1826 ge100 [(1826, 118647)]', 'save line 884452 bytes 87994470 us 78595 frames 7408..7412 ge100 []'])
 ok   positive control: frame 1826 118 647 us on the window 
-checks 60 failed 0
+checks 70 failed 0
 ALL OK

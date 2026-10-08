@@ -1,0 +1,367 @@
+{
+ "S": 0,
+ "S_flush": 0,
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "theta_load from the seal (0.4562)",
+   true
+  ],
+  [
+   "json binary_sha256 = T2 9745eb78 (9745eb7851d54174)",
+   true
+  ],
+  [
+   "installed during the tag = T2 (9745eb7851d54174)",
+   true
+  ],
+  [
+   "installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (a59eccb99a437852 / a59eccb99a437852)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl bonus_path_maker_mix (-lvl bonus_path_maker_mix; harness bonus_path_maker_mix)",
+   true
+  ],
+  [
+   "hold option 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "caches before = snapshot of the form (manifest cmp EQUAL files 4790 listsha c83a3843ec65)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4790 listsha c8)",
+   true
+  ],
+  [
+   "LogAsync: mode=1 line exactly once (['LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100'])",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0 / 0)",
+   true
+  ],
+  [
+   "scene entered (first 161)",
+   true
+  ],
+  [
+   "hold: scene >= 300 s (332.21 s) or GpuHangAbort after >= 10 s (None)",
+   true
+  ],
+  [
+   "no death marker other than GpuHangAbort ([])",
+   true
+  ],
+  [
+   "DiagB32 mode line once, no config invalid (1)",
+   true
+  ],
+  [
+   "rep_drop 0 (0)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885",
+ "f25_read_sha256": "933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf",
+ "fix": "1",
+ "form": "b36_k10",
+ "interference": null,
+ "kind": "cold",
+ "level": "bonus_path_maker_mix",
+ "lf_ge1s": 0,
+ "log": {
+  "K": 0,
+  "K_I": 0,
+  "P_I_K2": 0,
+  "abort": null,
+  "abort_hold": false,
+  "b5": [
+   {
+    "armed": true,
+    "cls": "EMU_RUN:Gpu",
+    "dt_us": 112962,
+    "n": 163,
+    "t_s": 0.019
+   }
+  ],
+  "b5_armed": 1,
+  "bad_names": [],
+  "cal": {
+   "n": 13094,
+   "note": "",
+   "offset": -10558971554,
+   "pairs": 2,
+   "second_minus_min_ms": 39.65
+  },
+  "death": [],
+  "diag_bad_prefix": 0,
+  "diag_lines": 436,
+  "diag_n": 2,
+  "dup": 0,
+  "first_n": 161,
+  "fliphold_cap_flip": null,
+  "fliphold_lines": 1,
+  "frames": [
+   {
+    "E": 84145.0,
+    "attr": "nothing",
+    "base": {
+     "dt": 16738.0,
+     "gbusy": 7883.0,
+     "k": 20,
+     "lat": 11303.0
+    },
+    "cls": "EMU_WAIT:ops_idle",
+    "cover_us": 98386,
+    "dt_us": 100883,
+    "family": "EMU_WAIT",
+    "fh_other_us": 0,
+    "flip_ns": 115420984965554,
+    "form": "FORM_OTHER",
+    "ftd_log_gpu_us": 0,
+    "ftd_log_us": 97,
+    "gbusy_us": 11741,
+    "gpu_in_chain": true,
+    "gpu_sw_or_s50": false,
+    "gpu_sw_plus_s50": false,
+    "holder": "flip",
+    "idx": 12933,
+    "in_count": false,
+    "instr_made_k2": false,
+    "instr_next_us": null,
+    "instr_poll": false,
+    "instr_us": 6023,
+    "k2": false,
+    "key": 13094,
+    "key_branch": "n",
+    "key_dt_us": 100885,
+    "lat_us": 20086,
+    "load_ratio": 0.15,
+    "m6_burst": false,
+    "n": 13094,
+    "note": "no waker, no peer",
+    "p_i": true,
+    "path": [
+     "DrawThread(guest)=W:gpu_wait->waker",
+     "Gpu(Gpu)=W:ops_wait->peer",
+     "POps(POps)=W:ops_idle"
+    ],
+    "poll_unknown": false,
+    "poll_us": null,
+    "precursor": false,
+    "print_us_x": 3,
+    "samples": 19,
+    "semwait_us": 28708,
+    "sgap_max_us": 10048,
+    "shared": false,
+    "stall_overlap": [],
+    "steps": [
+     {
+      "R": 1,
+      "S": 0,
+      "Sw": 0,
+      "how": "holder",
+      "name": "DrawThread",
+      "role": "guest",
+      "samples": 19,
+      "slot": 27
+     },
+     {
+      "R": 5,
+      "S": 0,
+      "Sw": 0,
+      "how": "waker",
+      "name": "Gpu",
+      "role": "Gpu",
+      "samples": 19,
+      "slot": 3
+     },
+     {
+      "R": 0,
+      "S": 0,
+      "Sw": 0,
+      "how": "peer",
+      "name": "POps",
+      "role": "POps",
+      "samples": 19,
+      "slot": 1
+     }
+    ],
+    "t_s": 256.911,
+    "t_us": 256910792,
+    "term_role": "POps",
+    "w_lines": 114,
+    "zero_w": {
+     "hist_exh_w": 0,
+     "lines_cut_w": 0,
+     "others_cut_w": 0,
+     "req_miss_w": 0,
+     "ring_drop_w": 0,
+     "sgap_bad_w": 0,
+     "slot_full_w": 0,
+     "sub_miss_w": 0,
+     "torn_w": 0,
+     "w_cut_w": 0
+    }
+   }
+  ],
+  "frames_n": 16655,
+  "hold": true,
+  "hold_any": true,
+  "hold_burst": null,
+  "hold_class": null,
+  "hold_family": null,
+  "hold_form": null,
+  "in_count": 0,
+  "instr_made_k2": 0,
+  "instr_poll_n": 0,
+  "invalid": [],
+  "level": "bonus_path_maker_mix",
+  "m6_foreign_max": 2.59,
+  "m6_samples": 238,
+  "med_dt": 17040,
+  "minimized": 0,
+  "mode": [
+   "DiagB32: mode=1 period_us=5000 print_us=100000 wait_rec_us=10000 kernel_after_us=40000 slots=256 hist=4096 wring=65536 ncpu=32 kstate=1 kq_us=3872 kq_budget_div=10 kq_near_us=60000"
+  ],
+  "poll_unknown_n": 0,
+  "rc13_equal": true,
+  "rc13_stripped": 436,
+  "recovering": 0,
+  "rep_drop": 0,
+  "replay_skipped": 1,
+  "scene_s": 332.21,
+  "sig": [
+   "9177b4267de1fb8bac7d1113afd8733210addfac"
+  ],
+  "slow70": 1,
+  "stand": null,
+  "test": [],
+  "u5_bad": [],
+  "u5_bad_n": 0,
+  "u5_excl": [],
+  "u5_h2": [],
+  "u5_tag": false,
+  "variant_dir": [
+   "variant_fixb26_fixb1b_fixf10_fixf19"
+  ],
+  "warm": true,
+  "warm_dump_frames": [],
+  "warm_dump_hashes": [],
+  "warm_dump_n": 0,
+  "x_last": {
+   "gap3p": 0,
+   "hist_exh": 0,
+   "hist_exh_w": 0,
+   "kq_fail": 0,
+   "lines_cut": 0,
+   "lines_cut_w": 0,
+   "n": 13094,
+   "others_cut": 0,
+   "others_cut_w": 0,
+   "print_us": 3,
+   "rep_drop": 0,
+   "req_miss": 0,
+   "req_miss_w": 0,
+   "ring_drop": 0,
+   "ring_drop_w": 0,
+   "ring_hold": 0,
+   "ring_hold_w": 0,
+   "sgap_bad": 0,
+   "sgap_bad_w": 0,
+   "short_stalls": 1,
+   "slot_full": 0,
+   "slot_full_w": 0,
+   "slots": 84,
+   "sub_miss": 0,
+   "sub_miss_w": 0,
+   "torn": 0,
+   "torn_w": 0,
+   "w_cut": 0,
+   "w_cut_w": 0
+  }
+ },
+ "rc3": null,
+ "reader_sha256": "5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8",
+ "reading": "ADMITTED (no verdict; reading - F25n)",
+ "ref": {
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.2,
+  "outcome": "ok",
+  "sheet": "sheet: C:/kyty/f287/f25m/runs/b36_k10/sheet_b36_k10.png frames 16811 step 350 tiles 8x6",
+  "stable_s": 11.9,
+  "video_index": 16811
+ },
+ "scene_ge1s": 0,
+ "sleeps": [],
+ "stall_lines": 0,
+ "stall_max_us": 0,
+ "stand": null,
+ "status": "ADMITTED",
+ "summary": {
+  "bytes": 506563147,
+  "drain_timeouts": 0,
+  "full_wait_us": 0,
+  "full_waits": 0,
+  "lines": 961595,
+  "max_queued_bytes": 624559,
+  "stall_cut": 0,
+  "stalls": 0,
+  "sync_lines": 0
+ },
+ "tag": "b36_k10",
+ "theta": 0.4562,
+ "vw": null
+}

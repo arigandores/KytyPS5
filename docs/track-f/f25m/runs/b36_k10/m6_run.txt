@@ -1,0 +1,1 @@
+M6 end samples=238 foreign_max=2.59 foreign_mean=1.11 cal_lines=16815

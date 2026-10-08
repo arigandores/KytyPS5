@@ -1,0 +1,2 @@
+C:/kyty/f287/f25m/rec_b36_k08.mp4: 16636 frames 960x540, index entries 16636
+one-frame glitches: 0

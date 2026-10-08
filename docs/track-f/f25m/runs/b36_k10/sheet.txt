@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/f25m/runs/b36_k10/sheet_b36_k10.png frames 16811 step 350 tiles 8x6

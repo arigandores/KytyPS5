@@ -1,0 +1,176 @@
+{
+ "S": 0,
+ "S_flush": 0,
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "theta_load from the seal (0.4562)",
+   true
+  ],
+  [
+   "json binary_sha256 = T2 9745eb78 (9745eb7851d54174)",
+   true
+  ],
+  [
+   "installed during the tag = T2 (9745eb7851d54174)",
+   true
+  ],
+  [
+   "installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (a59eccb99a437852 / a59eccb99a437852)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "caches before = snapshot of the form (manifest cmp EQUAL files 4808 listsha 08d6578e5d55)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4808 listsha 08)",
+   true
+  ],
+  [
+   "LogAsync: mode=1 line exactly once (['LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100'])",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0 / 0)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885",
+ "f25_read_sha256": "933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf",
+ "fix": "1",
+ "form": "b36_v",
+ "interference": null,
+ "kind": "v",
+ "level": "underwater_aerial_garden",
+ "lf_ge1s": 0,
+ "log": null,
+ "rc3": null,
+ "reader_sha256": "5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8",
+ "reading": "ADMITTED (no verdict; reading - F25n)",
+ "ref": {
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.0,
+  "outcome": "ok",
+  "sheet": "sheet: C:/kyty/f287/f25m/runs/b36_v/sheet_b36_v.png frames 10452 step 217 tiles 8x6",
+  "stable_s": 16.4,
+  "video_index": 10452
+ },
+ "sleeps": [],
+ "stall_lines": 0,
+ "stall_max_us": 0,
+ "stand": null,
+ "status": "ADMITTED",
+ "summary": {
+  "bytes": 322016293,
+  "drain_timeouts": 0,
+  "full_wait_us": 0,
+  "full_waits": 0,
+  "lines": 722258,
+  "max_queued_bytes": 27624,
+  "stall_cut": 0,
+  "stalls": 0,
+  "sync_lines": 0
+ },
+ "tag": "b36_v",
+ "theta": 0.4562,
+ "vw": {
+  "info": {
+   "first_scene_n": 268,
+   "frames_ge1s": 0,
+   "hold_s": 333.9
+  },
+  "members": [
+   [
+    "FixB13: mode=1 (every line) before the first GuestOut ([1], before True)",
+    true
+   ],
+   [
+    "hold >= 300 s after the first scene frame (333.9 s)",
+    true
+   ],
+   [
+    "the process lived through the hold (outcome ok, hold_exit None)",
+    true
+   ],
+   [
+    "0 frames >= 1 s after the first scene frame (0; first 268)",
+    true
+   ],
+   [
+    "0 death markers (log and stdout) []",
+    true
+   ],
+   [
+    "video index records >= 3000 (10452)",
+    true
+   ],
+   [
+    "0 one-frame glitches (0)",
+    true
+   ],
+   [
+    "sheet for the lead made (sheet: C:/kyty/f287/f25m/runs/b36_v/sheet_b36_v.png frames 10452 step 217 tiles 8x6)",
+    true
+   ]
+  ],
+  "ok": true
+ }
+}

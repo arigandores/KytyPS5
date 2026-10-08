@@ -1,0 +1,49 @@
+tag b36_f0_r1 (form b36_f0, kind stand_harness, level pot_treasure_cave, KYTY_FIX_B36=0)  reader sha256 5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8  f25_read sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf  theta 0.4562
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] theta_load from the seal (0.4562)
+    [ok] json binary_sha256 = T2 9745eb78 (9745eb7851d54174)
+    [ok] installed during the tag = T2 (9745eb7851d54174)
+    [ok] installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)
+    [ok] json prereg sha256 = seal sha256 (a59eccb99a437852 / a59eccb99a437852)
+    [ok] env = the form of the tag (exact)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl pot_treasure_cave (-lvl pot_treasure_cave; harness pot_treasure_cave)
+    [ok] hold option 150 s (150)
+    [ok] log present
+    [ok] entry outcome ok (ok)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] caches before = snapshot of the form (manifest cmp EQUAL files 4808 listsha 08d6578e5d55)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4808 listsha 08)
+    [ok] KYTY_FIX_B36=0: no LogAsync: line (mode 0, summary 0, stall 0)
+    [ok] TestLogStall config once: sleep_ms 3000, k 3, on=caller ([{'at_ms': 106392004, 'sleep_ms': 3000, 'k': 3, 'gap_ms': 5000, 'on': 'caller'}])
+    [ok] TestLogStall sleeps i=1,2,3, on=caller, slept_us >= 2 900 000 ([(1, 3000837, 'caller'), (2, 3000381, 'caller'), (3, 3000180, 'caller')]; bad 0)
+    [ok] scene entered and scene >= 120 s (first 331, 152.51 s)
+    [ok] no death marker (log [], stdout [])
+    [ok] DiagB32 mode line once (1)
+  binary_sha256 9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885
+  LogAsync summary None; S (stall us >= 1 000 000) 0 (flush=1 0); stall lines 0, max us 0; LongFrame >= 1 s 3
+  SLEEP i 1 t0_ms 106392011 t1_ms 106395011 on caller tid 9708 role other line="? queue  = 0x00000040?? packet = 0x00000"
+  SLEEP i 2 t0_ms 106400012 t1_ms 106403012 on caller tid 9708 role other line="? queue  = 0x00000040?? packet = 0x00000"
+  SLEEP i 3 t0_ms 106408017 t1_ms 106411017 on caller tid 46092 role Present line="FrameTrace: n=3259 dt_us=15444 lat_us=14"
+  STAND b36_f0 PASS; exit gap 87387 ms; LongFrame 4 (>= 1 s 3, after the level line 3, max 3015880); stall >= 2.9 s 0; full_waits None
+    [ok] exit window: estimated exit 106500404 ms - (last t1_ms 106411017 + 2 000) = 87387 >= 250
+    [ok] >= 1 scene frame dt_us >= 2 500 000 in the window of a sleep (sleeps with such a frame: 3 of 3; executor variant every sleep: True)
+    sleep 1 window [106390011, 106397011] hits [(2684, 3015880, 106395034, 'LongFrame')]
+    sleep 2 window [106398012, 106405012] hits [(2972, 3015548, 106403033, 'LongFrame')]
+    sleep 3 window [106406017, 106413017] hits [(3260, 3006055, 106411023, 'LongFrame')]
+    scene frames >= 1 s 3 [(2684, 3015880), (2972, 3015548), (3260, 3006055)]; LongFrame / FrameTrace dt cross-check {'pairs': 4, 'max_abs_diff_us': 2}
+  scene: first_n 331, frames 8032, scene 152.5 s, hold False (abort hold False); DiagB32 lines 1743; death []
+  K_I 0; K 0; K2 frames not attributed 3; in count 3; INSTR_MADE_K2 0; INSTR_POLL 0; POLL_UNKNOWN in count 0; FlipHold lines 3 (cap flip None); scene frames >= 1 s 3
+  hold class (longest frame in count): None; family None; form FORM_NOFLIP; M6_BURST all False
+    FRAME n 2684 dt_us 3015880 t 44.2 s attr nothing | key 2684(n) win 3015772 instr 400858 | UNMARKED:DrawThread IN COUNT | DrawThread(guest)=Sw | poll_us 100 | ftd log_us 5994505 log_gpu_us 4 | stall overlap [] | FORM_NOFLIP | M6_BURST False
+    FRAME n 2972 dt_us 3015548 t 52.2 s attr nothing | key 2972(n) win 3015504 instr 409485 | UNMARKED:DrawThread IN COUNT | DrawThread(guest)=Sw | poll_us 170 | ftd log_us 5995379 log_gpu_us 4 | stall overlap [] | FORM_NOFLIP | M6_BURST False
+    FRAME n 3260 dt_us 3006055 t 60.2 s attr nothing | key 3260(n) win 3005862 instr 407627 | UNMARKED:Present IN COUNT | DrawThread(guest)=W:gpu_wait->waker > Gpu(Gpu)=W:emu_mutex->waker > Present(Present)=Sw | poll_us 75 | ftd log_us 3000271 log_gpu_us 4 | stall overlap [] | FORM_NOFLIP | M6_BURST False
+  U5 windows bad 0 []
+  REFERENCE: glitches 0, video index 8373, outcome ok, hold_exit None, hold_s 150.0, stable_s 18.4, sheet sheet: C:/kyty/f287/f25m/runs/b36_f0_r1/sheet_b36_f0_r1.png frames 8373 step 174 tiles 8x6
+  LONGFRAMEPRINTER (item 619 (b)(1)): its log_us / LogNs (role other) are not the frame holder's and not in the sum of log_us over threads (F25i RC4)
+  READING ADMITTED (no verdict; reading - F25n)

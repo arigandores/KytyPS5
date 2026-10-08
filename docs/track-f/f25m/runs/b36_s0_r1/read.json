@@ -1,0 +1,260 @@
+{
+ "S": 0,
+ "S_flush": 0,
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "theta_load from the seal (0.4562)",
+   true
+  ],
+  [
+   "json binary_sha256 = T2 9745eb78 (9745eb7851d54174)",
+   true
+  ],
+  [
+   "installed during the tag = T2 (9745eb7851d54174)",
+   true
+  ],
+  [
+   "installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (a59eccb99a437852 / a59eccb99a437852)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl pot_treasure_cave (-lvl pot_treasure_cave; harness pot_treasure_cave)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {'lost keyboard focus': 2})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "caches before = snapshot of the form (manifest cmp EQUAL files 4808 listsha 6e1b3b848731)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4808 listsha 6e)",
+   true
+  ],
+  [
+   "KYTY_FIX_B36=0: no LogAsync: line (mode 0, summary 0, stall 0)",
+   true
+  ],
+  [
+   "TestLogStall config once: sleep_ms 3000, k 3, on=caller ([{'at_ms': 87539343, 'sleep_ms': 3000, 'k': 3, 'gap_ms': 5000, 'on': 'caller'}])",
+   true
+  ],
+  [
+   "TestLogStall sleeps i=1,2,3, on=caller, slept_us >= 2 900 000 ([(1, 3000690, 'caller'), (2, 3000077, 'caller'), (3, 3000725, 'caller')]; bad 0)",
+   true
+  ],
+  [
+   "hold >= 120 s, lived (hold_s 150.2, hold_exit None)",
+   true
+  ],
+  [
+   "user form: 0 FrameTrace and 0 DiagB32 lines (0)",
+   true
+  ],
+  [
+   "no death marker (log [], stdout [])",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885",
+ "f25_read_sha256": "933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf",
+ "fix": "0",
+ "form": "b36_s0",
+ "interference": null,
+ "kind": "stand_user",
+ "level": "pot_treasure_cave",
+ "lf_ge1s": 3,
+ "log": null,
+ "rc3": null,
+ "reader_sha256": "5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8",
+ "reading": "ADMITTED (no verdict; reading - F25n)",
+ "ref": {
+  "glitches": null,
+  "hold_exit": null,
+  "hold_s": 150.2,
+  "outcome": "ok",
+  "sheet": null,
+  "stable_s": 14.3,
+  "video_index": null
+ },
+ "sleeps": [
+  {
+   "i": 1,
+   "line": "? queue  = 0x00000040?? packet = 0x00000",
+   "on": "caller",
+   "role": "other",
+   "t0_ms": 87539352,
+   "t1_ms": 87542352,
+   "tid": 37132
+  },
+  {
+   "i": 2,
+   "line": "? queue  = 0x00000040?? packet = 0x00000",
+   "on": "caller",
+   "role": "other",
+   "t0_ms": 87547357,
+   "t1_ms": 87550357,
+   "tid": 37132
+  },
+  {
+   "i": 3,
+   "line": "? queue  = 0x00000040?? packet = 0x00000",
+   "on": "caller",
+   "role": "other",
+   "t0_ms": 87555362,
+   "t1_ms": 87558363,
+   "tid": 37132
+  }
+ ],
+ "stall_lines": 0,
+ "stall_max_us": 0,
+ "stand": {
+  "exit": 83480,
+  "full_waits": null,
+  "lf_ge1s": 3,
+  "lf_ge1s_after_level": 3,
+  "lf_max": 3017323,
+  "lf_n": 4,
+  "members": [
+   [
+    "exit window: estimated exit 87643843 ms - (last t1_ms 87558363 + 2 000) = 83480 >= 250",
+    true
+   ],
+   [
+    "every sleep has >= 1 LongFrame dt_us >= 2 500 000 in [t0_ms - 2 000; t1_ms + 2 000] (3 of 3 sleeps)",
+    true
+   ]
+  ],
+  "ok": true,
+  "per_sleep": [
+   {
+    "hits": [
+     [
+      2652,
+      3016981,
+      87542380
+     ]
+    ],
+    "i": 1,
+    "win": [
+     87537352,
+     87544352
+    ]
+   },
+   {
+    "hits": [
+     [
+      2936,
+      3017323,
+      87550380
+     ]
+    ],
+    "i": 2,
+    "win": [
+     87545357,
+     87552357
+    ]
+   },
+   {
+    "hits": [
+     [
+      3228,
+      3016721,
+      87558396
+     ]
+    ],
+    "i": 3,
+    "win": [
+     87553362,
+     87560363
+    ]
+   }
+  ],
+  "sleeps": [
+   {
+    "i": 1,
+    "line": "? queue  = 0x00000040?? packet = 0x00000",
+    "on": "caller",
+    "role": "other",
+    "slept_us": 3000690,
+    "t0_ms": 87539352,
+    "t1_ms": 87542352,
+    "tid": 37132
+   },
+   {
+    "i": 2,
+    "line": "? queue  = 0x00000040?? packet = 0x00000",
+    "on": "caller",
+    "role": "other",
+    "slept_us": 3000077,
+    "t0_ms": 87547357,
+    "t1_ms": 87550357,
+    "tid": 37132
+   },
+   {
+    "i": 3,
+    "line": "? queue  = 0x00000040?? packet = 0x00000",
+    "on": "caller",
+    "role": "other",
+    "slept_us": 3000725,
+    "t0_ms": 87555362,
+    "t1_ms": 87558363,
+    "tid": 37132
+   }
+  ],
+  "stall_ge29": 0
+ },
+ "status": "ADMITTED",
+ "summary": null,
+ "tag": "b36_s0_r1",
+ "theta": 0.4562,
+ "vw": null
+}

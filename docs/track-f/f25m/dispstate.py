@@ -5,6 +5,8 @@
 #                                          watch state changes for <sec>, then reset to ES_CONTINUOUS (probe, ROADMAP p.620(v)(3))
 #   python dispstate.py --hold-until <stopfile> --max <sec>
 #                                       -> the chain mode of go_f25m.sh: the same request until the stop file appears or <sec> pass
+#   python dispstate.py --wake          -> wake a display that is OFF (SC_MONITORPOWER, then a +1/-1 mouse nudge); user direction
+#                                          2026-10-07 23:39Z in HPP-680: a display OFF is not a reason to stop the series
 # Exit code: 0 ON, 1 OFF, 2 DIMMED, 3 UNKNOWN (hold modes: the state at the end; --hold-until: 0).
 import ctypes, os, sys, time, datetime
 from ctypes import wintypes
@@ -137,8 +139,71 @@ def hold_until(stop, max_s):
     return 0
 
 
+class MOUSEINPUT(ctypes.Structure):
+    _fields_ = [('dx', ctypes.c_long), ('dy', ctypes.c_long), ('mouseData', wintypes.DWORD), ('dwFlags', wintypes.DWORD),
+                ('time', wintypes.DWORD), ('dwExtraInfo', ctypes.c_size_t)]
+
+class _INPUTU(ctypes.Union):
+    _fields_ = [('mi', MOUSEINPUT), ('_pad', ctypes.c_byte * 32)]
+
+class INPUT(ctypes.Structure):
+    _fields_ = [('type', wintypes.DWORD), ('u', _INPUTU)]
+
+user32.SendInput.argtypes = [ctypes.c_uint, ctypes.POINTER(INPUT), ctypes.c_int]
+user32.SendInput.restype = ctypes.c_uint
+user32.SendMessageTimeoutW.argtypes = [wintypes.HWND, ctypes.c_uint, WPARAM, LPARAM, ctypes.c_uint, ctypes.c_uint,
+                                       ctypes.POINTER(ctypes.c_size_t)]
+user32.SendMessageTimeoutW.restype = LRESULT
+
+HWND_BROADCAST = 0xFFFF
+WM_SYSCOMMAND = 0x0112
+SC_MONITORPOWER = 0xF170
+INPUT_MOUSE = 0
+MOUSEEVENTF_MOVE = 0x0001
+
+def nudge_mouse():
+    """A relative mouse move +1 then -1 pixel: the cursor ends where it was; wakes the display (user direction 2026-10-07,
+    HPP-680: a display OFF is not a reason to stop - wake it)."""
+    arr = (INPUT * 2)()
+    for i, d in enumerate((1, -1)):
+        arr[i].type = INPUT_MOUSE
+        arr[i].u.mi = MOUSEINPUT(d, 0, 0, MOUSEEVENTF_MOVE, 0, 0)
+    return user32.SendInput(2, arr, ctypes.sizeof(INPUT))
+
+def wake(wait_s=15.0):
+    """Wake the display: ES_DISPLAY_REQUIRED, SC_MONITORPOWER on, then a mouse nudge if still not ON; wait for ON up to wait_s.
+    Returns the exit code of the final state (0 ON)."""
+    hwnd = make_window()
+    if hwnd is None:
+        print('wake UNKNOWN no window/registration utc %s' % utc())
+        return 3
+    pump(1.0)
+    print('wake start dispstate %s idle_s %d utc %s' % (name_of(state['v']), idle_s(), utc()))
+    if state['v'] == 1:
+        print('wake not needed utc %s' % utc())
+        return 0
+    kernel32.SetThreadExecutionState(ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED)
+    res = ctypes.c_size_t(0)
+    user32.SendMessageTimeoutW(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, -1, 0x0002, 2000, ctypes.byref(res))
+    print('wake step SC_MONITORPOWER on utc %s' % utc())
+    pump(3.0)
+    if state['v'] != 1:
+        n = nudge_mouse()
+        print('wake step mouse nudge sent %d utc %s' % (n, utc()))
+    end = time.time() + wait_s
+    while time.time() < end and state['v'] != 1:
+        pump(0.5)
+    for t, v in state['events']:
+        print('event %s %s' % (t, name_of(v)))
+    last = name_of(state['v'])
+    print('wake end dispstate %s idle_s %d utc %s' % (last, idle_s(), utc()))
+    return CODES[last]
+
+
 def main(argv):
     hold = None
+    if argv[:1] == ['--wake']:
+        return wake()
     if len(argv) == 4 and argv[0] == '--hold-until' and argv[2] == '--max':
         return hold_until(argv[1], float(argv[3]))
     if len(argv) >= 2 and argv[0] == '--hold':

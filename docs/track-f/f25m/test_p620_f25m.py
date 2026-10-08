@@ -270,8 +270,13 @@ check('go: the request flags of item 620 (v)(1) named', 'ES_CONTINUOUS | ES_DISP
 DS_SRC = open(DSP).read()
 check('dispstate: the request ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED, reset ES_CONTINUOUS, no powercfg / no input',
       'SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED | ES_SYSTEM_REQUIRED)' in DS_SRC and
-      'SetThreadExecutionState(ES_CONTINUOUS)' in DS_SRC and 'powercfg' not in DS_SRC and 'SendInput' not in DS_SRC and
-      'keybd_event' not in DS_SRC and 'mouse_event' not in DS_SRC)
+      'SetThreadExecutionState(ES_CONTINUOUS)' in DS_SRC and 'powercfg' not in DS_SRC and
+      'keybd_event' not in DS_SRC and 'mouse_event' not in DS_SRC and
+      DS_SRC.count('SendInput(') == 1 and DS_SRC.find('SendInput(') > DS_SRC.find('def nudge_mouse') > 0)
+# user direction 2026-10-07 23:39Z (HPP-680): a display OFF is not a stop - the launcher wakes it (dispstate --wake) and checks again
+check('launch: wake on a display not ON, then the check again', LA.find('dispstate.py --wake') > LA.find('DS=$(python $G/dispstate.py)') > 0 and
+      LA.count('DS=$(python $G/dispstate.py)') == 2)
+check('dispstate: the mouse nudge is +1 then -1 (the cursor returns)', 'for i, d in enumerate((1, -1)):' in DS_SRC)
 j1 = LA.find('DS=$(python $G/dispstate.py)')
 check('launch: display check before the guard TAG line, exit 6, restoreA exempt', 0 < j1 < LA.find('guard_f25m.py tag $T') and
       'exit 6' in LA and '"$T" != restoreA' in LA)

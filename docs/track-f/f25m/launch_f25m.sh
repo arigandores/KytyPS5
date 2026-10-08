@@ -24,6 +24,12 @@ esac
 if [ "$T" != restoreA ] && [ "${F25M_DISP_SKIP:-}" != 1 ]; then
   DS=$(python $G/dispstate.py)
   if [ $? != 0 ]; then
+    # User direction 2026-10-07 23:39Z (HPP-680): a display OFF is not a reason to stop - wake it, then check again.
+    WS=$(python $G/dispstate.py --wake | tr '\n' ';')
+    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F25m launch_f25m display was $DS - wake: $(echo "$WS" | cut -c1-300)" >> "$TM"
+    DS=$(python $G/dispstate.py)
+  fi
+  if [ $? != 0 ]; then
     echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F25m launch_f25m display not ON (item 620 (g)(1)): $DS - $T not launched (not an attempt)" >> "$TM"
     echo "display not ON: $DS"; exit 6
   fi

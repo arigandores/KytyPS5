@@ -1,0 +1,22 @@
+2026-10-07T18:29:59Z F25m go_f25m b36_s0_r1 run check (item 587 (g)): RUN ALIVE 83a12174 status in_progress
+2026-10-07T18:30:00Z F25m go_f25m b36_s0_r1 display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-07T18:30:00Z
+2026-10-07T18:30:44Z F25m go_f25m b36_s0_r1 lock taken; level pot_treasure_cave; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-07T18:30:44Z F25m go_f25m b36_s0_r1 installed binary inside the lock before the tag: 3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5
+2026-10-07T18:30:47Z F25m go_f25m b36_s0_r1 reconcile (item 606 (v)(2)-(5)): RECONCILE EQUAL state B files 4808
+2026-10-07T18:30:47Z F25m go_f25m b36_s0_r1 snap/STATE B = B - no restore (the return after the last tag gave B)
+2026-10-07T18:30:50Z F25m go_f25m b36_s0_r1 manifest before: manifest C:/kyty/f287/f25m/runs/b36_s0_r1/manifest_before.tsv files 4808 bytes 1266177899 listsha 6e1b3b848731f16a77178d21047f478a1d596c68d006f19b04fe87b32f0cfa2c
+2026-10-07T18:30:50Z F25m go_f25m b36_s0_r1 caches before = snapshot B: manifest cmp EQUAL files 4808 listsha 6e1b3b848731f16a77178d21047f478a1d596c68d006f19b04fe87b32f0cfa2c
+2026-10-07T18:30:52Z F25m go_f25m b36_s0_r1 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (238/184/5/664/130/ MB)
+2026-10-07T18:30:52Z F25m go_f25m b36_s0_r1 installed the binary T2 copy for the tag: 9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885
+2026-10-07T18:30:52Z F25m go_f25m b36_s0_r1 enter_scene start (level pot_treasure_cave, SD 300, hold 150, --user-form no video, KYTY_LONGFRAME=1 KYTY_TEST_LOGSTALL=60:3000:3 KYTY_FIX_B36=0, M6 + calibration poller)
+2026-10-07T18:33:48Z F25m go_f25m b36_s0_r1 enter_scene rc 0; guard watch: 2026-10-07T18:33:48Z watch end, user process seen: no; M6: M6 end samples=91 foreign_max=5.59 foreign_mean=2.37 cal_lines=0
+2026-10-07T18:33:49Z F25m go_f25m b36_s0_r1 run: VERDICT: pot_treasure_cave in 14.3 s - PASS (acceptance <= 90 s)
+2026-10-07T18:33:49Z F25m go_f25m b36_s0_r1 log_b36_s0_r1.txt sha256 bc130df28a095bb0d5e0a63f61b4c8e0b574082ca2592ad2676356bf32cac9d2
+2026-10-07T18:33:49Z F25m go_f25m b36_s0_r1 installed binary returned from the pinned FS9 copy
+2026-10-07T18:33:50Z F25m go_f25m b36_s0_r1 installed binary after the tag: 3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5
+2026-10-07T18:33:53Z F25m go_f25m b36_s0_r1 manifest of the run state (before the return): manifest C:/kyty/f287/f25m/runs/b36_s0_r1/manifest_run.tsv files 4808 bytes 1266177899 listsha 6e1b3b848731f16a77178d21047f478a1d596c68d006f19b04fe87b32f0cfa2c; run vs before: manifest cmp EQUAL files 4808 listsha 6e1b3b848731f16a77178d21047f478a1d596c68d006f19b04fe87b32f0cfa2c
+2026-10-07T18:33:53Z F25m go_f25m b36_s0_r1 caches, seeds, saves and GLCache returned
+2026-10-07T18:33:56Z F25m go_f25m b36_s0_r1 manifest after: manifest C:/kyty/f287/f25m/runs/b36_s0_r1/manifest_after.tsv files 4808 bytes 1266177899 listsha 6e1b3b848731f16a77178d21047f478a1d596c68d006f19b04fe87b32f0cfa2c; cmp: manifest cmp EQUAL files 4808 listsha 6e1b3b848731f16a77178d21047f478a1d596c68d006f19b04fe87b32f0cfa2c
+2026-10-07T18:33:56Z F25m go_f25m b36_s0_r1 lock released (rc 0)
+2026-10-07T18:33:58Z F25m go_f25m b36_s0_r1 display after lock released (item 620 (g)(1)): dispstate ON idle_s 8 utc 2026-10-07T18:33:57Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-07T18:33:57Z; dispstate ON idle_s 8
+rc=0

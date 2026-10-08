@@ -1,0 +1,38 @@
+tag b36_k04 (form b36_k04, kind cold, level bonus_path_maker_mix, KYTY_FIX_B36=1)  reader sha256 5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8  f25_read sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf  theta 0.4562
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] theta_load from the seal (0.4562)
+    [ok] json binary_sha256 = T2 9745eb78 (9745eb7851d54174)
+    [ok] installed during the tag = T2 (9745eb7851d54174)
+    [ok] installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)
+    [ok] json prereg sha256 = seal sha256 (a59eccb99a437852 / a59eccb99a437852)
+    [ok] env = the form of the tag (exact)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl bonus_path_maker_mix (-lvl bonus_path_maker_mix; harness bonus_path_maker_mix)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] entry outcome ok (ok)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] caches before = snapshot of the form (manifest cmp EQUAL files 4790 listsha c83a3843ec65)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4790 listsha c8)
+    [ok] LogAsync: mode=1 line exactly once (['LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100'])
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0)
+    [ok] no TestLogStall line (0 / 0)
+    [ok] scene entered (first 166)
+    [ok] hold: scene >= 300 s (332.143 s) or GpuHangAbort after >= 10 s (None)
+    [ok] no death marker other than GpuHangAbort ([])
+    [ok] DiagB32 mode line once, no config invalid (1)
+    [ok] rep_drop 0 (0)
+  binary_sha256 9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885
+  LogAsync summary {'full_waits': 0, 'full_wait_us': 0, 'stalls': 0, 'stall_cut': 0, 'lines': 963077, 'bytes': 503588207, 'max_queued_bytes': 624795, 'sync_lines': 0, 'drain_timeouts': 0}; S (stall us >= 1 000 000) 0 (flush=1 0); stall lines 0, max us 0; LongFrame >= 1 s 0
+  scene: first_n 166, frames 16523, scene 332.1 s, hold True (abort hold False); DiagB32 lines 356; death []
+  K_I 0; K 0; K2 frames not attributed 0; in count 0; INSTR_MADE_K2 0; INSTR_POLL 0; POLL_UNKNOWN in count 0; FlipHold lines 1 (cap flip None); scene frames >= 1 s 0
+  hold class (longest frame in count): None; family None; form None; M6_BURST all None
+  U5 windows bad 0 []
+  REFERENCE: glitches 0, video index 16679, outcome ok, hold_exit None, hold_s 330.2, stable_s 12.4, sheet sheet: C:/kyty/f287/f25m/runs/b36_k04/sheet_b36_k04.png frames 16679 step 347 tiles 8x6
+  LONGFRAMEPRINTER (item 619 (b)(1)): its log_us / LogNs (role other) are not the frame holder's and not in the sum of log_us over threads (F25i RC4)
+  READING ADMITTED (no verdict; reading - F25n)

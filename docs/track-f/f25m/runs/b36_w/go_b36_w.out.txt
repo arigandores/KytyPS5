@@ -1,0 +1,22 @@
+2026-10-08T00:17:27Z F25m go_f25m b36_w run check (item 587 (g)): RUN ALIVE cf77b1a9 status in_progress
+2026-10-08T00:17:28Z F25m go_f25m b36_w display before the lock (item 620 (g)(1)): dispstate ON idle_s 2216 utc 2026-10-08T00:17:28Z
+2026-10-08T00:18:05Z F25m go_f25m b36_w lock taken; level underwater_aerial_garden; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-08T00:18:05Z F25m go_f25m b36_w installed binary inside the lock before the tag: 3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5
+2026-10-08T00:18:08Z F25m go_f25m b36_w reconcile (item 606 (v)(2)-(5)): RECONCILE EQUAL state B files 4808
+2026-10-08T00:18:08Z F25m go_f25m b36_w snap/STATE B = B - no restore (the return after the last tag gave B)
+2026-10-08T00:18:11Z F25m go_f25m b36_w manifest before: manifest C:/kyty/f287/f25m/runs/b36_w/manifest_before.tsv files 4808 bytes 1283570065 listsha 08d6578e5d558994a88553e30707524e8e4f83f89df93e705609d6677a44dc3f
+2026-10-08T00:18:11Z F25m go_f25m b36_w caches before = snapshot B: manifest cmp EQUAL files 4808 listsha 08d6578e5d558994a88553e30707524e8e4f83f89df93e705609d6677a44dc3f
+2026-10-08T00:18:13Z F25m go_f25m b36_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (255/184/5/664/130/ MB)
+2026-10-08T00:18:13Z F25m go_f25m b36_w installed the binary T2 copy for the tag: 9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885
+2026-10-08T00:18:13Z F25m go_f25m b36_w enter_scene start (level underwater_aerial_garden, SD 100, hold 310, harness form --emu-arg=--vulkan-validation --emu-arg=true, VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_FIX_B36=1, M6 + calibration poller)
+2026-10-08T00:24:02Z F25m go_f25m b36_w enter_scene rc 0; guard watch: 2026-10-08T00:24:02Z watch end, user process seen: no; M6: M6 end samples=258 foreign_max=2.11 foreign_mean=0.70 cal_lines=2658
+2026-10-08T00:24:02Z F25m go_f25m b36_w run: VERDICT: underwater_aerial_garden in 27.9 s - PASS (acceptance <= 90 s)
+2026-10-08T00:24:03Z F25m go_f25m b36_w log_b36_w.txt sha256 8989aed7e4f49f63e72fe594a111fe9e653fd47522628dd7f3d20da3bee6dd47
+2026-10-08T00:24:04Z F25m go_f25m b36_w installed binary returned from the pinned FS9 copy
+2026-10-08T00:24:04Z F25m go_f25m b36_w installed binary after the tag: 3861eeeae6f2487682b0519195c10d2b4d927029462e695f3634b5bdddea4eb5
+2026-10-08T00:24:07Z F25m go_f25m b36_w manifest of the run state (before the return): manifest C:/kyty/f287/f25m/runs/b36_w/manifest_run.tsv files 4808 bytes 1283570065 listsha 08d6578e5d558994a88553e30707524e8e4f83f89df93e705609d6677a44dc3f; run vs before: manifest cmp EQUAL files 4808 listsha 08d6578e5d558994a88553e30707524e8e4f83f89df93e705609d6677a44dc3f
+2026-10-08T00:24:08Z F25m go_f25m b36_w caches, seeds, saves and GLCache returned
+2026-10-08T00:24:11Z F25m go_f25m b36_w manifest after: manifest C:/kyty/f287/f25m/runs/b36_w/manifest_after.tsv files 4808 bytes 1283570065 listsha 08d6578e5d558994a88553e30707524e8e4f83f89df93e705609d6677a44dc3f; cmp: manifest cmp EQUAL files 4808 listsha 08d6578e5d558994a88553e30707524e8e4f83f89df93e705609d6677a44dc3f
+2026-10-08T00:24:11Z F25m go_f25m b36_w lock released (rc 0)
+2026-10-08T00:24:13Z F25m go_f25m b36_w display after lock released (item 620 (g)(1)): dispstate ON idle_s 2621 utc 2026-10-08T00:24:12Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-08T00:24:13Z; dispstate ON idle_s 2621
+rc=0

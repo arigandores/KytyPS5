@@ -1,3 +1,22 @@
 reader f25m_read.py sha256 5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8
 | tag | level | status | binary_sha256 | K | K_I | in count | INSTR_POLL | S | frames >= 1 s (scene / LongFrame) | full_waits | drain_timeouts | members | glitches |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| b36_f0_r1 | pot_t | ADMITTED | 9745eb78 | 0 | 0 | 3 | 0 | 0 | 3 / 3 | None | None | PASS | 0 |
+| b36_f1 | pot_t | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 3 | 0 / 0 | 0 | 0 | PASS | 0 |
+| b36_k01 | pot_t | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k02 | bonus | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k03 | pot_t | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k04 | bonus | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k05 | pot_t | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k06 | bonus | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k07 | pot_t | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k08 | bonus | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k09 | pot_t | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k10 | bonus | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k11 | pot_t | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k12 | pot_t | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_k13 | pot_t | ADMITTED | 9745eb78 | 0 | 0 | 0 | 0 | 0 | 0 / 0 | 0 | 0 | - | 0 |
+| b36_s0_r1 | pot_t | ADMITTED | 9745eb78 | - | - | - | - | 0 | - / 3 | None | None | PASS | None |
+| b36_s1_r1 | pot_t | ADMITTED | 9745eb78 | - | - | - | - | 3 | - / 0 | 0 | 0 | PASS | None |
+| b36_v | under | ADMITTED | 9745eb78 | - | - | - | - | 0 | - / 0 | 0 | 0 | PASS | 0 |
+| b36_w | under | ADMITTED | 9745eb78 | - | - | - | - | 0 | - / 0 | 0 | 0 | PASS | None |

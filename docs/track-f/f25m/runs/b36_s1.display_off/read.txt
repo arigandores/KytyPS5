@@ -1,0 +1,44 @@
+tag b36_s1 (form b36_s1, kind stand_user, level pot_treasure_cave, KYTY_FIX_B36=1)  reader sha256 5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8  f25_read sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf  theta 0.4562
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] theta_load from the seal (0.4562)
+    [ok] json binary_sha256 = T2 9745eb78 (9745eb7851d54174)
+    [ok] installed during the tag = T2 (9745eb7851d54174)
+    [ok] installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)
+    [ok] json prereg sha256 = seal sha256 (a59eccb99a437852 / a59eccb99a437852)
+    [ok] env = the form of the tag (exact)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl pot_treasure_cave (-lvl pot_treasure_cave; harness pot_treasure_cave)
+    [ok] hold option 150 s (150)
+    [ok] log present
+    [ok] entry outcome ok (ok)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] caches before = snapshot of the form (manifest cmp EQUAL files 4808 listsha 6e1b3b848731)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4808 listsha 6e)
+    [ok] LogAsync: mode=1 line exactly once (['LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100'])
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0)
+    [ok] TestLogStall config once: sleep_ms 3000, k 3, on=writer ([{'at_ms': 84636743, 'sleep_ms': 3000, 'k': 3, 'gap_ms': 5000, 'on': 'writer'}])
+    [ok] TestLogStall sleeps i=1,2,3, on=writer, slept_us >= 2 900 000 ([(1, 3000479, 'writer'), (2, 3000113, 'writer'), (3, 3000523, 'writer')]; bad 0)
+    [ok] hold >= 120 s, lived (hold_s 150.1, hold_exit None)
+    [ok] user form: 0 FrameTrace and 0 DiagB32 lines (0)
+    [ok] no death marker (log [], stdout [])
+  binary_sha256 9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885
+  LogAsync summary {'full_waits': 0, 'full_wait_us': 0, 'stalls': 3, 'stall_cut': 0, 'lines': 198277, 'bytes': 14631060, 'max_queued_bytes': 182371, 'sync_lines': 0, 'drain_timeouts': 0}; S (stall us >= 1 000 000) 3 (flush=1 0); stall lines 3, max us 3000550; LongFrame >= 1 s 0
+  SLEEP i 1 t0_ms 84636775 t1_ms 84639776 on writer tid 36216 role other line="? queue  = 0x00000040?? packet = 0x00000"
+  SLEEP i 2 t0_ms 84645008 t1_ms 84648008 on writer tid 36216 role other line="? queue  = 0x00000040?? packet = 0x00000"
+  SLEEP i 3 t0_ms 84653299 t1_ms 84656300 on writer tid 36216 role other line="? queue  = 0x00000040?? packet = 0x00000"
+  STAND b36_s1 PASS; exit gap 86443 ms; LongFrame 313 (>= 1 s 0, after the level line 0, max 767078); stall >= 2.9 s 3; full_waits 0
+    [ok] exit window: estimated exit 84744743 ms - (last t1_ms 84656300 + 2 000) = 86443 >= 250
+    [ok] 0 LongFrame lines dt_us >= 1 000 000 in the whole log (0; executor variant after the level line: 0)
+    [ok] >= 3 LogAsync: stall lines us >= 2 900 000 (3)
+    [ok] full_waits 0 (summary field: 0)
+    sleep 1 window [84634775, 84641776] hits []
+    sleep 2 window [84643008, 84650008] hits []
+    sleep 3 window [84651299, 84658300] hits []
+  REFERENCE: glitches None, video index None, outcome ok, hold_exit None, hold_s 150.1, stable_s 17.9, sheet None
+  LONGFRAMEPRINTER (item 619 (b)(1)): its log_us / LogNs (role other) are not the frame holder's and not in the sum of log_us over threads (F25i RC4)
+  READING ADMITTED (no verdict; reading - F25n)

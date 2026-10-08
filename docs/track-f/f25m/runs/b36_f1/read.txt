@@ -1,0 +1,47 @@
+tag b36_f1 (form b36_f1, kind stand_harness, level pot_treasure_cave, KYTY_FIX_B36=1)  reader sha256 5e3645e6046d2b9764f2244908fb1be790c33989e16e8787a6cdb2026e4ff9f8  f25_read sha256 933f36c1f63bbb3159144e1a7ca7395dc000234d6dc3be27349e40b2ff902ddf  theta 0.4562
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] theta_load from the seal (0.4562)
+    [ok] json binary_sha256 = T2 9745eb78 (9745eb7851d54174)
+    [ok] installed during the tag = T2 (9745eb7851d54174)
+    [ok] installed before = after = FS9 3861eeea (3861eeeae6f24876 / 3861eeeae6f24876)
+    [ok] json prereg sha256 = seal sha256 (a59eccb99a437852 / a59eccb99a437852)
+    [ok] env = the form of the tag (exact)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl pot_treasure_cave (-lvl pot_treasure_cave; harness pot_treasure_cave)
+    [ok] hold option 150 s (150)
+    [ok] log present
+    [ok] entry outcome ok (ok)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] caches before = snapshot of the form (manifest cmp EQUAL files 4808 listsha 08d6578e5d55)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4808 listsha 08)
+    [ok] LogAsync: mode=1 line exactly once (['LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100'])
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0)
+    [ok] TestLogStall config once: sleep_ms 3000, k 3, on=writer ([{'at_ms': 106782080, 'sleep_ms': 3000, 'k': 3, 'gap_ms': 5000, 'on': 'writer'}])
+    [ok] TestLogStall sleeps i=1,2,3, on=writer, slept_us >= 2 900 000 ([(1, 3000198, 'writer'), (2, 3000465, 'writer'), (3, 3000374, 'writer')]; bad 0)
+    [ok] scene entered and scene >= 120 s (first 190, 153.178 s)
+    [ok] no death marker (log [], stdout [])
+    [ok] DiagB32 mode line once (1)
+  binary_sha256 9745eb7851d541740ce9730b86258f7bb26cab270f0d35434d43037c5cefd885
+  LogAsync summary {'full_waits': 0, 'full_wait_us': 0, 'stalls': 3, 'stall_cut': 0, 'lines': 596547, 'bytes': 268075545, 'max_queued_bytes': 5078175, 'sync_lines': 0, 'drain_timeouts': 0}; S (stall us >= 1 000 000) 3 (flush=1 0); stall lines 3, max us 3000476; LongFrame >= 1 s 0
+  SLEEP i 1 t0_ms 106782087 t1_ms 106785087 on writer tid 25512 role other line="? queue  = 0x00000040?? packet = 0x00000"
+  SLEEP i 2 t0_ms 106790089 t1_ms 106793089 on writer tid 25512 role other line="FrameTrace: n=3232 dt_us=14300 lat_us=11"
+  SLEEP i 3 t0_ms 106798090 t1_ms 106801090 on writer tid 25512 role other line="FrameTrace: n=3689 dt_us=17495 lat_us=14"
+  STAND b36_f1 PASS; exit gap 82890 ms; LongFrame 1 (>= 1 s 0, after the level line 0, max 149334); stall >= 2.9 s 3; full_waits 0
+    [ok] exit window: estimated exit 106885980 ms - (last t1_ms 106801090 + 2 000) = 82890 >= 250
+    [ok] 0 scene frames dt_us >= 1 000 000 (0 []; executor variant LongFrame >= 1 s whole log: 0)
+    sleep 1 window [106780087, 106787087] hits []
+    sleep 2 window [106788089, 106795089] hits []
+    sleep 3 window [106796090, 106803090] hits []
+    scene frames >= 1 s 0 []; LongFrame / FrameTrace dt cross-check {'pairs': 1, 'max_abs_diff_us': 2}
+  scene: first_n 190, frames 8503, scene 153.2 s, hold False (abort hold False); DiagB32 lines 210; death []
+  K_I 0; K 0; K2 frames not attributed 0; in count 0; INSTR_MADE_K2 0; INSTR_POLL 0; POLL_UNKNOWN in count 0; FlipHold lines 0 (cap flip None); scene frames >= 1 s 0
+  hold class (longest frame in count): None; family None; form None; M6_BURST all None
+  U5 windows bad 0 []
+  REFERENCE: glitches 0, video index 8704, outcome ok, hold_exit None, hold_s 150.0, stable_s 13.9, sheet sheet: C:/kyty/f287/f25m/runs/b36_f1/sheet_b36_f1.png frames 8704 step 181 tiles 8x6
+  LONGFRAMEPRINTER (item 619 (b)(1)): its log_us / LogNs (role other) are not the frame holder's and not in the sum of log_us over threads (F25i RC4)
+  READING ADMITTED (no verdict; reading - F25n)

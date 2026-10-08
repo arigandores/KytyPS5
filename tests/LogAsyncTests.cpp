@@ -445,9 +445,13 @@ void TestSeq0() {
 	CHECK(StartsWith(f1, "LogAsync: mode=1 limit_bytes=268435456"));
 	CHECK(f1.find("LogAsync: full_waits=0 ") != std::string::npos);
 	CHECK(WithoutPrefix(f1, "LogAsync:") == expected);
-	Case("seq0_unset: KYTY_FIX_B36 unset - the file equals the =0 file");
+	// Track F, FS10a (HPP-684, ROADMAP s122 item 624(e)(1)): KYTY_FIX_B36 is ON by default - unset is =1.
+	Case("seq0_unset: KYTY_FIX_B36 unset - default ON since FS10a - checked as seq0_1");
 	Spawn("seq0", Path("seq0_u"), 0, nullptr, nullptr);
-	CHECK(ReadFile(Path("seq0_u")) == f0);
+	const auto fu = ReadFile(Path("seq0_u"));
+	CHECK(StartsWith(fu, "LogAsync: mode=1 limit_bytes=268435456"));
+	CHECK(fu.find("LogAsync: full_waits=0 ") != std::string::npos);
+	CHECK(WithoutPrefix(fu, "LogAsync:") == expected);
 }
 
 void TestOrder() {

@@ -730,7 +730,12 @@ void WriteFatal(fmt::text_style style, std::string_view text) {
 // (Log::Initialize runs on the main thread from Emulator::Init, before the guest and the host threads start).
 static void InitAsync() {
 	const auto init_ns   = Async::NowNs();
-	const bool requested = Common::EnvFlagOn("KYTY_FIX_B36");
+	// Track F, FS10a (HPP-684, ROADMAP s122 item 624(e)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
+	// other value as EnvValueOn (the form of FS4a 17adaf80); read once, here.
+	const bool requested = [] {
+		const char* value = std::getenv("KYTY_FIX_B36");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	Async::ParseStand(init_ns);
 	Async::g_on    = requested && g_direction == Direction::File && g_logger != nullptr;
 	Async::g_hooks = Async::g_on || Async::g_stand.armed;

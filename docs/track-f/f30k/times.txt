@@ -1,0 +1,8 @@
+2026-10-09 07:17:49 UTC start F30k HPP-721 (lock absent, STOP absent); rule30 API: HPP-716 FS11c in_progress executionRunId 738f7ce3 (Harness Engineer series) - no command > 60 s until it ends
+2026-10-09 07:28:48 UTC code commit main 11236f5a (lock released 07:28:40 UTC by poll); gate order main clean
+2026-10-09 07:41:26 UTC FS11c tags fs11_v/fs11_w/fs11_z logs present, lock released 07:40:52 UTC (poll) - series tags done; worktree T2 create start
+2026-10-09 07:41:50 UTC worktree T2 HEAD 6fbdcf67 = a1d1d863 + cherry-pick 11236f5a; gate order wt clean; configure+build start
+2026-10-09 07:44:03 UTC binary T2 built and copied (see binary_f30k.txt)
+2026-10-09 07:44:13 UTC tests build+run start (T2 build C:/kyty/f287/f30k/build)
+2026-10-09 07:44:51 UTC tests done rc=0 (133 tests, list compared to F29c baseline)
+2026-10-09 07:46:11 UTC report written; copy to docs/track-f, FACTS section F30k

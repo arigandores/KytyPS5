@@ -1,0 +1,65 @@
+== commit 11236f5a
+PASS C1 knob row {"KYTY_RT_SKIP", "rtskip", 1, 5} once, no 1..4 row
+PASS C2 code lines = parent + 24 counter lines + 4 xsrc lines + 4 modified lines (signature, two calls, PB item 6)
+PASS C3 one test of t_rts against 5, in PB item 6 (line [3734])
+PASS C3b the skip stays at value 1 only (2 tests t_rts == 1)
+PASS C3c t_rts != 4 once, t_rts != 3 once (PB 3-4, PA 3 unchanged)
+PASS C4 eight counters once each in RtsReport after the race filter and rts_bad_rx
+PASS C4b two RtsReport calls (place A, post): ['RtsReport(bits, m_context.GetGpu().GetFrameNum(), rec->age, state.color_count,', 'RtsReport(bits, m_context.GetGpu().GetFrameNum(), rec->age, cc, hd, xsrc);']
+PASS C4c each xsrc bit set right after a bits |= 0x020u (lines [3828, 3833, 3839])
+PASS C5 enum: the eight counters after RtsBadRx in order
+PASS C6 FrameTrace-x table: eight rows once each, after rts_bad_rx
+PASS C7 files of the commit: ['src/common/frameStats.h', 'src/common/gates.cpp', 'src/common/gates.h', 'src/graphics/host_gpu/renderer/renderDraw.cpp', 'src/graphics/presentation/videoOut.cpp']
+PASS C8 nothing under src/graphics/shader (translation signature)
+== commit 6fbdcf67
+PASS C1 knob row {"KYTY_RT_SKIP", "rtskip", 1, 5} once, no 1..4 row
+PASS C2 code lines = parent + 24 counter lines + 4 xsrc lines + 4 modified lines (signature, two calls, PB item 6)
+PASS C3 one test of t_rts against 5, in PB item 6 (line [3705])
+PASS C3b the skip stays at value 1 only (2 tests t_rts == 1)
+PASS C3c t_rts != 4 once, t_rts != 3 once (PB 3-4, PA 3 unchanged)
+PASS C4 eight counters once each in RtsReport after the race filter and rts_bad_rx
+PASS C4b two RtsReport calls (place A, post): ['RtsReport(bits, m_context.GetGpu().GetFrameNum(), rec->age, state.color_count,', 'RtsReport(bits, m_context.GetGpu().GetFrameNum(), rec->age, cc, hd, xsrc);']
+PASS C4c each xsrc bit set right after a bits |= 0x020u (lines [3799, 3804, 3810])
+PASS C5 enum: the eight counters after RtsBadRx in order
+PASS C6 FrameTrace-x table: eight rows once each, after rts_bad_rx
+PASS C7 files of the commit: ['src/common/frameStats.h', 'src/common/gates.cpp', 'src/common/gates.h', 'src/graphics/host_gpu/renderer/renderDraw.cpp', 'src/graphics/presentation/videoOut.cpp']
+PASS C8 nothing under src/graphics/shader (translation signature)
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:2142
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:2148
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:2196
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:2205
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:2256
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:2277
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:2278
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:2291
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:2312
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3493
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3501
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3637
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3690
+PASS R a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3694
+PASS R a1d1d863:src/graphics/host_gpu/renderer/image/image.cpp:204
+PASS R a1d1d863:src/graphics/host_gpu/renderer/image/image.cpp:217
+PASS R a1d1d863:src/graphics/host_gpu/renderer/image/image.cpp:237
+PASS R a1d1d863:src/graphics/host_gpu/renderer/image/image.cpp:270
+PASS R a1d1d863:src/graphics/host_gpu/renderer/image/image.cpp:278
+PASS R a1d1d863:src/graphics/host_gpu/renderer/image/image.cpp:283
+PASS R a1d1d863:src/graphics/host_gpu/vma.cpp:402
+PASS R a1d1d863:src/graphics/host_gpu/vma.cpp:456
+PASS R a1d1d863:src/graphics/host_gpu/renderer/cache/textureCache.cpp:499
+PASS R a1d1d863:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3200
+PASS R a1d1d863:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3394
+PASS R a1d1d863:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3824
+PASS R a1d1d863:src/graphics/host_gpu/renderer/image/image.h:153
+PASS R a1d1d863:src/graphics/host_gpu/renderer/render.h:147
+PASS R a1d1d863:src/graphics/host_gpu/renderer/context.cpp:325
+PASS R a11007d7:docs/track-f/f30h.md:146
+PASS R 11236f5a:src/common/gates.cpp:438
+PASS R 11236f5a:src/graphics/host_gpu/renderer/renderDraw.cpp:3734
+PASS R 11236f5a:src/graphics/host_gpu/renderer/renderDraw.cpp:1611
+PASS R 11236f5a:src/graphics/host_gpu/renderer/renderDraw.cpp:3817
+PASS R 11236f5a:src/common/frameStats.h:2490
+PASS R 11236f5a:src/graphics/presentation/videoOut.cpp:3258
+PASS N1 negative control (line + 1) fails
+PASS N2 negative control (anchor with a changed character) fails
+ALL OK

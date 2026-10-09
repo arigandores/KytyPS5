@@ -1,0 +1,6 @@
+regress f29e_read.py sha256 c739282671038419f69a597107ac4bddd0d6e467c208ca330a0436201521b853
+fs10_v as b12_v: members NO ['FixB12: mode=1 (every line) before the first GuestOut ([]; b']; FixB12Stat lines 0 bad 0 -> as expected
+  info {"first_scene_n": 200, "frames_ge1s": 0, "frames_ge1s_with_first": 0, "hold_s": 334.3, "max_dt": 168052, "mean_dt_us": 33202.0, "scene_frames": 10069, "summary": {"bytes": 335832895, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 891309, "max_queued_bytes": 41944, "stall_cut": 0, "stalls": 0, "sync_lines": 0}}
+fs10_w as b12_w: members NO ['FixB12: mode=1 (every line) before the first GuestOut ([]; b']; FixB12Stat lines 0 bad 0 -> as expected
+  info {"frames_ge1s_report": 0, "mean_dt_us": 130212.0, "scene_frames": 2488, "summary": {"bytes": 395563880, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 1312996, "max_queued_bytes": 72988, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "vkw": 922165}
+ALL OK

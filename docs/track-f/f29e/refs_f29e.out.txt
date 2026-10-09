@@ -1,0 +1,17 @@
+OK   87dafe31:docs/ROADMAP.md:23939 anchor 639. **\u0417\u0432\u0435\u043d\u043e F29b \u0442\u0440\u043
+OK   87dafe31:docs/ROADMAP.md:23950 anchor (4) **\u0422\u0435\u0433\u0438 \u043f\u043e\u0434 \u0437\u04
+OK   87dafe31:docs/ROADMAP.md:23951 anchor **\u0427\u0442\u0435\u043d\u0438\u0435:** (1)\u2013(4) \u043
+OK   87dafe31:docs/ROADMAP.md:23955 anchor (\u043a) **\u041d\u0435 \u0437\u0430\u044f\u0432\u043b\u044f
+OK   87dafe31:docs/ROADMAP.md:24000 anchor 645. **\u0417\u0432\u0435\u043d\u043e F29d \u0442\u0440\u043
+OK   87dafe31:docs/ROADMAP.md:24002 anchor (\u0430) **\u041f\u0440\u0438\u0451\u043c\u043a\u0430.** \u0
+OK   87dafe31:docs/ROADMAP.md:24014 anchor (\u0436) **\u041d\u0435 \u0437\u0430\u044f\u0432\u043b\u044f
+OK   87dafe31:docs/ROADMAP.md:24015 anchor 646. **\u0417\u0432\u0435\u043d\u043e F29c3 \u0442\u0440\u04
+OK   87dafe31:docs/ROADMAP.md:24023 anchor (\u0433) **\u041f\u043e\u0440\u044f\u0434\u043e\u043a.** \u0
+OK   87dafe31:docs/ROADMAP.md:24025 anchor (\u0434) **\u041d\u0435 \u0437\u0430\u044f\u0432\u043b\u044f
+OK   c7d0c857:docs/track-f/f29c.md:385 anchor - **sha256 `cabbd818397a8a299e7e64cf2d153197ad7e69e310015b5d
+OK   726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:605 anchor LOGF("FixB12: mode=%d
+OK   726e751e:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3497 anchor LOGF("FixB12Stat: passes=%llu rewalk=%llu rwd=%llu lskip=%ll
+OK   18e339db:docs/track-f/fs10c.md:70 anchor | `fs10_v` | `fs9_v`:
+negative control (line + 1): FAILED as expected
+REFS 14, mismatches 0
+ALL OK

@@ -1,0 +1,17 @@
+suite test_f30m_read.py sha256 c716eb5a5d2b03a93f1c50fcb1e1f1bc4d14b21a0c97e652e59e4e2729967b5c target f30m_read.py sha256 1beb2b525d719e84c3d29613fa25b0c1b40d082308192915dde19d278fd32148
+FAIL clean c5: T is the last line, distance 0, tail deviations 0 None
+FAIL item 662: chk_b event open on the last 1 lines (process chk_b = pb + 1) - parse YES, RC1 YES, ADMITTED, distance 1 (None)
+FAIL item 662: chk_b event open on the last 2 lines (process chk_b = pb + 1) - parse YES, RC1 YES, ADMITTED, distance 2 (None)
+FAIL item 662: chk_b event open on the last 3 lines (process chk_b = pb + 1) - parse YES, RC1 YES, ADMITTED, distance 3 (None)
+FAIL item 662: chk_b event open on the last 4 lines - parse NO, RC1 NO, NOT_ADMITTED and STOP (distance None)
+FAIL item 662: pb ahead on the last 3 lines - ADMITTED
+FAIL item 662: chk/pa event open on the last 3 lines - ADMITTED
+FAIL item 662: tail deviation 4 on the last 2 lines - ADMITTED (tail None)
+FAIL item 662 (b): rts_skip 1 on the tail line after T (T distance 1) - RC1 NO by the process sum (T None)
+FAIL item 662: chk < chk_b at T, process chk >= chk_b - RC1 NO (at T)
+FAIL item 662 (b): chk >= chk_b at T, process chk < chk_b - RC1 NO (process)
+FAIL item 662 (v)(1): rx one event ahead of b on the last 3 lines - T distance 3, parse YES, RC1 YES (None)
+FAIL item 662 (v)(1): rx one event ahead of b on the last 4 lines - T distance 4, parse NO, RC1 NO (None)
+FAIL item 662: event torn in the tail and closed at the last line - T last, distance 0, tail deviations 0 (None)
+FAIL --json onto the run json of the tag - refused (rc 2), the run json unchanged
+checks 284 failed 15

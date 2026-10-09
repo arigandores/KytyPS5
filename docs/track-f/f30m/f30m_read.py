@@ -22,9 +22,12 @@ ADMISSION (any member NO - NOT_ADMITTED with the reason; the first failed harnes
            line 'version: Fork build arigandores/KytyPS5 6fbdcf6'; the version string -1907-g6fbdcf67 in the pinned copy of sha T2; every log
            line carrying a version string 'KytyPS5-20..' carries exactly KytyPS5-2026-09-15-6a2987a-1907-g6fbdcf67 (none - vacuous).
   RC4 (F30f) / RC2 (F30l): every FrameTrace-x line carries every field of REQ incl. the 8 bit counters - else NOT_ADMITTED 'missing field'.
-  parse    item 651 (b) as F30f: process rts_chk = rts_pa, rts_chk_b = rts_pb, rts_bad_rx <= rts_bad_b <= rts_bad; prefix sums within PRE_TOL = 4 events at every line
-           (item 659 (v), was 1); reference - lines with deviation >= 2 per pair.
-  RC1 (F30l, every tag): process rts_skip = 0 and rts_chk >= rts_chk_b = rts_pb >= 1.
+  parse    item 651 (b) as F30f with item 662 (v): the closing point T = the last FrameTrace-x line with every prefix deviation 0 and
+           rx <= b <= bad without tolerance, at most CLOSE_MAX = 3 FrameTrace-x lines from the last one (none or farther - NO); at T
+           rts_chk = rts_pa, rts_chk_b = rts_pb, rts_bad_rx <= rts_bad_b <= rts_bad exactly; prefix sums within PRE_TOL = 4 events at
+           every line incl. the tail after T (item 659 (v), was 1); reference - lines with deviation >= 2 per pair, T, distance, tail.
+  RC1 (F30l, every tag): at T rts_skip = 0 and rts_chk >= rts_chk_b = rts_pb >= 1 (item 662 (v)(3)); process rts_skip = 0 and
+           rts_chk >= rts_chk_b (item 662 (b)).
   RC2 (F30l, every tag), process sums: exact - each of the 8 <= rts_bad_b <= rts_bad; rts_bad_r <= rts_bad_rx; rts_bad_xr, _xc, _xe <=
            rts_bad_rx; with 1 of tolerance - rts_bad_rx <= r + xr + xc + xe + 1; rts_bad_b <= sum of the 8 + 1.  Per line - reference.
   RC4 (F30l): at =5, =2, =4 (c5, cy_v, cy_c4) process rts_bad_noreg = rts_bad.
@@ -90,6 +93,7 @@ MIN_BLOCKS = 3
 OLD_SHARE = 0.9
 LINES_MAX = 40
 PRE_TOL = 4   # item 659 (v): prefix sums within 4 events (was 1, item 651 (b)(2))
+CLOSE_MAX = 3   # item 662 (v)(2): the closing point T at most 3 FrameTrace-x lines from the last one
 TOL8 = 1     # RC2 of F30l: a report torn by the last flip of the process
 BITS8 = ('rts_bad_r', 'rts_bad_xr', 'rts_bad_xc', 'rts_bad_xe', 'rts_bad_s', 'rts_bad_p', 'rts_bad_m', 'rts_bad_l')
 KB7 = BITS8[:7]   # item 655 (zh)(1): L is a reference
@@ -192,7 +196,9 @@ def scan(path, level, legacy=False):
     r = dict(entry_ln=None, first_guest_ln=None, modes=[], refused=0, gates=[], mm=[], mm_bad=0, verify=0, proc=new_sums(),
              win=new_sums(), x_lines=0, x_win=0, x_missing=0, x_missing_names=[], x_dup=0, x_prefixed=0, draw_win=0, draw_lines=0,
              bda_win=[], bda_missing=0, chkb_by_n={}, id_pa=0, id_pb=0, id_rx=0, id8_lines=0, ineq_lines=0, pre_viol=0, pre_first=None,
-             pre_viol_rx=0, maxdev=dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0), dev2=dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0), ft_last_n=None, input_max=None, input_lines=0, b42=[],
+             pre_viol_rx=0, maxdev=dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0), dev2=dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0),
+             x_full=0, close_idx=None, close_ln=None, close_sums=None, close_dist=None, tail_dev=dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0),
+             ft_last_n=None, input_max=None, input_lines=0, b42=[],
              death=[], minimized=0, recovering=0, winev={}, sig=[], variant_dir=[], gamepatch=0, diagb32=0, stall_lines=0, fork=[],
              ver_any=0, ver_bad=0, summary=[], summary_bad=0, lines=0)
     lvl = ('GuestOut: Level has started: %s' % level).encode()
@@ -253,6 +259,19 @@ def scan(path, level, legacy=False):
                 r['pre_viol_rx'] += 1
                 if r['pre_first'] is None:
                     r['pre_first'] = ln
+            r['x_full'] += 1
+            if pre['c'] == pre['a'] and pre['cb'] == pre['b'] and pre['rx'] <= pre['bb'] <= pre['bad']:
+                # item 662 (v)(1): the closing point T - every prefix deviation 0, rx <= b <= bad without tolerance
+                r['close_idx'] = r['x_full']
+                r['close_ln'] = ln
+                r['close_sums'] = dict(r['proc'])
+                r['tail_dev'] = dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0)
+            else:
+                td = r['tail_dev']
+                td['chk_pa'] = max(td['chk_pa'], abs(pre['c'] - pre['a']))
+                td['chkb_pb'] = max(td['chkb_pb'], abs(pre['cb'] - pre['b']))
+                td['rx_b'] = max(td['rx_b'], pre['rx'] - pre['bb'])
+                td['b_bad'] = max(td['b_bad'], pre['bb'] - pre['bad'])
             if got['rts_chk'] != got['rts_pa']:
                 r['id_pa'] += 1
             if got['rts_chk_b'] != got['rts_pb']:
@@ -367,6 +386,8 @@ def scan(path, level, legacy=False):
             if k == 'minimized':
                 r['minimized'] += 1
     r['lines'] = ln
+    if r['close_idx'] is not None:
+        r['close_dist'] = r['x_full'] - r['close_idx']
     fh.close()
     return r
 
@@ -628,28 +649,46 @@ def read_tag(tag, p, legacy=False):
                'than -1907-g6fbdcf67 %d' % ((lsha or '-')[:16], (jbin or '-')[:16], x['fork'], bin_ver, x['ver_any'], x['ver_bad']), d7),
               ('RC4 (F30f) / RC2 (F30l) every FrameTrace-x line carries every field of REQ incl. the 8 bit counters (lines %d, missing %d %s) '
                '- else missing field' % (x['x_lines'], x['x_missing'], x['x_missing_names'][:3]), x['x_missing'] == 0 and x['x_lines'] > 0)]
-        ident_ok = (P['rts_chk'] == P['rts_pa'] and P['rts_chk_b'] == P['rts_pb'] and P['rts_bad_rx'] <= P['rts_bad_b'] <= P['rts_bad']
+        # item 662 (v): the exact members of item 651 (b)(1) and RC1 of F30l read at the closing point T (sums up to T inclusive);
+        # T at most CLOSE_MAX FrameTrace-x lines from the last one; the tail after T - by the prefix tolerance of item 659 (v)
+        PT = x['close_sums']
+        cdist = x['close_dist']
+        close_ok = PT is not None and cdist is not None and cdist <= CLOSE_MAX
+        PTs = PT if PT is not None else new_sums()
+        ident_ok = (close_ok and PTs['rts_chk'] == PTs['rts_pa'] and PTs['rts_chk_b'] == PTs['rts_pb']
+                    and PTs['rts_bad_rx'] <= PTs['rts_bad_b'] <= PTs['rts_bad']
                     and x['pre_viol'] == 0 and x['pre_viol_rx'] == 0)
+        close_txt = ('closing point T (item 662): FrameTrace-x line %s of %d (log line %s), distance to the last %s <= %d; sums at T chk %d '
+                     '/ pa %d, chk_b %d / pb %d, rx %d <= b %d <= bad %d; tail deviations %s' % (
+                         x['close_idx'], x['x_full'], x['close_ln'], cdist, CLOSE_MAX, PTs['rts_chk'], PTs['rts_pa'], PTs['rts_chk_b'],
+                         PTs['rts_pb'], PTs['rts_bad_rx'], PTs['rts_bad_b'], PTs['rts_bad'], json.dumps(x['tail_dev'], sort_keys=True)))
         if not ident_ok:
-            stop.append('parse identity of item 651 (b) broken (sums chk %d / pa %d, chk_b %d / pb %d, rx %d <= b %d <= bad %d; prefix '
-                        'violations %d / %d; max deviation %s) - NOT_ADMITTED and series stop, item 651 (v)' % (
+            stop.append('parse identity of item 651 (b) broken (%s%s; process sums chk %d / pa %d, chk_b %d / pb %d, rx %d <= b %d <= bad %d; '
+                        'prefix violations %d / %d; max deviation %s) - NOT_ADMITTED and series stop, item 651 (v)' % (
+                            close_txt, '' if close_ok else ' - NO T within the distance',
                             P['rts_chk'], P['rts_pa'], P['rts_chk_b'], P['rts_pb'], P['rts_bad_rx'], P['rts_bad_b'], P['rts_bad'],
                             x['pre_viol'], x['pre_viol_rx'], x['maxdev']))
         parse_ok = (ident_ok and P['rts_chk_b'] <= P['rts_chk'] <= P['rts_n']
                     and P['rts_bad_noreg'] <= P['rts_bad']
                     and x['verify'] <= min(LINES_MAX, P['rts_bad']) and x['mm_bad'] == 0 and x['x_dup'] == 0)
-        d.append(('parse [identity of the parse, RC7]: process rts_chk %d = rts_pa %d, rts_chk_b %d = rts_pb %d, rts_bad_rx %d <= rts_bad_b '
-                  '%d <= rts_bad %d; prefix sums within %d events at every line (item 659 (v)) (chk/pa, chk_b/pb %d; rx/b/bad %d; first line %s); chk_b <= chk '
+        d.append(('parse [identity of the parse, RC7]: %s - %s; at T rts_chk = rts_pa, rts_chk_b = rts_pb, rts_bad_rx <= rts_bad_b <= rts_bad '
+                  '(item 662 (v)(3)); process (reference) rts_chk %d / rts_pa %d, rts_chk_b %d / rts_pb %d, rts_bad_rx %d / rts_bad_b '
+                  '%d / rts_bad %d; prefix sums within %d events at every line incl. the tail (item 659 (v), 662 (v)(4)) (chk/pa, chk_b/pb %d; rx/b/bad %d; first line %s); chk_b <= chk '
                   '<= n %d, noreg %d <= bad; RtSkipVerify lines %d <= min(40, bad); unparsable %d; duplicate fields %d; letter rows (per line, '
                   'reference - the flip tears one event): chk!=pa %d, chk_b!=pb %d, rx<=b<=bad broken %d; max prefix deviation %s; lines with '
                   'prefix deviation >= 2 (item 659 (v), reference) %s' % (
+                      close_txt, 'ok' if close_ok else 'NO',
                       P['rts_chk'], P['rts_pa'], P['rts_chk_b'], P['rts_pb'], P['rts_bad_rx'], P['rts_bad_b'], P['rts_bad'], PRE_TOL,
                       x['pre_viol'], x['pre_viol_rx'], x['pre_first'], P['rts_n'], P['rts_bad_noreg'], x['verify'], x['mm_bad'], x['x_dup'],
                       x['id_pa'], x['id_pb'], x['id_rx'], json.dumps(x['maxdev'], sort_keys=True),
                       json.dumps(x['dev2'], sort_keys=True)), parse_ok))
-        rc1 = P['rts_skip'] == 0 and P['rts_chk'] >= P['rts_chk_b'] and P['rts_chk_b'] == P['rts_pb'] and P['rts_pb'] >= 1
-        d.append(('RC1 (F30l): process rts_skip %d = 0 and rts_chk %d >= rts_chk_b %d = rts_pb %d >= 1' % (
-            P['rts_skip'], P['rts_chk'], P['rts_chk_b'], P['rts_pb']), rc1))
+        # item 662 (v)(3): RC1 at T exactly; item 662 (b): rts_skip = 0 and chk >= chk_b also on the process sums
+        rc1 = (close_ok and PTs['rts_skip'] == 0 and PTs['rts_chk'] >= PTs['rts_chk_b'] and PTs['rts_chk_b'] == PTs['rts_pb']
+               and PTs['rts_pb'] >= 1 and P['rts_skip'] == 0 and P['rts_chk'] >= P['rts_chk_b'])
+        d.append(('RC1 (F30l): at T (item 662: line %s, distance %s <= %d) rts_skip %d = 0 and rts_chk %d >= rts_chk_b %d = rts_pb %d >= 1; '
+                  'process rts_skip %d = 0 and rts_chk %d >= rts_chk_b %d (process rts_pb %d - reference)' % (
+                      x['close_idx'], cdist, CLOSE_MAX, PTs['rts_skip'], PTs['rts_chk'], PTs['rts_chk_b'], PTs['rts_pb'],
+                      P['rts_skip'], P['rts_chk'], P['rts_chk_b'], P['rts_pb']), rc1))
         r2, r2e, r2t, r2s = rc2_ok(P)
         d.append(('RC2 (F30l): exact - each of the 8 <= rts_bad_b %d <= rts_bad %d, rts_bad_r %d <= rts_bad_rx %d, xr %d / xc %d / xe %d <= '
                   'rts_bad_rx (%s); with 1 of tolerance - rts_bad_rx <= r+xr+xc+xe + 1, rts_bad_b <= sum8 + 1 (%s) [%s; per line '
@@ -744,7 +783,8 @@ def read_tag(tag, p, legacy=False):
                       win_s=win_s, lines=X.get('lines'), death=(X.get('death') or []) + sdth, video_index=idx_n, glitches=gl,
                       fork=X.get('fork'), x_prefixed=X.get('x_prefixed'), ineq_lines=X.get('ineq_lines'), ft_last_n=X.get('ft_last_n'),
                       input_lines=X.get('input_lines'), input_max=X.get('input_max'), prefix_maxdev=X.get('maxdev'),
-                      prefix_dev2=X.get('dev2'))
+                      prefix_dev2=X.get('dev2'), close_idx=X.get('close_idx'), close_ln=X.get('close_ln'), close_dist=X.get('close_dist'),
+                      x_full=X.get('x_full'), tail_dev=X.get('tail_dev'))
     if x is not None:
         P, W = x['proc'], x['win']
         res['proc'] = dict(P)
@@ -923,6 +963,10 @@ def main(argv):
             print('usage: f30m_read.py <tag> | --dir D --tag T | --table')
             return 2
         p = paths(tag)
+    if js and p.get('run') and os.path.normcase(os.path.abspath(js)) == os.path.normcase(os.path.abspath(p['run'])):
+        # item 662: the json of the run (enter_scene) is evidence of the harness members - never overwritten by the reader
+        print('refused: --json %s is the run json of the tag' % js)
+        return 2
     res = read_tag(tag, p, '--legacy-fields' in argv)
     for l in rows_out(res):
         print(l)

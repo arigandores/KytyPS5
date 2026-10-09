@@ -1,4 +1,4 @@
-suite regress_f30m.py sha256 a4458daf4055089696665c323dbcb25e3a208a11240b9e8e66ab6c4fb7daa6ae target f30m_read.py sha256 1beb2b525d719e84c3d29613fa25b0c1b40d082308192915dde19d278fd32148
+suite regress_f30m.py sha256 6e605c41bbeba4f4b09c8a175bb60d6f3c8fdb0a67cda55d9c5f16f0bce73c2b target f30m_read.py sha256 c1e915f498b1a90d14337eaf128af0721202cd735829e7d4d88bd833fe138bb4
 log f30_s1_c3 sha256 8c00bd6043233dfbc0ec9e481185387917132f13acac69fefebb8493f4f16686
 log f30_s1_c4 sha256 1352bf876efccf50ae8580dac4d6c1296cf77b6c24564c56163824af76de52cd
 log f30_s1_v sha256 bb415abab0b8e82d8e0379acccf13551bf7ecb5a78931f7b8fd854b1d31a1458
@@ -30,5 +30,21 @@ PASS cy_v on f30_s1_v: window chk_b 40 014 265 = F30f (40014265)
 PASS cy_c4 on f30_s1_c4: K_B'' NO (sum 0), RC2 (a) YES
 log f30_s1_c5 sha256 c2c42fd17dadedc0234f0ac95eabee210ddd4d9b24b5fddb4262c11505517a83
 PASS f30_s1_c5 real log: parse YES ([True]), max chk_b/pb deviation 2 (2), lines with deviation >= 2: chk_b/pb 1 (1), sums chk = pa = chk_b = pb = 17 474 336 (17474336)
-checks 26 failed 0
+log f30_s1_c5 sha256 c2c42fd17dadedc0234f0ac95eabee210ddd4d9b24b5fddb4262c11505517a83
+PASS f30_s1_c5 real log: status ADMITTED, parse True, RC1 True, T line 4071 of 4071 (log line 600808), distance 0 (want 0), tail {'chk_pa': 0, 'chkb_pb': 0, 'rx_b': 0, 'b_bad': 0}, process chk 17474336 pa 17474336 chk_b 17474336 pb 17474336
+log f30_s2_c5 sha256 805f7c6ef93397d552e85afc18df3c17d48ee32e143faafd44b0e02dacb33c09
+PASS f30_s2_c5 real log: status NOT_ADMITTED (run json lost - old read.out.txt ['STATUS ADMITTED']), parse True, RC1 True, T line 9438 of 9438 (log line 1047890), distance 0 (want 0), tail {'chk_pa': 0, 'chkb_pb': 0, 'rx_b': 0, 'b_bad': 0}, process chk 13236884 pa 13236884 chk_b 13236884 pb 13236884
+log f30_s3_c5 sha256 234487f0877439d08d1e818ab7a34c82b6d68b40e9848ec67ecaee8517b8dd0b
+PASS f30_s3_c5 real log: status NOT_ADMITTED (run json lost - old read.out.txt ['STATUS ADMITTED']), parse True, RC1 True, T line 9324 of 9324 (log line 985492), distance 0 (want 0), tail {'chk_pa': 0, 'chkb_pb': 0, 'rx_b': 0, 'b_bad': 0}, process chk 15612078 pa 15612078 chk_b 15612078 pb 15612078
+log f30_s4_c5 sha256 dd975f724ed23517dd5b3e6db69f95d5771c82243397cb1ab02795cb596abc28
+PASS f30_s4_c5 real log: status NOT_ADMITTED (run json lost - old read.out.txt ['STATUS ADMITTED']), parse True, RC1 True, T line 9209 of 9209 (log line 1014394), distance 0 (want 0), tail {'chk_pa': 0, 'chkb_pb': 0, 'rx_b': 0, 'b_bad': 0}, process chk 21245254 pa 21245254 chk_b 21245253 pb 21245253
+log f30_s5_c5 sha256 4816279c978de0517ee7b582566bd2ccbfac6cd647685c42d82beb5f090d8305
+PASS f30_s5_c5 real log: status NOT_ADMITTED (run json lost - old read.out.txt ['STATUS ADMITTED']), parse True, RC1 True, T line 9021 of 9021 (log line 983472), distance 0 (want 0), tail {'chk_pa': 0, 'chkb_pb': 0, 'rx_b': 0, 'b_bad': 0}, process chk 20821914 pa 20821914 chk_b 20821913 pb 20821913
+log f30_s6_c5 sha256 408023d3a34e7140c8569db0c5560755cb42c2330f283fe626d2cf19afdc6542
+PASS f30_s6_c5 real log: status NOT_ADMITTED (run json lost - old read.out.txt ['STATUS ADMITTED']), parse True, RC1 True, T line 5110 of 5110 (log line 669549), distance 0 (want 0), tail {'chk_pa': 0, 'chkb_pb': 0, 'rx_b': 0, 'b_bad': 0}, process chk 17979650 pa 17979650 chk_b 17979650 pb 17979650
+log f30_s7_c5 sha256 c0b85d67921083e29eb523c8bc44a15b805d669a654e04f4ab06a520184c18fc
+PASS f30_s7_c5 real log: status ADMITTED, parse True, RC1 True, T line 6161 of 6161 (log line 778935), distance 0 (want 0), tail {'chk_pa': 0, 'chkb_pb': 0, 'rx_b': 0, 'b_bad': 0}, process chk 16769433 pa 16769433 chk_b 16769432 pb 16769432
+log f30_s8_c5 sha256 eedd8d6ce863912ee0cabd5789b3a6caa5634b06eb58caacce7330402e2bf54d
+PASS f30_s8_c5 real log: status ADMITTED, parse True, RC1 True, T line 4609 of 4610 (log line 681407), distance 1 (want 1), tail {'chk_pa': 0, 'chkb_pb': 1, 'rx_b': 0, 'b_bad': 0}, process chk 19843829 pa 19843829 chk_b 19843828 pb 19843827
+checks 34 failed 0
 ALL OK

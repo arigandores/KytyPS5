@@ -1,3 +1,3 @@
-suite test_f30m_read.py sha256 b3d56663b5f807a398cdbefee3d6fd92b4bbbe9b7650102e5d9ef6013e5ce2a8 target f30m_read.py sha256 1beb2b525d719e84c3d29613fa25b0c1b40d082308192915dde19d278fd32148
-checks 261 failed 0
+suite test_f30m_read.py sha256 c716eb5a5d2b03a93f1c50fcb1e1f1bc4d14b21a0c97e652e59e4e2729967b5c target f30m_read.py sha256 c1e915f498b1a90d14337eaf128af0721202cd735829e7d4d88bd833fe138bb4
+checks 284 failed 0
 ALL OK

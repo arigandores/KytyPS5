@@ -65,7 +65,18 @@ MUTANTS = [
     ('d10_rc4', "x['x_missing'] == 0 and x['x_lines'] > 0)]", "x['x_lines'] > 0)]"),
     ('d11_missing_zero', "            if miss:\n                r['x_missing'] += 1", "            if False:\n                r['x_missing'] += 1"),
     ('d12_d5_min', "x['x_win'] >= X_MIN[knob]\n", "x['x_win'] >= X_MIN[2]\n"),
-    ('p01_sum_pa', "ident_ok = (P['rts_chk'] == P['rts_pa'] and", "ident_ok = ("),
+    ('p01_sum_pa', "ident_ok = (close_ok and PTs['rts_chk'] == PTs['rts_pa'] and", "ident_ok = (close_ok and"),   # item 662 (v)(3)
+    ('p01b_sum_pb', "and PTs['rts_chk_b'] == PTs['rts_pb']\n                    and PTs['rts_bad_rx']", "\n                    and PTs['rts_bad_rx']"),
+    ('p01c_ident_close', "ident_ok = (close_ok and", "ident_ok = (True and"),
+    ('k01_close_max', 'CLOSE_MAX = 3   #', 'CLOSE_MAX = 4   #'),   # item 662 (v)(2)
+    ('k02_close_max2', 'CLOSE_MAX = 3   #', 'CLOSE_MAX = 2   #'),
+    ('k03_close_dist', 'close_ok = PT is not None and cdist is not None and cdist <= CLOSE_MAX', 'close_ok = PT is not None'),
+    ('k04_close_def_pa', "if pre['c'] == pre['a'] and pre['cb'] == pre['b'] and", "if pre['cb'] == pre['b'] and"),   # item 662 (v)(1)
+    ('k05_close_def_pb', "pre['c'] == pre['a'] and pre['cb'] == pre['b'] and pre['rx'] <= pre['bb'] <= pre['bad']:", "pre['c'] == pre['a'] and pre['rx'] <= pre['bb'] <= pre['bad']:"),
+    ('k06_close_def_rx', "and pre['cb'] == pre['b'] and pre['rx'] <= pre['bb'] <= pre['bad']:", "and pre['cb'] == pre['b'] and pre['bb'] <= pre['bad']:"),
+    ('k07_close_tail_reset', "r['tail_dev'] = dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0)\n            else:", "pass\n            else:"),
+    ('k08_close_sums', "r['close_sums'] = dict(r['proc'])", "r['close_sums'] = r['proc']"),
+    ('k09_close_dist', "r['close_dist'] = r['x_full'] - r['close_idx']", "r['close_dist'] = r['x_full'] - r['close_idx'] - 1"),
     ('p02_prefix', "and x['pre_viol'] == 0 and x['pre_viol_rx'] == 0)", "and x['pre_viol_rx'] == 0)"),
     ('p03_verify_le', "and x['verify'] <= min(LINES_MAX, P['rts_bad']) and", 'and'),
     ('p04_ident_stop', "        if not ident_ok:\n            stop.append(", "        if False:\n            stop.append("),
@@ -76,10 +87,12 @@ MUTANTS = [
     ('q04_pre_bbad', "or pre['bb'] > pre['bad'] + PRE_TOL:", "or pre['bb'] > pre['bad'] + PRE_TOL + 1:"),
     ('q05_dev2_chkpa', "d2['chk_pa'] += abs(pre['c'] - pre['a']) >= 2", "d2['chk_pa'] += abs(pre['c'] - pre['a']) >= 3"),
     ('q06_dev2_chkbpb', "d2['chkb_pb'] += abs(pre['cb'] - pre['b']) >= 2", "d2['chkb_pb'] += abs(pre['cb'] - pre['b']) >= 3"),
-    ('l01_rc1_skip', "rc1 = P['rts_skip'] == 0 and P['rts_chk'] >= P['rts_chk_b']", "rc1 = P['rts_chk'] >= P['rts_chk_b']"),
-    ('l02_rc1_ge1', "and P['rts_chk_b'] == P['rts_pb'] and P['rts_pb'] >= 1", "and P['rts_chk_b'] == P['rts_pb']"),
-    ('l03_rc1_pb', "and P['rts_chk_b'] == P['rts_pb'] and P['rts_pb'] >= 1", "and P['rts_pb'] >= 1"),
-    ('l04_rc1_chk', "rc1 = P['rts_skip'] == 0 and P['rts_chk'] >= P['rts_chk_b']", "rc1 = P['rts_skip'] == 0"),
+    ('l01_rc1_skip', "rc1 = (close_ok and PTs['rts_skip'] == 0 and", "rc1 = (close_ok and"),   # item 662 (v)(3)
+    ('l01b_rc1_pskip', "and PTs['rts_pb'] >= 1 and P['rts_skip'] == 0 and", "and PTs['rts_pb'] >= 1 and"),   # item 662 (b)
+    ('l02_rc1_ge1', "and PTs['rts_pb'] >= 1 and P['rts_skip']", "and P['rts_skip']"),
+    ('l04_rc1_chk', "rc1 = (close_ok and PTs['rts_skip'] == 0 and PTs['rts_chk'] >= PTs['rts_chk_b'] and", "rc1 = (close_ok and PTs['rts_skip'] == 0 and"),
+    ('l04b_rc1_pchk', "and P['rts_skip'] == 0 and P['rts_chk'] >= P['rts_chk_b'])", "and P['rts_skip'] == 0)"),   # item 662 (b)
+    ('l05_rc1_close', "rc1 = (close_ok and", "rc1 = (True and"),
     ('l05_rc2_each', "exact = (all(P[k] <= P['rts_bad_b'] for k in BITS8) and", "exact = (all(P[k] <= P['rts_bad'] for k in BITS8) and"),
     ('l06_rc2_r', "and P['rts_bad_r'] <= P['rts_bad_rx']\n", "\n"),
     ('l07_rc2_xc', "and P['rts_bad_xc'] <= P['rts_bad_rx'] and", 'and'),

@@ -3,7 +3,7 @@ synthetic tag of each kind (c5 at s1 and s9 with the keys; cy_v, cy_c3, cy_c4) r
 (harness, (D1)-(D7) = RC3 of F30l, RC4 of F30f with the 8 bit counters, parse, RC1 / RC2 / RC4 of F30l, 'PB item 6 dropped', the
 reconciliation, RC2 (a) / (b) at cy_c4), every member of each kind (K_B'' and the 7 sources, (gamma), (C1), (V), race, (O), (K), (K')) and
 each edge (x lines 1499 / 1500, 2999 / 3000, xb_ser 99 / 100, chk_b 999 999 / 10^6, the tolerance 1 of RC2, the prefix tolerance 4 / 5
-of the parse on each of the four pairs (item 659 (g)), the name rts_bad_r against
+of the parse on each of the four pairs (item 659 (g)), the closing point T at distance 3 / 4 and the tail 4 / 5 (item 662 (g)), the name rts_bad_r against
 rts_bad_rx, 40 lines of the reconciliation) flips the reading; the STOP rows; the scene rows; strict cp1250 output without
 PYTHONIOENCODING; the last line is ALL OK.  Early-exit form of mutlib (ok = True, ok &= ..., sys.exit(0 if ok else 1)).  ASCII only.
 The reader is loaded in-process from argv[1] (default: f30m_read.py beside this file); the fixture directories live under BASE.
@@ -419,6 +419,75 @@ r = read(mod(c5, lambda t: t['frames'][10].update(rts_pb=401)))
 ok &= check('RC1 rts_chk_b != rts_pb - NO', adm(r, 'RC1 (F30l)') is False)
 r = read(mod(c5, lambda t: [f.update(rts_chk=300, rts_pa=300) for f in t['frames']]))
 ok &= check('RC1 rts_chk 300 < rts_chk_b 400 - NO', adm(r, 'RC1 (F30l)') is False)
+
+# --- item 662 (g): the closing point T ---
+ok &= check('clean c5: T is the last line, distance 0, tail deviations 0 %s' % r5['ref'].get('close_dist'), r5['ref'].get('close_dist') == 0
+            and r5['ref'].get('close_idx') == r5['ref'].get('x_full') and r5['ref'].get('tail_dev') == dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0))
+for k in (1, 2, 3):
+    r = read(mod(c5, lambda t: t['frames'][-k].update(rts_chk_b=401)))
+    ok &= check('item 662: chk_b event open on the last %d lines (process chk_b = pb + 1) - parse YES, RC1 YES, ADMITTED, distance %d (%s)' % (
+        k, k, r['ref'].get('close_dist')), adm(r, 'parse') is True and adm(r, 'RC1 (F30l)') is True and r['status'] == 'ADMITTED'
+                and r['ref'].get('close_dist') == k and r['ref'].get('tail_dev', {}).get('chkb_pb') == 1 and r['stop'] == [])
+r = read(mod(c5, lambda t: t['frames'][-4].update(rts_chk_b=401)))
+ok &= check('item 662: chk_b event open on the last 4 lines - parse NO, RC1 NO, NOT_ADMITTED and STOP (distance %s)' % r['ref'].get('close_dist'),
+            adm(r, 'parse') is False and adm(r, 'RC1 (F30l)') is False and r['status'] == 'NOT_ADMITTED' and stopped(r, 'item 651')
+            and r['ref'].get('close_dist') == 4)
+r = read(mod(c5, lambda t: t['frames'][-3].update(rts_pb=401)))
+ok &= check('item 662: pb ahead on the last 3 lines - ADMITTED', r['status'] == 'ADMITTED' and r['ref'].get('close_dist') == 3)
+r = read(mod(c5, lambda t: t['frames'][-4].update(rts_pb=401)))
+ok &= check('item 662: pb ahead on the last 4 lines - NOT_ADMITTED', r['status'] == 'NOT_ADMITTED' and adm(r, 'parse') is False)
+r = read(mod(c5, lambda t: t['frames'][-3].update(rts_chk=421)))
+ok &= check('item 662: chk/pa event open on the last 3 lines - ADMITTED', r['status'] == 'ADMITTED' and r['ref'].get('tail_dev', {}).get('chk_pa') == 1)
+r = read(mod(c5, lambda t: t['frames'][-4].update(rts_chk=421)))
+ok &= check('item 662: chk/pa event open on the last 4 lines - NOT_ADMITTED and STOP', r['status'] == 'NOT_ADMITTED' and stopped(r, 'item 651'))
+r = read(mod(c5, lambda t: t['frames'][800].update(rts_chk_b=401)))
+ok &= check('item 662: loss of one event in the middle (prefix 1 to the end, no T near the end) - parse NO, RC1 NO, STOP (T %s)' % (
+    r['ref'].get('close_idx'),), adm(r, 'parse') is False and adm(r, 'RC1 (F30l)') is False and r['status'] == 'NOT_ADMITTED'
+            and stopped(r, 'item 651'))
+r = read(mod(c5, lambda t: t['frames'][-2].update(rts_chk_b=404)))
+ok &= check('item 662: tail deviation 4 on the last 2 lines - ADMITTED (tail %s)' % r['ref'].get('tail_dev'), r['status'] == 'ADMITTED'
+            and r['ref'].get('tail_dev', {}).get('chkb_pb') == 4)
+r = read(mod(c5, lambda t: t['frames'][-2].update(rts_chk_b=405)))
+ok &= check('item 662: tail deviation 5 on the last 2 lines - NOT_ADMITTED and STOP', r['status'] == 'NOT_ADMITTED' and adm(r, 'parse') is False
+            and stopped(r, 'item 651'))
+r = read(mod(c5, lambda t: t['frames'][-1].update(rts_skip=1)))
+ok &= check('item 662 (b): rts_skip 1 on the last line (T last) - RC1 NO', adm(r, 'RC1 (F30l)') is False and r['status'] == 'NOT_ADMITTED')
+r = read(mod(c5, lambda t: t['frames'][-1].update(rts_skip=1, rts_chk_b=401)))
+ok &= check('item 662 (b): rts_skip 1 on the tail line after T (T distance 1) - RC1 NO by the process sum (T %s)' % r['ref'].get('close_dist'),
+            adm(r, 'RC1 (F30l)') is False and r['status'] == 'NOT_ADMITTED' and r['ref'].get('close_dist') == 1)
+r = read(mod(c5, lambda t: (t['frames'][-1].update(rts_chk_b=401), t['frames'][-2].update(rts_skip=1))))
+ok &= check('item 662: rts_skip 1 at T - RC1 NO', adm(r, 'RC1 (F30l)') is False)
+r = read(mod(c5, lambda t: ([f.update(rts_chk=300, rts_pa=300) for f in t['frames']], t['frames'][-1].update(rts_chk=10 ** 7, rts_pa=10 ** 7,
+                                                                                                           rts_chk_b=401))))
+ok &= check('item 662: chk < chk_b at T, process chk >= chk_b - RC1 NO (at T)', adm(r, 'RC1 (F30l)') is False and r['ref'].get('close_dist') == 1)
+r = read(mod(c5, lambda t: t['frames'][-1].update(rts_chk=421, rts_chk_b=10 ** 7, rts_pb=10 ** 7)))
+ok &= check('item 662 (b): chk >= chk_b at T, process chk < chk_b - RC1 NO (process)', adm(r, 'RC1 (F30l)') is False
+            and r['ref'].get('close_dist') == 1)
+r = read(mod(c5, lambda t: t['frames'][-3].update(rts_bad_rx=4)))
+ok &= check('item 662 (v)(1): rx one event ahead of b on the last 3 lines - T distance 3, parse YES, RC1 YES (%s)' % r['ref'].get('close_dist'),
+            r['ref'].get('close_dist') == 3 and adm(r, 'parse') is True and adm(r, 'RC1 (F30l)') is True
+            and r['ref'].get('tail_dev', {}).get('rx_b') == 1)
+r = read(mod(c5, lambda t: t['frames'][-4].update(rts_bad_rx=4)))
+ok &= check('item 662 (v)(1): rx one event ahead of b on the last 4 lines - T distance 4, parse NO, RC1 NO (%s)' % r['ref'].get('close_dist'),
+            r['ref'].get('close_dist') == 4 and adm(r, 'parse') is False and adm(r, 'RC1 (F30l)') is False)
+r = read(mod(c5, lambda t: (t['frames'][-3].update(rts_chk_b=402), t['frames'][-1].update(rts_chk_b=398))))
+ok &= check('item 662: event torn in the tail and closed at the last line - T last, distance 0, tail deviations 0 (%s)' % r['ref'].get('tail_dev'),
+            r['status'] == 'ADMITTED' and r['ref'].get('close_dist') == 0
+            and r['ref'].get('tail_dev') == dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0))
+r = read(mod(c5, lambda t: [f.update(rts_chk_b=401) for f in t['frames']]))
+ok &= check('item 662: T only before the window (prefix grows from the first window line) - NOT_ADMITTED', r['status'] == 'NOT_ADMITTED' and adm(r, 'parse') is False)
+CNT[0] += 1
+dd = os.path.join(TMP, 'runjson')
+write(dd, c5)
+es0 = open(os.path.join(dd, 'es.json'), 'rb').read()
+with contextlib.redirect_stdout(io.StringIO()):
+    rc_js = R.main(['--dir', dd, '--tag', 'f30_s1_c5', '--json', os.path.join(dd, 'es.json')])
+ok &= check('--json onto the run json of the tag - refused (rc 2), the run json unchanged', rc_js == 2
+            and open(os.path.join(dd, 'es.json'), 'rb').read() == es0)
+with contextlib.redirect_stdout(io.StringIO()):
+    rc_js = R.main(['--dir', dd, '--tag', 'f30_s1_c5', '--json', os.path.join(dd, 'read.json')])
+ok &= check('--json onto another path - written (rc 0)', rc_js == 0 and os.path.exists(os.path.join(dd, 'read.json')))
+shutil.rmtree(dd, ignore_errors=True)
 
 # --- RC2 of F30l ---
 r = read(mod(c5, lambda t: t['frames'][100].update(rts_bad_s=8)))

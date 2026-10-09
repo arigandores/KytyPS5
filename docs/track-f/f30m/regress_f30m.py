@@ -9,6 +9,8 @@ C:/kyty/f287/f30f/runs/<tag>/read.json are the reference numbers).
       (C1) YES, (V) YES, (O) YES; f30_cy_c4 on f30_s1_c4 - K_B'' NO (sum 0), RC2 (a) YES.
   (4) item 659 (g): the real log of f30_s1_c5 (T2, C:/kyty/f287/f30m/log_f30_s1_c5.txt, read in place with its own side files) - the parse
       member YES under the prefix tolerance 4 (max chk_b/pb deviation 2, one line with deviation >= 2; process sums exact).
+  (5) item 662 (g): the real logs of f30_s1_c5 .. f30_s8_c5 - ADMITTED, parse and RC1 YES; the closing point T at distance 0 (s1 .. s7)
+      and 1 (s8: the event PB open on the last flip).
 First output line: suite <name> sha256 <sha> target f30m_read.py sha256 <sha>.  Ends with ALL OK.  ASCII only.
 usage: python regress_f30m.py"""
 import hashlib
@@ -112,6 +114,29 @@ def main():
         ' = 17 474 336 (%s)' % (pm, md.get('chkb_pb'), d2.get('chkb_pb'), rr['proc']['rts_chk']),
         pm == [True] and md.get('chkb_pb') == 2 and d2.get('chkb_pb') == 1 and rr['proc']['rts_chk'] == rr['proc']['rts_pa']
         == rr['proc']['rts_chk_b'] == rr['proc']['rts_pb'] == 17474336)
+    # (5) item 662 (g): the real logs of f30_s1_c5 .. f30_s8_c5 on T2 (read in place) - s1 .. s7: T is the last line (distance 0),
+    # outcome ADMITTED as before; s8: T at distance 1 (log line 681505 is not asserted - the line number of T is printed), parse and RC1 YES
+    for k in range(1, 9):
+        tg = 'f30_s%d_c5' % k
+        lp = os.path.join(HERE, 'log_%s.txt' % tg)
+        print('log %s sha256 %s' % (tg, sha(lp)))
+        rr = R.read_tag(tg, R.paths(tg))
+        am = dict((a.split(' ')[0], b) for a, b in rr['admission'])
+        rf = rr['ref']
+        want = 1 if k == 8 else 0
+        # s2 .. s6: the run json was overwritten by the reader output at their reading (reader 1beb2b52, read.out.txt ADMITTED with the
+        # intact json) - the harness rows cannot be re-read; the log members (parse, RC1) and the old status line are checked
+        lost = 2 <= k <= 6
+        old = None
+        if lost:
+            ro = os.path.join(HERE, 'runs', tg, 'read.out.txt')
+            old = [l.strip() for l in open(ro, encoding='ascii', errors='replace') if l.strip().startswith('STATUS')][:1]
+        st_ok = (old == ['STATUS ADMITTED']) if lost else rr['status'] == 'ADMITTED'
+        chk('%s real log: status %s%s, parse %s, RC1 %s, T line %s of %s (log line %s), distance %s (want %d), tail %s, process chk %d pa %d '
+            'chk_b %d pb %d' % (tg, rr['status'], (' (run json lost - old read.out.txt %s)' % old) if lost else '', am.get('parse'),
+                                am.get('RC1'), rf.get('close_idx'), rf.get('x_full'), rf.get('close_ln'), rf.get('close_dist'), want,
+                                rf.get('tail_dev'), rr['proc']['rts_chk'], rr['proc']['rts_pa'], rr['proc']['rts_chk_b'], rr['proc']['rts_pb']),
+            st_ok and am.get('parse') is True and am.get('RC1') is True and rf.get('close_dist') == want)
     print('checks %d failed %d' % (n, nf))
     if ok:
         print('ALL OK')

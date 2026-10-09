@@ -1,0 +1,15 @@
+PASS R d25a78bc:src/graphics/host_gpu/renderer/renderDraw.cpp:1601
+PASS R d25a78bc:src/graphics/host_gpu/renderer/renderDraw.cpp:1685
+PASS R d25a78bc:src/graphics/host_gpu/renderer/renderDraw.cpp:1692
+PASS R d25a78bc:src/graphics/host_gpu/renderer/renderDraw.cpp:2261
+PASS R d25a78bc:src/graphics/host_gpu/renderer/renderDraw.cpp:3842
+PASS R d25a78bc:src/graphics/host_gpu/renderer/renderDraw.cpp:3845
+PASS R d25a78bc:src/graphics/host_gpu/renderer/renderDraw.cpp:3854
+PASS R d25a78bc:src/graphics/host_gpu/renderer/renderDraw.cpp:3909
+PASS R d25a78bc:src/graphics/host_gpu/renderer/renderDraw.cpp:3926
+PASS R d25a78bc:src/graphics/host_gpu/renderer/image/image.cpp:140
+PASS R d25a78bc:src/graphics/host_gpu/renderer/image/image.cpp:243
+PASS R d25a78bc:src/graphics/host_gpu/renderer/context.cpp:482
+PASS N1 negative control (line + 1) fails
+PASS N2 negative control (anchor with a changed character) fails
+ALL OK

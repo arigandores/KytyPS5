@@ -1,0 +1,33 @@
+PASS D0 parent of T3 ea38426b is T2 6fbdcf67
+PASS D1 +/- lines of T2..T3 = +/- lines of main d25a78bc (105 / 105)
+PASS D1b files T2..T3 = 5, none under src/graphics/shader: ['src/common/frameStats.h', 'src/common/gates.cpp', 'src/common/gates.h', 'src/graphics/host_gpu/renderer/renderDraw.cpp', 'src/graphics/presentation/videoOut.cpp']
+PASS D2 on T3 ea38426b
+PASS D3 on T3 ea38426b
+PASS D4 on T3 ea38426b
+PASS D5 on T3 ea38426b
+PASS D6 on T3 ea38426b
+PASS D7 on T3 ea38426b
+PASS D2-D7 on main d25a78bc
+PASS D8 GetBarriers: index level * info.resources.layers + layer, volume base_layer 0 / layer_count 1
+PASS D9 capture colour Transit: layout by is_bound, colour RW access, view range, lazy handle, TargetTransit
+PASS B1 sha256 of C:/kyty/f287/bin/kyty_emulator_50596951.exe = 50596951...
+PASS B2 version string KytyPS5-2026-09-15-6a2987a-1908-gea38426b in the image
+PASS B3 translation signature 9177b426... in the image
+PASS B4 names rts_inj, rts_inj_s, rts_inj_race, rts_inj_nos, rts_inj_none in the image (NUL-terminated)
+PASS B5 worktree C:/kyty/f287/f30o/wt HEAD = ea38426b, src clean
+-- mutants
+MUT m1   killed by D3
+MUT m1b  killed by D3
+MUT m2a  killed by D4
+MUT m2b  killed by D4
+MUT m3   killed by D4
+MUT m4   killed by D6
+MUT m5   killed by D6
+MUT m6   killed by D2,D5
+MUT m6b  killed by D3
+MUT m7   killed by D2,D3
+MUT m7b  killed by D6,D7
+MUT m7c  killed by D2
+PASS mutants killed 12 of 12
+PASS control: T2 text fails D3-D7 (D2,D3,D4,D5,D6,D7)
+ALL OK

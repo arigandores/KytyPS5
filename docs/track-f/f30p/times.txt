@@ -1,0 +1,4 @@
+2026-10-09T14:58:13Z F30p start: read ROADMAP 664 (41ba5772), f30o.md (382cfba8), diff d25a78bc, T3 ea38426b
+2026-10-09T15:08:33Z chk_f30p.py ALL OK (D0-D9, B1-B5, 12 mutants killed) 941e9bb7
+2026-10-09T15:08:34Z refs_f30p.py ALL OK (12 links, N1, N2) e4b45178
+2026-10-09T15:10:30Z review written f30p-review.md 94cc706f; FACTS F30p section 127b33da

@@ -1,0 +1,28 @@
+Preparing worktree (detached HEAD eded064e)
+Updating files:  99% (4258/4289)Updating files: 100% (4289/4289)Updating files: 100% (4289/4289), done.
+HEAD is now at eded064e track F link F29c3 (HPP-713): B12 stand arm B12-9b - hook=bitonly announces the region bit between the visits with no page write and no stamp move; fields bit1 and late_bit_skips (ROADMAP s122 item 645(v), RC1 of F29d)
+--- worktree HEAD
+eded064e3f9799af47b6103ac2f5cf7e8c344568 track F link F29c3 (HPP-713): B12 stand arm B12-9b - hook=bitonly announces the
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+eded064e3f9799af47b6103ac2f5cf7e8c344568 dab16a57ca77f3116dd50ba7f417b7e84bbc0f34 track F link F29c3 (HPP-713): B12 stand arm B12-9b - hook=bitonly announces th
+dab16a57ca77f3116dd50ba7f417b7e84bbc0f34 2a371d921c4c2864044314074e09c8ccc872ccfb track F link F29c edition 2 (HPP-702): KYTY_FIX_B12 - a first visit of a BDA p
+2a371d921c4c2864044314074e09c8ccc872ccfb edebaad9ca41d2e7a083959b3c59a9f2dd54886a track F link F29c (HPP-702): KYTY_FIX_B12 (default 0) - BDA pass number and re
+edebaad9ca41d2e7a083959b3c59a9f2dd54886a dc5d47127037ec0a3c914bedf4dce01d660d2bcf track F link F29a (HPP-699): B12 bdastamp stand without the game (ROADMAP s122
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 458 with CR 0
+WT OK

@@ -1,0 +1,11 @@
+OK   ee9632be:src/graphics/host_gpu/regionManager.h:70  anchor <<const char* value = std::getenv("KYTY_FIX_B12");>>  +1 <<return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);>>
+OK   ee9632be:src/graphics/host_gpu/renderer/renderContext.cpp:382  anchor <<const bool fix_b12 = FixB12Enabled();>>  +1 <<if (fix_b12) {>>
+OK   ee9632be:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3471  anchor <<const bool b12_pass = m_bda_pass_open;>>  +1 <<for (auto cursor = scan_begin; cursor < scan_end;) {>>
+OK   ee9632be:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3458  anchor <<m_bda_region_stamps.resize(MemoryTracker::RegionCount());>>  +1 <<}>>
+OK   ee9632be:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:604  anchor <<LOGF("FixB12: mode=%d\n", fix_b12 ? 1 : 0);>>  +1 <<}>>
+OK   ee9632be:src/graphics/host_gpu/renderer/cache/bufferCache.h:380  anchor <<struct BdaRegionStamp {>>  +1 <<MemoryTracker::RegionStamp stamp;>>
+OK   ee9632be:src/graphics/host_gpu/memoryTracker.h:411  anchor <<static constexpr size_t REGION_COUNT = TRACKER_ADDRESS_SIZE / TRACKER_REGION_SIZE;>>  +1 <<inline static thread_local const MemoryTracker* s_upload_owner = nullptr;>>
+OK   ee9632be:src/graphics/host_gpu/regionDefinitions.h:13  anchor <<constexpr uint64_t TRACKER_REGION_SIZE  = 4ull * 1024ull * 1024ull;>>  +1 <<constexpr uint64_t TRACKER_ADDRESS_SIZE = 1ull << 40u;>>
+OK   ee9632be:src/common/frameStats.cpp:195  anchor <<: lean     ? static_cast<uint32_t>(Counter::LogNs)>>  +1 <<: static_cast<uint32_t>(Counter::Count);>>
+negative control (shift +1 never matches): FAILED as expected
+REFS 9 ALL OK

@@ -1,0 +1,1331 @@
+watch: start 2026-10-09T01:05:53Z child 25972 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[0/2] Re-checking globbed directories...
+[1/784] Generate grammar tables
+[2/784] Generate language specific header for DebugInfo.
+[3/784] Generate language specific header for OpenCLDebugInfo100.
+[4/784] Generate language specific header for NonSemanticShaderDebugInfo100.
+[5/784] Update build-version.inc in the SPIRV-Tools build directory (if necessary).
+[6/784] Building CXX object 3rdparty\fmt\CMakeFiles\fmt.dir\src\format.cc.obj
+[7/784] Building CXX object 3rdparty\fmt\CMakeFiles\fmt.dir\src\os.cc.obj
+[8/784] Generate kytyGitVersion.h
+[9/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\init.c.obj
+[10/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\api.c.obj
+[11/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\cache.c.obj
+[12/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\deps\clog\src\clog.c.obj
+[13/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\init.c.obj
+[14/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\info.c.obj
+[15/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\vendor.c.obj
+[16/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\uarch.c.obj
+[17/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\name.c.obj
+[18/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\topology.c.obj
+[19/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\isa.c.obj
+[20/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\cache\init.c.obj
+[21/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\cache\descriptor.c.obj
+[22/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\cache\deterministic.c.obj
+[23/784] Building C object 3rdparty\cpuinfo\CMakeFiles\cpuinfo.dir\src\x86\windows\init.c.obj
+[24/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\API\Memory.c.obj
+[25/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\API\Process.c.obj
+[26/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\API\Synchronization.c.obj
+[27/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\API\Terminal.c.obj
+[28/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\API\Thread.c.obj
+[29/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\Allocator.c.obj
+[30/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\ArgParse.c.obj
+[31/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\Bitset.c.obj
+[32/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\Format.c.obj
+[33/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\List.c.obj
+[34/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\String.c.obj
+[35/784] Generate tables based on the SPIR-V XML registry.
+[36/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\Vector.c.obj
+[37/784] Building C object _deps\zydis-build\zycore\CMakeFiles\Zycore.dir\src\Zycore.c.obj
+[38/784] Generating include/SDL2/SDL.h
+[39/784] Generating include/SDL2/SDL_assert.h
+[40/784] Generating include/SDL2/SDL_atomic.h
+[41/784] Generating include/SDL2/SDL_audio.h
+[42/784] Generating include/SDL2/SDL_bits.h
+[43/784] Generating include/SDL2/SDL_blendmode.h
+[44/784] Generating include/SDL2/SDL_clipboard.h
+[45/784] Generating include/SDL2/SDL_copying.h
+[46/784] Generating include/SDL2/SDL_cpuinfo.h
+[47/784] Generating include/SDL2/SDL_egl.h
+[48/784] Generating include/SDL2/SDL_endian.h
+[49/784] Generating include/SDL2/SDL_error.h
+[50/784] Generating include/SDL2/SDL_events.h
+[51/784] Generating include/SDL2/SDL_filesystem.h
+[52/784] Generating include/SDL2/SDL_gamecontroller.h
+[53/784] Generating include/SDL2/SDL_gesture.h
+[54/784] Generating include/SDL2/SDL_guid.h
+[55/784] Generating include/SDL2/SDL_haptic.h
+[56/784] Generating include/SDL2/SDL_hidapi.h
+[57/784] Generating include/SDL2/SDL_hints.h
+[58/784] Generating include/SDL2/SDL_joystick.h
+[59/784] Generating include/SDL2/SDL_keyboard.h
+[60/784] Generating include/SDL2/SDL_keycode.h
+[61/784] Generating include/SDL2/SDL_loadso.h
+[62/784] Generating include/SDL2/SDL_locale.h
+[63/784] Generating include/SDL2/SDL_log.h
+[64/784] Generating include/SDL2/SDL_main.h
+[65/784] Generating include/SDL2/SDL_messagebox.h
+[66/784] Generating include/SDL2/SDL_metal.h
+[67/784] Generating include/SDL2/SDL_misc.h
+[68/784] Generating include/SDL2/SDL_mouse.h
+[69/784] Generating include/SDL2/SDL_mutex.h
+[70/784] Generating include/SDL2/SDL_name.h
+[71/784] Generating include/SDL2/SDL_opengl.h
+[72/784] Generating include/SDL2/SDL_opengl_glext.h
+[73/784] Generating include/SDL2/SDL_opengles.h
+[74/784] Generating include/SDL2/SDL_opengles2.h
+[75/784] Generating include/SDL2/SDL_opengles2_gl2.h
+[76/784] Generating include/SDL2/SDL_opengles2_gl2ext.h
+[77/784] Generating include/SDL2/SDL_opengles2_gl2platform.h
+[78/784] Generating include/SDL2/SDL_opengles2_khrplatform.h
+[79/784] Generating include/SDL2/SDL_pixels.h
+[80/784] Generating include/SDL2/SDL_platform.h
+[81/784] Generating include/SDL2/SDL_power.h
+[82/784] Generating include/SDL2/SDL_quit.h
+[83/784] Generating include/SDL2/SDL_rect.h
+[84/784] Generating include/SDL2/SDL_render.h
+[85/784] Generating include/SDL2/SDL_rwops.h
+[86/784] Generating include/SDL2/SDL_scancode.h
+[87/784] Generating include/SDL2/SDL_sensor.h
+[88/784] Generating include/SDL2/SDL_shape.h
+[89/784] Generating include/SDL2/SDL_stdinc.h
+[90/784] Generating include/SDL2/SDL_surface.h
+[91/784] Generating include/SDL2/SDL_system.h
+[92/784] Generating include/SDL2/SDL_syswm.h
+[93/784] Generating include/SDL2/SDL_test.h
+[94/784] Generating include/SDL2/SDL_test_assert.h
+[95/784] Generating include/SDL2/SDL_test_common.h
+[96/784] Generating include/SDL2/SDL_test_compare.h
+[97/784] Generating include/SDL2/SDL_test_crc32.h
+[98/784] Generating include/SDL2/SDL_test_font.h
+[99/784] Generating include/SDL2/SDL_test_fuzzer.h
+[100/784] Generating include/SDL2/SDL_test_harness.h
+[101/784] Generating include/SDL2/SDL_test_images.h
+[102/784] Generating include/SDL2/SDL_test_log.h
+[103/784] Generating include/SDL2/SDL_test_md5.h
+[104/784] Generating include/SDL2/SDL_test_memory.h
+[105/784] Generating include/SDL2/SDL_test_random.h
+[106/784] Generating include/SDL2/SDL_thread.h
+[107/784] Generating include/SDL2/SDL_timer.h
+[108/784] Generating include/SDL2/SDL_touch.h
+[109/784] Generating include/SDL2/SDL_types.h
+[110/784] Generating include/SDL2/SDL_version.h
+[111/784] Generating include/SDL2/SDL_video.h
+[112/784] Generating include/SDL2/SDL_vulkan.h
+[113/784] Generating include/SDL2/begin_code.h
+[114/784] Generating include/SDL2/close_code.h
+[115/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\software_version.cpp.obj
+[116/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\spirv_endian.cpp.obj
+[117/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\spirv_optimizer_options.cpp.obj
+[118/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\spirv_validator_options.cpp.obj
+[119/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\util\bit_vector.cpp.obj
+[120/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\ext_inst.cpp.obj
+[121/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\assembly_grammar.cpp.obj
+[122/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\util\string_utils.cpp.obj
+[123/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\opcode.cpp.obj
+[124/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\libspirv.cpp.obj
+[125/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\diagnostic.cpp.obj
+[126/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_cfg.cpp.obj
+[127/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\parsed_operand.cpp.obj
+[128/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_composites.cpp.obj
+[129/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_constants.cpp.obj
+[130/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\extensions.cpp.obj
+[131/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\spirv_fuzzer_options.cpp.obj
+[132/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\operand.cpp.obj
+[133/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\spirv_reducer_options.cpp.obj
+[134/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\util\parse_number.cpp.obj
+[135/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\to_string.cpp.obj
+[136/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\spirv_target_env.cpp.obj
+[137/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\print.cpp.obj
+[138/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\name_mapper.cpp.obj
+[139/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_conversion.cpp.obj
+[140/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_debug.cpp.obj
+[141/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_decorations.cpp.obj
+[142/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\table.cpp.obj
+[143/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\binary.cpp.obj
+[144/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\disassemble.cpp.obj
+[145/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\table2.cpp.obj
+[146/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_derivatives.cpp.obj
+[147/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_bitwise.cpp.obj
+[148/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_adjacency.cpp.obj
+[149/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\text.cpp.obj
+[150/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_arithmetics.cpp.obj
+[151/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_atomics.cpp.obj
+[152/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_barriers.cpp.obj
+[153/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\text_handler.cpp.obj
+[154/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_annotation.cpp.obj
+[155/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_extensions.cpp.obj
+[156/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_capability.cpp.obj
+[157/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate.cpp.obj
+[158/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_builtins.cpp.obj
+[159/784] Linking CXX static library 3rdparty\fmt\fmt.lib
+[160/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_execution_limitations.cpp.obj
+[161/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\basic_block.cpp.obj
+[162/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\instruction.cpp.obj
+[163/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_literals.cpp.obj
+[164/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_layout.cpp.obj
+[165/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_logicals.cpp.obj
+[166/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_graph.cpp.obj
+[167/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_function.cpp.obj
+[168/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_memory_semantics.cpp.obj
+[169/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_mesh_shading.cpp.obj
+[170/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_primitives.cpp.obj
+[171/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_non_uniform.cpp.obj
+[172/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_ray_tracing.cpp.obj
+[173/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_id.cpp.obj
+[174/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_misc.cpp.obj
+[175/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_ray_query.cpp.obj
+[176/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_tensor_layout.cpp.obj
+[177/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_tensor.cpp.obj
+[178/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_small_type_uses.cpp.obj
+[179/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\bit_reader.c.obj
+[180/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\band_extension.c.obj
+[181/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\huffCodes.c.obj
+[182/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\imdct.c.obj
+[183/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\bit_allocation.c.obj
+[184/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\libatrac9.c.obj
+[185/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\quantization.c.obj
+[186/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\scale_factors.c.obj
+[187/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_invalid_type.cpp.obj
+[188/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\tables.c.obj
+[189/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\decinit.c.obj
+[190/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_ray_tracing_reorder.cpp.obj
+[191/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\unpack.c.obj
+[192/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\decoder.c.obj
+[193/784] Building C object 3rdparty\CMakeFiles\LibAtrac9.dir\LibAtrac9\C\src\utility.c.obj
+[194/784] Linking C static library 3rdparty\cpuinfo\cpuinfo.lib
+[195/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\MetaInfo.c.obj
+[196/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Mnemonic.c.obj
+[197/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Register.c.obj
+[198/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\String.c.obj
+[199/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_instruction.cpp.obj
+[200/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\construct.cpp.obj
+[201/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Utils.c.obj
+[202/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_scopes.cpp.obj
+[203/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Zydis.c.obj
+[204/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Decoder.c.obj
+[205/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\DecoderData.c.obj
+[206/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Encoder.c.obj
+[207/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\EncoderData.c.obj
+[208/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Disassembler.c.obj
+[209/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Formatter.c.obj
+[210/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_image.cpp.obj
+[211/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\FormatterBuffer.c.obj
+[212/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\FormatterATT.c.obj
+[213/784] Building CXX object 3rdparty\CMakeFiles\imgui.dir\imgui\backends\imgui_impl_vulkan.cpp.obj
+[214/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_interfaces.cpp.obj
+[215/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_memory.cpp.obj
+[216/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_mode_setting.cpp.obj
+[217/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validate_type.cpp.obj
+[218/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\FormatterIntel.c.obj
+[219/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\Segment.c.obj
+[220/784] Linking C static library _deps\zydis-build\zycore\Zycore.lib
+[221/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL_error.c.obj
+[222/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL_guid.c.obj
+[223/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL_hints.c.obj
+[224/784] Building CXX object 3rdparty\spdlog\CMakeFiles\spdlog.dir\src\file_sinks.cpp.obj
+[225/784] Building CXX object 3rdparty\CMakeFiles\imgui.dir\imgui\imgui_tables.cpp.obj
+[226/784] Building CXX object 3rdparty\spdlog\CMakeFiles\spdlog.dir\src\stdout_sinks.cpp.obj
+[227/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL_utils.c.obj
+[228/784] Building CXX object 3rdparty\spdlog\CMakeFiles\spdlog.dir\src\color_sinks.cpp.obj
+[229/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\atomic\SDL_atomic.c.obj
+[230/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\atomic\SDL_spinlock.c.obj
+[231/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\SDL_audiodev.c.obj
+[232/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\function.cpp.obj
+[233/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\SDL_audiotypecvt.c.obj
+[234/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\SDL_mixer.c.obj
+[235/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\SDL_wave.c.obj
+[236/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\cpuinfo\SDL_cpuinfo.c.obj
+[237/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\FormatterBase.c.obj
+[238/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_keysym_to_scancode.c.obj
+[239/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL_list.c.obj
+[240/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL_dataqueue.c.obj
+[241/784] Building C object _deps\zydis-build\CMakeFiles\Zydis.dir\src\SharedData.c.obj
+[242/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL.c.obj
+[243/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL_assert.c.obj
+[244/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL_log.c.obj
+[245/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_scancode_tables.c.obj
+[246/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\imKStoUCS.c.obj
+[247/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_displayevents.c.obj
+[248/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_dropevents.c.obj
+[249/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_clipboardevents.c.obj
+[250/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\SDL_audio.c.obj
+[251/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\controller_type.c.obj
+[252/784] Building CXX object 3rdparty\spdlog\CMakeFiles\spdlog.dir\src\async.cpp.obj
+[253/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\haptic\SDL_haptic.c.obj
+[254/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_gesture.c.obj
+[255/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_keyboard.c.obj
+[256/784] Building CXX object 3rdparty\CMakeFiles\imgui.dir\imgui\imgui_draw.cpp.obj
+[257/784] Building CXX object 3rdparty\CMakeFiles\imgui.dir\imgui\imgui_widgets.cpp.obj
+[258/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\s_cos.c.obj
+[259/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\SDL_audiocvt.c.obj
+[260/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\s_fabs.c.obj
+[261/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_events.c.obj
+[262/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\s_floor.c.obj
+[263/784] Building CXX object 3rdparty\spdlog\CMakeFiles\spdlog.dir\src\cfg.cpp.obj
+[264/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_mouse.c.obj
+[265/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\e_atan2.c.obj
+[266/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\e_exp.c.obj
+[267/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\e_fmod.c.obj
+[268/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\e_log10.c.obj
+[269/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\e_log.c.obj
+[270/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\e_pow.c.obj
+[271/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\k_cos.c.obj
+[272/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\e_rem_pio2.c.obj
+[273/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\e_sqrt.c.obj
+[274/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\k_tan.c.obj
+[275/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\k_sin.c.obj
+[276/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\s_atan.c.obj
+[277/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\k_rem_pio2.c.obj
+[278/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_quit.c.obj
+[279/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\s_copysign.c.obj
+[280/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\file\SDL_rwops.c.obj
+[281/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_windowevents.c.obj
+[282/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\SDL_steam_virtual_gamepad.c.obj
+[283/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\events\SDL_touch.c.obj
+[284/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\hidapi\SDL_hidapi.c.obj
+[285/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\s_sin.c.obj
+[286/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\s_tan.c.obj
+[287/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\locale\SDL_locale.c.obj
+[288/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\misc\SDL_url.c.obj
+[289/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\power\SDL_power.c.obj
+[290/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\SDL_d3dmath.c.obj
+[291/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\SDL_yuv_sw.c.obj
+[292/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\direct3d\SDL_shaders_d3d.c.obj
+[293/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\opengl\SDL_shaders_gl.c.obj
+[294/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\opengles\SDL_render_gles.c.obj
+[295/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\SDL_gamecontroller.c.obj
+[296/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\opengles2\SDL_shaders_gles2.c.obj
+[297/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\ps2\SDL_render_ps2.c.obj
+[298/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\psp\SDL_render_psp.c.obj
+[299/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\software\SDL_blendpoint.c.obj
+[300/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\libm\s_scalbn.c.obj
+[301/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\SDL_joystick.c.obj
+[302/784] Building CXX object 3rdparty\spdlog\CMakeFiles\spdlog.dir\src\spdlog.cpp.obj
+[303/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\dynapi\SDL_dynapi.c.obj
+[304/784] Building CXX object 3rdparty\SPIRV-Tools\source\CMakeFiles\SPIRV-Tools-static.dir\val\validation_state.cpp.obj
+[305/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\software\SDL_drawpoint.c.obj
+[306/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\software\SDL_render_sw.c.obj
+[307/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\software\SDL_rotate.c.obj
+[308/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\software\SDL_triangle.c.obj
+[309/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\vitagxm\SDL_render_vita_gxm.c.obj
+[310/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\vitagxm\SDL_render_vita_gxm_memory.c.obj
+[311/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\vitagxm\SDL_render_vita_gxm_tools.c.obj
+[312/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\sensor\SDL_sensor.c.obj
+[313/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\stdlib\SDL_crc16.c.obj
+[314/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\stdlib\SDL_crc32.c.obj
+[315/784] Building CXX object 3rdparty\CMakeFiles\imgui.dir\imgui\imgui.cpp.obj
+[316/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\stdlib\SDL_getenv.c.obj
+[317/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\direct3d11\SDL_shaders_d3d11.c.obj
+[318/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\stdlib\SDL_iconv.c.obj
+[319/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\stdlib\SDL_malloc.c.obj
+[320/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\stdlib\SDL_mslibc.c.obj
+[321/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\stdlib\SDL_qsort.c.obj
+[322/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\stdlib\SDL_stdlib.c.obj
+[323/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\stdlib\SDL_string.c.obj
+[324/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\stdlib\SDL_strtokr.c.obj
+[325/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\thread\SDL_thread.c.obj
+[326/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\direct3d12\SDL_shaders_d3d12.c.obj
+[327/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\opengl\SDL_render_gl.c.obj
+[328/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\opengles2\SDL_render_gles2.c.obj
+[329/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\direct3d\SDL_render_d3d.c.obj
+[330/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\software\SDL_blendfillrect.c.obj
+[331/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\SDL_render.c.obj
+[332/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\direct3d11\SDL_render_d3d11.c.obj
+[333/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\software\SDL_drawline.c.obj
+[334/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\direct3d12\SDL_render_d3d12.c.obj
+[335/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\timer\SDL_timer.c.obj
+[336/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_RLEaccel.c.obj
+[337/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_blit.c.obj
+[338/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\render\software\SDL_blendline.c.obj
+[339/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_blit_0.c.obj
+[340/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_blit_1.c.obj
+[341/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_blit_A.c.obj
+[342/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_blit_N.c.obj
+[343/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_blit_copy.c.obj
+[344/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_blit_slow.c.obj
+[345/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_bmp.c.obj
+[346/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_clipboard.c.obj
+[347/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_egl.c.obj
+[348/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_fillrect.c.obj
+[349/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_pixels.c.obj
+[350/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_rect.c.obj
+[351/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_shape.c.obj
+[352/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_stretch.c.obj
+[353/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_surface.c.obj
+[354/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_video.c.obj
+[355/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_vulkan_utils.c.obj
+[356/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_yuv.c.obj
+[357/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\yuv2rgb\yuv_rgb_lsx.c.obj
+[358/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\yuv2rgb\yuv_rgb_sse.c.obj
+[359/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\yuv2rgb\yuv_rgb_std.c.obj
+[360/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\dummy\SDL_dummyaudio.c.obj
+[361/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\disk\SDL_diskaudio.c.obj
+[362/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\virtual\SDL_virtualjoystick.c.obj
+[363/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\dummy\SDL_nullevents.c.obj
+[364/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\dummy\SDL_nullframebuffer.c.obj
+[365/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\dummy\SDL_nullvideo.c.obj
+[366/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\offscreen\SDL_offscreenevents.c.obj
+[367/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\offscreen\SDL_offscreenframebuffer.c.obj
+[368/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\offscreen\SDL_offscreenopengles.c.obj
+[369/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\offscreen\SDL_offscreenvideo.c.obj
+[370/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\offscreen\SDL_offscreenwindow.c.obj
+[371/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\core\windows\SDL_hid.c.obj
+[372/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\core\windows\SDL_immdevice.c.obj
+[373/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\core\windows\SDL_windows.c.obj
+[374/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\core\windows\SDL_xinput.c.obj
+[375/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\misc\windows\SDL_sysurl.c.obj
+[376/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\winmm\SDL_winmm.c.obj
+[377/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\directsound\SDL_directsound.c.obj
+[378/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\wasapi\SDL_wasapi.c.obj
+[379/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\audio\wasapi\SDL_wasapi_win32.c.obj
+[380/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsclipboard.c.obj
+[381/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsevents.c.obj
+[382/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\SDL_blit_auto.c.obj
+[383/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsframebuffer.c.obj
+[384/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowskeyboard.c.obj
+[385/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsmessagebox.c.obj
+[386/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsmodes.c.obj
+[387/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsmouse.c.obj
+[388/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsopengl.c.obj
+[389/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsopengles.c.obj
+[390/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsshape.c.obj
+[391/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsvideo.c.obj
+[392/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowsvulkan.c.obj
+[393/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\video\windows\SDL_windowswindow.c.obj
+[394/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\thread\generic\SDL_syscond.c.obj
+[395/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\thread\windows\SDL_syscond_cv.c.obj
+[396/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\thread\windows\SDL_sysmutex.c.obj
+[397/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\thread\windows\SDL_syssem.c.obj
+[398/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\thread\windows\SDL_systhread.c.obj
+[399/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\thread\windows\SDL_systls.c.obj
+[400/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\sensor\windows\SDL_windowssensor.c.obj
+[401/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\power\windows\SDL_syspower.c.obj
+[402/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\locale\windows\SDL_syslocale.c.obj
+[403/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\filesystem\windows\SDL_sysfilesystem.c.obj
+[404/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\timer\windows\SDL_systimer.c.obj
+[405/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\loadso\windows\SDL_sysloadso.c.obj
+[406/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_8bitdo.c.obj
+[407/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_combined.c.obj
+[408/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_gamecube.c.obj
+[409/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_luna.c.obj
+[410/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_ps3.c.obj
+[411/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_ps4.c.obj
+[412/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_ps5.c.obj
+[413/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_rumble.c.obj
+[414/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_shield.c.obj
+[415/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_stadia.c.obj
+[416/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_steam.c.obj
+[417/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_steamdeck.c.obj
+[418/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_switch.c.obj
+[419/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_wii.c.obj
+[420/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_xbox360.c.obj
+[421/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_xbox360w.c.obj
+[422/784] Linking CXX static library 3rdparty\SPIRV-Tools\source\SPIRV-Tools.lib
+[423/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapi_xboxone.c.obj
+[424/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\hidapi\SDL_hidapijoystick.c.obj
+[425/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\windows\SDL_xinputjoystick.c.obj
+[426/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\windows\SDL_dinputjoystick.c.obj
+[427/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\windows\SDL_windowsjoystick.c.obj
+[428/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\haptic\windows\SDL_windowshaptic.c.obj
+[429/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\haptic\windows\SDL_xinputhaptic.c.obj
+[430/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\haptic\windows\SDL_dinputhaptic.c.obj
+[431/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\windows\SDL_windows_gaming_input.c.obj
+[432/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\control_dependence.cpp.obj
+[433/784] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\joystick\windows\SDL_rawinputjoystick.c.obj
+[434/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\def_use_manager.cpp.obj
+[435/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\block_merge_pass.cpp.obj
+[436/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\analyze_live_input_pass.cpp.obj
+[437/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\composite.cpp.obj
+[438/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\compact_ids_pass.cpp.obj
+[439/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\cfg_cleanup_pass.cpp.obj
+[440/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\build_module.cpp.obj
+[441/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\fix_func_call_arguments.cpp.obj
+[442/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\code_sink.cpp.obj
+[443/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\basic_block.cpp.obj
+[444/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\ccp_pass.cpp.obj
+[445/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\dataflow.cpp.obj
+[446/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\block_merge_util.cpp.obj
+[447/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\dead_variable_elimination.cpp.obj
+[448/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\combine_access_chains.cpp.obj
+[449/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\dead_insert_elim_pass.cpp.obj
+[450/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\constants.cpp.obj
+[451/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\convert_to_sampled_image_pass.cpp.obj
+[452/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\copy_prop_arrays.cpp.obj
+[453/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\dead_branch_elim_pass.cpp.obj
+[454/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\dominator_analysis.cpp.obj
+[455/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\amd_ext_to_khr.cpp.obj
+[456/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\cfg.cpp.obj
+[457/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\desc_sroa_util.cpp.obj
+[458/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\convert_to_half_pass.cpp.obj
+[459/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\aggressive_dead_code_elim_pass.cpp.obj
+[460/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\decoration_manager.cpp.obj
+[461/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\const_folding_rules.cpp.obj
+[462/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\feature_manager.cpp.obj
+[463/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\desc_sroa.cpp.obj
+[464/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\debug_info_manager.cpp.obj
+[465/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\dominator_tree.cpp.obj
+[466/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\eliminate_dead_functions_pass.cpp.obj
+[467/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\instruction_list.cpp.obj
+[468/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\eliminate_dead_functions_util.cpp.obj
+[469/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\eliminate_dead_constant_pass.cpp.obj
+[470/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\eliminate_dead_io_components_pass.cpp.obj
+[471/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\flatten_decoration_pass.cpp.obj
+[472/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\eliminate_dead_output_stores_pass.cpp.obj
+[473/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\fix_storage_class.cpp.obj
+[474/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\eliminate_dead_members_pass.cpp.obj
+[475/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\freeze_spec_constant_value_pass.cpp.obj
+[476/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\inline_exhaustive_pass.cpp.obj
+[477/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\inline_opaque_pass.cpp.obj
+[478/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\fold.cpp.obj
+[479/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\function.cpp.obj
+[480/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\fold_spec_constant_op_and_composite_pass.cpp.obj
+[481/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\licm_pass.cpp.obj
+[482/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\ir_loader.cpp.obj
+[483/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\graphics_robust_access_pass.cpp.obj
+[484/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\liveness.cpp.obj
+[485/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\if_conversion.cpp.obj
+[486/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\opextinst_forward_ref_fixup_pass.cpp.obj
+[487/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\interp_fixup_pass.cpp.obj
+[488/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\invocation_interlock_placement_pass.cpp.obj
+[489/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\interface_var_sroa.cpp.obj
+[490/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\instruction.cpp.obj
+[491/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\inline_pass.cpp.obj
+[492/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\local_access_chain_convert_pass.cpp.obj
+[493/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\local_redundancy_elimination.cpp.obj
+[494/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\loop_dependence_helpers.cpp.obj
+[495/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\loop_fusion_pass.cpp.obj
+[496/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\local_single_block_elim_pass.cpp.obj
+[497/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\local_single_store_elim_pass.cpp.obj
+[498/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\loop_dependence.cpp.obj
+[499/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\ir_context.cpp.obj
+[500/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\loop_descriptor.cpp.obj
+[501/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\loop_fission.cpp.obj
+[502/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\folding_rules.cpp.obj
+[503/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\loop_fusion.cpp.obj
+[504/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\module.cpp.obj
+[505/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\scalar_analysis_simplification.cpp.obj
+[506/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\pass_manager.cpp.obj
+[507/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\modify_maximal_reconvergence.cpp.obj
+[508/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\pass.cpp.obj
+[509/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\loop_peeling.cpp.obj
+[510/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\private_to_local_pass.cpp.obj
+[511/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\loop_unroller.cpp.obj
+[512/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\redundancy_elimination.cpp.obj
+[513/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\mem_pass.cpp.obj
+[514/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\loop_utils.cpp.obj
+[515/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\remove_dontinline_pass.cpp.obj
+[516/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\propagator.cpp.obj
+[517/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\canonicalize_ids_pass.cpp.obj
+[518/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\remove_duplicates_pass.cpp.obj
+[519/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\merge_return_pass.cpp.obj
+[520/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\replace_invalid_opc.cpp.obj
+[521/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\relax_float_ops_pass.cpp.obj
+[522/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\vector_dce.cpp.obj
+[523/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\workaround1209.cpp.obj
+[524/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\reduce_load_size.cpp.obj
+[525/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\loop_unswitch_pass.cpp.obj
+[526/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\remove_unused_interface_variables_pass.cpp.obj
+[527/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\register_pressure.cpp.obj
+[528/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\resolve_binding_conflicts_pass.cpp.obj
+[529/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\wrap_opkill.cpp.obj
+[530/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\replace_desc_array_access_using_var_index.cpp.obj
+[531/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\simplification_pass.cpp.obj
+[532/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\set_spec_constant_default_value_pass.cpp.obj
+[533/784] Building C object 3rdparty\xxHash\build\cmake\CMakeFiles\xxhash.dir\__\__\xxhash.c.obj
+[534/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\scalar_analysis.cpp.obj
+[535/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\spread_volatile_semantics.cpp.obj
+[536/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\scalar_replacement_pass.cpp.obj
+[537/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\optimizer.cpp.obj
+[538/784] Linking CXX static library 3rdparty\spdlog\spdlog.lib
+[539/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\strength_reduction_pass.cpp.obj
+[540/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\split_combined_image_sampler_pass.cpp.obj
+[541/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\strip_debug_info_pass.cpp.obj
+[542/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\types.cpp.obj
+[543/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\strip_nonsemantic_info_pass.cpp.obj
+[544/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\ssa_rewrite_pass.cpp.obj
+[545/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\switch_descriptorset_pass.cpp.obj
+[546/784] Building CXX object common\CMakeFiles\common.dir\assert.cpp.obj
+[547/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\struct_packing_pass.cpp.obj
+[548/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\trim_capabilities_pass.cpp.obj
+[549/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\struct_cfg_analysis.cpp.obj
+[550/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\unify_const_pass.cpp.obj
+[551/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\value_number_table.cpp.obj
+[552/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\type_manager.cpp.obj
+[553/784] Building CXX object 3rdparty\SPIRV-Tools\source\opt\CMakeFiles\SPIRV-Tools-opt.dir\upgrade_memory_model.cpp.obj
+[554/784] Building CXX object common\CMakeFiles\common.dir\platform\sysLinuxDbg.cpp.obj
+[555/784] Building CXX object common\CMakeFiles\common.dir\platform\sysLinuxFileIO.cpp.obj
+[556/784] Building CXX object common\CMakeFiles\common.dir\platform\sysLinuxVirtual.cpp.obj
+[557/784] Building CXX object common\CMakeFiles\common.dir\virtualMemory.cpp.obj
+[558/784] Linking C static library 3rdparty\xxHash\build\cmake\xxhash.lib
+[559/784] Linking C static library 3rdparty\LibAtrac9.lib
+[560/784] Linking CXX static library 3rdparty\imgui.lib
+[561/784] Linking C static library 3rdparty\SDL2\SDL2-static.lib
+[562/784] Linking C static library _deps\zydis-build\Zydis.lib
+[563/784] Linking CXX static library 3rdparty\SPIRV-Tools\source\opt\SPIRV-Tools-opt.lib
+[564/784] Building CXX object common\CMakeFiles\common.dir\debug.cpp.obj
+[565/784] Building CXX object common\CMakeFiles\common.dir\subsystems.cpp.obj
+[566/784] Building CXX object common\CMakeFiles\common.dir\dateTime.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\common\dateTime.cpp:5:
+C:\kyty\f287\fs11b\wt\src\common/stringUtils.h(323,28): warning: 'codecvt_utf8_utf16<char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |                                   ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\codecvt(442,7): note: 'codecvt_utf8_utf16<char16_t>' has been explicitly marked deprecated here
+  442 | class _CXX17_DEPRECATE_CODECVT_HEADER codecvt_utf8_utf16
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+In file included from C:\kyty\f287\fs11b\wt\src\common\dateTime.cpp:5:
+C:\kyty\f287\fs11b\wt\src\common/stringUtils.h(323,7): warning: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |              ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocbuf(303,7): note: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' has been explicitly marked deprecated here
+  303 | class _CXX17_DEPRECATE_CODECVT_HEADER wstring_convert { // converts between _Elem (wide) and char (byte) strings
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+2 warnings generated.
+[567/784] Building CXX object common\CMakeFiles\common.dir\systemInfo.cpp.obj
+[568/784] Building CXX object common\CMakeFiles\common.dir\platform\sysWindowsDbg.cpp.obj
+[569/784] Building CXX object common\CMakeFiles\common.dir\platform\sysWindowsVirtual.cpp.obj
+[570/784] Building CXX object common\CMakeFiles\common.dir\parallelCopy.cpp.obj
+C:\kyty\f287\fs11b\wt\src\common\parallelCopy.cpp(233,26): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  233 |                 const char* env = std::getenv("KYTY_PARALLEL_COPY");
+      |                                        ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\parallelCopy.cpp(491,26): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  491 |                 const char* env = std::getenv("KYTY_ASYNC_COPY");
+      |                                        ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+2 warnings generated.
+[571/784] Building CXX object 3rdparty\tracy\CMakeFiles\TracyClient.dir\public\TracyClient.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\3rdparty\tracy\public\TracyClient.cpp:23:
+C:\kyty\f287\fs11b\wt\3rdparty\tracy\public\client/TracyProfiler.cpp(285,13): warning: unused function 'EnsureReadable' [-Wunused-function]
+  285 | static bool EnsureReadable( uintptr_t address )
+      |             ^~~~~~~~~~~~~~
+1 warning generated.
+[572/784] Building CXX object common\CMakeFiles\common.dir\timer.cpp.obj
+[573/784] Building CXX object common\CMakeFiles\common.dir\gates.cpp.obj
+C:\kyty\f287\fs11b\wt\src\common\gates.cpp(497,34): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  497 |                         const auto* value      = std::getenv(definition.environment);
+      |                                                       ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\gates.cpp(508,34): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  508 |                         const auto* value      = std::getenv(definition.environment);
+      |                                                       ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\gates.cpp(535,39): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  535 |         static const char* const path = std::getenv("KYTY_GATE_FILE");
+      |                                              ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\gates.cpp(561,28): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  561 |                 const auto* value = std::getenv("KYTY_GATE_SCHEDULE");
+      |                                          ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\gates.cpp(610,27): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  610 |                 const auto* abba = std::getenv("KYTY_GATE_SCHEDULE_ABBA");
+      |                                         ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\gates.cpp(666,36): warning: 'fopen' is deprecated: This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  666 |         auto*                 file = std::fopen(path, "rb");
+      |                                           ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdio.h(212,20): note: 'fopen' has been explicitly marked deprecated here
+  212 |     _Check_return_ _CRT_INSECURE_DEPRECATE(fopen_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+6 warnings generated.
+[574/784] Building CXX object common\CMakeFiles\common.dir\profiler.cpp.obj
+[575/784] Building CXX object common\CMakeFiles\common.dir\emulatorConfig.cpp.obj
+[576/784] Building CXX object common\CMakeFiles\common.dir\hostException.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\common\hostException.cpp:5:
+C:\kyty\f287\fs11b\wt\src\common/envFlag.h(36,25): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   36 |         return EnvValueOn(std::getenv(name));
+      |                                ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+1 warning generated.
+[577/784] Building CXX object common\CMakeFiles\common.dir\threads.cpp.obj
+[578/784] Building CXX object common\CMakeFiles\common.dir\platform\sysWindowsFileIO.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\common\platform\sysWindowsFileIO.cpp:14:
+C:\kyty\f287\fs11b\wt\src\common/stringUtils.h(323,28): warning: 'codecvt_utf8_utf16<char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |                                   ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\codecvt(442,7): note: 'codecvt_utf8_utf16<char16_t>' has been explicitly marked deprecated here
+  442 | class _CXX17_DEPRECATE_CODECVT_HEADER codecvt_utf8_utf16
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+In file included from C:\kyty\f287\fs11b\wt\src\common\platform\sysWindowsFileIO.cpp:14:
+C:\kyty\f287\fs11b\wt\src\common/stringUtils.h(323,7): warning: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |              ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocbuf(303,7): note: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' has been explicitly marked deprecated here
+  303 | class _CXX17_DEPRECATE_CODECVT_HEADER wstring_convert { // converts between _Elem (wide) and char (byte) strings
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+2 warnings generated.
+[579/784] Building CXX object common\CMakeFiles\common.dir\file.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\common\file.cpp:7:
+C:\kyty\f287\fs11b\wt\src\common/stringUtils.h(323,28): warning: 'codecvt_utf8_utf16<char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |                                   ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\codecvt(442,7): note: 'codecvt_utf8_utf16<char16_t>' has been explicitly marked deprecated here
+  442 | class _CXX17_DEPRECATE_CODECVT_HEADER codecvt_utf8_utf16
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+In file included from C:\kyty\f287\fs11b\wt\src\common\file.cpp:7:
+C:\kyty\f287\fs11b\wt\src\common/stringUtils.h(323,7): warning: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |              ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocbuf(303,7): note: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' has been explicitly marked deprecated here
+  303 | class _CXX17_DEPRECATE_CODECVT_HEADER wstring_convert { // converts between _Elem (wide) and char (byte) strings
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+2 warnings generated.
+[580/784] Building CXX object common\CMakeFiles\common.dir\logging\log.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\common\logging\log.cpp:8:
+C:\kyty\f287\fs11b\wt\src\common/envFlag.h(36,25): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   36 |         return EnvValueOn(std::getenv(name));
+      |                                ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+In file included from C:\kyty\f287\fs11b\wt\src\common\logging\log.cpp:9:
+C:\kyty\f287\fs11b\wt\src\common/stringUtils.h(323,28): warning: 'codecvt_utf8_utf16<char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |                                   ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\codecvt(442,7): note: 'codecvt_utf8_utf16<char16_t>' has been explicitly marked deprecated here
+  442 | class _CXX17_DEPRECATE_CODECVT_HEADER codecvt_utf8_utf16
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+In file included from C:\kyty\f287\fs11b\wt\src\common\logging\log.cpp:9:
+C:\kyty\f287\fs11b\wt\src\common/stringUtils.h(323,7): warning: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |              ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocbuf(303,7): note: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' has been explicitly marked deprecated here
+  303 | class _CXX17_DEPRECATE_CODECVT_HEADER wstring_convert { // converts between _Elem (wide) and char (byte) strings
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+C:\kyty\f287\fs11b\wt\src\common\logging\log.cpp(187,27): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  187 |         const char* value = std::getenv("KYTY_TEST_LOGSTALL");
+      |                                  ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\logging\log.cpp(194,23): warning: 'sscanf' is deprecated: This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  194 |         const int n   = std::sscanf(value, "%u:%u:%u", &at_s, &ms, &k);
+      |                              ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdio.h(2239,20): note: 'sscanf' has been explicitly marked deprecated here
+ 2239 |     _Check_return_ _CRT_INSECURE_DEPRECATE(sscanf_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\logging\log.cpp(735,28): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  735 |                 const char* value = std::getenv("KYTY_FIX_B36");
+      |                                          ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+6 warnings generated.
+[581/784] Building CXX object common\CMakeFiles\common.dir\frameStats.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\common\frameStats.cpp:4:
+C:\kyty\f287\fs11b\wt\src\common/envFlag.h(36,25): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   36 |         return EnvValueOn(std::getenv(name));
+      |                                ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\frameStats.cpp(84,27): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   84 |         const auto* value = std::getenv("KYTY_FRAME_TRACE");
+      |                                  ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\frameStats.cpp(358,28): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  358 |                 const char* value = std::getenv("KYTY_SAMPLE_FRAME_MS");
+      |                                          ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\frameStats.cpp(376,28): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  376 |                 const char* value = std::getenv("KYTY_SAMPLE_US");
+      |                                          ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\frameStats.cpp(382,31): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  382 |         const auto* gate_path = std::getenv("KYTY_SAMPLE_GATE");
+      |                                      ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs11b\wt\src\common\frameStats.cpp(553,40): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  553 |         const char*              value = std::getenv("KYTY_SAMPLE_GPU");
+      |                                               ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+6 warnings generated.
+[582/784] Linking CXX static library common\common.lib
+[583/784] Generating gpu_tiler_shaders/fault_buffer_process_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/fault_buffer_process.comp
+[584/784] Generating gpu_tiler_shaders/gpu_tiler_swap_bgra16_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_swap_bgra16.comp
+[585/784] Generating gpu_tiler_shaders/gpu_tiler_promote_d16_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_promote_d16.comp
+[586/784] Generating gpu_tiler_shaders/dispatch_indirect_sanitize_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/dispatch_indirect_sanitize.comp
+[587/784] Generating gpu_tiler_shaders/gpu_tiler_demote_d16_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_demote_d16.comp
+[588/784] Generating gpu_tiler_shaders/gpu_tiler_standard4_img_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_standard4.comp
+[589/784] Generating gpu_tiler_shaders/gpu_tiler_standard256_img_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_standard256.comp
+[590/784] Generating gpu_tiler_shaders/gpu_tiler_standard4_3d_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_standard4_3d.comp
+[591/784] Generating gpu_tiler_shaders/gpu_tiler_standard4_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_standard4.comp
+[592/784] Generating gpu_tiler_shaders/gpu_tiler_prt_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_prt.comp
+[593/784] Generating gpu_tiler_shaders/gpu_tiler_render_target_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_render_target.comp
+[594/784] Generating gpu_tiler_shaders/gpu_tiler_standard256_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_standard256.comp
+[595/784] Generating gpu_tiler_shaders/gpu_tiler_depth_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_depth.comp
+[596/784] Generating gpu_tiler_shaders/gpu_tiler_standard64_img_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_standard64.comp
+[597/784] Generating gpu_tiler_shaders/gpu_tiler_standard4_3d_img_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_standard4_3d.comp
+[598/784] Generating gpu_tiler_shaders/gpu_tiler_prt_3d_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_prt_3d.comp
+[599/784] Generating gpu_tiler_shaders/gpu_tiler_standard64_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_standard64.comp
+[600/784] Generating gpu_tiler_shaders/gpu_tiler_standard64_3d_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_standard64_3d.comp
+[601/784] Generating gpu_tiler_shaders/gpu_tiler_standard64_3d_img_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_standard64_3d.comp
+[602/784] Generating gpu_blit_shaders/gpu_blit_fs_triangle_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_blit_fs_triangle.vert
+[603/784] Generating gpu_tiler_shaders/gpu_tiler_prt_3d_img_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_prt_3d.comp
+[604/784] Generating gpu_tiler_shaders/gpu_tiler_prt_img_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_prt.comp
+[605/784] Generating gpu_tiler_shaders/gpu_tiler_render_target_img_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_render_target.comp
+[606/784] Generating gpu_tiler_shaders/gpu_tiler_depth_img_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_tiler_depth.comp
+[607/784] Generating gpu_blit_shaders/gpu_blit_color_to_ms_depth_spv.h
+C:/kyty/f287/fs11b/wt/src/graphics/host_gpu/shaders/gpu_blit_color_to_ms_depth.frag
+[608/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\guest_gpu\command_processor\pm4Dispatch.cpp.obj
+[609/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\guest_gpu\gpu_format.cpp.obj
+[610/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\hostMemory.cpp.obj
+[611/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\guest_gpu\pm4.cpp.obj
+[612/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\main.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\main.cpp:5:
+In file included from C:\kyty\f287\fs11b\wt\src\common/magicEnum.h:5:
+C:\kyty\f287\fs11b\wt\src\common/stringUtils.h(323,28): warning: 'codecvt_utf8_utf16<char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |                                   ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\codecvt(442,7): note: 'codecvt_utf8_utf16<char16_t>' has been explicitly marked deprecated here
+  442 | class _CXX17_DEPRECATE_CODECVT_HEADER codecvt_utf8_utf16
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+In file included from C:\kyty\f287\fs11b\wt\src\main.cpp:5:
+In file included from C:\kyty\f287\fs11b\wt\src\common/magicEnum.h:5:
+C:\kyty\f287\fs11b\wt\src\common/stringUtils.h(323,7): warning: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |              ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocbuf(303,7): note: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' has been explicitly marked deprecated here
+  303 | class _CXX17_DEPRECATE_CODECVT_HEADER wstring_convert { // converts between _Elem (wide) and char (byte) strings
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+2 warnings generated.
+[613/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\memoryTracker.cpp.obj
+[614/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\guest_gpu\tile.cpp.obj
+[615/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\pageManager.cpp.obj
+[616/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\shaderTranslationCache.cpp.obj
+[617/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\shaderReplay.cpp.obj
+[618/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\textureCommon.cpp.obj
+C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\image\textureCommon.cpp(139,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  139 | }
+      | ^
+C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\image\textureCommon.cpp(173,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  173 | }
+      | ^
+2 warnings generated.
+[619/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\gpuTimeProfiler.cpp.obj
+[620/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\shaderResourceBarrier.cpp.obj
+C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\pipeline\shaderResourceBarrier.cpp(25,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   25 | }
+      | ^
+1 warning generated.
+[621/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\descriptorHeap.cpp.obj
+[622/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\blitHelper.cpp.obj
+[623/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\imageView.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\image\imageView.cpp:1:
+C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\image\imageView.cpp(297,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  297 | }
+      | ^
+2 warnings generated.
+[624/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\indirectArgsSanitizer.cpp.obj
+[625/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\faultManager.cpp.obj
+[626/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\samplerCache.cpp.obj
+[627/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\streamBuffer.cpp.obj
+[628/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\commandRecorder.cpp.obj
+[629/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\hostImport.cpp.obj
+[630/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\context.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\context.cpp:14:
+In file included from C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[631/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\debug.cpp.obj
+[632/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\tiler.cpp.obj
+[633/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp.obj
+C:\kyty\f287\fs11b\wt\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp(1595,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1595 | }
+      | ^
+C:\kyty\f287\fs11b\wt\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp(1611,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1611 | }
+      | ^
+2 warnings generated.
+[634/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\image.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\image\image.cpp:10:
+C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\image\image.cpp(30,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   30 | }
+      | ^
+C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\image\image.cpp(706,10): warning: enumeration value 'Cmask' not handled in switch [-Wswitch]
+  706 |         switch (info.metadata.kind) {
+      |                 ^~~~~~~~~~~~~~~~~~
+C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\image\image.cpp(741,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  741 | }
+      | ^
+4 warnings generated.
+[635/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\colorRenderTarget.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\colorRenderTarget.cpp:16:
+In file included from C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/renderMemo.h:7:
+In file included from C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[636/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\guest_gpu\graphicsRun.cpp.obj
+[637/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\masterSemaphore.cpp.obj
+[638/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\commandScheduler.cpp.obj
+[639/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\SpirvBuilder.cpp.obj
+[640/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\depthRenderTarget.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\depthRenderTarget.cpp:1:
+In file included from C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\depthRenderTarget.cpp(46,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   46 | }
+      | ^
+2 warnings generated.
+[641/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\gpuCheckpoints.cpp.obj
+[642/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\hostInput.cpp.obj
+[643/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\inputScript.cpp.obj
+[644/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAluHelpers.cpp.obj
+[645/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAlu.cpp.obj
+[646/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\Tessellation.cpp.obj
+[647/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\renderContext.cpp.obj
+[648/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp:13:
+In file included from C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/renderMemo.h:7:
+In file included from C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp(611,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  611 | }
+      | ^
+2 warnings generated.
+[649/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterFlow.cpp.obj
+[650/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\SpirvEmitter.cpp.obj
+[651/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\bufferCache.cpp.obj
+[652/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ShaderRecompiler.cpp.obj
+[653/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAnalysis.cpp.obj
+C:\kyty\f287\fs11b\wt\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAnalysis.cpp(115,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  115 | }
+      | ^
+1 warning generated.
+[654/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\renderCompute.cpp.obj
+[655/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\textureCache.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\cache\textureCache.cpp:18:
+C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[656/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\shaders.cpp.obj
+[657/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterHelpers.cpp.obj
+[658/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\shadowResolve.cpp.obj
+[659/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\vulkanCommon.cpp.obj
+[660/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMemoryHelpers.cpp.obj
+[661/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterModule.cpp.obj
+[662/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterTessellation.cpp.obj
+[663/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\systemOverlay.cpp.obj
+[664/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\ExportOps.cpp.obj
+[665/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMesh.cpp.obj
+[666/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterImage.cpp.obj
+C:\kyty\f287\fs11b\wt\src\graphics\shader\recompiler\backend\spirv\spirvEmitterImage.cpp(220,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  220 | }
+      | ^
+1 warning generated.
+[667/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\ImageOps.cpp.obj
+[668/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\MemoryOps.cpp.obj
+[669/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\ScalarAluOps.cpp.obj
+[670/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\vma.cpp.obj
+[671/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\VectorAluOps.cpp.obj
+[672/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Compare.cpp.obj
+[673/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\Type.cpp.obj
+[674/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Convert.cpp.obj
+[675/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\sync.cpp.obj
+[676/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterProgram.cpp.obj
+[677/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\opcodes\ValueOpcodes.cpp.obj
+[678/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\Block.cpp.obj
+[679/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\renderDoc.cpp.obj
+[680/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Attribute.cpp.obj
+[681/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Control.cpp.obj
+[682/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\DeadCodeElimination.cpp.obj
+[683/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Dispatch.cpp.obj
+[684/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\IREmitter.cpp.obj
+[685/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\screenshot.cpp.obj
+[686/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Integer.cpp.obj
+[687/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Scalar.cpp.obj
+[688/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\ShaderDecoder.cpp.obj
+[689/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Float.cpp.obj
+[690/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\macosGuestAddressSpace.cpp.obj
+[691/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Vector.cpp.obj
+[692/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\shaderBindings.cpp.obj
+[693/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp.obj
+[694/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\renderDraw.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\renderDraw.cpp:27:
+In file included from C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[695/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\shaderVertexMetadata.cpp.obj
+[696/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\shaderPixelParameter.cpp.obj
+[697/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\Value.cpp.obj
+[698/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Memory.cpp.obj
+[699/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\videoOut.cpp.obj
+[700/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\errno.cpp.obj
+[701/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\ConstantPropagation.cpp.obj
+[702/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\PredicationElimination.cpp.obj
+[703/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\ReadLaneElimination.cpp.obj
+[704/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Translate.cpp.obj
+C:\kyty\f287\fs11b\wt\src\graphics\shader\recompiler\frontend\translate\Translate.cpp(20,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   20 | }
+      | ^
+C:\kyty\f287\fs11b\wt\src\graphics\shader\recompiler\frontend\translate\Translate.cpp(148,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  148 | }
+      | ^
+2 warnings generated.
+[705/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\vulkanWindow.cpp.obj
+[706/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp:24:
+In file included from C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs11b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs11b\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp(408,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  408 | }
+      | ^
+2 warnings generated.
+[707/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\BindingLayout.cpp.obj
+[708/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\swapchain.cpp.obj
+[709/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\rectListShader.cpp.obj
+[710/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\Program.cpp.obj
+[711/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\ShaderInfoCollection.cpp.obj
+[712/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\window.cpp.obj
+[713/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\imeCommon.cpp.obj
+[714/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\SsaRewrite.cpp.obj
+[715/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\imeDialog.cpp.obj
+[716/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\syncOnAddress.cpp.obj
+[717/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\eventFlag.cpp.obj
+[718/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\pvar.cpp.obj
+[719/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp.obj
+[720/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\eventQueue.cpp.obj
+[721/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\semaphore.cpp.obj
+[722/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMemory.cpp.obj
+[723/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\ime.cpp.obj
+[724/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\fileSystem.cpp.obj
+[725/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libAgcDriver.cpp.obj
+[726/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\guestPrintf.cpp.obj
+[727/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\dialog.cpp.obj
+[728/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\controller.cpp.obj
+[729/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\ajm.cpp.obj
+[730/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libDialog.cpp.obj
+[731/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\avPlayer.cpp.obj
+[732/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libAppContent.cpp.obj
+[733/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libCes.cpp.obj
+[734/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libAudio2.cpp.obj
+[735/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\pthread.cpp.obj
+[736/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libFontFt.cpp.obj
+[737/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libDbgAsan.cpp.obj
+[738/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\SrtWalker.cpp.obj
+In file included from C:\kyty\f287\fs11b\wt\src\graphics\shader\recompiler\ir\passes\SrtWalker.cpp:2104:
+C:\kyty\f287\fs11b\wt\src\graphics/shader/recompiler/ir/passes/SrtNative.inc(93,49): warning: suggest braces around initialization of subobject [-Wmissing-braces]
+   93 |                 m_unwind = {0, static_cast<DWORD>(code_size), static_cast<DWORD>(unwind_offset)};
+      |                                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                               {                                }
+1 warning generated.
+[739/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libConvertKeycode.cpp.obj
+[740/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libDebug.cpp.obj
+[741/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libC.cpp.obj
+[742/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\audio.cpp.obj
+[743/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libAudio.cpp.obj
+[744/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libHmd2.cpp.obj
+[745/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\ResourceMaterialization.cpp.obj
+[746/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libPad.cpp.obj
+[747/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libPngDec.cpp.obj
+[748/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libAmpr.cpp.obj
+[749/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libPsml.cpp.obj
+[750/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libPlayGo.cpp.obj
+[751/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libRudp.cpp.obj
+[752/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libRtc.cpp.obj
+[753/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libShare.cpp.obj
+[754/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libFont.cpp.obj
+[755/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\loader\timer.cpp.obj
+[756/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libSysmodule.cpp.obj
+[757/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libTextToSpeech2.cpp.obj
+[758/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libVideoOut.cpp.obj
+[759/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\loader\x64InstructionEmulator.cpp.obj
+[760/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libSystemService.cpp.obj
+[761/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\videoDec2Decoder.cpp.obj
+[762/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\shader.cpp.obj
+C:\kyty\f287\fs11b\wt\src\graphics\shader\shader.cpp(178,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  178 | }
+      | ^
+1 warning generated.
+[763/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libVideoDec2.cpp.obj
+[764/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libUserService.cpp.obj
+[765/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libJson2.cpp.obj
+[766/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libWebBrowserDialog.cpp.obj
+[767/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libs.cpp.obj
+[768/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libSaveData.cpp.obj
+[769/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\loader\elf.cpp.obj
+[770/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\loader\symbolDatabase.cpp.obj
+[771/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\loader\gamePatchFile.cpp.obj
+[772/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libNet.cpp.obj
+[773/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libKernel.cpp.obj
+C:\kyty\f287\fs11b\wt\src\libs\libKernel.cpp(2146,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 2146 | }
+      | ^
+1 warning generated.
+[774/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\libUlt.cpp.obj
+[775/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\loader\gamePatch.cpp.obj
+[776/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\loader\redZonePatcher.cpp.obj
+[777/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\network.cpp.obj
+[778/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\emulator.cpp.obj
+[779/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\agc.cpp.obj
+[780/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\loader\systemContent.cpp.obj
+[781/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\loader\runtimeLinker.cpp.obj
+C:\kyty\f287\fs11b\wt\src\loader\runtimeLinker.cpp(924,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  924 | }
+      | ^
+1 warning generated.
+[782/784] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\memory.cpp.obj
+[783/784] Linking CXX executable kyty_emulator.exe
+-- Install configuration: "Release"
+-- Installing: C:\kyty\f287\fs11b\build\install/lib/cmake/xbyak/xbyak-config.cmake
+-- Installing: C:\kyty\f287\fs11b\build\install/lib/cmake/xbyak/xbyak-config-version.cmake
+-- Installing: C:\kyty\f287\fs11b\build\install/lib/cmake/xbyak/xbyak-targets.cmake
+-- Installing: C:\kyty\f287\fs11b\build\install/include/xbyak/xbyak.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/xbyak/xbyak_bin2hex.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/xbyak/xbyak_mnemonic.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/xbyak/xbyak_util.h
+-- Installing: C:\kyty\f287\fs11b\build\install/lib/cmake/zydis/zydis-config.cmake
+-- Installing: C:\kyty\f287\fs11b\build\install/lib/cmake/zydis/zydis-config-version.cmake
+-- Installing: C:\kyty\f287\fs11b\build\install/lib/Zydis.lib
+-- Installing: C:\kyty\f287\fs11b\build\install/lib/cmake/zydis/zydis-targets.cmake
+-- Installing: C:\kyty\f287\fs11b\build\install/lib/cmake/zydis/zydis-targets-release.cmake
+-- Up-to-date: C:\kyty\f287\fs11b\build\install/include
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Decoder.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/DecoderTypes.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Defines.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Disassembler.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Encoder.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Formatter.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/FormatterBuffer.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Generated
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Generated/EnumInstructionCategory.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Generated/EnumISAExt.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Generated/EnumISASet.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Generated/EnumMnemonic.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Generated/EnumRegister.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Internal
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Internal/DecoderData.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Internal/EncoderData.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Internal/FormatterATT.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Internal/FormatterBase.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Internal/FormatterIntel.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Internal/SharedData.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Internal/String.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/MetaInfo.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Mnemonic.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Register.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Segment.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/SharedTypes.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/ShortString.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Status.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Utils.h
+-- Installing: C:\kyty\f287\fs11b\build\install/include/Zydis/Zydis.h
+-- Installing: C:\kyty\f287\fs11b\build\install/kyty_emulator.exe
+-- Installing: C:\kyty\f287\fs11b\build\install/libwinpthread-1.dll
+BUILD OK: C:\kyty\f287\fs11b\build\install\kyty_emulator.exe
+rc=0 end 2026-10-09T01:06:49Z

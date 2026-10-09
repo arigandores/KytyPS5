@@ -1,0 +1,1 @@
+REGION_COUNT 262144 sizeof base 24 fs11 40 bytes base 6291456 fs11 10485760 growth 4194304

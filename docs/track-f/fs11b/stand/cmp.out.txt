@@ -1,0 +1,4 @@
+arms own default 72 own explicit 72 fs11a default 72
+own default == own explicit (all fields): True
+own default == fs11a default (all fields): True
+fix_b12=1 arms 47 fix_b12=0 arms 25

@@ -1,0 +1,84 @@
+== G1 chains
+ee9632be eded064e
+eded064e dab16a57
+dab16a57 2a371d92
+2a371d92 edebaad9
+edebaad9 dc5d4712
+dc5d4712 1a7eaff8
+
+PASS G1 FS11 chain = ee9632be <- eded064e <- dab16a57 <- 2a371d92 <- edebaad9 <- dc5d4712 - ['ee9632be', 'eded064e', 'dab16a57', '2a371d92', 'edebaad9', 'dc5d4712']
+PASS G1 F29c2 chain = 673b780a <- 61be23e1 <- 8c36ef5c <- dc5d4712 - ['673b780a', '61be23e1', '8c36ef5c', 'dc5d4712']
+== G2 contains (sorted changed lines equal; git cherry)
+PASS G2 lines 73a6e411 == copy edebaad9 - 464 / 464
+PASS G2 lines c94c49e0 == copy 2a371d92 - 250 / 250
+PASS G2 lines 726e751e == copy dab16a57 - 95 / 95
+PASS G2 lines 0db3b3eb == copy eded064e - 39 / 39
+PASS G2 lines cb022252 == copy ee9632be - 11 / 11
+PASS G2 lines 73a6e411 == copy 8c36ef5c - 464 / 464
+PASS G2 lines c94c49e0 == copy 61be23e1 - 250 / 250
+PASS G2 lines 726e751e == copy 673b780a - 95 / 95
+PASS G2 git cherry ee9632be 73a6e411 -> - - - 73a6e4116a
+PASS G2 git cherry ee9632be c94c49e0 -> - - - c94c49e0bf
+PASS G2 git cherry ee9632be 726e751e -> - - - 726e751eef
+PASS G2 git cherry ee9632be 0db3b3eb -> - - - 0db3b3eb68
+PASS G2 git cherry ee9632be cb022252 -> - - - cb02225253
+PASS G2 negative control 726e751e vs copy of c94c49e0 differs
+PASS G2 negative control one flipped line differs
+== G3 tree: base + five main diffs = FS11 tree (temporary index)
+PASS G3 base + 73a6e411 c94c49e0 726e751e 0db3b3eb cb022252 == ee9632be^{tree} - d5ecdce2f5d4982220e245d62dd8fff4cb8f41a5 / d5ecdce2f5d4982220e245d62dd8fff4cb8f41a5
+PASS G3 without cb022252 == eded064e^{tree} - b6eb584293b5d31c5e91e17db23dffc5d0356ca9 / b6eb584293b5d31c5e91e17db23dffc5d0356ca9
+PASS G3 negative control: without cb022252 != ee9632be^{tree}
+== G4 default path of FS11 = path =1 of cabbd818 (src/ of F29c edition 2 worktree + FS11a only)
+PASS G4 diff 673b780a..ee9632be -- src/ paths == [regionManager.h] - ['src/graphics/host_gpu/regionManager.h']
+PASS G4 changed lines of 673b780a..ee9632be in src/ == lines of cb022252 - 11 / 11
+PASS G4 control: 673b780a..eded064e -- src/ is empty (FS11 without FS11a = cabbd818 source in src/) - []
+   outside src/: tests/B12BdaStampStand.cpp | 39 ++++++++++++++++++++++++++++++--------- |  1 file changed, 30 insertions(+), 9 deletions(-)
+== G5 diff FS11 vs base
+PASS G5 paths == union of the five commits - ['CMakeLists.txt', 'src/common/frameStats.h', 'src/graphics/host_gpu/regionManager.h', 'src/graphics/host_gpu/renderer/cache/bufferCache.cpp', 'src/graphics/host_gpu/renderer/cache/bufferCache.h', 'src/graphics/host_gpu/renderer/renderContext.cpp', 'src/graphics/presentation/videoOut.cpp', 'tests/B12BdaStampStand.cpp']
+PASS G5 removed lines vs base == 0 - +807 -0
+PASS G5 no path under src/graphics/shader/
+PASS G5 outside tests/ beyond c94c49e0/726e751e/FS11a files == [CMakeLists.txt] (reading of item 650(v)) - ['CMakeLists.txt']
+   CMakeLists.txt hunks 1 added 11 removed 0
+   + # Track F, F29a (HPP-699, ROADMAP s122 item 638(g)(2)): the B12 "bdastamp" stand (tests/B12BdaStampStand.cpp) - the real
+   + # MemoryTracker and RangeSet, a model of the BDA scan of RenderContext::PrepareBda. Run by
+   + # docs/track-f/f29a/run_stand_f29a.py, not by ctest.
+   + add_executable(b12_bdastamp_stand EXCLUDE_FROM_ALL
+   + 	"${KYTY_TESTS_DIR}/B12BdaStampStand.cpp"
+   + 	"${KYTY_SOURCE_DIR}/graphics/host_gpu/pageManager.cpp"
+   + 	"${KYTY_SOURCE_DIR}/graphics/host_gpu/memoryTracker.cpp"
+   + )
+   + target_link_libraries(b12_bdastamp_stand fmt::fmt common)
+   + target_include_directories(b12_bdastamp_stand PRIVATE ${inc_headers})
+   + 
+PASS G5 CMakeLists.txt: one hunk, only added lines
+PASS G5 CMakeLists.txt: block is the b12_bdastamp_stand target with EXCLUDE_FROM_ALL, kyty_emulator not named
+== G8 shipped fixes untouched: contained in FS11 (ancestor or cherry -); FS11 removes no base line (G5)
+PASS G8 Ф10 1833ee28 contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Ф10 c3eb8fe8 contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Ф16 68602c4f contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Ф16 17adaf80 contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Б42 4e72289e contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Б33 c1732d1a contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Б4 a86a5ad0 contained in ee9632be (ancestor or cherry -) - cherry -; files met by the FS11 diff: ['CMakeLists.txt']
+PASS G8 Б4 17eb924e contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Ф8 10a4800b contained in ee9632be (ancestor or cherry -) - cherry -; files met by the FS11 diff: ['CMakeLists.txt']
+PASS G8 Ф8 ec6c4c83 contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Б24 9c726d74 contained in ee9632be (ancestor or cherry -) - cherry -; files met by the FS11 diff: ['CMakeLists.txt']
+PASS G8 Б24 919c1a19 contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Ф19 082d1612 contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Ф19 f98e842c contained in ee9632be (ancestor or cherry -) - cherry -; files met by the FS11 diff: ['CMakeLists.txt']
+PASS G8 Ф19 e46f55d4 contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Ф19 7719d0f2 contained in ee9632be (ancestor or cherry -) - cherry -
+PASS G8 Б13 21db93d1 contained in ee9632be (ancestor or cherry -) - ancestor; files met by the FS11 diff: ['src/graphics/host_gpu/regionManager.h']
+PASS G8 Б13 11164d72 contained in ee9632be (ancestor or cherry -) - ancestor; files met by the FS11 diff: ['src/graphics/host_gpu/regionManager.h']
+PASS G8 P-var 4414e235 contained in ee9632be (ancestor or cherry -) - ancestor
+PASS G8 S-replay 0005e11f contained in ee9632be (ancestor or cherry -) - ancestor
+PASS G8 Ф27 a42f50b1 contained in ee9632be (ancestor or cherry -) - ancestor; files met by the FS11 diff: ['CMakeLists.txt', 'src/graphics/presentation/videoOut.cpp']
+PASS G8 Ф27 7bc87bc8 contained in ee9632be (ancestor or cherry -) - ancestor
+PASS G8 Ф27 64a1fa40 contained in ee9632be (ancestor or cherry -) - ancestor
+PASS G8 Ф27 1a7eaff8 contained in ee9632be (ancestor or cherry -) - ancestor; files met by the FS11 diff: ['src/graphics/presentation/videoOut.cpp']
+PASS G8 Ф27 dc5d4712 contained in ee9632be (ancestor or cherry -) - ancestor
+PASS G8 F30d 585d997d NOT an ancestor of ee9632be
+PASS G8 no KYTY_DIAG_B32 / rts_bad_ in the FS11 diff
+PASS G8 shaderReplay.cpp blob base == FS11
+ALL OK

@@ -1,0 +1,37 @@
+OK   a1d1d863:renderDraw.cpp:3772 X1 depth load-clear sets X without the record
+OK   a1d1d863:renderDraw.cpp:3773 X1+1
+OK   a1d1d863:renderDraw.cpp:3761 R compare
+OK   a1d1d863:renderDraw.cpp:2203 load-clear source: register OR HTile meta
+OK   a1d1d863:renderDraw.cpp:2312 RenderState carries the clear flag
+OK   a1d1d863:renderDraw.cpp:2306 attachment is RenderState's
+OK   a1d1d863:renderDraw.cpp:2066 capture state is RenderState
+OK   a1d1d863:renderDraw.cpp:2070 extents reset per capture
+OK   a1d1d863:renderDraw.cpp:1576 rx counter merges R and X
+OK   a1d1d863:renderDraw.cpp:1577 rx counter +1
+OK   a1d1d863:renderDraw.cpp:1521 A-diff depth compares clear enable
+OK   a1d1d863:renderDraw.cpp:3470 PA item 3 off at =3
+OK   a1d1d863:renderDraw.cpp:3801 PA and PB: record not refreshed
+OK   a1d1d863:renderDraw.cpp:3803 PA and PB: re-pin only
+OK   a1d1d863:renderDraw.cpp:3704 skip path forces layout without transition
+OK   a1d1d863:renderDraw.cpp:3781 S bit
+OK   negative controls (+1 shift) rejected | accepted 0 of 4
+files reading t_rts / Knob::RtSkip / RtsReport(: ['src/graphics/host_gpu/renderer/renderDraw.cpp']
+OK   t_rts / RtsReport only in renderDraw.cpp (+ knob table) | ['src/graphics/host_gpu/renderer/renderDraw.cpp']
+Knob::RtSkip readers:
+   a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:4958:	if (const auto rts_value = Common::Gates::Value(Common::Gates::Knob::RtSkip); rts_value != 0 || t_rts != 0)
+   a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:5189:	if (const auto rts_value = Common::Gates::Value(Common::Gates::Knob::RtSkip); rts_value != 0 || t_rts != 0)
+OK   643(v) separation quote present at 8518d69b
+OK   643(d)(5) quote present
+OK   654(v) quote present
+OK   register row B28 criterion names the =3 control
+OK   27 rows
+OK   c3: bad_rx == bad_b on 9 of 9
+c3 share of B reports in all reports: 0.0285, 0.0265, 0.0529, 0.0546, 0.1264, 0.0194, 0.0875, 0.0278, 0.0240
+OK   c3: B reports are a minority of reports (A-only reports dominate)
+OK   xb_pass c4 17367..2064300
+OK   xb_pass v 34581..4813357
+OK   c4, v: xb_ser = 0, xb_ids = 0
+OK   c4, v: bad = 0
+OK   gamma: 2 cymbal hits, both s145
+OK   gamma: cymbal entries total 2 in the whole sweep
+ALL OK

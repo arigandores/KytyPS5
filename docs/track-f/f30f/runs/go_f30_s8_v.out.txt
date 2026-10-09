@@ -1,0 +1,18 @@
+2026-10-09T05:54:37Z F30f go_f30f f30_s8_v run check (item 587 (g)): RUN ALIVE 27d914dc status in_progress
+2026-10-09T05:54:38Z F30f go_f30f f30_s8_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 26388 utc 2026-10-09T05:54:38Z
+2026-10-09T05:56:23Z F30f go_f30f f30_s8_v lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-09T05:56:23Z F30f go_f30f f30_s8_v installed binary inside the lock before the tag: abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe
+2026-10-09T05:56:25Z F30f go_f30f f30_s8_v manifest before: manifest C:/kyty/f287/f30f/runs/f30_s8_v/manifest_before.tsv files 4790 bytes 1292322574 listsha 8df715bf2431e8ef8202a6ad8d5ec6180b637cb3997eb860c07a3e99e8b174a8
+2026-10-09T05:56:26Z F30f go_f30f f30_s8_v caches before against the base manifest of the seal (row): manifest cmp DIFFER only-before 3 only-after 3
+2026-10-09T05:56:26Z F30f go_f30f f30_s8_v state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-09T05:56:26Z
+2026-10-09T05:56:27Z F30f go_f30f f30_s8_v installed the T copy 3bc7ada7 for the tag: 3bc7ada7980a89fee30b17780f8dfbee0b3921332d81f1f63984d6252a811347
+2026-10-09T05:56:27Z F30f go_f30f f30_s8_v enter_scene start (level big_hand_pirate_island, SD 300, hold 300, --rec, KYTY_RT_SKIP=2 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-09T06:01:53Z F30f go_f30f f30_s8_v enter_scene rc 0; guard watch: 2026-10-09T06:01:52Z watch end, user process seen: no; hold watch: 2026-10-09T06:01:52Z watch end, user VM seen: no
+2026-10-09T06:01:53Z F30f go_f30f f30_s8_v run: VERDICT: big_hand_pirate_island in 14.0 s - PASS (acceptance <= 90 s)
+2026-10-09T06:01:54Z F30f go_f30f f30_s8_v log_f30_s8_v.txt sha256 71d1d6468bfff52a69bab375ec87803f4e3e295d3efab8571b5b838549752094
+2026-10-09T06:01:55Z F30f go_f30f f30_s8_v installed binary returned from the pinned FS10 copy
+2026-10-09T06:01:55Z F30f go_f30f f30_s8_v installed binary after the tag: abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe
+2026-10-09T06:01:58Z F30f go_f30f f30_s8_v manifest after (caches not returned, item 643 (d)(1)): manifest C:/kyty/f287/f30f/runs/f30_s8_v/manifest_after.tsv files 4790 bytes 1292511664 listsha 769a9503536f3b472512d902b4d146142ab6717a251b799da980b7b1cbea2f44; before vs after: manifest cmp DIFFER only-before 3 only-after 3
+2026-10-09T06:01:58Z F30f go_f30f f30_s8_v lock released (rc 0)
+2026-10-09T06:02:00Z F30f go_f30f f30_s8_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 26829 utc 2026-10-09T06:01:59Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-09T06:01:59Z; dispstate ON idle_s 26829
+rc=0

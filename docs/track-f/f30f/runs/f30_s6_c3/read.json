@@ -1,0 +1,293 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = T 3bc7ada7 (3bc7ada7980a89fe)",
+   true
+  ],
+  [
+   "installed during the tag = T 3bc7ada7 (3bc7ada7980a89fe)",
+   true
+  ],
+  [
+   "installed before = after = FS10 abfded5e (abfded5ea629ea70 / abfded5ea629ea70)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (2eca20181f896c21 / 2eca20181f896c21)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "gate text and schedule empty - no rtskip, no census gate ('' / '')",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd, no --graphics-debug-dump true (None)",
+   true
+  ],
+  [
+   "guest args -lvl sponge_dirty_bath (-lvl sponge_dirty_bath; harness sponge_dirty_bath)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "window from the entry line >= 150 s and the process alive at its end (item 649 (e)): stable_s 14.9 - started_s 11.9 + hold_s 150.2 = 153.2; outcome ok, hold_exit None",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "entry line present (246800)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "signature 9177b426 and catalog variant_fixb26_fixb1b_fixf10_fixf19 (D7) (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch:, DiagB32, TestLogStall lines (0 / 0 / 0)",
+   true
+  ],
+  [
+   "summary LogAsync: full_waits= once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ],
+  [
+   "(D1) exactly one RtSkip: mode 3, no other value ([(3, 16575)])",
+   true
+  ],
+  [
+   "(D2) RtSkip: refused lines 0, process rts_refuse 0",
+   true
+  ],
+  [
+   "(D3) Gate: rtskip= lines none or all 3 ([])",
+   true
+  ],
+  [
+   "(D4) process rts_xthr 0, rts_acqw 0",
+   true
+  ],
+  [
+   "(D5) FrameTrace-x in the window 5135 >= 0.95 x FrameTrace-draw 5135 and >= 1500",
+   true
+  ],
+  [
+   "(D6) window rts_ovf 0",
+   true
+  ],
+  [
+   "(D7) item 649 (b): launch_sha256 3bc7ada7980a89fe = T, binary_sha256 = launch_sha256 (3bc7ada7980a89fe), one log line version: Fork build ... a1d1d86 (['a1d1d86']), version string in the pinned copy of sha T (True) - YES; letter of item 644 (d) (reference): version string -ga1d1d863 in the log (0 lines) NO",
+   true
+  ],
+  [
+   "RC4 every FrameTrace-x line carries every field of REQ (lines 5385, missing 0 []) - else missing field",
+   true
+  ],
+  [
+   "parse [identity of the parse, RC7]: process rts_chk 19529094 = rts_pa 19529094, rts_chk_b 18989999 = rts_pb 18989999, rts_bad_rx 23259 <= rts_bad_b 23259 <= rts_bad 1197013; prefix sums within 1 event at every line (chk/pa, chk_b/pb 0; rx/b/bad 0; first line None); chk_b <= chk <= n 24896839, noreg 0 <= bad; RtSkipVerify lines 40 <= min(40, bad); unparsable 0; duplicate fields 0; letter rows (per line, reference - the flip tears one event): chk!=pa 110, chk_b!=pb 116, rx<=b<=bad broken 0; max prefix deviation {\"b_bad\": 0, \"chk_pa\": 1, \"chkb_pb\": 1, \"rx_b\": 0}",
+   true
+  ]
+ ],
+ "admitted": true,
+ "b42": {
+  "inc": {
+   "applied": 0,
+   "drawn": 4769,
+   "hit": 0
+  },
+  "lines": 272,
+  "modes": [
+   1
+  ],
+  "per_extent": {
+   "1920x1080": {
+    "applied": 0,
+    "drawn": 4769,
+    "hit": 0
+   },
+   "2432x1368": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "3328x1872": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "3840x2160": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "480x270": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "608x342": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "832x468": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "960x540": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   }
+  }
+ },
+ "bda": {
+  "bda_missing": 0,
+  "blocks": 57,
+  "chkb_old": 18302630,
+  "mean_read": 1250.5,
+  "mode": "OLD",
+  "new_blocks": 0,
+  "old_blocks": 55,
+  "read_blocks": 55
+ },
+ "binary_sha256": "3bc7ada7980a89fee30b17780f8dfbee0b3921332d81f1f63984d6252a811347",
+ "d5": [
+  5135,
+  5135
+ ],
+ "d7_rule": "variant",
+ "kappa": {
+  "by": {
+   "ALL": {
+    "inside": true,
+    "kappa": 1.013,
+    "ref": 0.7531
+   },
+   "OLD": {
+    "inside": true,
+    "kappa": 1.013,
+    "ref": 0.7531
+   }
+  },
+  "share_v2": 0.7629
+ },
+ "kind": "c3",
+ "knob": 3,
+ "launch_sha256": "3bc7ada7980a89fee30b17780f8dfbee0b3921332d81f1f63984d6252a811347",
+ "legacy": false,
+ "level": "sponge_dirty_bath",
+ "members": [
+  [
+   "(K) >= 1 line MISMATCH mode=3 with bit 0x001 (40) and process rts_bad 1197013 >= 1",
+   true
+  ],
+  [
+   "(K') process rts_bad_noreg 0 = 0",
+   true
+  ],
+  [
+   "race: process rts_race 0 = 0 (RC2)",
+   true
+  ]
+ ],
+ "mm_bits": [
+  "0x40d"
+ ],
+ "proc": {
+  "rts_acqw": 0,
+  "rts_bad": 1197013,
+  "rts_bad_b": 23259,
+  "rts_bad_noreg": 0,
+  "rts_bad_rx": 23259,
+  "rts_chk": 19529094,
+  "rts_chk_b": 18989999,
+  "rts_lost": 21642,
+  "rts_n": 24896839,
+  "rts_ovf": 0,
+  "rts_pa": 19529094,
+  "rts_pb": 18989999,
+  "rts_race": 0,
+  "rts_refuse": 0,
+  "rts_skip": 0,
+  "rts_xb_bound": 5726,
+  "rts_xb_ids": 77336,
+  "rts_xb_live": 0,
+  "rts_xb_meta": 478,
+  "rts_xb_pass": 421084,
+  "rts_xb_ser": 23259,
+  "rts_xthr": 0
+ },
+ "reader_sha256": "64cf84550a3c94a189ae5cff07ce1eb2ea1a0275bf42575002e0256851311b01",
+ "ref": {
+  "death": [],
+  "fork": [
+   "a1d1d86"
+  ],
+  "glitches": null,
+  "hold_exit": null,
+  "hold_s": 150.2,
+  "ineq_lines": 0,
+  "lines": 722193,
+  "outcome": "ok",
+  "stable_s": 14.9,
+  "video_index": null,
+  "x_prefixed": 0
+ },
+ "scene": "s6",
+ "status": "ADMITTED",
+ "stop": [],
+ "tag": "f30_s6_c3",
+ "verify_lines": 40,
+ "why": null,
+ "win": {
+  "rts_acqw": 0,
+  "rts_bad": 1196761,
+  "rts_bad_b": 23259,
+  "rts_bad_noreg": 0,
+  "rts_bad_rx": 23259,
+  "rts_chk": 19528842,
+  "rts_chk_b": 18989999,
+  "rts_lost": 21390,
+  "rts_n": 24891000,
+  "rts_ovf": 0,
+  "rts_pa": 19528842,
+  "rts_pb": 18989999,
+  "rts_race": 0,
+  "rts_refuse": 0,
+  "rts_skip": 0,
+  "rts_xb_bound": 5726,
+  "rts_xb_ids": 77336,
+  "rts_xb_live": 0,
+  "rts_xb_meta": 478,
+  "rts_xb_pass": 421084,
+  "rts_xb_ser": 23259,
+  "rts_xthr": 0
+ }
+}

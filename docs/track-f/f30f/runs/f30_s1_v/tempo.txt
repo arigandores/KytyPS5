@@ -1,0 +1,2 @@
+TEMPO PASS form harness mean_dt_ms 34.32 fps 29.13 frames 8885 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after the level line 8885, span 305.0 s)
+  row: flip records after the level line 8883

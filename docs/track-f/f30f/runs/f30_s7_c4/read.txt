@@ -1,0 +1,49 @@
+tag f30_s7_c4 (scene s7, kind c4, knob 4, level time_stopper_ghost_world)  reader sha256 64cf84550a3c94a189ae5cff07ce1eb2ea1a0275bf42575002e0256851311b01
+  STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = T 3bc7ada7 (3bc7ada7980a89fe)
+    [ok] installed during the tag = T 3bc7ada7 (3bc7ada7980a89fe)
+    [ok] installed before = after = FS10 abfded5e (abfded5ea629ea70 / abfded5ea629ea70)
+    [ok] json prereg sha256 = seal sha256 (2eca20181f896c21 / 2eca20181f896c21)
+    [ok] env = the form of the tag (exact)
+    [ok] gate text and schedule empty - no rtskip, no census gate ('' / '')
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd, no --graphics-debug-dump true (None)
+    [ok] guest args -lvl time_stopper_ghost_world (-lvl time_stopper_ghost_world; harness time_stopper_ghost_world)
+    [ok] hold option 150 s (150)
+    [ok] window from the entry line >= 150 s and the process alive at its end (item 649 (e)): stable_s 13.4 - started_s 10.9 + hold_s 150.2 = 152.7; outcome ok, hold_exit None
+    [ok] log present
+    [ok] entry line present (239976)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] signature 9177b426 and catalog variant_fixb26_fixb1b_fixf10_fixf19 (D7) (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch:, DiagB32, TestLogStall lines (0 / 0 / 0)
+    [ok] summary LogAsync: full_waits= once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+    [ok] (D1) exactly one RtSkip: mode 4, no other value ([(4, 16574)])
+    [ok] (D2) RtSkip: refused lines 0, process rts_refuse 0
+    [ok] (D3) Gate: rtskip= lines none or all 4 ([])
+    [ok] (D4) process rts_xthr 0, rts_acqw 0
+    [ok] (D5) FrameTrace-x in the window 5773 >= 0.95 x FrameTrace-draw 5773 and >= 1500
+    [ok] (D6) window rts_ovf 0
+    [ok] (D7) item 649 (b): launch_sha256 3bc7ada7980a89fe = T, binary_sha256 = launch_sha256 (3bc7ada7980a89fe), one log line version: Fork build ... a1d1d86 (['a1d1d86']), version string in the pinned copy of sha T (True) - YES; letter of item 644 (d) (reference): version string -ga1d1d863 in the log (0 lines) NO
+    [ok] RC4 every FrameTrace-x line carries every field of REQ (lines 5967, missing 0 []) - else missing field
+    [ok] parse [identity of the parse, RC7]: process rts_chk 16894954 = rts_pa 16894954, rts_chk_b 16696565 = rts_pb 16696565, rts_bad_rx 0 <= rts_bad_b 0 <= rts_bad 0; prefix sums within 1 event at every line (chk/pa, chk_b/pb 0; rx/b/bad 0; first line None); chk_b <= chk <= n 21261068, noreg 0 <= bad; RtSkipVerify lines 0 <= min(40, bad); unparsable 0; duplicate fields 0; letter rows (per line, reference - the flip tears one event): chk!=pa 110, chk_b!=pb 128, rx<=b<=bad broken 0; max prefix deviation {"b_bad": 0, "chk_pa": 1, "chkb_pb": 1, "rx_b": 0}
+    [ok] RC1 c4: process rts_skip 0 = 0 and rts_chk 16894954 >= rts_chk_b 16696565 >= 1
+    [ok] RC2 (a) c4: armed - RtSkip: mode 4 once, no mode 2 / 3 (D1) and process rts_xb_meta 0 = rts_xb_ser 0 = 0
+    [ok] RC3 reconciliation c4 (exact): lines mode=4 0, process rts_bad 0; rts_bad_rx 0 vs lines bits&0x030 0; rts_bad_b 0 vs lines bits&0x3f0 0
+    [ok] RC2 (b) c4: other PB reasons alive vs v of the scene (f30_s7_v; threshold 100): rts_xb_ids v 0 < 100 - not checked (c4 0); rts_xb_live v 0 < 100 - not checked (c4 0); rts_xb_bound v 0 < 100 - not checked (c4 0); rts_xb_pass v 392384 c4 198388 ok
+  launch_sha256 3bc7ada7980a89fee30b17780f8dfbee0b3921332d81f1f63984d6252a811347; binary_sha256 3bc7ada7980a89fee30b17780f8dfbee0b3921332d81f1f63984d6252a811347
+  MEMBERS c4
+    [NO] K_B (i) process rts_bad_rx 0 >= 1 - the reading (item 643 (d)(5), 644 (g))
+    [NO] K_B (ii) lines MISMATCH mode=4 with bits & 0x030: 0 - reconciliation row, not a gate
+  PROCESS rts_n=21261068 rts_skip=0 rts_chk=16894954 rts_chk_b=16696565 rts_bad=0 rts_bad_noreg=0 rts_bad_b=0 rts_bad_rx=0 rts_race=0 rts_lost=29799
+  WINDOW  rts_n=21256527 rts_skip=0 rts_chk=16894954 rts_chk_b=16696565 rts_bad=0 rts_bad_noreg=0 rts_bad_b=0 rts_bad_rx=0 rts_race=0 rts_lost=29603
+  XB process rts_xb_ids=0 rts_xb_live=0 rts_xb_meta=0 rts_xb_ser=0 rts_xb_bound=0 rts_xb_pass=198388
+  RtSkipVerify lines 0, bits []
+  RC1 reference: process rts_skip 0 (0 at 2-4), rts_chk 16894954 >= rts_chk_b 16696565
+  BDA {"bda_missing": 0, "blocks": 64, "chkb_old": 16203206, "mean_read": 1115.2, "mode": "OLD", "new_blocks": 0, "old_blocks": 62, "read_blocks": 62}
+  KAPPA (reference, RC6; [0.80; 1.25]) {"by": {"ALL": {"inside": true, "kappa": 1.007, "ref": 0.78}, "OLD": {"inside": true, "kappa": 1.007, "ref": 0.78}}, "share_v2": 0.7855}
+  FIXB42 window increments (RC4 of item 643 (g)) {"inc": {"applied": 10, "drawn": 5444, "hit": 10}, "lines": 273, "modes": [1], "per_extent": {"1920x1080": {"applied": 0, "drawn": 5423, "hit": 0}, "2432x1368": {"applied": 0, "drawn": 12, "hit": 0}, "3328x1872": {"applied": 0, "drawn": 6, "hit": 0}, "3840x2160": {"applied": 6, "drawn": 3, "hit": 6}, "480x270": {"applied": 1, "drawn": 0, "hit": 1}, "608x342": {"applied": 2, "drawn": 0, "hit": 2}, "832x468": {"applied": 1, "drawn": 0, "hit": 1}, "960x540": {"applied": 0, "drawn": 0, "hit": 0}}}; window rts_lost 29603
+  K_B {"bad": 0, "bad_b": 0, "exact": true, "i": 0, "ii": 0, "lines_b": 0, "lines_mode4": 0}
+  REFERENCE {"death": [], "fork": ["a1d1d86"], "glitches": null, "hold_exit": null, "hold_s": 150.2, "ineq_lines": 0, "lines": 800858, "outcome": "ok", "stable_s": 13.4, "video_index": null, "x_prefixed": 0}
+  STOP none

@@ -1,0 +1,42 @@
+reader f30f_read.py sha256 64cf84550a3c94a189ae5cff07ce1eb2ea1a0275bf42575002e0256851311b01
+| tag | status | knob | launch sha | (D5) x/draw | proc rts_bad | rts_bad_rx | race | win rts_chk_b | mode | OLD chk_b | stop |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| f30_s1_c3 | ADMITTED | 3 | 3bc7ada7 | 4437/4437 | 3411459 | 97274 | 0 | 21070470 | NEW | 978703 | - |
+| f30_s1_c4 | ADMITTED | 4 | 3bc7ada7 | 4438/4438 | 0 | 0 | 0 | 20482426 | NEW | 512167 | - |
+| f30_s1_v | ADMITTED | 2 | 3bc7ada7 | 8845/8844 | 0 | 0 | 0 | 40014265 | OLD | 39050284 | - |
+| f30_s2_c3 | ADMITTED | 3 | 3bc7ada7 | 9068/9068 | 1455335 | 38528 | 0 | 13710655 | NEW | 225993 | - |
+| f30_s2_c4 | ADMITTED | 4 | 3bc7ada7 | 9067/9067 | 0 | 0 | 0 | 13248951 | NEW | 228989 | - |
+| f30_s2_v | ADMITTED | 2 | 3bc7ada7 | 18038/18038 | 0 | 0 | 0 | 26190806 | NEW | 236291 | - |
+| f30_s3_c3 | ADMITTED | 3 | 3bc7ada7 | 9119/9119 | 2332681 | 123395 | 0 | 16436629 | NEW | 185680 | - |
+| f30_s3_c4 | ADMITTED | 4 | 3bc7ada7 | 9107/9107 | 0 | 0 | 0 | 15621921 | NEW | 178630 | - |
+| f30_s3_v | ADMITTED | 2 | 3bc7ada7 | 18142/18142 | 0 | 0 | 0 | 31254112 | NEW | 178716 | - |
+| f30_s4_c3 | ADMITTED | 3 | 3bc7ada7 | 8737/8737 | 1366139 | 74533 | 0 | 19107914 | NEW | 0 | - |
+| f30_s4_c4 | ADMITTED | 4 | 3bc7ada7 | 9025/9025 | 0 | 0 | 0 | 19501587 | NEW | 0 | - |
+| f30_s4_v | ADMITTED | 2 | 3bc7ada7 | 16834/16834 | 0 | 0 | 0 | 35641583 | NEW | 217971 | - |
+| f30_s5_c3 | ADMITTED | 3 | 3bc7ada7 | 9113/9113 | 1877943 | 237464 | 0 | 21892748 | NEW | 212822 | - |
+| f30_s5_c4 | ADMITTED | 4 | 3bc7ada7 | 9016/9016 | 0 | 0 | 0 | 20936207 | NEW | 206406 | - |
+| f30_s5_v | ADMITTED | 2 | 3bc7ada7 | 17773/17773 | 0 | 0 | 0 | 41369041 | NEW | 207260 | - |
+| f30_s6_c3 | ADMITTED | 3 | 3bc7ada7 | 5135/5135 | 1197013 | 23259 | 0 | 18989999 | OLD | 18302630 | - |
+| f30_s6_c4 | ADMITTED | 4 | 3bc7ada7 | 5200/5200 | 0 | 0 | 0 | 18969370 | OLD | 18307306 | - |
+| f30_s6_v | ADMITTED | 2 | 3bc7ada7 | 9828/9828 | 0 | 0 | 0 | 35639576 | OLD | 34920681 | - |
+| f30_s7_c3 | ADMITTED | 3 | 3bc7ada7 | 5872/5872 | 2436689 | 213095 | 0 | 17545222 | OLD | 17020966 | - |
+| f30_s7_c4 | ADMITTED | 4 | 3bc7ada7 | 5773/5773 | 0 | 0 | 0 | 16696565 | OLD | 16203206 | - |
+| f30_s7_v | ADMITTED | 2 | 3bc7ada7 | 11345/11345 | 0 | 0 | 0 | 32749398 | OLD | 32283958 | - |
+| f30_s8_c3 | ADMITTED | 3 | 3bc7ada7 | 4347/4347 | 1984412 | 55233 | 0 | 19928560 | OLD | 19468926 | - |
+| f30_s8_c4 | ADMITTED | 4 | 3bc7ada7 | 4304/4304 | 0 | 0 | 0 | 19145700 | OLD | 18748179 | - |
+| f30_s8_v | ADMITTED | 2 | 3bc7ada7 | 8479/8479 | 0 | 0 | 0 | 37490698 | OLD | 37005818 | - |
+| f30_s9_c3 | ADMITTED | 3 | 3bc7ada7 | 6807/6807 | 2182761 | 52390 | 0 | 16475749 | MIXED | 9661694 | - |
+| f30_s9_c4 | ADMITTED | 4 | 3bc7ada7 | 6837/6837 | 0 | 0 | 0 | 15850205 | MIXED | 9186979 | - |
+| f30_s9_v | ADMITTED | 2 | 3bc7ada7 | 15758/15758 | 0 | 0 | 0 | 23242145 | OLD | 16522010 | - |
+
+in intro_next: c3 - K False | c4 - K_B(i) not checked (no admitted c4, item 649 (v)) | v [] counted False OLD False | FixB42 applied in counted v 0
+s1 underwater_aerial_garden: c3 ADMITTED K True | c4 ADMITTED K_B(i) False | v ['f30_s1_v'] counted True OLD True | FixB42 applied in counted v 10
+s2 hoover_beach: c3 ADMITTED K True | c4 ADMITTED K_B(i) False | v ['f30_s2_v'] counted True OLD False | FixB42 applied in counted v 47
+s3 mini_giants_garden: c3 ADMITTED K True | c4 ADMITTED K_B(i) False | v ['f30_s3_v'] counted True OLD False | FixB42 applied in counted v 256
+s4 timestop_casino: c3 ADMITTED K True | c4 ADMITTED K_B(i) False | v ['f30_s4_v'] counted True OLD False | FixB42 applied in counted v 12
+s5 rotating_level_day_and_night: c3 ADMITTED K True | c4 ADMITTED K_B(i) False | v ['f30_s5_v'] counted True OLD False | FixB42 applied in counted v 11
+s6 sponge_dirty_bath: c3 ADMITTED K True | c4 ADMITTED K_B(i) False | v ['f30_s6_v'] counted True OLD True | FixB42 applied in counted v 12
+s7 time_stopper_ghost_world: c3 ADMITTED K True | c4 ADMITTED K_B(i) False | v ['f30_s7_v'] counted True OLD True | FixB42 applied in counted v 11
+s8 big_hand_pirate_island: c3 ADMITTED K True | c4 ADMITTED K_B(i) False | v ['f30_s8_v'] counted True OLD True | FixB42 applied in counted v 10
+s9 underwater_aerial_garden: c3 ADMITTED K True | c4 ADMITTED K_B(i) False | v ['f30_s9_v'] counted True OLD True | FixB42 applied in counted v 135
+counted 9 of 9 (S1 True); with live K_B 0 (S1 or S9 False); OLD with live K_B 0, OLD 5 - rows for F30g by item 643 (d)(9)-(10)

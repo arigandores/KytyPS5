@@ -6,11 +6,12 @@
 # go_f30m.sh <tag> (process rule p.324(i): the launcher only launches, the wait is wait_f30m.sh <= 540 s per tool command, separate
 # commands).  A previous output of a refused call is moved to old/ before the new call (rule p.309(i)).  The output go_<tag>.out.txt ends
 # with the line rc=<n>.  Item 623 (v)(1): a display OFF is woken (dispstate.py --wake) and checked again; still OFF => exit 6 and a
-# times.txt line (not an attempt).  ITEM 534 (3) (general rule 33): guard_f30m.py check (a user emulator or launcher => the block closes,
-# exit 7), hold_f30m.py check (a user session, item 606 (v)(1) => the block closes, exit 7) and status (the block must be open: two clean
-# checks >= 600 s apart by guard_f30m.py open-block, fewer than 6 tags in it; else exit 8); then the lock queue (queue_f30m.py, item
-# 322 (g): P > F > S; QUEUE BUSY => exit 9); then a TAG line of the block and the launch.  F30M_DRYRUN=2 stops after these checks;
-# F30M_GUARD_BLOCK / F30M_GUARD_FAKE / F30M_TIMES / F30M_QUEUE_SKIP=1 / F30M_DISP_SKIP=1 (fixtures only).  ASCII only.
+# times.txt line (not an attempt).  ITEM 660 (d)(1) (form of item 634): no guard, no hold check, no block in the launcher - only the
+# display, the lock queue (queue_f30m.py, item 322 (g): P > F > S; QUEUE BUSY => exit 9) and the launch; the one guard scan + hold check
+# of a tag is in go_f30m.sh right after the lock.  ITEM 661 (b)(1): the first executable line is the form linter form634_check.py
+# --series (FORM634 FAILED => exit 10: no lock, no files, not an attempt).  F30M_DRYRUN=2 stops after the checks;
+# F30M_TIMES / F30M_QUEUE_SKIP=1 / F30M_DISP_SKIP=1 (fixtures only).  ASCII only.
+python "C:/kyty/KytyPS5/ps5 em/docs/form634_check.py" --series C:/kyty/f287/f30m || exit 10
 export PATH=/usr/bin:/mingw64/bin:$PATH
 T=$1
 G=C:/kyty/f287/f30m
@@ -34,23 +35,6 @@ if [ "${F30M_DISP_SKIP:-}" != 1 ]; then
     echo "display not ON: $DS"; exit 6
   fi
 fi
-GA="--block ${F30M_GUARD_BLOCK:-$G/guard_block.txt}${F30M_GUARD_FAKE:+ --fake $F30M_GUARD_FAKE}"
-GS=$(python $G/guard_f30m.py check $GA)
-if [ $? != 0 ]; then
-  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F30m guard (item 534): $GS - block closed, $T not launched (interference, not an attempt)" >> "$TM"
-  echo "user process found: $GS"; exit 7
-fi
-HS=$(python $G/hold_f30m.py check)
-if [ $? != 0 ]; then
-  python $G/guard_f30m.py close user_session $GA > /dev/null
-  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F30m hold (item 606 (v)(1)): $HS - block closed, $T not launched (not an attempt)" >> "$TM"
-  echo "user session: $HS"; exit 7
-fi
-BS=$(python $G/guard_f30m.py status $GA)
-if [ $? != 0 ]; then
-  echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F30m guard (item 534): $BS - $T not launched (open the block: two clean checks >= 600 s apart)" >> "$TM"
-  echo "$BS"; exit 8
-fi
 if [ "${F30M_QUEUE_SKIP:-}" != 1 ]; then
   QS=$(python $G/queue_f30m.py 2>&1 | tr '\n' ';')
   if ! echo "$QS" | grep -q 'QUEUE FREE'; then
@@ -58,8 +42,8 @@ if [ "${F30M_QUEUE_SKIP:-}" != 1 ]; then
     echo "queue busy: $QS"; exit 9
   fi
 fi
-[ "${F30M_DRYRUN:-}" = 2 ] && { echo "dryrun2 $BS"; exit 0; }
-echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F30m guard (item 534): $GS; $HS; $BS; queue: $(echo "$QS" | grep -o 'QUEUE [A-Z]*'); $(python $G/guard_f30m.py tag $T $GA)" >> "$TM"
+[ "${F30M_DRYRUN:-}" = 2 ] && { echo "dryrun2"; exit 0; }
+echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) F30m launch_f30m form 634 (item 660): no guard before the lock; queue: $(echo "$QS" | grep -o 'QUEUE [A-Z]*'); tag $T" >> "$TM"
 if [ -e $G/go_$T.out.txt ]; then
   grep -q '^rc=' $G/go_$T.out.txt || { echo "go_$T.out.txt has no rc line - wait with wait_f30m.sh"; exit 1; }
   mkdir -p $G/old; mv $G/go_$T.out.txt $G/old/go_$T.$(date -u +%Y%m%dT%H%M%SZ).out.txt

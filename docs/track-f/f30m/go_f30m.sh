@@ -16,7 +16,10 @@
 # KYTY_* and VK_LAYER_* of the shell are unset before the call; the knobs go to enter_scene.py positionally.
 # usage: bash C:/kyty/f287/f30m/go_f30m.sh <f30_s<1..9>_c5 | f30_cy_v | f30_cy_c3 | f30_cy_c4>[_r1.._r3]
 # EXIT: 0 tag made (read it with post_f30m.sh); 1 hard refusal / return failed; 2 usage / the tag exists; 3 lock / user process / run gone;
-#   4 stop file; 5 procload busy; 6 display not ON before the lock.  ASCII only.
+#   4 stop file; 5 procload busy; 6 display not ON before the lock; 10 form linter FAILED (item 661 (b)(1)).  ASCII only.
+# ITEM 660 (d)(2) (form of item 634): no guard / hold check before the lock; ONE guard scan + hold check right after the lock, before
+# the manifest; a finding releases the lock, the tag is an interference, the repeat goes by the next command without a window.
+python "C:/kyty/KytyPS5/ps5 em/docs/form634_check.py" --series C:/kyty/f287/f30m || exit 10
 export PATH=/usr/bin:/mingw64/bin:$PATH
 G=C:/kyty/f287/f30m; F=C:/kyty/f287; EMU="C:/kyty/KytyPS5/ps5 em"; LOCK=${F30M_LOCK:-C:/kyty/SEALED_RUN.lock}
 GAME="$EMU/kyty_emulator.exe"
@@ -72,8 +75,6 @@ MF=("_ShaderCache=$EMU/_ShaderCache" "_ShaderSeeds=$EMU/_ShaderSeeds" "_Pipeline
 WANT=$(sha "$GAME")
 [ "$WANT" = "$FS11" ] || { log "installed binary $WANT is not FS11 ea51ae80 - not starting (question to the lead)"; exit 1; }
 [ -d "$GLDIR" ] || { log "no GLCache dir - not starting"; exit 1; }
-GS=$(python $G/guard_f30m.py scan) || { python $G/guard_f30m.py close user_found > /dev/null; log "user emulator or launcher lives - not starting, block closed (item 534): $GS"; exit 3; }
-HS=$(python $G/hold_f30m.py check) || { python $G/guard_f30m.py close user_session > /dev/null; log "user session (item 606 (v)(1)): $HS - not starting, block closed"; exit 3; }
 mkdir -p $OUT
 echo "$LV" > $OUT/level.txt
 python $G/procload.py --wait-s ${PLWAIT:-120} 2>&1 | mask > $OUT/procload.txt
@@ -100,8 +101,8 @@ if ! { echo "F30m HPP-723 go_f30m.sh $T pid $$ $(u)" > $LOCK; } 2>/dev/null; the
 fi
 set +o noclobber
 echo "lock taken $T $(u)" >> $G/runs/lock.log
-GS=$(python $G/guard_f30m.py scan) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; stop_disp; mv $OUT $OUT.user_$(date -u +%H%M%S); python $G/guard_f30m.py close user_found > /dev/null; log "user emulator or launcher found right after the lock - lock released, files untouched, block closed, interference (item 534): $GS"; exit 3; }
-HS=$(python $G/hold_f30m.py check) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; stop_disp; mv $OUT $OUT.session_$(date -u +%H%M%S); python $G/guard_f30m.py close user_session > /dev/null; log "user session right after the lock (item 606 (v)(1)): $HS - lock released, files untouched, block closed"; exit 3; }
+GS=$(python $G/guard_f30m.py scan) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; stop_disp; mv $OUT $OUT.user_$(date -u +%H%M%S); log "user emulator or launcher found right after the lock - lock released, files untouched, interference, repeat by the next command (item 660 (d)(2)): $GS"; exit 3; }
+HS=$(python $G/hold_f30m.py check) || { rm -f $LOCK; echo "lock released $T $(u)" >> $G/runs/lock.log; stop_disp; mv $OUT $OUT.session_$(date -u +%H%M%S); log "user session right after the lock (item 606 (v)(1)): $HS - lock released, files untouched, interference, repeat by the next command (item 660 (d)(2))"; exit 3; }
 log "lock taken; procload: $(tail -1 $OUT/procload.txt | cut -c1-120)"
 sha "$GAME" > $OUT/installed_before.txt
 log "installed binary inside the lock before the tag: $(cat $OUT/installed_before.txt)"
@@ -143,8 +144,8 @@ finish() {
       mv $OUT $OUT.display_$(date -u +%H%M%S)
       log "display not ON after the tag - the tag is the interference DISPLAY_OFF (item 620 (g)(1)), not read; repeat by the lead's item"
     elif [ -e $OUT/USER_FOUND ]; then
-      UF2=$(head -1 $OUT/USER_FOUND | cut -c1-160); python $G/guard_f30m.py close user_found > /dev/null
-      mv $OUT $OUT.user_$(date -u +%H%M%S); log "user process or session during the tag ($UF2) - block closed, interference, repeat by the lead (item 534, 606 (v)(1))"
+      UF2=$(head -1 $OUT/USER_FOUND | cut -c1-160)
+      mv $OUT $OUT.user_$(date -u +%H%M%S); log "user process or session during the tag ($UF2) - interference, repeat by the lead (item 534, 606 (v)(1))"
     elif [ ! -f $OUT/run.txt ]; then
       mv $OUT $OUT.nostart_$(date -u +%H%M%S); log "enter_scene never started - not a tag, repeat by the same name (item 534)"
     fi

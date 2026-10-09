@@ -1,0 +1,10 @@
+suite test_tools_f30m.py sha256 799042491eefd64eed7c792c310035848138072976c0e48fef3ae006dbf6fe66 target go_f30m.sh sha256 0e2bd526b3ef1e4d53eed3847eb74d2baa38f1e91113a607bef98a1fb0c7b6c9
+FAIL p661: launch_f30m.sh first executable line is the linter with exit 10 (export PATH=/usr/bin:/mingw64/bin:$PATH)
+FAIL p660: launch_f30m.sh has no block logic (guard_block, open-block, guard status/tag/close)
+FAIL p661: go_f30m.sh first executable line is the linter with exit 10 (export PATH=/usr/bin:/mingw64/bin:$PATH)
+FAIL p660: go_f30m.sh has no block logic (guard_block, open-block, guard status/tag/close)
+FAIL p660 (d)(1): launch has no guard_*.py / hold_*.py call
+FAIL p660 (d)(2): go has no guard / hold check before the lock line 102
+FAIL p660 (d)(2): go has ONE guard scan and ONE hold check, after the lock 102 and before the manifest 131 ([75, 103] / [76, 104])
+FAIL p661: linter --series f30m rc 0, last line ALL OK (FORM634 FAILED (11))
+checks 130 failed 8

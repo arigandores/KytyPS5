@@ -214,6 +214,68 @@ for f in ('launch_f30m.sh', 'wait_f30m.sh', 'chk_f30m.sh', 'post_f30m.sh', 'go_f
     ok &= check('%s ASCII, LF, no f30f / HPP-711 / F30F_ names in the code lines' % f, all(c < 128 for c in t) and b'\r\n' not in t
                 and b'f30f' not in code.lower() and b'HPP-711' not in code and b'F30F_' not in code)
 
+# --- item 660 (d)(4), 661 (b): the form of item 634 in launch_f30m.sh and go_f30m.sh ---
+import re
+import subprocess
+LINTER = 'C:/kyty/KytyPS5/ps5 em/docs/form634_check.py'
+LINT_LINE = 'python "C:/kyty/KytyPS5/ps5 em/docs/form634_check.py" --series C:/kyty/f287/f30m || exit 10'
+
+
+def code_of(f):
+    return [(n, l.strip()) for n, l in enumerate(open(os.path.join(HERE, f), encoding='ascii').read().split('\n'), 1)
+            if l.strip() and not l.strip().startswith('#')]
+
+
+for f in ('launch_f30m.sh', 'go_f30m.sh'):
+    cl = code_of(f)
+    ok &= check('p661: %s first executable line is the linter with exit 10 (%s)' % (f, cl[0][1][:70]), cl[0][1] == LINT_LINE)
+    ok &= check('p660: %s has no block logic (guard_block, open-block, guard status/tag/close)' % f,
+                not any(re.search(r'guard_block|open-block|guard_\w*\.py\s+(status|tag|close|open-block)\b', s) for _, s in cl))
+lc = code_of('launch_f30m.sh')
+ok &= check('p660 (d)(1): launch has no guard_*.py / hold_*.py call', not any(re.search(r'guard_\w*\.py|hold_\w*\.py', s) for _, s in lc))
+ok &= check('p660 (d)(1): launch keeps the display, the queue and the launch', any('dispstate.py' in s for _, s in lc)
+            and any('queue_f30m.py' in s for _, s in lc) and any('nohup bash -c "bash $G/go_f30m.sh $T' in s for _, s in lc))
+gc = code_of('go_f30m.sh')
+lock_n = next(n for n, s in gc if 'lock taken $T' in s)
+man_n = next(n for n, s in gc if n > lock_n and 'manifest_fs4c.py' in s)
+scans = [n for n, s in gc if re.search(r'guard_\w*\.py\s+scan\b(?!.*--pidfile)', s)]
+holds = [n for n, s in gc if re.search(r'hold_\w*\.py\s+check\b', s)]
+ok &= check('p660 (d)(2): go has no guard / hold check before the lock line %d' % lock_n,
+            not any(n < lock_n for n in scans + holds))
+ok &= check('p660 (d)(2): go has ONE guard scan and ONE hold check, after the lock %d and before the manifest %d (%s / %s)'
+            % (lock_n, man_n, scans, holds), len(scans) == 1 and len(holds) == 1 and lock_n < scans[0] < man_n and lock_n < holds[0] < man_n)
+ok &= check('p660 (d)(3): go keeps procload, the watch during the tag, kill-own by pid, the FS11 return',
+            any('procload.py' in s for _, s in gc) and any('hold_f30m.py watch' in s or 'guard_f30m.py watch' in s for _, s in gc)
+            and any('kill-own --pidfile' in s for _, s in gc) and 'cp "$PINNED" "$GAME"' in go)
+r = subprocess.run([sys.executable, LINTER, '--series', HERE], capture_output=True, text=True)
+ok &= check('p661: linter --series f30m rc 0, last line ALL OK (%s)' % r.stdout.strip().split('\n')[-1], r.returncode == 0 and r.stdout.strip().split('\n')[-1] == 'ALL OK')
+BADD = os.path.join(HERE, 'fx_p660_bad')
+shutil.rmtree(BADD, ignore_errors=True)
+os.makedirs(BADD)
+for f in ('launch_f30m.sh', 'go_f30m.sh'):
+    shutil.copy2(os.path.join(HERE, 'old', 'p660', f), os.path.join(BADD, f))
+r = subprocess.run([sys.executable, LINTER, '--series', BADD], capture_output=True, text=True)
+ok &= check('p661 negative: linter on the pre-660 scripts rc 1, FORM634 FAILED (%s)' % r.stdout.strip().split('\n')[-1],
+            r.returncode != 0 and 'FORM634 FAILED' in r.stdout)
+lt = open(os.path.join(HERE, 'launch_f30m.sh'), encoding='ascii').read().replace('--series C:/kyty/f287/f30m', '--series ' + BADD.replace('\\', '/'))
+open(os.path.join(BADD, 'launch_bad.sh'), 'w', encoding='ascii', newline='\n').write(lt)
+tmf = os.path.join(BADD, 'times.txt')
+r = subprocess.run([BASH, os.path.join(BADD, 'launch_bad.sh').replace('\\', '/'), 'f30_s7_c5'], capture_output=True, text=True,
+                   env=dict(os.environ, F30M_TIMES=tmf.replace('\\', '/'), F30M_DRYRUN='2', F30M_DISP_SKIP='1', F30M_QUEUE_SKIP='1'))
+ok &= check('p661 (b)(1): a launcher whose linter fails exits 10 before anything, no times.txt line (rc %d)' % r.returncode,
+            r.returncode == 10 and not os.path.exists(tmf))
+shutil.rmtree(BADD, ignore_errors=True)
+TMF2 = os.path.join(HERE, 'fx_p660_times.txt')
+if os.path.exists(TMF2):
+    os.remove(TMF2)
+gb = os.path.join(HERE, 'guard_block.txt')
+gbs = sha(gb) if os.path.exists(gb) else None
+rc, out = bash('launch_f30m.sh', 'f30_s7_c5', env={'F30M_TIMES': TMF2.replace('\\', '/'), 'F30M_DRYRUN': '2', 'F30M_DISP_SKIP': '1', 'F30M_QUEUE_SKIP': '1'})
+ok &= check('p660 (d)(1): launch dry-run 2 rc 0 without guard calls, guard_block.txt untouched (%s)' % out.strip().split('\n')[-1][:40],
+            rc == 0 and out.strip().split('\n')[-1] == 'dryrun2' and (sha(gb) if os.path.exists(gb) else None) == gbs)
+if os.path.exists(TMF2):
+    os.remove(TMF2)
+
 # --- strict cp1250 output of the planner ---
 raw = io.BytesIO()
 wrap = io.TextIOWrapper(raw, encoding='cp1250', errors='strict')

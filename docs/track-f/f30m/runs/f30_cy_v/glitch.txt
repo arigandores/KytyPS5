@@ -1,0 +1,2 @@
+C:/kyty/f287/f30m/rec_f30_cy_v.mp4: 11225 frames 960x540, index entries 11225
+one-frame glitches: 0

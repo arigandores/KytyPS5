@@ -1,0 +1,27 @@
+reader f30m_read.py sha256 c1e915f498b1a90d14337eaf128af0721202cd735829e7d4d88bd833fe138bb4
+| tag | status | knob | launch sha | (D5) x/draw | rts_bad | b / rx | r xr xc xe s p m l | xb_ser / xb_pass | race | win chk_b | mode | stop |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| f30_cy_c3 | ADMITTED | 3 | bba692c6 | 5739/5739 | 3330903 | 99015 / 99015 | 99015 99015 0 0 99015 99015 0 0 | 95732 / 264128 | 0 | 19415556 | NEW | - |
+| f30_cy_c4 | ADMITTED | 4 | bba692c6 | 5765/5765 | 1119 | 1119 / 0 | 0 0 0 0 1119 1119 0 0 | 0 / 273006 | 0 | 19149840 | NEW | - |
+| f30_cy_v | ADMITTED | 2 | bba692c6 | 10964/10964 | 0 | 0 / 0 | 0 0 0 0 0 0 0 0 | 1292 / 586830 | 0 | 38022809 | NEW | - |
+| f30_s1_c5 | ADMITTED | 5 | bba692c6 | 3758/3758 | 0 | 0 / 0 | 0 0 0 0 0 0 0 0 | 0 / 0 | 0 | 17474336 | NEW | - |
+| f30_s2_c5 | ADMITTED | 5 | bba692c6 | 9092/9092 | 0 | 0 / 0 | 0 0 0 0 0 0 0 0 | 0 / 0 | 0 | 13236884 | NEW | - |
+| f30_s3_c5 | ADMITTED | 5 | bba692c6 | 9036/9036 | 0 | 0 / 0 | 0 0 0 0 0 0 0 0 | 0 / 0 | 0 | 15612078 | NEW | - |
+| f30_s4_c5 | ADMITTED | 5 | bba692c6 | 8899/8899 | 0 | 0 / 0 | 0 0 0 0 0 0 0 0 | 0 / 0 | 0 | 21245253 | NEW | - |
+| f30_s5_c5 | ADMITTED | 5 | bba692c6 | 8797/8797 | 0 | 0 / 0 | 0 0 0 0 0 0 0 0 | 0 / 0 | 0 | 20821913 | NEW | - |
+| f30_s6_c5 | ADMITTED | 5 | bba692c6 | 4846/4846 | 0 | 0 / 0 | 0 0 0 0 0 0 0 0 | 0 / 0 | 0 | 17979650 | OLD | - |
+| f30_s7_c5 | ADMITTED | 5 | bba692c6 | 5791/5791 | 0 | 0 / 0 | 0 0 0 0 0 0 0 0 | 0 / 0 | 0 | 16769432 | OLD | - |
+| f30_s8_c5 | ADMITTED | 5 | bba692c6 | 4304/4304 | 0 | 0 / 0 | 0 0 0 0 0 0 0 0 | 0 / 0 | 0 | 19843828 | OLD | - |
+| f30_s9_c5 | ADMITTED | 5 | bba692c6 | 6834/6834 | 0 | 0 / 0 | 0 0 0 0 0 0 0 0 | 0 / 0 | 0 | 15595768 | MIXED | - |
+
+s1 underwater_aerial_garden: c5 ADMITTED K_B'' False live - (v of the scene - F30f, transfer by item 658 (a))
+s2 hoover_beach: c5 ADMITTED K_B'' False live - (v of the scene - F30f, transfer by item 658 (a))
+s3 mini_giants_garden: c5 ADMITTED K_B'' False live - (v of the scene - F30f, transfer by item 658 (a))
+s4 timestop_casino: c5 ADMITTED K_B'' False live - (v of the scene - F30f, transfer by item 658 (a))
+s5 rotating_level_day_and_night: c5 ADMITTED K_B'' False live - (v of the scene - F30f, transfer by item 658 (a))
+s6 sponge_dirty_bath: c5 ADMITTED K_B'' False live - (v of the scene - F30f, transfer by item 658 (a))
+s7 time_stopper_ghost_world: c5 ADMITTED K_B'' False live - (v of the scene - F30f, transfer by item 658 (a))
+s8 big_hand_pirate_island: c5 ADMITTED K_B'' False live - (v of the scene - F30f, transfer by item 658 (a))
+s9 underwater_aerial_garden: c5 ADMITTED K_B'' False live - (v of the scene - F30f, transfer by item 658 (a))
+cy cymbal_party_land: v ADMITTED (gamma) True (C1) True (V)=0 True (O) False | c3 ADMITTED (K) True | c4 ADMITTED K_B'' True live ['S', 'P'] | counted True
+scenes with live K_B'' 1 (s1..s9: -; cy True); S1 or S9 among them False; live sources over them ['P', 'S'] - rows for F30n by item 655 (zh)(1)-(3), 658 (v)

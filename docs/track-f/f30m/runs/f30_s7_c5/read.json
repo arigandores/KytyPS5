@@ -1,0 +1,407 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = T2 bba692c6 (bba692c6c161afc0)",
+   true
+  ],
+  [
+   "installed during the tag = T2 bba692c6 (bba692c6c161afc0)",
+   true
+  ],
+  [
+   "installed before = after = FS11 ea51ae80 (ea51ae80521e8300 / ea51ae80521e8300)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (81b41592d11887ef / 81b41592d11887ef)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "gate text and schedule empty - no rtskip, no census gate ('' / '')",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd, no --graphics-debug-dump true (None)",
+   true
+  ],
+  [
+   "guest args -lvl time_stopper_ghost_world (-lvl time_stopper_ghost_world; harness time_stopper_ghost_world)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "window from the entry line >= 150 s and the process alive at its end (item 649 (e)): stable_s 18.9 - started_s 15.9 + hold_s 150.2 = 153.2; outcome ok, hold_exit None",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "entry line present (243269)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "signature 9177b426 and catalog variant_fixb26_fixb1b_fixf10_fixf19 (D7) (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch:, DiagB32, TestLogStall lines (0 / 0 / 0)",
+   true
+  ],
+  [
+   "summary LogAsync: full_waits= once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ],
+  [
+   "(D1) exactly one RtSkip: mode 5, no other value ([(5, 16568)])",
+   true
+  ],
+  [
+   "(D2) RtSkip: refused lines 0, process rts_refuse 0",
+   true
+  ],
+  [
+   "(D3) Gate: rtskip= lines none or all 5 ([])",
+   true
+  ],
+  [
+   "(D4) process rts_xthr 0, rts_acqw 0",
+   true
+  ],
+  [
+   "(D5) FrameTrace-x in the window 5791 >= 0.95 x FrameTrace-draw 5791 and >= 1500",
+   true
+  ],
+  [
+   "(D6) window rts_ovf 0",
+   true
+  ],
+  [
+   "(D7) RC3 of F30l (item 658 (b)): launch_sha256 bba692c6c161afc0 = T2, binary_sha256 = launch_sha256 (bba692c6c161afc0), one log line version: Fork build ... 6fbdcf6 (['6fbdcf6']), version string -1907-g6fbdcf67 in the pinned copy of sha T2 (True), log version strings 0 of them other than -1907-g6fbdcf67 0",
+   true
+  ],
+  [
+   "RC4 (F30f) / RC2 (F30l) every FrameTrace-x line carries every field of REQ incl. the 8 bit counters (lines 6161, missing 0 []) - else missing field",
+   true
+  ],
+  [
+   "parse [identity of the parse, RC7]: closing point T (item 662): FrameTrace-x line 6161 of 6161 (log line 778935), distance to the last 0 <= 3; sums at T chk 16769433 / pa 16769433, chk_b 16769432 / pb 16769432, rx 0 <= b 0 <= bad 0; tail deviations {\"b_bad\": 0, \"chk_pa\": 0, \"chkb_pb\": 0, \"rx_b\": 0} - ok; at T rts_chk = rts_pa, rts_chk_b = rts_pb, rts_bad_rx <= rts_bad_b <= rts_bad (item 662 (v)(3)); process (reference) rts_chk 16769433 / rts_pa 16769433, rts_chk_b 16769432 / rts_pb 16769432, rts_bad_rx 0 / rts_bad_b 0 / rts_bad 0; prefix sums within 4 events at every line incl. the tail (item 659 (v), 662 (v)(4)) (chk/pa, chk_b/pb 0; rx/b/bad 0; first line None); chk_b <= chk <= n 21231660, noreg 0 <= bad; RtSkipVerify lines 0 <= min(40, bad); unparsable 0; duplicate fields 0; letter rows (per line, reference - the flip tears one event): chk!=pa 78, chk_b!=pb 108, rx<=b<=bad broken 0; max prefix deviation {\"b_bad\": 0, \"chk_pa\": 1, \"chkb_pb\": 1, \"rx_b\": 0}; lines with prefix deviation >= 2 (item 659 (v), reference) {\"b_bad\": 0, \"chk_pa\": 0, \"chkb_pb\": 0, \"rx_b\": 0}",
+   true
+  ],
+  [
+   "RC1 (F30l): at T (item 662: line 6161, distance 0 <= 3) rts_skip 0 = 0 and rts_chk 16769433 >= rts_chk_b 16769432 = rts_pb 16769432 >= 1; process rts_skip 0 = 0 and rts_chk 16769433 >= rts_chk_b 16769432 (process rts_pb 16769432 - reference)",
+   true
+  ],
+  [
+   "RC2 (F30l): exact - each of the 8 <= rts_bad_b 0 <= rts_bad 0, rts_bad_r 0 <= rts_bad_rx 0, xr 0 / xc 0 / xe 0 <= rts_bad_rx (ok); with 1 of tolerance - rts_bad_rx <= r+xr+xc+xe + 1, rts_bad_b <= sum8 + 1 (ok) [sum8 0, r+xr+xc+xe 0; per line reference: lines out of RC2 0]",
+   true
+  ],
+  [
+   "RC4 (F30l): value 5 != 3 - process rts_bad_noreg 0 = rts_bad 0",
+   true
+  ],
+  [
+   "PB item 6 dropped (item 655 (e)(4)): process rts_xb_pass 0 = 0",
+   true
+  ],
+  [
+   "reconciliation (exact): lines MISMATCH mode=5 0, process rts_bad 0; lines {\"b\": 0, \"rts_bad_l\": 0, \"rts_bad_m\": 0, \"rts_bad_p\": 0, \"rts_bad_r\": 0, \"rts_bad_s\": 0, \"rx\": 0, \"x\": 0} against rts_bad_rx 0, rts_bad_b 0, r 0, s 0, p 0, m 0, l 0, xr+xc+xe 0",
+   true
+  ]
+ ],
+ "admitted": true,
+ "b42": {
+  "inc": {
+   "applied": 0,
+   "drawn": 5220,
+   "hit": 0
+  },
+  "lines": 273,
+  "modes": [
+   1
+  ],
+  "per_extent": {
+   "1920x1080": {
+    "applied": 0,
+    "drawn": 5220,
+    "hit": 0
+   },
+   "2432x1368": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "3328x1872": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "3840x2160": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "480x270": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "608x342": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "832x468": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   },
+   "960x540": {
+    "applied": 0,
+    "drawn": 0,
+    "hit": 0
+   }
+  }
+ },
+ "b_minus_rx": 0,
+ "bda": {
+  "bda_missing": 0,
+  "blocks": 65,
+  "chkb_old": 16398787,
+  "mean_read": 1123.5,
+  "mode": "OLD",
+  "new_blocks": 0,
+  "old_blocks": 63,
+  "read_blocks": 63
+ },
+ "binary_sha256": "bba692c6c161afc0cd2bd3245cea574f7fb82e7a4aae4c065826898403107163",
+ "d5": [
+  5791,
+  5791
+ ],
+ "kappa": {
+  "by": {
+   "ALL": {
+    "inside": true,
+    "kappa": 1.013,
+    "ref": 0.78
+   },
+   "OLD": {
+    "inside": true,
+    "kappa": 1.013,
+    "ref": 0.78
+   }
+  },
+  "share_v2": 0.7901
+ },
+ "kb2": {
+  "a_only_lines": 0,
+  "l_ref": 0,
+  "live": [],
+  "per": {
+   "L": 0,
+   "M": 0,
+   "P": 0,
+   "R": 0,
+   "S": 0,
+   "X:xc": 0,
+   "X:xe": 0,
+   "X:xr": 0
+  },
+  "race": 0,
+  "sum7": 0
+ },
+ "kind": "c5",
+ "knob": 5,
+ "launch_sha256": "bba692c6c161afc0cd2bd3245cea574f7fb82e7a4aae4c065826898403107163",
+ "legacy": false,
+ "level": "time_stopper_ghost_world",
+ "members": [
+  [
+   "K_B'' (item 655 (zh)(1)): process r + xr + xc + xe + s + p + m = 0 >= 1 (live sources -; L 0 - reference)",
+   false
+  ],
+  [
+   "source R (item 658 (v)): process rts_bad_r 0 >= 1",
+   false
+  ],
+  [
+   "source X:xr (item 658 (v)): process rts_bad_xr 0 >= 1",
+   false
+  ],
+  [
+   "source X:xc (item 658 (v)): process rts_bad_xc 0 >= 1",
+   false
+  ],
+  [
+   "source X:xe (item 658 (v)): process rts_bad_xe 0 >= 1",
+   false
+  ],
+  [
+   "source S (item 658 (v)): process rts_bad_s 0 >= 1",
+   false
+  ],
+  [
+   "source P (item 658 (v)): process rts_bad_p 0 >= 1",
+   false
+  ],
+  [
+   "source M (item 658 (v)): process rts_bad_m 0 >= 1",
+   false
+  ]
+ ],
+ "mm_bits": {},
+ "proc": {
+  "rts_acqw": 0,
+  "rts_bad": 0,
+  "rts_bad_b": 0,
+  "rts_bad_l": 0,
+  "rts_bad_m": 0,
+  "rts_bad_noreg": 0,
+  "rts_bad_p": 0,
+  "rts_bad_r": 0,
+  "rts_bad_rx": 0,
+  "rts_bad_s": 0,
+  "rts_bad_xc": 0,
+  "rts_bad_xe": 0,
+  "rts_bad_xr": 0,
+  "rts_chk": 16769433,
+  "rts_chk_b": 16769432,
+  "rts_lost": 29855,
+  "rts_n": 21231660,
+  "rts_ovf": 0,
+  "rts_pa": 16769433,
+  "rts_pb": 16769432,
+  "rts_race": 0,
+  "rts_refuse": 0,
+  "rts_skip": 0,
+  "rts_xb_bound": 0,
+  "rts_xb_ids": 0,
+  "rts_xb_live": 0,
+  "rts_xb_meta": 0,
+  "rts_xb_pass": 0,
+  "rts_xb_ser": 0,
+  "rts_xthr": 0
+ },
+ "reader_sha256": "c1e915f498b1a90d14337eaf128af0721202cd735829e7d4d88bd833fe138bb4",
+ "rec": {
+  "a_only": 0,
+  "exact": true,
+  "lines": {
+   "b": 0,
+   "rts_bad_l": 0,
+   "rts_bad_m": 0,
+   "rts_bad_p": 0,
+   "rts_bad_r": 0,
+   "rts_bad_s": 0,
+   "rx": 0,
+   "x": 0
+  },
+  "n": 0,
+  "ok": true,
+  "x3": 0
+ },
+ "ref": {
+  "close_dist": 0,
+  "close_idx": 6161,
+  "close_ln": 778935,
+  "death": [],
+  "fork": [
+   "6fbdcf6"
+  ],
+  "ft_last_n": 6162,
+  "glitches": null,
+  "hold_exit": null,
+  "hold_s": 150.2,
+  "ineq_lines": 1407,
+  "input_lines": 0,
+  "input_max": null,
+  "lines": 778964,
+  "outcome": "ok",
+  "prefix_dev2": {
+   "b_bad": 0,
+   "chk_pa": 0,
+   "chkb_pb": 0,
+   "rx_b": 0
+  },
+  "prefix_maxdev": {
+   "b_bad": 0,
+   "chk_pa": 1,
+   "chkb_pb": 1,
+   "rx_b": 0
+  },
+  "stable_s": 18.9,
+  "tail_dev": {
+   "b_bad": 0,
+   "chk_pa": 0,
+   "chkb_pb": 0,
+   "rx_b": 0
+  },
+  "video_index": null,
+  "win_s": 153.2,
+  "x_full": 6161,
+  "x_prefixed": 0
+ },
+ "scene": "s7",
+ "status": "ADMITTED",
+ "stop": [],
+ "tag": "f30_s7_c5",
+ "verify_lines": 0,
+ "why": null,
+ "win": {
+  "rts_acqw": 0,
+  "rts_bad": 0,
+  "rts_bad_b": 0,
+  "rts_bad_l": 0,
+  "rts_bad_m": 0,
+  "rts_bad_noreg": 0,
+  "rts_bad_p": 0,
+  "rts_bad_r": 0,
+  "rts_bad_rx": 0,
+  "rts_bad_s": 0,
+  "rts_bad_xc": 0,
+  "rts_bad_xe": 0,
+  "rts_bad_xr": 0,
+  "rts_chk": 16769433,
+  "rts_chk_b": 16769432,
+  "rts_lost": 29485,
+  "rts_n": 21223111,
+  "rts_ovf": 0,
+  "rts_pa": 16769433,
+  "rts_pb": 16769432,
+  "rts_race": 0,
+  "rts_refuse": 0,
+  "rts_skip": 0,
+  "rts_xb_bound": 0,
+  "rts_xb_ids": 0,
+  "rts_xb_live": 0,
+  "rts_xb_meta": 0,
+  "rts_xb_pass": 0,
+  "rts_xb_ser": 0,
+  "rts_xthr": 0
+ }
+}

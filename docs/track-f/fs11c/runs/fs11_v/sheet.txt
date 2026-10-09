@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/fs11c/runs/fs11_v/sheet_fs11_v.png frames 10061 step 209 tiles 8x6

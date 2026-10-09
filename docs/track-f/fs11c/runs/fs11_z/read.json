@@ -1,0 +1,171 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS11 ea51ae80 (ea51ae80521e8300)",
+   true
+  ],
+  [
+   "installed during the tag = FS11 ea51ae80 (ea51ae80521e8300)",
+   true
+  ],
+  [
+   "installed before = after = FS10 abfded5e (abfded5ea629ea70 / abfded5ea629ea70)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (535ec79e78331ba5 / 535ec79e78331ba5)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (225302)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line - no KYTY_DIAG_B32 (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4791 listsha 71)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce",
+ "fixb12stat": {
+  "bad": 0,
+  "last": null,
+  "last_ln": null,
+  "lines": 0
+ },
+ "form": "fs11_z",
+ "info": {
+  "b13": [
+   [
+    1,
+    719
+   ]
+  ],
+  "first_scene_n": 202,
+  "frames_ge1s_report": 0,
+  "glitches": 0,
+  "hold_s": 154.4,
+  "logasync_mode": [
+   "LogAsync: mode=1 limit_bytes=268435456 d"
+  ],
+  "max_dt": 184641,
+  "mean_dt_us": 34598.0,
+  "scene_frames": 4464,
+  "summary": {
+   "bytes": 158615773,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 492544,
+   "max_queued_bytes": 30057,
+   "stall_cut": 0,
+   "stalls": 0,
+   "sync_lines": 0
+  },
+  "video_index": 4676
+ },
+ "interference": null,
+ "kind": "z",
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "hold >= 120 s after the first scene frame (154.4 s)",
+   true
+  ],
+  [
+   "the process lived through the hold (outcome ok, hold_exit None)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "FixB12: mode=0 (every line) before the first GuestOut ([(0, 721)]; bad 0; first GuestOut 12497) - item 647 (d)(3)",
+   true
+  ],
+  [
+   "FixB12Stat: lines 0 (parsed 0, unparsable 0) - item 647 (d)(3)",
+   true
+  ]
+ ],
+ "ok": true,
+ "reader_sha256": "9ce0471052a23fdd463c9c4ad7456d734209e3b9710bc38ae0ef03abfdddd31f",
+ "reading": "ADMITTED, members ALL YES (no verdict; reading - FS11d)",
+ "ref": {
+  "bin_version_string": true,
+  "fork_line": "version: Fork build arigandores/KytyPS5 ee9632b",
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 150.2,
+  "lines": 744348,
+  "other_logasync": 0,
+  "outcome": "ok",
+  "sheet": "sheet: C:/kyty/f287/fs11c/runs/fs11_z/sheet_fs11_z.png frames 4676 step 97 tiles 8x6",
+  "stable_s": 15.0,
+  "video_index": 4676,
+  "vke": 0
+ },
+ "status": "ADMITTED",
+ "tag": "fs11_z"
+}

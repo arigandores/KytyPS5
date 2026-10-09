@@ -1,0 +1,198 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS11 ea51ae80 (ea51ae80521e8300)",
+   true
+  ],
+  [
+   "installed during the tag = FS11 ea51ae80 (ea51ae80521e8300)",
+   true
+  ],
+  [
+   "installed before = after = FS10 abfded5e (abfded5ea629ea70 / abfded5ea629ea70)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (535ec79e78331ba5 / 535ec79e78331ba5)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (230238)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {'lost keyboard focus': 1})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line - no KYTY_DIAG_B32 (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4791 listsha 71)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce",
+ "fixb12stat": {
+  "bad": 0,
+  "last": {
+   "lskip": 0,
+   "passes": 220942,
+   "rewalk": 0,
+   "rwd": 0
+  },
+  "last_ln": 1146825,
+  "lines": 35
+ },
+ "form": "fs11_v",
+ "info": {
+  "first_scene_n": 362,
+  "frames_ge1s": 0,
+  "frames_ge1s_with_first": 0,
+  "hold_s": 334.4,
+  "max_dt": 201098,
+  "mean_dt_us": 34551.5,
+  "scene_frames": 9678,
+  "summary": {
+   "bytes": 310600479,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 700977,
+   "max_queued_bytes": 33742,
+   "stall_cut": 0,
+   "stalls": 0,
+   "sync_lines": 0
+  }
+ },
+ "interference": null,
+ "kind": "v",
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "hold >= 300 s after the first scene frame (334.4 s)",
+   true
+  ],
+  [
+   "the process lived through the hold (outcome ok, hold_exit None)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "0 frames >= 1 s after the first scene frame (0; first 362; with the first frame 0)",
+   true
+  ],
+  [
+   "video index records >= 3000 (10061)",
+   true
+  ],
+  [
+   "0 one-frame glitches (0)",
+   true
+  ],
+  [
+   "sheet for the lead made (sheet: C:/kyty/f287/fs11c/runs/fs11_v/sheet_fs11_v.png frames 10061 step 209 tiles 8x6)",
+   true
+  ],
+  [
+   "LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12497)",
+   true
+  ],
+  [
+   "summary LogAsync: full_waits= present (1)",
+   true
+  ],
+  [
+   "drain_timeouts 0 (0)",
+   true
+  ],
+  [
+   "FixB13: mode=1 (every line) before the first GuestOut ([(1, 719)]; first GuestOut 12497) - form fs10_v / fs10_w",
+   true
+  ],
+  [
+   "FixB12: mode=1 (every line) before the first GuestOut ([(1, 721)]; bad 0; first GuestOut 12497) - item 647 (d)(3)",
+   true
+  ],
+  [
+   "FixB12Stat: line present (parsed 35, unparsable 0) - item 647 (d)(3)",
+   true
+  ]
+ ],
+ "ok": true,
+ "reader_sha256": "9ce0471052a23fdd463c9c4ad7456d734209e3b9710bc38ae0ef03abfdddd31f",
+ "reading": "ADMITTED, members ALL YES (no verdict; reading - FS11d)",
+ "ref": {
+  "bin_version_string": true,
+  "fork_line": "version: Fork build arigandores/KytyPS5 ee9632b",
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.1,
+  "lines": 1147197,
+  "other_logasync": 0,
+  "outcome": "ok",
+  "sheet": "sheet: C:/kyty/f287/fs11c/runs/fs11_v/sheet_fs11_v.png frames 10061 step 209 tiles 8x6",
+  "stable_s": 21.0,
+  "video_index": 10061,
+  "vke": 0
+ },
+ "status": "ADMITTED",
+ "tag": "fs11_v"
+}

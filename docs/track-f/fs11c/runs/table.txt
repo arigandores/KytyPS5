@@ -1,0 +1,6 @@
+reader fs11c_read.py sha256 9ce0471052a23fdd463c9c4ad7456d734209e3b9710bc38ae0ef03abfdddd31f
+| tag | status | binary_sha256 | members | FixB12Stat last | glitches | video index | hold_s |
+|---|---|---|---|---|---|---|---|
+| fs11_v | ADMITTED | ea51ae80 | ALL YES | passes=220942 rewalk=0 rwd=0 lskip=0 | 0 | 10061 | 330.1 |
+| fs11_w | ADMITTED | ea51ae80 | ALL YES | passes=33184 rewalk=0 rwd=0 lskip=0 | None | None | 310.2 |
+| fs11_z | ADMITTED | ea51ae80 | ALL YES | - | 0 | 4676 | 150.2 |

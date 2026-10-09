@@ -1,0 +1,39 @@
+tag fs11_w (form fs11_w, kind w, level underwater_aerial_garden)  reader sha256 9ce0471052a23fdd463c9c4ad7456d734209e3b9710bc38ae0ef03abfdddd31f
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = FS11 ea51ae80 (ea51ae80521e8300)
+    [ok] installed during the tag = FS11 ea51ae80 (ea51ae80521e8300)
+    [ok] installed before = after = FS10 abfded5e (abfded5ea629ea70 / abfded5ea629ea70)
+    [ok] json prereg sha256 = seal sha256 (535ec79e78331ba5 / 535ec79e78331ba5)
+    [ok] env = the form of the tag (exact)
+    [ok] last --vulkan-validation true (true)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 310 s (310)
+    [ok] log present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (224754)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {'lost keyboard focus': 1})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line - no KYTY_DIAG_B32 (0)
+    [ok] no TestLogStall line (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4791 listsha 71)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+  binary_sha256 ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+  MEMBERS fs11_w ALL YES
+    [YES] lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.2 >= 310)
+    [YES] 0 death markers (log and stdout) []
+    [YES] 0 [Vulkan][E] (0)
+    [YES] 0 limit lines of the layer (0)
+    [YES] positive control: [Vulkan][W] 909883 > 0
+    [YES] DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)
+    [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12500)
+    [YES] no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)
+    [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 723)]; first GuestOut 12500) - form fs10_v / fs10_w
+    [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 725)]; bad 0; first GuestOut 12500) - item 647 (d)(3)
+  INFO {"frames_ge1s_report": 0, "mean_dt_us": 133132.6, "scene_frames": 2435, "summary": {"bytes": 391509803, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 1309473, "max_queued_bytes": 32682, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "vkw": 909883}
+  ROW FixB12Stat (last line - report row, not a gate; item 647 (d)(3)): lines 33, unparsable 0, last passes=33184 rewalk=0 rwd=0 lskip=0 (log line 2348072)
+  REFERENCE: {"bin_version_string": true, "fork_line": "version: Fork build arigandores/KytyPS5 ee9632b", "glitches": null, "hold_exit": null, "hold_s": 310.2, "lines": 2391614, "other_logasync": 0, "outcome": "ok", "sheet": null, "stable_s": 27.4, "video_index": null, "vke": 0}
+  READING ADMITTED, members ALL YES (no verdict; reading - FS11d)

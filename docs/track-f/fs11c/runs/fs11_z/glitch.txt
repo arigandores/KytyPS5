@@ -1,0 +1,2 @@
+C:/kyty/f287/fs11c/rec_fs11_z.mp4: 4676 frames 960x540, index entries 4676
+one-frame glitches: 0

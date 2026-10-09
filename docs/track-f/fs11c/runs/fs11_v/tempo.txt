@@ -1,0 +1,3 @@
+TEMPO PASS form harness mean_dt_ms 34.44 fps 29.03 frames 9737 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after the level line 9737, span 335.4 s)
+  row: flip records after the level line 9735
+  row: seal plan W form no (item 621)

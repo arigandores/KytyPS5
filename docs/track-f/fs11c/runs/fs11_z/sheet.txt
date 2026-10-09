@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/fs11c/runs/fs11_z/sheet_fs11_z.png frames 4676 step 97 tiles 8x6

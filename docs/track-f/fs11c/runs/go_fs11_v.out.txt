@@ -1,0 +1,21 @@
+2026-10-09T06:59:24Z FS11c go_fs11c fs11_v run check (item 587 (g)): RUN ALIVE 738f7ce3 status in_progress
+2026-10-09T06:59:25Z FS11c go_fs11c fs11_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 30275 utc 2026-10-09T06:59:25Z
+2026-10-09T07:01:14Z FS11c go_fs11c fs11_v lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-09T07:01:14Z FS11c go_fs11c fs11_v installed binary inside the lock before the tag: abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe
+2026-10-09T07:01:17Z FS11c go_fs11c fs11_v manifest before: manifest C:/kyty/f287/fs11c/runs/fs11_v/manifest_before.tsv files 4791 bytes 1295046822 listsha 71c6aeca2b4f2b2d846b8e123e7fc1875fd4784b603fb8d4065284f762612ac7
+2026-10-09T07:01:17Z FS11c go_fs11c fs11_v caches before against the base manifest of the seal (row): manifest cmp EQUAL files 4791 listsha 71c6aeca2b4f2b2d846b8e123e7fc1875fd4784b603fb8d4065284f762612ac7
+2026-10-09T07:01:20Z FS11c go_fs11c fs11_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (268/184/5/661/130/ MB)
+2026-10-09T07:01:21Z FS11c go_fs11c fs11_v state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-09T07:01:20Z
+2026-10-09T07:01:22Z FS11c go_fs11c fs11_v installed the FS11 copy ea51ae80 for the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T07:01:22Z FS11c go_fs11c fs11_v enter_scene start (level underwater_aerial_garden, SD 300, hold 330, harness form --rec, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-09T07:07:25Z FS11c go_fs11c fs11_v enter_scene rc 0; guard watch: 2026-10-09T07:07:24Z watch end, user process seen: no; hold watch: 2026-10-09T07:07:24Z watch end, user VM seen: no
+2026-10-09T07:07:25Z FS11c go_fs11c fs11_v run: VERDICT: underwater_aerial_garden in 21.0 s - PASS (acceptance <= 90 s)
+2026-10-09T07:07:27Z FS11c go_fs11c fs11_v log_fs11_v.txt sha256 e1d21ea104f8499df9c97bf7c18183d7ba9b00630363943f34cae5b736ece008
+2026-10-09T07:07:27Z FS11c go_fs11c fs11_v installed binary returned from the pinned FS10 copy
+2026-10-09T07:07:27Z FS11c go_fs11c fs11_v installed binary after the tag: abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe
+2026-10-09T07:07:30Z FS11c go_fs11c fs11_v manifest of the run state (before the return): manifest C:/kyty/f287/fs11c/runs/fs11_v/manifest_run.tsv files 4791 bytes 1295046822 listsha 71c6aeca2b4f2b2d846b8e123e7fc1875fd4784b603fb8d4065284f762612ac7; run vs before: manifest cmp EQUAL files 4791 listsha 71c6aeca2b4f2b2d846b8e123e7fc1875fd4784b603fb8d4065284f762612ac7
+2026-10-09T07:07:32Z FS11c go_fs11c fs11_v caches, seeds, saves and GLCache returned
+2026-10-09T07:07:35Z FS11c go_fs11c fs11_v manifest after: manifest C:/kyty/f287/fs11c/runs/fs11_v/manifest_after.tsv files 4791 bytes 1295046822 listsha 71c6aeca2b4f2b2d846b8e123e7fc1875fd4784b603fb8d4065284f762612ac7; cmp: manifest cmp EQUAL files 4791 listsha 71c6aeca2b4f2b2d846b8e123e7fc1875fd4784b603fb8d4065284f762612ac7
+2026-10-09T07:07:36Z FS11c go_fs11c fs11_v lock released (rc 0)
+2026-10-09T07:07:38Z FS11c go_fs11c fs11_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 48 utc 2026-10-09T07:07:38Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-09T07:07:38Z; dispstate ON idle_s 48
+rc=0

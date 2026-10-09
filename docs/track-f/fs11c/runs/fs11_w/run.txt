@@ -1,0 +1,17 @@
+prereg: fs11c_seal.md  24596 bytes  sha256 535ec79e78331ba5  mtime 2026-10-09T08:55:11  mtime-ctime +0.000 s
+pre_run: host 448 processes, top by CPU: <app> 28595s, <app> 10108s, <app> 5020s, <app> 4889s, <app> 2150s, <app> 1880s
+pre_run: GPU 0.0 % busy, 20.7 W, 2340 MiB used, SM 1485.0 MHz, 21 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\fs11c\cpuclk.py is not there
+--- attempt 1: launching
+11.7 s  LevelDocument Loaded: underwater_aerial_garden
+13.8 s  Level has started: underwater_aerial_garden
+27.4 s  scene stable at frame 281 (90 frames with draws >= 100)
+holding the run for 310 s
+hold end: ft_total 2626, ft_tail 40 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 3.8, 'close_wait_s': 40}
+hold_gpu: median 12.0 % busy over 610 rows (2026/10/09 09:23:11.092 .. 2026/10/09 09:28:21.306), a row, not a guard
+copied C:\kyty\f287\fs11c\log_fs11_w.txt
+copied C:\kyty\f287\fs11c\stdout_fs11_w.txt
+
+attempt 1  ok               document=11.7 s started=13.8 s stable=27.4 s 
+VERDICT: underwater_aerial_garden in 27.4 s - PASS (acceptance <= 90 s)

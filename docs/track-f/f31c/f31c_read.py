@@ -28,8 +28,8 @@ Members of item 620 (g)(1)-(2) (item 620 (d): a new harness of the track F with 
   --tempo-rc N    the exit code of tempo_f31c.py (0 PASS); read only for a COUNTED tag: N != 0 -> TEMPO (stop of the series, question
                   to the lead - item 620 (g)(2)); for other classes a row
 Series line (table): N = 5 inventory + counted of 41 (item 667 (g)); states DETECTOR_STOP > HARNESS_STOP > TEMPO_STOP > INTERFERENCE_STOP
-  (5 interferences) > COMPLETE (36 counted) > LOCK_BUDGET_STOP (sum of the lock time of all calls in runs/lock.log >= 14 400 s, item 667
-  (e)(4)) > GOING.
+  (5 interferences) > COMPLETE (36 counted) > LOCK_BUDGET_STOP (sum of the lock time of all calls in runs/lock.log >= 23 400 s, item 669
+  (v)(1); was 14 400 s by item 667 (e)(4)) > GOING.
 usage:
   python f31c_read.py <tag> [--json OUT]                   reads C:/kyty/f287/f31c/{log_<tag>.txt, stdout_<tag>.txt, <tag>.json}
   python f31c_read.py --log LOG [--stdout S] [--run-json J] [--name N] [--json OUT]    (fixtures, positive controls; .xz accepted)
@@ -59,7 +59,7 @@ INTERF_STOP = 5
 TAGS = 36
 INVENTORY = 5
 N_RULE = 41
-LOCK_BUDGET_S = 4 * 3600
+LOCK_BUDGET_S = 23400  # ROADMAP s122 item 669 (v)(1): <= 6.5 h of the lock of all calls (was 4 * 3600 by item 667 (e)(4))
 RX_OVER = re.compile(r'^hostload: over05 (\d+) ')
 RX_LOCK = re.compile(r'^lock (taken|released) (\S+) (\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ)\s*$')
 

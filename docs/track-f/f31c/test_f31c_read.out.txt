@@ -1,5 +1,5 @@
-suite test_f31c_read.py sha256 e0ceab012b4a28e96e13815d0803e69c2a30bdb42e65adf49899465efa7b8edd target f31c_read.py sha256 330997b89ac7f86e2a8f8e5a4f889603bec3b777b7d91906b607c23f0f8305e1
-ok   constants: FS11 ea51ae80, level mini_giants_garden, 290 s, entry 60 s, 5 interferences, 36 tags, 5 inventory, N 41, budget 14400 s
+suite test_f31c_read.py sha256 0515dfe0d88d316031c64c1087b99fcee4ae65f41492f94d7247f34a32905a6e target f31c_read.py sha256 f91dd371c0c6e7b0bd355622267b76acdf3c844db74cecc6f1c90c7a938246b5
+ok   constants: FS11 ea51ae80, level mini_giants_garden, 290 s, entry 60 s, 5 interferences, 36 tags, 5 inventory, N 41, budget 23400 s (item 669)
 ok   counted: class COUNTED
 ok   counted: frames 18000 sum 300.0 s
 ok   counted: frames before the entry not summed
@@ -75,9 +75,10 @@ ok   a detector tag: DETECTOR_STOP
 ok   a harness tag: HARNESS_STOP
 ok   a tempo tag: TEMPO_STOP
 ok   moved run folders (b25m_NN.<suffix>) are not read
-ok   lock 14 399 s, 30 counted: GOING
-ok   lock 14 400 s, 30 counted: LOCK_BUDGET_STOP
-ok   lock 15 000 s, 36 counted: COMPLETE (budget not read)
+ok   lock 14 400 s (old budget), 30 counted: GOING (item 669)
+ok   lock 23 399 s, 30 counted: GOING
+ok   lock 23 400 s, 30 counted: LOCK_BUDGET_STOP
+ok   lock 24 000 s, 36 counted: COMPLETE (budget not read)
 ok   lock over budget with a detector: DETECTOR_STOP
 ok   positive control s59: DETECTOR, strings [2, 2, 1], first line 627190 (F26a: 627192)
 ok   positive control s42: DETECTOR, strings [1, 1, 1], first line 4407362 (F26a: 4407364)

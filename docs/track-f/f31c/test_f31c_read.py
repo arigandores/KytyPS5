@@ -75,9 +75,9 @@ ASSERT = ['ASSERT: D:\\asobi\\6.0\\source\\engine\\js\\src\\framework\\js\\gpu\\
           'Unhandled host exception: type=1 code=3221225477 pc=0x00000009004a020e access=1 address=0xffffffffffffffff']
 
 # constants of item 667
-check('constants: FS11 ea51ae80, level mini_giants_garden, 290 s, entry 60 s, 5 interferences, 36 tags, 5 inventory, N 41, budget 14400 s',
+check('constants: FS11 ea51ae80, level mini_giants_garden, 290 s, entry 60 s, 5 interferences, 36 tags, 5 inventory, N 41, budget 23400 s (item 669)',
       R.TB.startswith('ea51ae80') and R.E == b'Level has started: mini_giants_garden' and R.SUM_MIN_US == 290000000 and R.ENTRY_MAX_S == 60.0
-      and R.INTERF_STOP == 5 and R.TAGS == 36 and R.INVENTORY == 5 and R.N_RULE == 41 and R.LOCK_BUDGET_S == 14400)
+      and R.INTERF_STOP == 5 and R.TAGS == 36 and R.INVENTORY == 5 and R.N_RULE == 41 and R.LOCK_BUDGET_S == 23400)
 # class members
 r = cls('counted'); check('counted: class COUNTED', r['cls'] == 'COUNTED')
 check('counted: frames 18000 sum 300.0 s', r['frames'] == 18000 and r['sum_dt_s'] == 300.0)
@@ -208,10 +208,11 @@ st, out = series(['COUNTED'] * 3 + ['DETECTOR']); check('a detector tag: DETECTO
 st, out = series(['COUNTED', 'HARNESS']); check('a harness tag: HARNESS_STOP', st == 'HARNESS_STOP')
 st, out = series(['COUNTED', 'TEMPO']); check('a tempo tag: TEMPO_STOP', st == 'TEMPO_STOP')
 check('moved run folders (b25m_NN.<suffix>) are not read', 'b25m_99' not in out)
-st, out = series(['COUNTED'] * 30, lock=14399); check('lock 14 399 s, 30 counted: GOING', st == 'GOING' and 'lock 14399 s of 14400' in out)
-st, out = series(['COUNTED'] * 30, lock=14400); check('lock 14 400 s, 30 counted: LOCK_BUDGET_STOP', st == 'LOCK_BUDGET_STOP')
-st, out = series(['COUNTED'] * 36, lock=15000); check('lock 15 000 s, 36 counted: COMPLETE (budget not read)', st == 'COMPLETE')
-st, out = series(['COUNTED'] * 3 + ['DETECTOR'], lock=15000); check('lock over budget with a detector: DETECTOR_STOP', st == 'DETECTOR_STOP')
+st, out = series(['COUNTED'] * 30, lock=14400); check('lock 14 400 s (old budget), 30 counted: GOING (item 669)', st == 'GOING')
+st, out = series(['COUNTED'] * 30, lock=23399); check('lock 23 399 s, 30 counted: GOING', st == 'GOING' and 'lock 23399 s of 23400' in out)
+st, out = series(['COUNTED'] * 30, lock=23400); check('lock 23 400 s, 30 counted: LOCK_BUDGET_STOP', st == 'LOCK_BUDGET_STOP')
+st, out = series(['COUNTED'] * 36, lock=24000); check('lock 24 000 s, 36 counted: COMPLETE (budget not read)', st == 'COMPLETE')
+st, out = series(['COUNTED'] * 3 + ['DETECTOR'], lock=24000); check('lock over budget with a detector: DETECTOR_STOP', st == 'DETECTOR_STOP')
 
 # positive control of the detector on the three real logs (item 667 (d)(5))
 for nm, p, ln in (('s59', 'C:/kyty/s59/log_sig1.txt.xz', 627192), ('s42', 'C:/kyty/log_s14_s42_merged_cold.txt.xz', 4407364),

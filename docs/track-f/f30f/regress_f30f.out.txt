@@ -1,0 +1,36 @@
+suite regress_f30f.py sha256 cec2b915b4a2e9fef29f94d4a48ef87c2b25b3006b24fdb191ef980aedec2c22 target f30f_read.py sha256 64cf84550a3c94a189ae5cff07ce1eb2ea1a0275bf42575002e0256851311b01
+log k3k127 sha256 25c7d65fce64b2810156455e915c762fbc2a7aebd06ff85f78f96f634a4d36ce
+log s3s127 sha256 f1193a3d4cf5a8b0f6cac992ba2d17be9b5382a5843d633389b6e4a62fd219c6
+log fs10_v sha256 c90a28fb926e02275a391843aaf8e185f41977d217fed50e496fe9166d4fdbc6
+PASS k3k127 default: NOT_ADMITTED (NOT_ADMITTED)
+PASS k3k127 default: RC4 row NO - missing field ([False])
+PASS k3k127 default: no sums from lines with a missing field (proc rts_chk 0)
+PASS s3s127 default: NOT_ADMITTED, RC4 NO (NOT_ADMITTED [False])
+k3k127 legacy proc {"rts_n": 44642788, "rts_chk": 39814684, "rts_chk_b": 39362713, "rts_bad": 0, "rts_race": 0}
+k3k127 legacy win {"rts_n": 44638544, "rts_chk": 39814684, "rts_chk_b": 39362713, "rts_bad": 0} bda {"bda_missing": 0, "blocks": 97, "chkb_old": 1478601, "mean_read": 119.5, "mode": "NEW", "new_blocks": 88, "old_blocks": 3, "read_blocks": 95}
+PASS k3k127 legacy: process rts_chk 39 814 684 = F30a (39814684)
+PASS k3k127 legacy: process rts_chk_b 39 362 713 = F30a (39362713)
+PASS k3k127 legacy: process rts_bad 0, RtSkipVerify 0 (0, 0)
+PASS k3k127 legacy: (C1) YES, (V) YES, race YES ({'(C1)': True, '(V)': True, 'race:': True, '(O)': False})
+PASS k3k127 legacy: (O) NO - entry NEW (NEW, mean 119.5)
+PASS k3k127 legacy: (D1) one mode 2 YES, (D2) YES, (D3) gate 2 YES, (D4) YES, (D5) YES, (D6) YES ({'(D1)': True, '(D2)': True, '(D3)': True, '(D4)': True, '(D5)': True, '(D6)': True})
+PASS k3k127 legacy: (D7) NO - not T (False)
+PASS k3k127 legacy: parse row YES (prefix sums; per-line letter tears: ax prefix deviation {"b_bad": 0, "chk_pa": 1, "chkb_pb": 1, "rx_b": 0})
+PASS k3k127 legacy: kappa ALL {'ref': 0.8802, 'kappa': 1.0018, 'inside': True} inside [0.80; 1.25]
+PASS k3k127 legacy: no STOP ([])
+PASS k3k127 legacy: item 651 (v)(1) - parse PASS with the letter tears 140 / 130, max prefix deviation 1 / 1 ( - the flip tears one event): chk!=pa 140, chk_b!=pb 130, rx<=b<=bad broken 0; max prefix deviation {"b_bad": 0, "chk_pa": 1, "chkb_pb": 1, "rx_b": 0})
+s3s127 legacy proc {"rts_chk": 6731360, "rts_chk_b": 6563303, "rts_bad": 1121276, "rts_bad_noreg": 0, "rts_race": 0} bits ['0x401', '0x405'] bda OLD
+PASS s3s127 legacy: process rts_bad 1 121 276 = F30a (1121276)
+PASS s3s127 legacy: 40 RtSkipVerify lines, bits 0x401 / 0x405 (40 ['0x401', '0x405'])
+PASS s3s127 legacy: (K) YES, (K') YES, race YES ({'(K)': True, "(K')": True, 'race:': True})
+PASS s3s127 legacy: (D3) NO - ABBA gate lines 0 and 3 (False)
+PASS s3s127 legacy: (D1) YES - one mode 3 line (True)
+PASS s3s127 legacy: parse YES (lines 40 <= min(40, bad)), letter tears 34 / 32 (ce - the flip tears one event): chk!=pa 34, chk_b!=pb 32, rx<=b<=bad broken 0; max prefix deviation {"b_bad": 0, "chk_pa": 1, "chkb_pb": 1, "rx_b": 0})
+PASS s3s127 legacy: BDA OLD (OLD)
+PASS fs10_v default: NOT_ADMITTED by RC4 missing field (NOT_ADMITTED ["RC4 every FrameTrace-x line carries every field of REQ (lines 10268, missing 10268 [(18274, ['rts_bad_b', 'rts_bad_rx']), (18422, ['rts_bad_b', 'rts_bad_rx']), (20000, ['rts_bad_b', 'rts_bad_rx'])]) - else missing field"])
+PASS fs10_v default: (D1) NO - mode 1 (False)
+PASS fs10_v: (D7) NO - log line version: Fork build ... dc5d471, not a1d1d86 (item 649 (zh)) (D7) item 649 (b): launch_sha256 - = T, binary_sha256 = launch_sha256 (-), one log line version: Fork build ... a1d1d86 (['dc5d471']), version string in the pinned copy of sha T (None) - NO; letter of
+fs10_v FixB42 window {"inc": {"applied": 10, "drawn": 9646, "hit": 10}, "lines": 280, "modes": [1], "per_extent": {"1920x1080": {"applied": 0, "drawn": 9625, "hit": 0}, "2432x1368": {"applied": 0, "drawn": 12, "hit": 0}, "3328x1872": {"applied": 0, "drawn": 6, "hit": 0}, "3840x2160": {"applied": 6, "drawn": 3, "hit": 6}, "480x270": {"applied": 1, "drawn": 0, "hit": 1}, "608x342": {"applied": 2, "drawn": 0, "hit": 2}, 
+PASS fs10_v: FixB42 lines read (280) and window increments >= 0 ({'hit': 10, 'applied': 10, 'drawn': 9646})
+checks 26 failed 0
+ALL OK

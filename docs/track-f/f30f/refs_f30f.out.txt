@@ -1,0 +1,27 @@
+suite refs_f30f.py sha256 76bb27acb2eff99d469a42506e3a4bbee3d8c3396517d47c250a2202b6c396d5 target docs/track-f/f30f.md
+PASS e52d4b2a:docs/ROADMAP.md:23981 643. **\u0417\u0432\u0435\u043d\u043e F30c \u0442\u0440\u0435\u043a\u0
+PASS e52d4b2a:docs/ROADMAP.md:23985 (\u0433) **RC2\u2013RC7 \u2014 \u0438\u0441\u043f\u043e\u043b\u043d\u0
+PASS e52d4b2a:docs/ROADMAP.md:23986 (\u0434) **\u041a\u043e\u043d\u0441\u0442\u0430\u043d\u0442\u044b \u04
+PASS e52d4b2a:docs/ROADMAP.md:23991 644. **\u0417\u0432\u0435\u043d\u043e F30e \u0442\u0440\u0435\u043a\u0
+PASS e52d4b2a:docs/ROADMAP.md:23993 (\u0431) **RC1 \u2014 \u0447\u043b\u0435\u043d \u043f\u0435\u0447\u043
+PASS e52d4b2a:docs/ROADMAP.md:23994 (\u0432) **RC2 \u2014 \u0447\u043b\u0435\u043d\u044b \u043f\u0435\u044
+PASS e52d4b2a:docs/ROADMAP.md:23995 (\u0433) **RC3 \u2014 \u041a_B, \u0440\u0435\u0448\u0435\u043d\u0438\u
+PASS e52d4b2a:docs/ROADMAP.md:23996 (\u0434) **RC4 \u2014 \u0447\u043b\u0435\u043d\u044b \u043f\u0435\u044
+PASS e52d4b2a:docs/ROADMAP.md:24037 649. **\u041e\u0442\u0432\u0435\u0442 \u043b\u0438\u0434\u0430 \u043d\
+PASS e52d4b2a:docs/ROADMAP.md:24039 (\u0431) **\u04121 \u2014 \u0447\u043b\u0435\u043d (\u04147) \u0443 \u
+PASS e52d4b2a:docs/ROADMAP.md:24040 (\u0432) **\u04122 \u2014 \u043f\u0440\u043e\u0432\u0430\u043b \u0443 
+PASS e52d4b2a:docs/ROADMAP.md:24041 (\u0433) **\u04123 \u2014 `c3` `NOT_ADMITTED`
+PASS e52d4b2a:docs/ROADMAP.md:24042 (\u0434) **\u04124 \u2014 \u0444\u043e\u0440\u043c\u0430 S9:**
+PASS e52d4b2a:docs/ROADMAP.md:24043 (\u0435) **\u04125 \u2014 \u0443\u0434\u0435\u0440\u0436\u0430\u043d\u
+PASS 67ea41df:docs/ROADMAP.md:24053 651. **\u041e\u0442\u0432\u0435\u0442 \u043b\u0438\u0434\u0430 \u043d\
+PASS 67ea41df:docs/ROADMAP.md:24055 (\u0431) **\u0427\u043b\u0435\u043d \xab\u0440\u0430\u0437\u0431\u043e
+PASS 67ea41df:docs/ROADMAP.md:24056 (\u0432) **\u0421\u043b\u0435\u0434\u0441\u0442\u0432\u0438\u0435 \u04
+PASS 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1605 if ((bits & 0x030u) != 0) {
+PASS 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:1610 LOGF("RtSkipVerify: MISMATCH frame=%d bits=0x%03x reg=%u
+PASS 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3438 LOGF("RtSkip: mode %u ctx_slots=%u groups=%u rec_bytes=%u
+PASS 585d997d:src/graphics/host_gpu/renderer/renderDraw.cpp:3683 if (t_rts != 4) {
+PASS 585d997d:src/graphics/presentation/videoOut.cpp:3255 {"rts_bad_b", FS::Counter::RtsBadB, false},
+PASS 585d997d:src/common/gates.cpp:438 {"KYTY_RT_SKIP", "rtskip", 1, 4},
+negative control (line +1): FAILED as expected
+refs 23
+ALL OK

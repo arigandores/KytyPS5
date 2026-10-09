@@ -1,0 +1,3 @@
+suite test_tools_f30f.py sha256 5d4971d2667e67f2400aae706da16f01486d0849d489b7f41624c614aad78b58 target go_f30f.sh sha256 527d7186aca2dec64b9cb6c8f274a0f82e9db299a8bb25635f1d91a64d714c68
+checks 135 failed 0
+ALL OK

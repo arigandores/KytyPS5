@@ -1,0 +1,22 @@
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:1304 | inline constexpr uint32_t kRtsBitsA = 0x001u | 0x002u | 0x004u | 0x008u | 0x400u; | +1 
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:1569 | if (!t_rts_reg) { | +1 FS::Add(FS::Counter::RtsBadNoreg, 1);
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:1576 | if ((bits & 0x030u) != 0) { | +1 FS::Add(FS::Counter::RtsBadRx, 1);
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3470 | } else if (t_rts != 3 && t_rts_reg) { | +1 why = C::RtsXaReg;
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3493 | if (t_rts == 1 && t_rts_pa) { | +1 // The skip (s.3.2): the record's outputs, then the stores of the resolution's memo hits in its order - the LRU
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3545 | if (t_rts >= 2 && t_rts_pa) { | +1 // The resolution half of the self-check (s.5.1 step 2, s.5.2).
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3654 | if (t_rts != 4) { | +1 // 3 (N2, N4): the metadata epoch the record's fast records were taken at.
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3661 | if (img[i]->backing.state_serial != rec->t[i].state_serial) { | +1 return C::RtsXbSer;
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3677 | if (!buffer.IsRendering() || CommandBuffer::PassBeginSerial() != rec->pass_serial) { | +1 return C::RtsXbPass;
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3690 | if (t_rts == 1 && pb_ok) { | +1 // The skip (s.3.2): the stores the fast path and the capture make on unchanged images, in the capture's order.
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3704 | image.binding.attachment_layout = t.att_layout; | +1 image.binding.attachment_access = t.att_access;
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3719 | if (t_rts >= 2 && pb_ok) { | +1 t_rts_pb = true;
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3758 | if (t_rts >= 2 && t_rts_pa) { | +1 uint32_t bits = t_rts_bits;
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3760 | if (t_rts_pb) { | +1 if (!(rendering == rec->state)) {
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3780 | if (t_rts_ser1 != t_rts_ser0) { | +1 bits |= 0x040u; // S
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderDraw.cpp:3801 | if (t_rts_pb) { | +1 // PA and PB (the skip at 1): the record is not refreshed, only re-pinned at BeginRendering ([RC1]).
+OK  a1d1d863:src/graphics/host_gpu/renderer/renderTarget.h:57 | bool operator==(const RenderState&) const = default; | +1 };
+OK  a1d1d863:src/graphics/host_gpu/graphicContext.h:202 | state_serial++; // written where `state` itself is written (under the render mutex) | +1 g_image_state_serial.fetch_add(1, std::memory_order_relaxed);
+OK  a1d1d863:src/common/gates.cpp:438 | {"KYTY_RT_SKIP", "rtskip", 1, 4}, | +1 // Session 128, MEASUREMENT ONLY: skip the read-only arming of a buffer synchronization on GuestGpu (1)
+NEG src/graphics/host_gpu/renderer/renderDraw.cpp:1577 shifted -> rejected
+NEG src/graphics/host_gpu/renderer/renderDraw.cpp:3662 shifted -> rejected
+ALL OK

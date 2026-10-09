@@ -1,0 +1,420 @@
+## f30_s1_c3 frames=4622 entry_frame_idx=146
+  mode_line: RtSkip: mode 3 ctx_slots=8 groups=11 rec_bytes=7192
+  verify_lines=40 bits={'0x40d': 40}
+  sum rts_acqw=0
+  sum rts_bad=3411459
+  sum rts_bad_b=97274
+  sum rts_bad_noreg=0
+  sum rts_bad_rx=97274
+  sum rts_chain2=21046970
+  sum rts_chk=21579573
+  sum rts_chk_b=21070470
+  sum rts_early=54306
+  sum rts_lost=20240
+  sum rts_n=23247111
+  sum rts_ovf=0
+  sum rts_pa=21579573
+  sum rts_pb=21070470
+  sum rts_race=0
+  sum rts_rec=536635
+  sum rts_rec_x=1585699
+  sum rts_refuse=0
+  sum rts_skip=0
+  sum rts_wr=29609579
+  sum rts_wr_obj=243749
+  sum rts_xa_arg=0
+  sum rts_xa_cfg=0
+  sum rts_xa_img=0
+  sum rts_xa_memo=18054
+  sum rts_xa_rec=1649484
+  sum rts_xa_reg=0
+  sum rts_xa_unh=0
+  sum rts_xb_bound=109442
+  sum rts_xb_ids=69071
+  sum rts_xb_live=0
+  sum rts_xb_meta=1
+  sum rts_xb_pass=227284
+  sum rts_xb_ser=92542
+  sum rts_xthr=0
+  frames_rx>0=4408 frames_ser>0=4408 frames_both=4408 frames_rx==ser>0=338 frames_rx==ser(all)=552 frames_rx==ser+meta=551 frames_b!=rx=0 sum(rx-ser)+=4732 sum(ser-rx)+=0
+  diff_frame n=216 rx=24 ser=23 meta=0 b=24 bad=687 pb=6104 chk_b=6104 ids=15 live=0 bound=37 pass=40
+  diff_frame n=217 rx=24 ser=23 meta=0 b=24 bad=913 pb=6180 chk_b=6180 ids=14 live=0 bound=38 pass=73
+  diff_frame n=218 rx=24 ser=23 meta=0 b=24 bad=507 pb=4776 chk_b=4776 ids=14 live=0 bound=38 pass=55
+  diff_frame n=219 rx=25 ser=24 meta=0 b=25 bad=1124 pb=7007 chk_b=7007 ids=16 live=0 bound=38 pass=64
+  diff_frame n=220 rx=24 ser=23 meta=0 b=24 bad=720 pb=4822 chk_b=4822 ids=14 live=0 bound=38 pass=31
+  diff_frame n=221 rx=22 ser=21 meta=0 b=22 bad=1098 pb=4093 chk_b=4093 ids=11 live=0 bound=38 pass=8
+  diff_frame n=224 rx=23 ser=22 meta=0 b=23 bad=1032 pb=4748 chk_b=4748 ids=13 live=0 bound=37 pass=25
+  diff_frame n=225 rx=24 ser=23 meta=0 b=24 bad=710 pb=6580 chk_b=6580 ids=15 live=0 bound=37 pass=18
+## f30_s2_c3 frames=9272 entry_frame_idx=177
+  mode_line: RtSkip: mode 3 ctx_slots=8 groups=11 rec_bytes=7192
+  verify_lines=40 bits={'0x40d': 40}
+  sum rts_acqw=0
+  sum rts_bad=1455335
+  sum rts_bad_b=38528
+  sum rts_bad_noreg=0
+  sum rts_bad_rx=38528
+  sum rts_chain2=13699619
+  sum rts_chk=13929915
+  sum rts_chk_b=13710655
+  sum rts_early=100943
+  sum rts_lost=36940
+  sum rts_n=16598297
+  sum rts_ovf=0
+  sum rts_pa=13929915
+  sum rts_pb=13710655
+  sum rts_race=0
+  sum rts_rec=237534
+  sum rts_rec_x=2549165
+  sum rts_refuse=0
+  sum rts_skip=0
+  sum rts_wr=48929021
+  sum rts_wr_obj=452730
+  sum rts_xa_arg=0
+  sum rts_xa_cfg=0
+  sum rts_xa_img=0
+  sum rts_xa_memo=68
+  sum rts_xa_rec=2668314
+  sum rts_xa_reg=0
+  sum rts_xa_unh=0
+  sum rts_xb_bound=9128
+  sum rts_xb_ids=89992
+  sum rts_xb_live=0
+  sum rts_xb_meta=1
+  sum rts_xb_pass=62995
+  sum rts_xb_ser=38410
+  sum rts_xthr=0
+  frames_rx>0=8969 frames_ser>0=8971 frames_both=8969 frames_rx==ser>0=8856 frames_rx==ser(all)=9157 frames_rx==ser+meta=9156 frames_b!=rx=0 sum(rx-ser)+=120 sum(ser-rx)+=2
+  diff_frame n=389 rx=8 ser=7 meta=0 b=8 bad=129 pb=1990 chk_b=1990 ids=8 live=0 bound=1 pass=11
+  diff_frame n=411 rx=17 ser=16 meta=0 b=17 bad=496 pb=4219 chk_b=4219 ids=12 live=0 bound=1 pass=8
+  diff_frame n=412 rx=17 ser=16 meta=0 b=17 bad=233 pb=1748 chk_b=1748 ids=6 live=0 bound=1 pass=3
+  diff_frame n=413 rx=17 ser=16 meta=0 b=17 bad=105 pb=2345 chk_b=2345 ids=8 live=0 bound=1 pass=4
+  diff_frame n=414 rx=17 ser=16 meta=0 b=17 bad=310 pb=2279 chk_b=2279 ids=7 live=0 bound=1 pass=7
+  diff_frame n=415 rx=17 ser=16 meta=0 b=17 bad=379 pb=4154 chk_b=4154 ids=9 live=0 bound=1 pass=21
+  diff_frame n=416 rx=17 ser=16 meta=0 b=17 bad=121 pb=2359 chk_b=2359 ids=8 live=0 bound=1 pass=12
+  diff_frame n=417 rx=17 ser=16 meta=0 b=17 bad=321 pb=2220 chk_b=2220 ids=7 live=0 bound=1 pass=6
+## f30_s3_c3 frames=9357 entry_frame_idx=199
+  mode_line: RtSkip: mode 3 ctx_slots=8 groups=11 rec_bytes=7192
+  verify_lines=40 bits={'0x40d': 40}
+  sum rts_acqw=0
+  sum rts_bad=2332681
+  sum rts_bad_b=123395
+  sum rts_bad_noreg=0
+  sum rts_bad_rx=123395
+  sum rts_chain2=16431231
+  sum rts_chk=16705756
+  sum rts_chk_b=16436629
+  sum rts_early=110623
+  sum rts_lost=28063
+  sum rts_n=18789223
+  sum rts_ovf=0
+  sum rts_pa=16705756
+  sum rts_pb=16436629
+  sum rts_race=0
+  sum rts_rec=280467
+  sum rts_rec_x=1961505
+  sum rts_refuse=0
+  sum rts_skip=0
+  sum rts_wr=52519493
+  sum rts_wr_obj=491710
+  sum rts_xa_arg=0
+  sum rts_xa_cfg=0
+  sum rts_xa_img=0
+  sum rts_xa_memo=2055
+  sum rts_xa_rec=2081412
+  sum rts_xa_reg=0
+  sum rts_xa_unh=0
+  sum rts_xb_bound=8878
+  sum rts_xb_ids=99473
+  sum rts_xb_live=0
+  sum rts_xb_meta=1
+  sum rts_xb_pass=19149
+  sum rts_xb_ser=122848
+  sum rts_xthr=0
+  frames_rx>0=9074 frames_ser>0=9074 frames_both=9074 frames_rx==ser>0=8519 frames_rx==ser(all)=8802 frames_rx==ser+meta=8801 frames_b!=rx=0 sum(rx-ser)+=551 sum(ser-rx)+=4
+  diff_frame n=433 rx=8 ser=7 meta=0 b=8 bad=373 pb=2042 chk_b=2042 ids=8 live=0 bound=0 pass=1
+  diff_frame n=434 rx=22 ser=23 meta=0 b=22 bad=170 pb=2101 chk_b=2101 ids=8 live=0 bound=0 pass=3
+  diff_frame n=816 rx=14 ser=13 meta=0 b=14 bad=576 pb=1811 chk_b=1811 ids=11 live=0 bound=1 pass=2
+  diff_frame n=817 rx=14 ser=15 meta=0 b=14 bad=163 pb=1812 chk_b=1812 ids=11 live=0 bound=1 pass=2
+  diff_frame n=1345 rx=4 ser=3 meta=0 b=4 bad=149 pb=1795 chk_b=1795 ids=11 live=0 bound=1 pass=2
+  diff_frame n=1346 rx=24 ser=25 meta=0 b=24 bad=268 pb=1814 chk_b=1814 ids=11 live=0 bound=1 pass=2
+  diff_frame n=1768 rx=16 ser=15 meta=0 b=16 bad=193 pb=1847 chk_b=1847 ids=11 live=0 bound=1 pass=3
+  diff_frame n=1769 rx=16 ser=15 meta=0 b=16 bad=612 pb=1850 chk_b=1850 ids=11 live=0 bound=1 pass=2
+## f30_s4_c3 frames=8967 entry_frame_idx=194
+  mode_line: RtSkip: mode 3 ctx_slots=8 groups=11 rec_bytes=7192
+  verify_lines=40 bits={'0x40d': 40}
+  sum rts_acqw=0
+  sum rts_bad=1366139
+  sum rts_bad_b=74533
+  sum rts_bad_noreg=0
+  sum rts_bad_rx=74533
+  sum rts_chain2=19107354
+  sum rts_chk=21277355
+  sum rts_chk_b=19107914
+  sum rts_early=111319
+  sum rts_lost=50502
+  sum rts_n=23367988
+  sum rts_ovf=0
+  sum rts_pa=21277355
+  sum rts_pb=19107914
+  sum rts_race=0
+  sum rts_rec=2170805
+  sum rts_rec_x=1977949
+  sum rts_refuse=0
+  sum rts_skip=0
+  sum rts_wr=48156786
+  sum rts_wr_obj=450038
+  sum rts_xa_arg=0
+  sum rts_xa_cfg=0
+  sum rts_xa_img=0
+  sum rts_xa_memo=0
+  sum rts_xa_rec=2090633
+  sum rts_xa_reg=0
+  sum rts_xa_unh=0
+  sum rts_xb_bound=0
+  sum rts_xb_ids=139641
+  sum rts_xb_live=0
+  sum rts_xb_meta=809
+  sum rts_xb_pass=1905921
+  sum rts_xb_ser=73931
+  sum rts_xthr=0
+  frames_rx>0=8035 frames_ser>0=8032 frames_both=8031 frames_rx==ser>0=7289 frames_rx==ser(all)=8220 frames_rx==ser+meta=7519 frames_b!=rx=0 sum(rx-ser)+=686 sum(ser-rx)+=84
+  diff_frame n=885 rx=1 ser=0 meta=1 b=1 bad=131 pb=2714 chk_b=2714 ids=6 live=0 bound=0 pass=38
+  diff_frame n=886 rx=14 ser=15 meta=1 b=14 bad=131 pb=2363 chk_b=2363 ids=12 live=0 bound=0 pass=65
+  diff_frame n=899 rx=7 ser=6 meta=0 b=7 bad=436 pb=1421 chk_b=1421 ids=8 live=0 bound=0 pass=35
+  diff_frame n=900 rx=19 ser=20 meta=0 b=19 bad=370 pb=1707 chk_b=1707 ids=15 live=0 bound=0 pass=36
+  diff_frame n=923 rx=2 ser=1 meta=0 b=2 bad=266 pb=2615 chk_b=2615 ids=10 live=0 bound=0 pass=58
+  diff_frame n=924 rx=27 ser=28 meta=0 b=27 bad=196 pb=1731 chk_b=1731 ids=18 live=0 bound=0 pass=41
+  diff_frame n=959 rx=27 ser=26 meta=0 b=27 bad=501 pb=5498 chk_b=5498 ids=24 live=0 bound=0 pass=176
+  diff_frame n=960 rx=1 ser=2 meta=0 b=1 bad=197 pb=2676 chk_b=2676 ids=9 live=0 bound=0 pass=90
+## f30_s5_c3 frames=9324 entry_frame_idx=166
+  mode_line: RtSkip: mode 3 ctx_slots=8 groups=11 rec_bytes=7192
+  verify_lines=40 bits={'0x40d': 40}
+  sum rts_acqw=0
+  sum rts_bad=1877943
+  sum rts_bad_b=237464
+  sum rts_bad_noreg=0
+  sum rts_bad_rx=237464
+  sum rts_chain2=21891947
+  sum rts_chk=22631606
+  sum rts_chk_b=21892748
+  sum rts_early=101767
+  sum rts_lost=27427
+  sum rts_n=23955959
+  sum rts_ovf=0
+  sum rts_pa=22631606
+  sum rts_pb=21892748
+  sum rts_race=0
+  sum rts_rec=748141
+  sum rts_rec_x=1213303
+  sum rts_refuse=0
+  sum rts_skip=0
+  sum rts_wr=52874668
+  sum rts_wr_obj=473073
+  sum rts_xa_arg=0
+  sum rts_xa_cfg=0
+  sum rts_xa_img=0
+  sum rts_xa_memo=0
+  sum rts_xa_rec=1324353
+  sum rts_xa_reg=0
+  sum rts_xa_unh=0
+  sum rts_xb_bound=8809
+  sum rts_xb_ids=127032
+  sum rts_xb_live=0
+  sum rts_xb_meta=1
+  sum rts_xb_pass=356490
+  sum rts_xb_ser=228382
+  sum rts_xthr=0
+  frames_rx>0=9012 frames_ser>0=9011 frames_both=9011 frames_rx==ser>0=286 frames_rx==ser(all)=598 frames_rx==ser+meta=597 frames_b!=rx=2 sum(rx-ser)+=9083 sum(ser-rx)+=1
+  diff_frame n=245 rx=28 ser=27 meta=0 b=28 bad=615 pb=2263 chk_b=2263 ids=11 live=0 bound=0 pass=22
+  diff_frame n=246 rx=28 ser=27 meta=0 b=28 bad=195 pb=2411 chk_b=2411 ids=13 live=0 bound=0 pass=41
+  diff_frame n=247 rx=28 ser=27 meta=0 b=28 bad=399 pb=2294 chk_b=2295 ids=13 live=0 bound=0 pass=18
+  diff_frame n=248 rx=36 ser=35 meta=0 b=36 bad=212 pb=2376 chk_b=2375 ids=16 live=0 bound=0 pass=44
+  diff_frame n=249 rx=30 ser=29 meta=0 b=30 bad=198 pb=2323 chk_b=2323 ids=13 live=0 bound=0 pass=19
+  diff_frame n=250 rx=47 ser=45 meta=0 b=47 bad=211 pb=2369 chk_b=2369 ids=13 live=0 bound=0 pass=41
+  diff_frame n=252 rx=42 ser=40 meta=0 b=42 bad=650 pb=2356 chk_b=2356 ids=13 live=0 bound=0 pass=39
+  diff_frame n=253 rx=29 ser=28 meta=0 b=29 bad=177 pb=2411 chk_b=2411 ids=14 live=0 bound=0 pass=36
+## f30_s6_c3 frames=5385 entry_frame_idx=211
+  mode_line: RtSkip: mode 3 ctx_slots=8 groups=11 rec_bytes=7192
+  verify_lines=40 bits={'0x40d': 40}
+  sum rts_acqw=0
+  sum rts_bad=1197013
+  sum rts_bad_b=23259
+  sum rts_bad_noreg=0
+  sum rts_bad_rx=23259
+  sum rts_chain2=18985666
+  sum rts_chk=19529094
+  sum rts_chk_b=18989999
+  sum rts_early=58006
+  sum rts_lost=21642
+  sum rts_n=24896839
+  sum rts_ovf=0
+  sum rts_pa=19529094
+  sum rts_pb=18989999
+  sum rts_race=0
+  sum rts_rec=549531
+  sum rts_rec_x=5299303
+  sum rts_refuse=0
+  sum rts_skip=0
+  sum rts_wr=28813770
+  sum rts_wr_obj=271042
+  sum rts_xa_arg=0
+  sum rts_xa_cfg=0
+  sum rts_xa_img=0
+  sum rts_xa_memo=5
+  sum rts_xa_rec=5367741
+  sum rts_xa_reg=0
+  sum rts_xa_unh=0
+  sum rts_xb_bound=5726
+  sum rts_xb_ids=77336
+  sum rts_xb_live=0
+  sum rts_xb_meta=478
+  sum rts_xb_pass=421084
+  sum rts_xb_ser=23259
+  sum rts_xthr=0
+  frames_rx>0=5104 frames_ser>0=5104 frames_both=5104 frames_rx==ser>0=5102 frames_rx==ser(all)=5383 frames_rx==ser+meta=4921 frames_b!=rx=0 sum(rx-ser)+=1 sum(ser-rx)+=1
+  diff_frame n=3728 rx=6 ser=5 meta=0 b=6 bad=374 pb=4817 chk_b=4817 ids=23 live=0 bound=2 pass=193
+  diff_frame n=3729 rx=3 ser=4 meta=0 b=3 bad=78 pb=1123 chk_b=1123 ids=6 live=0 bound=0 pass=42
+## f30_s7_c3 frames=6109 entry_frame_idx=202
+  mode_line: RtSkip: mode 3 ctx_slots=8 groups=11 rec_bytes=7192
+  verify_lines=40 bits={'0x40d': 40}
+  sum rts_acqw=0
+  sum rts_bad=2436689
+  sum rts_bad_b=213095
+  sum rts_bad_noreg=0
+  sum rts_bad_rx=213095
+  sum rts_chain2=17528004
+  sum rts_chk=18052607
+  sum rts_chk_b=17545222
+  sum rts_early=83450
+  sum rts_lost=30301
+  sum rts_n=21632710
+  sum rts_ovf=0
+  sum rts_pa=18052607
+  sum rts_pb=17545222
+  sum rts_race=0
+  sum rts_rec=525303
+  sum rts_rec_x=3478735
+  sum rts_refuse=0
+  sum rts_skip=0
+  sum rts_wr=38981399
+  sum rts_wr_obj=342965
+  sum rts_xa_arg=0
+  sum rts_xa_cfg=0
+  sum rts_xa_img=0
+  sum rts_xa_memo=6029
+  sum rts_xa_rec=3574075
+  sum rts_xa_reg=0
+  sum rts_xa_unh=0
+  sum rts_xb_bound=5529
+  sum rts_xb_ids=69881
+  sum rts_xb_live=0
+  sum rts_xb_meta=1
+  sum rts_xb_pass=206377
+  sum rts_xb_ser=207184
+  sum rts_xthr=0
+  frames_rx>0=5839 frames_ser>0=5839 frames_both=5839 frames_rx==ser>0=92 frames_rx==ser(all)=362 frames_rx==ser+meta=361 frames_b!=rx=0 sum(rx-ser)+=5912 sum(ser-rx)+=1
+  diff_frame n=286 rx=83 ser=82 meta=0 b=83 bad=743 pb=4845 chk_b=4845 ids=20 live=0 bound=0 pass=28
+  diff_frame n=287 rx=7 ser=8 meta=0 b=7 bad=357 pb=2268 chk_b=2268 ids=2 live=0 bound=0 pass=45
+  diff_frame n=362 rx=44 ser=43 meta=0 b=44 bad=232 pb=1583 chk_b=1583 ids=7 live=0 bound=0 pass=46
+  diff_frame n=363 rx=44 ser=43 meta=0 b=44 bad=288 pb=2247 chk_b=2247 ids=10 live=0 bound=0 pass=26
+  diff_frame n=364 rx=43 ser=42 meta=0 b=43 bad=750 pb=4774 chk_b=4774 ids=12 live=0 bound=0 pass=32
+  diff_frame n=365 rx=45 ser=44 meta=0 b=45 bad=208 pb=1836 chk_b=1836 ids=11 live=0 bound=0 pass=27
+  diff_frame n=366 rx=44 ser=43 meta=0 b=44 bad=314 pb=2287 chk_b=2287 ids=10 live=0 bound=0 pass=37
+  diff_frame n=367 rx=45 ser=44 meta=0 b=45 bad=733 pb=4410 chk_b=4410 ids=12 live=0 bound=0 pass=38
+## f30_s8_c3 frames=4620 entry_frame_idx=232
+  mode_line: RtSkip: mode 3 ctx_slots=8 groups=11 rec_bytes=7192
+  verify_lines=40 bits={'0x40d': 40}
+  sum rts_acqw=0
+  sum rts_bad=1984412
+  sum rts_bad_b=55233
+  sum rts_bad_noreg=0
+  sum rts_bad_rx=55233
+  sum rts_chain2=19914176
+  sum rts_chk=20790068
+  sum rts_chk_b=19928560
+  sum rts_early=52407
+  sum rts_lost=15240
+  sum rts_n=25058051
+  sum rts_ovf=0
+  sum rts_pa=20790068
+  sum rts_pb=19928560
+  sum rts_race=0
+  sum rts_rec=876097
+  sum rts_rec_x=4200987
+  sum rts_refuse=0
+  sum rts_skip=0
+  sum rts_wr=27903613
+  sum rts_wr_obj=237461
+  sum rts_xa_arg=0
+  sum rts_xa_cfg=0
+  sum rts_xa_img=0
+  sum rts_xa_memo=9723
+  sum rts_xa_rec=4258260
+  sum rts_xa_reg=0
+  sum rts_xa_unh=0
+  sum rts_xb_bound=3469
+  sum rts_xb_ids=72052
+  sum rts_xb_live=0
+  sum rts_xb_meta=413
+  sum rts_xb_pass=723942
+  sum rts_xb_ser=51257
+  sum rts_xthr=0
+  frames_rx>0=4172 frames_ser>0=4172 frames_both=4172 frames_rx==ser>0=346 frames_rx==ser(all)=794 frames_rx==ser+meta=1009 frames_b!=rx=0 sum(rx-ser)+=3976 sum(ser-rx)+=0
+  diff_frame n=455 rx=11 ser=10 meta=0 b=11 bad=421 pb=3927 chk_b=3927 ids=15 live=0 bound=0 pass=148
+  diff_frame n=456 rx=11 ser=10 meta=0 b=11 bad=192 pb=2444 chk_b=2444 ids=12 live=0 bound=0 pass=27
+  diff_frame n=457 rx=12 ser=11 meta=0 b=12 bad=452 pb=4030 chk_b=4030 ids=15 live=0 bound=0 pass=52
+  diff_frame n=458 rx=14 ser=13 meta=0 b=14 bad=380 pb=3842 chk_b=3842 ids=14 live=0 bound=0 pass=111
+  diff_frame n=459 rx=15 ser=14 meta=1 b=15 bad=254 pb=5865 chk_b=5865 ids=14 live=0 bound=0 pass=129
+  diff_frame n=460 rx=15 ser=14 meta=1 b=15 bad=443 pb=9747 chk_b=9747 ids=17 live=0 bound=0 pass=147
+  diff_frame n=461 rx=16 ser=15 meta=1 b=16 bad=532 pb=10093 chk_b=10093 ids=17 live=0 bound=0 pass=102
+  diff_frame n=463 rx=14 ser=13 meta=0 b=14 bad=352 pb=6618 chk_b=6618 ids=17 live=0 bound=0 pass=63
+## f30_s9_c3 frames=7020 entry_frame_idx=175
+  mode_line: RtSkip: mode 3 ctx_slots=8 groups=11 rec_bytes=7192
+  verify_lines=40 bits={'0x40d': 40}
+  sum rts_acqw=0
+  sum rts_bad=2182761
+  sum rts_bad_b=52390
+  sum rts_bad_noreg=0
+  sum rts_bad_rx=52390
+  sum rts_chain2=16458707
+  sum rts_chk=16941427
+  sum rts_chk_b=16475749
+  sum rts_early=80295
+  sum rts_lost=25453
+  sum rts_n=18467645
+  sum rts_ovf=0
+  sum rts_pa=16941427
+  sum rts_pb=16475749
+  sum rts_race=0
+  sum rts_rec=485755
+  sum rts_rec_x=1425845
+  sum rts_refuse=0
+  sum rts_skip=0
+  sum rts_wr=38117923
+  sum rts_wr_obj=360918
+  sum rts_xa_arg=0
+  sum rts_xa_cfg=0
+  sum rts_xa_img=0
+  sum rts_xa_memo=10024
+  sum rts_xa_rec=1516194
+  sum rts_xa_reg=0
+  sum rts_xa_unh=0
+  sum rts_xb_bound=80928
+  sum rts_xb_ids=86041
+  sum rts_xb_live=0
+  sum rts_xb_meta=8
+  sum rts_xb_pass=233431
+  sum rts_xb_ser=49870
+  sum rts_xthr=0
+  frames_rx>0=3811 frames_ser>0=3787 frames_both=3786 frames_rx==ser>0=1571 frames_rx==ser(all)=4779 frames_rx==ser+meta=4778 frames_b!=rx=0 sum(rx-ser)+=2525 sum(ser-rx)+=5
+  diff_frame n=244 rx=24 ser=23 meta=0 b=24 bad=409 pb=4594 chk_b=4594 ids=13 live=0 bound=37 pass=12
+  diff_frame n=245 rx=24 ser=23 meta=0 b=24 bad=1068 pb=7247 chk_b=7247 ids=16 live=0 bound=38 pass=28
+  diff_frame n=246 rx=24 ser=23 meta=0 b=24 bad=547 pb=4758 chk_b=4758 ids=14 live=0 bound=38 pass=17
+  diff_frame n=247 rx=25 ser=24 meta=0 b=25 bad=394 pb=4440 chk_b=4440 ids=12 live=0 bound=38 pass=33
+  diff_frame n=248 rx=21 ser=20 meta=0 b=21 bad=940 pb=6163 chk_b=6163 ids=14 live=0 bound=38 pass=160
+  diff_frame n=249 rx=22 ser=21 meta=0 b=22 bad=726 pb=4228 chk_b=4228 ids=13 live=0 bound=38 pass=18
+  diff_frame n=252 rx=23 ser=22 meta=0 b=23 bad=683 pb=6511 chk_b=6511 ids=15 live=0 bound=37 pass=37
+  diff_frame n=253 rx=24 ser=23 meta=0 b=24 bad=535 pb=4698 chk_b=4698 ids=14 live=0 bound=37 pass=25
+
+keys: rts_acqw rts_bad rts_bad_b rts_bad_noreg rts_bad_rx rts_chain2 rts_chk rts_chk_b rts_early rts_lost rts_n rts_ovf rts_pa rts_pb rts_race rts_rec rts_rec_x rts_refuse rts_skip rts_wr rts_wr_obj rts_xa_arg rts_xa_cfg rts_xa_img rts_xa_memo rts_xa_rec rts_xa_reg rts_xa_unh rts_xb_bound rts_xb_ids rts_xb_live rts_xb_meta rts_xb_pass rts_xb_ser rts_xthr
+ALL OK

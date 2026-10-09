@@ -1,0 +1,13 @@
+version version: Fork build arigandores/KytyPS5 4fc501f-dirty
+modes ['RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192']
+frames 12913
+mark at frame idx 170 GuestOut: Level has started:
+mark at frame idx 206 GuestOut: Level has started: cymbal_party_land
+sums {'rts_n': 52512664, 'rts_pa': 0, 'rts_pb': 0, 'rts_skip': 45033720, 'rts_xa_arg': 0, 'rts_xa_cfg': 0, 'rts_xa_img': 0, 'rts_xa_memo': 0, 'rts_xa_rec': 5383007, 'rts_xa_reg': 1433445, 'rts_xa_unh': 0, 'rts_xb_bound': 0, 'rts_xb_ids': 0, 'rts_xb_live': 0, 'rts_xb_meta': 0, 'rts_xb_pass': 661589, 'rts_xb_ser': 902, 'rts_xthr': 0}
+frames with ser|meta > 0: 151
+runs (first n, last n, ser, meta): 3
+RUN 1028 1040 30 0
+RUN 1043 1088 374 0
+RUN 1090 1181 498 0
+per-frame ser histogram [(2, 19), (3, 48), (4, 2), (5, 6), (7, 9), (9, 59), (10, 7), (18, 1)]
+ALL OK

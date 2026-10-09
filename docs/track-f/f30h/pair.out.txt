@@ -1,0 +1,10 @@
+f30_s1_c3 frames=4622 rx=97274 ser=92542 ser/rx=0.9514 same_frame=92542 (1.0000 of ser) lag1=0 frames_rx=4408 frames_ser=4408 only_rx=0 only_ser=0 D_end=4732 D_max=4732 D_min=0 hist(d)=[(1, 3408), (2, 662), (0, 552)]
+f30_s2_c3 frames=9272 rx=38528 ser=38410 ser/rx=0.9969 same_frame=38408 (0.9999 of ser) lag1=2 frames_rx=8969 frames_ser=8971 only_rx=0 only_ser=2 D_end=118 D_max=119 D_min=0 hist(d)=[(0, 9157), (1, 106), (2, 7), (-1, 2)]
+f30_s3_c3 frames=9357 rx=123395 ser=122848 ser/rx=0.9956 same_frame=122844 (1.0000 of ser) lag1=4 frames_rx=9074 frames_ser=9074 only_rx=0 only_ser=0 D_end=547 D_max=548 D_min=0 hist(d)=[(0, 8802), (1, 551), (-1, 4)]
+f30_s4_c3 frames=8967 rx=74533 ser=73931 ser/rx=0.9919 same_frame=73847 (0.9989 of ser) lag1=78 frames_rx=8035 frames_ser=8032 only_rx=4 only_ser=1 D_end=602 D_max=603 D_min=0 hist(d)=[(0, 8220), (1, 642), (-1, 84), (2, 19), (3, 2)]
+f30_s5_c3 frames=9324 rx=237464 ser=228382 ser/rx=0.9618 same_frame=228381 (1.0000 of ser) lag1=1 frames_rx=9012 frames_ser=9011 only_rx=1 only_ser=0 D_end=9082 D_max=9082 D_min=0 hist(d)=[(1, 8367), (0, 598), (2, 358), (-1, 1)]
+f30_s6_c3 frames=5385 rx=23259 ser=23259 ser/rx=1.0000 same_frame=23258 (1.0000 of ser) lag1=1 frames_rx=5104 frames_ser=5104 only_rx=0 only_ser=0 D_end=0 D_max=1 D_min=0 hist(d)=[(0, 5383), (1, 1), (-1, 1)]
+f30_s7_c3 frames=6109 rx=213095 ser=207184 ser/rx=0.9723 same_frame=207183 (1.0000 of ser) lag1=1 frames_rx=5839 frames_ser=5839 only_rx=0 only_ser=0 D_end=5911 D_max=5911 D_min=0 hist(d)=[(1, 5583), (0, 362), (2, 160), (3, 3), (-1, 1)]
+f30_s8_c3 frames=4620 rx=55233 ser=51257 ser/rx=0.9280 same_frame=51257 (1.0000 of ser) lag1=0 frames_rx=4172 frames_ser=4172 only_rx=0 only_ser=0 D_end=3976 D_max=3976 D_min=0 hist(d)=[(1, 3676), (0, 794), (2, 150)]
+f30_s9_c3 frames=7020 rx=52390 ser=49870 ser/rx=0.9519 same_frame=49865 (0.9999 of ser) lag1=5 frames_rx=3811 frames_ser=3787 only_rx=25 only_ser=1 D_end=2520 D_max=2520 D_min=0 hist(d)=[(0, 4779), (1, 1960), (2, 266), (3, 7), (-1, 5), (4, 3)]
+ALL OK

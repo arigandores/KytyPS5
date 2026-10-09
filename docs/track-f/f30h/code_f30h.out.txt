@@ -1,0 +1,23 @@
+1430 if (t_rts >= 2) {
+1446 if (t_rts >= 2) {
+3323 if (t_rts_live && t_rts >= 2) {
+3396 if (t_rts != 0 && t_rts_table != nullptr) {
+3470 } else if (t_rts != 3 && t_rts_reg) {
+3493 if (t_rts == 1 && t_rts_pa) {
+3545 if (t_rts >= 2 && t_rts_pa) {
+3654 if (t_rts != 4) {
+3690 if (t_rts == 1 && pb_ok) {
+3719 if (t_rts >= 2 && pb_ok) {
+3758 if (t_rts >= 2 && t_rts_pa) {
+3925 if (t_rts >= 2) {
+4365 t_rts != 0 && !bind_floor && !sp_scope.Armed()
+4395 if (t_rts != 0) [[unlikely]] {
+4634 if (t_rts != 0) [[unlikely]] {
+4805 if (t_rts != 0) [[unlikely]] {
+4958 if (const auto rts_value = Common::Gates::Value(Common::Gates::Knob::RtSkip); rts_value != 0 || t_rts != 0)
+5139 const bool prepared  = t_rts == 0 ? PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)
+5189 if (const auto rts_value = Common::Gates::Value(Common::Gates::Knob::RtSkip); rts_value != 0 || t_rts != 0)
+5327 const bool prepared  = t_rts == 0 ? PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)
+rts_bad_rx increments: 1
+bits 0x010/0x020 setters: [3762, 3769, 3773, 3778]
+ALL OK

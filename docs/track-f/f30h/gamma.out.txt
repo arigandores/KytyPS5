@@ -1,0 +1,21 @@
+logs 1078 entries_with_rts 2483
+totals {'rts_xb_ser': 31054, 'rts_xb_meta': 37, 'rts_pb': 58791634, 'rts_skip': 20199159159, 'rts_pa': 59535698, 'rts_n': 23779186169}
+entries with rts_xb_ser or rts_xb_meta >= 100: 3
+HIT C:/kyty/s145/log_w145_16.txt cymbal_party_land 3578 1292 0 11263126 0 348163 149.4
+HIT C:/kyty/s145/log_v145_16.txt cymbal_party_land 12707 902 0 45033720 0 1433238 70.7
+HIT C:/kyty/s127/log_s3s127.txt.xz underwater_aerial_garden 4599 28860 0 0 6563303 0 1540.0
+per level (entries, sum ser, sum meta, sum pb, sum skip, hit entries) - levels with ser+meta > 0:
+LVL underwater_aerial_garden 344 28860 0 56086134 11270516704 1
+LVL cymbal_party_land 2 2194 0 0 56296846 2
+LVL big_hand_pirate_island 18 0 16 0 454139845 0
+LVL hub_crashsite 5 0 5 0 117242619 0
+LVL rocket_hourglass 4 0 4 0 82268985 0
+LVL interactive_credit_00 3 0 3 0 31474212 0
+LVL voxel_challenge_1 2 0 2 0 5763568 0
+LVL voxel_challenge_2 2 0 2 0 7384064 0
+LVL small_pot_lava 2 0 2 0 57632554 0
+LVL voxel_world 14 0 1 0 177595208 0
+LVL voxel_challenge_4 1 0 1 0 1839784 0
+LVL voxel_challenge_3 1 0 1 0 2318828 0
+levels total 69
+ALL OK

@@ -3254,6 +3254,15 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    // Track F, F30d (ROADMAP s122 item 643(v)(2)).
 				    {"rts_bad_b", FS::Counter::RtsBadB, false},
 				    {"rts_bad_rx", FS::Counter::RtsBadRx, false},
+				    // Track F, F30k (ROADMAP s122 item 655(g)(2)).
+				    {"rts_bad_r", FS::Counter::RtsBadR, false},
+				    {"rts_bad_xr", FS::Counter::RtsBadXr, false},
+				    {"rts_bad_xc", FS::Counter::RtsBadXc, false},
+				    {"rts_bad_xe", FS::Counter::RtsBadXe, false},
+				    {"rts_bad_s", FS::Counter::RtsBadS, false},
+				    {"rts_bad_p", FS::Counter::RtsBadP, false},
+				    {"rts_bad_m", FS::Counter::RtsBadM, false},
+				    {"rts_bad_l", FS::Counter::RtsBadL, false},
 				    // Session 128, knob "protceil" (design128.md s.7.1, ROADMAP s122 item 89(zh)); pc_u_live after the loop.
 				    {"prot_gpu_ro_ns", FS::Counter::ProtGpuRoNs, false},
 				    {"prot_gpu_ro_n", FS::Counter::ProtGpuRoN, false},

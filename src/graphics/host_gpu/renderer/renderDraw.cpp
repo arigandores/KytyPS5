@@ -1313,14 +1313,15 @@ uint32_t Rk3VdDiff(const Rk3Vd& a, const Rk3Vd& b) {
 } // namespace
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Session 127, knob "rtskip" (KYTY_RT_SKIP, 0..4, default 0; docs/session-127/design127.md rev 2 with ROADMAP s122 items
+// Session 127, knob "rtskip" (KYTY_RT_SKIP, 0..5, default 0; docs/session-127/design127.md rev 2 with ROADMAP s122 items
 // 76(z), 77, 78, 79): the K3 prototype.  A draw of context C takes the outputs of its target resolution (place A,
 // PrepareDrawRenderState) and capture (place B, AcquireRenderTargets) from the RECORD of C - the outputs of the last full
 // draw on C - while no relevant register group was written since (s.2.1) and no non-register source moved (s.2.2).
 //   0 the previous path; 1 skip; 2 self-check: the full path always runs, the record lives exactly as at 1 ([RC1]) and
 //   every step is compared with it (s.5); 3 = 2 with the register source ignored by PA (positive control, s.6);
 //   4 = 2 with PB items 3 (metadata epoch) and 4 (state_serial) not applied (positive control of place B; track F, F30d,
-//   ROADMAP s122 item 643(v)).
+//   ROADMAP s122 item 643(v)); 5 = 2 with PB item 6 (the pinned pass, RtsXbPass) not applied (track F, F30k, ROADMAP
+//   s122 item 655(g)(1)).
 // The latch arms only on the GuestGpu thread; everything below touches thread-local state, its counters and one gauge.
 // The latch, places A and B and the post are RenderExecutor members (RtsLatchSlow, RtsPlaceA, RtsPlaceB, RtsPost) because
 // the replay calls TextureCache::TouchImage and reads m_slot_images, which only RenderExecutor may.
@@ -1435,7 +1436,7 @@ constinit thread_local bool        t_rts_open0    = false;   // IsRendering() be
 constinit thread_local bool        t_rts_open1    = false;
 constinit thread_local RtsGen      t_rts_gen_a {};           // the entry's generations at place A (rts_acqw)
 constinit thread_local const void* t_rts_last_ctx = nullptr; // item 79(v)(1): context of the last armed draw at A
-constinit thread_local uint32_t    t_rts_logged   = 0;       // bits 1..15: refusal printed; 17..20: mode line printed
+constinit thread_local uint32_t    t_rts_logged   = 0;       // bits 1..15: refusal printed; 17..21: mode line printed
 constinit thread_local uint32_t    t_rts_lines    = 0;       // RtSkipVerify lines printed (at most 40)
 
 RtsEntry* RtsFindOrAdd(RtsTable& t, const void* ctx) {
@@ -1587,8 +1588,9 @@ void RtsNoteSlow(bool stamp_moved) noexcept {
 	t_rts_slow = true;
 }
 
-// Values 2/3: one draw's self-check result (s.5.2).  A race suppresses only the capture bits.
-void RtsReport(uint32_t bits, int frame, uint32_t age, uint32_t colors, bool depth) {
+// Values 2/3: one draw's self-check result (s.5.2).  A race suppresses only the capture bits.  xsrc (track F, F30k):
+// the sources of bit X the post found - 1 attachment layout / access, 2 depth_load_clear_enable, 4 pass extents.
+void RtsReport(uint32_t bits, int frame, uint32_t age, uint32_t colors, bool depth, uint32_t xsrc) {
 	namespace FS = Common::FrameStats;
 	if (t_rts_race && (bits & kRtsBitsA) == 0) {
 		FS::Add(FS::Counter::RtsRace, 1);
@@ -1604,6 +1606,31 @@ void RtsReport(uint32_t bits, int frame, uint32_t age, uint32_t colors, bool dep
 	}
 	if ((bits & 0x030u) != 0) {
 		FS::Add(FS::Counter::RtsBadRx, 1);
+	}
+	// Track F, F30k (ROADMAP s122 item 655(g)(2)): one counter per place B bit, X by its source.
+	if ((bits & 0x010u) != 0) {
+		FS::Add(FS::Counter::RtsBadR, 1);
+	}
+	if ((xsrc & 1u) != 0) {
+		FS::Add(FS::Counter::RtsBadXr, 1);
+	}
+	if ((xsrc & 2u) != 0) {
+		FS::Add(FS::Counter::RtsBadXc, 1);
+	}
+	if ((xsrc & 4u) != 0) {
+		FS::Add(FS::Counter::RtsBadXe, 1);
+	}
+	if ((bits & 0x040u) != 0) {
+		FS::Add(FS::Counter::RtsBadS, 1);
+	}
+	if ((bits & 0x080u) != 0) {
+		FS::Add(FS::Counter::RtsBadP, 1);
+	}
+	if ((bits & 0x100u) != 0) {
+		FS::Add(FS::Counter::RtsBadM, 1);
+	}
+	if ((bits & 0x200u) != 0) {
+		FS::Add(FS::Counter::RtsBadL, 1);
 	}
 	if (t_rts_lines < 40) {
 		t_rts_lines++;
@@ -3613,7 +3640,7 @@ bool RenderExecutor::RtsPlaceA(CommandBuffer& buffer, const DrawCallInfo& draw, 
 		if (!prepared && bits != 0) {
 			// The draw ends here (no post): its report is made now.
 			RtsReport(bits, m_context.GetGpu().GetFrameNum(), rec->age, state.color_count,
-			          static_cast<bool>(state.depth_info.image_id));
+			          static_cast<bool>(state.depth_info.image_id), 0);
 		}
 	}
 	return prepared;
@@ -3702,8 +3729,9 @@ RenderState RenderExecutor::RtsPlaceB(CommandBuffer& buffer, DrawRenderState& st
 		if (hd && (img[cc]->binding.is_bound || img[cc]->info.data.Empty())) {
 			return C::RtsXbBound;
 		}
-		// 6 (N10, N11 - a narrowing of the set, [RC4]): inside the pass the record is pinned to.
-		if (!buffer.IsRendering() || CommandBuffer::PassBeginSerial() != rec->pass_serial) {
+		// 6 (N10, N11 - a narrowing of the set, [RC4]): inside the pass the record is pinned to.  Not applied at value 5
+		// (track F, F30k, ROADMAP s122 item 655(g)(1)): the full capture then runs against a record this item would refuse.
+		if (t_rts != 5 && (!buffer.IsRendering() || CommandBuffer::PassBeginSerial() != rec->pass_serial)) {
 			return C::RtsXbPass;
 		}
 		return C::Count;
@@ -3786,6 +3814,7 @@ void RenderExecutor::RtsPost(CommandBuffer& buffer, DrawRenderState& state, cons
 	}
 	if (t_rts >= 2 && t_rts_pa) {
 		uint32_t bits = t_rts_bits;
+		uint32_t xsrc = 0; // track F, F30k: the sources of bit X (RtsReport)
 		if (t_rts_pb) {
 			if (!(rendering == rec->state)) {
 				bits |= 0x010u; // R
@@ -3796,15 +3825,18 @@ void RenderExecutor::RtsPost(CommandBuffer& buffer, DrawRenderState& state, cons
 				if (image == nullptr || image->binding.attachment_layout != rec->t[i].att_layout ||
 				    image->binding.attachment_access != rec->t[i].att_access) {
 					bits |= 0x020u; // X
+					xsrc |= 1u;
 				}
 			}
 			if (hd && state.depth_info.depth_load_clear_enable) {
 				bits |= 0x020u;
+				xsrc |= 2u;
 			}
 			if (g_pass_extents.max_width != rec->extents.max_width ||
 			    g_pass_extents.max_height != rec->extents.max_height ||
 			    g_pass_extents.true_kpx != rec->extents.true_kpx) {
 				bits |= 0x020u;
+				xsrc |= 4u;
 			}
 			if (t_rts_ser1 != t_rts_ser0) {
 				bits |= 0x040u; // S
@@ -3820,7 +3852,7 @@ void RenderExecutor::RtsPost(CommandBuffer& buffer, DrawRenderState& state, cons
 			}
 		}
 		if (bits != 0) {
-			RtsReport(bits, m_context.GetGpu().GetFrameNum(), rec->age, cc, hd);
+			RtsReport(bits, m_context.GetGpu().GetFrameNum(), rec->age, cc, hd, xsrc);
 		}
 	}
 	if (e == nullptr) {

@@ -669,7 +669,7 @@ enum class Knob : uint32_t {
 	// record lived as at 1 and compared, RtSkipVerify); 3 = 2 with the register source ignored (positive control).  Refused
 	// (RtSkip: refused) while rk3cen, spine, spcen, slicecen, skipceil, bindfloor or m4baton is on, rtfast off, the debug
 	// dump, KYTY_RENDER_MEMO_FAST=0 or the linear readback configuration.
-	RtSkip,           // KYTY_RT_SKIP,     file name "rtskip" (0 off, 1 skip, 2 self-check, 3 self-check + positive control; default 1 since session 128; 4 self-check + positive control of place B, F30d)
+	RtSkip,           // KYTY_RT_SKIP,     file name "rtskip" (0 off, 1 skip, 2 self-check, 3 self-check + positive control; default 1 since session 128; 4 self-check + positive control of place B, F30d; 5 self-check without PB item 6, F30k)
 	// Session 128, MEASUREMENT ONLY, never shipped (docs/session-128/design128.md rev 1 with ROADMAP s122 items 88, 89):
 	// the clean ceiling of K14. Read ONCE per buffer synchronization on the GuestGpu thread (PageManager::CeilScope around
 	// the whole ForEachUploadRange of BufferCache::SynchronizeBuffer) and latched for it, so it CAN be a schedule arm.

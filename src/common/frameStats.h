@@ -2485,6 +2485,16 @@ enum class Counter : uint32_t {
 	// with bit R or X (0x010 / 0x020).  Raw counts.
 	RtsBadB,                 // rts_bad_b
 	RtsBadRx,                // rts_bad_rx
+	// Track F, F30k (ROADMAP s122 item 655(g)(2)): of rts_bad (values >= 2), the mismatches by place B bit; X split by
+	// its source in the post.  Raw counts; one mismatch may add to several.
+	RtsBadR,                 // rts_bad_r:  bit R (0x010), the RenderState against the record
+	RtsBadXr,                // rts_bad_xr: bit X, attachment layout / access of a target against the record
+	RtsBadXc,                // rts_bad_xc: bit X, depth_load_clear_enable set after the capture
+	RtsBadXe,                // rts_bad_xe: bit X, the pass extents against the record
+	RtsBadS,                 // rts_bad_s:  bit S (0x040), ImageStateSerial() moved over the capture
+	RtsBadP,                 // rts_bad_p:  bit P (0x080), the capture closed an open pass
+	RtsBadM,                 // rts_bad_m:  bit M (0x100), MetaEpoch() moved over the capture
+	RtsBadL,                 // rts_bad_l:  bit L (0x200), the slow path or the re-find ran in the capture
 	// Session 128, knob "protceil" (docs/session-128/design128.md rev 1 s.7.1, ROADMAP s122 items 88, 89): raw ns /
 	// counts / pages. prot_gpu_* split prot_gpu / prot_gpu_us by mode at every value (T1, T2); pc_* see PageManager.
 	ProtGpuRoNs,             // prot_gpu_ro_ns: GuestGpu host protection changes to read-only (not the worker), ns

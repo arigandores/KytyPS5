@@ -2495,6 +2495,14 @@ enum class Counter : uint32_t {
 	RtsBadP,                 // rts_bad_p:  bit P (0x080), the capture closed an open pass
 	RtsBadM,                 // rts_bad_m:  bit M (0x100), MetaEpoch() moved over the capture
 	RtsBadL,                 // rts_bad_l:  bit L (0x200), the slow path or the re-find ran in the capture
+	// Track F, F30o (ROADMAP s122 item 664(e)(2)): value 6 only - the (a2) perturbation and the outcome of the perturbed
+	// draw's self-check.  rts_inj_s + rts_inj_race + rts_inj_nos = rts_inj by construction (one of the three per
+	// perturbed draw, in its post); the perturbed reports are in rts_bad / rts_bad_s too.
+	RtsInj,                  // rts_inj:      perturbations done (one tracked Transit of a colour target to eGeneral)
+	RtsInjS,                 // rts_inj_s:    the perturbed draw's report carries S and the race filter kept it
+	RtsInjRace,              // rts_inj_race: the perturbed draw's report was suppressed by the race filter
+	RtsInjNos,               // rts_inj_nos:  the perturbed draw - no suppressed report and no S
+	RtsInjNone,              // rts_inj_none: the N-th PA and PB draw had no eligible colour target (no perturbation)
 	// Session 128, knob "protceil" (docs/session-128/design128.md rev 1 s.7.1, ROADMAP s122 items 88, 89): raw ns /
 	// counts / pages. prot_gpu_* split prot_gpu / prot_gpu_us by mode at every value (T1, T2); pc_* see PageManager.
 	ProtGpuRoNs,             // prot_gpu_ro_ns: GuestGpu host protection changes to read-only (not the worker), ns

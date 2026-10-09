@@ -1313,7 +1313,7 @@ uint32_t Rk3VdDiff(const Rk3Vd& a, const Rk3Vd& b) {
 } // namespace
 
 // ---------------------------------------------------------------------------------------------------------------------
-// Session 127, knob "rtskip" (KYTY_RT_SKIP, 0..5, default 0; docs/session-127/design127.md rev 2 with ROADMAP s122 items
+// Session 127, knob "rtskip" (KYTY_RT_SKIP, 0..6, default 0; docs/session-127/design127.md rev 2 with ROADMAP s122 items
 // 76(z), 77, 78, 79): the K3 prototype.  A draw of context C takes the outputs of its target resolution (place A,
 // PrepareDrawRenderState) and capture (place B, AcquireRenderTargets) from the RECORD of C - the outputs of the last full
 // draw on C - while no relevant register group was written since (s.2.1) and no non-register source moved (s.2.2).
@@ -1321,7 +1321,8 @@ uint32_t Rk3VdDiff(const Rk3Vd& a, const Rk3Vd& b) {
 //   every step is compared with it (s.5); 3 = 2 with the register source ignored by PA (positive control, s.6);
 //   4 = 2 with PB items 3 (metadata epoch) and 4 (state_serial) not applied (positive control of place B; track F, F30d,
 //   ROADMAP s122 item 643(v)); 5 = 2 with PB item 6 (the pinned pass, RtsXbPass) not applied (track F, F30k, ROADMAP
-//   s122 item 655(g)(1)).
+//   s122 item 655(g)(1)); 6 = 2 with the (a2) perturbation on every 4 096th PA and PB draw (a synthetic control of
+//   the bit S chain; track F, F30o, ROADMAP s122 item 664(e)(1)).
 // The latch arms only on the GuestGpu thread; everything below touches thread-local state, its counters and one gauge.
 // The latch, places A and B and the post are RenderExecutor members (RtsLatchSlow, RtsPlaceA, RtsPlaceB, RtsPost) because
 // the replay calls TextureCache::TouchImage and reads m_slot_images, which only RenderExecutor may.
@@ -1436,8 +1437,13 @@ constinit thread_local bool        t_rts_open0    = false;   // IsRendering() be
 constinit thread_local bool        t_rts_open1    = false;
 constinit thread_local RtsGen      t_rts_gen_a {};           // the entry's generations at place A (rts_acqw)
 constinit thread_local const void* t_rts_last_ctx = nullptr; // item 79(v)(1): context of the last armed draw at A
-constinit thread_local uint32_t    t_rts_logged   = 0;       // bits 1..15: refusal printed; 17..21: mode line printed
+constinit thread_local uint32_t    t_rts_logged   = 0;       // bits 1..15: refusal printed; 17..22: mode line printed
 constinit thread_local uint32_t    t_rts_lines    = 0;       // RtSkipVerify lines printed (at most 40)
+constinit thread_local bool        t_rts_inj      = false;   // value 6: this draw was perturbed (F30o), cleared by the post
+// Track F, F30o (ROADMAP s122 item 664(e)(1)): value 6 - PA and PB draws of the process counted at place B; every
+// kRtsInjEvery-th one is perturbed.  Touched at value 6 only.
+inline constexpr uint64_t   kRtsInjEvery = 4096;
+std::atomic<uint64_t>       g_rts_inj_n {0};
 
 RtsEntry* RtsFindOrAdd(RtsTable& t, const void* ctx) {
 	for (uint32_t i = 0; i < t.used; i++) {
@@ -1637,6 +1643,63 @@ void RtsReport(uint32_t bits, int frame, uint32_t age, uint32_t colors, bool dep
 		LOGF("RtSkipVerify: MISMATCH frame=%d bits=0x%03x reg=%u chain=%u colors=%u depth=%u pa=1 pb=%u mode=%u\n", frame,
 		     bits, t_rts_reg ? 1u : 0u, age, colors, depth ? 1u : 0u, t_rts_pb ? 1u : 0u, t_rts);
 	}
+}
+
+// Track F, F30o (ROADMAP s122 item 664(e)(1)), value 6: the tracked layout of every subresource of the view range is
+// eColorAttachmentOptimal - read exactly as Image::GetBarriers will (the whole state while there are no subresource
+// states, else the states of the range; a volume has one layer).  A range outside the image is not eligible.
+bool RtsInjAttachLayout(const Image& image, ImageSubresourceRange r) noexcept {
+	const uint32_t levels = image.info.resources.levels;
+	const uint32_t layers = image.info.resources.layers;
+	if (image.info.IsVolume()) {
+		r.base_layer  = 0;
+		r.layer_count = 1;
+	}
+	if (r.level_count == 0 || r.layer_count == 0 || r.base_level + r.level_count > levels ||
+	    r.base_layer + r.layer_count > layers) {
+		return false;
+	}
+	const auto& b = image.backing;
+	if (b.subresource_states.empty()) {
+		return b.state.layout == vk::ImageLayout::eColorAttachmentOptimal;
+	}
+	for (uint32_t level = r.base_level; level < r.base_level + r.level_count; level++) {
+		for (uint32_t layer = r.base_layer; layer < r.base_layer + r.layer_count; layer++) {
+			const size_t index = static_cast<size_t>(level) * layers + layer;
+			if (index >= b.subresource_states.size() ||
+			    b.subresource_states[index].layout != vk::ImageLayout::eColorAttachmentOptimal) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+// Track F, F30o (ROADMAP s122 item 664(e)(1)), value 6, at place B after PB held and before the snapshots: on every
+// kRtsInjEvery-th PA and PB draw, one Transit of the first colour target whose tracked layout is the attachment layout
+// and which this draw does not sample, to eGeneral with the capture's access and view range (AcquireRenderTargets) -
+// the same tracker path (GetBarriers, NoteStateChange, the pass end) under the same lock.  The capture then transits it
+// back to eColorAttachmentOptimal between the snapshots: bit S.  Never the depth target, never a sampled target.
+void RtsInject(uint32_t cc, const RenderColorInfo* colors, Image* const* img) {
+	namespace FS = Common::FrameStats;
+	if ((g_rts_inj_n.fetch_add(1, std::memory_order_relaxed) + 1) % kRtsInjEvery != 0) {
+		return;
+	}
+	for (uint32_t i = 0; i < cc; i++) {
+		Image&      image = *img[i];
+		const auto& view = colors[i].desc.view_info;
+		const ImageSubresourceRange range {view.base_level, view.level_count, view.base_layer, view.layer_count};
+		if (image.binding.is_bound || !RtsInjAttachLayout(image, range)) {
+			continue;
+		}
+		image.Transit(vk::ImageLayout::eGeneral,
+		              vk::AccessFlagBits2::eColorAttachmentRead | vk::AccessFlagBits2::eColorAttachmentWrite, range,
+		              vk::CommandBuffer {}, RenderPassEnd::TargetTransit);
+		t_rts_inj = true;
+		FS::Add(FS::Counter::RtsInj, 1);
+		return;
+	}
+	FS::Add(FS::Counter::RtsInjNone, 1);
 }
 
 // The pin (s.4.3): after BeginRendering the record the post left is pinned to the pass this draw renders in.
@@ -3395,6 +3458,7 @@ bool NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 	t_rts_race   = false;
 	t_rts_refind = false;
 	t_rts_bits   = 0;
+	t_rts_inj    = false; // track F, F30o: a perturbed draw that never reached its post
 	t_rts_take   = nullptr;
 	t_rts_entry  = nullptr;
 	uint32_t armed = 0;
@@ -3777,6 +3841,10 @@ RenderState RenderExecutor::RtsPlaceB(CommandBuffer& buffer, DrawRenderState& st
 		t_rts_pb = true;
 		FS::Add(C::RtsPb, 1);
 		FS::Add(C::RtsChkB, 1);
+		// Track F, F30o (ROADMAP s122 item 664(e)(1)): value 6 - the (a2) perturbation, after PB, before the snapshots.
+		if (t_rts == 6) [[unlikely]] {
+			RtsInject(cc, state.color_info, img.data());
+		}
 	}
 	// The full capture between the snapshots.
 	t_rts_slow   = false;
@@ -3849,6 +3917,18 @@ void RenderExecutor::RtsPost(CommandBuffer& buffer, DrawRenderState& state, cons
 			}
 			if (t_rts_slow || t_rts_refind) {
 				bits |= 0x200u; // L
+			}
+		}
+		// Track F, F30o (ROADMAP s122 item 664(e)(2)): the outcome of the perturbed draw - suppressed by the race filter
+		// (the predicate of RtsReport, which runs iff bits != 0), else S, else neither.
+		if (t_rts_inj) {
+			t_rts_inj = false;
+			if (bits != 0 && t_rts_race && (bits & kRtsBitsA) == 0) {
+				FS::Add(C::RtsInjRace, 1);
+			} else if ((bits & 0x040u) != 0) {
+				FS::Add(C::RtsInjS, 1);
+			} else {
+				FS::Add(C::RtsInjNos, 1);
 			}
 		}
 		if (bits != 0) {

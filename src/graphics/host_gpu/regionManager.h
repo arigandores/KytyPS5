@@ -58,14 +58,19 @@ void Hook(int point) noexcept;
 	return on;
 }
 
-// Track F, F29c (HPP-702, ROADMAP s122 item 639(d)): knob KYTY_FIX_B12, read once per process; default OFF - unset, "",
-// 0/false/off/no = OFF (Common::EnvValueOn). At 1 the incremental BDA scan numbers its passes (RenderContext::PrepareBda),
+// Track F, F29c (HPP-702, ROADMAP s122 item 639(d)): knob KYTY_FIX_B12, read once per process. At 1 the incremental
+// BDA scan numbers its passes (RenderContext::PrepareBda),
 // and a tracking region already walked in the current pass by another mapped range is walked again for the piece of
 // this range (BufferCache::SynchronizeBuffersByRegion) - B12: the witness of the whole 4 MiB region was written by the
 // walk of the first range while only that range's piece was collected, so the second range skipped the region.
 // BufferCache's constructor prints "FixB12: mode=<0|1>" once per process.
+// Track F, FS11a (HPP-714, ROADMAP s122 item 647(d)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any other
+// value as EnvValueOn (the form of FS4a 17adaf80).
 [[nodiscard]] inline bool FixB12Enabled() noexcept {
-	static const bool on = Common::EnvValueOn(std::getenv("KYTY_FIX_B12"));
+	static const bool on = [] {
+		const char* value = std::getenv("KYTY_FIX_B12");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	return on;
 }
 

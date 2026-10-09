@@ -1,0 +1,48 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\f287\f30m\f30m_read.py sha256 1beb2b525d719e84c3d29613fa25b0c1b40d082308192915dde19d278fd32148
+test    C:\kyty\f287\f30m\test_f30m_read.py sha256 b3d56663b5f807a398cdbefee3d6fd92b4bbbe9b7650102e5d9ef6013e5ce2a8
+mutants C:\kyty\f287\f30m\mut_f30m_read.py sha256 ef822961be2210baee54f9ec3fd74833576875d38ee4e56c242f1115f5a458a8
+mutants: format list, 119 defined (strict: every use of MUTANTS checked; statements evaluated at lines 7)
+selection: --only, 12 mutants
+suite: family V; fast on (176 guarded updates of ok); end of suite: the final exit call at line 675
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: every job writes its own (replay off: the scorer or the suite reads file times / inodes / modes, which a shared fixture would change: line 443: st_mtime)
+workers 8 (spawn, one process per job), work dir C:\kyty\f287\f30m\mutwork659\f30m_read_35332_1791536844
+BASELINE passed in 16.7 s (memo off); mutant timeout 120 s; workers 8
+[1/15] c22_pre_tol  KILLED by test line 374  (11.6 s)
+[2/15] c22b_pre_tol  KILLED by test line 372  (11.5 s)
+[3/15] p02_prefix  KILLED by test line 374  (11.4 s)
+[4/15] p04_ident_stop  KILLED by test line 374  (11.4 s)
+[5/15] CONTROL CONTROL_comment_after_docstring  SURVIVED  (21.5 s)
+[6/15] CONTROL CONTROL_pass_end_of_main  SURVIVED  (21.8 s)
+[7/15] CONTROL CONTROL_module_pass_at_end  SURVIVED  (21.7 s)
+[8/15] p01_sum_pa  KILLED by test line 401  (21.6 s)
+[9/15] p05_prefix_rx  KILLED by test line 387  (11.3 s)
+[10/15] q01_pre_chkpa  KILLED by test line 374  (21.8 s)
+[11/15] q02_pre_chkbpb  KILLED by test line 382  (21.5 s)
+[12/15] q03_pre_rxb  KILLED by test line 393  (22.1 s)
+[13/15] q04_pre_bbad  KILLED by test line 387  (23.4 s)
+[14/15] q05_dev2_chkpa  KILLED by test line 369  (23.6 s)
+[15/15] q06_dev2_chkbpb  KILLED by test line 377  (23.6 s)
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (16.7 s)
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (21.5 s)
+CONTROL CONTROL_pass_end_of_main  SURVIVED  (21.8 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (21.7 s)
+c22_pre_tol  KILLED by test line 374  (11.6 s)
+c22b_pre_tol  KILLED by test line 372  (11.5 s)
+p01_sum_pa  KILLED by test line 401  (21.6 s)
+p02_prefix  KILLED by test line 374  (11.4 s)
+p04_ident_stop  KILLED by test line 374  (11.4 s)
+p05_prefix_rx  KILLED by test line 387  (11.3 s)
+q01_pre_chkpa  KILLED by test line 374  (21.8 s)
+q02_pre_chkbpb  KILLED by test line 382  (21.5 s)
+q03_pre_rxb  KILLED by test line 393  (22.1 s)
+q04_pre_bbad  KILLED by test line 387  (23.4 s)
+q05_dev2_chkpa  KILLED by test line 369  (23.6 s)
+q06_dev2_chkbpb  KILLED by test line 377  (23.6 s)
+12 mutants: 12 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+controls: 3 of 3 survived
+early exit: 12 kill(s) ended at their first failing case; they skipped a median 45 % / mean 44 % of the suite's 261 checks, about 8.1 s of the baseline's suite time per job (98 s in all)
+wall 63.8 s, worker time 296.5 s, 8 workers
+ALL KILLED (12 of 12 selected mutants killed; 119 defined in the mutant script)

@@ -7,6 +7,8 @@ C:/kyty/f287/f30f/runs/<tag>/read.json are the reference numbers).
   (3) the cy kinds on the F30f logs of s1 with the scene cy pointed at Sky Garden in this process only (SCENES patched here, never in a
       tag): f30_cy_c3 on f30_s1_c3 - (K) YES, (K') YES, 40 lines; f30_cy_v on f30_s1_v - (gamma) NO (rts_xb_ser 0, the F30f observation),
       (C1) YES, (V) YES, (O) YES; f30_cy_c4 on f30_s1_c4 - K_B'' NO (sum 0), RC2 (a) YES.
+  (4) item 659 (g): the real log of f30_s1_c5 (T2, C:/kyty/f287/f30m/log_f30_s1_c5.txt, read in place with its own side files) - the parse
+      member YES under the prefix tolerance 4 (max chk_b/pb deviation 2, one line with deviation >= 2; process sums exact).
 First output line: suite <name> sha256 <sha> target f30m_read.py sha256 <sha>.  Ends with ALL OK.  ASCII only.
 usage: python regress_f30m.py"""
 import hashlib
@@ -101,6 +103,15 @@ def main():
     adm = dict((a.split(' ')[0] + ' ' + a.split(' ')[1], b) for a, b in r['admission'])
     chk("cy_c4 on f30_s1_c4: K_B'' NO (sum %d), RC2 (a) YES" % r['kb2']['sum7'], r['members'][0][1] is False and r['kb2']['sum7'] == 0
         and adm.get('RC2 (a)') is True)
+    # (4) item 659 (g): the real log of f30_s1_c5 on T2 - parse YES under the tolerance 4
+    rr = R.read_tag('f30_s1_c5', R.paths('f30_s1_c5'))
+    pm = [b for a, b in rr['admission'] if a.startswith('parse')]
+    md, d2 = rr['ref'].get('prefix_maxdev') or {}, rr['ref'].get('prefix_dev2') or {}
+    print('log f30_s1_c5 sha256 %s' % sha(os.path.join(HERE, 'log_f30_s1_c5.txt')))
+    chk('f30_s1_c5 real log: parse YES (%s), max chk_b/pb deviation 2 (%s), lines with deviation >= 2: chk_b/pb 1 (%s), sums chk = pa = chk_b = pb'
+        ' = 17 474 336 (%s)' % (pm, md.get('chkb_pb'), d2.get('chkb_pb'), rr['proc']['rts_chk']),
+        pm == [True] and md.get('chkb_pb') == 2 and d2.get('chkb_pb') == 1 and rr['proc']['rts_chk'] == rr['proc']['rts_pa']
+        == rr['proc']['rts_chk_b'] == rr['proc']['rts_pb'] == 17474336)
     print('checks %d failed %d' % (n, nf))
     if ok:
         print('ALL OK')

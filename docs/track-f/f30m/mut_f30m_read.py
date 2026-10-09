@@ -27,7 +27,8 @@ MUTANTS = [
     ('c19_rc2b', 'RC2_MIN = 100', 'RC2_MIN = 101'),
     ('c20_gamma', 'GAMMA_MIN = 100', 'GAMMA_MIN = 99'),
     ('c21_lines', 'LINES_MAX = 40', 'LINES_MAX = 41'),
-    ('c22_pre_tol', 'PRE_TOL = 1\n', 'PRE_TOL = 2\n'),
+    ('c22_pre_tol', 'PRE_TOL = 4   #', 'PRE_TOL = 5   #'),   # item 659 (v): the constant 4 (was 1 -> 2)
+    ('c22b_pre_tol', 'PRE_TOL = 4   #', 'PRE_TOL = 3   #'),
     ('c23_tol8', 'TOL8 = 1 ', 'TOL8 = 2 '),
     ('c24_kb7_l', 'KB7 = BITS8[:7]', 'KB7 = BITS8[:8]'),
     ('c25_kb7_m', 'KB7 = BITS8[:7]', 'KB7 = BITS8[:6]'),
@@ -69,6 +70,12 @@ MUTANTS = [
     ('p03_verify_le', "and x['verify'] <= min(LINES_MAX, P['rts_bad']) and", 'and'),
     ('p04_ident_stop', "        if not ident_ok:\n            stop.append(", "        if False:\n            stop.append("),
     ('p05_prefix_rx', "and x['pre_viol'] == 0 and x['pre_viol_rx'] == 0)", "and x['pre_viol'] == 0)"),
+    ('q01_pre_chkpa', "if abs(pre['c'] - pre['a']) > PRE_TOL or", "if abs(pre['c'] - pre['a']) > PRE_TOL + 1 or"),   # item 659 (g)
+    ('q02_pre_chkbpb', "or abs(pre['cb'] - pre['b']) > PRE_TOL:", "or abs(pre['cb'] - pre['b']) > PRE_TOL + 1:"),
+    ('q03_pre_rxb', "if pre['rx'] > pre['bb'] + PRE_TOL or", "if pre['rx'] > pre['bb'] + PRE_TOL + 1 or"),
+    ('q04_pre_bbad', "or pre['bb'] > pre['bad'] + PRE_TOL:", "or pre['bb'] > pre['bad'] + PRE_TOL + 1:"),
+    ('q05_dev2_chkpa', "d2['chk_pa'] += abs(pre['c'] - pre['a']) >= 2", "d2['chk_pa'] += abs(pre['c'] - pre['a']) >= 3"),
+    ('q06_dev2_chkbpb', "d2['chkb_pb'] += abs(pre['cb'] - pre['b']) >= 2", "d2['chkb_pb'] += abs(pre['cb'] - pre['b']) >= 3"),
     ('l01_rc1_skip', "rc1 = P['rts_skip'] == 0 and P['rts_chk'] >= P['rts_chk_b']", "rc1 = P['rts_chk'] >= P['rts_chk_b']"),
     ('l02_rc1_ge1', "and P['rts_chk_b'] == P['rts_pb'] and P['rts_pb'] >= 1", "and P['rts_chk_b'] == P['rts_pb']"),
     ('l03_rc1_pb', "and P['rts_chk_b'] == P['rts_pb'] and P['rts_pb'] >= 1", "and P['rts_pb'] >= 1"),

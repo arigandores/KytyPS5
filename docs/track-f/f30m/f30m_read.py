@@ -22,7 +22,8 @@ ADMISSION (any member NO - NOT_ADMITTED with the reason; the first failed harnes
            line 'version: Fork build arigandores/KytyPS5 6fbdcf6'; the version string -1907-g6fbdcf67 in the pinned copy of sha T2; every log
            line carrying a version string 'KytyPS5-20..' carries exactly KytyPS5-2026-09-15-6a2987a-1907-g6fbdcf67 (none - vacuous).
   RC4 (F30f) / RC2 (F30l): every FrameTrace-x line carries every field of REQ incl. the 8 bit counters - else NOT_ADMITTED 'missing field'.
-  parse    item 651 (b) as F30f: process rts_chk = rts_pa, rts_chk_b = rts_pb, rts_bad_rx <= rts_bad_b <= rts_bad; prefix sums within 1 event.
+  parse    item 651 (b) as F30f: process rts_chk = rts_pa, rts_chk_b = rts_pb, rts_bad_rx <= rts_bad_b <= rts_bad; prefix sums within PRE_TOL = 4 events at every line
+           (item 659 (v), was 1); reference - lines with deviation >= 2 per pair.
   RC1 (F30l, every tag): process rts_skip = 0 and rts_chk >= rts_chk_b = rts_pb >= 1.
   RC2 (F30l, every tag), process sums: exact - each of the 8 <= rts_bad_b <= rts_bad; rts_bad_r <= rts_bad_rx; rts_bad_xr, _xc, _xe <=
            rts_bad_rx; with 1 of tolerance - rts_bad_rx <= r + xr + xc + xe + 1; rts_bad_b <= sum of the 8 + 1.  Per line - reference.
@@ -88,7 +89,7 @@ BLK_SKIP = 2
 MIN_BLOCKS = 3
 OLD_SHARE = 0.9
 LINES_MAX = 40
-PRE_TOL = 1
+PRE_TOL = 4   # item 659 (v): prefix sums within 4 events (was 1, item 651 (b)(2))
 TOL8 = 1     # RC2 of F30l: a report torn by the last flip of the process
 BITS8 = ('rts_bad_r', 'rts_bad_xr', 'rts_bad_xc', 'rts_bad_xe', 'rts_bad_s', 'rts_bad_p', 'rts_bad_m', 'rts_bad_l')
 KB7 = BITS8[:7]   # item 655 (zh)(1): L is a reference
@@ -191,7 +192,7 @@ def scan(path, level, legacy=False):
     r = dict(entry_ln=None, first_guest_ln=None, modes=[], refused=0, gates=[], mm=[], mm_bad=0, verify=0, proc=new_sums(),
              win=new_sums(), x_lines=0, x_win=0, x_missing=0, x_missing_names=[], x_dup=0, x_prefixed=0, draw_win=0, draw_lines=0,
              bda_win=[], bda_missing=0, chkb_by_n={}, id_pa=0, id_pb=0, id_rx=0, id8_lines=0, ineq_lines=0, pre_viol=0, pre_first=None,
-             pre_viol_rx=0, maxdev=dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0), ft_last_n=None, input_max=None, input_lines=0, b42=[],
+             pre_viol_rx=0, maxdev=dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0), dev2=dict(chk_pa=0, chkb_pb=0, rx_b=0, b_bad=0), ft_last_n=None, input_max=None, input_lines=0, b42=[],
              death=[], minimized=0, recovering=0, winev={}, sig=[], variant_dir=[], gamepatch=0, diagb32=0, stall_lines=0, fork=[],
              ver_any=0, ver_bad=0, summary=[], summary_bad=0, lines=0)
     lvl = ('GuestOut: Level has started: %s' % level).encode()
@@ -239,6 +240,11 @@ def scan(path, level, legacy=False):
             md['chkb_pb'] = max(md['chkb_pb'], abs(pre['cb'] - pre['b']))
             md['rx_b'] = max(md['rx_b'], pre['rx'] - pre['bb'])
             md['b_bad'] = max(md['b_bad'], pre['bb'] - pre['bad'])
+            d2 = r['dev2']
+            d2['chk_pa'] += abs(pre['c'] - pre['a']) >= 2
+            d2['chkb_pb'] += abs(pre['cb'] - pre['b']) >= 2
+            d2['rx_b'] += pre['rx'] - pre['bb'] >= 2
+            d2['b_bad'] += pre['bb'] - pre['bad'] >= 2
             if abs(pre['c'] - pre['a']) > PRE_TOL or abs(pre['cb'] - pre['b']) > PRE_TOL:
                 r['pre_viol'] += 1
                 if r['pre_first'] is None:
@@ -633,12 +639,14 @@ def read_tag(tag, p, legacy=False):
                     and P['rts_bad_noreg'] <= P['rts_bad']
                     and x['verify'] <= min(LINES_MAX, P['rts_bad']) and x['mm_bad'] == 0 and x['x_dup'] == 0)
         d.append(('parse [identity of the parse, RC7]: process rts_chk %d = rts_pa %d, rts_chk_b %d = rts_pb %d, rts_bad_rx %d <= rts_bad_b '
-                  '%d <= rts_bad %d; prefix sums within %d event at every line (chk/pa, chk_b/pb %d; rx/b/bad %d; first line %s); chk_b <= chk '
+                  '%d <= rts_bad %d; prefix sums within %d events at every line (item 659 (v)) (chk/pa, chk_b/pb %d; rx/b/bad %d; first line %s); chk_b <= chk '
                   '<= n %d, noreg %d <= bad; RtSkipVerify lines %d <= min(40, bad); unparsable %d; duplicate fields %d; letter rows (per line, '
-                  'reference - the flip tears one event): chk!=pa %d, chk_b!=pb %d, rx<=b<=bad broken %d; max prefix deviation %s' % (
+                  'reference - the flip tears one event): chk!=pa %d, chk_b!=pb %d, rx<=b<=bad broken %d; max prefix deviation %s; lines with '
+                  'prefix deviation >= 2 (item 659 (v), reference) %s' % (
                       P['rts_chk'], P['rts_pa'], P['rts_chk_b'], P['rts_pb'], P['rts_bad_rx'], P['rts_bad_b'], P['rts_bad'], PRE_TOL,
                       x['pre_viol'], x['pre_viol_rx'], x['pre_first'], P['rts_n'], P['rts_bad_noreg'], x['verify'], x['mm_bad'], x['x_dup'],
-                      x['id_pa'], x['id_pb'], x['id_rx'], json.dumps(x['maxdev'], sort_keys=True)), parse_ok))
+                      x['id_pa'], x['id_pb'], x['id_rx'], json.dumps(x['maxdev'], sort_keys=True),
+                      json.dumps(x['dev2'], sort_keys=True)), parse_ok))
         rc1 = P['rts_skip'] == 0 and P['rts_chk'] >= P['rts_chk_b'] and P['rts_chk_b'] == P['rts_pb'] and P['rts_pb'] >= 1
         d.append(('RC1 (F30l): process rts_skip %d = 0 and rts_chk %d >= rts_chk_b %d = rts_pb %d >= 1' % (
             P['rts_skip'], P['rts_chk'], P['rts_chk_b'], P['rts_pb']), rc1))
@@ -735,7 +743,8 @@ def read_tag(tag, p, legacy=False):
     res['ref'] = dict(outcome=att.get('outcome'), hold_exit=att.get('hold_exit'), hold_s=att.get('hold_s'), stable_s=att.get('stable_s'),
                       win_s=win_s, lines=X.get('lines'), death=(X.get('death') or []) + sdth, video_index=idx_n, glitches=gl,
                       fork=X.get('fork'), x_prefixed=X.get('x_prefixed'), ineq_lines=X.get('ineq_lines'), ft_last_n=X.get('ft_last_n'),
-                      input_lines=X.get('input_lines'), input_max=X.get('input_max'))
+                      input_lines=X.get('input_lines'), input_max=X.get('input_max'), prefix_maxdev=X.get('maxdev'),
+                      prefix_dev2=X.get('dev2'))
     if x is not None:
         P, W = x['proc'], x['win']
         res['proc'] = dict(P)

@@ -1,4 +1,4 @@
-suite regress_f30m.py sha256 44f30a807abb2d16c3e52582d0a5bfade64365c23c0fa721398050418b37c28e target f30m_read.py sha256 4afa01a4c9a00e3349a570d41100e17d0becbafaa23dfcb44c2cbe90fcd84954
+suite regress_f30m.py sha256 a4458daf4055089696665c323dbcb25e3a208a11240b9e8e66ab6c4fb7daa6ae target f30m_read.py sha256 1beb2b525d719e84c3d29613fa25b0c1b40d082308192915dde19d278fd32148
 log f30_s1_c3 sha256 8c00bd6043233dfbc0ec9e481185387917132f13acac69fefebb8493f4f16686
 log f30_s1_c4 sha256 1352bf876efccf50ae8580dac4d6c1296cf77b6c24564c56163824af76de52cd
 log f30_s1_v sha256 bb415abab0b8e82d8e0379acccf13551bf7ecb5a78931f7b8fd854b1d31a1458
@@ -28,5 +28,7 @@ PASS cy_c3 on f30_s1_c3: rts_bad 3411459 = F30f 3 411 459
 PASS cy_v on f30_s1_v: (gamma) NO (xb_ser 0), (C1) YES (win chk_b 40014265), (V) YES, (O) YES ({'(gamma)': False, '(C1)': True, '(V)': True, 'race:': True, '(O)': True})
 PASS cy_v on f30_s1_v: window chk_b 40 014 265 = F30f (40014265)
 PASS cy_c4 on f30_s1_c4: K_B'' NO (sum 0), RC2 (a) YES
-checks 25 failed 0
+log f30_s1_c5 sha256 c2c42fd17dadedc0234f0ac95eabee210ddd4d9b24b5fddb4262c11505517a83
+PASS f30_s1_c5 real log: parse YES ([True]), max chk_b/pb deviation 2 (2), lines with deviation >= 2: chk_b/pb 1 (1), sums chk = pa = chk_b = pb = 17 474 336 (17474336)
+checks 26 failed 0
 ALL OK

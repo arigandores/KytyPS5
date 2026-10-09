@@ -2,7 +2,8 @@
 synthetic tag of each kind (c5 at s1 and s9 with the keys; cy_v, cy_c3, cy_c4) reads ADMITTED with every member YES; every admission member
 (harness, (D1)-(D7) = RC3 of F30l, RC4 of F30f with the 8 bit counters, parse, RC1 / RC2 / RC4 of F30l, 'PB item 6 dropped', the
 reconciliation, RC2 (a) / (b) at cy_c4), every member of each kind (K_B'' and the 7 sources, (gamma), (C1), (V), race, (O), (K), (K')) and
-each edge (x lines 1499 / 1500, 2999 / 3000, xb_ser 99 / 100, chk_b 999 999 / 10^6, the tolerance 1 of RC2, the name rts_bad_r against
+each edge (x lines 1499 / 1500, 2999 / 3000, xb_ser 99 / 100, chk_b 999 999 / 10^6, the tolerance 1 of RC2, the prefix tolerance 4 / 5
+of the parse on each of the four pairs (item 659 (g)), the name rts_bad_r against
 rts_bad_rx, 40 lines of the reconciliation) flips the reading; the STOP rows; the scene rows; strict cp1250 output without
 PYTHONIOENCODING; the last line is ALL OK.  Early-exit form of mutlib (ok = True, ok &= ..., sys.exit(0 if ok else 1)).  ASCII only.
 The reader is loaded in-process from argv[1] (default: f30m_read.py beside this file); the fixture directories live under BASE.
@@ -364,7 +365,32 @@ shutil.rmtree(dd, ignore_errors=True)
 r = read(mod(c5, lambda t: (t['frames'][10].__setitem__('rts_chk', 421), t['frames'][11].__setitem__('rts_chk', 419))))
 ok &= check('parse: tear of one event - YES', adm(r, 'parse') is True)
 r = read(mod(c5, lambda t: (t['frames'][10].__setitem__('rts_chk', 422), t['frames'][11].__setitem__('rts_chk', 418))))
-ok &= check('parse: prefix 2 - NO, NOT_ADMITTED and STOP', adm(r, 'parse') is False and r['status'] == 'NOT_ADMITTED' and stopped(r, 'item 651'))
+ok &= check('parse: chk/pa prefix 2 - YES (item 659 (g): was NO under tolerance 1)', adm(r, 'parse') is True and r['status'] == 'ADMITTED')
+ok &= check('parse: chk/pa prefix 2 - reference row of lines with deviation >= 2: 1', r['ref']['prefix_dev2']['chk_pa'] == 1
+            and r['ref']['prefix_maxdev']['chk_pa'] == 2)
+r = read(mod(c5, lambda t: (t['frames'][10].__setitem__('rts_chk', 424), t['frames'][11].__setitem__('rts_chk', 416))))
+ok &= check('parse: chk/pa prefix 4 - YES (item 659 (g))', adm(r, 'parse') is True and r['status'] == 'ADMITTED')
+r = read(mod(c5, lambda t: (t['frames'][10].__setitem__('rts_chk', 425), t['frames'][11].__setitem__('rts_chk', 415))))
+ok &= check('parse: chk/pa prefix 5 - NO, NOT_ADMITTED and STOP (item 659 (g))', adm(r, 'parse') is False and r['status'] == 'NOT_ADMITTED'
+            and stopped(r, 'item 651'))
+r = read(mod(c5, lambda t: (t['frames'][10].__setitem__('rts_chk_b', 402), t['frames'][11].__setitem__('rts_chk_b', 398))))
+ok &= check('parse: chk_b/pb prefix 2 (the f30_s1_c5 form) - YES', adm(r, 'parse') is True and r['status'] == 'ADMITTED'
+            and r['ref']['prefix_dev2']['chkb_pb'] == 1)
+r = read(mod(c5, lambda t: (t['frames'][10].__setitem__('rts_chk_b', 404), t['frames'][11].__setitem__('rts_chk_b', 396))))
+ok &= check('parse: chk_b/pb prefix 4 - YES (item 659 (g))', adm(r, 'parse') is True and r['status'] == 'ADMITTED')
+r = read(mod(c5, lambda t: (t['frames'][10].__setitem__('rts_chk_b', 405), t['frames'][11].__setitem__('rts_chk_b', 395))))
+ok &= check('parse: chk_b/pb prefix 5 - NO, NOT_ADMITTED and STOP (item 659 (g))', adm(r, 'parse') is False and r['status'] == 'NOT_ADMITTED'
+            and stopped(r, 'item 651'))
+r = read(mod(c5, lambda t: (t['frames'][99].update(rts_bad_b=4), t['frames'][100].update(rts_bad_b=3))))
+ok &= check('parse: b/bad prefix 4 (b four events ahead of bad) - YES (item 659 (g))', adm(r, 'parse') is True)
+r = read(mod(c5, lambda t: (t['frames'][99].update(rts_bad_b=5), t['frames'][100].update(rts_bad_b=2))))
+ok &= check('parse: b/bad prefix 5 - NO and STOP (item 659 (g))', adm(r, 'parse') is False and stopped(r, 'item 651'))
+r = read(mod(c5, lambda t: (put_reports(t, [('0x020', dict(rts_bad_xr=1))] * 8, 5), t['frames'][100].update(rts_bad_b=4),
+                            t['frames'][101].update(rts_bad_b=4))))
+ok &= check('parse: rx/b prefix 4 (rx 8, b 4 at a line) - YES (item 659 (g))', adm(r, 'parse') is True)
+r = read(mod(c5, lambda t: (put_reports(t, [('0x020', dict(rts_bad_xr=1))] * 8, 5), t['frames'][100].update(rts_bad_b=3),
+                            t['frames'][101].update(rts_bad_b=5))))
+ok &= check('parse: rx/b prefix 5 (rx 8, b 3 at a line) - NO and STOP (item 659 (g))', adm(r, 'parse') is False and stopped(r, 'item 651'))
 r = read(mod(c5, lambda t: t['frames'][10].__setitem__('rts_pb', 401)))
 ok &= check('parse: pb sum != chk_b sum - NO and STOP', adm(r, 'parse') is False and stopped(r, 'item 651'))
 r = read(mod(c5, lambda t: t['frames'][100].update(rts_bad_rx=8)))
@@ -372,11 +398,11 @@ ok &= check('parse: rx 8 > b 7 - NO and STOP', adm(r, 'parse') is False and stop
 r = read(mod(c5, lambda t: t['mid'].append('RtSkipVerify: something else')))
 ok &= check('parse: unparsable RtSkipVerify - NO', adm(r, 'parse') is False)
 r = read(mod(c5, lambda t: t['frames'][10].__setitem__('rts_chk', 421)))
-ok &= check('parse: chk sum 1 over pa sum (prefix within 1) - NO and STOP', adm(r, 'parse') is False and stopped(r, 'item 651'))
+ok &= check('parse: chk sum 1 over pa sum (member (b)(1), prefix 1 within 4) - NO and STOP', adm(r, 'parse') is False and stopped(r, 'item 651'))
 r = read(mod(c3, lambda t: t['mid'].append('RtSkipVerify: MISMATCH frame=1 bits=0x401 reg=1 chain=0 colors=1 depth=0 pa=1 pb=0 mode=3')))
 ok &= check('parse: 2 lines > bad 1 - NO', adm(r, 'parse') is False)
 r = read(mod(c5, lambda t: (t['frames'][100].update(rts_bad_b=1), t['frames'][101].update(rts_bad_b=6))))
-ok &= check('parse: rx 4 three events ahead of b 1 at a line, sums equal - NO and STOP', adm(r, 'parse') is False and stopped(r, 'item 651'))
+ok &= check('parse: rx 4 three events ahead of b 1 at a line, sums equal - YES (item 659 (g): was NO under tolerance 1)', adm(r, 'parse') is True)
 r = read(mod(c5, lambda t: put_reports(t, [('0x040', dict(rts_bad_s=1))] * 41, 5)))
 ok &= check('parse: 41 lines = bad 41 > 40 lines - NO; reconciliation not exact', adm(r, 'parse') is False and r['rec']['exact'] is False)
 

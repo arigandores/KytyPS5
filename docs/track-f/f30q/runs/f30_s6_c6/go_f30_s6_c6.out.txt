@@ -1,0 +1,19 @@
+ALL OK
+2026-10-09T16:34:52Z F30q go_f30q f30_s6_c6 run check (item 587 (g)): RUN ALIVE 4396cd1a status in_progress
+2026-10-09T16:34:53Z F30q go_f30q f30_s6_c6 display before the lock (item 620 (g)(1)): dispstate ON idle_s 110 utc 2026-10-09T16:34:53Z
+2026-10-09T16:38:39Z F30q go_f30q f30_s6_c6 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-09T16:38:39Z F30q go_f30q f30_s6_c6 installed binary inside the lock before the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T16:38:41Z F30q go_f30q f30_s6_c6 manifest before: manifest C:/kyty/f287/f30q/runs/f30_s6_c6/manifest_before.tsv files 4804 bytes 1302336424 listsha 723be9837d32f846b38ff7fb71487d6ed5e0c22c155822acffb347a31cd91f35
+2026-10-09T16:38:42Z F30q go_f30q f30_s6_c6 caches before against the base manifest of the seal (row): manifest cmp DIFFER only-before 2 only-after 2
+2026-10-09T16:38:42Z F30q go_f30q f30_s6_c6 state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-09T16:38:42Z
+2026-10-09T16:38:42Z F30q go_f30q f30_s6_c6 installed the T3 copy 50596951 for the tag: 505969510fb20f7ce56a5195b3b6d2209af812bc0c2c85eccb6368a712b1bf34
+2026-10-09T16:38:42Z F30q go_f30q f30_s6_c6 enter_scene start (level sponge_dirty_bath, SD 300, hold 150, no video, KYTY_RT_SKIP=6 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-09T16:41:39Z F30q go_f30q f30_s6_c6 enter_scene rc 0; guard watch: 2026-10-09T16:41:39Z watch end, user process seen: no; hold watch: 2026-10-09T16:41:39Z watch end, user VM seen: no
+2026-10-09T16:41:40Z F30q go_f30q f30_s6_c6 run: VERDICT: sponge_dirty_bath in 14.9 s - PASS (acceptance <= 90 s)
+2026-10-09T16:41:41Z F30q go_f30q f30_s6_c6 log_f30_s6_c6.txt sha256 d546a9021a38e7fa60809b40807d1fa9f7c5370dddfc2585841442de6f06cadc
+2026-10-09T16:41:41Z F30q go_f30q f30_s6_c6 installed binary returned from the pinned FS11 copy
+2026-10-09T16:41:41Z F30q go_f30q f30_s6_c6 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T16:41:46Z F30q go_f30q f30_s6_c6 manifest after (caches not returned, item 664 (z)(1)): manifest C:/kyty/f287/f30q/runs/f30_s6_c6/manifest_after.tsv files 4804 bytes 1302336424 listsha 723be9837d32f846b38ff7fb71487d6ed5e0c22c155822acffb347a31cd91f35; before vs after: manifest cmp EQUAL files 4804 listsha 723be9837d32f846b38ff7fb71487d6ed5e0c22c155822acffb347a31cd91f35
+2026-10-09T16:41:46Z F30q go_f30q f30_s6_c6 lock released (rc 0)
+2026-10-09T16:41:48Z F30q go_f30q f30_s6_c6 display after lock released (item 620 (g)(1)): dispstate ON idle_s 147 utc 2026-10-09T16:41:47Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-09T16:41:47Z; dispstate ON idle_s 148
+rc=0

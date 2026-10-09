@@ -1,0 +1,55 @@
+tag f30_s3_c6 (scene s3, kind c6, knob 6, level mini_giants_garden)  reader sha256 8fa28cc14b6bcb7de83068b86635119c52341561917c03a939376aec13852d11
+  STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = T3 50596951 (505969510fb20f7c)
+    [ok] installed during the tag = T3 50596951 (505969510fb20f7c)
+    [ok] installed before = after = FS11 ea51ae80 (ea51ae80521e8300 / ea51ae80521e8300)
+    [ok] json prereg sha256 = seal sha256 (e8bd7144d97b05b4 / e8bd7144d97b05b4)
+    [ok] env = the form of the tag (exact)
+    [ok] gate text and schedule empty - no rtskip, no census gate ('' / '')
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd, no --graphics-debug-dump true (None)
+    [ok] guest args -lvl mini_giants_garden (-lvl mini_giants_garden; harness mini_giants_garden)
+    [ok] hold option 150 s (150)
+    [ok] window from the entry line >= 150 s and the process alive at its end (item 649 (e)): stable_s 15.4 - started_s 12.9 + hold_s 150.1 = 152.6; outcome ok, hold_exit None
+    [ok] log present
+    [ok] entry line present (215792)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {'lost keyboard focus': 1})
+    [ok] signature 9177b426 and catalog variant_fixb26_fixb1b_fixf10_fixf19 (D7) (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch:, DiagB32, TestLogStall lines (0 / 0 / 0)
+    [ok] summary LogAsync: full_waits= once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+    [ok] (D1) exactly one line RtSkip: mode 6 ctx_slots=<n> groups=<n> rec_bytes=<n> (the text of the print place, item 665 (v)(5)), no other value, no other text ([(6, 16723)]; lines with the prefix 1)
+    [ok] (D2) RtSkip: refused lines 0, process rts_refuse 0
+    [ok] (D3) Gate: rtskip= lines none or all 6 ([])
+    [ok] (D4) process rts_xthr 0, rts_acqw 0
+    [ok] (D5) FrameTrace-x in the window 9128 >= 0.95 x FrameTrace-draw 9128 and >= 1500
+    [ok] (D6) window rts_ovf 0
+    [ok] (D7) RC5 of F30p (item 665 (v)(5)): launch_sha256 505969510fb20f7c = T3, binary_sha256 = launch_sha256 (505969510fb20f7c), one log line version: Fork build ... ea38426 (['ea38426']), version string -1908-gea38426b in the pinned copy of sha T3 (True), log version strings 0 of them other than -1908-gea38426b 0
+    [ok] RC4 (F30f) / RC2 (F30l) / RC2 (F30p) every FrameTrace-x line carries every field of REQ incl. the 8 bit counters and the 5 rts_inj names (lines 9407, missing 0 []) - else missing field
+    [ok] parse [identity of the parse, RC7]: closing point T (item 662): FrameTrace-x line 9407 of 9407 (log line 992918), distance to the last 0 <= 3; sums at T chk 15768162 / pa 15768162, chk_b 15748455 / pb 15748455, rx 0 <= b 2202 <= bad 2202; tail deviations {"b_bad": 0, "chk_pa": 0, "chkb_pb": 0, "rx_b": 0} - ok; at T rts_chk = rts_pa, rts_chk_b = rts_pb, rts_bad_rx <= rts_bad_b <= rts_bad (item 662 (v)(3)); process (reference) rts_chk 15768162 / rts_pa 15768162, rts_chk_b 15748455 / rts_pb 15748455, rts_bad_rx 0 / rts_bad_b 2202 / rts_bad 2202; prefix sums within 4 events at every line incl. the tail (item 659 (v), 662 (v)(4)) (chk/pa, chk_b/pb 0; rx/b/bad 0; first line None); chk_b <= chk <= n 18819445, noreg 2202 <= bad; RtSkipVerify lines 40 <= min(40, bad); unparsable 0; duplicate fields 0; letter rows (per line, reference - the flip tears one event): chk!=pa 12, chk_b!=pb 14, rx<=b<=bad broken 0; max prefix deviation {"b_bad": 0, "chk_pa": 1, "chkb_pb": 1, "rx_b": 0}; lines with prefix deviation >= 2 (item 659 (v), reference) {"b_bad": 0, "chk_pa": 0, "chkb_pb": 0, "rx_b": 0}
+    [ok] RC1 (F30l): at T (item 662: line 9407, distance 0 <= 3) rts_skip 0 = 0 and rts_chk 15768162 >= rts_chk_b 15748455 = rts_pb 15748455 >= 1; process rts_skip 0 = 0 and rts_chk 15768162 >= rts_chk_b 15748455 (process rts_pb 15748455 - reference)
+    [ok] RC2 (F30l): exact - each of the 8 <= rts_bad_b 2202 <= rts_bad 2202, rts_bad_r 0 <= rts_bad_rx 0, xr 0 / xc 0 / xe 0 <= rts_bad_rx (ok); with 1 of tolerance - rts_bad_rx <= r+xr+xc+xe + 1, rts_bad_b <= sum8 + 1 (ok) [sum8 2202, r+xr+xc+xe 0; per line reference: lines out of RC2 0]
+    [ok] RC4 (F30l): value 6 != 3 - process rts_bad_noreg 2202 = rts_bad 2202
+    [ok] reconciliation (lines exhausted - >=): lines MISMATCH mode=6 40, process rts_bad 2202; lines {"b": 40, "rts_bad_l": 0, "rts_bad_m": 0, "rts_bad_p": 0, "rts_bad_r": 0, "rts_bad_s": 40, "rx": 0, "x": 0} against rts_bad_rx 0, rts_bad_b 2202, r 0, s 2202, p 0, m 0, l 0, xr+xc+xe 0
+    [ok] RC1 (F30p, item 665 (v)(1)): at T rts_inj_nos 0 = 0
+    [ok] RC2 (F30p, item 665 (v)(2)): at T rts_inj_s 2202 + rts_inj_race 0 + rts_inj_nos 0 = rts_inj 2202 (difference +0, tolerance 1 on the tail)
+    [ok] RC3 (F30p, item 665 (v)(3)): at T rts_bad_s 2202 >= rts_inj_s 2202, rts_bad 2202 >= rts_inj_s, rts_race 0 >= rts_inj_race 0 (tolerance 1 on the tail)
+    [ok] RC4 (F30p, item 665 (v)(4)): at T floor(rts_pb 15748455 / 4096) = 3844; 3844 - 1 <= rts_inj 2202 + rts_inj_none 1642 = 3844 <= 3844 + 1
+    [ok] (inj) form member c6 (item 664 (z)(3), 665 (v)(4)): at T rts_inj 2202 >= 1
+  launch_sha256 505969510fb20f7ce56a5195b3b6d2209af812bc0c2c85eccb6368a712b1bf34; binary_sha256 505969510fb20f7ce56a5195b3b6d2209af812bc0c2c85eccb6368a712b1bf34
+  INJ (item 664 (z)(4)) at T rts_inj=2202 rts_inj_s=2202 rts_inj_race=0 rts_inj_nos=0 rts_inj_none=1642 | process rts_inj=2202 rts_inj_s=2202 rts_inj_race=0 rts_inj_nos=0 rts_inj_none=1642
+  natural S = rts_bad_s - rts_inj_s: at T 0, process 0 (reference, item 664 (i)(5))
+  K_S row (item 664 (i)(1) with item 665 (g)): at T rts_inj 2202 >= 1, rts_inj_s 2202 >= 1, rts_inj_nos 0 = 0 - YES (row for F30r, not a verdict)
+  PROCESS rts_n=18819445 rts_skip=0 rts_pa=15768162 rts_pb=15748455 rts_chk=15768162 rts_chk_b=15748455 rts_bad=2202 rts_bad_noreg=2202 rts_bad_b=2202 rts_bad_rx=0 rts_race=0 rts_lost=37311
+  AT T    rts_n=18819445 rts_skip=0 rts_pa=15768162 rts_pb=15748455 rts_chk=15768162 rts_chk_b=15748455 rts_bad=2202 rts_bad_noreg=2202 rts_bad_b=2202 rts_bad_rx=0 rts_race=0 rts_lost=37311
+  WINDOW  rts_n=18812964 rts_skip=0 rts_pa=15768162 rts_pb=15748455 rts_chk=15768162 rts_chk_b=15748455 rts_bad=2202 rts_bad_noreg=2202 rts_bad_b=2202 rts_bad_rx=0 rts_race=0 rts_lost=37031
+  BITS process rts_bad_r=0 rts_bad_xr=0 rts_bad_xc=0 rts_bad_xe=0 rts_bad_s=2202 rts_bad_p=0 rts_bad_m=0 rts_bad_l=0; rts_bad_b - rts_bad_rx = 2202
+  XB process rts_xb_ids=0 rts_xb_live=0 rts_xb_meta=0 rts_xb_ser=2093 rts_xb_bound=0 rts_xb_pass=17614 (H1 of F30p: rts_xb_ser at =6 - reference, not a basis)
+  RtSkipVerify lines 40, bits {"0x040": 40}; MISMATCH mode=6 with bit 0x040: 40 (reference of RC3)
+  BDA {"bda_missing": 0, "blocks": 102, "chkb_old": 177367, "mean_read": 36.9, "mode": "NEW", "new_blocks": 99, "old_blocks": 1, "read_blocks": 100}
+  KAPPA (reference; [0.80; 1.25]) {"by": {"ALL": {"inside": true, "kappa": 1.0037, "ref": 0.834}, "NEW": {"inside": true, "kappa": 1.0037, "ref": 0.834}}, "share_v2": 0.8371}
+  FIXB42 window increments {"inc": {"applied": 276, "drawn": 7958, "hit": 276}, "lines": 307, "modes": [1], "per_extent": {"1920x1080": {"applied": 0, "drawn": 941, "hit": 0}, "2432x1368": {"applied": 0, "drawn": 6946, "hit": 0}, "3328x1872": {"applied": 0, "drawn": 0, "hit": 0}, "3840x2160": {"applied": 40, "drawn": 71, "hit": 40}, "480x270": {"applied": 100, "drawn": 0, "hit": 100}, "608x342": {"applied": 133, "drawn": 0, "hit": 133}, "832x468": {"applied": 2, "drawn": 0, "hit": 2}, "960x540": {"applied": 1, "drawn": 0, "hit": 1}}}; window rts_lost 37031
+  RECONCILIATION {"a_only": 0, "exact": false, "lines": {"b": 40, "rts_bad_l": 0, "rts_bad_m": 0, "rts_bad_p": 0, "rts_bad_r": 0, "rts_bad_s": 40, "rx": 0, "x": 0}, "n": 40, "ok": true, "x3": 0}
+  REFERENCE {"close_dist": 0, "close_idx": 9407, "close_ln": 992918, "death": [], "fork": ["ea38426"], "ft_last_n": 9408, "hold_exit": null, "hold_s": 150.1, "ineq_lines": 5, "input_lines": 0, "input_max": null, "lines": 992934, "outcome": "ok", "prefix_dev2": {"b_bad": 0, "chk_pa": 0, "chkb_pb": 0, "rx_b": 0}, "prefix_maxdev": {"b_bad": 0, "chk_pa": 1, "chkb_pb": 1, "rx_b": 0}, "stable_s": 15.4, "tail_dev": {"b_bad": 0, "chk_pa": 0, "chkb_pb": 0, "rx_b": 0}, "win_s": 152.6, "x_full": 9407, "x_prefixed": 0}
+  STOP none

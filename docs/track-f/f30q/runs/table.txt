@@ -1,0 +1,25 @@
+reader f30q_read.py sha256 8fa28cc14b6bcb7de83068b86635119c52341561917c03a939376aec13852d11
+| tag | status | launch sha | (D5) x/draw | inj | inj_s | inj_race | inj_nos | inj_none | rts_bad | r xr xc xe s p m l | xb_ser | race | win chk_b | K_S | stop |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| f30_s1_c6 | ADMITTED | 50596951 | 4357/4357 | 2731 | 2731 | 0 | 0 | 2181 | 2731 | 0 0 0 0 2731 0 0 0 | 2595 | 0 | 20121669 | True | - |
+| f30_s1_w6 | ADMITTED | 50596951 | 1180/1180 | 816 | 816 | 0 | 0 | 635 | 816 | 0 0 0 0 816 0 0 0 | 783 | 0 | 5944305 | True | - |
+| f30_s2_c6 | ADMITTED | 50596951 | 9058/9058 | 1063 | 1063 | 0 | 0 | 2168 | 1063 | 0 0 0 0 1063 0 0 0 | 946 | 0 | 13235028 | True | - |
+| f30_s3_c6 | ADMITTED | 50596951 | 9128/9128 | 2202 | 2202 | 0 | 0 | 1642 | 2202 | 0 0 0 0 2202 0 0 0 | 2093 | 0 | 15748455 | True | - |
+| f30_s4_c6 | ADMITTED | 50596951 | 8711/8711 | 1600 | 1600 | 0 | 0 | 2999 | 1600 | 0 0 0 0 1600 0 0 0 | 1495 | 0 | 18841127 | True | - |
+| f30_s5_c6 | ADMITTED | 50596951 | 8887/8887 | 2561 | 2561 | 0 | 0 | 2480 | 2561 | 0 0 0 0 2561 0 0 0 | 2384 | 0 | 20648132 | True | - |
+| f30_s6_c6 | ADMITTED | 50596951 | 5078/5078 | 1677 | 1677 | 0 | 0 | 2831 | 1677 | 0 0 0 0 1677 0 0 0 | 1612 | 0 | 18467820 | True | - |
+| f30_s7_c6 | ADMITTED | 50596951 | 5522/5522 | 2557 | 2557 | 0 | 0 | 1330 | 2557 | 0 0 0 0 2557 0 0 0 | 2383 | 0 | 15921569 | True | - |
+| f30_s8_c6 | ADMITTED | 50596951 | 3923/3923 | 1472 | 1472 | 0 | 0 | 2786 | 1472 | 0 0 0 0 1472 0 0 0 | 1371 | 0 | 17441107 | True | - |
+| f30_s9_c6 | ADMITTED | 50596951 | 6853/6853 | 1696 | 1696 | 0 | 0 | 2075 | 1696 | 0 0 0 0 1696 0 0 0 | 1609 | 0 | 15446793 | True | - |
+
+w6 f30_s1_w6: ADMITTED; members all YES
+s1 underwater_aerial_garden: c6 ADMITTED; K_S True; at T {"rts_inj": 2731, "rts_inj_none": 2181, "rts_inj_nos": 0, "rts_inj_race": 0, "rts_inj_s": 2731}; natural S (process) 0
+s2 hoover_beach: c6 ADMITTED; K_S True; at T {"rts_inj": 1063, "rts_inj_none": 2168, "rts_inj_nos": 0, "rts_inj_race": 0, "rts_inj_s": 1063}; natural S (process) 0
+s3 mini_giants_garden: c6 ADMITTED; K_S True; at T {"rts_inj": 2202, "rts_inj_none": 1642, "rts_inj_nos": 0, "rts_inj_race": 0, "rts_inj_s": 2202}; natural S (process) 0
+s4 timestop_casino: c6 ADMITTED; K_S True; at T {"rts_inj": 1600, "rts_inj_none": 2999, "rts_inj_nos": 0, "rts_inj_race": 0, "rts_inj_s": 1600}; natural S (process) 0
+s5 rotating_level_day_and_night: c6 ADMITTED; K_S True; at T {"rts_inj": 2561, "rts_inj_none": 2480, "rts_inj_nos": 0, "rts_inj_race": 0, "rts_inj_s": 2561}; natural S (process) 0
+s6 sponge_dirty_bath: c6 ADMITTED; K_S True; at T {"rts_inj": 1677, "rts_inj_none": 2831, "rts_inj_nos": 0, "rts_inj_race": 0, "rts_inj_s": 1677}; natural S (process) 0
+s7 time_stopper_ghost_world: c6 ADMITTED; K_S True; at T {"rts_inj": 2557, "rts_inj_none": 1330, "rts_inj_nos": 0, "rts_inj_race": 0, "rts_inj_s": 2557}; natural S (process) 0
+s8 big_hand_pirate_island: c6 ADMITTED; K_S True; at T {"rts_inj": 1472, "rts_inj_none": 2786, "rts_inj_nos": 0, "rts_inj_race": 0, "rts_inj_s": 1472}; natural S (process) 0
+s9 underwater_aerial_garden: c6 ADMITTED; K_S True; at T {"rts_inj": 1696, "rts_inj_none": 2075, "rts_inj_nos": 0, "rts_inj_race": 0, "rts_inj_s": 1696}; natural S (process) 0
+scenes s1..s9 with K_S YES 9 (s1 s2 s3 s4 s5 s6 s7 s8 s9); S1 or S9 among them True; cymbal_party_land - natural K_B'' of F30m (item 664 (b)), not a tag of this series - rows for F30r by item 664 (i)(2)-(4) with item 665 (g)

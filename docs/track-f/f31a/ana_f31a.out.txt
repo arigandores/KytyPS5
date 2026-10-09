@@ -1,0 +1,77 @@
+logs 650 errors 0 empty 0
+
+(a) logs with any B25 signature
+  C:/kyty/f287/f30m/log_f30_s3_c5.txt S [3, 3, 3] bin rev:6fbdcf6  rev 6fbdcf6 rtskip ['RtSkip: mode 5 ctx_slots=8 groups=11 rec']
+    sig 1 t 164.252 entry mini_giants_garden entry_t 13.028 frames_before 9036 hold_before_s 151.2
+    sig 1 t 164.252 entry mini_giants_garden entry_t 13.028 frames_before 9036 hold_before_s 151.2
+    sig 1 t 164.253 entry mini_giants_garden entry_t 13.028 frames_before 9036 hold_before_s 151.2
+    sig 2 t 164.252 entry mini_giants_garden entry_t 13.028 frames_before 9036 hold_before_s 151.2
+    sig 2 t 164.252 entry mini_giants_garden entry_t 13.028 frames_before 9036 hold_before_s 151.2
+    sig 2 t 164.253 entry mini_giants_garden entry_t 13.028 frames_before 9036 hold_before_s 151.2
+    sig 3 t 164.253 entry mini_giants_garden entry_t 13.028 frames_before 9036 hold_before_s 151.2
+    sig 3 t 164.253 entry mini_giants_garden entry_t 13.028 frames_before 9036 hold_before_s 151.2
+    sig 3 t 164.253 entry mini_giants_garden entry_t 13.028 frames_before 9036 hold_before_s 151.2
+
+(b) entries by scene (all logs / line binaries), hold by guest frames in h; scenes 48
+  underwater_aerial_garden                   256    21.49 h | line    97     8.24 h
+  pot_treasure_cave                           41     3.28 h | line     0     0.00 h
+  bonus_path_maker_mix                        25     2.31 h | line     1     0.09 h
+  intro_next                                  60     2.14 h | line    60     2.14 h
+  hoover_beach                                32     1.76 h | line    12     0.77 h
+  enemy_final                                 13     1.16 h | line     2     0.14 h
+  sponge_dirty_bath                           24     1.09 h | line     8     0.46 h
+  big_hand_pirate_island                      14     0.91 h | line     6     0.33 h
+  timestop_casino                             16     0.77 h | line     8     0.44 h
+  transition_next                             12     0.75 h | line    12     0.75 h
+  rotating_level_day_and_night                12     0.62 h | line     8     0.41 h
+  mini_giants_garden                          10     0.60 h | line     6     0.39 h
+  diorama_astro_skin                           4     0.59 h | line     4     0.59 h
+  collectible_viewer                           4     0.59 h | line     4     0.59 h
+  diorama_zoo                                  4     0.59 h | line     4     0.59 h
+  diorama_controller_skin                      4     0.59 h | line     4     0.59 h
+  time_stopper_ghost_world                     9     0.51 h | line     5     0.30 h
+  ending_boss_after_credit                     6     0.50 h | line     4     0.31 h
+  voxel_world                                  7     0.48 h | line     5     0.30 h
+  penguin_atlantis                             5     0.30 h | line     5     0.30 h
+  bumper_enemy_snowy_canyon                    5     0.30 h | line     5     0.30 h
+  title_controller_ship                        5     0.30 h | line     5     0.30 h
+  ice_iceberg                                  5     0.30 h | line     5     0.30 h
+  hub_crashsite                                5     0.30 h | line     5     0.30 h
+  volcano_mountain                             5     0.30 h | line     5     0.30 h
+  enemy_gorilla                                5     0.30 h | line     5     0.30 h
+  cymbal_party_land                            5     0.25 h | line     0     0.00 h
+  robot_builder_next                           3     0.21 h | line     3     0.21 h
+  fragile_battle_1                             3     0.21 h | line     3     0.21 h
+  interactive_credit_00                        3     0.21 h | line     3     0.21 h
+  hero_kratos                                  4     0.20 h | line     2     0.13 h
+  hub_crashsite_diorama                        2     0.18 h | line     2     0.18 h
+  fragile_battle_2                             2     0.18 h | line     2     0.18 h
+  fragile_battle_3                             2     0.18 h | line     2     0.18 h
+  armadillo_challenge_1                        2     0.18 h | line     2     0.18 h
+  voxel_challenge_1                            2     0.18 h | line     2     0.18 h
+  voxel_challenge_2                            2     0.18 h | line     2     0.18 h
+  shuriken_ninja_castle                        5     0.17 h | line     4     0.14 h
+  non_interactive_credit                       2     0.12 h | line     2     0.12 h
+  mini_astro_clock_tower                       3     0.09 h | line     0     0.00 h
+  hero_drake                                   1     0.03 h | line     0     0.00 h
+  fragile_battle_4                             1     0.03 h | line     0     0.00 h
+  armadillo_challenge_2                        1     0.03 h | line     0     0.00 h
+  fragile_battle_5                             1     0.03 h | line     0     0.00 h
+  voxel_challenge_4                            1     0.03 h | line     0     0.00 h
+  voxel_challenge_3                            1     0.03 h | line     0     0.00 h
+  ps_logo                                      5     0.02 h | line     5     0.02 h
+  worldmap                                    12     0.00 h | line    12     0.00 h
+
+(c) mini_giants_garden entries
+  C:/kyty/f287/f30f/log_f30_s3_c3.txt | 3bc7ada7 | - | a1d1d86 | 3 | ['RtSkip: mode 3 ctx_slots=8 groups=11 rec'] | 9119 | 152.2 | 0 | 0 | 0 | KYTY_GATE_FILE,KYTY_GPU_CLOCK_PIN,KYTY_GPU_HANG_ABORT_S,KYTY_GPU_MARKERS,KYTY_QUEUE_TRACE,KYTY_RT_SKIP,KYTY_SAMPLE_GATE
+  C:/kyty/f287/f30f/log_f30_s3_c4.txt | 3bc7ada7 | - | a1d1d86 | 4 | ['RtSkip: mode 4 ctx_slots=8 groups=11 rec'] | 9107 | 152.0 | 0 | 0 | 0 | KYTY_GATE_FILE,KYTY_GPU_CLOCK_PIN,KYTY_GPU_HANG_ABORT_S,KYTY_GPU_MARKERS,KYTY_QUEUE_TRACE,KYTY_RT_SKIP,KYTY_SAMPLE_GATE
+  C:/kyty/f287/f30f/log_f30_s3_v.txt | 3bc7ada7 | - | a1d1d86 | 2 | ['RtSkip: mode 2 ctx_slots=8 groups=11 rec'] | 18142 | 302.6 | 0 | 0 | 0 | KYTY_GATE_FILE,KYTY_GPU_CLOCK_PIN,KYTY_GPU_HANG_ABORT_S,KYTY_GPU_MARKERS,KYTY_QUEUE_TRACE,KYTY_RT_SKIP,KYTY_SAMPLE_GATE
+  C:/kyty/f287/f30m/log_f30_s3_c5.txt | rev:6fbdcf6 | - | 6fbdcf6 | - | ['RtSkip: mode 5 ctx_slots=8 groups=11 rec'] | 9036 | 151.2 | 9 | 3 | 3 | 
+  C:/kyty/s288/s13/log_k_13.txt | adb0c82f | S12 | 4d9e8ab | - | ['RtSkip: mode 1 ctx_slots=8 groups=11 rec'] | 10906 | 182.5 | 0 | 0 | 0 | KYTY_GATE_FILE,KYTY_GPU_CLOCK_PIN,KYTY_GPU_HANG_ABORT_S,KYTY_GPU_MARKERS,KYTY_QUEUE_TRACE,KYTY_SAMPLE_GATE,KYTY_S_PCW
+  C:/kyty/s288/s13/log_u_13.txt | adb0c82f | S12 | 4d9e8ab | - | ['RtSkip: mode 1 ctx_slots=8 groups=11 rec'] | 7317 | 122.2 | 0 | 0 | 0 | KYTY_AV_TRACE,KYTY_CACHE_MODE,KYTY_GATE_FILE,KYTY_GPU_CLOCK_PIN,KYTY_GPU_HANG_ABORT_S,KYTY_GPU_MARKERS,KYTY_QUEUE_TRACE,KYTY_SAMPLE_GATE,KYTY_SHADER_REGISTER_TRACE,KYTY_SHADER_SEED_PATH,KYTY_S_PCW
+  C:/kyty/s288/s15/log_k_13.txt | 2c9b69b9 | FS8 | 302347b | - | ['RtSkip: mode 1 ctx_slots=8 groups=11 rec'] | 18128 | 302.5 | 0 | 0 | 0 | KYTY_GATE_FILE,KYTY_GPU_CLOCK_PIN,KYTY_GPU_HANG_ABORT_S,KYTY_GPU_MARKERS,KYTY_QUEUE_TRACE,KYTY_SAMPLE_GATE,KYTY_S_PCW
+  C:/kyty/s288/s15/log_u_13.txt | 2c9b69b9 | FS8 | 302347b | - | ['RtSkip: mode 1 ctx_slots=8 groups=11 rec'] | 7205 | 120.3 | 0 | 0 | 0 | KYTY_AV_TRACE,KYTY_CACHE_MODE,KYTY_GATE_FILE,KYTY_GPU_CLOCK_PIN,KYTY_GPU_HANG_ABORT_S,KYTY_GPU_MARKERS,KYTY_QUEUE_TRACE,KYTY_SAMPLE_GATE,KYTY_SHADER_REGISTER_TRACE,KYTY_SHADER_SEED_PATH,KYTY_S_PCW
+  C:/kyty/s288/s18c/log_s18_c13.txt | b3cee576 | S18 | 0005e11 | - | ['RtSkip: mode 1 ctx_slots=8 groups=11 rec'] | 19938 | 336.8 | 0 | 0 | 0 | KYTY_FIX_F19,KYTY_GATE_FILE,KYTY_GPU_CLOCK_PIN,KYTY_GPU_HANG_ABORT_S,KYTY_GPU_MARKERS,KYTY_QUEUE_TRACE,KYTY_SAMPLE_GATE,KYTY_SHADER_SEED,KYTY_S_REPLAY
+  C:/kyty/s288/s18c/log_s18_e2.txt | b3cee576 | S18 | 0005e11 | - | ['RtSkip: mode 1 ctx_slots=8 groups=11 rec'] | 19929 | 332.6 | 0 | 0 | 0 | KYTY_AV_TRACE,KYTY_GATE_FILE,KYTY_GPU_CLOCK_PIN,KYTY_GPU_HANG_ABORT_S,KYTY_GPU_MARKERS,KYTY_QUEUE_TRACE,KYTY_SAMPLE_GATE,KYTY_SHADER_SEED
+mini_giants_garden entries 10 hold >= 90 s 10 sum hold h 0.60 with signature 1
+  on line binaries 6 hold >= 90 s 6 sum hold h 0.39

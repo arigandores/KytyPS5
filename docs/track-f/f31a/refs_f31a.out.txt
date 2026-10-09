@@ -1,0 +1,13 @@
+ok   6fbdcf67:src/libs/agc.cpp:4219
+ok   6fbdcf67:src/libs/agc.cpp:49
+ok   6fbdcf67:src/libs/agc.cpp:4347
+ok   6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:4990
+ok   6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3346
+ok   6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3520
+ok   6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3553
+ok   6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3718
+ok   6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3759
+ok   6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3705
+ok   6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:1606
+refs 11
+ALL OK

@@ -1,0 +1,39 @@
+C:/kyty/f287/f30f/log_f30_s3_c3.txt window hold (141.2, 151.2] s lines 44490
+   4800 PAR handle 
+   4800 PAR op    
+   3000 PAR state 
+   2400 PAR data_offset 
+   2400 PAR flags       
+   1800 PAR queue  
+   1800 PAR packet 
+   1800 PAR acb   
+   1800 PAR size  
+   1800 PAR flags 
+   1800 PAR indirect_args 
+   1800 PAR modifier      
+   1200 HDR libkernel::libkernel::PthreadCondWait()
+   1200 PAR cache_policy                      
+   1200 PAR buffer                            
+   1200 PAR buffer_size_in_bytes              
+   1200 PAR reset_count                       
+   1200 PAR force_reset                       
+   1200 PAR report_and_reset                  
+   1200 PAR reporting_interval_in_#k_clocks 
+    600 PAR user_id 
+    600 PAR large_motor 
+    600 PAR small_motor 
+    600 PAR data   
+    600 PAR num    
+    600 PAR video_out_handle     
+    600 PAR display_buffer_index 
+    600 PAR flipPendingNum 
+     30 PAR port 
+     21 FaultTrace-gpu: addr=# rip=+# access=# us=# site
+     10 PAR count 
+     10 PAR processTime 
+     10 PAR processTimeCounter 
+      4 MemStats: heap=# flags=# size=# usage=# budget=#
+      2 AudioPropagation: calls total=# handles=# System
+      1 FixB#Ext: mode=# extent=#x# hit=# applied=# draw
+      1 PAR call 
+      1 FixB#: mode=# hit=# applied=# drawn=# rearm=# hi

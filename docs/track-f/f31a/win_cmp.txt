@@ -1,0 +1,50 @@
+C:/kyty/f287/f30m/log_f30_s3_c5.txt window hold (141.2, 151.3] s lines 44604
+C:/kyty/f287/f30f/log_f30_s3_c3.txt window hold (141.2, 151.2] s lines 44490
+C:/kyty/f287/f30f/log_f30_s3_v.txt window hold (141.2, 151.2] s lines 44520
+     c5      c3       v  kind
+   4808    4800    4800  PAR handle
+   4808    4800    4800  PAR op
+   3005    3000    3000  PAR state
+   2404    2400    2400  PAR data_offset
+   1803    1800    1800  PAR packet
+   1803    1800    1800  PAR queue
+   1803    1800    1800  PAR size
+   1803    1800    1800  PAR modifier
+   1803    1800    1800  PAR flags
+   1803    1800    1800  PAR acb
+   1803    1800    1800  PAR indirect_args
+   1205    1200    1200  HDR libkernel::libkernel::PthreadCondWait()
+   1202    1200    1200  PAR buffer_size_in_bytes
+   1202    1200    1200  PAR reset_count
+   1202    1200    1200  PAR cache_policy
+   1202    1200    1200  PAR force_reset
+   1202    1200    1200  PAR report_and_reset
+   1202    1200    1200  PAR buffer
+   1202    1200    1200  PAR reporting_interval_in_#k_clocks
+    601     600     600  PAR num
+    601     600     600  PAR data
+    601     600     600  PAR user_id
+    601     600     600  PAR large_motor
+    601     600     600  PAR video_out_handle
+    601     600     600  PAR small_motor
+    601     600     600  PAR display_buffer_index
+    600     600     600  PAR flipPendingNum
+     41      21      52  FaultTrace-gpu: addr=# rip=+# access=# us=# site
+     24      30      28  PAR port
+     10      10      10  PAR processTime
+     10      10      10  PAR count
+     10      10      10  PAR processTimeCounter
+      4       4       4  MemStats: heap=# flags=# size=# usage=# budget=#
+      3       0       0  in C:\kyty\f#\f#k\wt\src\loader\runtimeLinker.cp
+      3       0       0  <empty>
+      3       0       0  --- Error ---
+      3       0       0  There are too many objects/batches in this scene
+      3       0       0  --- Build ---
+      3       0       0  Fork build arigandores/KytyPS# #fbdcf#
+      3       0       0  Unhandled host exception: type=# code=# pc=# acc
+      3       0       0  ASSERT: D:\asobi\#.#\source\engine\js\src\framew
+      2       2       2  AudioPropagation: calls total=# handles=# System
+      0       1       2  FixB#Ext: mode=# extent=#x# hit=# applied=# draw
+      1       1       1  FixB#: mode=# hit=# applied=# drawn=# rearm=# hi
+      1       1       1  PAR call
+      1       0       0  LogAsync: full_waits=# full_wait_us=# stalls=# s

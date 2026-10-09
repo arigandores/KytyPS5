@@ -1,0 +1,47 @@
+C:/kyty/f287/f30m/log_f30_s3_c5.txt window hold (141.2, 151.3] s lines 44604
+   4808 PAR handle 
+   4808 PAR op    
+   3005 PAR state 
+   2404 PAR data_offset 
+   2404 PAR flags       
+   1803 PAR queue  
+   1803 PAR packet 
+   1803 PAR acb   
+   1803 PAR size  
+   1803 PAR flags 
+   1803 PAR indirect_args 
+   1803 PAR modifier      
+   1205 HDR libkernel::libkernel::PthreadCondWait()
+   1202 PAR cache_policy                      
+   1202 PAR buffer                            
+   1202 PAR buffer_size_in_bytes              
+   1202 PAR reset_count                       
+   1202 PAR force_reset                       
+   1202 PAR report_and_reset                  
+   1202 PAR reporting_interval_in_#k_clocks 
+    601 PAR user_id 
+    601 PAR large_motor 
+    601 PAR small_motor 
+    601 PAR data   
+    601 PAR num    
+    601 PAR video_out_handle     
+    601 PAR display_buffer_index 
+    600 PAR flipPendingNum 
+     41 FaultTrace-gpu: addr=# rip=+# access=# us=# site
+     24 PAR port 
+     10 PAR count 
+     10 PAR processTime 
+     10 PAR processTimeCounter 
+      4 MemStats: heap=# flags=# size=# usage=# budget=#
+      3 ASSERT: D:\asobi\#.#\source\engine\js\src\framew
+      3 
+      3 There are too many objects/batches in this scene
+      3 --- Build ---
+      3 Fork build arigandores/KytyPS# #fbdcf#
+      3 --- Error ---
+      3 Unhandled host exception: type=# code=# pc=# acc
+      3 in C:\kyty\f#\f#k\wt\src\loader\runtimeLinker.cp
+      2 AudioPropagation: calls total=# handles=# System
+      1 PAR call 
+      1 FixB#: mode=# hit=# applied=# drawn=# rearm=# hi
+      1 LogAsync: full_waits=# full_wait_us=# stalls=# s

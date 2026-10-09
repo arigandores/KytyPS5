@@ -1,0 +1,49 @@
+binary         name         logs  entries    hours   sig
+dac02fb9       FSc            45       49     5.04     0
+e342b839                      47       45     4.16     0
+2c9b69b9       FS8            55       61     3.83     0
+2d0c8815                      38       38     3.53     0
+9325446c       FS6            26       26     2.41     0
+b3cee576       S18            29       27     2.24     0
+abfded5e       FS10           63       63     2.18     0
+adb0c82f       S12            44       50     2.12     0
+ff16284f                      26       26     1.79     0
+3bc7ada7       T (F30d)       27       27     1.52     0
+9745eb78                      22       22     1.52     0
+4aa62e95       P23            21       21     1.29     0
+6bad00f3                      20       20     1.23     0
+4bb8bceb                      20       20     1.23     0
+f3b3aa3b                      19       19     1.06     0
+56ee1914                       8        8     0.74     0
+35c4a754                       4        4     0.65     0
+bba692c6       T2 (F30k)      14       14     0.64     1
+d4328b0c                       6        6     0.56     0
+ed2686da                      12        8     0.48     0
+540c035a       FS3             7        7     0.48     0
+631ff987       FS5             5        5     0.47     0
+b9e0ee00                       5        5     0.46     0
+7e4ded19                       5        5     0.46     0
+4ad735ad                       5        5     0.40     0
+b714f5c4                       4        4     0.38     0
+b97efad4                       4        4     0.37     0
+31cbfee8       FS4             5        4     0.37     0
+9b00ad40                       6        6     0.36     0
+8df61c00       FS7             2        2     0.33     0
+c01bde0c                       4        4     0.32     0
+43ef1cc1                       9        4     0.30     0
+rev:722c5e7                    4        4     0.29     0
+2b5e2ce6                       3        3     0.28     0
+bbad499c       FS2             5        5     0.25     0
+ea51ae80       FS11            3        3     0.23     0
+d8756dce                       7        7     0.21     0
+9235a7ac       base128         6        6     0.20     0
+36e2b042                       2        2     0.19     0
+24efead3                       2        2     0.19     0
+3861eeea       FS9             2        2     0.18     0
+91f155b7                       2        2     0.18     0
+cabbd818                       2        2     0.18     0
+rev:d515b90                    3        3     0.17     0
+907569f6                       1        1     0.09     0
+rev:68602c4                    1        0     0.00     0
+line binaries total: logs 318 entries 331 hours 21.61 logs with signature 0
+all: logs 650 entries 651 hours 45.56 logs with signature 1

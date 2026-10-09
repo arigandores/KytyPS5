@@ -1,0 +1,11 @@
+ok   build line
+ok   entries (empty name ignored)
+ok   alpha frames/sum
+ok   beta frames/sum
+ok   entry times
+ok   signature counts
+ok   signature -> entry beta, hold before it
+ok   signature time
+ok   error counts
+ok   rtskip line
+ALL OK

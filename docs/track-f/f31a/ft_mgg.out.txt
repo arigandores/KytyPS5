@@ -1,0 +1,33 @@
+log_f30_s3_c5.txt frames 9036 hold 151.2 s | draws med 2062 p99 2500 max 4769 | disp med 166 max 417 | submits med 28 max 76 | dt med 16668 p99 17466 max 164577
+    window hold 141.2-151.2 s: frames 599 draws med 2058 max 3486 disp max 251 submits max 48 dt max 33412
+    last frames: n9314:d2056/c166/s26/16ms n9315:d2058/c166/s27/16ms n9316:d2046/c166/s27/16ms n9317:d2056/c166/s30/16ms n9318:d2056/c166/s27/16ms n9319:d2049/c166/s26/16ms n9320:d2043/c166/s26/16ms n9321:d2053/c166/s26/16ms n9322:d2052/c166/s26/17ms n9323:d2057/c166/s28/16ms n9324:d2058/c166/s27/16ms n9325:d2060/c166/s29/16ms
+log_f30_s3_c3.txt frames 9119 hold 152.2 s | draws med 2059 p99 2430 max 4362 | disp med 163 max 433 | submits med 26 max 63 | dt med 16685 p99 17231 max 150981
+    window hold 141.2-151.2 s: frames 600 draws med 2056 max 2256 disp max 179 submits max 30 dt max 17311
+    last frames: n9347:d2041/c166/s25/17ms n9348:d2053/c166/s25/16ms n9349:d2045/c166/s26/16ms n9350:d2043/c166/s25/16ms n9351:d2044/c166/s24/16ms n9352:d2044/c166/s24/16ms n9353:d2041/c166/s25/16ms n9354:d2045/c166/s25/16ms n9355:d2037/c166/s27/16ms n9356:d2051/c166/s26/17ms n9357:d2037/c166/s24/16ms n9358:d2030/c166/s27/16ms
+log_f30_s3_c4.txt frames 9107 hold 152.0 s | draws med 2059 p99 2368 max 4606 | disp med 163 max 433 | submits med 27 max 67 | dt med 16680 p99 17265 max 149147
+    window hold 141.2-151.2 s: frames 600 draws med 2060 max 2267 disp max 181 submits max 30 dt max 17369
+    last frames: n9296:d2066/c166/s26/16ms n9297:d2063/c166/s27/16ms n9298:d2068/c166/s26/16ms n9299:d2068/c166/s26/16ms n9300:d2072/c166/s26/16ms n9301:d2072/c166/s26/16ms n9302:d2075/c166/s27/16ms n9303:d2074/c166/s27/16ms n9304:d2073/c166/s27/16ms n9305:d2079/c166/s27/16ms n9306:d2065/c166/s26/16ms n9307:d2057/c166/s26/16ms
+log_f30_s3_v.txt frames 18142 hold 302.6 s | draws med 2061 p99 2320 max 4277 | disp med 166 max 415 | submits med 27 max 60 | dt med 16775 p99 18600 max 146218
+    window hold 141.2-151.2 s: frames 600 draws med 2058 max 2284 disp max 181 submits max 35 dt max 19198
+    last frames: n18330:d2204/c177/s28/18ms n18331:d2048/c166/s27/15ms n18332:d2060/c166/s27/18ms n18333:d2053/c166/s27/15ms n18334:d2062/c166/s27/18ms n18335:d2059/c166/s25/15ms n18336:d2056/c166/s27/18ms n18337:d2048/c166/s28/15ms n18338:d2054/c166/s28/18ms n18339:d2050/c166/s26/15ms n18340:d2052/c166/s27/17ms n18341:d2061/c166/s26/17ms
+log_k_13.txt frames 10906 hold 182.5 s | draws med 2059 p99 2506 max 4252 | disp med 163 max 570 | submits med 28 max 66 | dt med 16673 p99 17380 max 336956
+    window hold 141.2-151.2 s: frames 600 draws med 2061 max 2548 disp max 206 submits max 35 dt max 17595
+    last frames: n11156:d2059/c163/s27/16ms n11157:d2061/c163/s27/16ms n11158:d2069/c163/s29/16ms n11159:d2055/c163/s27/16ms n11160:d2064/c163/s29/16ms n11161:d2065/c163/s29/16ms n11162:d2066/c163/s29/17ms n11163:d2062/c163/s30/16ms n11164:d2064/c163/s29/16ms n11165:d2061/c163/s28/16ms n11166:d2066/c163/s30/16ms n11167:d2055/c163/s29/16ms
+log_k_13.txt frames 18128 hold 302.5 s | draws med 2061 p99 2327 max 4424 | disp med 166 max 636 | submits med 27 max 67 | dt med 16670 p99 17367 max 330985
+    window hold 141.2-151.2 s: frames 600 draws med 2063 max 2261 disp max 179 submits max 33 dt max 17603
+    last frames: n18353:d2054/c166/s27/16ms n18354:d2058/c166/s26/16ms n18355:d2059/c166/s28/16ms n18356:d2049/c166/s27/16ms n18357:d2055/c166/s28/17ms n18358:d2052/c166/s25/16ms n18359:d2064/c166/s27/17ms n18360:d2044/c166/s28/16ms n18361:d2053/c166/s29/16ms n18362:d2055/c166/s25/16ms n18363:d2051/c166/s28/17ms n18364:d2048/c166/s27/16ms
+log_s18_c13.txt frames 19938 hold 336.8 s | draws med 2061 p99 2352 max 4775 | disp med 166 max 481 | submits med 28 max 58 | dt med 16666 p99 17422 max 3715370
+    window hold 141.2-151.2 s: frames 600 draws med 2061 max 2657 disp max 215 submits max 37 dt max 17611
+    last frames: n20265:d2051/c166/s28/16ms n20266:d2058/c166/s27/16ms n20267:d2039/c166/s26/16ms n20268:d2063/c166/s28/16ms n20269:d2053/c166/s28/16ms n20270:d2042/c166/s28/17ms n20271:d2055/c166/s28/16ms n20272:d2047/c166/s27/17ms n20273:d2046/c166/s28/16ms n20274:d2015/c156/s29/17ms n20275:d2079/c176/s29/16ms n20276:d2056/c166/s27/16ms
+log_s18_e2.txt frames 19929 hold 332.6 s | draws med 2059 p99 2383 max 4701 | disp med 166 max 445 | submits med 28 max 74 | dt med 16679 p99 18686 max 193550
+    window hold 141.2-151.2 s: frames 600 draws med 2062 max 2436 disp max 187 submits max 35 dt max 19170
+    last frames: n20403:d2249/c179/s33/16ms n20404:d2153/c177/s33/16ms n20405:d2056/c166/s29/16ms n20406:d2049/c166/s28/17ms n20407:d2050/c166/s27/16ms n20408:d2052/c166/s28/17ms n20409:d2062/c166/s28/14ms n20410:d2058/c166/s29/18ms n20411:d2056/c166/s30/15ms n20412:d2066/c166/s29/18ms n20413:d2061/c168/s29/15ms n20414:d2057/c166/s27/18ms
+log_fs_g.txt frames 19917 hold 332.7 s | draws med 2059 p99 2357 max 4779 | disp med 166 max 433 | submits med 28 max 59 | dt med 16703 p99 18876 max 172573
+    window hold 141.2-151.2 s: frames 600 draws med 2054 max 2265 disp max 183 submits max 37 dt max 19088
+    last frames: n20138:d2123/c176/s27/17ms n20139:d2056/c166/s28/15ms n20140:d2061/c166/s30/18ms n20141:d2053/c166/s28/15ms n20142:d2068/c166/s29/18ms n20143:d2056/c166/s31/15ms n20144:d2059/c166/s28/17ms n20145:d2064/c166/s27/15ms n20146:d2063/c166/s28/17ms n20147:d2065/c166/s27/15ms n20148:d2060/c166/s28/18ms n20149:d2060/c166/s26/15ms
+log_v144_20.txt frames 19864 hold 332.7 s | draws med 2060 p99 2669 max 5258 | disp med 166 max 433 | submits med 29 max 77 | dt med 16684 p99 19852 max 162163
+    window hold 141.2-151.2 s: frames 595 draws med 2058 max 4728 disp max 338 submits max 61 dt max 35300
+    last frames: n20197:d2067/c166/s28/15ms n20198:d2068/c166/s27/17ms n20199:d2056/c166/s30/15ms n20200:d2067/c166/s26/18ms n20201:d2060/c166/s27/14ms n20202:d2061/c166/s25/18ms n20203:d2066/c166/s26/14ms n20204:d2064/c166/s25/18ms n20205:d2061/c166/s29/15ms n20206:d2074/c166/s27/18ms n20207:d2055/c166/s27/14ms n20208:d2066/c166/s27/17ms
+log_f4c_g.txt frames 19308 hold 332.6 s | draws med 2037 p99 3924 max 4757 | disp med 166 max 361 | submits med 29 max 62 | dt med 16770 p99 34269 max 172147
+    window hold 141.2-151.2 s: frames 593 draws med 2059 max 4293 disp max 332 submits max 60 dt max 35707
+    last frames: n19687:d1823/c166/s31/16ms n19688:d1781/c126/s22/16ms n19689:d1774/c165/s29/16ms n19690:d1879/c149/s26/16ms n19691:d1680/c164/s30/16ms n19692:d3677/c246/s50/31ms n19693:d2037/c166/s29/18ms n19694:d1925/c161/s28/18ms n19695:d1277/c110/s21/13ms n19696:d2209/c166/s28/18ms n19697:d1618/c166/s31/14ms n19698:d2044/c147/s26/19ms

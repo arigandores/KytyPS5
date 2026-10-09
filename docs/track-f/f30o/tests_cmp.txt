@@ -1,0 +1,3 @@
+baseline lines 170 T3 lines 170 equal in order False equal as multisets False
+only baseline ['[replay] walk address: reads=4 low=00629900 exact=0 canonical=0 why=residual branch=addr culprit=30:role2 n=1']
+only T3 ['[replay] walk address: reads=4 low=00579f00 exact=0 canonical=0 why=residual branch=addr culprit=30:role2 n=1']

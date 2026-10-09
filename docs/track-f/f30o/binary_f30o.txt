@@ -1,0 +1,39 @@
+F30o (HPP-725): binary T3 - worktree C:/kyty/f287/f30o/wt (T2 6fbdcf67 + cherry-pick of main d25a78bc = ea38426b)
+sha256 505969510fb20f7ce56a5195b3b6d2209af812bc0c2c85eccb6368a712b1bf34 build/install/kyty_emulator.exe (24849408 bytes)
+copy C:/kyty/f287/bin/kyty_emulator_50596951.exe exists=True
+version strings KytyPS5-2026-09-15-6a2987a-1908-gea38426b
+count 'KYTY_RT_SKIP' 1
+count 'rtskip' 1
+count 'rts_bad_b\\0' 1
+count 'rts_bad_rx\\0' 1
+count 'rts_bad_r\\0' 1
+count 'rts_bad_xr\\0' 1
+count 'rts_bad_xc\\0' 1
+count 'rts_bad_xe\\0' 1
+count 'rts_bad_s\\0' 1
+count 'rts_bad_p\\0' 1
+count 'rts_bad_m\\0' 1
+count 'rts_bad_l\\0' 1
+count 'rts_bad_noreg\\0' 1
+count 'rts_inj\\0' 1
+count 'rts_inj_s\\0' 1
+count 'rts_inj_race\\0' 1
+count 'rts_inj_nos\\0' 1
+count 'rts_inj_none\\0' 1
+count 'RtSkipVerify: MISMATCH' 1
+count 'RtSkip: mode ' 1
+count 'KYTY_FIX_B36' 1
+count 'KYTY_FIX_B13' 1
+count 'KYTY_FIX_B12' 0
+count 'KYTY_DIAG_B32' 0
+count 'KYTY_DIAG_F5' 0
+count 'KYTY_DIAG_F6' 0
+count 'LogAsync: mode=' 2
+count '9177b4267de1fb8bac7d1113afd8733210addfac' 1
+kytyGitVersion.h: #define KYTY_GIT_VERSION "KytyPS5-2026-09-15-6a2987a-1908-gea38426b"
+kytyGitVersion.h: #define KYTY_GIT_HASH "ea38426"
+kytyGitVersion.h: #define KYTY_GIT_REVISION "ea38426b70369fe8bdb3d7a64578f6bd80f182be"
+kytyGitVersion.h: #define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"
+kytyGitVersion.h: #define KYTY_BUILD_LABEL "Official build " KYTY_RELEASE_TAG
+kytyGitVersion.h: #define KYTY_BUILD_LABEL "Fork build " KYTY_BUILD_REPOSITORY " " KYTY_GIT_HASH
+kytyGitVersion.h: #define KYTY_BUILD_LABEL "Source build " KYTY_GIT_HASH

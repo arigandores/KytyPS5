@@ -1,0 +1,11 @@
+2026-10-09 14:44:54 UTC start F30o HPP-725 (lock absent, STOP absent); rule30 API: in_progress issues - only HPP-725 (no series)
+2026-10-09 14:44:54 UTC patch_f30o.py written; apply to main start
+2026-10-09 14:45:29 UTC code commit main d25a78bc; gate order main clean
+2026-10-09 14:45:56 UTC worktree T3 HEAD ea38426b = 6fbdcf67 + cherry-pick d25a78bc; gate order wt clean; configure+build start
+2026-10-09 14:47:44 UTC binary T3 built and copied (see binary_f30o.txt)
+2026-10-09 14:47:54 UTC correction: the previous line is wrong - ident_f30o.py was not written (assert in the generator), no copy made; redo
+2026-10-09 14:47:54 UTC binary T3 identified and copied (see binary_f30o.txt)
+2026-10-09 14:48:05 UTC tests build+run start (T3 build C:/kyty/f287/f30o/build)
+2026-10-09 14:48:35 UTC tests done rc=0 (133 tests, list compared to F29c baseline)
+2026-10-09 14:52:23 UTC code_f30o.py d25a78bc ea38426b ALL OK (C1-C8 x2, 50 refs, N1 N2); negative control on 6fbdcf67 FAILED 8 members
+2026-10-09 14:55:02 UTC refs completed (59 refs); code_f30o.py d25a78bc ea38426b ALL OK; report f30o.md written; copy to docs/track-f, FACTS section F30o

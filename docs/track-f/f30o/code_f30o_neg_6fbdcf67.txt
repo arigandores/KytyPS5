@@ -1,0 +1,65 @@
+== commit 6fbdcf67
+FAIL C1 knob row {"KYTY_RT_SKIP", "rtskip", 1, 6} once, no 1..5 row
+FAIL C2 code lines = parent + the 5 listed blocks (64 lines) inserted whole, nothing else
+FAIL C3 one test of t_rts against 6 (line []), inside the PA and PB block, before the snapshots and the capture
+FAIL C3b RtsInject called once
+PASS C3c tests of the other values unchanged: t_rts == 1 x2, t_rts != 3 x1, t_rts != 4 x1, t_rts != 5 x1
+FAIL C4 t_rts_inj: set x1 right after the Transit, cleared x2 (latch, post), read x1; Transit to eGeneral x1 in RtsInject
+FAIL C4b five counters once each: rts_inj / rts_inj_none in RtsInject; race / s / nos in the post before RtsReport
+FAIL C5 enum: the five counters after RtsBadL in order
+FAIL C6 FrameTrace-x table: five rows once each, right after rts_bad_l
+PASS C7 files of the commit: ['src/common/frameStats.h', 'src/common/gates.cpp', 'src/common/gates.h', 'src/graphics/host_gpu/renderer/renderDraw.cpp', 'src/graphics/presentation/videoOut.cpp']
+PASS C8 nothing under src/graphics/shader (translation signature)
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1413
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1416
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1572
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1622
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1654
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1656
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1663
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1666
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1669
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1673
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1689
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:2151
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:2232
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:2238
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:2367
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:2381
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:3432
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:3811
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:3816
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:3824
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:3825
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:3826
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:3827
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:3895
+PASS R ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:3897
+PASS R ea38426b:src/graphics/host_gpu/renderer/image/image.cpp:120
+PASS R ea38426b:src/graphics/host_gpu/renderer/image/image.cpp:133
+PASS R ea38426b:src/graphics/host_gpu/renderer/image/image.cpp:204
+PASS R ea38426b:src/graphics/host_gpu/renderer/image/image.cpp:237
+PASS R ea38426b:src/graphics/host_gpu/renderer/image/image.cpp:243
+PASS R ea38426b:src/graphics/host_gpu/renderer/image/image.cpp:278
+PASS R ea38426b:src/graphics/host_gpu/renderer/image/image.cpp:283
+PASS R ea38426b:src/graphics/host_gpu/renderer/context.cpp:383
+PASS R ea38426b:src/graphics/host_gpu/renderer/context.cpp:452
+PASS R ea38426b:src/graphics/host_gpu/renderer/context.cpp:459
+PASS R ea38426b:src/graphics/host_gpu/renderer/context.cpp:465
+PASS R ea38426b:src/graphics/host_gpu/renderer/context.cpp:482
+PASS R ea38426b:src/graphics/host_gpu/renderer/context.cpp:488
+PASS R ea38426b:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:6109
+PASS R ea38426b:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:6566
+PASS R ea38426b:src/graphics/host_gpu/graphicContext.h:202
+PASS R ea38426b:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2346
+PASS R ea38426b:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2420
+PASS R ea38426b:src/common/gates.cpp:439
+PASS R ea38426b:src/common/frameStats.h:2493
+PASS R ea38426b:src/graphics/presentation/videoOut.cpp:3200
+PASS R 41ba5772:docs/ROADMAP.md:24163
+PASS R db7b0257:docs/track-f/f30k.md:58
+PASS R 3def0d25:docs/track-f/f30l-review.md:59
+PASS R 3def0d25:docs/track-f/f30l-review.md:69
+PASS N1 negative control (line + 1) fails
+PASS N2 negative control (anchor with a changed character) fails
+FAILED

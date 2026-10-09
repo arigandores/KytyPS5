@@ -1,0 +1,10 @@
+regress fs11c_read.py sha256 9ce0471052a23fdd463c9c4ad7456d734209e3b9710bc38ae0ef03abfdddd31f
+b12_v (f29e) as fs11_v: members NO []; FixB12 [(1, 718)]; FixB12Stat lines 34 bad 0 -> as expected
+  info {"first_scene_n": 359, "frames_ge1s": 0, "frames_ge1s_with_first": 0, "hold_s": 334.2, "max_dt": 183578, "mean_dt_us": 32589.8, "scene_frames": 10254, "summary": {"bytes": 327570844, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 730715, "max_queued_bytes": 77888, "stall_cut": 0, 
+b12_w (f29e) as fs11_w: members NO []; FixB12 [(1, 722)]; FixB12Stat lines 33 bad 0 -> as expected
+  info {"frames_ge1s_report": 0, "mean_dt_us": 131152.4, "scene_frames": 2468, "summary": {"bytes": 389136612, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 1278416, "max_queued_bytes": 27395, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "vkw": 908268}
+b12_v (f29e) as fs11_z: members NO ['FixB12: mode=0 (every line) before the first Guest', 'FixB12Stat: lines 0 (parsed 34, unparsable 0) - it']; FixB12 [(1, 718)]; FixB12Stat lines 34 bad 0 -> as expected
+  info {"b13": [[1, 716]], "first_scene_n": 359, "frames_ge1s_report": 0, "glitches": 0, "hold_s": 334.2, "logasync_mode": ["LogAsync: mode=1 limit_bytes=268435456 d"], "max_dt": 183578, "mean_dt_us": 32589.8, "scene_frames": 10254, "summary": {"bytes": 327570844, "drain_timeouts": 0, "full_wait_us": 0, "f
+fs10_v (fs10c) as fs11_z: members NO ['FixB12: mode=0 (every line) before the first Guest']; FixB12 []; FixB12Stat lines 0 bad 0 -> as expected
+  info {"b13": [[1, 716]], "first_scene_n": 200, "frames_ge1s_report": 0, "glitches": 0, "hold_s": 334.3, "logasync_mode": ["LogAsync: mode=1 limit_bytes=268435456 d"], "max_dt": 168052, "mean_dt_us": 33202.0, "scene_frames": 10069, "summary": {"bytes": 335832895, "drain_timeouts": 0, "full_wait_us": 0, "f
+ALL OK

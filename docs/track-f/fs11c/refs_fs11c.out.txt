@@ -1,0 +1,14 @@
+OK   cfd646d1:docs/ROADMAP.md:24026 anchor 647. **\u0417\u0432\u0435\u043d\u043e F29f \u0442\u0440\u043
+OK   cfd646d1:docs/ROADMAP.md:24031 anchor (\u0434) **\u041e\u0442\u0433\u0440\u0443\u0437\u043a\u0430 
+OK   cfd646d1:docs/ROADMAP.md:24035 anchor (\u0438) **\u041d\u0435 \u0437\u0430\u044f\u0432\u043b\u044f
+OK   cfd646d1:docs/ROADMAP.md:24061 anchor 652. **\u0417\u0432\u0435\u043d\u043e FS11b \u0442\u0440\u04
+OK   cfd646d1:docs/ROADMAP.md:24067 anchor (1) **\u041d1 \u2014 \xab\u043d\u0435 \u0438\u0441\u043f\u04
+OK   cfd646d1:docs/ROADMAP.md:24068 anchor (2) **\u041d2 \u2014 \xab\u043d\u0435 \u0438\u0441\u043f\u04
+OK   cfd646d1:docs/ROADMAP.md:24073 anchor (\u0431) **\u0427\u043b\u0435\u043d\u044b \u0437\u0430\u0434
+OK   ee9632be:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:604 anchor LOGF("FixB12: mode=%d
+OK   ee9632be:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:3439 anchor LOGF("FixB12Stat: passes=%llu rewalk=%llu rwd=%llu lskip=%ll
+OK   ee9632be:src/graphics/host_gpu/regionManager.h:65 anchor // BufferCache's constructor prints "FixB12: mode=<0|1>" onc
+OK   775302f6:docs/track-f/f29e.md:98 anchor | `b12_v` | \u0443\u0434\u0435\u0440\u0436\u0430\u043d\u0438
+negative control (line + 1): FAILED as expected
+REFS 11, mismatches 0
+ALL OK

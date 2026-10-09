@@ -1,0 +1,14 @@
+--- cherry-pick c94c49e0
+Auto-merging src/common/frameStats.h
+Auto-merging src/graphics/host_gpu/regionManager.h
+Auto-merging src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+Auto-merging src/graphics/host_gpu/renderer/cache/bufferCache.h
+Auto-merging src/graphics/presentation/videoOut.cpp
+[detached HEAD 2a371d92] track F link F29c (HPP-702): KYTY_FIX_B12 (default 0) - BDA pass number and revisit of a region in the same pass; stand branch =1 and arms B12-9..B12-12 (ROADMAP s122 item 639(d), (g)(1)-(5))
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Fri Oct 9 00:29:06 2026 +0200
+ 7 files changed, 243 insertions(+), 7 deletions(-)
+2a371d921c4c2864044314074e09c8ccc872ccfb edebaad9ca41d2e7a083959b3c59a9f2dd54886a track F link F29c (HPP-702): KYTY_FIX_B12 (default 0) - BDA pass number and re
+--- git status --short (0 = clean)
+0
+CP OK

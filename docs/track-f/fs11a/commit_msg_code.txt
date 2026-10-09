@@ -1,0 +1,14 @@
+track F link FS11a (HPP-714): KYTY_FIX_B12 default 0 -> 1 (ROADMAP s122 item 647(d)(1))
+
+FixB12Enabled reads KYTY_FIX_B12 in the form of FS4a 17adaf80 / FS9a (FixB13Enabled) / FS10a 7f34b1e2: unset or "" = ON,
+0/false/off/no = OFF, any other value as EnvValueOn; still one reading per process (static local). The line
+"FixB12: mode=<0|1>" of the BufferCache constructor, the FixB12Stat: line and the code of c94c49e0 / 726e751e are
+unchanged; only the header comment and the reading change. Outside the translation signature set (regionManager.h, as
+FS9a). The stand b12_bdastamp_stand reads the knob through the same function: without the variable it now runs the =1
+branch; its runner run_f29c3.py sets KYTY_FIX_B12 explicitly in every arm.
+
+Shipping binary FS11: clean worktree of FS10 dc5d4712 + cherry-pick of 73a6e411 (stand F29a), c94c49e0, 726e751e (code
+F29c), 0db3b3eb (stand arm B12-9b) + this commit; the F30d code and KYTY_DIAG_B32 are not in it. Not installed; no game
+run (WIP until FS11c).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

@@ -1,0 +1,9 @@
+--- cherry-pick 0db3b3eb
+[detached HEAD eded064e] track F link F29c3 (HPP-713): B12 stand arm B12-9b - hook=bitonly announces the region bit between the visits with no page write and no stamp move; fields bit1 and late_bit_skips (ROADMAP s122 item 645(v), RC1 of F29d)
+ Author: arigandores <74600980+arigandores@users.noreply.github.com>
+ Date: Fri Oct 9 01:42:15 2026 +0200
+ 1 file changed, 30 insertions(+), 9 deletions(-)
+eded064e3f9799af47b6103ac2f5cf7e8c344568 dab16a57ca77f3116dd50ba7f417b7e84bbc0f34 track F link F29c3 (HPP-713): B12 stand arm B12-9b - hook=bitonly announces th
+--- git status --short (0 = clean)
+0
+CP OK

@@ -1,0 +1,7 @@
+ok   cb022252:src/graphics/host_gpu/regionManager.h:67
+ok   ee9632be:src/graphics/host_gpu/regionManager.h:66
+ok   ee9632be:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:602
+ok   ee9632be:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:604
+ok   ee9632be:src/graphics/host_gpu/renderer/renderContext.cpp:382
+REFS 5 ALL OK
+negctl (+1 shift) FAILED

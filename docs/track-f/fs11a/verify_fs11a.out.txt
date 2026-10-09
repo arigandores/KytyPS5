@@ -1,0 +1,34 @@
+FS11 HEAD ee9632be1d8741547c345fd032ebf98c1e9e3e03 base dc5d47127037ec0a3c914bedf4dce01d660d2bcf
+V1 73a6e411 -> edebaad9: changed lines 464 / 464, equal True; git cherry - 73a6e4116af765f30493654c6965f484952992b3
+V1 c94c49e0 -> 2a371d92: changed lines 250 / 250, equal True; git cherry - c94c49e0bf40fe81ca2f0f3b3af8dd7d49224cc1 (member 647(d)(1))
+V1 726e751e -> dab16a57: changed lines 95 / 95, equal True; git cherry - 726e751eefe42e7c36c221e9ccf406396c0849b6 (member 647(d)(1))
+V1 0db3b3eb -> eded064e: changed lines 39 / 39, equal True; git cherry - 0db3b3eb68f4457c3a66d5916718a27223b1856b
+V1 cb022252 -> ee9632be: changed lines 11 / 11, equal True; git cherry - cb022252530ca1a9979d6b5db43c67627ea0b7b5
+V1 negative controls: 726e751e vs 2a371d92 equal False (want False); vs its own worktree commit with one line spoiled equal False (want False)
+V2 files of diff dc5d4712..FS11: CMakeLists.txt src/common/frameStats.h src/graphics/host_gpu/regionManager.h src/graphics/host_gpu/renderer/cache/bufferCache.cpp src/graphics/host_gpu/renderer/cache/bufferCache.h src/graphics/host_gpu/renderer/renderContext.cpp src/graphics/presentation/videoOut.cpp tests/B12BdaStampStand.cpp
+V2 files of the five source commits: CMakeLists.txt src/common/frameStats.h src/graphics/host_gpu/regionManager.h src/graphics/host_gpu/renderer/cache/bufferCache.cpp src/graphics/host_gpu/renderer/cache/bufferCache.h src/graphics/host_gpu/renderer/renderContext.cpp src/graphics/presentation/videoOut.cpp tests/B12BdaStampStand.cpp
+V2 file sets equal True; signed changed lines of the diff = sum of the five commits True (lines 807); negative control without FS11a equal False (want False)
+V2b paths of the diff outside tests/: CMakeLists.txt src/common/frameStats.h src/graphics/host_gpu/regionManager.h src/graphics/host_gpu/renderer/cache/bufferCache.cpp src/graphics/host_gpu/renderer/cache/bufferCache.h src/graphics/host_gpu/renderer/renderContext.cpp src/graphics/presentation/videoOut.cpp
+V2b files of c94c49e0, 726e751e, FS11a: src/common/frameStats.h src/graphics/host_gpu/regionManager.h src/graphics/host_gpu/renderer/cache/bufferCache.cpp src/graphics/host_gpu/renderer/cache/bufferCache.h src/graphics/host_gpu/renderer/renderContext.cpp src/graphics/presentation/videoOut.cpp tests/B12BdaStampStand.cpp
+V2b paths outside tests/ not of c94c49e0 / 726e751e / FS11a: ['CMakeLists.txt']
+   CMakeLists.txt brought by 73a6e411
+   CMakeLists +506 inside # Track F, F29a (HPP-699, ROADMAP s122 item 638(g)(2)): the B12 "bdastamp" stand (tests/B12BdaStampStand.cpp) 
+   CMakeLists +507 inside # MemoryTracker and RangeSet, a model of the BDA scan of RenderContext::PrepareBda. Run by
+   CMakeLists +508 inside # docs/track-f/f29a/run_stand_f29a.py, not by ctest.
+   CMakeLists +509 inside add_executable(b12_bdastamp_stand EXCLUDE_FROM_ALL
+   CMakeLists +510 inside 	"${KYTY_TESTS_DIR}/B12BdaStampStand.cpp"
+   CMakeLists +511 inside 	"${KYTY_SOURCE_DIR}/graphics/host_gpu/pageManager.cpp"
+   CMakeLists +512 inside 	"${KYTY_SOURCE_DIR}/graphics/host_gpu/memoryTracker.cpp"
+   CMakeLists +513 inside )
+   CMakeLists +514 inside target_link_libraries(b12_bdastamp_stand fmt::fmt common)
+   CMakeLists +515 inside target_include_directories(b12_bdastamp_stand PRIVATE ${inc_headers})
+   CMakeLists +516 inside 
+   CMakeLists: every changed line inside the b12_bdastamp_stand block (EXCLUDE_FROM_ALL), none removed: True
+V2b member by the letter (no path outside tests/ beyond c94c49e0 / 726e751e / FS11a): False; with the named exception CMakeLists.txt of 73a6e411 confined to the stand target: True
+V3 DEFAULT-ON base (15): KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 DEFAULT-ON FS11 (16): KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 FS11 = base + KYTY_FIX_B12 only: True; negative control at eded064e (before FS11a): difference empty, member there False (want False)
+V4 src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp blob base e1626ad67f22 FS11 e1626ad67f22 equal True; ParseMode unset/"" -> 3: True
+V5 paths of the diff under src/graphics/shader/: none
+V6 added lines naming KYTY_DIAG_B32 / F30d counters: 0 (comments 0); src/common/diagB32.h in base False, in FS11 False; 585d997d ancestor of FS11 False
+ALL OK

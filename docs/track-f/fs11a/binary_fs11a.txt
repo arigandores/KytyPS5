@@ -1,0 +1,22 @@
+FS11a (HPP-714): shipping binary FS11 - worktree C:/kyty/f287/fs11a/wt HEAD ee9632be1d8741547c345fd032ebf98c1e9e3e03
+sha256 ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce build/install/kyty_emulator.exe (24849408 bytes)
+copy C:/kyty/f287/bin/kyty_emulator_ea51ae80.exe
+version strings KytyPS5-2026-09-15-6a2987a-1910-gee9632be
+count 'KYTY_FIX_B12' 1
+count 'KYTY_FIX_B13' 1
+count 'KYTY_FIX_B36' 1
+count 'KYTY_DIAG_B32' 0
+count 'FixB12: mode=' 1
+count 'FixB12Stat:' 1
+count 'LogAsync: mode=' 2
+count 'KYTY_TEST_LOGSTALL' 2
+count 'KYTY_LONGFRAME' 1
+count 'rts_bad_b' 0
+count '9177b4267de1fb8bac7d1113afd8733210addfac' 1
+kytyGitVersion_base.h: #define KYTY_GIT_REVISION "dc5d47127037ec0a3c914bedf4dce01d660d2bcf"
+kytyGitVersion_base.h: #define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"
+kytyGitVersion_fs11.h: #define KYTY_GIT_REVISION "ee9632be1d8741547c345fd032ebf98c1e9e3e03"
+kytyGitVersion_fs11.h: #define KYTY_SHADER_SOURCE_HASH "9177b4267de1fb8bac7d1113afd8733210addfac"
+sha256 36c1a91e4590976dee1fd6ba19cbbdf4779f0e6d61a83382ddc2552146eb85c5 build/shader_cfg_tests.exe
+sha256 4daf3e30020acea7bf9eeed14f52bc0036c835fa9d9069227d26e409fbec8af0 build/memory_tracker_tests.exe
+sha256 2116221aa77012c83bce013b8f8696857ba7e78e786de128605f6fa91c05faff build/b12_bdastamp_stand.exe

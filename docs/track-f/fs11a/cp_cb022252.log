@@ -1,0 +1,9 @@
+--- cherry-pick cb022252
+Auto-merging src/graphics/host_gpu/regionManager.h
+[detached HEAD ee9632be] track F link FS11a (HPP-714): KYTY_FIX_B12 default 0 -> 1 (ROADMAP s122 item 647(d)(1))
+ Date: Fri Oct 9 02:50:11 2026 +0200
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+ee9632be1d8741547c345fd032ebf98c1e9e3e03 eded064e3f9799af47b6103ac2f5cf7e8c344568 track F link FS11a (HPP-714): KYTY_FIX_B12 default 0 -> 1 (ROADMAP s122 item 6
+--- git status --short (0 = clean)
+0
+CP OK

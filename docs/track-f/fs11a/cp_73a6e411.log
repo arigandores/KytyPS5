@@ -1,0 +1,10 @@
+--- cherry-pick 73a6e411
+Auto-merging CMakeLists.txt
+[detached HEAD edebaad9] track F link F29a (HPP-699): B12 bdastamp stand without the game (ROADMAP s122 item 638(g)(2))
+ Date: Fri Oct 9 00:08:15 2026 +0200
+ 2 files changed, 464 insertions(+)
+ create mode 100644 tests/B12BdaStampStand.cpp
+edebaad9ca41d2e7a083959b3c59a9f2dd54886a dc5d47127037ec0a3c914bedf4dce01d660d2bcf track F link F29a (HPP-699): B12 bdastamp stand without the game (ROADMAP s122
+--- git status --short (0 = clean)
+0
+CP OK

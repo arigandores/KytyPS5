@@ -1,0 +1,34 @@
+PASS D0 parent of T2 6fbdcf67 is T a1d1d863
+PASS D1 +/- lines of T..T2 = +/- lines of main 11236f5a (75 / 75)
+PASS D1b files T..T2 = 5, none under src/graphics/shader: ['src/common/frameStats.h', 'src/common/gates.cpp', 'src/common/gates.h', 'src/graphics/host_gpu/renderer/renderDraw.cpp', 'src/graphics/presentation/videoOut.cpp']
+PASS D2 on T2 6fbdcf67
+PASS D3 on T2 6fbdcf67
+PASS D3b on T2 6fbdcf67
+PASS D4 on T2 6fbdcf67
+PASS D5 on T2 6fbdcf67
+PASS D6 on T2 6fbdcf67
+PASS D7 knob row {"KYTY_RT_SKIP", "rtskip", 1, 5} once
+PASS B1 sha256 of the copy = bba692c6
+PASS B2 version string -g6fbdcf67 in the binary
+PASS B3 signature 9177b426 in the binary
+INFO PE TimeDateStamp 1791531830 = 2026-10-09 07:43:50 UTC (build time stamped into the image)
+mutant | D2 D3 D3b D4 D5 D6 | killed | code_f30k C2+C4c (emulated) passes?
+m1a =5 also drops PB 3-4                   | 0 0 0 1 1 1 | KILLED | -
+PASS mutant m1a =5 also drops PB 3-4 killed by D2-D6
+m1b =5 also drops PB 5                     | 0 0 0 1 1 1 | KILLED | -
+PASS mutant m1b =5 also drops PB 5 killed by D2-D6
+m2  =5 executes the skip                   | 0 0 1 1 1 1 | KILLED | -
+PASS mutant m2  =5 executes the skip killed by D2-D6
+m3a X source xc <-> xe                     | 1 1 1 1 0 1 | KILLED | yes (MISSED by code_f30k)
+PASS mutant m3a X source xc <-> xe killed by D2-D6
+m3b X source xr <-> xc (indent kept)       | 1 1 1 1 0 1 | KILLED | no
+PASS mutant m3b X source xr <-> xc (indent kept) killed by D2-D6
+m4a counters before the race return        | 1 1 1 0 1 1 | KILLED | -
+PASS mutant m4a counters before the race return killed by D2-D6
+m4b counter in the post, outside RtsReport | 1 1 1 0 1 1 | KILLED | -
+PASS mutant m4b counter in the post, outside RtsReport killed by D2-D6
+m5a at 0-4 the post compares at >= 3       | 0 0 1 1 1 1 | KILLED | -
+PASS mutant m5a at 0-4 the post compares at >= 3 killed by D2-D6
+m5b at 4 PB item 6 not applied             | 0 0 0 1 1 1 | KILLED | -
+PASS mutant m5b at 4 PB item 6 not applied killed by D2-D6
+ALL OK

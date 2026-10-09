@@ -1,0 +1,26 @@
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:1564
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:1566
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:1582
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:2169
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:2230
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3497
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3681
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3705
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3718
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3757
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3789
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3799
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3804
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3810
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3833
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3854
+PASS R 6fbdcf67:src/graphics/host_gpu/graphicContext.h:177
+PASS R 6fbdcf67:src/graphics/presentation/window/swapchain.cpp:827
+PASS R 6fbdcf67:src/graphics/presentation/window/swapchain.cpp:858
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/context.cpp:325
+PASS R 6fbdcf67:src/graphics/host_gpu/renderer/context.cpp:417
+PASS R 6fbdcf67:src/common/gates.cpp:438
+PASS N1 negative control (line + 1) fails
+PASS N2 negative control (anchor with a changed character) fails
+22 links
+ALL OK

@@ -1,0 +1,17 @@
+suite refs_f30q.py sha256 644b3030a9a65716eb0c6840049b1da7517bc38f4ed84b319d0934ae27347467 target docs/track-f/f30q.md
+PASS c4b2372d:docs/ROADMAP.md:24163 664. **\u0417\u0432\u0435\u043d\u043e F30n \u0442\u0440\u0435\u043a\u0
+PASS c4b2372d:docs/ROADMAP.md:24171 (\u0437) **\u0421\u0435\u0440\u0438\u044f F30q (Harness Engineer, \u04
+PASS c4b2372d:docs/ROADMAP.md:24172 (\u0438) **\u041f\u0440\u0430\u0432\u0438\u043b\u043e \u0447\u0442\u04
+PASS c4b2372d:docs/ROADMAP.md:24177 (\u043e) **\u041d\u0435 \u0437\u0430\u044f\u0432\u043b\u044f\u0435\u04
+PASS c4b2372d:docs/ROADMAP.md:24178 665. **\u0417\u0432\u0435\u043d\u043e F30p \u0442\u0440\u0435\u043a\u0
+PASS c4b2372d:docs/ROADMAP.md:24181 (\u0432) **RC1\u2013RC5 \u2014 \u0447\u043b\u0435\u043d\u044b \u043f\u
+PASS c4b2372d:docs/ROADMAP.md:24182 (\u0433) **RC6 \u2014 \u0440\u0435\u0448\u0435\u043d\u0438\u0435 \u043
+PASS ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1416 inline constexpr uint64_t   kRtsInjEvery = 4096;
+PASS ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:1654 void RtsInject(uint32_t cc, const RenderColorInfo* colors, Image* cons
+PASS ea38426b:src/graphics/host_gpu/renderer/renderDraw.cpp:3500 LOGF("RtSkip: mode %u ctx_slots=%u groups=%u rec_bytes=%u\n", armed,
+PASS ea38426b:src/graphics/presentation/videoOut.cpp:3200 {"rts_inj", FS::Counter::RtsInj, false},
+PASS ea38426b:src/common/gates.cpp:439 {"KYTY_RT_SKIP", "rtskip", 1, 6},
+negative control (line +1): FAILED as expected
+negative control (code line -1): FAILED as expected
+refs 12
+ALL OK

@@ -1,0 +1,11 @@
+suite regress_f30q.py sha256 5057e53c3aa75688620241c3bc314010b108cb00ec3c170806433b954d54e927 target f30q_read.py sha256 8fa28cc14b6bcb7de83068b86635119c52341561917c03a939376aec13852d11
+ok   (1) every FrameTrace-x line misses a field: lines 4610, missing 4610; first missing names [(18197, ['rts_inj', 'rts_inj_s', 'rts_inj_race', 'rts_inj_nos'])]
+ok   (1) RC4 (F30f) row NO, status NOT_ADMITTED
+ok   (2) (D1) NO (mode 5), (D7) NO, json binary row NO
+ok   (3) one strict mode line, value 5: mode_any 1, modes [(5, 16575)]
+ok   (4) process sums of 30 shared fields = F30m read.json (diff [])
+ok   (4) parse YES, RC1 (F30l) YES (close distance 1)
+ok   (4) RC1-RC3 (F30p) YES, RC4 (F30p) NO (pb 19839793 >= 4096, inj + none 0)
+ok   (4) (inj) NO and STOP code defect, K_S NO
+checks 8 failed 0
+ALL OK

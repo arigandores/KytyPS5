@@ -1,0 +1,5 @@
+reader f29e_read.py sha256 c739282671038419f69a597107ac4bddd0d6e467c208ca330a0436201521b853
+| tag | status | binary_sha256 | members | FixB12Stat last | glitches | video index | hold_s |
+|---|---|---|---|---|---|---|---|
+| b12_v | ADMITTED | cabbd818 | ALL YES | passes=226556 rewalk=0 rwd=0 lskip=0 | 0 | 10622 | 330.1 |
+| b12_w | ADMITTED | cabbd818 | ALL YES | passes=31145 rewalk=0 rwd=0 lskip=0 | None | None | 310.0 |

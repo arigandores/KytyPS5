@@ -1,0 +1,21 @@
+2026-10-09T00:33:55Z F29e go_f29e b12_w run check (item 587 (g)): RUN ALIVE 6e017250 status in_progress
+2026-10-09T00:33:56Z F29e go_f29e b12_w display before the lock (item 620 (g)(1)): dispstate ON idle_s 7145 utc 2026-10-09T00:33:56Z
+2026-10-09T00:35:30Z F29e go_f29e b12_w lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-09T00:35:31Z F29e go_f29e b12_w installed binary inside the lock before the tag: abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe
+2026-10-09T00:35:33Z F29e go_f29e b12_w manifest before: manifest C:/kyty/f287/f29e/runs/b12_w/manifest_before.tsv files 4790 bytes 1290693798 listsha 424427277b74d22372face6d29540ed53f2195279ff744f202f4567866a14303
+2026-10-09T00:35:34Z F29e go_f29e b12_w caches before against the base manifest of the seal (row): manifest cmp EQUAL files 4790 listsha 424427277b74d22372face6d29540ed53f2195279ff744f202f4567866a14303
+2026-10-09T00:35:36Z F29e go_f29e b12_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (265/184/5/661/130/ MB)
+2026-10-09T00:35:36Z F29e go_f29e b12_w state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-09T00:35:36Z
+2026-10-09T00:35:38Z F29e go_f29e b12_w installed the F29c copy cabbd818 for the tag: cabbd818397a8a299e7e64cf2d153197ad7e69e310015b5d473bb66f37802e95
+2026-10-09T00:35:38Z F29e go_f29e b12_w enter_scene start (level underwater_aerial_garden, SD 100, hold 310, harness form --emu-arg=--vulkan-validation --emu-arg=true, KYTY_FIX_B12=1 VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-09T00:41:29Z F29e go_f29e b12_w enter_scene rc 0; guard watch: 2026-10-09T00:41:28Z watch end, user process seen: no; hold watch: 2026-10-09T00:41:28Z watch end, user VM seen: no
+2026-10-09T00:41:30Z F29e go_f29e b12_w run: VERDICT: underwater_aerial_garden in 28.7 s - PASS (acceptance <= 90 s)
+2026-10-09T00:41:30Z F29e go_f29e b12_w log_b12_w.txt sha256 846dd824db6e8c6f1ff69c313f7a597d09fd4283521bc8f19b22e94434912e85
+2026-10-09T00:41:31Z F29e go_f29e b12_w installed binary returned from the pinned FS10 copy
+2026-10-09T00:41:31Z F29e go_f29e b12_w installed binary after the tag: abfded5ea629ea70b0307540248c79e699485d5d2008ea047bd939729a5ed3fe
+2026-10-09T00:41:34Z F29e go_f29e b12_w manifest of the run state (before the return): manifest C:/kyty/f287/f29e/runs/b12_w/manifest_run.tsv files 4790 bytes 1290693798 listsha 424427277b74d22372face6d29540ed53f2195279ff744f202f4567866a14303; run vs before: manifest cmp EQUAL files 4790 listsha 424427277b74d22372face6d29540ed53f2195279ff744f202f4567866a14303
+2026-10-09T00:41:37Z F29e go_f29e b12_w caches, seeds, saves and GLCache returned
+2026-10-09T00:41:39Z F29e go_f29e b12_w manifest after: manifest C:/kyty/f287/f29e/runs/b12_w/manifest_after.tsv files 4790 bytes 1290693798 listsha 424427277b74d22372face6d29540ed53f2195279ff744f202f4567866a14303; cmp: manifest cmp EQUAL files 4790 listsha 424427277b74d22372face6d29540ed53f2195279ff744f202f4567866a14303
+2026-10-09T00:41:40Z F29e go_f29e b12_w lock released (rc 0)
+2026-10-09T00:41:41Z F29e go_f29e b12_w display after lock released (item 620 (g)(1)): dispstate ON idle_s 7610 utc 2026-10-09T00:41:41Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-09T00:41:41Z; dispstate ON idle_s 7611
+rc=0

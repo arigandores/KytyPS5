@@ -1,0 +1,21 @@
+suite refs_f30m.py sha256 39af365728eb9c707baeeb4c76860d7a414649262fa2d2b50487f7c18ae0aded target docs/track-f/f30m.md
+PASS 0c91336f:docs/ROADMAP.md:24089 655. **\u0417\u0432\u0435\u043d\u043e F30j \u0442\u0440\u0435\u043a\u0
+PASS 0c91336f:docs/ROADMAP.md:24092 (\u0432) **\u0420\u0435\u0448\u0435\u043d\u0438\u0435 \u043b\u0438\u04
+PASS 0c91336f:docs/ROADMAP.md:24095 (\u0435) **\u0421\u0435\u0440\u0438\u044f F30m (Harness Engineer, \u04
+PASS 0c91336f:docs/ROADMAP.md:24096 (\u0436) **\u041f\u0440\u0430\u0432\u0438\u043b\u043e \u0447\u0442\u04
+PASS 0c91336f:docs/ROADMAP.md:24100 (\u043b) **\u041d\u0435 \u0437\u0430\u044f\u0432\u043b\u044f\u0435\u04
+PASS 0c91336f:docs/ROADMAP.md:24107 657. **\u0417\u0432\u0435\u043d\u043e FS11d \u0442\u0440\u0435\u043a\u
+PASS 0c91336f:docs/ROADMAP.md:24113 658. **\u0417\u0432\u0435\u043d\u043e F30l \u0442\u0440\u0435\u043a\u0
+PASS 0c91336f:docs/ROADMAP.md:24115 (\u0431) **RC1\u2013RC4 \u043f\u0435\u0447\u0430\u0442\u0438 F30m \u20
+PASS 0c91336f:docs/ROADMAP.md:24116 (\u0432) **Q1 \u2014 \u0440\u0435\u0448\u0435\u043d\u0438\u0435 \u043b
+PASS 3def0d25:docs/track-f/f30l-review.md:76 ## 7. RC \u043f\u0435\u0447\u0430\u0442\u0438 F30m
+PASS 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:1294 //   ROADMAP s122 item 643(v)); 5 = 2 with PB item 6
+PASS 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:1585 if ((xsrc & 1u) != 0) {
+PASS 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:1608 LOGF("RtSkipVerify: MISMATCH frame=%d bits=0x%03x reg=%u
+PASS 6fbdcf67:src/graphics/host_gpu/renderer/renderDraw.cpp:3705 if (t_rts != 5 && (!buffer.IsRendering()
+PASS 6fbdcf67:src/graphics/presentation/videoOut.cpp:3191 {"rts_bad_r", FS::Counter::RtsBadR, false},
+PASS 6fbdcf67:src/common/gates.cpp:438 {"KYTY_RT_SKIP", "rtskip", 1, 5},
+negative control (line +1): FAILED as expected
+negative control (code line -1): FAILED as expected
+refs 16
+ALL OK

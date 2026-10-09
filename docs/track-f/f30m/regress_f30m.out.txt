@@ -1,0 +1,32 @@
+suite regress_f30m.py sha256 44f30a807abb2d16c3e52582d0a5bfade64365c23c0fa721398050418b37c28e target f30m_read.py sha256 4afa01a4c9a00e3349a570d41100e17d0becbafaa23dfcb44c2cbe90fcd84954
+log f30_s1_c3 sha256 8c00bd6043233dfbc0ec9e481185387917132f13acac69fefebb8493f4f16686
+log f30_s1_c4 sha256 1352bf876efccf50ae8580dac4d6c1296cf77b6c24564c56163824af76de52cd
+log f30_s1_v sha256 bb415abab0b8e82d8e0379acccf13551bf7ecb5a78931f7b8fd854b1d31a1458
+log f30_s9_c4 sha256 430ae0389943c5d36c349273967f9d22e484f540ee97a3549e194e042520ad3d
+PASS f30_s1_c3 as f30_s1_c5 default: NOT_ADMITTED, RC4 row NO, no sums (NOT_ADMITTED [False] proc rts_chk 0)
+PASS f30_s1_c4 as f30_s1_c5 default: NOT_ADMITTED, RC4 row NO, no sums (NOT_ADMITTED [False] proc rts_chk 0)
+PASS f30_s1_v as f30_s1_c5 default: NOT_ADMITTED, RC4 row NO, no sums (NOT_ADMITTED [False] proc rts_chk 0)
+PASS f30_s9_c4 as f30_s9_c5 default: NOT_ADMITTED, RC4 row NO, no sums (NOT_ADMITTED [False] proc rts_chk 0)
+PASS f30_s1_c3 legacy: process sums of the 22 shared fields = the F30f row (diff [])
+PASS f30_s1_c3 legacy: window sums = the F30f row (diff [])
+PASS f30_s1_c3 legacy: RtSkipVerify lines 40 = F30f 40
+PASS f30_s1_c4 legacy: process sums of the 22 shared fields = the F30f row (diff [])
+PASS f30_s1_c4 legacy: window sums = the F30f row (diff [])
+PASS f30_s1_c4 legacy: RtSkipVerify lines 0 = F30f 0
+PASS f30_s1_c4 legacy as c5: (D1) NO (mode 4), PB item 6 NO (xb_pass 220397 > 0), (D7) NO (T, not T2)
+PASS f30_s1_c4 legacy as c5: NOT_ADMITTED and an instrument STOP row
+PASS f30_s1_v legacy: process sums of the 22 shared fields = the F30f row (diff [])
+PASS f30_s1_v legacy: window sums = the F30f row (diff [])
+PASS f30_s1_v legacy: RtSkipVerify lines 0 = F30f 0
+PASS f30_s9_c4 legacy: process sums of the 22 shared fields = the F30f row (diff [])
+PASS f30_s9_c4 legacy: window sums = the F30f row (diff [])
+PASS f30_s9_c4 legacy: RtSkipVerify lines 0 = F30f 0
+PASS f30_s9_c4 legacy as c5: (D1) NO (mode 4), PB item 6 NO (xb_pass 230653 > 0), (D7) NO (T, not T2)
+PASS f30_s9_c4 legacy as c5: NOT_ADMITTED and an instrument STOP row
+PASS cy_c3 on f30_s1_c3: (K) YES, (K') YES, race YES, 40 lines ({'(K)': True, "(K')": True, 'race:': True}, 40)
+PASS cy_c3 on f30_s1_c3: rts_bad 3411459 = F30f 3 411 459
+PASS cy_v on f30_s1_v: (gamma) NO (xb_ser 0), (C1) YES (win chk_b 40014265), (V) YES, (O) YES ({'(gamma)': False, '(C1)': True, '(V)': True, 'race:': True, '(O)': True})
+PASS cy_v on f30_s1_v: window chk_b 40 014 265 = F30f (40014265)
+PASS cy_c4 on f30_s1_c4: K_B'' NO (sum 0), RC2 (a) YES
+checks 25 failed 0
+ALL OK

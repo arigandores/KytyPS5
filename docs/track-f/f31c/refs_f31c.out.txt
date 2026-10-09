@@ -1,0 +1,17 @@
+ok   afb501a5:docs/ROADMAP.md:24191
+ok   afb501a5:docs/ROADMAP.md:24195
+ok   afb501a5:docs/ROADMAP.md:24196
+ok   afb501a5:docs/ROADMAP.md:24197
+ok   afb501a5:docs/ROADMAP.md:24198
+ok   afb501a5:docs/ROADMAP.md:24202
+ok   afb501a5:docs/ROADMAP.md:23786
+ok   afb501a5:docs/ROADMAP.md:23787
+ok   afb501a5:docs/ROADMAP.md:23815
+ok   afb501a5:docs/ROADMAP.md:23885
+ok   afb501a5:docs/ROADMAP.md:23897
+ok   afb501a5:docs/ROADMAP.md:24141
+ok   afb501a5:docs/ROADMAP.md:24142
+ok   afb501a5:docs/ROADMAP.md:23866
+ok   24f62694:docs/track-f/fs11c/go_fs11c.sh:43
+refs 15/15; negative control (shift +1) fails 15/15
+ALL OK

@@ -1,0 +1,58 @@
+suite test_tools_f31c.py sha256 df05a1622f70a96be68d0c4357286831b2cf8f1d5186c6bcd50c80edea6898e2 targets go_f31c.sh 1f5394b23fcdd39c launch_f31c.sh e8eb859ae264ae42 post_f31c.sh 96a39cb158a2788e queue_f31c.py 2512dd43a24a9f29 runchk_f31c.py 15bee3568c817384 enter_scene.py 3e4e2b41349f3608 hostload_f31c.py ba809a6181744b73
+ok   go dry run accepts b25m_01 (hold 300, timeout 60, mini_giants_garden, knobs of fs11_v)
+ok   go dry run accepts b25m_09 (hold 300, timeout 60, mini_giants_garden, knobs of fs11_v)
+ok   go dry run accepts b25m_10 (hold 300, timeout 60, mini_giants_garden, knobs of fs11_v)
+ok   go dry run accepts b25m_19 (hold 300, timeout 60, mini_giants_garden, knobs of fs11_v)
+ok   go dry run accepts b25m_20 (hold 300, timeout 60, mini_giants_garden, knobs of fs11_v)
+ok   go dry run accepts b25m_29 (hold 300, timeout 60, mini_giants_garden, knobs of fs11_v)
+ok   go dry run accepts b25m_30 (hold 300, timeout 60, mini_giants_garden, knobs of fs11_v)
+ok   go dry run accepts b25m_36 (hold 300, timeout 60, mini_giants_garden, knobs of fs11_v)
+ok   go dry run accepts base (hold 300, timeout 60, mini_giants_garden, knobs of fs11_v)
+ok   go dry run accepts return (hold 300, timeout 60, mini_giants_garden, knobs of fs11_v)
+ok   go refuses 'b25m_00' with rc 2
+ok   go refuses 'b25m_37' with rc 2
+ok   go refuses 'b25m_40' with rc 2
+ok   go refuses 'b25m_1' with rc 2
+ok   go refuses 'b25m_100' with rc 2
+ok   go refuses 'b25_01' with rc 2
+ok   go refuses 'fs11_v' with rc 2
+ok   go refuses '' with rc 2
+ok   launch refuses 'b25m_37' with rc 2
+ok   launch refuses 'b25_01' with rc 2
+ok   launch refuses '' with rc 2
+ok   post refuses a foreign tag with rc 2
+ok   form634_check.py --series f31c: ALL OK
+ok   negative control: a guard check in a copy of the launcher fails the linter
+ok   go_f31c.sh: first executable line is the linter --series (exit 10)
+ok   launch_f31c.sh: first executable line is the linter --series (exit 10)
+ok   launch has no guard / hold / block word outside comments
+ok   queue: a ready P link -> BUSY rc 1
+ok   queue: S ready, P blocked, own skipped -> FREE rc 0
+ok   runchk: own run alive rc 0
+ok   runchk: other run -> GONE rc 1
+ok   gate rates 0.75/0.10 at 0.5/None: offenders 1 (want 1)
+ok   gate rates 0.75/0.10 at 1.5/4.0: offenders 0 (want 0)
+ok   gate rates 1.60/0.10 at 1.5/4.0: offenders 1 (want 1)
+ok   gate rates 1.40/1.40 at 1.5/4.0: offenders 0 (want 0)
+ok   gate rates 1.40/1.40 at 1.5/2.5: offenders 1 (want 1)
+ok   hostload: one process above 0.5, name masked, total 0.95
+ok   go_f31c.sh gate uses 1.5 / 4
+ok   go_f31c.sh: a run.txt without the launching line is not a tag (nostart)
+ok   go_f31c.sh: FS11 full sha and level mini_giants_garden
+ok   go_f31c.sh: no KYTY_REC / KYTY_GAME_PATCH / validation / KYTY_GPU_CHECKPOINTS in code lines
+ok   enter_scene.py has --entry-at-level and ROOT f287/f31c
+ok   enter_scene.py env constants KYTY_FRAME_TRACE='lite', KYTY_GPU_HANG_ABORT_S='8' (= fs11_v)
+ok   enter_scene.py imports resolve in f31c (--help rc 0, option --entry-at-level listed)
+ok   import hostload_f31c.py resolves
+ok   import tempo_f31c.py resolves
+ok   import f31c_read.py resolves
+ok   import guard_f31c.py resolves
+ok   import hold_f31c.py resolves
+ok   import dispstate.py resolves
+ok   import procload.py resolves
+ok   import manifest_fs4c.py resolves
+ok   import runchk_f31c.py resolves
+ok   import run_safety99.py resolves
+ok   import sweep_f26a.py resolves
+ok   queue output in strict cp1250 rc 0
+ALL OK

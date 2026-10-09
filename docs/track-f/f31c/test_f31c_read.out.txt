@@ -1,0 +1,92 @@
+suite test_f31c_read.py sha256 e0ceab012b4a28e96e13815d0803e69c2a30bdb42e65adf49899465efa7b8edd target f31c_read.py sha256 330997b89ac7f86e2a8f8e5a4f889603bec3b777b7d91906b607c23f0f8305e1
+ok   constants: FS11 ea51ae80, level mini_giants_garden, 290 s, entry 60 s, 5 interferences, 36 tags, 5 inventory, N 41, budget 14400 s
+ok   counted: class COUNTED
+ok   counted: frames 18000 sum 300.0 s
+ok   counted: frames before the entry not summed
+ok   detector in the log: DETECTOR, strings 1/1/1
+ok   detector single string 0: DETECTOR
+ok   detector single string 2: DETECTOR
+ok   detector single string 3: DETECTOR
+ok   detector in the stdout only: DETECTOR
+ok   detector before the entry: DETECTOR
+ok   detector without an entry: DETECTOR
+ok   detector beats a harness problem: DETECTOR
+ok   detector with a short hold: DETECTOR
+ok   --- Error --- without the detector: INTERFERENCE
+ok   Unhandled host exception without the detector: INTERFERENCE
+ok   death 'Unhandled exception: x' in the log: INTERFERENCE
+ok   death '--- Fatal Error ---' in the log: INTERFERENCE
+ok   death 'GpuHangAbort: 8 s' in the log: INTERFERENCE
+ok   death 'ErrorDeviceLost' in the log: INTERFERENCE
+ok   death in the stdout: INTERFERENCE
+ok   no entry line: INTERFERENCE
+ok   entry of another level only: INTERFERENCE
+ok   frame 1 000 000 us after the entry: COUNTED (item 667 (e)(3)), row long 1
+ok   frame 3.7 s after the entry (as s18_c13): COUNTED, row long 1, max 3700000
+ok   frame 999 999 us: COUNTED, row long 0
+ok   frame >= 1 s before the entry: COUNTED, row pre max 3000000 count 1
+ok   sum exactly 290 000 000 us: COUNTED
+ok   sum 289 999 999 us: INTERFERENCE
+ok   the F26c hold of 120 s: INTERFERENCE (sum < 290 s)
+ok   entry_s 60.0: COUNTED
+ok   entry_s 60.1: INTERFERENCE
+ok   entry_s None: INTERFERENCE
+ok   frames after the next level are not summed: COUNTED, max 16667
+ok   a second mini_giants_garden entry closes the sum: entries 2, max 16667
+ok   form bin: HARNESS
+ok   form binfs10: HARNESS
+ok   form rec: HARNESS
+ok   form patch: HARNESS
+ok   form fix: HARNESS
+ok   form stand: HARNESS
+ok   form val: HARNESS
+ok   form args: HARNESS
+ok   form lite: HARNESS
+ok   form hang: HARNESS
+ok   form pin: HARNESS
+ok   form mark: HARNESS
+ok   no json: HARNESS
+ok   display OFF after a clean tag: INTERFERENCE
+ok   display ON, tempo 0: COUNTED
+ok   display OFF with the detector: DETECTOR
+ok   tempo rc 1 on a counted tag: TEMPO
+ok   tempo rc 2 on a counted tag: TEMPO
+ok   tempo rc 3 on a counted tag: TEMPO
+ok   tempo rc 2 on an interference tag: INTERFERENCE (a row)
+ok   layer: before 0, after 0 -> CLEAN
+ok   layer: before 1 -> HOST_LOAD
+ok   layer: after 1 -> HOST_LOAD
+ok   layer: only before 0 -> UNKNOWN
+ok   layer: a broken line -> UNKNOWN
+ok   layer: no files -> UNKNOWN
+host_load field written: layer HOST_LOAD
+ok   set-load writes host_load {layer HOST_LOAD, before, after} and keeps binary_sha256
+ok   a HOST_LOAD tag stays COUNTED (layer is a row)
+ok   xz log: COUNTED, sum 300.0
+ok   xz log with the assert: DETECTOR
+ok   lock seconds: base 60 + tag 370 = 430
+ok   lock seconds: an open taken counts to now (> 100)
+ok   lock seconds: no file -> 0
+ok   35 counted: GOING (N 40 of 41)
+ok   36 counted: COMPLETE (N 41)
+ok   4 interference: GOING
+ok   5 interference: INTERFERENCE_STOP
+ok   a detector tag: DETECTOR_STOP
+ok   a harness tag: HARNESS_STOP
+ok   a tempo tag: TEMPO_STOP
+ok   moved run folders (b25m_NN.<suffix>) are not read
+ok   lock 14 399 s, 30 counted: GOING
+ok   lock 14 400 s, 30 counted: LOCK_BUDGET_STOP
+ok   lock 15 000 s, 36 counted: COMPLETE (budget not read)
+ok   lock over budget with a detector: DETECTOR_STOP
+ok   positive control s59: DETECTOR, strings [2, 2, 1], first line 627190 (F26a: 627192)
+ok   positive control s42: DETECTOR, strings [1, 1, 1], first line 4407362 (F26a: 4407364)
+ok   positive control f30_s3_c5: DETECTOR, strings [3, 3, 3], first line 985555 (F26a: None)
+ok   regression s18_e2: class COUNTED, frames 19929 = F31a 19929, sum 332.6 s = F31a 332.6 s
+ok   sweep_f26a.walk still imports and SIGS = the reader strings
+ok   s18_e2 with its json is not the form of 667 (d): HARNESS (['binary b3cee576', 'forbidden KYTY_REC'])
+ok   cp1250 strict output: rc 0, CLASS line
+ok   no arguments: usage, rc 2
+ok   table rc 0 on GOING (ser_1: 35 counted)
+ok   table rc 1 on DETECTOR_STOP (ser_5)
+ALL OK

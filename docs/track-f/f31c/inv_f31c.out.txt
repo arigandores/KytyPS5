@@ -1,0 +1,17 @@
+script inv_f31c.py sha256 eda40758981ffa51bb3a4e216c7d00954f083867c062d082c490eadbb376b64b reader f31c_read.py sha256 330997b89ac7f86e2a8f8e5a4f889603bec3b777b7d91906b607c23f0f8305e1
+PASS C:/kyty/s144/log_v144_20.txt sha256 ea7e3094a6aa99e9b2e114327314abe57b2935ce370217a3530ac6de9c87ead8
+     entry line 215919 (entries 1); after it frames 19864, sum dt 332708604 us = 332.7 s (lead 332.7 s, diff +0.0); max dt 162163 us; frames >= 1 s 0 (row)
+     --- Error --- 0; Unhandled host exception 0; detector 0/0/0; death markers (row) 0; binary named 9235a7ac, json 9235a7ac
+PASS C:/kyty/f287/fsc/log_fs_g.txt sha256 775332c0986ee6c4458297a2028939054dcebaade9c668f6b08f54e194170042
+     entry line 213961 (entries 1); after it frames 19917, sum dt 332688423 us = 332.7 s (lead 332.7 s, diff -0.0); max dt 172573 us; frames >= 1 s 0 (row)
+     --- Error --- 0; Unhandled host exception 0; detector 0/0/0; death markers (row) 0; binary named dac02fb9, json dac02fb9
+PASS C:/kyty/s288/s15/log_k_13.txt sha256 0c455660f1ec0c37ab561a24bd4b9ced1ffee0a6d1c81adc411878d12c1b7e87
+     entry line 212963 (entries 1); after it frames 18128, sum dt 302522187 us = 302.5 s (lead 302.5 s, diff +0.0); max dt 330985 us; frames >= 1 s 0 (row)
+     --- Error --- 0; Unhandled host exception 0; detector 0/0/0; death markers (row) 0; binary named 2c9b69b9, json 2c9b69b9
+PASS C:/kyty/s288/s18c/log_s18_c13.txt sha256 2b49d0857a04ba6f6431e2f67db1bfa2367c6af35f29d771eeb5227651ddc69c
+     entry line 339916 (entries 1); after it frames 19938, sum dt 336757122 us = 336.8 s (lead 336.8 s, diff -0.0); max dt 3715370 us; frames >= 1 s 1 (row)
+     --- Error --- 0; Unhandled host exception 0; detector 0/0/0; death markers (row) 0; binary named b3cee576, json b3cee576
+PASS C:/kyty/s288/s18c/log_s18_e2.txt sha256 cf9b7dbf8988b6582dfab242ae7fc78f3ac2f2cbc352b3cef6f12796c3c7840c
+     entry line 227500 (entries 1); after it frames 19929, sum dt 332591859 us = 332.6 s (lead 332.6 s, diff -0.0); max dt 193550 us; frames >= 1 s 0 (row)
+     --- Error --- 0; Unhandled host exception 0; detector 0/0/0; death markers (row) 0; binary named b3cee576, json b3cee576
+INVENTORY 5 of 5 PASS, replacement tags 0; ALL OK

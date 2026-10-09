@@ -1,0 +1,131 @@
+{
+ "rows": [
+  {
+   "log": "C:/kyty/s144/log_v144_20.txt",
+   "binary_named": "9235a7ac",
+   "lead_sum_s": 332.7,
+   "sha256": "ea7e3094a6aa99e9b2e114327314abe57b2935ce370217a3530ac6de9c87ead8",
+   "passed": true,
+   "why": [],
+   "entry_line": 215919,
+   "entries": 1,
+   "frames": 19864,
+   "sum_dt_us": 332708604,
+   "sum_dt_s": 332.7,
+   "max_dt_us": 162163,
+   "long_frames": 0,
+   "death": {},
+   "error_lines": 0,
+   "host_exc": 0,
+   "detector": [
+    0,
+    0,
+    0
+   ],
+   "json_binary": "9235a7ac",
+   "log_lines": 1890789
+  },
+  {
+   "log": "C:/kyty/f287/fsc/log_fs_g.txt",
+   "binary_named": "dac02fb9",
+   "lead_sum_s": 332.7,
+   "sha256": "775332c0986ee6c4458297a2028939054dcebaade9c668f6b08f54e194170042",
+   "passed": true,
+   "why": [],
+   "entry_line": 213961,
+   "entries": 1,
+   "frames": 19917,
+   "sum_dt_us": 332688423,
+   "sum_dt_s": 332.7,
+   "max_dt_us": 172573,
+   "long_frames": 0,
+   "death": {},
+   "error_lines": 0,
+   "host_exc": 0,
+   "detector": [
+    0,
+    0,
+    0
+   ],
+   "json_binary": "dac02fb9",
+   "log_lines": 1888837
+  },
+  {
+   "log": "C:/kyty/s288/s15/log_k_13.txt",
+   "binary_named": "2c9b69b9",
+   "lead_sum_s": 302.5,
+   "sha256": "0c455660f1ec0c37ab561a24bd4b9ced1ffee0a6d1c81adc411878d12c1b7e87",
+   "passed": true,
+   "why": [],
+   "entry_line": 212963,
+   "entries": 1,
+   "frames": 18128,
+   "sum_dt_us": 302522187,
+   "sum_dt_s": 302.5,
+   "max_dt_us": 330985,
+   "long_frames": 0,
+   "death": {},
+   "error_lines": 0,
+   "host_exc": 0,
+   "detector": [
+    0,
+    0,
+    0
+   ],
+   "json_binary": "2c9b69b9",
+   "log_lines": 1785389
+  },
+  {
+   "log": "C:/kyty/s288/s18c/log_s18_c13.txt",
+   "binary_named": "b3cee576",
+   "lead_sum_s": 336.8,
+   "sha256": "2b49d0857a04ba6f6431e2f67db1bfa2367c6af35f29d771eeb5227651ddc69c",
+   "passed": true,
+   "why": [],
+   "entry_line": 339916,
+   "entries": 1,
+   "frames": 19938,
+   "sum_dt_us": 336757122,
+   "sum_dt_s": 336.8,
+   "max_dt_us": 3715370,
+   "long_frames": 1,
+   "death": {},
+   "error_lines": 0,
+   "host_exc": 0,
+   "detector": [
+    0,
+    0,
+    0
+   ],
+   "json_binary": "b3cee576",
+   "log_lines": 2795255
+  },
+  {
+   "log": "C:/kyty/s288/s18c/log_s18_e2.txt",
+   "binary_named": "b3cee576",
+   "lead_sum_s": 332.6,
+   "sha256": "cf9b7dbf8988b6582dfab242ae7fc78f3ac2f2cbc352b3cef6f12796c3c7840c",
+   "passed": true,
+   "why": [],
+   "entry_line": 227500,
+   "entries": 1,
+   "frames": 19929,
+   "sum_dt_us": 332591859,
+   "sum_dt_s": 332.6,
+   "max_dt_us": 193550,
+   "long_frames": 0,
+   "death": {},
+   "error_lines": 0,
+   "host_exc": 0,
+   "detector": [
+    0,
+    0,
+    0
+   ],
+   "json_binary": "b3cee576",
+   "log_lines": 1929467
+  }
+ ],
+ "passed": 5,
+ "replacement_tags": 0
+}

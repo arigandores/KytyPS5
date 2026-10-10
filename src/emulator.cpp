@@ -39,8 +39,9 @@
 
 namespace Emulator {
 
-// Track F, F33c (HPP-744; ROADMAP s122 item 675(d)(1), (v)(3)-(5)): stand KYTY_TEST_EXITFATAL=<arm>:<seed>, edition 2
-// (edition 1 - F33a 5f48cc3e, test binary only); off when unset or empty. The process runs the real Init (the Graphics
+// Track F, F33c (HPP-744; ROADMAP s122 item 675(d)(1), (v)(3)-(5)): stand KYTY_TEST_EXITFATAL=<arm>:<seed>, edition 3
+// (edition 1 - F33a 5f48cc3e, test binary only; edition 2 - F33c e5979953; edition 3 - F33c2 HPP-748, item 681(v)(1):
+// the arm CN and the event nested_fatal); off when unset or empty. The process runs the real Init (the Graphics
 // lifecycle is replaced by an entry with the same null emergency callback - no window, no GPU), the real at_quick_exit
 // registration, KYTY_FIX_F21 as read by Run and the mounts of Run; it loads no ELF and runs no guest code. One injector
 // thread (Common::Thread, as guest_thread of Execute; role "guest") raises a fatal with EXIT_IF - the path of a guest
@@ -59,12 +60,16 @@ namespace Emulator {
 //        and sleeps 15 s inside the walk (> T of KYTY_FIX_F21) - the positive control of the wait limit;
 //   HG - reference arm of F33c (not a member of item 675(d)(1)): as G, but at position pos of its walk the injector (the
 //        owner) releases the main thread and sleeps 15 s inside the walk; the main thread enters through quick_exit
-//        while it holds the CRT exit lock - the wait limit of the thread that ends the process.
+//        while it holds the CRT exit lock - the wait limit of the thread that ends the process;
+//   CN - edition 3 (F33c2, item 681(v)(1)): as C (the injector raises a fatal 50 ms after the start, the main thread
+//        never exits), and inside the injector's own walk, right before the first emergency callback it reaches, the
+//        injector raises a second fatal (EXIT_IF) - a fatal inside an emergency callback of the owner (the form of
+//        the F33d probe probe_cn.py; once per process; line "ExitFatal: nested_fatal"). pos is printed, not used.
 // Every event is one stderr line "ExitFatal: ..." (fwrite + fflush) with t_us (steady clock from Parse) and, where the
 // driver needs the wall time, e_us (system clock, microseconds since the epoch).
 namespace ExitFatalStand {
 
-enum class Arm { Off, P2, R2, G, C, N, H, HG };
+enum class Arm { Off, P2, R2, G, C, N, H, HG, CN };
 
 static constexpr size_t   kPositions   = 13;
 static constexpr uint64_t kPeerWaitUs  = 2000000;
@@ -83,6 +88,7 @@ static std::atomic<int>  g_main_entered {0};
 static std::atomic<int>  g_guest_entered {0};
 static std::atomic<int>  g_walk_seq {0};
 static std::atomic<int>  g_triggered {0};
+static std::atomic<int>  g_nested_fatal {0}; // CN: the second fatal was raised (once per process)
 static thread_local int  t_seq   = 0;
 static thread_local int  t_cbs   = 0;
 static thread_local int  t_depth = 0;
@@ -132,6 +138,7 @@ static const char* ArmName() {
 		case Arm::N: return "N";
 		case Arm::H: return "H";
 		case Arm::HG: return "HG";
+		case Arm::CN: return "CN";
 		default: return "off";
 	}
 }
@@ -156,10 +163,11 @@ static void Parse() {
 		         : name == "N"  ? Arm::N
 		         : name == "H"  ? Arm::H
 		         : name == "HG" ? Arm::HG
+		         : name == "CN" ? Arm::CN
 		                        : Arm::Off;
 	}
 	if (parsed == Arm::Off) {
-		std::fprintf(stderr, "KYTY_TEST_EXITFATAL: bad value '%s' (<P2|R2|G|C|N|H|HG>:<seed>), stand off\n", value);
+		std::fprintf(stderr, "KYTY_TEST_EXITFATAL: bad value '%s' (<P2|R2|G|C|N|H|HG|CN>:<seed>), stand off\n", value);
 		return;
 	}
 	g_arm  = parsed;
@@ -244,6 +252,12 @@ static void Hook(int event, size_t index, size_t size) {
 		case Common::kEmergencyBeforeCallback:
 			t_cbs++;
 			Line(fmt::format("ExitFatal: cb seq={} role={} pos={} t_us={}\n", t_seq, Role(), index, NowUs()));
+			if (g_arm == Arm::CN && !main && g_nested_fatal.exchange(1) == 0) {
+				// CN: a fatal inside the owner's emergency callback (the callback of this entry is not reached).
+				Line(fmt::format("ExitFatal: nested_fatal role={} seq={} pos={} t_us={}\n", Role(), t_seq, index,
+				                 NowUs()));
+				EXIT_IF(g_arm == Arm::CN);
+			}
 			break;
 		case Common::kEmergencyAfterLoop:
 			if (g_pos == kPositions - 1 && TriggerHere()) {
@@ -280,7 +294,7 @@ static void Hook(int event, size_t index, size_t size) {
 }
 
 static void Injector(void* /*arg*/) {
-	if (g_arm == Arm::C || g_arm == Arm::G || g_arm == Arm::HG) {
+	if (g_arm == Arm::C || g_arm == Arm::G || g_arm == Arm::HG || g_arm == Arm::CN) {
 		Common::Thread::Sleep(50);
 	} else {
 		while (!g_go.load()) {
@@ -300,7 +314,7 @@ static void Injector(void* /*arg*/) {
 	LOGF("ExitFatal: config arm=%s seed=%u pos=%u\n", ArmName(), g_seed, static_cast<unsigned>(g_pos));
 	auto* injector = new Common::Thread(Injector, nullptr); // never joined or destroyed - as guest_thread under quick_exit
 	(void)injector;
-	if (g_arm == Arm::C) {
+	if (g_arm == Arm::C || g_arm == Arm::CN) {
 		for (;;) {
 			Common::Thread::Sleep(1000);
 		}

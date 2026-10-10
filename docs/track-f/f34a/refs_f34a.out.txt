@@ -1,0 +1,28 @@
+OK     595b38dd:docs/ROADMAP.md:24254
+NOT OK 595b38dd:docs/ROADMAP.md:24255 (shift +1, negative control)
+OK     595b38dd:docs/ROADMAP.md:24283
+NOT OK 595b38dd:docs/ROADMAP.md:24284 (shift +1, negative control)
+OK     595b38dd:docs/ROADMAP.md:24288
+NOT OK 595b38dd:docs/ROADMAP.md:24289 (shift +1, negative control)
+OK     595b38dd:docs/track-f/register.md:153
+NOT OK 595b38dd:docs/track-f/register.md:154 (shift +1, negative control)
+OK     595b38dd:src/kernel/pvar.h:275
+NOT OK 595b38dd:src/kernel/pvar.h:276 (shift +1, negative control)
+OK     595b38dd:src/graphics/presentation/videoOut.cpp:1465
+NOT OK 595b38dd:src/graphics/presentation/videoOut.cpp:1466 (shift +1, negative control)
+OK     595b38dd:src/graphics/presentation/window/inputScript.cpp:201
+NOT OK 595b38dd:src/graphics/presentation/window/inputScript.cpp:202 (shift +1, negative control)
+OK     2e021a2:HANDOFF.md:4523
+NOT OK 2e021a2:HANDOFF.md:4524 (shift +1, negative control)
+OK     2e021a2:HANDOFF.md:4617
+NOT OK 2e021a2:HANDOFF.md:4618 (shift +1, negative control)
+OK     2e021a2:HANDOFF.md:4622
+NOT OK 2e021a2:HANDOFF.md:4623 (shift +1, negative control)
+OK     2e021a2:HANDOFF.md:5752
+NOT OK 2e021a2:HANDOFF.md:5753 (shift +1, negative control)
+OK     2e021a2:HANDOFF.md:2879
+NOT OK 2e021a2:HANDOFF.md:2880 (shift +1, negative control)
+OK     2e021a2:HANDOFF.md:6739
+NOT OK 2e021a2:HANDOFF.md:6740 (shift +1, negative control)
+refs 13
+ALL OK

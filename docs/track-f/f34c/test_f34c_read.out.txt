@@ -1,0 +1,201 @@
+suite test_f34c_read.py sha256 761851f3ce48a3345c4091c695e1084f56ad46838264d3a7ff9c38208626c69f target f34c_read.py sha256 adfcd984eb54337c29465b031ba2dd58fe0a84f28cead21e4428658f1d0f6ea7
+ok   b6_w0 clean ADMITTED []
+ok   b6_w0 clean path W0_MEMBERS_ALL_YES (want W0_MEMBERS_ALL_YES) []
+ok   b6_w0 clean all members YES
+ok   b6_w0_r1 reads as the same form
+ok   b6_v clean ADMITTED []
+ok   b6_v clean path ROOM_COVERED (want ROOM_COVERED) []
+ok   b6_v clean all members YES
+ok   b6_v_r1 reads as the same form
+ok   b6_v2 clean ADMITTED []
+ok   b6_v2 clean path ROOM_COVERED (want ROOM_COVERED) []
+ok   b6_v2 clean all members YES
+ok   b6_v2_r1 reads as the same form
+ok   b6_vl clean ADMITTED []
+ok   b6_vl clean path ROOM_COVERED (want ROOM_COVERED) []
+ok   b6_vl clean all members YES
+ok   b6_vl_r1 reads as the same form
+ok   b6_w clean ADMITTED []
+ok   b6_w clean path W_MEMBERS_ALL_YES (want W_MEMBERS_ALL_YES) []
+ok   b6_w clean all members YES
+ok   b6_w_r1 reads as the same form
+ok   b6_wl clean ADMITTED []
+ok   b6_wl clean path W_MEMBERS_ALL_YES (want W_MEMBERS_ALL_YES) []
+ok   b6_wl clean all members YES
+ok   b6_wl_r1 reads as the same form
+ok   b6_w0 admission prereg_ok
+ok   b6_w0 admission manifest
+ok   b6_w0 admission inst
+ok   b6_w0 admission minimized
+ok   b6_w0 admission sig
+ok   b6_w0 admission gamepatch
+ok   b6_w0 admission extra env VK_LAYER_MESSAGE_ID_FILTER
+ok   b6_w0 admission extra env KYTY_FIX_B12
+ok   b6_w0 admission env missing KYTY_GPU_CLOCK_PIN
+ok   b6_w0 admission validation flag flipped
+ok   b6_w0 admission guest args
+ok   b6_w0 no summary and no [E] -> INTERFERENCE run
+ok   b6_v admission prereg_ok
+ok   b6_v admission manifest
+ok   b6_v admission inst
+ok   b6_v admission minimized
+ok   b6_v admission sig
+ok   b6_v admission gamepatch
+ok   b6_v admission extra env VK_LAYER_MESSAGE_ID_FILTER
+ok   b6_v admission extra env KYTY_FIX_B12
+ok   b6_v admission env missing KYTY_GPU_CLOCK_PIN
+ok   b6_v admission validation flag flipped
+ok   b6_v admission guest args
+ok   b6_v no summary and no [E] -> INTERFERENCE run
+ok   b6_v2 admission prereg_ok
+ok   b6_v2 admission manifest
+ok   b6_v2 admission inst
+ok   b6_v2 admission minimized
+ok   b6_v2 admission sig
+ok   b6_v2 admission gamepatch
+ok   b6_v2 admission extra env VK_LAYER_MESSAGE_ID_FILTER
+ok   b6_v2 admission extra env KYTY_FIX_B12
+ok   b6_v2 admission env missing KYTY_GPU_CLOCK_PIN
+ok   b6_v2 admission validation flag flipped
+ok   b6_v2 admission guest args
+ok   b6_v2 no summary and no [E] -> INTERFERENCE run
+ok   b6_vl admission prereg_ok
+ok   b6_vl admission manifest
+ok   b6_vl admission inst
+ok   b6_vl admission minimized
+ok   b6_vl admission sig
+ok   b6_vl admission gamepatch
+ok   b6_vl admission extra env VK_LAYER_MESSAGE_ID_FILTER
+ok   b6_vl admission extra env KYTY_FIX_B12
+ok   b6_vl admission env missing KYTY_GPU_CLOCK_PIN
+ok   b6_vl admission validation flag flipped
+ok   b6_vl admission guest args
+ok   b6_vl no summary and no [E] -> INTERFERENCE run
+ok   b6_w admission prereg_ok
+ok   b6_w admission manifest
+ok   b6_w admission inst
+ok   b6_w admission minimized
+ok   b6_w admission sig
+ok   b6_w admission gamepatch
+ok   b6_w admission extra env VK_LAYER_MESSAGE_ID_FILTER
+ok   b6_w admission extra env KYTY_FIX_B12
+ok   b6_w admission env missing KYTY_GPU_CLOCK_PIN
+ok   b6_w admission validation flag flipped
+ok   b6_w admission guest args
+ok   b6_w no summary and no [E] -> INTERFERENCE run
+ok   b6_wl admission prereg_ok
+ok   b6_wl admission manifest
+ok   b6_wl admission inst
+ok   b6_wl admission minimized
+ok   b6_wl admission sig
+ok   b6_wl admission gamepatch
+ok   b6_wl admission extra env VK_LAYER_MESSAGE_ID_FILTER
+ok   b6_wl admission extra env KYTY_FIX_B12
+ok   b6_wl admission env missing KYTY_GPU_CLOCK_PIN
+ok   b6_wl admission validation flag flipped
+ok   b6_wl admission guest args
+ok   b6_wl no summary and no [E] -> INTERFERENCE run
+ok   vn natural form with KYTY_GUEST_ARGS in env -> INTERFERENCE
+ok   vn natural form without KYTY_KEYS -> INTERFERENCE
+ok   wn natural form with KYTY_GUEST_ARGS in env -> INTERFERENCE
+ok   wn natural form without KYTY_KEYS -> INTERFERENCE
+ok   w0 admission entry outcome
+ok   w0 admission entry line
+ok   vn entry outcome timeout is NOT an admission member (P3 reads it)
+ok   vn (P1) yes on source=none
+ok   vn (P2) one scheduled line -> NO
+ok   vn (P2) press at 2461 -> NO
+ok   vn (P3) title after the first press -> NO, NOT_ENTERED
+ok   vn (P3) no intro line -> NOT_ENTERED (attempt counted)
+ok   vl no intro line -> NOT_ENTERED
+ok   b6_w (b) [E] before the room -> admitted, W_LAYER_ERROR
+ok   b6_w (b) death marker of the layer exit is not a flag
+ok   b6_w (b) note: room not passed by the layer
+ok   b6_w (b) stop n printed
+ok   b6_w (b) [E] at n_intro + 2880 (edge) -> in the room, passed
+ok   b6_w (b) [E] at n_intro + 2879 -> outside, not passed
+ok   b6_w (b) [E] before the intro -> not passed, outside
+ok   b6_w (b) [E] at n_intro + 3331 -> outside the room window
+ok   b6_wl (b) [E] before the room -> admitted, W_LAYER_ERROR
+ok   b6_wl (b) death marker of the layer exit is not a flag
+ok   b6_wl (b) note: room not passed by the layer
+ok   b6_wl (b) stop n printed
+ok   b6_wl (b) [E] at n_intro + 2880 (edge) -> in the room, passed
+ok   b6_wl (b) [E] at n_intro + 2879 -> outside, not passed
+ok   b6_wl (b) [E] before the intro -> not passed, outside
+ok   b6_wl (b) [E] at n_intro + 3331 -> outside the room window
+ok   w0 [E] -> member NO (fs11_w form)
+ok   vl (v) off is None, off_L [U] note
+ok   vl (v) sheet window [n_intro + 2880; n_intro + 3355]
+ok   vl (v) cutscene records [n_intro; n_sw + 25]
+ok   vl (v) big frames without a correction
+ok   vn off = median of the input lines (20)
+ok   vn sheet window [P_intro + 2880; P_intro + 3330]
+ok   vn cutscene [n_intro + off; n_sw + off]
+ok   room window in n [n_intro + 2880; n_intro + 3330]
+ok   wn (g) no sub-level line -> W_SHORT
+ok   wn (g) tail n_sw + 299 -> W_TAIL_SHORT
+ok   wn (g) tail n_sw + 300 (edge) -> all yes
+ok   wn (g) delta 900 out of the band -> reference only, W_MEMBERS_ALL_YES
+ok   wl (g) delta 5000 -> reference only
+ok   b6_w (d) [W] only before n_intro -> W_NO_POSITIVE_CONTROL
+ok   b6_w (d) one [W] after n_intro (edge) -> all yes
+ok   b6_w (d) a limit line -> W_NO_POSITIVE_CONTROL
+ok   b6_w death marker without [E] -> INTERFERENCE_FLAG
+ok   b6_wl (d) [W] only before n_intro -> W_NO_POSITIVE_CONTROL
+ok   b6_wl (d) one [W] after n_intro (edge) -> all yes
+ok   b6_wl (d) a limit line -> W_NO_POSITIVE_CONTROL
+ok   b6_wl death marker without [E] -> INTERFERENCE_FLAG
+ok   w0 [W] 0 -> positive control NO
+ok   w0 limit line -> NO
+ok   b6_v (e) skipped inside the window by position, frame= outside -> COLD_ROOM
+ok   b6_v (e) skipped outside by position, frame= inside -> no COLD_ROOM
+ok   b6_v (e) held at n_intro + 2880 (edge) -> COLD_ROOM
+ok   b6_v (e) held at n_intro + 3331 -> no COLD_ROOM
+ok   b6_v (e) 64 held lines before the window -> 64th n printed, held in the window [U]
+ok   b6_v (e) 63 held lines -> no 64th, not unknown
+ok   b6_vl (e) skipped inside the window by position, frame= outside -> COLD_ROOM
+ok   b6_vl (e) skipped outside by position, frame= inside -> no COLD_ROOM
+ok   b6_vl (e) held at n_intro + 2880 (edge) -> COLD_ROOM
+ok   b6_vl (e) held at n_intro + 3331 -> no COLD_ROOM
+ok   b6_vl (e) 64 held lines before the window -> 64th n printed, held in the window [U]
+ok   b6_vl (e) 63 held lines -> no 64th, not unknown
+ok   b6_v (z) last n = n_intro + 3329 -> ROOM_NOT_COVERED
+ok   b6_v (z) last n = n_intro + 3330 (edge), no sub-level -> TIMELINE_OTHER
+ok   b6_v (z) delta 4479 -> TIMELINE_OTHER
+ok   b6_v (z) delta 4480 -> ROOM_COVERED
+ok   b6_v (z) delta 4620 -> ROOM_COVERED
+ok   b6_v (z) delta 4621 -> TIMELINE_OTHER
+ok   b6_vl (z) last n = n_intro + 3329 -> ROOM_NOT_COVERED
+ok   b6_vl (z) last n = n_intro + 3330 (edge), no sub-level -> TIMELINE_OTHER
+ok   b6_vl (z) delta 4479 -> TIMELINE_OTHER
+ok   b6_vl (z) delta 4480 -> ROOM_COVERED
+ok   b6_vl (z) delta 4620 -> ROOM_COVERED
+ok   b6_vl (z) delta 4621 -> TIMELINE_OTHER
+ok   wn (i) no intro line -> W_NOT_ENTERED (admitted)
+ok   wl (i) no intro line -> W_NOT_ENTERED
+ok   vn (k) glitch inside the cutscene -> (V3) NO
+ok   vn (k) glitch one present before P_intro -> (V3) YES, reference
+ok   vn (k) glitch one present after P_sw -> (V3) YES
+ok   vl (k) glitch at n_sw + 25 (edge of L) -> (V3) NO
+ok   vn (V3) clean -> YES
+ok   vn (V3) no detector output -> NO
+ok   vn (V1) hold_exit set -> NO and flag NOT_LIVED
+ok   vn (V1) death marker -> NO and INTERFERENCE_FLAG DEATH_MARKER
+ok   vn (V2) 2999 cutscene records -> NO (2999)
+ok   vn (V2) 3000 cutscene records (edge) -> YES
+ok   vn (V4) sheets FAILED -> NO
+ok   vn (V4) no sheet.txt -> NO
+ok   no log -> INTERFERENCE, no members
+ok   table has one row
+ok   output in strict cp1250 without PYTHONIOENCODING, rc 0
+ok   output ASCII only
+ok   json written and ASCII
+ok   reader source ASCII only
+ok   usage rc 2 for b6_x
+ok   usage rc 2 for b6_v_r5
+ok   usage rc 2 for b6_v3
+ok   usage rc 2 for fs11_w
+ok   usage rc 2 for b6_w0_r0
+checks 198 failed 0
+ALL OK

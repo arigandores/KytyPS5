@@ -1,0 +1,79 @@
+suite test_tools_f34c.py sha256 6d291cbe6942bc9e9acf155035e36594a5bd1843c73db6d31abf4d037a9b52c5 target go_f34c.sh sha256 3fad91883e053fcd8fc8f7acfc277e4db5d1b186c52ecf38a1ee0d5b01a7c67f
+ok   go plan b6_w0
+ok   go plan b6_w0_r1
+ok   go plan b6_w0_r4
+ok   go plan b6_v
+ok   go plan b6_v_r1
+ok   go plan b6_v_r4
+ok   go plan b6_v2
+ok   go plan b6_v2_r1
+ok   go plan b6_v2_r4
+ok   go plan b6_vl
+ok   go plan b6_vl_r1
+ok   go plan b6_vl_r4
+ok   go plan b6_w
+ok   go plan b6_w_r1
+ok   go plan b6_w_r4
+ok   go plan b6_wl
+ok   go plan b6_wl_r1
+ok   go plan b6_wl_r4
+ok   go usage rc 2 for 'b6_x'
+ok   launch usage rc 2 for 'b6_x'
+ok   go usage rc 2 for 'b6_v_r5'
+ok   launch usage rc 2 for 'b6_v_r5'
+ok   go usage rc 2 for 'b6_v_r0'
+ok   launch usage rc 2 for 'b6_v_r0'
+ok   go usage rc 2 for 'fs11_w'
+ok   launch usage rc 2 for 'fs11_w'
+ok   go usage rc 2 for 'b6_v3'
+ok   launch usage rc 2 for 'b6_v3'
+ok   go usage rc 2 for ''
+ok   launch usage rc 2 for ''
+ok   launch b6_v dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat without F34C_REPEAT_OK -> rc 11
+ok   launch repeat with F34C_REPEAT_OK and 0 repeats -> passes
+ok   launch 3 started repeats (busy one not counted) -> the 4th passes
+ok   launch a repeat already counted is not counted twice
+ok   launch 4 started repeats -> the 5th refused rc 11
+ok   repeat cap refusal written to times.txt
+ok   form634_check.py --series C:\kyty\f287\f34c: ALL OK
+ok   go first executable line is the form linter
+ok   launch first executable line is the form linter
+ok   go: no install of a binary (no cp to kyty_emulator.exe)
+ok   go: the guard scan right after the lock line, before the manifest
+ok   go: no KYTY_GPU_CHECKPOINTS, KYTY_GAME_PATCH, KYTY_FIX_ in knobs
+ok   SubTracker K 0: no 7->6 line -> not done
+ok   SubTracker K 5: no 7->6 line -> not done
+ok   SubTracker K 4: n_sw 101, last 105 -> done
+ok   SubTracker K 5: last 105 < 106 -> not done
+ok   SubTracker K 5: the next line n 106 -> done (incremental tail)
+ok   enter_scene --help names --natural, --until-sublevel, --proc-limit
+ok   enter_scene: options off by default
+ok   enter_scene: natural env has no KYTY_GUEST_ARGS
+ok   ASCII only: chk_f34c.sh
+ok   ASCII only: dispstate.py
+ok   ASCII only: f34c_read.py
+ok   ASCII only: go_f34c.sh
+ok   ASCII only: guard_f34c.py
+ok   ASCII only: hold_f34c.py
+ok   ASCII only: hostload_f34c.py
+ok   ASCII only: idle142.py
+ok   ASCII only: launch_f34c.sh
+ok   ASCII only: launch_run.py
+ok   ASCII only: manifest_fs4c.py
+ok   ASCII only: mfsub_f34c.py
+ok   ASCII only: post_f34c.sh
+ok   ASCII only: procload.py
+ok   ASCII only: queue_f34c.py
+ok   ASCII only: refs_f34c.py
+ok   ASCII only: run_safety99.py
+ok   ASCII only: runchk_f34c.py
+ok   ASCII only: sheet142.py
+ok   ASCII only: sheets_f34c.py
+ok   ASCII only: snap_f34c.py
+ok   ASCII only: test_f34c_read.py
+ok   ASCII only: test_tools_f34c.py
+ok   ASCII only: wait_f34c.sh
+checks 75 failed 0
+ALL OK

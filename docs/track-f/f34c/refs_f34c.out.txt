@@ -1,0 +1,26 @@
+OK     c5c18e55:docs/ROADMAP.md:24283
+NOT OK c5c18e55:docs/ROADMAP.md:24284 (shift +1, negative control)
+OK     c5c18e55:docs/ROADMAP.md:24290
+NOT OK c5c18e55:docs/ROADMAP.md:24291 (shift +1, negative control)
+OK     c5c18e55:docs/ROADMAP.md:24293
+NOT OK c5c18e55:docs/ROADMAP.md:24294 (shift +1, negative control)
+OK     c5c18e55:docs/ROADMAP.md:24294
+NOT OK c5c18e55:docs/ROADMAP.md:24295 (shift +1, negative control)
+OK     c5c18e55:docs/ROADMAP.md:24315
+NOT OK c5c18e55:docs/ROADMAP.md:24316 (shift +1, negative control)
+OK     c5c18e55:docs/ROADMAP.md:24326
+NOT OK c5c18e55:docs/ROADMAP.md:24327 (shift +1, negative control)
+OK     72317680:docs/track-f/f34a.md:103
+NOT OK 72317680:docs/track-f/f34a.md:104 (shift +1, negative control)
+OK     72317680:docs/track-f/f34a.md:117
+NOT OK 72317680:docs/track-f/f34a.md:118 (shift +1, negative control)
+OK     eef76f8c:docs/track-f/f34b-review.md:34
+NOT OK eef76f8c:docs/track-f/f34b-review.md:35 (shift +1, negative control)
+OK     ee9632be:src/loader/runtimeLinker.cpp:134
+NOT OK ee9632be:src/loader/runtimeLinker.cpp:135 (shift +1, negative control)
+OK     ee9632be:src/graphics/presentation/window/inputScript.cpp:151
+NOT OK ee9632be:src/graphics/presentation/window/inputScript.cpp:152 (shift +1, negative control)
+OK     ee9632be:src/graphics/presentation/window/screenshot.cpp:513
+NOT OK ee9632be:src/graphics/presentation/window/screenshot.cpp:514 (shift +1, negative control)
+refs 12
+ALL OK

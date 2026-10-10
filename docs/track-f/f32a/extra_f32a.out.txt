@@ -1,0 +1,24 @@
+(a) socket creation blocks {('OTHER_OR_PRE', 'logs'): 674, ('OTHER_OR_PRE', 'sock_lines'): 0, ('OTHER_OR_PRE', 'logs_with_sock'): 0, ('COURSE_FS2', 'logs'): 288, ('COURSE_FS2', 'sock_lines'): 0, ('COURSE_FS2', 'logs_with_sock'): 0}
+(b) KernelRead direct-read failures and the next Read line
+   C:/kyty/s144/log_w144_14.txt:907966 build=4fc501f size=623248 full_read_line=907979 FULL
+   C:/kyty/s146/log_v146_07.txt:1559778 build=95eec77 size=29566144 full_read_line=1559844 FULL
+   C:/kyty/s146/log_v146_07.txt:1561756 build=95eec77 size=40627200 full_read_line=1561823 FULL
+   C:/kyty/s146/log_v146_07.txt:1572238 build=95eec77 size=3417120 full_read_line=1572264 FULL
+   C:/kyty/s146/log_v146_07.txt:1681988 build=95eec77 size=10713808 full_read_line=1683209 FULL
+   C:/kyty/s146/log_v146_07.txt:1683315 build=95eec77 size=3146560 full_read_line=1683403 FULL
+   C:/kyty/s146/log_v146_07.txt:1683907 build=95eec77 size=11078112 full_read_line=1684349 FULL
+   C:/kyty/s146/log_v146_07.txt:1684479 build=95eec77 size=6627472 full_read_line=1684542 FULL
+   C:/kyty/s146/log_w146_07.txt:1498499 build=95eec77 size=40627200 full_read_line=1498566 FULL
+   C:/kyty/s146/log_w146_07.txt:1504766 build=95eec77 size=17878368 full_read_line=1504767 FULL
+   C:/kyty/s146/log_w146_07.txt:1552965 build=95eec77 size=3247136 full_read_line=1552966 FULL
+   C:/kyty/s146/log_w146_07.txt:1560442 build=95eec77 size=6750096 full_read_line=1560577 FULL
+   C:/kyty/s146/log_w146_07.txt:1561114 build=95eec77 size=20874176 full_read_line=1561425 FULL
+   C:/kyty/s146/log_w146_07.txt:1565025 build=95eec77 size=3076576 full_read_line=1565046 FULL
+   C:/kyty/s146/log_w146_07.txt:1565557 build=95eec77 size=3017872 full_read_line=1565593 FULL
+   C:/kyty/s146/log_w146_07.txt:1566569 build=95eec77 size=11078112 full_read_line=1566736 FULL
+   C:/kyty/s288/s13/log_u_14.txt:325135 build=S12 adb0c82f size=6400 full_read_line=325136 FULL
+   C:/kyty/s288/s15/log_k_14.txt:438377 build=FS8 2c9b69b9 size=90672 full_read_line=438378 FULL
+   C:/kyty/s288/s15/log_k_14.txt:438399 build=FS8 2c9b69b9 size=97792 full_read_line=438400 FULL
+   C:/kyty/s288/s15/log_k_14.txt:438407 build=FS8 2c9b69b9 size=97792 full_read_line=438408 FULL
+   C:/kyty/s288/s15/log_u_14.txt:293495 build=FS8 2c9b69b9 size=623248 full_read_line=293496 FULL
+   pairs 21 full 21

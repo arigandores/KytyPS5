@@ -1,0 +1,26 @@
+OK   list rc 0
+OK   old mtime not listed
+OK   fixture marked FIXTURE
+OK   xz with F0 sha -> F0_SAME
+OK   xz not in F0 -> SWEEP
+OK   txt -> SWEEP
+OK   run complete
+OK   lock -> exit 3
+OK   agg rc 0
+OK   dup detected
+OK   build hash parsed
+OK   levels parsed
+OK   segmented lines = 50
+OK   xz lines = 3
+OK   xz sha = original sha
+OK   baseline sig marked F0
+OK   baseline sig lines counted once per unique log (2)
+OK   new sig marked NEW
+OK   fixture sig not counted (logs 1)
+OK   segmented sig counted 50 lines
+OK   segmented example line 1
+OK   xz-only sig present
+OK   F0_SAME xz not swept
+OK   new table excludes F0 sigs
+OK   example line number 7
+ALL OK

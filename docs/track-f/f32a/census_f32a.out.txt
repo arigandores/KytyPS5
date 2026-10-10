@@ -1,0 +1,7 @@
+ids 74 occurrences 260
+ids 74 by code {'FIXED': 17, 'NE_DEFEKT': 11, 'OPEN': 19, 'NE_DEFEKT+REM': 6, 'TUPIK': 3, 'DUBL': 2, 'K5': 14, 'SPLIT': 1, 'FIXED+REM': 1}
+OPEN 19 Б5 Б5а Б6 Б26в Б26г Б32 Б34 Б36 Б40 Ф3 Ф4а Ф11 Ф18 Ф20 Ф21 Ф22 Ф24 Ф25 Ф26
+REMAINDERS 7 Б8 Б14 Б28 Б29 Б33 Б39 Ф5
+lead list (a) open rows missing in census: 0 ; census open rows beyond list (a): 0
+lead remainders missing in census: 0 ; census remainders beyond list (a): ['Б29', 'Б39']
+ALL OK

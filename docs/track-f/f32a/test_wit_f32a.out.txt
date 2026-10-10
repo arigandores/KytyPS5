@@ -1,0 +1,38 @@
+OK   one rc 0 log_0.txt
+OK   one rc 0 log_1.txt
+OK   one rc 0 log_2.txt.xz
+OK   [0] skipped 3 with classes
+OK   [0] take miss+hit
+OK   [0] cfg outside 1 (inside not counted)
+OK   [0] sock 1 (decimal len only) line 8
+OK   [0] read0 1
+OK   [0] ctl removed 1
+OK   [0] vuid 06479 1
+OK   [0] late >= 1 s only 1
+OK   [0] quit 1
+OK   [0] fatal 1 line 15
+OK   [0] lines 18
+OK   [1] skipped 3 with classes
+OK   [1] take miss+hit
+OK   [1] cfg outside 1 (inside not counted)
+OK   [1] sock 1 (decimal len only) line 8
+OK   [1] read0 1
+OK   [1] ctl removed 1
+OK   [1] vuid 06479 1
+OK   [1] late >= 1 s only 1
+OK   [1] quit 1
+OK   [1] fatal 1 line 15
+OK   [1] lines 18
+OK   [2] skipped 3 with classes
+OK   [2] take miss+hit
+OK   [2] cfg outside 1 (inside not counted)
+OK   [2] sock 1 (decimal len only) line 8
+OK   [2] read0 1
+OK   [2] ctl removed 1
+OK   [2] vuid 06479 1
+OK   [2] late >= 1 s only 1
+OK   [2] quit 1
+OK   [2] fatal 1 line 15
+OK   [2] lines 18
+OK   lock -> exit 3
+ALL OK

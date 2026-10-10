@@ -1,0 +1,3 @@
+signatures 203 classified 203 {'ROW': 46, 'INSTR': 75, 'GUEST': 24, 'FS': 30, 'ROW_K5': 1, 'ARGS': 5, 'FIXTURE': 22}
+new K1-K4 rows proposed by the triage: 0
+ALL OK

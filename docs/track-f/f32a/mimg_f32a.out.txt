@@ -1,0 +1,29 @@
+OK   synthetic BVH + BVH64 with NSA sizes {230: 1, 231: 1} OK
+OK   synthetic non-BVH MIMG not counted {0: 1} OK
+eboot ELF 6087 unique programs 5698
+walk status {'OK': 5690, 'FRONT_OK': 8}
+MIMG op 0xE6 IMAGE_BVH_INTERSECT_RAY: instructions 60 programs 20
+MIMG op 0xE7 IMAGE_BVH64_INTERSECT_RAY: instructions 0 programs 0
+bvh32 380bb9d636390bae 3 OK
+bvh32 0af122d5ac62c4c5 3 OK
+bvh32 a763fb769f3167ec 3 OK
+bvh32 99012529f9a27ba3 3 OK
+bvh32 503d7f066a496c3c 3 OK
+bvh32 7ede18ae55120a48 3 OK
+bvh32 56a15431999c5a2d 3 OK
+bvh32 1f3219e5899a66f2 3 OK
+bvh32 1f16e50eea0c89e3 3 OK
+bvh32 d234cf2781dabb34 3 OK
+bvh32 ea8e2d64dfe34ed9 3 OK
+bvh32 8175abf0855222db 3 OK
+bvh32 ff8ee744ffa4dcdc 3 OK
+bvh32 b76e569142635733 3 OK
+bvh32 5323c4ef4f785055 3 OK
+bvh32 3d27502d0a809c72 3 OK
+bvh32 f88d0f630ac5b35d 3 OK
+bvh32 559a0fa9def7a691 3 OK
+bvh32 cd94166bf3f2bb81 3 OK
+bvh32 092754e7ae8bac9a 3 OK
+ALL OK
+T1 unique programs 337 walk status {'OK': 333, 'FRONT_OK': 4}
+T1 BVH instructions 27 programs 9 ; BVH64 instructions 0 programs 0

@@ -1,0 +1,37 @@
+OK   ids parsed: B1, B12, F4a
+OK   B12 not taken from a non-first cell of the B1 row
+OK   multi-id first cell gives both ids
+OK   section 48.2 row recorded with its section
+OK   header row not taken as data
+OK   outcome words FIXED in last B1 row
+OK   F4a letter kept (not F4)
+ids 3 by code {'FIXED': 1, 'OPEN': 1, 'NE_DEFEKT': 1}
+OPEN 1 Б12
+REMAINDERS 0 
+lead list (a) open rows missing in census: 0 ; census open rows beyond list (a): 0
+lead remainders missing in census: 0 ; census remainders beyond list (a): 0
+OK   adjudication passes
+OK   FIXED cited on the section 9 line (15th line is prose, 14th is the row)
+OK   B12 outcome line ignores the 48.2 summary row
+OK   NE DEFEKT cited from prose line
+NOT ADJUDICATED Ф4а
+ids 2 by code {'FIXED': 1, 'OPEN': 1}
+OPEN 1 Б12
+REMAINDERS 0 
+lead list (a) open rows missing in census: 0 ; census open rows beyond list (a): 0
+lead remainders missing in census: 0 ; census remainders beyond list (a): 0
+OK   missing adjudication fails
+NO LINE WITH Б12 TUPIK
+ids 3 by code {'OPEN': 2, 'TUPIK': 1}
+OPEN 2 Б1 Ф4а
+REMAINDERS 0 
+lead list (a) open rows missing in census: ['Б12'] ; census open rows beyond list (a): ['Б1', 'Ф4а']
+lead remainders missing in census: 0 ; census remainders beyond list (a): 0
+OK   missing citation fails
+ids 3 by code {'FIXED': 2, 'NE_DEFEKT': 1}
+OPEN 0 
+REMAINDERS 0 
+lead list (a) open rows missing in census: ['Б12'] ; census open rows beyond list (a): 0
+lead remainders missing in census: 0 ; census remainders beyond list (a): 0
+OK   lead open row not open in census fails
+ALL OK

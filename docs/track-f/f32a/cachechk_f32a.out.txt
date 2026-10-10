@@ -1,0 +1,3 @@
+reference log C:/kyty/f287/f31c/log_b25m_36.txt skipped hashes 137 {'op:SOP1:0x21': 96, 'budget': 4, 'resource_tracking': 33, 'op:VOPC:0xf3': 4}
+cs cache files 466 distinct hashes 141
+skipped hashes present in the translation cache: 0 

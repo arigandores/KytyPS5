@@ -1,0 +1,19 @@
+[    0.0] events 2 done 0 todo 2 arms ['orig', 'def', 'mask', 'mem', 'sens', 'diag', 'orig2']
+[    3.8] opened C:/kyty/f287/f12f/f12_rd_k02.rdc
+[    7.5] event 88997 arm orig done
+[   11.3] event 88997 arm def done
+[   15.1] event 88997 arm mask done
+[   18.5] event 88997 arm mem done
+[   22.0] event 88997 arm sens done
+[   25.5] event 88997 arm diag done
+[   27.3] event 88997 arm orig2 done
+[   27.3] event 88997 written in 22.9 s
+[   30.0] event 89179 arm orig done
+[   33.3] event 89179 arm def done
+[   36.4] event 89179 arm mask done
+[   39.5] event 89179 arm mem done
+[   42.7] event 89179 arm sens done
+[   45.8] event 89179 arm diag done
+[   47.6] event 89179 arm orig2 done
+[   47.6] event 89179 written in 20.3 s
+[   47.6] done

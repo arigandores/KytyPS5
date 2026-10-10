@@ -1,0 +1,51 @@
+[    0.0] events 6 done 0 todo 6 arms ['orig', 'def', 'mask', 'mem', 'sens', 'diag', 'orig2']
+[    6.2] opened C:/kyty/f287/f12f/f12_rd_k07.rdc
+[    9.8] event 47207 arm orig done
+[   12.3] event 47207 arm def done
+[   15.0] event 47207 arm mask done
+[   17.9] event 47207 arm mem done
+[   20.3] event 47207 arm sens done
+[   22.7] event 47207 arm diag done
+[   23.8] event 47207 arm orig2 done
+[   23.8] event 47207 written in 16.6 s
+[   25.7] event 47339 arm orig done
+[   27.8] event 47339 arm def done
+[   30.0] event 47339 arm mask done
+[   32.3] event 47339 arm mem done
+[   34.7] event 47339 arm sens done
+[   37.0] event 47339 arm diag done
+[   38.2] event 47339 arm orig2 done
+[   38.2] event 47339 written in 14.4 s
+[   40.5] event 82614 arm orig done
+[   43.4] event 82614 arm def done
+[   45.9] event 82614 arm mask done
+[   48.8] event 82614 arm mem done
+[   51.6] event 82614 arm sens done
+[   54.3] event 82614 arm diag done
+[   55.8] event 82614 arm orig2 done
+[   55.8] event 82614 written in 17.6 s
+[   58.0] event 82739 arm orig done
+[   60.8] event 82739 arm def done
+[   63.4] event 82739 arm mask done
+[   66.2] event 82739 arm mem done
+[   69.0] event 82739 arm sens done
+[   71.7] event 82739 arm diag done
+[   73.7] event 82739 arm orig2 done
+[   73.7] event 82739 written in 17.9 s
+[   76.2] event 121162 arm orig done
+[   79.1] event 121162 arm def done
+[   81.7] event 121162 arm mask done
+[   84.1] event 121162 arm mem done
+[   86.7] event 121162 arm sens done
+[   89.4] event 121162 arm diag done
+[   90.8] event 121162 arm orig2 done
+[   90.8] event 121162 written in 17.1 s
+[   93.0] event 121286 arm orig done
+[   95.5] event 121286 arm def done
+[   98.1] event 121286 arm mask done
+[  100.6] event 121286 arm mem done
+[  103.1] event 121286 arm sens done
+[  105.6] event 121286 arm diag done
+[  107.0] event 121286 arm orig2 done
+[  107.0] event 121286 written in 16.2 s
+[  107.0] done

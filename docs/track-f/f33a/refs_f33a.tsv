@@ -1,0 +1,67 @@
+ee9632be	src/graphics/presentation/window/window.cpp	217	"LOGF(""Event: quit\n"");"	
+ee9632be	src/graphics/presentation/window/window.cpp	219	game.need_exit = true;	}
+ee9632be	src/emulator.cpp	145	subsystems.Initialize<Config::Lifecycle>();	Config::Load(cfg);
+ee9632be	src/emulator.cpp	147	subsystems.Initialize<Log::Lifecycle>();	
+ee9632be	src/emulator.cpp	158	subsystems.Initialize<Loader::Timer::Lifecycle>();	subsystems.Initialize<Libs::LibKernel::PthreadLifecycle>();
+ee9632be	src/emulator.cpp	159	subsystems.Initialize<Libs::LibKernel::PthreadLifecycle>();	subsystems.Initialize<Profiler::Lifecycle>();
+ee9632be	src/emulator.cpp	160	subsystems.Initialize<Profiler::Lifecycle>();	subsystems.Initialize<Libs::Network::Lifecycle>();
+ee9632be	src/emulator.cpp	161	subsystems.Initialize<Libs::Network::Lifecycle>();	subsystems.Initialize<Libs::LibKernel::Memory::Lifecycle>();
+ee9632be	src/emulator.cpp	162	subsystems.Initialize<Libs::LibKernel::Memory::Lifecycle>();	subsystems.Initialize<Libs::LibKernel::FileSystem::Lifecycle>();
+ee9632be	src/emulator.cpp	163	subsystems.Initialize<Libs::LibKernel::FileSystem::Lifecycle>();	subsystems.Initialize<Libs::SaveData::Lifecycle>();
+ee9632be	src/emulator.cpp	164	subsystems.Initialize<Libs::SaveData::Lifecycle>();	subsystems.Initialize<Libs::Controller::Lifecycle>();
+ee9632be	src/emulator.cpp	165	subsystems.Initialize<Libs::Controller::Lifecycle>();	subsystems.Initialize<Libs::Audio::Lifecycle>();
+ee9632be	src/emulator.cpp	166	subsystems.Initialize<Libs::Audio::Lifecycle>();	subsystems.Initialize<Libs::Graphics::Lifecycle>();
+ee9632be	src/emulator.cpp	167	subsystems.Initialize<Libs::Graphics::Lifecycle>();	}
+ee9632be	src/emulator.cpp	192	Common::Thread guest_thread(	[](void* param) {
+ee9632be	src/emulator.cpp	198	Libs::Graphics::WindowRun();	std::quick_exit(0);
+ee9632be	src/emulator.cpp	199	std::quick_exit(0);	}
+ee9632be	src/emulator.cpp	228	Common::Subsystems subsystems(true);	Init(options.config, param_json, subsystems);
+ee9632be	src/emulator.cpp	239	int ok = atexit(KytyClose);	EXIT_NOT_IMPLEMENTED(ok != 0);
+ee9632be	src/emulator.cpp	243	ok = at_quick_exit(Common::Subsystems::EmergencyShutdownActive);	EXIT_NOT_IMPLEMENTED(ok != 0);
+ee9632be	src/common/subsystems.cpp	5	static Subsystems* g_active_subsystems = nullptr;	
+ee9632be	src/common/subsystems.cpp	7	Subsystems::Subsystems(bool print): m_print(print) {	m_active.reserve(16);
+ee9632be	src/common/subsystems.cpp	8	m_active.reserve(16);	g_active_subsystems = this;
+ee9632be	src/common/subsystems.cpp	28	void Subsystems::EmergencyShutdown() {	for (auto it = m_active.rbegin(); it != m_active.rend(); ++it) {
+ee9632be	src/common/subsystems.cpp	29	for (auto it = m_active.rbegin(); it != m_active.rend(); ++it) {	if (it->emergency_shutdown != nullptr) {
+ee9632be	src/common/subsystems.cpp	34	m_active.clear();	}
+ee9632be	src/common/subsystems.cpp	37	void Subsystems::EmergencyShutdownActive() {	if (g_active_subsystems != nullptr) {
+ee9632be	src/common/subsystems.cpp	39	g_active_subsystems->EmergencyShutdown();	}
+ee9632be	src/common/subsystems.h	56	std::vector<Entry> m_active;	bool               m_print;
+ee9632be	src/common/assert.cpp	22	static int DbgReport(const char* title, std::string_view text, const char* file, int line) {	if (fatal_interceptor) { fatal_interceptor(file, line, text); }
+ee9632be	src/common/assert.cpp	24	Log::WriteFatal(BuildFatalReport(title, text, file, line));	Subsystems::EmergencyShutdownActive();
+ee9632be	src/common/assert.cpp	25	Subsystems::EmergencyShutdownActive();	return 1;
+ee9632be	src/common/assert.cpp	38	int DbgExitHandler(const char* file, int line, std::string_view text) {	if (fatal_interceptor) { fatal_interceptor(file, line, text); }
+ee9632be	src/common/assert.cpp	116	void DbgExit(int status) {	"if (fatal_interceptor) { fatal_interceptor(""DbgExit"", status, ""explicit fatal exit""); }"
+ee9632be	src/common/assert.cpp	118	Subsystems::EmergencyShutdownActive();	std::fflush(nullptr);
+ee9632be	src/common/assert.cpp	120	std::_Exit(status);	}
+ee9632be	src/common/assert.h	50	#define EXIT_HALT() (Common::DbgExit(321), 1)	
+ee9632be	src/common/assert.h	54	((void)((x) && Common::DbgExitIfHandler(#x, __FILE__, __LINE__) != 0 && (EXIT_HALT(), 1) != 0))	#else
+ee9632be	src/common/logging/log.h	19	static constexpr auto        emergency_shutdown = Log::Shutdown;	};
+ee9632be	src/common/logging/log.cpp	114	constexpr uint64_t kDrainNs           = 5000000000u; // the drain waits for the writer <= 5 s, then writes the rest itself	constexpr uint64_t kFlushEveryNs      = 100000000u;  // the idle writer flushes the sink at most every 100 ms
+ee9632be	src/common/logging/log.cpp	698	void WriteFatal(std::string_view text) {	if (g_direction == Direction::Silent || !g_initialized) {
+ee9632be	src/common/logging/log.cpp	707	Async::Drain(false); // F25k: the fatal text and everything before it are in the file before the caller dies	}
+ee9632be	src/common/logging/log.cpp	775	void Shutdown() {	if (LongFrame::g_on) [[unlikely]] {
+ee9632be	src/common/logging/log.cpp	786	g_logger.reset();	}
+ee9632be	src/common/profiler.cpp	68	void Shutdown() {	if (tracy::ProfilerAvailable()) {
+ee9632be	src/kernel/fileSystem.cpp	409	void EmergencyShutdown() {	if (g_files != nullptr) {
+ee9632be	src/kernel/fileSystem.cpp	413	g_files->FlushAll();	} else {
+ee9632be	src/kernel/fileSystem.cpp	264	void FileDescriptors::CloseAll() {	Common::LockGuard lock(m_mutex);
+ee9632be	src/kernel/fileSystem.cpp	280	void FileDescriptors::FlushAll() {	if constexpr (HOST_FILE_WRITE_BUFFERED) {
+ee9632be	src/libs/libSaveData.cpp	433	g_save_data_memory_dirty    = false;	g_save_data_memory_saved_ms = Loader::Timer::GetTimeMs();
+ee9632be	src/libs/libSaveData.cpp	455	void FlushMemoryPersist() {	Common::LockGuard lock(g_save_data_memory_mutex);
+ee9632be	src/libs/libSaveData.cpp	456	Common::LockGuard lock(g_save_data_memory_mutex);	flush_save_memory(true);
+ee9632be	src/libs/controller.cpp	228	void PadOutput::Stop() {	// Track F, F19c2 (ROADMAP s122 item 460(v)(1), RC1 of the F19d review): two emergency exits at once call Stop
+ee9632be	src/libs/controller.cpp	863	void EmergencyShutdown() {	if (g_haptics != nullptr) {
+ee9632be	src/libs/controller.cpp	865	g_haptics->Stop();	}
+ee9632be	src/libs/controller.cpp	869	g_pad_output->Stop();	}
+ee9632be	src/libs/controller.cpp	1152	void GameController::ReleaseHostPads() {	Common::LockGuard lock(m_mutex);
+5f48cc3e	src/common/subsystems.cpp	28	void Subsystems::EmergencyShutdown() {	// F33a stand (KYTY_TEST_EXITFATAL, test binary only): the hook is read once; nullptr - the loop is the FS11 loop.
+5f48cc3e	src/common/subsystems.h	17	inline EmergencyWalkHook g_emergency_walk_hook = nullptr;	
+5f48cc3e	src/emulator.cpp	41	// Track F, F33a (HPP-736; ROADMAP s122 item 673(z)(1)): stand KYTY_TEST_EXITFATAL=<arm>:<seed> - test binary only, NOT in	// main; off when unset. The process runs the real Init (the Graphics lifecycle is replaced by an entry with the same null
+5f48cc3e	src/emulator.cpp	122	static void Trigger(size_t pos) {	g_go.store(true);
+5f48cc3e	src/emulator.cpp	183	static void Injector(void* /*arg*/) {	if (g_arm == Arm::C) {
+5f48cc3e	src/emulator.cpp	212	std::quick_exit(0);	}
+5f48cc3e	src/emulator.cpp	347	subsystems.Initialize<ExitFatalStand::GraphicsPlaceholder>();	}
+5f48cc3e	src/emulator.cpp	409	ExitFatalStand::Parse();	Common::Subsystems subsystems(true);
+5f48cc3e	src/emulator.cpp	434	ExitFatalStand::Run();	}
+5f48cc3e	src/emulator.cpp	194	EXIT_IF(g_inject.load());	"Line(""ExitFatal: inject returned\n"");"

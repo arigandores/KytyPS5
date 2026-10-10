@@ -1,0 +1,6 @@
+F33a (HPP-736): test binary of the stand KYTY_TEST_EXITFATAL - worktree C:/kyty/f287/f33a/wt HEAD 5f48cc3e3215a46bbb0cf813deb11e06c229af44 (parent ee9632be = FS11), not in main
+sha256 b42e1791a2e63464c9014cd401e3461095e3b0324d8e6859b0aa92c590b4c21d build/install/kyty_emulator.exe (24856064 bytes)
+copy C:/kyty/f287/bin/kyty_emulator_b42e1791.exe (not installed); run copy C:/kyty/f287/f33a/run/kyty_emulator_b42e1791.exe
+b42e1791a2e63464c9014cd401e3461095e3b0324d8e6859b0aa92c590b4c21d *C:/kyty/f287/bin/kyty_emulator_b42e1791.exe
+b42e1791a2e63464c9014cd401e3461095e3b0324d8e6859b0aa92c590b4c21d *C:/kyty/f287/f33a/run/kyty_emulator_b42e1791.exe
+build label KytyPS5-2026-09-15-6a2987a-1911-g5f48cc3e; SDL_REVISION (configure time) KytyPS5-2026-09-15-6a2987a-1910-gee9632be

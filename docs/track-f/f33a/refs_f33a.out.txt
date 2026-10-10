@@ -1,0 +1,69 @@
+ok   ee9632be:src/graphics/presentation/window/window.cpp:217 | LOGF("Event: quit\n");
+ok   ee9632be:src/graphics/presentation/window/window.cpp:219 | game.need_exit = true;
+ok   ee9632be:src/emulator.cpp:145 | subsystems.Initialize<Config::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:147 | subsystems.Initialize<Log::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:158 | subsystems.Initialize<Loader::Timer::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:159 | subsystems.Initialize<Libs::LibKernel::PthreadLifecycle>();
+ok   ee9632be:src/emulator.cpp:160 | subsystems.Initialize<Profiler::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:161 | subsystems.Initialize<Libs::Network::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:162 | subsystems.Initialize<Libs::LibKernel::Memory::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:163 | subsystems.Initialize<Libs::LibKernel::FileSystem::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:164 | subsystems.Initialize<Libs::SaveData::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:165 | subsystems.Initialize<Libs::Controller::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:166 | subsystems.Initialize<Libs::Audio::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:167 | subsystems.Initialize<Libs::Graphics::Lifecycle>();
+ok   ee9632be:src/emulator.cpp:192 | Common::Thread guest_thread(
+ok   ee9632be:src/emulator.cpp:198 | Libs::Graphics::WindowRun();
+ok   ee9632be:src/emulator.cpp:199 | std::quick_exit(0);
+ok   ee9632be:src/emulator.cpp:228 | Common::Subsystems subsystems(true);
+ok   ee9632be:src/emulator.cpp:239 | int ok = atexit(KytyClose);
+ok   ee9632be:src/emulator.cpp:243 | ok = at_quick_exit(Common::Subsystems::EmergencyShutdownActive);
+ok   ee9632be:src/common/subsystems.cpp:5 | static Subsystems* g_active_subsystems = nullptr;
+ok   ee9632be:src/common/subsystems.cpp:7 | Subsystems::Subsystems(bool print): m_print(print) {
+ok   ee9632be:src/common/subsystems.cpp:8 | m_active.reserve(16);
+ok   ee9632be:src/common/subsystems.cpp:28 | void Subsystems::EmergencyShutdown() {
+ok   ee9632be:src/common/subsystems.cpp:29 | for (auto it = m_active.rbegin(); it != m_active.rend(); ++it) {
+ok   ee9632be:src/common/subsystems.cpp:34 | m_active.clear();
+ok   ee9632be:src/common/subsystems.cpp:37 | void Subsystems::EmergencyShutdownActive() {
+ok   ee9632be:src/common/subsystems.cpp:39 | g_active_subsystems->EmergencyShutdown();
+ok   ee9632be:src/common/subsystems.h:56 | std::vector<Entry> m_active;
+ok   ee9632be:src/common/assert.cpp:22 | static int DbgReport(const char* title, std::string_view text, const char* file, int line)
+ok   ee9632be:src/common/assert.cpp:24 | Log::WriteFatal(BuildFatalReport(title, text, file, line));
+ok   ee9632be:src/common/assert.cpp:25 | Subsystems::EmergencyShutdownActive();
+ok   ee9632be:src/common/assert.cpp:38 | int DbgExitHandler(const char* file, int line, std::string_view text) {
+ok   ee9632be:src/common/assert.cpp:116 | void DbgExit(int status) {
+ok   ee9632be:src/common/assert.cpp:118 | Subsystems::EmergencyShutdownActive();
+ok   ee9632be:src/common/assert.cpp:120 | std::_Exit(status);
+ok   ee9632be:src/common/assert.h:50 | #define EXIT_HALT() (Common::DbgExit(321), 1)
+ok   ee9632be:src/common/assert.h:54 | ((void)((x) && Common::DbgExitIfHandler(#x, __FILE__, __LINE__) != 0 && (EXIT_HALT(), 1) !
+ok   ee9632be:src/common/logging/log.h:19 | static constexpr auto        emergency_shutdown = Log::Shutdown;
+ok   ee9632be:src/common/logging/log.cpp:114 | constexpr uint64_t kDrainNs           = 5000000000u; // the drain waits for the writer <= 
+ok   ee9632be:src/common/logging/log.cpp:698 | void WriteFatal(std::string_view text) {
+ok   ee9632be:src/common/logging/log.cpp:707 | Async::Drain(false); // F25k: the fatal text and everything before it are in the file befo
+ok   ee9632be:src/common/logging/log.cpp:775 | void Shutdown() {
+ok   ee9632be:src/common/logging/log.cpp:786 | g_logger.reset();
+ok   ee9632be:src/common/profiler.cpp:68 | void Shutdown() {
+ok   ee9632be:src/kernel/fileSystem.cpp:409 | void EmergencyShutdown() {
+ok   ee9632be:src/kernel/fileSystem.cpp:413 | g_files->FlushAll();
+ok   ee9632be:src/kernel/fileSystem.cpp:264 | void FileDescriptors::CloseAll() {
+ok   ee9632be:src/kernel/fileSystem.cpp:280 | void FileDescriptors::FlushAll() {
+ok   ee9632be:src/libs/libSaveData.cpp:433 | g_save_data_memory_dirty    = false;
+ok   ee9632be:src/libs/libSaveData.cpp:455 | void FlushMemoryPersist() {
+ok   ee9632be:src/libs/libSaveData.cpp:456 | Common::LockGuard lock(g_save_data_memory_mutex);
+ok   ee9632be:src/libs/controller.cpp:228 | void PadOutput::Stop() {
+ok   ee9632be:src/libs/controller.cpp:863 | void EmergencyShutdown() {
+ok   ee9632be:src/libs/controller.cpp:865 | g_haptics->Stop();
+ok   ee9632be:src/libs/controller.cpp:869 | g_pad_output->Stop();
+ok   ee9632be:src/libs/controller.cpp:1152 | void GameController::ReleaseHostPads() {
+ok   5f48cc3e:src/common/subsystems.cpp:28 | void Subsystems::EmergencyShutdown() {
+ok   5f48cc3e:src/common/subsystems.h:17 | inline EmergencyWalkHook g_emergency_walk_hook = nullptr;
+ok   5f48cc3e:src/emulator.cpp:41 | // Track F, F33a (HPP-736; ROADMAP s122 item 673(z)(1)): stand KYTY_TEST_EXITFATAL=<arm>:<
+ok   5f48cc3e:src/emulator.cpp:122 | static void Trigger(size_t pos) {
+ok   5f48cc3e:src/emulator.cpp:183 | static void Injector(void* /*arg*/) {
+ok   5f48cc3e:src/emulator.cpp:212 | std::quick_exit(0);
+ok   5f48cc3e:src/emulator.cpp:347 | subsystems.Initialize<ExitFatalStand::GraphicsPlaceholder>();
+ok   5f48cc3e:src/emulator.cpp:409 | ExitFatalStand::Parse();
+ok   5f48cc3e:src/emulator.cpp:434 | ExitFatalStand::Run();
+ok   5f48cc3e:src/emulator.cpp:194 | EXIT_IF(g_inject.load());
+REFS 67, anchor 67 of 67, +1 control NOT OK 67 of 67
+ALL OK

@@ -1,0 +1,20 @@
+ExitFatal: config arm=P seed=1 pos=1 positions=13 t_us=24258
+ExitFatal: quick_exit t_us=83341
+ExitFatal: walk_begin seq=1 role=main size=12 main_walk=0 main_pos=-1 in_window=0 t_us=83388
+ExitFatal: inject role=guest main_walk=1 main_pos=1 t_us=83426
+ExitFatal: walk_begin seq=2 role=guest size=12 main_walk=1 main_pos=1 in_window=1 t_us=83568
+ExitFatal: trigger pos=1 waited_us=142 guest_walk_begun=1 t_us=83568
+ExitFatal: cb seq=2 role=guest pos=2 t_us=83574
+ExitFatal: cb seq=1 role=main pos=2 t_us=83580
+ExitFatal: cb seq=1 role=main pos=3 t_us=83589
+ExitFatal: cb seq=1 role=main pos=4 t_us=83597
+ExitFatal: cb seq=1 role=main pos=7 t_us=83599
+ExitFatal: cb seq=1 role=main pos=10 t_us=83602
+ExitFatal: cb seq=2 role=guest pos=3 t_us=83691
+ExitFatal: cb seq=2 role=guest pos=4 t_us=83699
+ExitFatal: cb seq=2 role=guest pos=7 t_us=83702
+ExitFatal: cb seq=2 role=guest pos=10 t_us=83707
+ExitFatal: walk_end seq=2 role=guest callbacks=5 t_us=83709
+ExitFatal: walk_begin seq=3 role=guest size=0 main_walk=1 main_pos=10 in_window=1 t_us=83712
+ExitFatal: walk_end seq=3 role=guest callbacks=0 t_us=83716
+ExitFatal: walk_end seq=1 role=main callbacks=5 t_us=84774

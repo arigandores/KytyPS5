@@ -1,0 +1,9 @@
+ExitFatal: config arm=N seed=1 pos=1 positions=13 t_us=23332
+ExitFatal: quick_exit t_us=80042
+ExitFatal: walk_begin seq=1 role=main size=12 main_walk=0 main_pos=-1 in_window=0 t_us=80077
+ExitFatal: cb seq=1 role=main pos=2 t_us=80111
+ExitFatal: cb seq=1 role=main pos=3 t_us=80330
+ExitFatal: cb seq=1 role=main pos=4 t_us=80347
+ExitFatal: cb seq=1 role=main pos=7 t_us=80351
+ExitFatal: cb seq=1 role=main pos=10 t_us=80361
+ExitFatal: walk_end seq=1 role=main callbacks=5 t_us=80734

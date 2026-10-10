@@ -1,0 +1,11 @@
+ExitFatal: config arm=C seed=1 pos=1 positions=13 t_us=24651
+ExitFatal: inject role=guest main_walk=0 main_pos=-1 t_us=78604
+ExitFatal: walk_begin seq=1 role=guest size=12 main_walk=0 main_pos=-1 in_window=0 t_us=78844
+ExitFatal: cb seq=1 role=guest pos=2 t_us=78853
+ExitFatal: cb seq=1 role=guest pos=3 t_us=78958
+ExitFatal: cb seq=1 role=guest pos=4 t_us=78963
+ExitFatal: cb seq=1 role=guest pos=7 t_us=78965
+ExitFatal: cb seq=1 role=guest pos=10 t_us=78966
+ExitFatal: walk_end seq=1 role=guest callbacks=5 t_us=80077
+ExitFatal: walk_begin seq=2 role=guest size=0 main_walk=0 main_pos=-1 in_window=0 t_us=80082
+ExitFatal: walk_end seq=2 role=guest callbacks=0 t_us=80084

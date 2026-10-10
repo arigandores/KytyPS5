@@ -1,0 +1,31 @@
+arm P N=600 control=600 k1=578 second=578 crash=0 hang=0 abort=0 fatal_text=600 leftover=0 k1_with_control0=0 rc={'0x00000141': 130, '0x00000000': 470} dur_med=0.161 dur_max=0.458
+   pos  0 n=46 control=46 second=46 crash=0 hang=0 rc321=8 guest_cbs5=46
+   pos  1 n=47 control=47 second=47 crash=0 hang=0 rc321=9 guest_cbs5=47
+   pos  2 n=47 control=47 second=47 crash=0 hang=0 rc321=4 guest_cbs5=47
+   pos  3 n=46 control=46 second=46 crash=0 hang=0 rc321=7 guest_cbs5=46
+   pos  4 n=46 control=46 second=46 crash=0 hang=0 rc321=3 guest_cbs5=46
+   pos  5 n=46 control=46 second=46 crash=0 hang=0 rc321=14 guest_cbs5=46
+   pos  6 n=46 control=46 second=46 crash=0 hang=0 rc321=7 guest_cbs5=46
+   pos  7 n=46 control=46 second=46 crash=0 hang=0 rc321=9 guest_cbs5=46
+   pos  8 n=46 control=46 second=46 crash=0 hang=0 rc321=13 guest_cbs5=46
+   pos  9 n=46 control=46 second=46 crash=0 hang=0 rc321=8 guest_cbs5=46
+   pos 10 n=46 control=46 second=46 crash=0 hang=0 rc321=8 guest_cbs5=46
+   pos 11 n=46 control=46 second=34 crash=0 hang=0 rc321=21 guest_cbs5=32
+   pos 12 n=46 control=46 second=36 crash=0 hang=0 rc321=19 guest_cbs5=34
+arm R N=600 control=518 k1=508 second=508 crash=0 hang=0 abort=0 fatal_text=597 leftover=0 k1_with_control0=0 rc={'0x00000000': 451, '0x00000141': 149} dur_med=0.161 dur_max=0.508
+   pos  0 n=46 control=46 second=46 crash=0 hang=0 rc321=10 guest_cbs5=46
+   pos  1 n=47 control=47 second=47 crash=0 hang=0 rc321=9 guest_cbs5=47
+   pos  2 n=47 control=47 second=47 crash=0 hang=0 rc321=7 guest_cbs5=47
+   pos  3 n=46 control=46 second=46 crash=0 hang=0 rc321=7 guest_cbs5=46
+   pos  4 n=46 control=46 second=46 crash=0 hang=0 rc321=11 guest_cbs5=46
+   pos  5 n=46 control=46 second=46 crash=0 hang=0 rc321=9 guest_cbs5=46
+   pos  6 n=46 control=46 second=46 crash=0 hang=0 rc321=18 guest_cbs5=46
+   pos  7 n=46 control=46 second=46 crash=0 hang=0 rc321=13 guest_cbs5=46
+   pos  8 n=46 control=46 second=46 crash=0 hang=0 rc321=13 guest_cbs5=46
+   pos  9 n=46 control=46 second=46 crash=0 hang=0 rc321=12 guest_cbs5=46
+   pos 10 n=46 control=46 second=46 crash=0 hang=0 rc321=7 guest_cbs5=46
+   pos 11 n=46 control=5 second=0 crash=0 hang=0 rc321=16 guest_cbs5=0
+   pos 12 n=46 control=5 second=0 crash=0 hang=0 rc321=17 guest_cbs5=0
+arm C N=50 control=0 k1=0 second=0 crash=0 hang=0 abort=0 fatal_text=50 leftover=0 k1_with_control0=0 rc={'0x00000141': 50} dur_med=0.161 dur_max=0.181
+arm N N=50 control=0 k1=0 second=0 crash=0 hang=0 abort=0 fatal_text=0 leftover=0 k1_with_control0=0 rc={'0x00000000': 50} dur_med=0.157 dur_max=0.451
+ALL OK

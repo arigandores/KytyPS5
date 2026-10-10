@@ -1,0 +1,3 @@
+arm	seed	pos	rc	rc_hex	dur_s	hang	control	inj_walk	inj_main_pos	walks	main_cbs	guest_cbs	guest_walks	guest_size	waited_us	guest_walk_begun	fatal_text	abort	second	crash	k1	leftover	utc
+N	1001	0	0	0x00000000	0.184	0	0			1	5	0	0				0	0	0	0	0	0	2026-10-10T15:09:35Z
+N	1002	1	0	0x00000000	0.162	0	0			1	5	0	0				0	0	0	0	0	0	2026-10-10T15:09:35Z

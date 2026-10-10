@@ -29,6 +29,7 @@
 #include "loader/systemContent.h"
 #include "loader/timer.h"
 
+#include <atomic>
 #include <cstdlib>
 #include <chrono>
 #include <cstdio>
@@ -37,6 +38,286 @@
 #include <thread>
 
 namespace Emulator {
+
+// Track F, F33c (HPP-744; ROADMAP s122 item 675(d)(1), (v)(3)-(5)): stand KYTY_TEST_EXITFATAL=<arm>:<seed>, edition 2
+// (edition 1 - F33a 5f48cc3e, test binary only); off when unset or empty. The process runs the real Init (the Graphics
+// lifecycle is replaced by an entry with the same null emergency callback - no window, no GPU), the real at_quick_exit
+// registration, KYTY_FIX_F21 as read by Run and the mounts of Run; it loads no ELF and runs no guest code. One injector
+// thread (Common::Thread, as guest_thread of Execute; role "guest") raises a fatal with EXIT_IF - the path of a guest
+// fatal: DbgReport -> Log::WriteFatal -> EmergencyShutdownActive -> EXIT_HALT -> DbgExit(321). The observer is
+// Common::Subsystems::SetEmergencyHook (called on the F21 path of EmergencyShutdownActive only: armed stand or
+// KYTY_FIX_F21=1). pos = seed % 13: 0..11 - the entries counted from the end, 12 - after the loop, before clear.
+//   P2 - the main thread ends the process by std::quick_exit(0) (the exit of Execute); at position pos of its walk it
+//        releases the injector and waits <= 2 s for the injector's entry into EmergencyShutdownActive, then goes on;
+//   R2 - as P2 without the wait;
+//   G  - reverse order: the injector raises its fatal first (50 ms after the start); at position pos of its walk it
+//        releases the main thread and waits <= 2 s for the main thread's entry; the main thread, released, calls
+//        std::quick_exit(0) (control - the main thread entered while the injector's walk was in progress);
+//   C  - control: no exit on the main thread, the injector raises the fatal 50 ms after the start;
+//   N  - control: std::quick_exit(0) without a fatal;
+//   H  - the main thread ends the process by std::quick_exit(0); at position pos of its walk it releases the injector
+//        and sleeps 15 s inside the walk (> T of KYTY_FIX_F21) - the positive control of the wait limit;
+//   HG - reference arm of F33c (not a member of item 675(d)(1)): as G, but at position pos of its walk the injector (the
+//        owner) releases the main thread and sleeps 15 s inside the walk; the main thread enters through quick_exit
+//        while it holds the CRT exit lock - the wait limit of the thread that ends the process.
+// Every event is one stderr line "ExitFatal: ..." (fwrite + fflush) with t_us (steady clock from Parse) and, where the
+// driver needs the wall time, e_us (system clock, microseconds since the epoch).
+namespace ExitFatalStand {
+
+enum class Arm { Off, P2, R2, G, C, N, H, HG };
+
+static constexpr size_t   kPositions   = 13;
+static constexpr uint64_t kPeerWaitUs  = 2000000;
+static constexpr uint32_t kHoldMs      = 15000;
+static constexpr uint64_t kMainGoCapUs = 5000000;
+
+static Arm               g_arm  = Arm::Off;
+static uint32_t          g_seed = 0;
+static size_t            g_pos  = 0;
+static std::atomic<bool> g_go {false};      // the injector may raise its fatal (P2, R2, H)
+static std::atomic<bool> g_go_main {false}; // the main thread may call quick_exit (G, HG)
+static std::atomic<bool> g_inject {false};
+static std::atomic<int>  g_main_walk {0};
+static std::atomic<int>  g_guest_walk {0};
+static std::atomic<int>  g_main_entered {0};
+static std::atomic<int>  g_guest_entered {0};
+static std::atomic<int>  g_walk_seq {0};
+static std::atomic<int>  g_triggered {0};
+static thread_local int  t_seq   = 0;
+static thread_local int  t_cbs   = 0;
+static thread_local int  t_depth = 0;
+
+static std::chrono::steady_clock::time_point g_t0;
+
+struct GraphicsPlaceholder {
+	static constexpr const char* name = "Graphics (KYTY_TEST_EXITFATAL placeholder: no window, no GPU)";
+	static void initialize() {}
+	static void shutdown() {}
+};
+
+static bool Armed() {
+	return g_arm != Arm::Off;
+}
+
+static uint64_t NowUs() {
+	return static_cast<uint64_t>(
+	    std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - g_t0).count());
+}
+
+static uint64_t EpochUs() {
+	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
+	                                 std::chrono::system_clock::now().time_since_epoch())
+	                                 .count());
+}
+
+static void Line(const std::string& text) {
+	std::fwrite(text.data(), 1, text.size(), stderr);
+	std::fflush(stderr);
+}
+
+static bool IsMain() {
+	return Common::Thread::IsMainThread();
+}
+
+static const char* Role() {
+	return IsMain() ? "main" : "guest";
+}
+
+static const char* ArmName() {
+	switch (g_arm) {
+		case Arm::P2: return "P2";
+		case Arm::R2: return "R2";
+		case Arm::G: return "G";
+		case Arm::C: return "C";
+		case Arm::N: return "N";
+		case Arm::H: return "H";
+		case Arm::HG: return "HG";
+		default: return "off";
+	}
+}
+
+static void Hook(int event, size_t index, size_t size);
+
+// Main thread, before Init and before KYTY_FIX_F21 is read: parse and, armed, set the observer.
+static void Parse() {
+	const char* value = std::getenv("KYTY_TEST_EXITFATAL");
+	if (value == nullptr || value[0] == '\0') {
+		return;
+	}
+	char     arm[4] = {};
+	unsigned seed   = 0;
+	Arm      parsed = Arm::Off;
+	if (std::sscanf(value, "%3[A-Z0-9]:%u", arm, &seed) == 2) {
+		const std::string name(arm);
+		parsed = name == "P2"  ? Arm::P2
+		         : name == "R2" ? Arm::R2
+		         : name == "G"  ? Arm::G
+		         : name == "C"  ? Arm::C
+		         : name == "N"  ? Arm::N
+		         : name == "H"  ? Arm::H
+		         : name == "HG" ? Arm::HG
+		                        : Arm::Off;
+	}
+	if (parsed == Arm::Off) {
+		std::fprintf(stderr, "KYTY_TEST_EXITFATAL: bad value '%s' (<P2|R2|G|C|N|H|HG>:<seed>), stand off\n", value);
+		return;
+	}
+	g_arm  = parsed;
+	g_seed = seed;
+	g_pos  = seed % kPositions;
+	g_t0   = std::chrono::steady_clock::now();
+	Common::Subsystems::SetEmergencyHook(Hook);
+}
+
+// Inside a walk at position pos, on the thread whose walk triggers (main for P2, R2, H; the injector for G, HG).
+static void Trigger(size_t pos) {
+	if (g_triggered.exchange(1) != 0) {
+		return;
+	}
+	const auto t_trig = NowUs();
+	uint64_t   waited = 0;
+	switch (g_arm) {
+		case Arm::P2:
+			g_go.store(true);
+			while (g_guest_entered.load() == 0 && NowUs() - t_trig < kPeerWaitUs) {
+				std::this_thread::yield();
+			}
+			waited = NowUs() - t_trig;
+			break;
+		case Arm::R2: g_go.store(true); break;
+		case Arm::G:
+			g_go_main.store(true);
+			while (g_main_entered.load() == 0 && NowUs() - t_trig < kPeerWaitUs) {
+				std::this_thread::yield();
+			}
+			waited = NowUs() - t_trig;
+			break;
+		case Arm::H: g_go.store(true); break;
+		case Arm::HG: g_go_main.store(true); break;
+		default: break;
+	}
+	Line(fmt::format("ExitFatal: trigger role={} pos={} waited_us={} main_entered={} guest_entered={} t_us={}\n",
+	                 Role(), pos, waited, g_main_entered.load(), g_guest_entered.load(), NowUs()));
+	if (g_arm == Arm::H || g_arm == Arm::HG) {
+		Line(fmt::format("ExitFatal: hold_begin role={} pos={} ms={} t_us={} e_us={}\n", Role(), pos, kHoldMs, NowUs(),
+		                 EpochUs()));
+		Common::Thread::Sleep(kHoldMs);
+		Line(fmt::format("ExitFatal: hold_end role={} pos={} t_us={}\n", Role(), pos, NowUs()));
+	}
+}
+
+static bool TriggerHere() {
+	if (g_arm == Arm::P2 || g_arm == Arm::R2 || g_arm == Arm::H) {
+		return IsMain();
+	}
+	if (g_arm == Arm::G || g_arm == Arm::HG) {
+		return !IsMain();
+	}
+	return false;
+}
+
+static void Hook(int event, size_t index, size_t size) {
+	const bool main = IsMain();
+	switch (event) {
+		case Common::kEmergencyEnter: {
+			(main ? g_main_entered : g_guest_entered).store(1);
+			Line(fmt::format("ExitFatal: enter role={} tid={} main_walk={} guest_walk={} t_us={} e_us={}\n", Role(),
+			                 Common::Thread::GetThreadIdUnique(), g_main_walk.load(), g_guest_walk.load(), NowUs(),
+			                 EpochUs()));
+			break;
+		}
+		case Common::kEmergencyWalkBegin: {
+			const int nested = t_depth > 0 ? 1 : 0;
+			t_depth++;
+			t_seq = g_walk_seq.fetch_add(1) + 1;
+			t_cbs = 0;
+			(main ? g_main_walk : g_guest_walk).store(1);
+			Line(fmt::format("ExitFatal: walk_begin seq={} role={} size={} nested={} t_us={}\n", t_seq, Role(), size,
+			                 nested, NowUs()));
+			break;
+		}
+		case Common::kEmergencyBeforeEntry:
+			if (index == g_pos && TriggerHere()) {
+				Trigger(index);
+			}
+			break;
+		case Common::kEmergencyBeforeCallback:
+			t_cbs++;
+			Line(fmt::format("ExitFatal: cb seq={} role={} pos={} t_us={}\n", t_seq, Role(), index, NowUs()));
+			break;
+		case Common::kEmergencyAfterLoop:
+			if (g_pos == kPositions - 1 && TriggerHere()) {
+				Trigger(index);
+			}
+			break;
+		case Common::kEmergencyAfterClear:
+			Line(fmt::format("ExitFatal: walk_end seq={} role={} callbacks={} t_us={} e_us={}\n", t_seq, Role(), t_cbs,
+			                 NowUs(), EpochUs()));
+			(main ? g_main_walk : g_guest_walk).store(0);
+			t_depth--;
+			break;
+		case Common::kEmergencyReenter:
+			Line(fmt::format("ExitFatal: reenter role={} t_us={}\n", Role(), NowUs()));
+			break;
+		case Common::kEmergencyDoneSeen:
+			Line(fmt::format("ExitFatal: done_seen role={} t_us={}\n", Role(), NowUs()));
+			break;
+		case Common::kEmergencyWaitBegin:
+			Line(fmt::format("ExitFatal: wait_begin role={} t_us={} e_us={}\n", Role(), NowUs(), EpochUs()));
+			break;
+		case Common::kEmergencyWaitDone:
+			Line(fmt::format("ExitFatal: wait_done role={} waited_us={} t_us={}\n", Role(), index, NowUs()));
+			break;
+		case Common::kEmergencyWaitExpired:
+			Line(fmt::format("ExitFatal: wait_expired role={} waited_us={} t_us={} e_us={}\n", Role(), index, NowUs(),
+			                 EpochUs()));
+			break;
+		case Common::kEmergencyExpiredSeen:
+			Line(fmt::format("ExitFatal: expired_seen role={} t_us={}\n", Role(), NowUs()));
+			break;
+		default: break;
+	}
+}
+
+static void Injector(void* /*arg*/) {
+	if (g_arm == Arm::C || g_arm == Arm::G || g_arm == Arm::HG) {
+		Common::Thread::Sleep(50);
+	} else {
+		while (!g_go.load()) {
+			std::this_thread::yield();
+		}
+	}
+	Line(fmt::format("ExitFatal: inject role={} main_walk={} t_us={}\n", Role(), g_main_walk.load(), NowUs()));
+	g_inject.store(true);
+	EXIT_IF(g_inject.load());
+	Line("ExitFatal: inject returned\n");
+}
+
+[[noreturn]] static void Run() {
+	Line(fmt::format("ExitFatal: config arm={} seed={} pos={} positions={} fix={} wait_ms={} t_us={} e_us={}\n",
+	                 ArmName(), g_seed, g_pos, kPositions, Common::Subsystems::FixF21On() ? 1 : 0,
+	                 Common::Subsystems::kFixF21WaitMs, NowUs(), EpochUs()));
+	LOGF("ExitFatal: config arm=%s seed=%u pos=%u\n", ArmName(), g_seed, static_cast<unsigned>(g_pos));
+	auto* injector = new Common::Thread(Injector, nullptr); // never joined or destroyed - as guest_thread under quick_exit
+	(void)injector;
+	if (g_arm == Arm::C) {
+		for (;;) {
+			Common::Thread::Sleep(1000);
+		}
+	}
+	if (g_arm == Arm::G || g_arm == Arm::HG) {
+		const auto t_wait = NowUs();
+		while (!g_go_main.load() && NowUs() - t_wait < kMainGoCapUs) {
+			std::this_thread::yield();
+		}
+	} else {
+		Common::Thread::Sleep(50);
+	}
+	Line(fmt::format("ExitFatal: quick_exit t_us={}\n", NowUs()));
+	std::quick_exit(0);
+}
+
+} // namespace ExitFatalStand
 
 static void SetCacheTestEnvironment(const char* key, const char* value) {
 	// SDL_setenv updates SDL's private environment on Windows; cache switches use std::getenv.
@@ -165,7 +446,11 @@ static void Init(const Config::ConfigOptions& cfg, const std::filesystem::path& 
 	subsystems.Initialize<Libs::SaveData::Lifecycle>();
 	subsystems.Initialize<Libs::Controller::Lifecycle>();
 	subsystems.Initialize<Libs::Audio::Lifecycle>();
-	subsystems.Initialize<Libs::Graphics::Lifecycle>();
+	if (!ExitFatalStand::Armed()) {
+		subsystems.Initialize<Libs::Graphics::Lifecycle>();
+	} else {
+		subsystems.Initialize<ExitFatalStand::GraphicsPlaceholder>(); // F33c stand: no window, no GPU
+	}
 }
 
 static void LoadElf(const std::filesystem::path& elf, bool dbg_print_reloc = false,
@@ -230,6 +515,7 @@ void Run(const RunOptions& options) {
 	const auto         param_json = options.app0_dir / "sce_sys" / "param.json";
 	// Track F, F33c (KYTY_FIX_F21; ROADMAP s122 item 675(g)): read once here - the main thread, before Init
 	// starts any host thread and before the guest threads.
+	ExitFatalStand::Parse(); // F33c stand KYTY_TEST_EXITFATAL (off when unset): the observer is set before the knob
 	Common::Subsystems::InitFixF21();
 	Common::Subsystems subsystems(true);
 	Init(options.config, param_json, subsystems);
@@ -255,6 +541,10 @@ void Run(const RunOptions& options) {
 	Libs::LibKernel::FileSystem::Mount(options.app0_dir, "/hostapp");
 
 	MountSandboxDirs();
+
+	if (ExitFatalStand::Armed()) {
+		ExitFatalStand::Run(); // F33c stand: never returns
+	}
 
 	// Track P, KYTY_GAME_PATCH (loader/gamePatchFile.h, ROADMAP s122 item 333(d)): the decision before Libs::InitAll,
 	// whose registration reads PVar::Mode(); without the variable nothing is called.

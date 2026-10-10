@@ -1,0 +1,18 @@
+2026-10-10T17:51:58Z f33c2 start: read ROADMAP 681 @7cd33c03 with 675(d), stand e5979953, fix 227e1b36, probe probe_cn.py
+2026-10-10T17:53:58Z f33c2 edition 3 committed in main 5237fdff; gate order main clean
+2026-10-10T17:54:27Z f33c2 worktree ee9632be + cherry-pick 227e1b36 e5979953 5237fdff -> b007ce5f
+2026-10-10T17:55:45Z f33c2 gate order wt clean; configure rc=0
+2026-10-10T17:56:43Z f33c2 build emu1 rc=0
+2026-10-10T17:58:54Z f33c2 comment: N and seeds named before counted data; fixtures test_read ALL OK (41), test_driver ALL OK
+2026-10-10T17:59:07Z F33c2 counted step start: arm CN seeds 3001-3050 KYTY_FIX_F21=1 binary a086872d
+2026-10-10T17:59:22Z F33c2 counted step end: arm CN seeds 3001-3050 KYTY_FIX_F21=1 rc=0
+2026-10-10T17:59:22Z F33c2 counted step start: arm C seeds 3001-3050 KYTY_FIX_F21=1 binary a086872d
+2026-10-10T17:59:36Z F33c2 counted step end: arm C seeds 3001-3050 KYTY_FIX_F21=1 rc=0
+2026-10-10T17:59:37Z F33c2 counted step start: arm CN seeds 3001-3050 KYTY_FIX_F21=0 binary a086872d
+2026-10-10T17:59:51Z F33c2 counted step end: arm CN seeds 3001-3050 KYTY_FIX_F21=0 rc=0
+2026-10-10T17:59:51Z F33c2 counted step start: arm C seeds 3001-3050 KYTY_FIX_F21=0 binary a086872d
+2026-10-10T18:00:06Z F33c2 counted step end: arm C seeds 3001-3050 KYTY_FIX_F21=0 rc=0
+2026-10-10T18:00:11Z F33c2 counted step start: arm P2 seeds 3001-3200 KYTY_FIX_F21=1 binary a086872d
+2026-10-10T18:01:03Z F33c2 counted step end: arm P2 seeds 3001-3200 KYTY_FIX_F21=1 rc=0
+2026-10-10T18:01:34Z f33c2 counted runs read: read_f33c2.out.txt 35735823 MEMBERS ALL YES; files copied to docs/track-f/f33c2
+2026-10-10T18:02:47Z f33c2 FACTS section F33c2 appended; f33c2.md bce2399d

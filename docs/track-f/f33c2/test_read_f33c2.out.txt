@@ -1,0 +1,43 @@
+ok   CN =1 good                               expect True got True
+ok   CN =1 walks 2                            expect False got False
+ok   CN =1 walks 0                            expect False got False
+ok   CN =1 nested 1                           expect False got False
+ok   CN =1 reenter 1 (< 2)                    expect False got False
+ok   CN =1 reenter 3 (>= 2)                   expect True got True
+ok   CN =1 expired 1                          expect False got False
+ok   CN =1 expired_seen 1                     expect False got False
+ok   CN =1 rc 0                               expect False got False
+ok   CN =1 rc empty (timeout)                 expect False got False
+ok   CN =1 hang 1                             expect False got False
+ok   CN =1 crash 1                            expect False got False
+ok   CN =1 dur 6.000 (not < 6)                expect False got False
+ok   CN =1 dur 5.999                          expect True got True
+ok   CN =1 dur 12.17 (m4b form)               expect False got False
+ok   CN =1 stand control nested_fatal 0       expect False got False
+ok   CN =1 leftover 1                         expect False got False
+ok   C =1 good                                expect True got True
+ok   C =1 done_seen 1                         expect False got False
+ok   C =1 walks 2                             expect False got False
+ok   C =1 rc 0                                expect False got False
+ok   C =1 reenter 0                           expect False got False
+ok   C =1 nested 1                            expect False got False
+ok   C =1 second 1                            expect False got False
+ok   C =1 cut 1                               expect False got False
+ok   C =1 expired 1                           expect False got False
+ok   C =1 hang 1                              expect False got False
+ok   C =1 crash 1                             expect False got False
+ok   P2 =1 good                               expect True got True
+ok   P2 =1 control 0                          expect False got False
+ok   P2 =1 second 1                           expect False got False
+ok   P2 =1 cut 1                              expect False got False
+ok   P2 =1 expired 1                          expect False got False
+ok   P2 =1 crash 1                            expect False got False
+ok   P2 =1 hang 1                             expect False got False
+ok   CN =0 reference                          expect True got True
+ok   CN =0 reference does not gate            expect True got True
+ok   CN =0 wait_expired line                  expect False got False
+ok   C =0 good                                expect True got True
+ok   C =0 k1 1                                expect False got False
+ok   C =0 wait_expired line                   expect False got False
+cases 41
+ALL OK

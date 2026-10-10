@@ -1,0 +1,7 @@
+F33c2 (HPP-748): binary of KYTY_FIX_F21 + stand KYTY_TEST_EXITFATAL ed.3 (stand only; the binary of tag F33e stays 2b393af8) - worktree C:/kyty/f287/f33c2/wt HEAD b007ce5f49af2c4aa3326a6dd32f39bd8c0eb920 = ee9632be (FS11a HEAD) + cherry-pick 227e1b36 (-> c4f13384) + e5979953 (-> e1444418, tree = 0c57cfed tree) + 5237fdff (-> b007ce5f) from main; not installed
+sha256 a086872d30833ac4ac011dcce272e36a689c5b24bb8a609a56a71a0a196f7669 build/install/kyty_emulator.exe (24864256 bytes)
+copy C:/kyty/f287/bin/kyty_emulator_a086872d.exe (a086872d30833ac4); run copy C:/kyty/f287/f33c2/run/kyty_emulator_a086872d.exe (a086872d30833ac4)
+build label KytyPS5-2026-09-15-6a2987a-1913-gb007ce5f; KYTY_SHADER_SOURCE_HASH 9177b4267de1fb8bac7d1113afd8733210addfac (= FS11)
+counts in exe: KYTY_FIX_F21 1, 'FixF21: mode=' 1, 'FixF21: wait_expired' 1, KYTY_TEST_EXITFATAL 3, nested_fatal 1, KYTY_FIX_B12 1, KYTY_DIAG_B32 0
+worktree vs 227e1b36 on src/common/subsystems.cpp, src/common/subsystems.h: 0 lines; worktree vs main 5237fdff on src/emulator.cpp: only the 4 KYTY_DIAG_B32 lines (not in FS11)
+gate order on worktree: GATE ORDER: clean; on main 5237fdff: GATE ORDER: clean; worktree src/ 458 files, CR 0; git status clean

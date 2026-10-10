@@ -1,0 +1,215 @@
+{
+ "N_diff_mask": {
+  "depth": 0,
+  "rt0": 3257,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "N_diff_mem": {
+  "depth": 0,
+  "rt0": 3257,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "N_mask_mem": {
+  "depth": 0,
+  "rt0": 0,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "N_null": {
+  "depth": 0,
+  "rt0": 0,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "N_orig_def": {
+  "depth": 0,
+  "rt0": 3570,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "Npre_def": {
+  "depth": 0,
+  "rt0": 3570,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "Npre_diag": {
+  "depth": 0,
+  "rt0": 3570,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "Npre_mask": {
+  "depth": 0,
+  "rt0": 313,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "Npre_mem": {
+  "depth": 0,
+  "rt0": 313,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "Npre_orig2": {
+  "depth": 0,
+  "rt0": 0,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "Npre_sens": {
+  "depth": 0,
+  "rt0": 3980,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "PSInvocations": 2233,
+ "SamplesPassed": 685,
+ "bound_is_cap": true,
+ "bound_ok_def": true,
+ "bound_ok_diag": true,
+ "bound_ok_mask": true,
+ "bound_ok_mem": true,
+ "bound_ok_orig": true,
+ "bound_ok_orig2": true,
+ "bound_ok_sens": true,
+ "bound_sha": "ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96",
+ "cap": "f12_rd_k05.rdc",
+ "diag": {
+  "base_word": 4473,
+  "buffer": 36540,
+  "diag_sha": "d3334fc22add19bd",
+  "elem": 3,
+  "off": 393216,
+  "rewritten": 3,
+  "size": 17920
+ },
+ "eid": 46220,
+ "exec_no": 1,
+ "n_entry": 0,
+ "n_f": [
+  0,
+  0,
+  0
+ ],
+ "n_t": [
+  0,
+  0,
+  0
+ ],
+ "outputs": [
+  "rt0",
+  "rt1",
+  "rt2",
+  "depth",
+  "rw_flattened_srt_0_b165_o60023040",
+  "rw_buffers_3_b36540_o393216",
+  "rw_buffers_4_b22483_o2416"
+ ],
+ "outputs_not_read_large": [],
+ "samplers": [
+  {
+   "cmp": "?",
+   "use_cmp": null
+  },
+  {
+   "cmp": "?",
+   "use_cmp": null
+  },
+  {
+   "cmp": "?",
+   "use_cmp": null
+  },
+  {
+   "cmp": "?",
+   "use_cmp": null
+  },
+  {
+   "cmp": "?",
+   "use_cmp": null
+  }
+ ],
+ "selfcheck": {
+  "depth": 0,
+  "rt0": 3257,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "sens": {
+  "depth": 0,
+  "rt0": 3684,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "slots_before_nonzero_vs_orig": true,
+ "t_end": 24.0,
+ "t_start": 5.6,
+ "units": {
+  "depth": 8,
+  "rt0": 8,
+  "rt1": 8,
+  "rt2": 8,
+  "rw_buffers_3_b36540_o393216": 4,
+  "rw_buffers_4_b22483_o2416": 4,
+  "rw_flattened_srt_0_b165_o60023040": 4
+ },
+ "writes": {
+  "depth": 0,
+  "rt0": 0,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ },
+ "writes_def": {
+  "depth": 0,
+  "rt0": 0,
+  "rt1": 0,
+  "rt2": 0,
+  "rw_buffers_3_b36540_o393216": 0,
+  "rw_buffers_4_b22483_o2416": 0,
+  "rw_flattened_srt_0_b165_o60023040": 0
+ }
+}

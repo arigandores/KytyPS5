@@ -1,0 +1,11 @@
+[    0.0] events 1 done 0 todo 1 arms ['orig', 'def', 'mask', 'mem', 'sens', 'diag', 'orig2']
+[    5.6] opened C:/kyty/f287/f12f/f12_rd_k05.rdc
+[    8.1] event 46220 arm orig done
+[   11.0] event 46220 arm def done
+[   13.9] event 46220 arm mask done
+[   16.9] event 46220 arm mem done
+[   19.9] event 46220 arm sens done
+[   22.9] event 46220 arm diag done
+[   24.0] event 46220 arm orig2 done
+[   24.0] event 46220 written in 18.4 s
+[   24.0] done

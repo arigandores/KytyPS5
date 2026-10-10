@@ -1,0 +1,10 @@
+action 46220 vkCmdDrawIndexedIndirect(1) => <192, 4> flags ActionFlags.Indirect|Instanced|Indexed|Drawcall
+  event 46218 vkCmdBindPipeline
+  event 46219 Indirect sub-command
+  event 46220 vkCmdDrawIndexedIndirect
+previous action None None None
+state eid-1 46219 rt0 ffaf23d89b7809c3 depth 7a3a7a799a3840d4
+state group_first-1 46217 rt0 b0d3b3e440b8032a depth 263f3e2b429ef588
+state eid 46220 rt0 ffaf23d89b7809c3 depth 7a3a7a799a3840d4
+state eid-1 again 46219 rt0 ffaf23d89b7809c3 depth 7a3a7a799a3840d4
+done

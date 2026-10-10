@@ -3,7 +3,9 @@
 # Env: RD_CAP capture; RD_EV json list [{eid, exec_no, PSInvocations, SamplesPassed}]; RD_OUT jsonl (one line per event, appended;
 #      events already in it are skipped - resumable).
 # Per arm (order orig, def, mask, mem, sens, diag, orig2): replacement of the PS module (BuildTargetShader + ReplaceResource;
-# none for orig / orig2), SetFrameEvent(eid - 1, force) -> read every output (state BEFORE the event under the same replacement),
+# none for orig / orig2), SetFrameEvent(pre_eid, force) -> read every output (state BEFORE the event under the same replacement;
+# pre_eid = (first event of the action's event group) - 1: an indirect draw's group is [bind, 'Indirect sub-command', draw] and
+# the sub-command = eid - 1 already executes the draw - runs/dbg_46220.txt; correction of section 0.8 of f36a.md),
 # SetFrameEvent(eid, force) -> sha of the bound PS module (must be the arm's bytes) and read every output (state AFTER), then
 # RemoveReplacement + FreeTargetResource.  Outputs: every bound colour target (its mip / slice), the depth-stencil target, every
 # read-write descriptor of the PS (textures: all mips / slices; buffers: the bound range, > 64 MiB not read - named).
@@ -102,6 +104,15 @@ def main():
     if st != rd.ResultCode.Succeeded:
         P('replay failed', st); return 1
     P('opened', os.environ['RD_CAP'])
+    grp = {}
+
+    def walk(al):
+        for a in al:
+            evl = [e.eventId for e in a.events]
+            for e in evl + [a.eventId]:
+                grp[e] = (min(evl + [a.eventId]), evl)
+            walk(a.children)
+    walk(ctrl.GetRootActions())
     tex = {rid_num(t.resourceId): t for t in ctrl.GetTextures()}
     buf = {rid_num(b.resourceId): b for b in ctrl.GetBuffers()}
     blobs = {a: open(A % a, 'rb').read() for a in ('def', 'mask', 'mem', 'sens')}
@@ -111,6 +122,9 @@ def main():
         eid = ev['eid']
         r = {'eid': eid, 'exec_no': ev['exec_no'], 'PSInvocations': ev['PSInvocations'], 'SamplesPassed': ev['SamplesPassed'],
              't_start': round(time.time() - T0, 1), 'cap': os.path.basename(os.environ['RD_CAP'])}
+        first, evl = grp[eid]
+        pre_eid = first - 1
+        r['pre_eid'], r['group_events'] = pre_eid, evl
         ctrl.SetFrameEvent(eid, True)
         ps = ctrl.GetPipelineState()
         refl = ps.GetShaderReflection(sst)
@@ -219,7 +233,7 @@ def main():
                     r['build_failed_' + arm] = (err or '')[:300]
                     continue
                 ctrl.ReplaceResource(shid, nid)
-            ctrl.SetFrameEvent(eid - 1, True)
+            ctrl.SetFrameEvent(pre_eid, True)
             pre = read()
             ctrl.SetFrameEvent(eid, True)
             bsha = sha(bytes(ctrl.GetPipelineState().GetShaderReflection(sst).rawBytes))

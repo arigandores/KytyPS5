@@ -571,6 +571,11 @@ add_kyty_full_emulator_test(kernel_file_system_tests
 add_kyty_full_emulator_test(b4_race_stand
 	"${KYTY_TESTS_DIR}/B4RaceStand.cpp")
 
+# Track F, F25 double read failure stand (F37a HPP-761; ROADMAP s122 item 688(e)): ReadFile import hook of the test
+# executable, arms A/K/Z over six read entries; run by docs/track-f/f37a/run_stand_f37a.py, not by ctest.
+add_kyty_full_emulator_test(f25_read_fail_stand
+	"${KYTY_TESTS_DIR}/F25ReadFailStand.cpp")
+
 # Track F, F6 (ROADMAP s122 item 287(c)(4), B9a): the AudioPropagation NIDs through the symbol database, no game.
 add_kyty_full_emulator_test(audio_propagation_tests
 	"${KYTY_TESTS_DIR}/AudioPropagationTests.cpp")

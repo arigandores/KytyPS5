@@ -1,0 +1,222 @@
+// Track F, F35a (HPP-755, ROADMAP s122 item 685(v)(1), row F22): an indirect image table with a comparison sample whose
+// root is a null T# and whose candidates are colour formats (outside DEPTH_FORMAT_POLICIES). The program is the one of
+// CompileF19IndirectTable (material key -> heap T#, image_sample_c_lz, S# LESS_EQUAL) with two or three members; the
+// specialization is built from the T# and S# in user_data by RecompileForTest (RC11 of the F32b review). The view of each
+// member is a mirror of the binding path (F22MemberView; docs/track-f/f35a.md s0.1); the measure "Dref by a colour view"
+// is 1 when the SPIR-V has an OpImageSampleDref* (the table is the only sampled image) and a member has a colour view.
+// The test measures and prints; it fails only on suitability (the table did not materialize as the form, the SPIR-V does
+// not validate).
+enum class F22View { NullD32, NullR32F, TsharpDepth, TsharpColor };
+
+const char *F22ViewName(F22View view) {
+  switch (view) {
+  case F22View::NullD32:
+    return "null_D32";
+  case F22View::NullR32F:
+    return "null_R32F";
+  case F22View::TsharpDepth:
+    return "tsharp_depth";
+  case F22View::TsharpColor:
+    return "tsharp_color";
+  }
+  return "?";
+}
+
+bool F22ColourView(F22View view) {
+  return view == F22View::NullR32F || view == F22View::TsharpColor;
+}
+
+// kInvalid stands for a null T# (eight zero dwords).
+std::string F22FormatName(Prospero::BufferFormat format) {
+  switch (format) {
+  case Prospero::BufferFormat::kInvalid:
+    return "null";
+  case Prospero::BufferFormat::k8UNorm:
+    return "k8UNorm";
+  case Prospero::BufferFormat::k16Float:
+    return "k16Float";
+  case Prospero::BufferFormat::k8_8_8_8UNorm:
+    return "k8_8_8_8UNorm";
+  case Prospero::BufferFormat::k32Float:
+    return "k32Float";
+  case Prospero::BufferFormat::k16UNorm:
+    return "k16UNorm";
+  default:
+    return fmt::format("fmt{}", static_cast<uint32_t>(format));
+  }
+}
+
+// The T# the binding path receives for a member: null by IsNull (Base40 == 0, shaderBindings.h), else its format.
+Prospero::BufferFormat F22TsharpFormat(const ShaderRecompiler::IR::DescriptorValue &descriptor) {
+  const uint64_t base40 =
+      ((descriptor.dwords[0] | (static_cast<uint64_t>(descriptor.dwords[1]) << 32u)) & 0xFFFFFFFFFFull) << 8u;
+  if (base40 == 0u) {
+    return Prospero::BufferFormat::kInvalid;
+  }
+  return static_cast<Prospero::BufferFormat>((descriptor.dwords[1] >> 20u) & 0x1ffu);
+}
+
+// Mirror of RenderExecutor::ResolveTextureWith (descriptors.cpp) for a member: storage = resource.written; a null T#
+// goes to NullTextureDesc - the D32 placeholder when Texture && depth_compare && !manual_depth_compare, else the
+// R32_SFLOAT colour view; a non-null T# takes the depth format of its policy when depth_compare and
+// FindGuestDepthFormatPolicy(format) (called, not mirrored), else the colour format of its surface.
+F22View F22MemberView(const ShaderRecompiler::IR::ImageResource &resource,
+                      const ShaderRecompiler::IR::DescriptorValue &descriptor) {
+  const bool texture = !resource.written;
+  const auto format = F22TsharpFormat(descriptor);
+  if (format == Prospero::BufferFormat::kInvalid) {
+    return texture && resource.depth_compare && !resource.manual_depth_compare ? F22View::NullD32
+                                                                               : F22View::NullR32F;
+  }
+  return resource.depth_compare && FindGuestDepthFormatPolicy(format) != nullptr ? F22View::TsharpDepth
+                                                                                : F22View::TsharpColor;
+}
+
+struct F22TableProbe {
+  size_t images = 0;
+  size_t members = 0;
+  size_t snapshot_images = 0;
+  uint32_t dref = 0;
+  uint32_t manual = 0;
+  uint32_t plain = 0;
+  bool root_manual = false;
+  bool root_matches = false;
+  bool candidates_match = false;
+  std::vector<std::pair<Prospero::BufferFormat, F22View>> views; // by image index
+};
+
+F22TableProbe CompileF22IndirectTable(const std::vector<Prospero::BufferFormat> &formats) {
+  constexpr uint32_t OpImageSampleExplicitLod = 88;
+  constexpr uint32_t OpImageSampleDrefImplicitLod = 89;
+  constexpr uint32_t OpImageSampleDrefExplicitLod = 90;
+  constexpr uint32_t record_stride = 224;
+  const auto count = static_cast<uint32_t>(formats.size());
+  Check(count >= 2u && count <= 4u, "F22 indirect table form must have two to four members");
+  alignas(256) static std::array<uint32_t, 256> material{};
+  alignas(256) static std::array<uint32_t, 64> heap{};
+  material.fill(0u);
+  heap.fill(0u);
+  for (uint32_t key = 0; key < count; key++) {
+    material[key * record_stride / 4u] = key;
+    if (formats[key] == Prospero::BufferFormat::kInvalid) {
+      continue; // null T#: eight zero dwords
+    }
+    uint32_t *d = &heap[key * 8u];
+    d[0] = 0x20u + key;
+    d[1] = (static_cast<uint32_t>(formats[key]) << 20u) | (3u << 30u); // width 4
+    d[2] = 3u << 14u;                                                  // height 4
+    d[3] = DstSel(4, 5, 6, 7) |
+           (static_cast<uint32_t>(Prospero::ImageType::kColor2D) << 28u);
+  }
+  const auto material_address = reinterpret_cast<uint64_t>(material.data());
+  const auto heap_address = reinterpret_cast<uint64_t>(heap.data());
+  std::array<uint32_t, 64> user_data{};
+  user_data[0] = static_cast<uint32_t>(material_address);
+  user_data[1] = static_cast<uint32_t>((material_address >> 32u) & 0xffffu) |
+                 (record_stride << 16u);
+  user_data[2] = count; // records
+  user_data[4] = static_cast<uint32_t>(heap_address);
+  user_data[5] = static_cast<uint32_t>((heap_address >> 32u) & 0xffffu) | (16u << 16u);
+  user_data[6] = 2u * count; // 16-byte records: two per T#
+  user_data[8] = 3u << 12u; // S# s[8:11]: depth compare LESS_EQUAL
+  const uint32_t shader[] = {
+      EncodeVop1(0x02, 16, 256u + 4u),        // v_readfirstlane_b32 s16, v4
+      EncodeSop2(0x26, 17, 16, 255), record_stride, // s_mul_i32 s17, s16, 224
+      EncodeSmem0(0x08, 18, 0), 17u << 25u,   // s_buffer_load_dword s18, s[0:3], s17
+      EncodeSop2(0x1e, 19, 18, 128u + 5u),    // s_lshl_b32 s19, s18, 5
+      EncodeSmem0(0x0b, 20, 2), 19u << 25u,   // s_buffer_load_dwordx8 s[20:27], s[4:7], s19
+      EncodeMimg0(0x2f, 0x1),
+      EncodeMimg1(0, 5, 2, 4),                // image_sample_c_lz v0, v[4:6], s[20:27], s[8:11]
+      EncodeExp0(0x00, 0xf, true, false, true),
+      EncodeExp1(0, 1, 2, 3),
+      0xbf810000u,
+  };
+  auto ps_info = RegressionPixelInputInfo();
+  auto options = MakeCompileOptions(ShaderType::Pixel);
+  options.input_info.pixel = &ps_info;
+  options.dump_ir = true;
+  options.user_data = user_data;
+  auto result = RecompileForTest(shader, options);
+  CheckSpirvBinaryValidates(result.spirv);
+  const auto &images = result.program.info.images;
+  const auto &snapshot = result.resources.images;
+  F22TableProbe probe;
+  probe.images = images.size();
+  probe.snapshot_images = snapshot.size();
+  probe.members = images.empty() ? 0u : images[0].indirect_resources.size();
+  probe.root_manual = !images.empty() && images[0].manual_depth_compare;
+  for (size_t i = 0; i < images.size() && i < snapshot.size(); i++) {
+    probe.views.emplace_back(F22TsharpFormat(snapshot[i]), F22MemberView(images[i], snapshot[i]));
+  }
+  if (probe.members == count && probe.views.size() == count) {
+    const auto &members = images[0].indirect_resources;
+    probe.root_matches = members[0] < probe.views.size() &&
+                         probe.views[members[0]].first == formats[0];
+    std::vector<uint32_t> want;
+    std::vector<uint32_t> got;
+    for (uint32_t m = 1; m < count; m++) {
+      want.push_back(static_cast<uint32_t>(formats[m]));
+      got.push_back(members[m] < probe.views.size()
+                        ? static_cast<uint32_t>(probe.views[members[m]].first)
+                        : UINT32_MAX);
+    }
+    std::sort(want.begin(), want.end());
+    std::sort(got.begin(), got.end());
+    probe.candidates_match = want == got;
+  }
+  probe.dref = SpirvInstructionOpcodeCount(result.spirv, OpImageSampleDrefImplicitLod) +
+               SpirvInstructionOpcodeCount(result.spirv, OpImageSampleDrefExplicitLod);
+  probe.manual = SpirvManualDepthComparePhiCount(result.spirv, OpImageSampleExplicitLod);
+  probe.plain = SpirvInstructionOpcodeCount(result.spirv, OpImageSampleExplicitLod);
+  return probe;
+}
+
+void TestF22IndirectNullComparison() {
+  using Format = Prospero::BufferFormat;
+  const bool fix_f19 = ShaderRecompiler::IR::FixF19Enabled();
+  struct Row {
+    const char *name;
+    std::vector<Format> formats; // member 0 - the root; kInvalid - a null T#
+  };
+  const Row rows[] = {
+      {"K1", {Format::k32Float, Format::k8UNorm}},
+      {"M1", {Format::kInvalid, Format::k8UNorm}},
+      {"M2", {Format::kInvalid, Format::k16Float}},
+      {"M3", {Format::kInvalid, Format::k8_8_8_8UNorm}},
+      {"M4", {Format::kInvalid, Format::k8UNorm, Format::k16Float}},
+      {"M5", {Format::kInvalid, Format::k32Float, Format::k8UNorm}},
+  };
+  uint32_t k1 = 0;
+  uint32_t k2 = 0;
+  uint32_t m = 0;
+  for (const auto &row : rows) {
+    const auto probe = CompileF22IndirectTable(row.formats);
+    bool colour = false;
+    std::string views;
+    for (size_t i = 0; i < probe.views.size(); i++) {
+      colour = colour || F22ColourView(probe.views[i].second);
+      views += fmt::format("{}{}:{}:{}", i == 0 ? "" : ",", i, F22FormatName(probe.views[i].first),
+                           F22ViewName(probe.views[i].second));
+    }
+    const uint32_t measure = probe.dref >= 1u && colour ? 1u : 0u;
+    std::printf("[f22] %s KYTY_FIX_F19=%d: images=%zu members=%zu dref=%u manual=%u plain_explicit=%u "
+                "root_manual=%d views=%s measure=%u\n",
+                row.name, fix_f19 ? 1 : 0, probe.images, probe.members, probe.dref, probe.manual, probe.plain,
+                probe.root_manual ? 1 : 0, views.c_str(), measure);
+    Check(probe.images == row.formats.size() && probe.members == row.formats.size() &&
+              probe.snapshot_images == row.formats.size(),
+          "F22 indirect comparison table did not materialize as a root and its candidates");
+    Check(probe.root_matches && probe.candidates_match,
+          "F22 indirect comparison table members do not hold the T# of the form");
+    if (std::string(row.name) == "K1") {
+      k1 = measure;
+    } else {
+      m += measure;
+      if (std::string(row.name) == "M1") {
+        k2 = measure;
+      }
+    }
+  }
+  std::printf("[f22] total KYTY_FIX_F19=%d: K1=%u K2=%u M=%u\n", fix_f19 ? 1 : 0, k1, k2, m);
+}
+

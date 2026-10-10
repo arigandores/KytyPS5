@@ -1,0 +1,15 @@
+2026-10-10 19:18:41 UTC worktree C:/kyty/f287/f35a/wt at ee9632be created (F35a start; API: no run link in_progress, only HPP-751 review)
+2026-10-10 19:22:31 UTC base configure start (API check 19:17 UTC: no run link in_progress)
+2026-10-10 19:23:03 UTC worktree recreated by mk_wt_f35a.sh (submodules as FS11a; first one lacked 3rdparty, configure failed)
+2026-10-10 19:23:23 UTC base configure start (ee9632be, no test)
+2026-10-10 19:24:08 UTC base build shader_cfg_tests chunk start
+2026-10-10 19:25:22 UTC base build OK; copy build/shader_cfg_tests_base.exe; base full runs start
+2026-10-10 19:25:27 UTC base full runs =0, =1 done
+2026-10-10 19:28:11 UTC s0 commit 1a4c9b24 in main (before any run of the F22 test; test not yet written)
+2026-10-10 19:29:37 UTC test patched into worktree (not committed, not built)
+2026-10-10 19:30:14 UTC test committed: worktree 399d3271, main 13e120f2
+2026-10-10 19:30:35 UTC first scoring runs of TestF22 (filter) start, exe 541cb290
+2026-10-10 19:30:43 UTC full runs =0, =1 on f35a exe done; cmp base: ALL OK
+2026-10-10 19:30:52 UTC API: no run link in_progress; reference worktree wtm at main 13e120f2 start
+2026-10-10 19:31:11 UTC reference configure+build (wtm 13e120f2 -> buildm) start
+2026-10-10 19:32:50 UTC reference build OK; reference filter runs =0, =1

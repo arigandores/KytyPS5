@@ -1,0 +1,200 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS11 ea51ae80 (ea51ae80521e8300)",
+   true
+  ],
+  [
+   "installed before = after = FS11 ea51ae80 - not installed (ea51ae80521e8300 / ea51ae80521e8300)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (ba3933d9971aec3d / ba3933d9971aec3d)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args none (natural start) (None; harness intro_next)",
+   true
+  ],
+  [
+   "hold option 600 s (600)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4804 listsha 64)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce",
+ "flags": [],
+ "form": "vn",
+ "info": {
+  "cold": {
+   "held_64th_n": null,
+   "held_all": 0,
+   "held_in_room": 0,
+   "held_in_room_unknown": false,
+   "skipped_all": 0,
+   "skipped_in_room": 0
+  },
+  "frames_ge1s_after_intro": 0,
+  "frames_ge1s_before_intro": 0,
+  "glitches_all": 0,
+  "glitches_cut": [],
+  "records_cut": 4572,
+  "translation_lines_before_intro": 5404
+ },
+ "interference": null,
+ "level": "intro_next",
+ "members": [
+  [
+   "(P1) GuestArgs: source=none argc=1, no -lvl in argv ([('none', 1)]; argv ['KytyEmu'])",
+   true
+  ],
+  [
+   "(P2) InputScript: scheduled j at present 2170 and 2460 once each, press j at present 2170 and 2460 once each (scheduled [('j', 2170), ('j', 2460)]; press [2170, 2460])",
+   true
+  ],
+  [
+   "(P3) title line (169033) before the first press ([284943]), intro_next line (452515) after the second press ([314691]), n_intro 2612",
+   true
+  ],
+  [
+   "(P4) sub-level line 854207, n_sw 7183, delta 4571 in [4480; 4620]",
+   true
+  ],
+  [
+   "(P5) the last FrameTrace n 7789 >= n_intro + 3330 (5942)",
+   true
+  ],
+  [
+   "(V1) the process lived to the end (outcome ok, hold_exit None, hold_end sublevel)",
+   true
+  ],
+  [
+   "(V1) 0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "(V2) cutscene records of the video 4572 >= 3000 (present [2623, 7194]; all records 7799)",
+   true
+  ],
+  [
+   "(V3) 0 one-frame glitches on the cutscene records (0: []; whole video 0)",
+   true
+  ],
+  [
+   "(V4) room sheet made - the last line of sheet.txt is sheets done (sheets done)",
+   true
+  ],
+  [
+   "(V5) 0 skipped draw / held lines with n in the room window [5492, 5942] (skipped 0, held 0; 64th held at n None)",
+   true
+  ]
+ ],
+ "path_status": "ROOM_COVERED",
+ "reader_sha256": "adfcd984eb54337c29465b031ba2dd58fe0a84f28cead21e4428658f1d0f6ea7",
+ "reading": "ADMITTED, ROOM_COVERED (no verdict; reading - F34d)",
+ "ref": {
+  "glitches": 0,
+  "hold_end": "sublevel",
+  "hold_exit": null,
+  "hold_s": 86.4,
+  "lines": 916522,
+  "log_sha256": "cd3f7f09e31e4c1cbdc1a244242263aea28d0b6a29615330243b6d5e944779af",
+  "n_end_harness": 7787,
+  "n_sw_harness": 7183,
+  "outcome": "ok",
+  "refs": [
+   "FixSval: mode=1 ubo_std_layout=1",
+   "ShaderReplay: mode=3 dir=_ShaderCache\\PPSA21564\\replay compat=ok generation=46 corrupt=0 sources=727 specs=1218 pipes=3079 test=none",
+   "ShaderReplay: rebuild skipped reason=recipes_current",
+   "PipelinePrecache: 1986 recipes -> 1842 graphics + 144 compute pipelines queued, 0 skipped, 3775 sources loaded, complete, 599 ms (scratch: 0 pipelines, max 0 dw",
+   "PipelinePrecache: all pipelines created, 600 ms",
+   "ShaderPreparation: startup wait finished in 0 ms presents_other=0 presents_main=0",
+   "PipelinePrecache: saved 1989 recipes (22014673 bytes) (22059 us)",
+   "ShaderReplay: hits rb_used=0 rb_marked=0 cap_skip=0 at=save",
+   "PipelinePrecache: saved 1992 recipes (22050206 bytes)"
+  ],
+  "sheet": "sheets done",
+  "stable_s": 52.8,
+  "video_index": 7799
+ },
+ "status": "ADMITTED",
+ "tag": "b6_v",
+ "timeline": {
+  "big_p": [
+   5573,
+   5673,
+   5773,
+   5873
+  ],
+  "cut_p": [
+   2623,
+   7194
+  ],
+  "delta": 4571,
+  "n_intro": 2612,
+  "n_last": 7789,
+  "n_sw": 7183,
+  "off": 11,
+  "off_note": "median of 4 InputScript lines",
+  "room_n": [
+   5492,
+   5942
+  ],
+  "sheet_p": [
+   5503,
+   5953
+  ]
+ }
+}

@@ -1,0 +1,178 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS11 ea51ae80 (ea51ae80521e8300)",
+   true
+  ],
+  [
+   "installed before = after = FS11 ea51ae80 - not installed (ea51ae80521e8300 / ea51ae80521e8300)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (ba3933d9971aec3d / ba3933d9971aec3d)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation true (true)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 310 s (310)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4804 listsha 64)",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "Sky Garden entry line present (229510)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce",
+ "flags": [],
+ "form": "w0",
+ "info": {
+  "frames_ge1s_report": 0,
+  "mean_dt_us": 130801.9,
+  "scene_frames": 2477,
+  "vkw": 918655
+ },
+ "interference": null,
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.0 >= 310)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "0 [Vulkan][E] (0)",
+   true
+  ],
+  [
+   "0 limit lines of the layer (0)",
+   true
+  ],
+  [
+   "positive control: [Vulkan][W] 918655 > 0",
+   true
+  ],
+  [
+   "DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)",
+   true
+  ],
+  [
+   "LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12504)",
+   true
+  ],
+  [
+   "no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)",
+   true
+  ],
+  [
+   "FixB13: mode=1 (every line) before the first GuestOut ([(1, 727)]; first GuestOut 12504) - form fs10_w",
+   true
+  ],
+  [
+   "FixB12: mode=1 (every line) before the first GuestOut ([(1, 729)]; bad 0; first GuestOut 12504) - form fs11_w",
+   true
+  ]
+ ],
+ "path_status": "W0_MEMBERS_ALL_YES",
+ "reader_sha256": "adfcd984eb54337c29465b031ba2dd58fe0a84f28cead21e4428658f1d0f6ea7",
+ "reading": "ADMITTED, W0_MEMBERS_ALL_YES (no verdict; reading - F34d)",
+ "ref": {
+  "glitches": null,
+  "hold_end": "hold",
+  "hold_exit": null,
+  "hold_s": 310.0,
+  "lines": 2402923,
+  "log_sha256": "e7ce4c9a31879579c0b755c0cb057925d271a050933a2ad9d837dd13855606d7",
+  "n_end_harness": null,
+  "n_sw_harness": null,
+  "outcome": "ok",
+  "refs": [
+   "FixSval: mode=1 ubo_std_layout=1",
+   "ShaderReplay: mode=3 dir=_ShaderCache\\PPSA21564\\replay compat=ok generation=46 corrupt=0 sources=727 specs=1218 pipes=3079 test=none",
+   "ShaderReplay: rebuild skipped reason=recipes_current",
+   "PipelinePrecache: 1986 recipes -> 1842 graphics + 144 compute pipelines queued, 0 skipped, 3775 sources loaded, complete, 5331 ms (scratch: 0 pipelines, max 0 d",
+   "PipelinePrecache: all pipelines created, 5390 ms",
+   "ShaderPreparation: startup wait finished in 0 ms presents_other=0 presents_main=0",
+   "ShaderReplay: hits rb_used=0 rb_marked=0 cap_skip=0 at=save"
+  ],
+  "sheet": null,
+  "stable_s": 34.0,
+  "video_index": 0
+ },
+ "status": "ADMITTED",
+ "tag": "b6_w0",
+ "timeline": {
+  "big_p": null,
+  "cut_p": null,
+  "delta": null,
+  "n_intro": null,
+  "n_last": 2852,
+  "n_sw": null,
+  "off": null,
+  "off_note": "median of 0 InputScript lines",
+  "room_n": null,
+  "sheet_p": null
+ }
+}

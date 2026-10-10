@@ -1,0 +1,207 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS11 ea51ae80 (ea51ae80521e8300)",
+   true
+  ],
+  [
+   "installed before = after = FS11 ea51ae80 - not installed (ea51ae80521e8300 / ea51ae80521e8300)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (ba3933d9971aec3d / ba3933d9971aec3d)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation true (true)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args none (natural start) (None; harness intro_next)",
+   true
+  ],
+  [
+   "hold option 1800 s (1800)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4804 listsha 64)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce",
+ "flags": [],
+ "form": "wn",
+ "info": {
+  "e_in_room": 0,
+  "e_out_room": 0,
+  "frames_ge1s": 0,
+  "n_last": 7437,
+  "notes": [],
+  "ref_295b3": "last layer line at n 7437, last FrameTrace n 7437 (reference, item 676 (d))",
+  "stop_n": null,
+  "vk_last_n": 7437,
+  "vkw_after": 277724
+ },
+ "interference": null,
+ "level": "intro_next",
+ "members": [
+  [
+   "(P1) GuestArgs: source=none argc=1, no -lvl in argv ([('none', 1)]; argv ['KytyEmu'])",
+   true
+  ],
+  [
+   "(P2) InputScript: scheduled j at present 2170 and 2460 once each, press j at present 2170 and 2460 once each (scheduled [('j', 2170), ('j', 2460)]; press [2170, 2460])",
+   true
+  ],
+  [
+   "(P3) title line (170277) before the first press ([507910]), intro_next line (785728) after the second press ([616079]), n_intro 2573",
+   true
+  ],
+  [
+   "(P4) row: sub-level line 1730493, n_sw 7123, delta 4550 - reference at W (item 676 (g))",
+   true
+  ],
+  [
+   "(P5)_W sub-level line present and the last FrameTrace n 7437 >= n_sw + 300 (7423) - item 676 (g)",
+   true
+  ],
+  [
+   "lived to the end (outcome ok, hold_exit None, hold_end sublevel)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "0 [Vulkan][E] (0; in the room window 0, outside 0 - by construction <= 1, item 676 (b))",
+   true
+  ],
+  [
+   "0 limit lines of the layer (0)",
+   true
+  ],
+  [
+   "positive control (item 676 (d)): [Vulkan][W] lines with n >= n_intro 277724 >= 1 (of them [W][2] 277724; all [W] 445084)",
+   true
+  ],
+  [
+   "W form line from the env (item 295 (b)(4)): limit=100000000 filter=none",
+   true
+  ],
+  [
+   "DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)",
+   true
+  ],
+  [
+   "LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12502)",
+   true
+  ],
+  [
+   "no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end)",
+   true
+  ]
+ ],
+ "path_status": "W_MEMBERS_ALL_YES",
+ "reader_sha256": "adfcd984eb54337c29465b031ba2dd58fe0a84f28cead21e4428658f1d0f6ea7",
+ "reading": "ADMITTED, W_MEMBERS_ALL_YES (no verdict; reading - F34d)",
+ "ref": {
+  "glitches": null,
+  "hold_end": "sublevel",
+  "hold_exit": null,
+  "hold_s": 91.1,
+  "lines": 1778926,
+  "log_sha256": "ccd4de031392a7e802938da27a3eaa6a57c035b704a62a8a542659baecc92b2c",
+  "n_end_harness": 7437,
+  "n_sw_harness": 7123,
+  "outcome": "ok",
+  "refs": [
+   "FixSval: mode=1 ubo_std_layout=1",
+   "ShaderReplay: mode=3 dir=_ShaderCache\\PPSA21564\\replay compat=ok generation=46 corrupt=0 sources=727 specs=1218 pipes=3079 test=none",
+   "ShaderReplay: rebuild skipped reason=recipes_current",
+   "PipelinePrecache: 1986 recipes -> 1842 graphics + 144 compute pipelines queued, 0 skipped, 3775 sources loaded, complete, 4571 ms (scratch: 0 pipelines, max 0 d",
+   "PipelinePrecache: all pipelines created, 4571 ms",
+   "ShaderPreparation: startup wait finished in 0 ms presents_other=0 presents_main=0",
+   "PipelinePrecache: saved 1989 recipes (22014673 bytes) (20573 us)",
+   "ShaderReplay: hits rb_used=0 rb_marked=0 cap_skip=0 at=save",
+   "PipelinePrecache: saved 1992 recipes (22050206 bytes)"
+  ],
+  "sheet": null,
+  "stable_s": 55.2,
+  "video_index": 0
+ },
+ "status": "ADMITTED",
+ "tag": "b6_w",
+ "timeline": {
+  "big_p": [
+   5557,
+   5657,
+   5757,
+   5857
+  ],
+  "cut_p": [
+   2607,
+   7157
+  ],
+  "delta": 4550,
+  "n_intro": 2573,
+  "n_last": 7437,
+  "n_sw": 7123,
+  "off": 34,
+  "off_note": "median of 4 InputScript lines",
+  "room_n": [
+   5453,
+   5903
+  ],
+  "sheet_p": [
+   5487,
+   5937
+  ]
+ }
+}

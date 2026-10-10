@@ -1,0 +1,7 @@
+reader f34c_read.py sha256 adfcd984eb54337c29465b031ba2dd58fe0a84f28cead21e4428658f1d0f6ea7
+| tag | status | path | binary_sha256 | n_intro | n_sw | delta | off | last n | video | glitches |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b6_v | ADMITTED | ROOM_COVERED | ea51ae80 | 2612 | 7183 | 4571 | 11 | 7789 | 7799 | 0 |
+| b6_vl | ADMITTED | ROOM_COVERED | ea51ae80 | 264 | 4785 | 4521 | None | 5392 | 5415 | 0 |
+| b6_w | ADMITTED | W_MEMBERS_ALL_YES | ea51ae80 | 2573 | 7123 | 4550 | 34 | 7437 | 0 | None |
+| b6_w0 | ADMITTED | W0_MEMBERS_ALL_YES | ea51ae80 | None | None | None | None | 2852 | 0 | None |

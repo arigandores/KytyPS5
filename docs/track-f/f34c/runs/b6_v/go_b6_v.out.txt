@@ -1,0 +1,22 @@
+ALL OK
+2026-10-10T16:08:42Z F34c go_f34c b6_v run check (item 587 (g)): RUN ALIVE a785be78 status in_progress
+2026-10-10T16:08:54Z F34c go_f34c b6_v host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.357 procs []
+2026-10-10T16:08:56Z F34c go_f34c b6_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 30072 utc 2026-10-10T16:08:55Z
+2026-10-10T16:12:50Z F34c go_f34c b6_v lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-10T16:12:51Z F34c go_f34c b6_v installed binary inside the lock before the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T16:12:53Z F34c go_f34c b6_v manifest before: manifest C:/kyty/f287/f34c/runs/b6_v/manifest_before.tsv files 4804 bytes 1302773008 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T16:12:54Z F34c go_f34c b6_v caches before against the base manifest of the seal (row): manifest cmp EQUAL files 4804 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T16:12:57Z F34c go_f34c b6_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (270/184/5/667/130/ MB)
+2026-10-10T16:12:58Z F34c go_f34c b6_v state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-10T16:12:58Z
+2026-10-10T16:12:59Z F34c go_f34c b6_v enter_scene start (level intro_next, --natural --stable-draws 500, timeout 600, hold 600, end --proc-limit 600 --until-sublevel 600, --rec, KYTY_KEYS=@2170:j,@2460:j KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T16:15:32Z F34c go_f34c b6_v enter_scene rc 0; guard watch: 2026-10-10T16:15:30Z watch end, user process seen: no; hold watch: 2026-10-10T16:15:31Z watch end, user VM seen: no
+2026-10-10T16:15:32Z F34c go_f34c b6_v run: VERDICT: intro_next in 52.8 s - PASS (acceptance <= 90 s); hold end: ft_total 7786, ft_tail 302 (last 5 s)
+2026-10-10T16:15:33Z F34c go_f34c b6_v log_b6_v.txt sha256 cd3f7f09e31e4c1cbdc1a244242263aea28d0b6a29615330243b6d5e944779af
+2026-10-10T16:15:33Z F34c go_f34c b6_v installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T16:15:38Z F34c go_f34c b6_v manifest of the run state (before the return): manifest C:/kyty/f287/f34c/runs/b6_v/manifest_run.tsv files 4809 bytes 1303453208 listsha 4b5252accd633d9547f9e5aaf3e9f00990e974efe6de4ecfdbae739d89dc67af; run vs before: manifest cmp DIFFER only-before 3 only-after 8
+2026-10-10T16:15:39Z F34c go_f34c b6_v caches, seeds, saves and GLCache returned
+2026-10-10T16:15:47Z F34c go_f34c b6_v manifest after: manifest C:/kyty/f287/f34c/runs/b6_v/manifest_after.tsv files 4804 bytes 1302773008 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d; cmp: manifest cmp EQUAL files 4804 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T16:15:47Z F34c go_f34c b6_v lock released (rc 0)
+2026-10-10T16:15:49Z F34c go_f34c b6_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 30485 utc 2026-10-10T16:15:48Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-10T16:15:49Z; dispstate ON idle_s 30486
+2026-10-10T16:16:01Z F34c go_f34c b6_v host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.649 procs []
+rc=0

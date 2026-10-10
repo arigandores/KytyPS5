@@ -1,0 +1,198 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS11 ea51ae80 (ea51ae80521e8300)",
+   true
+  ],
+  [
+   "installed before = after = FS11 ea51ae80 - not installed (ea51ae80521e8300 / ea51ae80521e8300)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (ba3933d9971aec3d / ba3933d9971aec3d)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl intro_next (-lvl intro_next; harness intro_next)",
+   true
+  ],
+  [
+   "hold option 600 s (600)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4804 listsha 64)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce",
+ "flags": [],
+ "form": "vl",
+ "info": {
+  "cold": {
+   "held_64th_n": null,
+   "held_all": 0,
+   "held_in_room": 0,
+   "held_in_room_unknown": false,
+   "skipped_all": 0,
+   "skipped_in_room": 0
+  },
+  "frames_ge1s_after_intro": 0,
+  "frames_ge1s_before_intro": 0,
+  "glitches_all": 0,
+  "glitches_cut": [],
+  "records_cut": 4547,
+  "translation_lines_before_intro": 920
+ },
+ "interference": null,
+ "level": "intro_next",
+ "members": [
+  [
+   "(P1) GuestArgs: source=KYTY_GUEST_ARGS argc=3, argv -lvl intro_next ([('KYTY_GUEST_ARGS', 3)]; argv ['KytyEmu', '-lvl', 'intro_next'])",
+   true
+  ],
+  [
+   "(P2) no InputScript press / release line - form L has no input (0)",
+   true
+  ],
+  [
+   "(P3) intro_next line (221615), n_intro 264",
+   true
+  ],
+  [
+   "(P4) sub-level line 617707, n_sw 4785, delta 4521 in [4480; 4620]",
+   true
+  ],
+  [
+   "(P5) the last FrameTrace n 5392 >= n_intro + 3330 (3594)",
+   true
+  ],
+  [
+   "(V1) the process lived to the end (outcome ok, hold_exit None, hold_end sublevel)",
+   true
+  ],
+  [
+   "(V1) 0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "(V2) cutscene records of the video 4547 >= 3000 (present [264, 4810]; all records 5415)",
+   true
+  ],
+  [
+   "(V3) 0 one-frame glitches on the cutscene records (0: []; whole video 0)",
+   true
+  ],
+  [
+   "(V4) room sheet made - the last line of sheet.txt is sheets done (sheets done)",
+   true
+  ],
+  [
+   "(V5) 0 skipped draw / held lines with n in the room window [3144, 3594] (skipped 0, held 0; 64th held at n None)",
+   true
+  ]
+ ],
+ "path_status": "ROOM_COVERED",
+ "reader_sha256": "adfcd984eb54337c29465b031ba2dd58fe0a84f28cead21e4428658f1d0f6ea7",
+ "reading": "ADMITTED, ROOM_COVERED (no verdict; reading - F34d)",
+ "ref": {
+  "glitches": 0,
+  "hold_end": "sublevel",
+  "hold_exit": null,
+  "hold_s": 85.3,
+  "lines": 678453,
+  "log_sha256": "dbece3a2a68bb11b6c3612e4b20ba7c59da4f3647b4858a8bc496cd86fda96cc",
+  "n_end_harness": 5392,
+  "n_sw_harness": 4785,
+  "outcome": "ok",
+  "refs": [
+   "FixSval: mode=1 ubo_std_layout=1",
+   "ShaderReplay: mode=3 dir=_ShaderCache\\PPSA21564\\replay compat=ok generation=46 corrupt=0 sources=727 specs=1218 pipes=3079 test=none",
+   "ShaderReplay: rebuild skipped reason=recipes_current",
+   "PipelinePrecache: 1986 recipes -> 1842 graphics + 144 compute pipelines queued, 0 skipped, 3775 sources loaded, complete, 601 ms (scratch: 0 pipelines, max 0 dw",
+   "PipelinePrecache: all pipelines created, 601 ms",
+   "ShaderPreparation: startup wait finished in 0 ms presents_other=0 presents_main=0",
+   "ShaderReplay: hits rb_used=0 rb_marked=0 cap_skip=0 at=save"
+  ],
+  "sheet": "sheets done",
+  "stable_s": 13.8,
+  "video_index": 5415
+ },
+ "status": "ADMITTED",
+ "tag": "b6_vl",
+ "timeline": {
+  "big_p": [
+   3214,
+   3314,
+   3414,
+   3514
+  ],
+  "cut_p": [
+   264,
+   4810
+  ],
+  "delta": 4521,
+  "n_intro": 264,
+  "n_last": 5392,
+  "n_sw": 4785,
+  "off": null,
+  "off_note": "off_L [U] in [0; 25] (item 676 (v))",
+  "room_n": [
+   3144,
+   3594
+  ],
+  "sheet_p": [
+   3144,
+   3619
+  ]
+ }
+}

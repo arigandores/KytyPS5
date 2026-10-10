@@ -1,0 +1,22 @@
+ALL OK
+2026-10-10T15:57:27Z F34c go_f34c b6_w0 run check (item 587 (g)): RUN ALIVE a785be78 status in_progress
+2026-10-10T15:57:39Z F34c go_f34c b6_w0 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.588 procs []
+2026-10-10T15:57:41Z F34c go_f34c b6_w0 display before the lock (item 620 (g)(1)): dispstate ON idle_s 29398 utc 2026-10-10T15:57:41Z
+2026-10-10T16:01:35Z F34c go_f34c b6_w0 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-10T16:01:35Z F34c go_f34c b6_w0 installed binary inside the lock before the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T16:01:38Z F34c go_f34c b6_w0 manifest before: manifest C:/kyty/f287/f34c/runs/b6_w0/manifest_before.tsv files 4804 bytes 1302773008 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T16:01:38Z F34c go_f34c b6_w0 caches before against the base manifest of the seal (row): manifest cmp EQUAL files 4804 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T16:01:41Z F34c go_f34c b6_w0 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (270/184/5/667/130/ MB)
+2026-10-10T16:01:42Z F34c go_f34c b6_w0 state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-10T16:01:41Z
+2026-10-10T16:01:42Z F34c go_f34c b6_w0 enter_scene start (level underwater_aerial_garden, --stable-draws 100, timeout 900, hold 310, end hold, --emu-arg=--vulkan-validation --emu-arg=true, VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T16:07:37Z F34c go_f34c b6_w0 enter_scene rc 0; guard watch: 2026-10-10T16:07:37Z watch end, user process seen: no; hold watch: 2026-10-10T16:07:36Z watch end, user VM seen: no
+2026-10-10T16:07:38Z F34c go_f34c b6_w0 run: VERDICT: underwater_aerial_garden in 34.0 s - PASS (acceptance <= 90 s); hold end: ft_total 2850, ft_tail 41 (last 5 s)
+2026-10-10T16:07:39Z F34c go_f34c b6_w0 log_b6_w0.txt sha256 e7ce4c9a31879579c0b755c0cb057925d271a050933a2ad9d837dd13855606d7
+2026-10-10T16:07:41Z F34c go_f34c b6_w0 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T16:07:44Z F34c go_f34c b6_w0 manifest of the run state (before the return): manifest C:/kyty/f287/f34c/runs/b6_w0/manifest_run.tsv files 4804 bytes 1302773008 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d; run vs before: manifest cmp EQUAL files 4804 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T16:07:45Z F34c go_f34c b6_w0 caches, seeds, saves and GLCache returned
+2026-10-10T16:07:48Z F34c go_f34c b6_w0 manifest after: manifest C:/kyty/f287/f34c/runs/b6_w0/manifest_after.tsv files 4804 bytes 1302773008 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d; cmp: manifest cmp EQUAL files 4804 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T16:07:48Z F34c go_f34c b6_w0 lock released (rc 0)
+2026-10-10T16:07:50Z F34c go_f34c b6_w0 display after lock released (item 620 (g)(1)): dispstate ON idle_s 30006 utc 2026-10-10T16:07:49Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-10T16:07:49Z; dispstate ON idle_s 30006
+2026-10-10T16:08:02Z F34c go_f34c b6_w0 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.270 procs []
+rc=0

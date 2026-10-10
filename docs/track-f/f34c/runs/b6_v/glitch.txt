@@ -1,0 +1,2 @@
+C:/kyty/f287/f34c/rec_b6_v.mp4: 7799 frames 960x540, index entries 7799
+one-frame glitches: 0

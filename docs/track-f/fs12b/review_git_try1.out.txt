@@ -1,0 +1,138 @@
+== G1 chains
+730ed40a 9aaea58c
+9aaea58c 25861288
+25861288 17c71ea6
+17c71ea6 ee9632be
+ee9632be eded064e
+
+PASS G1 FS12 chain = 730ed40a <- 9aaea58c <- 25861288 <- 17c71ea6 <- ee9632be - ['730ed40a', '9aaea58c', '25861288', '17c71ea6', 'ee9632be']
+PASS G1 F33c chain = 0c57cfed <- b536c419 <- ee9632be - ['0c57cfed', 'b536c419', 'ee9632be']
+== G2 contains (sorted changed lines equal; git cherry)
+PASS G2 lines 227e1b36 == copy 17c71ea6 - 190 / 190
+PASS G2 lines e5979953 == copy 25861288 - 292 / 292
+PASS G2 lines 5237fdff == copy 9aaea58c - 28 / 28
+PASS G2 lines cbfe8375 == copy 730ed40a - 8 / 8
+PASS G2 lines 227e1b36 == copy b536c419 - 190 / 190
+PASS G2 lines e5979953 == copy 0c57cfed - 292 / 292
+PASS G2 227e1b36 contained in 730ed40a (ancestor or git cherry -) - cherry -
+PASS G2 e5979953 contained in 730ed40a (ancestor or git cherry -) - cherry -
+PASS G2 5237fdff contained in 730ed40a (ancestor or git cherry -) - cherry -
+PASS G2 cbfe8375 contained in 730ed40a (ancestor or git cherry -) - cherry -
+PASS G2 c94c49e0 contained in 730ed40a (ancestor or git cherry -) - cherry -
+PASS G2 726e751e contained in 730ed40a (ancestor or git cherry -) - cherry -
+PASS G2 cb022252 contained in 730ed40a (ancestor or git cherry -) - cherry -
+PASS G2 73a6e411 contained in 730ed40a (ancestor or git cherry -) - cherry -
+PASS G2 0db3b3eb contained in 730ed40a (ancestor or git cherry -) - cherry -
+PASS G2 negative control: stand edition 1 5f48cc3e - git cherry + in FS12 and not an ancestor - + 5f48cc3e32
+PASS G2 negative control: 227e1b36 - git cherry + in the base ee9632be - + 227e1b36b3
+PASS G2 negative control: 5237fdff vs the copy of e5979953 differs
+PASS G2 negative control: one flipped line differs
+== G3 tree: base + four main diffs = FS12 tree (temporary index)
+PASS G3 base + 227e1b36 e5979953 5237fdff cbfe8375 == 730ed40a^{tree} - 9bd1094bd7a3dcd7f1e3b2c4612d8a7ea4531e49 / 9bd1094bd7a3dcd7f1e3b2c4612d8a7ea4531e49
+PASS G3 without cbfe8375 == 9aaea58c^{tree} - 64efa4f20c5eedabd821cbdc27b27395eb15778b / 64efa4f20c5eedabd821cbdc27b27395eb15778b
+PASS G3 negative control: without cbfe8375 != 730ed40a^{tree}
+PASS G3 base + 227e1b36 e5979953 == F33c worktree 0c57cfed^{tree} - 15e5875d0580f7f015af2d9a5f6530972aaa9ef5 / 15e5875d0580f7f015af2d9a5f6530972aaa9ef5
+== G4 default path of FS12 = path =1 of 2b393af8 (src/ of the F33c worktree + 5237fdff + FS12a only)
+PASS G4 diff 0c57cfed..730ed40a -- src/ paths == files of 5237fdff + cbfe8375 - ['src/common/subsystems.cpp', 'src/common/subsystems.h', 'src/emulator.cpp'] / ['src/common/subsystems.cpp', 'src/common/subsystems.h', 'src/emulator.cpp']
+PASS G4 changed lines of 0c57cfed..730ed40a in src/ == lines of 5237fdff + cbfe8375 (multiset) - 36 / 36
+PASS G4 negative control: without FS12a the lines differ (== lines of 5237fdff only) - 28
+PASS G4 control: 0c57cfed..25861288 is empty (same source at step 2 of both chains) - []
+PASS G4 outside src/: no path differs between 0c57cfed and 730ed40a - []
+   cbfe8375 code (non-comment) +/- lines:
+      +	const char* value = std::getenv("KYTY_FIX_F21");
+      +	g_fix_f21  = value == nullptr || value[0] == '\0' || EnvValueOn(value);
+      -	g_fix_f21  = EnvFlagOn("KYTY_FIX_F21"); // unset, "", 0/false/off/no - OFF (the form of FS4a)
+FAIL G4 cbfe8375 changes exactly one code statement (the g_fix_f21 initialiser), the rest comments - 3
+== G5 diff FS12 vs base
+PASS G5 paths == union of the four commits - ['src/common/subsystems.cpp', 'src/common/subsystems.h', 'src/emulator.cpp']
+PASS G5 all paths under src/ (no tests/, no CMakeLists.txt)
+PASS G5 no path under src/graphics/shader/
+   +499 -1; removed base lines:
+      -	subsystems.Initialize<Libs::Graphics::Lifecycle>();
+FAIL G5 the only removed base line is the Graphics lifecycle Initialize, re-added inside the stand branch
+   lines of the four commits: 518; lines of base..FS12: 500 (own lines replaced inside the chain cancel)
+== G6 hunks of base..FS12 that touch base function bodies (eye check of the =0 path)
+   @@ -2,2 +2,12 @@
+     +#include "common/envFlag.h"
+     +#include "common/logging/log.h"
+     +#include "common/threads.h"
+     +
+     +#include <atomic>
+     +#include <chrono>
+     +#include <cinttypes>
+     +#include <cstdio>
+     +#include <thread>
+     +
+   @@ -6,2 +16,15 @@ static Subsystems* g_active_subsystems = nullptr;
+     +// Track F, F33c (HPP-744; ROADMAP s122 item 675(g)): KYTY_FIX_F21. The three flags below are written by InitFixF21 and
+     +// SetEmergencyHook on the main thread before any other thread starts (the creation of every later thread orders them
+     +// before its reads) and never after; g_f21_path = g_fix_f21 || g_f21_hook != nullptr - the one check of the FS11 path.
+     +// At =1: g_f21_owner - Thread::GetThreadIdUnique of the first thread that entered EmergencyShutdownActive (0 - none;
+     +// the id is >= 1 and never reused), g_f21_done - "the owner's walk is done" (store release after the walk, load acquire
+     +// by the waiting threads), t_f21_expired - this thread's wait expired once, its later entries return at once.
+     +static bool                  g_fix_f21  = false;
+     +static EmergencyHook         g_f21_hook = nullptr;
+     +static bool                  g_f21_path = false;
+     +static std::atomic<uint64_t> g_f21_owner {0};
+     +static std::atomic<bool>     g_f21_done {false};
+     +static thread_local bool     t_f21_expired = false;
+     +
+   @@ -37,7 +60,131 @@ void Subsystems::EmergencyShutdown() { : +125 lines (new code block, not printed)
+   @@ -1,36 +1,37 @@
+     +#include <atomic>
+   @@ -39,2 +40,296 @@ namespace Emulator { : +294 lines (new code block, not printed)
+   @@ -141,28 +436,32 @@ static void ClearDebugTextureFolder() {
+     -	subsystems.Initialize<Libs::Graphics::Lifecycle>();
+     +	if (!ExitFatalStand::Armed()) {
+     +		subsystems.Initialize<Libs::Graphics::Lifecycle>();
+     +	} else {
+     +		subsystems.Initialize<ExitFatalStand::GraphicsPlaceholder>(); // F33c stand: no window, no GPU
+     +	}
+   @@ -202,66 +501,75 @@ static void Execute(const std::filesystem::path& game_patch) {
+     +	// Track F, F33c (KYTY_FIX_F21; ROADMAP s122 item 675(g)): read once here - the main thread, before Init
+     +	// starts any host thread and before the guest threads.
+     +	ExitFatalStand::Parse(); // F33c stand KYTY_TEST_EXITFATAL (off when unset): the observer is set before the knob
+     +	Common::Subsystems::InitFixF21();
+     +	Common::Subsystems::LogFixF21(); // F33c: "FixF21: mode=<0|1>" once, after Log::Initialize (Init)
+     +	if (ExitFatalStand::Armed()) {
+     +		ExitFatalStand::Run(); // F33c stand: never returns
+     +	}
+     +
+== G8 shipped fixes untouched: contained in FS12 (ancestor or cherry -); FS12 removes one base line only (G5)
+PASS G8 Ф10 1833ee28 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Ф10 c3eb8fe8 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Ф16 68602c4f contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Ф16 17adaf80 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б42 4e72289e contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б33 c1732d1a contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б4 a86a5ad0 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б4 17eb924e contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Ф8 10a4800b contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Ф8 ec6c4c83 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б24 9c726d74 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б24 919c1a19 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Ф19 082d1612 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Ф19 f98e842c contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Ф19 e46f55d4 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Ф19 7719d0f2 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б13 21db93d1 contained in 730ed40a (ancestor or cherry -) - ancestor
+PASS G8 Б13 11164d72 contained in 730ed40a (ancestor or cherry -) - ancestor
+PASS G8 P-var 4414e235 contained in 730ed40a (ancestor or cherry -) - ancestor; files met by the FS12 diff: ['src/emulator.cpp']
+PASS G8 S-replay 0005e11f contained in 730ed40a (ancestor or cherry -) - ancestor
+PASS G8 Ф27 a42f50b1 contained in 730ed40a (ancestor or cherry -) - ancestor
+PASS G8 Ф27 7bc87bc8 contained in 730ed40a (ancestor or cherry -) - ancestor
+PASS G8 Ф27 64a1fa40 contained in 730ed40a (ancestor or cherry -) - ancestor
+PASS G8 Ф27 1a7eaff8 contained in 730ed40a (ancestor or cherry -) - ancestor
+PASS G8 Ф27 dc5d4712 contained in 730ed40a (ancestor or cherry -) - ancestor
+PASS G8 Б12 73a6e411 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б12 c94c49e0 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б12 726e751e contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б12 0db3b3eb contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б12 cb022252 contained in 730ed40a (ancestor or cherry -) - cherry -
+PASS G8 Б12 ee9632be contained in 730ed40a (ancestor or cherry -) - ancestor
+PASS G8 585d997d NOT an ancestor of 730ed40a
+PASS G8 5f48cc3e NOT an ancestor of 730ed40a
+PASS G8 no KYTY_DIAG_B32 / rts_bad_ in the FS12 diff
+PASS G8 shaderReplay.cpp blob base == FS12
+   files of the FS12 diff also touched by shipped fixes: ['src/emulator.cpp']
+FAILED

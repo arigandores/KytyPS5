@@ -1,0 +1,9 @@
+OK   730ed40a:src/common/subsystems.cpp:74  anchor <<const char* value = std::getenv("KYTY_FIX_F21");>>  +1 <<g_fix_f21  = value == nullptr || value[0] == '\0' || EnvValueOn(value);>>
+OK   730ed40a:src/common/subsystems.cpp:61  anchor <<if (g_f21_path) [[unlikely]] { // F33c: KYTY_FIX_F21=1 or the stand KYTY_TEST_EXITFATAL armed>>  +1 <<EmergencyShutdownActiveF21();>>
+OK   730ed40a:src/common/subsystems.cpp:129  anchor <<if (!g_fix_f21) {>>  +1 <<// KYTY_FIX_F21=0 with the stand armed: the FS11 sequence - every entry walks - observed.>>
+OK   730ed40a:src/emulator.cpp:149  anchor <<const char* value = std::getenv("KYTY_TEST_EXITFATAL");>>  +1 <<if (value == nullptr || value[0] == '\0') {>>
+OK   730ed40a:src/emulator.cpp:529  anchor <<ExitFatalStand::Parse(); // F33c stand KYTY_TEST_EXITFATAL (off when unset): the observer is set before the knob>>  +1 <<Common::Subsystems::InitFixF21();>>
+OK   730ed40a:src/emulator.cpp:462  anchor <<if (!ExitFatalStand::Armed()) {>>  +1 <<subsystems.Initialize<Libs::Graphics::Lifecycle>();>>
+OK   ee9632be:src/common/subsystems.cpp:37  anchor <<void Subsystems::EmergencyShutdownActive() {>>  +1 <<if (g_active_subsystems != nullptr) {>>
+negative control (shift +1 never matches): FAILED as expected
+REFS 7 ALL OK

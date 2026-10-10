@@ -1,0 +1,4 @@
+6e930c95c90d99dcbca3f2bebe33f1afb642995d147224174c0502040598eb83 *build/install/kyty_emulator.exe
+6e930c95c90d99dcbca3f2bebe33f1afb642995d147224174c0502040598eb83 *build/kyty_emulator.exe
+46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26 *C:/kyty/f287/bin/kyty_emulator_46892c20.exe
+f82bf0db238b9d6620bf832d100f3a51000656f74dc66000c65e8c2050dbaf00 */c/kyty/f287/fs12n/build/install/kyty_emulator.exe

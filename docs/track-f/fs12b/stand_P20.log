@@ -1,0 +1,3 @@
+watch: start 2026-10-10T19:34:01Z child 51060 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+done fix 0 P2 201 220 new trials 20
+rc=0 end 2026-10-10T19:34:07Z

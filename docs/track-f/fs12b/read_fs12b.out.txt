@@ -1,0 +1,11 @@
+YES P2 N >= 200 - N 200
+YES P2 cfg_fix=1 and one FixF21: mode=1 line, leftover 0, in every trial - bad cfg [] mode [] leftover []
+YES P2 second=crash=hang=cut=expired=0 in every trial; control >= 1 - bad [] control 200 codes ['0', '321']
+YES H N >= 20 - N 20
+YES H cfg_fix=1 and one FixF21: mode=1 line, leftover 0, in every trial - bad cfg [] mode [] leftover []
+YES H expired>=1, second=crash=hang=cut=0 in every trial - bad [] codes {'0': 11, '321': 9} control 20
+YES CN N >= 20 - N 20
+YES CN cfg_fix=1 and one FixF21: mode=1 line, leftover 0, in every trial - bad cfg [] mode [] leftover []
+YES CN walks 1, nested 0, reenter>=2, expired 0, expired_seen 0, rc 321, dur<6 s, hang 0, crash 0, nested_fatal 1 - bad [] dur 0.15-0.175 reenter min 2
+YES control =0 P2: N >= 20, cfg_fix=0 and mode=0 in every trial, second >= 1 - N 20 second 16 bad cfg [] mode []
+MEMBERS ALL YES

@@ -1,0 +1,26 @@
+suite regress_f33e.py sha256 8b80f4dc10e8fcf8977668755e0ee164fc3f6937cdaada9a75c7d0ac6a181bc5 target f33e_read.py sha256 eb5ec8f00dcae4965b601b33e081eaaeb7b0b5b3ffd27ab6e7f1b8e0a9acf70f
+admission failed members: 4
+  NO json binary_sha256 = F33c 2b393af8 (ea51ae80521e8300)
+  NO installed during the tag = F33c 2b393af8 (ea51ae80521e8300)
+  NO installed before = after = FS11 ea51ae80 (abfded5ea629ea70 / abfded5ea629ea70)
+  NO env = the form of the tag (['missing KYTY_FIX_F21'])
+  [YES] hold >= 300 s after the first scene frame (334.4 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 362; with the first frame 0)
+  [YES] video index records >= 3000 (10061)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [NO] FixF21: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12497) - item 675 (d)(4)
+  [YES] exit by the harness: Event: quit line in the log (1147195)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12497)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 719)]; first GuestOut 12497)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 721)]; bad 0; first GuestOut 12497)
+  [YES] FixB12Stat: line present (parsed 35, unparsable 0)
+info hold_s 334.4 frames_ge1s 0 scene_frames 9678 quit_ln 1147195 close_rc 0 close_s 4.1
+ALL OK

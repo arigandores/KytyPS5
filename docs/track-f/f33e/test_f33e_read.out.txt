@@ -1,0 +1,3 @@
+suite test_f33e_read.py sha256 a0ebc346d7ed0ab68e61df3d96c47842da79f895248d8499316b64d9b172c1a9 target f33e_read.py sha256 eb5ec8f00dcae4965b601b33e081eaaeb7b0b5b3ffd27ab6e7f1b8e0a9acf70f
+checks 127 failed 0
+ALL OK

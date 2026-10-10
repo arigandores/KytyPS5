@@ -1,0 +1,69 @@
+suite test_tools_f33e.py sha256 8657099bb826ace5e2fd855472466e27bfaf327936b3f283e050384dff274fae target go_f33e.sh sha256 dd7892820faa8973d1e2f3e6d02f2ee619a2829b6bbfafc52a35190405bd5c90
+ok   go plan f21_v
+ok   go plan f21_v_r1
+ok   go plan f21_v_r3
+ok   go usage rc 2 for 'f21_x'
+ok   launch usage rc 2 for 'f21_x'
+ok   go usage rc 2 for 'f21_v_r4'
+ok   launch usage rc 2 for 'f21_v_r4'
+ok   go usage rc 2 for 'f21_v_r0'
+ok   launch usage rc 2 for 'f21_v_r0'
+ok   go usage rc 2 for 'fs11_v'
+ok   launch usage rc 2 for 'fs11_v'
+ok   go usage rc 2 for 'b4_v'
+ok   launch usage rc 2 for 'b4_v'
+ok   go usage rc 2 for ''
+ok   launch usage rc 2 for ''
+ok   launch f21_v dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat without F33E_REPEAT_OK -> rc 11
+ok   launch repeat with F33E_REPEAT_OK -> passes
+ok   form634_check.py --series C:\kyty\f287\f33e: ALL OK
+ok   go_f33e.sh first executable line is the form linter
+ok   launch_f33e.sh first executable line is the form linter
+ok   go: TB literal = 2b393af8
+ok   go: FS11 literal = ea51ae80
+ok   go: BIN and PINNED paths
+ok   on disk: sha256 of the F33c copy = 2b393af8
+ok   on disk: sha256 of the pinned FS11 copy = ea51ae80
+ok   go: the guard scan right after the lock line, before the manifest
+ok   go: install of the F33c copy after the copies of the caches and after INSTALLED=1
+ok   go: the return of the pinned FS11 copy in finish, before installed_after
+ok   go: installed_after must be FS11
+ok   go: installed before the tag must be FS11
+ok   go: knobs - KYTY_FIX_F21=1 is the only KYTY_FIX_ value
+ok   go: no KYTY_GPU_CHECKPOINTS=, KYTY_GAME_PATCH=, KYTY_TEST_ in the body
+ok   go: shell KYTY_* and VK_LAYER_* unset before the call
+ok   go: lock line names HPP-746
+ok   queue_f33e.py own issue HPP-746
+ok   runchk_f33e.py own issue HPP-746
+ok   enter_scene: ROOT = f287/f33e
+ok   enter_scene: CLOSE_WAIT_S = 40 (the harness timeout of the exit, form b4_v)
+ok   tempo_f33e.py = tempo_fs11c.py with the names moved (+ one header line)
+ok   ASCII only: chk_f33e.sh
+ok   ASCII only: dispstate.py
+ok   ASCII only: f33e_read.py
+ok   ASCII only: go_f33e.sh
+ok   ASCII only: guard_f33e.py
+ok   ASCII only: hold_f33e.py
+ok   ASCII only: hostload_f33e.py
+ok   ASCII only: idle142.py
+ok   ASCII only: launch_f33e.sh
+ok   ASCII only: launch_run.py
+ok   ASCII only: manifest_fs4c.py
+ok   ASCII only: mfsub_f33e.py
+ok   ASCII only: mk_f33e.py
+ok   ASCII only: post_f33e.sh
+ok   ASCII only: procload.py
+ok   ASCII only: queue_f33e.py
+ok   ASCII only: regress_f33e.py
+ok   ASCII only: run_safety99.py
+ok   ASCII only: runchk_f33e.py
+ok   ASCII only: sheet142.py
+ok   ASCII only: snap_f33e.py
+ok   ASCII only: tempo_f33e.py
+ok   ASCII only: test_f33e_read.py
+ok   ASCII only: test_tools_f33e.py
+ok   ASCII only: wait_f33e.sh
+checks 65 failed 0
+ALL OK

@@ -1,0 +1,20 @@
+OK     eac45df9:docs/ROADMAP.md:24299
+NOT OK eac45df9:docs/ROADMAP.md:24300 (shift +1, negative control)
+OK     eac45df9:docs/ROADMAP.md:24309
+NOT OK eac45df9:docs/ROADMAP.md:24310 (shift +1, negative control)
+OK     eac45df9:docs/ROADMAP.md:24366
+NOT OK eac45df9:docs/ROADMAP.md:24367 (shift +1, negative control)
+OK     eac45df9:docs/ROADMAP.md:24371
+NOT OK eac45df9:docs/ROADMAP.md:24372 (shift +1, negative control)
+OK     eac45df9:docs/track-f/f33c.md:64
+NOT OK eac45df9:docs/track-f/f33c.md:65 (shift +1, negative control)
+OK     227e1b36:src/common/subsystems.cpp:77
+NOT OK 227e1b36:src/common/subsystems.cpp:78 (shift +1, negative control)
+OK     227e1b36:src/common/subsystems.cpp:175
+NOT OK 227e1b36:src/common/subsystems.cpp:176 (shift +1, negative control)
+OK     227e1b36:src/emulator.cpp:233
+NOT OK 227e1b36:src/emulator.cpp:234 (shift +1, negative control)
+OK     227e1b36:src/emulator.cpp:236
+NOT OK 227e1b36:src/emulator.cpp:237 (shift +1, negative control)
+refs 9
+ALL OK

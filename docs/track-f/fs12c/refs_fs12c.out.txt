@@ -1,0 +1,24 @@
+OK cae9775d:docs/ROADMAP.md:24376
+OK cae9775d:docs/ROADMAP.md:24380
+OK cae9775d:docs/ROADMAP.md:24385
+OK cae9775d:docs/ROADMAP.md:24406
+OK cae9775d:docs/ROADMAP.md:24409
+OK 730ed40a:src/common/subsystems.cpp:74
+OK 730ed40a:src/common/subsystems.cpp:80
+OK 730ed40a:src/common/subsystems.cpp:178
+OK 730ed40a:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:604
+OK 730ed40a:src/graphics/presentation/window/vulkanWindow.cpp:672
+OK 730ed40a:src/emulator.cpp:67
+shift NOT OK cae9775d:docs/ROADMAP.md:24377
+shift NOT OK cae9775d:docs/ROADMAP.md:24381
+shift NOT OK cae9775d:docs/ROADMAP.md:24386
+shift NOT OK cae9775d:docs/ROADMAP.md:24407
+shift NOT OK cae9775d:docs/ROADMAP.md:24410
+shift NOT OK 730ed40a:src/common/subsystems.cpp:75
+shift NOT OK 730ed40a:src/common/subsystems.cpp:81
+shift NOT OK 730ed40a:src/common/subsystems.cpp:179
+shift NOT OK 730ed40a:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:605
+shift NOT OK 730ed40a:src/graphics/presentation/window/vulkanWindow.cpp:673
+shift NOT OK 730ed40a:src/emulator.cpp:68
+refs 11, ok True, every shift fails True
+ALL OK

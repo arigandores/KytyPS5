@@ -1,0 +1,55 @@
+suite regress_fs12c.py sha256 598f41cc143a4dfc9c2a866a559874b568966cee81bc06d97edfd5c8446f2066 target fs12c_read.py sha256 0a0cb9f1943882e3ad051db7b8d8cd30d1f50f09f494cb18a6df6ce4832dcf6e
+fs12_v (from log_f21_v.txt): admission failed members 3
+  NO json binary_sha256 = FS12 46892c20 (2b393af8e9c1a85a)
+  NO installed during the tag = FS12 46892c20 (2b393af8e9c1a85a)
+  NO env = the form of the tag (['extra KYTY_FIX_F21=1'])
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (334.5 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 339; with the first frame 0)
+  [YES] video index records >= 3000 (10569)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 727)]; unparsable 0; first GuestOut 12502) - item 683 (g)(3)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 725)]; bad 0; first GuestOut 12502)
+  [YES] exit by the harness: Event: quit line in the log (1193462)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12502)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 723)]; first GuestOut 12502)
+  [YES] FixB12Stat: line present (parsed 34, unparsable 0)
+  members as expected: True; ExitFatal: log 0 stdout 0; close_rc 0 close_s 3.8 quit_ln 1193462
+fs12_w (from log_fs11_w.txt): admission failed members 3
+  NO json binary_sha256 = FS12 46892c20 (ea51ae80521e8300)
+  NO installed during the tag = FS12 46892c20 (ea51ae80521e8300)
+  NO installed before = after = FS11 ea51ae80 (abfded5ea629ea70 / abfded5ea629ea70)
+  admission as expected: True
+  [YES] lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.2 >= 310)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 [Vulkan][E] (0)
+  [YES] 0 limit lines of the layer (0)
+  [YES] positive control: [Vulkan][W] 909883 > 0
+  [YES] DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)
+  [NO] FixF21: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12500) - item 683 (g)(3)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12500)
+  [YES] no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 723)]; first GuestOut 12500)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 725)]; bad 0; first GuestOut 12500)
+  members as expected: True; ExitFatal: log 0 stdout 0; close_rc 0 close_s 3.8 quit_ln 2391612
+fs12_z (from log_fs11_z.txt): admission failed members 4
+  NO json binary_sha256 = FS12 46892c20 (ea51ae80521e8300)
+  NO installed during the tag = FS12 46892c20 (ea51ae80521e8300)
+  NO installed before = after = FS11 ea51ae80 (abfded5ea629ea70 / abfded5ea629ea70)
+  NO env = the form of the tag (['extra KYTY_FIX_B12=0', 'missing KYTY_FIX_F21'])
+  admission as expected: True
+  [YES] hold >= 120 s after the first scene frame (154.4 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [NO] FixF21: mode=0 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12497) - item 683 (g)(3)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  members as expected: True; ExitFatal: log 0 stdout 0; close_rc 0 close_s 4.4 quit_ln 744346
+ALL OK

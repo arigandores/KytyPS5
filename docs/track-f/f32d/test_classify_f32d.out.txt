@@ -1,0 +1,38 @@
+ok   default form: no instr, no b5f, no patch
+ok   RenderDoc head -> instr
+ok   env as list, AV_TRACE -> instr
+ok   POKE -> instr
+ok   DIAG at 0 -> not instr
+ok   shader validation -> instr
+ok   salted cold -> b5f
+ok   S_REPLAY=3 (shipped default) -> not b5f
+ok   catalog arm k_ -> b5f
+ok   u_ arm without cold mode -> not b5f
+ok   user recording patch from times.txt
+ok   GAME_PATCH env -> patch, not instr
+ok   NONE on a clean warm frame ['NONE']
+ok   B32 by level ['B32']
+ok   B32 intro_next ['B32']
+ok   B5 ir ['B5']
+ok   B5 gcn ['B5']
+ok   B5 skipped draw ['B5']
+ok   B5 held ['B5']
+ok   B5 cold sub-form
+ok   B5 hold sub-form
+ok   B5 before B33 ['B5', 'B33']
+ok   B33 save >= half excess ['B33']
+ok   B33 save < half excess -> NONE ['NONE']
+ok   B33 reopen flag on default form
+ok   B33 no reopen under instr
+ok   B33 before PAUSE ['B33', 'PAUSE']
+ok   PAUSE by Pause: true ['PAUSE']
+ok   PAUSE by focus loss ['PAUSE']
+ok   Window exposed only -> NONE ['NONE']
+ok   INSTR before B32 ['INSTR', 'B32']
+ok   PAUSE before INSTR ['PAUSE', 'INSTR']
+ok   B5F ['B5F']
+ok   INSTR before B5F ['INSTR', 'B5F']
+ok   HOST fires ['HOST']
+ok   HOST below theta -> NONE ['NONE']
+ok   B5F before HOST before B32 ['B5F', 'HOST', 'B32']
+ALL OK

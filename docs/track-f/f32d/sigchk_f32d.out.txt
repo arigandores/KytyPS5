@@ -1,0 +1,39 @@
+signatures F32a 365 out-of-mask 174 new vs F0 33 new vs F0 and F32a 0
+  C:/kyty/f287/f10e/runs/f10e_r0/log.txt 68602c4 lines 55999 unique new
+  C:/kyty/f287/f30f/fx/reg/fs10_v/log.txt dc5d471 lines 1419083 = F32a C:/kyty/f287/fs10c/log_fs10_v.txt
+  C:/kyty/f287/f30f/fx/reg/k3k127/log.txt.xz defd2c9 lines 1162981 in_F0
+  C:/kyty/f287/f30f/fx/reg/s3s127/log.txt.xz defd2c9 lines 742464 in_F0
+  C:/kyty/f287/f30m/fx/reg/f30_s1_c3/log.txt a1d1d86 lines 747204 = F32a C:/kyty/f287/f30f/log_f30_s1_c3.txt
+  C:/kyty/f287/f30m/fx/reg/f30_s1_c4/log.txt a1d1d86 lines 731020 = F32a C:/kyty/f287/f30f/log_f30_s1_c4.txt
+  C:/kyty/f287/f30m/fx/reg/f30_s1_v/log.txt a1d1d86 lines 1137608 = F32a C:/kyty/f287/f30f/log_f30_s1_v.txt
+  C:/kyty/f287/f30m/fx/reg/f30_s9_c4/log.txt a1d1d86 lines 965679 = F32a C:/kyty/f287/f30f/log_f30_s9_c4.txt
+  C:/kyty/f287/f9/f9g/runs/f9g_c0/log.txt 722c5e7 lines 1205042 unique new
+  C:/kyty/f287/f9/f9g/runs/f9g_v1/log.txt 722c5e7 lines 1177398 unique new
+  C:/kyty/f287/f9/f9g/runs/f9g_v2/log.txt 722c5e7 lines 1190325 unique new
+  C:/kyty/f287/f9/f9g/runs/f9g_w/log.txt 722c5e7 lines 3497216 unique new
+  C:/kyty/f287/f9/runs/f9a_1/log.txt 4414e23 lines 915627 unique new
+  C:/kyty/f287/f9/runs/f9a_2/log.txt 4414e23 lines 1168503 unique new
+  C:/kyty/f287/f9/runs/f9a_rd1/log.txt 4414e23 lines 1619499 unique new
+  C:/kyty/f287/f9/runs/f9a_rd2/log.txt 4414e23 lines 752459 unique new
+  C:/kyty/f287/f9/runs/f9a_rd3/log.txt 4414e23 lines 1853947 unique new
+  C:/kyty/f287/f9/runs/f9d_2/log.txt 4414e23 lines 1507088 unique new
+  C:/kyty/f287/fs3/fs3c/runs/fs3_pu/log.txt d515b90 lines 1237587 unique new
+  C:/kyty/f287/fs3/fs3c/runs/fs3_u/log.txt d515b90 lines 1162632 unique new
+  C:/kyty/f287/fs3/fs3c/runs/fs3_u0/log.txt d515b90 lines 1195174 unique new
+  C:/kyty/f287/fs4c/runs/fs4_r0/log.txt 3d0e46d lines 56000 unique new
+  C:/kyty/play/20261002T221534Z/log.txt 4414e23 lines 2614364 unique new
+  C:/kyty/s145/step2/abort_w145_06_kyty.txt 4fc501f lines 6689347 unique new
+  C:/kyty/s34/background_kyty.txt.xz 03b9643 lines 240592 unique new
+  C:/kyty/s34/final_seed_install_kyty.txt.xz 03b9643 lines 240961 unique new
+  C:/kyty/s34/prepare_cold_mode_kyty.txt.xz 03b9643 lines 331438 unique new
+  C:/kyty/s34/smoke_kyty.txt.xz 03b9643 lines 550475 unique new
+  C:/kyty/s34/warm_default_kyty.txt.xz 03b9643 lines 246853 unique new
+  C:/kyty/s36/prepare_check_kyty.txt.xz 03b9643 lines 548491 unique new
+  C:/kyty/s37/restored_check_kyty.txt.xz 03b9643 lines 305528 unique new
+  C:/kyty/s37/validate_control_kyty.txt.xz 03b9643 lines 464146 unique new
+  C:/kyty/s37/validate_control_rec_kyty.txt.xz 03b9643 lines 466722 unique new
+  C:/kyty/s38/prepare_check_kyty.txt.xz 03b9643 lines 222920 unique new
+  C:/kyty/s39/prepare_seed_kyty.txt.xz 03b9643 lines 1086316 unique new
+  C:/kyty/s42/prepare_seed_kyty.txt.xz 6e2c892 lines 1610727 unique new
+records 36 unique new 29
+ALL OK

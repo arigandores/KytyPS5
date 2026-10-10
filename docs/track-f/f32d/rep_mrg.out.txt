@@ -1,0 +1,114 @@
+unique delta logs 992
+logs by build class {'OTHER': 524, 'COURSE_FS2': 299, 'PRE_FS2': 169}
+course builds present {'FS3 540c035a': 9, 'FS6 9325446c': 26, 'FS8 2c9b69b9': 55, 'FS10 abfded5e': 63, 'FS11 ea51ae80': 39, 'FS2 bbad499c': 5, 'FS4 31cbfee8': 5, 'FS5 631ff987': 5, 'FS7 8df61c00': 2, 'FS9 3861eeea': 2, 'P23 4aa62e95': 21, 'S12 adb0c82f': 44, 'S18 b3cee576': 23}
+
+(1) regular-path Take of speculatively skipped hashes
+  COURSE_FS2 logs  299 | with Take lines (path armed)   56, levels  23, Take lines   2899 | skipped hash-in-log by class {'op:SOP1:0x21': 28620, 'budget': 1192, 'resource_tracking': 9834, 'op:VOPC:0xf3': 1192} | witnesses 0  | B26g skipped in 298 logs, taken 0
+  PRE_FS2    logs  169 | with Take lines (path armed)   19, levels  20, Take lines    354 | skipped hash-in-log by class {'op:SOP1:0x21': 15092, 'budget': 629, 'resource_tracking': 5066, 'op:SOP1:0x0c': 115, 'op:VOPC:0xe3': 460, 'op:VOPC:0xf3': 168} | witnesses 0  | B26g skipped in 157 logs, taken 0
+  OTHER      logs  524 | with Take lines (path armed)   52, levels  12, Take lines   3247 | skipped hash-in-log by class {'op:SOP1:0x21': 28816, 'budget': 1205, 'resource_tracking': 9847, 'op:VOPC:0xf3': 1109, 'op:SOP1:0x0c': 22, 'op:VOPC:0xe3': 88} | witnesses {'resource_tracking': 1} {'resource_tracking': 'C:/kyty/f287/f21a/fxwork/log_fx.txt hash=1111111111111111'} | B26g skipped in 299 logs, taken 0
+  ALL        logs  992 | with Take lines (path armed)  127, levels  39, Take lines   6500 | skipped hash-in-log by class {'op:SOP1:0x21': 72528, 'budget': 3026, 'resource_tracking': 24747, 'op:VOPC:0xf3': 2469, 'op:SOP1:0x0c': 137, 'op:VOPC:0xe3': 548} | witnesses {'resource_tracking': 1} {'resource_tracking': 'C:/kyty/f287/f21a/fxwork/log_fx.txt hash=1111111111111111'} | B26g skipped in 754 logs, taken 0
+
+(2) other witness lines
+  COURSE_FS2 cfg_out 0/0 logs; sock 0/0 logs; read0 0/0 logs; ctl_removed 0/0 logs; vuid06479 0/0 logs; late_ge1s 79/49 logs; quit 295/295 logs; fatal 2/2 logs
+  PRE_FS2    cfg_out 0/0 logs; sock 0/0 logs; read0 0/0 logs; ctl_removed 0/0 logs; vuid06479 0/0 logs; late_ge1s 1/1 logs; quit 147/147 logs; fatal 0/0 logs
+  OTHER      cfg_out 1/1 logs; sock 0/0 logs; read0 0/0 logs; ctl_removed 2/2 logs; vuid06479 2/2 logs; late_ge1s 96/6 logs; quit 331/331 logs; fatal 26/24 logs
+    cfg_out C:/kyty/f287/f21a/fxwork/log_fx.txt ? ['294:shader CFG build failed: boom outside']
+    ctl_removed C:/kyty/f287/f19e/log_b24_d0.txt 52d2f54 412756:Controller 0: removed
+    ctl_removed C:/kyty/f287/f19e/log_b24_d1.txt 52d2f54 432627:Controller 0: removed
+    vuid06479 C:/kyty/s37/validate_control_kyty.txt.xz 03b9643 464145:The Vulkan spec states: If a VkImageView is sampled with depth comparison, the image view's format features must contain VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT (https://docs.vulkan.org
+    vuid06479 C:/kyty/s37/validate_control_rec_kyty.txt.xz 03b9643 466719:The Vulkan spec states: If a VkImageView is sampled with depth comparison, the image view's format features must contain VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT (https://docs.vulkan.org
+    late_ge1s C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 409227:MainTaskLate: us=3001064
+    late_ge1s C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 444543:MainTaskLate: us=3000286
+    late_ge1s C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 417550:MainTaskLate: us=3001508
+    late_ge1s C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc 414837:MainTaskLate: us=3001167
+    late_ge1s C:/kyty/s288/s10/log_u_1.txt 4414e23 5701:MainTaskLate: us=20419483
+    late_ge1s C:/kyty/s288/s10/log_u_2.txt 4414e23 5691:MainTaskLate: us=20175451
+    late_ge1s C:/kyty/s288/s10/log_u_3.txt 4414e23 5691:MainTaskLate: us=20054203
+    late_ge1s C:/kyty/s288/s10/log_u_4.txt 4414e23 5692:MainTaskLate: us=20652158
+    late_ge1s C:/kyty/s288/s10/log_u_5.txt 4414e23 5702:MainTaskLate: us=20640394
+    late_ge1s C:/kyty/s288/s13/log_u_01.txt 4d9e8ab 6275:MainTaskLate: us=24497442
+    late_ge1s C:/kyty/s288/s13/log_u_02.txt 4d9e8ab 6279:MainTaskLate: us=27300439
+    late_ge1s C:/kyty/s288/s13/log_u_03.txt 4d9e8ab 6279:MainTaskLate: us=26380170
+    late_ge1s ... 44 more
+    fatal C:/kyty/f287/f12f/log_f12_rd.txt d515b90 262825:--- Fatal Error ---
+    fatal C:/kyty/f287/f21a/fxwork/log_fx.txt ? 504:--- Fatal Error ---
+    fatal C:/kyty/f287/f26a/fxwork/log_fxa.txt ? 12:Unhandled host exception: type=1 code=3221225477 pc=0x00000009004a020e access=1 address=0xffffffffffffffff
+    fatal C:/kyty/f287/f26a/fxwork/log_fxb.txt.xz ? 13:Unhandled host exception: type=1 code=3221225477 pc=0x00000009004a020e access=1 address=0xffffffffffffffff
+    fatal C:/kyty/f287/f26c/fxread/log_d_F.txt ? 7205:--- Fatal Error ---
+    fatal C:/kyty/f287/f26c/fxread/log_d_Unhan.txt ? 7205:Unhandled exception: x
+    fatal C:/kyty/f287/f26c/fxread/log_det.txt ? 7208:Unhandled host exception: type=1 code=3221225477 pc=0x00000009004a020e access=1 address=0xffffffffffffffff
+    fatal C:/kyty/f287/f26c/fxread/log_det1_3.txt ? 7205:Unhandled host exception: type=1 code=3221225477 pc=0x00000009004a020e access=1 address=0xffffffffffffffff
+    fatal C:/kyty/f287/f26c/fxread/log_detnoentry.txt ? 7207:Unhandled host exception: type=1 code=3221225477 pc=0x00000009004a020e access=1 address=0xffffffffffffffff
+    fatal C:/kyty/f287/f26c/fxread/log_hexc.txt ? 7205:Unhandled host exception: type=1 code=1 pc=0x0000000900000000
+    fatal C:/kyty/f287/f2c/fx/read/a_death/log_f2c_a.txt ? 18211:Unhandled exception: access violation
+    fatal C:/kyty/f287/f2c/fx/read/a_short_death/log_f2c_a.txt ? 18101:Unhandled exception: access violation
+    fatal ... 14 more
+
+(3) frames by the F0 rule on COURSE_FS2 logs without validation
+  underwater_aerial_garden             entries  78  K2 window 18  K2 hold 11  K3 hold 204  hold frames  700085  C:/kyty/f287/f12f/log_f12_rd.txt:246800 n=397 dt=3424890 w | C:/kyty/f287/f12f/log_f12_rd.txt:249785 n=398 dt=1580178 w | C:/kyty/f287/f12f/log_f12_rd.txt:252968 n=399 dt=14118553 w | C:/kyty/f287/f12f/log_f12_rd.txt:252987 n=400 dt=1237749 w
+  intro_next                           entries  60  K2 window  1  K2 hold  0  K3 hold  25  hold frames  423133  C:/kyty/f287/f26c/log_b25_17.txt:800550 k3h=1 first=(6711, 532883) | C:/kyty/s288/s13/log_k_02.txt:653295 k3h=8 first=(1555, 452272) | C:/kyty/s288/s15/log_k_02.txt:436299 n=309 dt=1012255 w | C:/kyty/s288/s15/log_k_02.txt:654351 k3h=8 first=(1625, 157704)
+  mini_giants_garden                   entries  42  K2 window  0  K2 hold  0  K3 hold   1  hold frames  704920  C:/kyty/f287/f31c/log_b25m_06.txt:1286443 k3h=1 first=(12949, 100460)
+  hoover_beach                         entries  11  K2 window  0  K2 hold  0  K3 hold   2  hold frames  137371  C:/kyty/f287/fs4c/log_fs4_hb.txt:1381957 k3h=1 first=(3862, 236013) | C:/kyty/p283/p24/log_in_hoover_beach.txt:533270 k3h=1 first=(2651, 166575)
+  worldmap                             entries  10  K2 window  0  K2 hold  0  K3 hold   0  hold frames       0  
+  transition_next                      entries  10  K2 window  0  K2 hold  0  K3 hold  15  hold frames  117985  C:/kyty/s288/s18c/log_s18_c04.txt:1629096 k3h=15 first=(8962, 792110)
+  rotating_level_day_and_night         entries   8  K2 window  3  K2 hold  0  K3 hold   5  hold frames   79196  C:/kyty/f287/f27c/log_f27_v0.txt:247323 n=327 dt=4567345 w | C:/kyty/f287/f27c/log_f27_v0.txt:395863 k3h=2 first=(1907, 154288) | C:/kyty/f287/f27c/log_f27_v0b.txt:240327 n=224 dt=4517992 w | C:/kyty/f287/f27c/log_f27_v0b.txt:412405 k3h=1 first=(1785, 413734)
+  timestop_casino                      entries   7  K2 window  1  K2 hold  0  K3 hold   2  hold frames   69526  C:/kyty/f287/fs2c/log_fs2_tw.txt:386033 k3h=2 first=(1692, 187331) | C:/kyty/s288/s18c/log_s18_c12.txt:1434282 n=926 dt=1904670 w
+  sponge_dirty_bath                    entries   7  K2 window  0  K2 hold  0  K3 hold   0  hold frames   40235  
+  title_controller_ship                entries   5  K2 window  0  K2 hold  0  K3 hold   0  hold frames   60471  
+  hub_crashsite                        entries   5  K2 window  1  K2 hold  0  K3 hold   7  hold frames   60112  C:/kyty/s288/s13/log_k_05.txt:595302 k3h=2 first=(913, 266300) | C:/kyty/s288/s15/log_k_05.txt:604092 k3h=2 first=(1114, 266215) | C:/kyty/s288/s18c/log_s18_c05.txt:787081 n=509 dt=1053203 w | C:/kyty/s288/s18c/log_s18_c05.txt:1248539 k3h=3 first=(1186, 329329)
+  penguin_atlantis                     entries   5  K2 window  2  K2 hold  0  K3 hold   0  hold frames   59431  C:/kyty/s288/s13/log_k_07.txt:473577 n=147 dt=1258061 w | C:/kyty/s288/s15/log_k_07.txt:472347 n=192 dt=1490473 w
+  time_stopper_ghost_world             entries   5  K2 window  0  K2 hold  0  K3 hold   0  hold frames   37469  
+  bumper_enemy_snowy_canyon            entries   5  K2 window  0  K2 hold  0  K3 hold   0  hold frames   40061  
+  big_hand_pirate_island               entries   5  K2 window  0  K2 hold  0  K3 hold   2  hold frames   27017  C:/kyty/s288/s18c/log_s18_c11.txt:1698942 k3h=2 first=(1295, 149830)
+  ice_iceberg                          entries   5  K2 window  0  K2 hold  0  K3 hold   1  hold frames   59580  C:/kyty/s288/s18c/log_s18_c14.txt:1547507 k3h=1 first=(944, 116511)
+  volcano_mountain                     entries   5  K2 window  0  K2 hold  0  K3 hold   0  hold frames   60362  
+  voxel_world                          entries   5  K2 window  0  K2 hold  0  K3 hold   1  hold frames   58140  C:/kyty/s288/s18c/log_s18_c18.txt:931854 k3h=1 first=(1768, 117145)
+  enemy_gorilla                        entries   5  K2 window  0  K2 hold  0  K3 hold   1  hold frames   54213  C:/kyty/s288/s18c/log_s18_c19.txt:1030177 k3h=1 first=(843, 395312)
+  ending_boss_after_credit             entries   2  K2 window  0  K2 hold  2  K3 hold   1  hold frames   27527  C:/kyty/f287/f13a/log_f13_rd.txt:349136 n=2592 dt=1017975 h | C:/kyty/f287/f13a/log_f13_rd.txt:349302 n=2594 dt=4219890 h | C:/kyty/f287/f13a/log_f13_rd.txt:349314 k3h=1 first=(2595, 524863)
+  hero_kratos                          entries   2  K2 window  1  K2 hold  0  K3 hold   0  hold frames   25939  C:/kyty/s288/s12/log_s12_gw.txt:983773 n=285 dt=3351759 w
+  enemy_final                          entries   1  K2 window  0  K2 hold  0  K3 hold   0  hold frames   19312  
+  robot_builder_next                   entries   1  K2 window  0  K2 hold  0  K3 hold   0  hold frames    6726  
+  interactive_credit_00                entries   1  K2 window  0  K2 hold  0  K3 hold   0  hold frames    6709  
+  fragile_battle_1                     entries   1  K2 window  0  K2 hold  0  K3 hold   0  hold frames    6710  
+  TOTAL {'entries': 291, 'k2w': 27, 'k2h': 13, 'k3h': 267, 'hold_frames': 2882230} levels 25
+  all K2 frames (>= 1 s) after the first scene frame on COURSE_FS2 logs without validation: 40
+    C:/kyty/f287/f12f/log_f12_rd.txt:246800 underwater_aerial_garden n=397 dt_us=3424890 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:249785 underwater_aerial_garden n=398 dt_us=1580178 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:252968 underwater_aerial_garden n=399 dt_us=14118553 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:252987 underwater_aerial_garden n=400 dt_us=1237749 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:253293 underwater_aerial_garden n=401 dt_us=1149979 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:254368 underwater_aerial_garden n=402 dt_us=8505781 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:255449 underwater_aerial_garden n=403 dt_us=5391007 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:256232 underwater_aerial_garden n=404 dt_us=2239347 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:257247 underwater_aerial_garden n=405 dt_us=12602310 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:257586 underwater_aerial_garden n=407 dt_us=1262448 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:258379 underwater_aerial_garden n=408 dt_us=12651608 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:258391 underwater_aerial_garden n=409 dt_us=1127433 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:259993 underwater_aerial_garden n=411 dt_us=13454239 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:260332 underwater_aerial_garden n=413 dt_us=1198450 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:261155 underwater_aerial_garden n=414 dt_us=11241693 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:261168 underwater_aerial_garden n=415 dt_us=1088793 window build=FS3 540c035a
+    C:/kyty/f287/f12f/log_f12_rd.txt:262813 underwater_aerial_garden n=417 dt_us=7260633 window build=FS3 540c035a
+    C:/kyty/f287/f13a/log_f13_rd.txt:349136 ending_boss_after_credit n=2592 dt_us=1017975 hold build=FS3 540c035a
+    C:/kyty/f287/f13a/log_f13_rd.txt:349302 ending_boss_after_credit n=2594 dt_us=4219890 hold build=FS3 540c035a
+    C:/kyty/f287/f27c/log_f27_v0.txt:247323 rotating_level_day_and_night n=327 dt_us=4567345 window build=FS10 abfded5e
+    C:/kyty/f287/f27c/log_f27_v0b.txt:240327 rotating_level_day_and_night n=224 dt_us=4517992 window build=FS10 abfded5e
+    C:/kyty/f287/f27c/log_f27_v1a.txt:238111 rotating_level_day_and_night n=190 dt_us=4367881 window build=FS10 abfded5e
+    C:/kyty/s288/s12/log_s12_gw.txt:983773 hero_kratos n=285 dt_us=3351759 window build=S12 adb0c82f
+    C:/kyty/s288/s13/log_k_07.txt:473577 penguin_atlantis n=147 dt_us=1258061 window build=S12 adb0c82f
+    C:/kyty/s288/s15/log_k_02.txt:436299 intro_next n=309 dt_us=1012255 window build=FS8 2c9b69b9
+    C:/kyty/s288/s15/log_k_07.txt:472347 penguin_atlantis n=192 dt_us=1490473 window build=FS8 2c9b69b9
+    C:/kyty/s288/s18c/log_s18_c05.txt:787081 hub_crashsite n=509 dt_us=1053203 window build=S18 b3cee576
+    C:/kyty/s288/s18c/log_s18_c12.txt:1434282 timestop_casino n=926 dt_us=1904670 window build=S18 b3cee576
+    C:/kyty/f287/f9/runs/f9a_rd2/log.txt:710743 underwater_aerial_garden n=3948 dt_us=1612112 hold build=P23 4aa62e95
+    C:/kyty/f287/f9/runs/f9a_rd2/log.txt:710931 underwater_aerial_garden n=3949 dt_us=11114866 hold build=P23 4aa62e95
+    C:/kyty/f287/f9/runs/f9a_rd2/log.txt:710942 underwater_aerial_garden n=3950 dt_us=1086359 hold build=P23 4aa62e95
+    C:/kyty/f287/f9/runs/f9a_rd2/log.txt:731590 underwater_aerial_garden n=4188 dt_us=1015844 hold build=P23 4aa62e95
+    C:/kyty/f287/f9/runs/f9a_rd2/log.txt:731780 underwater_aerial_garden n=4189 dt_us=10347677 hold build=P23 4aa62e95
+    C:/kyty/f287/f9/runs/f9a_rd2/log.txt:731793 underwater_aerial_garden n=4190 dt_us=1095984 hold build=P23 4aa62e95
+    C:/kyty/f287/f9/runs/f9a_rd2/log.txt:752445 underwater_aerial_garden n=4429 dt_us=4400516 hold build=P23 4aa62e95
+    C:/kyty/f287/f9/runs/f9a_rd3/log.txt:972886 underwater_aerial_garden n=7287 dt_us=1274846 hold build=P23 4aa62e95
+    C:/kyty/f287/f9/runs/f9a_rd3/log.txt:972901 underwater_aerial_garden n=7288 dt_us=5451609 hold build=P23 4aa62e95
+    C:/kyty/f287/f9/runs/f9a_rd3/log.txt:998222 underwater_aerial_garden n=7591 dt_us=8461566 hold build=P23 4aa62e95
+    C:/kyty/play/20261002T221534Z/log.txt:377404 underwater_aerial_garden n=869 dt_us=19150054 window build=P23 4aa62e95
+    C:/kyty/play/20261002T221534Z/log.txt:624206 underwater_aerial_garden n=2414 dt_us=37082770 hold build=P23 4aa62e95

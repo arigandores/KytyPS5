@@ -1,0 +1,89 @@
+PASS I2 rows = rep K3 hold + K2 hold K3 267/267 K2 13/13
+PASS I3 per level = rep (3) []
+PASS I4 sum over classes = rows {'INSTR': 156, 'B32': 14, 'B5': 83, 'PAUSE': 6, 'NONE': 2, 'B33': 4, 'B5F': 15}
+PASS I5 F32a part + out-of-mask part = rows; F32a part K3 = 239 {'F32a': 241, 'out-of-mask': 39}, F32a K3 239
+
+class x part x cls:
+  B32    F32a         K3   13
+  B32    out-of-mask  K3    1
+  B33    out-of-mask  K3    4
+  B5     F32a         K3   68
+  B5     out-of-mask  K3   15
+  B5F    F32a         K3   15
+  INSTR  F32a         K2    2
+  INSTR  F32a         K3  140
+  INSTR  out-of-mask  K2   10
+  INSTR  out-of-mask  K3    4
+  NONE   F32a         K3    2
+  PAUSE  F32a         K3    1
+  PAUSE  out-of-mask  K2    1
+  PAUSE  out-of-mask  K3    4
+
+class x level (K3+K2):
+  big_hand_pirate_island         B5 2
+  ending_boss_after_credit       INSTR 3
+  enemy_gorilla                  B5 1
+  hoover_beach                   INSTR 2
+  hub_crashsite                  B5 7
+  ice_iceberg                    B5 1
+  intro_next                     B5 24 PAUSE 1
+  mini_giants_garden             NONE 1
+  rotating_level_day_and_night   B5 5
+  timestop_casino                B5 1 NONE 1
+  transition_next                B5F 15
+  underwater_aerial_garden       B32 14 B33 4 B5 41 INSTR 151 PAUSE 5
+  voxel_world                    B5 1
+
+class x build:
+  FS10 abfded5e  B5 4 PAUSE 1
+  FS11 ea51ae80  NONE 1
+  FS2 bbad499c   B5 1 NONE 1
+  FS3 540c035a   B32 1 B33 1 B5 5 INSTR 3
+  FS4 31cbfee8   B5 3 INSTR 1
+  FS5 631ff987   B5 5
+  FS6 9325446c   B32 12
+  FS7 8df61c00   INSTR 3
+  FS8 2c9b69b9   B32 1 B5 23
+  P23 4aa62e95   B33 3 B5 12 INSTR 16 PAUSE 5
+  S12 adb0c82f   B5 12 INSTR 133
+  S18 b3cee576   B5 18 B5F 15
+
+NONE rows: 2
+  mini_giants_garden | FS11 ea51ae80 | b25m_06 | n 12949 | 100460 us | K3 | warm |  | also - | -
+  timestop_casino | FS2 bbad499c | fs2_tw | n 1692 | 187331 us | K3 | warm |  | also - | -
+B32 rows: 14
+  underwater_aerial_garden | FS6 9325446c | f20_v07 | n 7750 | 229331 us | K3 | warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v10 | n 6965 | 188582 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v10 | n 7163 | 168123 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v10 | n 7244 | 230697 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v10 | n 7245 | 101087 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v10 | n 7301 | 102907 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v10 | n 7336 | 117415 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v18 | n 9198 | 109003 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v21 | n 2828 | 138172 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v21 | n 3025 | 171232 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v21 | n 3108 | 347268 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS6 9325446c | f20_v21 | n 3193 | 180215 us | K3 | not_warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS8 2c9b69b9 | f20_v35 | n 8487 | 115041 us | K3 | warm | underwater_aerial_garden | also - | -
+  underwater_aerial_garden | FS3 540c035a | fs3_pu | n 2635 | 237520 us | K3 | not_warm | underwater_aerial_garden | also - | patch
+B33 rows: 4
+  underwater_aerial_garden | FS3 540c035a | fs3_pu | n 3800 | 123738 us | K3 | not_warm | save 103104 us at line 628285 | also B32 | patch
+  underwater_aerial_garden | P23 4aa62e95 | 20261002T221534Z | n 2521 | 132072 us | K3 | not_warm | save 98569 us at line 636740 | also B32 | patch
+  underwater_aerial_garden | P23 4aa62e95 | 20261002T221534Z | n 3517 | 127455 us | K3 | not_warm | save 98248 us at line 755403 | also B32 | patch
+  underwater_aerial_garden | P23 4aa62e95 | 20261002T221534Z | n 6548 | 165023 us | K3 | not_warm | save 107292 us at line 1100711 | also B32 | patch
+PAUSE rows: 6
+  intro_next | FS10 abfded5e | b25_17 | n 6711 | 532883 us | K3 | warm | 800546:Pause: true; 800549:Pause: false | also B32 | -
+  underwater_aerial_garden | P23 4aa62e95 | 20261002T221534Z | n 2414 | 37082770 us | K2 | not_warm | 623970:Pause: true; 624181:Window 1 lost keyboard focus; 624183:Window | also B32 | patch
+  underwater_aerial_garden | P23 4aa62e95 | 20261002T221534Z | n 2443 | 232033 us | K3 | not_warm | 628965:Pause: true; 629158:Pause: false | also B32 | patch
+  underwater_aerial_garden | P23 4aa62e95 | 20261002T221534Z | n 3798 | 916878 us | K3 | not_warm | 789058:Pause: true; 789232:Pause: false | also B32 | patch
+  underwater_aerial_garden | P23 4aa62e95 | 20261002T221534Z | n 6104 | 499795 us | K3 | not_warm | 1050108:Pause: true; 1050242:Pause: false | also B32 | patch
+  underwater_aerial_garden | P23 4aa62e95 | 20261002T221534Z | n 19490 | 783029 us | K3 | not_warm | 2476780:Pause: true; 2476994:Pause: false | also B32 | patch
+
+B5 sub-forms: {'hold': 26, 'cold': 57}
+B5 hold sub-form by level/build/tag: {('underwater_aerial_garden', 'FS8 2c9b69b9', 'f20_v25'): 1, ('underwater_aerial_garden', 'FS8 2c9b69b9', 'f20_v26'): 1, ('underwater_aerial_garden', 'FS8 2c9b69b9', 'f20_v29'): 1, ('underwater_aerial_garden', 'FS8 2c9b69b9', 'f20_v30'): 1, ('underwater_aerial_garden', 'FS8 2c9b69b9', 'f20_v32'): 1, ('underwater_aerial_garden', 'FS8 2c9b69b9', 'f20_v33'): 1, ('underwater_aerial_garden', 'FS8 2c9b69b9', 'f20_v34'): 1, ('underwater_aerial_garden', 'P23 4aa62e95', 'f9a_1'): 1, ('underwater_aerial_garden', 'P23 4aa62e95', 'f9a_2'): 2, ('underwater_aerial_garden', 'P23 4aa62e95', 'f9a_rd1'): 1, ('underwater_aerial_garden', 'P23 4aa62e95', 'f9a_rd2'): 2, ('underwater_aerial_garden', 'P23 4aa62e95', 'f9a_rd3'): 2, ('underwater_aerial_garden', 'P23 4aa62e95', 'f9d_2'): 2, ('timestop_casino', 'FS2 bbad499c', 'fs2_tw'): 1, ('underwater_aerial_garden', 'FS3 540c035a', 'fs3_pu'): 1, ('underwater_aerial_garden', 'FS3 540c035a', 'fs3_u'): 2, ('underwater_aerial_garden', 'FS3 540c035a', 'fs3_u0'): 2, ('underwater_aerial_garden', 'P23 4aa62e95', 'iv_5'): 1, ('underwater_aerial_garden', 'P23 4aa62e95', 'iv_6'): 1, ('underwater_aerial_garden', 'S12 adb0c82f', 's12_v0'): 1}
+INSTR by tag: {('f13_rd', '--rd (RenderDoc bound), KYTY_RD_FLIPS=2, KYTY_RD'): 3, ('f9a_rd2', '--rd (RenderDoc bound), KYTY_RD_FLIPS=2, KYTY_RD'): 8, ('f9a_rd3', '--rd (RenderDoc bound), KYTY_RD_FLIPS=2, KYTY_RD'): 6, ('fs4_hb', '--shader-validation true'): 1, ('fs7_n', 'KYTY_AV_TRACE=1'): 3, ('ia_A3', 'KYTY_POKE=27e46c:909090909090,2a47'): 1, ('in_hoover_beach', 'KYTY_POKE=27e46c:909090909090'): 1, ('u_06', 'KYTY_AV_TRACE=1, KYTY_SHADER_REGISTER_TRACE=1'): 133}
+B5F by tag: {('s18_c04', 'KYTY_S_REPLAY=2'): 15}
+B33 reopen (p.637 condition) rows: 0
+
+F32e input: NONE rows 2; on a warm hold outside Sky Garden / intro_next 2; on Sky Garden 0; on intro_next 0
+ALL OK

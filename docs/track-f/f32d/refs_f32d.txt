@@ -1,0 +1,14 @@
+P673      OK   91cbf7ea:docs/ROADMAP.md:24254  anchor ok  +1 NOT OK
+P673z3    OK   91cbf7ea:docs/ROADMAP.md:24284  anchor ok  +1 NOT OK
+F32a35    OK   eb61b8d7:docs/track-f/f32a.md:151  anchor ok  +1 NOT OK
+F32bRC1   OK   f793bf5d:docs/track-f/f32b-review.md:27  anchor ok  +1 NOT OK
+F32bRC8   OK   f793bf5d:docs/track-f/f32b-review.md:79  anchor ok  +1 NOT OK
+R88B32    OK   595b38dd:docs/track-f/register.md:1344  anchor ok  +1 NOT OK
+R89B33    OK   595b38dd:docs/track-f/register.md:1352  anchor ok  +1 NOT OK
+R104      OK   595b38dd:docs/track-f/register.md:1484  anchor ok  +1 NOT OK
+PAUSELOG  OK   ee9632be:src/graphics/presentation/window/window.cpp:211  anchor ok  +1 NOT OK
+SPACE     OK   ee9632be:src/graphics/presentation/window/window.cpp:256  anchor ok  +1 NOT OK
+BG        OK   ee9632be:src/graphics/presentation/window/window.cpp:434  anchor ok  +1 NOT OK
+HELD      OK   ee9632be:src/graphics/presentation/videoOut.cpp:1210  anchor ok  +1 NOT OK
+FLIPHOLD  OK   ee9632be:src/graphics/presentation/videoOut.cpp:3561  anchor ok  +1 NOT OK
+ALL OK

@@ -1,0 +1,24 @@
+2026-10-10T21:22:33Z start k03 script C:/kyty/f287/f36b/rd_f36b.py limit 560
+2026-10-10T21:24:04Z k03 watchdog rc=0: watch: start 2026-10-10T21:22:35Z child 22260 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-10T21:24:03Z 
+2026-10-10T21:24:05Z k03 GLCache after = before (cmp EQUAL)
+2026-10-10T21:25:09Z start k03in script C:/kyty/f287/f36b/rd_in_f36b.py limit 400
+2026-10-10T21:25:41Z k03in watchdog rc=0: watch: start 2026-10-10T21:25:11Z child 34348 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-10T21:25:41Z 
+2026-10-10T21:25:41Z k03in GLCache after = before (cmp EQUAL)
+2026-10-10T21:26:58Z start v02 script C:/kyty/f287/f36b/rd_f36b.py limit 500
+2026-10-10T21:27:38Z v02 watchdog rc=0: watch: start 2026-10-10T21:27:00Z child 25272 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-10T21:27:36Z 
+2026-10-10T21:27:38Z v02 GLCache after = before (cmp EQUAL)
+2026-10-10T21:27:39Z start v03 script C:/kyty/f287/f36b/rd_f36b.py limit 500
+2026-10-10T21:28:18Z v03 watchdog rc=0: watch: start 2026-10-10T21:27:40Z child 30912 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-10T21:28:17Z 
+2026-10-10T21:28:18Z v03 GLCache after = before (cmp EQUAL)
+2026-10-10T21:28:19Z start v04 script C:/kyty/f287/f36b/rd_f36b.py limit 500
+2026-10-10T21:29:41Z v04 watchdog rc=0: watch: start 2026-10-10T21:28:21Z child 3432 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-10T21:29:41Z 
+2026-10-10T21:29:42Z v04 GLCache after = before (cmp EQUAL)
+2026-10-10T21:29:47Z start v05 script C:/kyty/f287/f36b/rd_f36b.py limit 500
+2026-10-10T21:30:43Z v05 watchdog rc=0: watch: start 2026-10-10T21:29:49Z child 29716 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-10T21:30:43Z 
+2026-10-10T21:30:44Z v05 GLCache after = before (cmp EQUAL)
+2026-10-10T21:30:44Z start v07 script C:/kyty/f287/f36b/rd_f36b.py limit 500
+2026-10-10T21:31:22Z v07 watchdog rc=0: watch: start 2026-10-10T21:30:46Z child 49040 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-10T21:31:21Z 
+2026-10-10T21:31:22Z v07 GLCache after = before (cmp EQUAL)
+2026-10-10T21:31:23Z start v08 script C:/kyty/f287/f36b/rd_f36b.py limit 500
+2026-10-10T21:32:39Z v08 watchdog rc=0: watch: start 2026-10-10T21:31:25Z child 3552 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-10T21:32:39Z 
+2026-10-10T21:32:40Z v08 GLCache after = before (cmp EQUAL)

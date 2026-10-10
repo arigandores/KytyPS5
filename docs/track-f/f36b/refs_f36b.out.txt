@@ -1,0 +1,11 @@
+OK   02531a91:docs/ROADMAP.md:24428
+OK   02531a91:docs/ROADMAP.md:24419
+OK   02531a91:docs/ROADMAP.md:22845
+OK   f22eccf5:docs/track-f/f23g-review.md:157
+OK   08214036:docs/track-f/f36a.md:136
+OK   08214036:docs/track-f/f36a/sum_f36a.py:55
+OK   08214036:docs/track-f/f36a.md:129
+OK   08214036:docs/track-f/f36a/rd_f36a.py:148
+OK   08214036:docs/track-f/f36a.md:228
+links 9
+ALL OK

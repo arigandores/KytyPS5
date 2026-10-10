@@ -1,0 +1,1173 @@
+{
+ "fs11": {
+  "all_sites_with_image_new": [
+   [
+    813,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    815,
+    "OpImageSampleImplicitLod",
+    1,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    817,
+    "OpImageSampleImplicitLod",
+    3,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1211,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1284,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1432,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1434,
+    "OpImageSampleImplicitLod",
+    1,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1436,
+    "OpImageSampleImplicitLod",
+    2,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1438,
+    "OpImageSampleImplicitLod",
+    3,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    3195,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    3197,
+    "OpImageSampleImplicitLod",
+    1,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    3199,
+    "OpImageSampleImplicitLod",
+    2,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    3305,
+    "OpImageSampleImplicitLod",
+    3,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    4234,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    4249,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    4264,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    4279,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    4294,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    4309,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    4324,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    4339,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    4968,
+    "OpImageSampleImplicitLod",
+    2,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    5011,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    5013,
+    "OpImageSampleImplicitLod",
+    1,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    5037,
+    "OpImageSampleImplicitLod",
+    2,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    5530,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    7762,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    7777,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    7792,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    7807,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    7822,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    7837,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    7852,
+    "OpImageSampleDrefExplicitLod",
+    0,
+    [
+     0,
+     76
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    10821,
+    "OpImageSampleExplicitLod",
+    0,
+    [
+     0,
+     55
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    10823,
+    "OpImageSampleExplicitLod",
+    1,
+    [
+     0,
+     55
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    10825,
+    "OpImageSampleExplicitLod",
+    2,
+    [
+     0,
+     55
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12422,
+    "OpImageSampleExplicitLod",
+    0,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12424,
+    "OpImageSampleExplicitLod",
+    1,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12426,
+    "OpImageSampleExplicitLod",
+    2,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12428,
+    "OpImageSampleExplicitLod",
+    3,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12690,
+    "OpImageSampleExplicitLod",
+    0,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12692,
+    "OpImageSampleExplicitLod",
+    1,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12694,
+    "OpImageSampleExplicitLod",
+    2,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12696,
+    "OpImageSampleExplicitLod",
+    3,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ]
+  ],
+  "model": 4,
+  "modes": [
+   4461,
+   7,
+   12
+  ],
+  "named": [
+   {
+    "cond": 4488,
+    "false": 4437,
+    "false_kind": 169,
+    "id": 5011,
+    "lane": {
+     "ballot_word": 3689,
+     "lane_builtin": 41,
+     "lane_var": 23
+    },
+    "new": {
+     "bias": true,
+     "comp": 0,
+     "id": 5000,
+     "image_operands_mask": 1,
+     "img_binding": [
+      0,
+      54
+     ],
+     "inst": "OpImageSampleImplicitLod",
+     "lod": false,
+     "smp_binding": [
+      0,
+      95
+     ]
+    },
+    "reach_outputs": [
+     0,
+     1,
+     2
+    ],
+    "true": 5010
+   },
+   {
+    "cond": 4488,
+    "false": 4432,
+    "false_kind": 169,
+    "id": 5013,
+    "lane": {
+     "ballot_word": 3689,
+     "lane_builtin": 41,
+     "lane_var": 23
+    },
+    "new": {
+     "bias": true,
+     "comp": 1,
+     "id": 5000,
+     "image_operands_mask": 1,
+     "img_binding": [
+      0,
+      54
+     ],
+     "inst": "OpImageSampleImplicitLod",
+     "lod": false,
+     "smp_binding": [
+      0,
+      95
+     ]
+    },
+    "reach_outputs": [
+     0,
+     1,
+     2
+    ],
+    "true": 5012
+   },
+   {
+    "cond": 4488,
+    "false": 4414,
+    "false_kind": 169,
+    "id": 5037,
+    "lane": {
+     "ballot_word": 3689,
+     "lane_builtin": 41,
+     "lane_var": 23
+    },
+    "new": {
+     "bias": true,
+     "comp": 2,
+     "id": 5024,
+     "image_operands_mask": 1,
+     "img_binding": [
+      0,
+      54
+     ],
+     "inst": "OpImageSampleImplicitLod",
+     "lod": false,
+     "smp_binding": [
+      0,
+      95
+     ]
+    },
+    "reach_outputs": [
+     0,
+     1,
+     2
+    ],
+    "true": 5036
+   }
+  ]
+ },
+ "s12": {
+  "all_sites_with_image_new": [
+   [
+    813,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    815,
+    "OpImageSampleImplicitLod",
+    1,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    817,
+    "OpImageSampleImplicitLod",
+    3,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1211,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1284,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1432,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1434,
+    "OpImageSampleImplicitLod",
+    1,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1436,
+    "OpImageSampleImplicitLod",
+    2,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    1438,
+    "OpImageSampleImplicitLod",
+    3,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    3195,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    3197,
+    "OpImageSampleImplicitLod",
+    1,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    3199,
+    "OpImageSampleImplicitLod",
+    2,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    3305,
+    "OpImageSampleImplicitLod",
+    3,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    4995,
+    "OpImageSampleImplicitLod",
+    2,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    5038,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    5040,
+    "OpImageSampleImplicitLod",
+    1,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    5064,
+    "OpImageSampleImplicitLod",
+    2,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    5557,
+    "OpImageSampleImplicitLod",
+    0,
+    [
+     0,
+     54
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    10902,
+    "OpImageSampleExplicitLod",
+    0,
+    [
+     0,
+     55
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    10904,
+    "OpImageSampleExplicitLod",
+    1,
+    [
+     0,
+     55
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    10906,
+    "OpImageSampleExplicitLod",
+    2,
+    [
+     0,
+     55
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12503,
+    "OpImageSampleExplicitLod",
+    0,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12505,
+    "OpImageSampleExplicitLod",
+    1,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12507,
+    "OpImageSampleExplicitLod",
+    2,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12509,
+    "OpImageSampleExplicitLod",
+    3,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12771,
+    "OpImageSampleExplicitLod",
+    0,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12773,
+    "OpImageSampleExplicitLod",
+    1,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12775,
+    "OpImageSampleExplicitLod",
+    2,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ],
+   [
+    12777,
+    "OpImageSampleExplicitLod",
+    3,
+    [
+     0,
+     58
+    ],
+    [
+     0,
+     95
+    ]
+   ]
+  ],
+  "model": 4,
+  "modes": [
+   4461,
+   7,
+   12
+  ],
+  "named": [
+   {
+    "cond": 4515,
+    "false": 4464,
+    "false_kind": 169,
+    "id": 5038,
+    "lane": {
+     "ballot_word": 3689,
+     "lane_builtin": 41,
+     "lane_var": 23
+    },
+    "new": {
+     "bias": true,
+     "comp": 0,
+     "id": 5027,
+     "image_operands_mask": 1,
+     "img_binding": [
+      0,
+      54
+     ],
+     "inst": "OpImageSampleImplicitLod",
+     "lod": false,
+     "smp_binding": [
+      0,
+      95
+     ]
+    },
+    "reach_outputs": [
+     0,
+     1,
+     2
+    ],
+    "true": 5037
+   },
+   {
+    "cond": 4515,
+    "false": 4459,
+    "false_kind": 169,
+    "id": 5040,
+    "lane": {
+     "ballot_word": 3689,
+     "lane_builtin": 41,
+     "lane_var": 23
+    },
+    "new": {
+     "bias": true,
+     "comp": 1,
+     "id": 5027,
+     "image_operands_mask": 1,
+     "img_binding": [
+      0,
+      54
+     ],
+     "inst": "OpImageSampleImplicitLod",
+     "lod": false,
+     "smp_binding": [
+      0,
+      95
+     ]
+    },
+    "reach_outputs": [
+     0,
+     1,
+     2
+    ],
+    "true": 5039
+   },
+   {
+    "cond": 4515,
+    "false": 4441,
+    "false_kind": 169,
+    "id": 5064,
+    "lane": {
+     "ballot_word": 3689,
+     "lane_builtin": 41,
+     "lane_var": 23
+    },
+    "new": {
+     "bias": true,
+     "comp": 2,
+     "id": 5051,
+     "image_operands_mask": 1,
+     "img_binding": [
+      0,
+      54
+     ],
+     "inst": "OpImageSampleImplicitLod",
+     "lod": false,
+     "smp_binding": [
+      0,
+      95
+     ]
+    },
+    "reach_outputs": [
+     0,
+     1,
+     2
+    ],
+    "true": 5063
+   }
+  ]
+ }
+}

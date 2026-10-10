@@ -1,0 +1,22 @@
+[    0.3] patched {'mask_inv': 3, 'mem_inv': 6, 'm3': 1}
+[   10.0] event 83214 arm orig done
+[   12.7] event 83214 arm def done
+[   15.4] event 83214 arm mask done
+[   17.5] event 83214 arm mem done
+[   20.8] event 83214 arm sens done
+[   22.9] event 83214 arm mask_inv done
+[   25.1] event 83214 arm mem_inv done
+[   27.4] event 83214 arm m3 done
+[   28.9] event 83214 arm orig2 done
+[   29.1] event 83214 written
+[   32.2] event 122326 arm orig done
+[   34.7] event 122326 arm def done
+[   37.4] event 122326 arm mask done
+[   39.4] event 122326 arm mem done
+[   42.6] event 122326 arm sens done
+[   44.6] event 122326 arm mask_inv done
+[   46.8] event 122326 arm mem_inv done
+[   49.2] event 122326 arm m3 done
+[   50.9] event 122326 arm orig2 done
+[   51.4] event 122326 written
+[   51.4] done

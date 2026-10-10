@@ -1,0 +1,12 @@
+[    0.3] patched {'mask_inv': 3, 'mem_inv': 6, 'm3': 1}
+[   10.8] event 47207 arm orig done
+[   13.8] event 47207 arm def done
+[   17.1] event 47207 arm mask done
+[   19.6] event 47207 arm mem done
+[   23.1] event 47207 arm sens done
+[   25.4] event 47207 arm mask_inv done
+[   27.7] event 47207 arm mem_inv done
+[   30.2] event 47207 arm m3 done
+[   31.7] event 47207 arm orig2 done
+[   31.9] event 47207 written
+[   31.9] done

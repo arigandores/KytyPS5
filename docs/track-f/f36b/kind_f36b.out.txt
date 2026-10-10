@@ -1,0 +1,22 @@
+== fs11 C:/kyty/f287/f36a/spv/fs11_p0.spv model 4 (4 = Fragment) modes [4461, 7, 12] (12 DepthReplacing, 9 EarlyFragmentTests)
+  OpSelect %uint with own-lane ballot-bit condition and an image instruction as true operand: 44
+  site %5011 cond %4488 lane builtin 41 new {"bias": true, "comp": 0, "id": 5000, "image_operands_mask": 1, "img_binding": [0, 54], "inst": "OpImageSampleImplicitLod", "lod": false, "smp_binding": [0, 95]} false-op opcode 169 reach Location [0, 1, 2]
+  site %5013 cond %4488 lane builtin 41 new {"bias": true, "comp": 1, "id": 5000, "image_operands_mask": 1, "img_binding": [0, 54], "inst": "OpImageSampleImplicitLod", "lod": false, "smp_binding": [0, 95]} false-op opcode 169 reach Location [0, 1, 2]
+  site %5037 cond %4488 lane builtin 41 new {"bias": true, "comp": 2, "id": 5024, "image_operands_mask": 1, "img_binding": [0, 54], "inst": "OpImageSampleImplicitLod", "lod": false, "smp_binding": [0, 95]} false-op opcode 169 reach Location [0, 1, 2]
+== s12 C:/kyty/f287/f36a/spv/s12_p0.spv model 4 (4 = Fragment) modes [4461, 7, 12] (12 DepthReplacing, 9 EarlyFragmentTests)
+  OpSelect %uint with own-lane ballot-bit condition and an image instruction as true operand: 29
+  site %5038 cond %4515 lane builtin 41 new {"bias": true, "comp": 0, "id": 5027, "image_operands_mask": 1, "img_binding": [0, 54], "inst": "OpImageSampleImplicitLod", "lod": false, "smp_binding": [0, 95]} false-op opcode 169 reach Location [0, 1, 2]
+  site %5040 cond %4515 lane builtin 41 new {"bias": true, "comp": 1, "id": 5027, "image_operands_mask": 1, "img_binding": [0, 54], "inst": "OpImageSampleImplicitLod", "lod": false, "smp_binding": [0, 95]} false-op opcode 169 reach Location [0, 1, 2]
+  site %5064 cond %4515 lane builtin 41 new {"bias": true, "comp": 2, "id": 5051, "image_operands_mask": 1, "img_binding": [0, 54], "inst": "OpImageSampleImplicitLod", "lod": false, "smp_binding": [0, 95]} false-op opcode 169 reach Location [0, 1, 2]
+match S12 %5038 -> FS11 %5011: EQUAL  key ('OpImageSampleImplicitLod', True, 0, (0, 54), (0, 95))
+match S12 %5040 -> FS11 %5013: EQUAL  key ('OpImageSampleImplicitLod', True, 1, (0, 54), (0, 95))
+match S12 %5064 -> FS11 %5037: EQUAL  key ('OpImageSampleImplicitLod', True, 2, (0, 54), (0, 95))
+fs11: form-A-like selects with image new sharing a key with the named sites: 15 (named 3)
+  fs11 %5011 kind H (Fragment + ImplicitLod): yes
+  fs11 %5013 kind H (Fragment + ImplicitLod): yes
+  fs11 %5037 kind H (Fragment + ImplicitLod): yes
+s12: form-A-like selects with image new sharing a key with the named sites: 15 (named 3)
+  s12 %5038 kind H (Fragment + ImplicitLod): yes
+  s12 %5040 kind H (Fragment + ImplicitLod): yes
+  s12 %5064 kind H (Fragment + ImplicitLod): yes
+ALL OK

@@ -1,0 +1,684 @@
+[
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": -1,
+"mask": -1,
+"orig2": -1,
+"sens": -1
+},
+"Nin_nz": [
+"in_ps_t22482_m0_12_s0_1",
+"in_ps_t25514_m0_12_s0_1"
+],
+"Npre": {
+"def": 0,
+"diag": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 4173,
+"SP": 1265,
+"arms": 10,
+"bound_ok": true,
+"cap": "k03",
+"eid": 46729,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+736,
+736
+],
+"large": [],
+"m1p_Nem1_sens": 746,
+"m1p_em1_eq_post": true,
+"m2_raw": 4173,
+"m2p_vs_orig_pre": 4173,
+"m3": 629,
+"n_entry": 4173,
+"n_inputs": 24,
+"no": 1,
+"refs": 0,
+"selfcheck": 0,
+"sens": 736,
+"slots_game": [
+1,
+0,
+1000,
+0,
+0,
+0,
+0
+],
+"writes": 5060
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": -1,
+"mask": -1,
+"orig2": -1,
+"sens": -1
+},
+"Nin_nz": [
+"in_ps_t22482_m0_12_s0_1",
+"in_ps_t25514_m0_12_s0_1"
+],
+"Npre": {
+"def": 0,
+"diag": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 4175,
+"SP": 1251,
+"arms": 10,
+"bound_ok": true,
+"cap": "k03",
+"eid": 86567,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+711,
+711
+],
+"large": [],
+"m1p_Nem1_sens": 718,
+"m1p_em1_eq_post": true,
+"m2_raw": 4175,
+"m2p_vs_orig_pre": 4175,
+"m3": 605,
+"n_entry": 4175,
+"n_inputs": 24,
+"no": 3,
+"refs": 0,
+"selfcheck": 0,
+"sens": 711,
+"slots_game": [
+1,
+0,
+1000,
+0,
+0,
+0,
+0
+],
+"writes": 5004
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": -1,
+"mask": -1,
+"orig2": -1,
+"sens": -1
+},
+"Nin_nz": [
+"in_ps_t22482_m0_12_s0_1",
+"in_ps_t25514_m0_12_s0_1",
+"in_ps_t27059_m0_1_s0_1"
+],
+"Npre": {
+"def": 530,
+"diag": 530,
+"m3": 672,
+"mask": 530,
+"mask_inv": 746,
+"mem": 530,
+"mem_inv": 746,
+"orig2": 0,
+"sens": 746
+},
+"PSInv": 130,
+"SP": 0,
+"arms": 10,
+"bound_ok": true,
+"cap": "k03",
+"eid": 46854,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+736,
+736
+],
+"large": [],
+"m1p_Nem1_sens": 746,
+"m1p_em1_eq_post": true,
+"m2_raw": 4303,
+"m2p_vs_orig_pre": 4303,
+"m3": 629,
+"n_entry": 130,
+"n_inputs": 24,
+"no": 2,
+"refs": 0,
+"selfcheck": 0,
+"sens": 736,
+"slots_game": [
+1,
+0,
+1000,
+0,
+0,
+0,
+0
+],
+"writes": 0
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 5554,
+"SP": 1678,
+"arms": 9,
+"bound_ok": true,
+"cap": "k02",
+"eid": 88997,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+1019,
+1019
+],
+"large": [],
+"m1p_Nem1_sens": 1020,
+"m1p_em1_eq_post": true,
+"m3": 914,
+"n_inputs": 22,
+"no": 1,
+"refs": 0,
+"sens": 1019,
+"writes": 6712
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 4175,
+"SP": 1260,
+"arms": 9,
+"bound_ok": true,
+"cap": "k03",
+"eid": 130003,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+735,
+735
+],
+"large": [],
+"m1p_Nem1_sens": 736,
+"m1p_em1_eq_post": true,
+"m3": 620,
+"n_inputs": 24,
+"no": 5,
+"refs": 0,
+"sens": 735,
+"writes": 5040
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 4176,
+"SP": 1269,
+"arms": 9,
+"bound_ok": true,
+"cap": "k04",
+"eid": 46048,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+779,
+779
+],
+"large": [],
+"m1p_Nem1_sens": 787,
+"m1p_em1_eq_post": true,
+"m3": 667,
+"n_inputs": 24,
+"no": 1,
+"refs": 0,
+"sens": 779,
+"writes": 5076
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 4174,
+"SP": 1256,
+"arms": 9,
+"bound_ok": true,
+"cap": "k04",
+"eid": 85495,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+779,
+779
+],
+"large": [],
+"m1p_Nem1_sens": 782,
+"m1p_em1_eq_post": true,
+"m3": 690,
+"n_inputs": 24,
+"no": 3,
+"refs": 0,
+"sens": 779,
+"writes": 5024
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 4181,
+"SP": 1263,
+"arms": 9,
+"bound_ok": true,
+"cap": "k04",
+"eid": 127560,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+756,
+756
+],
+"large": [],
+"m1p_Nem1_sens": 760,
+"m1p_em1_eq_post": true,
+"m3": 666,
+"n_inputs": 24,
+"no": 5,
+"refs": 0,
+"sens": 756,
+"writes": 5052
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 2235,
+"SP": 675,
+"arms": 9,
+"bound_ok": true,
+"cap": "k05",
+"eid": 83214,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+418,
+418
+],
+"large": [],
+"m1p_Nem1_sens": 420,
+"m1p_em1_eq_post": true,
+"m3": 358,
+"n_inputs": 24,
+"no": 3,
+"refs": 0,
+"sens": 418,
+"writes": 2700
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 2233,
+"SP": 681,
+"arms": 9,
+"bound_ok": true,
+"cap": "k05",
+"eid": 122326,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+440,
+440
+],
+"large": [],
+"m1p_Nem1_sens": 439,
+"m1p_em1_eq_post": true,
+"m3": 382,
+"n_inputs": 24,
+"no": 5,
+"refs": 0,
+"sens": 440,
+"writes": 2724
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 2239,
+"SP": 673,
+"arms": 9,
+"bound_ok": true,
+"cap": "k07",
+"eid": 47207,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+440,
+440
+],
+"large": [],
+"m1p_Nem1_sens": 440,
+"m1p_em1_eq_post": true,
+"m3": 407,
+"n_inputs": 24,
+"no": 1,
+"refs": 0,
+"sens": 440,
+"writes": 2692
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 2245,
+"SP": 672,
+"arms": 9,
+"bound_ok": true,
+"cap": "k08",
+"eid": 41956,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+239,
+239
+],
+"large": [],
+"m1p_Nem1_sens": 239,
+"m1p_em1_eq_post": true,
+"m3": 239,
+"n_inputs": 24,
+"no": 1,
+"refs": 0,
+"sens": 239,
+"writes": 2688
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 2243,
+"SP": 682,
+"arms": 9,
+"bound_ok": true,
+"cap": "k08",
+"eid": 78127,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+235,
+235
+],
+"large": [],
+"m1p_Nem1_sens": 235,
+"m1p_em1_eq_post": true,
+"m3": 233,
+"n_inputs": 24,
+"no": 3,
+"refs": 0,
+"sens": 235,
+"writes": 2728
+},
+{
+"N_diff": 0,
+"N_diff_mem": 0,
+"N_null": 0,
+"Nin": {
+"def": 0,
+"mask": 0,
+"orig2": 0,
+"sens": 0
+},
+"Nin_nz": [],
+"Npre": {
+"def": 0,
+"m3": 0,
+"mask": 0,
+"mask_inv": 0,
+"mem": 0,
+"mem_inv": 0,
+"orig2": 0,
+"sens": 0
+},
+"PSInv": 2247,
+"SP": 681,
+"arms": 9,
+"bound_ok": true,
+"cap": "k08",
+"eid": 114302,
+"inv_eq_sens": [
+0,
+0
+],
+"inv_vs_def": [
+228,
+228
+],
+"large": [],
+"m1p_Nem1_sens": 228,
+"m1p_em1_eq_post": true,
+"m3": 228,
+"n_inputs": 24,
+"no": 5,
+"refs": 0,
+"sens": 228,
+"writes": 2724
+}
+]

@@ -1,0 +1,16 @@
+2026-10-10T21:20:25Z F36b kind_f36b.py own SPIR-V parse of sites e35d8a51
+2026-10-10T21:20:49Z F36b rc3b_f36b.py cache files vs arms d96f9ebf
+2026-10-10T21:21:01Z F36b comment mutants before data posted
+2026-10-10T21:22:33Z F36b API check before 'rdw k03': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_f36b.py (p.431(v))
+2026-10-10T21:25:09Z F36b API check before 'rdw k03in': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_f36b.py (p.431(v))
+2026-10-10T21:26:34Z F36b recount_f36b.py over F36a rp_k0*.jsonl 04ba5f6b
+2026-10-10T21:26:58Z F36b API check before 'rdw v02': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_f36b.py (p.431(v))
+2026-10-10T21:27:39Z F36b API check before 'rdw v03': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_f36b.py (p.431(v))
+2026-10-10T21:28:19Z F36b API check before 'rdw v04': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_f36b.py (p.431(v))
+2026-10-10T21:29:47Z F36b API check before 'rdw v05': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_f36b.py (p.431(v))
+2026-10-10T21:30:44Z F36b API check before 'rdw v07': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_f36b.py (p.431(v))
+2026-10-10T21:31:23Z F36b API check before 'rdw v08': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_f36b.py (p.431(v))
+2026-10-10T21:32:59Z F36b sum_f36b.py own replay table 42c3e699
+2026-10-10T21:36:24Z F36b cmp_f36b.py own replay vs F36a records e91e500b
+2026-10-10T21:36:57Z F36b refs_f36b.py e24be71c
+2026-10-10T21:37:48Z F36b FACTS section appended (rule 34)

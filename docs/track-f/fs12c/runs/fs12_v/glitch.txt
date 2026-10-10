@@ -1,0 +1,2 @@
+C:/kyty/f287/fs12c/rec_fs12_v.mp4: 10487 frames 960x540, index entries 10487
+one-frame glitches: 0

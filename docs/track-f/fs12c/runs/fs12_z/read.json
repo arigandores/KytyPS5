@@ -1,0 +1,232 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS12 46892c20 (46892c20080819ae)",
+   true
+  ],
+  [
+   "installed during the tag = FS12 46892c20 (46892c20080819ae)",
+   true
+  ],
+  [
+   "installed before = after = FS11 ea51ae80 (ea51ae80521e8300 / ea51ae80521e8300)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (25c62c76e1670f47 / 25c62c76e1670f47)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "item 686 (v): no KYTY_TEST_* in the env (none)",
+   true
+  ],
+  [
+   "item 686 (v): 0 ExitFatal: lines (log 0; whole stdout 0)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "stdout present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (226779)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line - no KYTY_DIAG_B32 (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4804 listsha 64)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26",
+ "exit": {
+  "close_killed": false,
+  "close_posted": 5,
+  "close_rc": 0,
+  "close_rc_hex": "0x00000000",
+  "close_s": 3.7,
+  "close_wait_s": 40,
+  "fatal_after_quit": 0,
+  "fatal_stdout": 0,
+  "quit_ln": 720259
+ },
+ "form": "fs12_z",
+ "form_members": [],
+ "form_ok": null,
+ "info": {
+  "b12": [
+   [
+    1,
+    725
+   ]
+  ],
+  "b13": [
+   [
+    1,
+    723
+   ]
+  ],
+  "expired_log": 0,
+  "expired_stdout": 0,
+  "fatal_after_quit": 0,
+  "fatal_log_total": 0,
+  "fatal_stdout": 0,
+  "first_scene_n": 227,
+  "frames_ge1s": 0,
+  "frames_ge1s_with_first": 0,
+  "glitches": 0,
+  "hold_s": 154.3,
+  "logasync_mode": [
+   "LogAsync: mode=1 limit_bytes=268435456 d"
+  ],
+  "max_dt": 218874,
+  "mean_dt_us": 33434.0,
+  "quit_ln": 720259,
+  "scene_frames": 4616,
+  "sheet": "sheet: C:/kyty/f287/fs12c/runs/fs12_z/sheet_fs12_z.png frames 4853 step 101 tiles 8x6",
+  "stat_lines": 16,
+  "summary": {
+   "bytes": 160849795,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 472798,
+   "max_queued_bytes": 43221,
+   "stall_cut": 0,
+   "stalls": 0,
+   "sync_lines": 0
+  },
+  "video_index": 4853,
+  "vke": 0,
+  "vkw": 0
+ },
+ "interference": null,
+ "kind": "z",
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "hold >= 120 s after the first scene frame (154.3 s)",
+   true
+  ],
+  [
+   "the process lived through the hold (outcome ok, hold_exit None)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "FixF21: mode=0 (every line) before the first GuestOut ([(0, 12000, 727)]; unparsable 0; first GuestOut 12502) - item 683 (g)(3)",
+   true
+  ],
+  [
+   "0 FixF21: wait_expired (whole log 0; whole stdout 0)",
+   true
+  ]
+ ],
+ "ok": true,
+ "reader_sha256": "0a0cb9f1943882e3ad051db7b8d8cd30d1f50f09f494cb18a6df6ce4832dcf6e",
+ "reading": "ADMITTED, members 683(g)(3) ALL YES, members of the form - none (no verdict; reading - FS12d)",
+ "ref": {
+  "b12stat_last": {
+   "ln": 696069,
+   "lskip": 0,
+   "passes": 100278,
+   "rewalk": 0,
+   "rwd": 0
+  },
+  "b12stat_lines": 16,
+  "bin_version_string": true,
+  "env_keys": [
+   "KYTY_FIX_F21",
+   "KYTY_FRAME_TRACE",
+   "KYTY_GATE_FILE",
+   "KYTY_GPU_CLOCK_PIN",
+   "KYTY_GPU_HANG_ABORT_S",
+   "KYTY_GPU_MARKERS",
+   "KYTY_GUEST_ARGS",
+   "KYTY_QUEUE_TRACE",
+   "KYTY_REC",
+   "KYTY_SAMPLE_GATE"
+  ],
+  "f21_lines": 1,
+  "f21_other": 0,
+  "fork_line": "version: Fork build arigandores/KytyPS5 730ed40",
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 150.2,
+  "lines": 720261,
+  "other_logasync": 0,
+  "outcome": "ok",
+  "sheet": "sheet: C:/kyty/f287/fs12c/runs/fs12_z/sheet_fs12_z.png frames 4853 step 101 tiles 8x6",
+  "stable_s": 15.4,
+  "stand_log": 0,
+  "stand_stdout": 0,
+  "video_index": 4853,
+  "vke": 0,
+  "vkw": 0
+ },
+ "status": "ADMITTED",
+ "tag": "fs12_z"
+}

@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/fs12c/runs/fs12_z/sheet_fs12_z.png frames 4853 step 101 tiles 8x6

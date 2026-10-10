@@ -1,0 +1,6 @@
+reader fs12c_read.py sha256 0a0cb9f1943882e3ad051db7b8d8cd30d1f50f09f494cb18a6df6ce4832dcf6e
+| tag | status | binary_sha256 | members 683(g)(3) | form | exit code | close_s | glitches | video index | hold_s |
+|---|---|---|---|---|---|---|---|---|---|
+| fs12_v | ADMITTED | 46892c20 | ALL YES | ALL YES | 0 | 4.1 | 0 | 10487 | 330.1 |
+| fs12_w | ADMITTED | 46892c20 | ALL YES | ALL YES | 0 | 3.9 | None | None | 310.1 |
+| fs12_z | ADMITTED | 46892c20 | ALL YES | - | 0 | 3.7 | 0 | 4853 | 150.2 |

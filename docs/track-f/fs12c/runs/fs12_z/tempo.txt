@@ -1,0 +1,3 @@
+TEMPO PASS form harness mean_dt_ms 33.24 fps 30.09 frames 4671 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after the level line 4671, span 155.2 s)
+  row: flip records after the level line 4669
+  row: seal plan W form no (item 621); plan: dryrun fs12_z base fs12_z level underwater_aerial_garden sd 300 timeout 480 hold 150 rec --rec knobs KYTY_FIX_F21=0 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0

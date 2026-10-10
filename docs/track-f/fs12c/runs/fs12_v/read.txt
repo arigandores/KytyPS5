@@ -1,0 +1,51 @@
+tag fs12_v (form fs12_v, level underwater_aerial_garden)  reader sha256 0a0cb9f1943882e3ad051db7b8d8cd30d1f50f09f494cb18a6df6ce4832dcf6e
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = FS12 46892c20 (46892c20080819ae)
+    [ok] installed during the tag = FS12 46892c20 (46892c20080819ae)
+    [ok] installed before = after = FS11 ea51ae80 (ea51ae80521e8300 / ea51ae80521e8300)
+    [ok] json prereg sha256 = seal sha256 (25c62c76e1670f47 / 25c62c76e1670f47)
+    [ok] env = the form of the tag (exact)
+    [ok] item 686 (v): no KYTY_TEST_* in the env (none)
+    [ok] item 686 (v): 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (229089)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line - no KYTY_DIAG_B32 (0)
+    [ok] no TestLogStall line (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4804 listsha 64)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+  binary_sha256 46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26
+  MEMBERS 683(g)(3) ALL YES
+    [YES] hold >= 300 s after the first scene frame (334.0 s)
+    [YES] the process lived through the hold (outcome ok, hold_exit None)
+    [YES] 0 death markers (log and stdout) []
+    [YES] 0 frames >= 1 s after the first scene frame (0; first 342; with the first frame 0)
+    [YES] video index records >= 3000 (10487)
+    [YES] 0 one-frame glitches (0)
+    [YES] sheet for the lead made (sheet: C:/kyty/f287/fs12c/runs/fs12_v/sheet_fs12_v.png frames 10487 step 218 tiles 8x6)
+    [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 727)]; unparsable 0; first GuestOut 12502) - item 683 (g)(3)
+    [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 725)]; bad 0; first GuestOut 12502)
+    [YES] exit by the harness: Event: quit line in the log (1184420)
+    [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+    [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+    [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  MEMBERS form fs11_v ALL YES
+    [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12502)
+    [YES] summary LogAsync: full_waits= present (1)
+    [YES] drain_timeouts 0 (0)
+    [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 723)]; first GuestOut 12502)
+    [YES] FixB12Stat: line present (parsed 34, unparsable 0)
+  INFO {"expired_log": 0, "expired_stdout": 0, "fatal_after_quit": 0, "fatal_log_total": 0, "fatal_stdout": 0, "first_scene_n": 342, "frames_ge1s": 0, "frames_ge1s_with_first": 0, "hold_s": 334.0, "max_dt": 182921, "mean_dt_us": 33026.0, "quit_ln": 1184420, "scene_frames": 10113, "summary": {"bytes": 322756409, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 721145, "max_queued_bytes": 252300, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "vke": 0, "vkw": 0}
+  ROW exit (not a gate): exit code 0 (0x00000000); WM_CLOSE post -> process end 4.1 s; killed False; posted 5; harness timeout 40 s; Event: quit line 1184420; --- Fatal Error --- after it 0, whole stdout 0
+  REFERENCE: {"b12stat_last": {"ln": 1157938, "lskip": 0, "passes": 219460, "rewalk": 0, "rwd": 0}, "b12stat_lines": 34, "bin_version_string": true, "env_keys": ["KYTY_FRAME_TRACE", "KYTY_GATE_FILE", "KYTY_GPU_CLOCK_PIN", "KYTY_GPU_HANG_ABORT_S", "KYTY_GPU_MARKERS", "KYTY_GUEST_ARGS", "KYTY_QUEUE_TRACE", "KYTY_REC", "KYTY_SAMPLE_GATE"], "f21_lines": 1, "f21_other": 0, "fork_line": "version: Fork build arigandores/KytyPS5 730ed40", "glitches": 0, "hold_exit": null, "hold_s": 330.1, "lines": 1184439, "other_logasync": 0, "outcome": "ok", "sheet": "sheet: C:/kyty/f287/fs12c/runs/fs12_v/sheet_fs12_v.png frames 10487 step 218 tiles 8x6", "stable_s": 17.9, "stand_log": 0, "stand_stdout": 0, "video_index": 10487, "vke": 0, "vkw": 0}
+  READING ADMITTED, members 683(g)(3) ALL YES, members of the form fs11_v ALL YES (no verdict; reading - FS12d)

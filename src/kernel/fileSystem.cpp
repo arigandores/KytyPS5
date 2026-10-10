@@ -118,6 +118,25 @@ static bool FixB4Enabled() {
 	return enabled;
 }
 
+// Track F, F38a (HPP-763, ROADMAP s122 item 691(v)-(g), row F25): KYTY_FIX_F25 (default 0: unset, "", 0/false/off/no =
+// OFF; read once, first by Initialize). At 1 a double read failure of ReadGuestWithRetry (the direct read into the guest
+// buffer and the retry through a host buffer both gave 0 with nbytes > 0 and remaining > 0) is returned by KernelRead /
+// KernelPread as KERNEL_ERROR_EIO instead of 0 - a 0 in the middle of a file is the end of the file for the guest -
+// unless the file size read again is at or below the read position (the file was shortened meanwhile: a real end of
+// file, 0 as before). The guest buffer is not written; the file position is the one before the call.
+static bool FixF25Enabled() {
+	static const bool enabled = Common::EnvFlagOn("KYTY_FIX_F25");
+	return enabled;
+}
+
+// F25, KYTY_FIX_F25=1 only: one line per double read failure returned as EIO, at most 32 per process.
+static void FixF25Report(int d, uint64_t nbytes, uint64_t pos) {
+	static std::atomic<int> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) < 32) {
+		LOGF("FixF25: read failed twice d=%d size=%" PRIu64 " pos=%" PRIu64 "\n", d, nbytes, pos);
+	}
+}
+
 // Host write path with a user-space buffer that _Exit does not flush: stdio fwrite on non-Windows hosts
 // (sysLinuxFileIO.cpp SysFileWrite). Windows SysFileWrite is WriteFile with no user buffer (sysWindowsFileIO.cpp).
 constexpr bool HOST_FILE_WRITE_BUFFERED = (KYTY_PLATFORM != KYTY_PLATFORM_WINDOWS);
@@ -405,6 +424,7 @@ void Initialize() {
 	g_files        = new FileDescriptors;
 
 	LOGF("FixB4: mode=%d\n", FixB4Enabled() ? 1 : 0);
+	LOGF("FixF25: mode=%d\n", FixF25Enabled() ? 1 : 0);
 }
 
 void EmergencyShutdown() {
@@ -760,8 +780,11 @@ void StreamTraceEnd(StreamReadTrace& t, const void* buf, uint64_t bytes_read, co
 // faulting into our handler; the game then received a 0-byte read (observed without any
 // prefetch: a few reads per run, enough for a rare guest crash). On failure the data is read into
 // a host buffer and copied with memcpy, whose page faults the tracker resolves normally.
+// Track F, F38a (row F25): *failed_twice - true only when the direct read gave 0 with nbytes > 0 and remaining > 0
+// and the retry read gave 0 too; false on every other path (the early return included).
 void ReadGuestWithRetry(File* file, void* buf, size_t nbytes, uint64_t pos, uint64_t remaining,
-                        uint32_t* bytes_read) {
+                        uint32_t* bytes_read, bool* failed_twice) {
+	*failed_twice = false;
 	file->f.Read(buf, static_cast<uint32_t>(nbytes), bytes_read);
 	if (*bytes_read != 0 || nbytes == 0 || remaining == 0) {
 		return;
@@ -777,6 +800,8 @@ void ReadGuestWithRetry(File* file, void* buf, size_t nbytes, uint64_t pos, uint
 	file->f.Read(temporary.data(), static_cast<uint32_t>(nbytes), bytes_read);
 	if (*bytes_read != 0) {
 		std::memcpy(buf, temporary.data(), *bytes_read);
+	} else {
+		*failed_twice = true;
 	}
 }
 
@@ -835,7 +860,15 @@ int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf),
 	                         std::min<uint64_t>(nbytes, remaining));
 	uint32_t bytes_read = 0;
-	ReadGuestWithRetry(file, buf, nbytes, pos, remaining, &bytes_read);
+	bool     read_failed_twice = false;
+	ReadGuestWithRetry(file, buf, nbytes, pos, remaining, &bytes_read, &read_failed_twice);
+	// Track F, F38a (row F25, ROADMAP s122 item 691(v)(2)-(3)): at KYTY_FIX_F25=1 a double read failure is an I/O
+	// error unless the size read again is at or below pos (the file was shortened meanwhile); the position stays pos.
+	bool fix_f25_eio = false;
+	if (read_failed_twice && FixF25Enabled()) {
+		fix_f25_eio = pos < file->f.Size();
+		file->f.Seek(pos);
+	}
 	StreamTraceMid(stream_read, buf, bytes_read);
 	// The invalidation above only announces the write. A large read takes milliseconds, and the
 	// GPU thread may synchronize an overlapping buffer meanwhile: it uploads the half-written
@@ -852,6 +885,11 @@ int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 
 	if (is_invalid) {
 		LOGF("\tfile is invalid\n");
+		return KERNEL_ERROR_EIO;
+	}
+
+	if (fix_f25_eio) {
+		FixF25Report(d, nbytes, pos);
 		return KERNEL_ERROR_EIO;
 	}
 
@@ -987,8 +1025,15 @@ int64_t KYTY_SYSV_ABI KernelPread(int d, void* buf, size_t nbytes, int64_t offse
 	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf),
 	                         std::min<uint64_t>(nbytes, remaining));
 	uint32_t bytes_read = 0;
+	bool read_failed_twice = false;
 	file->f.Seek(offset);
-	ReadGuestWithRetry(file, buf, nbytes, static_cast<uint64_t>(offset), remaining, &bytes_read);
+	ReadGuestWithRetry(file, buf, nbytes, static_cast<uint64_t>(offset), remaining, &bytes_read,
+	                   &read_failed_twice);
+	// Track F, F38a (row F25, item 691(v)(2)-(3)): see KernelRead; the file position is restored just below as before.
+	bool fix_f25_eio = false;
+	if (read_failed_twice && FixF25Enabled()) {
+		fix_f25_eio = static_cast<uint64_t>(offset) < file->f.Size();
+	}
 	file->f.Seek(pos);
 	StreamTraceMid(stream_read, buf, bytes_read);
 	// See KernelRead: re-mark the region CPU-dirty once the data is complete.
@@ -1002,6 +1047,11 @@ int64_t KYTY_SYSV_ABI KernelPread(int d, void* buf, size_t nbytes, int64_t offse
 
 	if (is_invalid) {
 		LOGF("\tfile is invalid\n");
+		return KERNEL_ERROR_EIO;
+	}
+
+	if (fix_f25_eio) {
+		FixF25Report(d, nbytes, static_cast<uint64_t>(offset));
 		return KERNEL_ERROR_EIO;
 	}
 

@@ -228,8 +228,12 @@ void Run(const RunOptions& options) {
 	}
 
 	const auto         param_json = options.app0_dir / "sce_sys" / "param.json";
+	// Track F, F33c (KYTY_FIX_F21; ROADMAP s122 item 675(g)): read once here - the main thread, before Init
+	// starts any host thread and before the guest threads.
+	Common::Subsystems::InitFixF21();
 	Common::Subsystems subsystems(true);
 	Init(options.config, param_json, subsystems);
+	Common::Subsystems::LogFixF21(); // F33c: "FixF21: mode=<0|1>" once, after Log::Initialize (Init)
 
 	ClearDebugTextureFolder();
 

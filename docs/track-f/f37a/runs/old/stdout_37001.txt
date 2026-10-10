@@ -1,0 +1,8 @@
+NID 0 Cg4srZ6TKbU sceKernelRead vaddr=0x00007ff63c57b140 name=FileSystem::KernelRead
+NID 1 DRuBt2pvICk read vaddr=0x00007ff63c5f6a20 name=LibKernel::read
+NID 2 AqBioC2vF3I _read vaddr=0x00007ff63c5f6a20 name=LibKernel::read
+NID 3 +r3rMFwItV4 sceKernelPread vaddr=0x00007ff63c57d620 name=FileSystem::KernelPread
+NID 4 ezv-RSBNKqI pread vaddr=0x00007ff63c5e78b0 name=Posix::pread
+NID 5 HgX7+AORI58 sceKernelAioSubmitReadCommands vaddr=0x00007ff63c5f7ac0 name=KernelAioSubmitReadCommands
+HOOK module=KERNEL32.dll slot=00007FF63D14E448 real=00007FFB92397470
+HOOK slots=1

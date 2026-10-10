@@ -1,0 +1,11 @@
+OK   A zero on all entries, K/Z alive -> (1)
+OK   A error on all entries -> (2)
+OK   one entry zero -> (1)
+OK   POSIX -1 without errno is other, not error
+OK   K with one ReadFile call is dead -> (3)
+OK   K short read is dead -> (3)
+OK   A without the second injected failure -> (3)
+OK   Z with a wrong read position is dead
+OK   pread entry position compares with pos_before
+OK   Z with wrong bytes is dead
+ALL OK

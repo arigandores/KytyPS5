@@ -1,0 +1,21 @@
+NID 0 Cg4srZ6TKbU sceKernelRead vaddr=0x00007ff7ef25b140 name=FileSystem::KernelRead
+NID 1 DRuBt2pvICk read vaddr=0x00007ff7ef2d6a20 name=LibKernel::read
+NID 2 AqBioC2vF3I _read vaddr=0x00007ff7ef2d6a20 name=LibKernel::read
+NID 3 +r3rMFwItV4 sceKernelPread vaddr=0x00007ff7ef25d620 name=FileSystem::KernelPread
+NID 4 ezv-RSBNKqI pread vaddr=0x00007ff7ef2c78b0 name=Posix::pread
+NID 5 HgX7+AORI58 sceKernelAioSubmitReadCommands vaddr=0x00007ff7ef2d7ac0 name=KernelAioSubmitReadCommands
+HOOK module=KERNEL32.dll slot=00007FF7EFE2E448 real=00007FFB92397470
+HOOK slots=1
+SysFileRead: ReadFile failed, error=998 size=3841 data=0000000043D12830
+SysFileRead: ReadFile failed, error=998 size=2234710 data=0000000063C8D080
+SysFileRead: ReadFile failed, error=998 size=3148 data=0000000043D12830
+SysFileRead: ReadFile failed, error=998 size=2216 data=0000000044525800
+SysFileRead: ReadFile failed, error=998 size=560751 data=000000004EB85C80
+SysFileRead: ReadFile failed, error=998 size=119852 data=0000000044567400
+SysFileRead: ReadFile failed, error=998 size=296015 data=000000004EB85C80
+SysFileRead: ReadFile failed, error=998 size=2175 data=0000000044525800
+SysFileRead: ReadFile failed, error=998 size=2297163 data=0000000063C82080
+SysFileRead: ReadFile failed, error=998 size=2795 data=0000000043D12830
+SysFileRead: ReadFile failed, error=998 size=9693 data=000000004EA82660
+SysFileRead: ReadFile failed, error=998 size=1577020 data=0000000063C82080
+DONE trials=24

@@ -1,0 +1,14 @@
+2026-10-10T21:49:08Z F37a start (HPP-761 checkout by harness); lock none, STOP none
+2026-10-10T23:24:44Z resume run (wake: user 'продолжай'); lock none, STOP none; HPP-753 in_progress (lead FS12d), HPP-752 done - no harness series
+2026-10-10T23:28:06Z worktree C:/kyty/f287/f37a/wt on ee9632be (FS11a HEAD, FS11 code) made by mk_wt_f37a.sh
+2026-10-10T23:30:55Z stand source tests/F25ReadFailStand.cpp + CMake target f25_read_fail_stand put into the worktree (src/ of ee9632be unchanged)
+2026-10-10T23:33:30Z smoke (not counted) seed 1 nA=0 nK=2 nZ=2 - stand liveness only, no arm A
+2026-10-10T23:36:45Z section 0 committed to main 51c9e38f (before the first counted trial)
+2026-10-10T23:37:48Z counted run start: seed 37001 nA 200 nK 50 nZ 50 (after section 0 commit 51c9e38f)
+2026-10-10T23:37:50Z counted run end rc=0
+2026-10-10T23:37:59Z driver error: rows path relative to cwd=run, stand rc 5 at fopen before the first trial (0 trials); run_stand_f37a.py fixed (abspath), first attempt files moved to runs/old; rerun same seed
+2026-10-10T23:37:59Z counted run start (2): seed 37001 nA 200 nK 50 nZ 50
+2026-10-10T23:38:03Z counted run end rc=0
+2026-10-10T23:38:25Z correction: the line 23:37:50Z 'counted run end rc=0' of the first attempt is the shell status, not the stand - the driver printed 'stand rc 5' (runs/old/stdout_37001.txt: NID and HOOK lines only, no DONE); the counted rows are the second attempt 23:37:59-23:38:03Z, DONE trials=1800
+2026-10-10T23:39:08Z report sections 1-5 assembled
+2026-10-10T23:39:35Z FACTS.md section F37a appended (rule 34)

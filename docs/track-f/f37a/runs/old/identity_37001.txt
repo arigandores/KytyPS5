@@ -1,0 +1,6 @@
+worktree HEAD ee9632be1d8741547c345fd032ebf98c1e9e3e03
+fileSystem.cpp blob ee9632be 6f4926b961b7d2d15401e297d4e0e6242250d9c4 worktree 6f4926b961b7d2d15401e297d4e0e6242250d9c4 equal True; main HEAD 51c9e38f blob 55cb7cba6fd00c605ac4d67647a27d31dcbdfccb equal False
+worktree src/ vs ee9632be: git diff --quiet rc 0 (0 = equal), untracked in src/: 0
+stand source sha256 worktree 5b88d2b0e6fbc76da546ed2c34fb09218878a95e8b6c1df4ce95dff4d88f2803 main 5b88d2b0e6fbc76da546ed2c34fb09218878a95e8b6c1df4ce95dff4d88f2803 equal True
+stand exe C:/kyty/f287/f37a/build/f25_read_fail_stand.exe sha256 a002fc68162c82af45eed42e0c9a16393e9ed018df03a3f16040486e5bad0131
+args seed 37001 nA 200 nK 50 nZ 50

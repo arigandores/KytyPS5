@@ -1,0 +1,358 @@
+{
+  "tag": "b25m_04",
+  "binary_sha256": "ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce",
+  "started": "2026-10-10T01:38:44",
+  "launched": "2026-10-10T01:33:26",
+  "finished": "2026-10-10T01:38:44",
+  "cmdline": [
+    "C:\\kyty\\KytyPS5\\ps5 em\\kyty_emulator.exe",
+    "--screen-width",
+    "1280",
+    "--screen-height",
+    "720",
+    "--user-name",
+    "Player",
+    "--user-id",
+    "1000",
+    "--present-mode",
+    "Fifo",
+    "--vblank-frequency",
+    "60",
+    "--console-language",
+    "1",
+    "--vulkan-validation",
+    "false",
+    "--shader-validation",
+    "false",
+    "--shader-optimization-type",
+    "Size",
+    "--shader-log-direction",
+    "File",
+    "--shader-log-folder",
+    "_Shaders",
+    "--command-buffer-dump",
+    "false",
+    "--command-buffer-dump-folder",
+    "_Buffers",
+    "--printf-direction",
+    "File",
+    "--printf-output-file",
+    "_kyty.txt",
+    "--spirv-debug-printf",
+    "false",
+    "--game",
+    "C:\\kyty\\KytyPS5\\ps5 em\\games\\PPSA21564-app"
+  ],
+  "env": {
+    "KYTY_FRAME_TRACE": "lite",
+    "KYTY_GPU_HANG_ABORT_S": "8",
+    "KYTY_GATE_FILE": "C:\\kyty\\f287\\f31c\\gates.req",
+    "KYTY_SAMPLE_GATE": "C:\\kyty\\f287\\f31c\\sample.req",
+    "KYTY_QUEUE_TRACE": "1",
+    "KYTY_GUEST_ARGS": "-lvl mini_giants_garden",
+    "KYTY_GPU_CLOCK_PIN": "1",
+    "KYTY_GPU_MARKERS": "0"
+  },
+  "schedule": "",
+  "arms": [],
+  "phases": [],
+  "notes": "KYTY_GPU_TIME unset: the record thread stays live (PacketsWanted); guest command line: -lvl mini_giants_garden; stable = 90 consecutive FrameTrace lines with draws >= 500; ran the already installed binary (--no-install)",
+  "pre_run": {
+    "gpu_util_median": 2.0,
+    "gpu_power_median": 24.4,
+    "gpu_memory_used_mib": 2302,
+    "gpu_sm_mhz_median": 1650.0,
+    "gpu_util_samples": [
+      2.0,
+      2.0,
+      3.0,
+      3.0,
+      2.0
+    ],
+    "gpu_apps": [
+      {
+        "pid": 14696,
+        "name": "<app>"
+      },
+      {
+        "pid": 8048,
+        "name": "<app>"
+      },
+      {
+        "pid": 15168,
+        "name": "<app>"
+      },
+      {
+        "pid": 15264,
+        "name": "<app>"
+      },
+      {
+        "pid": 21572,
+        "name": "<app>"
+      },
+      {
+        "pid": 27352,
+        "name": "<app>"
+      },
+      {
+        "pid": 29484,
+        "name": "<app>"
+      },
+      {
+        "pid": 36324,
+        "name": "<app>"
+      },
+      {
+        "pid": 40112,
+        "name": "<app>"
+      },
+      {
+        "pid": 33516,
+        "name": "<app>"
+      },
+      {
+        "pid": 42076,
+        "name": "<app>"
+      },
+      {
+        "pid": 42896,
+        "name": "<app>"
+      },
+      {
+        "pid": 1972,
+        "name": "<app>"
+      },
+      {
+        "pid": 7924,
+        "name": "<app>"
+      },
+      {
+        "pid": 6068,
+        "name": "<app>"
+      },
+      {
+        "pid": 39708,
+        "name": "<app>"
+      },
+      {
+        "pid": 9700,
+        "name": "<app>"
+      },
+      {
+        "pid": 4920,
+        "name": "<app>"
+      },
+      {
+        "pid": 30100,
+        "name": "<app>"
+      },
+      {
+        "pid": 39172,
+        "name": "<app>"
+      },
+      {
+        "pid": 32380,
+        "name": "<app>"
+      }
+    ],
+    "host": {
+      "available": true,
+      "process_count": 413,
+      "top": [
+        {
+          "name": "<app>",
+          "pid": 37632,
+          "cpu_s": 39283.8,
+          "ws_mib": 1928.6
+        },
+        {
+          "name": "<app>",
+          "pid": 42076,
+          "cpu_s": 13627.6,
+          "ws_mib": 1205.2
+        },
+        {
+          "name": "<app>",
+          "pid": 32708,
+          "cpu_s": 6209.1,
+          "ws_mib": 82.2
+        },
+        {
+          "name": "<app>",
+          "pid": 8048,
+          "cpu_s": 5964.9,
+          "ws_mib": 1135.4
+        },
+        {
+          "name": "<app>",
+          "pid": 31796,
+          "cpu_s": 3694.8,
+          "ws_mib": 1018.0
+        },
+        {
+          "name": "<app>",
+          "pid": 9700,
+          "cpu_s": 3211.1,
+          "ws_mib": 463.3
+        },
+        {
+          "name": "<app>",
+          "pid": 46296,
+          "cpu_s": 3009.6,
+          "ws_mib": 32.7
+        },
+        {
+          "name": "<app>",
+          "pid": 13652,
+          "cpu_s": 2491.5,
+          "ws_mib": 220.7
+        },
+        {
+          "name": "<app>",
+          "pid": 45748,
+          "cpu_s": 1533.3,
+          "ws_mib": 43.7
+        },
+        {
+          "name": "<app>",
+          "pid": 40048,
+          "cpu_s": 1420.5,
+          "ws_mib": 32.7
+        },
+        {
+          "name": "<app>",
+          "pid": 41888,
+          "cpu_s": 1322.5,
+          "ws_mib": 547.9
+        },
+        {
+          "name": "<app>",
+          "pid": 39708,
+          "cpu_s": 1321.2,
+          "ws_mib": 1024.2
+        },
+        {
+          "name": "<app>",
+          "pid": 1972,
+          "cpu_s": 1213.9,
+          "ws_mib": 705.5
+        },
+        {
+          "name": "<app>",
+          "pid": 27092,
+          "cpu_s": 881.0,
+          "ws_mib": 544.1
+        },
+        {
+          "name": "<app>",
+          "pid": 19468,
+          "cpu_s": 698.1,
+          "ws_mib": 32.7
+        },
+        {
+          "name": "<app>",
+          "pid": 16272,
+          "cpu_s": 640.9,
+          "ws_mib": 355.0
+        },
+        {
+          "name": "<app>",
+          "pid": 40112,
+          "cpu_s": 517.4,
+          "ws_mib": 416.9
+        },
+        {
+          "name": "<app>",
+          "pid": 40224,
+          "cpu_s": 485.1,
+          "ws_mib": 485.9
+        },
+        {
+          "name": "<app>",
+          "pid": 1956,
+          "cpu_s": 484.7,
+          "ws_mib": 32.7
+        },
+        {
+          "name": "<app>",
+          "pid": 38340,
+          "cpu_s": 477.5,
+          "ws_mib": 32.7
+        }
+      ],
+      "top_names": [
+        "<app>"
+      ],
+      "sampled_at": "2026-10-10T01:33:26"
+    },
+    "sampled_at": "2026-10-10T01:33:26"
+  },
+  "hold_gpu": {
+    "available": true,
+    "source": "gpuclk csv (nvidia-smi -lms 500)",
+    "hold_from": "2026/10/10 01:33:37.685",
+    "hold_to": "2026/10/10 01:38:37.911",
+    "rows": 590,
+    "util_rows": 590,
+    "gpu_util_median": 64.0,
+    "gpu_power_median": 128.0,
+    "gpu_util_max": 82.0,
+    "note": "a row, not a guard"
+  },
+  "prereg": {
+    "path": "C:\\kyty\\f287\\f31c\\pred\\f31c_seal.md",
+    "bytes": 23728,
+    "sha256": "a5939dfe47895f68fa3d69e52f58c1d79eb40a4e922468967bb26321a76034b1",
+    "mtime": "2026-10-09T20:40:22",
+    "ctime": "2026-10-09T19:51:48",
+    "mtime_ctime_delta_s": 2914.299866,
+    "read_at": "2026-10-10T01:33:22"
+  },
+  "attempts": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 50740,
+      "level": "mini_giants_garden",
+      "guest_args": "-lvl mini_giants_garden",
+      "document_s": 8.7,
+      "started_s": 10.8,
+      "stable_s": 10.8,
+      "stable_frame": null,
+      "outcome": "ok",
+      "detail": null,
+      "hold_from": "2026/10/10 01:33:37.685",
+      "hold_to": "2026/10/10 01:38:37.911",
+      "ft_total": 18211,
+      "ft_tail": 302,
+      "ft_tail_span_s": 5.024,
+      "ft_window_s": 5.0,
+      "hold_exit": null,
+      "hold_s": 300.2,
+      "close_posted": 5,
+      "close_rc": 0,
+      "close_killed": false,
+      "close_s": 4.0,
+      "close_wait_s": 40,
+      "pipeline_cache_off": false
+    }
+  ],
+  "gates": "",
+  "schedule_period": 0,
+  "schedule_start": 0,
+  "guest_args": "-lvl mini_giants_garden",
+  "hold_s": 300,
+  "ft_total": 18211,
+  "ft_tail": 302,
+  "ft_tail_span_s": 5.024,
+  "ft_window_s": 5.0,
+  "cpuclk_requested": true,
+  "gpuclk": "C:\\kyty\\f287\\f31c\\gpuclk_b25m_04.csv",
+  "cpuclk": null,
+  "host_load": {
+    "layer": "CLEAN",
+    "before": "hostload: over05 0 max 0.000 total 0.689 procs []",
+    "after": "hostload: over05 0 max 0.000 total 1.272 procs []",
+    "item": "ROADMAP s122 item 632 (v)(2) form, row"
+  }
+}

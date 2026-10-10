@@ -1,0 +1,814 @@
+2026-10-09T17:47:54Z F31c (HPP-731) harness ported to C:/kyty/f287/f31c from f26c (form 634/660/661)
+2026-10-09T17:52:25Z F31c API check before base: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T17:52:28Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag base
+2026-10-09T17:52:29Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh base
+2026-10-09T17:55:48Z F31c go_f31c base lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-09T17:55:48Z F31c go_f31c base installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T17:55:50Z F31c go_f31c base series base manifest: manifest C:/kyty/f287/f31c/base/base.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T17:55:51Z F31c go_f31c base state of the base: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present
+2026-10-09T17:55:55Z F31c go_f31c base copy against the base manifest: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T17:55:56Z F31c go_f31c base lock released (base ok)
+2026-10-09T17:56:12Z F31c API check before b25m_01: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T17:56:13Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_01
+2026-10-09T17:56:13Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_01
+2026-10-09T17:56:28Z F31c go_f31c b25m_01 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-09T17:56:40Z F31c go_f31c b25m_01 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.867 procs []
+2026-10-09T17:56:41Z F31c go_f31c b25m_01 display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-09T17:56:41Z
+2026-10-09T18:00:09Z F31c go_f31c b25m_01 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-09T18:00:09Z F31c go_f31c b25m_01 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T18:00:13Z F31c go_f31c b25m_01 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_01/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T18:00:13Z F31c go_f31c b25m_01 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-09T18:05:40Z F31c go_f31c b25m_01 enter_scene rc 0; guard watch: 2026-10-09T18:05:39Z watch end, user process seen: no; hold watch: 2026-10-09T18:05:39Z watch end, user VM seen: no
+2026-10-09T18:05:41Z F31c go_f31c b25m_01 run: VERDICT: mini_giants_garden in 15.0 s - PASS (acceptance <= 90 s)
+2026-10-09T18:05:42Z F31c go_f31c b25m_01 log_b25m_01.txt sha256 927a511c60c8722082b0747bbaa3f7a37f61a2d978730aa9fe052e0c38e1b6eb
+2026-10-09T18:05:42Z F31c go_f31c b25m_01 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T18:05:44Z F31c go_f31c b25m_01 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_01/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T18:05:45Z F31c go_f31c b25m_01 lock released (rc 0)
+2026-10-09T18:05:47Z F31c go_f31c b25m_01 display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-09T18:05:46Z; hold: 0 display events, 0 OFF
+2026-10-09T18:05:59Z F31c go_f31c b25m_01 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.035 procs []
+2026-10-09T18:05:59Z F31c go_f31c b25m_01 host_load field written: layer CLEAN
+2026-10-09T18:06:10Z F31c post_f31c b25m_01: read.txt 9a389fd1fc2b05aa, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.69 fps 59.91 frames 18027 limit_ms 100 (it, display before / after: dispstate ON idle_s 0 ut / dispstate ON idle_s 0 ut; SERIES tags 1 counted 1 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 1 = 6 of 41; lock 748 s of 14400; state GOING
+2026-10-09T18:10:28Z F31c question to the lead (HPP-731 comment, HPP-287 line): lock budget 667(e)(4) - tag lock 542 s (hold check 219 s), 36 tags ~5.45 h > 4 h; series goes on by the letter
+2026-10-09T18:10:33Z F31c API check before b25m_02: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T18:10:37Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_02
+2026-10-09T18:10:37Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_02
+2026-10-09T18:12:06Z F31c go_f31c b25m_02 procload busy: procload: busy [('<app>', 39336, 4.325), ('<app>', 0, 4.901)]
+2026-10-09T18:12:22Z F31c b25m_02 procload BUSY (go_f31c 18:12:06Z: procload: busy [('<app>', 39336, 4.325), ('<app>', 0, 4.901)]) - user game <app>, waiting, the process is not touched
+2026-10-09T18:30:39Z F31c API check before b25m_02: comments new (not own) 1; queue: QUEUE FREE;
+2026-10-09T19:26:32Z F31c API check before b25m_02: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T20:21:19Z F31c API check before b25m_02: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T21:06:45Z F31c API check before b25m_02: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T21:52:14Z F31c API check before b25m_02: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T22:37:57Z F31c API check before b25m_02: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T23:08:23Z F31c user game <app> pid gone (seen 23:08:19Z) - b25m_02 relaunch
+2026-10-09T23:08:25Z F31c API check before b25m_02: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T23:08:28Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_02
+2026-10-09T23:08:28Z F31c launch_f31c previous output of b25m_02 moved to f31c/old/
+2026-10-09T23:08:28Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_02
+2026-10-09T23:08:43Z F31c go_f31c b25m_02 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-09T23:08:56Z F31c go_f31c b25m_02 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.793 procs []
+2026-10-09T23:08:58Z F31c go_f31c b25m_02 display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-09T23:08:57Z
+2026-10-09T23:12:35Z F31c go_f31c b25m_02 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-09T23:12:35Z F31c go_f31c b25m_02 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T23:12:39Z F31c go_f31c b25m_02 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_02/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T23:12:39Z F31c go_f31c b25m_02 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-09T23:18:10Z F31c go_f31c b25m_02 enter_scene rc 0; guard watch: 2026-10-09T23:18:09Z watch end, user process seen: no; hold watch: 2026-10-09T23:18:08Z watch end, user VM seen: no
+2026-10-09T23:18:10Z F31c go_f31c b25m_02 run: VERDICT: mini_giants_garden in 16.6 s - PASS (acceptance <= 90 s)
+2026-10-09T23:18:11Z F31c go_f31c b25m_02 log_b25m_02.txt sha256 a8330dda265ed96d0c5498f5996c6e71fd79c58c5ebf007433d9a3588d05069a
+2026-10-09T23:18:12Z F31c go_f31c b25m_02 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T23:18:16Z F31c go_f31c b25m_02 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_02/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T23:18:16Z F31c go_f31c b25m_02 lock released (rc 0)
+2026-10-09T23:18:17Z F31c go_f31c b25m_02 display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-09T23:18:17Z; hold: 0 display events, 0 OFF
+2026-10-09T23:18:31Z F31c go_f31c b25m_02 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 2.264 procs []
+2026-10-09T23:18:31Z F31c go_f31c b25m_02 host_load field written: layer CLEAN
+2026-10-09T23:18:44Z F31c post_f31c b25m_02: read.txt f04e5cf1f701e0ff, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.94 frames 18040 limit_ms 100 (it, display before / after: dispstate ON idle_s 0 ut / dispstate ON idle_s 0 ut; SERIES tags 2 counted 2 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 2 = 7 of 41; lock 1306 s of 23400; state GOING
+2026-10-09T23:18:49Z F31c API check before b25m_03: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T23:18:51Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_03
+2026-10-09T23:18:51Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_03
+2026-10-09T23:19:06Z F31c go_f31c b25m_03 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-09T23:19:18Z F31c go_f31c b25m_03 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.821 procs []
+2026-10-09T23:19:19Z F31c go_f31c b25m_03 display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-09T23:19:19Z
+2026-10-09T23:23:12Z F31c go_f31c b25m_03 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-09T23:23:12Z F31c go_f31c b25m_03 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T23:23:15Z F31c go_f31c b25m_03 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_03/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T23:23:16Z F31c go_f31c b25m_03 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-09T23:28:39Z F31c go_f31c b25m_03 enter_scene rc 0; guard watch: 2026-10-09T23:28:38Z watch end, user process seen: no; hold watch: 2026-10-09T23:28:38Z watch end, user VM seen: no
+2026-10-09T23:28:39Z F31c go_f31c b25m_03 run: VERDICT: mini_giants_garden in 9.8 s - PASS (acceptance <= 90 s)
+2026-10-09T23:28:40Z F31c go_f31c b25m_03 log_b25m_03.txt sha256 6061efee05dbdbd498d72d9a40b097f7184436930bf344658c711c84d238e4e6
+2026-10-09T23:28:41Z F31c go_f31c b25m_03 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T23:28:43Z F31c go_f31c b25m_03 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_03/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T23:28:43Z F31c go_f31c b25m_03 lock released (rc 0)
+2026-10-09T23:28:45Z F31c go_f31c b25m_03 display after lock released (item 620 (g)(1)): dispstate ON idle_s 31 utc 2026-10-09T23:28:44Z; hold: 0 display events, 0 OFF
+2026-10-09T23:28:58Z F31c go_f31c b25m_03 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.628 procs []
+2026-10-09T23:28:58Z F31c go_f31c b25m_03 host_load field written: layer CLEAN
+2026-10-09T23:29:11Z F31c post_f31c b25m_03: read.txt 28814a2ed9ed488b, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.69 fps 59.91 frames 18038 limit_ms 100 (it, display before / after: dispstate ON idle_s 0 ut / dispstate ON idle_s 31 u; SERIES tags 3 counted 3 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 3 = 8 of 41; lock 1870 s of 23400; state GOING
+2026-10-09T23:29:15Z F31c API check before b25m_04: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T23:29:17Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_04
+2026-10-09T23:29:17Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_04
+2026-10-09T23:29:33Z F31c go_f31c b25m_04 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-09T23:29:44Z F31c go_f31c b25m_04 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.689 procs []
+2026-10-09T23:29:45Z F31c go_f31c b25m_04 display before the lock (item 620 (g)(1)): dispstate ON idle_s 13 utc 2026-10-09T23:29:45Z
+2026-10-09T23:33:18Z F31c go_f31c b25m_04 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-09T23:33:18Z F31c go_f31c b25m_04 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T23:33:21Z F31c go_f31c b25m_04 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_04/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T23:33:21Z F31c go_f31c b25m_04 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-09T23:38:46Z F31c go_f31c b25m_04 enter_scene rc 0; guard watch: 2026-10-09T23:38:45Z watch end, user process seen: no; hold watch: 2026-10-09T23:38:44Z watch end, user VM seen: no
+2026-10-09T23:38:46Z F31c go_f31c b25m_04 run: VERDICT: mini_giants_garden in 10.8 s - PASS (acceptance <= 90 s)
+2026-10-09T23:38:47Z F31c go_f31c b25m_04 log_b25m_04.txt sha256 5e6a77f25ecec8f35fb8f6e619031fb4d19881d6cae453e9b2f37fec422b9f06
+2026-10-09T23:38:47Z F31c go_f31c b25m_04 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T23:38:50Z F31c go_f31c b25m_04 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_04/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T23:38:51Z F31c go_f31c b25m_04 lock released (rc 0)
+2026-10-09T23:38:52Z F31c go_f31c b25m_04 display after lock released (item 620 (g)(1)): dispstate ON idle_s 3 utc 2026-10-09T23:38:52Z; hold: 0 display events, 0 OFF
+2026-10-09T23:39:05Z F31c go_f31c b25m_04 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.272 procs []
+2026-10-09T23:39:05Z F31c go_f31c b25m_04 host_load field written: layer CLEAN
+2026-10-09T23:39:11Z F31c post_f31c b25m_04: read.txt 325ac6235872388a, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.69 fps 59.93 frames 18054 limit_ms 100 (it, display before / after: dispstate ON idle_s 13 u / dispstate ON idle_s 3 ut; SERIES tags 4 counted 4 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 4 = 9 of 41; lock 2415 s of 23400; state GOING
+2026-10-09T23:39:18Z F31c API check before b25m_05: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T23:39:19Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_05
+2026-10-09T23:39:19Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_05
+2026-10-09T23:39:34Z F31c go_f31c b25m_05 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-09T23:39:46Z F31c go_f31c b25m_05 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.796 procs []
+2026-10-09T23:39:47Z F31c go_f31c b25m_05 display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-09T23:39:47Z
+2026-10-09T23:43:21Z F31c go_f31c b25m_05 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-09T23:43:21Z F31c go_f31c b25m_05 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T23:43:25Z F31c go_f31c b25m_05 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_05/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T23:43:25Z F31c go_f31c b25m_05 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-09T23:48:50Z F31c go_f31c b25m_05 enter_scene rc 0; guard watch: 2026-10-09T23:48:48Z watch end, user process seen: no; hold watch: 2026-10-09T23:48:49Z watch end, user VM seen: no
+2026-10-09T23:48:50Z F31c go_f31c b25m_05 run: VERDICT: mini_giants_garden in 11.3 s - PASS (acceptance <= 90 s)
+2026-10-09T23:48:51Z F31c go_f31c b25m_05 log_b25m_05.txt sha256 a3047e2e5004a74f78b636d96862c0845d84edefe39d690f8c9df9be31ba276e
+2026-10-09T23:48:52Z F31c go_f31c b25m_05 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T23:48:55Z F31c go_f31c b25m_05 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_05/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T23:48:55Z F31c go_f31c b25m_05 lock released (rc 0)
+2026-10-09T23:48:57Z F31c go_f31c b25m_05 display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-09T23:48:56Z; hold: 0 display events, 0 OFF
+2026-10-09T23:49:09Z F31c go_f31c b25m_05 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.510 procs []
+2026-10-09T23:49:09Z F31c go_f31c b25m_05 host_load field written: layer CLEAN
+2026-10-09T23:49:25Z F31c post_f31c b25m_05: read.txt 74b99ce86969c65d, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18067 limit_ms 100 (it, display before / after: dispstate ON idle_s 0 ut / dispstate ON idle_s 0 ut; SERIES tags 5 counted 5 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 5 = 10 of 41; lock 2963 s of 23400; state GOING
+2026-10-09T23:49:31Z F31c API check before b25m_06: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-09T23:49:33Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_06
+2026-10-09T23:49:33Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_06
+2026-10-09T23:49:49Z F31c go_f31c b25m_06 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-09T23:50:01Z F31c go_f31c b25m_06 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.704 procs []
+2026-10-09T23:50:03Z F31c go_f31c b25m_06 display before the lock (item 620 (g)(1)): dispstate ON idle_s 3 utc 2026-10-09T23:50:02Z
+2026-10-09T23:53:41Z F31c go_f31c b25m_06 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-09T23:53:42Z F31c go_f31c b25m_06 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T23:53:45Z F31c go_f31c b25m_06 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_06/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T23:53:46Z F31c go_f31c b25m_06 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-09T23:53:52Z F31c go_f31c b25m_06 enter_scene rc 3; guard watch: 2026-10-09T23:53:52Z watch end, user process seen: no; hold watch: 2026-10-09T23:53:52Z watch end, user VM seen: no
+2026-10-09T23:53:54Z F31c go_f31c b25m_06 run: 
+2026-10-09T23:53:54Z F31c go_f31c b25m_06 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-09T23:53:56Z F31c go_f31c b25m_06 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_06/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-09T23:53:56Z F31c go_f31c b25m_06 lock released (rc 0)
+2026-10-09T23:53:58Z F31c go_f31c b25m_06 display after lock released (item 620 (g)(1)): dispstate ON idle_s 20 utc 2026-10-09T23:53:57Z; hold: 0 display events, 0 OFF
+2026-10-09T23:54:10Z F31c go_f31c b25m_06 host load after the tag (item 632 (v)(2)): hostload: over05 1 max 0.909 total 1.132 procs [('<app>', 29992, 0.909)]
+2026-10-09T23:54:11Z F31c go_f31c b25m_06 enter_scene never launched the emulator - not a tag, repeat by the same name
+2026-10-09T23:54:27Z F31c b25m_06 nostart 23:53:52Z (require-idle BUSY gpu 11.0 - user game <app> pid 29992) - not a tag, repeat by the same name after it exits; process not touched
+2026-10-10T00:21:55Z F31c API check before b25m_06: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T00:48:38Z F31c user game <app> pid 29992 gone (seen 00:48:35Z) - b25m_06 repeat
+2026-10-10T00:49:09Z F31c API check before b25m_06: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T00:49:11Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_06
+2026-10-10T00:49:11Z F31c launch_f31c previous output of b25m_06 moved to f31c/old/
+2026-10-10T00:49:11Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_06
+2026-10-10T00:49:26Z F31c go_f31c b25m_06 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T00:49:38Z F31c go_f31c b25m_06 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.653 procs []
+2026-10-10T00:49:39Z F31c go_f31c b25m_06 display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-10T00:49:39Z
+2026-10-10T00:53:27Z F31c go_f31c b25m_06 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T00:53:27Z F31c go_f31c b25m_06 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T00:53:30Z F31c go_f31c b25m_06 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_06/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T00:53:30Z F31c go_f31c b25m_06 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T00:53:36Z F31c go_f31c b25m_06 enter_scene rc 3; guard watch: 2026-10-10T00:53:36Z watch end, user process seen: no; hold watch: 2026-10-10T00:53:36Z watch end, user VM seen: no
+2026-10-10T00:53:36Z F31c go_f31c b25m_06 run: 
+2026-10-10T00:53:37Z F31c go_f31c b25m_06 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T00:53:40Z F31c go_f31c b25m_06 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_06/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T00:53:40Z F31c go_f31c b25m_06 lock released (rc 0)
+2026-10-10T00:53:43Z F31c go_f31c b25m_06 display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-10T00:53:41Z; hold: 0 display events, 0 OFF
+2026-10-10T00:53:55Z F31c go_f31c b25m_06 host load after the tag (item 632 (v)(2)): hostload: over05 1 max 1.997 total 2.384 procs [('<app>', 34476, 1.997)]
+2026-10-10T00:53:56Z F31c go_f31c b25m_06 enter_scene never launched the emulator - not a tag, repeat by the same name
+2026-10-10T00:54:17Z F31c b25m_06 nostart 00:53:36Z (require-idle BUSY gpu 14.0; host load <app> pid 34476 2.0 CPU s/s) - not a tag; next launch only after an idle pre-check outside the lock
+2026-10-10T01:02:13Z F31c API check before b25m_06: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T01:02:15Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_06
+2026-10-10T01:02:15Z F31c launch_f31c previous output of b25m_06 moved to f31c/old/
+2026-10-10T01:02:15Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_06
+2026-10-10T01:02:30Z F31c go_f31c b25m_06 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T01:02:42Z F31c go_f31c b25m_06 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.448 procs []
+2026-10-10T01:02:43Z F31c go_f31c b25m_06 display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-10T01:02:43Z
+2026-10-10T01:06:22Z F31c go_f31c b25m_06 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T01:06:22Z F31c go_f31c b25m_06 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T01:06:25Z F31c go_f31c b25m_06 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_06/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T01:06:25Z F31c go_f31c b25m_06 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T01:11:59Z F31c go_f31c b25m_06 enter_scene rc 0; guard watch: 2026-10-10T01:11:57Z watch end, user process seen: no; hold watch: 2026-10-10T01:11:57Z watch end, user VM seen: no
+2026-10-10T01:11:59Z F31c go_f31c b25m_06 run: VERDICT: mini_giants_garden in 18.0 s - PASS (acceptance <= 90 s)
+2026-10-10T01:12:00Z F31c go_f31c b25m_06 log_b25m_06.txt sha256 219a642ae2b6cc080d536e313aa68e75ab5ba669862ac82ce20446177dc3f144
+2026-10-10T01:12:02Z F31c go_f31c b25m_06 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T01:12:06Z F31c go_f31c b25m_06 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_06/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T01:12:07Z F31c go_f31c b25m_06 lock released (rc 0)
+2026-10-10T01:12:09Z F31c go_f31c b25m_06 display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-10T01:12:08Z; hold: 0 display events, 0 OFF
+2026-10-10T01:12:21Z F31c go_f31c b25m_06 host load after the tag (item 632 (v)(2)): hostload: over05 1 max 1.448 total 1.845 procs [('<app>', 50544, 1.448)]
+2026-10-10T01:12:23Z F31c go_f31c b25m_06 host_load field written: layer HOST_LOAD
+2026-10-10T01:12:40Z F31c post_f31c b25m_06: read.txt f8d53f616e8a0102, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 17.96 fps 55.67 frames 16776 limit_ms 100 (it, display before / after: dispstate ON idle_s 0 ut / dispstate ON idle_s 0 ut; SERIES tags 6 counted 6 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 6 = 11 of 41; lock 4000 s of 23400; state GOING
+2026-10-10T01:12:46Z F31c pre-check before b25m_07: idle142: gpu_util_median=27.0 (samples [28.0, 21.0, 27.0, 27.0, 28.0]) threshold <= 10 -> BUSY - not launched
+2026-10-10T01:12:48Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_07
+2026-10-10T01:12:48Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_07
+2026-10-10T01:14:18Z F31c go_f31c b25m_07 procload busy: procload: busy [('<app>', 50544, 3.254)]
+2026-10-10T01:14:30Z F31c executor deviation: launch of b25m_07 went in parallel with its pre-check (pre-check BUSY gpu 27); refused by procload before the lock (rc=5), not a tag; from now pre-check and launch strictly in sequence
+2026-10-10T01:42:00Z F31c API check before b25m_07: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T02:27:15Z F31c API check before b25m_07: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T03:12:32Z F31c API check before b25m_07: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T03:58:04Z F31c API check before b25m_07: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T04:30:23Z F31c user game <app> pid 50544 gone (seen 04:30:20Z)
+2026-10-10T04:31:26Z F31c pre-check before b25m_07: idle142: gpu_util_median=18.0 (samples [18.0, 18.0, 18.0, 22.0, 24.0]) threshold <= 10 -> BUSY - not launched
+2026-10-10T04:31:42Z F31c pre-check b25m_07 BUSY gpu 18 - user game <app> relaunched pid 33376; waiting
+2026-10-10T05:07:27Z F31c API check before b25m_07: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T05:51:55Z F31c API check before b25m_07: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T06:36:21Z F31c API check before b25m_07: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T07:29:53Z F31c API check before b25m_07: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T07:45:40Z F31c user game <app> gone (seen 07:45:37Z)
+2026-10-10T07:47:14Z F31c API check before b25m_07: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T07:47:19Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_07
+2026-10-10T07:47:19Z F31c launch_f31c previous output of b25m_07 moved to f31c/old/
+2026-10-10T07:47:19Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_07
+2026-10-10T07:47:33Z F31c go_f31c b25m_07 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T07:47:46Z F31c go_f31c b25m_07 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.623 procs []
+2026-10-10T07:47:48Z F31c go_f31c b25m_07 display before the lock (item 620 (g)(1)): dispstate ON idle_s 3 utc 2026-10-10T07:47:47Z
+2026-10-10T07:51:31Z F31c go_f31c b25m_07 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T07:51:31Z F31c go_f31c b25m_07 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T07:51:33Z F31c go_f31c b25m_07 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_07/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T07:51:34Z F31c go_f31c b25m_07 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T07:57:02Z F31c go_f31c b25m_07 enter_scene rc 0; guard watch: 2026-10-10T07:57:01Z watch end, user process seen: no; hold watch: 2026-10-10T07:57:00Z watch end, user VM seen: no
+2026-10-10T07:57:02Z F31c go_f31c b25m_07 run: VERDICT: mini_giants_garden in 15.3 s - PASS (acceptance <= 90 s)
+2026-10-10T07:57:04Z F31c go_f31c b25m_07 log_b25m_07.txt sha256 49d8e2d3fb0a4595066657e29923281cb8ab4b07046b706ecded0c90da62a996
+2026-10-10T07:57:05Z F31c go_f31c b25m_07 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T07:57:08Z F31c go_f31c b25m_07 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_07/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T07:57:09Z F31c go_f31c b25m_07 lock released (rc 0)
+2026-10-10T07:57:11Z F31c go_f31c b25m_07 display after lock released (item 620 (g)(1)): dispstate ON idle_s 566 utc 2026-10-10T07:57:10Z; hold: 0 display events, 0 OFF
+2026-10-10T07:57:24Z F31c go_f31c b25m_07 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.562 procs []
+2026-10-10T07:57:25Z F31c go_f31c b25m_07 host_load field written: layer CLEAN
+2026-10-10T07:57:41Z F31c post_f31c b25m_07: read.txt 37aba592b92028a0, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18068 limit_ms 100 (it, display before / after: dispstate ON idle_s 3 ut / dispstate ON idle_s 566 ; SERIES tags 7 counted 7 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 7 = 12 of 41; lock 4560 s of 23400; state GOING
+2026-10-10T07:57:49Z F31c API check before b25m_08: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T07:57:53Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_08
+2026-10-10T07:57:53Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_08
+2026-10-10T07:58:08Z F31c go_f31c b25m_08 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T07:58:20Z F31c go_f31c b25m_08 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.424 procs []
+2026-10-10T07:58:21Z F31c go_f31c b25m_08 display before the lock (item 620 (g)(1)): dispstate ON idle_s 637 utc 2026-10-10T07:58:21Z
+2026-10-10T08:02:06Z F31c go_f31c b25m_08 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T08:02:07Z F31c go_f31c b25m_08 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:02:09Z F31c go_f31c b25m_08 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_08/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:02:09Z F31c go_f31c b25m_08 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T08:07:32Z F31c go_f31c b25m_08 enter_scene rc 0; guard watch: 2026-10-10T08:07:31Z watch end, user process seen: no; hold watch: 2026-10-10T08:07:32Z watch end, user VM seen: no
+2026-10-10T08:07:32Z F31c go_f31c b25m_08 run: VERDICT: mini_giants_garden in 10.8 s - PASS (acceptance <= 90 s)
+2026-10-10T08:07:34Z F31c go_f31c b25m_08 log_b25m_08.txt sha256 a1321caec71c7ee4b8e30e3cc758f2946c4d42de771216deff57aa286c2e5dbd
+2026-10-10T08:07:34Z F31c go_f31c b25m_08 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:07:36Z F31c go_f31c b25m_08 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_08/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:07:36Z F31c go_f31c b25m_08 lock released (rc 0)
+2026-10-10T08:07:38Z F31c go_f31c b25m_08 display after lock released (item 620 (g)(1)): dispstate ON idle_s 1194 utc 2026-10-10T08:07:37Z; hold: 0 display events, 0 OFF
+2026-10-10T08:07:50Z F31c go_f31c b25m_08 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.266 procs []
+2026-10-10T08:07:50Z F31c go_f31c b25m_08 host_load field written: layer CLEAN
+2026-10-10T08:07:58Z F31c post_f31c b25m_08: read.txt bc6a7c47bb551dfe, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18046 limit_ms 100 (it, display before / after: dispstate ON idle_s 637  / dispstate ON idle_s 1194; SERIES tags 8 counted 8 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 8 = 13 of 41; lock 5115 s of 23400; state GOING
+2026-10-10T08:08:07Z F31c API check before b25m_09: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T08:08:11Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_09
+2026-10-10T08:08:11Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_09
+2026-10-10T08:08:29Z F31c go_f31c b25m_09 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T08:08:41Z F31c go_f31c b25m_09 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.701 procs []
+2026-10-10T08:08:42Z F31c go_f31c b25m_09 display before the lock (item 620 (g)(1)): dispstate ON idle_s 1259 utc 2026-10-10T08:08:42Z
+2026-10-10T08:12:31Z F31c go_f31c b25m_09 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T08:12:31Z F31c go_f31c b25m_09 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:12:34Z F31c go_f31c b25m_09 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_09/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:12:34Z F31c go_f31c b25m_09 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T08:17:58Z F31c go_f31c b25m_09 enter_scene rc 0; guard watch: 2026-10-10T08:17:58Z watch end, user process seen: no; hold watch: 2026-10-10T08:17:57Z watch end, user VM seen: no
+2026-10-10T08:17:58Z F31c go_f31c b25m_09 run: VERDICT: mini_giants_garden in 12.0 s - PASS (acceptance <= 90 s)
+2026-10-10T08:17:59Z F31c go_f31c b25m_09 log_b25m_09.txt sha256 262c8a908b63878c07e954024874e753a1b63fad4f4de1b9922c677fdfd15fea
+2026-10-10T08:18:00Z F31c go_f31c b25m_09 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:18:02Z F31c go_f31c b25m_09 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_09/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:18:03Z F31c go_f31c b25m_09 lock released (rc 0)
+2026-10-10T08:18:05Z F31c go_f31c b25m_09 display after lock released (item 620 (g)(1)): dispstate ON idle_s 1820 utc 2026-10-10T08:18:04Z; hold: 0 display events, 0 OFF
+2026-10-10T08:18:16Z F31c go_f31c b25m_09 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.448 procs []
+2026-10-10T08:18:17Z F31c go_f31c b25m_09 host_load field written: layer CLEAN
+2026-10-10T08:18:30Z F31c post_f31c b25m_09: read.txt 34bba6c3a0682450, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.96 frames 18058 limit_ms 100 (it, display before / after: dispstate ON idle_s 1259 / dispstate ON idle_s 1820; SERIES tags 9 counted 9 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 9 = 14 of 41; lock 5675 s of 23400; state GOING
+2026-10-10T08:18:38Z F31c API check before b25m_10: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T08:18:43Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_10
+2026-10-10T08:18:44Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_10
+2026-10-10T08:18:58Z F31c go_f31c b25m_10 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T08:19:11Z F31c go_f31c b25m_10 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.906 procs []
+2026-10-10T08:19:12Z F31c go_f31c b25m_10 display before the lock (item 620 (g)(1)): dispstate ON idle_s 1889 utc 2026-10-10T08:19:12Z
+2026-10-10T08:22:56Z F31c go_f31c b25m_10 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T08:22:57Z F31c go_f31c b25m_10 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:22:59Z F31c go_f31c b25m_10 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_10/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:22:59Z F31c go_f31c b25m_10 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T08:28:24Z F31c go_f31c b25m_10 enter_scene rc 0; guard watch: 2026-10-10T08:28:23Z watch end, user process seen: no; hold watch: 2026-10-10T08:28:24Z watch end, user VM seen: no
+2026-10-10T08:28:25Z F31c go_f31c b25m_10 run: VERDICT: mini_giants_garden in 12.1 s - PASS (acceptance <= 90 s)
+2026-10-10T08:28:26Z F31c go_f31c b25m_10 log_b25m_10.txt sha256 a7f182458219574d290b4d4690a39d9ec5ad9a5cc679e6a2f99173f796907df4
+2026-10-10T08:28:26Z F31c go_f31c b25m_10 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:28:29Z F31c go_f31c b25m_10 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_10/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:28:29Z F31c go_f31c b25m_10 lock released (rc 0)
+2026-10-10T08:28:31Z F31c go_f31c b25m_10 display after lock released (item 620 (g)(1)): dispstate ON idle_s 2447 utc 2026-10-10T08:28:31Z; hold: 0 display events, 0 OFF
+2026-10-10T08:28:44Z F31c go_f31c b25m_10 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.617 procs []
+2026-10-10T08:28:44Z F31c go_f31c b25m_10 host_load field written: layer CLEAN
+2026-10-10T08:28:58Z F31c post_f31c b25m_10: read.txt e32a4347087697ff, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.96 frames 18058 limit_ms 100 (it, display before / after: dispstate ON idle_s 1889 / dispstate ON idle_s 2447; SERIES tags 10 counted 10 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 10 = 15 of 41; lock 6232 s of 23400; state GOING
+2026-10-10T08:29:07Z F31c API check before b25m_11: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T08:29:11Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_11
+2026-10-10T08:29:12Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_11
+2026-10-10T08:29:27Z F31c go_f31c b25m_11 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T08:29:39Z F31c go_f31c b25m_11 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.519 procs []
+2026-10-10T08:29:40Z F31c go_f31c b25m_11 display before the lock (item 620 (g)(1)): dispstate ON idle_s 2516 utc 2026-10-10T08:29:40Z
+2026-10-10T08:33:25Z F31c go_f31c b25m_11 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T08:33:25Z F31c go_f31c b25m_11 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:33:27Z F31c go_f31c b25m_11 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_11/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:33:27Z F31c go_f31c b25m_11 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T08:38:52Z F31c go_f31c b25m_11 enter_scene rc 0; guard watch: 2026-10-10T08:38:51Z watch end, user process seen: no; hold watch: 2026-10-10T08:38:52Z watch end, user VM seen: no
+2026-10-10T08:38:52Z F31c go_f31c b25m_11 run: VERDICT: mini_giants_garden in 11.8 s - PASS (acceptance <= 90 s)
+2026-10-10T08:38:53Z F31c go_f31c b25m_11 log_b25m_11.txt sha256 267aeb14e302ec58f362a89e26cb9de7321cb953da4108527ae2a6df0338a5b3
+2026-10-10T08:38:54Z F31c go_f31c b25m_11 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:38:56Z F31c go_f31c b25m_11 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_11/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:38:56Z F31c go_f31c b25m_11 lock released (rc 0)
+2026-10-10T08:38:58Z F31c go_f31c b25m_11 display after lock released (item 620 (g)(1)): dispstate ON idle_s 3074 utc 2026-10-10T08:38:57Z; hold: 0 display events, 0 OFF
+2026-10-10T08:39:12Z F31c go_f31c b25m_11 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.500 procs []
+2026-10-10T08:39:12Z F31c go_f31c b25m_11 host_load field written: layer CLEAN
+2026-10-10T08:39:26Z F31c post_f31c b25m_11: read.txt ce994bb2454cbaa8, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.96 frames 18046 limit_ms 100 (it, display before / after: dispstate ON idle_s 2516 / dispstate ON idle_s 3074; SERIES tags 11 counted 11 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 11 = 16 of 41; lock 6788 s of 23400; state GOING
+2026-10-10T08:39:36Z F31c API check before b25m_12: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T08:39:41Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_12
+2026-10-10T08:39:41Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_12
+2026-10-10T08:39:57Z F31c go_f31c b25m_12 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T08:40:11Z F31c go_f31c b25m_12 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.788 procs []
+2026-10-10T08:40:13Z F31c go_f31c b25m_12 display before the lock (item 620 (g)(1)): dispstate ON idle_s 3149 utc 2026-10-10T08:40:13Z
+2026-10-10T08:43:57Z F31c go_f31c b25m_12 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T08:43:58Z F31c go_f31c b25m_12 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:44:00Z F31c go_f31c b25m_12 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_12/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:44:00Z F31c go_f31c b25m_12 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T08:49:23Z F31c go_f31c b25m_12 enter_scene rc 0; guard watch: 2026-10-10T08:49:22Z watch end, user process seen: no; hold watch: 2026-10-10T08:49:23Z watch end, user VM seen: no
+2026-10-10T08:49:23Z F31c go_f31c b25m_12 run: VERDICT: mini_giants_garden in 10.8 s - PASS (acceptance <= 90 s)
+2026-10-10T08:49:24Z F31c go_f31c b25m_12 log_b25m_12.txt sha256 f73bdfd24d3c1994e78a524cbadcb9a9d638413498d1d87cee009afc157f00b8
+2026-10-10T08:49:25Z F31c go_f31c b25m_12 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:49:27Z F31c go_f31c b25m_12 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_12/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:49:27Z F31c go_f31c b25m_12 lock released (rc 0)
+2026-10-10T08:49:29Z F31c go_f31c b25m_12 display after lock released (item 620 (g)(1)): dispstate ON idle_s 3705 utc 2026-10-10T08:49:28Z; hold: 0 display events, 0 OFF
+2026-10-10T08:49:42Z F31c go_f31c b25m_12 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.489 procs []
+2026-10-10T08:49:42Z F31c go_f31c b25m_12 host_load field written: layer CLEAN
+2026-10-10T08:49:55Z F31c post_f31c b25m_12: read.txt 6cedac6d26ce6f19, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.96 frames 18049 limit_ms 100 (it, display before / after: dispstate ON idle_s 3149 / dispstate ON idle_s 3705; SERIES tags 12 counted 12 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 12 = 17 of 41; lock 7342 s of 23400; state GOING
+2026-10-10T08:50:06Z F31c API check before b25m_13: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T08:50:11Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_13
+2026-10-10T08:50:12Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_13
+2026-10-10T08:50:26Z F31c go_f31c b25m_13 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T08:50:39Z F31c go_f31c b25m_13 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.742 procs []
+2026-10-10T08:50:41Z F31c go_f31c b25m_13 display before the lock (item 620 (g)(1)): dispstate ON idle_s 3777 utc 2026-10-10T08:50:40Z
+2026-10-10T08:54:25Z F31c go_f31c b25m_13 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T08:54:26Z F31c go_f31c b25m_13 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:54:27Z F31c go_f31c b25m_13 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_13/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:54:28Z F31c go_f31c b25m_13 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T08:59:53Z F31c go_f31c b25m_13 enter_scene rc 0; guard watch: 2026-10-10T08:59:51Z watch end, user process seen: no; hold watch: 2026-10-10T08:59:52Z watch end, user VM seen: no
+2026-10-10T08:59:53Z F31c go_f31c b25m_13 run: VERDICT: mini_giants_garden in 12.3 s - PASS (acceptance <= 90 s)
+2026-10-10T08:59:54Z F31c go_f31c b25m_13 log_b25m_13.txt sha256 537bc7ee6e0605828cca060aea89ea8faaee92154f7236860aa0e3b21ad7a9db
+2026-10-10T08:59:54Z F31c go_f31c b25m_13 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T08:59:57Z F31c go_f31c b25m_13 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_13/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T08:59:57Z F31c go_f31c b25m_13 lock released (rc 0)
+2026-10-10T08:59:58Z F31c go_f31c b25m_13 display after lock released (item 620 (g)(1)): dispstate ON idle_s 4334 utc 2026-10-10T08:59:58Z; hold: 0 display events, 0 OFF
+2026-10-10T09:00:13Z F31c go_f31c b25m_13 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.103 procs []
+2026-10-10T09:00:13Z F31c go_f31c b25m_13 host_load field written: layer CLEAN
+2026-10-10T09:00:28Z F31c post_f31c b25m_13: read.txt 9db4ef0804a08a73, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.96 frames 18055 limit_ms 100 (it, display before / after: dispstate ON idle_s 3777 / dispstate ON idle_s 4334; SERIES tags 13 counted 13 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 13 = 18 of 41; lock 7898 s of 23400; state GOING
+2026-10-10T09:00:36Z F31c API check before b25m_14: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T09:00:40Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_14
+2026-10-10T09:00:41Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_14
+2026-10-10T09:00:56Z F31c go_f31c b25m_14 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T09:01:08Z F31c go_f31c b25m_14 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.429 procs []
+2026-10-10T09:01:09Z F31c go_f31c b25m_14 display before the lock (item 620 (g)(1)): dispstate ON idle_s 4406 utc 2026-10-10T09:01:09Z
+2026-10-10T09:04:32Z F31c go_f31c b25m_14 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T09:04:33Z F31c go_f31c b25m_14 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:04:35Z F31c go_f31c b25m_14 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_14/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:04:35Z F31c go_f31c b25m_14 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T09:09:59Z F31c go_f31c b25m_14 enter_scene rc 0; guard watch: 2026-10-10T09:09:59Z watch end, user process seen: no; hold watch: 2026-10-10T09:09:58Z watch end, user VM seen: no
+2026-10-10T09:09:59Z F31c go_f31c b25m_14 run: VERDICT: mini_giants_garden in 11.4 s - PASS (acceptance <= 90 s)
+2026-10-10T09:10:00Z F31c go_f31c b25m_14 log_b25m_14.txt sha256 2a1b6fbcf92955d48fff48e69b553c5a151e19b52335e966ff946f849e9dea00
+2026-10-10T09:10:01Z F31c go_f31c b25m_14 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:10:03Z F31c go_f31c b25m_14 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_14/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:10:03Z F31c go_f31c b25m_14 lock released (rc 0)
+2026-10-10T09:10:05Z F31c go_f31c b25m_14 display after lock released (item 620 (g)(1)): dispstate ON idle_s 4941 utc 2026-10-10T09:10:04Z; hold: 0 display events, 0 OFF
+2026-10-10T09:10:17Z F31c go_f31c b25m_14 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.355 procs []
+2026-10-10T09:10:17Z F31c go_f31c b25m_14 host_load field written: layer CLEAN
+2026-10-10T09:10:23Z F31c post_f31c b25m_14: read.txt e13bbc044065644f, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18066 limit_ms 100 (it, display before / after: dispstate ON idle_s 4406 / dispstate ON idle_s 4941; SERIES tags 14 counted 14 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 14 = 19 of 41; lock 8432 s of 23400; state GOING
+2026-10-10T09:10:31Z F31c API check before b25m_15: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T09:10:35Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_15
+2026-10-10T09:10:35Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_15
+2026-10-10T09:10:51Z F31c go_f31c b25m_15 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T09:11:04Z F31c go_f31c b25m_15 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.464 procs []
+2026-10-10T09:11:05Z F31c go_f31c b25m_15 display before the lock (item 620 (g)(1)): dispstate ON idle_s 5002 utc 2026-10-10T09:11:05Z
+2026-10-10T09:14:44Z F31c go_f31c b25m_15 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T09:14:44Z F31c go_f31c b25m_15 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:14:47Z F31c go_f31c b25m_15 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_15/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:14:47Z F31c go_f31c b25m_15 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T09:20:12Z F31c go_f31c b25m_15 enter_scene rc 0; guard watch: 2026-10-10T09:20:10Z watch end, user process seen: no; hold watch: 2026-10-10T09:20:11Z watch end, user VM seen: no
+2026-10-10T09:20:12Z F31c go_f31c b25m_15 run: VERDICT: mini_giants_garden in 11.8 s - PASS (acceptance <= 90 s)
+2026-10-10T09:20:13Z F31c go_f31c b25m_15 log_b25m_15.txt sha256 07cfbc3e7b6984b347c41eeb38e3bfd56964747991d34f324b8d03c18cbf9c1b
+2026-10-10T09:20:13Z F31c go_f31c b25m_15 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:20:16Z F31c go_f31c b25m_15 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_15/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:20:16Z F31c go_f31c b25m_15 lock released (rc 0)
+2026-10-10T09:20:17Z F31c go_f31c b25m_15 display after lock released (item 620 (g)(1)): dispstate ON idle_s 5553 utc 2026-10-10T09:20:17Z; hold: 0 display events, 0 OFF
+2026-10-10T09:20:30Z F31c go_f31c b25m_15 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.269 procs []
+2026-10-10T09:20:31Z F31c go_f31c b25m_15 host_load field written: layer CLEAN
+2026-10-10T09:20:44Z F31c post_f31c b25m_15: read.txt 39078c77229400e7, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18046 limit_ms 100 (it, display before / after: dispstate ON idle_s 5002 / dispstate ON idle_s 5553; SERIES tags 15 counted 15 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 15 = 20 of 41; lock 8983 s of 23400; state GOING
+2026-10-10T09:20:51Z F31c API check before b25m_16: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T09:20:55Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_16
+2026-10-10T09:20:56Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_16
+2026-10-10T09:21:11Z F31c go_f31c b25m_16 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T09:21:23Z F31c go_f31c b25m_16 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.282 procs []
+2026-10-10T09:21:24Z F31c go_f31c b25m_16 display before the lock (item 620 (g)(1)): dispstate ON idle_s 5621 utc 2026-10-10T09:21:24Z
+2026-10-10T09:25:04Z F31c go_f31c b25m_16 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T09:25:04Z F31c go_f31c b25m_16 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:25:06Z F31c go_f31c b25m_16 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_16/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:25:06Z F31c go_f31c b25m_16 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T09:30:30Z F31c go_f31c b25m_16 enter_scene rc 0; guard watch: 2026-10-10T09:30:30Z watch end, user process seen: no; hold watch: 2026-10-10T09:30:29Z watch end, user VM seen: no
+2026-10-10T09:30:30Z F31c go_f31c b25m_16 run: VERDICT: mini_giants_garden in 11.8 s - PASS (acceptance <= 90 s)
+2026-10-10T09:30:32Z F31c go_f31c b25m_16 log_b25m_16.txt sha256 b96f5e550d398591a4dfc2f6fa7de937891cb44c027ca6eca27e679cfcd5ea11
+2026-10-10T09:30:32Z F31c go_f31c b25m_16 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:30:34Z F31c go_f31c b25m_16 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_16/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:30:34Z F31c go_f31c b25m_16 lock released (rc 0)
+2026-10-10T09:30:36Z F31c go_f31c b25m_16 display after lock released (item 620 (g)(1)): dispstate ON idle_s 6172 utc 2026-10-10T09:30:35Z; hold: 0 display events, 0 OFF
+2026-10-10T09:30:48Z F31c go_f31c b25m_16 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.504 procs []
+2026-10-10T09:30:48Z F31c go_f31c b25m_16 host_load field written: layer CLEAN
+2026-10-10T09:31:02Z F31c post_f31c b25m_16: read.txt ee1a8a80416507b7, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.96 frames 18064 limit_ms 100 (it, display before / after: dispstate ON idle_s 5621 / dispstate ON idle_s 6172; SERIES tags 16 counted 16 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 16 = 21 of 41; lock 9533 s of 23400; state GOING
+2026-10-10T09:31:12Z F31c API check before b25m_17: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T09:31:16Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_17
+2026-10-10T09:31:16Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_17
+2026-10-10T09:31:31Z F31c go_f31c b25m_17 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T09:31:43Z F31c go_f31c b25m_17 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.446 procs []
+2026-10-10T09:31:44Z F31c go_f31c b25m_17 display before the lock (item 620 (g)(1)): dispstate ON idle_s 6241 utc 2026-10-10T09:31:44Z
+2026-10-10T09:35:23Z F31c go_f31c b25m_17 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T09:35:24Z F31c go_f31c b25m_17 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:35:27Z F31c go_f31c b25m_17 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_17/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:35:28Z F31c go_f31c b25m_17 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T09:40:55Z F31c go_f31c b25m_17 enter_scene rc 0; guard watch: 2026-10-10T09:40:54Z watch end, user process seen: no; hold watch: 2026-10-10T09:40:55Z watch end, user VM seen: no
+2026-10-10T09:40:55Z F31c go_f31c b25m_17 run: VERDICT: mini_giants_garden in 11.9 s - PASS (acceptance <= 90 s)
+2026-10-10T09:40:56Z F31c go_f31c b25m_17 log_b25m_17.txt sha256 5edf024425328d80d1ca23e2ecfedb4ec15bad71b2f4905958b5f85185dafc74
+2026-10-10T09:40:57Z F31c go_f31c b25m_17 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:41:00Z F31c go_f31c b25m_17 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_17/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:41:00Z F31c go_f31c b25m_17 lock released (rc 0)
+2026-10-10T09:41:02Z F31c go_f31c b25m_17 display after lock released (item 620 (g)(1)): dispstate ON idle_s 6798 utc 2026-10-10T09:41:01Z; hold: 0 display events, 0 OFF
+2026-10-10T09:41:14Z F31c go_f31c b25m_17 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.612 procs []
+2026-10-10T09:41:14Z F31c go_f31c b25m_17 host_load field written: layer CLEAN
+2026-10-10T09:41:23Z F31c post_f31c b25m_17: read.txt a9bd389025ecdb2f, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18050 limit_ms 100 (it, display before / after: dispstate ON idle_s 6241 / dispstate ON idle_s 6798; SERIES tags 17 counted 17 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 17 = 22 of 41; lock 10089 s of 23400; state GOING
+2026-10-10T09:41:34Z F31c API check before b25m_18: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T09:41:39Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_18
+2026-10-10T09:41:40Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_18
+2026-10-10T09:41:56Z F31c go_f31c b25m_18 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T09:42:08Z F31c go_f31c b25m_18 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.716 procs []
+2026-10-10T09:42:09Z F31c go_f31c b25m_18 display before the lock (item 620 (g)(1)): dispstate ON idle_s 6866 utc 2026-10-10T09:42:09Z
+2026-10-10T09:45:54Z F31c go_f31c b25m_18 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T09:45:55Z F31c go_f31c b25m_18 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:45:57Z F31c go_f31c b25m_18 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_18/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:45:58Z F31c go_f31c b25m_18 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T09:51:23Z F31c go_f31c b25m_18 enter_scene rc 0; guard watch: 2026-10-10T09:51:21Z watch end, user process seen: no; hold watch: 2026-10-10T09:51:23Z watch end, user VM seen: no
+2026-10-10T09:51:23Z F31c go_f31c b25m_18 run: VERDICT: mini_giants_garden in 11.6 s - PASS (acceptance <= 90 s)
+2026-10-10T09:51:24Z F31c go_f31c b25m_18 log_b25m_18.txt sha256 bca81632f8d6f8a9dcfff034862b094efaed6d3d1226555d8a7cc32a30f8550d
+2026-10-10T09:51:25Z F31c go_f31c b25m_18 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:51:27Z F31c go_f31c b25m_18 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_18/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:51:27Z F31c go_f31c b25m_18 lock released (rc 0)
+2026-10-10T09:51:29Z F31c go_f31c b25m_18 display after lock released (item 620 (g)(1)): dispstate ON idle_s 7425 utc 2026-10-10T09:51:28Z; hold: 0 display events, 0 OFF
+2026-10-10T09:51:42Z F31c go_f31c b25m_18 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.535 procs []
+2026-10-10T09:51:42Z F31c go_f31c b25m_18 host_load field written: layer CLEAN
+2026-10-10T09:51:51Z F31c post_f31c b25m_18: read.txt 3700fc1b03b2f276, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.96 frames 18045 limit_ms 100 (it, display before / after: dispstate ON idle_s 6866 / dispstate ON idle_s 7425; SERIES tags 18 counted 18 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 18 = 23 of 41; lock 10646 s of 23400; state GOING
+2026-10-10T09:51:58Z F31c API check before b25m_19: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T09:52:03Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_19
+2026-10-10T09:52:03Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_19
+2026-10-10T09:52:21Z F31c go_f31c b25m_19 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T09:52:34Z F31c go_f31c b25m_19 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.465 procs []
+2026-10-10T09:52:35Z F31c go_f31c b25m_19 display before the lock (item 620 (g)(1)): dispstate ON idle_s 7492 utc 2026-10-10T09:52:35Z
+2026-10-10T09:56:17Z F31c go_f31c b25m_19 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T09:56:17Z F31c go_f31c b25m_19 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T09:56:19Z F31c go_f31c b25m_19 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_19/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T09:56:20Z F31c go_f31c b25m_19 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T10:01:45Z F31c go_f31c b25m_19 enter_scene rc 0; guard watch: 2026-10-10T10:01:43Z watch end, user process seen: no; hold watch: 2026-10-10T10:01:44Z watch end, user VM seen: no
+2026-10-10T10:01:45Z F31c go_f31c b25m_19 run: VERDICT: mini_giants_garden in 11.9 s - PASS (acceptance <= 90 s)
+2026-10-10T10:01:46Z F31c go_f31c b25m_19 log_b25m_19.txt sha256 382c48d9c0cc73079f87bd2bf9e1ba32f1650611e65590f007b7828bd35da29a
+2026-10-10T10:01:46Z F31c go_f31c b25m_19 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:01:48Z F31c go_f31c b25m_19 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_19/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:01:49Z F31c go_f31c b25m_19 lock released (rc 0)
+2026-10-10T10:01:50Z F31c go_f31c b25m_19 display after lock released (item 620 (g)(1)): dispstate ON idle_s 8046 utc 2026-10-10T10:01:50Z; hold: 0 display events, 0 OFF
+2026-10-10T10:02:03Z F31c go_f31c b25m_19 host load after the tag (item 632 (v)(2)): hostload: over05 1 max 1.403 total 1.683 procs [('<app>', 37632, 1.403)]
+2026-10-10T10:02:03Z F31c go_f31c b25m_19 host_load field written: layer HOST_LOAD
+2026-10-10T10:02:15Z F31c post_f31c b25m_19: read.txt 2dbe50289468caf4, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18064 limit_ms 100 (it, display before / after: dispstate ON idle_s 7492 / dispstate ON idle_s 8046; SERIES tags 19 counted 19 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 19 = 24 of 41; lock 11200 s of 23400; state GOING
+2026-10-10T10:02:23Z F31c API check before b25m_20: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T10:02:27Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_20
+2026-10-10T10:02:27Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_20
+2026-10-10T10:02:43Z F31c go_f31c b25m_20 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T10:02:55Z F31c go_f31c b25m_20 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.274 procs []
+2026-10-10T10:02:56Z F31c go_f31c b25m_20 display before the lock (item 620 (g)(1)): dispstate ON idle_s 8113 utc 2026-10-10T10:02:56Z
+2026-10-10T10:06:37Z F31c go_f31c b25m_20 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T10:06:37Z F31c go_f31c b25m_20 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:06:39Z F31c go_f31c b25m_20 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_20/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:06:39Z F31c go_f31c b25m_20 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T10:12:05Z F31c go_f31c b25m_20 enter_scene rc 0; guard watch: 2026-10-10T10:12:03Z watch end, user process seen: no; hold watch: 2026-10-10T10:12:04Z watch end, user VM seen: no
+2026-10-10T10:12:05Z F31c go_f31c b25m_20 run: VERDICT: mini_giants_garden in 11.3 s - PASS (acceptance <= 90 s)
+2026-10-10T10:12:06Z F31c go_f31c b25m_20 log_b25m_20.txt sha256 ca2e6e79e2052f8df4525561ee4c9e63c19da132c71597283fc8243aaa36cc97
+2026-10-10T10:12:07Z F31c go_f31c b25m_20 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:12:10Z F31c go_f31c b25m_20 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_20/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:12:10Z F31c go_f31c b25m_20 lock released (rc 0)
+2026-10-10T10:12:12Z F31c go_f31c b25m_20 display after lock released (item 620 (g)(1)): dispstate ON idle_s 8668 utc 2026-10-10T10:12:12Z; hold: 0 display events, 0 OFF
+2026-10-10T10:12:25Z F31c go_f31c b25m_20 host load after the tag (item 632 (v)(2)): hostload: over05 1 max 0.604 total 1.162 procs [('<app>', 13652, 0.604)]
+2026-10-10T10:12:25Z F31c go_f31c b25m_20 host_load field written: layer HOST_LOAD
+2026-10-10T10:12:37Z F31c post_f31c b25m_20: read.txt 6d9689b65e4bd490, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18058 limit_ms 100 (it, display before / after: dispstate ON idle_s 8113 / dispstate ON idle_s 8668; SERIES tags 20 counted 20 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 20 = 25 of 41; lock 11753 s of 23400; state GOING
+2026-10-10T10:12:46Z F31c API check before b25m_21: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T10:12:50Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_21
+2026-10-10T10:12:50Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_21
+2026-10-10T10:13:06Z F31c go_f31c b25m_21 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T10:13:18Z F31c go_f31c b25m_21 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.453 procs []
+2026-10-10T10:13:19Z F31c go_f31c b25m_21 display before the lock (item 620 (g)(1)): dispstate ON idle_s 8736 utc 2026-10-10T10:13:19Z
+2026-10-10T10:17:02Z F31c go_f31c b25m_21 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T10:17:02Z F31c go_f31c b25m_21 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:17:04Z F31c go_f31c b25m_21 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_21/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:17:04Z F31c go_f31c b25m_21 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T10:22:28Z F31c go_f31c b25m_21 enter_scene rc 0; guard watch: 2026-10-10T10:22:28Z watch end, user process seen: no; hold watch: 2026-10-10T10:22:27Z watch end, user VM seen: no
+2026-10-10T10:22:28Z F31c go_f31c b25m_21 run: VERDICT: mini_giants_garden in 11.8 s - PASS (acceptance <= 90 s)
+2026-10-10T10:22:29Z F31c go_f31c b25m_21 log_b25m_21.txt sha256 a4d59c3b2184d5570648385b6b7cfa34d2d1aeeb8614f8d2caac4cb894333369
+2026-10-10T10:22:30Z F31c go_f31c b25m_21 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:22:32Z F31c go_f31c b25m_21 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_21/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:22:32Z F31c go_f31c b25m_21 lock released (rc 0)
+2026-10-10T10:22:34Z F31c go_f31c b25m_21 display after lock released (item 620 (g)(1)): dispstate ON idle_s 9290 utc 2026-10-10T10:22:34Z; hold: 0 display events, 0 OFF
+2026-10-10T10:22:46Z F31c go_f31c b25m_21 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.620 procs []
+2026-10-10T10:22:46Z F31c go_f31c b25m_21 host_load field written: layer CLEAN
+2026-10-10T10:22:55Z F31c post_f31c b25m_21: read.txt e01952776891ec47, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18062 limit_ms 100 (it, display before / after: dispstate ON idle_s 8736 / dispstate ON idle_s 9290; SERIES tags 21 counted 21 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 21 = 26 of 41; lock 12306 s of 23400; state GOING
+2026-10-10T10:23:03Z F31c API check before b25m_22: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T10:23:09Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_22
+2026-10-10T10:23:09Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_22
+2026-10-10T10:23:23Z F31c go_f31c b25m_22 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T10:23:35Z F31c go_f31c b25m_22 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.560 procs []
+2026-10-10T10:23:37Z F31c go_f31c b25m_22 display before the lock (item 620 (g)(1)): dispstate ON idle_s 9353 utc 2026-10-10T10:23:37Z
+2026-10-10T10:27:20Z F31c go_f31c b25m_22 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T10:27:20Z F31c go_f31c b25m_22 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:27:22Z F31c go_f31c b25m_22 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_22/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:27:22Z F31c go_f31c b25m_22 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T10:32:46Z F31c go_f31c b25m_22 enter_scene rc 0; guard watch: 2026-10-10T10:32:46Z watch end, user process seen: no; hold watch: 2026-10-10T10:32:45Z watch end, user VM seen: no
+2026-10-10T10:32:47Z F31c go_f31c b25m_22 run: VERDICT: mini_giants_garden in 11.8 s - PASS (acceptance <= 90 s)
+2026-10-10T10:32:48Z F31c go_f31c b25m_22 log_b25m_22.txt sha256 a2489cfba700760d0f846a45a87c4a7da8d80807867e5e6a1bd1ea201f078776
+2026-10-10T10:32:49Z F31c go_f31c b25m_22 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:32:51Z F31c go_f31c b25m_22 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_22/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:32:52Z F31c go_f31c b25m_22 lock released (rc 0)
+2026-10-10T10:32:53Z F31c go_f31c b25m_22 display after lock released (item 620 (g)(1)): dispstate ON idle_s 9909 utc 2026-10-10T10:32:53Z; hold: 0 display events, 0 OFF
+2026-10-10T10:33:06Z F31c go_f31c b25m_22 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.551 procs []
+2026-10-10T10:33:06Z F31c go_f31c b25m_22 host_load field written: layer CLEAN
+2026-10-10T10:33:19Z F31c post_f31c b25m_22: read.txt 25b6117cc9f99e93, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18057 limit_ms 100 (it, display before / after: dispstate ON idle_s 9353 / dispstate ON idle_s 9909; SERIES tags 22 counted 22 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 22 = 27 of 41; lock 12861 s of 23400; state GOING
+2026-10-10T10:33:26Z F31c API check before b25m_23: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T10:33:30Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_23
+2026-10-10T10:33:31Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_23
+2026-10-10T10:33:47Z F31c go_f31c b25m_23 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T10:34:00Z F31c go_f31c b25m_23 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.259 procs []
+2026-10-10T10:34:01Z F31c go_f31c b25m_23 display before the lock (item 620 (g)(1)): dispstate ON idle_s 9977 utc 2026-10-10T10:34:01Z
+2026-10-10T10:37:46Z F31c go_f31c b25m_23 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T10:37:46Z F31c go_f31c b25m_23 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:37:49Z F31c go_f31c b25m_23 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_23/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:37:49Z F31c go_f31c b25m_23 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T10:43:16Z F31c go_f31c b25m_23 enter_scene rc 0; guard watch: 2026-10-10T10:43:13Z watch end, user process seen: no; hold watch: 2026-10-10T10:43:14Z watch end, user VM seen: no
+2026-10-10T10:43:16Z F31c go_f31c b25m_23 run: VERDICT: mini_giants_garden in 12.0 s - PASS (acceptance <= 90 s)
+2026-10-10T10:43:17Z F31c go_f31c b25m_23 log_b25m_23.txt sha256 bb12a5244966a4fc361b99da9ae44ad99c23684f92af9cdcb2027cec51056ff4
+2026-10-10T10:43:18Z F31c go_f31c b25m_23 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:43:21Z F31c go_f31c b25m_23 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_23/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:43:21Z F31c go_f31c b25m_23 lock released (rc 0)
+2026-10-10T10:43:23Z F31c go_f31c b25m_23 display after lock released (item 620 (g)(1)): dispstate ON idle_s 10539 utc 2026-10-10T10:43:22Z; hold: 0 display events, 0 OFF
+2026-10-10T10:43:35Z F31c go_f31c b25m_23 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.533 procs []
+2026-10-10T10:43:36Z F31c go_f31c b25m_23 host_load field written: layer CLEAN
+2026-10-10T10:43:52Z F31c post_f31c b25m_23: read.txt 95d552bbb9c7c749, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18051 limit_ms 100 (it, display before / after: dispstate ON idle_s 9977 / dispstate ON idle_s 1053; SERIES tags 23 counted 23 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 23 = 28 of 41; lock 13420 s of 23400; state GOING
+2026-10-10T10:43:59Z F31c API check before b25m_24: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T10:44:04Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_24
+2026-10-10T10:44:04Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_24
+2026-10-10T10:44:20Z F31c go_f31c b25m_24 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T10:44:32Z F31c go_f31c b25m_24 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.372 procs []
+2026-10-10T10:44:33Z F31c go_f31c b25m_24 display before the lock (item 620 (g)(1)): dispstate ON idle_s 10610 utc 2026-10-10T10:44:33Z
+2026-10-10T10:48:18Z F31c go_f31c b25m_24 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T10:48:19Z F31c go_f31c b25m_24 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:48:21Z F31c go_f31c b25m_24 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_24/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:48:21Z F31c go_f31c b25m_24 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T10:53:45Z F31c go_f31c b25m_24 enter_scene rc 0; guard watch: 2026-10-10T10:53:45Z watch end, user process seen: no; hold watch: 2026-10-10T10:53:44Z watch end, user VM seen: no
+2026-10-10T10:53:45Z F31c go_f31c b25m_24 run: VERDICT: mini_giants_garden in 11.8 s - PASS (acceptance <= 90 s)
+2026-10-10T10:53:46Z F31c go_f31c b25m_24 log_b25m_24.txt sha256 63ae61981e3ad8462cda1bf1092c2bb251fee24f64dd1094ed56ac57a668bc65
+2026-10-10T10:53:47Z F31c go_f31c b25m_24 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:53:49Z F31c go_f31c b25m_24 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_24/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:53:49Z F31c go_f31c b25m_24 lock released (rc 0)
+2026-10-10T10:53:51Z F31c go_f31c b25m_24 display after lock released (item 620 (g)(1)): dispstate ON idle_s 11167 utc 2026-10-10T10:53:50Z; hold: 0 display events, 0 OFF
+2026-10-10T10:54:04Z F31c go_f31c b25m_24 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.468 procs []
+2026-10-10T10:54:04Z F31c go_f31c b25m_24 host_load field written: layer CLEAN
+2026-10-10T10:54:14Z F31c post_f31c b25m_24: read.txt 7b2db76ba98eebbc, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18054 limit_ms 100 (it, display before / after: dispstate ON idle_s 1061 / dispstate ON idle_s 1116; SERIES tags 24 counted 24 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 24 = 29 of 41; lock 13975 s of 23400; state GOING
+2026-10-10T10:54:22Z F31c API check before b25m_25: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T10:54:27Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_25
+2026-10-10T10:54:27Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_25
+2026-10-10T10:54:43Z F31c go_f31c b25m_25 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T10:54:55Z F31c go_f31c b25m_25 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.422 procs []
+2026-10-10T10:54:56Z F31c go_f31c b25m_25 display before the lock (item 620 (g)(1)): dispstate ON idle_s 11232 utc 2026-10-10T10:54:56Z
+2026-10-10T10:58:40Z F31c go_f31c b25m_25 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T10:58:40Z F31c go_f31c b25m_25 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T10:58:42Z F31c go_f31c b25m_25 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_25/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T10:58:42Z F31c go_f31c b25m_25 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T11:04:07Z F31c go_f31c b25m_25 enter_scene rc 0; guard watch: 2026-10-10T11:04:06Z watch end, user process seen: no; hold watch: 2026-10-10T11:04:07Z watch end, user VM seen: no
+2026-10-10T11:04:07Z F31c go_f31c b25m_25 run: VERDICT: mini_giants_garden in 12.0 s - PASS (acceptance <= 90 s)
+2026-10-10T11:04:09Z F31c go_f31c b25m_25 log_b25m_25.txt sha256 e2be1dd539fd306cfa30acd27b470651fce8ef4bc8f25c7e2af63b4b957d917c
+2026-10-10T11:04:09Z F31c go_f31c b25m_25 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:04:12Z F31c go_f31c b25m_25 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_25/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:04:12Z F31c go_f31c b25m_25 lock released (rc 0)
+2026-10-10T11:04:14Z F31c go_f31c b25m_25 display after lock released (item 620 (g)(1)): dispstate ON idle_s 11790 utc 2026-10-10T11:04:13Z; hold: 0 display events, 0 OFF
+2026-10-10T11:04:26Z F31c go_f31c b25m_25 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.277 procs []
+2026-10-10T11:04:27Z F31c go_f31c b25m_25 host_load field written: layer CLEAN
+2026-10-10T11:04:34Z F31c post_f31c b25m_25: read.txt 4c9587089ff4f755, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.96 frames 18063 limit_ms 100 (it, display before / after: dispstate ON idle_s 1123 / dispstate ON idle_s 1179; SERIES tags 25 counted 25 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 25 = 30 of 41; lock 14531 s of 23400; state GOING
+2026-10-10T11:04:43Z F31c API check before b25m_26: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T11:04:48Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_26
+2026-10-10T11:04:48Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_26
+2026-10-10T11:05:03Z F31c go_f31c b25m_26 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T11:05:16Z F31c go_f31c b25m_26 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.452 procs []
+2026-10-10T11:05:17Z F31c go_f31c b25m_26 display before the lock (item 620 (g)(1)): dispstate ON idle_s 11853 utc 2026-10-10T11:05:17Z
+2026-10-10T11:09:03Z F31c go_f31c b25m_26 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T11:09:04Z F31c go_f31c b25m_26 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:09:07Z F31c go_f31c b25m_26 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_26/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:09:08Z F31c go_f31c b25m_26 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T11:14:32Z F31c go_f31c b25m_26 enter_scene rc 0; guard watch: 2026-10-10T11:14:32Z watch end, user process seen: no; hold watch: 2026-10-10T11:14:31Z watch end, user VM seen: no
+2026-10-10T11:14:32Z F31c go_f31c b25m_26 run: VERDICT: mini_giants_garden in 11.3 s - PASS (acceptance <= 90 s)
+2026-10-10T11:14:34Z F31c go_f31c b25m_26 log_b25m_26.txt sha256 449143dd751621491591555fdcef9d9049c7b370664975cf00bf8340ea472927
+2026-10-10T11:14:34Z F31c go_f31c b25m_26 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:14:36Z F31c go_f31c b25m_26 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_26/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:14:37Z F31c go_f31c b25m_26 lock released (rc 0)
+2026-10-10T11:14:38Z F31c go_f31c b25m_26 display after lock released (item 620 (g)(1)): dispstate ON idle_s 12414 utc 2026-10-10T11:14:38Z; hold: 0 display events, 0 OFF
+2026-10-10T11:14:50Z F31c go_f31c b25m_26 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.401 procs []
+2026-10-10T11:14:50Z F31c go_f31c b25m_26 host_load field written: layer CLEAN
+2026-10-10T11:15:02Z F31c post_f31c b25m_26: read.txt 1197cc44251b5290, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.96 frames 18051 limit_ms 100 (it, display before / after: dispstate ON idle_s 1185 / dispstate ON idle_s 1241; SERIES tags 26 counted 26 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 26 = 31 of 41; lock 15090 s of 23400; state GOING
+2026-10-10T11:15:13Z F31c API check before b25m_27: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T11:15:17Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_27
+2026-10-10T11:15:18Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_27
+2026-10-10T11:15:33Z F31c go_f31c b25m_27 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T11:15:45Z F31c go_f31c b25m_27 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.507 procs []
+2026-10-10T11:15:48Z F31c go_f31c b25m_27 display before the lock (item 620 (g)(1)): dispstate ON idle_s 12483 utc 2026-10-10T11:15:47Z
+2026-10-10T11:19:30Z F31c go_f31c b25m_27 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T11:19:31Z F31c go_f31c b25m_27 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:19:33Z F31c go_f31c b25m_27 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_27/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:19:33Z F31c go_f31c b25m_27 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T11:24:58Z F31c go_f31c b25m_27 enter_scene rc 0; guard watch: 2026-10-10T11:24:57Z watch end, user process seen: no; hold watch: 2026-10-10T11:24:58Z watch end, user VM seen: no
+2026-10-10T11:24:58Z F31c go_f31c b25m_27 run: VERDICT: mini_giants_garden in 11.8 s - PASS (acceptance <= 90 s)
+2026-10-10T11:25:00Z F31c go_f31c b25m_27 log_b25m_27.txt sha256 07d054ce4c61064f9325a7c8635384a304ad5e8ef37f186f2f2c5f653396bf99
+2026-10-10T11:25:00Z F31c go_f31c b25m_27 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:25:03Z F31c go_f31c b25m_27 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_27/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:25:03Z F31c go_f31c b25m_27 lock released (rc 0)
+2026-10-10T11:25:05Z F31c go_f31c b25m_27 display after lock released (item 620 (g)(1)): dispstate ON idle_s 13041 utc 2026-10-10T11:25:04Z; hold: 0 display events, 0 OFF
+2026-10-10T11:25:18Z F31c go_f31c b25m_27 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.042 procs []
+2026-10-10T11:25:18Z F31c go_f31c b25m_27 host_load field written: layer CLEAN
+2026-10-10T11:25:32Z F31c post_f31c b25m_27: read.txt 3b5b8d26f215b6da, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18029 limit_ms 100 (it, display before / after: dispstate ON idle_s 1248 / dispstate ON idle_s 1304; SERIES tags 27 counted 27 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 27 = 32 of 41; lock 15645 s of 23400; state GOING
+2026-10-10T11:25:41Z F31c API check before b25m_28: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T11:25:46Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_28
+2026-10-10T11:25:46Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_28
+2026-10-10T11:26:03Z F31c go_f31c b25m_28 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T11:26:16Z F31c go_f31c b25m_28 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.569 procs []
+2026-10-10T11:26:17Z F31c go_f31c b25m_28 display before the lock (item 620 (g)(1)): dispstate ON idle_s 13114 utc 2026-10-10T11:26:17Z
+2026-10-10T11:30:03Z F31c go_f31c b25m_28 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T11:30:03Z F31c go_f31c b25m_28 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:30:05Z F31c go_f31c b25m_28 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_28/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:30:06Z F31c go_f31c b25m_28 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T11:35:30Z F31c go_f31c b25m_28 enter_scene rc 0; guard watch: 2026-10-10T11:35:29Z watch end, user process seen: no; hold watch: 2026-10-10T11:35:30Z watch end, user VM seen: no
+2026-10-10T11:35:31Z F31c go_f31c b25m_28 run: VERDICT: mini_giants_garden in 11.9 s - PASS (acceptance <= 90 s)
+2026-10-10T11:35:32Z F31c go_f31c b25m_28 log_b25m_28.txt sha256 b54b0ec9ab8e444d5e4861ba628c8ac023a6aafa34ad3e6bf2a138cdd3fcaf84
+2026-10-10T11:35:32Z F31c go_f31c b25m_28 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:35:34Z F31c go_f31c b25m_28 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_28/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:35:34Z F31c go_f31c b25m_28 lock released (rc 0)
+2026-10-10T11:35:37Z F31c go_f31c b25m_28 display after lock released (item 620 (g)(1)): dispstate ON idle_s 13673 utc 2026-10-10T11:35:36Z; hold: 0 display events, 0 OFF
+2026-10-10T11:35:49Z F31c go_f31c b25m_28 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.616 procs []
+2026-10-10T11:35:49Z F31c go_f31c b25m_28 host_load field written: layer CLEAN
+2026-10-10T11:36:03Z F31c post_f31c b25m_28: read.txt 4da37ebdf61573da, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18059 limit_ms 100 (it, display before / after: dispstate ON idle_s 1311 / dispstate ON idle_s 1367; SERIES tags 28 counted 28 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 28 = 33 of 41; lock 16201 s of 23400; state GOING
+2026-10-10T11:36:14Z F31c API check before b25m_29: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T11:36:19Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_29
+2026-10-10T11:36:19Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_29
+2026-10-10T11:36:33Z F31c go_f31c b25m_29 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T11:36:46Z F31c go_f31c b25m_29 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.478 procs []
+2026-10-10T11:36:47Z F31c go_f31c b25m_29 display before the lock (item 620 (g)(1)): dispstate ON idle_s 13744 utc 2026-10-10T11:36:47Z
+2026-10-10T11:40:33Z F31c go_f31c b25m_29 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T11:40:33Z F31c go_f31c b25m_29 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:40:36Z F31c go_f31c b25m_29 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_29/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:40:37Z F31c go_f31c b25m_29 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T11:46:04Z F31c go_f31c b25m_29 enter_scene rc 0; guard watch: 2026-10-10T11:46:02Z watch end, user process seen: no; hold watch: 2026-10-10T11:46:04Z watch end, user VM seen: no
+2026-10-10T11:46:04Z F31c go_f31c b25m_29 run: VERDICT: mini_giants_garden in 12.5 s - PASS (acceptance <= 90 s)
+2026-10-10T11:46:06Z F31c go_f31c b25m_29 log_b25m_29.txt sha256 793b35373beda70462e3914af91b4628aa1473ad040256e2736e40579aa5680a
+2026-10-10T11:46:06Z F31c go_f31c b25m_29 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:46:09Z F31c go_f31c b25m_29 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_29/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:46:09Z F31c go_f31c b25m_29 lock released (rc 0)
+2026-10-10T11:46:11Z F31c go_f31c b25m_29 display after lock released (item 620 (g)(1)): dispstate ON idle_s 14307 utc 2026-10-10T11:46:10Z; hold: 0 display events, 0 OFF
+2026-10-10T11:46:24Z F31c go_f31c b25m_29 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.008 procs []
+2026-10-10T11:46:24Z F31c go_f31c b25m_29 host_load field written: layer CLEAN
+2026-10-10T11:46:38Z F31c post_f31c b25m_29: read.txt 1b4fc8a419857dba, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18070 limit_ms 100 (it, display before / after: dispstate ON idle_s 1374 / dispstate ON idle_s 1430; SERIES tags 29 counted 29 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 29 = 34 of 41; lock 16763 s of 23400; state GOING
+2026-10-10T11:46:48Z F31c API check before b25m_30: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T11:46:52Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_30
+2026-10-10T11:46:52Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_30
+2026-10-10T11:47:07Z F31c go_f31c b25m_30 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T11:47:19Z F31c go_f31c b25m_30 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.715 procs []
+2026-10-10T11:47:20Z F31c go_f31c b25m_30 display before the lock (item 620 (g)(1)): dispstate ON idle_s 14377 utc 2026-10-10T11:47:20Z
+2026-10-10T11:51:07Z F31c go_f31c b25m_30 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T11:51:08Z F31c go_f31c b25m_30 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:51:10Z F31c go_f31c b25m_30 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_30/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:51:11Z F31c go_f31c b25m_30 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T11:56:36Z F31c go_f31c b25m_30 enter_scene rc 0; guard watch: 2026-10-10T11:56:35Z watch end, user process seen: no; hold watch: 2026-10-10T11:56:36Z watch end, user VM seen: no
+2026-10-10T11:56:36Z F31c go_f31c b25m_30 run: VERDICT: mini_giants_garden in 11.9 s - PASS (acceptance <= 90 s)
+2026-10-10T11:56:37Z F31c go_f31c b25m_30 log_b25m_30.txt sha256 ab903223e2b926c65b1be0e51fffa710da1ab4988dbe6e70a9124fea6161f691
+2026-10-10T11:56:38Z F31c go_f31c b25m_30 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T11:56:40Z F31c go_f31c b25m_30 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_30/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T11:56:41Z F31c go_f31c b25m_30 lock released (rc 0)
+2026-10-10T11:56:42Z F31c go_f31c b25m_30 display after lock released (item 620 (g)(1)): dispstate ON idle_s 14939 utc 2026-10-10T11:56:42Z; hold: 0 display events, 0 OFF
+2026-10-10T11:56:54Z F31c go_f31c b25m_30 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.374 procs []
+2026-10-10T11:56:54Z F31c go_f31c b25m_30 host_load field written: layer CLEAN
+2026-10-10T11:57:08Z F31c post_f31c b25m_30: read.txt 43bdcbbd3c7b467a, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18059 limit_ms 100 (it, display before / after: dispstate ON idle_s 1437 / dispstate ON idle_s 1493; SERIES tags 30 counted 30 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 30 = 35 of 41; lock 17323 s of 23400; state GOING
+2026-10-10T11:57:20Z F31c API check before b25m_31: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T11:57:25Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_31
+2026-10-10T11:57:25Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_31
+2026-10-10T11:57:39Z F31c go_f31c b25m_31 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T11:57:52Z F31c go_f31c b25m_31 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.507 procs []
+2026-10-10T11:57:53Z F31c go_f31c b25m_31 display before the lock (item 620 (g)(1)): dispstate ON idle_s 15009 utc 2026-10-10T11:57:53Z
+2026-10-10T12:01:33Z F31c go_f31c b25m_31 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T12:01:33Z F31c go_f31c b25m_31 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:01:35Z F31c go_f31c b25m_31 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_31/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:01:36Z F31c go_f31c b25m_31 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T12:07:04Z F31c go_f31c b25m_31 enter_scene rc 0; guard watch: 2026-10-10T12:07:03Z watch end, user process seen: no; hold watch: 2026-10-10T12:07:02Z watch end, user VM seen: no
+2026-10-10T12:07:04Z F31c go_f31c b25m_31 run: VERDICT: mini_giants_garden in 14.6 s - PASS (acceptance <= 90 s)
+2026-10-10T12:07:05Z F31c go_f31c b25m_31 log_b25m_31.txt sha256 23bd7f81a445f3fd2982d7df4e56f9e6ebdd06bf2170c17b79c53f57b73f13aa
+2026-10-10T12:07:06Z F31c go_f31c b25m_31 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:07:08Z F31c go_f31c b25m_31 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_31/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:07:09Z F31c go_f31c b25m_31 lock released (rc 0)
+2026-10-10T12:07:10Z F31c go_f31c b25m_31 display after lock released (item 620 (g)(1)): dispstate ON idle_s 15566 utc 2026-10-10T12:07:10Z; hold: 0 display events, 0 OFF
+2026-10-10T12:07:22Z F31c go_f31c b25m_31 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.429 procs []
+2026-10-10T12:07:23Z F31c go_f31c b25m_31 host_load field written: layer CLEAN
+2026-10-10T12:07:36Z F31c post_f31c b25m_31: read.txt 81b846a3a3e1a7f3, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18057 limit_ms 100 (it, display before / after: dispstate ON idle_s 1500 / dispstate ON idle_s 1556; SERIES tags 31 counted 31 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 31 = 36 of 41; lock 17879 s of 23400; state GOING
+2026-10-10T12:07:43Z F31c API check before b25m_32: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T12:07:47Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_32
+2026-10-10T12:07:47Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_32
+2026-10-10T12:08:01Z F31c go_f31c b25m_32 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T12:08:13Z F31c go_f31c b25m_32 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.760 procs []
+2026-10-10T12:08:14Z F31c go_f31c b25m_32 display before the lock (item 620 (g)(1)): dispstate ON idle_s 15631 utc 2026-10-10T12:08:14Z
+2026-10-10T12:12:03Z F31c go_f31c b25m_32 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T12:12:03Z F31c go_f31c b25m_32 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:12:05Z F31c go_f31c b25m_32 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_32/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:12:06Z F31c go_f31c b25m_32 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T12:17:31Z F31c go_f31c b25m_32 enter_scene rc 0; guard watch: 2026-10-10T12:17:29Z watch end, user process seen: no; hold watch: 2026-10-10T12:17:30Z watch end, user VM seen: no
+2026-10-10T12:17:31Z F31c go_f31c b25m_32 run: VERDICT: mini_giants_garden in 11.3 s - PASS (acceptance <= 90 s)
+2026-10-10T12:17:32Z F31c go_f31c b25m_32 log_b25m_32.txt sha256 94a1e61e35057ed8cab538ff22538adec9427b59d65c2c4a19e2faf625dd9d59
+2026-10-10T12:17:32Z F31c go_f31c b25m_32 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:17:34Z F31c go_f31c b25m_32 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_32/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:17:35Z F31c go_f31c b25m_32 lock released (rc 0)
+2026-10-10T12:17:37Z F31c go_f31c b25m_32 display after lock released (item 620 (g)(1)): dispstate ON idle_s 16193 utc 2026-10-10T12:17:36Z; hold: 0 display events, 0 OFF
+2026-10-10T12:17:49Z F31c go_f31c b25m_32 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.421 procs []
+2026-10-10T12:17:49Z F31c go_f31c b25m_32 host_load field written: layer CLEAN
+2026-10-10T12:17:57Z F31c post_f31c b25m_32: read.txt 8be0f9db78a6ce7c, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.96 frames 18068 limit_ms 100 (it, display before / after: dispstate ON idle_s 1563 / dispstate ON idle_s 1619; SERIES tags 32 counted 32 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 32 = 37 of 41; lock 18439 s of 23400; state GOING
+2026-10-10T12:18:04Z F31c API check before b25m_33: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T12:18:08Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_33
+2026-10-10T12:18:08Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_33
+2026-10-10T12:18:22Z F31c go_f31c b25m_33 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T12:18:34Z F31c go_f31c b25m_33 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.400 procs []
+2026-10-10T12:18:35Z F31c go_f31c b25m_33 display before the lock (item 620 (g)(1)): dispstate ON idle_s 16252 utc 2026-10-10T12:18:35Z
+2026-10-10T12:22:23Z F31c go_f31c b25m_33 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T12:22:23Z F31c go_f31c b25m_33 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:22:25Z F31c go_f31c b25m_33 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_33/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:22:25Z F31c go_f31c b25m_33 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T12:27:50Z F31c go_f31c b25m_33 enter_scene rc 0; guard watch: 2026-10-10T12:27:49Z watch end, user process seen: no; hold watch: 2026-10-10T12:27:50Z watch end, user VM seen: no
+2026-10-10T12:27:51Z F31c go_f31c b25m_33 run: VERDICT: mini_giants_garden in 11.9 s - PASS (acceptance <= 90 s)
+2026-10-10T12:27:52Z F31c go_f31c b25m_33 log_b25m_33.txt sha256 6b9dbed9155b7ebf6553085f543eda874d22096ae07e6fbeb38ecd57f4c235d6
+2026-10-10T12:27:52Z F31c go_f31c b25m_33 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:27:54Z F31c go_f31c b25m_33 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_33/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:27:54Z F31c go_f31c b25m_33 lock released (rc 0)
+2026-10-10T12:27:56Z F31c go_f31c b25m_33 display after lock released (item 620 (g)(1)): dispstate ON idle_s 16812 utc 2026-10-10T12:27:55Z; hold: 0 display events, 0 OFF
+2026-10-10T12:28:08Z F31c go_f31c b25m_33 host load after the tag (item 632 (v)(2)): hostload: over05 1 max 0.610 total 1.139 procs [('<app>', 13652, 0.61)]
+2026-10-10T12:28:08Z F31c go_f31c b25m_33 host_load field written: layer HOST_LOAD
+2026-10-10T12:28:18Z F31c post_f31c b25m_33: read.txt 2b79d0fa5f7062ec, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18068 limit_ms 100 (it, display before / after: dispstate ON idle_s 1625 / dispstate ON idle_s 1681; SERIES tags 33 counted 33 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 33 = 38 of 41; lock 18997 s of 23400; state GOING
+2026-10-10T12:28:25Z F31c API check before b25m_34: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T12:28:29Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_34
+2026-10-10T12:28:29Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_34
+2026-10-10T12:28:43Z F31c go_f31c b25m_34 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T12:28:55Z F31c go_f31c b25m_34 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.306 procs []
+2026-10-10T12:28:56Z F31c go_f31c b25m_34 display before the lock (item 620 (g)(1)): dispstate ON idle_s 16873 utc 2026-10-10T12:28:56Z
+2026-10-10T12:32:42Z F31c go_f31c b25m_34 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T12:32:43Z F31c go_f31c b25m_34 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:32:45Z F31c go_f31c b25m_34 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_34/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:32:45Z F31c go_f31c b25m_34 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T12:38:09Z F31c go_f31c b25m_34 enter_scene rc 0; guard watch: 2026-10-10T12:38:08Z watch end, user process seen: no; hold watch: 2026-10-10T12:38:08Z watch end, user VM seen: no
+2026-10-10T12:38:09Z F31c go_f31c b25m_34 run: VERDICT: mini_giants_garden in 11.4 s - PASS (acceptance <= 90 s)
+2026-10-10T12:38:11Z F31c go_f31c b25m_34 log_b25m_34.txt sha256 abb0183f6e269863a1722b5c18794c59c994f0d90b868589f46b6822548783b7
+2026-10-10T12:38:11Z F31c go_f31c b25m_34 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:38:14Z F31c go_f31c b25m_34 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_34/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:38:14Z F31c go_f31c b25m_34 lock released (rc 0)
+2026-10-10T12:38:16Z F31c go_f31c b25m_34 display after lock released (item 620 (g)(1)): dispstate ON idle_s 17432 utc 2026-10-10T12:38:15Z; hold: 0 display events, 0 OFF
+2026-10-10T12:38:28Z F31c go_f31c b25m_34 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.334 procs []
+2026-10-10T12:38:28Z F31c go_f31c b25m_34 host_load field written: layer CLEAN
+2026-10-10T12:38:39Z F31c post_f31c b25m_34: read.txt f45451c07cde84a8, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18030 limit_ms 100 (it, display before / after: dispstate ON idle_s 1687 / dispstate ON idle_s 1743; SERIES tags 34 counted 34 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 34 = 39 of 41; lock 19555 s of 23400; state GOING
+2026-10-10T12:38:46Z F31c API check before b25m_35: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T12:38:50Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_35
+2026-10-10T12:38:50Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_35
+2026-10-10T12:39:04Z F31c go_f31c b25m_35 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T12:39:16Z F31c go_f31c b25m_35 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.509 procs []
+2026-10-10T12:39:17Z F31c go_f31c b25m_35 display before the lock (item 620 (g)(1)): dispstate ON idle_s 17494 utc 2026-10-10T12:39:17Z
+2026-10-10T12:43:05Z F31c go_f31c b25m_35 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T12:43:06Z F31c go_f31c b25m_35 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:43:08Z F31c go_f31c b25m_35 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_35/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:43:08Z F31c go_f31c b25m_35 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T12:48:32Z F31c go_f31c b25m_35 enter_scene rc 0; guard watch: 2026-10-10T12:48:31Z watch end, user process seen: no; hold watch: 2026-10-10T12:48:31Z watch end, user VM seen: no
+2026-10-10T12:48:32Z F31c go_f31c b25m_35 run: VERDICT: mini_giants_garden in 10.8 s - PASS (acceptance <= 90 s)
+2026-10-10T12:48:33Z F31c go_f31c b25m_35 log_b25m_35.txt sha256 2aa6f11b82992e13deb482e88042c4452aeab65c543ea1fc4b66478aff6c37c9
+2026-10-10T12:48:34Z F31c go_f31c b25m_35 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:48:36Z F31c go_f31c b25m_35 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_35/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:48:36Z F31c go_f31c b25m_35 lock released (rc 0)
+2026-10-10T12:48:38Z F31c go_f31c b25m_35 display after lock released (item 620 (g)(1)): dispstate ON idle_s 18054 utc 2026-10-10T12:48:38Z; hold: 0 display events, 0 OFF
+2026-10-10T12:48:50Z F31c go_f31c b25m_35 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.396 procs []
+2026-10-10T12:48:50Z F31c go_f31c b25m_35 host_load field written: layer CLEAN
+2026-10-10T12:48:59Z F31c post_f31c b25m_35: read.txt 4157973a68658492, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18042 limit_ms 100 (it, display before / after: dispstate ON idle_s 1749 / dispstate ON idle_s 1805; SERIES tags 35 counted 35 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 35 = 40 of 41; lock 20114 s of 23400; state GOING
+2026-10-10T12:49:05Z F31c API check before b25m_36: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T12:49:10Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag b25m_36
+2026-10-10T12:49:10Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh b25m_36
+2026-10-10T12:49:24Z F31c go_f31c b25m_36 run check (item 587 (g)): RUN ALIVE 0149ea3a status in_progress
+2026-10-10T12:49:36Z F31c go_f31c b25m_36 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.465 procs []
+2026-10-10T12:49:37Z F31c go_f31c b25m_36 display before the lock (item 620 (g)(1)): dispstate ON idle_s 18114 utc 2026-10-10T12:49:37Z
+2026-10-10T12:53:24Z F31c go_f31c b25m_36 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T12:53:25Z F31c go_f31c b25m_36 installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:53:27Z F31c go_f31c b25m_36 manifest before: manifest C:/kyty/f287/f31c/runs/b25m_36/manifest_before.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the state after the previous call: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:53:27Z F31c go_f31c b25m_36 enter_scene start (level mini_giants_garden, entry-at-level, timeout 60, hold 300, harness form, no video, KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T12:58:51Z F31c go_f31c b25m_36 enter_scene rc 0; guard watch: 2026-10-10T12:58:50Z watch end, user process seen: no; hold watch: 2026-10-10T12:58:49Z watch end, user VM seen: no
+2026-10-10T12:58:51Z F31c go_f31c b25m_36 run: VERDICT: mini_giants_garden in 11.4 s - PASS (acceptance <= 90 s)
+2026-10-10T12:58:52Z F31c go_f31c b25m_36 log_b25m_36.txt sha256 3e23d042e1bc0952e294d6d91479a8d589fad8c4794a916fcc5d18ccce3eee0e
+2026-10-10T12:58:53Z F31c go_f31c b25m_36 installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T12:58:55Z F31c go_f31c b25m_36 manifest after: manifest C:/kyty/f287/f31c/runs/b25m_36/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; before vs after (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T12:58:55Z F31c go_f31c b25m_36 lock released (rc 0)
+2026-10-10T12:58:57Z F31c go_f31c b25m_36 display after lock released (item 620 (g)(1)): dispstate ON idle_s 18673 utc 2026-10-10T12:58:56Z; hold: 0 display events, 0 OFF
+2026-10-10T12:59:09Z F31c go_f31c b25m_36 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.394 procs []
+2026-10-10T12:59:09Z F31c go_f31c b25m_36 host_load field written: layer CLEAN
+2026-10-10T12:59:20Z F31c post_f31c b25m_36: read.txt 70bd757156b165d1, CLASS COUNTED, reasons: , tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.95 frames 18052 limit_ms 100 (it, display before / after: dispstate ON idle_s 1811 / dispstate ON idle_s 1867; SERIES tags 36 counted 36 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 36 = 41 of 41; lock 20672 s of 23400; state COMPLETE
+2026-10-10T12:59:21Z F31c post_f31c b25m_36: series state is not GOING - SERIES_STOP (item 667 (e)): SERIES tags 36 counted 36 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 36 = 41 of 41; lock 20672 s of 23400; state COMPLETE
+2026-10-10T12:59:26Z F31c API check before return: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-10T12:59:26Z F31c launch_f31c form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag return
+2026-10-10T12:59:26Z F31c launch_f31c detached call: bash C:/kyty/f287/f31c/go_f31c.sh return
+2026-10-10T13:03:12Z F31c go_f31c return lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR
+2026-10-10T13:03:13Z F31c go_f31c return installed binary inside the lock before: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T13:03:15Z F31c go_f31c return end of the series against the base (row): manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf;
+2026-10-10T13:03:21Z F31c go_f31c return manifest after the return: manifest C:/kyty/f287/f31c/runs/return/manifest_after.tsv files 3839 bytes 871948876 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf; against the base: manifest cmp EQUAL files 3839 listsha 999e3fbdb49993538176ceb50a5d525d1e4ae024da711c6bc81c226c7d4dabcf
+2026-10-10T13:03:21Z F31c go_f31c return installed binary after the series: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T13:03:22Z F31c go_f31c return lock released (return ok)

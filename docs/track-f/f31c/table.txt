@@ -1,0 +1,40 @@
+| tag | binary | hold s | frames | sum dt s | max dt us | frames >= 1 s | detector | class | layer | reasons |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b25m_01 | ea51ae80 | 300.2 | 17988 | 300.2 | 158040 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_02 | ea51ae80 | 300.2 | 18000 | 300.3 | 150642 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_03 | ea51ae80 | 300.2 | 17994 | 300.4 | 159219 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_04 | ea51ae80 | 300.2 | 18013 | 300.6 | 151736 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_05 | ea51ae80 | 300.2 | 18025 | 300.7 | 166259 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_06 | ea51ae80 | 300.2 | 16731 | 300.6 | 165376 | 0 | 0/0/0 | COUNTED | HOST_LOAD | - |
+| b25m_07 | ea51ae80 | 300.3 | 18030 | 300.7 | 149988 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_08 | ea51ae80 | 300.2 | 18005 | 300.3 | 149450 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_09 | ea51ae80 | 300.2 | 18017 | 300.5 | 148433 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_10 | ea51ae80 | 300.2 | 18019 | 300.5 | 149179 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_11 | ea51ae80 | 300.2 | 18006 | 300.3 | 148138 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_12 | ea51ae80 | 300.2 | 18004 | 300.3 | 148403 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_13 | ea51ae80 | 300.2 | 18014 | 300.5 | 148170 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_14 | ea51ae80 | 300.2 | 18026 | 300.7 | 150404 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_15 | ea51ae80 | 300.2 | 18005 | 300.3 | 148139 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_16 | ea51ae80 | 300.2 | 18024 | 300.6 | 132889 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_17 | ea51ae80 | 300.2 | 18010 | 300.4 | 149755 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_18 | ea51ae80 | 300.2 | 18004 | 300.3 | 148345 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_19 | ea51ae80 | 300.2 | 18022 | 300.6 | 149015 | 0 | 0/0/0 | COUNTED | HOST_LOAD | - |
+| b25m_20 | ea51ae80 | 300.2 | 18018 | 300.5 | 149188 | 0 | 0/0/0 | COUNTED | HOST_LOAD | - |
+| b25m_21 | ea51ae80 | 300.2 | 18021 | 300.6 | 146368 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_22 | ea51ae80 | 300.2 | 18016 | 300.5 | 150699 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_23 | ea51ae80 | 300.2 | 18011 | 300.4 | 150719 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_24 | ea51ae80 | 300.2 | 18014 | 300.5 | 148682 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_25 | ea51ae80 | 300.2 | 18022 | 300.6 | 150531 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_26 | ea51ae80 | 300.2 | 18009 | 300.4 | 145751 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_27 | ea51ae80 | 300.0 | 17988 | 300.1 | 148684 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_28 | ea51ae80 | 300.2 | 18016 | 300.5 | 149813 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_29 | ea51ae80 | 300.3 | 18028 | 300.7 | 149290 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_30 | ea51ae80 | 300.2 | 18018 | 300.6 | 150156 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_31 | ea51ae80 | 300.2 | 18014 | 300.5 | 148537 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_32 | ea51ae80 | 300.2 | 18028 | 300.7 | 149023 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_33 | ea51ae80 | 300.2 | 18027 | 300.7 | 148446 | 0 | 0/0/0 | COUNTED | HOST_LOAD | - |
+| b25m_34 | ea51ae80 | 300.0 | 17991 | 300.1 | 149373 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_35 | ea51ae80 | 300.2 | 18002 | 300.3 | 150298 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+| b25m_36 | ea51ae80 | 300.2 | 18011 | 300.4 | 149066 | 0 | 0/0/0 | COUNTED | CLEAN | - |
+SERIES tags 36 counted 36 interference 0 detector 0 harness 0 tempo 0; N = 5 inventory + 36 = 41 of 41; lock 20907 s of 23400; state COMPLETE
+LAYERS of the counted tags (row): CLEAN 32 HOST_LOAD 4 UNKNOWN 0

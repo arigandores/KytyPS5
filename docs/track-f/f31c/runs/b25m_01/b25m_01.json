@@ -1,0 +1,354 @@
+{
+  "tag": "b25m_01",
+  "binary_sha256": "ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce",
+  "started": "2026-10-09T20:05:38",
+  "launched": "2026-10-09T20:00:17",
+  "finished": "2026-10-09T20:05:38",
+  "cmdline": [
+    "C:\\kyty\\KytyPS5\\ps5 em\\kyty_emulator.exe",
+    "--screen-width",
+    "1280",
+    "--screen-height",
+    "720",
+    "--user-name",
+    "Player",
+    "--user-id",
+    "1000",
+    "--present-mode",
+    "Fifo",
+    "--vblank-frequency",
+    "60",
+    "--console-language",
+    "1",
+    "--vulkan-validation",
+    "false",
+    "--shader-validation",
+    "false",
+    "--shader-optimization-type",
+    "Size",
+    "--shader-log-direction",
+    "File",
+    "--shader-log-folder",
+    "_Shaders",
+    "--command-buffer-dump",
+    "false",
+    "--command-buffer-dump-folder",
+    "_Buffers",
+    "--printf-direction",
+    "File",
+    "--printf-output-file",
+    "_kyty.txt",
+    "--spirv-debug-printf",
+    "false",
+    "--game",
+    "C:\\kyty\\KytyPS5\\ps5 em\\games\\PPSA21564-app"
+  ],
+  "env": {
+    "KYTY_FRAME_TRACE": "lite",
+    "KYTY_GPU_HANG_ABORT_S": "8",
+    "KYTY_GATE_FILE": "C:\\kyty\\f287\\f31c\\gates.req",
+    "KYTY_SAMPLE_GATE": "C:\\kyty\\f287\\f31c\\sample.req",
+    "KYTY_QUEUE_TRACE": "1",
+    "KYTY_GUEST_ARGS": "-lvl mini_giants_garden",
+    "KYTY_GPU_CLOCK_PIN": "1",
+    "KYTY_GPU_MARKERS": "0"
+  },
+  "schedule": "",
+  "arms": [],
+  "phases": [],
+  "notes": "KYTY_GPU_TIME unset: the record thread stays live (PacketsWanted); guest command line: -lvl mini_giants_garden; stable = 90 consecutive FrameTrace lines with draws >= 500; ran the already installed binary (--no-install)",
+  "pre_run": {
+    "gpu_util_median": 1.0,
+    "gpu_power_median": 26.7,
+    "gpu_memory_used_mib": 2446,
+    "gpu_sm_mhz_median": 1845.0,
+    "gpu_util_samples": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "gpu_apps": [
+      {
+        "pid": 14696,
+        "name": "<app>"
+      },
+      {
+        "pid": 8048,
+        "name": "<app>"
+      },
+      {
+        "pid": 15168,
+        "name": "<app>"
+      },
+      {
+        "pid": 15264,
+        "name": "<app>"
+      },
+      {
+        "pid": 21572,
+        "name": "<app>"
+      },
+      {
+        "pid": 27352,
+        "name": "<app>"
+      },
+      {
+        "pid": 29484,
+        "name": "<app>"
+      },
+      {
+        "pid": 36324,
+        "name": "<app>"
+      },
+      {
+        "pid": 40112,
+        "name": "<app>"
+      },
+      {
+        "pid": 33516,
+        "name": "<app>"
+      },
+      {
+        "pid": 42076,
+        "name": "<app>"
+      },
+      {
+        "pid": 42896,
+        "name": "<app>"
+      },
+      {
+        "pid": 1972,
+        "name": "<app>"
+      },
+      {
+        "pid": 7924,
+        "name": "<app>"
+      },
+      {
+        "pid": 48844,
+        "name": "<app>"
+      },
+      {
+        "pid": 6068,
+        "name": "<app>"
+      },
+      {
+        "pid": 39708,
+        "name": "<app>"
+      },
+      {
+        "pid": 17224,
+        "name": "<app>"
+      },
+      {
+        "pid": 9700,
+        "name": "<app>"
+      },
+      {
+        "pid": 4920,
+        "name": "<app>"
+      }
+    ],
+    "host": {
+      "available": true,
+      "process_count": 411,
+      "top": [
+        {
+          "name": "<app>",
+          "pid": 37632,
+          "cpu_s": 35145.2,
+          "ws_mib": 1871.5
+        },
+        {
+          "name": "<app>",
+          "pid": 42076,
+          "cpu_s": 12470.3,
+          "ws_mib": 1206.0
+        },
+        {
+          "name": "<app>",
+          "pid": 32708,
+          "cpu_s": 5814.6,
+          "ws_mib": 82.0
+        },
+        {
+          "name": "<app>",
+          "pid": 8048,
+          "cpu_s": 5630.6,
+          "ws_mib": 1098.1
+        },
+        {
+          "name": "<app>",
+          "pid": 31796,
+          "cpu_s": 3073.9,
+          "ws_mib": 131.8
+        },
+        {
+          "name": "<app>",
+          "pid": 9700,
+          "cpu_s": 2886.5,
+          "ws_mib": 476.4
+        },
+        {
+          "name": "<app>",
+          "pid": 46296,
+          "cpu_s": 2569.1,
+          "ws_mib": 32.8
+        },
+        {
+          "name": "<app>",
+          "pid": 13652,
+          "cpu_s": 2464.7,
+          "ws_mib": 223.3
+        },
+        {
+          "name": "<app>",
+          "pid": 48844,
+          "cpu_s": 1870.2,
+          "ws_mib": 1491.7
+        },
+        {
+          "name": "<app>",
+          "pid": 39708,
+          "cpu_s": 1228.5,
+          "ws_mib": 1006.9
+        },
+        {
+          "name": "<app>",
+          "pid": 40048,
+          "cpu_s": 1209.0,
+          "ws_mib": 32.8
+        },
+        {
+          "name": "<app>",
+          "pid": 1972,
+          "cpu_s": 1183.2,
+          "ws_mib": 703.0
+        },
+        {
+          "name": "<app>",
+          "pid": 41888,
+          "cpu_s": 1010.3,
+          "ws_mib": 523.6
+        },
+        {
+          "name": "<app>",
+          "pid": 27092,
+          "cpu_s": 825.8,
+          "ws_mib": 545.1
+        },
+        {
+          "name": "<app>",
+          "pid": 45748,
+          "cpu_s": 814.9,
+          "ws_mib": 42.8
+        },
+        {
+          "name": "<app>",
+          "pid": 36756,
+          "cpu_s": 729.4,
+          "ws_mib": 1656.8
+        },
+        {
+          "name": "<app>",
+          "pid": 16272,
+          "cpu_s": 598.2,
+          "ws_mib": 356.4
+        },
+        {
+          "name": "<app>",
+          "pid": 19468,
+          "cpu_s": 580.6,
+          "ws_mib": 32.8
+        },
+        {
+          "name": "<app>",
+          "pid": 40112,
+          "cpu_s": 484.4,
+          "ws_mib": 417.3
+        },
+        {
+          "name": "<app>",
+          "pid": 40224,
+          "cpu_s": 452.7,
+          "ws_mib": 477.5
+        }
+      ],
+      "top_names": [
+        "<app>"
+      ],
+      "sampled_at": "2026-10-09T20:00:17"
+    },
+    "sampled_at": "2026-10-09T20:00:17"
+  },
+  "hold_gpu": {
+    "available": true,
+    "source": "gpuclk csv (nvidia-smi -lms 500)",
+    "hold_from": "2026/10/09 20:00:32.402",
+    "hold_to": "2026/10/09 20:05:32.612",
+    "rows": 590,
+    "util_rows": 590,
+    "gpu_util_median": 58.0,
+    "gpu_power_median": 112.1,
+    "gpu_util_max": 89.0,
+    "note": "a row, not a guard"
+  },
+  "prereg": {
+    "path": "C:\\kyty\\f287\\f31c\\pred\\f31c_seal.md",
+    "bytes": 21619,
+    "sha256": "80917e4e7d70a142db33d5483388ad6675869519e29c6d2efcbd20808ee9bfd9",
+    "mtime": "2026-10-09T19:51:55",
+    "ctime": "2026-10-09T19:51:48",
+    "mtime_ctime_delta_s": 7.379646,
+    "read_at": "2026-10-09T20:00:13"
+  },
+  "attempts": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 20880,
+      "level": "mini_giants_garden",
+      "guest_args": "-lvl mini_giants_garden",
+      "document_s": 11.9,
+      "started_s": 15.0,
+      "stable_s": 15.0,
+      "stable_frame": null,
+      "outcome": "ok",
+      "detail": null,
+      "hold_from": "2026/10/09 20:00:32.402",
+      "hold_to": "2026/10/09 20:05:32.612",
+      "ft_total": 18329,
+      "ft_tail": 301,
+      "ft_tail_span_s": 5.022,
+      "ft_window_s": 5.0,
+      "hold_exit": null,
+      "hold_s": 300.2,
+      "close_posted": 5,
+      "close_rc": 0,
+      "close_killed": false,
+      "close_s": 4.0,
+      "close_wait_s": 40,
+      "pipeline_cache_off": false
+    }
+  ],
+  "gates": "",
+  "schedule_period": 0,
+  "schedule_start": 0,
+  "guest_args": "-lvl mini_giants_garden",
+  "hold_s": 300,
+  "ft_total": 18329,
+  "ft_tail": 301,
+  "ft_tail_span_s": 5.022,
+  "ft_window_s": 5.0,
+  "cpuclk_requested": true,
+  "gpuclk": "C:\\kyty\\f287\\f31c\\gpuclk_b25m_01.csv",
+  "cpuclk": null,
+  "host_load": {
+    "layer": "CLEAN",
+    "before": "hostload: over05 0 max 0.000 total 1.867 procs []",
+    "after": "hostload: over05 0 max 0.000 total 1.035 procs []",
+    "item": "ROADMAP s122 item 632 (v)(2) form, row"
+  }
+}

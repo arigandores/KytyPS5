@@ -1,0 +1,6 @@
+watch: start 2026-10-10T18:58:12Z child 17164 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+t2 memory_tracker_tests fs12 rc=0 lines_with_failed=0 summary=['MemoryTrackerTests: all cases passed'] fix=['FixB13: mode=1'] | base rc=0 lines_with_failed=0 summary=['MemoryTrackerTests: all cases passed'] fix=['FixB13: mode=1'] -> ok
+t3 shader_cfg_tests fs12 rc=0 tests=133 failed_lines=0 lines_with_failed=5 | base rc=0 tests=133 failed_lines=0 lines_with_failed=5; multiset equal True -> ok
+t4 SPIR-V fs12 360 base 360 differing 0 aggregate b1376644 / b1376644 -> ok
+ALL OK
+rc=0 end 2026-10-10T18:58:13Z

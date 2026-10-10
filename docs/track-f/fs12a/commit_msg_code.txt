@@ -1,0 +1,13 @@
+track F link FS12a (HPP-750): KYTY_FIX_F21 default 0 -> 1 (ROADMAP s122 item 683(g)(1))
+
+Subsystems::InitFixF21 reads KYTY_FIX_F21 in the form of FS11a cb022252 / FS4a 17adaf80: unset or "" = ON,
+0/false/off/no = OFF, any other value as EnvValueOn; still one reading per process, on the main thread in
+Emulator::Run before Init (before any host or guest thread). The line "FixF21: mode=<0|1>" (LogFixF21), the code of
+227e1b36 and the stand KYTY_TEST_EXITFATAL (e5979953, 5237fdff) are unchanged; only the reading and two header comments
+change. src/graphics/shader/** not touched - translation signature unchanged; no gates or knobs added.
+
+Shipping binary FS12: clean worktree of FS11 ee9632be + cherry-pick of 227e1b36 (code F33c), e5979953, 5237fdff (stand
+editions 2-3, off when unset) + this commit; the stand edition 1 5f48cc3e and diagnostics outside the base are not in
+it. Not installed; no game run (WIP until FS12c).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

@@ -1,0 +1,7 @@
+ok   cbfe8375:src/common/subsystems.cpp:71
+ok   730ed40a:src/common/subsystems.cpp:74
+ok   730ed40a:src/common/subsystems.cpp:80
+ok   730ed40a:src/emulator.cpp:530
+ok   730ed40a:src/common/subsystems.cpp:129
+REFS 5 ALL OK
+negctl (+1 shift) FAILED

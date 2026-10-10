@@ -1,0 +1,10 @@
+--- cherry-pick e5979953
+Auto-merging src/emulator.cpp
+[detached HEAD 25861288] track F link F33c (HPP-744): stand KYTY_TEST_EXITFATAL edition 2 (off when unset) - observer at the entry of EmergencyShutdownActive; arms P2, R2, G, C, N, H (+ reference arm HG)
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Sat Oct 10 17:49:43 2026 +0200
+ 1 file changed, 291 insertions(+), 1 deletion(-)
+258612886ef51c20a688764db5dd2398ae23463e 17c71ea651367806201972573fe2b069425bb796 track F link F33c (HPP-744): stand KYTY_TEST_EXITFATAL edition 2 (off when uns
+--- git status --short (0 = clean)
+0
+CP OK

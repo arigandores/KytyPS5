@@ -1,0 +1,14 @@
+runs C:/kyty/f287/fs12a/runs_neg
+default P2 200 seeds         NO   n 20, seeds 1..200 exactly: False
+default P2 200               NO   control 20; second 18 crash 0 hang 0 cut 6 expired 0; rc {0: 17, 321: 3}
+default P2 200 mode          NO   cfg_fix=1 in 0 of 20; 'FixF21: mode=1' in 0 of 20
+default P2 200 leftover      YES  leftover copies 0
+default C 50 seeds           NO   n 10, seeds 1..50 exactly: False
+default C 50                 NO   walks 1, rc 321, reenter>=1, nested 0, classes 0, done_seen 0 - fails {'walks': 10, 'reenter': 10}; done_seen 0 in 10 of 10; reenter min 0; second 0 crash 0 hang 0 cut 0 expired 0; dur max 0.169
+default C 50 mode            NO   cfg_fix=1 in 0 of 10; 'FixF21: mode=1' in 0 of 10
+default C 50 leftover        YES  leftover copies 0
+default CN 50                NO   no trials
+default H 20                 NO   no trials
+default HG 20                NO   no trials
+=0 P2 200                    NO   no trials
+MEMBERS NOT ALL

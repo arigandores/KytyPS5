@@ -1,0 +1,16 @@
+KYTY_FIX_F21 1
+FixF21: mode= 1
+FixF21: wait_expired 1
+KYTY_TEST_EXITFATAL 3
+ExitFatal: config 2
+nested_fatal 1
+KYTY_FIX_B12 1
+FixB12: mode= 1
+KYTY_FIX_B13 1
+KYTY_FIX_B36 1
+LogAsync: mode= 2
+KYTY_DIAG_B32 0
+rts_bad_b 0
+9177b4267de1fb8bac7d1113afd8733210addfac 1
+KytyPS5-2026-09-15-6a2987a-1914-g730ed40a 2
+730ed40 3

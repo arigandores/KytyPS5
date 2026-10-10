@@ -1,0 +1,28 @@
+runs C:/kyty/f287/fs12a/runs
+default P2 200 seeds         YES  n 200, seeds 1..200 exactly: True
+default P2 200               YES  control 200; second 0 crash 0 hang 0 cut 0 expired 0; rc {0: 193, 321: 7}
+default P2 200 mode          YES  cfg_fix=1 in 200 of 200; 'FixF21: mode=1' in 200 of 200
+default P2 200 leftover      YES  leftover copies 0
+default C 50 seeds           YES  n 50, seeds 1..50 exactly: True
+default C 50                 YES  walks 1, rc 321, reenter>=1, nested 0, classes 0, done_seen 0 - fails 0; done_seen 0 in 50 of 50; reenter min 1; second 0 crash 0 hang 0 cut 0 expired 0; dur max 0.441
+default C 50 mode            YES  cfg_fix=1 in 50 of 50; 'FixF21: mode=1' in 50 of 50
+default C 50 leftover        YES  leftover copies 0
+default CN 50 seeds          YES  n 50, seeds 1..50 exactly: True
+default CN 50                YES  walks 1, nested 0, reenter>=2, expired 0, expired_seen 0, rc 321, hang 0, crash 0, dur<6 s - fails 0; reenter min 2; dur 0.149..0.450; rc {321: 50}; cut 50 second 0 (ref)
+default CN stand nested_fatal YES  nested_fatal = 1 in 50 of 50 (stand control)
+default CN 50 mode           YES  cfg_fix=1 in 50 of 50; 'FixF21: mode=1' in 50 of 50
+default CN 50 leftover       YES  leftover copies 0
+default H 20 seeds           YES  n 20, seeds 1..20 exactly: True
+default H 20                 YES  order 1, expired>=1, rc in {0,321}, crash 0, hang 0, second 0 - fails 0; rc {0: 11, 321: 9}; dt_s 15.006..15.027 (ref); cut 0 (ref)
+default H 20 mode            YES  cfg_fix=1 in 20 of 20; 'FixF21: mode=1' in 20 of 20
+default H 20 leftover        YES  leftover copies 0
+default HG 20 seeds          YES  n 20, seeds 1..20 exactly: True
+default HG 20                YES  expired>=1, rc 0, hang 0, second 0, dt in [12.0; 13.5] - fails 0; rc {0: 20}; dt_s 12.004..12.018; cut 20 (ref); control 20 (ref)
+default HG 20 mode           YES  cfg_fix=1 in 20 of 20; 'FixF21: mode=1' in 20 of 20
+default HG 20 leftover       YES  leftover copies 0
+=0 P2 200 seeds              YES  n 200, seeds 1..200 exactly: True
+=0 P2 200                    YES  second 175 (>= 1); control 200; second 175 crash 0 hang 0 cut 61 expired 0; rc {0: 147, 321: 53}
+=0 P2 no wait_expired        YES  FixF21: wait_expired lines 0
+=0 P2 200 mode               YES  cfg_fix=0 in 200 of 200; 'FixF21: mode=0' in 200 of 200
+=0 P2 200 leftover           YES  leftover copies 0
+MEMBERS ALL YES

@@ -1,0 +1,10 @@
+--- cherry-pick 227e1b36
+Auto-merging src/emulator.cpp
+[detached HEAD 17c71ea6] track F link F33c (HPP-744): KYTY_FIX_F21 (default 0) - one owner of the emergency sequence (variant A, T = 12 s)
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Sat Oct 10 17:49:30 2026 +0200
+ 3 files changed, 190 insertions(+)
+17c71ea651367806201972573fe2b069425bb796 ee9632be1d8741547c345fd032ebf98c1e9e3e03 track F link F33c (HPP-744): KYTY_FIX_F21 (default 0) - one owner of the emerg
+--- git status --short (0 = clean)
+0
+CP OK

@@ -1,0 +1,25 @@
+FS12 HEAD 730ed40a398b98f4f4f51a13f56d8a647778eae1 base ee9632be1d8741547c345fd032ebf98c1e9e3e03
+V1 227e1b36 -> 17c71ea6: changed lines 190 / 190, equal True; git cherry - 227e1b36b361a0c4e16adefade5299a99c1b6115
+V1 e5979953 -> 25861288: changed lines 292 / 292, equal True; git cherry - e5979953f0e1e51082ebe36b10d875497483ba92
+V1 5237fdff -> 9aaea58c: changed lines 28 / 28, equal True; git cherry - 5237fdffc9465ba0e0327e89f94adcc7de946295
+V1 cbfe8375 -> 730ed40a: changed lines 8 / 8, equal True; git cherry - cbfe8375b4aa6c0146daff49c52eaa6d08f3f12b
+V1 negative controls: e5979953 vs 17c71ea6 equal False (want False); vs its own worktree commit with one line spoiled equal False (want False)
+V1b contains 227e1b36: True (ancestor False, git cherry - 227e1b36b361a0c4e16adefade5299a99c1b6115)
+V1b contains c94c49e0: True (ancestor False, git cherry - c94c49e0bf40fe81ca2f0f3b3af8dd7d49224cc1)
+V1b contains 726e751e: True (ancestor False, git cherry - 726e751eefe42e7c36c221e9ccf406396c0849b6)
+V1b contains cb022252: True (ancestor False, git cherry - cb022252530ca1a9979d6b5db43c67627ea0b7b5)
+V1b negative control 5f48cc3e in HEAD (stand edition 1, not carried): False (ancestor False, git cherry + 5f48cc3e3215a46bbb0cf813deb11e06c229af44) (want False)
+V1b negative control 227e1b36 in ee9632be (code F33c against the base FS11): False (ancestor False, git cherry + 227e1b36b361a0c4e16adefade5299a99c1b6115) (want False)
+V1b negative control c94c49e0 in dc5d4712 (code F29c against FS10): False (ancestor False, git cherry + c94c49e0bf40fe81ca2f0f3b3af8dd7d49224cc1) (want False)
+V2 files of diff ee9632be..FS12: src/common/subsystems.cpp src/common/subsystems.h src/emulator.cpp
+V2 files of the four source commits: src/common/subsystems.cpp src/common/subsystems.h src/emulator.cpp
+V2 file sets equal True; signed changed lines of the diff = sum of the four commits True (lines 500); negative control without FS12a equal False (want False)
+V2b paths of the diff outside tests/: src/common/subsystems.cpp src/common/subsystems.h src/emulator.cpp
+V2b paths outside tests/ not of 227e1b36 / e5979953 / 5237fdff / FS12a: none
+V3 DEFAULT-ON base (16): KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 DEFAULT-ON FS12 (17): KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F21 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 FS12 = base + KYTY_FIX_F21 only: True; negative control at 9aaea58c (before FS12a): difference empty, member there False (want False)
+V4 src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp blob base e1626ad67f22 FS12 e1626ad67f22 equal True; ParseMode unset/"" -> 3: True
+V5 paths of the diff under src/graphics/shader/: none
+V6 added lines naming KYTY_DIAG_B32 / F30d counters (code): 0; 5f48cc3e ancestor of FS12 False; 585d997d ancestor of FS12 False
+ALL OK

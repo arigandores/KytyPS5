@@ -1,0 +1,31 @@
+good                     want True  got True  ok
+P2 control               want False got False ok
+P2 second                want False got False ok
+P2 cut                   want False got False ok
+P2 seed missing          want False got False ok
+C done_seen              want False got False ok
+C reenter 0              want False got False ok
+C walks 2                want False got False ok
+C rc 0                   want False got False ok
+CN reenter 1             want False got False ok
+CN dur 7                 want False got False ok
+CN expired_seen          want False got False ok
+CN nested                want False got False ok
+CN nested_fatal 0        want False got False ok
+H expired 0              want False got False ok
+H rc 5                   want False got False ok
+H hang                   want False got False ok
+H order                  want False got False ok
+H rc 0 ok                want True  got True  ok
+HG rc 321                want False got False ok
+HG dt 15                 want False got False ok
+HG dt 11.9               want False got False ok
+HG second                want False got False ok
+HG expired 0             want False got False ok
+=0 P2 second 0           want False got False ok
+=0 P2 expired            want False got False ok
+default cfg_fix 0        want False got False ok
+=0 cfg_fix 1             want False got False ok
+default no mode line     want False got False ok
+leftover                 want False got False ok
+ALL OK

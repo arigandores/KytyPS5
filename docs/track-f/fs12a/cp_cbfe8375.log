@@ -1,0 +1,8 @@
+--- cherry-pick cbfe8375
+[detached HEAD 730ed40a] track F link FS12a (HPP-750): KYTY_FIX_F21 default 0 -> 1 (ROADMAP s122 item 683(g)(1))
+ Date: Sat Oct 10 20:54:13 2026 +0200
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+730ed40a398b98f4f4f51a13f56d8a647778eae1 9aaea58c7c7575dda0f7a403ca5d0ec1dd28b9e6 track F link FS12a (HPP-750): KYTY_FIX_F21 default 0 -> 1 (ROADMAP s122 item 6
+--- git status --short (0 = clean)
+0
+CP OK

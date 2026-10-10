@@ -1,0 +1,10 @@
+--- cherry-pick 5237fdff
+Auto-merging src/emulator.cpp
+[detached HEAD 9aaea58c] track F link F33c2 (HPP-748): stand KYTY_TEST_EXITFATAL edition 3 (off when unset) - arm CN (fatal inside the owner's emergency callback), event nested_fatal
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Sat Oct 10 19:53:57 2026 +0200
+ 1 file changed, 21 insertions(+), 7 deletions(-)
+9aaea58c7c7575dda0f7a403ca5d0ec1dd28b9e6 258612886ef51c20a688764db5dd2398ae23463e track F link F33c2 (HPP-748): stand KYTY_TEST_EXITFATAL edition 3 (off when un
+--- git status --short (0 = clean)
+0
+CP OK

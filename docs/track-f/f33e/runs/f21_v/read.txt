@@ -1,0 +1,49 @@
+tag f21_v (form f21_v, level underwater_aerial_garden)  reader sha256 eb5ec8f00dcae4965b601b33e081eaaeb7b0b5b3ffd27ab6e7f1b8e0a9acf70f
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = F33c 2b393af8 (2b393af8e9c1a85a)
+    [ok] installed during the tag = F33c 2b393af8 (2b393af8e9c1a85a)
+    [ok] installed before = after = FS11 ea51ae80 (ea51ae80521e8300 / ea51ae80521e8300)
+    [ok] json prereg sha256 = seal sha256 (75fd4c131a535569 / 75fd4c131a535569)
+    [ok] env = the form of the tag (exact)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (228657)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line - no KYTY_DIAG_B32 (0)
+    [ok] no TestLogStall line (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4804 listsha 64)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+  binary_sha256 2b393af8e9c1a85ad6d24bc47a3bc08f5cad2dcdd59b8f6a1ed7293859d0c612
+  MEMBERS 675(d)(4) ALL YES
+    [YES] hold >= 300 s after the first scene frame (334.5 s)
+    [YES] the process lived through the hold (outcome ok, hold_exit None)
+    [YES] 0 death markers (log and stdout) []
+    [YES] 0 frames >= 1 s after the first scene frame (0; first 339; with the first frame 0)
+    [YES] video index records >= 3000 (10569)
+    [YES] 0 one-frame glitches (0)
+    [YES] sheet for the lead made (sheet: C:/kyty/f287/f33e/runs/f21_v/sheet_f21_v.png frames 10569 step 220 tiles 8x6)
+    [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 727)]; unparsable 0; first GuestOut 12502) - item 675 (d)(4)
+    [YES] exit by the harness: Event: quit line in the log (1193462)
+    [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+    [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+    [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  MEMBERS form fs11_v ALL YES
+    [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12502)
+    [YES] summary LogAsync: full_waits= present (1)
+    [YES] drain_timeouts 0 (0)
+    [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 723)]; first GuestOut 12502)
+    [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 725)]; bad 0; first GuestOut 12502)
+    [YES] FixB12Stat: line present (parsed 34, unparsable 0)
+  INFO {"expired_log": 0, "expired_stdout": 0, "fatal_after_quit": 0, "fatal_log_total": 0, "fatal_stdout": 0, "first_scene_n": 339, "frames_ge1s": 0, "frames_ge1s_with_first": 0, "hold_s": 334.5, "max_dt": 184546, "mean_dt_us": 32799.6, "quit_ln": 1193462, "scene_frames": 10198, "summary": {"bytes": 325263602, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 726487, "max_queued_bytes": 49880, "stall_cut": 0, "stalls": 0, "sync_lines": 0}}
+  ROW exit (not a gate): exit code 0 (0x00000000; 0 expected [I]); WM_CLOSE post -> process end 3.8 s; killed False; posted 5; harness timeout 40 s
+  REFERENCE: {"bin_version_string": true, "f21_lines": 1, "f21_other": 0, "fork_line": "version: Fork build arigandores/KytyPS5 0c57cfe", "glitches": 0, "hold_exit": null, "hold_s": 330.1, "lines": 1193483, "other_logasync": 0, "outcome": "ok", "sheet": "sheet: C:/kyty/f287/f33e/runs/f21_v/sheet_f21_v.png frames 10569 step 220 tiles 8x6", "stable_s": 19.9, "stand_lines": 0, "video_index": 10569, "vke": 0}
+  READING ADMITTED, members 675(d)(4) ALL YES, members of the form fs11_v ALL YES (no verdict; reading - F33f)

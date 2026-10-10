@@ -1,0 +1,4 @@
+reader f33e_read.py sha256 eb5ec8f00dcae4965b601b33e081eaaeb7b0b5b3ffd27ab6e7f1b8e0a9acf70f
+| tag | status | binary_sha256 | members 675(d)(4) | form fs11_v | exit code | close_s | glitches | video index | hold_s |
+|---|---|---|---|---|---|---|---|---|---|
+| f21_v | ADMITTED | 2b393af8 | ALL YES | ALL YES | 0 | 3.8 | 0 | 10569 | 330.1 |

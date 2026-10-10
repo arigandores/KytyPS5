@@ -1,0 +1,2 @@
+C:/kyty/f287/f33e/rec_f21_v.mp4: 10569 frames 960x540, index entries 10569
+one-frame glitches: 0

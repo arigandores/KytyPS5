@@ -1,0 +1,24 @@
+ALL OK
+2026-10-10T18:31:37Z F33e go_f33e f21_v run check (item 587 (g)): RUN ALIVE 8ed7d49a status in_progress
+2026-10-10T18:31:49Z F33e go_f33e f21_v host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.667 procs []
+2026-10-10T18:31:51Z F33e go_f33e f21_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 38648 utc 2026-10-10T18:31:50Z
+2026-10-10T18:35:51Z F33e go_f33e f21_v lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-10T18:35:51Z F33e go_f33e f21_v installed binary inside the lock before the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T18:35:54Z F33e go_f33e f21_v manifest before: manifest C:/kyty/f287/f33e/runs/f21_v/manifest_before.tsv files 4804 bytes 1302773008 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T18:35:54Z F33e go_f33e f21_v caches before against the base manifest of the seal (row): manifest cmp EQUAL files 4804 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T18:35:56Z F33e go_f33e f21_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (270/184/5/667/130/ MB)
+2026-10-10T18:35:56Z F33e go_f33e f21_v state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-10T18:35:56Z
+2026-10-10T18:35:57Z F33e go_f33e f21_v installed the F33c copy 2b393af8 for the tag: 2b393af8e9c1a85ad6d24bc47a3bc08f5cad2dcdd59b8f6a1ed7293859d0c612
+2026-10-10T18:35:57Z F33e go_f33e f21_v enter_scene start (level underwater_aerial_garden, sd 300, timeout 480, hold 330, --rec, KYTY_FIX_F21=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0)
+2026-10-10T18:41:59Z F33e go_f33e f21_v enter_scene rc 0; guard watch: 2026-10-10T18:41:59Z watch end, user process seen: no; hold watch: 2026-10-10T18:41:57Z watch end, user VM seen: no
+2026-10-10T18:41:59Z F33e go_f33e f21_v run: VERDICT: underwater_aerial_garden in 19.9 s - PASS (acceptance <= 90 s)
+2026-10-10T18:42:00Z F33e go_f33e f21_v log_f21_v.txt sha256 f68c4cf2505b9f3699d372b116a217c5dbdb85e4687b60de26d629f318850b9d
+2026-10-10T18:42:00Z F33e go_f33e f21_v installed binary returned from the pinned FS11 copy
+2026-10-10T18:42:01Z F33e go_f33e f21_v installed binary after the tag: ea51ae80521e83000679467ce6efadd44b449428629a566e1a4053f8cb5750ce
+2026-10-10T18:42:04Z F33e go_f33e f21_v manifest of the run state (before the return): manifest C:/kyty/f287/f33e/runs/f21_v/manifest_run.tsv files 4804 bytes 1302773008 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d; run vs before: manifest cmp EQUAL files 4804 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T18:42:05Z F33e go_f33e f21_v caches, seeds, saves and GLCache returned
+2026-10-10T18:42:07Z F33e go_f33e f21_v manifest after: manifest C:/kyty/f287/f33e/runs/f21_v/manifest_after.tsv files 4804 bytes 1302773008 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d; cmp: manifest cmp EQUAL files 4804 listsha 64084958f37f864960144031ea18aaa06a07fd857b47eb625412477d6085839d
+2026-10-10T18:42:08Z F33e go_f33e f21_v lock released (rc 0)
+2026-10-10T18:42:10Z F33e go_f33e f21_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 39266 utc 2026-10-10T18:42:09Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-10T18:42:09Z; dispstate ON idle_s 39266
+2026-10-10T18:42:23Z F33e go_f33e f21_v host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.441 procs []
+rc=0

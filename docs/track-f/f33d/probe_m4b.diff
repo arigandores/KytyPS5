@@ -1,0 +1,71 @@
+diff --git a/src/common/subsystems.cpp b/src/common/subsystems.cpp
+index ab9b6d3b..eb0b6e2e 100644
+--- a/src/common/subsystems.cpp
++++ b/src/common/subsystems.cpp
+@@ -140,7 +140,7 @@ void Subsystems::EmergencyShutdownActiveF21() {
+ 		if (hook != nullptr) {
+ 			hook(kEmergencyReenter, 0, 0);
+ 		}
+-		return;
++		// MUTANT m4b: no return
+ 	}
+ 	if (g_f21_done.load(std::memory_order_acquire)) {
+ 		if (hook != nullptr) {
+diff --git a/src/emulator.cpp b/src/emulator.cpp
+index eca5e4b1..86cb6dab 100644
+--- a/src/emulator.cpp
++++ b/src/emulator.cpp
+@@ -63,7 +63,7 @@ namespace Emulator {
+ // driver needs the wall time, e_us (system clock, microseconds since the epoch).
+ namespace ExitFatalStand {
+ 
+-enum class Arm { Off, P2, R2, G, C, N, H, HG };
++enum class Arm { Off, P2, R2, G, C, N, H, HG, CN }; // PROBE CN
+ 
+ static constexpr size_t   kPositions   = 13;
+ static constexpr uint64_t kPeerWaitUs  = 2000000;
+@@ -131,6 +131,7 @@ static const char* ArmName() {
+ 		case Arm::N: return "N";
+ 		case Arm::H: return "H";
+ 		case Arm::HG: return "HG";
++		case Arm::CN: return "CN";
+ 		default: return "off";
+ 	}
+ }
+@@ -155,6 +156,7 @@ static void Parse() {
+ 		         : name == "N"  ? Arm::N
+ 		         : name == "H"  ? Arm::H
+ 		         : name == "HG" ? Arm::HG
++		         : name == "CN" ? Arm::CN
+ 		                        : Arm::Off;
+ 	}
+ 	if (parsed == Arm::Off) {
+@@ -243,6 +245,10 @@ static void Hook(int event, size_t index, size_t size) {
+ 		case Common::kEmergencyBeforeCallback:
+ 			t_cbs++;
+ 			Line(fmt::format("ExitFatal: cb seq={} role={} pos={} t_us={}\n", t_seq, Role(), index, NowUs()));
++			if (g_arm == Arm::CN && !main && g_triggered.exchange(1) == 0) {
++				Line(fmt::format("ExitFatal: nested_fatal t_us={}\n", NowUs()));
++				EXIT_IF(g_arm == Arm::CN);
++			}
+ 			break;
+ 		case Common::kEmergencyAfterLoop:
+ 			if (g_pos == kPositions - 1 && TriggerHere()) {
+@@ -279,7 +285,7 @@ static void Hook(int event, size_t index, size_t size) {
+ }
+ 
+ static void Injector(void* /*arg*/) {
+-	if (g_arm == Arm::C || g_arm == Arm::G || g_arm == Arm::HG) {
++	if (g_arm == Arm::C || g_arm == Arm::G || g_arm == Arm::HG || g_arm == Arm::CN) {
+ 		Common::Thread::Sleep(50);
+ 	} else {
+ 		while (!g_go.load()) {
+@@ -299,7 +305,7 @@ static void Injector(void* /*arg*/) {
+ 	LOGF("ExitFatal: config arm=%s seed=%u pos=%u\n", ArmName(), g_seed, static_cast<unsigned>(g_pos));
+ 	auto* injector = new Common::Thread(Injector, nullptr); // never joined or destroyed - as guest_thread under quick_exit
+ 	(void)injector;
+-	if (g_arm == Arm::C) {
++	if (g_arm == Arm::C || g_arm == Arm::CN) {
+ 		for (;;) {
+ 			Common::Thread::Sleep(1000);
+ 		}

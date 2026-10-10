@@ -1,0 +1,30 @@
+size 24863744 24863744
+raw diff bytes 1719
+path occurrences f33d 139
+diff bytes after path + SDL_REVISION normalisation 1571
+PE timestamp offset 0x80 debug dir off 0x14d189c size 28
+  dbgdata0_type2 8
+  dbgentry0 2
+  other:.data 1559
+  pe_timestamp 2
+unexplained diff bytes 1559
+   0x167bbd2 .data b'_4>@?0??ValidateShaderSpirv@?A0x6C63A3EA@Graphic' b'_4>@?0??ValidateShaderSpirv@?A0xF619E000@Graphic'
+   0x167bbd3 .data b'4>@?0??ValidateShaderSpirv@?A0x6C63A3EA@Graphics' b'4>@?0??ValidateShaderSpirv@?A0xF619E000@Graphics'
+   0x167bbd4 .data b'>@?0??ValidateShaderSpirv@?A0x6C63A3EA@Graphics@' b'>@?0??ValidateShaderSpirv@?A0xF619E000@Graphics@'
+   0x167bbd5 .data b'@?0??ValidateShaderSpirv@?A0x6C63A3EA@Graphics@L' b'@?0??ValidateShaderSpirv@?A0xF619E000@Graphics@L'
+   0x167bbd6 .data b'?0??ValidateShaderSpirv@?A0x6C63A3EA@Graphics@Li' b'?0??ValidateShaderSpirv@?A0xF619E000@Graphics@Li'
+   0x167bbd7 .data b'0??ValidateShaderSpirv@?A0x6C63A3EA@Graphics@Lib' b'0??ValidateShaderSpirv@?A0xF619E000@Graphics@Lib'
+   0x167bbd8 .data b'??ValidateShaderSpirv@?A0x6C63A3EA@Graphics@Libs' b'??ValidateShaderSpirv@?A0xF619E000@Graphics@Libs'
+   0x167bbd9 .data b'?ValidateShaderSpirv@?A0x6C63A3EA@Graphics@Libs@' b'?ValidateShaderSpirv@?A0xF619E000@Graphics@Libs@'
+   0x167bc9b .data b'_4>@?0??ValidateShaderSpirv@?A0x6C63A3EA@Graphic' b'_4>@?0??ValidateShaderSpirv@?A0xF619E000@Graphic'
+   0x167bc9c .data b'4>@?0??ValidateShaderSpirv@?A0x6C63A3EA@Graphics' b'4>@?0??ValidateShaderSpirv@?A0xF619E000@Graphics'
+   0x167bc9d .data b'>@?0??ValidateShaderSpirv@?A0x6C63A3EA@Graphics@' b'>@?0??ValidateShaderSpirv@?A0xF619E000@Graphics@'
+   0x167bc9e .data b'@?0??ValidateShaderSpirv@?A0x6C63A3EA@Graphics@L' b'@?0??ValidateShaderSpirv@?A0xF619E000@Graphics@L'
+   0x167bc9f .data b'?0??ValidateShaderSpirv@?A0x6C63A3EA@Graphics@Li' b'?0??ValidateShaderSpirv@?A0xF619E000@Graphics@Li'
+   0x167bca0 .data b'0??ValidateShaderSpirv@?A0x6C63A3EA@Graphics@Lib' b'0??ValidateShaderSpirv@?A0xF619E000@Graphics@Lib'
+   0x167bca1 .data b'??ValidateShaderSpirv@?A0x6C63A3EA@Graphics@Libs' b'??ValidateShaderSpirv@?A0xF619E000@Graphics@Libs'
+   0x167bca2 .data b'?ValidateShaderSpirv@?A0x6C63A3EA@Graphics@Libs@' b'?ValidateShaderSpirv@?A0xF619E000@Graphics@Libs@'
+   0x167cee1 .data b'a_1>@?0??TrimRecycledImages@?A0xB85FB239@Graphic' b'a_1>@?0??TrimRecycledImages@?A0x941AC16@Graphics'
+   0x167cee2 .data b'_1>@?0??TrimRecycledImages@?A0xB85FB239@Graphics' b'_1>@?0??TrimRecycledImages@?A0x941AC16@Graphics@'
+   0x167cee3 .data b'1>@?0??TrimRecycledImages@?A0xB85FB239@Graphics@' b'1>@?0??TrimRecycledImages@?A0x941AC16@Graphics@L'
+   0x167cee4 .data b'>@?0??TrimRecycledImages@?A0xB85FB239@Graphics@L' b'>@?0??TrimRecycledImages@?A0x941AC16@Graphics@Li'

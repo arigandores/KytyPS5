@@ -1,0 +1,13 @@
+ExitFatal: config arm=C seed=1001 pos=0 positions=13 fix=1 wait_ms=12000 t_us=24426 e_us=1791653002269185
+ExitFatal: inject role=guest main_walk=0 t_us=81238
+ExitFatal: enter role=guest tid=3 main_walk=0 guest_walk=0 t_us=81582 e_us=1791653002326340
+ExitFatal: walk_begin seq=1 role=guest size=12 nested=0 t_us=81595
+ExitFatal: cb seq=1 role=guest pos=2 t_us=81599
+ExitFatal: cb seq=1 role=guest pos=3 t_us=81815
+ExitFatal: cb seq=1 role=guest pos=4 t_us=81821
+ExitFatal: cb seq=1 role=guest pos=7 t_us=81824
+ExitFatal: cb seq=1 role=guest pos=10 t_us=81825
+ExitFatal: walk_end seq=1 role=guest callbacks=5 t_us=92155 e_us=1791653002336913
+ExitFatal: enter role=guest tid=3 main_walk=0 guest_walk=0 t_us=92172 e_us=1791653002336931
+ExitFatal: reenter role=guest t_us=92175
+ExitFatal: done_seen role=guest t_us=92176

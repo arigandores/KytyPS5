@@ -1,0 +1,17 @@
+runs C:/kyty/f287/f33d/runs_m1 label m1
+=1 P2 200                  NO   control 200; second 181 crash 0 hang 0 cut 77 expired 0; rc {0: 175, 321: 25}
+MEMBERS NOT ALL
+runs C:/kyty/f287/f33d/runs_m2 label m2
+=1 P2 200                  YES  control 200; second 0 crash 0 hang 0 cut 0 expired 0; rc {0: 161, 321: 39}
+=1 H 20                    NO   order 20; expired 0; rc {0: 14, 321: 6}; hang 0 second 0 crash 0; cut 0 (ref); dt_s 15.004..15.028 (ref)
+MEMBERS NOT ALL
+runs C:/kyty/f287/f33d/runs_m3 label m3
+=1 H 20                    NO   order 20; expired 0; rc {0: 20}; hang 0 second 0 crash 0; cut 0 (ref); dt_s 15.003..15.028 (ref)
+=1 HG 20                   NO   order 20; expired 0; rc {0: 11, 321: 9}; hang 0 second 0; dt in [12;13.5] 0; dt_s 15.019..15.033; cut 0 (ref)
+MEMBERS NOT ALL
+runs C:/kyty/f287/f33d/runs_m4a label m4a
+=1 C 50                    NO   walks==1 rc 321 reenter>=1 nested 0 - fails 50 ['1001', '1002', '1003', '1004', '1005']; reenter min 0; second 0 crash 0 hang 0 cut 0 expired 0; dur max 0.40
+MEMBERS NOT ALL
+runs C:/kyty/f287/f33d/runs_m4b label m4b
+=1 C 50                    YES  walks==1 rc 321 reenter>=1 nested 0 - fails 0 []; reenter min 1; second 0 crash 0 hang 0 cut 0 expired 0; dur max 0.18
+MEMBERS ALL YES

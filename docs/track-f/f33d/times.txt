@@ -1,0 +1,29 @@
+2026-10-10T16:59:45Z f33d start: read ROADMAP 675/678/680 @28c8114e, diffs 227e1b36 e5979953
+2026-10-10T16:59:49Z f33d start: read ROADMAP 675/678/680 @28c8114e, diffs 227e1b36 e5979953
+2026-10-10T17:00:13Z f33d worktree ee9632be + cherry-pick 227e1b36 e5979953: tree == 0c57cfed tree; checkout 0c57cfed for build
+2026-10-10T17:01:08Z f33d configure done
+2026-10-10T17:02:09Z f33d build1 rc done
+2026-10-10T17:02:14Z f33d build sha256 c82b0edf
+2026-10-10T17:02:32Z f33d cmp_norm vs 2b393af8 e3b0c442
+2026-10-10T17:02:50Z f33d cmp_norm.out.txt 89716682
+2026-10-10T17:03:10Z f33d cmp_anon.out.txt bd147be2
+2026-10-10T17:03:19Z f33d cmp_anon.out.txt (fixed read order) cf7e8e51
+2026-10-10T17:03:49Z f33d run dir: copy of 2b393af8, driver run_stand_f33d.py
+2026-10-10T17:04:01Z f33d comment: N and seeds named before counted data
+2026-10-10T17:09:43Z f33d stand fast arms done (P2 R2 G C N fix1; P2 C fix0)
+2026-10-10T17:18:58Z f33d stand H HG fix1 done
+2026-10-10T17:19:30Z f33d read_base.out.txt 8be930ed read_f33c_cross.out.txt cd914604
+2026-10-10T17:20:11Z f33d mutant m1 built 4f545cca
+2026-10-10T17:20:27Z f33d mutant m2 built 3bb299ed
+2026-10-10T17:20:38Z f33d mutant m3 built 03bcadd5
+2026-10-10T17:20:50Z f33d mutant m4a built 92affb5b
+2026-10-10T17:21:01Z f33d mutant m4b built 1d4b0569
+2026-10-10T17:23:34Z f33d mutants fast arms done (m1 P2, m2 P2, m4a C, m4b C)
+2026-10-10T17:33:57Z f33d m3 H interrupted by tool timeout at seed 1020 (19 rows written), resumed
+2026-10-10T17:36:45Z f33d m3 H done, m3 HG 1001-1010 done
+2026-10-10T17:39:22Z f33d m3 HG 1011-1020 done
+2026-10-10T17:39:22Z f33d read_mut.out.txt 67d76d49
+2026-10-10T17:40:49Z f33d probe CN built: probe 0f92cb71 probe_m4b d6e6a4af; worktree restored
+2026-10-10T17:43:05Z f33d probe CN runs done; read_probe.out.txt 1aec10f2
+2026-10-10T17:44:50Z f33d final restored clean build sha256 70c88308 (worktree 0c57cfed, status clean); cmp_anon_final.out.txt cf7e8e51
+2026-10-10T17:46:32Z f33d FACTS section F33d appended; f33d-review.md 5b40af82

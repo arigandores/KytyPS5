@@ -1,0 +1,11 @@
+runs C:/kyty/f287/f33d/runs label base_2b393af8
+=1 P2 600                  YES  control 600; second 0 crash 0 hang 0 cut 0 expired 0; rc {0: 582, 321: 18}
+=1 R2 200                  YES  live 171; live: second 0 crash 0 hang 0 cut 0 expired 0; all: second 0 crash 0 hang 0 cut 0 expired 0
+=1 G 200                   YES  live 200; live: second 0 crash 0 hang 0 cut 0 expired 0; all: second 0 crash 0 hang 0 cut 0 expired 0
+=1 C 50                    YES  walks==1 rc 321 reenter>=1 nested 0 - fails 0 []; reenter min 1; second 0 crash 0 hang 0 cut 0 expired 0; dur max 0.46
+=1 N 50                    YES  walks==1 rc 0 k1 0 - fails 0 []
+=1 H 20                    YES  order 20; expired 20; rc {321: 5, 0: 15}; hang 0 second 0 crash 0; cut 0 (ref); dt_s 15.003..15.028 (ref)
+=1 HG 20                   YES  order 20; expired 20; rc {0: 20}; hang 0 second 0; dt in [12;13.5] 20; dt_s 12.003..12.017; cut 20 (ref)
+=0 P2 200                  YES  control 200; second 172 crash 0 hang 0 cut 63 expired 0; rc {0: 153, 321: 47} (=0 control: second >= 1)
+=0 C 50                    YES  k1 0; rc {321: 50}
+MEMBERS ALL YES

@@ -1,0 +1,25 @@
+ok   227e1b36:src/emulator.cpp:233 | Common::Subsystems::InitFixF21();
+ok   227e1b36:src/common/subsystems.cpp:72 | g_fix_f21  = EnvFlagOn("KYTY_FIX_F21"); // unset, "", 0/false/off/no - OFF (the form of FS
+ok   227e1b36:src/emulator.cpp:236 | Common::Subsystems::LogFixF21(); // F33c: "FixF21: mode=<0|1>" once, after Log::Initialize
+ok   227e1b36:src/common/subsystems.cpp:77 | LOGF("FixF21: mode=%d wait_ms=%u\n", g_fix_f21 ? 1 : 0, kFixF21WaitMs);
+ok   227e1b36:src/common/subsystems.h:64 | static constexpr uint32_t kFixF21WaitMs = 12000; // T of item 675(v)(2)
+ok   227e1b36:src/common/subsystems.cpp:61 | if (g_f21_path) [[unlikely]] { // F33c: KYTY_FIX_F21=1 or the stand KYTY_TEST_EXITFATAL ar
+ok   227e1b36:src/common/subsystems.cpp:65 | if (g_active_subsystems != nullptr) {
+ok   227e1b36:src/common/subsystems.cpp:133 | if (g_f21_owner.compare_exchange_strong(owner, self, std::memory_order_acq_rel, std::memor
+ok   e5979953:src/emulator.cpp:143 | const char* value = std::getenv("KYTY_TEST_EXITFATAL");
+ok   e5979953:src/emulator.cpp:449 | if (!ExitFatalStand::Armed()) {
+ok   e5979953:src/emulator.cpp:545 | if (ExitFatalStand::Armed()) {
+ok   e5979953:src/emulator.cpp:518 | ExitFatalStand::Parse(); // F33c stand KYTY_TEST_EXITFATAL (off when unset): the observer 
+ok   ee9632be:src/emulator.cpp:80 | }
+ok   ee9632be:src/emulator.cpp:79 | Common::Subsystems::EmergencyShutdownActive();
+ok   ee9632be:src/common/assert.cpp:25 | Subsystems::EmergencyShutdownActive();
+ok   ee9632be:src/common/assert.cpp:118 | Subsystems::EmergencyShutdownActive();
+ok   ee9632be:src/emulator.cpp:243 | ok = at_quick_exit(Common::Subsystems::EmergencyShutdownActive);
+ok   ee9632be:src/libs/libC.cpp:80 | static KYTY_SYSV_ABI void exit(int code) {
+ok   ee9632be:src/libs/libKernel.cpp:1690 | static void KYTY_SYSV_ABI exit(int code) {
+ok   ee9632be:src/common/subsystems.cpp:39 | g_active_subsystems->EmergencyShutdown();
+ok   ee9632be:src/common/subsystems.cpp:19 | void Subsystems::Destroy() {
+ok   ee9632be:src/graphics/presentation/window/window.cpp:1066 | Controller::EmergencyShutdown();
+ok   ee9632be:src/graphics/presentation/window/window.cpp:420 | if (axis != Controller::Axis::AxisMax) {
+REFS 23, anchor 23 of 23, +1 control NOT OK 23 of 23
+ALL OK

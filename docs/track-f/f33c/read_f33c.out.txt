@@ -1,0 +1,14 @@
+(1) =1 P2 600                      YES  n 600 control 600; second 0 crash 0 hang 0 cut 0 expired 0
+(1) =1 R2 600 (live control)       YES  n 600 live 510; live: second 0 crash 0 hang 0 cut 0 expired 0; all: second 0 crash 0 hang 0 cut 0 expired 0
+(1) =1 G 200                       YES  n 200 live 200; second 0 crash 0 hang 0 cut 0 expired 0
+(1) =1 C 50                        YES  n 50; walks==1, rc 321, reenter>=1, nested 0 fails 0 []; reenter min 1 max 1; k1 0
+(1) =1 N 50                        YES  n 50; walks==1, rc 0, k1 0 fails 0 []
+(1) =1 H 20 (item 678)             NO   n 20 order executed 20; expired 20 rc0 16 hang 0 second 0; dt_s min 15.006 max 15.026 (ref); cut 0 (ref); expired lines max 1
+(1) =1 HG 20 (item 678)            YES  n 20 order executed 20; expired 20 rc0 20 hang 0 second 0; dt in [12;13.5] 20 of 20; dt_s min 12.004 max 12.018 (ref); cut 20 (ref); expired lines max 1
+(1) =0 P2 200                      YES  n 200 second 174; control 200; second 174 crash 0 hang 0 cut 71 expired 0
+(1) =0 C 50                        YES  n 50 k1 0; rc [321]
+(1) =0 N 50                        YES  n 50 k1 0; rc [0]
+(2) =0 no wait_expired             YES  wait_expired lines at =0: 0
+(2) FixF21: mode=<value> by value  YES  trials 1840, without the line of their value 0 []
+leftover copies after trials            0
+MEMBERS NOT ALL

@@ -1,0 +1,20 @@
+ExitFatal: config arm=H seed=8 pos=8 positions=13 fix=1 wait_ms=12000 t_us=23688 e_us=1791650447060144
+ExitFatal: quick_exit t_us=80292
+ExitFatal: enter role=main tid=1 main_walk=0 guest_walk=0 t_us=80334 e_us=1791650447116789
+ExitFatal: walk_begin seq=1 role=main size=12 nested=0 t_us=80355
+ExitFatal: cb seq=1 role=main pos=2 t_us=80361
+ExitFatal: cb seq=1 role=main pos=3 t_us=80515
+ExitFatal: cb seq=1 role=main pos=4 t_us=80532
+ExitFatal: cb seq=1 role=main pos=7 t_us=80536
+ExitFatal: trigger role=main pos=8 waited_us=0 main_entered=1 guest_entered=0 t_us=80539
+ExitFatal: hold_begin role=main pos=8 ms=15000 t_us=80542 e_us=1791650447116998
+ExitFatal: inject role=guest main_walk=1 t_us=80540
+ExitFatal: enter role=guest tid=3 main_walk=1 guest_walk=0 t_us=80663 e_us=1791650447117118
+ExitFatal: wait_begin role=guest t_us=80671 e_us=1791650447117127
+FixF21: wait_expired tid=3 waited_ms=12008
+ExitFatal: wait_expired role=guest waited_us=12008800 t_us=12089507 e_us=1791650459125803
+ExitFatal: enter role=guest tid=3 main_walk=1 guest_walk=0 t_us=12089515 e_us=1791650459125811
+ExitFatal: expired_seen role=guest t_us=12089518
+ExitFatal: hold_end role=main pos=8 t_us=15092637
+ExitFatal: cb seq=1 role=main pos=10 t_us=15092668
+ExitFatal: walk_end seq=1 role=main callbacks=5 t_us=15093371 e_us=1791650462129627

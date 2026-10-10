@@ -1,0 +1,7 @@
+F33c (HPP-744): binary of KYTY_FIX_F21 + stand KYTY_TEST_EXITFATAL ed.2 - worktree C:/kyty/f287/f33c/wt HEAD 0c57cfedb5a35e797d7dcd58b7a4a552486325d0 = ee9632be (FS11a HEAD) + cherry-pick 227e1b36 (-> b536c419) + e5979953 (-> 0c57cfed) from main; not installed
+sha256 2b393af8e9c1a85ad6d24bc47a3bc08f5cad2dcdd59b8f6a1ed7293859d0c612 build/install/kyty_emulator.exe (24863744 bytes)
+copy C:/kyty/f287/bin/kyty_emulator_2b393af8.exe; run copy C:/kyty/f287/f33c/run/kyty_emulator_2b393af8.exe (same sha256)
+build label KytyPS5-2026-09-15-6a2987a-1912-g0c57cfed; SDL_REVISION (configure time) KytyPS5-2026-09-15-6a2987a-1910-gee9632be
+KYTY_GIT_REVISION 0c57cfedb5a35e797d7dcd58b7a4a552486325d0; KYTY_SHADER_SOURCE_HASH 9177b4267de1fb8bac7d1113afd8733210addfac (= FS11)
+counts in exe: KYTY_FIX_F21 1, 'FixF21: mode=' 1, 'FixF21: wait_expired' 1, KYTY_TEST_EXITFATAL 3, KYTY_FIX_B12 1, KYTY_DIAG_B32 0, 9177b426... 1
+gate order on worktree: GATE ORDER: clean; worktree src/ 458 files, CR 0; git status clean

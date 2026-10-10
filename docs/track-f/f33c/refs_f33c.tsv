@@ -1,0 +1,23 @@
+227e1b36	src/emulator.cpp	233	Common::Subsystems::InitFixF21();	Common::Subsystems subsystems(true);
+227e1b36	src/common/subsystems.cpp	72	"g_fix_f21  = EnvFlagOn(""KYTY_FIX_F21""); // unset, """", 0/false/off/no - OFF (the form of FS4a)"	g_f21_path = g_fix_f21 || g_f21_hook != nullptr;
+227e1b36	src/emulator.cpp	236	"Common::Subsystems::LogFixF21(); // F33c: ""FixF21: mode=<0|1>"" once, after Log::Initialize (Init)"	
+227e1b36	src/common/subsystems.cpp	77	"LOGF(""FixF21: mode=%d wait_ms=%u\n"", g_fix_f21 ? 1 : 0, kFixF21WaitMs);"	}
+227e1b36	src/common/subsystems.h	64	static constexpr uint32_t kFixF21WaitMs = 12000; // T of item 675(v)(2)	static void               InitFixF21();
+227e1b36	src/common/subsystems.cpp	61	if (g_f21_path) [[unlikely]] { // F33c: KYTY_FIX_F21=1 or the stand KYTY_TEST_EXITFATAL armed	EmergencyShutdownActiveF21();
+227e1b36	src/common/subsystems.cpp	65	if (g_active_subsystems != nullptr) {	g_active_subsystems->EmergencyShutdown();
+227e1b36	src/common/subsystems.cpp	133	if (g_f21_owner.compare_exchange_strong(owner, self, std::memory_order_acq_rel, std::memory_order_acquire)) {	active->EmergencyWalkF21(hook);
+e5979953	src/emulator.cpp	143	"const char* value = std::getenv(""KYTY_TEST_EXITFATAL"");"	if (value == nullptr || value[0] == '\0') {
+e5979953	src/emulator.cpp	449	if (!ExitFatalStand::Armed()) {	subsystems.Initialize<Libs::Graphics::Lifecycle>();
+e5979953	src/emulator.cpp	545	if (ExitFatalStand::Armed()) {	ExitFatalStand::Run(); // F33c stand: never returns
+e5979953	src/emulator.cpp	518	ExitFatalStand::Parse(); // F33c stand KYTY_TEST_EXITFATAL (off when unset): the observer is set before the knob	Common::Subsystems::InitFixF21();
+ee9632be	src/emulator.cpp	80	}	
+ee9632be	src/emulator.cpp	79	Common::Subsystems::EmergencyShutdownActive();	}
+ee9632be	src/common/assert.cpp	25	Subsystems::EmergencyShutdownActive();	return 1;
+ee9632be	src/common/assert.cpp	118	Subsystems::EmergencyShutdownActive();	std::fflush(nullptr);
+ee9632be	src/emulator.cpp	243	ok = at_quick_exit(Common::Subsystems::EmergencyShutdownActive);	EXIT_NOT_IMPLEMENTED(ok != 0);
+ee9632be	src/libs/libC.cpp	80	static KYTY_SYSV_ABI void exit(int code) {	PRINT_NAME();
+ee9632be	src/libs/libKernel.cpp	1690	static void KYTY_SYSV_ABI exit(int code) {	PRINT_NAME();
+ee9632be	src/common/subsystems.cpp	39	g_active_subsystems->EmergencyShutdown();	}
+ee9632be	src/common/subsystems.cpp	19	void Subsystems::Destroy() {	for (auto it = m_active.rbegin(); it != m_active.rend(); ++it) {
+ee9632be	src/graphics/presentation/window/window.cpp	1066	Controller::EmergencyShutdown();	g_window.reset();
+ee9632be	src/graphics/presentation/window/window.cpp	420	if (axis != Controller::Axis::AxisMax) {	Controller::SetAxis(f.id, axis,

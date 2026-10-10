@@ -1,0 +1,16 @@
+ExitFatal: config arm=HG seed=12 pos=12 positions=13 fix=1 wait_ms=12000 t_us=23648 e_us=1791650786858396
+ExitFatal: inject role=guest main_walk=0 t_us=85576
+ExitFatal: enter role=guest tid=3 main_walk=0 guest_walk=0 t_us=85855 e_us=1791650786920602
+ExitFatal: walk_begin seq=1 role=guest size=12 nested=0 t_us=85879
+ExitFatal: cb seq=1 role=guest pos=2 t_us=85884
+ExitFatal: cb seq=1 role=guest pos=3 t_us=86138
+ExitFatal: cb seq=1 role=guest pos=4 t_us=86147
+ExitFatal: cb seq=1 role=guest pos=7 t_us=86150
+ExitFatal: cb seq=1 role=guest pos=10 t_us=86152
+ExitFatal: quick_exit t_us=87356
+ExitFatal: trigger role=guest pos=12 waited_us=0 main_entered=0 guest_entered=1 t_us=87356
+ExitFatal: hold_begin role=guest pos=12 ms=15000 t_us=87365 e_us=1791650786922112
+ExitFatal: enter role=main tid=1 main_walk=0 guest_walk=1 t_us=87367 e_us=1791650786922113
+ExitFatal: wait_begin role=main t_us=87375 e_us=1791650786922122
+FixF21: wait_expired tid=1 waited_ms=12004
+ExitFatal: wait_expired role=main waited_us=12004545 t_us=12091951 e_us=1791650798926538

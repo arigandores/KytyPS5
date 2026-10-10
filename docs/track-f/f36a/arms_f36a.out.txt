@@ -1,0 +1,6 @@
+sites (sid, cid, nid, oid) [(5011, 4488, 5010, 4437), (5013, 4488, 5012, 4432), (5037, 4488, 5036, 4414)]
+def sha256 71ebbdda693a7e51a8da03990d64d2514db384a1241588e3512cbc5df49fd5a9 bytes 275904 spirv-val rc 0  | OpSelect at sites 3, OpSelect +0, OpPhi +0 | OK
+mask sha256 2c907adde3914e6a5208b6480265762f089eb5a49679d87766855b2cd81ae867 bytes 276480 spirv-val rc 0  | OpSelect at sites 0, OpSelect -3, OpPhi +0 | OK
+mem sha256 c04f421a63ac0d19e030f8272e6f56c221c0fd5baa91f86ce35d4e666f219b06 bytes 276640 spirv-val rc 0  | OpSelect at sites 0, OpSelect -3, OpPhi +0 | OK
+sens sha256 0a0cd831e61659ab31ea6c048446dc6336206fcad927add53d2df105b08f97bd bytes 275904 spirv-val rc 0  | OpSelect at sites 3, OpSelect +0, OpPhi +0 | OK
+ALL OK

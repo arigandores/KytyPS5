@@ -1,0 +1,2 @@
+recompile C:/kyty/f287/f23a/eboot_text/be4c35a2031fd3f4.bin: ps hash=be4c35a2031fd3f4 wave=32 local=0x0x0 lds=0 inputs=6 permutations=1 buffer_align=[16c,16c,16c,16c,16,16c,16c,16c] translate=23.5ms emit=5.3ms spirv=68976 words (cached 68976) -> C:/kyty/f287/f36a/work/rc3b/out_p0.spv
+recompile-identity: permutation=0 words=68976 stored_words=68976 identical=1

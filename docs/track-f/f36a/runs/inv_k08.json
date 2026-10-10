@@ -1,0 +1,483 @@
+{
+ "cap": "C:/kyty/f287/f12f/f12_rd_k08.rdc",
+ "cap_sha": "ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96",
+ "counters_available": [
+  "GPUCounter.SamplesPassed",
+  "GPUCounter.PSInvocations"
+ ],
+ "counters_s": 0.6,
+ "events": [
+  {
+   "action": "vkCmdDrawIndexedIndirect(1) => <192, 4>",
+   "blend": [
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    }
+   ],
+   "bound_is_cap": true,
+   "bound_sha": "ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96",
+   "call": "vkCmdDrawIndexedIndirect",
+   "chunk": 60869,
+   "counters": {
+    "PSInvocations": 2245,
+    "SamplesPassed": 672
+   },
+   "depth": {
+    "fmt": "D32S8",
+    "res": 5885
+   },
+   "ds": {
+    "front": {
+     "compareMask": "63",
+     "depthFailOperation": "StencilOperation.Keep",
+     "failOperation": "StencilOperation.Keep",
+     "function": "CompareFunction.AlwaysTrue",
+     "passOperation": "StencilOperation.Replace",
+     "reference": "63",
+     "writeMask": "63"
+    },
+    "func": "CompareFunction.LessEqual",
+    "stencil": 1,
+    "test": 1,
+    "write": 1
+   },
+   "eid": 41956,
+   "exec_no": 1,
+   "numIndices": 192,
+   "numInstances": 4,
+   "rts": [
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36552,
+     "slice": 0,
+     "slot": 0,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36257,
+     "slice": 0,
+     "slot": 1,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 5895,
+     "slice": 0,
+     "slot": 2,
+     "w": 2432
+    }
+   ]
+  },
+  {
+   "action": "vkCmdDrawIndexedIndirect(1) => <192, 4>",
+   "blend": [
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    }
+   ],
+   "bound_is_cap": true,
+   "bound_sha": "ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96",
+   "call": "vkCmdDrawIndexedIndirect",
+   "chunk": 60997,
+   "counters": {
+    "PSInvocations": 48,
+    "SamplesPassed": 0
+   },
+   "depth": {
+    "fmt": "D32S8",
+    "res": 5885
+   },
+   "ds": {
+    "front": {
+     "compareMask": "63",
+     "depthFailOperation": "StencilOperation.Keep",
+     "failOperation": "StencilOperation.Keep",
+     "function": "CompareFunction.AlwaysTrue",
+     "passOperation": "StencilOperation.Replace",
+     "reference": "63",
+     "writeMask": "63"
+    },
+    "func": "CompareFunction.LessEqual",
+    "stencil": 1,
+    "test": 1,
+    "write": 1
+   },
+   "eid": 42088,
+   "exec_no": 2,
+   "numIndices": 192,
+   "numInstances": 4,
+   "rts": [
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36552,
+     "slice": 0,
+     "slot": 0,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36257,
+     "slice": 0,
+     "slot": 1,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 5895,
+     "slice": 0,
+     "slot": 2,
+     "w": 2432
+    }
+   ]
+  },
+  {
+   "action": "vkCmdDrawIndexedIndirect(1) => <192, 4>",
+   "blend": [
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    }
+   ],
+   "bound_is_cap": true,
+   "bound_sha": "ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96",
+   "call": "vkCmdDrawIndexedIndirect",
+   "chunk": 100719,
+   "counters": {
+    "PSInvocations": 2243,
+    "SamplesPassed": 682
+   },
+   "depth": {
+    "fmt": "D32S8",
+    "res": 5885
+   },
+   "ds": {
+    "front": {
+     "compareMask": "63",
+     "depthFailOperation": "StencilOperation.Keep",
+     "failOperation": "StencilOperation.Keep",
+     "function": "CompareFunction.AlwaysTrue",
+     "passOperation": "StencilOperation.Replace",
+     "reference": "63",
+     "writeMask": "63"
+    },
+    "func": "CompareFunction.LessEqual",
+    "stencil": 1,
+    "test": 1,
+    "write": 1
+   },
+   "eid": 78127,
+   "exec_no": 3,
+   "numIndices": 192,
+   "numInstances": 4,
+   "rts": [
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36552,
+     "slice": 0,
+     "slot": 0,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36257,
+     "slice": 0,
+     "slot": 1,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 5895,
+     "slice": 0,
+     "slot": 2,
+     "w": 2432
+    }
+   ]
+  },
+  {
+   "action": "vkCmdDrawIndexedIndirect(1) => <192, 4>",
+   "blend": [
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    }
+   ],
+   "bound_is_cap": true,
+   "bound_sha": "ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96",
+   "call": "vkCmdDrawIndexedIndirect",
+   "chunk": 100842,
+   "counters": {
+    "PSInvocations": 96,
+    "SamplesPassed": 0
+   },
+   "depth": {
+    "fmt": "D32S8",
+    "res": 5885
+   },
+   "ds": {
+    "front": {
+     "compareMask": "63",
+     "depthFailOperation": "StencilOperation.Keep",
+     "failOperation": "StencilOperation.Keep",
+     "function": "CompareFunction.AlwaysTrue",
+     "passOperation": "StencilOperation.Replace",
+     "reference": "63",
+     "writeMask": "63"
+    },
+    "func": "CompareFunction.LessEqual",
+    "stencil": 1,
+    "test": 1,
+    "write": 1
+   },
+   "eid": 78252,
+   "exec_no": 4,
+   "numIndices": 192,
+   "numInstances": 4,
+   "rts": [
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36552,
+     "slice": 0,
+     "slot": 0,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36257,
+     "slice": 0,
+     "slot": 1,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 5895,
+     "slice": 0,
+     "slot": 2,
+     "w": 2432
+    }
+   ]
+  },
+  {
+   "action": "vkCmdDrawIndexedIndirect(1) => <192, 4>",
+   "blend": [
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    }
+   ],
+   "bound_is_cap": true,
+   "bound_sha": "ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96",
+   "call": "vkCmdDrawIndexedIndirect",
+   "chunk": 140890,
+   "counters": {
+    "PSInvocations": 2247,
+    "SamplesPassed": 681
+   },
+   "depth": {
+    "fmt": "D32S8",
+    "res": 5885
+   },
+   "ds": {
+    "front": {
+     "compareMask": "63",
+     "depthFailOperation": "StencilOperation.Keep",
+     "failOperation": "StencilOperation.Keep",
+     "function": "CompareFunction.AlwaysTrue",
+     "passOperation": "StencilOperation.Replace",
+     "reference": "63",
+     "writeMask": "63"
+    },
+    "func": "CompareFunction.LessEqual",
+    "stencil": 1,
+    "test": 1,
+    "write": 1
+   },
+   "eid": 114302,
+   "exec_no": 5,
+   "numIndices": 192,
+   "numInstances": 4,
+   "rts": [
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36552,
+     "slice": 0,
+     "slot": 0,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36257,
+     "slice": 0,
+     "slot": 1,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 5895,
+     "slice": 0,
+     "slot": 2,
+     "w": 2432
+    }
+   ]
+  },
+  {
+   "action": "vkCmdDrawIndexedIndirect(1) => <192, 4>",
+   "blend": [
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    },
+    {
+     "en": 0,
+     "mask": "f"
+    }
+   ],
+   "bound_is_cap": true,
+   "bound_sha": "ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96",
+   "call": "vkCmdDrawIndexedIndirect",
+   "chunk": 141013,
+   "counters": {
+    "PSInvocations": 95,
+    "SamplesPassed": 0
+   },
+   "depth": {
+    "fmt": "D32S8",
+    "res": 5885
+   },
+   "ds": {
+    "front": {
+     "compareMask": "63",
+     "depthFailOperation": "StencilOperation.Keep",
+     "failOperation": "StencilOperation.Keep",
+     "function": "CompareFunction.AlwaysTrue",
+     "passOperation": "StencilOperation.Replace",
+     "reference": "63",
+     "writeMask": "63"
+    },
+    "func": "CompareFunction.LessEqual",
+    "stencil": 1,
+    "test": 1,
+    "write": 1
+   },
+   "eid": 114426,
+   "exec_no": 6,
+   "numIndices": 192,
+   "numInstances": 4,
+   "rts": [
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36552,
+     "slice": 0,
+     "slot": 0,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 36257,
+     "slice": 0,
+     "slot": 1,
+     "w": 2432
+    },
+    {
+     "fmt": "R16G16B16A16_FLOAT",
+     "h": 1368,
+     "mip": 0,
+     "res": 5895,
+     "slice": 0,
+     "slot": 2,
+     "w": 2432
+    }
+   ]
+  }
+ ],
+ "marked_module_ids": [
+  "ResourceId::1596"
+ ],
+ "prog": "ps_be4c35a2031fd3f4",
+ "scan": {
+  "marked_actions": 6,
+  "modules": 355,
+  "pipelines": 318
+ },
+ "shader_resources": 355
+}

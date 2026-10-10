@@ -1,0 +1,10 @@
+[    5.6] opened C:/kyty/f287/f12f/f12_rd_k05.rdc
+[    5.8] shader resources 361 marked ['ResourceId::1596']
+[    6.4] scan modules 361 pipelines 323 marked actions 6
+[    7.5] event 46220 exec 1 bound_is_cap True
+[    7.9] event 46344 exec 2 bound_is_cap True
+[    8.3] event 83214 exec 3 bound_is_cap True
+[    8.8] event 83338 exec 4 bound_is_cap True
+[    9.3] event 122326 exec 5 bound_is_cap True
+[    9.8] event 122458 exec 6 bound_is_cap True
+[   10.7] done

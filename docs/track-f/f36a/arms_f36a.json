@@ -1,0 +1,60 @@
+{
+ "files": {
+  "def": {
+   "bytes": 275904,
+   "ok": true,
+   "phi_added": 0,
+   "select_delta": 0,
+   "sha": "71ebbdda693a7e51a8da03990d64d2514db384a1241588e3512cbc5df49fd5a9",
+   "sites_left": 3,
+   "val_rc": 0
+  },
+  "mask": {
+   "bytes": 276480,
+   "ok": true,
+   "phi_added": 0,
+   "select_delta": -3,
+   "sha": "2c907adde3914e6a5208b6480265762f089eb5a49679d87766855b2cd81ae867",
+   "sites_left": 0,
+   "val_rc": 0
+  },
+  "mem": {
+   "bytes": 276640,
+   "ok": true,
+   "phi_added": 0,
+   "select_delta": -3,
+   "sha": "c04f421a63ac0d19e030f8272e6f56c221c0fd5baa91f86ce35d4e666f219b06",
+   "sites_left": 0,
+   "val_rc": 0
+  },
+  "sens": {
+   "bytes": 275904,
+   "ok": true,
+   "phi_added": 0,
+   "select_delta": 0,
+   "sha": "0a0cd831e61659ab31ea6c048446dc6336206fcad927add53d2df105b08f97bd",
+   "sites_left": 3,
+   "val_rc": 0
+  }
+ },
+ "sites": [
+  [
+   5011,
+   4488,
+   5010,
+   4437
+  ],
+  [
+   5013,
+   4488,
+   5012,
+   4432
+  ],
+  [
+   5037,
+   4488,
+   5036,
+   4414
+  ]
+ ]
+}

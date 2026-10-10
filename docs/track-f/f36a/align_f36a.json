@@ -1,0 +1,53 @@
+{
+ "conflicts": 0,
+ "sites": [
+  {
+   "fs11": {
+    "cid": 4488,
+    "nid": 5010,
+    "oid": 4437,
+    "sid": 5011
+   },
+   "fs11_line": "%5011 = OpSelect %1 %4488 %5010 %4437",
+   "fs11_sample": "%5000 = OpImageSampleImplicitLod %3 %4999 %4993 Bias %4994",
+   "operands_mapped": true,
+   "s12_line": "%5038 = OpSelect %1 %4515 %5037 %4464",
+   "s12_sample": "%5027 = OpImageSampleImplicitLod %3 %5026 %5020 Bias %5021",
+   "s12_sid": 5038,
+   "sample_mapped": true,
+   "window_equal": true
+  },
+  {
+   "fs11": {
+    "cid": 4488,
+    "nid": 5012,
+    "oid": 4432,
+    "sid": 5013
+   },
+   "fs11_line": "%5013 = OpSelect %1 %4488 %5012 %4432",
+   "fs11_sample": "%5000 = OpImageSampleImplicitLod %3 %4999 %4993 Bias %4994",
+   "operands_mapped": true,
+   "s12_line": "%5040 = OpSelect %1 %4515 %5039 %4459",
+   "s12_sample": "%5027 = OpImageSampleImplicitLod %3 %5026 %5020 Bias %5021",
+   "s12_sid": 5040,
+   "sample_mapped": true,
+   "window_equal": true
+  },
+  {
+   "fs11": {
+    "cid": 4488,
+    "nid": 5036,
+    "oid": 4414,
+    "sid": 5037
+   },
+   "fs11_line": "%5037 = OpSelect %1 %4488 %5036 %4414",
+   "fs11_sample": "%5024 = OpImageSampleImplicitLod %3 %5023 %5017 Bias %5018",
+   "operands_mapped": true,
+   "s12_line": "%5064 = OpSelect %1 %4515 %5063 %4441",
+   "s12_sample": "%5051 = OpImageSampleImplicitLod %3 %5050 %5044 Bias %5045",
+   "s12_sid": 5064,
+   "sample_mapped": true,
+   "window_equal": true
+  }
+ ]
+}

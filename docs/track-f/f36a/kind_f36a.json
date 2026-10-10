@@ -1,0 +1,227 @@
+[
+ {
+  "name": "H reference predoff (F23c)",
+  "modes": [
+   "OpEntryPoint Fragment %65 \"main\" %5 %8 %11 %13 %15",
+   "OpExecutionMode %65 SignedZeroInfNanPreserve 32",
+   "OpExecutionMode %65 OriginUpperLeft",
+   "OpExecutionMode %65 EarlyFragmentTests"
+  ],
+  "sites": [
+   {
+    "sid": 286,
+    "line": "%286 = OpSelect %1 %167 %285 %196",
+    "cond": "%167 = OpINotEqual %6 %166 %76",
+    "sample": [
+     "%275 = OpImageSampleImplicitLod %3 %274 %269"
+    ],
+    "sample_same_block": [
+     true
+    ],
+    "writes": [
+     [
+      "%15 Output Location 0",
+      1
+     ]
+    ],
+    "reached_ids": 145
+   },
+   {
+    "sid": 306,
+    "line": "%306 = OpSelect %1 %167 %305 %224",
+    "cond": "%167 = OpINotEqual %6 %166 %76",
+    "sample": [
+     "%295 = OpImageSampleImplicitLod %3 %294 %289"
+    ],
+    "sample_same_block": [
+     true
+    ],
+    "writes": [
+     [
+      "%15 Output Location 0",
+      1
+     ]
+    ],
+    "reached_ids": 102
+   }
+  ]
+ },
+ {
+  "name": "be4c35a2031fd3f4 FS11 (_fixf19)",
+  "modes": [
+   "OpEntryPoint Fragment %98 \"main\" %5 %8 %9 %10 %11 %12 %13 %17 %18 %21 %23 %25 %27 %28 %29",
+   "OpExecutionMode %98 SignedZeroInfNanPreserve 32",
+   "OpExecutionMode %98 OriginUpperLeft",
+   "OpExecutionMode %98 DepthReplacing"
+  ],
+  "sites": [
+   {
+    "sid": 5011,
+    "line": "%5011 = OpSelect %1 %4488 %5010 %4437",
+    "cond": "%4488 = OpINotEqual %6 %4487 %221",
+    "sample": [
+     "%5000 = OpImageSampleImplicitLod %3 %4999 %4993 Bias %4994"
+    ],
+    "sample_same_block": [
+     true
+    ],
+    "writes": [
+     [
+      "%27 Output Location 0",
+      1
+     ],
+     [
+      "%28 Output Location 1",
+      1
+     ],
+     [
+      "%29 Output Location 2",
+      1
+     ]
+    ],
+    "reached_ids": 4574
+   },
+   {
+    "sid": 5013,
+    "line": "%5013 = OpSelect %1 %4488 %5012 %4432",
+    "cond": "%4488 = OpINotEqual %6 %4487 %221",
+    "sample": [
+     "%5000 = OpImageSampleImplicitLod %3 %4999 %4993 Bias %4994"
+    ],
+    "sample_same_block": [
+     true
+    ],
+    "writes": [
+     [
+      "%27 Output Location 0",
+      1
+     ],
+     [
+      "%28 Output Location 1",
+      1
+     ],
+     [
+      "%29 Output Location 2",
+      1
+     ]
+    ],
+    "reached_ids": 4459
+   },
+   {
+    "sid": 5037,
+    "line": "%5037 = OpSelect %1 %4488 %5036 %4414",
+    "cond": "%4488 = OpINotEqual %6 %4487 %221",
+    "sample": [
+     "%5024 = OpImageSampleImplicitLod %3 %5023 %5017 Bias %5018"
+    ],
+    "sample_same_block": [
+     true
+    ],
+    "writes": [
+     [
+      "%27 Output Location 0",
+      1
+     ],
+     [
+      "%28 Output Location 1",
+      1
+     ],
+     [
+      "%29 Output Location 2",
+      1
+     ]
+    ],
+    "reached_ids": 4521
+   }
+  ]
+ },
+ {
+  "name": "be4c35a2031fd3f4 S12 / capture module",
+  "modes": [
+   "OpEntryPoint Fragment %98 \"main\" %5 %8 %9 %10 %11 %12 %13 %17 %18 %21 %23 %25 %27 %28 %29",
+   "OpExecutionMode %98 SignedZeroInfNanPreserve 32",
+   "OpExecutionMode %98 OriginUpperLeft",
+   "OpExecutionMode %98 DepthReplacing"
+  ],
+  "sites": [
+   {
+    "sid": 5038,
+    "line": "%5038 = OpSelect %1 %4515 %5037 %4464",
+    "cond": "%4515 = OpINotEqual %6 %4514 %221",
+    "sample": [
+     "%5027 = OpImageSampleImplicitLod %3 %5026 %5020 Bias %5021"
+    ],
+    "sample_same_block": [
+     true
+    ],
+    "writes": [
+     [
+      "%27 Output Location 0",
+      1
+     ],
+     [
+      "%28 Output Location 1",
+      1
+     ],
+     [
+      "%29 Output Location 2",
+      1
+     ]
+    ],
+    "reached_ids": 4628
+   },
+   {
+    "sid": 5040,
+    "line": "%5040 = OpSelect %1 %4515 %5039 %4459",
+    "cond": "%4515 = OpINotEqual %6 %4514 %221",
+    "sample": [
+     "%5027 = OpImageSampleImplicitLod %3 %5026 %5020 Bias %5021"
+    ],
+    "sample_same_block": [
+     true
+    ],
+    "writes": [
+     [
+      "%27 Output Location 0",
+      1
+     ],
+     [
+      "%28 Output Location 1",
+      1
+     ],
+     [
+      "%29 Output Location 2",
+      1
+     ]
+    ],
+    "reached_ids": 4513
+   },
+   {
+    "sid": 5064,
+    "line": "%5064 = OpSelect %1 %4515 %5063 %4441",
+    "cond": "%4515 = OpINotEqual %6 %4514 %221",
+    "sample": [
+     "%5051 = OpImageSampleImplicitLod %3 %5050 %5044 Bias %5045"
+    ],
+    "sample_same_block": [
+     true
+    ],
+    "writes": [
+     [
+      "%27 Output Location 0",
+      1
+     ],
+     [
+      "%28 Output Location 1",
+      1
+     ],
+     [
+      "%29 Output Location 2",
+      1
+     ]
+    ],
+    "reached_ids": 4575
+   }
+  ]
+ }
+]

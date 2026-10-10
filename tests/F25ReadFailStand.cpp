@@ -6,23 +6,34 @@
 // only on the stand thread while a trial is armed; a failed call returns FALSE, sets *lpNumberOfBytesRead = 0, writes
 // nothing and does not move the file pointer ("all or nothing" - the form measured by the F22a host stand).
 // Separate CMake target f25_read_fail_stand (EXCLUDE_FROM_ALL, no add_test - not in the default ctest set); the driver
-// is docs/track-f/f37a/run_stand_f37a.py.
+// is docs/track-f/f38a/run_stand_f38a.py (edition 2; edition 1 - docs/track-f/f37a/run_stand_f37a.py).
 //
-// Arms (ROADMAP s122 item 688(e)(0)(iii)):
+// Edition 2 (F38a HPP-763, ROADMAP s122 item 691(d)(1)): arms E and T added, the emulator log goes to <out.tsv>.log (the
+// lines FixF25: of KYTY_FIX_F25 are read there), every row carries the KYTY_FIX_F25 value seen by this process. The knob
+// is set by the environment before FileSystem::Initialize; =0 and =1 are separate processes of one build.
+//
+// Arms (ROADMAP s122 items 688(e)(0)(iii), 691(d)(1)):
 //   A - injected failure of the direct read (call 1, ERROR_NOACCESS) and of the retry read (call 2, ERROR_IO_DEVICE);
 //   K - control: injected failure of the direct read only (call 1, ERROR_NOACCESS), the retry reads the file (F22a form);
-//   Z - no injected failure.
+//   Z - no injected failure;
+//   E - a read from a position at or past the end of the file (remaining = 0), no injected failure;
+//   T - injected failure of call 1; on call 2 the hook shortens the file to the read position through a second host
+//       handle of the stand and fails the call (a real end of file after a shortening by another process). After the
+//       trial the file is restored through the second handle and checked by sha256 against the original.
 // Entries: 0 sceKernelRead (Cg4srZ6TKbU), 1 read (DRuBt2pvICk), 2 _read (AqBioC2vF3I), 3 sceKernelPread (+r3rMFwItV4),
 //          4 pread (ezv-RSBNKqI), 5 sceKernelAioSubmitReadCommands (HgX7+AORI58) - all resolved by NID from the libkernel
 //          symbol database of this build and called through the SysV ABI, as the guest calls them.
 //
-// Usage: f25_read_fail_stand <seed> <nA> <nK> <nZ> <out.tsv>
-// Output: <out.tsv> - one row per trial (header first); stdout - the NID resolution, "HOOK slots=<n>" and
-// "DONE trials=<n>". Exit 0; 2 - bad arguments; 3 - hook not installed; 4 - NID not resolved; 5 - stand file setup failed.
+// Usage: f25_read_fail_stand <seed> <nA> <nK> <nZ> <nE> <nT> <out.tsv>
+// Output: <out.tsv> - one row per trial (header first); <out.tsv>.log - the emulator log; stdout - "FIXF25 env=<v> on=<0|1>",
+// the NID resolution, "HOOK slots=<n>", "SHA256 <hex>" of the stand file and "DONE trials=<n>". Exit 0; 2 - bad
+// arguments; 3 - hook not installed; 4 - NID not resolved; 5 - stand file setup failed; 6 - the file was not restored
+// after a T trial (the row is written first).
 #define SDL_MAIN_HANDLED
 #include "SDL.h"
 #include "common/abi.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "common/subsystems.h"
 #include "common/threads.h"
@@ -53,8 +64,11 @@
 #define NOMINMAX
 #endif
 #include <windows.h>
+#include <bcrypt.h>
 #undef min
 #undef max
+
+#pragma comment(lib, "bcrypt.lib")
 
 namespace Libs {
 void InitLibKernel_1(Loader::SymbolDatabase* s);
@@ -67,7 +81,10 @@ namespace FileSystem = Libs::LibKernel::FileSystem;
 constexpr int ARM_A = 0;
 constexpr int ARM_K = 1;
 constexpr int ARM_Z = 2;
-constexpr const char* ARM_NAMES[3] = {"A", "K", "Z"};
+constexpr int ARM_E = 3;
+constexpr int ARM_T = 4;
+constexpr int ARM_COUNT = 5;
+constexpr const char* ARM_NAMES[ARM_COUNT] = {"A", "K", "Z", "E", "T"};
 
 constexpr int ENTRY_COUNT = 6;
 constexpr const char* ENTRY_NAMES[ENTRY_COUNT] = {"sceKernelRead", "read", "_read", "sceKernelPread", "pread",
@@ -108,13 +125,17 @@ using ReadFileFn = BOOL(WINAPI*)(HANDLE, LPVOID, DWORD, LPDWORD, LPOVERLAPPED);
 ReadFileFn g_real_read_file = nullptr;
 
 struct HookState {
-	int      mode     = ARM_Z;
-	int      calls    = 0;
-	uint64_t c1_buf   = 0;
-	uint64_t c2_buf   = 0;
-	uint32_t c1_size  = 0;
-	uint32_t c2_size  = 0;
-	int      injected = 0;
+	int      mode       = ARM_Z;
+	int      calls      = 0;
+	uint64_t c1_buf     = 0;
+	uint64_t c2_buf     = 0;
+	uint32_t c1_size    = 0;
+	uint32_t c2_size    = 0;
+	int      injected   = 0;
+	HANDLE   trunc_h    = INVALID_HANDLE_VALUE; // T: the second handle of the stand file
+	uint64_t trunc_to   = 0;                    // T: the size the file is shortened to on call 2
+	int      trunc_done = 0;                    // T: SetEndOfFile succeeded on call 2
+	int64_t  size_at_c2 = -1;                   // T: the file size seen through the second handle after the shortening
 };
 thread_local HookState* t_hook = nullptr;
 
@@ -131,7 +152,19 @@ BOOL WINAPI HookReadFile(HANDLE handle, LPVOID buffer, DWORD size, LPDWORD read,
 		st->c2_buf  = reinterpret_cast<uint64_t>(buffer);
 		st->c2_size = size;
 	}
-	const bool fail = (st->mode == ARM_A && (k == 1 || k == 2)) || (st->mode == ARM_K && k == 1);
+	if (st->mode == ARM_T && k == 2) {
+		// Shorten the file to the read position through the second handle, then fail the call.
+		LARGE_INTEGER to {};
+		to.QuadPart = static_cast<LONGLONG>(st->trunc_to);
+		if (SetFilePointerEx(st->trunc_h, to, nullptr, FILE_BEGIN) != FALSE && SetEndOfFile(st->trunc_h) != FALSE) {
+			st->trunc_done = 1;
+		}
+		LARGE_INTEGER now {};
+		if (GetFileSizeEx(st->trunc_h, &now) != FALSE) {
+			st->size_at_c2 = now.QuadPart;
+		}
+	}
+	const bool fail = ((st->mode == ARM_A || st->mode == ARM_T) && (k == 1 || k == 2)) || (st->mode == ARM_K && k == 1);
 	if (fail) {
 		st->injected++;
 		if (read != nullptr) {
@@ -184,10 +217,89 @@ int InstallReadFileHook() {
 	return slots;
 }
 
+// ---- sha256 (BCrypt) ----
+
+std::string Sha256Hex(const uint8_t* data, size_t size) {
+	BCRYPT_ALG_HANDLE  alg  = nullptr;
+	BCRYPT_HASH_HANDLE hash = nullptr;
+	uint8_t            digest[32] {};
+	std::string        hex;
+	if (BCryptOpenAlgorithmProvider(&alg, BCRYPT_SHA256_ALGORITHM, nullptr, 0) == 0) {
+		if (BCryptCreateHash(alg, &hash, nullptr, 0, nullptr, 0, 0) == 0) {
+			if (BCryptHashData(hash, const_cast<PUCHAR>(data), static_cast<ULONG>(size), 0) == 0 &&
+			    BCryptFinishHash(hash, digest, sizeof(digest), 0) == 0) {
+				char b[3];
+				for (uint8_t v: digest) {
+					std::snprintf(b, sizeof(b), "%02x", v);
+					hex += b;
+				}
+			}
+			BCryptDestroyHash(hash);
+		}
+		BCryptCloseAlgorithmProvider(alg, 0);
+	}
+	return hex;
+}
+
+// The whole stand file through the second handle (the real ReadFile, not the hook); false on a short read.
+bool ReadWholeFile(HANDLE h, std::vector<uint8_t>* out) {
+	LARGE_INTEGER size {};
+	if (GetFileSizeEx(h, &size) == FALSE) {
+		return false;
+	}
+	out->assign(static_cast<size_t>(size.QuadPart), 0);
+	LARGE_INTEGER zero {};
+	if (SetFilePointerEx(h, zero, nullptr, FILE_BEGIN) == FALSE) {
+		return false;
+	}
+	size_t done = 0;
+	while (done < out->size()) {
+		DWORD      got  = 0;
+		const auto want = static_cast<DWORD>(std::min<size_t>(out->size() - done, 1u << 20));
+		if (g_real_read_file(h, out->data() + done, want, &got, nullptr) == FALSE || got == 0) {
+			return false;
+		}
+		done += got;
+	}
+	return true;
+}
+
+// T: write back the file tail from `from` and the original size through the second handle, then compare by sha256.
+bool RestoreFile(HANDLE h, const std::vector<uint8_t>& original, const std::string& original_sha, uint64_t from) {
+	LARGE_INTEGER at {};
+	at.QuadPart = static_cast<LONGLONG>(from);
+	if (SetFilePointerEx(h, at, nullptr, FILE_BEGIN) == FALSE) {
+		return false;
+	}
+	uint64_t done = from;
+	while (done < original.size()) {
+		DWORD      put  = 0;
+		const auto want = static_cast<DWORD>(std::min<uint64_t>(original.size() - done, 1u << 20));
+		if (WriteFile(h, original.data() + done, want, &put, nullptr) == FALSE || put == 0) {
+			return false;
+		}
+		done += put;
+	}
+	if (SetEndOfFile(h) == FALSE) {
+		return false;
+	}
+	std::vector<uint8_t> now;
+	if (!ReadWholeFile(h, &now) || now.size() != original.size()) {
+		return false;
+	}
+	return Sha256Hex(now.data(), now.size()) == original_sha;
+}
+
 // ---- trials ----
 
 struct Entries {
 	std::array<uint64_t, ENTRY_COUNT> vaddr {};
+};
+
+struct StandFile {
+	HANDLE               h2 = INVALID_HANDLE_VALUE; // the second handle (T arm, restore and check)
+	std::vector<uint8_t> original;
+	std::string          sha;
 };
 
 struct Trial {
@@ -211,20 +323,27 @@ struct Trial {
 	int      data_ok    = 0; // the first ret bytes equal the file
 	int      canary_ok  = 0; // guard bytes before and after the buffer intact
 	int      untouched  = 0; // the whole guest buffer still holds the fill byte
+	int      trunc_done = 0; // T: the file was shortened on call 2
+	int64_t  size_at_c2 = -1; // T: the file size after the shortening
+	int      restore_ok = 0; // T: the file was restored and its sha256 equals the original (other arms: 1, not touched)
 };
 
 bool SeekTo(int fd, uint64_t pos) {
 	return FileSystem::KernelLseek(fd, static_cast<int64_t>(pos), 0) == static_cast<int64_t>(pos);
 }
 
-void RunTrial(const Entries& e, int fd, Trial& t, std::mt19937_64& rng) {
-	// Position, size: a mix of small, medium and large reads; ~25% reach past the end of the file. remaining > 0 always
-	// (a read at the end of the file does not take the retry - F22a 2.1 item 1).
+void RunTrial(const Entries& e, int fd, StandFile& sf, Trial& t, std::mt19937_64& rng) {
+	// Position, size: a mix of small, medium and large reads; ~25% reach past the end of the file. remaining > 0 in
+	// the arms A, K, Z, T (a read at the end of the file does not take the retry - F22a 2.1 item 1); the arm E reads
+	// from a position at or past the end of the file (remaining = 0).
 	std::uniform_int_distribution<uint64_t> pos_dist(0, FILE_SIZE - 1);
-	const uint64_t                          offset = pos_dist(rng);
-	const uint64_t                          remaining = FILE_SIZE - offset;
-	const auto                              kind = rng() % 10;
-	uint64_t                                n    = 0;
+	uint64_t                                offset = pos_dist(rng);
+	if (t.arm == ARM_E) {
+		offset = FILE_SIZE + rng() % 4097;
+	}
+	const uint64_t remaining = offset < FILE_SIZE ? FILE_SIZE - offset : 0;
+	const auto     kind      = rng() % 10;
+	uint64_t       n         = 0;
 	if (kind < 5) {
 		n = 1 + rng() % 4096;
 	} else if (kind < 8) {
@@ -232,7 +351,7 @@ void RunTrial(const Entries& e, int fd, Trial& t, std::mt19937_64& rng) {
 	} else {
 		n = 256u * 1024u + rng() % (2u * 1024u * 1024u);
 	}
-	if (rng() % 4 == 0) {
+	if (t.arm != ARM_E && rng() % 4 == 0) {
 		n = remaining + 1 + rng() % 4096; // past the end of the file
 	}
 	t.offset    = offset;
@@ -255,9 +374,11 @@ void RunTrial(const Entries& e, int fd, Trial& t, std::mt19937_64& rng) {
 	uint8_t*             buf = mem.data() + CANARY;
 
 	HookState st {};
-	st.mode                    = t.arm;
+	st.mode     = t.arm;
+	st.trunc_h  = sf.h2;
+	st.trunc_to = offset;
 	*Libs::Posix::GetErrorAddr() = ERRNO_SENTRY;
-	t_hook                     = &st;
+	t_hook                       = &st;
 	switch (t.entry) {
 		case 0: t.ret = reinterpret_cast<KReadFn>(e.vaddr[0])(fd, buf, n); break;
 		case 1: t.ret = reinterpret_cast<RReadFn>(e.vaddr[1])(fd, buf, n); break;
@@ -277,11 +398,13 @@ void RunTrial(const Entries& e, int fd, Trial& t, std::mt19937_64& rng) {
 	t_hook = nullptr;
 	t.err  = *Libs::Posix::GetErrorAddr();
 
-	t.calls    = st.calls;
-	t.injected = st.injected;
-	t.c1_guest = (st.c1_buf == reinterpret_cast<uint64_t>(buf)) ? 1 : 0;
-	t.c2_host  = (st.calls >= 2 && st.c2_buf != reinterpret_cast<uint64_t>(buf) && st.c2_size == n) ? 1 : 0;
-	t.pos_after = FileSystem::KernelLseek(fd, 0, 1);
+	t.calls      = st.calls;
+	t.injected   = st.injected;
+	t.c1_guest   = (st.c1_buf == reinterpret_cast<uint64_t>(buf)) ? 1 : 0;
+	t.c2_host    = (st.calls >= 2 && st.c2_buf != reinterpret_cast<uint64_t>(buf) && st.c2_size == n) ? 1 : 0;
+	t.pos_after  = FileSystem::KernelLseek(fd, 0, 1);
+	t.trunc_done = st.trunc_done;
+	t.size_at_c2 = st.size_at_c2;
 
 	bool data_ok = t.ret >= 0 && static_cast<uint64_t>(t.ret) <= n;
 	if (data_ok) {
@@ -302,28 +425,40 @@ void RunTrial(const Entries& e, int fd, Trial& t, std::mt19937_64& rng) {
 	}
 	t.canary_ok = canary_ok ? 1 : 0;
 	t.untouched = std::all_of(buf, buf + n, [](uint8_t b) { return b == CANARY_BYTE; }) ? 1 : 0;
+
+	t.restore_ok = 1;
+	if (t.arm == ARM_T) {
+		t.restore_ok = RestoreFile(sf.h2, sf.original, sf.sha, std::min<uint64_t>(offset, FILE_SIZE)) ? 1 : 0;
+	}
 }
 
 } // namespace
 
 int main(int argc, char** argv) {
-	if (argc != 6) {
-		std::fprintf(stderr, "usage: f25_read_fail_stand <seed> <nA> <nK> <nZ> <out.tsv>\n");
+	if (argc != 8) {
+		std::fprintf(stderr, "usage: f25_read_fail_stand <seed> <nA> <nK> <nZ> <nE> <nT> <out.tsv>\n");
 		return 2;
 	}
 	const uint64_t seed = std::strtoull(argv[1], nullptr, 10);
-	const int      n_a  = std::atoi(argv[2]);
-	const int      n_k  = std::atoi(argv[3]);
-	const int      n_z  = std::atoi(argv[4]);
-	if (n_a < 0 || n_k < 0 || n_z < 0) {
-		return 2;
+	std::array<int, ARM_COUNT> counts {};
+	for (int a = 0; a < ARM_COUNT; a++) {
+		counts[a] = std::atoi(argv[2 + a]);
+		if (counts[a] < 0) {
+			return 2;
+		}
 	}
+	const std::string out_path = argv[7];
+
+	const char* fix_env = std::getenv("KYTY_FIX_F25");
+	const int   fix_on  = Common::EnvValueOn(fix_env) ? 1 : 0;
+	std::printf("FIXF25 env=%s on=%d\n", fix_env != nullptr ? fix_env : "(unset)", fix_on);
 
 	Common::InitializeThreads();
 	Common::Subsystems subsystems;
 	subsystems.Initialize<Config::Lifecycle>();
 	Config::ConfigOptions options;
-	options.printf_direction = Config::LogDirection::Silent;
+	options.printf_direction   = Config::LogDirection::File;
+	options.printf_output_file = out_path + ".log";
 	Config::Load(options);
 	subsystems.Initialize<Log::Lifecycle>();
 
@@ -366,14 +501,17 @@ int main(int argc, char** argv) {
 	const auto unique = std::chrono::steady_clock::now().time_since_epoch().count();
 	const auto dir    = std::filesystem::temp_directory_path() / ("kyty_f25_stand_" + std::to_string(unique));
 	std::filesystem::create_directories(dir);
-	{
-		std::vector<uint8_t> data(FILE_SIZE);
-		for (uint64_t i = 0; i < FILE_SIZE; i++) {
-			data[i] = PatternByte(i);
-		}
-		std::ofstream out(dir / "f25_stand.bin", std::ios::binary);
-		out.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
+	StandFile sf;
+	sf.original.resize(FILE_SIZE);
+	for (uint64_t i = 0; i < FILE_SIZE; i++) {
+		sf.original[i] = PatternByte(i);
 	}
+	sf.sha = Sha256Hex(sf.original.data(), sf.original.size());
+	{
+		std::ofstream out(dir / "f25_stand.bin", std::ios::binary);
+		out.write(reinterpret_cast<const char*>(sf.original.data()), static_cast<std::streamsize>(sf.original.size()));
+	}
+	std::printf("SHA256 %s size %" PRIu64 "\n", sf.sha.c_str(), FILE_SIZE);
 	FileSystem::Initialize();
 	FileSystem::Mount(dir, "/app0");
 	const int fd = FileSystem::KernelOpen("/app0/f25_stand.bin", 0, 0);
@@ -381,40 +519,59 @@ int main(int argc, char** argv) {
 		std::printf("open failed %d\n", fd);
 		return 5;
 	}
+	sf.h2 = CreateFileW((dir / "f25_stand.bin").wstring().c_str(), GENERIC_READ | GENERIC_WRITE,
+	                    FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING,
+	                    FILE_ATTRIBUTE_NORMAL, nullptr);
+	if (sf.h2 == INVALID_HANDLE_VALUE) {
+		std::printf("second handle failed %lu\n", GetLastError());
+		return 5;
+	}
 
-	FILE* out = std::fopen(argv[5], "wb");
+	FILE* out = std::fopen(out_path.c_str(), "wb");
 	if (out == nullptr) {
 		return 5;
 	}
-	std::fprintf(out, "seed\tentry\tentry_name\tarm\tindex\tpos_before\toffset\tnbytes\tremaining\texpected\tret\terr\t"
-	                  "aio_rc\taio_state\tpos_after\tcalls\tinjected\tc1_guest\tc2_host\tdata_ok\tcanary_ok\tuntouched\n");
+	std::fprintf(out, "seed\tfix\tentry\tentry_name\tarm\tindex\tpos_before\toffset\tnbytes\tremaining\texpected\tret\terr\t"
+	                  "aio_rc\taio_state\tpos_after\tcalls\tinjected\tc1_guest\tc2_host\tdata_ok\tcanary_ok\tuntouched\t"
+	                  "trunc_done\tsize_at_c2\trestore_ok\n");
 
 	std::mt19937_64 rng(seed);
 	int             total = 0;
 	for (int e = 0; e < ENTRY_COUNT; e++) {
 		std::vector<int> arms;
-		arms.insert(arms.end(), static_cast<size_t>(n_a), ARM_A);
-		arms.insert(arms.end(), static_cast<size_t>(n_k), ARM_K);
-		arms.insert(arms.end(), static_cast<size_t>(n_z), ARM_Z);
+		for (int a = 0; a < ARM_COUNT; a++) {
+			arms.insert(arms.end(), static_cast<size_t>(counts[a]), a);
+		}
 		std::shuffle(arms.begin(), arms.end(), rng);
-		std::array<int, 3> idx {};
+		std::array<int, ARM_COUNT> idx {};
 		for (int arm: arms) {
 			Trial t {};
 			t.entry = e;
 			t.arm   = arm;
 			t.index = idx[arm]++;
-			RunTrial(entries, fd, t, rng);
+			RunTrial(entries, fd, sf, t, rng);
 			std::fprintf(out,
-			             "%" PRIu64 "\t%d\t%s\t%s\t%d\t%" PRIu64 "\t%" PRIu64 "\t%" PRIu64 "\t%" PRIu64 "\t%" PRIu64
-			             "\t%" PRId64 "\t%d\t%d\t%u\t%" PRId64 "\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",
-			             seed, t.entry, ENTRY_NAMES[t.entry], ARM_NAMES[t.arm], t.index, t.pos_before, t.offset, t.nbytes,
-			             t.remaining, t.expected, t.ret, t.err, t.aio_rc, t.aio_state, t.pos_after, t.calls, t.injected,
-			             t.c1_guest, t.c2_host, t.data_ok, t.canary_ok, t.untouched);
+			             "%" PRIu64 "\t%d\t%d\t%s\t%s\t%d\t%" PRIu64 "\t%" PRIu64 "\t%" PRIu64 "\t%" PRIu64 "\t%" PRIu64
+			             "\t%" PRId64 "\t%d\t%d\t%u\t%" PRId64 "\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%" PRId64 "\t%d\n",
+			             seed, fix_on, t.entry, ENTRY_NAMES[t.entry], ARM_NAMES[t.arm], t.index, t.pos_before, t.offset,
+			             t.nbytes, t.remaining, t.expected, t.ret, t.err, t.aio_rc, t.aio_state, t.pos_after, t.calls,
+			             t.injected, t.c1_guest, t.c2_host, t.data_ok, t.canary_ok, t.untouched, t.trunc_done,
+			             t.size_at_c2, t.restore_ok);
 			total++;
+			if (t.restore_ok == 0) {
+				std::fclose(out);
+				std::printf("RESTORE FAILED entry=%d index=%d\n", t.entry, t.index);
+				std::fflush(stdout);
+				std::_Exit(6);
+			}
 		}
 	}
 	std::fclose(out);
 
+	std::vector<uint8_t> last;
+	const bool final_ok = ReadWholeFile(sf.h2, &last) && Sha256Hex(last.data(), last.size()) == sf.sha;
+	std::printf("FINAL file sha256 equal %d\n", final_ok ? 1 : 0);
+	CloseHandle(sf.h2);
 	FileSystem::KernelClose(fd);
 	FileSystem::Shutdown();
 	std::error_code error;

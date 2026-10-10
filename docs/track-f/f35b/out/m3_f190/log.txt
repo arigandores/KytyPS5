@@ -1,0 +1,7 @@
+--- Build ---
+Fork build arigandores/KytyPS5 399d327-dirty
+--- Fatal Error ---
+Error: condition (program.info.buffers.size() != specialization.buffers.size() || program.info.images.size() > specialization.images.size()) is true in C:\kyty\f287\f35b\wt\src\graphics\shader\recompiler\ir\passes\ResourceMaterialization.cpp:1139
+[test] TestF22IndirectNullComparison
+shader resource specialization failed: indirect image specialization has no typed candidate
+ShaderCfgTests: failed: test shader resources did not materialize

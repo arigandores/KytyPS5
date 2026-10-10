@@ -1,0 +1,8 @@
+[f22] K1 KYTY_FIX_F19=1: images=2 members=2 dref=2 manual=0 plain_explicit=0 root_manual=0 views=0:k32Float:tsharp_depth,1:k8UNorm:tsharp_color measure=1
+[f22] M1 KYTY_FIX_F19=1: images=2 members=2 dref=2 manual=0 plain_explicit=0 root_manual=0 views=0:null:null_D32,1:k8UNorm:tsharp_color measure=1
+[f22] M2 KYTY_FIX_F19=1: images=2 members=2 dref=2 manual=0 plain_explicit=0 root_manual=0 views=0:null:null_D32,1:k16Float:tsharp_color measure=1
+[f22] M3 KYTY_FIX_F19=1: images=2 members=2 dref=2 manual=0 plain_explicit=0 root_manual=0 views=0:null:null_D32,1:k8_8_8_8UNorm:tsharp_color measure=1
+[f22] M4 KYTY_FIX_F19=1: images=3 members=3 dref=3 manual=0 plain_explicit=0 root_manual=0 views=0:null:null_D32,1:k8UNorm:tsharp_color,2:k16Float:tsharp_color measure=1
+[f22] M5 KYTY_FIX_F19=1: images=3 members=3 dref=3 manual=0 plain_explicit=0 root_manual=0 views=0:null:null_D32,1:k32Float:tsharp_depth,2:k8UNorm:tsharp_color measure=1
+[f22] total KYTY_FIX_F19=1: K1=1 K2=1 M=5
+[test] TestF22IndirectNullComparison

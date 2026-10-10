@@ -1,0 +1,39 @@
+2026-10-10T19:39:30Z start F35b; read ROADMAP p.685 (a2350134), f35a.md (0d8bab3f) 0d8bab3f
+2026-10-10T19:39:45Z worktree f35b/wt on 399d3271
+2026-10-10T19:40:07Z guard HPP-752 in_progress 95e7b0fb-fbc4-4f97-9a08-cc8693a04be3
+2026-10-10T19:40:53Z mut_f35b.py anchors checked (apply+revert, no build) 3ace7063
+2026-10-10T19:41:05Z guard HPP-752 in_progress 95e7b0fb-fbc4-4f97-9a08-cc8693a04be3
+2026-10-10T19:42:01Z notes.md static review saved; pause - HPP-752 series in_progress
+2026-10-10T19:42:01Z guard HPP-752 in_progress 95e7b0fb-fbc4-4f97-9a08-cc8693a04be3
+2026-10-10T20:29:42Z guard HPP-752 done None
+2026-10-10T20:30:30Z guard HPP-752 done None
+2026-10-10T20:31:23Z build base rc=0 434f7e07
+2026-10-10T20:31:23Z run base
+2026-10-10T20:31:40Z guard HPP-752 done None
+2026-10-10T20:31:55Z build m1a rc=0 cd2bb9c3
+2026-10-10T20:31:56Z run m1a
+2026-10-10T20:31:56Z guard HPP-752 done None
+2026-10-10T20:32:11Z build m1b rc=0 bce2d791
+2026-10-10T20:32:11Z run m1b
+2026-10-10T20:32:12Z guard HPP-752 done None
+2026-10-10T20:32:27Z build m2 rc=0 a5682538
+2026-10-10T20:32:28Z run m2
+2026-10-10T20:32:34Z guard HPP-752 done None
+2026-10-10T20:32:50Z build m3 rc=0 68ff4a35
+2026-10-10T20:32:51Z run m3
+2026-10-10T20:32:51Z guard HPP-752 done None
+2026-10-10T20:33:06Z build m4 rc=0 7d2f473e
+2026-10-10T20:33:06Z run m4
+2026-10-10T20:33:07Z guard HPP-752 done None
+2026-10-10T20:33:21Z build m5 rc=0 8fdfe41c
+2026-10-10T20:33:21Z run m5
+2026-10-10T20:33:38Z guard HPP-752 done None
+2026-10-10T20:33:38Z m3b declared after data (extra, not in b27a70ba list)
+2026-10-10T20:33:51Z build m3b rc=0 3484dcf7
+2026-10-10T20:33:52Z run m3b
+2026-10-10T20:33:53Z guard HPP-752 done None
+2026-10-10T20:34:07Z build final rc=0 d77f51d1
+2026-10-10T20:34:08Z run final (reverted)
+2026-10-10T20:35:18Z cmp [f22] base vs F35a filt and final vs base
+2026-10-10T20:37:06Z refs_f35b ALL OK 0ba4eebe
+2026-10-10T20:37:09Z report f35b-review.md written c64647e7; FACTS section appended

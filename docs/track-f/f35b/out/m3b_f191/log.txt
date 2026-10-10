@@ -1,0 +1,12 @@
+[f22] K1 KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2 root_manual=1 views=0:k32Float:tsharp_depth,1:k8UNorm:tsharp_color measure=0
+[f22] M1 KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2 root_manual=1 views=0:null:null_R32F,1:k8UNorm:tsharp_color measure=0
+[f22] M2 KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2 root_manual=1 views=0:null:null_R32F,1:k16Float:tsharp_color measure=0
+[f22] M3 KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2 root_manual=1 views=0:null:null_R32F,1:k8_8_8_8UNorm:tsharp_color measure=0
+[f22] M4 KYTY_FIX_F19=1: images=2 members=2 dref=0 manual=1 plain_explicit=2 root_manual=1 views=0:null:null_R32F,1:k8UNorm:tsharp_color measure=0
+[f22] M5 KYTY_FIX_F19=1: images=2 members=2 dref=2 manual=0 plain_explicit=0 root_manual=0 views=0:null:null_D32,1:k32Float:tsharp_depth measure=0
+[f22] total KYTY_FIX_F19=1: K1=0 K2=0 M=0
+[test] TestF22IndirectNullComparison
+ShaderCfgTests: failed: F22 indirect comparison table did not materialize as a root and its candidates
+ShaderCfgTests: failed: F22 indirect comparison table members do not hold the T# of the form
+ShaderCfgTests: failed: F22 indirect comparison table did not materialize as a root and its candidates
+ShaderCfgTests: failed: F22 indirect comparison table members do not hold the T# of the form

@@ -1,0 +1,19 @@
+runs runs
+=1 CN 50                   YES  walks 1, nested 0, reenter>=2, expired 0, expired_seen 0, rc 321, hang 0, crash 0, dur<6 s - fails 0; reenter min 2; dur 0.145..0.450; rc {321: 50}; cut 50 second 0 (ref)
+=1 CN stand nested_fatal   YES  nested_fatal = 1 in 50 of 50 (stand control)
+=1 C 50                    YES  walks 1, rc 321, reenter>=1, nested 0, classes 0, done_seen 0 - fails 0; done_seen 0 in 50 of 50; second 0 crash 0 hang 0 cut 0 expired 0; dur max 0.442
+MEMBERS ALL YES
+runs runs_b007
+=1 CN 10                   YES  walks 1, nested 0, reenter>=2, expired 0, expired_seen 0, rc 321, hang 0, crash 0, dur<6 s - fails 0; reenter min 2; dur 0.152..0.174; rc {321: 10}; cut 10 second 0 (ref)
+=1 CN stand nested_fatal   YES  nested_fatal = 1 in 10 of 10 (stand control)
+MEMBERS ALL YES
+runs runs_m4b
+=1 CN 10                   NO   walks 1, nested 0, reenter>=2, expired 0, expired_seen 0, rc 321, hang 0, crash 0, dur<6 s - fails {'expired': 10, 'expired_seen': 10, 'dur': 10}; reenter min 2; dur 12.160..12.188; rc {321: 10}; cut 10 second 0 (ref)
+=1 CN stand nested_fatal   YES  nested_fatal = 1 in 10 of 10 (stand control)
+=1 C 10                    NO   walks 1, rc 321, reenter>=1, nested 0, classes 0, done_seen 0 - fails {'done_seen': 10}; done_seen 0 in 0 of 10; second 0 crash 0 hang 0 cut 0 expired 0; dur max 0.164
+MEMBERS NOT ALL
+runs runs_m4a
+=1 CN 10                   NO   walks 1, nested 0, reenter>=2, expired 0, expired_seen 0, rc 321, hang 0, crash 0, dur<6 s - fails {'reenter': 10, 'expired': 10, 'expired_seen': 10, 'dur': 10}; reenter min 0; dur 12.160..12.426; rc {321: 10}; cut 10 second 0 (ref)
+=1 CN stand nested_fatal   YES  nested_fatal = 1 in 10 of 10 (stand control)
+=1 C 10                    NO   walks 1, rc 321, reenter>=1, nested 0, classes 0, done_seen 0 - fails {'reenter': 10, 'done_seen': 10}; done_seen 0 in 0 of 10; second 0 crash 0 hang 0 cut 0 expired 0; dur max 0.168
+MEMBERS NOT ALL

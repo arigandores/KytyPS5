@@ -1,0 +1,7 @@
+runs CN {'n': 50, 'pass': 50, 'walks!=1': 0, 'nested': 0, 'reenter<2': 0, 'expired': 0, 'expired_seen': 0, 'rc!=321': 0, 'dur>=6': 0, 'done_seen': 0, 'nf!=1': 0}
+runs C {'n': 50, 'pass': 50, 'walks!=1': 0, 'nested': 0, 'reenter<2': 0, 'expired': 0, 'expired_seen': 0, 'rc!=321': 0, 'dur>=6': 0, 'done_seen': 0, 'nf!=1': 0}
+runs_b007 CN {'n': 10, 'pass': 10, 'walks!=1': 0, 'nested': 0, 'reenter<2': 0, 'expired': 0, 'expired_seen': 0, 'rc!=321': 0, 'dur>=6': 0, 'done_seen': 0, 'nf!=1': 0}
+runs_m4b CN {'n': 10, 'pass': 0, 'walks!=1': 0, 'nested': 0, 'reenter<2': 0, 'expired': 10, 'expired_seen': 10, 'rc!=321': 0, 'dur>=6': 10, 'done_seen': 0, 'nf!=1': 0}
+runs_m4b C {'n': 10, 'pass': 0, 'walks!=1': 0, 'nested': 0, 'reenter<2': 0, 'expired': 0, 'expired_seen': 0, 'rc!=321': 0, 'dur>=6': 0, 'done_seen': 10, 'nf!=1': 0}
+runs_m4a CN {'n': 10, 'pass': 0, 'walks!=1': 0, 'nested': 0, 'reenter<2': 10, 'expired': 10, 'expired_seen': 10, 'rc!=321': 0, 'dur>=6': 10, 'done_seen': 0, 'nf!=1': 0}
+runs_m4a C {'n': 10, 'pass': 0, 'walks!=1': 0, 'nested': 0, 'reenter<2': 10, 'expired': 0, 'expired_seen': 0, 'rc!=321': 0, 'dur>=6': 0, 'done_seen': 10, 'nf!=1': 0}

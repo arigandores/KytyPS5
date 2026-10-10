@@ -1,0 +1,13 @@
+diff --git a/src/common/subsystems.cpp b/src/common/subsystems.cpp
+index ab9b6d3b..530b05ec 100644
+--- a/src/common/subsystems.cpp
++++ b/src/common/subsystems.cpp
+@@ -135,7 +135,7 @@ void Subsystems::EmergencyShutdownActiveF21() {
+ 		g_f21_done.store(true, std::memory_order_release);
+ 		return;
+ 	}
+-	if (owner == self) {
++	if (false && owner == self) { // MUTANT m4a
+ 		// Re-entry of the owner thread (DbgExit after DbgReport, a fatal inside an emergency callback): no nested walk.
+ 		if (hook != nullptr) {
+ 			hook(kEmergencyReenter, 0, 0);

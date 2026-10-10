@@ -1,0 +1,13 @@
+diff --git a/src/common/subsystems.cpp b/src/common/subsystems.cpp
+index ab9b6d3b..eb0b6e2e 100644
+--- a/src/common/subsystems.cpp
++++ b/src/common/subsystems.cpp
+@@ -140,7 +140,7 @@ void Subsystems::EmergencyShutdownActiveF21() {
+ 		if (hook != nullptr) {
+ 			hook(kEmergencyReenter, 0, 0);
+ 		}
+-		return;
++		// MUTANT m4b: no return
+ 	}
+ 	if (g_f21_done.load(std::memory_order_acquire)) {
+ 		if (hook != nullptr) {

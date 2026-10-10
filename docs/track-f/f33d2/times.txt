@@ -1,0 +1,23 @@
+2026-10-10T18:06:13Z f33d2 start; N/seed comment f5951123 18:06:04Z
+2026-10-10T18:06:14Z f33d2 worktree f33d/wt -> b007ce5f
+2026-10-10T18:06:49Z f33d2 base rebuild b007ce5f no mutant sha256 3a022fbf
+2026-10-10T18:07:15Z f33d2 mutant m4b on b007ce5f sha256 1d869989 diff d09330ab
+2026-10-10T18:07:26Z f33d2 mutant m4a on b007ce5f sha256 269a0374 diff 6c49ad43
+2026-10-10T18:07:36Z F33d2 step start: arm CN seeds 4001-4050 fix 1 exe kyty_emulator_a086872d.exe out runs
+2026-10-10T18:07:49Z F33d2 step end: arm CN fix 1 exe kyty_emulator_a086872d.exe out runs rc=0 tsv ea281b61
+2026-10-10T18:07:53Z F33d2 step start: arm C seeds 4001-4050 fix 1 exe kyty_emulator_a086872d.exe out runs
+2026-10-10T18:08:05Z F33d2 step end: arm C fix 1 exe kyty_emulator_a086872d.exe out runs rc=0 tsv f393576d
+2026-10-10T18:08:06Z F33d2 step start: arm CN seeds 4001-4010 fix 1 exe kyty_emulator_b007.exe out runs_b007
+2026-10-10T18:08:08Z F33d2 step end: arm CN fix 1 exe kyty_emulator_b007.exe out runs_b007 rc=0 tsv 63bde043
+2026-10-10T18:08:09Z F33d2 step start: arm CN seeds 4001-4010 fix 1 exe kyty_emulator_m4b.exe out runs_m4b
+2026-10-10T18:10:12Z F33d2 step end: arm CN fix 1 exe kyty_emulator_m4b.exe out runs_m4b rc=0 tsv 7fbb89ea
+2026-10-10T18:10:12Z F33d2 step start: arm CN seeds 4001-4010 fix 1 exe kyty_emulator_m4a.exe out runs_m4a
+2026-10-10T18:12:15Z F33d2 step end: arm CN fix 1 exe kyty_emulator_m4a.exe out runs_m4a rc=0 tsv b3378ebe
+2026-10-10T18:12:19Z F33d2 step start: arm C seeds 4001-4010 fix 1 exe kyty_emulator_m4b.exe out runs_m4b
+2026-10-10T18:12:21Z F33d2 step end: arm C fix 1 exe kyty_emulator_m4b.exe out runs_m4b rc=0 tsv 041b0dab
+2026-10-10T18:12:22Z F33d2 step start: arm C seeds 4001-4010 fix 1 exe kyty_emulator_m4a.exe out runs_m4a
+2026-10-10T18:12:25Z F33d2 step end: arm C fix 1 exe kyty_emulator_m4a.exe out runs_m4a rc=0 tsv 1bdfa74e
+2026-10-10T18:12:25Z f33d2 read_all.out.txt 0127e9fd
+2026-10-10T18:12:36Z f33d2 recount.out.txt e79d3095
+2026-10-10T18:13:06Z f33d2 worktree restored clean b007ce5f rebuild sha256 b547fe97
+2026-10-10T18:14:21Z f33d2 FACTS section F33d2 appended; f33d2-review.md d7008b50

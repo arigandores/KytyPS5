@@ -54,13 +54,14 @@ public:
 
 	static void EmergencyShutdownActive();
 
-	// Track F, F33c (HPP-744; ROADMAP s122 item 675(g)): KYTY_FIX_F21 (default 0). InitFixF21 reads the knob once - on
+	// Track F, F33c (HPP-744; ROADMAP s122 item 675(g)): KYTY_FIX_F21. InitFixF21 reads the knob once - on
 	// the main thread before any other thread starts (Emulator::Run, before Init); LogFixF21 prints "FixF21: mode=<0|1>"
 	// once after Log::Initialize. At =1 EmergencyShutdownActive has one owner: the first thread that enters walks
 	// m_active and publishes "the walk is done"; a re-entry of the owner thread returns at once; any other thread does not
 	// walk - it waits for "done" at most kFixF21WaitMs and returns. At =0 (and without the stand) EmergencyShutdownActive
 	// is the FS11 code plus one check of a static flag. SetEmergencyHook - the stand KYTY_TEST_EXITFATAL only, same
 	// thread and time as InitFixF21.
+	// Track F, FS12a (HPP-750, ROADMAP s122 item 683(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF.
 	static constexpr uint32_t kFixF21WaitMs = 12000; // T of item 675(v)(2)
 	static void               InitFixF21();
 	static void               LogFixF21();

@@ -68,8 +68,11 @@ void Subsystems::EmergencyShutdownActive() {
 }
 
 // F33c: KYTY_FIX_F21 (the flags - at the top of this file).
+// Track F, FS12a (HPP-750, ROADMAP s122 item 683(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any other
+// value as EnvValueOn (the form of FS11a cb022252).
 void Subsystems::InitFixF21() {
-	g_fix_f21  = EnvFlagOn("KYTY_FIX_F21"); // unset, "", 0/false/off/no - OFF (the form of FS4a)
+	const char* value = std::getenv("KYTY_FIX_F21");
+	g_fix_f21  = value == nullptr || value[0] == '\0' || EnvValueOn(value);
 	g_f21_path = g_fix_f21 || g_f21_hook != nullptr;
 }
 

@@ -1,0 +1,5 @@
+2026-10-10T15:30:03Z check_f34b.py ALL OK cd4ad8dd
+2026-10-10T15:30:03Z refs_f34a ALL OK; form634_check --text f34a.md \2acbfcd
+2026-10-10T15:30:10Z form634_check --text f34a.md output sha (stdin) 2acbfcd7
+2026-10-10T15:30:10Z f34b-review.md written 00283ee6
+2026-10-10T15:30:10Z FACTS F34b appended 1057fe7f

@@ -1,0 +1,31 @@
+REF 2829896b:docs/ROADMAP.md:24290 anchor=OK plus1=OK
+REF 2829896b:docs/ROADMAP.md:24293 anchor=OK plus1=OK
+REF 2829896b:docs/ROADMAP.md:24294 anchor=OK plus1=OK
+REF 2829896b:docs/ROADMAP.md:24283 anchor=OK plus1=OK
+REF 72317680:docs/track-f/f34a.md:140 anchor=OK plus1=OK
+REF 72317680:docs/track-f/f34a.md:162 anchor=OK plus1=OK
+REF 72317680:docs/track-f/f34a.md:169 anchor=OK plus1=OK
+REF 72317680:docs/track-f/f34a.md:175 anchor=OK plus1=OK
+REF 72317680:docs/track-f/f34a.md:180 anchor=OK plus1=OK
+REF 72317680:docs/track-f/f34a.md:194 anchor=OK plus1=OK
+REF ee9632be:src/graphics/presentation/window/swapchain.cpp:947 anchor=OK plus1=OK
+REF ee9632be:src/graphics/presentation/window/screenshot.cpp:513 anchor=OK plus1=OK
+REF ee9632be:src/graphics/presentation/window/inputScript.cpp:201 anchor=OK plus1=OK
+REF ee9632be:src/graphics/host_gpu/renderer/renderDraw.cpp:4451 anchor=OK plus1=OK
+REF ee9632be:src/graphics/presentation/videoOut.cpp:1209 anchor=OK plus1=OK
+REF ee9632be:src/graphics/presentation/window/vulkanWindow.cpp:932 anchor=OK plus1=OK
+REF ee9632be:src/common/assert.cpp:46 anchor=OK plus1=OK
+REF ee9632be:src/loader/runtimeLinker.cpp:1610 anchor=OK plus1=OK
+REF ee9632be:src/common/frameStats.cpp:85 anchor=OK plus1=OK
+FS11 log_fs11_v FrameTrace lines 10039 skc fields present False
+LOG C:/kyty/s122/log_des122.txt intro_next True vulkan_layer_lines 0
+LOG C:/kyty/s122/log_edes122.txt intro_next True vulkan_layer_lines 0
+LOG C:/kyty/s127/log_s2s127.txt.xz intro_next True vulkan_layer_lines 0
+LOG C:/kyty/s129/log_s3s129.txt.xz intro_next True vulkan_layer_lines 0
+LOG C:/kyty/s130/log_s2s130.txt.xz intro_next True vulkan_layer_lines 0
+LOG C:/kyty/s131/log_lw2s131.txt.xz intro_next True vulkan_layer_lines 0
+LOG C:/kyty/s134/log_s3s134.txt.xz intro_next True vulkan_layer_lines 0
+LOG C:/kyty/s136/log_s3s136.txt.xz intro_next True vulkan_layer_lines 0
+save memory.bin 705bebbb
+u_02 C:/kyty/s288/s15/rec_u_02.mp4: 7471 frames 960x540, index entries 7471 one-frame glitches: 0
+ALL OK

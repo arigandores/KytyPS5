@@ -1,0 +1,6 @@
+links 17 bad 0
+ALL OK
+neg 17 of 17 caught (anchor mutant and line +1)
+ALL OK
+text links 17 table 17 extra [] missing []
+ALL OK

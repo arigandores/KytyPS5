@@ -1,0 +1,13 @@
+watch: start 2026-10-11T13:30:21Z child 40592 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+plain ps_00dc898289bb924f_047bcdb28f560319.bin#0 -> MATCH_ONE
+rewrite own(F47a3) vs emulator transcription: outcome differs 0 of 259; patched equal 69 differ 0
+dual ps_04a29e34109469cb_6ab2263edf74bb60.bin#0 (emulator rewrite) -> MATCH_ONE
+   target e21b2889e0c2228b words 63231 walk_ok 1
+   exact 0 hashes [] []
+   rewritten 1 hashes ['04a29e34109469cb'] ['ps_04a29e34109469cb_6ab2263edf74bb60.bin#0']
+   stripped 1 hashes ['04a29e34109469cb'] ['ps_04a29e34109469cb_6ab2263edf74bb60.bin#0']
+   MATCH_ONE
+acrossH ps_2f46fd22b1de1575_7cd707ce8f2bfd2f.bin#0 -> MATCH_MANY
+T1 PS files 391; programs with SOP2 op: {'0x04': 36, '0x0a': 43, '0x0b': 90}
+done
+rc=0 end 2026-10-11T13:30:33Z

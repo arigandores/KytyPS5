@@ -1,0 +1,16 @@
+fixture lit        class C-imm        want C-imm        leaves ['LIT'] ok
+fixture user       class C-buf        want C-buf        leaves ['USER'] ok
+fixture smem       class C-buf        want C-buf        leaves ['SMEM'] ok
+fixture vin        class undetermined want undetermined leaves ['OTHER'] ok
+fixture shadow     class C-imm        want C-imm        leaves ['LIT'] ok
+fixture mrt1_only  class C-imm        want C-imm        leaves ['LIT'] ok
+fixture weak_pair  class C-buf        want C-buf        leaves ['LIT', 'USER'] ok
+fixture cbuf_other class undetermined want undetermined leaves ['OTHER', 'SMEM'] ok
+fixture img        class T            want T            leaves ['IMG'] ok
+fixture interp     class C-buf        want C-buf        leaves ['INTERP'] ok
+fixture mutant m0_load_unused           class C-imm        leaves ['LIT'] ok
+fixture mutant m1_literal_from_s_load   class C-buf        leaves ['LIT', 'SMEM'] ok
+fixture mutant m4_literal_from_user_sgpr class C-buf        leaves ['LIT', 'USER'] ok
+fixture mutant m2_branch_on_s_load      class undetermined leaves ['LIT', 'OTHER', 'SMEM'] ok
+fixture mutant m3_cndmask_on_s_load     class C-buf        leaves ['LIT', 'SMEM'] ok
+ALL OK

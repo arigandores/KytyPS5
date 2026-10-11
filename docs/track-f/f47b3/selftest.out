@@ -1,0 +1,23 @@
+watch: start 2026-10-11T13:29:45Z child 54252 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+catalog C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19 files 741 ok 741 bad 0 modules 1270
+modules 1270 unique sha 570 shared by >1 place 126 (of them across different H 2)
+PS modules 259: found at exactly one place 257; all places of one H 257; places of >1 H 2
+  across H 0073ca629876a570 ['ps_2f46fd22b1de1575_7cd707ce8f2bfd2f.bin#0', 'ps_715f9f6633036cf3_7cd707ce8f2bfd2f.bin#0']
+  across H cdcdd45c30a0670f ['vs_386047efb7a77418_82850abfcdfcd803.bin#0', 'vs_ba4d1f3a081f4cf7_82850abfcdfcd803.bin#0']
+  shared 0073ca629876a570 ['ps_2f46fd22b1de1575_7cd707ce8f2bfd2f.bin#0', 'ps_715f9f6633036cf3_7cd707ce8f2bfd2f.bin#0']
+  shared 00f4bfa2cf50976e ['vs_a5a228b1171ff83e_2d1fad53fb29e543.bin#0', 'vs_a5a228b1171ff83e_2d1fad53fb29e543.bin#1', 'vs_a5a228b1171ff83e_63f577b40223fe81.bin#0']
+  shared 0103ff75fee7f404 ['vs_fefefe95679d8b8b_cc8411ba81a3b41f.bin#0', 'vs_fefefe95679d8b8b_d7fcbf05330980ad.bin#0']
+  shared 01d841ed84481aef ['vs_4fe2a9292341ff88_0bc7e0c507a88640.bin#0', 'vs_4fe2a9292341ff88_2465084894627f1c.bin#0', 'vs_4fe2a9292341ff88_2465084894627f1c.bin#1', 'vs_4fe2a9292341ff88_2465084894627f1c.bin#2']
+  shared 081731bffdc56827 ['vs_db7cc6e2391055c9_0766c16f84dd2c79.bin#0', 'vs_db7cc6e2391055c9_1d850936d49a0dda.bin#0']
+  shared 0a5f305714d54f2c ['vs_90e81a4859ef74e3_3fb1d9893e0909de.bin#0', 'vs_90e81a4859ef74e3_401a7d0e73253c3f.bin#0', 'vs_90e81a4859ef74e3_d3b8fe786f6cc61d.bin#0']
+  shared 0f52a6f980f16e64 ['vs_ae4cca3e4bf70904_003e021a07b3bece.bin#0', 'vs_ae4cca3e4bf70904_4f56421833948772.bin#0', 'vs_ae4cca3e4bf70904_4f56421833948772.bin#1', 'vs_ae4cca3e4bf70904_4f56421833948772.bin#2', 'vs_ae4cca3e4bf70904_a0c50d36c8459d6b.bin#0', 'vs_ae4cca3e4bf70904_a0c50d36c8459d6b.bin#1', 'vs_ae4cca3e4bf70904_a0c50d36c8459d6b.bin#2', 'vs_ae4cca3e4bf70904_a881d79593abd425.bin#0', 'vs_ae4cca3e4bf70904_a881d79593abd425.bin#1', 'vs_ae4cca3e4bf70904_a881d79593abd425.bin#2']
+  shared 10ddf37c1175b73d ['cs_380bb9d636390bae_fe70c334a8301128.bin#0', 'cs_380bb9d636390bae_fe70c334a8301128.bin#2']
+  shared 1249087fc4f95d6a ['vs_ee81b5d88a2acf29_1b776d91ef4fd0c8.bin#0', 'vs_ee81b5d88a2acf29_b01a089fb2928750.bin#0']
+  shared 12608d4404d9dc65 ['vs_a513b601b80c40b6_7ff88f98fffc8e22.bin#0', 'vs_a513b601b80c40b6_f6c66230c670815d.bin#0', 'vs_a513b601b80c40b6_f6c66230c670815d.bin#1', 'vs_a513b601b80c40b6_f6c66230c670815d.bin#2']
+positive: PS modules 259 found at own place (and only at its sha group) 259 fail 0
+negative: 2 mutations x 60 PS modules, matches found 0 (must be 0)
+dual: rewrite outcomes [('location_above1', 81), ('no_location1', 109), ('patched', 69)]; checked 69 patched: exact 0 and found by rewrite and by stripped - fail 0
+dual: rewritten-path matches = own sha group (one H) 67 of 69; stripped matches = own sha group 69 of 69
+key: file name H = payload H fail 0
+ALL OK
+rc=0 end 2026-10-11T13:29:50Z

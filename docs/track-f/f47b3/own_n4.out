@@ -1,0 +1,16 @@
+program C:/kyty/s288/s4/gcn/g_1/ps_d88770f91d5d003e.bin words 44 class C-imm leaves ['LIT']
+  pc   0 VOP1   op 1     v_mov_b32                defs [('v', 0)] srcs [('leaf', 'LIT')] leaf None exp None
+  pc   2 EXP    op None  EXP_None                 defs [] srcs [] leaf None exp (0, [('v', 0), ('v', 0)])
+  pc   4 SOPP   op 1     SOPP_1                   defs [] srcs [] leaf None exp None
+site pc 0 fam VOP1 literal 0x3c003c00
+x1_s_cselect_on_s_load           class C-imm        leaves LIT                                      control 0 need SMEM  MISSED
+x2_s_cselect_b64_on_s_load       class C-imm        leaves LIT                                      control 0 need SMEM  MISSED
+x3_s_addc_scc_on_s_load          class C-imm        leaves LIT                                      control 0 need SMEM  MISSED
+x4_s_cmov_on_s_load              class C-buf        leaves LIT,SMEM                                 control 0 need SMEM  CAUGHT
+x5_s_mov_chain_s_load            class C-buf        leaves SMEM,USER                                control 0 need SMEM  CAUGHT
+x6_buffer_load                   class C-buf        leaves BUF                                      control 0 need BUF   CAUGHT
+x7_image                         class T            leaves IMG                                      control 0 need IMG   CAUGHT
+x8_exec_and_s_load               class undetermined leaves COV,LIT,OTHER,SMEM,USER                  control 1 need SMEM  CAUGHT
+x9_straight_lds_plus_s_load      class undetermined leaves OTHER,SMEM                               control 0 need SMEM  CAUGHT
+x10_branch_s_load_site_literal   class undetermined leaves LIT,OTHER,SMEM,USER                      control 1 need SMEM  CAUGHT
+done

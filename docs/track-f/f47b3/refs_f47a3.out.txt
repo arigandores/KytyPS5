@@ -1,0 +1,8 @@
+links 38 bad 0
+ALL OK
+links 38 bad 0
+ALL OK
+neg 38 of 38 caught (anchor mutant and line +1)
+ALL OK
+text links 38 table 38 extra [] missing []
+ALL OK

@@ -102,3 +102,13 @@ we_wait_msg	4b69833b	src/video/windows/SDL_windowsevents.c	1895	ret = MsgWaitFor
 we_wakeup	4b69833b	src/video/windows/SDL_windowsevents.c	1939	PostMessage(data->hwnd, data->videodata->_SDL_WAKEUP, 0, 0);	}
 kb_nofocus	4b69833b	src/events/SDL_keyboard.c	846	/* Drop events that don't change state */	if (state) {
 sdl_helper	4b69833b	src/SDL.c	230	if (SDL_HelperWindowCreate() < 0) {	goto quit_and_error;
+e_enum_ms	4b69833b	src/events/SDL_events.c	41	#define ENUMERATION_POLL_INTERVAL_MS 3000	
+e_event_ms	4b69833b	src/events/SDL_events.c	44	#define EVENT_POLL_INTERVAL_MS 1	
+hj_init_count	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	625	SDL_HIDAPI_change_count = SDL_hid_device_change_count();	HIDAPI_UpdateDeviceList();
+h_wminfo	4b69833b	include/SDL_syswm.h	374	extern DECLSPEC SDL_bool SDLCALL SDL_GetWindowWMInfo(SDL_Window * window,	SDL_SysWMinfo * info);
+j_setvbutton_lock	4b69833b	src/joystick/SDL_joystick.c	999	SDL_LockJoysticks();	{
+w_process	730ed40a	src/graphics/presentation/window/window.cpp	554	void WindowContext::ProcessEvent(double time_s) {	auto& game  = loop;
+w_late_cap	730ed40a	src/graphics/presentation/window/window.cpp	859	if (late_logged.fetch_add(1, std::memory_order_relaxed) < 32) {	LOGF("MainTaskLate: us=%llu\n", static_c
+w_fire_post	730ed40a	src/graphics/presentation/window/window.cpp	1259	if (!TestHidLossPost([mode = cfg.mode] { TestHidLossFire(mode); })) {	return;
+w_create	730ed40a	src/graphics/presentation/window/window.cpp	898	static void WindowCreate(WindowContext& context) {	EXIT_IF(context.window != nullptr);
+w_hostinit	730ed40a	src/graphics/presentation/window/window.cpp	915	HostInputInit();	InitializeSystemOverlayInput();

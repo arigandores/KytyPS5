@@ -120,6 +120,16 @@ REFS = [
     ('we_wakeup', 'sdl', 'src/video/windows/SDL_windowsevents.c', 'PostMessage(data->hwnd, data->videodata->_SDL_WAKEUP, 0, 0);', ''),
     ('kb_nofocus', 'sdl', 'src/events/SDL_keyboard.c', '/* Drop events that don\'t change state */', 'static int SDL_SendKeyboardKeyInternal('),
     ('sdl_helper', 'sdl', 'src/SDL.c', 'if (SDL_HelperWindowCreate() < 0) {', ''),
+    ('e_enum_ms', 'sdl', E, '#define ENUMERATION_POLL_INTERVAL_MS 3000', ''),
+    ('e_event_ms', 'sdl', E, '#define EVENT_POLL_INTERVAL_MS 1', ''),
+    ('hj_init_count', 'sdl', 'src/joystick/hidapi/SDL_hidapijoystick.c', 'SDL_HIDAPI_change_count = SDL_hid_device_change_count();', ''),
+    ('h_wminfo', 'sdl', 'include/SDL_syswm.h', 'extern DECLSPEC SDL_bool SDLCALL SDL_GetWindowWMInfo(SDL_Window * window,', ''),
+    ('j_setvbutton_lock', 'sdl', J, 'SDL_LockJoysticks();', 'int SDL_JoystickSetVirtualButton(SDL_Joystick *joystick, int button, Uint8 value)'),
+    ('w_process', 'emu', W, 'void WindowContext::ProcessEvent(double time_s) {', ''),
+    ('w_late_cap', 'emu', W, 'if (late_logged.fetch_add(1, std::memory_order_relaxed) < 32) {', ''),
+    ('w_fire_post', 'emu', W, 'if (!TestHidLossPost([mode = cfg.mode] { TestHidLossFire(mode); })) {', ''),
+    ('w_create', 'emu', W, 'static void WindowCreate(WindowContext& context) {', ''),
+    ('w_hostinit', 'emu', W, 'HostInputInit();', 'static void WindowCreate(WindowContext& context) {'),
 ]
 
 

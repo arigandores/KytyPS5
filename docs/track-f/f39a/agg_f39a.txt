@@ -1,0 +1,237 @@
+records 2576 errors 0 ok 2576 distinct logs 813
+course-line logs (distinct) 313
+by build:
+  ? -         232
+  dc5d471 FS10      63
+  302347b FS8       55
+  0005e11 S18       53
+  c0057cc -         49
+  35b454c -         45
+  4d9e8ab S12       44
+  ee9632b FS11      43
+  f2307b0 -         38
+  a1d1d86 -         27
+  3904522 FS6       26
+  0c8fcba -         22
+  6fbdcf6 -         12
+  9238a18 -         12
+  4fc501f 9235a7ac  11
+  ea38426 -         10
+  ed4f96d -         6
+  52d2f54 -         6
+  4950557 -         5
+  365cc3c -         5
+  61b410b -         5
+  0e72bc1 FS5       5
+  4414e23 P23       5
+  082d161 -         4
+  79b14ef -         4
+  730ed40 FS12      4
+  0c57cfe -         3
+  b007ce5 -         3
+  a2fee0d -         3
+  fbae3a6 -         2
+  673b780 -         2
+  defd2c9 -         2
+  d6ee2dc FS7       2
+  11164d7 FS9       2
+  5c2c5e5 -         1
+  5f48cc3 -         1
+  399d327 -         1
+FixB24 line by course/not: {(False, 'none'): 298, (False, 'FixB24: mode=1'): 202, (True, 'none'): 117, (True, 'FixB24: mode=1'): 196}
+
+== Controller <id>: removed - logs: 2 lines: 2
+  C:/kyty/f287/f19e/log_b24_d0.txt 52d2f54 [not course] b24=none copies=1 stand=TestHidLoss: config on delay_s=60 mode=detach hold_ms=3000
+     line 412756: Controller 0: removed
+  C:/kyty/f287/f19e/log_b24_d1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1 stand=TestHidLoss: config on delay_s=60 mode=detach hold_ms=3000
+     line 432627: Controller 0: removed
+
+== MainTaskLate >= 1 s - rows: 172 logs: 52 {'STAND': 124, 'STARTUP': 48}
+  STAND      us=3001064   line 409227    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2991442   line 409228    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2980309   line 409232    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2960011   line 409233    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2938576   line 409234    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2918207   line 409235    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2897538   line 409236    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2876712   line 409237    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2856050   line 409238    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2835272   line 409239    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2814795   line 409240    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2794273   line 409241    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2773850   line 409242    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2753272   line 409243    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2732984   line 409244    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2712084   line 409245    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2691794   line 409246    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2671738   line 409247    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2651714   line 409248    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2630393   line 409249    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2610072   line 409250    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2589817   line 409251    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2569735   line 409252    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2549441   line 409253    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2529156   line 409254    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2507636   line 409255    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2486231   line 409256    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2465885   line 409257    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2445832   line 409258    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2425054   line 409259    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2404042   line 409260    C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=3000286   line 444543    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2979940   line 444544    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2974098   line 444545    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2959715   line 444546    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2939664   line 444547    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2919008   line 444548    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2898949   line 444549    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2878104   line 444550    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2857115   line 444551    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2836469   line 444552    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2815335   line 444553    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2795281   line 444554    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2774594   line 444555    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2753915   line 444556    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2733469   line 444557    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2712955   line 444558    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2692548   line 444559    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2671321   line 444560    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2650713   line 444561    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2629537   line 444562    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2608558   line 444563    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2587302   line 444564    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2565910   line 444565    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2545298   line 444566    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2524326   line 444567    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2504257   line 444568    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2483600   line 444569    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2463328   line 444570    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2442960   line 444571    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2421599   line 444572    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=2401099   line 444573    C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1
+  STAND      us=3001508   line 417550    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2981289   line 417551    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2976787   line 417552    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2961130   line 417553    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2940964   line 417554    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2920022   line 417555    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2899712   line 417556    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2878804   line 417557    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2858021   line 417558    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2836970   line 417559    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2816588   line 417560    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2795587   line 417561    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2775255   line 417562    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2753790   line 417563    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2732924   line 417564    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2712716   line 417565    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2692304   line 417566    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2671705   line 417567    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2650832   line 417568    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2629593   line 417569    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2608766   line 417570    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2588300   line 417571    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2568243   line 417572    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2548032   line 417573    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2526862   line 417574    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2505446   line 417575    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2484368   line 417576    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2463982   line 417577    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2443953   line 417578    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2423021   line 417579    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=2402726   line 417580    C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1
+  STAND      us=3001167   line 414837    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2979690   line 414838    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2978188   line 414839    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2959266   line 414840    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2937808   line 414841    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2916291   line 414842    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2895726   line 414843    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2874706   line 414844    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2854368   line 414845    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2833773   line 414846    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2813575   line 414847    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2792134   line 414848    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2771867   line 414849    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2750428   line 414850    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2729995   line 414851    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2709646   line 414852    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2688490   line 414853    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2667789   line 414854    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2646820   line 414855    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2625498   line 414856    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2604805   line 414857    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2583569   line 414858    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2563486   line 414859    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2543064   line 414860    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2521590   line 414861    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2501205   line 414862    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2481113   line 414863    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2460485   line 414864    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2439889   line 414865    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2419364   line 414866    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STAND      us=2399270   line 414867    C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1
+  STARTUP    us=20419483  line 5701      C:/kyty/s288/s10/log_u_1.txt 4414e23 [P23] b24=none copies=1
+  STARTUP    us=20175451  line 5691      C:/kyty/s288/s10/log_u_2.txt 4414e23 [P23] b24=none copies=1
+  STARTUP    us=20054203  line 5691      C:/kyty/s288/s10/log_u_3.txt 4414e23 [P23] b24=none copies=1
+  STARTUP    us=20652158  line 5692      C:/kyty/s288/s10/log_u_4.txt 4414e23 [P23] b24=none copies=1
+  STARTUP    us=20640394  line 5702      C:/kyty/s288/s10/log_u_5.txt 4414e23 [P23] b24=none copies=1
+  STARTUP    us=24497442  line 6275      C:/kyty/s288/s13/log_u_01.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=27300439  line 6279      C:/kyty/s288/s13/log_u_02.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=26380170  line 6279      C:/kyty/s288/s13/log_u_03.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=25567592  line 6277      C:/kyty/s288/s13/log_u_04.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=26563457  line 6278      C:/kyty/s288/s13/log_u_05.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=27293705  line 6285      C:/kyty/s288/s13/log_u_06.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=24784540  line 6277      C:/kyty/s288/s13/log_u_07.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=24753608  line 6286      C:/kyty/s288/s13/log_u_08.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=25910346  line 6287      C:/kyty/s288/s13/log_u_09.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=24802444  line 6277      C:/kyty/s288/s13/log_u_10.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=26021037  line 6279      C:/kyty/s288/s13/log_u_11.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=25304050  line 6286      C:/kyty/s288/s13/log_u_12.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=25501760  line 6278      C:/kyty/s288/s13/log_u_13.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=25742240  line 6278      C:/kyty/s288/s13/log_u_14.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=25241103  line 6278      C:/kyty/s288/s13/log_u_15.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=25204371  line 6277      C:/kyty/s288/s13/log_u_16.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=25607021  line 6278      C:/kyty/s288/s13/log_u_17.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=25374814  line 6277      C:/kyty/s288/s13/log_u_18.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=25777052  line 6278      C:/kyty/s288/s13/log_u_19.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=23105408  line 4427      C:/kyty/s288/s13/log_w13.txt 4d9e8ab [S12] b24=none copies=1
+  STARTUP    us=21416331  line 6290      C:/kyty/s288/s15/log_u_01.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21773804  line 6290      C:/kyty/s288/s15/log_u_02.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21467170  line 6282      C:/kyty/s288/s15/log_u_03.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21623896  line 6281      C:/kyty/s288/s15/log_u_04.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21376708  line 6282      C:/kyty/s288/s15/log_u_05.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21456520  line 6290      C:/kyty/s288/s15/log_u_06.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21498296  line 6290      C:/kyty/s288/s15/log_u_07.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21477126  line 6282      C:/kyty/s288/s15/log_u_08.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21092675  line 6280      C:/kyty/s288/s15/log_u_09.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21573473  line 6281      C:/kyty/s288/s15/log_u_10.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21775430  line 6290      C:/kyty/s288/s15/log_u_11.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21613133  line 6282      C:/kyty/s288/s15/log_u_12.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21391182  line 6290      C:/kyty/s288/s15/log_u_13.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21174559  line 6289      C:/kyty/s288/s15/log_u_14.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21227701  line 6280      C:/kyty/s288/s15/log_u_15.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21307330  line 6289      C:/kyty/s288/s15/log_u_16.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21726865  line 6290      C:/kyty/s288/s15/log_u_17.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21075630  line 6289      C:/kyty/s288/s15/log_u_18.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=21652563  line 6281      C:/kyty/s288/s15/log_u_19.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=18586178  line 4434      C:/kyty/s288/s15/log_w13.txt 302347b [FS8] b24=FixB24: mode=1 copies=1
+  STARTUP    us=1637617   line 1328814   C:/kyty/s288/s17c2/log_s17c_rsb.txt c0057cc [not course] b24=FixB24: mode=1 copies=1
+  STARTUP    us=12499486  line 3442601   C:/kyty/s288/s18c/log_s18_r.txt 0005e11 [S18] b24=FixB24: mode=1 copies=1
+  STARTUP    us=13622666  line 3442597   C:/kyty/s288/s18c2/log_s18_w2.txt 0005e11 [S18] b24=FixB24: mode=1 copies=1
+
+== logs with a host pad (connect line): 6
+  C:/kyty/f287/f19e/log_b24_d0.txt 52d2f54 [not course] b24=none copies=1 n=1
+     Controller 0: "KYTY test pad" type=6 accel=0 gyro=0 path=<masked>
+  C:/kyty/f287/f19e/log_b24_d1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1 n=1
+     Controller 0: "KYTY test pad" type=6 accel=0 gyro=0 path=<masked>
+  C:/kyty/f287/f19e/log_b24_h0.txt 52d2f54 [not course] b24=none copies=1 n=1
+     Controller 0: "KYTY test pad" type=6 accel=0 gyro=0 path=<masked>
+  C:/kyty/f287/f19e/log_b24_h1.txt 52d2f54 [not course] b24=FixB24: mode=1 copies=1 n=1
+     Controller 0: "KYTY test pad" type=6 accel=0 gyro=0 path=<masked>
+  C:/kyty/f287/f19e/log_b24_s0.txt 52d2f54 [not course] b24=none copies=1 n=1
+     Controller 0: "KYTY test pad" type=6 accel=0 gyro=0 path=<masked>
+  C:/kyty/f287/fs7c/log_fs7_h.txt d6ee2dc [FS7] b24=FixB24: mode=1 copies=1 n=1
+     Controller 0: "KYTY test pad" type=6 accel=0 gyro=0 path=<masked>
+
+== disconnect of unknown id: 0

@@ -1,0 +1,2 @@
+2026-10-11T00:01:27Z loglist start; in_progress=HPP-763:eb15eb75:run;HPP-767:8e98843f:run
+2026-10-11T00:02:38Z sweep start (no Harness series in_progress at 00:01:27Z)

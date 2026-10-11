@@ -1,0 +1,30 @@
+730ed40a	src/graphics/host_gpu/vulkanCommon.cpp	126	vk::ShaderModule CompileSPV(std::span<const uint32_t> code, vk::Device device) {	\tvk::ShaderModuleCreateInfo create_info {};
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2208	\t\tconst auto module = CreateCachedModule(device, result.spirv);	\t\tEXIT_IF(module == nullptr);
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2185	\t\tif (const char* subst = std::getenv("KYTY_PIPELINE_STATS_SPV"); subst != nullptr) {	\t\t\tchar hash_text[24];
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4034	\t\tAdoptDmaLayout(entry->second.permutations.back()); // session 102, KYTY_DMA_LAYOUT	\t\tAdoptSpirvView(entry->second.permutations.back()); // track F, F4a2
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2249	\t\t\tconst auto module = CreateCachedModule(device, p.spirv);	\t\t\tEXIT_IF(module == nullptr);
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2312	\t\t\t// Session 102, KYTY_DMA_LAYOUT: what was added in memory never reaches the file.	\t\t\tif (p.dma_layout != 0) [[unlikely]] {
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2257	\t\t\tAdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT	\t\t\tAdoptSpirvView(source.permutations.back()); // track F, F4a2
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4651	\t\t\t\tconst auto module = CreateCachedModule(device, p.spirv);	\t\t\t\tEXIT_IF(module == nullptr);
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4659	\t\t\t\tAdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT	\t\t\t\tAdoptSpirvView(source.permutations.back()); // track F, F4a2
+730ed40a	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	355	\tconst auto module = CompileSPV(words, graphics.device);	\tif (DualSourceFirstLine(ps_hash, true)) {
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h	114	struct ShaderProgram {	\tuint64_t         id     = 0;
+730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	62	\tconst auto module = CompileSPV(FAULT_BUFFER_PROCESS_SPV, m_graphics.device);	
+730ed40a	src/graphics/host_gpu/renderer/image/tiler.cpp	308	\t    CompileSPV({shaders[family_index].code, shaders[family_index].words}, m_graphics.devi	\tvk::PipelineShaderStageCreateInfo stage {};
+730ed40a	src/graphics/host_gpu/renderer/image/tiler.cpp	353	\t    CompileSPV({shaders[family_index].code, shaders[family_index].words}, m_graphics.devi	\tvk::PipelineShaderStageCreateInfo stage {};
+730ed40a	src/graphics/host_gpu/renderer/image/tiler.cpp	704	\t\tconst auto module = CompileSPV({code, words}, m_graphics.device);	\t\tvk::PipelineShaderStageCreateInfo stage {};
+730ed40a	src/graphics/host_gpu/renderer/image/tiler.cpp	838	\t\tconst auto module = CompileSPV(GPU_TILER_SWAP_BGRA16_SPV, m_graphics.device);	\t\tvk::PipelineShaderStageCreateInfo stage {};
+730ed40a	src/graphics/host_gpu/renderer/image/blitHelper.cpp	40	\tm_vertex_shader   = CompileSPV(GPU_BLIT_FS_TRIANGLE_SPV, m_graphics.device);	\tm_fragment_shader = CompileSPV(GPU_BLIT_COLOR_TO_MS_DEPTH_SPV, m_graphics.device);
+730ed40a	src/graphics/host_gpu/renderer/image/blitHelper.cpp	41	\tm_fragment_shader = CompileSPV(GPU_BLIT_COLOR_TO_MS_DEPTH_SPV, m_graphics.device);	}
+730ed40a	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	391	\t\ttess_control_shader_module = CompileSPV(shaders.control, graphics.device);	\t\tif (graphics_debug_dump_enabled()) {
+730ed40a	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	397	\t\ttess_eval_shader_module = CompileSPV(shaders.evaluation, graphics.device);	\t\tif (graphics_debug_dump_enabled()) {
+730ed40a	src/graphics/host_gpu/renderer/indirectArgsSanitizer.cpp	54	\tRequireVulkanSuccess(m_graphics.device.createShaderModule(&module_info, nullptr, &module)	\t                     "create indirect-args sanitizer shader module");
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	7375	\t\t                                .program        = std::move(result.program).TakeCompiled	\t\t                                .spirv          = std::move(result.spirv)});
+730ed40a	src/graphics/shader/recompiler/ir/passes/BindingLayout.cpp	132	\tif (program.info.uses_dma) {	\t\tAddBinding(next, DescriptorBindingKind::BdaPagetable);
+730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterModule.cpp	302	\t\t\tcase IR::DescriptorBindingKind::FaultBuffer:	\t\t\t\tstate.fault_buffer_variable = Define(StorageBufferType(state), "fault_buffer");
+730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	354	uint8_t DmaLayoutInject(ShaderRecompiler::IR::CompiledShaderInfo& program) {	\tusing Kind        = ShaderRecompiler::IR::DescriptorBindingKind;
+730ed40a	src/graphics/presentation/window/vulkanWindow.cpp	637	\tEXIT_NOT_IMPLEMENTED(supported_features2.features.vertexPipelineStoresAndAtomics != VK_TR	\tvk::PhysicalDeviceFeatures device_features {};
+730ed40a	src/graphics/presentation/window/vulkanWindow.cpp	656	\tdevice_features.vertexPipelineStoresAndAtomics       = VK_TRUE;	\tgraphics.sample_rate_shading_enabled                 = true;
+730ed40a	src/graphics/presentation/window/vulkanWindow.cpp	333	\t\tif (device_features2.features.fragmentStoresAndAtomics != VK_TRUE) {	\t\t\tLOGF("fragmentStoresAndAtomics is not supported\\n");
+730ed40a	src/graphics/presentation/window/vulkanWindow.cpp	639	\tdevice_features.fragmentStoresAndAtomics = VK_TRUE;	\tdevice_features.samplerAnisotropy        = VK_TRUE;
+730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1928	void AtomicTailU32(EmitterState& state, spv::Op op, uint32_t word, uint32_t value) {	\tconst auto result = state.builder.AllocateId();

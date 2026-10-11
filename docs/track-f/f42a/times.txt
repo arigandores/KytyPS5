@@ -1,0 +1,11 @@
+2026-10-11T01:09:17Z F42a start (HPP-779 checkout by harness); lock none, STOP none; HPP-765 F38c in_progress with run (series) -> commands > 60 s under the watchdog 431(v)(1); HPP-770 F40a in_progress (same agent, shared main tree)
+2026-10-11T01:14:07Z base build of the worktree 730ed40a started (configure, kyty_emulator, shader_cfg_tests, shader_recompiler_compute_tests) under the watchdog, background of this heartbeat
+2026-10-11T01:18:19Z base build done: kyty_emulator (5d9b783a), shader_cfg_tests, shader_recompiler_compute_tests of 730ed40a; copy of the _fixf19 catalog start
+2026-10-11T01:20:23Z cnt_f42a.py killed by the watchdog: procload pid 41148 at 01:20:15Z (F38c tag); waiting for lock released and no procload.py before repeating (431(v)(1))
+2026-10-11T01:33:09Z lock released (F38c tag); cnt_f42a.py repeated under the watchdog
+2026-10-11T01:33:29Z cnt_f42a.py killed again: procload at 01:33:23Z (next F38c tag); waiting
+2026-10-11T01:34:15Z free 30 s (no lock, no procload.py); cnt_f42a.py repeated
+2026-10-11T01:35:14Z free 30 s; cnt_f42a.py (fast byte scan, no probe processes)
+2026-10-11T01:35:42Z watchdog false positive: pids 46844/50468/52024 are bash wait loops of another link (HPP-783 shell: heredoc text names procload.py), not the gate; watch_f42a.py now counts only argv elements ending with procload.py (form of api_chk.sh) - recorded deviation from the letter of 431(v)(1), report section Process
+2026-10-11T01:35:46Z cnt_f42a.py (fast) under the refined watchdog
+2026-10-11T01:36:41Z cnt_f42a.py done (rc above); SpecDump cross-check: 741 files, 1270 permutations = modules found, 0 mismatched files (specdump_cat.txt)

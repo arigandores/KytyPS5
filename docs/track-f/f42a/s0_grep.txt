@@ -1,0 +1,20 @@
+# git grep -n -E 'CompileSPV\(|createShaderModule\(|CreateCachedModule\(' 730ed40a -- src (F42a s0.1)
+730ed40a:src/graphics/host_gpu/renderer/cache/faultManager.cpp:62:	const auto module = CompileSPV(FAULT_BUFFER_PROCESS_SPV, m_graphics.device);
+730ed40a:src/graphics/host_gpu/renderer/image/blitHelper.cpp:40:	m_vertex_shader   = CompileSPV(GPU_BLIT_FS_TRIANGLE_SPV, m_graphics.device);
+730ed40a:src/graphics/host_gpu/renderer/image/blitHelper.cpp:41:	m_fragment_shader = CompileSPV(GPU_BLIT_COLOR_TO_MS_DEPTH_SPV, m_graphics.device);
+730ed40a:src/graphics/host_gpu/renderer/image/tiler.cpp:308:	    CompileSPV({shaders[family_index].code, shaders[family_index].words}, m_graphics.device);
+730ed40a:src/graphics/host_gpu/renderer/image/tiler.cpp:353:	    CompileSPV({shaders[family_index].code, shaders[family_index].words}, m_graphics.device);
+730ed40a:src/graphics/host_gpu/renderer/image/tiler.cpp:704:		const auto module = CompileSPV({code, words}, m_graphics.device);
+730ed40a:src/graphics/host_gpu/renderer/image/tiler.cpp:838:		const auto module = CompileSPV(GPU_TILER_SWAP_BGRA16_SPV, m_graphics.device);
+730ed40a:src/graphics/host_gpu/renderer/indirectArgsSanitizer.cpp:54:	RequireVulkanSuccess(m_graphics.device.createShaderModule(&module_info, nullptr, &module),
+730ed40a:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:425:vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& source) {
+730ed40a:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:450:	return CompileSPV(*words, device);
+730ed40a:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2208:		const auto module = CreateCachedModule(device, result.spirv);
+730ed40a:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2249:			const auto module = CreateCachedModule(device, p.spirv);
+730ed40a:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4651:				const auto module = CreateCachedModule(device, p.spirv);
+730ed40a:src/graphics/host_gpu/renderer/pipeline/shaders.cpp:355:	const auto module = CompileSPV(words, graphics.device);
+730ed40a:src/graphics/host_gpu/renderer/pipeline/shaders.cpp:391:		tess_control_shader_module = CompileSPV(shaders.control, graphics.device);
+730ed40a:src/graphics/host_gpu/renderer/pipeline/shaders.cpp:397:		tess_eval_shader_module = CompileSPV(shaders.evaluation, graphics.device);
+730ed40a:src/graphics/host_gpu/vulkanCommon.cpp:126:vk::ShaderModule CompileSPV(std::span<const uint32_t> code, vk::Device device) {
+730ed40a:src/graphics/host_gpu/vulkanCommon.cpp:131:	RequireVulkanSuccess(device.createShaderModule(&create_info, nullptr, &module),
+730ed40a:src/graphics/host_gpu/vulkanCommon.h:31:vk::ShaderModule CompileSPV(std::span<const uint32_t> code, vk::Device device);

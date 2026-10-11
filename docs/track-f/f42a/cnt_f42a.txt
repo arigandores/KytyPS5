@@ -1,0 +1,8 @@
+catalog copy: files 741 signature KytySC3:9177b426.. 741, perm count probe == modules found 741 (probe only with CNT_PROBE=1; the cross-check of this run is SpecDump, specdump_cat.txt)
+modules 1270 named(fault_buffer) 22 named+Binding 22 triples 79 loads_fb 79 loads_outside_triple 0 atomic_or_on_fb 0 named_without_triple 0
+  stage cs modules 149 named 21 triples 78
+  stage ps modules 259 named 0 triples 0
+  stage vs modules 862 named 1 triples 1
+recipes 1986 (gfx 1842 cs 144) at_end True signature KytySC3:9177b4267de1fb8bac7d1113afd8733210addfac:robust:ftz:
+recipes with a fault_buffer module 46 (gfx 30 cs 16) unresolved 0
+T1 rows 840 in_catalog 828 not_in_catalog 12 named 11 triples 49

@@ -39,8 +39,13 @@ constexpr uint64_t FixF29OverflowLines = 32;
 
 } // namespace
 
+// Track F, FS14a (HPP-812, ROADMAP s122 item 712(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
+// other value as EnvValueOn (the form of FS13a 3630f116); still one reading per process.
 bool FixF29Enabled() {
-	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_F29"));
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_FIX_F29");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	return enabled;
 }
 

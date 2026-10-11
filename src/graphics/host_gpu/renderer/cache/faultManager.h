@@ -32,7 +32,8 @@ struct FaultAreaPass {
 };
 using FaultAreaVisitor = std::function<void(uint32_t index, uint64_t value)>;
 
-// KYTY_FIX_F29 (default 0): the value is read once per process (EnvValueOn: unset/""/0/false/off/no - off).
+// KYTY_FIX_F29 (default 1 since FS14a, HPP-812, ROADMAP s122 item 712(g)(1)): the value is read once per process
+// (unset or "" - on; 0/false/off/no - off; any other value as EnvValueOn).
 [[nodiscard]] bool           FixF29Enabled();
 FaultAreaParse ParseFaultArea(const uint64_t* area, bool clamp, const FaultAreaVisitor& visit,
                               const FaultAreaPass& pass = {});

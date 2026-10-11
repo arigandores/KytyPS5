@@ -118,14 +118,19 @@ static bool FixB4Enabled() {
 	return enabled;
 }
 
-// Track F, F38a (HPP-763, ROADMAP s122 item 691(v)-(g), row F25): KYTY_FIX_F25 (default 0: unset, "", 0/false/off/no =
+// Track F, F38a (HPP-763, ROADMAP s122 item 691(v)-(g), row F25): KYTY_FIX_F25 (default 1 - FS13a below; 0/false/off/no =
 // OFF; read once, first by Initialize). At 1 a double read failure of ReadGuestWithRetry (the direct read into the guest
 // buffer and the retry through a host buffer both gave 0 with nbytes > 0 and remaining > 0) is returned by KernelRead /
 // KernelPread as KERNEL_ERROR_EIO instead of 0 - a 0 in the middle of a file is the end of the file for the guest -
 // unless the file size read again is at or below the read position (the file was shortened meanwhile: a real end of
 // file, 0 as before). The guest buffer is not written; the file position is the one before the call.
+// Track F, FS13a (HPP-787, ROADMAP s122 item 697(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any other
+// value as EnvValueOn (the form of FS12a cbfe8375 / FS11a cb022252).
 static bool FixF25Enabled() {
-	static const bool enabled = Common::EnvFlagOn("KYTY_FIX_F25");
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_FIX_F25");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	return enabled;
 }
 

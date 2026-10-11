@@ -1,4 +1,4 @@
-suite test_f47d.py sha256 91058228959704c1348e590409cede0240f0338b47554ab86b4eb3054fab80f6 target f47d_read.py sha256 74e5a443c5d16ff992d4d3126713679a5d907f34abb0d22543a0fde653c07e42 next_f47d.py sha256 63d12f9483070cb50aa39559b291dbee4e1c80cfe93777b63796c806d5cb34fc thumb_f47d.py sha256 8dd09812360d3f6a9efdbbba4df1f750a1f218c7080fbe76dab17bfa74e545ae queue_f47d.py sha256 af56d5b957c5143f016f443f750471b2978f90512614000c9b56aec551730811
+suite test_f47d.py sha256 3920d4d24ba4da5ac7c35f5f2b815c21439d233d8bcae60c0cff2744cb28ea8b target f47d_read.py sha256 74e5a443c5d16ff992d4d3126713679a5d907f34abb0d22543a0fde653c07e42 next_f47d.py sha256 b38391cde141b33d987daf4ad323d9f9770b0546d9225f4edac5c83390b3258b thumb_f47d.py sha256 8dd09812360d3f6a9efdbbba4df1f750a1f218c7080fbe76dab17bfa74e545ae queue_f47d.py sha256 af56d5b957c5143f016f443f750471b2978f90512614000c9b56aec551730811
 rd: good tag ADMITTED                                                  PASS
 rd: n0 300, P = 745.25, inside sample                                  PASS
 rd: G black 1 row                                                      PASS
@@ -62,6 +62,29 @@ next: G black 2 - f47_rd2 not due 7                                    PASS
 next: F47D_RD2_OK=1 - f47_rd2 MAY                                      PASS
 next: G black 2 - f47_hi MAY                                           PASS
 next: grid n0 326 -> R 748 -> 732..765                                 PASS
+next: lead admit unset - f47_hi waits (7)                              PASS
+next: lead admit unset - f47_rd_r1 MAY                                 PASS
+next: lead admit unset - no grid (7)                                   PASS
+next: lead admit 'f47_rd_r1' - f47_hi waits (7)                        PASS
+next: lead admit 'f47_rd_r1' - f47_rd_r1 MAY                           PASS
+next: lead admit 'f47_rd2' - f47_hi waits (7)                          PASS
+next: lead admit 'f47_rd2' - f47_rd_r1 MAY                             PASS
+next: lead admit 'F47_RD' - f47_hi waits (7)                           PASS
+next: lead admit 'F47_RD' - f47_rd_r1 MAY                              PASS
+next: lead admit 'f47_rd ' - f47_hi waits (7)                          PASS
+next: lead admit 'f47_rd ' - f47_rd_r1 MAY                             PASS
+next: lead admit '1' - f47_hi waits (7)                                PASS
+next: lead admit '1' - f47_rd_r1 MAY                                   PASS
+next: lead admit '' - f47_hi waits (7)                                 PASS
+next: lead admit '' - f47_rd_r1 MAY                                    PASS
+next: lead admit f47_rd - f47_hi MAY                                   PASS
+next: lead admit f47_rd - f47_rd_r1 refused 11                         PASS
+next: lead admit f47_rd - G black 2 - f47_rd2 not due 7                PASS
+next: lead admit f47_rd - grid n0 187 -> R 733 -> 717..750             PASS
+next: lead admit + F47D_RD2_OK=1 - f47_rd2 MAY                         PASS
+next: lead admit names f47_rd only - r1 made, f47_rd still NOT_ADMITTE PASS
+next: lead admit on INTERFERENCE f47_rd does nothing - f47_hi waits (7 PASS
+next: lead admit on UNREAD f47_rd does nothing - f47_hi waits (7)      PASS
 next: grid n0 300 -> 745.25 -> R 745 -> 729..762                       PASS
 next: G black 0 - f47_rd2 MAY                                          PASS
 next: G black 0 - f47_hi waits for f47_rd2 (7)                         PASS

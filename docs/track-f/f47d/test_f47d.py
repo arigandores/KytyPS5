@@ -296,6 +296,38 @@ def main():
         check('next: G black 2 - f47_hi MAY', N.may(runs, 'f47_hi')[0] == 0)
         rc, gr = N.grid(runs)
         check('next: grid n0 326 -> R 748 -> 732..765', rc == 0 and gr == ','.join(str(732 + 3 * k) for k in range(12)))
+        # lead admission F47D_RD_ADMIT_LEAD=f47_rd (item 731 (v)): without it waits, with it goes, another name does nothing
+        shutil.rmtree(runs)
+        os.makedirs(runs)
+        os.environ.pop('F47D_RD_ADMIT_LEAD', None)
+        made('f47_rd', 'NOT_ADMITTED', gblack=2, n0=187)
+        check('next: lead admit unset - f47_hi waits (7)', N.may(runs, 'f47_hi')[0] == 7)
+        check('next: lead admit unset - f47_rd_r1 MAY', N.may(runs, 'f47_rd_r1')[0] == 0)
+        check('next: lead admit unset - no grid (7)', N.grid(runs)[0] == 7)
+        for other in ('f47_rd_r1', 'f47_rd2', 'F47_RD', 'f47_rd ', '1', ''):
+            os.environ['F47D_RD_ADMIT_LEAD'] = other
+            check('next: lead admit %r - f47_hi waits (7)' % other, N.may(runs, 'f47_hi')[0] == 7)
+            check('next: lead admit %r - f47_rd_r1 MAY' % other, N.may(runs, 'f47_rd_r1')[0] == 0)
+        os.environ['F47D_RD_ADMIT_LEAD'] = 'f47_rd'
+        check('next: lead admit f47_rd - f47_hi MAY', N.may(runs, 'f47_hi')[0] == 0)
+        check('next: lead admit f47_rd - f47_rd_r1 refused 11', N.may(runs, 'f47_rd_r1')[0] == 11)
+        check('next: lead admit f47_rd - G black 2 - f47_rd2 not due 7', N.may(runs, 'f47_rd2')[0] == 7)
+        rc, gr = N.grid(runs)
+        check('next: lead admit f47_rd - grid n0 187 -> R 733 -> 717..750', rc == 0 and gr == ','.join(str(717 + 3 * k) for k in range(12)))
+        os.environ['F47D_RD2_OK'] = '1'
+        check('next: lead admit + F47D_RD2_OK=1 - f47_rd2 MAY', N.may(runs, 'f47_rd2')[0] == 0)
+        del os.environ['F47D_RD2_OK']
+        made('f47_rd_r1', 'NOT_ADMITTED')
+        check('next: lead admit names f47_rd only - r1 made, f47_rd still NOT_ADMITTED -> f47_hi MAY', N.may(runs, 'f47_hi')[0] == 0)
+        shutil.rmtree(runs)
+        os.makedirs(runs)
+        made('f47_rd', 'INTERFERENCE')
+        check('next: lead admit on INTERFERENCE f47_rd does nothing - f47_hi waits (7)', N.may(runs, 'f47_hi')[0] == 7)
+        shutil.rmtree(runs)
+        os.makedirs(runs)
+        made('f47_rd', None)
+        check('next: lead admit on UNREAD f47_rd does nothing - f47_hi waits (7)', N.may(runs, 'f47_hi')[0] == 7)
+        del os.environ['F47D_RD_ADMIT_LEAD']
         shutil.rmtree(runs)
         os.makedirs(runs)
         made('f47_rd', 'ADMITTED', gblack=0, n0=300)

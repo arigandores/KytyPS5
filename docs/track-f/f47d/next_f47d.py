@@ -18,6 +18,9 @@ RULES
     per series.  f47_hi - when f47_rd is ADMITTED and, if f47_rd2 is due by G (0 black), after f47_rd2 is ADMITTED or exhausted.
   budget (item 708 (g)(4)): spent + estimate <= 2 700 s, the estimate of a tag = the longest lock span of the same kind (rd: f47_rd*,
     hi: f47_hi*) made in this series, else 1 200 s (rd) / 720 s (hi); a 'lock taken' without its 'released' - refusal (exit 12).
+  lead admission (item 731 (v), KytyPS5 72cf927e): F47D_RD_ADMIT_LEAD=f47_rd, set only after the times.txt line of item 731, makes the
+    NOT_ADMITTED attempt f47_rd count as admitted (read.json is not rewritten): the base f47_rd ends (f47_rd_r1 refused 11), f47_hi and
+    --grid use it; any other value of the variable does nothing.
 """
 import json
 import math
@@ -64,10 +67,20 @@ def chain(runs, b):
     return out
 
 
+LEAD_ADMIT = 'f47_rd'  # the only attempt the lead admitted by item 731
+
+
+def lead_admitted(runs, b):
+    return (b == 'f47_rd' and os.environ.get('F47D_RD_ADMIT_LEAD') == LEAD_ADMIT
+            and status(runs, LEAD_ADMIT) == 'NOT_ADMITTED')
+
+
 def admitted(runs, b):
     for n, s in chain(runs, b):
         if s == 'ADMITTED':
             return n
+    if lead_admitted(runs, b):
+        return LEAD_ADMIT
     return None
 
 
@@ -131,6 +144,8 @@ def may(runs, tag):
         return 7, 'an attempt of %s is not read yet (%s)' % (b, c)
     if any(s == 'ADMITTED' for n, s in c):
         return 11, '%s already ADMITTED (%s)' % (b, c)
+    if lead_admitted(runs, b):
+        return 11, '%s admitted by the lead (F47D_RD_ADMIT_LEAD, item 731) (%s)' % (b, c)
     if sum(1 for n, s in c if s == 'NOT_ADMITTED') >= 2:
         return 11, '%s: two NOT_ADMITTED - no more attempts, question to the lead (item 708 (g)(3)) (%s)' % (b, c)
     want = names(b)[len(c)] if len(c) < 4 else None

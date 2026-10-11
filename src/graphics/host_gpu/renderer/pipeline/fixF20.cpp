@@ -59,4 +59,13 @@ void PrintExitStat() {
 	}
 }
 
+// Track F, F42a2 (HPP-805, ROADMAP s122 item 705(b)(1)): getters for the stand arm E.
+uint64_t Calls() {
+	return g_calls.load();
+}
+
+uint64_t Rewritten() {
+	return g_rewritten.load();
+}
+
 } // namespace Libs::Graphics::FixF20

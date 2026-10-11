@@ -413,6 +413,9 @@ private:
 	void ReplayRebuild();
 };
 
+// Track F, F42a2 (HPP-805, ROADMAP s122 item 705(b)(1)): the Vulkan module of a translation as the emulator creates it at
+// places 1-3 (FixF20 at KYTY_FIX_F20=1, the KYTY_PIPELINE_SALT salt, CompileSPV); pipelineCache.cpp.
+vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& translation, bool fault_bound);
 void LogPipelineTrace(const char* phase, uint64_t vertex_program_id, uint64_t pixel_program_id);
 // Knob "dapin" (session 56): applies the DrawAhead affinity experiment to the calling thread.
 // `gpu_thread` is true on the GuestGpu thread (it chooses the L3 group of dapin=2).

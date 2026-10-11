@@ -227,4 +227,9 @@ bool Apply(const std::vector<uint32_t>& in, bool bound, std::vector<uint32_t>& o
 // The exit line "FixF20Stat: when=exit ..." (KYTY_FIX_F20=1 only; nothing at 0).
 void PrintExitStat();
 
+// Track F, F42a2 (HPP-805, ROADMAP s122 item 705(b)(1)): the totals calls and rewritten of the "FixF20Stat:" line, read
+// by the stand arm E (the log of the test process is silent; at 0 there is no line).
+uint64_t Calls();
+uint64_t Rewritten();
+
 } // namespace Libs::Graphics::FixF20

@@ -15748,6 +15748,11 @@ public:
     return ReadBuffer(shader_name, m_fault_readback, static_cast<size_t>(m_fault_buffer.size / sizeof(u32)));
   }
 
+  // Track F, F42a2 (HPP-805, ROADMAP s122 item 705(b)(1)): the stand arm E dispatches a module created by the emulator
+  // (Libs::Graphics::CreateCachedModule). While set, Dispatch binds it in place of the module it creates from
+  // compiled.spirv (that one is still created and destroyed); the caller destroys the external module.
+  void SetExternalModule(vk::ShaderModule module) { m_external_module = module; }
+
   void Dispatch(const TestCase &test, const CompiledShader &compiled,
                 const Buffer &buffer, const Buffer *gds_buffer = nullptr,
                 const Image *sampled_image = nullptr,
@@ -15793,6 +15798,10 @@ public:
     RequireVk(test.name, "SPIR-V module",
               m_device.createShaderModule(&module_info, nullptr, &module),
               "vkCreateShaderModule");
+    const vk::ShaderModule own_module = module; // Track F, F42a2: SetExternalModule
+    if (m_external_module != nullptr) {
+      module = m_external_module;
+    }
 
     std::vector<vk::DescriptorSetLayoutBinding> layout_bindings;
     auto add_layout_binding =
@@ -16203,7 +16212,7 @@ public:
     m_device.destroyPipeline(pipeline, nullptr);
     m_device.destroyPipelineLayout(pipeline_layout, nullptr);
     m_device.destroyDescriptorSetLayout(descriptor_layout, nullptr);
-    m_device.destroyShaderModule(module, nullptr);
+    m_device.destroyShaderModule(own_module, nullptr);
   }
 
   void CheckRasterization(bool depth_feedback, bool packed_vertex_color = false,
@@ -18709,6 +18718,7 @@ private:
   Buffer m_bda_pagetable_buffer;
   Buffer m_fault_buffer;
   Buffer m_fault_readback; // Track F, F42a: host copy of m_fault_buffer (ReadFaultBuffer)
+  vk::ShaderModule m_external_module = nullptr; // Track F, F42a2: SetExternalModule (stand arm E)
   GraphicContext m_runtime_context{};
   std::unique_ptr<RenderContext> m_renderer;
 };
@@ -18889,10 +18899,15 @@ void RunCase(VulkanHarness *vulkan, const TestCase &test) {
 // no other_half), LocalSize 64, the triples = OpReturn of main. Every module is written to <out>.<arm>.spv.
 // KYTY_TEST_F20STAND_OUT=<tsv> (required), KYTY_TEST_F20STAND_R (default 200), KYTY_TEST_F20STAND_SEED (default 1:
 // the order of the four arms in every round).
+// Edition 2 (Track F, F42a2 HPP-805, ROADMAP s122 item 705(b)(1)): arms E-W and E-X - the programs of W and X, the
+// module created by the emulator for places 1-3 - Libs::Graphics::CreateCachedModule(device, translation, true): the
+// knob is FixF20::Mode() of the process (the stand reads nothing for it), KYTY_PIPELINE_SALT must be unset; the calls /
+// rewritten of FixF20 around it and in total are printed ("F20Stand: emu", "F20Stand: emu_stat"). Six arms per round.
 constexpr u32 F20PageBase = 0x44000u; // guest address 0x110000000, word 8704 of the bitmap
 constexpr u32 F20Words = 4096u;
 
-enum class F20Arm : u32 { W, X, S, N };
+enum class F20Arm : u32 { W, X, S, N, EW, EX };
+constexpr u32 F20Arms = 6u; // Track F, F42a2: edition 2
 
 const char *F20ArmName(F20Arm arm) {
   switch (arm) {
@@ -18900,15 +18915,23 @@ const char *F20ArmName(F20Arm arm) {
   case F20Arm::X: return "X";
   case F20Arm::S: return "S";
   case F20Arm::N: return "N";
+  case F20Arm::EW: return "E-W";
+  case F20Arm::EX: return "E-X";
   }
   return "?";
 }
 
+// Track F, F42a2: the arm E-W / E-X runs the program of W / X; its module comes from CreateCachedModule.
+F20Arm F20Program(F20Arm arm) { return arm == F20Arm::EW ? F20Arm::W : arm == F20Arm::EX ? F20Arm::X : arm; }
+bool F20Emu(F20Arm arm) { return arm == F20Arm::EW || arm == F20Arm::EX; }
+
 u32 F20Invocations(F20Arm arm) {
+  arm = F20Program(arm);
   return arm == F20Arm::X ? F20Words * 32u * 32u : arm == F20Arm::S ? F20Words : F20Words * 32u;
 }
 
 u32 F20RelativePage(F20Arm arm, u32 gid) {
+  arm = F20Program(arm);
   switch (arm) {
   case F20Arm::X: return gid >> 5u;
   case F20Arm::S: return (gid << 5u) | (gid & 31u);
@@ -18917,6 +18940,8 @@ u32 F20RelativePage(F20Arm arm, u32 gid) {
 }
 
 TestCase F20StandCase(F20Arm arm) {
+  const F20Arm name_arm = arm;
+  arm = F20Program(arm);
   using O = ShaderOpcode;
   const bool x = arm == F20Arm::X;
   const bool s = arm == F20Arm::S;
@@ -18946,7 +18971,7 @@ TestCase F20StandCase(F20Arm arm) {
   AppendEnd(&code);
 
   TestCase test;
-  test.name = arm == F20Arm::X ? "F20StandX" : arm == F20Arm::S ? "F20StandS" : arm == F20Arm::N ? "F20StandN" : "F20StandW";
+  test.name = name_arm == F20Arm::EW ? "F20StandEW" : name_arm == F20Arm::EX ? "F20StandEX" : arm == F20Arm::X ? "F20StandX" : arm == F20Arm::S ? "F20StandS" : arm == F20Arm::N ? "F20StandN" : "F20StandW";
   test.code = std::move(code);
   test.initial = std::vector<u32>(64, 0u);
   test.expected = std::vector<u32>(64, 0u);
@@ -19036,6 +19061,13 @@ int F20StandMain() {
     return 2;
   }
   const bool fix = Common::EnvFlagOn("KYTY_FIX_F20");
+  // Track F, F42a2 (ROADMAP s122 item 705(b)(1)): the arm E reads no knob itself - CreateCachedModule reads
+  // FixF20::Mode() of the process; its value is printed next to `fix` (the edition 1 arms). The salt changes the module.
+  const int emu_mode = Libs::Graphics::FixF20::Mode();
+  if (const char *salt = std::getenv("KYTY_PIPELINE_SALT"); salt != nullptr && salt[0] != 0) {
+    std::fprintf(stderr, "F20Stand: KYTY_PIPELINE_SALT is set - unset it (item 705(b)(1))\n");
+    return 2;
+  }
   const char *r_text = std::getenv("KYTY_TEST_F20STAND_R");
   const char *seed_text = std::getenv("KYTY_TEST_F20STAND_SEED");
   const u32 rounds = r_text != nullptr ? static_cast<u32>(std::strtoul(r_text, nullptr, 10)) : 200u;
@@ -19059,9 +19091,12 @@ int F20StandMain() {
     uint64_t words_lost = 0;
     uint64_t out_nonzero = 0;
     u32 rounds_with_loss = 0;
+    vk::ShaderModule emu_module = nullptr; // Track F, F42a2: arm E only
+    uint64_t emu_calls = 0;
+    uint64_t emu_rewritten = 0;
   };
-  std::array<ArmData, 4> arms;
-  for (u32 a = 0; a < 4u; a++) {
+  std::array<ArmData, F20Arms> arms;
+  for (u32 a = 0; a < F20Arms; a++) {
     auto &d = arms[a];
     d.arm = static_cast<F20Arm>(a);
     d.test = F20StandCase(d.arm);
@@ -19075,7 +19110,7 @@ int F20StandMain() {
     });
     std::vector<u32> fixed;
     d.stats = Libs::Graphics::FixF20::RewriteFaultOr(words, d.bound, fixed);
-    if (fix && d.stats.rewritten != 0) {
+    if (fix && d.stats.rewritten != 0 && !F20Emu(d.arm)) { // arm E: the words stay the translation (stats - form line)
       words = fixed;
     }
     d.form = F20ReadForm(words);
@@ -19086,6 +19121,18 @@ int F20StandMain() {
       std::fclose(file);
     }
     d.compiled.spirv = std::move(words);
+    if (F20Emu(d.arm)) {
+      // The module of the arm E: CreateCachedModule of the emulator, translation = the translator's words of the arm,
+      // the FaultBuffer binding flag true; FixF20 calls / rewritten of the process before and after the call.
+      const uint64_t calls0 = Libs::Graphics::FixF20::Calls();
+      const uint64_t rewritten0 = Libs::Graphics::FixF20::Rewritten();
+      d.emu_module = Libs::Graphics::CreateCachedModule(vulkan.Device(), d.compiled.spirv, true);
+      d.emu_calls = Libs::Graphics::FixF20::Calls() - calls0;
+      d.emu_rewritten = Libs::Graphics::FixF20::Rewritten() - rewritten0;
+      std::printf("F20Stand: emu mode=%d emu_mode=%d arm=%s bound_flag=1 calls=%llu rewritten=%llu module=%d\n",
+                  fix ? 1 : 0, emu_mode, F20ArmName(d.arm), static_cast<unsigned long long>(d.emu_calls),
+                  static_cast<unsigned long long>(d.emu_rewritten), d.emu_module != nullptr ? 1 : 0);
+    }
     d.expected.assign(F20Words, 0u);
     for (u32 gid = 0; gid < F20Invocations(d.arm); gid++) {
       const u32 rel = F20RelativePage(d.arm, gid);
@@ -19123,14 +19170,16 @@ int F20StandMain() {
   };
   constexpr u32 base_word = F20PageBase / 32u;
   for (u32 r = 0; r < rounds; r++) {
-    std::array<u32, 4> order{0, 1, 2, 3};
-    for (u32 i = 3; i > 0; i--) {
+    std::array<u32, F20Arms> order{0, 1, 2, 3, 4, 5};
+    for (u32 i = F20Arms - 1u; i > 0; i--) {
       std::swap(order[i], order[next() % (i + 1u)]);
     }
-    for (u32 position = 0; position < 4u; position++) {
+    for (u32 position = 0; position < F20Arms; position++) {
       auto &d = arms[order[position]];
       auto buffer = vulkan.CreateStorageBuffer(d.test.name, d.test.initial, 64u, true);
+      vulkan.SetExternalModule(d.emu_module); // nullptr for W, X, S, N
       vulkan.Dispatch(d.test, d.compiled, buffer);
+      vulkan.SetExternalModule(nullptr);
       const auto out = vulkan.ReadBuffer(d.test.name, buffer, 64u);
       vulkan.DestroyBuffer(&buffer);
       const auto map = vulkan.ReadFaultBuffer(d.test.name);
@@ -19165,6 +19214,14 @@ int F20StandMain() {
                 static_cast<unsigned long long>(d.expected_bits * rounds), static_cast<unsigned long long>(d.lost),
                 d.rounds_with_loss, static_cast<unsigned long long>(d.extra),
                 static_cast<unsigned long long>(d.words_lost), static_cast<unsigned long long>(d.out_nonzero));
+  }
+  std::printf("F20Stand: emu_stat mode=%d emu_mode=%d calls=%llu rewritten=%llu\n", fix ? 1 : 0, emu_mode,
+              static_cast<unsigned long long>(Libs::Graphics::FixF20::Calls()),
+              static_cast<unsigned long long>(Libs::Graphics::FixF20::Rewritten()));
+  for (const auto &d : arms) {
+    if (d.emu_module != nullptr) {
+      vulkan.Device().destroyShaderModule(d.emu_module, nullptr);
+    }
   }
   std::printf("F20Stand: done\n");
   return 0;

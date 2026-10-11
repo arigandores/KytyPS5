@@ -431,6 +431,10 @@ bool FixF20Bound(const ShaderRecompiler::IR::BindingLayout& layout) {
 	});
 }
 
+} // namespace
+
+// Track F, F42a2 (HPP-805, ROADMAP s122 item 705(b)(1)): CreateCachedModule is outside the anonymous namespace - declared
+// in pipelineCache.h for the stand arm E (shader_recompiler_compute_tests --f20-stand); its body is unchanged.
 // Salt only the module passed to Vulkan, including modules loaded from translation/seed caches.
 // The saved translation stays unchanged; a new salt gives a fresh driver compilation experiment.
 // Track F, F42a (HPP-779, ROADMAP s122 item 694(v)(1)): at KYTY_FIX_F20=1 the fault bitmap writes of the module become
@@ -465,6 +469,8 @@ vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_
 	}
 	return CompileSPV(*words, device);
 }
+
+namespace {
 
 std::string PipelineCacheTitleId() {
 	std::string title_id;

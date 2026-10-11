@@ -1,0 +1,61 @@
+mode=0 rows 1200 (expected 1200) identity/mode/seed/arm violations 0
+  arm W   rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 extra 0 words_lost 819200 out_nonzero 0
+  arm X   rounds 200 expected 26214400 seen 1865918 lost 24348482 rounds_with_loss 200 extra 0 words_lost 819200 out_nonzero 0
+  arm S   rounds 200 expected 819200 seen 819200 lost 0 rounds_with_loss 0 extra 0 words_lost 0 out_nonzero 0
+  arm N   rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 extra 0 words_lost 819200 out_nonzero 0
+  arm E-W rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 extra 0 words_lost 819200 out_nonzero 0
+  arm E-X rounds 200 expected 26214400 seen 1870089 lost 24344311 rounds_with_loss 200 extra 0 words_lost 819200 out_nonzero 0
+  form arm W  : wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm X  : wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm S  : wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm N  : wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 0 sites 0 rewritten 0 unmatched 1 valid 1 -> ok
+  emu line arm E-W: emu_mode 0 calls 0 rewritten 0 module 1 -> ok
+  form arm E-W: wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  emu line arm E-X: emu_mode 0 calls 0 rewritten 0 module 1 -> ok
+  form arm E-X: wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  sum line arm W seed 42051 = recount: True
+  sum line arm X seed 42051 = recount: True
+  sum line arm S seed 42051 = recount: True
+  sum line arm N seed 42051 = recount: True
+  sum line arm E-W seed 42051 = recount: True
+  sum line arm E-X seed 42051 = recount: True
+  emu_stat: emu_mode 0 calls 0 rewritten 0
+  lines complete (sum, form 6 arms; emu E-W, E-X; emu_stat; done): True
+mode=1 rows 1200 (expected 1200) identity/mode/seed/arm violations 0
+  arm W   rounds 200 expected 26214400 seen 26214400 lost 0 rounds_with_loss 0 extra 0 words_lost 0 out_nonzero 0
+  arm X   rounds 200 expected 26214400 seen 26214400 lost 0 rounds_with_loss 0 extra 0 words_lost 0 out_nonzero 0
+  arm S   rounds 200 expected 819200 seen 819200 lost 0 rounds_with_loss 0 extra 0 words_lost 0 out_nonzero 0
+  arm N   rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 extra 0 words_lost 819200 out_nonzero 0
+  arm E-W rounds 200 expected 26214400 seen 26214400 lost 0 rounds_with_loss 0 extra 0 words_lost 0 out_nonzero 0
+  arm E-X rounds 200 expected 26214400 seen 26214400 lost 0 rounds_with_loss 0 extra 0 words_lost 0 out_nonzero 0
+  form arm W  : wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm X  : wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm S  : wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm N  : wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 0 sites 0 rewritten 0 unmatched 1 valid 1 -> ok
+  emu line arm E-W: emu_mode 1 calls 1 rewritten 1 module 1 -> ok
+  form arm E-W: wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  emu line arm E-X: emu_mode 1 calls 1 rewritten 1 module 1 -> ok
+  form arm E-X: wave 32 subgroup 32 local 64x1x1 returns_main 1 bound 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  sum line arm W seed 42051 = recount: True
+  sum line arm X seed 42051 = recount: True
+  sum line arm S seed 42051 = recount: True
+  sum line arm N seed 42051 = recount: True
+  sum line arm E-W seed 42051 = recount: True
+  sum line arm E-X seed 42051 = recount: True
+  emu_stat: emu_mode 1 calls 2 rewritten 2
+  lines complete (sum, form 6 arms; emu E-W, E-X; emu_stat; done): True
+member =0 W lost > 0 (positive control)                     yes
+member =0 S lost = 0 (zero control)                         yes
+member =0 E-W lost > 0 summed over R (positive control E)   yes
+member =0 calls = 0 (emu_stat and emu lines)                yes
+member =1 W lost = 0 in every round                         yes
+member =1 X lost = 0 in every round                         yes
+member =1 S lost = 0 in every round                         yes
+member =1 E-W lost = 0 in every round                       yes
+member =1 E-X lost = 0 in every round                       yes
+member =1 calls >= 1 (emu_stat)                             yes
+member =1 rewritten >= 1 (emu_stat)                         yes
+member extra = 0 everywhere                                 yes
+reading line: =0 X lost 24348482 of 26214400 (200 rounds with loss); =0 E-X lost 24344311 of 26214400 (200 rounds); =1 N lost 25395200 of 26214400 (not rewritten, unmatched >= 1)
+mutant reading (not members): m1b caught False; m6 caught False
+ALL OK

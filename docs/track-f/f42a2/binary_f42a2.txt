@@ -1,0 +1,29 @@
+TAG  C:/kyty/f287/bin/kyty_emulator_1994a0ce.exe sha256 1994a0ced45c8135f17c8d2aa568278c66375250f1667430c83ba4d0b1a93f29
+FS12 C:/kyty/f287/bin/kyty_emulator_46892c20.exe sha256 46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26
+F42a C:/kyty/f287/bin/kyty_emulator_6abebc7b.exe sha256 6abebc7bb4ec556394ae505903bb834b4d08bff483daa5028b392ba32a3d4efa
+OK   KYTY_FIX_F20                                     TAG x1 FS12 x0 F42a x1
+OK   FixF20: mode=                                    TAG x1 FS12 x0 F42a x1
+OK   FixF20Stat:                                      TAG x1 FS12 x0 F42a x1
+OK   KYTY_FIX_F21                                     TAG x1 FS12 x1 F42a x1
+OK   FixF21: mode=                                    TAG x1 FS12 x1 F42a x1
+OK   KYTY_FIX_B12                                     TAG x1 FS12 x1 F42a x1
+OK   FixB12: mode=                                    TAG x1 FS12 x1 F42a x1
+OK   KYTY_FIX_B13                                     TAG x1 FS12 x1 F42a x1
+OK   KYTY_FIX_B36                                     TAG x1 FS12 x1 F42a x1
+OK   KYTY_FIX_B4                                      TAG x2 FS12 x2 F42a x2 (reference)
+OK   FixB4: mode=                                     TAG x1 FS12 x1 F42a x1
+OK   KYTY_FIX_F25                                     TAG x0 FS12 x0 F42a x0
+OK   FixF25: mode=                                    TAG x0 FS12 x0 F42a x0
+OK   KYTY_FIX_F24                                     TAG x0 FS12 x0 F42a x0
+OK   FixF24:                                          TAG x0 FS12 x0 F42a x0
+OK   KYTY_FIX_F29                                     TAG x0 FS12 x0 F42a x0
+OK   KYTY_DIAG_B32                                    TAG x0 FS12 x0 F42a x0
+OK   rts_bad_b                                        TAG x0 FS12 x0 F42a x0
+OK   KYTY_PIPELINE_SALT                               TAG x1 FS12 x1 F42a x1
+OK   9177b4267de1fb8bac7d1113afd8733210addfac         TAG x1 FS12 x1 F42a x1
+OK    KytyPS5-2026-09-15-6a2987a-1917-g5ccb1d31       TAG x1 FS12 x0 F42a x0
+OK    KytyPS5-2026-09-15-6a2987a-1916-g26283087       TAG x0 FS12 x0 F42a x1
+OK    KytyPS5-2026-09-15-6a2987a-1914-g730ed40a       TAG x0 FS12 x1 F42a x0
+OK   SDL-KytyPS5-2026-09-15-6a2987a-1916-gadcd0eba    TAG x1 FS12 x0 F42a x0
+OK   SDL-KytyPS5-2026-09-15-6a2987a-1914-g730ed40a    TAG x0 FS12 x1 F42a x1
+ALL OK

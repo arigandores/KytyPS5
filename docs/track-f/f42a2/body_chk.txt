@@ -1,0 +1,2 @@
+CreateCachedModule with its 4 comment lines: a9d6fd1c 34 lines, 82570fd2 34 lines, equal True, sha1 79e751682ce5 / 79e751682ce5
+ALL OK

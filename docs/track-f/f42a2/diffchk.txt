@@ -1,0 +1,23 @@
+== fixF20.h/.cpp: a9d6fd1c..82570fd2 numstat (added / removed)
+9	0	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp
+5	0	src/graphics/host_gpu/renderer/pipeline/fixF20.h
+== removed lines in fixF20.* a9d6fd1c..82570fd2:
+0
+== commit 82570fd2 (vs parent) src/ and tests/ files
+9	0	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp
+5	0	src/graphics/host_gpu/renderer/pipeline/fixF20.h
+6	0	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+3	0	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h
+66	9	tests/ShaderRecompilerComputeTests.cpp
+== worktree adcd0eba..5ccb1d31 (= F42a tree 26283087 -> F42a2) files
+9	0	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp
+5	0	src/graphics/host_gpu/renderer/pipeline/fixF20.h
+6	0	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+3	0	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h
+66	9	tests/ShaderRecompilerComputeTests.cpp
+== tree adcd0eba = 26283087:
+yes
+== paths under src/graphics/shader in 730ed40a..5ccb1d31 (worktree):
+0
+== CMakeLists.txt changed 730ed40a..5ccb1d31:
+0

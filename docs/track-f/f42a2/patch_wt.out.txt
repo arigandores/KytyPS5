@@ -1,0 +1,6 @@
+patched src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+patched src/graphics/host_gpu/renderer/pipeline/pipelineCache.h
+patched src/graphics/host_gpu/renderer/pipeline/fixF20.h
+patched src/graphics/host_gpu/renderer/pipeline/fixF20.cpp
+patched tests/ShaderRecompilerComputeTests.cpp
+PATCH OK

@@ -1,0 +1,17 @@
+82570fd2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	434	} // namespace	
+82570fd2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	473	namespace {	
+82570fd2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	442	vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& transl	\tstd::vector<uint32_t> fixed;
+82570fd2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h	418	vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& transl	void LogPipelineTrace(const char* phase, uint64_t vertex_program_id, uint64_t pixel_progra
+82570fd2	src/graphics/host_gpu/renderer/pipeline/fixF20.h	232	uint64_t Calls();	uint64_t Rewritten();
+82570fd2	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp	63	uint64_t Calls() {	\treturn g_calls.load();
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	15754	  void SetExternalModule(vk::ShaderModule module) { m_external_module = module; }	
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	15801	    const vk::ShaderModule own_module = module; // Track F, F42a2: SetExternalModule	    if (m_external_module != nullptr) {
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	16215	    m_device.destroyShaderModule(own_module, nullptr);	  }
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	18902	// Edition 2 (Track F, F42a2 HPP-805, ROADMAP s122 item 705(b)(1)): arms E-W and E-X - the	// module created by the emulator for places 1-3 - Libs::Graphics::CreateCachedModule(devi
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19129	      d.emu_module = Libs::Graphics::CreateCachedModule(vulkan.Device(), d.compiled.spirv,	      d.emu_calls = Libs::Graphics::FixF20::Calls() - calls0;
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19064	  // Track F, F42a2 (ROADMAP s122 item 705(b)(1)): the arm E reads no knob itself - Create	  // FixF20::Mode() of the process; its value is printed next to `fix` (the edition 1 arms
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19218	  std::printf("F20Stand: emu_stat mode=%d emu_mode=%d calls=%llu rewritten=%llu\\n", fix ? 	              static_cast<unsigned long long>(Libs::Graphics::FixF20::Calls()),
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	18721	  vk::ShaderModule m_external_module = nullptr; // Track F, F42a2: SetExternalModule (stan	  GraphicContext m_runtime_context{};
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19180	      vulkan.SetExternalModule(d.emu_module); // nullptr for W, X, S, N	      vulkan.Dispatch(d.test, d.compiled, buffer);
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19182	      vulkan.SetExternalModule(nullptr);	      const auto out = vulkan.ReadBuffer(d.test.name, buffer, 64u);
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19223	      vulkan.Device().destroyShaderModule(d.emu_module, nullptr);	    }

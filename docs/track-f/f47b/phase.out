@@ -1,0 +1,33 @@
+watch: start 2026-10-11T10:16:35Z child 40124 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+c142_02 big_hand_pirate_island n0 300 d 11 dn 791 s_ft 29.19 s_idx 29.28 d_xcorr 14 err_us 1224
+f12_bh big_hand_pirate_island n0 326 d 3 dn 801 s_ft 35.43 s_idx 35.43 d_xcorr 7 err_us 5396
+u_11s13 big_hand_pirate_island n0 303 d 22 dn 782 s_ft 28.02 s_idx 28.02 d_xcorr 22 err_us 1169
+fs8_i underwater_aerial_garden n0 352 d 0 dn 752 s_ft 36.55 s_idx 36.70 d_xcorr 0 err_us 1814
+u_03 worldmap n0 132 d 22 dn 731 s_ft 12.22 s_idx 12.22 d_xcorr 23 err_us 786
+u_04 ps_logo n0 83 d 23 dn 636 s_ft 10.60 s_idx 10.60 d_xcorr -5 err_us 1354
+u_06 underwater_aerial_garden n0 245 d 23 dn 736 s_ft 27.53 s_idx 27.53 d_xcorr 23 err_us 1070
+u_11 big_hand_pirate_island n0 283 d 22 dn 784 s_ft 26.46 s_idx 26.47 d_xcorr 22 err_us 1148
+u_12 timestop_casino n0 233 d 21 dn 662 s_ft 11.30 s_idx 11.30 d_xcorr 22 err_us 1117
+s17c_c2 underwater_aerial_garden n0 306 d 9 dn 744 s_ft 32.73 s_idx 32.75 d_xcorr 9 err_us 1179
+b32_z0 underwater_aerial_garden n0 193 d 10 dn 735 s_ft 28.28 s_idx 28.28 d_xcorr 10 err_us 1373
+s18_e1 underwater_aerial_garden n0 340 d 10 dn 752 s_ft 28.63 s_idx 28.63 d_xcorr 10 err_us 1464
+b32_z0b underwater_aerial_garden n0 200 d 11 dn 735 s_ft 29.03 s_idx 29.03 d_xcorr 11 err_us 2037
+b13_v underwater_aerial_garden n0 304 d 10 dn 746 s_ft 26.53 s_idx 26.53 d_xcorr 10 err_us 1034
+f25_s01 pot_treasure_cave n0 158 d 11 dn 622 s_ft 13.77 s_idx 13.77 d_xcorr 11 err_us 1313
+fs9_v underwater_aerial_garden n0 230 d 11 dn 735 s_ft 27.10 s_idx 27.10 d_xcorr 11 err_us 1063
+f25_k01 pot_treasure_cave n0 180 d 2 dn 624 s_ft 15.80 s_idx 15.93 d_xcorr 3 err_us 1400
+b36_v underwater_aerial_garden n0 258 d 11 dn 739 s_ft 27.13 s_idx 27.13 d_xcorr 11 err_us 1102
+fs10_f1 underwater_aerial_garden n0 197 d 10 dn 736 s_ft 27.22 s_idx 27.18 d_xcorr 11 err_us 1243
+b12_v underwater_aerial_garden n0 338 d 9 dn 751 s_ft 27.03 s_idx 27.02 d_xcorr 10 err_us 1027
+f30_s1_v underwater_aerial_garden n0 188 d 10 dn 736 s_ft 28.27 s_idx 28.25 d_xcorr 11 err_us 1406
+f30_s4_v timestop_casino n0 188 d 9 dn 659 s_ft 11.31 s_idx 11.32 d_xcorr 10 err_us 1056
+f30_s8_v big_hand_pirate_island n0 209 d 11 dn 767 s_ft 26.53 s_idx 26.53 d_xcorr 11 err_us 1035
+fs11_v underwater_aerial_garden n0 345 d 21 dn 747 s_ft 29.55 s_idx 29.53 d_xcorr 22 err_us 1748
+b6_v ps_logo n0 93 d 10 dn 635 s_ft 10.58 s_idx 10.58 d_xcorr -20 err_us 1258
+f21_v underwater_aerial_garden n0 321 d 32 dn 747 s_ft 27.38 s_idx 27.38 d_xcorr 32 err_us 1153
+fs12_v underwater_aerial_garden n0 325 d 32 dn 746 s_ft 26.85 s_idx 26.85 d_xcorr 32 err_us 1124
+f25_v underwater_aerial_garden n0 374 d 10 dn 755 s_ft 28.38 s_idx 28.38 d_xcorr 10 err_us 1650
+fs13_v underwater_aerial_garden n0 346 d 11 dn 752 s_ft 27.53 s_idx 27.53 d_xcorr 11 err_us 1067
+LEVEL big_hand_pirate_island N 5 dn min/max/cv 767 801 0.0143 s_ft min/max/cv 26.46 35.43 0.1137
+LEVEL underwater_aerial_garden N 17 dn min/max/cv 735 755 0.0095 s_ft min/max/cv 26.53 36.55 0.0855
+rc=0 end 2026-10-11T10:16:49Z

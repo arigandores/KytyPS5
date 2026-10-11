@@ -1,0 +1,68 @@
+== fs12c/rec_fs12_v
+vf 1098 band_black 0 band_white 1969 frame_black 0 frame_white 4760 mean 182.2 bbox -
+vf 1099 band_black 0 band_white 2161 frame_black 0 frame_white 4949 mean 180.7 bbox -
+vf 1100 band_black 0 band_white 2308 frame_black 0 frame_white 5069 mean 178.6 bbox -
+vf 1101 band_black 0 band_white 1263 frame_black 0 frame_white 4189 mean 177.1 bbox -
+vf 1102 band_black 6620 band_white 1108 frame_black 6620 frame_white 4166 mean 173.7 bbox 209-345 x 30-97
+vf 1103 band_black 6388 band_white 1646 frame_black 6388 frame_white 4781 mean 173.5 bbox 209-345 x 30-97
+vf 1104 band_black 4453 band_white 1563 frame_black 4453 frame_white 4464 mean 173.2 bbox 242-345 x 30-97
+vf 1105 band_black 4293 band_white 1564 frame_black 4293 frame_white 4383 mean 173.3 bbox 242-345 x 30-97
+vf 1106 band_black 4296 band_white 1501 frame_black 4296 frame_white 4319 mean 172.8 bbox 242-346 x 30-97
+vf 1107 band_black 0 band_white 1976 frame_black 0 frame_white 4757 mean 174.6 bbox -
+vf 1108 band_black 0 band_white 1777 frame_black 0 frame_white 4481 mean 173.9 bbox -
+vf 1109 band_black 0 band_white 6621 frame_black 0 frame_white 9319 mean 175.3 bbox -
+vf 1110 band_black 0 band_white 4542 frame_black 0 frame_white 7235 mean 173.9 bbox -
+vf 1111 band_black 0 band_white 5863 frame_black 0 frame_white 8638 mean 174.6 bbox -
+vf 1112 band_black 0 band_white 5842 frame_black 0 frame_white 8611 mean 173.7 bbox -
+vf 1113 band_black 0 band_white 5205 frame_black 0 frame_white 8005 mean 173.2 bbox -
+vf 1114 band_black 0 band_white 1435 frame_black 0 frame_white 4088 mean 172.9 bbox -
+vf 1115 band_black 0 band_white 1280 frame_black 0 frame_white 4005 mean 173.3 bbox -
+vf 1116 band_black 0 band_white 451 frame_black 0 frame_white 3125 mean 172.5 bbox -
+vf 1117 band_black 7978 band_white 423 frame_black 14001 frame_white 3187 mean 169.0 bbox 631-849 x 106-161
+vf 1118 band_black 7982 band_white 478 frame_black 14004 frame_white 3059 mean 168.6 bbox 631-849 x 106-161
+vf 1119 band_black 6031 band_white 650 frame_black 7473 frame_white 3173 mean 170.8 bbox 662-849 x 106-161
+vf 1120 band_black 6035 band_white 619 frame_black 7479 frame_white 3132 mean 169.9 bbox 662-850 x 106-161
+vf 1121 band_black 6004 band_white 681 frame_black 7446 frame_white 3248 mean 170.3 bbox 662-849 x 106-161
+vf 1122 band_black 0 band_white 380 frame_black 0 frame_white 2927 mean 171.7 bbox -
+vf 1123 band_black 0 band_white 405 frame_black 0 frame_white 3067 mean 171.7 bbox -
+vf 1124 band_black 0 band_white 383 frame_black 0 frame_white 2917 mean 170.9 bbox -
+vf 1125 band_black 0 band_white 538 frame_black 0 frame_white 3141 mean 171.0 bbox -
+vf 1126 band_black 0 band_white 445 frame_black 0 frame_white 2998 mean 170.8 bbox -
+vf 1127 band_black 0 band_white 733 frame_black 0 frame_white 3310 mean 169.1 bbox -
+vf 1128 band_black 0 band_white 540 frame_black 0 frame_white 3040 mean 168.3 bbox -
+vf 1129 band_black 0 band_white 538 frame_black 0 frame_white 3091 mean 168.2 bbox -
+vf 1130 band_black 0 band_white 469 frame_black 0 frame_white 3165 mean 167.7 bbox -
+== fs13c/rec_fs13_v
+vf 1098 band_black 0 band_white 559 frame_black 0 frame_white 3232 mean 185.1 bbox -
+vf 1099 band_black 0 band_white 520 frame_black 0 frame_white 3366 mean 185.0 bbox -
+vf 1100 band_black 0 band_white 311 frame_black 0 frame_white 3074 mean 184.4 bbox -
+vf 1101 band_black 0 band_white 487 frame_black 0 frame_white 3365 mean 184.6 bbox -
+vf 1102 band_black 0 band_white 656 frame_black 0 frame_white 3493 mean 184.2 bbox -
+vf 1103 band_black 0 band_white 1364 frame_black 0 frame_white 4102 mean 183.3 bbox -
+vf 1104 band_black 0 band_white 1772 frame_black 0 frame_white 4566 mean 181.5 bbox -
+vf 1105 band_black 0 band_white 1898 frame_black 0 frame_white 4689 mean 180.2 bbox -
+vf 1106 band_black 0 band_white 2050 frame_black 0 frame_white 4893 mean 178.3 bbox -
+vf 1107 band_black 0 band_white 1203 frame_black 0 frame_white 4204 mean 176.7 bbox -
+vf 1108 band_black 6609 band_white 954 frame_black 6609 frame_white 3930 mean 173.3 bbox 210-345 x 30-97
+vf 1109 band_black 6541 band_white 1452 frame_black 6541 frame_white 4471 mean 173.3 bbox 210-345 x 30-97
+vf 1110 band_black 4541 band_white 1358 frame_black 4541 frame_white 4306 mean 172.9 bbox 242-345 x 30-97
+vf 1111 band_black 4539 band_white 1205 frame_black 4539 frame_white 4301 mean 172.8 bbox 242-345 x 30-97
+vf 1112 band_black 4525 band_white 1063 frame_black 4525 frame_white 3990 mean 172.1 bbox 242-345 x 30-97
+vf 1113 band_black 0 band_white 1500 frame_black 0 frame_white 4456 mean 174.2 bbox -
+vf 1114 band_black 0 band_white 1205 frame_black 0 frame_white 4014 mean 173.6 bbox -
+vf 1115 band_black 0 band_white 5960 frame_black 0 frame_white 8671 mean 174.7 bbox -
+vf 1116 band_black 0 band_white 4135 frame_black 0 frame_white 6813 mean 173.2 bbox -
+vf 1117 band_black 0 band_white 5351 frame_black 0 frame_white 8113 mean 174.1 bbox -
+vf 1118 band_black 0 band_white 5208 frame_black 0 frame_white 8027 mean 173.4 bbox -
+vf 1119 band_black 0 band_white 4961 frame_black 0 frame_white 7771 mean 172.6 bbox -
+vf 1120 band_black 0 band_white 1939 frame_black 0 frame_white 4611 mean 172.2 bbox -
+vf 1121 band_black 0 band_white 1604 frame_black 0 frame_white 4262 mean 172.6 bbox -
+vf 1122 band_black 0 band_white 445 frame_black 0 frame_white 3067 mean 172.1 bbox -
+vf 1123 band_black 7942 band_white 415 frame_black 14033 frame_white 3117 mean 168.3 bbox 631-849 x 106-161
+vf 1124 band_black 7944 band_white 459 frame_black 14041 frame_white 3074 mean 167.7 bbox 631-849 x 106-161
+vf 1125 band_black 5873 band_white 574 frame_black 7330 frame_white 3126 mean 170.2 bbox 662-849 x 106-161
+vf 1126 band_black 5863 band_white 601 frame_black 7319 frame_white 3176 mean 169.5 bbox 662-849 x 106-161
+vf 1127 band_black 5856 band_white 696 frame_black 7302 frame_white 3196 mean 169.5 bbox 662-849 x 106-161
+vf 1128 band_black 0 band_white 338 frame_black 0 frame_white 2862 mean 170.7 bbox -
+vf 1129 band_black 0 band_white 364 frame_black 0 frame_white 2921 mean 170.9 bbox -
+vf 1130 band_black 0 band_white 371 frame_black 0 frame_white 2823 mean 170.3 bbox -

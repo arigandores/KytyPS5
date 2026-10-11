@@ -1,0 +1,2 @@
+links 22 bad 0 neg 22 of 22
+ALL OK

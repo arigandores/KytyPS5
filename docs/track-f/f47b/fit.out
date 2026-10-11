@@ -1,0 +1,8 @@
+N 17 slope 0.1075 intercept 713.0 r 0.959 resid min -3.4 max 2.8
+n0 150 pred dn 729.2
+n0 200 pred dn 734.5
+n0 326 pred dn 748.1
+n0 400 pred dn 756.0
+n0 500 pred dn 766.8
+n0 600 pred dn 777.5
+abs block n0+dn min 924 max 1129

@@ -10,7 +10,9 @@ LOCK = 'C:/kyty/SEALED_RUN.lock'
 STOP = 'C:/kyty/f287/STOP'
 ROOT = 'C:/kyty/KytyPS5'
 EMU = '730ed40a'
-COMMITS = [EMU]
+CODE = '15c9d2f2'
+COMMITS = [EMU, CODE]
+ST = 'tests/F29FaultStand.cpp'
 CO = 'src/graphics/host_gpu/shaders/fault_buffer_process.comp'
 CM = 'CMakeLists.txt'
 FM = 'src/graphics/host_gpu/renderer/cache/faultManager.cpp'
@@ -60,6 +62,34 @@ REFS = [
     ('bc_ctor', EMU, BC, 'm_fault_manager(graphics, scheduler, *this),', ''),
     ('bc_proc', EMU, BC, 'm_fault_manager.ProcessFaultBuffer();', ''),
     ('rc_proc', EMU, RC, 'm_buffer_cache.ProcessFaultBuffer();', 'void RenderContext::RunGarbageCollector() {'),
+    ('k_en', CODE, FM, 'bool FixF29Enabled() {', ''),
+    ('k_env', CODE, FM, 'static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_F29"));', ''),
+    ('k_parse', CODE, FM, 'FaultAreaParse ParseFaultArea(const uint64_t* area, bool clamp, const FaultAreaVisitor& visit,', ''),
+    ('k_total', CODE, FM, 'static std::atomic<uint64_t> overflow_total {0};', ''),
+    ('k_raw', CODE, FM, 'parse.raw   = static_cast<uint32_t>(area[0]);', ''),
+    ('k_min', CODE, FM, 'parse.count = clamp ? std::min(parse.raw, last_record) : parse.raw;', ''),
+    ('k_if', CODE, FM, 'if (clamp && parse.raw > last_record) {', ''),
+    ('k_line', CODE, FM, 'LOGF("FixF29: overflow pass=%" PRIu64', ''),
+    ('k_visit', CODE, FM, 'visit(index, area[index]);', ''),
+    ('k_mode', CODE, FM, 'LOGF("FixF29: mode=%d', ''),
+    ('k_pass', CODE, FM, 'const uint64_t fix_pass = FixF29Enabled() ? ++m_fix_f29_pass : 0;', ''),
+    ('k_defer', CODE, FM, 'm_scheduler.DeferOperation([this, mapped, offset, area, trips, trip_offset, fix_pass] {', ''),
+    ('k_call', CODE, FM, '(void)ParseFaultArea(', ''),
+    ('k_add', CODE, FM, 'fault_ranges.Add(value, BufferCache::CACHING_PAGESIZE);', ''),
+    ('k_log', CODE, FM, 'LOGF("Accessed non-GPU cached memory at 0x%016" PRIx64 "', 'void FaultManager::ProcessFaultBuffer() {'),
+    ('k_find', CODE, FM, '(void)m_buffer_cache.FindBuffer(start, end - start);', ''),
+    ('kh_en', CODE, FMH, '[[nodiscard]] bool           FixF29Enabled();', ''),
+    ('kh_parse', CODE, FMH, 'FaultAreaParse ParseFaultArea(const uint64_t* area, bool clamp, const FaultAreaVisitor& visit,', ''),
+    ('kh_member', CODE, FMH, 'uint64_t                                   m_fix_f29_pass = 0;', ''),
+    ('ks_inc', CODE, ST, '#include "gpu_tiler_shaders/fault_buffer_process_spv.h"', ''),
+    ('ks_last', CODE, ST, 'constexpr uint32_t LastRecord  = 1023;', ''),
+    ('ks_spv', CODE, ST, 'mi.pCode    = FAULT_BUFFER_PROCESS_SPV;', ''),
+    ('ks_label', CODE, ST, 'return i == 0 ? count : LabelBase + (uint64_t {area} * AreaWords + i) * PageBytes;', ''),
+    ('ks_guard', CODE, ST, 'dl[Areas * AreaWords + i] = GuardWord;', ''),
+    ('ks_call', CODE, ST, 'const auto            parse = Libs::Graphics::ParseFaultArea(', ''),
+    ('ks_inproc', CODE, ST, '(void)Libs::Graphics::ParseFaultArea(area_ptr, false, [&](uint32_t index, uint64_t v) {', ''),
+    ('ks_fix', CODE, ST, 'const bool  fix  = Libs::Graphics::FixF29Enabled();', ''),
+    ('kc_target', CODE, CM, 'add_kyty_full_emulator_test(f29_fault_stand', ''),
 ]
 
 

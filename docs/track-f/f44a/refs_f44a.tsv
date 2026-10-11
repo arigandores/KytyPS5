@@ -38,3 +38,31 @@ bh_fm	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.h	358	FaultManag
 bc_ctor	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	549	m_fault_manager(graphics, scheduler, *this),	m_host_import(graphics),
 bc_proc	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	2606	m_fault_manager.ProcessFaultBuffer();	}
 rc_proc	730ed40a	src/graphics/host_gpu/renderer/renderContext.cpp	423	m_buffer_cache.ProcessFaultBuffer();	if (fbp_t0 != 0) {
+k_en	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	42	bool FixF29Enabled() {	static const bool enabled = Common::EnvV
+k_env	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	43	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_F29"));	return enabled;
+k_parse	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	47	FaultAreaParse ParseFaultArea(const uint64_t* area, bool clamp, const FaultAreaVisitor& visit,	const FaultAreaPass& pass) {
+k_total	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	49	static std::atomic<uint64_t> overflow_total {0};	constexpr auto               last_record
+k_raw	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	52	parse.raw   = static_cast<uint32_t>(area[0]);	parse.count = clamp ? std::min(parse.raw
+k_min	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	53	parse.count = clamp ? std::min(parse.raw, last_record) : parse.raw;	if (clamp && parse.raw > last_record) {
+k_if	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	54	if (clamp && parse.raw > last_record) {	const uint64_t total = overflow_total.fe
+k_line	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	57	LOGF("FixF29: overflow pass=%" PRIu64	pass.area, parse.raw, parse.count, total
+k_visit	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	62	visit(index, area[index]);	}
+k_mode	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	79	LOGF("FixF29: mode=%d	
+k_pass	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	214	const uint64_t fix_pass = FixF29Enabled() ? ++m_fix_f29_pass : 0;	m_scheduler.DeferOperation([this, mapped
+k_defer	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	215	m_scheduler.DeferOperation([this, mapped, offset, area, trips, trip_offset, fix_pass] {	if (trips) {
+k_call	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	246	(void)ParseFaultArea(	faults, FixF29Enabled(),
+k_add	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	249	fault_ranges.Add(value, BufferCache::CACHING_PAGESIZE);	LOGF("Accessed non-GPU cached memory at 
+k_log	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	250	LOGF("Accessed non-GPU cached memory at 0x%016" PRIx64 "	},
+k_find	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.cpp	255	(void)m_buffer_cache.FindBuffer(start, end - start);	});
+kh_en	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.h	36	[[nodiscard]] bool           FixF29Enabled();	FaultAreaParse ParseFaultArea(const uint
+kh_parse	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.h	37	FaultAreaParse ParseFaultArea(const uint64_t* area, bool clamp, const FaultAreaVisitor& visit,	const FaultAreaPass& pass = {});
+kh_member	15c9d2f2	src/graphics/host_gpu/renderer/cache/faultManager.h	65	uint64_t                                   m_fix_f29_pass = 0;	vk::DescriptorSetLayout                 
+ks_inc	15c9d2f2	tests/F29FaultStand.cpp	38	#include "gpu_tiler_shaders/fault_buffer_process_spv.h"	
+ks_last	15c9d2f2	tests/F29FaultStand.cpp	78	constexpr uint32_t LastRecord  = 1023;	
+ks_spv	15c9d2f2	tests/F29FaultStand.cpp	368	mi.pCode    = FAULT_BUFFER_PROCESS_SPV;	vk::ShaderModule module = nullptr;
+ks_label	15c9d2f2	tests/F29FaultStand.cpp	454	return i == 0 ? count : LabelBase + (uint64_t {area} * AreaWords + i) * PageBytes;	}
+ks_guard	15c9d2f2	tests/F29FaultStand.cpp	480	dl[Areas * AreaWords + i] = GuardWord;	}
+ks_call	15c9d2f2	tests/F29FaultStand.cpp	523	const auto            parse = Libs::Graphics::ParseFaultArea(	area_ptr, clamp,
+ks_inproc	15c9d2f2	tests/F29FaultStand.cpp	558	(void)Libs::Graphics::ParseFaultArea(area_ptr, false, [&](uint32_t index, uint64_t v) {	if (index < AreaWords) {
+ks_fix	15c9d2f2	tests/F29FaultStand.cpp	592	const bool  fix  = Libs::Graphics::FixF29Enabled();	std::printf("FIXF29 env=%s on=%d\n", env
+kc_target	15c9d2f2	CMakeLists.txt	586	add_kyty_full_emulator_test(f29_fault_stand	"${KYTY_TESTS_DIR}/F29FaultStand.cpp")

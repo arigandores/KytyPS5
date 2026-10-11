@@ -1,0 +1,5 @@
+watch: start 2026-10-11T08:16:10Z child 30096 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+FIXF29 env=0 on=0
+DEVICE NVIDIA GeForce RTX 5080 Laptop GPU
+DONE rows=16
+rc=0 end 2026-10-11T08:16:13Z

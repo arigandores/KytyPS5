@@ -1,0 +1,12 @@
+LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100
+FixF29: overflow pass=1 area=0 count=1024 read=1023 total=1
+FixF29: overflow pass=2 area=7 count=1100 read=1023 total=2
+FixF29: overflow pass=4 area=0 count=1100 read=1023 total=3
+FixF29: overflow pass=5 area=0 count=1036 read=1023 total=4
+FixF29: overflow pass=8 area=0 count=1100 read=1023 total=5
+FixF29: overflow pass=10 area=0 count=1036 read=1023 total=6
+FixF29: overflow pass=12 area=7 count=1100 read=1023 total=7
+FixF29: overflow pass=13 area=0 count=1100 read=1023 total=8
+FixF29: overflow pass=14 area=0 count=1024 read=1023 total=9
+FixF29: overflow pass=15 area=0 count=1100 read=1023 total=10
+LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=11 bytes=685 max_queued_bytes=79 sync_lines=0 drain_timeouts=0

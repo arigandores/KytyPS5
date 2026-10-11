@@ -1,0 +1,20 @@
+tag   C:/kyty/f287/f44a/build/install/kyty_emulator.exe sha256 d760708d416d4fb5d494a9ca98c0417f2bf1911403f5334752783ed7a3b27c5f size 24866816
+fs12  C:/kyty/f287/bin/kyty_emulator_46892c20.exe sha256 46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26
+count KYTY_FIX_F29                                  tag 1 fs12 0
+count FixF29: mode=                                 tag 1 fs12 0
+count FixF29: overflow pass=                        tag 1 fs12 0
+count Accessed non-GPU cached memory at 0x          tag 1 fs12 1
+count KYTY_FIX_F21                                  tag 1 fs12 1
+count FixF21: mode=                                 tag 1 fs12 1
+count KYTY_FIX_F24                                  tag 0 fs12 0
+count FixF24: mode=                                 tag 0 fs12 0
+count KYTY_FIX_F20                                  tag 0 fs12 0
+count FixF20: mode=                                 tag 0 fs12 0
+count 9177b4267de1fb8bac7d1113afd8733210addfac      tag 1 fs12 1
+version tag ['KytyPS5-2026-09-15-6a2987a-1915-ge148f54c']
+version fs12 ['KytyPS5-2026-09-15-6a2987a-1914-g730ed40a']
+worktree HEAD e148f54c921d53074cef65ce97da954cc7ca20d4
+worktree src/ diff vs 730ed40a: src/graphics/host_gpu/renderer/cache/faultManager.cpp, src/graphics/host_gpu/renderer/cache/faultManager.h
+worktree status lines 0
+git cherry main HEAD (worktree commits after 730ed40a):
+  - e148f54c921d53074cef65ce97da954cc7ca20d4 WIP track F link F44a (HPP-791): KYTY_FIX_F29 (default 0) - ParseFa

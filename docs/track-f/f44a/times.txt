@@ -1,2 +1,6 @@
 2026-10-11T02:07:55Z F44a (HPP-791) start: assigned, read ROADMAP s122 item 698, F43a report sec 0-3; lock and STOP absent
 2026-10-11T08:08:07Z F44a section 0 written (docs/track-f/f44a.md), refs 40/40 ALL OK; commit of section 0 before the first code line
+2026-10-11T08:14:07Z F44a code commit 15c9d2f2 in main; worktree C:/kyty/f287/f44a/wt on 730ed40a + cherry-pick; gate order clean main and worktree
+2026-10-11T08:17:37Z F44a scored stand start: seed 44001 R 20, =0 then =1, exe C:/kyty/f287/f44a/build/f29_fault_stand.exe sha256 23d96872010fb739
+2026-10-11T08:18:14Z F44a scored stand end: rc=0 end 2026-10-11T08:18:14Z
+2026-10-11T08:23:17Z F44a report sections 1-7 written; tag binary d760708d (worktree e148f54c), stand ALL OK seed 44001 R 20, tests = FS12a; links 68/68 check ALL OK

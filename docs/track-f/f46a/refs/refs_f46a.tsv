@@ -1,0 +1,55 @@
+1398d44d	src/graphics/host_gpu/renderer/diagF5.h	153	F26TintApplied,	F26TintSkip,
+1398d44d	src/graphics/host_gpu/renderer/diagF5.h	340	enum class DccApplyResult : uint8_t { Cleared, Declined, Dropped };	enum class F26Site : uint8_t
+1398d44d	src/graphics/host_gpu/renderer/diagF5.h	364	struct FirstExecLine {	uint64_t n       = 0;
+1398d44d	src/graphics/host_gpu/renderer/diagF5.h	392	[[nodiscard]] TintResult F26TintAt(uint32_t mode, uint64_t key, uint64_t address, bool removes_mark,	vk::ClearColorValue& clear);
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	227	"f26_tint_applied",      // Track F, F46a (item 702(e)(4))	"f26_tint_skip",
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	773	std::string FormatDccStaleApply(const DccApplyLine& line) {	return fmt::format("DiagF5Ev: dcc_stale_apply
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	789	std::string FormatFirstExec(const FirstExecLine& line) {	return fmt::format("DiagF5Ev: f26_first_exec
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	794	bool NoteFirstExec(const FirstExecLine& line) {	if (line.n == 0 || line.n > 256)
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	804	uint32_t ParseTintMode(const char* value) {	if (value == nullptr) {
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	812	uint64_t ParseTintDcc(const char* value) {	if (value == nullptr || value[0] == 0) {
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	823	static const uint32_t mode = ParseTintMode(std::getenv("KYTY_F26_TINT"));	return mode;
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	828	static const uint64_t key = ParseTintDcc(std::getenv("KYTY_F26_TINT_DCC"));	return key;
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	832	bool LogF26TintMode() {	static std::atomic<bool> logged {false};
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	845	TintResult F26TintAt(uint32_t mode, uint64_t key, uint64_t address, bool removes_mark, vk::Format format,	vk::ClearColorValue& clear) {
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	850	if (!DccFixedClearSupported(format) || vk::componentCount(format) < 3) {	return TintResult::Skip;
+1398d44d	src/graphics/host_gpu/renderer/diagF5.cpp	857	TintResult F26Tint(uint64_t address, bool removes_mark, vk::Format format, vk::ClearColorValue& clear) {	const auto result = F26TintAt(
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.h	35	enum class F26Site : uint8_t; // Track F, F46a (diagF5.h)	} // namespace DiagF5
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.h	201	struct F26Deferred {	uint64_t n        = 0;
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.h	405	std::unordered_map<uint64_t, F26Deferred>         m_f26_marks;	m_f26_marks_count {0};
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.h	407	std::unordered_map<uint64_t, std::vector<uint64_t>> m_f26_first;	m_f26_first_count {0};
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	466	F26DropLocked(metadata->first, DiagF5::F26Site::Delete, metadata->second.clear_mask);	}
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1968	F26Scope(DiagF5::DccSite site, TextureCache* cache): m_site(site), m_cache(cache) {}	~F26Scope() {
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2015	[[nodiscard]] bool KeptNow() const {	return m_fix && m_probe.bucket_stale && !m_probe.exact_stale
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2053	m_cache->F26MarkLocked(m_line.dcc, {.n = n, .image = m_line.image, .dcc = m_line.dcc});	}
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2058	m_cache->F26ArmFirstExecLocked(m_line.dcc, n);	}
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2080	F26Scope f26 {DiagF5::DccSite::Prepare, this};	auto& image            = m_slot_images[id];
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2217	(void)DiagF5::F26Tint(desc.info.metadata.range.address,	f26.KeptNow() || F26HasMarkLocked(desc.info.metadata.range.address), view.format,
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2235	F26ExecLocked(desc.info.metadata.range.address, image.info.data.address, DiagF5::F26Site::Prepare,	f5id_mask0 & ~metadata.clear_mask);
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2288	F26DropLocked(desc.info.metadata.range.address, DiagF5::F26Site::Retype, metadata.clear_mask);	}
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2822	F26DropLocked(metadata->first, DiagF5::F26Site::Retype, metadata->second.clear_mask);	}
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3600	F26DropLocked(address, DiagF5::F26Site::Fill, found->second.clear_mask);	}
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3807	F26Scope   f26 {DiagF5::DccSite::Adopt, this};	const bool f5id     = DiagF5Id::On();
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3834	f26.Deferred();	} else {
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3864	void TextureCache::F26MarkLocked(uint64_t address, const F26Deferred& mark) {	if (m_f26_marks.contains(address)) [[unlikely]] {
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3872	void TextureCache::F26ArmFirstExecLocked(uint64_t address, uint64_t n) {	m_f26_first[address].push_back(n);
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3877	void TextureCache::F26ExecLocked(uint64_t address, uint64_t image_address, DiagF5::F26Site site, uint32_t layers) {	if (m_f26_marks_count.load(std::memory_order_relaxed) != 0) {
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3905	void TextureCache::F26Exec(uint64_t address, uint64_t image_address, DiagF5::F26Site site, uint32_t layers) {	if (m_f26_marks_count.load(std::memory_order_relaxed) == 0 &&
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3914	void TextureCache::F26Declined(uint64_t address, uint64_t image_address, uint32_t layers) {	if (m_f26_marks_count.load(std::memory_order_relaxed) == 0) {
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3935	void TextureCache::F26DropLocked(uint64_t address, DiagF5::F26Site site, uint32_t layers) {	const auto found = m_f26_marks.find(address);
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3956	bool TextureCache::F26HasMark(uint64_t address) {	if (m_f26_marks_count.load(std::memory_order_relaxed) == 0) {
+1398d44d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3991	F26DropLocked(metadata->first, DiagF5::F26Site::Unmap, metadata->second.clear_mask);	}
+1398d44d	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	3515	F26ApplyScope(TextureCache& cache, const Image& image)	: m_cache(cache), m_on(DiagF5::FixF26On()
+1398d44d	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	3520	m_cache.F26Declined(m_address, m_image, m_layers);	}
+1398d44d	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	3556	F26ApplyScope f26_apply {cache, image};	Session 124
+1398d44d	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	3657	(void)DiagF5::F26Tint(address, cache.F26HasMark(address), clear_format, clear);	}
+1398d44d	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	3702	cache.F26Exec(address, image.info.data.address, DiagF5::F26Site::Mat, mask);	Session 124
+1398d44d	src/graphics/presentation/window/vulkanWindow.cpp	686	(void)DiagF5::LogF26TintMode();	
+1398d44d	tests/ShaderRecompilerComputeTests.cpp	433	static void F16kEraseMeta(TextureCache &cache, uint64_t address) {	std::lock_guard lock(cache.m_lock);
+1398d44d	tests/ShaderRecompilerComputeTests.cpp	11400	const char *t1 = "F46a T1 alias: the mark of `pending` removed by another image's clear";	const auto n1 = adopt(t1);
+1398d44d	tests/ShaderRecompilerComputeTests.cpp	11430	const char *t2 = "F46a T2 a new fill, the next clear: the first execution after the event at =0";	const auto lines = F16kCount("DiagF5Ev:");
+1398d44d	tests/ShaderRecompilerComputeTests.cpp	11450	const char *t3 = "F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap)";	dimage.info.metadata = dmeta0;
+1398d44d	tests/ShaderRecompilerComputeTests.cpp	11481	const char *t4 = "F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear";	const auto lines = F16kCount("DiagF5Ev:");
+1398d44d	tests/ShaderRecompilerComputeTests.cpp	11516	const char *t5 = "F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear";	auto no_register = desc;
+1398d44d	tests/ShaderRecompilerComputeTests.cpp	10696	constexpr uint64_t tk = 0x571006000ull;	const TCase tcases[] = {
+1398d44d	tests/ShaderRecompilerComputeTests.cpp	12017	Require(name, "Z f26_first_exec lines", firsts == (!id ? 0u : f26 ? 4u : 2u),	fmt::format(

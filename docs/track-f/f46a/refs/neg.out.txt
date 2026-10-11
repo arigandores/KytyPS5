@@ -1,0 +1,2 @@
+neg shifted +1 caught 55 of 55
+ALL OK

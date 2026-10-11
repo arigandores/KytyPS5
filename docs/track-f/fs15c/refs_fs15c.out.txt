@@ -1,0 +1,30 @@
+OK 54e37383:docs/ROADMAP.md:24854
+OK 54e37383:docs/ROADMAP.md:24859
+OK 54e37383:docs/ROADMAP.md:24863
+OK 54e37383:docs/ROADMAP.md:24873
+OK 54e37383:docs/ROADMAP.md:24879
+OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:38
+OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:40
+OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:26
+OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:54
+OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:60
+OK 6beb3b73:src/emulator.cpp:499
+OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7066
+OK 6beb3b73:src/graphics/presentation/window/window.cpp:1089
+OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4861
+shift NOT OK 54e37383:docs/ROADMAP.md:24855
+shift NOT OK 54e37383:docs/ROADMAP.md:24860
+shift NOT OK 54e37383:docs/ROADMAP.md:24864
+shift NOT OK 54e37383:docs/ROADMAP.md:24874
+shift NOT OK 54e37383:docs/ROADMAP.md:24880
+shift NOT OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:39
+shift NOT OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:41
+shift NOT OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:27
+shift NOT OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:55
+shift NOT OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:61
+shift NOT OK 6beb3b73:src/emulator.cpp:500
+shift NOT OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:7067
+shift NOT OK 6beb3b73:src/graphics/presentation/window/window.cpp:1090
+shift NOT OK 6beb3b73:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4862
+refs 14, ok True, every shift fails True
+ALL OK

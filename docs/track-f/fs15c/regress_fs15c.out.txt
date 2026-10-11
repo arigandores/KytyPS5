@@ -1,0 +1,134 @@
+suite regress_fs15c.py sha256 1f3a8af2264d00c2b78aef9615bc832a0b8ebd658807b01e06b9109173052cff target fs15c_read.py sha256 9ef2975702ce8d3b94afdd9c0f3d9198a743711721fa570ac816acb70bb79cf2
+fs15_v (from log_fs14_v.txt): admission failed members 3
+  NO json binary_sha256 = FS15 bfac84be (013e1974ea8abfb4)
+  NO installed during the tag = FS15 bfac84be (013e1974ea8abfb4)
+  NO installed before = after = FS14 013e1974 (abab2196e3b66f04 / abab2196e3b66f04)
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (334.4 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 336; with the first frame 0)
+  [YES] video index records >= 3000 (10140)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [NO] FixF20: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12277) - item 730 (g)(3)
+  [YES] FixF24: mode=1 b24=1 (every line) before the first GuestOut ([(1, 1, 20)]; unparsable 0; first GuestOut 12277)
+  [YES] FixF24: init before the first GuestOut (lines [21]; first GuestOut 12277)
+  [YES] FixF24: init_owner exactly 1 before the first GuestOut (1, unparsable 0) {'hid': 56720, 'helper': 56720, 'msg': 56720, 'pump': 56720, 'main': 47768, '
+  [YES] FixF24: init_owner hid = helper = pump != main
+  [YES] FixF25: mode=1 (every line) before the first GuestOut ([(1, 17)]; unparsable 0; first GuestOut 12277)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 732)]; unparsable 0; first GuestOut 12277)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 730)]; bad 0; first GuestOut 12277)
+  [YES] FixF29: mode=1 (every line) before the first GuestOut ([(1, 95)]; unparsable 0; first GuestOut 12277)
+  [YES] exit by the harness: Event: quit line in the log (1156314)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] 0 FixF24: pump_stop_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [NO] FixF20Stat: when=exit line after Event: quit (quit 1156314; exit lines after it 0; all exit lines 0; unparsable FixF20Stat 0)
+  [NO] FixF20Stat exit line: unmatched 0 (None)
+  [NO] FixF20Stat exit line: modules_bound = modules (None / None)
+  [NO] FixF20Stat exit line: rewritten >= 11 (None)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12277)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 728)]; first GuestOut 12277)
+  [YES] FixB12Stat: line present (parsed 35, unparsable 0)
+  members as expected: True (failed 5, want 5); named YES True; F20 rows: prep [0], all pipelines created [578], _PipelineCache 192243915 -> 192243915, FixF20Stat lines 0 exit null; close_rc 0 close_s 4.1 quit_ln 1156314
+fs15_w (from log_fs14_w.txt): admission failed members 3
+  NO json binary_sha256 = FS15 bfac84be (013e1974ea8abfb4)
+  NO installed during the tag = FS15 bfac84be (013e1974ea8abfb4)
+  NO installed before = after = FS14 013e1974 (abab2196e3b66f04 / abab2196e3b66f04)
+  admission as expected: True
+  [YES] lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.0 >= 310)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 [Vulkan][E] (0)
+  [YES] 0 limit lines of the layer (0)
+  [YES] positive control: [Vulkan][W] 891794 > 0
+  [YES] DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)
+  [NO] FixF20: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12281) - item 730 (g)(3)
+  [YES] FixF24: mode=1 b24=1 (every line) before the first GuestOut ([(1, 1, 20)]; unparsable 0; first GuestOut 12281)
+  [NO] FixF20Stat: when=exit line after Event: quit (quit 2319054; exit lines after it 0; all exit lines 0; unparsable FixF20Stat 0)
+  [NO] FixF20Stat exit line: unmatched 0 (None)
+  [NO] FixF20Stat exit line: modules_bound = modules (None / None)
+  [YES] FixF29: mode=1 (every line) before the first GuestOut ([(1, 99)]; unparsable 0; first GuestOut 12281)
+  [YES] FixF25: mode=1 (every line) before the first GuestOut ([(1, 17)]; unparsable 0; first GuestOut 12281)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 736)]; unparsable 0; first GuestOut 12281)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12281)
+  [YES] no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 732)]; first GuestOut 12281)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 734)]; bad 0; first GuestOut 12281)
+  members as expected: True (failed 4, want 4); named YES True; F20 rows: prep [0], all pipelines created [5847], _PipelineCache 192243915 -> 192243915, FixF20Stat lines 0 exit null; close_rc 0 close_s 4.0 quit_ln 2319054
+fs15_z (from log_fs14_z.txt): admission failed members 4
+  NO json binary_sha256 = FS15 bfac84be (013e1974ea8abfb4)
+  NO installed during the tag = FS15 bfac84be (013e1974ea8abfb4)
+  NO installed before = after = FS14 013e1974 (abab2196e3b66f04 / abab2196e3b66f04)
+  NO env = the form of the tag (['missing KYTY_FIX_F20', 'extra KYTY_FIX_F24=0', 'extra KYTY_FIX_F29=0'])
+  admission as expected: True
+  [YES] hold >= 120 s after the first scene frame (154.1 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [NO] FixF20: mode=0 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12505) - item 730 (g)(3)
+  [YES] 0 FixF20Stat: lines (0: parsed 0 - exit 0, periodic 0; unparsable 0)
+  members as expected: True (failed 1, want 1); named YES True; F20 rows: prep [1], all pipelines created [580], _PipelineCache 192243915 -> 192243915, FixF20Stat lines 0 exit null; close_rc 0 close_s 4.2 quit_ln 665807
+fs15_v (from log_f20_v.txt): admission failed members 3
+  NO json binary_sha256 = FS15 bfac84be (1994a0ced45c8135)
+  NO installed during the tag = FS15 bfac84be (1994a0ced45c8135)
+  NO env = the form of the tag (['extra KYTY_FIX_F20=1'])
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (334.0 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 332; with the first frame 0)
+  [YES] video index records >= 3000 (10018)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [YES] FixF20: mode=1 (every line) before the first GuestOut ([(1, 84)]; unparsable 0; first GuestOut 12280) - item 730 (g)(3)
+  [NO] FixF24: mode=1 b24=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12280)
+  [NO] FixF24: init before the first GuestOut (lines []; first GuestOut 12280)
+  [NO] FixF24: init_owner exactly 1 before the first GuestOut (0, unparsable 0) None: hid != 0 and helper != 0 (witness alive)
+  [NO] FixF24: init_owner hid = helper = pump != main
+  [NO] FixF25: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12280)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 619)]; unparsable 0; first GuestOut 12280)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 516)]; bad 0; first GuestOut 12280)
+  [NO] FixF29: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12280)
+  [YES] exit by the harness: Event: quit line in the log (1143555)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] 0 FixF24: pump_stop_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [YES] FixF20Stat: when=exit line after Event: quit (quit 1143555; exit lines after it 1; all exit lines 1; unparsable FixF20Stat 0)
+  [YES] FixF20Stat exit line: unmatched 0 (0)
+  [YES] FixF20Stat exit line: modules_bound = modules (22 / 22)
+  [YES] FixF20Stat exit line: rewritten >= 11 (79)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12280)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 514)]; first GuestOut 12280)
+  [YES] FixB12Stat: line present (parsed 34, unparsable 0)
+  members as expected: True (failed 6, want 6); named YES True; F20 rows: prep [2299], all pipelines created [11190], _PipelineCache 192243915 -> 200058789, FixF20Stat lines 1 exit {"calls": 1271, "modules": 22, "modules_bound": 22, "rewritten": 79, "sites": 79, "unmatched": 0, "when": "exit"}; close_rc 0 close_s 4.2 quit_ln 1143555
+fs15_w (from log_f20_w.txt): admission failed members 3
+  NO json binary_sha256 = FS15 bfac84be (1994a0ced45c8135)
+  NO installed during the tag = FS15 bfac84be (1994a0ced45c8135)
+  NO env = the form of the tag (['extra KYTY_FIX_F20=1'])
+  admission as expected: True
+  [YES] lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.0 >= 310)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 [Vulkan][E] (0)
+  [YES] 0 limit lines of the layer (0)
+  [YES] positive control: [Vulkan][W] 883463 > 0
+  [YES] DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)
+  [YES] FixF20: mode=1 (every line) before the first GuestOut ([(1, 88)]; unparsable 0; first GuestOut 12277) - item 730 (g)(3)
+  [NO] FixF24: mode=1 b24=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12277)
+  [YES] FixF20Stat: when=exit line after Event: quit (quit 2314874; exit lines after it 1; all exit lines 1; unparsable FixF20Stat 0)
+  [YES] FixF20Stat exit line: unmatched 0 (0)
+  [YES] FixF20Stat exit line: modules_bound = modules (22 / 22)
+  [NO] FixF29: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12277)
+  [NO] FixF25: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12277)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 732)]; unparsable 0; first GuestOut 12277)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12277)
+  [YES] no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 728)]; first GuestOut 12277)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 730)]; bad 0; first GuestOut 12277)
+  members as expected: True (failed 3, want 3); named YES True; F20 rows: prep [0], all pipelines created [4995], _PipelineCache 200058789 -> 200058789, FixF20Stat lines 1 exit {"calls": 1271, "modules": 22, "modules_bound": 22, "rewritten": 79, "sites": 79, "unmatched": 0, "when": "exit"}; close_rc 0 close_s 4.1 quit_ln 2314874
+ALL OK

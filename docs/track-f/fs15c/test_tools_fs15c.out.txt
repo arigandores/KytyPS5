@@ -1,0 +1,113 @@
+suite test_tools_fs15c.py sha256 17581f68d4803934ce90a38fb3d7912d59769fcfa935bf75416ad10b1ca54b2d target go_fs15c.sh sha256 7092c7231877c85b1d79baf74bb536adbaa547cb699cc40c2050cd7c866e7811
+ok   go plan fs15_v
+ok   go plan fs15_v_r1
+ok   go plan fs15_v_r3
+ok   plan fs15_v: no KYTY_TEST_
+ok   plan fs15_v: KYTY_FIX_ only at fs15_z, only KYTY_FIX_F20=0
+ok   go plan fs15_w
+ok   go plan fs15_w_r1
+ok   go plan fs15_w_r3
+ok   plan fs15_w: no KYTY_TEST_
+ok   plan fs15_w: KYTY_FIX_ only at fs15_z, only KYTY_FIX_F20=0
+ok   go plan fs15_z
+ok   go plan fs15_z_r1
+ok   go plan fs15_z_r3
+ok   plan fs15_z: no KYTY_TEST_
+ok   plan fs15_z: KYTY_FIX_ only at fs15_z, only KYTY_FIX_F20=0
+ok   go dry-run output: first line is the linter line ALL OK, the plan is a later line (the F33e trap)
+ok   post plan of fs15_v is the dryrun line (not the linter line), plan-w no (rc 0: -rec knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of fs15_w is the dryrun line (not the linter line), plan-w yes (rc 0: 100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w yes)
+ok   post plan of fs15_z is the dryrun line (not the linter line), plan-w no (rc 0: _FIX_F20=0 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of fs15_w_r2 is the dryrun line (not the linter line), plan-w yes (rc 0: 100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w yes)
+ok   post: the plan is taken by grep '^dryrun ', not by the first line
+ok   post: the plan-only exit is before the lock check (reads nothing)
+ok   post: pair of fs15_v with the fs14_v sheet of FS14c
+ok   on disk: the fs14_v sheet exists
+ok   go usage rc 2 for 'fs15_x'
+ok   launch usage rc 2 for 'fs15_x'
+ok   post usage rc 2 for 'fs15_x'
+ok   go usage rc 2 for 'fs15_v_r4'
+ok   launch usage rc 2 for 'fs15_v_r4'
+ok   post usage rc 2 for 'fs15_v_r4'
+ok   go usage rc 2 for 'fs15_z_r0'
+ok   launch usage rc 2 for 'fs15_z_r0'
+ok   post usage rc 2 for 'fs15_z_r0'
+ok   go usage rc 2 for 'fs14_v'
+ok   launch usage rc 2 for 'fs14_v'
+ok   post usage rc 2 for 'fs14_v'
+ok   go usage rc 2 for 'f20_v'
+ok   launch usage rc 2 for 'f20_v'
+ok   post usage rc 2 for 'f20_v'
+ok   go usage rc 2 for ''
+ok   launch usage rc 2 for ''
+ok   post usage rc 2 for ''
+ok   launch fs15_v dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat fs15_v_r1 without FS15C_REPEAT_OK -> rc 11
+ok   launch repeat fs15_v_r1 with FS15C_REPEAT_OK -> passes
+ok   launch fs15_w dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat fs15_w_r1 without FS15C_REPEAT_OK -> rc 11
+ok   launch repeat fs15_w_r1 with FS15C_REPEAT_OK -> passes
+ok   launch fs15_z dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat fs15_z_r1 without FS15C_REPEAT_OK -> rc 11
+ok   launch repeat fs15_z_r1 with FS15C_REPEAT_OK -> passes
+ok   form634_check.py --series C:\kyty\f287\fs15c: ALL OK
+ok   go_fs15c.sh first executable line is the form linter
+ok   launch_fs15c.sh first executable line is the form linter
+ok   go: TB literal = bfac84be
+ok   go: FS14 literal = 013e1974
+ok   go: BIN and PINNED paths
+ok   on disk: sha256 of the FS15 copy = bfac84be
+ok   on disk: sha256 of the pinned FS14 copy = 013e1974
+ok   go: the guard scan right after the lock line, before the manifest
+ok   go: no guard scan / hold check before the lock (item 660 (d)(1))
+ok   go: install of the FS15 copy after the copies of the caches and after INSTALLED=1
+ok   go: the return of the pinned FS14 copy in finish, before installed_after
+ok   go: installed_after must be FS14
+ok   go: installed before the tag must be FS14
+ok   go: no FS13 / abab2196 / FS12 / 46892c20 left
+ok   go: KYTY_FIX_ in the knobs only KYTY_FIX_F20=0 (fs15_z)
+ok   go: no KYTY_GPU_CHECKPOINTS=, KYTY_GAME_PATCH=, KYTY_TEST_*= in the body
+ok   go: shell KYTY_* and VK_LAYER_* unset before the call
+ok   go: the env after the unset is written
+ok   go: lock line names HPP-822
+ok   queue_fs15c.py own issue HPP-822
+ok   runchk_fs15c.py own issue HPP-822
+ok   chk_fs15c.sh comments of HPP-822
+ok   enter_scene: ROOT = f287/fs15c
+ok   enter_scene: CLOSE_WAIT_S = 40 (the harness timeout of the exit, form b4_v)
+ok   tempo_fs15c.py = tempo_fs14c.py with the names moved (+ one header line)
+ok   ASCII only: chk_fs15c.sh
+ok   ASCII only: dispstate.py
+ok   ASCII only: fs15c_read.py
+ok   ASCII only: go_fs15c.sh
+ok   ASCII only: guard_fs15c.py
+ok   ASCII only: hold_fs15c.py
+ok   ASCII only: hostload_fs15c.py
+ok   ASCII only: idle142.py
+ok   ASCII only: launch_fs15c.sh
+ok   ASCII only: launch_run.py
+ok   ASCII only: manifest_fs4c.py
+ok   ASCII only: mfsub_fs15c.py
+ok   ASCII only: post_fs15c.sh
+ok   ASCII only: procload.py
+ok   ASCII only: queue_fs15c.py
+ok   ASCII only: refs_fs15c.py
+ok   ASCII only: regress_fs15c.py
+ok   ASCII only: run_safety99.py
+ok   ASCII only: runchk_fs15c.py
+ok   ASCII only: sheet142.py
+ok   ASCII only: snap_fs15c.py
+ok   ASCII only: tempo_fs15c.py
+ok   ASCII only: test_fs15c_read.py
+ok   ASCII only: test_tools_fs15c.py
+ok   ASCII only: wait_fs15c.sh
+ok   ASCII only: watch_fs15c.py
+checks 103 failed 0
+ALL OK

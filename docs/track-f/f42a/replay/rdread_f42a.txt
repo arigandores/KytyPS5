@@ -1,0 +1,37 @@
+== EID 128281: replays 100, unparsed arm lines 0
+  arm o' N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000004a0': 14, '000204a0': 6}  img {'06aa0be94a34c3a8': 20}
+  arm a' N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'06aa0be94a34c3a8': 20}
+  arm o  N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000004a0': 12, '000204a0': 8}  img {'5a281ce445d32655': 20}
+  arm z  N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000004a0': 13, '000204a0': 7}  img {'5a281ce445d32655': 20}
+  arm a  N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'5a281ce445d32655': 20}
+  R0 (buffer 138 zero at EID-1 in every replay): yes
+  K' (o' >= 2 distinct values of word 32824): alive (2 distinct)
+  K  (z  >= 2 distinct values of word 32824): alive (2 distinct)
+  P3' (a' one value = OR of o' and a' values 000204a0, img(a') in img(o')): yes
+  P3  (a  one value = OR of z  and a  values 000204a0, img(a)  in img(z)):  yes
+  o (no substitution) distinct values 2; img(o) == img(z): True; img(o') == img(a'): True
+== EID 44806: replays 100, unparsed arm lines 0
+  arm o' N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'94460a9411e4cdfd': 20}
+  arm a' N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'94460a9411e4cdfd': 20}
+  arm o  N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'6d5205123f098545': 20}
+  arm z  N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'6d5205123f098545': 20}
+  arm a  N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'6d5205123f098545': 20}
+  R0 (buffer 138 zero at EID-1 in every replay): yes
+  K' (o' >= 2 distinct values of word 32824): dead (1 distinct)
+  K  (z  >= 2 distinct values of word 32824): dead (1 distinct)
+  P3' (a' one value = OR of o' and a' values 000204a0, img(a') in img(o')): yes
+  P3  (a  one value = OR of z  and a  values 000204a0, img(a)  in img(z)):  yes
+  o (no substitution) distinct values 1; img(o) == img(z): True; img(o') == img(a'): True
+== EID 84820: replays 100, unparsed arm lines 0
+  arm o' N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'6c841a5640b4553b': 20}
+  arm a' N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'6c841a5640b4553b': 20}
+  arm o  N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'456b62b0792ad50c': 20}
+  arm z  N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'456b62b0792ad50c': 20}
+  arm a  N 20  p0_nonzero>0 0  words-other-than-32824 0  word32824 {'000204a0': 20}  img {'456b62b0792ad50c': 20}
+  R0 (buffer 138 zero at EID-1 in every replay): yes
+  K' (o' >= 2 distinct values of word 32824): dead (1 distinct)
+  K  (z  >= 2 distinct values of word 32824): dead (1 distinct)
+  P3' (a' one value = OR of o' and a' values 000204a0, img(a') in img(o')): yes
+  P3  (a  one value = OR of z  and a  values 000204a0, img(a)  in img(z)):  yes
+  o (no substitution) distinct values 1; img(o) == img(z): True; img(o') == img(a'): True
+ALL OK

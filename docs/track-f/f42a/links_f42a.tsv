@@ -28,3 +28,26 @@
 730ed40a	src/graphics/presentation/window/vulkanWindow.cpp	333	\t\tif (device_features2.features.fragmentStoresAndAtomics != VK_TRUE) {	\t\t\tLOGF("fragmentStoresAndAtomics is not supported\\n");
 730ed40a	src/graphics/presentation/window/vulkanWindow.cpp	639	\tdevice_features.fragmentStoresAndAtomics = VK_TRUE;	\tdevice_features.samplerAnisotropy        = VK_TRUE;
 730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1928	void AtomicTailU32(EmitterState& state, spv::Op op, uint32_t word, uint32_t value) {	\tconst auto result = state.builder.AllocateId();
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/fixF20.h	43	inline RewriteStats RewriteFaultOr(std::span<const uint32_t> in, bool bound, std::vector<u	\tconstexpr uint32_t kMagic               = 0x07230203u;
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp	43	bool Apply(const std::vector<uint32_t>& in, bool bound, std::vector<uint32_t>& out) {	\tconst auto stats = RewriteFaultOr(in, bound, out);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2225	\t\tconst auto module       = CreateCachedModule(device, result.spirv, fault_bound);	\t\tEXIT_IF(module == nullptr);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2223	\t\tconst bool fault_bound  = FixF20Bound(result.program.bindings); // Track F, F42a: before	\t\tconst auto module_begin = HostMicros();
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2267	\t\t\tconst auto module      = CreateCachedModule(device, p.spirv, fault_bound);	\t\t\tEXIT_IF(module == nullptr);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2266	\t\t\tconst bool fault_bound = FixF20Bound(p.program.bindings); // Track F, F42a: before Adop	\t\t\tconst auto module      = CreateCachedModule(device, p.spirv, fault_bound);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4678	\t\t\t\tconst auto module      = CreateCachedModule(device, p.spirv, fault_bound);	\t\t\t\tEXIT_IF(module == nullptr);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4677	\t\t\t\tconst bool fault_bound = FixF20Bound(p.program.bindings); // Track F, F42a: before Ado	\t\t\t\tconst auto module      = CreateCachedModule(device, p.spirv, fault_bound);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	360	\tconst bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(words, pixel_program	\tconst auto            module  = CompileSPV(fix_f20 ? fixed : words, graphics.device);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	440	\tconst bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(translation, fault_b	\tconst auto&           source  = fix_f20 ? fixed : translation;
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp	34	int Mode() {	\tstatic const int mode = [] {
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4865	\t(void)FixF20::Mode(); // Track F, F42a: "FixF20: mode=<0|1>" once, before the precache cr	\tInitializeDriverCache();
+a9d6fd1c	src/emulator.cpp	490	\t\tLibs::Graphics::FixF20::PrintExitStat(); // Track F, F42a: "FixF20Stat: when=exit" (KYTY	\t\tstd::quick_exit(0);
+a9d6fd1c	src/emulator.cpp	501	\tLibs::Graphics::FixF20::PrintExitStat(); // Track F, F42a: "FixF20Stat: when=exit" (KYTY_	\tstd::quick_exit(0);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h	123	\tbool fault_bound = false;	
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2240	\t\t    .handle         = {.id = ++next_shader_id, .module = module, .fault_bound = fault_bo	\t\t    .spirv          = translation_cache.Enabled() ? std::move(result.spirv)
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2272	\t\t\t    .handle         = {.id = ++next_shader_id, .module = module, .fault_bound = fault_b	\t\t\t    .spirv          = std::move(p.spirv),
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4683	\t\t\t\t    .handle         = {.id = ++next_shader_id, .module = module, .fault_bound = fault_	\t\t\t\t    .spirv          = std::move(p.spirv),
+a9d6fd1c	tests/ShaderRecompilerComputeTests.cpp	18532	// Track F, F42a (HPP-779, ROADMAP s122 item 694(g)(1), (v)(6); RC5 of F41b): the GPU stan	// A guest program translated by the real translator (the null-page BDA mode of the game: 
+a9d6fd1c	tests/ShaderRecompilerComputeTests.cpp	15375	  std::vector<u32> ReadFaultBuffer(const char *shader_name) {	    EnsureBdaBuffers(shader_name);
+a9d6fd1c	tests/ShaderRecompilerComputeTests.cpp	18283	    // Track F, F42a: eTransferSrc - ReadFaultBuffer copies m_fault_buffer out.	    const auto usage = vk::BufferUsageFlagBits::eStorageBuffer |
+a9d6fd1c	tests/shaderCfgTests.cpp	16421	    if (const char *f20 = std::getenv("KYTY_RECOMPILE_F20"); f20 != nullptr && f20[0] != 0	      // Track F, F42a (HPP-779, ROADMAP s122 item 694(g)(4)): KYTY_RECOMPILE_F20=<file> -
+a9d6fd1c	tests/shaderCfgTests.cpp	16064	  if (const char *f20file = std::getenv("KYTY_TEST_F20FILE"); f20file != nullptr && f20fil	    // Track F, F42a (HPP-779, ROADMAP s122 item 694(g)(3)): KYTY_TEST_F20FILE="<in.spv>;<

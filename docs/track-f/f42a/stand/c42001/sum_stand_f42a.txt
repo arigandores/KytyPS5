@@ -1,0 +1,33 @@
+mode=0 rows 800 identity lost=expected-seen violated 0
+  arm W rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 extra 0 words_lost 819200 out_nonzero 0
+  arm X rounds 200 expected 26214400 seen 1851248 lost 24363152 rounds_with_loss 200 extra 0 words_lost 819200 out_nonzero 0
+  arm S rounds 200 expected 819200 seen 819200 lost 0 rounds_with_loss 0 extra 0 words_lost 0 out_nonzero 0
+  arm N rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 extra 0 words_lost 819200 out_nonzero 0
+  form arm W: wave 32 subgroup 32 local 64x1x1 returns_main 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm X: wave 32 subgroup 32 local 64x1x1 returns_main 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm S: wave 32 subgroup 32 local 64x1x1 returns_main 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm N: wave 32 subgroup 32 local 64x1x1 returns_main 1 named 0 sites 0 rewritten 0 unmatched 1 valid 1 -> ok
+  sum line arm W seed 42001 = recount: True
+  sum line arm X seed 42001 = recount: True
+  sum line arm S seed 42001 = recount: True
+  sum line arm N seed 42001 = recount: True
+mode=1 rows 800 identity lost=expected-seen violated 0
+  arm W rounds 200 expected 26214400 seen 26214400 lost 0 rounds_with_loss 0 extra 0 words_lost 0 out_nonzero 0
+  arm X rounds 200 expected 26214400 seen 26214400 lost 0 rounds_with_loss 0 extra 0 words_lost 0 out_nonzero 0
+  arm S rounds 200 expected 819200 seen 819200 lost 0 rounds_with_loss 0 extra 0 words_lost 0 out_nonzero 0
+  arm N rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 extra 0 words_lost 819200 out_nonzero 0
+  form arm W: wave 32 subgroup 32 local 64x1x1 returns_main 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm X: wave 32 subgroup 32 local 64x1x1 returns_main 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm S: wave 32 subgroup 32 local 64x1x1 returns_main 1 named 1 sites 1 rewritten 1 unmatched 0 valid 1 -> ok
+  form arm N: wave 32 subgroup 32 local 64x1x1 returns_main 1 named 0 sites 0 rewritten 0 unmatched 1 valid 1 -> ok
+  sum line arm W seed 42001 = recount: True
+  sum line arm X seed 42001 = recount: True
+  sum line arm S seed 42001 = recount: True
+  sum line arm N seed 42001 = recount: True
+member =0 W lost > 0 (positive control)     yes
+member =0 S lost = 0 (zero control)         yes
+member =1 W lost = 0 in every round         yes
+member =1 X lost = 0 in every round         yes
+member =1 S lost = 0 in every round         yes
+reading line: =0 X lost 24363152 of 26214400 (200 rounds with loss); =1 N lost 25395200 of 26214400 (not rewritten, unmatched >= 1)
+ALL OK

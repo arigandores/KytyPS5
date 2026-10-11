@@ -1,0 +1,32 @@
+a: rc 0 f20file: bound=1 named=1 sites=11 rewritten=11 unmatched=0 malformed=0 words_in=115686 words_out=115631
+module z  sha256 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 words 115686 spirv-val rc 0
+module a  sha256 e4f8a56fae8846e6ac40d8a7fb310a6dd566018846bdcc1e4b35534f77c1e837 words 115631 spirv-val rc 0
+module o' sha256 111713caa4076d3d7973f956994c66ba91764ec581030839a7b008cac8f605b3 words 116310 spirv-val rc 0
+module a' sha256 4f90cc8f4e11ac33e1372d04fc82417083fc3b807c35b79835dbba39d2a765ba words 116255 spirv-val rc 0
+diff a vs z: only triples True, replaced 11, triples of the base 11, triples after 0
+diff a' vs o': only triples True, replaced 11, triples of the base 11, triples after 0
+bindings (set, binding) z 10 o' 10 equal True
+  cat cs_1f16e50eea0c89e3_f69183983bf9a738.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_2b3be82b8235ac05_409e95542b4bcbca.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_380bb9d636390bae_fe70c334a8301128.bin perm 0 triples 11 replaced 11 diff_ok True val 0 ok
+  cat cs_380bb9d636390bae_fe70c334a8301128.bin perm 1 triples 11 replaced 11 diff_ok True val 0 ok
+  cat cs_380bb9d636390bae_fe70c334a8301128.bin perm 2 triples 11 replaced 11 diff_ok True val 0 ok
+  cat cs_380bb9d636390bae_fe70c334a8301128.bin perm 3 triples 11 replaced 11 diff_ok True val 0 ok
+  cat cs_3f716cc2835a4c3f_bfd83d8d2a6d32b5.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_4e555b0ebf3b53f8_e451f9083ff59a84.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_503d7f066a496c3c_70975964c3b7a9c4.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_5323c4ef4f785055_c1ed6df4a815e257.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_559a0fa9def7a691_8e40a8b0ba87fa0e.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_56a15431999c5a2d_7ee8623d978266cd.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_7ede18ae55120a48_061a086a583a6aa1.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_b6dbdd5904905160_1426315974229232.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_b76e569142635733_78a9b719d344ea0e.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_c739f9614016bed4_cb92a6e6de463743.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_cd94166bf3f2bb81_29e5bf3a282c2956.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_d234cf2781dabb34_60e9441896552e8b.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_ea8e2d64dfe34ed9_e80959018cfda528.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_f88d0f630ac5b35d_a7c7d34503e28f20.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat cs_ff8ee744ffa4dcdc_8d9a17f42a196301.bin perm 0 triples 2 replaced 2 diff_ok True val 0 ok
+  cat vs_eacd00448abbef65_da702a1a6ede44ee.bin perm 0 triples 1 replaced 1 diff_ok True val 0 ok
+catalog modules with fault_buffer 22, rewritten cleanly 22 (reference)
+ALL OK

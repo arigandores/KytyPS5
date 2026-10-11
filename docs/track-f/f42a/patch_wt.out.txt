@@ -1,0 +1,9 @@
+copied src/graphics/host_gpu/renderer/pipeline/fixF20.h
+copied src/graphics/host_gpu/renderer/pipeline/fixF20.cpp
+patched src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp 9
+patched src/graphics/host_gpu/renderer/pipeline/pipelineCache.h 1
+patched src/graphics/host_gpu/renderer/pipeline/shaders.cpp 2
+patched src/emulator.cpp 3
+patched tests/shaderCfgTests.cpp 3
+patched tests/ShaderRecompilerComputeTests.cpp 7
+ALL PATCHED

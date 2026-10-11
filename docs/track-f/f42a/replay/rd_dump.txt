@@ -1,0 +1,3 @@
+[   14.4] eid 128281 shader 1251 entry main raw_bytes 462744 raw_sha256 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6
+[   14.4] dumped C:/kyty/f287/f42a/replay/snap_380_k03.spv
+[   14.4] done

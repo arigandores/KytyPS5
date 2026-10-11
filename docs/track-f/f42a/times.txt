@@ -9,3 +9,28 @@
 2026-10-11T01:35:42Z watchdog false positive: pids 46844/50468/52024 are bash wait loops of another link (HPP-783 shell: heredoc text names procload.py), not the gate; watch_f42a.py now counts only argv elements ending with procload.py (form of api_chk.sh) - recorded deviation from the letter of 431(v)(1), report section Process
 2026-10-11T01:35:46Z cnt_f42a.py (fast) under the refined watchdog
 2026-10-11T01:36:41Z cnt_f42a.py done (rc above); SpecDump cross-check: 741 files, 1270 permutations = modules found, 0 mismatched files (specdump_cat.txt)
+2026-10-11T01:37:57Z section 0 committed 3a2964e2 (links 30 ALL OK); code patch start
+2026-10-11T01:42:03Z patch_f42a.py applied to the worktree (rc above)
+2026-10-11T01:42:37Z patch_f42a.py applied to the worktree
+2026-10-11T01:43:13Z check_gate_order.py --src wt/src: GATE ORDER: clean (= F40a wt output); build start
+2026-10-11T01:45:09Z stand smoke (not counted) R=2 seed 7 =0 and =1
+2026-10-11T01:46:00Z smoke found OpAtomicXor (242) in place of OpAtomicOr (241) - the X arm at =1 lost every bit (mutant m4 form caught by the stand); fixed in fixF20.h and spvscan_f42a.py
+2026-10-11T01:47:28Z shader_cfg_tests start (KYTY_FIX_F20 unset and =1)
+2026-10-11T01:48:24Z worktree: checkout of the patch, cherry-pick a6342c98 -> cf8ecb1c, a9d6fd1c -> 26283087; files byte-equal to the built patch (cmp); rebuild for the tag binary
+2026-10-11T01:50:22Z tag binary built from wt 26283087 (730ed40a + cf8ecb1c + 26283087): kyty_emulator 6abebc7b (pinned C:/kyty/f287/bin/kyty_emulator_6abebc7b.exe), shader_cfg_tests 2c9e2123, shader_recompiler_compute_tests f9a304a7 (f42a/bin); version KytyPS5-2026-09-15-6a2987a-1916-g26283087, KYTY_SHADER_SOURCE_HASH 9177b4267de1fb8bac7d1113afd8733210addfac
+2026-10-11T01:50:28Z constants comment dc2c8be7 posted (R 200, seed 42001; replay N 20, seed 42003); counted stand start
+2026-10-11T01:51:48Z counted stand end
+2026-10-11T01:52:56Z corpus T1 start (shader_cfg_tests 2c9e2123, 4 workers)
+2026-10-11T01:54:07Z corpus T1 done (rc above; first pass FAIL was the reader's empty defaultdict key, fixed)
+2026-10-11T01:55:43Z replay dump of the snapshot module (EID 128281) start
+2026-10-11T01:57:17Z replay modules built and checked (mods_f42a.txt ALL OK): z 3e034e54, a e4f8a56f, o' 111713ca (= r1 F12g), a' 4f90cc8f; posting sha comment before the first replay
+2026-10-11T01:57:24Z replay e128281 start (N 20, seed 42003)
+2026-10-11T02:02:21Z replay e128281 done (100 replays, GLCache cmp EQUAL); replay e44806 start
+2026-10-11T02:06:01Z replay e44806 done (100 replays, GLCache cmp EQUAL); replay e84820 start
+2026-10-11T02:09:57Z replay e84820 done (rc above)
+2026-10-11T08:11:27Z continuation after the interrupted heartbeat (wake issue_continuation_needed, user comment 08:03:19Z); lock none, STOP none; API 08:04:43Z: no Harness Engineer link in_progress
+2026-10-11T08:05:58Z tag binary copied C:/kyty/f287/bin/kyty_emulator_6abebc7b.exe (worktree 26283087 = 730ed40a + cf8ecb1c + 26283087, git cherry - -), binary_f42a.py; tests rerun to file tests/run_tests.out.txt ALL OK; replay reading rdread_f42a.py ALL OK
+2026-10-11T08:06:25Z binary_f42a.py first run FAIL on the version count (expected x2, tag has main x1 + SDL_REVISION of configure 730ed40a x1); marks split main / SDL, rerun rc above
+2026-10-11T08:11:27Z stand recount sum_stand_f42a.py ALL OK (1600 rows, sum lines = recount 8 of 8); external spirv-val of the 8 stand modules rc 0; replay reading rdread_f42a.py ALL OK; report sections 1-9 drafted
+2026-10-11T08:11:38Z correction of the line 08:11:27Z 'continuation ...': written 08:11:27Z, event (first command of the continuation) 08:03:41Z by the date -u output of that command; lines 08:05:58Z / 08:06:25Z were kept in times_f42a.txt and merged here
+2026-10-11T08:12:35Z FACTS section appended (general rule 34, append_facts.py ALL OK); report assembled, files copied to docs/track-f/f42a, links 53 ALL OK

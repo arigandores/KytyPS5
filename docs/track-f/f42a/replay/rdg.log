@@ -1,0 +1,16 @@
+2026-10-11T01:55:49Z start dump eid 128281 N 1 seed 1 dump 'C:/kyty/f287/f42a/replay/snap_380_k03.spv' watchdog 240
+2026-10-11T01:55:52Z GLCache copied, manifest 5fc629833fcf287e files 38
+2026-10-11T01:56:18Z replay end after ~15 s (): 0 replays
+2026-10-11T01:56:21Z GLCache after = before (cmp EQUAL)
+2026-10-11T01:57:26Z start e128281 eid 128281 N 20 seed 42003 dump '' watchdog 540
+2026-10-11T01:57:26Z GLCache copied, manifest 5fc629833fcf287e files 38
+2026-10-11T02:02:05Z replay end after ~240 s (): 100 replays
+2026-10-11T02:02:06Z GLCache after = before (cmp EQUAL)
+2026-10-11T02:02:22Z start e44806 eid 44806 N 20 seed 42003 dump '' watchdog 540
+2026-10-11T02:02:22Z GLCache copied, manifest 5fc629833fcf287e files 38
+2026-10-11T02:05:55Z replay end after ~185 s (): 100 replays
+2026-10-11T02:05:56Z GLCache after = before (cmp EQUAL)
+2026-10-11T02:06:03Z start e84820 eid 84820 N 20 seed 42003 dump '' watchdog 540
+2026-10-11T02:06:04Z GLCache copied, manifest 5fc629833fcf287e files 38
+2026-10-11T02:09:56Z replay end after ~215 s (): 100 replays
+2026-10-11T02:09:57Z GLCache after = before (cmp EQUAL)

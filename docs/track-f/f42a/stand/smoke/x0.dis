@@ -1,0 +1,219 @@
+; SPIR-V
+; Version: 1.3
+; Generator: Khronos; 0
+; Bound: 155
+; Schema: 0
+               OpCapability Shader
+               OpCapability SignedZeroInfNanPreserve
+               OpCapability Int64
+               OpCapability PhysicalStorageBufferAddresses
+               OpExtension "SPV_KHR_physical_storage_buffer"
+               OpExtension "SPV_KHR_float_controls"
+               OpMemoryModel PhysicalStorageBuffer64 GLSL450
+               OpEntryPoint GLCompute %main "main" %gl_WorkGroupID %gl_LocalInvocationID %gl_LocalInvocationIndex
+               OpExecutionMode %main SignedZeroInfNanPreserve 32
+               OpExecutionMode %main LocalSize 64 1 1
+               OpName %gl_WorkGroupID "gl_WorkGroupID"
+               OpName %gl_LocalInvocationID "gl_LocalInvocationID"
+               OpName %gl_LocalInvocationIndex "gl_LocalInvocationIndex"
+               OpName %BufferResource "BufferResource"
+               OpName %vsharp "vsharp"
+               OpName %buffers "buffers"
+               OpName %bda_pagetable "bda_pagetable"
+               OpName %fault_buffer "fault_buffer"
+               OpName %main "main"
+               OpName %bda_fault_page "bda_fault_page"
+               OpName %get_bda_pointer "get_bda_pointer"
+               OpDecorate %gl_WorkGroupID BuiltIn WorkgroupId
+               OpDecorate %gl_LocalInvocationID BuiltIn LocalInvocationId
+               OpDecorate %gl_LocalInvocationIndex BuiltIn LocalInvocationIndex
+               OpDecorate %_arr_uint_uint_32 ArrayStride 4
+               OpMemberDecorate %BufferResource 0 Offset 0
+               OpDecorate %BufferResource Block
+               OpDecorate %_runtimearr_uint ArrayStride 4
+               OpMemberDecorate %_struct_14 0 Offset 0
+               OpDecorate %_struct_14 Block
+               OpDecorate %buffers DescriptorSet 0
+               OpDecorate %buffers Binding 0
+               OpDecorate %_runtimearr_ulong ArrayStride 8
+               OpMemberDecorate %_struct_21 0 Offset 0
+               OpDecorate %_struct_21 Block
+               OpDecorate %bda_pagetable DescriptorSet 0
+               OpDecorate %bda_pagetable Binding 46
+               OpDecorate %fault_buffer DescriptorSet 0
+               OpDecorate %fault_buffer Binding 47
+       %uint = OpTypeInt 32 0
+     %v3uint = OpTypeVector %uint 3
+%_ptr_Input_v3uint = OpTypePointer Input %v3uint
+%gl_WorkGroupID = OpVariable %_ptr_Input_v3uint Input
+%gl_LocalInvocationID = OpVariable %_ptr_Input_v3uint Input
+%_ptr_Input_uint = OpTypePointer Input %uint
+%gl_LocalInvocationIndex = OpVariable %_ptr_Input_uint Input
+    %uint_32 = OpConstant %uint 32
+%_arr_uint_uint_32 = OpTypeArray %uint %uint_32
+%BufferResource = OpTypeStruct %_arr_uint_uint_32
+%_ptr_PushConstant_BufferResource = OpTypePointer PushConstant %BufferResource
+     %vsharp = OpVariable %_ptr_PushConstant_BufferResource PushConstant
+%_runtimearr_uint = OpTypeRuntimeArray %uint
+ %_struct_14 = OpTypeStruct %_runtimearr_uint
+     %uint_1 = OpConstant %uint 1
+%_arr__struct_14_uint_1 = OpTypeArray %_struct_14 %uint_1
+%_ptr_StorageBuffer__arr__struct_14_uint_1 = OpTypePointer StorageBuffer %_arr__struct_14_uint_1
+    %buffers = OpVariable %_ptr_StorageBuffer__arr__struct_14_uint_1 StorageBuffer
+      %ulong = OpTypeInt 64 0
+%_runtimearr_ulong = OpTypeRuntimeArray %ulong
+ %_struct_21 = OpTypeStruct %_runtimearr_ulong
+%_ptr_StorageBuffer__struct_21 = OpTypePointer StorageBuffer %_struct_21
+%bda_pagetable = OpVariable %_ptr_StorageBuffer__struct_21 StorageBuffer
+%_ptr_StorageBuffer__struct_14 = OpTypePointer StorageBuffer %_struct_14
+%fault_buffer = OpVariable %_ptr_StorageBuffer__struct_14 StorageBuffer
+       %bool = OpTypeBool
+         %31 = OpTypeFunction %ulong %ulong %bool
+%_ptr_Private_uint = OpTypePointer Private %uint
+%bda_fault_page = OpVariable %_ptr_Private_uint Private
+   %ulong_14 = OpConstant %ulong 14
+     %uint_0 = OpConstant %uint 0
+%_ptr_StorageBuffer_ulong = OpTypePointer StorageBuffer %ulong
+    %ulong_0 = OpConstant %ulong 0
+%ulong_16383 = OpConstant %ulong 16383
+       %void = OpTypeVoid
+         %63 = OpTypeFunction %void
+     %uint_4 = OpConstant %uint 4
+%_ptr_PushConstant_uint = OpTypePointer PushConstant %uint
+   %uint_255 = OpConstant %uint 255
+     %uint_2 = OpConstant %uint 2
+     %uint_3 = OpConstant %uint 3
+    %uint_15 = OpConstant %uint 15
+     %uint_6 = OpConstant %uint 6
+     %uint_5 = OpConstant %uint 5
+%uint_278528 = OpConstant %uint 278528
+    %uint_14 = OpConstant %uint 14
+    %uint_18 = OpConstant %uint 18
+   %ulong_32 = OpConstant %ulong 32
+       %true = OpConstantTrue %bool
+%ulong_18446744073709551612 = OpConstant %ulong 18446744073709551612
+%_ptr_PhysicalStorageBuffer_uint = OpTypePointer PhysicalStorageBuffer %uint
+    %ulong_4 = OpConstant %ulong 4
+%_ptr_StorageBuffer_uint = OpTypePointer StorageBuffer %uint
+    %uint_31 = OpConstant %uint 31
+%get_bda_pointer = OpFunction %ulong None %31
+         %35 = OpFunctionParameter %ulong
+         %37 = OpFunctionParameter %bool
+         %36 = OpLabel
+         %39 = OpShiftRightLogical %ulong %35 %ulong_14
+         %40 = OpArrayLength %uint %bda_pagetable 0
+         %41 = OpUConvert %ulong %40
+         %42 = OpULessThan %bool %39 %41
+         %44 = OpUConvert %uint %39
+         %45 = OpSelect %uint %42 %44 %uint_0
+         %46 = OpAccessChain %_ptr_StorageBuffer_ulong %bda_pagetable %uint_0 %45
+         %48 = OpLoad %ulong %46
+         %49 = OpAccessChain %_ptr_StorageBuffer_ulong %bda_pagetable %uint_0 %uint_0
+         %50 = OpLoad %ulong %49
+         %52 = OpIEqual %bool %48 %ulong_0
+         %53 = OpLogicalNot %bool %42
+         %54 = OpLogicalOr %bool %53 %52
+         %55 = OpSelect %ulong %54 %50 %48
+         %56 = OpLoad %uint %bda_fault_page
+         %57 = OpLogicalAnd %bool %54 %37
+         %58 = OpSelect %uint %57 %45 %56
+               OpStore %bda_fault_page %58
+         %60 = OpBitwiseAnd %ulong %35 %ulong_16383
+         %61 = OpIAdd %ulong %55 %60
+               OpReturnValue %61
+               OpFunctionEnd
+       %main = OpFunction %void None %63
+         %27 = OpLabel
+               OpStore %bda_fault_page %uint_0
+         %64 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_4
+         %65 = OpLoad %uint %64
+         %69 = OpShiftRightLogical %uint %65 %uint_0
+         %70 = OpBitwiseAnd %uint %69 %uint_255
+               OpBranch %28
+         %28 = OpLabel
+         %71 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_0
+         %72 = OpLoad %uint %71
+         %73 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_1
+         %74 = OpLoad %uint %73
+         %75 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_2
+         %76 = OpLoad %uint %75
+         %78 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_3
+         %79 = OpLoad %uint %78
+         %81 = OpAccessChain %_ptr_Input_uint %gl_LocalInvocationID %uint_0
+         %82 = OpLoad %uint %81
+         %83 = OpAccessChain %_ptr_Input_uint %gl_WorkGroupID %uint_0
+         %84 = OpLoad %uint %83
+         %85 = OpAccessChain %_ptr_Input_uint %gl_WorkGroupID %uint_1
+         %86 = OpLoad %uint %85
+               OpBranch %29
+         %29 = OpLabel
+         %88 = OpShiftLeftLogical %uint %86 %uint_15
+         %89 = OpIAdd %uint %88 %84
+         %91 = OpShiftLeftLogical %uint %89 %uint_6
+         %92 = OpIAdd %uint %82 %91
+         %94 = OpShiftRightLogical %uint %92 %uint_5
+         %96 = OpIAdd %uint %uint_278528 %94
+         %98 = OpShiftLeftLogical %uint %96 %uint_14
+        %100 = OpShiftRightLogical %uint %96 %uint_18
+        %101 = OpUConvert %ulong %98
+        %103 = OpUConvert %ulong %100
+        %104 = OpShiftLeftLogical %ulong %103 %ulong_32
+        %105 = OpBitwiseOr %ulong %101 %104
+        %108 = OpBitwiseAnd %ulong %105 %ulong_18446744073709551612
+        %109 = OpFunctionCall %ulong %get_bda_pointer %108 %true
+        %110 = OpConvertUToPtr %_ptr_PhysicalStorageBuffer_uint %109
+        %112 = OpLoad %uint %110 Aligned 4
+        %113 = OpUConvert %uint %105
+        %114 = OpBitwiseAnd %uint %113 %uint_3
+        %115 = OpINotEqual %bool %114 %uint_0
+               OpSelectionMerge %119 None
+               OpBranchConditional %115 %116 %118
+        %116 = OpLabel
+        %121 = OpIAdd %ulong %108 %ulong_4
+        %122 = OpFunctionCall %ulong %get_bda_pointer %121 %true
+        %123 = OpConvertUToPtr %_ptr_PhysicalStorageBuffer_uint %122
+        %124 = OpLoad %uint %123 Aligned 4
+               OpBranch %117
+        %117 = OpLabel
+               OpBranch %119
+        %118 = OpLabel
+               OpBranch %119
+        %119 = OpLabel
+        %125 = OpPhi %uint %124 %117 %uint_0 %118
+        %126 = OpShiftLeftLogical %uint %114 %uint_3
+        %127 = OpISub %uint %uint_4 %114
+        %128 = OpBitwiseAnd %uint %127 %uint_3
+        %129 = OpShiftLeftLogical %uint %128 %uint_3
+        %130 = OpShiftLeftLogical %uint %125 %129
+        %131 = OpShiftRightLogical %uint %112 %126
+        %132 = OpBitwiseOr %uint %131 %130
+        %133 = OpShiftLeftLogical %uint %82 %uint_2
+        %134 = OpAccessChain %_ptr_StorageBuffer__struct_14 %buffers %uint_0
+        %135 = OpArrayLength %uint %134 0
+        %136 = OpShiftRightLogical %uint %70 %uint_2
+        %137 = OpShiftRightLogical %uint %133 %uint_2
+        %138 = OpIAdd %uint %137 %136
+        %139 = OpULessThan %bool %138 %135
+               OpSelectionMerge %141 None
+               OpBranchConditional %139 %140 %141
+        %140 = OpLabel
+        %143 = OpAccessChain %_ptr_StorageBuffer_uint %134 %uint_0 %138
+               OpStore %143 %132
+               OpBranch %141
+        %141 = OpLabel
+        %144 = OpLoad %uint %bda_fault_page
+        %145 = OpINotEqual %bool %144 %uint_0
+               OpSelectionMerge %147 None
+               OpBranchConditional %145 %146 %147
+        %146 = OpLabel
+        %148 = OpShiftRightLogical %uint %144 %uint_5
+        %150 = OpBitwiseAnd %uint %144 %uint_31
+        %151 = OpShiftLeftLogical %uint %uint_1 %150
+        %152 = OpAccessChain %_ptr_StorageBuffer_uint %fault_buffer %uint_0 %148
+        %153 = OpLoad %uint %152
+        %154 = OpBitwiseOr %uint %153 %151
+               OpStore %152 %154
+               OpBranch %147
+        %147 = OpLabel
+               OpReturn
+               OpFunctionEnd

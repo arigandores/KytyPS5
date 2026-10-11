@@ -580,6 +580,12 @@ add_kyty_full_emulator_test(f25_read_fail_stand
 add_kyty_full_emulator_test(audio_propagation_tests
 	"${KYTY_TESTS_DIR}/AudioPropagationTests.cpp")
 
+# Track F, F29 fault area parse stand (F44a HPP-791; ROADMAP s122 item 698(d)(1)): the real parser
+# FAULT_BUFFER_PROCESS_SPV on the GPU (stage G) and ParseFaultArea of faultManager.cpp on the CPU (stage P); run by
+# docs/track-f/f44a/run_stand_f44a.py, not by ctest.
+add_kyty_full_emulator_test(f29_fault_stand
+	"${KYTY_TESTS_DIR}/F29FaultStand.cpp")
+
 # Track F, F8 SDL audio subsystem stand (F18c; ROADMAP s122 item 441(d)(1)): run by docs/track-f/f18c/run_stand_f18c.py,
 # not by ctest.
 add_kyty_full_emulator_test(f8_audio_stand

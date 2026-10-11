@@ -3,6 +3,7 @@
 #include "common/frameStats.h"
 
 #include "common/assert.h"
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "gpu_tiler_shaders/fault_buffer_process_spv.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -12,8 +13,10 @@
 #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 
 #include <algorithm>
+#include <atomic>
 #include <bit>
 #include <cinttypes>
+#include <cstdlib>
 #include <cstring>
 #include <limits>
 
@@ -31,7 +34,35 @@ constexpr uint64_t LoopTripOffset = BufferCache::CACHING_NUMPAGES / 8;
 constexpr uint64_t LoopTripBytes  = LoopCap::LoopTripWords * sizeof(uint32_t);
 static_assert(LoopTripOffset == uint64_t {LoopCap::LoopTripWordBase} * sizeof(uint32_t));
 
+// KYTY_FIX_F29: at most this many "FixF29: overflow" lines per process.
+constexpr uint64_t FixF29OverflowLines = 32;
+
 } // namespace
+
+bool FixF29Enabled() {
+	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_F29"));
+	return enabled;
+}
+
+FaultAreaParse ParseFaultArea(const uint64_t* area, bool clamp, const FaultAreaVisitor& visit,
+                              const FaultAreaPass& pass) {
+	static std::atomic<uint64_t> overflow_total {0};
+	constexpr auto               last_record = static_cast<uint32_t>(MaxPageFaults - 1);
+	FaultAreaParse               parse;
+	parse.raw   = static_cast<uint32_t>(area[0]);
+	parse.count = clamp ? std::min(parse.raw, last_record) : parse.raw;
+	if (clamp && parse.raw > last_record) {
+		const uint64_t total = overflow_total.fetch_add(1, std::memory_order_relaxed) + 1;
+		if (total <= FixF29OverflowLines) {
+			LOGF("FixF29: overflow pass=%" PRIu64 " area=%u count=%u read=%u total=%" PRIu64 "\n", pass.pass,
+			     pass.area, parse.raw, parse.count, total);
+		}
+	}
+	for (uint32_t index = 1; index <= parse.count; ++index) {
+		visit(index, area[index]);
+	}
+	return parse;
+}
 
 FaultManager::FaultManager(GraphicContext& graphics, CommandScheduler& scheduler,
                            BufferCache& buffer_cache)
@@ -45,6 +76,7 @@ FaultManager::FaultManager(GraphicContext& graphics, CommandScheduler& scheduler
 	SetVulkanObjectNameF(m_graphics.device, m_fault_buffer.Handle(), "Fault Buffer");
 	LOGF("BvhLoopCap: cap=%u token='%s' default_slot0=%d\n", LoopCap::BvhLoopCap(),
 	     LoopCap::BvhLoopCapSignatureToken().c_str(), LoopCap::BvhLoopCapSlot(0x380bb9d636390baeull));
+	LOGF("FixF29: mode=%d\n", FixF29Enabled() ? 1 : 0);
 
 	const vk::DescriptorSetLayoutBinding bindings[] {
 	    {0, vk::DescriptorType::eStorageBuffer, 1, vk::ShaderStageFlagBits::eCompute, nullptr},
@@ -178,8 +210,9 @@ void FaultManager::ProcessFaultBuffer() {
 		command.pipelineBarrier2(tail_dependency);
 	}
 
-	const auto area = m_current_area;
-	m_scheduler.DeferOperation([this, mapped, offset, area, trips, trip_offset] {
+	const auto     area     = m_current_area;
+	const uint64_t fix_pass = FixF29Enabled() ? ++m_fix_f29_pass : 0;
+	m_scheduler.DeferOperation([this, mapped, offset, area, trips, trip_offset, fix_pass] {
 		if (trips) {
 			m_trip_download.Invalidate(trip_offset, LoopTripBytes);
 			std::array<uint32_t, LoopCap::LoopTripWords> words {};
@@ -210,11 +243,13 @@ void FaultManager::ProcessFaultBuffer() {
 		m_download_buffer.Invalidate(offset, PageFaultAreaSize);
 		RangeSet    fault_ranges;
 		const auto* faults = std::bit_cast<const uint64_t*>(mapped);
-		const auto  count  = static_cast<uint32_t>(faults[0]);
-		for (uint32_t index = 1; index <= count; ++index) {
-			fault_ranges.Add(faults[index], BufferCache::CACHING_PAGESIZE);
-			LOGF("Accessed non-GPU cached memory at 0x%016" PRIx64 "\n", faults[index]);
-		}
+		(void)ParseFaultArea(
+		    faults, FixF29Enabled(),
+		    [&fault_ranges](uint32_t /*index*/, uint64_t value) {
+			    fault_ranges.Add(value, BufferCache::CACHING_PAGESIZE);
+			    LOGF("Accessed non-GPU cached memory at 0x%016" PRIx64 "\n", value);
+		    },
+		    {fix_pass, area});
 		fault_ranges.ForEach([this](uint64_t start, uint64_t end) {
 			EXIT_IF(end - start > std::numeric_limits<uint32_t>::max());
 			(void)m_buffer_cache.FindBuffer(start, end - start);

@@ -1,0 +1,40 @@
+co_add	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	26	const uint store_index = atomicAdd(download_buffer32[0], 1u) + 1u;	if (store_index >= MAX_PAGE_FAULTS) {
+co_cmp	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	27	if (store_index >= MAX_PAGE_FAULTS) {	return;
+cm_incl	730ed40a	CMakeLists.txt	136	${PROJECT_BINARY_DIR}	${KYTY_SOURCE_DIR}
+cm_gen	730ed40a	CMakeLists.txt	235	set(gpu_tiler_generated_dir "${PROJECT_BINARY_DIR}/gpu_tiler_shaders")	set(gpu_tiler_shader_names
+cm_hdr	730ed40a	CMakeLists.txt	305	set(fault_buffer_shader_header "${gpu_tiler_generated_dir}/fault_buffer_process_spv.h")	add_custom_command(
+cm_max	730ed40a	CMakeLists.txt	310	-DCACHING_PAGEBITS=14 -DMAX_PAGE_FAULTS=1024	-o "${fault_buffer_shader_spv}" "${fault
+cm_sym	730ed40a	CMakeLists.txt	313	-DSYMBOL=FAULT_BUFFER_PROCESS_SPV -P "${KYTY_SOURCE_DIR}/embed_spirv.cmake"	DEPENDS "${fault_buffer_shader_source}"
+cm_src	730ed40a	CMakeLists.txt	317	list(APPEND kyty_emulator_src "${fault_buffer_shader_header}")	
+cm_fn	730ed40a	CMakeLists.txt	415	function(add_kyty_full_emulator_test target source)	add_executable(${target} EXCLUDE_FROM_AL
+cm_exe	730ed40a	CMakeLists.txt	416	add_executable(${target} EXCLUDE_FROM_ALL ${source} ${kyty_emulator_src})	target_link_libraries(${target} ${kyty_e
+cm_inc	730ed40a	CMakeLists.txt	418	target_include_directories(${target} PRIVATE ${inc_headers})	if (WIN32)
+cm_b4	730ed40a	CMakeLists.txt	571	add_kyty_full_emulator_test(b4_race_stand	"${KYTY_TESTS_DIR}/B4RaceStand.cpp")
+cm_extra	730ed40a	CMakeLists.txt	156	-D SHADER_CACHE_EXTRA_FILES=	-P ${KYTY_SOURCE_DIR}/generate_version.c
+fm_inc	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	7	#include "gpu_tiler_shaders/fault_buffer_process_spv.h"	#include "graphics/host_gpu/graphicConte
+fm_max	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	24	constexpr size_t MaxPageFaults    = 1024;	constexpr size_t PageFaultAreaSize = Max
+fm_ctor	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	36	FaultManager::FaultManager(GraphicContext& graphics, CommandScheduler& scheduler,	BufferCache& buffer_cache)
+fm_dl	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	41	m_download_buffer(graphics, scheduler, MemoryUsage::Download, 0, AllFlags,	MaxPendingFaults * PageFaultAreaSize),
+fm_bvhlog	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	46	LOGF("BvhLoopCap: cap=%u token=	LoopCap::BvhLoopCapSignatureToken().c_st
+fm_spv	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	62	const auto module = CompileSPV(FAULT_BUFFER_PROCESS_SPV, m_graphics.device);	
+fm_proc	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	96	void FaultManager::ProcessFaultBuffer() {	if (const auto wait_tick = m_fault_areas
+fm_mapped	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	104	auto*      mapped = m_download_buffer.Mapped().data() + offset;	std::memset(mapped, 0, PageFaultAreaSize
+fm_memset	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	105	std::memset(mapped, 0, PageFaultAreaSize);	m_download_buffer.Flush(offset, PageFaul
+fm_flush	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	106	m_download_buffer.Flush(offset, PageFaultAreaSize);	
+fm_info	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	124	{m_download_buffer.Handle(), offset, PageFaultAreaSize},	};
+fm_tripinv	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	184	m_trip_download.Invalidate(trip_offset, LoopTripBytes);	std::array<uint32_t, LoopCap::LoopTripWo
+fm_tripcpy	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	186	std::memcpy(words.data(), m_trip_download.Mapped().data() + trip_offset,	LoopTripBytes);
+fm_inv	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	210	m_download_buffer.Invalidate(offset, PageFaultAreaSize);	RangeSet    fault_ranges;
+fm_cast	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	212	const auto* faults = std::bit_cast<const uint64_t*>(mapped);	const auto  count  = static_cast<uint32_
+fm_count	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	213	const auto  count  = static_cast<uint32_t>(faults[0]);	for (uint32_t index = 1; index <= count;
+fm_loop	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	214	for (uint32_t index = 1; index <= count; ++index) {	fault_ranges.Add(faults[index], BufferCa
+fm_add	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	215	fault_ranges.Add(faults[index], BufferCache::CACHING_PAGESIZE);	LOGF("Accessed non-GPU cached memory at 
+fm_log	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	216	LOGF("Accessed non-GPU cached memory at 0x%016" PRIx64 "\n", faults[index]);	}
+fm_find	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	220	(void)m_buffer_cache.FindBuffer(start, end - start);	});
+fmh_pend	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.h	15	static constexpr size_t MaxPendingFaults = 8;	
+fmh_dl	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.h	33	Buffer                                     m_download_buffer;	std::array<uint64_t, MaxPendingFaults>  
+fmh_trip	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.h	35	Buffer                                     m_trip_download;	std::array<uint32_t, 16>                
+bh_fm	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.h	358	FaultManager                                      m_fault_manager;	HostImport                              
+bc_ctor	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	549	m_fault_manager(graphics, scheduler, *this),	m_host_import(graphics),
+bc_proc	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	2606	m_fault_manager.ProcessFaultBuffer();	}
+rc_proc	730ed40a	src/graphics/host_gpu/renderer/renderContext.cpp	423	m_buffer_cache.ProcessFaultBuffer();	if (fbp_t0 != 0) {

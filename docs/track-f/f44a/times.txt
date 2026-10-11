@@ -1,0 +1,2 @@
+2026-10-11T02:07:55Z F44a (HPP-791) start: assigned, read ROADMAP s122 item 698, F43a report sec 0-3; lock and STOP absent
+2026-10-11T08:08:07Z F44a section 0 written (docs/track-f/f44a.md), refs 40/40 ALL OK; commit of section 0 before the first code line

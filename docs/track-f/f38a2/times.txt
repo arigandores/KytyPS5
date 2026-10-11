@@ -1,0 +1,17 @@
+2026-10-11T00:39:42Z F38a2 start: workdir created, scripts copied from f38a
+2026-10-11T00:41:01Z F38a2 edition 3 patch applied to worktree (531d6488)
+2026-10-11T00:41:06Z F38a2 configure start
+2026-10-11T00:42:20Z F38a2 configure end
+2026-10-11T00:42:25Z F38a2 stand build t1 start
+2026-10-11T00:43:35Z F38a2 stand build t1 end
+2026-10-11T00:45:17Z F38a2 fixture sum_f38a2 + smoke seed 1 (not counted) done
+2026-10-11T00:45:40Z F38a2 stand edition 3 committed to main 49aba6a4
+2026-10-11T00:45:49Z F38a2 cherry-pick 49aba6a4 into worktree -> 3ea4d00f
+2026-10-11T00:45:56Z F38a2 stand build t2 (worktree 3ea4d00f) start
+2026-10-11T00:46:19Z F38a2 stand build t2 end
+2026-10-11T00:46:29Z F38a2 seed/N comment posted (seed 38301)
+2026-10-11T00:46:37Z F38a2 stand seed 38301 fix=1 start
+2026-10-11T00:46:39Z F38a2 stand seed 38301 fix=1 end rc=0
+2026-10-11T00:46:40Z F38a2 stand seed 38301 fix=0 start
+2026-10-11T00:46:43Z F38a2 stand seed 38301 fix=0 end rc=0
+2026-10-11T00:48:43Z F38a2 FACTS section appended (rule 34)

@@ -1,0 +1,4 @@
+[detached HEAD 3ea4d00f] track F link F38a2 (HPP-777): F25 stand edition 3 - arm G (a read at or past the end of the file, real call 1, then the file grows through a second handle to offset + 8192; cut back and checked by sha256 after the trial; growth in trunc_done/size_at_c2) and member E/G offset = size exactly in the even trials (note N4); usage <seed> <nA> <nK> <nZ> <nE> <nT> <nG> <out.tsv>; src/ unchanged (ROADMAP s122 item 693(b)(1)-(2))
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Sun Oct 11 02:45:38 2026 +0200
+ 1 file changed, 48 insertions(+), 22 deletions(-)

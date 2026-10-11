@@ -1,0 +1,7 @@
+worktree HEAD 531d64885e8bf426276d2bae6704cea269e53ff4
+worktree src/ diff vs 531d6488 (files): []
+worktree src/ diff vs 730ed40a (files): src/kernel/fileSystem.cpp
+worktree status lines 1
+stand source sha256 worktree ef89b326d98d007af30605507a3b8bb7803c2ebf3318edff04a60cdd49d28273 main a8cac01a1d3aebaaa8fcb160f46af19aefff19965b3dce6e4c9990c539d61709 equal False
+stand exe C:/kyty/f287/f38a2/build/f25_read_fail_stand.exe sha256 ed5b36adcb77fae15383d29dbeed7ae8dcd779a0d48a9e520010e2bab6b4ec81
+args seed 1 KYTY_FIX_F25=1 nA 3 nK 2 nZ 2 nE 4 nT 2 nG 4

@@ -1,0 +1,44 @@
+FIXF25 env=1 on=1
+NID 0 Cg4srZ6TKbU sceKernelRead vaddr=0x00007ff6271dc170 name=FileSystem::KernelRead
+NID 1 DRuBt2pvICk read vaddr=0x00007ff627257d50 name=LibKernel::read
+NID 2 AqBioC2vF3I _read vaddr=0x00007ff627257d50 name=LibKernel::read
+NID 3 +r3rMFwItV4 sceKernelPread vaddr=0x00007ff6271de840 name=FileSystem::KernelPread
+NID 4 ezv-RSBNKqI pread vaddr=0x00007ff627248be0 name=Posix::pread
+NID 5 HgX7+AORI58 sceKernelAioSubmitReadCommands vaddr=0x00007ff627258df0 name=KernelAioSubmitReadCommands
+HOOK module=KERNEL32.dll slot=00007FF627DAF630 real=00007FFB92397470
+HOOK slots=1
+SHA256 ec79fd279e528f0595f32b9c59d0a6058b5f25b3aedc8ea887f107b0b1f637e2 size 3150049
+SysFileRead: ReadFile failed, error=998 size=79837 data=0000000076C9CBC0
+SysFileRead: ReadFile failed, error=1117 size=79837 data=0000000076CB03E0
+SysFileRead: ReadFile failed, error=998 size=2164049 data=00000000FFFF2080
+SysFileRead: ReadFile failed, error=998 size=2145369 data=00000000FFFF2080
+SysFileRead: ReadFile failed, error=1117 size=2145369 data=0000000100203060
+SysFileRead: ReadFile failed, error=998 size=754225 data=0000000076C9CBC0
+SysFileRead: ReadFile failed, error=1117 size=754225 data=0000000076D54E40
+SysFileRead: ReadFile failed, error=998 size=3740 data=0000000076C68D60
+SysFileRead: ReadFile failed, error=1117 size=3740 data=00000000440C81A0
+SysFileRead: ReadFile failed, error=998 size=706 data=0000000076C78A00
+SysFileRead: ReadFile failed, error=1117 size=706 data=0000000076C30E30
+SysFileRead: ReadFile failed, error=998 size=19004 data=0000000076C9ABA0
+SysFileRead: ReadFile failed, error=1117 size=19004 data=0000000076C9F640
+SysFileRead: ReadFile failed, error=998 size=115474 data=0000000076C9ABA0
+SysFileRead: ReadFile failed, error=1117 size=115474 data=0000000076CB6F20
+SysFileRead: ReadFile failed, error=998 size=22535 data=0000000076C9ABA0
+SysFileRead: ReadFile failed, error=1117 size=22535 data=0000000076CA0400
+SysFileRead: ReadFile failed, error=998 size=3503 data=00000000440C81C0
+SysFileRead: ReadFile failed, error=1117 size=3503 data=0000000076C85140
+SysFileRead: ReadFile failed, error=998 size=137172 data=0000000076C9ABA0
+SysFileRead: ReadFile failed, error=998 size=332556 data=0000000076C9ABA0
+SysFileRead: ReadFile failed, error=1117 size=332556 data=0000000076CEBF00
+SysFileRead: ReadFile failed, error=998 size=1375 data=0000000044299660
+SysFileRead: ReadFile failed, error=1117 size=1375 data=0000000076C460D0
+SysFileRead: ReadFile failed, error=998 size=19714 data=0000000076C9ABA0
+SysFileRead: ReadFile failed, error=1117 size=19714 data=0000000076C9F900
+SysFileRead: ReadFile failed, error=998 size=3176 data=0000000076C85160
+SysFileRead: ReadFile failed, error=1117 size=3176 data=0000000076C6DF40
+SysFileRead: ReadFile failed, error=998 size=3932 data=0000000076C85160
+SysFileRead: ReadFile failed, error=1117 size=3932 data=0000000076C6DF40
+SysFileRead: ReadFile failed, error=998 size=1589 data=00000000440C8DF0
+SysFileRead: ReadFile failed, error=1117 size=1589 data=0000000044299640
+FINAL file sha256 equal 1
+DONE trials=2520

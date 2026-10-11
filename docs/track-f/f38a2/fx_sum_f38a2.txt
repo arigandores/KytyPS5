@@ -1,0 +1,45 @@
+OK   good =1: want True got True
+OK   good =0: want True got True
+OK   m1 A zero at =1: want False got False
+OK   m2b G EIO sceKernelRead: want False got False
+OK   m2b G read -1 errno 5: want False got False
+OK   m2b G AIO aborted: want False got False
+OK   m2a G retry data: want False got False
+OK   m2a G second call only: want False got False
+OK   m2a E second call: want False got False
+OK   G EIO at =0: want False got False
+OK   m2 E error at =1: want False got False
+OK   m3 T error at =1: want False got False
+OK   m4 A position: want False got False
+OK   m4 A pread position: want False got False
+OK   m5 sceKernelRead -1: want False got False
+OK   m5 AIO completed: want False got False
+OK   m5 POSIX errno 9: want False got False
+OK   =0 A error: want False got False
+OK   E buffer written: want False got False
+OK   E read pos moved: want False got False
+OK   E injected: want False got False
+OK   E not half at size: want False got False
+OK   G not half at size: want False got False
+OK   G no growth: want False got False
+OK   G grown wrong size: want False got False
+OK   G not restored: want False got False
+OK   G remaining > 0: want False got False
+OK   G buffer written: want False got False
+OK   G read pos moved: want False got False
+OK   K dead: want False got False
+OK   Z partial: want False got False
+OK   T no shortening: want False got False
+OK   T not restored: want False got False
+OK   A buffer written: want False got False
+OK   N wrong: want False got False
+OK   arm G missing: want False got False
+OK   log =1 no mode line: want False got False
+OK   log =1 lines 0: want False got False
+OK   log =0 failed lines: want False got False
+OK   log missing: want False got False
+OK   stdout FINAL 0: want False got False
+OK   stdout DONE short: want False got False
+OK   stdout missing: want False got False
+OK   fix column wrong: want False got False
+ALL OK

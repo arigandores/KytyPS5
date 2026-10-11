@@ -1,0 +1,420 @@
+LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100
+Vulkan required extension: VK_KHR_surface
+Vulkan required extension: VK_KHR_win32_surface
+Vulkan required extension: VK_EXT_debug_utils
+Vulkan available extension: VK_KHR_device_group_creation, version = 1
+Vulkan available extension: VK_KHR_display, version = 23
+Vulkan available extension: VK_KHR_external_fence_capabilities, version = 1
+Vulkan available extension: VK_KHR_external_memory_capabilities, version = 1
+Vulkan available extension: VK_KHR_external_semaphore_capabilities, version = 1
+Vulkan available extension: VK_KHR_get_display_properties2, version = 1
+Vulkan available extension: VK_KHR_get_physical_device_properties2, version = 2
+Vulkan available extension: VK_KHR_get_surface_capabilities2, version = 1
+Vulkan available extension: VK_KHR_surface, version = 25
+Vulkan available extension: VK_KHR_surface_maintenance1, version = 1
+Vulkan available extension: VK_KHR_surface_protected_capabilities, version = 1
+Vulkan available extension: VK_KHR_win32_surface, version = 6
+Vulkan available extension: VK_EXT_debug_report, version = 10
+Vulkan available extension: VK_EXT_debug_utils, version = 2
+Vulkan available extension: VK_EXT_direct_mode_display, version = 1
+Vulkan available extension: VK_EXT_surface_maintenance1, version = 1
+Vulkan available extension: VK_EXT_swapchain_colorspace, version = 5
+Vulkan available extension: VK_NV_external_memory_capabilities, version = 1
+Vulkan available extension: VK_KHR_portability_enumeration, version = 1
+Vulkan available extension: VK_LUNARG_direct_driver_loading, version = 1
+Vulkan available layer: VK_LAYER_NV_optimus, specVersion = 4211039, implVersion = 1, NVIDIA Optimus layer
+Vulkan available layer: VK_LAYER_NV_present, specVersion = 4211039, implVersion = 1, NVIDIA Presentation Layer
+Vulkan available layer: VK_LAYER_EOS_Overlay, specVersion = 4202632, implVersion = 1, Vulkan overlay layer for Epic Online Services
+Vulkan available layer: VK_LAYER_RENDERDOC_Capture, specVersion = 4211012, implVersion = 46, Debugging capture layer for RenderDoc
+Vulkan available layer: VK_LAYER_NV_nsight-sys, specVersion = 4206797, implVersion = 2, NVIDIA Nsight Systems profiler layer
+Vulkan available layer: VK_LAYER_VALVE_steam_overlay, specVersion = 4206799, implVersion = 1, <foreign app> Overlay Layer
+Vulkan available layer: VK_LAYER_VALVE_steam_fossilize, specVersion = 4210991, implVersion = 1, <foreign app> Pipeline Caching Layer
+Vulkan available layer: VK_LAYER_<app>_HOOK, specVersion = 4206808, implVersion = 1, Open Broadcaster Software hook
+Vulkan available layer: VK_LAYER_ROCKSTAR_GAMES_social_club, specVersion = 4194374, implVersion = 1, Rockstar Games Social Club Layer
+Vulkan available layer: VK_LAYER_LUNARG_api_dump, specVersion = 4211045, implVersion = 2, LunarG API dump layer
+Vulkan available layer: VK_LAYER_LUNARG_gfxreconstruct, specVersion = 4211045, implVersion = 4194309, GFXReconstruct Capture Layer Version 1.0.5
+Vulkan available layer: VK_LAYER_KHRONOS_synchronization2, specVersion = 4211045, implVersion = 1, Khronos Synchronization2 layer
+Vulkan available layer: VK_LAYER_KHRONOS_validation, specVersion = 4211045, implVersion = 1, Khronos Validation Layer
+Vulkan available layer: VK_LAYER_LUNARG_monitor, specVersion = 4211045, implVersion = 1, Execution Monitoring Layer
+Vulkan available layer: VK_LAYER_LUNARG_screenshot, specVersion = 4211045, implVersion = 1, LunarG image capture layer
+Vulkan available layer: VK_LAYER_KHRONOS_profiles, specVersion = 4211045, implVersion = 1, Khronos Profiles layer
+Vulkan available layer: VK_LAYER_KHRONOS_shader_object, specVersion = 4211045, implVersion = 1, Khronos Shader object layer
+Vulkan available layer: VK_LAYER_LUNARG_crash_diagnostic, specVersion = 4211045, implVersion = 1, Crash Diagnostic Layer is a crash/hang debugging tool that helps determines GPU progress in a Vulkan application.
+Vulkan loader version: 1.4.357
+Vulkan device: NVIDIA GeForce RTX 5080 Laptop GPU
+	queue family: { Graphics | Compute | Transfer | SparseBinding } [count = 16], [present = true]
+	selected universal queue family 0
+Format vk::Format::eR8G8B8A8Srgb cannot be used as texture
+Format vk::Format::eB8G8R8A8Srgb cannot be used as texture
+Select device: NVIDIA GeForce RTX 5080 Laptop GPU
+Block Texel View support: Yes
+Vulkan: VK_EXT_external_memory_host enabled (host pointer alignment 4096)
+Vulkan subgroup: default=32 min=32 max=32 stages=0x00003fff size_control=false wave64=false
+Vulkan dynamic rendering local read: enabled
+Vulkan VK_EXT_image_view_min_lod: enabled
+Vulkan depth feedback support: true
+Vulkan MeshEXT: invocations=128 vertices=256 primitives=256 shared=28672
+DualSrcBlend: supported=1 enabled=1
+Vulkan nullDescriptor: enabled
+Vulkan robustBufferAccess2: enabled (shader bounds branches dropped)
+Vulkan uniformBufferStandardLayout: enabled (const-bank constant loads enabled)
+Vulkan fp32 denormals: flush fixed, preserve fixed (shader denormal flush assumed)
+Vulkan robustness: robustImageAccess=true robustImageAccess2=true
+Shader translation cache: disabled (unknown title or translator hash)
+FixSval: mode=1 ubo_std_layout=1
+ShaderReplay: mode=3 disabled (no title or no translation cache)
+AsyncPipelines: mode=1 workers=4
+S-pcw: KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0
+BvhLoopCap: cap=65536 token='' default_slot0=0
+HostImport: backing alias unsuitable (base=0x0 size=0x0 alignment=4096)
+FixB13: mode=1
+BufferGc: budget=14901313536 trigger=9747352781 critical=13183326618 shift_mb=0
+FixB12: mode=1
+FixMinimize: on
+FixB4: mode=1
+FixF25: mode=0
+	 path = /app0/f25_stand.bin
+	 flags = 00000000
+	 mode = 0000
+	Open: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin, [ok]
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 850322) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff1080 size=0x2318ab: reading through a host buffer
+	Read 2299727 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 217728) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000046b14140 size=0x5cb: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 217728) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3152995) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3152995) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1880550) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x000000004429e6e0 size=0xe14: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1880550) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 892298) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff4080 size=0x2276d5: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 892298) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1596092) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c3bdc0 size=0xdb70: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1596092) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2747858) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cb5b80 size=0x63274: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2747858) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3152889) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3152889) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150257) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150257) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 76844) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 3073205 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1778389) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c3bdc0 size=0x23538: reading through a host buffer
+	Read 144696 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1923085) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2082032) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 123220 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2205252) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3152011) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3152011) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 136039) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c91940 size=0x1c5f: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 136039) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 221086) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff3080 size=0x17168c: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 221086) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150381) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150381) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 731377) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffffe080 size=0x24ee0a: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 731377) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2092815) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 2546 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2095361) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1572173) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 59934 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1632107) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3151857) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3151857) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1292053) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c9abe0 size=0xdb2: reading through a host buffer
+	Read 3506 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1295559) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2240528) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c3bdc0 size=0x287b8: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2240528) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150802) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150802) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1934708) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff7080 size=0x129284: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1934708) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1464037) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c93940 size=0x31e: reading through a host buffer
+	Read 798 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1464835) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3153962) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3153962) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 658489) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff9080 size=0x26146d: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 658489) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3153592) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3153592) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 151475) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c93940 size=0x6fe: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 151475) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1934698) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c3bdc0 size=0x1ca8b: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1934698) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 200346) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffffc080 size=0x1283a6: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 200346) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2807383) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff7080 size=0x1d74a2: reading through a host buffer
+	Read 342666 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3152992) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3152992) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3151687) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3151687) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1348670) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 232351 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1581021) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3150049) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1995978) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 3382 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1999360) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2213488) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c9abe0 size=0xab8: reading through a host buffer
+	Read 2744 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2216232) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3153793) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3153793) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2415702) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c9abe0 size=0x836: reading through a host buffer
+	Read 0 bytes from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2415702) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 193102) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 193102) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 239757) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff1080 size=0x147197: reading through a host buffer
+	Read 0 bytes (pos = 1813489) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 239757) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2013200) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff3080 size=0x1754ab: reading through a host buffer
+	Read 1529003 bytes (pos = 1284863) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2013200) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1521751) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c3bdc0 size=0x27607: reading through a host buffer
+	Read 0 bytes (pos = 2001228) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1521751) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 679973) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 679973) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2699441) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150578) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2699441) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2119093) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2119093) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2913419) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 1433351 bytes (pos = 354527) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2913419) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 767479) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff9080 size=0x190850: reading through a host buffer
+	Read 0 bytes (pos = 1510436) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 767479) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 772344) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cb5b80 size=0xde1ad: reading through a host buffer
+	Read 0 bytes (pos = 2241573) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 772344) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 630487) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150577) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 630487) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2670065) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2670065) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2356632) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c93940 size=0x314: reading through a host buffer
+	Read 788 bytes (pos = 3101477) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2356632) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2535200) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3151208) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2535200) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1901066) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3153788) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1901066) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3119747) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 334727 bytes (pos = 2815322) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3119747) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2791156) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cb5b80 size=0xd165c: reading through a host buffer
+	Read 0 bytes (pos = 2293904) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2791156) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 804657) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000468b23e0 size=0x76c: reading through a host buffer
+	Read 0 bytes (pos = 824865) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 804657) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1704249) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1704249) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 853131) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cb5b80 size=0xb59a2: reading through a host buffer
+	Read 0 bytes (pos = 2410094) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 853131) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 261283) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150736) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 261283) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1298016) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c93940 size=0x75c: reading through a host buffer
+	Read 0 bytes (pos = 1584066) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1298016) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3126637) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 2884 bytes (pos = 1727037) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3126637) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 540950) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 540950) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2135075) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150541) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2135075) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2030727) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c3bdc0 size=0x1ecd2: reading through a host buffer
+	Read 0 bytes (pos = 3038031) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2030727) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 276246) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 276246) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2438392) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 1060680) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2438392) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1051241) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3152153) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1051241) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1748531) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 1316123 bytes (pos = 1833926) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1748531) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1730896) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 253240 bytes (pos = 2471738) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1730896) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1934326) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1934326) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 841637) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3151042) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 841637) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 356903) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 219928 bytes (pos = 2308304) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 356903) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3117905) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 3117905) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 608277) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3153673) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 608277) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2710620) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2710620) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 137762) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3152700) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 137762) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2323185) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 908256) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2323185) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1507972) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 3650 bytes (pos = 1338713) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1507972) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1809709) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 2811896) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1809709) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2488884) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2488884) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 758711) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 758711) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1983126) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 2586110) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1983126) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 173005) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 1554061) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 173005) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1694056) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3151817) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1694056) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1667628) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 3152057) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1667628) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1560240) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 2469005 bytes (pos = 681044) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1560240) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1682590) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 3400 bytes (pos = 660727) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1682590) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1758906) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 103639 bytes (pos = 456815) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 1758906) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2892267) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Read 0 bytes (pos = 1893166) from: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Lseek (pos = 2892267) to: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+	Close: C:/Users/<user>/AppData/Local/Temp/paperclip-run-hpp-777-09cf690d-867-gSuwY9/kyty_f25_stand_369132698736100/f25_stand.bin
+CsPretranslate: summary queued=0 ready=0 failed=0 hits=0 missed=0 evicted=0
+LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=417 bytes=54549 max_queued_bytes=2284 sync_lines=0 drain_timeouts=0

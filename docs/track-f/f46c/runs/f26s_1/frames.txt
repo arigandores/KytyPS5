@@ -1,0 +1,2 @@
+frames f26s_1: size (960, 540) video frames 10061 idx records 10061 rows 10061 last present 10061; M max 0, frames with M >= 500: 0; entry screen frames 19
+SIZE 960x540

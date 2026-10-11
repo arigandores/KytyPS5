@@ -1,0 +1,2 @@
+frames f26s_t4: size (960, 540) video frames 10084 idx records 10084 rows 10084 last present 10084; M max 11, frames with M >= 500: 0; entry screen frames 18
+SIZE 960x540

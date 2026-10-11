@@ -1,0 +1,2 @@
+frames f26s_c2: size (960, 540) video frames 10100 idx records 10100 rows 10100 last present 10100; M max 10, frames with M >= 500: 0; entry screen frames 11
+SIZE 960x540

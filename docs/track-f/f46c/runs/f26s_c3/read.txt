@@ -1,0 +1,49 @@
+tag f26s_c3 (base f26s_c3, level underwater_aerial_garden)  reader sha256 492ad197596002afa5f2d782d97fa1c227f45884f03d5899bd1d3b950ee1cea1
+  knobs KYTY_DCC_TRACE=1 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x570b24000 KYTY_FIX_F26=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = T 9c1b268f (9c1b268ffffebcbf)
+    [ok] installed during the tag = T 9c1b268f (9c1b268ffffebcbf)
+    [ok] installed before = after = FS13 abab2196 (abab2196e3b66f04 / abab2196e3b66f04)
+    [ok] json prereg sha256 = seal sha256 (c54bed6ca5c61eb4 / c54bed6ca5c61eb4)
+    [ok] env = the form of the tag (exact)
+    [ok] no KYTY_TEST_* in the env (none)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (233996)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line (0)
+    [ok] no TestLogStall line (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha 98)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+    [ok] 702 (g)(4): hold >= 300 s after the first scene frame (334.3 s)
+    [ok] 702 (g)(4): 0 death markers (log and stdout) []
+    [ok] 702 (g)(4): video index records >= 3000 (9853)
+    [ok] 702 (g)(4): 'FixF26: mode=1' (every FixF26 line exactly) before the first GuestOut ([('FixF26: mode=1', 77)]; bad 0; first GuestOut 12506)
+    [ok] 702 (g)(4): 'F26Tint: mode= dcc=' = env as numbers (mode 2, key 0x570b24000) before the first GuestOut ([(2, '0000000570b24000', 78)]; bad 0)
+    [ok] 702 (g)(4): the 4 keys S1..S4 after the entry line: dcc_stale (image, dcc) found [True, True, True, True]; fill/size of the stale lines of the key equal (executor reading) [True, True, True, True]
+    [ok] 702 (g)(4): field site= on every dcc_stale line; unparsable DiagF5Ev dcc lines 0 (0; first None)
+    [ok] 702 (g)(4): 0 'skipped draw' lines in the whole log (0; first None)
+    [ok] 702 (g)(4): identity: every DiagF5 line: f26_kept_applied, f26_deferred_declined <= f26_kept; f26_kept = dcc_stale_bucket_only; tint free (169 lines, unparsable 0; bad [])
+    [ok] 702 (g)(4): identity: line counts (lines before the last DiagF5 line, variant 502 (b)) = the last DiagF5 line (equal)
+    [ok] 702 (g)(4): identity: site=adopt fix=kept_applied lines 0 (0)
+    [ok] 702 (g)(4): identity: cleared lines <= events of a MARK class (0 <= 5), at most one per n (yes)
+  binary_sha256 9c1b268ffffebcbf26e3ce33de94fb24c9b555fe89441fafcf40b7197d03ae69
+  EVENT S1 n 11 present 360 gpu 340 site prepare fix kept_applied why None class "kept_applied" allowed True NO_APPLY False exec_present 360 cleared [] declined 0 dropped [] first_exec [(361, 'prepare')] occurrences 1 stale_lines 0
+  EVENT S2 n 12 present 365 gpu 345 site prepare fix kept_applied why None class "kept_applied" allowed True NO_APPLY False exec_present 365 cleared [] declined 0 dropped [] first_exec [(366, 'prepare')] occurrences 1 stale_lines 0
+  EVENT S3 n 13 present 366 gpu 346 site prepare fix kept_applied why None class "kept_applied" allowed True NO_APPLY False exec_present 366 cleared [] declined 0 dropped [] first_exec [(367, 'prepare')] occurrences 1 stale_lines 0
+  EVENT S4 n 14 present 377 gpu 357 site prepare fix kept_applied why None class "kept_applied" allowed True NO_APPLY False exec_present 377 cleared [] declined 0 dropped [] first_exec [(378, 'prepare')] occurrences 1 stale_lines 0
+  INFO {"first_scene_n": 336, "frames_ge1s": 0, "hold_s": 334.3, "identities_letter": {"cleared_prepare": 0, "counts_last_line": {"f26_deferred_declined": 5, "f26_exact_stale": 0, "f26_fallback": 0, "f26_kept": 14, "f26_kept_applied": 9}, "counts_whole_log": {"f26_deferred_declined": 5, "f26_exact_stale": 0, "f26_fallback": 0, "f26_kept": 14, "f26_kept_applied": 9}, "decode_events": 5, "f45a_letter_cleared_prepare_le_decode": true}, "limit": false, "max_dt": 183186, "scene_frames": 9497}
+  ROW stale pending lines before / after the entry: 4 / 0; dcc_stale lines before the entry 10; last DiagF5 {'f26_kept': 14, 'f26_kept_applied': 9, 'f26_exact_stale': 0, 'f26_fallback': 0, 'f26_deferred_declined': 5, 'f26_tint_applied': 12, 'f26_tint_skip': 0, 'frame': 9808, 'dcc_stale_bucket_only': 14}
+  ROW DiagF5Id mode [('DiagF5Id: mode=1', 79)]; F26Tint [(2, '0000000570b24000', 78)]; form fs12_v {"close_killed": false, "close_rc": 0, "close_s": 3.9, "fatal_after_quit": 0, "fixb12": [[1, 729]], "fixb13": [[1, 727]], "fixf21": [[1, 731]], "logasync_mode": ["LogAsync: mode=1 limit_bytes=2"], "logasync_mode_before_guest": true, "quit_ln": 1140411, "summary": {"bytes": 306265012, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 702364, "max_queued_bytes": 39046, "stall_cut": 0
+  IDX {'records': 9853, 'last_present': 9853}
+  REFERENCE: {"bin_version_string": true, "env_keys": ["KYTY_DCC_TRACE", "KYTY_DIAG_F5", "KYTY_DIAG_F5ID", "KYTY_F26_TINT", "KYTY_F26_TINT_DCC", "KYTY_FIX_F26", "KYTY_FRAME_TRACE", "KYTY_GATE_FILE", "KYTY_GPU_CLOCK_PIN", "KYTY_GPU_HANG_ABORT_S", "KYTY_GPU_MARKERS", "KYTY_GUEST_ARGS", "KYTY_QUEUE_TRACE", "KYTY_REC", "KYTY_SAMPLE_GATE"], "fork_line": "version: Fork build arigandores/KytyPS5 7e8481e", "glitches": 0, "hold_exit": null, "lines": 1140413, "outcome": "ok", "sheet": "sheet: C:/kyty/f287/f46c/runs/f26s_c3/sheet_f26s_c3.png frames 9853 step 205 tiles 8x6", "vke": 0}
+  READING ADMITTED (no verdict; reading - F46d by item 702 (d))

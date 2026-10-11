@@ -1,0 +1,722 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = T 9c1b268f (9c1b268ffffebcbf)",
+   true
+  ],
+  [
+   "installed during the tag = T 9c1b268f (9c1b268ffffebcbf)",
+   true
+  ],
+  [
+   "installed before = after = FS13 abab2196 (abab2196e3b66f04 / abab2196e3b66f04)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (c54bed6ca5c61eb4 / c54bed6ca5c61eb4)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "no KYTY_TEST_* in the env (none)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "stdout present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (233996)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha 98)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ],
+  [
+   "702 (g)(4): hold >= 300 s after the first scene frame (334.3 s)",
+   true
+  ],
+  [
+   "702 (g)(4): 0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "702 (g)(4): video index records >= 3000 (9853)",
+   true
+  ],
+  [
+   "702 (g)(4): 'FixF26: mode=1' (every FixF26 line exactly) before the first GuestOut ([('FixF26: mode=1', 77)]; bad 0; first GuestOut 12506)",
+   true
+  ],
+  [
+   "702 (g)(4): 'F26Tint: mode= dcc=' = env as numbers (mode 2, key 0x570b24000) before the first GuestOut ([(2, '0000000570b24000', 78)]; bad 0)",
+   true
+  ],
+  [
+   "702 (g)(4): the 4 keys S1..S4 after the entry line: dcc_stale (image, dcc) found [True, True, True, True]; fill/size of the stale lines of the key equal (executor reading) [True, True, True, True]",
+   true
+  ],
+  [
+   "702 (g)(4): field site= on every dcc_stale line; unparsable DiagF5Ev dcc lines 0 (0; first None)",
+   true
+  ],
+  [
+   "702 (g)(4): 0 'skipped draw' lines in the whole log (0; first None)",
+   true
+  ],
+  [
+   "702 (g)(4): identity: every DiagF5 line: f26_kept_applied, f26_deferred_declined <= f26_kept; f26_kept = dcc_stale_bucket_only; tint free (169 lines, unparsable 0; bad [])",
+   true
+  ],
+  [
+   "702 (g)(4): identity: line counts (lines before the last DiagF5 line, variant 502 (b)) = the last DiagF5 line (equal)",
+   true
+  ],
+  [
+   "702 (g)(4): identity: site=adopt fix=kept_applied lines 0 (0)",
+   true
+  ],
+  [
+   "702 (g)(4): identity: cleared lines <= events of a MARK class (0 <= 5), at most one per n (yes)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "base": "f26s_c3",
+ "binary_sha256": "9c1b268ffffebcbf26e3ce33de94fb24c9b555fe89441fafcf40b7197d03ae69",
+ "events": [
+  {
+   "allowed": true,
+   "cleared": [],
+   "cls": "kept_applied",
+   "dcc": "0000000571006000",
+   "declined": 0,
+   "dropped": [],
+   "exact": "fresh",
+   "exec_present": 360,
+   "extent": "3328x1872",
+   "first_exec": [
+    {
+     "image": "000000051c630000",
+     "present": 361,
+     "site": "prepare"
+    }
+   ],
+   "fix": "kept_applied",
+   "found": true,
+   "gpu": 340,
+   "image": "000000051c630000",
+   "k": 1,
+   "label": "S1",
+   "mark": false,
+   "n": 11,
+   "no_apply": false,
+   "occurrences": 1,
+   "present": 360,
+   "site": "prepare",
+   "stale_fill_size_ok": true,
+   "stale_lines": 0,
+   "why": null
+  },
+  {
+   "allowed": true,
+   "cleared": [],
+   "cls": "kept_applied",
+   "dcc": "0000000570aee000",
+   "declined": 0,
+   "dropped": [],
+   "exact": "fresh",
+   "exec_present": 365,
+   "extent": "2432x1368",
+   "first_exec": [
+    {
+     "image": "0000000511650000",
+     "present": 366,
+     "site": "prepare"
+    }
+   ],
+   "fix": "kept_applied",
+   "found": true,
+   "gpu": 345,
+   "image": "0000000511650000",
+   "k": 2,
+   "label": "S2",
+   "mark": false,
+   "n": 12,
+   "no_apply": false,
+   "occurrences": 1,
+   "present": 365,
+   "site": "prepare",
+   "stale_fill_size_ok": true,
+   "stale_lines": 0,
+   "why": null
+  },
+  {
+   "allowed": true,
+   "cleared": [],
+   "cls": "kept_applied",
+   "dcc": "0000000570b24000",
+   "declined": 0,
+   "dropped": [],
+   "exact": "fresh",
+   "exec_present": 366,
+   "extent": "2432x1368",
+   "first_exec": [
+    {
+     "image": "00000005168c0000",
+     "present": 367,
+     "site": "prepare"
+    }
+   ],
+   "fix": "kept_applied",
+   "found": true,
+   "gpu": 346,
+   "image": "00000005168c0000",
+   "k": 3,
+   "label": "S3",
+   "mark": false,
+   "n": 13,
+   "no_apply": false,
+   "occurrences": 1,
+   "present": 366,
+   "site": "prepare",
+   "stale_fill_size_ok": true,
+   "stale_lines": 0,
+   "why": null
+  },
+  {
+   "allowed": true,
+   "cleared": [],
+   "cls": "kept_applied",
+   "dcc": "000000056d898000",
+   "declined": 0,
+   "dropped": [],
+   "exact": "fresh",
+   "exec_present": 377,
+   "extent": "1920x1080",
+   "first_exec": [
+    {
+     "image": "0000000510d10000",
+     "present": 378,
+     "site": "prepare"
+    }
+   ],
+   "fix": "kept_applied",
+   "found": true,
+   "gpu": 357,
+   "image": "0000000510d10000",
+   "k": 4,
+   "label": "S4",
+   "mark": false,
+   "n": 14,
+   "no_apply": false,
+   "occurrences": 1,
+   "present": 377,
+   "site": "prepare",
+   "stale_fill_size_ok": true,
+   "stale_lines": 0,
+   "why": null
+  }
+ ],
+ "failed": [],
+ "idx": {
+  "last_present": 9853,
+  "records": 9853
+ },
+ "info": {
+  "first_scene_n": 336,
+  "frames_ge1s": 0,
+  "hold_s": 334.3,
+  "identities_letter": {
+   "cleared_prepare": 0,
+   "counts_last_line": {
+    "f26_deferred_declined": 5,
+    "f26_exact_stale": 0,
+    "f26_fallback": 0,
+    "f26_kept": 14,
+    "f26_kept_applied": 9
+   },
+   "counts_whole_log": {
+    "f26_deferred_declined": 5,
+    "f26_exact_stale": 0,
+    "f26_fallback": 0,
+    "f26_kept": 14,
+    "f26_kept_applied": 9
+   },
+   "decode_events": 5,
+   "f45a_letter_cleared_prepare_le_decode": true
+  },
+  "limit": false,
+  "max_dt": 183186,
+  "scene_frames": 9497
+ },
+ "knobs": {
+  "KYTY_DCC_TRACE": "1",
+  "KYTY_DIAG_F5": "1",
+  "KYTY_DIAG_F5ID": "1",
+  "KYTY_F26_TINT": "2",
+  "KYTY_F26_TINT_DCC": "0x570b24000",
+  "KYTY_FIX_F26": "1",
+  "KYTY_GPU_CLOCK_PIN": "1",
+  "KYTY_GPU_MARKERS": "0"
+ },
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "hold >= 300 s after the first scene frame (334.3 s)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "video index records >= 3000 (9853)",
+   true
+  ],
+  [
+   "'FixF26: mode=1' (every FixF26 line exactly) before the first GuestOut ([('FixF26: mode=1', 77)]; bad 0; first GuestOut 12506)",
+   true
+  ],
+  [
+   "'F26Tint: mode= dcc=' = env as numbers (mode 2, key 0x570b24000) before the first GuestOut ([(2, '0000000570b24000', 78)]; bad 0)",
+   true
+  ],
+  [
+   "the 4 keys S1..S4 after the entry line: dcc_stale (image, dcc) found [True, True, True, True]; fill/size of the stale lines of the key equal (executor reading) [True, True, True, True]",
+   true
+  ],
+  [
+   "field site= on every dcc_stale line; unparsable DiagF5Ev dcc lines 0 (0; first None)",
+   true
+  ],
+  [
+   "0 'skipped draw' lines in the whole log (0; first None)",
+   true
+  ],
+  [
+   "identity: every DiagF5 line: f26_kept_applied, f26_deferred_declined <= f26_kept; f26_kept = dcc_stale_bucket_only; tint free (169 lines, unparsable 0; bad [])",
+   true
+  ],
+  [
+   "identity: line counts (lines before the last DiagF5 line, variant 502 (b)) = the last DiagF5 line (equal)",
+   true
+  ],
+  [
+   "identity: site=adopt fix=kept_applied lines 0 (0)",
+   true
+  ],
+  [
+   "identity: cleared lines <= events of a MARK class (0 <= 5), at most one per n (yes)",
+   true
+  ]
+ ],
+ "reader_sha256": "492ad197596002afa5f2d782d97fa1c227f45884f03d5899bd1d3b950ee1cea1",
+ "reading": "ADMITTED (no verdict; reading - F46d by item 702 (d))",
+ "ref": {
+  "bin_version_string": true,
+  "env_keys": [
+   "KYTY_DCC_TRACE",
+   "KYTY_DIAG_F5",
+   "KYTY_DIAG_F5ID",
+   "KYTY_F26_TINT",
+   "KYTY_F26_TINT_DCC",
+   "KYTY_FIX_F26",
+   "KYTY_FRAME_TRACE",
+   "KYTY_GATE_FILE",
+   "KYTY_GPU_CLOCK_PIN",
+   "KYTY_GPU_HANG_ABORT_S",
+   "KYTY_GPU_MARKERS",
+   "KYTY_GUEST_ARGS",
+   "KYTY_QUEUE_TRACE",
+   "KYTY_REC",
+   "KYTY_SAMPLE_GATE"
+  ],
+  "fork_line": "version: Fork build arigandores/KytyPS5 7e8481e",
+  "glitches": 0,
+  "hold_exit": null,
+  "lines": 1140413,
+  "outcome": "ok",
+  "sheet": "sheet: C:/kyty/f287/f46c/runs/f26s_c3/sheet_f26s_c3.png frames 9853 step 205 tiles 8x6",
+  "vke": 0
+ },
+ "rows": {
+  "apply": [
+   {
+    "dcc": "000000056d898000",
+    "gpu": 0,
+    "image": "0000000510d10000",
+    "layers": "00000001",
+    "n": 1,
+    "present": 20,
+    "result": "declined",
+    "site": "mat"
+   },
+   {
+    "dcc": "000000056d898000",
+    "gpu": 0,
+    "image": "0000000510d10000",
+    "layers": "ffffffff",
+    "n": 1,
+    "present": 20,
+    "result": "dropped",
+    "site": "fill"
+   },
+   {
+    "dcc": "000000057072f000",
+    "gpu": 4,
+    "image": "0000000511650000",
+    "layers": "00000001",
+    "n": 3,
+    "present": 24,
+    "result": "declined",
+    "site": "mat"
+   },
+   {
+    "dcc": "000000057072f000",
+    "gpu": 5,
+    "image": "0000000511650000",
+    "layers": "ffffffff",
+    "n": 3,
+    "present": 25,
+    "result": "dropped",
+    "site": "fill"
+   },
+   {
+    "dcc": "0000000570aee000",
+    "gpu": 9,
+    "image": "0000000511650000",
+    "layers": "00000001",
+    "n": 5,
+    "present": 29,
+    "result": "declined",
+    "site": "mat"
+   },
+   {
+    "dcc": "0000000570aee000",
+    "gpu": 10,
+    "image": "0000000511650000",
+    "layers": "ffffffff",
+    "n": 5,
+    "present": 30,
+    "result": "dropped",
+    "site": "fill"
+   },
+   {
+    "dcc": "0000000570fa2000",
+    "gpu": 15,
+    "image": "0000000512cf0000",
+    "layers": "00000001",
+    "n": 7,
+    "present": 35,
+    "result": "declined",
+    "site": "mat"
+   },
+   {
+    "dcc": "0000000570fa2000",
+    "gpu": 16,
+    "image": "0000000512cf0000",
+    "layers": "ffffffff",
+    "n": 7,
+    "present": 36,
+    "result": "dropped",
+    "site": "fill"
+   },
+   {
+    "dcc": "0000000571540000",
+    "gpu": 20,
+    "image": "0000000513bf0000",
+    "layers": "00000001",
+    "n": 9,
+    "present": 40,
+    "result": "declined",
+    "site": "mat"
+   },
+   {
+    "dcc": "0000000571540000",
+    "gpu": 21,
+    "image": "0000000513bf0000",
+    "layers": "ffffffff",
+    "n": 9,
+    "present": 41,
+    "result": "dropped",
+    "site": "fill"
+   }
+  ],
+  "dcc_stale_after": [
+   {
+    "dcc": "0000000571006000",
+    "exact": "fresh",
+    "fix": "kept_applied",
+    "gpu": 340,
+    "image": "000000051c630000",
+    "n": 11,
+    "present": 360,
+    "site": "prepare",
+    "why": null
+   },
+   {
+    "dcc": "0000000570aee000",
+    "exact": "fresh",
+    "fix": "kept_applied",
+    "gpu": 345,
+    "image": "0000000511650000",
+    "n": 12,
+    "present": 365,
+    "site": "prepare",
+    "why": null
+   },
+   {
+    "dcc": "0000000570b24000",
+    "exact": "fresh",
+    "fix": "kept_applied",
+    "gpu": 346,
+    "image": "00000005168c0000",
+    "n": 13,
+    "present": 366,
+    "site": "prepare",
+    "why": null
+   },
+   {
+    "dcc": "000000056d898000",
+    "exact": "fresh",
+    "fix": "kept_applied",
+    "gpu": 357,
+    "image": "0000000510d10000",
+    "n": 14,
+    "present": 377,
+    "site": "prepare",
+    "why": null
+   }
+  ],
+  "dcc_stale_before": 10,
+  "diagf5id_mode": [
+   [
+    "DiagF5Id: mode=1",
+    79
+   ]
+  ],
+  "f26tint_lines": [
+   [
+    2,
+    "0000000570b24000",
+    78
+   ]
+  ],
+  "first_exec": [
+   {
+    "dcc": "000000056d898000",
+    "image": "0000000510d10000",
+    "n": 1,
+    "present": 20,
+    "site": "mat"
+   },
+   {
+    "dcc": "000000056d8b8000",
+    "image": "0000000514080000",
+    "n": 2,
+    "present": 20,
+    "site": "prepare"
+   },
+   {
+    "dcc": "000000057072f000",
+    "image": "0000000511650000",
+    "n": 3,
+    "present": 25,
+    "site": "mat"
+   },
+   {
+    "dcc": "0000000570765000",
+    "image": "00000005168c0000",
+    "n": 4,
+    "present": 25,
+    "site": "prepare"
+   },
+   {
+    "dcc": "0000000570aee000",
+    "image": "0000000511650000",
+    "n": 5,
+    "present": 30,
+    "site": "mat"
+   },
+   {
+    "dcc": "0000000570b24000",
+    "image": "00000005168c0000",
+    "n": 6,
+    "present": 30,
+    "site": "prepare"
+   },
+   {
+    "dcc": "0000000570fa2000",
+    "image": "0000000512cf0000",
+    "n": 7,
+    "present": 36,
+    "site": "mat"
+   },
+   {
+    "dcc": "0000000571006000",
+    "image": "000000051c630000",
+    "n": 8,
+    "present": 36,
+    "site": "prepare"
+   },
+   {
+    "dcc": "0000000571540000",
+    "image": "0000000513bf0000",
+    "n": 9,
+    "present": 41,
+    "site": "mat"
+   },
+   {
+    "dcc": "00000005715c4000",
+    "image": "0000000520440000",
+    "n": 10,
+    "present": 41,
+    "site": "prepare"
+   },
+   {
+    "dcc": "0000000571006000",
+    "image": "000000051c630000",
+    "n": 11,
+    "present": 361,
+    "site": "prepare"
+   },
+   {
+    "dcc": "0000000570aee000",
+    "image": "0000000511650000",
+    "n": 12,
+    "present": 366,
+    "site": "prepare"
+   },
+   {
+    "dcc": "0000000570b24000",
+    "image": "00000005168c0000",
+    "n": 13,
+    "present": 367,
+    "site": "prepare"
+   },
+   {
+    "dcc": "000000056d898000",
+    "image": "0000000510d10000",
+    "n": 14,
+    "present": 378,
+    "site": "prepare"
+   }
+  ],
+  "form_fs12_v": {
+   "close_killed": false,
+   "close_rc": 0,
+   "close_s": 3.9,
+   "fatal_after_quit": 0,
+   "fixb12": [
+    [
+     1,
+     729
+    ]
+   ],
+   "fixb13": [
+    [
+     1,
+     727
+    ]
+   ],
+   "fixf21": [
+    [
+     1,
+     731
+    ]
+   ],
+   "logasync_mode": [
+    "LogAsync: mode=1 limit_bytes=2"
+   ],
+   "logasync_mode_before_guest": true,
+   "quit_ln": 1140411,
+   "summary": {
+    "bytes": 306265012,
+    "drain_timeouts": 0,
+    "full_wait_us": 0,
+    "full_waits": 0,
+    "lines": 702364,
+    "max_queued_bytes": 39046,
+    "stall_cut": 0,
+    "stalls": 0,
+    "sync_lines": 0
+   }
+  },
+  "last_f5": {
+   "dcc_stale_bucket_only": 14,
+   "f26_deferred_declined": 5,
+   "f26_exact_stale": 0,
+   "f26_fallback": 0,
+   "f26_kept": 14,
+   "f26_kept_applied": 9,
+   "f26_tint_applied": 12,
+   "f26_tint_skip": 0,
+   "frame": 9808
+  },
+  "stale_lines_after": 0,
+  "stale_lines_before": 4
+ },
+ "status": "ADMITTED",
+ "tag": "f26s_c3"
+}

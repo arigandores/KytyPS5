@@ -1,0 +1,2 @@
+frames f26s_t3: size (960, 540) video frames 9929 idx records 9929 rows 9929 last present 9929; M max 518400, frames with M >= 500: 1; entry screen frames 18
+SIZE 960x540

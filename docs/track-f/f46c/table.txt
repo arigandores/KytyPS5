@@ -1,0 +1,14 @@
+reader f46c_read.py sha256 492ad197596002afa5f2d782d97fa1c227f45884f03d5899bd1d3b950ee1cea1
+| tag | status | S1 class | S2 class | S3 class | S4 class | NO_APPLY | hold_s | idx | glitches | f26_tint_applied |
+|---|---|---|---|---|---|---|---|---|---|---|
+| f26s_0 | ADMITTED | off | off | off | off | - | 334.3 | 9915 | 0 | 0 |
+| f26s_1 | ADMITTED | kept_applied | kept_applied | kept_applied | kept_applied | - | 334.1 | 10061 | 0 | 0 |
+| f26s_1b | ADMITTED | kept_applied | kept_applied | kept_applied | kept_applied | - | 334.5 | 9943 | 0 | 0 |
+| f26s_c1 | ADMITTED | kept_applied | kept_applied | kept_applied | kept_applied | - | 334.3 | 10028 | 0 | 12 |
+| f26s_c2 | ADMITTED | kept_applied | kept_applied | kept_applied | kept_applied | - | 334.3 | 10100 | 0 | 11 |
+| f26s_c3 | ADMITTED | kept_applied | kept_applied | kept_applied | kept_applied | - | 334.3 | 9853 | 0 | 12 |
+| f26s_c4 | ADMITTED | kept_applied | kept_applied | kept_applied | kept_applied | - | 334.2 | 9998 | 0 | 9624 |
+| f26s_t1 | ADMITTED | kept_applied | kept_applied | kept_applied | kept_applied | - | 334.1 | 9875 | 1 | 2 |
+| f26s_t2 | ADMITTED | kept_applied | kept_applied | kept_applied | kept_applied | - | 334.2 | 10097 | 0 | 1 |
+| f26s_t3 | ADMITTED | kept_applied | kept_applied | kept_applied | kept_applied | - | 334.0 | 9929 | 1 | 2 |
+| f26s_t4 | ADMITTED | kept_applied | kept_applied | kept_applied | kept_applied | - | 334.4 | 10084 | 0 | 1 |

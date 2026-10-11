@@ -1,0 +1,260 @@
+{
+ "arms": {
+  "f26s_0": "f26s_0",
+  "f26s_1": "f26s_1",
+  "f26s_1b": "f26s_1b"
+ },
+ "d_min": 16,
+ "dark": 5.0,
+ "events": [
+  {
+   "V": "no",
+   "V_with_exclusion": {
+    "best": [
+     357,
+     0
+    ],
+    "comparable": 19,
+    "first": null,
+    "hits": 0
+   },
+   "V_without_exclusion": {
+    "best": [
+     357,
+     0
+    ],
+    "comparable": 19,
+    "first": null,
+    "hits": 0
+   },
+   "arms": {
+    "c": "f26s_c1",
+    "t": "f26s_t1"
+   },
+   "cls": "kept_applied",
+   "control": {
+    "alive": true,
+    "alive_without_exclusion": true,
+    "tint_applied": 12,
+    "with_exclusion": {
+     "best": [
+      35,
+      518400
+     ],
+     "comparable": 10009,
+     "first": 35,
+     "hits": 6
+    },
+    "without_exclusion": {
+     "best": [
+      35,
+      518400
+     ],
+     "comparable": 10028,
+     "first": 35,
+     "hits": 6
+    }
+   },
+   "exec_le_p1": true,
+   "exec_present": 358,
+   "k": 1,
+   "no_apply": false,
+   "p": 358,
+   "p_end_0": 372,
+   "p_end_0_source": "first_exec",
+   "p_end_1": 359,
+   "p_end_1_source": "first_exec",
+   "window": [
+    357,
+    375
+   ]
+  },
+  {
+   "V": "no",
+   "V_with_exclusion": {
+    "best": [
+     362,
+     0
+    ],
+    "comparable": 19,
+    "first": null,
+    "hits": 0
+   },
+   "V_without_exclusion": {
+    "best": [
+     362,
+     0
+    ],
+    "comparable": 19,
+    "first": null,
+    "hits": 0
+   },
+   "arms": {
+    "c": "f26s_c2",
+    "t": "f26s_t2"
+   },
+   "cls": "kept_applied",
+   "control": {
+    "alive": false,
+    "alive_without_exclusion": false,
+    "tint_applied": 11,
+    "with_exclusion": {
+     "best": [
+      1082,
+      10
+     ],
+     "comparable": 10042,
+     "first": null,
+     "hits": 0
+    },
+    "without_exclusion": {
+     "best": [
+      1082,
+      10
+     ],
+     "comparable": 10061,
+     "first": null,
+     "hits": 0
+    }
+   },
+   "exec_le_p1": true,
+   "exec_present": 363,
+   "k": 2,
+   "no_apply": false,
+   "p": 363,
+   "p_end_0": 377,
+   "p_end_0_source": "first_exec",
+   "p_end_1": 364,
+   "p_end_1_source": "first_exec",
+   "window": [
+    362,
+    380
+   ]
+  },
+  {
+   "V": "no",
+   "V_with_exclusion": {
+    "best": [
+     363,
+     0
+    ],
+    "comparable": 19,
+    "first": null,
+    "hits": 0
+   },
+   "V_without_exclusion": {
+    "best": [
+     363,
+     0
+    ],
+    "comparable": 19,
+    "first": null,
+    "hits": 0
+   },
+   "arms": {
+    "c": "f26s_c3",
+    "t": "f26s_t3"
+   },
+   "cls": "kept_applied",
+   "control": {
+    "alive": true,
+    "alive_without_exclusion": true,
+    "tint_applied": 12,
+    "with_exclusion": {
+     "best": [
+      31,
+      518400
+     ],
+     "comparable": 9833,
+     "first": 31,
+     "hits": 6
+    },
+    "without_exclusion": {
+     "best": [
+      31,
+      518400
+     ],
+     "comparable": 9853,
+     "first": 31,
+     "hits": 6
+    }
+   },
+   "exec_le_p1": true,
+   "exec_present": 364,
+   "k": 3,
+   "no_apply": false,
+   "p": 364,
+   "p_end_0": 378,
+   "p_end_0_source": "first_exec",
+   "p_end_1": 365,
+   "p_end_1_source": "first_exec",
+   "window": [
+    363,
+    381
+   ]
+  },
+  {
+   "V": "no",
+   "V_with_exclusion": {
+    "best": [
+     374,
+     0
+    ],
+    "comparable": 19,
+    "first": null,
+    "hits": 0
+   },
+   "V_without_exclusion": {
+    "best": [
+     374,
+     0
+    ],
+    "comparable": 19,
+    "first": null,
+    "hits": 0
+   },
+   "arms": {
+    "c": "f26s_c4",
+    "t": "f26s_t4"
+   },
+   "cls": "kept_applied",
+   "control": {
+    "alive": false,
+    "alive_without_exclusion": false,
+    "tint_applied": 9624,
+    "with_exclusion": {
+     "best": [
+      1076,
+      6
+     ],
+     "comparable": 9979,
+     "first": null,
+     "hits": 0
+    },
+    "without_exclusion": {
+     "best": [
+      1076,
+      6
+     ],
+     "comparable": 9998,
+     "first": null,
+     "hits": 0
+    }
+   },
+   "exec_le_p1": true,
+   "exec_present": 375,
+   "k": 4,
+   "no_apply": false,
+   "p": 375,
+   "p_end_0": 389,
+   "p_end_0_source": "first_exec",
+   "p_end_1": 377,
+   "p_end_1_source": "first_exec",
+   "window": [
+    374,
+    392
+   ]
+  }
+ ],
+ "theta": 500
+}

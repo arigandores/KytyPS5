@@ -1,0 +1,4 @@
+rows=269 bound=11 named=11 sites=49 rewritten=49 unmatched=0 tri_before=49 tri_after=49 loads_out=0 rows_rw=11 ps_bound=0 sha_base_eq=0 sha_f20_eq=0
+FAIL f20 != twin(out) 11 ['cs_1f16e50eea0c89e3_f69183983bf9a738_0', 'cs_380bb9d636390bae_fe70c334a8301128_0', 'cs_380bb9d636390bae_fe70c334a8301128_1', 'cs_380bb9d636390bae_fe70c334a8301128_2', 'cs_503d7f066a496c3c_70975964c3b7a9c4_0']
+FAIL triples after 11 ['cs_1f16e50eea0c89e3_f69183983bf9a738_0', 'cs_380bb9d636390bae_fe70c334a8301128_0', 'cs_380bb9d636390bae_fe70c334a8301128_1', 'cs_380bb9d636390bae_fe70c334a8301128_2', 'cs_503d7f066a496c3c_70975964c3b7a9c4_0']
+CAUGHT f20 != twin(out) | triples after

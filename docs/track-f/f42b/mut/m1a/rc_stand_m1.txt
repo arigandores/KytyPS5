@@ -1,0 +1,5 @@
+m1 arm=W rounds=20 expected=2621440 seen=81920 lost=2539520 rounds_with_loss=20 extra=0 words_lost=81920 out_nonzero=0
+m1 arm=X rounds=20 expected=2621440 seen=186832 lost=2434608 rounds_with_loss=20 extra=0 words_lost=81920 out_nonzero=0
+m1 arm=S rounds=20 expected=81920 seen=81920 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+m1 arm=N rounds=20 expected=2621440 seen=81920 lost=2539520 rounds_with_loss=20 extra=0 words_lost=81920 out_nonzero=0
+CAUGHT m1 W lost = 0 in every round | m1 X lost = 0 in every round

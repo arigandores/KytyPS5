@@ -1,0 +1,7 @@
+rows 269 rc0+line 269
+modules_bound 11 modules(named) 11 sites 49 rewritten 49 unmatched 0
+independent count: triples before 49, after 49, loads outside a triple 0, OpAtomicOr added 0
+rows rewritten 11; spirv-val of their base (control) failing 0
+BAD diff replaced != rewritten: 11 cs_1f16e50eea0c89e3_f69183983bf9a738_0 cs_380bb9d636390bae_fe70c334a8301128_0 cs_380bb9d636390bae_fe70c334a8301128_1 cs_380bb9d636390bae_fe70c334a8301128_2 cs_503d7f066a496c3c_70975964c3b7a9c4_0 cs_5323c4ef4f785055_c1ed6df4a815e257_0 cs_56a15431999c5a2d_7ee8623d978266cd_0 cs_cd94166bf3f2bb81_29e5bf3a282c2956_0
+BAD triples after rewrite: 11 cs_1f16e50eea0c89e3_f69183983bf9a738_0 cs_380bb9d636390bae_fe70c334a8301128_0 cs_380bb9d636390bae_fe70c334a8301128_1 cs_380bb9d636390bae_fe70c334a8301128_2 cs_503d7f066a496c3c_70975964c3b7a9c4_0 cs_5323c4ef4f785055_c1ed6df4a815e257_0 cs_56a15431999c5a2d_7ee8623d978266cd_0 cs_cd94166bf3f2bb81_29e5bf3a282c2956_0
+FAIL

@@ -1,0 +1,13 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/fixF20.h b/src/graphics/host_gpu/renderer/pipeline/fixF20.h
+index 5b47f850..598c7eba 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/fixF20.h
++++ b/src/graphics/host_gpu/renderer/pipeline/fixF20.h
+@@ -180,7 +180,7 @@ inline RewriteStats RewriteFaultOr(std::span<const uint32_t> in, bool bound, std
+ 	std::vector<uint8_t> rewrite(ins.size(), 0);
+ 	for (const auto& site: sites) {
+ 		if (const_one != 0 && const_zero != 0 && uses[site.value] == 2 && uses[site.result] == 2) {
+-			rewrite[site.k] = 1;
++			rewrite[site.k] = stats.rewritten == 0 ? 1 : 0; // MUTANT m2: only the first triple
+ 			stats.rewritten++;
+ 		} else {
+ 			stats.unmatched++;

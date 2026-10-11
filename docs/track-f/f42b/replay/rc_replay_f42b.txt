@@ -1,0 +1,63 @@
+eid 128281 arm op N 20 rounds True p0>0 0 words {'000204a0': 6, '000004a0': 14} imgs {'06aa0be94a34c3a8': 20} other_nonzero 0
+ok   eid 128281 arm op N = 20
+ok   eid 128281 arm op R0 p0_nonzero = 0 in every replay
+ok   eid 128281 arm op no nonzero word other than 32824
+eid 128281 arm ap N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'06aa0be94a34c3a8': 20} other_nonzero 0
+ok   eid 128281 arm ap N = 20
+ok   eid 128281 arm ap R0 p0_nonzero = 0 in every replay
+ok   eid 128281 arm ap no nonzero word other than 32824
+eid 128281 arm o  N 20 rounds True p0>0 0 words {'000004a0': 12, '000204a0': 8} imgs {'5a281ce445d32655': 20} other_nonzero 0
+ok   eid 128281 arm o N = 20
+ok   eid 128281 arm o R0 p0_nonzero = 0 in every replay
+ok   eid 128281 arm o no nonzero word other than 32824
+eid 128281 arm z  N 20 rounds True p0>0 0 words {'000204a0': 7, '000004a0': 13} imgs {'5a281ce445d32655': 20} other_nonzero 0
+ok   eid 128281 arm z N = 20
+ok   eid 128281 arm z R0 p0_nonzero = 0 in every replay
+ok   eid 128281 arm z no nonzero word other than 32824
+eid 128281 arm a  N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'5a281ce445d32655': 20} other_nonzero 0
+ok   eid 128281 arm a N = 20
+ok   eid 128281 arm a R0 p0_nonzero = 0 in every replay
+ok   eid 128281 arm a no nonzero word other than 32824
+eid 44806 arm op N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'94460a9411e4cdfd': 20} other_nonzero 0
+ok   eid 44806 arm op N = 20
+ok   eid 44806 arm op R0 p0_nonzero = 0 in every replay
+ok   eid 44806 arm op no nonzero word other than 32824
+eid 44806 arm ap N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'94460a9411e4cdfd': 20} other_nonzero 0
+ok   eid 44806 arm ap N = 20
+ok   eid 44806 arm ap R0 p0_nonzero = 0 in every replay
+ok   eid 44806 arm ap no nonzero word other than 32824
+eid 44806 arm o  N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'6d5205123f098545': 20} other_nonzero 0
+ok   eid 44806 arm o N = 20
+ok   eid 44806 arm o R0 p0_nonzero = 0 in every replay
+ok   eid 44806 arm o no nonzero word other than 32824
+eid 44806 arm z  N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'6d5205123f098545': 20} other_nonzero 0
+ok   eid 44806 arm z N = 20
+ok   eid 44806 arm z R0 p0_nonzero = 0 in every replay
+ok   eid 44806 arm z no nonzero word other than 32824
+eid 44806 arm a  N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'6d5205123f098545': 20} other_nonzero 0
+ok   eid 44806 arm a N = 20
+ok   eid 44806 arm a R0 p0_nonzero = 0 in every replay
+ok   eid 44806 arm a no nonzero word other than 32824
+eid 84820 arm op N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'6c841a5640b4553b': 20} other_nonzero 0
+ok   eid 84820 arm op N = 20
+ok   eid 84820 arm op R0 p0_nonzero = 0 in every replay
+ok   eid 84820 arm op no nonzero word other than 32824
+eid 84820 arm ap N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'6c841a5640b4553b': 20} other_nonzero 0
+ok   eid 84820 arm ap N = 20
+ok   eid 84820 arm ap R0 p0_nonzero = 0 in every replay
+ok   eid 84820 arm ap no nonzero word other than 32824
+eid 84820 arm o  N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'456b62b0792ad50c': 20} other_nonzero 0
+ok   eid 84820 arm o N = 20
+ok   eid 84820 arm o R0 p0_nonzero = 0 in every replay
+ok   eid 84820 arm o no nonzero word other than 32824
+eid 84820 arm z  N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'456b62b0792ad50c': 20} other_nonzero 0
+ok   eid 84820 arm z N = 20
+ok   eid 84820 arm z R0 p0_nonzero = 0 in every replay
+ok   eid 84820 arm z no nonzero word other than 32824
+eid 84820 arm a  N 20 rounds True p0>0 0 words {'000204a0': 20} imgs {'456b62b0792ad50c': 20} other_nonzero 0
+ok   eid 84820 arm a N = 20
+ok   eid 84820 arm a R0 p0_nonzero = 0 in every replay
+ok   eid 84820 arm a no nonzero word other than 32824
+K' (o' >= 2 values) True; K (z >= 2 values) True; P3' True; P3 True
+candidate outcome (not a verdict): R1
+ALL OK

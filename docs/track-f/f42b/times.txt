@@ -1,0 +1,20 @@
+2026-10-11T08:18:56Z F42b start (read p.694 a5a6fd25, F42a report ab01afff, code a6342c98/a9d6fd1c)
+2026-10-11T08:19:04Z F42b worktree 730ed40a + cp a6342c98 a9d6fd1c tree 156f781e
+2026-10-11T08:19:11Z F42b worktree detached at 26283087 (tree 156f781e = own cherry-pick tree 9103380f; same version strings as F42a)
+2026-10-11T08:22:48Z F42b clean build sha256 emu e8b7bdb3 rct 05d95a29 cfgt 2170c893; pediff3r vs F42a copies
+2026-10-11T08:24:10Z F42b comment: stand constants before data R=200 seed 42801; mutants R=20 seed 42802
+2026-10-11T08:25:23Z F42b own stand done stand/c42801 m0 0950af17 m1 a1e099ef
+2026-10-11T08:26:01Z F42b own recount stand c42801 ALL OK ; F42a c42001 by own script ALL OK
+2026-10-11T08:27:25Z F42b own recount replay F42a data ALL OK sha 9f40ea1e
+2026-10-11T08:28:33Z F42b own: replay modules a/a' re-derived by own shader_cfg_tests = F42a sha; twin_f42b == C++ on 2 replay + 22 catalog modules; spirv-val spirv-val rewritten n=24 bad=0
+2026-10-11T08:29:31Z F42b own corpus T1 (own build) + own recount ALL OK sha 2ea1e147
+2026-10-11T09:09:25Z F42b mutant m4 bins fcf9320a f42298fa | stand=1: CAUGHT m1 X lost = 0 in every round | stand=0:  | corpus: CAUGHT f20 != twin(out) | OpAtomicXor on fault_buffer
+2026-10-11T09:11:06Z F42b mutant m1a bins a49506bd a455fc75 | stand=1: CAUGHT m1 W lost = 0 in every round | m1 X lost = 0 in every round | stand=0:  | corpus: CAUGHT f20 != twin(out) | triples after
+2026-10-11T09:12:18Z F42b mutant m2 bins b0b221e9 2ab4a026 | stand=1: NOT CAUGHT | stand=0:  | corpus: CAUGHT f20 != twin(out) | triples after
+2026-10-11T09:13:30Z F42b mutant m5 bins 8857325f 38106ef2 | stand=1: CAUGHT m1 N unmatched >= 1 | stand=0:  | corpus: NOT CAUGHT
+2026-10-11T09:14:51Z F42b mutant m3 bins 9456cd23 ea5ad895 | stand=1: NOT CAUGHT | stand=0:  | corpus: CAUGHT f20 != twin(out) | scope/semantics
+2026-10-11T09:16:25Z F42b mutant m1b bins 32e199c0 ed951a09 | stand=1: NOT CAUGHT | stand=0: NOT CAUGHT | corpus: 
+2026-10-11T09:17:48Z F42b mutant m6 bins aaf5e16e 20a1d2f2 | stand=1: NOT CAUGHT | stand=0: NOT CAUGHT | corpus: 
+2026-10-11T09:19:33Z F42b clean rebuild after mutants: deedf93ffc1d6ce0 e83d3807c655eab7 1391e93b8277de62 
+2026-10-11T09:20:11Z F42b own shader_cfg_tests unset/=1 vs FS12a: rc=0 end 2026-10-11T09:20:11Z
+2026-10-11T09:32:22Z F42b review written docs/track-f/f42b-review.md sha 17fffccd; links ALL OK 22

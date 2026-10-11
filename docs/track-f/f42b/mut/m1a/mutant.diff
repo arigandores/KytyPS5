@@ -1,0 +1,13 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/fixF20.h b/src/graphics/host_gpu/renderer/pipeline/fixF20.h
+index 5b47f850..33b0f46b 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/fixF20.h
++++ b/src/graphics/host_gpu/renderer/pipeline/fixF20.h
+@@ -195,7 +195,7 @@ inline RewriteStats RewriteFaultOr(std::span<const uint32_t> in, bool bound, std
+ 	size_t s = 0;
+ 	for (size_t k = 0; k < ins.size(); k++) {
+ 		const auto& x = ins[k];
+-		if (rewrite[k] != 0) {
++		if (false && rewrite[k] != 0) { // MUTANT m1a: nothing replaced
+ 			while (sites[s].k != k) {
+ 				s++;
+ 			}

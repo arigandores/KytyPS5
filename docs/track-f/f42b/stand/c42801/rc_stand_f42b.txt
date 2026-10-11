@@ -1,0 +1,10 @@
+m0 arm=W rounds=200 expected=26214400 seen=819200 lost=25395200 rounds_with_loss=200 extra=0 words_lost=819200 out_nonzero=0
+m0 arm=X rounds=200 expected=26214400 seen=1869880 lost=24344520 rounds_with_loss=200 extra=0 words_lost=819200 out_nonzero=0
+m0 arm=S rounds=200 expected=819200 seen=819200 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+m0 arm=N rounds=200 expected=26214400 seen=819200 lost=25395200 rounds_with_loss=200 extra=0 words_lost=819200 out_nonzero=0
+reading m0 X lost=24344520 of 26214400, rounds_with_loss=200
+m1 arm=W rounds=200 expected=26214400 seen=26214400 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+m1 arm=X rounds=200 expected=26214400 seen=26214400 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+m1 arm=S rounds=200 expected=819200 seen=819200 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+m1 arm=N rounds=200 expected=26214400 seen=819200 lost=25395200 rounds_with_loss=200 extra=0 words_lost=819200 out_nonzero=0
+ALL OK

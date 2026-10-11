@@ -1,0 +1,2 @@
+rows=269 bound=11 named=11 sites=49 rewritten=49 unmatched=0 tri_before=49 tri_after=0 loads_out=0 rows_rw=11 ps_bound=0 sha_base_eq=0 sha_f20_eq=0
+NOT CAUGHT

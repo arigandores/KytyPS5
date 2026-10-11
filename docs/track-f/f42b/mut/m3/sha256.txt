@@ -1,0 +1,2 @@
+9456cd234f837c715b7be36d04b24547d9e0ac48e64ab5f34b0f7d2f10c31602 *shader_cfg_tests.exe
+ea5ad895b0c3f6605fe7fda100d99043ddd36401704ce19e96a90d4edd549342 *shader_recompiler_compute_tests.exe

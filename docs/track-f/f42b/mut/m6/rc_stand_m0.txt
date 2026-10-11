@@ -1,0 +1,6 @@
+m0 arm=W rounds=20 expected=2621440 seen=81920 lost=2539520 rounds_with_loss=20 extra=0 words_lost=81920 out_nonzero=0
+m0 arm=X rounds=20 expected=2621440 seen=188060 lost=2433380 rounds_with_loss=20 extra=0 words_lost=81920 out_nonzero=0
+m0 arm=S rounds=20 expected=81920 seen=81920 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+m0 arm=N rounds=20 expected=2621440 seen=81920 lost=2539520 rounds_with_loss=20 extra=0 words_lost=81920 out_nonzero=0
+reading m0 X lost=2433380 of 2621440, rounds_with_loss=20
+NOT CAUGHT

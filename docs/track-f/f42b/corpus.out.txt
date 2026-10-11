@@ -1,0 +1,8 @@
+watch: start 2026-10-11T08:28:57Z child 53104 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+t1 rows 2154 A rows run 269 stages {'cs': 111, 'ps': 158}
+rows 269 rc0+line 269
+modules_bound 11 modules(named) 11 sites 49 rewritten 49 unmatched 0
+independent count: triples before 49, after 0, loads outside a triple 0, OpAtomicOr added 49
+rows rewritten 11; spirv-val of their base (control) failing 0
+ALL OK
+rc=0 end 2026-10-11T08:29:05Z

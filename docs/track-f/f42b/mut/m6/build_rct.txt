@@ -1,0 +1,6 @@
+rc=0
+watch: start 2026-10-11T09:16:35Z child 12012 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+BUILD OK: C:\kyty\f287\f42b\build\shader_recompiler_compute_tests.exe
+rc=0 end 2026-10-11T09:17:07Z
+BUILD OK: C:\kyty\f287\f42b\build\shader_recompiler_compute_tests.exe
+rc=0 end 2026-10-11T09:17:07Z

@@ -1,0 +1,22 @@
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	440	\tconst bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(translation, fault_b	\tconst auto&           source  = fix_f20 ? fixed : translation;
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	360	\tconst bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(words, pixel_program	\tconst auto            module  = CompileSPV(fix_f20 ? fixed : words, graphics.device);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	441	\tconst auto&           source  = fix_f20 ? fixed : translation;	\tstd::vector<uint32_t> salted;
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp	36	\t\tconst int value = Common::EnvFlagOn("KYTY_FIX_F20") ? 1 : 0;	\t\tLOGF("FixF20: mode=%d\\n", value);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp	34	int Mode() {	\tstatic const int mode = [] {
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4865	\t(void)FixF20::Mode(); // Track F, F42a: "FixF20: mode=<0|1>" once, before the precache cr	\tInitializeDriverCache();
+a9d6fd1c	tests/ShaderRecompilerComputeTests.cpp	18695	  const bool fix = Common::EnvFlagOn("KYTY_FIX_F20");	  const char *r_text = std::getenv("KYTY_TEST_F20STAND_R");
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2225	\t\tconst auto module       = CreateCachedModule(device, result.spirv, fault_bound);	\t\tEXIT_IF(module == nullptr);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2267	\t\t\tconst auto module      = CreateCachedModule(device, p.spirv, fault_bound);	\t\t\tEXIT_IF(module == nullptr);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4678	\t\t\t\tconst auto module      = CreateCachedModule(device, p.spirv, fault_bound);	\t\t\t\tEXIT_IF(module == nullptr);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	361	\tconst auto            module  = CompileSPV(fix_f20 ? fixed : words, graphics.device);	\tif (DualSourceFirstLine(ps_hash, true)) {
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2223	\t\tconst bool fault_bound  = FixF20Bound(result.program.bindings); // Track F, F42a: before	\t\tconst auto module_begin = HostMicros();
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2266	\t\t\tconst bool fault_bound = FixF20Bound(p.program.bindings); // Track F, F42a: before Adop	\t\t\tconst auto module      = CreateCachedModule(device, p.spirv, fault_bound);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4677	\t\t\t\tconst bool fault_bound = FixF20Bound(p.program.bindings); // Track F, F42a: before Ado	\t\t\t\tconst auto module      = CreateCachedModule(device, p.spirv, fault_bound);
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/fixF20.h	43	inline RewriteStats RewriteFaultOr(std::span<const uint32_t> in, bool bound, std::vector<u	\tconstexpr uint32_t kMagic               = 0x07230203u;
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/fixF20.h	109	\tif (!bound) {	\t\tstats.unmatched = stats.named != 0 ? 1u : 0u;
+a9d6fd1c	tests/ShaderRecompilerComputeTests.cpp	18734	    d.stats = Libs::Graphics::FixF20::RewriteFaultOr(words, d.bound, fixed);	    if (fix && d.stats.rewritten != 0) {
+a9d6fd1c	tests/ShaderRecompilerComputeTests.cpp	18735	    if (fix && d.stats.rewritten != 0) {	      words = fixed;
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/fixF20.h	207	\t\t\tout.push_back(const_one);	\t\t\tout.push_back(const_zero);
+a9d6fd1c	tests/shaderCfgTests.cpp	16090	    const auto stats = Libs::Graphics::FixF20::RewriteFaultOr(words, bound, fixed);	    const auto &result = stats.rewritten != 0 ? fixed : words;
+a9d6fd1c	tests/shaderCfgTests.cpp	16429	      const auto stats = Libs::Graphics::FixF20::RewriteFaultOr(compiled.spirv, bound, fix	      const auto &words = stats.rewritten != 0 ? fixed : compiled.spirv;
+a9d6fd1c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	76	namespace {	

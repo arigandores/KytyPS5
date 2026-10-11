@@ -1,0 +1,27 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/fixF20.h b/src/graphics/host_gpu/renderer/pipeline/fixF20.h
+index 5b47f850..7c23afca 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/fixF20.h
++++ b/src/graphics/host_gpu/renderer/pipeline/fixF20.h
+@@ -105,6 +105,13 @@ inline RewriteStats RewriteFaultOr(std::span<const uint32_t> in, bool bound, std
+ 			}
+ 		}
+ 	}
++	uint32_t const_two = 0; // MUTANT m3: ScopeWorkgroup = u32 constant 2 of the module
++	for (const auto& x: ins) {
++		if (x.op == kOpConstant && x.count == 4 && u32_types.contains(in[x.at + 1]) && in[x.at + 3] == 2u &&
++		    const_two == 0) {
++			const_two = in[x.at + 2];
++		}
++	}
+ 	stats.named = static_cast<uint32_t>(fault_vars.size());
+ 	if (!bound) {
+ 		stats.unmatched = stats.named != 0 ? 1u : 0u;
+@@ -204,7 +211,7 @@ inline RewriteStats RewriteFaultOr(std::span<const uint32_t> in, bool bound, std
+ 			out.push_back(site.type);
+ 			out.push_back(site.value);
+ 			out.push_back(site.pointer);
+-			out.push_back(const_one);
++			out.push_back(const_two != 0 ? const_two : const_one); // MUTANT m3
+ 			out.push_back(const_zero);
+ 			out.push_back(site.bit);
+ 			k += 2; // the OpBitwiseOr and the OpStore of the triple

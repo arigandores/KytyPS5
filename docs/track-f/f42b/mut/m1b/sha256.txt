@@ -1,0 +1,2 @@
+32e199c0245b1129dcb160a9bed90177661a43b2f1f1b9a967164e71e187313c *kyty_emulator.exe
+ed951a098d691e4f865b2e285bd28a29fd9f53a2b6e41342af82259826e402b3 *shader_recompiler_compute_tests.exe

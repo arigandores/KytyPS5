@@ -1,0 +1,9 @@
+watch: start 2026-10-11T12:31:51Z child 22568 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+OK   t3 shader_cfg_tests rc: fs14 0 fs13 0
+OK   t3 shader_cfg_tests [test] lines: fs14 133 fs13 133
+OK   t3 shader_cfg_tests ShaderCfgTests: failed: lines: fs14 0 fs13 0
+OK   t3 shader_cfg_tests lines with failed: fs14 5 fs13 5
+OK   t3 shader_cfg_tests failed multiset equal: fs14 True fs13 True
+OK   t4 SPIR-V fs14 360 fs13 360 differing 0 aggregate b1376644 / b1376644
+ALL OK
+rc=0 end 2026-10-11T12:31:53Z

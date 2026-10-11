@@ -14,3 +14,23 @@
 2026-10-11T12:20:07Z FS14a API check before 'step tests_cfg': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
 2026-10-11T12:20:11Z FS14a shader_cfg_tests vs FS13 6 OK lines, ALL OK; binary_fs14a.py ALL OK
 2026-10-11T12:22:59Z FS14a report docs/track-f/fs14a.md, files docs/track-f/fs14a/, FACTS section appended
+2026-10-11T12:23:35Z FS14a docs commit 20b7693a
+2026-10-11T12:26:59Z FS14a main commit 78e45af3 (KYTY_FIX_F29 default 1, item 712(g)(1)); check_gate_order.py on main GATE ORDER: clean (= FS14a output)
+2026-10-11T12:27:08Z FS14a worktree + cherry-pick -x 15c9d2f2 -> c5eb48b0, 78e45af3 -> eb7e8b91; see cp_15c9d2f2.log cp_78e45af3.log; check_gate_order.py on worktree: GATE ORDER: clean
+2026-10-11T12:27:14Z FS14a API check before 'build cfg2 configure': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:27:28Z FS14a API check before 'build ver2 version': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:27:39Z FS14a configure2 rc=0, version2 rc=0 (worktree eb7e8b91)
+2026-10-11T12:27:40Z FS14a API check before 'build emu2 ': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:28:08Z FS14a kyty_emulator build2 rc=0
+2026-10-11T12:28:15Z FS14a API check before 'build t2 tests': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:28:40Z FS14a shader_cfg_tests build2 rc=0
+2026-10-11T12:28:41Z FS14a API check before 'build stand target f29_fault_stand': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:29:17Z FS14a f29_fault_stand build (worktree eb7e8b91) rc=0
+2026-10-11T12:29:40Z FS14a final binary sha256 013e1974ea8abfb41e9951c7939b3890257010f53bad4ff838d6fd70fde3d0cd copy C:/kyty/f287/bin/kyty_emulator_013e1974.exe; intermediate 826fc0a0 (F24 only) not FS14; installed ps5 em/kyty_emulator.exe not touched
+2026-10-11T12:31:49Z FS14a API check before 'step tests_cfg_f29': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:31:53Z FS14a shader_cfg_tests of the final FS14 (eb7e8b91) vs FS13: ALL OK
+2026-10-11T12:32:49Z FS14a stand constants commented before data: seed 71201 R 20, =0 first then the process without KYTY_FIX_F29
+2026-10-11T12:33:00Z FS14a scored stand start: seed 71201 R 20, =0 then unset, exe C:/kyty/f287/fs14a/build/f29_fault_stand.exe sha256 12c4b09fd08fdbdb
+2026-10-11T12:33:02Z FS14a API check before 'step stand_f29': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:33:50Z FS14a stand end: ALL OK
+2026-10-11T12:36:10Z FS14a edition 2 report docs/track-f/fs14a.md, files docs/track-f/fs14a/, FACTS section appended

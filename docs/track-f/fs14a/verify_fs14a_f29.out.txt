@@ -1,0 +1,65 @@
+FS14 HEAD eb7e8b91664aef26bdf0f5af6fd2cceebbf8f958 base ea6c6e9ea61713729c88b7b6ce8492334a00055c intermediate 76c1058f9158e10d173e14f39a9023554475e6c2
+V1 5c21c387 -> b50e90e8: changed lines 629 / 629, equal True; git cherry - 5c21c3872eafddcba79f3dfe9f3dd0a1bfa92dd4
+V1 e3aa4b4d -> cd422a94: changed lines 445 / 445, equal True; git cherry - e3aa4b4d6eed0b2d7244835bb78060c599971830
+V1 57f9e528 -> 6eb0f1a1: changed lines 140 / 140, equal True; git cherry - 57f9e52831b94f9654b3b8c6acaf8f05132bff2f
+V1 c8836f14 -> 76c1058f: changed lines 11 / 11, equal True; git cherry - c8836f1427fa95374e50fead3526734b9f6709e7
+V1 15c9d2f2 -> c5eb48b0: changed lines 1028 / 1028, equal True; git cherry - 15c9d2f2090b136f65d5744dfd2a9cac46add65d
+V1 78e45af3 -> eb7e8b91: changed lines 10 / 10, equal True; git cherry - 78e45af3a4be8d363ccc4bb8f90b5969f8b93b0f
+V1 negative controls: e3aa4b4d vs b50e90e8 equal False; 57f9e528 vs own worktree commit spoiled equal False; 15c9d2f2 vs eb7e8b91 equal False (want False x3)
+V1b contains 5c21c387: True (ancestor False, git cherry - 5c21c3872eafddcba79f3dfe9f3dd0a1bfa92dd4)
+V1b contains 57f9e528: True (ancestor False, git cherry - 57f9e52831b94f9654b3b8c6acaf8f05132bff2f)
+V1b contains c8836f14: True (ancestor False, git cherry - c8836f1427fa95374e50fead3526734b9f6709e7)
+V1b contains 15c9d2f2: True (ancestor False, git cherry - 15c9d2f2090b136f65d5744dfd2a9cac46add65d)
+V1b contains 78e45af3: True (ancestor False, git cherry - 78e45af3a4be8d363ccc4bb8f90b5969f8b93b0f)
+V1b contains e9dd8604: True (ancestor False, git cherry - e9dd86046f73ea8e84aee4653043f4ae799652e1)
+V1b contains 3630f116: True (ancestor False, git cherry - 3630f11620204df6429be18bee56b190e6e010f0)
+V1b contains 227e1b36: True (ancestor False, git cherry - 227e1b36b361a0c4e16adefade5299a99c1b6115)
+V1b contains cbfe8375: True (ancestor False, git cherry - cbfe8375b4aa6c0146daff49c52eaa6d08f3f12b)
+V1b contains c94c49e0: True (ancestor False, git cherry - c94c49e0bf40fe81ca2f0f3b3af8dd7d49224cc1)
+V1b contains 726e751e: True (ancestor False, git cherry - 726e751eefe42e7c36c221e9ccf406396c0849b6)
+V1b contains cb022252: True (ancestor False, git cherry - cb022252530ca1a9979d6b5db43c67627ea0b7b5)
+V1b negative control 5c21c387 in ea6c6e9e (code F40a against the base FS13): False (ancestor False, git cherry + 5c21c3872eafddcba79f3dfe9f3dd0a1bfa92dd4) (want False)
+V1b negative control 57f9e528 in ea6c6e9e (F40a2 against the base FS13): False (ancestor False, git cherry + 57f9e52831b94f9654b3b8c6acaf8f05132bff2f) (want False)
+V1b negative control c8836f14 in ea6c6e9e (FS14a F24 main commit against the base FS13): False (ancestor False, git cherry + c8836f1427fa95374e50fead3526734b9f6709e7) (want False)
+V1b negative control 15c9d2f2 in ea6c6e9e (code F44a against the base FS13): False (ancestor False, git cherry + 15c9d2f2090b136f65d5744dfd2a9cac46add65d) (want False)
+V1b negative control 78e45af3 in ea6c6e9e (FS14a F29 main commit against the base FS13): False (ancestor False, git cherry + 78e45af3a4be8d363ccc4bb8f90b5969f8b93b0f) (want False)
+V1b negative control 15c9d2f2 in 76c1058f (code F44a against the intermediate F24-only 76c1058f): False (ancestor False, git cherry + 15c9d2f2090b136f65d5744dfd2a9cac46add65d) (want False)
+V1b negative control 78e45af3 in 76c1058f (FS14a F29 main commit against the intermediate 76c1058f): False (ancestor False, git cherry + 78e45af3a4be8d363ccc4bb8f90b5969f8b93b0f) (want False)
+V1b negative control e9dd8604 in 730ed40a (code F38a against FS12): False (ancestor False, git cherry + e9dd86046f73ea8e84aee4653043f4ae799652e1) (want False)
+V1b negative control 3630f116 in 730ed40a (FS13a against FS12): False (ancestor False, git cherry + 3630f11620204df6429be18bee56b190e6e010f0) (want False)
+V1b negative control a6342c98 in HEAD (F20 code F42a, not carried): False (ancestor False, git cherry + a6342c987f35a3250b9c0b445d047eb7da675a00) (want False)
+V2 files of 5c21c387: src/graphics/presentation/window/hostInput.cpp src/graphics/presentation/window/joyPump.cpp src/graphics/presentation/window/joyPump.h src/graphics/presentation/window/vulkanWindow.cpp src/graphics/presentation/window/window.cpp src/libs/controller.cpp
+V2 files of e3aa4b4d: src/graphics/presentation/window/window.cpp
+V2 files of 57f9e528: src/graphics/presentation/window/joyPump.cpp src/graphics/presentation/window/joyPump.h src/graphics/presentation/window/window.cpp
+V2 files of c8836f14: src/graphics/presentation/window/joyPump.cpp src/graphics/presentation/window/joyPump.h
+V2 files of 15c9d2f2: CMakeLists.txt docs/track-f/f44a/gate_order_main.out.txt docs/track-f/f44a/patch_f44a.py src/graphics/host_gpu/renderer/cache/faultManager.cpp src/graphics/host_gpu/renderer/cache/faultManager.h tests/F29FaultStand.cpp
+V2 files of 78e45af3: src/graphics/host_gpu/renderer/cache/faultManager.cpp src/graphics/host_gpu/renderer/cache/faultManager.h
+V2 files of diff ea6c6e9e..FS14 (12): CMakeLists.txt docs/track-f/f44a/gate_order_main.out.txt docs/track-f/f44a/patch_f44a.py src/graphics/host_gpu/renderer/cache/faultManager.cpp src/graphics/host_gpu/renderer/cache/faultManager.h src/graphics/presentation/window/hostInput.cpp src/graphics/presentation/window/joyPump.cpp src/graphics/presentation/window/joyPump.h src/graphics/presentation/window/vulkanWindow.cpp src/graphics/presentation/window/window.cpp src/libs/controller.cpp tests/F29FaultStand.cpp
+V2 file set = files of the six source commits True; signed changed lines of the diff = sum of the six True (lines 2239); negative control without the F29 main commit equal False (want False)
+V2b git diff --stat ea6c6e9e FS14:
+    CMakeLists.txt                                        |   6 ++
+    docs/track-f/f44a/gate_order_main.out.txt             |  97 +++++++++++++++++++++
+    docs/track-f/f44a/patch_f44a.py                       | 202 +++++++++++++++++++++++++++++++++++++++++++
+    src/graphics/host_gpu/renderer/cache/faultManager.cpp |  54 ++++++++++--
+    src/graphics/host_gpu/renderer/cache/faultManager.h   |  28 ++++++
+    src/graphics/presentation/window/hostInput.cpp        |  38 +++++++++
+    src/graphics/presentation/window/joyPump.cpp          | 580 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    src/graphics/presentation/window/joyPump.h            |  66 ++++++++++++++
+    src/graphics/presentation/window/vulkanWindow.cpp     |   9 +-
+    src/graphics/presentation/window/window.cpp           | 502 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+    src/libs/controller.cpp                               |  14 ++-
+    tests/F29FaultStand.cpp                               | 647 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    12 files changed, 2210 insertions(+), 33 deletions(-)
+V2b src/ paths (8): src/graphics/host_gpu/renderer/cache/faultManager.cpp src/graphics/host_gpu/renderer/cache/faultManager.h src/graphics/presentation/window/hostInput.cpp src/graphics/presentation/window/joyPump.cpp src/graphics/presentation/window/joyPump.h src/graphics/presentation/window/vulkanWindow.cpp src/graphics/presentation/window/window.cpp src/libs/controller.cpp
+V2b src/ files of 15c9d2f2: src/graphics/host_gpu/renderer/cache/faultManager.cpp src/graphics/host_gpu/renderer/cache/faultManager.h; paths under src/graphics/shader/: none; paths outside src/ (all of 15c9d2f2 True): CMakeLists.txt docs/track-f/f44a/gate_order_main.out.txt docs/track-f/f44a/patch_f44a.py tests/F29FaultStand.cpp; member True
+V3 DEFAULT-ON base FS13 (18): KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F21 KYTY_FIX_F25 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 DEFAULT-ON FS14 (20): KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F21 KYTY_FIX_F24 KYTY_FIX_F25 KYTY_FIX_F29 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 FS14 = base + KYTY_FIX_F24 + KYTY_FIX_F29 only: True; negative controls: at 76c1058f difference ['KYTY_FIX_F24'] member False, at c5eb48b0 difference ['KYTY_FIX_F24'] member False (want False x2)
+V3b faultManager.cpp at FS14: getenv(KYTY_FIX_F29) x1, format "FixF29: mode=%d" x1, static const lambda in the form of 3630f116 True
+V4 src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp blob base e1626ad67f22 FS14 e1626ad67f22 equal True; ParseMode unset/"" -> 3: True
+V6 added code lines naming F20 / F26 / KYTY_DIAG_B32 / F30d counters: 0
+V6 a6342c98 (F20 code F42a) in FS14: False (ancestor False, git cherry + a6342c987f35a3250b9c0b445d047eb7da675a00) (want False)
+V6 1398d44d (F26 measurement F46a) in FS14: False (ancestor False, git cherry + 1398d44d91b7e35b755f9802b7fabdd50bc9587f) (want False)
+V6 82570fd2 (F20 stand edition 2 F42a2) in FS14: False (ancestor False, git cherry + 82570fd2f1b6e646221694181c1791d92af87a52) (want False)
+V7 (reference) src/ paths of the diff F40a2 worktree 7c38e497 .. FS14: src/graphics/host_gpu/renderer/cache/faultManager.cpp src/graphics/host_gpu/renderer/cache/faultManager.h src/graphics/presentation/window/joyPump.cpp src/graphics/presentation/window/joyPump.h src/kernel/fileSystem.cpp
+ALL OK

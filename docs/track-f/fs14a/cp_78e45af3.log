@@ -1,0 +1,8 @@
+--- cherry-pick 78e45af3
+[detached HEAD eb7e8b91] track F link FS14a (HPP-812): KYTY_FIX_F29 default 0 -> 1 (ROADMAP s122 item 712(g)(1))
+ Date: Sun Oct 11 14:26:59 2026 +0200
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+eb7e8b91664aef26bdf0f5af6fd2cceebbf8f958 c5eb48b03466b72c230817ac1212589a05699876 track F link FS14a (HPP-812): KYTY_FIX_F29 default 0 -> 1 (ROADMAP s122 item 7
+--- git status --short (0 = clean)
+0
+CP OK

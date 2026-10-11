@@ -1,0 +1,13 @@
+track F link FS14a (HPP-812): KYTY_FIX_F29 default 0 -> 1 (ROADMAP s122 item 712(g)(1))
+
+FixF29Enabled in src/graphics/host_gpu/renderer/cache/faultManager.cpp reads KYTY_FIX_F29 in the form of FS13a 3630f116:
+unset or "" = ON, 0/false/off/no = OFF, any other value as EnvValueOn; still one reading per process (static const).
+The line "FixF29: mode=<0|1>" (FaultManager constructor, by value), the code of 15c9d2f2 and the stand f29_fault_stand
+(the process knob through FixF29Enabled) are unchanged; only the reading and the header comment of faultManager.h change.
+src/graphics/shader/** not touched - translation signature unchanged; no gates or knobs added.
+
+Shipping binary FS14 (amendment of item 710(g) by item 712(g)(1)): worktree of FS13 ea6c6e9e + cherry-pick of 5c21c387,
+e3aa4b4d, 57f9e528, c8836f14 (F24) + 15c9d2f2 (code and stand F44a) + this commit. Not installed; no game run (WIP until
+FS14c).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

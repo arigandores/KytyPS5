@@ -1,0 +1,2 @@
+k=0 O1 out_area=77: 20 of 20; O7 out_buf=77: 20 of 20; all rows out_area=0 and out_buf=0: 60 of 160
+k=1 O1 out_area=77: 0 of 20; O7 out_buf=77: 0 of 20; all rows out_area=0 and out_buf=0: 160 of 160

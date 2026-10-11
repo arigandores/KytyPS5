@@ -1,0 +1,122 @@
+watch: start 2026-10-11T12:28:16Z child 42988 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[0/2] Re-checking globbed directories...
+[1/44] Generate kytyGitVersion.h
+[2/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\pipeline\shaderTranslationCache.cpp.obj
+[3/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\image\blitHelper.cpp.obj
+[4/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\image\tiler.cpp.obj
+[5/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\cache\samplerCache.cpp.obj
+[6/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\commandRecorder.cpp.obj
+[7/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\indirectArgsSanitizer.cpp.obj
+[8/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\context.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\context.cpp:14:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[9/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\cache\faultManager.cpp.obj
+[10/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\cache\streamBuffer.cpp.obj
+[11/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp.obj
+C:\kyty\f287\fs14a\wt\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp(1595,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1595 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp(1611,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1611 | }
+      | ^
+2 warnings generated.
+[12/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\gpuCheckpoints.cpp.obj
+[13/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\colorRenderTarget.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\colorRenderTarget.cpp:16:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/renderMemo.h:7:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[14/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\masterSemaphore.cpp.obj
+[15/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\presentation\renderDoc.cpp.obj
+[16/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\commandScheduler.cpp.obj
+[17/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\depthRenderTarget.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\depthRenderTarget.cpp:1:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\depthRenderTarget.cpp(46,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   46 | }
+      | ^
+2 warnings generated.
+[18/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\image\image.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\image\image.cpp:10:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\image\image.cpp(30,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   30 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\image\image.cpp(706,10): warning: enumeration value 'Cmask' not handled in switch [-Wswitch]
+  706 |         switch (info.metadata.kind) {
+      |                 ^~~~~~~~~~~~~~~~~~
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\image\image.cpp(741,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  741 | }
+      | ^
+4 warnings generated.
+[19/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\debug.cpp.obj
+[20/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\renderContext.cpp.obj
+[21/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\sync.cpp.obj
+[22/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\shadowResolve.cpp.obj
+[23/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\presentation\window\screenshot.cpp.obj
+[24/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\pipeline\shaders.cpp.obj
+[25/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\guest_gpu\graphicsRun.cpp.obj
+[26/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\presentation\window\swapchain.cpp.obj
+[27/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\presentation\window\vulkanWindow.cpp.obj
+[28/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\presentation\videoOut.cpp.obj
+[29/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\emulator.cpp.obj
+[30/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\cache\bufferCache.cpp.obj
+[31/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\presentation\window\window.cpp.obj
+[32/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp:13:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/renderMemo.h:7:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp(611,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  611 | }
+      | ^
+2 warnings generated.
+[33/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\renderCompute.cpp.obj
+[34/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\cache\textureCache.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\cache\textureCache.cpp:18:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[35/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\renderDraw.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\renderDraw.cpp:27:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[36/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\shader\shader.cpp.obj
+C:\kyty\f287\fs14a\wt\src\graphics\shader\shader.cpp(178,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  178 | }
+      | ^
+1 warning generated.
+[37/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMemory.cpp.obj
+[38/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp:24:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp(408,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  408 | }
+      | ^
+2 warnings generated.
+[39/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\libs\agc.cpp.obj
+[40/42] Building CXX object CMakeFiles\shader_cfg_tests.dir\src\kernel\memory.cpp.obj
+[41/42] Linking CXX executable shader_cfg_tests.exe
+BUILD OK: C:\kyty\f287\fs14a\build\shader_cfg_tests.exe
+rc=0 end 2026-10-11T12:28:40Z

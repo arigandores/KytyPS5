@@ -1,0 +1,12 @@
+--- cherry-pick 15c9d2f2
+Auto-merging CMakeLists.txt
+[detached HEAD c5eb48b0] WIP track F link F44a (HPP-791): KYTY_FIX_F29 (default 0) - ParseFaultArea(area, clamp, visit, pass) in faultManager.cpp/.h is the one parse of a fault download area: raw = low 32 bits of faults[0], count = clamp ? min(raw, MaxPageFaults - 1) : raw, visit(index, faults[index]) for 1..count in order; with clamp and raw > 1023 the line FixF29: overflow pass= area= count= read= total= (<= 32 per process, total counted only with clamp); FixF29Enabled() reads KYTY_FIX_F29 once per process (EnvValueOn); FixF29: mode= once in the FaultManager constructor; the deferred operation of ProcessFaultBuffer calls ParseFaultArea with a visitor doing the former Add and LOGF in the former order, pass number m_fix_f29_pass grows only at 1; fault_buffer_process.comp unchanged; outside the translation signature set. Stand tests/F29FaultStand.cpp (target f29_fault_stand, EXCLUDE_FROM_ALL): stage G - the real parser FAULT_BUFFER_PROCESS_SPV on a minimal Vulkan compute device over a CACHING_NUMPAGES/8 bitmap, 8 areas + 8 KiB guard (0xF29F29F29F29F29F), window = area a, neighbour counter C_N and labels 2^36 + (area*1024 + i)*16 KiB; stage P - the emulator ParseFaultArea on the copy of 9 areas, clamp from the process knob; arms S0 S1 S2 E1 O1 O7 D1 L x R, layouts and arm order from splitmix64 of the seed; TSV counters of F43a section 3 (ROADMAP s122 item 698(v)(1)-(5), (g), (d)(1)); not built yet, not run
+ Date: Sun Oct 11 10:13:33 2026 +0200
+ 6 files changed, 1021 insertions(+), 7 deletions(-)
+ create mode 100644 docs/track-f/f44a/gate_order_main.out.txt
+ create mode 100644 docs/track-f/f44a/patch_f44a.py
+ create mode 100644 tests/F29FaultStand.cpp
+c5eb48b03466b72c230817ac1212589a05699876 76c1058f9158e10d173e14f39a9023554475e6c2 WIP track F link F44a (HPP-791): KYTY_FIX_F29 (default 0) - ParseFaultArea(are
+--- git status --short (0 = clean)
+0
+CP OK

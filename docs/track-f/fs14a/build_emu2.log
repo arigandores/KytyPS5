@@ -1,0 +1,197 @@
+watch: start 2026-10-11T12:27:41Z child 8340 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[0/2] Re-checking globbed directories...
+[1/47] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL.c.obj
+[2/47] Linking C static library 3rdparty\SDL2\SDL2-static.lib
+[3/47] Generate kytyGitVersion.h
+[4/47] Building CXX object common\CMakeFiles\common.dir\assert.cpp.obj
+[5/47] Linking CXX static library common\common.lib
+[6/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\main.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\main.cpp:5:
+In file included from C:\kyty\f287\fs14a\wt\src\common/magicEnum.h:5:
+C:\kyty\f287\fs14a\wt\src\common/stringUtils.h(323,28): warning: 'codecvt_utf8_utf16<char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |                                   ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\codecvt(442,7): note: 'codecvt_utf8_utf16<char16_t>' has been explicitly marked deprecated here
+  442 | class _CXX17_DEPRECATE_CODECVT_HEADER codecvt_utf8_utf16
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+In file included from C:\kyty\f287\fs14a\wt\src\main.cpp:5:
+In file included from C:\kyty\f287\fs14a\wt\src\common/magicEnum.h:5:
+C:\kyty\f287\fs14a\wt\src\common/stringUtils.h(323,7): warning: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |              ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocbuf(303,7): note: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' has been explicitly marked deprecated here
+  303 | class _CXX17_DEPRECATE_CODECVT_HEADER wstring_convert { // converts between _Elem (wide) and char (byte) strings
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+2 warnings generated.
+[7/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\shaderTranslationCache.cpp.obj
+[8/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\blitHelper.cpp.obj
+[9/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\tiler.cpp.obj
+[10/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\samplerCache.cpp.obj
+[11/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\commandRecorder.cpp.obj
+[12/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\faultManager.cpp.obj
+[13/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\indirectArgsSanitizer.cpp.obj
+[14/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\streamBuffer.cpp.obj
+[15/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\renderDoc.cpp.obj
+[16/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\debug.cpp.obj
+[17/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\renderContext.cpp.obj
+[18/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\sync.cpp.obj
+[19/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\shadowResolve.cpp.obj
+[20/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\screenshot.cpp.obj
+[21/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\renderCompute.cpp.obj
+[22/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\shaders.cpp.obj
+[23/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\gpuCheckpoints.cpp.obj
+[24/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\masterSemaphore.cpp.obj
+[25/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\commandScheduler.cpp.obj
+[26/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\context.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\context.cpp:14:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[27/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\depthRenderTarget.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\depthRenderTarget.cpp:1:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\depthRenderTarget.cpp(46,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   46 | }
+      | ^
+2 warnings generated.
+[28/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp.obj
+C:\kyty\f287\fs14a\wt\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp(1595,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1595 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp(1611,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1611 | }
+      | ^
+2 warnings generated.
+[29/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\guest_gpu\graphicsRun.cpp.obj
+[30/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\swapchain.cpp.obj
+[31/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\videoOut.cpp.obj
+[32/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\colorRenderTarget.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\colorRenderTarget.cpp:16:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/renderMemo.h:7:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[33/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\image.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\image\image.cpp:10:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\image\image.cpp(30,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   30 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\image\image.cpp(706,10): warning: enumeration value 'Cmask' not handled in switch [-Wswitch]
+  706 |         switch (info.metadata.kind) {
+      |                 ^~~~~~~~~~~~~~~~~~
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\image\image.cpp(741,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  741 | }
+      | ^
+4 warnings generated.
+[34/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\vulkanWindow.cpp.obj
+[35/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\textureCache.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\cache\textureCache.cpp:18:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[36/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\bufferCache.cpp.obj
+[37/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\window.cpp.obj
+[38/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\emulator.cpp.obj
+[39/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMemory.cpp.obj
+[40/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\renderDraw.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\renderDraw.cpp:27:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[41/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp:13:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/renderMemo.h:7:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp(611,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  611 | }
+      | ^
+2 warnings generated.
+[42/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\shader.cpp.obj
+C:\kyty\f287\fs14a\wt\src\graphics\shader\shader.cpp(178,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  178 | }
+      | ^
+1 warning generated.
+[43/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp.obj
+In file included from C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp:24:
+In file included from C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14a\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14a\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp(408,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  408 | }
+      | ^
+2 warnings generated.
+[44/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\agc.cpp.obj
+[45/47] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\memory.cpp.obj
+[46/47] Linking CXX executable kyty_emulator.exe
+-- Install configuration: "Release"
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/lib/cmake/xbyak/xbyak-config.cmake
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/lib/cmake/xbyak/xbyak-config-version.cmake
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/lib/cmake/xbyak/xbyak-targets.cmake
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/xbyak/xbyak.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/xbyak/xbyak_bin2hex.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/xbyak/xbyak_mnemonic.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/xbyak/xbyak_util.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/lib/cmake/zydis/zydis-config.cmake
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/lib/cmake/zydis/zydis-config-version.cmake
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/lib/Zydis.lib
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/lib/cmake/zydis/zydis-targets.cmake
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/lib/cmake/zydis/zydis-targets-release.cmake
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Decoder.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/DecoderTypes.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Defines.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Disassembler.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Encoder.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Formatter.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/FormatterBuffer.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Generated
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Generated/EnumInstructionCategory.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Generated/EnumISAExt.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Generated/EnumISASet.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Generated/EnumMnemonic.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Generated/EnumRegister.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Internal
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Internal/DecoderData.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Internal/EncoderData.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Internal/FormatterATT.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Internal/FormatterBase.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Internal/FormatterIntel.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Internal/SharedData.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Internal/String.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/MetaInfo.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Mnemonic.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Register.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Segment.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/SharedTypes.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/ShortString.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Status.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Utils.h
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/include/Zydis/Zydis.h
+-- Installing: C:\kyty\f287\fs14a\build\install/kyty_emulator.exe
+-- Up-to-date: C:\kyty\f287\fs14a\build\install/libwinpthread-1.dll
+BUILD OK: C:\kyty\f287\fs14a\build\install\kyty_emulator.exe
+rc=0 end 2026-10-11T12:28:07Z

@@ -1,0 +1,22 @@
+2026-10-11T08:07:24Z F40b2 setup scripts dir C:/kyty/f287/f40b2
+2026-10-11T08:07:39Z F40b2 worktree 7c38e497 made, mut check ef0f209d
+2026-10-11T08:08:36Z F40b2 configure rc=0
+2026-10-11T08:09:53Z F40b2 clean build steps to 1 rc=0
+2026-10-11T08:10:06Z F40b2 clean build sha b2e285bb, cmp_code ee4f91b7 ALL OK, sig 648a4755
+2026-10-11T08:10:40Z F40b2 clean build: differing bytes 2008 (header 3 = PE timestamp, .rdata 150, .data 1855 - worktree path f40b2 vs f40a2), cmp_code ALL OK a83c4692
+2026-10-11T08:10:41Z F40b2 mutant m1 commit f0fc3c4d diff 64f20c46
+2026-10-11T08:11:06Z F40b2 mutant m1 binary b5df2d21 pinned bin/kyty_emulator_b5df2d21.exe out 38f99638
+2026-10-11T08:11:22Z F40b2 m1 first binary b5df2d21 discarded: two version strings (SDL_REVISION from configure = 7c38e497); script reconfigures after the mutant commit
+2026-10-11T08:11:23Z F40b2 mutant m1 commit 3bc53050 diff 64f20c46
+2026-10-11T08:11:59Z F40b2 mutant m1 binary c164a6d3 pinned bin/kyty_emulator_c164a6d3.exe out 9853baa2
+2026-10-11T08:12:05Z F40b2 mutant m2 commit 1ea4976f diff 5d7de73e
+2026-10-11T08:12:43Z F40b2 mutant m2 binary fcf462d8 pinned bin/kyty_emulator_fcf462d8.exe out 66c2bc3e
+2026-10-11T08:12:47Z F40b2 mutant m4 commit 81676e69 diff a33a512e
+2026-10-11T08:13:24Z F40b2 mutant m4 binary ea84198d pinned bin/kyty_emulator_ea84198d.exe out 6d1331d9
+2026-10-11T08:13:28Z F40b2 mutant m5 commit 1b29ab0d diff 7900deb1
+2026-10-11T08:14:07Z F40b2 mutant m5 binary bec75cc2 pinned bin/kyty_emulator_bec75cc2.exe out 293e8b09
+2026-10-11T08:14:11Z F40b2 mutant m6 commit 658ab84c diff 5da96fa3
+2026-10-11T08:14:41Z F40b2 mutant m6 binary bd6dcc81 pinned bin/kyty_emulator_bd6dcc81.exe out b9c289f4
+2026-10-11T08:14:59Z F40b2 diffcheck e109013f
+2026-10-11T08:17:29Z F40b2 refs check 6411074d ALL OK; mutant binaries pinned in C:/kyty/f287/bin
+2026-10-11T08:19:18Z F40b2 review written bcd3ecad, refs text ALL OK

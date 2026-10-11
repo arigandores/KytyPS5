@@ -1,0 +1,8 @@
+mutant m1 commit 3bc530504890fbd7ab8592e918510b11d12f1509 sha256 c164a6d34f0ab8b089d23752bf052da1db24f5ead9798ad0d8b8caa264d4ef0b size 24902144 version ['KytyPS5-2026-09-15-6a2987a-1918-g3bc53050']
+9177b4267de1fb8bac7d1113afd8733210addfac 1
+FixF24: init_owner hid= 1
+FixF24: mode= 1
+flap_life_min_us= 1
+jp_scan_gap_max_us= 1
+FixF24: open failed index= 1
+FixF24: open failed instance= 1

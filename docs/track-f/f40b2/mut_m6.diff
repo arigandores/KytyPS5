@@ -1,0 +1,26 @@
+diff --git a/src/graphics/presentation/window/joyPump.cpp b/src/graphics/presentation/window/joyPump.cpp
+index a03ecb8a..a94fd9df 100644
+--- a/src/graphics/presentation/window/joyPump.cpp
++++ b/src/graphics/presentation/window/joyPump.cpp
+@@ -202,7 +202,7 @@ void Pump::ThreadMain(uint64_t main_tid) {
+ 	// Item 692(v)(1): the line is written by the thread that runs the initialization, with its id at the call.
+ 	LOGF("FixF24: init tid=%" PRIu64 " pump tid=%" PRIu64 " main tid=%" PRIu64 "\n", static_cast<uint64_t>(SDL_ThreadID()),
+ 	     pump_tid, main_tid);
+-	const bool ok = SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) == 0;
++	const bool ok = true; // MUTANT m6 (F40b): the joystick init ran on the main thread
+ 	if (ok) {
+ 		LogInitOwner(m_main_os_tid); // F40a2 (RC1 of F40b): before the main thread resumes
+ 	}
+diff --git a/src/graphics/presentation/window/window.cpp b/src/graphics/presentation/window/window.cpp
+index 6209dd9c..b0e997f9 100644
+--- a/src/graphics/presentation/window/window.cpp
++++ b/src/graphics/presentation/window/window.cpp
+@@ -933,7 +933,7 @@ static void WindowCreate(WindowContext& context) {
+ 	if (JoyPump::Enabled()) {
+ 		const auto main_tid = static_cast<uint64_t>(SDL_ThreadID());
+ 		SDL_SetHint(SDL_HINT_AUTO_UPDATE_JOYSTICKS, "0");
+-		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
++		if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) { // MUTANT m6 (F40b): joystick init on main
+ 			EXIT("%s\n", SDL_GetError());
+ 		}
+ 		std::string error;

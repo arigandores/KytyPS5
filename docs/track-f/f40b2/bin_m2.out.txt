@@ -1,0 +1,8 @@
+mutant m2 commit 1ea4976f3f2c87361a6887ea71e349fe0a1dbc92 sha256 fcf462d823eee56a0069866de224aeef9df2b1c6d9bc83288fee364705de0bef size 24904192 version ['KytyPS5-2026-09-15-6a2987a-1918-g1ea4976f']
+9177b4267de1fb8bac7d1113afd8733210addfac 1
+FixF24: init_owner hid= 1
+FixF24: mode= 1
+flap_life_min_us= 1
+jp_scan_gap_max_us= 1
+FixF24: open failed index= 0
+FixF24: open failed instance= 1

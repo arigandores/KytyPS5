@@ -1,0 +1,13 @@
+diff --git a/src/graphics/presentation/window/window.cpp b/src/graphics/presentation/window/window.cpp
+index 6209dd9c..40740864 100644
+--- a/src/graphics/presentation/window/window.cpp
++++ b/src/graphics/presentation/window/window.cpp
+@@ -932,7 +932,7 @@ static void WindowCreate(WindowContext& context) {
+ 	JoyPump::ReadKnob();
+ 	if (JoyPump::Enabled()) {
+ 		const auto main_tid = static_cast<uint64_t>(SDL_ThreadID());
+-		SDL_SetHint(SDL_HINT_AUTO_UPDATE_JOYSTICKS, "0");
++		// MUTANT m5 (F40b): SDL_HINT_AUTO_UPDATE_JOYSTICKS is not set
+ 		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
+ 			EXIT("%s\n", SDL_GetError());
+ 		}

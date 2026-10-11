@@ -1,0 +1,8 @@
+mutant m4 commit 81676e69c8968ab3a0b7ca74e80afc1556d0b375 sha256 ea84198deaebc903b38e07df98fc1f6af84172434c024874b6a5c787a0069446 size 24901120 version ['KytyPS5-2026-09-15-6a2987a-1918-g81676e69']
+9177b4267de1fb8bac7d1113afd8733210addfac 1
+FixF24: init_owner hid= 1
+FixF24: mode= 1
+flap_life_min_us= 1
+jp_scan_gap_max_us= 1
+FixF24: open failed index= 0
+FixF24: open failed instance= 1

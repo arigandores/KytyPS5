@@ -1,0 +1,13 @@
+diff --git a/src/graphics/presentation/window/joyPump.cpp b/src/graphics/presentation/window/joyPump.cpp
+index a03ecb8a..7eb1a487 100644
+--- a/src/graphics/presentation/window/joyPump.cpp
++++ b/src/graphics/presentation/window/joyPump.cpp
+@@ -145,7 +145,7 @@ private:
+ 	void Wake();
+ 	void ScanAndOpen();
+ 	void OpenOne(SDL_GameController* pad);
+-	[[nodiscard]] bool Stopping() const { return m_stop.load(std::memory_order_acquire); }
++	[[nodiscard]] bool Stopping() const { return false; } // MUTANT m2 (F40b): the stop flag is never read
+ 
+ 	// Guarded by m_mutex: m_thread (moved out once by Stop), m_tasks, m_init_*, m_signal (non-Windows wait).
+ 	std::mutex              m_mutex;

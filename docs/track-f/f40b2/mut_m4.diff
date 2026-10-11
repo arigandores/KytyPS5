@@ -1,0 +1,13 @@
+diff --git a/src/graphics/presentation/window/window.cpp b/src/graphics/presentation/window/window.cpp
+index 6209dd9c..911a92cc 100644
+--- a/src/graphics/presentation/window/window.cpp
++++ b/src/graphics/presentation/window/window.cpp
+@@ -416,7 +416,7 @@ static void GameEventController([[maybe_unused]] const EventController& f) {
+ 		TestHidLossCount(g_test_hidloss.removed);
+ 		Controller::Disconnect(f.id);
+ 		if (JoyPump::Enabled()) {
+-			JoyPump::PostClose(f.id); // Track F, F40a: the close is a JoyPump task (s0.4)
++			SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id)); // MUTANT m4 (F40b): close on the main thread
+ 		} else {
+ 			SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));
+ 		}

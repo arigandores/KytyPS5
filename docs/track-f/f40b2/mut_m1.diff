@@ -1,0 +1,57 @@
+diff --git a/src/graphics/presentation/window/joyPump.cpp b/src/graphics/presentation/window/joyPump.cpp
+index a03ecb8a..214dea22 100644
+--- a/src/graphics/presentation/window/joyPump.cpp
++++ b/src/graphics/presentation/window/joyPump.cpp
+@@ -116,6 +116,7 @@ public:
+ 	}
+ 	[[nodiscard]] int OpenPads() const { return m_open_pads.load(std::memory_order_relaxed); }
+ 	void              Close(int instance_id);
++	void              MutantOpenM1(int index); // MUTANT m1 (F40b)
+ 
+ 	// Stand.
+ 	std::atomic<bool>     m_stand_window {false};
+@@ -331,6 +332,10 @@ void Pump::Post(std::function<void()> task) {
+ // only (the list cannot change meanwhile); Controller::Connect runs outside the lock (lock order m_mutex -> joystick lock
+ // of ReleaseHostPads and of the KYTY_FIX_B24=0 guest path).
+ void Pump::ScanAndOpen() {
++	static volatile bool mutant_m1 = true; // MUTANT m1 (F40b): no open by instance id after the update
++	if (mutant_m1) {
++		return;
++	}
+ 	std::vector<SDL_GameController*> opened;
+ 	SDL_LockJoysticks();
+ 	const int count = SDL_NumJoysticks();
+@@ -412,6 +417,25 @@ void Pump::Close(int instance_id) {
+ 	}
+ }
+ 
++// MUTANT m1 (F40b, ROADMAP s122 item 692(g)(3)): the FS12 open by the add event index, run as a JoyPump task.
++void Pump::MutantOpenM1(int index) {
++	SDL_LockJoysticks();
++	auto* pad = SDL_GameControllerOpen(index);
++	if (pad == nullptr) {
++		if (m_stand_window.load(std::memory_order_relaxed)) {
++			m_stand_open_failed.fetch_add(1, std::memory_order_relaxed);
++		}
++		if (LineAllowed(m_open_failed_lines)) {
++			LOGF("FixF24: open failed index=%d error=\"%s\"\n", index, SDL_GetError());
++		}
++		SDL_UnlockJoysticks();
++		return;
++	}
++	m_open_pads.fetch_add(1, std::memory_order_relaxed);
++	SDL_UnlockJoysticks();
++	OpenOne(pad);
++}
++
+ void Pump::Stop() {
+ 	m_stop.store(true, std::memory_order_seq_cst);
+ 	Wake();
+@@ -471,6 +495,7 @@ void PostClose(int instance_id) {
+ }
+ 
+ void NoteAddEvent(int index) {
++	P().Post([index] { P().MutantOpenM1(index); }); // MUTANT m1 (F40b): open by the event index, JoyPump task
+ 	if (LineAllowed(g_add_lines)) {
+ 		LOGF("FixF24: add event index=%d\n", index);
+ 	}

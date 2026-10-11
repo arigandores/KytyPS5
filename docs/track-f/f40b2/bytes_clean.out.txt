@@ -1,0 +1,3 @@
+len 24902144 24902144 differing bytes 2008
+{'header': 3, '.rdata': 150, '.data': 1855}
+header offsets ['0x80', '0x81', '0x82'] pe timestamp at 0x80

@@ -1,0 +1,37 @@
+== bin outs
+mutant m1 commit 3bc530504890fbd7ab8592e918510b11d12f1509 sha256 c164a6d34f0ab8b089d23752bf052da1db24f5ead9798ad0d8b8caa264d4ef0b size 24902144 version ['KytyPS5-2026-09-15-6a2987a-1918-g3bc53050']
+9177b4267de1fb8bac7d1113afd8733210addfac 1
+mutant m2 commit 1ea4976f3f2c87361a6887ea71e349fe0a1dbc92 sha256 fcf462d823eee56a0069866de224aeef9df2b1c6d9bc83288fee364705de0bef size 24904192 version ['KytyPS5-2026-09-15-6a2987a-1918-g1ea4976f']
+9177b4267de1fb8bac7d1113afd8733210addfac 1
+mutant m4 commit 81676e69c8968ab3a0b7ca74e80afc1556d0b375 sha256 ea84198deaebc903b38e07df98fc1f6af84172434c024874b6a5c787a0069446 size 24901120 version ['KytyPS5-2026-09-15-6a2987a-1918-g81676e69']
+9177b4267de1fb8bac7d1113afd8733210addfac 1
+mutant m5 commit 1b29ab0dde1399f072a51ff2e4be5b4f74707817 sha256 bec75cc20b86609bd1440a1a7aea1afea95a23af763f19b0f3a6e4c7e2f2fe94 size 24902144 version ['KytyPS5-2026-09-15-6a2987a-1918-g1b29ab0d']
+9177b4267de1fb8bac7d1113afd8733210addfac 1
+mutant m6 commit 658ab84c944c208e918dc05e6408f95c77015d96 sha256 bd6dcc81a32519eae50de4eb44ce88187d9ba9d4a8221c656b402c6065068c8f size 24902144 version ['KytyPS5-2026-09-15-6a2987a-1918-g658ab84c']
+9177b4267de1fb8bac7d1113afd8733210addfac 1
+== diff stat F40a2 in worktree dfc037e9..7c38e497 -- src
+ src/graphics/presentation/window/joyPump.cpp | 98 ++++++++++++++++++++++++++++
+ src/graphics/presentation/window/joyPump.h   |  4 ++
+ src/graphics/presentation/window/window.cpp  | 38 +++++++++--
+ 3 files changed, 135 insertions(+), 5 deletions(-)
+== main 57f9e528 -- src
+57f9e528
+
+ src/graphics/presentation/window/joyPump.cpp | 98 ++++++++++++++++++++++++++++
+ src/graphics/presentation/window/joyPump.h   |  4 ++
+ src/graphics/presentation/window/window.cpp  | 38 +++++++++--
+ 3 files changed, 135 insertions(+), 5 deletions(-)
+== shader paths in F40a2
+0
+== cherry main HEAD of wt
+- 730ed40a398b98f4f4f51a13f56d8a647778eae1
+- e0b4f2ba69d7907f5f6bfdf2302dec731d9a4815
+- dfc037e9424d141569ccc1847b01a3ee599f7df8
+- 7c38e497ff5afb2207a538a748ec21f022ce232d
+== body equality main vs wt
+0
+== F40a src diff vs main (e3aa4b4d..57f9e528 restricted to window/)
+ src/graphics/presentation/window/joyPump.cpp | 98 ++++++++++++++++++++++++++++
+ src/graphics/presentation/window/joyPump.h   |  4 ++
+ src/graphics/presentation/window/window.cpp  | 38 +++++++++--
+ 3 files changed, 135 insertions(+), 5 deletions(-)

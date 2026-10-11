@@ -216,8 +216,9 @@ inline RewriteStats RewriteFaultOr(std::span<const uint32_t> in, bool bound, std
 	return stats;
 }
 
-// KYTY_FIX_F20 (default 0): read once per process (Common::EnvFlagOn - unset, "", 0/false/off/no = 0, any other
-// value = 1); the first call prints "FixF20: mode=<0|1>". At 0 the callers never call Apply.
+// KYTY_FIX_F20 (default 1 since FS15a, HPP-820, ROADMAP s122 item 730(g)(1)): read once per process (unset or "" - 1;
+// 0/false/off/no - 0; any other value as EnvValueOn); the first call prints "FixF20: mode=<0|1>". At 0 the callers
+// never call Apply.
 int Mode();
 
 // At KYTY_FIX_F20=1 only: RewriteFaultOr + the totals of the "FixF20Stat:" line (printed every 4096 calls and by

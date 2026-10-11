@@ -31,9 +31,12 @@ void PrintStat(const char* when) {
 
 } // namespace
 
+// Track F, FS15a (HPP-820, ROADMAP s122 item 730(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
+// other value as EnvValueOn (the form of FS14a c8836f14 / FS13a 3630f116); still one reading per process.
 int Mode() {
 	static const int mode = [] {
-		const int value = Common::EnvFlagOn("KYTY_FIX_F20") ? 1 : 0;
+		const char* env = std::getenv("KYTY_FIX_F20");
+		const int value = (env == nullptr || env[0] == '\0' || Common::EnvValueOn(env)) ? 1 : 0;
 		LOGF("FixF20: mode=%d\n", value);
 		return value;
 	}();

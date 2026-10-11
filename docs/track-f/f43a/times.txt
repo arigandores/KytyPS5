@@ -1,2 +1,8 @@
 2026-10-11T01:13:04Z api in_progress: HPP-765 2f5a0935 run (Harness series F38c); HPP-779, HPP-770 eb15eb75 run; HPP-783 8e98843f run; commands < 60 s
 2026-10-11T01:16:30Z section 0 copied for commit
+2026-10-11T01:20:16Z census part 0 attempt 1: watchdog KILLED: procload (gate of series F38c HPP-765); no write under C:/kyty until release
+2026-10-11T01:22:22Z lock present (F38c tag); waited, no processes
+2026-10-11T01:33:16Z lock released
+2026-10-11T01:43:50Z census part 0 attempt 2: watchdog REFUSED: procload (waiting loop of HPP-785 carries the gate name in its command line)
+2026-10-11T01:50:44Z clear (no lock, no gate name 20 s); parts 0-3 01:50:44Z-01:54:16Z under watchdog, ALL OK each; merge 539 rows ALL OK
+2026-10-11T01:55:44Z sections 1-7 copied for commit; links 61 text ALL OK, 57 rows check ALL OK

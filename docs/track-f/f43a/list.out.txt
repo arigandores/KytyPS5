@@ -1,0 +1,21 @@
+watch: start 2026-10-11T01:18:16Z child 9304 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+candidates 30605 with_version 2045 course 539 other_builds 1506 no_version 28560
+  build 9235a7ac 4fc501f logs 171
+  build FS10 dc5d471 logs 64
+  build FS11 ee9632b logs 43
+  build FS12 730ed40 logs 6
+  build FS2 9c9d86a logs 5
+  build FS3 d515b90 logs 10
+  build FS4 3d0e46d logs 5
+  build FS5 0e72bc1 logs 5
+  build FS6 3904522 logs 26
+  build FS7 d6ee2dc logs 2
+  build FS8 302347b logs 55
+  build FS9 11164d7 logs 2
+  build P23 4414e23 logs 21
+  build S12 4d9e8ab logs 44
+  build S18 0005e11 logs 23
+  build dac02fb9 95eec77 logs 57
+bytes 201778407000
+ALL OK
+rc=0 end 2026-10-11T01:18:46Z

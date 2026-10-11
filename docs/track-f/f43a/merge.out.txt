@@ -1,0 +1,25 @@
+rows 539 distinct_sha256 481 with_fault_lines 374
+fault_lines_total 6547 max_total_per_log 151 logs_total_gt_1023 0
+max_pass_gap20 18 max_pass_gap200 41 passes_gt_1023_gap20 0 passes_gt_1023_gap200 0
+passes_gap20_total 2011 witness_zero 0 witness_unaligned 0 witness_top 0
+build | logs | distinct | with_faults | passes20 | max_pass20 | max_pass200 | max_total
+9235a7ac | 171 | 130 | 125 | 430 | 2 | 5 | 151
+dac02fb9 | 57 | 43 | 26 | 146 | 13 | 24 | 44
+FS2 | 5 | 5 | 5 | 29 | 13 | 13 | 37
+P23 | 21 | 21 | 19 | 169 | 14 | 25 | 45
+FS3 | 10 | 9 | 7 | 61 | 18 | 18 | 36
+FS4 | 5 | 5 | 4 | 35 | 15 | 15 | 36
+FS5 | 5 | 5 | 5 | 45 | 12 | 12 | 37
+S12 | 44 | 44 | 36 | 207 | 14 | 40 | 60
+FS6 | 26 | 26 | 26 | 230 | 15 | 15 | 37
+FS7 | 2 | 2 | 2 | 17 | 15 | 15 | 36
+FS8 | 55 | 55 | 46 | 305 | 15 | 41 | 48
+S18 | 23 | 23 | 19 | 108 | 14 | 18 | 44
+FS9 | 2 | 2 | 2 | 18 | 13 | 13 | 36
+FS10 | 64 | 63 | 8 | 67 | 13 | 13 | 37
+FS11 | 43 | 43 | 40 | 108 | 13 | 13 | 37
+FS12 | 6 | 5 | 4 | 36 | 13 | 22 | 36
+top max20 18 C:/kyty/f287/f12f/log_f12_rd.txt FS3 2dcd02dde29e70e6
+top max200 41 C:/kyty/s288/s15/log_u_08.txt FS8 063303f0ea8ea961
+top fault_lines 151 C:/kyty/s145/log_w145_11.txt 9235a7ac 40156adae8e085a5
+ALL OK

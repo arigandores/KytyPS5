@@ -1,0 +1,49 @@
+watch: start 2026-10-11T01:51:42Z child 26224 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+candidates 135 with_version 135 course 135 other_builds 0 no_version 0
+  build 9235a7ac 4fc501f logs 40
+  build FS10 dc5d471 logs 17
+  build FS11 ee9632b logs 10
+  build FS12 730ed40 logs 1
+  build FS2 9c9d86a logs 1
+  build FS3 d515b90 logs 1
+  build FS4 3d0e46d logs 2
+  build FS5 0e72bc1 logs 1
+  build FS6 3904522 logs 7
+  build FS7 d6ee2dc logs 0
+  build FS8 302347b logs 12
+  build FS9 11164d7 logs 0
+  build P23 4414e23 logs 8
+  build S12 4d9e8ab logs 15
+  build S18 0005e11 logs 2
+  build dac02fb9 95eec77 logs 18
+logs_read 135 logs_with_fault_lines 104 fault_lines_total 1652
+max_total_per_log 45 logs_total_gt_1023 0
+max_pass_gap20 15 max_pass_gap200 36
+passes_gt_1023_gap20 0 passes_gt_1023_gap200 0
+witness_zero 0 witness_unaligned 0 witness_top 0
+  build 9235a7ac logs 40 with_faults 38 max_pass20 2 max_pass200 5 max_total 16
+  build FS10 logs 17 with_faults 3 max_pass20 13 max_pass200 13 max_total 36
+  build FS11 logs 10 with_faults 10 max_pass20 1 max_pass200 1 max_total 2
+  build FS12 logs 1 with_faults 1 max_pass20 9 max_pass200 9 max_total 31
+  build FS2 logs 1 with_faults 1 max_pass20 13 max_pass200 13 max_total 36
+  build FS3 logs 1 with_faults 0 max_pass20 0 max_pass200 0 max_total 0
+  build FS4 logs 2 with_faults 1 max_pass20 4 max_pass200 9 max_total 18
+  build FS5 logs 1 with_faults 1 max_pass20 9 max_pass200 9 max_total 32
+  build FS6 logs 7 with_faults 7 max_pass20 13 max_pass200 15 max_total 37
+  build FS8 logs 12 with_faults 8 max_pass20 15 max_pass200 34 max_total 45
+  build P23 logs 8 with_faults 7 max_pass20 14 max_pass200 17 max_total 37
+  build S12 logs 15 with_faults 13 max_pass20 14 max_pass200 36 max_total 45
+  build S18 logs 2 with_faults 2 max_pass20 9 max_pass200 13 max_total 34
+  build dac02fb9 logs 18 with_faults 12 max_pass20 13 max_pass200 20 max_total 44
+  top C:/kyty/s288/s13/log_u_09.txt S12 total 39 max20 10 max200 36 passes20 8
+  top C:/kyty/s288/s15/log_u_19.txt FS8 total 35 max20 15 max200 34 passes20 6
+  top C:/kyty/s288/s15/log_k_09.txt FS8 total 34 max20 9 max200 24 passes20 7
+  top C:/kyty/s288/s13/log_k_08.txt S12 total 45 max20 11 max200 21 passes20 9
+  top C:/kyty/s146/log_v146_14.txt dac02fb9 total 21 max20 5 max200 20 passes20 7
+  top C:/kyty/s288/s15/log_k_08.txt FS8 total 45 max20 12 max200 19 passes20 9
+  top C:/kyty/s288/s13/log_u_10.txt S12 total 25 max20 10 max200 19 passes20 5
+  top C:/kyty/play/20261002T221534Z/log.txt P23 total 37 max20 13 max200 17 passes20 8
+  top C:/kyty/f287/f20c/log_f20_v17.txt FS6 total 33 max20 10 max200 15 passes20 9
+  top C:/kyty/s288/s13/log_k_07.txt S12 total 38 max20 14 max200 14 passes20 6
+ALL OK
+rc=0 end 2026-10-11T01:52:12Z

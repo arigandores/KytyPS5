@@ -1,0 +1,247 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = ddf0ca91 (ddf0ca913f9feb8a)",
+   true
+  ],
+  [
+   "installed during the tag = ddf0ca91 (ddf0ca913f9feb8a)",
+   true
+  ],
+  [
+   "installed before = after = FS13 abab2196 (abab2196e3b66f04 / abab2196e3b66f04)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (36bd2bcba3122449 / 36bd2bcba3122449)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "0 ExitFatal: lines (log 0; whole stdout 0)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "stdout present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (224854)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha db)",
+   true
+  ],
+  [
+   "FixF24: mode=1 b24=1 exactly 1, before the first GuestOut ([(1, 1, 19)]; unparsable 0; first GuestOut 12506)",
+   true
+  ],
+  [
+   "pad lines of another pad 0 ([])",
+   true
+  ],
+  [
+   "config on delay_s=60 mode=exit edition=2 hold_upd_ms=8000 in_ms=100 probe_ms=20 fix_f24=1 exactly 1, invalid 0 ([('60', 'exit', '3000', '2', '8000', '100', '20', '1')])",
+   true
+  ],
+  [
+   "armed exactly 1 (1)",
+   true
+  ],
+  [
+   "attach exactly 1 with hwnd=1, attach failed 0 ([(370434, 404430252376, 1)]; failed 0)",
+   true
+  ],
+  [
+   "emulator pad line \"KYTY test pad\" exactly 1 (1)",
+   true
+  ],
+  [
+   "fire mode=exit exactly 1 ([(466808, 404455259397, 'exit')])",
+   true
+  ],
+  [
+   "stimulus after the first scene frame: fire line 466808 > first scene frame line 226167",
+   true
+  ],
+  [
+   "jp_task posted exactly 1 (1)",
+   true
+  ],
+  [
+   "quit posted exactly 1 (1)",
+   true
+  ]
+ ],
+ "admitted": true,
+ "base": "f24_x1",
+ "binary": "ddf0ca91",
+ "catch": null,
+ "exit": {
+  "close_killed": false,
+  "close_rc": 0,
+  "close_s": 0.0,
+  "hold_exit": 0,
+  "hold_s": 68.5,
+  "quit_mark": {
+   "alive_last_s": 83.659,
+   "before_s": 72.115,
+   "dead_first_s": 83.909,
+   "exit_lower_s": 11.293,
+   "exit_upper_s": 11.795,
+   "seen_s": 72.366,
+   "step_s": 0.25
+  }
+ },
+ "f24": null,
+ "fix": "1",
+ "init_owner": {
+  "helper": 8188,
+  "hid": 8188,
+  "ln": 21,
+  "main": 8484,
+  "msg": 8188,
+  "pump": 8188
+ },
+ "kind": "x1",
+ "level": "underwater_aerial_garden",
+ "lines": {
+  "add_event": 1,
+  "death_log": [],
+  "death_stdout": [],
+  "expired": [
+   477141
+  ],
+  "f24_other": 0,
+  "fatal_total": 0,
+  "init": [
+   [
+    20,
+    "FixF24: init tid=8188 pump tid=8188 main tid=8484"
+   ]
+  ],
+  "init_n": 1,
+  "jp_posted": [
+   468454
+  ],
+  "jp_ran": [],
+  "open_failed": 0,
+  "owner_bad": 0,
+  "owner_n": 1,
+  "pads_n": 1,
+  "quit_ln": 470172,
+  "quit_posted": [
+   470170
+  ],
+  "removed": [],
+  "skipped_draw": 0,
+  "summary": {
+   "bytes": 82673510,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 351971,
+   "max_queued_bytes": 41440,
+   "stall_cut": 0,
+   "stalls": 0,
+   "sync_lines": 0
+  },
+  "test_pads": [
+   [
+    370759,
+    0
+   ]
+  ],
+  "upd_long": 0,
+  "vke": 0,
+  "wait_error": 0
+ },
+ "members": [
+  [
+   "line FixF24: pump_stop_expired ([477141])",
+   true
+  ],
+  [
+   "exit code 0 (hold_exit 0)",
+   true
+  ],
+  [
+   "0 lines TestHidLoss: jp_task ran after FixF24: pump_stop_expired (after: []; all jp_task ran [])",
+   true
+  ],
+  [
+   "exit <= HOLD_UPD_MS + 5 s from quit posted: upper bound 11.795 s <= 13.0 (lower 11.293 s)",
+   true
+  ]
+ ],
+ "mode": "exit",
+ "partner": null,
+ "reader_sha256": "b5855a0576264ee5ecae2fc055a6514a5266dfb38e4f381e05df9e2676742b41",
+ "status": "ADMITTED",
+ "tag": "f24_x1",
+ "window": {
+  "ge1s_strict": null,
+  "ge1s_wide": null,
+  "ge1s_wide_n": null,
+  "max_dt_wide": null,
+  "strict_frames": null,
+  "wide_frames": null
+ },
+ "word": "MEMBERS_PASS"
+}

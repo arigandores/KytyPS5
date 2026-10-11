@@ -1,0 +1,50 @@
+F40C f24_d1 (base f24_d1, kind d1, mode detach, KYTY_FIX_F24=1, binary ddf0ca91, level underwater_aerial_garden) reader sha256 b5855a0576264ee5ecae2fc055a6514a5266dfb38e4f381e05df9e2676742b41
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = ddf0ca91 (ddf0ca913f9feb8a)
+    [ok] installed during the tag = ddf0ca91 (ddf0ca913f9feb8a)
+    [ok] installed before = after = FS13 abab2196 (abab2196e3b66f04 / abab2196e3b66f04)
+    [ok] json prereg sha256 = seal sha256 (36bd2bcba3122449 / 36bd2bcba3122449)
+    [ok] env = the form of the tag (exact)
+    [ok] 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 150 s (150)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (224928)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line (0)
+    [ok] no TestLogStall line (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha db)
+    [ok] FixF24: mode=1 b24=1 exactly 1, before the first GuestOut ([(1, 1, 19)]; unparsable 0; first GuestOut 12506)
+    [ok] pad lines of another pad 0 ([])
+    [ok] summary LogAsync: full_waits= once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+    [ok] config on delay_s=60 mode=detach edition=2 hold_upd_ms=8000 in_ms=100 probe_ms=20 fix_f24=1 exactly 1, invalid 0 ([('60', 'detach', '3000', '2', '8000', '100', '20', '1')])
+    [ok] armed exactly 1 (1)
+    [ok] attach exactly 1 with hwnd=1, attach failed 0 ([(410641, 404945092551, 1)]; failed 0)
+    [ok] emulator pad line "KYTY test pad" exactly 1 (1)
+    [ok] fire mode=detach exactly 1 ([(448087, 404955102788, 'detach')])
+    [ok] stimulus after the first scene frame: fire line 448087 > first scene frame line 226220
+    [ok] done exactly 1 (1)
+    [ok] stat mode=detach exactly 1 ([(455026, 'detach')])
+    [ok] f24 line exactly 1, all fields, mode=detach fix=1 (1, malformed 0)
+    [ok] the tag does not end inside the stand window: Event: quit line 769226 after the f24 line 455027
+  MEMBERS (item 692 (g), 696 (b))
+    [YES] line Controller <id>: removed of the test pad ([(448089, 0)]; test pad id [0])
+    [YES] jp_tasks >= 1 (1)
+    [YES] frames >= 1 s in the stand window 0 (wide 0, strict 0)
+  F24 LINE {"attached": 0, "fix": 1, "flap_life_max_us": 0, "flap_life_min_us": 0, "hung_ms": 0, "in_lat_max_us": 688, "in_post_fail": 0, "in_posted": 30, "in_pre_lat_max_us": 87, "in_seen": 30, "jp_scan_gap_max_us": 0, "jp_tasks": 1, "jp_update_max_us": 8, "ln": 455027, "main_late_max_us": 708, "mode": "detach", "open_failed": 0, "open_lat_max_us": 0, "opened": 0, "pad_lat_max_us": 0, "pad_lat_p99_us": 0, "pad_posted": 0, "pad_seen": 0, "upd_on_main": 0, "upd_slept_us": 0}
+  INIT_OWNER {"helper": 28328, "hid": 28328, "ln": 21, "main": 41948, "msg": 28328, "pump": 28328}
+  WINDOW {"ge1s_strict": 0, "ge1s_wide": 0, "ge1s_wide_n": [], "max_dt_wide": 34023, "strict_frames": 62, "wide_frames": 93}
+  LINES {"add_event": 1, "death_log": [], "death_stdout": [], "expired": [], "f24_other": 0, "fatal_total": 0, "init": [[20, "FixF24: init tid=28328 pump tid=28328 main tid=41948"]], "init_n": 1, "jp_posted": [], "jp_ran": [], "open_failed": 0, "owner_bad": 0, "owner_n": 1, "pads_n": 1, "quit_ln": 769226, "quit_posted": [], "removed": [[448089, 0]], "skipped_draw": 0, "summary": {"bytes": 163028161, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 508594, "max_queued_bytes": 79194, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "test_pads": [[411363, 0]], "upd_long": 0, "vke": 0, "wait_error": 0}
+  EXIT {"close_killed": false, "close_rc": 0, "close_s": 3.7, "hold_exit": null, "hold_s": 150.2, "quit_mark": null}
+  WORD MEMBERS_PASS (no verdict; reading - F40d)
+TEMPO PASS form harness mean_dt_ms 33.48 fps 29.87 frames 4628 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after the level line 4628, span 154.9 s)
+  row: flip records after the level line 4626
+  row: seal plan W form no (item 621); plan: dryrun f24_d1 base f24_d1 binary ddf0ca91 level underwater_aerial_garden sd 300 timeout 480 hold 150 rec none mark none prev none knobs KYTY_FIX_F24=1 KYTY_TEST_HIDLOSS=60:detach KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0

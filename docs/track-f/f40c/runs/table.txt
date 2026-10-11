@@ -1,0 +1,17 @@
+reader f40c_read.py sha256 b5855a0576264ee5ecae2fc055a6514a5266dfb38e4f381e05df9e2676742b41
+| tag | binary | status | word | upd_on_main | main_late_max_us | in_lat_max_us | hung_ms | jp_update_max_us | jp_tasks | pad p99 / max | attached / opened | init_owner hid/helper/pump/main | expired / exit |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| f24_u0 | ddf0ca91 | ADMITTED | MEMBERS_PASS | 1 | 8001152 | 7968479 | 2921 | 0 | 0 | 2020 / 2087 | 0 / 0 | None/None/None/None | 0 / None |
+| f24_u1 | ddf0ca91 | ADMITTED | MEMBERS_PASS | 0 | 390 | 519 | 0 | 8000699 | 0 | 2052 / 2116 | 0 / 0 | 38972/38972/38972/30996 | 0 / None |
+| f24_p0 | ddf0ca91 | ADMITTED | REFERENCE | 0 | 0 | 0 | 0 | 0 | 0 | 2068 / 2384 | 0 / 0 | None/None/None/None | 0 / None |
+| f24_p1 | ddf0ca91 | ADMITTED | MEMBERS_PASS | 0 | 0 | 0 | 0 | 0 | 0 | 2075 / 2117 | 0 / 0 | 15624/15624/15624/48288 | 0 / None |
+| f24_f0 | ddf0ca91 | ADMITTED | REFERENCE | 0 | 273 | 452 | 0 | 0 | 0 | 0 / 0 | 60 / 60 | None/None/None/None | 0 / None |
+| f24_f1 | ddf0ca91 | ADMITTED | MEMBERS_PASS | 0 | 479 | 279 | 0 | 99 | 60 | 0 / 0 | 60 / 60 | 52536/52536/52536/30344 | 0 / None |
+| f24_x1 | ddf0ca91 | ADMITTED | MEMBERS_PASS | None | None | None | None | None | None | None / None | None / None | 8188/8188/8188/8484 | 1 / 0 |
+| f24_d1 | ddf0ca91 | ADMITTED | MEMBERS_PASS | 0 | 708 | 688 | 0 | 8 | 1 | 0 / 0 | 0 / 0 | 28328/28328/28328/41948 | 0 / None |
+| f24_m1 | c164a6d3 | ADMITTED | CAUGHT | 0 | 189 | 391 | 0 | 93 | 115 | 0 / 0 | 60 / 41 | 39692/39692/39692/15596 | 0 / None |
+| f24_m2 | fcf462d8 | ADMITTED | CAUGHT | None | None | None | None | None | None | None / None | None / None | 23652/23652/23652/43400 | 1 / 0 |
+| f24_m4 | ea84198d | ADMITTED | CAUGHT | 0 | 331 | 429 | 0 | 140 | 0 | 0 / 0 | 0 / 0 | 27128/27128/27128/11532 | 0 / None |
+| f24_m5 | bec75cc2 | ADMITTED | CAUGHT | 1 | 8000237 | 7928492 | 2937 | 7999222 | 0 | 1727 / 2029 | 0 / 0 | 14052/14052/14052/10004 | 0 / None |
+| f24_m6 | bd6dcc81 | ADMITTED | CAUGHT | 0 | 541 | 525 | 0 | 8000335 | 0 | 1999 / 2190 | 0 / 0 | 49720/49720/44604/49720 | 0 / None |
+| f24_n1 | ddf0ca91 | ADMITTED | MEMBERS_PASS | None | None | None | None | None | None | None / None | None / None | 41124/41124/41124/52836 | 0 / None |

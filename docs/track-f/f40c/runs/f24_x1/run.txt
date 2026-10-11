@@ -1,0 +1,19 @@
+prereg: f40c_seal.md  37651 bytes  sha256 36bd2bcba3122449  mtime 2026-10-11T11:21:18  mtime-ctime +0.239 s
+pre_run: host 444 processes, top by CPU: <app> 21039s, <app> 8912s, <app> 8358s, <app> 5415s, <app> 3057s, <app> 2558s
+pre_run: GPU 0.0 % busy, 20.4 W, 1790 MiB used, SM 1500.0 MHz, 21 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f40c\cpuclk.py is not there
+--- attempt 1: launching
+9.7 s  LevelDocument Loaded: underwater_aerial_garden
+11.3 s  Level has started: underwater_aerial_garden
+15.4 s  scene stable at frame 286 (90 frames with draws >= 300)
+holding the run for 150 s
+hold end: ft_total 2136, ft_tail 9 (last 5 s)
+quit mark: {'seen_s': 72.366, 'before_s': 72.115, 'alive_last_s': 83.659, 'dead_first_s': 83.909, 'exit_upper_s': 11.795, 'exit_lower_s': 11.293, 'step_s': 0.25}
+WARNING: the game ENDED inside the hold after 68.5 s, returncode 0 (0x00000000)
+close: {'close_posted': 0, 'close_rc': 0, 'close_killed': False, 'close_s': 0.0, 'close_wait_s': 40}
+hold_gpu: median 39.0 % busy over 135 rows (2026/10/11 12:32:53.068 .. 2026/10/11 12:34:01.594), a row, not a guard
+copied C:\kyty\f287\f40c\log_f24_x1.txt
+copied C:\kyty\f287\f40c\stdout_f24_x1.txt
+
+attempt 1  ok               document=9.7 s started=11.3 s stable=15.4 s 
+VERDICT: underwater_aerial_garden in 15.4 s - PASS (acceptance <= 90 s)

@@ -1,0 +1,58 @@
+F40C f24_u1 (base f24_u1, kind u1, mode upd, KYTY_FIX_F24=1, binary ddf0ca91, level underwater_aerial_garden) reader sha256 b5855a0576264ee5ecae2fc055a6514a5266dfb38e4f381e05df9e2676742b41
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = ddf0ca91 (ddf0ca913f9feb8a)
+    [ok] installed during the tag = ddf0ca91 (ddf0ca913f9feb8a)
+    [ok] installed before = after = FS13 abab2196 (abab2196e3b66f04 / abab2196e3b66f04)
+    [ok] json prereg sha256 = seal sha256 (36bd2bcba3122449 / 36bd2bcba3122449)
+    [ok] env = the form of the tag (exact)
+    [ok] 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 150 s (150)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (224942)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line (0)
+    [ok] no TestLogStall line (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4828 listsha 38)
+    [ok] FixF24: mode=1 b24=1 exactly 1, before the first GuestOut ([(1, 1, 19)]; unparsable 0; first GuestOut 12506)
+    [ok] pad lines of another pad 0 ([])
+    [ok] summary LogAsync: full_waits= once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+    [ok] config on delay_s=60 mode=upd edition=2 hold_upd_ms=8000 in_ms=100 probe_ms=20 fix_f24=1 exactly 1, invalid 0 ([('60', 'upd', '3000', '2', '8000', '100', '20', '1')])
+    [ok] armed exactly 1 (1)
+    [ok] attach exactly 1 with hwnd=1, attach failed 0 ([(353518, 401148271391, 1)]; failed 0)
+    [ok] emulator pad line "KYTY test pad" exactly 1 (1)
+    [ok] fire mode=upd exactly 1 ([(432620, 401173290664, 'upd')])
+    [ok] stimulus after the first scene frame: fire line 432620 > first scene frame line 226222
+    [ok] pad probe start exactly 1 after the first scene frame ([369133]; first scene 226222)
+    [ok] done exactly 1 (1)
+    [ok] stat mode=upd exactly 1 ([(467514, 'upd')])
+    [ok] f24 line exactly 1, all fields, mode=upd fix=1 (1, malformed 0)
+    [ok] the tag does not end inside the stand window: Event: quit line 748646 after the f24 line 467515
+  MEMBERS (item 692 (g), 696 (b))
+    [YES] upd_on_main = 0 (0)
+    [YES] jp_update_max_us >= 7200000 (8000699)
+    [YES] main_late_max_us < 100000 (390)
+    [YES] in_lat_max_us < 100000 (519)
+    [YES] hung_ms = 0 (0; the window member is alive in f24_u0)
+    [YES] in_posted = in_seen (107 / 107)
+    [YES] frames >= 1 s in the stand window 0 (wide 0, strict 0)
+    [YES] PAD pad_posted = pad_seen (376 / 376)
+    [YES] PAD pad_lat_p99_us 2052 <= 2020 of f24_u0 + 2000
+    [YES] PAD pad_lat_max_us 2116 <= 2087 of f24_u0 + 16667
+    [YES] init_owner exactly 1 (1, bad 0) {'hid': 38972, 'helper': 38972, 'msg': 38972, 'pump': 38972, 'main': 30996, 'ln': 21}: hid != 0 and helper != 0 (witness alive)
+    [YES] init_owner hid = helper = pump != main
+  F24 LINE {"attached": 0, "fix": 1, "flap_life_max_us": 0, "flap_life_min_us": 0, "hung_ms": 0, "in_lat_max_us": 519, "in_post_fail": 0, "in_posted": 107, "in_pre_lat_max_us": 179, "in_seen": 107, "jp_scan_gap_max_us": 0, "jp_tasks": 0, "jp_update_max_us": 8000699, "ln": 467515, "main_late_max_us": 390, "mode": "upd", "open_failed": 0, "open_lat_max_us": 0, "opened": 0, "pad_lat_max_us": 2116, "pad_lat_p99_us": 2052, "pad_posted": 376, "pad_seen": 376, "upd_on_main": 0, "upd_slept_us": 8000678}
+  INIT_OWNER {"helper": 38972, "hid": 38972, "ln": 21, "main": 30996, "msg": 38972, "pump": 38972}
+  WINDOW {"ge1s_strict": 0, "ge1s_wide": 0, "ge1s_wide_n": [], "max_dt_wide": 49418, "strict_frames": 319, "wide_frames": 351}
+  LINES {"add_event": 1, "death_log": [], "death_stdout": [], "expired": [], "f24_other": 0, "fatal_total": 0, "init": [[20, "FixF24: init tid=38972 pump tid=38972 main tid=30996"]], "init_n": 1, "jp_posted": [], "jp_ran": [], "open_failed": 0, "owner_bad": 0, "owner_n": 1, "pads_n": 1, "quit_ln": 748646, "quit_posted": [], "removed": [], "skipped_draw": 0, "summary": {"bytes": 162592581, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 493234, "max_queued_bytes": 48432, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "test_pads": [[353921, 0]], "upd_long": 1, "vke": 0, "wait_error": 0}
+  EXIT {"close_killed": false, "close_rc": 0, "close_s": 4.1, "hold_exit": null, "hold_s": 150.2, "quit_mark": null}
+  PARTNER {"pad_lat_max_us": 2087, "pad_lat_p99_us": 2020, "tag": "f24_u0", "window_member_alive": true, "word": "MEMBERS_PASS"}
+  WORD MEMBERS_PASS (no verdict; reading - F40d)

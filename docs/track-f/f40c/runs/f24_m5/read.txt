@@ -1,0 +1,46 @@
+F40C f24_m5 (base f24_m5, kind m5, mode upd, KYTY_FIX_F24=1, binary bec75cc2, level underwater_aerial_garden) reader sha256 b5855a0576264ee5ecae2fc055a6514a5266dfb38e4f381e05df9e2676742b41
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = bec75cc2 (bec75cc20b86609b)
+    [ok] installed during the tag = bec75cc2 (bec75cc20b86609b)
+    [ok] installed before = after = FS13 abab2196 (abab2196e3b66f04 / abab2196e3b66f04)
+    [ok] json prereg sha256 = seal sha256 (36bd2bcba3122449 / 36bd2bcba3122449)
+    [ok] env = the form of the tag (exact)
+    [ok] 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 150 s (150)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (224676)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line (0)
+    [ok] no TestLogStall line (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha db)
+    [ok] FixF24: mode=1 b24=1 exactly 1, before the first GuestOut ([(1, 1, 19)]; unparsable 0; first GuestOut 12506)
+    [ok] pad lines of another pad 0 ([])
+    [ok] summary LogAsync: full_waits= once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+    [ok] config on delay_s=60 mode=upd edition=2 hold_upd_ms=8000 in_ms=100 probe_ms=20 fix_f24=1 exactly 1, invalid 0 ([('60', 'upd', '3000', '2', '8000', '100', '20', '1')])
+    [ok] armed exactly 1 (1)
+    [ok] attach exactly 1 with hwnd=1, attach failed 0 ([(355986, 407261894959, 1)]; failed 0)
+    [ok] emulator pad line "KYTY test pad" exactly 1 (1)
+    [ok] fire mode=upd exactly 1 ([(440554, 407286899938, 'upd')])
+    [ok] stimulus after the first scene frame: fire line 440554 > first scene frame line 225980
+    [ok] pad probe start exactly 1 after the first scene frame ([373029]; first scene 225980)
+    [ok] done exactly 1 (1)
+    [ok] stat mode=upd exactly 1 ([(473177, 'upd')])
+    [ok] f24 line exactly 1, all fields, mode=upd fix=1 (1, malformed 0)
+    [ok] the tag does not end inside the stand window: Event: quit line 735798 after the f24 line 473178
+  MEMBERS (item 692 (g), 696 (b))
+    [YES] caught: a member of f24_u1 fails (item 696 (b)(3)): failed ['upd_on_main = 0', 'main_late_max_us < 100000', 'in_lat_max_us < 100000'] (upd_on_main 1, main_late_max_us 8000237, in_lat_max_us 7928492)
+  F24 LINE {"attached": 0, "fix": 1, "flap_life_max_us": 0, "flap_life_min_us": 0, "hung_ms": 2937, "in_lat_max_us": 7928492, "in_post_fail": 0, "in_posted": 108, "in_pre_lat_max_us": 107, "in_seen": 108, "jp_scan_gap_max_us": 0, "jp_tasks": 0, "jp_update_max_us": 7999222, "ln": 473178, "main_late_max_us": 8000237, "mode": "upd", "open_failed": 0, "open_lat_max_us": 0, "opened": 0, "pad_lat_max_us": 2029, "pad_lat_p99_us": 1727, "pad_posted": 376, "pad_seen": 376, "upd_on_main": 1, "upd_slept_us": 8000128}
+  INIT_OWNER {"helper": 14052, "hid": 14052, "ln": 21, "main": 10004, "msg": 14052, "pump": 14052}
+  WINDOW {"ge1s_strict": 0, "ge1s_wide": 0, "ge1s_wide_n": [], "max_dt_wide": 48369, "strict_frames": 310, "wide_frames": 340}
+  LINES {"add_event": 1, "death_log": [], "death_stdout": [], "expired": [], "f24_other": 0, "fatal_total": 0, "init": [[20, "FixF24: init tid=14052 pump tid=14052 main tid=10004"]], "init_n": 1, "jp_posted": [], "jp_ran": [], "open_failed": 0, "owner_bad": 0, "owner_n": 1, "pads_n": 1, "quit_ln": 735798, "quit_posted": [], "removed": [], "skipped_draw": 0, "summary": {"bytes": 159599430, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 485437, "max_queued_bytes": 102646, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "test_pads": [[356521, 0]], "upd_long": 1, "vke": 0, "wait_error": 0}
+  EXIT {"close_killed": false, "close_rc": 0, "close_s": 3.7, "hold_exit": null, "hold_s": 150.1, "quit_mark": null}
+  WORD CAUGHT (no verdict; reading - F40d)

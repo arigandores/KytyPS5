@@ -1,0 +1,55 @@
+F40C f24_u0 (base f24_u0, kind u0, mode upd, KYTY_FIX_F24=0, binary ddf0ca91, level underwater_aerial_garden) reader sha256 b5855a0576264ee5ecae2fc055a6514a5266dfb38e4f381e05df9e2676742b41
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = ddf0ca91 (ddf0ca913f9feb8a)
+    [ok] installed during the tag = ddf0ca91 (ddf0ca913f9feb8a)
+    [ok] installed before = after = FS13 abab2196 (abab2196e3b66f04 / abab2196e3b66f04)
+    [ok] json prereg sha256 = seal sha256 (36bd2bcba3122449 / 36bd2bcba3122449)
+    [ok] env = the form of the tag (exact)
+    [ok] 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 150 s (150)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (227853)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line (0)
+    [ok] no TestLogStall line (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4826 listsha 0a)
+    [ok] FixF24: mode=0 b24=1 exactly 1, before the first GuestOut ([(0, 1, 19)]; unparsable 0; first GuestOut 12504)
+    [ok] pad lines of another pad 0 ([])
+    [ok] summary LogAsync: full_waits= once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+    [ok] config on delay_s=60 mode=upd edition=2 hold_upd_ms=8000 in_ms=100 probe_ms=20 fix_f24=0 exactly 1, invalid 0 ([('60', 'upd', '3000', '2', '8000', '100', '20', '0')])
+    [ok] armed exactly 1 (1)
+    [ok] attach exactly 1 with hwnd=1, attach failed 0 ([(344866, 400568403958, 1)]; failed 0)
+    [ok] emulator pad line "KYTY test pad" exactly 1 (1)
+    [ok] fire mode=upd exactly 1 ([(415596, 400593422707, 'upd')])
+    [ok] stimulus after the first scene frame: fire line 415596 > first scene frame line 233804
+    [ok] pad probe start exactly 1 after the first scene frame ([359185]; first scene 233804)
+    [ok] done exactly 1 (1)
+    [ok] stat mode=upd exactly 1 ([(445359, 'upd')])
+    [ok] f24 line exactly 1, all fields, mode=upd fix=0 (1, malformed 0)
+    [ok] the tag does not end inside the stand window: Event: quit line 685062 after the f24 line 445360
+  MEMBERS (item 692 (g), 696 (b))
+    [YES] upd_on_main = 1 (1)
+    [YES] main_late_max_us >= 7200000 (8001152)
+    [YES] in_lat_max_us >= 7200000 (7968479)
+    [YES] in_pre_lat_max_us < 50000 (192)
+    [YES] window member alive: hung_ms > 0 (2921; 0 - the window member of f24_u1 drops, item 692 (v)(8)(b); not a failure)
+  ROW frames >= 1 s in the stand window (wide 0, strict 0) - a reading line of item 692 (v)(8)(a), not a member
+  ROW FixF24 lines other than mode=0 at =0: init 0, init_owner 0, other 0 (item 692 (g)(2): none)
+  F24 LINE {"attached": 0, "fix": 0, "flap_life_max_us": 0, "flap_life_min_us": 0, "hung_ms": 2921, "in_lat_max_us": 7968479, "in_post_fail": 0, "in_posted": 108, "in_pre_lat_max_us": 192, "in_seen": 108, "jp_scan_gap_max_us": 0, "jp_tasks": 0, "jp_update_max_us": 0, "ln": 445360, "main_late_max_us": 8001152, "mode": "upd", "open_failed": 0, "open_lat_max_us": 0, "opened": 0, "pad_lat_max_us": 2087, "pad_lat_p99_us": 2020, "pad_posted": 376, "pad_seen": 376, "upd_on_main": 1, "upd_slept_us": 8001106}
+  INIT_OWNER null
+  WINDOW {"ge1s_strict": 0, "ge1s_wide": 0, "ge1s_wide_n": [], "max_dt_wide": 49534, "strict_frames": 324, "wide_frames": 356}
+  LINES {"add_event": 0, "death_log": [], "death_stdout": [], "expired": [], "f24_other": 0, "fatal_total": 0, "init": [], "init_n": 0, "jp_posted": [], "jp_ran": [], "open_failed": 0, "owner_bad": 0, "owner_n": 0, "pads_n": 1, "quit_ln": 685062, "quit_posted": [], "removed": [], "skipped_draw": 0, "summary": {"bytes": 161837353, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 445553, "max_queued_bytes": 27465, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "test_pads": [[344867, 0]], "upd_long": 0, "vke": 0, "wait_error": 0}
+  EXIT {"close_killed": false, "close_rc": 0, "close_s": 3.9, "hold_exit": null, "hold_s": 150.1, "quit_mark": null}
+  WORD MEMBERS_PASS (no verdict; reading - F40d)
+TEMPO PASS form harness mean_dt_ms 32.86 fps 30.43 frames 4717 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after the level line 4717, span 155.0 s)
+  row: flip records after the level line 4713
+  row: seal plan W form no (item 621); plan: dryrun f24_u0 base f24_u0 binary ddf0ca91 level underwater_aerial_garden sd 300 timeout 480 hold 150 rec none mark none prev none knobs KYTY_FIX_F24=0 KYTY_TEST_HIDLOSS=60:upd KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0

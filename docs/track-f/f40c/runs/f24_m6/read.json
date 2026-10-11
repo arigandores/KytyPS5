@@ -1,0 +1,263 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = bd6dcc81 (bd6dcc81a32519ea)",
+   true
+  ],
+  [
+   "installed during the tag = bd6dcc81 (bd6dcc81a32519ea)",
+   true
+  ],
+  [
+   "installed before = after = FS13 abab2196 (abab2196e3b66f04 / abab2196e3b66f04)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (36bd2bcba3122449 / 36bd2bcba3122449)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "0 ExitFatal: lines (log 0; whole stdout 0)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "stdout present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (224975)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha db)",
+   true
+  ],
+  [
+   "FixF24: mode=1 b24=1 exactly 1, before the first GuestOut ([(1, 1, 19)]; unparsable 0; first GuestOut 12506)",
+   true
+  ],
+  [
+   "pad lines of another pad 0 ([])",
+   true
+  ],
+  [
+   "summary LogAsync: full_waits= once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ],
+  [
+   "config on delay_s=60 mode=upd edition=2 hold_upd_ms=8000 in_ms=100 probe_ms=20 fix_f24=1 exactly 1, invalid 0 ([('60', 'upd', '3000', '2', '8000', '100', '20', '1')])",
+   true
+  ],
+  [
+   "armed exactly 1 (1)",
+   true
+  ],
+  [
+   "attach exactly 1 with hwnd=1, attach failed 0 ([(365486, 407857018525, 1)]; failed 0)",
+   true
+  ],
+  [
+   "emulator pad line \"KYTY test pad\" exactly 1 (1)",
+   true
+  ],
+  [
+   "fire mode=upd exactly 1 ([(453858, 407882021336, 'upd')])",
+   true
+  ],
+  [
+   "stimulus after the first scene frame: fire line 453858 > first scene frame line 226274",
+   true
+  ],
+  [
+   "pad probe start exactly 1 after the first scene frame ([383288]; first scene 226274)",
+   true
+  ],
+  [
+   "done exactly 1 (1)",
+   true
+  ],
+  [
+   "stat mode=upd exactly 1 ([(490490, 'upd')])",
+   true
+  ],
+  [
+   "f24 line exactly 1, all fields, mode=upd fix=1 (1, malformed 0)",
+   true
+  ],
+  [
+   "the tag does not end inside the stand window: Event: quit line 773943 after the f24 line 490491",
+   true
+  ]
+ ],
+ "admitted": true,
+ "base": "f24_m6",
+ "binary": "bd6dcc81",
+ "catch": "m6",
+ "exit": {
+  "close_killed": false,
+  "close_rc": 0,
+  "close_s": 4.4,
+  "hold_exit": null,
+  "hold_s": 150.1,
+  "quit_mark": null
+ },
+ "f24": {
+  "attached": 0,
+  "fix": 1,
+  "flap_life_max_us": 0,
+  "flap_life_min_us": 0,
+  "hung_ms": 0,
+  "in_lat_max_us": 525,
+  "in_post_fail": 0,
+  "in_posted": 107,
+  "in_pre_lat_max_us": 113,
+  "in_seen": 107,
+  "jp_scan_gap_max_us": 0,
+  "jp_tasks": 0,
+  "jp_update_max_us": 8000335,
+  "ln": 490491,
+  "main_late_max_us": 541,
+  "mode": "upd",
+  "open_failed": 0,
+  "open_lat_max_us": 0,
+  "opened": 0,
+  "pad_lat_max_us": 2190,
+  "pad_lat_p99_us": 1999,
+  "pad_posted": 376,
+  "pad_seen": 376,
+  "upd_on_main": 0,
+  "upd_slept_us": 8000328
+ },
+ "fix": "1",
+ "init_owner": {
+  "helper": 49720,
+  "hid": 49720,
+  "ln": 21,
+  "main": 49720,
+  "msg": 49720,
+  "pump": 44604
+ },
+ "kind": "m6",
+ "level": "underwater_aerial_garden",
+ "lines": {
+  "add_event": 1,
+  "death_log": [],
+  "death_stdout": [],
+  "expired": [],
+  "f24_other": 0,
+  "fatal_total": 0,
+  "init": [
+   [
+    20,
+    "FixF24: init tid=44604 pump tid=44604 main tid=49720"
+   ]
+  ],
+  "init_n": 1,
+  "jp_posted": [],
+  "jp_ran": [],
+  "open_failed": 0,
+  "owner_bad": 0,
+  "owner_n": 1,
+  "pads_n": 1,
+  "quit_ln": 773943,
+  "quit_posted": [],
+  "removed": [],
+  "skipped_draw": 0,
+  "summary": {
+   "bytes": 162136758,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 512874,
+   "max_queued_bytes": 29538,
+   "stall_cut": 0,
+   "stalls": 0,
+   "sync_lines": 0
+  },
+  "test_pads": [
+   [
+    365679,
+    0
+   ]
+  ],
+  "upd_long": 1,
+  "vke": 0,
+  "wait_error": 0
+ },
+ "members": [
+  [
+   "caught: init_owner hid = main or helper = main ({'hid': 49720, 'helper': 49720, 'msg': 49720, 'pump': 44604, 'main': 49720, 'ln': 21})",
+   true
+  ]
+ ],
+ "mode": "upd",
+ "partner": null,
+ "reader_sha256": "b5855a0576264ee5ecae2fc055a6514a5266dfb38e4f381e05df9e2676742b41",
+ "status": "ADMITTED",
+ "tag": "f24_m6",
+ "window": {
+  "ge1s_strict": 0,
+  "ge1s_wide": 0,
+  "ge1s_wide_n": [],
+  "max_dt_wide": 50223,
+  "strict_frames": 312,
+  "wide_frames": 342
+ },
+ "word": "CAUGHT"
+}

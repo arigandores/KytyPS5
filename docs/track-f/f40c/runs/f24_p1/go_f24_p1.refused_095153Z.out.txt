@@ -1,0 +1,6 @@
+ALL OK
+2026-10-11T09:51:36Z F40c go_f40c f24_p1 run check (item 587 (g)): RUN ALIVE 181132ef status in_progress
+2026-10-11T09:51:49Z F40c go_f40c f24_p1 host load before the tag (item 632 (v)(2)): hostload: over05 1 max 0.608 total 1.362 procs [('<app>', 31844, 0.608)]
+2026-10-11T09:51:53Z F40c go_f40c f24_p1 display before the lock (item 620 (g)(1)): dispstate ON idle_s 6458 utc 2026-10-11T09:51:51Z
+2026-10-11T09:51:54Z F40c go_f40c f24_p1 user emulator or launcher found right after the lock - lock released, files untouched, interference, repeat by the next command (item 660 (d)(2)): GUARD FOUND 1: <app> pid 26748 kind launcher
+rc=3

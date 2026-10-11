@@ -1,0 +1,2 @@
+C:/kyty/f287/f40c/rec_f24_n1.mp4: 9934 frames 960x540, index entries 9934
+one-frame glitches: 0

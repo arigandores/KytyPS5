@@ -1,0 +1,24 @@
+ALL OK
+2026-10-11T10:44:48Z F40c go_f40c f24_m1 run check (item 587 (g)): RUN ALIVE 181132ef status in_progress
+2026-10-11T10:45:00Z F40c go_f40c f24_m1 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.531 procs []
+2026-10-11T10:45:01Z F40c go_f40c f24_m1 display before the lock (item 620 (g)(1)): dispstate ON idle_s 9648 utc 2026-10-11T10:45:01Z
+2026-10-11T10:50:14Z F40c go_f40c f24_m1 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-11T10:50:15Z F40c go_f40c f24_m1 installed binary inside the lock before the tag: abab2196e3b66f0449376f736421d5ac5fd3f18f6d6c98b7ef38351c45a44b73
+2026-10-11T10:50:18Z F40c go_f40c f24_m1 manifest before: manifest C:/kyty/f287/f40c/runs/f24_m1/manifest_before.tsv files 4832 bytes 1304938827 listsha db3e550e95429f28265b9c9cf954d512e3374aa81e9e4ce1253741652a4dc436
+2026-10-11T10:50:18Z F40c go_f40c f24_m1 caches before against the base manifest of the seal (row): manifest cmp DIFFER only-before 0 only-after 14
+2026-10-11T10:50:22Z F40c go_f40c f24_m1 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (272/184/5/667/130/ MB)
+2026-10-11T10:50:22Z F40c go_f40c f24_m1 state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-11T10:50:22Z
+2026-10-11T10:50:23Z F40c go_f40c f24_m1 installed the tag binary c164a6d3 for the tag: c164a6d34f0ab8b089d23752bf052da1db24f5ead9798ad0d8b8caa264d4ef0b
+2026-10-11T10:50:23Z F40c go_f40c f24_m1 enter_scene start (level underwater_aerial_garden, sd 300, timeout 480, hold 150, no video, no mark, KYTY_FIX_F24=1 KYTY_TEST_HIDLOSS=60:flap KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-11T10:53:20Z F40c go_f40c f24_m1 enter_scene rc 0; guard watch: 2026-10-11T10:53:19Z watch end, user process seen: no; hold watch: 2026-10-11T10:53:20Z watch end, user VM seen: no
+2026-10-11T10:53:20Z F40c go_f40c f24_m1 run: VERDICT: underwater_aerial_garden in 14.4 s - PASS (acceptance <= 90 s)
+2026-10-11T10:53:21Z F40c go_f40c f24_m1 log_f24_m1.txt sha256 a35f7dc7be64b69b9308d3efe92c2d4ed1696943b11e24829a6eaa78f9c5fd95
+2026-10-11T10:53:22Z F40c go_f40c f24_m1 installed binary returned from the pinned FS13 copy
+2026-10-11T10:53:23Z F40c go_f40c f24_m1 installed binary after the tag: abab2196e3b66f0449376f736421d5ac5fd3f18f6d6c98b7ef38351c45a44b73
+2026-10-11T10:53:26Z F40c go_f40c f24_m1 manifest of the run state (before the return): manifest C:/kyty/f287/f40c/runs/f24_m1/manifest_run.tsv files 4832 bytes 1304938827 listsha db3e550e95429f28265b9c9cf954d512e3374aa81e9e4ce1253741652a4dc436; run vs before: manifest cmp EQUAL files 4832 listsha db3e550e95429f28265b9c9cf954d512e3374aa81e9e4ce1253741652a4dc436
+2026-10-11T10:53:27Z F40c go_f40c f24_m1 caches, seeds, saves and GLCache returned
+2026-10-11T10:53:31Z F40c go_f40c f24_m1 manifest after: manifest C:/kyty/f287/f40c/runs/f24_m1/manifest_after.tsv files 4832 bytes 1304938827 listsha db3e550e95429f28265b9c9cf954d512e3374aa81e9e4ce1253741652a4dc436; cmp: manifest cmp EQUAL files 4832 listsha db3e550e95429f28265b9c9cf954d512e3374aa81e9e4ce1253741652a4dc436
+2026-10-11T10:53:31Z F40c go_f40c f24_m1 lock released (rc 0)
+2026-10-11T10:53:33Z F40c go_f40c f24_m1 display after lock released (item 620 (g)(1)): dispstate ON idle_s 10159 utc 2026-10-11T10:53:32Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-11T10:53:32Z; dispstate ON idle_s 10159
+2026-10-11T10:53:45Z F40c go_f40c f24_m1 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.529 procs []
+rc=0

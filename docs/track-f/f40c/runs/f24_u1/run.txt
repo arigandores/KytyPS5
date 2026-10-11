@@ -1,0 +1,17 @@
+prereg: f40c_seal.md  37651 bytes  sha256 36bd2bcba3122449  mtime 2026-10-11T11:21:18  mtime-ctime +0.239 s
+pre_run: host 441 processes, top by CPU: <app> 20771s, <app> 8839s, <app> 8301s, <app> 5355s, <app> 2970s, <app> 2529s
+pre_run: GPU 0.0 % busy, 20.3 W, 1777 MiB used, SM 1462.0 MHz, 21 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f40c\cpuclk.py is not there
+--- attempt 1: launching
+9.7 s  LevelDocument Loaded: underwater_aerial_garden
+11.3 s  Level has started: underwater_aerial_garden
+15.4 s  scene stable at frame 287 (90 frames with draws >= 300)
+holding the run for 150 s
+hold end: ft_total 4823, ft_tail 151 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 4.1, 'close_wait_s': 40}
+hold_gpu: median 40.0 % busy over 295 rows (2026/10/11 11:38:10.112 .. 2026/10/11 11:40:40.264), a row, not a guard
+copied C:\kyty\f287\f40c\log_f24_u1.txt
+copied C:\kyty\f287\f40c\stdout_f24_u1.txt
+
+attempt 1  ok               document=9.7 s started=11.3 s stable=15.4 s 
+VERDICT: underwater_aerial_garden in 15.4 s - PASS (acceptance <= 90 s)

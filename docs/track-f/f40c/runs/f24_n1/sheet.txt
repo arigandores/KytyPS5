@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/f40c/runs/f24_n1/sheet_f24_n1.png frames 9934 step 206 tiles 8x6

@@ -1,0 +1,2 @@
+C:/kyty/f287/fs13c/rec_fs13_z.mp4: 4922 frames 960x540, index entries 4922
+one-frame glitches: 0

@@ -1,0 +1,38 @@
+tag fs13_z (form fs13_z, level underwater_aerial_garden)  reader sha256 faca4cecdf061fcfcffa71858589b1ab27b74203402d88e9a19d9c5a7e763d1c
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = FS13 abab2196 (abab2196e3b66f04)
+    [ok] installed during the tag = FS13 abab2196 (abab2196e3b66f04)
+    [ok] installed before = after = FS12 46892c20 (46892c20080819ae / 46892c20080819ae)
+    [ok] json prereg sha256 = seal sha256 (a466feaadc9596ed / a466feaadc9596ed)
+    [ok] env = the form of the tag (exact)
+    [ok] no KYTY_TEST_* in the env (none)
+    [ok] 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 150 s (150)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (231647)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line - no KYTY_DIAG_B32 (0)
+    [ok] no TestLogStall line (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4816 listsha 07)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+  binary_sha256 abab2196e3b66f0449376f736421d5ac5fd3f18f6d6c98b7ef38351c45a44b73
+  MEMBERS 697(g)(3) ALL YES
+    [YES] hold >= 120 s after the first scene frame (154.0 s)
+    [YES] the process lived through the hold (outcome ok, hold_exit None)
+    [YES] 0 death markers (log and stdout) []
+    [YES] FixF25: mode=0 (every line) before the first GuestOut ([(0, 17)]; unparsable 0; first GuestOut 12505) - item 697 (g)(3)
+    [YES] 0 FixF25: read failed twice (whole log 0; whole stdout 0)
+  INFO {"b12": [[1, 726]], "b13": [[1, 724]], "expired_log": 0, "expired_stdout": 0, "f21": [[1, 12000, 728]], "f21_unparsable": 0, "fatal_after_quit": 0, "fatal_log_total": 0, "fatal_stdout": 0, "first_scene_n": 317, "frames_ge1s": 0, "frames_ge1s_with_first": 0, "glitches": 0, "hold_s": 154.0, "logasync_mode": ["LogAsync: mode=1 limit_bytes=268435456 d"], "max_dt": 185629, "mean_dt_us": 33531.8, "quit_ln": 677540, "scene_frames": 4594, "sheet": "sheet: C:/kyty/f287/fs13c/runs/fs13_z/sheet_fs13_z.png frames 4922 step 102 tiles 8x6", "stat_lines": 16, "summary": {"bytes": 159210745, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 441436, "max_queued_bytes": 66388, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "video_index": 4922, "vke": 0, "vkw": 0}
+  ROW F25 (not a gate; > 0 - evidence of F25 in the game, item of the lead): FixF25: read failed twice log 0, whole stdout 0; KernelRead: direct read failed log 0, whole stdout 0; FixF25: mode= lines 1, unparsable 0, other FixF25 lines 0
+  ROW exit (not a gate): exit code 0 (0x00000000); WM_CLOSE post -> process end 4.3 s; killed False; posted 5; harness timeout 40 s; Event: quit line 677540; --- Fatal Error --- after it 0, whole stdout 0
+  REFERENCE: {"b12stat_last": {"ln": 652177, "lskip": 0, "passes": 99431, "rewalk": 0, "rwd": 0}, "b12stat_lines": 16, "bin_version_string": true, "env_keys": ["KYTY_FIX_F25", "KYTY_FRAME_TRACE", "KYTY_GATE_FILE", "KYTY_GPU_CLOCK_PIN", "KYTY_GPU_HANG_ABORT_S", "KYTY_GPU_MARKERS", "KYTY_GUEST_ARGS", "KYTY_QUEUE_TRACE", "KYTY_REC", "KYTY_SAMPLE_GATE"], "f21_lines": 1, "f21_other": 0, "fork_line": "version: Fork build arigandores/KytyPS5 ea6c6e9", "glitches": 0, "hold_exit": null, "hold_s": 150.1, "lines": 677559, "other_logasync": 0, "outcome": "ok", "sheet": "sheet: C:/kyty/f287/fs13c/runs/fs13_z/sheet_fs13_z.png frames 4922 step 102 tiles 8x6", "stable_s": 17.4, "stand_log": 0, "stand_stdout": 0, "video_index": 4922, "vke": 0, "vkw": 0}
+  READING ADMITTED, members 697(g)(3) ALL YES, members of the form - none (no verdict; reading - FS13d)

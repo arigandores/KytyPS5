@@ -1,0 +1,24 @@
+ALL OK
+2026-10-11T08:58:28Z FS13c go_fs13c fs13_z run check (item 587 (g)): RUN ALIVE 792b671a status in_progress
+2026-10-11T08:58:40Z FS13c go_fs13c fs13_z host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.367 procs []
+2026-10-11T08:58:41Z FS13c go_fs13c fs13_z display before the lock (item 620 (g)(1)): dispstate ON idle_s 3268 utc 2026-10-11T08:58:41Z
+2026-10-11T09:04:08Z FS13c go_fs13c fs13_z lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-11T09:04:09Z FS13c go_fs13c fs13_z installed binary inside the lock before the tag: 46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26
+2026-10-11T09:04:11Z FS13c go_fs13c fs13_z manifest before: manifest C:/kyty/f287/fs13c/runs/fs13_z/manifest_before.tsv files 4816 bytes 1304722892 listsha 07e0ec9e973e2793464f9fb81e721bd1d4cf95bb7cfb9d072365aa46e9f08b20
+2026-10-11T09:04:12Z FS13c go_fs13c fs13_z caches before against the base manifest of the seal (row): manifest cmp EQUAL files 4816 listsha 07e0ec9e973e2793464f9fb81e721bd1d4cf95bb7cfb9d072365aa46e9f08b20
+2026-10-11T09:04:14Z FS13c go_fs13c fs13_z caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (272/184/5/667/130/ MB)
+2026-10-11T09:04:15Z FS13c go_fs13c fs13_z state before the start: pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present at 2026-10-11T09:04:15Z
+2026-10-11T09:04:15Z FS13c go_fs13c fs13_z installed the FS13 copy abab2196 for the tag: abab2196e3b66f0449376f736421d5ac5fd3f18f6d6c98b7ef38351c45a44b73
+2026-10-11T09:04:16Z FS13c go_fs13c fs13_z enter_scene start (level underwater_aerial_garden, sd 300, timeout 480, hold 150, --rec, KYTY_FIX_F25=0 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0 (no test knobs)
+2026-10-11T09:07:17Z FS13c go_fs13c fs13_z enter_scene rc 0; guard watch: 2026-10-11T09:07:16Z watch end, user process seen: no; hold watch: 2026-10-11T09:07:14Z watch end, user VM seen: no
+2026-10-11T09:07:18Z FS13c go_fs13c fs13_z run: VERDICT: underwater_aerial_garden in 17.4 s - PASS (acceptance <= 90 s)
+2026-10-11T09:07:19Z FS13c go_fs13c fs13_z log_fs13_z.txt sha256 cbe56dbe2f7ccbac8ed88285b315890426e09dde326b2e9ff29ed03a9aea2cb7
+2026-10-11T09:07:19Z FS13c go_fs13c fs13_z installed binary returned from the pinned FS12 copy
+2026-10-11T09:07:19Z FS13c go_fs13c fs13_z installed binary after the tag: 46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26
+2026-10-11T09:07:23Z FS13c go_fs13c fs13_z manifest of the run state (before the return): manifest C:/kyty/f287/fs13c/runs/fs13_z/manifest_run.tsv files 4816 bytes 1304722892 listsha 07e0ec9e973e2793464f9fb81e721bd1d4cf95bb7cfb9d072365aa46e9f08b20; run vs before: manifest cmp EQUAL files 4816 listsha 07e0ec9e973e2793464f9fb81e721bd1d4cf95bb7cfb9d072365aa46e9f08b20
+2026-10-11T09:07:24Z FS13c go_fs13c fs13_z caches, seeds, saves and GLCache returned
+2026-10-11T09:07:27Z FS13c go_fs13c fs13_z manifest after: manifest C:/kyty/f287/fs13c/runs/fs13_z/manifest_after.tsv files 4816 bytes 1304722892 listsha 07e0ec9e973e2793464f9fb81e721bd1d4cf95bb7cfb9d072365aa46e9f08b20; cmp: manifest cmp EQUAL files 4816 listsha 07e0ec9e973e2793464f9fb81e721bd1d4cf95bb7cfb9d072365aa46e9f08b20
+2026-10-11T09:07:27Z FS13c go_fs13c fs13_z lock released (rc 0)
+2026-10-11T09:07:29Z FS13c go_fs13c fs13_z display after lock released (item 620 (g)(1)): dispstate ON idle_s 3795 utc 2026-10-11T09:07:28Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-11T09:07:29Z; dispstate ON idle_s 3796
+2026-10-11T09:07:42Z FS13c go_fs13c fs13_z host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.983 procs []
+rc=0

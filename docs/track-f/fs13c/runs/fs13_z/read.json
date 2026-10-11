@@ -1,0 +1,251 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS13 abab2196 (abab2196e3b66f04)",
+   true
+  ],
+  [
+   "installed during the tag = FS13 abab2196 (abab2196e3b66f04)",
+   true
+  ],
+  [
+   "installed before = after = FS12 46892c20 (46892c20080819ae / 46892c20080819ae)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (a466feaadc9596ed / a466feaadc9596ed)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "no KYTY_TEST_* in the env (none)",
+   true
+  ],
+  [
+   "0 ExitFatal: lines (log 0; whole stdout 0)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "stdout present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (231647)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line - no KYTY_DIAG_B32 (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4816 listsha 07)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "abab2196e3b66f0449376f736421d5ac5fd3f18f6d6c98b7ef38351c45a44b73",
+ "exit": {
+  "close_killed": false,
+  "close_posted": 5,
+  "close_rc": 0,
+  "close_rc_hex": "0x00000000",
+  "close_s": 4.3,
+  "close_wait_s": 40,
+  "fatal_after_quit": 0,
+  "fatal_stdout": 0,
+  "quit_ln": 677540
+ },
+ "f25_rows": {
+  "direct_read_failed_first": null,
+  "direct_read_failed_log": 0,
+  "direct_read_failed_stdout": 0,
+  "f25_mode_lines": 1,
+  "f25_other": 0,
+  "f25_unparsable": 0,
+  "read_failed_twice_first": null,
+  "read_failed_twice_log": 0,
+  "read_failed_twice_stdout": 0
+ },
+ "form": "fs13_z",
+ "form_members": [],
+ "form_ok": null,
+ "info": {
+  "b12": [
+   [
+    1,
+    726
+   ]
+  ],
+  "b13": [
+   [
+    1,
+    724
+   ]
+  ],
+  "expired_log": 0,
+  "expired_stdout": 0,
+  "f21": [
+   [
+    1,
+    12000,
+    728
+   ]
+  ],
+  "f21_unparsable": 0,
+  "fatal_after_quit": 0,
+  "fatal_log_total": 0,
+  "fatal_stdout": 0,
+  "first_scene_n": 317,
+  "frames_ge1s": 0,
+  "frames_ge1s_with_first": 0,
+  "glitches": 0,
+  "hold_s": 154.0,
+  "logasync_mode": [
+   "LogAsync: mode=1 limit_bytes=268435456 d"
+  ],
+  "max_dt": 185629,
+  "mean_dt_us": 33531.8,
+  "quit_ln": 677540,
+  "scene_frames": 4594,
+  "sheet": "sheet: C:/kyty/f287/fs13c/runs/fs13_z/sheet_fs13_z.png frames 4922 step 102 tiles 8x6",
+  "stat_lines": 16,
+  "summary": {
+   "bytes": 159210745,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 441436,
+   "max_queued_bytes": 66388,
+   "stall_cut": 0,
+   "stalls": 0,
+   "sync_lines": 0
+  },
+  "video_index": 4922,
+  "vke": 0,
+  "vkw": 0
+ },
+ "interference": null,
+ "kind": "z",
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "hold >= 120 s after the first scene frame (154.0 s)",
+   true
+  ],
+  [
+   "the process lived through the hold (outcome ok, hold_exit None)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "FixF25: mode=0 (every line) before the first GuestOut ([(0, 17)]; unparsable 0; first GuestOut 12505) - item 697 (g)(3)",
+   true
+  ],
+  [
+   "0 FixF25: read failed twice (whole log 0; whole stdout 0)",
+   true
+  ]
+ ],
+ "ok": true,
+ "reader_sha256": "faca4cecdf061fcfcffa71858589b1ab27b74203402d88e9a19d9c5a7e763d1c",
+ "reading": "ADMITTED, members 697(g)(3) ALL YES, members of the form - none (no verdict; reading - FS13d)",
+ "ref": {
+  "b12stat_last": {
+   "ln": 652177,
+   "lskip": 0,
+   "passes": 99431,
+   "rewalk": 0,
+   "rwd": 0
+  },
+  "b12stat_lines": 16,
+  "bin_version_string": true,
+  "env_keys": [
+   "KYTY_FIX_F25",
+   "KYTY_FRAME_TRACE",
+   "KYTY_GATE_FILE",
+   "KYTY_GPU_CLOCK_PIN",
+   "KYTY_GPU_HANG_ABORT_S",
+   "KYTY_GPU_MARKERS",
+   "KYTY_GUEST_ARGS",
+   "KYTY_QUEUE_TRACE",
+   "KYTY_REC",
+   "KYTY_SAMPLE_GATE"
+  ],
+  "f21_lines": 1,
+  "f21_other": 0,
+  "fork_line": "version: Fork build arigandores/KytyPS5 ea6c6e9",
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 150.1,
+  "lines": 677559,
+  "other_logasync": 0,
+  "outcome": "ok",
+  "sheet": "sheet: C:/kyty/f287/fs13c/runs/fs13_z/sheet_fs13_z.png frames 4922 step 102 tiles 8x6",
+  "stable_s": 17.4,
+  "stand_log": 0,
+  "stand_stdout": 0,
+  "video_index": 4922,
+  "vke": 0,
+  "vkw": 0
+ },
+ "status": "ADMITTED",
+ "tag": "fs13_z"
+}

@@ -1,0 +1,253 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS13 abab2196 (abab2196e3b66f04)",
+   true
+  ],
+  [
+   "installed during the tag = FS13 abab2196 (abab2196e3b66f04)",
+   true
+  ],
+  [
+   "installed before = after = FS12 46892c20 (46892c20080819ae / 46892c20080819ae)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (a466feaadc9596ed / a466feaadc9596ed)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "no KYTY_TEST_* in the env (none)",
+   true
+  ],
+  [
+   "0 ExitFatal: lines (log 0; whole stdout 0)",
+   true
+  ],
+  [
+   "last --vulkan-validation true (true)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 310 s (310)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "stdout present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (229935)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line - no KYTY_DIAG_B32 (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4816 listsha 07)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "abab2196e3b66f0449376f736421d5ac5fd3f18f6d6c98b7ef38351c45a44b73",
+ "exit": {
+  "close_killed": false,
+  "close_posted": 5,
+  "close_rc": 0,
+  "close_rc_hex": "0x00000000",
+  "close_s": 4.1,
+  "close_wait_s": 40,
+  "fatal_after_quit": 0,
+  "fatal_stdout": 0,
+  "quit_ln": 2290348
+ },
+ "f25_rows": {
+  "direct_read_failed_first": null,
+  "direct_read_failed_log": 0,
+  "direct_read_failed_stdout": 0,
+  "f25_mode_lines": 1,
+  "f25_other": 0,
+  "f25_unparsable": 0,
+  "read_failed_twice_first": null,
+  "read_failed_twice_log": 0,
+  "read_failed_twice_stdout": 0
+ },
+ "form": "fs13_w",
+ "form_members": [
+  [
+   "FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 732)]; unparsable 0; first GuestOut 12508)",
+   true
+  ],
+  [
+   "LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12508)",
+   true
+  ],
+  [
+   "no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)",
+   true
+  ],
+  [
+   "FixB13: mode=1 (every line) before the first GuestOut ([(1, 728)]; first GuestOut 12508)",
+   true
+  ],
+  [
+   "FixB12: mode=1 (every line) before the first GuestOut ([(1, 730)]; bad 0; first GuestOut 12508)",
+   true
+  ]
+ ],
+ "form_ok": true,
+ "info": {
+  "expired_log": 0,
+  "expired_stdout": 0,
+  "fatal_after_quit": 0,
+  "fatal_log_total": 0,
+  "fatal_stdout": 0,
+  "first_scene_n": 306,
+  "frames_ge1s": 0,
+  "frames_ge1s_with_first": 0,
+  "hold_s": 323.7,
+  "max_dt": 381059,
+  "mean_dt_us": 131046.3,
+  "quit_ln": 2290348,
+  "scene_frames": 2470,
+  "summary": {
+   "bytes": 385724416,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 1238471,
+   "max_queued_bytes": 44348,
+   "stall_cut": 0,
+   "stalls": 0,
+   "sync_lines": 0
+  },
+  "vke": 0,
+  "vkw": 902206
+ },
+ "interference": null,
+ "kind": "w",
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.0 >= 310)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "0 [Vulkan][E] (0)",
+   true
+  ],
+  [
+   "0 limit lines of the layer (0)",
+   true
+  ],
+  [
+   "positive control: [Vulkan][W] 902206 > 0",
+   true
+  ],
+  [
+   "DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)",
+   true
+  ],
+  [
+   "FixF25: mode=1 (every line) before the first GuestOut ([(1, 17)]; unparsable 0; first GuestOut 12508) - item 697 (g)(3)",
+   true
+  ]
+ ],
+ "ok": true,
+ "reader_sha256": "faca4cecdf061fcfcffa71858589b1ab27b74203402d88e9a19d9c5a7e763d1c",
+ "reading": "ADMITTED, members 697(g)(3) ALL YES, members of the form fs12_w ALL YES (no verdict; reading - FS13d)",
+ "ref": {
+  "b12stat_last": {
+   "ln": 2241294,
+   "lskip": 0,
+   "passes": 34389,
+   "rewalk": 0,
+   "rwd": 0
+  },
+  "b12stat_lines": 33,
+  "bin_version_string": true,
+  "env_keys": [
+   "KYTY_FRAME_TRACE",
+   "KYTY_GATE_FILE",
+   "KYTY_GPU_CLOCK_PIN",
+   "KYTY_GPU_HANG_ABORT_S",
+   "KYTY_GPU_MARKERS",
+   "KYTY_GUEST_ARGS",
+   "KYTY_QUEUE_TRACE",
+   "KYTY_SAMPLE_GATE",
+   "VK_LAYER_DUPLICATE_MESSAGE_LIMIT",
+   "VK_LAYER_PATH"
+  ],
+  "f21_lines": 1,
+  "f21_other": 0,
+  "fork_line": "version: Fork build arigandores/KytyPS5 ea6c6e9",
+  "glitches": null,
+  "hold_exit": null,
+  "hold_s": 310.0,
+  "lines": 2290350,
+  "other_logasync": 0,
+  "outcome": "ok",
+  "sheet": null,
+  "stable_s": 31.2,
+  "stand_log": 0,
+  "stand_stdout": 0,
+  "video_index": null,
+  "vke": 0,
+  "vkw": 902206
+ },
+ "status": "ADMITTED",
+ "tag": "fs13_w"
+}

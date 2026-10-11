@@ -1,0 +1,6 @@
+reader fs13c_read.py sha256 faca4cecdf061fcfcffa71858589b1ab27b74203402d88e9a19d9c5a7e763d1c
+| tag | status | binary_sha256 | members 697(g)(3) | form | read failed twice (log/stdout) | direct read failed (log/stdout) | exit code | close_s | glitches | video index | hold_s |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| fs13_v | ADMITTED | abab2196 | ALL YES | ALL YES | 0 / 0 | 0 / 0 | 0 | 4.1 | 0 | 10501 | 330.1 |
+| fs13_w | ADMITTED | abab2196 | ALL YES | ALL YES | 0 / 0 | 0 / 0 | 0 | 4.1 | None | None | 310.0 |
+| fs13_z | ADMITTED | abab2196 | ALL YES | - | 0 / 0 | 0 / 0 | 0 | 4.3 | 0 | 4922 | 150.1 |

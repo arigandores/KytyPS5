@@ -52,6 +52,12 @@ pc_compile	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	45
 pc_seed	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6720	InstallShaderSeed();	m_recipes_path = m_program_cache->transl
 pc_rebuild_skip	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6738	skip = "recipes_current";	}
 sh_compile	730ed40a	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	355	const auto module = CompileSPV(words, graphics.device);	if (DualSourceFirstLine(ps_hash, true)) 
+sh_dualsrc	730ed40a	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	345	DualSrcBlend::RewriteLocation1ToIndex1(*pixel_program.spirv, words);	outcome != DualSrcBlend::Outcome::Patche
+pc_cm_a	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2208	const auto module = CreateCachedModule(device, result.spirv);	EXIT_IF(module == nullptr);
+pc_cm_b	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2249	const auto module = CreateCachedModule(device, p.spirv);	EXIT_IF(module == nullptr);
+pc_validate	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2177	if (!ValidateShaderSpirv(options.dump_label, options.shader_hash, result.spirv)) {	DumpShaderSpirv(stage_name, options.shad
+m_bit_one	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	180	Binary(state, spv::OpShiftLeftLogical, TypeU32(state), ConstantU32(state, 1),	Binary(state, spv::OpBitwiseAnd, TypeU32
+m_chain_zero	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	172	state.fault_buffer_variable, ConstantU32(state, 0), index);	return pointer;
 ts_bind	730ed40a	tests/ShaderRecompilerComputeTests.cpp	13207	"BDA page table and fault buffer must be bound together");	if (uses_bda) {
 ts_fill	730ed40a	tests/ShaderRecompilerComputeTests.cpp	13398	cmd.fillBuffer(m_fault_buffer.buffer, 0, m_fault_buffer.size, 0);	std::array<vk::BufferMemoryBarrier, 2> b
 d_b138_pre	5842bf43	docs/track-f/f12g/rd_f12g_b138.txt	15	eid 128281 pre ([], 8388672)	[   27.6] eid 128281 orig 1 ([(32824, '0

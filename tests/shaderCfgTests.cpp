@@ -32,6 +32,7 @@
 #include "graphics/shader/shaderCompiler.h"
 #include "shaderCfgFixtures.h"
 #include "libs/agc.h"
+#include "graphics/host_gpu/renderer/pipeline/fixF20.h"
 #include "spirv-tools/libspirv.hpp"
 #include "xxhash.h"
 
@@ -16060,6 +16061,46 @@ int main() {
     }
     return SpecDumpMain(specdump_dir, specdump_out, std::getenv("KYTY_TEST_SPECDUMP_SIG"));
   }
+  if (const char *f20file = std::getenv("KYTY_TEST_F20FILE"); f20file != nullptr && f20file[0] != 0) {
+    // Track F, F42a (HPP-779, ROADMAP s122 item 694(g)(3)): KYTY_TEST_F20FILE="<in.spv>;<out.spv>;<bound 0|1>" - the
+    // module of KYTY_FIX_F20=1 for the replay arms a / a' (Libs::Graphics::FixF20::RewriteFaultOr, the function the
+    // emulator calls); <out> = the rewritten words, or a copy of <in> when nothing is rewritten; one line "f20file: ...".
+    std::string list = f20file;
+    const auto first = list.find(';');
+    const auto second = first == std::string::npos ? std::string::npos : list.find(';', first + 1);
+    if (second == std::string::npos) {
+      std::fprintf(stderr, "KYTY_TEST_F20FILE=<in.spv>;<out.spv>;<bound 0|1>\n");
+      return 1;
+    }
+    const auto in_path = list.substr(0, first);
+    const auto out_path = list.substr(first + 1, second - first - 1);
+    const bool bound = list.substr(second + 1) == "1";
+    std::vector<uint32_t> words;
+    if (FILE *file = std::fopen(in_path.c_str(), "rb"); file != nullptr) {
+      uint32_t word = 0;
+      while (std::fread(&word, sizeof(word), 1, file) == 1) {
+        words.push_back(word);
+      }
+      std::fclose(file);
+    } else {
+      std::fprintf(stderr, "f20file: cannot open %s\n", in_path.c_str());
+      return 1;
+    }
+    std::vector<uint32_t> fixed;
+    const auto stats = Libs::Graphics::FixF20::RewriteFaultOr(words, bound, fixed);
+    const auto &result = stats.rewritten != 0 ? fixed : words;
+    FILE *out = std::fopen(out_path.c_str(), "wb");
+    if (out == nullptr) {
+      std::fprintf(stderr, "f20file: cannot write %s\n", out_path.c_str());
+      return 1;
+    }
+    std::fwrite(result.data(), sizeof(uint32_t), result.size(), out);
+    std::fclose(out);
+    std::printf("f20file: bound=%d named=%u sites=%u rewritten=%u unmatched=%u malformed=%d words_in=%zu words_out=%zu\n",
+                bound ? 1 : 0, stats.named, stats.sites, stats.rewritten, stats.unmatched, stats.malformed ? 1 : 0,
+                words.size(), result.size());
+    return 0;
+  }
   if (const char *recompile = std::getenv("KYTY_RECOMPILE"); recompile != nullptr) {
     // Offline recompilation: KYTY_RECOMPILE="<gcn.bin>;<cache.bin>;<out.spv>[;<permutation>]"
     // translates a raw GCN dump (_Shaders/original) with the current translator and emits the
@@ -16377,6 +16418,27 @@ int main() {
     }
     std::fwrite(compiled.spirv.data(), sizeof(uint32_t), compiled.spirv.size(), out);
     std::fclose(out);
+    if (const char *f20 = std::getenv("KYTY_RECOMPILE_F20"); f20 != nullptr && f20[0] != 0) {
+      // Track F, F42a (HPP-779, ROADMAP s122 item 694(g)(4)): KYTY_RECOMPILE_F20=<file> - the module of KYTY_FIX_F20=1
+      // (Libs::Graphics::FixF20::RewriteFaultOr with the FaultBuffer binding of the compiled program, the function the
+      // emulator calls; the words unchanged when nothing is rewritten) and one line "recompile-f20: ...".
+      const bool bound = std::ranges::any_of(compiled.program.bindings.descriptors, [](const auto &b) {
+        return b.kind == ShaderRecompiler::IR::DescriptorBindingKind::FaultBuffer;
+      });
+      std::vector<uint32_t> fixed;
+      const auto stats = Libs::Graphics::FixF20::RewriteFaultOr(compiled.spirv, bound, fixed);
+      const auto &words = stats.rewritten != 0 ? fixed : compiled.spirv;
+      FILE *f20_out = std::fopen(f20, "wb");
+      if (f20_out == nullptr) {
+        std::fprintf(stderr, "recompile: cannot write %s\n", f20);
+        return 1;
+      }
+      std::fwrite(words.data(), sizeof(uint32_t), words.size(), f20_out);
+      std::fclose(f20_out);
+      std::printf("recompile-f20: bound=%d named=%u sites=%u rewritten=%u unmatched=%u malformed=%d words=%zu -> %s\n",
+                  bound ? 1 : 0, stats.named, stats.sites, stats.rewritten, stats.unmatched, stats.malformed ? 1 : 0,
+                  words.size(), f20);
+    }
     if (dump_recompile) {
       const auto write_dump = [&](const char *suffix, const std::string &contents) {
         const auto path = parts[2] + suffix;

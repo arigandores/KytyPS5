@@ -1,0 +1,969 @@
+exe C:/kyty/f287/f46b/build/shader_recompiler_compute_tests.exe sha256 8f6643ecd3578a600c8d7a881466335e58ee49216ba8a5ead4d25709633db75b
+=== arm none () rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=0 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=0, ring 0
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 no DiagF5Id service with the knob off                    ok
+[f16k]    D18-D19 no fce line with KYTY_DIAG_F5ID off                  ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S0 branch 3: nothing counted with KYTY_DIAG_F5ID off         ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (49 checks)
+F16k test site: ALL OK
+=== arm f5 (KYTY_DIAG_F5=1) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=0, ring 0
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 no DiagF5Id service with the knob off                    ok
+[f16k]    D18-D19 no fce line with KYTY_DIAG_F5ID off                  ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S0 branch 3: nothing counted with KYTY_DIAG_F5ID off         ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (49 checks)
+F16k test site: ALL OK
+=== arm f5_fix (KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=0, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 no DiagF5Id service with the knob off                    ok
+[f16k]    D18-D19 no fce line with KYTY_DIAG_F5ID off                  ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S0 branch 3: nothing counted with KYTY_DIAG_F5ID off         ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (49 checks)
+F16k test site: ALL OK
+=== arm f5_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=0, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]      DiagF5Ev: f26_first_exec n=10 present=0 dcc=0x0000000207c00000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]      DiagF5Ev: f26_first_exec n=13 present=0 dcc=0x0000000207400000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 fce_next kind=target                                     ok
+[f16k]    D13 fce_next kind=texture                                    ok
+[f16k]    D14 fce_next kind=none, buf_reads                            ok
+[f16k]    D15 fce_next kind=exit, cleared; sum id_fce=ok               ok
+[f16k]    D16 key lines                                                ok
+[f16k]    D18 wr_after=large after a GPU write of 16 MB + 1 (none before the fill) ok
+[f16k]    D19 cpu_mod: 0 without a CPU write, 1 after a CPU write and its upload, 1 without a fill ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S1 branch 3 classes, sub, vclass, changed, marks             ok
+[f16k]    S2 stale_apply by a mark, a new fill drops the mark          ok
+[f16k]    S3 sum line: id_cs=ok, id_fce=ok                             ok
+[f16k]    S4 sum line: at most once per 600 frames, on growth          ok
+[f16k]    S5 negative control: id_cs=bad without the DiagF5 counter    ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (58 checks)
+F16k test site: ALL OK
+=== arm f5_fix_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F5CMU=1) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=0, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]      DiagF5Ev: f26_first_exec n=10 present=0 dcc=0x0000000207c00000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]      DiagF5Ev: f26_first_exec n=13 present=0 dcc=0x0000000207400000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 fce_next kind=target                                     ok
+[f16k]    D13 fce_next kind=texture                                    ok
+[f16k]    D14 fce_next kind=none, buf_reads                            ok
+[f16k]    D15 fce_next kind=exit, cleared; sum id_fce=ok               ok
+[f16k]    D16 key lines                                                ok
+[f16k]    D18 wr_after=large after a GPU write of 16 MB + 1 (none before the fill) ok
+[f16k]    D19 cpu_mod: 0 without a CPU write, 1 after a CPU write and its upload, 1 without a fill ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S1 branch 3 classes, sub, vclass, changed, marks             ok
+[f16k]    S2 stale_apply by a mark, a new fill drops the mark          ok
+[f16k]    S3 sum line: id_cs=ok, id_fce=ok                             ok
+[f16k]    S4 sum line: at most once per 600 frames, on growth          ok
+[f16k]    S5 negative control: id_cs=bad without the DiagF5 counter    ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (58 checks)
+F16k test site: ALL OK
+=== arm id_only (KYTY_DIAG_F5ID=1) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=0 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 0) KYTY_FIX_F26=0, ring 0
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 no DiagF5Id service with the knob off                    ok
+[f16k]    D18-D19 no fce line with KYTY_DIAG_F5ID off                  ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S0 branch 3: nothing counted with KYTY_DIAG_F5ID off         ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (49 checks)
+F16k test site: ALL OK
+=== arm fix_only (KYTY_FIX_F5CMU=1) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=0 KYTY_FIX_F5CMU=1 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=0, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 no DiagF5Id service with the knob off                    ok
+[f16k]    D18-D19 no fce line with KYTY_DIAG_F5ID off                  ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S0 branch 3: nothing counted with KYTY_DIAG_F5ID off         ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (49 checks)
+F16k test site: ALL OK
+=== arm f5_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=mat
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=declined layers=0x00000001 site=mat
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=10 present=0 gpu=0 image=0x0000000207000000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=prepare
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=11 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=fill
+[f16k]      DiagF5Ev: dcc_stale_apply n=12 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=unmap
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=14 present=0 gpu=0 image=0x0000000207000000 dcc=0x0000000207400000 result=cleared layers=0x00000001 site=mat
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 no DiagF5Id service with the knob off                    ok
+[f16k]    D18-D19 no fce line with KYTY_DIAG_F5ID off                  ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S0 branch 3: nothing counted with KYTY_DIAG_F5ID off         ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (49 checks)
+F16k test site: ALL OK
+=== arm f5_f26_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=mat
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=declined layers=0x00000001 site=mat
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=10 present=0 gpu=0 image=0x0000000207000000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=prepare
+[f16k]      DiagF5Ev: f26_first_exec n=10 present=0 dcc=0x0000000207c00000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=11 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=fill
+[f16k]      DiagF5Ev: dcc_stale_apply n=12 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=unmap
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+ShaderRecompilerComputeTests: F16k failed at F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear: an f26_first_exec line on the event itself, a mark of kept_applied, or not the expected event: DiagF5Ev: f26_first_exec n=13 present=0 dcc=0x0000000207400000 image=0x0000000207000000 site=prepare
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_fix_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1 KYTY_FIX_F5CMU=1) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=mat
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=declined layers=0x00000001 site=mat
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=10 present=0 gpu=0 image=0x0000000207000000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=prepare
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=11 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=fill
+[f16k]      DiagF5Ev: dcc_stale_apply n=12 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=unmap
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=14 present=0 gpu=0 image=0x0000000207000000 dcc=0x0000000207400000 result=cleared layers=0x00000001 site=mat
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 no DiagF5Id service with the knob off                    ok
+[f16k]    D18-D19 no fce line with KYTY_DIAG_F5ID off                  ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S0 branch 3: nothing counted with KYTY_DIAG_F5ID off         ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (49 checks)
+F16k test site: ALL OK
+=== arm f26_only (KYTY_FIX_F26=1) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=0 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 no DiagF5Id service with the knob off                    ok
+[f16k]    D18-D19 no fce line with KYTY_DIAG_F5ID off                  ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S0 branch 3: nothing counted with KYTY_DIAG_F5ID off         ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (49 checks)
+F16k test site: ALL OK
+=== arm f5_f26_id_t1d (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x207400000 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x0000000207400000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=mat
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=declined layers=0x00000001 site=mat
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=10 present=0 gpu=0 image=0x0000000207000000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=prepare
+[f16k]      DiagF5Ev: f26_first_exec n=10 present=0 dcc=0x0000000207c00000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=11 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=fill
+[f16k]      DiagF5Ev: dcc_stale_apply n=12 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=unmap
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+ShaderRecompilerComputeTests: F16k failed at F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear: an f26_first_exec line on the event itself, a mark of kept_applied, or not the expected event: DiagF5Ev: f26_first_exec n=13 present=0 dcc=0x0000000207400000 image=0x0000000207000000 site=prepare
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_f26_id_t1p (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x207c00000 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x0000000207c00000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=mat
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=declined layers=0x00000001 site=mat
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=10 present=0 gpu=0 image=0x0000000207000000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=prepare
+[f16k]      DiagF5Ev: f26_first_exec n=10 present=0 dcc=0x0000000207c00000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=11 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=fill
+[f16k]      DiagF5Ev: dcc_stale_apply n=12 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=unmap
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+ShaderRecompilerComputeTests: F16k failed at F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear: an f26_first_exec line on the event itself, a mark of kept_applied, or not the expected event: DiagF5Ev: f26_first_exec n=13 present=0 dcc=0x0000000207400000 image=0x0000000207000000 site=prepare
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_f26_id_t2d (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x207400000 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x0000000207400000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=mat
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=declined layers=0x00000001 site=mat
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=10 present=0 gpu=0 image=0x0000000207000000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=prepare
+[f16k]      DiagF5Ev: f26_first_exec n=10 present=0 dcc=0x0000000207c00000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=11 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=fill
+[f16k]      DiagF5Ev: dcc_stale_apply n=12 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=unmap
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+ShaderRecompilerComputeTests: F16k failed at F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear: an f26_first_exec line on the event itself, a mark of kept_applied, or not the expected event: DiagF5Ev: f26_first_exec n=13 present=0 dcc=0x0000000207400000 image=0x0000000207000000 site=prepare
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_f26_id_t2p (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x207c00000 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x0000000207c00000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=5 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=mat
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]      DiagF5Ev: dcc_stale site=adopt n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 extent=64x64 exact=fresh fix=kept why=deferred
+[f16k]      DiagF5Ev: dcc_stale_apply n=7 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=declined layers=0x00000001 site=mat
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=10 present=0 gpu=0 image=0x0000000207000000 dcc=0x0000000207c00000 result=cleared layers=0x00000001 site=prepare
+[f16k]      DiagF5Ev: f26_first_exec n=10 present=0 dcc=0x0000000207c00000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]      DiagF5Ev: dcc_stale_apply n=11 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=fill
+[f16k]      DiagF5Ev: dcc_stale_apply n=12 present=0 gpu=0 image=0x0000000207800000 dcc=0x0000000207c00000 result=dropped layers=0xffffffff site=unmap
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+ShaderRecompilerComputeTests: F16k failed at F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear: an f26_first_exec line on the event itself, a mark of kept_applied, or not the expected event: DiagF5Ev: f26_first_exec n=13 present=0 dcc=0x0000000207400000 image=0x0000000207000000 site=prepare
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_id_t2p (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x207c00000) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=0, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x0000000207c00000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]      DiagF5Ev: f26_first_exec n=10 present=0 dcc=0x0000000207c00000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]      DiagF5Ev: f26_first_exec n=13 present=0 dcc=0x0000000207400000 image=0x0000000207000000 site=prepare
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 fce_next kind=target                                     ok
+[f16k]    D13 fce_next kind=texture                                    ok
+[f16k]    D14 fce_next kind=none, buf_reads                            ok
+[f16k]    D15 fce_next kind=exit, cleared; sum id_fce=ok               ok
+[f16k]    D16 key lines                                                ok
+[f16k]    D18 wr_after=large after a GPU write of 16 MB + 1 (none before the fill) ok
+[f16k]    D19 cpu_mod: 0 without a CPU write, 1 after a CPU write and its upload, 1 without a fill ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S1 branch 3 classes, sub, vclass, changed, marks             ok
+[f16k]    S2 stale_apply by a mark, a new fill drops the mark          ok
+[f16k]    S3 sum line: id_cs=ok, id_fce=ok                             ok
+[f16k]    S4 sum line: at most once per 600 frames, on growth          ok
+[f16k]    S5 negative control: id_cs=bad without the DiagF5 counter    ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (58 checks)
+F16k test site: ALL OK
+=== arm f26_t1d (KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x207400000 KYTY_FIX_F26=1) rc=0 OK
+[f16k]    knobs: KYTY_DIAG_F5=0 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x0000000207400000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+[f16k]    F46a pure helpers (names, dcc_stale_apply dropped / site, f26_first_exec line, F26TintAt) ok
+[f16k]    R exact journal: neighbour, crossing, K+1 fallback (2 forms), 2 buckets, =0 not written ok
+[f16k]    K1 fresh: no write after the fill                            ok
+[f16k]    K2 neighbour: bucket stale, exact kept, cleared              ok
+[f16k]    K3 crossing write: stale by both                             ok
+[f16k]    K4 K+1 neighbours: ring fallback                             ok
+[f16k]    K5 kept without a clear (decode refused)                     ok
+[f16k]    K8 CPU-modified CMASK page, no crossing GPU write: why=cpu   ok
+[f16k]    K6 draw acquisition: old decision, cmask_rt_bucket_only only ok
+[f16k]    K1-K8 FCE acquisition: KYTY_FIX_F26 changes no decision, f26_* 0 (Track F, F16o) ok
+[f16k]    K7 FCE acquisition without a B42 hit: kept_applied and cmask_fce_nohit / old decision, no line ok
+[f16k]    D0f PrepareDccClear, no write after the fill: no line        ok
+[f16k]    D1 PrepareDccClear, neighbour                                ok
+[f16k]    D1b PrepareDccClear, neighbour, fill shorter than the range  ok
+[f16k]    D2 PrepareDccClear, K+1                                      ok
+[f16k]    D3 PrepareDccClear, crossing                                 ok
+[f16k]    D4f adoption, no write after the fill: no line               ok
+[f16k]    D4 adoption, neighbour, code 0x40: deferred, then cleared    ok
+[f16k]    D4b adoption, neighbour, no clear code                       ok
+[f16k]    D4e adoption, neighbour, code 0x20 without a slot: deferred, then declined ok
+[f16k]    D4c adoption, crossing                                       ok
+[f16k]    D4d adoption, K+1                                            ok
+[f16k]    F46a T1 alias: the mark of `pending` removed by another image's clear ok
+[f16k]    F46a T2 a new fill, the next clear: the first execution after the event at =0 ok
+[f16k]    F46a T3 a mark dropped by a new fill (site=fill) and by UnmapMemory (site=unmap) ok
+[f16k]    F46a T4 a prepare event: no f26_first_exec on the event itself, one at the next clear ok
+[f16k]    F46a T5 prepare kept why=decode: the mark of `dcc`, executed by MaterializeDeferredDccClear ok
+[f16k]    D5 R1 no image                                               ok
+[f16k]    D6 owner: no reason                                          ok
+[f16k]    D7 R2 a DCC image on another address                         ok
+[f16k]    D8 R5 no entry                                               ok
+[f16k]    D9 R6 an entry that is not PendingDcc                        ok
+[f16k]    D10 R3 another metadata kind                                 ok
+[f16k]    D11 branch 2 events: r5, wr_after none/exact/fallback        ok
+[f16k]    D12 no DiagF5Id service with the knob off                    ok
+[f16k]    D18-D19 no fce line with KYTY_DIAG_F5ID off                  ok
+[f16k]    D20 stamp_late: once per stamp not taken, the last counter of the sum line ok
+[f16k]    D17 TryConsumeComputeMetaClear: the refused entry and size   ok
+[f16k]    S0 branch 3: nothing counted with KYTY_DIAG_F5ID off         ok
+[f16k]    Z counters and lines of the knobs off                        ok
+[f16k]    L line limits: cmask_fce 1024, cmask_fce_nohit 64, dcc_stale 256 ok
+[f16k]    L F16o2 dcc_stale_apply limit (n <= 256)                     ok
+[f16k]    F16k                                                         ok (49 checks)
+F16k test site: ALL OK
+NOT OK

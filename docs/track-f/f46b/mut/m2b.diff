@@ -1,0 +1,13 @@
+diff --git a/src/graphics/host_gpu/renderer/diagF5.cpp b/src/graphics/host_gpu/renderer/diagF5.cpp
+index 764a356b..d4fee451 100644
+--- a/src/graphics/host_gpu/renderer/diagF5.cpp
++++ b/src/graphics/host_gpu/renderer/diagF5.cpp
+@@ -839,7 +839,7 @@ bool LogF26TintMode() {
+ }
+ 
+ bool F26TintKey(uint64_t address) {
+-	return F26TintMode() != 0 && address == F26TintDcc();
++	return F26TintMode() != 0 && (address == F26TintDcc() || true); // F46b m2b
+ }
+ 
+ TintResult F26TintAt(uint32_t mode, uint64_t key, uint64_t address, bool removes_mark, vk::Format format,

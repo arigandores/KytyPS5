@@ -1,0 +1,13 @@
+diff --git a/src/graphics/host_gpu/renderer/diagF5.cpp b/src/graphics/host_gpu/renderer/diagF5.cpp
+index 764a356b..58862e6a 100644
+--- a/src/graphics/host_gpu/renderer/diagF5.cpp
++++ b/src/graphics/host_gpu/renderer/diagF5.cpp
+@@ -844,7 +844,7 @@ bool F26TintKey(uint64_t address) {
+ 
+ TintResult F26TintAt(uint32_t mode, uint64_t key, uint64_t address, bool removes_mark, vk::Format format,
+                      vk::ClearColorValue& clear) {
+-	if ((mode != 1 && mode != 2) || address != key || (mode == 1 && !removes_mark)) {
++	if ((mode != 1 && mode != 2) || (mode == 1 && !removes_mark)) { // F46b m2a
+ 		return TintResult::None;
+ 	}
+ 	if (!DccFixedClearSupported(format) || vk::componentCount(format) < 3) {

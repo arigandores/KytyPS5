@@ -1,0 +1,376 @@
+exe C:/kyty/f287/f46b/build/shader_recompiler_compute_tests.exe sha256 d895a83cbc8ca3b8af4dceb47ae4ab4fe581e65f47c2dd46c92c7821cdbeed18
+=== arm none () rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=0 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=0, ring 0
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5 (KYTY_DIAG_F5=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=0, ring 0
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_fix (KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=0, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=0, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_fix_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=0, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm id_only (KYTY_DIAG_F5ID=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=0 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 0) KYTY_FIX_F26=0, ring 0
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm fix_only (KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=0 KYTY_FIX_F5CMU=1 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=0, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_f26_id (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_fix_f26 (KYTY_DIAG_F5=1 KYTY_FIX_F26=1 KYTY_FIX_F5CMU=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=1 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f26_only (KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=0 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=0 KYTY_F26_TINT_DCC=0x0000000000000000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_f26_id_t1d (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x207400000 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x0000000207400000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_f26_id_t1p (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x207c00000 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x0000000207c00000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_f26_id_t2d (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x207400000 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x0000000207400000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_f26_id_t2p (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x207c00000 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x0000000207c00000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f5_id_t2p (KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x207c00000) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=1 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=1 (effective 1) KYTY_FIX_F26=0, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x0000000207c00000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+=== arm f26_t1d (KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x207400000 KYTY_FIX_F26=1) rc=3221226505 FAIL
+[f16k]    knobs: KYTY_DIAG_F5=0 KYTY_FIX_F5CMU=0 KYTY_DIAG_F5ID=0 (effective 0) KYTY_FIX_F26=1, ring 1
+[f16k]    F46a knobs: KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x0000000207400000
+[f16k]    mode lines                                                   ok
+[f16k]    F16o mode line FixF26                                        ok
+[f16k]    F46a mode line F26Tint                                       ok
+[f16k]    pure helpers (ScanReason R1-R4, names, StaleBucketOnly, event line) ok
+[f16k]    F16k2 pure helpers (why=cpu, f5cmu_exact_cpu, no-hit line form) ok
+[f16k]    F16o pure helpers (names, f26_* last, dcc_stale line form)   ok
+[f16k]    F16o2 pure helpers (why=deferred, f26_deferred_declined last, dcc_stale_apply line form) ok
+ShaderRecompilerComputeTests: F16k failed at F46a F26TintAt: mode 2, another address: result 1 magenta true unchanged false
+  | [host]    LeastRecentlyUsedCache           ok
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+  | --- Build ---
+  | Fork build arigandores/KytyPS5 7e8481e-dirty
+  | --- abort() ---
+  | SIGABRT in abort:0
+  | 
+  | --- abort() ---
+  | abort() was called: std::terminate on a thread without a report, or an explicit abort
+NOT OK

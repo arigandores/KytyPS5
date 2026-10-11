@@ -1,0 +1,13 @@
+diff --git a/src/graphics/host_gpu/renderer/cache/textureCache.cpp b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+index 1611c048..fad5fcb6 100644
+--- a/src/graphics/host_gpu/renderer/cache/textureCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+@@ -2049,7 +2049,7 @@ private:
+ 		// why=deferred, prepare why=decode - keyed by the metadata address.
+ 		if (m_fix && e.fix == F::Kept &&
+ 		    (e.why == DiagF5::CmuWhy::Deferred || e.why == DiagF5::CmuWhy::Decode)) {
+-			m_cache->F26MarkLocked(m_line.dcc, {.n = n, .image = m_line.image, .dcc = m_line.dcc});
++			m_cache->F26MarkLocked(m_line.image, {.n = n, .image = m_line.image, .dcc = m_line.dcc}); // F46b m1b
+ 		}
+ 		// Track F, F46a (item 702(e)(3)): the event arms its f26_first_exec line (both arms, KYTY_DIAG_F5ID) here, when the
+ 		// site call leaves - after any in-call clear, which is not "after the event".

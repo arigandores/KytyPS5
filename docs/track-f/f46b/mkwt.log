@@ -1,0 +1,41 @@
+watch: start 2026-10-11T10:07:05Z child 47100 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+Preparing worktree (detached HEAD 7e8481e5)
+Updating files:  97% (4177/4291)Updating files:  98% (4206/4291)Updating files:  99% (4249/4291)Updating files: 100% (4291/4291)Updating files: 100% (4291/4291), done.
+HEAD is now at 7e8481e5 track F link F46a (HPP-798): F26 measurement code - mark M1 by metadata address, f26_first_exec line, KYTY_F26_TINT / KYTY_F26_TINT_DCC (all default 0)
+--- worktree HEAD
+7e8481e524132ec03703fc4c6a234be1f12e1c1a track F link F46a (HPP-798): F26 measurement code - mark M1 by metadata address
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+7e8481e524132ec03703fc4c6a234be1f12e1c1a e5115a5ab7c16f52f44405d8486743f2e0f4e681 track F link F46a (HPP-798): F26 measurement code - mark M1 by metadata addres
+e5115a5ab7c16f52f44405d8486743f2e0f4e681 d2757ba9193d20b09c6569c0afd3108b34a477d0 track F link F16o2 (HPP-599): RC1 of F16p - adopt kept why=deferred, the mark 
+d2757ba9193d20b09c6569c0afd3108b34a477d0 4c98b61a5ffd9bcede30192b20e419470a957572 track F link F16o (HPP-595): KYTY_FIX_F26 and the cmask_fce line limit 1024 - 
+4c98b61a5ffd9bcede30192b20e419470a957572 9bc6adaa6fe47b83b85c9761379dfc2c3e4a6126 track F link F16k2 (HPP-590): RC1-RC5 of the F16l review in KYTY_FIX_F5CMU / K
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 460 with CR 0
+WT OK
+Preparing worktree (detached HEAD 7e8481e5)
+HEAD is now at 7e8481e5 track F link F46a (HPP-798): F26 measurement code - mark M1 by metadata address, f26_first_exec line, KYTY_F26_TINT / KYTY_F26_TINT_DCC (all default 0)
+--- worktree HEAD
+7e8481e524132ec03703fc4c6a234be1f12e1c1a track F link F46a (HPP-798): F26 measurement code - mark M1 by metadata address
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+KILLED: procload 2026-10-11T10:07:18Z pids [20256]; tree [9528, 24588, 30444, 37988, 39692, 47100, 53240], alive after []
+tar: Unexpected EOF in archive
+tar: Unexpected EOF in archive
+tar: Error is not recoverable: exiting now

@@ -1,0 +1,12 @@
+diff --git a/src/graphics/host_gpu/renderer/cache/textureCache.cpp b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+index 1611c048..6a83b761 100644
+--- a/src/graphics/host_gpu/renderer/cache/textureCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+@@ -2055,6 +2055,7 @@ private:
+ 		// site call leaves - after any in-call clear, which is not "after the event".
+ 		if (DiagF5Id::On() && n <= 256) [[unlikely]] {
+ 			m_cache->F26ArmFirstExecLocked(m_line.dcc, n);
++			if (m_applied && n >= 13) { m_cache->F26ExecLocked(m_line.dcc, m_line.image, DiagF5::F26Site::Prepare, 1u); } // F46b m3c
+ 		}
+ 	}
+ 

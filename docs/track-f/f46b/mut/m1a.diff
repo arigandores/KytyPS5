@@ -1,0 +1,13 @@
+diff --git a/src/graphics/host_gpu/renderer/cache/textureCache.cpp b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+index 1611c048..200f1c50 100644
+--- a/src/graphics/host_gpu/renderer/cache/textureCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+@@ -3875,7 +3875,7 @@ void TextureCache::F26ArmFirstExecLocked(uint64_t address, uint64_t n) {
+ 
+ void TextureCache::F26ExecLocked(uint64_t address, uint64_t image_address, DiagF5::F26Site site, uint32_t layers) {
+ 	if (m_f26_marks_count.load(std::memory_order_relaxed) != 0) {
+-		if (const auto found = m_f26_marks.find(address); found != m_f26_marks.end()) {
++		if (const auto found = m_f26_marks.find(address); found != m_f26_marks.end() && found->second.image == image_address) { // F46b m1a
+ 			DiagF5::Add(DiagF5::Counter::F26KeptApplied);
+ 			(void)DiagF5::NoteDccStaleApply({.n       = found->second.n,
+ 			                                 .present = DiagF5::Present(),

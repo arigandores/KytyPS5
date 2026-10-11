@@ -1,0 +1,39 @@
+2026-10-11T10:06:42Z F46b tooling copied from docs/track-f/f46a (f46a -> f46b) into C:/kyty/f287/f46b
+2026-10-11T11:03:17Z F46b build dir seeded: CMakeCache.txt and CMakeFiles/4.4.3 of C:/kyty/f287/f46a/build with f46a -> f46b (configure checks cached; the foreign series leaves ~1 min windows)
+2026-10-11T11:23:54Z F46b clean build kyty_emulator from wt 7e8481e5: sha256 7570ccf9
+2026-10-11T11:46:03Z F46b mutant clean applied to wt (0 diff lines)
+2026-10-11T11:46:43Z F46b mutant clean built: tests exe sha256 bf0c8f56
+2026-10-11T11:47:11Z F46b mutant clean f16k: ALL OK, FAIL arms 0
+2026-10-11T11:47:34Z F46b clean tests exe bf0c8f56: f16k 17/17 ALL OK; site ALL OK, = F46a fin/site.txt and = f16k2 fin/site.txt (ed4f96d8) byte for byte after line 1
+2026-10-11T11:47:35Z F46b mutant m1a applied to wt (13 diff lines)
+2026-10-11T11:48:11Z F46b mutant m1a built: tests exe sha256 58c05f6f
+2026-10-11T11:48:58Z F46b mutant m1a f16k: NOT OK, FAIL arms 7
+2026-10-11T11:49:04Z F46b mutant m1b applied to wt (13 diff lines)
+2026-10-11T11:49:32Z F46b mutant m1b built: tests exe sha256 ef06d3a0
+2026-10-11T11:50:14Z F46b mutant m1b f16k: NOT OK, FAIL arms 7
+2026-10-11T11:50:20Z F46b mutant m2a applied to wt (13 diff lines)
+2026-10-11T11:50:49Z F46b mutant m2a built: tests exe sha256 5e722a05
+2026-10-11T11:50:58Z F46b mutant m2a f16k: NOT OK, FAIL arms 17
+2026-10-11T11:51:02Z F46b mutant m2b applied to wt (13 diff lines)
+2026-10-11T11:51:29Z F46b mutant m2b built: tests exe sha256 596c742b
+2026-10-11T11:52:08Z F46b mutant m2b f16k: ALL OK, FAIL arms 0
+2026-10-11T11:52:20Z F46b mutant m2c applied to wt (19 diff lines)
+2026-10-11T11:52:51Z F46b mutant m2c built: tests exe sha256 d895a83c
+2026-10-11T11:52:58Z F46b mutant m2c f16k: NOT OK, FAIL arms 17
+2026-10-11T11:53:03Z F46b mutant m2d applied to wt (22 diff lines)
+2026-10-11T11:53:30Z F46b mutant m2d built: tests exe sha256 881d0980
+2026-10-11T11:54:11Z F46b mutant m2d f16k: NOT OK, FAIL arms 5
+2026-10-11T11:54:16Z F46b mutant m3a applied to wt (13 diff lines)
+2026-10-11T12:07:31Z F46b mutant m3a built: tests exe sha256 23b56de3
+2026-10-11T12:08:00Z F46b mutant m3a f16k: NOT OK, FAIL arms 8
+2026-10-11T12:08:09Z F46b mutant m3b applied to wt (12 diff lines)
+2026-10-11T12:08:35Z F46b mutant m3b built: tests exe sha256 7f21abdb
+2026-10-11T12:09:04Z F46b mutant m3b f16k: NOT OK, FAIL arms 5
+2026-10-11T12:09:34Z F46b mutant m3c applied to wt (12 diff lines)
+2026-10-11T12:10:11Z F46b mutant m3c built: tests exe sha256 8f6643ec
+2026-10-11T12:10:42Z F46b mutant m3c f16k: NOT OK, FAIL arms 5
+2026-10-11T12:10:53Z F46b mutant clean applied to wt (0 diff lines)
+2026-10-11T12:11:28Z F46b mutant clean built: tests exe sha256 a84c62bf
+2026-10-11T12:12:01Z F46b mutant clean f16k: ALL OK, FAIL arms 0
+2026-10-11T12:12:10Z F46b wt reset to 7e8481e5 (status 0 lines), tests rebuilt: f16k 17/17 ALL OK (exe sha256 a84c62bf - relink differs from the first clean link bf0c8f56)
+2026-10-11T12:14:16Z F46b review written: docs/track-f/f46b-review.md (verdict PASS, RC1 to the reading rule)

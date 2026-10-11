@@ -1,0 +1,6 @@
+A site.txt
+  exe C:/kyty/f287/f46b/build/shader_recompiler_compute_tests.exe sha256 bf0c8f56e729a9cbbec6d318efaf1cf956424413c4d7628e81113aad21f33f8f
+B C:/kyty/KytyPS5/docs/track-f/f16k2/fin/site.txt
+  exe C:/kyty/f287/f16k2/fin/shader_recompiler_compute_tests.exe sha256 abe7056049afddaf1de1a571e5a6d8631e5c463ddc955ca239edc6e3c0344f82
+lines after the first: A 176 B 176; byte for byte equal: True
+ALL OK

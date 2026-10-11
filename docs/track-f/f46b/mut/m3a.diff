@@ -1,0 +1,13 @@
+diff --git a/src/graphics/host_gpu/renderer/cache/textureCache.cpp b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+index 1611c048..87ecef3d 100644
+--- a/src/graphics/host_gpu/renderer/cache/textureCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/textureCache.cpp
+@@ -2054,7 +2054,7 @@ private:
+ 		// Track F, F46a (item 702(e)(3)): the event arms its f26_first_exec line (both arms, KYTY_DIAG_F5ID) here, when the
+ 		// site call leaves - after any in-call clear, which is not "after the event".
+ 		if (DiagF5Id::On() && n <= 256) [[unlikely]] {
+-			m_cache->F26ArmFirstExecLocked(m_line.dcc, n);
++			(void)DiagF5::NoteFirstExec({.n = n, .present = DiagF5::Present(), .dcc = m_line.dcc, .image = m_line.image, .site = DiagF5::F26Site::Prepare}); // F46b m3a
+ 		}
+ 	}
+ 

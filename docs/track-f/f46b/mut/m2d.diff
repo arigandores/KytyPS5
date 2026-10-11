@@ -1,0 +1,22 @@
+diff --git a/src/graphics/host_gpu/renderer/diagF5.cpp b/src/graphics/host_gpu/renderer/diagF5.cpp
+index 764a356b..0e0b47eb 100644
+--- a/src/graphics/host_gpu/renderer/diagF5.cpp
++++ b/src/graphics/host_gpu/renderer/diagF5.cpp
+@@ -839,7 +839,7 @@ bool LogF26TintMode() {
+ }
+ 
+ bool F26TintKey(uint64_t address) {
+-	return F26TintMode() != 0 && address == F26TintDcc();
++	return F26TintMode() != 0 && (address == F26TintDcc() || true); // F46b m2b
+ }
+ 
+ TintResult F26TintAt(uint32_t mode, uint64_t key, uint64_t address, bool removes_mark, vk::Format format,
+@@ -855,7 +855,7 @@ TintResult F26TintAt(uint32_t mode, uint64_t key, uint64_t address, bool removes
+ }
+ 
+ TintResult F26Tint(uint64_t address, bool removes_mark, vk::Format format, vk::ClearColorValue& clear) {
+-	const auto result = F26TintAt(F26TintMode(), F26TintDcc(), address, removes_mark, format, clear);
++	const auto result = F26TintAt(F26TintMode(), address, address, removes_mark, format, clear); // F46b m2d
+ 	if (result == TintResult::Applied) {
+ 		Add(Counter::F26TintApplied);
+ 	} else if (result == TintResult::Skip) {

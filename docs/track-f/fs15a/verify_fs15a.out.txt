@@ -1,0 +1,61 @@
+FS15 HEAD 6beb3b738d65502adf517405239f9298ee26aa52 base eb7e8b91664aef26bdf0f5af6fd2cceebbf8f958
+worktree log base..FS15:
+   6beb3b738d65502adf517405239f9298ee26aa52 91b74d096a220b90a861aaec6c6ef1f19ef3e466 track F link FS15a (HPP-820): KYTY_FIX_F20 default 0 -> 1 (ROADMAP s122 item 730(g)(1))
+   91b74d096a220b90a861aaec6c6ef1f19ef3e466 95e39a17f26097c0ffd7466f78ca19fc2141ac40 WIP track F link F42a2 (HPP-805): stand of row F20 edition 2 - arm E (E-W, E-X): the mod
+   95e39a17f26097c0ffd7466f78ca19fc2141ac40 b1179dab7891a82e5e270350b1c1b73492177964 WIP track F link F42a (HPP-779): stand of row F20 - shader_recompiler_compute_tests --f2
+   b1179dab7891a82e5e270350b1c1b73492177964 eb7e8b91664aef26bdf0f5af6fd2cceebbf8f958 WIP track F link F42a (HPP-779): KYTY_FIX_F20 (default 0) - form P: at 1 every Vulkan mo
+V1 a6342c98 -> b1179dab: changed lines 338 / 338, equal True; git cherry - a6342c987f35a3250b9c0b445d047eb7da675a00
+V1 a9d6fd1c -> 95e39a17: changed lines 407 / 407, equal True; git cherry - a9d6fd1cae6efaa1b35f0f6230ae8f927678476e
+V1 82570fd2 -> 91b74d09: changed lines 98 / 98, equal True; git cherry - 82570fd2f1b6e646221694181c1791d92af87a52
+V1 38fc76c1 -> 6beb3b73: changed lines 10 / 10, equal True; git cherry - 38fc76c1af9badb97b7bd4f8d92aec0fac582f21
+V1 negative controls: a9d6fd1c vs b1179dab equal False; 82570fd2 vs own worktree commit spoiled equal False; 38fc76c1 vs 91b74d09 equal False (want False x3)
+V1b contains a6342c98: True (ancestor False, git cherry - a6342c987f35a3250b9c0b445d047eb7da675a00)
+V1b contains 82570fd2: True (ancestor False, git cherry - 82570fd2f1b6e646221694181c1791d92af87a52)
+V1b contains 38fc76c1: True (ancestor False, git cherry - 38fc76c1af9badb97b7bd4f8d92aec0fac582f21)
+V1b contains 5c21c387: True (ancestor False, git cherry - 5c21c3872eafddcba79f3dfe9f3dd0a1bfa92dd4)
+V1b contains 57f9e528: True (ancestor False, git cherry - 57f9e52831b94f9654b3b8c6acaf8f05132bff2f)
+V1b contains c8836f14: True (ancestor False, git cherry - c8836f1427fa95374e50fead3526734b9f6709e7)
+V1b contains 15c9d2f2: True (ancestor False, git cherry - 15c9d2f2090b136f65d5744dfd2a9cac46add65d)
+V1b contains 78e45af3: True (ancestor False, git cherry - 78e45af3a4be8d363ccc4bb8f90b5969f8b93b0f)
+V1b contains e9dd8604: True (ancestor False, git cherry - e9dd86046f73ea8e84aee4653043f4ae799652e1)
+V1b contains 3630f116: True (ancestor False, git cherry - 3630f11620204df6429be18bee56b190e6e010f0)
+V1b contains 227e1b36: True (ancestor False, git cherry - 227e1b36b361a0c4e16adefade5299a99c1b6115)
+V1b contains cbfe8375: True (ancestor False, git cherry - cbfe8375b4aa6c0146daff49c52eaa6d08f3f12b)
+V1b contains c94c49e0: True (ancestor False, git cherry - c94c49e0bf40fe81ca2f0f3b3af8dd7d49224cc1)
+V1b contains 726e751e: True (ancestor False, git cherry - 726e751eefe42e7c36c221e9ccf406396c0849b6)
+V1b contains cb022252: True (ancestor False, git cherry - cb022252530ca1a9979d6b5db43c67627ea0b7b5)
+V1b contains a9d6fd1c: True (ancestor False, git cherry - a9d6fd1cae6efaa1b35f0f6230ae8f927678476e)
+V1b negative control a6342c98 in eb7e8b91 (code F42a against the base FS14): False (ancestor False, git cherry + a6342c987f35a3250b9c0b445d047eb7da675a00) (want False)
+V1b negative control 82570fd2 in eb7e8b91 (F42a2 against the base FS14): False (ancestor False, git cherry + 82570fd2f1b6e646221694181c1791d92af87a52) (want False)
+V1b negative control 38fc76c1 in eb7e8b91 (FS15a main commit against the base FS14): False (ancestor False, git cherry + 38fc76c1af9badb97b7bd4f8d92aec0fac582f21) (want False)
+V1b negative control 38fc76c1 in 91b74d09 (FS15a main commit against the intermediate worktree commit of 82570fd2): False (ancestor False, git cherry + 38fc76c1af9badb97b7bd4f8d92aec0fac582f21) (want False)
+V1b negative control 15c9d2f2 in ea6c6e9e (code F44a against FS13): False (ancestor False, git cherry + 15c9d2f2090b136f65d5744dfd2a9cac46add65d) (want False)
+V1b negative control 78e45af3 in ea6c6e9e (FS14a F29 main commit against FS13): False (ancestor False, git cherry + 78e45af3a4be8d363ccc4bb8f90b5969f8b93b0f) (want False)
+V1b negative control 1398d44d in HEAD (F26 measurement F46a, not carried): False (ancestor False, git cherry + 1398d44d91b7e35b755f9802b7fabdd50bc9587f) (want False)
+V2 files of a6342c98: src/emulator.cpp src/graphics/host_gpu/renderer/pipeline/fixF20.cpp src/graphics/host_gpu/renderer/pipeline/fixF20.h src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp src/graphics/host_gpu/renderer/pipeline/pipelineCache.h src/graphics/host_gpu/renderer/pipeline/shaders.cpp
+V2 files of a9d6fd1c: tests/ShaderRecompilerComputeTests.cpp tests/shaderCfgTests.cpp
+V2 files of 82570fd2: src/graphics/host_gpu/renderer/pipeline/fixF20.cpp src/graphics/host_gpu/renderer/pipeline/fixF20.h src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp src/graphics/host_gpu/renderer/pipeline/pipelineCache.h tests/ShaderRecompilerComputeTests.cpp
+V2 files of 38fc76c1: src/graphics/host_gpu/renderer/pipeline/fixF20.cpp src/graphics/host_gpu/renderer/pipeline/fixF20.h
+V2 files of diff eb7e8b91..FS15 (8): src/emulator.cpp src/graphics/host_gpu/renderer/pipeline/fixF20.cpp src/graphics/host_gpu/renderer/pipeline/fixF20.h src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp src/graphics/host_gpu/renderer/pipeline/pipelineCache.h src/graphics/host_gpu/renderer/pipeline/shaders.cpp tests/ShaderRecompilerComputeTests.cpp tests/shaderCfgTests.cpp
+V2 file set = files of the four source commits True; signed changed lines of the diff = sum of the four True (lines 831); negative control without the FS15a main commit equal False (want False)
+V2b git diff --stat eb7e8b91 FS15:
+    src/emulator.cpp                                          |   3 +
+    src/graphics/host_gpu/renderer/pipeline/fixF20.cpp        |  74 +++++++++++++++++++++++++
+    src/graphics/host_gpu/renderer/pipeline/fixF20.h          | 236 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp |  38 ++++++++++---
+    src/graphics/host_gpu/renderer/pipeline/pipelineCache.h   |   7 +++
+    src/graphics/host_gpu/renderer/pipeline/shaders.cpp       |   7 ++-
+    tests/ShaderRecompilerComputeTests.cpp                    | 404 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+    tests/shaderCfgTests.cpp                                  |  62 +++++++++++++++++++++
+    8 files changed, 821 insertions(+), 10 deletions(-)
+V2b src/ paths (6): src/emulator.cpp src/graphics/host_gpu/renderer/pipeline/fixF20.cpp src/graphics/host_gpu/renderer/pipeline/fixF20.h src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp src/graphics/host_gpu/renderer/pipeline/pipelineCache.h src/graphics/host_gpu/renderer/pipeline/shaders.cpp
+V2b paths under src/graphics/shader/: none; paths outside src/ (all of a9d6fd1c / 82570fd2 True): tests/ShaderRecompilerComputeTests.cpp tests/shaderCfgTests.cpp; member True
+V3 DEFAULT-ON base FS14 (20): KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F21 KYTY_FIX_F24 KYTY_FIX_F25 KYTY_FIX_F29 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 DEFAULT-ON FS15 (21): KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F21 KYTY_FIX_F24 KYTY_FIX_F25 KYTY_FIX_F29 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 FS15 = base + KYTY_FIX_F20 only: True; negative control: at 91b74d09 (no FS15a) difference empty member False (want False)
+V3b fixF20.cpp at FS15: getenv(KYTY_FIX_F20) x1, EnvFlagOn(KYTY_FIX_F20) x0, format "FixF20: mode=%d" x1, format "FixF20Stat: when=%s" x1, static const lambda in the form of 3630f116 True
+V4 src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp blob base e1626ad67f22 FS15 e1626ad67f22 equal True; ParseMode unset/"" -> 3: True
+V5 KYTY_SHADER_SOURCE_HASH FS15 9177b4267de1fb8bac7d1113afd8733210addfac FS14 9177b4267de1fb8bac7d1113afd8733210addfac equal True
+V6 added code lines naming F26 / KYTY_DIAG_B32 / F30d counters: 0
+V7 (reference) src/ paths of the diff F42a2 worktree 5ccb1d31 .. FS15: src/graphics/host_gpu/renderer/cache/faultManager.cpp src/graphics/host_gpu/renderer/cache/faultManager.h src/graphics/host_gpu/renderer/pipeline/fixF20.cpp src/graphics/host_gpu/renderer/pipeline/fixF20.h src/graphics/presentation/window/hostInput.cpp src/graphics/presentation/window/joyPump.cpp src/graphics/presentation/window/joyPump.h src/graphics/presentation/window/vulkanWindow.cpp src/graphics/presentation/window/window.cpp src/kernel/fileSystem.cpp src/libs/controller.cpp
+ALL OK

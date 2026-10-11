@@ -1,0 +1,4 @@
+watch: start 2026-10-11T18:06:30Z child 20092 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[0/2] Re-checking globbed directories...
+[1/182] Generate kytyGitVersion.h
+KILLED: procload 2026-10-11T18:06:43Z pids [17036]; tree [14344, 15460, 20092, 20412, 21800, 22032, 28840, 30560, 31712, 40456, 49816, 51356, 51376, 54648, 55324, 56244, 56696, 57712, 57832, 59124, 59404, 60004], alive after []

@@ -1,0 +1,1 @@
+bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c  C:/kyty/f287/bin/kyty_emulator_bfac84be.exe (build C:/kyty/f287/fs15a/build/install/kyty_emulator.exe, worktree 6beb3b73)

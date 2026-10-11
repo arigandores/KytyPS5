@@ -1,0 +1,14 @@
+--- cherry-pick a6342c98
+Auto-merging src/emulator.cpp
+Auto-merging src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+Auto-merging src/graphics/host_gpu/renderer/pipeline/shaders.cpp
+[detached HEAD b1179dab] WIP track F link F42a (HPP-779): KYTY_FIX_F20 (default 0) - form P: at 1 every Vulkan module created from a guest translation (CreateCachedModule at the translation, LoadFromTranslationCache and precache Resolve; the dual-source variant) goes through FixF20::Apply - RewriteFaultOr (header-only fixF20.h, the function the stand calls) replaces each OpLoad -> OpBitwiseOr -> OpStore triple over the fault_buffer access chain of RecordBdaFault by one OpAtomicOr %u32 <the same pointer> <the existing u32 constant 1 = ScopeDevice> <constant 0 = MemorySemantics None> <the same bit> (result keeps the load id, not read); only when the translator layout has the FaultBuffer binding (FixF20Bound before AdoptDmaLayout, carried to the dual-source variant by ShaderProgram::fault_bound); unmatched counts a bound module without a variable named fault_buffer, a named module that is not bound, a load through the chain outside a triple and a triple left as it is; lines FixF20: mode=<0|1> once (PipelineCache constructor) and FixF20Stat: when= calls= modules_bound= modules= sites= rewritten= unmatched= every 4096 modules and at the exit of Execute (=1 only); at 0 Apply is never called and the module words are the translation; outside the translator signature set (no file of src/graphics/shader/** or SHADER_CACHE_EXTRA_FILES) (ROADMAP s122 item 694(v)(1)-(10)); built in the worktree, not run with the game
+ Author: Emu Engineer <emu-engineer@kyty.local>
+ Date: Sun Oct 11 03:48:04 2026 +0200
+ 6 files changed, 330 insertions(+), 8 deletions(-)
+ create mode 100644 src/graphics/host_gpu/renderer/pipeline/fixF20.cpp
+ create mode 100644 src/graphics/host_gpu/renderer/pipeline/fixF20.h
+b1179dab7891a82e5e270350b1c1b73492177964 eb7e8b91664aef26bdf0f5af6fd2cceebbf8f958 WIP track F link F42a (HPP-779): KYTY_FIX_F20 (default 0) - form P: at 1 every
+--- git status --short (0 = clean)
+0
+CP OK

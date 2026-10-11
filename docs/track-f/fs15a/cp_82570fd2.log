@@ -1,0 +1,11 @@
+--- cherry-pick 82570fd2
+Auto-merging src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+Auto-merging tests/ShaderRecompilerComputeTests.cpp
+[detached HEAD 91b74d09] WIP track F link F42a2 (HPP-805): stand of row F20 edition 2 - arm E (E-W, E-X): the module of the programs W and X is created by the emulator's Libs::Graphics::CreateCachedModule (places 1-3; moved out of the anonymous namespace of pipelineCache.cpp and declared in pipelineCache.h, body unchanged) with the binding flag true, the knob FixF20::Mode() of the process, KYTY_PIPELINE_SALT refused; VulkanHarness::SetExternalModule lets Dispatch bind it; FixF20::Calls() / Rewritten() getters (added lines only; RewriteFaultOr, Mode, Apply, PrintExitStat unchanged) print calls / rewritten per arm and in total (F20Stand: emu, emu_stat); six arms per round. Not run with the game (ROADMAP s122 item 705(b)(1)-(4))
+ Author: Emu Engineer <emu-engineer@kyty.local>
+ Date: Sun Oct 11 13:50:54 2026 +0200
+ 5 files changed, 89 insertions(+), 9 deletions(-)
+91b74d096a220b90a861aaec6c6ef1f19ef3e466 95e39a17f26097c0ffd7466f78ca19fc2141ac40 WIP track F link F42a2 (HPP-805): stand of row F20 edition 2 - arm E (E-W, E-X
+--- git status --short (0 = clean)
+0
+CP OK

@@ -1,0 +1,11 @@
+--- cherry-pick a9d6fd1c
+Auto-merging tests/ShaderRecompilerComputeTests.cpp
+Auto-merging tests/shaderCfgTests.cpp
+[detached HEAD 95e39a17] WIP track F link F42a (HPP-779): stand of row F20 - shader_recompiler_compute_tests --f20-stand: a guest program translated by the real translator (wave 32 on a 32-lane subgroup - no other_half, LocalSize 64, one FLAT load of a page outside the page table, the fault written on the return of main), arms W (32 lanes of a subgroup, 32 bits of one word), X (32 subgroups, one bit per subgroup), S (one lane per word), N (W without OpName/OpMemberName) x R dispatches (KYTY_TEST_F20STAND_R, default 200; arm order per round by KYTY_TEST_F20STAND_SEED), the module through Libs::Graphics::FixF20::RewriteFaultOr at KYTY_FIX_F20=1; after every dispatch the whole fault bitmap is read back (new VulkanHarness::ReadFaultBuffer, m_fault_buffer with eTransferSrc) and compared with the CPU bitmap - TSV expected_bits, seen_bits, lost, extra, words_lost, out_nonzero, form line (wave, subgroup, lane_count, LocalSize, OpReturn of main, named, sites, rewritten, unmatched, spvtools validation) and the modules as <out>.<arm>.spv; shader_cfg_tests: KYTY_RECOMPILE_F20=<file> (the =1 module of the corpus T1 row and the line recompile-f20:) and KYTY_TEST_F20FILE=<in>;<out>;<bound> (the replay modules a / a') (ROADMAP s122 item 694(g)(1), (3), (4), (v)(6))
+ Author: Emu Engineer <emu-engineer@kyty.local>
+ Date: Sun Oct 11 03:48:04 2026 +0200
+ 2 files changed, 406 insertions(+), 1 deletion(-)
+95e39a17f26097c0ffd7466f78ca19fc2141ac40 b1179dab7891a82e5e270350b1c1b73492177964 WIP track F link F42a (HPP-779): stand of row F20 - shader_recompiler_compute_
+--- git status --short (0 = clean)
+0
+CP OK

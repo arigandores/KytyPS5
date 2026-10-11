@@ -1,0 +1,8 @@
+--- cherry-pick 38fc76c1
+[detached HEAD 6beb3b73] track F link FS15a (HPP-820): KYTY_FIX_F20 default 0 -> 1 (ROADMAP s122 item 730(g)(1))
+ Date: Sun Oct 11 20:01:35 2026 +0200
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+6beb3b738d65502adf517405239f9298ee26aa52 91b74d096a220b90a861aaec6c6ef1f19ef3e466 track F link FS15a (HPP-820): KYTY_FIX_F20 default 0 -> 1 (ROADMAP s122 item 7
+--- git status --short (0 = clean)
+0
+CP OK

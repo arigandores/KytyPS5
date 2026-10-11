@@ -1,0 +1,14 @@
+track F link FS15a (HPP-820): KYTY_FIX_F20 default 0 -> 1 (ROADMAP s122 item 730(g)(1))
+
+FixF20::Mode in src/graphics/host_gpu/renderer/pipeline/fixF20.cpp reads KYTY_FIX_F20 in the form of FS14a c8836f14 /
+FS13a 3630f116: unset or "" = ON, 0/false/off/no = OFF, any other value as EnvValueOn; still one reading per process
+(static const lambda; the first call - PipelineCache constructor - prints "FixF20: mode=<0|1>" by value). The code of
+a6342c98 / 82570fd2 (RewriteFaultOr, Apply, PrintExitStat, getters) and the stand are unchanged; only the reading and the
+header comment of fixF20.h change. src/graphics/shader/** not touched - translation signature unchanged; no gates or
+knobs added.
+
+Shipping binary FS15: clean worktree of FS14 eb7e8b91 + cherry-pick of a6342c98 (code F42a), a9d6fd1c (stand edition 1),
+82570fd2 (CreateCachedModule moved out, getters, stand edition 2, F42a2) + this commit. Not installed; no game run (WIP
+until FS15c).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

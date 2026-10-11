@@ -1,0 +1,274 @@
+suite test_tools_f40c.py sha256 e925ff7be73af2fd46cb0ae472c993bf5ae7e13657b8ad90a7e221bf86a42042 target go_f40c.sh sha256 4cfef92f637479b8249863512a849f1eee0fd5d500f479dd98f159123ea21a0b
+ok   go plan f24_d1
+ok   go plan f24_d1_r1
+ok   go plan f24_d1_r2
+ok   plan f24_d1: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_d1: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_d1: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_d1: --mark-quit only for the exit tags
+ok   plan f24_d1: video only for f24_n1
+ok   go plan f24_f0
+ok   go plan f24_f0_r1
+ok   go plan f24_f0_r2
+ok   plan f24_f0: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_f0: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_f0: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_f0: --mark-quit only for the exit tags
+ok   plan f24_f0: video only for f24_n1
+ok   go plan f24_f1
+ok   go plan f24_f1_r1
+ok   go plan f24_f1_r2
+ok   plan f24_f1: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_f1: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_f1: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_f1: --mark-quit only for the exit tags
+ok   plan f24_f1: video only for f24_n1
+ok   go plan f24_m1
+ok   go plan f24_m1_r1
+ok   go plan f24_m1_r2
+ok   plan f24_m1: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_m1: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_m1: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_m1: --mark-quit only for the exit tags
+ok   plan f24_m1: video only for f24_n1
+ok   go plan f24_m2
+ok   go plan f24_m2_r1
+ok   go plan f24_m2_r2
+ok   plan f24_m2: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_m2: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_m2: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_m2: --mark-quit only for the exit tags
+ok   plan f24_m2: video only for f24_n1
+ok   go plan f24_m4
+ok   go plan f24_m4_r1
+ok   go plan f24_m4_r2
+ok   plan f24_m4: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_m4: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_m4: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_m4: --mark-quit only for the exit tags
+ok   plan f24_m4: video only for f24_n1
+ok   go plan f24_m5
+ok   go plan f24_m5_r1
+ok   go plan f24_m5_r2
+ok   plan f24_m5: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_m5: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_m5: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_m5: --mark-quit only for the exit tags
+ok   plan f24_m5: video only for f24_n1
+ok   go plan f24_m6
+ok   go plan f24_m6_r1
+ok   go plan f24_m6_r2
+ok   plan f24_m6: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_m6: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_m6: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_m6: --mark-quit only for the exit tags
+ok   plan f24_m6: video only for f24_n1
+ok   go plan f24_n1
+ok   go plan f24_n1_r1
+ok   go plan f24_n1_r2
+ok   plan f24_n1: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_n1: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_n1: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_n1: --mark-quit only for the exit tags
+ok   plan f24_n1: video only for f24_n1
+ok   go plan f24_p0
+ok   go plan f24_p0_r1
+ok   go plan f24_p0_r2
+ok   plan f24_p0: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_p0: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_p0: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_p0: --mark-quit only for the exit tags
+ok   plan f24_p0: video only for f24_n1
+ok   go plan f24_p0b
+ok   go plan f24_p0b_r1
+ok   go plan f24_p0b_r2
+ok   plan f24_p0b: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_p0b: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_p0b: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_p0b: --mark-quit only for the exit tags
+ok   plan f24_p0b: video only for f24_n1
+ok   go plan f24_p1
+ok   go plan f24_p1_r1
+ok   go plan f24_p1_r2
+ok   plan f24_p1: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_p1: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_p1: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_p1: --mark-quit only for the exit tags
+ok   plan f24_p1: video only for f24_n1
+ok   go plan f24_p1b
+ok   go plan f24_p1b_r1
+ok   go plan f24_p1b_r2
+ok   plan f24_p1b: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_p1b: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_p1b: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_p1b: --mark-quit only for the exit tags
+ok   plan f24_p1b: video only for f24_n1
+ok   go plan f24_u0
+ok   go plan f24_u0_r1
+ok   go plan f24_u0_r2
+ok   plan f24_u0: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_u0: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_u0: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_u0: --mark-quit only for the exit tags
+ok   plan f24_u0: video only for f24_n1
+ok   go plan f24_u0b
+ok   go plan f24_u0b_r1
+ok   go plan f24_u0b_r2
+ok   plan f24_u0b: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_u0b: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_u0b: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_u0b: --mark-quit only for the exit tags
+ok   plan f24_u0b: video only for f24_n1
+ok   go plan f24_u1
+ok   go plan f24_u1_r1
+ok   go plan f24_u1_r2
+ok   plan f24_u1: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_u1: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_u1: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_u1: --mark-quit only for the exit tags
+ok   plan f24_u1: video only for f24_n1
+ok   go plan f24_u1b
+ok   go plan f24_u1b_r1
+ok   go plan f24_u1b_r2
+ok   plan f24_u1b: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_u1b: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_u1b: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_u1b: --mark-quit only for the exit tags
+ok   plan f24_u1b: video only for f24_n1
+ok   go plan f24_x1
+ok   go plan f24_x1_r1
+ok   go plan f24_x1_r2
+ok   plan f24_x1: KYTY_FIX_ only KYTY_FIX_F24
+ok   plan f24_x1: KYTY_TEST_ only KYTY_TEST_HIDLOSS, absent for f24_n1
+ok   plan f24_x1: no KYTY_GAME_PATCH, no KYTY_GPU_CHECKPOINTS, no validation
+ok   plan f24_x1: --mark-quit only for the exit tags
+ok   plan f24_x1: video only for f24_n1
+ok   go dry-run output: first line is the linter line ALL OK, the plan is a later line (the F33e trap)
+ok   post plan of f24_u0 is the dryrun line, plan-w no (rc 0: OSS=60:upd KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of f24_n1 is the dryrun line, plan-w no (rc 0: _FIX_F24=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of f24_f1_r2 is the dryrun line, plan-w no (rc 0: SS=60:flap KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post: the plan is taken by grep '^dryrun ', not by the first line
+ok   post: the plan-only exit is before the lock check (reads nothing)
+ok   post: video steps only when rec_<tag>.mp4 exists; pair with the fs12_v sheet of FS12c
+ok   post: SERIES_STOP on DEAD_CONTROL, WITNESS_DEAD, the third flap non-admission and tempo
+ok   on disk: the fs12_v sheet exists
+ok   go usage rc 2 for 'f24_c0'
+ok   launch usage rc 2 for 'f24_c0'
+ok   post usage rc 2 for 'f24_c0'
+ok   go usage rc 2 for 'f24_c1'
+ok   launch usage rc 2 for 'f24_c1'
+ok   post usage rc 2 for 'f24_c1'
+ok   go usage rc 2 for 'f24_m3'
+ok   launch usage rc 2 for 'f24_m3'
+ok   post usage rc 2 for 'f24_m3'
+ok   go usage rc 2 for 'f24_u0_r3'
+ok   launch usage rc 2 for 'f24_u0_r3'
+ok   post usage rc 2 for 'f24_u0_r3'
+ok   go usage rc 2 for 'f24_u0_r0'
+ok   launch usage rc 2 for 'f24_u0_r0'
+ok   post usage rc 2 for 'f24_u0_r0'
+ok   go usage rc 2 for 'f25_v'
+ok   launch usage rc 2 for 'f25_v'
+ok   post usage rc 2 for 'f25_v'
+ok   go usage rc 2 for 'f24_u2'
+ok   launch usage rc 2 for 'f24_u2'
+ok   post usage rc 2 for 'f24_u2'
+ok   go usage rc 2 for ''
+ok   launch usage rc 2 for ''
+ok   post usage rc 2 for ''
+ok   launch f24_u0 dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch f24_n1 dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch f24_m6 dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat f24_u0b without F40C_REPEAT_OK -> rc 11
+ok   launch repeat f24_u0b with F40C_REPEAT_OK -> passes
+ok   launch repeat f24_u1b without F40C_REPEAT_OK -> rc 11
+ok   launch repeat f24_u1b with F40C_REPEAT_OK -> passes
+ok   launch repeat f24_p0b without F40C_REPEAT_OK -> rc 11
+ok   launch repeat f24_p0b with F40C_REPEAT_OK -> passes
+ok   launch repeat f24_p1b without F40C_REPEAT_OK -> rc 11
+ok   launch repeat f24_p1b with F40C_REPEAT_OK -> passes
+ok   launch repeat f24_f1_r1 without F40C_REPEAT_OK -> rc 11
+ok   launch repeat f24_f1_r1 with F40C_REPEAT_OK -> passes
+ok   launch repeat f24_m1_r2 without F40C_REPEAT_OK -> rc 11
+ok   launch repeat f24_m1_r2 with F40C_REPEAT_OK -> passes
+ok   launch repeat f24_n1_r1 without F40C_REPEAT_OK -> rc 11
+ok   launch repeat f24_n1_r1 with F40C_REPEAT_OK -> passes
+ok   launch repeat f24_u1b_r1 without F40C_REPEAT_OK -> rc 11
+ok   launch repeat f24_u1b_r1 with F40C_REPEAT_OK -> passes
+ok   form634_check.py --series C:\kyty\f287\f40c: ALL OK
+ok   go_f40c.sh first executable line is the form linter
+ok   launch_f40c.sh first executable line is the form linter
+ok   go: literal bd6dcc81 = full sha256
+ok   on disk: sha256 of kyty_emulator_bd6dcc81.exe = literal
+ok   go: literal bec75cc2 = full sha256
+ok   on disk: sha256 of kyty_emulator_bec75cc2.exe = literal
+ok   go: literal c164a6d3 = full sha256
+ok   on disk: sha256 of kyty_emulator_c164a6d3.exe = literal
+ok   go: literal ddf0ca91 = full sha256
+ok   on disk: sha256 of kyty_emulator_ddf0ca91.exe = literal
+ok   go: literal ea84198d = full sha256
+ok   on disk: sha256 of kyty_emulator_ea84198d.exe = literal
+ok   go: literal fcf462d8 = full sha256
+ok   on disk: sha256 of kyty_emulator_fcf462d8.exe = literal
+ok   go: INST literal = FS13 abab2196 (item 703 (d)); no FS12 literal
+ok   go: BIN and PINNED paths
+ok   on disk: sha256 of the pinned FS13 copy = abab2196
+ok   on disk: kyty_emulator_ddf0ca91.exe = F40a2 build output
+ok   go: the guard scan right after the lock line, before the manifest
+ok   go: no guard scan / hold check before the lock (item 660 (d)(1))
+ok   go: install of the tag copy after the copies of the caches and after INSTALLED=1
+ok   go: the return of the pinned FS13 copy in finish, before installed_after
+ok   go: installed_after must be FS13
+ok   go: installed before the tag must be FS13
+ok   go: KYTY_FIX_ in the knobs only KYTY_FIX_F24
+ok   go: no KYTY_GPU_CHECKPOINTS=, KYTY_GAME_PATCH= in the body
+ok   go: KYTY_TEST_ only KYTY_TEST_HIDLOSS=60:$MODE
+ok   go: shell KYTY_* and VK_LAYER_* unset before the call
+ok   go: the env after the unset is written
+ok   go: lock line names HPP-772
+ok   go: the order of item 692 (g)(1): u1 after u0, p1 after p0, the b pair
+ok   queue_f40c.py own issue HPP-772
+ok   runchk_f40c.py own issue HPP-772
+ok   runchk_f40c.py reads F40C_RUN_ID
+ok   chk_f40c.sh comments of HPP-772
+ok   enter_scene: ROOT = f287/f40c
+ok   enter_scene: CLOSE_WAIT_S = 40 (the harness timeout of the exit, form b4_v)
+ok   enter_scene: = the F38c file with ROOT moved once the F40c additions (header, QuitMark block, qm lines, --mark-quit) are taken out (859 / 859 lines)
+ok   QuitMark: upper = dead_first - before = 7.75, lower = alive_last - seen = 7.25 ({'seen_s': 10.25, 'before_s': 10.0, 'alive_last_s': 17.5, 'dead_first_s': 17.75, 'exit_upper_s': 7.75, 'exit_lower_s': 7.25, 'step_s': 0.25})
+ok   QuitMark: no line -> upper None ({'seen_s': None, 'before_s': 107.75, 'alive_last_s': None, 'dead_first_s': 107.75, 'exit_upper_s': None, 'exit_lower_s': None, 'step_s': 0.25})
+ok   tempo_f40c.py = tempo_f38c.py with the names moved (+ one header line)
+ok   ASCII only: chk_f40c.sh
+ok   ASCII only: dispstate.py
+ok   ASCII only: enter_scene.py
+ok   ASCII only: f40c_read.py
+ok   ASCII only: go_f40c.sh
+ok   ASCII only: guard_f40c.py
+ok   ASCII only: hold_f40c.py
+ok   ASCII only: hostload_f40c.py
+ok   ASCII only: idle142.py
+ok   ASCII only: launch_f40c.sh
+ok   ASCII only: launch_run.py
+ok   ASCII only: manifest_fs4c.py
+ok   ASCII only: mfsub_f40c.py
+ok   ASCII only: mk_f40c.py
+ok   ASCII only: post_f40c.sh
+ok   ASCII only: procload.py
+ok   ASCII only: queue_f40c.py
+ok   ASCII only: refs_f40c.py
+ok   ASCII only: regress_f40c.py
+ok   ASCII only: run_safety99.py
+ok   ASCII only: runchk_f40c.py
+ok   ASCII only: sheet142.py
+ok   ASCII only: snap_f40c.py
+ok   ASCII only: tempo_f40c.py
+ok   ASCII only: test_f40c_read.py
+ok   ASCII only: test_tools_f40c.py
+ok   ASCII only: wait_f40c.sh
+checks 265 failed 0
+ALL OK

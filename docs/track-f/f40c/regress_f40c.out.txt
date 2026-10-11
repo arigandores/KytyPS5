@@ -1,0 +1,33 @@
+suite regress_f40c.py sha256 e8eb4ebaeed46b3e4547b2d14a1db15075363f44b7e943d4f09b76c73faf51d9 target f40c_read.py sha256 b5855a0576264ee5ecae2fc055a6514a5266dfb38e4f381e05df9e2676742b41
+f24_n1 (from log_fs12_v.txt): admission failed members 5
+  NO json binary_sha256 = ddf0ca91 (46892c20080819ae)
+  NO installed during the tag = ddf0ca91 (46892c20080819ae)
+  NO installed before = after = FS13 abab2196 (ea51ae80521e8300 / ea51ae80521e8300)
+  NO env = the form of the tag (['missing KYTY_FIX_F24'])
+  NO FixF24: mode=1 b24=1 exactly 1, before the first GuestOut ([]; unparsable 0; first GuestOut 12502)
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (334.0 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0)
+  [YES] video index records >= 3000 (10487)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet: C:/kyty/f287/fs12c/runs/fs12_v/sheet_fs12_v.png frames 10487 step 218 tiles 8x6)
+  [YES] FixF24: mode=1 b24=1 before the first GuestOut (admission member, [])
+  [NO] FixF24: init before the first GuestOut ([]; first GuestOut 12502)
+  [NO] init_owner exactly 1 (0, bad 0) None: hid != 0 and helper != 0 (witness alive)
+  [NO] init_owner hid = helper = pump != main
+  [YES] FixF21: mode=1 before the first GuestOut ([(1, 727)])
+  [YES] FixB12: mode=1 before the first GuestOut ([(1, 725)])
+  [YES] exit by the harness: Event: quit line (1184420)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (log 0; stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0)
+  [YES] LogAsync: mode=1 exactly once before the first GuestOut (['LogAsync: mode=1 limit_bytes=2'])
+  [YES] summary present
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 before the first GuestOut ([(1, 723)])
+  [YES] FixB12Stat: line present (34)
+  members as expected (only the three FixF24 members NO, form fs12_v ALL YES, word WITNESS_DEAD on FS12): True (WITNESS_DEAD)
+  no TestHidLoss / ExitFatal / FixF24 lines in FS12: True; FixF24: pump_update_long 0, FixF24: open failed 0 (rows, not members); mean dt_us 33026.0; scene frames 10113
+ALL OK

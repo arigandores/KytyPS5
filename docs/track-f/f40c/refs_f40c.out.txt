@@ -1,0 +1,46 @@
+OK d2e316ee:docs/ROADMAP.md:24483
+OK d2e316ee:docs/ROADMAP.md:24497
+OK d2e316ee:docs/ROADMAP.md:24499
+OK d2e316ee:docs/ROADMAP.md:24507
+OK d2e316ee:docs/ROADMAP.md:24509
+OK d2e316ee:docs/ROADMAP.md:24510
+OK d2e316ee:docs/ROADMAP.md:24519
+OK d2e316ee:docs/ROADMAP.md:24581
+OK d2e316ee:docs/ROADMAP.md:24584
+OK d2e316ee:docs/ROADMAP.md:24586
+OK d2e316ee:docs/ROADMAP.md:24631
+OK d2e316ee:docs/ROADMAP.md:24633
+OK c6ceeecd:docs/ROADMAP.md:24654
+OK c6ceeecd:docs/ROADMAP.md:24659
+OK 7c38e497:src/graphics/presentation/window/window.cpp:1147
+OK 7c38e497:src/graphics/presentation/window/window.cpp:1155
+OK 7c38e497:src/graphics/presentation/window/window.cpp:1459
+OK 7c38e497:src/graphics/presentation/window/window.cpp:1695
+OK 7c38e497:src/graphics/presentation/window/window.cpp:1699
+OK 7c38e497:src/graphics/presentation/window/joyPump.cpp:97
+OK 7c38e497:src/graphics/presentation/window/joyPump.cpp:440
+OK 7c38e497:src/graphics/presentation/window/joyPump.cpp:454
+shift NOT OK d2e316ee:docs/ROADMAP.md:24484
+shift NOT OK d2e316ee:docs/ROADMAP.md:24498
+shift NOT OK d2e316ee:docs/ROADMAP.md:24500
+shift NOT OK d2e316ee:docs/ROADMAP.md:24508
+shift NOT OK d2e316ee:docs/ROADMAP.md:24510
+shift NOT OK d2e316ee:docs/ROADMAP.md:24511
+shift NOT OK d2e316ee:docs/ROADMAP.md:24520
+shift NOT OK d2e316ee:docs/ROADMAP.md:24582
+shift NOT OK d2e316ee:docs/ROADMAP.md:24585
+shift NOT OK d2e316ee:docs/ROADMAP.md:24587
+shift NOT OK d2e316ee:docs/ROADMAP.md:24632
+shift NOT OK d2e316ee:docs/ROADMAP.md:24634
+shift NOT OK c6ceeecd:docs/ROADMAP.md:24655
+shift NOT OK c6ceeecd:docs/ROADMAP.md:24660
+shift NOT OK 7c38e497:src/graphics/presentation/window/window.cpp:1148
+shift NOT OK 7c38e497:src/graphics/presentation/window/window.cpp:1156
+shift NOT OK 7c38e497:src/graphics/presentation/window/window.cpp:1460
+shift NOT OK 7c38e497:src/graphics/presentation/window/window.cpp:1696
+shift NOT OK 7c38e497:src/graphics/presentation/window/window.cpp:1700
+shift NOT OK 7c38e497:src/graphics/presentation/window/joyPump.cpp:98
+shift NOT OK 7c38e497:src/graphics/presentation/window/joyPump.cpp:441
+shift NOT OK 7c38e497:src/graphics/presentation/window/joyPump.cpp:455
+refs 22, ok True, every shift fails True
+ALL OK

@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/fs14c/runs/fs14_v/sheet_fs14_v.png frames 10140 step 211 tiles 8x6

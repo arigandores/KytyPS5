@@ -1,0 +1,6 @@
+reader fs14c_read.py sha256 65e8c7435658f589b66684be953ec16597c46e12dabe508b8cbbda8b467f3c42
+| tag | status | binary_sha256 | members 710(g)(3) | form | pump_update_long / open failed / Controller | overflow (log/stdout) | accessed (log/stdout) | exit code | close_s | glitches | video index | hold_s |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| fs14_v | ADMITTED | 013e1974 | ALL YES | ALL YES | 0 / 0 / 0 | 0 / 0 | 36 / 0 | 0 | 4.1 | 0 | 10140 | 330.1 |
+| fs14_w | ADMITTED | 013e1974 | ALL YES | ALL YES | 0 / 0 / 0 | 0 / 0 | 37 / 0 | 0 | 4.0 | None | None | 310.0 |
+| fs14_z | ADMITTED | 013e1974 | ALL YES | - | 0 / 0 / 0 | 0 / 0 | 32 / 0 | 0 | 4.2 | 0 | 4796 | 150.2 |

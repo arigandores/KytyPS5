@@ -1,0 +1,63 @@
+tag fs14_v (form fs14_v, level underwater_aerial_garden)  reader sha256 65e8c7435658f589b66684be953ec16597c46e12dabe508b8cbbda8b467f3c42
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = FS14 013e1974 (013e1974ea8abfb4)
+    [ok] installed during the tag = FS14 013e1974 (013e1974ea8abfb4)
+    [ok] installed before = after = FS13 abab2196 (abab2196e3b66f04 / abab2196e3b66f04)
+    [ok] json prereg sha256 = seal sha256 (e4a7b2cf33673cf4 / e4a7b2cf33673cf4)
+    [ok] env = the form of the tag (exact)
+    [ok] no KYTY_TEST_* in the env (none)
+    [ok] 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (227527)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line - no KYTY_DIAG_B32 (0)
+    [ok] no TestLogStall line (0)
+    [ok] no TestHidLoss line - the stand is off (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha 98)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+  binary_sha256 013e1974ea8abfb41e9951c7939b3890257010f53bad4ff838d6fd70fde3d0cd
+  MEMBERS 710(g)(3)+712(g)(3) ALL YES
+    [YES] hold >= 300 s after the first scene frame (334.4 s)
+    [YES] the process lived through the hold (outcome ok, hold_exit None)
+    [YES] 0 death markers (log and stdout) []
+    [YES] 0 frames >= 1 s after the first scene frame (0; first 336; with the first frame 0)
+    [YES] video index records >= 3000 (10140)
+    [YES] 0 one-frame glitches (0)
+    [YES] sheet for the lead made (sheet: C:/kyty/f287/fs14c/runs/fs14_v/sheet_fs14_v.png frames 10140 step 211 tiles 8x6)
+    [YES] FixF24: mode=1 b24=1 (every line) before the first GuestOut ([(1, 1, 20)]; unparsable 0; first GuestOut 12277) - item 710 (g)(3)
+    [YES] FixF24: init before the first GuestOut (lines [21]; first GuestOut 12277)
+    [YES] FixF24: init_owner exactly 1 before the first GuestOut (1, unparsable 0) {'hid': 56720, 'helper': 56720, 'msg': 56720, 'pump': 56720, 'main': 47768, 'ln': 22}: hid != 0 and helper != 0 (witness alive)
+    [YES] FixF24: init_owner hid = helper = pump != main
+    [YES] FixF25: mode=1 (every line) before the first GuestOut ([(1, 17)]; unparsable 0; first GuestOut 12277)
+    [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 732)]; unparsable 0; first GuestOut 12277)
+    [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 730)]; bad 0; first GuestOut 12277)
+    [YES] FixF29: mode=1 (every line) before the first GuestOut ([(1, 95)]; unparsable 0; first GuestOut 12277) - item 712 (g)(3)
+    [YES] exit by the harness: Event: quit line in the log (1156314)
+    [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+    [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+    [YES] 0 FixF24: pump_stop_expired (whole log 0; whole stdout 0)
+    [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  MEMBERS form fs13_v ALL YES
+    [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12277)
+    [YES] summary LogAsync: full_waits= present (1)
+    [YES] drain_timeouts 0 (0)
+    [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 728)]; first GuestOut 12277)
+    [YES] FixB12Stat: line present (parsed 35, unparsable 0)
+  INFO {"expired_log": 0, "expired_stdout": 0, "fatal_after_quit": 0, "fatal_log_total": 0, "fatal_stdout": 0, "first_scene_n": 336, "frames_ge1s": 0, "frames_ge1s_with_first": 0, "hold_s": 334.4, "max_dt": 197951, "mean_dt_us": 34146.7, "quit_ln": 1156314, "scene_frames": 9794, "summary": {"bytes": 313310577, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 706186, "max_queued_bytes": 34328, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "vke": 0, "vkw": 0}
+  ROW F24 (not a gate): FixF24: pump_update_long 0, FixF24: open failed 0, host pad lines Controller 0 (a reference, not an interference); pump_stop_expired log 0, whole stdout 0; FixF24: mode= lines [[1, 1]], unparsable 0; init 1; init_owner 1 (unparsable 0) {"helper": 56720, "hid": 56720, "ln": 22, "main": 47768, "msg": 56720, "pump": 56720}; add event 0, wait error 0, other 0
+  ROW F29 (not a gate; overflow > 0 - evidence of F29 in the game, item of the lead): FixF29: overflow log 0, whole stdout 0; Accessed non-GPU cached memory log 36, whole stdout 0; FixF29: mode= lines [1], unparsable 0, other FixF29 lines 0
+  ROW F29 first lines: None | Accessed non-GPU cached memory at 0x0000000401c08000
+  ROW F25 (not a gate): FixF25: read failed twice log 0, whole stdout 0; KernelRead: direct read failed log 0, whole stdout 0; FixF25: mode= lines 1, unparsable 0, other FixF25 lines 0
+  ROW exit (not a gate): exit code 0 (0x00000000); WM_CLOSE post -> process end 4.1 s; killed False; posted 5; harness timeout 40 s; Event: quit line 1156314; --- Fatal Error --- after it 0, whole stdout 0
+  REFERENCE: {"b12stat_last": {"ln": 1153740, "lskip": 0, "passes": 227992, "rewalk": 0, "rwd": 0}, "b12stat_lines": 35, "bin_version_string": true, "env_keys": ["KYTY_FRAME_TRACE", "KYTY_GATE_FILE", "KYTY_GPU_CLOCK_PIN", "KYTY_GPU_HANG_ABORT_S", "KYTY_GPU_MARKERS", "KYTY_GUEST_ARGS", "KYTY_QUEUE_TRACE", "KYTY_REC", "KYTY_SAMPLE_GATE"], "f21_lines": 1, "f21_other": 0, "fork_line": "version: Fork build arigandores/KytyPS5 eb7e8b9", "glitches": 0, "hold_exit": null, "hold_s": 330.1, "lines": 1156327, "other_logasync": 0, "outcome": "ok", "sheet": "sheet: C:/kyty/f287/fs14c/runs/fs14_v/sheet_fs14_v.png frames 10140 step 211 tiles 8x6", "stable_s": 19.9, "stand_log": 0, "stand_stdout": 0, "video_index": 10140, "vke": 0, "vkw": 0}
+  READING ADMITTED, members 710(g)(3)+712(g)(3) ALL YES, members of the form fs13_v ALL YES (no verdict; reading - FS14d)

@@ -1,0 +1,305 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = FS14 013e1974 (013e1974ea8abfb4)",
+   true
+  ],
+  [
+   "installed during the tag = FS14 013e1974 (013e1974ea8abfb4)",
+   true
+  ],
+  [
+   "installed before = after = FS13 abab2196 (abab2196e3b66f04 / abab2196e3b66f04)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (e4a7b2cf33673cf4 / e4a7b2cf33673cf4)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "no KYTY_TEST_* in the env (none)",
+   true
+  ],
+  [
+   "0 ExitFatal: lines (log 0; whole stdout 0)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 150 s (150)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "stdout present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (231374)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line - no KYTY_DIAG_B32 (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "no TestHidLoss line - the stand is off (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha 98)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "013e1974ea8abfb41e9951c7939b3890257010f53bad4ff838d6fd70fde3d0cd",
+ "exit": {
+  "close_killed": false,
+  "close_posted": 5,
+  "close_rc": 0,
+  "close_rc_hex": "0x00000000",
+  "close_s": 4.2,
+  "close_wait_s": 40,
+  "fatal_after_quit": 0,
+  "fatal_stdout": 0,
+  "quit_ln": 665807
+ },
+ "f24_rows": {
+  "add_event": 0,
+  "controller_first": null,
+  "controller_lines": 0,
+  "init_lines": 0,
+  "init_owner": null,
+  "mode_lines": [
+   [
+    0,
+    1
+   ]
+  ],
+  "mode_unparsable": 0,
+  "open_failed": 0,
+  "other": 0,
+  "owner_lines": 0,
+  "owner_unparsable": 0,
+  "pump_stop_expired_log": 0,
+  "pump_stop_expired_stdout": 0,
+  "pump_update_long": 0,
+  "wait_error": 0
+ },
+ "f25_rows": {
+  "direct_read_failed_first": null,
+  "direct_read_failed_log": 0,
+  "direct_read_failed_stdout": 0,
+  "f25_mode_lines": 1,
+  "f25_other": 0,
+  "f25_unparsable": 0,
+  "read_failed_twice_first": null,
+  "read_failed_twice_log": 0,
+  "read_failed_twice_stdout": 0
+ },
+ "f29_rows": {
+  "accessed_first": "Accessed non-GPU cached memory at 0x0000000401c08000",
+  "accessed_log": 32,
+  "accessed_stdout": 0,
+  "f29_mode_lines": [
+   0
+  ],
+  "f29_other": 0,
+  "f29_unparsable": 0,
+  "overflow_first": null,
+  "overflow_log": 0,
+  "overflow_stdout": 0
+ },
+ "form": "fs14_z",
+ "form_members": [],
+ "form_ok": null,
+ "info": {
+  "b12": [
+   [
+    1,
+    728
+   ]
+  ],
+  "b13": [
+   [
+    1,
+    726
+   ]
+  ],
+  "expired_log": 0,
+  "expired_stdout": 0,
+  "f21": [
+   [
+    1,
+    12000,
+    730
+   ]
+  ],
+  "f21_unparsable": 0,
+  "f25": [
+   [
+    1,
+    17
+   ]
+  ],
+  "fatal_after_quit": 0,
+  "fatal_log_total": 0,
+  "fatal_stdout": 0,
+  "first_scene_n": 332,
+  "frames_ge1s": 0,
+  "frames_ge1s_with_first": 0,
+  "glitches": 0,
+  "hold_s": 154.1,
+  "logasync_mode": [
+   "LogAsync: mode=1 limit_bytes=268435456 d"
+  ],
+  "max_dt": 199066,
+  "mean_dt_us": 34609.0,
+  "quit_ln": 665807,
+  "scene_frames": 4454,
+  "sheet": "sheet: C:/kyty/f287/fs14c/runs/fs14_z/sheet_fs14_z.png frames 4796 step 99 tiles 8x6",
+  "stat_lines": 16,
+  "summary": {
+   "bytes": 155524421,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 434980,
+   "max_queued_bytes": 27677,
+   "stall_cut": 0,
+   "stalls": 0,
+   "sync_lines": 0
+  },
+  "video_index": 4796,
+  "vke": 0,
+  "vkw": 0
+ },
+ "interference": null,
+ "kind": "z",
+ "level": "underwater_aerial_garden",
+ "members": [
+  [
+   "hold >= 120 s after the first scene frame (154.1 s)",
+   true
+  ],
+  [
+   "the process lived through the hold (outcome ok, hold_exit None)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "FixF24: mode=0 b24=1 (every line) before the first GuestOut ([(0, 1, 20)]; unparsable 0; first GuestOut 12505) - item 710 (g)(3)",
+   true
+  ],
+  [
+   "other FixF24: lines 0 (0: init 0, init_owner 0, unparsable 0, pump_stop_expired 0, pump_update_long 0, open failed 0, add event 0, wait error 0, other 0)",
+   true
+  ],
+  [
+   "FixF29: mode=0 (every line) before the first GuestOut ([(0, 93)]; unparsable 0; first GuestOut 12505) - item 712 (g)(3)",
+   true
+  ],
+  [
+   "other FixF29: lines 0 (0: overflow 0, unparsable 0, other 0)",
+   true
+  ]
+ ],
+ "ok": true,
+ "reader_sha256": "65e8c7435658f589b66684be953ec16597c46e12dabe508b8cbbda8b467f3c42",
+ "reading": "ADMITTED, members 710(g)(3)+712(g)(3) ALL YES, members of the form - none (no verdict; reading - FS14d)",
+ "ref": {
+  "b12stat_last": {
+   "ln": 639361,
+   "lskip": 0,
+   "passes": 96372,
+   "rewalk": 0,
+   "rwd": 0
+  },
+  "b12stat_lines": 16,
+  "bin_version_string": true,
+  "env_keys": [
+   "KYTY_FIX_F24",
+   "KYTY_FIX_F29",
+   "KYTY_FRAME_TRACE",
+   "KYTY_GATE_FILE",
+   "KYTY_GPU_CLOCK_PIN",
+   "KYTY_GPU_HANG_ABORT_S",
+   "KYTY_GPU_MARKERS",
+   "KYTY_GUEST_ARGS",
+   "KYTY_QUEUE_TRACE",
+   "KYTY_REC",
+   "KYTY_SAMPLE_GATE"
+  ],
+  "f21_lines": 1,
+  "f21_other": 0,
+  "fork_line": "version: Fork build arigandores/KytyPS5 eb7e8b9",
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 150.2,
+  "lines": 665809,
+  "other_logasync": 0,
+  "outcome": "ok",
+  "sheet": "sheet: C:/kyty/f287/fs14c/runs/fs14_z/sheet_fs14_z.png frames 4796 step 99 tiles 8x6",
+  "stable_s": 18.4,
+  "stand_log": 0,
+  "stand_stdout": 0,
+  "video_index": 4796,
+  "vke": 0,
+  "vkw": 0
+ },
+ "status": "ADMITTED",
+ "tag": "fs14_z"
+}

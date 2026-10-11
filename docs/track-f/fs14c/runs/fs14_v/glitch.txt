@@ -1,0 +1,2 @@
+C:/kyty/f287/fs14c/rec_fs14_v.mp4: 10140 frames 960x540, index entries 10140
+one-frame glitches: 0

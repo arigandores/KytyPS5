@@ -1151,6 +1151,11 @@ void WindowShutdown() {
 //    detached two steps later; JoyPump tasks run no earlier than FLAP_TASK_DELAY_MS after their post (a pad lives 2 steps,
 //    less than the delay: a task opening by the event index can never open its own pad); attached - successful attaches,
 //    opened - pads whose Update callback ran (SDL_JoystickOpen runs one Update), open_lat_max_us - attach to first Update.
+// F40a2 (HPP-785, ROADMAP s122 item 696(b)(2), RC2 of F40b): the line "TestHidLoss: f24" ends with flap_life_min_us,
+// flap_life_max_us (detach - attach of the flap slots that were attached and detached; both times taken under the
+// joystick lock, attach before SDL_JoystickAttachVirtualEx, detach before SDL_JoystickDetachVirtual) and
+// jp_scan_gap_max_us (JoyPump::StandScanGapBegin just before the first attach .. StandScanGapEnd just after the last
+// detach: the longest stretch without a ScanAndOpen start of JoyPump; 0 at KYTY_FIX_F24=0); 0 in other modes.
 constexpr double   TEST_HIDLOSS_PRE_S              = 10.0;
 constexpr uint32_t TEST_HIDLOSS_HOLD_MS            = 3000;
 constexpr uint32_t TEST_HIDLOSS_PROBE_MS           = 20;
@@ -1264,6 +1269,8 @@ struct TestHidLossEd2 {
 	std::atomic<uint64_t>  flap_attached {0};
 	std::atomic<uint64_t>  flap_attach_us[TEST_HIDLOSS_FLAP_N] {};
 	std::atomic<uint64_t>  flap_open_us[TEST_HIDLOSS_FLAP_N] {};
+	std::atomic<uint64_t>  flap_detach_us[TEST_HIDLOSS_FLAP_N] {}; // F40a2: 0 - not detached
+	std::atomic<uint64_t>  jp_scan_gap_max_us {0};                 // F40a2
 	// Main thread only.
 	uint64_t              in_seen           = 0;
 	uint64_t              in_lat_max_us     = 0;
@@ -1452,14 +1459,28 @@ static void TestHidLossStat(TestHidLossMode mode) {
 			open_lat_max_us = std::max(open_lat_max_us, open_us - e.flap_attach_us[i].load(std::memory_order_relaxed));
 		}
 	}
+	uint64_t life_min_us = 0;
+	uint64_t life_max_us = 0;
+	uint64_t life_n      = 0;
+	for (uint32_t i = 0; i < TEST_HIDLOSS_FLAP_N; i++) {
+		const uint64_t attach_us = e.flap_attach_us[i].load(std::memory_order_relaxed);
+		const uint64_t detach_us = e.flap_detach_us[i].load(std::memory_order_relaxed);
+		if (attach_us != 0 && detach_us >= attach_us) {
+			const uint64_t life_us = detach_us - attach_us;
+			life_min_us             = life_n == 0 ? life_us : std::min(life_min_us, life_us);
+			life_max_us             = std::max(life_max_us, life_us);
+			life_n++;
+		}
+	}
 	LOGF("TestHidLoss: f24 mode=%s fix=%d upd_on_main=%llu upd_slept_us=%llu main_late_max_us=%llu in_posted=%llu "
 	     "in_seen=%llu in_post_fail=%llu in_lat_max_us=%llu in_pre_lat_max_us=%llu hung_ms=%llu jp_update_max_us=%llu "
 	     "jp_tasks=%llu pad_posted=%llu pad_seen=%llu pad_lat_p99_us=%llu pad_lat_max_us=%llu attached=%llu opened=%llu "
-	     "open_failed=%llu open_lat_max_us=%llu\n",
+	     "open_failed=%llu open_lat_max_us=%llu flap_life_min_us=%llu flap_life_max_us=%llu jp_scan_gap_max_us=%llu\n",
 	     TestHidLossModeName(mode), JoyPump::Enabled() ? 1 : 0, get(e.upd_on_main), get(e.upd_slept_us),
 	     get(g_test_hidloss.main_late_max_us), get(e.in_posted), u(e.in_seen), get(e.in_post_fail), u(e.in_lat_max_us),
 	     u(e.in_pre_lat_max_us), get(e.hung_ms), u(jp.update_max_us), u(jp.tasks), get(e.pad_posted), u(e.pad_seen),
-	     u(p99), u(lat_max), u(attached), u(opened), u(jp.open_failed), u(open_lat_max_us));
+	     u(p99), u(lat_max), u(attached), u(opened), u(jp.open_failed), u(open_lat_max_us), u(life_min_us), u(life_max_us),
+	     get(e.jp_scan_gap_max_us));
 }
 
 static bool TestHidLossPost(std::function<void()> task) {
@@ -1566,14 +1587,17 @@ static SDL_JoystickID TestHidLossFlapAttach(uint32_t slot) {
 	return id;
 }
 
-static void TestHidLossFlapDetach(SDL_JoystickID id) {
+static void TestHidLossFlapDetach(uint32_t slot, SDL_JoystickID id) {
 	if (id < 0) {
 		return;
 	}
 	SDL_LockJoysticks();
 	for (int i = 0; i < SDL_NumJoysticks(); i++) {
 		if (SDL_JoystickGetDeviceInstanceID(i) == id) {
-			(void)SDL_JoystickDetachVirtual(i);
+			const uint64_t detach_us = TestHidLossNowUs(); // F40a2: under the lock, before the detach
+			if (SDL_JoystickDetachVirtual(i) == 0 && slot < TEST_HIDLOSS_FLAP_N) {
+				g_test_hidloss2.flap_detach_us[slot].store(detach_us, std::memory_order_relaxed);
+			}
 			break;
 		}
 	}
@@ -1656,16 +1680,20 @@ static void TestHidLossRun2(TestHidLossConfig cfg, uint64_t armed_us) {
 		}
 		if (fired && mode == TestHidLossMode::Flap && flap_k < TEST_HIDLOSS_FLAP_N + 2) {
 			if (flap_k < TEST_HIDLOSS_FLAP_N) {
+				if (flap_k == 0) {
+					JoyPump::StandScanGapBegin(); // F40a2 (RC2 of F40b): just before the first attach
+				}
 				flap_ids[flap_k] = TestHidLossFlapAttach(flap_k);
 				if (flap_ids[flap_k] >= 0) {
 					e.flap_attached.fetch_add(1, std::memory_order_relaxed);
 				}
 			}
 			if (flap_k >= 2) {
-				TestHidLossFlapDetach(flap_ids[flap_k - 2]);
+				TestHidLossFlapDetach(flap_k - 2, flap_ids[flap_k - 2]);
 			}
 			flap_k++;
 			if (flap_k == TEST_HIDLOSS_FLAP_N + 2) {
+				e.jp_scan_gap_max_us.store(JoyPump::StandScanGapEnd(), std::memory_order_relaxed); // F40a2: after the last detach
 				const uint64_t done_us = TestHidLossNowUs();
 				LOGF("TestHidLoss: done t_us=%" PRIu64 " flap_attached=%" PRIu64 "\n", done_us,
 				     e.flap_attached.load(std::memory_order_relaxed));

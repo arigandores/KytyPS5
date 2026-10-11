@@ -49,6 +49,10 @@ void       StandWindow(bool open);
 StandStats StandRead();
 // Flap arm: a task runs no earlier than its post time + ms (0 - off); the scan and the opening are not delayed.
 void StandTaskDelayMs(uint32_t ms);
+// Flap arm (F40a2, RC2 of F40b): the longest stretch of [Begin; End] without a ScanAndOpen start of JoyPump, us;
+// stand thread; no-ops and 0 at KYTY_FIX_F24=0.
+void     StandScanGapBegin();
+uint64_t StandScanGapEnd();
 // Win32 helpers of the stand probes (no-ops elsewhere): the HWND of the SDL window (main thread), a key message pair of
 // VK_F13 (scan code 0x64) posted to it, IsHungAppWindow.
 uintptr_t StandWindowHandle(SDL_Window* window);

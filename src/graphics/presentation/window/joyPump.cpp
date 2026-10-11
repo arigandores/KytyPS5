@@ -27,6 +27,7 @@
 #include <mutex>
 #include <set>
 #include <thread>
+#include <algorithm>
 #include <utility>
 #include <vector>
 
@@ -55,6 +56,48 @@ void AtomicMax(std::atomic<uint64_t>& value, uint64_t sample) {
 	}
 }
 
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+// F40a2 (RC1 of F40b, ROADMAP s122 item 696(b)(1)): the OS thread that owns the first message-only window of class cls
+// of this process (FindWindowExW(HWND_MESSAGE) by class, GetWindowThreadProcessId, own process id only - any process on
+// SDL2 has windows of the same classes); 0 - none found.
+uint64_t OwnerOfMessageWindow(const wchar_t* cls) {
+	const DWORD self = GetCurrentProcessId();
+	HWND        hwnd = nullptr;
+	for (int i = 0; i < 4096; i++) {
+		hwnd = FindWindowExW(HWND_MESSAGE, hwnd, cls, nullptr);
+		if (hwnd == nullptr) {
+			return 0;
+		}
+		DWORD       pid = 0;
+		const DWORD tid = GetWindowThreadProcessId(hwnd, &pid);
+		if (pid == self) {
+			return tid;
+		}
+	}
+	return 0;
+}
+#endif
+
+// F40a2 (RC1 of F40b): on JoyPump after a successful SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER), before the main thread
+// resumes. hid - SDL_HIDAPI_DEVICE_DETECTION (HIDAPI discovery), helper - SDLHelperWindowInputCatcher (SDL helper window,
+// DirectInput cooperative level), msg - Message (Windows joystick driver device notification); pump - this thread, main -
+// the thread that called Start; all are OS thread ids (GetCurrentThreadId), comparable with the window owners.
+void LogInitOwner(uint64_t main_os_tid) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	const uint64_t hid    = OwnerOfMessageWindow(L"SDL_HIDAPI_DEVICE_DETECTION");
+	const uint64_t helper = OwnerOfMessageWindow(L"SDLHelperWindowInputCatcher");
+	const uint64_t msg    = OwnerOfMessageWindow(L"Message");
+	const uint64_t pump   = GetCurrentThreadId();
+#else
+	const uint64_t hid    = 0;
+	const uint64_t helper = 0;
+	const uint64_t msg    = 0;
+	const uint64_t pump   = 0;
+#endif
+	LOGF("FixF24: init_owner hid=%" PRIu64 " helper=%" PRIu64 " msg=%" PRIu64 " pump=%" PRIu64 " main=%" PRIu64 "\n", hid,
+	     helper, msg, pump, main_os_tid);
+}
+
 bool LineAllowed(std::atomic<uint32_t>& counter) {
 	return counter.fetch_add(1, std::memory_order_relaxed) < LINE_LIMIT;
 }
@@ -80,6 +123,13 @@ public:
 	std::atomic<uint64_t> m_stand_tasks {0};
 	std::atomic<uint64_t> m_stand_open_failed {0};
 	std::atomic<uint32_t> m_stand_task_delay_ms {0};
+	// Flap arm scan gap (F40a2, RC2 of F40b): m_stand_scan_last_us and m_stand_scan_gap_max_us are guarded by
+	// m_stand_scan_mutex; m_stand_scan_on - one relaxed load per JoyPump scan when the stand is off.
+	std::atomic<bool> m_stand_scan_on {false};
+	std::mutex        m_stand_scan_mutex;
+	uint64_t          m_stand_scan_last_us    = 0;
+	uint64_t          m_stand_scan_gap_max_us = 0;
+	void              StandScanMark();
 
 private:
 	struct Task {
@@ -112,6 +162,7 @@ private:
 	std::atomic<bool>       m_exited {false};
 	std::atomic<bool>       m_stop {false};
 	std::atomic<int>        m_open_pads {0};
+	uint64_t                m_main_os_tid = 0; // written by Start before the thread, read by JoyPump
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 	HANDLE m_event = nullptr; // auto-reset: a task or the stop; created by Start before the thread
 #endif
@@ -130,6 +181,7 @@ Pump& P() {
 bool Pump::Start(uint64_t main_tid, std::string* error) {
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 	m_event = CreateEventW(nullptr, FALSE, FALSE, nullptr);
+	m_main_os_tid = GetCurrentThreadId(); // F40a2 (RC1 of F40b): the main thread, OS id
 #endif
 	{
 		std::lock_guard lock(m_mutex);
@@ -151,6 +203,9 @@ void Pump::ThreadMain(uint64_t main_tid) {
 	LOGF("FixF24: init tid=%" PRIu64 " pump tid=%" PRIu64 " main tid=%" PRIu64 "\n", static_cast<uint64_t>(SDL_ThreadID()),
 	     pump_tid, main_tid);
 	const bool ok = SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) == 0;
+	if (ok) {
+		LogInitOwner(m_main_os_tid); // F40a2 (RC1 of F40b): before the main thread resumes
+	}
 	{
 		std::lock_guard lock(m_mutex);
 		m_init_done = true;
@@ -191,6 +246,7 @@ void Pump::Loop() {
 		if (wall_us >= PUMP_UPDATE_LONG_US && LineAllowed(m_long_lines)) {
 			LOGF("FixF24: pump_update_long us=%" PRIu64 "\n", wall_us);
 		}
+		StandScanMark(); // F40a2 (RC2 of F40b): the start of the scan, stand only
 		ScanAndOpen();
 		if (Stopping()) {
 			return;
@@ -333,6 +389,20 @@ void Pump::OpenOne(SDL_GameController* pad) {
 	}
 }
 
+// Stand flap arm (F40a2, RC2 of F40b): a ScanAndOpen start of JoyPump inside [StandScanGapBegin; StandScanGapEnd].
+void Pump::StandScanMark() {
+	if (!m_stand_scan_on.load(std::memory_order_relaxed)) {
+		return;
+	}
+	const uint64_t now = NowUs();
+	std::lock_guard lock(m_stand_scan_mutex);
+	if (!m_stand_scan_on.load(std::memory_order_relaxed) || now < m_stand_scan_last_us) {
+		return; // the window ended (or restarted) between the load and the lock
+	}
+	m_stand_scan_gap_max_us = std::max(m_stand_scan_gap_max_us, now - m_stand_scan_last_us);
+	m_stand_scan_last_us    = now;
+}
+
 // JoyPump task posted by the main thread's removal handler (Controller::Disconnect is done there).
 void Pump::Close(int instance_id) {
 	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(instance_id));
@@ -435,6 +505,34 @@ StandStats StandRead() {
 	s.tasks         = p.m_stand_tasks.load(std::memory_order_relaxed);
 	s.open_failed   = p.m_stand_open_failed.load(std::memory_order_relaxed);
 	return s;
+}
+
+// F40a2 (RC2 of F40b): the stand thread, flap arm. Begin - just before the first attach; End - just after the last
+// detach: the longest stretch of the window without a ScanAndOpen start (the edges count: begin to the first start, the
+// last start to end). At KYTY_FIX_F24=0 (no JoyPump) both do nothing and End returns 0.
+void StandScanGapBegin() {
+	if (!Enabled()) {
+		return;
+	}
+	auto&           p = P();
+	std::lock_guard lock(p.m_stand_scan_mutex);
+	p.m_stand_scan_last_us    = NowUs();
+	p.m_stand_scan_gap_max_us = 0;
+	p.m_stand_scan_on.store(true, std::memory_order_relaxed);
+}
+
+uint64_t StandScanGapEnd() {
+	if (!Enabled()) {
+		return 0;
+	}
+	auto&           p = P();
+	std::lock_guard lock(p.m_stand_scan_mutex);
+	if (!p.m_stand_scan_on.load(std::memory_order_relaxed)) {
+		return 0;
+	}
+	p.m_stand_scan_on.store(false, std::memory_order_relaxed);
+	const uint64_t now = NowUs();
+	return std::max(p.m_stand_scan_gap_max_us, now > p.m_stand_scan_last_us ? now - p.m_stand_scan_last_us : 0);
 }
 
 void StandTaskDelayMs(uint32_t ms) {

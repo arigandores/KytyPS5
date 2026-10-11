@@ -1,2 +1,18 @@
 2026-10-11T00:33:02Z F40a start (HPP-770 checkout by harness); lock none, STOP none; f40a dir made
 2026-10-11T00:50:08Z F40a section 0 (member 692(g)(0)) written; refs_f40a.py check 107/107 ALL OK, text 101 links ALL OK; committing before the first code line
+2026-10-11T00:50:13Z F40a section 0 committed 23c25ef4
+2026-10-11T00:58:04Z F40a worktree creation start (mk_wt_f40a.sh wt 730ed40a)
+2026-10-11T00:58:23Z F40a code patch start (patch_f40a_code.py on worktree 730ed40a)
+2026-10-11T00:58:28Z F40a build configure start
+2026-10-11T01:00:11Z F40a build 1 step 1 start (kyty_emulator, code without stand)
+2026-10-11T01:04:50Z F40a code commit in worktree e0b4f2ba (build b1_2 OK, gate order clean)
+2026-10-11T01:04:54Z F40a stand ed.2 patch start (worktree)
+2026-10-11T01:05:37Z F40a stand commit in worktree dfc037e9 (build b2_1 OK, gate order clean)
+2026-10-11T01:06:28Z F40a cherry-pick into main: 5c21c387 (code), e3aa4b4d (stand); git cherry main HEAD of the worktree: - - (both)
+2026-10-11T01:06:35Z F40a tests build start (shader_cfg_tests)
+2026-10-11T01:07:14Z F40a tests run start (shader_cfg_tests)
+2026-10-11T01:07:15Z F40a tests run end
+2026-10-11T01:09:09Z F40a tag binary rebuilt after reconfigure (one version string), binary_f40a.py
+2026-10-11T01:09:23Z F40a pinned copy C:/kyty/f287/bin/kyty_emulator_3f06d311.exe
+2026-10-11T01:12:42Z F40a report sections 1-8 assembled into docs/track-f/f40a.md; refs check 157/157 ALL OK, text 163 ALL OK
+2026-10-11T01:13:03Z F40a FACTS.md section appended (rule 34)

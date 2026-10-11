@@ -105,3 +105,53 @@ di_coop	4b69833b	src/joystick/windows/SDL_dinputjoystick.c	769	IDirectInputDevic
 wgi_ro	4b69833b	src/joystick/windows/SDL_windows_gaming_input.c	658	if (FAILED(WIN_RoInitialize())) {	return SDL_SetError("RoInitialize() fail
 win_ro_sta	4b69833b	src/core/windows/SDL_windows.c	152	HRESULT hr = RoInitializeFunc(RO_INIT_SINGLETHREADED);	if (hr == RPC_E_CHANGED_MODE) {
 kb_ime_coinit	4b69833b	src/video/windows/SDL_windowskeyboard.c	384	if (SUCCEEDED(WIN_CoInitialize())) {	videodata->ime_com_initialized = SDL_TRU
+f_jp_idle	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	38	constexpr uint32_t JP_IDLE_MS	constexpr uint32_t T_JP_MS             =
+f_jp_tjp	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	39	constexpr uint32_t T_JP_MS	constexpr uint64_t PUMP_UPDATE_LONG_US =
+f_jp_p	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	125	Pump& P() {	static auto* pump = new Pump;
+f_jp_start	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	130	bool Pump::Start(uint64_t main_tid, std::string* error) {	#if KYTY_PLATFORM == KYTY_PLATFORM_WINDO
+f_jp_initline	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	151	LOGF("FixF24: init tid=	pump_tid, main_tid);
+f_jp_init	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	153	const bool ok = SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) == 0;	{
+f_jp_loop	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	175	void Pump::Loop() {	for (;;) {
+f_jp_update	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	183	SDL_JoystickUpdate();	const uint64_t wall_us = NowUs() - start
+f_jp_long	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	192	LOGF("FixF24: pump_update_long	}
+f_jp_wait	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	198	Wait(m_open_pads.load(std::memory_order_relaxed) > 0 ? JP_OPEN_MS : JP_IDLE_MS);	}
+f_jp_tasks	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	202	void Pump::RunTasks() {	for (;;) {
+f_jp_delay	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	214	if (delay_us != 0 && NowUs() < m_tasks.front().posted_us + delay_us) {	return; // stand flap arm: the head is n
+f_jp_peek	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	232	while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE) != 0) {	TranslateMessage(&msg);
+f_jp_msgwait	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	241	(void)MsgWaitForMultipleObjectsEx(1, &m_event, timeout_ms, QS_ALLINPUT, MWMO_INPUTAVAILABLE);	#else
+f_jp_post	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	263	void Pump::Post(std::function<void()> task) {	{
+f_jp_scan	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	277	void Pump::ScanAndOpen() {	std::vector<SDL_GameController*> opened;
+f_jp_open	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	289	auto* pad = SDL_GameControllerOpen(index);	if (pad == nullptr) {
+f_jp_openfail	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	295	LOGF("FixF24: open failed	}
+f_jp_connect	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	328	Controller::Connect(id);	// A removal posted by another thread (t
+f_jp_selfdisc	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	332	Controller::Disconnect(id);	}
+f_jp_close	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	337	void Pump::Close(int instance_id) {	auto* pad = SDL_GameControllerFromInstan
+f_jp_stop	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	345	void Pump::Stop() {	m_stop.store(true, std::memory_order_seq
+f_jp_expired	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	370	LOGF("FixF24: pump_stop_expired	thread.detach();
+f_jp_readknob	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	383	g_enabled.store(Common::EnvFlagOn("KYTY_FIX_F24"), std::memory_order_release);	LOGF("FixF24: mode=%d b24=%d\n", Enabled
+f_jp_modeline	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	384	LOGF("FixF24: mode=%d b24=%d	}
+f_jp_add	e3aa4b4d	src/graphics/presentation/window/joyPump.cpp	405	LOGF("FixF24: add event index=	}
+f_w_add	e3aa4b4d	src/graphics/presentation/window/window.cpp	390	if (f.added && JoyPump::Enabled()) {	// Track F, F40a (KYTY_FIX_F24=1, RC2): 
+f_w_postclose	e3aa4b4d	src/graphics/presentation/window/window.cpp	420	JoyPump::PostClose(f.id);	} else {
+f_w_close0	e3aa4b4d	src/graphics/presentation/window/window.cpp	422	SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));	}
+f_w_readknob	e3aa4b4d	src/graphics/presentation/window/window.cpp	948	JoyPump::ReadKnob();	if (JoyPump::Enabled()) {
+f_w_hint	e3aa4b4d	src/graphics/presentation/window/window.cpp	951	SDL_SetHint(SDL_HINT_AUTO_UPDATE_JOYSTICKS, "0");	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 
+f_w_initvideo	e3aa4b4d	src/graphics/presentation/window/window.cpp	952	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {	EXIT("%s\n", SDL_GetError());
+f_w_start	e3aa4b4d	src/graphics/presentation/window/window.cpp	956	if (!JoyPump::Start(main_tid, &error)) {	EXIT("%s\n", error.c_str());
+f_w_init0	e3aa4b4d	src/graphics/presentation/window/window.cpp	959	} else if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {	EXIT("%s\n", SDL_GetError());
+f_w_intercept	e3aa4b4d	src/graphics/presentation/window/window.cpp	573	if (TestHidLossIntercept(*event)) [[unlikely]] {	return;
+f_w_titleoff	e3aa4b4d	src/graphics/presentation/window/window.cpp	1953	if (TestHidLossTitleOff()) [[unlikely]] {	// Track F, F40a stand KYTY_TEST_HIDLOSS
+f_w_holdupd	e3aa4b4d	src/graphics/presentation/window/window.cpp	1158	constexpr uint32_t TEST_HIDLOSS_HOLD_UPD_MS	constexpr uint32_t TEST_HIDLOSS_IN_MS   
+f_w_vpupdate	e3aa4b4d	src/graphics/presentation/window/window.cpp	1331	static void SDLCALL TestHidLossVpUpdate(void* /*userdata*/) {	auto& e = g_test_hidloss2;
+f_w_bgevents	e3aa4b4d	src/graphics/presentation/window/window.cpp	1368	SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");	if (g_window != nullptr) {
+f_w_f24line	e3aa4b4d	src/graphics/presentation/window/window.cpp	1455	LOGF("TestHidLoss: f24 mode=%s	"in_seen=%llu in_post_fail=%llu in_lat_m
+f_w_run2	e3aa4b4d	src/graphics/presentation/window/window.cpp	1584	static void TestHidLossRun2(TestHidLossConfig cfg, uint64_t armed_us) {	auto&      e  = g_test_hidloss2;
+f_w_flapdelay	e3aa4b4d	src/graphics/presentation/window/window.cpp	1651	JoyPump::StandTaskDelayMs(TEST_HIDLOSS_FLAP_TASK_DELAY_MS);	} else {
+f_w_jptask	e3aa4b4d	src/graphics/presentation/window/window.cpp	1683	JoyPump::Post([] { LOGF("TestHidLoss: jp_task ran	}
+f_w_quit	e3aa4b4d	src/graphics/presentation/window/window.cpp	1689	quit.type = SDL_QUIT;	SDL_PushEvent(&quit);
+f_h_f24	e3aa4b4d	src/graphics/presentation/window/hostInput.cpp	429	static bool HostInputWaitEventF24(SDL_Event* event) {	const int bound_ms = JoyPump::OpenPads()
+f_h_bound	e3aa4b4d	src/graphics/presentation/window/hostInput.cpp	430	const int bound_ms = JoyPump::OpenPads() > 0 ? 1 : 3000;	if (!g_mouse.enabled || SDL_GetKeyboardF
+f_h_branch	e3aa4b4d	src/graphics/presentation/window/hostInput.cpp	459	return HostInputWaitEventF24(event);	}
+f_c_exited	e3aa4b4d	src/libs/controller.cpp	859	if (Libs::Graphics::JoyPump::Exited()) {	delete g_controller;
+f_c_stop	e3aa4b4d	src/libs/controller.cpp	873	Libs::Graphics::JoyPump::Stop();	}
+f_vw_quit	e3aa4b4d	src/graphics/presentation/window/vulkanWindow.cpp	1332	SDL_QuitSubSystem(SDL_INIT_VIDEO);	} else {

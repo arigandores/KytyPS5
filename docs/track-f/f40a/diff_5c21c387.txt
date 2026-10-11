@@ -1,0 +1,739 @@
+diff --git a/src/graphics/presentation/window/hostInput.cpp b/src/graphics/presentation/window/hostInput.cpp
+index dc0a031b..4a7ee467 100644
+--- a/src/graphics/presentation/window/hostInput.cpp
++++ b/src/graphics/presentation/window/hostInput.cpp
+@@ -11,10 +11,12 @@
+ #include "common/assert.h"
+ #include "common/emulatorConfig.h"
+ #include "common/logging/log.h"
++#include "graphics/presentation/window/joyPump.h"
+ #include "libs/controller.h"
+ 
+ #include <algorithm>
+ #include <array>
++#include <atomic>
+ #include <cmath>
+ #include <cstddef>
+ #include <cstdlib>
+@@ -419,7 +421,43 @@ int PollMouse(uint64_t now_ms) {
+ 	return MOUSE_POLL_INTERVAL_MS;
+ }
+ 
++// Track F, F40a (KYTY_FIX_F24=1, RC1, ROADMAP s122 item 692(v)(3); docs/track-f/f40a.md s0.3): with
++// SDL_HINT_AUTO_UPDATE_JOYSTICKS=0 SDL has no polling interval, and an event posted by another thread between the
++// queue check and the wakeup window publication of SDL_WaitEventTimeout_Device is not woken. The wait is bounded as
++// SDL bounds it at =0: 1 ms while JoyPump has a pad open, else 3000 ms; the main thread does not call
++// SDL_NumJoysticks. A 0 return is "no event" (the loop goes round); a wait error is a line, not a fatal.
++static bool HostInputWaitEventF24(SDL_Event* event) {
++	const int bound_ms = JoyPump::OpenPads() > 0 ? 1 : 3000;
++	if (!g_mouse.enabled || SDL_GetKeyboardFocus() == nullptr) {
++		CenterMouseStick();
++		SDL_ClearError();
++		if (SDL_WaitEventTimeout(event, bound_ms) != 0) {
++			return true;
++		}
++		if (SDL_GetError()[0] != '\0') {
++			static std::atomic<uint32_t> logged {0};
++			if (logged.fetch_add(1, std::memory_order_relaxed) < 32) {
++				LOGF("FixF24: wait error \"%s\"\n", SDL_GetError());
++			}
++		}
++		return false;
++	}
++
++	const int timeout_ms = std::min(PollMouse(SDL_GetTicks64()), bound_ms);
++	SDL_ClearError();
++	if (SDL_WaitEventTimeout(event, timeout_ms) != 0) {
++		return true;
++	}
++	if (SDL_GetError()[0] != '\0') {
++		EXIT("%s\n", SDL_GetError());
++	}
++	return false;
++}
++
+ bool HostInputWaitEvent(SDL_Event* event) {
++	if (JoyPump::Enabled()) {
++		return HostInputWaitEventF24(event);
++	}
+ 	if (!g_mouse.enabled || SDL_GetKeyboardFocus() == nullptr) {
+ 		CenterMouseStick();
+ 		if (SDL_WaitEvent(event) == 0) {
+diff --git a/src/graphics/presentation/window/joyPump.cpp b/src/graphics/presentation/window/joyPump.cpp
+new file mode 100644
+index 00000000..872d2ed0
+--- /dev/null
++++ b/src/graphics/presentation/window/joyPump.cpp
+@@ -0,0 +1,479 @@
++#include "graphics/presentation/window/joyPump.h"
++
++#include "common/common.h" // KYTY_PLATFORM
++
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++#ifndef NOMINMAX
++#define NOMINMAX // before the first <windows.h> (SDL_syswm.h includes it too)
++#endif
++#include <windows.h> // MsgWaitForMultipleObjectsEx, PeekMessage of JoyPump's own thread; the stand probes
++#endif
++
++#include "SDL.h"
++#include "SDL_error.h"
++#include "SDL_gamecontroller.h"
++#include "SDL_joystick.h"
++#include "SDL_syswm.h"
++#include "SDL_thread.h"
++#include "common/envFlag.h"
++#include "common/logging/log.h"
++#include "libs/controller.h"
++
++#include <atomic>
++#include <chrono>
++#include <cinttypes>
++#include <condition_variable>
++#include <deque>
++#include <mutex>
++#include <set>
++#include <thread>
++#include <utility>
++#include <vector>
++
++namespace Libs::Graphics::JoyPump {
++
++namespace {
++
++constexpr uint32_t JP_OPEN_MS          = 1;       // wait with an open pad (SDL EVENT_POLL_INTERVAL_MS)
++constexpr uint32_t JP_IDLE_MS          = 250;     // wait without (lead decision, item 692(v)(2))
++constexpr uint32_t T_JP_MS             = 2000;    // stop limit (item 692(v)(6))
++constexpr uint64_t PUMP_UPDATE_LONG_US = 1000000; // "FixF24: pump_update_long" from 1 s
++constexpr uint32_t LINE_LIMIT          = 32;
++
++// Written once by ReadKnob on the main thread; read by any thread (the emergency sequence may run on a thread created
++// before WindowCreate - PadOutput, haptics), hence atomic.
++std::atomic<bool> g_enabled {false};
++
++uint64_t NowUs() {
++	return static_cast<uint64_t>(
++	    std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
++}
++
++void AtomicMax(std::atomic<uint64_t>& value, uint64_t sample) {
++	uint64_t current = value.load(std::memory_order_relaxed);
++	while (sample > current && !value.compare_exchange_weak(current, sample, std::memory_order_relaxed)) {
++	}
++}
++
++bool LineAllowed(std::atomic<uint32_t>& counter) {
++	return counter.fetch_add(1, std::memory_order_relaxed) < LINE_LIMIT;
++}
++
++class Pump {
++public:
++	Pump() = default;
++
++	KYTY_CLASS_NO_COPY(Pump);
++
++	bool Start(uint64_t main_tid, std::string* error);
++	void Post(std::function<void()> task);
++	void Stop();
++	[[nodiscard]] bool Exited() const {
++		return !m_started.load(std::memory_order_acquire) || m_exited.load(std::memory_order_acquire);
++	}
++	[[nodiscard]] int OpenPads() const { return m_open_pads.load(std::memory_order_relaxed); }
++	void              Close(int instance_id);
++
++	// Stand.
++	std::atomic<bool>     m_stand_window {false};
++	std::atomic<uint64_t> m_stand_update_max_us {0};
++	std::atomic<uint64_t> m_stand_tasks {0};
++	std::atomic<uint64_t> m_stand_open_failed {0};
++	std::atomic<uint32_t> m_stand_task_delay_ms {0};
++
++private:
++	struct Task {
++		uint64_t              posted_us = 0;
++		std::function<void()> fn;
++	};
++
++	void ThreadMain(uint64_t main_tid);
++	void Loop();
++	void RunTasks();
++	void PumpMessages();
++	void Wait(uint32_t timeout_ms);
++	void Wake();
++	void ScanAndOpen();
++	void OpenOne(SDL_GameController* pad);
++	[[nodiscard]] bool Stopping() const { return m_stop.load(std::memory_order_acquire); }
++
++	// Guarded by m_mutex: m_thread (moved out once by Stop), m_tasks, m_init_*, m_signal (non-Windows wait).
++	std::mutex              m_mutex;
++	std::condition_variable m_cv; // init done, thread end, non-Windows wake
++	std::thread             m_thread;
++	std::deque<Task>        m_tasks;
++	bool                    m_init_done = false;
++	bool                    m_init_ok   = false;
++	std::string             m_init_error;
++#if KYTY_PLATFORM != KYTY_PLATFORM_WINDOWS
++	bool m_signal = false;
++#endif
++	std::atomic<bool>       m_started {false};
++	std::atomic<bool>       m_exited {false};
++	std::atomic<bool>       m_stop {false};
++	std::atomic<int>        m_open_pads {0};
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++	HANDLE m_event = nullptr; // auto-reset: a task or the stop; created by Start before the thread
++#endif
++	// JoyPump thread only: instance ids already handled by the scan (opened or not).
++	std::set<SDL_JoystickID> m_seen;
++	std::atomic<uint32_t>    m_open_failed_lines {0};
++	std::atomic<uint32_t>    m_long_lines {0};
++};
++
++// Never destroyed: no joinable std::thread at static destruction (a normal exit() after an expired stop).
++Pump& P() {
++	static auto* pump = new Pump;
++	return *pump;
++}
++
++bool Pump::Start(uint64_t main_tid, std::string* error) {
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++	m_event = CreateEventW(nullptr, FALSE, FALSE, nullptr);
++#endif
++	{
++		std::lock_guard lock(m_mutex);
++		m_started.store(true, std::memory_order_release);
++		m_thread = std::thread([this, main_tid] { ThreadMain(main_tid); });
++	}
++	std::unique_lock lock(m_mutex);
++	m_cv.wait(lock, [this] { return m_init_done; });
++	if (!m_init_ok && error != nullptr) {
++		*error = m_init_error;
++	}
++	return m_init_ok;
++}
++
++void Pump::ThreadMain(uint64_t main_tid) {
++	const auto pump_tid = static_cast<uint64_t>(SDL_ThreadID());
++	SDL_ClearError();
++	// Item 692(v)(1): the line is written by the thread that runs the initialization, with its id at the call.
++	LOGF("FixF24: init tid=%" PRIu64 " pump tid=%" PRIu64 " main tid=%" PRIu64 "\n", static_cast<uint64_t>(SDL_ThreadID()),
++	     pump_tid, main_tid);
++	const bool ok = SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) == 0;
++	{
++		std::lock_guard lock(m_mutex);
++		m_init_done = true;
++		m_init_ok   = ok;
++		if (!ok) {
++			m_init_error = SDL_GetError();
++		}
++	}
++	m_cv.notify_all();
++	if (ok) {
++		Loop();
++	}
++	{
++		std::lock_guard lock(m_mutex);
++		m_exited.store(true, std::memory_order_release);
++	}
++	m_cv.notify_all();
++}
++
++// RC4 (s0.4): the stop flag is checked before every task, after every SDL_JoystickUpdate and before every Controller
++// call of the scan; once it is up nothing else runs and the function returns.
++void Pump::Loop() {
++	for (;;) {
++		RunTasks();
++		if (Stopping()) {
++			return;
++		}
++		PumpMessages();
++		const uint64_t start_us = NowUs();
++		SDL_JoystickUpdate();
++		const uint64_t wall_us = NowUs() - start_us;
++		if (Stopping()) {
++			return;
++		}
++		if (m_stand_window.load(std::memory_order_relaxed)) {
++			AtomicMax(m_stand_update_max_us, wall_us);
++		}
++		if (wall_us >= PUMP_UPDATE_LONG_US && LineAllowed(m_long_lines)) {
++			LOGF("FixF24: pump_update_long us=%" PRIu64 "\n", wall_us);
++		}
++		ScanAndOpen();
++		if (Stopping()) {
++			return;
++		}
++		Wait(m_open_pads.load(std::memory_order_relaxed) > 0 ? JP_OPEN_MS : JP_IDLE_MS);
++	}
++}
++
++void Pump::RunTasks() {
++	for (;;) {
++		if (Stopping()) {
++			return;
++		}
++		std::function<void()> fn;
++		{
++			std::lock_guard lock(m_mutex);
++			if (m_tasks.empty()) {
++				return;
++			}
++			const uint64_t delay_us = static_cast<uint64_t>(m_stand_task_delay_ms.load(std::memory_order_relaxed)) * 1000;
++			if (delay_us != 0 && NowUs() < m_tasks.front().posted_us + delay_us) {
++				return; // stand flap arm: the head is not due yet (the wait of this loop is 1 ms with a pad open)
++			}
++			fn = std::move(m_tasks.front().fn);
++			m_tasks.pop_front();
++		}
++		fn();
++		if (m_stand_window.load(std::memory_order_relaxed)) {
++			m_stand_tasks.fetch_add(1, std::memory_order_relaxed);
++		}
++	}
++}
++
++// The messages of JoyPump's own thread: the windows of the joystick drivers created here (HIDAPI detection, Windows
++// device notification and its timers, the SDL helper window) and the COM apartment of this thread (s0.1).
++void Pump::PumpMessages() {
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++	MSG msg {};
++	while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE) != 0) {
++		TranslateMessage(&msg);
++		DispatchMessageW(&msg);
++	}
++#endif
++}
++
++void Pump::Wait(uint32_t timeout_ms) {
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++	(void)MsgWaitForMultipleObjectsEx(1, &m_event, timeout_ms, QS_ALLINPUT, MWMO_INPUTAVAILABLE);
++#else
++	std::unique_lock lock(m_mutex);
++	m_cv.wait_for(lock, std::chrono::milliseconds(timeout_ms), [this] { return m_signal; });
++	m_signal = false;
++#endif
++}
++
++void Pump::Wake() {
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++	if (m_event != nullptr) {
++		SetEvent(m_event);
++	}
++#else
++	{
++		std::lock_guard lock(m_mutex);
++		m_signal = true;
++	}
++	m_cv.notify_all();
++#endif
++}
++
++void Pump::Post(std::function<void()> task) {
++	{
++		std::lock_guard lock(m_mutex);
++		if (!m_started.load(std::memory_order_acquire) || Stopping()) {
++			return;
++		}
++		m_tasks.push_back(Task {NowUs(), std::move(task)});
++	}
++	Wake();
++}
++
++// RC2 (s0.4): opening by instance id after JoyPump's own SDL_JoystickUpdate. The index is used under SDL_LockJoysticks
++// only (the list cannot change meanwhile); Controller::Connect runs outside the lock (lock order m_mutex -> joystick lock
++// of ReleaseHostPads and of the KYTY_FIX_B24=0 guest path).
++void Pump::ScanAndOpen() {
++	std::vector<SDL_GameController*> opened;
++	SDL_LockJoysticks();
++	const int count = SDL_NumJoysticks();
++	for (int index = 0; index < count; index++) {
++		const SDL_JoystickID id = SDL_JoystickGetDeviceInstanceID(index);
++		if (id < 0 || !m_seen.insert(id).second) {
++			continue;
++		}
++		if (SDL_IsGameController(index) != SDL_TRUE) {
++			continue; // the same set as the SDL_CONTROLLERDEVICEADDED events of the FS12 path
++		}
++		auto* pad = SDL_GameControllerOpen(index);
++		if (pad == nullptr) {
++			if (m_stand_window.load(std::memory_order_relaxed)) {
++				m_stand_open_failed.fetch_add(1, std::memory_order_relaxed);
++			}
++			if (LineAllowed(m_open_failed_lines)) {
++				LOGF("FixF24: open failed instance=%d error=\"%s\"\n", static_cast<int>(id), SDL_GetError());
++			}
++			continue;
++		}
++		m_open_pads.fetch_add(1, std::memory_order_relaxed);
++		opened.push_back(pad);
++	}
++	SDL_UnlockJoysticks();
++	for (auto* pad: opened) {
++		if (Stopping()) {
++			return;
++		}
++		OpenOne(pad);
++	}
++}
++
++// The FS12 add block (window.cpp GameEventController) after SDL_GameControllerOpen, on JoyPump; the same line text.
++void Pump::OpenOne(SDL_GameController* pad) {
++	const int id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(pad));
++	for (const auto sensor: {SDL_SENSOR_ACCEL, SDL_SENSOR_GYRO}) {
++		if (SDL_GameControllerHasSensor(pad, sensor) == SDL_TRUE &&
++		    SDL_GameControllerSetSensorEnabled(pad, sensor, SDL_TRUE) != 0) {
++			LOGF("Controller %d: sensor %d enable failed: %s\n", id, static_cast<int>(sensor), SDL_GetError());
++		}
++	}
++	LOGF("Controller %d: \"%s\" type=%d accel=%d gyro=%d path=%s\n", id, SDL_GameControllerName(pad),
++	     static_cast<int>(SDL_GameControllerGetType(pad)),
++	     SDL_GameControllerIsSensorEnabled(pad, SDL_SENSOR_ACCEL) == SDL_TRUE ? 1 : 0,
++	     SDL_GameControllerIsSensorEnabled(pad, SDL_SENSOR_GYRO) == SDL_TRUE ? 1 : 0,
++	     SDL_GameControllerPath(pad) != nullptr ? SDL_GameControllerPath(pad) : "");
++	if (Stopping()) {
++		return;
++	}
++	Controller::Connect(id);
++	// A removal posted by another thread (the stand, a WGI callback) after the scan released the lock may already have
++	// been handled by the main thread before this Connect: the pad is gone - undo the Connect here (s0.4).
++	if (SDL_GameControllerGetAttached(pad) != SDL_TRUE && !Stopping()) {
++		Controller::Disconnect(id);
++	}
++}
++
++// JoyPump task posted by the main thread's removal handler (Controller::Disconnect is done there).
++void Pump::Close(int instance_id) {
++	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(instance_id));
++	if (pad != nullptr) {
++		SDL_GameControllerClose(pad);
++		m_open_pads.fetch_sub(1, std::memory_order_relaxed);
++	}
++}
++
++void Pump::Stop() {
++	m_stop.store(true, std::memory_order_seq_cst);
++	Wake();
++	std::thread thread;
++	{
++		std::lock_guard lock(m_mutex);
++		thread = std::move(m_thread);
++	}
++	if (!thread.joinable()) {
++		return; // never started, or another call owns the thread
++	}
++	if (thread.get_id() == std::this_thread::get_id()) {
++		thread.detach(); // the emergency sequence runs on JoyPump itself: the flag is enough
++		return;
++	}
++	bool exited = false;
++	{
++		std::unique_lock lock(m_mutex);
++		exited = m_cv.wait_for(lock, std::chrono::milliseconds(T_JP_MS),
++		                       [this] { return m_exited.load(std::memory_order_acquire); });
++	}
++	if (exited) {
++		thread.join();
++		return;
++	}
++	LOGF("FixF24: pump_stop_expired t_jp_ms=%u\n", T_JP_MS);
++	thread.detach();
++}
++
++std::atomic<uint32_t> g_add_lines {0};
++
++} // namespace
++
++void ReadKnob() {
++	static std::atomic<bool> done {false};
++	if (done.exchange(true)) {
++		return;
++	}
++	g_enabled.store(Common::EnvFlagOn("KYTY_FIX_F24"), std::memory_order_release);
++	LOGF("FixF24: mode=%d b24=%d\n", Enabled() ? 1 : 0, Controller::FixB24On() ? 1 : 0);
++}
++
++bool Enabled() {
++	return g_enabled.load(std::memory_order_acquire);
++}
++
++bool Start(uint64_t main_tid, std::string* error) {
++	return P().Start(main_tid, error);
++}
++
++int OpenPads() {
++	return P().OpenPads();
++}
++
++void PostClose(int instance_id) {
++	P().Post([instance_id] { P().Close(instance_id); });
++}
++
++void NoteAddEvent(int index) {
++	if (LineAllowed(g_add_lines)) {
++		LOGF("FixF24: add event index=%d\n", index);
++	}
++}
++
++void Post(std::function<void()> task) {
++	P().Post(std::move(task));
++}
++
++void Stop() {
++	P().Stop();
++}
++
++bool Exited() {
++	return P().Exited();
++}
++
++void StandWindow(bool open) {
++	auto& p = P();
++	if (open) {
++		p.m_stand_update_max_us.store(0, std::memory_order_relaxed);
++		p.m_stand_tasks.store(0, std::memory_order_relaxed);
++		p.m_stand_open_failed.store(0, std::memory_order_relaxed);
++	}
++	p.m_stand_window.store(open, std::memory_order_release);
++}
++
++StandStats StandRead() {
++	auto&      p = P();
++	StandStats s;
++	s.update_max_us = p.m_stand_update_max_us.load(std::memory_order_relaxed);
++	s.tasks         = p.m_stand_tasks.load(std::memory_order_relaxed);
++	s.open_failed   = p.m_stand_open_failed.load(std::memory_order_relaxed);
++	return s;
++}
++
++void StandTaskDelayMs(uint32_t ms) {
++	P().m_stand_task_delay_ms.store(ms, std::memory_order_relaxed);
++}
++
++uintptr_t StandWindowHandle(SDL_Window* window) {
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++	SDL_SysWMinfo info {};
++	SDL_VERSION(&info.version);
++	if (window != nullptr && SDL_GetWindowWMInfo(window, &info) == SDL_TRUE) {
++		return reinterpret_cast<uintptr_t>(info.info.win.window);
++	}
++#else
++	(void)window;
++#endif
++	return 0;
++}
++
++// lParam of WM_KEYDOWN / WM_KEYUP: repeat 1, scan code 0x64 (SDL maps it to SDL_SCANCODE_F13), up - previous state and
++// transition bits.
++bool StandPostKey(uintptr_t hwnd, bool down) {
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++	const auto lparam = static_cast<LPARAM>(1u | (0x64u << 16u) | (down ? 0u : ((1u << 30u) | (1u << 31u))));
++	return hwnd != 0 && PostMessageW(reinterpret_cast<HWND>(hwnd), down ? WM_KEYDOWN : WM_KEYUP, VK_F13, lparam) != 0;
++#else
++	(void)hwnd;
++	(void)down;
++	return false;
++#endif
++}
++
++bool StandIsHung(uintptr_t hwnd) {
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++	return hwnd != 0 && IsHungAppWindow(reinterpret_cast<HWND>(hwnd)) != 0;
++#else
++	(void)hwnd;
++	return false;
++#endif
++}
++
++} // namespace Libs::Graphics::JoyPump
+diff --git a/src/graphics/presentation/window/joyPump.h b/src/graphics/presentation/window/joyPump.h
+new file mode 100644
+index 00000000..6ac18069
+--- /dev/null
++++ b/src/graphics/presentation/window/joyPump.h
+@@ -0,0 +1,60 @@
++#ifndef KYTY_GRAPHICS_PRESENTATION_WINDOW_JOY_PUMP_H_
++#define KYTY_GRAPHICS_PRESENTATION_WINDOW_JOY_PUMP_H_
++
++#include <cstdint>
++#include <functional>
++#include <string>
++
++struct SDL_Window;
++
++// Track F, F40a (HPP-770; ROADMAP s122 item 692(v)): KYTY_FIX_F24 - variant B of F39a s1 (docs/track-f/f40a.md s0).
++// Default 0: nothing here runs except ReadKnob, Enabled (false) and Exited (true); the SDL init, the event wait and the
++// pad open / close stay on the main thread as in FS12. At 1: SDL_HINT_AUTO_UPDATE_JOYSTICKS is 0, the main thread
++// initializes only the video subsystem and waits while the JoyPump thread runs SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER)
++// (every window, timer and COM apartment of the joystick drivers belongs to JoyPump), then JoyPump loops: queued tasks
++// -> the messages of its own thread -> SDL_JoystickUpdate -> opening of new pads by instance id -> wait for a task, a
++// message or the timeout (1 ms with an open pad, JP_IDLE_MS = 250 ms without). The main thread makes no joystick or
++// game controller API call (the stand KYTY_TEST_HIDLOSS excepted).
++namespace Libs::Graphics::JoyPump {
++
++// Main thread, WindowCreate, before any SDL_InitSubSystem: reads KYTY_FIX_F24 once (Common::EnvFlagOn, default 0) and
++// prints "FixF24: mode=<0|1> b24=<0|1>". Later calls do nothing.
++void ReadKnob();
++bool Enabled();
++// =1 only: starts JoyPump and waits for its SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER); false and the SDL error text on
++// failure (the caller exits as on the FS12 path).
++bool Start(uint64_t main_tid, std::string* error);
++// Pads opened by JoyPump and not yet closed (written by JoyPump only).
++int OpenPads();
++// Main thread, removal event at =1: Controller::Disconnect is done by the caller; this queues the close of the pad.
++void PostClose(int instance_id);
++// Main thread, add event at =1: the event is only logged ("FixF24: add event index=<i>", at most 32 lines).
++void NoteAddEvent(int index);
++// FIFO task of JoyPump; dropped after the stop or before the start.
++void Post(std::function<void()> task);
++// RC4 (docs/track-f/f40a.md s0.4): raises the stop flag, wakes JoyPump and waits at most T_JP = 2 s for its end; on
++// expiry prints "FixF24: pump_stop_expired" and detaches the thread. Any thread, any number of times; a call from
++// JoyPump itself only raises the flag.
++void Stop();
++// True when JoyPump was never started or its thread function has returned.
++bool Exited();
++
++// Stand KYTY_TEST_HIDLOSS edition 2 (window.cpp). StandWindow(true) zeroes and starts the counters, (false) stops them.
++struct StandStats {
++	uint64_t update_max_us = 0; // the longest SDL_JoystickUpdate of JoyPump in the window
++	uint64_t tasks         = 0; // JoyPump tasks run in the window
++	uint64_t open_failed   = 0; // SDL_GameControllerOpen == nullptr on JoyPump in the window
++};
++void       StandWindow(bool open);
++StandStats StandRead();
++// Flap arm: a task runs no earlier than its post time + ms (0 - off); the scan and the opening are not delayed.
++void StandTaskDelayMs(uint32_t ms);
++// Win32 helpers of the stand probes (no-ops elsewhere): the HWND of the SDL window (main thread), a key message pair of
++// VK_F13 (scan code 0x64) posted to it, IsHungAppWindow.
++uintptr_t StandWindowHandle(SDL_Window* window);
++bool      StandPostKey(uintptr_t hwnd, bool down);
++bool      StandIsHung(uintptr_t hwnd);
++
++} // namespace Libs::Graphics::JoyPump
++
++#endif /* KYTY_GRAPHICS_PRESENTATION_WINDOW_JOY_PUMP_H_ */
+diff --git a/src/graphics/presentation/window/vulkanWindow.cpp b/src/graphics/presentation/window/vulkanWindow.cpp
+index 7a7f31d2..8f18fcd5 100644
+--- a/src/graphics/presentation/window/vulkanWindow.cpp
++++ b/src/graphics/presentation/window/vulkanWindow.cpp
+@@ -37,6 +37,7 @@
+ #include "graphics/presentation/systemOverlay.h"
+ #include "graphics/presentation/videoOut.h"
+ #include "graphics/presentation/window.h"
++#include "graphics/presentation/window/joyPump.h"
+ #include "graphics/presentation/window/windowInternal.h"
+ #include "kernel/memory.h"
+ #include "libs/controller.h"
+@@ -1325,7 +1326,13 @@ WindowContext::~WindowContext() {
+ 		SDL_DestroyWindow(window);
+ 		window = nullptr;
+ 	}
+-	SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
++	if (JoyPump::Enabled()) {
++		// Track F, F40a (KYTY_FIX_F24=1, s0.4): the joystick subsystem was initialized on JoyPump (its windows, timers and
++		// COM apartment); it is not torn down from this thread and stays until the process ends, as on the quick_exit path.
++		SDL_QuitSubSystem(SDL_INIT_VIDEO);
++	} else {
++		SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
++	}
+ }
+ 
+ } // namespace Libs::Graphics
+diff --git a/src/graphics/presentation/window/window.cpp b/src/graphics/presentation/window/window.cpp
+index 7eafc2be..764b257f 100644
+--- a/src/graphics/presentation/window/window.cpp
++++ b/src/graphics/presentation/window/window.cpp
+@@ -39,6 +39,7 @@
+ #include "graphics/presentation/presenter.h"
+ #include "graphics/presentation/systemOverlay.h"
+ #include "graphics/presentation/window/hostInput.h"
++#include "graphics/presentation/window/joyPump.h"
+ #include "graphics/presentation/window/testMinimizeLine.h"
+ #include "graphics/presentation/window/windowInternal.h"
+ #include "kytyGitVersion.h"
+@@ -381,7 +382,11 @@ static void GameEventController([[maybe_unused]] const EventController& f) {
+ 	}
+ #endif
+ 
+-	if (f.added) {
++	if (f.added && JoyPump::Enabled()) {
++		// Track F, F40a (KYTY_FIX_F24=1, RC2): JoyPump opens new pads by instance id after its own SDL_JoystickUpdate
++		// (docs/track-f/f40a.md s0.4); the add event of the main thread is only logged.
++		JoyPump::NoteAddEvent(f.id);
++	} else if (f.added) {
+ 		auto* pad = SDL_GameControllerOpen(f.id);
+ 		EXIT_NOT_IMPLEMENTED(pad == nullptr);
+ 		int id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(pad));
+@@ -406,7 +411,11 @@ static void GameEventController([[maybe_unused]] const EventController& f) {
+ 		LOGF("Controller %d: removed\n", f.id);
+ 		TestHidLossCount(g_test_hidloss.removed);
+ 		Controller::Disconnect(f.id);
+-		SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));
++		if (JoyPump::Enabled()) {
++			JoyPump::PostClose(f.id); // Track F, F40a: the close is a JoyPump task (s0.4)
++		} else {
++			SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));
++		}
+ 	}
+ 
+ 	if (f.down || f.up) {
+@@ -925,7 +934,21 @@ static void WindowCreate(WindowContext& context) {
+ 	SDL_SetHint(SDL_HINT_WINDOWS_DPI_SCALING, "0");
+ #endif
+ 
+-	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
++	// Track F, F40a (HPP-770, ROADMAP s122 item 692(v)): KYTY_FIX_F24, read once here before the SDL init. At 1 the main
++	// thread initializes only the video subsystem and waits while JoyPump initializes the game controllers - every
++	// joystick window, timer and COM apartment belongs to JoyPump (variant B, docs/track-f/f40a.md s0.1).
++	JoyPump::ReadKnob();
++	if (JoyPump::Enabled()) {
++		const auto main_tid = static_cast<uint64_t>(SDL_ThreadID());
++		SDL_SetHint(SDL_HINT_AUTO_UPDATE_JOYSTICKS, "0");
++		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
++			EXIT("%s\n", SDL_GetError());
++		}
++		std::string error;
++		if (!JoyPump::Start(main_tid, &error)) {
++			EXIT("%s\n", error.c_str());
++		}
++	} else if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
+ 		EXIT("%s\n", SDL_GetError());
+ 	}
+ 	HostInputInit();
+diff --git a/src/libs/controller.cpp b/src/libs/controller.cpp
+index 9c4f5f1e..6833e540 100644
+--- a/src/libs/controller.cpp
++++ b/src/libs/controller.cpp
+@@ -9,6 +9,7 @@
+ #include "common/logging/log.h"
+ #include "common/stringUtils.h"
+ #include "common/threads.h"
++#include "graphics/presentation/window/joyPump.h" // Track F, F40a (KYTY_FIX_F24)
+ #include "kernel/pthread.h"
+ #include "libs/audio_internal.h"
+ #include "libs/errno.h"
+@@ -853,8 +854,12 @@ void Initialize() {
+ 
+ void Shutdown() {
+ 	EmergencyShutdown();
+-	delete g_controller;
+-	g_controller = nullptr;
++	// Track F, F40a (KYTY_FIX_F24, RC4): after an expired JoyPump stop the object stays until the process ends - a JoyPump
++	// returning from an OS call must not reach freed memory (docs/track-f/f40a.md s0.4). At =0 Exited() is true.
++	if (Libs::Graphics::JoyPump::Exited()) {
++		delete g_controller;
++		g_controller = nullptr;
++	}
+ 	delete g_haptics;
+ 	g_haptics = nullptr;
+ 	delete g_pad_output;
+@@ -862,6 +867,11 @@ void Shutdown() {
+ }
+ 
+ void EmergencyShutdown() {
++	// Track F, F40a (KYTY_FIX_F24=1, RC4, ROADMAP s122 item 692(v)(6)): JoyPump is stopped first - after the flag it
++	// runs no task and calls neither Controller nor SDL; the wait is at most T_JP = 2 s ("FixF24: pump_stop_expired").
++	if (Libs::Graphics::JoyPump::Enabled()) {
++		Libs::Graphics::JoyPump::Stop();
++	}
+ 	if (g_haptics != nullptr) {
+ 		g_haptics->Stop();
+ 	}

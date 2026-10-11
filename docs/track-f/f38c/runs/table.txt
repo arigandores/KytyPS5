@@ -1,0 +1,4 @@
+reader f38c_read.py sha256 ed2ee28ae176d6b266bf321be6760a0ae9ad2c23b731731b90de399c9885f95c
+| tag | status | binary_sha256 | members 691(d)(4) | form fs12_v | read failed twice (log/stdout) | direct read failed (log/stdout) | exit code | close_s | glitches | video index | hold_s |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| f25_v | ADMITTED | 5a14a111 | ALL YES | ALL YES | 0 / 0 | 0 / 0 | 0 | 4.2 | 0 | 10178 | 330.0 |

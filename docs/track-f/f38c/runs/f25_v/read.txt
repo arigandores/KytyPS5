@@ -1,0 +1,53 @@
+tag f25_v (form f25_v, level underwater_aerial_garden)  reader sha256 ed2ee28ae176d6b266bf321be6760a0ae9ad2c23b731731b90de399c9885f95c
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = F38a 5a14a111 (5a14a1118e041c85)
+    [ok] installed during the tag = F38a 5a14a111 (5a14a1118e041c85)
+    [ok] installed before = after = FS12 46892c20 (46892c20080819ae / 46892c20080819ae)
+    [ok] json prereg sha256 = seal sha256 (4c38cb50e300461a / 4c38cb50e300461a)
+    [ok] env = the form of the tag (exact)
+    [ok] no KYTY_TEST_* in the env (none)
+    [ok] 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (230684)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {'lost keyboard focus': 1})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line - no KYTY_DIAG_B32 (0)
+    [ok] no TestLogStall line (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4810 listsha 28)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+  binary_sha256 5a14a1118e041c85257d7fd6faa8c8c98cea5c1c5a17ae7a4eff6707ec204754
+  MEMBERS 691(d)(4) ALL YES
+    [YES] hold >= 300 s after the first scene frame (334.0 s)
+    [YES] the process lived through the hold (outcome ok, hold_exit None)
+    [YES] 0 death markers (log and stdout) []
+    [YES] 0 frames >= 1 s after the first scene frame (0; first 400; with the first frame 0)
+    [YES] video index records >= 3000 (10178)
+    [YES] 0 one-frame glitches (0)
+    [YES] sheet for the lead made (sheet: C:/kyty/f287/f38c/runs/f25_v/sheet_f25_v.png frames 10178 step 212 tiles 8x6)
+    [YES] FixF25: mode=1 (every line) before the first GuestOut ([(1, 17)]; unparsable 0; first GuestOut 12503) - item 691 (d)(4)
+  MEMBERS form fs12_v ALL YES
+    [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 728)]; unparsable 0; first GuestOut 12503)
+    [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 726)]; bad 0; first GuestOut 12503)
+    [YES] exit by the harness: Event: quit line in the log (1158903)
+    [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+    [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+    [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+    [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12503)
+    [YES] summary LogAsync: full_waits= present (1)
+    [YES] drain_timeouts 0 (0)
+    [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 724)]; first GuestOut 12503)
+    [YES] FixB12Stat: line present (parsed 35, unparsable 0)
+  INFO {"expired_log": 0, "expired_stdout": 0, "fatal_after_quit": 0, "fatal_log_total": 0, "fatal_stdout": 0, "first_scene_n": 400, "frames_ge1s": 0, "frames_ge1s_with_first": 0, "hold_s": 334.0, "max_dt": 185955, "mean_dt_us": 34191.0, "quit_ln": 1158903, "scene_frames": 9768, "summary": {"bytes": 314414107, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 707495, "max_queued_bytes": 28154, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "vke": 0}
+  ROW F25 (not a gate; > 0 - evidence of F25 in the game, item of the lead): FixF25: read failed twice log 0, whole stdout 0; KernelRead: direct read failed log 0, whole stdout 0; FixF25: mode= lines 1, unparsable 0, other FixF25 lines 0
+  ROW exit (not a gate): exit code 0 (0x00000000); WM_CLOSE post -> process end 4.2 s; killed False; posted 5; harness timeout 40 s; Event: quit line 1158903; --- Fatal Error --- after it 0, whole stdout 0
+  REFERENCE: {"b12stat_last": {"ln": 1157798, "lskip": 0, "passes": 221976, "rewalk": 0, "rwd": 0}, "b12stat_lines": 35, "bin_version_string": true, "env_keys": ["KYTY_FIX_F25", "KYTY_FRAME_TRACE", "KYTY_GATE_FILE", "KYTY_GPU_CLOCK_PIN", "KYTY_GPU_HANG_ABORT_S", "KYTY_GPU_MARKERS", "KYTY_GUEST_ARGS", "KYTY_QUEUE_TRACE", "KYTY_REC", "KYTY_SAMPLE_GATE"], "f21_lines": 1, "f21_other": 0, "fork_line": "version: Fork build arigandores/KytyPS5 531d648", "glitches": 0, "hold_exit": null, "hold_s": 330.0, "lines": 1158905, "other_logasync": 0, "outcome": "ok", "sheet": "sheet: C:/kyty/f287/f38c/runs/f25_v/sheet_f25_v.png frames 10178 step 212 tiles 8x6", "stable_s": 20.9, "stand_log": 0, "stand_stdout": 0, "video_index": 10178, "vke": 0}
+  READING ADMITTED, members 691(d)(4) ALL YES, members of the form fs12_v ALL YES (no verdict; reading - F38d)

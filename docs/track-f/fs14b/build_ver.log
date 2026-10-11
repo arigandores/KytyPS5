@@ -1,0 +1,6 @@
+watch: start 2026-10-11T12:43:08Z child 24632 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+
+C:\kyty\f287\fs14b>rem FS14b (HPP-813, Red Team, ROADMAP s122 items 710(g)(2), 712(g)(2), 717): copy of the FS13b file with fs13b->fs14b in ALL lines. 
+[0/2] Re-checking globbed directories...
+[1/2] Generate kytyGitVersion.h
+rc=0 end 2026-10-11T12:43:11Z

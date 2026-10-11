@@ -1,0 +1,29 @@
+ok   default stdout FIXF29 env=(unset) on=1
+ok   control stdout FIXF29 env=0 on=0
+ok   default rows 160 = 8 x R 
+ok   default seed and fix columns 
+ok   default arm S0 count R 
+ok   default arm S1 count R 
+ok   default arm S2 count R 
+ok   default arm E1 count R 
+ok   default arm O1 count R 
+ok   default arm O7 count R 
+ok   default arm D1 count R 
+ok   default arm L count R 
+ok   default extra = dup = map_left = 0 
+ok   control rows 160 = 8 x R 
+ok   control seed and fix columns 
+ok   control arm S0 count R 
+ok   control arm S1 count R 
+ok   control arm S2 count R 
+ok   control arm E1 count R 
+ok   control arm O1 count R 
+ok   control arm O7 count R 
+ok   control arm D1 count R 
+ok   control arm L count R 
+ok   control extra = dup = map_left = 0 
+ok   P1 out_area = out_buf = cls_low = cls_exit = 0 in all default rows bad 0 of 160
+ok   P1 read = 1023 at E1 O1 O7 D1 L 100 rows
+ok   P0 control O1 out_area 77 20 of 20
+ok   P0 control O7 out_buf 77 20 of 20
+RECOUNT ALL OK

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\kyty\f287\fs14b\pediff3r_fs14b.py", line 27, in <module>
+    g = runpy.run_path(HERE)
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:/kyty/f287/fs14b/pediff3.py", line 15, in <module>
+    assert len(a) == len(b)
+           ^^^^^^^^^^^^^^^^
+AssertionError

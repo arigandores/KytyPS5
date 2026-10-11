@@ -1,0 +1,94 @@
+R1 paths 12 src ['src/graphics/host_gpu/renderer/cache/faultManager.cpp', 'src/graphics/host_gpu/renderer/cache/faultManager.h', 'src/graphics/presentation/window/hostInput.cpp', 'src/graphics/presentation/window/joyPump.cpp', 'src/graphics/presentation/window/joyPump.h', 'src/graphics/presentation/window/vulkanWindow.cpp', 'src/graphics/presentation/window/window.cpp', 'src/libs/controller.cpp']
+ok   R1 src/ == F40 files + faultManager.cpp/.h 
+ok   R1 outside src/: CMakeLists.txt, tests/F29FaultStand.cpp, docs/track-f/f44a/* ['CMakeLists.txt', 'docs/track-f/f44a/gate_order_main.out.txt', 'docs/track-f/f44a/patch_f44a.py', 'tests/F29FaultStand.cpp']
+R1 CMakeLists +6 -0 code+ ['+add_kyty_full_emulator_test(f29_fault_stand', '+\t"${KYTY_TESTS_DIR}/F29FaultStand.cpp")']
+ok   R1 CMakeLists only the f29_fault_stand target 
+ok   R1 CMakeLists = 15c9d2f2 CMake diff 
+ok   R1 chain b50e90e8 parent ea6c6e9e ea6c6e9e
+ok   R1 patch-id b50e90e8 == 5c21c387 (main) bfcd4764ab03
+ok   R1 chain cd422a94 parent b50e90e8 b50e90e8
+ok   R1 patch-id cd422a94 == e3aa4b4d (main) 337f7e6a05d5
+ok   R1 chain 6eb0f1a1 parent cd422a94 cd422a94
+ok   R1 patch-id 6eb0f1a1 == 57f9e528 (main) a1eb4bafb937
+ok   R1 chain 76c1058f parent 6eb0f1a1 6eb0f1a1
+ok   R1 patch-id 76c1058f == c8836f14 (main) 9287ca1baf02
+ok   R1 chain c5eb48b0 parent 76c1058f 76c1058f
+ok   R1 patch-id c5eb48b0 == 15c9d2f2 (main) f3dd01228e37
+ok   R1 chain eb7e8b91 parent c5eb48b0 c5eb48b0
+ok   R1 patch-id eb7e8b91 == 78e45af3 (main) 50ac3fd47786
+ok   R1 FS14 tip == eb7e8b91 
+R2 src paths F40a2 wt -> FS14 ['src/graphics/host_gpu/renderer/cache/faultManager.cpp', 'src/graphics/host_gpu/renderer/cache/faultManager.h', 'src/graphics/presentation/window/joyPump.cpp', 'src/graphics/presentation/window/joyPump.h', 'src/kernel/fileSystem.cpp']
+ok   R2 paths == fileSystem.cpp + joyPump.cpp/.h + faultManager.cpp/.h 
+ok   R2 fileSystem.cpp diff == FS13 diff (FS12 -> FS13) 
+ok   R2 joyPump diff == FS14a F24 default commit 76c1058f 
+ok   R2 faultManager diff == 15c9d2f2 + 78e45af3 (c5eb48b0^ .. eb7e8b91) 
+ok   R2 src/graphics/presentation/window/hostInput.cpp blob F40a2 wt == FS14 
+ok   R2 src/graphics/presentation/window/vulkanWindow.cpp blob F40a2 wt == FS14 
+ok   R2 src/graphics/presentation/window/window.cpp blob F40a2 wt == FS14 
+ok   R2 src/libs/controller.cpp blob F40a2 wt == FS14 
+ok   R2 F40a2 code commits = 6eb0f1a1 in F40 files 
+ok   R2 negative: diff src/ base FS13 -> FS14 != diff F40a2 wt -> FS14 
+R2b src paths F44a wt -> FS14 ['src/graphics/host_gpu/renderer/cache/faultManager.cpp', 'src/graphics/host_gpu/renderer/cache/faultManager.h', 'src/graphics/presentation/window/hostInput.cpp', 'src/graphics/presentation/window/joyPump.cpp', 'src/graphics/presentation/window/joyPump.h', 'src/graphics/presentation/window/vulkanWindow.cpp', 'src/graphics/presentation/window/window.cpp', 'src/kernel/fileSystem.cpp', 'src/libs/controller.cpp']
+ok   R2b paths == faultManager.cpp/.h + F40 files + fileSystem.cpp 
+ok   R2b faultManager diff == 78e45af3 only (c5eb48b0 -> eb7e8b91) 
+ok   R2b F40 files diff == ea6c6e9e -> 76c1058f 
+ok   R2b fileSystem.cpp diff == FS13 diff 
+ok   R2b F44a code = 15c9d2f2 blobs in faultManager 
+ok   R3 FS14 contains 15c9d2f2 cherry -
+ok   R3 FS14 contains 78e45af3 cherry -
+ok   R3 FS14 contains 5c21c387 cherry -
+ok   R3 FS14 contains 57f9e528 cherry -
+ok   R3 FS14 contains c8836f14 cherry -
+ok   R3 FS14 contains e9dd8604 cherry -
+ok   R3 FS14 contains 3630f116 cherry -
+ok   R3 FS14 contains 227e1b36 cherry -
+ok   R3 FS14 contains cbfe8375 cherry -
+ok   R3 FS14 contains c94c49e0 cherry -
+ok   R3 FS14 contains 726e751e cherry -
+ok   R3 FS14 contains cb022252 cherry -
+ok   R3 control 5c21c387 in ea6c6e9e expect no cherry +
+ok   R3 control 57f9e528 in ea6c6e9e expect no cherry +
+ok   R3 control c8836f14 in ea6c6e9e expect no cherry +
+ok   R3 control 15c9d2f2 in ea6c6e9e expect no cherry +
+ok   R3 control 78e45af3 in ea6c6e9e expect no cherry +
+ok   R3 control 15c9d2f2 in 76c1058f expect no cherry +
+ok   R3 control 78e45af3 in 76c1058f expect no cherry +
+ok   R3 control a6342c98 in eb7e8b91 expect no cherry +
+ok   R3 control e3aa4b4d in eb7e8b91 expect yes cherry -
+ok   R4 F25 files 1 differ []
+ok   R4 F21 files 3 differ []
+ok   R4 B12 files 5 differ []
+ok   R4 F27 files 5 differ []
+ok   R4 B13 files 2 differ []
+ok   R4 B33 files 2 differ []
+ok   R4 F10 files 5 differ []
+ok   R4 F16 files 3 differ ['src/graphics/presentation/window/vulkanWindow.cpp']
+ok   R4 F19 files 3 differ []
+ok   R4 B42 files 3 differ []
+ok   R4 B4 files 4 differ []
+ok   R4 F8 files 2 differ []
+ok   R4 B24 files 2 differ ['src/libs/controller.cpp']
+ok   R4 S-replay files 4 differ []
+ok   R4 P-var files 10 differ []
+ok   R4 filter fixtures (3 rejected, 3 allowed) 
+ok   R4 changed lines naming a knob/Fix symbol outside F24/F29/B24/stand/platform macros: 0 0
+R4 changed lines naming B24 or PadOutput (eye): 3
+     ('src/graphics/presentation/window/joyPump.cpp', '+// before WindowCreate - PadOutput, haptics), hence atomic.')
+     ('src/graphics/presentation/window/joyPump.cpp', '+// of ReleaseHostPads and of the KYTY_FIX_B24=0 guest path).')
+     ('src/graphics/presentation/window/joyPump.cpp', '+\tLOGF("FixF24: mode=%d b24=%d\\n", Enabled() ? 1 : 0, Controller::FixB24On() ? 1 : 0);')
+ok   R5 shader paths 0 
+ok   R5 signature of own build == 9177b426... 9177b4267de1fb8bac7d1113afd8733210addfac
+ok   R5 version string ends with -geb7e8b91 KytyPS5-2026-09-15-6a2987a-1925-geb7e8b91
+R6 76c1058f code lines:
+     -	g_enabled.store(Common::EnvFlagOn("KYTY_FIX_F24"), std::memory_order_release);
+     +	const char* value = std::getenv("KYTY_FIX_F24");
+     +	g_enabled.store(value == nullptr || value[0] == '\0' || Common::EnvValueOn(value), std::memory_order_release);
+ok   R6 76c1058f changes only the knob reading (code lines <= 6, getenv of its knob) 
+R6 eb7e8b91 code lines:
+     -	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_F29"));
+     +	static const bool enabled = [] {
+     +		const char* value = std::getenv("KYTY_FIX_F29");
+     +		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+     +	}();
+ok   R6 eb7e8b91 changes only the knob reading (code lines <= 6, getenv of its knob) 
+ALL OK

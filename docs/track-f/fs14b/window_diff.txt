@@ -1,0 +1,667 @@
+diff --git a/src/graphics/presentation/window/window.cpp b/src/graphics/presentation/window/window.cpp
+index fbad97f0..6209dd9c 100644
+--- a/src/graphics/presentation/window/window.cpp
++++ b/src/graphics/presentation/window/window.cpp
+@@ -38,12 +38,14 @@
+ #include "graphics/presentation/presenter.h"
+ #include "graphics/presentation/systemOverlay.h"
+ #include "graphics/presentation/window/hostInput.h"
++#include "graphics/presentation/window/joyPump.h"
+ #include "graphics/presentation/window/testMinimizeLine.h"
+ #include "graphics/presentation/window/windowInternal.h"
+ #include "kytyGitVersion.h"
+ #include "libs/controller.h"
+ #include "loader/systemContent.h"
+ 
++#include <algorithm>
+ #include <atomic>
+ #include <chrono>
+ #include <cstdlib>
+@@ -362,6 +364,10 @@ static void TestHidLossCount(std::atomic<uint64_t>& counter) {
+ 	}
+ }
+ 
++// Track F, F40a stand KYTY_TEST_HIDLOSS edition 2: the keyboard and pad probes, seen first by ProcessEvent (defined
++// with the stand, after WindowShutdown).
++static bool TestHidLossIntercept(const SDL_Event& event);
++
+ static void GameEventController([[maybe_unused]] const EventController& f) {
+ 	EXIT_NOT_IMPLEMENTED(f.remapped);
+ 
+@@ -380,7 +386,11 @@ static void GameEventController([[maybe_unused]] const EventController& f) {
+ 	}
+ #endif
+ 
+-	if (f.added) {
++	if (f.added && JoyPump::Enabled()) {
++		// Track F, F40a (KYTY_FIX_F24=1, RC2): JoyPump opens new pads by instance id after its own SDL_JoystickUpdate
++		// (docs/track-f/f40a.md s0.4); the add event of the main thread is only logged.
++		JoyPump::NoteAddEvent(f.id);
++	} else if (f.added) {
+ 		auto* pad = SDL_GameControllerOpen(f.id);
+ 		EXIT_NOT_IMPLEMENTED(pad == nullptr);
+ 		int id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(pad));
+@@ -405,7 +415,11 @@ static void GameEventController([[maybe_unused]] const EventController& f) {
+ 		LOGF("Controller %d: removed\n", f.id);
+ 		TestHidLossCount(g_test_hidloss.removed);
+ 		Controller::Disconnect(f.id);
+-		SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));
++		if (JoyPump::Enabled()) {
++			JoyPump::PostClose(f.id); // Track F, F40a: the close is a JoyPump task (s0.4)
++		} else {
++			SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));
++		}
+ 	}
+ 
+ 	if (f.down || f.up) {
+@@ -555,6 +569,9 @@ void WindowContext::ProcessEvent(double time_s) {
+ 	auto& game  = loop;
+ 	auto* event = &game.event;
+ 	EXIT_IF(SDL_GetEventState(SDL_DISPLAYEVENT) != SDL_ENABLE);
++	if (TestHidLossIntercept(*event)) [[unlikely]] { // Track F, F40a stand edition 2 probes (one relaxed load when off)
++		return;
++	}
+ 	if ((event->type == SDL_KEYDOWN || event->type == SDL_KEYUP) &&
+ 	    event->key.keysym.sym == SDLK_F7) {
+ 		if (event->type == SDL_KEYDOWN && event->key.repeat == 0) {
+@@ -909,7 +926,21 @@ static void WindowCreate(WindowContext& context) {
+ 	SDL_SetHint(SDL_HINT_WINDOWS_DPI_SCALING, "0");
+ #endif
+ 
+-	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
++	// Track F, F40a (HPP-770, ROADMAP s122 item 692(v)): KYTY_FIX_F24, read once here before the SDL init. At 1 the main
++	// thread initializes only the video subsystem and waits while JoyPump initializes the game controllers - every
++	// joystick window, timer and COM apartment belongs to JoyPump (variant B, docs/track-f/f40a.md s0.1).
++	JoyPump::ReadKnob();
++	if (JoyPump::Enabled()) {
++		const auto main_tid = static_cast<uint64_t>(SDL_ThreadID());
++		SDL_SetHint(SDL_HINT_AUTO_UPDATE_JOYSTICKS, "0");
++		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
++			EXIT("%s\n", SDL_GetError());
++		}
++		std::string error;
++		if (!JoyPump::Start(main_tid, &error)) {
++			EXIT("%s\n", error.c_str());
++		}
++	} else if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
+ 		EXIT("%s\n", SDL_GetError());
+ 	}
+ 	HostInputInit();
+@@ -1080,11 +1111,51 @@ void WindowShutdown() {
+ // records its age (main_late_max_us); after done + 2 s it posts the task that closes the counting window and prints the
+ // line "TestHidLoss: stat ..." (main thread tasks run in posting order: every probe posted before it has run). t_us -
+ // Common::FrameStats::NowNs() / 1000. The stand thread is detached; a process that ends inside the window prints no stat.
+-constexpr double   TEST_HIDLOSS_PRE_S    = 10.0;
+-constexpr uint32_t TEST_HIDLOSS_HOLD_MS  = 3000;
+-constexpr uint32_t TEST_HIDLOSS_PROBE_MS = 20;
+-
+-enum class TestHidLossMode { Detach, Hold, Sleep };
++//
++// Track F, F40a (HPP-770, ROADMAP s122 item 692(g)(1), edition 2; docs/track-f/f40a.md s0.5-s0.6): new modes upd, flap,
++// exit, pad; detach runs on the edition 2 thread (attach at fire - PRE_S and fire on the main thread as before, plus the
++// probes below and the line "TestHidLoss: f24 ..."); hold and sleep are edition 1 unchanged; no cls (s0.5). Edition 2:
++//  - attach (main thread): also SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1 (SDL drops a pad press without focus), the
++//    HWND of the window, and from then on ProcessEvent sees first (and does not pass on) every VK_F13 key event and every
++//    button A event of the virtual pad; upd, exit, pad, flap attach at fire - PRE2_S;
++//  - keyboard / window / main probes (all edition 2 modes but pad), from fire - 1 s to done + 2 s: every IN_MS a
++//    WM_KEYDOWN / WM_KEYUP pair of VK_F13 posted to the window (in_posted; the k-th KEYDOWN seen by ProcessEvent is the
++//    k-th posted: in_seen, in_lat_max_us, in_pre_lat_max_us for those posted before fire), IsHungAppWindow every PROBE_MS
++//    (hung_ms - the sum of the probe intervals that ended hung), the main thread probe tasks of edition 1; JoyPump counts
++//    its update wall and tasks (JoyPump::StandWindow);
++//  - pad probe (upd, pad), from fire - 20 s to fire - 1 s: button 0 (A) of the virtual pad pressed and released every
++//    IN_MS by SDL_JoystickSetVirtualButton on the stand thread (the event is born in the next Update of the updating
++//    thread); pad_posted, pad_seen, pad_lat_p99_us, pad_lat_max_us;
++//  - upd: at fire the next Update callback of the virtual pad - inside SDL_JoystickUpdate under the joystick lock, on the
++//    updating thread (main at KYTY_FIX_F24=0, JoyPump at 1) - sleeps HOLD_UPD_MS and prints "done" (upd_on_main,
++//    upd_slept_us);
++//  - exit: upd, then at fire + 0.5 s a JoyPump task (prints "TestHidLoss: jp_task ran") and at fire + 1 s SDL_QUIT;
++//  - pad: from fire - 21 s to fire the title is not posted (UpdateTitle); fire only ends the window, done = fire;
++//  - flap: from fire, FLAP_N pads "KYTY flap pad" attached one per probe step (PROBE_MS) from the stand thread, each
++//    detached two steps later; JoyPump tasks run no earlier than FLAP_TASK_DELAY_MS after their post (a pad lives 2 steps,
++//    less than the delay: a task opening by the event index can never open its own pad); attached - successful attaches,
++//    opened - pads whose Update callback ran (SDL_JoystickOpen runs one Update), open_lat_max_us - attach to first Update.
++// F40a2 (HPP-785, ROADMAP s122 item 696(b)(2), RC2 of F40b): the line "TestHidLoss: f24" ends with flap_life_min_us,
++// flap_life_max_us (detach - attach of the flap slots that were attached and detached; both times taken under the
++// joystick lock, attach before SDL_JoystickAttachVirtualEx, detach before SDL_JoystickDetachVirtual) and
++// jp_scan_gap_max_us (JoyPump::StandScanGapBegin just before the first attach .. StandScanGapEnd just after the last
++// detach: the longest stretch without a ScanAndOpen start of JoyPump; 0 at KYTY_FIX_F24=0); 0 in other modes.
++constexpr double   TEST_HIDLOSS_PRE_S              = 10.0;
++constexpr uint32_t TEST_HIDLOSS_HOLD_MS            = 3000;
++constexpr uint32_t TEST_HIDLOSS_PROBE_MS           = 20;
++constexpr double   TEST_HIDLOSS_PRE2_S             = 25.0;
++constexpr uint32_t TEST_HIDLOSS_HOLD_UPD_MS        = 8000;
++constexpr uint32_t TEST_HIDLOSS_IN_MS              = 100;
++constexpr double   TEST_HIDLOSS_PAD_FROM_S         = 20.0;
++constexpr double   TEST_HIDLOSS_PAD_TO_S           = 1.0;
++constexpr double   TEST_HIDLOSS_TITLE_OFF_S        = 21.0;
++constexpr double   TEST_HIDLOSS_EXIT_TASK_S        = 0.5;
++constexpr double   TEST_HIDLOSS_EXIT_QUIT_S        = 1.0;
++constexpr uint32_t TEST_HIDLOSS_FLAP_N             = 60;
++constexpr uint32_t TEST_HIDLOSS_FLAP_TASK_DELAY_MS = 50;
++constexpr uint32_t TEST_HIDLOSS_RING               = 4096;
++
++enum class TestHidLossMode { Detach, Hold, Sleep, Upd, Flap, Exit, Pad };
+ 
+ struct TestHidLossConfig {
+ 	bool            on      = false;
+@@ -1097,10 +1168,18 @@ static const char* TestHidLossModeName(TestHidLossMode mode) {
+ 		case TestHidLossMode::Detach: return "detach";
+ 		case TestHidLossMode::Hold: return "hold";
+ 		case TestHidLossMode::Sleep: return "sleep";
++		case TestHidLossMode::Upd: return "upd";
++		case TestHidLossMode::Flap: return "flap";
++		case TestHidLossMode::Exit: return "exit";
++		case TestHidLossMode::Pad: return "pad";
+ 	}
+ 	return "?";
+ }
+ 
++static bool TestHidLossEdition2(TestHidLossMode mode) {
++	return mode != TestHidLossMode::Hold && mode != TestHidLossMode::Sleep;
++}
++
+ static TestHidLossConfig TestHidLossReadConfig() {
+ 	TestHidLossConfig c;
+ 	const char*       value = std::getenv("KYTY_TEST_HIDLOSS");
+@@ -1118,19 +1197,29 @@ static TestHidLossConfig TestHidLossReadConfig() {
+ 			mode = TestHidLossMode::Hold;
+ 		} else if (std::strcmp(end, ":sleep") == 0) {
+ 			mode = TestHidLossMode::Sleep;
++		} else if (std::strcmp(end, ":upd") == 0) {
++			mode = TestHidLossMode::Upd;
++		} else if (std::strcmp(end, ":flap") == 0) {
++			mode = TestHidLossMode::Flap;
++		} else if (std::strcmp(end, ":exit") == 0) {
++			mode = TestHidLossMode::Exit;
++		} else if (std::strcmp(end, ":pad") == 0) {
++			mode = TestHidLossMode::Pad;
+ 		} else {
+ 			ok = false;
+ 		}
+ 	}
+ 	if (!ok) {
+-		LOGF("TestHidLoss: config invalid value=\"%s\" (expected <s>[:detach|hold|sleep]), stand off\n", value);
++		LOGF("TestHidLoss: config invalid value=\"%s\" (expected <s>[:detach|hold|sleep|upd|flap|exit|pad]), stand off\n",
++		     value);
+ 		return c;
+ 	}
+ 	c.on      = true;
+ 	c.delay_s = delay_s;
+ 	c.mode    = mode;
+-	LOGF("TestHidLoss: config on delay_s=%g mode=%s hold_ms=%u\n", delay_s, TestHidLossModeName(mode),
+-	     TEST_HIDLOSS_HOLD_MS);
++	LOGF("TestHidLoss: config on delay_s=%g mode=%s hold_ms=%u edition=%d hold_upd_ms=%u in_ms=%u probe_ms=%u fix_f24=%d\n",
++	     delay_s, TestHidLossModeName(mode), TEST_HIDLOSS_HOLD_MS, TestHidLossEdition2(mode) ? 2 : 1,
++	     TEST_HIDLOSS_HOLD_UPD_MS, TEST_HIDLOSS_IN_MS, TEST_HIDLOSS_PROBE_MS, JoyPump::Enabled() ? 1 : 0);
+ 	return c;
+ }
+ 
+@@ -1138,11 +1227,81 @@ static uint64_t TestHidLossNowUs() {
+ 	return Common::FrameStats::NowNs() / 1000;
+ }
+ 
+-// Instance id of the attached virtual pad (-1: none); written and read on the main thread only.
+-static SDL_JoystickID g_test_hidloss_vp = -1;
+-// t_us of the "done" line, 0 until fire has finished; written by the main thread, read by the stand thread.
++// Instance id of the attached virtual pad (-1: none); written by the main thread, read by the main thread and (pad probe)
++// the stand thread.
++static std::atomic<SDL_JoystickID> g_test_hidloss_vp {-1};
++// t_us of the "done" line, 0 until fire has finished; written by the main thread (detach) or the updating thread (upd),
++// read by the stand thread.
+ static std::atomic<uint64_t> g_test_hidloss_done_us {0};
+ 
++// Edition 2 state. Atomics are written by the stand thread / the updating thread and read by the main thread; the
++// fields after "main thread only" are touched by ProcessEvent and the stat task only.
++struct TestHidLossEd2 {
++	std::atomic<bool>      probes {false};    // ProcessEvent intercepts VK_F13 and the virtual pad's button A
++	std::atomic<bool>      title_off {false}; // UpdateTitle posts nothing (mode pad)
++	std::atomic<uintptr_t> hwnd {0};
++	std::atomic<bool>      upd_armed {false};
++	std::atomic<uint64_t>  upd_on_main {0};
++	std::atomic<uint64_t>  upd_slept_us {0};
++	std::atomic<uint64_t>  fire_us {0};
++	std::atomic<uint64_t>  in_posted {0};
++	std::atomic<uint64_t>  in_post_fail {0};
++	std::atomic<uint64_t>  in_post_us[TEST_HIDLOSS_RING] {};
++	std::atomic<uint64_t>  pad_posted {0};
++	std::atomic<uint64_t>  pad_post_us[TEST_HIDLOSS_RING] {};
++	std::atomic<uint64_t>  hung_ms {0};
++	std::atomic<uint64_t>  flap_attached {0};
++	std::atomic<uint64_t>  flap_attach_us[TEST_HIDLOSS_FLAP_N] {};
++	std::atomic<uint64_t>  flap_open_us[TEST_HIDLOSS_FLAP_N] {};
++	std::atomic<uint64_t>  flap_detach_us[TEST_HIDLOSS_FLAP_N] {}; // F40a2: 0 - not detached
++	std::atomic<uint64_t>  jp_scan_gap_max_us {0};                 // F40a2
++	// Main thread only.
++	uint64_t              in_seen           = 0;
++	uint64_t              in_lat_max_us     = 0;
++	uint64_t              in_pre_lat_max_us = 0;
++	uint64_t              pad_seen          = 0;
++	std::vector<uint64_t> pad_lat_us;
++};
++
++static TestHidLossEd2 g_test_hidloss2;
++
++// Main thread, first thing of ProcessEvent (after the display event check); one relaxed load when the stand is off.
++static bool TestHidLossIntercept(const SDL_Event& event) {
++	auto& e = g_test_hidloss2;
++	if (!e.probes.load(std::memory_order_relaxed)) {
++		return false;
++	}
++	if ((event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) && event.key.keysym.sym == SDLK_F13) {
++		if (event.type == SDL_KEYDOWN) {
++			const uint64_t k = e.in_seen++;
++			if (k < e.in_posted.load(std::memory_order_acquire)) {
++				const uint64_t posted_us = e.in_post_us[k % TEST_HIDLOSS_RING].load(std::memory_order_relaxed);
++				const uint64_t lat_us    = TestHidLossNowUs() - posted_us;
++				e.in_lat_max_us          = std::max(e.in_lat_max_us, lat_us);
++				if (posted_us < e.fire_us.load(std::memory_order_relaxed)) {
++					e.in_pre_lat_max_us = std::max(e.in_pre_lat_max_us, lat_us);
++				}
++			}
++		}
++		return true;
++	}
++	if ((event.type == SDL_CONTROLLERBUTTONDOWN || event.type == SDL_CONTROLLERBUTTONUP) &&
++	    event.cbutton.which == g_test_hidloss_vp.load(std::memory_order_relaxed) &&
++	    event.cbutton.button == SDL_CONTROLLER_BUTTON_A) {
++		const uint64_t k = e.pad_seen++;
++		if (k < e.pad_posted.load(std::memory_order_acquire)) {
++			e.pad_lat_us.push_back(TestHidLossNowUs() -
++			                       e.pad_post_us[k % TEST_HIDLOSS_RING].load(std::memory_order_relaxed));
++		}
++		return true;
++	}
++	return false;
++}
++
++static bool TestHidLossTitleOff() {
++	return g_test_hidloss2.title_off.load(std::memory_order_relaxed);
++}
++
+ static int SDLCALL TestHidLossVpRumble(void* /*userdata*/, Uint16 /*low*/, Uint16 /*high*/) {
+ 	TestHidLossCount(g_test_hidloss.vp_rumble);
+ 	return 0;
+@@ -1158,8 +1317,34 @@ static int SDLCALL TestHidLossVpSendEffect(void* /*userdata*/, const void* /*dat
+ 	return 0;
+ }
+ 
++// Edition 2, upd: inside SDL_JoystickUpdate under the joystick lock, on the updating thread. One relaxed load when not
++// armed.
++static void SDLCALL TestHidLossVpUpdate(void* /*userdata*/) {
++	auto& e = g_test_hidloss2;
++	if (!e.upd_armed.load(std::memory_order_relaxed) || !e.upd_armed.exchange(false, std::memory_order_acq_rel)) {
++		return;
++	}
++	const bool     on_main = Common::Thread::IsMainThread();
++	const uint64_t start   = TestHidLossNowUs();
++	std::this_thread::sleep_for(std::chrono::milliseconds(TEST_HIDLOSS_HOLD_UPD_MS));
++	const uint64_t done_us = TestHidLossNowUs();
++	e.upd_on_main.store(on_main ? 1 : 0, std::memory_order_relaxed);
++	e.upd_slept_us.store(done_us - start, std::memory_order_relaxed);
++	LOGF("TestHidLoss: done t_us=%" PRIu64 " upd_on_main=%d\n", done_us, on_main ? 1 : 0);
++	g_test_hidloss_done_us.store(done_us, std::memory_order_release);
++}
++
++// Edition 2, flap: the first Update of a flap pad (SDL_JoystickOpen runs one) marks it opened.
++static void SDLCALL TestHidLossFlapUpdate(void* userdata) {
++	const auto slot = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(userdata));
++	if (slot < TEST_HIDLOSS_FLAP_N) {
++		uint64_t expected = 0;
++		g_test_hidloss2.flap_open_us[slot].compare_exchange_strong(expected, TestHidLossNowUs(), std::memory_order_relaxed);
++	}
++}
++
+ // Main thread.
+-static void TestHidLossAttach() {
++static void TestHidLossAttach(bool edition2) {
+ 	SDL_VirtualJoystickDesc desc {};
+ 	desc.version    = SDL_VIRTUAL_JOYSTICK_DESC_VERSION;
+ 	desc.type       = SDL_JOYSTICK_TYPE_GAMECONTROLLER;
+@@ -1169,13 +1354,24 @@ static void TestHidLossAttach() {
+ 	desc.Rumble     = TestHidLossVpRumble;
+ 	desc.SetLED     = TestHidLossVpSetLed;
+ 	desc.SendEffect = TestHidLossVpSendEffect;
++	if (edition2) {
++		desc.Update = TestHidLossVpUpdate;
++		SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
++		if (g_window != nullptr) {
++			g_test_hidloss2.hwnd.store(JoyPump::StandWindowHandle(g_window->window), std::memory_order_relaxed);
++		}
++	}
+ 	const int index = SDL_JoystickAttachVirtualEx(&desc);
+ 	if (index < 0) {
+ 		LOGF("TestHidLoss: attach failed error=\"%s\" t_us=%" PRIu64 "\n", SDL_GetError(), TestHidLossNowUs());
+ 		return;
+ 	}
+-	g_test_hidloss_vp = SDL_JoystickGetDeviceInstanceID(index);
+-	LOGF("TestHidLoss: attach index=%d t_us=%" PRIu64 "\n", index, TestHidLossNowUs());
++	g_test_hidloss_vp.store(SDL_JoystickGetDeviceInstanceID(index), std::memory_order_relaxed);
++	if (edition2) {
++		g_test_hidloss2.probes.store(true, std::memory_order_release);
++	}
++	LOGF("TestHidLoss: attach index=%d t_us=%" PRIu64 " hwnd=%d\n", index, TestHidLossNowUs(),
++	     g_test_hidloss2.hwnd.load(std::memory_order_relaxed) != 0 ? 1 : 0);
+ }
+ 
+ // Main thread.
+@@ -1183,9 +1379,10 @@ static void TestHidLossFire(TestHidLossMode mode) {
+ 	LOGF("TestHidLoss: fire mode=%s t_us=%" PRIu64 "\n", TestHidLossModeName(mode), TestHidLossNowUs());
+ 	switch (mode) {
+ 		case TestHidLossMode::Detach: {
+-			int index = -1;
+-			for (int i = 0; g_test_hidloss_vp >= 0 && i < SDL_NumJoysticks(); i++) {
+-				if (SDL_JoystickGetDeviceInstanceID(i) == g_test_hidloss_vp) {
++			const SDL_JoystickID vp    = g_test_hidloss_vp.load(std::memory_order_relaxed);
++			int                  index = -1;
++			for (int i = 0; vp >= 0 && i < SDL_NumJoysticks(); i++) {
++				if (SDL_JoystickGetDeviceInstanceID(i) == vp) {
+ 					index = i;
+ 					break;
+ 				}
+@@ -1201,6 +1398,7 @@ static void TestHidLossFire(TestHidLossMode mode) {
+ 			SDL_UnlockJoysticks();
+ 			break;
+ 		case TestHidLossMode::Sleep: SDL_Delay(TEST_HIDLOSS_HOLD_MS); break;
++		default: break; // edition 2 modes other than detach fire on the stand thread
+ 	}
+ 	const uint64_t done_us = TestHidLossNowUs();
+ 	LOGF("TestHidLoss: done t_us=%" PRIu64 "\n", done_us);
+@@ -1224,6 +1422,49 @@ static void TestHidLossStat(TestHidLossMode mode) {
+ 	     u(pad.pad_trig), u(pad.pad_wait_max_us), u(pad.po_applied), u(pad.po_wait_max_us), u(pad.guest_sdl),
+ 	     get(g_test_hidloss.removed), get(g_test_hidloss.vp_rumble), get(g_test_hidloss.vp_led),
+ 	     get(g_test_hidloss.vp_effect));
++	if (!TestHidLossEdition2(mode)) {
++		return;
++	}
++	auto& e = g_test_hidloss2;
++	e.probes.store(false, std::memory_order_relaxed);
++	const auto jp = JoyPump::StandRead();
++	JoyPump::StandWindow(false);
++	auto lat = e.pad_lat_us;
++	std::sort(lat.begin(), lat.end());
++	const uint64_t p99     = lat.empty() ? 0 : lat[(lat.size() * 99 + 99) / 100 - 1];
++	const uint64_t lat_max = lat.empty() ? 0 : lat.back();
++	uint64_t       opened  = 0;
++	uint64_t       open_lat_max_us = 0;
++	const uint64_t attached        = e.flap_attached.load(std::memory_order_relaxed);
++	for (uint32_t i = 0; i < TEST_HIDLOSS_FLAP_N && i < attached; i++) {
++		const uint64_t open_us = e.flap_open_us[i].load(std::memory_order_relaxed);
++		if (open_us != 0) {
++			opened++;
++			open_lat_max_us = std::max(open_lat_max_us, open_us - e.flap_attach_us[i].load(std::memory_order_relaxed));
++		}
++	}
++	uint64_t life_min_us = 0;
++	uint64_t life_max_us = 0;
++	uint64_t life_n      = 0;
++	for (uint32_t i = 0; i < TEST_HIDLOSS_FLAP_N; i++) {
++		const uint64_t attach_us = e.flap_attach_us[i].load(std::memory_order_relaxed);
++		const uint64_t detach_us = e.flap_detach_us[i].load(std::memory_order_relaxed);
++		if (attach_us != 0 && detach_us >= attach_us) {
++			const uint64_t life_us = detach_us - attach_us;
++			life_min_us             = life_n == 0 ? life_us : std::min(life_min_us, life_us);
++			life_max_us             = std::max(life_max_us, life_us);
++			life_n++;
++		}
++	}
++	LOGF("TestHidLoss: f24 mode=%s fix=%d upd_on_main=%llu upd_slept_us=%llu main_late_max_us=%llu in_posted=%llu "
++	     "in_seen=%llu in_post_fail=%llu in_lat_max_us=%llu in_pre_lat_max_us=%llu hung_ms=%llu jp_update_max_us=%llu "
++	     "jp_tasks=%llu pad_posted=%llu pad_seen=%llu pad_lat_p99_us=%llu pad_lat_max_us=%llu attached=%llu opened=%llu "
++	     "open_failed=%llu open_lat_max_us=%llu flap_life_min_us=%llu flap_life_max_us=%llu jp_scan_gap_max_us=%llu\n",
++	     TestHidLossModeName(mode), JoyPump::Enabled() ? 1 : 0, get(e.upd_on_main), get(e.upd_slept_us),
++	     get(g_test_hidloss.main_late_max_us), get(e.in_posted), u(e.in_seen), get(e.in_post_fail), u(e.in_lat_max_us),
++	     u(e.in_pre_lat_max_us), get(e.hung_ms), u(jp.update_max_us), u(jp.tasks), get(e.pad_posted), u(e.pad_seen),
++	     u(p99), u(lat_max), u(attached), u(opened), u(jp.open_failed), u(open_lat_max_us), u(life_min_us), u(life_max_us),
++	     get(e.jp_scan_gap_max_us));
+ }
+ 
+ static bool TestHidLossPost(std::function<void()> task) {
+@@ -1245,7 +1486,7 @@ static void TestHidLossRun(TestHidLossConfig cfg, uint64_t armed_us) {
+ 		}
+ 	};
+ 	sleep_until(at(cfg.delay_s - TEST_HIDLOSS_PRE_S));
+-	if (!TestHidLossPost([] { TestHidLossAttach(); })) {
++	if (!TestHidLossPost([] { TestHidLossAttach(false); })) {
+ 		return;
+ 	}
+ 	sleep_until(at(cfg.delay_s - 1.0));
+@@ -1282,6 +1523,214 @@ static void TestHidLossRun(TestHidLossConfig cfg, uint64_t armed_us) {
+ 	TestHidLossPost([mode = cfg.mode] { TestHidLossStat(mode); });
+ }
+ 
++// Edition 2, the stand thread: one keyboard probe pair (the time and the count first - the main thread may see the
++// KEYDOWN before PostMessage returns).
++static void TestHidLossKeyProbe() {
++	auto&          e    = g_test_hidloss2;
++	const uintptr_t hwnd = e.hwnd.load(std::memory_order_relaxed);
++	const uint64_t k    = e.in_posted.load(std::memory_order_relaxed);
++	e.in_post_us[k % TEST_HIDLOSS_RING].store(TestHidLossNowUs(), std::memory_order_relaxed);
++	e.in_posted.store(k + 1, std::memory_order_release);
++	if (!JoyPump::StandPostKey(hwnd, true) || !JoyPump::StandPostKey(hwnd, false)) {
++		e.in_post_fail.fetch_add(1, std::memory_order_relaxed);
++	}
++}
++
++// Edition 2, the stand thread: one pad probe transition. Under the joystick lock the event cannot be born (it is born in
++// Update, which takes the lock) before the time and the count are stored.
++static void TestHidLossPadProbe(bool down) {
++	auto& e = g_test_hidloss2;
++	SDL_LockJoysticks();
++	if (auto* joy = SDL_JoystickFromInstanceID(g_test_hidloss_vp.load(std::memory_order_relaxed)); joy != nullptr) {
++		const uint64_t k = e.pad_posted.load(std::memory_order_relaxed);
++		e.pad_post_us[k % TEST_HIDLOSS_RING].store(TestHidLossNowUs(), std::memory_order_relaxed);
++		e.pad_posted.store(k + 1, std::memory_order_release);
++		(void)SDL_JoystickSetVirtualButton(joy, 0, down ? SDL_PRESSED : SDL_RELEASED);
++	}
++	SDL_UnlockJoysticks();
++}
++
++// Edition 2, flap: attach / detach from the stand thread (the joystick lock makes index and instance id agree).
++static SDL_JoystickID TestHidLossFlapAttach(uint32_t slot) {
++	SDL_VirtualJoystickDesc desc {};
++	desc.version  = SDL_VIRTUAL_JOYSTICK_DESC_VERSION;
++	desc.type     = SDL_JOYSTICK_TYPE_GAMECONTROLLER;
++	desc.naxes    = 6;
++	desc.nbuttons = 15;
++	desc.name     = "KYTY flap pad";
++	desc.userdata = reinterpret_cast<void*>(static_cast<uintptr_t>(slot));
++	desc.Update   = TestHidLossFlapUpdate;
++	SDL_LockJoysticks();
++	g_test_hidloss2.flap_attach_us[slot].store(TestHidLossNowUs(), std::memory_order_relaxed);
++	const int            index = SDL_JoystickAttachVirtualEx(&desc);
++	const SDL_JoystickID id    = index >= 0 ? SDL_JoystickGetDeviceInstanceID(index) : -1;
++	SDL_UnlockJoysticks();
++	if (id < 0) {
++		LOGF("TestHidLoss: flap attach failed slot=%u error=\"%s\"\n", slot, SDL_GetError());
++	}
++	return id;
++}
++
++static void TestHidLossFlapDetach(uint32_t slot, SDL_JoystickID id) {
++	if (id < 0) {
++		return;
++	}
++	SDL_LockJoysticks();
++	for (int i = 0; i < SDL_NumJoysticks(); i++) {
++		if (SDL_JoystickGetDeviceInstanceID(i) == id) {
++			const uint64_t detach_us = TestHidLossNowUs(); // F40a2: under the lock, before the detach
++			if (SDL_JoystickDetachVirtual(i) == 0 && slot < TEST_HIDLOSS_FLAP_N) {
++				g_test_hidloss2.flap_detach_us[slot].store(detach_us, std::memory_order_relaxed);
++			}
++			break;
++		}
++	}
++	SDL_UnlockJoysticks();
++}
++
++// The stand thread of edition 2 (detached).
++static void TestHidLossRun2(TestHidLossConfig cfg, uint64_t armed_us) {
++	auto&      e  = g_test_hidloss2;
++	const auto at = [armed_us](double s) { return armed_us + static_cast<uint64_t>((s > 0.0 ? s : 0.0) * 1000000.0); };
++	const auto sleep_until = [](uint64_t t_us) {
++		const uint64_t now = TestHidLossNowUs();
++		if (t_us > now) {
++			std::this_thread::sleep_for(std::chrono::microseconds(t_us - now));
++		}
++	};
++	const auto mode    = cfg.mode;
++	const auto fire_us = at(cfg.delay_s);
++	e.fire_us.store(fire_us, std::memory_order_relaxed);
++	sleep_until(at(cfg.delay_s - (mode == TestHidLossMode::Detach ? TEST_HIDLOSS_PRE_S : TEST_HIDLOSS_PRE2_S)));
++	if (!TestHidLossPost([] { TestHidLossAttach(true); })) {
++		return;
++	}
++	if (mode == TestHidLossMode::Upd || mode == TestHidLossMode::Pad) {
++		if (mode == TestHidLossMode::Pad) {
++			sleep_until(at(cfg.delay_s - TEST_HIDLOSS_TITLE_OFF_S));
++			e.title_off.store(true, std::memory_order_relaxed);
++			LOGF("TestHidLoss: title off t_us=%" PRIu64 "\n", TestHidLossNowUs());
++		}
++		sleep_until(at(cfg.delay_s - TEST_HIDLOSS_PAD_FROM_S));
++		const uint64_t until = at(cfg.delay_s - TEST_HIDLOSS_PAD_TO_S);
++		LOGF("TestHidLoss: pad probe start t_us=%" PRIu64 "\n", TestHidLossNowUs());
++		while (TestHidLossNowUs() < until) {
++			TestHidLossPadProbe(true);
++			std::this_thread::sleep_for(std::chrono::milliseconds(TEST_HIDLOSS_IN_MS / 2));
++			TestHidLossPadProbe(false);
++			std::this_thread::sleep_for(std::chrono::milliseconds(TEST_HIDLOSS_IN_MS / 2));
++		}
++		LOGF("TestHidLoss: pad probe end t_us=%" PRIu64 " posted=%" PRIu64 "\n", TestHidLossNowUs(),
++		     e.pad_posted.load(std::memory_order_relaxed));
++	}
++	if (mode == TestHidLossMode::Pad) {
++		sleep_until(fire_us);
++		LOGF("TestHidLoss: fire mode=pad t_us=%" PRIu64 "\n", TestHidLossNowUs());
++		e.title_off.store(false, std::memory_order_relaxed);
++		const uint64_t done_us = TestHidLossNowUs();
++		LOGF("TestHidLoss: done t_us=%" PRIu64 "\n", done_us);
++		g_test_hidloss_done_us.store(done_us, std::memory_order_release);
++		sleep_until(done_us + 2000000);
++		TestHidLossPost([mode] { TestHidLossStat(mode); });
++		return;
++	}
++	sleep_until(at(cfg.delay_s - 1.0));
++	Controller::TestHidLossWindow(true);
++	JoyPump::StandWindow(true);
++	g_test_hidloss.window.store(true, std::memory_order_release);
++	bool           fired     = false;
++	bool           exit_task = false;
++	bool           exit_quit = false;
++	uint32_t       flap_k    = 0;
++	SDL_JoystickID flap_ids[TEST_HIDLOSS_FLAP_N] {};
++	uint64_t       iter      = 0;
++	uint64_t       hung_prev = 0;
++	for (;;) {
++		const uint64_t now = TestHidLossNowUs();
++		if (!fired && now >= fire_us) {
++			fired = true;
++			if (mode == TestHidLossMode::Detach) {
++				if (!TestHidLossPost([mode] { TestHidLossFire(mode); })) {
++					return;
++				}
++			} else {
++				LOGF("TestHidLoss: fire mode=%s t_us=%" PRIu64 "\n", TestHidLossModeName(mode), now);
++				if (mode == TestHidLossMode::Flap) {
++					JoyPump::StandTaskDelayMs(TEST_HIDLOSS_FLAP_TASK_DELAY_MS);
++				} else {
++					e.upd_armed.store(true, std::memory_order_release);
++				}
++			}
++		}
++		if (fired && mode == TestHidLossMode::Flap && flap_k < TEST_HIDLOSS_FLAP_N + 2) {
++			if (flap_k < TEST_HIDLOSS_FLAP_N) {
++				if (flap_k == 0) {
++					JoyPump::StandScanGapBegin(); // F40a2 (RC2 of F40b): just before the first attach
++				}
++				flap_ids[flap_k] = TestHidLossFlapAttach(flap_k);
++				if (flap_ids[flap_k] >= 0) {
++					e.flap_attached.fetch_add(1, std::memory_order_relaxed);
++				}
++			}
++			if (flap_k >= 2) {
++				TestHidLossFlapDetach(flap_k - 2, flap_ids[flap_k - 2]);
++			}
++			flap_k++;
++			if (flap_k == TEST_HIDLOSS_FLAP_N + 2) {
++				e.jp_scan_gap_max_us.store(JoyPump::StandScanGapEnd(), std::memory_order_relaxed); // F40a2: after the last detach
++				const uint64_t done_us = TestHidLossNowUs();
++				LOGF("TestHidLoss: done t_us=%" PRIu64 " flap_attached=%" PRIu64 "\n", done_us,
++				     e.flap_attached.load(std::memory_order_relaxed));
++				g_test_hidloss_done_us.store(done_us, std::memory_order_release);
++			}
++		}
++		if (fired && mode == TestHidLossMode::Flap && flap_k == TEST_HIDLOSS_FLAP_N + 2 &&
++		    now >= g_test_hidloss_done_us.load(std::memory_order_acquire) + 1000000) {
++			JoyPump::StandTaskDelayMs(0); // the delayed closes of the last pads run before the stat
++		}
++		if (fired && mode == TestHidLossMode::Exit) {
++			if (!exit_task && now >= fire_us + static_cast<uint64_t>(TEST_HIDLOSS_EXIT_TASK_S * 1000000.0)) {
++				exit_task = true;
++				LOGF("TestHidLoss: jp_task posted t_us=%" PRIu64 "\n", now);
++				JoyPump::Post([] { LOGF("TestHidLoss: jp_task ran t_us=%" PRIu64 "\n", TestHidLossNowUs()); });
++			}
++			if (!exit_quit && now >= fire_us + static_cast<uint64_t>(TEST_HIDLOSS_EXIT_QUIT_S * 1000000.0)) {
++				exit_quit = true;
++				LOGF("TestHidLoss: quit posted t_us=%" PRIu64 "\n", now);
++				SDL_Event quit {};
++				quit.type = SDL_QUIT;
++				SDL_PushEvent(&quit);
++			}
++		}
++		const uint64_t done_us = g_test_hidloss_done_us.load(std::memory_order_acquire);
++		if (done_us != 0 && now >= done_us + 2000000) {
++			break;
++		}
++		g_test_hidloss.probes_posted.fetch_add(1, std::memory_order_relaxed);
++		const uint64_t posted_ns = Common::FrameStats::NowNs();
++		if (!TestHidLossPost([posted_ns] {
++			    const uint64_t age_us = (Common::FrameStats::NowNs() - posted_ns) / 1000;
++			    uint64_t current = g_test_hidloss.main_late_max_us.load(std::memory_order_relaxed);
++			    while (age_us > current && !g_test_hidloss.main_late_max_us.compare_exchange_weak(
++			                                   current, age_us, std::memory_order_relaxed)) {
++			    }
++			    g_test_hidloss.probes_run.fetch_add(1, std::memory_order_relaxed);
++		    })) {
++			return;
++		}
++		const uint64_t hung_now = TestHidLossNowUs();
++		if (JoyPump::StandIsHung(e.hwnd.load(std::memory_order_relaxed)) && hung_prev != 0) {
++			e.hung_ms.fetch_add((hung_now - hung_prev) / 1000, std::memory_order_relaxed);
++		}
++		hung_prev = hung_now;
++		if (iter++ % (TEST_HIDLOSS_IN_MS / TEST_HIDLOSS_PROBE_MS) == 0) {
++			TestHidLossKeyProbe();
++		}
++		std::this_thread::sleep_for(std::chrono::milliseconds(TEST_HIDLOSS_PROBE_MS));
++	}
++	TestHidLossPost([mode] { TestHidLossStat(mode); });
++}
++
+ static void WindowTestHidLossNoteGuestText(const char* text, size_t size) {
+ 	static const TestHidLossConfig cfg = TestHidLossReadConfig();
+ 	static std::atomic<bool>       armed {false};
+@@ -1293,7 +1742,11 @@ static void WindowTestHidLossNoteGuestText(const char* text, size_t size) {
+ 	}
+ 	const uint64_t armed_us = TestHidLossNowUs();
+ 	LOGF("TestHidLoss: armed t_us=%" PRIu64 "\n", armed_us);
+-	std::thread([armed_us] { TestHidLossRun(cfg, armed_us); }).detach();
++	if (TestHidLossEdition2(cfg.mode)) {
++		std::thread([armed_us] { TestHidLossRun2(cfg, armed_us); }).detach();
++	} else {
++		std::thread([armed_us] { TestHidLossRun(cfg, armed_us); }).detach();
++	}
+ }
+ 
+ // Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): KYTY_TEST_MINIMIZE=<s>:<dur> - <s> seconds after the
+@@ -1504,7 +1957,10 @@ void WindowContext::UpdateTitle() {
+ 	const bool loop_running = main_loop_running.load(std::memory_order_acquire);
+ 	const bool title_async  = !loop_running || Common::Gates::Value(Common::Gates::Knob::TitleAsync) != 0;
+ 	const auto title_t0    = Common::FrameStats::NowNs();
+-	if (title_async) {
++	if (TestHidLossTitleOff()) [[unlikely]] {
++		// Track F, F40a stand KYTY_TEST_HIDLOSS edition 2, mode pad (docs/track-f/f40a.md s0.6): no title post while the
++		// pad probe window is open - the main thread is woken by the pad events only.
++	} else if (title_async) {
+ 		bool post = false;
+ 		{
+ 			Common::LockGuard lock(title_mutex);

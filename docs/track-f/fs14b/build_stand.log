@@ -1,0 +1,398 @@
+watch: start 2026-10-11T12:44:53Z child 9768 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+
+C:\kyty\f287\fs14b>rem FS14b (HPP-813, Red Team, ROADMAP s122 items 710(g)(2), 712(g)(2), 717): copy of the FS13b file with fs13b->fs14b in ALL lines. 
+[0/2] Re-checking globbed directories...
+[1/181] Generate kytyGitVersion.h
+[2/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\guest_gpu\command_processor\pm4Dispatch.cpp.obj
+[3/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\guest_gpu\gpu_format.cpp.obj
+[4/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\hostMemory.cpp.obj
+[5/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\guest_gpu\pm4.cpp.obj
+[6/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\guest_gpu\tile.cpp.obj
+[7/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\memoryTracker.cpp.obj
+[8/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\pageManager.cpp.obj
+[9/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\image\textureCommon.cpp.obj
+C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\image\textureCommon.cpp(139,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  139 | }
+      | ^
+C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\image\textureCommon.cpp(173,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  173 | }
+      | ^
+2 warnings generated.
+[10/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\pipeline\descriptorHeap.cpp.obj
+[11/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\pipeline\shaderTranslationCache.cpp.obj
+[12/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\gpuTimeProfiler.cpp.obj
+[13/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\pipeline\shaderReplay.cpp.obj
+[14/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\indirectArgsSanitizer.cpp.obj
+[15/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\image\imageView.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\image\imageView.cpp:1:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\image\imageView.cpp(297,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  297 | }
+      | ^
+2 warnings generated.
+[16/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\cache\faultManager.cpp.obj
+[17/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\image\blitHelper.cpp.obj
+[18/179] Building CXX object CMakeFiles\f29_fault_stand.dir\tests\F29FaultStand.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\tests\F29FaultStand.cpp:35:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/cache/bufferCache.h:10:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/memoryTracker.h:8:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/regionManager.h:5:
+C:\kyty\f287\fs14b\wt\src\common/envFlag.h(36,25): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   36 |         return EnvValueOn(std::getenv(name));
+      |                                ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+In file included from C:\kyty\f287\fs14b\wt\tests\F29FaultStand.cpp:35:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/cache/bufferCache.h:10:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/memoryTracker.h:8:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/regionManager.h(54,28): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   54 |                 const char* value = std::getenv("KYTY_FIX_B13");
+      |                                          ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+In file included from C:\kyty\f287\fs14b\wt\tests\F29FaultStand.cpp:35:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/cache/bufferCache.h:10:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/memoryTracker.h:8:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/regionManager.h(70,28): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   70 |                 const char* value = std::getenv("KYTY_FIX_B12");
+      |                                          ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+In file included from C:\kyty\f287\fs14b\wt\tests\F29FaultStand.cpp:35:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/cache/bufferCache.h:10:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/memoryTracker.h:8:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/regionManager.h(88,30): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+   88 |                                 const auto* value = std::getenv("KYTY_TRACKING_RELAXED_SPIN");
+      |                                                          ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs14b\wt\tests\F29FaultStand.cpp(591,26): warning: 'getenv' is deprecated: This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  591 |         const char* env  = std::getenv("KYTY_FIX_F29");
+      |                                 ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdlib.h(1183,20): note: 'getenv' has been explicitly marked deprecated here
+ 1183 |     _Check_return_ _CRT_INSECURE_DEPRECATE(_dupenv_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs14b\wt\tests\F29FaultStand.cpp(601,19): warning: 'fopen' is deprecated: This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. [-Wdeprecated-declarations]
+  601 |         FILE* out = std::fopen(out_path.c_str(), "wb");
+      |                          ^
+C:\Program Files (x86)\Windows Kits\10\include\10.0.26100.0\ucrt\stdio.h(212,20): note: 'fopen' has been explicitly marked deprecated here
+  212 |     _Check_return_ _CRT_INSECURE_DEPRECATE(fopen_s)
+      |                    ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(368,55): note: expanded from macro '_CRT_INSECURE_DEPRECATE'
+  368 |         #define _CRT_INSECURE_DEPRECATE(_Replacement) _CRT_DEPRECATE_TEXT(    \
+      |                                                       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\vcruntime.h(358,47): note: expanded from macro '_CRT_DEPRECATE_TEXT'
+  358 | #define _CRT_DEPRECATE_TEXT(_Text) __declspec(deprecated(_Text))
+      |                                               ^
+C:\kyty\f287\fs14b\wt\tests\F29FaultStand.cpp(644,2): warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  644 |         g.device.waitIdle();
+      |         ^~~~~~~~~~~~~~~~~
+7 warnings generated.
+[19/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\commandRecorder.cpp.obj
+[20/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\pipeline\shaderResourceBarrier.cpp.obj
+C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\pipeline\shaderResourceBarrier.cpp(25,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   25 | }
+      | ^
+1 warning generated.
+[21/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\image\image.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\image\image.cpp:10:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\image\image.cpp(30,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   30 | }
+      | ^
+C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\image\image.cpp(706,10): warning: enumeration value 'Cmask' not handled in switch [-Wswitch]
+  706 |         switch (info.metadata.kind) {
+      |                 ^~~~~~~~~~~~~~~~~~
+C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\image\image.cpp(741,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  741 | }
+      | ^
+4 warnings generated.
+[22/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\cache\samplerCache.cpp.obj
+[23/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\depthRenderTarget.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\depthRenderTarget.cpp:1:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\depthRenderTarget.cpp(46,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   46 | }
+      | ^
+2 warnings generated.
+[24/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\image\tiler.cpp.obj
+[25/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\debug.cpp.obj
+[26/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\cache\streamBuffer.cpp.obj
+[27/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\masterSemaphore.cpp.obj
+[28/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\context.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\context.cpp:14:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[29/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp.obj
+C:\kyty\f287\fs14b\wt\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp(1595,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1595 | }
+      | ^
+C:\kyty\f287\fs14b\wt\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp(1611,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1611 | }
+      | ^
+2 warnings generated.
+[30/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\gpuCheckpoints.cpp.obj
+[31/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\commandScheduler.cpp.obj
+[32/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\cache\hostImport.cpp.obj
+[33/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\colorRenderTarget.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\colorRenderTarget.cpp:16:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/renderMemo.h:7:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[34/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\guest_gpu\graphicsRun.cpp.obj
+[35/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\presentation\window\hostInput.cpp.obj
+[36/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\presentation\window\inputScript.cpp.obj
+[37/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\SpirvBuilder.cpp.obj
+[38/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\cache\textureCache.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\cache\textureCache.cpp:18:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[39/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\presentation\window\joyPump.cpp.obj
+[40/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\renderContext.cpp.obj
+[41/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAluHelpers.cpp.obj
+[42/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAlu.cpp.obj
+[43/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterFlow.cpp.obj
+[44/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\Tessellation.cpp.obj
+[45/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ShaderRecompiler.cpp.obj
+[46/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\pipeline\shaders.cpp.obj
+[47/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\SpirvEmitter.cpp.obj
+[48/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\renderCompute.cpp.obj
+[49/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\cache\bufferCache.cpp.obj
+[50/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterHelpers.cpp.obj
+[51/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp:13:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/renderMemo.h:7:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp(611,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  611 | }
+      | ^
+2 warnings generated.
+[52/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\vulkanCommon.cpp.obj
+[53/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMemoryHelpers.cpp.obj
+[54/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\presentation\systemOverlay.cpp.obj
+[55/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\shadowResolve.cpp.obj
+[56/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterTessellation.cpp.obj
+[57/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMesh.cpp.obj
+[58/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Integer.cpp.obj
+[59/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\presentation\renderDoc.cpp.obj
+[60/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\decode\ExportOps.cpp.obj
+[61/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterModule.cpp.obj
+[62/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\vma.cpp.obj
+[63/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\decode\ImageOps.cpp.obj
+[64/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\decode\MemoryOps.cpp.obj
+[65/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\sync.cpp.obj
+[66/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\decode\ScalarAluOps.cpp.obj
+[67/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Compare.cpp.obj
+[68/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\presentation\window\screenshot.cpp.obj
+[69/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\decode\VectorAluOps.cpp.obj
+[70/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Convert.cpp.obj
+[71/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterProgram.cpp.obj
+[72/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Attribute.cpp.obj
+[73/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp.obj
+[74/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Dispatch.cpp.obj
+[75/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Control.cpp.obj
+[76/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\presentation\videoOut.cpp.obj
+[77/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\presentation\window\vulkanWindow.cpp.obj
+[78/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Float.cpp.obj
+[79/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\decode\ShaderDecoder.cpp.obj
+[80/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\presentation\window\swapchain.cpp.obj
+[81/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAnalysis.cpp.obj
+C:\kyty\f287\fs14b\wt\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAnalysis.cpp(115,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  115 | }
+      | ^
+1 warning generated.
+[82/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterImage.cpp.obj
+C:\kyty\f287\fs14b\wt\src\graphics\shader\recompiler\backend\spirv\spirvEmitterImage.cpp(220,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  220 | }
+      | ^
+1 warning generated.
+[83/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\renderDraw.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\renderDraw.cpp:27:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[84/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp:24:
+In file included from C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\fs14b\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\fs14b\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp(408,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  408 | }
+      | ^
+2 warnings generated.
+[85/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\kernel\macosGuestAddressSpace.cpp.obj
+[86/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Scalar.cpp.obj
+[87/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Memory.cpp.obj
+[88/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\Type.cpp.obj
+[89/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\opcodes\ValueOpcodes.cpp.obj
+[90/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\presentation\window\window.cpp.obj
+[91/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\Block.cpp.obj
+[92/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\passes\DeadCodeElimination.cpp.obj
+[93/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\shaderVertexMetadata.cpp.obj
+[94/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\shaderBindings.cpp.obj
+[95/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\shaderPixelParameter.cpp.obj
+[96/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\errno.cpp.obj
+[97/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\IREmitter.cpp.obj
+[98/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Vector.cpp.obj
+[99/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMemory.cpp.obj
+[100/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\kernel\syncOnAddress.cpp.obj
+[101/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\passes\PredicationElimination.cpp.obj
+[102/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\passes\ReadLaneElimination.cpp.obj
+[103/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\rectListShader.cpp.obj
+[104/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\Value.cpp.obj
+[105/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\passes\ConstantPropagation.cpp.obj
+[106/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\passes\BindingLayout.cpp.obj
+[107/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\kernel\eventFlag.cpp.obj
+[108/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\imeCommon.cpp.obj
+[109/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\imeDialog.cpp.obj
+[110/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\kernel\pvar.cpp.obj
+[111/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\passes\ShaderInfoCollection.cpp.obj
+[112/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\frontend\translate\Translate.cpp.obj
+C:\kyty\f287\fs14b\wt\src\graphics\shader\recompiler\frontend\translate\Translate.cpp(20,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   20 | }
+      | ^
+C:\kyty\f287\fs14b\wt\src\graphics\shader\recompiler\frontend\translate\Translate.cpp(148,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  148 | }
+      | ^
+2 warnings generated.
+[113/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\passes\SsaRewrite.cpp.obj
+[114/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\kernel\semaphore.cpp.obj
+[115/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\Program.cpp.obj
+[116/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\kernel\fileSystem.cpp.obj
+[117/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\kernel\eventQueue.cpp.obj
+[118/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\ajm.cpp.obj
+[119/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp.obj
+[120/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\guestPrintf.cpp.obj
+[121/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\controller.cpp.obj
+[122/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\ime.cpp.obj
+[123/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libAgcDriver.cpp.obj
+[124/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\avPlayer.cpp.obj
+[125/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libDialog.cpp.obj
+[126/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\dialog.cpp.obj
+[127/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\kernel\pthread.cpp.obj
+[128/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libFontFt.cpp.obj
+[129/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libDebug.cpp.obj
+[130/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\audio.cpp.obj
+[131/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libDbgAsan.cpp.obj
+[132/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libAppContent.cpp.obj
+[133/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libC.cpp.obj
+[134/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libAudio2.cpp.obj
+[135/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libAudio.cpp.obj
+[136/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libConvertKeycode.cpp.obj
+[137/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libCes.cpp.obj
+[138/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\passes\SrtWalker.cpp.obj
+In file included from C:\kyty\f287\fs14b\wt\src\graphics\shader\recompiler\ir\passes\SrtWalker.cpp:2104:
+C:\kyty\f287\fs14b\wt\src\graphics/shader/recompiler/ir/passes/SrtNative.inc(93,49): warning: suggest braces around initialization of subobject [-Wmissing-braces]
+   93 |                 m_unwind = {0, static_cast<DWORD>(code_size), static_cast<DWORD>(unwind_offset)};
+      |                                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                               {                                }
+1 warning generated.
+[139/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libHmd2.cpp.obj
+[140/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libAmpr.cpp.obj
+[141/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\recompiler\ir\passes\ResourceMaterialization.cpp.obj
+[142/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libPngDec.cpp.obj
+[143/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libPlayGo.cpp.obj
+[144/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libRtc.cpp.obj
+[145/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libPad.cpp.obj
+[146/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libSysmodule.cpp.obj
+[147/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libPsml.cpp.obj
+[148/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libVideoOut.cpp.obj
+[149/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libFont.cpp.obj
+[150/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libRudp.cpp.obj
+[151/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libJson2.cpp.obj
+[152/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\videoDec2Decoder.cpp.obj
+[153/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libShare.cpp.obj
+[154/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libSystemService.cpp.obj
+[155/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\loader\timer.cpp.obj
+[156/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\loader\x64InstructionEmulator.cpp.obj
+[157/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libTextToSpeech2.cpp.obj
+[158/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\graphics\shader\shader.cpp.obj
+C:\kyty\f287\fs14b\wt\src\graphics\shader\shader.cpp(178,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  178 | }
+      | ^
+1 warning generated.
+[159/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libs.cpp.obj
+[160/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libUserService.cpp.obj
+[161/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libSaveData.cpp.obj
+[162/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\loader\elf.cpp.obj
+[163/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libWebBrowserDialog.cpp.obj
+[164/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libVideoDec2.cpp.obj
+[165/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libKernel.cpp.obj
+C:\kyty\f287\fs14b\wt\src\libs\libKernel.cpp(2146,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 2146 | }
+      | ^
+1 warning generated.
+[166/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\loader\symbolDatabase.cpp.obj
+[167/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\loader\gamePatchFile.cpp.obj
+[168/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libNet.cpp.obj
+[169/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\libUlt.cpp.obj
+[170/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\loader\gamePatch.cpp.obj
+[171/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\agc.cpp.obj
+[172/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\loader\redZonePatcher.cpp.obj
+[173/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\libs\network.cpp.obj
+[174/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\emulator.cpp.obj
+[175/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\kernel\memory.cpp.obj
+[176/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\loader\systemContent.cpp.obj
+[177/179] Building CXX object CMakeFiles\f29_fault_stand.dir\src\loader\runtimeLinker.cpp.obj
+C:\kyty\f287\fs14b\wt\src\loader\runtimeLinker.cpp(924,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  924 | }
+      | ^
+1 warning generated.
+[178/179] Linking CXX executable f29_fault_stand.exe
+BUILD OK: C:\kyty\f287\fs14b\build\f29_fault_stand.exe
+rc=0 end 2026-10-11T12:45:28Z

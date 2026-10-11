@@ -1,0 +1,5 @@
+3be1242540243e16bf06b0d8138110b957ea55ef2496db8406fb8a27863f3dd1 *build/install/kyty_emulator.exe
+a5fa43b3c52b490d5fcd770f7e46f1468064fe22e59c5afcda03449a663b4c75 *build/f29_fault_stand.exe
+013e1974ea8abfb41e9951c7939b3890257010f53bad4ff838d6fd70fde3d0cd *C:/kyty/f287/bin/kyty_emulator_013e1974.exe
+12c4b09fd08fdbdb324b00bd7a7f6c310a91ebbe171e212f46673e3d3f9757dc *C:/kyty/f287/fs14a/build/f29_fault_stand.exe
+abab2196e3b66f0449376f736421d5ac5fd3f18f6d6c98b7ef38351c45a44b73 *C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe

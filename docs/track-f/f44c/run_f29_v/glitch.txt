@@ -1,0 +1,2 @@
+C:/kyty/f287/f44c/rec_f29_v.mp4: 10113 frames 960x540, index entries 10113
+one-frame glitches: 0

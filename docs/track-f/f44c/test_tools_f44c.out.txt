@@ -1,0 +1,94 @@
+suite test_tools_f44c.py sha256 02aaadd2215ce1dda65d93a60f1a1ead18a2a0e2f69af456d5f16f061a30cf3f target go_f44c.sh sha256 96fae22bf82df8c4a01b7ba559a2cc87ce692d1de17c0cb5a33e5e4274f9a11a
+ok   go plan f29_v
+ok   go plan f29_v_r1
+ok   go plan f29_v_r3
+ok   plan f29_v: no KYTY_TEST_
+ok   plan f29_v: KYTY_FIX_ only KYTY_FIX_F29=1
+ok   plan f29_v: no KYTY_GAME_PATCH, no validation
+ok   go dry-run output: first line is the linter line ALL OK, the plan is a later line (the F33e trap)
+ok   post plan of f29_v is the dryrun line (not the linter line), plan-w no (rc 0: _FIX_F29=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of f29_v_r2 is the dryrun line (not the linter line), plan-w no (rc 0: _FIX_F29=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post: the plan is taken by grep '^dryrun ', not by the first line
+ok   post: the plan-only exit is before the lock check (reads nothing)
+ok   post: pair of f29_v with the fs12_v sheet of FS12c
+ok   on disk: the fs12_v sheet exists
+ok   go usage rc 2 for 'f29_x'
+ok   launch usage rc 2 for 'f29_x'
+ok   post usage rc 2 for 'f29_x'
+ok   go usage rc 2 for 'f29_v_r4'
+ok   launch usage rc 2 for 'f29_v_r4'
+ok   post usage rc 2 for 'f29_v_r4'
+ok   go usage rc 2 for 'f29_v_r0'
+ok   launch usage rc 2 for 'f29_v_r0'
+ok   post usage rc 2 for 'f29_v_r0'
+ok   go usage rc 2 for 'fs12_v'
+ok   launch usage rc 2 for 'fs12_v'
+ok   post usage rc 2 for 'fs12_v'
+ok   go usage rc 2 for 'f25_v'
+ok   launch usage rc 2 for 'f25_v'
+ok   post usage rc 2 for 'f25_v'
+ok   go usage rc 2 for ''
+ok   launch usage rc 2 for ''
+ok   post usage rc 2 for ''
+ok   launch f29_v dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat f29_v_r1 without F44C_REPEAT_OK -> rc 11
+ok   launch repeat f29_v_r1 with F44C_REPEAT_OK -> passes
+ok   form634_check.py --series C:\kyty\f287\f44c: ALL OK
+ok   go_f44c.sh first executable line is the form linter
+ok   launch_f44c.sh first executable line is the form linter
+ok   go: TB literal = d760708d
+ok   go: INST literal = FS13 abab2196
+ok   go: no FS12 46892c20 literal left
+ok   go: BIN and PINNED paths
+ok   on disk: sha256 of the F44a copy = d760708d
+ok   on disk: sha256 of the pinned FS13 copy = abab2196
+ok   on disk: the F44a copy = the F44a build output (f44a/build/install)
+ok   go: the guard scan right after the lock line, before the manifest
+ok   go: no guard scan / hold check before the lock (item 660 (d)(1))
+ok   go: install of the F44a copy after the copies of the caches and after INSTALLED=1
+ok   go: the return of the pinned FS13 copy in finish, before installed_after
+ok   go: installed_after must be FS13
+ok   go: installed before the tag must be FS13
+ok   go: KYTY_FIX_ in the knobs only KYTY_FIX_F29=1
+ok   go: no KYTY_GPU_CHECKPOINTS=, KYTY_GAME_PATCH=, KYTY_TEST_*= in the body
+ok   go: shell KYTY_* and VK_LAYER_* unset before the call
+ok   go: the env after the unset is written
+ok   go: lock line names HPP-793
+ok   queue_f44c.py own issue HPP-793
+ok   runchk_f44c.py own issue HPP-793
+ok   chk_f44c.sh comments of HPP-793
+ok   runchk_f44c.py reads F44C_RUN_ID, launch sets it
+ok   enter_scene: ROOT = f287/f44c
+ok   enter_scene: CLOSE_WAIT_S = 40 (the harness timeout of the exit, form b4_v)
+ok   tempo_f44c.py = tempo_fs12c.py with the names moved (+ header lines)
+ok   ASCII only: chk_f44c.sh
+ok   ASCII only: dispstate.py
+ok   ASCII only: f44c_read.py
+ok   ASCII only: go_f44c.sh
+ok   ASCII only: guard_f44c.py
+ok   ASCII only: hold_f44c.py
+ok   ASCII only: hostload_f44c.py
+ok   ASCII only: idle142.py
+ok   ASCII only: launch_f44c.sh
+ok   ASCII only: launch_run.py
+ok   ASCII only: manifest_fs4c.py
+ok   ASCII only: mfsub_f44c.py
+ok   ASCII only: mk_f44c.py
+ok   ASCII only: post_f44c.sh
+ok   ASCII only: procload.py
+ok   ASCII only: queue_f44c.py
+ok   ASCII only: refs_f44c.py
+ok   ASCII only: regress_f44c.py
+ok   ASCII only: run_safety99.py
+ok   ASCII only: runchk_f44c.py
+ok   ASCII only: sheet142.py
+ok   ASCII only: snap_f44c.py
+ok   ASCII only: tempo_f44c.py
+ok   ASCII only: test_f44c_read.py
+ok   ASCII only: test_tools_f44c.py
+ok   ASCII only: wait_f44c.sh
+checks 88 failed 0
+ALL OK

@@ -1,0 +1,46 @@
+"""F44c (HPP-793): check of the references <commit>:<path>:<line> of the seal docs/track-f/f44c.md section 0 (general rule 24(1)): the
+line contains the anchor, the next line contains the +1 control ('<EOF>' - the line is the last of the file); negative control - every
+reference shifted by one line must FAIL.  Reads git objects only (git show).  Last line ALL OK.  ASCII output.  Port of refs_f38c.py.
+usage: python refs_f44c.py"""
+import subprocess
+import sys
+
+REPO = 'C:/kyty/KytyPS5'
+REFS = [
+@REFS@
+]
+CACHE = {}
+
+
+def lines(c, p):
+    k = (c, p)
+    if k not in CACHE:
+        out = subprocess.run(['git', '-C', REPO, 'show', '%s:%s' % (c, p)], capture_output=True).stdout.decode('utf-8')
+        CACHE[k] = out.split('\n')
+        if CACHE[k] and CACHE[k][-1] == '':
+            CACHE[k].pop()
+    return CACHE[k]
+
+
+def ok_ref(c, p, n, a, b):
+    L = lines(c, p)
+    if n < 1 or n > len(L) or a not in L[n - 1]:
+        return False
+    if b == '<EOF>':
+        return n == len(L)
+    return n < len(L) and b in L[n]
+
+
+good = True
+for c, p, n, a, b in REFS:
+    r = ok_ref(c, p, n, a, b)
+    print('%s %s:%s:%d' % ('OK' if r else 'NOT OK', c, p, n))
+    good &= r
+neg = True
+for c, p, n, a, b in REFS:
+    r = ok_ref(c, p, n + 1, a, b)
+    print('shift %s %s:%s:%d' % ('OK (BAD)' if r else 'NOT OK', c, p, n + 1))
+    neg &= not r
+print('refs %d, ok %s, every shift fails %s' % (len(REFS), good, neg))
+print('ALL OK' if good and neg else 'FAILED')
+sys.exit(0 if good and neg else 1)

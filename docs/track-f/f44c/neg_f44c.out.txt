@@ -1,0 +1,8 @@
+m1 FixF29 member always YES           rc 1 checks 143 failed 7 -> CAUGHT
+m2 env without KYTY_FIX_F29           rc 1 - -> CAUGHT
+m3 installed before / after any       rc 1 checks 143 failed 4 -> CAUGHT
+m4 overflow in stdout dead            rc 1 checks 143 failed 2 -> CAUGHT
+m5 accessed in log dead               rc 1 checks 143 failed 4 -> CAUGHT
+m6 FixF29 moved to the form group     rc 1 checks 143 failed 3 -> CAUGHT
+m7 glitches always YES                rc 1 checks 143 failed 3 -> CAUGHT
+ALL OK

@@ -1,0 +1,104 @@
+w_add_open	730ed40a	src/graphics/presentation/window/window.cpp	384	auto* pad = SDL_GameControllerOpen(f.id);	EXIT_NOT_IMPLEMENTED(pad == nullptr);
+w_add_sensor	730ed40a	src/graphics/presentation/window/window.cpp	389	SDL_GameControllerSetSensorEnabled(pad, sensor, SDL_TRUE) != 0	LOGF("Controller %d: sensor %d enable fa
+w_add_connect	730ed40a	src/graphics/presentation/window/window.cpp	399	Controller::Connect(id);	}
+w_removed_log	730ed40a	src/graphics/presentation/window/window.cpp	405	LOGF("Controller %d: removed	TestHidLossCount(g_test_hidloss.removed)
+w_removed_disc	730ed40a	src/graphics/presentation/window/window.cpp	407	Controller::Disconnect(f.id);	SDL_GameControllerClose(SDL_GameControll
+w_removed_close	730ed40a	src/graphics/presentation/window/window.cpp	408	SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));	}
+w_drain	730ed40a	src/graphics/presentation/window/window.cpp	840	void WindowContext::DrainMainThreadTasks() {	std::vector<std::function<void()>> tasks
+w_late	730ed40a	src/graphics/presentation/window/window.cpp	860	LOGF("MainTaskLate: us=	}
+w_run_drain	730ed40a	src/graphics/presentation/window/window.cpp	882	DrainMainThreadTasks();	if (loop.paused.load(std::memory_order_a
+w_run_wait	730ed40a	src/graphics/presentation/window/window.cpp	891	if (!HostInputWaitEvent(&loop.event)) {	continue;
+w_run_process	730ed40a	src/graphics/presentation/window/window.cpp	894	ProcessEvent(timer.GetTimeS());	}
+w_hint_rumble	730ed40a	src/graphics/presentation/window/window.cpp	906	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE, "1");	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5
+w_init	730ed40a	src/graphics/presentation/window/window.cpp	912	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {	EXIT("%s\n", SDL_GetError());
+w_prep_poll	730ed40a	src/graphics/presentation/window/window.cpp	1021	while (SDL_PollEvent(&g_window->loop.event)) {	// Keep window/controller lifecycle even
+w_prep_removed	730ed40a	src/graphics/presentation/window/window.cpp	1034	g_window->loop.event.type == SDL_CONTROLLERDEVICEREMOVED) {	g_window->ProcessEvent(0);
+w_hold_lock	730ed40a	src/graphics/presentation/window/window.cpp	1199	SDL_LockJoysticks();	SDL_Delay(TEST_HIDLOSS_HOLD_MS);
+w_hold_unlock	730ed40a	src/graphics/presentation/window/window.cpp	1201	SDL_UnlockJoysticks();	break;
+w_stat	730ed40a	src/graphics/presentation/window/window.cpp	1219	LOGF("TestHidLoss: stat mode=%s	"pad_led=%llu pad_trig=%llu pad_wait_max
+w_attach_virtual	730ed40a	src/graphics/presentation/window/window.cpp	1172	const int index = SDL_JoystickAttachVirtualEx(&desc);	if (index < 0) {
+w_vp_desc_effect	730ed40a	src/graphics/presentation/window/window.cpp	1171	desc.SendEffect = TestHidLossVpSendEffect;	const int index = SDL_JoystickAttachVirt
+w_probe_post	730ed40a	src/graphics/presentation/window/window.cpp	1270	if (!TestHidLossPost([posted_ns] {	const uint64_t age_us = (Common::FrameSt
+w_title_post	730ed40a	src/graphics/presentation/window/window.cpp	1516	PostToMainThread([this] {	std::string latest;
+w_title_wait	730ed40a	src/graphics/presentation/window/window.cpp	1527	RunOnMainThread([this, text = std::move(text)] { SDL_SetWindowTitle(window, text.c_str()); });	}
+w_runon_wait	730ed40a	src/graphics/presentation/window/window.cpp	823	main_task_done.Wait(&main_task_mutex);	}
+w_key_case	730ed40a	src/graphics/presentation/window/window.cpp	598	GameEventKeyboard(game, key);	
+w_f7	730ed40a	src/graphics/presentation/window/window.cpp	559	event->key.keysym.sym == SDLK_F7) {	if (event->type == SDL_KEYDOWN && event-
+w_ctl_button	730ed40a	src/graphics/presentation/window/window.cpp	414	Controller::SetButton(f.id, button, f.down);	}
+w_shutdown_em	730ed40a	src/graphics/presentation/window/window.cpp	1066	Controller::EmergencyShutdown();	g_window.reset();
+h_wait	730ed40a	src/graphics/presentation/window/hostInput.cpp	424	if (SDL_WaitEvent(event) == 0) {	EXIT("%s\n", SDL_GetError());
+h_wait_to	730ed40a	src/graphics/presentation/window/hostInput.cpp	432	if (SDL_WaitEventTimeout(event, timeout_ms) != 0) {	return true;
+c_b24_read	730ed40a	src/libs/controller.cpp	839	const char* value = std::getenv("KYTY_FIX_B24");	return value == nullptr || value[0] == '
+c_po_apply_lock	730ed40a	src/libs/controller.cpp	346	SDL_LockJoysticks();	if (auto* pad = SDL_GameControllerFromIn
+c_connect_sdl	730ed40a	src/libs/controller.cpp	882	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));	ps5       = pad != nullptr && SDL_GameCo
+c_connect_lock	730ed40a	src/libs/controller.cpp	885	Common::LockGuard lock(m_mutex);	
+c_em_po_stop	730ed40a	src/libs/controller.cpp	869	g_pad_output->Stop();	}
+c_em_release	730ed40a	src/libs/controller.cpp	872	g_controller->ReleaseHostPads();	}
+c_release_lock	730ed40a	src/libs/controller.cpp	1153	Common::LockGuard lock(m_mutex);	
+c_release_delay	730ed40a	src/libs/controller.cpp	1176	SDL_Delay(RELEASE_FLUSH_MS);	for (auto* pad: pads) {
+c_release_close	730ed40a	src/libs/controller.cpp	1178	SDL_GameControllerClose(pad);	}
+g_titleasync	730ed40a	src/common/gates.cpp	409	{"KYTY_TITLE_ASYNC", "titleasync", 1, 1},	// Session 117, MEASUREMENT ONLY: the sh
+s_apple_only	730ed40a	src/graphics/presentation/window/swapchain.cpp	632	m_window.RunOnMainThread([this] { m_window.RecreateSurface(); });	#else
+i_hostkey	730ed40a	src/graphics/presentation/window/inputScript.cpp	197	HostInputKey(action.key_code, true);	action.pressed = true;
+e_update_flag	4b69833b	src/events/SDL_events.c	99	static SDL_bool SDL_update_joysticks = SDL_TRUE;	
+e_pump_video	4b69833b	src/events/SDL_events.c	917	_this->PumpEvents(_this);	}
+e_pump_joy_if	4b69833b	src/events/SDL_events.c	922	if (SDL_update_joysticks) {	SDL_JoystickUpdate();
+e_pump_joy	4b69833b	src/events/SDL_events.c	923	SDL_JoystickUpdate();	}
+e_poll_guard	4b69833b	src/events/SDL_events.c	967	if (SDL_WasInit(SDL_INIT_JOYSTICK) && SDL_update_joysticks) {	if (SDL_NumJoysticks() > 0) {
+e_poll_num	4b69833b	src/events/SDL_events.c	968	if (SDL_NumJoysticks() > 0) {	/* If we have joysticks open, we need to
+e_wakeup	4b69833b	src/events/SDL_events.c	846	SDL_SendWakeupEvent();	}
+e_hint_read	4b69833b	src/events/SDL_events.c	1326	SDL_CalculateShouldUpdateJoysticks(SDL_GetHintBoolean(SDL_HINT_AUTO_UPDATE_JOYSTICKS, SDL_TRUE));	#endif
+e_hint_cb	4b69833b	src/events/SDL_events.c	1397	SDL_AddHintCallback(SDL_HINT_AUTO_UPDATE_JOYSTICKS, SDL_AutoUpdateJoysticksChanged, NULL);	#endif
+h_events_warn	4b69833b	include/SDL_events.h	716	* **WARNING**: This should only be run in the thread that initialized the	* video subsystem, and for extra safety,
+h_lock_doc	4b69833b	include/SDL_joystick.h	132	* Locking for multi-threaded access to the joystick API	*
+h_lock_doc2	4b69833b	include/SDL_joystick.h	134	* If you are using the joystick API or handling events from multiple threads	* you should use these locking functions
+h_lock_doc3	4b69833b	include/SDL_joystick.h	139	* and game controller events will not be delivered.	*
+h_update_doc	4b69833b	include/SDL_joystick.h	792	* This is called automatically by the event loop if any joystick events are	* enabled.
+h_vj_update	4b69833b	include/SDL_joystick.h	402	void (SDLCALL *Update)(void *userdata);	void (SDLCALL *SetPlayerIndex)(void *use
+h_hint_auto	4b69833b	include/SDL_hints.h	327	* - "0": You'll call SDL_JoystickUpdate() manually	* - "1": SDL will automatically call SDL
+h_hint_auto_rt	4b69833b	include/SDL_hints.h	332	#define SDL_HINT_AUTO_UPDATE_JOYSTICKS  "SDL_AUTO_UPDATE_JOYSTICKS"	
+h_hint_raw	4b69833b	include/SDL_hints.h	1278	* - "0": RAWINPUT drivers are not used (the default)	* - "1": RAWINPUT drivers are used
+h_hint_thread	4b69833b	include/SDL_hints.h	1319	#define SDL_HINT_JOYSTICK_THREAD "SDL_JOYSTICK_THREAD"	
+j_lock	4b69833b	src/joystick/SDL_joystick.c	444	void SDL_LockJoysticks(void)	{
+j_lock_mutex	4b69833b	src/joystick/SDL_joystick.c	447	SDL_LockMutex(SDL_joystick_lock);	(void)SDL_AtomicDecRef(&SDL_joystick_loc
+j_numjoy	4b69833b	src/joystick/SDL_joystick.c	666	int SDL_NumJoysticks(void)	{
+j_close	4b69833b	src/joystick/SDL_joystick.c	1578	void SDL_JoystickClose(SDL_Joystick *joystick)	{
+j_close_drv	4b69833b	src/joystick/SDL_joystick.c	1601	joystick->driver->Close(joystick);	joystick->hwdata = NULL;
+j_update	4b69833b	src/joystick/SDL_joystick.c	2167	void SDL_JoystickUpdate(void)	{
+j_update_lock	4b69833b	src/joystick/SDL_joystick.c	2177	SDL_LockJoysticks();	
+j_update_hidapi	4b69833b	src/joystick/SDL_joystick.c	2185	HIDAPI_UpdateDevices();	#endif /* SDL_JOYSTICK_HIDAPI */
+j_update_drv	4b69833b	src/joystick/SDL_joystick.c	2193	joystick->driver->Update(joystick);	
+j_update_detect	4b69833b	src/joystick/SDL_joystick.c	2225	SDL_joystick_drivers[i]->Detect();	}
+j_update_unlock	4b69833b	src/joystick/SDL_joystick.c	2228	SDL_UnlockJoysticks();	}
+gc_from_id_lock	4b69833b	src/joystick/SDL_gamecontroller.c	2853	SDL_LockJoysticks();	gamecontroller = SDL_gamecontrollers;
+gc_close	4b69833b	src/joystick/SDL_gamecontroller.c	3030	void SDL_GameControllerClose(SDL_GameController *gamecontroller)	{
+gc_close_lock	4b69833b	src/joystick/SDL_gamecontroller.c	3034	SDL_LockJoysticks();	
+vj_update_cb	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	547	hwdata->desc.Update(hwdata->desc.userdata);	}
+hd_wndproc_cnt	4b69833b	src/hidapi/SDL_hidapi.c	158	++SDL_HIDAPI_discovery.m_unDeviceChangeCounter;	}
+hd_window	4b69833b	src/hidapi/SDL_hidapi.c	240	SDL_HIDAPI_discovery.m_hwndMsg = CreateWindowExA(0, "SDL_HIDAPI_DEVICE_DETECTION"	
+hd_if0	4b69833b	src/hidapi/SDL_hidapi.c	379	#if 0 /* just let the usual SDL_PumpEvents loop dispatch these, fixing bug 4286. --ryan. */	/* We'll only get messages on the same t
+hd_if0_cmt	4b69833b	src/hidapi/SDL_hidapi.c	380	/* We'll only get messages on the same thread that created the window */	if (SDL_ThreadID() == SDL_HIDAPI_discove
+hd_count	4b69833b	src/hidapi/SDL_hidapi.c	1226	Uint32 SDL_hid_device_change_count(void)	{
+hd_count_upd	4b69833b	src/hidapi/SDL_hidapi.c	1235	HIDAPI_UpdateDiscovery();	
+wj_cm_cb	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	177	s_bWindowsDeviceChanged = SDL_TRUE;	}
+wj_timer_flag	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	249	s_bWindowsDeviceChanged = SDL_TRUE;	return 0;
+wj_cm_reg	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	491	SDL_CreateDeviceNotificationFunc();	
+wj_thread_hint	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	493	s_bJoystickThread = SDL_GetHintBoolean(SDL_HINT_JOYSTICK_THREAD, SDL_FALSE);	if (s_bJoystickThread) {
+wj_detect_flag	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	534	if (!s_bWindowsDeviceChanged) {	return; /* thread hasn't signaled, nothi
+wj_dinput_detect	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	548	SDL_DINPUT_JoystickDetect(&pCurList);	
+wj_xinput_detect	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	551	SDL_XINPUT_JoystickDetect(&pCurList);	
+di_minute	4b69833b	src/joystick/windows/SDL_dinputjoystick.c	404	/* In some environments, IDirectInput8_Initialize / _EnumDevices can take a minute even with no controllers. */	dinput = NULL;
+di_coinit	4b69833b	src/joystick/windows/SDL_dinputjoystick.c	409	result = WIN_CoInitialize();	if (FAILED(result)) {
+di_cocreate	4b69833b	src/joystick/windows/SDL_dinputjoystick.c	416	result = CoCreateInstance(&CLSID_DirectInput8, NULL, CLSCTX_INPROC_SERVER,	&IID_IDirectInput8, (LPVOID *)&dinput);
+di_enum	4b69833b	src/joystick/windows/SDL_dinputjoystick.c	555	IDirectInput8_EnumDevices(dinput, DI8DEVCLASS_GAMECTRL, EnumJoystickDetectCallback, pContext, DIEDFL_ATTACHEDONLY);	}
+ri_default	4b69833b	src/joystick/windows/SDL_rawinputjoystick.c	1030	if (!SDL_GetHintBoolean(SDL_HINT_JOYSTICK_RAWINPUT, SDL_FALSE)) {	return 0;
+hid_close_wait	4b69833b	src/hidapi/windows/hid.c	978	GetOverlappedResult(dev->device_handle, &dev->ol, &bytes_read, TRUE/*wait*/);	}
+hj_rumble_wait	4b69833b	src/joystick/hidapi/SDL_hidapijoystick.c	998	while (SDL_AtomicGet(&device->rumble_pending) > 0) {	SDL_Delay(10);
+we_keydown	4b69833b	src/video/windows/SDL_windowsevents.c	1074	case WM_KEYDOWN:	case WM_SYSKEYDOWN:
+we_keydown_send	4b69833b	src/video/windows/SDL_windowsevents.c	1094	SDL_SendKeyboardKey(SDL_PRESSED, code);	}
+we_vk_f13	4b69833b	src/video/windows/SDL_windowsevents.c	170	case VK_F13:	return SDL_SCANCODE_F13;
+we_pump_peek	4b69833b	src/video/windows/SDL_windowsevents.c	1953	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {	if (g_WindowsMessageHook) {
+we_wait_msg	4b69833b	src/video/windows/SDL_windowsevents.c	1895	ret = MsgWaitForMultipleObjects(0, NULL, FALSE, dwMilliseconds, QS_ALLINPUT);	if (ret == WAIT_OBJECT_0) {
+we_wakeup	4b69833b	src/video/windows/SDL_windowsevents.c	1939	PostMessage(data->hwnd, data->videodata->_SDL_WAKEUP, 0, 0);	}
+kb_nofocus	4b69833b	src/events/SDL_keyboard.c	846	/* Drop events that don't change state */	if (state) {
+sdl_helper	4b69833b	src/SDL.c	230	if (SDL_HelperWindowCreate() < 0) {	goto quit_and_error;

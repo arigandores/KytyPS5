@@ -8,6 +8,7 @@
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/pipeline/dualSrcBlend.h"
+#include "graphics/host_gpu/renderer/pipeline/fixF20.h"
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
@@ -353,7 +354,11 @@ static vk::ShaderModule CreateDualSourceVariant(GraphicContext& graphics, const 
 		}
 		return nullptr;
 	}
-	const auto module = CompileSPV(words, graphics.device);
+	// Track F, F42a (HPP-779, ROADMAP s122 item 694(v)(1)): at KYTY_FIX_F20=1 the fault bitmap writes of the variant
+	// become OpAtomicOr as in CreateCachedModule (the binding flag comes with the handle); at 0 Apply is not called.
+	std::vector<uint32_t> fixed;
+	const bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(words, pixel_program.fault_bound, fixed);
+	const auto            module  = CompileSPV(fix_f20 ? fixed : words, graphics.device);
 	if (DualSourceFirstLine(ps_hash, true)) {
 		LOGF("DualSrcBlend: patched ps=%016" PRIx64 "\n", ps_hash);
 	}

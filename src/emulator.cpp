@@ -14,6 +14,7 @@
 #include "common/systemInfo.h"
 #include "common/threads.h"
 #include "graphics/presentation/window.h"
+#include "graphics/host_gpu/renderer/pipeline/fixF20.h"
 #include "kernel/fileSystem.h"
 #include "kernel/memory.h"
 #include "kernel/pthread.h"
@@ -486,6 +487,7 @@ static void LoadElf(const std::filesystem::path& elf, bool dbg_print_reloc = fal
 
 static void Execute(const std::filesystem::path& game_patch) {
 	if (!Libs::Graphics::WindowPrepareShaders()) {
+		Libs::Graphics::FixF20::PrintExitStat(); // Track F, F42a: "FixF20Stat: when=exit" (KYTY_FIX_F20=1 only)
 		std::quick_exit(0);
 	}
 	auto           patch_path = game_patch;
@@ -496,6 +498,7 @@ static void Execute(const std::filesystem::path& game_patch) {
 	    },
 	    &patch_path);
 	Libs::Graphics::WindowRun();
+	Libs::Graphics::FixF20::PrintExitStat(); // Track F, F42a: "FixF20Stat: when=exit" (KYTY_FIX_F20=1 only)
 	std::quick_exit(0);
 }
 

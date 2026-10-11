@@ -4,6 +4,7 @@
 
 #include "graphics/host_gpu/renderer/pipeline/shaderTranslationCache.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderReplay.h"
+#include "graphics/host_gpu/renderer/pipeline/fixF20.h" // Track F, F42a (KYTY_FIX_F20)
 #include "loader/gamePatchFile.h"
 #include "graphics/host_gpu/renderer/pipeline/computePretranslation.h"
 #include "graphics/guest_gpu/command_processor/commandProcessor.h"
@@ -422,9 +423,22 @@ std::string DriverCacheSignature(const vk::PhysicalDeviceProperties& properties)
 	                   properties.vendorID, properties.deviceID, properties.driverVersion, uuid);
 }
 
+// Track F, F42a (HPP-779, ROADMAP s122 item 694(v)(5)): the program has the FaultBuffer binding in the translator's
+// layout. Read before AdoptDmaLayout - KYTY_DMA_LAYOUT=1 adds the binding in memory without a module variable.
+bool FixF20Bound(const ShaderRecompiler::IR::BindingLayout& layout) {
+	return std::ranges::any_of(layout.descriptors, [](const auto& b) {
+		return b.kind == ShaderRecompiler::IR::DescriptorBindingKind::FaultBuffer;
+	});
+}
+
 // Salt only the module passed to Vulkan, including modules loaded from translation/seed caches.
 // The saved translation stays unchanged; a new salt gives a fresh driver compilation experiment.
-vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& source) {
+// Track F, F42a (HPP-779, ROADMAP s122 item 694(v)(1)): at KYTY_FIX_F20=1 the fault bitmap writes of the module become
+// OpAtomicOr (FixF20::Apply, fixF20.h) before the salt; at 0 Apply is not called and `source` is the translation.
+vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& translation, bool fault_bound) {
+	std::vector<uint32_t> fixed;
+	const bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(translation, fault_bound, fixed);
+	const auto&           source  = fix_f20 ? fixed : translation;
 	std::vector<uint32_t> salted;
 	const auto* words = &source;
 	if (const char* salt = std::getenv("KYTY_PIPELINE_SALT"); salt != nullptr && salt[0] != 0) {
@@ -2206,8 +2220,9 @@ struct PipelineCache::ProgramCache {
 			}
 		}
 
+		const bool fault_bound  = FixF20Bound(result.program.bindings); // Track F, F42a: before AdoptDmaLayout
 		const auto module_begin = HostMicros();
-		const auto module = CreateCachedModule(device, result.spirv);
+		const auto module       = CreateCachedModule(device, result.spirv, fault_bound);
 		EXIT_IF(module == nullptr);
 		if (AvTraceEnabled()) {
 			LOGF("AvTrace: shader-emit %s hash=0x%016" PRIx64 " emit_us=%" PRIu64 " validate_us=%" PRIu64
@@ -2222,7 +2237,7 @@ struct PipelineCache::ProgramCache {
 		return {
 		    .specialization = std::move(specialization),
 		    .program        = std::move(result.program).TakeCompiledInfo(),
-		    .handle         = {.id = ++next_shader_id, .module = module},
+		    .handle         = {.id = ++next_shader_id, .module = module, .fault_bound = fault_bound},
 		    .spirv          = translation_cache.Enabled() ? std::move(result.spirv)
 		                                                  : std::vector<uint32_t> {},
 		};
@@ -2248,12 +2263,13 @@ struct PipelineCache::ProgramCache {
 		}
 		SourceEntry source(std::move(cached.plan));
 		for (auto& p: cached.permutations) {
-			const auto module = CreateCachedModule(device, p.spirv);
+			const bool fault_bound = FixF20Bound(p.program.bindings); // Track F, F42a: before AdoptDmaLayout
+			const auto module      = CreateCachedModule(device, p.spirv, fault_bound);
 			EXIT_IF(module == nullptr);
 			source.permutations.push_back({
 			    .specialization = std::move(p.specialization),
 			    .program        = std::move(p.program),
-			    .handle         = {.id = ++next_shader_id, .module = module},
+			    .handle         = {.id = ++next_shader_id, .module = module, .fault_bound = fault_bound},
 			    .spirv          = std::move(p.spirv),
 			});
 			AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
@@ -4658,12 +4674,13 @@ struct PipelineCache::ProgramCache {
 			}
 			SourceEntry source(std::move(loaded->plan));
 			for (auto& p: loaded->permutations) {
-				const auto module = CreateCachedModule(device, p.spirv);
+				const bool fault_bound = FixF20Bound(p.program.bindings); // Track F, F42a: before AdoptDmaLayout
+				const auto module      = CreateCachedModule(device, p.spirv, fault_bound);
 				EXIT_IF(module == nullptr);
 				source.permutations.push_back({
 				    .specialization = std::move(p.specialization),
 				    .program        = std::move(p.program),
-				    .handle         = {.id = ++next_shader_id, .module = module},
+				    .handle         = {.id = ++next_shader_id, .module = module, .fault_bound = fault_bound},
 				    .spirv          = std::move(p.spirv),
 				});
 				AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
@@ -4845,6 +4862,7 @@ PipelineCache::PipelineCache(GraphicContext& graphics)
 	LOGF("FixSval: mode=%d ubo_std_layout=%d\n", FixSvalEnabled() ? 1 : 0,
 	     graphics.uniform_buffer_standard_layout_enabled ? 1 : 0);
 	ReplayInit(); // track S, S17a: returns at once at KYTY_S_REPLAY=0
+	(void)FixF20::Mode(); // Track F, F42a: "FixF20: mode=<0|1>" once, before the precache creates modules
 	InitializeDriverCache();
 	if (AsyncPipelinesMode() != 0) {
 		StartWorkers();

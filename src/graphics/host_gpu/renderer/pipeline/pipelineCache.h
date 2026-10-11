@@ -117,6 +117,10 @@ struct ShaderProgram {
 	// Track F, F4a2 (HPP-346): the SPIR-V the module was created from (Permutation::spirv; empty when the
 	// translation cache is off), read only by CreatePipelineInternal under KYTY_FIX_DUALSRC=1.
 	const std::vector<uint32_t>* spirv = nullptr;
+	// Track F, F42a (HPP-779, ROADMAP s122 item 694(v)(5)): the translator's layout of the program has the FaultBuffer
+	// binding - set with `module` at the three module sites of ProgramCache, read by the dual-source variant at
+	// KYTY_FIX_F20=1.
+	bool fault_bound = false;
 
 	explicit operator bool() const { return id != 0 && module != nullptr; }
 };

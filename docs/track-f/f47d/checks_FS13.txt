@@ -1,0 +1,7 @@
+# F47d checks on ea6c6e9e (FS13) 2026-10-11T16:19:49Z refs sha256 59f6c4441930efd537ec3d89abd9b6b09208c41beacf27e0460d02f02f26fef9 cls sha256 abccb9aba1bae9ab193b31b3c744fe462c92e4190882e76809d8ce2333a91cf1
+ok  ea6c6e9e:src/graphics/host_gpu/renderer/pipeline/shaders.cpp:550
+links 42 bad 0
+ALL OK
+edition-3 code SOP2 0x31 decoder S_LSHL4_ADD_U32    classifier reads SCC False ok
+decoder opcodes outside the table that the classifier reads SCC from: 0 []
+ALL OK

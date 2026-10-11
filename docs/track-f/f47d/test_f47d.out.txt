@@ -1,0 +1,97 @@
+suite test_f47d.py sha256 91058228959704c1348e590409cede0240f0338b47554ab86b4eb3054fab80f6 target f47d_read.py sha256 74e5a443c5d16ff992d4d3126713679a5d907f34abb0d22543a0fde653c07e42 next_f47d.py sha256 63d12f9483070cb50aa39559b291dbee4e1c80cfe93777b63796c806d5cb34fc thumb_f47d.py sha256 8dd09812360d3f6a9efdbbba4df1f750a1f218c7080fbe76dab17bfa74e545ae queue_f47d.py sha256 af56d5b957c5143f016f443f750471b2978f90512614000c9b56aec551730811
+rd: good tag ADMITTED                                                  PASS
+rd: n0 300, P = 745.25, inside sample                                  PASS
+rd: G black 1 row                                                      PASS
+rd: frames >= 1 s at capture 12, outside 1                             PASS
+rd: n0 150 - prediction outside the sample                             PASS
+rd: FS14 installed ADMITTED, binary FS14                               PASS
+rd: unknown binary NOT_ADMITTED                                        PASS
+rd: binary changed after NOT_ADMITTED                                  PASS
+rd: binary pre differs NOT_ADMITTED                                    PASS
+rd: prereg != seal NOT_ADMITTED                                        PASS
+rd: extra KYTY_FIX_* NOT_ADMITTED                                      PASS
+rd: KYTY_GAME_PATCH NOT_ADMITTED                                       PASS
+rd: KYTY_RD_FLIPS=2 NOT_ADMITTED                                       PASS
+rd: missing KYTY_GPU_CLOCK_PIN NOT_ADMITTED                            PASS
+rd: KYTY_GPU_CHECKPOINTS NOT_ADMITTED                                  PASS
+rd: no --rd NOT_ADMITTED                                               PASS
+rd: hold 330 NOT_ADMITTED                                              PASS
+rd: outcome timeout NOT_ADMITTED                                       PASS
+rd: death marker NOT_ADMITTED                                          PASS
+rd: GpuHangAbort NOT_ADMITTED (both members)                           PASS
+rd: window minimized INTERFERENCE                                      PASS
+rd: lost keyboard focus INTERFERENCE                                   PASS
+rd: INTERFERENCE file                                                  PASS
+rd: manifest DIFF NOT_ADMITTED                                         PASS
+rd: no variant copy NOT_ADMITTED                                       PASS
+rd: variant copy with 0 files NOT_ADMITTED                             PASS
+rd: translation cache of another variant NOT_ADMITTED                  PASS
+rd: free 79 GiB NOT_ADMITTED                                           PASS
+rd: free 80 GiB edge ADMITTED                                          PASS
+rd: 11 flip lines NOT_ADMITTED                                         PASS
+rd: other flip line NOT_ADMITTED                                       PASS
+rd: no level started line NOT_ADMITTED                                 PASS
+rd: level started before the named start NOT_ADMITTED                  PASS
+rd: 11 captures NOT_ADMITTED                                           PASS
+rd: 11 thumbs NOT_ADMITTED                                             PASS
+rd: f47_rd with a grid other than 729..762 NOT_ADMITTED                PASS
+rd2: grid from grid.txt ADMITTED                                       PASS
+rd2: log X list != grid.txt NOT_ADMITTED                               PASS
+rd: no long frames at captures - rows 0 / 1                            PASS
+hi: good tag ADMITTED                                                  PASS
+hi: img_imp 3 - knob action (1) NOT_ADMITTED                           PASS
+hi: staging 0 - knob action (2) NOT_ADMITTED                           PASS
+hi: no draw lines - knob action (4) NOT_ADMITTED                       PASS
+hi: --rd NOT_ADMITTED                                                  PASS
+hi: no KYTY_HOST_IMPORT_MIN_KB NOT_ADMITTED                            PASS
+hi: KYTY_HOST_IMPORT_MIN_KB=64 NOT_ADMITTED                            PASS
+hi: no video index NOT_ADMITTED                                        PASS
+reader rows ascii                                                      PASS
+next: f47_rd first MAY                                                 PASS
+next: f47_hi before f47_rd - 7                                         PASS
+next: f47_rd2 before f47_rd - 7                                        PASS
+next: f47_rd_r1 before f47_rd - 11                                     PASS
+next: unread attempt - 7                                               PASS
+next: existing tag - 2                                                 PASS
+next: after NOT_ADMITTED f47_rd_r1 MAY                                 PASS
+next: after NOT_ADMITTED f47_rd_r2 - 11 (order)                        PASS
+next: interference does not spend - f47_rd_r2 MAY                      PASS
+next: two NOT_ADMITTED - f47_rd_r3 refused 11                          PASS
+next: rd ADMITTED - f47_rd_r1 refused 11                               PASS
+next: G black 2 - f47_rd2 not due 7                                    PASS
+next: F47D_RD2_OK=1 - f47_rd2 MAY                                      PASS
+next: G black 2 - f47_hi MAY                                           PASS
+next: grid n0 326 -> R 748 -> 732..765                                 PASS
+next: grid n0 300 -> 745.25 -> R 745 -> 729..762                       PASS
+next: G black 0 - f47_rd2 MAY                                          PASS
+next: G black 0 - f47_hi waits for f47_rd2 (7)                         PASS
+next: rd2 ADMITTED - f47_hi MAY                                        PASS
+next: grid without n0 - 7                                              PASS
+next: rd2 exhausted - f47_hi MAY                                       PASS
+next: grid rounding 734.5 -> R 735 (half up)                           PASS
+next: budget default estimate rd 1200 MAY                              PASS
+next: spent 1200 + est 1200 = 2400 - f47_rd2 MAY                       PASS
+next: spent 2400 + est 1200 > 2700 - f47_rd2_r1 refused 12             PASS
+next: spent 1980 + est hi 720 = 2700 edge - f47_hi MAY                 PASS
+next: open lock span - refused 12                                      PASS
+next: spent 2040 + est hi 720 > 2700 - f47_hi refused 12               PASS
+next: moved-aside folder is not an attempt                             PASS
+queue: F link in_progress with a run - BUSY                            PASS
+queue: F47D_QUEUE_OK lets that issue pass                              PASS
+queue: F link in_progress without a run - FREE                         PASS
+queue: P link todo - BUSY                                              PASS
+queue: F47D_QUEUE_OK does not pass a P link                            PASS
+queue: in_review with a run - FREE                                     PASS
+queue: own link ignored - FREE                                         PASS
+thumb: pictures written                                                PASS
+thumb: K 150 edge -> black                                             PASS
+thumb: K 140 -> -                                                      PASS
+thumb: Wt 1000 edge -> white                                           PASS
+thumb: black below the band -> K 0                                     PASS
+thumb: whole band black K 38880 printed                                PASS
+thumb: k01 matched to level+729, k05 to level+741                      PASS
+thumb: G line black 2 white 1 of 12 thumbs 5                           PASS
+thumb: output strict cp1250 / ascii                                    PASS
+reader: subprocess output strict cp1250, STATUS ADMITTED               PASS
+next: subprocess output strict cp1250, MAY                             PASS
+ALL OK

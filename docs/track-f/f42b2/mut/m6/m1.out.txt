@@ -1,0 +1,19 @@
+watch: start 2026-10-11T12:38:30Z child 21456 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[host]    LeastRecentlyUsedCache           ok
+F20Stand: form mode=1 arm=W wave=32 subgroup=32 lane_count=1 local=64x1x1 functions=2 returns_main=1 bound=1 named=1 sites=1 rewritten=1 unmatched=0 malformed=0 valid=1 groups=2048x1 invocations=131072 expected_bits=131072 words=897
+F20Stand: form mode=1 arm=X wave=32 subgroup=32 lane_count=1 local=64x1x1 functions=2 returns_main=1 bound=1 named=1 sites=1 rewritten=1 unmatched=0 malformed=0 valid=1 groups=32768x2 invocations=4194304 expected_bits=131072 words=902
+F20Stand: form mode=1 arm=S wave=32 subgroup=32 lane_count=1 local=64x1x1 functions=2 returns_main=1 bound=1 named=1 sites=1 rewritten=1 unmatched=0 malformed=0 valid=1 groups=64x1 invocations=4096 expected_bits=4096 words=912
+F20Stand: form mode=1 arm=N wave=32 subgroup=32 lane_count=1 local=64x1x1 functions=2 returns_main=1 bound=1 named=0 sites=0 rewritten=0 unmatched=1 malformed=0 valid=1 groups=2048x1 invocations=131072 expected_bits=131072 words=838
+F20Stand: emu mode=1 emu_mode=1 arm=E-W bound_flag=1 calls=1 rewritten=1 module=1
+F20Stand: form mode=1 arm=E-W wave=32 subgroup=32 lane_count=1 local=64x1x1 functions=2 returns_main=1 bound=1 named=1 sites=1 rewritten=1 unmatched=0 malformed=0 valid=1 groups=2048x1 invocations=131072 expected_bits=131072 words=902
+F20Stand: emu mode=1 emu_mode=1 arm=E-X bound_flag=1 calls=1 rewritten=1 module=1
+F20Stand: form mode=1 arm=E-X wave=32 subgroup=32 lane_count=1 local=64x1x1 functions=2 returns_main=1 bound=1 named=1 sites=1 rewritten=1 unmatched=0 malformed=0 valid=1 groups=32768x2 invocations=4194304 expected_bits=131072 words=907
+F20Stand: sum mode=1 seed=42072 arm=W rounds=20 expected_bits=2621440 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+F20Stand: sum mode=1 seed=42072 arm=X rounds=20 expected_bits=2621440 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+F20Stand: sum mode=1 seed=42072 arm=S rounds=20 expected_bits=81920 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+F20Stand: sum mode=1 seed=42072 arm=N rounds=20 expected_bits=2621440 lost=2539520 rounds_with_loss=20 extra=0 words_lost=81920 out_nonzero=0
+F20Stand: sum mode=1 seed=42072 arm=E-W rounds=20 expected_bits=2621440 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+F20Stand: sum mode=1 seed=42072 arm=E-X rounds=20 expected_bits=2621440 lost=0 rounds_with_loss=0 extra=0 words_lost=0 out_nonzero=0
+F20Stand: emu_stat mode=1 emu_mode=1 calls=2 rewritten=2
+F20Stand: done
+rc=0 end 2026-10-11T12:38:36Z

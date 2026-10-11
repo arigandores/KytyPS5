@@ -1,0 +1,26 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+index 3f462077..93be1f1a 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+@@ -440,7 +440,7 @@ bool FixF20Bound(const ShaderRecompiler::IR::BindingLayout& layout) {
+ vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& translation, bool fault_bound) {
+ 	std::vector<uint32_t> fixed;
+ 	const bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(translation, fault_bound, fixed);
+-	const auto&           source  = fix_f20 ? fixed : translation;
++	const auto&           source  = ((void)fix_f20, translation); // MUTANT m1b
+ 	std::vector<uint32_t> salted;
+ 	const auto* words = &source;
+ 	if (const char* salt = std::getenv("KYTY_PIPELINE_SALT"); salt != nullptr && salt[0] != 0) {
+diff --git a/src/graphics/host_gpu/renderer/pipeline/shaders.cpp b/src/graphics/host_gpu/renderer/pipeline/shaders.cpp
+index b14ec711..5f646208 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/shaders.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/shaders.cpp
+@@ -357,7 +357,7 @@ static vk::ShaderModule CreateDualSourceVariant(GraphicContext& graphics, const
+ 	// become OpAtomicOr as in CreateCachedModule (the binding flag comes with the handle); at 0 Apply is not called.
+ 	std::vector<uint32_t> fixed;
+ 	const bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(words, pixel_program.fault_bound, fixed);
+-	const auto            module  = CompileSPV(fix_f20 ? fixed : words, graphics.device);
++	const auto            module  = CompileSPV(((void)fix_f20, words), graphics.device); // MUTANT m1b
+ 	if (DualSourceFirstLine(ps_hash, true)) {
+ 		LOGF("DualSrcBlend: patched ps=%016" PRIx64 "\n", ps_hash);
+ 	}

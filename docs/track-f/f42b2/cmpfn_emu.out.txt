@@ -1,0 +1,5 @@
+differing bytes 2800 .text bytes 0 functions with a .text difference 0
+classes {'hdr': 13, 'sdlrev': 9, 'path': 138, 'version': 15, 'anon': 2625, 'code(functions)': 0}
+OTHER non-text 0 []
+OTHER functions 0 []
+ALL OK

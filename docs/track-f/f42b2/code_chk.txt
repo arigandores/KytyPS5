@@ -1,0 +1,49 @@
+a9d6fd1c body lines 30 sha1 0750daf1edd2
+82570fd2 body lines 30 sha1 0750daf1edd2
+607fabaf body lines 30 sha1 0750daf1edd2
+82570fd2:src/graphics/host_gpu/renderer/pipeline/fixF20.h:11:// the words of the translator; the rewrite runs where a Vulkan module is created from them (CreateCachedModule and the
+82570fd2:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:436:// Track F, F42a2 (HPP-805, ROADMAP s122 item 705(b)(1)): CreateCachedModule is outside the anonymous namespace - declared
+82570fd2:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:442:vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& translation, bool fault_bound) {
+82570fd2:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2231:		const auto module       = CreateCachedModule(device, result.spirv, fault_bound);
+82570fd2:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2273:			const auto module      = CreateCachedModule(device, p.spirv, fault_bound);
+82570fd2:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4684:				const auto module      = CreateCachedModule(device, p.spirv, fault_bound);
+82570fd2:src/graphics/host_gpu/renderer/pipeline/pipelineCache.h:418:vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& translation, bool fault_bound);
+82570fd2:src/graphics/host_gpu/renderer/pipeline/shaders.cpp:358:	// become OpAtomicOr as in CreateCachedModule (the binding flag comes with the handle); at 0 Apply is not called.
+
+shaders.cpp: const bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(words, pixel_program.fault_bound, fixed);
+shaders.cpp: const auto            module  = CompileSPV(fix_f20 ? fixed : words, graphics.device);
+pipelineCache.cpp: const bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(translation, fault_bound, fixed);
+pipelineCache.cpp: const auto&           source  = fix_f20 ? fixed : translation;
+fixF20.h:54: constexpr uint32_t kOpAtomicOr          = 241u; // OpAtomicOr (242 is OpAtomicXor)
+fixF20.h:86: uint32_t                     const_one  = 0;
+fixF20.h:101: if (in[x.at + 3] == 1u && const_one == 0) {
+fixF20.h:102: const_one = in[x.at + 2];
+fixF20.h:182: if (const_one != 0 && const_zero != 0 && uses[site.value] == 2 && uses[site.result] == 2) {
+fixF20.h:207: out.push_back(const_one);
+fixF20.cpp:18: std::atomic<uint64_t> g_calls {0};
+fixF20.cpp:22: std::atomic<uint64_t> g_rewritten {0};
+fixF20.cpp:28: when, g_calls.load(), g_modules_bound.load(), g_modules.load(), g_sites.load(), g_rewritten.load(),
+fixF20.cpp:36: const int value = Common::EnvFlagOn("KYTY_FIX_F20") ? 1 : 0;
+fixF20.cpp:48: g_rewritten.fetch_add(stats.rewritten);
+fixF20.cpp:50: if ((g_calls.fetch_add(1) + 1) % 4096u == 0) {
+fixF20.cpp:64: return g_calls.load();
+fixF20.cpp:68: return g_rewritten.load();
+ .../host_gpu/renderer/cache/faultManager.cpp       |  49 +++++-
+ .../host_gpu/renderer/cache/faultManager.h         |  27 +++
+ .../host_gpu/renderer/cache/textureCache.cpp       | 194 +++++++++++++++++----
+ .../host_gpu/renderer/cache/textureCache.h         |  45 +++--
+ src/graphics/host_gpu/renderer/diagF5.cpp          | 115 +++++++++++-
+ src/graphics/host_gpu/renderer/diagF5.h            |  94 ++++++++--
+ .../host_gpu/renderer/pipeline/descriptors.cpp     |  57 +++---
+ src/graphics/host_gpu/renderer/pipeline/fixF20.cpp |   9 +
+ src/graphics/host_gpu/renderer/pipeline/fixF20.h   |   5 +
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   |   6 +
+ .../host_gpu/renderer/pipeline/pipelineCache.h     |   3 +
+ src/graphics/presentation/window/joyPump.cpp       |  98 +++++++++++
+ src/graphics/presentation/window/joyPump.h         |   4 +
+ src/graphics/presentation/window/vulkanWindow.cpp  |   1 +
+ src/graphics/presentation/window/window.cpp        |  38 +++-
+ 15 files changed, 635 insertions(+), 110 deletions(-)
+
+removed lines in fixF20.*: 0
+shader paths changed: 0

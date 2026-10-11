@@ -1,0 +1,16 @@
+2026-10-11T12:20:28Z F42b2 constants comment posted (R=200 seed 42071; mutants R=20 seed 42072)
+2026-10-11T12:21:07Z F42b2 worktree HEAD 607fabaf tree bea8d373 (F42a2 5ccb1d31 tree bea8d373)
+2026-10-11T12:22:44Z F42b2 configure+version done
+2026-10-11T12:25:07Z F42b2 own builds emu ab8b9273 rct a0c58d91
+2026-10-11T12:25:19Z F42b2 pediff3r emu: VERDICT UNEXPLAINED rct: VERDICT UNEXPLAINED
+2026-10-11T12:27:03Z F42b2 cmpfn emu: ALL OK rct: NOT OK
+2026-10-11T12:32:59Z F42b2 align emu: ALL OK rct: ALL OK (script 3d2c8e3d)
+2026-10-11T12:34:03Z F42b2 stand c42071 m0 done rc=0
+2026-10-11T12:35:01Z F42b2 stand c42071 m1 done rc=0
+2026-10-11T12:35:41Z F42b2 recount c42071 ALL OK (m0.tsv fd30e35c m1.tsv 75531b15); F42a2 data c42051 ALL OK
+2026-10-11T12:37:23Z F42b2 mutant m1b bins 29a38db4 8cae5a02 | mutant m1b rule [=1 E-W or E-X lost > 0]: CAUGHT; failing members: 1:E-W lost = 0 in every round, 1:E-X lost = 0 in every round
+2026-10-11T12:38:47Z F42b2 mutant m6 bins d6a4c451 229fe56a | mutant m6 rule [=0 calls > 0 or E-W lost = 0]: CAUGHT; failing members: 0:E-W lost > 0 summed over R (positive control arm E), 0:calls = 0 (emu lines and emu_stat)
+2026-10-11T12:39:46Z F42b2 mutant m1a bins 8aadfb1a | mutant m1a rule [=1 W lost > 0]: CAUGHT; failing members: 1:W lost = 0 in every round, 1:X lost = 0 in every round, 1:E-W lost = 0 in every round, 1:E-X lost = 0 in every round
+2026-10-11T12:40:37Z F42b2 mutant m4 bins 2f3c1f2a | mutant m4 rule [=1 X lost > 0]: CAUGHT; failing members: 1:X lost = 0 in every round, 1:E-X lost = 0 in every round
+2026-10-11T12:41:39Z F42b2 mutant m5 bins 2408f704 | mutant m5 rule [=1 N form unmatched = 0]: CAUGHT; failing members: 1:N form unmatched >= 1
+2026-10-11T12:42:17Z F42b2 code_chk body sha1 0750daf1edd2 x3, wt shader paths 0

@@ -1,0 +1,26 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+index 3f462077..fee1e4cd 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+@@ -439,7 +439,7 @@ bool FixF20Bound(const ShaderRecompiler::IR::BindingLayout& layout) {
+ // OpAtomicOr (FixF20::Apply, fixF20.h) before the salt; at 0 Apply is not called and `source` is the translation.
+ vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& translation, bool fault_bound) {
+ 	std::vector<uint32_t> fixed;
+-	const bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(translation, fault_bound, fixed);
++	const bool            fix_f20 = FixF20::Apply(translation, fault_bound, fixed); // MUTANT m6
+ 	const auto&           source  = fix_f20 ? fixed : translation;
+ 	std::vector<uint32_t> salted;
+ 	const auto* words = &source;
+diff --git a/src/graphics/host_gpu/renderer/pipeline/shaders.cpp b/src/graphics/host_gpu/renderer/pipeline/shaders.cpp
+index b14ec711..929485c8 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/shaders.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/shaders.cpp
+@@ -356,7 +356,7 @@ static vk::ShaderModule CreateDualSourceVariant(GraphicContext& graphics, const
+ 	// Track F, F42a (HPP-779, ROADMAP s122 item 694(v)(1)): at KYTY_FIX_F20=1 the fault bitmap writes of the variant
+ 	// become OpAtomicOr as in CreateCachedModule (the binding flag comes with the handle); at 0 Apply is not called.
+ 	std::vector<uint32_t> fixed;
+-	const bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(words, pixel_program.fault_bound, fixed);
++	const bool            fix_f20 = FixF20::Apply(words, pixel_program.fault_bound, fixed); // MUTANT m6
+ 	const auto            module  = CompileSPV(fix_f20 ? fixed : words, graphics.device);
+ 	if (DualSourceFirstLine(ps_hash, true)) {
+ 		LOGF("DualSrcBlend: patched ps=%016" PRIx64 "\n", ps_hash);

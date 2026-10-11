@@ -1,0 +1,18 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/fixF20.h b/src/graphics/host_gpu/renderer/pipeline/fixF20.h
+index 26df1487..9a7826fa 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/fixF20.h
++++ b/src/graphics/host_gpu/renderer/pipeline/fixF20.h
+@@ -106,12 +106,8 @@ inline RewriteStats RewriteFaultOr(std::span<const uint32_t> in, bool bound, std
+ 		}
+ 	}
+ 	stats.named = static_cast<uint32_t>(fault_vars.size());
+-	if (!bound) {
+-		stats.unmatched = stats.named != 0 ? 1u : 0u;
+-		return stats;
+-	}
++	(void)bound; // MUTANT m5: identification by the name only
+ 	if (fault_vars.empty()) {
+-		stats.unmatched = 1;
+ 		return stats;
+ 	}
+ 

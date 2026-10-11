@@ -1,0 +1,24 @@
+1 rows identity/mode/seed/arm name (bad=0)         yes
+1 R rows per arm, six arms per round               yes
+1 sum lines = recount                              yes
+1 extra 0, out_nonzero 0 everywhere                yes
+1 form lines (wave/subgroup/lanes/local/return/valid) yes
+1 emu lines E-W, E-X present, module=1, bound_flag=1 yes
+1   W    rounds 20 expected 2621440 seen 2621440 lost 0 rounds_with_loss 0 words_lost 0
+1   X    rounds 20 expected 2621440 seen 0 lost 2621440 rounds_with_loss 20 words_lost 81920
+1   S    rounds 20 expected 81920 seen 81920 lost 0 rounds_with_loss 0 words_lost 0
+1   N    rounds 20 expected 2621440 seen 81920 lost 2539520 rounds_with_loss 20 words_lost 81920
+1   E-W  rounds 20 expected 2621440 seen 2621440 lost 0 rounds_with_loss 0 words_lost 0
+1   E-X  rounds 20 expected 2621440 seen 0 lost 2621440 rounds_with_loss 20 words_lost 81920
+1   emu E-W emu_mode 1 calls 1 rewritten 1
+1   emu E-X emu_mode 1 calls 1 rewritten 1
+1   emu_stat emu_mode 1 calls 2 rewritten 2
+1 W lost = 0 in every round                        yes
+1 X lost = 0 in every round                        NO
+1 S lost = 0 in every round                        yes
+1 E-W lost = 0 in every round                      yes
+1 E-X lost = 0 in every round                      NO
+1 calls >= 1 and rewritten >= 1 (each emu line, emu_stat) yes
+1 emu_mode = 1                                     yes
+1 N form unmatched >= 1                            yes
+mutant m4 rule [=1 X lost > 0]: CAUGHT; failing members: 1:X lost = 0 in every round, 1:E-X lost = 0 in every round

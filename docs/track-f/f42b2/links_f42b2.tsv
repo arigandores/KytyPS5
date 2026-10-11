@@ -1,0 +1,20 @@
+82570fd2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	434	} // namespace	
+82570fd2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	442	vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& transl	\tstd::vector<uint32_t> fixed;
+82570fd2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	473	namespace {	
+82570fd2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h	418	vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& transl	void LogPipelineTrace(const char* phase, uint64_t vertex_program_id, uint64_t pixel_progra
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19129	      d.emu_module = Libs::Graphics::CreateCachedModule(vulkan.Device(), d.compiled.spirv,	      d.emu_calls = Libs::Graphics::FixF20::Calls() - calls0;
+82570fd2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	444	\tconst bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(translation, fault_b	\tconst auto&           source  = fix_f20 ? fixed : translation;
+82570fd2	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp	36	\t\tconst int value = Common::EnvFlagOn("KYTY_FIX_F20") ? 1 : 0;	\t\tLOGF("FixF20: mode=%d\\n", value);
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19066	  const int emu_mode = Libs::Graphics::FixF20::Mode();	  if (const char *salt = std::getenv("KYTY_PIPELINE_SALT"); salt != nullptr && salt[0] != 
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19113	    if (fix && d.stats.rewritten != 0 && !F20Emu(d.arm)) { // arm E: the words stay the tr	      words = fixed;
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	15803	      module = m_external_module;	    }
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	16215	    m_device.destroyShaderModule(own_module, nullptr);	  }
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19182	      vulkan.SetExternalModule(nullptr);	      const auto out = vulkan.ReadBuffer(d.test.name, buffer, 64u);
+82570fd2	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp	63	uint64_t Calls() {	\treturn g_calls.load();
+82570fd2	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp	67	uint64_t Rewritten() {	\treturn g_rewritten.load();
+82570fd2	src/graphics/host_gpu/renderer/pipeline/fixF20.cpp	50	\tif ((g_calls.fetch_add(1) + 1) % 4096u == 0) {	\t\tPrintStat("periodic");
+82570fd2	tests/ShaderRecompilerComputeTests.cpp	19127	      const uint64_t calls0 = Libs::Graphics::FixF20::Calls();	      const uint64_t rewritten0 = Libs::Graphics::FixF20::Rewritten();
+82570fd2	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	360	\tconst bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(words, pixel_program	\tconst auto            module  = CompileSPV(fix_f20 ? fixed : words, graphics.device);
+82570fd2	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	361	\tconst auto            module  = CompileSPV(fix_f20 ? fixed : words, graphics.device);	\tif (DualSourceFirstLine(ps_hash, true)) {
+82570fd2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	445	\tconst auto&           source  = fix_f20 ? fixed : translation;	\tstd::vector<uint32_t> salted;
+82570fd2	src/graphics/host_gpu/renderer/pipeline/fixF20.h	207	\t\t\tout.push_back(const_one);	\t\t\tout.push_back(const_zero);

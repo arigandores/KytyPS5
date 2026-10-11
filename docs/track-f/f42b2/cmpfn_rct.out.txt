@@ -1,0 +1,25 @@
+differing bytes 290545 .text bytes 15672 functions with a .text difference 2206
+classes {'hdr': 2, 'rdata-move': 3916, 'data-move': 965, 'path': 185, 'anon': 43401, 'code(functions)': 1756}
+OTHER non-text 226404 [('.rdata', 14380288), ('.rdata', 14383416), ('.rdata', 14383432), ('.rdata', 14411592), ('.rdata', 14412936), ('.rdata', 14414664), ('.rdata', 14418696), ('.rdata', 14421048), ('.rdata', 14478272), ('.rdata', 14478273), ('.rdata', 14488464), ('.rdata', 14501168), ('.rdata', 14501888), ('.rdata', 14557600), ('.rdata', 14818256), ('.rdata', 14818528), ('.rdata', 15094284), ('.rdata', 15094288), ('.rdata', 15303636), ('.rdata', 15303644)]
+   .rdata 0xdb6d00 b'' b''
+   .rdata 0xdb7938 b'' b''
+   .rdata 0xdb7948 b'' b''
+   .rdata 0xdbe748 b'' b''
+   .rdata 0xdbec88 b'' b''
+   .rdata 0xdbf348 b'' b''
+   .rdata 0xdc0308 b'' b''
+   .rdata 0xdc0c38 b'' b''
+   .rdata 0xdcebc0 b'' b''
+   .rdata 0xdcebc1 b'' b''
+   .rdata 0xdd1390 b'' b''
+   .rdata 0xdd4530 b'' b''
+   .rdata 0xdd4800 b'' b''
+   .rdata 0xde21a0 b'' b''
+   .rdata 0xe21bd0 b'' b''
+   .rdata 0xe21ce0 b'' b''
+   .rdata 0xe6520c b'' b''
+   .rdata 0xe65210 b'' b''
+   .rdata 0xe983d4 b'' b'0'
+   .rdata 0xe983dc b'' b'-'
+OTHER functions 450 [('nofunc', '0x1a143'), ('nofunc', '0x250e3'), ('nofunc', '0x250fe'), ('nofunc', '0x25105'), ('nofunc', '0x255a7'), ('nofunc', '0x255ba'), ('nofunc', '0x2edf3'), ('nofunc', '0x2edfa'), ('nofunc', '0x34397'), ('nofunc', '0x343d4'), ('nofunc', '0x343ee'), ('nofunc', '0x34523'), ('nofunc', '0x34524'), ('nofunc', '0x34525'), ('nofunc', '0x347cc'), ('nofunc', '0x34ad3'), ('nofunc', '0x34ae3'), ('nofunc', '0x34b0e'), ('nofunc', '0x34b38'), ('nofunc', '0x359b3')]
+NOT OK

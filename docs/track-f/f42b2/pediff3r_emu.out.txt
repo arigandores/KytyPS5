@@ -1,0 +1,16 @@
+pediff3: differing bytes 2800 {'(3) header/debug stamp+GUID': 12, '(1) build dir name': 139, '(2) anon-namespace tag': 1796} OTHER 853 {'.rdata': 24, '.data': 829}
+pediff3 OTHER bytes 853
+  reclassified (2b) anon-namespace string .data bytes 829
+  reclassified (2c) SDL_REVISION .rdata bytes 9
+  SDL_REVISION at 0x011b285f: A SDL-KytyPS5-2026-09-15-6a2987a-1916-gadcd0eba | B SDL-KytyPS5-2026-09-15-6a2987a-1917-g607fabaf
+.text differing bytes (never reclassified): 0
+left OTHER 15 {'.rdata': 15}
+  0x013081be .rdata a=35 b=36 ctx_a=b'026-09-15-6a2987a-1917-g5ccb1d31' ctx_b=b'026-09-15-6a2987a-1917-g607fabaf'
+  0x013081bf .rdata a=63 b=30 ctx_a=b'26-09-15-6a2987a-1917-g5ccb1d31\x00' ctx_b=b'26-09-15-6a2987a-1917-g607fabaf\x00'
+  0x013081c0 .rdata a=63 b=37 ctx_a=b'6-09-15-6a2987a-1917-g5ccb1d31\x000' ctx_b=b'6-09-15-6a2987a-1917-g607fabaf\x000'
+  0x013081c1 .rdata a=62 b=66 ctx_a=b'-09-15-6a2987a-1917-g5ccb1d31\x000.' ctx_b=b'-09-15-6a2987a-1917-g607fabaf\x000.'
+  0x013081c2 .rdata a=31 b=61 ctx_a=b'09-15-6a2987a-1917-g5ccb1d31\x000.3' ctx_b=b'09-15-6a2987a-1917-g607fabaf\x000.3'
+  0x013081c3 .rdata a=64 b=62 ctx_a=b'9-15-6a2987a-1917-g5ccb1d31\x000.3.' ctx_b=b'9-15-6a2987a-1917-g607fabaf\x000.3.'
+  0x013081c4 .rdata a=33 b=61 ctx_a=b'-15-6a2987a-1917-g5ccb1d31\x000.3.0' ctx_b=b'-15-6a2987a-1917-g607fabaf\x000.3.0'
+  0x013081c5 .rdata a=31 b=66 ctx_a=b'15-6a2987a-1917-g5ccb1d31\x000.3.0\x00' ctx_b=b'15-6a2987a-1917-g607fabaf\x000.3.0\x00'
+VERDICT UNEXPLAINED

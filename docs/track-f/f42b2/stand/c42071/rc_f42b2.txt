@@ -1,0 +1,44 @@
+0 rows identity/mode/seed/arm name (bad=0)         yes
+0 R rows per arm, six arms per round               yes
+0 sum lines = recount                              yes
+0 extra 0, out_nonzero 0 everywhere                yes
+0 form lines (wave/subgroup/lanes/local/return/valid) yes
+0 emu lines E-W, E-X present, module=1, bound_flag=1 yes
+0   W    rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 words_lost 819200
+0   X    rounds 200 expected 26214400 seen 1868172 lost 24346228 rounds_with_loss 200 words_lost 819200
+0   S    rounds 200 expected 819200 seen 819200 lost 0 rounds_with_loss 0 words_lost 0
+0   N    rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 words_lost 819200
+0   E-W  rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 words_lost 819200
+0   E-X  rounds 200 expected 26214400 seen 1865211 lost 24349189 rounds_with_loss 200 words_lost 819200
+0   emu E-W emu_mode 0 calls 0 rewritten 0
+0   emu E-X emu_mode 0 calls 0 rewritten 0
+0   emu_stat emu_mode 0 calls 0 rewritten 0
+0 W lost > 0 (positive control, edition 1 arms)    yes
+0 S lost = 0 (zero control)                        yes
+0 E-W lost > 0 summed over R (positive control arm E) yes
+0 calls = 0 (emu lines and emu_stat)               yes
+0 emu_mode = 0                                     yes
+1 rows identity/mode/seed/arm name (bad=0)         yes
+1 R rows per arm, six arms per round               yes
+1 sum lines = recount                              yes
+1 extra 0, out_nonzero 0 everywhere                yes
+1 form lines (wave/subgroup/lanes/local/return/valid) yes
+1 emu lines E-W, E-X present, module=1, bound_flag=1 yes
+1   W    rounds 200 expected 26214400 seen 26214400 lost 0 rounds_with_loss 0 words_lost 0
+1   X    rounds 200 expected 26214400 seen 26214400 lost 0 rounds_with_loss 0 words_lost 0
+1   S    rounds 200 expected 819200 seen 819200 lost 0 rounds_with_loss 0 words_lost 0
+1   N    rounds 200 expected 26214400 seen 819200 lost 25395200 rounds_with_loss 200 words_lost 819200
+1   E-W  rounds 200 expected 26214400 seen 26214400 lost 0 rounds_with_loss 0 words_lost 0
+1   E-X  rounds 200 expected 26214400 seen 26214400 lost 0 rounds_with_loss 0 words_lost 0
+1   emu E-W emu_mode 1 calls 1 rewritten 1
+1   emu E-X emu_mode 1 calls 1 rewritten 1
+1   emu_stat emu_mode 1 calls 2 rewritten 2
+1 W lost = 0 in every round                        yes
+1 X lost = 0 in every round                        yes
+1 S lost = 0 in every round                        yes
+1 E-W lost = 0 in every round                      yes
+1 E-X lost = 0 in every round                      yes
+1 calls >= 1 and rewritten >= 1 (each emu line, emu_stat) yes
+1 emu_mode = 1                                     yes
+1 N form unmatched >= 1                            yes
+ALL OK

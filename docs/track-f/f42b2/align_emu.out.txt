@@ -1,0 +1,7 @@
+section tables equal True sizes A/B []
+.pdata equal True
+stats {'string': 336, 'segments .rdata': 143, 'segments .data': 195, 'segments .pdata': 1, 'segments .retplne': 1, 'segments .tls': 1, 'segments .rsrc': 1, 'segments .reloc': 1}
+.text differing bytes 0 decode units with a difference 0 instructions {'equal': 0, 'rip-mapped': 0}
+OTHER non-text 0 []
+OTHER .text units 0 []
+ALL OK

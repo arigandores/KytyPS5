@@ -1,0 +1,6 @@
+rc=0
+watch: start 2026-10-11T12:36:36Z child 5008 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+BUILD OK: C:\kyty\f287\f42b2\build\install\kyty_emulator.exe
+rc=0 end 2026-10-11T12:36:58Z
+BUILD OK: C:\kyty\f287\f42b2\build\install\kyty_emulator.exe
+rc=0 end 2026-10-11T12:36:58Z

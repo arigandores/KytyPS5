@@ -1,0 +1,7 @@
+section tables equal True sizes A/B []
+.pdata equal True
+stats {'string': 336, 'moved-ident B': 1, 'moved-ident AB': 1, 'moved-ident A': 1, 'segments .rdata': 105, 'tail-zero-fill .data': 1, 'segments .data': 236, 'segments .pdata': 1, 'segments .retplne': 1, 'segments .tls': 1, 'segments .rsrc': 1, 'segments .reloc': 1, 'pointer .rdata->.rdata': 3298, 'pointer-data-any .rdata': 1, 'rva-pair .rdata': 892, 'rel-offset-moved-ident': 6, 'pointer .data->.rdata': 155, 'pointer .tls->.rdata': 1, 'reloc (block of moved pointer sites)': 197}
+.text differing bytes 15672 decode units with a difference 2414 instructions {'equal': 996451, 'rip-mapped': 10472, 'rip-data-any': 3339, 'rip-moved-ident': 5}
+OTHER non-text 0 []
+OTHER .text units 0 []
+ALL OK

@@ -1,0 +1,13 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/fixF20.h b/src/graphics/host_gpu/renderer/pipeline/fixF20.h
+index 26df1487..969bef84 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/fixF20.h
++++ b/src/graphics/host_gpu/renderer/pipeline/fixF20.h
+@@ -51,7 +51,7 @@ inline RewriteStats RewriteFaultOr(std::span<const uint32_t> in, bool bound, std
+ 	constexpr uint32_t kOpAccessChain       = 65u;
+ 	constexpr uint32_t kOpInBoundsAccessChain = 66u;
+ 	constexpr uint32_t kOpBitwiseOr         = 197u;
+-	constexpr uint32_t kOpAtomicOr          = 241u; // OpAtomicOr (242 is OpAtomicXor)
++	constexpr uint32_t kOpAtomicOr          = 242u; // MUTANT m4: OpAtomicXor
+ 	constexpr uint32_t kOpSwitch            = 251u;
+ 	constexpr size_t   kHeaderWords         = 5;
+ 	// OpName <id> "fault_buffer": 12 characters + NUL, padded to 4 words.

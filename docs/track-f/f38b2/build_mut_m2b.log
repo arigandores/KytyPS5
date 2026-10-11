@@ -1,0 +1,7 @@
+watch: start 2026-10-11T00:57:18Z child 48580 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[0/2] Re-checking globbed directories...
+[1/10] Generate kytyGitVersion.h
+[2/4] Building CXX object CMakeFiles\f25_read_fail_stand.dir\src\kernel\fileSystem.cpp.obj
+[3/4] Linking CXX executable f25_read_fail_stand.exe
+BUILD OK: C:\kyty\f287\f38b2\build\f25_read_fail_stand.exe
+rc=0 end 2026-10-11T00:57:28Z

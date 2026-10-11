@@ -1,0 +1,15 @@
+diff --git a/src/kernel/fileSystem.cpp b/src/kernel/fileSystem.cpp
+index c33f1030..00523684 100644
+--- a/src/kernel/fileSystem.cpp
++++ b/src/kernel/fileSystem.cpp
+@@ -1033,7 +1033,9 @@ int64_t KYTY_SYSV_ABI KernelPread(int d, void* buf, size_t nbytes, int64_t offse
+ 	if (read_failed_twice && FixF25Enabled()) {
+ 		fix_f25_eio = static_cast<uint64_t>(offset) < file->f.Size();
+ 	}
+-	file->f.Seek(pos);
++	if (!fix_f25_eio) { // MUTANT m4b
++		file->f.Seek(pos);
++	}
+ 	StreamTraceMid(stream_read, buf, bytes_read);
+ 	// See KernelRead: re-mark the region CPU-dirty once the data is complete.
+ 	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf), bytes_read);

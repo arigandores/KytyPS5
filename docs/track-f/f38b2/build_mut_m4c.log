@@ -1,0 +1,12 @@
+watch: start 2026-10-11T01:00:06Z child 12012 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[0/2] Re-checking globbed directories...
+[1/11] Generate kytyGitVersion.h
+[2/5] Building CXX object CMakeFiles\f25_read_fail_stand.dir\src\kernel\fileSystem.cpp.obj
+[3/5] Building CXX object CMakeFiles\f25_read_fail_stand.dir\src\libs\libKernel.cpp.obj
+C:\kyty\f287\f38b2\wt\src\libs\libKernel.cpp(2146,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 2146 | }
+      | ^
+1 warning generated.
+[4/5] Linking CXX executable f25_read_fail_stand.exe
+BUILD OK: C:\kyty\f287\f38b2\build\f25_read_fail_stand.exe
+rc=0 end 2026-10-11T01:00:16Z

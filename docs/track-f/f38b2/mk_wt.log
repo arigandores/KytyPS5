@@ -1,0 +1,27 @@
+Preparing worktree (detached HEAD 531d6488)
+HEAD is now at 531d6488 WIP track F link F38a (HPP-763): F25 stand edition 2 - arms E (read at or past the end of the file, remaining = 0) and T (call 2 shortens the file to the read position through a second handle and fails; file restored and checked by sha256), emulator log to <out.tsv>.log, fix column; usage <seed> <nA> <nK> <nZ> <nE> <nT> <out.tsv> (ROADMAP s122 item 691(d)(1)); not built yet
+--- worktree HEAD
+531d64885e8bf426276d2bae6704cea269e53ff4 WIP track F link F38a (HPP-763): F25 stand edition 2 - arms E (read at or past 
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+531d64885e8bf426276d2bae6704cea269e53ff4 d7a30e55de74b676bf9fc7c117be52bb600ddf14 WIP track F link F38a (HPP-763): F25 stand edition 2 - arms E (read at or past
+d7a30e55de74b676bf9fc7c117be52bb600ddf14 6fcb620b93083ba77b3dcdf38c5b3bd803cbb1f2 WIP track F link F38a (HPP-763): KYTY_FIX_F25 (default 0) - at 1 a double read
+6fcb620b93083ba77b3dcdf38c5b3bd803cbb1f2 730ed40a398b98f4f4f51a13f56d8a647778eae1 track F link F37a (HPP-761): section 0 before data - F25 mechanism on FS11 ee9
+730ed40a398b98f4f4f51a13f56d8a647778eae1 9aaea58c7c7575dda0f7a403ca5d0ec1dd28b9e6 track F link FS12a (HPP-750): KYTY_FIX_F21 default 0 -> 1 (ROADMAP s122 item 6
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 458 with CR 0
+WT OK

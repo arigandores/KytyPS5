@@ -1,0 +1,22 @@
+diff --git a/src/kernel/fileSystem.cpp b/src/kernel/fileSystem.cpp
+index c33f1030..bf28b91b 100644
+--- a/src/kernel/fileSystem.cpp
++++ b/src/kernel/fileSystem.cpp
+@@ -889,7 +889,7 @@ int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
+ 
+ 	if (fix_f25_eio) {
+ 		FixF25Report(d, nbytes, pos);
+-		return KERNEL_ERROR_EIO;
++		return -1; // MUTANT m5a
+ 	}
+ 
+ 	LOGF("\tRead %u bytes from: %s\n", bytes_read, Common::PathToString(file->real_name).c_str());
+@@ -1051,7 +1051,7 @@ int64_t KYTY_SYSV_ABI KernelPread(int d, void* buf, size_t nbytes, int64_t offse
+ 
+ 	if (fix_f25_eio) {
+ 		FixF25Report(d, nbytes, static_cast<uint64_t>(offset));
+-		return KERNEL_ERROR_EIO;
++		return -1; // MUTANT m5a
+ 	}
+ 
+ 	LOGF("\tRead %u bytes (pos = %" PRId64 ") from: %s\n", bytes_read, offset,

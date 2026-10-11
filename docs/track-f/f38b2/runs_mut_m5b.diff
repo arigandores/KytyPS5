@@ -1,0 +1,13 @@
+diff --git a/src/libs/libKernel.cpp b/src/libs/libKernel.cpp
+index 34de5c5b..713cfae2 100644
+--- a/src/libs/libKernel.cpp
++++ b/src/libs/libKernel.cpp
+@@ -2993,7 +2993,7 @@ int KYTY_SYSV_ABI KernelAioSubmitReadCommands(KernelAioRwRequest* req, int32_t s
+ 		    LibKernel::FileSystem::KernelPread(req[i].fd, req[i].buf, req[i].nbyte, req[i].offset);
+ 
+ 		req[i].result->return_value = result;
+-		req[i].result->state = (result < 0 ? KERNEL_AIO_STATE_ABORTED : KERNEL_AIO_STATE_COMPLETED);
++		req[i].result->state = KERNEL_AIO_STATE_COMPLETED; // MUTANT m5b
+ 	}
+ 
+ 	g_kernel_aio_state[submit_id].store(KERNEL_AIO_STATE_COMPLETED, std::memory_order_release);

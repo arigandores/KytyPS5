@@ -1,0 +1,44 @@
+fix=0 rows 2520 fix column values [0]
+entry	arm	n	letter_ok	offset=size
+sceKernelRead	A	200	200	-
+sceKernelRead	K	50	50	-
+sceKernelRead	Z	50	50	-
+sceKernelRead	E	50	50	25
+sceKernelRead	T	20	20	-
+sceKernelRead	G	50	50	25
+read	A	200	200	-
+read	K	50	50	-
+read	Z	50	50	-
+read	E	50	50	25
+read	T	20	20	-
+read	G	50	50	25
+_read	A	200	200	-
+_read	K	50	50	-
+_read	Z	50	50	-
+_read	E	50	50	25
+_read	T	20	20	-
+_read	G	50	50	25
+sceKernelPread	A	200	200	-
+sceKernelPread	K	50	50	-
+sceKernelPread	Z	50	50	-
+sceKernelPread	E	50	50	25
+sceKernelPread	T	20	20	-
+sceKernelPread	G	50	50	25
+pread	A	200	200	-
+pread	K	50	50	-
+pread	Z	50	50	-
+pread	E	50	50	25
+pread	T	20	20	-
+pread	G	50	50	25
+AIO	A	200	200	-
+AIO	K	50	50	-
+AIO	Z	50	50	-
+AIO	E	50	50	25
+AIO	T	20	20	-
+AIO	G	50	50	25
+letter failures: none
+failing members by arm: none
+guard bad (all arms, reference outside G) 0
+log: mode=1 0 mode=0 1 read_failed_twice 0 (A rows 1200) True
+process: FINAL 1 True, DONE ['2520'] (rows 2520)
+MEMBERS LETTER YES

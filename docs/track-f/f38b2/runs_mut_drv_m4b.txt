@@ -1,0 +1,19 @@
+worktree HEAD 2689c9959115673cb6e5f3dbca0df4e5a76e17d7
+worktree status lines 1
+worktree src/ diff (files, working tree) vs 531d6488: [src/kernel/fileSystem.cpp]; vs 730ed40a: [src/kernel/fileSystem.cpp]
+stand source blob worktree 431cacc62bfb9e8cb5c96b65f228a907bfa0c6e5 49aba6a4 431cacc62bfb9e8cb5c96b65f228a907bfa0c6e5
+stand exe C:/kyty/f287/f38b2/build/f25_read_fail_stand.exe sha256 727a9a3127b55f9876a69e25af9ff41539b455dc40837898d6f25b796b141350
+args seed 38402 KYTY_FIX_F25=1 nA 200 nK 50 nZ 50 nE 50 nT 20 nG 50
+stand rc 0
+FIXF25 env=1 on=1
+NID 0 Cg4srZ6TKbU sceKernelRead vaddr=0x00007ff698aac170 name=FileSystem::KernelRead
+NID 1 DRuBt2pvICk read vaddr=0x00007ff698b27d50 name=LibKernel::read
+NID 2 AqBioC2vF3I _read vaddr=0x00007ff698b27d50 name=LibKernel::read
+NID 3 +r3rMFwItV4 sceKernelPread vaddr=0x00007ff698aae840 name=FileSystem::KernelPread
+NID 4 ezv-RSBNKqI pread vaddr=0x00007ff698b18be0 name=Posix::pread
+NID 5 HgX7+AORI58 sceKernelAioSubmitReadCommands vaddr=0x00007ff698b28df0 name=KernelAioSubmitReadCommands
+HOOK module=KERNEL32.dll slot=00007FF69967F638 real=00007FFB92397470
+HOOK slots=1
+SHA256 ec79fd279e528f0595f32b9c59d0a6058b5f25b3aedc8ea887f107b0b1f637e2 size 3150049
+FINAL file sha256 equal 1
+DONE trials=2520

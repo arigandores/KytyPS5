@@ -1,0 +1,2 @@
+sizes 22517760 22517760 differing bytes 19949
+{'hdr': 2, '.text': 805, '.rdata': 17242, '.data': 1900}

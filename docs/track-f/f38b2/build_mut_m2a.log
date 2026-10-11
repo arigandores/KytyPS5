@@ -1,0 +1,22 @@
+watch: start 2026-10-11T00:56:51Z child 24108 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[0/2] Re-checking globbed directories...
+[1/10] Generate kytyGitVersion.h
+[2/10] Building CXX object common\CMakeFiles\common.dir\assert.cpp.obj
+[3/10] Linking CXX static library common\common.lib
+[4/10] Building CXX object CMakeFiles\f25_read_fail_stand.dir\src\emulator.cpp.obj
+[5/10] Building CXX object CMakeFiles\f25_read_fail_stand.dir\src\kernel\fileSystem.cpp.obj
+[6/10] Building CXX object CMakeFiles\f25_read_fail_stand.dir\src\graphics\host_gpu\renderer\pipeline\shaderTranslationCache.cpp.obj
+[7/10] Building CXX object CMakeFiles\f25_read_fail_stand.dir\src\graphics\presentation\window\window.cpp.obj
+[8/10] Building CXX object CMakeFiles\f25_read_fail_stand.dir\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp.obj
+In file included from C:\kyty\f287\f38b2\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp:24:
+In file included from C:\kyty\f287\f38b2\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\f38b2\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\f38b2\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp(408,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  408 | }
+      | ^
+2 warnings generated.
+[9/10] Linking CXX executable f25_read_fail_stand.exe
+BUILD OK: C:\kyty\f287\f38b2\build\f25_read_fail_stand.exe
+rc=0 end 2026-10-11T00:57:08Z

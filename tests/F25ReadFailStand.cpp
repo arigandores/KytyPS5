@@ -12,6 +12,10 @@
 // lines FixF25: of KYTY_FIX_F25 are read there), every row carries the KYTY_FIX_F25 value seen by this process. The knob
 // is set by the environment before FileSystem::Initialize; =0 and =1 are separate processes of one build.
 //
+// Edition 3 (F38a2 HPP-777, ROADMAP s122 item 693(b)(1)-(2)): arm G added; in the arms E and G the trials with an even
+// index read from offset = file size exactly, the odd ones from size + 1 ... size + 4096 (remaining = 0 in all). The
+// driver is docs/track-f/f38a2/run_stand_f38a2.py.
+//
 // Arms (ROADMAP s122 items 688(e)(0)(iii), 691(d)(1)):
 //   A - injected failure of the direct read (call 1, ERROR_NOACCESS) and of the retry read (call 2, ERROR_IO_DEVICE);
 //   K - control: injected failure of the direct read only (call 1, ERROR_NOACCESS), the retry reads the file (F22a form);
@@ -20,15 +24,20 @@
 //   T - injected failure of call 1; on call 2 the hook shortens the file to the read position through a second host
 //       handle of the stand and fails the call (a real end of file after a shortening by another process). After the
 //       trial the file is restored through the second handle and checked by sha256 against the original.
+//   G - a read from a position at or past the end of the file (remaining = 0), no injected failure; call 1 is the real
+//       ReadFile (0 bytes at the end of the file), right after it the hook grows the file to offset + 8192 through the
+//       second handle (another writer appends while the guest reads the end) and returns the real result. After the
+//       trial the file is cut back to its size through the second handle and checked by sha256 against the original.
+//       Row fields of G: trunc_done = the growth succeeded, size_at_c2 = the size after the growth.
 // Entries: 0 sceKernelRead (Cg4srZ6TKbU), 1 read (DRuBt2pvICk), 2 _read (AqBioC2vF3I), 3 sceKernelPread (+r3rMFwItV4),
 //          4 pread (ezv-RSBNKqI), 5 sceKernelAioSubmitReadCommands (HgX7+AORI58) - all resolved by NID from the libkernel
 //          symbol database of this build and called through the SysV ABI, as the guest calls them.
 //
-// Usage: f25_read_fail_stand <seed> <nA> <nK> <nZ> <nE> <nT> <out.tsv>
+// Usage: f25_read_fail_stand <seed> <nA> <nK> <nZ> <nE> <nT> <nG> <out.tsv>
 // Output: <out.tsv> - one row per trial (header first); <out.tsv>.log - the emulator log; stdout - "FIXF25 env=<v> on=<0|1>",
 // the NID resolution, "HOOK slots=<n>", "SHA256 <hex>" of the stand file and "DONE trials=<n>". Exit 0; 2 - bad
 // arguments; 3 - hook not installed; 4 - NID not resolved; 5 - stand file setup failed; 6 - the file was not restored
-// after a T trial (the row is written first).
+// after a T or G trial (the row is written first).
 #define SDL_MAIN_HANDLED
 #include "SDL.h"
 #include "common/abi.h"
@@ -83,8 +92,9 @@ constexpr int ARM_K = 1;
 constexpr int ARM_Z = 2;
 constexpr int ARM_E = 3;
 constexpr int ARM_T = 4;
-constexpr int ARM_COUNT = 5;
-constexpr const char* ARM_NAMES[ARM_COUNT] = {"A", "K", "Z", "E", "T"};
+constexpr int ARM_G = 5;
+constexpr int ARM_COUNT = 6;
+constexpr const char* ARM_NAMES[ARM_COUNT] = {"A", "K", "Z", "E", "T", "G"};
 
 constexpr int ENTRY_COUNT = 6;
 constexpr const char* ENTRY_NAMES[ENTRY_COUNT] = {"sceKernelRead", "read", "_read", "sceKernelPread", "pread",
@@ -132,10 +142,10 @@ struct HookState {
 	uint32_t c1_size    = 0;
 	uint32_t c2_size    = 0;
 	int      injected   = 0;
-	HANDLE   trunc_h    = INVALID_HANDLE_VALUE; // T: the second handle of the stand file
-	uint64_t trunc_to   = 0;                    // T: the size the file is shortened to on call 2
-	int      trunc_done = 0;                    // T: SetEndOfFile succeeded on call 2
-	int64_t  size_at_c2 = -1;                   // T: the file size seen through the second handle after the shortening
+	HANDLE   trunc_h    = INVALID_HANDLE_VALUE; // T, G: the second handle of the stand file
+	uint64_t trunc_to   = 0;                    // T: the size the file is shortened to on call 2; G: grown to after call 1
+	int      trunc_done = 0;                    // T: SetEndOfFile succeeded on call 2; G: after call 1
+	int64_t  size_at_c2 = -1;                   // T: the file size seen through the second handle after the shortening; G: growth
 };
 thread_local HookState* t_hook = nullptr;
 
@@ -151,6 +161,20 @@ BOOL WINAPI HookReadFile(HANDLE handle, LPVOID buffer, DWORD size, LPDWORD read,
 	} else if (k == 2) {
 		st->c2_buf  = reinterpret_cast<uint64_t>(buffer);
 		st->c2_size = size;
+	}
+	if (st->mode == ARM_G && k == 1) {
+		// The real read at the end of the file, then another writer grows the file through the second handle.
+		const BOOL r = g_real_read_file(handle, buffer, size, read, overlapped);
+		LARGE_INTEGER to {};
+		to.QuadPart = static_cast<LONGLONG>(st->trunc_to);
+		if (SetFilePointerEx(st->trunc_h, to, nullptr, FILE_BEGIN) != FALSE && SetEndOfFile(st->trunc_h) != FALSE) {
+			st->trunc_done = 1;
+		}
+		LARGE_INTEGER now {};
+		if (GetFileSizeEx(st->trunc_h, &now) != FALSE) {
+			st->size_at_c2 = now.QuadPart;
+		}
+		return r;
 	}
 	if (st->mode == ARM_T && k == 2) {
 		// Shorten the file to the read position through the second handle, then fail the call.
@@ -264,7 +288,7 @@ bool ReadWholeFile(HANDLE h, std::vector<uint8_t>* out) {
 	return true;
 }
 
-// T: write back the file tail from `from` and the original size through the second handle, then compare by sha256.
+// T, G: write back the file tail from `from` and the original size through the second handle, then compare by sha256.
 bool RestoreFile(HANDLE h, const std::vector<uint8_t>& original, const std::string& original_sha, uint64_t from) {
 	LARGE_INTEGER at {};
 	at.QuadPart = static_cast<LONGLONG>(from);
@@ -323,9 +347,9 @@ struct Trial {
 	int      data_ok    = 0; // the first ret bytes equal the file
 	int      canary_ok  = 0; // guard bytes before and after the buffer intact
 	int      untouched  = 0; // the whole guest buffer still holds the fill byte
-	int      trunc_done = 0; // T: the file was shortened on call 2
-	int64_t  size_at_c2 = -1; // T: the file size after the shortening
-	int      restore_ok = 0; // T: the file was restored and its sha256 equals the original (other arms: 1, not touched)
+	int      trunc_done = 0; // T: the file was shortened on call 2; G: the file was grown after call 1
+	int64_t  size_at_c2 = -1; // T: the file size after the shortening; G: after the growth
+	int      restore_ok = 0; // T, G: the file was restored and its sha256 equals the original (other arms: 1, not touched)
 };
 
 bool SeekTo(int fd, uint64_t pos) {
@@ -335,11 +359,12 @@ bool SeekTo(int fd, uint64_t pos) {
 void RunTrial(const Entries& e, int fd, StandFile& sf, Trial& t, std::mt19937_64& rng) {
 	// Position, size: a mix of small, medium and large reads; ~25% reach past the end of the file. remaining > 0 in
 	// the arms A, K, Z, T (a read at the end of the file does not take the retry - F22a 2.1 item 1); the arm E reads
-	// from a position at or past the end of the file (remaining = 0).
+	// from a position at or past the end of the file (remaining = 0). Edition 3: the arms E and G read from offset = file
+	// size exactly when the trial index is even, from size + 1 ... size + 4096 when it is odd.
 	std::uniform_int_distribution<uint64_t> pos_dist(0, FILE_SIZE - 1);
 	uint64_t                                offset = pos_dist(rng);
-	if (t.arm == ARM_E) {
-		offset = FILE_SIZE + rng() % 4097;
+	if (t.arm == ARM_E || t.arm == ARM_G) {
+		offset = (t.index % 2 == 0) ? FILE_SIZE : FILE_SIZE + 1 + rng() % 4096;
 	}
 	const uint64_t remaining = offset < FILE_SIZE ? FILE_SIZE - offset : 0;
 	const auto     kind      = rng() % 10;
@@ -351,7 +376,7 @@ void RunTrial(const Entries& e, int fd, StandFile& sf, Trial& t, std::mt19937_64
 	} else {
 		n = 256u * 1024u + rng() % (2u * 1024u * 1024u);
 	}
-	if (t.arm != ARM_E && rng() % 4 == 0) {
+	if (t.arm != ARM_E && t.arm != ARM_G && rng() % 4 == 0) {
 		n = remaining + 1 + rng() % 4096; // past the end of the file
 	}
 	t.offset    = offset;
@@ -376,7 +401,7 @@ void RunTrial(const Entries& e, int fd, StandFile& sf, Trial& t, std::mt19937_64
 	HookState st {};
 	st.mode     = t.arm;
 	st.trunc_h  = sf.h2;
-	st.trunc_to = offset;
+	st.trunc_to = (t.arm == ARM_G) ? offset + 8192 : offset;
 	*Libs::Posix::GetErrorAddr() = ERRNO_SENTRY;
 	t_hook                       = &st;
 	switch (t.entry) {
@@ -427,7 +452,8 @@ void RunTrial(const Entries& e, int fd, StandFile& sf, Trial& t, std::mt19937_64
 	t.untouched = std::all_of(buf, buf + n, [](uint8_t b) { return b == CANARY_BYTE; }) ? 1 : 0;
 
 	t.restore_ok = 1;
-	if (t.arm == ARM_T) {
+	if (t.arm == ARM_T || t.arm == ARM_G) {
+		// G: from = FILE_SIZE (offset >= FILE_SIZE), nothing is written, SetEndOfFile cuts the growth.
 		t.restore_ok = RestoreFile(sf.h2, sf.original, sf.sha, std::min<uint64_t>(offset, FILE_SIZE)) ? 1 : 0;
 	}
 }
@@ -435,8 +461,8 @@ void RunTrial(const Entries& e, int fd, StandFile& sf, Trial& t, std::mt19937_64
 } // namespace
 
 int main(int argc, char** argv) {
-	if (argc != 8) {
-		std::fprintf(stderr, "usage: f25_read_fail_stand <seed> <nA> <nK> <nZ> <nE> <nT> <out.tsv>\n");
+	if (argc != 9) {
+		std::fprintf(stderr, "usage: f25_read_fail_stand <seed> <nA> <nK> <nZ> <nE> <nT> <nG> <out.tsv>\n");
 		return 2;
 	}
 	const uint64_t seed = std::strtoull(argv[1], nullptr, 10);
@@ -447,7 +473,7 @@ int main(int argc, char** argv) {
 			return 2;
 		}
 	}
-	const std::string out_path = argv[7];
+	const std::string out_path = argv[8];
 
 	const char* fix_env = std::getenv("KYTY_FIX_F25");
 	const int   fix_on  = Common::EnvValueOn(fix_env) ? 1 : 0;
@@ -560,7 +586,7 @@ int main(int argc, char** argv) {
 			total++;
 			if (t.restore_ok == 0) {
 				std::fclose(out);
-				std::printf("RESTORE FAILED entry=%d index=%d\n", t.entry, t.index);
+				std::printf("RESTORE FAILED entry=%d arm=%s index=%d\n", t.entry, ARM_NAMES[t.arm], t.index);
 				std::fflush(stdout);
 				std::_Exit(6);
 			}

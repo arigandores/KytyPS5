@@ -1,0 +1,71 @@
+watch: start 2026-10-11T12:08:33Z child 29400 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+big_hand_pirate_island FS8+ 2
+big_hand_pirate_island pre-FS8 3
+pot_treasure_cave FS8+ 37
+timestop_casino FS8+ 2
+timestop_casino pre-FS8 1
+underwater_aerial_garden FS8+ 79
+b32_s28 done
+b32_s29 done
+b13_v done
+f25_c1 done
+f25_z1 done
+f25_pb done
+f25_s01 done
+f25_s03 done
+f25_s05 done
+fs9_v done
+f25_s07 done
+f25_s09 done
+f25_s11 done
+f25_s13 done
+f25_s15 done
+f25_s17 done
+f25_s19 done
+f25_s21 done
+f25_s23 done
+f25_s25 done
+f25_s27 done
+f25_s29 done
+f25_s30 done
+f25_s31 done
+f25_s32 done
+f25_s33 done
+f25_s34 done
+f25_k01 done
+f25_k03 done
+f25_k05 done
+b36_f0 done
+b36_f0_r1 done
+b36_f1 done
+b36_v done
+b36_k01 done
+b36_k03 done
+b36_k05 done
+b36_k07 done
+b36_k09 done
+b36_k11 done
+b36_k12 done
+b36_k13 done
+fs10_f1 done
+fs10_v done
+b12_v done
+f30_s1_v done
+f30_s8_v done
+f30_s9_v done
+fs11_v done
+fs11_z done
+f21_v done
+fs12_v done
+fs12_z done
+f25_v done
+fs13_v done
+fs13_z done
+f24_n1 done
+joined 121 rows -> batch_main.tsv
+c142_03 done
+u_12 done
+f30_s4_v done
+joined 3 rows -> batch_ts.tsv
+RUN_F47A2_DONE
+rc=0 end 2026-10-11T12:13:47Z

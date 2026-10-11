@@ -1,0 +1,2 @@
+watch: start 2026-10-11T11:33:34Z child 10452 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+KILLED: procload 2026-10-11T11:33:43Z pids [8992]; tree [4868, 10312, 10452, 40416], alive after []

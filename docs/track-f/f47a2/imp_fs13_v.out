@@ -1,0 +1,14 @@
+watch: start 2026-10-11T11:47:14Z child 39404 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+log C:/kyty/f287/fs13c/log_fs13_v.txt
+n_start 346 window 600 950
+draw_lines_with_img_imp 10489 img_imp_sum 3955 img_imp_kb_sum 8422796 window_img_imp 405 window_img_imp_kb 556824
+x_lines_with_stg_img 10489 stg_img_pool_b_sum 990191616 stg_img_in_b_sum 18432 window_pool_b 0 window_in_b 256
+line Vulkan pipeline cache: loaded 127836218 bytes from _PipelineCache\PPSA21564.bin
+line HostImport: enabled, backing 13824 MB in 27 chunks of 512 MB, import in the background
+line HostImport: 65304 MB of RAM, backing 13824 MB: preload on
+line HostImport: chunk 0 imported (512 MB at backing 0x0, memory type 3) in 340824 us (pages touched in 1075 us)
+line HostImport: chunk 1 imported (512 MB at backing 0x20000000, memory type 3) in 331815 us (pages touched in 1165 us)
+line HostImport: chunk 2 imported (512 MB at backing 0x40000000, memory type 3) in 317805 us (pages touched in 1198 us)
+line HostImport: chunk 3 imported (512 MB at backing 0x60000000, memory type 3) in 308235 us (pages touched in 1186 us)
+line HostImport: chunk 4 imported (512 MB at backing 0x80000000, memory type 3) in 297683 us (pages touched in 1230 us)
+rc=0 end 2026-10-11T11:47:16Z

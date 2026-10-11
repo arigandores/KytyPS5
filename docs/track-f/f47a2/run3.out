@@ -1,0 +1,72 @@
+watch: start 2026-10-11T11:47:29Z child 52672 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+big_hand_pirate_island FS8+ 2
+big_hand_pirate_island pre-FS8 3
+pot_treasure_cave FS8+ 37
+timestop_casino FS8+ 2
+timestop_casino pre-FS8 1
+underwater_aerial_garden FS8+ 79
+c142_02 done
+f12_bh done
+u_11 done
+fs8_i done
+f20_v25 done
+f20_v26 done
+f20_v27 done
+f20_v28 done
+f20_v29 done
+f20_v30 done
+f20_v31 done
+f20_v32 done
+f20_v33 done
+f20_v34 done
+f20_v35 done
+u_06 done
+u_11 done
+s17c_c2 done
+s17c_n0 done
+s17c_e3 done
+s15_i done
+b32_z0 done
+b32_pp done
+b32_pc done
+b32_pd done
+b32_pd2 done
+s18_e1 done
+s18_v done
+b32_z0b done
+b32_ppb done
+b32_pcb done
+b32_pa done
+b32_s01 done
+b32_s02 done
+b32_s03 done
+b32_s04 done
+b32_s05 done
+b32_s06 done
+b32_s07 done
+b32_s08 done
+b32_s09 done
+b32_s10 done
+b32_z0c1 done
+b32_z0c2 done
+b32_z0c3 done
+b32_z0c4 done
+b32_z0c5 done
+b32_s11 done
+b32_s12 done
+b32_s13 done
+b32_s14 done
+b32_s15 done
+b32_s16 done
+b32_s17 done
+b32_s18 done
+b32_s19 done
+b32_s20 done
+b32_s21 done
+b32_s22 done
+b32_s23 done
+b32_s24 done
+b32_s25 done
+b32_s26 done
+b32_s27 done
+KILLED: procload 2026-10-11T11:54:34Z pids [22568]; tree [4912, 15268, 30096, 38872, 51516, 52672], alive after []

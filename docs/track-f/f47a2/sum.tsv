@@ -1,0 +1,133 @@
+tag	level	era	sha8	new	d	black_runs	white_runs	blocks	s555	dn1	dn555	len4
+c142_02	big_hand_pirate_island	pre-FS8	9235a7ac		11	1101-1105 1116-1120 1130-1132	1108-1112	yes	yes	791	791	no
+f12_bh	big_hand_pirate_island	pre-FS8	b714f5c4		3	1129-1133 1144-1148 1158-1160	1136-1140	yes	yes	801	801	no
+u_11	big_hand_pirate_island	pre-FS8	adb0c82f		22	1106-1110 1121-1125 1135-1137	1113-1117	yes	yes	782	782	no
+fs8_i	underwater_aerial_garden	FS8+	2c9b69b9		0	1103-1107 1118-1122 1281-1284	1110-1114	yes	yes	752	752	yes
+f20_v25	underwater_aerial_garden	FS8+	2c9b69b9		4	1125-1129 1140-1144 1303-1306	1132-1136	yes	yes	763	763	yes
+f20_v26	underwater_aerial_garden	FS8+	2c9b69b9		12	1077-1081 1092-1096 1255-1258	1084-1088	yes	yes	752	752	yes
+f20_v27	underwater_aerial_garden	FS8+	2c9b69b9		3	1067-1071 1082-1086 1245-1248	1074-1078	yes	yes	755	755	yes
+f20_v28	underwater_aerial_garden	FS8+	2c9b69b9		9	1080-1084 1095-1099 1258-1261	1087-1091	yes	yes	748	748	yes
+f20_v29	underwater_aerial_garden	FS8+	2c9b69b9		8	1080-1084 1095-1099 1258-1261	1087-1091	yes	yes	751	751	yes
+f20_v30	underwater_aerial_garden	FS8+	2c9b69b9		5	1064-1068 1079-1083 1242-1245	1071-1075	yes	yes	748	748	yes
+f20_v31	underwater_aerial_garden	FS8+	2c9b69b9		9	1080-1084 1095-1099 1258-1261	1087-1091	yes	yes	755	755	yes
+f20_v32	underwater_aerial_garden	FS8+	2c9b69b9		21	1085-1089 1100-1104 1263-1266	1092-1096	yes	yes	756	756	yes
+f20_v33	underwater_aerial_garden	FS8+	2c9b69b9		3	1075-1079 1090-1094 1253-1256	1082-1086	yes	yes	759	759	yes
+f20_v34	underwater_aerial_garden	FS8+	2c9b69b9		7	1070-1074 1085-1089 1248-1251	1077-1081	yes	yes	756	756	yes
+f20_v35	underwater_aerial_garden	FS8+	2c9b69b9		10	1088-1092 1103-1107 1266-1269	1095-1099	yes	yes	750	750	yes
+u_06	underwater_aerial_garden	FS8+	2c9b69b9		23	1003-1007 1018-1022 1181-1184	1010-1014	yes	yes	736	736	yes
+u_11	big_hand_pirate_island	FS8+	2c9b69b9		22	1088-1092 1103-1107 1118-1119	1095-1099	yes	yes	784	784	no
+s17c_c2	underwater_aerial_garden	FS8+	ed2686da		9	1058-1062 1073-1077 1236-1239	1065-1069	yes	yes	744	744	yes
+s17c_n0	underwater_aerial_garden	FS8+	ed2686da		3	931-935 946-950 1109-1112	938-942	yes	yes	742	742	yes
+s17c_e3	underwater_aerial_garden	FS8+	ed2686da		11	930-934 945-949 1108-1111	937-941	yes	yes	735	735	yes
+s15_i	underwater_aerial_garden	FS8+	2c9b69b9		10	930-934 945-949 1108-1111	937-941	yes	yes	735	735	yes
+b32_z0	underwater_aerial_garden	FS8+	b9e0ee00		10	937-941 952-956 1115-1118	944-948	yes	yes	735	735	yes
+b32_pp	underwater_aerial_garden	FS8+	b9e0ee00		9	937-941 952-956 1115-1118	944-948	yes	yes	736	736	yes
+b32_pc	underwater_aerial_garden	FS8+	b9e0ee00		10	937-941 952-956 1115-1118	944-948	yes	yes	737	737	yes
+b32_pd	underwater_aerial_garden	FS8+	b9e0ee00		9	939-943 954-958 1117-1120	946-950	yes	yes	737	737	yes
+b32_pd2	underwater_aerial_garden	FS8+	b9e0ee00		9	948-952 963-967 1126-1129	955-959	yes	yes	736	736	yes
+s18_e1	underwater_aerial_garden	FS8+	b3cee576		10	1101-1105 1116-1120 1279-1282	1108-1112	yes	yes	752	752	yes
+s18_v	underwater_aerial_garden	FS8+	b3cee576		10	1096-1100 1111-1115 1274-1277	1103-1107	yes	yes	755	755	yes
+b32_z0b	underwater_aerial_garden	FS8+	2d0c8815		11	945-949 960-964 1123-1126	952-956	yes	yes	735	735	yes
+b32_ppb	underwater_aerial_garden	FS8+	2d0c8815		12	949-953 964-968 1127-1130	956-960	yes	yes	736	736	yes
+b32_pcb	underwater_aerial_garden	FS8+	2d0c8815		13	945-949 960-964 1123-1126	952-956	yes	yes	737	737	yes
+b32_pa	underwater_aerial_garden	FS8+	2d0c8815		10	937-941 952-956 1115-1118	944-948	yes	yes	735	735	yes
+b32_s01	underwater_aerial_garden	FS8+	2d0c8815		11	937-941 952-956 1115-1118	944-948	yes	yes	735	735	yes
+b32_s02	underwater_aerial_garden	FS8+	2d0c8815		9	935-939 950-954 1113-1116	942-946	yes	yes	736	736	yes
+b32_s03	underwater_aerial_garden	FS8+	2d0c8815		11	942-946 957-961 1120-1123	949-953	yes	yes	735	735	yes
+b32_s04	underwater_aerial_garden	FS8+	2d0c8815		26	951-955 966-970 1129-1132	958-962	yes	yes	735	735	yes
+b32_s05	underwater_aerial_garden	FS8+	2d0c8815		10	940-944 955-959 1118-1121	947-951	yes	yes	735	735	yes
+b32_s06	underwater_aerial_garden	FS8+	2d0c8815		11	941-945 956-960 1119-1122	948-952	yes	yes	736	736	yes
+b32_s07	underwater_aerial_garden	FS8+	2d0c8815		10	938-942 953-957 1116-1119	945-949	yes	yes	736	736	yes
+b32_s08	underwater_aerial_garden	FS8+	2d0c8815		9	936-940 951-955 1114-1117	943-947	yes	yes	736	736	yes
+b32_s09	underwater_aerial_garden	FS8+	2d0c8815		10	939-943 954-958 1117-1120	946-950	yes	yes	735	735	yes
+b32_s10	underwater_aerial_garden	FS8+	2d0c8815		10	939-943 954-958 1117-1120	946-950	yes	yes	736	736	yes
+b32_z0c1	underwater_aerial_garden	FS8+	2d0c8815		11	941-945 956-960 1119-1122	948-952	yes	yes	736	736	yes
+b32_z0c2	underwater_aerial_garden	FS8+	2d0c8815		10	942-946 957-961 1120-1123	949-953	yes	yes	737	737	yes
+b32_z0c3	underwater_aerial_garden	FS8+	2d0c8815		10	935-939 950-954 1113-1116	942-946	yes	yes	736	736	yes
+b32_z0c4	underwater_aerial_garden	FS8+	2d0c8815		11	937-941 952-956 1115-1118	944-948	yes	yes	736	736	yes
+b32_z0c5	underwater_aerial_garden	FS8+	2d0c8815		11	939-943 954-958 1117-1120	946-950	yes	yes	736	736	yes
+b32_s11	underwater_aerial_garden	FS8+	2d0c8815		11	940-944 955-959 1118-1121	947-951	yes	yes	736	736	yes
+b32_s12	underwater_aerial_garden	FS8+	2d0c8815		10	940-944 955-959 1118-1121	947-951	yes	yes	736	736	yes
+b32_s13	underwater_aerial_garden	FS8+	2d0c8815		11	942-946 957-961 1120-1123	949-953	yes	yes	736	736	yes
+b32_s14	underwater_aerial_garden	FS8+	2d0c8815		10	941-945 956-960 1119-1122	948-952	yes	yes	736	736	yes
+b32_s15	underwater_aerial_garden	FS8+	2d0c8815		11	939-943 954-958 1117-1120	946-950	yes	yes	736	736	yes
+b32_s16	underwater_aerial_garden	FS8+	2d0c8815		11	942-946 957-961 1120-1123	949-953	yes	yes	735	735	yes
+b32_s17	underwater_aerial_garden	FS8+	2d0c8815		10	938-942 953-957 1116-1119	945-949	yes	yes	736	736	yes
+b32_s18	underwater_aerial_garden	FS8+	2d0c8815		10	938-942 953-957 1116-1119	945-949	yes	yes	736	736	yes
+b32_s19	underwater_aerial_garden	FS8+	2d0c8815		10	945-949 960-964 1123-1126	952-956	yes	yes	737	737	yes
+b32_s20	underwater_aerial_garden	FS8+	2d0c8815		10	940-944 955-959 1118-1121	947-951	yes	yes	735	735	yes
+b32_s21	underwater_aerial_garden	FS8+	2d0c8815		11	943-947 958-962 1121-1124	950-954	yes	yes	736	736	yes
+b32_s22	underwater_aerial_garden	FS8+	2d0c8815		10	941-945 956-960 1119-1122	948-952	yes	yes	736	736	yes
+b32_s23	underwater_aerial_garden	FS8+	2d0c8815		10	940-944 955-959 1118-1121	947-951	yes	yes	736	736	yes
+b32_s24	underwater_aerial_garden	FS8+	2d0c8815		9	943-947 958-962 1121-1124	950-954	yes	yes	737	737	yes
+b32_s25	underwater_aerial_garden	FS8+	2d0c8815		11	943-947 958-962 1121-1124	950-954	yes	yes	735	735	yes
+b32_s26	underwater_aerial_garden	FS8+	2d0c8815		11	937-941 952-956 1115-1118	944-948	yes	yes	735	735	yes
+b32_s27	underwater_aerial_garden	FS8+	2d0c8815		11	942-946 957-961 1120-1123	949-953	yes	yes	735	735	yes
+b32_s28	underwater_aerial_garden	FS8+	2d0c8815		11	943-947 958-962 1121-1124	950-954	yes	yes	735	735	yes
+b32_s29	underwater_aerial_garden	FS8+	2d0c8815		25	960-964 975-979 1138-1141	967-971	yes	yes	736	736	yes
+b13_v	underwater_aerial_garden	FS8+	91f155b7		10	1059-1063 1074-1078 1237-1240	1066-1070	yes	yes	746	746	yes
+f25_c1	pot_treasure_cave	FS8+	e342b839		1	828-831	-	yes	no	636	-	yes
+f25_z1	pot_treasure_cave	FS8+	e342b839		11	788-791	-	yes	no	622	-	yes
+f25_pb	pot_treasure_cave	FS8+	e342b839		10	794-797	-	yes	no	623	-	yes
+f25_s01	pot_treasure_cave	FS8+	e342b839		11	790-793	-	yes	no	622	-	yes
+f25_s03	pot_treasure_cave	FS8+	e342b839		9	791-794	-	yes	no	623	-	yes
+f25_s05	pot_treasure_cave	FS8+	e342b839		15	794-797	-	yes	no	622	-	yes
+fs9_v	underwater_aerial_garden	FS8+	3861eeea		11	975-979 990-994 1153-1156	982-986	yes	yes	735	735	yes
+f25_s07	pot_treasure_cave	FS8+	e342b839		18	799-802	-	yes	no	623	-	yes
+f25_s09	pot_treasure_cave	FS8+	e342b839		10	796-799	-	yes	no	623	-	yes
+f25_s11	pot_treasure_cave	FS8+	e342b839		10	794-797	-	yes	no	622	-	yes
+f25_s13	pot_treasure_cave	FS8+	e342b839		10	833-836	-	yes	no	632	-	yes
+f25_s15	pot_treasure_cave	FS8+	e342b839		10	815-818	-	yes	no	622	-	yes
+f25_s17	pot_treasure_cave	FS8+	e342b839		12	852-855	-	yes	no	632	-	yes
+f25_s19	pot_treasure_cave	FS8+	e342b839		11	817-820	-	yes	no	624	-	yes
+f25_s21	pot_treasure_cave	FS8+	e342b839		9	818-821	-	yes	no	623	-	yes
+f25_s23	pot_treasure_cave	FS8+	e342b839		9	814-817	-	yes	no	624	-	yes
+f25_s25	pot_treasure_cave	FS8+	e342b839		10	792-795	-	yes	no	622	-	yes
+f25_s27	pot_treasure_cave	FS8+	e342b839		9	842-845	-	yes	no	635	-	yes
+f25_s29	pot_treasure_cave	FS8+	e342b839		14	942-945	-	yes	no	636	-	yes
+f25_s30	pot_treasure_cave	FS8+	e342b839		16	874-877	-	yes	no	623	-	yes
+f25_s31	pot_treasure_cave	FS8+	e342b839		19	922-925	-	yes	no	642	-	yes
+f25_s32	pot_treasure_cave	FS8+	e342b839		13	984-987	-	yes	no	652	-	yes
+f25_s33	pot_treasure_cave	FS8+	e342b839		10	796-799	-	yes	no	623	-	yes
+f25_s34	pot_treasure_cave	FS8+	e342b839		10	799-802	-	yes	no	623	-	yes
+f25_k01	pot_treasure_cave	FS8+	e342b839		2	805-808	-	yes	no	624	-	yes
+f25_k03	pot_treasure_cave	FS8+	e342b839		3	811-814	-	yes	no	623	-	yes
+f25_k05	pot_treasure_cave	FS8+	e342b839		4	789-792	-	yes	no	623	-	yes
+b36_f0	pot_treasure_cave	FS8+	9745eb78		7	665-668	-	yes	no	622	-	yes
+b36_f0_r1	pot_treasure_cave	FS8+	9745eb78		10	956-959	-	yes	no	648	-	yes
+b36_f1	pot_treasure_cave	FS8+	9745eb78		11	815-818	-	yes	no	623	-	yes
+b36_v	underwater_aerial_garden	FS8+	9745eb78		11	1007-1011 1022-1026 1185-1188	1014-1018	yes	yes	739	739	yes
+b36_k01	pot_treasure_cave	FS8+	9745eb78		13	796-799	-	yes	no	623	-	yes
+b36_k03	pot_treasure_cave	FS8+	9745eb78		3	790-793	-	yes	no	623	-	yes
+b36_k05	pot_treasure_cave	FS8+	9745eb78		3	787-790	-	yes	no	623	-	yes
+b36_k07	pot_treasure_cave	FS8+	9745eb78		6	792-795	-	yes	no	624	-	yes
+b36_k09	pot_treasure_cave	FS8+	9745eb78		15	803-806	-	yes	no	622	-	yes
+b36_k11	pot_treasure_cave	FS8+	9745eb78		5	786-789	-	yes	no	622	-	yes
+b36_k12	pot_treasure_cave	FS8+	9745eb78		13	795-798	-	yes	no	622	-	yes
+b36_k13	pot_treasure_cave	FS8+	9745eb78		3	785-788	-	yes	no	622	-	yes
+fs10_f1	underwater_aerial_garden	FS8+	abfded5e		10	942-946 957-961 1120-1123	949-953	yes	yes	736	736	yes
+fs10_v	underwater_aerial_garden	FS8+	abfded5e		10	938-942 953-957 1116-1119	945-949	yes	yes	736	736	yes
+b12_v	underwater_aerial_garden	FS8+	cabbd818		9	1097-1101 1112-1116 1275-1278	1104-1108	yes	yes	751	751	yes
+f30_s1_v	underwater_aerial_garden	FS8+	3bc7ada7		10	933-937 948-952 1111-1114	940-944	yes	yes	736	736	yes
+f30_s8_v	big_hand_pirate_island	FS8+	3bc7ada7		11	986-990 1001-1005 1015-1017 1164-1167	993-997	yes	yes	767	767	yes
+f30_s9_v	underwater_aerial_garden	FS8+	3bc7ada7		9	932-936 947-951 1110-1113	939-943	yes	yes	736	736	yes
+fs11_v	underwater_aerial_garden	FS8+	ea51ae80		21	1112-1116 1127-1131 1290-1293	1119-1123	yes	yes	747	747	yes
+fs11_z	underwater_aerial_garden	FS8+	ea51ae80		10	941-945 956-960 1119-1122	948-952	yes	yes	736	736	yes
+f21_v	underwater_aerial_garden	FS8+	2b393af8		32	1099-1103 1114-1118 1277-1280	1106-1110	yes	yes	747	747	yes
+fs12_v	underwater_aerial_garden	FS8+	46892c20		32	1102-1106 1117-1121 1280-1283	1109-1113	yes	yes	746	746	yes
+fs12_z	underwater_aerial_garden	FS8+	46892c20		10	965-969 980-984 1143-1146	972-976	yes	yes	736	736	yes
+f25_v	underwater_aerial_garden	FS8+	5a14a111		10	1138-1142 1153-1157 1316-1319	1145-1149	yes	yes	755	755	yes
+fs13_v	underwater_aerial_garden	FS8+	abab2196		11	1108-1112 1123-1127 1286-1289	1115-1119	yes	yes	752	752	yes
+fs13_z	underwater_aerial_garden	FS8+	abab2196	new	11	1056-1060 1071-1075 1234-1237	1063-1067	yes	yes	736	736	yes
+f24_n1	underwater_aerial_garden	FS8+	ddf0ca91	new	9	938-942 953-957 1116-1119	945-949	yes	yes	737	737	yes
+c142_03	timestop_casino	pre-FS8	9235a7ac		-56	861-861 934-935 1018-1019 1159-1163 1174-1178 1331-1333 1337-1340	1166-1170	yes	yes	d<0	d<0	yes
+u_12	timestop_casino	FS8+	2c9b69b9		21	915-915 988-989 1073-1074 1214-1218 1229-1233 1388-1388 1392-1395	1221-1225	yes	yes	662	961	yes
+f30_s4_v	timestop_casino	FS8+	3bc7ada7		9	855-855 928-929 1013-1014 1154-1158 1169-1173 1328-1328 1332-1335	1161-1165	yes	yes	659	958	yes
+#
+# level	era	recordings	with_blocks	with_s555	with_len4
+# big_hand_pirate_island	FS8+	2	2	2	1
+# big_hand_pirate_island	pre-FS8	3	3	3	0
+# pot_treasure_cave	FS8+	37	37	0	37
+# timestop_casino	FS8+	2	2	2	2
+# timestop_casino	pre-FS8	1	1	1	1
+# underwater_aerial_garden	FS8+	79	79	79	79

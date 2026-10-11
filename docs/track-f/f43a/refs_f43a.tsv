@@ -1,0 +1,57 @@
+co_word	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	22	uint word = fault_buffer[id];	fault_buffer[id] = 0u;
+co_zero	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	23	fault_buffer[id] = 0u;	const uint base_bit = id * 32u;
+co_add	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	26	const uint store_index = atomicAdd(download_buffer32[0], 1u) + 1u;	if (store_index >= MAX_PAGE_FAULTS) {
+co_cmp	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	27	if (store_index >= MAX_PAGE_FAULTS) {	return;
+co_ret	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	28	return;	}
+co_store	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	33	download_buffer[store_index] = uint64_t(page) << CACHING_PAGEBITS;	}
+co_b32	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	17	uint download_buffer32[];	};
+cm_max	730ed40a	CMakeLists.txt	310	-DCACHING_PAGEBITS=14 -DMAX_PAGE_FAULTS=1024	-o "${fault_buffer_shader_spv}" "${fault
+fm_max	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	24	constexpr size_t MaxPageFaults    = 1024;	constexpr size_t PageFaultAreaSize = Max
+fm_area	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	25	constexpr size_t PageFaultAreaSize = MaxPageFaults * sizeof(uint64_t);	
+fm_dl	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	42	MaxPendingFaults * PageFaultAreaSize),	m_trip_download(graphics, scheduler, Mem
+fm_proc	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	96	void FaultManager::ProcessFaultBuffer() {	if (const auto wait_tick = m_fault_areas
+fm_wait	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	99	m_scheduler.Wait(wait_tick);	m_scheduler.PopPendingOperations();
+fm_off	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	103	const auto offset = m_current_area * PageFaultAreaSize;	auto*      mapped = m_download_buffer.Ma
+fm_memset	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	105	std::memset(mapped, 0, PageFaultAreaSize);	m_download_buffer.Flush(offset, PageFaul
+fm_info	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	124	{m_download_buffer.Handle(), offset, PageFaultAreaSize},	};
+fm_disp	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	146	command.dispatch(static_cast<uint32_t>(num_workgroups), 1, 1);	dependency.pBufferMemoryBarriers = &post
+fm_defer	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	182	m_scheduler.DeferOperation([this, mapped, offset, area, trips, trip_offset] {	if (trips) {
+fm_inv	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	210	m_download_buffer.Invalidate(offset, PageFaultAreaSize);	RangeSet    fault_ranges;
+fm_count	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	213	const auto  count  = static_cast<uint32_t>(faults[0]);	for (uint32_t index = 1; index <= count;
+fm_loop	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	214	for (uint32_t index = 1; index <= count; ++index) {	fault_ranges.Add(faults[index], BufferCa
+fm_add	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	215	fault_ranges.Add(faults[index], BufferCache::CACHING_PAGESIZE);	LOGF("Accessed non-GPU cached memory at 
+fm_log	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	216	LOGF("Accessed non-GPU cached memory at 0x%016" PRIx64 "\n", faults[index]);	}
+fm_exit32	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	219	EXIT_IF(end - start > std::numeric_limits<uint32_t>::max());	(void)m_buffer_cache.FindBuffer(start, e
+fm_find	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	220	(void)m_buffer_cache.FindBuffer(start, end - start);	});
+fm_next	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	225	m_fault_areas[m_current_area++] = m_scheduler.CurrentTick();	m_current_area %= MaxPendingFaults;
+fm_mod	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	226	m_current_area %= MaxPendingFaults;	}
+fmh_pend	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.h	15	static constexpr size_t MaxPendingFaults = 8;	
+bc_find	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	766	BufferId BufferCache::FindBuffer(uint64_t vaddr, uint64_t size) {	if (vaddr == 0) {
+bc_zero	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	767	if (vaddr == 0) {	return NULL_BUFFER_ID;
+bc_inval	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	771	EXIT("BufferCache: invalid buffer discovery request\n");	}
+bc_create	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	780	return CreateBuffer(vaddr, size);	}
+bc_down	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	847	vaddr = Common::AlignDown(vaddr, CACHING_PAGESIZE);	size               = end - vaddr;
+bc_reg	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	871	Register(id);	return id;
+bc_pt	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	139	m_page_table[page] = id;	} else {
+bc_null	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	153	// Null-page BDA mode (shader emitter): page-table entry 0 (guest page 0, never	// mapped) holds a zero-filled page that
+bc_ptw	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	168	WriteDataBuffer(m_bda_pagetable_buffer, pages.first * sizeof(vk::DeviceAddress),	addresses.data(), addresses.size() * siz
+bh_bits	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.h	54	static constexpr uint32_t CACHING_PAGEBITS  = 14;	static constexpr uint64_t CACHING_PAGESI
+bh_num	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.h	56	static constexpr uint64_t CACHING_NUMPAGES  = uint64_t {1} << (40 - CACHING_PAGEBITS);	static constexpr uint64_t BDA_PAGETABLE_
+rd_valid	730ed40a	src/graphics/host_gpu/regionDefinitions.h	61	return address != 0 && size != 0 && address < TRACKER_ADDRESS_SIZE &&	size <= TRACKER_ADDRESS_SIZE - address;
+rs_exit	730ed40a	src/graphics/host_gpu/rangeSet.h	109	EXIT("invalid range-set address or size\n");	}
+rc_pend	730ed40a	src/graphics/host_gpu/renderer/renderContext.cpp	332	m_fault_process_pending       = true;	const bool bda_cached = reuse && cpu_epo
+rc_gc	730ed40a	src/graphics/host_gpu/renderer/renderContext.cpp	416	if (m_fault_process_pending) {	m_fault_process_pending = false;
+rc_proc	730ed40a	src/graphics/host_gpu/renderer/renderContext.cpp	423	m_buffer_cache.ProcessFaultBuffer();	if (fbp_t0 != 0) {
+gr_gc1	730ed40a	src/graphics/guest_gpu/graphicsRun.cpp	1031	m_renderer.RunGarbageCollector();	if (t0 != 0) {
+gr_flip	730ed40a	src/graphics/guest_gpu/graphicsRun.cpp	1091	case SubmissionType::FlipPreparation:	Common::FrameStats::PathSpan pl_gc(
+sbh_all	730ed40a	src/graphics/host_gpu/renderer/cache/streamBuffer.h	36	inline constexpr vk::BufferUsageFlags AllFlags =	ReadFlags | vk::BufferUsageFlagBits::eTr
+sbh_all2	730ed40a	src/graphics/host_gpu/renderer/cache/streamBuffer.h	37	ReadFlags | vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eStorageBuffer;	
+sb_ded	730ed40a	src/graphics/host_gpu/renderer/cache/streamBuffer.cpp	85	with_bda && size >= dedicated_min_kb * 1024u ? VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT	: 0;
+m_null	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1901	const char* value = std::getenv("KYTY_BDA_NULLPAGE");	return value == nullptr || value[0] != '
+m_flush	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1913	void EmitBdaFaultFlush(EmitterState& state) {	if (state.bda_fault_page_variable == 0 |
+m_sel0	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2013	ConstantU32(state, 0));	const auto entry_pointer = state.builder
+m_remember	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2042	Binary(state, OpLogicalAnd, TypeBool(state), missing, active),	page, previous);
+m_lean	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1974	// KYTY_BDA_LEAN: no fault store in pixel shaders (a miss reads the null page silently).	const bool lean         = BdaLeanEnabled
+pr_flush	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp	132	EmitBdaFaultFlush(	ctx.state.builder.AddFunction(spv::OpRet
+sc_fifo	730ed40a	src/graphics/host_gpu/renderer/commandScheduler.cpp	544	!m_master.IsFree(m_pending_operations.front().tick)) {	return;
+ts_fill	730ed40a	tests/ShaderRecompilerComputeTests.cpp	13398	cmd.fillBuffer(m_fault_buffer.buffer, 0, m_fault_buffer.size, 0);	std::array<vk::BufferMemoryBarrier, 2> b

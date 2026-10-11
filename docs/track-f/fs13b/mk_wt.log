@@ -1,0 +1,47 @@
+Preparing worktree (detached HEAD ea6c6e9e)
+Updating files:  82% (3568/4300)
+Updating files:  83% (3569/4300)
+Updating files:  84% (3612/4300)
+Updating files:  85% (3655/4300)
+Updating files:  86% (3698/4300)
+Updating files:  87% (3741/4300)
+Updating files:  88% (3784/4300)
+Updating files:  89% (3827/4300)
+Updating files:  90% (3870/4300)
+Updating files:  91% (3913/4300)
+Updating files:  92% (3956/4300)
+Updating files:  93% (3999/4300)
+Updating files:  94% (4042/4300)
+Updating files:  95% (4085/4300)
+Updating files:  96% (4128/4300)
+Updating files:  97% (4171/4300)
+Updating files:  98% (4214/4300)
+Updating files:  99% (4257/4300)
+Updating files: 100% (4300/4300)
+Updating files: 100% (4300/4300), done.
+HEAD is now at ea6c6e9e track F link FS13a (HPP-787): KYTY_FIX_F25 default 0 -> 1 (ROADMAP s122 item 697(g)(1))
+--- worktree HEAD
+ea6c6e9ea61713729c88b7b6ce8492334a00055c track F link FS13a (HPP-787): KYTY_FIX_F25 default 0 -> 1 (ROADMAP s122 item 69
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+ea6c6e9ea61713729c88b7b6ce8492334a00055c 0861c391bed8cbbeb1436bdec66510ad70330cba track F link FS13a (HPP-787): KYTY_FIX_F25 default 0 -> 1 (ROADMAP s122 item 6
+0861c391bed8cbbeb1436bdec66510ad70330cba bc3bb65d1bb3f71e93bc90437563c867fac3819f track F link F38a2 (HPP-777): F25 stand edition 3 - arm G (a read at or past t
+bc3bb65d1bb3f71e93bc90437563c867fac3819f 4bd1e8653d7954154a8971a8592a99556d92d183 WIP track F link F38a (HPP-763): F25 stand edition 2 - arms E (read at or past
+4bd1e8653d7954154a8971a8592a99556d92d183 1048af459c7412a1586806b6c554f7157f4c4f35 WIP track F link F38a (HPP-763): KYTY_FIX_F25 (default 0) - at 1 a double read
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 458 with CR 0
+WT OK

@@ -1,0 +1,58 @@
+watch: start 2026-10-11T02:07:37Z child 31556 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+-- The C compiler identification is Clang 19.1.5 with MSVC-like command-line
+-- The CXX compiler identification is Clang 19.1.5 with MSVC-like command-line
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/Llvm/x64/bin/clang-cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/Llvm/x64/bin/clang-cl.exe - skipped
+-- Detecting CXX compile features
+CMake Error: Generator: build tool execution failed, command was: <HOME>/AppData/Local/Microsoft/WinGet/Links/ninja.exe -v cmTC_a825c
+-- Detecting CXX compile features - failed
+-- Found Git: C:/Program Files/Git/cmd/git.exe
+CMake Warning (deprecated) at C:/kyty/build/_deps/zydis-src/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+CMake Warning (deprecated) at C:/kyty/build/_deps/zydis-src/dependencies/zycore/CMakeLists.txt:5 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+-- Looking for __GLIBC__
+CMake Error at C:/kyty/f287/fs13b/build/CMakeFiles/CMakeScratch/TryCompile-or5myz/CMakeLists.txt:7 (project):
+  Running
+
+   '<HOME>/AppData/Local/Microsoft/WinGet/Links/ninja.exe' '--version'
+
+  failed with:
+
+   Exit code 0xc0000142
+
+
+CMake Error: CMAKE_C_COMPILER not set, after EnableLanguage
+CMake Error at C:/Program Files/CMake/share/cmake-4.4/Modules/CheckSymbolExists.cmake:171 (try_compile):
+  Failed to configure test project build system.
+Call Stack (most recent call first):
+  C:/Program Files/CMake/share/cmake-4.4/Modules/CheckSymbolExists.cmake:99 (__CHECK_SYMBOL_EXISTS_IMPL)
+  3rdparty/SDL2/CMakeLists.txt:85 (check_symbol_exists)
+
+
+-- Configuring incomplete, errors occurred!
+rc=0 end 2026-10-11T02:07:51Z

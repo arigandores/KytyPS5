@@ -683,6 +683,7 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
 	// Track F, F16k (ROADMAP s122 item 492(v)(1), (g)(1)): "FixF5Cmu: mode=1" / "DiagF5Id: mode=1" once, same point.
 	(void)DiagF5::LogFixCmuMode();
 	(void)DiagF5::LogFixF26Mode(); // Track F, F16o (item 504(e)(1)): "FixF26: mode=1" once, same point
+	(void)DiagF5::LogF26TintMode(); // Track F, F46a (item 702(e)(4)): "F26Tint: mode= dcc=" once when KYTY_F26_TINT is set
 	(void)DiagF5Id::LogMode();
 
 	vk::PhysicalDeviceRobustness2FeaturesEXT robustness2 {};

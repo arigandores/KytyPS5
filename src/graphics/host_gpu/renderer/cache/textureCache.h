@@ -32,6 +32,7 @@ struct TextureCacheTestAccess;
 namespace DiagF5 {
 struct CmuEvent;   // Track F, F16k (diagF5.h)
 struct StaleProbe; // Track F, F16k (diagF5.h)
+enum class F26Site : uint8_t; // Track F, F46a (diagF5.h)
 } // namespace DiagF5
 namespace DiagF5Id {
 struct MetaSnap; // Track F, F16k (diagF5.h)
@@ -188,19 +189,30 @@ public:
 	// Track F, F16k (KYTY_DIAG_F5ID): `f5id_miss` (optional) receives the reason of a false answer (DiagF5Id::Miss).
 	[[nodiscard]] bool AdoptPendingDccForTexture(ImageId id, uint64_t metadata_address,
 	                                             DiagF5Id::DccMiss* f5id_miss = nullptr);
-	// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(2)-(3)): the one-shot deferred mark of an
-	// image. NoteF26DeferredLocked - caller holds m_lock (the F26Scope of AdoptPendingDccForTexture, event fix=kept
-	// why=deferred); a second such event on the image overwrites the mark. TakeF26Deferred - takes m_lock itself (as
-	// MetaClearMask; RenderExecutor::MaterializeDeferredDccClear holds no texture cache lock), removes and returns the
-	// mark; false without one (and without taking the lock while no image has a mark). DeleteImage drops a mark without
-	// a line. No mark exists with KYTY_FIX_F26 = 0.
+	// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(2)-(3)) and Track F, F46a (HPP-798, item
+	// 702(e)(2)-(3), RC5 of F45b): the mark M1 of a kept fill keyed by the METADATA ADDRESS (diagF5.h, DccApplyLine) -
+	// set under m_lock by the reporting F26Scope (F26MarkLocked), removed by the execution of the fill at that address
+	// by any image (F26ExecLocked / F26Exec), reported once on a MaterializeDeferredDccClear of the address that clears
+	// nothing (F26Declined), dropped by a new fill, an erase or a retype of the entry (F26DropLocked); and the armed
+	// events of the line f26_first_exec (F26ArmFirstExecLocked; KYTY_DIAG_F5ID), fired by the same execution hook.
+	// *Locked - the caller holds m_lock; F26Exec / F26Declined / F26HasMark take it themselves (as MetaClearMask;
+	// RenderExecutor::MaterializeDeferredDccClear holds no texture cache lock), and not at all while nothing is stored
+	// (the counts). No mark exists with KYTY_FIX_F26 = 0 or KYTY_DIAG_F5 = 0; no armed event without KYTY_DIAG_F5ID.
 	struct F26Deferred {
-		uint64_t n     = 0; // the event number of the adopt's dcc_stale line
-		uint64_t image = 0; // image / dcc of that line
-		uint64_t dcc   = 0;
+		uint64_t n        = 0; // the event number of the dcc_stale line that set the mark
+		uint64_t image    = 0; // image / dcc of that line
+		uint64_t dcc      = 0;
+		bool     declined = false; // Track F, F46a: the declined line of this mark was printed
 	};
-	void               NoteF26DeferredLocked(ImageId id, const F26Deferred& mark);
-	[[nodiscard]] bool TakeF26Deferred(ImageId id, F26Deferred* mark);
+	void F26MarkLocked(uint64_t address, const F26Deferred& mark);
+	void F26ArmFirstExecLocked(uint64_t address, uint64_t n);
+	// `layers` - the clear-mask bits of `address` the execution took 1 -> 0 (called only when != 0).
+	void F26ExecLocked(uint64_t address, uint64_t image_address, DiagF5::F26Site site, uint32_t layers);
+	void F26Exec(uint64_t address, uint64_t image_address, DiagF5::F26Site site, uint32_t layers);
+	void F26Declined(uint64_t address, uint64_t image_address, uint32_t layers);
+	void F26DropLocked(uint64_t address, DiagF5::F26Site site, uint32_t layers);
+	[[nodiscard]] bool F26HasMarkLocked(uint64_t address) const;
+	[[nodiscard]] bool F26HasMark(uint64_t address);
 	// The registered colour image that starts at `data_address` and owns (or, for a lone
 	// metadata-less candidate, adopts) the DCC allocation at `metadata_address`. Empty when
 	// there is no such image or the ownership is ambiguous.
@@ -387,10 +399,13 @@ private:
 	// state and no epoch depends on them, with KYTY_FIX_B42 on or off.
 	uint64_t                                          m_b42_seq = 0;
 	std::unordered_map<ImageId, uint64_t>             m_b42_draw_seq;
-	// Track F, F16o2 (item 507(b)(2)): the deferred marks, under m_lock; their number - written under m_lock, read
-	// without it by TakeF26Deferred (0: the lock is not taken).
-	std::unordered_map<ImageId, F26Deferred>          m_f26_deferred;
-	std::atomic<uint32_t>                             m_f26_deferred_count {0};
+	// Track F, F46a (item 702(e)(2)-(3)): the marks M1 by metadata address and the armed f26_first_exec events (event
+	// numbers by metadata address), under m_lock; their numbers - written under m_lock, read without it by the fast
+	// paths (0: the lock is not taken).
+	std::unordered_map<uint64_t, F26Deferred>         m_f26_marks;
+	std::atomic<uint32_t>                             m_f26_marks_count {0};
+	std::unordered_map<uint64_t, std::vector<uint64_t>> m_f26_first;
+	std::atomic<uint32_t>                             m_f26_first_count {0};
 	uint64_t                                          m_total_used_memory  = 0;
 	uint64_t                                          m_trigger_gc_memory  = 0;
 	uint64_t                                          m_pressure_gc_memory = 1536ull * 1024 * 1024;

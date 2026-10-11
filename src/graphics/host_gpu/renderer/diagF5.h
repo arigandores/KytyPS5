@@ -24,6 +24,10 @@
 // Track F, F16o (HPP-595, ROADMAP s122 item 504(e)): KYTY_FIX_F26 - default 0, read once: the exact check decides the
 // stale question of a pending DCC fill at PrepareDccClear and AdoptPendingDccForTexture (row F26); the FCE acquisition and
 // every other PrepareCmaskClear do not read it. Its counters f26_* and the event line DiagF5Ev dcc_stale (KYTY_DIAG_F5).
+// Track F, F46a (HPP-798, ROADMAP s122 item 702(e)): the mark M1 of a kept fill keyed by the metadata address (the line
+// dcc_stale_apply), the line f26_first_exec (KYTY_DIAG_F5ID) and the synthetic positive control KYTY_F26_TINT /
+// KYTY_F26_TINT_DCC (default 0; NOT a measurement when set - the picture changes) - DccApplyLine, FirstExecLine,
+// F26TintAt below.
 
 #include "graphics/guest_gpu/hardwareContext.h"
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
@@ -141,6 +145,13 @@ enum class Counter : uint32_t {
 	// RenderExecutor::MaterializeDeferredDccClear took and did not clear (result=declined); one it cleared counts
 	// f26_kept_applied. f26_kept_applied + f26_deferred_declined <= f26_kept.
 	F26DeferredDeclined,
+	// Track F, F46a (HPP-798, item 702(e)(2), (4)): the mark is keyed by the metadata address and a declined mark stays
+	// (a later clear of the address takes it): f26_kept_applied <= f26_kept and f26_deferred_declined <= f26_kept (the sum
+	// may exceed f26_kept). KYTY_F26_TINT: the DCC fill executions at the key address KYTY_F26_TINT_DCC whose clear value
+	// was replaced by (1, 0, 1, 1) (f26_tint_applied) or would have been, the view format having no such encoding
+	// (f26_tint_skip). Both 0 with KYTY_F26_TINT = 0.
+	F26TintApplied,
+	F26TintSkip,
 	Count
 };
 
@@ -309,26 +320,79 @@ struct DccStaleLine {
 // Track F, F16o2: `n_out` (optional) receives the event number k (past the limit too).
 bool                      NoteDccStale(const DccStaleLine& line, uint64_t* n_out = nullptr);
 
-// ---- Track F, F16o2 (HPP-599, RC1 of F16p, ROADMAP s122 item 507(b)): the deferred clear of an adoption (the
-// one-shot mark the event fix=kept why=deferred of AdoptPendingDccForTexture leaves on the image -
-// TextureCache::F26Deferred, under m_lock).
-// The outcome line of RenderExecutor::MaterializeDeferredDccClear on an image with the mark (the call takes the mark
-// whatever its outcome), KYTY_DIAG_F5=1: "DiagF5Ev: dcc_stale_apply n=<n> present=<n> gpu=<n> image=0x... dcc=0x...
-// result=<cleared|declined> layers=0x<mask>"; n, image, dcc - of the adopt's dcc_stale line; present / gpu - at the
-// outcome (sources as dcc_stale); cleared - >= 1 layer cleared; declined - any return without a clear; layers - the
-// pending layer mask the call read (0 when it returned before reading it). The limit of dcc_stale: printed when
-// n <= 256 (the adopt's own line was printed). Counting (f26_kept_applied / f26_deferred_declined) is the caller's.
+// ---- Track F, F16o2 (HPP-599, RC1 of F16p, ROADMAP s122 item 507(b)): the deferred clear of a kept fill.
+// Track F, F46a (HPP-798, ROADMAP s122 item 702(e)(2), RC5 of F45b): the mark M1 is keyed by the METADATA ADDRESS
+// (TextureCache::F26Deferred in m_f26_marks, under m_lock), not by the image. It is set, with KYTY_FIX_F26 and
+// KYTY_DIAG_F5, by the event fix=kept why=deferred of AdoptPendingDccForTexture and by the event fix=kept why=decode of
+// PrepareDccClear; it is removed where the clear-mask bits of that address go 1 -> 0 - the layer loop of
+// PrepareDccClear (site=prepare) or of RenderExecutor::MaterializeDeferredDccClear (TouchMeta(..., false), site=mat) -
+// whichever image executes the fill (result=cleared, f26_kept_applied); a MaterializeDeferredDccClear of the address
+// that clears nothing does not remove it (result=declined, the first one per mark, f26_deferred_declined); a new fill
+// of the address (TrackDccFill, site=fill), the erase of its entry (UnmapMemory - site=unmap, DeleteImage -
+// site=delete), a retype of the entry (PrepareCmaskClear, the HTile binding - site=retype) or a second mark at the
+// address (site=remark; not reachable while the entry is Dcc) drop it (result=dropped, no counter).
+// The line, KYTY_DIAG_F5=1: "DiagF5Ev: dcc_stale_apply n=<n> present=<n> gpu=<n> image=0x... dcc=0x...
+// result=<cleared|declined|dropped> layers=0x<mask> site=<prepare|mat|fill|unmap|delete|retype|remark>"; n, dcc - of
+// the event's dcc_stale line; image - the executing image (cleared, declined) or the event's (dropped); present / gpu -
+// at the outcome; layers - cleared: the bits that went 1 -> 0, declined: the pending layer mask the call read (0 when
+// it returned before reading it), dropped: the clear mask of the entry at the drop. The limit of dcc_stale: printed
+// when n <= 256 (the event's own line was printed). Counting is the caller's.
+enum class DccApplyResult : uint8_t { Cleared, Declined, Dropped };
+enum class F26Site : uint8_t { Prepare, Mat, Fill, Unmap, Delete, Retype, Remark };
+[[nodiscard]] const char* DccApplyResultName(DccApplyResult result);
+[[nodiscard]] const char* F26SiteName(F26Site site);
 struct DccApplyLine {
-	uint64_t n       = 0;
-	uint32_t present = 0;
-	uint32_t gpu     = 0;
-	uint64_t image   = 0;
-	uint64_t dcc     = 0;
-	bool     cleared = false;
-	uint32_t layers  = 0;
+	uint64_t       n       = 0;
+	uint32_t       present = 0;
+	uint32_t       gpu     = 0;
+	uint64_t       image   = 0;
+	uint64_t       dcc     = 0;
+	DccApplyResult result  = DccApplyResult::Cleared;
+	uint32_t       layers  = 0;
+	F26Site        site    = F26Site::Prepare;
 };
 [[nodiscard]] std::string FormatDccStaleApply(const DccApplyLine& line);
 bool                      NoteDccStaleApply(const DccApplyLine& line);
+
+// ---- Track F, F46a (HPP-798, ROADMAP s122 item 702(e)(3), RC2(a) of F45b): the first execution of a fill of an address
+// that had a dcc_stale event in this process, after the event. KYTY_DIAG_F5ID=1, both arms of KYTY_FIX_F26: the event
+// is armed at TextureCache::m_f26_first by its reporting F26Scope - when the site call leaves, so the in-call clear of a
+// kept_applied event is not "after the event"; the first PrepareDccClear (site=prepare) or MaterializeDeferredDccClear
+// (site=mat) whose layer loop takes a clear-mask bit of the address 1 -> 0 prints one line per armed event and disarms
+// it: "DiagF5Ev: f26_first_exec n=<n> present=<n> dcc=0x... image=0x... site=<prepare|mat>" (n - the event's,
+// image - the executing image). The limit of dcc_stale: only events n <= 256 are armed.
+struct FirstExecLine {
+	uint64_t n       = 0;
+	uint32_t present = 0;
+	uint64_t dcc     = 0;
+	uint64_t image   = 0;
+	F26Site  site    = F26Site::Prepare;
+};
+[[nodiscard]] std::string FormatFirstExec(const FirstExecLine& line);
+bool                      NoteFirstExec(const FirstExecLine& line); // printed when n is 1..256
+
+// ---- Track F, F46a (HPP-798, ROADMAP s122 item 702(e)(4), RC3 of F45b): the synthetic positive control M2 - NOT a
+// measurement: with a mode != 0 the clear value of the chosen executions is replaced and the picture changes.
+// KYTY_F26_TINT: 0 (default; any value other than "1" / "2"), 1 - an execution that removes an F26 mark of the key
+// address (the mark M1, or the in-call clear of a kept_applied event of PrepareDccClear - the F26 decision of that very
+// call), 2 - every execution of a DCC fill (PrepareDccClear, MaterializeDeferredDccClear) at the key address.
+// KYTY_F26_TINT_DCC: the key, a metadata address in hex ("0x" optional; unset or not fully parsed - 0). Both read once
+// per process. The colour (1, 0, 1, 1) is written as float in the format the clear is written through; a format without
+// that encoding (not DccFixedClearSupported, or fewer than 3 components) keeps the decoded value (f26_tint_skip).
+[[nodiscard]] uint32_t F26TintMode();
+[[nodiscard]] uint64_t F26TintDcc();
+// "F26Tint: mode=<m> dcc=0x<key>" once per process when F26TintMode() != 0 (device creation); true when this call
+// printed it.
+bool LogF26TintMode();
+// The sites' cheap check: a mode is set and `address` is the key.
+[[nodiscard]] bool F26TintKey(uint64_t address);
+enum class TintResult : uint8_t { None, Applied, Skip };
+// The pure decision (test site): `mode` / `key` as given; `removes_mark` - the execution removes an F26 mark of
+// `address` (read by mode 1 only). Applied: `clear` is set to (1, 0, 1, 1); None / Skip: `clear` is unchanged.
+[[nodiscard]] TintResult F26TintAt(uint32_t mode, uint64_t key, uint64_t address, bool removes_mark, vk::Format format,
+                                   vk::ClearColorValue& clear);
+// The sites' call: F26TintAt with the process knobs, counting f26_tint_applied / f26_tint_skip.
+TintResult F26Tint(uint64_t address, bool removes_mark, vk::Format format, vk::ClearColorValue& clear);
 
 // Test site: the F16k lines printed so far (DiagF5Ev, FixF5Cmu, DiagF5Id; at most the last 4096) and a reset of that
 // list.

@@ -3503,29 +3503,21 @@ private:
 	vk::Format m_saved;
 };
 
-// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(3)): one MaterializeDeferredDccClear call on an
-// image that carries the deferred mark of AdoptPendingDccForTexture (event fix=kept why=deferred). The constructor
-// takes the mark (TextureCache::TakeF26Deferred - m_lock taken inside, as MetaClearMask; the call holds no cache
-// lock), so it is removed whatever the outcome; the destructor (every return of the call) reports it: cleared (>= 1
-// layer cleared) - f26_kept_applied, declined (any return without a clear) - f26_deferred_declined, and the line
-// DiagF5Ev dcc_stale_apply. Without KYTY_FIX_F26 nothing is taken (no mark exists) and nothing is reported.
+// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(3)); Track F, F46a (HPP-798, item 702(e)(2), RC5
+// of F45b): one MaterializeDeferredDccClear call of an image with DCC metadata. The mark M1 is keyed by the metadata
+// address: a call whose layer loop clears takes it (TextureCache::F26Exec after the loop, whichever image set it -
+// dcc_stale_apply result=cleared site=mat, f26_kept_applied); a call that returns without a clear does not remove it -
+// the destructor reports the first such return per mark (TextureCache::F26Declined - m_lock taken inside, the call
+// holds no cache lock: dcc_stale_apply result=declined site=mat, f26_deferred_declined). Without KYTY_FIX_F26 nothing
+// is reported (no mark exists).
 class F26ApplyScope {
 public:
-	F26ApplyScope(TextureCache& cache, ImageId id) {
-		if (DiagF5::FixF26On()) [[unlikely]] {
-			m_armed = cache.TakeF26Deferred(id, &m_mark);
-		}
-	}
+	F26ApplyScope(TextureCache& cache, const Image& image)
+	    : m_cache(cache), m_on(DiagF5::FixF26On() && image.info.metadata.kind == ImageMetadataKind::Dcc),
+	      m_address(image.info.metadata.range.address), m_image(image.info.data.address) {}
 	~F26ApplyScope() {
-		if (m_armed) [[unlikely]] {
-			DiagF5::Add(m_cleared ? DiagF5::Counter::F26KeptApplied : DiagF5::Counter::F26DeferredDeclined);
-			(void)DiagF5::NoteDccStaleApply({.n       = m_mark.n,
-			                                   .present = DiagF5::Present(),
-			                                   .gpu     = GpuTimeProfiler::Frame(),
-			                                   .image   = m_mark.image,
-			                                   .dcc     = m_mark.dcc,
-			                                   .cleared = m_cleared,
-			                                   .layers  = m_layers});
+		if (m_on && !m_cleared) [[unlikely]] {
+			m_cache.F26Declined(m_address, m_image, m_layers);
 		}
 	}
 	F26ApplyScope(const F26ApplyScope&)            = delete;
@@ -3537,10 +3529,12 @@ public:
 	void Cleared() { m_cleared = true; }
 
 private:
-	TextureCache::F26Deferred m_mark {};
-	bool                      m_armed   = false;
-	bool                      m_cleared = false;
-	uint32_t                  m_layers  = 0;
+	TextureCache& m_cache;
+	bool          m_on;
+	uint64_t      m_address;
+	uint64_t      m_image;
+	bool          m_cleared = false;
+	uint32_t      m_layers  = 0;
 };
 
 } // namespace
@@ -3557,10 +3551,9 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 
 void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id, Image& image) {
 	auto& cache = m_context.GetTextureCache();
-	// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(3)): the deferred mark of an adoption is
-	// taken here, before any return; the outcome (dcc_stale_apply) is reported when the call returns. Nothing without
-	// the knob.
-	F26ApplyScope f26_apply {cache, id};
+	// Track F, F16o2 (KYTY_FIX_F26, RC1 of F16p, ROADMAP s122 item 507(b)(3)); Track F, F46a (item 702(e)(2)): a return
+	// without a clear reports the mark of the metadata address as declined (it stays). Nothing without the knob.
+	F26ApplyScope f26_apply {cache, image};
 	// Session 124, knob "skipceil" = 3 (closure census, [RC1], [RC2], ROADMAP s122 item 44(b)): not a write event - the
 	// writer stays the logical clear; under the reference policy Lt it is a write of the trigger operation.
 	const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyMat);
@@ -3658,6 +3651,11 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	if (DiagF5::On()) [[unlikely]] {
 		DiagF5::Add(DiagF5::Counter::DccMatCleared);
 	}
+	// Track F, F46a (item 702(e)(4)): KYTY_F26_TINT at the key address (mode 1 - the address carries an F26 mark the clear
+	// below removes).
+	if (DiagF5::F26TintKey(address)) [[unlikely]] {
+		(void)DiagF5::F26Tint(address, cache.F26HasMark(address), clear_format, clear);
+	}
 	Common::DrawStat::Mark(Common::DrawStat::ImgUp | Common::DrawStat::Meta);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	buffer.EndRendering(RenderPassEnd::Clear);
@@ -3699,6 +3697,9 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 		layer += count - 1;
 	}
 	f26_apply.Cleared(); // Track F, F16o2: every layer of the mask was cleared above
+	// Track F, F46a (item 702(e)(2)-(3)): the clear-mask bits of `address` went 1 -> 0 in the loop above (TouchMeta) - the
+	// mark M1 of the address (whichever image set it) and its armed f26_first_exec events are resolved by this image.
+	cache.F26Exec(address, image.info.data.address, DiagF5::F26Site::Mat, mask);
 	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(b)): the materialized layers (every level).
 	const SkcCensus::SubScope skc3_sub(SkcCensus::Sub {0, UINT32_MAX, 0, 0, mask, 1});
 	cache.MarkGpuWritten(id);

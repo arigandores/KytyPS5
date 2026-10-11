@@ -451,10 +451,6 @@ void TextureCache::DeleteImage(ImageId id) {
 	}
 	m_download_images.erase(id);
 	m_b42_draw_seq.erase(id); // Track F, F9e2b (KYTY_FIX_B42): a recycled slot id starts without a draw stamp
-	// Track F, F16o2 (item 507(b)(2)): the deferred mark of a deleted image is dropped without a line.
-	if (m_f26_deferred_count.load(std::memory_order_relaxed) != 0 && m_f26_deferred.erase(id) != 0) [[unlikely]] {
-		m_f26_deferred_count.fetch_sub(1, std::memory_order_relaxed);
-	}
 	if (image->info.HasMetadata()) {
 		const auto metadata = m_surface_metas.find(image->info.metadata.range.address);
 		if (metadata != m_surface_metas.end() &&
@@ -465,6 +461,10 @@ void TextureCache::DeleteImage(ImageId id) {
 		     (image->info.metadata.kind == ImageMetadataKind::Htile &&
 		      metadata->second.type == MetaDataInfo::Type::HTile))) {
 			// A later binding may have reused this address for another metadata type.
+			// Track F, F46a (item 702(e)(2)): the erase drops the mark M1 of the address (site=delete).
+			if (m_f26_marks_count.load(std::memory_order_relaxed) != 0) [[unlikely]] {
+				F26DropLocked(metadata->first, DiagF5::F26Site::Delete, metadata->second.clear_mask);
+			}
 			m_surface_metas.erase(metadata);
 			BumpMetaEpoch();
 		}
@@ -1956,7 +1956,8 @@ private:
 };
 
 // Track F, F16o (KYTY_FIX_F26, ROADMAP s122 item 504(e)(2)-(4)): one PendingDccFillStale decision of PrepareDccClear or
-// AdoptPendingDccForTexture. Arm() - the probe of the call: passed when the ring is written and KYTY_DIAG_F5 or
+// AdoptPendingDccForTexture. Track F, F46a (HPP-798, item 702(e)(2)-(3)): `cache` - the TextureCache of the site (its
+// m_lock is held by the site call). Arm() - the probe of the call: passed when the ring is written and KYTY_DIAG_F5 or
 // KYTY_FIX_F26 is on (KYTY_DIAG_F5ID implies both), `exact_decides` = KYTY_FIX_F26; otherwise nullptr (the old call).
 // Decided() - after the call: with KYTY_DIAG_F5 and a stale bucket answer (the probe's; without a probe the answer
 // itself, which is then the bucket one) the decision is reported when the scope leaves (every later return of the
@@ -1964,7 +1965,7 @@ private:
 // applied in the same call. Neither knob: Arm() returns nullptr and nothing is reported. Not called: inert.
 class F26Scope {
 public:
-	explicit F26Scope(DiagF5::DccSite site): m_site(site) {}
+	F26Scope(DiagF5::DccSite site, TextureCache* cache): m_site(site), m_cache(cache) {}
 	~F26Scope() {
 		if (m_report) [[unlikely]] {
 			Report();
@@ -2003,14 +2004,16 @@ public:
 		}
 	}
 	// Track F, F16o2 (RC1 of F16p, item 507(b)(1)-(2)): AdoptPendingDccForTexture adopted the kept fill with a clear the
-	// call does not apply (RenderExecutor::MaterializeDeferredDccClear clears it later or declines): kept why=deferred;
-	// when Report() reports it as kept (KYTY_FIX_F26, KYTY_DIAG_F5), the mark of `id` in `cache` with the line's n (the
-	// scope is declared after cache->m_lock is taken and leaves before it is released).
-	void Deferred(TextureCache* cache, ImageId id) {
-		m_why         = DiagF5::CmuWhy::Deferred;
-		m_applied     = false;
-		m_defer_cache = cache;
-		m_defer_id    = id;
+	// call does not apply (RenderExecutor::MaterializeDeferredDccClear clears it later or declines): kept why=deferred.
+	// Track F, F46a: the mark of Report() is keyed by the metadata address (the line's dcc).
+	void Deferred() {
+		m_why     = DiagF5::CmuWhy::Deferred;
+		m_applied = false;
+	}
+	// Track F, F46a (item 702(e)(4), KYTY_F26_TINT=1): this call kept a fill the bucket check called stale (KYTY_FIX_F26,
+	// the exact check fresh) - its in-call clear (kept_applied) executes the F26 decision of the call.
+	[[nodiscard]] bool KeptNow() const {
+		return m_fix && m_probe.bucket_stale && !m_probe.exact_stale && !m_probe.fallback;
 	}
 
 private:
@@ -2043,8 +2046,16 @@ private:
 		}
 		uint64_t n = 0;
 		(void)DiagF5::NoteDccStale(m_line, &n);
-		if (m_fix && e.fix == F::Kept && e.why == DiagF5::CmuWhy::Deferred && m_defer_cache != nullptr) {
-			m_defer_cache->NoteF26DeferredLocked(m_defer_id, {.n = n, .image = m_line.image, .dcc = m_line.dcc});
+		// Track F, F16o2 / F46a (item 702(e)(2), RC5 of F45b): the mark M1 of a kept fill this call did not apply - adopt
+		// why=deferred, prepare why=decode - keyed by the metadata address.
+		if (m_fix && e.fix == F::Kept &&
+		    (e.why == DiagF5::CmuWhy::Deferred || e.why == DiagF5::CmuWhy::Decode)) {
+			m_cache->F26MarkLocked(m_line.dcc, {.n = n, .image = m_line.image, .dcc = m_line.dcc});
+		}
+		// Track F, F46a (item 702(e)(3)): the event arms its f26_first_exec line (both arms, KYTY_DIAG_F5ID) here, when the
+		// site call leaves - after any in-call clear, which is not "after the event".
+		if (DiagF5Id::On() && n <= 256) [[unlikely]] {
+			m_cache->F26ArmFirstExecLocked(m_line.dcc, n);
 		}
 	}
 
@@ -2056,8 +2067,7 @@ private:
 	DiagF5::CmuWhy       m_why      = DiagF5::CmuWhy::None;
 	DiagF5::StaleProbe   m_probe {};
 	DiagF5::DccStaleLine m_line {};
-	TextureCache*        m_defer_cache = nullptr; // Track F, F16o2: Deferred()
-	ImageId              m_defer_id {};
+	TextureCache*        m_cache; // Track F, F46a: the site's cache (marks, armed events)
 };
 
 } // namespace
@@ -2067,7 +2077,7 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		return;
 	}
 	// Track F, F16o (KYTY_FIX_F26, item 504(e)(2)-(3)): the decision of the PendingDcc branch below; reported at return.
-	F26Scope f26 {DiagF5::DccSite::Prepare};
+	F26Scope f26 {DiagF5::DccSite::Prepare, this};
 	auto& image            = m_slot_images[id];
 	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(v)): the image links to this surface now.
 	const bool skc3_link   = Common::SkipCeil::t_mode == 3 &&
@@ -2187,6 +2197,8 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		DiagF5::Add(DiagF5::Counter::DccRtCleared); // a bit of the view layers is set: the loop below clears it
 	}
 	const uint32_t f5id_mask0 = metadata.clear_mask; // Track F, F16k (KYTY_DIAG_F5ID): NoteClearApplied below
+	// Track F, F46a (item 702(e)(4)): KYTY_F26_TINT - decided once, before the first ClearImage of this call.
+	bool f26_tint_decided = false;
 	// The metadata fill covers the complete allocation. Consume each layer only after its
 	// native image contents exist; already materialized layers may have been rendered since.
 	for (uint32_t layer = first; layer < first + count;) {
@@ -2199,6 +2211,14 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		do {
 			mask |= 1u << layer++;
 		} while (layer < first + count && (metadata.clear_mask & (1u << layer)) != 0);
+		if (!f26_tint_decided) {
+			f26_tint_decided = true;
+			if (DiagF5::F26TintKey(desc.info.metadata.range.address)) [[unlikely]] {
+				(void)DiagF5::F26Tint(desc.info.metadata.range.address,
+				                      f26.KeptNow() || F26HasMarkLocked(desc.info.metadata.range.address), view.format,
+				                      clear.color);
+			}
+		}
 		ClearImage(m_scheduler.Current(), id, view.format,
 		           {vk::ImageAspectFlagBits::eColor, view.base_level, view.level_count, start,
 		            layer - start},
@@ -2208,6 +2228,13 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	}
 	// Track F, F16o (item 504(e)(3)): a kept fill is kept_applied when this call cleared >= 1 layer.
 	f26.Applied(metadata.clear_mask != f5id_mask0, DiagF5::CmuWhy::NoLayer);
+	// Track F, F46a (item 702(e)(2)-(3)): the clear-mask bits of this address went 1 -> 0 here - the mark M1 of the address
+	// (whichever image set it) and its armed f26_first_exec events are resolved by this image.
+	if (metadata.clear_mask != f5id_mask0 && (m_f26_marks_count.load(std::memory_order_relaxed) != 0 ||
+	                                          m_f26_first_count.load(std::memory_order_relaxed) != 0)) [[unlikely]] {
+		F26ExecLocked(desc.info.metadata.range.address, image.info.data.address, DiagF5::F26Site::Prepare,
+		              f5id_mask0 & ~metadata.clear_mask);
+	}
 	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(2)-(3)): a clear ran here - a stale mark, `cleared` of an open record.
 	if (DiagF5Id::On() && metadata.clear_mask != f5id_mask0) [[unlikely]] {
 		DiagF5Id::NoteClearApplied(DiagF5Id::ApplySite::DccRt, desc.info.metadata.range.address,
@@ -2256,6 +2283,10 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc, bool fce
 	} else if (metadata.type != MetaDataInfo::Type::CMask) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		BumpMetaEpoch();
+		// Track F, F46a (item 702(e)(2)): a retype drops the mark M1 of the address (site=retype).
+		if (m_f26_marks_count.load(std::memory_order_relaxed) != 0) [[unlikely]] {
+			F26DropLocked(desc.info.metadata.range.address, DiagF5::F26Site::Retype, metadata.clear_mask);
+		}
 		metadata = MetaDataInfo {.type = MetaDataInfo::Type::CMask};
 	}
 	// Session 124 (item 47(v)): a late link to a surface with a pending clear - before the materialization below.
@@ -2786,6 +2817,10 @@ vk::ImageView TextureCache::FindDepthTarget(ImageId id, const ImageDesc& desc,
 		if (!inserted && metadata->second.type != MetaDataInfo::Type::HTile) {
 			// PS5 allocations can reuse DCC storage as HTile while the old color image is cached.
 			// The depth binding defines the new type; incompatible fill state cannot carry over.
+			// Track F, F46a (item 702(e)(2)): a retype drops the mark M1 of the address (site=retype).
+			if (m_f26_marks_count.load(std::memory_order_relaxed) != 0) [[unlikely]] {
+				F26DropLocked(metadata->first, DiagF5::F26Site::Retype, metadata->second.clear_mask);
+			}
 			metadata->second = {.type       = MetaDataInfo::Type::HTile,
 			                    .clear_mask = image.info.htile_clear_mask};
 			BumpMetaEpoch();
@@ -3560,6 +3595,10 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
 		if (DiagF5::On() && found->second.type == MetaDataInfo::Type::Dcc) [[unlikely]] {
 			DiagF5::NoteDccFill(fill_value);
 		}
+		// Track F, F46a (item 702(e)(2)): a new fill of the address drops its mark M1 (site=fill; P1 of F45a).
+		if (m_f26_marks_count.load(std::memory_order_relaxed) != 0) [[unlikely]] {
+			F26DropLocked(address, DiagF5::F26Site::Fill, found->second.clear_mask);
+		}
 		found->second.clear_mask = found->second.type == MetaDataInfo::Type::CMask
 		    ? (fill_value == 0 ? UINT32_MAX : 0u) : dcc_clear_mask;
 		// Session 124, knob "skipceil" = 3 (closure census, [RC2]): a logical clear (PendingDcc: until the adoption).
@@ -3765,7 +3804,7 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 	// Track F, F16k (KYTY_DIAG_F5ID, item 492(g)(5), F26): the probe counts dcc_stale_*. Track F, F16o (KYTY_FIX_F26,
 	// item 504(e)(2)): with the knob the exact answer decides - a kept fill is adopted below. The scope reports when it
 	// leaves (each return below, m_lock still held: it is declared after the lock).
-	F26Scope   f26 {DiagF5::DccSite::Adopt};
+	F26Scope   f26 {DiagF5::DccSite::Adopt, this};
 	const bool f5id     = DiagF5Id::On();
 	const bool f5_stale = PendingDccFillStale(metadata_address, found->second, image->info.data.address, f26.Arm());
 	f26.Decided(f5_stale, image->info.data.address, metadata_address, image->info.extent.width,
@@ -3792,7 +3831,7 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 	// of F16p, item 507(b)(1)): one adopted with a clear is kept why=deferred - this call clears nothing; the clear is
 	// RenderExecutor::MaterializeDeferredDccClear's, which reports it (dcc_stale_apply) by the mark Deferred() leaves.
 	if (found->second.clear_mask != 0) {
-		f26.Deferred(this, id);
+		f26.Deferred();
 	} else {
 		f26.Applied(false, DiagF5::CmuWhy::Mask);
 	}
@@ -3819,28 +3858,107 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 	return true;
 }
 
-// Track F, F16o2 (KYTY_FIX_F26, item 507(b)(2)): caller holds m_lock.
-void TextureCache::NoteF26DeferredLocked(ImageId id, const F26Deferred& mark) {
-	if (m_f26_deferred.insert_or_assign(id, mark).second) {
-		m_f26_deferred_count.fetch_add(1, std::memory_order_relaxed);
+// Track F, F46a (HPP-798, ROADMAP s122 item 702(e)(2)-(3)): the mark M1 by metadata address and the armed f26_first_exec
+// events (textureCache.h). *Locked - the caller holds m_lock. The counts are written under m_lock and read without it
+// only as "is anything stored" by the same GPU thread [I, as F16o2].
+void TextureCache::F26MarkLocked(uint64_t address, const F26Deferred& mark) {
+	if (m_f26_marks.contains(address)) [[unlikely]] {
+		F26DropLocked(address, DiagF5::F26Site::Remark, 0);
+	}
+	m_f26_marks.emplace(address, mark);
+	m_f26_marks_count.fetch_add(1, std::memory_order_relaxed);
+}
+
+void TextureCache::F26ArmFirstExecLocked(uint64_t address, uint64_t n) {
+	m_f26_first[address].push_back(n);
+	m_f26_first_count.fetch_add(1, std::memory_order_relaxed);
+}
+
+void TextureCache::F26ExecLocked(uint64_t address, uint64_t image_address, DiagF5::F26Site site, uint32_t layers) {
+	if (m_f26_marks_count.load(std::memory_order_relaxed) != 0) {
+		if (const auto found = m_f26_marks.find(address); found != m_f26_marks.end()) {
+			DiagF5::Add(DiagF5::Counter::F26KeptApplied);
+			(void)DiagF5::NoteDccStaleApply({.n       = found->second.n,
+			                                 .present = DiagF5::Present(),
+			                                 .gpu     = GpuTimeProfiler::Frame(),
+			                                 .image   = image_address,
+			                                 .dcc     = found->second.dcc,
+			                                 .result  = DiagF5::DccApplyResult::Cleared,
+			                                 .layers  = layers,
+			                                 .site    = site});
+			m_f26_marks.erase(found);
+			m_f26_marks_count.fetch_sub(1, std::memory_order_relaxed);
+		}
+	}
+	if (m_f26_first_count.load(std::memory_order_relaxed) != 0) {
+		if (const auto found = m_f26_first.find(address); found != m_f26_first.end()) {
+			for (const auto n: found->second) {
+				(void)DiagF5::NoteFirstExec(
+				    {.n = n, .present = DiagF5::Present(), .dcc = address, .image = image_address, .site = site});
+			}
+			m_f26_first_count.fetch_sub(static_cast<uint32_t>(found->second.size()), std::memory_order_relaxed);
+			m_f26_first.erase(found);
+		}
 	}
 }
 
-// Track F, F16o2 (item 507(b)(3)): takes m_lock itself, as MetaClearMask; while no image has a mark the lock is not
-// taken (the count is written under m_lock by the same GPU thread that calls this [I]).
-bool TextureCache::TakeF26Deferred(ImageId id, F26Deferred* mark) {
-	if (m_f26_deferred_count.load(std::memory_order_relaxed) == 0) {
+void TextureCache::F26Exec(uint64_t address, uint64_t image_address, DiagF5::F26Site site, uint32_t layers) {
+	if (m_f26_marks_count.load(std::memory_order_relaxed) == 0 &&
+	    m_f26_first_count.load(std::memory_order_relaxed) == 0) {
+		return;
+	}
+	std::scoped_lock lock {m_lock};
+	F26ExecLocked(address, image_address, site, layers);
+}
+
+void TextureCache::F26Declined(uint64_t address, uint64_t image_address, uint32_t layers) {
+	if (m_f26_marks_count.load(std::memory_order_relaxed) == 0) {
+		return;
+	}
+	std::scoped_lock lock {m_lock};
+	const auto       found = m_f26_marks.find(address);
+	if (found == m_f26_marks.end() || found->second.declined) {
+		return;
+	}
+	found->second.declined = true;
+	DiagF5::Add(DiagF5::Counter::F26DeferredDeclined);
+	(void)DiagF5::NoteDccStaleApply({.n       = found->second.n,
+	                                 .present = DiagF5::Present(),
+	                                 .gpu     = GpuTimeProfiler::Frame(),
+	                                 .image   = image_address,
+	                                 .dcc     = found->second.dcc,
+	                                 .result  = DiagF5::DccApplyResult::Declined,
+	                                 .layers  = layers,
+	                                 .site    = DiagF5::F26Site::Mat});
+}
+
+void TextureCache::F26DropLocked(uint64_t address, DiagF5::F26Site site, uint32_t layers) {
+	const auto found = m_f26_marks.find(address);
+	if (found == m_f26_marks.end()) {
+		return;
+	}
+	(void)DiagF5::NoteDccStaleApply({.n       = found->second.n,
+	                                 .present = DiagF5::Present(),
+	                                 .gpu     = GpuTimeProfiler::Frame(),
+	                                 .image   = found->second.image,
+	                                 .dcc     = found->second.dcc,
+	                                 .result  = DiagF5::DccApplyResult::Dropped,
+	                                 .layers  = layers,
+	                                 .site    = site});
+	m_f26_marks.erase(found);
+	m_f26_marks_count.fetch_sub(1, std::memory_order_relaxed);
+}
+
+bool TextureCache::F26HasMarkLocked(uint64_t address) const {
+	return m_f26_marks_count.load(std::memory_order_relaxed) != 0 && m_f26_marks.contains(address);
+}
+
+bool TextureCache::F26HasMark(uint64_t address) {
+	if (m_f26_marks_count.load(std::memory_order_relaxed) == 0) {
 		return false;
 	}
 	std::scoped_lock lock {m_lock};
-	const auto       found = m_f26_deferred.find(id);
-	if (found == m_f26_deferred.end()) {
-		return false;
-	}
-	*mark = found->second;
-	m_f26_deferred.erase(found);
-	m_f26_deferred_count.fetch_sub(1, std::memory_order_relaxed);
-	return true;
+	return m_f26_marks.contains(address);
 }
 
 bool TextureCache::TouchMeta(uint64_t address, uint32_t slice, bool is_clear) {
@@ -3868,6 +3986,10 @@ void TextureCache::UnmapMemory(uint64_t address, uint64_t size) {
 	const auto       end = address + size;
 	for (auto metadata = m_surface_metas.lower_bound(address);
 	     metadata != m_surface_metas.end() && metadata->first < end;) {
+		// Track F, F46a (item 702(e)(2)): the erase drops the mark M1 of the address (site=unmap; C4 of F45a).
+		if (m_f26_marks_count.load(std::memory_order_relaxed) != 0) [[unlikely]] {
+			F26DropLocked(metadata->first, DiagF5::F26Site::Unmap, metadata->second.clear_mask);
+		}
 		metadata = m_surface_metas.erase(metadata);
 		BumpMetaEpoch();
 	}

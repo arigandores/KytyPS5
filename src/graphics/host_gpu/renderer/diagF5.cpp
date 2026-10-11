@@ -2,6 +2,7 @@
 
 #include "common/envFlag.h"
 #include "common/logging/log.h"
+#include "graphics/host_gpu/renderer/colorRenderTarget.h" // Track F, F46a: DccFixedClearSupported (F26TintAt)
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
 
@@ -14,6 +15,8 @@
 #include <map>
 #include <mutex>
 #include <string_view>
+
+#include <vulkan/vulkan_format_traits.hpp> // Track F, F46a: vk::componentCount (F26TintAt)
 
 // Track F, F16d (HPP-521): see diagF5.h. Nothing here is reachable with both knobs off except On() (a static read once)
 // and the early returns of LogMode / Tick / Service / NoteDraw (F16d2: Service is not even called - graphicsRun.cpp).
@@ -221,6 +224,8 @@ constexpr const char* F5Names[] = {
     "f26_exact_stale",
     "f26_fallback",
     "f26_deferred_declined", // Track F, F16o2 (item 507(b)(3))
+    "f26_tint_applied",      // Track F, F46a (item 702(e)(4))
+    "f26_tint_skip",
 };
 static_assert(std::size(F5Names) == static_cast<size_t>(DiagF5::Counter::Count));
 
@@ -741,12 +746,35 @@ bool NoteDccStale(const DccStaleLine& line, uint64_t* n_out) {
 	return true;
 }
 
-// ---- Track F, F16o2 (HPP-599, ROADMAP s122 item 507(b)(3)): the line dcc_stale_apply.
+// ---- Track F, F16o2 (HPP-599, ROADMAP s122 item 507(b)(3)): the line dcc_stale_apply. Track F, F46a (HPP-798, item
+// 702(e)(2)): the result dropped and the field site.
+const char* DccApplyResultName(DccApplyResult result) {
+	switch (result) {
+		case DccApplyResult::Cleared: return "cleared";
+		case DccApplyResult::Declined: return "declined";
+		case DccApplyResult::Dropped: return "dropped";
+	}
+	return "cleared";
+}
+
+const char* F26SiteName(F26Site site) {
+	switch (site) {
+		case F26Site::Prepare: return "prepare";
+		case F26Site::Mat: return "mat";
+		case F26Site::Fill: return "fill";
+		case F26Site::Unmap: return "unmap";
+		case F26Site::Delete: return "delete";
+		case F26Site::Retype: return "retype";
+		case F26Site::Remark: return "remark";
+	}
+	return "prepare";
+}
+
 std::string FormatDccStaleApply(const DccApplyLine& line) {
 	return fmt::format("DiagF5Ev: dcc_stale_apply n={} present={} gpu={} image=0x{:016x} dcc=0x{:016x} result={} "
-	                   "layers=0x{:08x}",
-	                   line.n, line.present, line.gpu, line.image, line.dcc, line.cleared ? "cleared" : "declined",
-	                   line.layers);
+	                   "layers=0x{:08x} site={}",
+	                   line.n, line.present, line.gpu, line.image, line.dcc, DccApplyResultName(line.result),
+	                   line.layers, F26SiteName(line.site));
 }
 
 bool NoteDccStaleApply(const DccApplyLine& line) {
@@ -755,6 +783,85 @@ bool NoteDccStaleApply(const DccApplyLine& line) {
 	}
 	EmitLine(FormatDccStaleApply(line));
 	return true;
+}
+
+// ---- Track F, F46a (HPP-798, ROADMAP s122 item 702(e)(3)): the line f26_first_exec.
+std::string FormatFirstExec(const FirstExecLine& line) {
+	return fmt::format("DiagF5Ev: f26_first_exec n={} present={} dcc=0x{:016x} image=0x{:016x} site={}", line.n,
+	                   line.present, line.dcc, line.image, F26SiteName(line.site));
+}
+
+bool NoteFirstExec(const FirstExecLine& line) {
+	if (line.n == 0 || line.n > 256) { // the limit of dcc_stale
+		return false;
+	}
+	EmitLine(FormatFirstExec(line));
+	return true;
+}
+
+// ---- Track F, F46a (HPP-798, ROADMAP s122 item 702(e)(4)): KYTY_F26_TINT / KYTY_F26_TINT_DCC.
+namespace {
+uint32_t ParseTintMode(const char* value) {
+	if (value == nullptr) {
+		return 0;
+	}
+	const std::string_view text(value);
+	return text == "1" ? 1u : text == "2" ? 2u : 0u;
+}
+
+uint64_t ParseTintDcc(const char* value) {
+	if (value == nullptr || value[0] == 0) {
+		return 0;
+	}
+	char*      end    = nullptr;
+	const auto parsed = std::strtoull(value, &end, 16);
+	return end != nullptr && *end == 0 ? static_cast<uint64_t>(parsed) : 0;
+}
+} // namespace
+
+uint32_t F26TintMode() {
+	static const uint32_t mode = ParseTintMode(std::getenv("KYTY_F26_TINT"));
+	return mode;
+}
+
+uint64_t F26TintDcc() {
+	static const uint64_t key = ParseTintDcc(std::getenv("KYTY_F26_TINT_DCC"));
+	return key;
+}
+
+bool LogF26TintMode() {
+	static std::atomic<bool> logged {false};
+	if (F26TintMode() == 0 || logged.exchange(true, std::memory_order_relaxed)) {
+		return false;
+	}
+	EmitLine(fmt::format("F26Tint: mode={} dcc=0x{:016x}", F26TintMode(), F26TintDcc()));
+	return true;
+}
+
+bool F26TintKey(uint64_t address) {
+	return F26TintMode() != 0 && address == F26TintDcc();
+}
+
+TintResult F26TintAt(uint32_t mode, uint64_t key, uint64_t address, bool removes_mark, vk::Format format,
+                     vk::ClearColorValue& clear) {
+	if ((mode != 1 && mode != 2) || address != key || (mode == 1 && !removes_mark)) {
+		return TintResult::None;
+	}
+	if (!DccFixedClearSupported(format) || vk::componentCount(format) < 3) {
+		return TintResult::Skip;
+	}
+	clear.float32 = std::array<float, 4> {1.0f, 0.0f, 1.0f, 1.0f};
+	return TintResult::Applied;
+}
+
+TintResult F26Tint(uint64_t address, bool removes_mark, vk::Format format, vk::ClearColorValue& clear) {
+	const auto result = F26TintAt(F26TintMode(), F26TintDcc(), address, removes_mark, format, clear);
+	if (result == TintResult::Applied) {
+		Add(Counter::F26TintApplied);
+	} else if (result == TintResult::Skip) {
+		Add(Counter::F26TintSkip);
+	}
+	return result;
 }
 
 std::vector<std::string> RecentLines() {

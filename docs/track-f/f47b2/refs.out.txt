@@ -1,0 +1,2 @@
+links 16 bad 0 neg 16 of 16
+ALL OK

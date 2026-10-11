@@ -1,0 +1,1 @@
+826fc0a0fb93aac9f0620baa7a411d3d0adbdc2fa9464bb2c2a7d9044cfa369e build/install/kyty_emulator.exe (FS14, worktree 76c1058f)

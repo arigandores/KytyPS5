@@ -1,0 +1,14 @@
+track F link FS14a (HPP-812): KYTY_FIX_F24 default 0 -> 1 (ROADMAP s122 item 710(g)(1))
+
+JoyPump::ReadKnob in src/graphics/presentation/window/joyPump.cpp reads KYTY_FIX_F24 in the form of FS13a 3630f116 /
+FS12a cbfe8375: unset or "" = ON, 0/false/off/no = OFF, any other value as EnvValueOn; still one reading per process
+(ReadKnob, main thread, WindowCreate before the SDL init; later calls do nothing). The line
+"FixF24: mode=<0|1> b24=<0|1>", the code of 5c21c387 / 57f9e528 and the stand KYTY_TEST_HIDLOSS edition 2 (e3aa4b4d)
+are unchanged; only the reading and two header comments of joyPump.h change. src/graphics/shader/** not touched -
+translation signature unchanged; no gates or knobs added.
+
+Shipping binary FS14: clean worktree of FS13 ea6c6e9e + cherry-pick of 5c21c387 (code F40a), e3aa4b4d (stand edition 2,
+off when unset), 57f9e528 (witness init_owner and flap fields, F40a2) + this commit. Not installed; no game run (WIP
+until FS14c).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

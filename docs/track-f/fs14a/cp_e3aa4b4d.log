@@ -1,0 +1,10 @@
+--- cherry-pick e3aa4b4d
+Auto-merging src/graphics/presentation/window/window.cpp
+[detached HEAD cd422a94] WIP track F link F40a (HPP-770): stand KYTY_TEST_HIDLOSS edition 2 (off when unset) - modes upd (the virtual pad's Update callback sleeps HOLD_UPD_MS 8000 inside SDL_JoystickUpdate on the updating thread), flap (60 extra virtual pads attached / detached from the stand thread, JoyPump tasks delayed 50 ms, opened by first Update), exit (upd + JoyPump task + SDL_QUIT), pad (no title posts, pad probe only); detach on the edition 2 thread; probes: VK_F13 key pairs every IN_MS 100 posted to the window and seen first by ProcessEvent, IsHungAppWindow every PROBE_MS 20, button A of the virtual pad from fire - 20 s to fire - 1 s; SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1 at attach; line TestHidLoss: f24 ...; hold and sleep edition 1 unchanged; no cls (unreachable, docs/track-f/f40a.md s0.5) (ROADMAP s122 item 692(g)(1)); built, not run with the game
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Sun Oct 11 03:05:35 2026 +0200
+ 1 file changed, 425 insertions(+), 20 deletions(-)
+cd422a9465687c7b376ab2e3afecd0d3249962ed b50e90e8301b0695b2fa53390d42d02f3bccb211 WIP track F link F40a (HPP-770): stand KYTY_TEST_HIDLOSS edition 2 (off when u
+--- git status --short (0 = clean)
+0
+CP OK

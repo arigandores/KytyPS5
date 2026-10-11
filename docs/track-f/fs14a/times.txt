@@ -1,0 +1,16 @@
+2026-10-11T12:14:54Z FS14a main commit c8836f14 (KYTY_FIX_F24 default 1); check_gate_order.py on main GATE ORDER: clean
+2026-10-11T12:15:27Z FS14a worktree C:/kyty/f287/fs14a/wt on FS13 ea6c6e9e + cherry-pick -x 5c21c387 -> b50e90e8, e3aa4b4d -> cd422a94, 57f9e528 -> 6eb0f1a1, c8836f14 -> 76c1058f; conflicts 0, status 0 after each
+2026-10-11T12:15:28Z FS14a check_gate_order.py on worktree 76c1058f: GATE ORDER: clean
+2026-10-11T12:15:29Z FS14a API check before 'configure': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:15:34Z FS14a API check before 'build cfg configure': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:17:03Z FS14a configure rc=0
+2026-10-11T12:17:08Z FS14a API check before 'build ver version': in_progress Harness Engineer links: []; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:17:14Z FS14a version rc=0
+2026-10-11T12:17:16Z FS14a API check before 'build emu ': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:18:40Z FS14a kyty_emulator build rc=0
+2026-10-11T12:18:48Z FS14a API check before 'build t1 tests': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:19:27Z FS14a shader_cfg_tests build rc=0
+2026-10-11T12:19:29Z FS14a binary sha256 826fc0a0fb93aac9f0620baa7a411d3d0adbdc2fa9464bb2c2a7d9044cfa369e copy C:/kyty/f287/bin/kyty_emulator_826fc0a0.exe; installed ps5 em/kyty_emulator.exe abab2196 (FS13, not touched)
+2026-10-11T12:20:07Z FS14a API check before 'step tests_cfg': in_progress Harness Engineer links: [HPP-800(run=y,series)]; lock absent, STOP absent, gate processes (argv ends with procload.py) 0; step runs under watchdog watch_fs14a.py (p.431(v))
+2026-10-11T12:20:11Z FS14a shader_cfg_tests vs FS13 6 OK lines, ALL OK; binary_fs14a.py ALL OK
+2026-10-11T12:22:59Z FS14a report docs/track-f/fs14a.md, files docs/track-f/fs14a/, FACTS section appended

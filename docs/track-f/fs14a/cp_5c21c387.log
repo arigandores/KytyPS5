@@ -1,0 +1,15 @@
+--- cherry-pick 5c21c387
+Auto-merging src/graphics/presentation/window/hostInput.cpp
+Auto-merging src/graphics/presentation/window/vulkanWindow.cpp
+Auto-merging src/graphics/presentation/window/window.cpp
+Auto-merging src/libs/controller.cpp
+[detached HEAD b50e90e8] WIP track F link F40a (HPP-770): KYTY_FIX_F24 (default 0) - variant B: at 1 SDL_HINT_AUTO_UPDATE_JOYSTICKS=0, the main thread initializes only video and waits while the JoyPump thread runs SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) (helper, HIDAPI and notification windows, DirectInput STA, WinRT on JoyPump) and then loops tasks -> own thread messages -> SDL_JoystickUpdate -> open new pads by instance id (open failed - line, no fatal; Connect outside the joystick lock) -> wait 1 ms with a pad open / 250 ms; main wait bounded 1 ms / 3000 ms (RC1); add event only logged, close of a removed pad is a JoyPump task; EmergencyShutdown stops JoyPump first (T_JP 2 s, pump_stop_expired, no task or Controller call after the flag), Shutdown keeps g_controller after an expired stop, ~WindowContext quits video only; lines FixF24: mode=, init, pump_update_long, open failed, add event, wait error; =0 path as FS12 (ROADMAP s122 item 692(v)); built, not run with the game
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Sun Oct 11 03:04:50 2026 +0200
+ 6 files changed, 623 insertions(+), 6 deletions(-)
+ create mode 100644 src/graphics/presentation/window/joyPump.cpp
+ create mode 100644 src/graphics/presentation/window/joyPump.h
+b50e90e8301b0695b2fa53390d42d02f3bccb211 ea6c6e9ea61713729c88b7b6ce8492334a00055c WIP track F link F40a (HPP-770): KYTY_FIX_F24 (default 0) - variant B: at 1 SD
+--- git status --short (0 = clean)
+0
+CP OK

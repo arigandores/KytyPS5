@@ -1,0 +1,28 @@
+FS14 C:/kyty/f287/bin/kyty_emulator_826fc0a0.exe sha256 826fc0a0fb93aac9f0620baa7a411d3d0adbdc2fa9464bb2c2a7d9044cfa369e
+FS13 C:/kyty/f287/bin/kyty_emulator_abab2196.exe sha256 abab2196e3b66f0449376f736421d5ac5fd3f18f6d6c98b7ef38351c45a44b73
+OK   FixF24: init_owner                            FS14 x1 FS13 x0
+OK   TestHidLoss: f24                              FS14 x1 FS13 x0
+OK   KYTY_FIX_F24                                  FS14 x1 FS13 x0
+OK   FixF24: mode=                                 FS14 x1 FS13 x0
+OK   FixF24: pump_stop_expired                     FS14 x1 FS13 x0
+OK   FixF24: open failed                           FS14 x1 FS13 x0 (reference)
+OK   FixF24: pump_update_long                      FS14 x1 FS13 x0 (reference)
+OK   KYTY_TEST_HIDLOSS                             FS14 x1 FS13 x1 (reference)
+OK   KYTY_FIX_F25                                  FS14 x1 FS13 x1
+OK   FixF25: mode=                                 FS14 x1 FS13 x1
+OK   FixF25: read failed twice                     FS14 x1 FS13 x1
+OK   KYTY_FIX_F21                                  FS14 x1 FS13 x1
+OK   FixF21: mode=                                 FS14 x1 FS13 x1
+OK   KYTY_FIX_B12                                  FS14 x1 FS13 x1
+OK   FixB12: mode=                                 FS14 x1 FS13 x1
+OK   KYTY_FIX_B13                                  FS14 x1 FS13 x1
+OK   KYTY_FIX_B36                                  FS14 x1 FS13 x1
+OK   FixB4: mode=                                  FS14 x1 FS13 x1
+OK   KYTY_FIX_B24                                  FS14 x1 FS13 x1 (reference)
+OK   KYTY_FIX_F20                                  FS14 x0 FS13 x0
+OK   KYTY_DIAG_B32                                 FS14 x0 FS13 x0
+OK   rts_bad_b                                     FS14 x0 FS13 x0
+OK   9177b4267de1fb8bac7d1113afd8733210addfac      FS14 x1 FS13 x1
+OK   KytyPS5-2026-09-15-6a2987a-1923-g76c1058f     FS14 x2 FS13 x0
+OK   KytyPS5-2026-09-15-6a2987a-1919-gea6c6e9e     FS14 x0 FS13 x2
+ALL OK

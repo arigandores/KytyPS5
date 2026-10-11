@@ -1,0 +1,10 @@
+--- cherry-pick 57f9e528
+Auto-merging src/graphics/presentation/window/window.cpp
+[detached HEAD 6eb0f1a1] WIP track F link F40a2 (HPP-785): KYTY_FIX_F24 witness FixF24: init_owner (RC1 of F40b) and stand KYTY_TEST_HIDLOSS edition 2 flap fields (RC2 of F40b)
+ Author: Emu Engineer <emu-engineer@kyty.local>
+ Date: Sun Oct 11 03:55:49 2026 +0200
+ 3 files changed, 135 insertions(+), 5 deletions(-)
+6eb0f1a19918c46548b58c6ee756b906126c338d cd422a9465687c7b376ab2e3afecd0d3249962ed WIP track F link F40a2 (HPP-785): KYTY_FIX_F24 witness FixF24: init_owner (RC1
+--- git status --short (0 = clean)
+0
+CP OK

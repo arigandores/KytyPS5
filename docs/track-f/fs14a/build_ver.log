@@ -1,0 +1,4 @@
+watch: start 2026-10-11T12:17:09Z child 1312 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+[0/2] Re-checking globbed directories...
+[1/2] Generate kytyGitVersion.h
+rc=0 end 2026-10-11T12:17:14Z

@@ -1,0 +1,154 @@
+prog 00dc898289bb924f udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha ff6c643015302f64
+prog 02bdfb9ab4872b18 udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha 5b37e56dee1151d3
+prog 03b93994f9bc2d39 udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha f8578fa2c6ac196c
+prog 04bc0188903a7e30 udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha 267b490cdb3e41dc
+prog 07fa8f4328cbf91a udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha a87cb6ce64770ac7
+prog 09bbe18686d987f7 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 1372ae7c54d1e497
+prog 0d12d410cec0c50d udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 8d66626d801a034a
+prog 0eceb5a172ebb12f udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 495308dbd6e19842
+prog 0fcbcadd13799ddd udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 53bac9629a0d8d2c
+prog 1179f9600924acb7 udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha 18873da97b807b45
+prog 11acd4c05adcba5c udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 2fd09aabc2673b95
+prog 13db9f7200632c02 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 2cc59cd1683b2765
+prog 16f9df575a3aa74f udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 0808707d76e68a8a
+prog 18ced3fc6fba62ac udc [24] class T v4 1 b5 T leaves IMG,INTERP,LIT,OTHER,OTHER_BR,SMEM,USER control 1 sha cf16cc85c59d65ce
+prog 1974d0d59ab6429f udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 7b6c2b11961a5020
+prog 19f4b92426d374f7 udc [16] class T v4 0 b5 T leaves IMG,SMEM control 0 sha f4fcc0a539b03eb7
+prog 1a4e22aaa15d8ab3 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha fe746db589bce27f
+prog 1b8268b65f79466c udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha a9872a9d783b2465
+prog 1cc26384970f0a3f udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 33d01d081efc1b1c
+prog 1d5fecb928935269 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha b3d3b2c34d91aaba
+prog 2190adcc312b2e6e udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 8753763d1bbc8bc9
+prog 254acd2192e3ed62 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 0b045f33f34591ff
+prog 255ce6193a9e7938 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha d5e19eb0e4acece1
+prog 29a1cf326c96db87 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 0ad17022300ecf61
+prog 2c3545445213721e udc [32] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha a5762d943f281006
+prog 2e2ae33a4d374e8f udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 9ab3fa3c043513e7
+prog 2f46fd22b1de1575 udc [24] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 8c5824bd08bc2189
+prog 32ecf7344a6cc938 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 33acfa15f0e8d75f
+prog 354cb8a3dc5c1869 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 19a0518511e575f4
+prog 3d705c1b57adec00 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha d48b436f4582258a
+prog 3f494f02a1b0b483 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 8a3113d988e3292c
+prog 4098eb87ab128674 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha e53b6958cde80e49
+prog 43cdacd2807376b8 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 8c3a353b791a3a6e
+prog 45942b26d9ffbe8e udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 2e2b6bc6717356eb
+prog 47306eefdb1d6181 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 9888dc0b6b07ced8
+prog 47cfa37a404040d5 udc [32] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 5d9fcfa2a588375a
+prog 4a55033774c8f01e udc [21] class no_export v4 0 b5 no_export leaves  control 0 sha 5e1a9d45b45ce08c
+prog 4c2f796d5951b12e udc [24] class no_export v4 0 b5 no_export leaves  control 1 sha 1439443cd653d606
+prog 4d72ec7fd676ae4a udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 34ca45540ae7b749
+prog 4db106a7729bc624 udc [30] class T v4 1 b5 T leaves COV,IMG,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 0ed636ae4946ba50
+prog 4dcbd39a14bd2e70 udc [24] class T v4 1 b5 T leaves IMG,INTERP,OTHER,OTHER_BR,OTHER_BRS,SMEM control 1 sha 70dbff1cbb4ddc55
+prog 4dd1f85484fc31f2 udc [17] class undetermined v4 0 b5 undetermined leaves BUF,COV,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha b68a0c5e1e88e404
+prog 4ddddb2acd03de9f udc [16] class T v4 0 b5 T leaves IMG,INTERP,LIT,OTHER,SMEM control 0 sha 7926908d1ecbab3e
+prog 4f4d1e114a9f9aae udc [32] class T v4 1 b5 T leaves COV,IMG,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 51f53e33ff898a39
+prog 52276fe1ba080bea udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 10f1e9d7e10873e2
+prog 52d7f981a9506915 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha bdaf68690326534c
+prog 53913e1a0e962495 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 2647c7eaff02804d
+prog 5401c2517a9b1b60 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha a6bad386342a5fba
+prog 5457609506174517 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 0f78f4a91a8e0465
+prog 55dcd484fab4c947 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 63cfab7f8398cea4
+prog 5702634974996107 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha fb97f94ca8ccf908
+prog 57611e7a373cf2d1 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 3c9773c9a43e182b
+prog 5934ba5156b5421e udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha e01a1b044594ff3c
+prog 5a34b303576ee324 udc [32] class T v4 1 b5 T leaves COV,IMG,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha c2dd03b5f6a8df1a
+prog 5c1559192ddc6cfb udc [4] class C-buf v4 0 b5 C-buf leaves INTERP,LIT,SMEM control 0 sha c4722030532d0b47
+prog 62c9c6e53b8edb5f udc [30] class T v4 0 b5 T leaves IMG,LIT,OTHER,SMEM control 0 sha 4846be245529073a
+prog 63722404bb8c7b26 udc [0] class C-buf v4 1 b5 C-buf leaves INTERP,LIT,OTHER_BR control 1 sha e6075c24ff474a67
+prog 69c6a3e4f8d08286 udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha 1861512832c620ba
+prog 6d289d31eb63a3a4 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha ad1948369384dd2c
+prog 70b33a567dcba0d6 udc [20] class T v4 0 b5 T leaves IMG,INTERP,LIT,OTHER,SMEM control 0 sha 373d6f4e3eddb9be
+prog 746c68bba46b2b49 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha e170bf743231790a
+prog 74bb8628d64f534c udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha e4f15897acb309db
+prog 753676e76f15cab2 udc [24] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 42820ed11a683fa9
+prog 77541beeaa4faec9 udc [20] class T v4 1 b5 T leaves IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM control 1 sha b925734d7e8364fd
+prog 7904c41b5a13e609 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha ba694cf44046ca5f
+prog 7a183baca3a6b0df udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 5836ec570c4c94f5
+prog 7a46be05e11e081b udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha a70674f919bf0fc1
+prog 7ffaad20e559f847 udc [24] class T v4 1 b5 T leaves IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM control 1 sha 2073d741efb51e9f
+prog 82e0dd90a5b657bc udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 842666ab98f0389f
+prog 845e6beb25c48d83 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 04368ccedbfa1e67
+prog 88ec57fde329c655 udc [12] class T v4 1 b5 T leaves IMG,OTHER,OTHER_BR control 1 sha 4c00d045ffbd32ab
+prog 8a0a3ff15da902a7 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 6f422d5ceda6a3a9
+prog 8a250ffe8348963b udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 119d07e77be8a0fd
+prog 8d7e7e8528e65547 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 50c36b117d5ffffe
+prog 8d80c0f15ea6562d udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha b694f5ee9fdf82a9
+prog 8ddc98682cf03c05 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 547d37575a666b6f
+prog 9056f3f00ae72940 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 8a644d868b74a302
+prog 9221b45c14fbe20b udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 84a2c7e8323855dc
+prog 92b1436c8042e396 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha e6a2ef600af451be
+prog 93f18ccb31937f4c udc [16] class T v4 0 b5 T leaves IMG,LIT,OTHER,SMEM control 0 sha 44fd150d036b96c1
+prog 9924496ed1039405 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 008345c0a20e4831
+prog 99c16b687dc7a74e udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 0bddc0056b9663ef
+prog 9efa7951e382fce0 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 102500b5ec76e1d9
+prog a400bf174cd8e064 udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha 19999f588fa1218d
+prog ab3583abbc20f2ae udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 628ad832f71f0f00
+prog aba5381e7b4d42bc udc [12] class T v4 1 b5 T leaves IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,USER control 1 sha 57ac4a34db83c654
+prog ace3da4d700b6dcc udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 88e4978260da8538
+prog adc3c63fe205a870 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 462d6f7d006d9a43
+prog aef08e7e8c990db9 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha cb39fde541862674
+prog b49f5c9c82e7e0cc udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha e5ff18dbc8be2be1
+prog b4c5e673efcaf520 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha f4730ac6275f71cd
+prog b5272fc86d605615 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 9bae93c49452a843
+prog b6f28a2e771d2665 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 2204b7720ae4447d
+prog b96c2898f05637df udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 2df73fb4d7339925
+prog bbbf6645f5234056 udc [16] class T v4 1 b5 T leaves IMG,INTERP,LIT,OTHER_BR control 1 sha c12d8945c38a9e89
+prog be4c35a2031fd3f4 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 479868c1feae77ce
+prog bf87bef4b9cfbeec udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 58c2bd1504a9a491
+prog c0c617c477cc9fe8 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 6986fa83114fe80d
+prog c143b6a6c71e7979 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha d980e0684c8366ba
+prog c1af3275440b8419 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha e7e98e064b3bcec9
+prog c33d65a1767f140a udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha 00ad301f31d53e61
+prog c33dc20535a2cebf udc [4] class no_export v4 0 b5 no_export leaves  control 1 sha bf207bf487c0ae2a
+prog c4af37d762c4c8b9 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 7dbf481025fc5ca1
+prog c54d5912f56c0abe udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 9572730dbe99d7ba
+prog c58a2418d811c873 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 2d6b92818d37e947
+prog c6011bbf1011da01 udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha 008536d89c7fad3b
+prog c68f1c9a103b140c udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 0ecd7518e4690479
+prog c7143960900de8db udc [16] class T v4 1 b5 T leaves IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha ed0fe06fbc928f90
+prog c924afb0821b68c8 udc [16] class no_export v4 0 b5 no_export leaves  control 1 sha b7405f69337f3810
+prog ca11de665702d6d9 udc [16] class no_export v4 0 b5 no_export leaves  control 1 sha c4d3875901c48bdf
+prog d40543e536984200 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha c9c451fbe98fd3fd
+prog d4947c8a62b867e9 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 9ae5d549f928fe84
+prog d607561f0debb616 udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha 3c33156106e0ab33
+prog d88770f91d5d003e udc [0] class C-imm v4 0 b5 C-imm leaves LIT control 0 sha 6707778ec40378ae
+prog d8d213fe0ad4b717 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha a18765efc5750979
+prog d97878ab848ab3ea udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha dabac28c5e8a2c0e
+prog d985ff0c7b8009aa udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 3a71a89df7e17c68
+prog db42662a2582dacb udc [24] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha cc4eb33acfd54d0d
+prog db98e493b8d22f5c udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha cffa9c60293a0ea2
+prog dbf26f9feeb21afa udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha 73384a3fe09fd752
+prog dca361d2a823ad25 udc [12] class T v4 1 b5 T leaves IMG,OTHER,OTHER_BR control 1 sha 37b4989e2f0b65e8
+prog dd05e409b33d411c udc [16] class T v4 1 b5 T leaves IMG,INTERP,LIT,OTHER,OTHER_BR,SMEM control 1 sha 3dda07b6ba47ef29
+prog de77cfe4df77658e udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 50f23cf6ac618d12
+prog e0bf2e65895a477e udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha ae46f214a287b234
+prog e14edf4a78d1a517 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 59adbd4d611c2cfc
+prog e197e307a5f2cb39 udc [16] class T v4 1 b5 T leaves IMG,INTERP,LIT,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 0b4ac9e8664caefa
+prog e224ba09c832a7db udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha dd8cf002939d7fd0
+prog e369f47d288c52ad udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 05c49935e9e966fc
+prog e3c32a8c5b12bc41 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 7ef2fae4352bd0da
+prog e427779dbe1ee538 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 013863a032f778ab
+prog e685a61f833c749b udc [8] class undetermined v4 0 b5 undetermined leaves COV,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM control 1 sha a72b6924115059fb
+prog e7f1899003a34d74 udc [16] class no_export v4 0 b5 no_export leaves  control 1 sha e6547a3128c57ee9
+prog eadf3bbe9e2416a0 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 8482e323fa552141
+prog f25acd918dbac2b5 udc [8] class no_export v4 0 b5 no_export leaves  control 0 sha 7fb91dc58eae8af7
+prog f47c0c097c598a36 udc [32] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha f8ffd269ca0de3b9
+prog f53f1c8aceb295d5 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha f69804e6a67def9e
+prog f6d0ec662d8faadc udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha fcff1c0e1339360c
+prog fa23206819e321ce udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 969e49ce6754b7a4
+prog fc4314dad69463cc udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha a7b17ae4e4b73711
+prog fc6adf263da9b1fd udc [31] class no_export v4 0 b5 no_export leaves  control 1 sha 07581f5e4f296bca
+prog fd05d2c1a3ee2741 udc [8] class C-buf v4 0 b5 C-buf leaves INTERP,LIT,SMEM control 0 sha fcfb9be9d99ca81f
+T1 PS programs 141 classes [('C-buf', 3), ('C-imm', 1), ('T', 115), ('no_export', 20), ('undetermined', 2)] v4 111; b5 reading [('C-buf', 3), ('C-imm', 1), ('T', 115), ('no_export', 20), ('undetermined', 2)]
+T1 VS programs 101 POS0 classes [('C-buf', 85), ('T', 13), ('undetermined', 3)] (reference for the coverage member)
+n4 d88770f91d5d003e orig class C-imm v4 0 b5 C-imm leaves LIT control 0
+n4 d88770f91d5d003e m0_load_unused class C-imm v4 0 leaves LIT expect C-imm ok
+n4 d88770f91d5d003e m1_literal_from_s_load class C-buf v4 0 leaves SMEM expect not C-imm with SMEM ok
+n4 d88770f91d5d003e m4_literal_from_user_sgpr class C-buf v4 0 leaves USER expect not C-imm with USER ok
+n4 d88770f91d5d003e m2_branch_on_s_load class undetermined v4 0 leaves LIT,OTHER_BR expect not C-imm with SMEM DEAD
+n4 d88770f91d5d003e m3_cndmask_on_s_load class C-imm v4 0 leaves LIT expect not C-imm with SMEM DEAD
+n4 d88770f91d5d003e m5_s_cselect_b32_on_s_load class C-buf v4 0 leaves LIT,SMEM expect not C-imm with SMEM ok
+n4 d88770f91d5d003e m6_s_cselect_b64_on_s_load class C-buf v4 0 leaves LIT,SMEM expect not C-imm with SMEM ok
+n4 d88770f91d5d003e m7_s_addc_u32_on_s_load class C-buf v4 0 leaves LIT,SMEM expect not C-imm with SMEM ok
+N4: C-imm programs 1, with a literal site 1, classifier dead on 1
+FAIL

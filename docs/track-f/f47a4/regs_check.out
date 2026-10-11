@@ -1,0 +1,51 @@
+source gfx10.json             sha256 f3435695c47c3c3b ok
+source gc_10_1_0_sh_mask.h    sha256 cba20414ecf02e91 ok
+source navi10_enum.h          sha256 26bf943bd92a5282 ok
+source ac_formats.c           sha256 e725f0d0d5f64114 ok
+field CB_BLEND0_CONTROL.COLOR_SRCBLEND         own [4:0] M (0, 4) K (0, 4) ok
+field CB_BLEND0_CONTROL.COLOR_COMB_FCN         own [7:5] M (5, 7) K (5, 7) ok
+field CB_BLEND0_CONTROL.COLOR_DESTBLEND        own [12:8] M (8, 12) K (8, 12) ok
+field CB_BLEND0_CONTROL.ALPHA_SRCBLEND         own [20:16] M (16, 20) K (16, 20) ok
+field CB_BLEND0_CONTROL.ALPHA_COMB_FCN         own [23:21] M (21, 23) K (21, 23) ok
+field CB_BLEND0_CONTROL.ALPHA_DESTBLEND        own [28:24] M (24, 28) K (24, 28) ok
+field CB_BLEND0_CONTROL.SEPARATE_ALPHA_BLEND   own [29:29] M (29, 29) K (29, 29) ok
+field CB_BLEND0_CONTROL.ENABLE                 own [30:30] M (30, 30) K (30, 30) ok
+field CB_BLEND0_CONTROL.DISABLE_ROP3           own [31:31] M (31, 31) K (31, 31) ok
+field CB_COLOR_CONTROL.DEGAMMA_ENABLE         own [3:3] M (3, 3) K (3, 3) ok
+field CB_COLOR_CONTROL.MODE                   own [6:4] M (4, 6) K (4, 6) ok
+field CB_COLOR_CONTROL.ROP3                   own [23:16] M (16, 23) K (16, 23) ok
+field CB_TARGET_MASK.TARGET0_ENABLE         own [3:0] M (0, 3) K (0, 3) ok
+field CB_TARGET_MASK.TARGET1_ENABLE         own [7:4] M (4, 7) K (4, 7) ok
+field CB_TARGET_MASK.TARGET2_ENABLE         own [11:8] M (8, 11) K (8, 11) ok
+field CB_TARGET_MASK.TARGET3_ENABLE         own [15:12] M (12, 15) K (12, 15) ok
+field CB_TARGET_MASK.TARGET4_ENABLE         own [19:16] M (16, 19) K (16, 19) ok
+field CB_TARGET_MASK.TARGET5_ENABLE         own [23:20] M (20, 23) K (20, 23) ok
+field CB_TARGET_MASK.TARGET6_ENABLE         own [27:24] M (24, 27) K (24, 27) ok
+field CB_TARGET_MASK.TARGET7_ENABLE         own [31:28] M (28, 31) K (28, 31) ok
+field CB_SHADER_MASK.OUTPUT0_ENABLE         own [3:0] M (0, 3) K (0, 3) ok
+field CB_SHADER_MASK.OUTPUT1_ENABLE         own [7:4] M (4, 7) K (4, 7) ok
+field CB_SHADER_MASK.OUTPUT2_ENABLE         own [11:8] M (8, 11) K (8, 11) ok
+field CB_SHADER_MASK.OUTPUT3_ENABLE         own [15:12] M (12, 15) K (12, 15) ok
+field CB_SHADER_MASK.OUTPUT4_ENABLE         own [19:16] M (16, 19) K (16, 19) ok
+field CB_SHADER_MASK.OUTPUT5_ENABLE         own [23:20] M (20, 23) K (20, 23) ok
+field CB_SHADER_MASK.OUTPUT6_ENABLE         own [27:24] M (24, 27) K (24, 27) ok
+field CB_SHADER_MASK.OUTPUT7_ENABLE         own [31:28] M (28, 31) K (28, 31) ok
+field CB_COLOR0_INFO.ENDIAN                 own [1:0] M (0, 1) K (0, 1) ok
+field CB_COLOR0_INFO.FORMAT                 own [6:2] M (2, 6) K (2, 6) ok
+field CB_COLOR0_INFO.NUMBER_TYPE            own [10:8] M (8, 10) K (8, 10) ok
+field CB_COLOR0_INFO.COMP_SWAP              own [12:11] M (11, 12) K (11, 12) ok
+field CB_COLOR0_INFO.BLEND_CLAMP            own [15:15] M (15, 15) K (15, 15) ok
+field CB_COLOR0_INFO.BLEND_BYPASS           own [16:16] M (16, 16) K (16, 16) ok
+field CB_COLOR0_INFO.ROUND_MODE             own [18:18] M (18, 18) K (18, 18) ok
+enum BlendOp       21 values vs M and K ok
+enum CombFunc      5 values vs M and K ok
+enum CBMode        8 values vs M and K ok
+enum SurfaceSwap   4 values vs M and K ok
+enum SurfaceNumber 8 values vs M and K ok
+enum ColorFormat   22 values vs M and K ok
+enum ROP3 0xcc own ROP3_COPY M ROP3_COPY ok
+colorswap 1 channels own [('SWAP_ALT_REV', '___X'), ('SWAP_STD', 'X___')] F [('SWAP_ALT_REV', '___X'), ('SWAP_STD', 'X___')] ok
+colorswap 2 channels own [('SWAP_ALT', 'X__Y'), ('SWAP_ALT_REV', 'Y__X'), ('SWAP_STD', 'XY__'), ('SWAP_STD_REV', 'YX__')] F [('SWAP_ALT', 'X__Y'), ('SWAP_ALT_REV', 'Y__X'), ('SWAP_STD', 'XY__'), ('SWAP_STD_REV', 'YX__')] ok
+colorswap 3 channels own [('SWAP_STD', 'XYZ'), ('SWAP_STD_REV', 'ZYX')] F [('SWAP_STD', 'X..'), ('SWAP_STD_REV', 'ZYX')] ok
+colorswap 4 channels own [('SWAP_ALT', 'ZYXW'), ('SWAP_ALT_REV', 'YZWX'), ('SWAP_STD', 'XYZW'), ('SWAP_STD_REV', 'WZYX')] F [('SWAP_ALT', 'ZYXW'), ('SWAP_ALT_REV', 'YZWX'), ('SWAP_STD', 'XYZW'), ('SWAP_STD_REV', 'WZYX')] ok
+ALL OK

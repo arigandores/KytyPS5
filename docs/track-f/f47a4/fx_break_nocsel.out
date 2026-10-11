@@ -1,0 +1,33 @@
+cls_f47a4 break=nocsel
+fixture lit          class C-imm        v4 0 b5 C-imm        want C-imm        v4 0 b5 C-imm        leaves ['LIT'] ok
+fixture user         class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['USER'] ok
+fixture smem         class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['SMEM'] ok
+fixture vin          class undetermined v4 0 b5 undetermined want undetermined v4 0 b5 undetermined leaves ['OTHER'] ok
+fixture shadow       class C-imm        v4 0 b5 C-imm        want C-imm        v4 0 b5 C-imm        leaves ['LIT'] ok
+fixture mrt1_only    class C-imm        v4 0 b5 C-imm        want C-imm        v4 0 b5 C-imm        leaves ['LIT'] ok
+fixture weak_pair    class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'USER'] ok
+fixture cbuf_other   class undetermined v4 0 b5 undetermined want undetermined v4 0 b5 undetermined leaves ['OTHER', 'SMEM'] ok
+fixture img          class T            v4 0 b5 T            want T            v4 0 b5 T            leaves ['IMG'] ok
+fixture interp       class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['INTERP'] ok
+fixture cselect32    class C-imm        v4 0 b5 C-imm        want C-buf        v4 0 b5 C-buf        leaves ['LIT'] BAD
+fixture cselect64    class C-imm        v4 0 b5 C-imm        want C-buf        v4 0 b5 C-buf        leaves ['LIT'] BAD
+fixture addc         class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture subb         class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture cmov         class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture cmovk        class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture scc_operand  class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture lshl3add     class C-imm        v4 0 b5 C-imm        want C-imm        v4 0 b5 C-imm        leaves ['LIT'] ok
+fixture br_smem      class C-buf        v4 1 b5 C-buf        want C-buf        v4 1 b5 C-buf        leaves ['LIT', 'OTHER_BR', 'SMEM', 'USER'] ok
+fixture lds_smem     class undetermined v4 0 b5 undetermined want undetermined v4 0 b5 undetermined leaves ['OTHER', 'SMEM'] ok
+fixture br_live_in   class undetermined v4 0 b5 undetermined want undetermined v4 0 b5 undetermined leaves ['LIT', 'OTHER', 'SMEM', 'USER'] ok
+fixture br_img       class T            v4 1 b5 T            want T            v4 1 b5 T            leaves ['IMG', 'LIT', 'OTHER_BR', 'SMEM', 'USER'] ok
+fixture br_smem_hi   class undetermined v4 0 b5 C-buf        want undetermined v4 0 b5 C-buf        leaves ['LIT', 'OTHER_BR', 'OTHER_BRS', 'SMEM'] ok
+fixture mutant m0_load_unused               class C-imm        leaves ['LIT'] ok
+fixture mutant m1_literal_from_s_load       class C-buf        leaves ['LIT', 'SMEM'] ok
+fixture mutant m4_literal_from_user_sgpr    class C-buf        leaves ['LIT', 'USER'] ok
+fixture mutant m2_branch_on_s_load          class undetermined leaves ['LIT', 'OTHER_BR', 'OTHER_BRS', 'SMEM'] ok
+fixture mutant m3_cndmask_on_s_load         class C-buf        leaves ['LIT', 'SMEM'] ok
+fixture mutant m5_s_cselect_b32_on_s_load   class C-imm        leaves ['LIT'] BAD
+fixture mutant m6_s_cselect_b64_on_s_load   class C-imm        leaves ['LIT'] BAD
+fixture mutant m7_s_addc_u32_on_s_load      class C-buf        leaves ['LIT', 'SMEM'] ok
+FAIL

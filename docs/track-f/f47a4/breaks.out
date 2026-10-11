@@ -1,0 +1,7 @@
+break noctl fixtures_rc 1 FAIL n4_rc 1 FAIL dead [m2_branch_on_s_load m3_cndmask_on_s_load ]
+break smemlit fixtures_rc 1 FAIL n4_rc 1 FAIL dead [m1_literal_from_s_load m2_branch_on_s_load m3_cndmask_on_s_load m5_s_cselect_b32_on_s_load m6_s_cselect_b64_on_s_load m7_s_addc_u32_on_s_load ]
+break userlit fixtures_rc 1 FAIL n4_rc 1 FAIL dead [m4_literal_from_user_sgpr ]
+break nocsel fixtures_rc 1 FAIL [4 BAD: cselect32 cselect64 mutant mutant ] n4_rc 1 FAIL dead [m5_s_cselect_b32_on_s_load m6_s_cselect_b64_on_s_load ]
+break noaddc fixtures_rc 1 FAIL [3 BAD: addc subb mutant ] n4_rc 1 FAIL dead [m7_s_addc_u32_on_s_load ]
+break e3scc fixtures_rc 1 FAIL [8 BAD: cselect32 cselect64 addc subb lshl3add mutant mutant mutant ] n4_rc 1 FAIL dead [m5_s_cselect_b32_on_s_load m6_s_cselect_b64_on_s_load m7_s_addc_u32_on_s_load ]
+break nobr fixtures_rc 1 FAIL [3 BAD: br_smem br_img br_smem_hi ] n4_rc 1 FAIL dead []

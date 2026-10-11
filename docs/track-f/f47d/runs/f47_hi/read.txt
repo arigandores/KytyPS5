@@ -1,0 +1,32 @@
+tag f47_hi (base f47_hi, level underwater_aerial_garden, binary FS14)  reader sha256 74e5a443c5d16ff992d4d3126713679a5d907f34abb0d22543a0fde653c07e42
+  STATUS INTERFERENCE
+    [ok] tag json present
+    [ok] json binary_sha256 = installed pre = before = after, FS13 abab2196 or FS14 013e1974 (FS14 013e1974ea8abfb4 / 013e1974ea8abfb4 / 013e1974ea8abfb4 / 013e1974ea8abfb4)
+    [ok] json prereg sha256 = seal sha256 (a654551965131c45 / a654551965131c45)
+    [ok] env = the form of the tag exactly (exact)
+    [ok] last --vulkan-validation false (false)
+    [ok] no --rd in the command line
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 120 s (120)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (231981)
+    [ok] 0 death markers (log and stdout) []
+    [ok] 0 'GpuHangAbort' lines (0)
+    [ok] 0 'GamePatch:' lines (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha 98)
+    [ok] variant catalog copy with a sha256 manifest, >= 1 file (item 718 (v)(3), F47a3 section 9) (manifest C:/kyty/f287/f47d/runs/f47_hi/variant_copy.tsv files 742 bytes 140083418 listsha )
+    [ok] 'Shader translation cache:' lines name variant_fixb26_fixb1b_fixf10_fixf19 (['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] free on C: >= 80 GiB before the tag (115)
+    [ok] video index present (records 3845)
+    [ok] knob action (1): sum img_imp over 'FrameTrace-draw' = 0 (0)
+    [ok] knob action (2): sum stg_img_pool_b + stg_img_in_b over 'FrameTrace-x' > 0 (6796956160 + 18432)
+    [ok] knob action (4): 'FrameTrace-draw' lines with img_imp = 'FrameTrace: n=' lines (3835 / 3835)
+  INTERFERENCE window events {'lost keyboard focus': 1}, Recovering Vulkan swapchain 0 (item 273 (z))
+  ROW n0 389; P = 713.0 + 0.1075 * n0 = 754.82; prediction outside the sample [185; 374]
+  ROW frames >= 1 s after the entry: at a capture 0 []; outside 0 []
+  ROW [Vulkan][E] 0; skipped draw 0; window events {'lost keyboard focus': 1}; Recovering 0; log lines 577769
+  ROW knob {"control_fs13_v_img_imp": 3955, "fd_lines": 3835, "fx_lines": 3835, "img_imp": 0, "img_imp_kb": 0, "stg_img_in_b": 18432, "stg_img_pool_b": 6796956160}; video records 3845
+  ROW title window {"black_runs": [[1154, 1158, 1155, 757], [1169, 1173, 1170, 772], [1332, 1335, 1333, 935]], "d": 9, "decoded": 351, "maxK": 2954, "maxW": 1668, "status": "OK", "white_runs": [[1161, 1165, 1162, 764]], "window": [997, 1347]}
+  READING INTERFERENCE (no verdict; G' and classes - F47e, outcome - F47f by item 708 (v))

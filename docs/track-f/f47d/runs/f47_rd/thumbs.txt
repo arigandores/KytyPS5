@@ -1,0 +1,9 @@
+thumb_f47d band y<81 of 480x270 TK 150 TW 1000 grid 729,732,735,738,741,744,747,750,753,756,759,762
+k01 level+729 K 0 Wt 494 class -
+k02 level+732 K 0 Wt 399 class -
+k03 level+735 K 1153 Wt 440 class black
+k04 level+738 K 1170 Wt 432 class black
+k05 level+741 K 0 Wt 1197 class white
+k06 level+744 K 11 Wt 1411 class white
+k07 level+747 K 1 Wt 609 class -
+G black 2 white 2 of 12 thumbs 7

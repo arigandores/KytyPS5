@@ -21,6 +21,10 @@ RULES
   lead admission (item 731 (v), KytyPS5 72cf927e): F47D_RD_ADMIT_LEAD=f47_rd, set only after the times.txt line of item 731, makes the
     NOT_ADMITTED attempt f47_rd count as admitted (read.json is not rewritten): the base f47_rd ends (f47_rd_r1 refused 11), f47_hi and
     --grid use it; any other value of the variable does nothing.
+  lead admission (item 734 (v), KytyPS5 a3fea4dd): F47D_HI_ADMIT_LEAD=f47_hi, set only after the times.txt line of item 734, makes the
+    INTERFERENCE attempt f47_hi count as admitted (read.json is not rewritten): the base f47_hi ends (f47_hi_r1 refused 11), the series
+    F47d ends; any other value of the variable, or the variable on another tag or status, does nothing.  f47_rd2 keeps its own rule
+    (F47D_RD2_OK=1 only by a lead's item).
 """
 import json
 import math
@@ -67,12 +71,16 @@ def chain(runs, b):
     return out
 
 
-LEAD_ADMIT = 'f47_rd'  # the only attempt the lead admitted by item 731
+# the only attempts the lead admitted: base -> (variable, the status it admits, item)
+LEAD_ADMIT = {'f47_rd': ('F47D_RD_ADMIT_LEAD', 'NOT_ADMITTED', '731'),
+              'f47_hi': ('F47D_HI_ADMIT_LEAD', 'INTERFERENCE', '734')}
 
 
 def lead_admitted(runs, b):
-    return (b == 'f47_rd' and os.environ.get('F47D_RD_ADMIT_LEAD') == LEAD_ADMIT
-            and status(runs, LEAD_ADMIT) == 'NOT_ADMITTED')
+    if b not in LEAD_ADMIT:
+        return False
+    var, st, _ = LEAD_ADMIT[b]
+    return os.environ.get(var) == b and status(runs, b) == st
 
 
 def admitted(runs, b):
@@ -80,7 +88,7 @@ def admitted(runs, b):
         if s == 'ADMITTED':
             return n
     if lead_admitted(runs, b):
-        return LEAD_ADMIT
+        return b
     return None
 
 
@@ -145,7 +153,9 @@ def may(runs, tag):
     if any(s == 'ADMITTED' for n, s in c):
         return 11, '%s already ADMITTED (%s)' % (b, c)
     if lead_admitted(runs, b):
-        return 11, '%s admitted by the lead (F47D_RD_ADMIT_LEAD, item 731) (%s)' % (b, c)
+        var, _, item = LEAD_ADMIT[b]
+        end = '; series F47d ends' if b == 'f47_hi' else ''
+        return 11, '%s admitted by the lead (%s, item %s)%s (%s)' % (b, var, item, end, c)
     if sum(1 for n, s in c if s == 'NOT_ADMITTED') >= 2:
         return 11, '%s: two NOT_ADMITTED - no more attempts, question to the lead (item 708 (g)(3)) (%s)' % (b, c)
     want = names(b)[len(c)] if len(c) < 4 else None

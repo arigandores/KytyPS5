@@ -1,0 +1,250 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = installed pre = before = after, FS13 abab2196 or FS14 013e1974 (FS14 013e1974ea8abfb4 / 013e1974ea8abfb4 / 013e1974ea8abfb4 / 013e1974ea8abfb4)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (a654551965131c45 / a654551965131c45)",
+   true
+  ],
+  [
+   "env = the form of the tag exactly (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "--rd in the command line",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 120 s (120)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "stdout present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (225026)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "0 'GpuHangAbort' lines (0)",
+   true
+  ],
+  [
+   "0 'GamePatch:' lines (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha 98)",
+   true
+  ],
+  [
+   "variant catalog copy with a sha256 manifest, >= 1 file (item 718 (v)(3), F47a3 section 9) (manifest C:/kyty/f287/f47d/runs/f47_rd/variant_copy.tsv files 742 bytes 140083418 listsha )",
+   true
+  ],
+  [
+   "'Shader translation cache:' lines name variant_fixb26_fixb1b_fixf10_fixf19 (['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "free on C: >= 80 GiB before the tag (141)",
+   true
+  ],
+  [
+   "'RenderDoc: level started at frame' after the named start line ([(192, 225060)]; named ln 225026)",
+   true
+  ],
+  [
+   "12 'RenderDoc: auto capture at frame F (level+X)' lines, X list = the grid ([729, 732, 735, 738, 741, 744, 747, 750] / [729, 732, 735, 738, 741, 744, 747, 750, 753, 756, 759, 762])",
+   false
+  ],
+  [
+   "12 'RenderDoc: captured guest flip 1/1' (7; other flip lines 0)",
+   false
+  ],
+  [
+   "12 new captures moved (rdc_sha.txt lines 7)",
+   false
+  ],
+  [
+   "12 thumbnail rows (7)",
+   false
+  ]
+ ],
+ "base": "f47_rd",
+ "binary": "FS14",
+ "failed": [
+  "12 'RenderDoc: auto capture at frame F (level+X)' lines, X list = the grid ([729, 732, 735, 738, 741, 744, 747, 750] / [729, 732, 735, 738, 741, 744, 747, 750, 753, 756, 759, 762])",
+  "12 'RenderDoc: captured guest flip 1/1' (7; other flip lines 0)",
+  "12 new captures moved (rdc_sha.txt lines 7)",
+  "12 thumbnail rows (7)"
+ ],
+ "interference": [],
+ "level": "underwater_aerial_garden",
+ "reader_sha256": "74e5a443c5d16ff992d4d3126713679a5d907f34abb0d22543a0fde653c07e42",
+ "rows": {
+  "G": "G black 2 white 2 of 12 thumbs 7",
+  "G_black": 2,
+  "G_white": 2,
+  "P": 733.1,
+  "P_outside_sample": false,
+  "capture_finished": 7,
+  "captures": [
+   "0ab8b089d303fbd00013e6249b5b31deaa9a8c1cad28f9293354a525f3268299  f47_rd_k01.rdc  2257459296",
+   "5bc6dbb30fbfe4d6313a398afe2aa8bc0dc3f2843b67be2a06435a383774e6b6  f47_rd_k02.rdc  6017348855",
+   "ada5b7be47bff87da667722476411276943c3fc7dd4b1a747eb54fed903bbb01  f47_rd_k03.rdc  5814825140",
+   "17236812c5ec4bddfeea60039a190e8547b9dd218c9fb8a575c5fcad3f8bd6a4  f47_rd_k04.rdc  1700452008",
+   "d6e7b204f8e417a4197b8ebb0cb56c64dcf86a8447d45621c71491e2e3d596ac  f47_rd_k05.rdc  3962842120",
+   "9ea0f585d433cc052e6701ca1fa89e9a83296816b237de2257c6b4bf929cc735  f47_rd_k06.rdc  3083886384",
+   "c76b2d6f57c164d2c8afc6cd782a0a43717937a90f7261090b4ce15e8edb15e6  f47_rd_k07.rdc  2426818499"
+  ],
+  "frames_ge1s_at_capture": [
+   [
+    918,
+    1825542
+   ],
+   [
+    919,
+    3524022
+   ],
+   [
+    921,
+    1114140
+   ],
+   [
+    922,
+    14204082
+   ],
+   [
+    924,
+    1001426
+   ],
+   [
+    925,
+    19580341
+   ],
+   [
+    927,
+    1129850
+   ],
+   [
+    928,
+    3814221
+   ],
+   [
+    931,
+    10974885
+   ],
+   [
+    934,
+    6195671
+   ],
+   [
+    937,
+    5901548
+   ]
+  ],
+  "frames_ge1s_outside": [
+   [
+    923,
+    1130448
+   ],
+   [
+    932,
+    1058916
+   ]
+  ],
+  "free_gib_after": "116",
+  "grid": [
+   729,
+   732,
+   735,
+   738,
+   741,
+   744,
+   747,
+   750,
+   753,
+   756,
+   759,
+   762
+  ],
+  "lines": 365339,
+  "n0": 187,
+  "rd_frames": [
+   [
+    921,
+    729
+   ],
+   [
+    924,
+    732
+   ],
+   [
+    927,
+    735
+   ],
+   [
+    930,
+    738
+   ],
+   [
+    933,
+    741
+   ],
+   [
+    936,
+    744
+   ],
+   [
+    939,
+    747
+   ],
+   [
+    942,
+    750
+   ]
+  ],
+  "recovering": 0,
+  "skipped_draw": 0,
+  "thumbs": [
+   "k01 level+729 K 0 Wt 494 class -",
+   "k02 level+732 K 0 Wt 399 class -",
+   "k03 level+735 K 1153 Wt 440 class black",
+   "k04 level+738 K 1170 Wt 432 class black",
+   "k05 level+741 K 0 Wt 1197 class white",
+   "k06 level+744 K 11 Wt 1411 class white",
+   "k07 level+747 K 1 Wt 609 class -"
+  ],
+  "vke": 0,
+  "window_events": {}
+ },
+ "status": "NOT_ADMITTED",
+ "tag": "f47_rd"
+}

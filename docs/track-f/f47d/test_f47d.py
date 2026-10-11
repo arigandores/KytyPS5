@@ -327,6 +327,44 @@ def main():
         os.makedirs(runs)
         made('f47_rd', None)
         check('next: lead admit on UNREAD f47_rd does nothing - f47_hi waits (7)', N.may(runs, 'f47_hi')[0] == 7)
+        # lead admission F47D_HI_ADMIT_LEAD=f47_hi (item 734 (v)): without it f47_hi_r1 is due, with it the series ends, another
+        # value / another status does nothing
+        shutil.rmtree(runs)
+        os.makedirs(runs)
+        os.environ['F47D_RD_ADMIT_LEAD'] = 'f47_rd'
+        os.environ.pop('F47D_HI_ADMIT_LEAD', None)
+        made('f47_rd', 'NOT_ADMITTED', gblack=2, n0=187)
+        made('f47_hi', 'INTERFERENCE')
+        check('next: hi admit unset - f47_hi_r1 MAY', N.may(runs, 'f47_hi_r1')[0] == 0)
+        check('next: hi admit unset - f47_hi not admitted', N.admitted(runs, 'f47_hi') is None)
+        for other in ('f47_hi_r1', 'f47_rd', 'F47_HI', 'f47_hi ', '1', ''):
+            os.environ['F47D_HI_ADMIT_LEAD'] = other
+            check('next: hi admit %r - f47_hi_r1 MAY' % other, N.may(runs, 'f47_hi_r1')[0] == 0)
+            check('next: hi admit %r - f47_hi not admitted' % other, N.admitted(runs, 'f47_hi') is None)
+        os.environ.pop('F47D_HI_ADMIT_LEAD', None)
+        os.environ['F47D_RD_ADMIT_LEAD'] = 'f47_hi'
+        check('next: rd variable = f47_hi does not admit f47_hi - f47_hi_r1 refused 7 (rd not admitted)',
+              N.may(runs, 'f47_hi_r1')[0] == 7 and N.admitted(runs, 'f47_hi') is None)
+        os.environ['F47D_RD_ADMIT_LEAD'] = 'f47_rd'
+        os.environ['F47D_HI_ADMIT_LEAD'] = 'f47_hi'
+        rc, msg = N.may(runs, 'f47_hi_r1')
+        check('next: hi admit f47_hi - f47_hi_r1 refused 11, series ends', rc == 11 and 'series F47d ends' in msg and 'item 734' in msg)
+        check('next: hi admit f47_hi - f47_hi admitted', N.admitted(runs, 'f47_hi') == 'f47_hi')
+        check('next: hi admit f47_hi - f47_hi exists 2', N.may(runs, 'f47_hi')[0] == 2)
+        check('next: hi admit f47_hi - f47_rd2 keeps its rule (not due 7)', N.may(runs, 'f47_rd2')[0] == 7)
+        check('next: hi admit f47_hi - rd still admitted by item 731', N.admitted(runs, 'f47_rd') == 'f47_rd')
+        os.environ['F47D_RD_ADMIT_LEAD'] = 'f47_hi'
+        check('next: hi variable does not admit f47_rd', N.admitted(runs, 'f47_rd') is None)
+        os.environ['F47D_RD_ADMIT_LEAD'] = 'f47_rd'
+        for st in ('NOT_ADMITTED', None):
+            shutil.rmtree(runs)
+            os.makedirs(runs)
+            made('f47_rd', 'NOT_ADMITTED', gblack=2, n0=187)
+            made('f47_hi', st)
+            exp = 0 if st == 'NOT_ADMITTED' else 7
+            check('next: hi admit on %s f47_hi does nothing - f47_hi_r1 rc %d' % (st or 'UNREAD', exp),
+                  N.may(runs, 'f47_hi_r1')[0] == exp and N.admitted(runs, 'f47_hi') is None)
+        del os.environ['F47D_HI_ADMIT_LEAD']
         del os.environ['F47D_RD_ADMIT_LEAD']
         shutil.rmtree(runs)
         os.makedirs(runs)

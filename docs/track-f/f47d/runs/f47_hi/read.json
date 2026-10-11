@@ -1,0 +1,169 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = installed pre = before = after, FS13 abab2196 or FS14 013e1974 (FS14 013e1974ea8abfb4 / 013e1974ea8abfb4 / 013e1974ea8abfb4 / 013e1974ea8abfb4)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (a654551965131c45 / a654551965131c45)",
+   true
+  ],
+  [
+   "env = the form of the tag exactly (exact)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "no --rd in the command line",
+   true
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)",
+   true
+  ],
+  [
+   "hold option 120 s (120)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "stdout present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (231981)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "0 'GpuHangAbort' lines (0)",
+   true
+  ],
+  [
+   "0 'GamePatch:' lines (0)",
+   true
+  ],
+  [
+   "caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha 98)",
+   true
+  ],
+  [
+   "variant catalog copy with a sha256 manifest, >= 1 file (item 718 (v)(3), F47a3 section 9) (manifest C:/kyty/f287/f47d/runs/f47_hi/variant_copy.tsv files 742 bytes 140083418 listsha )",
+   true
+  ],
+  [
+   "'Shader translation cache:' lines name variant_fixb26_fixb1b_fixf10_fixf19 (['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "free on C: >= 80 GiB before the tag (115)",
+   true
+  ],
+  [
+   "video index present (records 3845)",
+   true
+  ],
+  [
+   "knob action (1): sum img_imp over 'FrameTrace-draw' = 0 (0)",
+   true
+  ],
+  [
+   "knob action (2): sum stg_img_pool_b + stg_img_in_b over 'FrameTrace-x' > 0 (6796956160 + 18432)",
+   true
+  ],
+  [
+   "knob action (4): 'FrameTrace-draw' lines with img_imp = 'FrameTrace: n=' lines (3835 / 3835)",
+   true
+  ]
+ ],
+ "base": "f47_hi",
+ "binary": "FS14",
+ "failed": [],
+ "interference": [
+  "window events {'lost keyboard focus': 1}, Recovering Vulkan swapchain 0 (item 273 (z))"
+ ],
+ "level": "underwater_aerial_garden",
+ "reader_sha256": "74e5a443c5d16ff992d4d3126713679a5d907f34abb0d22543a0fde653c07e42",
+ "rows": {
+  "P": 754.82,
+  "P_outside_sample": true,
+  "frames_ge1s_at_capture": [],
+  "frames_ge1s_outside": [],
+  "knob": {
+   "control_fs13_v_img_imp": 3955,
+   "fd_lines": 3835,
+   "fx_lines": 3835,
+   "img_imp": 0,
+   "img_imp_kb": 0,
+   "stg_img_in_b": 18432,
+   "stg_img_pool_b": 6796956160
+  },
+  "lines": 577769,
+  "n0": 389,
+  "recovering": 0,
+  "skipped_draw": 0,
+  "title_window": {
+   "black_runs": [
+    [
+     1154,
+     1158,
+     1155,
+     757
+    ],
+    [
+     1169,
+     1173,
+     1170,
+     772
+    ],
+    [
+     1332,
+     1335,
+     1333,
+     935
+    ]
+   ],
+   "d": 9,
+   "decoded": 351,
+   "maxK": 2954,
+   "maxW": 1668,
+   "status": "OK",
+   "white_runs": [
+    [
+     1161,
+     1165,
+     1162,
+     764
+    ]
+   ],
+   "window": [
+    997,
+    1347
+   ]
+  },
+  "video_records": 3845,
+  "vke": 0,
+  "window_events": {
+   "lost keyboard focus": 1
+  }
+ },
+ "status": "INTERFERENCE",
+ "tag": "f47_hi"
+}

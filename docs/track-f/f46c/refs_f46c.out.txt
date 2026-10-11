@@ -1,0 +1,34 @@
+OK 7df0fe5f:docs/ROADMAP.md:24642
+OK 7df0fe5f:docs/ROADMAP.md:24646
+OK 7df0fe5f:docs/ROADMAP.md:24647
+OK 7df0fe5f:docs/ROADMAP.md:24653
+OK e6ef47e6:docs/ROADMAP.md:24717
+OK e6ef47e6:docs/ROADMAP.md:24719
+OK e6ef47e6:docs/ROADMAP.md:24720
+OK f27c1c09:docs/ROADMAP.md:24740
+OK d18ce225:docs/ROADMAP.md:24753
+OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:727
+OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:774
+OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:790
+OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:837
+OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:611
+OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:227
+OK 1398d44d:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3709
+shift NOT OK 7df0fe5f:docs/ROADMAP.md:24643
+shift NOT OK 7df0fe5f:docs/ROADMAP.md:24647
+shift NOT OK 7df0fe5f:docs/ROADMAP.md:24648
+shift NOT OK 7df0fe5f:docs/ROADMAP.md:24654
+shift NOT OK e6ef47e6:docs/ROADMAP.md:24718
+shift NOT OK e6ef47e6:docs/ROADMAP.md:24720
+shift NOT OK e6ef47e6:docs/ROADMAP.md:24721
+shift NOT OK f27c1c09:docs/ROADMAP.md:24741
+shift NOT OK d18ce225:docs/ROADMAP.md:24754
+shift NOT OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:728
+shift NOT OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:775
+shift NOT OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:791
+shift NOT OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:838
+shift NOT OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:612
+shift NOT OK 1398d44d:src/graphics/host_gpu/renderer/diagF5.cpp:228
+shift NOT OK 1398d44d:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3710
+refs 16, ok True, every shift fails True
+ALL OK

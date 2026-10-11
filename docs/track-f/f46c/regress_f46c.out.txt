@@ -1,0 +1,14 @@
+regress_f46c.py sha256 e35a519de4c0e9595e3e0a5600b4ec8b9dbca10fff6fe2fc599ce0558f8540a2 reader 492ad197596002afa5f2d782d97fa1c227f45884f03d5899bd1d3b950ee1cea1 vid 3b28e6fdb34f39390b2067d9dea7e2a8c4477053652a723ed870c96e0f2c9ae1
+ok   fs12_v as f26s_0: NOT_ADMITTED ['json binary_sha256 = T 9c1b268f (46892c20080819ae)', 'installed during the tag = T 9c1b268f (46892c20080819ae)', 'installed before = after = FS13 abab2196 (ea51ae80521e8300 / ea51ae80521e8300)']
+ok   fs12_v: stale lines before / after the entry = 14 / 4 (14, 4)
+ok   fs12_v: each S key has 1 stale line after the entry with fill / size = FS12 keys [('S1', 1), ('S2', 1), ('S3', 1), ('S4', 1)]
+ok   fs12_v: keys not found as dcc_stale lines (no KYTY_DIAG_F5) 
+ok   fs12_v: 0 skipped draw member YES 
+ok   fs12_v: hold >= 300 s member YES 334.0
+ok   fs12_v: env differs (KYTY_FIX_F26 / DIAG / DCC_TRACE missing) 
+ok   f16q f26_1 as f26s_1: NOT_ADMITTED, entry line absent (enemy_final) 
+ok   f16q f26_1: FixF26 member YES 
+ok   f16q f26_1: identity member NO (DiagF5 lines of the older binary unparsable) 
+ok   f29_v frames: size 960x540, rows = idx records ((960, 540), 10113)
+ok   f29_v frames: M max < 500 (natural Sky Garden) M max 7, frames M > 0: 5, entry-screen frames 13
+ALL OK

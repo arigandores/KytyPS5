@@ -1,0 +1,122 @@
+suite test_tools_f46c.py sha256 61057a867028c7ad82ce796c3640cd080499ff85688a9d96d2c394f40122f2af target go_f46c.sh sha256 38e500a262cc036115615e8567e9ee866b1450ffaa1b8a6c00ae7166efd82d4e
+ok   go plan f26s_0 (['dryrun f26s_0 base f26s_0 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=0 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_0_r1 (['dryrun f26s_0_r1 base f26s_0 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=0 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_0_r3 (['dryrun f26s_0_r3 base f26s_0 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=0 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   plan f26s_0: no KYTY_TEST_, no KYTY_GAME_PATCH, no validation; KYTY_FIX_ only KYTY_FIX_F26
+ok   go plan f26s_1 (['dryrun f26s_1 base f26s_1 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_1_r1 (['dryrun f26s_1_r1 base f26s_1 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_1_r3 (['dryrun f26s_1_r3 base f26s_1 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   plan f26s_1: no KYTY_TEST_, no KYTY_GAME_PATCH, no validation; KYTY_FIX_ only KYTY_FIX_F26
+ok   go plan f26s_1b (['dryrun f26s_1b base f26s_1b level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_1b_r1 (['dryrun f26s_1b_r1 base f26s_1b level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_1b_r3 (['dryrun f26s_1b_r3 base f26s_1b level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   plan f26s_1b: no KYTY_TEST_, no KYTY_GAME_PATCH, no validation; KYTY_FIX_ only KYTY_FIX_F26
+ok   go plan f26s_c1 (['dryrun f26s_c1 base f26s_c1 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x571006000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_c1_r1 (['dryrun f26s_c1_r1 base f26s_c1 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x571006000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_c1_r3 (['dryrun f26s_c1_r3 base f26s_c1 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x571006000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   plan f26s_c1: no KYTY_TEST_, no KYTY_GAME_PATCH, no validation; KYTY_FIX_ only KYTY_FIX_F26
+ok   go plan f26s_c3 (['dryrun f26s_c3 base f26s_c3 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x570b24000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_c3_r1 (['dryrun f26s_c3_r1 base f26s_c3 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x570b24000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_c3_r3 (['dryrun f26s_c3_r3 base f26s_c3 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=2 KYTY_F26_TINT_DCC=0x570b24000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   plan f26s_c3: no KYTY_TEST_, no KYTY_GAME_PATCH, no validation; KYTY_FIX_ only KYTY_FIX_F26
+ok   go plan f26s_t1 (['dryrun f26s_t1 base f26s_t1 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x571006000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_t1_r1 (['dryrun f26s_t1_r1 base f26s_t1 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x571006000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_t1_r3 (['dryrun f26s_t1_r3 base f26s_t1 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x571006000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   plan f26s_t1: no KYTY_TEST_, no KYTY_GAME_PATCH, no validation; KYTY_FIX_ only KYTY_FIX_F26
+ok   go plan f26s_t2 (['dryrun f26s_t2 base f26s_t2 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x570aee000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_t2_r1 (['dryrun f26s_t2_r1 base f26s_t2 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x570aee000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   go plan f26s_t2_r3 (['dryrun f26s_t2_r3 base f26s_t2 level underwater_aerial_garden sd 300 timeout 480 hold 330 rec --rec knobs KYTY_FIX_F26=1 KYTY_F26_TINT=1 KYTY_F26_TINT_DCC=0x570aee000 KYTY_DIAG_F5=1 KYTY_DIAG_F5ID=1 KYTY_DCC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0'])
+ok   plan f26s_t2: no KYTY_TEST_, no KYTY_GAME_PATCH, no validation; KYTY_FIX_ only KYTY_FIX_F26
+ok   go t4 of a "kept why=layers" event refused rc 8 (k by construction: class "kept why=layers" (item 711 (b)(1)))
+ok   go t1 before f26s_1 is settled refused rc 7
+ok   go dry-run output: first line is the linter line ALL OK, the plan is a later line
+ok   post plan of f26s_0 is the dryrun line, plan-w no (rc 0: CC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of f26s_c2_r1 is the dryrun line, plan-w no (rc 0: CC_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post: the plan is taken by grep '^dryrun '
+ok   post: the plan-only exit is before the lock check (reads nothing)
+ok   post: frames table before the reader, next plan after f26s_1
+ok   go usage rc 2 for 'f26s_2'
+ok   launch usage rc 2 for 'f26s_2'
+ok   post usage rc 2 for 'f26s_2'
+ok   go usage rc 2 for 'f26s_t5'
+ok   launch usage rc 2 for 'f26s_t5'
+ok   post usage rc 2 for 'f26s_t5'
+ok   go usage rc 2 for 'f26s_0_r4'
+ok   launch usage rc 2 for 'f26s_0_r4'
+ok   post usage rc 2 for 'f26s_0_r4'
+ok   go usage rc 2 for 'f29_v'
+ok   launch usage rc 2 for 'f29_v'
+ok   post usage rc 2 for 'f29_v'
+ok   go usage rc 2 for 'f26s_c0'
+ok   launch usage rc 2 for 'f26s_c0'
+ok   post usage rc 2 for 'f26s_c0'
+ok   go usage rc 2 for ''
+ok   launch usage rc 2 for ''
+ok   post usage rc 2 for ''
+ok   launch f26s_0 on an empty series: dry-run 2 passes (rc 0  datetime.datetime.utcnow().replace(microsecond=0))
+ok   launch f26s_1 before f26s_0: rc 7, times line
+ok   launch f26s_0_r1 without NOT_ADMITTED: rc 11
+ok   launch with lock sum 150 min 1 s: rc 12 (budget, item 716)
+ok   budget refusal wrote SERIES_STOP
+ok   form634_check.py --series C:\kyty\f287\f46c: ALL OK
+ok   go_f46c.sh first executable line is the form linter
+ok   launch_f46c.sh first executable line is the form linter
+ok   go: TB literal = 9c1b268f
+ok   go: INST literal = FS13 abab2196
+ok   go: no FS12 46892c20 / F44a d760708d literal left
+ok   go: BIN and PINNED paths
+ok   on disk: sha256 of the T copy = 9c1b268f
+ok   on disk: sha256 of the pinned FS13 copy = abab2196
+ok   on disk: the T copy = the F46a build output (f46a/build/install)
+ok   go: the machine rule before the lock and before procload
+ok   go: the guard scan right after the lock line, before the manifest
+ok   go: install of the T copy after the copies of the caches
+ok   go: the return of the pinned FS13 copy in finish, before installed_after
+ok   go: installed_after must be FS13; installed before must be FS13
+ok   go: no KYTY_GPU_CHECKPOINTS=, KYTY_GAME_PATCH=, KYTY_TEST_*= in the body
+ok   go: shell KYTY_* and VK_LAYER_* unset before the call
+ok   go: lock line names HPP-800
+ok   go: the key file of a tint tag
+ok   queue_f46c.py own issue HPP-800
+ok   runchk_f46c.py own issue HPP-800
+ok   chk_f46c.sh comments of HPP-800
+ok   runchk_f46c.py reads F46C_RUN_ID, launch sets it
+ok   enter_scene: ROOT = f287/f46c
+ok   enter_scene: CLOSE_WAIT_S = 40
+ok   tempo_f46c.py = tempo_f44c.py with the names moved (+ header line)
+ok   ASCII only: chk_f46c.sh
+ok   ASCII only: dispstate.py
+ok   ASCII only: f46c_read.py
+ok   ASCII only: f46c_vid.py
+ok   ASCII only: gen_refs_f46c.py
+ok   ASCII only: go_f46c.sh
+ok   ASCII only: guard_f46c.py
+ok   ASCII only: hold_f46c.py
+ok   ASCII only: hostload_f46c.py
+ok   ASCII only: idle142.py
+ok   ASCII only: launch_f46c.sh
+ok   ASCII only: launch_run.py
+ok   ASCII only: manifest_fs4c.py
+ok   ASCII only: mfsub_f46c.py
+ok   ASCII only: mk_f46c.py
+ok   ASCII only: neg_f46c.py
+ok   ASCII only: next_f46c.py
+ok   ASCII only: post_f46c.sh
+ok   ASCII only: procload.py
+ok   ASCII only: queue_f46c.py
+ok   ASCII only: refs_f46c.py
+ok   ASCII only: regress_f46c.py
+ok   ASCII only: run_safety99.py
+ok   ASCII only: runchk_f46c.py
+ok   ASCII only: sheet142.py
+ok   ASCII only: snap_f46c.py
+ok   ASCII only: tempo_f46c.py
+ok   ASCII only: test_f46c_read.py
+ok   ASCII only: test_f46c_vid.py
+ok   ASCII only: test_next_f46c.py
+ok   ASCII only: test_tools_f46c.py
+ok   ASCII only: wait_f46c.sh
+checks 117 failed 0
+ALL OK

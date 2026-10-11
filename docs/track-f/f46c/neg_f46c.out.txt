@@ -1,0 +1,21 @@
+m1 F26Tint key compared as text (N1): rc 1 checks 91 failed 10 CAUGHT
+m2 env key compared as text (N1): rc 1 checks 91 failed 3 CAUGHT
+m3 NO_APPLY never: rc 1 checks 91 failed 3 CAUGHT
+m4 class layers allowed: rc 1 checks 91 failed 1 CAUGHT
+m5 skipped draw member dead: rc 1 checks 91 failed 1 CAUGHT
+m6 f26_kept = bucket_only identity dropped: rc 1 checks 91 failed 1 CAUGHT
+m7 hold edge > 300 s: rc 1 checks 91 failed 1 CAUGHT
+m8 the 4 keys: fill / size not checked: rc 1 checks 91 failed 2 CAUGHT
+m9 FixF26 at =0 not checked: rc 1 checks 91 failed 1 CAUGHT
+n1 event rule ignores NO_APPLY: rc 1 checks 48 failed 1 CAUGHT
+n2 event rule ignores the class: rc 1 checks 48 failed 17 CAUGHT
+n3 budget 150:00 stops: rc 1 checks 48 failed 1 CAUGHT
+n4 _r2 without the lead item: rc 1 checks 48 failed 1 CAUGHT
+n5 order not enforced: rc 1 checks 48 failed 6 CAUGHT
+v1 theta edge strict: rc 1 checks 24 failed 1 CAUGHT
+v2 d mean over channels: rc 1 checks 24 failed 3 CAUGHT
+v3 window cap 601: rc 1 checks 24 failed 2 CAUGHT
+v4 exclusion ignored: rc 1 checks 24 failed 3 CAUGHT
+v5 candidate edge strict: rc 1 checks 24 failed 1 CAUGHT
+v6 detector G <= 41: rc 1 checks 24 failed 1 CAUGHT
+ALL OK

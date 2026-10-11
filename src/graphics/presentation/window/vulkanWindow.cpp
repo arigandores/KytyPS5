@@ -37,6 +37,7 @@
 #include "graphics/presentation/systemOverlay.h"
 #include "graphics/presentation/videoOut.h"
 #include "graphics/presentation/window.h"
+#include "graphics/presentation/window/joyPump.h"
 #include "graphics/presentation/window/windowInternal.h"
 #include "kernel/memory.h"
 #include "libs/controller.h"
@@ -1325,7 +1326,13 @@ WindowContext::~WindowContext() {
 		SDL_DestroyWindow(window);
 		window = nullptr;
 	}
-	SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
+	if (JoyPump::Enabled()) {
+		// Track F, F40a (KYTY_FIX_F24=1, s0.4): the joystick subsystem was initialized on JoyPump (its windows, timers and
+		// COM apartment); it is not torn down from this thread and stays until the process ends, as on the quick_exit path.
+		SDL_QuitSubSystem(SDL_INIT_VIDEO);
+	} else {
+		SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
+	}
 }
 
 } // namespace Libs::Graphics

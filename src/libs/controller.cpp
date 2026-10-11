@@ -9,6 +9,7 @@
 #include "common/logging/log.h"
 #include "common/stringUtils.h"
 #include "common/threads.h"
+#include "graphics/presentation/window/joyPump.h" // Track F, F40a (KYTY_FIX_F24)
 #include "kernel/pthread.h"
 #include "libs/audio_internal.h"
 #include "libs/errno.h"
@@ -853,8 +854,12 @@ void Initialize() {
 
 void Shutdown() {
 	EmergencyShutdown();
-	delete g_controller;
-	g_controller = nullptr;
+	// Track F, F40a (KYTY_FIX_F24, RC4): after an expired JoyPump stop the object stays until the process ends - a JoyPump
+	// returning from an OS call must not reach freed memory (docs/track-f/f40a.md s0.4). At =0 Exited() is true.
+	if (Libs::Graphics::JoyPump::Exited()) {
+		delete g_controller;
+		g_controller = nullptr;
+	}
 	delete g_haptics;
 	g_haptics = nullptr;
 	delete g_pad_output;
@@ -862,6 +867,11 @@ void Shutdown() {
 }
 
 void EmergencyShutdown() {
+	// Track F, F40a (KYTY_FIX_F24=1, RC4, ROADMAP s122 item 692(v)(6)): JoyPump is stopped first - after the flag it
+	// runs no task and calls neither Controller nor SDL; the wait is at most T_JP = 2 s ("FixF24: pump_stop_expired").
+	if (Libs::Graphics::JoyPump::Enabled()) {
+		Libs::Graphics::JoyPump::Stop();
+	}
 	if (g_haptics != nullptr) {
 		g_haptics->Stop();
 	}

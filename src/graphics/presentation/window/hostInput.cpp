@@ -11,10 +11,12 @@
 #include "common/assert.h"
 #include "common/emulatorConfig.h"
 #include "common/logging/log.h"
+#include "graphics/presentation/window/joyPump.h"
 #include "libs/controller.h"
 
 #include <algorithm>
 #include <array>
+#include <atomic>
 #include <cmath>
 #include <cstddef>
 #include <cstdlib>
@@ -419,7 +421,43 @@ int PollMouse(uint64_t now_ms) {
 	return MOUSE_POLL_INTERVAL_MS;
 }
 
+// Track F, F40a (KYTY_FIX_F24=1, RC1, ROADMAP s122 item 692(v)(3); docs/track-f/f40a.md s0.3): with
+// SDL_HINT_AUTO_UPDATE_JOYSTICKS=0 SDL has no polling interval, and an event posted by another thread between the
+// queue check and the wakeup window publication of SDL_WaitEventTimeout_Device is not woken. The wait is bounded as
+// SDL bounds it at =0: 1 ms while JoyPump has a pad open, else 3000 ms; the main thread does not call
+// SDL_NumJoysticks. A 0 return is "no event" (the loop goes round); a wait error is a line, not a fatal.
+static bool HostInputWaitEventF24(SDL_Event* event) {
+	const int bound_ms = JoyPump::OpenPads() > 0 ? 1 : 3000;
+	if (!g_mouse.enabled || SDL_GetKeyboardFocus() == nullptr) {
+		CenterMouseStick();
+		SDL_ClearError();
+		if (SDL_WaitEventTimeout(event, bound_ms) != 0) {
+			return true;
+		}
+		if (SDL_GetError()[0] != '\0') {
+			static std::atomic<uint32_t> logged {0};
+			if (logged.fetch_add(1, std::memory_order_relaxed) < 32) {
+				LOGF("FixF24: wait error \"%s\"\n", SDL_GetError());
+			}
+		}
+		return false;
+	}
+
+	const int timeout_ms = std::min(PollMouse(SDL_GetTicks64()), bound_ms);
+	SDL_ClearError();
+	if (SDL_WaitEventTimeout(event, timeout_ms) != 0) {
+		return true;
+	}
+	if (SDL_GetError()[0] != '\0') {
+		EXIT("%s\n", SDL_GetError());
+	}
+	return false;
+}
+
 bool HostInputWaitEvent(SDL_Event* event) {
+	if (JoyPump::Enabled()) {
+		return HostInputWaitEventF24(event);
+	}
 	if (!g_mouse.enabled || SDL_GetKeyboardFocus() == nullptr) {
 		CenterMouseStick();
 		if (SDL_WaitEvent(event) == 0) {

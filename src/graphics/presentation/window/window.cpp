@@ -39,6 +39,7 @@
 #include "graphics/presentation/presenter.h"
 #include "graphics/presentation/systemOverlay.h"
 #include "graphics/presentation/window/hostInput.h"
+#include "graphics/presentation/window/joyPump.h"
 #include "graphics/presentation/window/testMinimizeLine.h"
 #include "graphics/presentation/window/windowInternal.h"
 #include "kytyGitVersion.h"
@@ -381,7 +382,11 @@ static void GameEventController([[maybe_unused]] const EventController& f) {
 	}
 #endif
 
-	if (f.added) {
+	if (f.added && JoyPump::Enabled()) {
+		// Track F, F40a (KYTY_FIX_F24=1, RC2): JoyPump opens new pads by instance id after its own SDL_JoystickUpdate
+		// (docs/track-f/f40a.md s0.4); the add event of the main thread is only logged.
+		JoyPump::NoteAddEvent(f.id);
+	} else if (f.added) {
 		auto* pad = SDL_GameControllerOpen(f.id);
 		EXIT_NOT_IMPLEMENTED(pad == nullptr);
 		int id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(pad));
@@ -406,7 +411,11 @@ static void GameEventController([[maybe_unused]] const EventController& f) {
 		LOGF("Controller %d: removed\n", f.id);
 		TestHidLossCount(g_test_hidloss.removed);
 		Controller::Disconnect(f.id);
-		SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));
+		if (JoyPump::Enabled()) {
+			JoyPump::PostClose(f.id); // Track F, F40a: the close is a JoyPump task (s0.4)
+		} else {
+			SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));
+		}
 	}
 
 	if (f.down || f.up) {
@@ -925,7 +934,21 @@ static void WindowCreate(WindowContext& context) {
 	SDL_SetHint(SDL_HINT_WINDOWS_DPI_SCALING, "0");
 #endif
 
-	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
+	// Track F, F40a (HPP-770, ROADMAP s122 item 692(v)): KYTY_FIX_F24, read once here before the SDL init. At 1 the main
+	// thread initializes only the video subsystem and waits while JoyPump initializes the game controllers - every
+	// joystick window, timer and COM apartment belongs to JoyPump (variant B, docs/track-f/f40a.md s0.1).
+	JoyPump::ReadKnob();
+	if (JoyPump::Enabled()) {
+		const auto main_tid = static_cast<uint64_t>(SDL_ThreadID());
+		SDL_SetHint(SDL_HINT_AUTO_UPDATE_JOYSTICKS, "0");
+		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
+			EXIT("%s\n", SDL_GetError());
+		}
+		std::string error;
+		if (!JoyPump::Start(main_tid, &error)) {
+			EXIT("%s\n", error.c_str());
+		}
+	} else if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
 		EXIT("%s\n", SDL_GetError());
 	}
 	HostInputInit();

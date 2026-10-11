@@ -1,0 +1,2 @@
+same caches EQUAL files 4772
+GLCache row EQUAL only-before 0 only-after 0 (row, not a gate)

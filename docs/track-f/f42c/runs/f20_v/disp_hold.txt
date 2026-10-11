@@ -1,0 +1,3 @@
+hold start dispstate ON idle_s 18 utc 2026-10-11T16:54:31Z
+hold request set utc 2026-10-11T16:54:31Z prev 0x80000000
+hold reset (stop file) utc 2026-10-11T17:05:57Z; dispstate ON idle_s 1

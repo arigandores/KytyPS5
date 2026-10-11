@@ -1,0 +1,1 @@
+pair: C:/kyty/f287/f42c/runs/f20_v/pair_f20_v_fs13_v.png (left f20_v, right fs13_v)

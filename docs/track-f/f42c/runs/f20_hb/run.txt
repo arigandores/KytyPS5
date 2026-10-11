@@ -1,0 +1,17 @@
+prereg: f42c_seal.md  33318 bytes  sha256 68ba1704a6477d24  mtime 2026-10-11T18:53:05  mtime-ctime +0.001 s
+pre_run: host 410 processes, top by CPU: <app> 22902s, <app> 9474s, <app> 8932s, <app> 7429s, <app> 6107s, <app> 6020s
+pre_run: GPU 0.0 % busy, 22.5 W, 1821 MiB used, SM 1567.0 MHz, 21 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f42c\cpuclk.py is not there
+--- attempt 1: launching
+9.7 s  LevelDocument Loaded: hoover_beach
+11.9 s  Level has started: hoover_beach
+13.9 s  scene stable at frame 385 (90 frames with draws >= 300)
+holding the run for 330 s
+hold end: ft_total 20016, ft_tail 302 (last 5 s)
+close: {'close_posted': 5, 'close_rc': 0, 'close_killed': False, 'close_s': 4.1, 'close_wait_s': 40}
+hold_gpu: median 86.0 % busy over 649 rows (2026/10/11 19:14:27.849 .. 2026/10/11 19:19:58.033), a row, not a guard
+copied C:\kyty\f287\f42c\log_f20_hb.txt
+copied C:\kyty\f287\f42c\stdout_f20_hb.txt
+
+attempt 1  ok               document=9.7 s started=11.9 s stable=13.9 s 
+VERDICT: hoover_beach in 13.9 s - PASS (acceptance <= 90 s)

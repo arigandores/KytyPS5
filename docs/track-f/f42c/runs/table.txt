@@ -1,0 +1,6 @@
+reader f42c_read.py sha256 cd05eb4776c2a5d85c99500a267337f105ddc8557065295c0d5729c2ca739560
+| tag | status | binary_sha256 | members 694(g)(6) | form | FixF20Stat exit (bound/modules/rewritten/unmatched) | prep ms | _PipelineCache before / after | exit code | close_s | glitches | video index | hold_s |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| f20_hb | ADMITTED | 1994a0ce | ALL YES | ALL YES | 22/22/79/0 | [0] | 200058789 / 200058789 | 0 | 4.1 | 0 | 20028 | 330.2 |
+| f20_v | ADMITTED | 1994a0ce | ALL YES | ALL YES | 22/22/79/0 | [2299] | 192243915 / 200058789 | 0 | 4.2 | 0 | 10018 | 330.1 |
+| f20_w | ADMITTED | 1994a0ce | ALL YES | ALL YES | 22/22/79/0 | [0] | 200058789 / 200058789 | 0 | 4.1 | None | None | 310.0 |

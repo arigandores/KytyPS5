@@ -1,0 +1,337 @@
+{
+ "admission": [
+  [
+   "tag json present",
+   true
+  ],
+  [
+   "json binary_sha256 = F42a2 1994a0ce (1994a0ced45c8135)",
+   true
+  ],
+  [
+   "installed during the tag = F42a2 1994a0ce (1994a0ced45c8135)",
+   true
+  ],
+  [
+   "installed before = after, FS13 abab2196 or FS14 013e1974 (013e1974ea8abfb4 / 013e1974ea8abfb4)",
+   true
+  ],
+  [
+   "json prereg sha256 = seal sha256 (68ba1704a6477d24 / 68ba1704a6477d24)",
+   true
+  ],
+  [
+   "env = the form of the tag (exact)",
+   true
+  ],
+  [
+   "no KYTY_TEST_* in the env (none)",
+   true
+  ],
+  [
+   "0 ExitFatal: lines (log 0; whole stdout 0)",
+   true
+  ],
+  [
+   "last --vulkan-validation false (false)",
+   true
+  ],
+  [
+   "last --shader-validation false (false)",
+   true
+  ],
+  [
+   "no --rd",
+   true
+  ],
+  [
+   "guest args -lvl hoover_beach (-lvl hoover_beach; harness hoover_beach)",
+   true
+  ],
+  [
+   "hold option 330 s (330)",
+   true
+  ],
+  [
+   "log present",
+   true
+  ],
+  [
+   "stdout present",
+   true
+  ],
+  [
+   "entry outcome ok (ok)",
+   true
+  ],
+  [
+   "entry line present (223862)",
+   true
+  ],
+  [
+   "window events: minimized 0, Recovering Vulkan swapchain 0 (all {'lost keyboard focus': 1})",
+   true
+  ],
+  [
+   "translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])",
+   true
+  ],
+  [
+   "no GamePatch: line (0)",
+   true
+  ],
+  [
+   "no DiagB32 line - no KYTY_DIAG_B32 (0)",
+   true
+  ],
+  [
+   "no TestLogStall line (0)",
+   true
+  ],
+  [
+   "_SaveData returned (manifest_cmp: manifest cmp EQUAL files 2 listsha dc63b)",
+   true
+  ],
+  [
+   "caches before the tag = after the previous tag of the series (_ShaderCache, _ShaderSeeds, _PipelineCache) (same caches EQUAL files 4772)",
+   true
+  ],
+  [
+   "summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))",
+   true
+  ]
+ ],
+ "admitted": true,
+ "binary_sha256": "1994a0ced45c8135f17c8d2aa568278c66375250f1667430c83ba4d0b1a93f29",
+ "exit": {
+  "close_killed": false,
+  "close_posted": 5,
+  "close_rc": 0,
+  "close_rc_hex": "0x00000000",
+  "close_s": 4.1,
+  "close_wait_s": 40,
+  "fatal_after_quit": 0,
+  "fatal_stdout": 0,
+  "quit_ln": 1983466
+ },
+ "f20_rows": {
+  "blob_pipelinecache_after": 200058789,
+  "blob_pipelinecache_before": 200058789,
+  "f20_mode_lines": 1,
+  "f20_other": 0,
+  "f20_unparsable": 0,
+  "f20stat_exit": {
+   "calls": 1271,
+   "modules": 22,
+   "modules_bound": 22,
+   "rewritten": 79,
+   "sites": 79,
+   "unmatched": 0,
+   "when": "exit"
+  },
+  "f20stat_last": {
+   "calls": 1271,
+   "modules": 22,
+   "modules_bound": 22,
+   "rewritten": 79,
+   "sites": 79,
+   "unmatched": 0,
+   "when": "exit"
+  },
+  "f20stat_lines": 1,
+  "f20stat_max_unmatched": 0,
+  "f20stat_periodic": 0,
+  "f20stat_unparsable": 0,
+  "glcache_after": 294040863,
+  "glcache_before": 292702243,
+  "precache_lines": [
+   "PipelinePrecache: 1986 recipes -> 1842 graphics + 144 compute pipelines queued, 0 skipped, 3775 sources loaded, complete, 602 ms (scratch: 0 pipelines, max 0 dwords/thread)",
+   "PipelinePrecache: all pipelines created, 602 ms"
+  ],
+  "precache_n": 2,
+  "prep_lines": [
+   "ShaderPreparation: startup wait finished in 0 ms presents_other=0 presents_main=0"
+  ],
+  "prep_ms": [
+   0
+  ],
+  "shadercache_after": 689683755,
+  "shadercache_before": 689683755,
+  "vk_pipeline_cache_lines": [
+   "Vulkan pipeline cache: loading _PipelineCache\\PPSA21564.bin",
+   "Vulkan pipeline cache: loaded 135651092 bytes from _PipelineCache\\PPSA21564.bin",
+   "Vulkan pipeline cache: saved 135651092 bytes to _PipelineCache\\PPSA21564.bin (143690 us)"
+  ],
+  "vk_pipeline_cache_n": 3
+ },
+ "form": "f20_hb",
+ "form_members": [
+  [
+   "FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 728)]; unparsable 0; first GuestOut 12503)",
+   true
+  ],
+  [
+   "FixB12: mode=1 (every line) before the first GuestOut ([(1, 726)]; bad 0; first GuestOut 12503)",
+   true
+  ],
+  [
+   "exit by the harness: Event: quit line in the log (1983466)",
+   true
+  ],
+  [
+   "after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)",
+   true
+  ],
+  [
+   "0 FixF21: wait_expired (whole log 0; whole stdout 0)",
+   true
+  ],
+  [
+   "the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)",
+   true
+  ],
+  [
+   "LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12503)",
+   true
+  ],
+  [
+   "summary LogAsync: full_waits= present (1)",
+   true
+  ],
+  [
+   "drain_timeouts 0 (0)",
+   true
+  ],
+  [
+   "FixB13: mode=1 (every line) before the first GuestOut ([(1, 724)]; first GuestOut 12503)",
+   true
+  ],
+  [
+   "FixB12Stat: line present (parsed 34, unparsable 0)",
+   true
+  ],
+  [
+   "FixF20: mode=1 (every line) before the first GuestOut ([(1, 84)]; unparsable 0; first GuestOut 12503) - item 694 (g)(6)",
+   true
+  ],
+  [
+   "FixF20Stat exit line: unmatched 0 (0)",
+   true
+  ],
+  [
+   "FixF20Stat exit line: modules_bound = modules (22 / 22)",
+   true
+  ]
+ ],
+ "form_ok": true,
+ "info": {
+  "expired_log": 0,
+  "expired_stdout": 0,
+  "fatal_after_quit": 0,
+  "fatal_log_total": 0,
+  "fatal_stdout": 0,
+  "first_scene_n": 294,
+  "frames_ge1s": 0,
+  "frames_ge1s_with_first": 0,
+  "hold_s": 332.0,
+  "max_dt": 65967,
+  "mean_dt_us": 16833.5,
+  "quit_ln": 1983466,
+  "scene_frames": 19723,
+  "summary": {
+   "bytes": 600853303,
+   "drain_timeouts": 0,
+   "full_wait_us": 0,
+   "full_waits": 0,
+   "lines": 1162915,
+   "max_queued_bytes": 29152,
+   "stall_cut": 0,
+   "stalls": 0,
+   "sync_lines": 0
+  },
+  "vke": 0,
+  "vkw": 0
+ },
+ "interference": null,
+ "kind": "hb",
+ "level": "hoover_beach",
+ "members": [
+  [
+   "hold >= 300 s after the first scene frame (332.0 s)",
+   true
+  ],
+  [
+   "the process lived through the hold (outcome ok, hold_exit None)",
+   true
+  ],
+  [
+   "0 death markers (log and stdout) []",
+   true
+  ],
+  [
+   "0 frames >= 1 s after the first scene frame (0; first 294; with the first frame 0)",
+   true
+  ],
+  [
+   "video index records >= 3000 (20028)",
+   true
+  ],
+  [
+   "0 one-frame glitches (0)",
+   true
+  ],
+  [
+   "sheet for the lead made (sheet: C:/kyty/f287/f42c/runs/f20_hb/sheet_f20_hb.png frames 20028 step 417 tiles 8x6)",
+   true
+  ],
+  [
+   "N1 (item 705 (v)): Event: quit present and a FixF20Stat: when=exit line after it (quit 1983466; exit lines after it 1; all exit lines 1; unparsable FixF20Stat 0)",
+   true
+  ]
+ ],
+ "n1_stop": false,
+ "ok": true,
+ "reader_sha256": "cd05eb4776c2a5d85c99500a267337f105ddc8557065295c0d5729c2ca739560",
+ "reading": "ADMITTED, members 694(g)(6) ALL YES, members of the form ALL YES (no verdict; reading - F42d)",
+ "ref": {
+  "b12stat_last": {
+   "ln": 1947497,
+   "lskip": 0,
+   "passes": 180232,
+   "rewalk": 0,
+   "rwd": 0
+  },
+  "b12stat_lines": 34,
+  "bin_version_string": true,
+  "env_keys": [
+   "KYTY_FIX_F20",
+   "KYTY_FRAME_TRACE",
+   "KYTY_GATE_FILE",
+   "KYTY_GPU_CLOCK_PIN",
+   "KYTY_GPU_HANG_ABORT_S",
+   "KYTY_GPU_MARKERS",
+   "KYTY_GUEST_ARGS",
+   "KYTY_QUEUE_TRACE",
+   "KYTY_REC",
+   "KYTY_SAMPLE_GATE"
+  ],
+  "f21_lines": 1,
+  "f21_other": 0,
+  "fork_line": "version: Fork build arigandores/KytyPS5 5ccb1d3",
+  "glitches": 0,
+  "hold_exit": null,
+  "hold_s": 330.2,
+  "lines": 1983470,
+  "other_logasync": 0,
+  "outcome": "ok",
+  "sheet": "sheet: C:/kyty/f287/f42c/runs/f20_hb/sheet_f20_hb.png frames 20028 step 417 tiles 8x6",
+  "stable_s": 13.9,
+  "stand_log": 0,
+  "stand_stdout": 0,
+  "video_index": 20028,
+  "vke": 0,
+  "vkw": 0
+ },
+ "status": "ADMITTED",
+ "tag": "f20_hb"
+}

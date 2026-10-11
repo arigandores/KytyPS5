@@ -1,0 +1,459 @@
+diff 4fc501f4 eb7e8b91 -- src/: files 76 +15262 -190
+added lines with an env read call (code part): 57
+  + src/common/logging/log.cpp:187 const char* value = std::getenv("KYTY_TEST_LOGSTALL");
+  + src/common/logging/log.cpp:735 const char* value = std::getenv("KYTY_FIX_B36");
+  + src/common/logging/log.cpp:736 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/common/logging/log.cpp:755 LongFrame::g_on = Common::EnvFlagOn("KYTY_LONGFRAME");
+  + src/common/subsystems.cpp:74 const char* value = std::getenv("KYTY_FIX_F21");
+  + src/common/subsystems.cpp:75 g_fix_f21  = value == nullptr || value[0] == '\0' || EnvValueOn(value);
+  + src/emulator.cpp:149 const char* value = std::getenv("KYTY_TEST_EXITFATAL");
+  + src/emulator.cpp:561 if (const char* game_patch_file = std::getenv("KYTY_GAME_PATCH");
+  + src/graphics/host_gpu/regionManager.h:54 const char* value = std::getenv("KYTY_FIX_B13");
+  + src/graphics/host_gpu/regionManager.h:55 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/host_gpu/regionManager.h:70 const char* value = std::getenv("KYTY_FIX_B12");
+  + src/graphics/host_gpu/regionManager.h:71 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/host_gpu/renderer/cache/faultManager.cpp:46 const char* value = std::getenv("KYTY_FIX_F29");
+  + src/graphics/host_gpu/renderer/cache/faultManager.cpp:47 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3650 const char* value = std::getenv("KYTY_FIX_B42");
+  + src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3651 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:284 const char* value = std::getenv("KYTY_S_PCW");
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:285 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:295 const char* value = std::getenv("KYTY_S_PCW_FORCE_MS");
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1305 const char* value = std::getenv("KYTY_DUMP_GCN");
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1354 const char* value = std::getenv("KYTY_FIX_SVAL");
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1355 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:51 static const int mode = ParseMode(std::getenv("KYTY_S_REPLAY"));
+  + src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:65 const char* value = std::getenv("KYTY_S_REPLAY_TEST");
+  + src/graphics/presentation/videoOut.cpp:1297 static const bool long_frame = Common::EnvFlagOn("KYTY_LONGFRAME");
+  + src/graphics/presentation/window/joyPump.cpp:455 const char* value = std::getenv("KYTY_FIX_F24");
+  + src/graphics/presentation/window/joyPump.cpp:456 g_enabled.store(value == nullptr || value[0] == '\0' || Common::EnvValueOn(value), std::memory_order_release);
+  + src/graphics/presentation/window/swapchain.cpp:311 const char* value = std::getenv("KYTY_FIX_MINIMIZE");
+  + src/graphics/presentation/window/swapchain.cpp:312 const bool  on    = value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/presentation/window/vulkanWindow.cpp:667 const char* dual_src_value    = std::getenv("KYTY_FIX_DUALSRC");
+  + src/graphics/presentation/window/vulkanWindow.cpp:669 Common::EnvValueOn(dual_src_value));
+  + src/graphics/presentation/window/window.cpp:1185 const char*       value = std::getenv("KYTY_TEST_HIDLOSS");
+  + src/graphics/presentation/window/window.cpp:1768 const char*  value = std::getenv("KYTY_TEST_MINIMIZE");
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:331 const char* value = std::getenv("KYTY_FIX_B26");
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:332 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:346 const char* value = std::getenv("KYTY_FIX_B1B");
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:347 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:356 const char* value = std::getenv("KYTY_FIX_F10");
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:357 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:38 const char* value = std::getenv("KYTY_FIX_F19");
+  + src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:39 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/kernel/fileSystem.cpp:114 const char* value = std::getenv("KYTY_FIX_B4");
+  + src/kernel/fileSystem.cpp:115 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/kernel/fileSystem.cpp:130 const char* value = std::getenv("KYTY_FIX_F25");
+  + src/kernel/fileSystem.cpp:131 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/kernel/pvar.cpp:169 const char* value = std::getenv("KYTY_PVAR");
+  + src/libs/audio.cpp:295 const char* value = std::getenv("KYTY_FIX_F8");
+  + src/libs/audio.cpp:296 const bool  on    = value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/libs/controller.cpp:440 const char* value = std::getenv("KYTY_TEST_AUDIOLOSS");
+  + src/libs/controller.cpp:840 const char* value = std::getenv("KYTY_FIX_B24");
+  + src/libs/controller.cpp:841 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/libs/libAudio.cpp:374 const char* fix_b9a_value = std::getenv("KYTY_FIX_B9A");
+  + src/libs/libAudio.cpp:375 const bool  fix_b9a       = fix_b9a_value == nullptr || fix_b9a_value[0] == '\0' || Common::EnvValueOn(fix_b9a_value);
+  + src/loader/gamePatchFile.cpp:62 const char* path = std::getenv("KYTY_GAME_PATCH");
+  + src/loader/gamePatchFile.cpp:69 env.pvar       = std::getenv("KYTY_PVAR");
+  + src/loader/gamePatchFile.cpp:70 env.audio_sync = std::getenv("KYTY_AUDIO_SYNC");
+  + src/loader/gamePatchFile.cpp:71 env.poke       = std::getenv("KYTY_POKE");
+removed lines with an env read call: 0
+KYTY_* names on +/- lines: 61
+  KYTY_ARM_INLINE            +2 (code 1) -0
+  KYTY_ARM_IN_COPY           +2 (code 1) -0
+  KYTY_ARM_LOSS_WIN          +2 (code 1) -0
+  KYTY_ASYNC_COPY            +4 (code 0) -0
+  KYTY_ASYNC_PROTECT         +1 (code 0) -0
+  KYTY_AUDIO_SYNC            +7 (code 2) -0
+  KYTY_AV_TRACE              +5 (code 0) -0
+  KYTY_B2_REUSE              +2 (code 1) -0
+  KYTY_BIND_LEAN             +2 (code 1) -0
+  KYTY_CLASS_NO_COPY         +6 (code 6) -0
+  KYTY_DIAG_B32              +1 (code 0) -0
+  KYTY_DISP_CEILING          +2 (code 1) -0
+  KYTY_DUMP_GCN              +2 (code 1) -0
+  KYTY_FIX_B12               +14 (code 1) -0
+  KYTY_FIX_B13               +7 (code 1) -0
+  KYTY_FIX_B1B               +7 (code 1) -0
+  KYTY_FIX_B24               +12 (code 1) -0
+  KYTY_FIX_B26               +6 (code 1) -0
+  KYTY_FIX_B36               +15 (code 1) -0
+  KYTY_FIX_B4                +4 (code 1) -0
+  KYTY_FIX_B42               +11 (code 1) -0
+  KYTY_FIX_B9A               +3 (code 1) -0
+  KYTY_FIX_DUALSRC           +8 (code 1) -0
+  KYTY_FIX_F10               +6 (code 1) -0
+  KYTY_FIX_F19               +3 (code 1) -0
+  KYTY_FIX_F21               +12 (code 1) -0
+  KYTY_FIX_F24               +14 (code 1) -0
+  KYTY_FIX_F25               +4 (code 1) -0
+  KYTY_FIX_F29               +5 (code 1) -0
+  KYTY_FIX_F8                +3 (code 1) -0
+  KYTY_FIX_MINIMIZE          +6 (code 1) -0
+  KYTY_FIX_SVAL              +5 (code 1) -0
+  KYTY_FRAME_TRACE           +10 (code 0) -0
+  KYTY_GAME_PATCH            +9 (code 2) -0
+  KYTY_GRAPHICS_PRESENTATION_WINDOW_JOY_PUMP_H_ +3 (code 3) -0
+  KYTY_LOADER_GAME_PATCH_FILE_H_ +3 (code 2) -0
+  KYTY_LONGFRAME             +11 (code 2) -0
+  KYTY_PARALLEL_COPY         +2 (code 0) -0
+  KYTY_PIPELINE_SALT         +1 (code 0) -0
+  KYTY_PLATFORM              +22 (code 21) -0
+  KYTY_PLATFORM_WINDOWS      +21 (code 21) -0
+  KYTY_POKE                  +14 (code 3) -0
+  KYTY_PROT_CEILING          +2 (code 1) -0
+  KYTY_PVAR                  +16 (code 3) -0
+  KYTY_PVAR_ARITHMETIC_ONLY  +3 (code 2) -0
+  KYTY_REBIND_CENSUS         +2 (code 1) -0
+  KYTY_REBIND_SLOW_CENSUS    +2 (code 1) -0
+  KYTY_SHADER_PREPARE        +1 (code 0) -0
+  KYTY_SKIP_CS               +1 (code 0) -0
+  KYTY_SYSV_ABI              +18 (code 18) -0
+  KYTY_S_PCW                 +16 (code 2) -0
+  KYTY_S_PCW_FORCE_MS        +6 (code 2) -0
+  KYTY_S_REPLAY              +14 (code 1) -0
+  KYTY_S_REPLAY_TEST         +9 (code 1) -0
+  KYTY_TEST_AUDIOLOSS        +5 (code 1) -0
+  KYTY_TEST_B13_HOOK         +7 (code 6) -0
+  KYTY_TEST_B13_SWAP         +2 (code 1) -0
+  KYTY_TEST_EXITFATAL        +8 (code 3) -0
+  KYTY_TEST_HIDLOSS          +10 (code 1) -0
+  KYTY_TEST_LOGSTALL         +5 (code 2) -0
+  KYTY_TEST_MINIMIZE         +5 (code 1) -0
+KNOB_DEFINITIONS rows added: 9
+    KYTY_PROT_CEILING protceil fallback 0 max 2
+    KYTY_ARM_IN_COPY armcopy fallback 0 max 4
+    KYTY_ARM_INLINE acinline fallback 0 max 1
+    KYTY_ARM_LOSS_WIN lwin fallback 0 max 3
+    KYTY_DISP_CEILING dispceil fallback 0 max 1
+    KYTY_REBIND_CENSUS rbcen fallback 0 max 2
+    KYTY_B2_REUSE b2reuse fallback 0 max 3
+    KYTY_REBIND_SLOW_CENSUS rbslow fallback 0 max 1
+    KYTY_BIND_LEAN bindlean fallback 0 max 3
+KNOB_DEFINITIONS rows removed: 0
+
+per name: tip readings (code part, git grep -n at eb7e8b91)
+== KYTY_ARM_INLINE : KNOB_DEFINITIONS fallback 0
+== KYTY_ARM_IN_COPY : KNOB_DEFINITIONS fallback 0
+== KYTY_ARM_LOSS_WIN : KNOB_DEFINITIONS fallback 0
+== KYTY_ASYNC_COPY : only in comments on + lines
+== KYTY_ASYNC_PROTECT : only in comments on + lines
+== KYTY_AUDIO_SYNC src/kernel/pthread.cpp:182
+      182 const char* value = std::getenv("KYTY_AUDIO_SYNC");
+      183 return value == nullptr || std::atoi(value) != 0;
+      184 }();
+      185 // Track P, the patch file (loader/gamePatchFile.h, ROADMAP s122 item 333(g)): an applied "audio_sync 0" turns the
+== KYTY_AUDIO_SYNC src/loader/gamePatchFile.cpp:70
+      70 env.audio_sync = std::getenv("KYTY_AUDIO_SYNC");
+      71 env.poke       = std::getenv("KYTY_POKE");
+      72 // The eboot is hashed only when the file parsed (Decide asks for it after Parse).
+      73 std::string eboot_sha;
+   class: OFF-IF-UNSET (nullptr -> exit), UNDECIDED
+== KYTY_AV_TRACE : only in comments on + lines
+== KYTY_B2_REUSE : KNOB_DEFINITIONS fallback 0
+== KYTY_BIND_LEAN : KNOB_DEFINITIONS fallback 0
+   class: 
+== KYTY_DIAG_B32 : only in comments on + lines
+== KYTY_DISP_CEILING : KNOB_DEFINITIONS fallback 0
+== KYTY_DUMP_GCN src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1261
+      1261 const char* value = std::getenv("KYTY_DUMP_GCN");
+      1262 return value != nullptr && value[0] != '0';
+      1263 }();
+      1264 if (!enabled || code.empty()) {
+== KYTY_DUMP_GCN src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1305
+      1305 const char* value = std::getenv("KYTY_DUMP_GCN");
+      1306 return value != nullptr && value[0] == '2' && value[1] == '\0';
+      1307 }();
+      1308 return enabled;
+== KYTY_DUMP_GCN src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3647
+      3647 const auto* value = std::getenv("KYTY_DUMP_GCN");
+      3648 return value != nullptr && value[0] != '0';
+      3649 }();
+      3650 if (!tolerant && (register_trace || dump_gcn) &&
+   class: OFF-IF-UNSET (!= nullptr &&), OFF-IF-UNSET (!= nullptr &&), UNDECIDED
+== KYTY_FIX_B12 src/graphics/host_gpu/regionManager.h:70
+      70 const char* value = std::getenv("KYTY_FIX_B12");
+      71 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      72 }();
+      73 return on;
+   class: ON-IF-UNSET
+== KYTY_FIX_B13 src/graphics/host_gpu/regionManager.h:54
+      54 const char* value = std::getenv("KYTY_FIX_B13");
+      55 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      56 }();
+      57 return on;
+   class: ON-IF-UNSET
+== KYTY_FIX_B1B src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:346
+      346 const char* value = std::getenv("KYTY_FIX_B1B");
+      347 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      348 }();
+      349 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FIX_B24 src/libs/controller.cpp:840
+      840 const char* value = std::getenv("KYTY_FIX_B24");
+      841 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      842 }();
+      843 if (g_fix_b24) {
+   class: ON-IF-UNSET
+== KYTY_FIX_B26 src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:331
+      331 const char* value = std::getenv("KYTY_FIX_B26");
+      332 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      333 }();
+      334 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FIX_B36 src/common/logging/log.cpp:735
+      735 const char* value = std::getenv("KYTY_FIX_B36");
+      736 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      737 }();
+      738 Async::ParseStand(init_ns);
+   class: ON-IF-UNSET
+== KYTY_FIX_B4 src/kernel/fileSystem.cpp:114
+      114 const char* value = std::getenv("KYTY_FIX_B4");
+      115 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      116 }();
+      117 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FIX_B42 src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3650
+      3650 const char* value = std::getenv("KYTY_FIX_B42");
+      3651 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      3652 }();
+      3653 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FIX_B9A src/libs/libAudio.cpp:374
+      374 const char* fix_b9a_value = std::getenv("KYTY_FIX_B9A");
+      375 const bool  fix_b9a       = fix_b9a_value == nullptr || fix_b9a_value[0] == '\0' || Common::EnvValueOn(fix_b9a_value);
+      376 g_b9a_enabled.store(fix_b9a, std::memory_order_relaxed);
+      377 if (fix_b9a) {
+   class: ON-IF-UNSET
+== KYTY_FIX_DUALSRC src/graphics/presentation/window/vulkanWindow.cpp:667
+      667 const char* dual_src_value    = std::getenv("KYTY_FIX_DUALSRC");
+      668 const bool dual_src_enabled   = dual_src_supported && (dual_src_value == nullptr || dual_src_value[0] == '\0' ||
+      669 Common::EnvValueOn(dual_src_value));
+      670 if (dual_src_enabled) {
+   class: ON-IF-UNSET
+== KYTY_FIX_F10 src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:356
+      356 const char* value = std::getenv("KYTY_FIX_F10");
+      357 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      358 }();
+      359 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FIX_F19 src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:38
+      38 const char* value = std::getenv("KYTY_FIX_F19");
+      39 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      40 }();
+      41 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FIX_F21 src/common/subsystems.cpp:74
+      74 const char* value = std::getenv("KYTY_FIX_F21");
+      75 g_fix_f21  = value == nullptr || value[0] == '\0' || EnvValueOn(value);
+      76 g_f21_path = g_fix_f21 || g_f21_hook != nullptr;
+      77 }
+   class: ON-IF-UNSET
+== KYTY_FIX_F24 src/graphics/presentation/window/joyPump.cpp:455
+      455 const char* value = std::getenv("KYTY_FIX_F24");
+      456 g_enabled.store(value == nullptr || value[0] == '\0' || Common::EnvValueOn(value), std::memory_order_release);
+      457 LOGF("FixF24: mode=%d b24=%d\n", Enabled() ? 1 : 0, Controller::FixB24On() ? 1 : 0);
+      458 }
+   class: ON-IF-UNSET
+== KYTY_FIX_F25 src/kernel/fileSystem.cpp:130
+      130 const char* value = std::getenv("KYTY_FIX_F25");
+      131 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      132 }();
+      133 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FIX_F29 src/graphics/host_gpu/renderer/cache/faultManager.cpp:46
+      46 const char* value = std::getenv("KYTY_FIX_F29");
+      47 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      48 }();
+      49 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FIX_F8 src/libs/audio.cpp:295
+      295 const char* value = std::getenv("KYTY_FIX_F8");
+      296 const bool  on    = value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      297 if (on) {
+      298 LOGF("FixF8: mode=1\n");
+   class: ON-IF-UNSET
+== KYTY_FIX_MINIMIZE src/graphics/presentation/window/swapchain.cpp:311
+      311 const char* value = std::getenv("KYTY_FIX_MINIMIZE");
+      312 const bool  on    = value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      313 if (on) {
+      314 LOGF("FixMinimize: on\n");
+   class: ON-IF-UNSET
+== KYTY_FIX_SVAL src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1354
+      1354 const char* value = std::getenv("KYTY_FIX_SVAL");
+      1355 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      1356 }();
+      1357 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FRAME_TRACE : only in comments on + lines
+== KYTY_GAME_PATCH src/emulator.cpp:561
+      561 if (const char* game_patch_file = std::getenv("KYTY_GAME_PATCH");
+      562 game_patch_file != nullptr && game_patch_file[0] != '\0') {
+      563 Loader::GamePatchFile::Load(
+      564 Libs::LibKernel::FileSystem::GetRealFilename(Common::PathToGenericString(options.elf)));
+== KYTY_GAME_PATCH src/loader/gamePatchFile.cpp:62
+      62 const char* path = std::getenv("KYTY_GAME_PATCH");
+      63 if (path == nullptr || path[0] == '\0') {
+      64 return;
+      65 }
+   class: OFF-IF-UNSET (!= nullptr &&), OFF-IF-UNSET (nullptr -> exit)
+   class: 
+   class: 
+== KYTY_LONGFRAME src/common/logging/log.cpp:755
+      755 LongFrame::g_on = Common::EnvFlagOn("KYTY_LONGFRAME");
+      756 if (LongFrame::g_on) {
+      757 LongFrame::g_started.store(true);
+      758 std::thread(LongFrame::PrinterMain).detach();
+== KYTY_LONGFRAME src/graphics/presentation/videoOut.cpp:1297
+      1297 static const bool long_frame = Common::EnvFlagOn("KYTY_LONGFRAME");
+      1298 if (long_frame) [[unlikely]] {
+      1299 static uint64_t long_frame_prev_ns = 0;
+      1300 const uint64_t  now_ns             = Common::FrameStats::NowNs();
+   class: OFF-IF-UNSET (EnvFlagOn), OFF-IF-UNSET (EnvFlagOn)
+== KYTY_PARALLEL_COPY : only in comments on + lines
+== KYTY_PIPELINE_SALT : only in comments on + lines
+   class: 
+   class: 
+== KYTY_POKE src/loader/gamePatchFile.cpp:71
+      71 env.poke       = std::getenv("KYTY_POKE");
+      72 // The eboot is hashed only when the file parsed (Decide asks for it after Parse).
+      73 std::string eboot_sha;
+      74 const auto  hash_eboot = [&] {
+== KYTY_POKE src/loader/runtimeLinker.cpp:1557
+      1557 if (const char* poke = std::getenv("KYTY_POKE"); poke != nullptr && !m_programs.empty()) {
+      1558 const auto base = m_programs.front()->base_vaddr;
+      1559 for (const auto& item: Common::Split(std::string(poke), ',')) {
+      1560 const auto parts = Common::Split(item, ':');
+   class: UNDECIDED, UNDECIDED
+== KYTY_PROT_CEILING : KNOB_DEFINITIONS fallback 0
+== KYTY_PVAR src/kernel/pvar.cpp:169
+      169 const char* value = std::getenv("KYTY_PVAR");
+      170 if (value == nullptr || value[0] == '\0' || std::strcmp(value, "0") == 0) {
+      171 return 0;
+      172 }
+== KYTY_PVAR src/loader/gamePatchFile.cpp:69
+      69 env.pvar       = std::getenv("KYTY_PVAR");
+      70 env.audio_sync = std::getenv("KYTY_AUDIO_SYNC");
+      71 env.poke       = std::getenv("KYTY_POKE");
+      72 // The eboot is hashed only when the file parsed (Decide asks for it after Parse).
+   class: OFF-IF-UNSET (nullptr -> exit), UNDECIDED
+   class: 
+== KYTY_REBIND_CENSUS : KNOB_DEFINITIONS fallback 0
+== KYTY_REBIND_SLOW_CENSUS : KNOB_DEFINITIONS fallback 0
+== KYTY_SHADER_PREPARE : only in comments on + lines
+== KYTY_SKIP_CS : only in comments on + lines
+   class: 
+== KYTY_S_PCW src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:284
+      284 const char* value = std::getenv("KYTY_S_PCW");
+      285 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      286 }();
+      287 return mode;
+   class: ON-IF-UNSET
+== KYTY_S_PCW_FORCE_MS src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:295
+      295 const char* value = std::getenv("KYTY_S_PCW_FORCE_MS");
+      296 return value != nullptr ? static_cast<uint32_t>(std::strtoul(value, nullptr, 10)) : 0u;
+      297 }();
+      298 return ms;
+   class: UNDECIDED
+== KYTY_S_REPLAY src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:51
+      51 static const int mode = ParseMode(std::getenv("KYTY_S_REPLAY"));
+      52 return mode;
+      53 }
+      54 
+   class: UNDECIDED
+== KYTY_S_REPLAY_TEST src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:65
+      65 const char* value = std::getenv("KYTY_S_REPLAY_TEST");
+      66 if (value == nullptr) {
+      67 return Stand::None;
+      68 }
+   class: OFF-IF-UNSET (nullptr -> exit)
+== KYTY_TEST_AUDIOLOSS src/libs/controller.cpp:440
+      440 const char* value = std::getenv("KYTY_TEST_AUDIOLOSS");
+      441 if (value == nullptr || value[0] == '\0') {
+      442 return;
+      443 }
+   class: OFF-IF-UNSET (nullptr -> exit)
+   class: 
+   class: 
+== KYTY_TEST_EXITFATAL src/emulator.cpp:149
+      149 const char* value = std::getenv("KYTY_TEST_EXITFATAL");
+      150 if (value == nullptr || value[0] == '\0') {
+      151 return;
+      152 }
+   class: OFF-IF-UNSET (nullptr -> exit)
+== KYTY_TEST_HIDLOSS src/graphics/presentation/window/window.cpp:1185
+      1185 const char*       value = std::getenv("KYTY_TEST_HIDLOSS");
+      1186 if (value == nullptr || value[0] == '\0') {
+      1187 return c;
+      1188 }
+   class: OFF-IF-UNSET (nullptr -> exit)
+== KYTY_TEST_LOGSTALL src/common/logging/log.cpp:187
+      187 const char* value = std::getenv("KYTY_TEST_LOGSTALL");
+      188 if (value == nullptr || value[0] == '\0') {
+      189 return;
+      190 }
+   class: OFF-IF-UNSET (nullptr -> exit)
+== KYTY_TEST_MINIMIZE src/graphics/presentation/window/window.cpp:1768
+      1768 const char*  value = std::getenv("KYTY_TEST_MINIMIZE");
+      1769 if (value == nullptr || value[0] == '\0') {
+      1770 return c;
+      1771 }
+   class: OFF-IF-UNSET (nullptr -> exit)
+
+DEFAULT CLASS SUMMARY
+  KYTY_ARM_INLINE            TABLE fallback 0
+  KYTY_ARM_IN_COPY           TABLE fallback 0
+  KYTY_ARM_LOSS_WIN          TABLE fallback 0
+  KYTY_AUDIO_SYNC            OFF-IF-UNSET (nullptr -> exit), UNDECIDED
+  KYTY_B2_REUSE              TABLE fallback 0
+  KYTY_BIND_LEAN             TABLE fallback 0
+  KYTY_CLASS_NO_COPY         
+  KYTY_DISP_CEILING          TABLE fallback 0
+  KYTY_DUMP_GCN              OFF-IF-UNSET (!= nullptr &&), OFF-IF-UNSET (!= nullptr &&), UNDECIDED
+  KYTY_FIX_B12               ON-IF-UNSET
+  KYTY_FIX_B13               ON-IF-UNSET
+  KYTY_FIX_B1B               ON-IF-UNSET
+  KYTY_FIX_B24               ON-IF-UNSET
+  KYTY_FIX_B26               ON-IF-UNSET
+  KYTY_FIX_B36               ON-IF-UNSET
+  KYTY_FIX_B4                ON-IF-UNSET
+  KYTY_FIX_B42               ON-IF-UNSET
+  KYTY_FIX_B9A               ON-IF-UNSET
+  KYTY_FIX_DUALSRC           ON-IF-UNSET
+  KYTY_FIX_F10               ON-IF-UNSET
+  KYTY_FIX_F19               ON-IF-UNSET
+  KYTY_FIX_F21               ON-IF-UNSET
+  KYTY_FIX_F24               ON-IF-UNSET
+  KYTY_FIX_F25               ON-IF-UNSET
+  KYTY_FIX_F29               ON-IF-UNSET
+  KYTY_FIX_F8                ON-IF-UNSET
+  KYTY_FIX_MINIMIZE          ON-IF-UNSET
+  KYTY_FIX_SVAL              ON-IF-UNSET
+  KYTY_GAME_PATCH            OFF-IF-UNSET (!= nullptr &&), OFF-IF-UNSET (nullptr -> exit)
+  KYTY_GRAPHICS_PRESENTATION_WINDOW_JOY_PUMP_H_ 
+  KYTY_LOADER_GAME_PATCH_FILE_H_ 
+  KYTY_LONGFRAME             OFF-IF-UNSET (EnvFlagOn), OFF-IF-UNSET (EnvFlagOn)
+  KYTY_PLATFORM              
+  KYTY_PLATFORM_WINDOWS      
+  KYTY_POKE                  UNDECIDED, UNDECIDED
+  KYTY_PROT_CEILING          TABLE fallback 0
+  KYTY_PVAR                  OFF-IF-UNSET (nullptr -> exit), UNDECIDED
+  KYTY_PVAR_ARITHMETIC_ONLY  
+  KYTY_REBIND_CENSUS         TABLE fallback 0
+  KYTY_REBIND_SLOW_CENSUS    TABLE fallback 0
+  KYTY_SYSV_ABI              
+  KYTY_S_PCW                 ON-IF-UNSET
+  KYTY_S_PCW_FORCE_MS        UNDECIDED
+  KYTY_S_REPLAY              UNDECIDED
+  KYTY_S_REPLAY_TEST         OFF-IF-UNSET (nullptr -> exit)
+  KYTY_TEST_AUDIOLOSS        OFF-IF-UNSET (nullptr -> exit)
+  KYTY_TEST_B13_HOOK         
+  KYTY_TEST_B13_SWAP         
+  KYTY_TEST_EXITFATAL        OFF-IF-UNSET (nullptr -> exit)
+  KYTY_TEST_HIDLOSS          OFF-IF-UNSET (nullptr -> exit)
+  KYTY_TEST_LOGSTALL         OFF-IF-UNSET (nullptr -> exit)
+  KYTY_TEST_MINIMIZE         OFF-IF-UNSET (nullptr -> exit)
+ON-IF-UNSET: KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F21 KYTY_FIX_F24 KYTY_FIX_F25 KYTY_FIX_F29 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+UNDECIDED: KYTY_AUDIO_SYNC KYTY_DUMP_GCN KYTY_POKE KYTY_PVAR KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY
+ON-IF-UNSET == items 467(g)(1)+487(g)(1)+471(g)(1)+604(d)(1)+624(e)(1)+647(d)(1)+683(g)(1)+697(g)(1)+710(g)(1)+712(g)(1)+730(g)(1) set: False missing ['KYTY_FIX_F20'] extra []
+KNOBS CHECK BY HAND (UNDECIDED or set differs)

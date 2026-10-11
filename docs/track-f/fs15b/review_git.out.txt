@@ -1,0 +1,114 @@
+R1 paths 8 src ['src/emulator.cpp', 'src/graphics/host_gpu/renderer/pipeline/fixF20.cpp', 'src/graphics/host_gpu/renderer/pipeline/fixF20.h', 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp', 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.h', 'src/graphics/host_gpu/renderer/pipeline/shaders.cpp']
+ok   R1 src/ == six files of a6342c98/82570fd2/38fc76c1 
+ok   R1 src/ == src paths of the four main commits 
+ok   R1 outside src/: only the two test files ['tests/ShaderRecompilerComputeTests.cpp', 'tests/shaderCfgTests.cpp']
+ok   R1 chain b1179dab parent eb7e8b91 eb7e8b91
+ok   R1 patch-id b1179dab == a6342c98 (main) 391d22aadb1c
+ok   R1 chain 95e39a17 parent b1179dab b1179dab
+ok   R1 patch-id 95e39a17 == a9d6fd1c (main) 2d2e97d53cd2
+ok   R1 chain 91b74d09 parent 95e39a17 95e39a17
+ok   R1 patch-id 91b74d09 == 82570fd2 (main) 7f0d679cf692
+ok   R1 chain 6beb3b73 parent 91b74d09 91b74d09
+ok   R1 patch-id 6beb3b73 == 38fc76c1 (main) f22f52463bfa
+ok   R1 FS15 tip == 6beb3b73 
+ok   R2 F42a2 chain 23ff0c41 parent 730ed40a 730ed40a
+ok   R2 F42a2 patch-id 23ff0c41 == a6342c98 (main) 391d22aadb1c
+ok   R2 F42a2 chain adcd0eba parent 23ff0c41 23ff0c41
+ok   R2 F42a2 patch-id adcd0eba == a9d6fd1c (main) 2d2e97d53cd2
+ok   R2 F42a2 chain 5ccb1d31 parent adcd0eba adcd0eba
+ok   R2 F42a2 patch-id 5ccb1d31 == 82570fd2 (main) 7f0d679cf692
+R2 src paths FS12 -> FS14 (FS13 + FS14 commits): ['src/graphics/host_gpu/renderer/cache/faultManager.cpp', 'src/graphics/host_gpu/renderer/cache/faultManager.h', 'src/graphics/presentation/window/hostInput.cpp', 'src/graphics/presentation/window/joyPump.cpp', 'src/graphics/presentation/window/joyPump.h', 'src/graphics/presentation/window/vulkanWindow.cpp', 'src/graphics/presentation/window/window.cpp', 'src/kernel/fileSystem.cpp', 'src/libs/controller.cpp']
+R2 commits FS12 .. FS14:
+     eb7e8b91 track F link FS14a (HPP-812): KYTY_FIX_F29 default 0 -> 1 (ROADMAP s122 item 712(g)(1))
+     c5eb48b0 WIP track F link F44a (HPP-791): KYTY_FIX_F29 (default 0) - ParseFaultArea(area, clamp, visit, pass) in faultManager.cpp/.h is the one parse 
+     76c1058f track F link FS14a (HPP-812): KYTY_FIX_F24 default 0 -> 1 (ROADMAP s122 item 710(g)(1))
+     6eb0f1a1 WIP track F link F40a2 (HPP-785): KYTY_FIX_F24 witness FixF24: init_owner (RC1 of F40b) and stand KYTY_TEST_HIDLOSS edition 2 flap fields (RC
+     cd422a94 WIP track F link F40a (HPP-770): stand KYTY_TEST_HIDLOSS edition 2 (off when unset) - modes upd (the virtual pad's Update callback sleeps HOL
+     b50e90e8 WIP track F link F40a (HPP-770): KYTY_FIX_F24 (default 0) - variant B: at 1 SDL_HINT_AUTO_UPDATE_JOYSTICKS=0, the main thread initializes onl
+     ea6c6e9e track F link FS13a (HPP-787): KYTY_FIX_F25 default 0 -> 1 (ROADMAP s122 item 697(g)(1))
+     0861c391 track F link F38a2 (HPP-777): F25 stand edition 3 - arm G (a read at or past the end of the file, real call 1, then the file grows through a 
+     bc3bb65d WIP track F link F38a (HPP-763): F25 stand edition 2 - arms E (read at or past the end of the file, remaining = 0) and T (call 2 shortens the
+     4bd1e865 WIP track F link F38a (HPP-763): KYTY_FIX_F25 (default 0) - at 1 a double read failure of ReadGuestWithRetry (flag only with nbytes > 0, rema
+     1048af45 track F link F37a (HPP-761): section 0 before data - F25 mechanism on FS11 ee9632be (double read failure gives 0 on all six read entries; the
+ok   R2 FS13/FS14 src paths do not touch F42 files 
+R2 src paths F42a2 wt -> FS15 ['src/graphics/host_gpu/renderer/cache/faultManager.cpp', 'src/graphics/host_gpu/renderer/cache/faultManager.h', 'src/graphics/host_gpu/renderer/pipeline/fixF20.cpp', 'src/graphics/host_gpu/renderer/pipeline/fixF20.h', 'src/graphics/presentation/window/hostInput.cpp', 'src/graphics/presentation/window/joyPump.cpp', 'src/graphics/presentation/window/joyPump.h', 'src/graphics/presentation/window/vulkanWindow.cpp', 'src/graphics/presentation/window/window.cpp', 'src/kernel/fileSystem.cpp', 'src/libs/controller.cpp']
+ok   R2 paths == FS13/FS14 src paths + fixF20.cpp/.h 
+ok   R2 src/graphics/host_gpu/renderer/cache/faultManager.cpp diff == FS12 -> FS14 diff 
+ok   R2 src/graphics/host_gpu/renderer/cache/faultManager.h diff == FS12 -> FS14 diff 
+ok   R2 src/graphics/presentation/window/hostInput.cpp diff == FS12 -> FS14 diff 
+ok   R2 src/graphics/presentation/window/joyPump.cpp diff == FS12 -> FS14 diff 
+ok   R2 src/graphics/presentation/window/joyPump.h diff == FS12 -> FS14 diff 
+ok   R2 src/graphics/presentation/window/vulkanWindow.cpp diff == FS12 -> FS14 diff 
+ok   R2 src/graphics/presentation/window/window.cpp diff == FS12 -> FS14 diff 
+ok   R2 src/kernel/fileSystem.cpp diff == FS12 -> FS14 diff 
+ok   R2 src/libs/controller.cpp diff == FS12 -> FS14 diff 
+ok   R2 fixF20 diff == 91b74d09 -> 6beb3b73 
+ok   R2 fixF20 diff == main 38fc76c1 
+ok   R2 src/emulator.cpp blob F42a2 wt == FS15 
+ok   R2 src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp blob F42a2 wt == FS15 
+ok   R2 src/graphics/host_gpu/renderer/pipeline/pipelineCache.h blob F42a2 wt == FS15 
+ok   R2 src/graphics/host_gpu/renderer/pipeline/shaders.cpp blob F42a2 wt == FS15 
+ok   R2 F42 files of F42a2 wt == 91b74d09 (FS15 without FS15a) 
+ok   R2 negative: diff src/ base FS14 -> FS15 != diff F42a2 wt -> FS15 
+ok   R3 FS15 contains a6342c98 cherry -
+ok   R3 FS15 contains 82570fd2 cherry -
+ok   R3 FS15 contains 38fc76c1 cherry -
+ok   R3 FS15 contains 5c21c387 cherry -
+ok   R3 FS15 contains 57f9e528 cherry -
+ok   R3 FS15 contains c8836f14 cherry -
+ok   R3 FS15 contains 15c9d2f2 cherry -
+ok   R3 FS15 contains 78e45af3 cherry -
+ok   R3 FS15 contains e9dd8604 cherry -
+ok   R3 FS15 contains 3630f116 cherry -
+ok   R3 FS15 contains 227e1b36 cherry -
+ok   R3 FS15 contains cbfe8375 cherry -
+ok   R3 FS15 contains c94c49e0 cherry -
+ok   R3 FS15 contains 726e751e cherry -
+ok   R3 FS15 contains cb022252 cherry -
+ok   R3 control a6342c98 in eb7e8b91 expect no cherry +
+ok   R3 control 82570fd2 in eb7e8b91 expect no cherry +
+ok   R3 control 38fc76c1 in eb7e8b91 expect no cherry +
+ok   R3 control 38fc76c1 in 91b74d09 expect no cherry +
+ok   R3 control 1398d44d in 6beb3b73 expect no cherry +
+ok   R3 control 5c21c387 in 5ccb1d31 expect no cherry +
+ok   R3 control 38fc76c1 in 5ccb1d31 expect no cherry +
+ok   R3 control a9d6fd1c in 6beb3b73 expect yes cherry -
+ok   R4 F24 files 6 differ []
+ok   R4 F29 files 2 differ []
+ok   R4 F25 files 1 differ []
+ok   R4 F21 files 3 differ ['src/emulator.cpp']
+ok   R4 B12 files 5 differ []
+ok   R4 F27 files 5 differ []
+ok   R4 B13 files 2 differ []
+ok   R4 B33 files 2 differ ['src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp', 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.h']
+ok   R4 F10 files 5 differ []
+ok   R4 F16 files 3 differ ['src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp']
+ok   R4 F19 files 3 differ []
+ok   R4 B42 files 3 differ []
+ok   R4 B4 files 4 differ []
+ok   R4 F8 files 2 differ []
+ok   R4 B24 files 3 differ []
+ok   R4 S-replay files 4 differ ['src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp', 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.h']
+ok   R4 P-var files 10 differ ['src/emulator.cpp']
+ok   R4 F29 faultManager.cpp/.h (ParseFaultArea) same blob as FS14 
+ok   R4 filter fixtures (3 rejected, 3 allowed) 
+ok   R4 changed lines of F42 files naming another knob/Fix symbol: 0 0
+R4 changed lines naming KYTY_DMA_LAYOUT / KYTY_PIPELINE_SALT (eye: comments only): 2
+     ('src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp', '+// layout. Read before AdoptDmaLayout - KYTY_DMA_LAYOUT=1 adds the binding in memory without a module variable.')
+     ('src/graphics/host_gpu/renderer/pipeline/pipelineCache.h', '+// places 1-3 (FixF20 at KYTY_FIX_F20=1, the KYTY_PIPELINE_SALT salt, CompileSPV); pipelineCache.cpp.')
+ok   R4 those lines are comments 
+ok   R5 shader paths 0 
+ok   R5 signature of own build == 9177b426... 9177b4267de1fb8bac7d1113afd8733210addfac
+ok   R5 version string ends with -g6beb3b73 KytyPS5-2026-09-15-6a2987a-1929-g6beb3b73
+ok   R5 own signature == FS15a kytyGitVersion_fs15.h 9177b4267de1fb8bac7d1113afd8733210addfac
+R6 38fc76c1 code lines:
+     -		const int value = Common::EnvFlagOn("KYTY_FIX_F20") ? 1 : 0;
+     +		const char* env = std::getenv("KYTY_FIX_F20");
+     +		const int value = (env == nullptr || env[0] == '\0' || Common::EnvValueOn(env)) ? 1 : 0;
+ok   R6 38fc76c1 changes only the knob reading (code lines <= 6, getenv of KYTY_FIX_F20) 
+R7 Apply call src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:442 const bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(translation, fault_bound, fixed);
+R7 Apply call src/graphics/host_gpu/renderer/pipeline/shaders.cpp:359 const bool            fix_f20 = FixF20::Mode() == 1 && FixF20::Apply(words, pixel_program.fault_bound, fixed);
+ok   R7 Apply calls outside fixF20: 2, each guarded by FixF20::Mode() == 1 && 
+ok   R7 PrintExitStat prints only under Mode() == 1 
+ok   R7 PrintStat call sites: exit (guarded) + periodic (inside Apply) only 
+ALL OK

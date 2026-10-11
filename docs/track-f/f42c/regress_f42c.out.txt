@@ -1,0 +1,73 @@
+suite regress_f42c.py sha256 432156de251d5a23bd24e44369ff6b1a7c50a6a5369097a214d92e2e23428c6c target f42c_read.py sha256 cd05eb4776c2a5d85c99500a267337f105ddc8557065295c0d5729c2ca739560
+f20_v (from log_fs13_v.txt): admission failed members 5
+  NO json binary_sha256 = F42a2 1994a0ce (abab2196e3b66f04)
+  NO installed during the tag = F42a2 1994a0ce (abab2196e3b66f04)
+  NO installed before = after, FS13 abab2196 or FS14 013e1974 (46892c20080819ae / 46892c20080819ae)
+  NO env = the form of the tag (['missing KYTY_FIX_F20'])
+  NO series snapshot taken in this call before the install (-)
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (333.9 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 369; with the first frame 0)
+  [YES] video index records >= 3000 (10501)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [NO] FixF20: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12505) - item 694 (g)(6)
+  [NO] FixF20Stat exit line: unmatched 0 (None)
+  [NO] FixF20Stat exit line: modules_bound = modules (None / None)
+  [NO] FixF20Stat exit line: rewritten >= 11 (None)
+  [NO] N1 (item 705 (v)): Event: quit present and a FixF20Stat: when=exit line after it (quit 1189273; exit lines after it 0; all exit lines 0; unparsable Fi
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 728)]; unparsable 0; first GuestOut 12505)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 726)]; bad 0; first GuestOut 12505)
+  [YES] exit by the harness: Event: quit line in the log (1189273)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12505)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 724)]; first GuestOut 12505)
+  [YES] FixB12Stat: line present (parsed 34, unparsable 0)
+  members as expected (only the FixF20 members and N1 NO): True
+  rows: prep ms [0]; PipelinePrecache 2 lines; Vulkan pipeline cache 3 lines; FixF20Stat lines 0; quit line 1189273
+  rows as expected (no FixF20 line in FS13; precache and preparation lines present; Event: quit present): True
+f20_w (from log_fs13_w.txt): admission failed members 5
+  NO json binary_sha256 = F42a2 1994a0ce (abab2196e3b66f04)
+  NO installed during the tag = F42a2 1994a0ce (abab2196e3b66f04)
+  NO installed before = after, FS13 abab2196 or FS14 013e1974 (46892c20080819ae / 46892c20080819ae)
+  NO env = the form of the tag (['missing KYTY_FIX_F20'])
+  NO caches before the tag = after the previous tag of the series (_ShaderCache, _ShaderSeeds, _PipelineCache) (-)
+  admission as expected: True
+  [YES] lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.0 >= 310)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 [Vulkan][E] (0)
+  [YES] 0 limit lines of the layer (0)
+  [YES] positive control: [Vulkan][W] 902206 > 0
+  [NO] N1 (item 705 (v)): Event: quit present and a FixF20Stat: when=exit line after it (quit 2290348; exit lines after it 0; all exit lines 0; unparsable Fi
+  [YES] DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 732)]; unparsable 0; first GuestOut 12508)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12508)
+  [YES] no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 728)]; first GuestOut 12508)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 730)]; bad 0; first GuestOut 12508)
+  [NO] FixF20: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12508) - item 694 (g)(6)
+  [NO] FixF20Stat exit line: unmatched 0 (None)
+  [NO] FixF20Stat exit line: modules_bound = modules (None / None)
+  members as expected (only the FixF20 members and N1 NO): True
+  rows: prep ms [0]; PipelinePrecache 2 lines; Vulkan pipeline cache 3 lines; FixF20Stat lines 0; quit line 2290348
+  rows as expected (no FixF20 line in FS13; precache and preparation lines present; Event: quit present): True
+f20_hb (from log_fs4_hb.txt): status NOT_ADMITTED; admission failed members 9 (rows, FS4 form)
+  NO json binary_sha256 = F42a2 1994a0ce (31cbfee8261f7ea5)
+  NO installed during the tag = F42a2 1994a0ce (31cbfee8261f7ea5)
+  NO installed before = after, FS13 abab2196 or FS14 013e1974 (- / -)
+  NO env = the form of the tag (['missing KYTY_FIX_F20'])
+  NO last --shader-validation false (true)
+  NO guest args -lvl hoover_beach (-lvl hoover_beach; harness None)
+  NO translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['56189185'] / ['variant_fixb26_fixb1b'])
+  NO caches before the tag = after the previous tag of the series (_ShaderCache, _ShaderSeeds, _PipelineCache) (-)
+  NO summary line LogAsync: full_waits= present once, all fields (0, bad 0) - absent: killed (item 615 (b)(6))
+  entry line 345794; first scene frame n 211; hold 335.9 s; frames >= 1 s 0
+  scene part = FS4c reader (345794 / 211 / 335.9 / 0): True
+  the same log read with the Sky Garden level: entry line None (no Sky Garden entry in fs4_hb)
+ALL OK

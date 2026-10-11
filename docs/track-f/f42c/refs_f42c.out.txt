@@ -1,0 +1,36 @@
+OK 04d5ac8a:docs/ROADMAP.md:24533
+OK 04d5ac8a:docs/ROADMAP.md:24560
+OK 04d5ac8a:docs/ROADMAP.md:24573
+OK 04d5ac8a:docs/ROADMAP.md:24668
+OK 04d5ac8a:docs/ROADMAP.md:24678
+OK 04d5ac8a:docs/ROADMAP.md:24734
+OK 04d5ac8a:docs/ROADMAP.md:24738
+OK 04d5ac8a:docs/ROADMAP.md:24773
+OK 04d5ac8a:docs/ROADMAP.md:24778
+OK 5ccb1d31:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:26
+OK 5ccb1d31:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:37
+OK 5ccb1d31:src/emulator.cpp:489
+OK 5ccb1d31:src/emulator.cpp:500
+OK 5ccb1d31:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4861
+OK 5ccb1d31:src/graphics/presentation/window/window.cpp:1058
+OK 5ccb1d31:src/common/subsystems.cpp:80
+OK 5ccb1d31:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:604
+shift NOT OK 04d5ac8a:docs/ROADMAP.md:24534
+shift NOT OK 04d5ac8a:docs/ROADMAP.md:24561
+shift NOT OK 04d5ac8a:docs/ROADMAP.md:24574
+shift NOT OK 04d5ac8a:docs/ROADMAP.md:24669
+shift NOT OK 04d5ac8a:docs/ROADMAP.md:24679
+shift NOT OK 04d5ac8a:docs/ROADMAP.md:24735
+shift NOT OK 04d5ac8a:docs/ROADMAP.md:24739
+shift NOT OK 04d5ac8a:docs/ROADMAP.md:24774
+shift NOT OK 04d5ac8a:docs/ROADMAP.md:24779
+shift NOT OK 5ccb1d31:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:27
+shift NOT OK 5ccb1d31:src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:38
+shift NOT OK 5ccb1d31:src/emulator.cpp:490
+shift NOT OK 5ccb1d31:src/emulator.cpp:501
+shift NOT OK 5ccb1d31:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4862
+shift NOT OK 5ccb1d31:src/graphics/presentation/window/window.cpp:1059
+shift NOT OK 5ccb1d31:src/common/subsystems.cpp:81
+shift NOT OK 5ccb1d31:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:605
+refs 17, ok True, every shift fails True
+ALL OK

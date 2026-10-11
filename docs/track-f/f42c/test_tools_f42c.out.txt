@@ -1,0 +1,160 @@
+suite test_tools_f42c.py sha256 81c01e43c72935e13c5d2b820efe21dc01ebd1fd2ab16e327245a422039bacf7 target go_f42c.sh sha256 b9e3826b4f96644e1783bfdd123033b762425e93cb49f4a58546f8928fe1963c
+ok   go plan f20_hb
+ok   go plan f20_hb_r1
+ok   go plan f20_hb_r3
+ok   plan f20_hb: no KYTY_TEST_, no KYTY_GAME_PATCH
+ok   plan f20_hb: KYTY_FIX_ only KYTY_FIX_F20=1
+ok   plan f20_hb: validation only at f20_w
+ok   go plan f20_v
+ok   go plan f20_v_r1
+ok   go plan f20_v_r3
+ok   plan f20_v: no KYTY_TEST_, no KYTY_GAME_PATCH
+ok   plan f20_v: KYTY_FIX_ only KYTY_FIX_F20=1
+ok   plan f20_v: validation only at f20_w
+ok   go plan f20_w
+ok   go plan f20_w_r1
+ok   go plan f20_w_r3
+ok   plan f20_w: no KYTY_TEST_, no KYTY_GAME_PATCH
+ok   plan f20_w: KYTY_FIX_ only KYTY_FIX_F20=1
+ok   plan f20_w: validation only at f20_w
+ok   go plan f42c_ret
+ok   go plan f42c_ret_r1
+ok   go plan f42c_ret_r3
+ok   plan f42c_ret: no KYTY_TEST_, no KYTY_GAME_PATCH
+ok   go dry-run output: first line is the linter line ALL OK, the plan is a later line (the F33e trap)
+ok   post plan of f20_v is the dryrun line, plan-w no (rc 0: _FIX_F20=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of f20_hb_r2 is the dryrun line, plan-w no (rc 0: _FIX_F20=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of f20_w is the dryrun line, plan-w yes (rc 0: 100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w yes)
+ok   post plan of f42c_ret is the dryrun line, plan-w no (rc 0:  none sd none timeout 0 hold 0 rec none knobs none
+plan-w no)
+ok   post: the plan is taken by grep '^dryrun '
+ok   post: the plan-only exit is before the lock check (reads nothing)
+ok   post: pairs with fs13_v and fs4_hb sheets
+ok   on disk: the fs13_v and fs4_hb sheets exist
+ok   post: N1 -> SERIES_STOP
+ok   post: tempo not PASS -> SERIES_STOP
+ok   go usage rc 2 for 'f20_x'
+ok   launch usage rc 2 for 'f20_x'
+ok   post usage rc 2 for 'f20_x'
+ok   go usage rc 2 for 'f20_v_r4'
+ok   launch usage rc 2 for 'f20_v_r4'
+ok   post usage rc 2 for 'f20_v_r4'
+ok   go usage rc 2 for 'f20_v_r0'
+ok   launch usage rc 2 for 'f20_v_r0'
+ok   post usage rc 2 for 'f20_v_r0'
+ok   go usage rc 2 for 'f29_v'
+ok   launch usage rc 2 for 'f29_v'
+ok   post usage rc 2 for 'f29_v'
+ok   go usage rc 2 for 'fs13_v'
+ok   launch usage rc 2 for 'fs13_v'
+ok   post usage rc 2 for 'fs13_v'
+ok   go usage rc 2 for 'f42c_ret_r0'
+ok   launch usage rc 2 for 'f42c_ret_r0'
+ok   post usage rc 2 for 'f42c_ret_r0'
+ok   go usage rc 2 for ''
+ok   launch usage rc 2 for ''
+ok   post usage rc 2 for ''
+ok   launch f20_v dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat f20_v_r1 without F42C_REPEAT_OK -> rc 11
+ok   launch repeat f20_v_r1 with F42C_REPEAT_OK -> passes
+ok   launch f20_hb dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat f20_hb_r1 without F42C_REPEAT_OK -> rc 11
+ok   launch repeat f20_hb_r1 with F42C_REPEAT_OK -> passes
+ok   launch f20_w dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat f20_w_r1 without F42C_REPEAT_OK -> rc 11
+ok   launch repeat f20_w_r1 with F42C_REPEAT_OK -> passes
+ok   launch f42c_ret dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat f42c_ret_r1 without F42C_REPEAT_OK -> rc 11
+ok   launch repeat f42c_ret_r1 with F42C_REPEAT_OK -> passes
+ok   series order: snapshot None tags [] -> f20_v ok (rc 0)
+ok   series order: snapshot False tags [] -> f20_v refused (rc 2)
+ok   series order: snapshot True tags ['f20_v'] -> f20_v refused (rc 2)
+ok   series order: snapshot None tags [] -> f20_v_r1 ok (rc 0)
+ok   series order: snapshot None tags [] -> f20_hb refused (rc 2)
+ok   series order: snapshot True tags [] -> f20_hb refused (rc 2)
+ok   series order: snapshot True tags ['f20_v'] -> f20_hb ok (rc 0)
+ok   series order: snapshot True tags ['f20_v_r1'] -> f20_hb_r1 ok (rc 0)
+ok   series order: snapshot False tags ['f20_v'] -> f20_hb refused (rc 2)
+ok   series order: snapshot True tags ['f20_hb'] -> f20_hb refused (rc 2)
+ok   series order: snapshot None tags [] -> f20_w refused (rc 2)
+ok   series order: snapshot True tags ['f20_v'] -> f20_w refused (rc 2)
+ok   series order: snapshot True tags ['f20_v', 'f20_hb'] -> f20_w ok (rc 0)
+ok   series order: snapshot True tags ['f20_v', 'f20_hb', 'f20_w'] -> f20_w_r1 ok (rc 0)
+ok   series order: snapshot None tags [] -> f42c_ret refused (rc 2)
+ok   series order: snapshot False tags [] -> f42c_ret refused (rc 2)
+ok   series order: snapshot True tags [] -> f42c_ret ok (rc 0)
+ok   series order: snapshot True tags ['f20_v'] -> f42c_ret ok (rc 0)
+ok   series same: GLCache and _SaveData differ only -> EQUAL rc 0, GLCache row DIFFER
+ok   series same: _PipelineCache differs -> DIFFER rc 1
+ok   series same: a new _ShaderCache file -> DIFFER rc 1
+ok   series same: missing file -> MISSING rc 2
+ok   series sizes
+ok   series usage rc 9
+ok   form634_check.py --series C:\kyty\f287\f42c: ALL OK
+ok   go_f42c.sh first executable line is the form linter
+ok   launch_f42c.sh first executable line is the form linter
+ok   go: TB literal = 1994a0ce
+ok   go: INST13 / INST14 literals = FS13 abab2196 / FS14 013e1974
+ok   go: no 46892c20 / d760708d / 6abebc7b literal
+ok   go: BIN and PINNED paths
+ok   on disk: sha256 of the F42a2 copy = 1994a0ce
+ok   on disk: sha256 of the pinned FS13 copy = abab2196
+ok   on disk: sha256 of the pinned FS14 copy = 013e1974
+ok   on disk: the F42a2 copy = the F42a2 build output (f42a2/build/install)
+ok   go: the guard scan right after the lock line, before any manifest
+ok   go: no guard scan / hold check before the lock (item 660 (d)(1))
+ok   go: series snapshot inside f20_v, then _SaveData copy, then the install, then enter_scene
+ok   go: the series dirs are moved back only in the f42c_ret block, which exits before the tag manifest
+ok   go: a tag returns only _SaveData
+ok   go: series return cmp against series/manifest_before.tsv, EQUAL -> the dir moved to series.returned_
+ok   go: same caches before f20_hb / f20_w -> SERIES_STOP and exit 7
+ok   go: tags.txt and last_after.tsv only after a launch
+ok   go: SERIES_STOP blocks tags, not f42c_ret
+ok   go: the return of the pinned FS13 copy in finish, before installed_after
+ok   go: installed_after must be = before (INST)
+ok   go: installed before the call must be FS13 or FS14 (case on WANT, other -> exit 1)
+ok   go: KYTY_FIX_ in the code only KYTY_FIX_F20=1
+ok   go: no KYTY_GPU_CHECKPOINTS=, KYTY_GAME_PATCH=, KYTY_TEST_ in the body
+ok   go: shell KYTY_* and VK_LAYER_* unset before the call
+ok   go: lock line names HPP-781
+ok   queue_f42c.py own issue HPP-781
+ok   runchk_f42c.py own issue HPP-781
+ok   chk_f42c.sh comments of HPP-781 and the F46c end check HPP-800
+ok   runchk_f42c.py reads F42C_RUN_ID, launch sets it
+ok   enter_scene: ROOT = f287/f42c
+ok   enter_scene: CLOSE_WAIT_S = 40 (the harness timeout of the exit, form b4_v)
+ok   tempo_f42c.py = tempo_fs12c.py with the names moved (+ header lines)
+ok   ASCII only: chk_f42c.sh
+ok   ASCII only: dispstate.py
+ok   ASCII only: f42c_read.py
+ok   ASCII only: go_f42c.sh
+ok   ASCII only: guard_f42c.py
+ok   ASCII only: hold_f42c.py
+ok   ASCII only: hostload_f42c.py
+ok   ASCII only: idle142.py
+ok   ASCII only: launch_f42c.sh
+ok   ASCII only: launch_run.py
+ok   ASCII only: manifest_fs4c.py
+ok   ASCII only: mk_f42c.py
+ok   ASCII only: post_f42c.sh
+ok   ASCII only: procload.py
+ok   ASCII only: queue_f42c.py
+ok   ASCII only: refs_f42c.py
+ok   ASCII only: regress_f42c.py
+ok   ASCII only: run_safety99.py
+ok   ASCII only: runchk_f42c.py
+ok   ASCII only: series_f42c.py
+ok   ASCII only: sheet142.py
+ok   ASCII only: tempo_f42c.py
+ok   ASCII only: test_f42c_read.py
+ok   ASCII only: test_tools_f42c.py
+ok   ASCII only: wait_f42c.sh
+checks 149 failed 0
+ALL OK

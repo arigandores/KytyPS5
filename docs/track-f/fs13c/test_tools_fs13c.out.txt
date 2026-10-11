@@ -1,0 +1,113 @@
+suite test_tools_fs13c.py sha256 bac9b2382a4cc63e9f738a5923df958be0eea3012f77d519336d13208594873c target go_fs13c.sh sha256 e7271726d75b5f15e56a8e6a1ad4a1d466d263aa4994024df5096a5fc45130d9
+ok   go plan fs13_v
+ok   go plan fs13_v_r1
+ok   go plan fs13_v_r3
+ok   plan fs13_v: no KYTY_TEST_
+ok   plan fs13_v: KYTY_FIX_ only at fs13_z, only KYTY_FIX_F25=0
+ok   go plan fs13_w
+ok   go plan fs13_w_r1
+ok   go plan fs13_w_r3
+ok   plan fs13_w: no KYTY_TEST_
+ok   plan fs13_w: KYTY_FIX_ only at fs13_z, only KYTY_FIX_F25=0
+ok   go plan fs13_z
+ok   go plan fs13_z_r1
+ok   go plan fs13_z_r3
+ok   plan fs13_z: no KYTY_TEST_
+ok   plan fs13_z: KYTY_FIX_ only at fs13_z, only KYTY_FIX_F25=0
+ok   go dry-run output: first line is the linter line ALL OK, the plan is a later line (the F33e trap)
+ok   post plan of fs13_v is the dryrun line (not the linter line), plan-w no (rc 0: -rec knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of fs13_w is the dryrun line (not the linter line), plan-w yes (rc 0: 100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w yes)
+ok   post plan of fs13_z is the dryrun line (not the linter line), plan-w no (rc 0: _FIX_F25=0 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of fs13_w_r2 is the dryrun line (not the linter line), plan-w yes (rc 0: 100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w yes)
+ok   post: the plan is taken by grep '^dryrun ', not by the first line
+ok   post: the plan-only exit is before the lock check (reads nothing)
+ok   post: pair of fs13_v with the f25_v sheet of F38c
+ok   on disk: the f25_v sheet exists
+ok   go usage rc 2 for 'fs13_x'
+ok   launch usage rc 2 for 'fs13_x'
+ok   post usage rc 2 for 'fs13_x'
+ok   go usage rc 2 for 'fs13_v_r4'
+ok   launch usage rc 2 for 'fs13_v_r4'
+ok   post usage rc 2 for 'fs13_v_r4'
+ok   go usage rc 2 for 'fs13_z_r0'
+ok   launch usage rc 2 for 'fs13_z_r0'
+ok   post usage rc 2 for 'fs13_z_r0'
+ok   go usage rc 2 for 'fs12_v'
+ok   launch usage rc 2 for 'fs12_v'
+ok   post usage rc 2 for 'fs12_v'
+ok   go usage rc 2 for 'f25_v'
+ok   launch usage rc 2 for 'f25_v'
+ok   post usage rc 2 for 'f25_v'
+ok   go usage rc 2 for ''
+ok   launch usage rc 2 for ''
+ok   post usage rc 2 for ''
+ok   launch fs13_v dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat fs13_v_r1 without FS13C_REPEAT_OK -> rc 11
+ok   launch repeat fs13_v_r1 with FS13C_REPEAT_OK -> passes
+ok   launch fs13_w dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat fs13_w_r1 without FS13C_REPEAT_OK -> rc 11
+ok   launch repeat fs13_w_r1 with FS13C_REPEAT_OK -> passes
+ok   launch fs13_z dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat fs13_z_r1 without FS13C_REPEAT_OK -> rc 11
+ok   launch repeat fs13_z_r1 with FS13C_REPEAT_OK -> passes
+ok   form634_check.py --series C:\kyty\f287\fs13c: ALL OK
+ok   go_fs13c.sh first executable line is the form linter
+ok   launch_fs13c.sh first executable line is the form linter
+ok   go: TB literal = abab2196
+ok   go: FS12 literal = 46892c20
+ok   go: BIN and PINNED paths
+ok   on disk: sha256 of the FS13 copy = abab2196
+ok   on disk: sha256 of the pinned FS12 copy = 46892c20
+ok   go: the guard scan right after the lock line, before the manifest
+ok   go: no guard scan / hold check before the lock (item 660 (d)(1))
+ok   go: install of the FS13 copy after the copies of the caches and after INSTALLED=1
+ok   go: the return of the pinned FS12 copy in finish, before installed_after
+ok   go: installed_after must be FS12
+ok   go: installed before the tag must be FS12
+ok   go: no FS11 / ea51ae80 left
+ok   go: KYTY_FIX_ in the knobs only KYTY_FIX_F25=0 (fs13_z)
+ok   go: no KYTY_GPU_CHECKPOINTS=, KYTY_GAME_PATCH=, KYTY_TEST_*= in the body
+ok   go: shell KYTY_* and VK_LAYER_* unset before the call
+ok   go: the env after the unset is written
+ok   go: lock line names HPP-789
+ok   queue_fs13c.py own issue HPP-789
+ok   runchk_fs13c.py own issue HPP-789
+ok   chk_fs13c.sh comments of HPP-789
+ok   enter_scene: ROOT = f287/fs13c
+ok   enter_scene: CLOSE_WAIT_S = 40 (the harness timeout of the exit, form b4_v)
+ok   tempo_fs13c.py = tempo_fs12c.py (= tempo_f33e.py) with the names moved (+ one header line)
+ok   ASCII only: chk_fs13c.sh
+ok   ASCII only: dispstate.py
+ok   ASCII only: fs13c_read.py
+ok   ASCII only: go_fs13c.sh
+ok   ASCII only: guard_fs13c.py
+ok   ASCII only: hold_fs13c.py
+ok   ASCII only: hostload_fs13c.py
+ok   ASCII only: idle142.py
+ok   ASCII only: launch_fs13c.sh
+ok   ASCII only: launch_run.py
+ok   ASCII only: manifest_fs4c.py
+ok   ASCII only: mfsub_fs13c.py
+ok   ASCII only: mk_fs13c.py
+ok   ASCII only: post_fs13c.sh
+ok   ASCII only: procload.py
+ok   ASCII only: queue_fs13c.py
+ok   ASCII only: refs_fs13c.py
+ok   ASCII only: regress_fs13c.py
+ok   ASCII only: run_safety99.py
+ok   ASCII only: runchk_fs13c.py
+ok   ASCII only: sheet142.py
+ok   ASCII only: snap_fs13c.py
+ok   ASCII only: tempo_fs13c.py
+ok   ASCII only: test_fs13c_read.py
+ok   ASCII only: test_tools_fs13c.py
+ok   ASCII only: wait_fs13c.sh
+checks 103 failed 0
+ALL OK

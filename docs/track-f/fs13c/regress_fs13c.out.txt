@@ -1,0 +1,82 @@
+suite regress_fs13c.py sha256 b23624ee6ec88a88a7a7702817c4e5d291b8fed1b9e2f2878d04962a10c53d60 target fs13c_read.py sha256 faca4cecdf061fcfcffa71858589b1ab27b74203402d88e9a19d9c5a7e763d1c
+fs13_v (from log_f25_v.txt): admission failed members 3
+  NO json binary_sha256 = FS13 abab2196 (5a14a1118e041c85)
+  NO installed during the tag = FS13 abab2196 (5a14a1118e041c85)
+  NO env = the form of the tag (['extra KYTY_FIX_F25=1'])
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (334.0 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 400; with the first frame 0)
+  [YES] video index records >= 3000 (10178)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [YES] FixF25: mode=1 (every line) before the first GuestOut ([(1, 17)]; unparsable 0; first GuestOut 12503) - item 697 (g)(3)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 728)]; unparsable 0; first GuestOut 12503)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 726)]; bad 0; first GuestOut 12503)
+  [YES] exit by the harness: Event: quit line in the log (1158903)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12503)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 724)]; first GuestOut 12503)
+  [YES] FixB12Stat: line present (parsed 35, unparsable 0)
+  members as expected: True; F25 rows read failed twice 0 / 0, direct read failed 0 / 0; close_rc 0 close_s 4.2 quit_ln 1158903
+fs13_v (from log_fs12_v.txt): admission failed members 3
+  NO json binary_sha256 = FS13 abab2196 (46892c20080819ae)
+  NO installed during the tag = FS13 abab2196 (46892c20080819ae)
+  NO installed before = after = FS12 46892c20 (ea51ae80521e8300 / ea51ae80521e8300)
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (334.0 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 342; with the first frame 0)
+  [YES] video index records >= 3000 (10487)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [NO] FixF25: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12502) - item 697 (g)(3)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 727)]; unparsable 0; first GuestOut 12502)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 725)]; bad 0; first GuestOut 12502)
+  [YES] exit by the harness: Event: quit line in the log (1184420)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12502)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 723)]; first GuestOut 12502)
+  [YES] FixB12Stat: line present (parsed 34, unparsable 0)
+  members as expected: True; F25 rows read failed twice 0 / 0, direct read failed 0 / 0; close_rc 0 close_s 4.1 quit_ln 1184420
+fs13_w (from log_fs12_w.txt): admission failed members 3
+  NO json binary_sha256 = FS13 abab2196 (46892c20080819ae)
+  NO installed during the tag = FS13 abab2196 (46892c20080819ae)
+  NO installed before = after = FS12 46892c20 (ea51ae80521e8300 / ea51ae80521e8300)
+  admission as expected: True
+  [YES] lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.1 >= 310)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 [Vulkan][E] (0)
+  [YES] 0 limit lines of the layer (0)
+  [YES] positive control: [Vulkan][W] 932912 > 0
+  [YES] DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)
+  [NO] FixF25: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12505) - item 697 (g)(3)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 731)]; unparsable 0; first GuestOut 12505)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12505)
+  [YES] no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 727)]; first GuestOut 12505)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 729)]; bad 0; first GuestOut 12505)
+  members as expected: True; F25 rows read failed twice 0 / 0, direct read failed 0 / 0; close_rc 0 close_s 3.9 quit_ln 2441548
+fs13_z (from log_fs12_z.txt): admission failed members 4
+  NO json binary_sha256 = FS13 abab2196 (46892c20080819ae)
+  NO installed during the tag = FS13 abab2196 (46892c20080819ae)
+  NO installed before = after = FS12 46892c20 (ea51ae80521e8300 / ea51ae80521e8300)
+  NO env = the form of the tag (['extra KYTY_FIX_F21=0', 'missing KYTY_FIX_F25'])
+  admission as expected: True
+  [YES] hold >= 120 s after the first scene frame (154.3 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [NO] FixF25: mode=0 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12502) - item 697 (g)(3)
+  [YES] 0 FixF25: read failed twice (whole log 0; whole stdout 0)
+  members as expected: True; F25 rows read failed twice 0 / 0, direct read failed 0 / 0; close_rc 0 close_s 3.7 quit_ln 720259
+ALL OK

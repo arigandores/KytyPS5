@@ -1,0 +1,2 @@
+links 60 bad 0
+ALL OK

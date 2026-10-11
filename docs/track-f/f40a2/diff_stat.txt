@@ -1,0 +1,31 @@
+== worktree: git diff --stat dfc037e9 7c38e497 -- src
+ src/graphics/presentation/window/joyPump.cpp | 98 ++++++++++++++++++++++++++++
+ src/graphics/presentation/window/joyPump.h   |  4 ++
+ src/graphics/presentation/window/window.cpp  | 38 +++++++++--
+ 3 files changed, 135 insertions(+), 5 deletions(-)
+== main: git show --stat 57f9e528 -- src (F40a2 commit in main)
+57f9e52831b94f9654b3b8c6acaf8f05132bff2f WIP track F link F40a2 (HPP-785): KYTY_FIX_F24 witness FixF24: init_owner (RC1 of F40b) and stand K
+
+ src/graphics/presentation/window/joyPump.cpp | 98 ++++++++++++++++++++++++++++
+ src/graphics/presentation/window/joyPump.h   |  4 ++
+ src/graphics/presentation/window/window.cpp  | 38 +++++++++--
+ 3 files changed, 135 insertions(+), 5 deletions(-)
+== main: git diff --stat e3aa4b4d 57f9e528 -- src (includes commits of other links between e3aa4b4d and 57f9e528)
+ src/emulator.cpp                                   |   3 +
+ src/graphics/host_gpu/renderer/pipeline/fixF20.cpp |  62 ++++++
+ src/graphics/host_gpu/renderer/pipeline/fixF20.h   | 230 +++++++++++++++++++++
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   |  32 ++-
+ .../host_gpu/renderer/pipeline/pipelineCache.h     |   4 +
+ .../host_gpu/renderer/pipeline/shaders.cpp         |   7 +-
+ src/graphics/presentation/window/joyPump.cpp       |  98 +++++++++
+ src/graphics/presentation/window/joyPump.h         |   4 +
+ src/graphics/presentation/window/window.cpp        |  38 +++-
+ src/kernel/fileSystem.cpp                          |   9 +-
+ 10 files changed, 472 insertions(+), 15 deletions(-)
+== commits touching src between e3aa4b4d and 57f9e528
+57f9e528 WIP track F link F40a2 (HPP-785): KYTY_FIX_F24 witness FixF24: init_owner (RC1 of F40b) and stand KYT
+a6342c98 WIP track F link F42a (HPP-779): KYTY_FIX_F20 (default 0) - form P: at 1 every Vulkan module created 
+3630f116 track F link FS13a (HPP-787): KYTY_FIX_F25 default 0 -> 1 (ROADMAP s122 item 697(g)(1))
+== F40a2 paths under src/graphics/shader: 0; worktree dfc037e9..7c38e497: 0
+== diff 57f9e528^..57f9e528 = dfc037e9..7c38e497 (src): DIFFERENT
+== the same diff without 'index' and '@@' lines (hunk offsets differ: window.cpp of main carries the KYTY_DIAG_B32 lines, base blobs 5b12a7fa (main) / cf2a352f (worktree); joyPump.cpp, joyPump.h blobs equal on both sides): differing lines 0

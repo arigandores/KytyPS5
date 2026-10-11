@@ -1,0 +1,278 @@
+diff --git a/src/graphics/presentation/window/joyPump.cpp b/src/graphics/presentation/window/joyPump.cpp
+index 872d2ed0..a03ecb8a 100644
+--- a/src/graphics/presentation/window/joyPump.cpp
++++ b/src/graphics/presentation/window/joyPump.cpp
+@@ -27,6 +27,7 @@
+ #include <mutex>
+ #include <set>
+ #include <thread>
++#include <algorithm>
+ #include <utility>
+ #include <vector>
+ 
+@@ -55,6 +56,48 @@ void AtomicMax(std::atomic<uint64_t>& value, uint64_t sample) {
+ 	}
+ }
+ 
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++// F40a2 (RC1 of F40b, ROADMAP s122 item 696(b)(1)): the OS thread that owns the first message-only window of class cls
++// of this process (FindWindowExW(HWND_MESSAGE) by class, GetWindowThreadProcessId, own process id only - any process on
++// SDL2 has windows of the same classes); 0 - none found.
++uint64_t OwnerOfMessageWindow(const wchar_t* cls) {
++	const DWORD self = GetCurrentProcessId();
++	HWND        hwnd = nullptr;
++	for (int i = 0; i < 4096; i++) {
++		hwnd = FindWindowExW(HWND_MESSAGE, hwnd, cls, nullptr);
++		if (hwnd == nullptr) {
++			return 0;
++		}
++		DWORD       pid = 0;
++		const DWORD tid = GetWindowThreadProcessId(hwnd, &pid);
++		if (pid == self) {
++			return tid;
++		}
++	}
++	return 0;
++}
++#endif
++
++// F40a2 (RC1 of F40b): on JoyPump after a successful SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER), before the main thread
++// resumes. hid - SDL_HIDAPI_DEVICE_DETECTION (HIDAPI discovery), helper - SDLHelperWindowInputCatcher (SDL helper window,
++// DirectInput cooperative level), msg - Message (Windows joystick driver device notification); pump - this thread, main -
++// the thread that called Start; all are OS thread ids (GetCurrentThreadId), comparable with the window owners.
++void LogInitOwner(uint64_t main_os_tid) {
++#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
++	const uint64_t hid    = OwnerOfMessageWindow(L"SDL_HIDAPI_DEVICE_DETECTION");
++	const uint64_t helper = OwnerOfMessageWindow(L"SDLHelperWindowInputCatcher");
++	const uint64_t msg    = OwnerOfMessageWindow(L"Message");
++	const uint64_t pump   = GetCurrentThreadId();
++#else
++	const uint64_t hid    = 0;
++	const uint64_t helper = 0;
++	const uint64_t msg    = 0;
++	const uint64_t pump   = 0;
++#endif
++	LOGF("FixF24: init_owner hid=%" PRIu64 " helper=%" PRIu64 " msg=%" PRIu64 " pump=%" PRIu64 " main=%" PRIu64 "\n", hid,
++	     helper, msg, pump, main_os_tid);
++}
++
+ bool LineAllowed(std::atomic<uint32_t>& counter) {
+ 	return counter.fetch_add(1, std::memory_order_relaxed) < LINE_LIMIT;
+ }
+@@ -80,6 +123,13 @@ public:
+ 	std::atomic<uint64_t> m_stand_tasks {0};
+ 	std::atomic<uint64_t> m_stand_open_failed {0};
+ 	std::atomic<uint32_t> m_stand_task_delay_ms {0};
++	// Flap arm scan gap (F40a2, RC2 of F40b): m_stand_scan_last_us and m_stand_scan_gap_max_us are guarded by
++	// m_stand_scan_mutex; m_stand_scan_on - one relaxed load per JoyPump scan when the stand is off.
++	std::atomic<bool> m_stand_scan_on {false};
++	std::mutex        m_stand_scan_mutex;
++	uint64_t          m_stand_scan_last_us    = 0;
++	uint64_t          m_stand_scan_gap_max_us = 0;
++	void              StandScanMark();
+ 
+ private:
+ 	struct Task {
+@@ -112,6 +162,7 @@ private:
+ 	std::atomic<bool>       m_exited {false};
+ 	std::atomic<bool>       m_stop {false};
+ 	std::atomic<int>        m_open_pads {0};
++	uint64_t                m_main_os_tid = 0; // written by Start before the thread, read by JoyPump
+ #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+ 	HANDLE m_event = nullptr; // auto-reset: a task or the stop; created by Start before the thread
+ #endif
+@@ -130,6 +181,7 @@ Pump& P() {
+ bool Pump::Start(uint64_t main_tid, std::string* error) {
+ #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+ 	m_event = CreateEventW(nullptr, FALSE, FALSE, nullptr);
++	m_main_os_tid = GetCurrentThreadId(); // F40a2 (RC1 of F40b): the main thread, OS id
+ #endif
+ 	{
+ 		std::lock_guard lock(m_mutex);
+@@ -151,6 +203,9 @@ void Pump::ThreadMain(uint64_t main_tid) {
+ 	LOGF("FixF24: init tid=%" PRIu64 " pump tid=%" PRIu64 " main tid=%" PRIu64 "\n", static_cast<uint64_t>(SDL_ThreadID()),
+ 	     pump_tid, main_tid);
+ 	const bool ok = SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) == 0;
++	if (ok) {
++		LogInitOwner(m_main_os_tid); // F40a2 (RC1 of F40b): before the main thread resumes
++	}
+ 	{
+ 		std::lock_guard lock(m_mutex);
+ 		m_init_done = true;
+@@ -191,6 +246,7 @@ void Pump::Loop() {
+ 		if (wall_us >= PUMP_UPDATE_LONG_US && LineAllowed(m_long_lines)) {
+ 			LOGF("FixF24: pump_update_long us=%" PRIu64 "\n", wall_us);
+ 		}
++		StandScanMark(); // F40a2 (RC2 of F40b): the start of the scan, stand only
+ 		ScanAndOpen();
+ 		if (Stopping()) {
+ 			return;
+@@ -333,6 +389,20 @@ void Pump::OpenOne(SDL_GameController* pad) {
+ 	}
+ }
+ 
++// Stand flap arm (F40a2, RC2 of F40b): a ScanAndOpen start of JoyPump inside [StandScanGapBegin; StandScanGapEnd].
++void Pump::StandScanMark() {
++	if (!m_stand_scan_on.load(std::memory_order_relaxed)) {
++		return;
++	}
++	const uint64_t now = NowUs();
++	std::lock_guard lock(m_stand_scan_mutex);
++	if (!m_stand_scan_on.load(std::memory_order_relaxed) || now < m_stand_scan_last_us) {
++		return; // the window ended (or restarted) between the load and the lock
++	}
++	m_stand_scan_gap_max_us = std::max(m_stand_scan_gap_max_us, now - m_stand_scan_last_us);
++	m_stand_scan_last_us    = now;
++}
++
+ // JoyPump task posted by the main thread's removal handler (Controller::Disconnect is done there).
+ void Pump::Close(int instance_id) {
+ 	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(instance_id));
+@@ -437,6 +507,34 @@ StandStats StandRead() {
+ 	return s;
+ }
+ 
++// F40a2 (RC2 of F40b): the stand thread, flap arm. Begin - just before the first attach; End - just after the last
++// detach: the longest stretch of the window without a ScanAndOpen start (the edges count: begin to the first start, the
++// last start to end). At KYTY_FIX_F24=0 (no JoyPump) both do nothing and End returns 0.
++void StandScanGapBegin() {
++	if (!Enabled()) {
++		return;
++	}
++	auto&           p = P();
++	std::lock_guard lock(p.m_stand_scan_mutex);
++	p.m_stand_scan_last_us    = NowUs();
++	p.m_stand_scan_gap_max_us = 0;
++	p.m_stand_scan_on.store(true, std::memory_order_relaxed);
++}
++
++uint64_t StandScanGapEnd() {
++	if (!Enabled()) {
++		return 0;
++	}
++	auto&           p = P();
++	std::lock_guard lock(p.m_stand_scan_mutex);
++	if (!p.m_stand_scan_on.load(std::memory_order_relaxed)) {
++		return 0;
++	}
++	p.m_stand_scan_on.store(false, std::memory_order_relaxed);
++	const uint64_t now = NowUs();
++	return std::max(p.m_stand_scan_gap_max_us, now > p.m_stand_scan_last_us ? now - p.m_stand_scan_last_us : 0);
++}
++
+ void StandTaskDelayMs(uint32_t ms) {
+ 	P().m_stand_task_delay_ms.store(ms, std::memory_order_relaxed);
+ }
+diff --git a/src/graphics/presentation/window/joyPump.h b/src/graphics/presentation/window/joyPump.h
+index 6ac18069..83ce82dd 100644
+--- a/src/graphics/presentation/window/joyPump.h
++++ b/src/graphics/presentation/window/joyPump.h
+@@ -49,6 +49,10 @@ void       StandWindow(bool open);
+ StandStats StandRead();
+ // Flap arm: a task runs no earlier than its post time + ms (0 - off); the scan and the opening are not delayed.
+ void StandTaskDelayMs(uint32_t ms);
++// Flap arm (F40a2, RC2 of F40b): the longest stretch of [Begin; End] without a ScanAndOpen start of JoyPump, us;
++// stand thread; no-ops and 0 at KYTY_FIX_F24=0.
++void     StandScanGapBegin();
++uint64_t StandScanGapEnd();
+ // Win32 helpers of the stand probes (no-ops elsewhere): the HWND of the SDL window (main thread), a key message pair of
+ // VK_F13 (scan code 0x64) posted to it, IsHungAppWindow.
+ uintptr_t StandWindowHandle(SDL_Window* window);
+diff --git a/src/graphics/presentation/window/window.cpp b/src/graphics/presentation/window/window.cpp
+index 5b12a7fa..bb555500 100644
+--- a/src/graphics/presentation/window/window.cpp
++++ b/src/graphics/presentation/window/window.cpp
+@@ -1151,6 +1151,11 @@ void WindowShutdown() {
+ //    detached two steps later; JoyPump tasks run no earlier than FLAP_TASK_DELAY_MS after their post (a pad lives 2 steps,
+ //    less than the delay: a task opening by the event index can never open its own pad); attached - successful attaches,
+ //    opened - pads whose Update callback ran (SDL_JoystickOpen runs one Update), open_lat_max_us - attach to first Update.
++// F40a2 (HPP-785, ROADMAP s122 item 696(b)(2), RC2 of F40b): the line "TestHidLoss: f24" ends with flap_life_min_us,
++// flap_life_max_us (detach - attach of the flap slots that were attached and detached; both times taken under the
++// joystick lock, attach before SDL_JoystickAttachVirtualEx, detach before SDL_JoystickDetachVirtual) and
++// jp_scan_gap_max_us (JoyPump::StandScanGapBegin just before the first attach .. StandScanGapEnd just after the last
++// detach: the longest stretch without a ScanAndOpen start of JoyPump; 0 at KYTY_FIX_F24=0); 0 in other modes.
+ constexpr double   TEST_HIDLOSS_PRE_S              = 10.0;
+ constexpr uint32_t TEST_HIDLOSS_HOLD_MS            = 3000;
+ constexpr uint32_t TEST_HIDLOSS_PROBE_MS           = 20;
+@@ -1264,6 +1269,8 @@ struct TestHidLossEd2 {
+ 	std::atomic<uint64_t>  flap_attached {0};
+ 	std::atomic<uint64_t>  flap_attach_us[TEST_HIDLOSS_FLAP_N] {};
+ 	std::atomic<uint64_t>  flap_open_us[TEST_HIDLOSS_FLAP_N] {};
++	std::atomic<uint64_t>  flap_detach_us[TEST_HIDLOSS_FLAP_N] {}; // F40a2: 0 - not detached
++	std::atomic<uint64_t>  jp_scan_gap_max_us {0};                 // F40a2
+ 	// Main thread only.
+ 	uint64_t              in_seen           = 0;
+ 	uint64_t              in_lat_max_us     = 0;
+@@ -1452,14 +1459,28 @@ static void TestHidLossStat(TestHidLossMode mode) {
+ 			open_lat_max_us = std::max(open_lat_max_us, open_us - e.flap_attach_us[i].load(std::memory_order_relaxed));
+ 		}
+ 	}
++	uint64_t life_min_us = 0;
++	uint64_t life_max_us = 0;
++	uint64_t life_n      = 0;
++	for (uint32_t i = 0; i < TEST_HIDLOSS_FLAP_N; i++) {
++		const uint64_t attach_us = e.flap_attach_us[i].load(std::memory_order_relaxed);
++		const uint64_t detach_us = e.flap_detach_us[i].load(std::memory_order_relaxed);
++		if (attach_us != 0 && detach_us >= attach_us) {
++			const uint64_t life_us = detach_us - attach_us;
++			life_min_us             = life_n == 0 ? life_us : std::min(life_min_us, life_us);
++			life_max_us             = std::max(life_max_us, life_us);
++			life_n++;
++		}
++	}
+ 	LOGF("TestHidLoss: f24 mode=%s fix=%d upd_on_main=%llu upd_slept_us=%llu main_late_max_us=%llu in_posted=%llu "
+ 	     "in_seen=%llu in_post_fail=%llu in_lat_max_us=%llu in_pre_lat_max_us=%llu hung_ms=%llu jp_update_max_us=%llu "
+ 	     "jp_tasks=%llu pad_posted=%llu pad_seen=%llu pad_lat_p99_us=%llu pad_lat_max_us=%llu attached=%llu opened=%llu "
+-	     "open_failed=%llu open_lat_max_us=%llu\n",
++	     "open_failed=%llu open_lat_max_us=%llu flap_life_min_us=%llu flap_life_max_us=%llu jp_scan_gap_max_us=%llu\n",
+ 	     TestHidLossModeName(mode), JoyPump::Enabled() ? 1 : 0, get(e.upd_on_main), get(e.upd_slept_us),
+ 	     get(g_test_hidloss.main_late_max_us), get(e.in_posted), u(e.in_seen), get(e.in_post_fail), u(e.in_lat_max_us),
+ 	     u(e.in_pre_lat_max_us), get(e.hung_ms), u(jp.update_max_us), u(jp.tasks), get(e.pad_posted), u(e.pad_seen),
+-	     u(p99), u(lat_max), u(attached), u(opened), u(jp.open_failed), u(open_lat_max_us));
++	     u(p99), u(lat_max), u(attached), u(opened), u(jp.open_failed), u(open_lat_max_us), u(life_min_us), u(life_max_us),
++	     get(e.jp_scan_gap_max_us));
+ }
+ 
+ static bool TestHidLossPost(std::function<void()> task) {
+@@ -1566,14 +1587,17 @@ static SDL_JoystickID TestHidLossFlapAttach(uint32_t slot) {
+ 	return id;
+ }
+ 
+-static void TestHidLossFlapDetach(SDL_JoystickID id) {
++static void TestHidLossFlapDetach(uint32_t slot, SDL_JoystickID id) {
+ 	if (id < 0) {
+ 		return;
+ 	}
+ 	SDL_LockJoysticks();
+ 	for (int i = 0; i < SDL_NumJoysticks(); i++) {
+ 		if (SDL_JoystickGetDeviceInstanceID(i) == id) {
+-			(void)SDL_JoystickDetachVirtual(i);
++			const uint64_t detach_us = TestHidLossNowUs(); // F40a2: under the lock, before the detach
++			if (SDL_JoystickDetachVirtual(i) == 0 && slot < TEST_HIDLOSS_FLAP_N) {
++				g_test_hidloss2.flap_detach_us[slot].store(detach_us, std::memory_order_relaxed);
++			}
+ 			break;
+ 		}
+ 	}
+@@ -1656,16 +1680,20 @@ static void TestHidLossRun2(TestHidLossConfig cfg, uint64_t armed_us) {
+ 		}
+ 		if (fired && mode == TestHidLossMode::Flap && flap_k < TEST_HIDLOSS_FLAP_N + 2) {
+ 			if (flap_k < TEST_HIDLOSS_FLAP_N) {
++				if (flap_k == 0) {
++					JoyPump::StandScanGapBegin(); // F40a2 (RC2 of F40b): just before the first attach
++				}
+ 				flap_ids[flap_k] = TestHidLossFlapAttach(flap_k);
+ 				if (flap_ids[flap_k] >= 0) {
+ 					e.flap_attached.fetch_add(1, std::memory_order_relaxed);
+ 				}
+ 			}
+ 			if (flap_k >= 2) {
+-				TestHidLossFlapDetach(flap_ids[flap_k - 2]);
++				TestHidLossFlapDetach(flap_k - 2, flap_ids[flap_k - 2]);
+ 			}
+ 			flap_k++;
+ 			if (flap_k == TEST_HIDLOSS_FLAP_N + 2) {
++				e.jp_scan_gap_max_us.store(JoyPump::StandScanGapEnd(), std::memory_order_relaxed); // F40a2: after the last detach
+ 				const uint64_t done_us = TestHidLossNowUs();
+ 				LOGF("TestHidLoss: done t_us=%" PRIu64 " flap_attached=%" PRIu64 "\n", done_us,
+ 				     e.flap_attached.load(std::memory_order_relaxed));

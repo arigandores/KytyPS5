@@ -1,0 +1,28 @@
+Preparing worktree (detached HEAD dfc037e9)
+Updating files:  95% (4081/4291)Updating files:  96% (4120/4291)Updating files:  97% (4163/4291)Updating files:  98% (4206/4291)Updating files:  99% (4249/4291)Updating files: 100% (4291/4291)Updating files: 100% (4291/4291), done.
+HEAD is now at dfc037e9 WIP track F link F40a (HPP-770): stand KYTY_TEST_HIDLOSS edition 2 (off when unset) - modes upd (the virtual pad's Update callback sleeps HOLD_UPD_MS 8000 inside SDL_JoystickUpdate on the updating thread), flap (60 extra virtual pads attached / detached from the stand thread, JoyPump tasks delayed 50 ms, opened by first Update), exit (upd + JoyPump task + SDL_QUIT), pad (no title posts, pad probe only); detach on the edition 2 thread; probes: VK_F13 key pairs every IN_MS 100 posted to the window and seen first by ProcessEvent, IsHungAppWindow every PROBE_MS 20, button A of the virtual pad from fire - 20 s to fire - 1 s; SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1 at attach; line TestHidLoss: f24 ...; hold and sleep edition 1 unchanged; no cls (unreachable, docs/track-f/f40a.md s0.5) (ROADMAP s122 item 692(g)(1)); built, not run with the game
+--- worktree HEAD
+dfc037e9424d141569ccc1847b01a3ee599f7df8 WIP track F link F40a (HPP-770): stand KYTY_TEST_HIDLOSS edition 2 (off when un
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+dfc037e9424d141569ccc1847b01a3ee599f7df8 e0b4f2ba69d7907f5f6bfdf2302dec731d9a4815 WIP track F link F40a (HPP-770): stand KYTY_TEST_HIDLOSS edition 2 (off when u
+e0b4f2ba69d7907f5f6bfdf2302dec731d9a4815 730ed40a398b98f4f4f51a13f56d8a647778eae1 WIP track F link F40a (HPP-770): KYTY_FIX_F24 (default 0) - variant B: at 1 SD
+730ed40a398b98f4f4f51a13f56d8a647778eae1 9aaea58c7c7575dda0f7a403ca5d0ec1dd28b9e6 track F link FS12a (HPP-750): KYTY_FIX_F21 default 0 -> 1 (ROADMAP s122 item 6
+9aaea58c7c7575dda0f7a403ca5d0ec1dd28b9e6 258612886ef51c20a688764db5dd2398ae23463e track F link F33c2 (HPP-748): stand KYTY_TEST_EXITFATAL edition 3 (off when un
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 460 with CR 0
+WT OK

@@ -1,0 +1,29 @@
+tag   C:/kyty/f287/f40a2/build/install/kyty_emulator.exe sha256 ddf0ca913f9feb8a66569fa30668de4b97e275ab6c4cc3e5c69889b4cb82e5d5 size 24902144
+fs12  C:/kyty/f287/bin/kyty_emulator_46892c20.exe sha256 46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26
+count KYTY_FIX_F24                                  tag 1 fs12 0
+count FixF24: mode=                                 tag 1 fs12 0
+count FixF24: init tid=                             tag 1 fs12 0
+count FixF24: pump_stop_expired                     tag 1 fs12 0
+count FixF24: pump_update_long                      tag 1 fs12 0
+count FixF24: open failed                           tag 1 fs12 0
+count FixF24: add event                             tag 1 fs12 0
+count FixF24: wait error                            tag 1 fs12 0
+count TestHidLoss: f24 mode=                        tag 1 fs12 0
+count KYTY_TEST_HIDLOSS                             tag 1 fs12 1
+count FixF24: init_owner hid=                       tag 1 fs12 0
+count flap_life_min_us=                             tag 1 fs12 0
+count jp_scan_gap_max_us=                           tag 1 fs12 0
+count SDL_HIDAPI_DEVICE_DETECTION                   tag 1 fs12 1
+count KYTY_FIX_F21                                  tag 1 fs12 1
+count FixF21: mode=                                 tag 1 fs12 1
+count FixB24: mode=                                 tag 1 fs12 1
+count 9177b4267de1fb8bac7d1113afd8733210addfac      tag 1 fs12 1
+version tag ['KytyPS5-2026-09-15-6a2987a-1917-g7c38e497']
+version fs12 ['KytyPS5-2026-09-15-6a2987a-1914-g730ed40a']
+worktree HEAD 7c38e497ff5afb2207a538a748ec21f022ce232d
+worktree src/ diff vs 730ed40a: src/graphics/presentation/window/hostInput.cpp, src/graphics/presentation/window/joyPump.cpp, src/graphics/presentation/window/joyPump.h, src/graphics/presentation/window/vulkanWindow.cpp, src/graphics/presentation/window/window.cpp, src/libs/controller.cpp
+worktree status lines 0
+git cherry main HEAD (worktree commits after 730ed40a):
+  - e0b4f2ba69d7907f5f6bfdf2302dec731d9a4815 WIP track F link F40a (HPP-770): KYTY_FIX_F24 (default 0) - variant
+  - dfc037e9424d141569ccc1847b01a3ee599f7df8 WIP track F link F40a (HPP-770): stand KYTY_TEST_HIDLOSS edition 2 
+  - 7c38e497ff5afb2207a538a748ec21f022ce232d WIP track F link F40a2 (HPP-785): KYTY_FIX_F24 witness FixF24: init

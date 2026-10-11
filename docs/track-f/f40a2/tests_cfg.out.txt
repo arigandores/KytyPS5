@@ -1,0 +1,10 @@
+OK   shader_cfg_tests rc: f40a2 0 fs12 0
+OK   shader_cfg_tests [test] lines: f40a2 133 fs12 133
+OK   shader_cfg_tests failed lines: f40a2 5 fs12 5
+OK   shader_cfg_tests failed multiset equal: f40a2 True fs12 True
+  failed: pretranslation test: ready=18 failed=1 hits=17
+  failed: shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0x200
+  failed: shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfff
+  failed: shader resource evaluation failed: hash=0x0000000000000000 flat slot 3: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem3 kind=1 off=0xe](
+  failed: shader resource specialization failed: runtime descriptor sources could not be evaluated
+ALL OK

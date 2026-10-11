@@ -1,0 +1,60 @@
+j_owner_fn	57f9e528	src/graphics/presentation/window/joyPump.cpp	63	uint64_t OwnerOfMessageWindow(const wchar_t* cls) {	const DWORD self = GetCurrentProcessId()
+j_owner_find	57f9e528	src/graphics/presentation/window/joyPump.cpp	67	hwnd = FindWindowExW(HWND_MESSAGE, hwnd, cls, nullptr);	if (hwnd == nullptr) {
+j_owner_tid	57f9e528	src/graphics/presentation/window/joyPump.cpp	72	const DWORD tid = GetWindowThreadProcessId(hwnd, &pid);	if (pid == self) {
+j_owner_pid	57f9e528	src/graphics/presentation/window/joyPump.cpp	73	if (pid == self) {	return tid;
+j_log_fn	57f9e528	src/graphics/presentation/window/joyPump.cpp	85	void LogInitOwner(uint64_t main_os_tid) {	#if KYTY_PLATFORM == KYTY_PLATFORM_WINDO
+j_cls_hid	57f9e528	src/graphics/presentation/window/joyPump.cpp	87	OwnerOfMessageWindow(L"SDL_HIDAPI_DEVICE_DETECTION");	const uint64_t helper = OwnerOfMessageWi
+j_cls_helper	57f9e528	src/graphics/presentation/window/joyPump.cpp	88	OwnerOfMessageWindow(L"SDLHelperWindowInputCatcher");	const uint64_t msg    = OwnerOfMessageWi
+j_cls_msg	57f9e528	src/graphics/presentation/window/joyPump.cpp	89	OwnerOfMessageWindow(L"Message");	const uint64_t pump   = GetCurrentThread
+j_pump_tid	57f9e528	src/graphics/presentation/window/joyPump.cpp	90	const uint64_t pump   = GetCurrentThreadId();	#else
+j_line	57f9e528	src/graphics/presentation/window/joyPump.cpp	97	LOGF("FixF24: init_owner hid=	helper, msg, pump, main_os_tid);
+j_main_field	57f9e528	src/graphics/presentation/window/joyPump.cpp	165	uint64_t                m_main_os_tid = 0;	#if KYTY_PLATFORM == KYTY_PLATFORM_WINDO
+j_main_set	57f9e528	src/graphics/presentation/window/joyPump.cpp	184	m_main_os_tid = GetCurrentThreadId();	#endif
+j_thread_new	57f9e528	src/graphics/presentation/window/joyPump.cpp	189	m_thread = std::thread([this, main_tid] { ThreadMain(main_tid); });	}
+j_init_tid_line	57f9e528	src/graphics/presentation/window/joyPump.cpp	203	LOGF("FixF24: init tid=	pump_tid, main_tid);
+j_init	57f9e528	src/graphics/presentation/window/joyPump.cpp	205	const bool ok = SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) == 0;	if (ok) {
+j_owner_call	57f9e528	src/graphics/presentation/window/joyPump.cpp	207	LogInitOwner(m_main_os_tid);	}
+j_init_done	57f9e528	src/graphics/presentation/window/joyPump.cpp	211	m_init_done = true;	m_init_ok   = ok;
+j_notify	57f9e528	src/graphics/presentation/window/joyPump.cpp	217	m_cv.notify_all();	if (ok) {
+j_scan_fields	57f9e528	src/graphics/presentation/window/joyPump.cpp	128	std::atomic<bool> m_stand_scan_on {false};	std::mutex        m_stand_scan_mutex;
+j_mark_call	57f9e528	src/graphics/presentation/window/joyPump.cpp	249	StandScanMark(); // F40a2	ScanAndOpen();
+j_scan_call	57f9e528	src/graphics/presentation/window/joyPump.cpp	250	ScanAndOpen();	if (Stopping()) {
+j_scan_fn	57f9e528	src/graphics/presentation/window/joyPump.cpp	333	void Pump::ScanAndOpen() {	std::vector<SDL_GameController*> opened;
+j_scan_lock	57f9e528	src/graphics/presentation/window/joyPump.cpp	335	SDL_LockJoysticks();	const int count = SDL_NumJoysticks();
+j_mark_fn	57f9e528	src/graphics/presentation/window/joyPump.cpp	393	void Pump::StandScanMark() {	if (!m_stand_scan_on.load(std::memory_or
+j_begin	57f9e528	src/graphics/presentation/window/joyPump.cpp	513	void StandScanGapBegin() {	if (!Enabled()) {
+j_end	57f9e528	src/graphics/presentation/window/joyPump.cpp	524	uint64_t StandScanGapEnd() {	if (!Enabled()) {
+j_end_off	57f9e528	src/graphics/presentation/window/joyPump.cpp	533	p.m_stand_scan_on.store(false, std::memory_order_relaxed);	const uint64_t now = NowUs();
+j_delay	57f9e528	src/graphics/presentation/window/joyPump.cpp	270	if (delay_us != 0 && NowUs() < m_tasks.front().posted_us + delay_us) {	return; // stand flap arm: the head is n
+h_decl	57f9e528	src/graphics/presentation/window/joyPump.h	54	void     StandScanGapBegin();	uint64_t StandScanGapEnd();
+w_probe_ms	57f9e528	src/graphics/presentation/window/window.cpp	1161	constexpr uint32_t TEST_HIDLOSS_PROBE_MS           = 20;	constexpr double   TEST_HIDLOSS_PRE2_S  
+w_delay_ms	57f9e528	src/graphics/presentation/window/window.cpp	1171	constexpr uint32_t TEST_HIDLOSS_FLAP_TASK_DELAY_MS = 50;	constexpr uint32_t TEST_HIDLOSS_RING    
+w_comment	57f9e528	src/graphics/presentation/window/window.cpp	1154	// F40a2 (HPP-785, ROADMAP s122 item 696(b)(2), RC2 of F40b)	// flap_life_max_us (detach - attach of 
+w_detach_field	57f9e528	src/graphics/presentation/window/window.cpp	1272	std::atomic<uint64_t>  flap_detach_us[TEST_HIDLOSS_FLAP_N] {};	std::atomic<uint64_t>  jp_scan_gap_max_u
+w_gap_field	57f9e528	src/graphics/presentation/window/window.cpp	1273	std::atomic<uint64_t>  jp_scan_gap_max_us {0};	// Main thread only.
+w_life	57f9e528	src/graphics/presentation/window/window.cpp	1462	uint64_t life_min_us = 0;	uint64_t life_max_us = 0;
+w_life_if	57f9e528	src/graphics/presentation/window/window.cpp	1468	if (attach_us != 0 && detach_us >= attach_us) {	const uint64_t life_us = detach_us - att
+w_fmt	57f9e528	src/graphics/presentation/window/window.cpp	1478	"open_failed=%llu open_lat_max_us=%llu flap_life_min_us=	TestHidLossModeName(mode), JoyPump::Enab
+w_attach_us	57f9e528	src/graphics/presentation/window/window.cpp	1580	g_test_hidloss2.flap_attach_us[slot].store(TestHidLossNowUs(), std::memory_order_relaxed);	const int            index = SDL_Joystic
+w_attach_call	57f9e528	src/graphics/presentation/window/window.cpp	1581	const int            index = SDL_JoystickAttachVirtualEx(&desc);	const SDL_JoystickID id    = index >= 0 
+w_detach_fn	57f9e528	src/graphics/presentation/window/window.cpp	1590	static void TestHidLossFlapDetach(uint32_t slot, SDL_JoystickID id) {	if (id < 0) {
+w_detach_lock	57f9e528	src/graphics/presentation/window/window.cpp	1594	SDL_LockJoysticks();	for (int i = 0; i < SDL_NumJoysticks(); 
+w_detach_us	57f9e528	src/graphics/presentation/window/window.cpp	1597	const uint64_t detach_us = TestHidLossNowUs(); // F40a2	if (SDL_JoystickDetachVirtual(i) == 0 &&
+w_detach_call	57f9e528	src/graphics/presentation/window/window.cpp	1598	if (SDL_JoystickDetachVirtual(i) == 0 && slot < TEST_HIDLOSS_FLAP_N) {	g_test_hidloss2.flap_detach_us[slot].sto
+w_begin_call	57f9e528	src/graphics/presentation/window/window.cpp	1684	JoyPump::StandScanGapBegin();	}
+w_attach_step	57f9e528	src/graphics/presentation/window/window.cpp	1686	flap_ids[flap_k] = TestHidLossFlapAttach(flap_k);	if (flap_ids[flap_k] >= 0) {
+w_detach_step	57f9e528	src/graphics/presentation/window/window.cpp	1692	TestHidLossFlapDetach(flap_k - 2, flap_ids[flap_k - 2]);	}
+w_end_call	57f9e528	src/graphics/presentation/window/window.cpp	1696	e.jp_scan_gap_max_us.store(JoyPump::StandScanGapEnd()	const uint64_t done_us = TestHidLossNowU
+w_delay_set	57f9e528	src/graphics/presentation/window/window.cpp	1675	JoyPump::StandTaskDelayMs(TEST_HIDLOSS_FLAP_TASK_DELAY_MS);	} else {
+w_initvideo	57f9e528	src/graphics/presentation/window/window.cpp	952	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {	EXIT("%s\n", SDL_GetError());
+w_main_tid	57f9e528	src/graphics/presentation/window/window.cpp	950	const auto main_tid = static_cast<uint64_t>(SDL_ThreadID());	SDL_SetHint(SDL_HINT_AUTO_UPDATE_JOYSTIC
+w_start	57f9e528	src/graphics/presentation/window/window.cpp	956	if (!JoyPump::Start(main_tid, &error)) {	EXIT("%s\n", error.c_str());
+sdl_init_helper	4b69833b	src/SDL.c	230	if (SDL_HelperWindowCreate() < 0) {	goto quit_and_error;
+sdl_init_gc_joy	4b69833b	src/SDL.c	335	if (!SDL_PrivateInitOrIncrSubsystem(SDL_INIT_JOYSTICK)) {	goto quit_and_error;
+sdl_helper_class	4b69833b	src/video/windows/SDL_windowswindow.c	56	static const TCHAR *SDL_HelperWindowClassName = TEXT("SDLHelperWindowInputCatcher");	static const TCHAR *SDL_HelperWindowName
+sdl_helper_once	4b69833b	src/video/windows/SDL_windowswindow.c	1204	if (SDL_HelperWindow != NULL) {	return 0;
+sdl_helper_create	4b69833b	src/video/windows/SDL_windowswindow.c	1221	SDL_HelperWindow = CreateWindowEx(0, SDL_HelperWindowClassName,	SDL_HelperWindowName,
+sdl_helper_parent	4b69833b	src/video/windows/SDL_windowswindow.c	1225	CW_USEDEFAULT, HWND_MESSAGE, NULL,	hInstance, NULL);
+hid_window	4b69833b	src/hidapi/SDL_hidapi.c	240	SDL_HIDAPI_discovery.m_hwndMsg = CreateWindowExA(0, "SDL_HIDAPI_DEVICE_DETECTION"	
+win_notif_window	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	302	data->messageWindow = CreateWindowEx(0, TEXT("Message"), NULL, 0, 0, 0, 0, 0, HWND_MESSAGE, NULL, NULL, NULL);	if (!data->messageWindow) {
+thr_id	4b69833b	src/thread/windows/SDL_systhread.c	169	return (SDL_threadID)GetCurrentThreadId();	}

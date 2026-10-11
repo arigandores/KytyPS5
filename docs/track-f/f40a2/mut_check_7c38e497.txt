@@ -1,0 +1,7 @@
+m1 src/graphics/presentation/window/joyPump.cpp +25 lines, marks 4
+m2 src/graphics/presentation/window/joyPump.cpp +0 lines, marks 1
+m4 src/graphics/presentation/window/window.cpp +0 lines, marks 1
+m5 src/graphics/presentation/window/window.cpp +0 lines, marks 1
+m6 src/graphics/presentation/window/joyPump.cpp +0 lines, marks 1
+m6 src/graphics/presentation/window/window.cpp +0 lines, marks 1
+ALL OK

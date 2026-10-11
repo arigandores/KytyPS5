@@ -1,0 +1,11 @@
+2026-10-11T15:32:22Z F47b4 start read inputs after 9ab3e10f (p.723)
+2026-10-11T15:32:22Z own_n4 74a6b40c
+2026-10-11T15:33:22Z own n4 rerun a4eeaecb
+2026-10-11T15:33:37Z probe_pair f53bef32
+2026-10-11T15:34:00Z scccheck fecee9e5 own breaks
+2026-10-11T15:34:30Z regs check/neg e9c4d48a 0ee636f8 
+2026-10-11T15:46:55Z refs/fx/srgb 024b6fc4 94298765 3f8602ec 
+2026-10-11T15:47:10Z selftest 0e909cab
+2026-10-11T15:47:23Z selftest 14819d6f
+2026-10-11T16:01:06Z refs_f47b4 786f489d
+2026-10-11T16:01:21Z review written 73f5b073

@@ -1,0 +1,37 @@
+break=nocsel program C:/kyty/s288/s4/gcn/g_1/ps_d88770f91d5d003e.bin words 44 class C-imm leaves ['LIT']
+site pc 0 fam VOP1 literal 0x3c003c00 exported v0
+x1_s_cselect_on_s_load           udc None class C-imm        v4 0 b5 C-imm        leaves LIT                                            need SMEM letter MISSED b5 MISSED
+x1_s_cselect_on_s_load           udc 0    class C-imm        v4 0 b5 C-imm        leaves LIT                                            need SMEM letter MISSED b5 MISSED
+x2_s_cselect_b64_on_s_load       udc None class C-imm        v4 0 b5 C-imm        leaves LIT                                            need SMEM letter MISSED b5 MISSED
+x2_s_cselect_b64_on_s_load       udc 0    class C-imm        v4 0 b5 C-imm        leaves LIT                                            need SMEM letter MISSED b5 MISSED
+x3_s_addc_scc_on_s_load          udc None class C-buf        v4 0 b5 C-buf        leaves LIT,SMEM                                       need SMEM letter CAUGHT b5 CAUGHT
+x3_s_addc_scc_on_s_load          udc 0    class C-buf        v4 0 b5 C-buf        leaves LIT,SMEM                                       need SMEM letter CAUGHT b5 CAUGHT
+x4_s_cmov_on_s_load              udc None class C-buf        v4 0 b5 C-buf        leaves LIT,SMEM                                       need SMEM letter CAUGHT b5 CAUGHT
+x4_s_cmov_on_s_load              udc 0    class C-buf        v4 0 b5 C-buf        leaves LIT,SMEM                                       need SMEM letter CAUGHT b5 CAUGHT
+x5_s_mov_chain_s_load            udc None class C-buf        v4 0 b5 C-buf        leaves SMEM,USER                                      need SMEM letter CAUGHT b5 CAUGHT
+x5_s_mov_chain_s_load            udc 0    class undetermined v4 0 b5 undetermined leaves OTHER,SMEM                                     need SMEM letter CAUGHT b5 CAUGHT
+x6_buffer_load                   udc None class C-buf        v4 0 b5 C-buf        leaves BUF                                            need BUF  letter CAUGHT b5 CAUGHT
+x6_buffer_load                   udc 0    class C-buf        v4 0 b5 C-buf        leaves BUF                                            need BUF  letter CAUGHT b5 CAUGHT
+x7_image                         udc None class T            v4 0 b5 T            leaves IMG                                            need IMG  letter CAUGHT b5 CAUGHT
+x7_image                         udc 0    class T            v4 0 b5 T            leaves IMG                                            need IMG  letter CAUGHT b5 CAUGHT
+x8_exec_and_s_load               udc None class C-buf        v4 1 b5 C-buf        leaves COV,LIT,OTHER_BR,SMEM,USER                     need SMEM letter CAUGHT b5 CAUGHT
+x8_exec_and_s_load               udc 0    class undetermined v4 0 b5 C-buf        leaves COV,LIT,OTHER_BR,OTHER_BRS,SMEM                need SMEM letter CAUGHT b5 CAUGHT
+x9_straight_lds_plus_s_load      udc None class undetermined v4 0 b5 undetermined leaves OTHER,SMEM                                     need SMEM letter CAUGHT b5 CAUGHT
+x9_straight_lds_plus_s_load      udc 0    class undetermined v4 0 b5 undetermined leaves OTHER,SMEM                                     need SMEM letter CAUGHT b5 CAUGHT
+x10_branch_s_load_site_literal   udc None class C-buf        v4 1 b5 C-buf        leaves LIT,OTHER_BR,SMEM,USER                         need SMEM letter CAUGHT b5 CAUGHT
+x10_branch_s_load_site_literal   udc 0    class undetermined v4 0 b5 C-buf        leaves LIT,OTHER_BR,OTHER_BRS,SMEM                    need SMEM letter CAUGHT b5 CAUGHT
+x11_cselect_b64_mask_cndmask     udc None class C-imm        v4 0 b5 C-imm        leaves LIT                                            need SMEM letter MISSED b5 MISSED
+x11_cselect_b64_mask_cndmask     udc 0    class C-imm        v4 0 b5 C-imm        leaves LIT                                            need SMEM letter MISSED b5 MISSED
+x12_s_subb_scc_on_s_load         udc None class C-buf        v4 0 b5 C-buf        leaves LIT,SMEM                                       need SMEM letter CAUGHT b5 CAUGHT
+x12_s_subb_scc_on_s_load         udc 0    class C-buf        v4 0 b5 C-buf        leaves LIT,SMEM                                       need SMEM letter CAUGHT b5 CAUGHT
+x13_scc_operand_into_site        udc None class C-buf        v4 0 b5 C-buf        leaves LIT,SMEM                                       need SMEM letter CAUGHT b5 CAUGHT
+x13_scc_operand_into_site        udc 0    class C-buf        v4 0 b5 C-buf        leaves LIT,SMEM                                       need SMEM letter CAUGHT b5 CAUGHT
+x14_cmpk_then_cselect            udc None class C-imm        v4 0 b5 C-imm        leaves LIT                                            need SMEM letter MISSED b5 MISSED
+x14_cmpk_then_cselect            udc 0    class C-imm        v4 0 b5 C-imm        leaves LIT                                            need SMEM letter MISSED b5 MISSED
+x15_sop2_scc_then_cselect        udc None class C-imm        v4 0 b5 C-imm        leaves LIT                                            need SMEM letter MISSED b5 MISSED
+x15_sop2_scc_then_cselect        udc 0    class C-imm        v4 0 b5 C-imm        leaves LIT                                            need SMEM letter MISSED b5 MISSED
+x16_branch_over_only_def         udc None class C-buf        v4 1 b5 C-buf        leaves LIT,OTHER_BR,SMEM,USER                         need SMEM letter CAUGHT b5 CAUGHT
+x16_branch_over_only_def         udc 0    class undetermined v4 0 b5 C-buf        leaves LIT,OTHER_BR,OTHER_BRS,SMEM                    need SMEM letter CAUGHT b5 CAUGHT
+x9 vs x10 leaves differ udc0 True udcNone True; x9 OTHER True OTHER_BR False; x10 OTHER False OTHER_BR True
+missed 20
+done

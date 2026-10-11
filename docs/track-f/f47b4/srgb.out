@@ -1,0 +1,6 @@
+v 0.5000 Q1 0.501961 | E 0.737255 d(Q0) 60.500 d(Q1) 60.000 -> NOT_EQUAL | L 0.502886 d(Q0) 0.736 d(Q1) 0.236 -> equal/undet
+v 0.9000 Q1 0.901961 | E 0.952941 d(Q0) 13.500 d(Q1) 13.000 -> NOT_EQUAL | L 0.896269 d(Q0) 0.951 d(Q1) 1.451 -> equal/undet
+v 0.9500 Q1 0.949020 | E 0.976471 d(Q0) 6.750 d(Q1) 7.000 -> NOT_EQUAL | L 0.947307 d(Q0) 0.687 d(Q1) 0.437 -> equal/undet
+v 0.9955 Q1 0.996078 | E 0.996078 d(Q0) 0.147 d(Q1) 0.000 -> equal/undet | L 0.991102 d(Q0) 1.121 d(Q1) 1.269 -> NOT_EQUAL
+grid 0..1 step 1e-4: literals with NOT_EQUAL against L (decoded-quantized) under both readings: 69 of 10001
+done

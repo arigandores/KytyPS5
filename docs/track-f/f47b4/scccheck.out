@@ -1,0 +1,15 @@
+cls_f47a4 break=-
+decoder ea6c6e9e src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp: SOP1 34 SOP2 49 SOPC 16 SOPK 22 SOPP 22 opcodes; operand 253 -> Scc yes
+reader SOP1 0x05 S_CMOV_B32       decoder - (not decoded: UNSUPPORTED) classifier reads SCC True ok
+reader SOP1 0x06 S_CMOV_B64       decoder S_CMOV_B64         classifier reads SCC True ok
+reader SOP2 0x04 S_ADDC_U32       decoder S_ADDC_U32         classifier reads SCC True ok
+reader SOP2 0x05 S_SUBB_U32       decoder S_SUBB_U32         classifier reads SCC True ok
+reader SOP2 0x0a S_CSELECT_B32    decoder S_CSELECT_B32      classifier reads SCC True ok
+reader SOP2 0x0b S_CSELECT_B64    decoder S_CSELECT_B64      classifier reads SCC True ok
+reader SOPK 0x02 S_CMOVK_I32      decoder - (not decoded: UNSUPPORTED) classifier reads SCC True ok
+reader SOPP 0x04 S_CBRANCH_SCC0   decoder S_CBRANCH_SCC0     classifier reads SCC True ok
+reader SOPP 0x05 S_CBRANCH_SCC1   decoder S_CBRANCH_SCC1     classifier reads SCC True ok
+edition-3 code SOP2 0x30 decoder S_LSHL3_ADD_U32    classifier reads SCC False ok
+edition-3 code SOP2 0x31 decoder S_LSHL4_ADD_U32    classifier reads SCC False ok
+decoder opcodes outside the table that the classifier reads SCC from: 0 []
+ALL OK

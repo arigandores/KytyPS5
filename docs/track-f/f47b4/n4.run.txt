@@ -1,0 +1,60 @@
+cls_f47a4 break=-
+fixture lit          class C-imm        v4 0 b5 C-imm        want C-imm        v4 0 b5 C-imm        leaves ['LIT'] ok
+fixture user         class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['USER'] ok
+fixture smem         class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['SMEM'] ok
+fixture vin          class undetermined v4 0 b5 undetermined want undetermined v4 0 b5 undetermined leaves ['OTHER'] ok
+fixture shadow       class C-imm        v4 0 b5 C-imm        want C-imm        v4 0 b5 C-imm        leaves ['LIT'] ok
+fixture mrt1_only    class C-imm        v4 0 b5 C-imm        want C-imm        v4 0 b5 C-imm        leaves ['LIT'] ok
+fixture weak_pair    class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'USER'] ok
+fixture cbuf_other   class undetermined v4 0 b5 undetermined want undetermined v4 0 b5 undetermined leaves ['OTHER', 'SMEM'] ok
+fixture img          class T            v4 0 b5 T            want T            v4 0 b5 T            leaves ['IMG'] ok
+fixture interp       class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['INTERP'] ok
+fixture cselect32    class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture cselect64    class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture addc         class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture subb         class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture cmov         class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture cmovk        class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture scc_operand  class C-buf        v4 0 b5 C-buf        want C-buf        v4 0 b5 C-buf        leaves ['LIT', 'SMEM'] ok
+fixture lshl3add     class C-imm        v4 0 b5 C-imm        want C-imm        v4 0 b5 C-imm        leaves ['LIT'] ok
+fixture br_smem      class C-buf        v4 1 b5 C-buf        want C-buf        v4 1 b5 C-buf        leaves ['LIT', 'OTHER_BR', 'SMEM', 'USER'] ok
+fixture lds_smem     class undetermined v4 0 b5 undetermined want undetermined v4 0 b5 undetermined leaves ['OTHER', 'SMEM'] ok
+fixture br_live_in   class undetermined v4 0 b5 undetermined want undetermined v4 0 b5 undetermined leaves ['LIT', 'OTHER', 'SMEM', 'USER'] ok
+fixture br_img       class T            v4 1 b5 T            want T            v4 1 b5 T            leaves ['IMG', 'LIT', 'OTHER_BR', 'SMEM', 'USER'] ok
+fixture br_smem_hi   class undetermined v4 0 b5 C-buf        want undetermined v4 0 b5 C-buf        leaves ['LIT', 'OTHER_BR', 'OTHER_BRS', 'SMEM'] ok
+fixture mutant m0_load_unused               class C-imm        leaves ['LIT'] ok
+fixture mutant m1_literal_from_s_load       class C-buf        leaves ['LIT', 'SMEM'] ok
+fixture mutant m4_literal_from_user_sgpr    class C-buf        leaves ['LIT', 'USER'] ok
+fixture mutant m2_branch_on_s_load          class undetermined leaves ['LIT', 'OTHER_BR', 'OTHER_BRS', 'SMEM'] ok
+fixture mutant m3_cndmask_on_s_load         class C-buf        leaves ['LIT', 'SMEM'] ok
+fixture mutant m5_s_cselect_b32_on_s_load   class C-buf        leaves ['LIT', 'SMEM'] ok
+fixture mutant m6_s_cselect_b64_on_s_load   class C-buf        leaves ['LIT', 'SMEM'] ok
+fixture mutant m7_s_addc_u32_on_s_load      class C-buf        leaves ['LIT', 'SMEM'] ok
+ALL OK
+fae4352bd0da
+prog e427779dbe1ee538 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 013863a032f778ab
+prog e685a61f833c749b udc [8] class undetermined v4 0 b5 undetermined leaves COV,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM control 1 sha a72b6924115059fb
+prog e7f1899003a34d74 udc [16] class no_export v4 0 b5 no_export leaves COV,IMG,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha e6547a3128c57ee9
+prog eadf3bbe9e2416a0 udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 8482e323fa552141
+prog f25acd918dbac2b5 udc [8] class no_export v4 0 b5 no_export leaves  control 0 sha 7fb91dc58eae8af7
+prog f47c0c097c598a36 udc [32] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha f8ffd269ca0de3b9
+prog f53f1c8aceb295d5 udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha f69804e6a67def9e
+prog f6d0ec662d8faadc udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha fcff1c0e1339360c
+prog fa23206819e321ce udc [30] class T v4 1 b5 T leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 969e49ce6754b7a4
+prog fc4314dad69463cc udc [30] class T v4 1 b5 T leaves BUF,COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha a7b17ae4e4b73711
+prog fc6adf263da9b1fd udc [31] class no_export v4 0 b5 no_export leaves COV,IMG,INTERP,LIT,OTHER,OTHER_BR,OTHER_BRS,SMEM,USER control 1 sha 07581f5e4f296bca
+prog fd05d2c1a3ee2741 udc [8] class C-buf v4 0 b5 C-buf leaves INTERP,LIT,SMEM control 0 sha fcfb9be9d99ca81f
+T1 PS programs 141 classes [('C-buf', 3), ('C-imm', 1), ('T', 115), ('no_export', 20), ('undetermined', 2)] v4 111; b5 reading [('C-buf', 3), ('C-imm', 1), ('T', 115), ('no_export', 20), ('undetermined', 2)]
+T1 VS programs 101 POS0 classes [('C-buf', 84), ('T', 13), ('undetermined', 4)] (reference for the coverage member)
+n4 d88770f91d5d003e orig class C-imm v4 0 b5 C-imm leaves LIT control 0
+n4 d88770f91d5d003e m0_load_unused class C-imm v4 0 leaves LIT expect C-imm ok
+n4 d88770f91d5d003e m1_literal_from_s_load class C-buf v4 0 leaves SMEM expect not C-imm with SMEM ok
+n4 d88770f91d5d003e m4_literal_from_user_sgpr class C-buf v4 0 leaves USER expect not C-imm with USER ok
+n4 d88770f91d5d003e m2_branch_on_s_load class undetermined v4 0 leaves LIT,OTHER_BR,OTHER_BRS,SMEM expect not C-imm with SMEM ok
+n4 d88770f91d5d003e m3_cndmask_on_s_load class C-buf v4 0 leaves LIT,SMEM expect not C-imm with SMEM ok
+n4 d88770f91d5d003e m5_s_cselect_b32_on_s_load class C-buf v4 0 leaves LIT,SMEM expect not C-imm with SMEM ok
+n4 d88770f91d5d003e m6_s_cselect_b64_on_s_load class C-buf v4 0 leaves LIT,SMEM expect not C-imm with SMEM ok
+n4 d88770f91d5d003e m7_s_addc_u32_on_s_load class C-buf v4 0 leaves LIT,SMEM expect not C-imm with SMEM ok
+N4: C-imm programs 1, with a literal site 1, classifier dead on 0
+ALL OK
+

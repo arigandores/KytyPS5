@@ -1,0 +1,24 @@
+ok  9ab3e10f:docs/ROADMAP.md:24807
+ok  9ab3e10f:docs/ROADMAP.md:24809
+ok  4c9b928e:docs/ROADMAP.md:24802
+ok  1073a385:docs/track-f/f47b3-review.md:84
+ok  1073a385:docs/track-f/f47b3-review.md:95
+ok  1073a385:docs/track-f/f47b3-review.md:105
+ok  1073a385:docs/track-f/f47b3-review.md:120
+ok  631f57ec:docs/track-f/f47a4.md:168
+ok  631f57ec:docs/track-f/f47a4.md:175
+ok  631f57ec:docs/track-f/f47a4.md:186
+ok  631f57ec:docs/track-f/f47a4.md:232
+ok  631f57ec:docs/track-f/f47a4/cls_f47a4.py:252
+ok  631f57ec:docs/track-f/f47a4/cls_f47a4.py:274
+ok  631f57ec:docs/track-f/f47a4/cls_f47a4.py:442
+ok  ea6c6e9e:src/graphics/guest_gpu/gpu_defs.h:91
+ok  ea6c6e9e:src/graphics/guest_gpu/gpu_format.cpp:138
+ok  ea6c6e9e:src/graphics/host_gpu/renderer/image/imageInfo.h:340
+ok  ea6c6e9e:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:35
+links 18 bad 0
+ALL OK
+neg 18 of 18 caught (anchor mutant and line +1)
+ALL OK
+text links 18 table 18 extra [] missing []
+ALL OK

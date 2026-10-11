@@ -1,0 +1,11 @@
+log C:/kyty/f287/fs12c/log_fs12_v.txt n_start 325 rows 36 dt_us min 31516 max 51877 mean 39361
+740:32162 741:33956 742:50620 743:32240 744:33932 745:49840 746:32257 747:36987 748:46379 749:34881 750:32480 751:51493 752:31516 753:51430 754:32271 755:32901 756:51192 757:33603 758:49129 759:32421 760:51877 761:32019 762:51242 763:32637 764:32493 765:51125 766:33117 767:32583 768:51400 769:32725 770:49696 771:33690 772:31956 773:51663 774:32590 775:34478
+log C:/kyty/f287/f14g/log_f19_rd.txt n_start 326 rows 1 dt_us min 16815 max 16815 mean 16815
+0:16815
+RD n_before 326 dn 0 | RenderDoc: level started at frame 331, capture at frame 340 (+1 more)
+RD n_before 335 dn 9 | RenderDoc: auto capture at frame 340 (level+9)
+RD n_before 336 dn 10 | RenderDoc: captured guest flip 1/2
+RD n_before 337 dn 11 | RenderDoc: captured guest flip 2/2
+RD n_before 627 dn 301 | RenderDoc: auto capture at frame 631 (level+300)
+RD n_before 628 dn 302 | RenderDoc: captured guest flip 1/2
+RD n_before 629 dn 303 | RenderDoc: captured guest flip 2/2

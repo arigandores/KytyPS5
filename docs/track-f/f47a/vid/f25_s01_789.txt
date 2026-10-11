@@ -1,0 +1,5 @@
+video C:/kyty/f287/f25f/rec_f25_s01.mp4
+frames (row-major, 6 wide):
+787 788 789 790 791 792
+793 794 795 796 797 798
+png sha256 35d1fc75fc1d55891585550fad8be9ccbccafd4504dab5579b1d131731b9a45c

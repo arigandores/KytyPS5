@@ -1,0 +1,11 @@
+log C:/kyty/f287/fs12c/log_fs12_v.txt named_start_n 325 last_n 10455 last_present 10487 d_tail 32 early_d {}
+log C:/kyty/f287/fs13c/log_fs13_v.txt named_start_n 346 last_n 10490 last_present 10501 d_tail 11 early_d {}
+log C:/kyty/s288/s15/log_u_11.txt named_start_n 283 last_n 3768 last_present 3790 d_tail 22 early_d {}
+log C:/kyty/s288/s15/log_u_06.txt named_start_n 245 last_n 3776 last_present 3799 d_tail 23 early_d {}
+log C:/kyty/s288/s15/log_u_12.txt named_start_n 233 last_n 7361 last_present 7382 d_tail 21 early_d {}
+log C:/kyty/s288/s13/log_u_11.txt named_start_n 303 last_n 3800 last_present 3822 d_tail 22 early_d {}
+log C:/kyty/s142/log_c142_02.txt named_start_n 300 last_n 3799 last_present 3810 d_tail 11 early_d {}
+log C:/kyty/s142/log_c142_03.txt named_start_n 251 last_n 7156 last_present 7100 d_tail -56 early_d {}
+log C:/kyty/f287/f12f/log_f12_bh.txt named_start_n 326 last_n 9401 last_present 9404 d_tail 3 early_d {}
+log C:/kyty/f287/f30f/log_f30_s8_v.txt named_start_n 209 last_n 8687 last_present 8698 d_tail 11 early_d {}
+log C:/kyty/f287/f30f/log_f30_s4_v.txt named_start_n 188 last_n 17021 last_present 17030 d_tail 9 early_d {}

@@ -1,0 +1,11 @@
+ok  7df0fe5f:docs/ROADMAP.md:24649
+ok  7df0fe5f:docs/ROADMAP.md:24280
+ok  7df0fe5f:docs/track-f/f32b-review.md:120
+ok  7df0fe5f:docs/track-f/f32a.md:157
+ok  7df0fe5f:docs/track-f/register.md:1656
+links 5 bad 0
+ALL OK
+neg 5 of 5 caught (anchor mutant and line +1)
+ALL OK
+text links 5 table 5 extra [] missing []
+ALL OK

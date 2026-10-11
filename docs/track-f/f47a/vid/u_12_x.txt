@@ -1,0 +1,4 @@
+video C:/kyty/s288/s15/rec_u_12.mp4
+frames (row-major, 6 wide):
+913 914 915 916 917 918
+png sha256 d6bb6e8af130e9f8a238cad2ef4c9b37195a6e730898f5d507e53b981a6f1450

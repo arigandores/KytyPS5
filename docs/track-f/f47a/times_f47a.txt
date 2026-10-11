@@ -1,0 +1,4 @@
+2026-10-11T09:07:55Z F47a HPP-802 start: lock none, STOP none; map of recordings (watch_f47a.py)
+2026-10-11T09:22:23Z F47a watchdog batch_ts: KILLED: procload 2026-10-11T09:22:23Z pids [34832]
+2026-10-11T09:31:47Z F47a watchdog dtwin: KILLED: lock 2026-10-11T09:22:50Z (F40c f24_u0 lock; line written after release)
+2026-10-11T09:54:07Z F47a HPP-802 report docs/track-f/f47a.md, refs_f47a.py ALL OK x3; FACTS.md section (rule 34)

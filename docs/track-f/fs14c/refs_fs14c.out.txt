@@ -1,0 +1,48 @@
+OK 45dd78a2:docs/ROADMAP.md:24708
+OK 45dd78a2:docs/ROADMAP.md:24712
+OK 45dd78a2:docs/ROADMAP.md:24716
+OK 45dd78a2:docs/ROADMAP.md:24724
+OK 45dd78a2:docs/ROADMAP.md:24728
+OK 45dd78a2:docs/ROADMAP.md:24742
+OK 45dd78a2:docs/ROADMAP.md:24781
+OK 45dd78a2:docs/ROADMAP.md:24786
+OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:455
+OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:457
+OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:203
+OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:97
+OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:440
+OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:247
+OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:351
+OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:376
+OK eb7e8b91:src/graphics/presentation/window/window.cpp:404
+OK eb7e8b91:src/graphics/presentation/window/window.cpp:376
+OK eb7e8b91:src/graphics/host_gpu/renderer/cache/faultManager.cpp:46
+OK eb7e8b91:src/graphics/host_gpu/renderer/cache/faultManager.cpp:84
+OK eb7e8b91:src/graphics/host_gpu/renderer/cache/faultManager.cpp:62
+OK eb7e8b91:src/graphics/host_gpu/renderer/cache/faultManager.cpp:255
+OK eb7e8b91:src/kernel/fileSystem.cpp:431
+shift NOT OK 45dd78a2:docs/ROADMAP.md:24709
+shift NOT OK 45dd78a2:docs/ROADMAP.md:24713
+shift NOT OK 45dd78a2:docs/ROADMAP.md:24717
+shift NOT OK 45dd78a2:docs/ROADMAP.md:24725
+shift NOT OK 45dd78a2:docs/ROADMAP.md:24729
+shift NOT OK 45dd78a2:docs/ROADMAP.md:24743
+shift NOT OK 45dd78a2:docs/ROADMAP.md:24782
+shift NOT OK 45dd78a2:docs/ROADMAP.md:24787
+shift NOT OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:456
+shift NOT OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:458
+shift NOT OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:204
+shift NOT OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:98
+shift NOT OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:441
+shift NOT OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:248
+shift NOT OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:352
+shift NOT OK eb7e8b91:src/graphics/presentation/window/joyPump.cpp:377
+shift NOT OK eb7e8b91:src/graphics/presentation/window/window.cpp:405
+shift NOT OK eb7e8b91:src/graphics/presentation/window/window.cpp:377
+shift NOT OK eb7e8b91:src/graphics/host_gpu/renderer/cache/faultManager.cpp:47
+shift NOT OK eb7e8b91:src/graphics/host_gpu/renderer/cache/faultManager.cpp:85
+shift NOT OK eb7e8b91:src/graphics/host_gpu/renderer/cache/faultManager.cpp:63
+shift NOT OK eb7e8b91:src/graphics/host_gpu/renderer/cache/faultManager.cpp:256
+shift NOT OK eb7e8b91:src/kernel/fileSystem.cpp:432
+refs 23, ok True, every shift fails True
+ALL OK

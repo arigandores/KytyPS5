@@ -1,0 +1,113 @@
+suite test_tools_fs14c.py sha256 ae82641ba2d93212b7d580d7388a5bdfcd9d67af2ed95f752fdec1491c1501e2 target go_fs14c.sh sha256 95ac520f210ce0c7612a6e701671a4699936699e0a401ea10f5a19dc503d73c2
+ok   go plan fs14_v
+ok   go plan fs14_v_r1
+ok   go plan fs14_v_r3
+ok   plan fs14_v: no KYTY_TEST_
+ok   plan fs14_v: KYTY_FIX_ only at fs14_z, only KYTY_FIX_F24=0 and KYTY_FIX_F29=0
+ok   go plan fs14_w
+ok   go plan fs14_w_r1
+ok   go plan fs14_w_r3
+ok   plan fs14_w: no KYTY_TEST_
+ok   plan fs14_w: KYTY_FIX_ only at fs14_z, only KYTY_FIX_F24=0 and KYTY_FIX_F29=0
+ok   go plan fs14_z
+ok   go plan fs14_z_r1
+ok   go plan fs14_z_r3
+ok   plan fs14_z: no KYTY_TEST_
+ok   plan fs14_z: KYTY_FIX_ only at fs14_z, only KYTY_FIX_F24=0 and KYTY_FIX_F29=0
+ok   go dry-run output: first line is the linter line ALL OK, the plan is a later line (the F33e trap)
+ok   post plan of fs14_v is the dryrun line (not the linter line), plan-w no (rc 0: -rec knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of fs14_w is the dryrun line (not the linter line), plan-w yes (rc 0: 100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w yes)
+ok   post plan of fs14_z is the dryrun line (not the linter line), plan-w no (rc 0: _FIX_F29=0 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of fs14_w_r2 is the dryrun line (not the linter line), plan-w yes (rc 0: 100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w yes)
+ok   post: the plan is taken by grep '^dryrun ', not by the first line
+ok   post: the plan-only exit is before the lock check (reads nothing)
+ok   post: pair of fs14_v with the fs13_v sheet of FS13c
+ok   on disk: the fs13_v sheet exists
+ok   go usage rc 2 for 'fs14_x'
+ok   launch usage rc 2 for 'fs14_x'
+ok   post usage rc 2 for 'fs14_x'
+ok   go usage rc 2 for 'fs14_v_r4'
+ok   launch usage rc 2 for 'fs14_v_r4'
+ok   post usage rc 2 for 'fs14_v_r4'
+ok   go usage rc 2 for 'fs14_z_r0'
+ok   launch usage rc 2 for 'fs14_z_r0'
+ok   post usage rc 2 for 'fs14_z_r0'
+ok   go usage rc 2 for 'fs13_v'
+ok   launch usage rc 2 for 'fs13_v'
+ok   post usage rc 2 for 'fs13_v'
+ok   go usage rc 2 for 'f24_n1'
+ok   launch usage rc 2 for 'f24_n1'
+ok   post usage rc 2 for 'f24_n1'
+ok   go usage rc 2 for ''
+ok   launch usage rc 2 for ''
+ok   post usage rc 2 for ''
+ok   launch fs14_v dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat fs14_v_r1 without FS14C_REPEAT_OK -> rc 11
+ok   launch repeat fs14_v_r1 with FS14C_REPEAT_OK -> passes
+ok   launch fs14_w dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat fs14_w_r1 without FS14C_REPEAT_OK -> rc 11
+ok   launch repeat fs14_w_r1 with FS14C_REPEAT_OK -> passes
+ok   launch fs14_z dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat fs14_z_r1 without FS14C_REPEAT_OK -> rc 11
+ok   launch repeat fs14_z_r1 with FS14C_REPEAT_OK -> passes
+ok   form634_check.py --series C:\kyty\f287\fs14c: ALL OK
+ok   go_fs14c.sh first executable line is the form linter
+ok   launch_fs14c.sh first executable line is the form linter
+ok   go: TB literal = 013e1974
+ok   go: FS13 literal = abab2196
+ok   go: BIN and PINNED paths
+ok   on disk: sha256 of the FS14 copy = 013e1974
+ok   on disk: sha256 of the pinned FS13 copy = abab2196
+ok   go: the guard scan right after the lock line, before the manifest
+ok   go: no guard scan / hold check before the lock (item 660 (d)(1))
+ok   go: install of the FS14 copy after the copies of the caches and after INSTALLED=1
+ok   go: the return of the pinned FS13 copy in finish, before installed_after
+ok   go: installed_after must be FS13
+ok   go: installed before the tag must be FS13
+ok   go: no FS12 / 46892c20 / FS11 / ea51ae80 left
+ok   go: KYTY_FIX_ in the knobs only KYTY_FIX_F24=0 and KYTY_FIX_F29=0 (fs14_z)
+ok   go: no KYTY_GPU_CHECKPOINTS=, KYTY_GAME_PATCH=, KYTY_TEST_*= in the body
+ok   go: shell KYTY_* and VK_LAYER_* unset before the call
+ok   go: the env after the unset is written
+ok   go: lock line names HPP-814
+ok   queue_fs14c.py own issue HPP-814
+ok   runchk_fs14c.py own issue HPP-814
+ok   chk_fs14c.sh comments of HPP-814
+ok   enter_scene: ROOT = f287/fs14c
+ok   enter_scene: CLOSE_WAIT_S = 40 (the harness timeout of the exit, form b4_v)
+ok   tempo_fs14c.py = tempo_fs13c.py with the names moved (+ one header line)
+ok   ASCII only: chk_fs14c.sh
+ok   ASCII only: dispstate.py
+ok   ASCII only: fs14c_read.py
+ok   ASCII only: go_fs14c.sh
+ok   ASCII only: guard_fs14c.py
+ok   ASCII only: hold_fs14c.py
+ok   ASCII only: hostload_fs14c.py
+ok   ASCII only: idle142.py
+ok   ASCII only: launch_fs14c.sh
+ok   ASCII only: launch_run.py
+ok   ASCII only: manifest_fs4c.py
+ok   ASCII only: mfsub_fs14c.py
+ok   ASCII only: mk_fs14c.py
+ok   ASCII only: post_fs14c.sh
+ok   ASCII only: procload.py
+ok   ASCII only: queue_fs14c.py
+ok   ASCII only: refs_fs14c.py
+ok   ASCII only: regress_fs14c.py
+ok   ASCII only: run_safety99.py
+ok   ASCII only: runchk_fs14c.py
+ok   ASCII only: sheet142.py
+ok   ASCII only: snap_fs14c.py
+ok   ASCII only: tempo_fs14c.py
+ok   ASCII only: test_fs14c_read.py
+ok   ASCII only: test_tools_fs14c.py
+ok   ASCII only: wait_fs14c.sh
+checks 103 failed 0
+ALL OK

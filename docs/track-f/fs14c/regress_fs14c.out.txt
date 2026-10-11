@@ -1,0 +1,129 @@
+suite regress_fs14c.py sha256 05cc454a4ca96b5cefd59e2735d92348b27510ef73b499ed904b5c40646fffc1 target fs14c_read.py sha256 65e8c7435658f589b66684be953ec16597c46e12dabe508b8cbbda8b467f3c42
+fs14_v (from log_f24_n1.txt): admission failed members 3
+  NO json binary_sha256 = FS14 013e1974 (ddf0ca913f9feb8a)
+  NO installed during the tag = FS14 013e1974 (ddf0ca913f9feb8a)
+  NO env = the form of the tag (['extra KYTY_FIX_F24=1'])
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (334.2 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 200; with the first frame 0)
+  [YES] video index records >= 3000 (9934)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [YES] FixF24: mode=1 b24=1 (every line) before the first GuestOut ([(1, 1, 19)]; unparsable 0; first GuestOut 12507) - item 710 (g)(3)
+  [YES] FixF24: init before the first GuestOut (lines [20]; first GuestOut 12507)
+  [YES] FixF24: init_owner exactly 1 before the first GuestOut (1, unparsable 0) {'hid': 41124, 'helper': 41124, 'msg': 41124, 'pump': 41124, 'main': 52836, '
+  [YES] FixF24: init_owner hid = helper = pump != main
+  [NO] FixF25: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12507)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 730)]; unparsable 0; first GuestOut 12507)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 728)]; bad 0; first GuestOut 12507)
+  [NO] FixF29: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12507) - item 712 (g)(3)
+  [YES] exit by the harness: Event: quit line in the log (1326281)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] 0 FixF24: pump_stop_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12507)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 726)]; first GuestOut 12507)
+  [YES] FixB12Stat: line present (parsed 34, unparsable 0)
+  members as expected: True (failed 2, want 2); F24 rows pump_update_long 0 open failed 0 Controller 0 pump_stop_expired 0 / 0; F29 rows overflow 0 / 0 accessed 37 / 0; F25 rows 0 / 0, 0 / 0; close_rc 0 close_s 4.0 quit_ln 1326281
+fs14_v (from log_f29_v.txt): admission failed members 3
+  NO json binary_sha256 = FS14 013e1974 (d760708d416d4fb5)
+  NO installed during the tag = FS14 013e1974 (d760708d416d4fb5)
+  NO env = the form of the tag (['extra KYTY_FIX_F29=1'])
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (334.2 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 366; with the first frame 0)
+  [YES] video index records >= 3000 (10113)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [NO] FixF24: mode=1 b24=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12503) - item 710 (g)(3)
+  [NO] FixF24: init before the first GuestOut (lines []; first GuestOut 12503)
+  [NO] FixF24: init_owner exactly 1 before the first GuestOut (0, unparsable 0) None: hid != 0 and helper != 0 (witness alive)
+  [NO] FixF24: init_owner hid = helper = pump != main
+  [NO] FixF25: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12503)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 728)]; unparsable 0; first GuestOut 12503)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 726)]; bad 0; first GuestOut 12503)
+  [YES] FixF29: mode=1 (every line) before the first GuestOut ([(1, 91)]; unparsable 0; first GuestOut 12503) - item 712 (g)(3)
+  [YES] exit by the harness: Event: quit line in the log (1152315)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] 0 FixF24: pump_stop_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12503)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 724)]; first GuestOut 12503)
+  [YES] FixB12Stat: line present (parsed 34, unparsable 0)
+  members as expected: True (failed 5, want 5); F24 rows pump_update_long 0 open failed 0 Controller 0 pump_stop_expired 0 / 0; F29 rows overflow 0 / 0 accessed 36 / 0; F25 rows 0 / 0, 0 / 0; close_rc 0 close_s 4.0 quit_ln 1152315
+fs14_v (from log_fs13_v.txt): admission failed members 3
+  NO json binary_sha256 = FS14 013e1974 (abab2196e3b66f04)
+  NO installed during the tag = FS14 013e1974 (abab2196e3b66f04)
+  NO installed before = after = FS13 abab2196 (46892c20080819ae / 46892c20080819ae)
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (333.9 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 369; with the first frame 0)
+  [YES] video index records >= 3000 (10501)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [NO] FixF24: mode=1 b24=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12505) - item 710 (g)(3)
+  [NO] FixF24: init before the first GuestOut (lines []; first GuestOut 12505)
+  [NO] FixF24: init_owner exactly 1 before the first GuestOut (0, unparsable 0) None: hid != 0 and helper != 0 (witness alive)
+  [NO] FixF24: init_owner hid = helper = pump != main
+  [YES] FixF25: mode=1 (every line) before the first GuestOut ([(1, 17)]; unparsable 0; first GuestOut 12505)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 728)]; unparsable 0; first GuestOut 12505)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 726)]; bad 0; first GuestOut 12505)
+  [NO] FixF29: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12505) - item 712 (g)(3)
+  [YES] exit by the harness: Event: quit line in the log (1189273)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] 0 FixF24: pump_stop_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12505)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 724)]; first GuestOut 12505)
+  [YES] FixB12Stat: line present (parsed 34, unparsable 0)
+  members as expected: True (failed 5, want 5); F24 rows pump_update_long 0 open failed 0 Controller 0 pump_stop_expired 0 / 0; F29 rows overflow 0 / 0 accessed 36 / 0; F25 rows 0 / 0, 0 / 0; close_rc 0 close_s 4.1 quit_ln 1189273
+fs14_w (from log_fs13_w.txt): admission failed members 3
+  NO json binary_sha256 = FS14 013e1974 (abab2196e3b66f04)
+  NO installed during the tag = FS14 013e1974 (abab2196e3b66f04)
+  NO installed before = after = FS13 abab2196 (46892c20080819ae / 46892c20080819ae)
+  admission as expected: True
+  [YES] lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.0 >= 310)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 [Vulkan][E] (0)
+  [YES] 0 limit lines of the layer (0)
+  [YES] positive control: [Vulkan][W] 902206 > 0
+  [YES] DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)
+  [NO] FixF24: mode=1 b24=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12508) - item 710 (g)(3)
+  [NO] FixF29: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12508) - item 712 (g)(3)
+  [YES] FixF25: mode=1 (every line) before the first GuestOut ([(1, 17)]; unparsable 0; first GuestOut 12508)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 732)]; unparsable 0; first GuestOut 12508)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12508)
+  [YES] no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 728)]; first GuestOut 12508)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 730)]; bad 0; first GuestOut 12508)
+  members as expected: True (failed 2, want 2); F24 rows pump_update_long 0 open failed 0 Controller 0 pump_stop_expired 0 / 0; F29 rows overflow 0 / 0 accessed 37 / 0; F25 rows 0 / 0, 0 / 0; close_rc 0 close_s 4.1 quit_ln 2290348
+fs14_z (from log_fs13_z.txt): admission failed members 4
+  NO json binary_sha256 = FS14 013e1974 (abab2196e3b66f04)
+  NO installed during the tag = FS14 013e1974 (abab2196e3b66f04)
+  NO installed before = after = FS13 abab2196 (46892c20080819ae / 46892c20080819ae)
+  NO env = the form of the tag (['missing KYTY_FIX_F24', 'extra KYTY_FIX_F25=0', 'missing KYTY_FIX_F29'])
+  admission as expected: True
+  [YES] hold >= 120 s after the first scene frame (154.0 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [NO] FixF24: mode=0 b24=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12505) - item 710 (g)(3)
+  [YES] other FixF24: lines 0 (0: init 0, init_owner 0, unparsable 0, pump_stop_expired 0, pump_update_long 0, open failed 0, add event 0, wait error 0, other
+  [NO] FixF29: mode=0 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12505) - item 712 (g)(3)
+  [YES] other FixF29: lines 0 (0: overflow 0, unparsable 0, other 0)
+  members as expected: True (failed 2, want 2); F24 rows pump_update_long 0 open failed 0 Controller 0 pump_stop_expired 0 / 0; F29 rows overflow 0 / 0 accessed 36 / 0; F25 rows 0 / 0, 0 / 0; close_rc 0 close_s 4.3 quit_ln 677540
+ALL OK

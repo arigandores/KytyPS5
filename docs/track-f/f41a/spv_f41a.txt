@@ -1,0 +1,21 @@
+input C:/kyty/f287/f12g/spv0_dis.txt sha256 a16ecd01f771cae05928636789e9a11a045cf050534f5b326a8158494d2507cd
+fault_buffer id %58
+access chains on fault_buffer 42
+rmw line 1431 | %1314 = OpLoad %1 %1313 | %1315 = OpBitwiseOr %1 %1314 %1312 | OpStore %1313 %1315
+rmw line 1489 | %1358 = OpLoad %1 %1357 | %1359 = OpBitwiseOr %1 %1358 %1356 | OpStore %1357 %1359
+rmw line 2284 | %2145 = OpLoad %1 %2144 | %2146 = OpBitwiseOr %1 %2145 %2143 | OpStore %2144 %2146
+rmw line 2348 | %2195 = OpLoad %1 %2194 | %2196 = OpBitwiseOr %1 %2195 %2193 | OpStore %2194 %2196
+rmw line 2567 | %2392 = OpLoad %1 %2391 | %2393 = OpBitwiseOr %1 %2392 %2390 | OpStore %2391 %2393
+rmw line 13292 | %12616 = OpLoad %1 %12615 | %12617 = OpBitwiseOr %1 %12616 %12614 | OpStore %12615 %12617
+rmw line 15002 | %14289 = OpLoad %1 %14288 | %14290 = OpBitwiseOr %1 %14289 %14287 | OpStore %14288 %14290
+rmw line 15542 | %14813 = OpLoad %1 %14812 | %14814 = OpBitwiseOr %1 %14813 %14811 | OpStore %14812 %14814
+rmw line 17320 | %16595 = OpLoad %1 %16594 | %16596 = OpBitwiseOr %1 %16595 %16593 | OpStore %16594 %16596
+rmw line 22653 | %21905 = OpLoad %1 %21904 | %21906 = OpBitwiseOr %1 %21905 %21903 | OpStore %21904 %21906
+rmw line 22680 | %21923 = OpLoad %1 %21922 | %21924 = OpBitwiseOr %1 %21923 %21921 | OpStore %21922 %21924
+rmw triples 11
+atomics {'OpAtomicIAdd': 20, 'OpAtomicUMax': 11} not on fault_buffer 0
+workgroup storage pointers/variables 0
+subgroup ops {'OpGroupNonUniformBallot': 354, 'OpGroupNonUniformShuffle': 196}
+barriers {}
+returns 11 kill/terminate/demote 0
+ALL OK

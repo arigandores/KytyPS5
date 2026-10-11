@@ -1,0 +1,67 @@
+m_record	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	176	void RecordBdaFault(EmitterState& state, uint32_t page) {	const auto word =
+m_word	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	178	Binary(state, spv::OpShiftRightLogical, TypeU32(state), page, ConstantU32(state, 5));	const auto bit =
+m_load	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	184	state.builder.AddFunction(spv::OpLoad, TypeU32(state), value, pointer);	state.builder.AddFunction(spv::OpStore, 
+m_store	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	185	state.builder.AddFunction(spv::OpStore, pointer,	Binary(state, spv::OpBitwiseOr, TypeU32(
+m_or	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	186	Binary(state, spv::OpBitwiseOr, TypeU32(state), value, bit));	}
+m_chain	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	169	uint32_t FaultElementPointer(EmitterState& state, uint32_t index) {	const auto pointer = state.builder.Alloc
+m_nullpage_env	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1901	const char* value = std::getenv("KYTY_BDA_NULLPAGE");	return value == nullptr || value[0] != '
+m_lean	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1908	static const bool enabled = Common::EnvFlagOn("KYTY_BDA_LEAN") && BdaNullPageEnabled();	return enabled;
+m_flush	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1913	void EmitBdaFaultFlush(EmitterState& state) {	if (state.bda_fault_page_variable == 0 |
+m_flush_call	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1920	EmitIfCondition(state, faulted, [&]() { RecordBdaFault(state, page); });	}
+m_atomic_tail	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1928	void AtomicTailU32(EmitterState& state, spv::Op op, uint32_t word, uint32_t value) {	const auto result = state.builder.Alloca
+m_atomic_scope	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1932	ConstantU32(state, spv::ScopeDevice),	ConstantU32(state, spv::MemorySemanticsM
+m_track	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1976	const bool track_faults = !lean || state.program.stage != ShaderType::Pixel;	if (track_faults) {
+m_page_sel	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2011	const auto page = Select(state, TypeU32(state), in_table,	Unary(state, OpUConvert, TypeU32(state),
+m_null_base	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2036	const auto base = Select(state, type, missing, null_base, loaded);	// Remember an in-table miss (page 0 is 
+m_remember	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2041	const auto remembered = Select(state, TypeU32(state),	Binary(state, OpLogicalAnd, TypeBool(sta
+m_remember_store	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2044	state.builder.AddFunction(OpStore, state.bda_fault_page_variable, remembered);	}
+m_legacy_def	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2054	void DefineGetBdaPointer(EmitterState& state) {	if (!state.program.info.uses_dma) {
+m_legacy_call	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2103	RecordBdaFault(state, page);	state.builder.AddFunction(spv::OpBranch,
+p_return_tail	730ed40a	src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp	132	EmitBdaFaultFlush(ctx.state);	ctx.state.builder.AddFunction(spv::OpRet
+fm_maxfaults	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	24	constexpr size_t MaxPageFaults    = 1024;	constexpr size_t PageFaultAreaSize = Max
+fm_size	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	40	LoopTripOffset + LoopTripBytes),	m_download_buffer(graphics, scheduler, M
+fm_process	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	96	void FaultManager::ProcessFaultBuffer() {	if (const auto wait_tick = m_fault_areas
+fm_wait	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	99	m_scheduler.Wait(wait_tick);	m_scheduler.PopPendingOperations();
+fm_dispatch	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	146	command.dispatch(static_cast<uint32_t>(num_workgroups), 1, 1);	dependency.pBufferMemoryBarriers = &post
+fm_defer	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	182	m_scheduler.DeferOperation([this, mapped, offset, area, trips, trip_offset] {	if (trips) {
+fm_log	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	216	LOGF("Accessed non-GPU cached memory at 0x%016" PRIx64 "	}
+fm_find	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.cpp	220	(void)m_buffer_cache.FindBuffer(start, end - start);	});
+fmh_pending	730ed40a	src/graphics/host_gpu/renderer/cache/faultManager.h	15	static constexpr size_t MaxPendingFaults = 8;	
+co_load	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	22	uint word = fault_buffer[id];	fault_buffer[id] = 0u;
+co_clear	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	23	fault_buffer[id] = 0u;	const uint base_bit = id * 32u;
+co_cap	730ed40a	src/graphics/host_gpu/shaders/fault_buffer_process.comp	27	if (store_index >= MAX_PAGE_FAULTS) {	return;
+rc_arm	730ed40a	src/graphics/host_gpu/renderer/renderContext.cpp	332	m_fault_process_pending       = true;	const bool bda_cached = reuse && cpu_epo
+rc_gc	730ed40a	src/graphics/host_gpu/renderer/renderContext.cpp	413	void RenderContext::RunGarbageCollector() {	// Session 124, knob "skipceil" = 3 (clo
+rc_gc_call	730ed40a	src/graphics/host_gpu/renderer/renderContext.cpp	423	m_buffer_cache.ProcessFaultBuffer();	if (fbp_t0 != 0) {
+bh_pagebits	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.h	54	static constexpr uint32_t CACHING_PAGEBITS  = 14;	static constexpr uint64_t CACHING_PAGESI
+bh_numpages	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.h	56	static constexpr uint64_t CACHING_NUMPAGES  = uint64_t {1} << (40 - CACHING_PAGEBITS);	static constexpr uint64_t BDA_PAGETABLE_
+bc_findbuffer	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	766	BufferId BufferCache::FindBuffer(uint64_t vaddr, uint64_t size) {	if (vaddr == 0) {
+bc_create	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	780	return CreateBuffer(vaddr, size);	}
+bc_pt_write	730ed40a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	168	WriteDataBuffer(m_bda_pagetable_buffer, pages.first * sizeof(vk::DeviceAddress),	addresses.data(), addresses.size() * siz
+tc_variant	730ed40a	src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp	583	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +	(ShaderRecompiler::Spirv::Emitter::BdaLe
+tc_fixf19	730ed40a	src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp	588	(ShaderRecompiler::IR::FixF19Enabled() ? ":fixf19" : "");	if (!variant.empty()) {
+tc_folder	730ed40a	src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp	590	std::string folder = "variant" + variant;	std::replace(folder.begin(), folder.end(
+tc_signature	730ed40a	src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp	595	m_signature = std::string("KytySC") + std::to_string(FORMAT_VERSION) + ":" +	std::string(translator_hash) +
+gv_hash	730ed40a	src/generate_version.cmake	43	set(KYTY_SHADER_SOURCE_HASH "unknown")	if(SHADER_SOURCE_DIR)
+gv_glob	730ed40a	src/generate_version.cmake	46	"${SHADER_SOURCE_DIR}/*.cpp" "${SHADER_SOURCE_DIR}/*.h" "${SHADER_SOURCE_DIR}/*.inc")	list(APPEND SHADER_SOURCES ${SHADER_CACH
+cm_dir	730ed40a	CMakeLists.txt	155	-D SHADER_SOURCE_DIR=${KYTY_SOURCE_DIR}/graphics/shader	-D SHADER_CACHE_EXTRA_FILES=${KYTY_SOURC
+cm_extra	730ed40a	CMakeLists.txt	156	-D SHADER_CACHE_EXTRA_FILES=	-P ${KYTY_SOURCE_DIR}/generate_version.c
+pc_cached_module	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	425	vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_t>& source) {	std::vector<uint32_t> salted;
+pc_salt	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	428	if (const char* salt = std::getenv("KYTY_PIPELINE_SALT"); salt != nullptr && salt[0] != 0) {	uint32_t void_id = 0;
+pc_compile	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	450	return CompileSPV(*words, device);	}
+pc_seed	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6720	InstallShaderSeed();	m_recipes_path = m_program_cache->transl
+pc_rebuild_skip	730ed40a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6738	skip = "recipes_current";	}
+sh_compile	730ed40a	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	355	const auto module = CompileSPV(words, graphics.device);	if (DualSourceFirstLine(ps_hash, true)) 
+ts_bind	730ed40a	tests/ShaderRecompilerComputeTests.cpp	13207	"BDA page table and fault buffer must be bound together");	if (uses_bda) {
+ts_fill	730ed40a	tests/ShaderRecompilerComputeTests.cpp	13398	cmd.fillBuffer(m_fault_buffer.buffer, 0, m_fault_buffer.size, 0);	std::array<vk::BufferMemoryBarrier, 2> b
+d_b138_pre	5842bf43	docs/track-f/f12g/rd_f12g_b138.txt	15	eid 128281 pre ([], 8388672)	[   27.6] eid 128281 orig 1 ([(32824, '0
+d_b138_o1	5842bf43	docs/track-f/f12g/rd_f12g_b138.txt	16	eid 128281 orig 1 ([(32824, '000004a0')]	[   28.9] eid 128281 orig 2 ([(32824, '0
+d_b138_o2	5842bf43	docs/track-f/f12g/rd_f12g_b138.txt	17	eid 128281 orig 2 ([(32824, '000004a0')]	[   30.1] eid 128281 orig 3 ([(32824, '0
+d_b138_o4	5842bf43	docs/track-f/f12g/rd_f12g_b138.txt	19	eid 128281 orig 4 ([(32824, '000004a0')]	[   33.2] eid 128281 r1 1 ([(32824, '000
+d_b138_o3	5842bf43	docs/track-f/f12g/rd_f12g_b138.txt	18	eid 128281 orig 3 ([(32824, '000204a0')]	[   31.4] eid 128281 orig 4 ([(32824, '0
+d_b138_r1	5842bf43	docs/track-f/f12g/rd_f12g_b138.txt	20	eid 128281 r1 1 ([(32824, '000204a0')]	[   34.5] eid 128281 r1 2 ([(32824, '000
+d_b138_44806	5842bf43	docs/track-f/f12g/rd_f12g_b138.txt	2	eid 44806 orig 1 ([(32824, '000204a0')]	[   10.5] eid 44806 orig 2 ([(32824, '00
+d_k03_nzero	5842bf43	docs/track-f/f12g/rd_f12g_k03.txt	283	NZERO 138 pre 2097168	[   78.8]   NZERO 138 o1 2097167
+d_k03_nzero_o1	5842bf43	docs/track-f/f12g/rd_f12g_k03.txt	284	NZERO 138 o1 2097167	[   79.9]   NZERO 138 r0 2097167
+d_k03_ndiff	5842bf43	docs/track-f/f12g/rd_f12g_k03.txt	277	NDIFF 138 o1 o2 1 of 2097168	[   73.8]   NDIFF 138 o1 pre 1 of 209716
+d_k03_pt	5842bf43	docs/track-f/f12g/rd_f12g_k03.txt	270	EQUAL_SHA 152 o1 o2 True	[   72.1]   EQUAL_SHA 152 o1 pre True

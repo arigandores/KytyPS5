@@ -1,0 +1,30 @@
+suite regress_f38c.py sha256 6e2805da69eb169c8ad1510f3a0234fc389926683940d45c78fa70280c4aec52 target f38c_read.py sha256 ed2ee28ae176d6b266bf321be6760a0ae9ad2c23b731731b90de399c9885f95c
+f25_v (from log_fs12_v.txt): admission failed members 4
+  NO json binary_sha256 = F38a 5a14a111 (46892c20080819ae)
+  NO installed during the tag = F38a 5a14a111 (46892c20080819ae)
+  NO installed before = after = FS12 46892c20 (ea51ae80521e8300 / ea51ae80521e8300)
+  NO env = the form of the tag (['missing KYTY_FIX_F25'])
+  admission as expected: True
+  [YES] hold >= 300 s after the first scene frame (334.0 s)
+  [YES] the process lived through the hold (outcome ok, hold_exit None)
+  [YES] 0 death markers (log and stdout) []
+  [YES] 0 frames >= 1 s after the first scene frame (0; first 342; with the first frame 0)
+  [YES] video index records >= 3000 (10487)
+  [YES] 0 one-frame glitches (0)
+  [YES] sheet for the lead made (sheet)
+  [NO] FixF25: mode=1 (every line) before the first GuestOut ([]; unparsable 0; first GuestOut 12502) - item 691 (d)(4)
+  [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 727)]; unparsable 0; first GuestOut 12502)
+  [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 725)]; bad 0; first GuestOut 12502)
+  [YES] exit by the harness: Event: quit line in the log (1184420)
+  [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+  [YES] 0 FixF21: wait_expired (whole log 0; whole stdout 0)
+  [YES] the process ended before the harness timeout (close_killed False, close_rc 0, close_wait_s 40)
+  [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12502)
+  [YES] summary LogAsync: full_waits= present (1)
+  [YES] drain_timeouts 0 (0)
+  [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 723)]; first GuestOut 12502)
+  [YES] FixB12Stat: line present (parsed 34, unparsable 0)
+  members as expected (only FixF25: mode=1 NO): True
+  F25 rows of the FS12 log: read failed twice log 0 stdout 0; direct read failed log 0 stdout 0; FixF25 mode lines 0
+  F25 rows as expected (no FixF25 line in FS12): True; ExitFatal: log 0 stdout 0; close_rc 0 close_s 4.1
+ALL OK

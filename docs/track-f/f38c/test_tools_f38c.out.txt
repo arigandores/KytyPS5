@@ -1,0 +1,92 @@
+suite test_tools_f38c.py sha256 ca655198ea2d381f4ca29c320abeb2acf3fcce4dc1af97ff1ea25faf0ffbba50 target go_f38c.sh sha256 afa71a2e5fc38d2c3f715e89a2dfd7f91ae319dc7cb3e186e587d4b1fab72273
+ok   go plan f25_v
+ok   go plan f25_v_r1
+ok   go plan f25_v_r3
+ok   plan f25_v: no KYTY_TEST_
+ok   plan f25_v: KYTY_FIX_ only KYTY_FIX_F25=1
+ok   plan f25_v: no KYTY_GAME_PATCH, no validation
+ok   go dry-run output: first line is the linter line ALL OK, the plan is a later line (the F33e trap)
+ok   post plan of f25_v is the dryrun line (not the linter line), plan-w no (rc 0: _FIX_F25=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post plan of f25_v_r2 is the dryrun line (not the linter line), plan-w no (rc 0: _FIX_F25=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+plan-w no)
+ok   post: the plan is taken by grep '^dryrun ', not by the first line
+ok   post: the plan-only exit is before the lock check (reads nothing)
+ok   post: pair of f25_v with the fs12_v sheet of FS12c
+ok   on disk: the fs12_v sheet exists
+ok   go usage rc 2 for 'f25_x'
+ok   launch usage rc 2 for 'f25_x'
+ok   post usage rc 2 for 'f25_x'
+ok   go usage rc 2 for 'f25_v_r4'
+ok   launch usage rc 2 for 'f25_v_r4'
+ok   post usage rc 2 for 'f25_v_r4'
+ok   go usage rc 2 for 'f25_v_r0'
+ok   launch usage rc 2 for 'f25_v_r0'
+ok   post usage rc 2 for 'f25_v_r0'
+ok   go usage rc 2 for 'fs12_v'
+ok   launch usage rc 2 for 'fs12_v'
+ok   post usage rc 2 for 'fs12_v'
+ok   go usage rc 2 for 'f21_v'
+ok   launch usage rc 2 for 'f21_v'
+ok   post usage rc 2 for 'f21_v'
+ok   go usage rc 2 for ''
+ok   launch usage rc 2 for ''
+ok   post usage rc 2 for ''
+ok   launch f25_v dry-run 2 passes (rc 0 ALL OK
+dryrun2 rep 0)
+ok   launch repeat f25_v_r1 without F38C_REPEAT_OK -> rc 11
+ok   launch repeat f25_v_r1 with F38C_REPEAT_OK -> passes
+ok   form634_check.py --series C:\kyty\f287\f38c: ALL OK
+ok   go_f38c.sh first executable line is the form linter
+ok   launch_f38c.sh first executable line is the form linter
+ok   go: TB literal = 5a14a111
+ok   go: FS12 literal = 46892c20
+ok   go: BIN and PINNED paths
+ok   on disk: sha256 of the F38a copy = 5a14a111
+ok   on disk: sha256 of the pinned FS12 copy = 46892c20
+ok   on disk: the F38a copy = the F38a build output (binary_f38a.out.txt)
+ok   go: the guard scan right after the lock line, before the manifest
+ok   go: no guard scan / hold check before the lock (item 660 (d)(1))
+ok   go: install of the F38a copy after the copies of the caches and after INSTALLED=1
+ok   go: the return of the pinned FS12 copy in finish, before installed_after
+ok   go: installed_after must be FS12
+ok   go: installed before the tag must be FS12
+ok   go: KYTY_FIX_ in the knobs only KYTY_FIX_F25=1
+ok   go: no KYTY_GPU_CHECKPOINTS=, KYTY_GAME_PATCH=, KYTY_TEST_*= in the body
+ok   go: shell KYTY_* and VK_LAYER_* unset before the call
+ok   go: the env after the unset is written
+ok   go: lock line names HPP-765
+ok   queue_f38c.py own issue HPP-765
+ok   runchk_f38c.py own issue HPP-765
+ok   chk_f38c.sh comments of HPP-765
+ok   enter_scene: ROOT = f287/f38c
+ok   enter_scene: CLOSE_WAIT_S = 40 (the harness timeout of the exit, form b4_v)
+ok   tempo_f38c.py = tempo_fs12c.py with the names moved (+ one header line)
+ok   ASCII only: chk_f38c.sh
+ok   ASCII only: dispstate.py
+ok   ASCII only: f38c_read.py
+ok   ASCII only: go_f38c.sh
+ok   ASCII only: guard_f38c.py
+ok   ASCII only: hold_f38c.py
+ok   ASCII only: hostload_f38c.py
+ok   ASCII only: idle142.py
+ok   ASCII only: launch_f38c.sh
+ok   ASCII only: launch_run.py
+ok   ASCII only: manifest_fs4c.py
+ok   ASCII only: mfsub_f38c.py
+ok   ASCII only: mk_f38c.py
+ok   ASCII only: post_f38c.sh
+ok   ASCII only: procload.py
+ok   ASCII only: queue_f38c.py
+ok   ASCII only: refs_f38c.py
+ok   ASCII only: regress_f38c.py
+ok   ASCII only: run_safety99.py
+ok   ASCII only: runchk_f38c.py
+ok   ASCII only: sheet142.py
+ok   ASCII only: snap_f38c.py
+ok   ASCII only: tempo_f38c.py
+ok   ASCII only: test_f38c_read.py
+ok   ASCII only: test_tools_f38c.py
+ok   ASCII only: wait_f38c.sh
+checks 86 failed 0
+ALL OK

@@ -1,0 +1,43 @@
+2026-10-11T00:15:45Z N/seed comment posted (38201 own, 38202 mutants)
+2026-10-11T00:16:06Z worktree f38b ready on 531d6488 51dfba88
+2026-10-11T00:16:11Z configure start
+2026-10-11T00:17:23Z configure end rc=0
+2026-10-11T00:18:44Z stand build rc=0 sha cab4f37e
+2026-10-11T00:19:27Z emu build rc=0 sha a77453ab
+2026-10-11T00:19:56Z cmp emu 74fd780e stand 1b324bc7
+2026-10-11T00:22:07Z cmp_code emu cc0a480a stand 1d8ad1b4
+2026-10-11T00:23:12Z own stand seed 38201 fix=1 start
+2026-10-11T00:23:15Z own stand seed 38201 fix=1 end c19e832d
+2026-10-11T00:23:16Z own stand seed 38201 fix=0 start
+2026-10-11T00:23:17Z own stand seed 38201 fix=0 end ab0bcada
+2026-10-11T00:23:22Z read own f1 82856cbd f0 7dc4dc64
+2026-10-11T00:23:33Z F38a stand copy 3e6b6e22 seed 38201 f1/f0 rows equal to own build: yes
+2026-10-11T00:24:10Z mutant m1 applied 01d99120
+2026-10-11T00:24:34Z mutant m1 read 002e9123 MEMBERS LETTER NO; VARIANT E YES
+2026-10-11T00:24:37Z mutant m2a applied f3f42008
+2026-10-11T00:24:53Z mutant m2a read b51f1a60 MEMBERS LETTER YES; VARIANT E NO
+2026-10-11T00:24:54Z mutant m2b applied 4f3e19ea
+2026-10-11T00:25:13Z mutant m2b read 82856cbd MEMBERS LETTER YES; VARIANT E YES
+2026-10-11T00:25:18Z mutant m3 applied 323fd27a
+2026-10-11T00:25:34Z mutant m3 read 818519a2 MEMBERS LETTER NO; VARIANT E YES
+2026-10-11T00:25:35Z mutant m4a applied 7cef71f7
+2026-10-11T00:25:53Z mutant m4a read 2fe3b7e4 MEMBERS LETTER NO; VARIANT E YES
+2026-10-11T00:25:55Z mutant m4b applied bde18a1a
+2026-10-11T00:26:14Z mutant m4b read 8459c9d7 MEMBERS LETTER NO; VARIANT E YES
+2026-10-11T00:26:19Z mutant m4c applied dac6a07b
+2026-10-11T00:26:36Z mutant m4c read 82856cbd MEMBERS LETTER YES; VARIANT E YES
+2026-10-11T00:26:37Z mutant m5a applied ab538fcd
+2026-10-11T00:26:54Z mutant m5a read 7aa1b05c MEMBERS LETTER NO; VARIANT E YES
+2026-10-11T00:27:14Z mutant m5b applied f3291f58
+2026-10-11T00:27:31Z mutant m5b read 128bd808 MEMBERS LETTER NO; VARIANT E YES
+2026-10-11T00:28:24Z probe G base fix=1 applied 07a345fe
+2026-10-11T00:28:48Z probe G base fix=1 read c0c34a7b
+2026-10-11T00:28:48Z probe G base fix=0 applied 07a345fe
+2026-10-11T00:28:57Z probe G base fix=0 read c0c34a7b
+2026-10-11T00:28:58Z probe G m2b fix=1 applied 2b0aa9a3
+2026-10-11T00:29:20Z probe G m2b fix=1 read 4e2bd47c
+2026-10-11T00:29:21Z probe G m2a fix=1 applied bdcf747c
+2026-10-11T00:29:41Z probe G m2a fix=1 read 6d80ffd8
+2026-10-11T00:30:19Z worktree restored, stand rebuilt clean2 28270f20 (clean1 cab4f37e)
+2026-10-11T00:30:28Z clean1 vs clean2 93fecbe6 ONLY PE TIMESTAMP
+2026-10-11T00:33:34Z FACTS section appended 60d38b0e; review 82de1847

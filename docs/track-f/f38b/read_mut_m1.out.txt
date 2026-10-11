@@ -1,0 +1,37 @@
+fix=1 rows 2220 fix column values [1]
+entry	arm	n	letter_ok	variant_ok
+sceKernelRead	A	200	0	200
+sceKernelRead	K	50	50	50
+sceKernelRead	Z	50	50	50
+sceKernelRead	E	50	50	50
+sceKernelRead	T	20	20	20
+read	A	200	0	200
+read	K	50	50	50
+read	Z	50	50	50
+read	E	50	50	50
+read	T	20	20	20
+_read	A	200	0	200
+_read	K	50	50	50
+_read	Z	50	50	50
+_read	E	50	50	50
+_read	T	20	20	20
+sceKernelPread	A	200	0	200
+sceKernelPread	K	50	50	50
+sceKernelPread	Z	50	50	50
+sceKernelPread	E	50	50	50
+sceKernelPread	T	20	20	20
+pread	A	200	0	200
+pread	K	50	50	50
+pread	Z	50	50	50
+pread	E	50	50	50
+pread	T	20	20	20
+AIO	A	200	0	200
+AIO	K	50	50	50
+AIO	Z	50	50	50
+AIO	E	50	50	50
+AIO	T	20	20	20
+letter failures: AIO/A/form 200, _read/A/form 200, pread/A/form 200, read/A/form 200, sceKernelPread/A/form 200, sceKernelRead/A/form 200
+variant (E calls 1, untouched, pos) failures: none
+canary bad (reference) 0
+log: mode=1 1 mode=0 0 read_failed_twice 0 (A rows 1200) False
+MEMBERS LETTER NO; VARIANT E YES

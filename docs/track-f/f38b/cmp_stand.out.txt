@@ -1,0 +1,6 @@
+size 22516736 22516224
+path occurrences f38b 87 f38a in a 87
+sections a [('.text', 11749878, 11749888), ('.rdata', 10141640, 10141696), ('.data', 23421748, 308736), ('.pdata', 264432, 264704), ('.retplne', 164, 512), ('.tls', 15938, 16384), ('.rsrc', 424, 512), ('.reloc', 33124, 33280)]
+sections b [('.text', 11749878, 11749888), ('.rdata', 10141640, 10141696), ('.data', 23421428, 308224), ('.pdata', 264432, 264704), ('.retplne', 164, 512), ('.tls', 15938, 16384), ('.rsrc', 424, 512), ('.reloc', 33124, 33280)]
+anon token bytes a 3068 b 2880
+SIZE DIFFERS - byte compare not applicable

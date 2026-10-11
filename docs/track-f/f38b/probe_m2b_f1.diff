@@ -1,0 +1,95 @@
+diff --git a/src/kernel/fileSystem.cpp b/src/kernel/fileSystem.cpp
+index c33f1030..fc56f5da 100644
+--- a/src/kernel/fileSystem.cpp
++++ b/src/kernel/fileSystem.cpp
+@@ -786,6 +786,7 @@ void ReadGuestWithRetry(File* file, void* buf, size_t nbytes, uint64_t pos, uint
+ 	*failed_twice = false;
+ 	file->f.Read(buf, static_cast<uint32_t>(nbytes), bytes_read);
+ 	if (*bytes_read != 0 || nbytes == 0 || remaining == 0) {
++		*failed_twice = (*bytes_read == 0 && nbytes != 0 && remaining == 0); // MUTANT m2b
+ 		return;
+ 	}
+ 	static int logged = 0;
+diff --git a/tests/F25ReadFailStand.cpp b/tests/F25ReadFailStand.cpp
+index 3ad2f4dc..050eab87 100644
+--- a/tests/F25ReadFailStand.cpp
++++ b/tests/F25ReadFailStand.cpp
+@@ -83,8 +83,9 @@ constexpr int ARM_K = 1;
+ constexpr int ARM_Z = 2;
+ constexpr int ARM_E = 3;
+ constexpr int ARM_T = 4;
+-constexpr int ARM_COUNT = 5;
+-constexpr const char* ARM_NAMES[ARM_COUNT] = {"A", "K", "Z", "E", "T"};
++constexpr int ARM_G = 5; // F38b probe
++constexpr int ARM_COUNT = 6;
++constexpr const char* ARM_NAMES[ARM_COUNT] = {"A", "K", "Z", "E", "T", "G"};
+ 
+ constexpr int ENTRY_COUNT = 6;
+ constexpr const char* ENTRY_NAMES[ENTRY_COUNT] = {"sceKernelRead", "read", "_read", "sceKernelPread", "pread",
+@@ -152,6 +153,20 @@ BOOL WINAPI HookReadFile(HANDLE handle, LPVOID buffer, DWORD size, LPDWORD read,
+ 		st->c2_buf  = reinterpret_cast<uint64_t>(buffer);
+ 		st->c2_size = size;
+ 	}
++	if (st->mode == ARM_G && k == 1) {
++		// F38b probe: the real read at the end of the file, then another writer grows the file.
++		const BOOL r = g_real_read_file(handle, buffer, size, read, overlapped);
++		LARGE_INTEGER to {};
++		to.QuadPart = static_cast<LONGLONG>(st->trunc_to);
++		if (SetFilePointerEx(st->trunc_h, to, nullptr, FILE_BEGIN) != FALSE && SetEndOfFile(st->trunc_h) != FALSE) {
++			st->trunc_done = 1;
++		}
++		LARGE_INTEGER now {};
++		if (GetFileSizeEx(st->trunc_h, &now) != FALSE) {
++			st->size_at_c2 = now.QuadPart;
++		}
++		return r;
++	}
+ 	if (st->mode == ARM_T && k == 2) {
+ 		// Shorten the file to the read position through the second handle, then fail the call.
+ 		LARGE_INTEGER to {};
+@@ -338,7 +353,7 @@ void RunTrial(const Entries& e, int fd, StandFile& sf, Trial& t, std::mt19937_64
+ 	// from a position at or past the end of the file (remaining = 0).
+ 	std::uniform_int_distribution<uint64_t> pos_dist(0, FILE_SIZE - 1);
+ 	uint64_t                                offset = pos_dist(rng);
+-	if (t.arm == ARM_E) {
++	if (t.arm == ARM_E || t.arm == ARM_G) {
+ 		offset = FILE_SIZE + rng() % 4097;
+ 	}
+ 	const uint64_t remaining = offset < FILE_SIZE ? FILE_SIZE - offset : 0;
+@@ -351,7 +366,7 @@ void RunTrial(const Entries& e, int fd, StandFile& sf, Trial& t, std::mt19937_64
+ 	} else {
+ 		n = 256u * 1024u + rng() % (2u * 1024u * 1024u);
+ 	}
+-	if (t.arm != ARM_E && rng() % 4 == 0) {
++	if (t.arm != ARM_E && t.arm != ARM_G && rng() % 4 == 0) {
+ 		n = remaining + 1 + rng() % 4096; // past the end of the file
+ 	}
+ 	t.offset    = offset;
+@@ -376,7 +391,7 @@ void RunTrial(const Entries& e, int fd, StandFile& sf, Trial& t, std::mt19937_64
+ 	HookState st {};
+ 	st.mode     = t.arm;
+ 	st.trunc_h  = sf.h2;
+-	st.trunc_to = offset;
++	st.trunc_to = (t.arm == ARM_G) ? offset + 8192 : offset;
+ 	*Libs::Posix::GetErrorAddr() = ERRNO_SENTRY;
+ 	t_hook                       = &st;
+ 	switch (t.entry) {
+@@ -427,7 +442,7 @@ void RunTrial(const Entries& e, int fd, StandFile& sf, Trial& t, std::mt19937_64
+ 	t.untouched = std::all_of(buf, buf + n, [](uint8_t b) { return b == CANARY_BYTE; }) ? 1 : 0;
+ 
+ 	t.restore_ok = 1;
+-	if (t.arm == ARM_T) {
++	if (t.arm == ARM_T || t.arm == ARM_G) {
+ 		t.restore_ok = RestoreFile(sf.h2, sf.original, sf.sha, std::min<uint64_t>(offset, FILE_SIZE)) ? 1 : 0;
+ 	}
+ }
+@@ -441,7 +456,8 @@ int main(int argc, char** argv) {
+ 	}
+ 	const uint64_t seed = std::strtoull(argv[1], nullptr, 10);
+ 	std::array<int, ARM_COUNT> counts {};
+-	for (int a = 0; a < ARM_COUNT; a++) {
++	counts[ARM_G] = std::getenv("F38B_NG") != nullptr ? std::atoi(std::getenv("F38B_NG")) : 0; // F38b probe
++	for (int a = 0; a < ARM_T + 1; a++) {
+ 		counts[a] = std::atoi(argv[2 + a]);
+ 		if (counts[a] < 0) {
+ 			return 2;

@@ -1,0 +1,2 @@
+build/install/kyty_emulator.exe [b'KytyPS5-2026-09-15-6a2987a-1917-g531d6488']
+C:/kyty/f287/bin/kyty_emulator_5a14a111.exe [b'KytyPS5-2026-09-15-6a2987a-1917-g531d6488']

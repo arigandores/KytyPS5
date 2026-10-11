@@ -1,0 +1,3 @@
+build/install/kyty_emulator.exe 1 1 1
+C:/kyty/f287/bin/kyty_emulator_5a14a111.exe 1 1 1
+C:/kyty/f287/bin/kyty_emulator_46892c20.exe 1 0 0

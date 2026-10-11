@@ -1,0 +1,8 @@
+sceKernelRead G n 50 ok 0 error 50 positive 0 grown 50
+read G n 50 ok 0 error 50 positive 0 grown 50
+_read G n 50 ok 0 error 50 positive 0 grown 50
+sceKernelPread G n 50 ok 0 error 50 positive 0 grown 50
+pread G n 50 ok 0 error 50 positive 0 grown 50
+sceKernelAioSubmitReadCommands G n 50 ok 0 error 50 positive 0 grown 50
+G NOT OK (n 300)
+letter failures: AIO/G/quiet 50, AIO/G/trunc 50, AIO/G/zero 50, _read/G/quiet 50, _read/G/trunc 50, _read/G/zero 50, pread/G/quiet 50, pread/G/trunc 50, pread/G/zero 50, read/G/quiet 50, read/G/trunc 50, read/G/zero 50, sceKernelPread/G/trunc 50, sceKernelPread/G/zero 50, sceKernelRead/G/trunc 50, sceKernelRead/G/zero 50

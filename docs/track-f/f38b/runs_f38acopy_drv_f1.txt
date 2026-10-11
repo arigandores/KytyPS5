@@ -1,0 +1,19 @@
+worktree HEAD 531d64885e8bf426276d2bae6704cea269e53ff4
+worktree src/ diff vs 730ed40a (files): src/kernel/fileSystem.cpp
+worktree fileSystem.cpp blob c33f103043e201b0890ffc177cfbb07bb141d6c6; main HEAD 848a6739 fileSystem.cpp blob 127dcc2226cfae821bb5dc0f2c06e22e9d24dd1e
+stand source sha256 worktree a8cac01a1d3aebaaa8fcb160f46af19aefff19965b3dce6e4c9990c539d61709 main a8cac01a1d3aebaaa8fcb160f46af19aefff19965b3dce6e4c9990c539d61709 equal True
+stand exe C:/kyty/f287/f38a/bin/f25_read_fail_stand_3e6b6e22.exe sha256 3e6b6e22841e85ca48420369c515261cfb454734181167048b5c7549de31d728
+args seed 38201 KYTY_FIX_F25=1 nA 200 nK 50 nZ 50 nE 50 nT 20
+stand rc 0
+FIXF25 env=1 on=1
+NID 0 Cg4srZ6TKbU sceKernelRead vaddr=0x00007ff63c78c130 name=FileSystem::KernelRead
+NID 1 DRuBt2pvICk read vaddr=0x00007ff63c807d10 name=LibKernel::read
+NID 2 AqBioC2vF3I _read vaddr=0x00007ff63c807d10 name=LibKernel::read
+NID 3 +r3rMFwItV4 sceKernelPread vaddr=0x00007ff63c78e800 name=FileSystem::KernelPread
+NID 4 ezv-RSBNKqI pread vaddr=0x00007ff63c7f8ba0 name=Posix::pread
+NID 5 HgX7+AORI58 sceKernelAioSubmitReadCommands vaddr=0x00007ff63c808db0 name=KernelAioSubmitReadCommands
+HOOK module=KERNEL32.dll slot=00007FF63D35F5C8 real=00007FFB92397470
+HOOK slots=1
+SHA256 ec79fd279e528f0595f32b9c59d0a6058b5f25b3aedc8ea887f107b0b1f637e2 size 3150049
+FINAL file sha256 equal 1
+DONE trials=2220

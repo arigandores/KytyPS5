@@ -1,0 +1,16 @@
+image base 0x140000000 0x140000000
+section .text vsize 11749878 11749878 rva 0x1000 0x1000
+section .rdata vsize 10141640 10141640 rva 0xb36000 0xb36000
+section .data vsize 23421748 23421428 rva 0x14e2000 0x14e2000
+section .pdata vsize 264432 264432 rva 0x2b39000 0x2b39000
+section .retplne vsize 164 164 rva 0x2b7a000 0x2b7a000
+section .tls vsize 15938 15938 rva 0x2b7b000 0x2b7b000
+section .rsrc vsize 424 424 rva 0x2b7f000 0x2b7f000
+section .reloc vsize 33124 33124 rva 0x2b80000 0x2b80000
+.pdata equal True
+functions 22036 decode units with gaps 42531
+.text differing functions 2394 differing bytes outside any function 0
+.text instructions in differing functions: equal 598858 RIP into .data (accepted) 21813 rejected 0
+debug directory rva range 0x0 0x0
+.rdata differing bytes 310 accepted qword VAs into .data 21 dword RVAs into .data 157 debug directory / CodeView dwords 0 rejected 0
+ALL OK

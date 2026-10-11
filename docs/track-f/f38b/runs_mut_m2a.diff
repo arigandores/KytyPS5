@@ -1,0 +1,13 @@
+diff --git a/src/kernel/fileSystem.cpp b/src/kernel/fileSystem.cpp
+index c33f1030..87b49902 100644
+--- a/src/kernel/fileSystem.cpp
++++ b/src/kernel/fileSystem.cpp
+@@ -785,7 +785,7 @@ void ReadGuestWithRetry(File* file, void* buf, size_t nbytes, uint64_t pos, uint
+                         uint32_t* bytes_read, bool* failed_twice) {
+ 	*failed_twice = false;
+ 	file->f.Read(buf, static_cast<uint32_t>(nbytes), bytes_read);
+-	if (*bytes_read != 0 || nbytes == 0 || remaining == 0) {
++	if (*bytes_read != 0 || nbytes == 0) { // MUTANT m2a
+ 		return;
+ 	}
+ 	static int logged = 0;

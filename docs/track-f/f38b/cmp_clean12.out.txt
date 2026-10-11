@@ -1,0 +1,4 @@
+size 22516224 22516224
+diff bytes 2 pe timestamp field 0x80
+['0x80', '0x81']
+ONLY PE TIMESTAMP

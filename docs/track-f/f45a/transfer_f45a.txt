@@ -1,0 +1,87 @@
+# worktree C:/kyty/f287/f45a/wt base 730ed40a
+7e5aa858 track F link F16o2 (HPP-599): RC1 of F16p - adopt kept why=deferred, the mark and the line dcc_stale_apply - RO
+56e7aed3 track F link F16o (HPP-595): KYTY_FIX_F26 and the cmask_fce line limit 1024 - ROADMAP p.504(e)(1)-(6)
+9b7fc067 track F link F16k2 (HPP-590): RC1-RC5 of the F16l review in KYTY_FIX_F5CMU / KYTY_DIAG_F5ID code - ROADMAP p.49
+578280ff track F link F16k (HPP-583), code: KYTY_FIX_F5CMU and KYTY_DIAG_F5ID (ROADMAP p.492(v), (g), (z)), both default
+80e710f6 track F link F16d2 (HPP-569): consistent snapshot of the DiagF5/DiagF6 line (RC1 of F16e, form (a)) and the for
+a1919914 track F link F16d (HPP-521): KYTY_DIAG_F5 / KYTY_DIAG_F6 (default 0) - colour metadata branch counters of row F
+# cherry-pick outputs
+## cp_365cc3c2.txt
+[detached HEAD 7e5aa858] track F link F16o2 (HPP-599): RC1 of F16p - adopt kept why=deferred, the mark and the line dcc_stale_apply - ROADMAP p.507(b)(1)-(6)
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Mon Oct 5 04:55:24 2026 +0200
+ 6 files changed, 294 insertions(+), 32 deletions(-)
+## cp_381aa80a.txt
+Auto-merging src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+Auto-merging src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+CONFLICT (content): Merge conflict in src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+Auto-merging src/graphics/presentation/videoOut.cpp
+error: could not apply 381aa80a... track F link F16d (HPP-521): KYTY_DIAG_F5 / KYTY_DIAG_F6 (default 0) - colour metadata branch counters of row F5 and draw slot counters of row F6, test site --diag-f5-only (ROADMAP s122 items 421(g), 427, 433(v)-(g))
+hint: After resolving the conflicts, mark them with
+## cp_381aa80a_cont.txt
+[detached HEAD a1919914] track F link F16d (HPP-521): KYTY_DIAG_F5 / KYTY_DIAG_F6 (default 0) - colour metadata branch counters of row F5 and draw slot counters of row F6, test site --diag-f5-only (ROADMAP s122 items 421(g), 427, 433(v)-(g))
+ Author: Emu Engineer <emu-engineer@paperclip.local>
+ Date: Sun Oct 4 14:09:28 2026 +0200
+ 17 files changed, 1494 insertions(+), 13 deletions(-)
+ create mode 100644 src/graphics/host_gpu/renderer/diagF5.cpp
+ create mode 100644 src/graphics/host_gpu/renderer/diagF5.h
+## cp_56b04817.txt
+Auto-merging src/graphics/presentation/videoOut.cpp
+[detached HEAD 80e710f6] track F link F16d2 (HPP-569): consistent snapshot of the DiagF5/DiagF6 line (RC1 of F16e, form (a)) and the format-asymmetric F6 fixture (RC2) - ROADMAP s122 item 470(v)
+ Author: Emu Engineer <emu-engineer@paperclip.local>
+ Date: Sun Oct 4 17:21:07 2026 +0200
+ 5 files changed, 453 insertions(+), 38 deletions(-)
+## cp_810909e3.txt
+Auto-merging src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+Auto-merging src/graphics/host_gpu/renderer/cache/bufferCache.h
+[detached HEAD 578280ff] track F link F16k (HPP-583), code: KYTY_FIX_F5CMU and KYTY_DIAG_F5ID (ROADMAP p.492(v), (g), (z)), both default 0
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Sun Oct 4 21:49:42 2026 +0200
+ 13 files changed, 2378 insertions(+), 24 deletions(-)
+## cp_d5cbcbe2.txt
+[detached HEAD 56e7aed3] track F link F16o (HPP-595): KYTY_FIX_F26 and the cmask_fce line limit 1024 - ROADMAP p.504(e)(1)-(6)
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Mon Oct 5 02:45:16 2026 +0200
+ 6 files changed, 515 insertions(+), 59 deletions(-)
+## cp_ed4f96d8.txt
+Auto-merging src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+Auto-merging src/graphics/host_gpu/renderer/cache/bufferCache.h
+[detached HEAD 9b7fc067] track F link F16k2 (HPP-590): RC1-RC5 of the F16l review in KYTY_FIX_F5CMU / KYTY_DIAG_F5ID code - ROADMAP p.496(b)(1)-(6)
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Sun Oct 4 23:16:55 2026 +0200
+ 9 files changed, 357 insertions(+), 16 deletions(-)
+# git cherry -v main HEAD 730ed40a
++ a1919914ef793003de249efc301aab1128127264 track F link F16d (HPP-521): KYTY_DIAG_F5 / KYTY_DIAG_F6 (default 0) - colour
+- 80e710f6f17ad07febe0eee3485542f4b4f6b9f2 track F link F16d2 (HPP-569): consistent snapshot of the DiagF5/DiagF6 line (
+- 578280ffcfbe14b04d9c1c700825029954d7cb53 track F link F16k (HPP-583), code: KYTY_FIX_F5CMU and KYTY_DIAG_F5ID (ROADMAP
+- 9b7fc0673987d202e912e737901e5d391e0e3b77 track F link F16k2 (HPP-590): RC1-RC5 of the F16l review in KYTY_FIX_F5CMU / 
+- 56e7aed3511dfdb80893aa5b4f924bc100a469f9 track F link F16o (HPP-595): KYTY_FIX_F26 and the cmask_fce line limit 1024 -
+- 7e5aa85887342e9ec08fc5133c8adf43cda0b508 track F link F16o2 (HPP-599): RC1 of F16p - adopt kept why=deferred, the mark
+# changed lines 381aa80a vs a1919914
+EQUAL (1507 lines)
+# diff --stat 730ed40a HEAD
+ .../guest_gpu/command_processor/pm4Handlers.cpp    |    7 +
+ src/graphics/guest_gpu/graphicsRun.cpp             |   16 +
+ .../host_gpu/renderer/cache/bufferCache.cpp        |   60 +-
+ src/graphics/host_gpu/renderer/cache/bufferCache.h |   31 +
+ .../host_gpu/renderer/cache/textureCache.cpp       |  494 ++++-
+ .../host_gpu/renderer/cache/textureCache.h         |   66 +-
+ .../host_gpu/renderer/colorRenderTarget.cpp        |    8 +
+ src/graphics/host_gpu/renderer/debug.cpp           |   10 +
+ .../host_gpu/renderer/depthRenderTarget.cpp        |    7 +
+ src/graphics/host_gpu/renderer/diagF5.cpp          | 1318 +++++++++++
+ src/graphics/host_gpu/renderer/diagF5.h            |  527 +++++
+ .../host_gpu/renderer/pipeline/descriptors.cpp     |  288 ++-
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   |    9 +
+ src/graphics/host_gpu/renderer/render.h            |   15 +-
+ src/graphics/host_gpu/renderer/renderCompute.cpp   |  117 +-
+ src/graphics/host_gpu/renderer/renderDraw.cpp      |   35 +
+ src/graphics/presentation/videoOut.cpp             |    6 +
+ src/graphics/presentation/window/screenshot.cpp    |    6 +
+ src/graphics/presentation/window/vulkanWindow.cpp  |    8 +
+ tests/ShaderRecompilerComputeTests.cpp             | 2345 ++++++++++++++++++++
+ 20 files changed, 5341 insertions(+), 32 deletions(-)
+# files in the translation signature set (shader tree, SHADER_CACHE_EXTRA_FILES, CMakeLists, generate_version)
+0
+# status
+0

@@ -1,3 +1,4 @@
+ok  730ed40a:CMakeLists.txt:156
 ok  730ed40a:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2848
 ok  730ed40a:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2855
 ok  730ed40a:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2858
@@ -63,7 +64,8 @@ ok  730ed40a:src/graphics/host_gpu/renderer/renderDraw.cpp:5009
 ok  730ed40a:src/graphics/host_gpu/renderer/renderDraw.cpp:5235
 ok  730ed40a:src/graphics/host_gpu/renderer/renderDraw.cpp:5236
 ok  730ed40a:src/graphics/host_gpu/renderer/renderTarget.h:40
-links 65 bad 0
+ok  730ed40a:src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h:36
+links 67 bad 0
 ALL OK
-text links 64 missing 0
+text links 66 missing 0
 ALL OK

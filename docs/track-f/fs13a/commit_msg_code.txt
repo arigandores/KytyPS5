@@ -1,0 +1,13 @@
+track F link FS13a (HPP-787): KYTY_FIX_F25 default 0 -> 1 (ROADMAP s122 item 697(g)(1))
+
+FixF25Enabled in src/kernel/fileSystem.cpp reads KYTY_FIX_F25 in the form of FS12a cbfe8375 / FS11a cb022252 and of
+FixB4Enabled in the same file: unset or "" = ON, 0/false/off/no = OFF, any other value as EnvValueOn; still one reading
+per process (static const, first call - FileSystem::Initialize). The line "FixF25: mode=<0|1>", the code of e9dd8604 and
+the stand f25_read_fail_stand (51c9e38f, a28c37d5, 49aba6a4) are unchanged; only the reading and the header comment
+change. src/graphics/shader/** not touched - translation signature unchanged; no gates or knobs added.
+
+Shipping binary FS13: clean worktree of FS12 730ed40a + cherry-pick of 51c9e38f (stand edition 1 and its CMake target),
+e9dd8604 (code F38a), a28c37d5, 49aba6a4 (stand editions 2-3, tests/ only) + this commit. Not installed; no game run
+(WIP until FS13c).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

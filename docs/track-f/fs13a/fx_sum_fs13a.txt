@@ -1,0 +1,13 @@
+OK   d good: want True got True
+OK   d old default (mode=0, A gives 0): want False got False
+OK   d log mode=1 but A gives 0: want False got False
+OK   d variable set (column 1): want False got False
+OK   d stdout env not unset: want False got False
+OK   d log mode line twice: want False got False
+OK   d log missing: want False got False
+OK   d one A trial 0: want False got False
+OK   0 good: want True got True
+OK   0 one A trial EIO: want False got False
+OK   0 A short: want False got False
+OK   0 rows of =1: want False got False
+ALL OK

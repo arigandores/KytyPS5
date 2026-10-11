@@ -1,0 +1,9 @@
+--- cherry-pick 3630f116
+Auto-merging src/kernel/fileSystem.cpp
+[detached HEAD ea6c6e9e] track F link FS13a (HPP-787): KYTY_FIX_F25 default 0 -> 1 (ROADMAP s122 item 697(g)(1))
+ Date: Sun Oct 11 03:46:15 2026 +0200
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+ea6c6e9ea61713729c88b7b6ce8492334a00055c 0861c391bed8cbbeb1436bdec66510ad70330cba track F link FS13a (HPP-787): KYTY_FIX_F25 default 0 -> 1 (ROADMAP s122 item 6
+--- git status --short (0 = clean)
+0
+CP OK

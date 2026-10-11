@@ -1,0 +1,3 @@
+FS13 build/install/kyty_emulator.exe sha256 abab2196e3b66f0449376f736421d5ac5fd3f18f6d6c98b7ef38351c45a44b73
+copy C:/kyty/f287/bin/kyty_emulator_abab2196.exe
+installed ps5 em/kyty_emulator.exe sha256 46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26 (FS12 46892c20 expected, not changed)

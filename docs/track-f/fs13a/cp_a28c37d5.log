@@ -1,0 +1,9 @@
+--- cherry-pick a28c37d5
+[detached HEAD bc3bb65d] WIP track F link F38a (HPP-763): F25 stand edition 2 - arms E (read at or past the end of the file, remaining = 0) and T (call 2 shortens the file to the read position through a second handle and fails; file restored and checked by sha256), emulator log to <out.tsv>.log, fix column; usage <seed> <nA> <nK> <nZ> <nE> <nT> <out.tsv> (ROADMAP s122 item 691(d)(1)); not built yet
+ Author: Emu Engineer <noreply@anthropic.com>
+ Date: Sun Oct 11 01:56:53 2026 +0200
+ 1 file changed, 213 insertions(+), 56 deletions(-)
+bc3bb65d1bb3f71e93bc90437563c867fac3819f 4bd1e8653d7954154a8971a8592a99556d92d183 WIP track F link F38a (HPP-763): F25 stand edition 2 - arms E (read at or past
+--- git status --short (0 = clean)
+0
+CP OK

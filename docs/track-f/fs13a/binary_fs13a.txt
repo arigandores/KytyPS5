@@ -1,0 +1,22 @@
+FS13 C:/kyty/f287/bin/kyty_emulator_abab2196.exe sha256 abab2196e3b66f0449376f736421d5ac5fd3f18f6d6c98b7ef38351c45a44b73
+FS12 C:/kyty/f287/bin/kyty_emulator_46892c20.exe sha256 46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26
+OK   KYTY_FIX_F25                                  FS13 x1 FS12 x0
+OK   FixF25: mode=                                 FS13 x1 FS12 x0
+OK   FixF25: read failed twice                     FS13 x1 FS12 x0
+OK   KYTY_FIX_F21                                  FS13 x1 FS12 x1
+OK   FixF21: mode=                                 FS13 x1 FS12 x1
+OK   KYTY_FIX_B12                                  FS13 x1 FS12 x1
+OK   FixB12: mode=                                 FS13 x1 FS12 x1
+OK   KYTY_FIX_B13                                  FS13 x1 FS12 x1
+OK   KYTY_FIX_B36                                  FS13 x1 FS12 x1
+OK   KYTY_FIX_B4                                   FS13 x2 FS12 x2 (reference)
+OK   FixB4: mode=                                  FS13 x1 FS12 x1
+OK   KYTY_FIX_F24                                  FS13 x0 FS12 x0
+OK   FixF24:                                       FS13 x0 FS12 x0
+OK   KYTY_FIX_F20                                  FS13 x0 FS12 x0
+OK   KYTY_DIAG_B32                                 FS13 x0 FS12 x0
+OK   rts_bad_b                                     FS13 x0 FS12 x0
+OK   9177b4267de1fb8bac7d1113afd8733210addfac      FS13 x1 FS12 x1
+OK   KytyPS5-2026-09-15-6a2987a-1919-gea6c6e9e     FS13 x2 FS12 x0
+OK   KytyPS5-2026-09-15-6a2987a-1914-g730ed40a     FS13 x0 FS12 x2
+ALL OK

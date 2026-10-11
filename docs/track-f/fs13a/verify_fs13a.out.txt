@@ -1,0 +1,32 @@
+FS13 HEAD ea6c6e9ea61713729c88b7b6ce8492334a00055c base 730ed40a398b98f4f4f51a13f56d8a647778eae1
+V1 51c9e38f -> 1048af45: changed lines 1042 / 1042, equal True; git cherry - 51c9e38fd32cfa2c082eca87c9a150ca347cc395
+V1 e9dd8604 -> 4bd1e865: changed lines 56 / 56, equal True; git cherry - e9dd86046f73ea8e84aee4653043f4ae799652e1
+V1 a28c37d5 -> bc3bb65d: changed lines 269 / 269, equal True; git cherry - a28c37d5a2be9c8b75322f03b2dfb04e5056aafa
+V1 49aba6a4 -> 0861c391: changed lines 70 / 70, equal True; git cherry - 49aba6a4b406f2e0fedbedfb4d77e3d38378a282
+V1 3630f116 -> ea6c6e9e: changed lines 9 / 9, equal True; git cherry - 3630f11620204df6429be18bee56b190e6e010f0
+V1 negative controls: a28c37d5 vs 4bd1e865 equal False (want False); vs its own worktree commit with one line spoiled equal False (want False)
+V1b contains e9dd8604: True (ancestor False, git cherry - e9dd86046f73ea8e84aee4653043f4ae799652e1)
+V1b contains cbfe8375: True (ancestor False, git cherry - cbfe8375b4aa6c0146daff49c52eaa6d08f3f12b)
+V1b contains 227e1b36: True (ancestor False, git cherry - 227e1b36b361a0c4e16adefade5299a99c1b6115)
+V1b contains c94c49e0: True (ancestor False, git cherry - c94c49e0bf40fe81ca2f0f3b3af8dd7d49224cc1)
+V1b contains 726e751e: True (ancestor False, git cherry - 726e751eefe42e7c36c221e9ccf406396c0849b6)
+V1b contains cb022252: True (ancestor False, git cherry - cb022252530ca1a9979d6b5db43c67627ea0b7b5)
+V1b negative control e9dd8604 in 730ed40a (code F38a against the base FS12): False (ancestor False, git cherry + e9dd86046f73ea8e84aee4653043f4ae799652e1) (want False)
+V1b negative control 3630f116 in 730ed40a (FS13a main commit against the base FS12): False (ancestor False, git cherry + 3630f11620204df6429be18bee56b190e6e010f0) (want False)
+V1b negative control cbfe8375 in ee9632be (FS12a against FS11): False (ancestor False, git cherry + cbfe8375b4aa6c0146daff49c52eaa6d08f3f12b) (want False)
+V1b negative control 5c21c387 in HEAD (F24 code F40a, not carried): False (ancestor False, git cherry + 5c21c3872eafddcba79f3dfe9f3dd0a1bfa92dd4) (want False)
+V2 files of diff 730ed40a..FS13 (13): CMakeLists.txt docs/track-f/f37a.md docs/track-f/f37a/api_chk.sh docs/track-f/f37a/bstep.sh docs/track-f/f37a/build_f37a.cmd docs/track-f/f37a/gen_links_f37a.py docs/track-f/f37a/links_f37a.out.txt docs/track-f/f37a/links_f37a.py docs/track-f/f37a/mk_wt_f37a.sh docs/track-f/f37a/patch_cmake_f37a.py docs/track-f/f37a/watch_f37a.py src/kernel/fileSystem.cpp tests/F25ReadFailStand.cpp
+V2 file set = files of the five source commits True; signed changed lines of the diff = sum of the five commits True (lines 1286); negative control without FS13a equal False (want False)
+V2b paths of the diff under docs/ (carried by 51c9e38f, not built): 10: docs/track-f/f37a.md docs/track-f/f37a/api_chk.sh docs/track-f/f37a/bstep.sh docs/track-f/f37a/build_f37a.cmd docs/track-f/f37a/gen_links_f37a.py docs/track-f/f37a/links_f37a.out.txt docs/track-f/f37a/links_f37a.py docs/track-f/f37a/mk_wt_f37a.sh docs/track-f/f37a/patch_cmake_f37a.py docs/track-f/f37a/watch_f37a.py
+V2b paths of the diff outside tests/ and docs/: CMakeLists.txt src/kernel/fileSystem.cpp
+V2b CMakeLists.txt: added 5 (naming the stand 2, comment 2, blank 1, other 0), removed 0
+   comment: # Track F, F25 double read failure stand (F37a HPP-761; ROADMAP s122 item 688(e)): ReadFile import hook of the test
+   comment: # executable, arms A/K/Z over six read entries; run by docs/track-f/f37a/run_stand_f37a.py, not by ctest.
+V2b outside tests/, docs/ and the CMake target of the stand - only src/kernel/fileSystem.cpp: True (['src/kernel/fileSystem.cpp'])
+V3 DEFAULT-ON base (17): KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F21 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 DEFAULT-ON FS13 (18): KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F21 KYTY_FIX_F25 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V3 FS13 = base + KYTY_FIX_F25 only: True; negative control at 0861c391 (before FS13a): difference empty, member there False (want False)
+V4 src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp blob base e1626ad67f22 FS13 e1626ad67f22 equal True; ParseMode unset/"" -> 3: True
+V5 paths of the diff under src/graphics/shader/: none
+V6 added code lines naming F24 / F20 / KYTY_DIAG_B32 / F30d counters: 0; 5c21c387 ancestor of FS13 False; 5f48cc3e ancestor of FS13 False
+ALL OK

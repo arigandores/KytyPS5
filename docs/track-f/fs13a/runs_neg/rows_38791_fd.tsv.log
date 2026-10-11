@@ -1,0 +1,906 @@
+LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100
+Vulkan required extension: VK_KHR_surface
+Vulkan required extension: VK_KHR_win32_surface
+Vulkan required extension: VK_EXT_debug_utils
+Vulkan available extension: VK_KHR_device_group_creation, version = 1
+Vulkan available extension: VK_KHR_display, version = 23
+Vulkan available extension: VK_KHR_external_fence_capabilities, version = 1
+Vulkan available extension: VK_KHR_external_memory_capabilities, version = 1
+Vulkan available extension: VK_KHR_external_semaphore_capabilities, version = 1
+Vulkan available extension: VK_KHR_get_display_properties2, version = 1
+Vulkan available extension: VK_KHR_get_physical_device_properties2, version = 2
+Vulkan available extension: VK_KHR_get_surface_capabilities2, version = 1
+Vulkan available extension: VK_KHR_surface, version = 25
+Vulkan available extension: VK_KHR_surface_maintenance1, version = 1
+Vulkan available extension: VK_KHR_surface_protected_capabilities, version = 1
+Vulkan available extension: VK_KHR_win32_surface, version = 6
+Vulkan available extension: VK_EXT_debug_report, version = 10
+Vulkan available extension: VK_EXT_debug_utils, version = 2
+Vulkan available extension: VK_EXT_direct_mode_display, version = 1
+Vulkan available extension: VK_EXT_surface_maintenance1, version = 1
+Vulkan available extension: VK_EXT_swapchain_colorspace, version = 5
+Vulkan available extension: VK_NV_external_memory_capabilities, version = 1
+Vulkan available extension: VK_KHR_portability_enumeration, version = 1
+Vulkan available extension: VK_LUNARG_direct_driver_loading, version = 1
+Vulkan available layer: VK_LAYER_NV_optimus, specVersion = 4211039, implVersion = 1, NVIDIA Optimus layer
+Vulkan available layer: VK_LAYER_NV_present, specVersion = 4211039, implVersion = 1, NVIDIA Presentation Layer
+Vulkan available layer: VK_LAYER_EOS_Overlay, specVersion = 4202632, implVersion = 1, Vulkan overlay layer for Epic Online Services
+Vulkan available layer: VK_LAYER_RENDERDOC_Capture, specVersion = 4211012, implVersion = 46, Debugging capture layer for RenderDoc
+Vulkan available layer: VK_LAYER_NV_nsight-sys, specVersion = 4206797, implVersion = 2, NVIDIA Nsight Systems profiler layer
+Vulkan available layer: VK_LAYER_VALVE_steam_overlay, specVersion = 4206799, implVersion = 1, <foreign app> Overlay Layer
+Vulkan available layer: VK_LAYER_VALVE_steam_fossilize, specVersion = 4210991, implVersion = 1, <foreign app> Pipeline Caching Layer
+Vulkan available layer: VK_LAYER_<app>_HOOK, specVersion = 4206808, implVersion = 1, Open Broadcaster Software hook
+Vulkan available layer: VK_LAYER_ROCKSTAR_GAMES_social_club, specVersion = 4194374, implVersion = 1, Rockstar Games Social Club Layer
+Vulkan available layer: VK_LAYER_LUNARG_api_dump, specVersion = 4211045, implVersion = 2, LunarG API dump layer
+Vulkan available layer: VK_LAYER_LUNARG_gfxreconstruct, specVersion = 4211045, implVersion = 4194309, GFXReconstruct Capture Layer Version 1.0.5
+Vulkan available layer: VK_LAYER_KHRONOS_synchronization2, specVersion = 4211045, implVersion = 1, Khronos Synchronization2 layer
+Vulkan available layer: VK_LAYER_KHRONOS_validation, specVersion = 4211045, implVersion = 1, Khronos Validation Layer
+Vulkan available layer: VK_LAYER_LUNARG_monitor, specVersion = 4211045, implVersion = 1, Execution Monitoring Layer
+Vulkan available layer: VK_LAYER_LUNARG_screenshot, specVersion = 4211045, implVersion = 1, LunarG image capture layer
+Vulkan available layer: VK_LAYER_KHRONOS_profiles, specVersion = 4211045, implVersion = 1, Khronos Profiles layer
+Vulkan available layer: VK_LAYER_KHRONOS_shader_object, specVersion = 4211045, implVersion = 1, Khronos Shader object layer
+Vulkan available layer: VK_LAYER_LUNARG_crash_diagnostic, specVersion = 4211045, implVersion = 1, Crash Diagnostic Layer is a crash/hang debugging tool that helps determines GPU progress in a Vulkan application.
+Vulkan loader version: 1.4.357
+Vulkan device: NVIDIA GeForce RTX 5080 Laptop GPU
+	queue family: { Graphics | Compute | Transfer | SparseBinding } [count = 16], [present = true]
+	selected universal queue family 0
+Format vk::Format::eR8G8B8A8Srgb cannot be used as texture
+Format vk::Format::eB8G8R8A8Srgb cannot be used as texture
+Select device: NVIDIA GeForce RTX 5080 Laptop GPU
+Block Texel View support: Yes
+Vulkan: VK_EXT_external_memory_host enabled (host pointer alignment 4096)
+Vulkan subgroup: default=32 min=32 max=32 stages=0x00003fff size_control=false wave64=false
+Vulkan dynamic rendering local read: enabled
+Vulkan VK_EXT_image_view_min_lod: enabled
+Vulkan depth feedback support: true
+Vulkan MeshEXT: invocations=128 vertices=256 primitives=256 shared=28672
+DualSrcBlend: supported=1 enabled=1
+Vulkan nullDescriptor: enabled
+Vulkan robustBufferAccess2: enabled (shader bounds branches dropped)
+Vulkan uniformBufferStandardLayout: enabled (const-bank constant loads enabled)
+Vulkan fp32 denormals: flush fixed, preserve fixed (shader denormal flush assumed)
+Vulkan robustness: robustImageAccess=true robustImageAccess2=true
+Shader translation cache: disabled (unknown title or translator hash)
+FixSval: mode=1 ubo_std_layout=1
+ShaderReplay: mode=3 disabled (no title or no translation cache)
+AsyncPipelines: mode=1 workers=4
+S-pcw: KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0
+BvhLoopCap: cap=65536 token='' default_slot0=0
+HostImport: backing alias unsuitable (base=0x0 size=0x0 alignment=4096)
+FixB13: mode=1
+BufferGc: budget=14901313536 trigger=9747352781 critical=13183326618 shift_mb=0
+FixB12: mode=1
+FixMinimize: on
+FixB4: mode=1
+FixF25: mode=0
+	 path = /app0/f25_stand.bin
+	 flags = 00000000
+	 mode = 0000
+	Open: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin, [ok]
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2743232) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 406817 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150322) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150322) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 303771) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c72670 size=0x420: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 303771) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 442646) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff0080 size=0x295932: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 442646) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1870446) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffffd080 size=0x138b32: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1870446) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2728146) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000046c43410 size=0x36b: reading through a host buffer
+	Read 875 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2729021) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2905130) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cbca00 size=0x3caff: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2905130) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3152648) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3152648) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 377000) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c91730 size=0x5be: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 377000) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2896995) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cbca00 size=0x3e169: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2896995) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1088291) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 660 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1088951) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2017263) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cbca00 size=0x33179: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2017263) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150811) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150811) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1460999) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c72880 size=0x1f8: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1460999) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1973016) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cbca00 size=0x2a61e: reading through a host buffer
+	Read 173598 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2146614) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 166844) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 253328 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 420172) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1523319) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c987b0 size=0xd43: reading through a host buffer
+	Read 3395 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1526714) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2235038) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000000552de0 size=0x646: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2235038) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1792880) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076ca1a80 size=0x5d1c: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1792880) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 452999) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c91730 size=0xacc: reading through a host buffer
+	Read 2764 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 455763) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 171810) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 55339 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 227149) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 214462) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x000000004415ce50 size=0x2c9: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 214462) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150423) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150423) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1147659) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff2080 size=0x1e90df: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1147659) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2012553) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c9a7c0 size=0x62e: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2012553) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2545878) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076ca1a80 size=0x31a3: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2545878) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2775958) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cfeea0 size=0x5c066: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2775958) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1298106) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cbca00 size=0x92d3: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1298106) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3151896) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3151896) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1353358) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c91730 size=0xacb: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1353358) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2579695) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffff3080 size=0x1e8e1a: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2579695) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1040005) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cfeea0 size=0x7f869: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1040005) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3151954) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3151954) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2441521) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cbca00 size=0x33d06: reading through a host buffer
+	Read 212230 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2653751) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 861082) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076ca1a60 size=0xdbd: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 861082) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2890470) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 321 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2890791) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1746251) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c91730 size=0xc42: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1746251) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1174990) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076cfeea0 size=0xaaa88: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1174990) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 100329) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffffd080 size=0x2e8db9: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 100329) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2711278) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 2932 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2714210) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1855686) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076ca1a60 size=0xf62: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1855686) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1839344) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 421 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1839765) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 877782) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x0000000076c91730 size=0xb14: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 877782) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1406298) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffffa080 size=0x117dda: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1406298) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3153402) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3153402) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1233320) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+KernelRead: direct read failed, dst=0x00000000ffffc080 size=0x1d497b: reading through a host buffer
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1233320) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2258612) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2258612) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2429065) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2429065) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2327898) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1825 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2329723) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3153672) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3153672) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150314) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150314) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1552374) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1552374) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1753514) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1396535 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 832764) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 2317285 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 555206) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 555206) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2628118) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 137 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2628255) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1344204) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1805845 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3151919) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3151919) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 364215) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 364215) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 74005) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 74005) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1042267) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1042267) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3153449) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3153449) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 111952) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 164456 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 276408) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 292687) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 292687) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1170057) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1170057) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1828908) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1828908) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3000771) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3000771) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 181119) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1994 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 183113) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1910556) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 3432 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1913988) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1174691) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1174691) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2970469) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2970469) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 86918) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 86918) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3154056) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3154056) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 588402) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 588402) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1754380) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1754380) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2720589) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2720589) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 866183) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 2266 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 868449) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2745996) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2745996) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1940789) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1940789) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1726876) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1726876) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2941684) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2941684) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2915952) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 62928 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2978880) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 704425) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 704425) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3152708) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3152708) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1136239) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1136239) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 162179) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 162179) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2820462) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 329587 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2546243) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2546243) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2227144) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 526004 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2753148) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 469269) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 469269) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150572) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150572) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 230246) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 78087 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 308333) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2030038) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1120011 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 64152) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 64152) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1466711) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1466711) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2640437) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2640437) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3152903) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3152903) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 965262) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 965262) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 986715) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 2093409 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3080124) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2614124) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2614124) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1564684) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1564684) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2376704) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 773345 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 714955) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 714955) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2449055) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2449055) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1949505) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1949505) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 400536) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 2749513 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2080404) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2080404) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 781721) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 781721) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 627399) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 627399) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1819853) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 51294 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1871147) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3153488) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3153488) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3150049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2216411) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2216411) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3153953) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3153953) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3151979) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3151979) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2407725) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2407725) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 677293) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3153189) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 677293) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2415528) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 524779 bytes (pos = 2625270) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2415528) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 748459) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1277881) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 748459) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2008161) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2860001) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2008161) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 844896) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 13670 bytes (pos = 1287119) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 844896) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2741737) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2824515) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2741737) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2543342) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3003963) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2543342) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 312075) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 252087 bytes (pos = 2233729) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 312075) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2959379) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2959379) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1980892) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1318969) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1980892) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2909693) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 811502 bytes (pos = 1841075) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2909693) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 203565) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 203565) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 581378) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3152061) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 581378) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 693620) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 2555 bytes (pos = 1364397) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 693620) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 60957) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2429467) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 60957) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 769935) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3151693) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 769935) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1279416) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2613677) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1279416) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 717150) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1801103) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 717150) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1596231) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1496499) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1596231) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2214593) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2214593) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 655186) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1468798) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 655186) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 447849) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1888248) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 447849) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 340243) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 790434) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 340243) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1807308) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1807308) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 968378) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1800902) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 968378) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2037130) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2032643) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2037130) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2234095) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2297978) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2234095) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 606645) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1879966) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 606645) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 814955) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3152958) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 814955) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1841855) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1535 bytes (pos = 1870250) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1841855) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 526416) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2841952) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 526416) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1601201) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1508 bytes (pos = 1106482) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1601201) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 853003) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3001815) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 853003) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2283374) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2283374) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1026227) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150981) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1026227) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1955712) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1210099 bytes (pos = 1939950) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1955712) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2095647) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 630418) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2095647) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1357116) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 74166 bytes (pos = 138580) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1357116) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2959627) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 19666 bytes (pos = 2787010) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2959627) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1331254) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2569675) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1331254) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2644107) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2094493) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2644107) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1185140) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1299832) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1185140) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 867966) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3151628) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 867966) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1302403) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1217842) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1302403) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1689095) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 63200 bytes (pos = 145404) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1689095) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2963070) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 265304 bytes (pos = 1313964) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2963070) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 388650) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 266 bytes (pos = 1286802) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 388650) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 950070) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2120340) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 950070) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1291073) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 155387) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1291073) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2560762) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2577301) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2560762) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1693453) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1504347) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1693453) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 331938) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3014323) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 331938) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1781925) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1781925) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1205532) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 63195) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1205532) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2435193) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2494922) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2435193) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 283661) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1207348) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 283661) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2903316) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 3510 bytes (pos = 322612) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2903316) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 726890) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 726890) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1171764) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3151728) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1171764) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2214817) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1077568) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2214817) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2788261) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1975746 bytes (pos = 1174303) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2788261) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1735961) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3151855) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1735961) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 501534) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 501534) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1938446) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1840344) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1938446) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 802643) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1756155) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 802643) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2563606) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 319764) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2563606) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1177037) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1177037) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1615) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3151166) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1615) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1875721) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 55252) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1875721) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 454965) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1188177) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 454965) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1106131) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3152174) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1106131) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 181942) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 181942) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1882142) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 3270 bytes (pos = 580469) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1882142) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 855788) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 364287) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 855788) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2863523) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 780 bytes (pos = 2864969) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2863523) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1973474) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1328472) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1973474) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1494029) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 2490650 bytes (pos = 659399) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1494029) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1561247) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 346742) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1561247) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2474361) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 2911042 bytes (pos = 239007) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2474361) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2001520) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2001520) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1489709) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 3040771 bytes (pos = 109278) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1489709) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1740401) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2121415) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1740401) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1926289) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3153291) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1926289) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 999687) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3153143) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 999687) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2948368) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1855599) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2948368) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 734980) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2479733) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 734980) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2999545) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2202204) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2999545) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 900089) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1256 bytes (pos = 643626) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 900089) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2421898) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2421898) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1411390) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 149203 bytes (pos = 1449339) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1411390) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2086413) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 42316 bytes (pos = 2846170) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2086413) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 669417) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 937077) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 669417) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 154275) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 442780) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 154275) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 843736) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2538098) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 843736) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 116361) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1262537) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 116361) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 499661) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2666818) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 499661) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2654076) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2436750) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2654076) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2803393) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150221) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2803393) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 992760) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2872150) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 992760) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2966198) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1367185) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2966198) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2632976) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2632976) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3141288) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 226120 bytes (pos = 2923929) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3141288) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2251231) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1444835) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2251231) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1861431) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 207800) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1861431) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 519735) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2887972) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 519735) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2239122) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1884008) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2239122) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2889275) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3151824) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2889275) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2726372) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 2084081 bytes (pos = 1065968) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2726372) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 572336) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1854744 bytes (pos = 1295305) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 572336) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2750807) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3023876) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2750807) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2191715) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2191715) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1613129) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3153016) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1613129) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1043710) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 632981) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1043710) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 448453) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 808646) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 448453) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2329049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 1094 bytes (pos = 269369) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2329049) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2795095) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2161015) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2795095) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2863786) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 104009) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2863786) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3115455) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3115455) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 433300) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 762277) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 433300) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1270079) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3153825) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1270079) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1471032) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 2903105) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1471032) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 880125) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 31248) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 880125) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1217737) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1217737) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2298252) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3150049) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2298252) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 910253) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3151271) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 910253) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 449266) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 996494) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 449266) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3126694) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 3151011) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 3126694) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 894346) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 134737 bytes (pos = 1034433) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 894346) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1942652) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 2332530 bytes (pos = 817519) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1942652) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1139110) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 185425 bytes (pos = 2607233) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 1139110) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2637444) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Read 0 bytes (pos = 1311329) from: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Lseek (pos = 2637444) to: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+	Close: <TEMP>/kyty_f25_stand_373537121412800/f25_stand.bin
+CsPretranslate: summary queued=0 ready=0 failed=0 hits=0 missed=0 evicted=0
+LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=903 bytes=126641 max_queued_bytes=2043 sync_lines=0 drain_timeouts=0

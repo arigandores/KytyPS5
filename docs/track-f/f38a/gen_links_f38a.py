@@ -17,15 +17,22 @@ WANT = {
     'src/common/platform/sysWindowsFileIO.cpp': [267],
     'tests/KernelFileSystemTests.cpp': [158],
 }
+# The F38a code commit (main): the places of the new state.
+C2 = 'e9dd8604'
+WANT2 = {
+    'src/kernel/fileSystem.cpp': [127, 128, 133, 135, 427, 786, 787, 803, 804, 863, 864, 867, 868, 869, 870, 891, 892,
+                                  893, 1028, 1033, 1034, 1035, 1037, 1053, 1054, 1055],
+}
 
 
 def main():
     refs = []
-    for path, lines in WANT.items():
-        text = subprocess.run([G, '-C', REPO, 'show', '%s:%s' % (C, path)], capture_output=True).stdout
-        rows = text.decode('utf-8').split('\n')
-        for n in lines:
-            refs.append((C, path, n, rows[n - 1].rstrip('\r')[:90], rows[n].rstrip('\r')[:90]))
+    for c, want in ((C, WANT), (C2, WANT2)):
+        for path, lines in want.items():
+            text = subprocess.run([G, '-C', REPO, 'show', '%s:%s' % (c, path)], capture_output=True).stdout
+            rows = text.decode('utf-8').split('\n')
+            for n in lines:
+                refs.append((c, path, n, rows[n - 1].rstrip('\r')[:90], rows[n].rstrip('\r')[:90]))
     body = []
     body.append('"""F38a (HPP-763): check of the references <commit>:<path>:<line> of docs/track-f/f38a.md - the line '
                 'starts with the anchor\nand the next line starts with the +1 text (git show of the commit, real git). '

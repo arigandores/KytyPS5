@@ -1,0 +1,24 @@
+OK   good =1: want True got True
+OK   good =0: want True got True
+OK   m1 A zero at =1: want False got False
+OK   m2 E error at =1: want False got False
+OK   m2 E AIO aborted: want False got False
+OK   m3 T error at =1: want False got False
+OK   m4 A position: want False got False
+OK   m4 A pread position: want False got False
+OK   m5 sceKernelRead -1: want False got False
+OK   m5 AIO completed: want False got False
+OK   m5 POSIX errno 9: want False got False
+OK   =0 A error: want False got False
+OK   K dead: want False got False
+OK   Z partial: want False got False
+OK   E two calls: want False got False
+OK   T no shortening: want False got False
+OK   T not restored: want False got False
+OK   A buffer written: want False got False
+OK   log =1 no mode line: want False got False
+OK   log =1 lines 0: want False got False
+OK   log =0 failed lines: want False got False
+OK   log missing: want False got False
+OK   fix column wrong: want False got False
+ALL OK

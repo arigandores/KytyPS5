@@ -1,0 +1,4 @@
+Auto-merging src/kernel/fileSystem.cpp
+[detached HEAD d7a30e55] WIP track F link F38a (HPP-763): KYTY_FIX_F25 (default 0) - at 1 a double read failure of ReadGuestWithRetry (flag only with nbytes > 0, remaining > 0 and both reads 0) is returned by KernelRead/KernelPread as KERNEL_ERROR_EIO after the is_invalid check, unless the size read again under file->mutex is at or below the read position (0 - end of file); KernelRead keeps pos, KernelPread restores its position as before; lines FixF25: mode= and FixF25: read failed twice (limit 32, =1 only); only src/kernel/fileSystem.cpp (ROADMAP s122 item 691(v)-(g)); not built yet
+ Date: Sun Oct 11 01:56:53 2026 +0200
+ 1 file changed, 53 insertions(+), 3 deletions(-)

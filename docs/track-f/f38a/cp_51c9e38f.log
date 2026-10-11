@@ -1,0 +1,16 @@
+Auto-merging CMakeLists.txt
+[detached HEAD 6fcb620b] track F link F37a (HPP-761): section 0 before data - F25 mechanism on FS11 ee9632be (double read failure gives 0 on all six read entries; the IsInvalid EIO path is unreachable - Tell()/Size() EXIT_IF first, form of its code by entry), stand form (test target f25_read_fail_stand, ReadFile import hook of the test executable, src/ = ee9632be), arms A/K/Z 200/50/50 per entry, measure, project KYTY_FIX_F25 (not written); stand source and CMake target (ROADMAP s122 item 688(e)(0))
+ Author: Emu Engineer <emu-engineer@agents.invalid>
+ Date: Sun Oct 11 01:36:45 2026 +0200
+ 12 files changed, 1042 insertions(+)
+ create mode 100644 docs/track-f/f37a.md
+ create mode 100644 docs/track-f/f37a/api_chk.sh
+ create mode 100644 docs/track-f/f37a/bstep.sh
+ create mode 100644 docs/track-f/f37a/build_f37a.cmd
+ create mode 100644 docs/track-f/f37a/gen_links_f37a.py
+ create mode 100644 docs/track-f/f37a/links_f37a.out.txt
+ create mode 100644 docs/track-f/f37a/links_f37a.py
+ create mode 100644 docs/track-f/f37a/mk_wt_f37a.sh
+ create mode 100644 docs/track-f/f37a/patch_cmake_f37a.py
+ create mode 100644 docs/track-f/f37a/watch_f37a.py
+ create mode 100644 tests/F25ReadFailStand.cpp

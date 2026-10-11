@@ -1,0 +1,9 @@
+watch: start 2026-10-11T00:06:44Z child 2080 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP
+OK   kernel_file_system_tests fsonly KYTY_FIX_F25=unset rc 0 failed-lines {}
+OK   kernel_file_system_tests full KYTY_FIX_F25=unset rc 3221226505 failed-lines {'KernelFileSystemTests: failed: guest PEEK and WAITALL preserve the wake bytes': 1}
+OK   kernel_file_system_tests fsonly KYTY_FIX_F25=0 rc 0 failed-lines {}
+OK   kernel_file_system_tests full KYTY_FIX_F25=0 rc 3221226505 failed-lines {'KernelFileSystemTests: failed: guest PEEK and WAITALL preserve the wake bytes': 1}
+OK   kernel_file_system_tests fsonly KYTY_FIX_F25=1 rc 0 failed-lines {}
+OK   kernel_file_system_tests full KYTY_FIX_F25=1 rc 3221226505 failed-lines {'KernelFileSystemTests: failed: guest PEEK and WAITALL preserve the wake bytes': 1}
+ALL OK
+rc=0 end 2026-10-11T00:06:47Z

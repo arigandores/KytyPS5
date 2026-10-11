@@ -1,0 +1,19 @@
+tag   C:/kyty/f287/f38a/build/install/kyty_emulator.exe sha256 5a14a1118e041c85257d7fd6faa8c8c98cea5c1c5a17ae7a4eff6707ec204754 size 24865792
+stand C:/kyty/f287/f38a/build/f25_read_fail_stand.exe sha256 3e6b6e22841e85ca48420369c515261cfb454734181167048b5c7549de31d728
+fs12  C:/kyty/f287/bin/kyty_emulator_46892c20.exe sha256 46892c20080819ae090598511748265dfbac31f303a02f1804e5b10db8acae26
+count KYTY_FIX_F25                                  tag 1 fs12 0
+count FixF25: mode=                                 tag 1 fs12 0
+count FixF25: read failed twice                     tag 1 fs12 0
+count KYTY_FIX_F21                                  tag 1 fs12 1
+count FixF21: mode=                                 tag 1 fs12 1
+count FixB4: mode=                                  tag 1 fs12 1
+count 9177b4267de1fb8bac7d1113afd8733210addfac      tag 1 fs12 1
+version tag ['KytyPS5-2026-09-15-6a2987a-1917-g531d6488']
+version fs12 ['KytyPS5-2026-09-15-6a2987a-1914-g730ed40a']
+worktree HEAD 531d64885e8bf426276d2bae6704cea269e53ff4
+worktree src/ diff vs 730ed40a: src/kernel/fileSystem.cpp
+worktree status lines 0
+git cherry main HEAD (worktree commits after 730ed40a):
+  - 6fcb620b93083ba77b3dcdf38c5b3bd803cbb1f2 track F link F37a (HPP-761): section 0 before data - F25 mechanism 
+  - d7a30e55de74b676bf9fc7c117be52bb600ddf14 WIP track F link F38a (HPP-763): KYTY_FIX_F25 (default 0) - at 1 a 
+  - 531d64885e8bf426276d2bae6704cea269e53ff4 WIP track F link F38a (HPP-763): F25 stand edition 2 - arms E (read

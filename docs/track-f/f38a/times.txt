@@ -1,2 +1,19 @@
 2026-10-10T23:50:59Z F38a start (HPP-763 checkout by harness); lock none, STOP none; f38a dir and helper copies made
 2026-10-10T23:52:50Z F38a section 0 (member 691(d)(0)) written; links_f38a.py 55 refs ALL OK; committing before the first code line
+2026-10-10T23:52:52Z F38a section 0 committed 59ba3846
+2026-10-10T23:53:56Z F38a code patch start (patch_fs_f38a.py on main src/kernel/fileSystem.cpp)
+2026-10-10T23:56:54Z F38a code commit e9dd8604 (fileSystem.cpp), stand ed.2 commit a28c37d5; check_gate_order.py on main: GATE ORDER: clean, output = FS12a main output
+2026-10-10T23:57:15Z mk_wt attempt 1 failed before any git action (python resolved bash to WSL); rerun with Git bash path
+2026-10-10T23:57:37Z worktree cherry-picks 51c9e38f e9dd8604 a28c37d5 done; check_gate_order.py on worktree: GATE ORDER: clean
+2026-10-11T00:02:45Z smoke (not counted) seed 1 nA 3 nK 2 nZ 2 nE 2 nT 2, =1 then =0
+2026-10-11T00:02:57Z counted stand run seed 38001 KYTY_FIX_F25=1 start (A 200 K 50 Z 50 E 50 T 20 per entry)
+2026-10-11T00:03:06Z counted stand run seed 38001 KYTY_FIX_F25=1 end rc=0
+2026-10-11T00:03:08Z counted stand run seed 38001 KYTY_FIX_F25=0 start (A 200 K 50 Z 50 E 50 T 20 per entry)
+2026-10-11T00:03:17Z counted stand run seed 38001 KYTY_FIX_F25=0 end rc=0
+2026-10-11T00:05:45Z tests start (kernel_file_system_tests unset/0/1, shader_cfg_tests)
+2026-10-11T00:05:51Z tests end
+2026-10-11T00:06:24Z kernel_file_system_tests rerun with --filesystem-only and the known socket failure rule (first run: full form only, the known failure)
+2026-10-11T00:06:47Z kernel_file_system_tests rerun with --filesystem-only and the known socket failure rule (first run tests/old: full form only, the known failure only)
+2026-10-11T00:07:33Z pinned copies: C:/kyty/f287/bin/kyty_emulator_5a14a111.exe, f38a/bin/f25_read_fail_stand_3e6b6e22.exe
+2026-10-11T00:07:39Z correction: the line 00:06:24Z - that kfs run used the unchanged script (the edit of run_tests_f38a.py failed in the heredoc), its output was overwritten by the 00:06:47Z run; files of the first full-form run - tests/old/
+2026-10-11T00:09:31Z report sections 1-6 assembled into docs/track-f/f38a.md; run files copied (logs redacted)

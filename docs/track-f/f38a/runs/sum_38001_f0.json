@@ -1,0 +1,131 @@
+{
+ "fix": 0,
+ "ok": true,
+ "log": {
+  "mode1": 0,
+  "mode0": 1,
+  "failed_twice": 0
+ },
+ "table": {
+  "sceKernelRead/K": [
+   50,
+   50
+  ],
+  "sceKernelRead/A": [
+   200,
+   200
+  ],
+  "sceKernelRead/T": [
+   20,
+   20
+  ],
+  "sceKernelRead/E": [
+   50,
+   50
+  ],
+  "sceKernelRead/Z": [
+   50,
+   50
+  ],
+  "read/A": [
+   200,
+   200
+  ],
+  "read/K": [
+   50,
+   50
+  ],
+  "read/Z": [
+   50,
+   50
+  ],
+  "read/T": [
+   20,
+   20
+  ],
+  "read/E": [
+   50,
+   50
+  ],
+  "_read/A": [
+   200,
+   200
+  ],
+  "_read/K": [
+   50,
+   50
+  ],
+  "_read/Z": [
+   50,
+   50
+  ],
+  "_read/E": [
+   50,
+   50
+  ],
+  "_read/T": [
+   20,
+   20
+  ],
+  "sceKernelPread/A": [
+   200,
+   200
+  ],
+  "sceKernelPread/E": [
+   50,
+   50
+  ],
+  "sceKernelPread/K": [
+   50,
+   50
+  ],
+  "sceKernelPread/T": [
+   20,
+   20
+  ],
+  "sceKernelPread/Z": [
+   50,
+   50
+  ],
+  "pread/A": [
+   200,
+   200
+  ],
+  "pread/T": [
+   20,
+   20
+  ],
+  "pread/K": [
+   50,
+   50
+  ],
+  "pread/Z": [
+   50,
+   50
+  ],
+  "pread/E": [
+   50,
+   50
+  ],
+  "sceKernelAioSubmitReadCommands/A": [
+   200,
+   200
+  ],
+  "sceKernelAioSubmitReadCommands/K": [
+   50,
+   50
+  ],
+  "sceKernelAioSubmitReadCommands/Z": [
+   50,
+   50
+  ],
+  "sceKernelAioSubmitReadCommands/E": [
+   50,
+   50
+  ],
+  "sceKernelAioSubmitReadCommands/T": [
+   20,
+   20
+  ]
+ }
+}

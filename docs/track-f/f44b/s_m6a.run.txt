@@ -1,0 +1,19 @@
+[0] stdout FIXF29 on=0, DONE rows=160 PASS bad=0 of 1 
+[0] rows: seed, fix, R x 8 arms, area, bits PASS bad=0 of 160 
+[0] zero extra/dup/map_left/nb/raw_hi PASS bad=0 of 800 
+[0] identities (6 per row)         PASS bad=0 of 960 
+[0] G1 raw > 1023, one-bit raw = B, D1 PASS bad=0 of 220 
+[0] G2 stored = 1023 / = B         PASS bad=0 of 140 
+[0] P0 O1 77 (1+76), O7 buf 77 exit 77, E1 1, L low>=1 PASS bad=0 of 80 
+[0] lines FixF29: none             FAIL bad=32 of 1 (lines 32)
+[1] stdout FIXF29 on=1, DONE rows=160 PASS bad=0 of 1 
+[1] rows: seed, fix, R x 8 arms, area, bits PASS bad=0 of 160 
+[1] zero extra/dup/map_left/nb/raw_hi PASS bad=0 of 800 
+[1] identities (6 per row)         PASS bad=0 of 960 
+[1] G1 raw > 1023, one-bit raw = B, D1 PASS bad=0 of 220 
+[1] G2 stored = 1023 / = B         PASS bad=0 of 140 
+[1] P1 0 reads past area/buffer, read 1023 PASS bad=0 of 640 
+[1] lines overflow = min(32, 100), fields FAIL bad=1 of 1 (lines 32)
+H S0-S2 sorted =1 = =0 = expected; E1/O1/D1 h_inproc PASS bad=0 of 120 
+h_inproc all =1 rows 1, =0 rows -1 PASS bad=0 of 320 
+FAIL

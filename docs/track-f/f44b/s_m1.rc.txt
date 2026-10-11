@@ -1,0 +1,21 @@
+[0] rows = R*8, each (rep,arm) once          PASS bad=0 of 1
+[0] Z map_left/nb_touched/raw_hi             PASS bad=0 of 160
+[0] extra = dup = 0                          PASS bad=0 of 160
+[0] G1                                       PASS bad=0 of 140
+[0] G2                                       PASS bad=0 of 140
+[0] read_vis = read, classes sum = out_area  PASS bad=0 of 160
+[0] read = raw (=0 path unchanged)           PASS bad=0 of 160
+[0] P0                                       PASS bad=0 of 80
+[0] FixF29 lines = 0 (got 0)                 PASS bad=0 of 1
+[1] rows = R*8, each (rep,arm) once          PASS bad=0 of 1
+[1] Z map_left/nb_touched/raw_hi             PASS bad=0 of 160
+[1] extra = dup = 0                          PASS bad=0 of 160
+[1] G1                                       PASS bad=0 of 140
+[1] G2                                       PASS bad=0 of 140
+[1] read_vis = read, classes sum = out_area  PASS bad=0 of 160
+[1] P1 out_area/out_buf/low/exit/zero/page = 0 FAIL bad=100 of 160
+[1] read = min(raw, 1023)                    FAIL bad=100 of 160
+[1] overflow lines = min(32, 100) (got 32), other 0 PASS bad=0 of 1
+[1] overflow lines read=1023, total 1..n     FAIL bad=32 of 32
+H                                            PASS bad=0 of 120
+FAIL

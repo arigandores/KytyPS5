@@ -1,0 +1,29 @@
+2026-10-11T08:28:50Z F44b setup copies of F44a build scripts in C:/kyty/f287/f44b
+2026-10-11T08:30:17Z F44b configure done rc=0
+2026-10-11T08:43:50Z F44b configure step rc=0
+2026-10-11T08:43:56Z F44b build emu step1 rc=0
+2026-10-11T08:58:15Z F44b build emu step1 rc=0
+ca758d337cee6566b4813b87a739ca09832ab8f2906cb55fbb55cfcee16732ad *build/install/kyty_emulator.exe
+2026-10-11T09:08:46Z F44b emulator built sha above
+2026-10-11T09:09:59Z F44b cmp_bin d760708d vs ca758d33
+2026-10-11T09:10:11Z F44b cmp_bin2 classes
+2026-10-11T09:10:25Z F44b cmp_bin2 classes
+2026-10-11T09:10:39Z F44b seed comment posted seed 792044 R 20
+2026-10-11T09:11:15Z F44b stand s_base exe 8c792bf5 reader=rc=1 end 2026-10-11T09:11:15Z own=FileNotFoundError: [Errno 2] No such file or directory: 's_base/f29_0.tsv'
+2026-10-11T09:12:20Z F44b stand s_base exe 8c792bf5 reader=rc=0 end 2026-10-11T09:12:20Z own=ALL OK
+2026-10-11T09:13:05Z F44b mutant m1 built f29_fault_stand sha 88983c748066d43439b95381915c8597f95931dcf3fa051a518992af9ef2cfe0
+2026-10-11T09:14:04Z F44b mutant m2 built f29_fault_stand sha 2f6dccbcc71dd9081762b083ca1125761fb73dd2dc5a0c1b2d361da6c5ec5b25
+2026-10-11T09:14:38Z F44b mutant m3 built f29_fault_stand sha 9c410cb88ff8823f72484a9dcf5d31819024eda21fe379647c7d1ac2b6a45f16
+2026-10-11T09:15:13Z F44b mutant m4 built f29_fault_stand sha 7d107610d0c75feeb45e6e84282a7b5dd93ad254a0f1181e14c6bcb907f85321
+2026-10-11T09:16:08Z F44b mutant m5 built f29_fault_stand sha 8754a110e52dd091bb4906315cdb36916832ce98993ed34ec99cfba0fb58c77e
+2026-10-11T09:16:42Z F44b mutant m6a built f29_fault_stand sha 2a7cd044824ac807498756595ecc54d1a5f408f1cd0dac93c350820e6bfbeaf1
+2026-10-11T09:17:22Z F44b mutant m6b built f29_fault_stand sha 61cea3637df312d3b01ec28d53c6f74ddae77d887147b94f5066715bf12af243
+2026-10-11T09:18:32Z F44b stand s_m1 exe 88983c74 reader=rc=1 end 2026-10-11T09:18:32Z own=FAIL
+2026-10-11T09:19:48Z F44b stand s_m2 exe 2f6dccbc reader=rc=1 end 2026-10-11T09:19:48Z own=FAIL
+2026-10-11T09:20:56Z F44b stand s_m3 exe 9c410cb8 reader=rc=1 end 2026-10-11T09:20:55Z own=FAIL
+2026-10-11T09:22:00Z F44b stand s_m4 exe 7d107610 reader=rc=0 end 2026-10-11T09:22:00Z own=ALL OK
+2026-10-11T09:53:16Z F44b stand(split) s_m5 exe 8754a110 reader=FAIL own=FAIL
+2026-10-11T09:54:42Z F44b stand(split) s_m6a exe 2a7cd044 reader=FAIL own=FAIL
+2026-10-11T09:56:13Z F44b stand(split) s_m6b exe 61cea363 reader=FAIL own=FAIL
+2026-10-11T09:56:36Z F44b wt reverted, gate order, signature strings, m4 letter grep
+2026-10-11T10:07:07Z F44b review and files copied to docs/track-f

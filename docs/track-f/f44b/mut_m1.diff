@@ -1,0 +1,13 @@
+diff --git a/src/graphics/host_gpu/renderer/cache/faultManager.cpp b/src/graphics/host_gpu/renderer/cache/faultManager.cpp
+index cd5e1ca0..dcfec6be 100644
+--- a/src/graphics/host_gpu/renderer/cache/faultManager.cpp
++++ b/src/graphics/host_gpu/renderer/cache/faultManager.cpp
+@@ -47,7 +47,7 @@ bool FixF29Enabled() {
+ FaultAreaParse ParseFaultArea(const uint64_t* area, bool clamp, const FaultAreaVisitor& visit,
+                               const FaultAreaPass& pass) {
+ 	static std::atomic<uint64_t> overflow_total {0};
+-	constexpr auto               last_record = static_cast<uint32_t>(MaxPageFaults - 1);
++	constexpr auto               last_record = static_cast<uint32_t>(MaxPageFaults);
+ 	FaultAreaParse               parse;
+ 	parse.raw   = static_cast<uint32_t>(area[0]);
+ 	parse.count = clamp ? std::min(parse.raw, last_record) : parse.raw;

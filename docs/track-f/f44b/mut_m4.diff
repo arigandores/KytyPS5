@@ -1,0 +1,50 @@
+diff --git a/tests/F29FaultStand.cpp b/tests/F29FaultStand.cpp
+index 3b7395f2..0b0e53ce 100644
+--- a/tests/F29FaultStand.cpp
++++ b/tests/F29FaultStand.cpp
+@@ -450,6 +450,27 @@ struct Row {
+ 	std::string h_sha, exp_sha;
+ };
+ 
++Libs::Graphics::FaultAreaParse ParseFaultAreaCopy(const uint64_t* area, bool clamp,
++                                                  const Libs::Graphics::FaultAreaVisitor& visit,
++                                                  const Libs::Graphics::FaultAreaPass& pass = {}) {
++	static uint64_t                overflow_total = 0;
++	constexpr uint32_t             last_record    = 1023;
++	Libs::Graphics::FaultAreaParse parse;
++	parse.raw   = static_cast<uint32_t>(area[0]);
++	parse.count = clamp ? std::min(parse.raw, last_record) : parse.raw;
++	if (clamp && parse.raw > last_record) {
++		const uint64_t total = ++overflow_total;
++		if (total <= 32) {
++			LOGF("FixF29: overflow pass=%" PRIu64 " area=%u count=%u read=%u total=%" PRIu64 "\n", pass.pass, pass.area,
++			     parse.raw, parse.count, total);
++		}
++	}
++	for (uint32_t index = 1; index <= parse.count; ++index) {
++		visit(index, area[index]);
++	}
++	return parse;
++}
++
+ uint64_t Neighbour(uint32_t area, uint32_t i, uint64_t count) {
+ 	return i == 0 ? count : LabelBase + (uint64_t {area} * AreaWords + i) * PageBytes;
+ }
+@@ -520,7 +541,7 @@ bool RunArm(Gpu* g, uint64_t seed, uint32_t rep, uint32_t seq, int arm, bool cla
+ 		return true;
+ 	}
+ 	std::vector<uint64_t> pages;
+-	const auto            parse = Libs::Graphics::ParseFaultArea(
++	const auto            parse = ParseFaultAreaCopy(
+         area_ptr, clamp,
+         [&](uint32_t index, uint64_t v) {
+             row->read_vis++;
+@@ -555,7 +576,7 @@ bool RunArm(Gpu* g, uint64_t seed, uint32_t rep, uint32_t seq, int arm, bool cla
+ 	// records in the order read are equal. At =0 the clamped call would write overflow lines; not measured.
+ 	if (clamp) {
+ 		std::vector<uint64_t> unclamped;
+-		(void)Libs::Graphics::ParseFaultArea(area_ptr, false, [&](uint32_t index, uint64_t v) {
++		(void)ParseFaultAreaCopy(area_ptr, false, [&](uint32_t index, uint64_t v) {
+ 			if (index < AreaWords) {
+ 				unclamped.push_back(v);
+ 			}

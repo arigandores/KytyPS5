@@ -1,0 +1,26 @@
+diff --git a/src/graphics/host_gpu/renderer/cache/faultManager.cpp b/src/graphics/host_gpu/renderer/cache/faultManager.cpp
+index cd5e1ca0..dcfec6be 100644
+--- a/src/graphics/host_gpu/renderer/cache/faultManager.cpp
++++ b/src/graphics/host_gpu/renderer/cache/faultManager.cpp
+@@ -47,7 +47,7 @@ bool FixF29Enabled() {
+ FaultAreaParse ParseFaultArea(const uint64_t* area, bool clamp, const FaultAreaVisitor& visit,
+                               const FaultAreaPass& pass) {
+ 	static std::atomic<uint64_t> overflow_total {0};
+-	constexpr auto               last_record = static_cast<uint32_t>(MaxPageFaults - 1);
++	constexpr auto               last_record = static_cast<uint32_t>(MaxPageFaults);
+ 	FaultAreaParse               parse;
+ 	parse.raw   = static_cast<uint32_t>(area[0]);
+ 	parse.count = clamp ? std::min(parse.raw, last_record) : parse.raw;
+diff --git a/tests/F29FaultStand.cpp b/tests/F29FaultStand.cpp
+index 3b7395f2..e511d883 100644
+--- a/tests/F29FaultStand.cpp
++++ b/tests/F29FaultStand.cpp
+@@ -75,7 +75,7 @@ constexpr uint64_t MapBytes    = NumPages / 8;
+ constexpr uint64_t LabelBase   = uint64_t {1} << 36;   // P_N
+ constexpr uint64_t GuardWord   = 0xF29F29F29F29F29Full;
+ constexpr uint64_t ExitBound   = uint64_t {1} << 40;
+-constexpr uint32_t LastRecord  = 1023;                 // the stand's own expectation (not the emulator constant)
++constexpr uint32_t LastRecord  = 1024;                 // m5: the stand expectation follows the function
+ 
+ enum Arm : int { ARM_S0, ARM_S1, ARM_S2, ARM_E1, ARM_O1, ARM_O7, ARM_D1, ARM_L, ARM_COUNT };
+ const char* const ARM_NAMES[ARM_COUNT] = {"S0", "S1", "S2", "E1", "O1", "O7", "D1", "L"};

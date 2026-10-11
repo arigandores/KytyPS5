@@ -1,0 +1,17 @@
+tests/F29FaultStand.cpp:9://   P - Libs::Graphics::ParseFaultArea of faultManager.cpp (the emulator function, not a copy) on the copy of the 9
+tests/F29FaultStand.cpp:15://   S0  0                                          -                                0   1023
+tests/F29FaultStand.cpp:16://   S1  1000, one bit per word                     0                                    1023
+tests/F29FaultStand.cpp:17://   S2  1023, one bit per word                     3                                    1023
+tests/F29FaultStand.cpp:18://   E1  1024, one bit per word                     0                                    1023
+tests/F29FaultStand.cpp:19://   O1  1100, one bit per word                     0                                    1023
+tests/F29FaultStand.cpp:20://   O7  1100, one bit per word                     7                                    1023
+tests/F29FaultStand.cpp:21://   D1  1120 = 35 words x 32 bits                  0                                    1023
+tests/F29FaultStand.cpp:28:// "FixF29: overflow" of ParseFaultArea are read there); stdout - "FIXF29 env=<v> on=<0|1>", "DEVICE <name>",
+tests/F29FaultStand.cpp:78:constexpr uint32_t LastRecord  = 1023;                 // the stand's own expectation (not the emulator constant)
+tests/F29FaultStand.cpp:89:    {0, false, 0, 1023},    {1000, false, 0, 1023}, {1023, false, 3, 1023}, {1024, false, 0, 1023},
+tests/F29FaultStand.cpp:90:    {1100, false, 0, 1023}, {1100, false, 7, 1023}, {1120, true, 0, 1023},  {1100, false, 0, 5},
+tests/F29FaultStand.cpp:505:	for (uint32_t i = 1; i <= LastRecord; i++) {
+tests/F29FaultStand.cpp:510:	const uint64_t                     first = std::min<uint64_t>(row->raw, LastRecord);
+tests/F29FaultStand.cpp:523:	const auto            parse = Libs::Graphics::ParseFaultArea(
+tests/F29FaultStand.cpp:554:	// h_inproc (only at =1): the same copy through the same function with clamp = false - the first min(raw, 1023)
+tests/F29FaultStand.cpp:558:		(void)Libs::Graphics::ParseFaultArea(area_ptr, false, [&](uint32_t index, uint64_t v) {

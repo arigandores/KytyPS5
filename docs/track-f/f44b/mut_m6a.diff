@@ -1,0 +1,13 @@
+diff --git a/src/graphics/host_gpu/renderer/cache/faultManager.cpp b/src/graphics/host_gpu/renderer/cache/faultManager.cpp
+index cd5e1ca0..b3e6e431 100644
+--- a/src/graphics/host_gpu/renderer/cache/faultManager.cpp
++++ b/src/graphics/host_gpu/renderer/cache/faultManager.cpp
+@@ -51,7 +51,7 @@ FaultAreaParse ParseFaultArea(const uint64_t* area, bool clamp, const FaultAreaV
+ 	FaultAreaParse               parse;
+ 	parse.raw   = static_cast<uint32_t>(area[0]);
+ 	parse.count = clamp ? std::min(parse.raw, last_record) : parse.raw;
+-	if (clamp && parse.raw > last_record) {
++	if (parse.raw > last_record) {
+ 		const uint64_t total = overflow_total.fetch_add(1, std::memory_order_relaxed) + 1;
+ 		if (total <= FixF29OverflowLines) {
+ 			LOGF("FixF29: overflow pass=%" PRIu64 " area=%u count=%u read=%u total=%" PRIu64 "\n", pass.pass,

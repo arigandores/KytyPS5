@@ -450,7 +450,10 @@ void ReadKnob() {
 	if (done.exchange(true)) {
 		return;
 	}
-	g_enabled.store(Common::EnvFlagOn("KYTY_FIX_F24"), std::memory_order_release);
+	// Track F, FS14a (HPP-812, ROADMAP s122 item 710(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
+	// other value as EnvValueOn (the form of FS13a 3630f116 / FS12a cbfe8375).
+	const char* value = std::getenv("KYTY_FIX_F24");
+	g_enabled.store(value == nullptr || value[0] == '\0' || Common::EnvValueOn(value), std::memory_order_release);
 	LOGF("FixF24: mode=%d b24=%d\n", Enabled() ? 1 : 0, Controller::FixB24On() ? 1 : 0);
 }
 

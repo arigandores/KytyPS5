@@ -8,7 +8,8 @@
 struct SDL_Window;
 
 // Track F, F40a (HPP-770; ROADMAP s122 item 692(v)): KYTY_FIX_F24 - variant B of F39a s1 (docs/track-f/f40a.md s0).
-// Default 0: nothing here runs except ReadKnob, Enabled (false) and Exited (true); the SDL init, the event wait and the
+// At 0 (default 1 since FS14a - ReadKnob below): nothing here runs except ReadKnob, Enabled (false) and Exited (true);
+// the SDL init, the event wait and the
 // pad open / close stay on the main thread as in FS12. At 1: SDL_HINT_AUTO_UPDATE_JOYSTICKS is 0, the main thread
 // initializes only the video subsystem and waits while the JoyPump thread runs SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER)
 // (every window, timer and COM apartment of the joystick drivers belongs to JoyPump), then JoyPump loops: queued tasks
@@ -17,7 +18,8 @@ struct SDL_Window;
 // game controller API call (the stand KYTY_TEST_HIDLOSS excepted).
 namespace Libs::Graphics::JoyPump {
 
-// Main thread, WindowCreate, before any SDL_InitSubSystem: reads KYTY_FIX_F24 once (Common::EnvFlagOn, default 0) and
+// Main thread, WindowCreate, before any SDL_InitSubSystem: reads KYTY_FIX_F24 once (track F, FS14a, HPP-812, ROADMAP s122
+// item 710(g)(1): default 1 - unset or "" = ON, 0/false/off/no = OFF, any other value as EnvValueOn) and
 // prints "FixF24: mode=<0|1> b24=<0|1>". Later calls do nothing.
 void ReadKnob();
 bool Enabled();

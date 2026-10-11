@@ -1,0 +1,56 @@
+date 2026-10-11T01:33:39Z
+dfc037e9424d141569ccc1847b01a3ee599f7df8
+status_lines 0
+dfc037e9 WIP track F link F40a (HPP-770): stand KYTY_TEST_HIDLOSS edition 2 (off when unset) - modes upd (the virtual pad's Update callback sleeps HOLD_UPD_MS 8000 inside SDL_JoystickUpdate on the updating thread), flap (60 extra virtual pads attached / detached from the stand thread, JoyPump tasks delayed 50 ms, opened by first Update), exit (upd + JoyPump task + SDL_QUIT), pad (no title posts, pad probe only); detach on the edition 2 thread; probes: VK_F13 key pairs every IN_MS 100 posted to the window and seen first by ProcessEvent, IsHungAppWindow every PROBE_MS 20, button A of the virtual pad from fire - 20 s to fire - 1 s; SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1 at attach; line TestHidLoss: f24 ...; hold and sleep edition 1 unchanged; no cls (unreachable, docs/track-f/f40a.md s0.5) (ROADMAP s122 item 692(g)(1)); built, not run with the game
+e0b4f2ba WIP track F link F40a (HPP-770): KYTY_FIX_F24 (default 0) - variant B: at 1 SDL_HINT_AUTO_UPDATE_JOYSTICKS=0, the main thread initializes only video and waits while the JoyPump thread runs SDL_InitSubSystem(SDL_INIT_GAMECONTROLLER) (helper, HIDAPI and notification windows, DirectInput STA, WinRT on JoyPump) and then loops tasks -> own thread messages -> SDL_JoystickUpdate -> open new pads by instance id (open failed - line, no fatal; Connect outside the joystick lock) -> wait 1 ms with a pad open / 250 ms; main wait bounded 1 ms / 3000 ms (RC1); add event only logged, close of a removed pad is a JoyPump task; EmergencyShutdown stops JoyPump first (T_JP 2 s, pump_stop_expired, no task or Controller call after the flag), Shutdown keeps g_controller after an expired stop, ~WindowContext quits video only; lines FixF24: mode=, init, pump_update_long, open failed, add event, wait error; =0 path as FS12 (ROADMAP s122 item 692(v)); built, not run with the game
+730ed40a track F link FS12a (HPP-750): KYTY_FIX_F21 default 0 -> 1 (ROADMAP s122 item 683(g)(1))
+cherry:
+- 7662bb28920a4984791d6aeb57d7c56b6f964bba
+- 64de099c8834316a500007f7e313b7eb45e3b009
+- 722c5e7f45a2b0fa22a4a1f786216b021a29ea10
+- d515b9016933a8df081f93a0056c2eca35b8fb4c
+- 92d11340ae1a4fc34445b6e886fd55a201953d00
+- 3d0e46daf83ff77584b88fb9a786ed64320cb3b4
+- 8a56dc2a1b30f141493f827610845d843c0ffe2c
+- 0e72bc19c9ec9a2a2a2c6871b5ab572a2b47f6c9
+- 4d9e8ab709b4911a935e76cd90303562b2ecf174
+- 33679a021ac8d6130edbbfda342f9e875d9ea336
+- 3904522da9cf29a8c22c19fcb8f8a8e3ed35b791
+- e2a21d7408519063916b9c3871396509de2916d9
+- 915871f7c96da93e83f56b77dd8f58992f73f89e
+- b47033cba554f55d6ee337a61e60f03ea2f121fc
+- d6ee2dc886c98b80ab36231519dec9f7356a4691
+- 05896234a6df690b17a581131a698aa0b7a94b12
+- c85969f87d4c05dc5ee8794127ced83a622ca7f6
++ 3b39efd16cb8b6e230d83a455450d3b911be8dc1
+- 7a83c4e37ba24b44a3c25bf6dc31e3dc936dff20
+- 0f78a522fe4844fabe51293a1c36baf4969ef2a2
+- 302347b4f54025d48d8487cecdacb2a308c8d71a
++ 2dd9f9026082e4cd1f8a95f3e51e02ba3a6d9f1f
++ 6c4903a8098ab55cda39140b03088e40fb82e24d
+- 60f6c0068251e8b418929a4a257de347954ebabf
++ a139a145c64f3d8d0a035e53e1fae36362e0e691
+- b738443bff32e2cd4c00906d55e8f9430eeea051
+- 4fbea82e8917b86fa1851fcba3cf189c2e422737
+- 62ff7b5b02dc5177078d1a9de20b196991c2383c
+- 0005e11fee90bc42b51960573bfbb14f55694b4c
+- 0107f69e957f3d624382f12c2dcaea54351a56e1
++ 21db93d1cf86a46ed7a938a6799bfd00dfb2a5ef
+- 11164d7258899f9450f2b06149197e94f57d4b21
++ a42f50b15866c207d25dbaf2e6e390e5cd128fb5
+- 7bc87bc8511cc1e45f0f13f04390f3e5be2c4cc6
+- 64a1fa402d3a41450d8baf06c5b567fae110ff57
+- 1a7eaff826ea846048b3260f78bce7f6068b9860
+- dc5d47127037ec0a3c914bedf4dce01d660d2bcf
+- edebaad9ca41d2e7a083959b3c59a9f2dd54886a
+- 2a371d921c4c2864044314074e09c8ccc872ccfb
+- dab16a57ca77f3116dd50ba7f417b7e84bbc0f34
+- eded064e3f9799af47b6103ac2f5cf7e8c344568
+- ee9632be1d8741547c345fd032ebf98c1e9e3e03
+- 17c71ea651367806201972573fe2b069425bb796
+- 258612886ef51c20a688764db5dd2398ae23463e
+- 9aaea58c7c7575dda0f7a403ca5d0ec1dd28b9e6
+- 730ed40a398b98f4f4f51a13f56d8a647778eae1
+- e0b4f2ba69d7907f5f6bfdf2302dec731d9a4815
+- dfc037e9424d141569ccc1847b01a3ee599f7df8
+3f06d311bbe0ef19658234e33871d1707c94893ede9ae5d40376bcbb8e489535 *C:/kyty/f287/bin/kyty_emulator_3f06d311.exe

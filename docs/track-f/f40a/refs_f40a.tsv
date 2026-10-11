@@ -1,0 +1,107 @@
+w_hint_rumble	730ed40a	src/graphics/presentation/window/window.cpp	906	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS4_RUMBLE, "1");	SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_PS5
+w_init	730ed40a	src/graphics/presentation/window/window.cpp	912	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {	EXIT("%s\n", SDL_GetError());
+w_hostinit	730ed40a	src/graphics/presentation/window/window.cpp	915	HostInputInit();	InitializeSystemOverlayInput();
+w_add_open	730ed40a	src/graphics/presentation/window/window.cpp	384	auto* pad = SDL_GameControllerOpen(f.id);	EXIT_NOT_IMPLEMENTED(pad == nullptr);
+w_add_exit	730ed40a	src/graphics/presentation/window/window.cpp	385	EXIT_NOT_IMPLEMENTED(pad == nullptr);	int id = SDL_JoystickInstanceID(SDL_Game
+w_add_connect	730ed40a	src/graphics/presentation/window/window.cpp	399	Controller::Connect(id);	}
+w_removed_log	730ed40a	src/graphics/presentation/window/window.cpp	405	LOGF("Controller %d: removed	TestHidLossCount(g_test_hidloss.removed)
+w_removed_disc	730ed40a	src/graphics/presentation/window/window.cpp	407	Controller::Disconnect(f.id);	SDL_GameControllerClose(SDL_GameControll
+w_removed_close	730ed40a	src/graphics/presentation/window/window.cpp	408	SDL_GameControllerClose(SDL_GameControllerFromInstanceID(f.id));	}
+w_run_wait	730ed40a	src/graphics/presentation/window/window.cpp	891	if (!HostInputWaitEvent(&loop.event)) {	continue;
+w_prep_poll	730ed40a	src/graphics/presentation/window/window.cpp	1021	while (SDL_PollEvent(&g_window->loop.event)) {	// Keep window/controller lifecycle even
+w_prep_process	730ed40a	src/graphics/presentation/window/window.cpp	1035	g_window->ProcessEvent(0);	}
+w_shutdown_em	730ed40a	src/graphics/presentation/window/window.cpp	1066	Controller::EmergencyShutdown();	g_window.reset();
+w_attach_virtual	730ed40a	src/graphics/presentation/window/window.cpp	1172	const int index = SDL_JoystickAttachVirtualEx(&desc);	if (index < 0) {
+w_detach_virtual	730ed40a	src/graphics/presentation/window/window.cpp	1193	if (index < 0 || SDL_JoystickDetachVirtual(index) != 0) {	LOGF("TestHidLoss: detach failed index=%
+w_hold_lock	730ed40a	src/graphics/presentation/window/window.cpp	1199	SDL_LockJoysticks();	SDL_Delay(TEST_HIDLOSS_HOLD_MS);
+w_title_post	730ed40a	src/graphics/presentation/window/window.cpp	1516	PostToMainThread([this] {	std::string latest;
+h_wait	730ed40a	src/graphics/presentation/window/hostInput.cpp	424	if (SDL_WaitEvent(event) == 0) {	EXIT("%s\n", SDL_GetError());
+h_wait_to	730ed40a	src/graphics/presentation/window/hostInput.cpp	432	if (SDL_WaitEventTimeout(event, timeout_ms) != 0) {	return true;
+h_mouse_exit	730ed40a	src/graphics/presentation/window/hostInput.cpp	436	EXIT("%s\n", SDL_GetError());	}
+c_po_start	730ed40a	src/libs/controller.cpp	845	g_pad_output->Start();	}
+c_haptics_start	730ed40a	src/libs/controller.cpp	848	g_haptics->Start();	g_controller = new GameController;
+c_po_apply_lock	730ed40a	src/libs/controller.cpp	346	SDL_LockJoysticks();	if (auto* pad = SDL_GameControllerFromIn
+c_connect_sdl	730ed40a	src/libs/controller.cpp	882	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(id));	ps5       = pad != nullptr && SDL_GameCo
+c_connect_lock	730ed40a	src/libs/controller.cpp	885	Common::LockGuard lock(m_mutex);	
+c_disconnect_lock	730ed40a	src/libs/controller.cpp	900	Common::LockGuard lock(m_mutex);	
+c_shutdown_delete	730ed40a	src/libs/controller.cpp	855	delete g_controller;	g_controller = nullptr;
+c_em_po_stop	730ed40a	src/libs/controller.cpp	869	g_pad_output->Stop();	}
+c_em_release	730ed40a	src/libs/controller.cpp	872	g_controller->ReleaseHostPads();	}
+c_release_lock	730ed40a	src/libs/controller.cpp	1153	Common::LockGuard lock(m_mutex);	
+c_release_close	730ed40a	src/libs/controller.cpp	1178	SDL_GameControllerClose(pad);	}
+c_setvib_lock	730ed40a	src/libs/controller.cpp	1194	Common::LockGuard lock(m_mutex);	
+c_setvib_sdl	730ed40a	src/libs/controller.cpp	1208	if (SDL_GameControllerRumble(pad, large, small, RUMBLE_DURATION_MS) != 0) {	probe.Sdl();
+vw_quit	730ed40a	src/graphics/presentation/window/vulkanWindow.cpp	1320	SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);	}
+e_init_controller	730ed40a	src/emulator.cpp	460	subsystems.Initialize<Libs::Controller::Lifecycle>();	subsystems.Initialize<Libs::Audio::Lifec
+e_init_graphics	730ed40a	src/emulator.cpp	463	subsystems.Initialize<Libs::Graphics::Lifecycle>();	} else {
+e_run_quick	730ed40a	src/emulator.cpp	498	std::quick_exit(0);	}
+e_at_quick	730ed40a	src/emulator.cpp	547	ok = at_quick_exit(Common::Subsystems::EmergencyShutdownActive);	EXIT_NOT_IMPLEMENTED(ok != 0);
+agc_window_shutdown	730ed40a	src/libs/agc.cpp	75	WindowShutdown();	g_renderer = nullptr;
+agc_lifecycle	730ed40a	src/libs/agc.h	29	static constexpr auto        shutdown   = Libs::Graphics::Shutdown;	};
+sub_em_loop	730ed40a	src/common/subsystems.cpp	54	it->emergency_shutdown();	}
+sdl_refcount	4b69833b	src/SDL.c	119	static Uint8 SDL_SubsystemRefCount[32];	
+sdl_init_helper	4b69833b	src/SDL.c	230	if (SDL_HelperWindowCreate() < 0) {	goto quit_and_error;
+sdl_init_video	4b69833b	src/SDL.c	277	if (SDL_VideoInit(NULL) < 0) {	goto quit_and_error;
+sdl_init_joy	4b69833b	src/SDL.c	319	if (SDL_JoystickInit() < 0) {	goto quit_and_error;
+sdl_init_gc_joy	4b69833b	src/SDL.c	335	if (!SDL_PrivateInitOrIncrSubsystem(SDL_INIT_JOYSTICK)) {	goto quit_and_error;
+sdl_init_gc	4b69833b	src/SDL.c	339	if (SDL_GameControllerInit() < 0) {	goto quit_and_error;
+sdl_helper_create	4b69833b	src/video/windows/SDL_windowswindow.c	1221	SDL_HelperWindow = CreateWindowEx(0, SDL_HelperWindowClassName,	SDL_HelperWindowName,
+j_drivers	4b69833b	src/joystick/SDL_joystick.c	54	static SDL_JoystickDriver *SDL_joystick_drivers[] = {	#ifdef SDL_JOYSTICK_HIDAPI /* Before WIN
+j_init_events	4b69833b	src/joystick/SDL_joystick.c	622	if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0) {	return -1;
+j_init_drivers	4b69833b	src/joystick/SDL_joystick.c	650	if (SDL_joystick_drivers[i]->Init() >= 0) {	status = 0;
+j_open_lock	4b69833b	src/joystick/SDL_joystick.c	795	SDL_LockJoysticks();	
+j_open_update	4b69833b	src/joystick/SDL_joystick.c	900	driver->Update(joystick);	
+j_rumble_driver	4b69833b	src/joystick/SDL_joystick.c	1419	retval = joystick->driver->Rumble(joystick, low_frequency_rumble, high_frequency_rumble);	if (retval == 0) {
+j_close_rumble	4b69833b	src/joystick/SDL_joystick.c	1595	SDL_JoystickRumble(joystick, 0, 0, 0);	}
+j_close_driver	4b69833b	src/joystick/SDL_joystick.c	1601	joystick->driver->Close(joystick);	joystick->hwdata = NULL;
+j_ignore	4b69833b	src/joystick/SDL_joystick.c	1698	if (SDL_HasWindows() && SDL_GetKeyboardFocus() == NULL) {	/* We have windows but we don't have foc
+j_removed_attached	4b69833b	src/joystick/SDL_joystick.c	1906	joystick->attached = SDL_FALSE;	break;
+j_removed_fix	4b69833b	src/joystick/SDL_joystick.c	1923	UpdateEventsForDeviceRemoval(device_index, SDL_CONTROLLERDEVICEADDED);	#endif /* !SDL_EVENTS_DISABLED */
+j_button_ignore	4b69833b	src/joystick/SDL_joystick.c	2108	if (SDL_PrivateJoystickShouldIgnoreEvent()) {	if (state == SDL_PRESSED) {
+j_update_lock	4b69833b	src/joystick/SDL_joystick.c	2177	SDL_LockJoysticks();	
+j_update_skip	4b69833b	src/joystick/SDL_joystick.c	2189	if (!joystick->attached) {	continue;
+j_update_driver	4b69833b	src/joystick/SDL_joystick.c	2193	joystick->driver->Update(joystick);	
+j_update_expire	4b69833b	src/joystick/SDL_joystick.c	2202	SDL_JoystickRumble(joystick, 0, 0, 0);	joystick->rumble_resend = 0;
+j_update_detect	4b69833b	src/joystick/SDL_joystick.c	2225	SDL_joystick_drivers[i]->Detect();	}
+v_append	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	236	last->next = hwdata;	} else {
+v_detach_free	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	255	VIRTUAL_FreeHWData(hwdata);	SDL_PrivateJoystickRemoved(instance_id);
+v_free_null	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	73	hwdata->joystick->hwdata = NULL;	hwdata->joystick = NULL;
+v_button_inner	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	300	hwdata->buttons[button] = value;	
+v_rumble_check	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	429	if (joystick->hwdata) {	joystick_hwdata *hwdata = joystick->hwda
+v_rumble_err	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	437	result = SDL_SetError("Rumble failed, device disconnected");	}
+v_update_cb	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	547	hwdata->desc.Update(hwdata->desc.userdata);	}
+v_close	4b69833b	src/joystick/virtual/SDL_virtualjoystick.c	567	hwdata->joystick = NULL;	joystick->hwdata = NULL;
+gc_watch_added	4b69833b	src/joystick/SDL_gamecontroller.c	375	if (SDL_IsGameController(event->jdevice.which)) {	SDL_Event deviceevent;
+gc_watch	4b69833b	src/joystick/SDL_gamecontroller.c	1943	SDL_AddEventWatch(SDL_GameControllerEventWatcher, NULL);	
+gc_init_push	4b69833b	src/joystick/SDL_gamecontroller.c	1950	deviceevent.cdevice.which = i;	SDL_PushEvent(&deviceevent);
+ev_calc	4b69833b	src/events/SDL_events.c	101	static void SDL_CalculateShouldUpdateJoysticks(SDL_bool hint_value)	{
+ev_push_wake	4b69833b	src/events/SDL_events.c	846	SDL_SendWakeupEvent();	}
+ev_wake_take	4b69833b	src/events/SDL_events.c	748	wakeup_window = (SDL_Window *)SDL_AtomicSetPtr(&_this->wakeup_window, NULL);	if (wakeup_window) {
+ev_update	4b69833b	src/events/SDL_events.c	922	if (SDL_update_joysticks) {	SDL_JoystickUpdate();
+ev_poll_cond	4b69833b	src/events/SDL_events.c	967	if (SDL_WasInit(SDL_INIT_JOYSTICK) && SDL_update_joysticks) {	if (SDL_NumJoysticks() > 0) {
+ev_poll_1ms	4b69833b	src/events/SDL_events.c	970	poll_interval = SDL_min(poll_interval, EVENT_POLL_INTERVAL_MS);	} else {
+ev_poll_3s	4b69833b	src/events/SDL_events.c	973	poll_interval = SDL_min(poll_interval, ENUMERATION_POLL_INTERVAL_MS);	}
+ev_peep	4b69833b	src/events/SDL_events.c	1008	status = SDL_PeepEvents(event, 1, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT);	if (status < 0) {
+ev_loop_timeout	4b69833b	src/events/SDL_events.c	1029	loop_timeout = SDL_min(loop_timeout, poll_interval);	} else {
+ev_publish	4b69833b	src/events/SDL_events.c	1035	SDL_AtomicSetPtr(&_this->wakeup_window, wakeup_window);	status = _this->WaitEventTimeout(_this, 
+ev_wait_device	4b69833b	src/events/SDL_events.c	1036	status = _this->WaitEventTimeout(_this, loop_timeout);	SDL_AtomicSetPtr(&_this->wakeup_window, 
+ev_hint_cb	4b69833b	src/events/SDL_events.c	1397	SDL_AddHintCallback(SDL_HINT_AUTO_UPDATE_JOYSTICKS, SDL_AutoUpdateJoysticksChanged, NULL);	#endif
+we_msgwait	4b69833b	src/video/windows/SDL_windowsevents.c	1895	ret = MsgWaitForMultipleObjects(0, NULL, FALSE, dwMilliseconds, QS_ALLINPUT);	if (ret == WAIT_OBJECT_0) {
+we_post	4b69833b	src/video/windows/SDL_windowsevents.c	1939	PostMessage(data->hwnd, data->videodata->_SDL_WAKEUP, 0, 0);	}
+we_peek	4b69833b	src/video/windows/SDL_windowsevents.c	1953	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {	if (g_WindowsMessageHook) {
+hid_thread	4b69833b	src/hidapi/SDL_hidapi.c	231	SDL_HIDAPI_discovery.m_nThreadID = SDL_ThreadID();	
+hid_window	4b69833b	src/hidapi/SDL_hidapi.c	240	SDL_HIDAPI_discovery.m_hwndMsg = CreateWindowExA(0, "SDL_HIDAPI_DEVICE_DETECTION"	
+hid_if0	4b69833b	src/hidapi/SDL_hidapi.c	379	#if 0 /* just let the usual SDL_PumpEvents loop dispatch these	/* We'll only get messages on the same t
+win_init_xinput	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	476	if (SDL_XINPUT_JoystickInit() < 0) {	WINDOWS_JoystickQuit();
+win_init_dinput	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	481	if (SDL_DINPUT_JoystickInit() < 0) {	WINDOWS_JoystickQuit();
+win_thread_hint	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	493	s_bJoystickThread = SDL_GetHintBoolean(SDL_HINT_JOYSTICK_THREAD, SDL_FALSE);	if (s_bJoystickThread) {
+win_notif_coinit	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	289	data->coinitialized = WIN_CoInitialize();	
+win_notif_window	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	302	data->messageWindow = CreateWindowEx(0, TEXT("Message"), NULL, 0, 0, 0, 0, 0, HWND_MESSAGE, NULL, NULL, NULL);	if (!data->messageWindow) {
+win_timer	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	239	SetTimer(hwnd, IDT_SDL_DEVICE_CHANGE_TIMER_1, 300, NULL);	SetTimer(hwnd, IDT_SDL_DEVICE_CHANGE_TIM
+win_thread_getmsg	4b69833b	src/joystick/windows/SDL_windowsjoystick.c	338	lastret = GetMessage(&msg, NULL, 0, 0); /* WM_QUIT causes return value of 0 */	if (lastret > 0) {
+di_coinit	4b69833b	src/joystick/windows/SDL_dinputjoystick.c	409	result = WIN_CoInitialize();	if (FAILED(result)) {
+di_create	4b69833b	src/joystick/windows/SDL_dinputjoystick.c	416	result = CoCreateInstance(&CLSID_DirectInput8, NULL, CLSCTX_INPROC_SERVER,	&IID_IDirectInput8, (LPVOID *)&dinput);
+di_coop	4b69833b	src/joystick/windows/SDL_dinputjoystick.c	769	IDirectInputDevice8_SetCooperativeLevel(joystick->hwdata->InputDevice, SDL_HelperWindow,	DISCL_EXCLUSIVE |
+wgi_ro	4b69833b	src/joystick/windows/SDL_windows_gaming_input.c	658	if (FAILED(WIN_RoInitialize())) {	return SDL_SetError("RoInitialize() fail
+win_ro_sta	4b69833b	src/core/windows/SDL_windows.c	152	HRESULT hr = RoInitializeFunc(RO_INIT_SINGLETHREADED);	if (hr == RPC_E_CHANGED_MODE) {
+kb_ime_coinit	4b69833b	src/video/windows/SDL_windowskeyboard.c	384	if (SUCCEEDED(WIN_CoInitialize())) {	videodata->ime_com_initialized = SDL_TRU

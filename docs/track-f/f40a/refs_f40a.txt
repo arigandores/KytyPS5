@@ -1,0 +1,4 @@
+links 107 bad 0
+ALL OK
+text links 101 missing 0
+ALL OK

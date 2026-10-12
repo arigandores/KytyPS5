@@ -1,0 +1,51 @@
+unique delta logs 164
+logs by build class {'COURSE_FS2': 50, 'OTHER': 114}
+course builds present {'FS11 ea51ae80': 35, 'FS14 013e1974': 5, 'FS12 46892c20': 4, 'FS13 abab2196': 3, 'FS15 bfac84be': 3}
+
+(1) regular-path Take of speculatively skipped hashes
+  COURSE_FS2 logs   50 | with Take lines (path armed)    0, levels   0, Take lines      0 | skipped hash-in-log by class {'op:SOP1:0x21': 4704, 'budget': 196, 'resource_tracking': 1617, 'op:VOPC:0xf3': 196} | witnesses 0  | B26g skipped in 49 logs, taken 0
+  PRE_FS2    logs    0 | with Take lines (path armed)    0, levels   0, Take lines      0 | skipped hash-in-log by class {} | witnesses 0  | B26g skipped in 0 logs, taken 0
+  OTHER      logs  114 | with Take lines (path armed)    0, levels   0, Take lines      0 | skipped hash-in-log by class {'op:SOP1:0x21': 3168, 'budget': 132, 'resource_tracking': 1089, 'op:VOPC:0xf3': 132} | witnesses 0  | B26g skipped in 33 logs, taken 0
+  ALL        logs  164 | with Take lines (path armed)    0, levels   0, Take lines      0 | skipped hash-in-log by class {'op:SOP1:0x21': 7872, 'budget': 328, 'resource_tracking': 2706, 'op:VOPC:0xf3': 328} | witnesses 0  | B26g skipped in 82 logs, taken 0
+
+(2) other witness lines
+  COURSE_FS2 cfg_out 0/0 logs; sock 0/0 logs; read0 0/0 logs; ctl_removed 0/0 logs; vuid06479 0/0 logs; late_ge1s 1/1 logs; quit 49/49 logs; fatal 0/0 logs
+  PRE_FS2    cfg_out 0/0 logs; sock 0/0 logs; read0 0/0 logs; ctl_removed 0/0 logs; vuid06479 0/0 logs; late_ge1s 0/0 logs; quit 0/0 logs; fatal 0/0 logs
+  OTHER      cfg_out 0/0 logs; sock 0/0 logs; read0 0/0 logs; ctl_removed 182/5 logs; vuid06479 0/0 logs; late_ge1s 65/5 logs; quit 33/33 logs; fatal 6/5 logs
+    ctl_removed C:/kyty/f287/f40c/log_f24_d1.txt 7c38e49 448089:Controller 0: removed
+    ctl_removed C:/kyty/f287/f40c/log_f24_f0.txt 7c38e49 414239:Controller 1: removed
+    ctl_removed C:/kyty/f287/f40c/log_f24_f1.txt 7c38e49 412452:Controller 1: removed
+    ctl_removed C:/kyty/f287/f40c/log_f24_m1.txt 3bc5305 453714:Controller 1: removed
+    ctl_removed C:/kyty/f287/f40c/log_f24_m4.txt 81676e6 456781:Controller 0: removed
+    late_ge1s C:/kyty/f287/f40c/log_f24_m5.txt 1b29ab0 466497:MainTaskLate: us=8000232
+    late_ge1s C:/kyty/f287/f40c/log_f24_u0.txt 7c38e49 439280:MainTaskLate: us=8001148
+    late_ge1s C:/kyty/f287/f42c/log_f20_v.txt 5ccb1d3 4423:MainTaskLate: us=2671436
+    late_ge1s C:/kyty/f287/f47i/log_f47_dt.txt 8bdc069 4426:MainTaskLate: us=1886688
+    late_ge1s C:/kyty/f287/f47i/log_f47_dt_r1.txt 8bdc069 4428:MainTaskLate: us=3335061
+    late_ge1s C:/kyty/f287/fs15c/log_fs15_v.txt 6beb3b7 4423:MainTaskLate: us=2007471
+    fatal C:/kyty/f287/f33a/run/_kyty.txt 5f48cc3 21:--- Fatal Error ---
+    fatal C:/kyty/f287/f33c2/run/_kyty.txt b007ce5 22:--- Fatal Error ---
+    fatal C:/kyty/f287/f33d/run/_kyty.txt 0c57cfe 22:--- Fatal Error ---
+    fatal C:/kyty/f287/f33d2/run/_kyty.txt b007ce5 22:--- Fatal Error ---
+    fatal C:/kyty/f287/fs12a/run/_kyty.txt b007ce5 22:--- Fatal Error ---
+
+(3) frames by the F0 rule on COURSE_FS2 logs without validation
+  mini_giants_garden                   entries  31  K2 window  0  K2 hold  0  K3 hold   1  hold frames  538238  C:/kyty/f287/f31c/log_b25m_06.txt:1286443 k3h=1 first=(12949, 100460)
+  underwater_aerial_garden             entries  10  K2 window  0  K2 hold 13  K3 hold   4  hold frames   56360  C:/kyty/f287/f47d/log_f47_rd.txt:358283 n=918 dt=1825542 h | C:/kyty/f287/f47d/log_f47_rd.txt:358444 n=919 dt=3524022 h | C:/kyty/f287/f47d/log_f47_rd.txt:358883 n=921 dt=1114140 h | C:/kyty/f287/f47d/log_f47_rd.txt:359140 n=922 dt=14204082 h
+  intro_next                           entries   2  K2 window  0  K2 hold  0  K3 hold   0  hold frames    9102  
+  title_controller_ship                entries   1  K2 window  0  K2 hold  0  K3 hold   0  hold frames    1111  
+  TOTAL {'entries': 44, 'k2w': 0, 'k2h': 13, 'k3h': 5, 'hold_frames': 604811} levels 4
+  all K2 frames (>= 1 s) after the first scene frame on COURSE_FS2 logs without validation: 13
+    C:/kyty/f287/f47d/log_f47_rd.txt:358283 underwater_aerial_garden n=918 dt_us=1825542 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:358444 underwater_aerial_garden n=919 dt_us=3524022 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:358883 underwater_aerial_garden n=921 dt_us=1114140 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:359140 underwater_aerial_garden n=922 dt_us=14204082 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:359152 underwater_aerial_garden n=923 dt_us=1130448 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:359230 underwater_aerial_garden n=924 dt_us=1001426 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:359889 underwater_aerial_garden n=925 dt_us=19580341 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:360022 underwater_aerial_garden n=927 dt_us=1129850 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:361108 underwater_aerial_garden n=928 dt_us=3814221 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:361851 underwater_aerial_garden n=931 dt_us=10974885 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:361863 underwater_aerial_garden n=932 dt_us=1058916 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:363064 underwater_aerial_garden n=934 dt_us=6195671 hold build=FS14 013e1974
+    C:/kyty/f287/f47d/log_f47_rd.txt:364774 underwater_aerial_garden n=937 dt_us=5901548 hold build=FS14 013e1974

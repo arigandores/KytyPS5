@@ -1,0 +1,4 @@
+signatures new vs F0 98 classified 98 {'INSTR': 84, 'ROW': 13, 'TOOL': 1}
+of them not in F32a / F32d sweep tables 35 {'INSTR': 28, 'ROW': 6, 'TOOL': 1}
+new K1-K4 rows proposed by the triage: 0
+ALL OK

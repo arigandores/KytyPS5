@@ -1,0 +1,68 @@
+logs 164 course 50 line count = sweep: 164 of 164
+f21_second  logs   5 (course   0) lines      6
+    C:/kyty/f287/f33a/run/_kyty.txt 5f48cc3 OTHER n=1 | form - | env  | 21:--- Fatal Error ---
+    C:/kyty/f287/f33c2/run/_kyty.txt b007ce5 OTHER n=1 | form - | env  | 22:--- Fatal Error ---
+    C:/kyty/f287/f33d/run/_kyty.txt 0c57cfe OTHER n=2 | form - | env  | 22:--- Fatal Error ---
+    C:/kyty/f287/f33d2/run/_kyty.txt b007ce5 OTHER n=1 | form - | env  | 22:--- Fatal Error ---
+    C:/kyty/f287/fs12a/run/_kyty.txt b007ce5 OTHER n=1 | form - | env  | 22:--- Fatal Error ---
+f21_nested  logs   0 (course   0) lines      0
+f21_wait    logs   0 (course   0) lines      0
+f24_mode1   logs  20 (course   7) lines     20
+    C:/kyty/f287/f40c/log_f24_d1.txt 7c38e49 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f40c/log_f24_f1.txt 7c38e49 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f40c/log_f24_m1.txt 3bc5305 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f40c/log_f24_m2.txt 1ea4976 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f40c/log_f24_m4.txt 81676e6 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f40c/log_f24_m5.txt 1b29ab0 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f40c/log_f24_m6.txt 658ab84 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f40c/log_f24_n1.txt 7c38e49 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f40c/log_f24_p1.txt 7c38e49 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f40c/log_f24_u1.txt 7c38e49 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f40c/log_f24_x1.txt 7c38e49 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 19:FixF24: mode=1 b24=1
+    C:/kyty/f287/f47d/log_f47_hi.txt eb7e8b9 FS14 013e1974 n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: mode=1 b24=1
+    C:/kyty/f287/f47d/log_f47_rd.txt eb7e8b9 FS14 013e1974 n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 21:FixF24: mode=1 b24=1
+    C:/kyty/f287/f47i/log_f47_dt.txt 8bdc069 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: mode=1 b24=1
+    C:/kyty/f287/f47i/log_f47_dt_r1.txt 8bdc069 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: mode=1 b24=1
+    C:/kyty/f287/fs14c/log_fs14_v.txt eb7e8b9 FS14 013e1974 n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: mode=1 b24=1
+    C:/kyty/f287/fs14c/log_fs14_w.txt eb7e8b9 FS14 013e1974 n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: mode=1 b24=1
+    C:/kyty/f287/fs15c/log_fs15_v.txt 6beb3b7 FS15 bfac84be n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: mode=1 b24=1
+    C:/kyty/f287/fs15c/log_fs15_w.txt 6beb3b7 FS15 bfac84be n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: mode=1 b24=1
+    C:/kyty/f287/fs15c/log_fs15_z.txt 6beb3b7 FS15 bfac84be n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: mode=1 b24=1
+f24_init    logs  20 (course   7) lines     40
+    C:/kyty/f287/f40c/log_f24_d1.txt 7c38e49 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=28328 pump tid=28328 main tid=41948
+    C:/kyty/f287/f40c/log_f24_f1.txt 7c38e49 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=52536 pump tid=52536 main tid=30344
+    C:/kyty/f287/f40c/log_f24_m1.txt 3bc5305 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=39692 pump tid=39692 main tid=15596
+    C:/kyty/f287/f40c/log_f24_m2.txt 1ea4976 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=23652 pump tid=23652 main tid=43400
+    C:/kyty/f287/f40c/log_f24_m4.txt 81676e6 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=27128 pump tid=27128 main tid=11532
+    C:/kyty/f287/f40c/log_f24_m5.txt 1b29ab0 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=14052 pump tid=14052 main tid=10004
+    C:/kyty/f287/f40c/log_f24_m6.txt 658ab84 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=44604 pump tid=44604 main tid=49720
+    C:/kyty/f287/f40c/log_f24_n1.txt 7c38e49 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=41124 pump tid=41124 main tid=52836
+    C:/kyty/f287/f40c/log_f24_p1.txt 7c38e49 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=15624 pump tid=15624 main tid=48288
+    C:/kyty/f287/f40c/log_f24_u1.txt 7c38e49 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=38972 pump tid=38972 main tid=30996
+    C:/kyty/f287/f40c/log_f24_x1.txt 7c38e49 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 20:FixF24: init tid=8188 pump tid=8188 main tid=8484
+    C:/kyty/f287/f47d/log_f47_hi.txt eb7e8b9 FS14 013e1974 n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 21:FixF24: init tid=58060 pump tid=58060 main tid=61220
+    C:/kyty/f287/f47d/log_f47_rd.txt eb7e8b9 FS14 013e1974 n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 22:FixF24: init tid=39816 pump tid=39816 main tid=54712
+    C:/kyty/f287/f47i/log_f47_dt.txt 8bdc069 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 21:FixF24: init tid=4956 pump tid=4956 main tid=61792
+    C:/kyty/f287/f47i/log_f47_dt_r1.txt 8bdc069 OTHER n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 21:FixF24: init tid=32284 pump tid=32284 main tid=35252
+    C:/kyty/f287/fs14c/log_fs14_v.txt eb7e8b9 FS14 013e1974 n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 21:FixF24: init tid=56720 pump tid=56720 main tid=47768
+    C:/kyty/f287/fs14c/log_fs14_w.txt eb7e8b9 FS14 013e1974 n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 21:FixF24: init tid=17452 pump tid=17452 main tid=56292
+    C:/kyty/f287/fs15c/log_fs15_v.txt 6beb3b7 FS15 bfac84be n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 21:FixF24: init tid=16960 pump tid=16960 main tid=54140
+    C:/kyty/f287/fs15c/log_fs15_w.txt 6beb3b7 FS15 bfac84be n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 21:FixF24: init tid=22172 pump tid=22172 main tid=61712
+    C:/kyty/f287/fs15c/log_fs15_z.txt 6beb3b7 FS15 bfac84be n=2 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 21:FixF24: init tid=60144 pump tid=60144 main tid=61612
+f24_open    logs   1 (course   0) lines     14
+    C:/kyty/f287/f40c/log_f24_m1.txt 3bc5305 OTHER n=14 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 454244:FixF24: open failed index=3 error="Couldn't find mapping for device (3)"
+f24_long    logs   4 (course   0) lines      4
+    C:/kyty/f287/f40c/log_f24_m2.txt 1ea4976 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 467964:FixF24: pump_update_long us=8000232
+    C:/kyty/f287/f40c/log_f24_m5.txt 1b29ab0 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 466500:FixF24: pump_update_long us=7999222
+    C:/kyty/f287/f40c/log_f24_m6.txt 658ab84 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 483235:FixF24: pump_update_long us=8000335
+    C:/kyty/f287/f40c/log_f24_u1.txt 7c38e49 OTHER n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 460304:FixF24: pump_update_long us=8000699
+f25_twice   logs   0 (course   0) lines      0
+f29_over    logs   0 (course   0) lines      0
+f20_unm     logs   0 (course   0) lines      0
+pause_on    logs   0 (course   0) lines      0
+fliphold    logs   0 (course   0) lines      0
+logstall    logs   1 (course   1) lines      1
+    C:/kyty/f287/f47d/log_f47_rd.txt eb7e8b9 FS14 013e1974 n=1 | form - | env KYTY_RECORD_THREAD=1 KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=0 | 363743:LogAsync: stall us=202480 queued_bytes=85744 t_ms=431093948
+bvhtrip     logs   0 (course   0) lines      0
+assert      logs   0 (course   0) lines      0
+ALL OK

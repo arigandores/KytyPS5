@@ -1,0 +1,31 @@
+c1 real register: 0 messages                               ok
+c1 real register: 77 ids                                   ok
+c1 real register: OPEN 0                                   ok
+c1 real register: 7 remainders                             ok
+c1 real register: F28 last row is s106:1521 (not the reference row) ok
+c2 synthetic: B97 only in s103 -> NOT ADJUDICATED          ok
+c3 synthetic: B97 only in s103 -> ONLY IN SUMMARY          ok
+c4 synthetic clean: 0 messages                             ok
+c4 B8-H is its own id, last row s50                        ok
+c5 reference row (справка Б99) is not a row of B99         ok
+c6 census code against the last-row bold word -> CONTRADICTS ok
+c7 lead count differs / missing -> messages                ok
+c8 outcome word absent from every line -> NO LINE WITH     ok
+c9 remainder code without a condition line -> message      ok
+t1 every F48a rule example gets its class                  ok
+t2 unknown signature -> unclassified                       ok
+t3 fixture signature outside a fixture path -> BAD         ok
+t3 fixture signature inside a fixture path -> FIXTURE      ok
+s1 list: mtime > 2026-10-10Z taken (log_new, _kyty_new)    ok
+s1 list: mtime <= T0 not taken, name outside mask not taken ok
+s2 lock present -> exit 3                                  ok
+s2 STOP present -> exit 4                                  ok
+r1 lines counted across chunk cuts, CRLF, last line without NL ok
+r1 two fatal lines (one is the last line), first at line 2 ok
+r2 FlipHold poll_us 499999 no, 500000 yes                  ok
+r2 FixF20Stat unmatched=0 no, =3 yes                       ok
+r2 FixF24 mode=1 and init counted                          ok
+r2 Pause / LogAsync stall counted                          ok
+r3 lock present -> exit 3                                  ok
+members 29 passed 29
+ALL OK

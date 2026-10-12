@@ -1,0 +1,7 @@
+(a) socket creation blocks {('COURSE_FS2', 'logs'): 50, ('COURSE_FS2', 'sock_lines'): 0, ('COURSE_FS2', 'logs_with_sock'): 0, ('OTHER_OR_PRE', 'logs'): 114, ('OTHER_OR_PRE', 'sock_lines'): 0, ('OTHER_OR_PRE', 'logs_with_sock'): 0}
+(b) KernelRead direct-read failures and the next Read line
+   C:/kyty/f287/f34c/log_b6_v.txt:480708 build=FS11 ea51ae80 size=318208 full_read_line=480709 FULL
+   C:/kyty/f287/f34c/log_b6_v.txt:481825 build=FS11 ea51ae80 size=461632 full_read_line=481826 FULL
+   C:/kyty/f287/f34c/log_b6_w.txt:823075 build=FS11 ea51ae80 size=232198 full_read_line=823076 FULL
+   C:/kyty/f287/f34c/log_b6_w.txt:824400 build=FS11 ea51ae80 size=5387536 full_read_line=824427 FULL
+   pairs 4 full 4

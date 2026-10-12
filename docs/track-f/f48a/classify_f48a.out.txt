@@ -1,0 +1,1 @@
+frames 18 by attr {'INSTR': 17, 'NONE': 1} by cls/attr {('K2', 'INSTR'): 13, ('K3', 'INSTR'): 4, ('K3', 'NONE'): 1}

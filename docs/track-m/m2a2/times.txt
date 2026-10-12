@@ -1,0 +1,20 @@
+2026-10-12T11:12:41Z HPP-843 M2a2 start (Emu Engineer); main 2b869aa4
+2026-10-12T11:13:09Z worktree C:/kyty/m657/m2a2/wt on 2b869aa4 (clean, 0 CR)
+2026-10-12T11:13:14Z configure start
+2026-10-12T11:14:56Z configure end
+2026-10-12T11:15:58Z patch_m2a2.py applied to wt
+2026-10-12T11:16:03Z build shader_cfg_tests (main + test) start, --parallel 2 IDLE, log build_t1.log
+2026-10-12T11:23:20Z build_t1 end rc=0
+2026-10-12T11:23:33Z run1: resource tracking EXIT (saveexec into s[2:3] overwrote the T#); saved exec moved to s[40:41]; rebuild build_t2
+2026-10-12T11:23:51Z build_t2 end rc=0
+2026-10-12T11:24:35Z diag: dump_ir=true (temporary), spv1 dump at T306=1
+2026-10-12T11:24:57Z diag spv1: v2/v3 are constant 0 in the test -> mask false, offset 0 folded; compare moved to 3 > v0 (lane id); rebuild build_t4
+2026-10-12T11:25:40Z diag spv2: v0 is constant 0 in the test too (offset folds to 0x101 for every lane - ConstOffset right); compare moved to s8 > v0 (user data); rebuild build_t5
+2026-10-12T11:27:18Z diag spv3: entry EXEC of a full compute wave = constant true (Translate.cpp initial_exec) -> SelectU32(true,off,0) folds, write under A taken as wrapper -> main gives ConstOffset to full-mask form (finding); patch edition 2 (forms same/other A vs A&B, full = probe); rebuild build_t6
+2026-10-12T11:27:56Z mutant t306_mask applied (mut_t306.py from mut_m2c.py); build_mut start
+2026-10-12T11:28:14Z build_mut end rc=0
+2026-10-12T11:28:26Z mutant restored (git checkout); wt status above
+2026-10-12T11:28:37Z patch applied to main tree; srchash.out.txt written
+2026-10-12T11:28:53Z check_m2a2.py: FAIL
+2026-10-12T11:28:59Z check_m2a2.py edition 2 (strip CR of failure lines; edition 1 printed FAIL on the CAUGHT member only): ALL OK
+2026-10-12T11:30:02Z report.md written

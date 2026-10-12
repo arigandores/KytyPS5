@@ -1,0 +1,9 @@
+PASS	(1) hash main	aac6db694d6785bbde0a838953d4565569645996
+PASS	(1) hash wt	aac6db694d6785bbde0a838953d4565569645996
+PASS	(1) self-check FS15	9177b4267de1fb8bac7d1113afd8733210addfac
+PASS	(2) PASS run_main_t306_0.txt	other: OpImageSample=1 ConstOffset=0
+PASS	(2) PASS run_main_t306_1.txt	other: OpImageSample=1 ConstOffset=0
+PASS	(2) PASS run_mut_ctl_0.txt	other: OpImageSample=1 ConstOffset=0
+PASS	(2) PASS run_mut_ctl_1.txt	other: OpImageSample=1 ConstOffset=0
+PASS	(2) CAUGHT run_mut_t306_mask_1.txt	other: OpImageSample=1 ConstOffset=1 T306: offset written under another lane mask became a ConstOffset
+ALL OK

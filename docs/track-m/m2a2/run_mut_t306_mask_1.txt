@@ -1,0 +1,4 @@
+[test] TestMWave1T306OffsetWriteMask
+[mw1] T306 knob=1 write-mask same: OpImageSample=1 ConstOffset=1 other: OpImageSample=1 ConstOffset=1 reference=same >=1, other 0
+[mw1] T306 knob=1 probe full-mask (no check): OpImageSample=1 ConstOffset=1
+ShaderCfgTests: failed: T306: offset written under another lane mask became a ConstOffset

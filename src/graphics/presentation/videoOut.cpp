@@ -18,6 +18,7 @@
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
 #include "graphics/host_gpu/renderer/diagF5.h"
+#include "graphics/host_gpu/renderer/diagF47Dt.h" // Track F, F47g2 (KYTY_DIAG_F47DT)
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
@@ -1303,6 +1304,10 @@ bool FlipQueue::Flip(uint32_t micros) {
 	// GuestGpu thread outside every window of the sites (GuestGpu::ThreadRun, graphicsRun.cpp).
 	Graphics::DiagF5::Tick(static_cast<uint32_t>(r.cfg->flip_status.count));
 	Graphics::DiagF6::Tick(static_cast<uint32_t>(r.cfg->flip_status.count));
+	// Track F, F47g2 (HPP-828, RC1 of F47h): KYTY_DIAG_F47DT - the n of this request (measurement only: a line).
+	if (Graphics::DiagF47Dt::On()) {
+		Graphics::DiagF47Dt::NoteShown(r.cfg->flip_status.count, r.id);
+	}
 	const uint64_t poll_t0 = Common::FrameStats::NowNs();
 	Common::Gates::Poll(static_cast<uint32_t>(r.cfg->flip_status.count));
 	poll_ns = Common::FrameStats::NowNs() - poll_t0;

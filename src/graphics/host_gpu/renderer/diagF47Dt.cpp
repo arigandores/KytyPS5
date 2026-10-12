@@ -40,7 +40,8 @@
 #include <xxhash.h>
 
 // Track F, F47g (HPP-824, ROADMAP s122 item 740(v)(1)): see diagF47Dt.h.  Hash: XXH3-64 (XXH3_64bits) for value (i),
-// the source of value (ii), buffers and the SRT.
+// the source of value (ii), buffers and the SRT.  F47g2 (HPP-828, item 742(v)): RC1 (show q), RC2 (record per image),
+// RC3 (stream ring without the pool guard, GPU copies into the ring unmeasured), RC4 (stand only).
 
 namespace Libs::Graphics {
 // pipeline/shaders.cpp: the conversions the pipeline creation applies to PipelineStaticParameters (F47g wrappers).
@@ -122,6 +123,14 @@ std::atomic<int64_t>     g_present_override {-1};
 uint32_t PresentNow() {
 	const auto o = g_present_override.load(std::memory_order_relaxed);
 	return o >= 0 ? static_cast<uint32_t>(o) : GpuTimeProfiler::Frame();
+}
+
+// F47g2 (RC1 of F47h): the flips the GuestGpu parse has queued so far (NoteFlip); the draws parsed now land in the show
+// of the next one.
+std::atomic<uint32_t> g_flips {0};
+
+uint32_t QueuedShow() {
+	return g_flips.load(std::memory_order_relaxed) + 1u;
 }
 
 struct Read {
@@ -312,8 +321,12 @@ thread_local SrcNote t_note;
 struct Upload {
 	Src      src;
 	uint32_t image_index = UINT32_MAX;
+	uint32_t image_gen   = 0;
+	uint64_t address     = 0; // the image range (the resolution of a pooled source hashes size bytes)
+	uint64_t size        = 0;
+	uint32_t q           = 0; // the show the upload lands in (F47g2, RC1)
 	uint32_t n           = 0;
-	uint32_t d           = 0; // the draw number the next OnDraw of present n gets
+	uint32_t d           = 0; // the draw number the next OnDraw of show q gets
 	uint64_t seq         = 0; // global upload sequence
 	uint32_t first_level = 0;
 	uint32_t level_count = 0;
@@ -334,14 +347,75 @@ struct KeyHash {
 	}
 };
 
-std::mutex g_mutex; // records, files, counters - GuestGpu thread in practice
-std::unordered_map<std::pair<uint64_t, uint64_t>, Record, KeyHash> g_uploads;
-std::vector<std::pair<uint64_t, uint64_t>>                           g_pending; // keys with a pending cur or prev
-uint64_t                                                             g_upload_seq = 0;
+// F47g2 (RC2 of F47h): the record of value (ii) belongs to the host image (ImageId index and slot generation - a
+// recycled slot has another generation, so it never inherits the record of the deleted image), not to the range.
+uint64_t ImageKey(uint32_t index, uint32_t generation) {
+	return (static_cast<uint64_t>(generation) << 32u) | index;
+}
 
-// Draw numbering: d of present n.
-uint32_t g_last_n = UINT32_MAX;
+std::string KeyName(uint64_t key) {
+	return fmt::format("{}:{}", static_cast<uint32_t>(key), static_cast<uint32_t>(key >> 32u));
+}
+
+std::mutex g_mutex; // records, files, counters - GuestGpu thread in practice
+std::unordered_map<uint64_t, Record>                                   g_uploads;    // image key -> record
+std::unordered_map<std::pair<uint64_t, uint64_t>, uint64_t, KeyHash>  g_range_last; // range -> image key uploaded last
+std::vector<uint64_t>                                                  g_pending; // image keys with a pending cur or prev
+uint64_t                                                               g_upload_seq = 0;
+
+// Draw numbering: d of show q.
+uint32_t g_last_q = UINT32_MAX;
 uint32_t g_next_d = 0;
+
+uint32_t NextDrawLocked(uint32_t q) {
+	if (q != g_last_q) {
+		g_last_q = q;
+		g_next_d = 0;
+	}
+	return g_next_d++;
+}
+
+// F47g2 (RC3 of F47h): ranges of the stream ring the GPU copies into (NoteRingGpuCopy), of the current wrap generation
+// only (offsets only grow inside a generation; an older generation is dropped at the next note or lookup).
+struct RingCopy {
+	uint64_t offset = 0;
+	uint64_t end    = 0;
+};
+constexpr size_t      kRingCopyCap = 1u << 16u;
+const void*           g_ring_ring  = nullptr;
+uint64_t              g_ring_gen   = 0;
+bool                  g_ring_over  = false; // more than kRingCopyCap copies in this generation: every lookup unmeasured
+std::vector<RingCopy> g_ring_copies;
+uint64_t              g_ring_notes = 0;
+
+void RingSyncLocked(const void* ring, uint64_t generation) {
+	if (ring != g_ring_ring || generation != g_ring_gen) {
+		g_ring_ring = ring;
+		g_ring_gen  = generation;
+		g_ring_over = false;
+		g_ring_copies.clear();
+	}
+}
+
+// What the draw got in [offset, offset + range) of the ring: the hash of the mapped bytes, or why not measured.  No
+// global guard of the copy pool: the stream ring is filled by memcpy (StreamBuffer::Copy, ObtainBuffer, the const-bank
+// CPU copies) or by a copy on the GPU (noted); the pool fills only the staging ring of images.
+std::string RingGivenLocked(const void* ring, uint64_t generation, const uint8_t* mapped, uint64_t mapped_size,
+                            uint64_t offset, uint64_t range) {
+	if (mapped == nullptr || mapped_size == 0 || offset + range > mapped_size) {
+		return "unmapped";
+	}
+	RingSyncLocked(ring, generation);
+	if (g_ring_over) {
+		return "unmeasured:gpu_copy_overflow";
+	}
+	const auto it = std::upper_bound(g_ring_copies.begin(), g_ring_copies.end(), offset,
+	                                 [](uint64_t o, const RingCopy& c) { return o < c.end; });
+	if (it != g_ring_copies.end() && it->offset < offset + std::max<uint64_t>(range, 1)) {
+		return "unmeasured:gpu_copy";
+	}
+	return fmt::format("{:016x}", XXH3_64bits(mapped + offset, static_cast<size_t>(range)));
+}
 
 // Files and counters (e).
 std::unordered_set<std::string> g_files;
@@ -352,8 +426,10 @@ uint64_t                        g_draws      = 0;
 std::set<uint32_t>              g_frames;
 uint64_t                        g_imgs = 0, g_bufs = 0;
 
-void ResolveOne(Upload* u, uint64_t address, uint64_t size) {
-	auto& s = u->src;
+void ResolveOne(Upload* u) {
+	const auto address = u->address;
+	const auto size    = u->size;
+	auto&      s       = u->src;
 	if (std::strcmp(s.st, "pending") != 0) {
 		return;
 	}
@@ -370,9 +446,10 @@ void ResolveOne(Upload* u, uint64_t address, uint64_t size) {
 		s.why = "ring_generation_moved";
 	}
 	if (u->referenced) {
-		LOGF("F47dt: kind=srcres useq=%" PRIu64 " addr=0x%010" PRIx64 " size=0x%" PRIx64 " sst=%s sh=%016" PRIx64
-		     " n_res=%u\n",
-		     u->seq, address, size, s.st, s.hash, PresentNow());
+		LOGF("F47dt: kind=srcres useq=%" PRIu64 " sid=%s addr=0x%010" PRIx64 " size=0x%" PRIx64 " sst=%s sh=%016" PRIx64
+		     " q_res=%u n_res=%u\n",
+		     u->seq, KeyName(ImageKey(u->image_index, u->image_gen)).c_str(), address, size, s.st, s.hash,
+		     QueuedShow(), PresentNow());
 	}
 }
 
@@ -380,15 +457,15 @@ void ResolvePendingLocked() {
 	if (g_pending.empty()) {
 		return;
 	}
-	std::vector<std::pair<uint64_t, uint64_t>> keep;
-	for (const auto& key: g_pending) {
+	std::vector<uint64_t> keep;
+	for (const auto key: g_pending) {
 		auto it = g_uploads.find(key);
 		if (it == g_uploads.end()) {
 			continue;
 		}
-		ResolveOne(&it->second.cur, key.first, key.second);
+		ResolveOne(&it->second.cur);
 		if (it->second.has_prev) {
-			ResolveOne(&it->second.prev, key.first, key.second);
+			ResolveOne(&it->second.prev);
 		}
 		const bool still = std::strcmp(it->second.cur.src.st, "pending") == 0 ||
 		                   (it->second.has_prev && std::strcmp(it->second.prev.src.st, "pending") == 0);
@@ -444,15 +521,17 @@ const char* WriteFileLocked(uint64_t address, uint64_t hash, const uint8_t* data
 
 void AppendSrc(std::string* s, const char* p, const Upload& u) {
 	fmt::format_to(std::back_inserter(*s),
-	               " {}k={} {}st={} {}why={} {}h={} {}exact={} {}n={} {}d={} {}seq={} {}lv={}+{} {}pend={} {}comp={}",
+	               " {}k={} {}st={} {}why={} {}h={} {}exact={} {}q={} {}n={} {}d={} {}seq={} {}lv={}+{} {}pend={} {}comp={}",
 	               p, KindName(u.src.kind), p, u.src.st, p, u.src.why, p,
 	               std::strcmp(u.src.st, "hashed") == 0 ? fmt::format("{:016x}", u.src.hash) : std::string("-"), p,
-	               u.src.exact, p, u.n, p, u.d, p, u.seq, p, u.first_level, u.level_count, p, u.pending, p,
+	               u.src.exact, p, u.q, p, u.n, p, u.d, p, u.seq, p, u.first_level, u.level_count, p, u.pending, p,
 	               u.completion ? 1 : 0);
 }
 
-// Appends "ih= ihow= igc= ifile= | s*= | cmp=" for [address, address + size) to *s.  n/d: the draw.
-void MeasureRangeLocked(std::string* s, uint64_t address, uint64_t size, uint32_t n, uint32_t d) {
+// Appends "ih= ihow= igc= ifile= | sid= rlast= s*= | cmp=" for the image key (its range [address, address + size)) to
+// *s.  q/n/d: the draw.
+void MeasureRangeLocked(std::string* s, uint64_t key, uint64_t address, uint64_t size, uint32_t q, uint32_t n,
+                        uint32_t d) {
 	Read r;
 	ReadGuest(address, size, &r);
 	const uint64_t ih    = r.ok ? Hash(r.data, size) : 0;
@@ -460,11 +539,20 @@ void MeasureRangeLocked(std::string* s, uint64_t address, uint64_t size, uint32_
 	const char*    file  = r.ok ? WriteFileLocked(address, ih, r.data, size, n, d) : "-";
 	fmt::format_to(std::back_inserter(*s), " | ih={} ihow={} igc={} ifile={}",
 	               r.ok ? fmt::format("{:016x}", ih) : std::string("-"), r.how, gc, file);
-	auto it = g_uploads.find({address, size});
-	if (it == g_uploads.end()) {
-		fmt::format_to(std::back_inserter(*s), " | sk=norecord cmp=und");
+	const auto last  = g_range_last.find({address, size});
+	const auto rlast = last != g_range_last.end() ? KeyName(last->second) : std::string("-");
+	auto       it    = g_uploads.find(key);
+	if (it == g_uploads.end() || it->second.cur.address != address || it->second.cur.size != size) {
+		// No upload of THIS image: another image of the same range was uploaded (its bytes say nothing about this one).
+		if (last != g_range_last.end() && last->second != key) {
+			fmt::format_to(std::back_inserter(*s), " | sid={} rlast={} sk=other_image cmp=und", KeyName(last->second),
+			               rlast);
+		} else {
+			fmt::format_to(std::back_inserter(*s), " | sid=- rlast={} sk=norecord cmp=und", rlast);
+		}
 		return;
 	}
+	fmt::format_to(std::back_inserter(*s), " | sid={} rlast={}", KeyName(key), rlast);
 	auto& rec = it->second;
 	AppendSrc(s, "s", rec.cur);
 	if (std::strcmp(rec.cur.src.st, "pending") == 0) {
@@ -489,7 +577,7 @@ void MeasureRangeLocked(std::string* s, uint64_t address, uint64_t size, uint32_
 		const bool partial = rec.cur.pending != 0;
 		cmp = (c == 2 && !partial) ? "ne" : ((c == 1 && p == 1 && !partial) ? "eq" : "und");
 	}
-	fmt::format_to(std::back_inserter(*s), " cmp={} upl_now={}", cmp, (rec.cur.n == n && rec.cur.d == d) ? 1 : 0);
+	fmt::format_to(std::back_inserter(*s), " cmp={} upl_now={}", cmp, (rec.cur.q == q && rec.cur.d == d) ? 1 : 0);
 }
 
 char Swz(vk::ComponentSwizzle c) {
@@ -547,9 +635,9 @@ bool Wanted(uint64_t ps_hash) {
 
 void PrintStat(const char* when) {
 	LOGF("F47dtStat: when=%s draws=%" PRIu64 " frames=%zu files=%" PRIu64 " bytes=%" PRIu64 " capped=%d imgs=%" PRIu64
-	     " bufs=%" PRIu64 " pending=%zu\n",
+	     " bufs=%" PRIu64 " pending=%zu flips=%u ring_gpu_notes=%" PRIu64 "\n",
 	     when, g_draws, g_frames.size(), g_file_count, g_file_bytes, g_capped ? 1 : 0, g_imgs, g_bufs,
-	     g_pending.size());
+	     g_pending.size(), g_flips.load(), g_ring_notes);
 }
 
 } // namespace
@@ -695,8 +783,44 @@ void NoteImageSource(SrcKind kind, uint64_t vaddr, uint64_t size, const uint8_t*
 	}
 }
 
-void NoteImageUpload(uint32_t image_index, uint64_t address, uint64_t size, uint32_t first_level, uint32_t level_count,
-                     uint32_t pending_levels, bool pending_completion) {
+void NoteFlip(uint32_t path, uint64_t request_id) {
+	if (!On()) {
+		return;
+	}
+	const uint32_t q = g_flips.fetch_add(1, std::memory_order_relaxed) + 1u;
+	LOGF("F47dt: kind=flip q=%u path=%u rid=%" PRIu64 " n=%u\n", q, path, request_id, PresentNow());
+}
+
+void NoteShown(uint64_t count, uint64_t request_id) {
+	if (!On()) {
+		return;
+	}
+	LOGF("F47dt: kind=shown n=%" PRIu64 " rid=%" PRIu64 "\n", count, request_id);
+}
+
+void NoteRingGpuCopy(const void* ring, uint64_t offset, uint64_t size, uint64_t generation) {
+	if (!On()) {
+		return;
+	}
+	std::lock_guard lock(g_mutex);
+	g_ring_notes++;
+	RingSyncLocked(ring, generation);
+	if (g_ring_over) {
+		return;
+	}
+	if (g_ring_copies.size() >= kRingCopyCap) {
+		g_ring_over = true;
+		g_ring_copies.clear();
+		return;
+	}
+	const RingCopy c {offset, offset + std::max<uint64_t>(size, 1)};
+	const auto     at = std::upper_bound(g_ring_copies.begin(), g_ring_copies.end(), c.offset,
+	                                     [](uint64_t o, const RingCopy& x) { return o < x.offset; });
+	g_ring_copies.insert(at, c);
+}
+
+void NoteImageUpload(uint32_t image_index, uint32_t image_generation, uint64_t address, uint64_t size,
+                     uint32_t first_level, uint32_t level_count, uint32_t pending_levels, bool pending_completion) {
 	if (!On()) {
 		return;
 	}
@@ -710,25 +834,34 @@ void NoteImageUpload(uint32_t image_index, uint64_t address, uint64_t size, uint
 	} else {
 		u.src.why = note.valid ? "note_range_differs" : "no_note";
 	}
-	const auto n  = PresentNow();
+	const auto q  = QueuedShow();
 	u.image_index = image_index;
-	u.n           = n;
-	u.d           = n == g_last_n ? g_next_d : 0;
+	u.image_gen   = image_generation;
+	u.address     = address;
+	u.size        = size;
+	u.q           = q;
+	u.n           = PresentNow();
+	u.d           = q == g_last_q ? g_next_d : 0;
 	u.seq         = ++g_upload_seq;
 	u.first_level = first_level;
 	u.level_count = level_count;
 	u.pending     = pending_levels;
 	u.completion  = pending_completion;
-	auto& rec     = g_uploads[{address, size}];
+	const auto key = ImageKey(image_index, image_generation);
+	auto&      rec = g_uploads[key];
 	if (pending_completion) {
 		rec.prev     = rec.cur;
 		rec.has_prev = true;
 	} else {
 		rec.has_prev = false;
 	}
-	rec.cur = u;
-	if (std::strcmp(u.src.st, "pending") == 0) {
-		g_pending.emplace_back(address, size);
+	rec.cur                        = u;
+	g_range_last[{address, size}] = key;
+	if (std::strcmp(u.src.st, "pending") == 0 ||
+	    (rec.has_prev && std::strcmp(rec.prev.src.st, "pending") == 0)) {
+		if (std::find(g_pending.begin(), g_pending.end(), key) == g_pending.end()) {
+			g_pending.push_back(key);
+		}
 	}
 }
 
@@ -760,26 +893,23 @@ void OnDraw(RenderContext& context, const CommandBuffer& buffer, const DrawArgs&
 	const PsRuntime ps_rt = t_ps;
 	t_ps.valid           = false;
 	std::lock_guard lock(g_mutex);
+	const auto      q = QueuedShow();
 	const auto      n = PresentNow();
-	if (n != g_last_n) {
-		g_last_n = n;
-		g_next_d = 0;
-	}
-	const uint32_t d = g_next_d++;
-	if (args.ps == nullptr || !*args.ps || !Wanted(args.ps->program->shader_hash) || n < Cfg().first ||
-	    n > Cfg().last) {
+	const uint32_t  d = NextDrawLocked(q);
+	if (args.ps == nullptr || !*args.ps || !Wanted(args.ps->program->shader_hash) || q < Cfg().first ||
+	    q > Cfg().last) {
 		return;
 	}
 	ResolvePendingLocked();
 	g_draws++;
-	g_frames.insert(n);
+	g_frames.insert(q);
 	const auto& program   = *args.ps->program;
 	const auto& resources = args.ps->resources;
 	const auto* pixel     = args.pixel;
 	// (a) header and the raw PS user data
-	LOGF("F47dt: kind=draw n=%u d=%u gf=%d submit=%" PRIu64 " draw=%s ps=%016" PRIx64 " vs=%016" PRIx64
+	LOGF("F47dt: kind=draw q=%u n=%u d=%u gf=%d submit=%" PRIu64 " draw=%s ps=%016" PRIx64 " vs=%016" PRIx64
 	     " idx=%u inst=%u ready=%d images=%zu buffers=%zu samplers=%zu ud=%zu:%s\n",
-	     n, d, args.guest_frame, args.submit_id, args.draw_name, program.shader_hash,
+	     q, n, d, args.guest_frame, args.submit_id, args.draw_name, program.shader_hash,
 	     (args.vs != nullptr && *args.vs) ? args.vs->program->shader_hash : 0u, args.index_count, args.instance_count,
 	     args.pipeline_ready ? 1 : 0, program.info.images.size(), program.info.buffers.size(),
 	     program.info.samplers.size(), resources.user_data.size(),
@@ -788,7 +918,7 @@ void OnDraw(RenderContext& context, const CommandBuffer& buffer, const DrawArgs&
 	// (b) images
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
 		g_imgs++;
-		std::string s = fmt::format("F47dt: kind=img n={} d={} i={} cls={}", n, d, i,
+		std::string s = fmt::format("F47dt: kind=img q={} n={} d={} i={} cls={}", q, n, d, i,
 		                            program.info.images[i].resource_class ==
 		                                    ShaderRecompiler::IR::ImageResourceClass::Sampled
 		                                ? "sampled"
@@ -854,11 +984,14 @@ void OnDraw(RenderContext& context, const CommandBuffer& buffer, const DrawArgs&
 		               img.IsDefinitelyCpuDirty() ? 1 : 0, img.IsMaybeCpuDirty() ? 1 : 0,
 		               img.IsBufferModified() ? 1 : 0, img.IsGpuModified() ? 1 : 0,
 		               (!img.IsCpuDirty() && !img.IsBufferModified()) ? 1 : 0, img.pending_levels);
-		MeasureRangeLocked(&s, range.address, range.size, n, d);
+		MeasureRangeLocked(&s, ImageKey(b->image_id.index, b->image_id.generation), range.address, range.size, q, n, d);
 		LOGF("%s\n", s.c_str());
 	}
 	// (c) buffers
-	auto&       stream     = context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream);
+	auto&       bcache     = context.GetBufferCache();
+	auto&       stream     = bcache.GetUtilityBuffer(MemoryUsage::Stream);
+	// F47g2 (RC3 of F47h): no global guard of the copy pool (the pool does not fill the stream ring); a range the GPU
+	// copied into the ring (NoteRingGpuCopy) is "unmeasured:gpu_copy".
 	const auto  ring_hash  = [&stream](const vk::DescriptorBufferInfo& info, std::string* out) {
 		if (info.buffer != stream.Handle()) {
 			*out = "-";
@@ -866,20 +999,12 @@ void OnDraw(RenderContext& context, const CommandBuffer& buffer, const DrawArgs&
 		}
 		const auto mapped = stream.Mapped();
 		const auto range  = info.range == VK_WHOLE_SIZE ? 0 : info.range;
-		if (mapped.empty() || info.offset + range > mapped.size()) {
-			*out = "unmapped";
-			return true;
-		}
-		if (Common::AsyncCopyCompleted() < Common::AsyncCopySequence()) {
-			*out = "copy_in_flight";
-			return true;
-		}
-		*out = fmt::format("{:016x}", Hash(mapped.data() + info.offset, range));
+		*out = RingGivenLocked(&stream, stream.Generation(), mapped.data(), mapped.size(), info.offset, range);
 		return true;
 	};
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 		g_bufs++;
-		std::string s = fmt::format("F47dt: kind=buf n={} d={} i={} rw={}", n, d, i,
+		std::string s = fmt::format("F47dt: kind=buf q={} n={} d={} i={} rw={}", q, n, d, i,
 		                            program.info.buffers[i].written ? 1 : 0);
 		const ShaderRecompiler::IR::DescriptorValue* raw =
 		    i < resources.buffers.size() ? &resources.buffers[i] : nullptr;
@@ -902,11 +1027,18 @@ void OnDraw(RenderContext& context, const CommandBuffer& buffer, const DrawArgs&
 		ReadGuest(src.address, src.size, &r);
 		const uint64_t gh   = r.ok ? Hash(r.data, src.size) : 0;
 		const char*    file = r.ok ? WriteFileLocked(src.address, gh, r.data, src.size, n, d) : "-";
+		// F47g2 (RC3 of F47h): the range has GPU writes (the "gpu" decision of the const-bank copy, with the locked
+		// tracker query - no counters): the guest bytes are not what the GPU buffer holds.
+		const bool     ggpu = src.size != 0 && src.address != 0 &&
+		                  (bcache.IsRegionGpuModified(src.address, src.size) ||
+		                   bcache.HasGpuDirtyBytes(src.address, src.size));
 		std::string    given;
 		const bool     ring = ring_hash(info, &given);
 		fmt::format_to(std::back_inserter(s),
-		               " | addr=0x{:012x} size=0x{:x} gh={} ghow={} gfile={} | given={} goff=0x{:x} grange=0x{:x} gvh={}",
-		               src.address, src.size, r.ok ? fmt::format("{:016x}", gh) : std::string("-"), r.how, file,
+		               " | addr=0x{:012x} size=0x{:x} gh={} ghow={} ggpu={} gfile={} | given={} goff=0x{:x} grange=0x{:x}"
+		               " gvh={}",
+		               src.address, src.size, r.ok ? fmt::format("{:016x}", gh) : std::string("-"), r.how, ggpu ? 1 : 0,
+		               file,
 		               ring ? "ring_copy" : (info.buffer ? "cache_buffer" : "null"), info.offset,
 		               info.range == VK_WHOLE_SIZE ? 0 : info.range,
 		               ring ? given : std::string(info.buffer ? "unmeasured:gpu_memory" : "-"));
@@ -958,14 +1090,14 @@ void OnDraw(RenderContext& context, const CommandBuffer& buffer, const DrawArgs&
 		        ? std::string("-")
 		        : fmt::format("{:016x}", Hash(reinterpret_cast<const uint8_t*>(pixel->shader_data.data()),
 		                                      pixel->shader_data.size() * 4u));
-		LOGF("F47dt: kind=srt n=%u d=%u words=%zu snaph=%s given=%s gvh=%s %s shader_data=%zu sdh=%s\n", n, d,
+		LOGF("F47dt: kind=srt q=%u n=%u d=%u words=%zu snaph=%s given=%s gvh=%s %s shader_data=%zu sdh=%s\n", q, n, d,
 		     resources.flattened_srt.size(), snaph.c_str(),
 		     ring ? "ring_copy" : (pixel->flattened_srt.buffer ? "other" : "none"), ring ? given.c_str() : "-",
 		     fresh_s.c_str(), pixel->shader_data.size(), sdh.c_str());
 	}
 	// (g) raw guest register words, last write before this draw
 	{
-		std::string s = fmt::format("F47dt: kind=reg n={} d={}", n, d);
+		std::string s = fmt::format("F47dt: kind=reg q={} n={} d={}", q, n, d);
 		AppendRegs(&s, &buffer.GetRegisters());
 		LOGF("%s\n", s.c_str());
 	}
@@ -973,7 +1105,7 @@ void OnDraw(RenderContext& context, const CommandBuffer& buffer, const DrawArgs&
 	// (the same functions SetGraphicsDynamicParams calls)
 	{
 		const auto& ctx = buffer.GetRegisters();
-		std::string s   = fmt::format("F47dt: kind=vk n={} d={} key={}", n, d, key_valid ? 1 : 0);
+		std::string s   = fmt::format("F47dt: kind=vk q={} n={} d={} key={}", q, n, d, key_valid ? 1 : 0);
 		if (key_valid) {
 			const auto& p  = t_key.params;
 			const auto& rd = t_key.rendering;
@@ -1056,25 +1188,22 @@ void SetPresentForStand(uint32_t n) {
 	g_present_override.store(n);
 }
 
-void StandImage(uint32_t slot, uint64_t address, uint64_t size) {
+void StandImage(uint32_t slot, uint32_t image_index, uint64_t address, uint64_t size) {
 	if (!On()) {
 		return;
 	}
 	std::lock_guard lock(g_mutex);
+	const auto      q = QueuedShow();
 	const auto      n = PresentNow();
-	if (n != g_last_n) {
-		g_last_n = n;
-		g_next_d = 0;
-	}
-	const uint32_t d = g_next_d++;
+	const uint32_t  d = NextDrawLocked(q);
 	ResolvePendingLocked();
 	g_draws++;
-	g_frames.insert(n);
+	g_frames.insert(q);
 	g_imgs++;
-	std::string s = fmt::format("F47dt: kind=img n={} d={} i={} cls=stand raw=- base=- | id=- img=0x{:010x}+0x{:x}"
+	std::string s = fmt::format("F47dt: kind=img q={} n={} d={} i={} cls=stand raw=- base=- | id={} img=0x{:010x}+0x{:x}"
 	                            " | view=-",
-	                            n, d, slot, address, size);
-	MeasureRangeLocked(&s, address, size, n, d);
+	                            q, n, d, slot, image_index, address, size);
+	MeasureRangeLocked(&s, ImageKey(image_index, 1), address, size, q, n, d);
 	LOGF("%s\n", s.c_str());
 }
 
@@ -1086,15 +1215,27 @@ void StandRegs(const void* ctx) {
 	std::string s;
 	{
 		std::lock_guard lock(g_mutex);
-		const auto      n = PresentNow();
-		if (n != g_last_n) {
-			g_last_n = n;
-			g_next_d = 0;
-		}
-		s = fmt::format("F47dt: kind=reg n={} d={}", n, g_next_d++);
+		const auto      q = QueuedShow();
+		s = fmt::format("F47dt: kind=reg q={} n={} d={}", q, PresentNow(), NextDrawLocked(q));
 	}
 	AppendRegs(&s, ctx);
 	LOGF("%s\n", s.c_str());
+}
+
+void StandRing(const void* ring, uint64_t generation, const uint8_t* mapped, uint64_t mapped_size, uint64_t offset,
+               uint64_t range) {
+	if (!On()) {
+		return;
+	}
+	std::lock_guard lock(g_mutex);
+	const auto      q = QueuedShow();
+	const auto      d = NextDrawLocked(q);
+	// inflight: a pooled copy is still in flight now (the old global guard would have said copy_in_flight).
+	const int inflight = Common::AsyncCopyCompleted() < Common::AsyncCopySequence() ? 1 : 0;
+	const auto gvh     = RingGivenLocked(ring, generation, mapped, mapped_size, offset, range);
+	LOGF("F47dt: kind=ringstand q=%u n=%u d=%u gen=%" PRIu64 " off=0x%" PRIx64 " range=0x%" PRIx64
+	     " inflight=%d gvh=%s\n",
+	     q, PresentNow(), d, generation, offset, range, inflight, gvh.c_str());
 }
 
 } // namespace Libs::Graphics::DiagF47Dt

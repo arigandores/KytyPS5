@@ -4135,6 +4135,11 @@ void CommandProcessor::Flip() {
 	auto& command = CurrentBuffer();
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                         m_flip.flip_arg);
+	// Track F, F47g2 (HPP-828, RC1 of F47h): KYTY_DIAG_F47DT - the draws parsed so far land in the show of this flip
+	// (measurement only: a counter and a line).
+	if (DiagF47Dt::On()) {
+		DiagF47Dt::NoteFlip(0, request);
+	}
 	MarkFlipIfIncomplete(command, request);
 	SkipCeilFlipBoundary(request, false); // Session 123, knob "skipceil"
 	Sync::WriteAtEndOfPipeOnlyFlip(m_submit_id, command, m_flip.handle, m_flip.index,
@@ -4162,6 +4167,11 @@ void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 	auto& command = CurrentBuffer();
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                         m_flip.flip_arg);
+	// Track F, F47g2 (HPP-828, RC1 of F47h): KYTY_DIAG_F47DT - the draws parsed so far land in the show of this flip
+	// (measurement only: a counter and a line).
+	if (DiagF47Dt::On()) {
+		DiagF47Dt::NoteFlip(1, request);
+	}
 	MarkFlipIfIncomplete(command, request);
 	SkipCeilFlipBoundary(request, false); // Session 123, knob "skipceil"
 	Sync::WriteAtEndOfPipeWithFlip32(m_submit_id, command, static_cast<uint32_t*>(dst_gpu_addr),
@@ -4196,6 +4206,11 @@ void CommandProcessor::FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache
 	auto& command = CurrentBuffer();
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                         m_flip.flip_arg);
+	// Track F, F47g2 (HPP-828, RC1 of F47h): KYTY_DIAG_F47DT - the draws parsed so far land in the show of this flip
+	// (measurement only: a counter and a line).
+	if (DiagF47Dt::On()) {
+		DiagF47Dt::NoteFlip(2, request);
+	}
 	MarkFlipIfIncomplete(command, request);
 	SkipCeilFlipBoundary(request, false); // Session 123, knob "skipceil"
 	Sync::WriteAtEndOfPipeWithInterruptWriteBackFlip32(
@@ -4219,6 +4234,11 @@ void CommandProcessor::PrepareCpuFlip(uint64_t request_id) {
 	ProcessorScope processor_scope(*this);
 
 	m_renderer.GetVideoOut().PrepareFlip(request_id, CurrentBuffer());
+	// Track F, F47g2 (HPP-828, RC1 of F47h): KYTY_DIAG_F47DT - the draws parsed so far land in the show of this flip
+	// (measurement only: a counter and a line).
+	if (DiagF47Dt::On()) {
+		DiagF47Dt::NoteFlip(3, request_id);
+	}
 	SkipCeilFlipBoundary(request_id, true); // Session 123, knob "skipceil": after PrepareFlip, before CompleteFlip
 	Common::FrameStats::SiteScope site_scope("cpu-flip");
 	GetScheduler().Flush();

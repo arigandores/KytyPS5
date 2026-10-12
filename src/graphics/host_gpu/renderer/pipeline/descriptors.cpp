@@ -31,6 +31,7 @@
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/hostMemory.h"
 #include "graphics/host_gpu/renderer/debug.h"
+#include "graphics/host_gpu/renderer/diagF47Dt.h" // Track F, F47g2 (KYTY_DIAG_F47DT)
 #include "graphics/host_gpu/renderer/image/imageView.h"
 #include "graphics/host_gpu/renderer/image/textureCommon.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
@@ -1013,6 +1014,11 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 				                vk::AccessFlagBits::eShaderWrite | vk::AccessFlagBits::eTransferWrite,
 				                vk::AccessFlagBits::eHostWrite, vk::AccessFlagBits::eShaderRead,
 				                vk::AccessFlagBits::eUniformRead | vk::AccessFlagBits::eShaderRead);
+				// Track F, F47g2 (HPP-828, RC3 of F47h): KYTY_DIAG_F47DT - the GPU writes this ring range after the submit
+				// (measurement only: a note).
+				if (DiagF47Dt::On()) {
+					DiagF47Dt::NoteRingGpuCopy(&stream, stream_offset, size, stream.Generation());
+				}
 			}
 			if (Common::FrameStats::Enabled()) {
 				Common::FrameStats::Add(gpu ? Common::FrameStats::Counter::CbankCopyGpu

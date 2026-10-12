@@ -124,6 +124,17 @@ public:
 	}
 	// Track F, F47g (HPP-824): the image without the LRU touch of GetImage (KYTY_DIAG_F47DT reads only).
 	[[nodiscard]] const Image& PeekImage(ImageId id) const { return m_slot_images[id]; }
+	// Track F, F47g2 (HPP-828, RC2 of F47h): the id of an image by its address (KYTY_DIAG_F47DT reads only; one pass
+	// over the slots, no touch).
+	[[nodiscard]] ImageId IdOfImageForDiag(const Image& image) const {
+		ImageId found {};
+		m_slot_images.ForEach([&](ImageId id, const Image& candidate) {
+			if (&candidate == &image) {
+				found = id;
+			}
+		});
+		return found;
+	}
 	void MarkGpuWritten(ImageId id);
 
 	[[nodiscard]] bool ClearImageFromBuffer(CommandBuffer& command, uint64_t address, uint64_t size,

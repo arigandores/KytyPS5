@@ -1,0 +1,4 @@
+2026-10-12T06:59:45Z M1a start HPP-835; subjects.tsv 564
+2026-10-12T07:07:30Z prep done: commits.json overlap.tsv ophist.tsv knobs.md buckets/ agent_rules.md
+2026-10-12T07:36:54Z 9 worker agents returned (agents/*.tsv, m883.md, tests.md)
+2026-10-12T07:42:09Z out/ assembled (upstream.tsv, upstream_detail.tsv, upstream.md, check_m1a.py, m883.md, tests.md, evidence/, tools/, agents/)

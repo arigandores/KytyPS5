@@ -1,0 +1,791 @@
+sha	file	up_hunks	our_knob_hunks_hit	our_other_hunks_hit	knobs_in_file
+79120d53e	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7af28c267	src/graphics/presentation/window/hostInput.cpp	1	0	0	KYTY_FIX_F24
+acd7435d3	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+9cf7963f4	CMakeLists.txt	2	0	0	KYTY_FIX_B36
+0d9e95d96	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0d9e95d96	tests/shaderCfgTests.cpp	2	1 [call-site]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+629ae1ac0	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+441367b1a	tests/ShaderRecompilerComputeTests.cpp	6	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+957452d6f	src/loader/runtimeLinker.cpp	1	0	0	KYTY_GAME_PATCH KYTY_PVAR
+7c9148dd4	tests/shaderCfgTests.cpp	2	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+77680ce9d	src/loader/runtimeLinker.cpp	1	0	0	KYTY_GAME_PATCH KYTY_PVAR
+86e5e0140	src/loader/runtimeLinker.cpp	13	0	0	KYTY_GAME_PATCH KYTY_PVAR
+71f52f9d9	src/libs/libKernel.cpp	24	0	6	KYTY_PVAR
+ded696495	src/libs/libKernel.cpp	20	0	7	KYTY_PVAR
+5b541375a	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+5b541375a	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+5b541375a	tests/shaderCfgTests.cpp	2	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+af3a3f4bf	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	2	0	0	KYTY_FIX_F19
+c1dccd7db	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8589731a2	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8589731a2	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	9	0	5	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8589731a2	tests/ShaderRecompilerComputeTests.cpp	18	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+fb94a819c	tests/shaderCfgTests.cpp	2	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+b594f8c83	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	5	2 [KYTY_S_PCW KYTY_S_PCW_FORCE_MS]	1	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+b594f8c83	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_F26]	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f38d738ee	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	1	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f38d738ee	src/graphics/presentation/window/vulkanWindow.cpp	5	0	0	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+f38d738ee	tests/ShaderRecompilerComputeTests.cpp	6	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e0ecffed7	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+e0ecffed7	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+e0ecffed7	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+e0ecffed7	tests/ShaderRecompilerComputeTests.cpp	6	1 [KYTY_FIX_F20]	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+235e24d44	tests/shaderCfgTests.cpp	5	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+47957faa1	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+47957faa1	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f30afc184	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+f30afc184	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f30afc184	tests/shaderCfgTests.cpp	2	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+4e6f4f99d	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+ce629e039	src/graphics/presentation/window/window.cpp	1	0	0	KYTY_FIX_F24
+ce629e039	src/libs/controller.cpp	12	1 [KYTY_FIX_B24]	12	KYTY_FIX_B24 KYTY_FIX_F24
+ce629e039	src/libs/controller.h	2	1 [KYTY_FIX_B24]	1	KYTY_FIX_B24
+4b7768656	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+4b7768656	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+c66d977c1	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+c66d977c1	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cc8e02380	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+cc8e02380	src/libs/audio.cpp	6	0	3	KYTY_FIX_F8
+cc8e02380	src/loader/runtimeLinker.cpp	8	0	0	KYTY_GAME_PATCH KYTY_PVAR
+2bf78a94e	src/kernel/fileSystem.cpp	3	0	0	KYTY_FIX_B4 KYTY_FIX_F25
+2bf78a94e	src/loader/runtimeLinker.cpp	4	0	0	KYTY_GAME_PATCH KYTY_PVAR
+2bf78a94e	tests/shaderCfgTests.cpp	1014	0	2	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+1211958b4	src/kernel/pthread.cpp	1	0	0	KYTY_GAME_PATCH
+1211958b4	src/libs/libKernel.cpp	5	0	0	KYTY_PVAR
+5dc644edb	src/graphics/presentation/window/swapchain.cpp	1	0	1	KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE
+5dc644edb	src/graphics/presentation/window/vulkanWindow.cpp	1	0	0	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+5dc644edb	src/graphics/presentation/window/window.cpp	5	0	1	KYTY_FIX_F24
+5dc644edb	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+c5cebc1d1	src/kernel/pthread.cpp	2	0	2	KYTY_GAME_PATCH
+c5cebc1d1	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+104530eaf	src/graphics/host_gpu/regionManager.h	1	0	0	KYTY_FIX_B12 KYTY_FIX_B13
+649367472	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1	1 [KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY]	1	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+649367472	src/graphics/presentation/window/vulkanWindow.cpp	3	0	0	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+165234b15	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+bfc8cd0e0	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+bfc8cd0e0	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+bfc8cd0e0	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+bfc8cd0e0	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+95d3d9d3a	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+007d7ea2e	src/libs/libAudio.cpp	1	0	0	KYTY_FIX_B9A KYTY_FIX_DUALSRC
+c2b7b0b58	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+394e63890	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+394e63890	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5b7d3343c	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+5b7d3343c	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+ea6aae857	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+ea6aae857	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f100f785d	src/libs/controller.cpp	1	0	0	KYTY_FIX_B24 KYTY_FIX_F24
+f100f785d	src/libs/controller.h	1	0	0	KYTY_FIX_B24
+b61b3f2a4	src/kernel/fileSystem.cpp	6	1 [KYTY_FIX_B4]	0	KYTY_FIX_B4 KYTY_FIX_F25
+07c9978ac	src/graphics/presentation/window/window.cpp	5	0	1	KYTY_FIX_F24
+cfbaee07f	CMakeLists.txt	2	0	0	KYTY_FIX_B36
+303a0203b	src/libs/audio.cpp	37	0	2	KYTY_FIX_F8
+82b2711cd	src/libs/audio.cpp	15	0	1	KYTY_FIX_F8
+0ad9149c9	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1	1 [call-site]	0	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+0ad9149c9	tests/ShaderRecompilerComputeTests.cpp	5	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cfb110e0a	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cfb110e0a	tests/shaderCfgTests.cpp	2	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+549495575	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+549495575	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+d7da24447	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+81af13014	src/graphics/presentation/window/hostInput.cpp	1	0	0	KYTY_FIX_F24
+81af13014	src/graphics/presentation/window/window.cpp	3	0	0	KYTY_FIX_F24
+fe4f9423e	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+ba55ba5dc	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	2	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+ba55ba5dc	tests/ShaderRecompilerComputeTests.cpp	5	1 [KYTY_FIX_F19]	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+61761b65f	src/graphics/presentation/videoOut.cpp	3	0	2	KYTY_PVAR
+f9e56ef8a	tests/shaderCfgTests.cpp	5	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+476204cd4	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1	0	2	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+476204cd4	tests/shaderCfgTests.cpp	2	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+cfb8f7b24	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cfb8f7b24	tests/shaderCfgTests.cpp	1	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+b2a80a3a9	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	12	0	3	KYTY_FIX_B1B KYTY_FIX_F10
+b2a80a3a9	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7c9e18e73	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	3	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7c9e18e73	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+4b074cf9e	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	10	0	0	KYTY_FIX_F19
+8dc9b9d53	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8dc9b9d53	tests/shaderCfgTests.cpp	1	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+90471836f	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	4	0	4	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+90471836f	tests/ShaderRecompilerComputeTests.cpp	12	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+13fcb3a13	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	4	1 [KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU]	3	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+13fcb3a13	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	8	0	5	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+13fcb3a13	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	36	1 [call-site]	10	KYTY_FIX_F19
+13fcb3a13	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h	1	0	0	KYTY_FIX_F19
+13fcb3a13	tests/ShaderRecompilerComputeTests.cpp	46	0	2	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+13fcb3a13	tests/shaderCfgTests.cpp	16	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+03c55e571	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4	0	3	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+03c55e571	tests/shaderCfgTests.cpp	11	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+8a5e5c547	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+eb8a5504a	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	4	0	0	KYTY_FIX_F19
+eb8a5504a	tests/ShaderRecompilerComputeTests.cpp	5	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+66f1a8236	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	13	0	1	KYTY_FIX_F19
+d30dca78b	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1	0	1	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+d30dca78b	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	5	0	0	KYTY_FIX_F19
+d30dca78b	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+d30dca78b	tests/shaderCfgTests.cpp	9	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+ef83ba65a	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	2	0	0	KYTY_FIX_F19
+5ed5fdd36	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+d8a441249	src/graphics/host_gpu/renderer/cache/textureCache.cpp	22	0	19	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+d8a441249	src/graphics/host_gpu/renderer/cache/textureCache.h	1	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+d8a441249	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+79530b4c5	tests/ShaderRecompilerComputeTests.cpp	3	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3fad77fd8	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	2	0	5	KYTY_FIX_B12 KYTY_FIX_F5CMU
+ee3749d9b	tests/ShaderRecompilerComputeTests.cpp	8	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+9860c2bbf	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3	0	7	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+9860c2bbf	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b5ba482fc	src/graphics/presentation/videoOut.cpp	1	0	0	KYTY_PVAR
+b5ba482fc	src/kernel/fileSystem.cpp	5	0	0	KYTY_FIX_B4 KYTY_FIX_F25
+b5ba482fc	src/libs/libKernel.cpp	2	0	0	KYTY_PVAR
+f68c77d78	CMakeLists.txt	3	0	0	KYTY_FIX_B36
+f68c77d78	src/graphics/presentation/window/hostInput.cpp	24	2 [KYTY_FIX_F24]	3	KYTY_FIX_F24
+f68c77d78	src/graphics/presentation/window/swapchain.cpp	1	0	0	KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE
+f68c77d78	src/graphics/presentation/window/vulkanWindow.cpp	8	1 [KYTY_FIX_F24]	2	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+f68c77d78	src/graphics/presentation/window/window.cpp	75	3 [KYTY_FIX_F24]	15	KYTY_FIX_F24
+f68c77d78	src/libs/audio.cpp	35	0	26	KYTY_FIX_F8
+f68c77d78	src/libs/controller.cpp	14	2 [call-site]	11	KYTY_FIX_B24 KYTY_FIX_F24
+019929587	src/graphics/presentation/window/swapchain.cpp	10	2 [KYTY_FIX_MINIMIZE]	7	KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE
+019929587	src/graphics/presentation/window/window.cpp	2	0	0	KYTY_FIX_F24
+ba579088d	src/loader/runtimeLinker.cpp	1	0	0	KYTY_GAME_PATCH KYTY_PVAR
+c437de972	src/graphics/presentation/window/swapchain.cpp	2	0	0	KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE
+3742ad998	src/libs/audio.cpp	3	0	0	KYTY_FIX_F8
+1275d65bb	src/libs/audio.cpp	8	0	7	KYTY_FIX_F8
+1275d65bb	src/libs/libAudio.cpp	2	0	0	KYTY_FIX_B9A KYTY_FIX_DUALSRC
+2aa0a64f6	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3	0	3	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+2aa0a64f6	src/graphics/presentation/videoOut.cpp	1	0	0	KYTY_PVAR
+7d7267cc5	tests/shaderCfgTests.cpp	4	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+fc86509aa	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+fc86509aa	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+fc86509aa	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+fc86509aa	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+fc86509aa	tests/shaderCfgTests.cpp	1	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+3dc3fd019	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+3dc3fd019	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+3dc3fd019	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+3dc3fd019	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3b89e36d1	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	5	0	1	KYTY_FIX_F19
+51c34d1a2	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+66cc2fe26	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	2	0	2	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+66cc2fe26	tests/ShaderRecompilerComputeTests.cpp	26	0	2	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+963a0817d	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	11	0	1	KYTY_FIX_F19
+a670dc84b	tests/ShaderRecompilerComputeTests.cpp	3	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3bd5de646	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	5	1 [KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU]	4	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3bd5de646	tests/ShaderRecompilerComputeTests.cpp	18	0	4	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a6248c7c7	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+a6248c7c7	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a6248c7c7	tests/shaderCfgTests.cpp	4	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+84d015120	tests/ShaderRecompilerComputeTests.cpp	1	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+fcf0f3b67	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+fcf0f3b67	tests/shaderCfgTests.cpp	1	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+2aaf0c9ba	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	1	0	0	KYTY_FIX_DUALSRC KYTY_FIX_F20
+2aaf0c9ba	src/graphics/presentation/window/vulkanWindow.cpp	2	0	0	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+732057b07	src/graphics/presentation/videoOut.cpp	1	0	0	KYTY_PVAR
+e43c24268	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+e43c24268	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	3	0	2	KYTY_FIX_B1B KYTY_FIX_F10
+e43c24268	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cce0cd950	src/graphics/presentation/videoOut.cpp	2	0	1	KYTY_PVAR
+392f39e2f	tests/ShaderRecompilerComputeTests.cpp	10	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+6a9ae4ae4	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+dc9280d75	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+dc9280d75	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+dc9280d75	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+dc9280d75	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+dc9280d75	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+d72a79af2	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3	0	5	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+d72a79af2	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+d72a79af2	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+d72a79af2	tests/shaderCfgTests.cpp	2	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+96874909a	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+a20fb7f9f	src/graphics/presentation/videoOut.cpp	1	0	0	KYTY_PVAR
+5a705dd15	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+5a705dd15	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7855c980c	src/libs/audio.cpp	7	0	6	KYTY_FIX_F8
+93185953f	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	2	0	1	KYTY_FIX_F19
+6bb68a3fd	tests/shaderCfgTests.cpp	2	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+ff5460856	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+ff5460856	tests/ShaderRecompilerComputeTests.cpp	4	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3585cd8f0	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	58	1 [KYTY_FIX_B1B KYTY_FIX_F10]	1	KYTY_FIX_B1B KYTY_FIX_F10
+f7ae6e0a8	CMakeLists.txt	3	0	0	KYTY_FIX_B36
+bfdbba3aa	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0ec43a8d3	src/graphics/host_gpu/renderer/cache/textureCache.cpp	4	1 [KYTY_FIX_B42]	4	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1371219f5	src/loader/runtimeLinker.cpp	14	0	0	KYTY_GAME_PATCH KYTY_PVAR
+e056d55dd	src/loader/runtimeLinker.cpp	28	0	0	KYTY_GAME_PATCH KYTY_PVAR
+0fb3ac560	src/libs/libKernel.cpp	3	0	0	KYTY_PVAR
+497166009	src/loader/runtimeLinker.cpp	8	0	0	KYTY_GAME_PATCH KYTY_PVAR
+cda236dbb	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cda236dbb	tests/shaderCfgTests.cpp	1	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+1e438136f	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+4e8d8c849	CMakeLists.txt	3	0	0	KYTY_FIX_B36
+cf268af83	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	3	0	2	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cf268af83	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+cf268af83	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+cf268af83	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+cf268af83	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	2	0	0	KYTY_FIX_F19
+cf268af83	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+16b83a034	src/graphics/host_gpu/graphicContext.h	1	1 [KYTY_FIX_DUALSRC KYTY_FIX_SVAL]	3	KYTY_FIX_DUALSRC KYTY_FIX_SVAL
+16b83a034	src/graphics/presentation/window/vulkanWindow.cpp	3	1 [KYTY_FIX_B26 KYTY_FIX_DUALSRC]	0	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+16b83a034	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+16b83a034	tests/ShaderRecompilerComputeTests.cpp	4	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+81f312638	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+81f312638	tests/ShaderRecompilerComputeTests.cpp	13	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a22a9d934	CMakeLists.txt	3	0	0	KYTY_FIX_B36
+a22a9d934	src/libs/audio.cpp	5	0	5	KYTY_FIX_F8
+a22a9d934	src/libs/controller.cpp	6	3 [KYTY_FIX_F24]	8	KYTY_FIX_B24 KYTY_FIX_F24
+a22a9d934	src/libs/controller.h	1	1 [KYTY_FIX_B24]	1	KYTY_FIX_B24
+bec67b786	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+bec67b786	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	6	0	10	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+bec67b786	src/graphics/presentation/videoOut.cpp	49	2 [KYTY_PVAR]	15	KYTY_PVAR
+bec67b786	src/graphics/presentation/window/swapchain.cpp	55	4 [KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE]	31	KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE
+bec67b786	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	3	0	3	KYTY_FIX_F19
+bec67b786	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h	1	0	0	KYTY_FIX_F19
+bec67b786	tests/ShaderRecompilerComputeTests.cpp	15	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+bec67b786	tests/shaderCfgTests.cpp	2	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+496432bbb	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+041874f66	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	6	0	3	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+041874f66	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a88181b89	tests/ShaderRecompilerComputeTests.cpp	12	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7b6bfdec6	tests/ShaderRecompilerComputeTests.cpp	9	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f53f0ca48	src/graphics/host_gpu/renderer/cache/textureCache.cpp	4	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f53f0ca48	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+da33a1c4a	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+da33a1c4a	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0f1ff37f2	src/graphics/host_gpu/renderer/cache/textureCache.cpp	14	2 [KYTY_FIX_F26 KYTY_FIX_F5CMU]	6	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0f1ff37f2	src/graphics/host_gpu/renderer/cache/textureCache.h	1	1 [KYTY_FIX_F26 KYTY_FIX_F5CMU]	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0f1ff37f2	tests/ShaderRecompilerComputeTests.cpp	29	1 [KYTY_FIX_F5CMU]	5	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1b6af301b	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1b6af301b	tests/shaderCfgTests.cpp	3	1 [call-site]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+025b39c01	CMakeLists.txt	3	0	0	KYTY_FIX_B36
+0791f921f	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	3	0	4	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0791f921f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	11	0	13	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+0791f921f	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	7	0	2	KYTY_FIX_B1B KYTY_FIX_F10
+0791f921f	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+0791f921f	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	19	0	1	KYTY_FIX_F19
+0791f921f	tests/ShaderRecompilerComputeTests.cpp	79	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0791f921f	tests/shaderCfgTests.cpp	76	0	2	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+0a5774be7	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+0a5774be7	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+2016f8e2f	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	6	0	2	KYTY_FIX_B12 KYTY_FIX_F5CMU
+2016f8e2f	src/graphics/host_gpu/renderer/cache/bufferCache.h	3	0	3	KYTY_FIX_B12 KYTY_FIX_F5CMU
+2016f8e2f	src/graphics/host_gpu/renderer/cache/faultManager.cpp	1	1 [call-site]	0	KYTY_FIX_F29
+2016f8e2f	src/graphics/host_gpu/renderer/cache/textureCache.h	2	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+2016f8e2f	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	1	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+2016f8e2f	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1	0	1	KYTY_FIX_B1B KYTY_FIX_F10
+2016f8e2f	tests/ShaderRecompilerComputeTests.cpp	6	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+c8baa7b90	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	5	0	1	KYTY_FIX_F19
+05f92b642	CMakeLists.txt	3	0	0	KYTY_FIX_B36
+a107d1e33	src/kernel/fileSystem.cpp	4	0	0	KYTY_FIX_B4 KYTY_FIX_F25
+22ff4693c	src/libs/audio.cpp	9	0	6	KYTY_FIX_F8
+4cf456fb7	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	4	0	9	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0471c9991	src/libs/libAudio.cpp	1	0	0	KYTY_FIX_B9A KYTY_FIX_DUALSRC
+6ee1bf9db	src/graphics/host_gpu/renderer/cache/textureCache.cpp	5	0	4	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+6ee1bf9db	src/graphics/host_gpu/renderer/cache/textureCache.h	1	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+6ee1bf9db	tests/ShaderRecompilerComputeTests.cpp	7	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8e61798bf	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8e61798bf	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+4b0de1b67	CMakeLists.txt	5	0	1	KYTY_FIX_B36
+4b0de1b67	src/kernel/fileSystem.cpp	16	0	1	KYTY_FIX_B4 KYTY_FIX_F25
+49db3ea54	tests/ShaderRecompilerComputeTests.cpp	26	0	4	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+21d7e8e1f	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+6f241bef4	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+62a0222e2	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+62a0222e2	tests/ShaderRecompilerComputeTests.cpp	4	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8e42e9978	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b43bf9f7f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	4	0	4	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+b43bf9f7f	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b43bf9f7f	tests/shaderCfgTests.cpp	4	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+37501b5a7	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	1	0	4	KYTY_FIX_B12 KYTY_FIX_F5CMU
+37501b5a7	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0fbeac6d3	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3	0	4	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+0fbeac6d3	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h	2	0	1	KYTY_FIX_DUALSRC KYTY_FIX_F20 KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY
+0fbeac6d3	tests/shaderCfgTests.cpp	1	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+6d6666819	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6	2 [KYTY_S_PCW]	13	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+6d6666819	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h	3	2 [KYTY_FIX_DUALSRC KYTY_FIX_F20 KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY]	2	KYTY_FIX_DUALSRC KYTY_FIX_F20 KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY
+6d6666819	src/graphics/presentation/window/window.cpp	1	0	1	KYTY_FIX_F24
+0c844e4bc	src/loader/runtimeLinker.cpp	4	0	0	KYTY_GAME_PATCH KYTY_PVAR
+6f24b031f	src/kernel/pthread.cpp	9	0	6	KYTY_GAME_PATCH
+35c4dca2c	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+35c4dca2c	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+6799ecbc5	src/graphics/presentation/window/vulkanWindow.cpp	5	0	3	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+6799ecbc5	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+6799ecbc5	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+6799ecbc5	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+6799ecbc5	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+6799ecbc5	tests/ShaderRecompilerComputeTests.cpp	8	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+73615c31f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6	2 [KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY]	3	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+73615c31f	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h	2	0	0	KYTY_FIX_DUALSRC KYTY_FIX_F20 KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY
+73615c31f	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	7	0	0	KYTY_FIX_DUALSRC KYTY_FIX_F20
+73615c31f	tests/shaderCfgTests.cpp	3	1 [call-site]	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+650dc1e0a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	1	0	2	KYTY_FIX_B12 KYTY_FIX_F5CMU
+18a5f04d0	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	6	0	7	KYTY_FIX_B12 KYTY_FIX_F5CMU
+18a5f04d0	tests/ShaderRecompilerComputeTests.cpp	2	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+9d4da4832	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+af4edc286	src/graphics/presentation/window/vulkanWindow.cpp	29	0	0	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+05057c944	src/libs/controller.cpp	2	1 [call-site]	3	KYTY_FIX_B24 KYTY_FIX_F24
+840b9f575	tests/ShaderRecompilerComputeTests.cpp	22	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+48b52d31b	CMakeLists.txt	3	0	0	KYTY_FIX_B36
+8ba2caf58	src/graphics/presentation/videoOut.cpp	1	0	0	KYTY_PVAR
+bc193f527	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+bc193f527	tests/ShaderRecompilerComputeTests.cpp	7	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b7a1fac89	src/libs/controller.cpp	9	1 [KYTY_FIX_B24]	3	KYTY_FIX_B24 KYTY_FIX_F24
+44ba65757	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+c2f8e64f6	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+c2f8e64f6	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0ecd32299	tests/shaderCfgTests.cpp	5	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+64dcbe0ea	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+64dcbe0ea	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+64dcbe0ea	tests/shaderCfgTests.cpp	3	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+581dad7dd	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+581dad7dd	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+337f43201	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	3	0	5	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+337f43201	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	10	0	9	KYTY_FIX_B1B KYTY_FIX_F10
+337f43201	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+337f43201	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+337f43201	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+337f43201	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+337f43201	tests/shaderCfgTests.cpp	2	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+11001c97f	tests/shaderCfgTests.cpp	8	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+0d0b215fa	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+0d0b215fa	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	5	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+0d0b215fa	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	13	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+0d0b215fa	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+0d0b215fa	tests/ShaderRecompilerComputeTests.cpp	38	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+6409be287	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	1	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+6409be287	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	21	0	2	KYTY_FIX_F19
+6409be287	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+6409be287	tests/shaderCfgTests.cpp	4	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+35759e48c	tests/shaderCfgTests.cpp	2	0	3	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+706eec3ca	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+64eea6b32	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	1	0	0	KYTY_FIX_DUALSRC KYTY_FIX_F20
+64eea6b32	tests/shaderCfgTests.cpp	4	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+f29bd0fe3	tests/ShaderRecompilerComputeTests.cpp	3	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b86cf0a82	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2	1 [KYTY_S_PCW]	1	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+b86cf0a82	tests/ShaderRecompilerComputeTests.cpp	4	0	2	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+4428640b4	src/graphics/host_gpu/renderer/renderContext.cpp	1	1 [KYTY_FIX_B12]	0	KYTY_FIX_B12
+b3e419ff1	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+b3e419ff1	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+b3e419ff1	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+b3e419ff1	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+b3e419ff1	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+70a475ec8	CMakeLists.txt	3	0	0	KYTY_FIX_B36
+70a475ec8	src/libs/audio.cpp	16	0	13	KYTY_FIX_F8
+a9620f98f	src/graphics/host_gpu/regionManager.h	1	0	2	KYTY_FIX_B12 KYTY_FIX_B13
+a67a033ff	src/graphics/host_gpu/regionManager.h	3	0	2	KYTY_FIX_B12 KYTY_FIX_B13
+39e23ac92	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	5	0	9	KYTY_FIX_B12 KYTY_FIX_F5CMU
+39e23ac92	src/graphics/host_gpu/renderer/cache/bufferCache.h	1	0	2	KYTY_FIX_B12 KYTY_FIX_F5CMU
+39e23ac92	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+89792a3bc	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+89792a3bc	src/libs/libKernel.cpp	2	0	0	KYTY_PVAR
+e1be2ead5	CMakeLists.txt	2	0	0	KYTY_FIX_B36
+e1be2ead5	src/libs/audio.cpp	6	0	0	KYTY_FIX_F8
+82a2f4ad4	CMakeLists.txt	3	0	0	KYTY_FIX_B36
+82a2f4ad4	src/graphics/presentation/window/hostInput.cpp	5	0	2	KYTY_FIX_F24
+82a2f4ad4	src/libs/audio.cpp	11	0	2	KYTY_FIX_F8
+82a2f4ad4	src/libs/controller.cpp	23	4 [KYTY_FIX_B24]	11	KYTY_FIX_B24 KYTY_FIX_F24
+82a2f4ad4	src/libs/controller.h	1	1 [KYTY_FIX_B24]	1	KYTY_FIX_B24
+7804eef9b	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	16	0	1	KYTY_FIX_F19
+684330c9e	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	13	0	5	KYTY_FIX_F19
+8fa116eeb	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	1	1 [KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU]	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e6cb880ad	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1	0	4	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+e6cb880ad	src/graphics/presentation/window/window.cpp	2	2 [KYTY_FIX_F24]	2	KYTY_FIX_F24
+e6cb880ad	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+ef4c5baf3	src/graphics/host_gpu/graphicContext.h	1	1 [KYTY_FIX_DUALSRC KYTY_FIX_SVAL]	3	KYTY_FIX_DUALSRC KYTY_FIX_SVAL
+ef4c5baf3	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	7	0	5	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+ef4c5baf3	src/graphics/presentation/window/vulkanWindow.cpp	4	0	1	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+ef4c5baf3	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+ef4c5baf3	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+ef4c5baf3	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+ef4c5baf3	tests/ShaderRecompilerComputeTests.cpp	16	1 [KYTY_FIX_F20]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+ef4c5baf3	tests/shaderCfgTests.cpp	2	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+0d4f99335	src/graphics/host_gpu/renderer/cache/textureCache.cpp	8	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0d4f99335	tests/ShaderRecompilerComputeTests.cpp	18	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+ebe401d05	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+ebe401d05	tests/ShaderRecompilerComputeTests.cpp	4	0	3	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+190608ae2	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2	1 [KYTY_FIX_F5CMU]	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+190608ae2	tests/ShaderRecompilerComputeTests.cpp	1	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0ec3655f1	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	1 [KYTY_FIX_F26]	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0ec3655f1	tests/ShaderRecompilerComputeTests.cpp	10	0	3	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0bb2bdad1	src/graphics/host_gpu/regionManager.h	1	0	3	KYTY_FIX_B12 KYTY_FIX_B13
+bd611bfe1	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	3	0	3	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+bd611bfe1	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+bd611bfe1	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	4	1 [call-site]	1	KYTY_FIX_F19
+bd611bfe1	tests/ShaderRecompilerComputeTests.cpp	33	1 [KYTY_FIX_F20]	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+bd611bfe1	tests/shaderCfgTests.cpp	1	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+52c8ff18d	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8cbee7f4b	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+8b0cc79ac	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8b0cc79ac	tests/ShaderRecompilerComputeTests.cpp	4	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7f158c656	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	1	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7f158c656	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	8	1 [call-site]	0	KYTY_FIX_F19
+7f158c656	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5766b241c	src/kernel/pthread.cpp	1	0	0	KYTY_GAME_PATCH
+5766b241c	src/libs/libKernel.cpp	1	0	0	KYTY_PVAR
+a0858abe3	src/libs/libKernel.cpp	10	0	0	KYTY_PVAR
+92c22d60e	src/libs/libKernel.cpp	1	0	0	KYTY_PVAR
+45f55413e	tests/ShaderRecompilerComputeTests.cpp	25	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+820856b30	src/libs/controller.cpp	1	0	0	KYTY_FIX_B24 KYTY_FIX_F24
+feeced81d	src/graphics/presentation/window/hostInput.cpp	8	2 [KYTY_FIX_F24]	0	KYTY_FIX_F24
+b11aea803	src/loader/runtimeLinker.cpp	18	0	2	KYTY_GAME_PATCH KYTY_PVAR
+a4d26cf81	src/loader/runtimeLinker.cpp	7	0	0	KYTY_GAME_PATCH KYTY_PVAR
+19a9464b7	src/loader/runtimeLinker.cpp	3	0	0	KYTY_GAME_PATCH KYTY_PVAR
+0e8ded37b	src/graphics/presentation/window/window.cpp	2	0	0	KYTY_FIX_F24
+429d0af62	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+429d0af62	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	26	1 [KYTY_FIX_F19]	3	KYTY_FIX_F19
+429d0af62	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h	1	0	0	KYTY_FIX_F19
+429d0af62	tests/ShaderRecompilerComputeTests.cpp	6	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+429d0af62	tests/shaderCfgTests.cpp	2	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+f58014ff0	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+f58014ff0	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+f58014ff0	tests/ShaderRecompilerComputeTests.cpp	12	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f58014ff0	tests/shaderCfgTests.cpp	3	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+e4aca7a60	tests/ShaderRecompilerComputeTests.cpp	6	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+ec3e48cdd	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	3	0	1	KYTY_FIX_F19
+ec3e48cdd	tests/shaderCfgTests.cpp	2	1 [call-site]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+d890bb190	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+d890bb190	tests/shaderCfgTests.cpp	2	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+068d7621d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	10	0	13	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+068d7621d	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+284d58d1d	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+284d58d1d	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+284d58d1d	tests/shaderCfgTests.cpp	2	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+f18679e0c	tests/ShaderRecompilerComputeTests.cpp	7	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b4d32394b	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2	0	1	KYTY_FIX_B1B KYTY_FIX_F10
+b4d32394b	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b4d32394b	tests/shaderCfgTests.cpp	13	0	3	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+7992aecb7	src/graphics/presentation/window/vulkanWindow.cpp	1	1 [KYTY_FIX_B26 KYTY_FIX_DUALSRC]	0	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+7992aecb7	tests/ShaderRecompilerComputeTests.cpp	6	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a5eeab98d	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b8946fef9	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+b8946fef9	tests/ShaderRecompilerComputeTests.cpp	21	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b8946fef9	tests/shaderCfgTests.cpp	2	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+0258bd61e	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	11	0	0	KYTY_FIX_F19
+0258bd61e	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+181123ea0	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a55a28380	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	32	0	3	KYTY_FIX_B1B KYTY_FIX_F10
+a55a28380	tests/ShaderRecompilerComputeTests.cpp	16	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+843b57788	src/graphics/presentation/window/vulkanWindow.cpp	2	0	0	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+843b57788	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	11	1 [call-site]	7	KYTY_FIX_F19
+843b57788	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e0c90acee	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5f01308b2	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	7	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+5f01308b2	tests/ShaderRecompilerComputeTests.cpp	10	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b183cb101	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	5	0	2	KYTY_FIX_F19
+b183cb101	tests/ShaderRecompilerComputeTests.cpp	7	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1f6be3d57	tests/ShaderRecompilerComputeTests.cpp	9	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+c17fa5b93	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+c17fa5b93	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+c17fa5b93	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+c17fa5b93	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+c17fa5b93	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cd9fc6ff2	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	3	0	0	KYTY_FIX_F19
+cd9fc6ff2	tests/ShaderRecompilerComputeTests.cpp	8	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8b05b6730	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	2	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8b05b6730	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+8b05b6730	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	5	0	1	KYTY_FIX_F19
+8b05b6730	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h	1	1 [KYTY_FIX_F19]	0	KYTY_FIX_F19
+8b05b6730	tests/ShaderRecompilerComputeTests.cpp	3	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3ba0e971e	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	2	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3ba0e971e	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+3ba0e971e	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	11	0	1	KYTY_FIX_F19
+3ba0e971e	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.h	1	0	0	KYTY_FIX_F19
+3ba0e971e	tests/ShaderRecompilerComputeTests.cpp	15	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+33e74cab2	tests/shaderCfgTests.cpp	4	0	3	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+dbf66b7f4	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+dbf66b7f4	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+57cf08688	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1	0	1	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+57cf08688	tests/ShaderRecompilerComputeTests.cpp	4	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+783d9f8d6	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	0	2	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+783d9f8d6	src/graphics/host_gpu/renderer/cache/textureCache.h	1	1 [KYTY_FIX_B42]	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+783d9f8d6	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2	0	1	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+783d9f8d6	tests/ShaderRecompilerComputeTests.cpp	13	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+efbaa17f7	tests/ShaderRecompilerComputeTests.cpp	7	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+efbaa17f7	tests/shaderCfgTests.cpp	2	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+0ce84e59b	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	1	0	3	KYTY_FIX_B12 KYTY_FIX_F5CMU
+0ce84e59b	tests/ShaderRecompilerComputeTests.cpp	14	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+c3f496271	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	1	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+c3f496271	src/graphics/presentation/window/vulkanWindow.cpp	6	0	1	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+c3f496271	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	28	0	7	KYTY_FIX_B1B KYTY_FIX_F10
+c3f496271	tests/ShaderRecompilerComputeTests.cpp	30	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+98557a83b	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+98557a83b	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+98557a83b	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+98557a83b	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	8	0	1	KYTY_FIX_B1B KYTY_FIX_F10
+98557a83b	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+98557a83b	tests/shaderCfgTests.cpp	1	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+39248a1f8	tests/shaderCfgTests.cpp	4	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+719e02574	src/libs/controller.cpp	1	0	0	KYTY_FIX_B24 KYTY_FIX_F24
+fdac55a5e	src/loader/runtimeLinker.cpp	6	1 [KYTY_GAME_PATCH KYTY_PVAR]	1	KYTY_GAME_PATCH KYTY_PVAR
+96c067d0f	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+96c067d0f	tests/ShaderRecompilerComputeTests.cpp	12	1 [KYTY_FIX_F20]	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5940e623d	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+5940e623d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	10	0	6	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5940e623d	tests/ShaderRecompilerComputeTests.cpp	12	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a2f851788	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a2f851788	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	2	0	4	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a2f851788	tests/ShaderRecompilerComputeTests.cpp	3	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0bef3fc0d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6	3 [KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY]	2	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+0bef3fc0d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h	2	0	0	KYTY_FIX_DUALSRC KYTY_FIX_F20 KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY
+0bef3fc0d	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	7	0	0	KYTY_FIX_DUALSRC KYTY_FIX_F20
+0bef3fc0d	tests/ShaderRecompilerComputeTests.cpp	3	0	2	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0bef3fc0d	tests/shaderCfgTests.cpp	8	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+0ee880090	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2	0	1	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+0ee880090	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	2	0	0	KYTY_FIX_F19
+0ee880090	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b0bbaef1e	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	4	1 [KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU]	2	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b0bbaef1e	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1	0	4	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+b0bbaef1e	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+b0bbaef1e	tests/ShaderRecompilerComputeTests.cpp	11	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+96011cc5c	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1	1 [KYTY_S_PCW]	1	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+96011cc5c	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+96011cc5c	tests/shaderCfgTests.cpp	1	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+8274e517b	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+8274e517b	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8274e517b	tests/shaderCfgTests.cpp	2	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+94e7d239d	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	2	2 [KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY]	2	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+94e7d239d	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+94e7d239d	tests/shaderCfgTests.cpp	4	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+a98a39c57	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0885f43a6	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+0885f43a6	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b27b89f51	tests/ShaderRecompilerComputeTests.cpp	7	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+8e46a3ccf	tests/ShaderRecompilerComputeTests.cpp	9	0	4	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+d8be245c2	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+d8be245c2	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e85279ea7	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+e85279ea7	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e85279ea7	tests/shaderCfgTests.cpp	2	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+de9c15fa7	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+de9c15fa7	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+af3011cd6	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	8	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+af3011cd6	tests/ShaderRecompilerComputeTests.cpp	12	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+af3011cd6	tests/shaderCfgTests.cpp	3	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+2b1b7ed0e	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+2b1b7ed0e	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+2b1b7ed0e	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+2b1b7ed0e	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1d5527246	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+1d5527246	tests/ShaderRecompilerComputeTests.cpp	18	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+72e4989b1	CMakeLists.txt	2	0	0	KYTY_FIX_B36
+5c8306048	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	2	0	2	KYTY_FIX_F19
+1d41ddb37	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1d41ddb37	tests/shaderCfgTests.cpp	2	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+7a0e1dafd	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+7a0e1dafd	tests/ShaderRecompilerComputeTests.cpp	10	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7a0e1dafd	tests/shaderCfgTests.cpp	2	0	2	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+266c12cec	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	3	0	0	KYTY_FIX_F19
+266c12cec	tests/ShaderRecompilerComputeTests.cpp	8	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5b826c6e4	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	26	0	6	KYTY_FIX_B1B KYTY_FIX_F10
+5b826c6e4	tests/ShaderRecompilerComputeTests.cpp	14	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5b826c6e4	tests/shaderCfgTests.cpp	10	0	4	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+e6fce45d3	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e6fce45d3	src/graphics/host_gpu/renderer/cache/textureCache.h	1	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e6fce45d3	src/graphics/host_gpu/renderer/renderContext.cpp	1	0	1	KYTY_FIX_B12
+e6fce45d3	tests/ShaderRecompilerComputeTests.cpp	10	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+57c97ebd8	tests/ShaderRecompilerComputeTests.cpp	11	0	3	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+984010227	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1	1 [call-site]	1	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+984010227	src/graphics/host_gpu/renderer/pipeline/pipelineCache.h	2	0	0	KYTY_FIX_DUALSRC KYTY_FIX_F20 KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY
+984010227	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	2	0	0	KYTY_FIX_DUALSRC KYTY_FIX_F20
+984010227	tests/ShaderRecompilerComputeTests.cpp	4	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e5dcfdb87	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	5	0	5	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e5dcfdb87	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cdb64bfd4	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+9caec9f2c	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	7	0	5	KYTY_FIX_B1B KYTY_FIX_F10
+9caec9f2c	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+9caec9f2c	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+c23de6218	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	15	0	7	KYTY_FIX_F19
+c23de6218	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cd0660102	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	11	0	2	KYTY_FIX_F19
+cd0660102	tests/ShaderRecompilerComputeTests.cpp	11	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5601861d6	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+5601861d6	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+5601861d6	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5a491abbd	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+ae1e92621	tests/ShaderRecompilerComputeTests.cpp	19	0	2	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b929bbe3e	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	4	0	1	KYTY_FIX_F19
+fb7ff7ec0	CMakeLists.txt	2	0	0	KYTY_FIX_B36
+35c6e8fff	CMakeLists.txt	2	0	0	KYTY_FIX_B36
+35c6e8fff	src/loader/runtimeLinker.cpp	2	0	0	KYTY_GAME_PATCH KYTY_PVAR
+6ef406542	CMakeLists.txt	2	0	0	KYTY_FIX_B36
+6ef406542	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+199d0a9d9	src/kernel/pthread.cpp	1	0	0	KYTY_GAME_PATCH
+1195af251	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+1b21161aa	src/kernel/pthread.cpp	2	0	0	KYTY_GAME_PATCH
+7492cb957	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+7492cb957	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+7492cb957	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7415febd9	src/graphics/presentation/window/hostInput.cpp	2	2 [KYTY_FIX_F24]	0	KYTY_FIX_F24
+7415febd9	src/graphics/presentation/window/swapchain.cpp	1	0	2	KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE
+7415febd9	src/graphics/presentation/window/window.cpp	6	0	3	KYTY_FIX_F24
+e7cfe5a2f	src/libs/libKernel.cpp	14	0	1	KYTY_PVAR
+bb98f2643	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	6	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+bb98f2643	tests/ShaderRecompilerComputeTests.cpp	8	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5af370c25	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+5af370c25	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+5af370c25	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+5af370c25	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+5af370c25	tests/ShaderRecompilerComputeTests.cpp	4	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+26cce9909	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+26cce9909	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+26cce9909	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+26cce9909	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+26cce9909	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+96eb681b9	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+96eb681b9	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+fbf6ae400	src/graphics/host_gpu/renderer/cache/textureCache.cpp	3	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+fbf6ae400	tests/ShaderRecompilerComputeTests.cpp	13	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3ba6ebae8	tests/ShaderRecompilerComputeTests.cpp	5	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3ba6ebae8	tests/shaderCfgTests.cpp	3	1 [call-site]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+21a1346e2	tests/ShaderRecompilerComputeTests.cpp	11	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+21a1346e2	tests/shaderCfgTests.cpp	2	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+b96871e2b	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a8beac190	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a8beac190	tests/shaderCfgTests.cpp	6	0	7	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+5297abb7a	tests/shaderCfgTests.cpp	29	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+9f83fd5f0	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+743fdc699	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	1	0	2	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+743fdc699	tests/ShaderRecompilerComputeTests.cpp	9	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+dd754065d	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+dd754065d	tests/ShaderRecompilerComputeTests.cpp	2	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+470669c67	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	2	0	6	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+470669c67	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+038d2257d	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+038d2257d	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+006875ed4	src/graphics/host_gpu/pageManager.cpp	2	0	5	KYTY_FIX_B36
+006875ed4	src/graphics/host_gpu/regionManager.h	2	0	3	KYTY_FIX_B12 KYTY_FIX_B13
+4d10ea17a	src/graphics/host_gpu/renderer/cache/bufferCache.cpp	2	0	1	KYTY_FIX_B12 KYTY_FIX_F5CMU
+4d10ea17a	tests/ShaderRecompilerComputeTests.cpp	4	0	5	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+9e666e4dd	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+9e666e4dd	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+9e666e4dd	tests/ShaderRecompilerComputeTests.cpp	9	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7881c69a5	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+7881c69a5	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+9f25e3c23	tests/ShaderRecompilerComputeTests.cpp	6	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+c86c8b4d9	src/libs/audio.cpp	14	0	4	KYTY_FIX_F8
+c86c8b4d9	src/libs/audio_internal.h	1	0	0	KYTY_FIX_F8
+420bb51d6	tests/ShaderRecompilerComputeTests.cpp	4	1 [KYTY_FIX_F26]	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+79a91ecfa	src/graphics/host_gpu/regionManager.h	1	0	0	KYTY_FIX_B12 KYTY_FIX_B13
+34f6fd1f5	tests/ShaderRecompilerComputeTests.cpp	7	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+de6266490	src/kernel/fileSystem.cpp	2	0	0	KYTY_FIX_B4 KYTY_FIX_F25
+db41d0482	src/kernel/fileSystem.cpp	3	0	1	KYTY_FIX_B4 KYTY_FIX_F25
+db41d0482	src/libs/libKernel.cpp	2	0	0	KYTY_PVAR
+3c62359e0	src/libs/controller.cpp	12	3 [KYTY_FIX_B24]	7	KYTY_FIX_B24 KYTY_FIX_F24
+3c62359e0	src/libs/controller.h	2	0	0	KYTY_FIX_B24
+aa3b2cd57	tests/ShaderRecompilerComputeTests.cpp	4	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1f3adf510	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+b65dc1220	src/libs/controller.cpp	23	0	4	KYTY_FIX_B24 KYTY_FIX_F24
+b65dc1220	src/libs/controller.h	2	1 [KYTY_FIX_B24]	1	KYTY_FIX_B24
+b38b7454a	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	1	1 [KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY]	1	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+b38b7454a	tests/ShaderRecompilerComputeTests.cpp	8	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+2f4b8a335	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+52dbc724f	tests/shaderCfgTests.cpp	3	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+e1ac893a0	CMakeLists.txt	1	0	1	KYTY_FIX_B36
+e1ac893a0	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	36	0	29	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e1ac893a0	src/graphics/host_gpu/renderer/pipeline/shaders.cpp	3	0	3	KYTY_FIX_DUALSRC KYTY_FIX_F20
+e1ac893a0	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+e1ac893a0	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+e1ac893a0	tests/ShaderRecompilerComputeTests.cpp	70	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+e1ac893a0	tests/shaderCfgTests.cpp	45	1 [KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+dbe5353f3	CMakeLists.txt	2	0	2	KYTY_FIX_B36
+dbe5353f3	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	14	0	1	KYTY_FIX_F19
+dbe5353f3	tests/shaderCfgTests.cpp	12	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+97fda7b10	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	11	0	12	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+46997dfc7	src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+3df456675	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	12	0	0	KYTY_FIX_F19
+3df456675	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3df456675	tests/shaderCfgTests.cpp	54	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+ee4dd9064	tests/ShaderRecompilerComputeTests.cpp	11	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b4853a0e0	tests/shaderCfgTests.cpp	3	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+13e3ca314	tests/ShaderRecompilerComputeTests.cpp	6	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7b9997bae	tests/ShaderRecompilerComputeTests.cpp	3	2 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1fc520cd6	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1bd282ec0	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+1bd282ec0	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+1bd282ec0	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+1bd282ec0	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+a31e2cd36	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+a31e2cd36	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+a31e2cd36	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+a31e2cd36	tests/ShaderRecompilerComputeTests.cpp	11	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3ae5a9b70	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+4c8fc53a8	tests/ShaderRecompilerComputeTests.cpp	2	0	2	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+488c0acae	tests/shaderCfgTests.cpp	2	1 [call-site]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+3b1a94707	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	3	0	1	KYTY_FIX_F19
+3b1a94707	tests/shaderCfgTests.cpp	3	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+5b68a26cc	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+5b68a26cc	tests/ShaderRecompilerComputeTests.cpp	14	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5b68a26cc	tests/shaderCfgTests.cpp	2	1 [call-site]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+71c726174	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+71c726174	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+973809cde	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	4	0	2	KYTY_FIX_F19
+973809cde	tests/shaderCfgTests.cpp	2	1 [call-site]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+165cd884c	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1818aae56	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	13	1 [KYTY_S_REPLAY]	7	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+1818aae56	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+1818aae56	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	8	0	2	KYTY_FIX_F19
+1818aae56	tests/ShaderRecompilerComputeTests.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1818aae56	tests/shaderCfgTests.cpp	2	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+bb5edbd49	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+bb5edbd49	tests/ShaderRecompilerComputeTests.cpp	5	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+bb5edbd49	tests/shaderCfgTests.cpp	3	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+8c8138656	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	4	0	2	KYTY_FIX_F19
+8c8138656	tests/ShaderRecompilerComputeTests.cpp	6	0	2	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3e9f88bf7	src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp	6	0	6	KYTY_FIX_F20 KYTY_FIX_SVAL KYTY_S_PCW KYTY_S_PCW_FORCE_MS KYTY_S_REPLAY KYTY_S_REPLAY_TEST
+3e9f88bf7	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+3e9f88bf7	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+3e9f88bf7	tests/shaderCfgTests.cpp	6	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+59183dbfa	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+59183dbfa	tests/ShaderRecompilerComputeTests.cpp	16	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1c301c9aa	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+1c301c9aa	tests/ShaderRecompilerComputeTests.cpp	14	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+1c301c9aa	tests/shaderCfgTests.cpp	2	1 [call-site]	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+5559cfcbb	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+5559cfcbb	src/graphics/host_gpu/renderer/cache/textureCache.cpp	35	0	23	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5559cfcbb	src/graphics/host_gpu/renderer/cache/textureCache.h	3	1 [KYTY_FIX_F26 KYTY_FIX_F5CMU]	4	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5559cfcbb	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	13	0	11	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+5559cfcbb	src/graphics/presentation/videoOut.cpp	4	0	0	KYTY_PVAR
+5559cfcbb	tests/ShaderRecompilerComputeTests.cpp	137	0	4	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+d247d3d60	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	7	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+d247d3d60	tests/ShaderRecompilerComputeTests.cpp	16	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+d247d3d60	tests/shaderCfgTests.cpp	2	0	1	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+2f4d0f383	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+053f5fd3c	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+3b9e176b7	tests/ShaderRecompilerComputeTests.cpp	15	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+fa56c5eae	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	1	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+fa56c5eae	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+fa56c5eae	tests/ShaderRecompilerComputeTests.cpp	3	1 [KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19]	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+679be25c3	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp	3	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+679be25c3	src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10
+679be25c3	tests/shaderCfgTests.cpp	4	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+f63d3befd	src/emulator.cpp	2	0	1	KYTY_FIX_F20 KYTY_FIX_F21 KYTY_GAME_PATCH
+1cfb9522a	src/graphics/presentation/window/window.cpp	1	0	0	KYTY_FIX_F24
+9a5dd9faf	tests/ShaderRecompilerComputeTests.cpp	4	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+b7b335ac6	tests/ShaderRecompilerComputeTests.cpp	13	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+7e4e142aa	tests/ShaderRecompilerComputeTests.cpp	8	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+cf77fb435	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+fbea51c68	tests/ShaderRecompilerComputeTests.cpp	1	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f848d2761	CMakeLists.txt	3	0	3	KYTY_FIX_B36
+f848d2761	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+1029511bb	src/graphics/host_gpu/graphicContext.h	1	1 [KYTY_FIX_DUALSRC KYTY_FIX_SVAL]	2	KYTY_FIX_DUALSRC KYTY_FIX_SVAL
+1029511bb	src/graphics/presentation/window/vulkanWindow.cpp	4	0	2	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+cb375ec35	src/loader/runtimeLinker.cpp	4	1 [KYTY_GAME_PATCH KYTY_PVAR]	6	KYTY_GAME_PATCH KYTY_PVAR
+c0ebf2247	tests/ShaderRecompilerComputeTests.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+16a7fe689	CMakeLists.txt	1	0	0	KYTY_FIX_B36
+4c87dbebb	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	1	0	0	KYTY_FIX_F19
+4c87dbebb	tests/ShaderRecompilerComputeTests.cpp	15	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f28c0fccb	src/graphics/host_gpu/renderer/cache/textureCache.cpp	2	1 [KYTY_FIX_F5CMU]	2	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f28c0fccb	src/graphics/host_gpu/renderer/pipeline/descriptors.cpp	2	0	1	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+f28c0fccb	tests/ShaderRecompilerComputeTests.cpp	1	0	1	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+df0412afb	src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp	7	0	1	KYTY_FIX_F19
+984cfcebd	src/graphics/shader/recompiler/frontend/translate/Memory.cpp	2	0	0	KYTY_FIX_B1B KYTY_FIX_F10
+984cfcebd	tests/ShaderRecompilerComputeTests.cpp	12	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU
+984cfcebd	tests/shaderCfgTests.cpp	1	0	0	KYTY_FIX_F19 KYTY_FIX_F20 KYTY_S_REPLAY
+e51de54ee	CMakeLists.txt	3	0	1	KYTY_FIX_B36
+e51de54ee	src/graphics/presentation/videoOut.cpp	9	0	0	KYTY_PVAR
+e51de54ee	src/graphics/presentation/window/swapchain.cpp	16	3 [KYTY_FIX_MINIMIZE]	11	KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE
+e51de54ee	src/graphics/presentation/window/vulkanWindow.cpp	1	0	0	KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_FIX_F24 KYTY_FIX_SVAL
+048fe9f41	src/libs/libKernel.cpp	1	0	0	KYTY_PVAR
+5b730d4df	src/graphics/host_gpu/renderer/cache/textureCache.cpp	1	0	0	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+dad900c61	src/graphics/host_gpu/renderer/cache/textureCache.cpp	6	0	4	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+dad900c61	src/graphics/host_gpu/renderer/cache/textureCache.h	3	0	3	KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU
+dad900c61	tests/ShaderRecompilerComputeTests.cpp	6	0	0	KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F26 KYTY_FIX_F5CMU

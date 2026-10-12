@@ -1,0 +1,5 @@
+# Track F, F47g (HPP-824; ROADMAP s122 item 740(v)(1)): KYTY_DIAG_F47DT stand without the game (the real module, a host
+# buffer as guest memory); run by docs/track-f/f47g/run_stand_f47g.py, not by ctest.
+add_kyty_full_emulator_test(f47dt_stand
+	"${KYTY_TESTS_DIR}/F47DtStand.cpp")
+

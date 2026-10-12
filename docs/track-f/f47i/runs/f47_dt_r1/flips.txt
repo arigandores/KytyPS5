@@ -1,0 +1,1 @@
+ADMISSION OK: flips 601 in [900, 1500], paths [0], shown lines 4054, FrameTrace lines 4053

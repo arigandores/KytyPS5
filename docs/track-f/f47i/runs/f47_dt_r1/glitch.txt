@@ -1,0 +1,2 @@
+C:/kyty/f287/f47i/rec_f47_dt_r1.mp4: 4078 frames 960x540, index entries 4078
+one-frame glitches: 0

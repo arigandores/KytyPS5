@@ -1,0 +1,237 @@
+tag f47_dt_r1 (level underwater_aerial_garden, binary F47g2 86e42e36 for the tag, FS15 bfac84be installed)  reader sha256 598db478ca4a2bc8a78f38384ff2ce4f0e1fd35cde9c9e20187a8685de963e84
+  STATUS ADMITTED
+    [ok] tag json present
+    [ok] window of the seal 900-1500 = window of the call 900-1500
+    [ok] json binary_sha256 = installed tag binary = F47g2 86e42e36 (86e42e36440ac5b7 / 86e42e36440ac5b7)
+    [ok] installed pre = before = after = FS15 bfac84be (bfac84bea0eaec8b / bfac84bea0eaec8b / bfac84bea0eaec8b)
+    [ok] json prereg sha256 = seal sha256 (f18b32c919f0aa62 / f18b32c919f0aa62)
+    [ok] env = the form of the tag exactly (exact)
+    [ok] last --vulkan-validation false (false)
+    [ok] no --rd in the command line
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 120 s (120)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (250048)
+    [ok] 0 death markers (log and stdout) []
+    [ok] 0 'GpuHangAbort' lines (0)
+    [ok] 0 'GamePatch:' lines (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha 98)
+    [ok] 'Shader translation cache:' lines name variant_fixb26_fixb1b_fixf10_fixf19 (['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] free on C: >= 40 GiB before the tag (124)
+    [ok] 'F47dt: mode=1' line with frames = the window ({"cap": "2147483648", "dir": "_f47dt", "frames": "900-1500", "hash": "xxh3_64", "mode": "1", "ps": "45942b26d9ffbe8e"})
+    [ok] 'F47dtStat: when=exit' with capped=0 and 0 'F47dt: capped' lines (stat capped 0, lines 0)
+    [ok] _f47dt/ moved out of the emulator folder with a sha256 manifest (manifest C:/kyty/f287/f47i/runs/f47_dt_r1/f47dt_files.tsv files 1215 bytes 24299104 listsh)
+    [ok] reader dt_f47g2.py sha256 61a13e294df0e371... (61a13e294df0e371)
+    [ok] video index present (records 4078)
+    [ok] detector of F47a section 1.3 ran on the title window (OK)
+    [ok] item 740 (v)(3): an H line (ps=45942b26d9ffbe8e) in >= 1 show of a black series and >= 1 show of a white series (black [1217, 1218, 1219, 1220, 1221, 1232, 1233, 1234, 1235, 1236], white [1224, 1225, 1226, 1227, 1228])
+    [ok] item 742 (e) + 744 (g)(1): dt_f47g2.py flips --window: ADMISSION OK and FrameTrace lines > 0 in the same line (ADMISSION OK: flips 601 in [900, 1500], paths [0], shown lines 4054, FrameTrace lines 4053)
+  ROW n0 480; frames >= 1 s after the entry 0 []; [Vulkan][E] 0; skipped draw 0; window events {}; Recovering 0; log lines 661440
+  ROW F47dtStat {"bufs": "2455", "bytes": "24299104", "capped": "0", "draws": "491", "files": "1215", "flips": "4054", "frames": "198", "imgs": "2455", "pending": "0", "ring_gpu_notes": "0", "when": "exit"}; H lines 491 in 198 shows; held lines 0
+  ROW _f47dt files 1215 bytes 24299104
+  ROW video records 4078
+  ROW title window {"black_runs": [[1240, 1244, 1241, 1217, 1221, 737], [1255, 1259, 1256, 1232, 1236, 752], [1418, 1421, 1419, 1395, 1398, 915]], "d": 24, "decoded": 351, "maxK": 2989, "maxW": 1643, "status": "OK", "white_runs": [[1247, 1251, 1248, 1224, 1228, 744]], "window": [1103, 1453]}
+  ROW black shows [1217, 1218, 1219, 1220, 1221, 1232, 1233, 1234, 1235, 1236, 1395, 1396, 1397, 1398]; white shows [1224, 1225, 1226, 1227, 1228]; H in black [1217, 1218, 1219, 1220, 1221, 1232, 1233, 1234, 1235, 1236, 1395, 1396, 1397, 1398]; H in white [1224, 1225, 1226, 1227, 1228]; n0 in [165; 719] True; series in the window {'black': 14, 'white': 5}
+  SHOWS q rid path shown_n held series H
+  SHOW 1211 1211 0 [1211] - - 2
+  SHOW 1212 1212 0 [1212] - - 2
+  SHOW 1213 1213 0 [1213] - - 4
+  SHOW 1214 1214 0 [1214] - - 4
+  SHOW 1215 1215 0 [1215] - - 4
+  SHOW 1216 1216 0 [1216] - - 5
+  SHOW 1217 1217 0 [1217] - black 4
+  SHOW 1218 1218 0 [1218] - black 5
+  SHOW 1219 1219 0 [1219] - black 5
+  SHOW 1220 1220 0 [1220] - black 5
+  SHOW 1221 1221 0 [1221] - black 5
+  SHOW 1222 1222 0 [1222] - - 4
+  SHOW 1223 1223 0 [1223] - - 5
+  SHOW 1224 1224 0 [1224] - white 4
+  SHOW 1225 1225 0 [1225] - white 5
+  SHOW 1226 1226 0 [1226] - white 4
+  SHOW 1227 1227 0 [1227] - white 5
+  SHOW 1228 1228 0 [1228] - white 4
+  SHOW 1229 1229 0 [1229] - - 4
+  SHOW 1230 1230 0 [1230] - - 4
+  SHOW 1231 1231 0 [1231] - - 5
+  SHOW 1232 1232 0 [1232] - black 4
+  SHOW 1233 1233 0 [1233] - black 4
+  SHOW 1234 1234 0 [1234] - black 5
+  SHOW 1235 1235 0 [1235] - black 4
+  SHOW 1236 1236 0 [1236] - black 4
+  SHOW 1237 1237 0 [1237] - - 4
+  SHOW 1238 1238 0 [1238] - - 4
+  SHOW 1239 1239 0 [1239] - - 4
+  SHOW 1240 1240 0 [1240] - - 4
+  SHOW 1241 1241 0 [1241] - - 3
+  SHOW 1242 1242 0 [1242] - - 4
+  SHOW 1243 1243 0 [1243] - - 3
+  SHOW 1244 1244 0 [1244] - - 4
+  SHOW 1245 1245 0 [1245] - - 5
+  SHOW 1246 1246 0 [1246] - - 5
+  SHOW 1247 1247 0 [1247] - - 4
+  SHOW 1248 1248 0 [1248] - - 4
+  SHOW 1249 1249 0 [1249] - - 3
+  SHOW 1250 1250 0 [1250] - - 3
+  SHOW 1251 1251 0 [1251] - - 3
+  SHOW 1252 1252 0 [1252] - - 3
+  SHOW 1253 1253 0 [1253] - - 2
+  SHOW 1254 1254 0 [1254] - - 2
+  SHOW 1255 1255 0 [1255] - - 2
+  SHOW 1256 1256 0 [1256] - - 2
+  SHOW 1257 1257 0 [1257] - - 2
+  SHOW 1258 1258 0 [1258] - - 2
+  SHOW 1259 1259 0 [1259] - - 2
+  SHOW 1260 1260 0 [1260] - - 2
+  SHOW 1261 1261 0 [1261] - - 2
+  SHOW 1262 1262 0 [1262] - - 2
+  SHOW 1263 1263 0 [1263] - - 2
+  SHOW 1264 1264 0 [1264] - - 2
+  SHOW 1265 1265 0 [1265] - - 2
+  SHOW 1266 1266 0 [1266] - - 2
+  SHOW 1267 1267 0 [1267] - - 2
+  SHOW 1268 1268 0 [1268] - - 2
+  SHOW 1269 1269 0 [1269] - - 2
+  SHOW 1270 1270 0 [1270] - - 2
+  SHOW 1271 1271 0 [1271] - - 2
+  SHOW 1272 1272 0 [1272] - - 2
+  SHOW 1273 1273 0 [1273] - - 2
+  SHOW 1274 1274 0 [1274] - - 2
+  SHOW 1275 1275 0 [1275] - - 2
+  SHOW 1276 1276 0 [1276] - - 2
+  SHOW 1277 1277 0 [1277] - - 2
+  SHOW 1278 1278 0 [1278] - - 2
+  SHOW 1279 1279 0 [1279] - - 2
+  SHOW 1280 1280 0 [1280] - - 2
+  SHOW 1281 1281 0 [1281] - - 2
+  SHOW 1282 1282 0 [1282] - - 2
+  SHOW 1283 1283 0 [1283] - - 2
+  SHOW 1284 1284 0 [1284] - - 2
+  SHOW 1285 1285 0 [1285] - - 2
+  SHOW 1286 1286 0 [1286] - - 2
+  SHOW 1287 1287 0 [1287] - - 2
+  SHOW 1288 1288 0 [1288] - - 2
+  SHOW 1289 1289 0 [1289] - - 2
+  SHOW 1290 1290 0 [1290] - - 2
+  SHOW 1291 1291 0 [1291] - - 2
+  SHOW 1292 1292 0 [1292] - - 2
+  SHOW 1293 1293 0 [1293] - - 2
+  SHOW 1294 1294 0 [1294] - - 2
+  SHOW 1295 1295 0 [1295] - - 2
+  SHOW 1296 1296 0 [1296] - - 2
+  SHOW 1297 1297 0 [1297] - - 2
+  SHOW 1298 1298 0 [1298] - - 2
+  SHOW 1299 1299 0 [1299] - - 2
+  SHOW 1300 1300 0 [1300] - - 2
+  SHOW 1301 1301 0 [1301] - - 2
+  SHOW 1302 1302 0 [1302] - - 2
+  SHOW 1303 1303 0 [1303] - - 2
+  SHOW 1304 1304 0 [1304] - - 2
+  SHOW 1305 1305 0 [1305] - - 2
+  SHOW 1306 1306 0 [1306] - - 2
+  SHOW 1307 1307 0 [1307] - - 2
+  SHOW 1308 1308 0 [1308] - - 2
+  SHOW 1309 1309 0 [1309] - - 2
+  SHOW 1310 1310 0 [1310] - - 2
+  SHOW 1311 1311 0 [1311] - - 2
+  SHOW 1312 1312 0 [1312] - - 2
+  SHOW 1313 1313 0 [1313] - - 2
+  SHOW 1314 1314 0 [1314] - - 2
+  SHOW 1315 1315 0 [1315] - - 2
+  SHOW 1316 1316 0 [1316] - - 2
+  SHOW 1317 1317 0 [1317] - - 2
+  SHOW 1318 1318 0 [1318] - - 2
+  SHOW 1319 1319 0 [1319] - - 2
+  SHOW 1320 1320 0 [1320] - - 2
+  SHOW 1321 1321 0 [1321] - - 2
+  SHOW 1322 1322 0 [1322] - - 2
+  SHOW 1323 1323 0 [1323] - - 2
+  SHOW 1324 1324 0 [1324] - - 2
+  SHOW 1325 1325 0 [1325] - - 2
+  SHOW 1326 1326 0 [1326] - - 2
+  SHOW 1327 1327 0 [1327] - - 2
+  SHOW 1328 1328 0 [1328] - - 2
+  SHOW 1329 1329 0 [1329] - - 2
+  SHOW 1330 1330 0 [1330] - - 2
+  SHOW 1331 1331 0 [1331] - - 2
+  SHOW 1332 1332 0 [1332] - - 2
+  SHOW 1333 1333 0 [1333] - - 2
+  SHOW 1334 1334 0 [1334] - - 2
+  SHOW 1335 1335 0 [1335] - - 2
+  SHOW 1336 1336 0 [1336] - - 2
+  SHOW 1337 1337 0 [1337] - - 2
+  SHOW 1338 1338 0 [1338] - - 2
+  SHOW 1339 1339 0 [1339] - - 2
+  SHOW 1340 1340 0 [1340] - - 2
+  SHOW 1341 1341 0 [1341] - - 2
+  SHOW 1342 1342 0 [1342] - - 2
+  SHOW 1343 1343 0 [1343] - - 2
+  SHOW 1344 1344 0 [1344] - - 2
+  SHOW 1345 1345 0 [1345] - - 2
+  SHOW 1346 1346 0 [1346] - - 2
+  SHOW 1347 1347 0 [1347] - - 2
+  SHOW 1348 1348 0 [1348] - - 2
+  SHOW 1349 1349 0 [1349] - - 2
+  SHOW 1350 1350 0 [1350] - - 2
+  SHOW 1351 1351 0 [1351] - - 2
+  SHOW 1352 1352 0 [1352] - - 2
+  SHOW 1353 1353 0 [1353] - - 2
+  SHOW 1354 1354 0 [1354] - - 2
+  SHOW 1355 1355 0 [1355] - - 2
+  SHOW 1356 1356 0 [1356] - - 2
+  SHOW 1357 1357 0 [1357] - - 2
+  SHOW 1358 1358 0 [1358] - - 2
+  SHOW 1359 1359 0 [1359] - - 2
+  SHOW 1360 1360 0 [1360] - - 2
+  SHOW 1361 1361 0 [1361] - - 2
+  SHOW 1362 1362 0 [1362] - - 2
+  SHOW 1363 1363 0 [1363] - - 2
+  SHOW 1364 1364 0 [1364] - - 2
+  SHOW 1365 1365 0 [1365] - - 2
+  SHOW 1366 1366 0 [1366] - - 2
+  SHOW 1367 1367 0 [1367] - - 2
+  SHOW 1368 1368 0 [1368] - - 2
+  SHOW 1369 1369 0 [1369] - - 2
+  SHOW 1370 1370 0 [1370] - - 2
+  SHOW 1371 1371 0 [1371] - - 2
+  SHOW 1372 1372 0 [1372] - - 2
+  SHOW 1373 1373 0 [1373] - - 2
+  SHOW 1374 1374 0 [1374] - - 2
+  SHOW 1375 1375 0 [1375] - - 2
+  SHOW 1376 1376 0 [1376] - - 2
+  SHOW 1377 1377 0 [1377] - - 2
+  SHOW 1378 1378 0 [1378] - - 2
+  SHOW 1379 1379 0 [1379] - - 2
+  SHOW 1380 1380 0 [1380] - - 2
+  SHOW 1381 1381 0 [1381] - - 2
+  SHOW 1382 1382 0 [1382] - - 2
+  SHOW 1383 1383 0 [1383] - - 2
+  SHOW 1384 1384 0 [1384] - - 2
+  SHOW 1385 1385 0 [1385] - - 2
+  SHOW 1386 1386 0 [1386] - - 2
+  SHOW 1387 1387 0 [1387] - - 2
+  SHOW 1388 1388 0 [1388] - - 2
+  SHOW 1389 1389 0 [1389] - - 2
+  SHOW 1390 1390 0 [1390] - - 2
+  SHOW 1391 1391 0 [1391] - - 2
+  SHOW 1392 1392 0 [1392] - - 2
+  SHOW 1393 1393 0 [1393] - - 2
+  SHOW 1394 1394 0 [1394] - - 4
+  SHOW 1395 1395 0 [1395] - black 4
+  SHOW 1396 1396 0 [1396] - black 4
+  SHOW 1397 1397 0 [1397] - black 3
+  SHOW 1398 1398 0 [1398] - black 1
+  SHOW 1399 1399 0 [1399] - - 3
+  SHOW 1400 1400 0 [1400] - - 3
+  SHOW 1401 1401 0 [1401] - - 3
+  SHOW 1402 1402 0 [1402] - - 3
+  SHOW 1403 1403 0 [1403] - - 2
+  SHOW 1404 1404 0 [1404] - - 2
+  SHOW 1405 1405 0 [1405] - - 2
+  SHOW 1406 1406 0 [1406] - - 2
+  SHOW 1407 1407 0 [1407] - - 2
+  SHOW 1408 1408 0 [1408] - - 1
+  SHOWS listed: the shows with H draws, a series, held, no flip line or shown n != q; the others of the window have H 0, not held, no series, shown n = q
+  READING ADMITTED (no verdict; the outcome is F47j by rule (6) of item 740 (v)(6))

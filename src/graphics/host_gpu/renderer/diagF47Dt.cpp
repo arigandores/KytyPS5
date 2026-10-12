@@ -1025,7 +1025,8 @@ void OnDraw(RenderContext& context, const CommandBuffer& buffer, const DrawArgs&
 		}
 		if (extent.width != 0) {
 			const auto sc = calc_final_scissor(vp, ctx.GetScanModeControl(), extent, 0);
-			fmt::format_to(std::back_inserter(s), " sc0={},{},{},{}", sc.left, sc.top, sc.right, sc.bottom);
+			fmt::format_to(std::back_inserter(s), " sc0={},{},{},{} ext={},{}", sc.left, sc.top, sc.right, sc.bottom,
+			               extent.width, extent.height);
 		} else {
 			s += " sc0=-";
 		}

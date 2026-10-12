@@ -440,6 +440,10 @@ endfunction()
 
 add_kyty_full_emulator_test(shader_cfg_tests "${KYTY_TESTS_DIR}/shaderCfgTests.cpp")
 
+# Track M, M2b (HPP-839, ROADMAP s122 item 756(v)(2)): stand of the HLE themes T265, T272, T231 of upstream wave 1
+# (KYTY_M_T265, KYTY_M_T272, KYTY_M_T231); run by C:/kyty/m657/m2b/run_stand_m2b.py, not by ctest.
+add_kyty_full_emulator_test(m_wave1_hle_stand "${KYTY_TESTS_DIR}/MWave1HleStand.cpp")
+
 # Track F, B24 pad output stand (F19c; ROADMAP s122 item 451(e)(1)): run by docs/track-f/f19c/run_stand_f19c.py, not by
 # ctest.
 add_kyty_full_emulator_test(b24_pad_stand

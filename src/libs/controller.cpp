@@ -659,6 +659,7 @@ public:
 	void SetVibration(uint8_t large_motor, uint8_t small_motor);
 	void SetLightBar(uint8_t r, uint8_t g, uint8_t b);
 	bool SetTriggerEffect(const PadTriggerEffectParam& param, bool* sent);
+	void GetTriggerEffectStateM272(int32_t* state); // Track M, M2b (T272)
 	void ReadState(ControllerState* state, bool* flag, int* count);
 	int  ReadStates(ControllerState* states, int states_num, bool* flag, int* count);
 
@@ -666,6 +667,9 @@ private:
 	static constexpr uint32_t STATES_MAX = 64;
 
 	void RefreshMotion();
+	// Track M, M2b (T272; KYTY_M_T272=1 only): recompute m_m272_state from m_m272_effect and the trigger axes; the
+	// caller holds m_mutex.
+	void UpdateTriggerEffectStateM272();
 	void CheckActive();
 	void AddState();
 
@@ -684,6 +688,10 @@ private:
 	uint64_t         m_gyro_timestamp = 0;
 	// Track F, F19c (item 451(d)): connected ids whose pad is a PS5 pad (filled at KYTY_FIX_B24=1 only).
 	std::vector<int> m_ps5_ids;
+	// Track M, M2b (T272, upstream 3c62359e): the last accepted command per trigger and the reported states
+	// (written at KYTY_M_T272=1 only, under m_mutex).
+	PadTriggerEffectParam m_m272_effect {};
+	int32_t               m_m272_state[2] {};
 };
 
 static GameController* g_controller = nullptr;
@@ -831,8 +839,64 @@ static bool trigger_effect_to_dualsense(const PadTriggerEffectCommand& command, 
 	}
 }
 
+// Track M, M2b (T272, upstream 3c62359e; HPP-839, ROADMAP s122 item 756(v)(2)): KYTY_M_T272 (default 0).
+bool MT272On() {
+	static const bool on = [] {
+		const bool value = Common::EnvValueOn(std::getenv("KYTY_M_T272"));
+		LOGF("MT272: mode=%d\n", value ? 1 : 0);
+		return value;
+	}();
+	return on;
+}
+
+// Track M, M2b (T272, upstream 3c62359e): the libScePad trigger effect states (the values duaLib reads from a
+// DualSense input report; [I] for the console).
+enum M272TriggerState : int32_t {
+	M272_TRIGGER_STATE_OFF               = 0,
+	M272_TRIGGER_STATE_FEEDBACK_STANDBY  = 1,
+	M272_TRIGGER_STATE_FEEDBACK_ACTIVE   = 2,
+	M272_TRIGGER_STATE_WEAPON_STANDBY    = 3,
+	M272_TRIGGER_STATE_WEAPON_PULLING    = 4,
+	M272_TRIGGER_STATE_WEAPON_FIRED      = 5,
+	M272_TRIGGER_STATE_VIBRATION_STANDBY = 6,
+	M272_TRIGGER_STATE_VIBRATION_ACTIVE  = 7,
+};
+
+// Track M, M2b (T272, upstream 3c62359e): the state of one trigger from its last command and its travel 0..255.
+static int32_t M272TriggerEffectState(const PadTriggerEffectCommand& command, int value, int32_t previous) {
+	// Trigger positions use nonuniform travel ranges, with endpoints at 0 and 255.
+	const int pos = value == 0 ? 0 : value == 255 ? 9 : 1 + value / 32;
+	switch (command.mode) {
+		case 1: // feedback: resistance from position data[0], strength data[1]
+			return command.data[1] != 0 && pos >= command.data[0] ? M272_TRIGGER_STATE_FEEDBACK_ACTIVE
+			                                                      : M272_TRIGGER_STATE_FEEDBACK_STANDBY;
+		case 2: // weapon: resistance from data[0], released at data[1]
+			if (value < command.data[0] * 32) {
+				return M272_TRIGGER_STATE_WEAPON_STANDBY;
+			}
+			return previous == M272_TRIGGER_STATE_WEAPON_FIRED || value >= std::min(command.data[1] * 32, 254)
+			           ? M272_TRIGGER_STATE_WEAPON_FIRED
+			           : M272_TRIGGER_STATE_WEAPON_PULLING;
+		case 3: // vibration from position data[0], amplitude data[1], frequency data[2]
+			return command.data[1] != 0 && command.data[2] != 0 && pos >= command.data[0]
+			           ? M272_TRIGGER_STATE_VIBRATION_ACTIVE
+			           : M272_TRIGGER_STATE_VIBRATION_STANDBY;
+		case 4: // multiple-position feedback: strength per position
+			return command.data[pos] != 0 ? M272_TRIGGER_STATE_FEEDBACK_ACTIVE : M272_TRIGGER_STATE_FEEDBACK_STANDBY;
+		case 5: // slope feedback between data[0] and data[1]
+			return pos >= command.data[0] && pos < command.data[1] ? M272_TRIGGER_STATE_FEEDBACK_ACTIVE
+			                                                       : M272_TRIGGER_STATE_FEEDBACK_STANDBY;
+		case 6: // multiple-position vibration: frequency data[0], amplitude per position
+			return command.data[0] != 0 && command.data[1 + pos] != 0 ? M272_TRIGGER_STATE_VIBRATION_ACTIVE
+			                                                         : M272_TRIGGER_STATE_VIBRATION_STANDBY;
+		default: return M272_TRIGGER_STATE_OFF;
+	}
+}
+
 void Initialize() {
 	EXIT_IF(g_controller != nullptr);
+
+	(void)MT272On(); // Track M, M2b (T272): the knob is read before the guest threads exist
 
 	// Track F, F19c (ROADMAP s122 item 451(d)): KYTY_FIX_B24, read once here - before the guest threads exist.
 	// FS7a (HPP-565, ROADMAP s122 item 487(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any other value
@@ -954,6 +1018,12 @@ void GameController::CheckActive() {
 	m_orientation[0] = m_orientation[1] = m_orientation[2] = 0.0f;
 	m_orientation[3] = 1.0f;
 	m_gyro_timestamp = 0;
+	if (MT272On()) {
+		// Track M, M2b (T272, upstream 3c62359e): a new active pad starts without trigger effects.
+		m_m272_effect   = {};
+		m_m272_state[0] = 0;
+		m_m272_state[1] = 0;
+	}
 	if (g_pad_output != nullptr) {
 		// Track F, F19c (item 451(d)): the PadOutput copy of the active pad id and of "the active pad is a PS5 pad"
 		// (KYTY_FIX_B24=1 only; the caller holds m_mutex; no SDL call here - the type was read by Connect).
@@ -1007,6 +1077,11 @@ void GameController::Axis(int id, Controller::Axis axis, int value) {
 		}
 		if (trigger != 0) {
 			m_state.buttons = value > 0 ? m_state.buttons | trigger : m_state.buttons & ~trigger;
+			if (MT272On()) {
+				// Track M, M2b (T272, upstream 3c62359e): every trigger event, so a fired weapon stays fired
+				// when the game polls after the release starts.
+				UpdateTriggerEffectStateM272();
+			}
 		}
 
 		AddState();
@@ -1153,6 +1228,9 @@ void GameController::ResetInputState() {
 	const bool motion_enabled = m_state.motion_enabled;
 	m_state         = {};
 	m_state.motion_enabled = motion_enabled;
+	if (MT272On()) {
+		UpdateTriggerEffectStateM272(); // Track M, M2b (T272): the triggers are released
+	}
 	m_state.time    = LibKernel::KernelGetProcessTime();
 	m_states_num    = 0;
 	m_first_state   = 0;
@@ -1239,6 +1317,21 @@ void GameController::SetLightBar(uint8_t r, uint8_t g, uint8_t b) {
 	}
 }
 
+// Track M, M2b (T272, upstream 3c62359e): the states of both triggers (KYTY_M_T272=1 only).
+void GameController::GetTriggerEffectStateM272(int32_t* state) {
+	Common::LockGuard lock(m_mutex);
+	state[0] = m_m272_state[0];
+	state[1] = m_m272_state[1];
+}
+
+void GameController::UpdateTriggerEffectStateM272() {
+	for (int i = 0; i < 2; i++) {
+		m_m272_state[i] = M272TriggerEffectState(
+		    m_m272_effect.command[i], m_state.axes[static_cast<int>(Controller::Axis::TriggerLeft) + i],
+		    m_m272_state[i]);
+	}
+}
+
 bool GameController::SetTriggerEffect(const PadTriggerEffectParam& param, bool* sent) {
 	PadCallProbe probe(g_hidloss.pad_trig);
 	*sent = false;
@@ -1258,6 +1351,18 @@ bool GameController::SetTriggerEffect(const PadTriggerEffectParam& param, bool* 
 		if (!trigger_effect_to_dualsense(param.command[1], effect.right_trigger)) {
 			return false;
 		}
+	}
+	if (MT272On()) {
+		// Track M, M2b (T272, upstream 3c62359e; KYTY_M_T272): both commands are valid here - the request is
+		// cached per trigger of its mask and the reported states are recomputed.
+		Common::LockGuard lock(m_mutex);
+		for (int i = 0; i < 2; i++) {
+			if ((param.trigger_mask & (1u << i)) != 0) {
+				m_m272_effect.trigger_mask |= static_cast<uint8_t>(1u << i);
+				m_m272_effect.command[i] = param.command[i];
+			}
+		}
+		UpdateTriggerEffectStateM272();
 	}
 	if (effect.enable_bits == 0) {
 		return true;
@@ -1631,6 +1736,21 @@ int KYTY_SYSV_ABI PadSetTriggerEffect(int handle, const PadTriggerEffectParam* p
 	}
 
 	return ok ? OK : PAD_ERROR_INVALID_ARG;
+}
+
+// Track M, M2b (T272, upstream 3c62359e; KYTY_M_T272=1 only): scePadGetTriggerEffectState - the handle first, then
+// the argument (libScePad codes), then the states of the last effects.
+int KYTY_SYSV_ABI PadGetTriggerEffectStateM272(int handle, int32_t* state) {
+	if (handle != 1) {
+		return PAD_ERROR_INVALID_HANDLE;
+	}
+	if (state == nullptr) {
+		return PAD_ERROR_INVALID_ARG;
+	}
+
+	g_controller->GetTriggerEffectStateM272(state);
+
+	return OK;
 }
 
 } // namespace Libs::Controller

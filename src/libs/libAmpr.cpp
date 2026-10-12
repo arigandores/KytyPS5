@@ -1,6 +1,7 @@
 #include "common/abi.h"
 #include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/dateTime.h"
+#include "common/envFlag.h" // Track M, M2b (KYTY_M_T265)
 #include "common/file.h"
 #include "common/logging/log.h"
 #include "common/stringUtils.h"
@@ -14,6 +15,7 @@
 #include <algorithm>
 #include <array>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <limits>
 #include <mutex>
@@ -58,6 +60,21 @@ static std::unordered_map<uint32_t, SubmissionState>     g_submissions;
 static std::unordered_map<uint32_t, std::string>         g_files;
 static std::unordered_map<uint32_t, uint64_t>            g_file_sizes;
 static std::unordered_map<std::string, ResolvedPathInfo> g_resolved_paths;
+
+// Track M, M2b (T265, upstream e43aadf7; HPP-839, ROADMAP s122 item 756(v)(2)): KYTY_M_T265 (default 0), read once
+// per process (line MT265: mode=). At 1 the ID of a resolved path is the next value of a counter, allocated once
+// under g_mutex when the path enters g_resolved_paths (two paths with the same 31-bit FNV-1a of ComputeFileId then
+// get two IDs - at 0 the second path replaced the host path and the size of the first); 0xffffffff is never given
+// (ENFILE). At 0 the ID is ComputeFileId and every resolve registers the host path again, as before.
+static bool MT265On() {
+	static const bool on = [] {
+		const bool value = Common::EnvValueOn(std::getenv("KYTY_M_T265"));
+		LOGF("MT265: mode=%d\n", value ? 1 : 0);
+		return value;
+	}();
+	return on;
+}
+static uint32_t g_m265_next_file_id = 1;
 
 static bool IsValidGuestRange(uint64_t addr, uint64_t size, bool write = false) {
 	(void)write;
@@ -200,6 +217,7 @@ static int ResolveOnePath(const char* guest_path, uint32_t* id, uint64_t* size) 
 		return LibKernel::KERNEL_ERROR_EINVAL;
 	}
 
+	const bool        m265 = MT265On(); // Track M, M2b (T265)
 	ResolvedPathInfo  info {};
 	const std::string path(guest_path);
 	bool              found = false;
@@ -214,7 +232,8 @@ static int ResolveOnePath(const char* guest_path, uint32_t* id, uint64_t* size) 
 
 	if (!found) {
 		const auto real_path = LibKernel::FileSystem::GetRealFilename(path);
-		info.file_id         = AprShared::ComputeFileId(guest_path);
+		// Track M, M2b (T265; KYTY_M_T265): at 1 the ID is given below, when the path is inserted.
+		info.file_id         = m265 ? 0xffffffffu : AprShared::ComputeFileId(guest_path);
 		info.host_path       = Common::PathToString(real_path);
 
 		if (Common::File::IsDirectoryExisting(real_path)) {
@@ -232,6 +251,15 @@ static int ResolveOnePath(const char* guest_path, uint32_t* id, uint64_t* size) 
 			auto [it, inserted] = g_resolved_paths.emplace(path, info);
 			if (!inserted) {
 				info = it->second;
+			} else if (info.result == OK && m265) {
+				// Track M, M2b (T265, upstream e43aadf7; KYTY_M_T265): one ID per path, allocated once under g_mutex.
+				if (g_m265_next_file_id == 0xffffffffu) {
+					info.result = it->second.result = LibKernel::KERNEL_ERROR_ENFILE;
+				} else {
+					info.file_id = it->second.file_id = g_m265_next_file_id++;
+					g_files.emplace(info.file_id, info.host_path);
+					g_file_sizes.emplace(info.file_id, info.is_dir ? 0 : info.file_size);
+				}
 			} else if (info.result == OK) {
 				RegisterHostPathLocked(info.file_id, info.host_path, info.file_size, info.is_dir);
 			} else if (info.result == LibKernel::KERNEL_ERROR_ENOENT) {
@@ -241,7 +269,7 @@ static int ResolveOnePath(const char* guest_path, uint32_t* id, uint64_t* size) 
 		if (log_missing) {
 			LOGF("\tAPR resolve missing path: %s -> %s\n", guest_path, info.host_path.c_str());
 		}
-	} else if (info.result == OK) {
+	} else if (info.result == OK && !m265) { // Track M, M2b (T265): at 1 the path keeps its first ID
 		AprShared::RegisterHostPath(info.file_id, info.host_path, info.file_size, info.is_dir);
 	}
 

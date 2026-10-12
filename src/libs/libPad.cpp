@@ -32,6 +32,11 @@ static int KYTY_SYSV_ABI PadGetTriggerEffectState(int                           
 
 	LOGF("\t handle = %d\n", handle);
 
+	if (Controller::MT272On()) {
+		// Track M, M2b (T272, upstream 3c62359e; KYTY_M_T272): the state of the last effect and the trigger travel.
+		return Controller::PadGetTriggerEffectStateM272(handle, info != nullptr ? info->state : nullptr);
+	}
+
 	if (info == nullptr) {
 		return -2137653243; /* 0x80960005 */
 	}

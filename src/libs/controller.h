@@ -112,6 +112,11 @@ int KYTY_SYSV_ABI PadSetVibration(int handle, const PadVibrationParam* param);
 int KYTY_SYSV_ABI PadSetTriggerEffect(int handle, const PadTriggerEffectParam* param);
 int KYTY_SYSV_ABI PadResetLightBar(int handle);
 int KYTY_SYSV_ABI PadSetLightBar(int handle, const PadLightBarParam* param);
+// Track M, M2b (T272, upstream 3c62359e; HPP-839, ROADMAP s122 item 756(v)(2)): KYTY_M_T272 (default 0), read once
+// per process (Initialize; line MT272: mode=). At 1 scePadGetTriggerEffectState (libPad.cpp) answers with
+// PadGetTriggerEffectStateM272: the state of the last effect per trigger and the trigger travel; at 0 it stays 0.
+bool              MT272On();
+int KYTY_SYSV_ABI PadGetTriggerEffectStateM272(int handle, int32_t* state);
 
 } // namespace Libs::Controller
 

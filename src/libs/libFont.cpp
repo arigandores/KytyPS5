@@ -2,6 +2,7 @@
 #include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "common/assert.h"
 #include "common/common.h"
+#include "common/envFlag.h" // Track M, M2b (KYTY_M_T231)
 #include "common/logging/log.h"
 #include "libs/errno.h"
 #include "libs/libs.h"
@@ -11,6 +12,7 @@
 #include <array>
 #include <cinttypes>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
@@ -74,6 +76,9 @@ constexpr int SCE_FONT_TEXT_PARSER_RESULT_TERMINATE = 0;
 constexpr int SCE_FONT_TEXT_PARSER_RESULT_ERROR     = -1;
 constexpr int SCE_FONT_WRITING_FORM_HORIZONTAL      = 0x10;
 constexpr int FONT_BITMAP_MAX_DIM                   = 128;
+// Track M, M2b (T231, upstream 58978d15): at KYTY_M_T231=1 TrueType glyphs are rasterized at the requested
+// size; the limit only rejects absurd scales.
+constexpr int FONT_GLYPH_MAX_DIM_M231 = 4096;
 
 struct FontMemory {
 	uint16_t                   type;
@@ -192,6 +197,7 @@ struct FontState {
 	uint32_t                                                       ttf_size;
 	bool                                                           has_ttf;
 	std::array<uint8_t, FONT_BITMAP_MAX_DIM * FONT_BITMAP_MAX_DIM> fallback_image;
+	std::vector<uint8_t> fallback_image_m231; // Track M, M2b (T231): TrueType raster at KYTY_M_T231=1
 	FontTransImage                                                 trans_image;
 };
 
@@ -213,6 +219,7 @@ struct GlyphState {
 	int                                                            attribute;
 	FontGlyphMetrics                                               metrics;
 	std::array<uint8_t, FONT_BITMAP_MAX_DIM * FONT_BITMAP_MAX_DIM> image;
+	std::vector<uint8_t> image_m231; // Track M, M2b (T231): TrueType raster at KYTY_M_T231=1
 	FontTransImage                                                 trans_image;
 };
 
@@ -797,6 +804,21 @@ static bool ensure_stb_font(FontState* font) {
 	return font->has_ttf;
 }
 
+// Track M, M2b (T231, upstream f96a14a0 + 58978d15; HPP-839, ROADMAP s122 item 756(v)(2)): KYTY_M_T231 (default 0),
+// read once per process (line MT231: mode=). At 1 a TrueType glyph is measured and rasterized in the em scale of
+// scale_w / scale_h (stbtt_ScaleForMappingEmToPixels) with no 8..128 clamp: the raster buffer grows to the glyph
+// box (limit FONT_GLYPH_MAX_DIM_M231) and width_byte is the glyph width; the horizontal layout uses the em scale
+// of scale_h. At 0 the pixel height is scale_h clamped to 8..128 over ascent - descent, as before. The VGA
+// fallback keeps its 128-pixel buffer at both values.
+static bool MT231On() {
+	static const bool on = [] {
+		const bool value = Common::EnvValueOn(std::getenv("KYTY_M_T231"));
+		LOGF("MT231: mode=%d\n", value ? 1 : 0);
+		return value;
+	}();
+	return on;
+}
+
 static float stb_font_pixel_height(const FontState* font) {
 	const float scale = (font != nullptr && font->scale_h > 1.0f ? font->scale_h : 16.0f);
 	return static_cast<float>(std::clamp(static_cast<int>(scale + 0.5f), 8, FONT_BITMAP_MAX_DIM));
@@ -819,6 +841,32 @@ static uint32_t stb_supported_codepoint(FontState* font, uint32_t code) {
 static bool get_stb_metrics(FontState* font, uint32_t code, FontGlyphMetrics* metrics) {
 	if (metrics == nullptr || !ensure_stb_font(font)) {
 		return false;
+	}
+
+	if (MT231On()) {
+		// Track M, M2b (T231, upstream f96a14a0; KYTY_M_T231): metrics in the em scale of scale_w / scale_h.
+		code                = stb_supported_codepoint(font, code);
+		const float scale_x = stbtt_ScaleForMappingEmToPixels(&font->font_info, font->scale_w);
+		const float scale_y = stbtt_ScaleForMappingEmToPixels(&font->font_info, font->scale_h);
+
+		int advance = 0;
+		int x0      = 0;
+		int y0      = 0;
+		int x1      = 0;
+		int y1      = 0;
+		stbtt_GetCodepointHMetrics(&font->font_info, static_cast<int>(code), &advance, nullptr);
+		stbtt_GetCodepointBox(&font->font_info, static_cast<int>(code), &x0, &y0, &x1, &y1);
+
+		metrics->width                = static_cast<float>(x1 - x0) * scale_x;
+		metrics->height               = static_cast<float>(y1 - y0) * scale_y;
+		metrics->horizontal.bearing_x = static_cast<float>(x0) * scale_x;
+		metrics->horizontal.bearing_y = static_cast<float>(y1) * scale_y;
+		metrics->horizontal.advance   = static_cast<float>(advance) * scale_x;
+		metrics->vertical.bearing_x   = 0.0f;
+		metrics->vertical.bearing_y   = 0.0f;
+		metrics->vertical.advance     = font->scale_h;
+
+		return true;
 	}
 
 	code              = stb_supported_codepoint(font, code);
@@ -851,9 +899,44 @@ static bool get_stb_metrics(FontState* font, uint32_t code, FontGlyphMetrics* me
 }
 
 static bool init_stb_image(std::array<uint8_t, FONT_BITMAP_MAX_DIM * FONT_BITMAP_MAX_DIM>* image,
-                           FontTransImage* trans_image, uint32_t code, FontState* font) {
+                           FontTransImage* trans_image, uint32_t code, FontState* font,
+                           std::vector<uint8_t>* image_m231) {
 	if (image == nullptr || trans_image == nullptr || !ensure_stb_font(font)) {
 		return false;
+	}
+
+	if (MT231On() && image_m231 != nullptr) {
+		// Track M, M2b (T231, upstream f96a14a0 + 58978d15; KYTY_M_T231): the glyph at the requested em scale in a
+		// buffer of its own box; width_byte is the glyph width.
+		code                = stb_supported_codepoint(font, code);
+		const float scale_x = stbtt_ScaleForMappingEmToPixels(&font->font_info, font->scale_w);
+		const float scale_y = stbtt_ScaleForMappingEmToPixels(&font->font_info, font->scale_h);
+
+		int x0 = 0;
+		int y0 = 0;
+		int x1 = 0;
+		int y1 = 0;
+		stbtt_GetCodepointBitmapBox(&font->font_info, static_cast<int>(code), scale_x, scale_y, &x0, &y0,
+		                            &x1, &y1);
+
+		const auto width  = static_cast<uint32_t>(std::clamp(x1 - x0, 0, FONT_GLYPH_MAX_DIM_M231));
+		const auto height = static_cast<uint32_t>(std::clamp(y1 - y0, 0, FONT_GLYPH_MAX_DIM_M231));
+		// Keep at least one byte so that blank glyphs still get a valid address.
+		image_m231->assign(std::max<size_t>(static_cast<size_t>(width) * height, 1), 0);
+		trans_image->address      = image_m231->data();
+		trans_image->width_byte   = width;
+		trans_image->image_width  = width;
+		trans_image->image_height = height;
+
+		if (width == 0 || height == 0) {
+			return true;
+		}
+
+		stbtt_MakeCodepointBitmap(&font->font_info, image_m231->data(), static_cast<int>(width),
+		                          static_cast<int>(height), static_cast<int>(width), scale_x, scale_y,
+		                          static_cast<int>(code));
+
+		return true;
 	}
 
 	code              = stb_supported_codepoint(font, code);
@@ -938,11 +1021,12 @@ static uint32_t normalize_bitmap_font_code(uint32_t code) {
 }
 
 static void init_image(std::array<uint8_t, FONT_BITMAP_MAX_DIM * FONT_BITMAP_MAX_DIM>* image,
-                       FontTransImage* trans_image, uint32_t code, const FontState* font) {
+                       FontTransImage* trans_image, uint32_t code, const FontState* font,
+                       std::vector<uint8_t>* image_m231) {
 	EXIT_NOT_IMPLEMENTED(image == nullptr);
 	EXIT_NOT_IMPLEMENTED(trans_image == nullptr);
 
-	if (init_stb_image(image, trans_image, code, const_cast<FontState*>(font))) {
+	if (init_stb_image(image, trans_image, code, const_cast<FontState*>(font), image_m231)) {
 		return;
 	}
 
@@ -1186,7 +1270,8 @@ static int open_font(FontLibrary library, const void* data, uint32_t size, uint3
 	state->ttf_size                  = 0;
 	state->has_ttf                   = false;
 	init_font_face(state);
-	init_image(&state->fallback_image, &state->trans_image, static_cast<uint32_t>('?'), state);
+	init_image(&state->fallback_image, &state->trans_image, static_cast<uint32_t>('?'), state,
+	           &state->fallback_image_m231);
 
 	*handle = state;
 
@@ -1416,7 +1501,9 @@ int KYTY_SYSV_ABI FontGetHorizontalLayout(FontHandle font_handle, FontHorizontal
 
 	auto* font = static_cast<FontState*>(font_handle);
 	if (ensure_stb_font(font)) {
-		const float scale    = stb_font_scale(font);
+		// Track M, M2b (T231, upstream f96a14a0; KYTY_M_T231): at 1 the em scale of scale_h.
+		const float scale    = MT231On() ? stbtt_ScaleForMappingEmToPixels(&font->font_info, font->scale_h)
+		                                 : stb_font_scale(font);
 		int         ascent   = 0;
 		int         descent  = 0;
 		int         line_gap = 0;
@@ -2141,7 +2228,7 @@ int KYTY_SYSV_ABI FontGenerateCharGlyph(FontHandle font_handle, uint32_t code,
 	glyph->font = font;
 	glyph->code = code;
 	fill_metrics_for_code(&glyph->metrics, font, code);
-	init_image(&glyph->image, &glyph->trans_image, code, font);
+	init_image(&glyph->image, &glyph->trans_image, code, font, &glyph->image_m231);
 	register_glyph(glyph);
 
 	*font_glyph = glyph;
@@ -2198,7 +2285,7 @@ int KYTY_SYSV_ABI FontRenderCharGlyphImageHorizontal(FontHandle font_handle, uin
 		return -1;
 	}
 
-	init_image(&font->fallback_image, &font->trans_image, code, font);
+	init_image(&font->fallback_image, &font->trans_image, code, font, &font->fallback_image_m231);
 	FontGlyphMetrics local_metrics {};
 	auto*            draw_metrics = (metrics != nullptr ? metrics : &local_metrics);
 	fill_metrics_for_code(draw_metrics, font, code);

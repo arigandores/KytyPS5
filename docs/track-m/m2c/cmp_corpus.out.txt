@@ -1,0 +1,12 @@
+rows 269 configs 10 rc != 0: 0 []
+u      rows_diff   0 programs   0 
+z      rows_diff   0 programs   0 
+tT234  rows_diff   0 programs   0 
+tT233  rows_diff 229 programs 229 
+tT256  rows_diff   0 programs   0 
+tT306  rows_diff   2 programs   2 ?ps_5a34b303576ee324_914a71d3664b53ab_0 ?ps_f47c0c097c598a36_3de3d43ef41686a6_0
+tT032  rows_diff   1 programs   1 ?cs_1ab07462ad1bec74_40f7d5bdb5e049c5_0
+tT203  rows_diff   3 programs   3 ?cs_380bb9d636390bae_fe70c334a8301128_0 ?cs_380bb9d636390bae_fe70c334a8301128_1 ?cs_380bb9d636390bae_fe70c334a8301128_2
+all    rows_diff 230 programs 230 
+all == union of six themes: True | MS1 union rows 230 programs 230
+ALL OK

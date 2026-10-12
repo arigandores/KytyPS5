@@ -1,0 +1,80 @@
+2026-10-12T09:52:24Z start M2c read inputs ROADMAP p.756/758/759 at KytyPS5 666a434a
+2026-10-12T09:56:52Z worktree m2c/wt at 666a434a, build_m2c.cmd written
+2026-10-12T09:57:01Z configure start
+2026-10-12T09:57:13Z configure end
+2026-10-12T09:57:47Z worktree m2c/wt at 666a434a via mk_wt_m2c.sh (autocrlf=false, submodules)
+2026-10-12T09:57:53Z configure start
+2026-10-12T09:59:11Z configure end
+2026-10-12T09:59:11Z build compute tests start
+2026-10-12T10:00:44Z build compute tests end
+2026-10-12T10:00:49Z build cfg+stand+emu start
+2026-10-12T10:02:39Z build cfg+stand+emu end
+f05ae347368768251efc289b150ed75cbd8811144ed68f663b868d65adec5daa *build/kyty_emulator.exe
+388f76918a910981a7bf6bf27585b22b21162e93c14f77618b9d0cd9698913d5 *build/m_wave1_hle_stand.exe
+c8e7f50d37c66c0e8de06c15acdcc07a011044d556cf0e145abf13a4f1d37a8d *build/shader_cfg_tests.exe
+cd8f5af5a50619b1e883a83ed821058102c6168939b25d9299ae87e1f63b7536 *build/shader_recompiler_compute_tests.exe
+f05ae347368768251efc289b150ed75cbd8811144ed68f663b868d65adec5daa *build/install/kyty_emulator.exe
+2026-10-12T10:03:16Z full compute tests start
+2026-10-12T10:03:26Z full compute tests end df32d637
+2026-10-12T10:04:14Z wt15 at 6beb3b73; build15 start
+2026-10-12T10:06:46Z build15 end 8e83975b
+2026-10-12T10:06:48Z full15 z f57a7e5f
+2026-10-12T10:07:39Z measurement patch applied wt + wt15; rebuild start
+cc233aeb5e75787a468ea78e1c1d235ac9646aedfbdcd041c1c0f9ba9f3c39b9 *bin/meas_fs15.exe
+cf019ed0543038b8611a15a313c643abb360cde7ed2609b78d1398e79e11e5b2 *bin/meas_main.exe
+2026-10-12T10:08:45Z rebuild end
+2026-10-12T10:09:07Z meas fs15 z start
+2026-10-12T10:09:09Z meas fs15 z end 
+2026-10-12T10:09:18Z meas15 z end 94233c56
+2026-10-12T10:09:59Z patch_meas2 applied wt + wt15; rebuild start
+21f65e832a147725d2ec58f584e2e931de5cb6270cb1a807bf49f21d283fc526 *bin/meas_fs15.exe
+8c0f4936aed14c8212c01bf916bc5b94699e926a88053e6a5dcc1204a205d7e8 *bin/meas_main.exe
+2026-10-12T10:12:07Z meas15c z end 67384166
+2026-10-12T10:13:03Z patch_meas3 applied; rebuild
+736c7e170f7ee34a5144dcf4055b5bd9cd504c7346e98d44c1d6f26833013a0a *bin/meas_fs15.exe
+7a52c3477df42cd4c797208a4eb4e0be33ea58079715452ff51d2d45b0688ac0 *bin/meas_main.exe
+2026-10-12T10:16:10Z cases15 z end 9f948102
+2026-10-12T10:18:30Z cases main z end 9f948102
+2026-10-12T10:20:35Z cases main ms1 end 9f948102
+2026-10-12T10:22:39Z cases main all end 9f948102
+2026-10-12T10:25:19Z user complaint (PC freeze): run_cases.py guarded (SKIP 224, below-normal, no DL retry, refuses exe without M2C_SKIP); patch_meas4.py written 40b5dde7
+2026-10-12T10:35:17Z isa xml downloaded d671ecbc
+2026-10-12T10:38:40Z stand start
+2026-10-12T10:38:40Z stand end e3bf6d85
+2026-10-12T10:38:48Z stand start (retry, PY full path)
+2026-10-12T10:38:49Z stand end cc724df1
+2026-10-12T10:40:10Z mutants patched into wt (mut_m2c.py 055efb61); build compute start
+2026-10-12T10:40:10Z build compute end
+2026-10-12T10:40:18Z build compute start (retry, no path conversion)
+2026-10-12T10:40:53Z build compute end rc
+2026-10-12T10:41:00Z build cfg start
+2026-10-12T10:41:25Z build cfg end; stand start
+2026-10-12T10:41:52Z build stand end
+8bc148ddc9886d87e559f4f81be16b51e8c21a00fe7d794774c327dcb1c7260a *bin/mutall_cfg.exe
+21fd6e70dcb7fb0aa6a0c07aca257379985a4e01742c13e288a1c4f35ae2f4f2 *bin/mutall_compute.exe
+c979507c889e1eda063e359e7fc5ec3b3a6f65027b9f83bec8feebaec30fdcc0 *bin/mutall_stand.exe
+2026-10-12T10:41:58Z wt restored (only tests file modified)
+2026-10-12T10:42:28Z mutants run start
+2026-10-12T10:43:14Z mutants run end a5027097
+2026-10-12T10:44:43Z mutants patched (build 2, + t265_path; mut_m2c.py 47d71f4d); stand build start
+2026-10-12T10:45:03Z stand build 2 end, wt restored 9aa28987
+2026-10-12T10:45:09Z mutants run 2 start
+2026-10-12T10:45:58Z mutants run 2 end 1c036aca
+2026-10-12T10:46:24Z corpus base start
+2026-10-12T10:46:54Z corpus base end
+2026-10-12T10:47:00Z corpus u,z start
+2026-10-12T10:47:50Z corpus u,z end
+2026-10-12T10:47:59Z corpus themes+all start
+2026-10-12T10:52:11Z corpus themes+all end
+2026-10-12T10:52:32Z cmp_corpus 8065aed4
+2026-10-12T10:52:56Z build15 cfg start
+e4c01c51cb6279efcb82f953733c95ff8b7da341c184d08bb920fcc4d4a1f87d *bin/cfg_fs15.exe
+2026-10-12T10:56:08Z build15 cfg end
+2026-10-12T10:56:16Z corpus (shader_cfg_tests exes) start; first attempt with kyty_emulator printed usage - kept as corpus_wrongexe
+2026-10-12T11:00:43Z corpus end
+2026-10-12T11:00:43Z cmp_corpus 0e36d3cd
+2026-10-12T11:01:27Z srchash 127a7b67
+2026-10-12T11:02:02Z isa_xml.out f03d5c78; rdna1/2 xml copied
+2026-10-12T11:02:42Z host ms1/all start (M2C_FROM=100000, no cases)
+2026-10-12T11:02:53Z host ms1/all end
+2026-10-12T11:06:13Z review.md written 6e4afee5

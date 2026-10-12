@@ -1,0 +1,5 @@
+exe C:\kyty\m657\m2c\bin\compute_main.exe cd8f5af5a50619b1e883a83ed821058102c6168939b25d9299ae87e1f63b7536
+z    rc=3221226505 1.8s lines=12 FAIL last=abort() was called: std::terminate on a thread without a report, or an explicit abort
+ms1  rc=3221226505 4.8s lines=12 FAIL last=abort() was called: std::terminate on a thread without a report, or an explicit abort
+all  rc=3221226505 3.0s lines=12 FAIL last=abort() was called: std::terminate on a thread without a report, or an explicit abort
+FAIL

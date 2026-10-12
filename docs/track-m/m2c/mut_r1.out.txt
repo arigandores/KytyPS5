@@ -1,0 +1,21 @@
+MW1 cases 54
+control	T032	50 tests	PASS
+control	T203	2 tests	PASS
+control	T231	1 tests	PASS
+control	T233	2 tests	PASS
+control	T234	3 tests	PASS
+control	T256	1 tests	PASS
+control	T265	1 tests	PASS
+control	T272	1 tests	PASS
+control	T306	2 tests	PASS
+t234_tie	T234	3 tests	CAUGHT	MW1T234DsMinMaxLdsClasses
+t234_snan	T234	3 tests	CAUGHT	MW1T234DsMinMaxLdsClasses
+t233_thr	T233	2 tests	CAUGHT	MW1T233LegacyMadRoundsProduct
+t306_mask	T306	2 tests	NOT CAUGHT	
+t032_2bit	T032	50 tests	CAUGHT	MW1T032SnormPackedAlpha,MW1T032TSnormPackedAlpha,MW1T032SnormPackedFirstChannel,MW1T032TSnormPackedFirstChannel,MW1T032SscaledPackedAlpha,MW1T032TSscaledPackedAlpha,MW1T032SscaledPackedFirstChannel,MW1T032TSscaledPackedFirstChannel
+t203_zero	T203	2 tests	CAUGHT	MW1T203AlignByteTwoBitOffset
+t256_u	T256	1 tests	NOT CAUGHT	
+t265_size	T265	1 tests	NOT CAUGHT	
+t272_swap	T272	1 tests	CAUGHT	stand:t272
+t231_lim	T231	1 tests	CAUGHT	stand:t231
+FAIL

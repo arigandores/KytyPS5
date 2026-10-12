@@ -1,0 +1,4 @@
+exe C:\kyty\m657\m2c\bin\meas_main.exe 7a52c3477df42cd4c797208a4eb4e0be33ea58079715452ff51d2d45b0688ac0 config ms1 {'KYTY_M_T234': '1', 'KYTY_M_T233': '1', 'KYTY_M_T306': '1', 'KYTY_M_T032': '1', 'KYTY_M_T203': '1'}
+ms1 processes=3 cases=328 not_pass=1 122.9s
+  224 DL FlatVirtualAddressRebasesGuestAllocation | ShaderRecompilerComputeTests: FlatVirtualAddressRebasesGuestAllocation failed at dispatch: vkWaitForFences returned ErrorDeviceLost
+FAIL

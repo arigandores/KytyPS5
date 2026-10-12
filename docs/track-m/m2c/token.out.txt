@@ -1,0 +1,21 @@
+[mw1] mask=0x00 token=
+[mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19 sig_ok=1 dir_ok=1
+[mw1] mask=0x01 token=:mw1_01
+[mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_01
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_01 sig_ok=1 dir_ok=1
+[mw1] mask=0x02 token=:mw1_02
+[mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_02
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_02 sig_ok=1 dir_ok=1
+[mw1] mask=0x08 token=:mw1_08
+[mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_08
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_08 sig_ok=1 dir_ok=1
+[mw1] mask=0x10 token=:mw1_10
+[mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_10
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_10 sig_ok=1 dir_ok=1
+[mw1] mask=0x20 token=:mw1_20
+[mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_20
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_20 sig_ok=1 dir_ok=1
+[mw1] mask=0x04 token=:mw1_04
+[mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_04
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_04 sig_ok=1 dir_ok=1

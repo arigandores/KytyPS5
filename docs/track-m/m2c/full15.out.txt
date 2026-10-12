@@ -1,0 +1,3 @@
+exe C:\kyty\m657\m2c\bin\compute_fs15.exe 8e83975b2d92d730f0845f1b504ca9647478aaf80d267b047a4321f3d1eeaa94
+z    rc=3221226505 1.5s lines=12 FAIL last=abort() was called: std::terminate on a thread without a report, or an explicit abort
+FAIL

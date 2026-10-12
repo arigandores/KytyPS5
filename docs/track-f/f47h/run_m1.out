@@ -1,0 +1,20 @@
+stand C:/kyty/f287/f47h/stand_bin/s_m1.exe sha256 e9baf69b2cd67051064eeced6a6017944429413b2e976a296b4e1f526dfa291e
+OK   =1 rc 0, on=1, DONE rc=0
+FAIL P positive control: one byte changed after the upload -> ne ih=08100dfe1ff6a628 sh=08100dfe1ff6a628
+OK   N negative control: unchanged -> eq 
+OK   A pooled copy: last line hashed eq (srcres if the first was pending) first sst=pending
+OK   L ring generation moved -> lost, und 
+FAIL I import, one byte changed -> ne; I0 -> eq 
+OK   O owner -> unmeasured und 
+OK   U no note -> und 
+OK   D deferred completion: current source = (i), earlier != (i) -> und 
+OK   R1 after clear + write 
+OK   R2 after pop 
+OK   C file cap: C0 new, C1/C2 capped, one capped line 
+OK   F47dtStat files=10 bytes=26214400 capped=1 [{'when': 'exit', 'draws': '13', 'frames': '5', 'files': '10', 'bytes': '26214400', 'capped': '1', 'imgs': '13', 'bufs': '0', 'pending': '0'}]
+FAIL 10 files, XXH3-64 of each = its name = an ih of a line 10 files
+OK   N+- one byte of a copy of the P file flipped at 10 positions -> a different hash 10 of 10
+OK   =0 rc 0, on=0, DONE rc=0
+OK   =0 no line with F47dt in the log 0
+OK   =0 no _f47dt directory 
+FAILED

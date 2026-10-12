@@ -1,0 +1,14 @@
+F47g e1c50d1597d88edeae54ca3649bb4e7e5f92d587b9cc7899c08fda8337e42f77 25040896
+own  a73a6a6104b31cba01cf69f7dd26bb76b88bc29a4e3813aa11ba1d2b48608e30 25040896
+path strings: f47g in F47g 139 ; f47h in own 139
+own with f47h->f47g sha256 da18f02bb7b1407967509dfb9d98dda9f3ed31390754043cc09ed4d47976ebac differs
+differing bytes 1901
+  PE header timestamp                        2
+  SDL revision string                        5
+  anon-namespace hash ?A0x (path)            1882
+  debug directory (timestamp / PDB GUID)     10
+  other                                      2
+by section {'hdr': 2, '.rdata': 17, '.data': 1882}
+.text differing bytes 0
+F47g version strings ['KytyPS5-2026-09-15-6a2987a-1929-g6beb3b73', 'KytyPS5-2026-09-15-6a2987a-1931-g1f9b5b77']
+own  version strings ['KytyPS5-2026-09-15-6a2987a-1931-g1f9b5b77']

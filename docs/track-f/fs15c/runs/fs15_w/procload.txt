@@ -1,0 +1,6 @@
+procload: busy [('<app>', 47132, 2.831)]
+procload: busy [('<app>', 47132, 2.698)]
+procload: busy [('<app>', 47132, 3.286)]
+procload: busy [('<app>', 47132, 2.634)]
+procload: busy [('<app>', 47132, 2.66)]
+procload: clean (no process above 0.50 CPU s/s, total cap None)

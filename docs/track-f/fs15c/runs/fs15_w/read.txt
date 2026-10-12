@@ -1,0 +1,61 @@
+tag fs15_w (form fs15_w, level underwater_aerial_garden)  reader sha256 9ef2975702ce8d3b94afdd9c0f3d9198a743711721fa570ac816acb70bb79cf2
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = FS15 bfac84be (bfac84bea0eaec8b)
+    [ok] installed during the tag = FS15 bfac84be (bfac84bea0eaec8b)
+    [ok] installed before = after = FS14 013e1974 (013e1974ea8abfb4 / 013e1974ea8abfb4)
+    [ok] json prereg sha256 = seal sha256 (76e67c26e742451b / 76e67c26e742451b)
+    [ok] env = the form of the tag (exact)
+    [ok] no KYTY_TEST_* in the env (none)
+    [ok] 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation true (true)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 310 s (310)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (229576)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {})
+    [ok] translation signature 9177b426 and cache dir variant_fixb26_fixb1b_fixf10_fixf19 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] no GamePatch: line (0)
+    [ok] no DiagB32 line - no KYTY_DIAG_B32 (0)
+    [ok] no TestLogStall line (0)
+    [ok] no TestHidLoss line - the stand is off (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha 98)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+  binary_sha256 bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+  MEMBERS 730(g)(3) ALL YES
+    [YES] lived to the end of the hold (outcome ok, hold_exit None, hold_s 310.0 >= 310)
+    [YES] 0 death markers (log and stdout) []
+    [YES] 0 [Vulkan][E] (0)
+    [YES] 0 limit lines of the layer (0)
+    [YES] positive control: [Vulkan][W] 899116 > 0
+    [YES] DualSrcBlend: supported=1 enabled=1 before the first GuestOut (1)
+    [YES] FixF20: mode=1 (every line) before the first GuestOut ([(1, 92)]; unparsable 0; first GuestOut 12512) - item 730 (g)(3)
+    [YES] FixF24: mode=1 b24=1 (every line) before the first GuestOut ([(1, 1, 20)]; unparsable 0; first GuestOut 12512)
+    [YES] FixF20Stat: when=exit line after Event: quit (quit 2347973; exit lines after it 1; all exit lines 1; unparsable FixF20Stat 0)
+    [YES] FixF20Stat exit line: unmatched 0 (0)
+    [YES] FixF20Stat exit line: modules_bound = modules (22 / 22)
+  MEMBERS form fs14_w ALL YES
+    [YES] FixF29: mode=1 (every line) before the first GuestOut ([(1, 100)]; unparsable 0; first GuestOut 12512)
+    [YES] FixF25: mode=1 (every line) before the first GuestOut ([(1, 17)]; unparsable 0; first GuestOut 12512)
+    [YES] FixF21: mode=1 (every line) before the first GuestOut ([(1, 12000, 734)]; unparsable 0; first GuestOut 12512)
+    [YES] LogAsync: mode=1 exactly once, before the first GuestOut (lines [('LogAsync: mode=1 limit_bytes=268435456 d', 1)], first GuestOut 12512)
+    [YES] no VALIDATION_STOP (a [Vulkan][E] line and the process did not live to the end of the hold)
+    [YES] FixB13: mode=1 (every line) before the first GuestOut ([(1, 730)]; first GuestOut 12512)
+    [YES] FixB12: mode=1 (every line) before the first GuestOut ([(1, 732)]; bad 0; first GuestOut 12512)
+  INFO {"expired_log": 0, "expired_stdout": 0, "fatal_after_quit": 0, "fatal_log_total": 0, "fatal_stdout": 0, "first_scene_n": 360, "frames_ge1s": 0, "frames_ge1s_with_first": 0, "hold_s": 324.8, "max_dt": 416964, "mean_dt_us": 132623.3, "quit_ln": 2347973, "scene_frames": 2449, "summary": {"bytes": 390416259, "drain_timeouts": 0, "full_wait_us": 0, "full_waits": 0, "lines": 1280634, "max_queued_bytes": 40722, "stall_cut": 0, "stalls": 0, "sync_lines": 0}, "vke": 0, "vkw": 899116}
+  ROW F24 (not a gate): FixF24: pump_update_long 0, FixF24: open failed 0, host pad lines Controller 0 (a reference, not an interference); pump_stop_expired log 0, whole stdout 0; FixF24: mode= lines [[1, 1]], unparsable 0; init 1; init_owner 1 (unparsable 0) {"helper": 22172, "hid": 22172, "ln": 22, "main": 61712, "msg": 22172, "pump": 22172}; add event 0, wait error 0, other 0
+  ROW F29 (not a gate; overflow > 0 - evidence of F29 in the game, item of the lead): FixF29: overflow log 0, whole stdout 0; Accessed non-GPU cached memory log 37, whole stdout 0; FixF29: mode= lines [1], unparsable 0, other FixF29 lines 0
+  ROW F29 first lines: None | Accessed non-GPU cached memory at 0x0000000401c08000
+  ROW F25 (not a gate): FixF25: read failed twice log 0, whole stdout 0; KernelRead: direct read failed log 0, whole stdout 0; FixF25: mode= lines 1, unparsable 0, other FixF25 lines 0
+  ROW preparation screen (not a gate): ShaderPreparation ms [65]; PipelinePrecache: all pipelines created ms [11877]
+  ROW PipelinePrecache (not a gate): 2 lines; PipelinePrecache: 1986 recipes -> 1842 graphics + 144 compute pipelines queued, 0 skipped, 3775 sources loaded, complete, 6034 ms (scratch: 0 pipelines, max 0 dwords/thread) | PipelinePrecache: all pipelines created, 11877 ms
+  ROW Vulkan pipeline cache (not a gate): 3 lines; Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin | Vulkan pipeline cache: loaded 127836218 bytes from _PipelineCache\PPSA21564.bin | Vulkan pipeline cache: saved 135651151 bytes to _PipelineCache\PPSA21564.bin (271990 us)
+  ROW driver blob (not a gate): _PipelineCache bytes before 192243915 after 200058848; GLCache bytes before 284887245 after 292702302; _ShaderCache bytes before 689683755 after 689683755
+  ROW FixF20Stat (not a gate beyond the members): lines 1 (periodic 0, unparsable 0), max unmatched 0; exit after quit {"calls": 1271, "modules": 22, "modules_bound": 22, "rewritten": 79, "sites": 79, "unmatched": 0, "when": "exit"}; last {"calls": 1271, "modules": 22, "modules_bound": 22, "rewritten": 79, "sites": 79, "unmatched": 0, "when": "exit"}; FixF20: mode= lines [1], unparsable 0, other FixF20 lines 0
+  ROW exit (not a gate): exit code 0 (0x00000000); WM_CLOSE post -> process end 4.0 s; killed False; posted 5; harness timeout 40 s; Event: quit line 2347973; --- Fatal Error --- after it 0, whole stdout 0
+  REFERENCE: {"b12stat_last": {"ln": 2282855, "lskip": 0, "passes": 33612, "rewalk": 0, "rwd": 0}, "b12stat_lines": 33, "bin_version_string": true, "env_keys": ["KYTY_FRAME_TRACE", "KYTY_GATE_FILE", "KYTY_GPU_CLOCK_PIN", "KYTY_GPU_HANG_ABORT_S", "KYTY_GPU_MARKERS", "KYTY_GUEST_ARGS", "KYTY_QUEUE_TRACE", "KYTY_SAMPLE_GATE", "VK_LAYER_DUPLICATE_MESSAGE_LIMIT", "VK_LAYER_PATH"], "f21_lines": 1, "f21_other": 0, "fork_line": "version: Fork build arigandores/KytyPS5 6beb3b7", "glitches": null, "hold_exit": null, "hold_s": 310.0, "lines": 2347976, "other_logasync": 0, "outcome": "ok", "sheet": null, "stable_s": 34.0, "stand_log": 0, "stand_stdout": 0, "video_index": null, "vke": 0, "vkw": 899116}
+  READING ADMITTED, members 730(g)(3) ALL YES, members of the form fs14_w ALL YES (no verdict; reading - FS15d)

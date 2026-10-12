@@ -1,0 +1,6 @@
+reader fs15c_read.py sha256 9ef2975702ce8d3b94afdd9c0f3d9198a743711721fa570ac816acb70bb79cf2
+| tag | status | binary_sha256 | members 730(g)(3) | form | FixF20Stat exit (bound/modules/rewritten/unmatched) | prep ms | all pipelines created ms | _PipelineCache before / after | exit code | close_s | glitches | video index | hold_s |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| fs15_v | ADMITTED | bfac84be | ALL YES | ALL YES | 22/22/79/0 | [1636] | [12002] | 192243915 / 200058845 | 0 | 4.0 | 0 | 10373 | 330.1 |
+| fs15_w | ADMITTED | bfac84be | ALL YES | ALL YES | 22/22/79/0 | [65] | [11877] | 192243915 / 200058848 | 0 | 4.0 | None | None | 310.0 |
+| fs15_z | ADMITTED | bfac84be | ALL YES | - | - | [0] | [561] | 192243915 / 192243915 | 0 | 3.7 | 0 | 4743 | 150.2 |

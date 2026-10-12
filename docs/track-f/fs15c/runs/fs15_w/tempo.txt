@@ -1,0 +1,3 @@
+TEMPO PASS form harness mean_dt_ms 129.76 fps 7.71 frames 2511 limit_ms 200 (W form, item 621) (FrameTrace frames after the level line 2511, span 325.8 s)
+  row: flip records after the level line 2509
+  row: seal plan W form yes (item 621); plan: dryrun fs15_w base fs15_w level underwater_aerial_garden sd 100 timeout 900 hold 310 rec --emu-arg=--vulkan-validation --emu-arg=true knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0

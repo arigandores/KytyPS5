@@ -1,0 +1,2 @@
+C:/kyty/f287/fs15c/rec_fs15_z.mp4: 4743 frames 960x540, index entries 4743
+one-frame glitches: 0

@@ -1,0 +1,1 @@
+sheet: C:/kyty/f287/fs15c/runs/fs15_z/sheet_fs15_z.png frames 4743 step 98 tiles 8x6

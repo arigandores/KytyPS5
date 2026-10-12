@@ -1,0 +1,13 @@
+upstream no-merges 564 merges 1 ['8cecaf4e30bb5fdeeab231864848bbf2d066a6a1']
+rows tsv 564 detail 564
+resolved unique 564 dup 0 missing 0
+tsv vs detail theme/class mismatch 0
+themes 312 multi-class 0
+commits by class {'А': 40, 'Б': 10, 'В': 58, 'Г': 375, 'Д': 81}
+themes by class {'А': 28, 'Б': 9, 'В': 35, 'Г': 186, 'Д': 54}
+  files differ b11aea803 git-only ['src/loader/redZonePatcher.cpp'] tsv-only []
+  files differ 5940e623d git-only ['src/graphics/host_gpu/shaders/gpu_tiler_swap_bgra16.comp'] tsv-only []
+files column differs from git diff-tree: 2
+merge 8cecaf4e3 combined-diff files 6 ['3rdparty/CMakeLists.txt', 'src/common/file.cpp', 'src/common/logging/log.cpp', 'src/common/stringUtils.h', 'src/kernel/fileSystem.cpp', 'tests/KernelFileSystemTests.cpp']
+FAIL merge with own content not covered by any non-merge row: 8cecaf4e3
+FAILED

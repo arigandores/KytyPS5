@@ -1,0 +1,189 @@
+KYTY_FIX_B12: our-commits 15, src files by commits 6, in knobs.md 5, extra 1; upstream themes on extra files 10; of them without a 6.2 line naming KYTY_FIX_B12: 10
+   T067: src/graphics/presentation/videoOut.cpp
+   T092: src/graphics/presentation/videoOut.cpp
+   T098: src/graphics/presentation/videoOut.cpp
+   T110: src/graphics/presentation/videoOut.cpp
+   T111: src/graphics/presentation/videoOut.cpp
+   T116: src/graphics/presentation/videoOut.cpp
+   T130: src/graphics/presentation/videoOut.cpp
+   T165: src/graphics/presentation/videoOut.cpp
+   T289: src/graphics/presentation/videoOut.cpp
+   T307: src/graphics/presentation/videoOut.cpp
+KYTY_FIX_B13: our-commits 14, src files by commits 2, in knobs.md 2, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_B13: 0
+KYTY_FIX_B1B: our-commits 9, src files by commits 5, in knobs.md 5, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_B1B: 0
+KYTY_FIX_B24: our-commits 12, src files by commits 5, in knobs.md 3, extra 3; upstream themes on extra files 18; of them without a 6.2 line naming KYTY_FIX_B24: 15
+   T033: src/libs/audio.cpp
+   T037: src/graphics/presentation/window/window.cpp
+   T050: src/libs/audio.cpp
+   T053: src/graphics/presentation/window/window.cpp
+   T064: src/graphics/presentation/window/window.cpp
+   T093: src/graphics/presentation/window/window.cpp, src/libs/audio.cpp
+   T094: src/graphics/presentation/window/window.cpp
+   T097: src/libs/audio.cpp
+   T118: src/libs/audio.cpp
+   T125: src/libs/audio.cpp, src/libs/audio_internal.h
+   T153: src/graphics/presentation/window/window.cpp
+   T185: src/graphics/presentation/window/window.cpp
+   T199: src/graphics/presentation/window/window.cpp
+   T250: src/graphics/presentation/window/window.cpp
+   T294: src/graphics/presentation/window/window.cpp
+KYTY_FIX_B26: our-commits 13, src files by commits 9, in knobs.md 4, extra 6; upstream themes on extra files 27; of them without a 6.2 line naming KYTY_FIX_B26: 26
+   T003: src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp
+   T014: src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp, src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+   T026: src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp, src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+   T032: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+   T037: src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp, src/graphics/shader/recompiler/frontend/translate/Memory.cpp, src/graphics/shader/recompiler/frontend/translate/Scalar.cpp, src/graphics/shader/recompiler/frontend/translate/Vector.cpp
+   T048: src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp, src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+   T072: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+   T083: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+   T113: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp, src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+   T114: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp, src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+   T130: src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp
+   T138: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp, src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+   T140: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+   T170: src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp, src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+   T186: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp, src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+   T189: src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+   T200: src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp, src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+   T203: src/graphics/shader/recompiler/frontend/translate/Vector.cpp
+   T216: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+   T226: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+   T233: src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp, src/graphics/shader/recompiler/frontend/translate/Vector.cpp
+   T234: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+   T238: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp, src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+   T244: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp, src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+   T279: src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+   T306: src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+KYTY_FIX_B36: our-commits 16, src files by commits 6, in knobs.md 5, extra 1; upstream themes on extra files 10; of them without a 6.2 line naming KYTY_FIX_B36: 10
+   T067: src/graphics/presentation/videoOut.cpp
+   T092: src/graphics/presentation/videoOut.cpp
+   T098: src/graphics/presentation/videoOut.cpp
+   T110: src/graphics/presentation/videoOut.cpp
+   T111: src/graphics/presentation/videoOut.cpp
+   T116: src/graphics/presentation/videoOut.cpp
+   T130: src/graphics/presentation/videoOut.cpp
+   T165: src/graphics/presentation/videoOut.cpp
+   T289: src/graphics/presentation/videoOut.cpp
+   T307: src/graphics/presentation/videoOut.cpp
+KYTY_FIX_B4: our-commits 27, src files by commits 4, in knobs.md 1, extra 3; upstream themes on extra files 46; of them without a 6.2 line naming KYTY_FIX_B4: 41
+   T018: src/graphics/host_gpu/renderer/cache/textureCache.cpp, src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T021: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T025: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T027: src/graphics/host_gpu/renderer/cache/textureCache.cpp, src/graphics/host_gpu/renderer/cache/textureCache.h
+   T066: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T072: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T074: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T079: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T098: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T101: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T130: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T133: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T134: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T135: src/graphics/host_gpu/renderer/cache/textureCache.cpp, src/graphics/host_gpu/renderer/cache/textureCache.h
+   T138: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T140: src/graphics/host_gpu/renderer/cache/textureCache.h, src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T146: src/graphics/host_gpu/renderer/cache/textureCache.cpp, src/graphics/host_gpu/renderer/cache/textureCache.h
+   T147: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T168: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T171: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T179: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T186: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T187: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T188: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T189: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T192: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T193: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T216: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T222: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T223: src/graphics/host_gpu/renderer/cache/textureCache.cpp, src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T228: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T239: src/graphics/host_gpu/renderer/cache/textureCache.cpp, src/graphics/host_gpu/renderer/cache/textureCache.h
+   T242: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T258: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T259: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+   T260: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T279: src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T289: src/graphics/host_gpu/renderer/cache/textureCache.cpp, src/graphics/host_gpu/renderer/cache/textureCache.h, src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T304: src/graphics/host_gpu/renderer/cache/textureCache.cpp, src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+   T311: src/graphics/host_gpu/renderer/cache/textureCache.cpp
+KYTY_FIX_B42: our-commits 16, src files by commits 3, in knobs.md 3, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_B42: 0
+KYTY_FIX_B9A: our-commits 12, src files by commits 2, in knobs.md 1, extra 1; upstream themes on extra files 7; of them without a 6.2 line naming KYTY_FIX_B9A: 7
+   T037: src/graphics/presentation/window/swapchain.cpp
+   T093: src/graphics/presentation/window/swapchain.cpp
+   T094: src/graphics/presentation/window/swapchain.cpp
+   T096: src/graphics/presentation/window/swapchain.cpp
+   T130: src/graphics/presentation/window/swapchain.cpp
+   T250: src/graphics/presentation/window/swapchain.cpp
+   T307: src/graphics/presentation/window/swapchain.cpp
+KYTY_FIX_DUALSRC: our-commits 13, src files by commits 8, in knobs.md 7, extra 1; upstream themes on extra files 21; of them without a 6.2 line naming KYTY_FIX_DUALSRC: 20
+   T007: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T020: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T026: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T046: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T060: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T069: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T081: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T082: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T086: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T114: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T138: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T152: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T156: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T174: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T185: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T213: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T214: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T225: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T226: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+   T241: src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+KYTY_FIX_F10: our-commits 14, src files by commits 5, in knobs.md 5, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_F10: 0
+KYTY_FIX_F19: our-commits 20, src files by commits 3, in knobs.md 3, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_F19: 0
+KYTY_FIX_F20: our-commits 17, src files by commits 6, in knobs.md 6, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_F20: 0
+KYTY_FIX_F21: our-commits 12, src files by commits 3, in knobs.md 3, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_F21: 0
+KYTY_FIX_F24: our-commits 14, src files by commits 6, in knobs.md 6, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_F24: 0
+KYTY_FIX_F25: our-commits 17, src files by commits 1, in knobs.md 1, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_F25: 0
+KYTY_FIX_F29: our-commits 15, src files by commits 2, in knobs.md 2, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_F29: 0
+KYTY_FIX_F8: our-commits 9, src files by commits 4, in knobs.md 2, extra 2; upstream themes on extra files 7; of them without a 6.2 line naming KYTY_FIX_F8: 7
+   T029: src/libs/controller.cpp, src/libs/controller.h
+   T052: src/libs/controller.cpp, src/libs/controller.h
+   T093: src/libs/controller.cpp
+   T129: src/libs/controller.cpp, src/libs/controller.h
+   T162: src/libs/controller.cpp, src/libs/controller.h
+   T272: src/libs/controller.cpp, src/libs/controller.h
+   T277: src/libs/controller.cpp, src/libs/controller.h
+KYTY_FIX_MINIMIZE: our-commits 12, src files by commits 6, in knobs.md 1, extra 5; upstream themes on extra files 15; of them without a 6.2 line naming KYTY_FIX_MINIMIZE: 14
+   T029: src/graphics/presentation/window/window.cpp
+   T037: src/graphics/presentation/window/window.cpp
+   T050: src/libs/libAudio.cpp
+   T053: src/graphics/presentation/window/window.cpp
+   T064: src/graphics/presentation/window/window.cpp
+   T093: src/graphics/presentation/window/window.cpp
+   T097: src/libs/libAudio.cpp
+   T145: src/libs/libAudio.cpp
+   T153: src/graphics/presentation/window/window.cpp
+   T185: src/graphics/presentation/window/window.cpp
+   T199: src/graphics/presentation/window/window.cpp
+   T250: src/graphics/presentation/window/window.cpp
+   T294: src/graphics/presentation/window/window.cpp
+   T303: src/libs/libC.cpp
+KYTY_FIX_SVAL: our-commits 12, src files by commits 3, in knobs.md 3, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_FIX_SVAL: 0
+KYTY_GAME_PATCH: our-commits 8, src files by commits 6, in knobs.md 5, extra 1; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_GAME_PATCH: 0
+KYTY_PVAR: our-commits 17, src files by commits 10, in knobs.md 8, extra 2; upstream themes on extra files 6; of them without a 6.2 line naming KYTY_PVAR: 6
+   T036: src/kernel/pthread.cpp
+   T040: src/kernel/pthread.cpp
+   T155: src/kernel/pthread.cpp
+   T194: src/kernel/pthread.cpp
+   T249: src/kernel/pthread.cpp
+   T293: src/emulator.cpp
+KYTY_S_PCW: our-commits 19, src files by commits 2, in knobs.md 2, extra 0; upstream themes on extra files 0; of them without a 6.2 line naming KYTY_S_PCW: 0
+KYTY_S_REPLAY: our-commits 26, src files by commits 5, in knobs.md 4, extra 1; upstream themes on extra files 11; of them without a 6.2 line naming KYTY_S_REPLAY: 10
+   T029: src/graphics/presentation/window/window.cpp
+   T037: src/graphics/presentation/window/window.cpp
+   T053: src/graphics/presentation/window/window.cpp
+   T064: src/graphics/presentation/window/window.cpp
+   T093: src/graphics/presentation/window/window.cpp
+   T094: src/graphics/presentation/window/window.cpp
+   T185: src/graphics/presentation/window/window.cpp
+   T199: src/graphics/presentation/window/window.cpp
+   T250: src/graphics/presentation/window/window.cpp
+   T294: src/graphics/presentation/window/window.cpp

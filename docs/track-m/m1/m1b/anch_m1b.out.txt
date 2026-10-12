@@ -1,0 +1,25 @@
+T001 Г 79120d53e OK b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:2843
+T006 Г 629ae1ac0 OK b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:3083
+T010 Б 7c9148dd4 OK b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:1118
+T011 Б 32e6a433e OK b3dc9c67:src/libs/libJson2.cpp:878
+T014 Б 5b541375a OK b3dc9c67:src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp:116
+T011 Б eda6ba37e OK b3dc9c67:src/libs/libJson2.cpp:1447
+T021 Б f38d738ee OK b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1952
+T046 Б 649367472 OK b3dc9c67:src/graphics/host_gpu/renderer/pipeline/shaders.cpp:345
+T060 Г 0ad9149c9 OK b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:3198
+T065 Г c997cdb83 OK b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:2106
+T088 Б 79530b4c5 OK b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:1360
+T090 Г 3fad77fd8 OK b3dc9c67:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:561
+T136 Г 9229c04eb OK b3dc9c67:src/graphics/host_gpu/renderer/cache/samplerCache.cpp:88
+T185 Б e6cb880ad OK b3dc9c67:src/graphics/presentation/window/joyPump.cpp:351
+T224 Г 45fab265d OK b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:2952
+T240 Б 57c97ebd8 OK b3dc9c67:src/graphics/host_gpu/renderer/image/imageInfo.h:458
+T242 Г e5dcfdb87 OK b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:4913
+T250 Б 7415febd9 OK b3dc9c67:src/graphics/presentation/window/window.cpp:1979
+T251 Г 2a18e66a4 OK b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:194
+T256 Г b96871e2b OK b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterFlow.cpp:291
+T284 Г 4c8fc53a8 OK b3dc9c67:src/libs/agc.cpp:1746
+T296 Г 7e4e142aa OK b3dc9c67:src/graphics/guest_gpu/gpu_format.cpp:23
+T251 Г 65144ce4a OK b3dc9c67:src/graphics/host_gpu/renderer/debug.cpp:430
+T301 Г 1029511bb OK b3dc9c67:src/graphics/host_gpu/renderer/depthRenderTarget.cpp:370
+ALL OK

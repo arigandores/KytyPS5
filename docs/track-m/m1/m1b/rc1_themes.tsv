@@ -1,0 +1,76 @@
+тема	вид	класс_M1a	увер_M1a	подпись	коммиты	ключ	заголовок	основание_M1a
+T001	FATAL	Г	U	нет	79120d53e	rnd-pm4-chain	Handle chained PM4 buffers without recursion	b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:2843
+T006	FATAL	Г	I	нет	629ae1ac0	rnd-zpass-pred	Handle Z-pass predication and query waits	b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:3083
+T022	FATAL	Г	I	нет	63fb822f8	rnd-mesh-restart	Warn and continue mesh draws with primitive restart enabled	b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:4109
+T024	FATAL	Г	I	нет	fa913ec1a a98a39c57	rnd-depth-flags	Accept EXPCLEAR acceleration on expanded depth attachments	b3dc9c67:src/graphics/host_gpu/renderer/depthRenderTarget.cpp:169
+T056	FATAL	Г	I	нет	8d66c4ef6	sys-userservice-name	user service: return logged-out error for unavailable user names	b3dc9c67:src/libs/libUserService.cpp:95 — наш код = база
+T060	FATAL	Г	U	да	0ad9149c9	rnd-rectlist-legacy	Fix three-vertex rectangle rendering	b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:3198
+T065	FATAL	Г	I	нет	c997cdb83	rnd-cx-24a	Skip zero-valued indirect CX 0x24a	b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:2106
+T066	FATAL	Г	I	нет	ba55ba5dc	rnd-storage-cube	Allow storage access to PS5 cubemap faces	b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1188
+T070	FATAL	Г	I	нет	bf4dcdce5	rnd-fmask-msaa	Accept resolved FMASK metadata with native MSAA	b3dc9c67:src/graphics/host_gpu/renderer/debug.cpp:222
+T072	FATAL	Г	U	да	b2a80a3a9 429d0af62 b4d32394b a55a28380 5f01308b2 919c058fe 8b05b6730 3ba0e971e 33e74cab2	be-gpubuf	Resolve GPU-selected raw buffer descriptors through shared RDNA2 addressing	b3dc9c67:src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:589
+T074	FATAL	Г	I	нет	7c9e18e73	rnd-depth-meta-bits	Ignore inactive metadata address bits in sampled depth descriptors	b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1117
+T084	FATAL	Г	U	да	eb8a5504a 3b89e36d1 a670dc84b 843b57788 cd0660102 ae1e92621 71c726174 8c8138656 4c87dbebb	be-indimg	Emit coordinates for each indirect image candidate	register:§45:Ф22
+T090	FATAL	Г	I	нет	3fad77fd8 18a5f04d0	rnd-readback-staging	Increase GPU readback staging to 64 MiB	b3dc9c67:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:561
+T099	FATAL	Г	U	да	7d7267cc5 11001c97f 5297abb7a	dec-ngg-other	Translate NGG mesh prolog with guest wave32 width	b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:1079
+T101	FATAL	Г	U	нет	66cc2fe26	rnd-depth-feedback	Track depth and stencil attachment feedback across graphics stages	b3dc9c67:src/graphics/host_gpu/renderer/depthRenderTarget.h:52
+T121	FATAL	Г	I	нет	bfdbba3aa	rnd-eop-clock	graphics: share EOP clock and immediate write handling	b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:3718
+T131	FATAL	Г	I	нет	a88181b89	rnd-linear-rt-mips	Graphics: share texture layout for linear render-target mip chains	b3dc9c67:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:290
+T136	FATAL	Г	I	нет	9229c04eb	rnd-aniso-reserved	samplerCache: handle reserved sampler anisotropy ratios	b3dc9c67:src/graphics/host_gpu/renderer/cache/samplerCache.cpp:88
+T167	FATAL	Г	I	нет	44ba65757	img-depth-swizzle	renderer: validate depth swizzles by available channels	b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1145
+T191	FATAL	Г	I	нет	52c8ff18d	img-srgb-rt-bpe	Update gpu_format.cpp (#1003)	b3dc9c67:src/graphics/guest_gpu/gpu_format.cpp:64
+T217	FATAL	Г	U	да	39248a1f8	be-meshclip	shader: emit per-vertex mesh clip and cull distances	b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMesh.cpp:39
+T221	FATAL	Г	U	да	96c067d0f 07c84876a e56899902	be-scaledtex	shader: fix filtering for scaled 8-bit textures	b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:397
+T224	FATAL	Г	I	нет	45fab265d	rnd-polygon-fan	gpu: draw polygons as triangle fans	b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:2952
+T229	FATAL	Г	I	нет	8e46a3ccf	rnd-vfmt-uscaled	gpu: add packed unsigned-scaled vertex formats	b3dc9c67:src/graphics/host_gpu/vulkanCommon.cpp:50
+T242	FATAL	Г	I	нет	e5dcfdb87	rnd-unbounded-buffers	graphics: bound unbounded buffer reads and writes (#1066)	b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:4913
+T251	FATAL	Г	I	нет	2a18e66a4 65144ce4a	rnd-depth-copy	gpu: validate depth copy state when drawing instead of decoding	b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:194
+T284	FATAL	Г	U	нет	4c8fc53a8	rnd-nop-1dw	agc: support one-word NOP reservations and share packet sizing	b3dc9c67:src/libs/agc.cpp:1746
+T295	FATAL	Г	I	нет	b7b335ac6	rnd-r64-bc	gpu: admit block-compressed textures in PS5 R64 tiling	b3dc9c67:src/graphics/guest_gpu/tile.cpp:306
+T296	FATAL	Г	c	нет	7e4e142aa	img-r8snorm	gpu: enable native R8 SNORM texture sampling	b3dc9c67:src/graphics/guest_gpu/gpu_format.cpp:23
+T301	FATAL	Г	I	нет	1029511bb	prs-depth2color	add depth to color copy	b3dc9c67:src/graphics/host_gpu/renderer/depthRenderTarget.cpp:370
+T057	RT	Г	I	да	102a10f0f	ir-srteval-scmp	Fix signed sampler comparisons	register:§104:Ф3
+T073	RT	Г	I	да	d2df2cad7	ir-scalarchain-img	Resolve draw-uniform image descriptors through scalar buffer chains	register:§104:Ф3
+T085	RT	Г	I	да	66f1a8236	ir-scalar-imgtable	Resolve scalar image tables during resource planning	register:§104:Ф3
+T103	RT	Г	I	да	963a0817d	ir-material-mask	Bound uniformized image keys by guarded material mask	register:§104:Ф3
+T112	RT	Г	I	да	392f39e2f	ir-indirect-x3	shader: support indirect BUFFER_LOAD_DWORDX3	register:§104:Ф3
+T171	RT	Г	I	да	6409be287	ir-refresh-reach	shader: respect branch reachability when refreshing scalar resources	register:§104:Ф3
+T180	RT	Г	I	да	7804eef9b	ir-gpu-selected-img	Lower finite GPU-selected image descriptors through shared indirect bindings	register:§104:Ф3
+T202	RT	Г	I	да	ec3e48cdd	ir-gpu-written-desc	shader: synchronize GPU-produced direct writable descriptors	register:§104:Ф3
+T207	RT	Г	I	да	e0c90acee	ir-loop-exec-witness	shader: preserve EXEC witnesses across reconverged descriptor loops	register:§104:Ф3
+T208	RT	Г	I	да	b183cb101	ir-material-scan	shader: share bounded material-key scans across scalar and vector loads	register:§104:Ф3
+T209	RT	Г	I	да	1f6be3d57	ir-desckey-ssa	shader: preserve descriptor key SSA across native-resolved image uses	register:§104:Ф3
+T225	RT	Г	I	да	0ee880090 190f838ea	ir-wg-imgtable	shader: read image descriptors indexed by workgroup	register:§104:Ф3
+T227	RT	Г	I	да	b7d3c572c	ir-sampler-resv	shader: clear unused sampler bits after constant folding	register:§104:Ф3
+T236	RT	Г	I	да	5c8306048	ir-strided-masked	shader: resolve masked image keys in strided descriptor records	register:§104:Ф3
+T245	RT	Г	I	да	c23de6218	ir-nested-selector	shader: resolve nested descriptor selector tables with exact scalar offsets	register:§104:Ф3
+T248	RT	Г	I	да	b929bbe3e	ir-broad-table	shader: limit broad image tables to compatible views	register:§104:Ф3
+T287	RT	Г	I	да	973809cde	ir-scalar-matsel	shader: retain bounded scalar material image selectors	register:§104:Ф3
+T305	RT	Г	I	да	df0412afb	ir-shared-pred	shader: preserve shared predicates during resource plan extraction	register:§104:Ф3
+T027	PIC	Г	U	нет	47957faa1 d8a441249 9860c2bbf 068d7621d	img-stencil-assoc	Match stencil associations by guest range and extent	b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2411
+T047	PIC	Г	I	нет	165234b15 c2b7b0b58 539c0f7bf	img-bc-storage-usage	BC7-RGBA32_UINT views (Vulkan validation)	-
+T068	PIC	Г	U	да	f9e56ef8a	be-barrier	Scope native barriers to shaders with shared execution	b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterFlow.cpp:595
+T087	PIC	Г	U	да	ef83ba65a 5ed5fdd36	ir-tdesc-valid	Validate texture descriptor fields	-
+T132	PIC	Г	U	нет	7b6bfdec6	rnd-rt-pitch	Graphics: share canonical padded layouts for single-sample color targets	b3dc9c67:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:332
+T134	PIC	Г	U	нет	da33a1c4a fbf6ae400	img-depth-alias	Graphics: respect physical tile layout when resolving depth aliases	b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:932
+T146	PIC	Г	U	нет	6ee1bf9db	img-readback-valid	graphics: trust image-local readback validity	b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:372
+T157	PIC	Г	I	нет	59a176042	rnd-lodbias-clamp	sampler: clamp mipLodBias to not be greater than maxSamplerLodBias	b3dc9c67:src/graphics/host_gpu/renderer/cache/samplerCache.cpp:156
+T187	PIC	Г	U	нет	0d4f99335	img-bc5-reuse	Keep reused BC5 textures in their own guest layout	b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1024
+T192	PIC	Г	U	нет	8b0cc79ac	img-volume-depth	Preserve native slices when PS5 volume texture depth grows	b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1024
+T201	PIC	Г	I	да	e4aca7a60 0258bd61e	ir-dispatch-exec	shader: initialize EXEC from requested dispatch thread extents	-
+T215	PIC	Г	I	да	efbaa17f7	dec-cselect-raw	shader: preserve raw EXEC and VCC bits in 64-bit scalar selects	b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Control.cpp:261
+T222	PIC	Г	U	да	5940e623d	img-10-11-11	gpu: fix 10-11-11 render-target storage	-
+T223	PIC	Г	U	нет	a2f851788	img-rebind-order	gpu: create texture views before rebinding overlapping images	b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:5176
+T226	PIC	Г	I	да	b0bbaef1e f7bd0b436	be-ldsbuf	gpu: store large compute shared memory in device buffers	-
+T228	PIC	Г	U	нет	0885f43a6	img-2d3d-alias	gpu: keep 2D and 3D texture aliases separate	b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1024
+T256	PIC	Г	c	да	b96871e2b	be-snorm16exp	shader: unpack compressed SNORM16 color exports as normalized signed values	b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterFlow.cpp:291
+T259	PIC	Г	U	нет	dd754065d	img-array-sync	graphics: preserve full tiled array backing in image-to-buffer copies	b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3220
+T044	HLE	Г	U	нет	57c5b206c	hle-net-errno	fix network errno	b3dc9c67:src/libs/network.cpp:3143
+T104	HLE	Г	I	нет	0382d0ca5	sys-mem-reserved-atomic	Publish reserved guest mappings atomically after backing commit	imports: sceKernelReserveVirtualRange (7oxv3PPCumo), sceKernelSetPrtAperture (BohYr-F7-is) = 0
+T130	HLE	Г	U	да	bec67b786	prs-layered-vo	Fix HITMAN 3 boot, layered presentation, and socket imports (#851)	-
+T148	HLE	Г	U	нет	4b0de1b67	av-zarchive	Zarchive Loading (#724)	игра — распакованная папка games/PPSA21564-app
+T166	HLE	Г	U	нет	17100ec96	hle-shareplay	shareplay: return initialized connection information	nid:+MCXJlWdi+s нет в бинарях игры; игра импортирует только SharePlayTerminate
+T198	HLE	Г	I	нет	45f55413e	sys-signin-dialog	Keep sign-in dialogs active until user dismissal through shared system presentation	-
+T235	HLE	Г	U	нет	72e4989b1 fb7ff7ec0	hle-trophy	Add trophy notification support	diff: оверлей и состояние трофеев
+T268	HLE	Г	I	нет	de6266490	sys-dev-random	kernel: report /dev/random and /dev/urandom as character devices (#1140)	-
+T288	HLE	Г	U	нет	165cd884c 9a5dd9faf	sys-agc-driver-dmem	agc: initialize function table in tracked driver memory	-

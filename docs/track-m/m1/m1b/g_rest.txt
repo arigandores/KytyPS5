@@ -1,0 +1,1430 @@
+== T001 rnd-pm4-chain n=1 ув=U подп=нет knobhunk=-
+   dirs: src/graphics/guest_gpu(3); tests/ShaderRecompilerComputeTests.cpp(1)
+   79120d53e Handle chained PM4 buffers without recursion
+      суть: INDIRECT_BUFFER с битом CHAIN и взятая ветвь CpOpBranch заменяют текущий буфер вместо вложенного вызова; убран deferred_advance_dw
+      довод: у нас базовый вариант (рекурсивный ProcessPm4 со стеком). Без бита CHAIN ответ тот же; бит CHAIN и пакеты ветвления у ASTRO не измерены; падения стека/зависания CP на 40 SCENE_OK нет
+== T002 prs-key-l2r2 n=1 ув=c подп=нет knobhunk=-
+   dirs: src/launcher/src(1); src/graphics/presentation(1)
+   7af28c267 Map Z/C to L2/R2
+      суть: Клавиатура: Z и C по умолчанию — L2 и R2; подписи в диалоге лаунчера.
+      довод: Удобство раскладки клавиатуры; корректность игры не меняет
+== T003 dec-sdwa-accept n=11 ув=I,c подп=да knobhunk=-
+   dirs: src/graphics/shader(2); tests/shaderCfgTests.cpp(1); tests/ShaderRecompilerComputeTests.cpp(1); tests/ResourceTrackingTests.cpp(1)
+   acd7435d3 Support byte destinations in V_MOV_B32
+      суть: Разрешает байтовые назначения SDWA у V_MOV_B32 (расширение проверки декодера)
+      довод: VOP1:1 sdwa 3 094 в игре; настоящий декодер (decode не менялся с dd7c6b33) на 5 698 программах eboot — 0 UNSUPPORTED, т. е. все формы игры уже принимаются; правка лишь расширяет проверку
+   cfb110e0a shader: allow partial SDWA destinations for V_NOT_B32 (#684)
+      суть: Частичные SDWA-назначения у V_NOT_B32
+      довод: V_NOT_B32 игра не исполняет
+   cfb8f7b24 Decode unsigned byte sources for SDWA half-float conversion
+      суть: Байтовые источники SDWA у V_CVT_F16_U16 (с запретом sext)
+      довод: V_CVT_F16_U16 игра не исполняет
+   6a9ae4ae4 shader: add SDWA support for V_MAX_I32
+      суть: SDWA у V_MAX_I32 (профиль IntegerFullDestination)
+      довод: V_MAX_I32 в игре 58 инструкций, SDWA 0
+   cda236dbb Shader recompiler: accept V_NOT_B32 SDWA partial dst with any source; allow 64 buffers
+      суть: V_NOT_B32 SDWA: частичное назначение с любым источником; MaxBuffers 32 → 64
+      довод: V_NOT_B32 игра не исполняет (ophist:VOP1:37=0, VOP3:1b7=0); у нас MaxBuffers 32 — переполнение даёт UINT32_MAX, сигнатуры такого отказа в реестре нет (register §129) [I]
+   d890bb190 shader: decode RDNA2 bit-reverse SDWA source selectors
+      суть: SDWA-селекторы источника у V_BFREV_B32
+      довод: V_BFREV_B32 в игре 85 инструкций, SDWA 0
+   1d41ddb37 shader: allow RDNA2 SDWA partial destinations for i24 multiply
+      суть: Частичные SDWA-назначения у V_MUL_I32_I24
+      довод: V_MUL_I32_I24 игра не исполняет
+   60e53a39c decoder: accept clamp on V_MIN3/MAX3/MED3_F16 (#1116)
+      суть: Разрешён clamp у V_MIN3/MAX3/MED3_F16 (расширение проверки декодера)
+      довод: VOP3:351 (V_MIN3_F16) 1 инструкция, 0x354/0x357 =0; настоящий декодер (decode не менялся с dd7c6b33) на 5 698 программах eboot — 0 UNSUPPORTED, т. е. все формы игры уже принимаются; правка лишь расширяет проверку
+   9f25e3c23 shader: support partial SDWA multiply and byte-source moves
+      суть: Частичные SDWA-назначения у V_MUL_U32_U24 и байтовые источники перемещений
+      довод: VOP2:b sdwa 16 в игре; настоящий декодер (decode не менялся с dd7c6b33) на 5 698 программах eboot — 0 UNSUPPORTED, т. е. все формы игры уже принимаются; правка лишь расширяет проверку
+   2f4b8a335 shader: allow SDWA byte destinations for bitwise VOP2 ops
+      суть: Байтовые SDWA-назначения у побитовых VOP2
+      довод: VOP2:1b sdwa 92, VOP2:1d sdwa 4 в игре; настоящий декодер (decode не менялся с dd7c6b33) на 5 698 программах eboot — 0 UNSUPPORTED, т. е. все формы игры уже принимаются; правка лишь расширяет проверку
+   2f4d0f383 shader: add SDWA support for V_MIN_I32 (#1342)
+      суть: SDWA у V_MIN_I32 (профиль IntegerFullDestination)
+      довод: V_MIN_I32 в игре 49 инструкций, SDWA 0
+== T004 av-linux-ffmpeg n=1 ув=c подп=нет knobhunk=-
+   dirs: CMakeLists.txt(1); src/libs/avPlayer.cpp(1); .github/workflows/build.yml(1); src/libs/videoDec2Decoder.cpp(1); README.md(1); src/libs/libFont.cpp(1)
+   9cf7963f4 Use system FFmpeg for VP9 playback on Linux
+      суть: Linux: системный FFmpeg для VP9 (CI, CMake, README); в avPlayer/videoDec2 — только предупреждение при отсутствии VP9; libFont — совместимость avutil 61
+      довод: на Windows меняется только строка предупреждения при отсутствии VP9-декодера; ролики игры — mp4, декодер есть (лог без «decoder not found»)
+== T006 rnd-zpass-pred n=1 ув=I подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/guest_gpu(1)
+   629ae1ac0 Handle Z-pass predication and query waits
+      суть: SET_PREDICATION op 1: сумма счётчиков 16 DB с битом готовности, приостановка PM4 до готовности; op 3 - ожидание только при wait_op
+      довод: у нас op 1 -> фатал unknown predication op; строк bool predication и фатала 0 в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15; игра запрашивает occlusion queries без предикации (stdout: Note: game uses occlusion queries ... everything is visible)
+== T008 bld-ci n=4 ув=c подп=нет knobhunk=-
+   dirs: .coderabbit.yaml(1); .github/workflows/build.yml(1); .vscode/settings.json(1)
+   e6156bef0 Cache CI builds with sccache
+      суть: CI: кэш сборок sccache
+      довод: не меняет эмулятор
+   0627e23e9 coderabbit: make it quieter
+      суть: coderabbit: тише
+      довод: не меняет эмулятор
+   6c03b4aaa vscode: point IntelliSense at clang instead of MSVC (#564)
+      суть: VS Code: IntelliSense на clang
+      довод: не меняет эмулятор
+   fd2e15ee7 ci: run the recompiler unit tests (#447)
+      суть: CI: запуск юнит-тестов рекомпилятора (CPU-тесты)
+      довод: не меняет эмулятор
+== T009 sys-amdcpu-patch n=10 ув=I,c подп=нет knobhunk=-
+   dirs: src/launcher/src(2); src/loader/guestInstructionPatcher.h(1); src/launcher/include(1); src/loader/x64InstructionEmulator.cpp(1); src/launcher/forms(1); CMakeLists.txt(1)
+   957452d6f Emulate VRSQRTPS instruction
+      суть: Патч загрузчика: VRSQRTPS гостя заменяется ловушкой с эмуляцией AMD-точного rsqrt (на этом коммите — Linux).
+      довод: хост пользователя AMD Ryzen 9 9955HX3D (Zen 5); патчер включается только --amd-cpu/--redzone (умолчание off; у нас этих опций нет, харнессы их не передают); «инструкции, отличающиеся между AMD и хостом» на AMD-хосте исполняются нативно
+   77680ce9d Make AMD CPU patch optional
+      суть: Эмуляция VRSQRTPS под опцией --amd-cpu (конфиг, лаунчер), по умолчанию off.
+      довод: хост пользователя AMD Ryzen 9 9955HX3D (Zen 5); патчер включается только --amd-cpu/--redzone (умолчание off; у нас этих опций нет, харнессы их не передают); «инструкции, отличающиеся между AMD и хостом» на AMD-хосте исполняются нативно
+   86e5e0140 Protect Windows guest red zones when emulating VRSQRTPS
+      суть: Защита красной зоны гостя на Windows при эмуляции VRSQRTPS (redZonePatcher, x64InstructionEmulator).
+      довод: хост пользователя AMD Ryzen 9 9955HX3D (Zen 5); патчер включается только --amd-cpu/--redzone (умолчание off; у нас этих опций нет, харнессы их не передают); «инструкции, отличающиеся между AMD и хостом» на AMD-хосте исполняются нативно
+   349fae00d Emulate register-form SSE4a EXTRQ
+      суть: Эмуляция регистровой формы SSE4a EXTRQ в обработчике #UD (хосты без SSE4a).
+      довод: срабатывает только при #UD на хосте без SSE4a; Zen 5 поддерживает SSE4a [I]
+   4e6f4f99d loader: emulate immediate SSE4a instructions on macOS (#635)
+      суть: Эмуляция иммедиатных SSE4a на macOS, тест macos_sse4a.
+      довод: платформа macOS
+   b11aea803 loader: native trampoline for VRSQRTPS under --amd-cpu (#893)
+      суть: Нативный трамплин для VRSQRTPS под --amd-cpu (guestInstructionPatcher).
+      довод: хост пользователя AMD Ryzen 9 9955HX3D (Zen 5); патчер включается только --amd-cpu/--redzone (умолчание off; у нас этих опций нет, харнессы их не передают); «инструкции, отличающиеся между AMD и хостом» на AMD-хосте исполняются нативно
+   a4d26cf81 loader: replace SSE4a EXTRQ with native trampolines on hosts without SSE4a (#839)
+      суть: EXTRQ заменяется нативными трамплинами на хостах без SSE4a.
+      довод: хост пользователя AMD Ryzen 9 9955HX3D (Zen 5); патчер включается только --amd-cpu/--redzone (умолчание off; у нас этих опций нет, харнессы их не передают); «инструкции, отличающиеся между AMD и хостом» на AMD-хосте исполняются нативно; Zen 5 имеет SSE4a [I]
+   19a9464b7 loader: add INSERTQ RDPID and CLWB fallbacks
+      суть: Запасные пути INSERTQ, RDPID, CLWB для хостов без них.
+      довод: хост пользователя AMD Ryzen 9 9955HX3D (Zen 5); патчер включается только --amd-cpu/--redzone (умолчание off; у нас этих опций нет, харнессы их не передают); «инструкции, отличающиеся между AMD и хостом» на AMD-хосте исполняются нативно; Zen 5 имеет SSE4a/RDPID/CLWB [I]
+   ab98fb1ff loader: preserve red-zone liveness across stack adjustments
+      суть: Живость красной зоны через изменения стека в патчере.
+      довод: патчер не включается в нашей конфигурации [c]
+   35c6e8fff loader: enable the AMD CPU instruction patcher on macOS (#1014)
+      суть: Патчер инструкций AMD включён на macOS.
+      довод: платформа macOS
+== T013 sys-build-ffmpeg n=1 ув=c подп=нет knobhunk=-
+   dirs: .github/workflows/build.yml(1); 3rdparty/ffmpeg-core(1); README.md(1); .gitmodules(1); 3rdparty/CMakeLists.txt(1)
+   9b2111dc0 Bundle FFmpeg
+      суть: FFmpeg подмодулем 3rdparty/ffmpeg-core, правки CI и README.
+      довод: только сборка/CI; код эмулятора не меняется
+== T015 sys-nix n=1 ув=c подп=нет knobhunk=-
+   dirs: flake.nix(1); README.md(1); flake.lock(1); shell.nix(1); nix/devshell.nix(1)
+   10cae50b3 Add Nix flake and development shell (#645)
+      суть: Nix flake и окружение разработки.
+      довод: вне цели: сборка Linux/Nix
+== T022 rnd-mesh-restart n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(1)
+   63fb822f8 Warn and continue mesh draws with primitive restart enabled
+      суть: При включённом primitive restart в mesh-шейдерном draw печатается предупреждение и draw идёт дальше (restart не реализован)
+      довод: у нас фатал unsupported mesh draw; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет, строки Warning: primitive restart в stdout 112 прогонов нет
+== T024 rnd-depth-flags n=2 ув=I подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   fa913ec1a Accept EXPCLEAR acceleration on expanded depth attachments
+      суть: MakeDepthTargetDesc больше не считает фаталом expclear_enabled (HTile уже развёрнут на хосте)
+      довод: у нас DepthFatal unsupported depth register state; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет - игра эти флаги на пройденных сценах не ставит
+   a98a39c57 gpu: accept partially resident depth flags
+      суть: MakeDepthTargetDesc больше не считает фаталом partially_resident глубины и стенсила
+      довод: фатал unsupported depth register state в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 нет
+== T025 dec-op-unused n=45 ув=I,c подп=да knobhunk=-
+   dirs: src/graphics/shader(33); src/graphics/host_gpu(4); src/graphics/guest_gpu(1); tests/ShaderRecompilerComputeTests.cpp(1); tests/shaderCfgTests.cpp(1); src/graphics/presentation(1)
+   e0ecffed7 Approximate explicit-LOD texture gathers at mip zero
+      суть: IMAGE_GATHER4_L (MIMG 0x44) — приближение на mip 0
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot; из gather игра исполняет только MIMG:47 (GATHER4_LZ)
+   f30afc184 shader: support S_ASHR_I64 (#658)
+      суть: S_ASHR_I64 (SOP2 0x23)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   4b7768656 shader: V_CMP_NGT_F16
+      суть: V_CMP_NGT_F16 (VOPC 0xeb)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   394e63890 shader: V_MUL_LO_U16
+      суть: V_MUL_LO_U16 (VOP3 0x305)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   5b7d3343c shader: V_CMP_NLT_F16
+      суть: V_CMP_NLT_F16 (VOPC 0xee)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   ea6aae857 shader: V_MAD_I16
+      суть: V_MAD_I16 (VOP3 0x35e)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   549495575 shader: add S_BITCMP0_B64 and S_BITCMP1_B64 (#688)
+      суть: S_BITCMP0_B64 и S_BITCMP1_B64 (SOPC 0x0e, 0x0f)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   fc86509aa shader: support DS_WRITE_B8_D16_HI (#794)
+      суть: DS_WRITE_B8_D16_HI (DS 0xa0)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   3dc3fd019 shader: implement DS_INC_U32 and DS_DEC_U32 (#790)
+      суть: DS_INC_U32 и DS_DEC_U32 (DS 0x03, 0x04)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   e43c24268 shader: add S_MEMREALTIME opcode
+      суть: S_MEMREALTIME (SMEM 0x25)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   5a705dd15 shader: support V_CMPX_EQ_U16 (#816)
+      суть: V_CMPX_EQ_U16 (VOPC 0xba)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   ff5460856 shader: add V_CMPX_O_F32 opcode
+      суть: V_CMPX_O_F32 (VOPC 0x17)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   cf268af83 Shader: implement RDNA2 image atomic float maximum
+      суть: IMAGE_ATOMIC_FMIN/FMAX (MIMG 0x1e, 0x1f)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot; атомики образов игры — только MIMG:f и MIMG:11
+   16b83a034 Shader: execute RDNA2 FP64 shadow arithmetic and log denorm limits
+      суть: FP64: V_CVT_F32_F64, V_CVT_F64_I32, V_FMA_F64, V_MUL_F64, V_RCP_F64; shaderFloat64 и float controls устройства
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot; исполнение FP64 у upstream включается только при F64 в программе
+   0a5774be7 shader: support FP64 conversions used by FighterZ (#884)
+      суть: V_CVT_F64_F32, V_CVT_F64_U32 (VOP1 0x10, 0x16)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   35c4dca2c shader: add V_CMPX_NLE_F16 opcode
+      суть: V_CMPX_NLE_F16 (VOPC 0xfc)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   6799ecbc5 shader: add native 64-bit LDS OR with shared typed storage views
+      суть: DS_OR_B64 (DS 0x4a) через общие типизированные виды LDS; фича int64-атомиков LDS
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   bc193f527 shader: V_CMPX_LT_I16 + fix SDWA with SEXT
+      суть: V_CMPX_LT_I16 (VOPC 0x99) и знаковое расширение байта SDWA в 16-битных чтениях
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot; SEXT-правка касается только 16-битных целых операций с SDWA — VOPC 0x89–0x9e, 0xa9–0xbe и VOP1 0x50/0x51 в игре =0 [I]
+   581dad7dd shader: implement RDNA2 FP64 equality comparisons
+      суть: V_CMP_EQ_F64 (VOPC 0x22)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   0d0b215fa shader: port 64-bit ALU and atomic opcodes
+      суть: Порт 64-битных ALU и атомиков: S_BREV_B64, V_ADD_F64, BUFFER_ATOMIC_AND_X2, DS_ADD_U64, IMAGE_ATOMIC_SMAX/SMIN, 14 VOPC (в т.ч. V_CMP_LE_U64)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot; S_BREV_B64 и V_CMP_LE_U64 есть только в 1 и 4 программах вне eboot, игрой не запрошенных (Б26б, register §11)
+   b3e419ff1  shader: implement 32-bit RDNA2 IMAGE_ATOMIC_CMPSWAP (#952)
+      суть: IMAGE_ATOMIC_CMPSWAP 32 бит (MIMG 0x10)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   284d58d1d shader: implement RDNA2 double-precision fractional part
+      суть: V_FRACT_F64 (VOP1 0x3e)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   b8946fef9 shader: translate RDNA2 signed 64-bit not-equal comparisons
+      суть: V_CMP_NE_I64 (VOPC 0xa5)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   c17fa5b93 shader: implement RDNA2 DS forward lane permute
+      суть: DS_PERMUTE_B32 (DS 0xb2)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   98557a83b shader: implement RDNA2 DS masked OR through shared atomic updates
+      суть: DS_MSKOR_B32 (DS 0x0c)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   8274e517b shader: add FP64 min, max and rounding
+      суть: FP64 min/max и округления: V_MIN/MAX_F64, V_TRUNC/CEIL/FLOOR_F64
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   2b1b7ed0e shader: FLAT opcode=0x24
+      суть: FLAT_LOAD_SHORT_D16 (FLAT 0x24)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot; FLAT игры — только global_load op c, d, f
+   1d5527246 shader: support V_CMPX_NE_U16
+      суть: V_CMPX_NE_U16 (VOPC 0xbd)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   7a0e1dafd shader: classify native half values with shared operand decoding
+      суть: V_CMPX_CLASS_F16 (VOPC 0x9f) и общее чтение F16-операндов через Read16LaneBits
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot; чтение F16-операндов переписано (abs/neg по битам, встроенные константы) — f16-операции игра исполняет, ответ эквивалентен кроме знака NaN [I]
+   5601861d6 shader: implement RDNA2 scalar 16-bit sign extension
+      суть: S_SEXT_I32_I16 (SOP1 0x1a)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   1195af251 decoder: add V_CMPX_U_F32 (#1120)
+      суть: V_CMPX_U_F32 (VOPC 0x18)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   7492cb957 shader: emulate DS_ORDERED_COUNT as a GDS atomic (#1117)
+      суть: DS_ORDERED_COUNT как GDS-атомик (DS 0x3f)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   bb98f2643 shader: add missing I64/U64 compare variants
+      суть: 15 вариантов сравнений I64/U64 (F/T/LT/LE/EQ/GT/GE, CMP и CMPX)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   5af370c25 shader: add BUFFER_STORE_FORMAT_D16_X opcode
+      суть: BUFFER_STORE_FORMAT_D16_X (MUBUF 0x84)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot; 8-битный op MUBUF (бит 25) в игре всегда 0 [c проба eboot]
+   26cce9909 shader: add BUFFER_LOAD_FORMAT_D16_X opcode
+      суть: BUFFER_LOAD_FORMAT_D16_X (MUBUF 0x80)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot; 8-битный op MUBUF (бит 25) в игре всегда 0 [c проба eboot]
+   96eb681b9 shader: add V_MIN3_U16 opcode
+      суть: V_MIN3_U16 (VOP3 0x353)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   9e666e4dd shader: support scalar byte sign extension
+      суть: S_SEXT_I32_I8 (SOP1 0x19)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   7881c69a5 shader: decode v_cmp_class_f16
+      суть: V_CMP_CLASS_F16 (VOPC 0x8f)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   1fc520cd6 shader: FLAT_STORE_DWORD
+      суть: FLAT_STORE_DWORD (FLAT 0x1c)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot; FLAT игры — только global_load op c, d, f
+   1bd282ec0 shader: BUFFER_LOAD_SHORT_D16
+      суть: BUFFER_LOAD_SHORT_D16 (MUBUF 0x24)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   a31e2cd36 shader: BUFFER_LOAD_SHORT_D16_HI
+      суть: BUFFER_LOAD_SHORT_D16_HI (MUBUF 0x25)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   bb5edbd49 shader: expose graphics compute queue fields to GETREG
+      суть: S_GETREG_B32 (SOPK 0x12): поля очереди graphics/compute
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   59183dbfa shader: add missing F64 VOPC compares
+      суть: 28 недостающих сравнений F64 (CMP и CMPX)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   d247d3d60 shader: complete signed 64-bit integer comparisons
+      суть: Знаковые сравнения I64: V_CMP(X)_GT/GE_I64
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+   fa56c5eae shader: add scalar zero-bit count and search operations
+      суть: S_BCNT0_I32_B32/B64, S_FF0_I32_B32/B64 (SOP1 0x0d, 0x0e, 0x11, 0x12)
+      довод: игра не исполняет: опкода нет ни в одной из 5 698 программ eboot
+== T026 dec-swappc n=3 ув=c подп=да knobhunk=-
+   dirs: src/graphics/shader(12); tests/ShaderRecompilerComputeTests.cpp(1); tests/shaderCfgTests.cpp(1); src/graphics/host_gpu(1)
+   235e24d44 Recognize null-destination SWAPPC shader handoffs
+      суть: S_SWAPPC_B64 с NULL-приёмником декодируется как S_SETPC_B64
+      довод: в eboot SWAPPC нет; 96 программ с SOP1 0x21 вне eboot игрой не запрошены — Б26а ТУПИК (register §11)
+   1818aae56 shader: link scalar leaf calls only for SWAPPC programs
+      суть: Скалярные leaf-вызовы связываются только для программ с SWAPPC (call_source в кэше программ)
+      довод: SWAPPC в eboot нет; программы вне eboot игрой не запрошены (Б26а ТУПИК)
+   3e9f88bf7 shader: isolate SWAPPC work from ordinary shader paths
+      суть: Работа SWAPPC изолирована от обычных путей шейдера (FindPermutation<HasCalls>)
+      довод: SWAPPC в eboot нет (Б26а ТУПИК)
+== T027 img-stencil-assoc n=4 ув=U подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(4); tests/ShaderRecompilerComputeTests.cpp(1)
+   47957faa1 Match stencil associations by guest range and extent
+      суть: Ассоциация трафарета ищется по совпадению всего диапазона и экстента глубины, а не только адреса (PPSA30279).
+      довод: Для PPSA30279 [I]; путь трафарета через ассоциацию (CPU/DMA-запись, очистка, сэмплирование трафарета) у ASTRO не доказан; строки реестра с симптомом трафарета нет
+   d8a441249 Refresh stencil backing through the depth image
+      суть: Выгрузка CPU-данных трафарета в аспект eStencil образа глубины, учёт GPU-записей и частичных очисток трафарета; AssociateStencil возвращает id.
+      довод: Путь CPU/DMA-записи и очистки трафарета у ASTRO не доказан; строки реестра с трафаретом нет
+   9860c2bbf Associate stencil when depth is acquired
+      суть: Ассоциация трафарета при захвате глубины (FindDepthTarget) и обновление трафарета при сэмплировании его диапазона в FindTexture.
+      довод: Сэмплирование трафарета у ASTRO не доказано; строки реестра нет
+   068d7621d graphics: preserve stencil view layers through uploads and clears
+      суть: Слои вида трафарета (stencil_subresources) сохраняются через выгрузки и очистки; ClearImageFromBuffer чистит только подресурсы трафарета; новые EXIT_IF в FindDepthTarget.
+      довод: Слоистый трафарет у ASTRO не доказан; новые EXIT_IF — риск фатала на нашем пути; строки реестра нет
+== T028 rnd-log-launcher n=1 ув=c подп=нет knobhunk=-
+   dirs: src/launcher/src(1); src/graphics/guest_gpu(1)
+   228cf3fbf Build the launcher on Qt below 6.6 and cap the reference-clock log (#653)
+      суть: Сборка лаунчера на Qt < 6.6 (флаг NoPortabilityDrivers под условием) и печать copy_data reference clock только первые 64 раза
+      довод: лаунчер - вне цели; строка лога у нас без предела, но в V FS15 0 таких строк; ответ не меняется
+== T033 av-refactor-magic-enum n=1 ув=c подп=да knobhunk=-
+   dirs: src/graphics/shader(2); src/kernel/memory.cpp(1); src/libs/audio.cpp(1); src/main.cpp(1); src/common/magicEnum.h(1); src/loader/symbolDatabase.cpp(1)
+   cc8e02380 remove magic_enum wrappers
+      суть: Рефакторинг: Common::EnumName → magic_enum::enum_name в строках логов (memory, audio, avPlayer, runtimeLinker, symbolDatabase, main); поведение не меняется
+      довод: меняется только форматирование логов; [I] string_view в %s без завершающего нуля — риск мусора в логе, не в ответах игре
+== T034 sys-refactor-strings n=1 ув=I подп=нет knobhunk=-
+   dirs: src/common/file.cpp(1); src/kernel/fileSystem.cpp(1); src/common/stringUtils.h(1); src/main.cpp(1); src/libs/libAppContent.cpp(1); src/loader/symbolDatabase.cpp(1)
+   2bf78a94e remove string wrappers
+      суть: Рефакторинг: удалены строковые обёртки (PathToString и т.п.), пути через std::filesystem.
+      довод: поведение не меняется [I]
+== T035 hle-launcher-cleanup n=1 ув=c подп=нет knobhunk=-
+   dirs: src/launcher/include(10); src/launcher/src(6); src/utils.cmake(1)
+   218e7200b clean up launcher helpers
+      суть: Чистка вспомогательных функций лаунчера (заголовки, диалоги) и utils.cmake
+      довод: лаунчер (Qt) в пути игры не участвует: kyty_emulator.exe запускается напрямую (run.sh, харнессы)
+== T036 hle-refactor-runtime n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/network.cpp(1); src/kernel/memory.cpp(1); src/libs/libPsml.cpp(1); src/loader/redZonePatcher.cpp(1); src/libs/imeDialog.cpp(1); src/loader/x64InstructionEmulator.cpp(1)
+   1211958b4 clean up runtime helpers
+      суть: Чистка: std::has_single_bit/std::rotl вместо самописных, константы ошибок, удалён мёртвый код (NpWebApi2, NetCtl, redZonePatcher, timer)
+      довод: поведение не меняется
+== T037 dec-refactor n=2 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(18); src/graphics/host_gpu(5); src/graphics/presentation(3)
+   5dc644edb clean up graphics helpers
+      суть: Чистка графических хелперов: удалены отладочные дефайны и константы KYTY_SDL_*, упрощения без изменения поведения
+      довод: рефакторинг, ответ не меняется [I]
+   3585cd8f0 shader: simplify translator dispatch to void handlers
+      суть: Обработчики транслятора возвращают void вместо bool (механическая перестройка Translator)
+      довод: рефакторинг, ответ не меняется [I]
+== T038 sys-refactor-vm n=1 ув=I подп=нет knobhunk=-
+   dirs: src/common/platform(8); src/common/virtualMemory.cpp(1)
+   5b2935e36 remove the extra virtual memory layer
+      суть: Рефакторинг: удалён лишний слой sysVirtual/sysFileIO.
+      довод: поведение не меняется [I]
+== T039 hle-refactor-bytebuffer n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/network.cpp(1); src/graphics/guest_gpu(1); src/loader/gamePatch.cpp(1); src/common/file.h(1); src/common/stringUtils.h(1); src/libs/libDbgAsan.cpp(1)
+   697b18b36 replace ByteBuffer with std::vector
+      суть: Рефакторинг: ByteBuffer → std::vector<std::byte> (File::ReadWholeBuffer, удалён File::Read(size)), tile, gamePatch, systemContent, network, тесты
+      довод: поведение не меняется [по диффу]; наш код, вызывающий ByteBuffer/File::Read(size), при переносе потребует правки [I]
+== T040 sys-refactor-helpers n=1 ув=I подп=нет knobhunk=-
+   dirs: tests/ImeDialogTests.cpp(1); src/common/debug.h(1); src/common/timer.h(1); src/common/threads.cpp(1); tests/ShaderRecompilerComputeTests.cpp(1); src/kernel/pthread.cpp(1)
+   c5cebc1d1 remove unused helpers and the -64 suffix
+      суть: Удалены неиспользуемые помощники и суффикс -64 (таймер, хэш, потоки).
+      довод: поведение не меняется [I]
+== T041 rnd-tile-exitmsg n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/guest_gpu(1); src/launcher/src(1)
+   6cfde37e9 avoid extra allocations
+      суть: TileGetTextureSize: сообщение фатала unknown format через printf вместо fmt::join; лаунчер - connect пункта Run
+      довод: меняется только текст фатала и GUI лаунчера; ответ эмулятора тот же
+== T042 rnd-winbuild-membarrier n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(1)
+   104530eaf fix Windows build (#680)
+      суть: После windows.h снимается макрос MemoryBarrier, мешавший имени барьера Vulkan
+      довод: наша сборка на Windows идёт без этой строки (у нас после #undef max сразу #elif); правка только сборки
+== T043 hle-np-signin n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/network.h(1); src/libs/libNet.cpp(1); src/libs/network.cpp(1)
+   87b4417ac fix initial NP sign-in callback
+      суть: NP: NpRegisterStateCallbackA с отложенным колбэком «signed out»; NpGetState — константа
+      довод: функция игрой не импортируется [c NID]; сеть у нас офлайн (NetCtl принудительно offline), строк по сети в реестре трека F нет
+== T044 hle-net-errno n=1 ув=U подп=нет knobhunk=-
+   dirs: src/libs/libNet.cpp(1)
+   57c5b206c fix network errno
+      суть: libnet: g_net_errno = result − NET_ERROR_EPERM + 1 вместо отрицательного кода; макрос NET_CALL → FinishNetCall
+      довод: игра зовёт NetPoolCreate (пулы «Sample», «DataCapture» — телеметрия, log_fs15_v) и импортирует GetNetErrorAddr; errno пишется только при отказе; сеть у нас офлайн (NetCtl принудительно offline), строк по сети в реестре трека F нет
+== T045 hle-net-sockets n=6 ув=c подп=нет knobhunk=-
+   dirs: src/libs/network.h(1); src/libs/network.cpp(1); src/libs/libNet.cpp(1); tests/KernelFileSystemTests.cpp(1)
+   cbedf5707 UDP P2P sockets
+      суть: UDP P2P-сокеты: бэкенд сокетов, EpollWait, Bind/Connect/Accept
+      довод: сокетов игра не создаёт: строк «family =» (Net::Socket) 0 в log_fs15_v и log_fs15_z; вызовов заглушек неразрешённых сетевых импортов 0 в 560 из 562 stdout (f287, s144–s146; предел печати 1024 не исчерпан)
+   44798085b network: handle SO_NBIO on non-Windows hosts (#954)
+      суть: SO_NBIO на хостах не Windows
+      довод: только не-Windows хосты
+   e7f632706 net: emulate Windows PEEK and WAITALL receives
+      суть: recv: эмуляция MSG_PEEK и MSG_WAITALL на Windows; тесты
+      довод: сокетов игра не создаёт: строк «family =» (Net::Socket) 0 в log_fs15_v и log_fs15_z; вызовов заглушек неразрешённых сетевых импортов 0 в 560 из 562 stdout (f287, s144–s146; предел печати 1024 не исчерпан)
+   485272100 net: export connect, getsockopt, sendto, and recvfrom
+      суть: Экспорт sceNetConnect/Getsockopt/Sendto/Recvfrom; тесты
+      довод: сокетов игра не создаёт: строк «family =» (Net::Socket) 0 в log_fs15_v и log_fs15_z; вызовов заглушек неразрешённых сетевых импортов 0 в 560 из 562 stdout (f287, s144–s146; предел печати 1024 не исчерпан)
+   e679486ed net: translate native UDP socket options and microsecond timeouts
+      суть: UDP: трансляция опций сокета и таймаутов в микросекундах; тесты
+      довод: сокетов игра не создаёт: строк «family =» (Net::Socket) 0 в log_fs15_v и log_fs15_z; вызовов заглушек неразрешённых сетевых импортов 0 в 560 из 562 stdout (f287, s144–s146; предел печати 1024 не исчерпан)
+   861dd76d7 net: accept sufficient Ethernet address output buffers
+      суть: NetEtherNtostr: буфер ≥ 18 и печать настоящего адреса вместо EXIT
+      довод: функция игрой не импортируется [c NID]
+== T047 img-bc-storage-usage n=3 ув=I,c подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   165234b15 BC7-RGBA32_UINT views (Vulkan validation)
+      суть: Добавляет eStorage к usage блочных образов при supports_block_texel_view (откатан c2b7b0b58).
+      довод: Пара 165234b15 + c2b7b0b58 в сумме ничего не меняет (откат возвращает image.cpp байт в байт); улучшенная форма — 539c0f7bf
+   c2b7b0b58 Revert "BC7-RGBA32_UINT views (Vulkan validation)"
+      суть: Откат 165234b15.
+      довод: Чистый эффект пары с 165234b15 — ноль [c]
+   539c0f7bf graphics: restore block image storage usage where the device supports it (#894)
+      суть: Возвращает eStorage блочным образам, если формат допускает (GetImageFormatProperties), иначе предупреждение один раз.
+      довод: Нужно для записи гостем в BC-текстуру через несжатый storage-вид; у ASTRO путь не доказан; прогоны W на 40 сценах SCENE_OK — 0 [Vulkan][E], а storage-вид образа без eStorage дал бы ошибку слоя [I]
+== T048 dec-dpp8 n=3 ув=c подп=да knobhunk=-
+   dirs: src/graphics/shader(9); tests/ShaderRecompilerComputeTests.cpp(1)
+   bfc8cd0e0 shader: DPP8 moves
+      суть: DPP8 для перемещений; выбор лейна DPP обобщён (quad perm и dpp8 одной функцией)
+      довод: в игре 0 инструкций DPP8 (колонка dpp8 ophist = 0 везде); путь DPP16 игры (VOP1:1 dpp16 17 000, VOP2:4 21 146) переписан обобщением — эквивалентно [I]
+   b27b89f51 shader: fix VOP2 DPP8 decoding
+      суть: Исправлено декодирование VOP2 DPP8 (src0 = 233; neg/abs src1 только для DPP16)
+      довод: в игре 0 инструкций DPP8
+   3b9e176b7 shader: support VOP1/VOP2 DPP8 fetch-inactive
+      суть: DPP8 fetch-inactive (src0 = 234) для VOP1/VOP2
+      довод: в игре 0 инструкций DPP8
+== T049 dec-int16-neg n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(3); tests/ShaderRecompilerComputeTests.cpp(1)
+   95d3d9d3a shader: fix packed integer negation
+      суть: NEG у 16-битных операндов — переворот знакового бита вместо целого отрицания (packed int, V_PACK_B32_F16)
+      довод: у нас тот же код, что в базе (целое отрицание); пути игры: VOP3P целые 0x00–0x0d =0, VOP3:311 =0, PK_MIN/MAX_F16 (тихий sNaN, Float.cpp:29) VOP3P:11/12 =0, 16-битные целые VOPC/VOP1 =0 ⇒ не исполняются [I]
+== T050 av-ngs2-ajm n=15 ув=c подп=нет knobhunk=-
+   dirs: src/libs/ajm(4); tests/Ngs2SamplerTests.cpp(1); src/libs/ngs2.cpp(1); src/libs/ajm.cpp(1); src/libs/audio.h(1); src/libs/audio.cpp(1)
+   007d7ea2e audio: infer stereo RAW AAC layout from channel-pair packets
+      суть: AJM AAC: раскладка стерео RAW AAC по парам каналов; Audiodec: TOO_MANY_CHANNELS → ошибка декодирования
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   1d2f59dfa ajm: reject invalid batch storage
+      суть: AjmBatchInitialize: код ошибки вместо EXIT при нулевом буфере/info
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   303a0203b audio: play NGS2 PCM buffers
+      суть: NGS2: воспроизведение PCM-буферов голосов (рэки сэмплера)
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   82b2711cd audio: play ATRAC9 sampler blocks
+      суть: NGS2: воспроизведение блоков ATRAC9 сэмплера
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   e40438f95 Decode ATRAC9 streams after complete RIFF headers
+      суть: AJM ATRAC9: декодирование только после полного RIFF-заголовка
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   3742ad998 NGS2: warn and skip unsupported custom audio modules
+      суть: NGS2: предупреждение и пропуск неподдерживаемых пользовательских модулей
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   fc04db759 NGS2: preserve ATRAC9 config word byte order
+      суть: NGS2: порядок байт слова конфигурации ATRAC9
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   2165c710c audio: share block completion
+      суть: NGS2: общее завершение блока сэмпла
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   83628a436 audio: fix NGS2 playback
+      суть: NGS2: исправление воспроизведения
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   1cc0ac7ed ajm: share control handling to fully reset gapless decoders
+      суть: AJM: общий разбор управления, полный сброс gapless-декодеров
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   f7ae6e0a8 audio: support NGS2 PCM16 samplers and rear low-pass filters (#825)
+      суть: NGS2: сэмплеры PCM16 и низкочастотный фильтр тыловых каналов; тесты
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   5ce4f0836 audio: improve NGS2 stream and ATRAC9 playback
+      суть: NGS2: потоки и воспроизведение ATRAC9; тесты
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   7c8583d20 audio: implement the AJM Opus decoder (#858)
+      суть: AJM: декодер Opus
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   a20b64d3e audio: rewind compressed sampler blocks at loop boundaries
+      суть: NGS2: перемотка сжатых блоков сэмплера на границе петли
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+   b10bd53dd audio: prevent ATRAC9 vibration configuration heap corruption
+      суть: ATRAC9 (AJM/NGS2): защита от порчи кучи в конфигурации вибрации; тесты
+      довод: ASTRO BOT не импортирует NGS2/AJM/Audio3d/AudioOut v1 [c NID]; мьютексы sce_Ngs2_* в логе — статическая копия в самой игре, не HLE; звук игры идёт через AudioOut2
+== T051 hle-net-pool n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/network.cpp(1)
+   ba1854bbd net: start pool IDs at 1
+      суть: libnet Shutdown: обход пулов начинается с id 1
+      довод: только путь выхода; сеть у нас офлайн (NetCtl принудительно offline), строк по сети в реестре трека F нет
+== T052 av-pad-misc-stubs n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/controller.cpp(1); src/libs/libNet.cpp(1); src/libs/controller.h(1); src/libs/libPad.cpp(1)
+   f100f785d libs: fill controller and broadcast status outputs
+      суть: Новые PadIsRemoteController, GameLiveStreamingGetCurrentStatus2 и GetSocialFeedbackMessagesCount
+      довод: функции игрой не импортируются [c NID]
+== T053 sys-native-paths n=5 ув=c подп=нет knobhunk=-
+   dirs: src/loader/systemContent.h(1); src/kernel/fileSystem.cpp(1); src/common/stringUtils.h(1); src/main.cpp(1); src/graphics/presentation(1); tests/KernelFileSystemTests.cpp(1)
+   001dfea50 Preserve native windows paths in filesystem operations
+      суть: Перебор каталогов на Windows через нативный std::filesystem::path без UTF-8-круга.
+      довод: различие только для не-ASCII путей — у нас их нет [c]
+   b61b3f2a4 handle UTF-8 command-line paths
+      суть: UTF-8 пути командной строки, нативный rel_path в MountPoints.
+      довод: различие только для не-ASCII путей [c]
+   07c9978ac keep game icon paths native in windows
+      суть: Пути иконки игры нативные на Windows.
+      довод: иконка окна; не-ASCII путей нет [c]
+   8b294eb5b Add unicode path regression coverage
+      суть: Регрессионные тесты Unicode-путей.
+      довод: только тесты
+   fe45265fc preserve native paths when creating directories
+      суть: Нативные пути при создании каталогов.
+      довод: различие только для не-ASCII путей [c]
+== T056 sys-userservice-name n=1 ув=I подп=нет knobhunk=-
+   dirs: src/libs/libUserService.cpp(1)
+   8d66c4ef6 user service: return logged-out error for unavailable user names
+      суть: GetUserName для недоступного user_id возвращает NOT_LOGGED_IN вместо EXIT.
+      довод: игра импортирует GetUserName, зовёт с user_id входа: EXIT в наших логах и реестре не встречался [I]
+== T057 ir-srteval-scmp n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(1); tests/ResourceTrackingTests.cpp(1)
+   102a10f0f Fix signed sampler comparisons
+      суть: SrtWalker: SGreaterThanEqual32 считается равномерной операцией и вычисляется на хосте
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate; у нас SGreaterThanEqual32 в SrtWalker/SrtNative нет — перенос потребовал бы и нашего компилированного вычислит
+== T060 rnd-rectlist-legacy n=1 ув=U подп=да knobhunk=pipelineCache.cpp: 1 [call-site]
+   dirs: src/graphics/host_gpu(2); tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/guest_gpu(1)
+   0ad9149c9 Fix three-vertex rectangle rendering
+      суть: kRectListLegacy рисуется тем же путём, что kRectList (patch list, эмуляция прямоугольника); снят обход Sarah - draw(4) как triangle strip
+      довод: у нас kRectListLegacy только в auto-draw как strip из 4 вершин (Sarah), иначе фатал; фатала в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 нет. Исполняет ли ASTRO legacy-прямоугольники из 3 вершин - не измерено (счётчика типов примитивов нет); дефекта на листах 40 SCENE_OK нет
+== T061 sys-win-cacheflags n=1 ув=c подп=нет knobhunk=-
+   dirs: src/common/platform(1)
+   b8ad1d8c4 common: return real Win32 cache flags from GetCacheAccessType (#673)
+      суть: GetCacheAccessType отдаёт FILE_FLAG_SEQUENTIAL_SCAN/FILE_ATTRIBUTE_NORMAL вместо значений enum.
+      довод: ответ на нашем пути не меняется [c]
+== T062 sys-refactor-findfiles n=1 ув=I подп=нет knobhunk=-
+   dirs: src/common/platform(3); src/common/file.cpp(1); src/common/file.h(1); tests/KernelFileSystemTests.cpp(1)
+   c3cc8454b common: remove unused recursive file enumeration (#681)
+      суть: Удалён неиспользуемый рекурсивный SysFileFindFiles.
+      довод: мёртвый код [I]
+== T063 bld-cmake n=6 ув=c подп=нет knobhunk=-
+   dirs: README.md(1); CMakeLists.txt(1); .github/workflows/build.yml(1)
+   d7da24447 Add automatic sccache/ccache detection to CMake and remove deprecated Ninja setup action (#734)
+      суть: CMake: автоопределение sccache/ccache; удалён устаревший шаг Ninja в CI
+      довод: сборочная обвязка; ответы эмулятора не меняются
+   fe4f9423e Significantly Reduce Linux Release Size (#738)
+      суть: Linux: уменьшение размера релиза
+      довод: только Linux
+   96874909a cmake: pass -Map as discrete link option on non-clang-cl builds (#806)
+      суть: CMake: -Map отдельной опцией линковки на сборках не clang-cl
+      довод: сборочная обвязка; ответы эмулятора не меняются
+   9d4da4832 Linux: Strip debug symbols from launcher (#913)
+      суть: Linux: снятие отладочных символов лаунчера
+      довод: только Linux
+   8cbee7f4b cmake: raise the bundled-dependency policy floor to 3.10 (#975)
+      суть: CMake: минимум политики встроенных зависимостей 3.10
+      довод: сборочная обвязка; ответы эмулятора не меняются
+   1f3adf510 cmake: accept glslang's current tool name and document Python 3 (#1161)
+      суть: CMake: принимает нынешнее имя glslang; README про Python 3
+      довод: удобство сборки (у нас glslang.exe скопирован как glslangValidator.exe); ответы эмулятора не меняются
+== T064 av-host-window-ux n=2 ув=c подп=нет knobhunk=-
+   dirs: src/launcher/src(4); src/launcher/include(2); src/graphics/presentation(2); src/common/emulatorConfig.cpp(1); src/launcher/forms(1); src/main.cpp(1)
+   81af13014 Avoid game list rescans on settings changes/Remove Space pause shortcut
+      суть: Лаунчер: без пересканирования списка игр при смене настроек; убрана пауза эмуляции по Space (hostInput, window)
+      довод: хоткей хоста и лаунчер; ответы игре не меняются
+   feeced81d window: auto-hide the cursor over the game window (#958)
+      суть: Автоскрытие курсора над окном игры (настройка лаунчера, таймаут в цикле ожидания событий)
+      довод: курсор хоста; ответы игре не меняются
+== T065 rnd-cx-24a n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/guest_gpu(1)
+   c997cdb83 Skip zero-valued indirect CX 0x24a
+      суть: Косвенная запись контекстного регистра 0x24a со значением 0 игнорируется (одна диагностическая строка) вместо фатала unknown cx reg
+      довод: у нас фатал unknown cx reg; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+== T066 rnd-storage-cube n=1 ув=I подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   ba55ba5dc Allow storage access to PS5 cubemap faces
+      суть: IsSupportedStorageTextureDescriptor: снято требование, чтобы число слоёв кубического вида было кратно 6
+      довод: у нас фатал unsupported storage texture; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+== T067 prs-out-res n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/presentation(1); src/loader/systemContent.cpp(1)
+   61761b65f Honor PS5 title output-resolution detection permission
+      суть: VideoOutGetOutputStatus: 4K, если param.json не разрешает определение разрешения (ATTRIBUTE3 бит 4); разбор attribute3.
+      довод: ASTRO импортирует utPrVdxio-8 (eboot.bin) и имеет attribute3 = 262164 (бит 4 установлен) ⇒ формула upstream (бит 4, width<3840, height<2160 → 1, иначе 2) совпадает с нашей (width≥3840 или height≥2160 → 2, иначе 1) при любом окне — ответ для ASTRO тот же [c]
+== T068 be-barrier n=1 ув=U подп=да knobhunk=-
+   dirs: src/graphics/shader(2); tests/shaderCfgTests.cpp(1)
+   f9e56ef8a Scope native barriers to shaders with shared execution
+      суть: OpControlBarrier не эмитится в графических стадиях без рабочей группы (кроме TCS); меш-вход зовёт EmitBarrier
+      довод: S_BARRIER (SOPP:a) 186 инстр./66 программ, стадии не разобраны; барьер Workgroup в VS/PS — ошибка валидации, а W-прогоны линии курса дают 0 [Vulkan][E] [I]
+== T070 rnd-fmask-msaa n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(1)
+   bf4dcdce5 Accept resolved FMASK metadata with native MSAA
+      суть: RtCheck: снят фатал fmask_data_compression_disable, строка лога о развёрнутых сэмплах
+      довод: путь MSAA-целей с FMASK: строки RenderTarget: using native Vulkan MSAA в V FS15 0, фатала в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 нет
+== T071 rnd-attach-samples n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(1)
+   d3c182f38 Centralize attachment sample validation before acquisition
+      суть: Проверки смешанных сэмплов и пустого состояния убраны из AcquireRenderTargets (остаются в создании пайплайна), захват целей после создания пайплайна
+      довод: перестановка проверок; фаталы mixed color/depth sample counts и no valid attachments в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 не встречаются; ответ ASTRO не меняется
+== T072 be-gpubuf n=9 ув=U подп=да knobhunk=-
+   dirs: src/graphics/shader(16); src/graphics/host_gpu(3); 3rdparty/cpuinfo/src(1); tests/KernelFileSystemTests.cpp(1); tests/ShaderRecompilerComputeTests.cpp(1); tests/shaderCfgTests.cpp(1)
+   b2a80a3a9 Resolve GPU-selected raw buffer descriptors through shared RDNA2 addressing
+      суть: Сырые DWORD x2/x4 загрузки с дескриптором, выбранным на ГП: ResourceKind::IndirectBuffer, адрес и границы RDNA2 считаются в шейдере (BDA)
+      довод: у нас неразрешимый на ЦП буферный дескриптор = Fail трансляции -> EXIT (ResourceTracking.cpp:169-173, :589); в свипе F48a «--- Fatal Error ---» вне стендов 0, корпус T1 EXIT 0 из 269; новые формы игра на пройденных уровнях не даёт [I]
+   429d0af62 shader: bind bounded GPU-selected buffer store destinations
+      суть: Запись в буфер с дескриптором, выбранным на ГП, через ограниченную таблицу (IndirectDescriptorPlan); плюс правка комментариев 3rdparty cpuinfo и теста ядра
+      довод: у нас неразрешимый на ЦП буферный дескриптор = Fail трансляции -> EXIT (ResourceTracking.cpp:169-173, :589); в свипе F48a «--- Fatal Error ---» вне стендов 0, корпус T1 EXIT 0 из 269; новые формы игра на пройденных уровнях не даёт [I]
+   b4d32394b shader: keep GPU-derived scalar resource reads on the GPU
+      суть: Скалярные чтения (ReadConstBuffer) через дескриптор, выведенный на ГП, остаются на ГП (LoadIndirectScalarBuffer)
+      довод: у нас неразрешимый на ЦП буферный дескриптор = Fail трансляции -> EXIT (ResourceTracking.cpp:169-173, :589); в свипе F48a «--- Fatal Error ---» вне стендов 0, корпус T1 EXIT 0 из 269; новые формы игра на пройденных уровнях не даёт [I]
+   a55a28380 shader: decode GPU-selected formatted buffer loads with native bounds
+      суть: Форматные загрузки через дескриптор с ГП с нативными границами; перестройка LoadFormattedComponent
+      довод: у нас неразрешимый на ЦП буферный дескриптор = Fail трансляции -> EXIT (ResourceTracking.cpp:169-173, :589); в свипе F48a «--- Fatal Error ---» вне стендов 0, корпус T1 EXIT 0 из 269; новые формы игра на пройденных уровнях не даёт [I]
+   5f01308b2 shader: reuse aligned indirect buffer loads for scalar DWORD reads
+      суть: Скалярные DWORD-чтения IndirectBuffer через выровненную загрузку (x1 к x2/x3/x4)
+      довод: у нас неразрешимый на ЦП буферный дескриптор = Fail трансляции -> EXIT (ResourceTracking.cpp:169-173, :589); в свипе F48a «--- Fatal Error ---» вне стендов 0, корпус T1 EXIT 0 из 269; новые формы игра на пройденных уровнях не даёт [I]
+   919c058fe tests: preserve descriptor phi rejection coverage for writable buffers
+      суть: Тест отказа phi дескриптора переведён на записываемый буфер (чтение теперь принимается)
+      довод: следует за be-gpubuf (чтения через дескриптор с ГП); TestPhiValidation у нас есть — без кода upstream тест в новой форме не нужен
+   8b05b6730 shader: bind dispatch spans while keeping GPU record counts native
+      суть: Буфер с размером по диспатчу (dispatch_stride): привязка по числу потоков X, NUM_RECORDS остаётся с ГП
+      довод: у нас неразрешимый на ЦП буферный дескриптор = Fail трансляции -> EXIT (ResourceTracking.cpp:169-173, :589); в свипе F48a «--- Fatal Error ---» вне стендов 0, корпус T1 EXIT 0 из 269; новые формы игра на пройденных уровнях не даёт [I]
+   3ba0e971e shader: materialize exact buffer capacity through shared clean reads
+      суть: Ёмкость буфера через общие чистые чтения (LoadBufferU32 в SrtWalker), откат привязки по диспатчу из 8b05b6730
+      довод: у нас неразрешимый на ЦП буферный дескриптор = Fail трансляции -> EXIT (ResourceTracking.cpp:169-173, :589); в свипе F48a «--- Fatal Error ---» вне стендов 0, корпус T1 EXIT 0 из 269; новые формы игра на пройденных уровнях не даёт [I]
+   33e74cab2 test: verify native vector descriptor loads in structured loops
+      суть: Цикловой векторный дескриптор: структурированный цикл на ГП вместо ожидаемого фатала; тест включён и на Windows
+      довод: ожидание кода be-gpubuf; у нас такой дескриптор = фатал
+== T073 ir-scalarchain-img n=1 ув=I подп=да knobhunk=-
+   dirs: tests/ResourceTrackingTests.cpp(1); src/graphics/shader(1)
+   d2df2cad7 Resolve draw-uniform image descriptors through scalar buffer chains
+      суть: Снят отказ GetImageResource, когда слово T# получено ReadConstBuffer (S_BUFFER_LOAD) — дескриптор разрешается через цепочку
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate; у нас отказ остаётся (ResourceTracking.cpp:581)
+== T074 rnd-depth-meta-bits n=1 ув=I подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   7c9e18e73 Ignore inactive metadata address bits in sampled depth descriptors
+      суть: IsSupportedDepthTextureEncoding смотрит только младшие 24 бита fields[6]; fields[7] при нулевом управлении метаданными больше не отвергает дескриптор
+      довод: у нас отказ -> фатал unsupported sampled depth image; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+== T076 rnd-logs-quiet n=4 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(3); src/graphics/guest_gpu(1); src/libs/ajm.cpp(1)
+   a6a56c8a4 Remove obsolete partial indirect draw warnings
+      суть: Удалены предупреждения partial DrawIndirect* (4 места)
+      довод: только журнал; у нас строки есть, но в V FS15 их 0 (косвенные draw идут на ГП)
+   8252caee0 Quiet draw and audio logs
+      суть: Строка draw indexed offsets только при debug dump; убрана строка AjmBatchJobRunSplit
+      довод: только журнал (в V FS15 строк draw indexed offsets 0)
+   4428640b4 add one time log for BDA
+      суть: Однократная строка GPU: using buffer device address (BDA) в PrepareBda
+      довод: только журнал
+   42a315f0e graphics: trace direct dispatches at their recording tick
+      суть: Подробная строка GraphicsRenderDispatchDirect (буферы, текстуры, сэмплеры) только при debug dump и с тиком записи
+      довод: только журнал (у нас 512 строк на прогон)
+== T077 sys-savedata-search n=1 ув=c подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); tests/SaveDataMemoryTests.cpp(1); tests/shaderCfgTests.cpp(1); src/libs/libSaveData.cpp(1)
+   8dc9b9d53 Persist save allocations for search and mount capacity queries
+      суть: Сохранённые выделения для DirNameSearch/GetMountInfo/Mount3 (на базе cfbaee07f).
+      довод: функции не импортируются (импорты eboot.bin, libc.prx, libSceNpCppWebApi.prx (C:/kyty/s8_imports_all.txt и байты PRX)) [c]; зависит от cfbaee07f
+== T084 be-indimg n=9 ув=U подп=да knobhunk=-
+   dirs: src/graphics/shader(10); tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/presentation(1); tests/ResourceTrackingTests.cpp(1)
+   eb8a5504a Emit coordinates for each indirect image candidate
+      суть: Координаты выборки для каждого кандидата косвенной таблицы образов (2D/2DArray совместимы)
+      довод: корпус T1: 0 косвенных выборок образов из 4 343 (register §45 Ф22); несовместимые кандидаты у нас = SpecializationFail -> EXIT, фаталов в свипе F48a 0 вне стендов [I]
+   3b89e36d1 Track bounded indirect image tables from signed shader loops
+      суть: Ограниченные косвенные таблицы образов из знаковых циклов; свёртки ConstantPropagation (0>>x=0, select с ложным условием)
+      довод: корпус T1: 0 косвенных выборок образов из 4 343 (register §45 Ф22); несовместимые кандидаты у нас = SpecializationFail -> EXIT, фаталов в свипе F48a 0 вне стендов [I]
+   a670dc84b Test RDNA2 wave32 ReadLane material key selection
+      суть: Новый случай VectorReadlaneSelectsTwoKeysWithinWave (wave32, V_READLANE_B32 с двумя ключами)
+      довод: страж ключей материалов (тема be-indimg, 843b57788); сам тест общий: V_READLANE_B32 (VOP3:360) 6 141/834, помощники есть, контекст 2/3 — применим к нашему дереву [I]
+   843b57788 shader: resolve bounded GPU material keys through sampled image arrays
+      суть: Ключи материалов, выбранные на ГП, через массивы sampled image (NonUniform индексирование); EmitIndexSwitch
+      довод: корпус T1: 0 косвенных выборок образов из 4 343 (register §45 Ф22); несовместимые кандидаты у нас = SpecializationFail -> EXIT, фаталов в свипе F48a 0 вне стендов [I]
+   cd0660102 shader: replace CPU selector chains with direct image-table lookup
+      суть: Цепочки селекторов на ЦП заменены прямым поиском в таблице образов
+      довод: корпус T1: 0 косвенных выборок образов из 4 343 (register §45 Ф22); несовместимые кандидаты у нас = SpecializationFail -> EXIT, фаталов в свипе F48a 0 вне стендов [I]
+   ae1e92621 shader: sample mixed bindless images through contiguous native arrays
+      суть: Смешанные bindless-образы через непрерывные нативные массивы (прогоны SampleRun)
+      довод: корпус T1: 0 косвенных выборок образов из 4 343 (register §45 Ф22); несовместимые кандидаты у нас = SpecializationFail -> EXIT, фаталов в свипе F48a 0 вне стендов [I]
+   71c726174 shader: share indirect texture dispatch with image loads
+      суть: Общая косвенная выборка текстур с загрузками образов
+      довод: корпус T1: 0 косвенных выборок образов из 4 343 (register §45 Ф22); несовместимые кандидаты у нас = SpecializationFail -> EXIT, фаталов в свипе F48a 0 вне стендов [I]
+   8c8138656 shader: share finite descriptor planning with GPU-selected inline samplers
+      суть: Общее конечное планирование дескрипторов для встроенных сэмплеров, выбранных на ГП
+      довод: корпус T1: 0 косвенных выборок образов из 4 343 (register §45 Ф22); несовместимые кандидаты у нас = SpecializationFail -> EXIT, фаталов в свипе F48a 0 вне стендов [I]
+   4c87dbebb shader: select indirect texture descriptors for image gathers
+      суть: Выбор косвенных дескрипторов текстур для gather
+      довод: корпус T1: 0 косвенных выборок образов из 4 343 (register §45 Ф22); несовместимые кандидаты у нас = SpecializationFail -> EXIT, фаталов в свипе F48a 0 вне стендов [I]
+== T085 ir-scalar-imgtable n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(3); tests/ResourceTrackingTests.cpp(1)
+   66f1a8236 Resolve scalar image tables during resource planning
+      суть: Косвенные таблицы T# по скалярному адресу (LoadAddressU32) без буферного дескриптора; key_count/table_offset
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate
+== T087 ir-tdesc-valid n=2 ув=U подп=да knobhunk=-
+   dirs: src/graphics/shader(1); tests/ResourceTrackingTests.cpp(1)
+   ef83ba65a Validate texture descriptor fields
+      суть: ValidImageDescriptor отбраковывает T# с ненулевыми резервными битами и base_array > last_array (обнуляет как пустой)
+      довод: путь исполняется ASTRO BOT (все T#: ResourceMaterialization.cpp:314, :415), но дефекта с мусорными T# у нас не зарегистрировано; риск: обнуление годного T# игры, если бит считается резервным ошибочно [U]
+   5ed5fdd36 Preserve resource level bits in texture descriptors
+      суть: Поправка к ef83ba65a: бит 31 слова 2 (resource level) не считается резервным
+      довод: то же, что ef83ba65a
+== T090 rnd-readback-staging n=2 ув=I подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   3fad77fd8 Increase GPU readback staging to 64 MiB
+      суть: Буфер выгрузки ГП -> ЦП увеличен с 32 до 64 МиБ
+      довод: у нас 32 МиБ и фатал download exceeds при переполнении; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+   18a5f04d0 graphics: retain oversized readbacks through GPU completion
+      суть: Выгрузка больше кольца - через временный буфер, живущий до завершения ГП, вместо фатала
+      довод: фатал download exceeds в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 нет
+== T092 hle-kernel-imports n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/presentation(2); src/kernel/fileSystem.cpp(1); src/libs/libVideoOut.cpp(1); src/kernel/fileSystem.h(1); src/libs/libKernel.cpp(1); src/libs/libNet.cpp(1)
+   b5ba482fc Implement missing kernel and startup library imports (#772)
+      суть: Новые KernelPreadv/KernelPwritev, VideoOutGetVrrStatus, NpEntitlementAccessGetEntitlementKey; флаг readable у File
+      довод: функции игрой не импортируются [c NID]
+== T094 prs-resize n=1 ув=c подп=нет knobhunk=swapchain.cpp: 2 [KYTY_FIX_MINIMIZE]
+   dirs: src/graphics/presentation(2)
+   019929587 Allow resizing by default and recreate swapchain on resize (#763)
+      суть: Окно изменяемо по умолчанию; swapchain запоминает размер окна, Present пересоздаёт его при смене размера; RefreshSurfaceCapabilities перенесён в Create.
+      довод: У нас окно неизменяемо (window.cpp:1001), ресайз в ASTRO не участвует; единственный путь нулевого экстента — свёртывание, закрыт Б37 (FIXED, register:§24)
+== T095 sys-dynload n=4 ув=c подп=нет knobhunk=-
+   dirs: src/loader/runtimeLinker.h(1); src/loader/symbolDatabase.cpp(1); src/libs/libKernel.cpp(1); src/loader/symbolDatabase.h(1); src/loader/runtimeLinker.cpp(1)
+   ba579088d loader: refresh imports after dynamic module loads (#511)
+      суть: Обновление импортов после динамической загрузки модуля.
+      довод: игра не грузит модули во время работы (импорты eboot.bin, libc.prx, libSceNpCppWebApi.prx (C:/kyty/s8_imports_all.txt и байты PRX)) [c]
+   1371219f5 loader: preserve resolved relocations across dynamic loads
+      суть: Разрешённые релокации сохраняются при динамической загрузке.
+      довод: нет динамической загрузки [c]
+   0fb3ac560 kernel: retain modules until their final explicit unload
+      суть: Модули удерживаются до последней явной выгрузки.
+      довод: нет динамической выгрузки [c]
+   497166009 loader: unlink exact module imports before releasing their mapping
+      суть: Отвязка импортов модуля до освобождения его отображения.
+      довод: нет динамической выгрузки [c]
+== T097 av-audio-split n=1 ув=U подп=нет knobhunk=-
+   dirs: src/libs/acm.cpp(1); src/libs/ngs2.cpp(1); src/libs/audio.h(1); src/libs/audio.cpp(1); src/libs/ngs2.h(1); src/libs/acm.h(1)
+   1275d65bb Audio: split ACM, Audio3D, and NGS2 implementations
+      суть: Рефакторинг: ACM, Audio3D и NGS2 вынесены из audio.cpp в acm.cpp, audio3d.cpp, ngs2.cpp (+ заголовки)
+      довод: ACM игра зовёт (5 из 11 импортов [c NID]); изменение поведения ACM по диффу не видно [U]; основа текстовой базы всех поздних правок звука upstream
+== T098 img-vo-dcc n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(1); src/graphics/presentation(1)
+   2aa0a64f6 materialize compressed video-out DCC clears before flip
+      суть: Материализует отложенную DCC-заливку сжатого буфера видеовывода до флипа; размер метаданных DCC по TileGetDccSize (PPSA27624).
+      довод: ASTRO регистрирует один набор буферов видеовывода: pixel_format 0x8100000000000000, metadata 0, dcc 0 (лог C:/kyty/f287/fs15c/log_fs15_v.txt) — путь сжатого видеовывода не исполняется [c]
+== T099 dec-ngg-other n=3 ув=I,U подп=да knobhunk=-
+   dirs: src/graphics/shader(3); tests/shaderCfgTests.cpp(1); src/graphics/host_gpu(1)
+   7d7267cc5 Translate NGG mesh prolog with guest wave32 width
+      суть: Пролог NGG mesh для гостевой волны 32
+      довод: у нас EXIT_NOT_IMPLEMENTED при wave32 NGG GS; K1 с этой сигнатурой в реестре нет (register §129: 61 строка, все с исходом) ⇒ игра идёт волной 64 [I]
+   11001c97f shader: add distinct mesh shader type
+      суть: Отдельный тип mesh-шейдера и NGG fast launch (списки точек)
+      довод: ShaderType::Mesh у нас уже есть; fast launch у нас упал бы в EXIT (gs_vgpr_component_count != 3) — такого K1 в реестре нет ⇒ fast launch игра не использует [I]
+   5297abb7a shader: run non-amplifying NGG programs in mesh workgroups
+      суть: Не-амплифицирующие NGG GS (GS_EN выкл., LDS) запускаются в mesh-группах
+      довод: у нас пути native NGG без GS_EN нет; применимость к игре [U], сигнатуры отказа в реестре нет
+== T101 rnd-depth-feedback n=1 ув=U подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(4); tests/ShaderRecompilerComputeTests.cpp(1)
+   66cc2fe26 Track depth and stencil attachment feedback across graphics stages
+      суть: Обратная связь глубины считается по образам всех стадий (не только PS) и по аспектам; раскладка вложения учитывает очистку LoadOp; setAttachmentFeedbackLoopEnableEXT по аспектам
+      довод: у нас только PS-стадия и аспект глубины; фатал sampling a writable depth в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 нет, W 40 сцен 0 [Vulkan][E]; нужен ли путь ASTRO - не измерено
+== T103 ir-material-mask n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(3); tests/ResourceTrackingTests.cpp(1)
+   963a0817d Bound uniformized image keys by guarded material mask
+      суть: Равномеризованные ключи образов ограничиваются охраняемой маской материала (selector_mask) — разрешение таблиц, выбранных GPU
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate
+== T104 sys-mem-reserved-atomic n=1 ув=I подп=нет knobhunk=-
+   dirs: src/kernel/memory.h(1); tests/VirtualMemoryAllocationTests.cpp(1); src/kernel/memory.cpp(1)
+   0382d0ca5 Publish reserved guest mappings atomically after backing commit
+      суть: Отображение в зарезервированный диапазон публикуется атомарно после коммита подложки (без окна дыры).
+      довод: тесты upstream — ReserveVirtualRange/PRT; игра их не импортирует [c]; путь ReplaceFixedRangeWithReserved при фиксированном отображении — [U]
+== T106 tst-infra n=9 ув=c подп=нет knobhunk=-
+   dirs: tests/ResourceMaterializationTests.cpp(1); tests/shaderCfgTests.cpp(1); tests/ShaderRecompilerComputeTests.cpp(1); tests/VirtualMemoryAllocationTests.cpp(1)
+   84d015120 Remove duplicate image scratch setup from push constant test
+      суть: Удалён дублирующий блок image scratch из теста push constant
+      довод: удаляемого блока (image_prepared) у нас нет [c]; тест инфраструктуры/платформы, к игре не относится
+   1b6af301b tests: wire dormant VOP3 lane-read check and guard new dormant tests (#840)
+      суть: Включён спящий тест VOP3 lane-read (верхний регистр в дампе), правка текста сообщений
+      довод: функция TestNewShaderRecompilerVop3LaneReadDestinationEncoding у нас есть, но не вызывается; ожидаемый регистр дампа — формат upstream [U]; тест инфраструктуры/платформы, к игре не относится
+   a892097ff tests: fix macOS extended-memory alias regression check (#889)
+      суть: Адрес для проверки алиаса расширенной памяти на macOS
+      довод: платформа macOS [c]
+   49db3ea54 tests: skip rasterization cases instead of aborting the suite on limited GPUs (#875)
+      суть: Пропуск растровых случаев на GPU без нужных возможностей вместо падения набора
+      довод: харнесс тестов; контекст 5/11; тест инфраструктуры/платформы, к игре не относится
+   21d7e8e1f tests: run the saveexec mask cases in a populated subgroup (#876)
+      суть: Случаи saveexec запускаются в заполненной подгруппе (64 потока), исправлены ожидания
+      довод: исправление ожиданий теста; контекст 2/2 — применим к нашему дереву; тест инфраструктуры/платформы, к игре не относится
+   181123ea0 tests: exercise full graphics binding preparation before scratch checks
+      суть: Полная подготовка графических привязок перед проверками scratch
+      довод: контекст 0/1; тест инфраструктуры/платформы, к игре не относится
+   c3a12397b tests: use function pointers in the concurrent backing read pairs (#1163)
+      суть: Указатели на функции в парах конкурентных чтений backing (сборка)
+      довод: TestConcurrentBackingReads у нас нет [c]; тест инфраструктуры/платформы, к игре не относится
+   f3836bb83 tests: fix the Linux build of ResourceMaterializationTests (#1333)
+      суть: Сборка ResourceMaterializationTests на Linux (emplace IndirectDescriptor{})
+      довод: платформа Linux; indirect_descriptor у нас нет [c]
+   c0ebf2247 tests: rename a local that collides with the Windows small macro (#1400)
+      суть: Переименование локальной small (макрос Windows) в тесте R64 BC1 array
+      довод: теста «R64 BC1 array» у нас нет [c]; тест инфраструктуры/платформы, к игре не относится
+== T110 prs-vrr-status n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/presentation(2); src/libs/libVideoOut.cpp(1)
+   732057b07 videoout: fix VRR status import signature
+      суть: kP2L8t3j-aM — функция без аргументов, возвращает OK (вместо GetVrrStatus с указателем).
+      довод: NID kP2L8t3j-aM в eboot.bin ASTRO нет [c]
+== T111 img-vo-pq n=1 ув=c подп=да knobhunk=-
+   dirs: src/graphics/host_gpu(1); src/graphics/presentation(1)
+   cce0cd950 videoout: add RGB10A2 PQ buffer support
+      суть: Добавляет формат видеовывода 0x8100070422000000 (BT2100 PQ) как A2B10G10R10 без тонмаппинга.
+      довод: ASTRO: pixel_format 0x8100000000000000 (лог fs15_v), PQ-формат не используется [c]
+== T112 ir-indirect-x3 n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(3); tests/ShaderRecompilerComputeTests.cpp(1)
+   392f39e2f shader: support indirect BUFFER_LOAD_DWORDX3
+      суть: GPU-выбранный V# допускает сырой DWORDX3 (раньше только x2/x4)
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate; при встрече у нас был бы отказ трансляции с текстом raw DWORD x2/x4 — в реестре такой строки нет
+== T115 sys-log-timestamp n=1 ув=c подп=нет knobhunk=-
+   dirs: tests/SaveDataMemoryTests.cpp(1); src/libs/libs.h(1); src/common/timer.cpp(1); src/loader/timer.cpp(1); src/loader/timer.h(1)
+   b9a0bd279 loader: wrap elapsed time in Timer::GetTime (#679)
+      суть: Метка времени PRINT_NAME форматируется после 24 ч; Timer::GetTime удалён.
+      довод: только печать лога
+== T117 sys-printname-noinline n=1 ув=I подп=нет knobhunk=-
+   dirs: src/libs/libs.h(1)
+   e73324c2e Fix Linux fiber stack overflow with Clang 18 (#813)
+      суть: Форматирование PRINT_NAME вынесено в noinline-функцию (переполнение малых стеков волокон, Linux/Clang 18).
+      довод: Linux/Clang; стеки волокон игры 1 MiB [c]
+== T120 dec-cfg-gateway n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(1); tests/shaderCfgTests.cpp(1)
+   6bb68a3fd shader: stop repeated CFG merge gateway splitting
+      суть: Не делить повторно ворота слияния CFG (SplitSharedMergeBlock при пустом предшественнике-переходе)
+      довод: у нас код в этом месте = базе; все программы игры транслируются, K1/K2 трансляции CFG в реестре нет (register §129) ⇒ патологию игра не встречает [I]
+== T121 rnd-eop-clock n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(2); tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/guest_gpu(1)
+   bfdbba3aa graphics: share EOP clock and immediate write handling
+      суть: WriteAtEndOfPipe: источник 0x04 (часы) слит с 0x02, 64-битная запись при прерывании для событий 0x04/0x28 index 5; удалены WriteAtEndOfPipeClockCounter*
+      довод: у нас базовый вариант с фаталом unknown event type для непокрытых сочетаний; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+== T123 av-avplayer-autostart n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/avPlayer.cpp(1)
+   7e1c2d153 avplayer: auto-start playback without an event callback
+      суть: AvPlayer: автозапуск воспроизведения, если колбэк событий не задан
+      довод: у ASTRO BOT колбэк задан (log_fs15_v: event_replacement.event_callback = 00000009010546a0, auto_start = 0) — правка для игры ничего не меняет
+== T124 sys-eager-resolve n=1 ув=I подп=нет knobhunk=-
+   dirs: src/loader/jit.h(1); src/loader/runtimeLinker.cpp(1); src/loader/runtimeLinker.h(1)
+   e056d55dd loader: consolidate eager symbol resolution and remove dead PLT machinery
+      суть: Жадное разрешение символов; ленивый PLT-тамплин заменён короткой заглушкой (возврат 0).
+      довод: для игры без динамических загрузок ответ заглушки тот же (0) [I]; строка свипа Б9 «Relocate: unresolved PLT import patched» исчезает (register:§Б9)
+== T126 bld-tests n=5 ув=c подп=нет knobhunk=-
+   dirs: CMakeLists.txt(1); .github/workflows/build.yml(1); tests/ShaderRecompilerComputeTests.cpp(1); tests/MemoryTrackerTests.cpp(1); tests/PageManagerTests.cpp(1)
+   1e438136f Build save_data_memory_tests from the kyty_tests aggregate (#798)
+      суть: Сборка save_data_memory_tests в агрегате kyty_tests
+      довод: не меняет эмулятор
+   6f241bef4 Fix macOS aggregate test build (#536)
+      суть: Сборка агрегата тестов на macOS (Darwin-память, death-тесты)
+      довод: только тесты на macOS
+   62a0222e2 tests: cover 1D-array color render targets (#377)
+      суть: Тест 1D-array цветовых целей рендера (ShaderRecompilerComputeTests); сборка тестов шейдеров в CI Windows
+      довод: только тест; поведение эмулятора не меняет
+   6ef406542 tests: make kyty_tests build and run every test without LTO (#1110)
+      суть: kyty_tests собирается и запускается без LTO (timer.cpp в avplayer_file_tests, правка теста шейдеров, trophy_system)
+      довод: только тесты
+   038d2257d tests: enable image aliasing coverage on Linux
+      суть: Тесты алиасинга образов включены и на Linux
+      довод: только тесты
+== T127 lch-tests-args n=1 ув=c подп=нет knobhunk=-
+   dirs: src/main.cpp(1); CMakeLists.txt(1); .github/workflows/build.yml(1); src/launcher/include(1); tests/LruCacheTests.cpp(1); src/launcher/src(1)
+   4e8d8c849 tests: add LeastRecentlyUsedCache regression tests (#671)
+      суть: Тесты LeastRecentlyUsedCache; строгий разбор чисел в аргументах main.cpp; updateChecker лаунчера; CI
+      довод: разбор аргументов строже, но наши аргументы запуска (окно 1280x720) корректны [I по диффу]; поведение игры не меняется
+== T130 prs-layered-vo n=1 ув=U подп=да knobhunk=videoOut.cpp: 2 [KYTY_PVAR];swapchain.cpp: 4 [KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE]
+   dirs: src/graphics/shader(6); src/graphics/presentation(4); src/graphics/host_gpu(3); tests/ShaderRecompilerComputeTests.cpp(1); src/libs/libVideoOut.cpp(1); CMakeLists.txt(1)
+   bec67b786 Fix HITMAN 3 boot, layered presentation, and socket imports (#851)
+      суть: Слоистый видеовывод (шины, master/slave флипы, premultiplied alpha, отложенный CompleteFlip), V_FFBH_U32 SDWA, omod у V_CUBEID_F32, отсев внешних чтений буфера, NetSend/NetRecv.
+      довод: ASTRO: NID WkYtyOg30do (SetFlipMaster) и MBlv8YWoyOk в eboot.bin нет, один буфер видеовывода [c]; ophist:VOP1:39 (V_FFBH_U32) sdwa = 0 [c]; omod у CUBEID — Б7 НЕ ДЕФЕКТ (register:§61: 0 программ с неподдержанной инструкцией из 5 698) [c]; отсев внешних чтений буфера — [U]; NetSend/NetRecv (beRjXBn-z+o, 9wO9XrMsNhc) ASTRO импортирует, сейчас это заглушки (лог: unresolved PLT import patched to stub)
+== T131 rnd-linear-rt-mips n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(1); tests/ShaderRecompilerComputeTests.cpp(1)
+   a88181b89 Graphics: share texture layout for linear render-target mip chains
+      суть: Линейные цели цвета с уровнями > 1 получают раскладку текстуры (выравнивание 256) вместо фатала
+      довод: у нас фатал linear mipmapped render targets; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+== T132 rnd-rt-pitch n=1 ув=U подп=нет knobhunk=-
+   dirs: src/graphics/guest_gpu(2); src/graphics/host_gpu(1); tests/ShaderRecompilerComputeTests.cpp(1)
+   7b6bfdec6 Graphics: share canonical padded layouts for single-sample color targets
+      суть: Для samples == 1 шаг и размер цели цвета берутся из раскладки текстуры (TileGetTexturePitch/TileGetTextureSize), удалён TileGetRenderTargetMipLayout
+      довод: путь исполняется на каждой цели ASTRO, но для одного фрагмента блок 64 КиБ цели и текстуры по чтению кода совпадают - ответ, вероятно, тот же [I]; дефекта шага на листах 40 SCENE_OK нет
+== T134 img-depth-alias n=2 ув=U подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   da33a1c4a Graphics: respect physical tile layout when resolving depth aliases
+      суть: ResolveDepthOverlap не сводит образы с разным tile_mode (физическая раскладка), условие вынесено в начало.
+      довод: Путь ASTRO не доказан; строки реестра нет
+   fbf6ae400 graphics: preserve depth array layout during storage reinterpretation
+      суть: ResolveDepthOverlap сохраняет полную раскладку массива при переинтерпретации, допускает HTile источника (PPSA04288).
+      довод: Для PPSA04264/04288 [I]; путь ASTRO не доказан
+== T136 rnd-aniso-reserved n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(1)
+   9229c04eb samplerCache: handle reserved sampler anisotropy ratios
+      суть: Коды MaxAnisoRatio 5-7 дают 16x вместо фатала unknown ratio
+      довод: у нас фатал; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+== T137 hle-http-uri n=2 ув=c подп=нет knobhunk=-
+   dirs: CMakeLists.txt(1); tests/HttpUriParseTests.cpp(1); src/libs/libNet.cpp(1)
+   025b39c01 Fix empty query handling in HttpUriParse (#764)
+      суть: sceHttpUriParse: пустой query; тесты
+      довод: функция игрой не импортируется [c NID]
+   dc3cd2d2c libNet: honour the option mask in sceHttpUriBuild (#1069)
+      суть: sceHttpUriBuild учитывает маску опций; тесты
+      довод: функция игрой не импортируется [c NID]
+== T139 sys-mem-extended n=1 ув=I подп=нет knobhunk=-
+   dirs: src/kernel/memory.h(1); src/kernel/memory.cpp(1); src/kernel/memoryAddressSpace.inc(1); src/libs/libAmpr.cpp(1); tests/VirtualMemoryAllocationTests.cpp(1)
+   c91fe80d6 memory: separate extended allocations from ordinary guest mappings
+      суть: Расширенные выделения (AMM VA 0x0800_0000_0000, 512 ГиБ) отделены от обычных отображений гостя.
+      довод: игра не импортирует ни одной Amm* (импорты eboot.bin, libc.prx, libSceNpCppWebApi.prx (C:/kyty/s8_imports_all.txt и байты PRX)) [c]; резервирование новой области — [I]
+== T140 img-ext-mem n=1 ув=I подп=да knobhunk=faultManager.cpp: 1 [call-site]
+   dirs: src/graphics/host_gpu(7); tests/ImagePageTableTests.cpp(1); tests/ShaderRecompilerComputeTests.cpp(1); tests/MemoryTrackerTests.cpp(1); tests/PageManagerTests.cpp(1); src/graphics/shader(1)
+   2016f8e2f gpu: address extended guest memory without widening dense cache tables
+      суть: Таблицы буферного/образного кэша и BDA адресуют расширенную память (база 0x80000000000) без расширения плотных таблиц; GuestRange::Valid по двум окнам.
+      довод: Зависит от c91fe80d6 (раздельные расширенные выделения, другая корзина); у нас расширенной памяти нет (kExtendedMemoryBase отсутствует), TRACKER_ADDRESS_SIZE = 2^40; адреса ASTRO ниже 2^40 (буферы видеовывода 0x507410000, img4 0x050740dc00) [I]
+== T143 hle-ces-savedialog n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/dialog.cpp(1); CMakeLists.txt(1); tests/CesTests.cpp(1); tests/SaveDataDialogTests.cpp(1); src/libs/libCes.cpp(1); 3rdparty/CMakeLists.txt(1)
+   05f92b642 libCes CP932 fix for Windows/macOS, fix SaveDataDialog lockups (#878)
+      суть: libCes: CP932 на Windows/macOS; SaveDataDialog: зависания статуса; тесты
+      довод: функции игрой не импортируются [c NID]
+== T144 sys-fs-unmounted n=1 ув=I подп=нет knobhunk=-
+   dirs: src/kernel/fileSystem.h(1); src/kernel/fileSystem.cpp(1); tests/KernelFileSystemTests.cpp(1); src/common/platform(1)
+   a107d1e33 filesystem: keep unmapped guest paths out of the host namespace
+      суть: Немонтированный путь гостя даёт ENOENT вместо пути хоста (Open/Rename/Mkdir).
+      довод: немонтированных путей у игры не найдено (F16a, п. 421) [I]
+== T145 av-audioout2-user n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/libAudio.cpp(1); tests/AudioOut2PortTests.cpp(1); src/libs/audio.h(1); src/libs/libAudio2.cpp(1)
+   0471c9991 audio: implement AudioOut2 user capability queries
+      суть: AudioOut2: реестр пользователей, UserDestroy с BUSY, новая UserGetSupportedAttributes; PortCreate отвергает неизвестный user_handle
+      довод: новая функция не импортируется [c NID]; проверка user_handle в PortCreate — игра передаёт хэндл из AudioOut2UserCreate [I]; текстовая основа c86c8b4d9
+== T146 img-readback-valid n=1 ув=U подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(2); tests/ShaderRecompilerComputeTests.cpp(1)
+   6ee1bf9db graphics: trust image-local readback validity
+      суть: SafeToDownload образа больше не требует отсутствия GPU-грязных байт в буферном кэше.
+      довод: Меняет, когда образ выгружается в память гостя; условие «образ годен, буфер грязен» у ASTRO не доказано; строки реестра нет
+== T148 av-zarchive n=1 ув=U подп=нет knobhunk=-
+   dirs: src/launcher/src(5); src/common/platform(3); src/launcher/include(3); .github/workflows/build.yml(1); README.md(1); src/common/file.h(1)
+   4b0de1b67 Zarchive Loading (#724)
+      суть: Игры из архива .zar: ридер архива, мост в FileSystem/File, AvPlayer читает локальный файл без file_replacement; KernelWrite/Pwrite проверяют writable
+      довод: архивный путь игрой не исполняется; неархивные изменения KernelOpen/KernelStat/KernelWrite (GetInfo, проверка writable) — влияние [U]
+== T154 sys-profiler n=1 ув=c подп=нет knobhunk=-
+   dirs: src/common/profiler.cpp(1); src/loader/runtimeLinker.cpp(1); src/common/profiler.h(1)
+   0c844e4bc profiler: use native Tracy scopes and remove unused manual lifetime tracking
+      суть: Нативные зоны Tracy, удалён ручной учёт времени жизни.
+      довод: только профайлер
+== T157 rnd-lodbias-clamp n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(1)
+   59a176042 sampler: clamp mipLodBias to not be greater than maxSamplerLodBias
+      суть: mipLodBias сэмплера зажимается в [-maxSamplerLodBias; maxSamplerLodBias]
+      довод: смещение вне предела - ошибка валидации Vulkan; W 40 сцен ASTRO - 0 [Vulkan][E], значит на пройденных сценах смещения в пределе
+== T158 sys-mem-sparse n=3 ув=I подп=нет knobhunk=-
+   dirs: src/kernel/memory.h(1); src/kernel/memory.cpp(1); src/kernel/memoryAddressSpace.inc(1); src/graphics/host_gpu(1); tests/VirtualMemoryAllocationTests.cpp(1)
+   650dc1e0a graphics: upload streamed texture mips from sparse reservations
+      суть: Мипы потоковых текстур читаются из разреженных резервов (TryReadSparseBacking).
+      довод: разреженных резервов игра не создаёт (импорты eboot.bin, libc.prx, libSceNpCppWebApi.prx (C:/kyty/s8_imports_all.txt и байты PRX)) [c]; для плотной памяти ответ прежний [I]
+   f9fd400db memory: validate sparse uploads against the guest address-space owner
+      суть: Проверка разреженных загрузок по владельцу адресного пространства.
+      довод: путь разреженной подложки игрой не используется [I]
+   45b6d2c59 memory: copy sparse backing in one traversal
+      суть: Копирование разреженной подложки за один проход.
+      довод: путь разреженной подложки игрой не используется [I]
+== T160 bld-tracy n=1 ув=c подп=нет knobhunk=-
+   dirs: 3rdparty/CMakeLists.txt(1)
+   2650478d9 profiling: preserve emulator fault handlers when Tracy connects
+      суть: TRACY_NO_CRASH_HANDLER: обработчик крэша Tracy не перехватывает исключения эмулятора при подключении профилировщика
+      довод: Tracy стартует только при Config::ProfilerEnabled() (опция профилирования); в обычном запуске игры путь не исполняется
+== T161 prs-gpu-reject n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/presentation(1)
+   af4edc286 window: explain why each GPU was rejected in device selection (#910)
+      суть: Ошибка «Could not find suitable device» перечисляет причины отказа каждого GPU; требования не меняются.
+      довод: Диагностика выбора устройства; на ASTRO не влияет
+== T162 av-host-controller-ux n=4 ув=c подп=нет knobhunk=controller.cpp: 1 [call-site]
+   dirs: src/launcher/src(5); src/launcher/include(4); .github/workflows/build.yml(1); src/libs/audio.cpp(1); src/launcher/forms(1); src/libs/controller.cpp(1)
+   05057c944 launcher: configure and preview DualSense lightbar color (#912)
+      суть: Лаунчер: цвет световой панели DualSense в настройках и превью; цвет по умолчанию из конфигурации
+      довод: настройка хоста; ответы игре не меняются
+   82a2f4ad4 controller: cycle DualSense speaker volume, vibration and trigger intensity in game (#946)
+      суть: Хоткеи в игре: громкость динамика, сила вибрации и курков DualSense; тесты настроек
+      довод: настройка ощущений хоста; по описанию «trigger intensity changes only the output, not the reported state»
+   820856b30 launcher: dualsense vibration/volume setting (#973)
+      суть: Лаунчер: настройки вибрации и громкости динамика DualSense
+      довод: лаунчер (Qt) в пути игры не участвует: kyty_emulator.exe запускается напрямую (run.sh, харнессы)
+   719e02574 launcher: Raise DualSense speaker volume range for SpeakerFX (#1043)
+      суть: Лаунчер: расширен диапазон громкости динамика DualSense (SpeakerFX)
+      довод: настройка хоста; ответы игре не меняются
+== T164 hle-pngenc n=1 ув=c подп=нет knobhunk=-
+   dirs: CMakeLists.txt(1); tests/PngEncTests.cpp(1); src/libs/libPngEnc.cpp(1); 3rdparty/stb/stb_image_write.h(1); src/libs/libs.cpp(1)
+   48b52d31b libs: libScePngEnc on stb_image_write
+      суть: libScePngEnc на stb_image_write (Create/Encode/Delete/QueryMemorySize); тесты
+      довод: игра импортирует PngEnc, но не вызывает: «Unresolved import stub called» по PngEnc 0 в 560 из 562 stdout (f287, s144–s146)
+== T165 prs-vrr-wqhd n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/presentation(2); src/libs/libVideoOut.cpp(1)
+   8ba2caf58 videoout: WQHD detection and VRR peg/unpeg
+      суть: Новые HLE VideoOutAllowOutputResolutionWqhdDetection, VrrPegToFixedRate, VrrUnpegFromFixedRate (возврат OK).
+      довод: NID w7Ipp9Xl7hg, 5tRaBjtdTzY, T4ucGB8CsnM в eboot.bin ASTRO нет [c]
+== T166 hle-shareplay n=1 ув=U подп=нет knobhunk=-
+   dirs: src/libs/libNet.cpp(1)
+   17100ec96 shareplay: return initialized connection information
+      суть: SharePlay: флаг инициализации, Terminate без Initialize → NOT_INITIALIZED, новая GetCurrentConnectionInfoA
+      довод: игра импортирует только SharePlayTerminate — при правке её ответ без Initialize станет ошибкой; влияние [U]
+== T167 img-depth-swizzle n=1 ув=I подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   44ba65757 renderer: validate depth swizzles by available channels
+      суть: Swizzle вида глубины проверяется по числу каналов (селекторы 0/1/X) вместо трёх фиксированных форм.
+      довод: У нас неподдержанный swizzle глубины — EXIT «unsupported sampled depth image»; на линии курса такого фатала нет (в реестре трека F строки нет) ⇒ ASTRO использует поддержанные формы [I]
+== T170 dec-cdbg-unused n=2 ув=c подп=да knobhunk=-
+   dirs: src/graphics/shader(4); tests/shaderCfgTests.cpp(1)
+   64dcbe0ea shader: decode the combined conditional-debug branch
+      суть: Декодирует S_CBRANCH_CDBGSYS_OR_USER (SOPP 0x19)
+      довод: игра не исполняет; у нас 0x19 уже декодируется как S_NOP (ScalarAluOps.cpp:118)
+   679be25c3 shader: recognize remaining disabled debug branches
+      суть: Декодирует S_CBRANCH_CDBGUSER и S_CBRANCH_CDBGSYS_AND_USER (SOPP 0x18, 0x1a)
+      довод: игра не исполняет; у нас 0x18 и 0x1a уже декодируются как S_NOP (ScalarAluOps.cpp:117, 119)
+== T171 ir-refresh-reach n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(6); src/graphics/host_gpu(2); tests/ShaderRecompilerComputeTests.cpp(1); tests/ResourceMaterializationTests.cpp(1); tests/shaderCfgTests.cpp(1); tests/ResourceTrackingTests.cpp(1)
+   6409be287 shader: respect branch reachability when refreshing scalar resources
+      суть: specialization_reads и проверки EXIT при пересечении скалярных чтений с записями образов/буферов; учёт достижимости ветвей
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate; правка стоит на механизме захвата чтений upstream (13fcb3a13 и др.), которого у нас нет; вводит фатальные EXIT
+== T172 ir-wave32-ballot n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(4); tests/shaderCfgTests.cpp(1)
+   35759e48c shader: expose wave32 feature guards through ballot mask simplification
+      суть: ConstantPropagation: (ballot>>lane)&1 в wave32 сворачивается в предикат через операции EXEC и Phi (LaneMaskProjection)
+      довод: тождественное упрощение, помогает трекеру ресурсов на охраняемых wave32-путях; отказов трекера на ASTRO BOT нет (register §104 Ф3); ложится на наш ConstantPropagation (known-value sets) и выбор wave32 в ShaderRecompiler.cpp
+== T173 tst-wave32mask n=1 ув=I подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1)
+   706eec3ca add tests
+      суть: Новые случаи ScalarB32MaskDataflowWave32/64 (S_AND/OR/XOR/ANDN2/ORN2/NAND/NOR/XNOR/NOT_B32 с маской)
+      довод: покрытие кода, который у нас есть (своя правка 068f82f25); S_AND_B32 (SOP2:e) 25 134, S_OR_B32 (SOP2:10) 24 662; контекст 3/3 — применим как проверка [I]
+== T180 ir-gpu-selected-img n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(4); tests/ResourceMaterializationTests.cpp(1); tests/ResourceTrackingTests.cpp(1)
+   7804eef9b Lower finite GPU-selected image descriptors through shared indirect bindings
+      суть: Конечное множество T#, выбираемых на GPU, опускается в общие косвенные привязки с переключателем по ординалу
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate
+== T182 hle-net-resolver n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/network.h(1); src/libs/libNet.cpp(1); src/libs/network.cpp(1)
+   254572306 Stub NetResolverAbort import AzqoBha7js4 with success
+      суть: Заглушка NetResolverAbort (AzqoBha7js4) с успехом
+      довод: функция игрой не импортируется [c NID]
+== T184 ir-ci-linux n=1 ув=c подп=да knobhunk=-
+   dirs: src/graphics/shader(1); tests/ResourceMaterializationTests.cpp(1)
+   e317465d8 fix linux CI (#972)
+      суть: Явная инициализация optional IndirectImage (сборка Linux) и правка теста
+      довод: только сборка Linux/тесты, поведение не меняется
+== T186 dec-img-atomic64 n=2 ув=c подп=да knobhunk=graphicContext.h: 1 [KYTY_FIX_DUALSRC KYTY_FIX_SVAL]
+   dirs: src/graphics/shader(13); src/graphics/host_gpu(3); tests/ShaderRecompilerComputeTests.cpp(1); tests/shaderCfgTests.cpp(1); src/graphics/presentation(1); tests/ResourceTrackingTests.cpp(1)
+   ef4c5baf3 Implement RDNA2 64-bit image atomic maximum
+      суть: 64-битный IMAGE_ATOMIC_UMAX/SMAX (int64-атомики образов, фича устройства, виды образов)
+      довод: атомики образов в игре — MIMG:f (swap, 223) и MIMG:11 (add, 2), все с dmask 1, т. е. 32 бит [c проба eboot]
+   af3011cd6 shader: add missing 64-bit integer image atomics
+      суть: Недостающие 64-битные целые атомики образов (swap, add, umin, and/or/xor по dmask 0x3)
+      довод: атомики образов игры (MIMG:f swap 223, MIMG:11 add 2) — dmask 1, 32 бит [c проба eboot]; 64-битный путь не исполняется
+== T187 img-bc5-reuse n=1 ув=U подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(3); tests/ShaderRecompilerComputeTests.cpp(1)
+   0d4f99335 Keep reused BC5 textures in their own guest layout
+      суть: В ResolveOverlap проверка tile/экстента раньше расширения блочный↔неблочный и объёмных; BuildTextureTransfer без RenderTargetTransferFormat и allow_depth_tile.
+      довод: Путь ASTRO не доказан; строки реестра нет
+== T189 ir-gather-lod n=1 ув=c подп=да knobhunk=ResourceMaterialization.cpp: 1 [call-site]
+   dirs: src/graphics/shader(10); src/graphics/host_gpu(2); tests/ShaderRecompilerComputeTests.cpp(1); tests/shaderCfgTests.cpp(1); tests/ResourceTrackingTests.cpp(1)
+   bd611bfe1 Honor explicit gather LOD with shared image mip selection
+      суть: IMAGE_GATHER4_L: выбор мипа по LOD; ImageMipMode::DynamicStorage -> Dynamic; min_lod = 0 у мип-видов
+      довод: IMAGE_GATHER4_L (0x44 по ImageOps upstream) игрой не исполняется [c]; у ASTRO BOT только GATHER4_LZ (MIMG:47, 104 инстр.); побочно min_lod = 0 у мип-видов storage (MIMG:1 — 4 инстр.) [I]
+== T190 be-buildfix n=1 ув=c подп=да knobhunk=-
+   dirs: src/graphics/shader(1)
+   f53e5d228 fix windows ci (#998)
+      суть: static_cast<uint32_t> для OpImageGather/OpImageDrefGather (сужение на MSVC)
+      довод: исправление сборки строки кода upstream; у нас это место написано иначе и собирается MSVC [c]
+== T191 img-srgb-rt-bpe n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/guest_gpu(1); tests/ShaderRecompilerComputeTests.cpp(1)
+   52c8ff18d Update gpu_format.cpp (#1003)
+      суть: render_target_bytes_per_element = 1/2 для k8Srgb и k8_8Srgb (Lucky's Tale).
+      довод: При 0 байт цель не проходит проверку кэша (фатал); на линии курса ASTRO (59 входивших уровней) такого фатала нет [I]
+== T192 img-volume-depth n=1 ув=U подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(2); tests/ShaderRecompilerComputeTests.cpp(1)
+   8b0cc79ac Preserve native slices when PS5 volume texture depth grows
+      суть: ExpandImage при увеличении глубины 3D-текстуры с той же раскладкой срезов; CopyImage копирует меньшую из глубин.
+      довод: Растущая 3D-текстура на том же адресе у ASTRO не доказана; строки реестра нет
+== T194 sys-posix-attrstack n=1 ув=c подп=нет knobhunk=-
+   dirs: src/kernel/pthread.h(1); src/kernel/pthread.cpp(1); src/libs/libKernel.cpp(1)
+   5766b241c Implement POSIX thread stack attribute import through kernel setter
+      суть: POSIX pthread_attr_setstack (-SrbXpGR1f0) через PthreadAttrSetstack.
+      довод: NID не импортируется [c]
+== T195 sys-aio n=2 ув=c подп=нет knobhunk=-
+   dirs: tests/KernelFileSystemTests.cpp(1); src/libs/libKernel.cpp(1)
+   a0858abe3 Implement batch AIO completion polling and deletion with per-request results
+      суть: Пакетные sceKernelAioPollRequests/DeleteRequests с результатом на запрос.
+      довод: AIO игра не импортирует [c]
+   e7cfe5a2f libkernel: implement sceKernelAioWaitRequests (#1109)
+      суть: sceKernelAioWaitRequests (пакетное ожидание AIO).
+      довод: AIO игра не импортирует [c]
+== T196 sys-kernel-timers n=1 ув=c подп=нет knobhunk=-
+   dirs: tests/EventQueueLifetimeTests.cpp(1); src/libs/libKernel.cpp(1); src/kernel/eventQueue.cpp(1); src/kernel/eventQueue.h(1)
+   92c22d60e Support periodic kernel timers through shared event queue deadlines
+      суть: Периодические таймеры (sceKernelAddTimerEvent) через дедлайны очереди событий.
+      довод: таймеры игра не регистрирует [c]; общий путь WaitForEvents меняется только при дедлайне
+== T197 hle-npwebapi-stats n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/libNet.cpp(1); tests/KernelFileSystemTests.cpp(1)
+   c3330caba Report NP Web API memory pool statistics for active library contexts
+      суть: NpWebApi2GetMemoryPoolStats для активных контекстов; тесты
+      довод: функция игрой не импортируется [c NID]; сеть у нас офлайн (NetCtl принудительно offline), строк по сети в реестре трека F нет
+== T198 sys-signin-dialog n=1 ув=I подп=нет knobhunk=-
+   dirs: src/libs/dialog.cpp(1); src/libs/libSystemService.cpp(1); tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/presentation(1); src/libs/dialog.h(1)
+   45f55413e Keep sign-in dialogs active until user dismissal through shared system presentation
+      суть: Диалог входа (и ошибки) остаётся RUNNING до закрытия пользователем через системный оверлей.
+      довод: игра импортирует SigninDialogOpen/UpdateStatus [c]; поведение UI ожидает пользователя — для прогонов без человека вредно; открывает ли игра диалог — [U]
+== T199 prs-resize-zero n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/presentation(2)
+   0e8ded37b window: ignore nonpositive resize dimensions
+      суть: WindowContext::Resize пропускает размеры ≤ 0 вместо EXIT.
+      довод: У нас окно неизменяемо; свёртывание (стенд KYTY_TEST_MINIMIZE, Б37 FIXED, register:§24) этот EXIT не вызывает; нужно только при изменяемом окне (019929587)
+== T201 ir-dispatch-exec n=2 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(8); tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   e4aca7a60 shader: initialize EXEC from requested dispatch thread extents
+      суть: При DISPATCH_INITIATOR USE_THREAD_DIMENSIONS начальный EXEC = GlobalInvocationId < extent (лишние потоки последней группы гасятся)
+      довод: путь исполняется (ASTRO BOT шлёт dispatch с thread dimensions), но в 40 последних логах C:/kyty/f287 все 1 120 записанных случаев (первые 32 за запуск) кратны группе 64 — маска тождественна; некратный случай не наблюдался
+   0258bd61e shader: preserve complete clear recognition with dispatch EXEC bounds
+      суть: Распознавание полной заливки буфера (clear) сохраняется при EXEC-ограничении dispatch (IsFullDispatchPredicate)
+      довод: продолжение e4aca7a60; у нас распознавание заливки своё (renderCompute.cpp:218-231)
+== T202 ir-gpu-written-desc n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(1); tests/shaderCfgTests.cpp(1); tests/ResourceMaterializationTests.cpp(1)
+   ec3e48cdd shader: synchronize GPU-produced direct writable descriptors
+      суть: Чистое чтение адресов записываемых дескрипторов только при захвате чтений; иначе — обычный вычислитель
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate; стоит на механизме захвата чтений upstream, которого у нас нет
+== T204 be-fp64 n=1 ув=c подп=да knobhunk=vulkanWindow.cpp: 1 [KYTY_FIX_B26 KYTY_FIX_DUALSRC]
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/presentation(1); src/graphics/shader(1)
+   7992aecb7 shader: keep native rounding consistent in mixed-precision programs
+      суть: Для FP64 (MODE 0xc0) снято RoundingModeRTE 32; shaderFloat64 без требования RTE
+      довод: FP64-опкодов в eboot 0 [c]; у нас FP64-эмиссии нет вовсе (git grep float64 в backend пуст)
+== T205 tst-hades n=1 ув=U подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1)
+   a5eeab98d tests: recognize existing PS user-data address register handlers
+      суть: Тест PM4 ждёт обработчики SPI_SHADER_USER_DATA_ADDR_LO/HI_PS
+      довод: регистра SPI_SHADER_USER_DATA_ADDR_LO_PS нет в нашем src [c]; тема — 89792a3bc (Hades II); класс — по той теме
+== T206 ir-brev-flat n=1 ув=c подп=да knobhunk=-
+   dirs: src/graphics/shader(1); tests/ShaderRayTracingGpuTests.inc(1)
+   139b564c0 shader: fold constant bit reversal before flat stack classification
+      суть: ConstantPropagation сворачивает BitReverse32 константы до классификации апертур FLAT (случай GTA)
+      довод: классификация апертур нужна только FLAT flat-сегменту; в ophist нет FLAT.flat и FLAT.scratch (есть только FLAT.global) [c]; S_BREV_B32 у игры 8 инстр./6 программ — без FLAT
+== T207 ir-loop-exec-witness n=1 ув=I подп=да knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/shader(1)
+   e0c90acee shader: preserve EXEC witnesses across reconverged descriptor loops
+      суть: Свидетель EXEC до определения в сошедшемся цикле не используется (может быть с прошлой итерации)
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate
+== T208 ir-material-scan n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(2); tests/ShaderRecompilerComputeTests.cpp(1)
+   b183cb101 shader: share bounded material-key scans across scalar and vector loads
+      суть: Сканы ключей материала общие для скалярных и векторных загрузок; GPU-скаляр как любое U32
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate
+== T209 ir-desckey-ssa n=1 ув=I подп=да knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/shader(1)
+   1f6be3d57 shader: preserve descriptor key SSA across native-resolved image uses
+      суть: Проекция SSA дескриптора на ключ при нативном разрешении образов; новый отказ shared descriptor read has incompatible keys
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate
+== T211 ir-scalar-native n=2 ув=c подп=да knobhunk=-
+   dirs: src/graphics/shader(3); tests/ShaderRecompilerComputeTests.cpp(1); tests/ResourceMaterializationTests.cpp(1); tests/ResourceTrackingTests.cpp(1)
+   cd9fc6ff2 shader: keep scalar data native and preserve raw addresses
+      суть: Скалярные данные остаются нативными, сырые адреса сохраняются — отменено 266c12cec
+      довод: итог пары с 266c12cec — 0 изменений (184+/50- и 50+/184-)
+   266c12cec Revert "shader: keep scalar data native and preserve raw addresses"
+      суть: Revert cd9fc6ff2
+      довод: итог пары — 0 изменений
+== T215 dec-cselect-raw n=1 ув=I подп=да knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); tests/shaderCfgTests.cpp(1); src/graphics/shader(1)
+   efbaa17f7 shader: preserve raw EXEC and VCC bits in 64-bit scalar selects
+      суть: S_CSELECT_B64 в EXEC/VCC пишет сырую пару и маску (когда в EXEC/VCC лежит адрес)
+      довод: у нас код = базе (пишется только маска); игра: 20 987 s_cselect_b64 vcc — источники exec/0 (16 410) или sgpr/0 (4 577), приёмник EXEC — 0 [c проба eboot]; адрес в VCC не виден [I]
+== T217 be-meshclip n=1 ув=U подп=да knobhunk=-
+   dirs: src/graphics/shader(4); tests/shaderCfgTests.cpp(1)
+   39248a1f8 shader: emit per-vertex mesh clip and cull distances
+      суть: Меш-выходы ClipDistance/CullDistance как массивы на вершину вместо EXIT
+      довод: у нас такой выход = EXIT (spirvEmitterMesh.cpp:39); в игре 5 MS-программ (корпус T1), фаталов в свипе F48a 0 вне стендов [I]
+== T218 av-haptics-linux n=1 ув=c подп=нет knobhunk=-
+   dirs: tests/PadHapticsTests.cpp(1); src/libs/dualSenseHaptics.cpp(1)
+   c885da0a3 haptics: recognize 'Wireless Controller' audio endpoint on Linux (#1046)
+      суть: Linux: распознавание аудио-конечной точки «Wireless Controller» для хаптики
+      довод: только Linux
+== T220 sys-ampr-evfilt n=1 ув=c подп=нет knobhunk=-
+   dirs: src/kernel/eventQueue.cpp(1); tests/KernelFileSystemTests.cpp(1); src/libs/libAmpr.cpp(1); src/kernel/eventQueue.h(1)
+   deb45a8bb kernel: use the AMPR filter for APR completion events
+      суть: События завершения APR — фильтр EVFILT_AMPR (-25) вместо EVFILT_USER при Add/Delete/Trigger.
+      довод: игра не регистрирует AMPR-событий [c]; при переносе событие, добавленное не через AddAmprEvent, перестало бы срабатывать
+== T221 be-scaledtex n=3 ув=U подп=да knobhunk=-
+   dirs: src/graphics/shader(2); src/graphics/guest_gpu(1); tests/ResourceMaterializationTests.cpp(1); tests/ShaderRecompilerComputeTests.cpp(1)
+   96c067d0f shader: fix filtering for scaled 8-bit textures
+      суть: k8UScaled/k8_8UScaled: хранение UNORM для фильтрации, масштаб *255 после выборки; ImageGatherSource по swizzle
+      довод: у нас USCALED-форматов нет в таблице форматов текстур (только перечисление gpu_defs.h); путь конверсии принимает лишь упакованный Uint; фаталов в свипе F48a 0 [I]
+   07c84876a shader: fix constant types in converted image gathers
+      суть: Константы swizzle 0/1 в gather конвертированного образа: F32 для Uscaled, U32 иначе
+      довод: продолжение 96c067d0f; см. там
+   e56899902 tests: use a valid image descriptor for mixed samplers
+      суть: Тест смешанных сэмплеров: валидный дескриптор образа k11_11_10UInt вместо conversion_format
+      довод: следует за правкой ResourceMaterialization из 96c067d0f; MixedSamplerProgram у нас нет [c]
+== T222 img-10-11-11 n=1 ув=U подп=да knobhunk=-
+   dirs: src/graphics/host_gpu(12); src/graphics/guest_gpu(1); tests/ShaderRecompilerComputeTests.cpp(1); CMakeLists.txt(1)
+   5940e623d gpu: fix 10-11-11 render-target storage
+      суть: k10_11_11Float как цель с обратным порядком каналов через ColorTransform (тайлер, выгрузка/загрузка); байты k8SNorm/k1_5_5_5; гость-формат цели = формат цели.
+      довод: Использует ли ASTRO цель k10_11_11Float — [U]; строки реестра нет
+== T223 img-rebind-order n=1 ув=U подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(2); tests/ShaderRecompilerComputeTests.cpp(1)
+   a2f851788 gpu: create texture views before rebinding overlapping images
+      суть: RebindImages получает вид каждого образа сразу после разрешения, до замены перекрывающим дескриптором; ResolveDepthOverlap пересоздаёт при смене объёмности.
+      довод: RebindImages ASTRO исполняет на каждом draw, но условие (второй дескриптор того же draw расширяет образ первого) не доказано; строки реестра нет
+== T224 rnd-polygon-fan n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(1)
+   45fab265d gpu: draw polygons as triangle fans
+      суть: kPolygon рисуется как eTriangleFan
+      довод: у нас draw с kPolygon пропускается со строкой stdout Skipping draw with unknown primitive type; в stdout 112 прогонов с. 144-146 такой строки нет
+== T225 ir-wg-imgtable n=2 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(6); src/graphics/host_gpu(2); tests/ShaderRecompilerComputeTests.cpp(1)
+   0ee880090 shader: read image descriptors indexed by workgroup
+      суть: Таблицы T#, индексируемые WorkgroupId, читаются на хосте по границам dispatch
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate
+   190f838ea shader: preserve workgroup bounds for scalar image descriptor tables
+      суть: Поправка 0ee880090: границы рабочей группы сохраняются для скалярных таблиц T#
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate
+== T226 be-ldsbuf n=2 ув=I подп=да knobhunk=descriptors.cpp: 1 [KYTY_FIX_B42 KYTY_FIX_F26 KYTY_FIX_F5CMU]
+   dirs: src/graphics/shader(12); src/graphics/host_gpu(4); tests/ShaderRecompilerComputeTests.cpp(1); tests/ResourceTrackingTests.cpp(1)
+   b0bbaef1e gpu: store large compute shared memory in device buffers
+      суть: LDS > maxComputeSharedMemorySize — в буфер устройства по рабочей группе (binding SharedMemory, NumWorkgroups) вместо урезания
+      довод: в compute-рецептах pipelines.bin (2 файла кэша) наибольший LDS = 49 152 Б [c] = лимиту NVIDIA 49 152 [I] — путь «больше лимита» не срабатывает; у нас и урезания нет
+   f7bd0b436 tests: update shared-memory binding expectations
+      суть: Ожидание DescriptorBindingKind::SharedMemory = 55, Count = 56
+      довод: символа SharedMemory у нас нет (тема b0bbaef1e)
+== T227 ir-sampler-resv n=1 ув=I подп=да knobhunk=-
+   dirs: tests/ResourceTrackingTests.cpp(1); src/graphics/shader(1)
+   b7d3c572c shader: clear unused sampler bits after constant folding
+      суть: CanonicalizeSampleAdjustDword3: значение только из резервных битов -> 0 после свёртки констант
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate; функция есть у нас (ResourceTracking.cpp:47), случай не сообщался
+== T228 img-2d3d-alias n=1 ув=U подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   0885f43a6 gpu: keep 2D and 3D texture aliases separate
+      суть: ResolveOverlap: образы разных типов (2D/3D) на одном адресе не сводятся.
+      довод: Путь ASTRO не доказан; строки реестра нет
+== T229 rnd-vfmt-uscaled n=1 ув=I подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   8e46a3ccf gpu: add packed unsigned-scaled vertex formats
+      суть: Таблица форматов: k10_10_10_2UScaled -> eA2B10G10R10UscaledPack32
+      довод: у нас записи нет; фатала формата в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 нет - игра на пройденных сценах формат не использует (или он идёт встроенной выборкой транслятора)
+== T230 hle-font-kerning n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/libFont.cpp(1)
+   c753efdde font: add scaled kerning
+      суть: Новая FontGetKerning (масштабированный кернинг stb)
+      довод: функция игрой не импортируется [c NID]
+== T232 sys-hle-stubs n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/libBluetoothHid.cpp(1); src/libs/libUsbd.cpp(1); src/libs/libs.cpp(1); src/libs/libDeviceService.cpp(1)
+   bbb98bd49 hle: add BluetoothHid, DeviceService and Usbd stubs (#1031)
+      суть: Заглушки BluetoothHid, DeviceService, Usbd (8 NID).
+      довод: NID не импортируются [c]
+== T235 hle-trophy n=2 ув=U подп=нет knobhunk=-
+   dirs: src/launcher/include(4); src/launcher/src(4); src/graphics/presentation(2); src/launcher/icons(2); src/launcher/forms(2); src/launcher/resources.qrc(1)
+   72e4989b1 Add trophy notification support
+      суть: Трофеи: состояние разблокировки на диске, оверлей-уведомление со звуком, NpTrophy2/UDS перенесены в libTrophy.cpp, коды NOT_REGISTERED
+      довод: игра зовёт NpTrophy2 Create/Register и UDS PostEvent [c NID]; оверлей — вне цели, но меняются ответы RegisterContext (NOT_REGISTERED) — влияние [U]
+   fb7ff7ec0 Map UDS events to trophies from dumped metadata; trophy viewer/overview improvements (#1088)
+      суть: События UDS → трофеи по выгруженным метаданным; просмотрщик трофеев в лаунчере; тесты
+      довод: игра шлёт события UDS (NpUniversalDataSystemPostEvent импортирована); вне цели, влияние на ответы [U]
+== T236 ir-strided-masked n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(3); tests/ResourceTrackingTests.cpp(1)
+   5c8306048 shader: resolve masked image keys in strided descriptor records
+      суть: Разрешение маскированных ключей образов в записях с шагом (смещения с переносом U32)
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate
+== T242 rnd-unbounded-buffers n=1 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(3); tests/ShaderRecompilerComputeTests.cpp(1)
+   e5dcfdb87 graphics: bound unbounded buffer reads and writes (#1066)
+      суть: FindBuffers по всем стадиям: буфер-«бесконечность» для чтения обрезается до 256 МиБ/предела, для записи - до первой скалярной таблицы любой стадии
+      довод: у нас размер зажимается ClampRangeSize по отображению, сверх maxStorageBufferRange - фатал storage buffer range; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+== T244 dec-glc-flat n=1 ув=c подп=да knobhunk=-
+   dirs: src/graphics/shader(4); tests/ShaderRecompilerComputeTests.cpp(1)
+   9caec9f2c shader: preserve RDNA2 DLC coherence for flat address loads
+      суть: DLC-когерентность FLAT-загрузок по адресу
+      довод: FLAT игры — global_load op c/d/f, glc = dlc = slc = 0 [c проба eboot]; у нас FLAT с glc/dlc отвергается декодером, а UNSUPPORTED в eboot 0
+== T245 ir-nested-selector n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(3); tests/ShaderRecompilerComputeTests.cpp(1); tests/ResourceTrackingTests.cpp(1)
+   c23de6218 shader: resolve nested descriptor selector tables with exact scalar offsets
+      суть: Разрешение вложенных таблиц селекторов с точными скалярными смещениями
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate; ложится на 7 наших ханков диагностики
+== T248 ir-broad-table n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(1); tests/ResourceTrackingTests.cpp(1)
+   b929bbe3e shader: limit broad image tables to compatible views
+      суть: Кандидаты широкой кучи T#, несовместимые по виду, исключаются вместо отказа
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate; наш отказ indirect image table has incompatible candidates в log_fs15_v — 0
+== T249 sys-thread-naming n=2 ув=c подп=нет knobhunk=-
+   dirs: src/kernel/pthread.cpp(1)
+   199d0a9d9 kernel: name guest threads on the host (#1106)
+      суть: pthread_setname_np гостевых потоков на Linux.
+      довод: платформа Linux
+   1b21161aa kernel: fix the macOS build of host thread naming (#1122)
+      суть: Сборка macOS для имён потоков.
+      довод: платформа macOS
+== T251 rnd-depth-copy n=2 ув=I подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(2); src/graphics/guest_gpu(1)
+   2a18e66a4 gpu: validate depth copy state when drawing instead of decoding
+      суть: DecodeRenderControl больше не фатален при copy_depth_to_color/copy_stencil_to_color
+      довод: у нас фатал на декодировании; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+   65144ce4a gpu: centralize depth copy state validation in target resolution
+      суть: Удалён RcCheck (фатал copy_centroid/copy_sample); centroid/sample проверяются только при копии глубины в цвет
+      довод: у нас RcCheck фатален при copy_centroid/copy_sample; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+== T252 sys-notice-skip n=1 ув=c подп=нет knobhunk=-
+   dirs: src/launcher/src(3); src/launcher/include(1); src/common/emulatorConfig.cpp(1); src/launcher/forms(1); src/main.cpp(1); src/common/emulatorConfig.h(1)
+   cc44a43eb systemservice: add an option to report the notice screen as skipped (#1127)
+      суть: Опция skip_notice_screen для sceSystemServiceGetNoticeScreenSkipFlag, умолчание off.
+      довод: игра импортирует GetNoticeScreenSkipFlag (3RQ5aQfnstU) [c], но при умолчании ответ прежний (false); опция лаунчера
+== T253 sys-agc-new-abi n=4 ув=c подп=нет knobhunk=-
+   dirs: src/libs/libAgcDriver.cpp(1); tests/ShaderRecompilerComputeTests.cpp(1); src/libs/agc.h(1); src/libs/agc.cpp(1)
+   67d7db685 agc: new abi
+      суть: Новый NID AGC nNlUtdDDvZ0.
+      довод: NID не импортируется [c]
+   aa3b2cd57 Implement AGC async rewind imports
+      суть: AGC async rewind (2 новых NID).
+      довод: NID не импортируются [c]
+   3ae5a9b70 agc: implement branch target patching and packet size queries
+      суть: AGC: патч цели ветвления и запросы размера пакетов (3 новых NID), константы размеров.
+      довод: новые NID и AgcCbBranch не импортируются [c]; Set*RegistersIndirect — без изменения ответа
+   fbea51c68 agc: implement sceAgcSetNop (#1343)
+      суть: sceAgcSetNop (K2mciNVxUCE).
+      довод: NID не импортируется [c]
+== T254 prs-trophy-ui n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/presentation(1); src/launcher/src(1)
+   d2413fc2e trophies: add viewer inspector and wrap toast titles
+      суть: Инспектор в просмотрщике трофеев лаунчера, перенос строк заголовков тостов оверлея.
+      довод: Лаунчер и GUI
+== T256 be-snorm16exp n=1 ув=c подп=да knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/shader(1)
+   b96871e2b shader: unpack compressed SNORM16 color exports as normalized signed values
+      суть: Режим цели 6 (SNORM16_ABGR) сжатого экспорта распаковывается UnpackSnorm2x16, а не как half
+      довод: у нас режим 6 распаковывается как half (дефект кода [c]); в 5 866 PS-рецептах 4 файлов pipelines.bin режимы целей только 1 (32_R) и 4 (FP16_ABGR) — режим 6 игра не задаёт [c]
+== T259 img-array-sync n=1 ув=U подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/host_gpu(1)
+   dd754065d graphics: preserve full tiled array backing in image-to-buffer copies
+      суть: SynchronizeBufferFromImage копирует весь образ, если он в границах буфера; массивы и объёмы иначе — отказ.
+      довод: Путь ASTRO не доказан; строки реестра нет
+== T260 sys-raw-image-sync n=1 ув=c подп=нет knobhunk=-
+   dirs: src/launcher/src(3); src/launcher/include(1); tests/ShaderRecompilerComputeTests.cpp(1); src/common/emulatorConfig.cpp(1); src/launcher/forms(1); src/main.cpp(1)
+   470669c67 graphics: make raw image synchronization an opt-in setting
+      суть: Синхронизация сырых чтений хранилищ с образами — по опции (умолчание off), откат умолчания 743fdc699.
+      довод: при умолчании ответ = базе = нашему [c]
+== T262 sys-mem-flatten n=1 ув=I подп=нет knobhunk=-
+   dirs: tests/VirtualMemoryAllocationTests.cpp(1); src/kernel/memory.cpp(1)
+   9c79d9d29 memory: flatten direct and batch mapping paths
+      суть: Упрощены пути прямого и пакетного отображения (порядок проверок имени).
+      довод: рефакторинг; sceKernelBatchMap* игра не импортирует [c]; порядок валидации — [I]
+== T266 rnd-macos-tid n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/host_gpu(1)
+   79a91ecfa graphics: cache the macOS thread id in TrackingSpinLock (#1169)
+      суть: thread_local id потока mach на macOS
+      довод: платформа не Windows
+== T267 tst-int16 n=1 ув=c подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1)
+   34f6fd1f5 tests: cover the untested 16-bit integer ALU opcodes (#1151)
+      суть: Новые случаи Vop3pInt16Ops и Vop3Int16Ops (V_PK_*_I16/U16, V_ADD_NC_I16, V_CMP_*_I16/U16)
+      довод: 16-битные целочисленные опкоды в eboot 0 [c]; тест применим к нашему дереву (контекст 4/7) как покрытие базы
+== T268 sys-dev-random n=1 ув=I подп=нет knobhunk=-
+   dirs: src/kernel/fileSystem.cpp(1); tests/KernelFileSystemTests.cpp(1)
+   de6266490 kernel: report /dev/random and /dev/urandom as character devices (#1140)
+      суть: /dev/random и /dev/urandom — символьные устройства в KernelFstat.
+      довод: пути игры — под /app0 (register:§44:Ф7); открытие /dev/* — [U]
+== T269 sys-cloexec n=1 ув=c подп=нет knobhunk=-
+   dirs: src/kernel/fileSystem.h(1); src/kernel/fileSystem.cpp(1); src/libs/libKernel.cpp(1)
+   db41d0482 kernel: retain POSIX file descriptor close-on-exec flags
+      суть: Флаг close-on-exec дескрипторов сохраняется (Open/Close).
+      довод: флаг важен только при exec — игра его не делает [c]
+== T273 hle-np-lang n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/network.h(1); src/libs/libNet.cpp(1); src/libs/network.cpp(1)
+   4865dd92c libNet: answer sceNpGetAccountLanguage2 as a signed-out user (#1186)
+      суть: sceNpGetAccountLanguage2 — ответ «signed out»
+      довод: функция игрой не импортируется [c NID]
+== T275 sys-ampr-native-path n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/libAmpr.cpp(1)
+   f40755173 ampr: keep resolved host paths in native form (#1175)
+      суть: Разрешённые пути APR хранятся как std::filesystem::path (не-ASCII папка игры на Windows).
+      довод: различие только для не-ASCII путей [c]; ложится на код e43aadf75
+== T276 hle-npcommerce n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/libNet.cpp(1); tests/KernelFileSystemTests.cpp(1)
+   107d5f750 libNet: finish NpCommerce dialogs at open (#1166)
+      суть: NpCommerceDialogOpen/GetResult; диалог завершается сразу при открытии; тесты
+      довод: без импорта Open диалог игрой не открывается [c NID]; сеть у нас офлайн (NetCtl принудительно offline), строк по сети в реестре трека F нет
+== T284 rnd-nop-1dw n=1 ув=U подп=нет knobhunk=-
+   dirs: src/graphics/guest_gpu(3); tests/ShaderRecompilerComputeTests.cpp(1); src/libs/agc.cpp(1)
+   4c8fc53a8 agc: support one-word NOP reservations and share packet sizing
+      суть: Pm4::PacketSizeDw: заголовок 0x3fff10xx - пакет в 1 слово (CP пропускает); AgcCbNop принимает размер 1 и не обнуляет тело
+      довод: у нас AgcCbNop(1) возвращает nullptr, CP не знает 1-словного NOP; вызывает ли ASTRO AgcCbNop с размером 1 - не измерено, фатала/зависания на 40 SCENE_OK нет
+== T286 ir-scalar-gpu n=2 ув=c подп=да knobhunk=-
+   dirs: src/graphics/shader(2); tests/ShaderRecompilerComputeTests.cpp(1); tests/shaderCfgTests.cpp(1); tests/ResourceMaterializationTests.cpp(1)
+   5b68a26cc shader: keep scalar payload and terminal conditions on the GPU
+      суть: Скалярная нагрузка и конечные условия на GPU — отменено 1c301c9aa
+      довод: итог пары с 1c301c9aa — 0 изменений (152+/23- и 23+/152-)
+   1c301c9aa Revert "shader: keep scalar payload and terminal conditions on the GPU"
+      суть: Revert 5b68a26cc
+      довод: итог пары — 0 изменений
+== T287 ir-scalar-matsel n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(2); tests/shaderCfgTests.cpp(1); tests/ResourceTrackingTests.cpp(1)
+   973809cde shader: retain bounded scalar material image selectors
+      суть: Хост перебирает охраняемый скалярный цикл материала; ключ и T# остаются на GPU
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate
+== T288 sys-agc-driver-dmem n=2 ув=U подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/libs/agc.h(1); src/libs/agc.cpp(1)
+   165cd884c agc: initialize function table in tracked driver memory
+      суть: AgcInit: 2 МиБ DMEM «SceAgcDriver» по 0x0fe0000000 и таблица функций драйвера (валидатор ordered-count).
+      довод: игра зовёт AgcInit (импорт) [c]; читают ли её шейдеры таблицу драйвера — [U]; меняет раскладку прямой памяти гостя
+   9a5dd9faf agc: reserve driver backing before guest direct-memory allocation
+      суть: DMEM драйвера резервируется при старте эмулятора до выделений гостя.
+      довод: то же, что 165cd884c; меняет раскладку DMEM до старта игры [U]
+== T291 be-dppshare n=1 ув=c подп=да knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/shader(1)
+   053f5fd3c shader: emit DPP row_share instead of an identity move
+      суть: DPP row_share:N (0x150..0x15f) — чтение лейна N своей строки вместо тождественного move
+      довод: скан DPP16 по 5 698 программам eboot: dpp_ctrl только quad_perm (0x00,0x1b,0x44,0x4e,0x55,0xa0,0xaa,0xb1,0xee,0xf5) и row_shr 1/2/4/8 (0x111,0x112,0x114,0x118); row_share 0 [c]
+== T292 sys-updater n=1 ув=c подп=нет knobhunk=-
+   dirs: src/launcher/src(3); src/launcher/include(2); src/updater/UpdateInstaller.h(1); .github/workflows/build.yml(1); README.md(1); src/updater/UpdateInstaller.cpp(1)
+   307fdcf7a add self updater (#1352)
+      суть: Самообновление лаунчера (updater, CI, README).
+      довод: лаунчер/CI
+== T293 prs-splash n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/presentation(4); src/main.cpp(1); src/emulator.cpp(1); src/common/emulatorConfig.h(1); src/libs/libSystemService.cpp(1)
+   f63d3befd Add startup splash screen
+      суть: Стартовая заставка из DDS (по умолчанию включена, --no-splash), скрытие по sceSystemServiceHideSplashScreen.
+      довод: Бренд и GUI; на игру не влияет
+== T294 prs-back-touch n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/presentation(1)
+   1cfb9522a controller: use Back as the touchpad click on pads without a touchpad (#1355)
+      суть: На геймпадах без тачпада кнопка Back даёт клик тачпада в центре.
+      довод: Удобство ввода с чужих геймпадов; корректность игры не меняет
+== T295 rnd-r64-bc n=1 ув=I подп=нет knobhunk=-
+   dirs: tests/ShaderRecompilerComputeTests.cpp(1); src/graphics/guest_gpu(1)
+   b7b335ac6 gpu: admit block-compressed textures in PS5 R64 tiling
+      суть: TileGetTextureBlockLayout: семейство RenderTarget64KB допускает BC-форматы (запрет только для Depth64KB и не 1x1 текселя)
+      довод: у нас BC в тайле kRenderTarget отвергается -> фатал раскладки; в 112 логов с. 144-146 (59 входивших уровней) и V Sky Garden FS15 фатала нет
+== T296 img-r8snorm n=1 ув=c подп=нет knobhunk=-
+   dirs: src/graphics/guest_gpu(1); tests/ShaderRecompilerComputeTests.cpp(1)
+   7e4e142aa gpu: enable native R8 SNORM texture sampling
+      суть: k8SNorm помечен сэмплируемым (sampled_texture = true).
+      довод: У нас k8SNorm несэмплируемый ⇒ сэмплирование дало бы строку «shader resource specialization failed: … unsupported format»; в 4 357 stdout-логах s143–s146 и трека F (59 входивших уровней) таких строк 0 [c]
+== T299 sys-agc-dbgdump n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/agc.cpp(1)
+   d4bb7fd78 agc: remove command buffer debug dump
+      суть: Удалён отладочный дамп буфера команд (DbgDump).
+      довод: только печать лога
+== T301 prs-depth2color n=1 ув=I подп=нет knobhunk=graphicContext.h: 1 [KYTY_FIX_DUALSRC KYTY_FIX_SVAL]
+   dirs: src/graphics/host_gpu(4); src/graphics/presentation(1)
+   1029511bb add depth to color copy
+      суть: Поддержка copy_depth_to_color (Z32F → R32F через vkCmdCopyImage, VK_KHR_maintenance8).
+      довод: У нас copy_depth_to_color — DepthFatal (depthRenderTarget.cpp:370); на линии курса такого фатала нет (реестр трека F) ⇒ ASTRO регистр не ставит [I]
+== T302 sys-playgo-plgx n=1 ув=c подп=нет knobhunk=-
+   dirs: src/loader/systemContent.cpp(1)
+   6f3bebcb5 playgo: read plgx chunks
+      суть: PlayGo принимает магию plgx.
+      довод: у пакета игры нет playgo-chunk.dat [c]
+== T303 sys-loadexec n=3 ув=c подп=нет knobhunk=runtimeLinker.cpp: 1 [KYTY_GAME_PATCH KYTY_PVAR]
+   dirs: src/loader/runtimeLinker.h(1); src/libs/libC.cpp(1); src/graphics/shader(1); src/common/emulatorConfig.cpp(1); src/main.cpp(1); CMakeLists.txt(1)
+   cb375ec35 add load exec
+      суть: LoadExec: перезапуск с аргументами гостя, EntryParams с argv.
+      довод: LoadExec игра не импортирует [c]
+   6f0cddd44 implement LoadExec (windows)
+      суть: LoadExec для Windows.
+      довод: LoadExec игра не импортирует [c]
+   16a7fe689 fix windows compilation (2) (#1411)
+      суть: Сборка Windows: LoadExec, std::min/max в SrtWalker.cpp (без изменения ответа).
+      довод: компиляция [c]
+== T305 ir-shared-pred n=1 ув=I подп=да knobhunk=-
+   dirs: src/graphics/shader(1); tests/ResourceMaterializationTests.cpp(1)
+   df0412afb shader: preserve shared predicates during resource plan extraction
+      суть: Извлечение плана сохраняет общие EXEC-предикаты (подграфы без равномерного множителя)
+      довод: наша линия не сообщает отказов планирования/материализации ресурсов на обычном пути ASTRO BOT: register §104 Ф3 — 0 запросов 137 пропущенных хэшей на 281 входе; в log_fs15_v (FS15) 0 строк could not be materialized/incompatible candidates, отказы resource tracking только у CsPretranslate; стоит на механизме предикатов плана upstream
+== T307 sys-hdr n=1 ув=I подп=да knobhunk=swapchain.cpp: 3 [KYTY_FIX_MINIMIZE]
+   dirs: src/graphics/presentation(5); src/graphics/host_gpu(3); src/launcher/src(3); src/launcher/include(1); src/launcher/forms(1); CMakeLists.txt(1)
+   e51de54ee add hdr display support
+      суть: Вывод HDR10 по --hdr (умолчание off): формат/цветовое пространство swapchain, dynamicRange, оверлей.
+      довод: при умолчании dynamicRange = 1 и формат SDR как у нас [I]; игра SDR в наших прогонах
+== T308 sys-ftruncate n=1 ув=c подп=нет knobhunk=-
+   dirs: src/libs/libKernel.cpp(1)
+   048fe9f41 kernel: export sceKernelFtruncate through existing native handler
+      суть: Экспорт sceKernelFtruncate.
+      довод: NID не импортируется [c]
+== T310 hle-netctl-ipv4 n=1 ув=c подп=нет knobhunk=-
+   dirs: src/launcher/src(3); src/libs/network.cpp(1); src/launcher/include(1); src/common/emulatorConfig.cpp(1); src/launcher/forms(1); src/main.cpp(1)
+   e699a35f2 netctl: add opt-in host IPv4 connectivity and launcher toggle
+      суть: NetCtl: опциональное подключение по IPv4 хоста и переключатель в лаунчере (умолчание выкл.)
+      довод: при умолчании NetCtl офлайн, как у нас (network.cpp:3143)

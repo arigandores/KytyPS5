@@ -1,0 +1,6 @@
+2026-10-12T07:45:57Z M1b start HPP-836; input eee39691 + p754 11c1ab35
+2026-10-12T07:46:32Z cov_m1b.py run 5e9f47c3
+2026-10-12T07:49:15Z anch_m1b.py 22 themes ff53d924
+2026-10-12T07:55:18Z NID spot-check 17 NIDs eboot+prx
+2026-10-12T07:57:11Z rc1_themes.tsv 660e1d79
+2026-10-12T07:59:00Z review.md written 805b71bf; commit

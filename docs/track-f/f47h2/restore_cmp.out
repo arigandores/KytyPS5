@@ -1,0 +1,4 @@
+len 25050624 25050624
+differing bytes by section {'hdr/other': 2, '.rdata': 2} ; .text 0
+len 8120832 8120832
+differing bytes by section {'hdr/other': 2} ; .text 0

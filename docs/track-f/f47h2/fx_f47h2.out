@@ -1,0 +1,6 @@
+A1 no FrameTrace line at all: ADMISSION OK | ADMISSION OK: flips 11 in [700, 710], paths [0], shown lines 11, FrameTrace lines 0
+A2 FrameTrace n=705 missing: ADMISSION FAIL | ADMISSION FAIL: flips 11 in [700, 710], paths [0], shown lines 11, FrameTrace lines 10 / q without a FrameTrace n line: 1 ([705])
+B1 buffer ring copy != guest now, ggpu=0, no cpu/maybe field: ('ne', 'buffer 0x0x1000: guest aaaaaaaaaaaaaaaa != given bbbbbbbbbbbbbbbb')
+B2a SRT ring bytes != snapshot: ('ne', 'SRT ring bytes cccccccccccccccc != snapshot dddddddddddddddd')
+B2b SRT fresh materialization from guest now differs (same_ud=0): ('ne', 'snapshot of the draw != materialization from guest now (same_ud=0)')
+rows B1/B2 -> rule (6): a show with any ne -> "DEFECT (6)(1)" (read_rule: `if ne:` before every und)

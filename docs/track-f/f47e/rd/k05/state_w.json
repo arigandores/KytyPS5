@@ -1,0 +1,135 @@
+[
+ {
+  "eid": 48298,
+  "name": "vkCmdDrawIndexed()",
+  "numIndices": 6,
+  "outs": [
+   [
+    0,
+    48170
+   ]
+  ],
+  "ro": [
+   [
+    "ps",
+    0,
+    79528
+   ],
+   [
+    "ps",
+    0,
+    83682
+   ],
+   [
+    "ps",
+    0,
+    12687
+   ],
+   [
+    "ps",
+    0,
+    48172
+   ]
+  ],
+  "rw": [
+   [
+    "vs",
+    1,
+    193
+   ],
+   [
+    "vs",
+    0,
+    12317
+   ],
+   [
+    "vs",
+    0,
+    30081
+   ],
+   [
+    "ps",
+    0,
+    193
+   ]
+  ],
+  "blend": [
+   [
+    true,
+    "BlendMultiplier.One",
+    "BlendMultiplier.InvSrcAlpha",
+    "BlendOperation.Add",
+    "BlendMultiplier.Zero",
+    "BlendMultiplier.InvSrcAlpha",
+    "BlendOperation.Add",
+    15
+   ]
+  ],
+  "vs": 2446,
+  "ps": 2387
+ },
+ {
+  "eid": 48341,
+  "name": "vkCmdDrawIndexed()",
+  "numIndices": 5568,
+  "outs": [
+   [
+    0,
+    48170
+   ]
+  ],
+  "ro": [
+   [
+    "ps",
+    0,
+    48181
+   ],
+   [
+    "ps",
+    0,
+    48182
+   ],
+   [
+    "ps",
+    0,
+    12687
+   ]
+  ],
+  "rw": [
+   [
+    "vs",
+    1,
+    193
+   ],
+   [
+    "vs",
+    0,
+    12317
+   ],
+   [
+    "vs",
+    0,
+    30081
+   ],
+   [
+    "ps",
+    0,
+    193
+   ]
+  ],
+  "blend": [
+   [
+    true,
+    "BlendMultiplier.One",
+    "BlendMultiplier.One",
+    "BlendOperation.Add",
+    "BlendMultiplier.Zero",
+    "BlendMultiplier.One",
+    "BlendOperation.Add",
+    15
+   ]
+  ],
+  "vs": 329,
+  "ps": 333
+ }
+]

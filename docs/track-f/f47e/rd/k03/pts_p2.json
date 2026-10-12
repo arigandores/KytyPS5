@@ -1,0 +1,29 @@
+[
+ {
+  "snap": "k03",
+  "block": "p2",
+  "name": "p2_a",
+  "tex": 48170,
+  "x": 240,
+  "y": 240,
+  "inner": true
+ },
+ {
+  "snap": "k03",
+  "block": "p2",
+  "name": "p2_b",
+  "tex": 48170,
+  "x": 400,
+  "y": 600,
+  "inner": true
+ },
+ {
+  "snap": "k03",
+  "block": "p2",
+  "name": "p2_c",
+  "tex": 7948,
+  "x": 240,
+  "y": 240,
+  "inner": true
+ }
+]

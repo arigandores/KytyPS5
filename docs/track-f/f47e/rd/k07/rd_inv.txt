@@ -1,0 +1,54 @@
+capture: C:/kyty/f287/f47d/f47_rd_k07.rdc phase inv
+actions 44, last eid 253, presents [(253, 'End of Capture')]
+kinds {'PassBoundary': 2, 'Dispatch': 40, 'Copy': 1, 'Present': 1}
+textures 3 buffers 524
+--- last 40 actions:
+  eid 30 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 36 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 42 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 48 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 54 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 60 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 66 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 72 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 78 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 84 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 90 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 96 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 102 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 108 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 114 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 120 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 126 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 132 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 138 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 144 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 150 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 156 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 162 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 168 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 174 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 180 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 186 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 192 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 198 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 204 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 210 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 216 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 222 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 228 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 234 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 240 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 246 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 249 flags=1024 name=vkCmdCopyBuffer() outs=[] depth=- copySrc=18336 copyDst=198
+  eid 252 flags=25174016 name==> vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::89183) outs=[] depth=- copySrc=- copyDst=-
+  eid 253 flags=256 name=End of Capture outs=[] depth=- copySrc=- copyDst=2810
+--- copies (last 12):
+  eid 249 vkCmdCopyBuffer() src=18336 dst=198
+--- big colour textures (w >= 1280):
+  tex 2810 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2810
+  tex 2811 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2811
+  tex 2812 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2812
+present eid 253 src=- dst=2810 outs=[]
+shown guest image: copy eid 249 src res(18336) -> dst res(198)
+done

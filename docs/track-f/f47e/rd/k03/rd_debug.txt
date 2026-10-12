@@ -1,0 +1,7 @@
+capture: C:/kyty/f287/f47d/f47_rd_k03.rdc phase debug
+actions 22029, last eid 125609, presents [(125609, 'vkQueuePresentKHR(ResourceId::2810)')]
+---- DEBUG eid 49591 pixel 988,140
+  debug failed (no trace)
+---- DEBUG eid 49591 pixel 948,252
+  debug failed (no trace)
+done

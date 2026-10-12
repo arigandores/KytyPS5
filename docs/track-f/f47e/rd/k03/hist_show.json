@@ -1,0 +1,357 @@
+[
+ {
+  "pt": {
+   "snap": "k03",
+   "block": "black1",
+   "name": "black1_c00",
+   "tex": 7958,
+   "xm": 123,
+   "ym": 17,
+   "x": 988,
+   "y": 140,
+   "inner": true,
+   "how": "corner",
+   "npix": 1154,
+   "bbox": [
+    121,
+    15,
+    172,
+    48
+   ]
+  },
+  "mods": [
+   {
+    "eid": 49669,
+    "name": "vkCmdCopyImage()",
+    "passed": true,
+    "prim": 0,
+    "frag": 0,
+    "pre": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "out": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "post": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "preU": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "outU": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "postU": [
+     0,
+     0,
+     0,
+     1065353216
+    ],
+    "flags": "direct",
+    "draw": false,
+    "clear": false,
+    "copy": true,
+    "dispatch": false
+   }
+  ]
+ },
+ {
+  "pt": {
+   "snap": "k03",
+   "block": "black1",
+   "name": "black1_c10",
+   "tex": 7958,
+   "xm": 170,
+   "ym": 17,
+   "x": 1364,
+   "y": 140,
+   "inner": true,
+   "how": "corner",
+   "npix": 1154,
+   "bbox": [
+    121,
+    15,
+    172,
+    48
+   ]
+  },
+  "mods": [
+   {
+    "eid": 49669,
+    "name": "vkCmdCopyImage()",
+    "passed": true,
+    "prim": 0,
+    "frag": 0,
+    "pre": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "out": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "post": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "preU": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "outU": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "postU": [
+     0,
+     0,
+     0,
+     1065353216
+    ],
+    "flags": "direct",
+    "draw": false,
+    "clear": false,
+    "copy": true,
+    "dispatch": false
+   }
+  ]
+ },
+ {
+  "pt": {
+   "snap": "k03",
+   "block": "black1",
+   "name": "black1_c01",
+   "tex": 7958,
+   "xm": 123,
+   "ym": 46,
+   "x": 988,
+   "y": 372,
+   "inner": true,
+   "how": "corner",
+   "npix": 1154,
+   "bbox": [
+    121,
+    15,
+    172,
+    48
+   ]
+  },
+  "mods": [
+   {
+    "eid": 49669,
+    "name": "vkCmdCopyImage()",
+    "passed": true,
+    "prim": 0,
+    "frag": 0,
+    "pre": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "out": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "post": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "preU": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "outU": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "postU": [
+     0,
+     0,
+     0,
+     1065353216
+    ],
+    "flags": "direct",
+    "draw": false,
+    "clear": false,
+    "copy": true,
+    "dispatch": false
+   }
+  ]
+ },
+ {
+  "pt": {
+   "snap": "k03",
+   "block": "black1",
+   "name": "black1_c11",
+   "tex": 7958,
+   "xm": 170,
+   "ym": 46,
+   "x": 1364,
+   "y": 372,
+   "inner": true,
+   "how": "corner",
+   "npix": 1154,
+   "bbox": [
+    121,
+    15,
+    172,
+    48
+   ]
+  },
+  "mods": [
+   {
+    "eid": 49669,
+    "name": "vkCmdCopyImage()",
+    "passed": true,
+    "prim": 0,
+    "frag": 0,
+    "pre": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "out": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "post": [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "preU": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "outU": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "postU": [
+     0,
+     0,
+     0,
+     1065353216
+    ],
+    "flags": "direct",
+    "draw": false,
+    "clear": false,
+    "copy": true,
+    "dispatch": false
+   }
+  ]
+ },
+ {
+  "pt": {
+   "snap": "k03",
+   "block": "black1",
+   "name": "black1_out",
+   "tex": 7958,
+   "xm": 118,
+   "ym": 31,
+   "x": 948,
+   "y": 252,
+   "inner": false,
+   "how": "outside",
+   "npix": 1154,
+   "bbox": [
+    121,
+    15,
+    172,
+    48
+   ]
+  },
+  "mods": [
+   {
+    "eid": 49669,
+    "name": "vkCmdCopyImage()",
+    "passed": true,
+    "prim": 0,
+    "frag": 0,
+    "pre": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "out": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "post": [
+     0.261974573135376,
+     0.5718474984169006,
+     0.6754643321037292,
+     1.0
+    ],
+    "preU": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "outU": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "postU": [
+     1048977800,
+     1058170009,
+     1059908411,
+     1065353216
+    ],
+    "flags": "direct",
+    "draw": false,
+    "clear": false,
+    "copy": true,
+    "dispatch": false
+   }
+  ]
+ }
+]

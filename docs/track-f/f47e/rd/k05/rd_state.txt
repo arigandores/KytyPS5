@@ -1,0 +1,72 @@
+capture: C:/kyty/f287/f47d/f47_rd_k05.rdc phase state
+actions 22243, last eid 125753, presents [(125753, 'vkQueuePresentKHR(ResourceId::2810)')]
+==== STATE EID 48298 vkCmdDrawIndexed() numIndices=6 numInstances=1 indexOffset=0 vertexOffset=0 flags=196610
+  RT[0] tex 48170 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48170
+  blend[0] en=True src=BlendMultiplier.One dst=BlendMultiplier.InvSrcAlpha op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.InvSrcAlpha op=BlendOperation.Add mask=f logic=False/LogicOperation.Copy
+  blendConst [0.0, 0.0, 0.0, 0.0]
+  depth test=False write=False func=CompareFunction.Never stencil=False
+  raster cull=CullMode.Back frontCCW=True fill=FillMode.Solid
+  viewport (0.0 2160.0 3840.0 -2160.0) scissor (0 0 3840 2160)
+  vs shader 2446 spirv C:/kyty/f287/f47e/rd/k05\vs_2446.spv bytes 22240 entry main
+    out sig name=outPerVertex._child0 reg=0 comp=4 sys=ShaderBuiltin.Position type=VarType.Float
+    out sig name=gl_ClipDistance[0] reg=0 comp=1 sys=ShaderBuiltin.ClipDistance type=VarType.Float
+    out sig name=out_param_0 reg=0 comp=4 sys=ShaderBuiltin.Undefined type=VarType.Float
+    out sig name=out_param_1 reg=1 comp=4 sys=ShaderBuiltin.Undefined type=VarType.Float
+    out sig name=out_param_2 reg=2 comp=4 sys=ShaderBuiltin.Undefined type=VarType.Float
+    out sig name=out_param_3 reg=3 comp=4 sys=ShaderBuiltin.Undefined type=VarType.Float
+    out sig name=out_param_4 reg=4 comp=4 sys=ShaderBuiltin.Undefined type=VarType.Float
+    RW idx=1 res=buf 193
+    RW idx=0 res=buf 12317
+    RW idx=0 res=buf 30081
+    CB idx=0 res=193 off=21680768 size=128
+    CB idx=0 res=193 off=21680896 size=576
+    CB idx=1 res=193 off=21680768 size=128
+    CB idx=1 res=193 off=21680896 size=576
+  ps shader 2387 spirv C:/kyty/f287/f47e/rd/k05\ps_2387.spv bytes 37828 entry main
+    out sig name=out_mrt_0 reg=0 comp=4 sys=ShaderBuiltin.ColorOutput type=VarType.Float
+    RO idx=0 res=tex 79528 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79528
+    RO idx=0 res=tex 83682 1920x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 83682
+    RO idx=0 res=tex 12687 1x1x1 arr=1 mips=1 fmt=R8G8B8A8_SRGB ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 12687
+    RO idx=0 res=tex 48172 1x1x1 arr=1 mips=1 fmt=R8G8B8A8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48172
+    RW idx=0 res=buf 193
+    CB idx=2 res=83350 off=0 size=128
+    CB idx=0 res=193 off=21681792 size=192
+    CB idx=0 res=30081 off=15249408 size=17904
+    CB idx=0 res=193 off=21681984 size=176
+    CB idx=0 res=193 off=21682176 size=576
+    CB idx=1 res=193 off=21681792 size=192
+    CB idx=1 res=30081 off=15249408 size=17904
+    CB idx=1 res=193 off=21682176 size=576
+==== STATE EID 48341 vkCmdDrawIndexed() numIndices=5568 numInstances=1 indexOffset=0 vertexOffset=0 flags=196610
+  RT[0] tex 48170 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48170
+  blend[0] en=True src=BlendMultiplier.One dst=BlendMultiplier.One op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.One op=BlendOperation.Add mask=f logic=False/LogicOperation.Copy
+  blendConst [0.0, 0.0, 0.0, 0.0]
+  depth test=False write=False func=CompareFunction.Never stencil=False
+  raster cull=CullMode.Back frontCCW=True fill=FillMode.Solid
+  viewport (0.0 2160.0 3840.0 -2160.0) scissor (0 0 3840 2160)
+  vs shader 329 spirv C:/kyty/f287/f47e/rd/k05\vs_329.spv bytes 20956 entry main
+    out sig name=outPerVertex._child0 reg=0 comp=4 sys=ShaderBuiltin.Position type=VarType.Float
+    out sig name=gl_ClipDistance[0] reg=0 comp=1 sys=ShaderBuiltin.ClipDistance type=VarType.Float
+    out sig name=out_param_0 reg=0 comp=4 sys=ShaderBuiltin.Undefined type=VarType.Float
+    out sig name=out_param_1 reg=1 comp=4 sys=ShaderBuiltin.Undefined type=VarType.Float
+    out sig name=out_param_2 reg=2 comp=4 sys=ShaderBuiltin.Undefined type=VarType.Float
+    out sig name=out_param_3 reg=3 comp=4 sys=ShaderBuiltin.Undefined type=VarType.Float
+    RW idx=1 res=buf 193
+    RW idx=0 res=buf 12317
+    RW idx=0 res=buf 30081
+    CB idx=0 res=193 off=21726656 size=128
+    CB idx=0 res=193 off=21726784 size=576
+    CB idx=1 res=193 off=21726656 size=128
+    CB idx=1 res=193 off=21726784 size=576
+  ps shader 333 spirv C:/kyty/f287/f47e/rd/k05\ps_333.spv bytes 37776 entry main
+    out sig name=out_mrt_0 reg=0 comp=4 sys=ShaderBuiltin.ColorOutput type=VarType.Float
+    RO idx=0 res=tex 48181 512x512x1 arr=1 mips=10 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 48181
+    RO idx=0 res=tex 48182 512x1024x1 arr=1 mips=11 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 48182
+    RO idx=0 res=tex 12687 1x1x1 arr=1 mips=1 fmt=R8G8B8A8_SRGB ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 12687
+    RW idx=0 res=buf 193
+    CB idx=2 res=83350 off=0 size=128
+    CB idx=0 res=193 off=21727616 size=192
+    CB idx=0 res=30081 off=15249408 size=17904
+    CB idx=0 res=193 off=21727808 size=176
+    CB idx=1 res=193 off=21727616 size=192
+done

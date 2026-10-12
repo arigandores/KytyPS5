@@ -1,0 +1,72 @@
+[
+ {
+  "eid": 49605,
+  "name": "vkCmdDrawIndexed()",
+  "numIndices": 96,
+  "outs": [
+   [
+    0,
+    48170
+   ]
+  ],
+  "ro": [
+   [
+    "ps",
+    0,
+    48104
+   ],
+   [
+    "ps",
+    0,
+    12687
+   ],
+   [
+    "ps",
+    0,
+    48172
+   ]
+  ],
+  "rw": [
+   [
+    "vs",
+    1,
+    193
+   ],
+   [
+    "vs",
+    0,
+    12317
+   ],
+   [
+    "vs",
+    0,
+    30081
+   ],
+   [
+    "ps",
+    0,
+    193
+   ],
+   [
+    "cs",
+    0,
+    48169
+   ]
+  ],
+  "blend": [
+   [
+    true,
+    "BlendMultiplier.One",
+    "BlendMultiplier.InvSrcAlpha",
+    "BlendOperation.Add",
+    "BlendMultiplier.Zero",
+    "BlendMultiplier.InvSrcAlpha",
+    "BlendOperation.Add",
+    15
+   ]
+  ],
+  "vs": 329,
+  "ps": 333,
+  "cs": 166
+ }
+]

@@ -1,0 +1,192 @@
+[
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c00",
+  "tex": 48170,
+  "xm": 123,
+  "ym": 17,
+  "x": 988,
+  "y": 140,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c00_scene",
+  "tex": 66628,
+  "xm": 123,
+  "ym": 17,
+  "x": 625,
+  "y": 88,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c10",
+  "tex": 48170,
+  "xm": 170,
+  "ym": 17,
+  "x": 1364,
+  "y": 140,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c10_scene",
+  "tex": 66628,
+  "xm": 170,
+  "ym": 17,
+  "x": 863,
+  "y": 88,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c01",
+  "tex": 48170,
+  "xm": 123,
+  "ym": 46,
+  "x": 988,
+  "y": 372,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c01_scene",
+  "tex": 66628,
+  "xm": 123,
+  "ym": 46,
+  "x": 625,
+  "y": 235,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c11",
+  "tex": 48170,
+  "xm": 170,
+  "ym": 46,
+  "x": 1364,
+  "y": 372,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c11_scene",
+  "tex": 66628,
+  "xm": 170,
+  "ym": 46,
+  "x": 863,
+  "y": 235,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_out",
+  "tex": 48170,
+  "xm": 118,
+  "ym": 31,
+  "x": 948,
+  "y": 252,
+  "inner": false,
+  "how": "outside",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_out_scene",
+  "tex": 66628,
+  "xm": 118,
+  "ym": 31,
+  "x": 600,
+  "y": 159,
+  "inner": false,
+  "how": "outside",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ }
+]

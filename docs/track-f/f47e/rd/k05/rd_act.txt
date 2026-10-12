@@ -1,0 +1,34 @@
+capture: C:/kyty/f287/f47d/f47_rd_k05.rdc phase act
+actions 22243, last eid 125753, presents [(125753, 'vkQueuePresentKHR(ResourceId::2810)')]
+---- actions in 48255..48400
+  eid 48255 flags=20979712 => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::88202) outs=[] copySrc=- copyDst=-
+  eid 48259 flags=1024 vkCmdCopyBuffer() outs=[] copySrc=187 copyDst=30081
+  eid 48262 flags=1048577 vkCmdClearColorImage() outs=[] copySrc=- copyDst=48170
+  eid 48279 flags=4202496 vkCmdBeginRendering(Load) outs=[48170] copySrc=- copyDst=-
+  eid 48281 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48287 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48293 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48298 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48303 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48309 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48315 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48317 flags=8396800 vkCmdEndRendering(Store) outs=[48170] copySrc=- copyDst=-
+  eid 48322 flags=4202496 vkCmdBeginRendering(Load) outs=[48170] copySrc=- copyDst=-
+  eid 48324 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48330 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48335 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48341 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48347 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 48349 flags=8396800 vkCmdEndRendering(Store) outs=[48170] copySrc=- copyDst=-
+  eid 48350 flags=25174016 => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::88202) outs=[] copySrc=- copyDst=-
+  eid 48354 flags=20979712 => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::88203) outs=[] copySrc=- copyDst=-
+  eid 48358 flags=25174016 => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::88203) outs=[] copySrc=- copyDst=-
+  eid 48362 flags=20979712 => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::88204) outs=[] copySrc=- copyDst=-
+  eid 48382 flags=4202496 vkCmdBeginRendering(Load) outs=[7948] copySrc=- copyDst=-
+  eid 48384 flags=131074 vkCmdDraw() outs=[7948] copySrc=- copyDst=-
+  eid 48386 flags=8396800 vkCmdEndRendering(Store) outs=[7948] copySrc=- copyDst=-
+  eid 48387 flags=25174016 => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::88204) outs=[] copySrc=- copyDst=-
+  eid 48391 flags=20979712 => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::88205) outs=[] copySrc=- copyDst=-
+  eid 48396 flags=1024 vkCmdCopyImage() outs=[] copySrc=7948 copyDst=7958
+  eid 48399 flags=25174016 => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::88205) outs=[] copySrc=- copyDst=-
+done

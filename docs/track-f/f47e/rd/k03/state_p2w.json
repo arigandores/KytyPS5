@@ -1,0 +1,41 @@
+[
+ {
+  "eid": 9091,
+  "name": "vkCmdDraw()",
+  "numIndices": 6,
+  "outs": [
+   [
+    0,
+    48104
+   ]
+  ],
+  "ro": [
+   [
+    "ps",
+    0,
+    48106
+   ]
+  ],
+  "rw": [
+   [
+    "vs",
+    0,
+    48107
+   ]
+  ],
+  "blend": [
+   [
+    false,
+    "BlendMultiplier.Zero",
+    "BlendMultiplier.Zero",
+    "BlendOperation.Add",
+    "BlendMultiplier.Zero",
+    "BlendMultiplier.Zero",
+    "BlendOperation.Add",
+    15
+   ]
+  ],
+  "vs": 1787,
+  "ps": 1788
+ }
+]

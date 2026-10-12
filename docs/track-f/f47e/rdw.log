@@ -1,0 +1,90 @@
+2026-10-11T19:55:35Z start inv_k04 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-11T19:55:39Z inv_k04 watchdog rc=8: REFUSED: procload 2026-10-11T19:55:38Z pids [36972, 48688, 52828, 61424] 
+2026-10-11T19:55:40Z inv_k04 GLCache after = before (cmp EQUAL)
+2026-10-11T20:01:30Z start inv_k04 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-11T20:01:37Z inv_k04 watchdog rc=7: survivors by command line 'qrenderdoc.exe': found [], alive after [] KILLED: procload 2026-10-11T20:01:36Z pids [30640, 34700, 55768]; tree [11612, 29100, 39452, 49480, 60380], alive after [] 
+2026-10-11T20:01:37Z inv_k04 GLCache after = before (cmp EQUAL)
+2026-10-11T20:09:18Z start inv_k04 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-11T20:09:23Z inv_k04 watchdog rc=0: watch: start 2026-10-11T20:09:19Z child 27580 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-11T20:09:22Z 
+2026-10-11T20:09:24Z inv_k04 GLCache after = before (cmp EQUAL)
+2026-10-11T20:24:46Z start inv_k03 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-11T20:25:02Z inv_k03 watchdog rc=7: survivors by command line 'qrenderdoc.exe': found [], alive after [] KILLED: procload 2026-10-11T20:25:01Z pids [38968, 52236, 54188, 57884, 60640]; tree [54412, 55696, 57032], alive after [] 
+2026-10-11T20:25:05Z inv_k03 GLCache after = before (cmp EQUAL)
+2026-10-12T01:01:18Z start inv_k03 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:01:35Z inv_k03 watchdog rc=0: watch: start 2026-10-12T01:01:20Z child 53828 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:01:35Z 
+2026-10-12T01:01:36Z inv_k03 GLCache after = before (cmp EQUAL)
+2026-10-12T01:02:30Z start hist_k03_show script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:02:48Z hist_k03_show watchdog rc=0: watch: start 2026-10-12T01:02:32Z child 33752 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:02:48Z 
+2026-10-12T01:02:49Z hist_k03_show GLCache after = before (cmp EQUAL)
+2026-10-12T01:03:19Z start act_k03_a script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:03:32Z act_k03_a watchdog rc=0: watch: start 2026-10-12T01:03:21Z child 38836 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:03:31Z 
+2026-10-12T01:03:33Z act_k03_a GLCache after = before (cmp EQUAL)
+2026-10-12T01:03:42Z start hist_k03_7948 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:04:04Z hist_k03_7948 watchdog rc=0: watch: start 2026-10-12T01:03:44Z child 58520 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:04:04Z 
+2026-10-12T01:04:05Z hist_k03_7948 GLCache after = before (cmp EQUAL)
+2026-10-12T01:04:11Z start state_k03_49665 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:04:21Z state_k03_49665 watchdog rc=0: watch: start 2026-10-12T01:04:12Z child 50512 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:04:21Z 
+2026-10-12T01:04:22Z state_k03_49665 GLCache after = before (cmp EQUAL)
+2026-10-12T01:04:32Z start hist_k03_l1 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:05:02Z hist_k03_l1 watchdog rc=0: watch: start 2026-10-12T01:04:33Z child 4800 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:05:02Z 
+2026-10-12T01:05:03Z hist_k03_l1 GLCache after = before (cmp EQUAL)
+2026-10-12T01:05:14Z start state_k03_ui script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:05:28Z state_k03_ui watchdog rc=0: watch: start 2026-10-12T01:05:16Z child 56028 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:05:28Z 
+2026-10-12T01:05:29Z state_k03_ui GLCache after = before (cmp EQUAL)
+2026-10-12T01:05:43Z start dbg_k03_49591 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:05:55Z dbg_k03_49591 watchdog rc=0: watch: start 2026-10-12T01:05:44Z child 43472 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:05:55Z 
+2026-10-12T01:05:56Z dbg_k03_49591 GLCache after = before (cmp EQUAL)
+2026-10-12T01:07:48Z start usage_k03 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:07:58Z usage_k03 watchdog rc=0: watch: start 2026-10-12T01:07:49Z child 43476 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:07:58Z 
+2026-10-12T01:07:59Z usage_k03 GLCache after = before (cmp EQUAL)
+2026-10-12T01:08:09Z start vsout_k03 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:08:22Z vsout_k03 watchdog rc=0: watch: start 2026-10-12T01:08:10Z child 21088 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:08:22Z 
+2026-10-12T01:08:23Z vsout_k03 GLCache after = before (cmp EQUAL)
+2026-10-12T01:08:25Z start save_k03_db script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:08:39Z save_k03_db watchdog rc=0: watch: start 2026-10-12T01:08:27Z child 3540 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:08:39Z 
+2026-10-12T01:08:40Z save_k03_db GLCache after = before (cmp EQUAL)
+2026-10-12T01:09:25Z start inv_k01 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:09:30Z inv_k01 watchdog rc=0: watch: start 2026-10-12T01:09:27Z child 55240 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:09:30Z 
+2026-10-12T01:09:31Z inv_k01 GLCache after = before (cmp EQUAL)
+2026-10-12T01:09:32Z start inv_k02 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:09:50Z inv_k02 watchdog rc=0: watch: start 2026-10-12T01:09:34Z child 51484 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:09:49Z 
+2026-10-12T01:09:50Z inv_k02 GLCache after = before (cmp EQUAL)
+2026-10-12T01:09:51Z start inv_k05 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:10:07Z inv_k05 watchdog rc=0: watch: start 2026-10-12T01:09:53Z child 45424 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:10:06Z 
+2026-10-12T01:10:07Z inv_k05 GLCache after = before (cmp EQUAL)
+2026-10-12T01:10:09Z start inv_k06 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:10:15Z inv_k06 watchdog rc=0: watch: start 2026-10-12T01:10:10Z child 8628 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:10:15Z 
+2026-10-12T01:10:16Z inv_k06 GLCache after = before (cmp EQUAL)
+2026-10-12T01:10:17Z start inv_k07 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:10:22Z inv_k07 watchdog rc=0: watch: start 2026-10-12T01:10:18Z child 38292 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:10:21Z 
+2026-10-12T01:10:22Z inv_k07 GLCache after = before (cmp EQUAL)
+2026-10-12T01:11:01Z start usage_k05 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:11:12Z usage_k05 watchdog rc=0: watch: start 2026-10-12T01:11:03Z child 17236 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:11:12Z 
+2026-10-12T01:11:13Z usage_k05 GLCache after = before (cmp EQUAL)
+2026-10-12T01:11:14Z start usage_k02 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:11:24Z usage_k02 watchdog rc=0: watch: start 2026-10-12T01:11:15Z child 52156 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:11:24Z 
+2026-10-12T01:11:25Z usage_k02 GLCache after = before (cmp EQUAL)
+2026-10-12T01:11:33Z start act_k05 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:11:44Z act_k05 watchdog rc=0: watch: start 2026-10-12T01:11:35Z child 62184 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:11:44Z 
+2026-10-12T01:11:45Z act_k05 GLCache after = before (cmp EQUAL)
+2026-10-12T01:11:53Z start hist_k05_ui script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:12:31Z hist_k05_ui watchdog rc=0: watch: start 2026-10-12T01:11:55Z child 54024 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:12:31Z 
+2026-10-12T01:12:32Z hist_k05_ui GLCache after = before (cmp EQUAL)
+2026-10-12T01:12:39Z start state_k05_w script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:12:50Z state_k05_w watchdog rc=0: watch: start 2026-10-12T01:12:40Z child 11640 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:12:50Z 
+2026-10-12T01:12:50Z state_k05_w GLCache after = before (cmp EQUAL)
+2026-10-12T01:13:07Z start hist_k03_p2 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:13:24Z hist_k03_p2 watchdog rc=0: watch: start 2026-10-12T01:13:09Z child 20800 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:13:24Z 
+2026-10-12T01:13:25Z hist_k03_p2 GLCache after = before (cmp EQUAL)
+2026-10-12T01:13:31Z start state_k03_p2 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:13:44Z state_k03_p2 watchdog rc=0: watch: start 2026-10-12T01:13:33Z child 38380 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:13:44Z 
+2026-10-12T01:13:44Z state_k03_p2 GLCache after = before (cmp EQUAL)
+2026-10-12T01:13:57Z start usage_k03_p2 script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:14:07Z usage_k03_p2 watchdog rc=0: watch: start 2026-10-12T01:13:58Z child 38072 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:14:07Z 
+2026-10-12T01:14:08Z usage_k03_p2 GLCache after = before (cmp EQUAL)
+2026-10-12T01:14:20Z start usage_k03_b script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:14:30Z usage_k03_b watchdog rc=0: watch: start 2026-10-12T01:14:21Z child 8416 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:14:30Z 
+2026-10-12T01:14:31Z usage_k03_b GLCache after = before (cmp EQUAL)
+2026-10-12T01:14:40Z start state_k03_p2w script C:/kyty/f287/f47e/rd_f47e.py limit 540
+2026-10-12T01:14:50Z state_k03_p2w watchdog rc=0: watch: start 2026-10-12T01:14:41Z child 59252 poll 1.5 s lock C:/kyty/SEALED_RUN.lock stop C:/kyty/f287/STOP rc=0 end 2026-10-12T01:14:50Z 
+2026-10-12T01:14:51Z state_k03_p2w GLCache after = before (cmp EQUAL)

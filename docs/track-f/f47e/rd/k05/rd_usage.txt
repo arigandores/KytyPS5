@@ -1,0 +1,9 @@
+capture: C:/kyty/f287/f47d/f47_rd_k05.rdc phase usage
+actions 22243, last eid 125753, presents [(125753, 'vkQueuePresentKHR(ResourceId::2810)')]
+==== USAGE 7958 tex 7958 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.NoFlags name=2D Image 7958 : 4 uses, kinds [('ResourceUsage.Barrier', 2), ('ResourceUsage.CopyDst', 1), ('ResourceUsage.ResolveSrc', 1)]
+   first use eid 48395 last use eid 125748
+==== USAGE 7948 tex 7948 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 7948 : 4 uses, kinds [('ResourceUsage.Barrier', 2), ('ResourceUsage.ColorTarget', 1), ('ResourceUsage.CopySrc', 1)]
+   first use eid 48365 last use eid 48396
+==== USAGE 48170 tex 48170 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48170 : 51 uses, kinds [('ResourceUsage.Barrier', 8), ('ResourceUsage.Clear', 3), ('ResourceUsage.ColorTarget', 38), ('ResourceUsage.PS_Resource', 2)]
+   first use eid 48261 last use eid 125729
+done

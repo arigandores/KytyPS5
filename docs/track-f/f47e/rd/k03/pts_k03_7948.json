@@ -1,0 +1,97 @@
+[
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c00",
+  "tex": 7948,
+  "xm": 123,
+  "ym": 17,
+  "x": 988,
+  "y": 140,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c10",
+  "tex": 7948,
+  "xm": 170,
+  "ym": 17,
+  "x": 1364,
+  "y": 140,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c01",
+  "tex": 7948,
+  "xm": 123,
+  "ym": 46,
+  "x": 988,
+  "y": 372,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_c11",
+  "tex": 7948,
+  "xm": 170,
+  "ym": 46,
+  "x": 1364,
+  "y": 372,
+  "inner": true,
+  "how": "corner",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ },
+ {
+  "snap": "k03",
+  "block": "black1",
+  "name": "black1_out",
+  "tex": 7948,
+  "xm": 118,
+  "ym": 31,
+  "x": 948,
+  "y": 252,
+  "inner": false,
+  "how": "outside",
+  "npix": 1154,
+  "bbox": [
+   121,
+   15,
+   172,
+   48
+  ]
+ }
+]

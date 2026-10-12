@@ -1,0 +1,22 @@
+capture: C:/kyty/f287/f47d/f47_rd_k03.rdc phase state
+actions 22029, last eid 125609, presents [(125609, 'vkQueuePresentKHR(ResourceId::2810)')]
+==== STATE EID 9091 vkCmdDraw() numIndices=6 numInstances=1 indexOffset=0 vertexOffset=0 flags=131074
+  RT[0] tex 48104 880x880x1 arr=1 mips=1 fmt=R8G8B8A8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48104
+  blend[0] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f logic=False/LogicOperation.Copy
+  blendConst [0.0, 0.0, 0.0, 0.0]
+  depth test=False write=False func=CompareFunction.Never stencil=False
+  raster cull=CullMode.NoCull frontCCW=True fill=FillMode.Solid
+  viewport (0.0 880.0 880.0 -880.0) scissor (0 0 880 880)
+  vs shader 1787 spirv C:/kyty/f287/f47e/rd/k03\vs_1787.spv bytes 6748 entry main
+    out sig name=outPerVertex._child0 reg=0 comp=4 sys=ShaderBuiltin.Position type=VarType.Float
+    out sig name=gl_ClipDistance[0] reg=0 comp=1 sys=ShaderBuiltin.ClipDistance type=VarType.Float
+    out sig name=out_param_0 reg=0 comp=4 sys=ShaderBuiltin.Undefined type=VarType.Float
+    RW idx=0 res=buf 48107
+    CB idx=0 res=30052 off=2847936 size=64
+    CB idx=1 res=7629 off=0 size=128
+  ps shader 1788 spirv C:/kyty/f287/f47e/rd/k03\ps_1788.spv bytes 10444 entry main
+    out sig name=out_mrt_0 reg=0 comp=4 sys=ShaderBuiltin.ColorOutput type=VarType.Float
+    RO idx=0 res=tex 48106 1024x1320x1 arr=1 mips=1 fmt=R8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48106
+    CB idx=0 res=30052 off=2847872 size=64
+    CB idx=1 res=7629 off=0 size=128
+done

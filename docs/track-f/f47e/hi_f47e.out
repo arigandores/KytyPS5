@@ -1,0 +1,10 @@
+log C:/kyty/f287/f47d/log_f47_hi.txt: FrameTrace n lines 3835; FrameTrace-draw with img_imp 3835; sum img_imp 0; sum stg_img_pool_b 6796956160 stg_img_in_b 18432; named start 'underwater_aerial_garden'; n_start 389; last n 3836
+control fs13_v: sum img_imp 3955 (> 0: True); draw lines with img_imp 10489 = n lines 10489
+knob members: (1) sum img_imp = 0: True; (2) staging > 0: True; (4) draw lines = n lines: True
+idx records 3845, last present 3845, d = 9; window records [997; 1347]
+decoded 351 frames; max K 2954 max Wt 1668
+series black: records 1154-1158 (5 frames) dn 757
+series black: records 1169-1173 (5 frames) dn 772
+series black: records 1332-1335 (4 frames) dn 935
+series white: records 1161-1165 (5 frames) dn 764
+ALL OK

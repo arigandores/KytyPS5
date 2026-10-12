@@ -1,0 +1,23 @@
+capture: C:/kyty/f287/f47d/f47_rd_k06.rdc phase inv
+actions 8, last eid 39, presents [(39, 'End of Capture')]
+kinds {'PassBoundary': 4, 'Copy': 2, 'Drawcall': 1, 'Present': 1}
+textures 5 buffers 535
+--- last 40 actions:
+  eid 8 flags=20979712 name==> vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::88950) outs=[] depth=- copySrc=- copyDst=-
+  eid 12 flags=1024 name=vkCmdCopyBufferToImage() outs=[] depth=- copySrc=187 copyDst=48321
+  eid 30 flags=4202496 name=vkCmdBeginRendering(Load) outs=[48104] depth=- copySrc=- copyDst=-
+  eid 32 flags=131074 name=vkCmdDraw() outs=[48104] depth=- copySrc=- copyDst=-
+  eid 33 flags=8396800 name=vkCmdEndRendering(Store) outs=[48104] depth=- copySrc=- copyDst=-
+  eid 35 flags=1024 name=vkCmdCopyBuffer() outs=[] depth=- copySrc=18336 copyDst=198
+  eid 38 flags=25174016 name==> vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::88950) outs=[] depth=- copySrc=- copyDst=-
+  eid 39 flags=256 name=End of Capture outs=[] depth=- copySrc=- copyDst=2810
+--- copies (last 12):
+  eid 12 vkCmdCopyBufferToImage() src=187 dst=tex 48321 1024x1320x1 arr=1 mips=1 fmt=R8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48321
+  eid 35 vkCmdCopyBuffer() src=18336 dst=198
+--- big colour textures (w >= 1280):
+  tex 2810 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2810
+  tex 2811 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2811
+  tex 2812 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2812
+present eid 39 src=- dst=2810 outs=[]
+shown guest image: copy eid 35 src res(18336) -> dst res(198)
+done

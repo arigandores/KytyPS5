@@ -1,0 +1,745 @@
+capture: C:/kyty/f287/f47d/f47_rd_k05.rdc phase inv
+actions 22243, last eid 125753, presents [(125753, 'vkQueuePresentKHR(ResourceId::2810)')]
+kinds {'PassBoundary': 1484, 'Clear': 134, 'Drawcall': 18833, 'Copy': 457, 'Dispatch': 869, 'Resolve': 1, 'Present': 1}
+textures 1184 buffers 590
+--- last 40 actions:
+  eid 125526 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125531 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125539 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125547 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125555 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125563 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125572 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125581 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125590 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125599 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125608 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125617 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125626 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125632 flags=4 name=vkCmdDispatch() outs=[] depth=- copySrc=- copyDst=-
+  eid 125635 flags=1024 name=vkCmdCopyBuffer() outs=[] depth=- copySrc=187 copyDst=34171
+  eid 125638 flags=1048577 name=vkCmdClearColorImage() outs=[] depth=- copySrc=- copyDst=48170
+  eid 125655 flags=4202496 name=vkCmdBeginRendering(Load) outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125657 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125663 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125668 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125674 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125679 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125685 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125691 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125693 flags=8396800 name=vkCmdEndRendering(Store) outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125698 flags=4202496 name=vkCmdBeginRendering(Load) outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125700 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125706 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125711 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125717 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125723 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125729 flags=196610 name=vkCmdDrawIndexed() outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125731 flags=8396800 name=vkCmdEndRendering(Store) outs=[48170] depth=- copySrc=- copyDst=-
+  eid 125732 flags=25174016 name==> vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::88914) outs=[] depth=- copySrc=- copyDst=-
+  eid 125736 flags=20979712 name==> vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::88916) outs=[] depth=- copySrc=- copyDst=-
+  eid 125740 flags=25174016 name==> vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::88916) outs=[] depth=- copySrc=- copyDst=-
+  eid 125744 flags=20979712 name==> vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::88926) outs=[] depth=- copySrc=- copyDst=-
+  eid 125748 flags=2048 name=vkCmdBlitImage() outs=[] depth=- copySrc=7958 copyDst=2810
+  eid 125751 flags=25174016 name==> vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::88926) outs=[] depth=- copySrc=- copyDst=-
+  eid 125753 flags=256 name=vkQueuePresentKHR(ResourceId::2810) outs=[] depth=- copySrc=- copyDst=2810
+--- copies (last 12):
+  eid 123281 vkCmdCopyBuffer() src=187 dst=69494
+  eid 125009 vkCmdCopyImageToBuffer() src=tex 88280 960x540x1 arr=1 mips=1 fmt=R11G11B10_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 88280 dst=204
+  eid 125011 vkCmdCopyBufferToImage() src=204 dst=tex 88893 960x540x1 arr=1 mips=1 fmt=D32 ms=1 cf=TextureCategory.DepthTarget|ShaderRead name=2D Depth Attachment 88893
+  eid 125016 vkCmdCopyImageToBuffer() src=tex 88829 960x540x1 arr=1 mips=1 fmt=R32_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 88829 dst=204
+  eid 125018 vkCmdCopyBufferToImage() src=204 dst=tex 88895 960x540x1 arr=1 mips=1 fmt=D32 ms=1 cf=TextureCategory.DepthTarget|ShaderRead name=2D Depth Attachment 88895
+  eid 125021 vkCmdCopyBuffer() src=187 dst=69494
+  eid 125488 vkCmdCopyImageToBuffer() src=tex 88893 960x540x1 arr=1 mips=1 fmt=D32 ms=1 cf=TextureCategory.DepthTarget|ShaderRead name=2D Depth Attachment 88893 dst=204
+  eid 125490 vkCmdCopyBufferToImage() src=204 dst=tex 88909 960x540x1 arr=1 mips=1 fmt=R11G11B10_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 88909
+  eid 125495 vkCmdCopyImageToBuffer() src=tex 88895 960x540x1 arr=1 mips=1 fmt=D32 ms=1 cf=TextureCategory.DepthTarget|ShaderRead name=2D Depth Attachment 88895 dst=204
+  eid 125497 vkCmdCopyBufferToImage() src=204 dst=tex 88911 960x540x1 arr=1 mips=1 fmt=R11G11B10_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 88911
+  eid 125635 vkCmdCopyBuffer() src=187 dst=34171
+  eid 125748 vkCmdBlitImage() src=tex 7958 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.NoFlags name=2D Image 7958 dst=tex 2810 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2810
+--- big colour textures (w >= 1280):
+  tex 2810 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2810
+  tex 2811 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2811
+  tex 2812 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2812
+  tex 7702 1920x1080x1 arr=1 mips=1 fmt=R8G8B8A8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 7702
+  tex 7715 1920x1080x1 arr=1 mips=1 fmt=R8G8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 7715
+  tex 7719 1920x1080x1 arr=1 mips=1 fmt=R8G8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 7719
+  tex 7776 1920x1080x1 arr=1 mips=1 fmt=R11G11B10_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 7776
+  tex 7778 1920x1080x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 7778
+  tex 7780 1920x1080x1 arr=1 mips=1 fmt=R16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 7780
+  tex 7948 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 7948
+  tex 7958 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.NoFlags name=2D Image 7958
+  tex 8047 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 8047
+  tex 8052 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.NoFlags name=2D Image 8052
+  tex 13013 2048x2048x1 arr=1 mips=12 fmt=BC6_UFLOAT ms=1 cf=TextureCategory.ShaderRead name=2D Image 13013
+  tex 13069 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13069
+  tex 13070 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13070
+  tex 13071 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13071
+  tex 13072 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13072
+  tex 13074 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13074
+  tex 13075 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13075
+  tex 13077 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13077
+  tex 13108 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13108
+  tex 13136 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13136
+  tex 13137 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13137
+  tex 13158 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13158
+  tex 13159 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13159
+  tex 13160 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13160
+  tex 13161 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13161
+  tex 13162 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13162
+  tex 13184 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13184
+  tex 13189 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13189
+  tex 13256 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13256
+  tex 13265 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13265
+  tex 13266 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13266
+  tex 13278 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13278
+  tex 13291 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13291
+  tex 13330 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13330
+  tex 13351 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13351
+  tex 13385 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13385
+  tex 13386 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13386
+  tex 13387 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13387
+  tex 13412 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13412
+  tex 13413 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13413
+  tex 13415 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13415
+  tex 13440 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13440
+  tex 13444 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13444
+  tex 13447 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13447
+  tex 13496 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13496
+  tex 13501 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13501
+  tex 13533 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13533
+  tex 13536 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13536
+  tex 13592 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13592
+  tex 13628 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13628
+  tex 13660 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13660
+  tex 13661 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 13661
+  tex 13663 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13663
+  tex 13719 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13719
+  tex 13750 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13750
+  tex 13775 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13775
+  tex 13804 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13804
+  tex 13878 4096x4096x1 arr=1 mips=13 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13878
+  tex 13902 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13902
+  tex 13942 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 13942
+  tex 14100 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14100
+  tex 14103 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14103
+  tex 14104 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14104
+  tex 14133 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14133
+  tex 14134 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14134
+  tex 14189 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14189
+  tex 14219 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14219
+  tex 14286 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14286
+  tex 14336 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14336
+  tex 14452 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14452
+  tex 14471 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14471
+  tex 14490 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14490
+  tex 14521 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14521
+  tex 14705 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14705
+  tex 14706 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14706
+  tex 14781 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14781
+  tex 14797 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 14797
+  tex 14895 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14895
+  tex 14897 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14897
+  tex 14933 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14933
+  tex 14934 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14934
+  tex 14950 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14950
+  tex 14998 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 14998
+  tex 14999 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 14999
+  tex 15000 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15000
+  tex 15001 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15001
+  tex 15076 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 15076
+  tex 15077 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15077
+  tex 15079 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15079
+  tex 15124 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15124
+  tex 15154 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 15154
+  tex 15156 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 15156
+  tex 15158 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15158
+  tex 15159 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15159
+  tex 15191 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 15191
+  tex 15192 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15192
+  tex 15195 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15195
+  tex 15516 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 15516
+  tex 15517 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15517
+  tex 15519 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15519
+  tex 15561 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 15561
+  tex 15562 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15562
+  tex 15687 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15687
+  tex 15859 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 15859
+  tex 16198 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 16198
+  tex 16339 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 16339
+  tex 16340 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 16340
+  tex 16341 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 16341
+  tex 16363 2048x2048x1 arr=1 mips=12 fmt=BC6_UFLOAT ms=1 cf=TextureCategory.ShaderRead name=2D Image 16363
+  tex 16380 2048x2048x1 arr=1 mips=12 fmt=BC6_UFLOAT ms=1 cf=TextureCategory.ShaderRead name=2D Image 16380
+  tex 16385 2048x2048x1 arr=1 mips=12 fmt=BC6_UFLOAT ms=1 cf=TextureCategory.ShaderRead name=2D Image 16385
+  tex 17232 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 17232
+  tex 17317 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 17317
+  tex 17324 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 17324
+  tex 17726 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 17726
+  tex 17852 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 17852
+  tex 17853 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 17853
+  tex 17855 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 17855
+  tex 17856 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 17856
+  tex 17892 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 17892
+  tex 17893 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 17893
+  tex 18353 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 18353
+  tex 18420 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 18420
+  tex 18440 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 18440
+  tex 19137 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 19137
+  tex 19138 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 19138
+  tex 19324 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 19324
+  tex 19350 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 19350
+  tex 19396 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 19396
+  tex 19417 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 19417
+  tex 19419 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 19419
+  tex 19421 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 19421
+  tex 19449 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 19449
+  tex 19619 2048x2048x1 arr=3 mips=1 fmt=D16 ms=1 cf=TextureCategory.DepthTarget|ShaderRead name=2D Depth Attachment 19619
+  tex 19820 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 19820
+  tex 19898 1536x1536x1 arr=16 mips=1 fmt=D32 ms=1 cf=TextureCategory.DepthTarget|ShaderRead name=2D Depth Attachment 19898
+  tex 19956 4096x1024x1 arr=1 mips=1 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 19956
+  tex 19961 4096x1024x1 arr=1 mips=1 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 19961
+  tex 19965 2048x2048x1 arr=1 mips=1 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 19965
+  tex 19968 2048x2048x1 arr=1 mips=1 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 19968
+  tex 19971 2048x2048x1 arr=1 mips=1 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 19971
+  tex 20000 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 20000
+  tex 20503 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 20503
+  tex 20583 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 20583
+  tex 20614 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 20614
+  tex 20669 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 20669
+  tex 21233 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 21233
+  tex 22574 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 22574
+  tex 23586 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 23586
+  tex 23800 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23800
+  tex 23830 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23830
+  tex 23839 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23839
+  tex 23841 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23841
+  tex 23842 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23842
+  tex 23906 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23906
+  tex 23907 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23907
+  tex 23915 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23915
+  tex 23927 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23927
+  tex 23928 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23928
+  tex 23933 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23933
+  tex 23934 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23934
+  tex 23939 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23939
+  tex 23940 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23940
+  tex 23951 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23951
+  tex 23957 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23957
+  tex 23958 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23958
+  tex 23966 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23966
+  tex 23974 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23974
+  tex 23983 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23983
+  tex 23993 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 23993
+  tex 23995 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23995
+  tex 23996 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23996
+  tex 23998 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 23998
+  tex 24023 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24023
+  tex 24024 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24024
+  tex 24031 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24031
+  tex 24058 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24058
+  tex 24059 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24059
+  tex 24060 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24060
+  tex 24075 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24075
+  tex 24083 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24083
+  tex 24084 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24084
+  tex 24085 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24085
+  tex 24087 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24087
+  tex 24101 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24101
+  tex 24102 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24102
+  tex 24103 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24103
+  tex 24112 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24112
+  tex 24115 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24115
+  tex 24118 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24118
+  tex 24121 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24121
+  tex 24122 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24122
+  tex 24127 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24127
+  tex 24128 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24128
+  tex 24145 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24145
+  tex 24146 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24146
+  tex 24147 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24147
+  tex 24154 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24154
+  tex 24159 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24159
+  tex 24164 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24164
+  tex 24165 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24165
+  tex 24170 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24170
+  tex 24177 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24177
+  tex 24180 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24180
+  tex 24181 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24181
+  tex 24182 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24182
+  tex 24189 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24189
+  tex 24192 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24192
+  tex 24193 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24193
+  tex 24196 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24196
+  tex 24203 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24203
+  tex 24204 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24204
+  tex 24216 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24216
+  tex 24226 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24226
+  tex 24227 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24227
+  tex 24228 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24228
+  tex 24239 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24239
+  tex 24240 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24240
+  tex 24241 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24241
+  tex 24243 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24243
+  tex 24245 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24245
+  tex 24246 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24246
+  tex 24268 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24268
+  tex 24269 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24269
+  tex 24276 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24276
+  tex 24277 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24277
+  tex 24282 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24282
+  tex 24283 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24283
+  tex 24285 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24285
+  tex 24300 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24300
+  tex 24323 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24323
+  tex 24360 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24360
+  tex 24361 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24361
+  tex 24362 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24362
+  tex 24382 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24382
+  tex 24390 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24390
+  tex 24393 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24393
+  tex 24400 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24400
+  tex 24414 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24414
+  tex 24416 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24416
+  tex 24426 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24426
+  tex 24476 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24476
+  tex 24477 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24477
+  tex 24502 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24502
+  tex 24503 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24503
+  tex 24504 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24504
+  tex 24523 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24523
+  tex 24529 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24529
+  tex 24532 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24532
+  tex 24533 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24533
+  tex 24549 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24549
+  tex 24550 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24550
+  tex 24583 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24583
+  tex 24585 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24585
+  tex 24595 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24595
+  tex 24598 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24598
+  tex 24604 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24604
+  tex 24615 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24615
+  tex 24624 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24624
+  tex 24625 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24625
+  tex 24627 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24627
+  tex 24642 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24642
+  tex 24644 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24644
+  tex 24652 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24652
+  tex 24685 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24685
+  tex 24686 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24686
+  tex 24688 4096x4096x1 arr=1 mips=13 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24688
+  tex 24689 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24689
+  tex 24690 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24690
+  tex 24691 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24691
+  tex 24692 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24692
+  tex 24693 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24693
+  tex 24712 4096x4096x1 arr=1 mips=13 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24712
+  tex 24716 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24716
+  tex 24719 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24719
+  tex 24720 4096x4096x1 arr=1 mips=13 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24720
+  tex 24721 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24721
+  tex 24722 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24722
+  tex 24723 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24723
+  tex 24724 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24724
+  tex 24739 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24739
+  tex 24740 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24740
+  tex 24741 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24741
+  tex 24742 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24742
+  tex 24743 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24743
+  tex 24744 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24744
+  tex 24776 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24776
+  tex 24777 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24777
+  tex 24778 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24778
+  tex 24779 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24779
+  tex 24780 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24780
+  tex 24781 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24781
+  tex 24796 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24796
+  tex 24797 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24797
+  tex 24798 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24798
+  tex 24799 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24799
+  tex 24801 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24801
+  tex 24814 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24814
+  tex 24815 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24815
+  tex 24816 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24816
+  tex 24817 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24817
+  tex 24818 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24818
+  tex 24820 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24820
+  tex 24851 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24851
+  tex 24856 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24856
+  tex 24858 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24858
+  tex 24866 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24866
+  tex 24867 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24867
+  tex 24874 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24874
+  tex 24878 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24878
+  tex 24879 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24879
+  tex 24891 2048x1024x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24891
+  tex 24897 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24897
+  tex 24926 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24926
+  tex 24927 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24927
+  tex 24935 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24935
+  tex 24941 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24941
+  tex 24949 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24949
+  tex 24956 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24956
+  tex 24968 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24968
+  tex 24976 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24976
+  tex 24977 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24977
+  tex 24978 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24978
+  tex 24979 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24979
+  tex 24980 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24980
+  tex 24996 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 24996
+  tex 24997 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24997
+  tex 24998 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 24998
+  tex 25008 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25008
+  tex 25009 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25009
+  tex 25010 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25010
+  tex 25017 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25017
+  tex 25027 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25027
+  tex 25028 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25028
+  tex 25029 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25029
+  tex 25030 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25030
+  tex 25040 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25040
+  tex 25055 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25055
+  tex 25066 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25066
+  tex 25067 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25067
+  tex 25080 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25080
+  tex 25083 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25083
+  tex 25095 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25095
+  tex 25101 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25101
+  tex 25102 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25102
+  tex 25111 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25111
+  tex 25113 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25113
+  tex 25114 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25114
+  tex 25115 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25115
+  tex 25126 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25126
+  tex 25129 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25129
+  tex 25130 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25130
+  tex 25131 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25131
+  tex 25132 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25132
+  tex 25133 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25133
+  tex 25146 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25146
+  tex 25149 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25149
+  tex 25172 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25172
+  tex 25178 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25178
+  tex 25299 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25299
+  tex 25302 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25302
+  tex 25326 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25326
+  tex 25342 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25342
+  tex 25354 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25354
+  tex 25385 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25385
+  tex 25567 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25567
+  tex 25568 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25568
+  tex 25588 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25588
+  tex 25595 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25595
+  tex 25600 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25600
+  tex 25611 4096x4096x1 arr=1 mips=13 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25611
+  tex 25618 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25618
+  tex 25620 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25620
+  tex 25632 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25632
+  tex 25648 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25648
+  tex 25661 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25661
+  tex 25662 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25662
+  tex 25663 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25663
+  tex 25670 4096x4096x1 arr=1 mips=13 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25670
+  tex 25676 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25676
+  tex 25694 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25694
+  tex 25704 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25704
+  tex 25733 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25733
+  tex 25740 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25740
+  tex 25837 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25837
+  tex 25918 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 25918
+  tex 25923 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25923
+  tex 25928 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 25928
+  tex 26178 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26178
+  tex 26200 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26200
+  tex 26244 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26244
+  tex 26479 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26479
+  tex 26488 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26488
+  tex 26511 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26511
+  tex 26524 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26524
+  tex 26531 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26531
+  tex 26543 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26543
+  tex 26665 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26665
+  tex 26668 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26668
+  tex 26859 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 26859
+  tex 26862 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 26862
+  tex 26865 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 26865
+  tex 26877 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 26877
+  tex 26885 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26885
+  tex 26905 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26905
+  tex 26906 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 26906
+  tex 26907 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26907
+  tex 26908 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26908
+  tex 26917 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26917
+  tex 26922 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26922
+  tex 26923 4096x4096x1 arr=1 mips=13 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26923
+  tex 26924 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26924
+  tex 26946 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26946
+  tex 26949 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26949
+  tex 26977 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 26977
+  tex 27035 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27035
+  tex 27040 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27040
+  tex 27052 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27052
+  tex 27053 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27053
+  tex 27067 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27067
+  tex 27068 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27068
+  tex 27082 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27082
+  tex 27091 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 27091
+  tex 27092 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27092
+  tex 27093 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27093
+  tex 27094 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27094
+  tex 27246 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 27246
+  tex 27254 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27254
+  tex 27259 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27259
+  tex 27264 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27264
+  tex 27268 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27268
+  tex 27289 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27289
+  tex 27296 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27296
+  tex 27498 2432x1368x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 27498
+  tex 27645 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27645
+  tex 27646 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27646
+  tex 27651 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27651
+  tex 27682 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27682
+  tex 27734 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27734
+  tex 27804 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27804
+  tex 27811 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27811
+  tex 27821 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27821
+  tex 27826 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27826
+  tex 27837 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27837
+  tex 27841 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 27841
+  tex 27846 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27846
+  tex 27851 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27851
+  tex 27878 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 27878
+  tex 28163 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28163
+  tex 28187 4096x4096x1 arr=1 mips=13 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28187
+  tex 28432 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28432
+  tex 28433 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28433
+  tex 28570 2432x1368x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 28570
+  tex 28635 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28635
+  tex 28647 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28647
+  tex 28648 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 28648
+  tex 28655 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 28655
+  tex 28659 4096x4096x1 arr=1 mips=13 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28659
+  tex 28660 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28660
+  tex 28685 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 28685
+  tex 28690 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 28690
+  tex 28693 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28693
+  tex 28702 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28702
+  tex 28724 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 28724
+  tex 28854 2432x1368x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 28854
+  tex 29186 1920x1080x1 arr=1 mips=1 fmt=D32S8 ms=1 cf=TextureCategory.DepthTarget|ShaderRead name=2D Depth/Stencil Attachment 29186
+  tex 29192 1920x1080x1 arr=1 mips=1 fmt=R8G8B8A8_SRGB ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29192
+  tex 29194 1920x1080x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29194
+  tex 29196 1920x1080x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29196
+  tex 29230 1920x1080x1 arr=1 mips=1 fmt=R10G10B10A2_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29230
+  tex 29282 1920x1080x1 arr=1 mips=1 fmt=R16G16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29282
+  tex 29288 1920x1080x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29288
+  tex 29293 1920x1080x1 arr=1 mips=1 fmt=D32 ms=1 cf=TextureCategory.DepthTarget|ShaderRead name=2D Depth Attachment 29293
+  tex 29320 1920x1080x1 arr=1 mips=1 fmt=R16G16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29320
+  tex 29337 1920x1080x1 arr=1 mips=1 fmt=R8G8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29337
+  tex 29342 1920x1080x1 arr=1 mips=1 fmt=R8G8B8A8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29342
+  tex 29347 1920x1080x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29347
+  tex 29479 1920x1080x1 arr=1 mips=1 fmt=R11G11B10_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 29479
+  tex 31556 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31556
+  tex 31708 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 31708
+  tex 31719 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31719
+  tex 31720 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 31720
+  tex 31731 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 31731
+  tex 31734 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 31734
+  tex 31742 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31742
+  tex 31777 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31777
+  tex 31799 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31799
+  tex 31940 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 31940
+  tex 31944 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31944
+  tex 31945 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31945
+  tex 31956 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31956
+  tex 31957 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31957
+  tex 31964 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31964
+  tex 31965 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 31965
+  tex 31970 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31970
+  tex 31973 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31973
+  tex 31974 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31974
+  tex 31982 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 31982
+  tex 31983 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31983
+  tex 31994 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 31994
+  tex 31995 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 31995
+  tex 32000 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32000
+  tex 32003 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32003
+  tex 32004 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32004
+  tex 32005 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32005
+  tex 32012 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32012
+  tex 32018 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32018
+  tex 32027 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32027
+  tex 32082 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32082
+  tex 32111 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32111
+  tex 32114 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32114
+  tex 32120 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32120
+  tex 32123 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32123
+  tex 32131 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32131
+  tex 32132 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32132
+  tex 32161 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32161
+  tex 32162 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32162
+  tex 32163 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32163
+  tex 32173 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32173
+  tex 32187 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32187
+  tex 32193 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32193
+  tex 32221 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32221
+  tex 32224 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32224
+  tex 32230 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32230
+  tex 32239 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32239
+  tex 32240 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32240
+  tex 32245 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32245
+  tex 32255 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32255
+  tex 32256 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32256
+  tex 32257 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32257
+  tex 32265 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32265
+  tex 32266 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32266
+  tex 32267 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32267
+  tex 32274 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32274
+  tex 32275 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32275
+  tex 32276 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32276
+  tex 32277 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32277
+  tex 32336 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32336
+  tex 32344 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32344
+  tex 32347 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32347
+  tex 32348 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32348
+  tex 32353 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32353
+  tex 32354 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32354
+  tex 32359 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32359
+  tex 32362 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32362
+  tex 32369 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32369
+  tex 32372 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32372
+  tex 32375 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32375
+  tex 32381 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32381
+  tex 32393 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32393
+  tex 32396 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32396
+  tex 32399 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32399
+  tex 32402 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32402
+  tex 32407 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32407
+  tex 32634 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32634
+  tex 32635 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32635
+  tex 32636 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32636
+  tex 32654 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32654
+  tex 32661 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32661
+  tex 32672 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32672
+  tex 32691 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32691
+  tex 32703 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32703
+  tex 32737 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32737
+  tex 32738 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32738
+  tex 32739 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32739
+  tex 32747 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32747
+  tex 32756 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32756
+  tex 32759 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32759
+  tex 32769 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32769
+  tex 32785 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32785
+  tex 32828 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32828
+  tex 32858 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32858
+  tex 32958 2048x2048x1 arr=1 mips=12 fmt=BC7_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32958
+  tex 32972 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 32972
+  tex 32973 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32973
+  tex 32974 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32974
+  tex 32975 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32975
+  tex 32985 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32985
+  tex 32986 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 32986
+  tex 33005 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33005
+  tex 33006 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33006
+  tex 33017 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33017
+  tex 33028 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33028
+  tex 33037 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 33037
+  tex 33044 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 33044
+  tex 33045 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33045
+  tex 33246 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33246
+  tex 33374 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33374
+  tex 33830 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33830
+  tex 33863 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33863
+  tex 33875 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33875
+  tex 33876 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33876
+  tex 33877 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33877
+  tex 33894 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33894
+  tex 33897 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33897
+  tex 33921 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33921
+  tex 33924 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33924
+  tex 33935 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33935
+  tex 33939 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33939
+  tex 33940 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 33940
+  tex 34005 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34005
+  tex 34019 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34019
+  tex 34020 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34020
+  tex 34025 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34025
+  tex 34031 4096x4096x1 arr=1 mips=13 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34031
+  tex 34034 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34034
+  tex 34048 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34048
+  tex 34231 4096x4096x1 arr=1 mips=13 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 34231
+  tex 34312 4096x4096x1 arr=1 mips=13 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34312
+  tex 34899 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34899
+  tex 34921 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34921
+  tex 34976 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 34976
+  tex 35234 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 35234
+  tex 35237 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 35237
+  tex 35241 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 35241
+  tex 35246 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 35246
+  tex 35265 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 35265
+  tex 36363 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 36363
+  tex 36371 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 36371
+  tex 36377 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 36377
+  tex 36378 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 36378
+  tex 36907 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 36907
+  tex 37424 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 37424
+  tex 39099 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 39099
+  tex 39598 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 39598
+  tex 39604 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 39604
+  tex 41255 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 41255
+  tex 48170 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48170
+  tex 54076 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 54076
+  tex 59831 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 59831
+  tex 60996 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 60996
+  tex 65701 4096x4096x1 arr=1 mips=13 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 65701
+  tex 66628 2432x1368x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 66628
+  tex 70201 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 70201
+  tex 70202 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 70202
+  tex 70341 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 70341
+  tex 71190 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 71190
+  tex 71281 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 71281
+  tex 71306 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 71306
+  tex 71319 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 71319
+  tex 71320 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 71320
+  tex 71597 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 71597
+  tex 71776 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 71776
+  tex 71906 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 71906
+  tex 73733 2048x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 73733
+  tex 79528 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79528
+  tex 79533 1920x1600x1 arr=1 mips=11 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 79533
+  tex 79609 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79609
+  tex 79704 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79704
+  tex 79707 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79707
+  tex 79710 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79710
+  tex 79714 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79714
+  tex 79717 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79717
+  tex 79724 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79724
+  tex 79727 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79727
+  tex 79733 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79733
+  tex 79747 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79747
+  tex 79750 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79750
+  tex 79775 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79775
+  tex 83682 1920x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 83682
+  tex 84018 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 84018
+  tex 84021 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 84021
+  tex 84030 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 84030
+  tex 84524 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 84524
+  tex 84528 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 84528
+  tex 84531 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 84531
+  tex 84534 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 84534
+  tex 84743 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 84743
+  tex 87784 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 87784
+  tex 87792 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 87792
+  tex 87796 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 87796
+  tex 87799 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 87799
+  tex 87802 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 87802
+  tex 87848 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 87848
+  tex 87886 2048x2048x1 arr=1 mips=12 fmt=BC5_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 87886
+  tex 88083 2432x1368x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 88083
+present eid 125753 src=- dst=2810 outs=[]
+shown guest image: copy eid 125748 src tex 7958 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.NoFlags name=2D Image 7958 -> dst tex 2810 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2810
+  saved png C:/kyty/f287/f47e/rd/k05\tex_7958_e125753_m0_shown.png <Result: 'Success'>
+  saved raw C:/kyty/f287/f47e/rd/k05\tex_7958_e125753_m0_shown.raw 33177600 bytes (tex 7958 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.NoFlags name=2D Image 7958)
+  saved png C:/kyty/f287/f47e/rd/k05\tex_2810_e125753_m0_dst.png <Result: 'Success'>
+  saved raw C:/kyty/f287/f47e/rd/k05\tex_2810_e125753_m0_dst.raw 3686400 bytes (tex 2810 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2810)
+done

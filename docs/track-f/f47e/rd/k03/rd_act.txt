@@ -1,0 +1,68 @@
+capture: C:/kyty/f287/f47d/f47_rd_k03.rdc phase act
+actions 22029, last eid 125609, presents [(125609, 'vkQueuePresentKHR(ResourceId::2810)')]
+==== ACT 49669 vkCmdCopyImage() flags=1024 outs=[] depth=- copySrc=tex 7948 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 7948 copyDst=tex 7958 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM ms=1 cf=TextureCategory.NoFlags name=2D Image 7958 parent=-
+  vkCmdCopyImage {8}
+    commandBuffer = ResourceId::83002
+    srcImage = ResourceId::7948
+    srcImageLayout = 6
+    destImage = ResourceId::7958
+    destImageLayout = 7
+    regionCount = 1
+    pRegions {1}
+      $el {5}
+        srcSubresource {4}
+          aspectMask = 1
+          mipLevel = 0
+          baseArrayLayer = 0
+          layerCount = 1
+        srcOffset {3}
+          x = 0
+          y = 0
+          z = 0
+        dstSubresource {4}
+          aspectMask = 1
+          mipLevel = 0
+          baseArrayLayer = 0
+          layerCount = 1
+        dstOffset {3}
+          x = 0
+          y = 0
+          z = 0
+        extent {3}
+          width = 3840
+          height = 2160
+          depth = 1
+    DebugMessages = 0
+---- actions in 49560..49700
+  eid 49567 flags=4202496 vkCmdBeginRendering(Load) outs=[48170] copySrc=- copyDst=-
+  eid 49569 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49575 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49580 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49586 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49591 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49596 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49598 flags=8396800 vkCmdEndRendering(Store) outs=[48170] copySrc=- copyDst=-
+  eid 49603 flags=4202496 vkCmdBeginRendering(Load) outs=[48170] copySrc=- copyDst=-
+  eid 49605 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49611 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49616 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49622 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49628 flags=196610 vkCmdDrawIndexed() outs=[48170] copySrc=- copyDst=-
+  eid 49630 flags=8396800 vkCmdEndRendering(Store) outs=[48170] copySrc=- copyDst=-
+  eid 49631 flags=25174016 => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::85658) outs=[] copySrc=- copyDst=-
+  eid 49635 flags=20979712 => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::85660) outs=[] copySrc=- copyDst=-
+  eid 49639 flags=25174016 => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::85660) outs=[] copySrc=- copyDst=-
+  eid 49643 flags=20979712 => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::85661) outs=[] copySrc=- copyDst=-
+  eid 49663 flags=4202496 vkCmdBeginRendering(Load) outs=[7948] copySrc=- copyDst=-
+  eid 49665 flags=131074 vkCmdDraw() outs=[7948] copySrc=- copyDst=-
+  eid 49666 flags=8396800 vkCmdEndRendering(Store) outs=[7948] copySrc=- copyDst=-
+  eid 49669 flags=1024 vkCmdCopyImage() outs=[] copySrc=7948 copyDst=7958
+  eid 49672 flags=25174016 => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::85661) outs=[] copySrc=- copyDst=-
+  eid 49677 flags=20979712 => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::85662) outs=[] copySrc=- copyDst=-
+  eid 49683 flags=4 vkCmdDispatch() outs=[] copySrc=- copyDst=-
+  eid 49686 flags=1024 vkCmdCopyBuffer() outs=[] copySrc=138 copyDst=144
+  eid 49689 flags=1024 vkCmdCopyBuffer() outs=[] copySrc=20496 copyDst=198
+  eid 49692 flags=25174016 => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::85662) outs=[] copySrc=- copyDst=-
+  eid 49696 flags=20979712 => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::85663) outs=[] copySrc=- copyDst=-
+  eid 49700 flags=25174016 => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::85663) outs=[] copySrc=- copyDst=-
+done

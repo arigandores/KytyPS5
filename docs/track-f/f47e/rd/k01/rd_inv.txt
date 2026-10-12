@@ -1,0 +1,13 @@
+capture: C:/kyty/f287/f47d/f47_rd_k01.rdc phase inv
+actions 1, last eid 1, presents [(1, 'End of Capture')]
+kinds {'Present': 1}
+textures 3 buffers 504
+--- last 40 actions:
+  eid 1 flags=256 name=End of Capture outs=[] depth=- copySrc=- copyDst=2810
+--- copies (last 12):
+--- big colour textures (w >= 1280):
+  tex 2810 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2810
+  tex 2811 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2811
+  tex 2812 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM ms=1 cf=TextureCategory.SwapBuffer|ColorTarget|ShaderRead name=Swapchain Image 2812
+present eid 1 src=- dst=2810 outs=[]
+done

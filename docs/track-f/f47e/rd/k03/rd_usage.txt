@@ -1,0 +1,70 @@
+capture: C:/kyty/f287/f47d/f47_rd_k03.rdc phase usage
+actions 22029, last eid 125609, presents [(125609, 'vkQueuePresentKHR(ResourceId::2810)')]
+==== USAGE 48104 tex 48104 880x880x1 arr=1 mips=1 fmt=R8G8B8A8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48104 : 12 uses, kinds [('ResourceUsage.Barrier', 6), ('ResourceUsage.ColorTarget', 3), ('ResourceUsage.PS_Resource', 3)]
+   eid 9074 Barrier ?
+   eid 9091 ColorTarget vkCmdDraw()
+   eid 49599 Barrier ?
+   eid 49721 Barrier ?
+   eid 49738 ColorTarget vkCmdDraw()
+   eid 87571 Barrier ?
+   eid 87689 Barrier ?
+   eid 87706 ColorTarget vkCmdDraw()
+   eid 125556 Barrier ?
+   first use eid 9074 last use eid 125562
+==== USAGE 48170 tex 48170 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48170 : 48 uses, kinds [('ResourceUsage.Barrier', 8), ('ResourceUsage.Clear', 3), ('ResourceUsage.ColorTarget', 35), ('ResourceUsage.PS_Resource', 2)]
+   eid 49549 Barrier ?
+   eid 49550 Clear vkCmdClearColorImage()
+   eid 49551 Barrier ?
+   eid 49569 ColorTarget vkCmdDrawIndexed()
+   eid 49575 ColorTarget vkCmdDrawIndexed()
+   eid 49580 ColorTarget vkCmdDrawIndexed()
+   eid 49586 ColorTarget vkCmdDrawIndexed()
+   eid 49591 ColorTarget vkCmdDrawIndexed()
+   eid 49596 ColorTarget vkCmdDrawIndexed()
+   eid 49605 ColorTarget vkCmdDrawIndexed()
+   eid 49611 ColorTarget vkCmdDrawIndexed()
+   eid 49616 ColorTarget vkCmdDrawIndexed()
+   eid 49622 ColorTarget vkCmdDrawIndexed()
+   eid 49628 ColorTarget vkCmdDrawIndexed()
+   eid 49649 Barrier ?
+   eid 87477 Barrier ?
+   eid 87478 Clear vkCmdClearColorImage()
+   eid 87479 Barrier ?
+   eid 87497 ColorTarget vkCmdDrawIndexed()
+   eid 87503 ColorTarget vkCmdDrawIndexed()
+   eid 87508 ColorTarget vkCmdDrawIndexed()
+   eid 87514 ColorTarget vkCmdDrawIndexed()
+   eid 87519 ColorTarget vkCmdDrawIndexed()
+   eid 87524 ColorTarget vkCmdDrawIndexed()
+   eid 87568 ColorTarget vkCmdDrawIndexed()
+   eid 87577 ColorTarget vkCmdDrawIndexed()
+   eid 87583 ColorTarget vkCmdDrawIndexed()
+   eid 87588 ColorTarget vkCmdDrawIndexed()
+   eid 87594 ColorTarget vkCmdDrawIndexed()
+   eid 87600 ColorTarget vkCmdDrawIndexed()
+   eid 87621 Barrier ?
+   eid 125493 Barrier ?
+   eid 125494 Clear vkCmdClearColorImage()
+   eid 125495 Barrier ?
+   eid 125513 ColorTarget vkCmdDrawIndexed()
+   eid 125519 ColorTarget vkCmdDrawIndexed()
+   eid 125524 ColorTarget vkCmdDrawIndexed()
+   eid 125537 ColorTarget vkCmdDrawIndexed()
+   eid 125542 ColorTarget vkCmdDrawIndexed()
+   eid 125547 ColorTarget vkCmdDrawIndexed()
+   eid 125553 ColorTarget vkCmdDrawIndexed()
+   eid 125562 ColorTarget vkCmdDrawIndexed()
+   eid 125568 ColorTarget vkCmdDrawIndexed()
+   eid 125573 ColorTarget vkCmdDrawIndexed()
+   eid 125579 ColorTarget vkCmdDrawIndexed()
+   eid 125585 ColorTarget vkCmdDrawIndexed()
+   first use eid 49549 last use eid 125585
+==== USAGE 79528 tex 79528 2048x2048x1 arr=1 mips=12 fmt=BC4_UNORM ms=1 cf=TextureCategory.ShaderRead name=2D Image 79528 : 15 uses, kinds [('ResourceUsage.PS_Resource', 15)]
+   first use eid 49575 last use eid 125547
+==== USAGE 83682 tex 83682 1920x2048x1 arr=1 mips=12 fmt=BC7_SRGB ms=1 cf=TextureCategory.ShaderRead name=2D Image 83682 : 6 uses, kinds [('ResourceUsage.PS_Resource', 6)]
+   first use eid 49575 last use eid 125542
+==== USAGE 12687 tex 12687 1x1x1 arr=1 mips=1 fmt=R8G8B8A8_SRGB ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 12687 : 2217 uses, kinds [('ResourceUsage.PS_Resource', 2217)]
+   first use eid 13641 last use eid 125585
+==== USAGE 48172 tex 48172 1x1x1 arr=1 mips=1 fmt=R8G8B8A8_UNORM ms=1 cf=TextureCategory.ShaderReadWrite|ColorTarget|ShaderRead name=2D Color Attachment 48172 : 35 uses, kinds [('ResourceUsage.PS_Resource', 35)]
+   first use eid 49569 last use eid 125585
+done

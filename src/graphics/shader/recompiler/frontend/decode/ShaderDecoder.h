@@ -764,6 +764,17 @@ bool   FixB1BEnabled();
 // Read once per process; the translation cache keys the value in its signature and directory
 // (shaderTranslationCache.cpp).
 bool   FixF10Enabled();
+// Track M, M2a (HPP-838, ROADMAP s122 item 756(v)(1)): translator themes of upstream wave 1, one knob each -
+// KYTY_M_T234, KYTY_M_T233, KYTY_M_T256, KYTY_M_T306, KYTY_M_T032, KYTY_M_T203; default OFF (unset, empty, 0, false,
+// off, no = off; any other value as Common::EnvValueOn). Off: the translation is byte for byte that of FS15. Read once
+// per process; the translation cache keys the set of enabled themes with one token (MWave1SignatureToken) in its
+// signature and directory (shaderTranslationCache.cpp).
+enum class MTheme : uint32_t { T234 = 0, T233 = 1, T256 = 2, T306 = 3, T032 = 4, T203 = 5, Count = 6 };
+bool        MThemeEnabled(MTheme theme);
+uint32_t    MThemeMask(); // bit i = MTheme value i
+const char* MThemeKnob(MTheme theme);
+// "" when every theme is off, else ":mw1_<two hex digits of MThemeMask()>".
+std::string MWave1SignatureToken();
 std::string OperandToString(const Operand& operand);
 const char* ImageDimensionToString(ImageDimension dimension);
 std::string InstructionToString(const Instruction& inst);

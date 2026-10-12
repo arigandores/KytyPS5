@@ -1550,6 +1550,10 @@ CompiledShader CompileCase(const TestCase &test, u32 host_subgroup_size = 64) {
           "translated resources could not be materialized");
   auto result = ShaderRecompiler::CompileProgram(
       std::move(translated), options, specialization);
+  if (std::getenv("KYTY_M_DUMP_IR") != nullptr) {
+    // Track M, M2a (HPP-838): the decoded program and the IR of a case (diagnostics of the --m-wave1-case gate).
+    std::printf("%s\n==== IR ====\n%s\n", result.decoded_dump.c_str(), result.ir_dump.c_str());
+  }
   for (const auto &[text, expected] : test.decoded_counts) {
     const auto actual = CountText(result.decoded_dump, text);
     Require(test.name, "decoded RDNA2", actual == expected,
@@ -21845,8 +21849,12 @@ TestCase VectorAlignByteUsesFiveBitByteOffset() {
       "VectorAlignByteUsesFiveBitByteOffset",
       code,
       {},
-      {0x55667788u, 0x44556677u, 0x22334455u, 0x11223344u, 0x00112233u,
-       0x00000011u, 0u, 0u},
+      // Track M, M2a (T203): at KYTY_M_T203=1 only S2[1:0] selects the byte (the reference).
+      ShaderRecompiler::Decoder::MThemeEnabled(ShaderRecompiler::Decoder::MTheme::T203)
+          ? std::vector<u32>{0x55667788u, 0x44556677u, 0x22334455u, 0x55667788u, 0x44556677u,
+                             0x22334455u, 0x55667788u, 0x22334455u}
+          : std::vector<u32>{0x55667788u, 0x44556677u, 0x22334455u, 0x11223344u, 0x00112233u,
+                             0x00000011u, 0u, 0u},
       {O::V_MOV_B32, O::V_ALIGNBYTE_B32, O::BUFFER_STORE_DWORD, O::S_ENDPGM}};
 }
 
@@ -27945,7 +27953,10 @@ TestCase DsFloatMinMaxUsesSeparateCompareOperand() {
   test.name = "DsFloatMinMaxUsesSeparateCompareOperand";
   test.code = code;
   test.initial = std::vector<u32>(2, 0);
-  test.expected = {0x41100000u, 0x3f800000u};
+  // Track M, M2a (T234): at KYTY_M_T234=1 DATA1 is not read - min/max of the word and DATA0 (the reference).
+  test.expected = ShaderRecompiler::Decoder::MThemeEnabled(ShaderRecompiler::Decoder::MTheme::T234)
+                      ? std::vector<u32>{0x40800000u, 0x40800000u}
+                      : std::vector<u32>{0x41100000u, 0x3f800000u};
   test.opcodes = {O::V_MOV_B32,  O::DS_WRITE_B32, O::DS_MIN_F32,
                   O::DS_MAX_F32, O::DS_READ_B32,  O::BUFFER_STORE_DWORD,
                   O::S_ENDPGM};
@@ -29291,6 +29302,11 @@ TestCase ImageSampleA16OffsetKeepsTexelOffset32BitOnGpu() {
   test.name = "ImageSampleA16OffsetKeepsTexelOffset32BitOnGpu";
   test.code = code;
   test.expected = {0x3f800000u, 0x40000000u, 0x40400000u, 0x40800000u};
+  if (ShaderRecompiler::Decoder::MThemeEnabled(ShaderRecompiler::Decoder::MTheme::T306)) {
+    // Track M, M2a (T306): at KYTY_M_T306=1 the +1 X offset reaches the sample - texel (3, 1) (the reference).
+    SetRgbaPixel(&image, 4, 3, 1, 0x40a00000u, 0x40c00000u, 0x40e00000u, 0x41000000u);
+    test.expected = {0x40a00000u, 0x40c00000u, 0x40e00000u, 0x41000000u};
+  }
   test.opcodes = {O::V_MOV_B32, O::IMAGE_SAMPLE, O::BUFFER_STORE_DWORD,
                   O::S_ENDPGM};
   test.sampled_image_rgba = image;
@@ -35039,6 +35055,394 @@ void CheckPm4CeCompletion(RenderContext &renderer) {
   std::printf("[host]    %-32s ok\n", "Pm4CeCompletion");
 }
 
+// Track M, M2a (HPP-838, ROADMAP s122 item 756(v)(1)(i), (iv)): GPU test gate of the translator themes of wave 1. Every
+// case expects the reference (RDNA2 ISA description / LLVM AMDGPU semantics; [I] about silicon). One case per process
+// (--m-wave1-case <name>): rc 0 and "ALL OK" = the answer at the knob values of the process equals the reference; an
+// abort with the readback = it differs (at 0 - the reproduction of the theme, at 1 - a failure or a caught mutant).
+TestCase MWave1T234DsMinMaxIgnoresData1() {
+  using O = ShaderOpcode;
+  std::vector<u32> code;
+  AppendVMovU32(&code, 1, 0);
+  AppendVMovLiteral(&code, 2, 0x40800000u);
+  code.push_back(EncodeDs0(0x0d, 0));
+  code.push_back(EncodeDs1(0, 2, 1));
+  code.push_back(EncodeDs0(0x0d, 4));
+  code.push_back(EncodeDs1(0, 2, 1));
+  AppendVMovLiteral(&code, 4, 0x41100000u); // DATA0 of ds_min_f32: 9.0
+  AppendVMovLiteral(&code, 5, 0x40000000u); // DATA1 of ds_min_f32: 2.0 (not an operand)
+  code.push_back(EncodeDs0(0x12, 0));
+  code.push_back(EncodeDs1Ex(0, 5, 4, 1));
+  AppendVMovLiteral(&code, 6, 0x3f800000u); // DATA0 of ds_max_f32: 1.0
+  AppendVMovLiteral(&code, 7, 0x40400000u); // DATA1 of ds_max_f32: 3.0 (not an operand)
+  code.push_back(EncodeDs0(0x13, 4));
+  code.push_back(EncodeDs1Ex(0, 7, 6, 1));
+  code.push_back(EncodeDs0(0x36, 0));
+  code.push_back(EncodeDs1(8, 0, 1));
+  code.push_back(EncodeDs0(0x36, 4));
+  code.push_back(EncodeDs1(9, 0, 1));
+  AppendStoreVgpr(&code, 8, 0);
+  AppendStoreVgpr(&code, 9, 1);
+  AppendEnd(&code);
+  TestCase test;
+  test.name = "MW1T234DsMinMaxIgnoresData1";
+  test.code = code;
+  test.initial = std::vector<u32>(2, 0);
+  test.expected = {0x40800000u, 0x40800000u}; // min(4, 9) = 4, max(4, 1) = 4
+  test.opcodes = {O::V_MOV_B32,  O::DS_WRITE_B32, O::DS_MIN_F32,
+                  O::DS_MAX_F32, O::DS_READ_B32,  O::BUFFER_STORE_DWORD,
+                  O::S_ENDPGM};
+  test.compute_info.threads_num[0] = 1;
+  test.compute_info.threads_num[1] = 1;
+  test.compute_info.threads_num[2] = 1;
+  test.has_compute_info = true;
+  return test;
+}
+
+TestCase MWave1T234DsMinMaxLdsClasses() {
+  using O = ShaderOpcode;
+  // Upstream e85279ea table. Rows memory, columns source: -inf, -normal, -denorm, -0, +0, +denorm, +normal, +inf,
+  // qNaN, sNaN. O/N select old/new; Q/R quiet them.
+  constexpr const char *minimum[] = {
+      "OOOOOOOOOR", "NNOOOOOOOR", "NNNNOOOOOR", "NNNOOOOOOR", "NNNNOOOOOR",
+      "NNNNNNOOOR", "NNNNNNOOOR", "NNNNNNNOOR", "NNNNNNNNOR", "QQQQQQQQQQ"};
+  constexpr const char *maximum[] = {
+      "ONNNNNNNOR", "OONNNNNNOR", "OOOONNNNOR", "OOOONNNNOR", "OOOOONNNOR",
+      "OOOOOONNOR", "OOOOOONNOR", "OOOOOOOOOR", "NNNNNNNNOR", "QQQQQQQQQQ"};
+  constexpr u32 old_values[] = {
+      0xff800000u, 0xc0000000u, 0x80000100u, 0x80000000u, 0u,
+      0x00000100u, 0x40000000u, 0x7f800000u, 0x7fc12345u, 0x7f812345u};
+  constexpr u32 sources[] = {
+      0xff800000u, 0xc0400000u, 0x80000001u, 0x80000000u, 0u,
+      0x00000001u, 0x40400000u, 0x7f800000u, 0xffc54321u, 0xff854321u};
+  const auto select = [](char choice, u32 old, u32 source) {
+    const u32 bits = choice == 'O' || choice == 'Q' ? old : source;
+    return choice == 'Q' || choice == 'R' ? bits | 0x00400000u : bits;
+  };
+  TestCase test;
+  test.name = "MW1T234DsMinMaxLdsClasses";
+  for (u32 row = 0; row < 10u; ++row) {
+    for (u32 column = 0; column < 10u; ++column) {
+      const auto old = old_values[row];
+      const auto source = sources[column];
+      test.initial.insert(test.initial.end(), {old, source, 0u, 0u});
+      test.expected.insert(test.expected.end(),
+                           {old, source, select(minimum[row][column], old, source),
+                            select(maximum[row][column], old, source)});
+    }
+  }
+  // Reversing positive denorm magnitudes still selects source for min and old for max.
+  test.initial.insert(test.initial.end(), {1u, 0x100u, 0u, 0u});
+  test.expected.insert(test.expected.end(), {1u, 0x100u, 0x100u, 1u});
+  const auto count = static_cast<u32>(test.initial.size() / 4u);
+  auto &code = test.code;
+  code.push_back(EncodeVop2(0x1a, 1, InlineU32(3), 0)); // v1 = tid << 3 (LDS address)
+  code.push_back(EncodeVop2(0x1a, 8, InlineU32(4), 0)); // v8 = tid << 4 (buffer offset)
+  code.push_back(EncodeMubuf0(0x0d));                   // buffer_load_dwordx2 v[2:3] = old, source
+  code.push_back(EncodeMubuf1(2, 0, 8));
+  for (u32 offset : {0u, 4u}) {
+    code.push_back(EncodeDs0(0x0d, offset));
+    code.push_back(EncodeDs1(0, 2, 1));
+  }
+  code.push_back(EncodeDs0(0x12, 0));
+  code.push_back(EncodeDs1Ex(0, 250, 3, 1)); // DATA1 is unused and uninitialized.
+  code.push_back(EncodeDs0(0x13, 4));
+  code.push_back(EncodeDs1Ex(0, 251, 3, 1));
+  for (u32 component = 0; component < 2u; ++component) {
+    code.push_back(EncodeDs0(0x36, component * 4u));
+    code.push_back(EncodeDs1(4u + component, 0, 1));
+  }
+  code.push_back(EncodeMubuf0(0x1d, 8)); // buffer_store_dwordx2 v[4:5] at tid * 16 + 8
+  code.push_back(EncodeMubuf1(4, 0, 8));
+  AppendEnd(&code);
+  test.compute_info.threads_num[0] = count;
+  test.compute_info.threads_num[1] = 1;
+  test.compute_info.threads_num[2] = 1;
+  test.compute_info.thread_ids_num = 1;
+  test.compute_info.lds_size_dwords = count * 2u;
+  test.has_compute_info = true;
+  test.opcodes = {O::V_LSHLREV_B32, O::BUFFER_LOAD_DWORDX2, O::DS_WRITE_B32, O::DS_MIN_F32,
+                  O::DS_MAX_F32, O::DS_READ_B32, O::BUFFER_STORE_DWORDX2, O::S_ENDPGM};
+  return test;
+}
+
+TestCase MWave1T233LegacyMadRoundsProduct() {
+  using O = ShaderOpcode;
+  // a = b = 1 + 2^-12: a * b = 1 + 2^-11 + 2^-24 rounds (tie to even) to 1 + 2^-11 = -c; legacy MAD = 0, fused = 2^-24.
+  constexpr u32 a = 0x3f800800u;
+  constexpr u32 c = 0xbf801000u;
+  std::vector<u32> code;
+  AppendVMovLiteral(&code, 0, a);
+  AppendVMovLiteral(&code, 1, a);
+  AppendVMovLiteral(&code, 2, c);
+  AppendVop3(&code, 0x141, 10, Vgpr(0), Vgpr(1), Vgpr(2)); // v_mad_f32 v10, v0, v1, v2
+  AppendVMovLiteral(&code, 11, c);
+  code.push_back(EncodeVop2(0x1f, 11, Vgpr(0), 1));       // v_mac_f32 v11, v0, v1
+  code.push_back(EncodeVop2(0x20, 12, Vgpr(0), 2));       // v_madmk_f32 v12, v0, K = a, v2
+  code.push_back(a);
+  code.push_back(EncodeVop2(0x21, 13, Vgpr(0), 1));       // v_madak_f32 v13, v0, v1, K = c
+  code.push_back(c);
+  AppendVMovLiteral(&code, 14, c);
+  AppendVop3(&code, 0x11f, 14, Vgpr(0), Vgpr(1), 0);      // v_mac_f32 (VOP3) v14, v0, v1
+  AppendVMovLiteral(&code, 15, c);
+  code.push_back(EncodeVop2(0x2b, 15, Vgpr(0), 1));       // v_fmac_f32 v15, v0, v1 (fused control)
+  AppendVop3(&code, 0x14b, 16, Vgpr(0), Vgpr(1), Vgpr(2)); // v_fma_f32 v16, v0, v1, v2 (fused control)
+  for (u32 i = 0; i < 7u; i++) {
+    AppendStoreVgpr(&code, 10u + i, i);
+  }
+  AppendEnd(&code);
+  TestCase test;
+  test.name = "MW1T233LegacyMadRoundsProduct";
+  test.code = code;
+  test.expected = {0u, 0u, 0u, 0u, 0u, 0x33800000u, 0x33800000u};
+  test.opcodes = {O::V_MOV_B32, O::V_MAD_F32, O::V_MAC_F32, O::V_MADMK_F32, O::V_MADAK_F32, O::V_FMA_F32,
+                  O::BUFFER_STORE_DWORD, O::S_ENDPGM};
+  return test;
+}
+
+TestCase MWave1T203AlignByteTwoBitOffset() {
+  using O = ShaderOpcode;
+  std::vector<u32> code;
+  AppendVMovLiteral(&code, 0, 0x11223344u);
+  AppendVMovLiteral(&code, 1, 0x55667788u);
+  const std::vector<u32> offsets = {0, 1, 2, 3, 4, 5, 7, 8, 31, 32, 0xffffffffu};
+  for (u32 i = 0; i < static_cast<u32>(offsets.size()); i++) {
+    AppendVMovU32(&code, 2, i * sizeof(u32));
+    AppendBufferLoadDword(&code, 2, 2); // the offset is not a constant of the program
+    AppendVop3(&code, 0x14f, 10u + i, Vgpr(0), Vgpr(1), Vgpr(2));
+    AppendStoreVgpr(&code, 10u + i, i);
+  }
+  AppendEnd(&code);
+  TestCase test;
+  test.name = "MW1T203AlignByteTwoBitOffset";
+  test.code = code;
+  test.initial = offsets;
+  test.expected = {0x55667788u, 0x44556677u, 0x33445566u, 0x22334455u, 0x55667788u, 0x44556677u,
+                   0x22334455u, 0x55667788u, 0x22334455u, 0x55667788u, 0x22334455u};
+  test.opcodes = {O::V_MOV_B32, O::BUFFER_LOAD_DWORD, O::V_ALIGNBYTE_B32, O::BUFFER_STORE_DWORD,
+                  O::S_ENDPGM};
+  return test;
+}
+
+TestCase MWave1T306SampleOffsetsFourNeighbors() {
+  using O = ShaderOpcode;
+  TestCase test;
+  test.name = "MW1T306SampleOffsetsFourNeighbors";
+  // Upstream 984cfceb: +1 X, -1 X, -1 Y, +1 Y on image_sample_lz_o (0x37), _lz_o, _l_o (0x34), _d_o (0x32).
+  constexpr std::array<u32, 4> offsets{0x01u, 0x3fu, 0x3f00u, 0x0100u};
+  constexpr std::array<u32, 4> opcodes{0x37u, 0x37u, 0x34u, 0x32u};
+  for (u32 sample = 0; sample < offsets.size(); ++sample) {
+    AppendVMovLiteral(&test.code, 20, offsets[sample]);
+    u32 coordinate = 21;
+    if (opcodes[sample] == 0x32u) {
+      for (float gradient : {0.25f, 0.f, 0.f, 0.25f}) {
+        AppendVMovLiteral(&test.code, coordinate++, std::bit_cast<u32>(gradient));
+      }
+    }
+    // All instructions address the center of texel (2, 1) before applying the offset.
+    AppendVMovLiteral(&test.code, coordinate, std::bit_cast<u32>(0.625f));
+    AppendVMovLiteral(&test.code, coordinate + 1, std::bit_cast<u32>(0.375f));
+    if (opcodes[sample] == 0x34u) {
+      AppendVMovU32(&test.code, coordinate + 2, 0);
+    }
+    test.code.push_back(EncodeMimg0(opcodes[sample], 0x1));
+    test.code.push_back(EncodeMimg1(sample, 20));
+    AppendStoreVgpr(&test.code, sample, sample);
+  }
+  AppendEnd(&test.code);
+  test.sampled_image_rgba = MakeRgbaImage(4, 4);
+  SetRgbaPixel(&test.sampled_image_rgba, 4, 2, 1, std::bit_cast<u32>(16.f), 0, 0, 0);
+  constexpr std::array<std::array<u32, 2>, 4> neighbors{{{3, 1}, {1, 1}, {2, 0}, {2, 2}}};
+  for (u32 sample = 0; sample < neighbors.size(); ++sample) {
+    const auto value = std::bit_cast<u32>(float(sample + 1));
+    SetRgbaPixel(&test.sampled_image_rgba, 4, neighbors[sample][0], neighbors[sample][1], value, 0, 0, 0);
+    test.expected.push_back(value);
+  }
+  test.opcodes = {O::V_MOV_B32, O::IMAGE_SAMPLE, O::BUFFER_STORE_DWORD, O::S_ENDPGM};
+  return test;
+}
+
+TestCase MWave1T032Snorm16XyzwSkinning() {
+  using O = ShaderOpcode;
+  // Upstream c66d977c: normal and tangent of a character skinning dispatch.
+  constexpr std::array<u32, 8> values = {0x3d98f7c5u, 0xbedae712u, 0xbf66a19eu, 0x3f800000u,
+                                         0x3f7e6baeu, 0xbd339a7du, 0x3dd0a2e2u, 0xbf800000u};
+  std::vector<u32> code;
+  for (u32 record = 0; record < 2; record++) {
+    for (u32 component = 0; component < 4; component++) {
+      AppendVMovLiteral(&code, component, values[record * 4 + component]);
+    }
+    AppendVMovU32(&code, 20, record);
+    code.push_back(EncodeMubuf0(0x07u, 0, true, false));
+    code.push_back(EncodeMubuf1(0, 0, 20));
+  }
+  AppendEnd(&code);
+  TestCase test;
+  test.name = "MW1T032Snorm16XyzwSkinning";
+  test.code = std::move(code);
+  test.initial = std::vector<u32>(4, 0xdeadbeefu);
+  test.expected = {0xc947098fu, 0x7fff8cb0u, 0xfa637f35u, 0x80010d0au};
+  test.user_data =
+      MakeStructuredStorageBufferData(8, 2, false, BufferFormat(Prospero::BufferFormat::k16_16_16_16SNorm));
+  test.has_user_data = true;
+  test.opcodes = {O::V_MOV_B32, O::BUFFER_STORE_FORMAT_XYZW, O::S_ENDPGM};
+  return test;
+}
+
+TestCase MWave1T032Snorm16XClampRound() {
+  using O = ShaderOpcode;
+  constexpr std::array<float, 9> values = {-2.0f, -1.0f, -0.75f, -0.25f, 0.0f, 0.25f, 0.75f, 1.0f, 2.0f};
+  std::vector<u32> code;
+  for (u32 i = 0; i < values.size(); i++) {
+    AppendVMovLiteral(&code, 0, std::bit_cast<u32>(values[i]));
+    AppendVMovU32(&code, 20, i * 2 + 2);
+    code.push_back(EncodeMubuf0(0x04u));
+    code.push_back(EncodeMubuf1(0, 0, 20));
+  }
+  AppendEnd(&code);
+  TestCase test;
+  test.name = "MW1T032Snorm16XClampRound";
+  test.code = std::move(code);
+  test.initial = std::vector<u32>(6, 0xdeadbeefu);
+  test.expected = {0x8001beefu, 0xa0018001u, 0x0000e000u, 0x5fff2000u, 0x7fff7fffu, 0xdeadbeefu};
+  test.user_data = MakeStructuredStorageBufferData(0, 24, false, BufferFormat(Prospero::BufferFormat::k16SNorm));
+  test.has_user_data = true;
+  test.opcodes = {O::V_MOV_B32, O::BUFFER_STORE_FORMAT_X, O::S_ENDPGM};
+  return test;
+}
+
+TestCase MWave1T032Float16Xyzw() {
+  using O = ShaderOpcode;
+  // Upstream a6248c7c: this finite F32 has low bits 0x7e63, which form an F16 NaN if truncated.
+  constexpr std::array<float, 8> values = {std::bit_cast<float>(0x3f807e63u), -2.0f, 0.5f, 0.25f,
+                                           -4.0f, 3.0f, 0.0f, 2.0f};
+  std::vector<u32> code;
+  for (u32 record = 0; record < 2; record++) {
+    for (u32 component = 0; component < 4; component++) {
+      AppendVMovLiteral(&code, component, std::bit_cast<u32>(values[record * 4 + component]));
+    }
+    AppendVMovU32(&code, 20, record);
+    code.push_back(EncodeMubuf0(0x07u, 0, true, false));
+    code.push_back(EncodeMubuf1(0, 0, 20));
+  }
+  AppendEnd(&code);
+  TestCase test;
+  test.name = "MW1T032Float16Xyzw";
+  test.code = std::move(code);
+  test.initial = std::vector<u32>(4, 0xdeadbeefu);
+  test.expected = {0xc0003c04u, 0x34003800u, 0x4200c400u, 0x40000000u};
+  test.user_data =
+      MakeStructuredStorageBufferData(8, 2, false, BufferFormat(Prospero::BufferFormat::k16_16_16_16Float));
+  test.has_user_data = true;
+  test.opcodes = {O::V_MOV_B32, O::BUFFER_STORE_FORMAT_XYZW, O::S_ENDPGM};
+  return test;
+}
+
+std::vector<TestCase> MWave1T032ConversionCases() {
+  using F = Prospero::BufferFormat;
+  using O = ShaderOpcode;
+  struct ConversionCase {
+    const char *name[2];
+    F format;
+    u32 components;
+    std::array<float, 4> values;
+    u32 expected;
+  };
+  constexpr float nan = std::bit_cast<float>(0x7fc12345u);
+  constexpr float inf = std::bit_cast<float>(0x7f800000u);
+  // Upstream de9c15fa, except the four non-packed partial cases (ZeroFill X / Xy / Xyz of 8- and 16-bit formats):
+  // here the components without a VGPR keep the memory (the transfer rule of our emitter; upstream zero-fills them,
+  // [I]); packed bit-field formats write their one word whole with the missing fields zero (as upstream).
+  constexpr ConversionCase inputs[] = {
+      {{"MW1T032Snorm8Range", "MW1T032TSnorm8Range"}, F::k8_8_8_8SNorm, 4, {-2.0f, 0.25f, 0.75f, 2.0f}, 0x7f5f2081u},
+      {{"MW1T032Snorm8Ties", "MW1T032TSnorm8Ties"}, F::k8_8SNorm, 2, {0.5f, -0.5f}, 0xffffc040u},
+      {{"MW1T032SnormPackedAlpha", "MW1T032TSnormPackedAlpha"}, F::k10_10_10_2SNorm, 4,
+       {-1.0f, -0.5f, 0.5f, 1.0f}, 0xd00c0201u},
+      {{"MW1T032SnormPackedFirstChannel", "MW1T032TSnormPackedFirstChannel"}, F::k2_10_10_10SNorm, 4,
+       {1.0f, -1.0f, 0.5f, -0.5f}, 0xc0100807u},
+      {{"MW1T032SnormPackedZeroFillX", "MW1T032TSnormPackedZeroFillX"}, F::k10_10_10_2SNorm, 1, {-1.0f},
+       0x00000201u},
+      {{"MW1T032SnormPackedZeroFillXy", "MW1T032TSnormPackedZeroFillXy"}, F::k10_10_10_2SNorm, 2, {-1.0f, 1.0f},
+       0x0007fe01u},
+      {{"MW1T032SnormPackedZeroFillXyz", "MW1T032TSnormPackedZeroFillXyz"}, F::k10_10_10_2SNorm, 3,
+       {-1.0f, 1.0f, -1.0f}, 0x2017fe01u},
+      {{"MW1T032Snorm8PartialX", "MW1T032TSnorm8PartialX"}, F::k8_8_8_8SNorm, 1, {-1.0f}, 0xffffff81u},
+      {{"MW1T032Snorm16PartialX", "MW1T032TSnorm16PartialX"}, F::k16_16SNorm, 1, {-1.0f}, 0xffff8001u},
+      {{"MW1T032UscaledPartialXy", "MW1T032TUscaledPartialXy"}, F::k8_8_8_8UScaled, 2, {42.0f, 99.0f}, 0xffff632au},
+      {{"MW1T032SscaledPartialXyz", "MW1T032TSscaledPartialXyz"}, F::k8_8_8_8SScaled, 3, {-42.0f, 127.0f, -128.0f},
+       0xff807fd6u},
+      {{"MW1T032Uscaled8Fraction", "MW1T032TUscaled8Fraction"}, F::k8UScaled, 1, {42.875f}, 0xffffff2au},
+      {{"MW1T032Sscaled8Fraction", "MW1T032TSscaled8Fraction"}, F::k8SScaled, 1, {-42.875f}, 0xffffffd6u},
+      {{"MW1T032Uscaled8Range", "MW1T032TUscaled8Range"}, F::k8_8_8_8UScaled, 4, {-1.0f, 255.875f, 256.0f, 0.0f},
+       0x00ffff00u},
+      {{"MW1T032Sscaled8Range", "MW1T032TSscaled8Range"}, F::k8_8_8_8SScaled, 4,
+       {-129.0f, -128.75f, 127.875f, 128.0f}, 0x7f7f8080u},
+      {{"MW1T032Uscaled16Range", "MW1T032TUscaled16Range"}, F::k16_16UScaled, 2, {65536.0f, 42.875f}, 0x002affffu},
+      {{"MW1T032Sscaled16Range", "MW1T032TSscaled16Range"}, F::k16_16SScaled, 2, {-32769.0f, 32768.0f},
+       0x7fff8000u},
+      {{"MW1T032UscaledPacked", "MW1T032TUscaledPacked"}, F::k10_10_10_2UScaled, 4, {1024.0f, 3.875f, -1.0f, 4.0f},
+       0xc0000fffu},
+      {{"MW1T032SscaledPackedAlpha", "MW1T032TSscaledPackedAlpha"}, F::k10_10_10_2SScaled, 4,
+       {-512.75f, 511.875f, -3.875f, 3.875f}, 0xffd7fe00u},
+      {{"MW1T032SscaledPackedFirstChannel", "MW1T032TSscaledPackedFirstChannel"}, F::k2_10_10_10SScaled, 4,
+       {3.0f, -512.0f, 511.0f, -1.0f}, 0xffdff803u},
+      {{"MW1T032Snorm8SpecialValues", "MW1T032TSnorm8SpecialValues"}, F::k8_8_8_8SNorm, 4, {nan, inf, -inf, -0.0f},
+       0x00817f00u},
+      {{"MW1T032Uscaled8SpecialValues", "MW1T032TUscaled8SpecialValues"}, F::k8_8_8_8UScaled, 4,
+       {nan, inf, -inf, -0.0f}, 0x0000ff00u},
+      {{"MW1T032Sscaled8SpecialValues", "MW1T032TSscaled8SpecialValues"}, F::k8_8_8_8SScaled, 4,
+       {nan, inf, -inf, -0.0f}, 0x00807f00u},
+  };
+  constexpr O store_opcodes[2][4] = {
+      {O::BUFFER_STORE_FORMAT_X, O::BUFFER_STORE_FORMAT_XY, O::BUFFER_STORE_FORMAT_XYZ, O::BUFFER_STORE_FORMAT_XYZW},
+      {O::TBUFFER_STORE_FORMAT_X, O::TBUFFER_STORE_FORMAT_XY, O::TBUFFER_STORE_FORMAT_XYZ,
+       O::TBUFFER_STORE_FORMAT_XYZW},
+  };
+  std::vector<TestCase> cases;
+  for (const auto &input : inputs) {
+    for (const bool typed : {false, true}) {
+      TestCase test;
+      test.name = input.name[typed ? 1 : 0];
+      for (u32 component = 0; component < input.components; ++component) {
+        AppendVMovLiteral(&test.code, component, std::bit_cast<u32>(input.values[component]));
+      }
+      AppendVMovU32(&test.code, 20, 4);
+      const u32 opcode = 3 + input.components;
+      if (typed) {
+        const u32 format = BufferFormat(input.format);
+        test.code.push_back(EncodeMtbuf0(opcode, format & 0xfu, format >> 4u));
+        test.code.push_back(EncodeMtbuf1(opcode, 0, 0, 20));
+      } else {
+        test.code.push_back(EncodeMubuf0(opcode));
+        test.code.push_back(EncodeMubuf1(0, 0, 20));
+      }
+      AppendEnd(&test.code);
+      test.initial = {0xdeadbeefu, 0xffffffffu, 0xcafef00du};
+      test.expected = {0xdeadbeefu, input.expected, 0xcafef00du};
+      test.user_data = MakeStructuredStorageBufferData(0, 12, false, BufferFormat(input.format));
+      test.has_user_data = true;
+      test.opcodes = {O::V_MOV_B32, store_opcodes[typed ? 1 : 0][input.components - 1], O::S_ENDPGM};
+      cases.push_back(std::move(test));
+    }
+  }
+  return cases;
+}
+
+std::vector<TestCase> MWave1Cases() {
+  std::vector<TestCase> cases;
+  cases.push_back(MWave1T234DsMinMaxIgnoresData1());
+  cases.push_back(MWave1T234DsMinMaxLdsClasses());
+  cases.push_back(MWave1T233LegacyMadRoundsProduct());
+  cases.push_back(MWave1T203AlignByteTwoBitOffset());
+  cases.push_back(MWave1T306SampleOffsetsFourNeighbors());
+  cases.push_back(MWave1T032Snorm16XyzwSkinning());
+  cases.push_back(MWave1T032Snorm16XClampRound());
+  cases.push_back(MWave1T032Float16Xyzw());
+  for (auto &test : MWave1T032ConversionCases()) {
+    cases.push_back(std::move(test));
+  }
+  return cases;
+}
+
 } // namespace
 } // namespace Libs::Graphics
 
@@ -35189,6 +35593,55 @@ int main(int argc, char **argv) {
   std::setvbuf(stdout, nullptr, _IONBF, 0);
   EnsureConfigInitialized();
   CheckLeastRecentlyUsedCacheOrdering();
+  if (argc == 2 && std::strcmp(argv[1], "--m-wave1-list") == 0) {
+    // Track M, M2a (HPP-838): the names of the GPU gate cases of wave 1.
+    for (const auto &test : MWave1Cases()) {
+      std::printf("%s\n", test.name);
+    }
+    return 0;
+  }
+  if (argc == 3 && std::strcmp(argv[1], "--m-wave1-case") == 0) {
+    // Track M, M2a (HPP-838, ROADMAP s122 item 756(v)(1)(i)): one GPU gate case at the knob values of this process.
+    std::printf("[mw1] mask=0x%02x case=%s\n", ShaderRecompiler::Decoder::MThemeMask(), argv[2]);
+    for (const auto &test : MWave1Cases()) {
+      if (std::strcmp(test.name, argv[2]) == 0) {
+        VulkanHarness vulkan;
+        RunCase(&vulkan, test);
+        std::printf("ALL OK\n");
+        return 0;
+      }
+    }
+    std::printf("[mw1] no case %s\n", argv[2]);
+    return 2;
+  }
+  if (argc == 2 && std::strcmp(argv[1], "--m-wave1-cache") == 0) {
+    // Track M, M2a (HPP-838): ":mw1_<mask>" is the last token of the signature and "_mw1_<mask>" of the directory
+    // exactly when a theme is on; every theme off adds nothing.
+    const auto token = ShaderRecompiler::Decoder::MWave1SignatureToken();
+    const ShaderTranslationCache cache("PPSA21564");
+    const auto directory = Common::PathToString(cache.Directory());
+    std::string signature = cache.Signature();
+    while (!signature.empty() && (signature.back() == '\n' || signature.back() == '\r')) {
+      signature.pop_back();
+    }
+    std::string folder_token = token;
+    std::replace(folder_token.begin(), folder_token.end(), ':', '_');
+    const bool sig_ok = token.empty() ? signature.find(":mw1_") == std::string::npos
+                                      : signature.size() >= token.size() &&
+                                            signature.compare(signature.size() - token.size(), token.size(),
+                                                              token) == 0;
+    const bool dir_ok = token.empty() ? directory.find("mw1_") == std::string::npos
+                                      : directory.size() >= folder_token.size() &&
+                                            directory.compare(directory.size() - folder_token.size(),
+                                                              folder_token.size(), folder_token) == 0;
+    std::printf("[mw1] mask=0x%02x token=%s\n[mw1] cache signature=%s\n[mw1] cache dir=%s sig_ok=%d dir_ok=%d\n",
+                ShaderRecompiler::Decoder::MThemeMask(), token.c_str(), signature.c_str(), directory.c_str(),
+                sig_ok ? 1 : 0, dir_ok ? 1 : 0);
+    Require("MWave1Cache", "translation cache key", cache.Enabled() && sig_ok && dir_ok,
+            "mw1 token of the signature or directory does not follow the knobs");
+    std::printf("ALL OK\n");
+    return 0;
+  }
   if (argc == 2 && std::strcmp(argv[1], "--fix-b26-only") == 0) {
     // Track F, F2a (HPP-307): the B26b cases at the knob value of this process.
     const bool fix_on = ShaderRecompiler::Decoder::FixB26Enabled();

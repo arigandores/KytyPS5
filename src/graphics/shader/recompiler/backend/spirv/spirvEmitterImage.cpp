@@ -363,6 +363,70 @@ uint32_t PackedOffset(ValueEmitContext& ctx, const IR::MemoryInfo& mem, const IR
 	return result;
 }
 
+// Track M, M2a (T306, upstream 984cfceb; KYTY_M_T306): the ConstOffset operand of a sample on <resource> from the
+// immediate packed offset (signed six-bit fields in the low bits of each byte), or 0 - the previous path, the
+// offset dropped, with a log line - for a cube image or a component outside the Vulkan minimum range [-8, 7].
+uint32_t MSampleConstOffset(ValueEmitContext& ctx, const IR::Inst& inst, uint32_t packed, uint32_t resource) {
+	auto&       state      = ctx.state;
+	const auto& image      = state.program.info.images.at(resource);
+	const auto  components = ImageDimensionInfoFor(image.dimension).spatial_components;
+	int32_t     values[3] {};
+	bool        in_range = components >= 1u && components <= 3u;
+	for (uint32_t index = 0; in_range && index < components; index++) {
+		const auto bits = (packed >> (index * 8u)) & 0x3fu;
+		values[index]   = static_cast<int32_t>(bits ^ 0x20u) - 0x20;
+		in_range        = values[index] >= -8 && values[index] <= 7;
+	}
+	if (image.cube || !in_range) {
+		LOGF("MTexOffset: shader=0x%016llx pc=0x%x offset=0x%08x previous path (%s)\n",
+		     static_cast<unsigned long long>(state.program.shader_hash), inst.Flags<IR::MemoryFlags>().pc, packed,
+		     image.cube ? "cube" : "range");
+		return 0u;
+	}
+	if (components == 1u) {
+		return ConstantI32(state, values[0]);
+	}
+	const auto x = ConstantI32(state, values[0]);
+	const auto y = ConstantI32(state, values[1]);
+	if (components == 2u) {
+		return state.builder.Constant(spv::OpConstantComposite, TypeI32Vector(state, 2), x, y);
+	}
+	return state.builder.Constant(spv::OpConstantComposite, TypeI32Vector(state, 3), x, y,
+	                              ConstantI32(state, values[2]));
+}
+
+// Track M, M2a (T306; KYTY_M_T306): the packed offset of a sample when it is the same immediate for every lane that
+// executes the sample. At =1 the translator hands the offset dword over as SelectU32(exec of the sample, offset, 0)
+// (Translator::IMAGE_SAMPLE); the offset is exact when it is an immediate, or that wrapper around an immediate, or
+// the wrapper around SelectU32(c, immediate, old) - the VGPR written under the same lane mask c. Anything else (an
+// offset written under another mask, a computed offset): false, the previous path.
+bool MImmediateU32(IR::Value value, uint32_t& packed) {
+	if (!value.IsImmediate() || value.GetType() != IR::Type::U32) {
+		return false;
+	}
+	packed = value.U32();
+	return true;
+}
+
+bool MResolveSampleOffset(IR::Value value, uint32_t& packed) {
+	value = value.Resolve();
+	if (MImmediateU32(value, packed)) {
+		return true;
+	}
+	const auto* wrapper = value.TryInstruction();
+	if (wrapper == nullptr || wrapper->GetOpcode() != IR::ValueOpcode::SelectU32) {
+		return false;
+	}
+	const auto exec  = wrapper->Arg(0).Resolve();
+	const auto inner = wrapper->Arg(1).Resolve();
+	if (MImmediateU32(inner, packed)) {
+		return true;
+	}
+	const auto* write = inner.TryInstruction();
+	return write != nullptr && write->GetOpcode() == IR::ValueOpcode::SelectU32 &&
+	       write->Arg(0).Resolve() == exec && MImmediateU32(write->Arg(1).Resolve(), packed);
+}
+
 uint32_t HorizontalOffsets(EmitterState& state, ImageDimension dimension) {
 	const auto components   = ImageDimensionInfoFor(dimension).spatial_components;
 	const auto count        = ConstantU32(state, 4);
@@ -797,6 +861,23 @@ void EmitImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 			operand_mask |= spv::ImageOperandsBiasMask;
 			operands.push_back(AddressF32(ctx, mem, *address, layout.bias));
 		}
+		// Track M, M2a (T306, upstream 984cfceb; KYTY_M_T306): the texel offset of IMAGE_SAMPLE_*_O reaches the sample
+		// as ConstOffset when it is an immediate (MSampleConstOffset); a non-constant offset keeps the previous path
+		// (offset dropped) with a log line instead of failing the translation. Off: the previous path.
+		bool     m_t306_offset = false;
+		uint32_t m_t306_packed = 0;
+		if (Decoder::MThemeEnabled(Decoder::MTheme::T306) && layout.offset != NoImageComponent &&
+		    mem.image_address_components > layout.offset) {
+			const auto arg =
+			    Decoder::ImageAddressComponentLayout(mem.image_sample_flags, layout.offset).bit_offset / 32u;
+			if (arg < address->NumArgs() && MResolveSampleOffset(address->Arg(arg), m_t306_packed)) {
+				m_t306_offset = true;
+			} else {
+				LOGF("MTexOffset: shader=0x%016llx pc=0x%x nonconstant offset, previous path\n",
+				     static_cast<unsigned long long>(state.program.shader_hash),
+				     inst.Flags<IR::MemoryFlags>().pc);
+			}
+		}
 		const auto EmitSample = [&](uint32_t resource) {
 			const auto            sampled = MakeSampledImage(state, resource, mem.sampler);
 			const auto            sample  = state.builder.AllocateId();
@@ -806,9 +887,15 @@ void EmitImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 			if (native_dref) {
 				sample_operands.push_back(dref_value);
 			}
-			if (operand_mask != 0u) {
-				sample_operands.push_back(operand_mask);
+			const auto m_offset = m_t306_offset ? MSampleConstOffset(ctx, inst, m_t306_packed, resource) : 0u;
+			const auto sample_mask =
+			    operand_mask | (m_offset != 0u ? static_cast<uint32_t>(spv::ImageOperandsConstOffsetMask) : 0u);
+			if (sample_mask != 0u) {
+				sample_operands.push_back(sample_mask);
 				sample_operands.insert(sample_operands.end(), operands.begin(), operands.end());
+				if (m_offset != 0u) {
+					sample_operands.push_back(m_offset);
+				}
 			}
 			state.builder.AddFunction(opcode, sample_operands);
 			return sample;

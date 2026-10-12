@@ -664,7 +664,18 @@ bool Translator::IMAGE_SAMPLE(const Decoder::Instruction& inst) {
 	const auto memory   = MemoryInfoFromDecoded(inst);
 	const auto resource = GetImageResource(memory);
 	const auto sampler  = GetSamplerResource(memory);
-	const auto address  = MakeImageAddress(inst, MemorySourceAt(inst, 0));
+	IR::Value  m_offset;
+	if (Decoder::MThemeEnabled(Decoder::MTheme::T306) &&
+	    (memory.image_sample_flags & Decoder::ImageSampleFlagOffset) != 0u) {
+		// Track M, M2a (T306, upstream 984cfceb; KYTY_M_T306): the offset (address dword 0) seen through the lane mask
+		// of this sample - the emitter (MResolveSampleOffset) proves an offset written under the same mask constant.
+		m_offset = ir.Select(ir.GetExec(), IR::U32(ReadRawU32(OffsetOperand(PlainOperand(MemorySourceAt(inst, 0)), 0))),
+		                     IR::U32(IR::Value(0u)));
+	}
+	const auto address = MakeImageAddress(inst, MemorySourceAt(inst, 0));
+	if (!m_offset.IsEmpty()) {
+		address.Instruction()->SetArg(0, m_offset);
+	}
 	const auto result   = ir.Emit(IR::ValueOpcode::ImageSampleRaw, {resource, sampler, address},
 	                              AddMemoryInfo(memory, inst.pc));
 	const bool dref     = (memory.image_sample_flags & Decoder::ImageSampleFlagCompare) != 0u;
@@ -1230,6 +1241,15 @@ bool Translator::DS_WRITE2(const Decoder::Instruction& inst) {
 
 bool Translator::DS_MINMAX_F32(const Decoder::Instruction& inst, IR::ValueOpcode opcode) {
 	const auto memory = MemoryInfoFromDecoded(inst);
+	if (Decoder::MThemeEnabled(Decoder::MTheme::T234)) {
+		// Track M, M2a (T234, upstream e85279ea; KYTY_M_T234): two operands - MEM = min/max(MEM, DATA0); DATA1 is
+		// not read (the game encodes 0 there, i.e. v0 - the address register of its ds_max_f32). The compare
+		// argument carries DATA0 and is not used by the emitter at =1.
+		const auto address = ReadU32(MemorySourceAt(inst, 1));
+		const auto data    = ReadU32(MemorySourceAt(inst, 0));
+		ir.Emit(opcode, {address, data, data, ir.GetExec()}, AddMemoryInfo(memory, inst.pc));
+		return true;
+	}
 	ir.Emit(opcode,
 	        {ReadU32(MemorySourceAt(inst, 1)), ReadU32(MemorySourceAt(inst, 0)),
 	         ReadU32(MemorySourceAt(inst, 2)), ir.GetExec()},

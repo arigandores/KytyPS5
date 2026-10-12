@@ -359,6 +359,40 @@ bool FixF10Enabled() {
 	return enabled;
 }
 
+const char* MThemeKnob(MTheme theme) {
+	static constexpr const char* knobs[] = {"KYTY_M_T234", "KYTY_M_T233", "KYTY_M_T256",
+	                                        "KYTY_M_T306", "KYTY_M_T032", "KYTY_M_T203"};
+	const auto index = static_cast<uint32_t>(theme);
+	return index < static_cast<uint32_t>(MTheme::Count) ? knobs[index] : "";
+}
+
+uint32_t MThemeMask() {
+	// Track M, M2a (HPP-838): default OFF - only a value Common::EnvValueOn accepts turns a theme on.
+	static const uint32_t mask = [] {
+		uint32_t result = 0;
+		for (uint32_t index = 0; index < static_cast<uint32_t>(MTheme::Count); index++) {
+			if (Common::EnvValueOn(std::getenv(MThemeKnob(static_cast<MTheme>(index))))) {
+				result |= 1u << index;
+			}
+		}
+		return result;
+	}();
+	return mask;
+}
+
+bool MThemeEnabled(MTheme theme) {
+	return (MThemeMask() >> static_cast<uint32_t>(theme) & 1u) != 0u;
+}
+
+std::string MWave1SignatureToken() {
+	const auto mask = MThemeMask();
+	if (mask == 0u) {
+		return {};
+	}
+	static constexpr char digits[] = "0123456789abcdef";
+	return std::string(":mw1_") + digits[(mask >> 4u) & 0xfu] + digits[mask & 0xfu];
+}
+
 Family GetInstructionFamily(uint32_t word) {
 	if ((word & 0x80000000u) == 0u) {
 		switch ((word >> 25u) & 0x3fu) {

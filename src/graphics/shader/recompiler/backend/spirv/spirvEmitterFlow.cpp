@@ -286,9 +286,17 @@ uint32_t ExportRawComponent(ValueEmitContext& ctx, uint32_t vector, uint32_t com
 uint32_t ExportVector(ValueEmitContext& ctx, uint32_t data, const IR::ExportInfo& exp,
                       bool uint_output) {
 	auto& state = ctx.state;
-	if (exp.compr && !uint_output) {
-		const auto unpack =
-		    MrtOutputMode(state, exp) == 5u ? GLSLstd450UnpackUnorm2x16 : GLSLstd450UnpackHalf2x16;
+	// Track M, M2a (T256, upstream b96871e2; KYTY_M_T256): compressed exports of SPI_SHADER_COL_FORMAT 6
+	// (SNORM16_ABGR) unpack as signed normalized pairs and of format 8 (SINT16_ABGR) as sign-extended 16-bit
+	// lanes (the raw path, as format 7 does with zero extension); off: both unpack as half.
+	const bool m_t256      = Decoder::MThemeEnabled(Decoder::MTheme::T256);
+	const auto output_mode = MrtOutputMode(state, exp);
+	const bool sint16_raw  = m_t256 && exp.compr && !uint_output && output_mode == 8u;
+	if (exp.compr && !uint_output && !sint16_raw) {
+		auto unpack = output_mode == 5u ? GLSLstd450UnpackUnorm2x16 : GLSLstd450UnpackHalf2x16;
+		if (m_t256 && output_mode == 6u) {
+			unpack = GLSLstd450UnpackSnorm2x16;
+		}
 		uint32_t f32[4] = {ConstantF32(state, 0), ConstantF32(state, 0), ConstantF32(state, 0),
 		                   ConstantF32(state, 0x3f800000u)};
 		for (uint32_t pair = 0; pair < 2u; pair++) {
@@ -332,9 +340,9 @@ uint32_t ExportVector(ValueEmitContext& ctx, uint32_t data, const IR::ExportInfo
 					continue;
 				}
 				raw[component] = state.builder.AllocateId();
-				state.builder.AddFunction(spv::OpBitFieldUExtract, TypeU32(state), raw[component],
-				                          packed, ConstantU32(state, lane * 16u),
-				                          ConstantU32(state, 16));
+				state.builder.AddFunction(sint16_raw ? spv::OpBitFieldSExtract : spv::OpBitFieldUExtract,
+				                          TypeU32(state), raw[component], packed,
+				                          ConstantU32(state, lane * 16u), ConstantU32(state, 16));
 			}
 		}
 	} else {

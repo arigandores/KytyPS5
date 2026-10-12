@@ -201,6 +201,20 @@ uint32_t EmitF32ToU32(EmitterState& state, uint32_t src, bool signed_value) {
 }
 
 } // namespace
+uint32_t EmitFPMad32(EmitterState& state, uint32_t a, uint32_t b, uint32_t c) {
+	// Track M, M2a (T233, upstream d8be245c; KYTY_M_T233): legacy MAD/MAC round the product before the add. Denormals
+	// follow our DenormFlushToZero mode: EmitFlushF32DenormToSignedZero flushes only when the module does not
+	// (upstream 77d77221 / T237 - the commented-out variant - is not taken).
+	a                  = EmitFlushF32DenormToSignedZero(state, a);
+	b                  = EmitFlushF32DenormToSignedZero(state, b);
+	c                  = EmitFlushF32DenormToSignedZero(state, c);
+	const auto product = EmitFPMul32(state, a, b);
+	state.builder.AddAnnotation(spv::OpDecorate, product, spv::DecorationNoContraction);
+	const auto sum = EmitFPAdd32(state, EmitFlushF32DenormToSignedZero(state, product), c);
+	state.builder.AddAnnotation(spv::OpDecorate, sum, spv::DecorationNoContraction);
+	return EmitFlushF32DenormToSignedZero(state, sum);
+}
+
 uint32_t EmitFPMedTri32(EmitterState& state, uint32_t a, uint32_t b, uint32_t c) {
 	const auto min_ab   = EmitMinMaxF32Value(state, a, b, false);
 	const auto min3     = EmitMinMaxF32Value(state, min_ab, c, false);

@@ -304,3 +304,6 @@ VALUE_OPCODE(BvhIntersectRay, U32x4, U32, U32, F32, F32, F32, F32, F32, F32, F32
 // DS_INC_RTN_U32 / DS_DEC_RTN_U32 (upstream e04007a), appended for cache compatibility.
 VALUE_OPCODE(SharedAtomicInc32, U32, U32, U32, U1)
 VALUE_OPCODE(SharedAtomicDec32, U32, U32, U32, U1)
+// Track M, M2a (T233, upstream d8be245c; KYTY_M_T233): legacy V_MAD/MAC/MADMK/MADAK_F32 - the product and the sum
+// are rounded separately (not fused); appended for cache compatibility.
+VALUE_OPCODE(FPMad32, F32, F32, F32, F32)

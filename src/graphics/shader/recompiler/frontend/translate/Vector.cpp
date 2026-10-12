@@ -2,6 +2,23 @@
 
 namespace Libs::Graphics::ShaderRecompiler::Frontend {
 
+namespace {
+
+// Track M, M2a (T233, upstream d8be245c; KYTY_M_T233): V_MAC_F32 (VOP2 0x1f, VOP3 0x11f), V_MADMK_F32 (0x20),
+// V_MADAK_F32 (0x21) and V_MAD_F32 (VOP3 0x141) are the legacy, unfused MAD; VOP2 0x2b-0x2d (VOP3 0x12b) are
+// V_FMAC/FMAMK/FMAAK_F32 - fused - and our decoder names them V_MAC/MADMK/MADAK_F32 too, so the raw opcode decides.
+IR::ValueOpcode LegacyMadOpcode(const Decoder::Instruction& inst) {
+	if (!Decoder::MThemeEnabled(Decoder::MTheme::T233)) {
+		return IR::ValueOpcode::FPFma32;
+	}
+	if (inst.opcode != Decoder::Opcode::V_MAD_F32 && (inst.opcode_id & 0xffu) >= 0x2bu) {
+		return IR::ValueOpcode::FPFma32;
+	}
+	return IR::ValueOpcode::FPMad32;
+}
+
+} // namespace
+
 bool Translator::EmitVector(const Decoder::Instruction& inst) {
 	using O = Decoder::Opcode;
 	switch (inst.opcode) {
@@ -411,10 +428,10 @@ bool Translator::EmitVector(const Decoder::Instruction& inst) {
 		case O::V_MIN_F32: return FloatBinary(inst, IR::ValueOpcode::FPMin32, false);
 		case O::V_MAX_F32: return FloatBinary(inst, IR::ValueOpcode::FPMax32, false);
 		case O::V_LDEXP_F32: return FloatBinary(inst, IR::ValueOpcode::FPLdexp, false);
-		case O::V_MAC_F32: return FloatTernary(inst, IR::ValueOpcode::FPFma32, true, true);
+		case O::V_MAC_F32: return FloatTernary(inst, LegacyMadOpcode(inst), true, true);
 		case O::V_MADMK_F32:
 		case O::V_MADAK_F32:
-		case O::V_MAD_F32:
+		case O::V_MAD_F32: return FloatTernary(inst, LegacyMadOpcode(inst), false, true);
 		case O::V_FMA_F32: return FloatTernary(inst, IR::ValueOpcode::FPFma32, false, true);
 		case O::V_MIN3_F32: return FloatTernary(inst, IR::ValueOpcode::FPMinTri32, false, false);
 		case O::V_MAX3_F32: return FloatTernary(inst, IR::ValueOpcode::FPMaxTri32, false, false);

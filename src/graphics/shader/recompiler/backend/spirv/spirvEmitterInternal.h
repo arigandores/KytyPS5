@@ -514,6 +514,12 @@ void EmitDeviceAtomicMemoryBarrier(EmitterState& state);
 uint32_t EmitFloatAtomicReplacement(EmitterState& state, uint32_t old, uint32_t source,
                                     bool max_value);
 
+// Track M, M2a (T234, upstream e85279ea; KYTY_M_T234): DS_MIN/MAX_F32 replacement - a NaN operand yields the other
+// one, a signalling NaN is quieted, negative denormals tie with -0, positive denormals tie with each other, ties
+// select the source for min and the old value for max; the selected operand keeps its bits.
+uint32_t EmitDsFloatAtomicReplacement(EmitterState& state, uint32_t old, uint32_t source,
+                                      bool max_value);
+
 uint32_t EmitDsSwizzleTargetLane(EmitterState& state, uint32_t subid, uint32_t control);
 
 inline constexpr auto EmitSelectValueU32 =

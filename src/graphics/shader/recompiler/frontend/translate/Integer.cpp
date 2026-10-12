@@ -497,6 +497,20 @@ bool Translator::V_ALIGNBIT_B32(const Decoder::Instruction& inst) {
 bool Translator::V_ALIGNBYTE_B32(const Decoder::Instruction& inst) {
 	const auto hi           = ReadU32(inst.src0);
 	const auto lo           = ReadU32(inst.src1);
+	if (Decoder::MThemeEnabled(Decoder::MTheme::T203)) {
+		// Track M, M2a (T203, upstream f18679e0; KYTY_M_T203): RDNA2 V_ALIGNBYTE_B32 is
+		// D = ({S0, S1} >> (8 * S2[1:0]))[31:0] - only the two low bits of S2 select the byte.
+		const auto shift   = ir.ShiftLeftLogical(ir.BitwiseAnd(ReadU32(inst.src2), IR::U32(IR::Value(3u))),
+		                                         IR::U32(IR::Value(3u)));
+		const auto lo_part = ir.ShiftRightLogical(lo, shift);
+		const auto inverse =
+		    ir.BitwiseAnd(ir.ISub(IR::U32(IR::Value(32u)), shift), IR::U32(IR::Value(31u)));
+		const auto hi_part_raw = ir.ShiftLeftLogical(hi, inverse);
+		const auto hi_part     = ir.Select(ir.INotEqual(shift, IR::U32(IR::Value(0u))), hi_part_raw,
+		                                   IR::U32(IR::Value(0u)));
+		WriteOperand(DestinationOperand(inst), ir.BitwiseOr(lo_part, hi_part));
+		return true;
+	}
 	const auto byte_offset  = ir.BitwiseAnd(ReadU32(inst.src2), IR::U32(IR::Value(31u)));
 	const auto bit_offset   = ir.ShiftLeftLogical(byte_offset, IR::U32(IR::Value(3u)));
 	const auto concatenated = ir.ConstructU64(lo, hi);

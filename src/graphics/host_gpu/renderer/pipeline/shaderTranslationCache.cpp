@@ -580,12 +580,23 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
 	// =0 and =1 never share a signature or a directory.
 	// Track F, F14e (ROADMAP s122 item 409(v)): KYTY_FIX_F19=1 (the default since FS8a, p.471(g)(1)) adds ":fixf19" after
 	// ":fixf10", last.
+	// Track M, M2a (HPP-838, ROADMAP s122 item 756(v)(1)): any KYTY_M_<theme>=1 of wave 1 adds ":mw1_<mask>" after
+	// ":fixf19", last - one token for the whole wave; every theme off adds nothing.
+	LOGF("MWave1: mask=0x%02x T234=%d T233=%d T256=%d T306=%d T032=%d T203=%d\n",
+	     ShaderRecompiler::Decoder::MThemeMask(),
+	     ShaderRecompiler::Decoder::MThemeEnabled(ShaderRecompiler::Decoder::MTheme::T234) ? 1 : 0,
+	     ShaderRecompiler::Decoder::MThemeEnabled(ShaderRecompiler::Decoder::MTheme::T233) ? 1 : 0,
+	     ShaderRecompiler::Decoder::MThemeEnabled(ShaderRecompiler::Decoder::MTheme::T256) ? 1 : 0,
+	     ShaderRecompiler::Decoder::MThemeEnabled(ShaderRecompiler::Decoder::MTheme::T306) ? 1 : 0,
+	     ShaderRecompiler::Decoder::MThemeEnabled(ShaderRecompiler::Decoder::MTheme::T032) ? 1 : 0,
+	     ShaderRecompiler::Decoder::MThemeEnabled(ShaderRecompiler::Decoder::MTheme::T203) ? 1 : 0);
 	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
 	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "") +
 	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "") +
 	                            (ShaderRecompiler::Decoder::FixB1BEnabled() ? ":fixb1b" : "") +
 	                            (ShaderRecompiler::Decoder::FixF10Enabled() ? ":fixf10" : "") +
-	                            (ShaderRecompiler::IR::FixF19Enabled() ? ":fixf19" : "");
+	                            (ShaderRecompiler::IR::FixF19Enabled() ? ":fixf19" : "") +
+	                            ShaderRecompiler::Decoder::MWave1SignatureToken();
 	if (!variant.empty()) {
 		std::string folder = "variant" + variant;
 		std::replace(folder.begin(), folder.end(), ':', '_');

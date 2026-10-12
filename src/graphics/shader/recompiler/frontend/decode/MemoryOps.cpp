@@ -194,7 +194,8 @@ uint32_t DsSourceCount(Opcode opcode) {
 		case Opcode::DS_WRITE2_B64:
 		case Opcode::DS_WRITE2ST64_B64:
 		case Opcode::DS_MIN_F32:
-		case Opcode::DS_MAX_F32: return 3u;
+		// Track M, M2a (T234, upstream e85279ea; KYTY_M_T234): DS_MIN/MAX_F32 read the address and DATA0 only.
+		case Opcode::DS_MAX_F32: return MThemeEnabled(MTheme::T234) ? 2u : 3u;
 		case Opcode::DS_BPERMUTE_B32: return 2u;
 		case Opcode::DS_READ_ADDTID_B32:
 		case Opcode::DS_CONSUME:

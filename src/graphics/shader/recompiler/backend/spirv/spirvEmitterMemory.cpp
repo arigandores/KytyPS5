@@ -1578,9 +1578,21 @@ void FormattedStorePrepared(ValueEmitContext& ctx, const IR::Inst& inst, const I
 	}
 }
 
+// Track M, M2a (T032; KYTY_M_T032): defined after PrepareFormattedMemory.
+void MStoreFormatted(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryInfo& mem,
+                     const MemoryResourceAccess& resource, const Format::BufferFormatInfo& info, uint32_t data,
+                     uint32_t components);
+
 void FormattedStore(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryInfo& mem) {
 	EmitIfCondition(ctx.state, ctx.Arg(inst, inst.NumArgs() - 1), [&]() {
 		const auto resource = PrepareMemoryResourceAccess(ctx.state, mem);
+		if (Decoder::MThemeEnabled(Decoder::MTheme::T032)) {
+			const auto info = Format::GetFormatInfo(BufferFormat(ctx, mem));
+			if (info.type != Format::ComponentType::Unknown) {
+				MStoreFormatted(ctx, inst, mem, resource, info, ctx.Arg(inst, inst.NumArgs() - 2), 1u);
+				return;
+			}
+		}
 		FormattedStorePrepared(ctx, inst, mem, 0u, resource, ctx.Arg(inst, inst.NumArgs() - 2));
 	});
 }
@@ -1770,6 +1782,89 @@ uint32_t FormattedOutOfBoundsValue(ValueEmitContext& ctx, const IR::MemoryInfo& 
 	return ConstructU32Composite(ctx.state, components, values);
 }
 
+// Track M, M2a (T032, upstream c66d977c, a6248c7c, 81f31263, de9c15fa; KYTY_M_T032): one component of a formatted
+// store encoded by the format of the V# - UNORM/SNORM: NaN -> 0, clamp, scale, round to nearest even; USCALED/
+// SSCALED: NaN -> 0, clamp, truncate toward zero; two-bit channels are unsigned in signed formats; FLOAT16: half;
+// any other type and width: the bits as they are.
+uint32_t MEncodeFormattedStoreComponent(ValueEmitContext& ctx, const Format::BufferFormatInfo& info,
+                                        uint32_t component, uint32_t data) {
+	auto&      state      = ctx.state;
+	const auto bits       = info.component_bits[component];
+	const bool normalized = info.type == Format::ComponentType::Unorm ||
+	                        info.type == Format::ComponentType::Snorm;
+	const bool scaled     = info.type == Format::ComponentType::Uscaled ||
+	                        info.type == Format::ComponentType::Sscaled;
+	if ((normalized || scaled) && bits >= 1u && bits < 32u) {
+		const bool is_signed = bits != 2u && (info.type == Format::ComponentType::Snorm ||
+		                                      info.type == Format::ComponentType::Sscaled);
+		const auto max_value = static_cast<float>((1u << (bits - (is_signed ? 1u : 0u))) - 1u);
+		const auto lower =
+		    normalized ? (is_signed ? -1.0f : 0.0f) : (is_signed ? -max_value - 1.0f : 0.0f);
+		const auto upper = normalized ? 1.0f : max_value;
+		auto       value = Select(state, TypeF32(state), EmitClassifyF32Bits(state, data).nan,
+		                          ConstantF32Value(state, 0.0f), EmitBitcastU32ToF32(state, data));
+		value = EmitGlsl<GLSLstd450FClamp, IR::Type::F32, uint32_t, uint32_t, uint32_t>(
+		    state, value, ConstantF32Value(state, lower), ConstantF32Value(state, upper));
+		if (normalized) {
+			value = EmitFPRoundEven32(state, EmitFPMul32(state, value, ConstantF32Value(state, max_value)));
+		}
+		// Float-to-integer conversion truncates scaled values toward zero.
+		value = Unary(state, is_signed ? spv::OpConvertFToS : spv::OpConvertFToU,
+		              is_signed ? TypeI32(state) : TypeU32(state), value);
+		return is_signed ? Unary(state, spv::OpBitcast, TypeU32(state), value) : value;
+	}
+	if (bits == 16u && info.type == Format::ComponentType::Float) {
+		const auto pair = state.builder.AllocateId();
+		state.builder.AddFunction(spv::OpCompositeConstruct, TypeF32Vector(state, 2), pair,
+		                          EmitBitcastU32ToF32(state, data), ConstantF32Value(state, 0.0f));
+		return EmitPackHalf2x16(state, pair);
+	}
+	return data;
+}
+
+// Track M, M2a (T032; KYTY_M_T032): every transferred component is encoded by the format of the V#. Non-packed
+// formats write the transferred components only, each in bounds as before (the components without a VGPR keep the
+// memory; upstream 81f31263 zero-fills them - [I], not taken); a packed bit-field format writes its one word whole
+// with the fields without a VGPR zero (as upstream).
+void MStoreFormatted(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryInfo& mem,
+                     const MemoryResourceAccess& resource, const Format::BufferFormatInfo& info, uint32_t data,
+                     uint32_t components) {
+	const auto transferred =
+	    info.packed_bitfield ? info.component_count : std::min(components, info.component_count);
+	const auto plan = PrepareFormattedMemory(ctx, inst, mem, resource, info, transferred, FormattedAccess::Store);
+	EmitIfCondition(ctx.state, plan.in_bounds, [&]() {
+		auto packed = ConstantU32(ctx.state, 0);
+		for (uint32_t component = 0; component < transferred; component++) {
+			auto value = ConstantU32(ctx.state, 0);
+			if (component < components) {
+				value = data;
+				if (components != 1u) {
+					value = ctx.state.builder.AllocateId();
+					ctx.state.builder.AddFunction(spv::OpCompositeExtract, TypeU32(ctx.state), value, data,
+					                              component);
+				}
+			}
+			value           = MEncodeFormattedStoreComponent(ctx, info, component, value);
+			const auto bits = info.component_bits[component];
+			if (info.packed_bitfield) {
+				const auto inserted = ctx.state.builder.AllocateId();
+				ctx.state.builder.AddFunction(spv::OpBitFieldInsert, TypeU32(ctx.state), inserted, packed, value,
+				                              ConstantU32(ctx.state, info.component_bit_offset[component]),
+				                              ConstantU32(ctx.state, bits));
+				packed = inserted;
+			} else if (bits == 8u || bits == 16u) {
+				StoreSubwordInBounds(ctx, mem, resource, plan.addresses[component], plan.indices[component], bits,
+				                     value);
+			} else {
+				StoreWordInBounds(ctx, resource, plan.indices[component], value);
+			}
+		}
+		if (info.packed_bitfield) {
+			StoreWordInBounds(ctx, resource, plan.indices[0], packed);
+		}
+	});
+}
+
 void StoreFormattedInBounds(ValueEmitContext& ctx, const IR::MemoryInfo& mem,
                             const PreparedFormattedMemory& plan, uint32_t component,
                             uint32_t data) {
@@ -1827,6 +1922,10 @@ void StoreWideBuffer(ValueEmitContext& ctx, const IR::Inst& inst, uint32_t compo
 		const auto info = Format::GetFormatInfo(
 		    mem.formatted ? BufferFormat(ctx, mem) : Prospero::BufferFormat::kInvalid);
 		if (info.type != Format::ComponentType::Unknown) {
+			if (Decoder::MThemeEnabled(Decoder::MTheme::T032)) {
+				MStoreFormatted(ctx, inst, mem, resource, info, composite, components);
+				return;
+			}
 			const auto plan = PrepareFormattedMemory(ctx, inst, mem, resource, info, components,
 			                                         FormattedAccess::Store);
 			EmitIfCondition(state, plan.in_bounds, [&]() {
@@ -2527,6 +2626,11 @@ void EmitSharedFloatAtomic(ValueEmitContext& ctx, const IR::Inst& inst) {
 			    AtomicUpdate(
 			        ctx.state, EmitMemoryElementPointer(ctx.state, access.resource, access.index),
 			        mem.kind, [&](uint32_t old) {
+				        if (Decoder::MThemeEnabled(Decoder::MTheme::T234)) {
+					        // Track M, M2a (T234, upstream e85279ea; KYTY_M_T234): min/max of the word and DATA0
+					        // with the NaN and denormal order of the hardware; DATA1 is not read.
+					        return EmitDsFloatAtomicReplacement(ctx.state, old, data, max_value);
+				        }
 				        const auto old_f =
 				            Unary(ctx.state, spv::OpBitcast, TypeF32(ctx.state), old);
 				        const auto compare_f =

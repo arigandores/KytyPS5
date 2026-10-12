@@ -8127,6 +8127,133 @@ void TestNewShaderRecompilerDsFloatMinMaxTranslation() {
   CheckSpirvBinaryValidates(result.spirv);
 }
 
+// Track M, M2a (HPP-838, ROADMAP s122 item 756(v)(1)): translator themes of wave 1 at the knob values of this process
+// (KYTY_M_<theme>, read once). Each block checks the answer of its knob: at 1 the ISA reference, at 0 the previous
+// translation, which differs from the reference (the reproduction of the theme at 0; numbers - the GPU gate
+// --m-wave1-case of shader_recompiler_compute_tests).
+uint32_t MWave1CountExtInst(const std::vector<uint32_t> &binary, uint32_t ext_inst) {
+  uint32_t count = 0;
+  for (size_t i = 5; i < binary.size();) {
+    const uint32_t word_count = binary[i] >> 16u;
+    if (word_count == 0 || i + word_count > binary.size()) {
+      break;
+    }
+    if ((binary[i] & 0xffffu) == 12u && word_count >= 5u && binary[i + 4] == ext_inst) {
+      count++;
+    }
+    i += word_count;
+  }
+  return count;
+}
+
+uint32_t MWave1CountDecoration(const std::vector<uint32_t> &binary, uint32_t decoration) {
+  uint32_t count = 0;
+  for (size_t i = 5; i < binary.size();) {
+    const uint32_t word_count = binary[i] >> 16u;
+    if (word_count == 0 || i + word_count > binary.size()) {
+      break;
+    }
+    if ((binary[i] & 0xffffu) == 71u && word_count >= 3u && binary[i + 2] == decoration) {
+      count++;
+    }
+    i += word_count;
+  }
+  return count;
+}
+
+void TestMWave1Translator() {
+  namespace D = ShaderRecompiler::Decoder;
+  std::fprintf(stderr, "[mw1] mask=0x%02x token=%s\n", D::MThemeMask(), D::MWave1SignatureToken().c_str());
+  {
+    // T234: DS_MIN/MAX_F32 read the address and DATA0 only (reference: two operands).
+    const bool on = D::MThemeEnabled(D::MTheme::T234);
+    for (bool max_value : {false, true}) {
+      const uint32_t shader[] = {EncodeDs0(max_value ? 0x13 : 0x12, 4), EncodeDs1Ex(0, 250, 7, 1)};
+      D::Instruction decoded;
+      D::DecodeInstruction(shader, 0u, decoded);
+      std::fprintf(stderr, "[mw1] T234 knob=%d %s src_count=%u reference=2\n", on ? 1 : 0,
+                   max_value ? "ds_max_f32" : "ds_min_f32", decoded.src_count);
+      Check(decoded.opcode == (max_value ? D::Opcode::DS_MAX_F32 : D::Opcode::DS_MIN_F32) &&
+                decoded.src_count == (on ? 2u : 3u),
+            "T234: DS float min/max source count does not follow KYTY_M_T234");
+    }
+  }
+  {
+    // T256: compressed export of SPI_SHADER_COL_FORMAT 6 (SNORM16_ABGR) unpacks with UnpackSnorm2x16 (GLSL 60),
+    // of format 8 (SINT16_ABGR) with sign extension; at 0 both unpack as half (GLSL 62).
+    const bool on = D::MThemeEnabled(D::MTheme::T256);
+    const uint32_t shader[] = {
+        EncodeExp0(0x00, 0xf, true, true),
+        EncodeExp1(0, 1, 0, 0), // compressed MRT0
+        0xbf810000u,
+    };
+    auto options = MakeCompileOptions(ShaderType::Pixel);
+    ShaderPixelInputInfo snorm16_info;
+    snorm16_info.target_output_mode[0] = 6;
+    options.input_info.pixel = &snorm16_info;
+    auto snorm16 = RecompileForTest(shader, options);
+    const auto snorm_unpack = MWave1CountExtInst(snorm16.spirv, 60);
+    const auto snorm_half = MWave1CountExtInst(snorm16.spirv, 62);
+    CheckSpirvBinaryValidates(snorm16.spirv);
+    ShaderPixelInputInfo sint16_info;
+    sint16_info.target_output_mode[0] = 8;
+    options.input_info.pixel = &sint16_info;
+    auto sint16 = RecompileForTest(shader, options);
+    const auto sint_source = DisassembleSpirvBinary(sint16.spirv);
+    const auto sint_sext = CountSourceOccurrences(sint_source, "OpBitFieldSExtract");
+    const auto sint_half = MWave1CountExtInst(sint16.spirv, 62);
+    CheckSpirvBinaryValidates(sint16.spirv);
+    std::fprintf(stderr,
+                 "[mw1] T256 knob=%d mode6 UnpackSnorm2x16=%u UnpackHalf2x16=%u mode8 SExtract=%u "
+                 "UnpackHalf2x16=%u reference=snorm/sext\n",
+                 on ? 1 : 0, snorm_unpack, snorm_half, sint_sext, sint_half);
+    Check(on ? (snorm_unpack == 2u && snorm_half == 0u) : (snorm_unpack == 0u && snorm_half == 2u),
+          "T256: SNORM16 compressed export does not follow KYTY_M_T256");
+    Check(on ? (sint_sext == 4u && sint_half == 0u) : (sint_sext == 0u && sint_half == 2u),
+          "T256: SINT16 compressed export does not follow KYTY_M_T256");
+  }
+  {
+    // T233: legacy V_MAD_F32 (VOP3 0x141), V_MAC_F32 (VOP2 0x1f, VOP3 0x11f), V_MADMK_F32 (0x20), V_MADAK_F32
+    // (0x21) are not fused - OpFMul + OpFAdd with NoContraction (decoration 42); V_FMAC_F32 (0x2b) and V_FMA_F32
+    // (VOP3 0x14b) stay GLSL Fma (50).
+    const bool on = D::MThemeEnabled(D::MTheme::T233);
+    const auto vop2 = [](uint32_t op, uint32_t vdst, uint32_t src0, uint32_t vsrc1) {
+      return (op << 25u) | (vdst << 17u) | (vsrc1 << 9u) | src0;
+    };
+    const auto vop3w0 = [](uint32_t op, uint32_t vdst) { return (0x35u << 26u) | (op << 16u) | vdst; };
+    const auto vop3w1 = [](uint32_t s0, uint32_t s1, uint32_t s2) { return (s2 << 18u) | (s1 << 9u) | s0; };
+    const uint32_t legacy_shader[] = {
+        vop3w0(0x141, 10), vop3w1(256, 257, 258),       // v_mad_f32 v10, v0, v1, v2
+        vop2(0x1f, 2, 256, 1),                           // v_mac_f32 v2, v0, v1
+        vop2(0x20, 11, 256, 1), 0x3f800800u,             // v_madmk_f32 v11, v0, K, v1
+        vop2(0x21, 12, 256, 1), 0xbf801000u,             // v_madak_f32 v12, v0, v1, K
+        EncodeExp0(0x00, 0xf, true), EncodeExp1(10, 2, 11, 12),
+        0xbf810000u,
+    };
+    const uint32_t mixed_shader[] = {
+        vop3w0(0x11f, 3), vop3w1(256, 257, 0),           // v_mac_f32 (VOP3) v3, v0, v1
+        vop2(0x2b, 4, 256, 1),                           // v_fmac_f32 v4, v0, v1
+        vop3w0(0x14b, 13), vop3w1(256, 257, 258),       // v_fma_f32 v13, v0, v1, v2
+        EncodeExp0(0x00, 0xf, true), EncodeExp1(3, 4, 13, 13),
+        0xbf810000u,
+    };
+    auto options = MakeCompileOptions(ShaderType::Pixel);
+    ShaderPixelInputInfo info;
+    options.input_info.pixel = &info;
+    auto legacy = RecompileForTest(legacy_shader, options);
+    CheckSpirvBinaryValidates(legacy.spirv);
+    auto mixed = RecompileForTest(mixed_shader, options);
+    CheckSpirvBinaryValidates(mixed.spirv);
+    const auto fma = MWave1CountExtInst(legacy.spirv, 50) + MWave1CountExtInst(mixed.spirv, 50);
+    const auto no_contraction =
+        MWave1CountDecoration(legacy.spirv, 42) + MWave1CountDecoration(mixed.spirv, 42);
+    std::fprintf(stderr, "[mw1] T233 knob=%d Fma=%u NoContraction=%u reference=Fma 2 NoContraction 10\n",
+                 on ? 1 : 0, fma, no_contraction);
+    Check(on ? (fma == 2u && no_contraction == 10u) : (fma == 7u && no_contraction == 0u),
+          "T233: legacy MAD fusion does not follow KYTY_M_T233");
+  }
+}
+
 void TestNewShaderRecompilerCfgStraightLine() {
   const uint32_t shader[] = {
       EncodeSMovB32(0, 129),
@@ -16101,6 +16228,30 @@ int main() {
                 words.size(), result.size());
     return 0;
   }
+  if (const char *m_decode = std::getenv("KYTY_M_DECODE"); m_decode != nullptr && m_decode[0] != 0) {
+    // Track M, M2a (HPP-838, ROADMAP s122 item 756(v)(1)(ii)): the translator's own decoder over a raw GCN dump
+    // (_Shaders/original form) - one line per instruction: pc, family, raw opcode id, the decoder's text.
+    namespace D = ShaderRecompiler::Decoder;
+    std::vector<uint32_t> code;
+    if (FILE *file = std::fopen(m_decode, "rb"); file != nullptr) {
+      uint32_t word = 0;
+      while (std::fread(&word, sizeof(word), 1, file) == 1) {
+        code.push_back(word);
+      }
+      std::fclose(file);
+    } else {
+      std::fprintf(stderr, "m-decode: cannot open %s\n", m_decode);
+      return 1;
+    }
+    D::Program program;
+    D::DecodeProgram(std::span<const uint32_t>(code), program);
+    for (const auto &inst : program.instructions) {
+      std::printf("pc=0x%05x fam=%d op=0x%03x %s\n", inst.pc, static_cast<int>(inst.family), inst.opcode_id,
+                  D::InstructionToString(inst).c_str());
+    }
+    std::printf("m-decode: words=%zu instructions=%zu\n", code.size(), program.instructions.size());
+    return 0;
+  }
   if (const char *recompile = std::getenv("KYTY_RECOMPILE"); recompile != nullptr) {
     // Offline recompilation: KYTY_RECOMPILE="<gcn.bin>;<cache.bin>;<out.spv>[;<permutation>]"
     // translates a raw GCN dump (_Shaders/original) with the current translator and emits the
@@ -16681,6 +16832,7 @@ int main() {
   RUN(TestShaderReplayFormat);
   RUN(TestShaderReplayCanonicalPath);
   RUN(TestShaderReplayWalkBits);
+  RUN(TestMWave1Translator);
 
   return 0;
 }

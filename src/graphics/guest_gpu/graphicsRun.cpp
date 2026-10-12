@@ -1,4 +1,5 @@
 #include "graphics/guest_gpu/graphicsRun.h"
+#include "graphics/host_gpu/renderer/diagF47Dt.h" // Track F, F47g (KYTY_DIAG_F47DT)
 
 #include "common/diagB32.h"
 #include "common/assert.h"
@@ -375,6 +376,9 @@ CommandProcessor& GuestGpu::GetProcessor(uint32_t queue_id) {
 }
 
 void CommandProcessor::Reset() {
+	if (DiagF47Dt::On()) { // Track F, F47g (HPP-824): KYTY_DIAG_F47DT, the register shadow follows the context
+		DiagF47Dt::NoteCtxOp(&m_ctx, &m_saved_ctx, DiagF47Dt::CtxOp::Reset);
+	}
 	m_sh_ctx.Reset();
 	m_ucfg.Reset();
 	m_ctx.Reset();
@@ -390,6 +394,13 @@ void CommandProcessor::Reset() {
 }
 
 void CommandProcessor::ApplyContextStateOperation(ContextStateOperation operation) {
+	if (DiagF47Dt::On()) { // Track F, F47g (HPP-824): KYTY_DIAG_F47DT, the register shadow follows the context
+		DiagF47Dt::NoteCtxOp(&m_ctx, &m_saved_ctx,
+		                     operation == ContextStateOperation::Clear  ? DiagF47Dt::CtxOp::Clear
+		                     : operation == ContextStateOperation::Push ? DiagF47Dt::CtxOp::Push
+		                     : operation == ContextStateOperation::Pop  ? DiagF47Dt::CtxOp::Pop
+		                                                                 : DiagF47Dt::CtxOp::PushClear);
+	}
 	switch (operation) {
 		case ContextStateOperation::Clear: m_ctx.Reset(); break;
 		case ContextStateOperation::Push:

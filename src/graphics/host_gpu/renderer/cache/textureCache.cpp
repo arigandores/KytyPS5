@@ -1,5 +1,6 @@
 #include "graphics/host_gpu/renderer/cache/textureCache.h"
 #include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
+#include "graphics/host_gpu/renderer/diagF47Dt.h" // Track F, F47g (KYTY_DIAG_F47DT)
 
 #include "common/alignment.h"
 #include "common/assert.h"
@@ -1648,6 +1649,10 @@ void TextureCache::CompletePendingUpload(Image& image) {
 	m_frame_upload_bytes += uploaded;
 	m_frame_pending_bytes += uploaded;
 	image.pending_bytes = 0;
+	if (DiagF47Dt::On()) { // Track F, F47g (HPP-824): KYTY_DIAG_F47DT, the completion of a deferred upload
+		DiagF47Dt::NoteImageUpload(UINT32_MAX, image.SourceRange().address, image.SourceRange().size,
+		                           image.source_first_level, levels - image.source_first_level, 0, true);
+	}
 	// Session 71, C1: key 0 = "the whole upload", so that keys 1..6 stay a clean phase
 	// namespace. The two-argument overload used to put the size in MiB in the KEY slot, where it
 	// collided with the phase keys for every image of 1-6 MiB. GpuTime only; nothing else reads
@@ -1856,6 +1861,10 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 		m_frame_upload_bytes += uploaded;
 		image.pending_levels = deferred > image.source_first_level ? deferred : 0;
 		image.pending_bytes  = image.pending_levels != 0 ? image.SourceRange().size - std::min(image.SourceRange().size, uploaded) : 0;
+		if (DiagF47Dt::On()) { // Track F, F47g (HPP-824): KYTY_DIAG_F47DT, the upload of this range
+			DiagF47Dt::NoteImageUpload(id.index, image.SourceRange().address, image.SourceRange().size, first_level,
+			                           image.info.resources.levels - first_level, image.pending_levels, false);
+		}
 		if (image.pending_levels != 0) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::ImgDeferred, 1);
 			Common::FrameStats::Add(Common::FrameStats::Counter::ImgDeferredBytes,

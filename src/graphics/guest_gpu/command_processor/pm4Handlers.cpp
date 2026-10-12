@@ -13,6 +13,7 @@
 #include "graphics/host_gpu/lodStats.h"
 #include "graphics/host_gpu/renderer/diagF5.h"
 #include "graphics/host_gpu/renderer/render.h"
+#include "graphics/host_gpu/renderer/diagF47Dt.h" // Track F, F47g (KYTY_DIAG_F47DT)
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/presentation/videoOut.h"
 #include "graphics/presentation/window.h"
@@ -2106,6 +2107,9 @@ KYTY_CP_OP_PARSER(CpOpIndirectCxRegs) {
 		}
 
 		pfunc(cp, cmd_offset, value);
+		if (DiagF47Dt::On()) { // Track F, F47g (HPP-824): KYTY_DIAG_F47DT, raw register words
+			DiagF47Dt::NoteCtxWrite(&cp.GetCtx(), cmd_offset, &value, 1, 2);
+		}
 	}
 
 	return KYTY_PM4_LEN(cmd_id) - 1u;
@@ -2492,6 +2496,9 @@ KYTY_CP_OP_PARSER(CpOpSetContextReg) {
 				g_hw_ctx_indirect_func[(cmd_offset + i) & (Pm4::CX_NUM - 1)](cp, cmd_offset + i,
 				                                                             buffer[1 + i]);
 			}
+			if (DiagF47Dt::On()) { // Track F, F47g (HPP-824): KYTY_DIAG_F47DT, raw register words
+				DiagF47Dt::NoteCtxWrite(&cp.GetCtx(), cmd_offset, buffer + 1, num_values, 1);
+			}
 			return num_values + 1u;
 		}
 		EXIT("unknown context register\n\t%05" PRIx32 ":\n\tcmd_id = %08" PRIx32
@@ -2502,6 +2509,10 @@ KYTY_CP_OP_PARSER(CpOpSetContextReg) {
 	auto s = pfunc(cp, cmd_id, cmd_offset, buffer + 1, dw);
 
 	EXIT_IF(s == 0);
+
+	if (DiagF47Dt::On()) { // Track F, F47g (HPP-824): KYTY_DIAG_F47DT, raw register words
+		DiagF47Dt::NoteCtxWrite(&cp.GetCtx(), cmd_offset, buffer + 1, s, 0);
+	}
 
 	return s + 1;
 }

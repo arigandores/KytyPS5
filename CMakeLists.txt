@@ -586,6 +586,11 @@ add_kyty_full_emulator_test(audio_propagation_tests
 add_kyty_full_emulator_test(f29_fault_stand
 	"${KYTY_TESTS_DIR}/F29FaultStand.cpp")
 
+# Track F, F47g (HPP-824; ROADMAP s122 item 740(v)(1)): KYTY_DIAG_F47DT stand without the game (the real module, a host
+# buffer as guest memory); run by docs/track-f/f47g/run_stand_f47g.py, not by ctest.
+add_kyty_full_emulator_test(f47dt_stand
+	"${KYTY_TESTS_DIR}/F47DtStand.cpp")
+
 # Track F, F8 SDL audio subsystem stand (F18c; ROADMAP s122 item 441(d)(1)): run by docs/track-f/f18c/run_stand_f18c.py,
 # not by ctest.
 add_kyty_full_emulator_test(f8_audio_stand

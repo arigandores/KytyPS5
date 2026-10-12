@@ -1,5 +1,6 @@
 #include "graphics/host_gpu/gpuDirtyGen.h"
 #include "graphics/host_gpu/renderer/cache/bufferCache.h"
+#include "graphics/host_gpu/renderer/diagF47Dt.h" // Track F, F47g (KYTY_DIAG_F47DT)
 #include <chrono>
 #include <cstdlib>
 #include <string>
@@ -1959,12 +1960,18 @@ BufferCache::ImageSource BufferCache::ObtainBufferForImage(uint64_t vaddr, uint6
 			TouchBuffer(buffer);
 			(void)SynchronizeBuffer(buffer, vaddr, size, false, false);
 			TraceImageUpload(vaddr, size, "owner");
+			if (DiagF47Dt::On()) { // Track F, F47g
+				DiagF47Dt::NoteImageSource(DiagF47Dt::SrcKind::Owner, vaddr, size, nullptr, nullptr, nullptr, 0);
+			}
 			const auto offset = buffer.Offset(vaddr);
 			return {buffer.Handle(), offset, buffer.Size() - offset};
 		}
 	}
 	if (IsRegionGpuModifiedFromGpu(vaddr, size)) {
 		TraceImageUpload(vaddr, size, "gpu-buffer");
+		if (DiagF47Dt::On()) { // Track F, F47g
+			DiagF47Dt::NoteImageSource(DiagF47Dt::SrcKind::Gpu, vaddr, size, nullptr, nullptr, nullptr, 0);
+		}
 		const auto [buffer, offset] = ObtainBuffer(vaddr, size, false, false);
 		return {buffer->Handle(), offset, buffer->Size() - offset};
 	}
@@ -1978,6 +1985,9 @@ BufferCache::ImageSource BufferCache::ObtainBufferForImage(uint64_t vaddr, uint6
 		ImageSource imported {};
 		if (ObtainImportedImageSource(vaddr, size, &imported, !pending_levels)) {
 			TraceImageUpload(vaddr, size, "import:no-owner");
+			if (DiagF47Dt::On()) { // Track F, F47g
+				DiagF47Dt::NoteImageSource(DiagF47Dt::SrcKind::Import, vaddr, size, nullptr, nullptr, nullptr, 0);
+			}
 			return imported;
 		}
 	}
@@ -1994,6 +2004,15 @@ BufferCache::ImageSource BufferCache::ObtainBufferForImage(uint64_t vaddr, uint6
 		                        size);
 		if (!m_staging_buffer.IsCoherent()) {
 			Common::WaitAsyncCopies(); // Commit flushes the range
+		}
+		// Track F, F47g (HPP-824): KYTY_DIAG_F47DT - the staging bytes; a pooled copy on coherent memory is still in
+		// flight here and is hashed later (never waited for), otherwise the bytes have landed.
+		if (DiagF47Dt::On()) {
+			DiagF47Dt::NoteImageSource(
+			    pooled && m_staging_buffer.IsCoherent() ? DiagF47Dt::SrcKind::StagingAsync : DiagF47Dt::SrcKind::Staging,
+			    vaddr, size, staging, &m_staging_buffer,
+			    [](const void* ring) { return static_cast<const StreamBuffer*>(ring)->Generation(); },
+			    m_staging_buffer.Generation());
 		}
 	}
 	m_staging_buffer.Commit();

@@ -122,6 +122,8 @@ public:
 		TouchImage(image);
 		return image;
 	}
+	// Track F, F47g (HPP-824): the image without the LRU touch of GetImage (KYTY_DIAG_F47DT reads only).
+	[[nodiscard]] const Image& PeekImage(ImageId id) const { return m_slot_images[id]; }
 	void MarkGpuWritten(ImageId id);
 
 	[[nodiscard]] bool ClearImageFromBuffer(CommandBuffer& command, uint64_t address, uint64_t size,

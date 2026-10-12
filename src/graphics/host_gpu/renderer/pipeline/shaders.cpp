@@ -284,6 +284,16 @@ static vk::BlendOp GetBlendOp(uint32_t op) {
 	return vk::BlendOp::eAdd;
 }
 
+// Track F, F47g (HPP-824, ROADMAP s122 item 740(v)(1)): GetBlendFactor / GetBlendOp for KYTY_DIAG_F47DT
+// (diagF47Dt.cpp prints the Vulkan blend state of a draw with the conversions the pipeline uses).
+vk::BlendFactor DiagF47DtBlendFactor(uint32_t factor) {
+	return GetBlendFactor(factor);
+}
+
+vk::BlendOp DiagF47DtBlendOp(uint32_t op) {
+	return GetBlendOp(op);
+}
+
 static void AddLayoutBindings(std::vector<vk::DescriptorSetLayoutBinding>& descriptor_bindings,
                               const ShaderRecompiler::IR::CompiledShaderInfo& program,
                               vk::ShaderStageFlagBits              stage) {

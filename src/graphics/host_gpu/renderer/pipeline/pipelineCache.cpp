@@ -5,6 +5,7 @@
 #include "graphics/host_gpu/renderer/pipeline/shaderTranslationCache.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderReplay.h"
 #include "graphics/host_gpu/renderer/pipeline/fixF20.h" // Track F, F42a (KYTY_FIX_F20)
+#include "graphics/host_gpu/renderer/diagF47Dt.h" // Track F, F47g (KYTY_DIAG_F47DT)
 #include "loader/gamePatchFile.h"
 #include "graphics/host_gpu/renderer/pipeline/computePretranslation.h"
 #include "graphics/guest_gpu/command_processor/commandProcessor.h"
@@ -3742,6 +3743,11 @@ struct PipelineCache::ProgramCache {
 		    .userdata                   = &read_cache,
 		    .read_specialization_memory = ReadShaderGuestMemory,
 		};
+		// Track F, F47g (HPP-824): KYTY_DIAG_F47DT - the plan, base and user data of the PS (measurement only).
+		if (DiagF47Dt::On() && stage == ShaderType::Pixel) {
+			DiagF47Dt::NotePsRuntime(entry != programs.end() ? &entry->second.resource_plan : nullptr,
+			                         params.Base(), params.user_data.data(), params.user_data.size());
+		}
 		pg_mark(Common::FrameStats::Counter::ProgLapLocalNs);
 		// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053): at bfmode 1
 		// and 3 the floor removes BOTH AheadTake (below) and MaterializeResources (further
@@ -5664,6 +5670,10 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 		EXIT_IF(attributes_num != static_cast<uint32_t>(vs_input_info.resources_num));
 	}
 
+	// Track F, F47g (HPP-824): KYTY_DIAG_F47DT - a thread-local copy of the finished key (measurement only).
+	if (DiagF47Dt::On()) {
+		DiagF47Dt::NoteGraphicsKey(key.static_params, key.rendering);
+	}
 	// Session 60, B3 (gate "progmemo"): most draws build the key of the previous draw's
 	// pipeline; entries are never erased, so the pointer found then still names it.
 	auto& memo = m_program_cache->pipeline_memo;

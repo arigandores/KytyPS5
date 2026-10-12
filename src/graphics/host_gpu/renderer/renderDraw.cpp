@@ -24,6 +24,7 @@
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
 #include "graphics/host_gpu/renderer/commandRecorder.h"
 #include "graphics/host_gpu/renderer/debug.h"
+#include "graphics/host_gpu/renderer/diagF47Dt.h" // Track F, F47g (KYTY_DIAG_F47DT)
 #include "graphics/host_gpu/renderer/depthRenderTarget.h"
 #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
@@ -4590,6 +4591,25 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	    state.programs, allow_pipeline_wait);
 	lap.Mark(Common::FrameStats::Counter::DrawPipelineNs);
 	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmPipeNs);
+	// Track F, F47g (HPP-824, ROADMAP s122 item 740(v)(1)): KYTY_DIAG_F47DT - measurement only, default 0; at 0
+	// one test of a flag read once per process. Reads the prepared bindings and the registers, records nothing
+	// the draw uses.
+	if (DiagF47Dt::On()) {
+		DiagF47Dt::DrawArgs f47dt;
+		f47dt.submit_id      = submit_id;
+		f47dt.draw_name      = draw.Name();
+		f47dt.index_count    = draw.index_count;
+		f47dt.instance_count = draw.instance_count;
+		f47dt.guest_frame    = m_context.GetGpu().GetFrameNum();
+		f47dt.vs             = &state.vertex_info[0].stage;
+		f47dt.ps             = state.ps_active ? &state.ps_input_info.stage : nullptr;
+		f47dt.pixel          = bindings.pixel.has_value() ? &*bindings.pixel : nullptr;
+		f47dt.colors         = state.color_info;
+		f47dt.color_count    = state.color_count;
+		f47dt.depth          = &state.depth_info;
+		f47dt.pipeline_ready = pipeline_ptr != nullptr;
+		DiagF47Dt::OnDraw(m_context, buffer, f47dt);
+	}
 	if (pipeline_ptr == nullptr) {
 		// The pipeline is being compiled by a worker thread (KYTY_ASYNC_PIPELINES): skip the draw
 		// instead of freezing the frame; the caller resets the bindings.

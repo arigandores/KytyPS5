@@ -1,0 +1,18 @@
+2026-10-12T11:36:02Z start M2c2 (HPP-844), read ROADMAP p.761-762 at KytyPS5 864d57aa; HPP-843 done; lock absent; no harness series (tracks P/F/S closed)
+2026-10-12T11:36:03Z m2c wt: tests/shaderCfgTests.cpp from 864d57aa; src = 864d57aa (diff empty)
+2026-10-12T11:36:09Z build cfg main start (m2c build, --parallel 2, IDLE)
+2026-10-12T11:36:43Z build cfg main end rc=0 sha d5e1801f
+2026-10-12T11:36:51Z mut_m2c.py patch (all mutants, M2C_MUT-gated): ALL OK; build cfg+compute start
+2026-10-12T11:37:20Z build cfg mut end rc=0 sha d6114515
+2026-10-12T11:37:25Z build compute mut start
+2026-10-12T11:38:04Z build compute mut end rc=0 sha 14ac4d41
+2026-10-12T11:38:17Z run_mut_m2c2.py T306 start
+2026-10-12T11:38:18Z run_mut_m2c2.py T306 end ef907dc6
+2026-10-12T11:38:25Z cfg_main MWave1 =0 49c1ea55 =1 49c1ea55
+2026-10-12T11:38:35Z cfg_main MWave1 =0 17d40421 =1 f99c3333 (first attempt: relative exe path, lowrun Popen error, not run)
+2026-10-12T11:39:30Z mutants restored; probe patch applied (not committed); build cfg probe start
+2026-10-12T11:40:07Z build cfg probe end rc=0 sha 599cd37a
+2026-10-12T11:40:24Z probe forms 0-5 x knob 0/1 done, concat sha 6090a1eb
+2026-10-12T11:41:02Z srchash (git archive 864d57aa, FS15 6beb3b73, m2c wt) 2f20c67a
+2026-10-12T11:41:18Z m2c wt restored (shaderCfgTests.cpp = 666a434a; only M2c measurement patch of compute tests remains); m2c/build objects now = probe build (stale, own)
+2026-10-12T11:42:15Z review.md written a2d2cbe0

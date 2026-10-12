@@ -1,0 +1,4 @@
+[host]    LeastRecentlyUsedCache           ok
+[mw1] mask=0x08 case=MW1T306SampleOffsetsFourNeighbors
+[compute] MW1T306SampleOffsetsFourNeighbors ok
+ALL OK

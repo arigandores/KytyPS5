@@ -1,0 +1,3 @@
+[spv] C:/kyty/m657/m2c2/spv/f4_k1/0.spv (565 words)
+[m2c2] form=4 knob=1 OpImageSample=1 ConstOffset=1
+rc=0

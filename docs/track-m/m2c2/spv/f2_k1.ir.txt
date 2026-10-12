@@ -1,0 +1,45 @@
+0x00000000: V_CMP_GT_U32 vcc_lo, s8, v0
+0x00000004: S_AND_SAVEEXEC_B64 s40, vcc_lo
+0x00000008: V_MOV_B32 v20, 0x00000101
+0x00000010: S_MOV_B64 exec_lo, -1
+0x00000014: image_sample_lz_o v4, v20, s0, s0 ; dmask=0x1 image_dim=2d sample_flags=offset|level_zero addr_components=3
+0x0000001c: IMAGE_STORE v4, v0, s0, s0 ; dmask=0x1 image_dim=2d
+0x00000024: s_endpgm
+
+==== IR ====
+CFG:
+entry_block=0 irreducible=0 unsupported=0 failure=None failure_block=4294967295
+block_0 pc=0x00000000 end=0x00000028 inst=[0,7)
+  predecessors=[] successors=[]
+  dominators=[0] post_dominators=[0]
+  terminator=3 condition=always true=4294967295 false=4294967295 merge=4294967295 continue=4294967295 loop_header=0 indirect_sgpr=4294967295 indirect_selector=4294967295 indirect_targets=[] selector_values=[] goto_variable=4294967295 goto_value=-1
+scc blocks=[0] entries=[] irreducible=0
+
+IR:
+mode=structured scratch_dwords=0
+Block $0 pc=0x00000000..0x00000000
+  %1     = GetUserData s0 (U32; uses=3)
+  %2     = GetUserData s1 (U32; uses=3)
+  %3     = GetUserData s2 (U32; uses=3)
+  %4     = GetUserData s3 (U32; uses=3)
+  %5     = GetUserData s4 (U32; uses=2)
+  %6     = GetUserData s5 (U32; uses=2)
+  %7     = GetUserData s6 (U32; uses=2)
+  %8     = GetUserData s7 (U32; uses=2)
+  %9     = GetUserData s8 (U32; uses=1)
+  %10    = GetBuiltin 0x00000007, 0x00000000 (U32; uses=1)
+  %11    = IEqual32 %10, 0x00000000 (U1; uses=2)
+Block $1 pc=0x00000000..0x00000028
+  %12    = UGreaterThan32 %9, 0x00000000 (U1; uses=1)
+  %13    = LogicalAnd %11, %12 (U1; uses=1)
+  %14    = LogicalAnd %11, %13 (U1; uses=1)
+  %15    = SelectU32 %14, 0x00000101, 0x00000000 (U32; uses=1)
+  %16    = GetImageResource %1, %2, %3, %4, %5, %6, %7, %8 (ImageResource; uses=1)
+  %17    = GetSamplerResource %1, %2, %3, %4 (SamplerResource; uses=1)
+  %18    = MakeImageAddress %15, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 (ImageAddress; uses=1)
+  %19    = ImageSampleRaw %16, %17, %18 (U32x4; uses=1)
+  %20    = CompositeExtractU32x4 %19, 0x00000000 (U32; uses=1)
+  %21    = GetImageResource %1, %2, %3, %4, %5, %6, %7, %8 (ImageResource; uses=1)
+  %22    = MakeImageAddress 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000 (ImageAddress; uses=1)
+  %23    = CompositeConstructU32x4 %20, 0x00000000, 0x00000000, 0x00000000 (U32x4; uses=1)
+          ImageWrite %21, %22, %23, true (Void; uses=0)

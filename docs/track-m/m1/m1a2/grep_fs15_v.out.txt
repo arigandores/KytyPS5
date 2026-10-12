@@ -1,0 +1,17 @@
+files 2
+T057	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T072	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T073	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T085	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T103	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T112	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T180	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T207	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T208	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T209	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T225	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T227	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T236	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T245	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+T287	fatal=0	pretranslate=33	first=C:/kyty/f287/fs15c/log_fs15_v.txt:284905
+themes with fatal hits: []

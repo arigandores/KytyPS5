@@ -1,0 +1,7 @@
+elf 6087 unique programs 5698 CS (pair 0x213) 190 non-CS 5508
+LDS bytes histogram (CS): 0:107 512:34 1024:2 1536:3 2048:4 2560:1 4096:1 5120:1 5632:3 6656:1 7680:5 8704:1 9728:3 49152:24
+max LDS bytes 49152 limit 49152 CS over limit 0 
+same code in ELFs with different LDS (max taken): 24
+anomalies {}
+ALL OK
+device (vulkaninfoSDK 1.4.357, 2026-10-12T08:20:30Z): NVIDIA GeForce RTX 5080 Laptop GPU, driver 616.56.0.0, maxComputeSharedMemorySize = 49152, maxMeshSharedMemorySize = 28672

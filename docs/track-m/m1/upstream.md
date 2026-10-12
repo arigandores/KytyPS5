@@ -12,6 +12,8 @@ Upstream: `origin` = `KytyPS5/KytyPS5`, `origin/main` `dad900c6`, база (merg
 покрытия, классов и якорей — печатает `564 of 564` и `ALL OK`), приложения `m883.md` (член (5)) и `tests.md` (член (6)), свидетельства
 `evidence/` (`ophist.tsv`, `overlap.tsv`, `knobs.md`), скрипты `tools/`.
 
+> **M1a2 (`HPP-837`, п. 756(б)) поправила эту опись.** Действующие классы — `upstream.tsv` и §14 (А-резерв у 74 тем RC1, T256 → А, T021 → В, деление T240/T313 и T185/T314, слияние `8cecaf4e` — `upstream_merges.tsv`). Таблица §10 поправлена на месте с пометкой «(M1a2; было X)»; §0–§9 — текст издания M1a без правки (классы там — до M1a2).
+
 ## 0. Итог
 
 | класс | смысл (п. 752(в)) | тем | коммитов | из них тем c / I / U |
@@ -721,12 +723,12 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 
 | № | ключ | класс | ув. | коммиты | название | основание | подп. | файлы ручек |
 |---|---|---|---|---|---|---|---|---|
-| T001 | `rnd-pm4-chain` | Г | U | `79120d53` | Цепочки PM4 (бит CHAIN) без рекурсии | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:2843` | нет | — |
+| T001 | `rnd-pm4-chain` | А-резерв (M1a2; было Г) | U | `79120d53` | Цепочки PM4 (бит CHAIN) без рекурсии | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:2843` | нет | — |
 | T002 | `prs-key-l2r2` | Г | c | `7af28c26` | Клавиши Z/C → L2/R2 | — | нет | `hostInput.cpp` |
 | T003 | `dec-sdwa-accept` | Г | I | `acd7435d` `cfb110e0` `cfb8f7b2` `6a9ae4ae` `cda236db` `d890bb19` `1d41ddb3` `60e53a39` `9f25e3c2` `2f4b8a33` `2f4d0f38` | Расширение допустимых форм SDWA/модификаторов декодера | `b3dc9c67:docs/track-f/f23a/cmp_eboot.out.txt:3` | да | — |
 | T004 | `av-linux-ffmpeg` | Г | c | `9cf7963f` | Системный FFmpeg на Linux | platform:Linux | нет | `CMakeLists.txt` |
 | T005 | `ir-baryc` | В | c | `0d9e95d9` `3ba6ebae` | Барицентрики PS: centroid/sample | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:1207` | да | — |
-| T006 | `rnd-zpass-pred` | Г | I | `629ae1ac` | Предикация по Z-pass (op 1) и ожидание запросов | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:3083` | нет | — |
+| T006 | `rnd-zpass-pred` | А-резерв (M1a2; было Г) | I | `629ae1ac` | Предикация по Z-pass (op 1) и ожидание запросов | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:3083` | нет | — |
 | T007 | `be-psalias` | В | I | `441367b1` `b38b7454` | Псевдонимы входов PS (общий offset SPI_PS_INPUT_CNTL) и flat при провоцирующей вершине | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterModule.cpp:487` | да | `pipelineCache.cpp` |
 | T008 | `bld-ci` | Г | c | `e6156bef` `0627e23e` `6c03b4aa` `fd2e15ee` | CI и окружение разработки | diff: только .github/workflows | нет | — |
 | T009 | `sys-amdcpu-patch` | Г | I | `957452d6` `77680ce9` `86e5e014` `349fae00` `4e6f4f99` `b11aea80` `a4d26cf8` `19a9464b` `ab98fb1f` `35c6e8ff` | Патчер инструкций AMD CPU (VRSQRTPS/SSE4a/INSERTQ/RDPID/CLWB, красная зона) для хостов не-AMD | git grep amd_cpu/AmdCpu b3dc9c67 -- src = 0 строк; хост AMD Zen 5 | нет | `CMakeLists.txt`, `runtimeLinker.cpp` |
@@ -741,13 +743,13 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T018 | `img-miptail-views` | В | U | `8589731a` | Мип-хвост PS5: виды T# с уровнями сверх ресурса | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3014` | нет | `textureCache.cpp`, `descriptors.cpp` |
 | T019 | `dec-cfg-early-return` | В | I | `fb94a819` | CFG: слияние выбора с ранним return | `b3dc9c67:src/graphics/shader/recompiler/frontend/cfg/ShaderCFG.cpp:1359` | да | — |
 | T020 | `rnd-mrt-exported` | В | I | `b594f8c8` | Привязка только экспортируемых цветовых целей, слоты MRT сохраняются | `b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:3014` | нет | `pipelineCache.cpp` |
-| T021 | `img-tsharp-minlod` | Б | c | `f38d738e` | T# MIN_LOD через VK_EXT_image_view_min_lod | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1952` | да | `descriptors.cpp`, `vulkanWindow.cpp` |
-| T022 | `rnd-mesh-restart` | Г | I | `63fb822f` | Mesh-draw с primitive restart: предупреждение вместо фатала | `b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:4109` | нет | — |
+| T021 | `img-tsharp-minlod` | В (M1a2; было Б) | c | `f38d738e` | T# MIN_LOD через VK_EXT_image_view_min_lod | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1952` | да | `descriptors.cpp`, `vulkanWindow.cpp` |
+| T022 | `rnd-mesh-restart` | А-резерв (M1a2; было Г) | I | `63fb822f` | Mesh-draw с primitive restart: предупреждение вместо фатала | `b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:4109` | нет | — |
 | T023 | `sys-agc-cb-capacity` | А | U | `49b2eedd` | AGC CommandBuffer: расчёт свободного места со знаком | `b3dc9c67:src/libs/agc.cpp:267` | нет | — |
-| T024 | `rnd-depth-flags` | Г | I | `fa913ec1` `a98a39c5` | Флаги глубины EXPCLEAR / partially_resident без фатала | `b3dc9c67:src/graphics/host_gpu/renderer/depthRenderTarget.cpp:169` | нет | — |
+| T024 | `rnd-depth-flags` | А-резерв (M1a2; было Г) | I | `fa913ec1` `a98a39c5` | Флаги глубины EXPCLEAR / partially_resident без фатала | `b3dc9c67:src/graphics/host_gpu/renderer/depthRenderTarget.cpp:169` | нет | — |
 | T025 | `dec-op-unused` | Г | I | `e0ecffed` `f30afc18` `4b776865` `394e6389` `5b7d3343` `ea6aae85` `54949557` `fc86509a` `3dc3fd01` `e43c2426` `5a705dd1` `ff546085` `cf268af8` `16b83a03` `0a5774be` `35c4dca2` `6799ecbc` `bc193f52` `581dad7d` `0d0b215f` `b3e419ff` `284d58d1` `b8946fef` `c17fa5b9` `98557a83` `8274e517` `2b1b7ed0` `1d552724` `7a0e1daf` `5601861d` `1195af25` `7492cb95` `bb98f264` `5af370c2` `26cce990` `96eb681b` `9e666e4d` `7881c69a` `1fc520cd` `1bd282ec` `a31e2cd3` `bb5edbd4` `59183dbf` `d247d3d6` `fa56c5ea` | Новые опкоды, которых игра не исполняет | ophist:MIMG:44=0 | да | `graphicContext.h`, `descriptors.cpp`, `vulkanWindow.cpp`, `spirvEmitterMemory.cpp`, `ShaderDecoder.cpp`, `ShaderDecoder.h`, `Memory.cpp`, `ResourceMaterialization.cpp` |
 | T026 | `dec-swappc` | Г | c | `235e24d4` `1818aae5` `3e9f88bf` | SWAPPC: передача управления и leaf-вызовы | ophist:SOP1:21=0; register:§11:Б26а | да | `pipelineCache.cpp`, `ShaderDecoder.cpp`, `ShaderDecoder.h`, `ResourceMaterialization.cpp` |
-| T027 | `img-stencil-assoc` | Г | U | `47957faa` `d8a44124` `9860c2bb` `068d7621` | Ассоциация трафарета с образом глубины (выгрузка, очистка, диапазон) | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2411` | нет | `textureCache.cpp`, `textureCache.h` |
+| T027 | `img-stencil-assoc` | А-резерв (M1a2; было Г) | U | `47957faa` `d8a44124` `9860c2bb` `068d7621` | Ассоциация трафарета с образом глубины (выгрузка, очистка, диапазон) | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2411` | нет | `textureCache.cpp`, `textureCache.h` |
 | T028 | `rnd-log-launcher` | Г | c | `228cf3fb` | Лаунчер на Qt < 6.6 и предел строки лога reference clock | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:621` | нет | — |
 | T029 | `av-motion` | В | c | `ce629e03` `b7a1fac8` | Датчики движения пада (гироскоп, акселерометр) | `b3dc9c67:src/libs/controller.cpp:705` | нет | `window.cpp`, `controller.cpp`, `controller.h` |
 | T030 | `lch-launcher` | Г | c | `de1545e1` `a6144f79` `e930657b` `ada05140` `f1f930e0` `9313a088` `7d2422ab` `9a5658c0` `7da3c4ed` `448a4c8a` | Лаунчер (Qt) | diff: src/launcher и README | нет | — |
@@ -764,10 +766,10 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T041 | `rnd-tile-exitmsg` | Г | c | `6cfde37e` | Текст фатала формата тайла без fmt и строка меню лаунчера | — | нет | — |
 | T042 | `rnd-winbuild-membarrier` | Г | c | `104530ea` | Сборка Windows: #undef MemoryBarrier в regionManager.h | `b3dc9c67:src/graphics/host_gpu/regionManager.h:25` | нет | `regionManager.h` |
 | T043 | `hle-np-signin` | Г | c | `87b4417a` | NP: колбэк состояния входа | nid:qQJfO8HAiaY нет в бинарях игры (NID-поиск строк «NID#» в eboot.bin и sce_module/*.prx игры) | нет | — |
-| T044 | `hle-net-errno` | Г | U | `57c5b206` | libnet: код errno | `b3dc9c67:src/libs/network.cpp:3143` | нет | — |
+| T044 | `hle-net-errno` | А-резерв (M1a2; было Г) | U | `57c5b206` | libnet: код errno | `b3dc9c67:src/libs/network.cpp:3143` | нет | — |
 | T045 | `hle-net-sockets` | Г | c | `cbedf570` `44798085` `e7f63270` `48527210` `e679486e` `861dd76d` | Сокеты libnet (UDP, опции, recv, экспорт) | `b3dc9c67:src/libs/network.cpp:3143` | нет | — |
 | T046 | `be-dualsrc` | Б | c | `64936747` | Двухисточниковое смешивание (dual-source blend) | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/shaders.cpp:345` | да | `pipelineCache.cpp`, `vulkanWindow.cpp` |
-| T047 | `img-bc-storage-usage` | Г | I | `165234b1` `c2b7b0b5` `539c0f7b` | Использование storage у блочных (BC) образов | `b3dc9c67:src/graphics/host_gpu/renderer/image/image.cpp:54` | нет | — |
+| T047 | `img-bc-storage-usage` | А-резерв (M1a2; было Г) | I | `165234b1` `c2b7b0b5` `539c0f7b` | Использование storage у блочных (BC) образов | `b3dc9c67:src/graphics/host_gpu/renderer/image/image.cpp:54` | нет | — |
 | T048 | `dec-dpp8` | Г | c | `bfc8cd0e` `b27b89f5` `3b9e176b` | DPP8 (перемещения, VOP2, fetch-inactive) | ophist:dpp8=0 (все семейства) | да | `ShaderDecoder.cpp`, `ShaderDecoder.h`, `Memory.cpp` |
 | T049 | `dec-int16-neg` | Г | I | `95d3d9d3` | NEG 16-битных операндов (знаковый бит) | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:545` | да | — |
 | T050 | `av-ngs2-ajm` | Г | c | `007d7ea2` `1d2f59df` `303a0203` `82b2711c` `e40438f9` `3742ad99` `fc04db75` `2165c710` `83628a43` `1cc0ac7e` `f7ae6e0a` `5ce4f083` `7c8583d2` `a20b64d3` `b10bd53d` | NGS2/AJM/ATRAC9/AAC/Opus (игра не импортирует) | nid:Ngs2=0/27,Ajm=0/32,Audio3d=0/7,AudioOut(v1)=0/7 (LIB_FUNC b3dc9c67:src/libs/libAudio.cpp; NID-поиск строк «NID#» в eboot.bin и sce_module/*.prx игры) | нет | `CMakeLists.txt`, `audio.cpp`, `libAudio.cpp` |
@@ -776,25 +778,25 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T053 | `sys-native-paths` | Г | c | `001dfea5` `b61b3f2a` `07c9978a` `8b294eb5` `fe45265f` | Нативные/Unicode пути Windows | пакет игры: 0 не-ASCII имён из 158 205, наибольшая длина пути 181 (< 260); папка эмулятора ASCII | нет | `window.cpp`, `fileSystem.cpp` |
 | T054 | `sys-savedata-persist` | В | I | `cfbaee07` `569ec04d` | SaveData: постоянное сохранение SaveDataMemory2, раскладка по user_id, метаданные | `b3dc9c67:src/libs/libSaveData.cpp:335` | нет | `CMakeLists.txt` |
 | T055 | `av-avplayer-state` | А | I | `35a275e9` `6b79b7a0` `fa51da4d` `12ff5716` `d792dfa8` | AvPlayer: состояния, события, пауза/переход, режим синхронизации | `b3dc9c67:src/libs/avPlayer.cpp:1817` | нет | — |
-| T056 | `sys-userservice-name` | Г | I | `8d66c4ef` | UserService: GetUserName для чужого user_id | `b3dc9c67:src/libs/libUserService.cpp:95` | нет | — |
-| T057 | `ir-srteval-scmp` | Г | I | `102a10f0` | Вычислитель SRT: знаковое сравнение | register:§104:Ф3 | да | — |
+| T056 | `sys-userservice-name` | А-резерв (M1a2; было Г) | I | `8d66c4ef` | UserService: GetUserName для чужого user_id | `b3dc9c67:src/libs/libUserService.cpp:95` | нет | — |
+| T057 | `ir-srteval-scmp` | А-резерв (M1a2; было Г) | I | `102a10f0` | Вычислитель SRT: знаковое сравнение | register:§104:Ф3 | да | — |
 | T058 | `sys-tess-optional` | В | I | `a849f253` | Тесселяция по опции (по умолчанию patch-draw пропускаются) | `b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:2566` | нет | — |
 | T059 | `av-avplayer-aspect` | А | U | `25f26995` | AvPlayer: соотношение сторон видео | `b3dc9c67:src/libs/avPlayer.cpp:1408` | нет | — |
-| T060 | `rnd-rectlist-legacy` | Г | U | `0ad9149c` | Прямоугольники RectListLegacy из трёх вершин через патч-лист | `b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:3198` | да | `pipelineCache.cpp` |
+| T060 | `rnd-rectlist-legacy` | А-резерв (M1a2; было Г) | U | `0ad9149c` | Прямоугольники RectListLegacy из трёх вершин через патч-лист | `b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:3198` | да | `pipelineCache.cpp` |
 | T061 | `sys-win-cacheflags` | Г | c | `b8ad1d8c` | Windows: флаги кэша CreateFileW | `b3dc9c67:src/common/platform/sysWindowsFileIO.cpp:58` | нет | — |
 | T062 | `sys-refactor-findfiles` | Г | I | `c3cc8454` | Удаление рекурсивного перебора файлов | — | нет | — |
 | T063 | `bld-cmake` | Г | c | `d7da2444` `fe4f9423` `96874909` `9d4da483` `8cbee7f4` `1f3adf51` | CMake и упаковка | diff: CMakeLists и CI | нет | `CMakeLists.txt` |
 | T064 | `av-host-window-ux` | Г | c | `81af1301` `feeced81` | Хоткеи и курсор окна хоста | diff: хоткей хоста и лаунчер | нет | `hostInput.cpp`, `window.cpp` |
-| T065 | `rnd-cx-24a` | Г | I | `c997cdb8` | Пропуск нулевой записи косвенного CX 0x24a | `b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:2106` | нет | — |
-| T066 | `rnd-storage-cube` | Г | I | `ba55ba5d` | Storage-доступ к частичным кубическим видам | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1188` | нет | `descriptors.cpp` |
+| T065 | `rnd-cx-24a` | А-резерв (M1a2; было Г) | I | `c997cdb8` | Пропуск нулевой записи косвенного CX 0x24a | `b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:2106` | нет | — |
+| T066 | `rnd-storage-cube` | А-резерв (M1a2; было Г) | I | `ba55ba5d` | Storage-доступ к частичным кубическим видам | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1188` | нет | `descriptors.cpp` |
 | T067 | `prs-out-res` | Г | c | `61761b65` | Разрешение вывода по ATTRIBUTE3 | `b3dc9c67:src/graphics/presentation/videoOut.cpp:4183` | нет | `videoOut.cpp` |
-| T068 | `be-barrier` | Г | U | `f9e56ef8` | Барьер рабочей группы только в стадиях с общим выполнением | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterFlow.cpp:595` | да | — |
+| T068 | `be-barrier` | А-резерв (M1a2; было Г) | U | `f9e56ef8` | Барьер рабочей группы только в стадиях с общим выполнением | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterFlow.cpp:595` | да | — |
 | T069 | `dec-ngg-launch` | В | I | `476204cd` `cf77fb43` | NGG passthrough: состояние запуска s2/s3 | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:1258` | да | `pipelineCache.cpp` |
-| T070 | `rnd-fmask-msaa` | Г | I | `bf4dcdce` | FMASK с нативным MSAA без фатала | `b3dc9c67:src/graphics/host_gpu/renderer/debug.cpp:222` | нет | — |
+| T070 | `rnd-fmask-msaa` | А-резерв (M1a2; было Г) | I | `bf4dcdce` | FMASK с нативным MSAA без фатала | `b3dc9c67:src/graphics/host_gpu/renderer/debug.cpp:222` | нет | — |
 | T071 | `rnd-attach-samples` | Г | I | `d3c182f3` | Проверка числа сэмплов вложений до захвата целей | `b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:2442` | нет | — |
-| T072 | `be-gpubuf` | Г | U | `b2a80a3a` `429d0af6` `b4d32394` `a55a2838` `5f01308b` `919c058f` `8b05b673` `3ba0e971` `33e74cab` | Буферные дескрипторы, выбранные на ГП (IndirectBuffer), вместо отказа трансляции | `b3dc9c67:src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:589` | да | `descriptors.cpp`, `spirvEmitterMemory.cpp`, `ResourceMaterialization.cpp`, `ResourceMaterialization.h` |
-| T073 | `ir-scalarchain-img` | Г | I | `d2df2cad` | T# через цепочку скалярных буферов | register:§104:Ф3 | да | — |
-| T074 | `rnd-depth-meta-bits` | Г | I | `7c9e18e7` | Неактивные биты адреса метаданных в дескрипторе глубины | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1117` | нет | `descriptors.cpp` |
+| T072 | `be-gpubuf` | А-резерв (M1a2; было Г) | U | `b2a80a3a` `429d0af6` `b4d32394` `a55a2838` `5f01308b` `919c058f` `8b05b673` `3ba0e971` `33e74cab` | Буферные дескрипторы, выбранные на ГП (IndirectBuffer), вместо отказа трансляции | `b3dc9c67:src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:589` | да | `descriptors.cpp`, `spirvEmitterMemory.cpp`, `ResourceMaterialization.cpp`, `ResourceMaterialization.h` |
+| T073 | `ir-scalarchain-img` | А-резерв (M1a2; было Г) | I | `d2df2cad` | T# через цепочку скалярных буферов | register:§104:Ф3 | да | — |
+| T074 | `rnd-depth-meta-bits` | А-резерв (M1a2; было Г) | I | `7c9e18e7` | Неактивные биты адреса метаданных в дескрипторе глубины | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1117` | нет | `descriptors.cpp` |
 | T075 | `ir-perf-remap` | Д | c | `4b074cf9` | Скорость: перестановка образов без кучи | — | да | `ResourceMaterialization.cpp` |
 | T076 | `rnd-logs-quiet` | Г | c | `a6a56c8a` `8252caee` `4428640b` `42a315f0` | Журнал: убраны и приглушены строки draw/dispatch/BDA | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:3167` | нет | `renderContext.cpp` |
 | T077 | `sys-savedata-search` | Г | c | `8dc9b9d5` | SaveData: ёмкость для Mount3/DirNameSearch/GetMountInfo | imports: sceSaveDataDirNameSearch (dyIhnXq-0SM, X4MYzukPc3g, PHnuI4LhuRk), GetMountInfo (65VH0Qaaz6s), Mount3 (ZP4e7rlzOUk) = 0 | нет | — |
@@ -804,13 +806,13 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T081 | `ir-refresh-onewalk` | Д | I | `13fcb3a1` | Обновление кэша ресурсов одним обходом SRT | `b3dc9c67:src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:2354` | да | `descriptors.cpp`, `pipelineCache.cpp`, `ResourceMaterialization.cpp`, `ResourceMaterialization.h` |
 | T082 | `dec-perf` | Д | I | `03c55e57` `cf423df6` `b43bf9f7` `e57c37fa` `64eea6b3` `7c6121cb` | Скорость/память без изменения ответа | — | да | `pipelineCache.cpp`, `shaders.cpp` |
 | T083 | `be-spvsize` | Д | c | `8a5e5c54` `f29bd0fe` `71017416` `46997dfc` `8abf99c5` `b4853a0e` `13e3ca31` | Сжатие эмитируемого SPIR-V и памяти эмиттера (тот же ответ) | — | да | `spirvEmitterMemory.cpp` |
-| T084 | `be-indimg` | Г | U | `eb8a5504` `3b89e36d` `a670dc84` `843b5778` `cd066010` `ae1e9262` `71c72617` `8c813865` `4c87dbeb` | Косвенные таблицы образов/сэмплеров (indirect image tables, ключи материалов) | register:§45:Ф22 | да | `vulkanWindow.cpp`, `ResourceMaterialization.cpp` |
-| T085 | `ir-scalar-imgtable` | Г | I | `66f1a823` | Скалярные таблицы образов при планировании | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
+| T084 | `be-indimg` | А-резерв (M1a2; было Г) | U | `eb8a5504` `3b89e36d` `a670dc84` `843b5778` `cd066010` `ae1e9262` `71c72617` `8c813865` `4c87dbeb` | Косвенные таблицы образов/сэмплеров (indirect image tables, ключи материалов) | register:§45:Ф22 | да | `vulkanWindow.cpp`, `ResourceMaterialization.cpp` |
+| T085 | `ir-scalar-imgtable` | А-резерв (M1a2; было Г) | I | `66f1a823` | Скалярные таблицы образов при планировании | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
 | T086 | `ir-perf-span` | Д | I | `d30dca78` | Скорость: чтение дескрипторов одним отрезком | — | да | `pipelineCache.cpp`, `ResourceMaterialization.cpp` |
-| T087 | `ir-tdesc-valid` | Г | U | `ef83ba65` `5ed5fdd3` | Проверка полей T# (резервные биты) | — | да | `ResourceMaterialization.cpp` |
+| T087 | `ir-tdesc-valid` | А-резерв (M1a2; было Г) | U | `ef83ba65` `5ed5fdd3` | Проверка полей T# (резервные биты) | — | да | `ResourceMaterialization.cpp` |
 | T088 | `rnd-dispatch-indirect-gpu` | Б | c | `79530b4c` | Число групп косвенного dispatch читается ГП | `b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:1360` | нет | — |
 | T089 | `rnd-cp-hotpath` | Д | I | `d6b2abe2` `d646fd92` | Горячий путь CP: лишние проверки | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:3438` | да | — |
-| T090 | `rnd-readback-staging` | Г | I | `3fad77fd` `18a5f04d` | Крупные readback: буфер выгрузки 64 МиБ и временный буфер | `b3dc9c67:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:561` | нет | `bufferCache.cpp` |
+| T090 | `rnd-readback-staging` | А-резерв (M1a2; было Г) | I | `3fad77fd` `18a5f04d` | Крупные readback: буфер выгрузки 64 МиБ и временный буфер | `b3dc9c67:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:561` | нет | `bufferCache.cpp` |
 | T091 | `tst-dlring` | Д | U | `ee3749d9` | Тест кольца выгрузки 64 МиБ (к теме 3fad77fd8) | `b3dc9c67:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:561` | нет | — |
 | T092 | `hle-kernel-imports` | Г | c | `b5ba482f` | Недостающие импорты ядра и старта | nid:yTj62I7kw4s,mBd4AfLP+u8,kP2L8t3j-aM,5LiMEPuW0DQ нет в бинарях игры (NID-поиск строк «NID#» в eboot.bin и sce_module/*.prx игры) | нет | `videoOut.cpp`, `fileSystem.cpp`, `libKernel.cpp` |
 | T093 | `prs-sdl3` | В | I | `f68c77d7` | Переход на SDL3 | `b3dc9c67:src/graphics/presentation/window/joyPump.cpp:238` | нет | `CMakeLists.txt`, `hostInput.cpp`, `swapchain.cpp`, `vulkanWindow.cpp`, `window.cpp`, `audio.cpp`, `controller.cpp` |
@@ -819,12 +821,12 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T096 | `prs-frame-cfg` | Д | c | `c437de97` | Presenter: ранний выход при совместимом кадре | `b3dc9c67:src/graphics/presentation/window/swapchain.cpp:216` | нет | `swapchain.cpp` |
 | T097 | `av-audio-split` | Г | U | `1275d65b` | Разделение audio.cpp на acm/audio3d/ngs2 | diff: перенос кода (5 509 строк диффа, построчно не сверялся) | нет | `audio.cpp`, `libAudio.cpp` |
 | T098 | `img-vo-dcc` | Г | c | `2aa0a64f` | Сжатый (DCC) буфер видеовывода | `b3dc9c67:src/graphics/presentation/videoOut.cpp:596` | нет | `textureCache.cpp`, `videoOut.cpp` |
-| T099 | `dec-ngg-other` | Г | U | `7d7267cc` `11001c97` `5297abb7` | NGG: волна 32, fast launch, не-амплифицирующие GS | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:1079` | да | — |
+| T099 | `dec-ngg-other` | А-резерв (M1a2; было Г) | U | `7d7267cc` `11001c97` `5297abb7` | NGG: волна 32, fast launch, не-амплифицирующие GS | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:1079` | да | — |
 | T100 | `tst-zeroshift` | Д | I | `51c34d1a` | Тест свёртки нулевого скалярного сдвига (к свёртке 0>>x из 3b89e36d1) | — | нет | — |
-| T101 | `rnd-depth-feedback` | Г | U | `66cc2fe2` | Обратная связь вложения глубины/стенсила на всех стадиях | `b3dc9c67:src/graphics/host_gpu/renderer/depthRenderTarget.h:52` | нет | `descriptors.cpp` |
+| T101 | `rnd-depth-feedback` | А-резерв (M1a2; было Г) | U | `66cc2fe2` | Обратная связь вложения глубины/стенсила на всех стадиях | `b3dc9c67:src/graphics/host_gpu/renderer/depthRenderTarget.h:52` | нет | `descriptors.cpp` |
 | T102 | `ir-perf-reach` | Д | c | `1617ee77` | Рефакторинг: общая достижимость CFG | — | да | — |
-| T103 | `ir-material-mask` | Г | I | `963a0817` | Ключи образов по маске материала | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
-| T104 | `sys-mem-reserved-atomic` | Г | I | `0382d0ca` | Память: атомарная публикация отображений в зарезервированный диапазон | imports: sceKernelReserveVirtualRange (7oxv3PPCumo), sceKernelSetPrtAperture (BohYr-F7-is) = 0 | нет | — |
+| T103 | `ir-material-mask` | А-резерв (M1a2; было Г) | I | `963a0817` | Ключи образов по маске материала | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
+| T104 | `sys-mem-reserved-atomic` | А-резерв (M1a2; было Г) | I | `0382d0ca` | Память: атомарная публикация отображений в зарезервированный диапазон | imports: sceKernelReserveVirtualRange (7oxv3PPCumo), sceKernelSetPrtAperture (BohYr-F7-is) = 0 | нет | — |
 | T105 | `rnd-bind-reuse` | Д | I | `3bd5de64` `4cf456fb` `8fa116ee` `97fda7b1` | Повторное использование подготовленных привязок | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:4132` | нет | `descriptors.cpp` |
 | T106 | `tst-infra` | Г | c | `84d01512` `1b6af301` `a892097f` `49db3ea5` `21d7e8e1` `181123ea` `c3a12397` `f3836bb8` `c0ebf224` | Тестовая инфраструктура / платформа / сборка тестов | — | нет | — |
 | T107 | `dec-wqm-live` | В | c | `fcf0f3b6` | S_WQM в начале PS: предикат живых лейнов | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Control.cpp:311` | да | — |
@@ -832,7 +834,7 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T109 | `prs-depth-clamp` | А | I | `2aaf0c9b` | Ограничение глубины после polygon offset | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/shaders.cpp:542` | нет | `shaders.cpp`, `vulkanWindow.cpp` |
 | T110 | `prs-vrr-status` | Г | c | `732057b0` | Сигнатура VideoOutVrrStatus | — | нет | `videoOut.cpp` |
 | T111 | `img-vo-pq` | Г | c | `cce0cd95` | Формат видеовывода RGB10A2 PQ | — | да | `videoOut.cpp` |
-| T112 | `ir-indirect-x3` | Г | I | `392f39e2` | Косвенный BUFFER_LOAD_DWORDX3 | register:§104:Ф3 | да | — |
+| T112 | `ir-indirect-x3` | А-резерв (M1a2; было Г) | I | `392f39e2` | Косвенный BUFFER_LOAD_DWORDX3 | register:§104:Ф3 | да | — |
 | T113 | `dec-glc-coherent` | А | U | `dc9280d7` | GLC/DLC буферов как Volatile/Coherent | `b3dc9c67:src/graphics/shader/recompiler/frontend/decode/MemoryOps.cpp:265` | да | `spirvEmitterMemory.cpp`, `ShaderDecoder.cpp`, `ShaderDecoder.h`, `Memory.cpp` |
 | T114 | `dec-bvh` | В | c | `d72a79af` `337f4320` `dbf66b7f` | BVH: исполнение пересечений лучей (MIMG 0xe6/0xe7) | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Memory.cpp:709` | да | `pipelineCache.cpp`, `spirvEmitterMemory.cpp`, `ShaderDecoder.cpp`, `ShaderDecoder.h`, `Memory.cpp` |
 | T115 | `sys-log-timestamp` | Г | c | `b9a0bd27` | Метка времени PRINT_NAME после 24 ч | — | нет | — |
@@ -841,7 +843,7 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T118 | `av-audio-out-pacing` | В | c | `7855c980` `70a475ec` | Темп вывода AudioOut (каденция, часы вывода) | `b3dc9c67:src/libs/audio.cpp:697` | нет | `CMakeLists.txt`, `audio.cpp` |
 | T119 | `ir-perf-spec` | Д | I | `93185953` `496432bb` `684330c9` | Скорость: специализация образов | — | да | `ResourceMaterialization.cpp` |
 | T120 | `dec-cfg-gateway` | Г | I | `6bb68a3f` | CFG: повторное деление ворот слияния | — | да | — |
-| T121 | `rnd-eop-clock` | Г | I | `bfdbba3a` | Общая обработка записи часов и значения в EOP | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:3718` | нет | — |
+| T121 | `rnd-eop-clock` | А-резерв (M1a2; было Г) | I | `bfdbba3a` | Общая обработка записи часов и значения в EOP | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:3718` | нет | — |
 | T122 | `img-vk-names` | Д | I | `0ec43a8d` | Имена Vulkan-объектов только при создании | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:197` | нет | `textureCache.cpp` |
 | T123 | `av-avplayer-autostart` | Г | c | `7e1c2d15` | AvPlayer: автозапуск без колбэка | `b3dc9c67:src/libs/avPlayer.cpp:1843` | нет | — |
 | T124 | `sys-eager-resolve` | Г | I | `e056d55d` | Загрузчик: жадное разрешение символов, удаление ленивого PLT-механизма | наш runtimeLinker = база в этом месте; маркер Б9/Б9а «Unresolved import stub called» upstream сохраняет | нет | `runtimeLinker.cpp` |
@@ -850,13 +852,13 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T127 | `lch-tests-args` | Г | c | `4e8d8c84` | Тесты LRU-кэша и разбор аргументов | diff: тесты, CI, разбор аргументов | нет | `CMakeLists.txt` |
 | T128 | `av-avplayer-clock` | В | c | `e0b682e4` `e51f252b` | AvPlayer: часы воспроизведения и метки при петле | `b3dc9c67:src/libs/avPlayer.cpp:909` | нет | — |
 | T129 | `av-dualsense-haptics` | В | c | `a22a9d93` `22ff4693` `e1be2ead` | Хаптика и динамик DualSense | `b3dc9c67:src/libs/controller.cpp:382` | нет | `CMakeLists.txt`, `audio.cpp`, `controller.cpp`, `controller.h` |
-| T130 | `prs-layered-vo` | Г | U | `bec67b78` | HITMAN 3: слоистый видеовывод, шейдеры, сокеты | — | да | `CMakeLists.txt`, `descriptors.cpp`, `videoOut.cpp`, `swapchain.cpp`, `ResourceMaterialization.cpp`, `ResourceMaterialization.h` |
-| T131 | `rnd-linear-rt-mips` | Г | I | `a88181b8` | Линейные render target с mip-цепочкой | `b3dc9c67:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:290` | нет | — |
-| T132 | `rnd-rt-pitch` | Г | U | `7b6bfdec` | Каноническая раскладка однофрагментных целей цвета | `b3dc9c67:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:332` | нет | — |
+| T130 | `prs-layered-vo` | А-резерв (M1a2; было Г) | U | `bec67b78` | HITMAN 3: слоистый видеовывод, шейдеры, сокеты | — | да | `CMakeLists.txt`, `descriptors.cpp`, `videoOut.cpp`, `swapchain.cpp`, `ResourceMaterialization.cpp`, `ResourceMaterialization.h` |
+| T131 | `rnd-linear-rt-mips` | А-резерв (M1a2; было Г) | I | `a88181b8` | Линейные render target с mip-цепочкой | `b3dc9c67:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:290` | нет | — |
+| T132 | `rnd-rt-pitch` | А-резерв (M1a2; было Г) | U | `7b6bfdec` | Каноническая раскладка однофрагментных целей цвета | `b3dc9c67:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:332` | нет | — |
 | T133 | `img-1d2d-alias` | А | U | `f53f0ca4` | Алиасы 1D/2D текстур с отрисованным содержимым | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:297` | нет | `textureCache.cpp` |
-| T134 | `img-depth-alias` | Г | U | `da33a1c4` `fbf6ae40` | Алиасы глубины: раскладка массива и tile_mode | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:932` | нет | `textureCache.cpp` |
+| T134 | `img-depth-alias` | А-резерв (M1a2; было Г) | U | `da33a1c4` `fbf6ae40` | Алиасы глубины: раскладка массива и tile_mode | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:932` | нет | `textureCache.cpp` |
 | T135 | `img-color-meta-clear` | В | I | `0f1ff37f` `190608ae` `0ec3655f` | Материализация быстрых очисток по байтам метаданных (DCC/CMASK) | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2258` | да | `textureCache.cpp`, `textureCache.h` |
-| T136 | `rnd-aniso-reserved` | Г | I | `9229c04e` | Зарезервированные коды анизотропии сэмплера | `b3dc9c67:src/graphics/host_gpu/renderer/cache/samplerCache.cpp:88` | нет | — |
+| T136 | `rnd-aniso-reserved` | А-резерв (M1a2; было Г) | I | `9229c04e` | Зарезервированные коды анизотропии сэмплера | `b3dc9c67:src/graphics/host_gpu/renderer/cache/samplerCache.cpp:88` | нет | — |
 | T137 | `hle-http-uri` | Г | c | `025b39c0` `dc3cd2d2` | HTTP: разбор и сборка URI | nid:IWalAn-guFs (sceHttpUriParse) нет в бинарях игры (NID-поиск строк «NID#» в eboot.bin и sce_module/*.prx игры) | нет | `CMakeLists.txt` |
 | T138 | `ir-883` | В | I | `0791f921` | UFC 5 in-game (#883) | `b3dc9c67:src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:185` | да | `descriptors.cpp`, `pipelineCache.cpp`, `spirvEmitterMemory.cpp`, `Memory.cpp`, `ResourceMaterialization.cpp` |
 | T139 | `sys-mem-extended` | Г | I | `c91fe80d` | Память: расширенная область 0x0800_0000_0000 для AMM | imports: Amm* (AmmGetVirtualAddressRanges, AmmGiveDirectMemory и др., 15 NID) = 0 | нет | — |
@@ -866,9 +868,9 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T143 | `hle-ces-savedialog` | Г | c | `05f92b64` | libCes CP932 и SaveDataDialog | nid: 7 функций Ces (ZiDCxUUGbec …) и SaveDataDialog (s9e3+YpRnzw, KK3Bdg1RWK0, yEiJ-qqr6Cg) нет в бинарях игры (NID-поиск строк «NID#» в eboot.bin и sce_module… | нет | `CMakeLists.txt` |
 | T144 | `sys-fs-unmounted` | Г | I | `a107d1e3` | ФС: немонтированные пути гостя не уходят в ФС хоста | register:§44:Ф7 — пути KernelStat/KernelOpen игры все под /app0, «другой регистр и монтирование — 0» | нет | `fileSystem.cpp` |
 | T145 | `av-audioout2-user` | Г | c | `0471c999` | AudioOut2: реестр пользователей | nid:iE8trxPKnAg (AudioOut2UserGetSupportedAttributes) нет в бинарях игры (NID-поиск строк «NID#» в eboot.bin и sce_module/*.prx игры) | нет | `libAudio.cpp` |
-| T146 | `img-readback-valid` | Г | U | `6ee1bf9d` | Годность выгрузки образа без проверки грязных байт буфера | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:372` | нет | `textureCache.cpp`, `textureCache.h` |
+| T146 | `img-readback-valid` | А-резерв (M1a2; было Г) | U | `6ee1bf9d` | Годность выгрузки образа без проверки грязных байт буфера | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:372` | нет | `textureCache.cpp`, `textureCache.h` |
 | T147 | `img-gpumod-cpu` | В | U | `8e61798b` | IsRegionGpuModified и владение CPU | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3432` | нет | `textureCache.cpp` |
-| T148 | `av-zarchive` | Г | U | `4b0de1b6` | Загрузка игр из .zar | игра — распакованная папка games/PPSA21564-app | нет | `CMakeLists.txt`, `fileSystem.cpp` |
+| T148 | `av-zarchive` | А-резерв (M1a2; было Г) | U | `4b0de1b6` | Загрузка игр из .zar | игра — распакованная папка games/PPSA21564-app | нет | `CMakeLists.txt`, `fileSystem.cpp` |
 | T149 | `rnd-releasemem-flush` | Д | I | `8e42e997` | RELEASE_MEM без лишних отправок | `b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:2334` | нет | — |
 | T150 | `rnd-stream-memcpy` | Д | I | `37501b5a` | Потоковое копирование чистых буферов без чтения backing | `b3dc9c67:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:1668` | нет | `bufferCache.cpp` |
 | T151 | `rnd-rt-desc-inplace` | Д | c | `5e4f6afc` | Дескриптор цели цвета на месте, без лога решения | `b3dc9c67:src/graphics/host_gpu/renderer/colorRenderTarget.cpp:411` | нет | — |
@@ -877,7 +879,7 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T154 | `sys-profiler` | Г | c | `0c844e4b` | Профайлер Tracy | — | нет | `runtimeLinker.cpp` |
 | T155 | `sys-sleep-block` | Д | I | `6f24b031` | Короткие сны блокируют вместо спина | — | нет | `pthread.cpp` |
 | T156 | `rnd-blend-swizzle-alpha` | В | U | `73615c31` `0bef3fc0` `96011cc5` `94e7d239` | Смешение на целях с перестановкой каналов (логическая альфа через второй источник) | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/dualSrcBlend.h:3` | да | `pipelineCache.cpp`, `pipelineCache.h`, `shaders.cpp` |
-| T157 | `rnd-lodbias-clamp` | Г | I | `59a17604` | Ограничение mipLodBias пределом устройства | `b3dc9c67:src/graphics/host_gpu/renderer/cache/samplerCache.cpp:156` | нет | — |
+| T157 | `rnd-lodbias-clamp` | А-резерв (M1a2; было Г) | I | `59a17604` | Ограничение mipLodBias пределом устройства | `b3dc9c67:src/graphics/host_gpu/renderer/cache/samplerCache.cpp:156` | нет | — |
 | T158 | `sys-mem-sparse` | Г | I | `650dc1e0` `f9fd400d` `45b6d2c5` | Память/графика: чтение разреженной подложки (PRT/пулы) для текстур | imports: sceKernelReserveVirtualRange, SetPrtAperture, MemoryPool* = 0 | нет | `bufferCache.cpp` |
 | T159 | `sys-ampr-waits` | А | I | `5bf9218b` `c045f089` `da9b38af` `5a880808` | AMPR: асинхронный исполнитель APR, WaitOnAddress/WaitOnCounter/WriteCounter | `b3dc9c67:src/libs/libAmpr.cpp:1988` | нет | — |
 | T160 | `bld-tracy` | Г | c | `2650478d` | Профилировщик Tracy | `b3dc9c67:src/common/profiler.cpp:58` | нет | — |
@@ -886,12 +888,12 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T163 | `rnd-suspend-point` | Д | I | `840b9f57` | AgcSuspendPoint без стока очереди на вызывающем потоке | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:335` | нет | — |
 | T164 | `hle-pngenc` | Г | c | `48b52d31` | libScePngEnc | nid:RUrWdwTWZy8,xgDjJKpcyHo,7aGTPfrqT9s,9030RnBDoh4 импортированы eboot.bin, у нас — заглушки; вызовов 0 в 560 stdout | нет | `CMakeLists.txt` |
 | T165 | `prs-vrr-wqhd` | Г | c | `8ba2caf5` | WQHD и VRR peg/unpeg | — | нет | `videoOut.cpp` |
-| T166 | `hle-shareplay` | Г | U | `17100ec9` | SharePlay: состояние и сведения о соединении | nid:+MCXJlWdi+s нет в бинарях игры; игра импортирует только SharePlayTerminate | нет | — |
-| T167 | `img-depth-swizzle` | Г | I | `44ba6575` | Допустимые swizzle сэмплируемой глубины | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1145` | нет | — |
+| T166 | `hle-shareplay` | А-резерв (M1a2; было Г) | U | `17100ec9` | SharePlay: состояние и сведения о соединении | nid:+MCXJlWdi+s нет в бинарях игры; игра импортирует только SharePlayTerminate | нет | — |
+| T167 | `img-depth-swizzle` | А-резерв (M1a2; было Г) | I | `44ba6575` | Допустимые swizzle сэмплируемой глубины | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1145` | нет | — |
 | T168 | `img-scratch-reuse` | Д | I | `c2f8e64f` | Переиспользование scratch-буферов тайлера | — | нет | `textureCache.cpp` |
 | T169 | `dec-shader-identity` | В | I | `0ecd3229` | Идентичность шейдера (хэш кода) | `b3dc9c67:src/graphics/shader/shader.cpp:222` | да | — |
 | T170 | `dec-cdbg-unused` | Г | c | `64dcbe0e` `679be25c` | S_CBRANCH_CDBG* прочие (игра не исполняет) | ophist:SOPP:19=0 | да | `ShaderDecoder.cpp`, `ShaderDecoder.h` |
-| T171 | `ir-refresh-reach` | Г | I | `6409be28` | Достижимость ветвей при обновлении скалярных ресурсов | register:§104:Ф3 | да | `descriptors.cpp`, `ResourceMaterialization.cpp` |
+| T171 | `ir-refresh-reach` | А-резерв (M1a2; было Г) | I | `6409be28` | Достижимость ветвей при обновлении скалярных ресурсов | register:§104:Ф3 | да | `descriptors.cpp`, `ResourceMaterialization.cpp` |
 | T172 | `ir-wave32-ballot` | Г | I | `35759e48` | Упрощение бита ballot в wave32 | `b3dc9c67:src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp:207` | да | — |
 | T173 | `tst-wave32mask` | Г | I | `706eec3c` | Тест скалярных B32-масок в wave32/wave64 | — | нет | — |
 | T174 | `rnd-pipeline-blend-normalize` | Д | I | `b86cf0a8` | Пайплайны не зависят от настроек выключенного смешения | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5567` | нет | `pipelineCache.cpp` |
@@ -900,86 +902,88 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T177 | `rnd-memtrack-hotpath` | Д | I | `a9620f98` `a67a033f` `0bb2bdad` `a87889f0` `006875ed` | Горячий путь трекера памяти | `b3dc9c67:src/graphics/host_gpu/regionManager.h:196` | нет | `pageManager.cpp`, `regionManager.h` |
 | T178 | `rnd-readback-sync` | Д | I | `39e23ac9` `0ce84e59` | Синхронный readback: публикация и окно | `b3dc9c67:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:722` | нет | `bufferCache.cpp`, `bufferCache.h` |
 | T179 | `img-hades2` | В | U | `89792a3b` | Совместимость Hades II: адрес user data PS, заливка DWORD | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2971` | да | `textureCache.cpp`, `libKernel.cpp` |
-| T180 | `ir-gpu-selected-img` | Г | I | `7804eef9` | GPU-выбранные T# через общие косвенные привязки | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
+| T180 | `ir-gpu-selected-img` | А-резерв (M1a2; было Г) | I | `7804eef9` | GPU-выбранные T# через общие косвенные привязки | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
 | T181 | `ir-perf-dce` | Д | I | `95c89229` | DCE мёртвых циклов | — | да | — |
 | T182 | `hle-net-resolver` | Г | c | `25457230` | NetResolverAbort | nid:AzqoBha7js4 нет в бинарях игры (NID-поиск строк «NID#» в eboot.bin и sce_module/*.prx игры) | нет | — |
 | T183 | `ir-perf-info` | Д | c | `f3dc5ee4` | Скорость: сбор интерфейса без копий | — | да | — |
 | T184 | `ir-ci-linux` | Г | c | `e317465d` | Сборка Linux CI | — | да | — |
 | T185 | `prs-lds-pad` | Б | I | `e6cb880a` | Предел LDS вычислений и неоткрываемые геймпады | `b3dc9c67:src/graphics/presentation/window/joyPump.cpp:351` | нет | `pipelineCache.cpp`, `window.cpp` |
+| T314 | `prs-lds-clamp` | А-резерв (M1a2; часть T185) | I | `e6cb880a` | предел LDS вычислений: у нас `lds_size_dwords = lds_size * 128` (shader.cpp:850) без зажим… | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5424` | нет | — |
 | T186 | `dec-img-atomic64` | Г | c | `ef4c5baf` `af3011cd` | 64-битные атомики образов | ophist:MIMG:16=0,MIMG:17=0 | да | `graphicContext.h`, `descriptors.cpp`, `vulkanWindow.cpp`, `spirvEmitterMemory.cpp`, `Memory.cpp`, `ResourceMaterialization.cpp` |
-| T187 | `img-bc5-reuse` | Г | U | `0d4f9933` | Повторно используемые BC5 в своей раскладке | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1024` | нет | `textureCache.cpp` |
+| T187 | `img-bc5-reuse` | А-резерв (M1a2; было Г) | U | `0d4f9933` | Повторно используемые BC5 в своей раскладке | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1024` | нет | `textureCache.cpp` |
 | T188 | `img-gpu-alias-write` | А | U | `ebe401d0` | Запись GPU в буфер и инвалидация перекрытых образов | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3400` | нет | `textureCache.cpp` |
 | T189 | `ir-gather-lod` | Г | c | `bd611bfe` | Явный LOD у gather | ophist:MIMG:44=0 | да | `descriptors.cpp`, `Memory.cpp`, `ResourceMaterialization.cpp` |
 | T190 | `be-buildfix` | Г | c | `f53e5d22` | Исправление сборки Windows CI | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:717` | да | — |
-| T191 | `img-srgb-rt-bpe` | Г | I | `52c8ff18` | Байты на элемент цели k8Srgb/k8_8Srgb | `b3dc9c67:src/graphics/guest_gpu/gpu_format.cpp:64` | нет | — |
-| T192 | `img-volume-depth` | Г | U | `8b0cc79a` | Рост глубины объёмной текстуры | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1024` | нет | `textureCache.cpp` |
+| T191 | `img-srgb-rt-bpe` | А-резерв (M1a2; было Г) | I | `52c8ff18` | Байты на элемент цели k8Srgb/k8_8Srgb | `b3dc9c67:src/graphics/guest_gpu/gpu_format.cpp:64` | нет | — |
+| T192 | `img-volume-depth` | А-резерв (M1a2; было Г) | U | `8b0cc79a` | Рост глубины объёмной текстуры | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1024` | нет | `textureCache.cpp` |
 | T193 | `ir-perf-sampler` | Д | I | `7f158c65` | Общие снимки сэмплеров у вариантов | — | да | `descriptors.cpp`, `ResourceMaterialization.cpp` |
 | T194 | `sys-posix-attrstack` | Г | c | `5766b241` | POSIX pthread_attr_setstack | imports: pthread_attr_setstack (-SrbXpGR1f0) = 0; scePthreadAttrSetstack у нас есть (libKernel.cpp:3307) | нет | `pthread.cpp`, `libKernel.cpp` |
 | T195 | `sys-aio` | Г | c | `a0858abe` `e7cfe5a2` | Пакетный AIO (poll/delete/wait) | imports: Ft3EtsZzAoY, o7O4z3jwKzo = 0 | нет | `libKernel.cpp` |
 | T196 | `sys-kernel-timers` | Г | c | `92c22d60` | Периодические таймеры ядра в очереди событий | imports: sceKernelAddTimerEvent (57ZK+ODEXWY), AddHRTimerEvent (R74tt43xP6k) = 0 | нет | `libKernel.cpp` |
 | T197 | `hle-npwebapi-stats` | Г | c | `c3330cab` | NP Web API: статистика пулов памяти | nid:Xweb+naPZ8Y нет в eboot.bin и libSceNpCppWebApi.prx | нет | — |
-| T198 | `sys-signin-dialog` | Г | I | `45f55413` | Диалог входа держится до закрытия пользователем | — | нет | — |
+| T198 | `sys-signin-dialog` | А-резерв (M1a2; было Г) | I | `45f55413` | Диалог входа держится до закрытия пользователем | — | нет | — |
 | T199 | `prs-resize-zero` | Г | I | `0e8ded37` | Игнор неположительных размеров окна | `b3dc9c67:src/graphics/presentation/window/window.cpp:467` | нет | `window.cpp` |
 | T200 | `dec-vscnt` | А | I | `f58014ff` | S_WAITCNT_VSCNT как завершение записей волны | `b3dc9c67:src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp:91` | да | `ShaderDecoder.cpp`, `ShaderDecoder.h` |
-| T201 | `ir-dispatch-exec` | Г | I | `e4aca7a6` `0258bd61` | EXEC по размерам dispatch в потоках | — | да | `ResourceMaterialization.cpp` |
-| T202 | `ir-gpu-written-desc` | Г | I | `ec3e48cd` | Синхронизация GPU-записанных записываемых дескрипторов | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
+| T201 | `ir-dispatch-exec` | А-резерв (M1a2; было Г) | I | `e4aca7a6` `0258bd61` | EXEC по размерам dispatch в потоках | — | да | `ResourceMaterialization.cpp` |
+| T202 | `ir-gpu-written-desc` | А-резерв (M1a2; было Г) | I | `ec3e48cd` | Синхронизация GPU-записанных записываемых дескрипторов | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
 | T203 | `dec-alignbyte` | А | I | `f18679e0` | V_ALIGNBYTE_B32: смещение по 2 битам | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Integer.cpp:500` | да | — |
 | T204 | `be-fp64` | Г | c | `7992aecb` | FP64: собственное округление в смешанной точности | ophist:VOP3:14c=0;VOP3:164=0;VOP3:165=0;VOP3:166=0;VOP3:167=0;VOP1:f=0;VOP3:18f=0;VOP1:10=0;VOP3:190=0 | да | `vulkanWindow.cpp` |
 | T205 | `tst-hades` | Г | U | `a5eeab98` | Тест PM4: обработчики SPI_SHADER_USER_DATA_ADDR_*_PS (к теме 89792a3bc) | — | нет | — |
 | T206 | `ir-brev-flat` | Г | c | `139b564c` | Свёртка S_BREV_B32 до классификации FLAT-стека | ophist:FLAT.flat:*=0 | да | — |
-| T207 | `ir-loop-exec-witness` | Г | I | `e0c90ace` | EXEC-свидетели в циклах дескрипторов | register:§104:Ф3 | да | — |
-| T208 | `ir-material-scan` | Г | I | `b183cb10` | Общие ограниченные сканы ключей материала | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
-| T209 | `ir-desckey-ssa` | Г | I | `1f6be3d5` | SSA ключа дескриптора при нативном разрешении | register:§104:Ф3 | да | — |
+| T207 | `ir-loop-exec-witness` | А-резерв (M1a2; было Г) | I | `e0c90ace` | EXEC-свидетели в циклах дескрипторов | register:§104:Ф3 | да | — |
+| T208 | `ir-material-scan` | А-резерв (M1a2; было Г) | I | `b183cb10` | Общие ограниченные сканы ключей материала | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
+| T209 | `ir-desckey-ssa` | А-резерв (M1a2; было Г) | I | `1f6be3d5` | SSA ключа дескриптора при нативном разрешении | register:§104:Ф3 | да | — |
 | T210 | `sys-mem-fixed-replace` | А | U | `46900d80` | Память: замена живого фиксированного прямого отображения без дыры | — | нет | — |
 | T211 | `ir-scalar-native` | Г | c | `cd9fc6ff` `266c12ce` | Скаляры нативно, сырые адреса (отменено) | — | да | `ResourceMaterialization.cpp` |
 | T212 | `ir-movreld-loopbound` | Д | I | `92ac54a4` | Невозможные относительные записи при замкнутых границах цикла | `b3dc9c67:src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp:207` | да | — |
 | T213 | `sys-gpu-descr-sync` | В | I | `57cf0868` | Синхронизация GPU-записанных зависимостей дескрипторов через кэш буферов | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:851` | нет | `pipelineCache.cpp` |
 | T214 | `img-spec-read` | В | I | `783d9f8d` | Чтение памяти специализации из сырого буфера | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:830` | нет | `textureCache.cpp`, `textureCache.h`, `pipelineCache.cpp` |
-| T215 | `dec-cselect-raw` | Г | I | `efbaa17f` | S_CSELECT_B64 в EXEC/VCC: сырые биты | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Control.cpp:261` | да | — |
+| T215 | `dec-cselect-raw` | А-резерв (M1a2; было Г) | I | `efbaa17f` | S_CSELECT_B64 в EXEC/VCC: сырые биты | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Control.cpp:261` | да | — |
 | T216 | `be-narrowsto` | Д | I | `c3f49627` | Нативное 8/16-битное хранение буферов (storageBuffer8/16BitAccess) | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1518` | да | `descriptors.cpp`, `vulkanWindow.cpp`, `spirvEmitterMemory.cpp` |
-| T217 | `be-meshclip` | Г | U | `39248a1f` | Clip/cull distance в меш-шейдерах | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMesh.cpp:39` | да | — |
+| T217 | `be-meshclip` | А-резерв (M1a2; было Г) | U | `39248a1f` | Clip/cull distance в меш-шейдерах | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMesh.cpp:39` | да | — |
 | T218 | `av-haptics-linux` | Г | c | `c885da0a` | Хаптика DualSense на Linux | platform:Linux | нет | — |
 | T219 | `sys-libc-autoload` | В | I | `fdac55a5` | Загрузчик: только libc.prx автоматически, без предзагрузки соседних PRX | `b3dc9c67:src/loader/runtimeLinker.cpp:1531` | нет | `runtimeLinker.cpp` |
 | T220 | `sys-ampr-evfilt` | Г | c | `deb45a8b` | Фильтр EVFILT_AMPR для событий завершения APR | imports: sceKernelAddAmprEvent (bBfz7kMF2Ho), DeleteAmprEvent (bMmid3pfyjo), AddUserEvent (4R6-OvI2cEA) = 0; строк «AMPR event add» в log_fs15_z 0 | нет | — |
-| T221 | `be-scaledtex` | Г | U | `96c067d0` `07c84876` `e5689990` | Текстуры USCALED 8 бит: выборка через UNORM-хранение | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:397` | да | `ResourceMaterialization.cpp` |
-| T222 | `img-10-11-11` | Г | U | `5940e623` | Цель 10-11-11 и общие преобразования цвета | — | да | `CMakeLists.txt`, `textureCache.cpp` |
-| T223 | `img-rebind-order` | Г | U | `a2f85178` | Порядок пересвязывания перекрывающихся образов | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:5176` | нет | `textureCache.cpp`, `descriptors.cpp` |
-| T224 | `rnd-polygon-fan` | Г | I | `45fab265` | Примитив kPolygon как веер треугольников | `b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:2952` | нет | — |
-| T225 | `ir-wg-imgtable` | Г | I | `0ee88009` `190f838e` | T# по индексу рабочей группы | register:§104:Ф3 | да | `pipelineCache.cpp`, `ResourceMaterialization.cpp` |
-| T226 | `be-ldsbuf` | Г | I | `b0bbaef1` `f7bd0b43` | LDS больше лимита устройства — в буфер устройства | — | да | `descriptors.cpp`, `pipelineCache.cpp`, `spirvEmitterMemory.cpp` |
-| T227 | `ir-sampler-resv` | Г | I | `b7d3c572` | Очистка неиспользуемых битов сэмплера | register:§104:Ф3 | да | — |
-| T228 | `img-2d3d-alias` | Г | U | `0885f43a` | Алиасы 2D/3D текстур раздельно | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1024` | нет | `textureCache.cpp` |
-| T229 | `rnd-vfmt-uscaled` | Г | I | `8e46a3cc` | Вершинный формат 10_10_10_2 UScaled | `b3dc9c67:src/graphics/host_gpu/vulkanCommon.cpp:50` | нет | — |
+| T221 | `be-scaledtex` | А-резерв (M1a2; было Г) | U | `96c067d0` `07c84876` `e5689990` | Текстуры USCALED 8 бит: выборка через UNORM-хранение | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:397` | да | `ResourceMaterialization.cpp` |
+| T222 | `img-10-11-11` | А-резерв (M1a2; было Г) | U | `5940e623` | Цель 10-11-11 и общие преобразования цвета | — | да | `CMakeLists.txt`, `textureCache.cpp` |
+| T223 | `img-rebind-order` | А-резерв (M1a2; было Г) | U | `a2f85178` | Порядок пересвязывания перекрывающихся образов | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:5176` | нет | `textureCache.cpp`, `descriptors.cpp` |
+| T224 | `rnd-polygon-fan` | А-резерв (M1a2; было Г) | I | `45fab265` | Примитив kPolygon как веер треугольников | `b3dc9c67:src/graphics/host_gpu/renderer/renderDraw.cpp:2952` | нет | — |
+| T225 | `ir-wg-imgtable` | А-резерв (M1a2; было Г) | I | `0ee88009` `190f838e` | T# по индексу рабочей группы | register:§104:Ф3 | да | `pipelineCache.cpp`, `ResourceMaterialization.cpp` |
+| T226 | `be-ldsbuf` | А-резерв (M1a2; было Г) | I | `b0bbaef1` `f7bd0b43` | LDS больше лимита устройства — в буфер устройства | — | да | `descriptors.cpp`, `pipelineCache.cpp`, `spirvEmitterMemory.cpp` |
+| T227 | `ir-sampler-resv` | А-резерв (M1a2; было Г) | I | `b7d3c572` | Очистка неиспользуемых битов сэмплера | register:§104:Ф3 | да | — |
+| T228 | `img-2d3d-alias` | А-резерв (M1a2; было Г) | U | `0885f43a` | Алиасы 2D/3D текстур раздельно | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1024` | нет | `textureCache.cpp` |
+| T229 | `rnd-vfmt-uscaled` | А-резерв (M1a2; было Г) | I | `8e46a3cc` | Вершинный формат 10_10_10_2 UScaled | `b3dc9c67:src/graphics/host_gpu/vulkanCommon.cpp:50` | нет | — |
 | T230 | `hle-font-kerning` | Г | c | `c753efdd` | sceFont: кернинг | nid:sDuhHGNhHvE (sceFontGetKerning) нет в бинарях игры (NID-поиск строк «NID#» в eboot.bin и sce_module/*.prx игры) | нет | — |
 | T231 | `hle-font-metrics` | А | I | `f96a14a0` `58978d15` | sceFont: метрики и растр глифов по запрошенному масштабу | `b3dc9c67:src/libs/libFont.cpp:802` | нет | — |
 | T232 | `sys-hle-stubs` | Г | c | `bbb98bd4` | Заглушки BluetoothHid/DeviceService/Usbd | imports: 8 новых NID = 0 | нет | — |
 | T233 | `dec-mad-legacy` | А | c | `d8be245c` | Нефьюзный legacy MAD/MAC FP32 отдельно от FMA | `b3dc9c67:src/graphics/shader/recompiler/frontend/translate/Vector.cpp:414` | да | `ShaderDecoder.h` |
 | T234 | `dec-ds-fminmax` | А | c | `e85279ea` | DS_MIN/MAX_F32: два операнда и особые значения | `b3dc9c67:src/graphics/shader/recompiler/frontend/decode/MemoryOps.cpp:197` | да | `spirvEmitterMemory.cpp` |
-| T235 | `hle-trophy` | Г | U | `72e4989b` `fb7ff7ec` | Трофеи: состояние, уведомления, UDS | diff: оверлей и состояние трофеев | нет | `CMakeLists.txt` |
-| T236 | `ir-strided-masked` | Г | I | `5c830604` | Маскированные ключи в шаговых записях | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
+| T235 | `hle-trophy` | А-резерв (M1a2; было Г) | U | `72e4989b` `fb7ff7ec` | Трофеи: состояние, уведомления, UDS | diff: оверлей и состояние трофеев | нет | `CMakeLists.txt` |
+| T236 | `ir-strided-masked` | А-резерв (M1a2; было Г) | I | `5c830604` | Маскированные ключи в шаговых записях | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
 | T237 | `be-maddenorm` | В | c | `77d77221` | Явный флеш денормалей в legacy MAD (выключен для теста скорости) | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h:18` | да | — |
 | T238 | `ir-native-int64` | Д | I | `5b826c6e` | Нативные 64-битные операции SPIR-V | — | да | `spirvEmitterMemory.cpp` |
 | T239 | `img-unmap-drain` | Д | I | `e6fce45d` | Снятие отображения без ожидания GPU | — | нет | `textureCache.cpp`, `textureCache.h`, `renderContext.cpp` |
 | T240 | `img-clear16` | Б | c | `57c97ebd` | Декодирование 16-битных цветовых очисток | `b3dc9c67:src/graphics/host_gpu/renderer/image/imageInfo.h:458` | да | — |
+| T313 | `img-clear16-guard` | А (M1a2; часть T240) | I | `57c97ebd` | защита заливки DWORD R16 с неравными половинами: у нас `ClearImageFromBuffer` берёт младшу… | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:2971` | нет | — |
 | T241 | `rnd-depth-bounds-dyn` | Д | I | `98401022` | Динамические границы глубины | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5635` | нет | `pipelineCache.cpp`, `pipelineCache.h`, `shaders.cpp` |
-| T242 | `rnd-unbounded-buffers` | Г | I | `e5dcfdb8` | Ограничение буферов с NumRecords = 0xFFFFFFFF | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:4913` | нет | `descriptors.cpp` |
+| T242 | `rnd-unbounded-buffers` | А-резерв (M1a2; было Г) | I | `e5dcfdb8` | Ограничение буферов с NumRecords = 0xFFFFFFFF | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:4913` | нет | `descriptors.cpp` |
 | T243 | `rnd-indirect-sgpr` | В | I | `cdb64bfd` `9f83fd5f` `420bb51d` | Смещения косвенного draw в user SGPR и источник индексов | `b3dc9c67:src/graphics/guest_gpu/graphicsRun.cpp:3126` | нет | — |
 | T244 | `dec-glc-flat` | Г | c | `9caec9f2` | DLC-когерентность FLAT-загрузок | `b3dc9c67:src/graphics/shader/recompiler/frontend/decode/MemoryOps.cpp:346` | да | `spirvEmitterMemory.cpp`, `Memory.cpp` |
-| T245 | `ir-nested-selector` | Г | I | `c23de621` | Вложенные таблицы селекторов дескрипторов | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
+| T245 | `ir-nested-selector` | А-резерв (M1a2; было Г) | I | `c23de621` | Вложенные таблицы селекторов дескрипторов | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
 | T246 | `sys-eq-persistent` | А | U | `afbb322b` | Очередь событий: уровень без EV_CLEAR один раз за ожидание | `b3dc9c67:src/kernel/eventQueue.cpp:94` | нет | — |
 | T247 | `ir-perf-cleanup` | Д | c | `5a491abb` | Чистка: лишняя сортировка | — | да | `ResourceMaterialization.cpp` |
-| T248 | `ir-broad-table` | Г | I | `b929bbe3` | Широкие таблицы образов — только совместимые виды | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
+| T248 | `ir-broad-table` | А-резерв (M1a2; было Г) | I | `b929bbe3` | Широкие таблицы образов — только совместимые виды | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
 | T249 | `sys-thread-naming` | Г | c | `199d0a9d` `1b21161a` | Имена гостевых потоков на хосте (Linux/macOS) | — | нет | `pthread.cpp` |
 | T250 | `prs-title` | Б | c | `7415febd` | Заголовок окна в главном потоке | `b3dc9c67:src/graphics/presentation/window/window.cpp:1979` | нет | `hostInput.cpp`, `swapchain.cpp`, `window.cpp` |
-| T251 | `rnd-depth-copy` | Г | I | `2a18e66a` `65144ce4` | Проверка копирования глубины в цвет при draw | `b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:194` | нет | — |
+| T251 | `rnd-depth-copy` | А-резерв (M1a2; было Г) | I | `2a18e66a` `65144ce4` | Проверка копирования глубины в цвет при draw | `b3dc9c67:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:194` | нет | — |
 | T252 | `sys-notice-skip` | Г | c | `cc44a43e` | Опция пропуска экрана уведомлений | — | нет | — |
 | T253 | `sys-agc-new-abi` | Г | c | `67d7db68` `aa3b2cd5` `3ae5a9b7` `fbea51c6` | AGC: новые NID (SetNop, async rewind, branch patch, packet size) | imports: nNlUtdDDvZ0 = 0 | нет | — |
 | T254 | `prs-trophy-ui` | Г | c | `d2413fc2` | Просмотр трофеев и перенос заголовков тостов | — | нет | — |
 | T255 | `ir-mrt-compact` | В | I | `21a1346e` | Компактные экспорты цвета через CB_SHADER_MASK | `b3dc9c67:src/graphics/shader/recompiler/ir/passes/ShaderInfoCollection.cpp:378` | да | — |
-| T256 | `be-snorm16exp` | Г | c | `b96871e2` | Распаковка сжатого экспорта цвета SNORM16_ABGR (режим 6) | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterFlow.cpp:291` | да | — |
+| T256 | `be-snorm16exp` | А (M1a2; было Г) | c | `b96871e2` | Распаковка сжатого экспорта цвета SNORM16_ABGR (режим 6) | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterFlow.cpp:291` | да | — |
 | T257 | `be-wavebranch` | А | I | `a8beac19` | Скалярное ветвление (EXECZ/VCCZ) решением всей волны | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:143` | да | — |
 | T258 | `rnd-raw-storage-alias` | А | U | `743fdc69` | Чтение сырых буферов хранения синхронизируется с образами-алиасами | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:903` | нет | `descriptors.cpp` |
-| T259 | `img-array-sync` | Г | U | `dd754065` | Копирование массивов образа в буфер | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3220` | нет | `textureCache.cpp` |
+| T259 | `img-array-sync` | А-резерв (M1a2; было Г) | U | `dd754065` | Копирование массивов образа в буфер | `b3dc9c67:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3220` | нет | `textureCache.cpp` |
 | T260 | `sys-raw-image-sync` | Г | c | `470669c6` | Синхронизация сырых чтений образов по опции | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:903` | нет | `descriptors.cpp` |
 | T261 | `sys-mem-winview` | Д | I | `c30ac7c9` | Память: без лишней смены защиты вида Windows | — | нет | — |
 | T262 | `sys-mem-flatten` | Г | I | `9c79d9d2` | Память: упрощение путей прямого и пакетного отображения | — | нет | — |
@@ -988,7 +992,7 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T265 | `sys-ampr-fileid` | А | c | `e43aadf7` | AMPR: уникальные ID разрешённых путей вместо FNV-1a | `b3dc9c67:src/libs/libAmpr.cpp:96` | нет | — |
 | T266 | `rnd-macos-tid` | Г | c | `79a91ecf` | macOS: кэш id потока в TrackingSpinLock | — | нет | `regionManager.h` |
 | T267 | `tst-int16` | Г | c | `34f6fd1f` | Тесты 16-битных целочисленных опкодов ALU | ophist:VOP3P:0..d=0;VOP3:303..30e=0;VOPC:89..8e=0;VOP3:89..8e=0;VOPC:a9..ae=0;VOP3:a9..ae=0 | нет | — |
-| T268 | `sys-dev-random` | Г | I | `de626649` | /dev/random как символьное устройство | — | нет | `fileSystem.cpp` |
+| T268 | `sys-dev-random` | А-резерв (M1a2; было Г) | I | `de626649` | /dev/random как символьное устройство | — | нет | `fileSystem.cpp` |
 | T269 | `sys-cloexec` | Г | c | `db41d048` | Флаг close-on-exec дескрипторов | imports: sceKernelSetFdCloseOnExec (ioWKNmDZG+0), sceSystemServiceLoadExec (JoBqSQt1yyA) = 0 | нет | `fileSystem.cpp`, `libKernel.cpp` |
 | T270 | `sys-sysmodule-refs` | А | U | `210d4dcd` | Sysmodule: счёт ссылок загрузки и статус выгрузки | `b3dc9c67:src/libs/libSysmodule.cpp:25` | нет | — |
 | T271 | `sys-entitlement-event` | А | U | `62643c34` | SystemService: событие ENTITLEMENT_UPDATE после AppContentInitialize | `b3dc9c67:src/libs/libSystemService.cpp:156` | нет | — |
@@ -1004,28 +1008,28 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 | T281 | `ir-block-cfg` | Д | I | `3df45667` | Рефакторинг: управление потоком в блоках IR | — | да | `ResourceMaterialization.cpp` |
 | T282 | `be-nativeint` | Д | I | `ee4dd906` | Нативные целочисленные GLSL-операции без приведения знака | — | да | — |
 | T283 | `be-nanclass` | Д | c | `393257ea` `7b9997ba` | Классификация NaN: одно сравнение модуля, маска класса 3 -> OpIsNan | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterAluHelpers.cpp:104` | да | — |
-| T284 | `rnd-nop-1dw` | Г | U | `4c8fc53a` | NOP из одного слова и общий размер пакета | `b3dc9c67:src/libs/agc.cpp:1746` | нет | — |
+| T284 | `rnd-nop-1dw` | А-резерв (M1a2; было Г) | U | `4c8fc53a` | NOP из одного слова и общий размер пакета | `b3dc9c67:src/libs/agc.cpp:1746` | нет | — |
 | T285 | `ir-pred-capture` | Д | I | `3b1a9470` | Захват только предикатов из памяти | — | да | `ResourceMaterialization.cpp` |
 | T286 | `ir-scalar-gpu` | Г | c | `5b68a26c` `1c301c9a` | Скалярная полезная нагрузка на GPU (отменено) | — | да | `ResourceMaterialization.cpp` |
-| T287 | `ir-scalar-matsel` | Г | I | `973809cd` | Ограниченные скалярные селекторы образов материала | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
-| T288 | `sys-agc-driver-dmem` | Г | U | `165cd884` `9a5dd9fa` | AGC: DMEM драйвера и таблица функций при старте | — | нет | — |
+| T287 | `ir-scalar-matsel` | А-резерв (M1a2; было Г) | I | `973809cd` | Ограниченные скалярные селекторы образов материала | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
+| T288 | `sys-agc-driver-dmem` | А-резерв (M1a2; было Г) | U | `165cd884` `9a5dd9fa` | AGC: DMEM драйвера и таблица функций при старте | — | нет | — |
 | T289 | `img-tiling-refactor` | Д | I | `5559cfcb` | Перестройка тайлинга и общих раскладок | — | да | `CMakeLists.txt`, `textureCache.cpp`, `textureCache.h`, `descriptors.cpp`, `videoOut.cpp` |
 | T290 | `img-dynstate` | Д | I | `93452b24` | Кэш динамического состояния графики | — | нет | — |
 | T291 | `be-dppshare` | Г | c | `053f5fd3` | DPP row_share | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterHelpers.cpp:92` | да | — |
 | T292 | `sys-updater` | Г | c | `307fdcf7` | Самообновление лаунчера | — | нет | — |
 | T293 | `prs-splash` | Г | c | `f63d3bef` | Заставка при запуске | — | нет | `emulator.cpp` |
 | T294 | `prs-back-touch` | Г | c | `1cfb9522` | Back как клик тачпада | — | нет | `window.cpp` |
-| T295 | `rnd-r64-bc` | Г | I | `b7b335ac` | Блочно-сжатые текстуры в тайлинге RenderTarget R64 | `b3dc9c67:src/graphics/guest_gpu/tile.cpp:306` | нет | — |
-| T296 | `img-r8snorm` | Г | c | `7e4e142a` | Сэмплирование R8 SNORM | `b3dc9c67:src/graphics/guest_gpu/gpu_format.cpp:23` | нет | — |
+| T295 | `rnd-r64-bc` | А-резерв (M1a2; было Г) | I | `b7b335ac` | Блочно-сжатые текстуры в тайлинге RenderTarget R64 | `b3dc9c67:src/graphics/guest_gpu/tile.cpp:306` | нет | — |
+| T296 | `img-r8snorm` | А-резерв (M1a2; было Г) | c | `7e4e142a` | Сэмплирование R8 SNORM | `b3dc9c67:src/graphics/guest_gpu/gpu_format.cpp:23` | нет | — |
 | T297 | `img-fmt-uint8` | Д | c | `ece4e287` | Поля таблицы форматов в uint8_t | — | нет | — |
 | T298 | `av-avplayer-buffers` | А | U | `a6f4e8e7` | AvPlayer: возврат выходных буферов декодеру | `b3dc9c67:src/libs/avPlayer.cpp:963` | нет | — |
 | T299 | `sys-agc-dbgdump` | Г | c | `d4bb7fd7` | AGC: удалён отладочный дамп буфера команд | — | нет | — |
 | T300 | `ir-srt-jit` | Д | I | `f848d276` `4084a008` | JIT обхода SRT (xbyak) | `b3dc9c67:src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:2354` | да | `CMakeLists.txt`, `ResourceMaterialization.cpp` |
-| T301 | `prs-depth2color` | Г | I | `1029511b` | Копия глубины в цвет | `b3dc9c67:src/graphics/host_gpu/renderer/depthRenderTarget.cpp:370` | нет | `graphicContext.h`, `vulkanWindow.cpp` |
+| T301 | `prs-depth2color` | А-резерв (M1a2; было Г) | I | `1029511b` | Копия глубины в цвет | `b3dc9c67:src/graphics/host_gpu/renderer/depthRenderTarget.cpp:370` | нет | `graphicContext.h`, `vulkanWindow.cpp` |
 | T302 | `sys-playgo-plgx` | Г | c | `6f3bebcb` | PlayGo: чанки plgx | лог игры: «Can't open .../sce_sys/playgo-chunk.dat» (log_fs15_v) | нет | — |
 | T303 | `sys-loadexec` | Г | c | `cb375ec3` `6f0cddd4` `16a7fe68` | LoadExec (перезапуск исполняемого файла) | imports: sceSystemServiceLoadExec (JoBqSQt1yyA) = 0 | да | `CMakeLists.txt`, `runtimeLinker.cpp` |
 | T304 | `img-cmp-depth-dcc` | В | U | `f28c0fcc` | DCC у цветового алиаса со сравнением глубины | `b3dc9c67:src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3104` | нет | `textureCache.cpp`, `descriptors.cpp` |
-| T305 | `ir-shared-pred` | Г | I | `df0412af` | Общие предикаты при извлечении плана | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
+| T305 | `ir-shared-pred` | А-резерв (M1a2; было Г) | I | `df0412af` | Общие предикаты при извлечении плана | register:§104:Ф3 | да | `ResourceMaterialization.cpp` |
 | T306 | `ir-texoffset` | А | I | `984cfceb` | Смещения текселей IMAGE_SAMPLE_*_O | `b3dc9c67:src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:781` | да | `Memory.cpp` |
 | T307 | `sys-hdr` | Г | I | `e51de54e` | Вывод HDR10 | — | да | `CMakeLists.txt`, `videoOut.cpp`, `swapchain.cpp`, `vulkanWindow.cpp` |
 | T308 | `sys-ftruncate` | Г | c | `048fe9f4` | Экспорт sceKernelFtruncate | imports: VW3TVZiM4-E = 0 | нет | `libKernel.cpp` |
@@ -1217,3 +1221,162 @@ T020 `rnd-mrt-exported`, T046 `be-dualsrc`, T109 `prs-depth-clamp`, T152 `rnd-pi
 Что upstream лучше или хуже нашего; что перенос любой темы что-то исправит у нас; что кандидаты А дают видимый дефект ASTRO BOT; что темы Г
 с уверенностью U игрой не исполняются; что опись полна по смыслу внутри больших коммитов; что CI или тесты upstream проходят у нас; ни одно
 число — не выигрыш; 60 FPS не обещаются; цель (B) не меняется.
+
+## 14. M1a2 (`HPP-837`): правки по исходам отзыва M1b (п. 756(б)(1)–(6))
+
+Исполнитель — Probe Designer, 2026-10-12 (UTC). Вход — опись M1a (KytyPS5 `eee39691`), отзыв M1b `review.md` (`9430bb10`), решения — `ROADMAP.md` п. 756 (`f7208cda`), правило класса — п. 752(в). Игра не запускалась, замок не брался, сборок нет, код `main` не менялся. Свой код и выводы — `m1a2/` (`apply_m1a2.py` пишет `upstream.tsv`, `upstream_detail.tsv`, `upstream_parts.tsv`, `upstream_merges.tsv` из издания `eee39691`; `md_m1a2.py` — этот раздел; `check_m1a2.py` — члены (1)–(6)). Пометки [c]/[I]/[U] — как в отзыве.
+
+### 14.0 Итог классов (счёт скриптом)
+
+| класс | коммитов M1a | коммитов M1a2 | тем M1a | тем M1a2 (+ части) |
+|---|---|---|---|---|
+| А | 40 | 41 | 28 | 29 + T313 |
+| А-резерв | 0 | 109 | 0 | 74 + T314 |
+| Б | 10 | 9 | 9 | 8 |
+| В | 58 | 59 | 35 | 36 |
+| В′ | 0 | 0 | 0 | 0 |
+| Г | 375 | 265 | 186 | 111 |
+| Д | 81 | 81 | 54 | 54 |
+| всего | 564 | 564 | 312 | 312 + 2 |
+
+Расчёт по коммитам: Г = 375 − 110 (RC1) = **265**, поправки (2) Г не трогают; А = 40 + 1 (T256) = 41; А-резерв = 110 − 1 = 109; Б = 10 − 1 (T021) = 9; В = 58 + 1 = 59; Д = 81. Коммиты T240 (`57c97ebd`) и T185 (`e6cb880a`) несут по две темы: класс строки `upstream.tsv` — Б (декодирование / пад), вторая тема — колонка `доп_тема` (`T313:А`, `T314:А-резерв`) и строка `upstream_parts.tsv`; по долям коммит идёт в оба класса.
+
+### 14.1 RC1: А-резерв и сигнатуры отказа
+
+75 тем `m1b/rc1_themes.tsv`: 74 — **А-резерв** (перенос только при сигнатуре у нас или офлайн-свидетельстве по всей игре), **T256 — А** (волна 1, п. 756(в)(1)). Строка `строка_M1a2` каждой темы это называет.
+
+**Сигнатуры (`m1a2/signatures.tsv`, `mk_sig_m1a2.py` — `ALL OK`).** 74 мест на 48 тем (30 FATAL, 18 RT): у 46 тем печатаемый текст, у T202 и T305 печати нет (путь молча берёт устаревший V# / отбрасывает предикат — место названо). Места найдены тремя помощниками звена только чтением и перепроверены скриптом: строка N и N+1 на `b3dc9c67` — 74 из 74; сигнатура — подстрока литерала у места. Поток: лог 58, stderr 11, stdout 1, нет 4. Сигнатура T001 сужена до `Exception: code=0xc00000fd` (переполнение стека): общий вид «Exception: code=» есть в чистом прогоне (16 строк C++-исключений `0xe06d7363` в `stdout_fs15_v`) [c].
+
+**Находка [c]: свип трека F этих сигнатур не видит.** У 23 из 48 тем строка журнала с сигнатурой не совпадает с `KEY` сканера `docs/track-f/f0/sweep_f0.py` (его без изменений импортирует `sweep_f48a.py`): «Not implemented (…)» (в `KEY` только «not implemented»), «… is not a valid runtime value», «sampling a writable depth…» и т. п. — свип видит только общий заголовок «--- Error ---» / «--- Fatal Error ---»; строки stderr/stdout (`_run_stdout.txt`) свип не читает вовсе. Темы: T001, T022, T056, T057, T070, T072, T073, T085, T101, T103, T112, T180, T202, T207, T208, T209, T224, T225, T227, T236, T245, T287, T305. Поэтому поиск — свой: **`m1a2/grep_sig_m1a2.py`** (все сигнатуры и строки-спутники в логе; строка «CsPretranslate: skipped» считается отдельно). Положительный контроль `selftest` — 46 из 46 тем с печатью найдены по строке формы нашей печати, отрицательные строки — 0; отрицательный контроль на чистом V FS15 (`log_fs15_v.txt` + `stdout_fs15_v.txt`) — 0 фатальных совпадений, 33 строки предтрансляции «… is not a valid runtime value» (`CsPretranslate: skipped`) у 15 тем (14 RT и T072) — отказ CS-программ при предтрансляции, не фатал прогона [c]; к какой теме относится каждая — по `hash`/`pc` строки [U]. Правило переоткрытия п. 749 читает эти сигнатуры этим поиском; `sweep_f48a.py` не меняется (вне звена).
+
+| тема | вид | мест | поток | первая сигнатура | место (`b3dc9c67`) | ключ свипа |
+|---|---|---|---|---|---|---|
+| T001 | FATAL | 1 | stderr | `Exception: code=0xc00000fd` | `src/common/hostException.cpp:119` | - |
+| T006 | FATAL | 1 | лог | `unknown predication op: ` | `src/graphics/guest_gpu/graphicsRun.cpp:3083` | да |
+| T022 | FATAL | 1 | лог | `Not implemented (!draw.IsIndexed() \|\| emit.indirect_args_addr != ` | `src/graphics/host_gpu/renderer/renderDraw.cpp:4117` | нет |
+| T024 | FATAL | 1 | stderr | `unsupported depth register state` | `src/graphics/host_gpu/renderer/depthRenderTarget.cpp:174` | да |
+| T056 | FATAL | 1 | лог | `Not implemented (user_id != Config::GetUserId())` | `src/libs/libUserService.cpp:95` | нет |
+| T057 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:589` | нет |
+| T060 | FATAL | 3 | лог | `unknown primitive type: ` | `src/graphics/host_gpu/renderer/renderDraw.cpp:2942` | да/нет |
+| T065 | FATAL | 1 | лог | `unknown cx reg at ` | `src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:2106` | да |
+| T066 | FATAL | 1 | лог | `unsupported storage texture: resource=` | `src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1284` | да |
+| T070 | FATAL | 1 | лог | `Not implemented (rt.info.fmask_data_compression_disable != false)` | `src/graphics/host_gpu/renderer/debug.cpp:222` | нет |
+| T072 | FATAL | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:589` | нет |
+| T073 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:582` | нет |
+| T074 | FATAL | 1 | лог | `unsupported sampled depth image: resource=` | `src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1145` | да |
+| T084 | FATAL | 3 | stderr/лог | `shader resource materialization failed hash=` | `src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4064` | да |
+| T085 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:589` | нет |
+| T090 | FATAL | 1 | лог | `TextureCache: failed to map reusable download buffer` | `src/graphics/host_gpu/renderer/cache/textureCache.cpp:3364` | да |
+| T099 | FATAL | 4 | лог | `Not implemented (options.wave_size != ` | `src/graphics/shader/recompiler/frontend/translate/Translate.cpp:1079` | да/нет |
+| T101 | FATAL | 1 | лог | `sampling a writable depth/stencil attachment aspect` | `src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:6829` | нет |
+| T103 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:589` | нет |
+| T112 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:589` | нет |
+| T121 | FATAL | 1 | лог | `unknown event type` | `src/graphics/guest_gpu/graphicsRun.cpp:3718` | да |
+| T131 | FATAL | 2 | лог | `linear mipmapped render targets are unsupported` | `src/graphics/host_gpu/renderer/colorRenderTarget.cpp:290` | да |
+| T136 | FATAL | 1 | лог | `unknown ratio: ` | `src/graphics/host_gpu/renderer/cache/samplerCache.cpp:88` | да |
+| T167 | FATAL | 1 | лог | `unsupported sampled depth image: resource=` | `src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1145` | да |
+| T171 | RT | 3 | stderr/нет | `runtime descriptor sources could not be evaluated` | `src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:363` | -/да |
+| T180 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:589` | нет |
+| T191 | FATAL | 2 | лог | `unknown format:` | `src/graphics/guest_gpu/tile.cpp:1331` | да |
+| T202 | RT | 1 | нет | `-` | `src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:2475` | - |
+| T207 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:582` | нет |
+| T208 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:582` | нет |
+| T209 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:582` | нет |
+| T217 | FATAL | 1 | лог | `unsupported mesh output kind=` | `src/graphics/shader/recompiler/backend/spirv/spirvEmitterMesh.cpp:39` | да |
+| T221 | FATAL | 3 | stderr/лог | `shader resource materialization failed hash=` | `src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4064` | да |
+| T224 | FATAL | 1 | stdout | `Skipping draw with unknown primitive type: ` | `src/graphics/host_gpu/renderer/renderDraw.cpp:2952` | - |
+| T225 | RT | 2 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:582` | нет |
+| T227 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:589` | нет |
+| T229 | FATAL | 1 | лог | `unknown vertex format: fmt = ` | `src/graphics/host_gpu/renderer/pipeline/shaders.cpp:233` | да |
+| T236 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:582` | нет |
+| T242 | FATAL | 2 | лог | `storage buffer range or device alignment is unsupported` | `src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:770` | да |
+| T245 | RT | 1 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:582` | нет |
+| T248 | RT | 2 | stderr/лог | `shader resource materialization failed hash=` | `src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4064` | да |
+| T251 | FATAL | 4 | stderr/лог | `Not implemented (r.copy_depth_to_color \|\| r.copy_stencil_to_color)` | `src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:194` | да/нет |
+| T284 | FATAL | 4 | лог/нет | `Not implemented (remaining_dw < ` | `src/graphics/guest_gpu/graphicsRun.cpp:2935` | -/да/нет |
+| T287 | RT | 2 | лог | `is not a valid runtime value` | `src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:582` | нет |
+| T295 | FATAL | 3 | лог | `unknown format:` | `src/graphics/guest_gpu/tile.cpp:1331` | да/нет |
+| T296 | FATAL | 2 | stderr/лог | `shader resource materialization failed hash=` | `src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4064` | да |
+| T301 | FATAL | 1 | stderr | `unsupported depth register state` | `src/graphics/host_gpu/renderer/depthRenderTarget.cpp:375` | да |
+| T305 | RT | 1 | нет | `-` | `src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:801` | - |
+
+Темы PIC/HLE без печатающего отказа (27): T027, T044, T047, T068, T087, T104, T130, T132, T134, T146, T148, T157, T166, T187, T192, T198, T201, T215, T222, T223, T226, T228, T235, T256, T259, T268, T288 — А-резерв, кроме T256 (А); переоткрытие — видимый дефект на листе, строка реестра или офлайн-свидетельство по всей игре.
+
+**Офлайн по всей игре (T226 и T314) [c].** `m1a2/lds_m1a2.py`: в 6 087 AMDGPU ELF `eboot.bin` (5 698 уникальных программ) раздел `.shader_header` — заголовок AGC `Shader` с парами SH-регистров (указатель `sh_registers` — от своего поля); у 190 программ типа CS есть `COMPUTE_PGM_RSRC2` (0x213), LDS = биты [23:15] × 512 Б. Гистограмма: 0 Б — 107, ≤ 9 728 Б — 59, 49 152 Б — 24; наибольший 49 152 Б = `maxComputeSharedMemorySize` устройства пользователя (RTX 5080 Laptop, драйвер 616.56, `vulkaninfoSDK`) — сверх предела 0 из 190. Свидетельство обо всей игре, а не о пройденных сценах; что игра передаёт значение заголовка без правки — [I]. Триггер переноса T226/T314 — устройство с пределом < 49 152 Б (тогда 24 программы сверх) или новая программа.
+
+### 14.2 RC2: T021 → В, деление T240 и T185
+
+| тема | часть коммита | класс | ханки | основание |
+|---|---|---|---|---|
+| T240 | основная `57c97ebd` | Б | imageInfo.h @@ -390 (DecodePackedColorClear: R16Sfloat/R16G16Sfloat/R16Unorm/R16G16Unorm); тесты декодирования | `src/graphics/host_gpu/renderer/image/imageInfo.h:458` |
+| T313 | часть T240 `57c97ebd` | А | imageInfo.h @@ -443 (DecodeColorDwordFill: R16Sfloat/R16Unorm — отказ при неравных половинах слова); тест заливки | `src/graphics/host_gpu/renderer/cache/textureCache.cpp:2971` |
+| T185 | основная `e6cb880a` | Б | window.cpp (неоткрываемый геймпад пропускается без фатала) | `src/graphics/presentation/window/joyPump.cpp:351` |
+| T314 | часть T185 `e6cb880a` | А-резерв | pipelineCache.cpp @@ -658 (GetComputeProgram: lds_size_dwords = min(…, maxComputeSharedMemorySize/4), строка GPU warning); тест ComputeLdsLimit | `src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5424` |
+
+T021 (`f38d738e`) — **В**: наш `minLod` не прибавляет `base_level` (RC2(а) отзыва); проверка — §14.6. T313 — защита заливки DWORD R16 с неравными половинами: у нас путь `ClearImageFromBuffer` (`textureCache.cpp:2971`) берёт младшую половину слова — волна 2 вместе с частью заливки T179 (п. 756(в)(3)). T314 — предел LDS вычислений (`GetComputeProgram`, `pipelineCache.cpp:5424`; у нас `lds_size_dwords = lds_size × 128` без зажима, `shader.cpp:850`) — А-резерв со свидетельством §14.1.
+
+### 14.3 RC3: слияние `8cecaf4e` и переименования
+
+`upstream_merges.tsv`: `8cecaf4e3` → тема **T053**, класс **Г** (как у T053), файлы — комбинированный дифф (6): `3rdparty/CMakeLists.txt`, `src/common/file.cpp`, `src/common/logging/log.cpp`, `src/common/stringUtils.h`, `src/kernel/fileSystem.cpp`, `tests/KernelFileSystemTests.cpp`. Основание `src/kernel/fileSystem.cpp:340` — «return Common::PathToGenericString(p.dir) == folder_or_point_str ||». п. 756(б)(3): слияние 8cecaf4e (PR #716) несёт своё содержимое разрешения — строка upstream_merges.tsv, класс Г (FindFiles `rel_path_with_name`: потребителей у нас 0 [c]; `Umount` по пути хоста: вызовов у нас 0 [c]; журнал и UTF-8 — только не-ASCII пути); судьба fileSystem.cpp — Б4 не задет (ханк `MountPoints::Umount` стр. 340, ханки Б4 стр. 105–115, 303, 431–446); перенос T053 — только вместе со слиянием
+
+Колонка `файлы` `upstream.tsv` — обе стороны переименований `git diff-tree -r -M`: дописаны исходные пути у `b11aea80` (`src/loader/redZonePatcher.cpp`) и `5940e623` (`src/graphics/host_gpu/shaders/gpu_tiler_swap_bgra16.comp`); расхождений с `-M` — 0 из 564 (`check_m1a2.py`). `m1b/cov_m1b.py` поправлен в одном месте (ветка слияния): слияние с содержимым считается покрытым только строкой `upstream_merges.tsv` с его sha, темой и классом этой темы и ровно его файлами комбинированного диффа; остальные проверки отзыва не тронуты. `cov_m1b.py` и `check_m1a.py` (новая колонка `доп_тема`, класс А-резерв) печатают `ALL OK`.
+
+### 14.4 RC4: свидетели строк журнала
+
+`m1a2/wit_m1a2.py` (`ALL OK`): литералы удалённых строк вызовов печати/журнала каждого коммита (и слияния) против 4160 наших скриптов `docs/` на `b3dc9c67` (`*.py`, `*.sh`, `*.ps1`, `*.cmd`); судьба ключа — есть ли он текстом в `src/` upstream `dad900c6`. 55 строк, 20 тем (`m1a2/witness.tsv`; ключи вида «size = 0x» — общие, отсеивает читатель). Колонка `свидетели` `upstream_detail.tsv` — по теме. Правило M2 (п. 756(б)(4)): перенос темы со свидетелем сохраняет строку текстом.
+
+| тема | ключ | в upstream | наши читатели |
+|---|---|---|---|
+| T017 | `GraphicsRenderDispatchDirect: skipping zero-sized dispatch groups=` | текст есть | `track-f/f11f/f11f_read.py`, `track-f/f11f/test_f11f_read.py`, `track-f/f16f/test_f16f_read.py` |
+| T073 | `is not a valid runtime value` | текст есть | `track-f/f21a/fx_sweep_f21a.py`, `track-f/f21a/sweep_f21a.py`, `track-f/f2c/test_f2c_b26.py` |
+| T093 | `got unknown event` | текст есть | `session-145/audit/aud145.py`, `session-145/step1b/mut_sc145.py`, `session-145/step1b/sc145.py` (+11) |
+| T093 | `AudioOut: SDL_OpenAudioDevice failed:` | **удалена** | `track-f/f32a/triage_f32a.py` |
+| T093 | `AudioOut: SDL_QueueAudio failed:` | **удалена** | `track-f/f0/mk_register.py`, `track-f/f17b/p433refs.py`, `track-f/f18a/refs_f18a.py` (+9) |
+| T097 | `sample_rate       =` | текст есть | `track-f/f4a/patch_f4a.py` |
+| T097 | `num_samples   =` | текст есть | `track-f/f17a/refs_f17a.py` |
+| T116 | `flipPendingNum =` | текст есть | `track-f/f34a/flipmap.py`, `track-f/f9a/scan_log.py` |
+| T116 | `queue  = 0x` | текст есть | `track-f/f31a/acb31.py` |
+| T116 | `packet = 0x` | текст есть | `track-f/f31a/acb31.py` |
+| T116 | `acb   = 0x` | текст есть | `track-f/f31a/acb31.py`, `track-s/s14d/refs_s14d.py` |
+| T116 | `size  = 0x` | текст есть | `track-f/f31a/acb31.py` |
+| T116 | `flags = 0x` | текст есть | `track-f/f22a/fx_sweep_f22a.py`, `track-f/f29a/maps_f29a.py`, `track-f/f31a/acb31.py` |
+| T124 | `Late-resolved import:` | **удалена** | `track-f/f21a/fx_sweep_f21a.py`, `track-f/f21a/refs_f21a.py`, `track-f/f21a/sweep_f21a.py` |
+| T124 | `Relocate: unresolved PLT import patched to stub [` | **удалена** | `track-f/f21a/refs_f21a.py` |
+| T124 | `=== Stubbed function, returning OK ===` | **удалена** | `session-142/step0/step0/v1/test_sc142.py`, `session-142/step0/test_sc142.py`, `session-142/step1b/step1b/v1/test_sc142.py` (+13) |
+| T135 | `RenderTarget: temporary: ignoring PS5 color metadata fast_clear=` | **удалена** | `track-f/f16a/refs_f16a.py`, `track-f/f16f/test_f16f_read.py` |
+| T140 | `Accessed non-GPU cached memory at 0x` | текст есть | `track-f/f3d/f3d_read.py`, `track-f/f3d/mk_seal_f3d.py`, `track-f/f3d/test_f3d_read.py` (+14) |
+| T151 | `RenderColorTarget: slot=` | **удалена** | `track-f/f16h/refs_f16h.py`, `track-f/f17a/selfcheck_f17a.py`, `track-f/f17a/sweep_f17a.py` |
+| T159 | `APR submit read failed: id=0x` | текст есть | `track-f/f22a/fx_sweep_f22a.py` |
+| T159 | `APR submit read failed: id=0x` | текст есть | `track-f/f22a/fx_sweep_f22a.py` |
+| T161 | `Format vk::Format::eR8G8B8A8Srgb cannot be used as texture` | **удалена** | `track-f/f16a/refs_f16a.py` |
+| T161 | `Format vk::Format::eB8G8R8A8Srgb cannot be used as texture` | **удалена** | `track-f/f16a/refs_f16a.py` |
+| T177 | `recursive region tracking lock` | **удалена** | `track-f/f16c/refs_f16c.py`, `track-f/f20j3/p2_sites.py` |
+| T177 | `recursive region tracking lock while contended` | **удалена** | `track-f/f20j3/p2_sites.py` |
+| T235 | `offset        =` | текст есть | `session-103/tools/patch_s103_loopcap_host.py` |
+| T235 | `prop       = 0x` | **удалена** | `track-f/f13d/f13d_refs.py` |
+| T275 | `APR read missing host file:` | текст есть | `track-f/f22a/fx_sweep_f22a.py` |
+| T026 | `phase begin: stage=` | текст есть | `track-f/f1b/rt_scan142.py`, `track-f/f25f/test_f25_read.py` |
+| T026 | `phase end: stage=` | текст есть | `track-f/f23f/links_f23f.py` |
+| T289 | `render-target memory footprint is invalid` | **удалена** | `track-f/f17a/refs_f17a.py` |
+
+Особо: T116 — строка `flipPendingNum` в upstream печатается только при `--graphics-debug-dump` (`a20fb7f9`): `f34a/flipmap.py`, `f9a/scan_log.py` ослепнут без флага; T124 — строки «Relocate: unresolved PLT import patched to stub», «Late-resolved import:», «=== Stubbed function, returning OK ===» удалены; T151 — «RenderColorTarget: slot=» удалена; T017 — строка нулевого dispatch сохранена, проверка перенесена до подготовки программы.
+
+### 14.5 RC5: темы Д против кадра ≥ 1 с
+
+T163, T239, T155, T178 — класс Д, строка: «кандидат против кадра ≥ 1 с; перенос — только с серией формы п. 613(г) (п. 756(б)(5): паркуется до переоткрытия Б36, Б40, Ф28 или Б32 новым свидетельством); класс Д».
+
+### 14.6 RC6: что превратит В в В′ или Б
+
+- **T021** — RC6/п. 756(б)(2): Б → В. Проверка, превращающая В в В′ или Б: (1) тест вида у нас — `base_level` = 2, MIN_LOD T# = 3,0, отложенные верхние уровни: наш `minLod` (b3dc9c67 imageView.cpp:387, без прибавки `base_level`) против `base_level` + MIN_LOD (upstream) под валидацией (VUID-VkImageViewMinLodCreateInfoEXT-minLod-06456 [I]); (2) в игре — счётчик видов с `base_level` > 0 и `minLod` > 0 под замком (волна 2, п. 756(в)(3)): 0 видов ⇒ Б (расхождение недостижимо), ≥ 1 вид и (1) показывает чтение ниже `baseMipLevel` ⇒ В′ (замена нашего варианта формулой upstream)
+- **T240** — RC6/п. 756(б)(2): делится — T240 = декодирование R16/R16G16 (Б, наш `DecodePackedColorClear` imageInfo.h:458), T313 = защита заливки DWORD R16 с неравными половинами (А, волна 2 с T179). Проверка, снимающая или подтверждающая T313: стенд пути `ClearImageFromBuffer` (b3dc9c67 textureCache.cpp:2971) — R16, слово 0x00003c00: у нас 1,0 по всей поверхности, по upstream — отказ декодирования (заливка буфером); в игре — счётчик заливок DWORD R16/R16Unorm с неравными половинами на тегах M3: 0 ⇒ T313 — Б (недостижимо), ≥ 1 ⇒ T313 переносится по критерию до кода
+- **T069** — RC6: проверка, превращающая В в В′ или Б: (1) опись своим декодером транслятора программ NGG passthrough VS корпуса T1/eboot, читающих s3 сверх бита 28 до первой записи (у нас s3 = 1<<28, upstream — (1<<28)|wave_size, затем popcount начальной EXEC, cf77fb435): 0 программ ⇒ Б; (2) ≥ 1 — GPU-тест пролога при EXEC < 64 бит: ответ нашего s3 против числа активных вершин; отличие при чтении программой ⇒ В′
+- **T255** — RC6: проверка, превращающая В в В′ или Б: офлайн по корпусу T1 и регистрам снимков (k02–k08 хранятся, п. 748) — число draw, у которых множество экспортируемых MRT PS ≠ множеству включённых слотов `CB_SHADER_MASK` (маска с дырами ниже экспортируемой цели, где правило upstream «k-й экспорт → k-й включённый слот» и наше «гостевой индекс цели» d844f4cb расходятся): 0 ⇒ Б; ≥ 1 ⇒ пара листов этого draw с обоими правилами и семантика ISA RDNA2 [I] — видимый дефект нашего ⇒ В′
+- **T007** — RC6: проверка, превращающая В в В′ или Б: (1) тест транслятора/GPU-тест flat-входа PS при `PA_SU_SC_MODE_CNTL.PROVOKING_VTX_LAST` = 1 — наш ответ (вершина 0, 33ca0bfc) против провоцирующей вершины (upstream b38b7454); (2) в игре — счётчик draw с `PROVOKING_VTX_LAST` = 1 и flat-входами PS (снимки или счётчик под замком): 0 ⇒ Б; ≥ 1 и (1) различает ⇒ В′ (видимое — пара листов)
+
+### 14.7 Проверки
+
+`check_m1a.py` — `564 of 564`, якорей 224, `ALL OK`; `m1b/cov_m1b.py` — `ALL OK`; `m1a2/check_m1a2.py` — члены (1)–(6) и счёт классов, `ALL OK`; `mk_sig_m1a2.py`, `grep_sig_m1a2.py selftest`, `lds_m1a2.py`, `wit_m1a2.py` — `ALL OK`. Выводы — `m1a2/*.out.txt`; sha256 — в отчёте звена.
+
+### 14.8 Не заявляется (M1a2)
+
+Что какая-либо тема А-резерв игра на невиданных уровнях исполняет или не исполняет; что сигнатуры покрывают все пути отказа темы (найдены места, которые снимают коммиты upstream; путь без печати — [U]); что 33 строки предтрансляции относятся к конкретной теме RT; что предел LDS другого устройства ниже 49 152 Б; что проверки §14.6 дадут В′; ни одно число — не выигрыш; 60 FPS не обещаются; цель (B) не меняется.

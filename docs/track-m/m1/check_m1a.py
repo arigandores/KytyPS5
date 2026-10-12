@@ -4,7 +4,10 @@ Run from anywhere:  python docs/track-m/m1/check_m1a.py   (repo = two levels abo
 Checks: (1) every non-merge commit of 6a2987a7..dad900c6 has exactly one row in upstream.tsv and nothing else is there -> prints
 '<n> of 564'; (2) class in {А, Б, В, В′, Г, Д}; one class per theme; (3) upstream_detail.tsv has the same sha/theme/class rows;
 (4) every basis 'b3dc9c67:<path>:<N>' in upstream_detail.tsv: line N == anchor and line N+1 == anchor_plus1 (whitespace-stripped);
-(5) every theme id appears in upstream.md. Prints ALL OK when all hold."""
+(5) every theme id appears in upstream.md. Prints ALL OK when all hold.
+M1a2 (HPP-837, ROADMAP p.756(b)): upstream.tsv has the fifth column доп_тема (split part of the commit: 'T313:А',
+'T314:А-резерв' or '-'); class А-резерв (p.756(b)(1)) is a class of the set; the M1a2 members are checked by
+m1a2/check_m1a2.py."""
 import csv, os, re, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, '..', '..', '..'))
@@ -13,7 +16,7 @@ for g in ('C:/Program Files/Git/cmd/git.exe',):
     if os.path.exists(g):
         GIT = g
 BASE, UP, OURS = '6a2987a7', 'dad900c6', 'b3dc9c67'
-CLASSES = {'А', 'Б', 'В', 'В′', 'Г', 'Д'}
+CLASSES = {'А', 'А-резерв', 'Б', 'В', 'В′', 'Г', 'Д'}
 ok = True
 def git(*a):
     return subprocess.run([GIT, '-C', REPO] + list(a), capture_output=True).stdout.decode('utf-8', 'replace')
@@ -24,11 +27,11 @@ def fail(msg):
 up = [l[:9] for l in git('rev-list', '--no-merges', '--reverse', '--abbrev=9', '--abbrev-commit', BASE + '..' + UP).split()]
 rows = list(csv.reader(open(os.path.join(HERE, 'upstream.tsv'), encoding='utf-8'), delimiter='\t', quoting=csv.QUOTE_NONE))
 hdr, body = rows[0], rows[1:]
-if hdr != ['sha', 'тема', 'класс', 'файлы']:
+if hdr != ['sha', 'тема', 'класс', 'файлы', 'доп_тема']:
     fail('header ' + repr(hdr))
 seen = {}
 for r in body:
-    if len(r) != 4:
+    if len(r) != 5:
         fail('row width ' + repr(r[:2]))
         continue
     k = r[0][:9]

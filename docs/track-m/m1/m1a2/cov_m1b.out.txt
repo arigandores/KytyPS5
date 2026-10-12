@@ -1,0 +1,11 @@
+upstream no-merges 564 merges 1 ['8cecaf4e30bb5fdeeab231864848bbf2d066a6a1']
+rows tsv 564 detail 564
+resolved unique 564 dup 0 missing 0
+tsv vs detail theme/class mismatch 0
+themes 312 multi-class 0
+commits by class {'А': 41, 'А-резерв': 109, 'Б': 9, 'В': 59, 'Г': 265, 'Д': 81}
+themes by class {'А': 29, 'А-резерв': 74, 'Б': 8, 'В': 36, 'Г': 111, 'Д': 54}
+files column differs from git diff-tree: 0
+merge 8cecaf4e3 combined-diff files 6 ['3rdparty/CMakeLists.txt', 'src/common/file.cpp', 'src/common/logging/log.cpp', 'src/common/stringUtils.h', 'src/kernel/fileSystem.cpp', 'tests/KernelFileSystemTests.cpp']
+  covered by upstream_merges.tsv row: [('8cecaf4e3', 'T053', 'Г')]
+ALL OK

@@ -1,0 +1,5 @@
+our scripts under docs/ at b3dc9c67 4160 of 4160
+witness rows 55 themes 20 {'kept_text_upstream': 41, 'removed_upstream': 14}
+themes: T009:3 T017:1 T026:4 T073:1 T076:1 T093:4 T097:8 T116:6 T124:3 T135:1 T138:1 T140:1 T151:1 T155:2 T159:4 T161:2 T177:2 T235:8 T275:1 T289:1
+RC4 named themes without witness: []
+ALL OK

@@ -1,0 +1,5 @@
+rows 74 themes 48 of 48
+stream {'stderr': 11, 'лог': 58, 'нет': 4, 'stdout': 1} sweep key {'-': 6, 'да': 38, 'нет': 30}
+themes with a printed signature 46 without: ['T202', 'T305']
+themes whose failure puts a KEY-matching line into the swept log 25 not: ['T001', 'T022', 'T056', 'T057', 'T070', 'T072', 'T073', 'T085', 'T101', 'T103', 'T112', 'T180', 'T202', 'T207', 'T208', 'T209', 'T224', 'T225', 'T227', 'T236', 'T245', 'T287', 'T305']
+ALL OK

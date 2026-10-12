@@ -1,0 +1,4 @@
+positive control: themes with printed signature 46 found 46 missing []
+pretranslate line counted apart: True
+negative lines hits: 0
+ALL OK

@@ -72,10 +72,18 @@ for r in t:
             print('  files differ', r['sha'], 'git-only', sorted(g - f)[:5], 'tsv-only', sorted(f - g)[:5])
 print('files column differs from git diff-tree:', fdiff)
 # merge commits: evil-merge content (combined diff non-empty)
+# M1a2 (HPP-837, ROADMAP p.756(b)(3), RC3(a)): a merge with own content counts as covered only by a row of
+# upstream_merges.tsv with its sha, a theme of upstream.tsv, the same class as that theme and exactly its combined-diff files.
+import os
+mrows = rows('upstream_merges.tsv') if os.path.exists(D + 'upstream_merges.tsv') else []
+theme_cls = {k: next(iter(v)) for k, v in cls_by_theme.items()}
 for m in merges:
     cc_out = git('diff-tree', '--cc', '--name-only', m).split('\n')[1:]
     cc_out = [x for x in cc_out if x]
     print('merge', m[:9], 'combined-diff files', len(cc_out), cc_out[:10])
-    if cc_out:
+    cov = [r for r in mrows if m.startswith(r['sha']) and theme_cls.get(r['тема']) == r['класс']
+           and set(r['файлы'].split(';')) == set(cc_out)]
+    print('  covered by upstream_merges.tsv row:', [(r['sha'], r['тема'], r['класс']) for r in cov])
+    if cc_out and not cov:
         bad('merge with own content not covered by any non-merge row: ' + m[:9])
 print('ALL OK' if ok else 'FAILED')

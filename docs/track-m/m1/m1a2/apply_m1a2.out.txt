@@ -1,0 +1,6 @@
+commits by class (row class): {'А': 41, 'А-резерв': 109, 'Б': 9, 'В': 59, 'Г': 265, 'Д': 81} sum 564
+themes by class (upstream.tsv): {'А': 29, 'А-резерв': 74, 'Б': 8, 'В': 36, 'Г': 111, 'Д': 54} sum 312
+themes by class with parts T313 (А), T314 (А-резерв): {'А': 30, 'А-резерв': 75, 'Б': 8, 'В': 36, 'Г': 111, 'Д': 54} sum 314
+multi-class themes []
+rename-file fixes: ['b11aea803', '5940e623d']
+written: upstream.tsv upstream_detail.tsv upstream_parts.tsv upstream_merges.tsv

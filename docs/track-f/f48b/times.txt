@@ -1,0 +1,14 @@
+2026-10-12T04:49:09Z start F48b; API series: see above; input f4a720b0 (F48a) d336bb44 (p.748)
+2026-10-12T04:49:42Z census_f48b run 77f3a738
+2026-10-12T04:50:07Z census_f48b rerun (verdict column) 5fac0dd3
+2026-10-12T04:52:31Z outline_f48b e0ac4a92
+2026-10-12T04:53:38Z sw_f32b sample 17 logs d9f5d816
+2026-10-12T04:53:47Z cmp_f48b 0095e3c5
+2026-10-12T04:57:05Z scope_f48b a7cf72e8
+2026-10-12T04:57:49Z sw_f32b outmask 5de83e11
+2026-10-12T04:59:08Z hold_f48b 52b94b78
+2026-10-12T04:59:17Z hold_f48b rerun dedup fix 52b94b78
+2026-10-12T05:00:55Z f5pre_f48b 03ba7ca8
+2026-10-12T05:02:46Z checks_f48b rerun 4 verbs 9645f3b6
+2026-10-12T05:04:12Z f48b-review.md written a936faeb
+2026-10-12T05:04:31Z FACTS F48b appended 3835270a

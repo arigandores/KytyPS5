@@ -1,0 +1,4 @@
+K1-K4+dubl+split ids 63 own last outcome row word = F48a code 60
+MISMATCH ('Б3б', 'NE_DEFEKT', 'NONE', 'K4 (п. 231(г)(4)); вариант исполнителя —')
+MISMATCH ('Б10', 'DUBL', 'NONE', 'K4')
+MISMATCH ('Б26', 'SPLIT', 'NONE', 'K4')

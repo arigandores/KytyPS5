@@ -1,0 +1,2 @@
+{'mtime': 286595, 'read': 95427, 'glob': 182}
+Counter({'EMUTEXT': 22895}) under 200000 bytes: 22744

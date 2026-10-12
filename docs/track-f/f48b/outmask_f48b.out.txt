@@ -1,0 +1,32 @@
+known signatures 1058
+logs 6539 by build {'5f48cc3': 1308, 'ee9632b': 14, '0c57cfe': 3837, 'b007ce5': 580, '730ed40': 800} with fatal 5577 with >=2 fatal lines 280
+signatures not in F0/F32a/F32d/F48a tables: 11
+2733 	 Error: condition (g_inject.load()) is true in C:\kyty\fX\fXc\wt\src\emulator.cpp:X 	 C:/kyty/f287/f33c/devsmoke/fix0/P2/1001.log:23
+804 	 ExitFatal: config arm=RX seed=X pos=X 	 C:/kyty/f287/f33c/devsmoke/fix1/R2/1001.log:19
+700 	 Error: condition (g_inject.load()) is true in C:\kyty\fX\fsXa\wt\src\emulator.cpp:X 	 C:/kyty/f287/fs12a/runs/fix0/P2/1.log:23
+602 	 ExitFatal: config arm=P seed=X pos=X 	 C:/kyty/f287/f33a/runs/P/1.log:18
+404 	 ExitFatal: config arm=G seed=X pos=X 	 C:/kyty/f287/f33c/devsmoke/fix1/G/1001.log:19
+150 	 Error: condition (g_arm == Arm::CN) is true in C:\kyty\fX\fXcX\wt\src\emulator.cpp:X 	 C:/kyty/f287/f33c2/runs/fix0/CN/3001.log:27
+122 	 ExitFatal: config arm=H seed=X pos=X 	 C:/kyty/f287/f33c/devsmoke/fix1/H/1001.log:19
+81 	 ExitFatal: config arm=HG seed=X pos=X 	 C:/kyty/f287/f33c/runs/fix1/HG/1.log:19
+70 	 Error: condition (g_arm == Arm::CN) is true in C:\kyty\fX\fsXa\wt\src\emulator.cpp:X 	 C:/kyty/f287/fs12a/runs/fixd/CN/1.log:27
+11 	 oogAsync: full_waits=X full_wait_us=X stalls=X stall_cut=X lines=X bytes=X max_queued_bytes=X sync_lines=X drain_timeouts=X 	 C:/kyty/f287/f33a/runs/P/137.log:23
+1 	 LLogAsync: full_waits=X full_wait_us=X stalls=X stall_cut=X lines=X bytes=X max_queued_bytes=X sync_lines=X drain_timeouts=X 	 C:/kyty/f287/f33a/runs/P/595.log:23
+logs with >=2 "--- Fatal Error ---" lines by arm directory:
+50 ('C:/kyty/f287/f33c2/runs/fix0/CN', 'b007ce5')
+50 ('C:/kyty/f287/f33c2/runs/fix1/CN', 'b007ce5')
+10 ('C:/kyty/f287/f33d/runs_probe/fix0/CN', '0c57cfe')
+10 ('C:/kyty/f287/f33d/runs_probe/fix1/CN', '0c57cfe')
+10 ('C:/kyty/f287/f33d/runs_probe_m4b/fix1/CN', '0c57cfe')
+50 ('C:/kyty/f287/f33d2/runs/fix1/CN', 'b007ce5')
+10 ('C:/kyty/f287/f33d2/runs_b007/fix1/CN', 'b007ce5')
+10 ('C:/kyty/f287/f33d2/runs_m4a/fix1/CN', 'b007ce5')
+10 ('C:/kyty/f287/f33d2/runs_m4b/fix1/CN', 'b007ce5')
+50 ('C:/kyty/f287/fs12a/runs/fixd/CN', '730ed40')
+20 ('C:/kyty/f287/fs12b/runs/fixd/CN', '730ed40')
+torn LogAsync summary lines by arm:
+1 ('C:/kyty/f287/f33a/runs/P', '5f48cc3', 'LLogAsync: f')
+1 ('C:/kyty/f287/f33a/runs/P', '5f48cc3', 'oogAsync: fu')
+4 ('C:/kyty/f287/f33a/runs/R', '5f48cc3', 'oogAsync: fu')
+5 ('C:/kyty/f287/f33d/runs_m2/fix1/P2', '0c57cfe', 'oogAsync: fu')
+1 ('C:/kyty/f287/fs12a/runs/fix0/P2', '730ed40', 'oogAsync: fu')

@@ -1,0 +1,22 @@
+source docs/track-f/f47a/batch.tsv sha256 78da8bfba7f994b447f94d686ffdff3984d87c8f56d5ea394455c769d18be870
+absolute show n = n_start + dn (FrameTrace n counts from process start: first n=2 in log_f47_hi.txt)
+fs8_i n_start 352 black [(1104, 1108), (1119, 1123), (1282, 1285)] white [(1111, 1115)] black1+white in q 700-1000: False
+u_06 n_start 245 black [(981, 985), (996, 1000), (1159, 1162)] white [(988, 992)] black1+white in q 700-1000: True
+s17c_c2 n_start 306 black [(1050, 1054), (1065, 1069), (1228, 1231)] white [(1057, 1061)] black1+white in q 700-1000: False
+b32_z0 n_start 193 black [(928, 932), (943, 947), (1106, 1109)] white [(935, 939)] black1+white in q 700-1000: True
+s18_e1 n_start 340 black [(1092, 1096), (1107, 1111), (1270, 1273)] white [(1099, 1103)] black1+white in q 700-1000: False
+b32_z0b n_start 200 black [(935, 939), (950, 954), (1113, 1116)] white [(942, 946)] black1+white in q 700-1000: True
+b13_v n_start 304 black [(1050, 1054), (1065, 1069), (1228, 1231)] white [(1057, 1061)] black1+white in q 700-1000: False
+fs9_v n_start 230 black [(965, 969), (980, 984), (1143, 1146)] white [(972, 976)] black1+white in q 700-1000: True
+b36_v n_start 258 black [(997, 1001), (1012, 1016), (1175, 1178)] white [(1004, 1008)] black1+white in q 700-1000: False
+fs10_f1 n_start 197 black [(933, 937), (948, 952), (1111, 1114)] white [(940, 944)] black1+white in q 700-1000: True
+b12_v n_start 338 black [(1089, 1093), (1104, 1108), (1267, 1270)] white [(1096, 1100)] black1+white in q 700-1000: False
+f30_s1_v n_start 188 black [(924, 928), (939, 943), (1102, 1105)] white [(931, 935)] black1+white in q 700-1000: True
+fs11_v n_start 345 black [(1092, 1096), (1107, 1111), (1270, 1273)] white [(1099, 1103)] black1+white in q 700-1000: False
+f21_v n_start 321 black [(1068, 1072), (1083, 1087), (1246, 1249)] white [(1075, 1079)] black1+white in q 700-1000: False
+fs12_v n_start 325 black [(1071, 1075), (1086, 1090), (1249, 1252)] white [(1078, 1082)] black1+white in q 700-1000: False
+f25_v n_start 374 black [(1129, 1133), (1144, 1148), (1307, 1310)] white [(1136, 1140)] black1+white in q 700-1000: False
+fs13_v n_start 346 black [(1098, 1102), (1113, 1117), (1276, 1279)] white [(1105, 1109)] black1+white in q 700-1000: False
+f47_hi (F47e section 6): n_start 389, black n 1145-1149, 1160-1164, 1323-1326, white 1152-1156
+tags with a black and a white series start inside 700-1000: 6 of 17 (+ f47_hi: no)
+first splash (black1..black2) absolute n range over the tags: 924-1148

@@ -1,0 +1,11 @@
+MStand: t231 code=53 img_w=172 img_h=248 ref_w=172 ref_h=248 ink_w=168 ink_h=248 ref_ink_w=168 ref_ink_h=248 sum=6321645 ref_sum=6321645 met_h=247.690 ref_met_h=247.690 clamp128=0 match=1
+MStand: t231 code=6b img_w=166 img_h=189 ref_w=166 ref_h=189 ink_w=166 ink_h=189 ref_ink_w=166 ref_ink_h=189 sum=5289553 ref_sum=5289553 met_h=188.170 ref_met_h=188.170 clamp128=0 match=1
+MStand: t231 code=79 img_w=180 img_h=188 ref_w=180 ref_h=188 ink_w=180 ink_h=188 ref_ink_w=180 ref_ink_h=188 sum=3797447 ref_sum=3797447 met_h=186.310 ref_met_h=186.310 clamp128=0 match=1
+MStand: t231 code=47 img_w=243 img_h=245 ref_w=243 ref_h=245 ink_w=243 ink_h=245 ref_ink_w=243 ref_ink_h=245 sum=8589822 ref_sum=8589822 met_h=243.350 ref_met_h=243.350 clamp128=0 match=1
+MStand: t231 code=61 img_w=186 img_h=185 ref_w=186 ref_h=185 ink_w=176 ink_h=185 ref_ink_w=176 ref_ink_h=185 sum=4953729 ref_sum=4953729 met_h=183.830 ref_met_h=183.830 clamp128=0 match=1
+MStand: t231 code=72 img_w=154 img_h=182 ref_w=154 ref_h=182 ink_w=154 ink_h=182 ref_ink_w=154 ref_ink_h=182 sum=5428006 ref_sum=5428006 met_h=181.660 ref_met_h=181.660 clamp128=0 match=1
+MStand: t231 code=64 img_w=167 img_h=182 ref_w=167 ref_h=182 ink_w=167 ink_h=182 ref_ink_w=167 ref_ink_h=182 sum=5740223 ref_sum=5740223 met_h=181.660 ref_met_h=181.660 clamp128=0 match=1
+MStand: t231 code=65 img_w=118 img_h=183 ref_w=118 ref_h=183 ink_w=118 ink_h=183 ref_ink_w=118 ref_ink_h=183 sum=4515613 ref_sum=4515613 met_h=181.970 ref_met_h=181.970 clamp128=0 match=1
+MStand: t231 code=6e img_w=177 img_h=186 ref_w=177 ref_h=186 ink_w=177 ink_h=186 ref_ink_w=177 ref_ink_h=186 sum=6124822 ref_sum=6124822 met_h=185.380 ref_met_h=185.380 clamp128=0 match=1
+MStand: t231 code=57 img_w=349 img_h=235 ref_w=349 ref_h=235 ink_w=349 ink_h=235 ref_ink_w=349 ref_ink_h=235 sum=10704247 ref_sum=10704247 met_h=234.980 ref_met_h=234.980 clamp128=0 match=1
+MStand: t231 knob=1 total=10 match=10 END

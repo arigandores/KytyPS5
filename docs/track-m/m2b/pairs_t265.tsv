@@ -1,0 +1,12 @@
+# entries=158205 pairs=10 file_pairs=9
+/app0/	0c760a50	f	2883584	data/prein/bg/gfx/atlantis_crown_a_base_ao.gnfp	d	0	data/prein/levels/enemy_bird/layers/ui_layer
+/app0/	41ee698b	f	304	data/prein/effects/anim/sea_ship_barrel_01_break_horizontal_fx.skel	f	10560	data/prein/levels/final_shooting_ps5/anim/F8B47AF2-45AF-4683-8FFB-C2BA3C6DE21E.anim
+/app0/	471ef8a1	f	15760	data/prein/bg/anim/hourgrass_sandfall_a_art_test_anim_idle.anim	f	114076	data/prein/characters/pfx/wildlife_snow_turtle_attachment_tree.pfbhk
+/app0/	5a08bf90	f	464	data/prein/levels/final_shooting_ps4/anim/6FFF9D5E-4348-A03C-1A86-BAA49F9C6ABC.anim	f	6176	data/prein/proto/anim/construction_parts_gpu_v2_anim_reaction_happy_start.anim
+/app0/	5c57e69f	f	1296	data/prein/characters/anim/enemy_hand_ghost_anim_mat.anim	f	528	data/prein/ui/odx/nx_ui_worldmap_bot_icon~~159.odxb
+app0/	10efdfeb	f	147984	data/prein/common/anim/powerup_bighand_anim_pole_to_twohands_right.anim	f	36688	data/prein/effects/gfx/gf_aloy_flight.jxm
+app0/	3614e0b5	f	4064	data/prein/levels/booster_magic_lamp/anim/3F50046D-46C5-5CD7-E28A-5D95CF7B1D00.anim	f	115840	data/prein/sound/Astro Bot2/ab2_hero_vo_renewal/ab2_hero_renew_power_up_idle_big_hand_pad.szd
+app0/	3738f4dc	f	11272192	data/prein/characters/gfx/climbing_siderock_c_ao.gnfp	f	304	data/prein/effects/anim/world_map_planet_lock_crack.skel
+app0/	65e28b7c	f	2883584	data/prein/bg/gfx/aloy_rock_a_r.gnfp	f	42016	data/prein/levels/intro_next/cinematics/c05/anim/cs_9DA59A22-465F-4337-7477-2A958334FA84.anim
+app0/	749464d3	f	672	data/prein/bg/odx/casino_metal_cable_connector_a.odxb	f	720	data/prein/levels/enemy_chameleon/cinematics/locoloco_cinematics_01/anim/2BB6DF10-4B11-88B9-C41F-DBA0467342ED.anim
+ALL OK

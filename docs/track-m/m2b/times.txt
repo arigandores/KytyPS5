@@ -1,0 +1,14 @@
+2026-10-12T09:25:05Z start M2b (HPP-839)
+2026-10-12T09:35:56Z patch_m2b.py applied to worktree; stand copied
+2026-10-12T09:36:25Z API: in_progress only HPP-839; no lock; build m_wave1_hle_stand (worktree) start
+2026-10-12T09:37:02Z build m_wave1_hle_stand end
+2026-10-12T09:38:50Z mutants start
+2026-10-12T09:40:05Z mutants end
+2026-10-12T09:42:01Z patch_m2b.py applied to main; stand copied
+2026-10-12T09:42:35Z build main stand start
+2026-10-12T09:43:16Z build main stand end
+2026-10-12T09:43:22Z build wt kyty_emulator start
+2026-10-12T09:43:40Z build wt kyty_emulator end
+2026-10-12T09:45:04Z commits worktree + main
+2026-10-12T09:45:58Z final stand on HEAD build ALL OK check done
+2026-10-12T09:47:52Z report.md written; copy to docs/track-m/m2b

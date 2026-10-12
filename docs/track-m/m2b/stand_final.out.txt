@@ -1,0 +1,7 @@
+t265 k0: OK
+t265 k1: OK
+t272 k0: OK
+t272 k1: OK
+t231 k0: OK
+t231 k1: OK
+ALL OK

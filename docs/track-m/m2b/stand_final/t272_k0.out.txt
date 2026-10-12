@@ -1,0 +1,46 @@
+MStand: t272 step=0 name="invalid trigger handle changed the output" rc=0 got=0,0 want_rc=-2137915389 want=-1,-1 match=0
+MStand: t272 step=1 name="trigger state checked the output before the handle" rc=-2137653243 got=0,0 want_rc=-2137915389 want=0,0 match=0
+MStand: t272 step=2 name="trigger state accepted a null output" rc=-2137653243 got=0,0 want_rc=-2137915391 want=0,0 match=0
+MStand: t272 step=3 name="unset trigger effects did not report off" rc=0 got=0,0 want_rc=0 want=0,0 match=1
+MStand: t272 step=4 name="triggers activated before the documented start positions" rc=0 got=0,0 want_rc=0 want=1,3 match=0
+MStand: t272 step=5 name="triggers did not activate at the documented start positions" rc=0 got=0,0 want_rc=0 want=2,4 match=0
+MStand: t272 step=6 name="weapon fired before its end position" rc=0 got=0,0 want_rc=0 want=2,4 match=0
+MStand: t272 step=7 name="unpolled weapon firing was lost on partial release" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=8 name="reading trigger state changed the weapon latch" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=9 name="repeating a weapon request rearmed a held trigger" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=10 name="invalid weapon end position was accepted" rc=-2137915391 got=0,0 want_rc=-2137915391 want=0,0 match=1
+MStand: t272 step=11 name="an invalid request changed cached trigger commands or states" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=12 name="unpolled release did not rearm the weapon" rc=0 got=0,0 want_rc=0 want=2,4 match=0
+MStand: t272 step=13 name="weapon end position 8 fired before output 254" rc=0 got=0,0 want_rc=0 want=2,4 match=0
+MStand: t272 step=14 name="weapon end position 8 did not fire at output 254" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=15 name="feedback position 9 activated before full travel" rc=0 got=0,0 want_rc=0 want=1,5 match=0
+MStand: t272 step=16 name="keyboard trigger travel did not activate feedback" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=17 name="feedback at position 0 was suppressed by a dead zone" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=18 name="zero-strength feedback reported active" rc=0 got=0,0 want_rc=0 want=1,5 match=0
+MStand: t272 step=19 name="multi-position feedback used the wrong position" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=20 name="multi-position feedback used the wrong position" rc=0 got=0,0 want_rc=0 want=1,5 match=0
+MStand: t272 step=21 name="multi-position feedback used the wrong position" rc=0 got=0,0 want_rc=0 want=1,5 match=0
+MStand: t272 step=22 name="multi-position feedback used the wrong position" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=23 name="multi-position feedback used the wrong position" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=24 name="multi-position feedback used the wrong position" rc=0 got=0,0 want_rc=0 want=1,5 match=0
+MStand: t272 step=25 name="multi-position feedback used the wrong position" rc=0 got=0,0 want_rc=0 want=1,5 match=0
+MStand: t272 step=26 name="multi-position feedback used the wrong position" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=27 name="multi-position feedback used the wrong position" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=28 name="multi-position feedback used the wrong position" rc=0 got=0,0 want_rc=0 want=1,5 match=0
+MStand: t272 step=29 name="slope feedback did not respect its start and end" rc=0 got=0,0 want_rc=0 want=1,5 match=0
+MStand: t272 step=30 name="slope feedback did not respect its start and end" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=31 name="slope feedback did not respect its start and end" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=32 name="slope feedback did not respect its start and end" rc=0 got=0,0 want_rc=0 want=1,5 match=0
+MStand: t272 step=33 name="slope feedback did not respect its start and end" rc=0 got=0,0 want_rc=0 want=1,5 match=0
+MStand: t272 step=34 name="slope feedback at position 0 was suppressed" rc=0 got=0,0 want_rc=0 want=2,5 match=0
+MStand: t272 step=35 name="vibration activated before position 6" rc=0 got=0,0 want_rc=0 want=6,5 match=0
+MStand: t272 step=36 name="vibration did not activate at position 6" rc=0 got=0,0 want_rc=0 want=7,5 match=0
+MStand: t272 step=37 name="vibration at position 0 was suppressed" rc=0 got=0,0 want_rc=0 want=7,5 match=0
+MStand: t272 step=38 name="zero-frequency vibration reported active" rc=0 got=0,0 want_rc=0 want=6,5 match=0
+MStand: t272 step=39 name="multi-position vibration activated before position 9" rc=0 got=0,0 want_rc=0 want=6,5 match=0
+MStand: t272 step=40 name="multi-position vibration did not activate at position 9" rc=0 got=0,0 want_rc=0 want=7,5 match=0
+MStand: t272 step=41 name="zero-frequency multi-position vibration reported active" rc=0 got=0,0 want_rc=0 want=6,5 match=0
+MStand: t272 step=42 name="input reset retained a fired weapon" rc=0 got=0,0 want_rc=0 want=6,3 match=0
+MStand: t272 step=43 name="off mode retained an effect state" rc=0 got=0,0 want_rc=0 want=0,3 match=0
+MStand: t272 step=44 name="switching controllers retained effect states" rc=0 got=0,0 want_rc=0 want=0,0 match=1
+MStand: t272 knob=0 total=45 match=3 END

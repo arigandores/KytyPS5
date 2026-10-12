@@ -1,0 +1,7 @@
+t265_full: CAUGHT (exe sha256 5983912acc19ad4c) t265 k1: upstream answer 0 of 5
+t265_part: CAUGHT (exe sha256 87637da79bbd9516) t265 k1: upstream answer 0 of 5
+t272_full: CAUGHT (exe sha256 58414f083eda1994) t272 k1: mismatched steps 0,1,2,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43
+t272_part: CAUGHT (exe sha256 a1c9c290b9597839) t272 k1: mismatched steps 7,8,9,11
+t231_full: CAUGHT (exe sha256 3af1f2536112a350) t231 k1: match 0 of 10
+t231_part: CAUGHT (exe sha256 6bab1066a56b4bef) t231 k1: match 0 of 10
+ALL OK

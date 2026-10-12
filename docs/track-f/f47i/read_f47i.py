@@ -27,10 +27,15 @@ DEFINITIONS (seal):
                     emulator logs only the first 64 such lines - the row says when 64 are reached).
 STATUS: INTERFERENCE - the INTERFERENCE file, >= 1 window event (item 273 (z)), the member of item 742 (e) / 744 (g)(1) not held
   ('ADMISSION OK' with 'FrameTrace lines' > 0 in the first line of dt_f47g2.py flips - else an interference of the run, RC2 of F47h2),
-  or the window form of item 745: n0 outside [144; 483] and a black series show or a white series show missing inside the window;
-  NO_BLOCKS - every other member holds but the title window
+  or the window form of the edition (f47_dt: item 745, n0 outside [144; 483]; f47_dt_r1: item 746, n0 outside [165; 719] - no second
+  repeat, stop and lead item) and a black series show or a white series show missing inside the window;
+  INVALID (edition f47_dt_r1, item 746 / F2 of F47h) - 'F47dtStat:' draws > 0 with files=0: stop and lead item; NO_BLOCKS - every other member holds but the title window
   has no black series or no white series (item 708 (b)(9): stop, lead item - the control fs13_v is printed by --control); else ADMITTED
   when every admission member holds, else NOT_ADMITTED (one attempt; a repeat only by the lead's item, item 740 (v)(3)).
+EDITIONS (by the tag): f47_dt - seal pred/f47i_seal.md, window pred/window.txt, n0 range [144; 483] (item 745), member 13 = the moved
+  _f47dt/ with a manifest; f47_dt_r1 - seal pred/f47i_r1_seal.md, window pred/window_r1.txt, n0 range [165; 719] (item 746), member 13
+  of item 746: files=0 and draws=0 - 'no subject' (member 16 decides), draws > 0 with files=0 - INVALID, else the moved _f47dt/ with a
+  manifest.
 """
 import hashlib
 import json
@@ -40,19 +45,23 @@ import subprocess
 import sys
 
 G = 'C:/kyty/f287/f47i'
-SEAL_PATH = G + '/pred/f47i_seal.md'
-WIN_PATH = G + '/pred/window.txt'
+EDITIONS = {
+    'f47_dt': dict(seal=G + '/pred/f47i_seal.md', win=G + '/pred/window.txt', n0=(144, 483), item='745', m13=False),
+    'f47_dt_r1': dict(seal=G + '/pred/f47i_r1_seal.md', win=G + '/pred/window_r1.txt', n0=(165, 719), item='746', m13=True),
+}
+SEAL_PATH = EDITIONS['f47_dt']['seal']
+WIN_PATH = EDITIONS['f47_dt']['win']
 DT_READER = 'C:/kyty/KytyPS5/docs/track-f/f47g2/dt_f47g2.py'
 DT_READER_SHA = '61a13e294df0e371'
 TB = '86e42e36440ac5b7ac7a420c12d7a6aaadc4ffc483145ae9c6d18be046075e82'
 INST = 'bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c'
 SKY = 'underwater_aerial_garden'
 H_PS = '45942b26d9ffbe8e'
-TAG_RX = re.compile(r'^f47_dt(_r[1-3])?$')
+TAG_RX = re.compile(r'^f47_dt(_r1)?$')
 K2_US = 1000000
 HOLD_OPT = 120
 FREE_MIN = 40
-N0_LO, N0_HI = 144, 483
+N0_LO, N0_HI = EDITIONS['f47_dt']['n0']
 LO, HI, TK, TW, W, H, BAND_H = 600, 950, 150, 1000, 480, 270, 81
 RX_FT = re.compile(rb'^FrameTrace: n=(\d+) dt_us=(\d+)')
 RX_WIN = re.compile(rb'Window \d+ (minimized|restored|resized|size changed|lost keyboard focus)\b')
@@ -280,13 +289,16 @@ def paths(tag, base=None):
     d = os.path.join(G, 'runs', tag)
     p = dict((nm, os.path.join(d, nm + '.txt')) for nm in names)
     p.update(log=os.path.join(G, 'log_%s.txt' % tag), stdout=os.path.join(G, 'stdout_%s.txt' % tag), run=os.path.join(G, '%s.json' % tag),
-             idx=os.path.join(G, 'rec_%s.mp4.idx' % tag), mp4=os.path.join(G, 'rec_%s.mp4' % tag), seal=SEAL_PATH, win=WIN_PATH,
+             idx=os.path.join(G, 'rec_%s.mp4.idx' % tag), mp4=os.path.join(G, 'rec_%s.mp4' % tag), seal=EDITIONS[tag]['seal'],
+             win=EDITIONS[tag]['win'],
              interference=os.path.join(d, 'INTERFERENCE'), dtreader=DT_READER)
     return p
 
 
 def read_tag(tag, p, video=False):
     res = dict(tag=tag, level=SKY, reader_sha256=sha_file(os.path.abspath(__file__)))
+    ed = EDITIONS[tag]
+    n0lo, n0hi = ed['n0']
     run = json.load(open(p['run'], encoding='utf-8')) if os.path.exists(p['run']) else None
     jbin = (run or {}).get('binary_sha256')
     ipre = ((text(p['installed_pre']) or '').split() or [None])[0]
@@ -351,7 +363,7 @@ def read_tag(tag, p, video=False):
         ("'F47dtStat: when=exit' with capped=0 and 0 'F47dt: capped' lines (stat capped %s, lines %s)" % (
             stat.get('capped'), (x or {}).get('capped')), stat.get('when') == 'exit' and stat.get('capped') == '0' and x is not None
          and x['capped'] == 0),
-        ('_f47dt/ moved out of the emulator folder with a sha256 manifest (%s)' % (dtf[0][:90] if dtf else '-'), mdt is not None),
+        m13_member(ed, stat, dtf, mdt),
         ('reader dt_f47g2.py sha256 %s... (%s)' % (DT_READER_SHA, (dts or '-')[:16]), (dts or '').startswith(DT_READER_SHA)),
     ]
     flips_ok = fl0.startswith('ADMISSION OK') and mft is not None and int(mft.group(1)) > 0
@@ -396,7 +408,7 @@ def read_tag(tag, p, video=False):
         rows['h_in_black_shows'] = hb
         rows['h_in_white_shows'] = hw
         n0 = (x or {}).get('n0')
-        wf, rows['n0_in_item745_range'], rows['series_in_window'] = window_form(n0, bl, wh, win)
+        wf, rows['n0_in_range'], rows['series_in_window'] = window_form(n0, bl, wh, win, n0lo, n0hi)
         wform = ok_tw and wf
         adm.append(('item 740 (v)(3): an H line (ps=%s) in >= 1 show of a black series and >= 1 show of a white series (black %s, white %s)' % (
             H_PS, hb[:10], hw[:10]), bool(hb) and bool(hw)))
@@ -406,8 +418,9 @@ def read_tag(tag, p, video=False):
         interf.append('item 742 (e) / 744 (g)(1): dt_f47g2.py flips --window not ADMISSION OK with FrameTrace lines > 0 (%s) - an '
                       'interference of the run, repeat by the lead item' % fl0[:160])
     if video and wform:
-        interf.append('item 745: n0 %s outside [%d; %d] and the black / white series not both in the window (%s) - an interference of '
-                      'the window form, repeat by the lead item' % ((x or {}).get('n0'), N0_LO, N0_HI, rows['series_in_window']))
+        interf.append('item %s: n0 %s outside [%d; %d] and the black / white series not both in the window (%s) - an interference of '
+                      'the window form, %s' % (ed['item'], (x or {}).get('n0'), n0lo, n0hi, rows['series_in_window'],
+                                               'no second repeat: stop and lead item (item 746)' if ed['m13'] else 'repeat by the lead item'))
     if os.path.exists(p['interference']):
         interf.append((text(p['interference']) or '').strip()[:160])
     if x is not None and (x['win'] or x['recovering']):
@@ -417,7 +430,10 @@ def read_tag(tag, p, video=False):
     res['admission'] = [[a, bool(b)] for a, b in adm]
     res['failed'] = [a for a, b in adm if not b]
     res['interference'] = interf
-    if interf:
+    res['invalid'] = m13_invalid(ed, stat)
+    if res['invalid']:
+        res['status'] = 'INVALID'
+    elif interf:
         res['status'] = 'INTERFERENCE'
     elif nob and all(b for a, b in adm if not a.startswith('item 740 (v)(3): an H line')):
         res['status'] = 'NO_BLOCKS'
@@ -427,12 +443,35 @@ def read_tag(tag, p, video=False):
     return res
 
 
-def window_form(n0, bl, wh, win):
-    """Item 745: (interference, n0 in [144; 483], series counts in the window) - the interference of the window form is n0 outside
-    [144; 483] (or unknown) and a black series show or a white series show missing inside the window."""
+def m13_invalid(ed, stat):
+    """Item 746 (edition f47_dt_r1): 'F47dtStat:' draws > 0 with files=0 - INVALID (F2 of F47h: stop and lead item)."""
+    if not ed['m13'] or not stat:
+        return None
+    try:
+        dr, fi = int(stat.get('draws', '')), int(stat.get('files', ''))
+    except ValueError:
+        return None
+    return 'item 746: F47dtStat draws %d > 0 with files=0 - INVALID (F2), stop and lead item' % dr if dr > 0 and fi == 0 else None
+
+
+def m13_member(ed, stat, dtf, mdt):
+    """Member 13: f47_dt - the moved _f47dt/ with a manifest; f47_dt_r1 (item 746) - files=0 and draws=0 'no subject' (member 16
+    decides), draws > 0 with files=0 - not held (INVALID), else the moved _f47dt/ with a manifest."""
+    man = dtf[0][:90] if dtf else '-'
+    if ed['m13'] and stat and stat.get('files') == '0' and stat.get('draws') == '0':
+        return ('_f47dt/: F47dtStat files=0 draws=0 - no subject (item 746; member 16 decides) (manifest %s)' % man, True)
+    if ed['m13'] and m13_invalid(ed, stat):
+        return ('_f47dt/: F47dtStat draws %s with files=0 - INVALID (item 746)' % stat.get('draws'), False)
+    return ('_f47dt/ moved out of the emulator folder with a sha256 manifest (%s)' % man, mdt is not None)
+
+
+def window_form(n0, bl, wh, win, lo=N0_LO, hi=N0_HI):
+    """Items 745 / 746: (interference, n0 in [lo; hi], series counts in the window) - the interference of the window form is n0 outside
+    [lo; hi] (or unknown) and a black series show or a white series show missing inside the window (f47_dt [144; 483], f47_dt_r1
+    [165; 719])."""
     inw_b = [q for q in bl if win and win[0] <= q <= win[1]]
     inw_w = [q for q in wh if win and win[0] <= q <= win[1]]
-    inr = n0 is not None and N0_LO <= n0 <= N0_HI
+    inr = n0 is not None and lo <= n0 <= hi
     return (not inr) and (not inw_b or not inw_w), inr, dict(black=len(inw_b), white=len(inw_w))
 
 
@@ -455,6 +494,8 @@ def rows_out(res):
     out.append('  STATUS %s' % res['status'])
     for a, b in res['admission']:
         out.append('    [%s] %s' % ('ok' if b else 'NO', a))
+    if res.get('invalid'):
+        out.append('  INVALID %s' % res['invalid'])
     for i in res['interference']:
         out.append('  INTERFERENCE %s' % i)
     r = res['rows']
@@ -470,9 +511,10 @@ def rows_out(res):
     out.append('  ROW video records %s' % r.get('video_records'))
     if r.get('title_window'):
         out.append('  ROW title window %s' % json.dumps(r['title_window'], sort_keys=True)[:900])
-        out.append('  ROW black shows %s; white shows %s; H in black %s; H in white %s; n0 in [144; 483] (item 745) %s; series in the '
-                   'window %s' % (r['black_shows'], r['white_shows'], r['h_in_black_shows'], r['h_in_white_shows'],
-                                  r.get('n0_in_item745_range'), r.get('series_in_window')))
+        lo, hi = EDITIONS[res['tag']]['n0'] if res['tag'] in EDITIONS else EDITIONS['f47_dt']['n0']
+        out.append('  ROW black shows %s; white shows %s; H in black %s; H in white %s; n0 in [%d; %d] %s; series in the '
+                   'window %s' % (r['black_shows'], r['white_shows'], r['h_in_black_shows'], r['h_in_white_shows'], lo, hi,
+                                  r.get('n0_in_range'), r.get('series_in_window')))
     if r.get('show_table'):
         out.append('  SHOWS q rid path shown_n held series H')
         for s in r['show_table']:
@@ -507,7 +549,7 @@ def main(argv):
     else:
         tag = argv[0]
         if not TAG_RX.match(tag):
-            print('usage: read_f47i.py f47_dt[_r1..3] [--json F] [--video]')
+            print('usage: read_f47i.py f47_dt[_r1] [--json F] [--video]')
             return 2
         p = paths(tag)
     res = read_tag(tag, p, video)

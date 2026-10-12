@@ -2,7 +2,8 @@
 of the show table (held), of the launcher / chain refusals, and the strict cp1250 output of the reader.  The fixture log and video are
 synthetic (the line forms of diagF47Dt.cpp F47g2 as in dt_f47g2.py fx_flips / fx_draw; the video by ffmpeg lavfi: grey frames with a
 black / white band at the given records, libx264rgb lossless).  The admission member of item 742 (e) runs the REAL reader dt_f47g2.py
-flips on the fixture log.  First output line: 'suite <name> sha256 <sha> target <name> sha256 <sha>'; last line ALL OK.  ASCII only.
+flips on the fixture log.  Edition f47_dt_r1 (item 746): window 900-1500, n0 range [165; 719], member 13 'no subject' / INVALID -
+fixtures R1-R9, W8-W11, C6-C7.  First output line: 'suite <name> sha256 <sha> target <name> sha256 <sha>'; last line ALL OK.  ASCII only.
 usage: python test_f47i.py [--work DIR]"""
 import hashlib
 import json
@@ -48,12 +49,12 @@ def make_video(path, black=BLACK_REC, white=WHITE_REC):
 
 
 def log_lines(h_black=(952,), h_white=(959,), held=(961,), stat_capped=0, death=False, win_event=False, shift=None, no_ft=False,
-              mode_frames=None, n0=N0, win=WIN):
+              mode_frames=None, n0=N0, win=WIN, n_last=N_LAST, stat_draws=2, stat_files=3):
     mode_frames = win if mode_frames is None else mode_frames
     a, b = [int(x) for x in win.split('-')]
     out = ['[0][00:00:00.000] start', 'F47dt: mode=1 ps=45942b26d9ffbe8e frames=%s hash=xxh3_64 cap=2147483648 dir=_f47dt' % mode_frames,
            'Shader translation cache: C:/x/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19']
-    for n in range(1, N_LAST + 1):
+    for n in range(1, n_last + 1):
         if n == n0:
             out.append('GuestOut: Level has started: underwater_aerial_garden')
         if a <= n <= b:
@@ -71,8 +72,8 @@ def log_lines(h_black=(952,), h_white=(959,), held=(961,), stat_capped=0, death=
         out.append('--- Fatal Error ---')
     if win_event:
         out.append('Window 1 minimized')
-    out.append('F47dtStat: when=exit draws=2 frames=2 files=3 bytes=100 capped=%d imgs=0 bufs=0 pending=0 flips=301 ring_gpu_notes=0'
-               % stat_capped)
+    out.append('F47dtStat: when=exit draws=%d frames=2 files=%d bytes=100 capped=%d imgs=0 bufs=0 pending=0 flips=301 ring_gpu_notes=0'
+               % (stat_draws, stat_files, stat_capped))
     return out
 
 
@@ -84,12 +85,13 @@ def build(dirname, mp4_src, **kw):
     env_extra = kw.pop('env_extra', {})
     jbin = kw.pop('jbin', R.TB)
     win = kw.get('win', WIN)
+    n_last = kw.get('n_last', N_LAST)
     open(os.path.join(d, 'log.txt'), 'w', newline='\n').write('\n'.join(log_lines(**kw)) + '\n')
     open(os.path.join(d, 'stdout.txt'), 'w', newline='\n').write('stdout\n')
     open(os.path.join(d, 'seal.md'), 'w', newline='\n').write('seal\n')
     shutil.copyfile(mp4_src, os.path.join(d, 'rec.mp4'))
     with open(os.path.join(d, 'rec.idx'), 'w', newline='\n') as f:
-        for r in range(N_LAST):
+        for r in range(n_last):
             f.write('%d %d\n' % (r, r + 1 + D))
     env = dict(KYTY_GUEST_ARGS='-lvl underwater_aerial_garden', KYTY_FRAME_TRACE='lite', KYTY_GATE_FILE='g', KYTY_SAMPLE_GATE='s',
                KYTY_QUEUE_TRACE='1', KYTY_GPU_HANG_ABORT_S='8', KYTY_GPU_CLOCK_PIN='1', KYTY_GPU_MARKERS='0', KYTY_REC='r.mp4',
@@ -113,8 +115,18 @@ def build(dirname, mp4_src, **kw):
     return d
 
 
-def read(d):
-    return R.read_tag('f47_dt', R.paths('f47_dt', d), video=True)
+def read(d, tag='f47_dt'):
+    return R.read_tag(tag, R.paths(tag, d), video=True)
+
+
+R1W = '900-1500'
+R1 = dict(win=R1W, n_last=1600)
+
+
+def r1(**kw):
+    out = dict(R1)
+    out.update(kw)
+    return out
 
 
 def main():
@@ -183,6 +195,38 @@ def main():
     check('W5 window_form n0 143 outside, both missing -> interference', wf(143, [], [], W9)[0] is True)
     check('W6 window_form n0 None -> outside', wf(None, [1000], [], W9)[0] is True)
     check('W7 window_form edges 900 / 1250 counted in window', wf(500, [900], [1250], W9)[2] == dict(black=1, white=1))
+    # edition f47_dt_r1 (item 746)
+    r = read(build('r1_ok', v_ok, **R1), 'f47_dt_r1')
+    check('R1 r1 base ADMITTED (window 900-1500, n0 200)', r['status'] == 'ADMITTED', '%s %s' % (r['status'], r['failed'][:3]))
+    st = dict((s['q'], s) for s in r['rows']['show_table'])
+    check('R2 r1 show table covers 900..1500 (601 rows)', min(st) == 900 and max(st) == 1500 and len(st) == 601)
+    r = read(build('r1_nosub', v_ok, **r1(stat_draws=0, stat_files=0, h_black=(), h_white=(), files=dict(f47dt_files=None))), 'f47_dt_r1')
+    m13 = [a for a, b in r['admission'] if a.startswith('_f47dt/')]
+    ok13 = [b for a, b in r['admission'] if a.startswith('_f47dt/')]
+    check('R3 r1 files=0 draws=0 without _f47dt: member 13 held as no subject, member 16 decides -> NOT_ADMITTED',
+          ok13 == [True] and 'no subject' in m13[0] and r['status'] == 'NOT_ADMITTED' and len(r['failed']) == 1
+          and r['failed'][0].startswith('item 740 (v)(3): an H line'), '%s %s %s' % (r['status'], m13, r['failed'][:2]))
+    r = read(build('r1_inv', v_ok, **r1(stat_draws=2, stat_files=0, files=dict(f47dt_files=None))), 'f47_dt_r1')
+    check('R4 r1 draws 2 > 0 with files=0 -> INVALID (F2)', r['status'] == 'INVALID' and 'INVALID' in (r.get('invalid') or ''), r['status'])
+    out = R.rows_out(r)
+    check('R5 r1 INVALID row printed', any(l.startswith('  INVALID item 746') for l in out))
+    r = read(build('r1_noman', v_ok, **r1(files=dict(f47dt_files=None))), 'f47_dt_r1')
+    check('R6 r1 files 3 > 0 without a manifest -> NOT_ADMITTED', r['status'] == 'NOT_ADMITTED', r['status'])
+    r = read(build('r0_nosub', v_ok, stat_draws=0, stat_files=0, files=dict(f47dt_files=None)))
+    check('R7 f47_dt edition unchanged: files=0 draws=0 without a manifest -> NOT_ADMITTED', r['status'] == 'NOT_ADMITTED', r['status'])
+    r = read(build('r1_wf', v_ok, **r1(n0=164, win='1000-1500')), 'f47_dt_r1')
+    check('R8 r1 n0 164 outside [165; 719], series outside 1000-1500 -> INTERFERENCE, no second repeat',
+          r['status'] == 'INTERFERENCE' and any('item 746' in i and 'no second repeat' in i for i in r['interference']), r['status'])
+    r = read(build('r1_wf2', v_ok, **r1(n0=165, win='1000-1500')), 'f47_dt_r1')
+    check('R9 r1 n0 165 inside, series outside 1000-1500 -> NOT_ADMITTED', r['status'] == 'NOT_ADMITTED', r['status'])
+    W15 = (900, 1500)
+    check('W8 r1 window_form n0 719 inside, series missing -> not interference', wf(719, [1600], [1600], W15, 165, 719)[0] is False)
+    check('W9 r1 window_form n0 720 outside, white missing -> interference', wf(720, [1308], [1600], W15, 165, 719)[0] is True)
+    check('W10 r1 window_form n0 538 (the f47_dt tag) inside [165; 719]', wf(538, [1308], [1315], W15, 165, 719)[1] is True)
+    check('W11 r1 window_form edges 900 / 1500 counted', wf(538, [900], [1500], W15, 165, 719)[2] == dict(black=1, white=1))
+    pe = R.paths('f47_dt_r1')
+    check('R10 r1 paths: seal pred/f47i_r1_seal.md, window pred/window_r1.txt',
+          pe['seal'].endswith('/pred/f47i_r1_seal.md') and pe['win'].endswith('/pred/window_r1.txt'))
     r = read(build('nob', v_none))
     check('M20 no blocks on the video -> NO_BLOCKS (item 708 (b)(9))', r['status'] == 'NO_BLOCKS', r['status'])
     r = read(build('nowhite', v_black))
@@ -196,6 +240,10 @@ def main():
     p = subprocess.run([sys.executable, os.path.join(HERE, 'read_f47i.py'), '--dir', os.path.join(WORK, 'ok'), '--tag', 'f47_dt', '--video'],
                        capture_output=True, env=env)
     check('C1 reader output in strict cp1250, rc 0, ASCII', p.returncode == 0 and all(c < 128 for c in p.stdout), 'rc %d' % p.returncode)
+    p = subprocess.run([sys.executable, os.path.join(HERE, 'read_f47i.py'), '--dir', os.path.join(WORK, 'r1_inv'), '--tag', 'f47_dt_r1',
+                        '--video'], capture_output=True, env=env)
+    check('C1b r1 reader output (INVALID) in strict cp1250, rc 0, ASCII', p.returncode == 0 and all(c < 128 for c in p.stdout),
+          'rc %d' % p.returncode)
     # chain refusals (no game, no lock)
     g = os.path.join(HERE, 'go_f47i.sh')
     lch = os.path.join(HERE, 'launch_f47i.sh')
@@ -213,6 +261,18 @@ def main():
         p = subprocess.run([BASH, g, 'f47_dt'], capture_output=True, text=True, env=dict(os.environ, F47I_DRYRUN='1'))
         check('C5 go dryrun with the sealed window prints the knobs', p.returncode == 0 and 'KYTY_DIAG_F47DT_FRAMES=' in p.stdout,
               p.stdout.strip()[-120:])
+    p = subprocess.run([BASH, lch, 'f47_dt_r2'], capture_output=True, text=True, env=dict(os.environ, F47I_DISP_SKIP='1',
+                                                                                          F47I_QUEUE_SKIP='1', F47I_REPEAT_OK='1',
+                                                                                          F47I_DRYRUN='2'))
+    check('C6 launch f47_dt_r2 (no seal, item 746) rc 1', p.returncode == 1 and 'no seal' in p.stdout, p.stdout.strip()[-80:])
+    p = subprocess.run([BASH, g, 'f47_dt_r1'], capture_output=True, text=True, env=dict(os.environ, F47I_DRYRUN='1'))
+    check('C7 go dryrun f47_dt_r1 prints KYTY_DIAG_F47DT_FRAMES=900-1500', p.returncode == 0 and 'KYTY_DIAG_F47DT_FRAMES=900-1500 ' in p.stdout,
+          p.stdout.strip()[-120:])
+    p = subprocess.run([BASH, lch, 'f47_dt_r1'], capture_output=True, text=True, env=dict(os.environ, F47I_DISP_SKIP='1',
+                                                                                          F47I_QUEUE_SKIP='1', F47I_REPEAT_OK='1',
+                                                                                          F47I_DRYRUN='2'))
+    check('C8 launch f47_dt_r1 dryrun2 passes the checks (seal and window present)', p.returncode == 0 and 'dryrun2 rep 1' in p.stdout,
+          p.stdout.strip()[-80:])
     bad = [n for n, ok in results if not ok]
     print('checks %d failed %d' % (len(results), len(bad)))
     if not bad:

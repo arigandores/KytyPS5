@@ -7,7 +7,10 @@
 # before any manifest; manifest sha256 and copy of _ShaderCache (with pipelines.bin, the variant catalog and replay/), _ShaderSeeds,
 # _PipelineCache, _SaveData and the driver cache GLCache before the tag, the return with 'manifest cmp EQUAL' after it) with the binary
 # install / return of C:/kyty/f287/f42c/go_f42c.sh (F42c, HPP-781).
-# FORM (seal docs/track-f/f47i.md = pred/f47i_seal.md):
+# EDITIONS (item 746): f47_dt - seal pred/f47i_seal.md, window pred/window.txt (item 745); f47_dt_r1 - seal pred/f47i_r1_seal.md,
+#   window pred/window_r1.txt (item 746: 900-1500 by q, n0 [165; 719]); _r2/_r3 have no seal file - refused (no second repeat of
+#   the window form, item 746).
+# FORM (seal docs/track-f/f47i.md = pred/f47i_seal.md; f47_dt_r1: docs/track-f/f47i_r1.md = pred/f47i_r1_seal.md):
 #   f47_dt   enter_scene.py <tag> --level underwater_aerial_garden --attempts 1 --stable-draws 300 --timeout 480 --no-install
 #            --require-idle --gates-file gates_default.txt --pred <seal> --rec --hold 120 KYTY_DIAG_F47DT=1
 #            KYTY_DIAG_F47DT_FRAMES=<WIN> KYTY_STREAM_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
@@ -31,11 +34,9 @@ INST=bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
 PINNED=$F/bin/kyty_emulator_bfac84be.exe
 TB=86e42e36440ac5b7ac7a420c12d7a6aaadc4ffc483145ae9c6d18be046075e82
 BIN=$F/bin/kyty_emulator_86e42e36.exe
-SEAL=$G/pred/f47i_seal.md
 GLDIR="$USERPROFILE/AppData/Local/NVIDIA/GLCache"
 VARIANT="$EMU/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19"
 LV=underwater_aerial_garden
-WIN=$(head -1 $G/pred/window.txt 2>/dev/null | tr -cd '0-9-')
 FREE_MIN_GIB=40
 export ProgramFiles="${ProgramFiles:-C:\Program Files}"
 export ProgramData="${ProgramData:-C:\ProgramData}"
@@ -47,6 +48,8 @@ case "$T" in
   f47_dt_r[1-3]) REP=1;;
   *) echo "usage: go_f47i.sh f47_dt[_r1..3]"; exit 2;;
 esac
+if [ $T = f47_dt ]; then SEAL=$G/pred/f47i_seal.md; WF=$G/pred/window.txt; else SEAL=$G/pred/f47i_${T#f47_dt_}_seal.md; WF=$G/pred/window_${T#f47_dt_}.txt; fi
+WIN=$(head -1 $WF 2>/dev/null | tr -cd '0-9-')
 echo "$WIN" | grep -qE '^[0-9]+-[0-9]+$' || { echo "window WIN not set by the lead's item - no tag"; exit 1; }
 SD=300; TO=480; H=120
 KX="KYTY_DIAG_F47DT=1 KYTY_DIAG_F47DT_FRAMES=$WIN KYTY_STREAM_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0"

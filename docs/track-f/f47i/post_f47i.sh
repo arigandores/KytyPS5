@@ -10,7 +10,7 @@ export PATH=/usr/bin:/mingw64/bin:$PATH
 T=$1; G=C:/kyty/f287/f47i; D=$G/runs/$T
 DT=C:/kyty/KytyPS5/docs/track-f/f47g2/dt_f47g2.py
 case "$T" in
-  f47_dt|f47_dt_r[1-3]) ;;
+  f47_dt|f47_dt_r1) ;;
   *) echo "usage: post_f47i.sh <tag>"; exit 2;;
 esac
 [ -e C:/kyty/SEALED_RUN.lock ] && { echo "lock held - not reading"; exit 3; }

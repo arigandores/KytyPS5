@@ -8,6 +8,9 @@
 # 714 (b)(2); QUEUE BUSY => exit 9) and the launch; the one guard scan + hold check of a call is in go_f47i.sh right after the lock.
 # ITEM 661 (b)(1): the first executable line is the form linter form634_check.py --series (FORM634 FAILED => exit 10).  A previous output
 # of a refused call is moved to old/ before the new call (rule p.309(i)).  The output go_<tag>.out.txt ends with the line rc=<n>.
+# EDITIONS (item 746): f47_dt - seal pred/f47i_seal.md, window pred/window.txt (item 745); f47_dt_r1 - seal pred/f47i_r1_seal.md,
+# window pred/window_r1.txt (item 746: 900-1500 by q, n0 [165; 719]); _r2/_r3 have no seal file - refused (no second repeat of
+# the window form, item 746).
 # F47I_DRYRUN=2 stops after the checks; F47I_TIMES / F47I_QUEUE_SKIP=1 / F47I_DISP_SKIP=1 (fixtures only).  ASCII only.
 python "C:/kyty/KytyPS5/ps5 em/docs/form634_check.py" --series C:/kyty/f287/f47i || exit 10
 export PATH=/usr/bin:/mingw64/bin:$PATH
@@ -24,7 +27,9 @@ esac
 if [ $REP = 1 ]; then
   [ "${F47I_REPEAT_OK:-}" = 1 ] || { echo "a repeat needs the lead's item and its times.txt line first (item 740 (v)(3)), then F47I_REPEAT_OK=1"; exit 11; }
 fi
-head -1 $G/pred/window.txt 2>/dev/null | grep -qE '^[0-9]+-[0-9]+$' || { echo "window not set (pred/window.txt) - no tag"; exit 1; }
+if [ $T = f47_dt ]; then WF=$G/pred/window.txt; SEAL=$G/pred/f47i_seal.md; else WF=$G/pred/window_${T#f47_dt_}.txt; SEAL=$G/pred/f47i_${T#f47_dt_}_seal.md; fi
+[ -f $SEAL ] || { echo "no seal $SEAL - no tag (item 746)"; exit 1; }
+head -1 $WF 2>/dev/null | grep -qE '^[0-9]+-[0-9]+$' || { echo "window not set ($WF) - no tag"; exit 1; }
 if [ "${F47I_DISP_SKIP:-}" != 1 ]; then
   DS=$(python $G/dispstate.py)
   if [ $? != 0 ]; then

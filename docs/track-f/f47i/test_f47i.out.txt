@@ -1,4 +1,4 @@
-suite test_f47i.py sha256 2e914cfefd53e0fff357d028673c599dd68605062d7a48fc4d2c89086c12f083 target read_f47i.py sha256 0bdf9e5e3b6783afd766ecbfa54c16f43c30d608fc08c485dfe4e5fedcaab6f3
+suite test_f47i.py sha256 3f8b0f268578d8cdf9a5840db97302b2a865bb07d9e2abf00f967baa89d72ae7 target read_f47i.py sha256 598db478ca4a2bc8a78f38384ff2ce4f0e1fd35cde9c9e20187a8685de963e84
 OK   F1 base ADMITTED - ADMITTED []
 OK   F2 black shows = records - d (951..955, 966..970) - [951, 952, 953, 954, 955, 966, 967, 968, 969, 970]
 OK   F3 white shows 958..962 - [958, 959, 960, 961, 962]
@@ -37,14 +37,34 @@ OK   W4 window_form n0 484 outside, both in window -> not interference
 OK   W5 window_form n0 143 outside, both missing -> interference
 OK   W6 window_form n0 None -> outside
 OK   W7 window_form edges 900 / 1250 counted in window
+OK   R1 r1 base ADMITTED (window 900-1500, n0 200) - ADMITTED []
+OK   R2 r1 show table covers 900..1500 (601 rows)
+OK   R3 r1 files=0 draws=0 without _f47dt: member 13 held as no subject, member 16 decides -> NOT_ADMITTED - NOT_ADMITTED ['_f47dt/: F47dtStat files=0 draws=0 - no subject (item 746; member 16 decides) (manifest -)'] ['item 740 (v)(3): an H line (ps=45942b26d9ffbe8e) in >= 1 show of a black series and >= 1 show of a white series (black [], white [])']
+OK   R4 r1 draws 2 > 0 with files=0 -> INVALID (F2) - INVALID
+OK   R5 r1 INVALID row printed
+OK   R6 r1 files 3 > 0 without a manifest -> NOT_ADMITTED - NOT_ADMITTED
+OK   R7 f47_dt edition unchanged: files=0 draws=0 without a manifest -> NOT_ADMITTED - NOT_ADMITTED
+OK   R8 r1 n0 164 outside [165; 719], series outside 1000-1500 -> INTERFERENCE, no second repeat - INTERFERENCE
+OK   R9 r1 n0 165 inside, series outside 1000-1500 -> NOT_ADMITTED - NOT_ADMITTED
+OK   W8 r1 window_form n0 719 inside, series missing -> not interference
+OK   W9 r1 window_form n0 720 outside, white missing -> interference
+OK   W10 r1 window_form n0 538 (the f47_dt tag) inside [165; 719]
+OK   W11 r1 window_form edges 900 / 1500 counted
+OK   R10 r1 paths: seal pred/f47i_r1_seal.md, window pred/window_r1.txt
 OK   M20 no blocks on the video -> NO_BLOCKS (item 708 (b)(9)) - NO_BLOCKS
 OK   M21 black series without a white series -> NO_BLOCKS - NO_BLOCKS
 OK   M22 no blocks + another failed member -> NOT_ADMITTED - NOT_ADMITTED
 OK   C1 reader output in strict cp1250, rc 0, ASCII - rc 0
+OK   C1b r1 reader output (INVALID) in strict cp1250, rc 0, ASCII - rc 0
 OK   C2 go usage rc 2 - ALL OK
 usage: go_f47i.sh f47_dt[_r1..3]
 OK   C3 launch repeat without the lead item rc 11 - ead's item and its times.txt line first (item 740 (v)(3)), then F47I_REPEAT_OK=1
 OK   C4 launch usage rc 2
 OK   C5 go dryrun with the sealed window prints the knobs -  rec knobs KYTY_DIAG_F47DT=1 KYTY_DIAG_F47DT_FRAMES=900-1250 KYTY_STREAM_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
-checks 46 failed 0
+OK   C6 launch f47_dt_r2 (no seal, item 746) rc 1 - ALL OK
+no seal C:/kyty/f287/f47i/pred/f47i_r2_seal.md - no tag (item 746)
+OK   C7 go dryrun f47_dt_r1 prints KYTY_DIAG_F47DT_FRAMES=900-1500 -  rec knobs KYTY_DIAG_F47DT=1 KYTY_DIAG_F47DT_FRAMES=900-1500 KYTY_STREAM_TRACE=1 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+OK   C8 launch f47_dt_r1 dryrun2 passes the checks (seal and window present) - ALL OK
+dryrun2 rep 1
+checks 64 failed 0
 ALL OK

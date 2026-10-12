@@ -1,0 +1,6 @@
+patched src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp lf
+patched src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h lf
+patched src/libs/libAmpr.cpp lf
+patched src/libs/controller.cpp lf
+patched src/libs/libFont.cpp lf
+PATCH OK

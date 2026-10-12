@@ -1,0 +1,4 @@
+FS15 base vs MS1 z a 180 b 187 common 180 common differing 0 [] only a [] only b ['180.spv', '181.spv', '182.spv', '183.spv', '184.spv', '185.spv', '186.spv']
+FS15 base vs MS1 d a 180 b 187 common 180 common differing 0 [] only a [] only b ['180.spv', '181.spv', '182.spv', '183.spv', '184.spv', '185.spv', '186.spv']
+M2a dev4 u (all off) vs MS1 z a 184 b 187 common 184 common differing 0 [] only a [] only b ['184.spv', '185.spv', '186.spv']
+MS1 z vs MS1 d a 187 b 187 common 187 common differing 2 ['182.spv', '183.spv'] only a [] only b []

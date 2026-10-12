@@ -1,0 +1,10 @@
+m2a predict.tsv sha256 9718477d1940935f9185adcc7ca0939edab16e5d5c6dd8b1a8dce8e140d987e4
+m2a corpus_m2a.tsv sha256 ab5c5fdd9bf2b5ebdf0c83bd5069902af6ec29923fcb0f946f5f3c3721c3590b
+(1) rows 269 processes 1076 failed 0 []
+(2) z == base (FS15) on 269 of 269 rows, differ 0 []
+(3) base == M2a base on 269 of 269 rows, differ 0 []
+(4) d == e on 269 of 269 rows, differ 0 []
+(5) d != base: 186 programs; predicted union T234/T233/T032/T203 192; outside 0 []
+(6) M2a union of tT234/tT233/tT032/tT203 changed 186; d changed 186; equal True; d-only [] m2a-only []
+corpus_m2d.tsv sha256 86835bd8414308e909c403601f2e80c1c3f31c41e0d8e9d0ad14a21eac92d80c
+ALL OK

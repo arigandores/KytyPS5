@@ -1,0 +1,32 @@
+MS1  C:/kyty/m657/bin/kyty_emulator_ea35b679.exe sha256 ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+FS15 C:/kyty/f287/bin/kyty_emulator_bfac84be.exe sha256 bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+OK   MWave1: mask=                                 MS1 x1 FS15 x0
+OK   MTexOffset:                                   MS1 x2 FS15 x0 (reference)
+OK   MT265: mode=                                  MS1 x1 FS15 x0
+OK   MT272: mode=                                  MS1 x1 FS15 x0
+OK   MT231: mode=                                  MS1 x1 FS15 x0
+OK   KYTY_M_T234                                   MS1 x1 FS15 x0
+OK   KYTY_M_T233                                   MS1 x1 FS15 x0
+OK   KYTY_M_T256                                   MS1 x1 FS15 x0
+OK   KYTY_M_T306                                   MS1 x1 FS15 x0
+OK   KYTY_M_T032                                   MS1 x1 FS15 x0
+OK   KYTY_M_T203                                   MS1 x1 FS15 x0
+OK   KYTY_M_T265                                   MS1 x1 FS15 x0
+OK   KYTY_M_T272                                   MS1 x1 FS15 x0
+OK   KYTY_M_T231                                   MS1 x1 FS15 x0
+OK   FixF20: mode=                                 MS1 x1 FS15 x1
+OK   KYTY_FIX_F20                                  MS1 x1 FS15 x1
+OK   FixF24: mode=                                 MS1 x1 FS15 x1
+OK   FixF29: mode=                                 MS1 x1 FS15 x1
+OK   FixF25: mode=                                 MS1 x1 FS15 x1
+OK   FixF21: mode=                                 MS1 x1 FS15 x1
+OK   FixB12: mode=                                 MS1 x1 FS15 x1
+OK   KYTY_S_REPLAY                                 MS1 x2 FS15 x2
+OK   KYTY_DIAG_F47DT                               MS1 x0 FS15 x0
+OK   KYTY_DIAG_B32                                 MS1 x0 FS15 x0
+OK   KYTY_F26_TINT                                 MS1 x0 FS15 x0
+OK   8dcf31779bbcb7c6e605653a138dae162f645a46      MS1 x1 FS15 x0
+OK   9177b4267de1fb8bac7d1113afd8733210addfac      MS1 x0 FS15 x1
+OK   KytyPS5-2026-09-15-6a2987a-1933-ged94b13d4    MS1 x2 FS15 x0
+OK   KytyPS5-2026-09-15-6a2987a-1929-g6beb3b73     MS1 x0 FS15 x2
+ALL OK

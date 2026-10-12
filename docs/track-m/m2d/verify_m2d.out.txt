@@ -1,0 +1,141 @@
+MS1 HEAD ed94b13d4f2fb5c7d44495eaa30d0c966df3d260 base FS15 6beb3b738d65502adf517405239f9298ee26aa52
+worktree log FS15..MS1 (4):
+   ed94b13d4f2fb5c7d44495eaa30d0c966df3d260 10da0b8b4601d4e6f76d4e56a167a552a25ef49c track M link M2d (HPP-841): MS1 defaults - KYTY_M_T234, KYTY_M_T233, KYTY_M_T032, KYTY_M
+   10da0b8b4601d4e6f76d4e56a167a552a25ef49c 43f690001f03f1c410729f259246a602a22448e0 track M link M2a2 (HPP-843): shader_cfg_tests test TestMWave1T306OffsetWriteMask catchin
+   43f690001f03f1c410729f259246a602a22448e0 61989839135f047742a55b231f0052f4fd44d925 track M link M2b (HPP-839): HLE themes of upstream wave 1 under KYTY_M_<theme> knobs (de
+   61989839135f047742a55b231f0052f4fd44d925 6beb3b738d65502adf517405239f9298ee26aa52 track M link M2a (HPP-838): translator themes of upstream wave 1 under KYTY_M_<theme> kn
+V1 0361b202 -> 61989839: changed lines 1018, equal True; git cherry - 0
+V1 674f8c27 -> 61989839: changed lines 1018, equal True; git cherry - 6 (reference: main context)
+V1 8a717ac0 -> 43f69000: changed lines 853, equal True; git cherry - 8
+V1 274ee39a -> 43f69000: changed lines 853, equal True; git cherry + 2 (reference: main context)
+V1 adc3c33d -> 10da0b8b: changed lines 396, equal True; git cherry - a
+V1 negative control 674f8c27 vs the MS1 M2b commit 43f69000 equal False (want False)
+V1b FS15 6beb3b73 ancestor of MS1: True
+V1b contains a6342c98: True (ancestor False, git cherry - a); new sha c13ec293: True (ancestor False, git cherry - c)
+V1b contains 82570fd2: True (ancestor False, git cherry - 8); new sha b0c95062: True (ancestor False, git cherry - b)
+V1b contains 38fc76c1: True (ancestor False, git cherry - 3); new sha 71615b88: True (ancestor False, git cherry - 7)
+V1b contains 5c21c387: True (ancestor False, git cherry - 5); new sha 6a9dd85a: True (ancestor False, git cherry - 6)
+V1b contains 57f9e528: True (ancestor False, git cherry - 5); new sha e0b7032e: True (ancestor False, git cherry - e)
+V1b contains c8836f14: True (ancestor False, git cherry - c); new sha f6c09d8d: True (ancestor False, git cherry - f)
+V1b contains 15c9d2f2: True (ancestor False, git cherry - 1); new sha ff1d6729: True (ancestor False, git cherry - f)
+V1b contains 78e45af3: True (ancestor False, git cherry - 7); new sha 59404726: True (ancestor False, git cherry - 5)
+V1b contains e9dd8604: True (ancestor False, git cherry - e); new sha f6b6acf6: True (ancestor False, git cherry - f)
+V1b contains 3630f116: True (ancestor False, git cherry - 3); new sha d125b4f5: True (ancestor False, git cherry - d)
+V1b contains 227e1b36: True (ancestor False, git cherry - 2); new sha de245bc4: True (ancestor False, git cherry - d)
+V1b contains cbfe8375: True (ancestor False, git cherry - c); new sha ca950a34: True (ancestor False, git cherry - c)
+V1b contains c94c49e0: True (ancestor False, git cherry - c); new sha 3f84058d: True (ancestor False, git cherry - 3)
+V1b contains 726e751e: True (ancestor False, git cherry - 7); new sha 10b2340f: True (ancestor False, git cherry - 1)
+V1b contains cb022252: True (ancestor False, git cherry - c); new sha 7d909a43: True (ancestor False, git cherry - 7)
+V1b contains a9d6fd1c: True (ancestor False, git cherry - a); new sha 52fdb8b4: True (ancestor False, git cherry - 5)
+V1b negative control: MS1 defaults commit ed94b13d in FS15: False (git cherry + e) (want False)
+V2 files of FS15..MS1 (41) = files of the four commits (41): True; signed changed lines = sum of the four: True; negative control without the defaults commit equal False (want False)
+V2 src/ paths (21): src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp src/graphics/shader/recompiler/backend/spirv/spirvEmitterAlu.cpp src/graphics/shader/recompiler/backend/spirv/spirvEmitterFlow.cpp src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp src/graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h src/graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemoryHelpers.cpp src/graphics/shader/recompiler/frontend/decode/MemoryOps.cpp src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h src/graphics/shader/recompiler/frontend/translate/Integer.cpp src/graphics/shader/recompiler/frontend/translate/Memory.cpp src/graphics/shader/recompiler/frontend/translate/Vector.cpp src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.inc src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp src/libs/controller.cpp src/libs/controller.h src/libs/libAmpr.cpp src/libs/libFont.cpp src/libs/libPad.cpp
+V2 src/graphics/shader/ paths (15, the translator signature set changes): src/graphics/shader/recompiler/backend/spirv/spirvEmitterAlu.cpp src/graphics/shader/recompiler/backend/spirv/spirvEmitterFlow.cpp src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp src/graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h src/graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemoryHelpers.cpp src/graphics/shader/recompiler/frontend/decode/MemoryOps.cpp src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h src/graphics/shader/recompiler/frontend/translate/Integer.cpp src/graphics/shader/recompiler/frontend/translate/Memory.cpp src/graphics/shader/recompiler/frontend/translate/Vector.cpp src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.inc src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp
+V2 paths outside src/: CMakeLists.txt docs/track-m/m2a2/check.out.txt docs/track-m/m2a2/check_m2a2.py docs/track-m/m2a2/mut_t306.py docs/track-m/m2a2/patch_m2a2.py docs/track-m/m2a2/report.md docs/track-m/m2a2/run_main_mwave1_0.txt docs/track-m/m2a2/run_main_mwave1_1.txt docs/track-m/m2a2/run_main_t306_0.txt docs/track-m/m2a2/run_main_t306_1.txt docs/track-m/m2a2/run_mut_ctl_0.txt docs/track-m/m2a2/run_mut_ctl_1.txt docs/track-m/m2a2/run_mut_t306_mask_0.txt docs/track-m/m2a2/run_mut_t306_mask_1.txt docs/track-m/m2a2/sha_m2a2.txt docs/track-m/m2a2/srchash.out.txt docs/track-m/m2a2/times.txt tests/MWave1HleStand.cpp tests/ShaderRecompilerComputeTests.cpp tests/shaderCfgTests.cpp
+V2 git diff --stat FS15 MS1:
+     CMakeLists.txt                                                             |   4 +
+     docs/track-m/m2a2/check.out.txt                                            |   9 ++
+     docs/track-m/m2a2/check_m2a2.py                                            |  45 ++++++
+     docs/track-m/m2a2/mut_t306.py                                              |  39 ++++++
+     docs/track-m/m2a2/patch_m2a2.py                                            |  82 +++++++++++
+     docs/track-m/m2a2/report.md                                                |  86 ++++++++++++
+     docs/track-m/m2a2/run_main_mwave1_0.txt                                    |   9 ++
+     docs/track-m/m2a2/run_main_mwave1_1.txt                                    |   9 ++
+     docs/track-m/m2a2/run_main_t306_0.txt                                      |   3 +
+     docs/track-m/m2a2/run_main_t306_1.txt                                      |   3 +
+     docs/track-m/m2a2/run_mut_ctl_0.txt                                        |   3 +
+     docs/track-m/m2a2/run_mut_ctl_1.txt                                        |   3 +
+     docs/track-m/m2a2/run_mut_t306_mask_0.txt                                  |   3 +
+     docs/track-m/m2a2/run_mut_t306_mask_1.txt                                  |   4 +
+     docs/track-m/m2a2/sha_m2a2.txt                                             |  16 +++
+     docs/track-m/m2a2/srchash.out.txt                                          |   3 +
+     docs/track-m/m2a2/times.txt                                                |  20 +++
+     src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp         |  13 +-
+     src/graphics/shader/recompiler/backend/spirv/spirvEmitterAlu.cpp           |  14 ++
+     src/graphics/shader/recompiler/backend/spirv/spirvEmitterFlow.cpp          |  20 ++-
+     src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp         |  91 +++++++++++-
+     src/graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h    |   2 +
+     src/graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h        |   6 +
+     src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp        | 104 ++++++++++++++
+     src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemoryHelpers.cpp |  48 +++++++
+     src/graphics/shader/recompiler/frontend/decode/MemoryOps.cpp               |   3 +-
+     src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp           |  42 ++++++
+     src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h             |  14 ++
+     src/graphics/shader/recompiler/frontend/translate/Integer.cpp              |  14 ++
+     src/graphics/shader/recompiler/frontend/translate/Memory.cpp               |  22 ++-
+     src/graphics/shader/recompiler/frontend/translate/Vector.cpp               |  21 ++-
+     src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.inc                 |   3 +
+     src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp        |   1 +
+     src/libs/controller.cpp                                                    | 123 ++++++++++++++++
+     src/libs/controller.h                                                      |   5 +
+     src/libs/libAmpr.cpp                                                       |  35 ++++-
+     src/libs/libFont.cpp                                                       | 104 +++++++++++++-
+     src/libs/libPad.cpp                                                        |   5 +
+     tests/MWave1HleStand.cpp                                                   | 586 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     tests/ShaderRecompilerComputeTests.cpp                                     | 459 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+     tests/shaderCfgTests.cpp                                                   | 211 ++++++++++++++++++++++++++++
+     41 files changed, 2262 insertions(+), 25 deletions(-)
+V2b adc3c33d files (17): tests/ ['tests/shaderCfgTests.cpp']; outside tests/ and docs/: none (want none)
+     docs/track-m/m2a2/check.out.txt           |  9 +++++++++
+     docs/track-m/m2a2/check_m2a2.py           | 45 +++++++++++++++++++++++++++++++++++++++++++++
+     docs/track-m/m2a2/mut_t306.py             | 39 +++++++++++++++++++++++++++++++++++++++
+     docs/track-m/m2a2/patch_m2a2.py           | 82 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     docs/track-m/m2a2/report.md               | 86 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     docs/track-m/m2a2/run_main_mwave1_0.txt   |  9 +++++++++
+     docs/track-m/m2a2/run_main_mwave1_1.txt   |  9 +++++++++
+     docs/track-m/m2a2/run_main_t306_0.txt     |  3 +++
+     docs/track-m/m2a2/run_main_t306_1.txt     |  3 +++
+     docs/track-m/m2a2/run_mut_ctl_0.txt       |  3 +++
+     docs/track-m/m2a2/run_mut_ctl_1.txt       |  3 +++
+     docs/track-m/m2a2/run_mut_t306_mask_0.txt |  3 +++
+     docs/track-m/m2a2/run_mut_t306_mask_1.txt |  4 ++++
+     docs/track-m/m2a2/sha_m2a2.txt            | 16 ++++++++++++++++
+     docs/track-m/m2a2/srchash.out.txt         |  3 +++
+     docs/track-m/m2a2/times.txt               | 20 ++++++++++++++++++++
+     tests/shaderCfgTests.cpp                  | 59 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+     17 files changed, 396 insertions(+)
+V3 knob table (KYTY_M_*, KYTY_FIX_*, KYTY_S_* read in src/): name | FS15 | MS1 before defaults (10da0b8b) | MS1 | where (MS1)
+V3 KYTY_FIX_B12                 | 1      | 1      | 1      | unset/"" = on, src/graphics/host_gpu/regionManager.h:70
+V3 KYTY_FIX_B13                 | 1      | 1      | 1      | unset/"" = on, src/graphics/host_gpu/regionManager.h:54
+V3 KYTY_FIX_B1B                 | 1      | 1      | 1      | unset/"" = on, src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:346
+V3 KYTY_FIX_B24                 | 1      | 1      | 1      | unset/"" = on, src/libs/controller.cpp:907
+V3 KYTY_FIX_B26                 | 1      | 1      | 1      | unset/"" = on, src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:331
+V3 KYTY_FIX_B36                 | 1      | 1      | 1      | unset/"" = on, src/common/logging/log.cpp:735
+V3 KYTY_FIX_B4                  | 1      | 1      | 1      | unset/"" = on, src/kernel/fileSystem.cpp:114
+V3 KYTY_FIX_B42                 | 1      | 1      | 1      | unset/"" = on, src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3650
+V3 KYTY_FIX_B9A                 | 1      | 1      | 1      | unset/"" = on, src/libs/libAudio.cpp:374
+V3 KYTY_FIX_DUALSRC             | 1      | 1      | 1      | unset/"" = on, src/graphics/presentation/window/vulkanWindow.cpp:667
+V3 KYTY_FIX_F10                 | 1      | 1      | 1      | unset/"" = on, src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:356
+V3 KYTY_FIX_F19                 | 1      | 1      | 1      | unset/"" = on, src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:38
+V3 KYTY_FIX_F20                 | 1      | 1      | 1      | unset/"" = on, src/graphics/host_gpu/renderer/pipeline/fixF20.cpp:38
+V3 KYTY_FIX_F21                 | 1      | 1      | 1      | unset/"" = on, src/common/subsystems.cpp:74
+V3 KYTY_FIX_F24                 | 1      | 1      | 1      | unset/"" = on, src/graphics/presentation/window/joyPump.cpp:455
+V3 KYTY_FIX_F25                 | 1      | 1      | 1      | unset/"" = on, src/kernel/fileSystem.cpp:130
+V3 KYTY_FIX_F29                 | 1      | 1      | 1      | unset/"" = on, src/graphics/host_gpu/renderer/cache/faultManager.cpp:46
+V3 KYTY_FIX_F8                  | 1      | 1      | 1      | unset/"" = on, src/libs/audio.cpp:295
+V3 KYTY_FIX_MINIMIZE            | 1      | 1      | 1      | unset/"" = on, src/graphics/presentation/window/swapchain.cpp:311
+V3 KYTY_FIX_SVAL                | 1      | 1      | 1      | unset/"" = on, src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1374
+V3 KYTY_M_T032                  | absent | 0      | 1      | MThemeMask default_on[] = true (src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp)  <- changed
+V3 KYTY_M_T203                  | absent | 0      | 1      | MThemeMask default_on[] = true (src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp)  <- changed
+V3 KYTY_M_T231                  | absent | 0      | 1      | unset/"" = on, src/libs/libFont.cpp:816  <- changed
+V3 KYTY_M_T233                  | absent | 0      | 1      | MThemeMask default_on[] = true (src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp)  <- changed
+V3 KYTY_M_T234                  | absent | 0      | 1      | MThemeMask default_on[] = true (src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp)  <- changed
+V3 KYTY_M_T256                  | absent | 0      | 0      | MThemeMask default_on[] = false (src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp)  <- changed
+V3 KYTY_M_T265                  | absent | 0      | 1      | unset/"" = on, src/libs/libAmpr.cpp:72  <- changed
+V3 KYTY_M_T272                  | absent | 0      | 1      | unset/"" = on, src/libs/controller.cpp:846  <- changed
+V3 KYTY_M_T306                  | absent | 0      | 0      | MThemeMask default_on[] = false (src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp)  <- changed
+V3 KYTY_S_PCW                   | 1      | 1      | 1      | unset/"" = on, src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:285
+V3 KYTY_S_PCW_FORCE_MS          | 0      | 0      | 0      | unset = off, src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:296
+V3 KYTY_S_REPLAY                | 3      | 3      | 3      | ParseMode unset/"" -> 3 True, src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:51
+V3 KYTY_S_REPLAY_TEST           | 0      | 0      | 0      | unset = off, src/graphics/host_gpu/renderer/pipeline/shaderReplay.cpp:65
+V3 MS1 KYTY_M_* on: KYTY_M_T032 KYTY_M_T203 KYTY_M_T231 KYTY_M_T233 KYTY_M_T234 KYTY_M_T265 KYTY_M_T272
+V3 MS1 KYTY_M_* off: KYTY_M_T256 KYTY_M_T306
+V3 every KYTY_FIX_*/KYTY_S_* default of MS1 = FS15: True (lost none); changed names all KYTY_M_*: True; member True
+V3 negative control: at 10da0b8b KYTY_M_* on = empty (want empty - the member fails there)
+V3 FS15 default-ON (21): KYTY_FIX_B12 KYTY_FIX_B13 KYTY_FIX_B1B KYTY_FIX_B24 KYTY_FIX_B26 KYTY_FIX_B36 KYTY_FIX_B4 KYTY_FIX_B42 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_F10 KYTY_FIX_F19 KYTY_FIX_F20 KYTY_FIX_F21 KYTY_FIX_F24 KYTY_FIX_F25 KYTY_FIX_F29 KYTY_FIX_F8 KYTY_FIX_MINIMIZE KYTY_FIX_SVAL KYTY_S_PCW
+V5 KYTY_GIT_VERSION KytyPS5-2026-09-15-6a2987a-1933-ged94b13d4
+V5 KYTY_GIT_REVISION ed94b13d4f2fb5c7d44495eaa30d0c966df3d260
+V5 KYTY_SHADER_SOURCE_HASH 8dcf31779bbcb7c6e605653a138dae162f645a46
+V5 KYTY_GIT_REVISION = MS1 HEAD: True
+V5 (reference) FS15 KYTY_SHADER_SOURCE_HASH 9177b4267de1fb8bac7d1113afd8733210addfac, main after M2a aac6db69...
+ALL OK

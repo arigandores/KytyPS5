@@ -1,0 +1,25 @@
+# M2d (HPP-841) times, UTC by date -u
+2026-10-12T11:34:42Z start M2d: blockers HPP-840 accepted (p.761), HPP-844 lifted (p.762(d)); MS1 = T234 T233 T032 T203 (mask 0x33) + T265 T272 T231; T306, T256 = 0
+2026-10-12T11:36:32Z worktree C:/kyty/m657/m2d/wt: 6beb3b73 + cherry-pick 0361b202 (M2a) -> 61989839, 8a717ac0 (M2b) -> 43f69000, adc3c33d (M2a2 test, main) -> 10da0b8b; defaults commit ed94b13d
+2026-10-12T11:37:03Z check_gate_order.py on worktree ed94b13d: GATE ORDER: clean
+2026-10-12T11:37:26Z configure start (build_m2d.cmd configure, IDLE)
+2026-10-12T11:38:46Z configure end rc=0
+2026-10-12T11:38:51Z build kyty_emulator start (build_m2d.cmd, --parallel 2, IDLE)
+2026-10-12T11:45:48Z build kyty_emulator end rc=0 (BUILD OK)
+2026-10-12T11:45:49Z MS1 binary sha256 ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df copy C:/kyty/m657/bin/kyty_emulator_ea35b679.exe (not installed)
+2026-10-12T11:45:49Z build shader_cfg_tests start (--parallel 2, IDLE)
+2026-10-12T11:46:26Z binary_m2d.py ed1 FAIL (constant KYTY_S_REPLAY x1 wrong, x2 in both); ed2 base markers = equal count >= 1: ALL OK
+2026-10-12T11:49:39Z build shader_cfg_tests end rc=0; exe sha256 31f63e59aae63b0b23309ca5cdc5c344ef296ee7aee68775e4ff62e819f9838b
+2026-10-12T11:49:40Z build shader_recompiler_compute_tests start (--parallel 2, IDLE; only for --m-wave1-cache)
+2026-10-12T11:49:40Z G1 start: shader_cfg_tests MS1 at d (unset) and z (six KYTY_M_*=0), IDLE
+2026-10-12T11:49:44Z G1 end
+2026-10-12T11:49:56Z G1 rerun with absolute exe path (first try: FileNotFoundError, relative path + cwd=exe dir, no process ran)
+2026-10-12T11:50:01Z G1 end
+2026-10-12T11:50:33Z T1 corpus run start: corpus_m2d.py run base=m2a/bin/shader_cfg_tests_fs15.exe ms1=tests/shader_cfg_tests_ms1.exe configs base,z,d,e workers 2 IDLE
+2026-10-12T11:52:58Z T1 corpus run end rc=0
+2026-10-12T11:53:01Z T1 corpus check: ALL OK
+2026-10-12T11:54:18Z spirv-val changed modules z/d/e: ALL OK
+2026-10-12T11:54:31Z build shader_recompiler_compute_tests end rc=0; exe sha256 177fc32ccf2de9b8a27eda257b5b38315c9147dcdbc9632b4d29e7e6ed4e7e76
+2026-10-12T11:54:32Z --m-wave1-cache d/z done
+2026-10-12T11:56:06Z (late record) event times from rc mtimes: build kyty_emulator end 2026-10-12T11:45:38Z (build_emu.rc), shader_cfg_tests end 11:49:12Z (build_t.rc), corpus run end 11:52:54Z (corpus_run.rc), compute tests build end 11:53:23Z (build_c.rc)
+2026-10-12T11:56:07Z report.md written; GPU compute case set not run in M2d (no GPU case executed, new DeviceLost 0)

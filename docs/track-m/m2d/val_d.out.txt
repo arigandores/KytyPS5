@@ -1,0 +1,4 @@
+C:/kyty/m657/m2d/corpus z changed 0 valid 0 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2d/corpus d changed 230 valid 230 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2d/corpus e changed 230 valid 230 base-invalid 0 new-invalid 0
+ALL OK

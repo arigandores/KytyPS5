@@ -1,0 +1,7 @@
+log C:/kyty/f287/f47i/log_f47_dt.txt sha256 7c8bcd4123aa392d2cddde1c23710f00b4be816282c7fa72849d10f1bb2466cb
+reader dt_f47g2.py sha256 61a13e294df0e371a72515c5a969ff95aaada8e1747f00e22b0d5678a5faeada
+enum C:/kyty/f287/f47a4/src/navi10_enum.h sha256 26bf943bd92a5282; cfmt C:/kyty/f287/f47a4/src/gfx10.json sha256 f3435695c47c3c3b
+mode {'mode': '1', 'ps': '45942b26d9ffbe8e', 'frames': '900-1250', 'hash': 'xxh3_64', 'cap': '2147483648', 'dir': '_f47dt'}
+stat {'when': 'exit', 'draws': '0', 'frames': '0', 'files': '0', 'bytes': '0', 'capped': '0', 'imgs': '0', 'bufs': '0', 'pending': '0', 'flips': '4156', 'ring_gpu_notes': '0'}
+capped lines 0
+ADMISSION OK: flips 351 in [900, 1250], paths [0], shown lines 4156, FrameTrace lines 4155

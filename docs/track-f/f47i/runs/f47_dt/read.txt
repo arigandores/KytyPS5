@@ -1,0 +1,39 @@
+tag f47_dt (level underwater_aerial_garden, binary F47g2 86e42e36 for the tag, FS15 bfac84be installed)  reader sha256 0bdf9e5e3b6783afd766ecbfa54c16f43c30d608fc08c485dfe4e5fedcaab6f3
+  STATUS INTERFERENCE
+    [ok] tag json present
+    [ok] window of the seal 900-1250 = window of the call 900-1250
+    [ok] json binary_sha256 = installed tag binary = F47g2 86e42e36 (86e42e36440ac5b7 / 86e42e36440ac5b7)
+    [ok] installed pre = before = after = FS15 bfac84be (bfac84bea0eaec8b / bfac84bea0eaec8b / bfac84bea0eaec8b)
+    [ok] json prereg sha256 = seal sha256 (687767e652be1d17 / 687767e652be1d17)
+    [ok] env = the form of the tag exactly (exact)
+    [ok] last --vulkan-validation false (false)
+    [ok] no --rd in the command line
+    [ok] guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness underwater_aerial_garden)
+    [ok] hold option 120 s (120)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (244427)
+    [ok] 0 death markers (log and stdout) []
+    [ok] 0 'GpuHangAbort' lines (0)
+    [ok] 0 'GamePatch:' lines (0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4832 listsha 98)
+    [ok] 'Shader translation cache:' lines name variant_fixb26_fixb1b_fixf10_fixf19 (['variant_fixb26_fixb1b_fixf10_fixf19'])
+    [ok] free on C: >= 40 GiB before the tag (124)
+    [ok] 'F47dt: mode=1' line with frames = the window ({"cap": "2147483648", "dir": "_f47dt", "frames": "900-1250", "hash": "xxh3_64", "mode": "1", "ps": "45942b26d9ffbe8e"})
+    [ok] 'F47dtStat: when=exit' with capped=0 and 0 'F47dt: capped' lines (stat capped 0, lines 0)
+    [NO] _f47dt/ moved out of the emulator folder with a sha256 manifest (-)
+    [ok] reader dt_f47g2.py sha256 61a13e294df0e371... (61a13e294df0e371)
+    [ok] video index present (records 4179)
+    [ok] detector of F47a section 1.3 ran on the title window (OK)
+    [NO] item 740 (v)(3): an H line (ps=45942b26d9ffbe8e) in >= 1 show of a black series and >= 1 show of a white series (black [], white [])
+    [ok] item 742 (e) + 744 (g)(1): dt_f47g2.py flips --window: ADMISSION OK and FrameTrace lines > 0 in the same line (ADMISSION OK: flips 351 in [900, 1250], paths [0], shown lines 4156, FrameTrace lines 4155)
+  INTERFERENCE item 745: n0 538 outside [144; 483] and the black / white series not both in the window ({'black': 0, 'white': 0}) - an interference of the window form, repeat by the lead item
+  ROW n0 538; frames >= 1 s after the entry 0 []; [Vulkan][E] 0; skipped draw 0; window events {}; Recovering 0; log lines 659885
+  ROW F47dtStat {"bufs": "0", "bytes": "0", "capped": "0", "draws": "0", "files": "0", "flips": "4156", "frames": "0", "imgs": "0", "pending": "0", "ring_gpu_notes": "0", "when": "exit"}; H lines 0 in 0 shows; held lines 0
+  ROW video records 4179
+  ROW title window {"black_runs": [[1330, 1334, 1331, 1308, 1312, 770], [1345, 1349, 1346, 1323, 1327, 785], [1508, 1510, 1509, 1486, 1488, 948]], "d": 23, "decoded": 351, "maxK": 2962, "maxW": 1684, "status": "OK", "white_runs": [[1337, 1341, 1338, 1315, 1319, 777]], "window": [1160, 1510]}
+  ROW black shows [1308, 1309, 1310, 1311, 1312, 1323, 1324, 1325, 1326, 1327, 1486, 1487, 1488]; white shows [1315, 1316, 1317, 1318, 1319]; H in black []; H in white []; n0 in [144; 483] (item 745) False; series in the window {'black': 0, 'white': 0}
+  SHOWS q rid path shown_n held series H
+  SHOWS listed: the shows with H draws, a series, held, no flip line or shown n != q; the others of the window have H 0, not held, no series, shown n = q
+  READING INTERFERENCE (no verdict; the outcome is F47j by rule (6) of item 740 (v)(6))

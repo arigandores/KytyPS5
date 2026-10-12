@@ -1,0 +1,2 @@
+control C:/kyty/f287/fs13c/log_fs13_v.txt sha256 644e282fdc6bdcc9: n0 346, title window {"black_runs": [[1108, 1112, 1109, 1098, 1102, 752], [1123, 1127, 1124, 1113, 1117, 767], [1286, 1289, 1287, 1276, 1279, 930]], "d": 11, "decoded": 351, "maxK": 2993, "maxW": 1627, "status": "OK", "white_runs": [[1115, 1119, 1116, 1105, 1109, 759]], "window": [956, 1306]}
+control detector ALIVE: black shows 14, white shows 5

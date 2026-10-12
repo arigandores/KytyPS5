@@ -1,0 +1,60 @@
+cfg rc 0 lines 
+cfg failure lines 0 []
+gpu MW1T032Snorm16XyzwSkinning rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T032Snorm16XyzwSkinning failed at readback: expected [0xc947098f, 0x7fff8cb0, 0xfa637f35, 0x80010d0a] actual [0xc947098f, 0x7fff8cb1, 0xfa647f34,
+gpu MW1T032Snorm16XClampRound rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T032Snorm16XClampRound failed at readback: expected [0x8001beef, 0xa0018001, 0x0000e000, 0x5fff2000, 0x7fff7fff, 0xdeadbeef] actual [0x8001beef, 0
+gpu MW1T032Float16Xyzw rc 0 passed 
+gpu MW1T032Snorm8Range rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T032Snorm8Range failed at readback: expected [0xdeadbeef, 0x7f5f2081, 0xcafef00d] actual [0xdeadbeef, 0x7f5f1f81, 0xcafef00d]
+
+gpu MW1T032TSnorm8Range rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T032TSnorm8Range failed at readback: expected [0xdeadbeef, 0x7f5f2081, 0xcafef00d] actual [0xdeadbeef, 0x7f5f1f81, 0xcafef00d]
+
+gpu MW1T032Snorm8Ties rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T032Snorm8Ties failed at readback: expected [0xdeadbeef, 0xffffc040, 0xcafef00d] actual [0xdeadbeef, 0xffffc13f, 0xcafef00d]
+
+gpu MW1T032TSnorm8Ties rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T032TSnorm8Ties failed at readback: expected [0xdeadbeef, 0xffffc040, 0xcafef00d] actual [0xdeadbeef, 0xffffc13f, 0xcafef00d]
+
+gpu MW1T032SnormPackedAlpha rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T032SnormPackedAlpha failed at readback: expected [0xdeadbeef, 0xd00c0201, 0xcafef00d] actual [0xdeadbeef, 0xcffc0601, 0xcafef00d]
+
+gpu MW1T032TSnormPackedAlpha rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T032TSnormPackedAlpha failed at readback: expected [0xdeadbeef, 0xd00c0201, 0xcafef00d] actual [0xdeadbeef, 0xcffc0601, 0xcafef00d]
+
+gpu MW1T032SnormPackedFirstChannel rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T032SnormPackedFirstChannel failed at readback: expected [0xdeadbeef, 0xc0100807, 0xcafef00d] actual [0xdeadbeef, 0xc04ff807, 0xcafef00d]
+
+gpu MW1T032TSnormPackedFirstChannel rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T032TSnormPackedFirstChannel failed at readback: expected [0xdeadbeef, 0xc0100807, 0xcafef00d] actual [0xdeadbeef, 0xc04ff807, 0xcafef00d]
+
+gpu MW1T032SnormPackedZeroFillX rc 0 passed 
+gpu MW1T032TSnormPackedZeroFillX rc 0 passed 
+gpu MW1T032SnormPackedZeroFillXy rc 0 passed 
+gpu MW1T032TSnormPackedZeroFillXy rc 0 passed 
+gpu MW1T032SnormPackedZeroFillXyz rc 0 passed 
+gpu MW1T032TSnormPackedZeroFillXyz rc 0 passed 
+gpu MW1T032Snorm8PartialX rc 0 passed 
+gpu MW1T032TSnorm8PartialX rc 0 passed 
+gpu MW1T032Snorm16PartialX rc 0 passed 
+gpu MW1T032TSnorm16PartialX rc 0 passed 
+gpu MW1T032UscaledPartialXy rc 0 passed 
+gpu MW1T032TUscaledPartialXy rc 0 passed 
+gpu MW1T032SscaledPartialXyz rc 0 passed 
+gpu MW1T032TSscaledPartialXyz rc 0 passed 
+gpu MW1T032Uscaled8Fraction rc 0 passed 
+gpu MW1T032TUscaled8Fraction rc 0 passed 
+gpu MW1T032Sscaled8Fraction rc 0 passed 
+gpu MW1T032TSscaled8Fraction rc 0 passed 
+gpu MW1T032Uscaled8Range rc 0 passed 
+gpu MW1T032TUscaled8Range rc 0 passed 
+gpu MW1T032Sscaled8Range rc 0 passed 
+gpu MW1T032TSscaled8Range rc 0 passed 
+gpu MW1T032Uscaled16Range rc 0 passed 
+gpu MW1T032TUscaled16Range rc 0 passed 
+gpu MW1T032Sscaled16Range rc 0 passed 
+gpu MW1T032TSscaled16Range rc 0 passed 
+gpu MW1T032UscaledPacked rc 0 passed 
+gpu MW1T032TUscaledPacked rc 0 passed 
+gpu MW1T032SscaledPackedAlpha rc 0 passed 
+gpu MW1T032TSscaledPackedAlpha rc 0 passed 
+gpu MW1T032SscaledPackedFirstChannel rc 0 passed 
+gpu MW1T032TSscaledPackedFirstChannel rc 0 passed 
+gpu MW1T032Snorm8SpecialValues rc 0 passed 
+gpu MW1T032TSnorm8SpecialValues rc 0 passed 
+gpu MW1T032Uscaled8SpecialValues rc 0 passed 
+gpu MW1T032TUscaled8SpecialValues rc 0 passed 
+gpu MW1T032Sscaled8SpecialValues rc 0 passed 
+gpu MW1T032TSscaled8SpecialValues rc 0 passed 
+mutant T032 gpu caught 10 of 49 cfg rc 0 CAUGHT

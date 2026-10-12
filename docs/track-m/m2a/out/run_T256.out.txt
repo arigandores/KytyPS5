@@ -1,0 +1,3 @@
+cfg rc 0 lines [mw1] T256 knob=1 mode6 UnpackSnorm2x16=0 UnpackHalf2x16=2 mode8 SExtract=4 UnpackHalf2x16=0 reference=snorm/sext
+cfg failure lines 1 ['ShaderCfgTests: failed: T256: SNORM16 compressed export does not follow KYTY_M_T256\r']
+mutant T256 gpu caught 0 of 0 cfg rc 0 CAUGHT

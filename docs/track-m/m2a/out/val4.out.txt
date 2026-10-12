@@ -1,0 +1,15 @@
+C:/kyty/m657/m2a/corpus4 tT234 changed 0 valid 0 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/corpus4 tT233 changed 229 valid 229 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/corpus4 tT256 changed 0 valid 0 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/corpus4 tT306 changed 2 valid 2 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/corpus4 tT032 changed 1 valid 1 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/corpus4 tT203 changed 3 valid 3 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/corpus4 all changed 230 valid 230 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/x/run tT234 changed 1 valid 1 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/x/run tT233 changed 8 valid 8 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/x/run tT256 changed 0 valid 0 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/x/run tT306 changed 3 valid 3 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/x/run tT032 changed 0 valid 0 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/x/run tT203 changed 0 valid 0 base-invalid 0 new-invalid 0
+C:/kyty/m657/m2a/x/run all changed 8 valid 8 base-invalid 0 new-invalid 0
+ALL OK

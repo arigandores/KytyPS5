@@ -1,0 +1,6 @@
+cfg rc 0 lines [mw1] T234 knob=1 ds_min_f32 src_count=2 reference=2 | [mw1] T234 knob=1 ds_max_f32 src_count=2 reference=2
+cfg failure lines 0 []
+gpu MW1T234DsMinMaxIgnoresData1 rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T234DsMinMaxIgnoresData1 failed at readback: expected [0x40800000, 0x40800000] actual [0x40800000, 0x3f800000]
+
+gpu MW1T234DsMinMaxLdsClasses rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T234DsMinMaxLdsClasses failed at readback: expected [0xff800000, 0xff800000, 0xff800000, 0xff800000, 0xff800000, 0xc0400000, 0xff800000, 0xc040000
+mutant T234 gpu caught 2 of 2 cfg rc 0 CAUGHT

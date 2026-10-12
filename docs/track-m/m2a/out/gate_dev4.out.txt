@@ -1,0 +1,85 @@
+exe C:\kyty\m657\m2a\bin\compute_tests_dev4.exe 8cb34d1ffb9a7376ad4da7771f6cba4f4452104100df9f18c13727bcf5010e00
+cases 54
+MW1T234DsMinMaxIgnoresData1	T234	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T234DsMinMaxIgnoresData1 failed at readback: expected [0x40800000, 0x40800000] actual [0x41100000, 0x3f800000]	0	EQUAL	
+MW1T234DsMinMaxLdsClasses	T234	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T234DsMinMaxLdsClasses failed at readback: expected [0xff800000, 0xff800000, 0xff800000, 0xff800000, 0xff800000, 0xc0400000, 0x	0	EQUAL	
+MW1T233LegacyMadRoundsProduct	T233	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T233LegacyMadRoundsProduct failed at readback: expected [0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x33800000	0	EQUAL	
+MW1T203AlignByteTwoBitOffset	T203	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T203AlignByteTwoBitOffset failed at readback: expected [0x55667788, 0x44556677, 0x33445566, 0x22334455, 0x55667788, 0x44556677,	0	EQUAL	
+MW1T306SampleOffsetsFourNeighbors	T306	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T306SampleOffsetsFourNeighbors failed at readback: expected [0x3f800000, 0x40000000, 0x40400000, 0x40800000] actual [0x41800000	0	EQUAL	
+MW1T032Snorm16XyzwSkinning	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Snorm16XyzwSkinning failed at readback: expected [0xc947098f, 0x7fff8cb0, 0xfa637f35, 0x80010d0a] actual [0xe712f7c5, 0x000	0	EQUAL	
+MW1T032Snorm16XClampRound	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Snorm16XClampRound failed at readback: expected [0x8001beef, 0xa0018001, 0x0000e000, 0x5fff2000, 0x7fff7fff, 0xdeadbeef] ac	0	EQUAL	
+MW1T032Float16Xyzw	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Float16Xyzw failed at readback: expected [0xc0003c04, 0x34003800, 0x4200c400, 0x40000000] actual [0x00007e63, 0x00000000, 0	0	EQUAL	
+MW1T032Snorm8Range	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Snorm8Range failed at readback: expected [0xdeadbeef, 0x7f5f2081, 0xcafef00d] actual [0xdeadbeef, 0x00000000, 0xcafef00d]	0	EQUAL	
+MW1T032TSnorm8Range	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSnorm8Range failed at readback: expected [0xdeadbeef, 0x7f5f2081, 0xcafef00d] actual [0xdeadbeef, 0x00000000, 0xcafef00d]	0	EQUAL	
+MW1T032Snorm8Ties	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Snorm8Ties failed at readback: expected [0xdeadbeef, 0xffffc040, 0xcafef00d] actual [0xdeadbeef, 0xffff0000, 0xcafef00d]	0	EQUAL	
+MW1T032TSnorm8Ties	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSnorm8Ties failed at readback: expected [0xdeadbeef, 0xffffc040, 0xcafef00d] actual [0xdeadbeef, 0xffff0000, 0xcafef00d]	0	EQUAL	
+MW1T032SnormPackedAlpha	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032SnormPackedAlpha failed at readback: expected [0xdeadbeef, 0xd00c0201, 0xcafef00d] actual [0xdeadbeef, 0x3f800000, 0xcafef0	0	EQUAL	
+MW1T032TSnormPackedAlpha	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSnormPackedAlpha failed at readback: expected [0xdeadbeef, 0xd00c0201, 0xcafef00d] actual [0xdeadbeef, 0x3f800000, 0xcafef	0	EQUAL	
+MW1T032SnormPackedFirstChannel	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032SnormPackedFirstChannel failed at readback: expected [0xdeadbeef, 0xc0100807, 0xcafef00d] actual [0xdeadbeef, 0xbf000000, 0	0	EQUAL	
+MW1T032TSnormPackedFirstChannel	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSnormPackedFirstChannel failed at readback: expected [0xdeadbeef, 0xc0100807, 0xcafef00d] actual [0xdeadbeef, 0xbf000000, 	0	EQUAL	
+MW1T032SnormPackedZeroFillX	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032SnormPackedZeroFillX failed at readback: expected [0xdeadbeef, 0x00000201, 0xcafef00d] actual [0xdeadbeef, 0xbf800000, 0xca	0	EQUAL	
+MW1T032TSnormPackedZeroFillX	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSnormPackedZeroFillX failed at readback: expected [0xdeadbeef, 0x00000201, 0xcafef00d] actual [0xdeadbeef, 0xbf800000, 0xc	0	EQUAL	
+MW1T032SnormPackedZeroFillXy	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032SnormPackedZeroFillXy failed at readback: expected [0xdeadbeef, 0x0007fe01, 0xcafef00d] actual [0xdeadbeef, 0x3f800000, 0xc	0	EQUAL	
+MW1T032TSnormPackedZeroFillXy	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSnormPackedZeroFillXy failed at readback: expected [0xdeadbeef, 0x0007fe01, 0xcafef00d] actual [0xdeadbeef, 0x3f800000, 0x	0	EQUAL	
+MW1T032SnormPackedZeroFillXyz	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032SnormPackedZeroFillXyz failed at readback: expected [0xdeadbeef, 0x2017fe01, 0xcafef00d] actual [0xdeadbeef, 0xbf800000, 0x	0	EQUAL	
+MW1T032TSnormPackedZeroFillXyz	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSnormPackedZeroFillXyz failed at readback: expected [0xdeadbeef, 0x2017fe01, 0xcafef00d] actual [0xdeadbeef, 0xbf800000, 0	0	EQUAL	
+MW1T032Snorm8PartialX	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Snorm8PartialX failed at readback: expected [0xdeadbeef, 0xffffff81, 0xcafef00d] actual [0xdeadbeef, 0xffffff00, 0xcafef00d	0	EQUAL	
+MW1T032TSnorm8PartialX	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSnorm8PartialX failed at readback: expected [0xdeadbeef, 0xffffff81, 0xcafef00d] actual [0xdeadbeef, 0xffffff00, 0xcafef00	0	EQUAL	
+MW1T032Snorm16PartialX	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Snorm16PartialX failed at readback: expected [0xdeadbeef, 0xffff8001, 0xcafef00d] actual [0xdeadbeef, 0xffff0000, 0xcafef00	0	EQUAL	
+MW1T032TSnorm16PartialX	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSnorm16PartialX failed at readback: expected [0xdeadbeef, 0xffff8001, 0xcafef00d] actual [0xdeadbeef, 0xffff0000, 0xcafef0	0	EQUAL	
+MW1T032UscaledPartialXy	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032UscaledPartialXy failed at readback: expected [0xdeadbeef, 0xffff632a, 0xcafef00d] actual [0xdeadbeef, 0xffff0000, 0xcafef0	0	EQUAL	
+MW1T032TUscaledPartialXy	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TUscaledPartialXy failed at readback: expected [0xdeadbeef, 0xffff632a, 0xcafef00d] actual [0xdeadbeef, 0xffff0000, 0xcafef	0	EQUAL	
+MW1T032SscaledPartialXyz	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032SscaledPartialXyz failed at readback: expected [0xdeadbeef, 0xff807fd6, 0xcafef00d] actual [0xdeadbeef, 0xff000000, 0xcafef	0	EQUAL	
+MW1T032TSscaledPartialXyz	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSscaledPartialXyz failed at readback: expected [0xdeadbeef, 0xff807fd6, 0xcafef00d] actual [0xdeadbeef, 0xff000000, 0xcafe	0	EQUAL	
+MW1T032Uscaled8Fraction	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Uscaled8Fraction failed at readback: expected [0xdeadbeef, 0xffffff2a, 0xcafef00d] actual [0xdeadbeef, 0xffffff00, 0xcafef0	0	EQUAL	
+MW1T032TUscaled8Fraction	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TUscaled8Fraction failed at readback: expected [0xdeadbeef, 0xffffff2a, 0xcafef00d] actual [0xdeadbeef, 0xffffff00, 0xcafef	0	EQUAL	
+MW1T032Sscaled8Fraction	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Sscaled8Fraction failed at readback: expected [0xdeadbeef, 0xffffffd6, 0xcafef00d] actual [0xdeadbeef, 0xffffff00, 0xcafef0	0	EQUAL	
+MW1T032TSscaled8Fraction	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSscaled8Fraction failed at readback: expected [0xdeadbeef, 0xffffffd6, 0xcafef00d] actual [0xdeadbeef, 0xffffff00, 0xcafef	0	EQUAL	
+MW1T032Uscaled8Range	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Uscaled8Range failed at readback: expected [0xdeadbeef, 0x00ffff00, 0xcafef00d] actual [0xdeadbeef, 0x00000000, 0xcafef00d]	0	EQUAL	
+MW1T032TUscaled8Range	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TUscaled8Range failed at readback: expected [0xdeadbeef, 0x00ffff00, 0xcafef00d] actual [0xdeadbeef, 0x00000000, 0xcafef00d	0	EQUAL	
+MW1T032Sscaled8Range	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Sscaled8Range failed at readback: expected [0xdeadbeef, 0x7f7f8080, 0xcafef00d] actual [0xdeadbeef, 0x00000000, 0xcafef00d]	0	EQUAL	
+MW1T032TSscaled8Range	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSscaled8Range failed at readback: expected [0xdeadbeef, 0x7f7f8080, 0xcafef00d] actual [0xdeadbeef, 0x00000000, 0xcafef00d	0	EQUAL	
+MW1T032Uscaled16Range	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Uscaled16Range failed at readback: expected [0xdeadbeef, 0x002affff, 0xcafef00d] actual [0xdeadbeef, 0x80000000, 0xcafef00d	0	EQUAL	
+MW1T032TUscaled16Range	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TUscaled16Range failed at readback: expected [0xdeadbeef, 0x002affff, 0xcafef00d] actual [0xdeadbeef, 0x80000000, 0xcafef00	0	EQUAL	
+MW1T032Sscaled16Range	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Sscaled16Range failed at readback: expected [0xdeadbeef, 0x7fff8000, 0xcafef00d] actual [0xdeadbeef, 0x00000100, 0xcafef00d	0	EQUAL	
+MW1T032TSscaled16Range	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSscaled16Range failed at readback: expected [0xdeadbeef, 0x7fff8000, 0xcafef00d] actual [0xdeadbeef, 0x00000100, 0xcafef00	0	EQUAL	
+MW1T032UscaledPacked	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032UscaledPacked failed at readback: expected [0xdeadbeef, 0xc0000fff, 0xcafef00d] actual [0xdeadbeef, 0x40800000, 0xcafef00d]	0	EQUAL	
+MW1T032TUscaledPacked	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TUscaledPacked failed at readback: expected [0xdeadbeef, 0xc0000fff, 0xcafef00d] actual [0xdeadbeef, 0x40800000, 0xcafef00d	0	EQUAL	
+MW1T032SscaledPackedAlpha	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032SscaledPackedAlpha failed at readback: expected [0xdeadbeef, 0xffd7fe00, 0xcafef00d] actual [0xdeadbeef, 0x40780000, 0xcafe	0	EQUAL	
+MW1T032TSscaledPackedAlpha	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSscaledPackedAlpha failed at readback: expected [0xdeadbeef, 0xffd7fe00, 0xcafef00d] actual [0xdeadbeef, 0x40780000, 0xcaf	0	EQUAL	
+MW1T032SscaledPackedFirstChannel	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032SscaledPackedFirstChannel failed at readback: expected [0xdeadbeef, 0xffdff803, 0xcafef00d] actual [0xdeadbeef, 0xbf800000,	0	EQUAL	
+MW1T032TSscaledPackedFirstChannel	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSscaledPackedFirstChannel failed at readback: expected [0xdeadbeef, 0xffdff803, 0xcafef00d] actual [0xdeadbeef, 0xbf800000	0	EQUAL	
+MW1T032Snorm8SpecialValues	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Snorm8SpecialValues failed at readback: expected [0xdeadbeef, 0x00817f00, 0xcafef00d] actual [0xdeadbeef, 0x00000045, 0xcaf	0	EQUAL	
+MW1T032TSnorm8SpecialValues	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSnorm8SpecialValues failed at readback: expected [0xdeadbeef, 0x00817f00, 0xcafef00d] actual [0xdeadbeef, 0x00000045, 0xca	0	EQUAL	
+MW1T032Uscaled8SpecialValues	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Uscaled8SpecialValues failed at readback: expected [0xdeadbeef, 0x0000ff00, 0xcafef00d] actual [0xdeadbeef, 0x00000045, 0xc	0	EQUAL	
+MW1T032TUscaled8SpecialValues	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TUscaled8SpecialValues failed at readback: expected [0xdeadbeef, 0x0000ff00, 0xcafef00d] actual [0xdeadbeef, 0x00000045, 0x	0	EQUAL	
+MW1T032Sscaled8SpecialValues	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032Sscaled8SpecialValues failed at readback: expected [0xdeadbeef, 0x00807f00, 0xcafef00d] actual [0xdeadbeef, 0x00000045, 0xc	0	EQUAL	
+MW1T032TSscaled8SpecialValues	T032	3221226505	DIFFERS	ShaderRecompilerComputeTests: MW1T032TSscaled8SpecialValues failed at readback: expected [0xdeadbeef, 0x00807f00, 0xcafef00d] actual [0xdeadbeef, 0x00000045, 0x	0	EQUAL	
+cache unset rc 0 OK [mw1] mask=0x00 token=
+ | [mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19
+ | [mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19 sig_ok=1 dir_ok=1
+
+cache T234 rc 0 OK [mw1] mask=0x01 token=:mw1_01
+ | [mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_01
+ | [mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_01 sig_ok=1 dir_ok=1
+
+cache T233 rc 0 OK [mw1] mask=0x02 token=:mw1_02
+ | [mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_02
+ | [mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_02 sig_ok=1 dir_ok=1
+
+cache T256 rc 0 OK [mw1] mask=0x04 token=:mw1_04
+ | [mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_04
+ | [mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_04 sig_ok=1 dir_ok=1
+
+cache T306 rc 0 OK [mw1] mask=0x08 token=:mw1_08
+ | [mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_08
+ | [mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_08 sig_ok=1 dir_ok=1
+
+cache T032 rc 0 OK [mw1] mask=0x10 token=:mw1_10
+ | [mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_10
+ | [mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_10 sig_ok=1 dir_ok=1
+
+cache T203 rc 0 OK [mw1] mask=0x20 token=:mw1_20
+ | [mw1] cache signature=KytySC3:aac6db694d6785bbde0a838953d4565569645996:fixb26:fixb1b:fixf10:fixf19:mw1_20
+ | [mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_20 sig_ok=1 dir_ok=1
+
+ALL OK

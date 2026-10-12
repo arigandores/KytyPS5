@@ -1,0 +1,50 @@
+2026-10-12T08:07:49Z M2a start (HPP-838), heartbeat run 6cb7f0cc-b38f-4ee0-a668-e4ba73475c5d
+2026-10-12T08:08:24Z worktree C:/kyty/m657/m2/wt on 6beb3b73 created
+2026-10-12T08:09:45Z base build shader_cfg_tests start
+2026-10-12T08:11:03Z base build shader_cfg_tests end
+2026-10-12T08:11:39Z base G1 written base_g1.txt
+2026-10-12T08:23:12Z dev build 1 shader_cfg_tests start
+2026-10-12T08:23:49Z dev build 1 end
+2026-10-12T08:30:59Z dev build 2 (tests patch) start
+2026-10-12T08:31:26Z dev build 2 cfg done
+2026-10-12T08:31:34Z dev build compute tests start
+2026-10-12T08:32:43Z dev build compute tests end rc
+2026-10-12T08:33:04Z GPU gate dev1 start
+2026-10-12T08:34:04Z GPU gate dev1 end
+2026-10-12T08:38:24Z GPU gate dev2 start
+2026-10-12T08:39:19Z GPU gate dev2 end
+2026-10-12T08:39:23Z GPU gate dev2: 54 cases z DIFFERS / o EQUAL, cache 7/7 OK, ALL OK
+2026-10-12T08:42:37Z T1 predict start (before any theme run)
+2026-10-12T08:42:38Z T1 predict end
+2026-10-12T08:43:26Z T1 predict end
+2026-10-12T08:43:37Z T1 run base,u,z start
+2026-10-12T08:44:25Z T1 run base,u,z end
+2026-10-12T08:44:30Z T1 run themes,all start
+2026-10-12T08:46:10Z T1 run themes,all end
+2026-10-12T08:50:40Z T1 supplement (T234, T306) start
+2026-10-12T08:51:06Z T1 supplement end
+2026-10-12T08:55:30Z dev4: predict (T306 pattern case fixed) before dev4 theme runs
+2026-10-12T08:56:21Z dev4 predict end; corpus run start
+2026-10-12T08:58:47Z dev4 corpus run end
+2026-10-12T08:58:55Z dev4 supplement start
+2026-10-12T08:59:22Z dev4 supplement end
+2026-10-12T09:01:02Z dev4 GPU gate start
+2026-10-12T09:02:05Z dev4 GPU gate end
+2026-10-12T09:02:53Z mutant T234 build start
+2026-10-12T09:03:48Z mutant T234 done
+2026-10-12T09:03:53Z mutant T233 start
+2026-10-12T09:04:48Z mutant T233 done
+2026-10-12T09:04:48Z mutant T203 start
+2026-10-12T09:05:43Z mutant T203 done
+2026-10-12T09:05:44Z mutant T306 start
+2026-10-12T09:06:39Z mutant T306 done
+2026-10-12T09:06:39Z mutant T032 start
+2026-10-12T09:08:00Z mutant T032 done
+2026-10-12T09:08:01Z mutant T256 start
+2026-10-12T09:09:00Z mutant T256 done
+2026-10-12T09:12:13Z main build (own folder build_main) tests start
+2026-10-12T09:15:38Z main build + tests + gate done
+2026-10-12T09:15:44Z emulator build (worktree, not installed) start
+2026-10-12T09:16:32Z emulator build end
+2026-10-12T09:18:14Z emulator rebuilt on worktree commit 0361b202, copy kyty_emulator_cc46e102.exe (not installed)
+2026-10-12T09:19:54Z report.md and sha_m2a.txt written

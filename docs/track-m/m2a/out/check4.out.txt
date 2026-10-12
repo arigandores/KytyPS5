@@ -1,0 +1,12 @@
+rows 269 processes 2690 failed 0 []
+G2 u == base on 269 of 269 rows (differ 0) []
+G2 z == base on 269 of 269 rows (differ 0) []
+theme T234 predicted 0 changed 0 changed-not-predicted 0 predicted-not-changed 0 NONE_CHANGED []
+theme T233 predicted 185 changed 185 changed-not-predicted 0 predicted-not-changed 0 MEMBER_OK []
+theme T256 predicted 0 changed 0 changed-not-predicted 0 predicted-not-changed 0 NONE_CHANGED []
+theme T306 predicted 2 changed 2 changed-not-predicted 0 predicted-not-changed 0 MEMBER_OK []
+theme T032 predicted 14 changed 1 changed-not-predicted 0 predicted-not-changed 13 MEMBER_OK []
+theme T203 predicted 1 changed 1 changed-not-predicted 0 predicted-not-changed 0 MEMBER_OK []
+all changed 186 union of themes 186 all-not-in-union []
+corpus_m2a.tsv sha256 ab5c5fdd9bf2b5ebdf0c83bd5069902af6ec29923fcb0f946f5f3c3721c3590b
+FAIL

@@ -1,0 +1,4 @@
+cfg rc 0 lines [mw1] T233 knob=1 Fma=7 NoContraction=0 reference=Fma 2 NoContraction 10
+cfg failure lines 1 ['ShaderCfgTests: failed: T233: legacy MAD fusion does not follow KYTY_M_T233\r']
+gpu MW1T233LegacyMadRoundsProduct rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T233LegacyMadRoundsProduct failed at readback: expected [0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x33800000, 0x33800000] a
+mutant T233 gpu caught 1 of 1 cfg rc 0 CAUGHT

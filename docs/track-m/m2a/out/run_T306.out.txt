@@ -1,0 +1,4 @@
+cfg rc 0 lines 
+cfg failure lines 0 []
+gpu MW1T306SampleOffsetsFourNeighbors rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T306SampleOffsetsFourNeighbors failed at readback: expected [0x3f800000, 0x40000000, 0x40400000, 0x40800000] actual [0x3f800000, 0x4180000
+mutant T306 gpu caught 1 of 1 cfg rc 0 CAUGHT

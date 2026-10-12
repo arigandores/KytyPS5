@@ -1,0 +1,4 @@
+cfg rc 0 lines 
+cfg failure lines 0 []
+gpu MW1T203AlignByteTwoBitOffset rc 3221226505 CAUGHT ShaderRecompilerComputeTests: MW1T203AlignByteTwoBitOffset failed at readback: expected [0x55667788, 0x44556677, 0x33445566, 0x22334455, 0x55667788, 0x44556677, 0x22334455, 0x5
+mutant T203 gpu caught 1 of 1 cfg rc 0 CAUGHT

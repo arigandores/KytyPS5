@@ -1,0 +1,7 @@
+# M2a (HPP-838) base G1 (ROADMAP s122 item 756(g)(1)): shader_cfg_tests on the FS15 tree 6beb3b73
+# worktree C:/kyty/m657/m2/wt (HEAD 6beb3b73, status clean), build C:/kyty/m657/m2/build, not installed
+# exe sha256 8d8cb751ed4aa4186ed45bd48857b4ca01642c01b92015d2c4d03d89044b0eb0
+# run: KYTY_TESTS_CONTINUE=1 KYTY_TESTS_VERBOSE=1 KYTY_TESTS_SPV_DIR, other KYTY_* removed; rc 0; [test] lines 133
+# SPIR-V files 360, equal byte for byte to the FS15a run C:/kyty/f287/fs15a/tests/fs15 (0 differing)
+# failed tests ("ShaderCfgTests: failed:" lines) - the list below; empty list = 0 failed:
+# end (0 failed)

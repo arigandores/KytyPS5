@@ -21,6 +21,11 @@
 //     ao_obj_nz); the other ports keep the raw read (the output path reads them raw already);
 //   M6a2 (item 770(d)): inv_part_src - the pairs of inv_part with coverage tested against SourceRange() (size =
 //     source_size or info.data.size) instead of info.data (reference);
+//   M6a3 (item 772(v)): when the copy by TryReadBacking is refused (it serves only storage mappings - the private
+//     commits of module images, stacks and TLS are refused), every page of the grain is asked of the OS
+//     (VirtualQuery, no lock of the emulator): MEM_COMMIT with a readable protection and without PAGE_GUARD /
+//     PAGE_NOACCESS - the grain is read raw (as the bus ports) and counted ao_obj_vq (reference; also in
+//     ao_obj_push, in ao_obj_nz by content); otherwise ao_obj_unread (no form of read served the grain);
 //   T188 (textureCache.cpp, InvalidateMemoryFromGPU): inv_calls - calls with a valid range; inv_part - (call, colour
 //     image) pairs where the image IsGpuModified and the write does not cover the image's range; inv_gpu - pairs with
 //     IsGpuModified (reference); inv_off - inv_part whose write starts at an address other than the image's base
@@ -92,6 +97,7 @@ struct Totals {
 	uint64_t clr_dw_div8;   // M6a2
 	uint64_t ao_obj_unread; // M6a2
 	uint64_t inv_part_src;  // M6a2
+	uint64_t ao_obj_vq;     // M6a3
 };
 Totals Read();
 

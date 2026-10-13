@@ -1,5 +1,6 @@
 #include "libs/diagM5W2.h"
 
+#include "common/common.h"
 #include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "kernel/memory.h"
@@ -11,6 +12,13 @@
 #include <cstring>
 #include <vector>
 #include <vulkan/vulkan.hpp>
+
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h> // IWYU pragma: keep
+#endif
 
 // Track M, M6a (HPP-848, ROADMAP s122 item 767(i)): the counters of KYTY_DIAG_M5W2 (diagM5W2.h). Every counter is a
 // relaxed atomic summed over the process; the call sites call the Note functions only when On() is true.
@@ -40,6 +48,8 @@ std::atomic<uint64_t> g_minlod_div_x {0};
 std::atomic<uint64_t> g_clr_dw_div8 {0};
 std::atomic<uint64_t> g_ao_obj_unread {0};
 std::atomic<uint64_t> g_inv_part_src {0};
+// M6a3 (ROADMAP s122 item 772(v)).
+std::atomic<uint64_t> g_ao_obj_vq {0};
 
 // Per vk::Format value (formats >= 255 share the last row, printed fmt=255).
 constexpr uint32_t                             FMT_ROWS = 256;
@@ -59,6 +69,50 @@ uint64_t GrainBytes(uint32_t data_format, uint32_t samples) {
 	const uint32_t channels     = raw_channels == 0 ? 2u : (raw_channels < 16u ? raw_channels : 16u);
 	const uint32_t data_type    = data_format & 0x7fu;
 	return static_cast<uint64_t>(samples) * channels * (data_type == 1 ? 2u : 4u);
+}
+
+// M6a3 (item 772(v)): true if every page of [addr, addr + size) is committed with a readable protection
+// (PAGE_READONLY, PAGE_READWRITE, PAGE_WRITECOPY, PAGE_EXECUTE_READ, PAGE_EXECUTE_READWRITE,
+// PAGE_EXECUTE_WRITECOPY) and without PAGE_GUARD / PAGE_NOACCESS. Asked of the OS only (VirtualQuery walks the
+// regions of equal attributes that cover the range), no lock of the emulator is taken. The memory can still
+// change between this answer and the read - the class of the raw read of the bus ports (item 769(g)(2)).
+bool OsReadable(uint64_t addr, uint64_t size) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	if (addr == 0 || size == 0 || UINT64_MAX - addr < size) {
+		return false;
+	}
+	const uint64_t end = addr + size;
+	uint64_t       p   = addr;
+	while (p < end) {
+		MEMORY_BASIC_INFORMATION mbi {};
+		if (VirtualQuery(reinterpret_cast<LPCVOID>(p), &mbi, sizeof(mbi)) != sizeof(mbi) || mbi.State != MEM_COMMIT) {
+			return false;
+		}
+		const DWORD prot = mbi.Protect;
+		if ((prot & (PAGE_GUARD | PAGE_NOACCESS)) != 0) {
+			return false;
+		}
+		switch (prot & 0xffu) {
+			case PAGE_READONLY:
+			case PAGE_READWRITE:
+			case PAGE_WRITECOPY:
+			case PAGE_EXECUTE_READ:
+			case PAGE_EXECUTE_READWRITE:
+			case PAGE_EXECUTE_WRITECOPY: break;
+			default: return false;
+		}
+		const uint64_t region_end = reinterpret_cast<uint64_t>(mbi.BaseAddress) + mbi.RegionSize;
+		if (region_end <= p) {
+			return false;
+		}
+		p = region_end;
+	}
+	return true;
+#else
+	(void)addr;
+	(void)size;
+	return false;
+#endif
 }
 
 uint64_t Load(const std::atomic<uint64_t>& a) {
@@ -125,8 +179,13 @@ void NoteAudioPort(bool object_port, const void* pcm, uint32_t data_format, uint
 		}
 		copy.resize(static_cast<size_t>(bytes));
 		if (!Libs::LibKernel::Memory::TryReadBacking(reinterpret_cast<uint64_t>(pcm), copy.data(), bytes)) {
-			Bump(g_ao_obj_unread);
-			return;
+			// M6a3 (item 772(v)): the fallback - pages readable by the OS are read raw (private commits).
+			if (!OsReadable(reinterpret_cast<uint64_t>(pcm), bytes)) {
+				Bump(g_ao_obj_unread);
+				return;
+			}
+			std::memcpy(copy.data(), pcm, static_cast<size_t>(bytes));
+			Bump(g_ao_obj_vq);
 		}
 		if (PcmHasNonzero(copy.data(), data_format, samples)) {
 			Bump(g_ao_obj_nz);
@@ -247,7 +306,8 @@ Totals Read() {
 	        Load(g_ao_bus_nz),   Load(g_clr_dw),       Load(g_clr_dw_div),   Load(g_minlod_views),
 	        Load(g_minlod_div),  Load(g_inv_calls),    Load(g_inv_part),     Load(g_inv_gpu),
 	        Load(g_inv_off),     Load(g_raw_rd),       Load(g_raw_rd_gpu),   Load(g_pushes),
-	        Load(g_minlod_div_x), Load(g_clr_dw_div8), Load(g_ao_obj_unread), Load(g_inv_part_src)};
+	        Load(g_minlod_div_x), Load(g_clr_dw_div8), Load(g_ao_obj_unread), Load(g_inv_part_src),
+	        Load(g_ao_obj_vq)};
 }
 
 void PrintStat(const char* when) {
@@ -256,10 +316,10 @@ void PrintStat(const char* when) {
 	     " ao_bus_push=%" PRIu64 " ao_bus_nz=%" PRIu64 " clr_dw=%" PRIu64 " clr_dw_div=%" PRIu64 " minlod_views=%" PRIu64
 	     " minlod_div=%" PRIu64 " inv_calls=%" PRIu64 " inv_part=%" PRIu64 " inv_gpu=%" PRIu64 " inv_off=%" PRIu64
 	     " raw_rd=%" PRIu64 " raw_rd_gpu=%" PRIu64 " minlod_div_x=%" PRIu64 " clr_dw_div8=%" PRIu64
-	     " ao_obj_unread=%" PRIu64 " inv_part_src=%" PRIu64 "\n",
+	     " ao_obj_unread=%" PRIu64 " inv_part_src=%" PRIu64 " ao_obj_vq=%" PRIu64 "\n",
 	     when, t.pushes, t.ao_obj_push, t.ao_obj_nz, t.ao_obj_nopcm, t.ao_bus_push, t.ao_bus_nz, t.clr_dw, t.clr_dw_div,
 	     t.minlod_views, t.minlod_div, t.inv_calls, t.inv_part, t.inv_gpu, t.inv_off, t.raw_rd, t.raw_rd_gpu,
-	     t.minlod_div_x, t.clr_dw_div8, t.ao_obj_unread, t.inv_part_src);
+	     t.minlod_div_x, t.clr_dw_div8, t.ao_obj_unread, t.inv_part_src, t.ao_obj_vq);
 	for (uint32_t row = 0; row < FMT_ROWS; row++) {
 		const uint64_t n = Load(g_clr_fmt[row]);
 		if (n != 0) {

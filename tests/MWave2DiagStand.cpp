@@ -27,6 +27,7 @@
 // Every arm ends with "MStand: m6 arm=<arm> knob=<0|1> total=<n> match=<m> END". Exit 0 unless the arguments are bad (2).
 
 #define SDL_MAIN_HANDLED
+#include "common/common.h"
 #include "common/emulatorConfig.h"
 #include "common/envFlag.h"
 #include "common/logging/log.h"
@@ -48,6 +49,13 @@
 #include <string>
 #include <vector>
 #include <vulkan/vulkan.hpp>
+
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h> // IWYU pragma: keep
+#endif
 
 // The layouts of libAudio2.cpp (the same definitions; audio.h only declares them).
 namespace Libs::Audio::AudioOut2 {
@@ -127,6 +135,7 @@ uint64_t Field(const D::Totals& t, const std::string& f) {
 	if (f == "clr_dw_div8") return t.clr_dw_div8;
 	if (f == "ao_obj_unread") return t.ao_obj_unread;
 	if (f == "inv_part_src") return t.inv_part_src;
+	if (f == "ao_obj_vq") return t.ao_obj_vq;
 	std::printf("MStand: m6 unknown field %s\n", f.c_str());
 	std::_Exit(2);
 }
@@ -185,6 +194,55 @@ V* GuestCopy(const std::vector<V>& v) {
 // M6a2: a pointer no guest mapping covers (and no host page either) - the guarded reader refuses it.
 const void* const UNREADABLE = reinterpret_cast<const void*>(uintptr_t {0x1000});
 
+// M6a3 (item 772(v)): a private commit of the guest address space (AllocateRuntimeMemory -> Commit ->
+// MappingType::Private, the path of module images, stacks and TLS) - TryReadBacking refuses it, the OS reads it.
+uint8_t* PrivateAlloc(size_t size) {
+	const uint64_t addr = Libs::LibKernel::Memory::AllocateRuntimeMemory(0, size, Common::VirtualMemory::Mode::ReadWrite,
+	                                                                     "m6a3stand");
+	if (addr == 0) {
+		std::printf("MStand: m6 private commit failed\n");
+		std::fflush(stdout);
+		std::_Exit(3);
+	}
+	auto* p = reinterpret_cast<uint8_t*>(addr);
+	std::memset(p, 0, size);
+	return p;
+}
+
+// M6a3: 8 bytes before the end of a committed read/write host page whose next page is reserved only - a grain of
+// 16 bytes spans both pages (not read: the second page is not committed).
+const void* HostSpan() {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	auto* r = static_cast<uint8_t*>(VirtualAlloc(nullptr, 0x2000, MEM_RESERVE, PAGE_NOACCESS));
+	if (r == nullptr || VirtualAlloc(r, 0x1000, MEM_COMMIT, PAGE_READWRITE) == nullptr) {
+		std::printf("MStand: m6 host span failed\n");
+		std::fflush(stdout);
+		std::_Exit(3);
+	}
+	std::memset(r, 0, 0x1000);
+	r[0x1000 - 4] = 0x7f;
+	return r + 0x1000 - 8;
+#else
+	return UNREADABLE;
+#endif
+}
+
+// M6a3: a committed host page with the protection prot (PAGE_NOACCESS, PAGE_READWRITE | PAGE_GUARD) - not read.
+const void* HostPage(uint32_t prot) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	void* p = VirtualAlloc(nullptr, 0x1000, MEM_RESERVE | MEM_COMMIT, prot);
+	if (p == nullptr) {
+		std::printf("MStand: m6 host page failed prot=0x%x\n", prot);
+		std::fflush(stdout);
+		std::_Exit(3);
+	}
+	return p;
+#else
+	(void)prot;
+	return UNREADABLE;
+#endif
+}
+
 // ------------------------------------------------------------------------------------------------ pure
 int ArmPure() {
 	// M6a2: the PCM of every object case lives in guest memory; bus cases keep host memory (raw read).
@@ -195,19 +253,38 @@ int ArmPure() {
 	const std::vector<float> hf_nz {0.0f, 0.0f, 0.25f, 0.0f};
 	const std::vector<float> hf_z(4, 0.0f);
 	// T125: mono float (0x100) and mono int16 (0x101), 4 samples.
+	// M6a3 (item 772(v)): storage memory (read by TryReadBacking) - ao_obj_vq 0.
 	Check("ao_obj_nz_float", [&] { D::NoteAudioPort(true, f_nz, 0x100, 4); },
-	      {{"ao_obj_push", 1}, {"ao_obj_nz", 1}, {"ao_obj_unread", 0}, {"ao_bus_push", 0}, {"ao_bus_nz", 0}});
+	      {{"ao_obj_push", 1}, {"ao_obj_nz", 1}, {"ao_obj_unread", 0}, {"ao_bus_push", 0}, {"ao_bus_nz", 0},
+	       {"ao_obj_vq", 0}});
 	Check("ao_obj_zero_float", [&] { D::NoteAudioPort(true, f_z, 0x100, 4); },
-	      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}});
+	      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}, {"ao_obj_vq", 0}});
 	Check("ao_obj_nz_int16", [&] { D::NoteAudioPort(true, s_nz, 0x101, 4); },
-	      {{"ao_obj_push", 1}, {"ao_obj_nz", 1}, {"ao_obj_unread", 0}});
+	      {{"ao_obj_push", 1}, {"ao_obj_nz", 1}, {"ao_obj_unread", 0}, {"ao_obj_vq", 0}});
 	Check("ao_obj_zero_int16", [&] { D::NoteAudioPort(true, s_z, 0x101, 4); },
-	      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}});
+	      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}, {"ao_obj_vq", 0}});
 	// M6a2 (item 770(g)): an unreadable object pointer - counted, not read, the process lives.
 	Check("ao_obj_unread", [&] { D::NoteAudioPort(true, UNREADABLE, 0x100, 4); },
-	      {{"ao_obj_push", 1}, {"ao_obj_unread", 1}, {"ao_obj_nz", 0}});
+	      {{"ao_obj_push", 1}, {"ao_obj_unread", 1}, {"ao_obj_nz", 0}, {"ao_obj_vq", 0}});
+	// M6a3 (item 772(v)): a private commit - TryReadBacking refuses, the fallback reads it (nonzero and zero).
+	float* p_nz = reinterpret_cast<float*>(PrivateAlloc(0x4000));
+	float* p_z  = reinterpret_cast<float*>(PrivateAlloc(0x4000));
+	p_nz[3]     = -0.5f;
+	Check("ao_obj_vq_nz", [&] { D::NoteAudioPort(true, p_nz, 0x100, 4); },
+	      {{"ao_obj_push", 1}, {"ao_obj_nz", 1}, {"ao_obj_unread", 0}, {"ao_obj_vq", 1}});
+	Check("ao_obj_vq_zero", [&] { D::NoteAudioPort(true, p_z, 0x100, 4); },
+	      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}, {"ao_obj_vq", 1}});
+	// M6a3: committed pages the OS check refuses - PAGE_NOACCESS and PAGE_GUARD (a raw read would fault).
+	Check("ao_obj_noaccess", [&] { D::NoteAudioPort(true, HostPage(PAGE_NOACCESS), 0x100, 4); },
+	      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 1}, {"ao_obj_vq", 0}});
+	Check("ao_obj_guard", [&] { D::NoteAudioPort(true, HostPage(PAGE_READWRITE | PAGE_GUARD), 0x100, 4); },
+	      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 1}, {"ao_obj_vq", 0}});
+	// M6a3: the grain spans a committed page and a reserved one - every page is checked.
+	Check("ao_obj_span", [&] { D::NoteAudioPort(true, HostSpan(), 0x100, 4); },
+	      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 1}, {"ao_obj_vq", 0}});
 	Check("ao_bus_nz", [&] { D::NoteAudioPort(false, hf_nz.data(), 0x100, 4); },
-	      {{"ao_bus_push", 1}, {"ao_bus_nz", 1}, {"ao_obj_push", 0}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}});
+	      {{"ao_bus_push", 1}, {"ao_bus_nz", 1}, {"ao_obj_push", 0}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0},
+	       {"ao_obj_vq", 0}});
 	Check("ao_bus_zero", [&] { D::NoteAudioPort(false, hf_z.data(), 0x100, 4); },
 	      {{"ao_bus_push", 1}, {"ao_bus_nz", 0}});
 	Check("ao_obj_nopcm", [&] { D::NoteAudioObjectNoPcm(); }, {{"ao_obj_nopcm", 1}, {"ao_obj_push", 0}});
@@ -235,6 +312,9 @@ int ArmPure() {
 	      {{"clr_dw", 1}, {"clr_dw_div", 0}, {"clr_dw_div8", 1}});
 	Check("clr_r8_rep", [&] { D::NoteClearDword(fmt(vk::Format::eR8Unorm), 0x7f7f7f7fu); },
 	      {{"clr_dw", 1}, {"clr_dw_div", 0}, {"clr_dw_div8", 0}});
+	// M6a3 (item 772(g), P2 of M6b2): equal low bytes, another high byte - 1 (the rule on the low 16 bits gives 0).
+	Check("clr_r8_hi_div8", [&] { D::NoteClearDword(fmt(vk::Format::eR8Unorm), 0x34121212u); },
+	      {{"clr_dw", 1}, {"clr_dw_div", 0}, {"clr_dw_div8", 1}});
 	Check("clr_rg8_div8", [&] { D::NoteClearDword(fmt(vk::Format::eR8G8Unorm), 0x00001234u); },
 	      {{"clr_dw", 1}, {"clr_dw_div", 0}, {"clr_dw_div8", 1}});
 	Check("clr_rg8_rep", [&] { D::NoteClearDword(fmt(vk::Format::eR8G8Unorm), 0x12341234u); },
@@ -278,6 +358,7 @@ int ArmAudio() {
 	AO2::AudioOut2ContextParam cp {};
 	AO2::AudioOut2ContextResetParam(&cp);
 	cp.num_grains = 256;
+	cp.queue_depth = 8; // M6a3: 5 non-blocking pushes (the default depth 4 refuses the fifth)
 	std::vector<uint8_t>       ctx_mem(0x20000);
 	AO2::AudioOut2ContextHandle ctx = 0;
 	if (AO2::AudioOut2ContextCreate(&cp, ctx_mem.data(), ctx_mem.size(), &ctx) != 0) {
@@ -316,11 +397,15 @@ int ArmAudio() {
 	const int knob = KnobValue();
 	// push 1: both nonzero; push 2: both zero; push 3: a fresh object port without PCM (the old ports keep zeros);
 	// M6a2 push 4: the first object port points to an unreadable address (ao_obj_unread 1 at =1; alive at 0 and 1).
+	// M6a3 push 5: the first object port at a private commit, nonzero grain (ao_obj_nz 1, ao_obj_vq 1 at =1).
 	struct Want {
-		uint64_t obj_push, obj_nz, obj_nopcm, bus_push, bus_nz, pushes, obj_unread;
+		uint64_t obj_push, obj_nz, obj_nopcm, bus_push, bus_nz, pushes, obj_unread, obj_vq;
 	};
-	const Want wants[4] = {{1, 1, 0, 1, 1, 1, 0}, {1, 0, 0, 1, 0, 1, 0}, {1, 0, 1, 1, 0, 1, 0}, {1, 0, 1, 1, 0, 1, 1}};
-	for (int i = 0; i < 4; i++) {
+	const Want wants[5] = {{1, 1, 0, 1, 1, 1, 0, 0}, {1, 0, 0, 1, 0, 1, 0, 0}, {1, 0, 1, 1, 0, 1, 0, 0},
+	                       {1, 0, 1, 1, 0, 1, 1, 0}, {1, 1, 1, 1, 0, 1, 0, 1}};
+	auto* obj_priv = reinterpret_cast<float*>(PrivateAlloc(256 * sizeof(float)));
+	obj_priv[17]   = 0.75f;
+	for (int i = 0; i < 5; i++) {
 		if (i == 0) {
 			set_pcm(obj, obj_nz);
 			set_pcm(bus, bus_nz.data());
@@ -329,6 +414,8 @@ int ArmAudio() {
 			set_pcm(bus, bus_z.data());
 		} else if (i == 3) {
 			set_pcm(obj, UNREADABLE);
+		} else if (i == 4) {
+			set_pcm(obj, obj_priv);
 		} else {
 			AO2::AudioOut2PortHandle obj2 = 0;
 			if (AO2::AudioOut2PortCreate(ctx, &pp_obj, &obj2) != 0) {
@@ -339,18 +426,19 @@ int ArmAudio() {
 		const auto before = D::Read();
 		const int  rc     = AO2::AudioOut2ContextPush(ctx, 0);
 		const auto after  = D::Read();
-		const Want w      = knob != 0 ? wants[i] : Want {0, 0, 0, 0, 0, 0, 0};
+		const Want w      = knob != 0 ? wants[i] : Want {0, 0, 0, 0, 0, 0, 0, 0};
 		const Want d {after.ao_obj_push - before.ao_obj_push, after.ao_obj_nz - before.ao_obj_nz,
 		              after.ao_obj_nopcm - before.ao_obj_nopcm, after.ao_bus_push - before.ao_bus_push,
 		              after.ao_bus_nz - before.ao_bus_nz, after.pushes - before.pushes,
-		              after.ao_obj_unread - before.ao_obj_unread};
+		              after.ao_obj_unread - before.ao_obj_unread, after.ao_obj_vq - before.ao_obj_vq};
 		const bool ok = rc == 0 && std::memcmp(&w, &d, sizeof(Want)) == 0;
 		std::printf("MStand: m6 arm=audio push=%d knob=%d rc=%d d_obj_push=%llu d_obj_nz=%llu d_obj_nopcm=%llu "
-		            "d_bus_push=%llu d_bus_nz=%llu d_pushes=%llu d_obj_unread=%llu match=%d\n",
+		            "d_bus_push=%llu d_bus_nz=%llu d_pushes=%llu d_obj_unread=%llu d_obj_vq=%llu match=%d\n",
 		            i + 1, knob, rc, static_cast<unsigned long long>(d.obj_push),
 		            static_cast<unsigned long long>(d.obj_nz), static_cast<unsigned long long>(d.obj_nopcm),
 		            static_cast<unsigned long long>(d.bus_push), static_cast<unsigned long long>(d.bus_nz),
-		            static_cast<unsigned long long>(d.pushes), static_cast<unsigned long long>(d.obj_unread), ok ? 1 : 0);
+		            static_cast<unsigned long long>(d.pushes), static_cast<unsigned long long>(d.obj_unread),
+		            static_cast<unsigned long long>(d.obj_vq), ok ? 1 : 0);
 		g_total++;
 		g_match += ok ? 1 : 0;
 	}

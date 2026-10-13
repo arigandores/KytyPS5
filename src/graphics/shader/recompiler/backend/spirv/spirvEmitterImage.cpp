@@ -1,11 +1,16 @@
 #include "graphics/guest_gpu/gpu_format.h"
 #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h"
 #include "graphics/shader/recompiler/frontend/decode/ImageOps.h"
+#include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 
 #include "common/envFlag.h"
 #include <cstdlib>
 #include <algorithm>
+#include <atomic>
 #include <bit>
+#include <mutex>
+#include <utility>
+#include <vector>
 
 namespace Libs::Graphics::ShaderRecompiler::Spirv::Emitter {
 namespace {
@@ -363,6 +368,19 @@ uint32_t PackedOffset(ValueEmitContext& ctx, const IR::MemoryInfo& mem, const IR
 	return result;
 }
 
+// Track M, M7a (T306; ROADMAP s122 item 767(g)(3)): the "MTexOffset: ... previous path" lines counted by reason
+// (0 nonconstant, 1 cube, 2 range) in the branch that writes the line, and the test probe of the emitted ConstOffset
+// (off unless shader_cfg_tests turns it on; the emulator never does). No knob: a count costs one relaxed increment
+// on a path that already writes a log line.
+std::atomic<uint32_t>         g_m_tex_offset_fallbacks[3] {};
+std::atomic<bool>             g_m_tex_offset_recording {false};
+std::mutex                    g_m_tex_offset_mutex;
+std::vector<MTexOffsetRecord> g_m_tex_offset_records;
+
+void MTexOffsetCount(uint32_t reason) {
+	g_m_tex_offset_fallbacks[reason].fetch_add(1u, std::memory_order_relaxed);
+}
+
 // Track M, M2a (T306, upstream 984cfceb; KYTY_M_T306): the ConstOffset operand of a sample on <resource> from the
 // immediate packed offset (signed six-bit fields in the low bits of each byte), or 0 - the previous path, the
 // offset dropped, with a log line - for a cube image or a component outside the Vulkan minimum range [-8, 7].
@@ -381,6 +399,7 @@ uint32_t MSampleConstOffset(ValueEmitContext& ctx, const IR::Inst& inst, uint32_
 		LOGF("MTexOffset: shader=0x%016llx pc=0x%x offset=0x%08x previous path (%s)\n",
 		     static_cast<unsigned long long>(state.program.shader_hash), inst.Flags<IR::MemoryFlags>().pc, packed,
 		     image.cube ? "cube" : "range");
+		MTexOffsetCount(image.cube ? 1u : 2u);
 		return 0u;
 	}
 	if (components == 1u) {
@@ -400,6 +419,9 @@ uint32_t MSampleConstOffset(ValueEmitContext& ctx, const IR::Inst& inst, uint32_
 // (Translator::IMAGE_SAMPLE); the offset is exact when it is an immediate, or that wrapper around an immediate, or
 // the wrapper around SelectU32(c, immediate, old) - the VGPR written under the same lane mask c. Anything else (an
 // offset written under another mask, a computed offset): false, the previous path.
+// Track M, M7a (ROADMAP s122 items 762(b), 767(g)): the wrapper is the select with IR::MSampleOffsetWrapperFlags.
+// Under a constant lane mask constant propagation folds it to its operand - an immediate (every lane holds it) or
+// the write SelectU32(c, immediate, old) of the offset under a narrower mask c, which has no such flags: false.
 bool MImmediateU32(IR::Value value, uint32_t& packed) {
 	if (!value.IsImmediate() || value.GetType() != IR::Type::U32) {
 		return false;
@@ -414,7 +436,8 @@ bool MResolveSampleOffset(IR::Value value, uint32_t& packed) {
 		return true;
 	}
 	const auto* wrapper = value.TryInstruction();
-	if (wrapper == nullptr || wrapper->GetOpcode() != IR::ValueOpcode::SelectU32) {
+	if (wrapper == nullptr || wrapper->GetOpcode() != IR::ValueOpcode::SelectU32 ||
+	    wrapper->Flags<uint64_t>() != IR::MSampleOffsetWrapperFlags) {
 		return false;
 	}
 	const auto exec  = wrapper->Arg(0).Resolve();
@@ -876,6 +899,7 @@ void EmitImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 				LOGF("MTexOffset: shader=0x%016llx pc=0x%x nonconstant offset, previous path\n",
 				     static_cast<unsigned long long>(state.program.shader_hash),
 				     inst.Flags<IR::MemoryFlags>().pc);
+				MTexOffsetCount(0u);
 			}
 		}
 		const auto EmitSample = [&](uint32_t resource) {
@@ -898,6 +922,11 @@ void EmitImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 				}
 			}
 			state.builder.AddFunction(opcode, sample_operands);
+			if (m_offset != 0u && g_m_tex_offset_recording.load(std::memory_order_relaxed)) [[unlikely]] {
+				const std::lock_guard lock(g_m_tex_offset_mutex);
+				g_m_tex_offset_records.push_back(
+				    {state.program.shader_hash, inst.Flags<IR::MemoryFlags>().pc, sample, m_offset});
+			}
 			return sample;
 		};
 		if (image.indirect_root != mem.resource) {
@@ -1034,6 +1063,23 @@ void EmitImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 		return;
 	}
 	ctx.Fail(inst, "has no image SPIR-V emitter");
+}
+
+MTexOffsetCounts MTexOffsetFallbacks() {
+	return {g_m_tex_offset_fallbacks[0].load(std::memory_order_relaxed),
+	        g_m_tex_offset_fallbacks[1].load(std::memory_order_relaxed),
+	        g_m_tex_offset_fallbacks[2].load(std::memory_order_relaxed)};
+}
+
+void MTexOffsetRecording(bool on) {
+	const std::lock_guard lock(g_m_tex_offset_mutex);
+	g_m_tex_offset_records.clear();
+	g_m_tex_offset_recording.store(on, std::memory_order_relaxed);
+}
+
+std::vector<MTexOffsetRecord> MTexOffsetTakeRecords() {
+	const std::lock_guard lock(g_m_tex_offset_mutex);
+	return std::exchange(g_m_tex_offset_records, {});
 }
 
 } // namespace Libs::Graphics::ShaderRecompiler::Spirv::Emitter

@@ -44,6 +44,24 @@ inline constexpr uint32_t LoopTripSlots    = 8;
 // writes no memory), and uvec4 loads for the 16-byte windows of a scalar load group behind a
 // run-time alignment test. Needs the null-page mode. Part of the translation cache signature.
 bool BdaLeanEnabled();
+// Track M, M7a (T306, KYTY_M_T306; ROADMAP s122 item 767(g)(3)): the lines "MTexOffset: ... previous path" written
+// so far in this process, by reason (no knob; the emulator only counts). The probe: while recording is on, one
+// record per emitted IMAGE_SAMPLE_*_O that carries ConstOffset - shader hash, pc of the instruction (MemoryFlags),
+// SPIR-V result id of the sample, id of its ConstOffset constant. MTexOffsetRecording clears the records; tests only.
+struct MTexOffsetRecord {
+	uint64_t shader_hash = 0;
+	uint32_t pc          = 0;
+	uint32_t sample_id   = 0;
+	uint32_t offset_id   = 0;
+};
+struct MTexOffsetCounts {
+	uint32_t nonconstant = 0;
+	uint32_t cube        = 0;
+	uint32_t range       = 0;
+};
+MTexOffsetCounts              MTexOffsetFallbacks();
+void                          MTexOffsetRecording(bool on);
+std::vector<MTexOffsetRecord> MTexOffsetTakeRecords();
 } // namespace Emitter
 
 std::vector<uint32_t> EmitProgram(const IR::Program& program,

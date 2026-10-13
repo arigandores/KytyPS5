@@ -669,8 +669,12 @@ bool Translator::IMAGE_SAMPLE(const Decoder::Instruction& inst) {
 	    (memory.image_sample_flags & Decoder::ImageSampleFlagOffset) != 0u) {
 		// Track M, M2a (T306, upstream 984cfceb; KYTY_M_T306): the offset (address dword 0) seen through the lane mask
 		// of this sample - the emitter (MResolveSampleOffset) proves an offset written under the same mask constant.
-		m_offset = ir.Select(ir.GetExec(), IR::U32(ReadRawU32(OffsetOperand(PlainOperand(MemorySourceAt(inst, 0)), 0))),
-		                     IR::U32(IR::Value(0u)));
+		// Track M, M7a (ROADMAP s122 item 767(g)): the select carries IR::MSampleOffsetWrapperFlags - the emitter tells
+		// it from a write of the offset that constant propagation leaves in its place when the lane mask is constant.
+		m_offset = ir.Emit(IR::ValueOpcode::SelectU32,
+		                   {ir.GetExec(), ReadRawU32(OffsetOperand(PlainOperand(MemorySourceAt(inst, 0)), 0)),
+		                    IR::Value(0u)},
+		                   IR::MSampleOffsetWrapperFlags);
 	}
 	const auto address = MakeImageAddress(inst, MemorySourceAt(inst, 0));
 	if (!m_offset.IsEmpty()) {

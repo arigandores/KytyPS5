@@ -8265,12 +8265,92 @@ void TestMWave1Translator() {
 // t306_mask of C:/kyty/m657/m2c/mut_m2c.py). Program "full" (printed probe, no Check): the offset is written under A
 // and exec is restored to the entry EXEC, the constant true of a full compute wave - SelectU32(true, offset, 0) folds
 // and the write under A is taken for the T306 wrapper (finding of M2a2, decision of the lead).
+// Track M, M7a (HPP-852, ROADMAP s122 item 767(g)): the ConstOffset of the sample with SPIR-V result id <sample_id>,
+// read from the words of the module (image operands of OpImageSample*; OpConstant / OpConstantComposite of the offset).
+// False when the sample, its ConstOffset operand or the constant is missing, or the operand is not <offset_id>.
+bool T306ConstOffsetOf(const std::vector<uint32_t> &spirv, uint32_t sample_id, uint32_t offset_id,
+                       std::array<int32_t, 3> &xyz, uint32_t &components) {
+  std::unordered_map<uint32_t, size_t> defs; // id -> word index of OpConstant (43) / OpConstantComposite (44)
+  size_t sample_at = 0;
+  for (size_t i = 5; i < spirv.size();) {
+    const uint32_t count = spirv[i] >> 16u;
+    const uint32_t op = spirv[i] & 0xffffu;
+    if (count == 0u || i + count > spirv.size()) {
+      return false;
+    }
+    if ((op == 43u || op == 44u) && count >= 3u) {
+      defs[spirv[i + 2]] = i;
+    }
+    // OpImageSampleImplicitLod 87, OpImageSampleExplicitLod 88, OpImageSampleDrefImplicitLod 89, ...DrefExplicitLod 90
+    if (op >= 87u && op <= 90u && count >= 3u && spirv[i + 2] == sample_id) {
+      sample_at = i;
+    }
+    i += count;
+  }
+  if (sample_at == 0u) {
+    return false;
+  }
+  const uint32_t count = spirv[sample_at] >> 16u;
+  const uint32_t op = spirv[sample_at] & 0xffffu;
+  const size_t mask_at = sample_at + ((op == 89u || op == 90u) ? 6u : 5u);
+  if (mask_at >= sample_at + count) {
+    return false;
+  }
+  const uint32_t mask = spirv[mask_at];
+  if ((mask & 0x8u) == 0u) { // ConstOffset; operands follow in bit order: Bias 0x1, Lod 0x2, Grad 0x4 (two)
+    return false;
+  }
+  const size_t at = mask_at + 1u + ((mask & 0x1u) != 0u ? 1u : 0u) + ((mask & 0x2u) != 0u ? 1u : 0u) +
+                    ((mask & 0x4u) != 0u ? 2u : 0u);
+  if (at >= sample_at + count || spirv[at] != offset_id) {
+    return false;
+  }
+  const auto scalar = [&](uint32_t id, int32_t &value) {
+    const auto it = defs.find(id);
+    if (it == defs.end() || (spirv[it->second] & 0xffffu) != 43u || (spirv[it->second] >> 16u) != 4u) {
+      return false;
+    }
+    value = static_cast<int32_t>(spirv[it->second + 3]);
+    return true;
+  };
+  xyz = {};
+  const auto it = defs.find(offset_id);
+  if (it == defs.end()) {
+    return false;
+  }
+  if ((spirv[it->second] & 0xffffu) == 43u) {
+    components = 1u;
+    return scalar(offset_id, xyz[0]);
+  }
+  const uint32_t n = (spirv[it->second] >> 16u) - 3u;
+  if (n < 2u || n > 3u) {
+    return false;
+  }
+  components = n;
+  for (uint32_t k = 0; k < n; k++) {
+    if (!scalar(spirv[it->second + 3 + k], xyz[k])) {
+      return false;
+    }
+  }
+  return true;
+}
+
 void TestMWave1T306OffsetWriteMask() {
   namespace D = ShaderRecompiler::Decoder;
+  namespace E = ShaderRecompiler::Spirv::Emitter;
   const bool on = D::MThemeEnabled(D::MTheme::T306);
-  uint32_t const_offset[3] = {};
-  uint32_t samples[3] = {};
-  for (uint32_t form = 0; form < 3u; form++) {
+  // Forms: same - offset and sample under A; other - offset under A & B, sample under A; full - offset under A, sample
+  // under the entry EXEC of compute (constant true); lit - pixel shader, offset under A, sample after
+  // s_mov_b64 exec, -1. Track M, M7a (HPP-852, ROADMAP s122 item 767(g)): full and lit are members (M2a2: a probe);
+  // the "MTexOffset: ... nonconstant offset, previous path" line is counted by E::MTexOffsetFallbacks().
+  static const char *const names[4] = {"same", "other", "full", "lit"};
+  uint32_t const_offset[4] = {};
+  uint32_t samples[4] = {};
+  uint32_t fallback[4] = {};
+  uint32_t fallback_other[4] = {};
+  uint32_t records[4] = {};
+  bool pair_ok[4] = {};
+  for (uint32_t form = 0; form < 4u; form++) {
     std::vector<uint32_t> shader = {
         EncodeVopc(0xc4, 8, 0),   // v_cmp_gt_u32 vcc, s8, v0
         EncodeSop1(0x24, 40, 106), // s_and_saveexec_b64 s[40:41], vcc (exec = A)
@@ -8285,6 +8365,8 @@ void TestMWave1T306OffsetWriteMask() {
       shader.push_back(EncodeSop1(0x04, 126, 42)); // s_mov_b64 exec, s[42:43] (exec = A)
     } else if (form == 2u) {
       shader.push_back(EncodeSop1(0x04, 126, 40)); // s_mov_b64 exec, s[40:41] (exec = entry EXEC)
+    } else if (form == 3u) {
+      shader.push_back(EncodeSop1(0x04, 126, 193)); // s_mov_b64 exec, -1
     }
     shader.push_back(EncodeMimg0(0x37, 0x1)); // image_sample_lz_o v4, v[20:22]
     shader.push_back(EncodeMimg1(4, 0, 0, 20));
@@ -8292,24 +8374,151 @@ void TestMWave1T306OffsetWriteMask() {
     shader.push_back(EncodeMimg1(4, 0, 0, 0));
     shader.push_back(0xbf810000u);
     auto user_data = ImageTestUserData();
-    auto options = MakeCompileOptions(ShaderType::Compute);
+    auto options = MakeCompileOptions(form == 3u ? ShaderType::Pixel : ShaderType::Compute);
     options.user_data = user_data;
+    const auto before = E::MTexOffsetFallbacks();
+    E::MTexOffsetRecording(true);
     auto result = RecompileForTest(shader, options);
+    const auto taken = E::MTexOffsetTakeRecords();
+    E::MTexOffsetRecording(false);
+    const auto after = E::MTexOffsetFallbacks();
     CheckSpirvBinaryValidates(result.spirv);
     const auto source = DisassembleSpirvBinary(result.spirv);
     const_offset[form] = CountSourceOccurrences(source, "ConstOffset");
     samples[form] = CountSourceOccurrences(source, "OpImageSample");
+    fallback[form] = after.nonconstant - before.nonconstant;
+    fallback_other[form] = (after.cube - before.cube) + (after.range - before.range);
+    records[form] = static_cast<uint32_t>(taken.size());
+    std::array<int32_t, 3> xyz{};
+    uint32_t components = 0;
+    pair_ok[form] = taken.size() == 1u &&
+                    T306ConstOffsetOf(result.spirv, taken[0].sample_id, taken[0].offset_id, xyz, components) &&
+                    components == 2u && xyz[0] == 1 && xyz[1] == 1;
   }
   std::fprintf(stderr,
                "[mw1] T306 knob=%d write-mask same: OpImageSample=%u ConstOffset=%u other: OpImageSample=%u "
                "ConstOffset=%u reference=same %s, other 0\n",
                on ? 1 : 0, samples[0], const_offset[0], samples[1], const_offset[1], on ? ">=1" : "0");
-  std::fprintf(stderr, "[mw1] T306 knob=%d probe full-mask (no check): OpImageSample=%u ConstOffset=%u\n", on ? 1 : 0,
-               samples[2], const_offset[2]);
-  Check(samples[0] >= 1u && samples[1] >= 1u, "T306: offset write-mask test lost its sample");
+  for (uint32_t form = 0; form < 4u; form++) {
+    std::fprintf(stderr,
+                 "[mw1] T306 knob=%d form=%s OpImageSample=%u ConstOffset=%u fallback_nonconstant=%u "
+                 "fallback_other=%u records=%u pair_1_1=%d\n",
+                 on ? 1 : 0, names[form], samples[form], const_offset[form], fallback[form], fallback_other[form],
+                 records[form], pair_ok[form] ? 1 : 0);
+  }
+  Check(samples[0] >= 1u && samples[1] >= 1u && samples[2] >= 1u && samples[3] >= 1u,
+        "T306: offset write-mask test lost its sample");
   Check(on ? const_offset[0] >= 1u : const_offset[0] == 0u,
         "T306: offset written under the mask of the sample does not follow KYTY_M_T306");
   Check(const_offset[1] == 0u, "T306: offset written under another lane mask became a ConstOffset");
+  Check(const_offset[2] == 0u && const_offset[3] == 0u,
+        "T306: offset written under a partial mask became a ConstOffset of a sample under a constant full mask");
+  Check(on ? (records[0] == 1u && pair_ok[0]) : records[0] == 0u,
+        "T306: the ConstOffset of the same-mask form is not (+1, +1)");
+  Check(records[1] == 0u && records[2] == 0u && records[3] == 0u,
+        "T306: a ConstOffset was recorded for a form that must take the previous path");
+  Check(fallback[0] == 0u && fallback[1] == (on ? 1u : 0u) && fallback[2] == (on ? 1u : 0u) &&
+            fallback[3] == (on ? 1u : 0u),
+        "T306: the previous path of a non-constant offset was not taken with exactly one MTexOffset line");
+  Check(fallback_other[0] == 0u && fallback_other[1] == 0u && fallback_other[2] == 0u && fallback_other[3] == 0u,
+        "T306: a cube/range MTexOffset line appeared in the write-mask test");
+}
+
+// Track M, M7a (HPP-852, ROADMAP s122 item 767(g)(1)-(2)): the two compute programs of the game with IMAGE_SAMPLE_*_O
+// that the corpus T1 does not hold, translated from the words of eboot.bin - the files <dir>/7b4078750f32db50.bin and
+// <dir>/b912bcf29000558d.bin of KYTY_TEST_T306_EBOOT=<dir> (the words stay outside the repository). Descriptors:
+// ImageTestUserData (every 4 dwords a 2D k8UNorm pattern) in the user SGPRs and in a host table whose address is
+// s[12:13] (the table both programs load their descriptors from). At KYTY_M_T306=1 every IMAGE_SAMPLE_*_O gives
+// exactly the (x, y) of its GCN literal (oracle of the M5b review RC3(a); pc in dwords) and no MTexOffset line; at =0
+// no ConstOffset. Without the variable the test prints SKIP and does not fail.
+void TestMWave1T306EbootPrograms() {
+  namespace D = ShaderRecompiler::Decoder;
+  namespace E = ShaderRecompiler::Spirv::Emitter;
+  const char *dir = std::getenv("KYTY_TEST_T306_EBOOT");
+  if (dir == nullptr || dir[0] == 0) {
+    std::fprintf(stderr, "[mw1] T306 eboot SKIP (KYTY_TEST_T306_EBOOT unset)\n");
+    return;
+  }
+  const bool on = D::MThemeEnabled(D::MTheme::T306);
+  struct Expect {
+    uint32_t pc_dwords;
+    int32_t x;
+    int32_t y;
+  };
+  struct EbootProgram {
+    uint64_t hash;
+    const char *name;
+    std::vector<Expect> expect;
+  };
+  const EbootProgram programs[] = {
+      {0x7b4078750f32db50ull, "7b4078750f32db50", {{105, 1, 1}, {108, 1, 0}, {110, 0, 1}}},
+      {0xb912bcf29000558dull,
+       "b912bcf29000558d",
+       {{69, 0, -1}, {72, -1, 0}, {75, 1, 0}, {78, 0, 1}, {117, 1, -1}, {120, -1, -1}, {123, -1, 1}, {139, 1, 1}}},
+  };
+  static const std::array<uint32_t, 64> table = ImageTestUserData();
+  for (const auto &program : programs) {
+    std::vector<uint32_t> code;
+    const auto path = std::string(dir) + "/" + program.name + ".bin";
+    if (FILE *file = std::fopen(path.c_str(), "rb"); file != nullptr) {
+      uint32_t word = 0;
+      while (std::fread(&word, sizeof(word), 1, file) == 1) {
+        code.push_back(word);
+      }
+      std::fclose(file);
+    }
+    Check(!code.empty(), "T306 eboot: cannot read the words of a program");
+    if (code.empty()) {
+      continue;
+    }
+    auto user_data = ImageTestUserData();
+    const auto address = reinterpret_cast<uint64_t>(table.data());
+    user_data[12] = static_cast<uint32_t>(address);
+    user_data[13] = static_cast<uint32_t>(address >> 32u);
+    auto options = MakeCompileOptions(ShaderType::Compute);
+    options.user_data = user_data;
+    options.shader_hash = program.hash;
+    const auto before = E::MTexOffsetFallbacks();
+    E::MTexOffsetRecording(true);
+    auto result = RecompileForTest(code, options, ReadHostTestMemory);
+    const auto taken = E::MTexOffsetTakeRecords();
+    E::MTexOffsetRecording(false);
+    const auto after = E::MTexOffsetFallbacks();
+    CheckSpirvBinaryValidates(result.spirv);
+    const auto source = DisassembleSpirvBinary(result.spirv);
+    const uint32_t const_offset = CountSourceOccurrences(source, "ConstOffset");
+    const uint32_t fallback =
+        (after.nonconstant - before.nonconstant) + (after.cube - before.cube) + (after.range - before.range);
+    uint32_t matched = 0;
+    for (const auto &expect : program.expect) {
+      uint32_t hits = 0;
+      bool pair = false;
+      std::array<int32_t, 3> xyz{};
+      uint32_t components = 0;
+      for (const auto &record : taken) {
+        if (record.shader_hash != program.hash || record.pc != expect.pc_dwords * 4u) {
+          continue;
+        }
+        hits++;
+        pair = T306ConstOffsetOf(result.spirv, record.sample_id, record.offset_id, xyz, components) &&
+               components == 2u && xyz[0] == expect.x && xyz[1] == expect.y;
+      }
+      if (hits == 1u && pair) {
+        matched++;
+      }
+      std::fprintf(stderr, "[mw1] T306 eboot %s knob=%d pc=%u want=(%d,%d) records=%u got=(%d,%d) components=%u %s\n",
+                   program.name, on ? 1 : 0, expect.pc_dwords, expect.x, expect.y, hits, xyz[0], xyz[1],
+                   components, hits == 1u && pair ? "match" : "no-match");
+    }
+    std::fprintf(stderr,
+                 "[mw1] T306 eboot %s knob=%d words=%zu places=%zu records=%zu matched=%u ConstOffset=%u "
+                 "fallback=%u\n",
+                 program.name, on ? 1 : 0, code.size(), program.expect.size(), taken.size(), matched, const_offset,
+                 fallback);
+    Check(on ? (matched == program.expect.size() && taken.size() == program.expect.size() && fallback == 0u)
+             : (taken.empty() && const_offset == 0u && fallback == 0u),
+          "T306 eboot: a sample of the game does not carry exactly the offset of its GCN literal");
+  }
 }
 
 void TestNewShaderRecompilerCfgStraightLine() {
@@ -16607,10 +16816,33 @@ int main() {
         return 2;
       }
     }
+    // Track M, M7a (HPP-852, ROADMAP s122 item 767(g)(1)): KYTY_RECOMPILE_T306=1 - one line per emitted
+    // IMAGE_SAMPLE_*_O with ConstOffset (pc, offset read from the SPIR-V words) and the MTexOffset lines of this compile.
+    const bool t306_probe = std::getenv("KYTY_RECOMPILE_T306") != nullptr;
+    const auto t306_before = ShaderRecompiler::Spirv::Emitter::MTexOffsetFallbacks();
+    if (t306_probe) {
+      ShaderRecompiler::Spirv::Emitter::MTexOffsetRecording(true);
+    }
     auto compiled = ShaderRecompiler::CompileProgram(
         std::move(translated), options, specialization,
         stored.program.bindings.push_data_start_dword);
     const auto t2 = std::chrono::steady_clock::now();
+    if (t306_probe) {
+      const auto t306_records = ShaderRecompiler::Spirv::Emitter::MTexOffsetTakeRecords();
+      ShaderRecompiler::Spirv::Emitter::MTexOffsetRecording(false);
+      const auto t306_after = ShaderRecompiler::Spirv::Emitter::MTexOffsetFallbacks();
+      for (const auto &record : t306_records) {
+        std::array<int32_t, 3> xyz{};
+        uint32_t components = 0;
+        const bool readable = T306ConstOffsetOf(compiled.spirv, record.sample_id, record.offset_id, xyz, components);
+        std::printf("recompile-t306: hash=%016llx pc=0x%x x=%d y=%d z=%d components=%u path=%s\n",
+                    static_cast<unsigned long long>(record.shader_hash), record.pc, xyz[0], xyz[1], xyz[2], components,
+                    readable ? "const" : "unreadable");
+      }
+      std::printf("recompile-t306-fallback: nonconstant=%u cube=%u range=%u records=%zu\n",
+                  t306_after.nonconstant - t306_before.nonconstant, t306_after.cube - t306_before.cube,
+                  t306_after.range - t306_before.range, t306_records.size());
+    }
     if (early_check) {
       auto checked = ShaderRecompiler::CompileProgram(std::move(*early_check), options,
           specialization, stored.program.bindings.push_data_start_dword);
@@ -16892,6 +17124,7 @@ int main() {
   RUN(TestShaderReplayWalkBits);
   RUN(TestMWave1Translator);
   RUN(TestMWave1T306OffsetWriteMask);
+  RUN(TestMWave1T306EbootPrograms);
 
   return 0;
 }

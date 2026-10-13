@@ -65,6 +65,13 @@ struct ExportFlags {
 static_assert(sizeof(ExportFlags) == sizeof(uint64_t));
 static_assert(std::is_trivially_copyable_v<ExportFlags>);
 
+// Track M, M7a (T306, KYTY_M_T306; ROADMAP s122 items 762(b), 767(g)): the flags of the SelectU32(exec of the sample,
+// offset dword, 0) that Translator::IMAGE_SAMPLE hands over for the texel offset of IMAGE_SAMPLE_*_O. The emitter
+// (MResolveSampleOffset) takes a select as that wrapper only with these flags: under a constant lane mask (the entry
+// EXEC of a non-pixel stage, s_mov_b64 exec, -1) constant propagation folds the wrapper away, and the write of the
+// offset under another mask, SelectU32(mask, immediate, old), then stood in its place and was read as the wrapper.
+inline constexpr uint64_t MSampleOffsetWrapperFlags = 0x0000003630335447ull; // "GT306"
+
 [[nodiscard]] Type              TypeOf(ValueOpcode opcode);
 [[nodiscard]] Type              ArgTypeOf(ValueOpcode opcode, size_t index);
 [[nodiscard]] size_t            NumArgsOf(ValueOpcode opcode);

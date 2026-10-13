@@ -1,0 +1,2 @@
+crlf False patched C:/kyty/KytyPS5/tests/MT125Stand.cpp
+PATCH OK

@@ -1,0 +1,14 @@
+2026-10-13T06:54:39Z M8c start (HPP-860, ROADMAP p.778(d), p.783); lock absent
+2026-10-13T06:55:16Z step 0 commit in main: 1ba722f4 (tests/MT125Stand.cpp only)
+2026-10-13T06:56:12Z wt: 3d227024 + cherry-pick 91a46dc5, 6da84361, 1ba722f4; srchash baeea6e209399ed86e67c8f805dddc01ddcf631a
+2026-10-13T06:56:52Z wt defaults commit 3504ecbc; srchash with defaults 0d2da32ca7ff8b4e4c0fc008726e2c59abe2a8f5 != predicted baeea6e2 (without the defaults commit = baeea6e2): STOP M8c per p.778(d), question to lead
+2026-10-13T06:58:36Z configure wt and wtmain start
+2026-10-13T06:58:37Z configure wt and wtmain end
+2026-10-13T07:00:45Z configure wt and wtmain end (second try via bld_m8c.py; first try lost /c to MSYS path conversion, no configure ran)
+2026-10-13T07:01:13Z stand wt: ALL OK
+2026-10-13T07:01:37Z stand main: ALL OK
+2026-10-13T07:01:41Z mutants wt start
+2026-10-13T07:02:12Z mutants wt end: ALL OK
+2026-10-13T07:02:17Z mutants main start
+2026-10-13T07:02:51Z mutants main end: ALL OK
+2026-10-13T07:03:28Z edition 1 report (step 0 + stop) copied to docs/track-m/m8c; commit to main

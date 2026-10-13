@@ -1,0 +1,3 @@
+patched src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp crlf False
+patched src/libs/libAudio2.cpp crlf False
+PATCH OK

@@ -1,0 +1,30 @@
+3d2270241883202d70b13f42a137a8444180d48d track M link M6a3 (HPP-856): KYTY_DIAG_M5W2 - OS-checked fa
+[detached HEAD 6c795c577] track M link M7a (HPP-852): T306 repair - the offset wrapper of IMAGE_SAMPLE_*_O carries IR::MSampleOffsetWrapperFlags (ROADMAP s122 items 762(b), 767(g))
+ Author: arigandores <arigandores@users.noreply.github.com>
+ Date: Tue Oct 13 06:04:23 2026 +0200
+ 5 files changed, 318 insertions(+), 10 deletions(-)
+cp 91a46dc5 -> 6c795c57
+Auto-merging CMakeLists.txt
+Auto-merging src/libs/libAudio2.cpp
+[detached HEAD de23ec44a] track M link M8a (HPP-858): T125 - upstream c86c8b4d9 in own form under KYTY_M_T125 (ROADMAP s122 item 778(g)(2)) - worktree on MS1 ed94b13d
+ Author: arigandores <arigandores@users.noreply.github.com>
+ Date: Tue Oct 13 08:15:41 2026 +0200
+ 3 files changed, 812 insertions(+)
+ create mode 100644 tests/MT125Stand.cpp
+cp 6da84361 -> de23ec44
+[detached HEAD fe26f2805] track M link M8c (HPP-860) step 0: RC3 of M8b - MT125 stand comparator MaxDiff returns +inf for a non-finite output sample (NaN mix no longer compares as 0), ROADMAP s122 item 783(g); stand only (tests/MT125Stand.cpp, target EXCLUDE_FROM_ALL), emulator code and binary unchanged
+ Date: Tue Oct 13 08:55:16 2026 +0200
+ 1 file changed, 5 insertions(+)
+cp 1ba722f4 -> fe26f280
+fe26f2805 track M link M8c (HPP-860) step 0: RC3 of M8b - MT125 stand comparator MaxDiff returns +inf for a no
+de23ec44a track M link M8a (HPP-858): T125 - upstream c86c8b4d9 in own form under KYTY_M_T125 (ROADMAP s122 it
+6c795c577 track M link M7a (HPP-852): T306 repair - the offset wrapper of IMAGE_SAMPLE_*_O carries IR::MSample
+3d2270241 track M link M6a3 (HPP-856): KYTY_DIAG_M5W2 - OS-checked fallback read of object PCM (ao_obj_vq), st
+97198ce90 track M link M6a2 (HPP-854): KYTY_DIAG_M5W2 edits after review M6b - minlod_div_x, clr_dw_div8, guar
+0
+fe26f2805cebbd2f64bfd5f0eb5ae416dd03ebac d4659e584727b7b1
+de23ec44a3939def0dfa91a26fa8d2f072da479c 97e3d21376e3a53a
+6c795c57798b6a9a16956e82f63e2c317ef29bd0 15dfad370caf44bf
+91a46dc5 15dfad370caf44bf
+6da84361 97e3d21376e3a53a
+1ba722f4 d4659e584727b7b1

@@ -1,0 +1,8 @@
+tree main C:/kyty/m657/m8c/wtmain exe C:/kyty/m657/m8c/buildmain/m_t125_stand.exe
+MUTANT m1_no_gain CAUGHT first=DRIVER m1_exit0 FAIL rc=1 members=28 m1:A0_mix_eq_ref FAIL max_diff=0.684804; m1:A1_mix_eq_ref FAIL max_diff=0.684791; m1:A2_mix_eq_ref FAIL max_diff=0.684739
+MUTANT m2_no_format_check CAUGHT first=DRIVER m1_exit0 FAIL rc=1 members=4 m1:A0_mix_eq_ref FAIL max_diff=0.565677; m1:A1_mix_eq_ref FAIL max_diff=0.565677; m1:A2_mix_eq_ref FAIL max_diff=0.565677
+MUTANT m3_mix_at_0 CAUGHT first=DRIVER m0_exit0 FAIL rc=1 members=52 m0:A_no_mix_device FAIL opened_in_create=1; m0:A0_outputs FAIL n=5 want=4; m0:A0_no_object_pcm FAIL no output on a mix device
+MUTANT m4_one_object_lost CAUGHT first=DRIVER m1_exit0 FAIL rc=1 members=27 m1:A0_mix_eq_ref FAIL max_diff=0.141421; m1:A1_mix_eq_ref FAIL max_diff=0.141421; m1:A2_mix_eq_ref FAIL max_diff=0.141417
+MUTANT m9_gain_nan_accepted CAUGHT first=DRIVER m1_exit0 FAIL rc=1 members=2 m1:G_f32_invalid_not_applied FAIL n=1 max_diff=inf; m1:G_s16_invalid_not_applied FAIL n=1 max_diff=inf
+CONTROL ALL OK
+ALL OK

@@ -1,0 +1,56 @@
+suite test_m9f.py sha256 c060f46b6c33318f402e5fabf0ce38ca66395e15862b6ecb587fe6b3709b5196 target m9f_read.py sha256 5f72413d53fc4f436f57b11cb1548fd632cf7953dad4b30304d909892dc64414 t188_rules.py sha256 78f135a6e8fa0ab526d3c69ec8284897cee9501002390ecc56b4bc77c8a6fde6 nmag_m9f.py sha256 983763920e5fa0469ab873fd6556cfcec6fe6d1e83a72149f2635ea877cc529c queue_m9f.py sha256 beec87d157e83d0ae4ab1a891d05ad310849d41643449d8daf88ea5490928573 test_t188.py sha256 d72728e8fa7b88b3298e845afa62d5c267535f7c490fea057bf296101ddea890
+[ok] rules suite test_t188.py: rc 0, last line ALL OK, 0 FAIL lines (cases 118; suite test_t188.py sha256 d72728e8fa7b88b3298e845afa62d5c267535f7c490fea057bf296101ddea890)
+[ok] select: top12 ties -> the earlier record; sorted by record
+[ok] even: 12 offsets over a window of 100
+[ok] even: a window of 5 -> all 5
+NMAG t188_sg2: threshold 338 (M_b 169); window 30 records from present 11 (w0 10); max N_mag 900; marked > threshold 3 (>= 3: YES)
+  top12 (record off N_mag M6c record): 10/0/0/8 11/1/0/9 12/2/0/10 13/3/0/11 14/4/0/12 15/5/324/13 16/6/0/14 17/7/0/15 18/8/0/16 20/10/361/18 25/15/900/23 30/20/900/28
+  sheets: sheet_top.png pairs_top_1.png pairs_top_2.png pairs_even_1.png pairs_even_2.png; script sha256 983763920e5fa0469ab873fd6556cfcec6fe6d1e83a72149f2635ea877cc529c
+[ok] detector: rc 0, window from present 11 = record 10, 30 records
+[ok] detector: 324 px (18x18) not marked, 361 px (19x19) marked (threshold 338 edge), the square before the window not counted
+[ok] detector: top12 led by records 20/25/30 with N_mag 361/900/900
+[ok] detector: pair of record 20 (offset 10) = M6c w0 8 + 10 = record 18
+[ok] detector: offsets beyond the M6c window -> none (M6c window records 8..29)
+[ok] detector: sheet_top.png and 4 pair sheets written
+usage: nmag_m9f.py [--dir D] <t188_sg2|t188_hb2|t188_mg2>[_rN] <out dir>
+[ok] detector: unknown tag refused (rc 9)
+[ok] queue: M3a2 in_progress -> QUEUE BUSY (item 785 (v)(5))
+[ok] queue: M3a2 blocked without a run -> QUEUE FREE
+[ok] queue: M3a2 blocked with a going run -> BUSY
+[ok] queue: M3a2 done (fetched by id) -> FREE
+[ok] queue: a ready track P link -> BUSY
+[ok] queue: own issue does not hold the queue
+[ok] queue: M3a2 not fetched -> BUSY by rule
+[ok] queue: M3b2 in_progress (the lead, no lock) -> reference row, FREE
+[ok] plan_of t188_sg2 level underwater_aerial_garden hold 330 knobs M5W2=1 T188=2
+[ok] plan_of t188_hb2 level hoover_beach hold 330 knobs M5W2=1 T188=2
+[ok] plan_of t188_mg2 level mini_giants_garden hold 330 knobs M5W2=1 T188=2
+[ok] plan_of t188_mg2_r3 level mini_giants_garden hold 330 knobs M5W2=1 T188=2
+[ok] plan_of 't188_sg3' unknown
+[ok] plan_of 't188_sg2_r4' unknown
+[ok] plan_of 'm6_sg' unknown
+[ok] plan_of 't188_sg2c_1' unknown
+[ok] plan_of '' unknown
+[ok] expected env: KYTY_DIAG_T188=2 required, KYTY_DIAG_T188_CLS absent (extra -> admission NO)
+[ok] go_m9f.sh dry run of t188_sg2 = the plan of the reader
+[ok] go_m9f.sh dry run of t188_hb2 = the plan of the reader
+[ok] go_m9f.sh dry run of t188_mg2 = the plan of the reader
+[ok] go_m9f.sh dry run of t188_sg2_r1 = the plan of the reader
+[ok] go_m9f.sh dry run of t188_xx2 refused (rc 2)
+[ok] go_m9f.sh dry run of t188_sg2_r4 refused (rc 2)
+[ok] go_m9f.sh: binary feb55b54 full sha = reader TB, seal seal.md, no KYTY_DIAG_T188_CLS set
+[ok] real M6c tag: NOT_ADMITTED
+[ok] real M6c tag: json binary member NO (2179005b is not feb55b54)
+[ok] real M6c tag: T188 knob witness NO, M5W2 witness ok
+[ok] real M6c tag: env member NO (KYTY_DIAG_T188 missing)
+[ok] real M6c tag: entry, window and signature members ok
+[ok] real M6c tag: no T188 lines -> E members violated, no Z violation, no T188 stop (not admitted)
+[ok] reader --scan-t188 output in strict cp1250 (rc 0, ascii, stop members printed)
+[ok] reader --plan in strict cp1250
+[ok] m9f_read.py source is ASCII
+[ok] t188_rules.py source is ASCII
+[ok] nmag_m9f.py source is ASCII
+[ok] queue_m9f.py source is ASCII
+[ok] test_m9f.py source is ASCII
+checks 49, failed 0 []
+ALL OK

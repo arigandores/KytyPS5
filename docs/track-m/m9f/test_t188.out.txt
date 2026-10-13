@@ -1,0 +1,121 @@
+suite test_t188.py sha256 d72728e8fa7b88b3298e845afa62d5c267535f7c490fea057bf296101ddea890 target t188_rules.py sha256 78f135a6e8fa0ab526d3c69ec8284897cee9501002390ecc56b4bc77c8a6fde6
+PASS the field tuples of the scorer = the code (70 / 27 / 10 / 10) and the I3 map, plan mode (2, all, 4), share 0.8, max 2, cover 0.5
+PASS consistent state: every stop member holds (23 members)
+PASS rows: img rows of the fixture sum to the globals (I3 holds)
+PASS I1: part_unk 1 -> I1 violated (and Z)
+PASS I1: part_st + 1 -> violated
+PASS I2a: reopen + 1 -> violated
+PASS I2b: cl_dt + 1 (a closing site outside T188Img) -> violated
+PASS I2b: cl_none is not in the sum -> holds
+PASS I2b: open + 1 -> violated
+PASS I2c: pend_open + 1 -> violated
+PASS I2d edge: ep_pend = cl_smp + .. + cl_vo -> holds
+PASS I2d edge: ep_pend = S3 sum + 1 -> violated
+PASS I4: w_other + 1 -> violated
+PASS I4 edge: part_off = part -> holds
+PASS I4: part_off = part + 1 -> violated
+PASS I4: w_bytes > img_bytes -> violated
+PASS I4 edge: img_bytes_unsync = img_bytes -> holds
+PASS I4: img_bytes_unsync > img_bytes -> violated
+PASS I4 edge: in_pass_unsync = in_pass -> holds
+PASS I4: in_pass_unsync > in_pass -> violated
+PASS I4: in_pass > part -> violated
+PASS I3: +1 in any of the 27 class fields of a row -> violated (fields not caught: [])
+PASS I3: key=other is in the sum (+1 there -> violated)
+PASS I3: tint_skip = sum of the five tint_skip_* (ovf +1 on both sides -> holds)
+PASS I3: a missing key=other row (its share lost) -> violated
+PASS I6 edge: tint_ep = S3 sum + pend_done -> holds (I3 aside)
+PASS I6: tint_ep = S3 sum + pend_done + 1 -> violated
+PASS I6: tint_bad 1 -> violated
+PASS I6 (=2) edge: class tint_bytes = lost_bytes + lost_pend_bytes -> holds
+PASS I6 (=2): class tint_bytes > lost + lost_pend by 1 -> violated
+PASS I6 (=2): the key=other row is checked too
+PASS I6: rb0_nofmt + 1 -> tint_rb_req equation violated
+PASS I6: rb1_none + 1 -> tint_rb0_ok equation violated
+PASS I6: rb1_bad 1 -> violated (also Z)
+PASS I6 edge: tint_rb_req = K x 2 classes (8) -> holds
+PASS I6: tint_rb_req = 9 > 4 x 2 -> violated
+PASS I6: key=other with tint_ep 1 counts as one more class (12 <= 4 x 3) -> holds
+PASS I8: lock_bad 1 -> violated (also Z)
+PASS I8: ep_bad 1 -> violated
+PASS Z: an invariant nonzero on a PERIODIC line (exit clean) -> violated
+PASS Z: all invariants 0 on every line -> holds
+PASS N: mode=1 -> mode member violated
+PASS N: cls=1 (a class list) -> violated
+PASS N: two mode lines -> violated
+PASS N: no mode line -> violated
+PASS N (I7, cls=all): tint_skip_cls 1 -> violated
+PASS E: two T188Stat exit lines -> violated, identities not evaluated
+PASS E: no exit line (killed) -> violated
+PASS E: no T109Stat exit line -> violated and I9 not evaluated
+PASS E: key=other twice -> violated
+PASS E: no T188Img row -> violated
+PASS E: one unparsable T188Img line -> violated
+PASS I5: holds with the M5W2 exit total
+PASS I5: M5W2 total when=periodic -> violated
+PASS I5: no M5W2 total -> violated
+PASS I5: part != inv_part_src -> violated
+PASS I5: part_off != inv_off with inv_part = inv_part_src -> violated
+PASS I5: part_off != inv_off with inv_part != inv_part_src -> the member does not apply (holds)
+PASS I5: m5_on=False -> no I5 member
+PASS I9: zx_narrow = zx_d32 edge -> holds
+PASS I9: zx_narrow > zx_d32 -> violated
+PASS I9: zx_d32 > d32 -> violated
+PASS I9: bias_d32 = d32 edge -> holds
+PASS I9: bias_narrow > bias_d32 -> violated
+PASS I9: bias_d32 > d32 -> violated
+PASS I9: ovr_vpc = ovr_w edge -> holds
+PASS I9: ovr_vpc > ovr_w -> violated
+PASS N: one unparsable mode line next to a good one -> N violated
+PASS E: a T188Img row with when=periodic -> violated
+PASS E: one unparsable line (stat_bad) -> violated
+PASS E: one unparsable line (t109_bad) -> violated
+PASS E: one unparsable line (mode_bad) -> violated
+PASS I1: part_unk 1 with the sum kept -> violated by the member part_unk = 0
+PASS I4 edge: w_bytes = img_bytes -> holds
+PASS I4 edge: in_pass = part -> holds
+PASS I6: rb0_bad 1 with tint_rb_req kept -> the rb0_ok member violated
+PASS class rows: a class with rb0_ok 0 -> readback not alive
+PASS I1: one event moved from part_st to part_copy (sum kept) -> holds
+PASS I6 (=2) edge: tint_bytes = lost_bytes + lost_pend_bytes with lost_pend 100 -> holds
+PASS I6: rb1_bad 1 with the rb0_ok equation kept -> violated by rb1_bad = 0
+PASS parse: the 70-field exit line with a log prefix and CRLF
+PASS parse: a class row with its 10 head fields and 27 class fields
+PASS parse: the key=other row has no head fields
+PASS parse: the T109Stat line, 10 fields in order
+PASS parse: mode line parsed once, the broken one is unparsable
+PASS parse: a renamed field, fields out of order -> unparsable (2 T188Stat)
+PASS parse: a truncated T188Img line -> unparsable
+PASS parse: a short T109Stat line -> unparsable
+PASS parse: the field order is the code order (70 / 27 / 10 / 10)
+PASS choice: rows 600 then 300 of total 1000 -> 2 classes, share 0.9 >= 0.8; other never chosen
+PASS choice edge: the first class reaches exactly 0.8 -> 1 class, reached
+PASS choice: 0.799 -> a second class (by bytes: 101 before 100)
+PASS choice: 3 classes needed -> stops at 2, share 0.6 not reached, rest named
+PASS choice: key=other carries 98 % -> only real classes, share 0.02 not reached
+PASS choice: scene sum 0 -> no class
+PASS choice: tie of bytes -> the larger ev first (key 0x10)
+PASS class rows: readback alive only for rows with rb0_ok >= 1 and global rb0_bad = rb1_bad = 0; key=other never alive
+PASS class rows: a global rb1_bad 1 -> no class alive
+PASS class rows: coverage 300 / 600 = 0.5 -> cover >= 0.5 (edge)
+PASS class rows: coverage 299 / 600 -> below 0.5
+PASS class rows: lost 0 -> coverage none, not >= 0.5
+PASS open: read at ep_bad = 0
+PASS open: not read at ep_bad 1 (item 788 (g) N2)
+PASS open: no exit line -> not read
+PASS 791: one exit line with difference 1 -> not counted
+PASS 791: difference first at exit (periodic 0) -> not counted
+PASS 791: periodic 1, exit 1 -> counted
+PASS 791: periodic 1, later periodic 0, exit 1 -> not counted
+PASS 791: periodic 0, periodic 1, exit 2 -> counted
+PASS 791: periodic 1, exit 0 -> not counted
+PASS 791: periodic 1 without an exit line -> not counted
+PASS 791 form for bias: periodic 1, exit 1 -> counted; zx 0 -> not
+PASS 789 (g)(3): zx_narrow = zx_narrow_vi >= 1 on the exit line -> zx_eq_all
+PASS 789 (g)(3): difference 1 -> not zx_eq_all
+PASS 789 (g)(3): zx_narrow 0 -> not zx_eq_all (form (4))
+PASS T109 rows: armed d32 >= 1, ovr_vpc >= 1 flags of the exit line
+PASS T109 reference: narrow_cd > zx_vi + bias_vi -> reference flag false (not a stop)
+PASS choice: a zero row after a class ends the choice (share 0.5, one class)
+cases 118
+ALL OK

@@ -1,0 +1,5 @@
+rule: R>=200 G<=60 B>=200, 1 frame per second, 960x540
+rec_m6_sg.mp4 sha256 6a0b797f0d7c84d214d29b3efa3dd413986f402d33294666cfb2ae80d9831d62 frames 167 max 0 p99.9 0 mean 0.00 frames_gt0 0 frames_gt200 0
+rec_m6_hb.mp4 sha256 a26096fb6f69bf60959fb696e358b46888a3847262309d42404927909cd9b6e2 frames 335 max 23 p99.9 23 mean 0.07 frames_gt0 2 frames_gt200 0
+rec_m6_mg.mp4 sha256 4f5b8bc7a28b33d042372c822e10aaf6bea37f10ce602e665135321731fbe7aa frames 337 max 16 p99.9 16 mean 0.97 frames_gt0 69 frames_gt200 0
+ALL OK

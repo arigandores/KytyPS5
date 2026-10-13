@@ -1,0 +1,33 @@
+table docs/track-m/m6c/table.txt sha256 dd77f20dd15f97d2fb7b5f76feaf4445cae3b7e44e57d1c7edf8d93178d3afed
+tag inv_calls inv_gpu inv_part inv_part_src inv_off hold_s video_frames part_per_s part_per_frame off_share full_gpu
+m6_sg 10103170 105797 47813 47813 38802 334.4 10037 143.0 4.764 0.812 57984
+m6_hb 4219622 59501 19797 19797 267 332.0 20104 59.6 0.985 0.013 39704
+m6_mg 4206554 4402 3144 3144 3143 332.2 20201 9.5 0.156 1.000 1258
+SUM inv_part 70754 inv_off 42212 off_share 0.597
+note: counts are whole-run totals (entry + hold); per-second and per-frame rates divide by hold_s and video frames [I]
+
+cost of form A per frame = part_per_frame x S (one image->buffer download of the image source range per event)
+S_MiB m6_sg_MiB_per_frame m6_hb_MiB_per_frame m6_mg_MiB_per_frame
+0.25 1.19 0.25 0.04
+1.00 4.76 0.98 0.16
+4.00 19.05 3.94 0.62
+8.00 38.11 7.88 1.25
+16.00 76.22 15.76 2.49
+32.00 152.44 31.51 4.98
+
+ms per frame at an assumed effective download bandwidth B (read+write, tiler included) [I]:
+B=50 GB/s S=1 MiB ms/frame sg hb mg: 0.100 0.021 0.003
+B=50 GB/s S=8 MiB ms/frame sg hb mg: 0.799 0.165 0.026
+B=50 GB/s S=32 MiB ms/frame sg hb mg: 3.197 0.661 0.104
+B=100 GB/s S=1 MiB ms/frame sg hb mg: 0.050 0.010 0.002
+B=100 GB/s S=8 MiB ms/frame sg hb mg: 0.400 0.083 0.013
+B=100 GB/s S=32 MiB ms/frame sg hb mg: 1.598 0.330 0.052
+B=200 GB/s S=1 MiB ms/frame sg hb mg: 0.025 0.005 0.001
+B=200 GB/s S=8 MiB ms/frame sg hb mg: 0.200 0.041 0.007
+B=200 GB/s S=32 MiB ms/frame sg hb mg: 0.799 0.165 0.026
+
+render pass breaks of form A per frame (upper bound = part_per_frame, if every event is inside a pass):
+m6_sg 4.764
+m6_hb 0.985
+m6_mg 0.156
+ALL OK

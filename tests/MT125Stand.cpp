@@ -219,6 +219,11 @@ double MaxDiff(const Output& out, const std::vector<double>& ref) {
 	for (size_t i = 0; i < ref.size(); i++) {
 		float v = 0.0f;
 		std::memcpy(&v, out.bytes.data() + i * sizeof(float), sizeof(float));
+		if (!std::isfinite(v)) {
+			// Track M, M8c (RC3 of M8b, ROADMAP s122 item 783(g)): a non-finite output sample fails the comparison;
+			// std::max(m, NaN) keeps m, so without this a NaN mix (NaN GAIN accepted) compared as max_diff 0.
+			return std::numeric_limits<double>::infinity();
+		}
 		m = std::max(m, std::fabs(static_cast<double>(v) - ref[i]));
 	}
 	return m;

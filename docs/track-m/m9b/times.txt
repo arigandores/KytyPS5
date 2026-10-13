@@ -1,0 +1,3 @@
+2026-10-13T06:13:46Z start: lock absent, read HPP-864, HPP-863 comments, ROADMAP p.778-779 (KytyPS5 46c0908e)
+2026-10-13T06:20:35Z design_m9a.md sha256 d873f0a4 (= ce636e3c), HEAD 206cdbce
+2026-10-13T06:22:25Z review.md written SOUND_WITH_CHANGES RC1-RC11 52fcd4f3

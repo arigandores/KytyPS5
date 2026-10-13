@@ -1,0 +1,3 @@
+grid cells field 96 diverge 80 field_not_diverge 16 diverge_not_field 0
+examples field-only (B,count,M/256): [(2, 2, 1.25), (2, 2, 1.5), (2, 2, 1.75), (2, 2, 2.0), (3, 2, 1.25), (3, 2, 1.5)]
+exact divergence == B>0 and M > 256*max(B,count-1): ALL OK

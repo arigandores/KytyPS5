@@ -1,0 +1,8 @@
+CAUGHT div_ao_obj_nz (5 failed members; first: pure: match 58 of 60 (want 60 of 60))
+CAUGHT div_ao_bus_nz (4 failed members; first: pure: match 59 of 60 (want 60 of 60))
+CAUGHT div_clr_dw_div (6 failed members; first: pure: match 57 of 60 (want 60 of 60))
+CAUGHT div_minlod_div (4 failed members; first: pure: match 58 of 60 (want 60 of 60))
+CAUGHT div_inv_part (5 failed members; first: pure: match 58 of 60 (want 60 of 60))
+CAUGHT div_raw_rd_gpu (3 failed members; first: pure: match 59 of 60 (want 60 of 60))
+CONTROL restored tree: build=1 driver=ALL OK
+ALL OK

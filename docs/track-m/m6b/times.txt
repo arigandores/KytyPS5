@@ -1,0 +1,7 @@
+2026-10-13T03:39:33Z api in_progress checked before stand run
+2026-10-13T03:39:34Z stand wt+main rerun by Red Team: ALL OK both; out a0772fd5 after LF (= M6a stand_base.out.txt; raw CRLF 8b4c5c8d)
+2026-10-13T03:40:33Z mut_m6b start (6 div mutants + control) in m6a wt
+2026-10-13T03:41:58Z mut_m6b done: 6/6 CAUGHT, control ALL OK, mut_m6b.out.txt dca5a0fb
+2026-10-13T03:42:52Z binary strings 146c9358 checked by Red Team
+2026-10-13T03:44:42Z review.md written, docs copied to KytyPS5/docs/track-m/m6b
+2026-10-13T03:44:57Z commit docs/track-m/m6b

@@ -1,0 +1,6 @@
+reader m3a3_read.py sha256 c1e169f1f6af746624aea85baaf18f61c2afd597586c265b9e78f02ad2634b3c m3a2_read.py sha256 8bb06728d2e80022f194c8b8c155b13cb36fea34e956142d8728f8236ca68675 rules sha256 839f5bf2b8e92cd58ba43b1f32fa1e297338c70b18b6823994e79ee388509d82
+| tag | status | members | kind | T125 | form FS15 | frames >= 1 s | glitches | video | hold_s | host over05 | mean dt (+30 s, end A) |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| m3w2_sg_v_r1 | ADMITTED | ALL YES | - | ALL YES | ALL YES | 0 | 0 | 10155 | 334.4 | 0 | 33829.26 |
+| m3w2_sg_v_r2 | ADMITTED | ALL YES | - | ALL YES | ALL YES | 0 | 0 | 10359 | 334.1 | 0 | 32973.21 |
+| m3w2_sg_v_r3 | ADMITTED | ALL YES | - | ALL YES | ALL YES | 0 | 0 | 10379 | 333.8 | 0 | 32484.35 |

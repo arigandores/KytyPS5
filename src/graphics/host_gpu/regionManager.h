@@ -136,6 +136,19 @@ public:
 		m_owner.store(0, std::memory_order_relaxed);
 		m_lock.clear(std::memory_order_release);
 	}
+	// Track M, M9d (KYTY_DIAG_T188, ROADMAP s122 item 785): the lock check of the T188 sites (lock_bad) and the try of
+	// its exit scan (S6). Neither is called at KYTY_DIAG_T188=0.
+	[[nodiscard]] bool HeldByCurrentThread() const noexcept {
+		return m_owner.load(std::memory_order_relaxed) == CurrentThread();
+	}
+	[[nodiscard]] bool TryLock() noexcept {
+		const auto thread = CurrentThread();
+		if (m_owner.load(std::memory_order_relaxed) == thread || m_lock.test_and_set(std::memory_order_acquire)) {
+			return false;
+		}
+		m_owner.store(thread, std::memory_order_relaxed);
+		return true;
+	}
 
 private:
 	static uint32_t CurrentThread() noexcept {

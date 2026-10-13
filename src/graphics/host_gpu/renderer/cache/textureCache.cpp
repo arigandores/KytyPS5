@@ -2,6 +2,7 @@
 #include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "graphics/host_gpu/renderer/diagF47Dt.h" // Track F, F47g (KYTY_DIAG_F47DT)
 #include "libs/diagM5W2.h" // Track M, M6a (KYTY_DIAG_M5W2)
+#include "libs/diagT188.h" // Track M, M9d (KYTY_DIAG_T188)
 
 #include "common/alignment.h"
 #include "common/assert.h"
@@ -29,6 +30,7 @@
 #include <array>
 #include <atomic>
 #include <bit>
+#include <chrono>
 #include <cinttypes>
 #include <cstdio>
 #include <cstdlib>
@@ -40,6 +42,7 @@
 #include <mutex>
 #include <set>
 #include <span>
+#include <thread>
 #include <tuple>
 #include <unordered_map>
 #include <unordered_set>
@@ -264,9 +267,17 @@ TextureCache::TextureCache(GraphicContext& graphics, CommandScheduler& scheduler
 		    std::max<int64_t>(std::min(budget - 2 * threshold / 10, budget - GiB / 2), 3 * GiB));
 		m_trigger_gc_memory = static_cast<uint64_t>(std::max<int64_t>((budget - threshold) / 2, 0));
 	}
+	// Track M, M9d (KYTY_DIAG_T188): "T188: mode=" once per process at any value; the exit hook (S6) at mode >= 1.
+	DiagT188::PrintModeLine();
+	if (DiagT188::Mode() >= 1) {
+		DiagT188::SetExitHook(&TextureCache::T188ExitHook, this);
+	}
 }
 
 TextureCache::~TextureCache() {
+	if (DiagT188::Mode() >= 1) {
+		DiagT188::SetExitHook(nullptr, this); // Track M, M9d
+	}
 	m_slot_images.ForEach([&](ImageId id, const Image& image) {
 		if (image.registered) {
 			UnregisterImage(id);
@@ -491,6 +502,9 @@ void TextureCache::FreeImage(ImageId id, const char* reason, uint32_t line) {
 	Common::DrawStat::Mark(Common::DrawStat::ImgNew);
 	auto& image = m_slot_images[id];
 	TraceImageLifetime("free", image.info, reason, line, image.frame_accessed_last);
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		DiagT188::NoteFree(image.t188, m_lock.HeldByCurrentThread()); // Track M, M9d: S5
+	}
 	static const bool state_trace = Common::EnvFlagOn("KYTY_IMAGE_STATE_TRACE");
 	if (state_trace && image.info.data.size >= (1u << 20u)) {
 		LOGF("ImageStateFree: frame=%u guest=0x%016" PRIx64 " reason=%s gpu=%d cpu=%d maybe=%d buffer=%d metadata=%u\n",
@@ -855,6 +869,9 @@ void TextureCache::CopyImage(ImageId destination_id, ImageId source_id) {
 	if (source.IsBufferModified()) {
 		if (source.info.data == destination.info.data) {
 			destination.MarkBufferModified();
+			if (DiagT188::Mode() >= 1) [[unlikely]] {
+				T188Propagate(destination, source); // Track M, M9d: S8
+			}
 		}
 		return;
 	}
@@ -884,6 +901,10 @@ void TextureCache::CopyImage(ImageId destination_id, ImageId source_id) {
 			destination.MarkGpuModified();
 		}
 	}
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		DiagT188::NoteImageWrite(destination.t188);       // Track M, M9d (RC12): the copy wrote the destination
+		T188Close(destination, DiagT188::Close::CopyDst); // S7b
+	}
 	destination.ClearBufferModified();
 }
 
@@ -901,6 +922,9 @@ void TextureCache::CopyImageMip(ImageId destination_id, ImageId source_id, uint3
 		EXIT("TextureCache: invalid mip-copy ownership or sample count\n");
 	}
 	destination.CopyMip(source, mip, layer);
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		DiagT188::NoteImageWrite(destination.t188); // Track M, M9d (RC12): the mip copy wrote the destination
+	}
 	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
 		SkcCensus::G3Copy(SkcCensus::LazyP3b, destination, source, mip, layer); // Session 124 ([RC1])
 	}
@@ -1274,6 +1298,9 @@ void TextureCache::ConfigureImageSourceUnlocked(ImageId id, const ImageDesc& des
 	if (image.pending_levels <= first) {
 		image.pending_levels = 0;
 		image.pending_bytes = 0;
+		if (DiagT188::Mode() >= 1) [[unlikely]] {
+			DiagT188::PendDrop(image.t188, m_lock.HeldByCurrentThread()); // Track M, M9d: S3c
+		}
 	}
 	static const bool trace = Common::EnvFlagOn("KYTY_IMAGE_LIFETIME_TRACE");
 	if (trace) LOGF("ImageSource: frame=%u guest=0x%016" PRIx64 " first=%u bytes=%" PRIu64 " logical=%" PRIu64 "\n",
@@ -1401,6 +1428,11 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 		SkcCensus::Upload(m_buffer_cache, image, first_level, level_count);
 	}
 	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 48(b), M2 (N1)
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		// Track M, M9d (RC12): every upload writes the image - both branches (DetileToImage, Image::Upload), both calls
+		// (CompletePendingUpload, InitializeImage), with or without an episode.
+		DiagT188::NoteImageWrite(image.t188);
+	}
 	const auto& info    = image.info;
 	const auto  binding = UploadBinding(image);
 	const bool  partial = first_level != 0 || level_count < info.resources.levels;
@@ -1657,6 +1689,9 @@ void TextureCache::CompletePendingUpload(Image& image) {
 		                           image.SourceRange().size, image.source_first_level,
 		                           levels - image.source_first_level, 0, true);
 	}
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		T188PendDone(image, image.source_first_level, levels); // Track M, M9d: S3b
+	}
 	// Session 71, C1: key 0 = "the whole upload", so that keys 1..6 stay a clean phase
 	// namespace. The two-argument overload used to put the size in MiB in the KEY slot, where it
 	// collided with the phase keys for every image of 1-6 MiB. GpuTime only; nothing else reads
@@ -1739,12 +1774,18 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 	Common::FrameStats::Scope init_scope(Common::FrameStats::Counter::ImgInitNs);
 	TrackImage(id);
 	if (image.info.metadata.compression != VideoOutCompression::Uncompressed) {
+		if (DiagT188::Mode() >= 1) [[unlikely]] {
+			T188Close(image, DiagT188::Close::Cmp); // Track M, M9d: S4
+		}
 		if (image.IsCpuDirty()) {
 			image.RefreshComplete();
 		}
 		return;
 	}
 	if (image.info.samples > 1) {
+		if (DiagT188::Mode() >= 1) [[unlikely]] {
+			T188Close(image, DiagT188::Close::Msaa); // Track M, M9d: S4
+		}
 		return;
 	}
 	const bool upload = image.IsBufferModified() || image.IsCpuDirty();
@@ -1825,6 +1866,9 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::ImgSkipped, 1);
 		Common::FrameStats::Add(Common::FrameStats::Counter::ImgSkippedKb,
 		                        image.SourceRange().size / 1024u);
+		if (DiagT188::Mode() >= 1) [[unlikely]] {
+			T188Close(image, DiagT188::Close::Skip); // Track M, M9d: S7c
+		}
 		image.ClearBufferModified();
 	} else if (upload) {
 		TraceWatchedImage("upload", image);
@@ -1878,6 +1922,9 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 		}
 		// Session 71, C1: key 0, see CompletePendingUpload above.
 		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 0, image.info.data.size >> 20u);
+		if (DiagT188::Mode() >= 1) [[unlikely]] {
+			T188CloseUpload(image, first_level, image.info.resources.levels); // Track M, M9d: S3
+		}
 		image.ClearBufferModified();
 	}
 	if (image.IsCpuDirty()) {
@@ -2085,6 +2132,308 @@ private:
 };
 
 } // namespace
+
+// Track M, M9d (KYTY_DIAG_T188, ROADMAP s122 item 785; design docs/track-m/m9a2/design_m9a2.md edition 2): the T188 sites
+// of the texture cache. Every one is called at KYTY_DIAG_T188 >= 1 only and checks m_lock (lock_bad); the logic is in
+// libs/diagT188.cpp, the GPU part (tint, readback) in T188Gpu below.
+namespace {
+
+struct T188Geo {
+	std::array<DiagT188::Mip, 16> mips {};
+	DiagT188::Geometry            g;
+};
+
+void T188Fill(const Image& image, T188Geo& out) {
+	const auto levels = std::min<uint32_t>(image.info.resources.levels, static_cast<uint32_t>(out.mips.size()));
+	for (uint32_t l = 0; l < levels; l++) {
+		out.mips[l] = {image.info.mip_layout[l].offset, image.info.mip_layout[l].size};
+	}
+	out.g.address     = image.info.data.address;
+	out.g.data_size   = image.info.data.size;
+	out.g.source_size = image.SourceRange().size;
+	out.g.levels      = levels;
+	out.g.layers      = image.backing.image != nullptr ? image.backing.layers : image.info.resources.layers;
+	out.g.volume      = image.info.IsVolume();
+	out.g.mips        = out.mips.data();
+}
+
+DiagT188::ClassFields T188Fields(const Image& image) {
+	DiagT188::ClassFields f;
+	f.fmt     = static_cast<uint32_t>(image.info.pixel_format);
+	f.tile    = static_cast<uint32_t>(image.info.tile_mode);
+	f.w       = image.info.extent.width;
+	f.h       = image.info.extent.height;
+	f.levels  = image.info.resources.levels;
+	f.layers  = image.info.resources.layers;
+	f.cmp     = (image.info.IsBlock() ? 1u : 0u) |
+	        (image.info.metadata.compression != VideoOutCompression::Uncompressed ? 2u : 0u);
+	f.samples = image.info.samples;
+	f.usage   = (image.usage.texture ? 1u : 0u) | (image.usage.storage ? 2u : 0u) | (image.usage.render_target ? 4u : 0u) |
+	          (image.usage.depth_target ? 8u : 0u) | (image.usage.video_out ? 16u : 0u);
+	f.vol     = image.info.IsVolume() ? 1u : 0u;
+	return f;
+}
+
+DiagT188::Close T188SiteOf(const UploadSiteState& site) {
+	switch (site.site) {
+		case UploadSite::ColorTarget:
+			return (site.reg_clear || site.fill_clear) ? DiagT188::Close::RtClr : DiagT188::Close::Rt;
+		case UploadSite::DepthTarget: return DiagT188::Close::Dt;
+		case UploadSite::StorageImage: return DiagT188::Close::Sto;
+		case UploadSite::Sampled: return DiagT188::Close::Smp;
+		case UploadSite::ClearOp: return DiagT188::Close::ClrOp;
+		case UploadSite::Other: break;
+	}
+	return DiagT188::Close::Oth;
+}
+
+} // namespace
+
+void TextureCache::T188Invalidate(Image& image, DiagT188::Writer writer, uint64_t address, uint64_t size) {
+	const bool locked = m_lock.HeldByCurrentThread();
+	T188Geo    geo;
+	T188Fill(image, geo);
+	if (locked) {
+		T188Visit(image);
+	}
+	const bool in_pass =
+	    m_scheduler.Active() && !m_scheduler.Current().IsInvalid() && m_scheduler.Current().IsRendering();
+	(void)DiagT188::NoteInvalidate(image.t188, geo.g, T188Fields(image), image.IsGpuModified(), writer, address, size,
+	                               in_pass, locked);
+}
+
+void TextureCache::T188CloseUpload(Image& image, uint32_t first, uint32_t end) {
+	const bool locked = m_lock.HeldByCurrentThread();
+	T188Geo    geo;
+	T188Fill(image, geo);
+	if (locked) {
+		T188Visit(image); // rb1 of an older tint, after the upload it reads
+	}
+	const auto site = m_t188_vo ? DiagT188::Close::Vo : T188SiteOf(t_upload_site);
+	const auto plan = DiagT188::CloseUpload(image.t188, geo.g, T188Fields(image), site, first, end,
+	                                        image.source_first_level, image.pending_levels,
+	                                        T188Gpu::TintFormatOk(image), image.IsCpuDirty(), locked);
+	T188Tint(image, plan);
+}
+
+void TextureCache::T188PendDone(Image& image, uint32_t first, uint32_t end) {
+	const bool locked = m_lock.HeldByCurrentThread();
+	T188Geo    geo;
+	T188Fill(image, geo);
+	if (locked) {
+		T188Visit(image);
+	}
+	const auto plan = DiagT188::PendDone(image.t188, geo.g, first, end, locked);
+	T188Tint(image, plan);
+}
+
+void TextureCache::T188Close(Image& image, DiagT188::Close site) {
+	const bool locked = m_lock.HeldByCurrentThread();
+	if (locked) {
+		T188Visit(image);
+	}
+	DiagT188::CloseNoUpload(image.t188, site, locked);
+}
+
+void TextureCache::T188Propagate(Image& destination, const Image& source) {
+	const bool locked = m_lock.HeldByCurrentThread();
+	T188Geo    geo;
+	T188Fill(destination, geo);
+	if (locked) {
+		T188Visit(destination);
+	}
+	DiagT188::Propagate(destination.t188, source.t188, geo.g, T188Fields(destination), locked);
+}
+
+// rb1: the first visit of a tinted image in a frame after its tint reads the same texels back (no wait here; the result
+// is taken when the tick completes).
+void TextureCache::T188Visit(Image& image) {
+	if (DiagT188::Mode() < 2 || image.t188.rb_pend.load(std::memory_order_acquire) == 0) {
+		return;
+	}
+	std::array<DiagT188::RbInfo, DiagT188::kLevels> infos {};
+	const auto n = DiagT188::RbWant1(image.t188, GpuTimeProfiler::Frame(), infos.data(), DiagT188::kLevels);
+	if (n == 0) {
+		return;
+	}
+	auto& command = m_scheduler.Current();
+	if (command.IsInvalid()) {
+		DiagT188::RbNotRecorded1(infos.data(), n);
+		return;
+	}
+	auto&          download = m_buffer_cache.GetUtilityBuffer(MemoryUsage::Download);
+	const auto     mapping  = download.Map(32ull * n, 16);
+	uint8_t* const mapped   = mapping.first;
+	const uint64_t offset   = mapping.second;
+	if (mapped == nullptr) {
+		DiagT188::RbNotRecorded1(infos.data(), n);
+		return;
+	}
+	download.Commit();
+	T188Gpu::ReadTexels(command, image, infos.data(), n, download.Handle(), offset);
+	m_scheduler.DeferOperation([&download, mapped, offset, n, infos] {
+		download.Invalidate(offset, 32ull * n);
+		for (uint32_t i = 0; i < n; i++) {
+			const uint8_t* texel = mapped + 32ull * i;
+			const bool     ok    = DiagT188::TexelIsMagenta(infos[i].fmt, texel) &&
+			              (infos[i].last_layer == 0 || DiagT188::TexelIsMagenta(infos[i].fmt, texel + 16));
+			DiagT188::RbDone1(infos[i].id, ok);
+		}
+	});
+}
+
+// The tint of a plan (mode >= 2) and its rb0, right after the clears in the same command buffer.
+void TextureCache::T188Tint(Image& image, const DiagT188::TintPlan& plan) {
+	if (plan.mask == 0) {
+		return;
+	}
+	auto& command = m_scheduler.Current();
+	EXIT_IF(command.IsInvalid());
+	const auto     count    = static_cast<uint32_t>(std::popcount(plan.rb_mask));
+	auto&          download = m_buffer_cache.GetUtilityBuffer(MemoryUsage::Download);
+	uint8_t*       mapped   = nullptr;
+	uint64_t       offset   = 0;
+	if (count != 0) {
+		const auto mapping = download.Map(32ull * count, 16);
+		mapped             = mapping.first;
+		offset             = mapping.second;
+		if (mapped != nullptr) {
+			download.Commit();
+		}
+	}
+	T188Gpu::TintLevels(command, image, plan.mask, mapped != nullptr ? plan.rb_mask : 0u, download.Handle(), offset);
+	if (count == 0) {
+		return;
+	}
+	if (mapped == nullptr) {
+		DiagT188::RbNotRecorded(plan);
+		return;
+	}
+	T188Geo geo;
+	T188Fill(image, geo);
+	const auto     fmt   = static_cast<uint32_t>(image.backing.format);
+	const bool     two   = geo.g.layers >= 2;
+	const uint32_t first = DiagT188::RbBegin(image.t188, plan, geo.g, image.info.extent.width, image.info.extent.height,
+	                                         fmt, GpuTimeProfiler::Frame());
+	m_scheduler.DeferOperation([&download, mapped, offset, count, first, fmt, two] {
+		download.Invalidate(offset, 32ull * count);
+		for (uint32_t i = 0; i < count; i++) {
+			const uint8_t* texel = mapped + 32ull * i;
+			const bool     ok    = DiagT188::TexelIsMagenta(fmt, texel) && (!two || DiagT188::TexelIsMagenta(fmt, texel + 16));
+			DiagT188::RbDone0(first + i, ok);
+		}
+	});
+}
+
+// S6 (both exits of Execute): the readbacks in flight get up to 2 s, m_lock is tried for up to 2 s (a thread that holds it
+// forever must not hang the exit); with it, the images are scanned (ep_bad (v)); then the exit lines.
+void TextureCache::T188ExitHook(void* context) {
+	auto*      cache    = static_cast<TextureCache*>(context);
+	const auto deadline = [](int ms) { return std::chrono::steady_clock::now() + std::chrono::milliseconds(ms); };
+	for (const auto until = deadline(2000); DiagT188::RbInFlight() != 0 && std::chrono::steady_clock::now() < until;) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+	bool locked = false;
+	for (const auto until = deadline(2000); !(locked = cache->m_lock.TryLock()) && std::chrono::steady_clock::now() < until;) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	}
+	if (locked) {
+		uint64_t open = 0;
+		uint64_t wait = 0;
+		cache->m_slot_images.ForEach([&](ImageId, const Image& image) {
+			open += image.t188.open ? 1u : 0u;
+			wait += image.t188.wait ? 1u : 0u;
+		});
+		DiagT188::ExitScan(open, wait);
+	}
+	DiagT188::PrintExit();
+	if (locked) {
+		cache->m_lock.unlock();
+	}
+}
+
+namespace T188Gpu {
+
+bool TintFormatOk(const Image& image) {
+	if (image.backing.image == nullptr || image.info.IsDepth() || image.info.IsBlock() || image.info.IsVolume() ||
+	    image.info.samples != 1 || image.backing.samples != 1) {
+		return false;
+	}
+	const auto usage = image.backing.usage;
+	if (!(usage & vk::ImageUsageFlagBits::eTransferDst) || !(usage & vk::ImageUsageFlagBits::eTransferSrc)) {
+		return false;
+	}
+	uint8_t  code[16];
+	uint32_t bytes = 0;
+	return DiagT188::MagentaCode(static_cast<uint32_t>(image.backing.format), code, &bytes);
+}
+
+void TintLevels(CommandBuffer& command, Image& image, uint32_t mask, uint32_t rb_mask, vk::Buffer rb_buffer,
+                uint64_t rb_offset) {
+	if (mask == 0) {
+		return;
+	}
+	command.EndRendering(RenderPassEnd::Clear);
+	image.Transit(vk::ImageLayout::eTransferDstOptimal, vk::AccessFlagBits2::eTransferWrite, {}, command.Handle());
+	const vk::ClearColorValue magenta {std::array<float, 4> {1.0f, 0.0f, 1.0f, 1.0f}};
+	const uint32_t            layers = image.backing.layers;
+	for (uint32_t l = 0; l < DiagT188::kLevels; l++) {
+		if ((mask & (1u << l)) == 0) {
+			continue;
+		}
+		const vk::ImageSubresourceRange range {vk::ImageAspectFlagBits::eColor, l, 1, 0, layers};
+		command.Handle().clearColorImage(image.backing.image, vk::ImageLayout::eTransferDstOptimal, &magenta, 1,
+		                                 &range);
+	}
+	if (rb_mask == 0) {
+		return;
+	}
+	std::array<DiagT188::RbInfo, DiagT188::kLevels> infos {};
+	uint32_t                                        n = 0;
+	for (uint32_t l = 0; l < DiagT188::kLevels; l++) {
+		if ((rb_mask & (1u << l)) == 0) {
+			continue;
+		}
+		infos[n++] = {0, l, std::max(image.info.extent.width >> l, 1u) / 2, std::max(image.info.extent.height >> l, 1u) / 2,
+		              layers >= 2 ? layers - 1 : 0u, static_cast<uint32_t>(image.backing.format)};
+	}
+	ReadTexels(command, image, infos.data(), n, rb_buffer, rb_offset);
+}
+
+void ReadTexels(CommandBuffer& command, Image& image, const DiagT188::RbInfo* infos, uint32_t count, vk::Buffer rb_buffer,
+                uint64_t rb_offset) {
+	if (count == 0) {
+		return;
+	}
+	std::vector<vk::BufferImageCopy> copies;
+	const auto add = [&](const DiagT188::RbInfo& info, uint32_t layer, uint64_t buffer_offset) {
+		vk::BufferImageCopy copy {};
+		copy.bufferOffset     = buffer_offset;
+		copy.imageSubresource = vk::ImageSubresourceLayers {vk::ImageAspectFlagBits::eColor, info.level, layer, 1};
+		copy.imageOffset      = vk::Offset3D {static_cast<int32_t>(info.x), static_cast<int32_t>(info.y), 0};
+		copy.imageExtent      = vk::Extent3D {1, 1, 1};
+		copies.push_back(copy);
+	};
+	for (uint32_t i = 0; i < count; i++) {
+		add(infos[i], 0, rb_offset + 32ull * i);
+		if (infos[i].last_layer != 0) {
+			add(infos[i], infos[i].last_layer, rb_offset + 32ull * i + 16);
+		}
+	}
+	image.Download(copies, rb_buffer, rb_offset, 32ull * count);
+	vk::BufferMemoryBarrier barrier {};
+	barrier.srcAccessMask       = vk::AccessFlagBits::eTransferWrite;
+	barrier.dstAccessMask       = vk::AccessFlagBits::eHostRead;
+	barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	barrier.buffer              = rb_buffer;
+	barrier.offset              = rb_offset;
+	barrier.size                = 32ull * count;
+	command.Handle().pipelineBarrier(vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eHost, {}, 0,
+	                                 nullptr, 1, &barrier, 0, nullptr);
+}
+
+} // namespace T188Gpu
 
 void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	if (desc.info.metadata.kind != ImageMetadataKind::Dcc) {
@@ -2525,10 +2874,18 @@ ImageId TextureCache::FindImage(ImageDesc& desc, bool exact_format) {
 	return result;
 }
 
-void TextureCache::UpdateImage(ImageId id) {
+void TextureCache::UpdateImage(ImageId id, bool t188_video_out) {
 	std::scoped_lock lock {m_lock};
 	auto&            image = m_slot_images[id];
 	TouchImage(image);
+	if (t188_video_out && DiagT188::Mode() >= 1) [[unlikely]] {
+		// Track M, M9d: site Svo - an S3 closure inside counts cl_vo; the visit may read a tinted image back.
+		m_t188_vo = true;
+		RefreshImage(id);
+		m_t188_vo = false;
+		T188Visit(m_slot_images[id]);
+		return;
+	}
 	RefreshImage(id);
 }
 
@@ -2868,6 +3225,9 @@ void TextureCache::CommitGpuWrite(Image& image) {
 		EXIT("TextureCache: stencil association cannot own image contents\n");
 	}
 	CompletePendingUpload(image);
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		T188Close(image, DiagT188::Close::Commit); // Track M, M9d: S7
+	}
 	image.ClearBufferModified();
 	if (image.IsCpuDirty()) {
 		image.RefreshComplete();
@@ -3014,6 +3374,9 @@ void TextureCache::ClearImage(CommandBuffer& command, ImageId id, vk::Format for
                               const vk::ImageSubresourceRange& range, const vk::ClearValue& clear) {
 	auto& image = m_slot_images[id];
 	TraceWatchedImage("clear", image);
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		DiagT188::NoteImageWrite(image.t188); // Track M, M9d (RC12): the clear writes the image
+	}
 	Common::DrawStat::Mark(Common::DrawStat::ImgUp);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	const auto aspects = image.info.IsDepth() ? ImageViewOps::DepthAspectMask(image.backing.format)
@@ -3293,6 +3656,11 @@ bool BufferCache::SynchronizeBufferFromImage(Buffer& buffer, uint64_t vaddr, uin
 	}
 	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 	m_texture_cache.DownloadImage(image, buffer, buf_offset, copy_size, std::move(transfer));
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		// Track M, M9d: Ss - a synchronization of every level (a volume is always whole) stamps sseq := wseq.
+		DiagT188::NoteSync(image.t188, levels == image.info.resources.levels,
+		                   m_texture_cache.m_lock.HeldByCurrentThread());
+	}
 	return true;
 }
 
@@ -3393,10 +3761,13 @@ bool TextureCache::DownloadImageMemory(ImageId id) {
 		download.Invalidate(offset, range.size);
 		LibKernel::Memory::WriteBacking(range.address, mapped, range.size);
 	});
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		DiagT188::NoteDownload(image.t188, m_lock.HeldByCurrentThread()); // Track M, M9d: Sd - dseq := wseq
+	}
 	return true;
 }
 
-void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size) {
+void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size, DiagT188::Writer writer) {
 	if (!GuestRange {address, size}.Valid()) {
 		return;
 	}
@@ -3407,6 +3778,7 @@ void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size) {
 	if (diag_m5w2) [[unlikely]] {
 		DiagM5W2::NoteInvalidateCall();
 	}
+	const bool diag_t188 = DiagT188::Mode() >= 1; // Track M, M9d
 	for (const auto id: FindImagesInRegion(address, size, true)) {
 		auto& image = m_slot_images[id];
 		if (image.depth_id || !image.Overlaps(address, size)) {
@@ -3416,6 +3788,9 @@ void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size) {
 		if (diag_m5w2) [[unlikely]] {
 			DiagM5W2::NoteInvalidateImage(image.IsGpuModified(), image.info.data.address, image.info.data.size,
 			                              image.SourceRange().size, address, size); // M6a2: + inv_part_src
+		}
+		if (diag_t188) [[unlikely]] {
+			T188Invalidate(image, writer, address, size); // Track M, M9d: S2 (before ClearGpuModified)
 		}
 		Common::DrawStat::Mark(Common::DrawStat::GpuWrite);
 		if (image.IsGpuModified()) {

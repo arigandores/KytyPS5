@@ -1078,7 +1078,7 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	// kept because it can only cost an extra image upload, while the narrow condition can hand a
 	// draw stale contents; it is also pure cost for the (common) writes that alias no image.
 	if (resource.written) {
-		context.GetTextureCache().InvalidateMemoryFromGPU(address, size);
+		context.GetTextureCache().InvalidateMemoryFromGPU(address, size, DiagT188::Writer::St); // Track M, M9d: S1 (st)
 	}
 	const char* access = "Read";
 	if (resource.written && resource.read) {

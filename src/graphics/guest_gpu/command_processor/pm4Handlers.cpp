@@ -21,6 +21,7 @@
 #include "kernel/memory.h"
 #include "libs/agc.h"
 #include "libs/errno.h"
+#include "libs/diagT188.h" // Track M, M9d (KYTY_DIAG_T188, T109)
 
 #include <algorithm>
 #include <array>
@@ -327,6 +328,11 @@ static void HwCtxSetDepthBoundsRegister(CommandProcessor& cp, uint32_t cmd_offse
 static void HwCtxSetDepthMetadataRegister(CommandProcessor& cp, uint32_t cmd_offset,
                                          uint32_t value) {
 	if (cmd_offset == Pm4::DB_RENDER_OVERRIDE) {
+		if (DiagT188::Mode() >= 1) [[unlikely]] {
+			// Track M, M9d (T109, RC14): the one place every write of the register reaches (direct packet, range from
+			// DB_COUNT_CONTROL, indirect paths).
+			DiagT109::NoteRenderOverride(value);
+		}
 		HW::DepthRenderOverride control;
 		control.force_z_valid       = (value & 0x20000000u) != 0;
 		control.force_z_dirty       = (value & 0x08000000u) != 0;

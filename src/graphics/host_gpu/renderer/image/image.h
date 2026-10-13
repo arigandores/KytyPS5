@@ -9,6 +9,7 @@
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
 #include "graphics/host_gpu/renderer/renderTarget.h"
+#include "libs/diagT188.h" // Track M, M9d (KYTY_DIAG_T188)
 
 #include <atomic>
 #include <compare>
@@ -151,6 +152,11 @@ public:
 	// monotonic GPU-dirty generation, and counting it here means no call site can be missed.
 	// The branch is predicted not-taken on a line the store already dirties.
 	void MarkGpuModified() noexcept {
+		// Track M, M9d (KYTY_DIAG_T188, ROADMAP s122 item 785(b)(2)): Sw - the FIRST statement, before the census stamp
+		// and the transition test: every write moves t188.wseq (and flags a pending readback), not only the first one.
+		if (DiagT188::Mode() != 0) [[unlikely]] {
+			DiagT188::NoteGpuWrite(t188);
+		}
 		// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY; design123.md s.3.1 W3 [N6]): the stamp is the FIRST
 		// statement, before the transition test, so every write is stamped and not only the first.  One thread-local test.
 		if (Common::SkipCeil::t_w3) [[unlikely]] {
@@ -249,6 +255,9 @@ public:
 	// Session 124, knob "skipceil" = 3 (closure census): the image part of the key of the graph (design124.md s.3.3.1),
 	// assigned on first use by the GuestGpu thread; 0 = none.
 	uint32_t              skc3_uid = 0;
+	// Track M, M9d (KYTY_DIAG_T188, ROADMAP s122 item 785): the T188 episode state (diagT188.h); read and written only at
+	// KYTY_DIAG_T188 >= 1, under TextureCache::m_lock except its atomics.
+	DiagT188::ImageState  t188;
 
 private:
 	friend struct ImageTestAccess;

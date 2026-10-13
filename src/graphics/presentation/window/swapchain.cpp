@@ -439,7 +439,7 @@ struct Presenter::Impl {
 		const auto image_id   = cache.FindImage(desc);
 		auto&      image      = cache.GetImage(image_id);
 		image.usage.video_out = true;
-		cache.UpdateImage(image_id);
+		cache.UpdateImage(image_id, true); // Track M, M9d: true - site Svo of KYTY_DIAG_T188 (read only at mode >= 1)
 		return image;
 	}
 

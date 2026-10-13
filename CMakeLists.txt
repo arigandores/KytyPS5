@@ -448,6 +448,11 @@ add_kyty_full_emulator_test(m_wave1_hle_stand "${KYTY_TESTS_DIR}/MWave1HleStand.
 # signature lines of T031, T309, T023; run by C:/kyty/m657/m6a/run_stand_m6a.py, not by ctest.
 add_kyty_full_emulator_test(m_wave2_diag_stand "${KYTY_TESTS_DIR}/MWave2DiagStand.cpp")
 
+# Track M, M9d (HPP-869, ROADMAP s122 item 785(d)): stand of the functions of KYTY_DIAG_T188 and of DiagT109 (no game, no
+# GPU); run by C:/kyty/m657/m9d/run_stand_m9d.py, not by ctest. The GPU stand is --t188-gpu-stand of
+# shader_recompiler_compute_tests.
+add_kyty_full_emulator_test(t188_stand "${KYTY_TESTS_DIR}/T188Stand.cpp")
+
 # Track F, B24 pad output stand (F19c; ROADMAP s122 item 451(e)(1)): run by docs/track-f/f19c/run_stand_f19c.py, not by
 # ctest.
 add_kyty_full_emulator_test(b24_pad_stand

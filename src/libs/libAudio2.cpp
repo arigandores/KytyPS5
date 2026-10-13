@@ -8,6 +8,7 @@
 #include "libs/audio.h"
 #include "libs/audio_internal.h"
 #include "libs/diagM5W2.h" // Track M, M6a (KYTY_DIAG_M5W2)
+#include "libs/diagT188.h" // Track M, M9d (KYTY_DIAG_T188)
 #include "libs/errno.h"
 #include "libs/libs.h"
 
@@ -606,6 +607,9 @@ static void audioout2_queue_context_audio(AudioOut2ContextHandle ctx, bool block
 	g_audioout2_port_mutex.Unlock();
 	if (DiagM5W2::On()) [[unlikely]] {
 		DiagM5W2::NoteAudioPush(); // M6a: the periodic "M5W2Stat:" line every 4096 queued pushes
+	}
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		DiagT188::NoteAudioPush(); // M9d: the periodic "T188Stat:" / "T109Stat:" lines every 4096 queued pushes
 	}
 
 	if (params.empty()) {

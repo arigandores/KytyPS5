@@ -17,6 +17,7 @@
 #include "graphics/presentation/window.h"
 #include "graphics/host_gpu/renderer/pipeline/fixF20.h"
 #include "libs/diagM5W2.h" // Track M, M6a (KYTY_DIAG_M5W2)
+#include "libs/diagT188.h" // Track M, M9d (KYTY_DIAG_T188)
 #include "kernel/fileSystem.h"
 #include "kernel/memory.h"
 #include "kernel/pthread.h"
@@ -492,6 +493,7 @@ static void Execute(const std::filesystem::path& game_patch) {
 		Libs::Graphics::FixF20::PrintExitStat(); // Track F, F42a: "FixF20Stat: when=exit" (KYTY_FIX_F20=1 only)
 		Libs::Graphics::DiagF47Dt::PrintExitStat(); // Track F, F47g: "F47dtStat: when=exit" (KYTY_DIAG_F47DT=1 only)
 		Libs::DiagM5W2::PrintExitStat(); // Track M, M6a: "M5W2Stat: when=exit" (KYTY_DIAG_M5W2=1 only)
+		Libs::DiagT188::PrintExitStat(); // Track M, M9d: "T188Stat/T188Img/T109Stat: when=exit" (KYTY_DIAG_T188 >= 1)
 		std::quick_exit(0);
 	}
 	auto           patch_path = game_patch;
@@ -505,6 +507,7 @@ static void Execute(const std::filesystem::path& game_patch) {
 	Libs::Graphics::FixF20::PrintExitStat(); // Track F, F42a: "FixF20Stat: when=exit" (KYTY_FIX_F20=1 only)
 	Libs::Graphics::DiagF47Dt::PrintExitStat(); // Track F, F47g: "F47dtStat: when=exit" (KYTY_DIAG_F47DT=1 only)
 	Libs::DiagM5W2::PrintExitStat(); // Track M, M6a: "M5W2Stat: when=exit" (KYTY_DIAG_M5W2=1 only)
+	Libs::DiagT188::PrintExitStat(); // Track M, M9d: "T188Stat/T188Img/T109Stat: when=exit" (KYTY_DIAG_T188 >= 1)
 	std::quick_exit(0);
 }
 

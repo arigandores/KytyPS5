@@ -302,6 +302,9 @@ void Image::Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffe
                    uint64_t size, bool buffer_from_tiler, bool fuse_candidate) {
 	EXIT_IF(copies.empty() || buffer == nullptr || size == 0);
 	m_scheduler.EndRendering(RenderPassEnd::ImageUpload);
+	if (DiagT188::Mode() != 0) [[unlikely]] {
+		DiagT188::NoteImageWrite(t188); // Track M, M9d (RC12): a write of the image after its tint
+	}
 	vk::BufferMemoryBarrier2 buffer_barrier {};
 	buffer_barrier.srcStageMask =
 	    buffer_from_tiler && TileManager::NarrowUploadBarriers()

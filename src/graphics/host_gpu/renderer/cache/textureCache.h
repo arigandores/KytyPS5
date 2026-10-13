@@ -58,7 +58,8 @@ public:
 
 	[[nodiscard]] ImageId       FindImage(ImageDesc& desc, bool exact_format = false);
 	void ConfigureImageSource(ImageId id, const ImageDesc& desc);
-	void                        UpdateImage(ImageId id);
+	// Track M, M9d (KYTY_DIAG_T188): t188_video_out - the call of swapchain ResolveSurface (site Svo); nothing else reads it.
+	void                        UpdateImage(ImageId id, bool t188_video_out = false);
 	[[nodiscard]] ImageId       FindImageFromRange(uint64_t address, uint64_t size,
 	                                               bool ensure_valid = true);
 	// Session 71, candidate C3 (counters only, no decision changed): the guest fast-clear
@@ -142,7 +143,9 @@ public:
 	void               InvalidateMemory(uint64_t address, uint64_t size);
 	// Debug aid: synchronously reads mip 0 of the image back and writes it to `name`.
 	void               DebugDumpImage(ImageId id, const std::string& name);
-	void               InvalidateMemoryFromGPU(uint64_t address, uint64_t size);
+	// Track M, M9d (KYTY_DIAG_T188, site S1): `writer` - which GPU write calls (read only at KYTY_DIAG_T188 >= 1).
+	void               InvalidateMemoryFromGPU(uint64_t address, uint64_t size,
+	                                           DiagT188::Writer writer = DiagT188::Writer::Unk);
 	[[nodiscard]] bool IsRegionGpuModified(uint64_t address, uint64_t size);
 
 	[[nodiscard]] bool IsMeta(uint64_t address);
@@ -377,6 +380,17 @@ private:
 	// Gate "texfaulthint": false when no image is registered on the pages of the range.
 	[[nodiscard]] bool MayHaveImages(uint64_t address, uint64_t size) const noexcept;
 	[[nodiscard]] bool DownloadImageMemory(ImageId id);
+	// Track M, M9d (KYTY_DIAG_T188, ROADMAP s122 item 785): the T188 sites (called at mode >= 1 only; textureCache.cpp).
+	// The caller holds m_lock - checked (lock_bad), and without it a site does no work.
+	void        T188Invalidate(Image& image, DiagT188::Writer writer, uint64_t address, uint64_t size);
+	void        T188CloseUpload(Image& image, uint32_t first, uint32_t end);
+	void        T188PendDone(Image& image, uint32_t first, uint32_t end);
+	void        T188Close(Image& image, DiagT188::Close site);
+	void        T188Propagate(Image& destination, const Image& source);
+	void        T188Visit(Image& image);
+	void        T188Tint(Image& image, const DiagT188::TintPlan& plan);
+	static void T188ExitHook(void* context);
+	bool        m_t188_vo = false; // inside UpdateImage(id, true) (site Svo), under m_lock
 
 	GraphicContext&                                   m_graphics;
 	CommandScheduler&                                 m_scheduler;
@@ -438,6 +452,23 @@ private:
 	friend class RenderExecutor;
 	friend struct SkcCensus;
 };
+
+// Track M, M9d (KYTY_DIAG_T188, ROADMAP s122 item 785): the tint and its readback, shared by the T188 sites and the GPU
+// stand (--t188-gpu-stand of shader_recompiler_compute_tests).
+namespace T188Gpu {
+// The image can be tinted and read back: colour, not block-compressed, not a volume, single-sampled, TRANSFER_DST and
+// TRANSFER_SRC, a backing format with a row of DiagT188::MagentaCode.
+[[nodiscard]] bool TintFormatOk(const Image& image);
+// Records, in this order: the end of a pass, the transition of the image to TransferDstOptimal, clearColorImage
+// (1, 0, 1, 1) of {level, 1, 0, layers} for every level of `mask`; then, for the i-th set bit of `rb_mask`, the copy of
+// the centre texel of that level (layer 0 to rb_buffer + rb_offset + 32 * i; at layers >= 2 the last layer to + 16)
+// and a transfer-to-host barrier.
+void TintLevels(CommandBuffer& command, Image& image, uint32_t mask, uint32_t rb_mask, vk::Buffer rb_buffer,
+                uint64_t rb_offset);
+// The reads alone (rb1): infos[i] to rb_buffer + rb_offset + 32 * i (+ 16 for its last layer).
+void ReadTexels(CommandBuffer& command, Image& image, const DiagT188::RbInfo* infos, uint32_t count, vk::Buffer rb_buffer,
+                uint64_t rb_offset);
+} // namespace T188Gpu
 
 // Session 72, measurement only (KYTY_CLEAR_TRACE): the outcome the last ClearImageFromBuffer on
 // this thread took - "ok", "none", "ambig", "decode" or "invalid". Written at every exit of that

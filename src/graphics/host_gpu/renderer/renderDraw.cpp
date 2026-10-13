@@ -42,6 +42,7 @@
 #include "kernel/memory.h"
 #include "kernel/pthread.h"
 #include "libs/errno.h"
+#include "libs/diagT188.h" // Track M, M9d (KYTY_DIAG_T188, T109)
 
 #include <algorithm>
 #include <array>
@@ -503,6 +504,14 @@ static void SetGraphicsDynamicParams(const CommandBuffer& buffer, Sink& vk_buffe
 	const bool  depth_bias_enable = use_front || use_back;
 	if (buffer.GraphicsStateChanged(GraphicsStateSlot::DepthBiasEnable, depth_bias_enable)) {
 		vk_buffer.setDepthBiasEnable(depth_bias_enable ? VK_TRUE : VK_FALSE);
+	}
+	if (DiagT188::Mode() >= 1) [[unlikely]] {
+		// Track M, M9d (T109, ROADMAP s122 item 785(b)(4)): the draw with its computed viewports - the array
+		// setViewportWithCount took above, after minDepth / maxDepth.
+		DiagT109::NoteDraw(depth.image_id ? static_cast<uint32_t>(depth.desc.view_info.format) : 0u,
+		                   depth.depth_test_enable, depth.depth_write_enable,
+		                   ctx.GetShaderRegisters().db_shader_control.shader_z_export_enable, depth_bias_enable,
+		                   reinterpret_cast<const VkViewport*>(viewports.data()), viewport_count);
 	}
 	if (depth_bias_enable) {
 		// Vulkan has one bias for both faces. Prefer a visible front face when both are enabled.

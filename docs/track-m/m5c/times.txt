@@ -1,0 +1,2 @@
+start 2026-10-13 02:40 UTC (first command, no lock)
+end   2026-10-13 02:51 UTC (report written, before commit)

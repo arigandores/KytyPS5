@@ -1,0 +1,1899 @@
+pc=0x00000 fam=5 op=0x020 0x00000000: S_INST_PREFETCH 0x00000003
+pc=0x00004 fam=1 op=0x003 0x00000004: S_MOV_B32 m0, s30
+pc=0x00008 fam=12 op=0x002 0x00000008: S_LOAD_DWORDX4 s40, s28, null ; offset=352 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00010 fam=12 op=0x003 0x00000010: S_LOAD_DWORDX8 s32, s28, null ; offset=32 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00018 fam=1 op=0x004 0x00000018: S_MOV_B64 s30, exec_lo
+pc=0x0001c fam=1 op=0x00a 0x0000001c: S_WQM_B64 exec_lo, exec_lo
+pc=0x00020 fam=11 op=0x000 0x00000020: V_INTERP_P1_F32 v56, v0, 0, 0
+pc=0x00024 fam=11 op=0x000 0x00000024: V_INTERP_P1_F32 v57, v0, 0, 1
+pc=0x00028 fam=11 op=0x001 0x00000028: V_INTERP_P2_F32 v56, v1, 0, 0
+pc=0x0002c fam=11 op=0x001 0x0000002c: V_INTERP_P2_F32 v57, v1, 0, 1
+pc=0x00030 fam=5 op=0x00c 0x00000030: S_WAITCNT 0x0000c07f
+pc=0x00034 fam=17 op=0x020 0x00000034: image_sample v58, v56, s16, s40 ; dmask=0x1 image_dim=2d sample_flags=none addr_components=2
+pc=0x0003c fam=17 op=0x020 0x0000003c: image_sample v7, v56, s32, s24 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2
+pc=0x00044 fam=5 op=0x00c 0x00000044: S_WAITCNT 0x00003f71
+pc=0x00048 fam=10 op=0x002 0x00000048: V_CMP_EQ_F32 s16, 1.000000, v58
+pc=0x00050 fam=5 op=0x00c 0x00000050: S_WAITCNT 0x00003f70
+pc=0x00054 fam=10 op=0x006 0x00000054: V_CMP_GE_F32 vcc_lo, 0, v7
+pc=0x00058 fam=2 op=0x011 0x00000058: S_OR_B64 vcc_lo, vcc_lo, s16
+pc=0x0005c fam=2 op=0x015 0x0000005c: S_ANDN2_B64 s30, s30, vcc_lo
+pc=0x00060 fam=5 op=0x004 0x00000060: S_CBRANCH_SCC0 0x000029bc
+pc=0x00064 fam=1 op=0x00a 0x00000064: S_WQM_B64 exec_lo, s30
+pc=0x00068 fam=12 op=0x003 0x00000068: S_LOAD_DWORDX8 s16, s28, null ; offset=0 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00070 fam=17 op=0x020 0x00000070: image_sample v15, v56, s0, s24 ; dmask=0x7 image_dim=2d sample_flags=none addr_components=2
+pc=0x00078 fam=17 op=0x020 0x00000078: image_sample v11, v56, s8, s24 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2
+pc=0x00080 fam=12 op=0x002 0x00000080: S_LOAD_DWORDX4 s0, s28, null ; offset=448 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00088 fam=8 op=0x141 0x00000088: V_MAD_F32 v78, 2.000000, v56, -1.000000
+pc=0x00090 fam=7 op=0x010 0x00000090: V_MAX_F32 v18.clamp, 0, v7
+pc=0x00098 fam=5 op=0x00c 0x00000098: S_WAITCNT 0x0000c07f
+pc=0x0009c fam=12 op=0x00c 0x0000009c: S_BUFFER_LOAD_DWORDX16 s32, s0, null ; offset=256 offset2=0 dwords=16 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x000a4 fam=17 op=0x020 0x000000a4: image_sample v4, v56, s16, s24 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2
+pc=0x000ac fam=8 op=0x141 0x000000ac: V_MAD_F32 v77, 2.000000, v57, -1.000000
+pc=0x000b4 fam=5 op=0x00c 0x000000b4: S_WAITCNT 0x0000c07f
+pc=0x000b8 fam=7 op=0x008 0x000000b8: V_MUL_F32 v21, s32, v78
+pc=0x000bc fam=7 op=0x008 0x000000bc: V_MUL_F32 v19, s33, v78
+pc=0x000c0 fam=7 op=0x008 0x000000c0: V_MUL_F32 v20, s34, v78
+pc=0x000c4 fam=12 op=0x00c 0x000000c4: S_BUFFER_LOAD_DWORDX16 s48, s0, null ; offset=192 offset2=0 dwords=16 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x000cc fam=6 op=0x02a 0x000000cc: V_RCP_F32 v0, v18
+pc=0x000d0 fam=8 op=0x11f 0x000000d0: V_MAC_F32 v21, s36, v77.neg
+pc=0x000d8 fam=8 op=0x11f 0x000000d8: V_MAC_F32 v19, s37, v77.neg
+pc=0x000e0 fam=8 op=0x11f 0x000000e0: V_MAC_F32 v20, s38, v77.neg
+pc=0x000e8 fam=12 op=0x00a 0x000000e8: S_BUFFER_LOAD_DWORDX4 s16, s0, null ; offset=400 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x000f0 fam=12 op=0x002 0x000000f0: S_LOAD_DWORDX4 s68, s28, null ; offset=464 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x000f8 fam=7 op=0x01f 0x000000f8: V_MAC_F32 v21, s40, v58
+pc=0x000fc fam=7 op=0x01f 0x000000fc: V_MAC_F32 v19, s41, v58
+pc=0x00100 fam=7 op=0x01f 0x00000100: V_MAC_F32 v20, s42, v58
+pc=0x00104 fam=5 op=0x00c 0x00000104: S_WAITCNT 0x0000c07f
+pc=0x00108 fam=12 op=0x008 0x00000108: S_BUFFER_LOAD_DWORD vcc_lo, s68, null ; offset=176 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00110 fam=1 op=0x003 0x00000110: S_MOV_B32 s4, m0
+pc=0x00114 fam=7 op=0x003 0x00000114: V_ADD_F32 v1, s44, v21
+pc=0x00118 fam=7 op=0x003 0x00000118: V_ADD_F32 v19, s45, v19
+pc=0x0011c fam=7 op=0x003 0x0000011c: V_ADD_F32 v20, s46, v20
+pc=0x00120 fam=5 op=0x00c 0x00000120: S_WAITCNT 0x0000c07f
+pc=0x00124 fam=7 op=0x003 0x00000124: V_ADD_F32 v23, vcc_lo, v9
+pc=0x00128 fam=3 op=0x000 0x00000128: S_MOVK_I32 m0, 0
+pc=0x0012c fam=6 op=0x001 0x0000012c: V_MOV_B32 v76, 0
+pc=0x00130 fam=16 op=0x0b0 0x00000130: DS_WRITE_ADDTID_B32 v0, v0 ; offset=0 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00138 fam=8 op=0x141 0x00000138: V_MAD_F32 v18, s35, v78, s47
+pc=0x00140 fam=7 op=0x010 0x00000140: V_MAX_F32 v73.clamp, 0, v23
+pc=0x00148 fam=1 op=0x003 0x00000148: S_MOV_B32 m0, s4
+pc=0x0014c fam=12 op=0x00c 0x0000014c: S_BUFFER_LOAD_DWORDX16 s0, s68, null ; offset=32 offset2=0 dwords=16 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00154 fam=6 op=0x001 0x00000154: V_MOV_B32 v75, 0
+pc=0x00158 fam=8 op=0x141 0x00000158: V_MAD_F32 v9, s39, v77.neg, v18
+pc=0x00160 fam=7 op=0x004 0x00000160: V_SUB_F32 v71, 1.000000, v73
+pc=0x00164 fam=6 op=0x001 0x00000164: V_MOV_B32 v74, 0
+pc=0x00168 fam=5 op=0x00c 0x00000168: S_WAITCNT 0x0000c07f
+pc=0x0016c fam=1 op=0x003 0x0000016c: S_MOV_B32 s3, m0
+pc=0x00170 fam=3 op=0x000 0x00000170: S_MOVK_I32 m0, 0
+pc=0x00174 fam=7 op=0x01f 0x00000174: V_MAC_F32 v9, s43, v58
+pc=0x00178 fam=12 op=0x009 0x00000178: S_BUFFER_LOAD_DWORDX2 s72, s68, null ; offset=124 offset2=0 dwords=2 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00180 fam=12 op=0x00a 0x00000180: S_BUFFER_LOAD_DWORDX4 s64, s68, null ; offset=96 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00188 fam=1 op=0x004 0x00000188: S_MOV_B64 s74, exec_lo
+pc=0x0018c fam=6 op=0x02a 0x0000018c: V_RCP_F32 v18, v9
+pc=0x00190 fam=7 op=0x008 0x00000190: V_MUL_F32 v9, v18, v1
+pc=0x00194 fam=7 op=0x008 0x00000194: V_MUL_F32 v1, v18, v19
+pc=0x00198 fam=7 op=0x008 0x00000198: V_MUL_F32 v59, v18, v20
+pc=0x0019c fam=8 op=0x141 0x0000019c: V_MAD_F32 v19, s48, v9, s60
+pc=0x001a4 fam=8 op=0x141 0x000001a4: V_MAD_F32 v20, s49, v9, s61
+pc=0x001ac fam=8 op=0x141 0x000001ac: V_MAD_F32 v18, s50, v9, s62
+pc=0x001b4 fam=7 op=0x008 0x000001b4: V_MUL_F32 v9, v9, v9
+pc=0x001b8 fam=8 op=0x141 0x000001b8: V_MAD_F32 v60, s52, v1, v19
+pc=0x001c0 fam=8 op=0x141 0x000001c0: V_MAD_F32 v61, s53, v1, v20
+pc=0x001c8 fam=8 op=0x141 0x000001c8: V_MAD_F32 v62, s54, v1, v18
+pc=0x001d0 fam=7 op=0x01f 0x000001d0: V_MAC_F32 v9, v1, v1
+pc=0x001d4 fam=7 op=0x01f 0x000001d4: V_MAC_F32 v60, s56, v59
+pc=0x001d8 fam=7 op=0x01f 0x000001d8: V_MAC_F32 v61, s57, v59
+pc=0x001dc fam=7 op=0x01f 0x000001dc: V_MAC_F32 v62, s58, v59
+pc=0x001e0 fam=7 op=0x01f 0x000001e0: V_MAC_F32 v9, v59, v59
+pc=0x001e4 fam=7 op=0x004 0x000001e4: V_SUB_F32 v65, s16, v60
+pc=0x001e8 fam=7 op=0x004 0x000001e8: V_SUB_F32 v64, s17, v61
+pc=0x001ec fam=7 op=0x004 0x000001ec: V_SUB_F32 v63, s18, v62
+pc=0x001f0 fam=6 op=0x033 0x000001f0: V_SQRT_F32 v66, v9
+pc=0x001f4 fam=7 op=0x008 0x000001f4: V_MUL_F32 v1, v65, v65
+pc=0x001f8 fam=8 op=0x141 0x000001f8: V_MAD_F32 v48, v64, v64, v1
+pc=0x00200 fam=5 op=0x00c 0x00000200: S_WAITCNT 0x00003f72
+pc=0x00204 fam=7 op=0x008 0x00000204: V_MUL_F32 v15, v15, v0
+pc=0x00208 fam=7 op=0x008 0x00000208: V_MUL_F32 v16, v0, v16
+pc=0x0020c fam=7 op=0x008 0x0000020c: V_MUL_F32 v17, v0, v17
+pc=0x00210 fam=7 op=0x01f 0x00000210: V_MAC_F32 v48, v63, v63
+pc=0x00214 fam=5 op=0x00c 0x00000214: S_WAITCNT 0x00003f71
+pc=0x00218 fam=8 op=0x141 0x00000218: V_MAD_F32 v9, 2.000000, v12, -1.000000
+pc=0x00220 fam=8 op=0x141 0x00000220: V_MAD_F32 v0, 2.000000, v15, -1.000000
+pc=0x00228 fam=8 op=0x141 0x00000228: V_MAD_F32 v12, 2.000000, v16, -1.000000
+pc=0x00230 fam=8 op=0x141 0x00000230: V_MAD_F32 v15, 2.000000, v17, -1.000000
+pc=0x00238 fam=6 op=0x02e 0x00000238: V_RSQ_F32 v1, v48
+pc=0x0023c fam=5 op=0x00c 0x0000023c: S_WAITCNT 0x00003f70
+pc=0x00240 fam=7 op=0x010 0x00000240: V_MAX_F32 v70.clamp, 0, v7
+pc=0x00248 fam=16 op=0x0b0 0x00000248: DS_WRITE_ADDTID_B32 v0, v0 ; offset=1024 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00250 fam=16 op=0x0b0 0x00000250: DS_WRITE_ADDTID_B32 v0, v0 ; offset=768 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00258 fam=16 op=0x0b0 0x00000258: DS_WRITE_ADDTID_B32 v0, v0 ; offset=256 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00260 fam=7 op=0x008 0x00000260: V_MUL_F32 v67, v1, v65
+pc=0x00264 fam=7 op=0x008 0x00000264: V_MUL_F32 v68, v1, v64
+pc=0x00268 fam=7 op=0x008 0x00000268: V_MUL_F32 v69, v1, v63
+pc=0x0026c fam=8 op=0x141 0x0000026c: V_MAD_F32 v1, 2.000000, v11, -1.000000
+pc=0x00274 fam=8 op=0x141 0x00000274: V_MAD_F32 v11, 2.000000, v13, -1.000000
+pc=0x0027c fam=7 op=0x008 0x0000027c: V_MUL_F32 v13, v0, v0
+pc=0x00280 fam=7 op=0x004 0x00000280: V_SUB_F32 v4, 1.000000, v70
+pc=0x00284 fam=7 op=0x010 0x00000284: V_MAX_F32 v72, v14, v8
+pc=0x00288 fam=7 op=0x008 0x00000288: V_MUL_F32 v16, v1, v1
+pc=0x0028c fam=8 op=0x141 0x0000028c: V_MAD_F32 v8, v12, v12, v13
+pc=0x00294 fam=7 op=0x01f 0x00000294: V_MAC_F32 v16, v9, v9
+pc=0x00298 fam=7 op=0x01f 0x00000298: V_MAC_F32 v8, v15, v15
+pc=0x0029c fam=7 op=0x01f 0x0000029c: V_MAC_F32 v16, v11, v11
+pc=0x002a0 fam=6 op=0x02e 0x000002a0: V_RSQ_F32 v8, v8
+pc=0x002a4 fam=7 op=0x008 0x000002a4: V_MUL_F32 v82, v8, v0
+pc=0x002a8 fam=7 op=0x008 0x000002a8: V_MUL_F32 v81, v8, v12
+pc=0x002ac fam=7 op=0x008 0x000002ac: V_MUL_F32 v80, v8, v15
+pc=0x002b0 fam=7 op=0x008 0x000002b0: V_MUL_F32 v0, v82, v67
+pc=0x002b4 fam=7 op=0x01f 0x000002b4: V_MAC_F32 v0, v68, v81
+pc=0x002b8 fam=8 op=0x11f 0x000002b8: V_MAC_F32 v0.clamp, v69, v80
+pc=0x002c0 fam=16 op=0x0b0 0x000002c0: DS_WRITE_ADDTID_B32 v0, v0 ; offset=512 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x002c8 fam=10 op=0x01d 0x000002c8: V_CMPX_NEQ_F32 exec_lo, 0, v16
+pc=0x002cc fam=1 op=0x003 0x000002cc: S_MOV_B32 m0, s3
+pc=0x002d0 fam=5 op=0x008 0x000002d0: S_CBRANCH_EXECZ 0x0000031c
+pc=0x002d4 fam=6 op=0x02e 0x000002d4: V_RSQ_F32 v8, v16
+pc=0x002d8 fam=12 op=0x002 0x000002d8: S_LOAD_DWORDX4 s16, s28, null ; offset=464 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x002e0 fam=6 op=0x033 0x000002e0: V_SQRT_F32 v0, v16
+pc=0x002e4 fam=5 op=0x00c 0x000002e4: S_WAITCNT 0x0000c07f
+pc=0x002e8 fam=12 op=0x008 0x000002e8: S_BUFFER_LOAD_DWORD vcc_lo, s16, null ; offset=172 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x002f0 fam=5 op=0x00c 0x000002f0: S_WAITCNT 0x0000c07f
+pc=0x002f4 fam=7 op=0x008 0x000002f4: V_MUL_F32 v7, vcc_lo, v8
+pc=0x002f8 fam=7 op=0x00f 0x000002f8: V_MIN_F32 v0, 0x3dcccccd, v0
+pc=0x00300 fam=7 op=0x008 0x00000300: V_MUL_F32 v1, v7, v1
+pc=0x00304 fam=7 op=0x008 0x00000304: V_MUL_F32 v0, v0, v0
+pc=0x00308 fam=7 op=0x008 0x00000308: V_MUL_F32 v8, v7, v9
+pc=0x0030c fam=7 op=0x008 0x0000030c: V_MUL_F32 v7, v7, v11
+pc=0x00310 fam=7 op=0x008 0x00000310: V_MUL_F32 v76, v1, v0
+pc=0x00314 fam=7 op=0x008 0x00000314: V_MUL_F32 v75, v8, v0
+pc=0x00318 fam=7 op=0x008 0x00000318: V_MUL_F32 v74, v7, v0
+pc=0x0031c fam=12 op=0x002 0x0000031c: S_LOAD_DWORDX4 s48, s28, null ; offset=464 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00324 fam=1 op=0x004 0x00000324: S_MOV_B64 exec_lo, s74
+pc=0x00328 fam=12 op=0x002 0x00000328: S_LOAD_DWORDX4 s40, s28, null ; offset=368 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00330 fam=12 op=0x003 0x00000330: S_LOAD_DWORDX8 s32, s28, null ; offset=96 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00338 fam=7 op=0x008 0x00000338: V_MUL_F32 v53, v82, v82
+pc=0x0033c fam=7 op=0x008 0x0000033c: V_MUL_F32 v49, v81, v81
+pc=0x00340 fam=5 op=0x00c 0x00000340: S_WAITCNT 0x0000c07f
+pc=0x00344 fam=12 op=0x00a 0x00000344: S_BUFFER_LOAD_DWORDX4 s24, s48, null ; offset=16 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0034c fam=12 op=0x00a 0x0000034c: S_BUFFER_LOAD_DWORDX4 s44, s48, null ; offset=140 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00354 fam=7 op=0x008 0x00000354: V_MUL_F32 v83, v80, v80
+pc=0x00358 fam=7 op=0x008 0x00000358: V_MUL_F32 v0, v53, v53
+pc=0x0035c fam=5 op=0x00c 0x0000035c: S_WAITCNT 0x0000c07f
+pc=0x00360 fam=8 op=0x141 0x00000360: V_MAD_F32 v7, s26, v74.neg, v62
+pc=0x00368 fam=6 op=0x02a 0x00000368: V_RCP_F32 v22, s44
+pc=0x0036c fam=8 op=0x141 0x0000036c: V_MAD_F32 v8, s26, v75.neg, v61
+pc=0x00374 fam=8 op=0x141 0x00000374: V_MAD_F32 v21, s26, v76.neg, v60
+pc=0x0037c fam=8 op=0x141 0x0000037c: V_MAD_F32 v1, v49, v49, v0
+pc=0x00384 fam=7 op=0x008 0x00000384: V_MUL_F32 v19, v83, v83
+pc=0x00388 fam=7 op=0x008 0x00000388: V_MUL_F32 v27, v22, v7
+pc=0x0038c fam=7 op=0x008 0x0000038c: V_MUL_F32 v28, v22, v8
+pc=0x00390 fam=7 op=0x008 0x00000390: V_MUL_F32 v24, v22, v21
+pc=0x00394 fam=7 op=0x01f 0x00000394: V_MAC_F32 v1, v83, v83
+pc=0x00398 fam=8 op=0x141 0x00000398: V_MAD_F32 v39, s27, v76.neg, v60
+pc=0x003a0 fam=6 op=0x02a 0x000003a0: V_RCP_F32 v40, s45
+pc=0x003a4 fam=12 op=0x003 0x000003a4: S_LOAD_DWORDX8 s16, s28, null ; offset=128 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x003ac fam=17 op=0x020 0x000003ac: image_sample v15, v27, s32, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2
+pc=0x003b4 fam=17 op=0x020 0x000003b4: image_sample v11, v24, s32, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2 nsa_dwords=1 nsa_addr=27,0,0,0
+pc=0x003c0 fam=6 op=0x02a 0x000003c0: V_RCP_F32 v20, v1
+pc=0x003c4 fam=7 op=0x008 0x000003c4: V_MUL_F32 v1, v49, v49
+pc=0x003c8 fam=7 op=0x008 0x000003c8: V_MUL_F32 v37, v22, v39
+pc=0x003cc fam=7 op=0x008 0x000003cc: V_MUL_F32 v7, v40, v7
+pc=0x003d0 fam=7 op=0x008 0x000003d0: V_MUL_F32 v46, v40, v21
+pc=0x003d4 fam=7 op=0x008 0x000003d4: V_MUL_F32 v9, v0, v20
+pc=0x003d8 fam=7 op=0x008 0x000003d8: V_MUL_F32 v79, v1, v20
+pc=0x003dc fam=8 op=0x141 0x000003dc: V_MAD_F32 v0, s27, v74.neg, v62
+pc=0x003e4 fam=8 op=0x141 0x000003e4: V_MAD_F32 v1, s27, v75.neg, v61
+pc=0x003ec fam=7 op=0x008 0x000003ec: V_MUL_F32 v8, v40, v8
+pc=0x003f0 fam=12 op=0x009 0x000003f0: S_BUFFER_LOAD_DWORDX2 vcc_lo, s48, null ; offset=156 offset2=0 dwords=2 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x003f8 fam=1 op=0x003 0x000003f8: S_MOV_B32 s3, m0
+pc=0x003fc fam=7 op=0x008 0x000003fc: V_MUL_F32 v38, v22, v0
+pc=0x00400 fam=7 op=0x008 0x00000400: V_MUL_F32 v36, v22, v1
+pc=0x00404 fam=7 op=0x008 0x00000404: V_MUL_F32 v0, v40, v0
+pc=0x00408 fam=5 op=0x00c 0x00000408: S_WAITCNT 0x0000c07f
+pc=0x0040c fam=7 op=0x004 0x0000040c: V_SUB_F32 v47, vcc_hi, vcc_lo
+pc=0x00414 fam=7 op=0x008 0x00000414: V_MUL_F32 v1, v40, v1
+pc=0x00418 fam=3 op=0x000 0x00000418: S_MOVK_I32 m0, 0
+pc=0x0041c fam=5 op=0x00c 0x0000041c: S_WAITCNT 0x00003f71
+pc=0x00420 fam=8 op=0x141 0x00000420: V_MAD_F32 v15, 2.000000, v15, -1.000000
+pc=0x00428 fam=8 op=0x141 0x00000428: V_MAD_F32 v16, 2.000000, v16, -1.000000
+pc=0x00430 fam=5 op=0x00c 0x00000430: S_WAITCNT 0x00003f70
+pc=0x00434 fam=8 op=0x141 0x00000434: V_MAD_F32 v21, 2.000000, v11, -1.000000
+pc=0x0043c fam=8 op=0x141 0x0000043c: V_MAD_F32 v22, 2.000000, v12, -1.000000
+pc=0x00444 fam=8 op=0x141 0x00000444: V_MAD_F32 v11, s46, v15, v80
+pc=0x0044c fam=8 op=0x141 0x0000044c: V_MAD_F32 v12, s46, v16, v81
+pc=0x00454 fam=8 op=0x141 0x00000454: V_MAD_F32 v16, s46, v21, v82
+pc=0x0045c fam=8 op=0x141 0x0000045c: V_MAD_F32 v15, s46, v22, v80
+pc=0x00464 fam=7 op=0x008 0x00000464: V_MUL_F32 v22, v11, v11
+pc=0x00468 fam=7 op=0x008 0x00000468: V_MUL_F32 v21, v16, v16
+pc=0x0046c fam=7 op=0x01f 0x0000046c: V_MAC_F32 v22, v12, v12
+pc=0x00470 fam=8 op=0x141 0x00000470: V_MAD_F32 v23, v15, v15, v21
+pc=0x00478 fam=7 op=0x01f 0x00000478: V_MAC_F32 v22, v82, v82
+pc=0x0047c fam=7 op=0x01f 0x0000047c: V_MAC_F32 v23, v81, v81
+pc=0x00480 fam=6 op=0x02e 0x00000480: V_RSQ_F32 v21, v22
+pc=0x00484 fam=6 op=0x02e 0x00000484: V_RSQ_F32 v22, v23
+pc=0x00488 fam=7 op=0x008 0x00000488: V_MUL_F32 v25, v21, v82
+pc=0x0048c fam=7 op=0x008 0x0000048c: V_MUL_F32 v26, v21, v9
+pc=0x00490 fam=7 op=0x008 0x00000490: V_MUL_F32 v21, v22, v79
+pc=0x00494 fam=7 op=0x008 0x00000494: V_MUL_F32 v22, v22, v81
+pc=0x00498 fam=7 op=0x008 0x00000498: V_MUL_F32 v29, v25, v9
+pc=0x0049c fam=7 op=0x008 0x0000049c: V_MUL_F32 v30, v26, v11
+pc=0x004a0 fam=7 op=0x008 0x000004a0: V_MUL_F32 v11, v19, v20
+pc=0x004a4 fam=7 op=0x008 0x000004a4: V_MUL_F32 v12, v26, v12
+pc=0x004a8 fam=7 op=0x01f 0x000004a8: V_MAC_F32 v29, v16, v21
+pc=0x004ac fam=7 op=0x01f 0x000004ac: V_MAC_F32 v30, v15, v21
+pc=0x004b0 fam=7 op=0x01f 0x000004b0: V_MAC_F32 v12, v79, v22
+pc=0x004b4 fam=17 op=0x020 0x000004b4: image_sample v19, v24, s32, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2 nsa_dwords=1 nsa_addr=28,0,0,0
+pc=0x004c0 fam=5 op=0x00c 0x000004c0: S_WAITCNT 0x00003f70
+pc=0x004c4 fam=8 op=0x141 0x000004c4: V_MAD_F32 v19, 2.000000, v19, -1.000000
+pc=0x004cc fam=8 op=0x141 0x000004cc: V_MAD_F32 v20, 2.000000, v20, -1.000000
+pc=0x004d4 fam=8 op=0x141 0x000004d4: V_MAD_F32 v23, s46, v19, v82
+pc=0x004dc fam=8 op=0x141 0x000004dc: V_MAD_F32 v19, s46, v20, v81
+pc=0x004e4 fam=7 op=0x008 0x000004e4: V_MUL_F32 v20, v23, v23
+pc=0x004e8 fam=7 op=0x01f 0x000004e8: V_MAC_F32 v20, v19, v19
+pc=0x004ec fam=7 op=0x01f 0x000004ec: V_MAC_F32 v20, v80, v80
+pc=0x004f0 fam=6 op=0x02e 0x000004f0: V_RSQ_F32 v27, v20
+pc=0x004f4 fam=7 op=0x008 0x000004f4: V_MUL_F32 v20, v27, v11
+pc=0x004f8 fam=7 op=0x008 0x000004f8: V_MUL_F32 v27, v27, v80
+pc=0x004fc fam=7 op=0x01f 0x000004fc: V_MAC_F32 v29, v23, v20
+pc=0x00500 fam=7 op=0x01f 0x00000500: V_MAC_F32 v30, v11, v27
+pc=0x00504 fam=7 op=0x01f 0x00000504: V_MAC_F32 v12, v19, v20
+pc=0x00508 fam=7 op=0x008 0x00000508: V_MUL_F32 v19, v29, v29
+pc=0x0050c fam=7 op=0x01f 0x0000050c: V_MAC_F32 v19, v12, v12
+pc=0x00510 fam=7 op=0x01f 0x00000510: V_MAC_F32 v19, v30, v30
+pc=0x00514 fam=6 op=0x02e 0x00000514: V_RSQ_F32 v19, v19
+pc=0x00518 fam=7 op=0x008 0x00000518: V_MUL_F32 v12, v19, v12
+pc=0x0051c fam=7 op=0x008 0x0000051c: V_MUL_F32 v15, v19, v30
+pc=0x00520 fam=7 op=0x008 0x00000520: V_MUL_F32 v19, v19, v29
+pc=0x00524 fam=17 op=0x020 0x00000524: image_sample v27, v38, s32, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2 nsa_dwords=1 nsa_addr=36,0,0,0
+pc=0x00530 fam=17 op=0x020 0x00000530: image_sample v23, v37, s32, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2
+pc=0x00538 fam=5 op=0x00c 0x00000538: S_WAITCNT 0x00003f71
+pc=0x0053c fam=8 op=0x141 0x0000053c: V_MAD_F32 v27, 2.000000, v27, -1.000000
+pc=0x00544 fam=8 op=0x141 0x00000544: V_MAD_F32 v28, 2.000000, v28, -1.000000
+pc=0x0054c fam=5 op=0x00c 0x0000054c: S_WAITCNT 0x00003f70
+pc=0x00550 fam=8 op=0x141 0x00000550: V_MAD_F32 v20, 2.000000, v24, -1.000000
+pc=0x00558 fam=8 op=0x141 0x00000558: V_MAD_F32 v16, 2.000000, v23, -1.000000
+pc=0x00560 fam=8 op=0x141 0x00000560: V_MAD_F32 v27, s46, v27, v80
+pc=0x00568 fam=8 op=0x141 0x00000568: V_MAD_F32 v28, s46, v28, v81
+pc=0x00570 fam=8 op=0x141 0x00000570: V_MAD_F32 v20, s46, v20, v80
+pc=0x00578 fam=8 op=0x141 0x00000578: V_MAD_F32 v16, s46, v16, v82
+pc=0x00580 fam=8 op=0x141 0x00000580: V_MAD_F32 v31, v27, v27, v53
+pc=0x00588 fam=8 op=0x141 0x00000588: V_MAD_F32 v23, v16, v16, v49
+pc=0x00590 fam=7 op=0x01f 0x00000590: V_MAC_F32 v31, v28, v28
+pc=0x00594 fam=7 op=0x01f 0x00000594: V_MAC_F32 v23, v20, v20
+pc=0x00598 fam=6 op=0x02e 0x00000598: V_RSQ_F32 v31, v31
+pc=0x0059c fam=6 op=0x02e 0x0000059c: V_RSQ_F32 v24, v23
+pc=0x005a0 fam=7 op=0x008 0x000005a0: V_MUL_F32 v32, v31, v82
+pc=0x005a4 fam=7 op=0x008 0x000005a4: V_MUL_F32 v31, v31, v9
+pc=0x005a8 fam=7 op=0x008 0x000005a8: V_MUL_F32 v23, v24, v79
+pc=0x005ac fam=7 op=0x008 0x000005ac: V_MUL_F32 v24, v24, v81
+pc=0x005b0 fam=7 op=0x008 0x000005b0: V_MUL_F32 v41, v32, v9
+pc=0x005b4 fam=7 op=0x008 0x000005b4: V_MUL_F32 v42, v31, v28
+pc=0x005b8 fam=7 op=0x008 0x000005b8: V_MUL_F32 v43, v31, v27
+pc=0x005bc fam=17 op=0x020 0x000005bc: image_sample v31, v37, s32, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2 nsa_dwords=1 nsa_addr=36,0,0,0
+pc=0x005c8 fam=17 op=0x020 0x000005c8: image_sample v35, v46, s16, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2 nsa_dwords=1 nsa_addr=7,0,0,0
+pc=0x005d4 fam=7 op=0x01f 0x000005d4: V_MAC_F32 v41, v16, v23
+pc=0x005d8 fam=7 op=0x01f 0x000005d8: V_MAC_F32 v42, v79, v24
+pc=0x005dc fam=7 op=0x01f 0x000005dc: V_MAC_F32 v43, v20, v23
+pc=0x005e0 fam=5 op=0x00c 0x000005e0: S_WAITCNT 0x00003f71
+pc=0x005e4 fam=8 op=0x141 0x000005e4: V_MAD_F32 v20, 2.000000, v31, -1.000000
+pc=0x005ec fam=8 op=0x141 0x000005ec: V_MAD_F32 v28, 2.000000, v32, -1.000000
+pc=0x005f4 fam=5 op=0x00c 0x000005f4: S_WAITCNT 0x00003f70
+pc=0x005f8 fam=8 op=0x141 0x000005f8: V_MAD_F32 v31, 2.000000, v36, -1.000000
+pc=0x00600 fam=8 op=0x141 0x00000600: V_MAD_F32 v27, s46, v20, v82
+pc=0x00608 fam=8 op=0x141 0x00000608: V_MAD_F32 v28, s46, v28, v81
+pc=0x00610 fam=8 op=0x141 0x00000610: V_MAD_F32 v20, s47, v31, v80
+pc=0x00618 fam=8 op=0x141 0x00000618: V_MAD_F32 v31, v27, v27, v83
+pc=0x00620 fam=7 op=0x01f 0x00000620: V_MAC_F32 v31, v28, v28
+pc=0x00624 fam=6 op=0x02e 0x00000624: V_RSQ_F32 v32, v31
+pc=0x00628 fam=7 op=0x008 0x00000628: V_MUL_F32 v31, v32, v11
+pc=0x0062c fam=7 op=0x008 0x0000062c: V_MUL_F32 v32, v32, v80
+pc=0x00630 fam=7 op=0x01f 0x00000630: V_MAC_F32 v41, v27, v31
+pc=0x00634 fam=7 op=0x01f 0x00000634: V_MAC_F32 v42, v28, v31
+pc=0x00638 fam=7 op=0x01f 0x00000638: V_MAC_F32 v43, v11, v32
+pc=0x0063c fam=7 op=0x008 0x0000063c: V_MUL_F32 v16, v41, v41
+pc=0x00640 fam=7 op=0x01f 0x00000640: V_MAC_F32 v16, v42, v42
+pc=0x00644 fam=7 op=0x01f 0x00000644: V_MAC_F32 v16, v43, v43
+pc=0x00648 fam=6 op=0x02e 0x00000648: V_RSQ_F32 v28, v16
+pc=0x0064c fam=8 op=0x141 0x0000064c: V_MAD_F32 v16, v28, v42, v12.neg
+pc=0x00654 fam=8 op=0x141 0x00000654: V_MAD_F32 v23, v28, v43, v15.neg
+pc=0x0065c fam=8 op=0x141 0x0000065c: V_MAD_F32 v24, v28, v41, v19.neg
+pc=0x00664 fam=7 op=0x01f 0x00000664: V_MAC_F32 v12, s25, v16
+pc=0x00668 fam=7 op=0x008 0x00000668: V_MUL_F32 v16, v40, v39
+pc=0x0066c fam=17 op=0x020 0x0000066c: image_sample v39, v7, s16, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2
+pc=0x00674 fam=8 op=0x141 0x00000674: V_MAD_F32 v7, s25, v24, v19
+pc=0x0067c fam=8 op=0x141 0x0000067c: V_MAD_F32 v19, 2.000000, v35, -1.000000
+pc=0x00684 fam=7 op=0x01f 0x00000684: V_MAC_F32 v15, s25, v23
+pc=0x00688 fam=8 op=0x141 0x00000688: V_MAD_F32 v19, s47, v19, v82
+pc=0x00690 fam=8 op=0x141 0x00000690: V_MAD_F32 v23, v19, v19, v49
+pc=0x00698 fam=7 op=0x01f 0x00000698: V_MAC_F32 v23, v20, v20
+pc=0x0069c fam=6 op=0x02e 0x0000069c: V_RSQ_F32 v24, v23
+pc=0x006a0 fam=7 op=0x008 0x000006a0: V_MUL_F32 v23, v24, v79
+pc=0x006a4 fam=7 op=0x008 0x000006a4: V_MUL_F32 v24, v24, v81
+pc=0x006a8 fam=5 op=0x00c 0x000006a8: S_WAITCNT 0x00003f70
+pc=0x006ac fam=8 op=0x141 0x000006ac: V_MAD_F32 v27, 2.000000, v39, -1.000000
+pc=0x006b4 fam=8 op=0x141 0x000006b4: V_MAD_F32 v28, 2.000000, v40, -1.000000
+pc=0x006bc fam=7 op=0x008 0x000006bc: V_MUL_F32 v36, v42, v9
+pc=0x006c0 fam=17 op=0x020 0x000006c0: image_sample v42, v46, s16, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2 nsa_dwords=1 nsa_addr=8,0,0,0
+pc=0x006cc fam=8 op=0x141 0x000006cc: V_MAD_F32 v8, s47, v27, v80
+pc=0x006d4 fam=8 op=0x141 0x000006d4: V_MAD_F32 v27, s47, v28, v81
+pc=0x006dc fam=7 op=0x01f 0x000006dc: V_MAC_F32 v36, v79, v38
+pc=0x006e0 fam=8 op=0x141 0x000006e0: V_MAD_F32 v31, v8, v8, v53
+pc=0x006e8 fam=7 op=0x01f 0x000006e8: V_MAC_F32 v31, v27, v27
+pc=0x006ec fam=6 op=0x02e 0x000006ec: V_RSQ_F32 v31, v31
+pc=0x006f0 fam=7 op=0x008 0x000006f0: V_MUL_F32 v32, v31, v82
+pc=0x006f4 fam=7 op=0x008 0x000006f4: V_MUL_F32 v31, v31, v9
+pc=0x006f8 fam=7 op=0x008 0x000006f8: V_MUL_F32 v38, v32, v9
+pc=0x006fc fam=7 op=0x008 0x000006fc: V_MUL_F32 v27, v31, v27
+pc=0x00700 fam=7 op=0x008 0x00000700: V_MUL_F32 v35, v31, v8
+pc=0x00704 fam=8 op=0x141 0x00000704: V_MAD_F32 v8, v72, v47, vcc_lo
+pc=0x0070c fam=7 op=0x01f 0x0000070c: V_MAC_F32 v38, v19, v23
+pc=0x00710 fam=7 op=0x01f 0x00000710: V_MAC_F32 v27, v79, v24
+pc=0x00714 fam=7 op=0x01f 0x00000714: V_MAC_F32 v35, v20, v23
+pc=0x00718 fam=16 op=0x0b1 0x00000718: DS_READ_ADDTID_B32 v23 ; offset=768 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00720 fam=5 op=0x00c 0x00000720: S_WAITCNT 0x00003f70
+pc=0x00724 fam=8 op=0x141 0x00000724: V_MAD_F32 v31, 2.000000, v43, -1.000000
+pc=0x0072c fam=8 op=0x141 0x0000072c: V_MAD_F32 v20, 2.000000, v42, -1.000000
+pc=0x00734 fam=8 op=0x141 0x00000734: V_MAD_F32 v19, v45, v11, v36
+pc=0x0073c fam=17 op=0x020 0x0000073c: image_sample v45, v16, s16, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2 nsa_dwords=1 nsa_addr=0,0,0,0
+pc=0x00748 fam=8 op=0x141 0x00000748: V_MAD_F32 v28, s47, v31, v81
+pc=0x00750 fam=8 op=0x141 0x00000750: V_MAD_F32 v20, s47, v20, v82
+pc=0x00758 fam=8 op=0x141 0x00000758: V_MAD_F32 v31, v20, v20, v83
+pc=0x00760 fam=7 op=0x01f 0x00000760: V_MAC_F32 v31, v28, v28
+pc=0x00764 fam=6 op=0x02e 0x00000764: V_RSQ_F32 v32, v31
+pc=0x00768 fam=7 op=0x008 0x00000768: V_MUL_F32 v31, v32, v11
+pc=0x0076c fam=7 op=0x008 0x0000076c: V_MUL_F32 v24, v32, v80
+pc=0x00770 fam=8 op=0x141 0x00000770: V_MAD_F32 v20, v31, v20, v38
+pc=0x00778 fam=8 op=0x141 0x00000778: V_MAD_F32 v31, v31, v28, v27
+pc=0x00780 fam=8 op=0x141 0x00000780: V_MAD_F32 v24, v24, v11, v35
+pc=0x00788 fam=7 op=0x008 0x00000788: V_MUL_F32 v32, v20, v20
+pc=0x0078c fam=7 op=0x01f 0x0000078c: V_MAC_F32 v32, v31, v31
+pc=0x00790 fam=7 op=0x01f 0x00000790: V_MAC_F32 v32, v24, v24
+pc=0x00794 fam=6 op=0x02e 0x00000794: V_RSQ_F32 v32, v32
+pc=0x00798 fam=5 op=0x00c 0x00000798: S_WAITCNT 0x00003f70
+pc=0x0079c fam=8 op=0x141 0x0000079c: V_MAD_F32 v27, 2.000000, v45, -1.000000
+pc=0x007a4 fam=8 op=0x141 0x000007a4: V_MAD_F32 v35, 2.000000, v46, -1.000000
+pc=0x007ac fam=7 op=0x008 0x000007ac: V_MUL_F32 v46, v32, v31
+pc=0x007b0 fam=8 op=0x141 0x000007b0: V_MAD_F32 v28, s47, v27, v82
+pc=0x007b8 fam=8 op=0x141 0x000007b8: V_MAD_F32 v27, s47, v35, v80
+pc=0x007c0 fam=7 op=0x01f 0x000007c0: V_MAC_F32 v49, v28, v28
+pc=0x007c4 fam=7 op=0x01f 0x000007c4: V_MAC_F32 v49, v27, v27
+pc=0x007c8 fam=6 op=0x02e 0x000007c8: V_RSQ_F32 v35, v49
+pc=0x007cc fam=17 op=0x020 0x000007cc: image_sample v49, v0, s16, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2
+pc=0x007d4 fam=7 op=0x008 0x000007d4: V_MUL_F32 v0, v35, v79
+pc=0x007d8 fam=7 op=0x008 0x000007d8: V_MUL_F32 v35, v35, v81
+pc=0x007dc fam=5 op=0x00c 0x000007dc: S_WAITCNT 0x00003f70
+pc=0x007e0 fam=8 op=0x141 0x000007e0: V_MAD_F32 v36, 2.000000, v49, -1.000000
+pc=0x007e8 fam=8 op=0x141 0x000007e8: V_MAD_F32 v39, 2.000000, v50, -1.000000
+pc=0x007f0 fam=8 op=0x141 0x000007f0: V_MAD_F32 v43, v52, v9, v19.neg
+pc=0x007f8 fam=8 op=0x141 0x000007f8: V_MAD_F32 v38, s47, v36, v80
+pc=0x00800 fam=8 op=0x141 0x00000800: V_MAD_F32 v39, s47, v39, v81
+pc=0x00808 fam=7 op=0x01f 0x00000808: V_MAC_F32 v43, v79, v48
+pc=0x0080c fam=16 op=0x0b1 0x0000080c: DS_READ_ADDTID_B32 v48 ; offset=256 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00814 fam=1 op=0x003 0x00000814: S_MOV_B32 m0, s3
+pc=0x00818 fam=7 op=0x01f 0x00000818: V_MAC_F32 v53, v38, v38
+pc=0x0081c fam=7 op=0x01f 0x0000081c: V_MAC_F32 v53, v39, v39
+pc=0x00820 fam=6 op=0x02e 0x00000820: V_RSQ_F32 v40, v53
+pc=0x00824 fam=17 op=0x020 0x00000824: image_sample v52, v16, s16, s40 ; dmask=0xf image_dim=2d sample_flags=none addr_components=2 nsa_dwords=1 nsa_addr=1,0,0,0
+pc=0x00830 fam=8 op=0x141 0x00000830: V_MAD_F32 v1, v32, v31, v12.neg
+pc=0x00838 fam=7 op=0x008 0x00000838: V_MUL_F32 v42, v40, v82
+pc=0x0083c fam=7 op=0x008 0x0000083c: V_MUL_F32 v31, v40, v9
+pc=0x00840 fam=7 op=0x008 0x00000840: V_MUL_F32 v42, v42, v9
+pc=0x00844 fam=7 op=0x008 0x00000844: V_MUL_F32 v45, v31, v39
+pc=0x00848 fam=7 op=0x008 0x00000848: V_MUL_F32 v38, v31, v38
+pc=0x0084c fam=7 op=0x008 0x0000084c: V_MUL_F32 v31, v32, v24
+pc=0x00850 fam=8 op=0x141 0x00000850: V_MAD_F32 v24, v32, v24, v15.neg
+pc=0x00858 fam=7 op=0x01f 0x00000858: V_MAC_F32 v42, v28, v0
+pc=0x0085c fam=7 op=0x01f 0x0000085c: V_MAC_F32 v45, v79, v35
+pc=0x00860 fam=8 op=0x141 0x00000860: V_MAD_F32 v0, v0, v27, v38
+pc=0x00868 fam=7 op=0x008 0x00000868: V_MUL_F32 v27, v32, v20
+pc=0x0086c fam=8 op=0x141 0x0000086c: V_MAD_F32 v20, v32, v20, v7.neg
+pc=0x00874 fam=5 op=0x00c 0x00000874: S_WAITCNT 0x00003f70
+pc=0x00878 fam=8 op=0x141 0x00000878: V_MAD_F32 v32, 2.000000, v53, -1.000000
+pc=0x00880 fam=7 op=0x01f 0x00000880: V_MAC_F32 v43, v11, v55
+pc=0x00884 fam=7 op=0x01f 0x00000884: V_MAC_F32 v81, s47, v32
+pc=0x00888 fam=8 op=0x141 0x00000888: V_MAD_F32 v40, s25, v43, v19
+pc=0x00890 fam=8 op=0x141 0x00000890: V_MAD_F32 v19, 2.000000, v52, -1.000000
+pc=0x00898 fam=7 op=0x01f 0x00000898: V_MAC_F32 v82, s47, v19
+pc=0x0089c fam=7 op=0x01f 0x0000089c: V_MAC_F32 v83, v82, v82
+pc=0x008a0 fam=7 op=0x01f 0x000008a0: V_MAC_F32 v83, v81, v81
+pc=0x008a4 fam=6 op=0x02e 0x000008a4: V_RSQ_F32 v39, v83
+pc=0x008a8 fam=7 op=0x008 0x000008a8: V_MUL_F32 v36, v39, v11
+pc=0x008ac fam=7 op=0x008 0x000008ac: V_MUL_F32 v39, v39, v80
+pc=0x008b0 fam=7 op=0x01f 0x000008b0: V_MAC_F32 v42, v82, v36
+pc=0x008b4 fam=7 op=0x01f 0x000008b4: V_MAC_F32 v45, v81, v36
+pc=0x008b8 fam=7 op=0x01f 0x000008b8: V_MAC_F32 v0, v11, v39
+pc=0x008bc fam=7 op=0x008 0x000008bc: V_MUL_F32 v28, v42, v42
+pc=0x008c0 fam=7 op=0x01f 0x000008c0: V_MAC_F32 v28, v45, v45
+pc=0x008c4 fam=7 op=0x01f 0x000008c4: V_MAC_F32 v28, v0, v0
+pc=0x008c8 fam=6 op=0x02e 0x000008c8: V_RSQ_F32 v28, v28
+pc=0x008cc fam=8 op=0x141 0x000008cc: V_MAD_F32 v16, v28, v45, v46.neg
+pc=0x008d4 fam=8 op=0x141 0x000008d4: V_MAD_F32 v27, v28, v42, v27.neg
+pc=0x008dc fam=8 op=0x141 0x000008dc: V_MAD_F32 v31, v28, v0, v31.neg
+pc=0x008e4 fam=7 op=0x01f 0x000008e4: V_MAC_F32 v1, s25, v16
+pc=0x008e8 fam=7 op=0x01f 0x000008e8: V_MAC_F32 v20, s25, v27
+pc=0x008ec fam=7 op=0x01f 0x000008ec: V_MAC_F32 v24, s25, v31
+pc=0x008f0 fam=7 op=0x01f 0x000008f0: V_MAC_F32 v12, v1, v72
+pc=0x008f4 fam=7 op=0x01f 0x000008f4: V_MAC_F32 v7, v20, v72
+pc=0x008f8 fam=7 op=0x01f 0x000008f8: V_MAC_F32 v15, v24, v72
+pc=0x008fc fam=7 op=0x008 0x000008fc: V_MUL_F32 v8, v12, v8
+pc=0x00900 fam=7 op=0x008 0x00000900: V_MUL_F32 v12, v7, v7
+pc=0x00904 fam=7 op=0x01f 0x00000904: V_MAC_F32 v12, v8, v8
+pc=0x00908 fam=7 op=0x01f 0x00000908: V_MAC_F32 v12, v15, v15
+pc=0x0090c fam=6 op=0x02e 0x0000090c: V_RSQ_F32 v12, v12
+pc=0x00910 fam=7 op=0x008 0x00000910: V_MUL_F32 v20, v12, v7
+pc=0x00914 fam=7 op=0x008 0x00000914: V_MUL_F32 v19, v12, v8
+pc=0x00918 fam=7 op=0x008 0x00000918: V_MUL_F32 v16, v12, v15
+pc=0x0091c fam=7 op=0x008 0x0000091c: V_MUL_F32 v1, v67, v20
+pc=0x00920 fam=7 op=0x01f 0x00000920: V_MAC_F32 v1, v19, v68
+pc=0x00924 fam=7 op=0x01f 0x00000924: V_MAC_F32 v1, v16, v69
+pc=0x00928 fam=7 op=0x010 0x00000928: V_MAX_F32 v42.clamp, 0, v1
+pc=0x00930 fam=10 op=0x014 0x00000930: V_CMPX_GT_F32 exec_lo, 0x3e800000, v10
+pc=0x00938 fam=5 op=0x008 0x00000938: S_CBRANCH_EXECZ 0x0000097c
+pc=0x0093c fam=7 op=0x004 0x0000093c: V_SUB_F32 v7, 1.000000, v42
+pc=0x00940 fam=6 op=0x001 0x00000940: V_MOV_B32 v37, 0x3d5ab9f5
+pc=0x00948 fam=7 op=0x008 0x00000948: V_MUL_F32 v7, v7, v7
+pc=0x0094c fam=7 op=0x008 0x0000094c: V_MUL_F32 v7, v7, v7
+pc=0x00950 fam=8 op=0x141 0x00000950: V_MAD_F32 v7, 0x41f80000, v7, 1.000000
+pc=0x0095c fam=7 op=0x003 0x0000095c: V_ADD_F32 v0, v72, v7
+pc=0x00960 fam=8 op=0x11f 0x00000960: V_MAC_F32 v0, v72, v7.neg
+pc=0x00968 fam=7 op=0x008 0x00000968: V_MUL_F32 v7, v4, v0
+pc=0x0096c fam=7 op=0x008 0x0000096c: V_MUL_F32 v26, 0x3ca6e5b2, v7
+pc=0x00974 fam=6 op=0x001 0x00000974: V_MOV_B32 v10, v26
+pc=0x00978 fam=6 op=0x001 0x00000978: V_MOV_B32 v11, v26
+pc=0x0097c fam=2 op=0x015 0x0000097c: S_ANDN2_B64 exec_lo, s74, exec_lo
+pc=0x00980 fam=5 op=0x008 0x00000980: S_CBRANCH_EXECZ 0x00000b10
+pc=0x00984 fam=7 op=0x008 0x00000984: V_MUL_F32 v0, v17, v9
+pc=0x00988 fam=7 op=0x008 0x00000988: V_MUL_F32 v12, v41, v9
+pc=0x0098c fam=8 op=0x141 0x0000098c: V_MAD_F32 v10, 2.000000, v10, 0.500000
+pc=0x00994 fam=1 op=0x004 0x00000994: S_MOV_B64 s16, exec_lo
+pc=0x00998 fam=7 op=0x01f 0x00000998: V_MAC_F32 v0, v79, v13
+pc=0x0099c fam=7 op=0x01f 0x0000099c: V_MAC_F32 v12, v79, v37
+pc=0x009a0 fam=6 op=0x007 0x000009a0: V_CVT_U32_F32 v7, v10
+pc=0x009a4 fam=7 op=0x01f 0x000009a4: V_MAC_F32 v0, v11, v21
+pc=0x009a8 fam=8 op=0x141 0x000009a8: V_MAD_F32 v10, v44, v11, v12
+pc=0x009b0 fam=8 op=0x141 0x000009b0: V_MAD_F32 v12, v29, v9, v0.neg
+pc=0x009b8 fam=8 op=0x141 0x000009b8: V_MAD_F32 v13, v51, v9, v10.neg
+pc=0x009c0 fam=7 op=0x01f 0x000009c0: V_MAC_F32 v12, v79, v25
+pc=0x009c4 fam=7 op=0x01f 0x000009c4: V_MAC_F32 v13, v79, v47
+pc=0x009c8 fam=7 op=0x01f 0x000009c8: V_MAC_F32 v12, v11, v33
+pc=0x009cc fam=7 op=0x01f 0x000009cc: V_MAC_F32 v13, v11, v54
+pc=0x009d0 fam=7 op=0x01f 0x000009d0: V_MAC_F32 v0, s25, v12
+pc=0x009d4 fam=7 op=0x004 0x000009d4: V_SUB_F32 v10, v10, v0
+pc=0x009d8 fam=7 op=0x01f 0x000009d8: V_MAC_F32 v10, s25, v13
+pc=0x009dc fam=8 op=0x141 0x000009dc: V_MAD_F32 v8, v72, v10, v0
+pc=0x009e4 fam=10 op=0x0d5 0x000009e4: V_CMPX_NE_U32 exec_lo, 1, v7
+pc=0x009e8 fam=5 op=0x008 0x000009e8: S_CBRANCH_EXECZ 0x00000a18
+pc=0x009ec fam=1 op=0x003 0x000009ec: S_MOV_B32 vcc_lo, 0xbca3d70a
+pc=0x009f4 fam=7 op=0x021 0x000009f4: V_MADAK_F32 v9, vcc_lo, v72, 0x3d23d70a
+pc=0x009fc fam=10 op=0x0c2 0x000009fc: V_CMP_EQ_U32 vcc_lo, 2, v7
+pc=0x00a00 fam=7 op=0x010 0x00000a00: V_MAX_F32 v7.clamp, 0, v8
+pc=0x00a08 fam=7 op=0x001 0x00000a08: V_CNDMASK_B32 v26, 0, v9
+pc=0x00a0c fam=7 op=0x001 0x00000a0c: V_CNDMASK_B32 v37, 0, v7
+pc=0x00a10 fam=6 op=0x001 0x00000a10: V_MOV_B32 v10, v26
+pc=0x00a14 fam=6 op=0x001 0x00000a14: V_MOV_B32 v11, v26
+pc=0x00a18 fam=2 op=0x015 0x00000a18: S_ANDN2_B64 exec_lo, s16, exec_lo
+pc=0x00a1c fam=5 op=0x008 0x00000a1c: S_CBRANCH_EXECZ 0x00000b10
+pc=0x00a20 fam=7 op=0x008 0x00000a20: V_MUL_F32 v0, v18, v9
+pc=0x00a24 fam=1 op=0x003 0x00000a24: S_MOV_B32 vcc_lo, 0x3e9c5112
+pc=0x00a2c fam=7 op=0x004 0x00000a2c: V_SUB_F32 v7, 1.000000, v42
+pc=0x00a30 fam=7 op=0x010 0x00000a30: V_MAX_F32 v37.clamp, 0, v8
+pc=0x00a38 fam=7 op=0x01f 0x00000a38: V_MAC_F32 v0, v79, v14
+pc=0x00a3c fam=7 op=0x008 0x00000a3c: V_MUL_F32 v7, v7, v7
+pc=0x00a40 fam=7 op=0x01f 0x00000a40: V_MAC_F32 v0, v11, v22
+pc=0x00a44 fam=8 op=0x141 0x00000a44: V_MAD_F32 v9, v30, v9, v0.neg
+pc=0x00a4c fam=7 op=0x01f 0x00000a4c: V_MAC_F32 v9, v79, v26
+pc=0x00a50 fam=7 op=0x01f 0x00000a50: V_MAC_F32 v9, v11, v34
+pc=0x00a54 fam=7 op=0x01f 0x00000a54: V_MAC_F32 v0, s25, v9
+pc=0x00a58 fam=7 op=0x004 0x00000a58: V_SUB_F32 v9, v40, v0
+pc=0x00a5c fam=7 op=0x01f 0x00000a5c: V_MAC_F32 v0, v9, v72
+pc=0x00a60 fam=8 op=0x157 0x00000a60: V_MED3_F32 v8.clamp, 1.000000, v0, 0
+pc=0x00a68 fam=7 op=0x02b 0x00000a68: V_MAC_F32 v8, 2.000000, v8
+pc=0x00a6c fam=7 op=0x020 0x00000a6c: V_MADMK_F32 v10, v42, 0x3f19999a, v8
+pc=0x00a74 fam=7 op=0x008 0x00000a74: V_MUL_F32 v11, 0x400fed4f, v10
+pc=0x00a7c fam=7 op=0x008 0x00000a7c: V_MUL_F32 v9, 0x401feb3c, v10
+pc=0x00a84 fam=7 op=0x008 0x00000a84: V_MUL_F32 v8, 0x402fe928, v10
+pc=0x00a8c fam=8 op=0x141 0x00000a8c: V_MAD_F32 v10, 0xbe6f9db2, v10, 1.000000
+pc=0x00a98 fam=6 op=0x036 0x00000a98: V_COS_F32 v11, v11
+pc=0x00a9c fam=6 op=0x036 0x00000a9c: V_COS_F32 v9, v9
+pc=0x00aa0 fam=6 op=0x036 0x00000aa0: V_COS_F32 v12, v8
+pc=0x00aa4 fam=8 op=0x141 0x00000aa4: V_MAD_F32 v8, v11.neg, v10, 1.000000
+pc=0x00aac fam=8 op=0x141 0x00000aac: V_MAD_F32 v9, v9.neg, v10, 1.000000
+pc=0x00ab4 fam=8 op=0x141 0x00000ab4: V_MAD_F32 v10, v12.neg, v10, 1.000000
+pc=0x00abc fam=7 op=0x021 0x00000abc: V_MADAK_F32 v12, vcc_lo, v8, 0x3f2ea2c4
+pc=0x00ac4 fam=7 op=0x021 0x00000ac4: V_MADAK_F32 v13, vcc_lo, v9, 0x3f2ea2c4
+pc=0x00acc fam=7 op=0x021 0x00000acc: V_MADAK_F32 v11, vcc_lo, v10, 0x3f2ea2c4
+pc=0x00ad4 fam=7 op=0x021 0x00000ad4: V_MADAK_F32 v12, v12, v8, 0x3c4d2cc2
+pc=0x00adc fam=7 op=0x021 0x00000adc: V_MADAK_F32 v13, v13, v9, 0x3c4d2cc2
+pc=0x00ae4 fam=7 op=0x021 0x00000ae4: V_MADAK_F32 v11, v11, v10, 0x3c4d2cc2
+pc=0x00aec fam=7 op=0x008 0x00000aec: V_MUL_F32 v8.clamp, v8, v12
+pc=0x00af4 fam=7 op=0x008 0x00000af4: V_MUL_F32 v9.clamp, v9, v13
+pc=0x00afc fam=7 op=0x008 0x00000afc: V_MUL_F32 v11.clamp, v10, v11
+pc=0x00b04 fam=7 op=0x008 0x00000b04: V_MUL_F32 v26, v8, v7
+pc=0x00b08 fam=7 op=0x008 0x00000b08: V_MUL_F32 v10, v9, v7
+pc=0x00b0c fam=7 op=0x008 0x00000b0c: V_MUL_F32 v11, v11, v7
+pc=0x00b10 fam=12 op=0x001 0x00000b10: S_LOAD_DWORDX2 s16, s28, null ; offset=164 offset2=0 dwords=2 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00b18 fam=1 op=0x004 0x00000b18: S_MOV_B64 exec_lo, s74
+pc=0x00b1c fam=5 op=0x00c 0x00000b1c: S_WAITCNT 0x0000c07f
+pc=0x00b20 fam=2 op=0x00e 0x00000b20: S_AND_B32 vcc_lo, s17, 0x00003fff
+pc=0x00b28 fam=2 op=0x020 0x00000b28: S_LSHR_B32 vcc_hi, s16, 30
+pc=0x00b2c fam=2 op=0x01e 0x00000b2c: S_LSHL_B32 vcc_lo, vcc_lo, 2
+pc=0x00b30 fam=2 op=0x010 0x00000b30: S_OR_B32 vcc_lo, vcc_hi, vcc_lo
+pc=0x00b34 fam=2 op=0x002 0x00000b34: S_ADD_I32 vcc_lo, vcc_lo, 1
+pc=0x00b38 fam=4 op=0x008 0x00000b38: S_CMP_GT_U32 vcc_lo, 1
+pc=0x00b3c fam=5 op=0x004 0x00000b3c: S_CBRANCH_SCC0 0x00000b74
+pc=0x00b40 fam=6 op=0x001 0x00000b40: V_MOV_B32 v41, 0
+pc=0x00b44 fam=12 op=0x002 0x00000b44: S_LOAD_DWORDX4 s24, s28, null ; offset=384 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00b4c fam=12 op=0x003 0x00000b4c: S_LOAD_DWORDX8 s16, s28, null ; offset=160 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00b54 fam=5 op=0x00c 0x00000b54: S_WAITCNT 0x0000c07f
+pc=0x00b58 fam=17 op=0x020 0x00000b58: image_sample v7, v40, s16, s24 ; dmask=0x7 image_dim=2d sample_flags=none addr_components=2
+pc=0x00b60 fam=5 op=0x00c 0x00000b60: S_WAITCNT 0x00003f70
+pc=0x00b64 fam=7 op=0x008 0x00000b64: V_MUL_F32 v14, s73, v7
+pc=0x00b68 fam=7 op=0x008 0x00000b68: V_MUL_F32 v15, s73, v8
+pc=0x00b6c fam=7 op=0x008 0x00000b6c: V_MUL_F32 v35, s73, v9
+pc=0x00b70 fam=5 op=0x002 0x00000b70: S_BRANCH 0x00000ba4
+pc=0x00b74 fam=12 op=0x002 0x00000b74: S_LOAD_DWORDX4 s16, s28, null ; offset=464 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00b7c fam=5 op=0x00c 0x00000b7c: S_WAITCNT 0x0000c07f
+pc=0x00b80 fam=12 op=0x00a 0x00000b80: S_BUFFER_LOAD_DWORDX4 s20, s16, null ; offset=112 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00b88 fam=5 op=0x00c 0x00000b88: S_WAITCNT 0x0000c07f
+pc=0x00b8c fam=7 op=0x008 0x00000b8c: V_MUL_F32 v14, s73, s20
+pc=0x00b94 fam=7 op=0x008 0x00000b94: V_MUL_F32 v15, s73, s21
+pc=0x00b9c fam=7 op=0x008 0x00000b9c: V_MUL_F32 v35, s73, s22
+pc=0x00ba4 fam=6 op=0x001 0x00000ba4: V_MOV_B32 v22, 0
+pc=0x00ba8 fam=6 op=0x001 0x00000ba8: V_MOV_B32 v21, 0
+pc=0x00bac fam=6 op=0x001 0x00000bac: V_MOV_B32 v17, 0
+pc=0x00bb0 fam=1 op=0x004 0x00000bb0: S_MOV_B64 s52, exec_lo
+pc=0x00bb4 fam=10 op=0x014 0x00000bb4: V_CMPX_GT_F32 exec_lo, 0x3f7d70a4, v23
+pc=0x00bbc fam=5 op=0x008 0x00000bbc: S_CBRANCH_EXECZ 0x00000e58
+pc=0x00bc0 fam=7 op=0x010 0x00000bc0: V_MAX_F32 v0, v78.abs, v77.abs
+pc=0x00bc8 fam=12 op=0x002 0x00000bc8: S_LOAD_DWORDX4 s32, s28, null ; offset=464 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00bd0 fam=8 op=0x157 0x00000bd0: V_MED3_F32 v17, 1.000000, v77, -1.000000
+pc=0x00bd8 fam=7 op=0x008 0x00000bd8: V_MUL_F32 v8, v1.neg, v1
+pc=0x00be0 fam=5 op=0x00c 0x00000be0: S_WAITCNT 0x0000c07f
+pc=0x00be4 fam=12 op=0x009 0x00000be4: S_BUFFER_LOAD_DWORDX2 s56, s32, null ; offset=184 offset2=0 dwords=2 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00bec fam=7 op=0x008 0x00000bec: V_MUL_F32 v9, v0, v0
+pc=0x00bf0 fam=12 op=0x008 0x00000bf0: S_BUFFER_LOAD_DWORD vcc_lo, s32, null ; offset=192 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00bf8 fam=8 op=0x157 0x00000bf8: V_MED3_F32 v7, 1.000000, v78, -1.000000
+pc=0x00c00 fam=12 op=0x002 0x00000c00: S_LOAD_DWORDX4 s48, s28, null ; offset=448 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00c08 fam=12 op=0x002 0x00000c08: S_LOAD_DWORDX4 s24, s28, null ; offset=352 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00c10 fam=7 op=0x008 0x00000c10: V_MUL_F32 v0, v9, v0
+pc=0x00c14 fam=12 op=0x003 0x00000c14: S_LOAD_DWORDX8 s16, s28, null ; offset=64 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00c1c fam=7 op=0x010 0x00000c1c: V_MAX_F32 v7, v7.abs, v17.abs
+pc=0x00c24 fam=1 op=0x003 0x00000c24: S_MOV_B32 s3, 0
+pc=0x00c28 fam=5 op=0x00c 0x00000c28: S_WAITCNT 0x0000c07f
+pc=0x00c2c fam=7 op=0x004 0x00000c2c: V_SUB_F32 v17, vcc_lo, s57
+pc=0x00c34 fam=1 op=0x003 0x00000c34: S_MOV_B32 vcc_lo, 0x3e7fced8
+pc=0x00c3c fam=7 op=0x005 0x00000c3c: V_SUBREV_F32 v9, s57, v66
+pc=0x00c40 fam=7 op=0x021 0x00000c40: V_MADAK_F32 v0, vcc_lo, v0, 0x3f400c4a
+pc=0x00c48 fam=1 op=0x003 0x00000c48: S_MOV_B32 vcc_lo, 0xbf4ccccd
+pc=0x00c50 fam=6 op=0x02a 0x00000c50: V_RCP_F32 v18, v17
+pc=0x00c54 fam=7 op=0x003 0x00000c54: V_ADD_F32 v17.clamp, vcc_lo, v7
+pc=0x00c5c fam=1 op=0x003 0x00000c5c: S_MOV_B32 vcc_lo, 0x40a00000
+pc=0x00c64 fam=7 op=0x008 0x00000c64: V_MUL_F32 v12, v0.neg, v0
+pc=0x00c6c fam=7 op=0x008 0x00000c6c: V_MUL_F32 v13, v67.neg, v0
+pc=0x00c74 fam=7 op=0x008 0x00000c74: V_MUL_F32 v18.clamp, v18, v9
+pc=0x00c7c fam=7 op=0x008 0x00000c7c: V_MUL_F32 v9.clamp, vcc_lo, v17
+pc=0x00c84 fam=1 op=0x003 0x00000c84: S_MOV_B32 vcc_lo, 0xbd23d70a
+pc=0x00c8c fam=7 op=0x01f 0x00000c8c: V_MAC_F32 v12, v12, v8
+pc=0x00c90 fam=7 op=0x008 0x00000c90: V_MUL_F32 v7, v68.neg, v0
+pc=0x00c98 fam=7 op=0x008 0x00000c98: V_MUL_F32 v21, v18, v18
+pc=0x00c9c fam=7 op=0x021 0x00000c9c: V_MADAK_F32 v18, -2.000000, v18, 0x40400000
+pc=0x00ca4 fam=7 op=0x021 0x00000ca4: V_MADAK_F32 v9, vcc_lo, v9, 0x3d23d70a
+pc=0x00cac fam=10 op=0x001 0x00000cac: V_CMP_LT_F32 vcc_lo, -1.000000, v12
+pc=0x00cb0 fam=7 op=0x008 0x00000cb0: V_MUL_F32 v17, v69.neg, v0
+pc=0x00cb8 fam=7 op=0x008 0x00000cb8: V_MUL_F32 v22, s56, v21
+pc=0x00cbc fam=7 op=0x003 0x00000cbc: V_ADD_F32 v21, 1.000000, v12
+pc=0x00cc0 fam=12 op=0x00c 0x00000cc0: S_BUFFER_LOAD_DWORDX16 s32, s48, null ; offset=0 offset2=0 dwords=16 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00cc8 fam=1 op=0x004 0x00000cc8: S_MOV_B64 s54, exec_lo
+pc=0x00ccc fam=7 op=0x008 0x00000ccc: V_MUL_F32 v22, v22, v18
+pc=0x00cd0 fam=6 op=0x033 0x00000cd0: V_SQRT_F32 v12, v21.abs
+pc=0x00cd8 fam=7 op=0x001 0x00000cd8: V_CNDMASK_B32 v18, 0, 1.000000
+pc=0x00ce0 fam=7 op=0x008 0x00000ce0: V_MUL_F32 v9, v22, v9
+pc=0x00ce4 fam=8 op=0x141 0x00000ce4: V_MAD_F32 v12, v1, v0, v12.neg
+pc=0x00cec fam=7 op=0x01f 0x00000cec: V_MAC_F32 v13, v12, v20
+pc=0x00cf0 fam=7 op=0x01f 0x00000cf0: V_MAC_F32 v7, v12, v19
+pc=0x00cf4 fam=7 op=0x01f 0x00000cf4: V_MAC_F32 v17, v12, v16
+pc=0x00cf8 fam=7 op=0x008 0x00000cf8: V_MUL_F32 v1, v18, v13
+pc=0x00cfc fam=7 op=0x008 0x00000cfc: V_MUL_F32 v8, v18, v7
+pc=0x00d00 fam=7 op=0x008 0x00000d00: V_MUL_F32 v0, v18, v17
+pc=0x00d04 fam=8 op=0x141 0x00000d04: V_MAD_F32 v7, v1, v9, v60
+pc=0x00d0c fam=8 op=0x141 0x00000d0c: V_MAD_F32 v1, v8, v9, v61
+pc=0x00d14 fam=8 op=0x141 0x00000d14: V_MAD_F32 v0, v0, v9, v62
+pc=0x00d1c fam=5 op=0x00c 0x00000d1c: S_WAITCNT 0x0000c07f
+pc=0x00d20 fam=7 op=0x008 0x00000d20: V_MUL_F32 v9, s32, v7
+pc=0x00d24 fam=8 op=0x141 0x00000d24: V_MAD_F32 v8, s35, v7, s47
+pc=0x00d2c fam=8 op=0x141 0x00000d2c: V_MAD_F32 v12, s33, v7, s45
+pc=0x00d34 fam=8 op=0x141 0x00000d34: V_MAD_F32 v7, s36, v1, v9
+pc=0x00d3c fam=7 op=0x01f 0x00000d3c: V_MAC_F32 v8, s39, v1
+pc=0x00d40 fam=7 op=0x01f 0x00000d40: V_MAC_F32 v12, s37, v1
+pc=0x00d44 fam=7 op=0x01f 0x00000d44: V_MAC_F32 v7, s40, v0
+pc=0x00d48 fam=7 op=0x01f 0x00000d48: V_MAC_F32 v8, s43, v0
+pc=0x00d4c fam=7 op=0x01f 0x00000d4c: V_MAC_F32 v12, s41, v0
+pc=0x00d50 fam=7 op=0x003 0x00000d50: V_ADD_F32 v1, s44, v7
+pc=0x00d54 fam=6 op=0x02a 0x00000d54: V_RCP_F32 v7, v8
+pc=0x00d58 fam=7 op=0x008 0x00000d58: V_MUL_F32 v1, v7, v1
+pc=0x00d5c fam=7 op=0x008 0x00000d5c: V_MUL_F32 v7, v7, v12
+pc=0x00d60 fam=8 op=0x141 0x00000d60: V_MAD_F32 v0, 0.500000, v1, 0.500000
+pc=0x00d68 fam=8 op=0x141 0x00000d68: V_MAD_F32 v1, -0.500000, v7, 0.500000
+pc=0x00d70 fam=7 op=0x004 0x00000d70: V_SUB_F32 v7, v56, v0
+pc=0x00d74 fam=17 op=0x020 0x00000d74: image_sample v9, v0, s16, s24 ; dmask=0x8 image_dim=2d sample_flags=none addr_components=2
+pc=0x00d7c fam=7 op=0x004 0x00000d7c: V_SUB_F32 v8, v57, v1
+pc=0x00d80 fam=7 op=0x008 0x00000d80: V_MUL_F32 v7, 0x3d2aaaab, v7
+pc=0x00d88 fam=7 op=0x008 0x00000d88: V_MUL_F32 v8, 0x3d2aaaab, v8
+pc=0x00d90 fam=5 op=0x00c 0x00000d90: S_WAITCNT 0x00003f70
+pc=0x00d94 fam=10 op=0x00c 0x00000d94: V_CMP_NLE_F32 vcc_lo, v9, 0
+pc=0x00d9c fam=7 op=0x001 0x00000d9c: V_CNDMASK_B32 v9, 0x461c4000, v9
+pc=0x00da4 fam=7 op=0x003 0x00000da4: V_ADD_F32 v9, 0x38d1b717, v9
+pc=0x00dac fam=6 op=0x001 0x00000dac: V_MOV_B32 v17, s3
+pc=0x00db0 fam=10 op=0x014 0x00000db0: V_CMPX_GT_F32 exec_lo, v66, v9
+pc=0x00db4 fam=10 op=0x0d1 0x00000db4: V_CMPX_LT_U32 exec_lo, s3, 24
+pc=0x00dbc fam=5 op=0x008 0x00000dbc: S_CBRANCH_EXECZ 0x00000e00
+pc=0x00dc0 fam=7 op=0x003 0x00000dc0: V_ADD_F32 v0, v0, v7
+pc=0x00dc4 fam=7 op=0x003 0x00000dc4: V_ADD_F32 v1, v1, v8
+pc=0x00dc8 fam=12 op=0x002 0x00000dc8: S_LOAD_DWORDX4 s24, s28, null ; offset=352 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00dd0 fam=12 op=0x003 0x00000dd0: S_LOAD_DWORDX8 s16, s28, null ; offset=64 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00dd8 fam=2 op=0x002 0x00000dd8: S_ADD_I32 s3, s3, 1
+pc=0x00ddc fam=5 op=0x00c 0x00000ddc: S_WAITCNT 0x0000c07f
+pc=0x00de0 fam=17 op=0x020 0x00000de0: image_sample v9, v0, s16, s24 ; dmask=0x8 image_dim=2d sample_flags=none addr_components=2
+pc=0x00de8 fam=5 op=0x00c 0x00000de8: S_WAITCNT 0x00003f70
+pc=0x00dec fam=10 op=0x00c 0x00000dec: V_CMP_NLE_F32 vcc_lo, v9, 0
+pc=0x00df4 fam=7 op=0x001 0x00000df4: V_CNDMASK_B32 v9, 0x461c4000, v9
+pc=0x00dfc fam=5 op=0x002 0x00000dfc: S_BRANCH 0x00000da4
+pc=0x00e00 fam=1 op=0x004 0x00000e00: S_MOV_B64 exec_lo, s54
+pc=0x00e04 fam=12 op=0x002 0x00000e04: S_LOAD_DWORDX4 s24, s28, null ; offset=352 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00e0c fam=6 op=0x006 0x00000e0c: V_CVT_F32_U32 v7, v17
+pc=0x00e10 fam=7 op=0x004 0x00000e10: V_SUB_F32 v8, v56, v0
+pc=0x00e14 fam=7 op=0x004 0x00000e14: V_SUB_F32 v9, v57, v1
+pc=0x00e18 fam=12 op=0x003 0x00000e18: S_LOAD_DWORDX8 s16, s28, null ; offset=64 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00e20 fam=7 op=0x008 0x00000e20: V_MUL_F32 v7, 0x3d2aaaab, v7
+pc=0x00e28 fam=7 op=0x01f 0x00000e28: V_MAC_F32 v0, v8, v7
+pc=0x00e2c fam=7 op=0x01f 0x00000e2c: V_MAC_F32 v1, v9, v7
+pc=0x00e30 fam=5 op=0x00c 0x00000e30: S_WAITCNT 0x0000c07f
+pc=0x00e34 fam=17 op=0x020 0x00000e34: image_sample v7, v0, s16, s24 ; dmask=0x7 image_dim=2d sample_flags=none addr_components=2
+pc=0x00e3c fam=5 op=0x00c 0x00000e3c: S_WAITCNT 0x00003f70
+pc=0x00e40 fam=7 op=0x008 0x00000e40: V_MUL_F32 v22, 0x3f4ccccd, v7
+pc=0x00e48 fam=7 op=0x008 0x00000e48: V_MUL_F32 v21, 0x3f4ccccd, v8
+pc=0x00e50 fam=7 op=0x008 0x00000e50: V_MUL_F32 v17, 0x3f4ccccd, v9
+pc=0x00e58 fam=1 op=0x004 0x00000e58: S_MOV_B64 exec_lo, s52
+pc=0x00e5c fam=12 op=0x002 0x00000e5c: S_LOAD_DWORDX4 s16, s28, null ; offset=464 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00e64 fam=7 op=0x008 0x00000e64: V_MUL_F32 v9, v76, v76
+pc=0x00e68 fam=7 op=0x004 0x00000e68: V_SUB_F32 v0, s4, s0
+pc=0x00e70 fam=7 op=0x004 0x00000e70: V_SUB_F32 v7, s5, s1
+pc=0x00e78 fam=7 op=0x004 0x00000e78: V_SUB_F32 v1, s6, s2
+pc=0x00e80 fam=5 op=0x00c 0x00000e80: S_WAITCNT 0x0000c07f
+pc=0x00e84 fam=12 op=0x008 0x00000e84: S_BUFFER_LOAD_DWORD vcc_lo, s16, null ; offset=180 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00e8c fam=7 op=0x01f 0x00000e8c: V_MAC_F32 v9, v75, v75
+pc=0x00e90 fam=8 op=0x141 0x00000e90: V_MAD_F32 v0, v0, v72, s0
+pc=0x00e98 fam=8 op=0x141 0x00000e98: V_MAD_F32 v7, v7, v72, s1
+pc=0x00ea0 fam=8 op=0x141 0x00000ea0: V_MAD_F32 v8, v1, v72, s2
+pc=0x00ea8 fam=7 op=0x008 0x00000ea8: V_MUL_F32 v27, v4, v73
+pc=0x00eac fam=7 op=0x01f 0x00000eac: V_MAC_F32 v9, v74, v74
+pc=0x00eb0 fam=7 op=0x004 0x00000eb0: V_SUB_F32 v23, s12, s8
+pc=0x00eb8 fam=7 op=0x008 0x00000eb8: V_MUL_F32 v1, v5, v7
+pc=0x00ebc fam=7 op=0x004 0x00000ebc: V_SUB_F32 v25, s13, s9
+pc=0x00ec4 fam=7 op=0x004 0x00000ec4: V_SUB_F32 v29, s14, s10
+pc=0x00ecc fam=6 op=0x033 0x00000ecc: V_SQRT_F32 v18.clamp, v9
+pc=0x00ed4 fam=7 op=0x008 0x00000ed4: V_MUL_F32 v9, v6, v8
+pc=0x00ed8 fam=1 op=0x003 0x00000ed8: S_MOV_B32 s0, m0
+pc=0x00edc fam=3 op=0x000 0x00000edc: S_MOVK_I32 m0, 0
+pc=0x00ee0 fam=8 op=0x141 0x00000ee0: V_MAD_F32 v24, v23, v72, s8
+pc=0x00ee8 fam=16 op=0x0b1 0x00000ee8: DS_READ_ADDTID_B32 v4 ; offset=1024 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00ef0 fam=5 op=0x00c 0x00000ef0: S_WAITCNT 0x0000c07f
+pc=0x00ef4 fam=7 op=0x008 0x00000ef4: V_MUL_F32 v18, vcc_lo, v18
+pc=0x00ef8 fam=7 op=0x008 0x00000ef8: V_MUL_F32 v83, v27, v1
+pc=0x00efc fam=8 op=0x141 0x00000efc: V_MAD_F32 v25, v25, v72, s9
+pc=0x00f04 fam=7 op=0x008 0x00000f04: V_MUL_F32 v23, v27, v9
+pc=0x00f08 fam=8 op=0x141 0x00000f08: V_MAD_F32 v12, v29, v72, s10
+pc=0x00f10 fam=7 op=0x008 0x00000f10: V_MUL_F32 v28, 0x3e4ccccd, v18
+pc=0x00f18 fam=7 op=0x008 0x00000f18: V_MUL_F32 v39, v4, v0
+pc=0x00f1c fam=8 op=0x141 0x00000f1c: V_MAD_F32 v14, s72.neg, s64, v14
+pc=0x00f24 fam=7 op=0x008 0x00000f24: V_MUL_F32 v33, s72, s64
+pc=0x00f2c fam=8 op=0x141 0x00000f2c: V_MAD_F32 v15, s72.neg, s65, v15
+pc=0x00f34 fam=8 op=0x141 0x00000f34: V_MAD_F32 v0, v4, v0, v28
+pc=0x00f3c fam=7 op=0x008 0x00000f3c: V_MUL_F32 v82, v27, v39
+pc=0x00f40 fam=7 op=0x008 0x00000f40: V_MUL_F32 v34, s72, s65
+pc=0x00f48 fam=8 op=0x141 0x00000f48: V_MAD_F32 v35, s72.neg, s66, v35
+pc=0x00f50 fam=7 op=0x008 0x00000f50: V_MUL_F32 v32, s72, s66
+pc=0x00f58 fam=1 op=0x003 0x00000f58: S_MOV_B32 m0, s0
+pc=0x00f5c fam=12 op=0x009 0x00000f5c: S_BUFFER_LOAD_DWORDX2 s0, s16, null ; offset=132 offset2=0 dwords=2 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00f64 fam=12 op=0x002 0x00000f64: S_LOAD_DWORDX4 s4, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00f6c fam=7 op=0x008 0x00000f6c: V_MUL_F32 v31, v71, v0
+pc=0x00f70 fam=7 op=0x01f 0x00000f70: V_MAC_F32 v82, v24, v4
+pc=0x00f74 fam=5 op=0x00c 0x00000f74: S_WAITCNT 0x0000c07f
+pc=0x00f78 fam=7 op=0x004 0x00000f78: V_SUB_F32 v13, s1, s0
+pc=0x00f80 fam=12 op=0x00a 0x00000f80: S_BUFFER_LOAD_DWORDX4 s24, s4, null ; offset=17248 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00f88 fam=7 op=0x01f 0x00000f88: V_MAC_F32 v83, v25, v5
+pc=0x00f8c fam=8 op=0x141 0x00000f8c: V_MAD_F32 v5, v5, v7, v28
+pc=0x00f94 fam=8 op=0x141 0x00000f94: V_MAD_F32 v7, v6, v8, v28
+pc=0x00f9c fam=8 op=0x141 0x00000f9c: V_MAD_F32 v25, v70, v1, v10
+pc=0x00fa4 fam=8 op=0x141 0x00000fa4: V_MAD_F32 v28, v70, v9, v11
+pc=0x00fac fam=8 op=0x141 0x00000fac: V_MAD_F32 v38, v72, v13, s0
+pc=0x00fb4 fam=7 op=0x008 0x00000fb4: V_MUL_F32 v30, v71, v5
+pc=0x00fb8 fam=7 op=0x008 0x00000fb8: V_MUL_F32 v29, v71, v7
+pc=0x00fbc fam=7 op=0x01f 0x00000fbc: V_MAC_F32 v23, v12, v6
+pc=0x00fc0 fam=7 op=0x01f 0x00000fc0: V_MAC_F32 v26, v39, v70
+pc=0x00fc4 fam=7 op=0x01f 0x00000fc4: V_MAC_F32 v33, v14, v72
+pc=0x00fc8 fam=7 op=0x01f 0x00000fc8: V_MAC_F32 v34, v15, v72
+pc=0x00fcc fam=7 op=0x01f 0x00000fcc: V_MAC_F32 v32, v35, v72
+pc=0x00fd0 fam=1 op=0x003 0x00000fd0: S_MOV_B32 s2, m0
+pc=0x00fd4 fam=3 op=0x000 0x00000fd4: S_MOVK_I32 m0, 0
+pc=0x00fd8 fam=5 op=0x00c 0x00000fd8: S_WAITCNT 0x0000c07f
+pc=0x00fdc fam=4 op=0x00d 0x00000fdc: S_BITCMP1_B32 s24, 4
+pc=0x00fe0 fam=16 op=0x0b1 0x00000fe0: DS_READ_ADDTID_B32 v18 ; offset=0 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x00fe8 fam=1 op=0x003 0x00000fe8: S_MOV_B32 m0, s2
+pc=0x00fec fam=5 op=0x004 0x00000fec: S_CBRANCH_SCC0 0x00001088
+pc=0x00ff0 fam=6 op=0x001 0x00000ff0: V_MOV_B32 v5, v20.dpp(ctrl=0xa0,fi=0,bc=1)
+pc=0x00ff8 fam=6 op=0x001 0x00000ff8: V_MOV_B32 v6, v19.dpp(ctrl=0xa0,fi=0,bc=1)
+pc=0x01000 fam=6 op=0x001 0x00001000: V_MOV_B32 v4, v16.dpp(ctrl=0xa0,fi=0,bc=1)
+pc=0x01008 fam=6 op=0x001 0x00001008: V_MOV_B32 v8, v20.dpp(ctrl=0x0,fi=0,bc=1)
+pc=0x01010 fam=6 op=0x001 0x00001010: V_MOV_B32 v0, v19.dpp(ctrl=0x0,fi=0,bc=1)
+pc=0x01018 fam=7 op=0x004 0x00001018: V_SUB_F32 v5, v20.dpp(ctrl=0xf5,fi=0,bc=1), v5
+pc=0x01020 fam=7 op=0x004 0x00001020: V_SUB_F32 v6, v19.dpp(ctrl=0xf5,fi=0,bc=1), v6
+pc=0x01028 fam=7 op=0x004 0x00001028: V_SUB_F32 v4, v16.dpp(ctrl=0xf5,fi=0,bc=1), v4
+pc=0x01030 fam=6 op=0x001 0x00001030: V_MOV_B32 v7, v16.dpp(ctrl=0x0,fi=0,bc=1)
+pc=0x01038 fam=7 op=0x004 0x00001038: V_SUB_F32 v0, v19.dpp(ctrl=0xaa,fi=0,bc=1), v0
+pc=0x01040 fam=7 op=0x008 0x00001040: V_MUL_F32 v10, v5, v5
+pc=0x01044 fam=7 op=0x004 0x00001044: V_SUB_F32 v5, v20.dpp(ctrl=0xaa,fi=0,bc=1), v8
+pc=0x0104c fam=7 op=0x01f 0x0000104c: V_MAC_F32 v10, v6, v6
+pc=0x01050 fam=7 op=0x004 0x00001050: V_SUB_F32 v6, v16.dpp(ctrl=0xaa,fi=0,bc=1), v7
+pc=0x01058 fam=7 op=0x008 0x00001058: V_MUL_F32 v7, v37, v37
+pc=0x0105c fam=7 op=0x01f 0x0000105c: V_MAC_F32 v10, v4, v4
+pc=0x01060 fam=7 op=0x008 0x00001060: V_MUL_F32 v4, v7, v7
+pc=0x01064 fam=7 op=0x01f 0x00001064: V_MAC_F32 v10, v5, v5
+pc=0x01068 fam=7 op=0x01f 0x00001068: V_MAC_F32 v10, v0, v0
+pc=0x0106c fam=7 op=0x01f 0x0000106c: V_MAC_F32 v10, v6, v6
+pc=0x01070 fam=7 op=0x00f 0x00001070: V_MIN_F32 v0, 0x3f90c3bd, v10
+pc=0x01078 fam=8 op=0x11f 0x00001078: V_MAC_F32 v4.clamp, 0.159155, v0
+pc=0x01080 fam=6 op=0x02e 0x00001080: V_RSQ_F32 v0, v4
+pc=0x01084 fam=6 op=0x02e 0x00001084: V_RSQ_F32 v37, v0
+pc=0x01088 fam=7 op=0x004 0x00001088: V_SUB_F32 v4, 1.000000, v37
+pc=0x0108c fam=3 op=0x000 0x0000108c: S_MOVK_I32 m0, 0
+pc=0x01090 fam=7 op=0x004 0x00001090: V_SUB_F32 v7, 1.000000, v42
+pc=0x01094 fam=16 op=0x0b1 0x00001094: DS_READ_ADDTID_B32 v0 ; offset=512 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0109c fam=7 op=0x008 0x0000109c: V_MUL_F32 v5, 0xbce147ae, v37
+pc=0x010a4 fam=7 op=0x008 0x000010a4: V_MUL_F32 v6, v4, v4
+pc=0x010a8 fam=1 op=0x003 0x000010a8: S_MOV_B32 s26, 0xbf851eb8
+pc=0x010b0 fam=6 op=0x027 0x000010b0: V_LOG_F32 v7, v7
+pc=0x010b4 fam=1 op=0x003 0x000010b4: S_MOV_B32 s64, 0x3f851eb8
+pc=0x010bc fam=5 op=0x00c 0x000010bc: S_WAITCNT 0x0000c07f
+pc=0x010c0 fam=7 op=0x008 0x000010c0: V_MUL_F32 v0, 0xc1147ae1, v0
+pc=0x010c8 fam=12 op=0x002 0x000010c8: S_LOAD_DWORDX4 s4, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x010d0 fam=7 op=0x010 0x000010d0: V_MAX_F32 v43, 0x3dcccccd, v37
+pc=0x010d8 fam=7 op=0x02b 0x000010d8: V_MAC_F32 v7, 4.000000, v7
+pc=0x010dc fam=5 op=0x00c 0x000010dc: S_WAITCNT 0x0000c07f
+pc=0x010e0 fam=12 op=0x00a 0x000010e0: S_BUFFER_LOAD_DWORDX4 s20, s4, null ; offset=32 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x010e8 fam=6 op=0x025 0x000010e8: V_EXP_F32 v0, v0
+pc=0x010ec fam=12 op=0x00a 0x000010ec: S_BUFFER_LOAD_DWORDX4 s40, s4, null ; offset=0 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x010f4 fam=6 op=0x007 0x000010f4: V_CVT_U32_F32 v35, v2
+pc=0x010f8 fam=6 op=0x025 0x000010f8: V_EXP_F32 v2, v7
+pc=0x010fc fam=6 op=0x007 0x000010fc: V_CVT_U32_F32 v36, v3
+pc=0x01100 fam=7 op=0x00f 0x00001100: V_MIN_F32 v3, v0, v6
+pc=0x01104 fam=5 op=0x00c 0x00001104: S_WAITCNT 0x0000c07f
+pc=0x01108 fam=6 op=0x001 0x00001108: V_MOV_B32 v7, s20
+pc=0x0110c fam=6 op=0x001 0x0000110c: V_MOV_B32 v8, s21
+pc=0x01110 fam=7 op=0x003 0x00001110: V_ADD_F32 v41, -1.000000, v2
+pc=0x01114 fam=6 op=0x001 0x00001114: V_MOV_B32 v24, s22
+pc=0x01118 fam=7 op=0x01f 0x00001118: V_MAC_F32 v5, v3, v4
+pc=0x0111c fam=6 op=0x001 0x0000111c: V_MOV_B32 v44, 0
+pc=0x01120 fam=6 op=0x001 0x00001120: V_MOV_B32 v45, 0
+pc=0x01124 fam=6 op=0x001 0x00001124: V_MOV_B32 v46, 0
+pc=0x01128 fam=12 op=0x00a 0x00001128: S_BUFFER_LOAD_DWORDX4 s16, s4, null ; offset=14816 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01130 fam=7 op=0x02d 0x00001130: V_MADAK_F32 v2, s26, v5, 0xbd350b0f
+pc=0x01138 fam=7 op=0x02d 0x00001138: V_MADAK_F32 v3, s64, v5, 0x3d350b0f
+pc=0x01140 fam=4 op=0x008 0x00001140: S_CMP_GT_U32 s40, 0
+pc=0x01144 fam=7 op=0x003 0x00001144: V_ADD_F32 v2, v2, v3
+pc=0x01148 fam=7 op=0x003 0x00001148: V_ADD_F32 v2, 0x3f7fffff, v2
+pc=0x01150 fam=7 op=0x020 0x00001150: V_MADMK_F32 v2, v37, 0xbf0ccccd, v2
+pc=0x01158 fam=8 op=0x141 0x00001158: V_MAD_F32 v3, v39, v2, v41
+pc=0x01160 fam=8 op=0x141 0x00001160: V_MAD_F32 v1, v1, v2, v41
+pc=0x01168 fam=8 op=0x141 0x00001168: V_MAD_F32 v2, v9, v2, v41
+pc=0x01170 fam=8 op=0x141 0x00001170: V_MAD_F32 v39, v70, v3, v41.neg
+pc=0x01178 fam=8 op=0x141 0x00001178: V_MAD_F32 v40, v70, v1, v41.neg
+pc=0x01180 fam=8 op=0x141 0x00001180: V_MAD_F32 v41, v70, v2, v41.neg
+pc=0x01188 fam=5 op=0x004 0x00001188: S_CBRANCH_SCC0 0x00001744
+pc=0x0118c fam=7 op=0x01a 0x0000118c: V_LSHLREV_B32 v1, 2, v36
+pc=0x01190 fam=7 op=0x01b 0x00001190: V_AND_B32 v0, 3, v35
+pc=0x01194 fam=1 op=0x003 0x00001194: S_MOV_B32 s34, 64
+pc=0x01198 fam=1 op=0x003 0x00001198: S_MOV_B32 s35, 0x10005004
+pc=0x011a0 fam=1 op=0x01f 0x000011a0: s_getpc_b64 s32
+pc=0x011a4 fam=2 op=0x000 0x000011a4: S_ADD_U32 s32, 0x0000182c, s32
+pc=0x011ac fam=2 op=0x004 0x000011ac: S_ADDC_U32 s33, 0, s33
+pc=0x011b0 fam=7 op=0x01b 0x000011b0: V_AND_B32 v1, 12, v1
+pc=0x011b4 fam=12 op=0x002 0x000011b4: S_LOAD_DWORDX4 s12, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x011bc fam=5 op=0x00c 0x000011bc: S_WAITCNT 0x0000c07f
+pc=0x011c0 fam=12 op=0x00a 0x000011c0: S_BUFFER_LOAD_DWORDX4 s36, s12, null ; offset=8336 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x011c8 fam=7 op=0x025 0x000011c8: V_ADD_NC_U32 v0, v0, v1
+pc=0x011cc fam=12 op=0x00b 0x000011cc: S_BUFFER_LOAD_DWORDX8 s0, s12, null ; offset=8288 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x011d4 fam=12 op=0x008 0x000011d4: S_BUFFER_LOAD_DWORD vcc_lo, s12, null ; offset=10688 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x011dc fam=12 op=0x00a 0x000011dc: S_BUFFER_LOAD_DWORDX4 s8, s12, null ; offset=10528 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x011e4 fam=7 op=0x00b 0x000011e4: V_MUL_U32_U24 v0, 4, v0
+pc=0x011e8 fam=5 op=0x00c 0x000011e8: S_WAITCNT 0x0000c07f
+pc=0x011ec fam=8 op=0x141 0x000011ec: V_MAD_F32 v4, s38, v62, s39
+pc=0x011f4 fam=8 op=0x141 0x000011f4: V_MAD_F32 v5, s6, v62, s7
+pc=0x011fc fam=8 op=0x141 0x000011fc: V_MAD_F32 v6, s2, v62, s3
+pc=0x01204 fam=7 op=0x005 0x00001204: V_SUBREV_F32 v1, s8, v60
+pc=0x01208 fam=13 op=0x00c 0x00001208: BUFFER_LOAD_DWORD v0, v0, s32, 0 ; offset=0 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=1
+pc=0x01210 fam=8 op=0x141 0x00001210: V_MAD_F32 v7, s37, v61, v4
+pc=0x01218 fam=7 op=0x01f 0x00001218: V_MAC_F32 v5, s5, v61
+pc=0x0121c fam=7 op=0x01f 0x0000121c: V_MAC_F32 v6, s1, v61
+pc=0x01220 fam=12 op=0x00a 0x00001220: S_BUFFER_LOAD_DWORDX4 s32, s12, null ; offset=64 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01228 fam=7 op=0x005 0x00001228: V_SUBREV_F32 v3, s9, v61
+pc=0x0122c fam=7 op=0x01f 0x0000122c: V_MAC_F32 v7, s36, v60
+pc=0x01230 fam=8 op=0x141 0x00001230: V_MAD_F32 v4, s4, v60, v5
+pc=0x01238 fam=8 op=0x141 0x00001238: V_MAD_F32 v5, s0, v60, v6
+pc=0x01240 fam=5 op=0x00c 0x00001240: S_WAITCNT 0x0000c07f
+pc=0x01244 fam=7 op=0x008 0x00001244: V_MUL_F32 v6, s32, v1
+pc=0x01248 fam=7 op=0x005 0x00001248: V_SUBREV_F32 v2, s10, v62
+pc=0x0124c fam=6 op=0x02a 0x0000124c: V_RCP_F32 v7, v7
+pc=0x01250 fam=4 op=0x00b 0x00001250: S_CMP_LE_U32 vcc_lo, 2
+pc=0x01254 fam=7 op=0x01f 0x00001254: V_MAC_F32 v6, s33, v3
+pc=0x01258 fam=2 op=0x00b 0x00001258: S_CSELECT_B64 s0, exec_lo, 0
+pc=0x0125c fam=7 op=0x008 0x0000125c: V_MUL_F32 v4.clamp, v7, v4
+pc=0x01264 fam=7 op=0x008 0x00001264: V_MUL_F32 v5.clamp, v7, v5
+pc=0x0126c fam=2 op=0x002 0x0000126c: S_ADD_I32 s10, vcc_lo, -1
+pc=0x01270 fam=7 op=0x01f 0x00001270: V_MAC_F32 v6, s34, v2
+pc=0x01274 fam=8 op=0x141 0x00001274: V_MAD_F32 v4, 2.000000, v4, -1.000000
+pc=0x0127c fam=8 op=0x141 0x0000127c: V_MAD_F32 v7, 2.000000, v5, -1.000000
+pc=0x01284 fam=7 op=0x00f 0x00001284: V_MIN_F32 v4, v7.abs, v4.abs
+pc=0x0128c fam=10 op=0x001 0x0000128c: V_CMP_LT_F32 vcc_lo, 0x3f733333, v4
+pc=0x01294 fam=5 op=0x00c 0x00001294: S_WAITCNT 0x00003f70
+pc=0x01298 fam=7 op=0x008 0x00001298: V_MUL_F32 v4, s19, v0
+pc=0x0129c fam=7 op=0x008 0x0000129c: V_MUL_F32 v4, 0x3d800000, v4
+pc=0x012a4 fam=7 op=0x001 0x000012a4: V_CNDMASK_B32 v4, 0, v4
+pc=0x012a8 fam=8 op=0x141 0x000012a8: V_MAD_F32 v1, v1, v1, v4
+pc=0x012b0 fam=7 op=0x01f 0x000012b0: V_MAC_F32 v1, v3, v3
+pc=0x012b4 fam=7 op=0x01f 0x000012b4: V_MAC_F32 v1, v2, v2
+pc=0x012b8 fam=8 op=0x11f 0x000012b8: V_MAC_F32 v1, v6, v6.neg
+pc=0x012c0 fam=10 op=0x004 0x000012c0: V_CMP_GT_F32 vcc_lo, s11, v1
+pc=0x012c4 fam=2 op=0x011 0x000012c4: S_OR_B64 vcc_lo, s0, vcc_lo
+pc=0x012c8 fam=1 op=0x024 0x000012c8: S_AND_SAVEEXEC_B64 s8, vcc_lo
+pc=0x012cc fam=10 op=0x00e 0x000012cc: V_CMP_NLT_F32 vcc_lo, v1, s11
+pc=0x012d4 fam=7 op=0x001 0x000012d4: V_CNDMASK_B32 v2, 0, s10
+pc=0x012dc fam=2 op=0x015 0x000012dc: S_ANDN2_B64 exec_lo, s8, exec_lo
+pc=0x012e0 fam=5 op=0x008 0x000012e0: S_CBRANCH_EXECZ 0x0000133c
+pc=0x012e4 fam=12 op=0x002 0x000012e4: S_LOAD_DWORDX4 s0, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x012ec fam=5 op=0x00c 0x000012ec: S_WAITCNT 0x0000c07f
+pc=0x012f0 fam=12 op=0x00a 0x000012f0: S_BUFFER_LOAD_DWORDX4 s4, s0, null ; offset=10544 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x012f8 fam=5 op=0x00c 0x000012f8: S_WAITCNT 0x0000c07f
+pc=0x012fc fam=7 op=0x005 0x000012fc: V_SUBREV_F32 v5, s4, v60
+pc=0x01300 fam=7 op=0x005 0x00001300: V_SUBREV_F32 v2, s5, v61
+pc=0x01304 fam=7 op=0x005 0x00001304: V_SUBREV_F32 v1, s6, v62
+pc=0x01308 fam=7 op=0x008 0x00001308: V_MUL_F32 v3, s32, v5
+pc=0x0130c fam=7 op=0x008 0x0000130c: V_MUL_F32 v5, v5, v5
+pc=0x01310 fam=7 op=0x01f 0x00001310: V_MAC_F32 v3, s33, v2
+pc=0x01314 fam=7 op=0x01f 0x00001314: V_MAC_F32 v5, v2, v2
+pc=0x01318 fam=7 op=0x01f 0x00001318: V_MAC_F32 v3, s34, v1
+pc=0x0131c fam=7 op=0x01f 0x0000131c: V_MAC_F32 v5, v1, v1
+pc=0x01320 fam=8 op=0x11f 0x00001320: V_MAC_F32 v5, v3, v3.neg
+pc=0x01328 fam=7 op=0x01f 0x00001328: V_MAC_F32 v5, 2.000000, v4
+pc=0x0132c fam=10 op=0x00e 0x0000132c: V_CMP_NLT_F32 vcc_lo, v5, s7
+pc=0x01334 fam=7 op=0x001 0x00001334: V_CNDMASK_B32 v2, 1, s10
+pc=0x0133c fam=1 op=0x004 0x0000133c: S_MOV_B64 exec_lo, s8
+pc=0x01340 fam=12 op=0x002 0x00001340: S_LOAD_DWORDX4 s36, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01348 fam=7 op=0x01a 0x00001348: V_LSHLREV_B32 v1, 6, v2
+pc=0x0134c fam=6 op=0x006 0x0000134c: V_CVT_F32_U32 v73, v2
+pc=0x01350 fam=7 op=0x008 0x00001350: V_MUL_F32 v5, s32, s32
+pc=0x01358 fam=8 op=0x141 0x00001358: V_MAD_F32 v3.clamp, 0x3d000000, v0, 0.500000
+pc=0x01364 fam=12 op=0x002 0x00001364: S_LOAD_DWORDX4 s44, s28, null ; offset=400 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0136c fam=7 op=0x018 0x0000136c: V_ASHRREV_I32 v2, 4, v1
+pc=0x01370 fam=7 op=0x01b 0x00001370: V_AND_B32 v1, 15, v1
+pc=0x01374 fam=7 op=0x008 0x00001374: V_MUL_F32 v4, 0xbf15c01a, v73
+pc=0x0137c fam=8 op=0x141 0x0000137c: V_MAD_F32 v5, s33, s33, v5
+pc=0x01384 fam=12 op=0x003 0x00001384: S_LOAD_DWORDX8 s0, s28, null ; offset=256 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0138c fam=7 op=0x025 0x0000138c: V_ADD_NC_U32 v0, 0x00000209, v2
+pc=0x01394 fam=6 op=0x033 0x00001394: V_SQRT_F32 v47, v48
+pc=0x01398 fam=6 op=0x025 0x00001398: V_EXP_F32 v4, v4
+pc=0x0139c fam=8 op=0x141 0x0000139c: V_MAD_F32 v5, s34, s34, v5
+pc=0x013a4 fam=5 op=0x00c 0x000013a4: S_WAITCNT 0x0000c07f
+pc=0x013a8 fam=12 op=0x00a 0x000013a8: S_BUFFER_LOAD_DWORDX4 s48, s36, null ; offset=80 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x013b0 fam=13 op=0x00e 0x000013b0: BUFFER_LOAD_DWORDX4 v12, v0, s36, 0 ; offset=0 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=1 offen=1
+pc=0x013b8 fam=7 op=0x025 0x000013b8: V_ADD_NC_U32 v0, 0x00000207, v2
+pc=0x013c0 fam=7 op=0x008 0x000013c0: V_MUL_F32 v55, v4, v3
+pc=0x013c4 fam=6 op=0x02e 0x000013c4: V_RSQ_F32 v50, v5
+pc=0x013c8 fam=1 op=0x004 0x000013c8: S_MOV_B64 vcc_lo, s8
+pc=0x013cc fam=12 op=0x00b 0x000013cc: S_BUFFER_LOAD_DWORDX8 s8, s36, null ; offset=10560 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x013d4 fam=13 op=0x00e 0x000013d4: BUFFER_LOAD_DWORDX4 v8, v0, s36, 0 ; offset=0 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=1 offen=1
+pc=0x013dc fam=7 op=0x025 0x000013dc: V_ADD_NC_U32 v0, 0x00000206, v2
+pc=0x013e4 fam=7 op=0x008 0x000013e4: V_MUL_F32 v56, 0x3f3504f3, v55
+pc=0x013ec fam=5 op=0x00c 0x000013ec: S_WAITCNT 0x0000c07f
+pc=0x013f0 fam=7 op=0x005 0x000013f0: V_SUBREV_F32 v47, s8, v47
+pc=0x013f4 fam=7 op=0x008 0x000013f4: V_MUL_F32 v49, s33, v50
+pc=0x013f8 fam=7 op=0x008 0x000013f8: V_MUL_F32 v48, s34, v50
+pc=0x013fc fam=13 op=0x00e 0x000013fc: BUFFER_LOAD_DWORDX4 v4, v0, s36, 0 ; offset=0 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=1 offen=1
+pc=0x01404 fam=7 op=0x025 0x00001404: V_ADD_NC_U32 v0, 0x00000208, v2
+pc=0x0140c fam=7 op=0x008 0x0000140c: V_MUL_F32 v50, s32, v50
+pc=0x01410 fam=7 op=0x008 0x00001410: V_MUL_F32 v53.clamp, s9, v47
+pc=0x01418 fam=13 op=0x00e 0x00001418: BUFFER_LOAD_DWORDX4 v0, v0, s36, 0 ; offset=0 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=1 offen=1
+pc=0x01420 fam=7 op=0x008 0x00001420: V_MUL_F32 v52, v67, v50
+pc=0x01424 fam=7 op=0x008 0x00001424: V_MUL_F32 v47, v20, v50
+pc=0x01428 fam=8 op=0x141 0x00001428: V_MAD_F32 v54, v68, v49, v52
+pc=0x01430 fam=8 op=0x141 0x00001430: V_MAD_F32 v52, v19, v49, v47
+pc=0x01438 fam=7 op=0x01f 0x00001438: V_MAC_F32 v54, v48, v69
+pc=0x0143c fam=7 op=0x01f 0x0000143c: V_MAC_F32 v52, v48, v16
+pc=0x01440 fam=8 op=0x157 0x00001440: V_MED3_F32 v54, 1.000000, v54.neg, 0
+pc=0x01448 fam=8 op=0x14b 0x00001448: V_FMA_F32 v47.clamp, 0.500000, v52, 0.500000
+pc=0x01450 fam=7 op=0x008 0x00001450: V_MUL_F32 v54, v38, v54
+pc=0x01454 fam=7 op=0x008 0x00001454: V_MUL_F32 v57, 0x3e747645, v47
+pc=0x0145c fam=7 op=0x020 0x0000145c: V_MADMK_F32 v54, v54, 0x3e747645, v57
+pc=0x01464 fam=5 op=0x00c 0x00001464: S_WAITCNT 0x00003f73
+pc=0x01468 fam=7 op=0x01f 0x00001468: V_MAC_F32 v15, v62, v14
+pc=0x0146c fam=7 op=0x01f 0x0000146c: V_MAC_F32 v15, v61, v13
+pc=0x01470 fam=5 op=0x00c 0x00001470: S_WAITCNT 0x00003f72
+pc=0x01474 fam=8 op=0x141 0x00001474: V_MAD_F32 v10, v10, v62, v11
+pc=0x0147c fam=7 op=0x01f 0x0000147c: V_MAC_F32 v15, v60, v12
+pc=0x01480 fam=7 op=0x01f 0x00001480: V_MAC_F32 v10, v61, v9
+pc=0x01484 fam=5 op=0x00c 0x00001484: S_WAITCNT 0x00003f71
+pc=0x01488 fam=7 op=0x01f 0x00001488: V_MAC_F32 v7, v62, v6
+pc=0x0148c fam=6 op=0x02a 0x0000148c: V_RCP_F32 v6, v15
+pc=0x01490 fam=7 op=0x01f 0x00001490: V_MAC_F32 v10, v60, v8
+pc=0x01494 fam=8 op=0x141 0x00001494: V_MAD_F32 v8, v5, v61, v7
+pc=0x0149c fam=5 op=0x00c 0x0000149c: S_WAITCNT 0x00003f70
+pc=0x014a0 fam=7 op=0x01f 0x000014a0: V_MAC_F32 v3, v62, v2
+pc=0x014a4 fam=7 op=0x008 0x000014a4: V_MUL_F32 v2, v6, v10
+pc=0x014a8 fam=7 op=0x01f 0x000014a8: V_MAC_F32 v8, v60, v4
+pc=0x014ac fam=7 op=0x01f 0x000014ac: V_MAC_F32 v3, v61, v1
+pc=0x014b0 fam=8 op=0x141 0x000014b0: V_MAD_F32 v72, v56.neg, s12, v2
+pc=0x014b8 fam=8 op=0x141 0x000014b8: V_MAD_F32 v1, s12, v56, v2
+pc=0x014c0 fam=8 op=0x141 0x000014c0: V_MAD_F32 v7, v0, v60, v3
+pc=0x014c8 fam=7 op=0x008 0x000014c8: V_MUL_F32 v0, v6, v8
+pc=0x014cc fam=8 op=0x141 0x000014cc: V_MAD_F32 v5, v55.neg, s12, v2
+pc=0x014d4 fam=8 op=0x141 0x000014d4: V_MAD_F32 v3, s12, v55, v2
+pc=0x014dc fam=7 op=0x008 0x000014dc: V_MUL_F32 v7, v6, v7
+pc=0x014e0 fam=8 op=0x141 0x000014e0: V_MAD_F32 v71, s12, v56, v0
+pc=0x014e8 fam=8 op=0x141 0x000014e8: V_MAD_F32 v11, v56.neg, s12, v0
+pc=0x014f0 fam=8 op=0x141 0x000014f0: V_MAD_F32 v12, v55.neg, s12, v0
+pc=0x014f8 fam=8 op=0x141 0x000014f8: V_MAD_F32 v10, s12, v55, v0
+pc=0x01500 fam=7 op=0x00f 0x00001500: V_MIN_F32 v70, 1.000000, v7
+pc=0x01504 fam=17 op=0x02f 0x00001504: image_sample_c_lz v8, v70, s0, s44 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4
+pc=0x0150c fam=17 op=0x02f 0x0000150c: image_sample_c_lz v9, v70, s0, s44 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=11,72,73,0
+pc=0x01518 fam=17 op=0x02f 0x00001518: image_sample_c_lz v4, v70, s0, s44 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=11,1,73,0
+pc=0x01524 fam=17 op=0x02f 0x00001524: image_sample_c_lz v11, v70, s0, s44 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=12,2,73,0
+pc=0x01530 fam=17 op=0x02f 0x00001530: image_sample_c_lz v13, v70, s0, s44 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=10,2,73,0
+pc=0x0153c fam=17 op=0x02f 0x0000153c: image_sample_c_lz v12, v70, s0, s44 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=0,5,73,0
+pc=0x01548 fam=17 op=0x02f 0x00001548: image_sample_c_lz v5, v70, s0, s44 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=71,1,73,0
+pc=0x01554 fam=17 op=0x02f 0x00001554: image_sample_c_lz v6, v70, s0, s44 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=0,3,73,0
+pc=0x01560 fam=17 op=0x02f 0x00001560: image_sample_c_lz v1, v70, s0, s44 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=0,2,73,0
+pc=0x0156c fam=5 op=0x00c 0x0000156c: S_WAITCNT 0x00003f77
+pc=0x01570 fam=7 op=0x003 0x00001570: V_ADD_F32 v0, v9, v8
+pc=0x01574 fam=5 op=0x00c 0x00001574: S_WAITCNT 0x00003f73
+pc=0x01578 fam=7 op=0x003 0x00001578: V_ADD_F32 v2, v12, v11
+pc=0x0157c fam=7 op=0x003 0x0000157c: V_ADD_F32 v0, v0, v4
+pc=0x01580 fam=7 op=0x003 0x00001580: V_ADD_F32 v2, v2, v13
+pc=0x01584 fam=5 op=0x00c 0x00001584: S_WAITCNT 0x00003f72
+pc=0x01588 fam=7 op=0x003 0x00001588: V_ADD_F32 v0, v0, v5
+pc=0x0158c fam=5 op=0x00c 0x0000158c: S_WAITCNT 0x00003f71
+pc=0x01590 fam=7 op=0x003 0x00001590: V_ADD_F32 v2, v2, v6
+pc=0x01594 fam=7 op=0x008 0x00001594: V_MUL_F32 v0, 0x3d800000, v0
+pc=0x0159c fam=7 op=0x020 0x0000159c: V_MADMK_F32 v0, v2, 0x3e000000, v0
+pc=0x015a4 fam=5 op=0x00c 0x000015a4: S_WAITCNT 0x00003f70
+pc=0x015a8 fam=7 op=0x020 0x000015a8: V_MADMK_F32 v0, v1, 0x3e800000, v0
+pc=0x015b0 fam=7 op=0x003 0x000015b0: V_ADD_F32 v1, v0, v53
+pc=0x015b4 fam=8 op=0x11f 0x000015b4: V_MAC_F32 v1, v0, v53.neg
+pc=0x015bc fam=7 op=0x00f 0x000015bc: V_MIN_F32 v2, 1.000000, v1
+pc=0x015c0 fam=7 op=0x008 0x000015c0: V_MUL_F32 v1, s51, v2
+pc=0x015c4 fam=7 op=0x008 0x000015c4: V_MUL_F32 v3, s48, v1
+pc=0x015c8 fam=7 op=0x008 0x000015c8: V_MUL_F32 v0, s49, v1
+pc=0x015cc fam=7 op=0x008 0x000015cc: V_MUL_F32 v1, s50, v1
+pc=0x015d0 fam=8 op=0x141 0x000015d0: V_MAD_F32 v7, v3, v54, s20
+pc=0x015d8 fam=8 op=0x141 0x000015d8: V_MAD_F32 v8, v0, v54, s21
+pc=0x015e0 fam=8 op=0x141 0x000015e0: V_MAD_F32 v24, v1, v54, s22
+pc=0x015e8 fam=10 op=0x011 0x000015e8: V_CMPX_LT_F32 exec_lo, -1.000000, v52
+pc=0x015ec fam=5 op=0x008 0x000015ec: S_CBRANCH_EXECZ 0x00001740
+pc=0x015f0 fam=7 op=0x003 0x000015f0: V_ADD_F32 v0, v67, v50
+pc=0x015f4 fam=7 op=0x003 0x000015f4: V_ADD_F32 v1, v68, v49
+pc=0x015f8 fam=7 op=0x003 0x000015f8: V_ADD_F32 v3, v69, v48
+pc=0x015fc fam=7 op=0x008 0x000015fc: V_MUL_F32 v5, v43, v43
+pc=0x01600 fam=1 op=0x003 0x00001600: S_MOV_B32 s0, 0x42480000
+pc=0x01608 fam=7 op=0x008 0x00001608: V_MUL_F32 v11, v0, v0
+pc=0x0160c fam=7 op=0x008 0x0000160c: V_MUL_F32 v9, v42, v2
+pc=0x01610 fam=7 op=0x003 0x00001610: V_ADD_F32 v2, 1.000000, v43
+pc=0x01614 fam=7 op=0x008 0x00001614: V_MUL_F32 v10, v5, v5
+pc=0x01618 fam=7 op=0x01f 0x00001618: V_MAC_F32 v11, v1, v1
+pc=0x0161c fam=7 op=0x008 0x0000161c: V_MUL_F32 v5, v9, v47
+pc=0x01620 fam=7 op=0x008 0x00001620: V_MUL_F32 v4, v2, v2
+pc=0x01624 fam=7 op=0x008 0x00001624: V_MUL_F32 v9.clamp, s0, v25
+pc=0x0162c fam=1 op=0x003 0x0000162c: S_MOV_B32 s0, 0xc0b1c059
+pc=0x01634 fam=8 op=0x141 0x00001634: V_MAD_F32 v12, v3, v3, v11
+pc=0x0163c fam=7 op=0x008 0x0000163c: V_MUL_F32 v2, v5, v10
+pc=0x01640 fam=8 op=0x141 0x00001640: V_MAD_F32 v11, 0x3e000000, v4.neg, 1.000000
+pc=0x0164c fam=7 op=0x008 0x0000164c: V_MUL_F32 v45, 0x3e000000, v4
+pc=0x01654 fam=7 op=0x004 0x00001654: V_SUB_F32 v4, v9, v26
+pc=0x01658 fam=6 op=0x02e 0x00001658: V_RSQ_F32 v14, v12
+pc=0x0165c fam=7 op=0x004 0x0000165c: V_SUB_F32 v5, v9, v28
+pc=0x01660 fam=7 op=0x004 0x00001660: V_SUB_F32 v9, v9, v25
+pc=0x01664 fam=8 op=0x141 0x00001664: V_MAD_F32 v12, v47, v11, v45
+pc=0x0166c fam=7 op=0x01f 0x0000166c: V_MAC_F32 v45, v11, v42
+pc=0x01670 fam=7 op=0x008 0x00001670: V_MUL_F32 v15, v14, v0
+pc=0x01674 fam=7 op=0x008 0x00001674: V_MUL_F32 v13, v14, v1
+pc=0x01678 fam=7 op=0x008 0x00001678: V_MUL_F32 v14, v14, v3
+pc=0x0167c fam=7 op=0x008 0x0000167c: V_MUL_F32 v2, 0x3ea2f986, v2
+pc=0x01684 fam=7 op=0x008 0x00001684: V_MUL_F32 v3, s48, s51
+pc=0x0168c fam=7 op=0x008 0x0000168c: V_MUL_F32 v44, v20, v15
+pc=0x01690 fam=7 op=0x008 0x00001690: V_MUL_F32 v15, v67, v15
+pc=0x01694 fam=7 op=0x008 0x00001694: V_MUL_F32 v0, s51, s49
+pc=0x0169c fam=7 op=0x008 0x0000169c: V_MUL_F32 v1, s51, s50
+pc=0x016a4 fam=8 op=0x141 0x000016a4: V_MAD_F32 v11, v19, v13, v44
+pc=0x016ac fam=8 op=0x141 0x000016ac: V_MAD_F32 v44, v68, v13, v15
+pc=0x016b4 fam=8 op=0x11f 0x000016b4: V_MAC_F32 v11.clamp, v14, v16
+pc=0x016bc fam=8 op=0x11f 0x000016bc: V_MAC_F32 v44.clamp, v14, v69
+pc=0x016c4 fam=8 op=0x141 0x000016c4: V_MAD_F32 v15, v11, v10, v11.neg
+pc=0x016cc fam=7 op=0x021 0x000016cc: V_MADAK_F32 v10, s0, v44, 0xc0df760c
+pc=0x016d4 fam=8 op=0x141 0x000016d4: V_MAD_F32 v13, v11, v15, 1.000000
+pc=0x016dc fam=7 op=0x008 0x000016dc: V_MUL_F32 v10, v44, v10
+pc=0x016e0 fam=7 op=0x008 0x000016e0: V_MUL_F32 v13, v13, v13
+pc=0x016e4 fam=6 op=0x025 0x000016e4: V_EXP_F32 v10, v10
+pc=0x016e8 fam=7 op=0x008 0x000016e8: V_MUL_F32 v12, v13, v12
+pc=0x016ec fam=8 op=0x141 0x000016ec: V_MAD_F32 v13, v10, v4, v26
+pc=0x016f4 fam=8 op=0x141 0x000016f4: V_MAD_F32 v9, v10, v9, v25
+pc=0x016fc fam=8 op=0x141 0x000016fc: V_MAD_F32 v5, v10, v5, v28
+pc=0x01704 fam=7 op=0x008 0x00001704: V_MUL_F32 v10, v12, v45
+pc=0x01708 fam=7 op=0x008 0x00001708: V_MUL_F32 v9, v47, v9
+pc=0x0170c fam=7 op=0x008 0x0000170c: V_MUL_F32 v4, v47, v5
+pc=0x01710 fam=7 op=0x008 0x00001710: V_MUL_F32 v5, v47, v13
+pc=0x01714 fam=6 op=0x02a 0x00001714: V_RCP_F32 v10, v10
+pc=0x01718 fam=7 op=0x008 0x00001718: V_MUL_F32 v2, v2, v10
+pc=0x0171c fam=7 op=0x008 0x0000171c: V_MUL_F32 v5.clamp, v5, v2
+pc=0x01724 fam=7 op=0x008 0x00001724: V_MUL_F32 v9.clamp, v9, v2
+pc=0x0172c fam=7 op=0x008 0x0000172c: V_MUL_F32 v2.clamp, v4, v2
+pc=0x01734 fam=7 op=0x008 0x00001734: V_MUL_F32 v44, v3, v5
+pc=0x01738 fam=7 op=0x008 0x00001738: V_MUL_F32 v45, v0, v9
+pc=0x0173c fam=7 op=0x008 0x0000173c: V_MUL_F32 v46, v1, v2
+pc=0x01740 fam=1 op=0x004 0x00001740: S_MOV_B64 exec_lo, vcc_lo
+pc=0x01744 fam=1 op=0x003 0x00001744: S_MOV_B32 vcc_lo, 0x42480000
+pc=0x0174c fam=2 op=0x00e 0x0000174c: S_AND_B32 s40, s24, 8
+pc=0x01750 fam=7 op=0x008 0x00001750: V_MUL_F32 v9.clamp, vcc_lo, v25
+pc=0x01758 fam=1 op=0x003 0x00001758: S_MOV_B32 s14, 0
+pc=0x0175c fam=7 op=0x004 0x0000175c: V_SUB_F32 v0, v9, v26
+pc=0x01760 fam=7 op=0x004 0x00001760: V_SUB_F32 v1, v9, v25
+pc=0x01764 fam=7 op=0x004 0x00001764: V_SUB_F32 v2, v9, v28
+pc=0x01768 fam=4 op=0x00a 0x00001768: S_CMP_LT_U32 s14, s41
+pc=0x0176c fam=5 op=0x004 0x0000176c: S_CBRANCH_SCC0 0x00001a50
+pc=0x01770 fam=12 op=0x002 0x00001770: S_LOAD_DWORDX4 s4, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01778 fam=2 op=0x026 0x00001778: S_MUL_I32 vcc_lo, s14, 16
+pc=0x0177c fam=1 op=0x004 0x0000177c: S_MOV_B64 s12, exec_lo
+pc=0x01780 fam=5 op=0x00c 0x00001780: S_WAITCNT 0x0000c07f
+pc=0x01784 fam=12 op=0x00a 0x00001784: S_BUFFER_LOAD_DWORDX4 s8, s4, vcc_lo ; offset=96 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0178c fam=12 op=0x00a 0x0000178c: S_BUFFER_LOAD_DWORDX4 s0, s4, vcc_lo ; offset=2144 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01794 fam=5 op=0x00c 0x00001794: S_WAITCNT 0x0000c07f
+pc=0x01798 fam=7 op=0x004 0x00001798: V_SUB_F32 v10, s8, v60
+pc=0x0179c fam=7 op=0x004 0x0000179c: V_SUB_F32 v5, s9, v61
+pc=0x017a0 fam=7 op=0x004 0x000017a0: V_SUB_F32 v3, s10, v62
+pc=0x017a4 fam=7 op=0x004 0x000017a4: V_SUB_F32 v11, s1, s0
+pc=0x017ac fam=7 op=0x008 0x000017ac: V_MUL_F32 v4, v10, v10
+pc=0x017b0 fam=7 op=0x010 0x000017b0: V_MAX_F32 v11, 0x3c23d70a, v11
+pc=0x017b8 fam=7 op=0x01f 0x000017b8: V_MAC_F32 v4, v5, v5
+pc=0x017bc fam=6 op=0x02a 0x000017bc: V_RCP_F32 v11, v11
+pc=0x017c0 fam=7 op=0x01f 0x000017c0: V_MAC_F32 v4, v3, v3
+pc=0x017c4 fam=6 op=0x033 0x000017c4: V_SQRT_F32 v4, v4
+pc=0x017c8 fam=7 op=0x003 0x000017c8: V_ADD_F32 v4, 0x3a83126f, v4
+pc=0x017d0 fam=7 op=0x005 0x000017d0: V_SUBREV_F32 v12, s0, v4
+pc=0x017d4 fam=10 op=0x00e 0x000017d4: V_CMP_NLT_F32 vcc_lo, v4, s0
+pc=0x017dc fam=7 op=0x010 0x000017dc: V_MAX_F32 v12, 0, v12
+pc=0x017e0 fam=7 op=0x008 0x000017e0: V_MUL_F32 v11, v11, v12
+pc=0x017e4 fam=8 op=0x141 0x000017e4: V_MAD_F32 v12, v12, v12, 1.000000
+pc=0x017ec fam=7 op=0x008 0x000017ec: V_MUL_F32 v13, v11, v11
+pc=0x017f0 fam=6 op=0x02a 0x000017f0: V_RCP_F32 v11, v12
+pc=0x017f4 fam=8 op=0x141 0x000017f4: V_MAD_F32 v12.clamp, v13.neg, v13, 1.000000
+pc=0x017fc fam=7 op=0x008 0x000017fc: V_MUL_F32 v12, v12, v12
+pc=0x01800 fam=7 op=0x008 0x00001800: V_MUL_F32 v11, v12, v11
+pc=0x01804 fam=7 op=0x001 0x00001804: V_CNDMASK_B32 v48, 1.000000, v11
+pc=0x01808 fam=10 op=0x011 0x00001808: V_CMPX_LT_F32 exec_lo, 0, v48
+pc=0x0180c fam=5 op=0x008 0x0000180c: S_CBRANCH_EXECZ 0x00001a20
+pc=0x01810 fam=6 op=0x02a 0x00001810: V_RCP_F32 v12, v4
+pc=0x01814 fam=12 op=0x002 0x00001814: S_LOAD_DWORDX4 s8, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0181c fam=2 op=0x026 0x0000181c: S_MUL_I32 vcc_lo, s14, 16
+pc=0x01820 fam=6 op=0x001 0x00001820: V_MOV_B32 v11, 0
+pc=0x01824 fam=5 op=0x00c 0x00001824: S_WAITCNT 0x0000c07f
+pc=0x01828 fam=12 op=0x00a 0x00001828: S_BUFFER_LOAD_DWORDX4 s4, s8, vcc_lo ; offset=1120 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01830 fam=7 op=0x008 0x00001830: V_MUL_F32 v14, v12, v10
+pc=0x01834 fam=7 op=0x008 0x00001834: V_MUL_F32 v15, v12, v5
+pc=0x01838 fam=7 op=0x008 0x00001838: V_MUL_F32 v47, v12, v3
+pc=0x0183c fam=5 op=0x00c 0x0000183c: S_WAITCNT 0x0000c07f
+pc=0x01840 fam=7 op=0x008 0x00001840: V_MUL_F32 v12, s4, v48
+pc=0x01844 fam=6 op=0x001 0x00001844: V_MOV_B32 v13, 0
+pc=0x01848 fam=7 op=0x008 0x00001848: V_MUL_F32 v5, v67, v14
+pc=0x0184c fam=7 op=0x008 0x0000184c: V_MUL_F32 v10, v20, v14
+pc=0x01850 fam=1 op=0x004 0x00001850: S_MOV_B64 vcc_lo, exec_lo
+pc=0x01854 fam=7 op=0x008 0x00001854: V_MUL_F32 v50, s7, v12
+pc=0x01858 fam=8 op=0x141 0x00001858: V_MAD_F32 v3, v68, v15, v5
+pc=0x01860 fam=7 op=0x01f 0x00001860: V_MAC_F32 v10, v15, v19
+pc=0x01864 fam=7 op=0x008 0x00001864: V_MUL_F32 v5, s5, v48
+pc=0x01868 fam=7 op=0x01f 0x00001868: V_MAC_F32 v3, v47, v69
+pc=0x0186c fam=8 op=0x141 0x0000186c: V_MAD_F32 v49, v16, v47, v10
+pc=0x01874 fam=7 op=0x008 0x00001874: V_MUL_F32 v10, s6, v48
+pc=0x01878 fam=7 op=0x008 0x00001878: V_MUL_F32 v51, s7, v5
+pc=0x0187c fam=8 op=0x157 0x0000187c: V_MED3_F32 v48, 1.000000, v3.neg, 0
+pc=0x01884 fam=8 op=0x14b 0x00001884: V_FMA_F32 v3.clamp, 0.500000, v49, 0.500000
+pc=0x0188c fam=7 op=0x008 0x0000188c: V_MUL_F32 v52, s7, v10
+pc=0x01890 fam=7 op=0x008 0x00001890: V_MUL_F32 v53, v38, v48
+pc=0x01894 fam=7 op=0x008 0x00001894: V_MUL_F32 v54, 0x3e747645, v3
+pc=0x0189c fam=6 op=0x001 0x0000189c: V_MOV_B32 v48, 0
+pc=0x018a0 fam=7 op=0x020 0x000018a0: V_MADMK_F32 v53, v53, 0x3e747645, v54
+pc=0x018a8 fam=7 op=0x01f 0x000018a8: V_MAC_F32 v7, v53, v50
+pc=0x018ac fam=7 op=0x01f 0x000018ac: V_MAC_F32 v8, v53, v51
+pc=0x018b0 fam=7 op=0x01f 0x000018b0: V_MAC_F32 v24, v53, v52
+pc=0x018b4 fam=10 op=0x014 0x000018b4: V_CMPX_GT_F32 exec_lo, s3, 0
+pc=0x018bc fam=10 op=0x011 0x000018bc: V_CMPX_LT_F32 exec_lo, -1.000000, v49
+pc=0x018c0 fam=5 op=0x008 0x000018c0: S_CBRANCH_EXECZ 0x00001a10
+pc=0x018c4 fam=7 op=0x003 0x000018c4: V_ADD_F32 v11, v67, v14
+pc=0x018c8 fam=7 op=0x003 0x000018c8: V_ADD_F32 v13, v68, v15
+pc=0x018cc fam=1 op=0x003 0x000018cc: S_MOV_B32 s1, 0x3dcccccd
+pc=0x018d4 fam=7 op=0x003 0x000018d4: V_ADD_F32 v14, v69, v47
+pc=0x018d8 fam=7 op=0x010 0x000018d8: V_MAX_F32 v48, s1, s0
+pc=0x018e0 fam=7 op=0x008 0x000018e0: V_MUL_F32 v49, v11, v11
+pc=0x018e4 fam=7 op=0x008 0x000018e4: V_MUL_F32 v15, 0x41f00000, v4
+pc=0x018ec fam=7 op=0x008 0x000018ec: V_MUL_F32 v47, s3, s7
+pc=0x018f4 fam=1 op=0x003 0x000018f4: S_MOV_B32 s0, 0xc0b1c059
+pc=0x018fc fam=7 op=0x01f 0x000018fc: V_MAC_F32 v49, v13, v13
+pc=0x01900 fam=6 op=0x02a 0x00001900: V_RCP_F32 v50, v15
+pc=0x01904 fam=7 op=0x008 0x00001904: V_MUL_F32 v15, v42, v3
+pc=0x01908 fam=7 op=0x008 0x00001908: V_MUL_F32 v4, v12, v47
+pc=0x0190c fam=7 op=0x008 0x0000190c: V_MUL_F32 v5, v5, v47
+pc=0x01910 fam=7 op=0x008 0x00001910: V_MUL_F32 v10, v10, v47
+pc=0x01914 fam=8 op=0x141 0x00001914: V_MAD_F32 v12.clamp, v50, v48, v43
+pc=0x0191c fam=8 op=0x141 0x0000191c: V_MAD_F32 v48, v14, v14, v49
+pc=0x01924 fam=7 op=0x008 0x00001924: V_MUL_F32 v47, v12, v12
+pc=0x01928 fam=6 op=0x02e 0x00001928: V_RSQ_F32 v48, v48
+pc=0x0192c fam=7 op=0x003 0x0000192c: V_ADD_F32 v49, 1.000000, v12
+pc=0x01930 fam=7 op=0x008 0x00001930: V_MUL_F32 v12, v47, v47
+pc=0x01934 fam=7 op=0x008 0x00001934: V_MUL_F32 v11, v48, v11
+pc=0x01938 fam=7 op=0x008 0x00001938: V_MUL_F32 v13, v48, v13
+pc=0x0193c fam=7 op=0x008 0x0000193c: V_MUL_F32 v14, v48, v14
+pc=0x01940 fam=7 op=0x008 0x00001940: V_MUL_F32 v47, v49, v49
+pc=0x01944 fam=7 op=0x008 0x00001944: V_MUL_F32 v50, v15, v12
+pc=0x01948 fam=7 op=0x008 0x00001948: V_MUL_F32 v51, v20, v11
+pc=0x0194c fam=7 op=0x008 0x0000194c: V_MUL_F32 v49, v67, v11
+pc=0x01950 fam=8 op=0x141 0x00001950: V_MAD_F32 v48, 0x3e000000, v47.neg, 1.000000
+pc=0x0195c fam=7 op=0x008 0x0000195c: V_MUL_F32 v52, 0x3e000000, v47
+pc=0x01964 fam=7 op=0x01f 0x00001964: V_MAC_F32 v51, v13, v19
+pc=0x01968 fam=8 op=0x141 0x00001968: V_MAD_F32 v13, v68, v13, v49
+pc=0x01970 fam=7 op=0x008 0x00001970: V_MUL_F32 v11, 0x3ea2f986, v50
+pc=0x01978 fam=8 op=0x141 0x00001978: V_MAD_F32 v15, v3, v48, v52
+pc=0x01980 fam=8 op=0x11f 0x00001980: V_MAC_F32 v51.clamp, v14, v16
+pc=0x01988 fam=8 op=0x11f 0x00001988: V_MAC_F32 v13.clamp, v14, v69
+pc=0x01990 fam=7 op=0x01f 0x00001990: V_MAC_F32 v52, v48, v42
+pc=0x01994 fam=8 op=0x141 0x00001994: V_MAD_F32 v48, v51, v12, v51.neg
+pc=0x0199c fam=7 op=0x021 0x0000199c: V_MADAK_F32 v12, s0, v13, 0xc0df760c
+pc=0x019a4 fam=8 op=0x141 0x000019a4: V_MAD_F32 v47, v51, v48, 1.000000
+pc=0x019ac fam=7 op=0x008 0x000019ac: V_MUL_F32 v12, v13, v12
+pc=0x019b0 fam=7 op=0x008 0x000019b0: V_MUL_F32 v47, v47, v47
+pc=0x019b4 fam=6 op=0x025 0x000019b4: V_EXP_F32 v14, v12
+pc=0x019b8 fam=7 op=0x008 0x000019b8: V_MUL_F32 v47, v47, v15
+pc=0x019bc fam=8 op=0x141 0x000019bc: V_MAD_F32 v12, v14, v2, v28
+pc=0x019c4 fam=8 op=0x141 0x000019c4: V_MAD_F32 v15, v14, v0, v26
+pc=0x019cc fam=8 op=0x141 0x000019cc: V_MAD_F32 v14, v14, v1, v25
+pc=0x019d4 fam=7 op=0x008 0x000019d4: V_MUL_F32 v47, v47, v52
+pc=0x019d8 fam=7 op=0x008 0x000019d8: V_MUL_F32 v13, v3, v15
+pc=0x019dc fam=7 op=0x008 0x000019dc: V_MUL_F32 v14, v3, v14
+pc=0x019e0 fam=7 op=0x008 0x000019e0: V_MUL_F32 v3, v3, v12
+pc=0x019e4 fam=6 op=0x02a 0x000019e4: V_RCP_F32 v12, v47
+pc=0x019e8 fam=7 op=0x008 0x000019e8: V_MUL_F32 v11, v11, v12
+pc=0x019ec fam=7 op=0x008 0x000019ec: V_MUL_F32 v12.clamp, v13, v11
+pc=0x019f4 fam=7 op=0x008 0x000019f4: V_MUL_F32 v13.clamp, v14, v11
+pc=0x019fc fam=7 op=0x008 0x000019fc: V_MUL_F32 v3.clamp, v3, v11
+pc=0x01a04 fam=7 op=0x008 0x00001a04: V_MUL_F32 v48, v4, v12
+pc=0x01a08 fam=7 op=0x008 0x00001a08: V_MUL_F32 v11, v5, v13
+pc=0x01a0c fam=7 op=0x008 0x00001a0c: V_MUL_F32 v13, v10, v3
+pc=0x01a10 fam=1 op=0x004 0x00001a10: S_MOV_B64 exec_lo, vcc_lo
+pc=0x01a14 fam=7 op=0x003 0x00001a14: V_ADD_F32 v44, v44, v48
+pc=0x01a18 fam=7 op=0x003 0x00001a18: V_ADD_F32 v45, v45, v11
+pc=0x01a1c fam=7 op=0x003 0x00001a1c: V_ADD_F32 v46, v46, v13
+pc=0x01a20 fam=1 op=0x004 0x00001a20: S_MOV_B64 exec_lo, s12
+pc=0x01a24 fam=2 op=0x002 0x00001a24: S_ADD_I32 s14, s14, 1
+pc=0x01a28 fam=4 op=0x007 0x00001a28: S_CMP_LG_U32 0, s40
+pc=0x01a2c fam=5 op=0x000 0x00001a2c: S_NOP 0x00000000
+pc=0x01a30 fam=2 op=0x00b 0x00001a30: S_CSELECT_B64 vcc_lo, s12, 0
+pc=0x01a34 fam=7 op=0x001 0x00001a34: V_CNDMASK_B32 v44, v44, 0
+pc=0x01a3c fam=7 op=0x001 0x00001a3c: V_CNDMASK_B32 v45, v45, 0
+pc=0x01a44 fam=7 op=0x001 0x00001a44: V_CNDMASK_B32 v46, v46, 0
+pc=0x01a4c fam=5 op=0x002 0x00001a4c: S_BRANCH 0x00001768
+pc=0x01a50 fam=5 op=0x00c 0x00001a50: S_WAITCNT 0x0000c07f
+pc=0x01a54 fam=7 op=0x005 0x00001a54: V_SUBREV_F32 v3, s16, v60
+pc=0x01a58 fam=12 op=0x002 0x00001a58: S_LOAD_DWORDX4 s0, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01a60 fam=7 op=0x005 0x00001a60: V_SUBREV_F32 v4, s17, v61
+pc=0x01a64 fam=7 op=0x005 0x00001a64: V_SUBREV_F32 v5, s18, v62
+pc=0x01a68 fam=5 op=0x00c 0x00001a68: S_WAITCNT 0x0000c07f
+pc=0x01a6c fam=12 op=0x008 0x00001a6c: S_BUFFER_LOAD_DWORD s43, s0, null ; offset=10580 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01a74 fam=1 op=0x003 0x00001a74: S_MOV_B32 s41, 0
+pc=0x01a78 fam=4 op=0x00a 0x00001a78: S_CMP_LT_U32 s41, s42
+pc=0x01a7c fam=5 op=0x004 0x00001a7c: S_CBRANCH_SCC0 0x00001fa8
+pc=0x01a80 fam=12 op=0x002 0x00001a80: S_LOAD_DWORDX4 s4, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01a88 fam=2 op=0x026 0x00001a88: S_MUL_I32 vcc_lo, s41, 16
+pc=0x01a8c fam=5 op=0x00c 0x00001a8c: S_WAITCNT 0x0000c07f
+pc=0x01a90 fam=12 op=0x00a 0x00001a90: S_BUFFER_LOAD_DWORDX4 s0, s4, vcc_lo ; offset=3168 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01a98 fam=12 op=0x00a 0x00001a98: S_BUFFER_LOAD_DWORDX4 s8, s4, vcc_lo ; offset=4192 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01aa0 fam=12 op=0x00a 0x00001aa0: S_BUFFER_LOAD_DWORDX4 s44, s4, vcc_lo ; offset=6240 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01aa8 fam=5 op=0x00c 0x00001aa8: S_WAITCNT 0x0000c07f
+pc=0x01aac fam=7 op=0x004 0x00001aac: V_SUB_F32 v11, s0, v60
+pc=0x01ab0 fam=7 op=0x004 0x00001ab0: V_SUB_F32 v12, s1, v61
+pc=0x01ab4 fam=7 op=0x004 0x00001ab4: V_SUB_F32 v13, s2, v62
+pc=0x01ab8 fam=7 op=0x008 0x00001ab8: V_MUL_F32 v10, v11, v11
+pc=0x01abc fam=7 op=0x01f 0x00001abc: V_MAC_F32 v10, v12, v12
+pc=0x01ac0 fam=7 op=0x01f 0x00001ac0: V_MAC_F32 v10, v13, v13
+pc=0x01ac4 fam=6 op=0x033 0x00001ac4: V_SQRT_F32 v10, v10
+pc=0x01ac8 fam=7 op=0x003 0x00001ac8: V_ADD_F32 v10, 0x3a83126f, v10
+pc=0x01ad0 fam=6 op=0x02a 0x00001ad0: V_RCP_F32 v14, v10
+pc=0x01ad4 fam=7 op=0x008 0x00001ad4: V_MUL_F32 v11, v14, v11
+pc=0x01ad8 fam=7 op=0x008 0x00001ad8: V_MUL_F32 v12, v14, v12
+pc=0x01adc fam=7 op=0x008 0x00001adc: V_MUL_F32 v13, v14, v13
+pc=0x01ae0 fam=7 op=0x008 0x00001ae0: V_MUL_F32 v14, s8, v11
+pc=0x01ae4 fam=7 op=0x01f 0x00001ae4: V_MAC_F32 v14, s9, v12
+pc=0x01ae8 fam=8 op=0x11f 0x00001ae8: V_MAC_F32 v14.clamp, s10, v13
+pc=0x01af0 fam=10 op=0x003 0x00001af0: V_CMP_LE_F32 s0, s46, v14
+pc=0x01af8 fam=10 op=0x006 0x00001af8: V_CMP_GE_F32 vcc_lo, s47, v14
+pc=0x01afc fam=2 op=0x011 0x00001afc: S_OR_B64 vcc_lo, vcc_lo, s0
+pc=0x01b00 fam=1 op=0x024 0x00001b00: S_AND_SAVEEXEC_B64 s24, vcc_lo
+pc=0x01b04 fam=10 op=0x003 0x00001b04: V_CMP_LE_F32 vcc_lo, s46, v14
+pc=0x01b08 fam=7 op=0x001 0x00001b08: V_CNDMASK_B32 v14, 0, 1.000000
+pc=0x01b10 fam=2 op=0x015 0x00001b10: S_ANDN2_B64 exec_lo, s24, exec_lo
+pc=0x01b14 fam=5 op=0x008 0x00001b14: S_CBRANCH_EXECZ 0x00001b34
+pc=0x01b18 fam=8 op=0x157 0x00001b18: V_MED3_F32 v15, v14, s47, s46
+pc=0x01b20 fam=7 op=0x004 0x00001b20: V_SUB_F32 v14, s46, s47
+pc=0x01b28 fam=7 op=0x005 0x00001b28: V_SUBREV_F32 v15, s47, v15
+pc=0x01b2c fam=6 op=0x02a 0x00001b2c: V_RCP_F32 v14, v14
+pc=0x01b30 fam=7 op=0x008 0x00001b30: V_MUL_F32 v14, v14, v15
+pc=0x01b34 fam=1 op=0x004 0x00001b34: S_MOV_B64 exec_lo, s24
+pc=0x01b38 fam=7 op=0x004 0x00001b38: V_SUB_F32 v47, s45, s44
+pc=0x01b40 fam=7 op=0x005 0x00001b40: V_SUBREV_F32 v15, s44, v10
+pc=0x01b44 fam=10 op=0x00e 0x00001b44: V_CMP_NLT_F32 vcc_lo, v10, s44
+pc=0x01b4c fam=7 op=0x010 0x00001b4c: V_MAX_F32 v47, 0x3c23d70a, v47
+pc=0x01b54 fam=7 op=0x010 0x00001b54: V_MAX_F32 v15, 0, v15
+pc=0x01b58 fam=6 op=0x02a 0x00001b58: V_RCP_F32 v48, v47
+pc=0x01b5c fam=8 op=0x141 0x00001b5c: V_MAD_F32 v47, v15, v15, 1.000000
+pc=0x01b64 fam=7 op=0x008 0x00001b64: V_MUL_F32 v48, v48, v15
+pc=0x01b68 fam=6 op=0x02a 0x00001b68: V_RCP_F32 v15, v47
+pc=0x01b6c fam=7 op=0x008 0x00001b6c: V_MUL_F32 v47, v48, v48
+pc=0x01b70 fam=8 op=0x141 0x00001b70: V_MAD_F32 v47.clamp, v47.neg, v47, 1.000000
+pc=0x01b78 fam=7 op=0x008 0x00001b78: V_MUL_F32 v47, v47, v47
+pc=0x01b7c fam=7 op=0x008 0x00001b7c: V_MUL_F32 v15, v47, v15
+pc=0x01b80 fam=7 op=0x001 0x00001b80: V_CNDMASK_B32 v15, 1.000000, v15
+pc=0x01b84 fam=7 op=0x008 0x00001b84: V_MUL_F32 v14, v14, v15
+pc=0x01b88 fam=10 op=0x011 0x00001b88: V_CMPX_LT_F32 exec_lo, 0, v14
+pc=0x01b8c fam=5 op=0x008 0x00001b8c: S_CBRANCH_EXECZ 0x00001f78
+pc=0x01b90 fam=6 op=0x001 0x00001b90: V_MOV_B32 v15, 1.000000
+pc=0x01b94 fam=12 op=0x002 0x00001b94: S_LOAD_DWORDX4 s4, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01b9c fam=2 op=0x026 0x00001b9c: S_MUL_I32 vcc_lo, s41, 16
+pc=0x01ba0 fam=4 op=0x00a 0x00001ba0: S_CMP_LT_U32 s3, 32
+pc=0x01ba4 fam=5 op=0x00c 0x00001ba4: S_WAITCNT 0x0000c07f
+pc=0x01ba8 fam=12 op=0x00a 0x00001ba8: S_BUFFER_LOAD_DWORDX4 s48, s4, vcc_lo ; offset=7264 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01bb0 fam=2 op=0x00b 0x00001bb0: S_CSELECT_B64 s0, exec_lo, 0
+pc=0x01bb4 fam=5 op=0x00c 0x00001bb4: S_WAITCNT 0x0000c07f
+pc=0x01bb8 fam=10 op=0x001 0x00001bb8: V_CMP_LT_F32 vcc_lo, s48, 1.000000
+pc=0x01bc0 fam=2 op=0x00f 0x00001bc0: S_AND_B64 vcc_lo, s0, vcc_lo
+pc=0x01bc4 fam=5 op=0x006 0x00001bc4: S_CBRANCH_VCCZ 0x00001d6c
+pc=0x01bc8 fam=6 op=0x006 0x00001bc8: V_CVT_F32_U32 v75, s3
+pc=0x01bcc fam=12 op=0x002 0x00001bcc: S_LOAD_DWORDX4 s52, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01bd4 fam=2 op=0x026 0x00001bd4: S_MUL_I32 vcc_lo, s3, 64
+pc=0x01bd8 fam=12 op=0x002 0x00001bd8: S_LOAD_DWORDX4 s56, s28, null ; offset=400 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01be0 fam=12 op=0x003 0x00001be0: S_LOAD_DWORDX8 s16, s28, null ; offset=288 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01be8 fam=5 op=0x00c 0x00001be8: S_WAITCNT 0x0000c07f
+pc=0x01bec fam=12 op=0x00a 0x00001bec: S_BUFFER_LOAD_DWORDX4 s60, s52, vcc_lo ; offset=10752 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01bf4 fam=12 op=0x00b 0x00001bf4: S_BUFFER_LOAD_DWORDX8 s32, s52, vcc_lo ; offset=10720 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01bfc fam=12 op=0x00c 0x00001bfc: S_BUFFER_LOAD_DWORDX16 s0, s52, vcc_lo ; offset=12768 offset2=0 dwords=16 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01c04 fam=5 op=0x00c 0x00001c04: S_WAITCNT 0x0000c07f
+pc=0x01c08 fam=8 op=0x141 0x00001c08: V_MAD_F32 v51, s62, v5, s63
+pc=0x01c10 fam=8 op=0x141 0x00001c10: V_MAD_F32 v50, s38, v5, s39
+pc=0x01c18 fam=8 op=0x141 0x00001c18: V_MAD_F32 v49, s34, v5, s35
+pc=0x01c20 fam=7 op=0x01f 0x00001c20: V_MAC_F32 v51, s61, v4
+pc=0x01c24 fam=7 op=0x01f 0x00001c24: V_MAC_F32 v50, s37, v4
+pc=0x01c28 fam=7 op=0x01f 0x00001c28: V_MAC_F32 v49, s33, v4
+pc=0x01c2c fam=8 op=0x141 0x00001c2c: V_MAD_F32 v48, s36, v3, v50
+pc=0x01c34 fam=8 op=0x141 0x00001c34: V_MAD_F32 v50, s60, v3, v51
+pc=0x01c3c fam=8 op=0x141 0x00001c3c: V_MAD_F32 v47, s32, v3, v49
+pc=0x01c44 fam=8 op=0x141 0x00001c44: V_MAD_F32 v53, s14, v50, s15
+pc=0x01c4c fam=8 op=0x141 0x00001c4c: V_MAD_F32 v51, s6, v50, s7
+pc=0x01c54 fam=8 op=0x141 0x00001c54: V_MAD_F32 v52, s2, v50, s3
+pc=0x01c5c fam=8 op=0x141 0x00001c5c: V_MAD_F32 v49, s10, v50, s11
+pc=0x01c64 fam=7 op=0x01f 0x00001c64: V_MAC_F32 v53, s13, v48
+pc=0x01c68 fam=7 op=0x01f 0x00001c68: V_MAC_F32 v51, s5, v48
+pc=0x01c6c fam=8 op=0x141 0x00001c6c: V_MAD_F32 v50, s1, v48, v52
+pc=0x01c74 fam=7 op=0x01f 0x00001c74: V_MAC_F32 v49, s9, v48
+pc=0x01c78 fam=7 op=0x01f 0x00001c78: V_MAC_F32 v53, s12, v47
+pc=0x01c7c fam=7 op=0x01f 0x00001c7c: V_MAC_F32 v51, s4, v47
+pc=0x01c80 fam=7 op=0x01f 0x00001c80: V_MAC_F32 v50, s0, v47
+pc=0x01c84 fam=7 op=0x01f 0x00001c84: V_MAC_F32 v49, s8, v47
+pc=0x01c88 fam=6 op=0x02a 0x00001c88: V_RCP_F32 v47, v53
+pc=0x01c8c fam=7 op=0x008 0x00001c8c: V_MUL_F32 v48, v47, v51
+pc=0x01c90 fam=7 op=0x008 0x00001c90: V_MUL_F32 v51, v47, v50
+pc=0x01c94 fam=7 op=0x008 0x00001c94: V_MUL_F32 v72, v47, v49
+pc=0x01c98 fam=8 op=0x141 0x00001c98: V_MAD_F32 v74, -0.500000, v48, 0.500000
+pc=0x01ca0 fam=8 op=0x141 0x00001ca0: V_MAD_F32 v73, 0.500000, v51, 0.500000
+pc=0x01ca8 fam=7 op=0x005 0x00001ca8: V_SUBREV_F32 v48, s43, v74
+pc=0x01cac fam=7 op=0x005 0x00001cac: V_SUBREV_F32 v71, s43, v73
+pc=0x01cb0 fam=7 op=0x003 0x00001cb0: V_ADD_F32 v56, s43, v73
+pc=0x01cb4 fam=7 op=0x003 0x00001cb4: V_ADD_F32 v57, s43, v74
+pc=0x01cb8 fam=17 op=0x02f 0x00001cb8: image_sample_c_lz v70, v72, s16, s56 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=73,48,75,0
+pc=0x01cc4 fam=17 op=0x02f 0x00001cc4: image_sample_c_lz v51, v72, s16, s56 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=71,74,75,0
+pc=0x01cd0 fam=17 op=0x02f 0x00001cd0: image_sample_c_lz v47, v72, s16, s56 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4
+pc=0x01cd8 fam=17 op=0x02f 0x00001cd8: image_sample_c_lz v54, v72, s16, s56 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=56,48,75,0
+pc=0x01ce4 fam=17 op=0x02f 0x00001ce4: image_sample_c_lz v53, v72, s16, s56 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=71,48,75,0
+pc=0x01cf0 fam=17 op=0x02f 0x00001cf0: image_sample_c_lz v48, v72, s16, s56 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=56,74,75,0
+pc=0x01cfc fam=17 op=0x02f 0x00001cfc: image_sample_c_lz v55, v72, s16, s56 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=71,57,75,0
+pc=0x01d08 fam=17 op=0x02f 0x00001d08: image_sample_c_lz v49, v72, s16, s56 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=73,57,75,0
+pc=0x01d14 fam=17 op=0x02f 0x00001d14: image_sample_c_lz v52, v72, s16, s56 ; dmask=0x1 image_dim=2d_array sample_flags=compare|level_zero addr_components=4 nsa_dwords=1 nsa_addr=56,57,75,0
+pc=0x01d20 fam=5 op=0x00c 0x00001d20: S_WAITCNT 0x00003f78
+pc=0x01d24 fam=7 op=0x008 0x00001d24: V_MUL_F32 v15, 0x3dfc8da0, v70
+pc=0x01d2c fam=5 op=0x00c 0x00001d2c: S_WAITCNT 0x00003f74
+pc=0x01d30 fam=7 op=0x003 0x00001d30: V_ADD_F32 v50, v53, v54
+pc=0x01d34 fam=7 op=0x020 0x00001d34: V_MADMK_F32 v15, v51, 0x3dfc8da0, v15
+pc=0x01d3c fam=5 op=0x00c 0x00001d3c: S_WAITCNT 0x00003f72
+pc=0x01d40 fam=7 op=0x003 0x00001d40: V_ADD_F32 v50, v50, v55
+pc=0x01d44 fam=7 op=0x020 0x00001d44: V_MADMK_F32 v15, v47, 0x3e4808c8, v15
+pc=0x01d4c fam=5 op=0x00c 0x00001d4c: S_WAITCNT 0x00003f70
+pc=0x01d50 fam=7 op=0x003 0x00001d50: V_ADD_F32 v47, v50, v52
+pc=0x01d54 fam=7 op=0x020 0x00001d54: V_MADMK_F32 v15, v48, 0x3dfc8da0, v15
+pc=0x01d5c fam=7 op=0x020 0x00001d5c: V_MADMK_F32 v15, v49, 0x3dfc8da0, v15
+pc=0x01d64 fam=7 op=0x020 0x00001d64: V_MADMK_F32 v15, v47, 0x3d9f6e3f, v15
+pc=0x01d6c fam=7 op=0x010 0x00001d6c: V_MAX_F32 v47, s48, v15
+pc=0x01d70 fam=7 op=0x008 0x00001d70: V_MUL_F32 v15, v67, v11
+pc=0x01d74 fam=12 op=0x002 0x00001d74: S_LOAD_DWORDX4 s4, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01d7c fam=2 op=0x026 0x00001d7c: S_MUL_I32 vcc_lo, s41, 16
+pc=0x01d80 fam=7 op=0x00f 0x00001d80: V_MIN_F32 v47, 1.000000, v47
+pc=0x01d84 fam=7 op=0x01f 0x00001d84: V_MAC_F32 v15, v12, v68
+pc=0x01d88 fam=5 op=0x00c 0x00001d88: S_WAITCNT 0x0000c07f
+pc=0x01d8c fam=12 op=0x00a 0x00001d8c: S_BUFFER_LOAD_DWORDX4 s0, s4, vcc_lo ; offset=5216 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x01d94 fam=1 op=0x004 0x00001d94: S_MOV_B64 vcc_lo, exec_lo
+pc=0x01d98 fam=5 op=0x00c 0x00001d98: S_WAITCNT 0x0000c07f
+pc=0x01d9c fam=7 op=0x008 0x00001d9c: V_MUL_F32 v51, s3, v47
+pc=0x01da0 fam=7 op=0x01f 0x00001da0: V_MAC_F32 v15, v13, v69
+pc=0x01da4 fam=8 op=0x157 0x00001da4: V_MED3_F32 v15, 1.000000, v15.neg, 0
+pc=0x01dac fam=7 op=0x008 0x00001dac: V_MUL_F32 v48, v38, v15
+pc=0x01db0 fam=7 op=0x008 0x00001db0: V_MUL_F32 v15, v20, v11
+pc=0x01db4 fam=8 op=0x141 0x00001db4: V_MAD_F32 v50, v19, v12, v15
+pc=0x01dbc fam=7 op=0x01f 0x00001dbc: V_MAC_F32 v50, v13, v16
+pc=0x01dc0 fam=8 op=0x14b 0x00001dc0: V_FMA_F32 v15.clamp, 0.500000, v50, 0.500000
+pc=0x01dc8 fam=7 op=0x008 0x00001dc8: V_MUL_F32 v49, 0x3e747645, v15
+pc=0x01dd0 fam=7 op=0x020 0x00001dd0: V_MADMK_F32 v52, v48, 0x3e747645, v49
+pc=0x01dd8 fam=7 op=0x008 0x00001dd8: V_MUL_F32 v49, s0, v14
+pc=0x01ddc fam=7 op=0x008 0x00001ddc: V_MUL_F32 v48, s1, v14
+pc=0x01de0 fam=7 op=0x008 0x00001de0: V_MUL_F32 v14, s2, v14
+pc=0x01de4 fam=7 op=0x008 0x00001de4: V_MUL_F32 v53, v14, v51
+pc=0x01de8 fam=7 op=0x01f 0x00001de8: V_MAC_F32 v24, v52, v53
+pc=0x01dec fam=7 op=0x008 0x00001dec: V_MUL_F32 v53, v49, v51
+pc=0x01df0 fam=7 op=0x008 0x00001df0: V_MUL_F32 v51, v48, v51
+pc=0x01df4 fam=7 op=0x01f 0x00001df4: V_MAC_F32 v7, v52, v53
+pc=0x01df8 fam=6 op=0x001 0x00001df8: V_MOV_B32 v53, 0
+pc=0x01dfc fam=7 op=0x01f 0x00001dfc: V_MAC_F32 v8, v52, v51
+pc=0x01e00 fam=6 op=0x001 0x00001e00: V_MOV_B32 v51, 0
+pc=0x01e04 fam=6 op=0x001 0x00001e04: V_MOV_B32 v52, 0
+pc=0x01e08 fam=10 op=0x014 0x00001e08: V_CMPX_GT_F32 exec_lo, s50, 0
+pc=0x01e10 fam=10 op=0x011 0x00001e10: V_CMPX_LT_F32 exec_lo, -1.000000, v50
+pc=0x01e14 fam=5 op=0x008 0x00001e14: S_CBRANCH_EXECZ 0x00001f68
+pc=0x01e18 fam=7 op=0x003 0x00001e18: V_ADD_F32 v50, v67, v11
+pc=0x01e1c fam=7 op=0x003 0x00001e1c: V_ADD_F32 v51, v68, v12
+pc=0x01e20 fam=7 op=0x003 0x00001e20: V_ADD_F32 v13, v69, v13
+pc=0x01e24 fam=7 op=0x008 0x00001e24: V_MUL_F32 v12, 0x41f00000, v10
+pc=0x01e2c fam=1 op=0x003 0x00001e2c: S_MOV_B32 s0, 0x3dcccccd
+pc=0x01e34 fam=7 op=0x008 0x00001e34: V_MUL_F32 v10, v50, v50
+pc=0x01e38 fam=7 op=0x010 0x00001e38: V_MAX_F32 v11, s0, s44
+pc=0x01e40 fam=7 op=0x008 0x00001e40: V_MUL_F32 v53, s50, s3
+pc=0x01e48 fam=6 op=0x02a 0x00001e48: V_RCP_F32 v12, v12
+pc=0x01e4c fam=7 op=0x008 0x00001e4c: V_MUL_F32 v47, v42, v47
+pc=0x01e50 fam=8 op=0x141 0x00001e50: V_MAD_F32 v52, v51, v51, v10
+pc=0x01e58 fam=1 op=0x003 0x00001e58: S_MOV_B32 s0, 0xc0b1c059
+pc=0x01e60 fam=7 op=0x008 0x00001e60: V_MUL_F32 v10, v49, v53
+pc=0x01e64 fam=8 op=0x141 0x00001e64: V_MAD_F32 v49.clamp, v12, v11, v43
+pc=0x01e6c fam=7 op=0x008 0x00001e6c: V_MUL_F32 v47, v47, v15
+pc=0x01e70 fam=7 op=0x01f 0x00001e70: V_MAC_F32 v52, v13, v13
+pc=0x01e74 fam=7 op=0x008 0x00001e74: V_MUL_F32 v11, v48, v53
+pc=0x01e78 fam=7 op=0x008 0x00001e78: V_MUL_F32 v12, v14, v53
+pc=0x01e7c fam=7 op=0x008 0x00001e7c: V_MUL_F32 v14, v49, v49
+pc=0x01e80 fam=7 op=0x003 0x00001e80: V_ADD_F32 v49, 1.000000, v49
+pc=0x01e84 fam=6 op=0x02e 0x00001e84: V_RSQ_F32 v48, v52
+pc=0x01e88 fam=7 op=0x008 0x00001e88: V_MUL_F32 v14, v14, v14
+pc=0x01e8c fam=7 op=0x008 0x00001e8c: V_MUL_F32 v52, v49, v49
+pc=0x01e90 fam=7 op=0x008 0x00001e90: V_MUL_F32 v50, v48, v50
+pc=0x01e94 fam=7 op=0x008 0x00001e94: V_MUL_F32 v49, v48, v51
+pc=0x01e98 fam=7 op=0x008 0x00001e98: V_MUL_F32 v48, v48, v13
+pc=0x01e9c fam=7 op=0x008 0x00001e9c: V_MUL_F32 v13, v47, v14
+pc=0x01ea0 fam=8 op=0x141 0x00001ea0: V_MAD_F32 v47, 0x3e000000, v52.neg, 1.000000
+pc=0x01eac fam=7 op=0x008 0x00001eac: V_MUL_F32 v51, v20, v50
+pc=0x01eb0 fam=7 op=0x008 0x00001eb0: V_MUL_F32 v53, v67, v50
+pc=0x01eb4 fam=7 op=0x008 0x00001eb4: V_MUL_F32 v52, 0x3e000000, v52
+pc=0x01ebc fam=7 op=0x008 0x00001ebc: V_MUL_F32 v13, 0x3ea2f986, v13
+pc=0x01ec4 fam=8 op=0x141 0x00001ec4: V_MAD_F32 v50, v19, v49, v51
+pc=0x01ecc fam=7 op=0x01f 0x00001ecc: V_MAC_F32 v53, v49, v68
+pc=0x01ed0 fam=8 op=0x141 0x00001ed0: V_MAD_F32 v49, v15, v47, v52
+pc=0x01ed8 fam=7 op=0x01f 0x00001ed8: V_MAC_F32 v52, v47, v42
+pc=0x01edc fam=8 op=0x11f 0x00001edc: V_MAC_F32 v50.clamp, v48, v16
+pc=0x01ee4 fam=8 op=0x11f 0x00001ee4: V_MAC_F32 v53.clamp, v48, v69
+pc=0x01eec fam=8 op=0x141 0x00001eec: V_MAD_F32 v51, v50, v14, v50.neg
+pc=0x01ef4 fam=7 op=0x021 0x00001ef4: V_MADAK_F32 v14, s0, v53, 0xc0df760c
+pc=0x01efc fam=8 op=0x141 0x00001efc: V_MAD_F32 v50, v50, v51, 1.000000
+pc=0x01f04 fam=7 op=0x008 0x00001f04: V_MUL_F32 v14, v53, v14
+pc=0x01f08 fam=7 op=0x008 0x00001f08: V_MUL_F32 v50, v50, v50
+pc=0x01f0c fam=6 op=0x025 0x00001f0c: V_EXP_F32 v48, v14
+pc=0x01f10 fam=7 op=0x008 0x00001f10: V_MUL_F32 v50, v50, v49
+pc=0x01f14 fam=8 op=0x141 0x00001f14: V_MAD_F32 v49, v48, v0, v26
+pc=0x01f1c fam=8 op=0x141 0x00001f1c: V_MAD_F32 v14, v48, v1, v25
+pc=0x01f24 fam=8 op=0x141 0x00001f24: V_MAD_F32 v48, v48, v2, v28
+pc=0x01f2c fam=7 op=0x008 0x00001f2c: V_MUL_F32 v50, v50, v52
+pc=0x01f30 fam=7 op=0x008 0x00001f30: V_MUL_F32 v47, v15, v49
+pc=0x01f34 fam=7 op=0x008 0x00001f34: V_MUL_F32 v14, v15, v14
+pc=0x01f38 fam=7 op=0x008 0x00001f38: V_MUL_F32 v15, v15, v48
+pc=0x01f3c fam=6 op=0x02a 0x00001f3c: V_RCP_F32 v48, v50
+pc=0x01f40 fam=7 op=0x008 0x00001f40: V_MUL_F32 v13, v13, v48
+pc=0x01f44 fam=7 op=0x008 0x00001f44: V_MUL_F32 v47.clamp, v47, v13
+pc=0x01f4c fam=7 op=0x008 0x00001f4c: V_MUL_F32 v14.clamp, v14, v13
+pc=0x01f54 fam=7 op=0x008 0x00001f54: V_MUL_F32 v13.clamp, v15, v13
+pc=0x01f5c fam=7 op=0x008 0x00001f5c: V_MUL_F32 v51, v10, v47
+pc=0x01f60 fam=7 op=0x008 0x00001f60: V_MUL_F32 v52, v11, v14
+pc=0x01f64 fam=7 op=0x008 0x00001f64: V_MUL_F32 v53, v12, v13
+pc=0x01f68 fam=1 op=0x004 0x00001f68: S_MOV_B64 exec_lo, vcc_lo
+pc=0x01f6c fam=7 op=0x003 0x00001f6c: V_ADD_F32 v44, v44, v51
+pc=0x01f70 fam=7 op=0x003 0x00001f70: V_ADD_F32 v45, v45, v52
+pc=0x01f74 fam=7 op=0x003 0x00001f74: V_ADD_F32 v46, v46, v53
+pc=0x01f78 fam=1 op=0x004 0x00001f78: S_MOV_B64 exec_lo, s24
+pc=0x01f7c fam=2 op=0x002 0x00001f7c: S_ADD_I32 s41, s41, 1
+pc=0x01f80 fam=4 op=0x007 0x00001f80: S_CMP_LG_U32 0, s40
+pc=0x01f84 fam=5 op=0x000 0x00001f84: S_NOP 0x00000000
+pc=0x01f88 fam=2 op=0x00b 0x00001f88: S_CSELECT_B64 vcc_lo, s24, 0
+pc=0x01f8c fam=7 op=0x001 0x00001f8c: V_CNDMASK_B32 v44, v44, 0
+pc=0x01f94 fam=7 op=0x001 0x00001f94: V_CNDMASK_B32 v45, v45, 0
+pc=0x01f9c fam=7 op=0x001 0x00001f9c: V_CNDMASK_B32 v46, v46, 0
+pc=0x01fa4 fam=5 op=0x002 0x00001fa4: S_BRANCH 0x00001a78
+pc=0x01fa8 fam=7 op=0x003 0x00001fa8: V_ADD_F32 v0, 0x358637bd, v66
+pc=0x01fb0 fam=4 op=0x007 0x00001fb0: S_CMP_LG_U32 0, s40
+pc=0x01fb4 fam=5 op=0x000 0x00001fb4: S_NOP 0x00000000
+pc=0x01fb8 fam=2 op=0x00b 0x00001fb8: S_CSELECT_B64 vcc_lo, exec_lo, 0
+pc=0x01fbc fam=4 op=0x00d 0x00001fbc: S_BITCMP1_B32 s27, 0
+pc=0x01fc0 fam=6 op=0x02a 0x00001fc0: V_RCP_F32 v0, v0
+pc=0x01fc4 fam=7 op=0x001 0x00001fc4: V_CNDMASK_B32 v10, v44, 0
+pc=0x01fcc fam=7 op=0x001 0x00001fcc: V_CNDMASK_B32 v11, v45, 0
+pc=0x01fd4 fam=7 op=0x001 0x00001fd4: V_CNDMASK_B32 v12, v46, 0
+pc=0x01fdc fam=7 op=0x008 0x00001fdc: V_MUL_F32 v44, v0, v65
+pc=0x01fe0 fam=7 op=0x008 0x00001fe0: V_MUL_F32 v80, v0, v64
+pc=0x01fe4 fam=7 op=0x008 0x00001fe4: V_MUL_F32 v81, v0, v63
+pc=0x01fe8 fam=7 op=0x008 0x00001fe8: V_MUL_F32 v0, v20, v44
+pc=0x01fec fam=8 op=0x141 0x00001fec: V_MAD_F32 v1, v19, v80, v0
+pc=0x01ff4 fam=8 op=0x141 0x00001ff4: V_MAD_F32 v1.omod(1), v16.neg, v81, v1.neg
+pc=0x01ffc fam=8 op=0x141 0x00001ffc: V_MAD_F32 v2, v20.neg, v1, v44.neg
+pc=0x02004 fam=8 op=0x141 0x00002004: V_MAD_F32 v0, v19.neg, v1, v80.neg
+pc=0x0200c fam=8 op=0x141 0x0000200c: V_MAD_F32 v1, v16.neg, v1, v81.neg
+pc=0x02014 fam=7 op=0x008 0x00002014: V_MUL_F32 v2, v20, v2
+pc=0x02018 fam=7 op=0x01f 0x00002018: V_MAC_F32 v2, v0, v19
+pc=0x0201c fam=7 op=0x01f 0x0000201c: V_MAC_F32 v2, v1, v16
+pc=0x02020 fam=8 op=0x141 0x00002020: V_MAD_F32 v0.clamp, 0x3fa66666, v2, 1.000000
+pc=0x0202c fam=7 op=0x008 0x0000202c: V_MUL_F32 v14, v0, v0
+pc=0x02030 fam=5 op=0x004 0x00002030: S_CBRANCH_SCC0 0x000020b4
+pc=0x02034 fam=12 op=0x002 0x00002034: S_LOAD_DWORDX4 s8, s28, null ; offset=448 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0203c fam=5 op=0x00c 0x0000203c: S_WAITCNT 0x0000c07f
+pc=0x02040 fam=12 op=0x00b 0x00002040: S_BUFFER_LOAD_DWORDX8 s0, s8, null ; offset=64 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02048 fam=12 op=0x00a 0x00002048: S_BUFFER_LOAD_DWORDX4 s12, s8, null ; offset=96 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02050 fam=5 op=0x00c 0x00002050: S_WAITCNT 0x0000c07f
+pc=0x02054 fam=7 op=0x008 0x00002054: V_MUL_F32 v2, s0, v44
+pc=0x02058 fam=7 op=0x008 0x00002058: V_MUL_F32 v3, s1, v44
+pc=0x0205c fam=7 op=0x008 0x0000205c: V_MUL_F32 v5, s2, v44
+pc=0x02060 fam=7 op=0x008 0x00002060: V_MUL_F32 v4, s0, v20
+pc=0x02064 fam=7 op=0x008 0x00002064: V_MUL_F32 v0, s1, v20
+pc=0x02068 fam=7 op=0x008 0x00002068: V_MUL_F32 v1, s2, v20
+pc=0x0206c fam=8 op=0x141 0x0000206c: V_MAD_F32 v44, s4, v80, v2
+pc=0x02074 fam=7 op=0x01f 0x00002074: V_MAC_F32 v3, s5, v80
+pc=0x02078 fam=8 op=0x141 0x00002078: V_MAD_F32 v20, s4, v19, v4
+pc=0x02080 fam=7 op=0x01f 0x00002080: V_MAC_F32 v5, s6, v80
+pc=0x02084 fam=7 op=0x01f 0x00002084: V_MAC_F32 v0, s5, v19
+pc=0x02088 fam=7 op=0x01f 0x00002088: V_MAC_F32 v1, s6, v19
+pc=0x0208c fam=8 op=0x141 0x0000208c: V_MAD_F32 v80, s13, v81, v3
+pc=0x02094 fam=7 op=0x01f 0x00002094: V_MAC_F32 v44, s12, v81
+pc=0x02098 fam=8 op=0x141 0x00002098: V_MAD_F32 v81, s14, v81, v5
+pc=0x020a0 fam=8 op=0x141 0x000020a0: V_MAD_F32 v19, s13, v16, v0
+pc=0x020a8 fam=7 op=0x01f 0x000020a8: V_MAC_F32 v20, s12, v16
+pc=0x020ac fam=8 op=0x141 0x000020ac: V_MAD_F32 v16, s14, v16, v1
+pc=0x020b4 fam=8 op=0x147 0x000020b4: V_CUBEMA_F32 v1, v20.neg, v19.neg, v16.neg
+pc=0x020bc fam=8 op=0x147 0x000020bc: V_CUBEMA_F32 v0, v20, v19, v16
+pc=0x020c4 fam=8 op=0x145 0x000020c4: V_CUBESC_F32 v3, v20.neg, v19.neg, v16.neg
+pc=0x020cc fam=8 op=0x146 0x000020cc: V_CUBETC_F32 v4, v20.neg, v19.neg, v16.neg
+pc=0x020d4 fam=8 op=0x145 0x000020d4: V_CUBESC_F32 v2, v20, v19, v16
+pc=0x020dc fam=6 op=0x02a 0x000020dc: V_RCP_F32 v5, v1.abs
+pc=0x020e4 fam=6 op=0x02a 0x000020e4: V_RCP_F32 v0, v0.abs
+pc=0x020ec fam=8 op=0x146 0x000020ec: V_CUBETC_F32 v1, v20, v19, v16
+pc=0x020f4 fam=8 op=0x144 0x000020f4: V_CUBEID_F32 v50, v20.neg, v19.neg, v16.neg
+pc=0x020fc fam=6 op=0x001 0x000020fc: V_MOV_B32 v51, 0x40d00000
+pc=0x02104 fam=7 op=0x021 0x00002104: V_MADAK_F32 v48, v3, v5, 0x3fc00000
+pc=0x0210c fam=7 op=0x021 0x0000210c: V_MADAK_F32 v49, v4, v5, 0x3fc00000
+pc=0x02114 fam=7 op=0x021 0x00002114: V_MADAK_F32 v42, v2, v0, 0x3fc00000
+pc=0x0211c fam=7 op=0x021 0x0000211c: V_MADAK_F32 v43, v1, v0, 0x3fc00000
+pc=0x02124 fam=8 op=0x144 0x00002124: V_CUBEID_F32 v45, v20, v19, v16
+pc=0x0212c fam=12 op=0x002 0x0000212c: S_LOAD_DWORDX4 s8, s28, null ; offset=416 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02134 fam=12 op=0x003 0x00002134: S_LOAD_DWORDX8 s0, s28, null ; offset=224 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0213c fam=7 op=0x008 0x0000213c: V_MUL_F32 v46, v44, v20
+pc=0x02140 fam=7 op=0x010 0x00002140: V_MAX_F32 v13, 0x3c23d70a, v37
+pc=0x02148 fam=5 op=0x00c 0x00002148: S_WAITCNT 0x0000c07f
+pc=0x0214c fam=17 op=0x024 0x0000214c: image_sample_l v0, v48, s0, s8 ; dmask=0x7 image_dim=2d_array sample_flags=lod addr_components=4
+pc=0x02154 fam=17 op=0x024 0x00002154: image_sample_l v3, v42, s0, s8 ; dmask=0x7 image_dim=2d_array sample_flags=lod addr_components=4 nsa_dwords=1 nsa_addr=43,45,51,0
+pc=0x02160 fam=12 op=0x002 0x00002160: S_LOAD_DWORDX4 s12, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02168 fam=1 op=0x003 0x00002168: S_MOV_B32 vcc_lo, 0xbf933333
+pc=0x02170 fam=7 op=0x01f 0x00002170: V_MAC_F32 v46, v19, v80
+pc=0x02174 fam=6 op=0x027 0x00002174: V_LOG_F32 v15, v13
+pc=0x02178 fam=5 op=0x00c 0x00002178: S_WAITCNT 0x0000c07f
+pc=0x0217c fam=12 op=0x00a 0x0000217c: S_BUFFER_LOAD_DWORDX4 s8, s12, null ; offset=17872 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02184 fam=10 op=0x001 0x00002184: V_CMP_LT_F32 s20, 0, v38
+pc=0x0218c fam=6 op=0x001 0x0000218c: V_MOV_B32 v48, 0
+pc=0x02190 fam=8 op=0x141 0x00002190: V_MAD_F32 v51, v81, v16, v46
+pc=0x02198 fam=7 op=0x021 0x00002198: V_MADAK_F32 v42, vcc_lo, v15, 0x40400000
+pc=0x021a0 fam=5 op=0x00c 0x000021a0: S_WAITCNT 0x0000c07f
+pc=0x021a4 fam=6 op=0x006 0x000021a4: V_CVT_F32_U32 v53, s11
+pc=0x021a8 fam=6 op=0x001 0x000021a8: V_MOV_B32 v45, 0
+pc=0x021ac fam=6 op=0x001 0x000021ac: V_MOV_B32 v46, 0
+pc=0x021b0 fam=7 op=0x008 0x000021b0: V_MUL_F32 v54, -2.000000, v51
+pc=0x021b4 fam=7 op=0x004 0x000021b4: V_SUB_F32 v43, 0x41100000, v42
+pc=0x021bc fam=7 op=0x008 0x000021bc: V_MUL_F32 v53, 0x3a83126f, v53
+pc=0x021c4 fam=7 op=0x010 0x000021c4: V_MAX_F32 v49.clamp, 0, v51
+pc=0x021cc fam=6 op=0x001 0x000021cc: V_MOV_B32 v47, 0
+pc=0x021d0 fam=8 op=0x141 0x000021d0: V_MAD_F32 v52, v20.neg, v54, v44.neg
+pc=0x021d8 fam=8 op=0x141 0x000021d8: V_MAD_F32 v80, v19.neg, v54, v80.neg
+pc=0x021e0 fam=8 op=0x141 0x000021e0: V_MAD_F32 v81, v16.neg, v54, v81.neg
+pc=0x021e8 fam=8 op=0x157 0x000021e8: V_MED3_F32 v75, v43, 0, 0x40d00000
+pc=0x021f4 fam=6 op=0x02a 0x000021f4: V_RCP_F32 v51, v53
+pc=0x021f8 fam=6 op=0x001 0x000021f8: V_MOV_B32 v44, 0
+pc=0x021fc fam=6 op=0x001 0x000021fc: V_MOV_B32 v15, 0
+pc=0x02200 fam=6 op=0x001 0x00002200: V_MOV_B32 v43, 0
+pc=0x02204 fam=6 op=0x001 0x00002204: V_MOV_B32 v37, 0
+pc=0x02208 fam=6 op=0x001 0x00002208: V_MOV_B32 v42, 0
+pc=0x0220c fam=2 op=0x002 0x0000220c: S_ADD_I32 s11, s8, s9
+pc=0x02210 fam=1 op=0x003 0x00002210: S_MOV_B32 s24, s8
+pc=0x02214 fam=5 op=0x00c 0x00002214: S_WAITCNT 0x00003f70
+pc=0x02218 fam=8 op=0x141 0x00002218: V_MAD_F32 v0, v0, v38, v3
+pc=0x02220 fam=8 op=0x141 0x00002220: V_MAD_F32 v1, v1, v38, v4
+pc=0x02228 fam=8 op=0x141 0x00002228: V_MAD_F32 v2, v2, v38, v5
+pc=0x02230 fam=8 op=0x101 0x00002230: V_CNDMASK_B32 v55, v3, v0, s20
+pc=0x02238 fam=8 op=0x101 0x00002238: V_CNDMASK_B32 v56, v4, v1, s20
+pc=0x02240 fam=8 op=0x101 0x00002240: V_CNDMASK_B32 v57, v5, v2, s20
+pc=0x02248 fam=4 op=0x00a 0x00002248: S_CMP_LT_U32 s24, s11
+pc=0x0224c fam=5 op=0x004 0x0000224c: S_CBRANCH_SCC0 0x000027a8
+pc=0x02250 fam=6 op=0x006 0x00002250: V_CVT_F32_U32 v0, s9
+pc=0x02254 fam=2 op=0x003 0x00002254: S_SUB_I32 vcc_lo, 0, s9
+pc=0x02258 fam=12 op=0x002 0x00002258: S_LOAD_DWORDX4 s0, s28, null ; offset=512 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02260 fam=4 op=0x007 0x00002260: S_CMP_LG_U32 0, s10
+pc=0x02264 fam=6 op=0x001 0x00002264: V_MOV_B32 v63, 1.000000
+pc=0x02268 fam=6 op=0x02b 0x00002268: V_RCP_IFLAG_F32 v0, v0
+pc=0x0226c fam=2 op=0x00b 0x0000226c: S_CSELECT_B64 s4, exec_lo, 0
+pc=0x02270 fam=7 op=0x008 0x00002270: V_MUL_F32 v0, 0x4f7ffffe, v0
+pc=0x02278 fam=6 op=0x007 0x00002278: V_CVT_U32_F32 v0, v0
+pc=0x0227c fam=6 op=0x002 0x0000227c: V_READFIRSTLANE_B32 vcc_hi, v0
+pc=0x02280 fam=2 op=0x026 0x00002280: S_MUL_I32 vcc_lo, vcc_lo, vcc_hi
+pc=0x02284 fam=2 op=0x035 0x00002284: S_MUL_HI_U32 vcc_lo, vcc_lo, vcc_hi
+pc=0x02288 fam=2 op=0x002 0x00002288: S_ADD_I32 vcc_lo, vcc_hi, vcc_lo
+pc=0x0228c fam=2 op=0x035 0x0000228c: S_MUL_HI_U32 vcc_lo, vcc_lo, s24
+pc=0x02290 fam=2 op=0x026 0x00002290: S_MUL_I32 vcc_lo, vcc_lo, s9
+pc=0x02294 fam=2 op=0x001 0x00002294: S_SUB_U32 vcc_hi, s24, vcc_lo
+pc=0x02298 fam=2 op=0x001 0x00002298: S_SUB_U32 vcc_lo, vcc_hi, s9
+pc=0x0229c fam=4 op=0x009 0x0000229c: S_CMP_GE_U32 vcc_hi, s9
+pc=0x022a0 fam=5 op=0x000 0x000022a0: S_NOP 0x00000000
+pc=0x022a4 fam=2 op=0x00a 0x000022a4: S_CSELECT_B32 vcc_hi, vcc_lo, vcc_hi
+pc=0x022a8 fam=2 op=0x001 0x000022a8: S_SUB_U32 vcc_lo, vcc_hi, s9
+pc=0x022ac fam=4 op=0x009 0x000022ac: S_CMP_GE_U32 vcc_hi, s9
+pc=0x022b0 fam=5 op=0x000 0x000022b0: S_NOP 0x00000000
+pc=0x022b4 fam=2 op=0x00a 0x000022b4: S_CSELECT_B32 s25, vcc_lo, vcc_hi
+pc=0x022b8 fam=2 op=0x026 0x000022b8: S_MUL_I32 vcc_hi, s25, 16
+pc=0x022bc fam=5 op=0x00c 0x000022bc: S_WAITCNT 0x0000c07f
+pc=0x022c0 fam=12 op=0x008 0x000022c0: S_BUFFER_LOAD_DWORD vcc_lo, s0, vcc_hi ; offset=4 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x022c8 fam=5 op=0x00c 0x000022c8: S_WAITCNT 0x0000c07f
+pc=0x022cc fam=4 op=0x006 0x000022cc: S_CMP_EQ_U32 1, vcc_lo
+pc=0x022d0 fam=5 op=0x000 0x000022d0: S_NOP 0x00000000
+pc=0x022d4 fam=2 op=0x00b 0x000022d4: S_CSELECT_B64 vcc_lo, exec_lo, 0
+pc=0x022d8 fam=2 op=0x011 0x000022d8: S_OR_B64 vcc_lo, s4, vcc_lo
+pc=0x022dc fam=5 op=0x007 0x000022dc: S_CBRANCH_VCCNZ 0x00002380
+pc=0x022e0 fam=6 op=0x001 0x000022e0: V_MOV_B32 v63, 0
+pc=0x022e4 fam=12 op=0x002 0x000022e4: S_LOAD_DWORDX4 s0, s28, null ; offset=496 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x022ec fam=2 op=0x026 0x000022ec: S_MUL_I32 vcc_lo, s25, 0x00000070
+pc=0x022f4 fam=1 op=0x004 0x000022f4: S_MOV_B64 s22, exec_lo
+pc=0x022f8 fam=5 op=0x00c 0x000022f8: S_WAITCNT 0x0000c07f
+pc=0x022fc fam=12 op=0x00a 0x000022fc: S_BUFFER_LOAD_DWORDX4 s4, s0, vcc_lo ; offset=0 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02304 fam=5 op=0x00c 0x00002304: S_WAITCNT 0x0000c07f
+pc=0x02308 fam=7 op=0x005 0x00002308: V_SUBREV_F32 v2, s4, v60
+pc=0x0230c fam=7 op=0x005 0x0000230c: V_SUBREV_F32 v1, s5, v61
+pc=0x02310 fam=7 op=0x005 0x00002310: V_SUBREV_F32 v0, s6, v62
+pc=0x02314 fam=7 op=0x008 0x00002314: V_MUL_F32 v2, v2, v2
+pc=0x02318 fam=7 op=0x01f 0x00002318: V_MAC_F32 v2, v1, v1
+pc=0x0231c fam=7 op=0x01f 0x0000231c: V_MAC_F32 v2, v0, v0
+pc=0x02320 fam=6 op=0x033 0x00002320: V_SQRT_F32 v0, v2
+pc=0x02324 fam=10 op=0x014 0x00002324: V_CMPX_GT_F32 exec_lo, s7, v0
+pc=0x02328 fam=5 op=0x008 0x00002328: S_CBRANCH_EXECZ 0x0000237c
+pc=0x0232c fam=12 op=0x002 0x0000232c: S_LOAD_DWORDX4 s12, s28, null ; offset=496 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02334 fam=2 op=0x026 0x00002334: S_MUL_I32 vcc_lo, s25, 0x00000070
+pc=0x0233c fam=12 op=0x002 0x0000233c: S_LOAD_DWORDX4 s16, s28, null ; offset=512 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02344 fam=2 op=0x026 0x00002344: S_MUL_I32 vcc_hi, s25, 16
+pc=0x02348 fam=5 op=0x00c 0x00002348: S_WAITCNT 0x0000c07f
+pc=0x0234c fam=12 op=0x00b 0x0000234c: S_BUFFER_LOAD_DWORDX8 s0, s12, vcc_lo ; offset=16 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02354 fam=12 op=0x008 0x00002354: S_BUFFER_LOAD_DWORD vcc_lo, s16, vcc_hi ; offset=12 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0235c fam=5 op=0x00c 0x0000235c: S_WAITCNT 0x0000c07f
+pc=0x02360 fam=7 op=0x005 0x00002360: V_SUBREV_F32 v1, s4, v0
+pc=0x02364 fam=7 op=0x00f 0x00002364: V_MIN_F32 v63, vcc_lo, s1
+pc=0x0236c fam=7 op=0x008 0x0000236c: V_MUL_F32 v1.clamp, s5, v1
+pc=0x02374 fam=8 op=0x11f 0x00002374: V_MAC_F32 v63, v63, v1.neg
+pc=0x0237c fam=1 op=0x004 0x0000237c: S_MOV_B64 exec_lo, s22
+pc=0x02380 fam=1 op=0x004 0x00002380: S_MOV_B64 s16, exec_lo
+pc=0x02384 fam=10 op=0x011 0x00002384: V_CMPX_LT_F32 exec_lo, 0, v63
+pc=0x02388 fam=5 op=0x008 0x00002388: S_CBRANCH_EXECZ 0x0000279c
+pc=0x0238c fam=12 op=0x002 0x0000238c: S_LOAD_DWORDX4 s12, s28, null ; offset=496 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02394 fam=2 op=0x026 0x00002394: S_MUL_I32 vcc_lo, s25, 0x00000070
+pc=0x0239c fam=4 op=0x00a 0x0000239c: S_CMP_LT_U32 s25, s8
+pc=0x023a0 fam=5 op=0x00c 0x000023a0: S_WAITCNT 0x0000c07f
+pc=0x023a4 fam=12 op=0x00b 0x000023a4: S_BUFFER_LOAD_DWORDX8 s0, s12, vcc_lo ; offset=16 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x023ac fam=2 op=0x00b 0x000023ac: S_CSELECT_B64 s18, exec_lo, 0
+pc=0x023b0 fam=5 op=0x00c 0x000023b0: S_WAITCNT 0x0000c07f
+pc=0x023b4 fam=7 op=0x008 0x000023b4: V_MUL_F32 v66, s0, s3
+pc=0x023bc fam=7 op=0x008 0x000023bc: V_MUL_F32 v65, s0, s6
+pc=0x023c4 fam=7 op=0x008 0x000023c4: V_MUL_F32 v64, s0, s7
+pc=0x023cc fam=1 op=0x004 0x000023cc: S_MOV_B64 vcc_lo, s18
+pc=0x023d0 fam=5 op=0x006 0x000023d0: S_CBRANCH_VCCZ 0x0000252c
+pc=0x023d4 fam=7 op=0x008 0x000023d4: V_MUL_F32 v67, v63, v66
+pc=0x023d8 fam=12 op=0x002 0x000023d8: S_LOAD_DWORDX4 s0, s28, null ; offset=512 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x023e0 fam=2 op=0x026 0x000023e0: S_MUL_I32 vcc_lo, s25, 16
+pc=0x023e4 fam=7 op=0x008 0x000023e4: V_MUL_F32 v68, v63, v65
+pc=0x023e8 fam=5 op=0x00c 0x000023e8: S_WAITCNT 0x0000c07f
+pc=0x023ec fam=12 op=0x008 0x000023ec: S_BUFFER_LOAD_DWORD vcc_hi, s0, vcc_lo ; offset=0 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x023f4 fam=7 op=0x008 0x000023f4: V_MUL_F32 v69, v63, v64
+pc=0x023f8 fam=6 op=0x001 0x000023f8: V_MOV_B32 v0, v55
+pc=0x023fc fam=6 op=0x001 0x000023fc: V_MOV_B32 v1, v56
+pc=0x02400 fam=6 op=0x001 0x00002400: V_MOV_B32 v2, v57
+pc=0x02404 fam=5 op=0x00c 0x00002404: S_WAITCNT 0x0000c07f
+pc=0x02408 fam=4 op=0x004 0x00002408: S_CMP_LT_I32 vcc_hi, 0
+pc=0x0240c fam=5 op=0x005 0x0000240c: S_CBRANCH_SCC1 0x0000251c
+pc=0x02410 fam=8 op=0x147 0x00002410: V_CUBEMA_F32 v0, v20, v19, v16
+pc=0x02418 fam=8 op=0x145 0x00002418: V_CUBESC_F32 v1, v20, v19, v16
+pc=0x02420 fam=6 op=0x001 0x00002420: V_MOV_B32 v79, 0x40d00000
+pc=0x02428 fam=12 op=0x002 0x00002428: S_LOAD_DWORDX4 s12, s28, null ; offset=416 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02430 fam=12 op=0x003 0x00002430: S_LOAD_DWORDX8 s0, s28, null ; offset=192 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02438 fam=6 op=0x02a 0x00002438: V_RCP_F32 v0, v0.abs
+pc=0x02440 fam=6 op=0x001 0x00002440: V_MOV_B32 v70, 0
+pc=0x02444 fam=6 op=0x001 0x00002444: V_MOV_B32 v4, 0
+pc=0x02448 fam=6 op=0x001 0x00002448: V_MOV_B32 v5, 0
+pc=0x0244c fam=7 op=0x021 0x0000244c: V_MADAK_F32 v76, v1, v0, 0x3fc00000
+pc=0x02454 fam=8 op=0x146 0x00002454: V_CUBETC_F32 v1, v20, v19, v16
+pc=0x0245c fam=7 op=0x021 0x0000245c: V_MADAK_F32 v77, v1, v0, 0x3fc00000
+pc=0x02464 fam=8 op=0x144 0x00002464: V_CUBEID_F32 v1, v20, v19, v16
+pc=0x0246c fam=6 op=0x005 0x0000246c: V_CVT_F32_I32 v0, vcc_hi.sdwa(sel=4,sext=0)
+pc=0x02474 fam=7 op=0x020 0x00002474: V_MADMK_F32 v78, v0, 0x41000000, v1
+pc=0x0247c fam=7 op=0x008 0x0000247c: V_MUL_F32 v3, 0x41000000, v0
+pc=0x02484 fam=5 op=0x00c 0x00002484: S_WAITCNT 0x0000c07f
+pc=0x02488 fam=17 op=0x024 0x00002488: image_sample_l v0, v76, s0, s12 ; dmask=0x7 image_dim=2d_array sample_flags=lod addr_components=4
+pc=0x02490 fam=1 op=0x024 0x00002490: S_AND_SAVEEXEC_B64 vcc_lo, s20
+pc=0x02494 fam=5 op=0x008 0x00002494: S_CBRANCH_EXECZ 0x00002508
+pc=0x02498 fam=8 op=0x147 0x00002498: V_CUBEMA_F32 v4, v20.neg, v19.neg, v16.neg
+pc=0x024a0 fam=8 op=0x145 0x000024a0: V_CUBESC_F32 v5, v20.neg, v19.neg, v16.neg
+pc=0x024a8 fam=6 op=0x001 0x000024a8: V_MOV_B32 v74, 0x40d00000
+pc=0x024b0 fam=12 op=0x002 0x000024b0: S_LOAD_DWORDX4 s12, s28, null ; offset=416 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x024b8 fam=12 op=0x003 0x000024b8: S_LOAD_DWORDX8 s0, s28, null ; offset=192 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x024c0 fam=6 op=0x02a 0x000024c0: V_RCP_F32 v4, v4.abs
+pc=0x024c8 fam=7 op=0x021 0x000024c8: V_MADAK_F32 v71, v5, v4, 0x3fc00000
+pc=0x024d0 fam=8 op=0x146 0x000024d0: V_CUBETC_F32 v5, v20.neg, v19.neg, v16.neg
+pc=0x024d8 fam=7 op=0x021 0x000024d8: V_MADAK_F32 v72, v5, v4, 0x3fc00000
+pc=0x024e0 fam=8 op=0x144 0x000024e0: V_CUBEID_F32 v4, v20.neg, v19.neg, v16.neg
+pc=0x024e8 fam=7 op=0x003 0x000024e8: V_ADD_F32 v73, v4, v3
+pc=0x024ec fam=5 op=0x00c 0x000024ec: S_WAITCNT 0x0000c07f
+pc=0x024f0 fam=17 op=0x024 0x000024f0: image_sample_l v3, v71, s0, s12 ; dmask=0x7 image_dim=2d_array sample_flags=lod addr_components=4
+pc=0x024f8 fam=5 op=0x00c 0x000024f8: S_WAITCNT 0x00003f70
+pc=0x024fc fam=7 op=0x008 0x000024fc: V_MUL_F32 v70, v3, v38
+pc=0x02500 fam=7 op=0x008 0x00002500: V_MUL_F32 v4, v4, v38
+pc=0x02504 fam=7 op=0x008 0x00002504: V_MUL_F32 v5, v5, v38
+pc=0x02508 fam=1 op=0x004 0x00002508: S_MOV_B64 exec_lo, vcc_lo
+pc=0x0250c fam=5 op=0x00c 0x0000250c: S_WAITCNT 0x00003f70
+pc=0x02510 fam=7 op=0x003 0x00002510: V_ADD_F32 v0, v0, v70
+pc=0x02514 fam=7 op=0x003 0x00002514: V_ADD_F32 v1, v1, v4
+pc=0x02518 fam=7 op=0x003 0x00002518: V_ADD_F32 v2, v2, v5
+pc=0x0251c fam=7 op=0x003 0x0000251c: V_ADD_F32 v45, v45, v63
+pc=0x02520 fam=7 op=0x01f 0x00002520: V_MAC_F32 v43, v67, v0
+pc=0x02524 fam=7 op=0x01f 0x00002524: V_MAC_F32 v37, v68, v1
+pc=0x02528 fam=7 op=0x01f 0x00002528: V_MAC_F32 v42, v69, v2
+pc=0x0252c fam=2 op=0x00f 0x0000252c: S_AND_B64 vcc_lo, exec_lo, s18
+pc=0x02530 fam=5 op=0x006 0x00002530: S_CBRANCH_VCCZ 0x00002540
+pc=0x02534 fam=7 op=0x004 0x00002534: V_SUB_F32 v0.clamp, v63, v48
+pc=0x0253c fam=7 op=0x008 0x0000253c: V_MUL_F32 v63, v51, v0
+pc=0x02540 fam=7 op=0x008 0x00002540: V_MUL_F32 v3, v63, v66
+pc=0x02544 fam=12 op=0x002 0x00002544: S_LOAD_DWORDX4 s12, s28, null ; offset=496 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0254c fam=2 op=0x026 0x0000254c: S_MUL_I32 vcc_hi, s25, 0x00000070
+pc=0x02554 fam=12 op=0x002 0x00002554: S_LOAD_DWORDX4 s0, s28, null ; offset=512 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0255c fam=2 op=0x026 0x0000255c: S_MUL_I32 vcc_lo, s25, 16
+pc=0x02560 fam=7 op=0x008 0x00002560: V_MUL_F32 v4, v63, v65
+pc=0x02564 fam=5 op=0x00c 0x00002564: S_WAITCNT 0x0000c07f
+pc=0x02568 fam=12 op=0x00a 0x00002568: S_BUFFER_LOAD_DWORDX4 s4, s12, vcc_hi ; offset=0 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02570 fam=5 op=0x000 0x00002570: S_NOP 0x00000000
+pc=0x02574 fam=12 op=0x008 0x00002574: S_BUFFER_LOAD_DWORD s12, s0, vcc_lo ; offset=0 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0257c fam=7 op=0x008 0x0000257c: V_MUL_F32 v5, v63, v64
+pc=0x02580 fam=5 op=0x00c 0x00002580: S_WAITCNT 0x0000c07f
+pc=0x02584 fam=10 op=0x004 0x00002584: V_CMP_GT_F32 vcc_lo, s7, 0
+pc=0x0258c fam=4 op=0x004 0x0000258c: S_CMP_LT_I32 s12, 0
+pc=0x02590 fam=5 op=0x004 0x00002590: S_CBRANCH_SCC0 0x00002680
+pc=0x02594 fam=6 op=0x001 0x00002594: V_MOV_B32 v1, v52
+pc=0x02598 fam=6 op=0x001 0x00002598: V_MOV_B32 v66, v80
+pc=0x0259c fam=6 op=0x001 0x0000259c: V_MOV_B32 v64, v81
+pc=0x025a0 fam=5 op=0x006 0x000025a0: S_CBRANCH_VCCZ 0x00002618
+pc=0x025a4 fam=7 op=0x004 0x000025a4: V_SUB_F32 v64, s4, v60
+pc=0x025a8 fam=7 op=0x004 0x000025a8: V_SUB_F32 v1, s5, v61
+pc=0x025ac fam=7 op=0x004 0x000025ac: V_SUB_F32 v0, s6, v62
+pc=0x025b0 fam=7 op=0x008 0x000025b0: V_MUL_F32 v2, v64, v64
+pc=0x025b4 fam=7 op=0x008 0x000025b4: V_MUL_F32 v50, v52, v64
+pc=0x025b8 fam=7 op=0x01f 0x000025b8: V_MAC_F32 v2, v1, v1
+pc=0x025bc fam=7 op=0x01f 0x000025bc: V_MAC_F32 v50, v1, v80
+pc=0x025c0 fam=8 op=0x141 0x000025c0: V_MAD_F32 v1, v0, v0, v2
+pc=0x025c8 fam=7 op=0x01f 0x000025c8: V_MAC_F32 v50, v0, v81
+pc=0x025cc fam=7 op=0x005 0x000025cc: V_SUBREV_F32 v0, s6, v62
+pc=0x025d0 fam=8 op=0x141 0x000025d0: V_MAD_F32 v1, s7, s7, v1.neg
+pc=0x025d8 fam=8 op=0x141 0x000025d8: V_MAD_F32 v1, v50, v50, v1.abs
+pc=0x025e0 fam=6 op=0x033 0x000025e0: V_SQRT_F32 v2, v1
+pc=0x025e4 fam=7 op=0x005 0x000025e4: V_SUBREV_F32 v1, s4, v60
+pc=0x025e8 fam=7 op=0x003 0x000025e8: V_ADD_F32 v2, v2, v50
+pc=0x025ec fam=7 op=0x005 0x000025ec: V_SUBREV_F32 v50, s5, v61
+pc=0x025f0 fam=7 op=0x01f 0x000025f0: V_MAC_F32 v1, v2, v52
+pc=0x025f4 fam=7 op=0x01f 0x000025f4: V_MAC_F32 v50, v2, v80
+pc=0x025f8 fam=7 op=0x01f 0x000025f8: V_MAC_F32 v0, v2, v81
+pc=0x025fc fam=7 op=0x008 0x000025fc: V_MUL_F32 v64, v1, v1
+pc=0x02600 fam=7 op=0x01f 0x00002600: V_MAC_F32 v64, v50, v50
+pc=0x02604 fam=7 op=0x01f 0x00002604: V_MAC_F32 v64, v0, v0
+pc=0x02608 fam=6 op=0x02e 0x00002608: V_RSQ_F32 v65, v64
+pc=0x0260c fam=7 op=0x008 0x0000260c: V_MUL_F32 v1, v65, v1
+pc=0x02610 fam=7 op=0x008 0x00002610: V_MUL_F32 v66, v65, v50
+pc=0x02614 fam=7 op=0x008 0x00002614: V_MUL_F32 v64, v65, v0
+pc=0x02618 fam=8 op=0x147 0x00002618: V_CUBEMA_F32 v65, v1, v66, v64
+pc=0x02620 fam=8 op=0x145 0x00002620: V_CUBESC_F32 v2, v1, v66, v64
+pc=0x02628 fam=8 op=0x146 0x00002628: V_CUBETC_F32 v0, v1, v66, v64
+pc=0x02630 fam=8 op=0x144 0x00002630: V_CUBEID_F32 v74, v1, v66, v64
+pc=0x02638 fam=12 op=0x002 0x00002638: S_LOAD_DWORDX4 s12, s28, null ; offset=416 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02640 fam=6 op=0x02a 0x00002640: V_RCP_F32 v1, v65.abs
+pc=0x02648 fam=12 op=0x003 0x00002648: S_LOAD_DWORDX8 s0, s28, null ; offset=224 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02650 fam=7 op=0x021 0x00002650: V_MADAK_F32 v72, v2, v1, 0x3fc00000
+pc=0x02658 fam=7 op=0x021 0x00002658: V_MADAK_F32 v73, v0, v1, 0x3fc00000
+pc=0x02660 fam=5 op=0x00c 0x00002660: S_WAITCNT 0x0000c07f
+pc=0x02664 fam=17 op=0x024 0x00002664: image_sample_l v0, v72, s0, s12 ; dmask=0x7 image_dim=2d_array sample_flags=lod addr_components=4
+pc=0x0266c fam=5 op=0x00c 0x0000266c: S_WAITCNT 0x00003f70
+pc=0x02670 fam=7 op=0x008 0x00002670: V_MUL_F32 v0, v0, v14
+pc=0x02674 fam=7 op=0x008 0x00002674: V_MUL_F32 v1, v1, v14
+pc=0x02678 fam=7 op=0x008 0x00002678: V_MUL_F32 v2, v2, v14
+pc=0x0267c fam=5 op=0x002 0x0000267c: S_BRANCH 0x0000277c
+pc=0x02680 fam=6 op=0x001 0x00002680: V_MOV_B32 v2, v52
+pc=0x02684 fam=6 op=0x001 0x00002684: V_MOV_B32 v64, v80
+pc=0x02688 fam=6 op=0x001 0x00002688: V_MOV_B32 v66, v81
+pc=0x0268c fam=2 op=0x00f 0x0000268c: S_AND_B64 vcc_lo, exec_lo, vcc_lo
+pc=0x02690 fam=5 op=0x006 0x00002690: S_CBRANCH_VCCZ 0x00002704
+pc=0x02694 fam=7 op=0x004 0x00002694: V_SUB_F32 v64, s4, v60
+pc=0x02698 fam=7 op=0x004 0x00002698: V_SUB_F32 v1, s5, v61
+pc=0x0269c fam=7 op=0x004 0x0000269c: V_SUB_F32 v0, s6, v62
+pc=0x026a0 fam=7 op=0x008 0x000026a0: V_MUL_F32 v2, v64, v64
+pc=0x026a4 fam=7 op=0x008 0x000026a4: V_MUL_F32 v50, v52, v64
+pc=0x026a8 fam=7 op=0x005 0x000026a8: V_SUBREV_F32 v64, s5, v61
+pc=0x026ac fam=7 op=0x01f 0x000026ac: V_MAC_F32 v2, v1, v1
+pc=0x026b0 fam=7 op=0x01f 0x000026b0: V_MAC_F32 v50, v1, v80
+pc=0x026b4 fam=7 op=0x005 0x000026b4: V_SUBREV_F32 v1, s4, v60
+pc=0x026b8 fam=7 op=0x01f 0x000026b8: V_MAC_F32 v2, v0, v0
+pc=0x026bc fam=7 op=0x01f 0x000026bc: V_MAC_F32 v50, v0, v81
+pc=0x026c0 fam=7 op=0x005 0x000026c0: V_SUBREV_F32 v0, s6, v62
+pc=0x026c4 fam=8 op=0x141 0x000026c4: V_MAD_F32 v2, s7, s7, v2.neg
+pc=0x026cc fam=8 op=0x141 0x000026cc: V_MAD_F32 v2, v50, v50, v2.abs
+pc=0x026d4 fam=6 op=0x033 0x000026d4: V_SQRT_F32 v2, v2
+pc=0x026d8 fam=7 op=0x003 0x000026d8: V_ADD_F32 v2, v2, v50
+pc=0x026dc fam=7 op=0x01f 0x000026dc: V_MAC_F32 v1, v2, v52
+pc=0x026e0 fam=7 op=0x01f 0x000026e0: V_MAC_F32 v64, v2, v80
+pc=0x026e4 fam=7 op=0x01f 0x000026e4: V_MAC_F32 v0, v2, v81
+pc=0x026e8 fam=7 op=0x008 0x000026e8: V_MUL_F32 v2, v1, v1
+pc=0x026ec fam=7 op=0x01f 0x000026ec: V_MAC_F32 v2, v64, v64
+pc=0x026f0 fam=7 op=0x01f 0x000026f0: V_MAC_F32 v2, v0, v0
+pc=0x026f4 fam=6 op=0x02e 0x000026f4: V_RSQ_F32 v65, v2
+pc=0x026f8 fam=7 op=0x008 0x000026f8: V_MUL_F32 v2, v65, v1
+pc=0x026fc fam=7 op=0x008 0x000026fc: V_MUL_F32 v64, v65, v64
+pc=0x02700 fam=7 op=0x008 0x00002700: V_MUL_F32 v66, v65, v0
+pc=0x02704 fam=8 op=0x147 0x00002704: V_CUBEMA_F32 v65, v2, v64, v66
+pc=0x0270c fam=8 op=0x145 0x0000270c: V_CUBESC_F32 v1, v2, v64, v66
+pc=0x02714 fam=8 op=0x146 0x00002714: V_CUBETC_F32 v0, v2, v64, v66
+pc=0x0271c fam=8 op=0x144 0x0000271c: V_CUBEID_F32 v64, v2, v64, v66
+pc=0x02724 fam=6 op=0x005 0x00002724: V_CVT_F32_I32 v66, s12.sdwa(sel=4,sext=0)
+pc=0x0272c fam=6 op=0x02a 0x0000272c: V_RCP_F32 v2, v65.abs
+pc=0x02734 fam=12 op=0x002 0x00002734: S_LOAD_DWORDX4 s12, s28, null ; offset=416 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0273c fam=12 op=0x003 0x0000273c: S_LOAD_DWORDX8 s0, s28, null ; offset=192 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02744 fam=7 op=0x020 0x00002744: V_MADMK_F32 v64, v66, 0x41000000, v64
+pc=0x0274c fam=7 op=0x021 0x0000274c: V_MADAK_F32 v65, v1, v2, 0x3fc00000
+pc=0x02754 fam=7 op=0x021 0x00002754: V_MADAK_F32 v66, v0, v2, 0x3fc00000
+pc=0x0275c fam=5 op=0x00c 0x0000275c: S_WAITCNT 0x0000c07f
+pc=0x02760 fam=17 op=0x024 0x00002760: image_sample_l v0, v65, s0, s12 ; dmask=0x7 image_dim=2d_array sample_flags=lod addr_components=4 nsa_dwords=1 nsa_addr=66,64,75,0
+pc=0x0276c fam=5 op=0x00c 0x0000276c: S_WAITCNT 0x00003f70
+pc=0x02770 fam=7 op=0x008 0x00002770: V_MUL_F32 v0, v0, v14
+pc=0x02774 fam=7 op=0x008 0x00002774: V_MUL_F32 v1, v1, v14
+pc=0x02778 fam=7 op=0x008 0x00002778: V_MUL_F32 v2, v2, v14
+pc=0x0277c fam=7 op=0x003 0x0000277c: V_ADD_F32 v46, v46, v63
+pc=0x02780 fam=4 op=0x009 0x00002780: S_CMP_GE_U32 s25, s8
+pc=0x02784 fam=7 op=0x01f 0x00002784: V_MAC_F32 v47, v3, v0
+pc=0x02788 fam=2 op=0x00b 0x00002788: S_CSELECT_B64 vcc_lo, exec_lo, 0
+pc=0x0278c fam=7 op=0x01f 0x0000278c: V_MAC_F32 v44, v4, v1
+pc=0x02790 fam=7 op=0x001 0x00002790: V_CNDMASK_B32 v0, 0, v63
+pc=0x02794 fam=7 op=0x01f 0x00002794: V_MAC_F32 v15, v5, v2
+pc=0x02798 fam=7 op=0x003 0x00002798: V_ADD_F32 v48, v48, v0
+pc=0x0279c fam=1 op=0x004 0x0000279c: S_MOV_B64 exec_lo, s16
+pc=0x027a0 fam=2 op=0x002 0x000027a0: S_ADD_I32 s24, s24, 1
+pc=0x027a4 fam=5 op=0x002 0x000027a4: S_BRANCH 0x00002248
+pc=0x027a8 fam=7 op=0x004 0x000027a8: V_SUB_F32 v0, 1.000000, v13
+pc=0x027ac fam=7 op=0x008 0x000027ac: V_MUL_F32 v1, 0xc1147ae1, v49
+pc=0x027b4 fam=7 op=0x008 0x000027b4: V_MUL_F32 v20, 0xbce147ae, v13
+pc=0x027bc fam=6 op=0x02a 0x000027bc: V_RCP_F32 v5, v45
+pc=0x027c0 fam=6 op=0x02a 0x000027c0: V_RCP_F32 v2, v46
+pc=0x027c4 fam=7 op=0x008 0x000027c4: V_MUL_F32 v3, v0, v0
+pc=0x027c8 fam=6 op=0x025 0x000027c8: V_EXP_F32 v16, v1
+pc=0x027cc fam=10 op=0x001 0x000027cc: V_CMP_LT_F32 vcc_lo, 0, v45
+pc=0x027d0 fam=10 op=0x001 0x000027d0: V_CMP_LT_F32 s0, 0, v46
+pc=0x027d8 fam=7 op=0x008 0x000027d8: V_MUL_F32 v14, v2, v47
+pc=0x027dc fam=7 op=0x008 0x000027dc: V_MUL_F32 v1, v5, v43
+pc=0x027e0 fam=7 op=0x00f 0x000027e0: V_MIN_F32 v19, v16, v3
+pc=0x027e4 fam=7 op=0x008 0x000027e4: V_MUL_F32 v16, v5, v37
+pc=0x027e8 fam=7 op=0x008 0x000027e8: V_MUL_F32 v3, v2, v44
+pc=0x027ec fam=7 op=0x008 0x000027ec: V_MUL_F32 v2, v2, v15
+pc=0x027f0 fam=7 op=0x008 0x000027f0: V_MUL_F32 v5, v5, v42
+pc=0x027f4 fam=7 op=0x01f 0x000027f4: V_MAC_F32 v20, v19, v0
+pc=0x027f8 fam=8 op=0x101 0x000027f8: V_CNDMASK_B32 v0, v47, v14, s0
+pc=0x02800 fam=7 op=0x001 0x00002800: V_CNDMASK_B32 v14, v37, v16
+pc=0x02804 fam=8 op=0x101 0x00002804: V_CNDMASK_B32 v2, v15, v2, s0
+pc=0x0280c fam=7 op=0x001 0x0000280c: V_CNDMASK_B32 v4, v42, v5
+pc=0x02810 fam=7 op=0x02d 0x00002810: V_MADAK_F32 v16, s64, v20, 0x3d350b0f
+pc=0x02818 fam=7 op=0x02d 0x00002818: V_MADAK_F32 v19, s26, v20, 0xbd350b0f
+pc=0x02820 fam=7 op=0x001 0x00002820: V_CNDMASK_B32 v5, v43, v1
+pc=0x02824 fam=8 op=0x101 0x00002824: V_CNDMASK_B32 v1, v44, v3, s0
+pc=0x0282c fam=7 op=0x003 0x0000282c: V_ADD_F32 v3, v14, v8
+pc=0x02830 fam=7 op=0x020 0x00002830: V_MADMK_F32 v8, v13, 0x3cb43958, v16
+pc=0x02838 fam=7 op=0x020 0x00002838: V_MADMK_F32 v13, v13, 0xbf126e98, v19
+pc=0x02840 fam=7 op=0x003 0x00002840: V_ADD_F32 v5, v5, v7
+pc=0x02844 fam=7 op=0x003 0x00002844: V_ADD_F32 v4, v4, v24
+pc=0x02848 fam=7 op=0x01f 0x00002848: V_MAC_F32 v33, v31, v22
+pc=0x0284c fam=7 op=0x003 0x0000284c: V_ADD_F32 v14, 0xbd23d70a, v8
+pc=0x02854 fam=7 op=0x003 0x00002854: V_ADD_F32 v8, 0x3f851eb8, v13
+pc=0x0285c fam=7 op=0x01f 0x0000285c: V_MAC_F32 v34, v30, v21
+pc=0x02860 fam=7 op=0x01f 0x00002860: V_MAC_F32 v32, v29, v17
+pc=0x02864 fam=4 op=0x007 0x00002864: S_CMP_LG_U32 0, s40
+pc=0x02868 fam=7 op=0x008 0x00002868: V_MUL_F32 v9, v9, v14
+pc=0x0286c fam=12 op=0x002 0x0000286c: S_LOAD_DWORDX4 s0, s28, null ; offset=480 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02874 fam=2 op=0x00b 0x00002874: S_CSELECT_B64 s4, exec_lo, 0
+pc=0x02878 fam=7 op=0x01f 0x00002878: V_MAC_F32 v33, v5, v82
+pc=0x0287c fam=7 op=0x01f 0x0000287c: V_MAC_F32 v34, v3, v83
+pc=0x02880 fam=8 op=0x141 0x00002880: V_MAD_F32 v7, v26, v8, v9
+pc=0x02888 fam=8 op=0x141 0x00002888: V_MAD_F32 v13, v25, v8, v9
+pc=0x02890 fam=7 op=0x01f 0x00002890: V_MAC_F32 v9, v8, v28
+pc=0x02894 fam=7 op=0x01f 0x00002894: V_MAC_F32 v32, v4, v23
+pc=0x02898 fam=5 op=0x00c 0x00002898: S_WAITCNT 0x0000c07f
+pc=0x0289c fam=12 op=0x00a 0x0000289c: S_BUFFER_LOAD_DWORDX4 s8, s0, null ; offset=17088 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x028a4 fam=8 op=0x141 0x000028a4: V_MAD_F32 v0, v0, v7, v10
+pc=0x028ac fam=8 op=0x141 0x000028ac: V_MAD_F32 v1, v1, v13, v11
+pc=0x028b4 fam=8 op=0x141 0x000028b4: V_MAD_F32 v2, v2, v9, v12
+pc=0x028bc fam=5 op=0x00c 0x000028bc: S_WAITCNT 0x0000c07f
+pc=0x028c0 fam=10 op=0x004 0x000028c0: V_CMP_GT_F32 vcc_lo, s11, 0
+pc=0x028c8 fam=8 op=0x101 0x000028c8: V_CNDMASK_B32 v0, v0, v10, s4
+pc=0x028d0 fam=8 op=0x101 0x000028d0: V_CNDMASK_B32 v1, v1, v11, s4
+pc=0x028d8 fam=8 op=0x101 0x000028d8: V_CNDMASK_B32 v2, v2, v12, s4
+pc=0x028e0 fam=7 op=0x01f 0x000028e0: V_MAC_F32 v33, v0, v39
+pc=0x028e4 fam=7 op=0x01f 0x000028e4: V_MAC_F32 v34, v1, v40
+pc=0x028e8 fam=7 op=0x01f 0x000028e8: V_MAC_F32 v32, v2, v41
+pc=0x028ec fam=5 op=0x006 0x000028ec: S_CBRANCH_VCCZ 0x0000299c
+pc=0x028f0 fam=6 op=0x006 0x000028f0: V_CVT_F32_U32 v0, v35
+pc=0x028f4 fam=12 op=0x002 0x000028f4: S_LOAD_DWORDX4 s20, s28, null ; offset=432 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x028fc fam=12 op=0x002 0x000028fc: S_LOAD_DWORDX4 s12, s28, null ; offset=448 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02904 fam=6 op=0x006 0x00002904: V_CVT_F32_U32 v2, v36
+pc=0x02908 fam=12 op=0x002 0x00002908: S_LOAD_DWORDX4 s16, s28, null ; offset=416 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02910 fam=7 op=0x003 0x00002910: V_ADD_F32 v1, 0.500000, v0
+pc=0x02914 fam=12 op=0x003 0x00002914: S_LOAD_DWORDX8 s0, s28, null ; offset=320 offset2=0 dwords=8 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0291c fam=7 op=0x003 0x0000291c: V_ADD_F32 v0, 0.500000, v2
+pc=0x02920 fam=5 op=0x00c 0x00002920: S_WAITCNT 0x0000c07f
+pc=0x02924 fam=12 op=0x008 0x00002924: S_BUFFER_LOAD_DWORD vcc_hi, s20, null ; offset=72 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x0292c fam=5 op=0x000 0x0000292c: S_NOP 0x00000000
+pc=0x02930 fam=12 op=0x00a 0x00002930: S_BUFFER_LOAD_DWORDX4 s20, s12, null ; offset=424 offset2=0 dwords=4 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+pc=0x02938 fam=5 op=0x00c 0x00002938: S_WAITCNT 0x0000c07f
+pc=0x0293c fam=7 op=0x004 0x0000293c: V_SUB_F32 v3, vcc_hi, s20
+pc=0x02944 fam=7 op=0x003 0x00002944: V_ADD_F32 v2, s20.neg, v59.neg
+pc=0x0294c fam=6 op=0x02a 0x0000294c: V_RCP_F32 v7, s22
+pc=0x02950 fam=6 op=0x02a 0x00002950: V_RCP_F32 v8, v3
+pc=0x02954 fam=6 op=0x02a 0x00002954: V_RCP_F32 v3, s23
+pc=0x02958 fam=7 op=0x008 0x00002958: V_MUL_F32 v7, v7, v1
+pc=0x0295c fam=7 op=0x008 0x0000295c: V_MUL_F32 v1.clamp, v8, v2
+pc=0x02964 fam=7 op=0x008 0x00002964: V_MUL_F32 v8, v3, v0
+pc=0x02968 fam=7 op=0x005 0x00002968: V_SUBREV_F32 v0, s10, v1
+pc=0x0296c fam=6 op=0x02a 0x0000296c: V_RCP_F32 v0, v0
+pc=0x02970 fam=8 op=0x141 0x00002970: V_MAD_F32 v9, s8.neg, v0, s9.neg
+pc=0x02978 fam=17 op=0x027 0x00002978: image_sample_lz v0, v7, s0, s16 ; dmask=0xf image_dim=3d sample_flags=level_zero addr_components=3
+pc=0x02980 fam=5 op=0x00c 0x00002980: S_WAITCNT 0x00003f70
+pc=0x02984 fam=8 op=0x141 0x00002984: V_MAD_F32 v33, v3, v33, v0
+pc=0x0298c fam=8 op=0x141 0x0000298c: V_MAD_F32 v34, v3, v34, v1
+pc=0x02994 fam=8 op=0x141 0x00002994: V_MAD_F32 v32, v3, v32, v2
+pc=0x0299c fam=7 op=0x02f 0x0000299c: V_CVT_PKRTZ_F16_F32 v0, v33, v34
+pc=0x029a0 fam=7 op=0x02f 0x000029a0: V_CVT_PKRTZ_F16_F32 v1, v32, v18
+pc=0x029a4 fam=1 op=0x004 0x000029a4: S_MOV_B64 exec_lo, s30
+pc=0x029a8 fam=18 op=0x008 0x000029a8: exp target=0x08 en=0x1 done=0 compr=0 vm=0 v58, v0, v0, v0
+pc=0x029b0 fam=18 op=0x000 0x000029b0: exp target=0x00 en=0xf done=1 compr=1 vm=1 v0, v1
+pc=0x029b8 fam=5 op=0x001 0x000029b8: s_endpgm
+pc=0x029bc fam=1 op=0x004 0x000029bc: S_MOV_B64 exec_lo, 0
+pc=0x029c0 fam=18 op=0x000 0x000029c0: exp target=0x00 en=0x0 done=1 compr=1 vm=1
+pc=0x029c8 fam=5 op=0x001 0x000029c8: s_endpgm
+m-decode: words=2876 instructions=1898

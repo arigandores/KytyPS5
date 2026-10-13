@@ -1,0 +1,61 @@
+decoder C:/kyty/m657/m2a/bin/shader_cfg_tests_main.exe sha256 c02d8261227491db3e19c960618c98a49030b10a42f21764bd56335ac94474a8
+====================================================================================================
+PS be4c35a2031fd3f4 raw C:/kyty/f287/f23a/eboot_text/be4c35a2031fd3f4.bin sha256 479868c1feae77cec7ad6b348b9c0604de2ebf59e2dc515d19b9a12807d5fa69
+  decode rc 0 tail m-decode: words=3980 instructions=2678
+  MRTZ exports with Z: 1
+  export pc=0x03a48 Z vreg v4  (target=0x08 en=0x1 done=0 compr=0 vm=0 v4, v0, v0, v0)
+     writer pc=0x000b4 NOSAT  V_CNDMASK_B32 v4, v4, 1.000000
+     writers 1  first_write 0x000b4  first_read 0x000b4  conditional branches before first writer 1
+     input path possible (no writer, or a branch may skip the first writer): True
+  VERDICT be4c35a2031fd3f4 saturated_in_0_1=False (every writer SAT and no input path)
+  SPIR-V C:/kyty/m657/m2a/corpus/base/ps_be4c35a2031fd3f4_a772ac521fadeb8a_0/out.spv sha256 ebff0feeb90b9b35c7aecbd6fc542fb6ded352504b70442b9172f533a571cb96 lines 13850
+  FragDepth stores 1 ['%13457']
+  slice ids 9 ops {'OpBitcast': 2, 'OpSelect': 2, 'OpCompositeExtract': 1, 'OpCompositeConstruct': 1, 'OpPhi': 1, 'OpLoad': 1, 'OpConstant': 1}
+  GLSL ext ops on slice {}
+  clamp/min/max on slice {}
+  leaves (2 kinds):
+        1  OpLoad <- OpAccessChain %gl_FragCoord %uint_2
+        1  OpConstant %uint 1065353216
+====================================================================================================
+PS f25acd918dbac2b5 raw C:/kyty/f287/f23a/eboot_text/f25acd918dbac2b5.bin sha256 7fb91dc58eae8af746d10f2501e8f504e308a86485065b3c1ad44e9b392994e5
+  decode rc 0 tail m-decode: words=48 instructions=6
+  MRTZ exports with Z: 1
+  export pc=0x00014 Z vreg v0  (target=0x08 en=0x1 done=1 compr=0 vm=1 v0, v0, v0, v0)
+     writer pc=0x00000 NOSAT  V_CVT_I32_F32 v0, v2
+     writer pc=0x00008 NOSAT  IMAGE_LOAD v0, v0, s0, s0 ; dmask=0x1 image_dim=2d
+     writers 2  first_write 0x00000  first_read 0x00008  conditional branches before first writer 0
+     input path possible (no writer, or a branch may skip the first writer): False
+  VERDICT f25acd918dbac2b5 saturated_in_0_1=False (every writer SAT and no input path)
+  SPIR-V C:/kyty/m657/m2a/corpus/base/ps_f25acd918dbac2b5_3595d376277395b4_0/out.spv sha256 a75ca92a461fef1cfde2964ec776521f3b3e00c7b3e83af8200e01cd27737fe3 lines 224
+  FragDepth stores 1 ['%168']
+  slice ids 19 ops {'OpBitcast': 6, 'OpCompositeExtract': 6, 'OpCompositeConstruct': 2, 'OpSelect': 1, 'OpLoad': 1, 'OpPhi': 1, 'OpConstantComposite': 1, 'OpImageFetch': 1}
+  GLSL ext ops on slice {}
+  clamp/min/max on slice {}
+  leaves (3 kinds):
+        1  OpLoad <- OpAccessChain %gl_BaryCoordKHR %uint_1
+        1  OpConstantComposite %v4uint %uint_0 %uint_0 %uint_0 %uint_0
+        1  OpImageFetch
+====================================================================================================
+PS 5514e10f1a60df83 raw C:/kyty/f287/f23a/eboot_text/5514e10f1a60df83.bin sha256 f1c0d5a61051a9acaf7c240cdeb49c4802fe6c4bf75faccafcce466e5e87fb20
+  decode rc 0 tail m-decode: words=896 instructions=583
+  MRTZ exports with Z: 1
+  export pc=0x00bf4 Z vreg v18  (target=0x08 en=0x1 done=0 compr=0 vm=0 v18, v0, v0, v0)
+     writer pc=0x00160 NOSAT  V_MUL_F32 v18, v5, v0
+     writer pc=0x00ad8 NOSAT  V_MAD_F32 v18, s3, v9, s15
+     writer pc=0x00b28 NOSAT  V_MAC_F32 v18, s7, v7
+     writer pc=0x00b38 NOSAT  V_MAC_F32 v18, s11, v13
+     writer pc=0x00b5c NOSAT  V_RCP_F32 v18, v18
+     writer pc=0x00bc4 NOSAT  V_MUL_F32 v18, v18, v19
+     writers 6  first_write 0x00160  first_read 0x0016c  conditional branches before first writer 2
+     input path possible (no writer, or a branch may skip the first writer): True
+  VERDICT 5514e10f1a60df83 saturated_in_0_1=False (every writer SAT and no input path)
+====================================================================================================
+PS c67734666ad63e20 raw C:/kyty/f287/f23a/eboot_text/c67734666ad63e20.bin sha256 249e45b3727c1b84548a45f6602c44e1d88654bbd1f34c471f4451e22886d0e5
+  decode rc 0 tail m-decode: words=2876 instructions=1898
+  MRTZ exports with Z: 1
+  export pc=0x029a8 Z vreg v58  (target=0x08 en=0x1 done=0 compr=0 vm=0 v58, v0, v0, v0)
+     writer pc=0x00034 NOSAT  image_sample v58, v56, s16, s40 ; dmask=0x1 image_dim=2d sample_flags=none addr_components=2
+     writers 1  first_write 0x00034  first_read 0x00048  conditional branches before first writer 0
+     input path possible (no writer, or a branch may skip the first writer): False
+  VERDICT c67734666ad63e20 saturated_in_0_1=False (every writer SAT and no input path)
+DONE

@@ -1,0 +1,223 @@
+eboot.elf sha256 1f063c0cbf45123d367e77611d1a5c2145a88e86d6cce6a16db34e20a3955591 size 251414288
+wrapper functions with AvPlayer import calls (function start: [(import, site)])
+  0x1053c00 [('Init', 17120735), ('PostInit', 17121304), ('AddSource', 17121343), ('SetAvSyncMode', 17121444)]
+  0x10546a0 [('StreamCount', 17123024), ('GetStreamInfo', 17123078), ('EnableStream', 17123242)]
+  0x1054970 [('Close', 17123743)]
+  0x1054a60 [('Start', 17123953)]
+  0x1054b30 [('Stop', 17124161)]
+  0x1054eb0 [('Pause', 17125057)]
+  0x1054ef0 [('Resume', 17125121)]
+  0x1055010 [('JumpToTime', 17125431)]
+  0x10551b0 [('SetLooping', 17125827)]
+  0x10551e0 [('SetTrickSpeed', 17125897)]
+  0x1055230 [('IsActive', 17125949)]
+  0x1055da0 [('GetVideoDataEx', 17128924)]
+RELA entries 558551
+  wrapper 0x1053c00 (SetAvSyncMode): vtable slots ['0x89208c8']
+  wrapper 0x10546a0 (EnableStream): vtable slots []
+  wrapper 0x1054970 (Close): vtable slots ['0x89208d0']
+  wrapper 0x1054a60 (Start): vtable slots ['0x8920818']
+  wrapper 0x1054b30 (Stop): vtable slots ['0x8920828']
+  wrapper 0x1054eb0 (Pause): vtable slots ['0x8920838']
+  wrapper 0x1054ef0 (Resume): vtable slots ['0x8920840']
+  wrapper 0x1055010 (JumpToTime): vtable slots ['0x8920858']
+  wrapper 0x10551b0 (SetLooping): vtable slots ['0x8920868']
+  wrapper 0x10551e0 (SetTrickSpeed): vtable slots ['0x89208c0']
+  wrapper 0x1055230 (IsActive): vtable slots ['0x8920870']
+  wrapper 0x1055da0 (GetVideoDataEx): vtable slots ['0x8920980']
+  wrapper 0x1053c00 (SetAvSyncMode): direct rel32 hits 0 []
+  wrapper 0x10546a0 (EnableStream): direct rel32 hits 0 []
+  wrapper 0x1054970 (Close): direct rel32 hits 0 []
+  wrapper 0x1054a60 (Start): direct rel32 hits 0 []
+  wrapper 0x1054b30 (Stop): direct rel32 hits 0 []
+  wrapper 0x1054eb0 (Pause): direct rel32 hits 0 []
+  wrapper 0x1054ef0 (Resume): direct rel32 hits 0 []
+  wrapper 0x1055010 (JumpToTime): direct rel32 hits 0 []
+  wrapper 0x10551b0 (SetLooping): direct rel32 hits 0 []
+  wrapper 0x10551e0 (SetTrickSpeed): direct rel32 hits 0 []
+  wrapper 0x1055230 (IsActive): direct rel32 hits 0 []
+  wrapper 0x1055da0 (GetVideoDataEx): direct rel32 hits 0 []
+vtable runs holding wrapper slots: 2
+  run 0x89207b8..0x89208f0 (39 slots)
+     slot 0x89207b8 +0x0 -> 0x10539a0 
+     slot 0x89207c0 +0x8 -> 0x1053bd0 
+     slot 0x89207c8 +0x10 -> 0x1052c90 
+     slot 0x89207d0 +0x18 -> 0x1052cf0 
+     slot 0x89207d8 +0x20 -> 0x1052e80 
+     slot 0x89207e0 +0x28 -> 0x1052ef0 
+     slot 0x89207e8 +0x30 -> 0x1052f60 
+     slot 0x89207f0 +0x38 -> 0x1052fd0 
+     slot 0x89207f8 +0x40 -> 0x1053030 
+     slot 0x8920800 +0x48 -> 0x1053140 
+     slot 0x8920808 +0x50 -> 0x10531b0 
+     slot 0x8920810 +0x58 -> 0x1053220 
+     slot 0x8920818 +0x60 -> 0x1054a60 Start
+     slot 0x8920820 +0x68 -> 0x1054aa0 
+     slot 0x8920828 +0x70 -> 0x1054b30 Stop
+     slot 0x8920830 +0x78 -> 0x1054b70 
+     slot 0x8920838 +0x80 -> 0x1054eb0 Pause
+     slot 0x8920840 +0x88 -> 0x1054ef0 Resume
+     slot 0x8920848 +0x90 -> 0x1054f30 
+     slot 0x8920850 +0x98 -> 0x1054fc0 
+     slot 0x8920858 +0xa0 -> 0x1055010 JumpToTime
+     slot 0x8920860 +0xa8 -> 0x1055060 
+     slot 0x8920868 +0xb0 -> 0x10551b0 SetLooping
+     slot 0x8920870 +0xb8 -> 0x1055230 IsActive
+     slot 0x8920878 +0xc0 -> 0x1055260 
+     slot 0x8920880 +0xc8 -> 0x1055270 
+     slot 0x8920888 +0xd0 -> 0x1055a70 
+     slot 0x8920890 +0xd8 -> 0x1055a80 
+     slot 0x8920898 +0xe0 -> 0x1055a90 
+     slot 0x89208a0 +0xe8 -> 0x1055aa0 
+     slot 0x89208a8 +0xf0 -> 0x1055280 
+     slot 0x89208b0 +0xf8 -> 0x1055ab0 
+     slot 0x89208b8 +0x100 -> 0x10552a0 
+     slot 0x89208c0 +0x108 -> 0x10551e0 SetTrickSpeed
+     slot 0x89208c8 +0x110 -> 0x1053c00 SetAvSyncMode
+     slot 0x89208d0 +0x118 -> 0x1054970 Close
+     slot 0x89208d8 +0x120 -> 0x1055ac0 
+     slot 0x89208e0 +0x128 -> 0x10557f0 
+     slot 0x89208e8 +0x130 -> 0x1055930 
+  run 0x8920970..0x89209a0 (6 slots)
+     slot 0x8920970 +0x0 -> 0x1055d60 
+     slot 0x8920978 +0x8 -> 0x1055d80 
+     slot 0x8920980 +0x10 -> 0x1055da0 GetVideoDataEx
+     slot 0x8920988 +0x18 -> 0x1055df0 
+     slot 0x8920990 +0x20 -> 0x1055e00 
+     slot 0x8920998 +0x28 -> 0x1055e10 
+  run 0x89207b8: lea refs 2 ['0x10537ab->+0x0', '0x10539c0->+0x0']
+  run 0x8920970: lea refs 3 ['0x1054cec->+0x0', '0x1055d60->+0x0', '0x1055d80->+0x0']
+virtual call displacements (vptr, slot -> disp, wrapper):
+  vptr 0x89207b8 slot 0x8920818 disp 0x60 Start
+  vptr 0x89207b8 slot 0x8920828 disp 0x70 Stop
+  vptr 0x89207b8 slot 0x8920838 disp 0x80 Pause
+  vptr 0x89207b8 slot 0x8920840 disp 0x88 Resume
+  vptr 0x89207b8 slot 0x8920858 disp 0xa0 JumpToTime
+  vptr 0x89207b8 slot 0x8920868 disp 0xb0 SetLooping
+  vptr 0x89207b8 slot 0x8920870 disp 0xb8 IsActive
+  vptr 0x89207b8 slot 0x89208c0 disp 0x108 SetTrickSpeed
+  vptr 0x89207b8 slot 0x89208c8 disp 0x110 SetAvSyncMode
+  vptr 0x89207b8 slot 0x89208d0 disp 0x118 Close
+  vptr 0x8920970 slot 0x8920980 disp 0x10 GetVideoDataEx
+  disp 0x10 (GetVideoDataEx): indirect call sites 20949
+     0x10d0
+     0x1c9e
+     0x21ae
+     0x119bb
+     0x1bee5
+     0x1bfa4
+     0x1c373
+     0x1c855
+     0x1c862
+     0x1c874
+  disp 0x60 (Start): indirect call sites 1493
+     0x1e318
+     0x1eb43
+     0x1ef2d
+     0x1f337
+     0x28705
+     0x295a7
+     0x2a754
+     0x339c0
+     0x34105
+     0x3420c
+  disp 0x70 (Stop): indirect call sites 512
+     0x1e6d5
+     0x1e843
+     0x1ed0e
+     0x1ed78
+     0x1f53d
+     0x1f6fe
+     0x1f87b
+     0x1f910
+     0x3086b
+     0x30b29
+  disp 0x80 (Pause): indirect call sites 536
+     0x34533c
+     0x38040b
+     0x380b01
+     0x43dbee
+     0x43e2fe
+     0x441adc
+     0x441f5c
+     0x44210c
+     0x44286c
+     0x4ad39f
+  disp 0x88 (Resume): indirect call sites 276
+     0x26903
+     0x32990
+     0x32b98
+     0x32d1a
+     0x32d75
+     0x32dac
+     0x373d5
+     0x380ed
+     0x38f36
+     0x393d0
+  disp 0xa0 (JumpToTime): indirect call sites 138
+     0x3669e
+     0x281825
+     0x297604
+     0x299a3b
+     0x29a344
+     0x29a3e4
+     0x43f92b
+     0x4471e9
+     0x447606
+     0x4b100c
+  disp 0xb0 (SetLooping): indirect call sites 1150
+     0x209dd
+     0x20c31
+     0x20f15
+     0x26506
+     0x361f6
+     0x365f9
+     0x366ba
+     0x370aa
+     0x37148
+     0x371e6
+  disp 0xb8 (IsActive): indirect call sites 2289
+     0x2828dd
+     0x28b8eb
+     0x297511
+     0x29997d
+     0x29a4fd
+     0x2a7ef7
+     0x2a83c2
+     0x2a8606
+     0x2b1da4
+     0x2b1dd6
+  disp 0x108 (SetTrickSpeed): indirect call sites 1718
+     0x36922e
+     0x37129e
+     0x372091
+     0x4e53df
+     0x5256c1
+     0x77aa43
+     0x93781d
+     0x973400
+     0x98144e
+     0x984254
+  disp 0x110 (SetAvSyncMode): indirect call sites 3392
+     0x371789
+     0x37931d
+     0x37972f
+     0x37989e
+     0x38182b
+     0x447c94
+     0x77abc2
+     0x93737b
+     0x9dc521
+     0x9fec8e
+  disp 0x118 (Close): indirect call sites 1423
+     0x24c96e
+     0x447a35
+     0x447b62
+     0x4e50af
+     0x75a497
+     0x79b0ad
+     0x79b0bf
+     0x7b43c7
+     0x7be89c
+     0x7cafee
+DONE

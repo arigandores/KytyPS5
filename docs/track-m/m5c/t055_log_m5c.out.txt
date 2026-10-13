@@ -1,0 +1,93 @@
+====================================================================================================
+LOG C:/kyty/m657/m3a/log_m3_sg_v_r1.txt size 316192041
+lines 1164394
+      271429 filename data/prein/video/06_nx_controller_ship.mp4
+      271459 event    READY
+      271548 create   AvPlayerVideoDecoder rc=0
+      271562 run      AvPlayerVideoDecoder id=79
+      271563 create   AvPlayerDemuxer rc=0
+      271573 event    PLAY
+      271574 run      AvPlayerDemuxer id=80
+      271939 event    PAUSE
+      271988 event    PLAY
+      271989 event    PAUSE
+      272105 event    PLAY
+      320271 event    WARNING
+      325622 event    STOP
+  count create_AvPlayerDemuxer           1
+  count create_AvPlayerVideoDecoder      1
+  count event_PAUSE                      2
+  count event_PLAY                       3
+  count event_READY                      1
+  count event_STOP                       1
+  count event_WARNING                    1
+  count filename                         1
+  count run_AvPlayerDemuxer              1
+  count run_AvPlayerVideoDecoder         1
+  successful_jump_upper_bound = create_AvPlayerDemuxer(1) - starts_from_Start(1) = 0
+====================================================================================================
+LOG C:/kyty/m657/m3a/log_m3_i.txt size 498503965
+lines 4601977
+     3709436 filename data/prein/video/06_nx_controller_ship.mp4
+     3709499 event    READY
+     3709587 create   AvPlayerVideoDecoder rc=0
+     3709601 run      AvPlayerVideoDecoder id=79
+     3709602 create   AvPlayerDemuxer rc=0
+     3709612 event    PLAY
+     3709613 run      AvPlayerDemuxer id=80
+     3709968 event    PAUSE
+     3710025 event    PLAY
+     3710026 event    PAUSE
+     3710142 event    PLAY
+     3758763 event    WARNING
+     3764142 event    STOP
+  count create_AvPlayerDemuxer           1
+  count create_AvPlayerVideoDecoder      1
+  count event_PAUSE                      2
+  count event_PLAY                       3
+  count event_READY                      1
+  count event_STOP                       1
+  count event_WARNING                    1
+  count filename                         1
+  count run_AvPlayerDemuxer              1
+  count run_AvPlayerVideoDecoder         1
+  successful_jump_upper_bound = create_AvPlayerDemuxer(1) - starts_from_Start(1) = 0
+====================================================================================================
+LOG C:/kyty/f287/f18e/log_f8_s1.txt size 327532942
+lines 1343485
+      270647 filename data/prein/video/06_nx_controller_ship.mp4
+      270703 event    READY
+      270823 create   AvPlayerVideoDecoder rc=0
+      270837 run      AvPlayerVideoDecoder id=79
+      270838 create   AvPlayerDemuxer rc=0
+      270848 event    PLAY
+      270854 run      AvPlayerDemuxer id=80
+      271285 event    PAUSE
+      271332 event    PLAY
+      271333 event    PAUSE
+      271495 event    PLAY
+      327464 event    WARNING
+      334038 event    STOP
+  count create_AvPlayerDemuxer           1
+  count create_AvPlayerVideoDecoder      1
+  count event_PAUSE                      2
+  count event_PLAY                       3
+  count event_READY                      1
+  count event_STOP                       1
+  count event_WARNING                    1
+  count filename                         1
+  count run_AvPlayerDemuxer              1
+  count run_AvPlayerVideoDecoder         1
+  successful_jump_upper_bound = create_AvPlayerDemuxer(1) - starts_from_Start(1) = 0
+====================================================================================================
+TOTAL create_AvPlayerDemuxer           3
+TOTAL create_AvPlayerVideoDecoder      3
+TOTAL event_PAUSE                      6
+TOTAL event_PLAY                       9
+TOTAL event_READY                      3
+TOTAL event_STOP                       3
+TOTAL event_WARNING                    3
+TOTAL filename                         3
+TOTAL run_AvPlayerDemuxer              3
+TOTAL run_AvPlayerVideoDecoder         3
+DONE

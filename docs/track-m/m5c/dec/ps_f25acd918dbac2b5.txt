@@ -1,0 +1,7 @@
+pc=0x00000 fam=6 op=0x008 0x00000000: V_CVT_I32_F32 v0, v2
+pc=0x00004 fam=6 op=0x008 0x00000004: V_CVT_I32_F32 v1, v3
+pc=0x00008 fam=17 op=0x000 0x00000008: IMAGE_LOAD v0, v0, s0, s0 ; dmask=0x1 image_dim=2d
+pc=0x00010 fam=5 op=0x00c 0x00000010: S_WAITCNT 0x00003f70
+pc=0x00014 fam=18 op=0x008 0x00000014: exp target=0x08 en=0x1 done=1 compr=0 vm=1 v0, v0, v0, v0
+pc=0x0001c fam=5 op=0x001 0x0000001c: s_endpgm
+m-decode: words=48 instructions=6

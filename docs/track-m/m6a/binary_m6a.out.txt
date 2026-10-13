@@ -1,0 +1,25 @@
+M6a C:/kyty/m657/bin/kyty_emulator_146c9358.exe sha256 146c93585b664fc98c50fc8a79fdfd99f09430940cb10ecc041720f2cd821202
+MS1 C:/kyty/m657/bin/kyty_emulator_ea35b679.exe sha256 ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+OK   KYTY_DIAG_M5W2                                M6a x1 MS1 x0
+OK   M5W2: mode=%d                                 M6a x1 MS1 x0
+OK   M5W2Stat: when=%s                             M6a x1 MS1 x0
+OK   M5W2Clr: when=%s                              M6a x1 MS1 x0
+OK   GuestPrintf: negative precision               M6a x1 MS1 x0
+OK   AmprRecordSpace: refused why=%s               M6a x1 MS1 x0
+OK   AmprWriteAddress: refused why=%s              M6a x1 MS1 x0
+OK   AgcReserveDW: cursor state class=%s           M6a x1 MS1 x0
+OK   MWave1: mask=                                 M6a x1 MS1 x1
+OK   MT265: mode=                                  M6a x1 MS1 x1
+OK   MT272: mode=                                  M6a x1 MS1 x1
+OK   MT231: mode=                                  M6a x1 MS1 x1
+OK   KYTY_M_T306                                   M6a x1 MS1 x1
+OK   FixF20: mode=                                 M6a x1 MS1 x1
+OK   FixF24: mode=                                 M6a x1 MS1 x1
+OK   FixF29: mode=                                 M6a x1 MS1 x1
+OK   FixF25: mode=                                 M6a x1 MS1 x1
+OK   FixF21: mode=                                 M6a x1 MS1 x1
+OK   FixB12: mode=                                 M6a x1 MS1 x1
+OK   KYTY_S_REPLAY                                 M6a x2 MS1 x2
+OK   8dcf31779bbcb7c6e605653a138dae162f645a46      M6a x1 MS1 x1
+OK   KytyPS5-2026-09-15-6a2987a-1934-g6964a58ff    M6a x1
+ALL OK

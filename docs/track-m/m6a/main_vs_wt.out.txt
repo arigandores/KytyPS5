@@ -1,0 +1,13 @@
+SAME CMakeLists.txt wt 4 main 4
+SAME src/emulator.cpp wt 3 main 3
+SAME src/graphics/host_gpu/renderer/cache/textureCache.cpp wt 16 main 16
+SAME src/graphics/host_gpu/renderer/image/imageView.cpp wt 6 main 6
+SAME src/graphics/host_gpu/renderer/pipeline/descriptors.cpp wt 7 main 7
+SAME src/libs/agc.cpp wt 15 main 15
+SAME src/libs/diagM5W2.cpp wt 211 main 211
+SAME src/libs/diagM5W2.h wt 85 main 85
+SAME src/libs/guestPrintf.cpp wt 9 main 9
+SAME src/libs/libAmpr.cpp wt 53 main 53
+SAME src/libs/libAudio2.cpp wt 19 main 19
+SAME tests/MWave2DiagStand.cpp wt 413 main 413
+ALL OK

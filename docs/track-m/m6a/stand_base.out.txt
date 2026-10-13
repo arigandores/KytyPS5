@@ -1,0 +1,8 @@
+pure total=60 match=60
+pure M5W2Clr [('103', ('1', '1')), ('37', ('1', '0')), ('70', ('1', '1')), ('76', ('2', '1')), ('91', ('1', '1')), ('97', ('2', '1'))]
+audio k1 total=3 match=3 on=1
+audio k0 total=3 match=3 on=0
+printf negative precision lines 1
+ampr AmprRecordSpace 20 AmprWriteAddress 20
+agc AgcReserveDW lines 20 first ['up0', 'down0', 'both0', 'down_lt_up', 'down0']
+ALL OK

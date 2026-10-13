@@ -1,0 +1,22 @@
+OK   new libs/diagM5W2.h (4780 bytes)
+OK   new libs/diagM5W2.cpp (6323 bytes)
+OK   libs/libAudio2.cpp: #include "libs/audio_internal.h"
+OK   libs/libAudio2.cpp: g_audioout2_port_mutex.Lock();
+OK   libs/libAudio2.cpp: g_audioout2_port_mutex.Unlock();
+OK   emulator.cpp: #include "graphics/host_gpu/renderer/pipeline/fixF20.h"
+OK   emulator.cpp: exit line x2
+OK   graphics/host_gpu/renderer/cache/textureCache.cpp: #include "graphics/host_gpu/renderer/cache/textureCache.h"
+OK   graphics/host_gpu/renderer/cache/textureCache.cpp: ClearImage(command, selected, image.backing.format,
+OK   graphics/host_gpu/renderer/cache/textureCache.cpp: void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t 
+OK   graphics/host_gpu/renderer/cache/textureCache.cpp: TraceWatchedImage("gpu-invalidate", image, address, size);
+OK   graphics/host_gpu/renderer/image/imageView.cpp: #include "graphics/host_gpu/renderer/image/image.h"
+OK   graphics/host_gpu/renderer/image/imageView.cpp: views.push_back({normalized, view});
+OK   graphics/host_gpu/renderer/pipeline/descriptors.cpp: #include "graphics/host_gpu/renderer/shadowResolve.h"
+OK   graphics/host_gpu/renderer/pipeline/descriptors.cpp: const Common::B2Reuse::Entry* reuse_hit = b2r_hit != nullptr ? b2r_hit
+OK   libs/guestPrintf.cpp: #include <cmath>
+OK   libs/guestPrintf.cpp: precision      = prec > 0 ? static_cast<unsigned int>(prec) : 0U;
+OK   libs/libAmpr.cpp: #include <array>
+OK   libs/libAmpr.cpp: static bool EnsureCommandBufferRecordSpace(uint64_t command_buffer, Co
+OK   libs/libAmpr.cpp: static bool AppendWriteAddressRecord(uint64_t command_buffer, uint64_t
+OK   libs/agc.cpp: KYTY_SYSV_ABI bool ReserveDW(uint32_t num_dw) {
+ALL OK

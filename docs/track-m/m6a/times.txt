@@ -1,0 +1,16 @@
+2026-10-13T02:47:30Z M6a start (HPP-848): lock absent; read ROADMAP p.767, M5a, M5b
+2026-10-13T02:47:56Z names of lines/fields fixed before code: names_before_code.md sha256 f619d78f4f316a09
+2026-10-13T02:51:34Z patch_m6a.py applied to wt: FAIL
+2026-10-13T02:52:15Z patch_m6a.py re-applied to clean wt (anchor fixes): ALL OK
+2026-10-13T02:52:31Z names fix before build: AmprWriteAddress why=<state|ensure> (was state|space; ensure = any refusal of EnsureCommandBufferRecordSpace, its own line names the test)
+2026-10-13T02:56:02Z stand patch on wt: ALL OK; check_gate_order.py on wt: GATE ORDER: clean
+2026-10-13T02:56:08Z API: in_progress HPP-847 (M5c, Probe Designer, offline) and HPP-848 only - no harness series; configure+build start
+2026-10-13T03:02:50Z stand build: 0 errors; BUILD OK: C:\kyty\m657\m6a\build\m_wave2_diag_stand.exe
+2026-10-13T03:05:32Z stand driver on wt build: ALL OK; mutants start (26 + control)
+2026-10-13T03:09:52Z mutants: 26 CAUGHT of 26, CONTROL restored tree: build=1 driver=ALL OK; ALL OK; wt sources = before mutants
+2026-10-13T03:13:11Z wt commit 6964a58f (on ed94b13d); rebuild version+emulator
+2026-10-13T03:13:47Z emulator 146c9358 (wt 6964a58f, version -1934-g6964a58ff), pinned C:/kyty/m657/bin/kyty_emulator_146c9358.exe; binary_m6a.py: ALL OK
+2026-10-13T03:17:05Z shader_cfg_tests (wt 6964a58f): 135 tests, 0 failed (= M2d d, MS1); spv 374 vs M2d d: ALL OK
+2026-10-13T03:18:52Z main commit 1f95def9 (cherry-pick of 6964a58f, +/- lines equal 12/12 files: main_vs_wt.out.txt ALL OK); worktree wtmain on 1f95def9 for compile check
+2026-10-13T03:28:33Z main wtmain: stand ALL OK; kyty_emulator build BUILD OK
+2026-10-13T03:30:24Z report.md written; docs copied to KytyPS5/docs/track-m/m6a

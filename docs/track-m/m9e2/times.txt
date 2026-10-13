@@ -1,0 +1,12 @@
+2026-10-13T09:41:28Z start M9e2 read diff d490f648..3f5d8725 / main 6fde3e0c; ROADMAP p.788 read (ebdf7d34)
+2026-10-13T09:41:39Z HPP-861 executionRunId=None; own stand all arms on m9d build start
+2026-10-13T09:41:42Z own stand end: ALL OK 86ad34a4
+2026-10-13T09:41:50Z HPP-861 executionRunId=None; mutants batch T (t1-t6, y1-y5) start
+2026-10-13T09:44:03Z mutants batch T end: BATCH FAIL cafb1074
+2026-10-13T09:44:17Z HPP-861 executionRunId=None; mutants batch P (m1-m12) start
+2026-10-13T09:49:01Z mutants batch P end: BATCH OK 25bd9eb5
+2026-10-13T09:49:08Z HPP-861 executionRunId=None; mutants batch G (m8s m13 m14 m15 g1-g4) start
+2026-10-13T09:56:25Z mutants batch G end: BATCH OK f03472d0
+2026-10-13T09:56:31Z HPP-861 executionRunId=None; control start
+2026-10-13T09:58:30Z control end: CONTROL build=1 arms={'pure': True, 'cls': True, 'gpu1': True, 'gpu0': True, 'gpuv': True} 954530fa
+2026-10-13T10:01:03Z review.md written 7889fd0b; docs copy to KytyPS5/docs/track-m/m9e2

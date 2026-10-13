@@ -1,0 +1,14 @@
+t1_vp0_only CAUGHT {'pure': False}
+t2_nonstrict CAUGHT {'pure': False}
+t3_bias_any CAUGHT {'pure': False}
+t4_zx_narrow_any CAUGHT {'pure': False}
+t5_all_slots CAUGHT {'pure': False}
+t6_raw_range CAUGHT {'pure': False}
+y1_width_only SURVIVED {'pure': True}
+y2_and SURVIVED {'pure': True}
+y3_lo_raw CAUGHT {'pure': False}
+y4_hi_raw CAUGHT {'pure': False}
+y5_break CAUGHT {'pure': False}
+sources restored (sha256 of 5 files): True
+mutants 9 of 11 CAUGHT (batch, no control)
+BATCH FAIL

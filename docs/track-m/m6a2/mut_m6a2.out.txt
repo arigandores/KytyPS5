@@ -1,0 +1,18 @@
+CAUGHT x_eq_div (3 failed members; first: pure: match 102 of 103 (want 103 of 103))
+CAUGHT c_minlod_div_x (3 failed members; first: pure: match 102 of 103 (want 103 of 103))
+CAUGHT c_clr_dw_div8 (4 failed members; first: pure: match 101 of 103 (want 103 of 103))
+CAUGHT c_clr_fmt_div8 (1 failed members; first: pure: M5W2Clr {'9': ('2', '0', '0'), '16': ('2', '0', '0'), '37': ('1', '0', '0'), '70': ('1', '1', '0')
+CAUGHT r8_never (4 failed members; first: pure: match 102 of 103 (want 103 of 103))
+CAUGHT r8_always (4 failed members; first: pure: match 102 of 103 (want 103 of 103))
+CAUGHT rg8_never (4 failed members; first: pure: match 102 of 103 (want 103 of 103))
+CAUGHT rg8_always (4 failed members; first: pure: match 102 of 103 (want 103 of 103))
+CAUGHT c_ao_obj_unread (4 failed members; first: pure: match 102 of 103 (want 103 of 103))
+CAUGHT obj_raw_read (5 failed members; first: pure: rc=3221225477 END lines=0)
+CAUGHT c_ao_obj_push (8 failed members; first: pure: match 98 of 103 (want 103 of 103))
+CAUGHT c_ao_obj_nz (5 failed members; first: pure: match 101 of 103 (want 103 of 103))
+CAUGHT c_ao_bus_push (5 failed members; first: pure: match 101 of 103 (want 103 of 103))
+CAUGHT c_ao_bus_nz (4 failed members; first: pure: match 102 of 103 (want 103 of 103))
+CAUGHT c_inv_part_src (4 failed members; first: pure: match 101 of 103 (want 103 of 103))
+CAUGHT src_eq_data (3 failed members; first: pure: match 102 of 103 (want 103 of 103))
+CONTROL restored tree: build=1 driver=ALL OK
+ALL OK

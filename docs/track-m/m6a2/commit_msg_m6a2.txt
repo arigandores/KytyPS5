@@ -1,0 +1,15 @@
+track M link M6a2 (HPP-854): KYTY_DIAG_M5W2 edits after review M6b - minlod_div_x, clr_dw_div8, guarded object PCM read with ao_obj_unread, inv_part_src (ROADMAP s122 item 770(b)-(e))
+
+Measurement only (default 0, no decision changes at any value); fields appended at the end of "M5W2Stat:"
+(minlod_div_x, clr_dw_div8, ao_obj_unread, inv_part_src) and of "M5W2Clr:" (clr_dw_div8):
+- T021 (RC1): minlod_div_x - base_level > 0 and min_lod > 256 * max(base_level, level_count - 1), the exact
+  divergence of our clamp; minlod_div stays as reference;
+- T313 + T179 (RC2): clr_dw_div8 - class (a3) of M5a, R8Unorm without a repeated byte, R8G8Unorm with lo != hi;
+- T125 (member 769(g)(2)): at =1 the object port grain is read only through a copy by
+  Libs::LibKernel::Memory::TryReadBacking; a refused copy is ao_obj_unread (in ao_obj_push, never in ao_obj_nz);
+- T188 (P1): inv_part_src - the inv_part pairs with coverage against SourceRange().
+Stand tests/MWave2DiagStand.cpp: guest memory for object PCM in the pure and audio arms, cases for the new fields,
+audio push 4 with an unreadable object pointer. Translation signature set untouched. Not run in the game (WIP until
+the M6c tags).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

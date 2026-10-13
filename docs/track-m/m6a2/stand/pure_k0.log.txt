@@ -1,0 +1,21 @@
+LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100
+	 guest address-space self-test: ok
+	 direct-memory sub-64K placeholder self-test: ok
+	 in_addr  = 0x0000000000000000
+	 out_addr = 0x0000000200000000
+	 size     = 262144
+	 mode     = ReadWrite
+	 flags    = 0x00000000
+	 name     = m6a2stand
+	 gpu_mode = NoAccess
+M5W2Stat: when=stand pushes=1 ao_obj_push=5 ao_obj_nz=2 ao_obj_nopcm=1 ao_bus_push=2 ao_bus_nz=1 clr_dw=12 clr_dw_div=5 minlod_views=4 minlod_div=2 inv_calls=1 inv_part=3 inv_gpu=4 inv_off=1 raw_rd=2 raw_rd_gpu=1 minlod_div_x=1 clr_dw_div8=2 ao_obj_unread=1 inv_part_src=2
+M5W2Clr: when=stand fmt=9 clr_dw=2 clr_dw_div=0 clr_dw_div8=1
+M5W2Clr: when=stand fmt=16 clr_dw=2 clr_dw_div=0 clr_dw_div8=1
+M5W2Clr: when=stand fmt=37 clr_dw=1 clr_dw_div=0 clr_dw_div8=0
+M5W2Clr: when=stand fmt=70 clr_dw=1 clr_dw_div=1 clr_dw_div8=0
+M5W2Clr: when=stand fmt=76 clr_dw=2 clr_dw_div=1 clr_dw_div8=0
+M5W2Clr: when=stand fmt=91 clr_dw=1 clr_dw_div=1 clr_dw_div8=0
+M5W2Clr: when=stand fmt=97 clr_dw=2 clr_dw_div=1 clr_dw_div8=0
+M5W2Clr: when=stand fmt=103 clr_dw=1 clr_dw_div=1 clr_dw_div8=0
+M5W2: mode=0
+LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=14 bytes=1131 max_queued_bytes=461 sync_lines=0 drain_timeouts=0

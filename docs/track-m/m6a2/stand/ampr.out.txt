@@ -1,0 +1,27 @@
+MStand: m6 arm=ampr ctor=0 set_buffer=0
+MStand: m6 arm=ampr call=1 rc=0
+MStand: m6 arm=ampr call=2 rc=0
+MStand: m6 arm=ampr call=3 rc=-2147352560
+MStand: m6 arm=ampr call=4 rc=-2147352560
+MStand: m6 arm=ampr call=5 rc=-2147352560
+MStand: m6 arm=ampr call=6 rc=-2147352560
+MStand: m6 arm=ampr call=7 rc=-2147352560
+MStand: m6 arm=ampr call=8 rc=-2147352560
+MStand: m6 arm=ampr call=9 rc=-2147352560
+MStand: m6 arm=ampr call=10 rc=-2147352560
+MStand: m6 arm=ampr call=11 rc=-2147352560
+MStand: m6 arm=ampr call=12 rc=-2147352560
+MStand: m6 arm=ampr call=13 rc=-2147352560
+MStand: m6 arm=ampr call=14 rc=-2147352560
+MStand: m6 arm=ampr call=15 rc=-2147352560
+MStand: m6 arm=ampr call=16 rc=-2147352560
+MStand: m6 arm=ampr call=17 rc=-2147352560
+MStand: m6 arm=ampr call=18 rc=-2147352560
+MStand: m6 arm=ampr call=19 rc=-2147352560
+MStand: m6 arm=ampr call=20 rc=-2147352560
+MStand: m6 arm=ampr call=21 rc=-2147352560
+MStand: m6 arm=ampr call=22 rc=-2147352560
+MStand: m6 arm=ampr call=23 rc=-2147352560
+MStand: m6 arm=ampr call=24 rc=-2147352560
+MStand: m6 arm=ampr call=25 rc=-2147352560
+MStand: m6 arm=ampr knob=0 total=0 match=0 END

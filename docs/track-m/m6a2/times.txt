@@ -1,0 +1,19 @@
+2026-10-13T03:50:16Z names_before_code.md written (before the first code edit)
+2026-10-13T03:53:07Z patch_m6a2.py + patch_m6a2_stand.py applied to worktree C:/kyty/m657/m6a/wt (first code edit)
+2026-10-13T03:53:19Z patch_m6a2.py anchor of Read() fixed (tab + 8 spaces), diagM5W2.h restored, script re-applied
+2026-10-13T03:53:30Z API: in_progress HPP-854, HPP-852 only (no series of a runs link); stand build wt start
+2026-10-13T03:53:53Z stand build wt end
+2026-10-13T03:54:10Z stand driver run on wt build: ALL OK
+2026-10-13T03:54:55Z mutants mut_m6a2.py start (16 + control)
+2026-10-13T03:57:44Z mutants end: 16 of 16 CAUGHT, control ALL OK, wt sha256 after = before; kyty_emulator wt build start
+2026-10-13T03:58:25Z check_gate_order wt: GATE ORDER: clean; kyty_emulator wt build (uncommitted tree) end
+2026-10-13T03:58:41Z worktree commit 97198ce9 (on 6964a58f); version + emulator rebuild start
+2026-10-13T03:59:14Z binary sha256 23f3c4e73f69b2246a0250c518dc1a0f799221342ddbfddee0ba6ca7160c39a3, pinned C:/kyty/m657/bin/kyty_emulator_23f3c4e7.exe (not installed)
+2026-10-13T03:59:24Z shader_cfg_tests build start
+2026-10-13T03:59:55Z shader_cfg_tests: FileNotFoundError: [WinError 2] The system cannot find the file specified; spv vs M6a: FAIL
+2026-10-13T04:00:02Z shader_cfg_tests: rc 0 [test] lines 135 failed names 0 failed lines 5 spv 374; spv vs M6a: ALL OK
+2026-10-13T04:00:26Z main commit fce6480f (cherry-pick of 97198ce9, +/- lines equal)
+2026-10-13T04:00:33Z wtmain checked out at fce6480f; stand build main start
+2026-10-13T04:00:59Z stand on main build: ALL OK
+2026-10-13T04:01:32Z kyty_emulator main build (compile check): BUILD OK: C:\kyty\m657\m6a\buildmain\ins
+2026-10-13T04:02:46Z report.md written; docs commit

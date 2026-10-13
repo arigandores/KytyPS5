@@ -1,0 +1,4 @@
+patched src/libs/diagM5W2.h (5 edits, crlf=0)
+ANCHOR FAIL src/libs/diagM5W2.cpp count=0 first line: 		Load(g_inv_off),     Load(g_raw_rd),       Load(g_raw_rd_gpu),   Load(g_pushes)};
+patched tests/MWave2DiagStand.cpp (11 edits, crlf=0)
+ALL OK

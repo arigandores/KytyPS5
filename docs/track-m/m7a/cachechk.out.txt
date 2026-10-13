@@ -1,0 +1,15 @@
+== d rc 0 env ''
+[mw1] mask=0x33 token=:mw1_33
+[mw1] cache signature=KytySC3:baeea6e209399ed86e67c8f805dddc01ddcf631a:fixb26:fixb1b:fixf10:fixf19:mw1_33
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 sig_ok=1 dir_ok=1
+ALL OK
+== t306 rc 0 env 'KYTY_M_T306=1'
+[mw1] mask=0x3b token=:mw1_3b
+[mw1] cache signature=KytySC3:baeea6e209399ed86e67c8f805dddc01ddcf631a:fixb26:fixb1b:fixf10:fixf19:mw1_3b
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_3b sig_ok=1 dir_ok=1
+ALL OK
+== z rc 0 env 'KYTY_M_T234=0 KYTY_M_T233=0 KYTY_M_T256=0 KYTY_M_T306=0 KYTY_M_T032=0 KYTY_M_T203=0'
+[mw1] mask=0x00 token=
+[mw1] cache signature=KytySC3:baeea6e209399ed86e67c8f805dddc01ddcf631a:fixb26:fixb1b:fixf10:fixf19
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19 sig_ok=1 dir_ok=1
+ALL OK

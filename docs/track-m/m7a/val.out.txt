@@ -1,0 +1,4 @@
+corpus/m1/ps_5a34b303576ee324_914a71d3664b53ab_0/out.spv rc=0
+corpus/m1/ps_f47c0c097c598a36_3de3d43ef41686a6_0/out.spv rc=0
+cs7b/out_0.spv rc=0
+cs7b/out_1.spv rc=0

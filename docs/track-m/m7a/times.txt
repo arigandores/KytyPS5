@@ -1,0 +1,19 @@
+2026-10-13T03:36:59Z start M7a (HPP-852): worktree from MS1 ed94b13d
+2026-10-13T03:40:54Z names before code written: names_before_code.md (fallback line = existing 'MTexOffset: ... nonconstant offset, previous path'); no src edit yet
+916efeb4f2dd7ef4e6afca316cbf50e1feaa5925d2730d33aae851c342d4ef8d *names_before_code.md
+2026-10-13T03:43:17Z patch_m7a.py applied to wt (first src edit)
+2026-10-13T03:45:55Z API: in_progress only HPP-852 - no harness series; configure+tests build start
+2026-10-13T03:52:51Z tests build OK
+2026-10-13T03:53:02Z wt tests MWave1T306 =0 and =1 with KYTY_TEST_T306_EBOOT: rc 0 both; =1 eboot 3/3 + 8/8 matched, forms full/lit CO 0 fallback 1
+2026-10-13T03:54:01Z corpus m0 start
+2026-10-13T03:54:50Z corpus m1, ms1t run; check: ALL OK
+2026-10-13T03:55:39Z mutant t306_mask start (timing)
+2026-10-13T03:56:21Z mutants full run start (5 + control)
+2026-10-13T03:58:08Z mutants: ALL OK
+2026-10-13T04:02:56Z full shader_cfg_tests runs d / d_eb / t1_eb start
+2026-10-13T04:03:58Z corpus rerun on final test exe eb988b24: ALL OK; cs7b recompile rerun
+2026-10-13T04:04:23Z wt commit 91a46dc5 on ed94b13d; build version+emulator start
+2026-10-13T04:07:28Z emulator BUILD OK sha256 97d85a26db8a8815f643203ca018531094d466cd7df0557ef606782985ad3cf1, pinned C:/kyty/m657/bin/kyty_emulator_97d85a26.exe; ref refs/archive/wt/91a46dc5
+2026-10-13T04:08:00Z main commit 95ad0de2
+2026-10-13T04:15:23Z main worktree 95ad0de2 tests build OK; full runs u_eb / t1_eb done
+2026-10-13T04:18:54Z report docs/track-m/m7a/report.md written (copies of names, scripts, outputs)

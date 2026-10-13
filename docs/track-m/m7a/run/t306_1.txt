@@ -1,0 +1,20 @@
+[test] TestMWave1T306OffsetWriteMask
+[mw1] T306 knob=1 write-mask same: OpImageSample=1 ConstOffset=1 other: OpImageSample=1 ConstOffset=0 reference=same >=1, other 0
+[mw1] T306 knob=1 form=same OpImageSample=1 ConstOffset=1 fallback_nonconstant=0 fallback_other=0 records=1 pair_1_1=1
+[mw1] T306 knob=1 form=other OpImageSample=1 ConstOffset=0 fallback_nonconstant=1 fallback_other=0 records=0 pair_1_1=0
+[mw1] T306 knob=1 form=full OpImageSample=1 ConstOffset=0 fallback_nonconstant=1 fallback_other=0 records=0 pair_1_1=0
+[mw1] T306 knob=1 form=lit OpImageSample=1 ConstOffset=0 fallback_nonconstant=1 fallback_other=0 records=0 pair_1_1=0
+[test] TestMWave1T306EbootPrograms
+[mw1] T306 eboot 7b4078750f32db50 knob=1 pc=105 want=(1,1) records=1 got=(1,1) components=2 match
+[mw1] T306 eboot 7b4078750f32db50 knob=1 pc=108 want=(1,0) records=1 got=(1,0) components=2 match
+[mw1] T306 eboot 7b4078750f32db50 knob=1 pc=110 want=(0,1) records=1 got=(0,1) components=2 match
+[mw1] T306 eboot 7b4078750f32db50 knob=1 words=724 places=3 records=3 matched=3 ConstOffset=3 fallback=0
+[mw1] T306 eboot b912bcf29000558d knob=1 pc=69 want=(0,-1) records=1 got=(0,-1) components=2 match
+[mw1] T306 eboot b912bcf29000558d knob=1 pc=72 want=(-1,0) records=1 got=(-1,0) components=2 match
+[mw1] T306 eboot b912bcf29000558d knob=1 pc=75 want=(1,0) records=1 got=(1,0) components=2 match
+[mw1] T306 eboot b912bcf29000558d knob=1 pc=78 want=(0,1) records=1 got=(0,1) components=2 match
+[mw1] T306 eboot b912bcf29000558d knob=1 pc=117 want=(1,-1) records=1 got=(1,-1) components=2 match
+[mw1] T306 eboot b912bcf29000558d knob=1 pc=120 want=(-1,-1) records=1 got=(-1,-1) components=2 match
+[mw1] T306 eboot b912bcf29000558d knob=1 pc=123 want=(-1,1) records=1 got=(-1,1) components=2 match
+[mw1] T306 eboot b912bcf29000558d knob=1 pc=139 want=(1,1) records=1 got=(1,1) components=2 match
+[mw1] T306 eboot b912bcf29000558d knob=1 words=772 places=8 records=8 matched=8 ConstOffset=8 fallback=0

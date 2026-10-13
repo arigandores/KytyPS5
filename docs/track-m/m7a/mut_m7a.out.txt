@@ -1,0 +1,9 @@
+exe before mutants 66342e2a8a2eac8f6b3b00a87a16ba1c0aa4a07268908f7091ea5ba9903f55c9
+t306_mask CAUGHT  =1 rc 0 failed ['ShaderCfgTests: failed: T306: offset written under another lane mask became a ConstOffset', 'ShaderCfgTests: failed: T306: a ConstOffset was recorded for a form that must take the previous path', 'ShaderCfgTests: failed: T306: the previous path of a non-constant offset was not taken with exactly one MTexOf'] | =0 rc 0 failed []
+t306_full CAUGHT  =1 rc 0 failed ['ShaderCfgTests: failed: T306: offset written under a partial mask became a ConstOffset of a sample under a con', 'ShaderCfgTests: failed: T306: a ConstOffset was recorded for a form that must take the previous path', 'ShaderCfgTests: failed: T306: the previous path of a non-constant offset was not taken with exactly one MTexOf'] | =0 rc 0 failed []
+t306_noflag CAUGHT  =1 rc 0 failed ['ShaderCfgTests: failed: T306: offset written under the mask of the sample does not follow KYTY_M_T306', 'ShaderCfgTests: failed: T306: the ConstOffset of the same-mask form is not (+1, +1)', 'ShaderCfgTests: failed: T306: the previous path of a non-constant offset was not taken with exactly one MTexOf'] | =0 rc 0 failed []
+t306_silent CAUGHT  =1 rc 0 failed ['ShaderCfgTests: failed: T306: the previous path of a non-constant offset was not taken with exactly one MTexOf'] | =0 rc 0 failed []
+t306_sign CAUGHT  =1 rc 0 failed ['ShaderCfgTests: failed: T306 eboot: a sample of the game does not carry exactly the offset of its GCN literal'] | =0 rc 0 failed []
+CONTROL restored tree: build rc 0, =1 rc 0 failed 0, =0 rc 0 failed 0 -> PASS
+exe after control eb988b24040072121e8ff625e158c715a5627bef22d6c81a34771107cf0095f1
+ALL OK

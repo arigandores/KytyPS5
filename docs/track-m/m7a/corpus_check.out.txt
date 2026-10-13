@@ -1,0 +1,18 @@
+(1) rows 269 processes 1076 failed 0 []
+(2) m0 == M2d d (MS1 defaults): 269 of 269
+(3) rows m1 != m0: 2 ['ps_5a34b303576ee324_914a71d3664b53ab_0', 'ps_f47c0c097c598a36_3de3d43ef41686a6_0']
+(4) oracle on the two PS rows and probe silence elsewhere:
+m1 ps_5a34b303576ee324_914a71d3664b53ab_0 fallback [(0, 0, 0, 8)] records 8
+  pc  62 want ( 0, 1) got [(0, 1, 2, 'const')] match
+  pc  64 want ( 1,-1) got [(1, -1, 2, 'const')] match
+  pc  67 want ( 0,-1) got [(0, -1, 2, 'const')] match
+  pc  70 want (-1, 0) got [(-1, 0, 2, 'const')] match
+  pc  73 want ( 1, 0) got [(1, 0, 2, 'const')] match
+  pc  78 want (-1,-1) got [(-1, -1, 2, 'const')] match
+  pc  81 want (-1, 1) got [(-1, 1, 2, 'const')] match
+  pc  84 want ( 1, 1) got [(1, 1, 2, 'const')] match
+m1 ps_f47c0c097c598a36_3de3d43ef41686a6_0 fallback [(0, 0, 0, 2)] records 2
+  pc  99 want ( 1, 0) got [(1, 0, 2, 'const')] match
+  pc 215 want ( 0, 1) got [(0, 1, 2, 'const')] match
+(5) m1 == ms1t (MS1 code at KYTY_M_T306=1): 269 of 269
+ALL OK

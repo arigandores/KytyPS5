@@ -1,0 +1,21 @@
+== log_m3_sg_v_r1.txt FrameTrace-x 10230 sum clr_ok 68906
+   PortCreate port_type {0: 1, 1: 1, 3: 1, 6: 1, 256: 18} audio_handle>0 by type {(0, True): 1, (1, True): 1, (3, True): 1, (6, True): 1, (256, False): 18}
+   port destroy lines 2888 event_id seq [2, 3, 4, 3, 4, 3, 32, 1]
+   MT265 lines 0 T# MIN_LOD lines 1 invalid image view 0 Fatal Error 0
+== log_m3_hb_f.txt FrameTrace-x 18913 sum clr_ok 105430
+   PortCreate port_type {0: 1, 1: 1, 3: 1, 6: 1, 256: 18} audio_handle>0 by type {(0, True): 1, (1, True): 1, (3, True): 1, (6, True): 1, (256, False): 18}
+   port destroy lines 2517 event_id seq []
+   MT265 lines 0 T# MIN_LOD lines 1 invalid image view 0 Fatal Error 0
+== log_m3_i.txt FrameTrace-x 10213 sum clr_ok 68734
+   PortCreate port_type {0: 1, 1: 1, 3: 1, 6: 1, 256: 18} audio_handle>0 by type {(0, True): 1, (1, True): 1, (3, True): 1, (6, True): 1, (256, False): 18}
+   port destroy lines 2853 event_id seq [2, 3, 4, 3, 4, 3, 32, 1]
+   MT265 lines 0 T# MIN_LOD lines 1 invalid image view 0 Fatal Error 0
+== log_m3_mg_v.txt FrameTrace-x 20246 sum clr_ok 188889
+   PortCreate port_type {0: 1, 1: 1, 3: 1, 6: 1, 256: 15} audio_handle>0 by type {(0, True): 1, (1, True): 1, (3, True): 1, (6, True): 1, (256, False): 15}
+   port destroy lines 940 event_id seq []
+   MT265 lines 0 T# MIN_LOD lines 1 invalid image view 0 Fatal Error 0
+== log_m3_hb_w.txt FrameTrace-x 7118 sum clr_ok 47970
+   PortCreate port_type {0: 1, 1: 1, 3: 1, 6: 1, 256: 15} audio_handle>0 by type {(0, True): 1, (1, True): 1, (3, True): 1, (6, True): 1, (256, False): 15}
+   port destroy lines 888 event_id seq []
+   MT265 lines 0 T# MIN_LOD lines 1 invalid image view 0 Fatal Error 0
+ALL DONE

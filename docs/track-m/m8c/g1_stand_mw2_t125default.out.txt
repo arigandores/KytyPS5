@@ -1,0 +1,9 @@
+pure total=132 match=132
+pure M5W2Clr [('103', ('1', '1', '0')), ('16', ('2', '0', '1')), ('37', ('1', '0', '0')), ('70', ('1', '1', '0')), ('76', ('2', '1', '0')), ('9', ('3', '0', '2')), ('91', ('1', '1', '0')), ('97', ('2', '1', '0'))]
+audio k1 total=5 match=0 on=1
+audio k0 total=5 match=5 on=0
+printf negative precision lines 1
+ampr AmprRecordSpace 20 AmprWriteAddress 20
+agc AgcReserveDW lines 20 first ['up0', 'down0', 'both0', 'down_lt_up', 'down0']
+FAILED audio k1: {'arm': 'audio', 'knob': '1', 'on': '1', 'total': '5', 'match': '0'}
+FAIL

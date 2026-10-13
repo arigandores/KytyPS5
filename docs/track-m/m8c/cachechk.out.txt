@@ -1,0 +1,23 @@
+== d rc 0 env ''
+[host]    LeastRecentlyUsedCache           ok
+[mw1] mask=0x3b token=:mw1_3b
+[mw1] cache signature=KytySC3:0d2da32ca7ff8b4e4c0fc008726e2c59abe2a8f5:fixb26:fixb1b:fixf10:fixf19:mw1_3b
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_3b sig_ok=1 dir_ok=1
+ALL OK
+member: mask True sig True dir True -> OK
+== e rc 0 env 'KYTY_M_T234=1 KYTY_M_T233=1 KYTY_M_T256=0 KYTY_M_T306=1 KYTY_M_T032=1 KYTY_M_T203=1'
+[host]    LeastRecentlyUsedCache           ok
+[mw1] mask=0x3b token=:mw1_3b
+[mw1] cache signature=KytySC3:0d2da32ca7ff8b4e4c0fc008726e2c59abe2a8f5:fixb26:fixb1b:fixf10:fixf19:mw1_3b
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_3b sig_ok=1 dir_ok=1
+ALL OK
+member: mask True sig True dir True -> OK
+== z rc 0 env 'KYTY_M_T234=0 KYTY_M_T233=0 KYTY_M_T256=0 KYTY_M_T306=0 KYTY_M_T032=0 KYTY_M_T203=0'
+[host]    LeastRecentlyUsedCache           ok
+[mw1] mask=0x00 token=
+[mw1] cache signature=KytySC3:0d2da32ca7ff8b4e4c0fc008726e2c59abe2a8f5:fixb26:fixb1b:fixf10:fixf19
+[mw1] cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19 sig_ok=1 dir_ok=1
+ALL OK
+member: mask True sig True dir True -> OK
+negative control (baeea6e2 string differs from the expected one): caught
+ALL OK

@@ -1,0 +1,3 @@
+ms2 exe C:/kyty/m657/m8c/tests/shader_cfg_tests_ms2.exe b79836ed7c484bc2ddfe27c1fa0e3e3ec8bfc2644ae7dff12035afec272ab1b1
+rows 269 configs ['z', 'd'] cs arms ['cs_d', 'cs_1', 'cs_0'] processes 541 workers 2
+ran 541 already done 0

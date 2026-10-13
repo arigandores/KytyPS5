@@ -12,3 +12,24 @@
 2026-10-13T07:02:17Z mutants main start
 2026-10-13T07:02:51Z mutants main end: ALL OK
 2026-10-13T07:03:28Z edition 1 report (step 0 + stop) copied to docs/track-m/m8c; commit to main
+2026-10-13T07:08:49Z p.786 (KytyPS5 7b905f91) read: option (A), signature 0d2da32c accepted; HPP-873 done; M8c resumes: build MS2, signature member p.786(d), G1, G2; lock absent; no harness series in progress (API)
+2026-10-13T07:09:45Z check_gate_order.py on wt 3504ecbc: GATE ORDER: clean (output = M7a byte for byte)
+2026-10-13T07:09:53Z build version+kyty_emulator start (build_m8c.cmd, --parallel 2, IDLE)
+2026-10-13T07:16:00Z build kyty_emulator end rc=0
+2026-10-13T07:16:05Z MS2 binary sha256 c630327bc2a3d9ce13c75edb5d64621d594541dafa7d4a5e97a86b95ba6e7bdf copy C:/kyty/m657/bin/kyty_emulator_c630327b.exe (not installed)
+2026-10-13T07:16:09Z build shader_cfg_tests + shader_recompiler_compute_tests start (--parallel 2, IDLE)
+2026-10-13T07:23:15Z build tests end rc=0
+2026-10-13T07:23:49Z member p.786(d) --m-wave1-cache d/e/z: rc=0 ALL OK
+2026-10-13T07:24:10Z G1 start: shader_cfg_tests MS2 d (unset, eboot words) and z (six KYTY_M_*=0, eboot words), IDLE
+2026-10-13T07:24:11Z G1 end
+2026-10-13T07:24:52Z G1 stands: build m_t125_stand and m_wave2_diag_stand on wt 3504ecbc start (--parallel 2, IDLE)
+2026-10-13T07:28:34Z G1 stands build end rc=0
+2026-10-13T07:28:39Z G1 stands run start (IDLE)
+2026-10-13T07:28:40Z G1 stands end: t125 rc=0 ALL OK; mw2 rc=1 FAIL
+2026-10-13T07:28:56Z MWave2DiagStand at MS2 defaults (KYTY_M_T125 unset = 1): FAIL only audio k1 match 0 of 5 (RC2 p.783(v): ao_* from NoteAudioPush 0 by construction at T125=1); rerun with KYTY_M_T125=0 start
+2026-10-13T07:28:58Z MWave2DiagStand KYTY_M_T125=0 end rc=0 ALL OK
+2026-10-13T07:30:20Z G2 corpus run start: corpus_m8c.py run tests/shader_cfg_tests_ms2.exe configs z,d + cs_d,cs_1,cs_0, workers 2, IDLE
+2026-10-13T07:31:23Z G2 corpus run end rc=0
+2026-10-13T07:31:24Z G2 corpus check: ALL OK
+2026-10-13T07:32:24Z binary strings MS2 vs MS1: ALL OK (binary_m8c.py = inline text, rerun output identical)
+2026-10-13T07:33:27Z edition 2 report and outputs copied to docs/track-m/m8c; commit to main

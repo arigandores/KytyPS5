@@ -1,0 +1,16 @@
+ms2 c630327bc2a3d9ce13c75edb5d64621d594541dafa7d4a5e97a86b95ba6e7bdf
+ms1 ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+MT125: mode=                                  ms2 1 ms1 0
+MT125Stat: when=exit                          ms2 1 ms1 0
+MWave1: mask=                                 ms2 1 ms1 1
+MT265: mode=                                  ms2 1 ms1 1
+MT272: mode=                                  ms2 1 ms1 1
+MT231: mode=                                  ms2 1 ms1 1
+M5W2: mode=                                   ms2 1 ms1 0
+MTexOffset:                                   ms2 2 ms1 2
+AudioStat:                                    ms2 1 ms1 1
+AvTrace:                                      ms2 21 ms1 21
+0d2da32ca7ff8b4e4c0fc008726e2c59abe2a8f5      ms2 1 ms1 0
+8dcf31779bbcb7c6e605653a138dae162f645a46      ms2 0 ms1 1
+KytyPS5-2026-09-15-6a2987a-1940-g3504ecbce    ms2 2 ms1 0
+ALL OK

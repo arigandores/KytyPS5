@@ -15,6 +15,7 @@
 #include "libs/vaContext.h"
 
 #include <cfloat>
+#include <atomic>
 #include <cmath>
 #include <vector>
 
@@ -528,6 +529,14 @@ static int kyty_printf_internal(bool sn, char* sn_s, size_t sn_n, const char* fo
 				// const int prec = (int)va_arg(va, int);
 				const int prec = VaArg_int(va_list);
 				precision      = prec > 0 ? static_cast<unsigned int>(prec) : 0U;
+				// Track M, M6a (HPP-848, ROADMAP s122 item 767(v), T031): signature line without a knob, once per
+				// process - a negative "*" precision (C11: as if omitted; here precision 0). No decision changes.
+				if (prec < 0) {
+					static std::atomic<bool> negative_precision_logged {false};
+					if (!negative_precision_logged.exchange(true)) {
+						LOGF("GuestPrintf: negative precision prec=%d\n", prec);
+					}
+				}
 				format++;
 			}
 		}

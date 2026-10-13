@@ -4,6 +4,7 @@
 #include "common/drawStat.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/image/image.h"
+#include "libs/diagM5W2.h" // Track M, M6a (KYTY_DIAG_M5W2)
 
 namespace Libs::Graphics {
 
@@ -400,6 +401,11 @@ vk::ImageView Image::FindView(const ImageViewInfo& view_info) {
 		     static_cast<vk::ImageAspectFlags::MaskType>(view_info.aspect), view_info.base_level,
 		     view_info.level_count, view_info.base_layer, view_info.layer_count,
 		     static_cast<vk::ImageUsageFlags::MaskType>(view_info.usage));
+	}
+	// Track M, M6a (HPP-848, ROADMAP s122 item 767(i)), T021: measurement only - a created view with min_lod > 0
+	// and whether the clamp level_count - 1 above cut an absolute minLod (base_level > 0); no decision.
+	if (DiagM5W2::On()) [[unlikely]] {
+		DiagM5W2::NoteMinLodView(normalized.min_lod, normalized.base_level, normalized.level_count);
 	}
 	views.push_back({normalized, view});
 	return view;

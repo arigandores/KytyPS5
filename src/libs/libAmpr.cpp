@@ -14,6 +14,8 @@
 
 #include <algorithm>
 #include <array>
+#include <atomic>
+#include <cinttypes>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
@@ -934,15 +936,54 @@ static bool GetOrCreateCommandBufferStateLocked(uint64_t               command_b
 	return true;
 }
 
+// Track M, M6a (HPP-848, ROADMAP s122 item 767(z), T309): signature lines without a knob, at most 20 each per
+// process - a refused record (EnsureCommandBufferRecordSpace) and a refused WriteAddress (AppendWriteAddressRecord)
+// returned false / EBUSY without a line before. No decision changes.
+static void LogRecordSpaceRefused(const char* why, uint64_t command_buffer, const CommandBufferState* state,
+                                  uint64_t record_size) {
+	static std::atomic<uint32_t> logged {0};
+	const uint32_t n = logged.fetch_add(1, std::memory_order_relaxed) + 1;
+	if (n > 20) {
+		return;
+	}
+	LOGF("AmprRecordSpace: refused why=%s cb=0x%016" PRIx64 " record_size=0x%" PRIx64 " write_offset=0x%" PRIx64
+	     " size=0x%" PRIx64 " n=%u\n",
+	     why, command_buffer, record_size, state != nullptr ? state->write_offset : 0,
+	     state != nullptr ? state->size : 0, n);
+}
+
+static void LogWriteAddressRefused(const char* why, uint64_t command_buffer, uint64_t record_size, uint64_t address,
+                                   uint64_t value) {
+	static std::atomic<uint32_t> logged {0};
+	const uint32_t n = logged.fetch_add(1, std::memory_order_relaxed) + 1;
+	if (n > 20) {
+		return;
+	}
+	LOGF("AmprWriteAddress: refused why=%s cb=0x%016" PRIx64 " record_size=0x%" PRIx64 " address=0x%016" PRIx64
+	     " value=0x%016" PRIx64 " n=%u\n",
+	     why, command_buffer, record_size, address, value, n);
+}
+
+// M6a: the same tests in the same order as before (short-circuit kept), the failed one named.
 static bool EnsureCommandBufferRecordSpace(uint64_t command_buffer, CommandBufferState* state,
                                            uint64_t record_size) {
-	if (state == nullptr || record_size == 0 ||
-	    !ValidateCommandBufferHeader(command_buffer, state) || state->buffer == 0 ||
-	    record_size > state->size || state->write_offset > state->size - record_size) {
+	const char* why = nullptr;
+	if (state == nullptr || record_size == 0) {
+		why = "arg";
+	} else if (!ValidateCommandBufferHeader(command_buffer, state)) {
+		why = "header";
+	} else if (state->buffer == 0) {
+		why = "buffer";
+	} else if (record_size > state->size || state->write_offset > state->size - record_size) {
+		why = "space";
+	} else if (!ValidateCommandBufferBacking(state)) {
+		why = "backing";
+	}
+	if (why != nullptr) {
+		LogRecordSpaceRefused(why, command_buffer, state, record_size);
 		return false;
 	}
-
-	return ValidateCommandBufferBacking(state);
+	return true;
 }
 
 static bool CommitCommandBufferRecord(uint64_t command_buffer, CommandBufferState* state,
@@ -1200,11 +1241,13 @@ static bool AppendWriteAddressRecord(uint64_t command_buffer, uint64_t address, 
 	std::scoped_lock      lock(g_command_buffer_mutex);
 	CommandBufferIterator it;
 	if (!GetOrCreateCommandBufferStateLocked(command_buffer, &it)) {
+		LogWriteAddressRefused("state", command_buffer, record_size, address, value); // M6a, T309
 		return false;
 	}
 
 	auto& state = it->second;
 	if (!EnsureCommandBufferRecordSpace(command_buffer, &state, record_size)) {
+		LogWriteAddressRefused("ensure", command_buffer, record_size, address, value); // M6a, T309
 		return false;
 	}
 

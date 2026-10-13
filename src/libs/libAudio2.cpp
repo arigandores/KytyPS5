@@ -7,6 +7,7 @@
 #include "kernel/pthread.h"
 #include "libs/audio.h"
 #include "libs/audio_internal.h"
+#include "libs/diagM5W2.h" // Track M, M6a (KYTY_DIAG_M5W2)
 #include "libs/errno.h"
 #include "libs/libs.h"
 
@@ -359,6 +360,21 @@ static void audioout2_queue_context_audio(AudioOut2ContextHandle ctx, bool block
 	params.reserve(AudioInternal::OUT_PORTS_MAX);
 
 	g_audioout2_port_mutex.Lock();
+	// Track M, M6a (HPP-848, ROADMAP s122 item 767(i)), T125: measurement only - at this queued push every port
+	// of the context with PCM (object ports and the others, the live control), object ports without PCM; no decision.
+	if (DiagM5W2::On()) [[unlikely]] {
+		for (const auto& state: g_audioout2_ports) {
+			if (!state.used || state.context != ctx) {
+				continue;
+			}
+			const bool object_port = audioout2_port_type_is_object(state.port_type);
+			if (state.pcm_data != nullptr) {
+				DiagM5W2::NoteAudioPort(object_port, state.pcm_data, state.data_format, state.samples_num);
+			} else if (object_port) {
+				DiagM5W2::NoteAudioObjectNoPcm();
+			}
+		}
+	}
 	for (const auto& state: g_audioout2_ports) {
 		if (state.used && state.context == ctx && state.audio_handle > 0 &&
 		    state.pcm_data != nullptr && params.size() < AudioInternal::OUT_PORTS_MAX) {
@@ -366,6 +382,9 @@ static void audioout2_queue_context_audio(AudioOut2ContextHandle ctx, bool block
 		}
 	}
 	g_audioout2_port_mutex.Unlock();
+	if (DiagM5W2::On()) [[unlikely]] {
+		DiagM5W2::NoteAudioPush(); // M6a: the periodic "M5W2Stat:" line every 4096 queued pushes
+	}
 
 	if (params.empty()) {
 		return;

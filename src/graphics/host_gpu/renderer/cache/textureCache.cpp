@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/cache/textureCache.h"
 #include "common/diagB32.h" // Track F, F20j3 (KYTY_DIAG_B32, ROADMAP s122 item 574(g))
 #include "graphics/host_gpu/renderer/diagF47Dt.h" // Track F, F47g (KYTY_DIAG_F47DT)
+#include "libs/diagM5W2.h" // Track M, M6a (KYTY_DIAG_M5W2)
 
 #include "common/alignment.h"
 #include "common/assert.h"
@@ -2988,6 +2989,11 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 		}
 		clear.depthStencil.stencil = stencil_clear;
 	}
+	// Track M, M6a (HPP-848, ROADMAP s122 item 767(i)), T313 + T179: measurement only - an accepted colour DWORD
+	// fill by vk::Format and whether our decode differs from upstream 57c97ebd8 / 89792a3bc; no decision.
+	if (aspect == vk::ImageAspectFlagBits::eColor && DiagM5W2::On()) [[unlikely]] {
+		DiagM5W2::NoteClearDword(static_cast<uint32_t>(image.info.pixel_format), packed_clear);
+	}
 	ClearImage(command, selected, image.backing.format,
 	           {aspect, 0, image.info.resources.levels, 0, image.info.TransferLayers()}, clear);
 	g_last_clear_outcome = "ok";
@@ -3395,12 +3401,22 @@ void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size) {
 		return;
 	}
 	std::scoped_lock lock {m_lock};
+	// Track M, M6a (HPP-848, ROADMAP s122 item 767(i)), T188: measurement only - the call, then every image the
+	// loop below invalidates (IsGpuModified, the write covers the image or not, at its base or not); no decision.
+	const bool diag_m5w2 = DiagM5W2::On();
+	if (diag_m5w2) [[unlikely]] {
+		DiagM5W2::NoteInvalidateCall();
+	}
 	for (const auto id: FindImagesInRegion(address, size, true)) {
 		auto& image = m_slot_images[id];
 		if (image.depth_id || !image.Overlaps(address, size)) {
 			continue;
 		}
 		TraceWatchedImage("gpu-invalidate", image, address, size);
+		if (diag_m5w2) [[unlikely]] {
+			DiagM5W2::NoteInvalidateImage(image.IsGpuModified(), image.info.data.address, image.info.data.size, address,
+			                              size);
+		}
 		Common::DrawStat::Mark(Common::DrawStat::GpuWrite);
 		if (image.IsGpuModified()) {
 			image.ClearGpuModified();

@@ -286,6 +286,21 @@ struct CommandBuffer {
 	}
 
 	KYTY_SYSV_ABI bool ReserveDW(uint32_t num_dw) {
+		// Track M, M6a (HPP-848, ROADMAP s122 item 767(z), T023): signature line without a knob, at most 20 per
+		// process - a zero cursor or cursor_down < cursor_up on entry (the states where our GetAvailableSizeDW and
+		// upstream 49b2eedd1 decide differently). No decision changes.
+		if (cursor_up == nullptr || cursor_down == nullptr || cursor_down < cursor_up) [[unlikely]] {
+			static std::atomic<uint32_t> cursor_state_logged {0};
+			const uint32_t                n = cursor_state_logged.fetch_add(1, std::memory_order_relaxed) + 1;
+			if (n <= 20) {
+				const char* cls = cursor_up == nullptr ? (cursor_down == nullptr ? "both0" : "up0")
+				                                        : (cursor_down == nullptr ? "down0" : "down_lt_up");
+				LOGF("AgcReserveDW: cursor state class=%s up=0x%016" PRIx64 " down=0x%016" PRIx64 " reserved_dw=%" PRIu32
+				     " num_dw=%" PRIu32 " callback=%d n=%u\n",
+				     cls, reinterpret_cast<uint64_t>(cursor_up), reinterpret_cast<uint64_t>(cursor_down), reserved_dw,
+				     num_dw, callback != nullptr ? 1 : 0, n);
+			}
+		}
 		uint32_t remaining = GetAvailableSizeDW();
 		if (num_dw > remaining) {
 			if (callback == nullptr) {

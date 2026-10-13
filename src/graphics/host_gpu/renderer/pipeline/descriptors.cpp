@@ -13,6 +13,7 @@
 #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/renderer/renderMemo.h"
 #include "graphics/host_gpu/renderer/shadowResolve.h"
+#include "libs/diagM5W2.h" // Track M, M6a (KYTY_DIAG_M5W2)
 
 #include "common/assert.h"
 #include "common/drawStat.h"
@@ -894,6 +895,12 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			}
 		}
 		Common::BindLean::t_bln.arm_p = bln_mode >= 2 && Common::BindLean::t_bln.pend != Common::BindLean::Pend::None;
+	}
+	// Track M, M6a (HPP-848, ROADMAP s122 item 767(i)), T258: measurement only - a raw read binding (neither
+	// written nor formatted) and whether an image of the GPU (base == address, SafeToDownload) lies at its base: the
+	// buffer is then read without the image content (ObtainBuffer syncs from images only for texel buffers); no decision.
+	if (!resource.written && !resource.formatted && DiagM5W2::On()) [[unlikely]] {
+		DiagM5W2::NoteRawRead(static_cast<bool>(context.GetTextureCache().FindImageFromRange(address, size)));
 	}
 	const Common::B2Reuse::Entry* reuse_hit = b2r_hit != nullptr ? b2r_hit : bln_hit_p; // knob "bindlean" (s.3.2)
 	// The last argument (gate "buffast"): this binding asks for the same range every draw.

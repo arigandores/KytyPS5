@@ -444,6 +444,10 @@ add_kyty_full_emulator_test(shader_cfg_tests "${KYTY_TESTS_DIR}/shaderCfgTests.c
 # (KYTY_M_T265, KYTY_M_T272, KYTY_M_T231); run by C:/kyty/m657/m2b/run_stand_m2b.py, not by ctest.
 add_kyty_full_emulator_test(m_wave1_hle_stand "${KYTY_TESTS_DIR}/MWave1HleStand.cpp")
 
+# Track M, M6a (HPP-848, ROADMAP s122 item 767(i)): stand of the measurement-only knob KYTY_DIAG_M5W2 and of the
+# signature lines of T031, T309, T023; run by C:/kyty/m657/m6a/run_stand_m6a.py, not by ctest.
+add_kyty_full_emulator_test(m_wave2_diag_stand "${KYTY_TESTS_DIR}/MWave2DiagStand.cpp")
+
 # Track F, B24 pad output stand (F19c; ROADMAP s122 item 451(e)(1)): run by docs/track-f/f19c/run_stand_f19c.py, not by
 # ctest.
 add_kyty_full_emulator_test(b24_pad_stand

@@ -1,0 +1,17 @@
+files 20
+T057	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T072	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T073	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T085	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T103	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T112	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T180	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T207	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T208	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T209	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T225	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T227	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T236	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T245	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+T287	fatal=0	pretranslate=330	first=C:/kyty/m657/m3a2\log_m3w2_g5_b1.txt:295930
+themes with fatal hits: []

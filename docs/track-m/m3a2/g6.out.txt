@@ -1,0 +1,229 @@
+g6_m3a2: scp24.py sha256 0b38cf7945e2664abac3b1537b9ff64627923f0567be45437677a5d70c34c419
+EXCLUDED: guest-clock names of stage 1 9, input-bound names over qa_A, qv_1, qv_2 46
+RUN ia_A3 (underwater_aerial_garden, knob 0): config ok
+  [ok] build sha = pvar binary of the seal 4aa62e95f74ecab7
+  [ok] eboot.bin sha 3b5100797fe83663
+  [ok] prereg sha = seal 66cf70d100ee8b71
+  [ok] guest args -lvl underwater_aerial_garden -lvl underwater_aerial_garden
+  [ok] env KYTY_POKE = three places (item 284 (zh)) 27e46c:909090909090,2a470b:c5fb10051ddd0a08c5fb5905b5c40a08c5f25a8d40ffffff90,687375:e790cb07
+  [ok] env KYTY_AUDIO_SYNC = 0 (item 283 (v)(4)) 0
+  [ok] env KYTY_PVAR = 0 0
+  [ok] env KYTY_KEYS = seal keys = keys of 02_p4.md set
+  [ok] env KYTY_GPU_CLOCK_PIN=1 1
+  [ok] env no KYTY_GPU_CHECKPOINTS 
+  [ok] env no KYTY_PIPELINE_PRECACHE (shipped precache) None
+  [ok] env no VK_LAYER_MESSAGE_ID_FILTER None
+  [ok] no validation false
+  [ok] video KYTY_REC rec_ia_A3.mp4 C:\kyty\p283\p24\rec_ia_A3.mp4
+  [ok] one attempt 1
+  [ok] window event: no "Window <id> minimized" and no "Recovering Vulkan swapchain" line (item 273 (z)) minimized 0, Recovering 0
+  [ok] KYTY_POKE: lines = 3 = the three places 3
+  [ok] P24 env no KYTY_GAME_PATCH (item 333 (zh)(2), (4)) None
+  [ok] P24 0 lines "GamePatch:" in the log 0
+  [ok] P24 print: "GamePatch: file" lines 0, "GamePatch: detail" lines 0 in the log; "GamePatch:" lines in the stdout 0 (the members read the log) 
+  [ok] log exists 
+  [ok] attempt ok ok
+  [ok] hold_s >= 330 330.1
+  [ok] hold_exit none None
+  [ok] entry line 
+  [ok] first scene frame 195
+  [ok] hold sum dt_us >= 300 s 334.2 s
+  [ok] no scene change in the hold 
+  [ok] lost rows <= 0.5 % of the hold torn 0 + missing 0 of 9892 rows
+  [ok] presses = plan of the seal 46 of 46
+  [ok] every press after the first scene frame 
+  [ok] every press before the end of the hold 
+  INTEGRITY ia_A3 (null control): ok
+  [ok] knob 0: 0 lines starting with "PVar:" (P12 s.3.7 null control) 0
+  [ok] knob 0: every pvar_* field of FrameTrace-x 0 over the log all 0 (11 fields)
+  entered True; first scene frame 195; hold rows 9892, 334.2 s; mean dt_us 33785.8, FPS 29.60; frames >= 3 vblanks 6.83 %; K2 frames 0; K3 rows 2; skipped draw lines 0
+  death markers none; defect keys none; [Vulkan][E] 0
+  WINDOW ia_A3: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 0, Recovering Vulkan swapchain 0
+  shader cache line Shader translation cache: _ShaderCache\PPSA21564\variant_fixb26_fixb1b
+  video frames 10097; one-frame glitches 0; sheet file True
+  PAIRS ia_A3 (print, item 292 (b), item 297 (d)): names 77, pairs 3728, lost 0; restart events 4857; pairs from a restarted Play 1310; orphan Finished 4868
+RUN m3w2_g6 (underwater_aerial_garden, knob 2): config ok
+  [ok] build sha = pvar binary of the seal c630327bc2a3d9ce
+  [ok] eboot.bin sha 3b5100797fe83663
+  [ok] prereg sha = seal 621963355f18fe9d
+  [ok] guest args -lvl underwater_aerial_garden -lvl underwater_aerial_garden
+  [ok] P24 env KYTY_POKE = 27e46c:909090909090 (the log poke; item 333 (zh)) 27e46c:909090909090
+  [ok] P24 env no KYTY_AUDIO_SYNC (item 333 (zh): the patch file sets the tempo, or the game without the patch) None
+  [ok] P24 env no KYTY_PVAR (item 333 (zh)) None
+  [ok] env KYTY_KEYS = seal keys = keys of 02_p4.md set
+  [ok] env KYTY_GPU_CLOCK_PIN=1 1
+  [ok] env no KYTY_GPU_CHECKPOINTS 
+  [ok] env no KYTY_PIPELINE_PRECACHE (shipped precache) None
+  [ok] env no VK_LAYER_MESSAGE_ID_FILTER None
+  [ok] no validation false
+  [ok] video KYTY_REC rec_m3w2_g6.mp4 C:\kyty\m657\m3a2\rec_m3w2_g6.mp4
+  [ok] one attempt 1
+  [ok] window event: no "Window <id> minimized" and no "Recovering Vulkan swapchain" line (item 273 (z)) minimized 0, Recovering 0
+  [ok] P24 KYTY_POKE: lines = the log poke 27e46c:909090909090 alone (item 334 (v)(6)) 1: 27e46c
+  [ok] P24 env KYTY_GAME_PATCH = the patch file of the seal (item 333 (zh)(3)) C:/kyty/KytyPS5/patches/PPSA21564_pvar.txt
+  [ok] P24 exactly one line "GamePatch: applied sha=3b5100797fe83663 pokes=2 pvar=2 audio_sync=0" in the log (the eboot sha, the poke lines of the patch file; item 333 (d)) sha=3b5100797fe83663 pokes=2
+  [ok] P24 the "GamePatch: poke" lines = the poke directives of the patch file (any order; item 334 (v)(6)) 2 of 2
+  [ok] P24 no line "GamePatch: refused", no "GamePatch: detail" and no other "GamePatch:" line in the log detail 0
+  [ok] P24 print: "GamePatch: file" lines 1, "GamePatch: detail" lines 0 in the log; "GamePatch:" lines in the stdout 0 (the members read the log) 
+  [ok] log exists 
+  [ok] attempt ok ok
+  [ok] hold_s >= 330 330.0
+  [ok] hold_exit none None
+  [ok] entry line 
+  [ok] first scene frame 206
+  [ok] hold sum dt_us >= 300 s 334.0 s
+  [ok] no scene change in the hold 
+  [ok] lost rows <= 0.5 % of the hold torn 0 + missing 0 of 13056 rows
+  [ok] presses = plan of the seal 46 of 46
+  [ok] every press after the first scene frame 
+  [ok] every press before the end of the hold 
+  INTEGRITY m3w2_g6 (item 284 (d)): ok
+  [ok] exactly one "PVar: armed" line 1
+  [ok] armed mode=2 2
+  [ok] armed cells = image 60.000/3c888889/16666/3c888889 60.000/3c888889/16666/3c888889
+  [ok] armed lim = new bytes of item 283 (v)(6) c5fb10051ddd0a08c5fb5905b5c40a08c5f25a8d40ffffff90
+  [ok] armed hav = e790cb07 e790cb07
+  [ok] no "PVar: refused" line 
+  [ok] every record line parsed (n, d, c, k, vb) 0
+  [ok] hold pvar_foreign = 0 (FrameTrace-x, 13056 lines) 0
+  [ok] hold pvar_bad = 0 (FrameTrace-x, 13056 lines) 0
+  [ok] hold pvar_over = 0 (FrameTrace-x, 13056 lines) 0
+  [ok] hold pvar_inupd = 0 (FrameTrace-x, 13056 lines) 0
+  [ok] hold pvar_tear = 0 (FrameTrace-x, 13056 lines) 0
+  [ok] hold pvar_tail = 0 (FrameTrace-x, 13056 lines) 0
+  [ok] hold "PVar: foreign" lines 0 0
+  [ok] hold "PVar: bad" lines 0 0
+  [ok] hold window record lines >= 1 (item 297 (v)(1)) 13055
+  [ok] T1: hold window record lines = sum pvar_w of the hold FrameTrace-x +- 1 (item 297 (v)(2)) 13055 vs 13055
+  [ok] T2: sum k of the hold window record lines = sum pvar_k +- 3 (item 297 (v)(3)) 20028 vs 20028
+  [ok] coverage: hold window record lines / hold rows in [0.99; 1.01] (item 297 (v)(4)) 13055 / 13056 = 0.999923
+  entered True; first scene frame 206; hold rows 13056, 334.0 s; mean dt_us 25583.5, FPS 39.09; frames >= 3 vblanks 2.00 %; K2 frames 0; K3 rows 1; skipped draw lines 0
+  death markers none; defect keys none; [Vulkan][E] 0
+  WINDOW m3w2_g6: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 0, Recovering Vulkan swapchain 0
+  shader cache line Shader translation cache: _ShaderCache\PPSA21564\variant_fixb26_fixb1b_fixf10_fixf19_mw1_3b
+  video frames 13346; one-frame glitches 0; sheet file True
+  PAIRS m3w2_g6 (print, item 292 (b), item 297 (d)): names 80, pairs 7558, lost 0; restart events 9743; pairs from a restarted Play 2979; orphan Finished 9754
+  PVAR m3w2_g6: record lines in the hold window 13055, hold rows 13056; mean k 1.5341, r^ 0.6518; T6 0.9993 (letter), T6 0.9993 (item 284 (z): 0 rows with dt_us > 1 s and neighbours out)
+  CONSERVATION m3w2_g6 (item 284 (v), print): C by lines 0.9994; C by counters 0.9994; share d >= 3 1.96 %; clamp loss 0.055 %; sum lost 11, sum over 0 (lines); counters pvar_k 20028 pvar_lost 11 pvar_over 0; window identity 20028 = 20028 ok; line arithmetic mismatches 0
+  T7 m3w2_g6 (item 284 (z) by the letter, print): share of record lines with k = bin of FrameTrace dt_us of the same n 62.80 %; T7(d) (variant of the executor, item 297 (d)): with d = bin 62.64 %
+  POSITIVE CONTROL P12 s.3.7 (print): lines 13055 vs hold rows 13056 (+-1 %: ok); k = 1/2/3 48.55 % / 49.49 % / 1.96 % vs bins 1/2/>=3 48.59 % / 49.41 % / 2.00 % (+-3 p.p.: ok); share k = 3 > 0: yes
+  rare PVar lines none; FrameTrace-x lines on the hold 13056; pvar fields on the hold pvar_bad=0 pvar_chg=4975 pvar_foreign=0 pvar_inupd=0 pvar_k=20028 pvar_kraw=20041 pvar_lost=11 pvar_over=0 pvar_tail=0 pvar_tear=0 pvar_w=13055
+  ENV m3w2_g6 = qa_A (up to KYTY_PVAR, KYTY_REC and the tag; item 284 (zh)): equal
+W03 PAIR qa_A/m3w2_g6: r^ 0.6518, window [0.5867; 0.7170]; candidates 28, spread-passed 26, in the window 1, speed names 1 (min 3), integral m3w2_g6 pairs 2 (min 10)
+W03   speed m3w2_g6 0.9964 (in [0.95; 1.05]); T6 0.9993 (>= 0.95, variant of the executor for item 243 (g)); control qa_A 0.5027 vs 0.5027 |dev| 0.0000
+  SIGN on all pairs before the filter (item 284 (g), print): median of the per-name ratios over all pairs 0.4617 (names 26)
+  INTEGRITY BY NAME (item 284 (g)): names with >= 5 integral qa_A pairs 2; rows (drop > 20 p.p.): none
+  NOT FOLLOWING THE STEP (ratio in [0.9; 1.1], print): none
+W03   OUT OF SPEED (> 20 % of qv pairs not integral; variant of the executor, item 243 (v)): none
+  TABLE BY NAME (item 284 (g), print): name | D s | qa pairs | qv pairs (integral) | lost qa/qv | ratio integral / all | sign | sum k/60 median / D | speed of the name
+    artifact_psone_memorycard_anim_idle_memorycard.anim | 5.883 | 1 | 1 (1) | 0/0 | 0.8215 / 0.8215 | out | 1.0000 | 1.0032
+    astro_anim_controllership_fly.anim | 14.600 | 1 | 1 (1) | 0/0 | 0.4292 / 0.4292 | out | 0.9977 | 0.9909
+    astro_anim_controllership_fly_L.anim | 0.100 | 1 | 1 (1) | 0/0 | 0.5000 / 0.5000 | out | 1.0000 | 0.3991
+    astro_anim_controllership_fly_R.anim | 0.100 | 1 | 1 (1) | 0/0 | 0.5000 / 0.5000 | out | 1.0000 | 0.3991
+    astro_anim_controllership_land_normal_land.anim | 0.617 | 1 | 1 (1) | 0/0 | 0.4865 / 0.4865 | out | 1.0270 | 1.0010
+    astro_anim_controllership_land_normal_start.anim | 0.683 | 1 | 1 (1) | 0/0 | 0.4146 / 0.4146 | out | 0.9512 | 1.0543
+    astro_anim_idle_memorycard.anim | 5.883 | 1 | 1 (1) | 0/0 | 0.8215 / 0.8215 | out | 1.0000 | 1.0032
+    astro_anim_idle_sleep1_start.anim | 4.783 | 1 | 2 (2) | 0/0 | 0.6899 / 0.6899 | in | 1.0017 | 0.9964
+    astro_anim_idle_sleep2_start.anim | 1.500 | 1 | 1 (1) | 0/0 | 0.8222 / 0.8222 | out | 0.9889 | 1.0101
+    astro_anim_jump_03_fall.anim | 0.300 | 22 | 22 (22) | 0/0 | 0.5000 / 0.5000 | out | 0.9444 | 1.0424
+    astro_anim_jump_03_land.anim | 0.683 | 22 | 22 (22) | 0/0 | 0.5000 / 0.5000 | out | 1.0000 | 1.0115
+    bot_anim_rescue_proximity_wave_in.anim | 0.433 | 1 | 1 (1) | 0/0 | 0.4231 / 0.4231 | out | 1.0000 | 1.0330
+    enemy_basic_anim_idle.anim | 14.133 | 1 | 1 (1) | 0/0 | 0.4316 / 0.4316 | out | 0.9941 | 1.0057
+    wildlife_flamingo_anim_landing.anim | 2.400 | 1 | 1 (1) | 0/0 | 0.5208 / 0.5208 | out | 1.0764 | 0.9173
+    controller_ship_art_anim_crash_landing_recover_fast.anim | 0.483 | 1 | 1 (1) | 0/0 | 0.4828 / 0.4828 | out | 1.0000 | 0.9699
+    controller_ship_art_anim_landing_slide_base.anim | 2.000 | 1 | 1 (1) | 0/0 | 0.4500 / 0.4500 | out | 0.9833 | 1.0175
+    fuse_a_base_anim_idle.anim | 0.967 | 1 | 1 (1) | 0/0 | 0.3966 / 0.3966 | out | 1.0172 | 1.0356
+    holoboard2_anim_in.anim | 0.467 | 1 | 1 (1) | 0/0 | 0.4286 / 0.4286 | out | 0.9643 | 1.0752
+    holoboard2_anim_out.anim | 0.150 | 1 | 1 (1) | 0/0 | 0.2222 / 0.2222 | out | 0.8889 | 1.8117
+    aerial_garden_controller_ship_landing_anim_play.anim | 4.400 | 1 | 1 (1) | 0/0 | 0.4735 / 0.4735 | out | 0.9886 | 1.0078
+    temp_water_splash_anim_play.anim | 1.317 | 1 | 1 (1) | 0/0 | 0.4810 / 0.4810 | out | 1.0127 | 0.9863
+    nx_ui_level_name_transition_base_anim_in.anim | 0.767 | 1 | 1 (1) | 0/0 | 0.4130 / 0.4130 | out | 0.9783 | 1.0009
+    nx_ui_level_name_transition_base_anim_out.anim | 0.317 | 1 | 1 (1) | 0/0 | 0.4737 / 0.4737 | out | 1.0000 | 0.9990
+    nx_ui_level_name_transition_base_black_anim_in.anim | 0.767 | 1 | 1 (1) | 0/0 | 0.4130 / 0.4130 | out | 0.9783 | 1.0009
+    nx_ui_level_name_transition_base_black_anim_out.anim | 0.317 | 1 | 1 (1) | 0/0 | 0.4737 / 0.4737 | out | 1.0000 | 0.9990
+    nx_ui_level_name_transition_base_shapes_anim_out_1.anim | 0.300 | 1 | 1 (1) | 0/0 | 0.4444 / 0.4444 | out | 0.9444 | 1.0630
+    nx_ui_level_name_transition_color_anim_in.anim | 0.717 | 1 | 1 (1) | 0/0 | 0.4186 / 0.4186 | out | 0.9302 | 1.0038
+    nx_ui_level_name_transition_color_anim_out.anim | 0.250 | 1 | 1 (1) | 0/0 | 0.4000 / 0.4000 | out | 0.8667 | 1.1608
+W03 VERDICT_PAIR qa_A/m3w2_g6 CLOCK_UNDETERMINED
+G1' PAIR ia_A3/m3w2_g6 (item 312 (d)(1), no sign window): candidates 28, spread-passed = clock names 26, speed names 26 (min 3), integral m3w2_g6 pairs 27 (min 10); integrity by name rows none; admission ok
+G1' speed m3w2_g6 0.9960 (in [0.95; 1.05]); T6 0.9993 (>= 0.95); control ia_A3 0.4559 vs 0.4559 |dev| 0.0000; sign of item 240 (a) over the clock names (print) median 0.4617 inactive False
+G1' OUT OF SPEED (> 20 % of qv pairs not integral): none
+G1' FOLLOWING THE STEP (sum k/60 median / D in [0.9; 1.1], print): names 24, pairs 25, speed 0.9945: artifact_psone_memorycard_anim_idle_memorycard.anim, astro_anim_controllership_fly.anim, astro_anim_controllership_fly_L.anim, astro_anim_controllership_fly_R.anim, astro_anim_controllership_land_normal_land.anim, astro_anim_controllership_land_normal_start.anim, astro_anim_idle_memorycard.anim, astro_anim_idle_sleep1_start.anim, astro_anim_idle_sleep2_start.anim, bot_anim_rescue_proximity_wave_in.anim, enemy_basic_anim_idle.anim, wildlife_flamingo_anim_landing.anim, controller_ship_art_anim_crash_landing_recover_fast.anim, controller_ship_art_anim_landing_slide_base.anim, fuse_a_base_anim_idle.anim, holoboard2_anim_in.anim, aerial_garden_controller_ship_landing_anim_play.anim, temp_water_splash_anim_play.anim, nx_ui_level_name_transition_base_anim_in.anim, nx_ui_level_name_transition_base_anim_out.anim, nx_ui_level_name_transition_base_black_anim_in.anim, nx_ui_level_name_transition_base_black_anim_out.anim, nx_ui_level_name_transition_base_shapes_anim_out_1.anim, nx_ui_level_name_transition_color_anim_in.anim
+G1' NOT FOLLOWING THE STEP (f_qv / f_qa in [0.9; 1.1], print): names 0, pairs 0, speed n/a: none
+G1' HIDDEN OVERRUN m3w2_g6 (item 312 (d)(2), print): no
+G1' TABLE (item 312 (d)(2), print): name | D s | qa pairs | qv pairs (integral) | f_qv / f_qa | sum k/60 median / D | speed of the name | clock | speed name | follows | not follows
+G1'   artifact_psone_memorycard_anim_idle_memorycard.anim | 5.883 | 1 | 1 (1) | 0.8215 | 1.0000 | 1.0032 | yes | yes | yes | no
+G1'   astro_anim_controllership_fly.anim | 14.600 | 1 | 1 (1) | 0.4292 | 0.9977 | 0.9909 | yes | yes | yes | no
+G1'   astro_anim_controllership_fly_L.anim | 0.100 | 1 | 1 (1) | 0.5000 | 1.0000 | 0.3991 | yes | yes | yes | no
+G1'   astro_anim_controllership_fly_R.anim | 0.100 | 1 | 1 (1) | 0.5000 | 1.0000 | 0.3991 | yes | yes | yes | no
+G1'   astro_anim_controllership_land_normal_land.anim | 0.617 | 1 | 1 (1) | 0.4865 | 1.0270 | 1.0010 | yes | yes | yes | no
+G1'   astro_anim_controllership_land_normal_start.anim | 0.683 | 1 | 1 (1) | 0.4146 | 0.9512 | 1.0543 | yes | yes | yes | no
+G1'   astro_anim_idle_memorycard.anim | 5.883 | 1 | 1 (1) | 0.8215 | 1.0000 | 1.0032 | yes | yes | yes | no
+G1'   astro_anim_idle_sleep1_start.anim | 4.783 | 1 | 2 (2) | 0.6899 | 1.0017 | 0.9964 | yes | yes | yes | no
+G1'   astro_anim_idle_sleep2_start.anim | 1.500 | 1 | 1 (1) | 0.8222 | 0.9889 | 1.0101 | yes | yes | yes | no
+G1'   astro_anim_jump_03_fall.anim | 0.300 | 22 | 22 (22) | 0.5000 | 0.9444 | 1.0424 | no | no | yes | no
+G1'   astro_anim_jump_03_land.anim | 0.683 | 22 | 22 (22) | 0.5000 | 1.0000 | 1.0115 | no | no | yes | no
+G1'   bot_anim_rescue_proximity_wave_in.anim | 0.433 | 1 | 1 (1) | 0.4231 | 1.0000 | 1.0330 | yes | yes | yes | no
+G1'   enemy_basic_anim_idle.anim | 14.133 | 1 | 1 (1) | 0.4316 | 0.9941 | 1.0057 | yes | yes | yes | no
+G1'   wildlife_flamingo_anim_landing.anim | 2.400 | 1 | 1 (1) | 0.5208 | 1.0764 | 0.9173 | yes | yes | yes | no
+G1'   controller_ship_art_anim_crash_landing_recover_fast.anim | 0.483 | 1 | 1 (1) | 0.4828 | 1.0000 | 0.9699 | yes | yes | yes | no
+G1'   controller_ship_art_anim_landing_slide_base.anim | 2.000 | 1 | 1 (1) | 0.4500 | 0.9833 | 1.0175 | yes | yes | yes | no
+G1'   fuse_a_base_anim_idle.anim | 0.967 | 1 | 1 (1) | 0.3966 | 1.0172 | 1.0356 | yes | yes | yes | no
+G1'   holoboard2_anim_in.anim | 0.467 | 1 | 1 (1) | 0.4286 | 0.9643 | 1.0752 | yes | yes | yes | no
+G1'   holoboard2_anim_out.anim | 0.150 | 1 | 1 (1) | 0.2222 | 0.8889 | 1.8117 | yes | yes | no | no
+G1'   aerial_garden_controller_ship_landing_anim_play.anim | 4.400 | 1 | 1 (1) | 0.4735 | 0.9886 | 1.0078 | yes | yes | yes | no
+G1'   temp_water_splash_anim_play.anim | 1.317 | 1 | 1 (1) | 0.4810 | 1.0127 | 0.9863 | yes | yes | yes | no
+G1'   nx_ui_level_name_transition_base_anim_in.anim | 0.767 | 1 | 1 (1) | 0.4130 | 0.9783 | 1.0009 | yes | yes | yes | no
+G1'   nx_ui_level_name_transition_base_anim_out.anim | 0.317 | 1 | 1 (1) | 0.4737 | 1.0000 | 0.9990 | yes | yes | yes | no
+G1'   nx_ui_level_name_transition_base_black_anim_in.anim | 0.767 | 1 | 1 (1) | 0.4130 | 0.9783 | 1.0009 | yes | yes | yes | no
+G1'   nx_ui_level_name_transition_base_black_anim_out.anim | 0.317 | 1 | 1 (1) | 0.4737 | 1.0000 | 0.9990 | yes | yes | yes | no
+G1'   nx_ui_level_name_transition_base_shapes_anim_out_1.anim | 0.300 | 1 | 1 (1) | 0.4444 | 0.9444 | 1.0630 | yes | yes | yes | no
+G1'   nx_ui_level_name_transition_color_anim_in.anim | 0.717 | 1 | 1 (1) | 0.4186 | 0.9302 | 1.0038 | yes | yes | yes | no
+G1'   nx_ui_level_name_transition_color_anim_out.anim | 0.250 | 1 | 1 (1) | 0.4000 | 0.8667 | 1.1608 | yes | yes | no | no
+G1'b EVENTS ia_A3/m3w2_g6 (item 326 (b)(1): Play lines in ia_A3 within +-1 FrameTrace row): events 18 (min 3) of 26 speed names; integral m3w2_g6 pairs 27 (min 10)
+G1'b   event 1: astro_anim_controllership_fly.anim, astro_anim_controllership_fly_L.anim, astro_anim_controllership_fly_R.anim
+G1'b   event 2: enemy_basic_anim_idle.anim
+G1'b   event 3: fuse_a_base_anim_idle.anim
+G1'b   event 4: holoboard2_anim_in.anim
+G1'b   event 5: nx_ui_level_name_transition_base_anim_in.anim, nx_ui_level_name_transition_base_black_anim_in.anim, nx_ui_level_name_transition_color_anim_in.anim
+G1'b   event 6: holoboard2_anim_out.anim
+G1'b   event 7: bot_anim_rescue_proximity_wave_in.anim
+G1'b   event 8: controller_ship_art_anim_landing_slide_base.anim
+G1'b   event 9: astro_anim_controllership_land_normal_start.anim
+G1'b   event 10: aerial_garden_controller_ship_landing_anim_play.anim
+G1'b   event 11: nx_ui_level_name_transition_base_anim_out.anim, nx_ui_level_name_transition_base_black_anim_out.anim, nx_ui_level_name_transition_base_shapes_anim_out_1.anim, nx_ui_level_name_transition_color_anim_out.anim
+G1'b   event 12: astro_anim_controllership_land_normal_land.anim
+G1'b   event 13: wildlife_flamingo_anim_landing.anim
+G1'b   event 14: temp_water_splash_anim_play.anim
+G1'b   event 15: controller_ship_art_anim_crash_landing_recover_fast.anim
+G1'b   event 16: artifact_psone_memorycard_anim_idle_memorycard.anim, astro_anim_idle_memorycard.anim
+G1'b   event 17: astro_anim_idle_sleep1_start.anim
+G1'b   event 18: astro_anim_idle_sleep2_start.anim
+G1'b LARGEST EVENT m3w2_g6 (item 326 (b)(4), print): share of sum D 0.2141: astro_anim_controllership_fly.anim, astro_anim_controllership_fly_L.anim, astro_anim_controllership_fly_R.anim
+G1'b LEAVE ONE EVENT OUT m3w2_g6 (item 326 (b)(2)): speed 0.9960 side ok; without each event min 0.9935 max 1.0029; every side = the full side: yes
+G1'b D CHECK ia_A3 vs qa_A2 of P21 (item 326 (b)(3); item 333 (zh)(2)): common names 74 (min 5), median D ratio 1.0000 in [0.98; 1.02] -> ok
+G1'b CONTROL OF ITEM 234 (e)(3) m3w2_g6: 0.4559 vs 0.4559 |dev| 0.0000 - self-check of the arithmetic, tautology, not a check of X (item 326 (g)); print, not a gate
+G1'b NAME FILTER m3w2_g6 (item 326 (b)(4), print): names with |D ratio - 1| <= 0.02: 40 of 74 common; G1' on them: SPEED_OK speed 0.9940, speed names 17, events 13, pairs 18
+G1'b RC2 m3w2_g6 (item 326 (v)): HIDDEN OVERRUN no; T6 0.9993 > 1.05: no -> no effect
+G1' VERDICT_PAIR ia_A3/m3w2_g6 SPEED_OK
+W03 G1 NOT_DETERMINED (m3w2_g6 CLOCK_UNDETERMINED)
+STOPCHECK reference qa_A2 of P21 (C:/kyty/p283/p21/runs): log_qa_A2.txt and qa_A2.json = C:/kyty/p283/p21/SHA256SUMS_p21.txt -> ok
+STOPCHECK ia_A3 [ok] the qa band of item 297 (g) [3.98 %; 7.24 %]: 6.83 %
+STOPCHECK ia_A3 [ok] the admission rows (config): all ok
+STOPCHECK ia_A3 [ok] the integrity: lost rows <= 0.5 % of the hold (item 297 (d)): torn 0 + missing 0 of 9892
+STOPCHECK ia_A3 [ok] the null control (knob 0: 0 PVar lines, pvar fields 0): ok
+STOPCHECK ia_A3 [ok] the D check of item 326 (b)(3) against qa_A2 of P21: >= 5 common names, median in [0.98; 1.02]: common 74, median 1.0000
+STOPCHECK ia_A3 [ok] the GLCache manifest after = before: files 16 -> 16: added 0, removed 0, changed 0
+STOPCHECK ia_A3 PASS
+G1'b X of the pairs (item 326 (e)(2)): ia_A3, its stop-check PASS
+G1'b WORD (item 326 (v), (e)): stop-check of ia_A3 PASS; RC2 flags m3w2_g6 no -> the G1' word TWO_OF_TWO
+G1' VERDICT TWO_OF_TWO (m3w2_g6 SPEED_OK)
+RATCHET base qa_A: frames >= 3 vblanks 6.83 %; segments of 60 s 19.1 % 2.4 % 6.1 % 3.9 % 5.2 % 4.4 %; Delta_L bins -0.0416 0.0728 0.1396 0.0794; band of stage 1 (item 297 (g)) [3.98 %; 7.24 %]: in; stage 1-2 shares pa_A 3.98 %, pa0_A0 5.24 %, pb0_B0 6.02 %, pr_C 15.56 %; spread of one configuration C (pb0_B0 / pr_C) 9.54 p.p. > the threshold 5 p.p.
+R2 qa_A (print): OK
+RATCHET m3w2_g6: frames >= 3 vblanks 2.00 % vs qa_A 6.83 %: delta -4.83 % (> 5 p.p.: False); segments of 60 s 11.1 % 2.3 % 1.2 % 0.1 % 0.0 % 0.1 %
+  DELTA_L m3w2_g6 (item 284 (e), print; L = 1..4): by k of the record 0.9634 0.0824 0.1519 0.2385; by bins 0.0539 0.1478 0.2300 0.1636; qa_A bins -0.0416 0.0728 0.1396 0.0794; excess (k - qa_A) 1.0050 0.0096 0.0123 0.1591
+R2 m3w2_g6 (video >= 3000 frames, glitches 0, K1 0, K2 0): r2=OK
+RATCHET NONE (item 284 (e): one of two - UNDETERMINED, both - DEFECT; item 297 (g): NONE and DEFECT only with qa_A in the band, else UNDETERMINED)
+G6 ROWS m3w2_g6: X ia_A3 (stop-check PASS); config rows of m3w2_g6 all ok; G1' word TWO_OF_TWO (one V: TWO_OF_TWO reads ONE_OF_ONE); outcome SPEED_OK; speed 0.996; RATCHET NONE; R2 OK
+G6 RATCHET line: RATCHET m3w2_g6: frames >= 3 vblanks 2.00 % vs qa_A 6.83 %: delta -4.83 % (> 5 p.p.: False); segments of 60 s 11.1 % 2.3 % 1.2 % 0.1 % 0.0 % 0.1 %
+G6 PASS (item 778 (d)(6): G1' in [0.95; 1.05] - SPEED_OK, RATCHET NONE)

@@ -1,0 +1,14 @@
+G7 rows m3w2_g5_a1: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_g5_a2: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_g5_ap: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_g5_b1: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_g5_b2: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_g6: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_hb_v: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_hb_w: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_i: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_mg_v: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_mg_w: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_sg_v: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows m3w2_sg_w: no-knob 0; read {'AudioStat:': 0, 'AvTrace:': 0, 'MTexOffset:': 0}
+G7 rows no-knob lines 0 (>= 1 - a register row, item 778 (d)(7))

@@ -1,0 +1,16 @@
+reader m3a2_read.py sha256 8bb06728d2e80022f194c8b8c155b13cb36fea34e956142d8728f8236ca68675
+| tag | status | bin | level | kind | members | form FS15 | frames >= 1 s | glitches | video | hold_s | mean dt (+30 s, end A) | MWave1 | T125 opened / mixed_nz |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| m3w2_g5_a1 | ADMITTED | ms1 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10291 | 334.1 | 33380.35 | ['0x33'] | 3 / [] |
+| m3w2_g5_a2 | ADMITTED | ms1 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10128 | 334.4 | 33803.07 | ['0x33'] | 3 / [] |
+| m3w2_g5_ap | ADMITTED | ms1 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10281 | 334.4 | 33451.81 | ['0x33'] | 3 / [] |
+| m3w2_g5_b1 | ADMITTED | ms2 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10342 | 334.0 | 33096.98 | ['0x3b'] | 4 / [15665] |
+| m3w2_g5_b2 | ADMITTED | ms2 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10440 | 334.2 | 32820.27 | ['0x3b'] | 4 / [15779] |
+| m3w2_g6 | ADMITTED | ms2 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 13346 | 334.0 | 24842.85 | ['0x3b'] | 4 / [31321] |
+| m3w2_hb_v | ADMITTED | ms2 | hoover_beach | v | ALL YES | ALL YES | 0 | 0 | 20182 | 331.8 | 16709.52 | ['0x3b'] | 4 / [16927] |
+| m3w2_hb_w | ADMITTED | ms2 | hoover_beach | w | ALL YES | ALL YES | 0 | None | None | 313.8 | 45854.31 | ['0x3b'] | 4 / [5396] |
+| m3w2_i | ADMITTED | ms2 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10212 | 334.4 | 33791.61 | ['0x3b'] | 4 / [15386] |
+| m3w2_mg_v | ADMITTED | ms2 | mini_giants_garden | v | ALL YES | ALL YES | 0 | 0 | 20349 | 331.9 | 16672.67 | ['0x3b'] | 4 / [30993] |
+| m3w2_mg_w | ADMITTED | ms2 | mini_giants_garden | w | ALL YES | ALL YES | 0 | None | None | 316.5 | 54822.16 | ['0x3b'] | 4 / [8832] |
+| m3w2_sg_v | ADMITTED | ms2 | underwater_aerial_garden | v | NOT ALL YES | ALL YES | 1 | 0 | 8796 | 334.3 | 39921.45 | ['0x3b'] | 4 / [13414] |
+| m3w2_sg_w | ADMITTED | ms2 | underwater_aerial_garden | w | ALL YES | ALL YES | 0 | None | None | 325.6 | 134499.65 | ['0x3b'] | 4 / [6201] |

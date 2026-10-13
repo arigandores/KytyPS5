@@ -1,0 +1,4 @@
+G7 wit sg: keys in MS1 m3_sg_v_r1 27, in MS2 m3w2_sg_v 27, LOST 0 []
+G7 wit hb: keys in MS1 m3_hb_v 27, in MS2 m3w2_hb_v 27, LOST 0 []
+G7 wit mg: keys in MS1 m3_mg_v 27, in MS2 m3w2_mg_v 27, LOST 0 []
+G7 witnesses lost 0

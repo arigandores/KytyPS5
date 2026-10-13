@@ -1,0 +1,7 @@
+294c294,297
+<   for d in $DIRS GLCache; do LIVE=$(live_of $d); [ -d "$LIVE" ] && { mv "$LIVE" "$G/$KS.new/$d" || { log "move of live $d into $KS.new failed"; exit 1; }; }; done
+---
+>   # HPP-861 executor change 2026-10-13 (after m3w2_sg_v, m3w2_mg_w: mv of live _ShaderSeeds - Permission denied right after the exit):
+>   # the same move, retried up to 5 times 3 s apart; no other change (the saved state and every reading are the same).
+>   mvr() { for k in 1 2 3 4 5; do mv "$1" "$2" 2>>$OUT/mv_retry.txt && { [ $k = 1 ] || log "move of $1 done at try $k"; return 0; }; rm -rf "$2"; sleep 3; done; return 1; }
+>   for d in $DIRS GLCache; do LIVE=$(live_of $d); [ -d "$LIVE" ] && { mvr "$LIVE" "$G/$KS.new/$d" || { log "move of live $d into $KS.new failed"; exit 1; }; }; done

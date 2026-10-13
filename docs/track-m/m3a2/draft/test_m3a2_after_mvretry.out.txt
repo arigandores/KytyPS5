@@ -1,0 +1,110 @@
+suite test_m3a2.py sha256 f49e355e8eae4f5c9f0926be46307ee12863719c35fd41e49a2aa58f4d5d6e19 target m3a2_read.py sha256 8bb06728d2e80022f194c8b8c155b13cb36fea34e956142d8728f8236ca68675 go_m3a2.sh sha256 eb501b6083bc9ab583e49d222ac1823760da63d5ee9f1efd9563e671a8ba6f32 g5_m3a2.py sha256 46a7247b610a15f0d906a4e508614ebadd6bba56499ace51c3bb1445d0631265 kset_m3a2.py sha256 b0fd412b23e6bde876326c48e2a996ae2a70766e9343b7573c2cb106ea363109 g7_m3a2.py sha256 59a0bcb733d3d5801e71c4b6c04d5f418aee514e8ebba44d12602f8d163f909f launch_m3a2.sh sha256 75c02af52ada509544c72ea1315406a9418dd42aef09bf94f1b27f645bbb846a
+[ok] plan m3w2_i: go dry run = reader plan bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save K1 knob - patch 0 | bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save K1 k
+[ok] plan m3w2_sg_w: go dry run = reader plan bin ms2 level underwater_aerial_garden kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0 | bin ms2 level underwater_aerial_garden kind w sd 100 timeout 900 hold 310 cache K1 save K1 k
+[ok] plan m3w2_sg_v: go dry run = reader plan bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 k
+[ok] plan m3w2_hb_w: go dry run = reader plan bin ms2 level hoover_beach kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0 | bin ms2 level hoover_beach kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0
+[ok] plan m3w2_hb_v: go dry run = reader plan bin ms2 level hoover_beach kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms2 level hoover_beach kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0
+[ok] plan m3w2_mg_w: go dry run = reader plan bin ms2 level mini_giants_garden kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0 | bin ms2 level mini_giants_garden kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 
+[ok] plan m3w2_mg_v: go dry run = reader plan bin ms2 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms2 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 
+[ok] plan m3w2_g5_ap: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save KA knob - patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save KA k
+[ok] plan m3w2_g5_a1: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache KA save none knob - patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache KA save no
+[ok] plan m3w2_g5_b1: go dry run = reader plan bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 k
+[ok] plan m3w2_g5_b2: go dry run = reader plan bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 k
+[ok] plan m3w2_g5_a2: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache KA save none knob - patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache KA save no
+[ok] plan m3w2_g6: go dry run = reader plan bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save none knob - patch 1 | bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save no
+[ok] plan m3w2_sg_t1250: go dry run = reader plan bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save none knob KYTY_M_T125=0 patch 0 | bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cach
+[ok] plan m3w2_hb_t1250w: go dry run = reader plan bin ms2 level hoover_beach kind w sd 100 timeout 900 hold 310 cache K1 save none knob KYTY_M_T125=0 patch 0 | bin ms2 level hoover_beach kind w sd 100 timeout 900 hold 310 cache K1 save none knob KYTY
+[ok] plan m3w2_g5_t1250: go dry run = reader plan bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save none knob KYTY_M_T125=0 patch 0 | bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cach
+[ok] plan m3w2_mg_t3060p: go dry run = reader plan bin ms2 level mini_giants_garden kind p sd 300 timeout 480 hold 150 cache K1 save KT knob KYTY_M_T306=0 patch 0 | bin ms2 level mini_giants_garden kind p sd 300 timeout 480 hold 150 cache K1 save KT k
+[ok] plan m3w2_mg_t3060: go dry run = reader plan bin ms2 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache KT save none knob KYTY_M_T306=0 patch 0 | bin ms2 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache KT save no
+[ok] plan m3w2_mg_t3060w: go dry run = reader plan bin ms2 level mini_giants_garden kind w sd 100 timeout 900 hold 310 cache KT save none knob KYTY_M_T306=0 patch 0 | bin ms2 level mini_giants_garden kind w sd 100 timeout 900 hold 310 cache KT save no
+[ok] plan m3w2_g5_t3060p: go dry run = reader plan bin ms2 level underwater_aerial_garden kind p sd 300 timeout 480 hold 150 cache K1 save KT knob KYTY_M_T306=0 patch 0 | bin ms2 level underwater_aerial_garden kind p sd 300 timeout 480 hold 150 cache 
+[ok] plan m3w2_g5_t3060: go dry run = reader plan bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache KT save none knob KYTY_M_T306=0 patch 0 | bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cach
+[ok] plan m3w2_sg_v_r1: go dry run = reader plan bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms2 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 k
+[ok] plan m3w2_g5_a1_r2: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache KA save none knob - patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache KA save no
+[ok] plan m3w2_x: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3w2_sg_f: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3w2_ac_v: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3_sg_v: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3w2_g5_t1250w: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3w2_g5_t1250p: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3w2_sg_t1250p: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3w2_g5_t3060w: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3w2_sg_t2330: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3w2_g6_t1250: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3w2_i_r4: refused by go (rc 2) and the reader (None) 2
+[ok] dir of MS2 defaults = ..._mw1_3b variant_fixb26_fixb1b_fixf10_fixf19_mw1_3b
+[ok] dir of the T306 arm = ..._mw1_33 
+[ok] dir of MS1 = ..._mw1_33 
+[ok] T125 arm keeps mask 0x3b, MT125 want 0, MT265 want 1 
+[ok] MS1 plan: MT125 want None (0 lines member) 
+[ok] signatures: MS2 0d2da32c, MS1 8dcf3177 
+[ok] REF_OPENED = 3 (the support log m3_sg_v_r1, comment of HPP-861 06:53Z) 
+[ok] m3_sg_v_r1 (MS1) as m3w2_g5_a1: ADMITTED []
+[ok] m3_sg_v_r1 as m3w2_g5_a1: members ALL YES (MT125 0 lines at MS1) []
+[ok] m3_sg_v_r1 as m3w2_g5_a1: form FS15 ALL YES []
+[ok] m3_sg_v_r1: no T125 members on a G5 arm None
+[ok] m3_sg_v_r1 T125 rows: opened 3 (= REF_OPENED), failures 0, FixF8 1, MT125 none {'mt125': [], 'mt125stat': [], 'opened': 3, 'open_failed': 0, 'init_failed': 0, 'in_init_failed': 0, 'fixf8': 1, 'audiostat': 0, 'audiostat_init_max': None, 'avtrace': 0}
+[ok] m3_sg_v_r1: G5 measure end A n > 0 and end B n >= end A n {'end_a': {'n': 9087, 'mean': 33479.5, 'sd': 5404.32, 'se': 56.693}, 'end_b': {'n': 9087, 'mean': 33479.5, 'sd': 5404.32, 'se': 56.693}, 'first_scene_n': 357, 'quit_ln': 1164391}
+[ok] negative plan=ms1 ea35b679b0bcfe83: NOT_ADMITTED by "plan of go" ['the plan of go_m3a2.sh = the plan of the reader (ms1 ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df K0 none v / ms1 ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+[ok] negative k0_cmp=KSET DIFFER4 only-a : NOT_ADMITTED by "K0" ['live caches before the tag = K0 (KSET DIFFER4 only-a 1)']
+[ok] negative installed_sha=c630327bc2a3d9ce13c7: NOT_ADMITTED by "installed during" ['installed during the tag = ms1 ea35b679 (c630327bc2a3d9ce)']
+[ok] negative installed_after=c630327bc2a3d9ce13c7: NOT_ADMITTED by "before = after" ['installed before = after = MS1 ea35b679 (ea35b679b0bcfe83 / c630327bc2a3d9ce)']
+[ok] negative installed_before=c630327bc2a3d9ce13c7: NOT_ADMITTED by "before = after" ['installed before = after = MS1 ea35b679 (c630327bc2a3d9ce / ea35b679b0bcfe83)']
+[ok] negative manifest_cmp=manifest cmp DIFFER: NOT_ADMITTED by "caches returned" ['caches returned (manifest_cmp: manifest cmp DIFFER)']
+[ok] negative level=hoover_beach: NOT_ADMITTED by "guest args" ['guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness hoover_beach)']
+[ok] negative base_cmp=manifest cmp DIFFER: NOT_ADMITTED by "live caches of the run = KA" ['live caches of the run = KA (manifest cmp DIFFER)']
+[ok] MS1 log read as MS2 m3w2_sg_v: NOT_ADMITTED by json binary and signature ['json binary_sha256 = ms2 c630327b (ea35b679b0bcfe83)', "translation signature 0d2da32c and cache dir variant_fixb26_fixb1b_fixf10_fixf19_mw1_3b (['8dcf3177'] / ['variant_fixb26_fixb1b_fixf10_fixf19_
+[ok] negative env extra KYTY_M_T125: NOT_ADMITTED by env 
+[ok] m3_sg_w (MS1 W) with an MS1 W plan: ADMITTED []
+[ok] m3_sg_w: W members ALL YES (0 [Vulkan][E], [Vulkan][W] > 0, DualSrcBlend, MS1 0 MT125 lines) []
+[ok] scan_m: MWave1 0x3b, MT125 [1], MT125Stat [(47, 27)], opened 4, FixF8 1 ([59], [1], [(47, 27)], 4)
+[ok] m_members MS2 defaults ALL YES []
+[ok] t125 members ALL YES on the good log (Q2 A) []
+[ok] t125 negative opened 3 (= support, the mix device missing): NO in "opened SDL device" ['AudioOut: opened SDL device = REF_OPENED + 1 = 4 (item 783 (b); 3)']
+[ok] t125 negative opened 5: NO in "opened SDL device" ['AudioOut: opened SDL device = REF_OPENED + 1 = 4 (item 783 (b); 5)']
+[ok] t125 negative mixed_nz 0: NO in "mixed_nz" ['mixed_nz >= 1 (0)']
+[ok] t125 negative two MT125Stat lines: NO in "exactly one line" ['MT125Stat: when=exit - exactly one line, unparsable 0 (2, bad 0)', 'mixed_nz >= 1 (-)']
+[ok] t125 negative no MT125Stat line: NO in "exactly one line" ['MT125Stat: when=exit - exactly one line, unparsable 0 (0, bad 0)', 'mixed_nz >= 1 (-)']
+[ok] t125 negative MT125 mode=0: NO in "MT125: mode=1" ['MT125: mode=1 - >= 1 line, every line 1 ([0])']
+[ok] t125 negative no MT125 line: NO in "MT125: mode=1" ['MT125: mode=1 - >= 1 line, every line 1 ([])']
+[ok] t125 negative one SDL_OpenAudioDevice failed: NO in "SDL_OpenAudioDevice failed" ['0 lines SDL_OpenAudioDevice failed (1) and SDL audio init failed (0)']
+[ok] t125 negative one SDL audio init failed: NO in "SDL_OpenAudioDevice failed" ['0 lines SDL_OpenAudioDevice failed (0) and SDL audio init failed (1)']
+[ok] t125 negative item 790 (b)(1): no FixF8 line: NO in "FixF8: mode=1" ['FixF8: mode=1 >= 1 (0; item 790 (b)(1) - init_calls of item 778 (g)(2)(v) not measured in the game, AudioStat lines 0 a row)']
+[ok] t125: FixF8 member reads 2 lines as YES 
+[ok] t125: no init_calls member left (item 790 (b): not measured) 
+[ok] item 790 (b)(2) audio init member, clean -> True 0 lines AudioOut: SDL audio init failed (0) and AudioIn: SDL init failed (0) (item 790 (b)(2))
+[ok] item 790 (b)(2) audio init member, AudioOut init failed -> False 0 lines AudioOut: SDL audio init failed (1) and AudioIn: SDL init failed (0) (item 790 (b)(2))
+[ok] item 790 (b)(2) audio init member, AudioIn init failed -> False 0 lines AudioOut: SDL audio init failed (0) and AudioIn: SDL init failed (1) (item 790 (b)(2))
+[ok] item 790 (b)(2) audio init member, both -> False 0 lines AudioOut: SDL audio init failed (2) and AudioIn: SDL init failed (1) (item 790 (b)(2))
+[ok] item 790 (b)(2) audio init member, AudioStat init_calls 2 only (not a member) -> True 0 lines AudioOut: SDL audio init failed (0) and AudioIn: SDL init failed (0) (item 790 (b)(2))
+[ok] item 790 (a): m3w2_g5_ap = MS1 V 330 s on K0 saved as KA, a reference tag {'base_tag': 'm3w2_g5_ap', 'knob': None, 'patch': False, 'bin': 'ms1', 'level': 'underwater_aerial_garden', 'cache': 'K0', 'save': 'KA', 'kind': 'v', 'sd': 300, 'timeout': 480, 'hold': 330, 'theme_off
+[ok] m_members MS1: an MT125 line is a NO, mask 0x33 YES ['MS1: 0 lines MT125: mode= (1)']
+[ok] m_members MS2 on a 0x33 log: MWave1 NO 
+[ok] G5 end B: rows n 1502..2000, mean 40000 {'n': 499, 'mean': 40000.0, 'sd': 0.0, 'se': 0.0}
+[ok] G5 end A: rows before Event: quit (n <= 1800) - 299 rows {'n': 299, 'mean': 40000.0, 'sd': 0.0, 'se': 0.0}
+[ok] G5 delta exactly +1.0 % -> NOT_WORSE 
+[ok] G5 delta +1.01 % -> FAIL 
+[ok] G5 delta -1.0 % -> NOT_WORSE (BETTER) 
+[ok] G5 an arm not admitted -> NOT_EVALUABLE 
+[ok] G5 culprit rows: T125 arm +0.5000 %, T306 arm NOT_EVALUABLE ['CULPRIT ARM m3w2_g5_t1250 (T125=0) delta against the A arms +0.5000 % (ok bin x members ALL YES)', 'CULPRIT ARM m3w2_g5_t3060: NOT_EVALUABLE (no read.json)']
+[ok] kset: GLCache differs only -> EQUAL4 rc 0 b'KSET EQUAL4 files 1; GLCache row: only-a 1 only-b 1\r\n'
+[ok] kset: _ShaderCache differs -> DIFFER4 rc 1 b'KSET DIFFER4 only-a 1 only-b 1; GLCache row: only-a 0 only-b'
+[ok] G7 MS1 baseline selector: MS1 tags of M3a in 
+[ok] G7 MS1 baseline selector: FS15 tags of M3a out 
+[ok] G7 tag_of: m3w2 tags only 
+[ok] G7 support logs exist (sg hb mg) {'sg': 'm3_sg_v_r1', 'hb': 'm3_hb_v', 'mg': 'm3_mg_v'}
+[ok] G7 M3a loglist and segments exist 
+[ok] launch: theme arm without M3A2_ARM_OK -> exit 12 12
+[ok] launch: theme arm with M3A2_ARM_OK=1 -> dryrun2 rc 0 (0, b' cache K1 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_M_T125=0\n')
+[ok] launch: repeat without M3A2_REPEAT_OK -> exit 11 11
+[ok] launch: a seal tag -> dryrun2 rc 0 (0, b'ld 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0\n')
+[ok] launch: unknown tag -> exit 2 2
+[ok] post plan-only m3w2_hb_w: plan-w yes b'00000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0\nplan-w yes\n'
+[ok] post plan-only m3w2_hb_v: plan-w no b' K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0\nplan-w no\n'
+[ok] cp1250 strict output of m3a2_read.py --plan m3w2_g6: rc 0, no UnicodeEncodeError (0, b'')
+[ok] cp1250 strict output of m3a2_read.py --table: rc 0, no UnicodeEncodeError (0, b'')
+[ok] cp1250 strict output of g5_m3a2.py: rc 0, no UnicodeEncodeError (0, b'')
+[ok] cp1250 strict output of g7_m3a2.py: rc 2, no UnicodeEncodeError (2, b'')
+checks 107, failed 0 []
+ALL OK

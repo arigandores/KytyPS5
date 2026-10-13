@@ -1,0 +1,2 @@
+2026-10-13T06:29:15Z HPP-866 M9a2 start; API: in_progress HPP-866 (self), HPP-858 M8a Emu Engineer (no harness series) -> rule 30 allows >60 s offline commands; mb_kd sg
+2026-10-13T06:44:48Z HPP-866 design_m9a2.md written; mb_kd sg/hb/mg done 06:29-06:40Z; grep_m9a2 done

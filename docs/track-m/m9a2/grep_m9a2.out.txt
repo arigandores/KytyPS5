@@ -1,0 +1,102 @@
+rev 1ffda330 (1ffda330ace8a9a9ce9433f1a87d032eefbe987e)
+== MarkGpuModified call sites (src + tests): 9 lines (9 not comments)
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:884  destination.MarkGpuModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:911  destination.MarkGpuModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2636  image.MarkGpuModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2705  image.MarkGpuModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2803  image.MarkGpuModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2875  image.MarkGpuModified();
+  src/graphics/host_gpu/renderer/renderDraw.cpp:1750  image.MarkGpuModified();
+  src/graphics/host_gpu/renderer/renderDraw.cpp:3820  image.MarkGpuModified();
+  tests/ShaderRecompilerComputeTests.cpp:5115  image.MarkGpuModified();
+== ClearGpuModified call sites: 2 lines (2 not comments)
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:502  image.ClearGpuModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:3422  image.ClearGpuModified();
+== IsBufferModified() readers: 22 lines (22 not comments)
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:75  image.IsCpuDirty(), image.IsBufferModified(), image.IsGpuModified(),
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:499  image.IsBufferModified(), static_cast<uint32_t>(image.info.metadata.kind));
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:855  if (source.IsBufferModified()) {
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:900  if (source.IsBufferModified() || source.backing.samples != destination.backing.samples) {
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1002  if (cached.IsBufferModified() || cached.IsDefinitelyCpuDirty()) {
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1341  image->IsCpuDirty() ? 1 : 0, image->IsBufferModified() ? 1 : 0);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1750  const bool upload = image.IsBufferModified() || image.IsCpuDirty();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1765  upload && image.IsBufferModified() && !image.IsCpuDirty() &&
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1831  const bool buffer_modified = image.IsBufferModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2385  bool cpu_dirty = image.IsBufferModified() || image.IsDefinitelyCpuDirty();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2507  const bool guest_dirty = image.IsBufferModified() || image.IsCpuDirty();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2733  image.IsBufferModified() && !image.IsCpuDirty() &&
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2775  if (c3_pop && !image.IsBufferModified() &&
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:3034  if (!full_image && (image.IsBufferModified() || image.IsCpuDirty())) {
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:3040  if (image.info.samples == 1 && (image.IsBufferModified() || image.IsCpuDirty())) {
+  src/graphics/host_gpu/renderer/diagF47Dt.cpp:985  img.IsBufferModified() ? 1 : 0, img.IsGpuModified() ? 1 : 0,
+  src/graphics/host_gpu/renderer/diagF47Dt.cpp:986  (!img.IsCpuDirty() && !img.IsBufferModified()) ? 1 : 0, img.pending_levels);
+  src/graphics/host_gpu/renderer/image/image.h:178  [[nodiscard]] bool IsBufferModified() const noexcept { return m_buffer_modified; }
+  src/graphics/host_gpu/renderer/image/image.h:195  return IsGpuModified() && !IsBufferModified() && !IsCpuDirty();
+  src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:5314  const bool needs_work = image.IsCpuDirty() || image.IsBufferModified() ||
+  src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:5340  !image.IsBufferModified() && image.IsTracked() &&
+  src/graphics/host_gpu/renderer/renderDraw.cpp:1792  !image.IsBufferModified() && image.IsTracked() && image.track_addr == source.address &&
+== MarkBufferModified call sites: 4 lines (4 not comments)
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:857  destination.MarkBufferModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1271  if (first < image.source_first_level) image.MarkBufferModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2501  inserted.MarkBufferModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:3424  image.MarkBufferModified();
+== ClearBufferModified call sites: 4 lines (4 not comments)
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:887  destination.ClearBufferModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1828  image.ClearBufferModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1881  image.ClearBufferModified();
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2871  image.ClearBufferModified();
+== InvalidateMemoryFromGPU callers: 5 lines (5 not comments)
+  src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2307  m_texture_cache.InvalidateMemoryFromGPU(vaddr, size);
+  src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2376  m_texture_cache.InvalidateMemoryFromGPU(dst_vaddr, size);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:3399  void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size) {
+  src/graphics/host_gpu/renderer/cache/textureCache.h:145  void               InvalidateMemoryFromGPU(uint64_t address, uint64_t size);
+  src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1081  context.GetTextureCache().InvalidateMemoryFromGPU(address, size);
+== CommitGpuWrite callers: 9 lines (9 not comments)
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1015  CommitGpuWrite(replacement);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2682  CommitGpuWrite(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2785  CommitGpuWrite(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2847  CommitGpuWrite(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2863  CommitGpuWrite(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2866  void TextureCache::CommitGpuWrite(Image& image) {
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:3082  CommitGpuWrite(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:3101  CommitGpuWrite(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.h:363  void CommitGpuWrite(Image& image);
+== CompletePendingUpload callers: 7 lines (7 not comments)
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:752  CompletePendingUpload(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1635  void TextureCache::CompletePendingUpload(Image& image) {
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2379  CompletePendingUpload(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2396  CompletePendingUpload(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2669  CompletePendingUpload(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2870  CompletePendingUpload(image);
+  src/graphics/host_gpu/renderer/cache/textureCache.h:358  void                   CompletePendingUpload(Image& image);
+== FreeImage callers: 11 lines (11 not comments)
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:448  FreeImage(association, __func__, __LINE__);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:488  void TextureCache::FreeImage(ImageId id, const char* reason, uint32_t line) {
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1021  FreeImage(cached_id, __func__, __LINE__);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1057  FreeImage(cached_id, __func__, __LINE__);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1109  FreeImage(cached_id, __func__, __LINE__);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1113  FreeImage(cached_id, __func__, __LINE__);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:1136  FreeImage(source_id, __func__, __LINE__);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:2492  FreeImage(result, __func__, __LINE__);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:4031  FreeImage(id, __func__, __LINE__);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:4226  FreeImage(id, __func__, __LINE__);
+  src/graphics/host_gpu/renderer/cache/textureCache.h:294  void                      FreeImage(ImageId id, const char* reason = "unknown", uint32_t line = 0);
+== SynchronizeBufferFromImage callers: 4 lines (4 not comments)
+  src/graphics/host_gpu/renderer/cache/bufferCache.cpp:1097  return is_texel_buffer ? SynchronizeBufferFromImage(buffer, vaddr, size) : false;
+  src/graphics/host_gpu/renderer/cache/bufferCache.cpp:1155  return SynchronizeBufferFromImage(buffer, vaddr, size);
+  src/graphics/host_gpu/renderer/cache/bufferCache.h:317  [[nodiscard]] bool SynchronizeBufferFromImage(Buffer& buffer, uint64_t vaddr, uint64_t size);
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:3226  bool BufferCache::SynchronizeBufferFromImage(Buffer& buffer, uint64_t vaddr, uint64_t size) {
+== DownloadImageMemory callers: 4 lines (4 not comments)
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:3299  bool TextureCache::DownloadImageMemory(ImageId id) {
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:4216  if (safe && !DownloadImageMemory(id)) {
+  src/graphics/host_gpu/renderer/cache/textureCache.cpp:4248  (void)DownloadImageMemory(id);
+  src/graphics/host_gpu/renderer/cache/textureCache.h:379  [[nodiscard]] bool DownloadImageMemory(ImageId id);
+== DB_RENDER_OVERRIDE handlers: 2 lines (2 not comments)
+  src/graphics/guest_gpu/command_processor/pm4Dispatch.cpp:16  g_hw_ctx_func[Pm4::DB_RENDER_OVERRIDE]           = HwCtxSetDepthMetadataRegisters;
+  src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:3130  g_hw_ctx_indirect_func[Pm4::DB_RENDER_OVERRIDE] = [](KYTY_HW_CTX_INDIRECT_ARGS) {
+== SetGraphicsDynamicParams callers: 3 lines (3 not comments)
+  src/graphics/host_gpu/renderer/renderDraw.cpp:390  static void SetGraphicsDynamicParams(const CommandBuffer& buffer, Sink& vk_buffer,
+  src/graphics/host_gpu/renderer/renderDraw.cpp:4805  SetGraphicsDynamicParams(buffer, tail, vertex_stages.back(), state.color_info,
+  src/graphics/host_gpu/renderer/renderDraw.cpp:4942  SetGraphicsDynamicParams(buffer, vk_buffer, vertex_stages.back(), state.color_info,
+script sha256 1e155872922ec2e9fd0909ca1991613af25442eb25374820f6d0e150eca177e0
+ALL OK

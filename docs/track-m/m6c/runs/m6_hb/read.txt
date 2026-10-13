@@ -1,0 +1,56 @@
+tag m6_hb (plan: bin m6a3 level hoover_beach kind v sd 300 timeout 480 hold 330 cache K0 save none knob KYTY_DIAG_M5W2=1)  reader sha256 e2a27aa916bb378c7c61e5a3f0eecb59d0e4acd51cdd6e29450ba9d6d9cb1f06
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = M6a3 test binary 2179005b (2179005bc42e4213)
+    [ok] installed during the tag = 2179005b (2179005bc42e4213)
+    [ok] installed before = after = MS1 ea35b679 (ea35b679b0bcfe83 / ea35b679b0bcfe83)
+    [ok] json prereg sha256 = seal sha256 (3ae05ebc2cb3b6c7 / 3ae05ebc2cb3b6c7)
+    [ok] the plan of go_m6c.sh = the plan of the reader (m6a3 2179005bc42e42133e92d4a4c9cc0a2f33b3670f0263a6ca67c2c3804ac7e43f K0 none v KYTY_DIAG_)
+    [ok] env = the form of the tag (exact)
+    [ok] no KYTY_TEST_* in the env (none)
+    [ok] 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl hoover_beach (-lvl hoover_beach; harness hoover_beach)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (3661157)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {}) - a window event is an interference, repeat (item 767 (i))
+    [ok] translation signature 8dcf3177 and cache dir variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 (['8dcf3177'] / ['variant_fixb26_fixb1b_fixf10_fixf19_mw1_33'])
+    [ok] GamePatch lines 0 (0)
+    [ok] no DiagB32 line (0)
+    [ok] no TestLogStall line (0)
+    [ok] no TestHidLoss line (0)
+    [ok] knob witness: exactly one line M5W2: mode=1 ([1], unparsable 0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4868 listsha 01)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+  MEMBERS ALL YES
+    [YES] hold >= 300 s after the first scene frame (332.0 s)
+    [YES] the process lived through the hold (outcome ok, hold_exit None)
+    [YES] 0 death markers (log and stdout) []; device lost lines 0
+    [YES] 0 frames >= 1 s after the first scene frame (0; first 268; with the first frame 0)
+    [YES] video index records >= 3000 (20104)
+    [YES] 0 one-frame glitches (0)
+    [YES] sheet for the lead made (sheet: C:/kyty/m657/m6c/runs/m6_hb/sheet_m6_hb.png frames 20104 step 418 tiles 8x6)
+    [YES] exit by the harness: Event: quit line in the log (5428920)
+    [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+    [YES] the process ended before the harness timeout (close_killed False, close_rc 0)
+    [YES] MWave1: mask=0x33 on every parsed line, >= 1 line (lines ['0x33'], unparsable 0)
+    [YES] MT265: mode=1 on every parsed line (lines []; absent - not called, a row)
+    [YES] MT272: mode=1 on every parsed line (lines [1]; absent - not called, a row)
+    [YES] MT231: mode=1 on every parsed line (lines [1]; absent - not called, a row)
+    [YES] M5W2Stat: >= 1 parsed line, 0 unparsable (8 / 0; M5W2Clr outside a total group 0)
+  M5W2 TOTAL (last line with the largest pushes, item 770 (e)) when=exit of 8 lines (whens ['exit', 'periodic'])
+    pushes=31402 ao_obj_push=706234 ao_obj_nz=50545 ao_obj_nopcm=173 ao_bus_push=94172 ao_bus_nz=32096 clr_dw=40238 clr_dw_div=0 minlod_views=1277 minlod_div=0 inv_calls=4219622 inv_part=19797 inv_gpu=59501 inv_off=267 raw_rd=250912311 raw_rd_gpu=0 minlod_div_x=0 clr_dw_div8=0 ao_obj_unread=0 inv_part_src=19797 ao_obj_vq=533714
+    M5W2Clr fmt=9 (R8Unorm) clr_dw=19553 clr_dw_div=0 clr_dw_div8=0
+    M5W2Clr fmt=16 (R8G8Unorm) clr_dw=435 clr_dw_div=0 clr_dw_div8=0
+    M5W2Clr fmt=37 clr_dw=441 clr_dw_div=0 clr_dw_div8=0
+    M5W2Clr fmt=58 clr_dw=1 clr_dw_div=0 clr_dw_div8=0
+    M5W2Clr fmt=98 clr_dw=19808 clr_dw_div=0 clr_dw_div8=0
+  M5W2 NO-KNOB LINES {"T023": 0, "T031": 0, "T309_space": 0, "T309_waddr": 0}
+  M5W2 REFERENCE ROWS (item 769 (v)) {"clr_ok": 100179, "clr_ok_lines": 20082, "img_minlod": 1076, "img_minlod_lines": 20082, "tminlod_applied_lines": 1}
+  INFO {"first_scene_n": 268, "frames_ge1s": 0, "frames_ge1s_with_first": 0, "glitches": 0, "hold_s": 332.0, "max_dt": 65394, "mean_dt_us": 16755.4, "mt": {"231": [1], "265": [], "272": [1]}, "mwave1": ["0x33"], "scene_frames": 19815, "video_index": 20104}
+  READING ADMITTED, members ALL YES (no verdict on a theme; reading - M6d)

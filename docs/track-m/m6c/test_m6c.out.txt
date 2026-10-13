@@ -1,0 +1,43 @@
+suite test_m6c.py sha256 b3e030e5ec1ae1b9d131ac004f667ebfe0fbb7ebde4c5ec2ee09fae1b083791d target m6c_read.py sha256 e2a27aa916bb378c7c61e5a3f0eecb59d0e4acd51cdd6e29450ba9d6d9cb1f06
+[ok] stat lines parsed 4 (the broken line is unparsable)
+[ok] unparsable stat lines 1
+[ok] total = last line with the largest pushes (V3 exit, not the later V4 with pushes 7)
+[ok] fields in order: pushes first, ao_obj_vq last (V1 line)
+[ok] clr group of the total: 2 lines with when=exit, fmt 9 and 37
+[ok] clr line with another when after a Stat line is outside the group (clr_bad 1 + the line after the broken Stat 0)
+[ok] knob witness mode [1]
+[ok] no-knob counts T031 1, T309 1+1, T023 2
+[ok] no-knob first line kept
+[ok] reference clr_ok = sum of per-frame deltas 10 over 2 lines
+[ok] reference img_minlod 2 and T# MIN_LOD applied lines 1
+[ok] MWave1 0x33 and MT272 1 parsed
+[ok] tie of pushes -> the later line (exit) and its clr group
+[ok] no Stat line -> total None, mode []
+[ok] missing log -> None
+[ok] two mode lines and one unparsable are seen (admission needs exactly [1])
+[ok] plan_of m6_sg level underwater_aerial_garden hold 330 knob KYTY_DIAG_M5W2=1
+[ok] plan_of m6_hb level hoover_beach hold 330 knob KYTY_DIAG_M5W2=1
+[ok] plan_of m6_mg level mini_giants_garden hold 330 knob KYTY_DIAG_M5W2=1
+[ok] plan_of m6_hb_r2 level hoover_beach hold 330 knob KYTY_DIAG_M5W2=1
+[ok] plan_of 'm6_xx' unknown
+[ok] plan_of 'm3_sg_v' unknown
+[ok] plan_of 'm6_sg_r4' unknown
+[ok] plan_of 'm6_sg_v' unknown
+[ok] plan_of '' unknown
+[ok] go_m6c.sh dry run of m6_sg = the plan of the reader
+[ok] go_m6c.sh dry run of m6_hb = the plan of the reader
+[ok] go_m6c.sh dry run of m6_mg = the plan of the reader
+[ok] go_m6c.sh dry run of m6_mg_r1 = the plan of the reader
+[ok] go_m6c.sh dry run of m6_xx refused (rc 2)
+[ok] go_m6c.sh dry run of m6_sg_r4 refused (rc 2)
+[ok] real M3a tag: NOT_ADMITTED
+[ok] real M3a tag: json binary member NO
+[ok] real M3a tag: knob witness member NO
+[ok] real M3a tag: env member NO (KYTY_DIAG_M5W2 missing)
+[ok] real M3a tag: entry line and window members ok
+[ok] real M3a tag: signature member ok (MS1 8dcf3177, mw1_33)
+[ok] real M3a log: 0 M5W2 lines, reference clr_ok > 0
+[ok] reader output in strict cp1250 (rc 0, ascii)
+[ok] reader source is ASCII
+checks 40, failed 0 []
+ALL OK

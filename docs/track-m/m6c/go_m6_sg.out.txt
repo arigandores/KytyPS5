@@ -1,0 +1,23 @@
+ALL OK
+2026-10-13T05:00:06Z M6c go_m6c m6_sg run check (item 587 (g)): RUN ALIVE 10d001d6 status in_progress
+2026-10-13T05:00:20Z M6c go_m6c m6_sg host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.437 procs []
+2026-10-13T05:00:21Z M6c go_m6c m6_sg display before the lock (item 620 (g)(1)): dispstate ON idle_s 17360 utc 2026-10-13T05:00:21Z
+2026-10-13T05:06:17Z M6c go_m6c m6_sg lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-13T05:06:18Z M6c go_m6c m6_sg installed binary inside the lock before the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-13T05:06:22Z M6c go_m6c m6_sg manifest before: manifest C:/kyty/m657/m6c/runs/m6_sg/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T05:06:26Z M6c go_m6c m6_sg caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-13T05:06:27Z M6c go_m6c m6_sg state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-13T05:06:27Z
+2026-10-13T05:06:29Z M6c go_m6c m6_sg installed the M6a3 test binary for the tag: 2179005bc42e42133e92d4a4c9cc0a2f33b3670f0263a6ca67c2c3804ac7e43f
+2026-10-13T05:06:30Z M6c go_m6c m6_sg enter_scene start (level underwater_aerial_garden, bin m6a3, kind v, sd 300, timeout 480, hold 330, --rec, cache K0, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_DIAG_M5W2=1); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-13T05:13:13Z M6c go_m6c m6_sg enter_scene rc 0; guard watch: 2026-10-13T05:13:12Z watch end, user process seen: no; hold watch: 2026-10-13T05:13:13Z watch end, user VM seen: no
+2026-10-13T05:13:13Z M6c go_m6c m6_sg run: VERDICT: underwater_aerial_garden in 59.6 s - PASS (acceptance <= 90 s)
+2026-10-13T05:13:14Z M6c go_m6c m6_sg log_m6_sg.txt sha256 652d665f87416d21148d203e5a899445c9b0b084734c3f434420863b5bc5404c
+2026-10-13T05:13:15Z M6c go_m6c m6_sg installed binary returned from the pinned MS1 copy
+2026-10-13T05:13:16Z M6c go_m6c m6_sg installed binary after the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-13T05:13:20Z M6c go_m6c m6_sg manifest of the run state (before the return): manifest C:/kyty/m657/m6c/runs/m6_sg/manifest_run.tsv files 5597 bytes 1548230253 listsha 9d4d759da02f050cf1f4b0d579406592059f5ac74d1a85f15ba95961fd09c2c7
+2026-10-13T05:13:22Z M6c go_m6c m6_sg caches, seeds, saves and GLCache returned
+2026-10-13T05:13:25Z M6c go_m6c m6_sg manifest after: manifest C:/kyty/m657/m6c/runs/m6_sg/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T05:13:26Z M6c go_m6c m6_sg lock released (rc 0)
+2026-10-13T05:13:31Z M6c go_m6c m6_sg display after lock released (item 620 (g)(1)): dispstate ON idle_s 18147 utc 2026-10-13T05:13:28Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-13T05:13:29Z; dispstate ON idle_s 18148
+2026-10-13T05:13:43Z M6c go_m6c m6_sg host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.401 procs []
+rc=0

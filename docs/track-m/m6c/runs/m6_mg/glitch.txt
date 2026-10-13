@@ -1,0 +1,2 @@
+C:/kyty/m657/m6c/rec_m6_mg.mp4: 20201 frames 960x540, index entries 20201
+one-frame glitches: 0

@@ -1,0 +1,29 @@
+reader m6c_read.py sha256 e2a27aa916bb378c7c61e5a3f0eecb59d0e4acd51cdd6e29450ba9d6d9cb1f06
+| tag | status | members | death / frames >= 1 s | glitches | video | hold_s | when | pushes | ao_obj_push | ao_obj_nz | ao_obj_nopcm | ao_bus_push | ao_bus_nz | clr_dw | clr_dw_div | minlod_views | minlod_div | inv_calls | inv_part | inv_gpu | inv_off | raw_rd | raw_rd_gpu | minlod_div_x | clr_dw_div8 | ao_obj_unread | inv_part_src | ao_obj_vq |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| m6_hb | ADMITTED | ALL YES | 0 / 0 | 0 | 20104 | 332.0 | exit | 31402 | 706234 | 50545 | 173 | 94172 | 32096 | 40238 | 0 | 1277 | 0 | 4219622 | 19797 | 59501 | 267 | 250912311 | 0 | 0 | 0 | 0 | 19797 | 533714 |
+| m6_mg | ADMITTED | ALL YES | 0 / 0 | 0 | 20201 | 332.2 | exit | 31552 | 749907 | 174550 | 76 | 94622 | 62893 | 136730 | 0 | 844 | 0 | 4206554 | 3144 | 4402 | 3143 | 331350787 | 0 | 0 | 0 | 0 | 3144 | 536264 |
+| m6_sg | ADMITTED | ALL YES | 0 / 0 | 0 | 10037 | 334.4 | exit | 15708 | 558598 | 167675 | 134 | 47080 | 32274 | 37726 | 0 | 1833 | 0 | 10103170 | 47813 | 105797 | 38802 | 370411145 | 0 | 0 | 0 | 0 | 47813 | 266916 |
+| SUM m6_hb+m6_mg+m6_sg | | | | | | | | 78662 | 2014739 | 392770 | 383 | 235874 | 127263 | 214694 | 0 | 3954 | 0 | 18529346 | 70754 | 169700 | 42212 | 952674243 | 0 | 0 | 0 | 0 | 70754 | 1336894 |
+
+M5W2Clr of the totals (tag fmt clr_dw clr_dw_div clr_dw_div8):
+  m6_hb fmt=9 (R8Unorm) 19553 0 0
+  m6_hb fmt=16 (R8G8Unorm) 435 0 0
+  m6_hb fmt=37 441 0 0
+  m6_hb fmt=58 1 0 0
+  m6_hb fmt=98 19808 0 0
+  m6_mg fmt=9 (R8Unorm) 59009 0 0
+  m6_mg fmt=16 (R8G8Unorm) 18733 0 0
+  m6_mg fmt=37 19181 0 0
+  m6_mg fmt=58 1 0 0
+  m6_mg fmt=70 19903 0 0
+  m6_mg fmt=98 19903 0 0
+  m6_sg fmt=9 (R8Unorm) 8786 0 0
+  m6_sg fmt=16 (R8G8Unorm) 9659 0 0
+  m6_sg fmt=37 9621 0 0
+  m6_sg fmt=58 1 0 0
+  m6_sg fmt=98 9659 0 0
+no-knob lines and reference rows (item 767 (z), 769 (v)):
+  m6_hb noknob {"T023": 0, "T031": 0, "T309_space": 0, "T309_waddr": 0} ref {"clr_ok": 100179, "clr_ok_lines": 20082, "img_minlod": 1076, "img_minlod_lines": 20082, "tminlod_applied_lines": 1}
+  m6_mg noknob {"T023": 0, "T031": 0, "T309_space": 0, "T309_waddr": 0} ref {"clr_ok": 196706, "clr_ok_lines": 20178, "img_minlod": 5113, "img_minlod_lines": 20178, "tminlod_applied_lines": 1}
+  m6_sg noknob {"T023": 0, "T031": 0, "T309_space": 0, "T309_waddr": 0} ref {"clr_ok": 67402, "clr_ok_lines": 10013, "img_minlod": 53856, "img_minlod_lines": 10013, "tminlod_applied_lines": 1}

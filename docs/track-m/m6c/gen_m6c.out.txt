@@ -1,0 +1,23 @@
+procload.py -> procload.py src d9e7a777404f1aa9 copy 59bc47c4ebcc2dcb m3a-left 0
+enter_scene.py -> enter_scene.py src e392c6a55c54ad57 copy 7b451b0a97695474 m3a-left 0
+dispstate.py -> dispstate.py src 7e170d76c211be36 copy 915f1d6fd23571c5 m3a-left 0
+idle142.py -> idle142.py src c5ee7dc26d2a6d28 copy 67992bf45aa2a8a8 m3a-left 0
+launch_run.py -> launch_run.py src 392caca1562fb543 copy cf29e302ff1144e6 m3a-left 0
+run_safety99.py -> run_safety99.py src 77e685e5543d90a0 copy 72a26447d8f852f5 m3a-left 0
+sheet142.py -> sheet142.py src c1bf9e2903c7db7a copy 1416d95868e438ac m3a-left 0
+manifest_fs4c.py -> manifest_fs4c.py src a7096fd47f70419a copy b84c7d759d8da88e m3a-left 0
+guard_m3a.py -> guard_m6c.py src 4b7703f72e4177e8 copy fa6977ace5a46051 m3a-left 0
+hold_m3a.py -> hold_m6c.py src e5b7b53a71211eb1 copy 6d0fdea4a6571b9e m3a-left 0
+hostload_m3a.py -> hostload_m6c.py src 5f4a14f2a3aabb7c copy 8f27785497c368ff m3a-left 0
+snap_m3a.py -> snap_m6c.py src f505fb96a1446365 copy c0db7362839d7db1 m3a-left 0
+mfsub_m3a.py -> mfsub_m6c.py src aef4d0d39840cd68 copy e3fffd797d3a3505 m3a-left 0
+runchk_m3a.py -> runchk_m6c.py src 5b4866a1063656fe copy 2c750c80063aa080 m3a-left 0
+queue_m3a.py -> queue_m6c.py src b21e939ad53fdcbe copy a96d5ed5bb9594ee m3a-left 0
+tempo_m3a.py -> tempo_m6c.py src 5be8235c21320813 copy f5ea9f968981e3c7 m3a-left 0
+watch_m3a.py -> watch_m6c.py src e5b7d28bfcb31f52 copy da4e31b198c899f1 m3a-left 0
+chk_m3a.sh -> chk_m6c.sh src 30e865d5e3a6f23c copy 44295bed7e4ebe9d m3a-left 0
+wait_m3a.sh -> wait_m6c.sh src 2c0cef7f8dcbd1e0 copy 12810e9ef37a28df m3a-left 0
+gates_default.txt -> gates_default.txt src e3b0c44298fc1c14 copy e3b0c44298fc1c14 m3a-left 0
+gates.req -> gates.req src e3b0c44298fc1c14 copy e3b0c44298fc1c14 m3a-left 0
+sample.req -> sample.req src 5feceb66ffc86f38 copy 5feceb66ffc86f38 m3a-left 0
+ALL OK

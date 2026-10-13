@@ -1,0 +1,5 @@
+pretranslation test: ready=18 failed=1 hits=17
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 3: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem3 kind=1 off=0xe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x2)
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0xfffffffe](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), GetUserData(imm)), 0x0)
+shader resource evaluation failed: hash=0x0000000000000000 flat slot 0: cannot evaluate ReadConstBuffer; value = ReadConstBuffer[mem0 kind=1 off=0x200](GetBufferResource(GetUserData(imm), GetUserData(imm), GetUserData(imm), 0x0), 0x0)
+shader resource specialization failed: runtime descriptor sources could not be evaluated

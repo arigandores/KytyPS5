@@ -1,0 +1,20 @@
+2026-10-13T04:19:44Z M6a3 HPP-856 start; lock absent; read ROADMAP p.772, review M6b2, code 97198ce9
+2026-10-13T04:21:02Z patch_m6a3.py applied to worktree (first code edit)
+2026-10-13T04:22:14Z stand run 1 on wt: pure 128/128 (driver want 120 - count error of the driver), audio push 5 rc 0x80260008 (queue depth 4) -> patch_m6a3_b.py (queue_depth 8), driver want 128
+2026-10-13T04:22:28Z stand run 2 on wt: ALL OK
+2026-10-13T04:23:44Z patch_m6a3_c.py (case ao_obj_span) applied to wt; driver want 132; mut_m6a3.py made (members named before the run)
+2026-10-13T04:23:59Z stand run 3 on wt: ALL OK
+2026-10-13T04:24:17Z mut batch 1 start
+2026-10-13T04:25:12Z mut_m6a3.py full run start
+2026-10-13T04:29:15Z mut_m6a3.py full run end
+2026-10-13T04:29:39Z check_gate_order wt: check_gate_order.py: error: unrecognized arguments: C:/kyty/m657/m6a/wt
+2026-10-13T04:29:46Z check_gate_order wt: GATE ORDER: clean
+2026-10-13T04:29:58Z worktree commit 3d227024 (on 97198ce9)
+2026-10-13T04:30:04Z emulator build wt (version + kyty_emulator) start
+2026-10-13T04:30:33Z emulator build wt end
+2026-10-13T04:30:46Z binary sha256 2179005bc42e42133e92d4a4c9cc0a2f33b3670f0263a6ca67c2c3804ac7e43f pinned C:/kyty/m657/bin/kyty_emulator_2179005b.exe (not installed); shader_cfg_tests build start
+2026-10-13T04:31:28Z shader_cfg_tests: rc 0 [test] lines 135 failed names 0 failed lines 5 spv 374; spv vs M6a2: ALL OK
+2026-10-13T04:32:01Z main commit 534d75af (cherry-pick of 3d227024): ALL OK
+2026-10-13T04:34:11Z stand on main build (wtmain 534d75af): ALL OK
+2026-10-13T04:36:14Z kyty_emulator main build (compile check, wtmain 534d75af): BUILD OK: C:\kyty\m657\m6a\buildmain\install\kyty_emulator.e
+2026-10-13T04:37:22Z report.md written; docs commit

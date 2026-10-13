@@ -1,0 +1,16 @@
+track M link M6a3 (HPP-856): KYTY_DIAG_M5W2 - OS-checked fallback read of object PCM (ao_obj_vq), stand R8 case 0x34121212 (ROADMAP s122 item 772(v), (g))
+
+Measurement only (default 0, no decision changes at any value):
+- T125 (RC2 of M6b2): when the copy by TryReadBacking is refused (it serves storage mappings only; private commits
+  of module images, stacks and TLS are refused), every page of the grain is asked of the OS by VirtualQuery
+  without any lock of the emulator - MEM_COMMIT, protection READONLY / READWRITE / WRITECOPY / EXECUTE_READ /
+  EXECUTE_READWRITE / EXECUTE_WRITECOPY, no PAGE_GUARD / PAGE_NOACCESS; all readable - raw read (as the bus
+  ports) and the new reference field ao_obj_vq; otherwise ao_obj_unread. ao_obj_vq is appended at the end of
+  "M5W2Stat:" after inv_part_src; the other fields and their order are unchanged.
+- Stand tests/MWave2DiagStand.cpp: object PCM on a private commit (AllocateRuntimeMemory) nonzero / zero,
+  0x1000, storage memory, committed PAGE_NOACCESS and PAGE_GUARD host pages, a grain spanning a committed and a
+  reserved page; audio push 5 at a private commit (queue depth 8); R8 case 0x34121212 -> clr_dw_div8 1
+  (P2 of M6b2).
+Translation signature set untouched. Not run in the game (WIP until the M6c tags).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

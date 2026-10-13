@@ -1,0 +1,40 @@
+LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100
+	 guest address-space self-test: ok
+	 direct-memory sub-64K placeholder self-test: ok
+	 buffer      = 0x00000000005f2fe0
+	 buffer_size = 0x0000000000020000
+	 ctx         = 0x0000000000000001
+	 queue_depth = 8, num_grains = 256
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000001
+	 port_type     = 256
+	 data_format   = 0x00000100
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000000
+	 audio_handle  = 0
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000002
+	 port_type     = 0
+	 data_format   = 0x00000300
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000000
+	 audio_handle  = 0
+	 in_addr  = 0x0000000000000000
+	 out_addr = 0x0000000200000000
+	 size     = 262144
+	 mode     = ReadWrite
+	 flags    = 0x00000000
+	 name     = m6a2stand
+	 gpu_mode = NoAccess
+M5W2: mode=0
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000003
+	 port_type     = 256
+	 data_format   = 0x00000100
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000000
+	 audio_handle  = 0
+LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=9 bytes=1198 max_queued_bytes=609 sync_lines=0 drain_timeouts=0

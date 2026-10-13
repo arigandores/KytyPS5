@@ -1,0 +1,6 @@
+MStand: m6 arm=audio push=1 knob=1 rc=0 d_obj_push=1 d_obj_nz=1 d_obj_nopcm=0 d_bus_push=1 d_bus_nz=1 d_pushes=1 d_obj_unread=0 d_obj_vq=0 match=1
+MStand: m6 arm=audio push=2 knob=1 rc=0 d_obj_push=1 d_obj_nz=0 d_obj_nopcm=0 d_bus_push=1 d_bus_nz=0 d_pushes=1 d_obj_unread=0 d_obj_vq=0 match=1
+MStand: m6 arm=audio push=3 knob=1 rc=0 d_obj_push=1 d_obj_nz=0 d_obj_nopcm=1 d_bus_push=1 d_bus_nz=0 d_pushes=1 d_obj_unread=0 d_obj_vq=0 match=1
+MStand: m6 arm=audio push=4 knob=1 rc=0 d_obj_push=1 d_obj_nz=0 d_obj_nopcm=1 d_bus_push=1 d_bus_nz=0 d_pushes=1 d_obj_unread=1 d_obj_vq=0 match=1
+MStand: m6 arm=audio push=5 knob=1 rc=0 d_obj_push=1 d_obj_nz=1 d_obj_nopcm=1 d_bus_push=1 d_bus_nz=0 d_pushes=1 d_obj_unread=0 d_obj_vq=1 match=1
+MStand: m6 arm=audio knob=1 on=1 total=5 match=5 END

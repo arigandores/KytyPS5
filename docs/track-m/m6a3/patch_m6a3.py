@@ -1,0 +1,271 @@
+"""Track M, M6a3 (HPP-856, ROADMAP s122 item 772(v), (g)): fallback read of the object PCM checked by the OS
+(VirtualQuery) when TryReadBacking refuses, new reference field ao_obj_vq (last field of M5W2Stat), stand: private
+commit (nonzero / zero), 0x1000, storage memory, committed PAGE_NOACCESS and PAGE_GUARD pages, R8 case 0x34121212.
+Anchors are whole lines; each must match exactly once. CRLF is stripped before the search and restored after.
+Usage: python patch_m6a3.py <tree root>   Last line ALL OK or FAIL."""
+import sys
+
+ROOT = sys.argv[1].rstrip('/')
+T = chr(9)
+NL = chr(10)
+fails = []
+
+
+def L(*parts):
+    return ''.join(parts)
+
+
+def edit(rel, pairs):
+    path = ROOT + '/' + rel
+    raw = open(path, 'rb').read()
+    crlf = b'\r\n' in raw
+    text = raw.decode('utf-8').replace('\r\n', '\n')
+    for old, new in pairs:
+        n = text.count(old)
+        if n != 1:
+            fails.append('%s: anchor x%d: %s' % (rel, n, old.splitlines()[0][:90] if old else '<empty>'))
+            continue
+        text = text.replace(old, new, 1)
+    if crlf:
+        text = text.replace('\n', '\r\n')
+    open(path, 'wb').write(text.encode('utf-8'))
+
+
+# ------------------------------------------------------------------ diagM5W2.h
+H = 'src/libs/diagM5W2.h'
+edit(H, [
+    (L('//   M6a2 (item 770(d)): inv_part_src - the pairs of inv_part with coverage tested against SourceRange() (size =', NL,
+       '//     source_size or info.data.size) instead of info.data (reference);', NL),
+     L('//   M6a2 (item 770(d)): inv_part_src - the pairs of inv_part with coverage tested against SourceRange() (size =', NL,
+       '//     source_size or info.data.size) instead of info.data (reference);', NL,
+       '//   M6a3 (item 772(v)): when the copy by TryReadBacking is refused (it serves only storage mappings - the private', NL,
+       '//     commits of module images, stacks and TLS are refused), every page of the grain is asked of the OS', NL,
+       '//     (VirtualQuery, no lock of the emulator): MEM_COMMIT with a readable protection and without PAGE_GUARD /', NL,
+       '//     PAGE_NOACCESS - the grain is read raw (as the bus ports) and counted ao_obj_vq (reference; also in', NL,
+       '//     ao_obj_push, in ao_obj_nz by content); otherwise ao_obj_unread (no form of read served the grain);', NL)),
+    (L(T, 'uint64_t inv_part_src;  // M6a2', NL),
+     L(T, 'uint64_t inv_part_src;  // M6a2', NL,
+       T, 'uint64_t ao_obj_vq;     // M6a3', NL)),
+])
+
+# ------------------------------------------------------------------ diagM5W2.cpp
+D = 'src/libs/diagM5W2.cpp'
+edit(D, [
+    (L('#include "common/envFlag.h"', NL),
+     L('#include "common/common.h"', NL,
+       '#include "common/envFlag.h"', NL)),
+    (L('#include <vulkan/vulkan.hpp>', NL),
+     L('#include <vulkan/vulkan.hpp>', NL,
+       NL,
+       '#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS', NL,
+       '#ifndef NOMINMAX', NL,
+       '#define NOMINMAX', NL,
+       '#endif', NL,
+       '#include <windows.h> // IWYU pragma: keep', NL,
+       '#endif', NL)),
+    (L('std::atomic<uint64_t> g_inv_part_src {0};', NL),
+     L('std::atomic<uint64_t> g_inv_part_src {0};', NL,
+       '// M6a3 (ROADMAP s122 item 772(v)).', NL,
+       'std::atomic<uint64_t> g_ao_obj_vq {0};', NL)),
+    (L('uint64_t Load(const std::atomic<uint64_t>& a) {', NL),
+     L('// M6a3 (item 772(v)): true if every page of [addr, addr + size) is committed with a readable protection', NL,
+       '// (PAGE_READONLY, PAGE_READWRITE, PAGE_WRITECOPY, PAGE_EXECUTE_READ, PAGE_EXECUTE_READWRITE,', NL,
+       '// PAGE_EXECUTE_WRITECOPY) and without PAGE_GUARD / PAGE_NOACCESS. Asked of the OS only (VirtualQuery walks the', NL,
+       '// regions of equal attributes that cover the range), no lock of the emulator is taken. The memory can still', NL,
+       '// change between this answer and the read - the class of the raw read of the bus ports (item 769(g)(2)).', NL,
+       'bool OsReadable(uint64_t addr, uint64_t size) {', NL,
+       '#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS', NL,
+       T, 'if (addr == 0 || size == 0 || UINT64_MAX - addr < size) {', NL,
+       T, T, 'return false;', NL,
+       T, '}', NL,
+       T, 'const uint64_t end = addr + size;', NL,
+       T, 'uint64_t       p   = addr;', NL,
+       T, 'while (p < end) {', NL,
+       T, T, 'MEMORY_BASIC_INFORMATION mbi {};', NL,
+       T, T, 'if (VirtualQuery(reinterpret_cast<LPCVOID>(p), &mbi, sizeof(mbi)) != sizeof(mbi) || mbi.State != MEM_COMMIT) {', NL,
+       T, T, T, 'return false;', NL,
+       T, T, '}', NL,
+       T, T, 'const DWORD prot = mbi.Protect;', NL,
+       T, T, 'if ((prot & (PAGE_GUARD | PAGE_NOACCESS)) != 0) {', NL,
+       T, T, T, 'return false;', NL,
+       T, T, '}', NL,
+       T, T, 'switch (prot & 0xffu) {', NL,
+       T, T, T, 'case PAGE_READONLY:', NL,
+       T, T, T, 'case PAGE_READWRITE:', NL,
+       T, T, T, 'case PAGE_WRITECOPY:', NL,
+       T, T, T, 'case PAGE_EXECUTE_READ:', NL,
+       T, T, T, 'case PAGE_EXECUTE_READWRITE:', NL,
+       T, T, T, 'case PAGE_EXECUTE_WRITECOPY: break;', NL,
+       T, T, T, 'default: return false;', NL,
+       T, T, '}', NL,
+       T, T, 'const uint64_t region_end = reinterpret_cast<uint64_t>(mbi.BaseAddress) + mbi.RegionSize;', NL,
+       T, T, 'if (region_end <= p) {', NL,
+       T, T, T, 'return false;', NL,
+       T, T, '}', NL,
+       T, T, 'p = region_end;', NL,
+       T, '}', NL,
+       T, 'return true;', NL,
+       '#else', NL,
+       T, '(void)addr;', NL,
+       T, '(void)size;', NL,
+       T, 'return false;', NL,
+       '#endif', NL,
+       '}', NL,
+       NL,
+       'uint64_t Load(const std::atomic<uint64_t>& a) {', NL)),
+    (L(T, T, 'if (!Libs::LibKernel::Memory::TryReadBacking(reinterpret_cast<uint64_t>(pcm), copy.data(), bytes)) {', NL,
+       T, T, T, 'Bump(g_ao_obj_unread);', NL,
+       T, T, T, 'return;', NL,
+       T, T, '}', NL),
+     L(T, T, 'if (!Libs::LibKernel::Memory::TryReadBacking(reinterpret_cast<uint64_t>(pcm), copy.data(), bytes)) {', NL,
+       T, T, T, '// M6a3 (item 772(v)): the fallback - pages readable by the OS are read raw (private commits).', NL,
+       T, T, T, 'if (!OsReadable(reinterpret_cast<uint64_t>(pcm), bytes)) {', NL,
+       T, T, T, T, 'Bump(g_ao_obj_unread);', NL,
+       T, T, T, T, 'return;', NL,
+       T, T, T, '}', NL,
+       T, T, T, 'std::memcpy(copy.data(), pcm, static_cast<size_t>(bytes));', NL,
+       T, T, T, 'Bump(g_ao_obj_vq);', NL,
+       T, T, '}', NL)),
+    (L(T, '        Load(g_minlod_div_x), Load(g_clr_dw_div8), Load(g_ao_obj_unread), Load(g_inv_part_src)};', NL),
+     L(T, '        Load(g_minlod_div_x), Load(g_clr_dw_div8), Load(g_ao_obj_unread), Load(g_inv_part_src),', NL,
+       T, '        Load(g_ao_obj_vq)};', NL)),
+    (L(T, '     " ao_obj_unread=%" PRIu64 " inv_part_src=%" PRIu64 "\\n",', NL),
+     L(T, '     " ao_obj_unread=%" PRIu64 " inv_part_src=%" PRIu64 " ao_obj_vq=%" PRIu64 "\\n",', NL)),
+    (L(T, '     t.minlod_div_x, t.clr_dw_div8, t.ao_obj_unread, t.inv_part_src);', NL),
+     L(T, '     t.minlod_div_x, t.clr_dw_div8, t.ao_obj_unread, t.inv_part_src, t.ao_obj_vq);', NL)),
+])
+
+# ------------------------------------------------------------------ stand
+S = 'tests/MWave2DiagStand.cpp'
+edit(S, [
+    (L('#include "common/emulatorConfig.h"', NL),
+     L('#include "common/common.h"', NL,
+       '#include "common/emulatorConfig.h"', NL)),
+    (L('#include <vulkan/vulkan.hpp>', NL),
+     L('#include <vulkan/vulkan.hpp>', NL,
+       NL,
+       '#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS', NL,
+       '#ifndef NOMINMAX', NL,
+       '#define NOMINMAX', NL,
+       '#endif', NL,
+       '#include <windows.h> // IWYU pragma: keep', NL,
+       '#endif', NL)),
+    (L(T, 'if (f == "inv_part_src") return t.inv_part_src;', NL),
+     L(T, 'if (f == "inv_part_src") return t.inv_part_src;', NL,
+       T, 'if (f == "ao_obj_vq") return t.ao_obj_vq;', NL)),
+    (L('const void* const UNREADABLE = reinterpret_cast<const void*>(uintptr_t {0x1000});', NL),
+     L('const void* const UNREADABLE = reinterpret_cast<const void*>(uintptr_t {0x1000});', NL,
+       NL,
+       '// M6a3 (item 772(v)): a private commit of the guest address space (AllocateRuntimeMemory -> Commit ->', NL,
+       '// MappingType::Private, the path of module images, stacks and TLS) - TryReadBacking refuses it, the OS reads it.', NL,
+       'uint8_t* PrivateAlloc(size_t size) {', NL,
+       T, 'const uint64_t addr = Libs::LibKernel::Memory::AllocateRuntimeMemory(0, size, Common::VirtualMemory::Mode::ReadWrite,', NL,
+       T, '                                                                     "m6a3stand");', NL,
+       T, 'if (addr == 0) {', NL,
+       T, T, 'std::printf("MStand: m6 private commit failed\\n");', NL,
+       T, T, 'std::fflush(stdout);', NL,
+       T, T, 'std::_Exit(3);', NL,
+       T, '}', NL,
+       T, 'auto* p = reinterpret_cast<uint8_t*>(addr);', NL,
+       T, 'std::memset(p, 0, size);', NL,
+       T, 'return p;', NL,
+       '}', NL,
+       NL,
+       '// M6a3: a committed host page with the protection prot (PAGE_NOACCESS, PAGE_READWRITE | PAGE_GUARD) - not read.', NL,
+       'const void* HostPage(uint32_t prot) {', NL,
+       '#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS', NL,
+       T, 'void* p = VirtualAlloc(nullptr, 0x1000, MEM_RESERVE | MEM_COMMIT, prot);', NL,
+       T, 'if (p == nullptr) {', NL,
+       T, T, 'std::printf("MStand: m6 host page failed prot=0x%x\\n", prot);', NL,
+       T, T, 'std::fflush(stdout);', NL,
+       T, T, 'std::_Exit(3);', NL,
+       T, '}', NL,
+       T, 'return p;', NL,
+       '#else', NL,
+       T, '(void)prot;', NL,
+       T, 'return UNREADABLE;', NL,
+       '#endif', NL,
+       '}', NL)),
+    (L(T, 'Check("ao_obj_nz_float", [&] { D::NoteAudioPort(true, f_nz, 0x100, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 1}, {"ao_obj_unread", 0}, {"ao_bus_push", 0}, {"ao_bus_nz", 0}});', NL,
+       T, 'Check("ao_obj_zero_float", [&] { D::NoteAudioPort(true, f_z, 0x100, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}});', NL,
+       T, 'Check("ao_obj_nz_int16", [&] { D::NoteAudioPort(true, s_nz, 0x101, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 1}, {"ao_obj_unread", 0}});', NL,
+       T, 'Check("ao_obj_zero_int16", [&] { D::NoteAudioPort(true, s_z, 0x101, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}});', NL,
+       T, '// M6a2 (item 770(g)): an unreadable object pointer - counted, not read, the process lives.', NL,
+       T, 'Check("ao_obj_unread", [&] { D::NoteAudioPort(true, UNREADABLE, 0x100, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_unread", 1}, {"ao_obj_nz", 0}});', NL,
+       T, 'Check("ao_bus_nz", [&] { D::NoteAudioPort(false, hf_nz.data(), 0x100, 4); },', NL,
+       T, '      {{"ao_bus_push", 1}, {"ao_bus_nz", 1}, {"ao_obj_push", 0}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}});', NL),
+     L(T, '// M6a3 (item 772(v)): storage memory (read by TryReadBacking) - ao_obj_vq 0.', NL,
+       T, 'Check("ao_obj_nz_float", [&] { D::NoteAudioPort(true, f_nz, 0x100, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 1}, {"ao_obj_unread", 0}, {"ao_bus_push", 0}, {"ao_bus_nz", 0},', NL,
+       T, '       {"ao_obj_vq", 0}});', NL,
+       T, 'Check("ao_obj_zero_float", [&] { D::NoteAudioPort(true, f_z, 0x100, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}, {"ao_obj_vq", 0}});', NL,
+       T, 'Check("ao_obj_nz_int16", [&] { D::NoteAudioPort(true, s_nz, 0x101, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 1}, {"ao_obj_unread", 0}, {"ao_obj_vq", 0}});', NL,
+       T, 'Check("ao_obj_zero_int16", [&] { D::NoteAudioPort(true, s_z, 0x101, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}, {"ao_obj_vq", 0}});', NL,
+       T, '// M6a2 (item 770(g)): an unreadable object pointer - counted, not read, the process lives.', NL,
+       T, 'Check("ao_obj_unread", [&] { D::NoteAudioPort(true, UNREADABLE, 0x100, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_unread", 1}, {"ao_obj_nz", 0}, {"ao_obj_vq", 0}});', NL,
+       T, '// M6a3 (item 772(v)): a private commit - TryReadBacking refuses, the fallback reads it (nonzero and zero).', NL,
+       T, 'float* p_nz = reinterpret_cast<float*>(PrivateAlloc(0x4000));', NL,
+       T, 'float* p_z  = reinterpret_cast<float*>(PrivateAlloc(0x4000));', NL,
+       T, 'p_nz[3]     = -0.5f;', NL,
+       T, 'Check("ao_obj_vq_nz", [&] { D::NoteAudioPort(true, p_nz, 0x100, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 1}, {"ao_obj_unread", 0}, {"ao_obj_vq", 1}});', NL,
+       T, 'Check("ao_obj_vq_zero", [&] { D::NoteAudioPort(true, p_z, 0x100, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0}, {"ao_obj_vq", 1}});', NL,
+       T, '// M6a3: committed pages the OS check refuses - PAGE_NOACCESS and PAGE_GUARD (a raw read would fault).', NL,
+       T, 'Check("ao_obj_noaccess", [&] { D::NoteAudioPort(true, HostPage(PAGE_NOACCESS), 0x100, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 1}, {"ao_obj_vq", 0}});', NL,
+       T, 'Check("ao_obj_guard", [&] { D::NoteAudioPort(true, HostPage(PAGE_READWRITE | PAGE_GUARD), 0x100, 4); },', NL,
+       T, '      {{"ao_obj_push", 1}, {"ao_obj_nz", 0}, {"ao_obj_unread", 1}, {"ao_obj_vq", 0}});', NL,
+       T, 'Check("ao_bus_nz", [&] { D::NoteAudioPort(false, hf_nz.data(), 0x100, 4); },', NL,
+       T, '      {{"ao_bus_push", 1}, {"ao_bus_nz", 1}, {"ao_obj_push", 0}, {"ao_obj_nz", 0}, {"ao_obj_unread", 0},', NL,
+       T, '       {"ao_obj_vq", 0}});', NL)),
+    (L(T, 'Check("clr_r8_rep", [&] { D::NoteClearDword(fmt(vk::Format::eR8Unorm), 0x7f7f7f7fu); },', NL,
+       T, '      {{"clr_dw", 1}, {"clr_dw_div", 0}, {"clr_dw_div8", 0}});', NL),
+     L(T, 'Check("clr_r8_rep", [&] { D::NoteClearDword(fmt(vk::Format::eR8Unorm), 0x7f7f7f7fu); },', NL,
+       T, '      {{"clr_dw", 1}, {"clr_dw_div", 0}, {"clr_dw_div8", 0}});', NL,
+       T, '// M6a3 (item 772(g), P2 of M6b2): equal low bytes, another high byte - 1 (the rule on the low 16 bits gives 0).', NL,
+       T, 'Check("clr_r8_hi_div8", [&] { D::NoteClearDword(fmt(vk::Format::eR8Unorm), 0x34121212u); },', NL,
+       T, '      {{"clr_dw", 1}, {"clr_dw_div", 0}, {"clr_dw_div8", 1}});', NL)),
+    # audio arm: push 5 - the first object port at a private commit with a nonzero grain.
+    (L('// M6a2 push 4: the first object port points to an unreadable address (ao_obj_unread 1 at =1; alive at 0 and 1).', NL),
+     L('// M6a2 push 4: the first object port points to an unreadable address (ao_obj_unread 1 at =1; alive at 0 and 1).', NL,
+       T, '// M6a3 push 5: the first object port at a private commit, nonzero grain (ao_obj_nz 1, ao_obj_vq 1 at =1).', NL)),
+    (L(T, T, 'uint64_t obj_push, obj_nz, obj_nopcm, bus_push, bus_nz, pushes, obj_unread;', NL),
+     L(T, T, 'uint64_t obj_push, obj_nz, obj_nopcm, bus_push, bus_nz, pushes, obj_unread, obj_vq;', NL)),
+    (L(T, 'const Want wants[4] = {{1, 1, 0, 1, 1, 1, 0}, {1, 0, 0, 1, 0, 1, 0}, {1, 0, 1, 1, 0, 1, 0}, {1, 0, 1, 1, 0, 1, 1}};', NL,
+       T, 'for (int i = 0; i < 4; i++) {', NL),
+     L(T, 'const Want wants[5] = {{1, 1, 0, 1, 1, 1, 0, 0}, {1, 0, 0, 1, 0, 1, 0, 0}, {1, 0, 1, 1, 0, 1, 0, 0},', NL,
+       T, '                       {1, 0, 1, 1, 0, 1, 1, 0}, {1, 1, 1, 1, 0, 1, 0, 1}};', NL,
+       T, 'auto* obj_priv = reinterpret_cast<float*>(PrivateAlloc(256 * sizeof(float)));', NL,
+       T, 'obj_priv[17]   = 0.75f;', NL,
+       T, 'for (int i = 0; i < 5; i++) {', NL)),
+    (L(T, T, '} else if (i == 3) {', NL,
+       T, T, T, 'set_pcm(obj, UNREADABLE);', NL),
+     L(T, T, '} else if (i == 3) {', NL,
+       T, T, T, 'set_pcm(obj, UNREADABLE);', NL,
+       T, T, '} else if (i == 4) {', NL,
+       T, T, T, 'set_pcm(obj, obj_priv);', NL)),
+    (L(T, T, 'const Want w      = knob != 0 ? wants[i] : Want {0, 0, 0, 0, 0, 0, 0};', NL),
+     L(T, T, 'const Want w      = knob != 0 ? wants[i] : Want {0, 0, 0, 0, 0, 0, 0, 0};', NL)),
+    (L(T, T, '              after.ao_obj_unread - before.ao_obj_unread};', NL),
+     L(T, T, '              after.ao_obj_unread - before.ao_obj_unread, after.ao_obj_vq - before.ao_obj_vq};', NL)),
+    (L(T, T, '            "d_bus_push=%llu d_bus_nz=%llu d_pushes=%llu d_obj_unread=%llu match=%d\\n",', NL),
+     L(T, T, '            "d_bus_push=%llu d_bus_nz=%llu d_pushes=%llu d_obj_unread=%llu d_obj_vq=%llu match=%d\\n",', NL)),
+    (L(T, T, '            static_cast<unsigned long long>(d.pushes), static_cast<unsigned long long>(d.obj_unread), ok ? 1 : 0);', NL),
+     L(T, T, '            static_cast<unsigned long long>(d.pushes), static_cast<unsigned long long>(d.obj_unread),', NL,
+       T, T, '            static_cast<unsigned long long>(d.obj_vq), ok ? 1 : 0);', NL)),
+])
+
+for f in fails:
+    print('FAILED ' + f)
+print('ALL OK' if not fails else 'FAIL')
+sys.exit(0 if not fails else 1)

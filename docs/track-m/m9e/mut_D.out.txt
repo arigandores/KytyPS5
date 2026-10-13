@@ -1,0 +1,10 @@
+x1_clear_noflag SURVIVED {'pure': True}
+x2_copydst_noflag SURVIVED {'pure': True}
+x3_join_dropped CAUGHT {'pure': False}
+x4_synced_ignored CAUGHT {'pure': False}
+x7_vo_flag_never SURVIVED {'pure': True}
+x8_download_noop CAUGHT {'pure': False}
+x9_s3c_site_gone SURVIVED {'pure': True}
+sources restored (sha256 of 5 files): True
+mutants 3 of 7 CAUGHT (batch, no control)
+BATCH FAIL

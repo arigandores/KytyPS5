@@ -1,0 +1,221 @@
+src/common/frameStats.h:142:	ImgImportPieces,   // ... physical pieces (vkCmdCopyBuffer regions)
+src/common/frameStats.h:146:	ImgCopyRegions,      // vkCmdCopyBufferToImage regions recorded for image uploads
+src/common/frameStats.h:678:	ClearConsumed,    // clr_ok: fills turned into a vkCmdClearColorImage / ClearDepthStencilImage
+src/common/frameStats.h:842:	C1StorageDetileCopyKb, // c1_si_dt_cp_kb: KiB copyBufferToImage really moves there
+src/common/frameStats.h:845:	C1StorageDirectCopyKb, // c1_si_nd_cp_kb: KiB copyBufferToImage really moves there
+src/common/frameStats.h:848:	C1NoStorageDetileCopyKb, // c1_ns_dt_cp_kb: KiB copyBufferToImage really moves there
+src/common/frameStats.h:851:	C1NoStorageDirectCopyKb, // c1_ns_nd_cp_kb: KiB copyBufferToImage really moves there
+src/common/frameStats.h:1693:	ClearShortcutImage,  // clr_taken_img:  TryConsumeComputeImageClear consumed the dispatch
+src/common/frameStats.h:1818:	CspFreeClear,            // cspfree_clr
+src/graphics/host_gpu/renderer/cache/bufferCache.cpp:103:		const auto offset = m_staging_buffer.Copy(bytes, chunk, 4);
+src/graphics/host_gpu/renderer/cache/bufferCache.cpp:1315:			if (!m_host_import.Resolve(cursor, left, &region)) {
+src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2054:		if (!m_host_import.Resolve(pieces[0].backing_offset, size, &region)) {
+src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2077:			if (!m_host_import.Resolve(offset, left, &region)) {
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:823:		destination.Upload(color_copies, color_buffer.buffer, color_buffer.offset,
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:829:		destination.Upload(depth_copies, depth_buffer.buffer, depth_buffer.offset,
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:896:	destination.CopyMip(source, mip, layer);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1439:		image.Upload(copies, linear.buffer, linear.offset, linear.size,
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1525:				m_tiler.DetileToImage(image, fuse_format, source, source_offset, source_size,
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2710:		attachment.loadOp      = vk::AttachmentLoadOp::eClear;
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2742:		command.Handle().clearColorImage(image.backing.image, vk::ImageLayout::eTransferDstOptimal,
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2745:		command.Handle().clearDepthStencilImage(image.backing.image,
+src/graphics/host_gpu/renderer/commandRecorder.h:67:	BufferUpload,  // RecordBufferUpload, vk::BufferCopy[count]: barrier, vkCmdCopyBuffer, barrier
+src/graphics/host_gpu/renderer/context.cpp:417:		    attachment.is_clear ? vk::AttachmentLoadOp::eClear : vk::AttachmentLoadOp::eLoad;
+src/graphics/host_gpu/renderer/context.cpp:427:	    depth_stencil.depth_clear ? vk::AttachmentLoadOp::eClear : vk::AttachmentLoadOp::eLoad;
+src/graphics/host_gpu/renderer/context.cpp:435:	    depth_stencil.stencil_clear ? vk::AttachmentLoadOp::eClear : vk::AttachmentLoadOp::eLoad;
+src/graphics/host_gpu/renderer/depthRenderTarget.cpp:485:	command.copyImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal,
+src/graphics/host_gpu/renderer/image/blitHelper.cpp:163:	depth_attachment.loadOp                  = vk::AttachmentLoadOp::eClear;
+src/graphics/host_gpu/renderer/image/image.cpp:330:	command.copyBufferToImage(buffer, backing.image, vk::ImageLayout::eTransferDstOptimal,
+src/graphics/host_gpu/renderer/image/image.cpp:455:	command.copyImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal, backing.image,
+src/graphics/host_gpu/renderer/image/image.cpp:506:		command.copyImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal, backing.image,
+src/graphics/host_gpu/renderer/image/image.cpp:516:		command.resolveImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal,
+src/graphics/host_gpu/renderer/image/image.cpp:610:				command.copyBufferToImage(buffer.Handle(), backing.image,
+src/graphics/host_gpu/renderer/image/image.cpp:619:void Image::CopyMip(Image& source, uint32_t mip, uint32_t layer) {
+src/graphics/host_gpu/renderer/image/image.cpp:646:	command.copyImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal, backing.image,
+src/graphics/host_gpu/renderer/image/image.h:94:	void CopyMip(Image& source, uint32_t mip, uint32_t layer);
+src/graphics/host_gpu/renderer/image/tiler.cpp:498:void TileManager::DetileToImage(Image& image, vk::Format view_format, vk::Buffer tiled,
+src/graphics/host_gpu/renderer/image/tiler.h:76:	void DetileToImage(Image& image, vk::Format view_format, vk::Buffer tiled,
+src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3432:	const auto offset = buffer.Copy(data.data(), data.size_bytes(), 256);
+src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3616:			buffer.Handle().clearColorImage(image.backing.image,
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5840:			Common::FrameStats::Add(Common::FrameStats::Counter::CspFreeClear, 1);
+src/graphics/host_gpu/renderer/render.h:488:	[[nodiscard]] bool TryConsumeComputeImageClear(const ShaderComputeInputInfo& input,
+src/graphics/host_gpu/renderer/renderCompute.cpp:168:bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& input,
+src/graphics/host_gpu/renderer/renderCompute.cpp:560:	    TryConsumeComputeImageClear(input_info, buffer, thread_group_x, thread_group_y,
+src/graphics/host_gpu/renderer/renderDraw.cpp:2275:			buffer.Handle().clearDepthStencilImage(image.backing.image,
+src/graphics/host_gpu/renderer/renderDraw.cpp:2970:		prepared.offset = stream.Copy(source.host_data, source.size, 16);
+src/graphics/host_gpu/renderer/renderDraw.cpp:5413:	destination.Resolve(source, {src.guest_mip_level, 1, src.guest_array_layer, 1},
+src/graphics/presentation/videoOut.cpp:2630:				    {"cspfree_clr", FS::Counter::CspFreeClear, false},
+src/graphics/presentation/window/swapchain.cpp:290:	command.copyImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal, image.image,
+src/graphics/presentation/window/swapchain.cpp:300:	command.clearColorImage(image.image, vk::ImageLayout::eTransferDstOptimal, &color, 1, &range);
+src/graphics/presentation/window/swapchain.cpp:729:	vk_command.blitImage(source.image, vk::ImageLayout::eTransferSrcOptimal,
+src/graphics/shader/recompiler/Tessellation.cpp:159:	const auto* base = inst.Arg(3).Resolve().TryInstruction();
+src/graphics/shader/recompiler/Tessellation.cpp:167:	value        = value.Resolve();
+src/graphics/shader/recompiler/Tessellation.cpp:172:		return source->Arg(0).Resolve() == predicate.Resolve()
+src/graphics/shader/recompiler/Tessellation.cpp:180:	if (lhs != source->Arg(0).Resolve() || rhs != source->Arg(1).Resolve()) {
+src/graphics/shader/recompiler/Tessellation.cpp:256:				address    = inst.Arg(2).Resolve();
+src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.cpp:18:	const auto value = value_in.Resolve();
+src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.cpp:29:		const auto v = inst->Arg(i).Resolve();
+src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.cpp:264:					const auto slot = inst.Arg(1).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterAlu.cpp:357:	return arg1.Resolve().IsImmediate()
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterAlu.cpp:358:	           ? EmitConstantShift64(state, spv::OpShiftLeftLogical, arg0, arg1.Resolve().U32())
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterAlu.cpp:364:	return arg1.Resolve().IsImmediate()
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterAlu.cpp:365:	           ? EmitConstantShift64(state, spv::OpShiftRightLogical, arg0, arg1.Resolve().U32())
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterAlu.cpp:371:	return arg1.Resolve().IsImmediate()
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterAlu.cpp:372:	           ? EmitConstantShift64(state, spv::OpShiftRightArithmetic, arg0, arg1.Resolve().U32())
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:412:	value = value.Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:420:	const auto exec  = wrapper->Arg(0).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:421:	const auto inner = wrapper->Arg(1).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp:427:	       write->Arg(0).Resolve() == exec && MImmediateU32(write->Arg(1).Resolve(), packed);
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:86:	const auto soffset_value = inst.Arg(3).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:148:		const auto* handle = inst.Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:305:	const auto* handle = inst.Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:383:	value = value.Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:392:		v = v.Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:455:	const auto offset_value = inst.Arg(1).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:495:		    (other_mem.offset & 3u) != 0u || !(other.Arg(1).Resolve() == offset_value)) {
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:693:	const auto* handle = inst.Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:694:	const auto  low    = inst.Arg(1).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:695:	const auto  active = inst.Arg(inst.NumArgs() - 1).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:719:			    other.Arg(0).Resolve().TryInstruction() != handle ||
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:720:			    !(other.Arg(1).Resolve() == low) ||
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:721:			    !(other.Arg(other.NumArgs() - 1).Resolve() == active)) {
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:725:					     other.Arg(0).Resolve().TryInstruction() == handle ? 1 : 0,
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:726:					     other.Arg(1).Resolve() == low ? 1 : 0,
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:727:					     other.Arg(other.NumArgs() - 1).Resolve() == active ? 1 : 0,
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:974:	const auto  handle = inst.Arg(0).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:975:	const auto  low    = inst.Arg(1).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:976:	const auto  high   = inst.Arg(2).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:977:	const auto  active = inst.Arg(inst.NumArgs() - 1).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1001:			    (other_mem.offset & 3u) != 0u || !(other.Arg(0).Resolve() == handle) ||
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1002:			    !(other.Arg(1).Resolve() == low) || !(other.Arg(2).Resolve() == high) ||
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1003:			    !(other.Arg(other.NumArgs() - 1).Resolve() == active)) {
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1124:	const auto active_value  = inst.Arg(inst.NumArgs() - 1).Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1133:		const auto* handle = inst.Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1147:			const auto* handle = inst.Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:649:	value = value.Resolve();
+src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:899:			value                  = value.Resolve();
+src/graphics/shader/recompiler/frontend/translate/Control.cpp:333:	    IR::Value(exec_before).Resolve() == program.pixel_live_exec.Resolve()) {
+src/graphics/shader/recompiler/ir/Program.cpp:59:	left  = left.Resolve();
+src/graphics/shader/recompiler/ir/Program.cpp:60:	right = right.Resolve();
+src/graphics/shader/recompiler/ir/Program.cpp:162:	value            = value.Resolve();
+src/graphics/shader/recompiler/ir/Program.cpp:171:		const auto current = pending.back().Resolve();
+src/graphics/shader/recompiler/ir/Program.cpp:646:		info.condition       = info.condition.Resolve();
+src/graphics/shader/recompiler/ir/Program.cpp:647:		info.indirect_target = info.indirect_target.Resolve();
+src/graphics/shader/recompiler/ir/Value.cpp:74:	return IsIdentity() ? inst->Arg(0).Resolve() : *this;
+src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp:22:	return inst.Arg(index).Resolve();
+src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp:30:	inst.ReplaceUsesWith(value.Resolve());
+src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp:194:		const auto lhs = producer->Arg(0).Resolve();
+src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp:195:		const auto rhs = producer->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp:253:	const auto arg = [&](size_t index) { return inst.Arg(index).Resolve(); };
+src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp:358:	value = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:182:	mask      = mask.Resolve();
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:183:	predicate = predicate.Resolve();
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:279:		value = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:310:	const auto condition = inst.Arg(0).Resolve();
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:312:	if (auto* inner = inst.Arg(2).Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:318:		inst.SetArg(2, inner->Arg(2).Resolve());
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:321:	if (auto* inner = inst.Arg(1).Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:327:		inst.SetArg(1, inner->Arg(1).Resolve());
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:366:			if (!inst.Arg(0).Resolve().IsImmediate()) {
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:381:		const auto predicate = select->Arg(0).Resolve();
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:382:		const auto new_value = select->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/PredicationElimination.cpp:383:		const auto old_value = select->Arg(2).Resolve();
+src/graphics/shader/recompiler/ir/passes/ReadLaneElimination.cpp:21:		value      = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/ReadLaneElimination.cpp:26:		const auto selector = inst->Arg(2).Resolve();
+src/graphics/shader/recompiler/ir/passes/ReadLaneElimination.cpp:90:	const auto first = arguments.front().Resolve();
+src/graphics/shader/recompiler/ir/passes/ReadLaneElimination.cpp:92:	                        [&](Value argument) { return argument.Resolve() == first; })) {
+src/graphics/shader/recompiler/ir/passes/ReadLaneElimination.cpp:115:			const auto selector = inst.Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:210:		auto value = pending.back().Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:218:			const auto slot = inst->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:859:	value = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:944:		    store->Arg(3).Resolve() != Value(true)) return {};
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:971:		if (store_op == stores.end() || store->Arg(2).Resolve() != Value(0u) ||
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:972:		    store->Arg(3).Resolve() != Value(0u) || store->Arg(5).Resolve() != Value(true))
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:985:	data = data.Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceMaterialization.cpp:1016:		value              = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:24:	value = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:38:			const auto shift = inst->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:49:		value            = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:54:		const auto left           = inst->Arg(0).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:55:		const auto right          = inst->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:136:			const auto* inst = value.Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:185:			descriptor.dwords[i] = LowerUniformPhi(handle.Arg(i).Resolve(), pc);
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:190:		const auto dword0 = descriptor.dwords[0].Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:256:		value     = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:285:		if (condition.IsEmpty() || condition.Resolve().GetType() != Type::U1 ||
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:306:			if (descriptor.dwords[i].Resolve().GetType() != Type::U32) {
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:336:		value = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:399:		value           = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:406:				value = candidate->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:408:				value = candidate->Arg(0).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:420:			selector = multiply->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:422:			selector = multiply->Arg(0).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:440:			heap_reads[dword] = handle.Arg(dword).Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:450:			auto* current_handle = heap_reads[dword]->Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:457:				heap_offset = heap_reads[dword]->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:472:		auto* material_read = shift->Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:482:		auto* material_handle = material_read->Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:557:				auto* handle = inst.Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:571:		handle = value.Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:580:				const auto* value = descriptor.dwords[bad_dword].Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:596:		const auto* handle = value.Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:726:		value            = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:732:			const auto slot = inst->NumArgs() == 2 ? inst->Arg(1).Resolve() : Value {};
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:782:			auto* load   = read.value.Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:791:				const auto* inst = candidate.Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:796:				const auto arg = inst->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:823:		auto* handle = inst.Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:949:				handle = inst.Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:968:		handle               = inst.Arg(0).Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:168:		value = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:199:			const auto slot = inst->NumArgs() == 2 ? inst->Arg(1).Resolve() : Value {};
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:200:			if (inst->NumArgs() != 2 || inst->Arg(0).Resolve().TryInstruction() == nullptr ||
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:201:			    inst->Arg(0).Resolve().TryInstruction()->GetOpcode() !=
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:217:		    inst->Arg(0).Resolve() == m_active_mask) {
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:265:			m_active_mask          = inst->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:286:			const auto index = inst->NumArgs() == 2 ? inst->Arg(1).Resolve() : Value {};
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:292:			const auto  index  = inst->NumArgs() == 2 ? inst->Arg(1).Resolve() : Value {};
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:368:				    inst.Arg(1).Resolve().IsImmediate() &&
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:392:		value = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:423:		const auto offset = inst->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:457:			const auto* inst = m_program.srt_reads[slot].value.Resolve().TryInstruction();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:528:				if (info.condition.Resolve() == Value(patch.inst)) {
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:531:				if (info.indirect_target.Resolve() == Value(patch.inst)) {
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:557:	      m_clean_evaluator(clean_evaluator), m_active_mask(active_mask.Resolve()) {}
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:600:		value = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:619:		    inst->NumArgs() == 3 && inst->Arg(0).Resolve() == m_active_mask) {
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:668:			const auto arg = inst.Arg(index).Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:697:		const auto index = inst.Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:833:				const auto slot = inst.Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:1202:	value = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:1230:		const auto slot = inst->Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:1548:		value = value.Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:1565:		    inst->Arg(0).Resolve() == Value(const_cast<Inst*>(ctx.mask))) {
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:1580:		const auto index = inst.Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:1688:					const auto arg = inst.Arg(index).Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:1705:				const auto  mask      = inst.Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp:1722:				const auto slot = inst.Arg(1).Resolve();
+src/graphics/shader/recompiler/ir/passes/SsaRewrite.cpp:269:			const auto operand = phi.Arg(index).Resolve();
+src/graphics/shader/recompiler/ir/passes/SsaRewrite.cpp:270:			if (operand == same.Resolve() || operand == Value(&phi)) {
+src/libs/libFont.cpp:2026:int KYTY_SYSV_ABI FontWritingLineClear(FontWritingLine writing_line) {
+src/libs/libFont.cpp:2370:	LIB_FUNC("1+DgKL0haWQ", Font::FontWritingLineClear);
+src/libs/libJson2.cpp:170:static void JsonValueClear(JsonValue* self);
+src/libs/libJson2.cpp:269:		JsonValueClear(self);
+src/libs/libJson2.cpp:308:		JsonValueClear(&item.value);
+src/libs/libJson2.cpp:374:static void JsonValueClear(JsonValue* self) {
+src/libs/libJson2.cpp:403:	JsonValueClear(dst);
+src/libs/libJson2.cpp:440:	JsonValueClear(out);
+src/libs/libJson2.cpp:754:		JsonValueClear(self);
+src/libs/libJson2.cpp:765:	JsonValueClear(reinterpret_cast<JsonValue*>(self));
+src/libs/libJson2.cpp:778:	JsonValueClear(self);
+src/libs/libJson2.cpp:788:	JsonValueClear(self);
+src/libs/libJson2.cpp:798:	JsonValueClear(self);
+src/libs/libJson2.cpp:808:	JsonValueClear(self);
+src/libs/libJson2.cpp:818:	JsonValueClear(self);
+src/libs/libJson2.cpp:828:	JsonValueClear(self);
+src/libs/libJson2.cpp:1117:		JsonValueClear(&parsed);
+src/libs/libJson2.cpp:1122:	JsonValueClear(&parsed);
+src/libs/libJson2.cpp:1325:	JsonValueClear(self);
+src/libs/libJson2.cpp:1338:		JsonValueClear(self);
+src/libs/libJson2.cpp:1356:	JsonValueClear(&copy);
+src/libs/libJson2.cpp:1368:		JsonValueClear(value);

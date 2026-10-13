@@ -1,0 +1,17 @@
+2026-10-13T08:35:58Z start M9e read diff d490f648
+2026-10-13T08:38:01Z own git grep RC12 base 3d227024
+2026-10-13T08:41:30Z API check HPP-861 before stands; anchors check
+2026-10-13T08:41:41Z own run_stand_m9d all arms on m9d build: ALL OK 083285df
+2026-10-13T08:41:59Z mutants batch A start (pure m1-m12,t1-t4)
+2026-10-13T08:44:04Z mutants batch A end: BATCH OK
+2026-10-13T08:44:11Z API HPP-861 checked; mutants batch B start (m7 m8s m13 m14 m15)
+2026-10-13T08:51:01Z mutants batch B end: BATCH OK
+2026-10-13T08:51:15Z API HPP-861 checked; mutants batch C start (g1-g4)
+2026-10-13T08:53:05Z mutants batch C end: BATCH OK
+2026-10-13T08:53:13Z API HPP-861 checked; mutants batch D start (x1-x9)
+2026-10-13T08:56:08Z mutants batch D end: BATCH FAIL
+2026-10-13T08:56:18Z control start
+2026-10-13T08:57:10Z control end: CONTROL build=1 arms={'pure': True, 'cls': True, 'gpu1': True, 'gpu0': True, 'gpuv': True}
+2026-10-13T08:58:29Z patch-id -U0 wt=fbb8cd111dcb main=fbb8cd111dcb
+2026-10-13T09:00:13Z pinned binary strings checked 751bfa7f
+2026-10-13T09:02:41Z review.md written 078dffe1

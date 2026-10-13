@@ -1,0 +1,41 @@
+ELF C:/kyty/f287/f26a/eboot.elf size 251414288
+vsnprintf(Q2V+iqvjgC0)                        stub 0x74e7400  sites 24  call@0x1c39 call@0x1c153 call@0x1c32a call@0x39b93 call@0x39cb6 call@0x27e4b7 call@0x2b8d20 call@0x38e147 call@0x392c51 call@0x392d34 call@0x3a0bf7 jmp@0x3a0e19
+libc_printf(hcuQgD53UxM)                      stub 0x74e7440  sites 762  call@0x27fd6e call@0x28106d call@0x281105 call@0x2a0276 call@0x2a0311 call@0x2a033d call@0x2a79cd call@0x2a7cf0 call@0x2b1747 call@0x2b1768 call@0x2b178c call@0x2b3d0e
+AvPlayerSetLooping(OVths0xGfho)               stub 0x74ebca0  sites 1  call@0x10551c3
+AvPlayerSetTrickSpeed(av8Z++94rs0)            stub 0x74ebcb0  sites 1  call@0x1055209
+AvPlayerStop(ZC17w3vB5Lo)                     stub 0x74ebcc0  sites 1  call@0x1054b41
+AvPlayerStart(ET4Gr-Uu07s)                    stub 0x74ebcd0  sites 1  call@0x1054a71
+AvPlayerAddSource(KMcEa+rHsIo)                stub 0x74ebce0  sites 1  call@0x105403f
+AvPlayerInit(aS66RI0gGgo)                     stub 0x74ebcf0  sites 1  call@0x1053ddf
+AvPlayerPostInit(HD1YKVU26-M)                 stub 0x74ebd00  sites 1  call@0x1054018
+AvPlayerIsActive(UbQoYawOsfY)                 stub 0x74ebd10  sites 1  call@0x105523d
+AvPlayerEnableStream(ODJK2sn9w4A)             stub 0x74ebd20  sites 1  call@0x10547aa
+AvPlayerGetStreamInfo(d8FcbzfAdQw)            stub 0x74ebd30  sites 1  call@0x1054706
+AvPlayerResume(w5moABNwnRY)                   stub 0x74ebd40  sites 1  call@0x1054f01
+AvPlayerPause(9y5v+fGN4Wk)                    stub 0x74ebd50  sites 1  call@0x1054ec1
+AvPlayerGetVideoDataEx(JdksQu8pNdQ)           stub 0x74ebd60  sites 1  call@0x1055ddc
+AvPlayerClose(NkJwDzKmIlw)                    stub 0x74ebd70  sites 1  call@0x105499f
+AvPlayerStreamCount(hdTyRzCXQeQ)              stub 0x74ebd80  sites 1  call@0x10546d0
+AvPlayerJumpToTime(XC9wM+xULz8)               stub 0x74ebd90  sites 1  call@0x1055037
+AvPlayerSetAvSyncMode(k-q+xOxdc3E)            stub 0x74ebda0  sites 1  call@0x10540a4
+AudioOut2ContextQueryMemory(pDmme7Bgm6E)      stub 0x74ebdb0  sites 1  call@0xeb3229
+AudioOut2ContextPush(aII9h5nli9U)             stub 0x74ebdc0  sites 1  call@0xeb39ca
+AudioOut2ContextGetQueueLevel(R7d0F1g2qsU)    stub 0x74ebdd0  sites 1  call@0xeb39e0
+AudioOut2PortDestroy(cd+Rtw+D1x8)             stub 0x74ebde0  sites 7  call@0xeb26ce call@0xeb2cfe call@0xeb3b92 call@0xeb3c52 call@0xeb3cba call@0xeb40e2 call@0xeb416e
+AudioOut2UserCreate(xywYcRB7nbQ)              stub 0x74ebdf0  sites 2  call@0xeb3265 call@0xeb407d
+AudioOut2ContextResetParam(t5YrizufpQc)       stub 0x74ebe00  sites 1  call@0xeb31ed
+AudioOut2PortCreate(JK2wamZPzwM)              stub 0x74ebe10  sites 6  call@0xeb2521 call@0xeb25c4 call@0xeb2bfc call@0xeb3560 call@0xeb3690 call@0xeb3fa7
+AudioOut2Initialize(g2tViFIohHE)              stub 0x74ebe20  sites 1  call@0xeb31de
+AudioOut2GetSpeakerInfo(DImz2Ft9E2g)          stub 0x74ebe30  sites 2  call@0xded1bf call@0xeb3857
+AudioOut2PortGetState(gatEUKG+Ea4)            stub 0x74ebe40  sites 3  call@0xeb3822 call@0xeb38b5 call@0xeb41f9
+AudioOut2ContextAdvance(PE2zHMqLSHs)          stub 0x74ebe50  sites 1  call@0xeb39bd
+AudioOut2ContextCreate(0x6o1VVAYSY)           stub 0x74ebe60  sites 1  call@0xeb324d
+AudioOut2PortSetAttributes(8XTArSPyWHk)       stub 0x74ebe70  sites 5  call@0xeb2178 call@0xeb2323 call@0xeb2395 call@0xeb29d2 call@0xeb3101
+AudioOut2UserDestroy(IaZXJ9M79uo)             stub 0x74ebe80  sites 4  call@0xeb3cff call@0xeb3da2 call@0xeb412c call@0xeb41b2
+AudioOut2ContextDestroy(on6ZH7Abo10)          stub 0x74ebe90  sites 1  call@0xeb3dc9
+snprintf(eLdDw6l0-bU)                         stub 0x74ec290  sites 235  call@0x1bf2 call@0x20e9f call@0x20f06 call@0x302db call@0x365b3 call@0x2b7e9e call@0x2b7eb8 call@0x2b81c9 call@0x2b8c9a call@0x2b8fb0 call@0x2c3762 call@0x2c3f7e
+puts(YQ0navp+YIc)                             stub 0x74ec2a0  sites 48  call@0x1c50 call@0x1e26 call@0x1e57 jmp@0x27361a call@0x29fb3b call@0x2b1732 call@0x2b174f call@0x2b1794 call@0x2b179c call@0x38dbd2 call@0x38dd4d call@0x38decd
+
+AvPlayer call-site clusters: 1
+--- cluster 0x1053d5f..0x1055dfc : AvPlayerInit, AvPlayerPostInit, AvPlayerAddSource, AvPlayerSetAvSyncMode, AvPlayerStreamCount, AvPlayerGetStreamInfo, AvPlayerEnableStream, AvPlayerClose, AvPlayerStart, AvPlayerStop, AvPlayerPause, AvPlayerResume, AvPlayerJumpToTime, AvPlayerSetLooping, AvPlayerSetTrickSpeed, AvPlayerIsActive, AvPlayerGetVideoDataEx
+DONE

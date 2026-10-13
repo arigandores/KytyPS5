@@ -1,0 +1,29 @@
+T# path: B count M/256 | ours_minLod upstream_minLod | lowest level ours / upstream / hw
+  B=1 count=2 M=1.25 | ours 1.00 upstream 1.25 | lowest ours 1.00 upstream 1.25 hw 1.25
+  B=1 count=2 M=1.50 | ours 1.00 upstream 1.50 | lowest ours 1.00 upstream 1.50 hw 1.50
+  B=1 count=2 M=1.75 | ours 1.00 upstream 1.75 | lowest ours 1.00 upstream 1.75 hw 1.75
+  B=1 count=2 M=2.00 | ours 1.00 upstream 2.00 | lowest ours 1.00 upstream 2.00 hw 2.00
+  B=1 count=3 M=2.25 | ours 2.00 upstream 2.25 | lowest ours 2.00 upstream 2.25 hw 2.25
+  B=1 count=3 M=2.50 | ours 2.00 upstream 2.50 | lowest ours 2.00 upstream 2.50 hw 2.50
+  B=1 count=3 M=2.75 | ours 2.00 upstream 2.75 | lowest ours 2.00 upstream 2.75 hw 2.75
+  B=1 count=3 M=3.00 | ours 2.00 upstream 3.00 | lowest ours 2.00 upstream 3.00 hw 3.00
+  B=1 count=4 M=3.25 | ours 3.00 upstream 3.25 | lowest ours 3.00 upstream 3.25 hw 3.25
+  B=1 count=4 M=3.50 | ours 3.00 upstream 3.50 | lowest ours 3.00 upstream 3.50 hw 3.50
+  B=1 count=4 M=3.75 | ours 3.00 upstream 3.75 | lowest ours 3.00 upstream 3.75 hw 3.75
+  B=1 count=4 M=4.00 | ours 3.00 upstream 4.00 | lowest ours 3.00 upstream 4.00 hw 4.00
+T# cases 256 ours differs from hw 80
+differing cases outside {B>0 and M/256 > count-1}: 0
+deferred-mip path: pending levels P (top P levels absent), view base B
+  P=2 B=1 count=2: ours minLod 1 -> lowest level 1 < P=2 (pending level readable)
+  P=2 B=1 count=3: ours minLod 1 -> lowest level 1 < P=2 (pending level readable)
+  P=2 B=1 count=4: ours minLod 1 -> lowest level 1 < P=2 (pending level readable)
+  P=2 B=1 count=5: ours minLod 1 -> lowest level 1 < P=2 (pending level readable)
+  P=3 B=1 count=3: ours minLod 2 -> lowest level 2 < P=3 (pending level readable)
+  P=3 B=1 count=4: ours minLod 2 -> lowest level 2 < P=3 (pending level readable)
+  P=3 B=1 count=5: ours minLod 2 -> lowest level 2 < P=3 (pending level readable)
+  P=3 B=2 count=2: ours minLod 1 -> lowest level 2 < P=3 (pending level readable)
+  P=3 B=2 count=3: ours minLod 1 -> lowest level 2 < P=3 (pending level readable)
+  P=3 B=2 count=4: ours minLod 1 -> lowest level 2 < P=3 (pending level readable)
+  P=3 B=2 count=5: ours minLod 1 -> lowest level 2 < P=3 (pending level readable)
+deferred cases reading a pending level 11 - all need P >= 2; default KYTY_MIP_DEFER_LEVELS = 1 (textureCache.cpp:327)
+DONE

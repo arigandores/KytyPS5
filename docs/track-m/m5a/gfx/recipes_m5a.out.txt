@@ -1,0 +1,21 @@
+=== FILE C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10_fixf19/pipelines.bin size 21979060 sha256 198db02743926b05c61a5e4bad13977ad7a4ac9ffc550a2efd88b067bdd1c4b3
+  layout 10288 376 216 44 516 125 signature b'KytySC3:9177b4267de1fb8bac7d1113afd87332'
+  count 1986 graphics 1842 compute 144 at_end True err None
+  graphics recipes with depth_clip_enable=0: 0 of 1842
+    depth_clip_enable=1 depth_format=D16_UNORM  n=50
+    depth_clip_enable=1 depth_format=D32S8      n=1578
+    depth_clip_enable=1 depth_format=D32_SFLOAT n=62
+    depth_clip_enable=1 depth_format=undef      n=152
+    negative_one_to_one=0 depth_clip_enable=1 n=1842
+  distinct (vs, ps, depth_format) with clip off: 0
+=== FILE C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/pipelines.bin size 31440961 sha256 a43efb5421bf5ec4fbc9c70cbfd766a3318026d0b3b738a3a8f93cd64e890355
+  layout 10288 376 216 44 516 125 signature b'KytySC3:699c1e4b7db359067b461e029b913c4b'
+  count 2833 graphics 2631 compute 202 at_end True err None
+  graphics recipes with depth_clip_enable=0: 0 of 2631
+    depth_clip_enable=1 depth_format=D16_UNORM  n=56
+    depth_clip_enable=1 depth_format=D32S8      n=2304
+    depth_clip_enable=1 depth_format=D32_SFLOAT n=96
+    depth_clip_enable=1 depth_format=undef      n=175
+    negative_one_to_one=0 depth_clip_enable=1 n=2631
+  distinct (vs, ps, depth_format) with clip off: 0
+DONE

@@ -1,0 +1,58 @@
+== eboot.bin sha256=3b5100797fe83663e18a650f82f901d066acf1029ae80cfb1be638fe0839debd strtab_base=0xe342730 (hits 60) libs=62 mods=59 nid_strings=1733
+  [AudioOut2] g2tViFIohHE  Initialize                                    [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] pDmme7Bgm6E  ContextQueryMemory                            [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] t5YrizufpQc  ContextResetParam                             [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] 0x6o1VVAYSY  ContextCreate                                 [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] on6ZH7Abo10  ContextDestroy                                [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] PE2zHMqLSHs  ContextAdvance                                [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] aII9h5nli9U  ContextPush                                   [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] R7d0F1g2qsU  ContextGetQueueLevel                          [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] JK2wamZPzwM  PortCreate                                    [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] cd+Rtw+D1x8  PortDestroy                                   [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] 8XTArSPyWHk  PortSetAttributes                             [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] gatEUKG+Ea4  PortGetState                                  [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] xywYcRB7nbQ  UserCreate                                    [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] IaZXJ9M79uo  UserDestroy                                   [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] DImz2Ft9E2g  GetSpeakerInfo                                [('libSceAudioOut2_v1', 'libSceAudioOut_v1.1')]
+  [AudioOut2] imported 15 of 28 HLE NIDs
+  [AvPlayer] aS66RI0gGgo  Init                                          [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] HD1YKVU26-M  PostInit                                      [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] KMcEa+rHsIo  AddSource                                     [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] hdTyRzCXQeQ  StreamCount                                   [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] d8FcbzfAdQw  GetStreamInfo                                 [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] ODJK2sn9w4A  EnableStream                                  [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] ET4Gr-Uu07s  Start                                         [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] ZC17w3vB5Lo  Stop                                          [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] 9y5v+fGN4Wk  Pause                                         [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] w5moABNwnRY  Resume                                        [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] k-q+xOxdc3E  SetAvSyncMode                                 [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] OVths0xGfho  SetLooping                                    [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] av8Z++94rs0  SetTrickSpeed                                 [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] JdksQu8pNdQ  GetVideoDataEx                                [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] UbQoYawOsfY  IsActive                                      [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] XC9wM+xULz8  JumpToTime                                    [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] NkJwDzKmIlw  Close                                         [('libSceAvPlayer_v1', 'libSceAvPlayer_v1.0')]
+  [AvPlayer] imported 17 of 28 HLE NIDs
+  [printf] eLdDw6l0-bU  LibcInternal::snprintf                        [('libc_v1', 'libc_v1.1')]
+  [printf] hcuQgD53UxM  libc::printf                                  [('libc_v1', 'libc_v1.1')]
+  [printf] YQ0navp+YIc  libc::puts                                    [('libc_v1', 'libc_v1.1')]
+  [printf] Q2V+iqvjgC0  libc::vsnprintf(HLE LibcInternal::vsnprintf)  [('libc_v1', 'libc_v1.1')]
+  [printf] imported 4 of 5 HLE NIDs
+  libs: libSceAcm_v1, libSceAgcDriver_v1, libSceAgc_v1, libSceAmpr_v1, libSceAppContent_v1, libSceAudioIn_v1, libSceAudioOut2_v1, libSceAudioPropagation_v1, libSceAudiodec_v1, libSceAvPlayer_v1, libSceCommonDialog_v1, libSceContentExport_v1, libSceContentSearch_v1, libSceConvertKeycode_v1, libSceFiber_v1, libSceFontFt_v1, libSceFont_v1, libSceGameLiveStreaming_v1, libSceHttp2_v1, libSceHttp_v1, libSceImeDialog_v1, libSceIme_v1, libSceJpegDec_v1, libSceJpegEnc_v1, libSceJson2_v1, libSceMouse_v1, libSceMsgDialog.native_v1, libSceNetCtl_v1, libSceNet_v1, libSceNpCommerce_v1, libSceNpCppWebApi_v1, libSceNpEntitlementAccess_v1, libSceNpGameIntent_v1, libSceNpManager_v1, libSceNpSessionSignaling_v1, libSceNpTrophy2_v1, libSceNpUniversalDataSystem_v1, libSceNpWebApi2_v1, libSceOpenPsId_v1, libScePad_v1, libScePlayGo_v1, libScePlayerInvitationDialog_v1, libScePngDec_v1, libScePngEnc_v1, libScePosix_v1, libSceRemoteplay_v1, libSceRtc_v1, libSceRudp_v1, libSceSaveDataDialog.native_v1, libSceSaveData_native_v1, libSceSharePlay_v1, libSceShare_v1, libSceSigninDialog_v1, libSceSsl_v1, libSceSysmodule_v1, libSceSystemService_v1, libSceUserServicePlatformPrivacyWs1_v1, libSceUserService_v1, libSceVideoOut_v1, libSceVoiceChat_v1, libc_v1, libkernel_v1
+== libc.prx sha256=3d9f5aba64e9c8f881cdee2795016f13a0419092742c60d8325ff752063ebeb1 strtab_base=0x194da0 (hits 3) libs=3 mods=3 nid_strings=3038
+  [AudioOut2] imported 0 of 28 HLE NIDs
+  [AvPlayer] imported 0 of 28 HLE NIDs
+  [printf] GMpvxPFW924  LibcInternal::vprintf                         [('?D', '?A')]
+  [printf] eLdDw6l0-bU  LibcInternal::snprintf                        [('?D', '?A')]
+  [printf] hcuQgD53UxM  libc::printf                                  [('?D', '?A')]
+  [printf] YQ0navp+YIc  libc::puts                                    [('?D', '?A')]
+  [printf] Q2V+iqvjgC0  libc::vsnprintf(HLE LibcInternal::vsnprintf)  [('?D', '?A')]
+  [printf] imported 5 of 5 HLE NIDs
+  libs: libSceLibcInternalExt_v1, libSceSysmodule_v1, libkernel_v1
+== libSceNpCppWebApi.prx sha256=00ccfa02e5ab35afa79745d7ca673b29ebdd1b0cbfb0d9fd096f0f201f735a83 strtab_base=0x583af0 (hits 6) libs=6 mods=6 nid_strings=42921
+  [AudioOut2] imported 0 of 28 HLE NIDs
+  [AvPlayer] imported 0 of 28 HLE NIDs
+  [printf] eLdDw6l0-bU  LibcInternal::snprintf                        [('libSceLibcInternal_v1', 'libSceLibcInternal_v1.1')]
+  [printf] hcuQgD53UxM  libc::printf                                  [('libSceLibcInternal_v1', 'libSceLibcInternal_v1.1')]
+  [printf] imported 2 of 5 HLE NIDs
+  libs: libSceHttp_v1, libSceJson2_v1, libSceLibcInternal_v1, libSceNpWebApi2_v1, libSceRtc_v1, libkernel_v1

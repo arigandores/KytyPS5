@@ -1,0 +1,153 @@
+BIN eboot.bin 251850759 3b5100797fe83663
+BIN libSceNpCppWebApi.prx 7865383 00ccfa02e5ab35af
+BIN libc.prx 1877874 3d9f5aba64e9c8f8
+IMP WT-5NKy42fw    libs/libAmpr.cpp:656 Apr::ResolveFilepathsToIds              eboot.bin:r#n
+IMP ApkYaHb8Sek    libs/libAmpr.cpp:657 Apr::GetFileStat                        eboot.bin:r#n
+IMP WvEu7yl3Ivg    libs/libAmpr.cpp:658 Apr::GetFileSize                        eboot.bin:r#n
+IMP gEpBkcwxUjw    libs/libAmpr.cpp:659 Apr::ResolveFilepathsToIdsAndFileSizes  eboot.bin:r#n
+IMP i3HWvW35jao    libs/libAmpr.cpp:660 Apr::ResolveFilepathsWithPrefixToIds    eboot.bin:r#n
+IMP w5fcCG+t31g    libs/libAmpr.cpp:661 Apr::ResolveFilepathsWithPrefixToIdsAndFileSizes eboot.bin:r#n
+IMP eYAh2vlCY-U    libs/libAmpr.cpp:662 Apr::ResolveFilepathsToIdsForEach       eboot.bin:r#n
+IMP QzB4O+bJQyA    libs/libAmpr.cpp:663 Apr::ResolveFilepathsToIdsAndFileSizesForEach eboot.bin:r#n
+IMP VB-BtuIW8Xc    libs/libAmpr.cpp:664 Apr::ResolveFilepathsWithPrefixToIdsForEach eboot.bin:r#n
+IMP C+Khtbbx2g8    libs/libAmpr.cpp:665 Apr::ResolveFilepathsWithPrefixToIdsAndFileSizesForEach eboot.bin:r#n
+IMP ASoW5WE-UPo    libs/libAmpr.cpp:666 Apr::SubmitCommandBufferAndGetResult    eboot.bin:r#n
+IMP rqwFKI4PAiM    libs/libAmpr.cpp:667 Apr::WaitCommandBuffer                  eboot.bin:r#n
+IMP eE4Szl8sil8    libs/libAmpr.cpp:668 Apr::SubmitCommandBuffer                eboot.bin:r#n
+IMP qvMUCyyaCSI    libs/libAmpr.cpp:669 Apr::SubmitCommandBufferAndGetId        eboot.bin:r#n
+IMP 8aI7R7WaOlc    libs/libAmpr.cpp:2546 Ampr::CommandBufferConstructor         eboot.bin:9#7
+IMP a8uLzYY--tM    libs/libAmpr.cpp:2547 Ampr::AprCommandBufferConstructor      eboot.bin:9#7
+IMP Qs1xtplKo0U    libs/libAmpr.cpp:2548 Ampr::AprCommandBufferDestructor       eboot.bin:9#7
+IMP GuchCTefuZw    libs/libAmpr.cpp:2549 Ampr::CommandBufferDestructor          eboot.bin:9#7
+IMP N-FSPA4S3nI    libs/libAmpr.cpp:2550 Ampr::CommandBufferSetBuffer           eboot.bin:9#7
+IMP baQO9ez2gL4    libs/libAmpr.cpp:2551 Ampr::CommandBufferReset               eboot.bin:9#7
+IMP ULvXMDz56po    libs/libAmpr.cpp:2552 Ampr::CommandBufferClearBuffer         eboot.bin:9#7
+IMP VEDMaQmJZng    libs/libAmpr.cpp:2553 Ampr::CommandBufferGetType             eboot.bin:9#7
+IMP RPCAhx-aabE    libs/libAmpr.cpp:2554 Ampr::CommandBufferGetBufferBaseAddress eboot.bin:9#7
+IMP gzndltBEzWc    libs/libAmpr.cpp:2555 Ampr::CommandBufferGetNumCommands      eboot.bin:9#7
+IMP GmOguNIsuKk    libs/libAmpr.cpp:2556 Ampr::CommandBufferConstructNop        eboot.bin:9#7
+IMP tNn5WBkta60    libs/libAmpr.cpp:2557 Ampr::CommandBufferNop                 eboot.bin:9#7
+IMP pFQ9UHpO52s    libs/libAmpr.cpp:2558 Ampr::CommandBufferNopWithData         eboot.bin:9#7
+IMP 4UkZbYKVF7c    libs/libAmpr.cpp:2559 Ampr::CommandBufferConstructMarker     eboot.bin:9#7
+IMP sWbST0oQKsc    libs/libAmpr.cpp:2560 Ampr::CommandBufferSetMarkerWithColor  eboot.bin:9#7
+IMP 4quckD2y7Pg    libs/libAmpr.cpp:2561 Ampr::CommandBufferSetMarker           eboot.bin:9#7
+IMP f12ObAMEi9A    libs/libAmpr.cpp:2562 Ampr::CommandBufferPushMarkerWithColor eboot.bin:9#7
+IMP dXPaz65HNmk    libs/libAmpr.cpp:2563 Ampr::CommandBufferPushMarker          eboot.bin:9#7
+IMP mv0O8Zg0woU    libs/libAmpr.cpp:2564 Ampr::CommandBufferPopMarker           eboot.bin:9#7
+IMP DLfoNxTFNVk    libs/libAmpr.cpp:2565 Ampr::CommandBufferWaitOnAddress       eboot.bin:9#7
+--- V7GQTEeUfhw    libs/libAmpr.cpp:2566 Ampr::CommandBufferWaitOnAddress       
+IMP cQb8Zr8Q0Y0    libs/libAmpr.cpp:2567 Ampr::CommandBufferWaitOnCounter       eboot.bin:9#7
+IMP j0+3uJMxYJY    libs/libAmpr.cpp:2568 Ampr::CommandBufferWriteAddress        eboot.bin:9#7
+--- sJXyWHjP-F8    libs/libAmpr.cpp:2569 Ampr::CommandBufferWriteAddressOnCompletion 
+IMP jK+yuYCI7MA    libs/libAmpr.cpp:2570 Ampr::CommandBufferWriteCounter        eboot.bin:9#7
+--- 3wn42MWTzTs    libs/libAmpr.cpp:2571 Ampr::CommandBufferWriteCounterOnCompletion 
+IMP bt3LHR9xjK4    libs/libAmpr.cpp:2572 Ampr::CommandBufferWriteAddressFromTimeCounter eboot.bin:9#7
+--- FI2JD0jAHCs    libs/libAmpr.cpp:2573 Ampr::CommandBufferWriteAddressFromTimeCounterOnCompletion 
+IMP t4ExS+SwLjs    libs/libAmpr.cpp:2574 Ampr::CommandBufferWriteAddressFromCounter eboot.bin:9#7
+--- gSF5OsXdfIg    libs/libAmpr.cpp:2575 Ampr::CommandBufferWriteAddressFromCounterOnCompletion 
+IMP enZm-6GjWqw    libs/libAmpr.cpp:2576 Ampr::CommandBufferWriteAddressFromCounterPair eboot.bin:9#7
+--- ZLWtNUP6R5E    libs/libAmpr.cpp:2577 Ampr::CommandBufferWriteAddressFromCounterPairOnCompletion 
+IMP vWU-odnS+fU    libs/libAmpr.cpp:2578 Ampr::MeasureCommandSizeReadFile       eboot.bin:9#7
+IMP sSAUCCU1dv4    libs/libAmpr.cpp:2579 Ampr::MeasureCommandSizeWriteKernelEventQueue eboot.bin:9#7
+--- Zi3dBUjgyXI    libs/libAmpr.cpp:2580 Ampr::MeasureCommandSizeWriteKernelEventQueue 
+--- C+IEj+BsAFM    libs/libAmpr.cpp:2581 Ampr::MeasureCommandSizeWriteAddressOnCompletion 
+--- x7SQEXfeovg    libs/libAmpr.cpp:2582 Ampr::MeasureCommandSizeWriteAddressFromTimeCounterOnCompletion 
+--- 32AcaTaBPSY    libs/libAmpr.cpp:2583 Ampr::MeasureCommandSizeWriteAddressFromCounterOnCompletion 
+--- vxC58+DRk-U    libs/libAmpr.cpp:2584 Ampr::MeasureCommandSizeWriteAddressFromCounterPairOnCompletion 
+--- 4muPEJ-x5N8    libs/libAmpr.cpp:2585 Ampr::MeasureCommandSizeWriteCounterOnCompletion 
+IMP 0BMj1hgG+kE    libs/libAmpr.cpp:2586 Ampr::MeasureCommandSizeFixed32        eboot.bin:9#7
+IMP ClnsFLLLcss    libs/libAmpr.cpp:2587 Ampr::MeasureCommandSizeFixed32        eboot.bin:9#7
+IMP 4fgtGfXDrFc    libs/libAmpr.cpp:2588 Ampr::MeasureCommandSizeFixed32        eboot.bin:9#7
+IMP gAtc79UTt5E    libs/libAmpr.cpp:2589 Ampr::MeasureCommandSizeFixed32        eboot.bin:9#7
+IMP JYd9g9L+TmE    libs/libAmpr.cpp:2590 Ampr::MeasureCommandSizeFixed32        eboot.bin:9#7
+IMP 2Hw8gjMdwSY    libs/libAmpr.cpp:2591 Ampr::MeasureCommandSizeFixed32        eboot.bin:9#7
+IMP I-Qm+MEso5c    libs/libAmpr.cpp:2592 Ampr::MeasureCommandSizeFixed32        eboot.bin:9#7
+--- 6hbai6KIXkk    libs/libAmpr.cpp:2593 Ampr::MeasureAmmCommandSizeMap         
+--- m+fYyX8oFqw    libs/libAmpr.cpp:2594 Ampr::MeasureAmmCommandSizeMapWithGpuMaskId 
+--- ZFDZoN9IbVU    libs/libAmpr.cpp:2595 Ampr::MeasureAmmCommandSizeMapDirect   
+--- KUjtdPZJo5I    libs/libAmpr.cpp:2596 Ampr::MeasureAmmCommandSizeMapDirectWithGpuMaskId 
+--- Ayg6PIon2wA    libs/libAmpr.cpp:2597 Ampr::MeasureAmmCommandSizeUnmap       
+IMP NNIZ-FMyz3M    libs/libAmpr.cpp:2598 Ampr::MeasureCommandSizeNop            eboot.bin:9#7
+IMP Xp85BP3+BBI    libs/libAmpr.cpp:2599 Ampr::MeasureCommandSizeNopWithData    eboot.bin:9#7
+IMP qesF88X4DRg    libs/libAmpr.cpp:2600 Ampr::MeasureCommandSizeReadFileGather eboot.bin:9#7
+IMP 7nXGDGMXSqo    libs/libAmpr.cpp:2601 Ampr::MeasureCommandSizeReadFileScatter eboot.bin:9#7
+IMP DXmgc5op8Yw    libs/libAmpr.cpp:2602 Ampr::MeasureCommandSizeReadFileGatherScatter eboot.bin:9#7
+IMP rddQYXM0CjM    libs/libAmpr.cpp:2603 Ampr::MeasureCommandSizePopMarker      eboot.bin:9#7
+IMP kdFImtTD0hc    libs/libAmpr.cpp:2604 Ampr::MeasureAprCommandSizeMapBegin    eboot.bin:9#7
+IMP qvbdJc7bG+s    libs/libAmpr.cpp:2605 Ampr::MeasureAprCommandSizeMapDirectBegin eboot.bin:9#7
+IMP iwTNhyaemnw    libs/libAmpr.cpp:2606 Ampr::MeasureCommandSizePopMarker      eboot.bin:9#7
+IMP tmfr97+ED5I    libs/libAmpr.cpp:2607 Ampr::MeasureCommandSizeMarkerWithColor eboot.bin:9#7
+IMP VGkEj4d6-Kg    libs/libAmpr.cpp:2608 Ampr::MeasureCommandSizeMarker         eboot.bin:9#7
+IMP 3OfeY4pzDV0    libs/libAmpr.cpp:2609 Ampr::MeasureCommandSizeMarkerWithColor eboot.bin:9#7
+IMP 0RdLmAh7WVo    libs/libAmpr.cpp:2610 Ampr::MeasureCommandSizeMarker         eboot.bin:9#7
+IMP pbnNnahE8vk    libs/libAmpr.cpp:2611 Ampr::MeasureCommandSizePopMarker      eboot.bin:9#7
+IMP tZDDEo2tE5k    libs/libAmpr.cpp:2612 Ampr::CommandBufferGetSize             eboot.bin:9#7
+IMP GnxKOHEawhk    libs/libAmpr.cpp:2613 Ampr::CommandBufferGetCurrentOffset    eboot.bin:9#7
+IMP H896Pt-yB4I    libs/libAmpr.cpp:2614 Ampr::CommandBufferWriteKernelEventQueue eboot.bin:9#7
+--- o67gODLFpls    libs/libAmpr.cpp:2615 Ampr::CommandBufferWriteKernelEventQueue 
+IMP mQ16-QdKv7k    libs/libAmpr.cpp:2616 Ampr::AprCommandBufferReadFile         eboot.bin:9#7
+IMP mZSbNJVJpV8    libs/libAmpr.cpp:2617 Ampr::AprCommandBufferReadFileGather   eboot.bin:9#7
+IMP Jg-AgkdJHkk    libs/libAmpr.cpp:2618 Ampr::AprCommandBufferReadFileScatter  eboot.bin:9#7
+IMP BVmR1H8l+XI    libs/libAmpr.cpp:2619 Ampr::AprCommandBufferReadFileGatherScatter eboot.bin:9#7
+IMP YPxkUDhgoNI    libs/libAmpr.cpp:2620 Ampr::AprCommandBufferResetGatherScatterState eboot.bin:9#7
+IMP Eul7AGEpjLo    libs/libAmpr.cpp:2621 Ampr::AprCommandBufferMapBegin         eboot.bin:9#7
+IMP bFEs0Gs6D2A    libs/libAmpr.cpp:2622 Ampr::AprCommandBufferMapDirectBegin   eboot.bin:9#7
+IMP X169CE6G3Y4    libs/libAmpr.cpp:2623 Ampr::AprCommandBufferMapEnd           eboot.bin:9#7
+--- Q07J7XpvhrU    libs/libAmpr.cpp:2624 Ampr::AmmGiveDirectMemory              
+--- wkQR9+xTFKY    libs/libAmpr.cpp:2625 Ampr::AmmGetVirtualAddressRanges       
+--- KqiWXLgCVe0    libs/libAmpr.cpp:2626 Ampr::AmmGetUsageStatsData             
+--- touqMEt6qXQ    libs/libAmpr.cpp:2627 Ampr::AmmSetPageTablePoolOccupancyNotificationThreshold 
+--- EDq5bqCqYpA    libs/libAmpr.cpp:2628 Ampr::AmmCommandBufferConstructor      
+--- pvUFDOHilnE    libs/libAmpr.cpp:2629 Ampr::AmmCommandBufferDestructor       
+--- JEVYGhDc97M    libs/libAmpr.cpp:2630 Ampr::AmmCommandBufferMap              
+--- ojBkmG7+CgE    libs/libAmpr.cpp:2631 Ampr::AmmCommandBufferMapWithGpuMaskId 
+--- 8TBE+9XCZbI    libs/libAmpr.cpp:2632 Ampr::AmmCommandBufferMapDirect        
+--- kOfZlhbVAkc    libs/libAmpr.cpp:2633 Ampr::AmmCommandBufferMapDirectWithGpuMaskId 
+--- M-VFI2DJWQA    libs/libAmpr.cpp:2634 Ampr::AmmCommandBufferUnmap            
+--- lwS-7y3jcBI    libs/libAmpr.cpp:2635 Ampr::AmmSubmitCommandBuffer           
+--- NnKhlMJtIsI    libs/libAmpr.cpp:2636 Ampr::AmmSubmitCommandBufferAndGetId   
+--- OJf3vCckPAM    libs/libAmpr.cpp:2637 Ampr::AmmSubmitCommandBufferAndGetResult 
+--- HXymib4T8gc    libs/libAmpr.cpp:2638 Ampr::AmmWaitCommandBufferCompletion   
+IMP 4fU5yvOkVG4    libs/libSysmodule.cpp:68 Sysmodule::SysmoduleGetModuleInfoForUnwind libc.prx:C#D
+IMP eR2bZFAAU0Q    libs/libSysmodule.cpp:69 Sysmodule::SysmoduleUnloadModule    eboot.bin:q#r
+--- hHrGoGoNf+s    libs/libSysmodule.cpp:70 Sysmodule::SysmoduleLoadModuleInternalWithArg 
+IMP g8cM39EUZ6o    libs/libSysmodule.cpp:71 Sysmodule::SysmoduleLoadModule      eboot.bin:q#r
+IMP fMP5NHUOaMk    libs/libSysmodule.cpp:72 Sysmodule::SysmoduleIsLoaded        eboot.bin:q#r
+IMP Vo5V8KAwCmk    libs/libSystemService.cpp:537 SystemService::SystemServiceHideSplashScreen eboot.bin:b#c
+IMP fZo48un7LK4    libs/libSystemService.cpp:538 SystemService::SystemServiceParamGetInt eboot.bin:b#c
+--- SsC-m-S9JTA    libs/libSystemService.cpp:539 SystemService::SystemServiceParamGetString 
+IMP 656LMQSrg6U    libs/libSystemService.cpp:540 SystemService::SystemServiceReceiveEvent eboot.bin:b#c
+IMP rPo6tV8D9bM    libs/libSystemService.cpp:541 SystemService::SystemServiceGetStatus eboot.bin:b#c
+--- 1n37q1Bvc5Y    libs/libSystemService.cpp:542 SystemService::SystemServiceGetDisplaySafeAreaInfo 
+IMP mPpPxv5CZt4    libs/libSystemService.cpp:543 SystemService::SystemServiceGetHdrToneMapLuminance eboot.bin:b#c
+IMP 3RQ5aQfnstU    libs/libSystemService.cpp:544 SystemService::SystemServiceGetNoticeScreenSkipFlag eboot.bin:b#c
+--- 8Lo6Zv94aho    libs/libSystemService.cpp:545 SystemService::SystemServiceDisableNoticeScreenSkipFlagAutoSet 
+--- Q3utJvma4Mo    libs/libSystemService.cpp:546 SystemService::SystemServiceSetNoticeScreenSkipFlag 
+--- XbbJC3E+L5M    libs/libSystemService.cpp:547 SystemService::SystemServicePowerTick 
+--- 3s8cHiCBKBE    libs/libSystemService.cpp:548 SystemService::SystemServiceReportAbnormalTermination 
+IMP R9lA82OraNs    libs/libAppContent.cpp:257 AppContent::AppContentInitialize  eboot.bin:t#t
+--- UqDGjXA5yUM    libs/libKernel.cpp:2224 LibKernel::Memory::KernelMunmap      
+--- IWIBBdTHit4    libs/libKernel.cpp:3174 Memory::KernelMapFlexibleMemory      
+IMP 4h6F1LLbTiw    libs/libKernel.cpp:3178 Memory::KernelMapFlexibleMemory      libc.prx:A#B
+IMP cQke9UuBQOk    libs/libKernel.cpp:3179 Memory::KernelMunmap                 eboot.bin:r#n,libSceNpCppWebApi.prx:E#F,libc.prx:A#B
+IMP rTXw65xmLIA    libs/libKernel.cpp:3183 Memory::KernelAllocateDirectMemory   eboot.bin:r#n
+IMP B+vc2AO2Zrc    libs/libKernel.cpp:3184 Memory::KernelAllocateMainDirectMemory eboot.bin:r#n
+--- 7oxv3PPCumo    libs/libKernel.cpp:3187 Memory::KernelReserveVirtualRange    
+IMP L-Q3LEjIbgA    libs/libKernel.cpp:3188 Memory::KernelMapDirectMemory        eboot.bin:r#n
+IMP BQQniolj9tQ    libs/libKernel.cpp:3189 Memory::KernelMapDirectMemory2       eboot.bin:r#n
+IMP NcaWUxfMNIQ    libs/libKernel.cpp:3190 Memory::KernelMapNamedDirectMemory   eboot.bin:r#n
+--- hwVSPCmp5tM    libs/libKernel.cpp:3193 Memory::KernelCheckedReleaseDirectMemory 
+IMP MBuItvba6z8    libs/libKernel.cpp:3194 Memory::KernelReleaseDirectMemory    eboot.bin:r#n
+--- 2SKEx6bSq-4    libs/libKernel.cpp:3202 Memory::KernelBatchMap               
+--- kBJzF8x4SyE    libs/libKernel.cpp:3203 Memory::KernelBatchMap2              
+IMP D0OdFMjp46I    libs/libKernel.cpp:3213 EventQueue::KernelCreateEqueue       eboot.bin:r#n
+IMP fzyMKs9kim0    libs/libKernel.cpp:3215 EventQueue::KernelWaitEqueue         eboot.bin:r#n
+--- 4R6-OvI2cEA    libs/libKernel.cpp:3222 EventQueue::KernelAddUserEvent       
+--- WDszmSbWuDk    libs/libKernel.cpp:3223 EventQueue::KernelAddUserEventEdge   
+--- F6e0kwo4cnk    libs/libKernel.cpp:3224 EventQueue::KernelTriggerUserEvent   
+--- LJDwdSNTnDg    libs/libKernel.cpp:3225 EventQueue::KernelDeleteUserEvent    
+--- bBfz7kMF2Ho    libs/libKernel.cpp:3228 EventQueue::KernelAddAmprEvent       
+--- vuae5JPNt9A    libs/libKernel.cpp:3229 EventQueue::KernelAddAmprSystemEvent 
+--- bMmid3pfyjo    libs/libKernel.cpp:3230 EventQueue::KernelDeleteAmprEvent    
+--- Ij+ryuEClXQ    libs/libKernel.cpp:3231 EventQueue::KernelDeleteAmprSystemEvent 
+TOTAL nids 149 imported 95

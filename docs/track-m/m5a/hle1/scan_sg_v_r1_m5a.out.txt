@@ -1,0 +1,81 @@
+====================================================================================================
+LOG C:/kyty/m657/m3a/log_m3_sg_v_r1.txt size=316192041
+counts: {'AudioOut': 4, 'GuestOut': 34, 'PS5 NID fallback': 201, 'audio_handle': 22, 'auto_start              ': 1, 'data_format   = 0x000001': 19, 'data_format   = 0x000002': 1, 'data_format   = 0x000008': 2, 'debug_level             ': 1, 'demux_video_buffer_size ': 1, 'event_id': 8, 'event_replacement.event_': 1, 'filename = data/prein/vi': 1, 'num_output_video_framebu': 1, 'port_create': 22, 'port_destroy': 2888, 'port_type': 22, 'queue_depth = 1, num_gra': 1}
+sig counts: {}
+AudioOut2PortCreate port_type: {0: 1, 1: 1, 256: 18, 3: 1, 6: 1}  (port_type, audio_handle>0): {(0, True): 1, (1, True): 1, (256, False): 18, (3, True): 1, (6, True): 1}
+port handles logged: n=22 min=1 max=2400 first=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 22, 23, 600, 1200] last=[23, 600, 1200, 1800, 2400]
+AudioStat last per port (pushes, q_fail, dev): {}
+AvPlayer events (8): READY,PLAY,PAUSE,PLAY,PAUSE,PLAY,WARNING,STOP
+  event offsets: [31985178, 31988420, 32095679, 32097135, 32097150, 32127276, 45144795, 46708345]
+-- AudioOut (4)
+    @490684 AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    @490996 AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    @802813 AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    @803171 AudioOut: vibration port 3 (48000 Hz, 2 ch, 512 frames, float) -> pad haptics
+-- PS5 NID fallback (201)
+    @214881 PS5 NID fallback: QxVVYhP-mvg -> QxVVYhP-mvg[Json2_v1][Json2_v1.1][Func]
+    @214954 PS5 NID fallback: sZIoMRGO+jk -> sZIoMRGO+jk[Json2_v1][Json2_v1.1][Func]
+    @215027 PS5 NID fallback: IKQimvG9Wqs -> IKQimvG9Wqs[Json2_v1][Json2_v1.1][Func]
+    @215100 PS5 NID fallback: a+W7HHlwpBs -> a+W7HHlwpBs[Json2_v1][Json2_v1.1][Func]
+    @215173 PS5 NID fallback: JP-PtKMiI1E -> JP-PtKMiI1E[Json2_v1][Json2_v1.1][Func]
+    @215246 PS5 NID fallback: 9KUZFjI1IxA -> 9KUZFjI1IxA[Json2_v1][Json2_v1.1][Func]
+    @215319 PS5 NID fallback: 9uP25i6ipno -> 9uP25i6ipno[Json2_v1][Json2_v1.1][Func]
+    @215392 PS5 NID fallback: 5JmzZt8twAo -> 5JmzZt8twAo[Json2_v1][Json2_v1.1][Func]
+    @215465 PS5 NID fallback: zQtLRTqceMY -> zQtLRTqceMY[Json2_v1][Json2_v1.1][Func]
+    @215538 PS5 NID fallback: cK6bYHf-Q5E -> cK6bYHf-Q5E[Json2_v1][Json2_v1.1][Func]
+    @215611 PS5 NID fallback: 00oCq0RwSAY -> 00oCq0RwSAY[Json2_v1][Json2_v1.1][Func]
+    @215684 PS5 NID fallback: 0CAesfH963Q -> 0CAesfH963Q[Json2_v1][Json2_v1.1][Func]
+-- auto_start               (1)
+    @31983442 	 auto_start                            = 0
+-- data_format   = 0x000001 (19)
+    @491404 	 data_format   = 0x00000100
+    @491639 	 data_format   = 0x00000100
+    @493797 	 data_format   = 0x00000100
+    @494032 	 data_format   = 0x00000100
+    @494267 	 data_format   = 0x00000100
+    @494502 	 data_format   = 0x00000100
+    @494737 	 data_format   = 0x00000100
+    @494972 	 data_format   = 0x00000100
+    @495207 	 data_format   = 0x00000100
+    @495442 	 data_format   = 0x00000100
+    @495677 	 data_format   = 0x00000100
+    @495912 	 data_format   = 0x00000100
+-- data_format   = 0x000002 (1)
+    @803343 	 data_format   = 0x00000200
+-- data_format   = 0x000008 (2)
+    @490857 	 data_format   = 0x00000800
+    @491169 	 data_format   = 0x00000800
+-- debug_level              (1)
+    @31983294 	 debug_level                           = AvplayerDbgNone
+-- demux_video_buffer_size  (1)
+    @31983535 	 demux_video_buffer_size = 4194304
+-- event_replacement.event_ (1)
+    @31983235 	 event_replacement.event_callback      = 00000009010546a0
+-- filename = data/prein/vi (1)
+    @31983571 	 filename = data/prein/video/06_nx_controller_ship.mp4
+-- num_output_video_framebu (1)
+    @31983352 	 num_output_video_framebuffers         = 6
+-- queue_depth = 1, num_gra (1)
+    @467530 	 queue_depth = 1, num_grains = 512
+GuestOut unique=19 total=34; top 25:
+       12  GAME:
+        4  PLAY:
+        2  Armadillo Load end 0.007000s
+        1  MODL:
+        1  PlayGo finished.
+        1  Resident Load end 0.001000s
+        1  Armadillo Load end 0.189000s
+        1  Transition Load end 0.000000s
+        1  LoadLevelResources: ui_setting : 1.096 sec.
+        1  LoadLevelResources: ui_pause_next : 1.539 sec.
+        1  LoadLevelResources: 93218A3E-4DC4-6602-64B8-F6A87A1E2029 : 1.635 sec.
+        1  LoadLevelResources: underwater_aerial_garden : 2.166 sec.
+        1  [0:04] StartLevel aerial_garden : Heap Used 904.556MB, 1118912
+        1  Armadillo Load end 0.008000s
+        1  Level has started:
+        1  Level has started: underwater_aerial_garden
+        1  SubLevelLocator sublevel_secret [36AB6B90-4729-4556-7E2A-1EA08431B48B], state changed 7->6
+        1  SubLevelLocator sublevel_pool_underwater [19F2D5BB-4416-527D-65E2-11886594DE02], state changed 7->6
+        1  SubLevelLocator sublevel_locator_veg_chibi [03E392BA-41D8-DB7E-67D7-0AB3A537B83E], state changed 6->7
+GuestOut lines containing % (unformatted remnants): 0 []
+DONE

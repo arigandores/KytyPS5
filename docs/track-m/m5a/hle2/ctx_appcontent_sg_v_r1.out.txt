@@ -1,0 +1,7 @@
+   -5297: b'\t id = 180\n'
+   -5298: b'\t init_param = 0x00000007efdf2860\n'
+>> 5299: b'\t boot_param = 0x00000007efdf2830\n'
+   +5300: b'\t title_id   = PPSA21564\n'
+   +5301: b'\t user_id = 1000\n'
+-----
+TOTAL hits 1 lines 1164394

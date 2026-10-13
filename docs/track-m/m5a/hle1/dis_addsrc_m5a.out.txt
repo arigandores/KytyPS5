@@ -1,0 +1,57 @@
+    1054018  e8e37c4906               call     0x74ebd00
+    105401d  41894628                 mov      dword ptr [r14 + 0x28], eax
+    1054021  85c0                     test     eax, eax
+    1054023  0f8888000000             js       0x10540b1
+    1054029  49837e5010               cmp      qword ptr [r14 + 0x50], 0x10
+    105402e  498b7e60                 mov      rdi, qword ptr [r14 + 0x60]
+    1054032  4d8d6e38                 lea      r13, [r14 + 0x38]
+    1054036  4c89ee                   mov      rsi, r13
+    1054039  7204                     jb       0x105403f
+    105403b  498b7638                 mov      rsi, qword ptr [r14 + 0x38]
+    105403f  e89c7c4906               call     0x74ebce0
+    1054044  41894628                 mov      dword ptr [r14 + 0x28], eax
+    1054048  85c0                     test     eax, eax
+    105404a  0f887c000000             js       0x10540cc
+    1054050  488dbd30ffffff           lea      rdi, [rbp - 0xd0]
+    1054057  4c89fe                   mov      rsi, r15
+    105405a  e8e1c5fafe               call     0x640
+    105405f  4180be9802000000         cmp      byte ptr [r14 + 0x298], 0
+    1054067  751c                     jne      0x1054085
+    1054069  4c8dad30ffffff           lea      r13, [rbp - 0xd0]
+    1054070  4c89ef                   mov      rdi, r13
+    1054073  4c89e6                   mov      rsi, r12
+    1054076  e835ddfbfe               call     0x11db0
+    105407b  4180be9802000000         cmp      byte ptr [r14 + 0x298], 0
+    1054083  74eb                     je       0x1054070
+    1054085  488dbd30ffffff           lea      rdi, [rbp - 0xd0]
+    105408c  4c89fe                   mov      rsi, r15
+    105408f  e82cc8fafe               call     0x8c0
+    1054094  41f6465801               test     byte ptr [r14 + 0x58], 1
+    1054099  740e                     je       0x10540a9
+    105409b  498b7e60                 mov      rdi, qword ptr [r14 + 0x60]
+    105409f  be01000000               mov      esi, 1
+    10540a4  e8f77c4906               call     0x74ebda0
+    10540a9  c70300000000             mov      dword ptr [rbx], 0
+    10540af  eb6e                     jmp      0x105411f
+    10540b1  498b06                   mov      rax, qword ptr [r14]
+    10540b4  488dbdb4feffff           lea      rdi, [rbp - 0x14c]
+    10540bb  4c89f6                   mov      rsi, r14
+    10540be  ff9018010000             call     qword ptr [rax + 0x118]
+    10540c4  c70300000080             mov      dword ptr [rbx], 0x80000000
+    10540ca  eb5a                     jmp      0x1054126
+    10540cc  49837e5010               cmp      qword ptr [r14 + 0x50], 0x10
+    10540d1  7204                     jb       0x10540d7
+    10540d3  4d8b6e38                 mov      r13, qword ptr [r14 + 0x38]
+    10540d7  488d3d8b600a07           lea      rdi, [rip + 0x70a608b]   ; ->0x80fa169 "D:\asobi\6.0\source\engine\app\Module\Media\VideoPlayerOrbis.cpp"
+    10540de  488d0ddd190207           lea      rcx, [rip + 0x70219dd]   ; ->0x8075ac2 "[Asobi Dbg]"
+    10540e5  4c8d0523e02907           lea      r8, [rip + 0x729e023]   ; ->0x82f210f "VideoPlayer: mp4 initialization faild [%s]"
+    10540ec  be16010000               mov      esi, 0x116
+    10540f1  ba01000000               mov      edx, 1
+    10540f6  4d89e9                   mov      r9, r13
+    10540f9  31c0                     xor      eax, eax
+    10540fb  e8a0d9fafe               call     0x1aa0
+    1054100  85c0                     test     eax, eax
+    1054102  7402                     je       0x1054106
+    1054104  cd41                     int      0x41
+    1054106  498b06                   mov      rax, qword ptr [r14]
+    1054109  488dbd30ffffff           lea      rdi, [rbp - 0xd0]

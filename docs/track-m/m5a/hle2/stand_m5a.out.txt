@@ -1,0 +1,14 @@
+== T309 model: 768-byte buffer, 16 read+fence pairs, fence value i+1
+  SDK sizes [I]: bytes needed 500 fits True
+  OUR code, guest sized batch by SDK constants: final offset 768 lost pairs [(14, 'OK', 'EBUSY'), (15, 'OK', 'EBUSY')]
+  OUR code, guest measuring via 4fgtGfXDrFc before append: lost 0 submits 2
+  => difference exists ONLY if the guest sizes WriteAddress records without calling our measure
+== T141 model: repeated AMM MapAuto(16 MiB)/Unmap with empty auto pool
+  cycles until EAGAIN (16 GiB dmem, nothing else allocated): 1024 allocated 16384 MiB
+  reachable only via NIDs JEVYGhDc97M / ojBkmG7+CgE (AmmCommandBufferMap*) + lwS-7y3jcBI etc. (see imports_m5a.out.txt)
+== T246 model: one wait with num=8
+  AddUserEvent (level, EV_ADD)         -> 8 copies
+  AddUserEventEdge (EV_CLEAR)          -> 1 copies
+  GPU EOP (InterruptEventResetFunc)    -> 1 copies
+  VideoOut (ResetVideoOutEvent)        -> 1 copies
+ALL OK

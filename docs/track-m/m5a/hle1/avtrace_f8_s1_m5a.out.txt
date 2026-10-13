@@ -1,0 +1,24 @@
+log C:/kyty/f287/f18e/log_f8_s1.txt
+b'AvTrace: push ct' 20
+    AvTrace: push ctx=0x1 blocking=1 n=1 tid=45 t=814336
+    AvTrace: push ctx=0x1 blocking=1 n=2 tid=45 t=814472
+    AvTrace: push ctx=0x1 blocking=1 n=3 tid=45 t=814483
+    AvTrace: push ctx=0x1 blocking=1 n=4 tid=45 t=814495
+    AvTrace: push ctx=0x1 blocking=1 n=5 tid=45 t=814586
+    AvTrace: push ctx=0x1 blocking=1 n=1000 tid=45 t=11394991
+b'AudioStat: t_us=' 340
+    AudioStat: t_us=814445 port=0 dev=2 status=1 queued=0 pushes=1 q_fail=0 init_calls=1 acq=2
+    AudioStat: t_us=954956 port=2 dev=4 status=1 queued=0 pushes=1 q_fail=0 init_calls=1 acq=3
+    AudioStat: t_us=1827059 port=0 dev=2 status=1 queued=15872 pushes=100 q_fail=0 init_calls=1 acq=4
+    AudioStat: t_us=1957936 port=2 dev=4 status=1 queued=7424 pushes=96 q_fail=0 init_calls=1 acq=4
+    AudioStat: t_us=2827188 port=0 dev=2 status=1 queued=16896 pushes=194 q_fail=0 init_calls=1 acq=4
+    AudioStat: t_us=2968445 port=2 dev=4 status=1 queued=4608 pushes=190 q_fail=0 init_calls=1 acq=4
+b'AvTrace: audio d' 326
+    AvTrace: audio dev=2 type=0 blocking=1 push=1 grain=512 freq=48000 audio_s=0.011 wall_s=0.000 queued_before=0 queued_after=0 wait_us=2 drops=0 t=814447 speed=1.000 out_bytes=0
+    AvTrace: audio dev=2 type=0 blocking=1 push=2 grain=512 freq=48000 audio_s=0.021 wall_s=0.000 queued_before=0 queued_after=0 wait_us=0 drops=0 t=814478 speed=1.000 out_bytes=0
+    AvTrace: audio dev=2 type=0 blocking=1 push=3 grain=512 freq=48000 audio_s=0.032 wall_s=0.000 queued_before=0 queued_after=4096 wait_us=3 drops=0 t=814492 speed=1.000 out_bytes=4096
+    AvTrace: audio dev=2 type=0 blocking=1 push=4 grain=512 freq=48000 audio_s=0.043 wall_s=0.000 queued_before=4096 queued_after=8192 wait_us=1 drops=0 t=814583 speed=1.000 out_bytes=4096
+    AvTrace: audio dev=2 type=0 blocking=1 push=5 grain=512 freq=48000 audio_s=0.053 wall_s=0.000 queued_before=8192 queued_after=12288 wait_us=2 drops=0 t=814705 speed=1.000 out_bytes=4096
+    AvTrace: audio dev=4 type=4 blocking=1 push=1 grain=512 freq=48000 audio_s=0.011 wall_s=0.000 queued_before=0 queued_after=0 wait_us=3 drops=0 t=954959 speed=1.000 out_bytes=0
+AudioOut2ContextPush calls (max n of AvTrace push) >= 15000  contexts: {b'0x1': 20}
+DONE

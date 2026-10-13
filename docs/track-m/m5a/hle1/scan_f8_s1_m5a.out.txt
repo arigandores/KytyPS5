@@ -1,0 +1,95 @@
+====================================================================================================
+LOG C:/kyty/f287/f18e/log_f8_s1.txt size=327532942
+counts: {'AudioOut': 4, 'AudioStat': 340, 'AvTrace': 11518, 'GuestOut': 34, 'PS5 NID fallback': 201, 'audio_handle': 22, 'auto_start              ': 1, 'data_format   = 0x000001': 19, 'data_format   = 0x000002': 1, 'data_format   = 0x000008': 2, 'debug_level             ': 1, 'demux_video_buffer_size ': 1, 'event_id': 8, 'event_replacement.event_': 1, 'filename = data/prein/vi': 1, 'num_output_video_framebu': 1, 'port_create': 22, 'port_destroy': 2881, 'port_type': 22, 'queue_depth = 1, num_gra': 1}
+sig counts: {}
+AudioOut2PortCreate port_type: {0: 1, 1: 1, 256: 18, 3: 1, 6: 1}  (port_type, audio_handle>0): {(0, True): 1, (1, True): 1, (256, False): 18, (3, True): 1, (6, True): 1}
+port handles logged: n=22 min=1 max=2400 first=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 22, 23, 600, 1200] last=[23, 600, 1200, 1800, 2400]
+AudioStat last per port (pushes, q_fail, dev): {0: (15844, 0, 2), 2: (15827, 0, 4)}
+AvPlayer events (8): READY,PLAY,PAUSE,PLAY,PAUSE,PLAY,WARNING,STOP
+  event offsets: [28861924, 28866876, 28979071, 29007528, 29007543, 29014281, 42610812, 44243175]
+-- AudioOut (4)
+    @505025 AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    @505337 AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    @702992 AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    @703350 AudioOut: vibration port 3 (48000 Hz, 2 ch, 512 frames, float) -> pad haptics
+-- AvTrace (11518)
+    @7252 AvTrace: pipeline cs cs=1 us=1463 total=3 precache
+    @7385 AvTrace: pipeline cs cs=3 us=703 total=4 precache
+    @8192 AvTrace: pipeline cs cs=5 us=488 total=6 precache
+    @8549 AvTrace: pipeline cs cs=6 us=833 total=10 precache
+    @8907 AvTrace: pipeline cs cs=2 us=2695 total=13 precache
+    @9119 AvTrace: pipeline cs cs=7 us=930 total=13 precache
+    @9330 AvTrace: pipeline cs cs=4 us=1758 total=13 precache
+    @9836 AvTrace: pipeline cs cs=9 us=528 total=14 precache
+    @10341 AvTrace: pipeline cs cs=8 us=1202 total=15 precache
+    @10553 AvTrace: pipeline cs cs=11 us=968 total=15 precache
+    @10834 AvTrace: pipeline cs cs=12 us=571 total=15 precache
+    @11046 AvTrace: pipeline cs cs=10 us=992 total=15 precache
+-- PS5 NID fallback (201)
+    @224968 PS5 NID fallback: QxVVYhP-mvg -> QxVVYhP-mvg[Json2_v1][Json2_v1.1][Func]
+    @225041 PS5 NID fallback: sZIoMRGO+jk -> sZIoMRGO+jk[Json2_v1][Json2_v1.1][Func]
+    @225114 PS5 NID fallback: IKQimvG9Wqs -> IKQimvG9Wqs[Json2_v1][Json2_v1.1][Func]
+    @225187 PS5 NID fallback: a+W7HHlwpBs -> a+W7HHlwpBs[Json2_v1][Json2_v1.1][Func]
+    @225260 PS5 NID fallback: JP-PtKMiI1E -> JP-PtKMiI1E[Json2_v1][Json2_v1.1][Func]
+    @225333 PS5 NID fallback: 9KUZFjI1IxA -> 9KUZFjI1IxA[Json2_v1][Json2_v1.1][Func]
+    @225406 PS5 NID fallback: 9uP25i6ipno -> 9uP25i6ipno[Json2_v1][Json2_v1.1][Func]
+    @225479 PS5 NID fallback: 5JmzZt8twAo -> 5JmzZt8twAo[Json2_v1][Json2_v1.1][Func]
+    @225552 PS5 NID fallback: zQtLRTqceMY -> zQtLRTqceMY[Json2_v1][Json2_v1.1][Func]
+    @225625 PS5 NID fallback: cK6bYHf-Q5E -> cK6bYHf-Q5E[Json2_v1][Json2_v1.1][Func]
+    @225698 PS5 NID fallback: 00oCq0RwSAY -> 00oCq0RwSAY[Json2_v1][Json2_v1.1][Func]
+    @225771 PS5 NID fallback: 0CAesfH963Q -> 0CAesfH963Q[Json2_v1][Json2_v1.1][Func]
+-- auto_start               (1)
+    @28832738 	 auto_start                            = 0
+-- data_format   = 0x000001 (19)
+    @505745 	 data_format   = 0x00000100
+    @505980 	 data_format   = 0x00000100
+    @509399 	 data_format   = 0x00000100
+    @509634 	 data_format   = 0x00000100
+    @509869 	 data_format   = 0x00000100
+    @510104 	 data_format   = 0x00000100
+    @510339 	 data_format   = 0x00000100
+    @510574 	 data_format   = 0x00000100
+    @510809 	 data_format   = 0x00000100
+    @511044 	 data_format   = 0x00000100
+    @511279 	 data_format   = 0x00000100
+    @511514 	 data_format   = 0x00000100
+-- data_format   = 0x000002 (1)
+    @703522 	 data_format   = 0x00000200
+-- data_format   = 0x000008 (2)
+    @505198 	 data_format   = 0x00000800
+    @505510 	 data_format   = 0x00000800
+-- debug_level              (1)
+    @28832590 	 debug_level                           = AvplayerDbgNone
+-- demux_video_buffer_size  (1)
+    @28832831 	 demux_video_buffer_size = 4194304
+-- event_replacement.event_ (1)
+    @28832531 	 event_replacement.event_callback      = 00000009010546a0
+-- filename = data/prein/vi (1)
+    @28832867 	 filename = data/prein/video/06_nx_controller_ship.mp4
+-- num_output_video_framebu (1)
+    @28832648 	 num_output_video_framebuffers         = 6
+-- queue_depth = 1, num_gra (1)
+    @479931 	 queue_depth = 1, num_grains = 512
+GuestOut unique=20 total=34; top 25:
+       12  GAME:
+        4  PLAY:
+        1  MODL:
+        1  PlayGo finished.
+        1  Resident Load end 0.000000s
+        1  Armadillo Load end 0.069000s
+        1  Armadillo Load end 0.005000s
+        1  Transition Load end 0.000000s
+        1  Armadillo Load end 0.004000s
+        1  LoadLevelResources: ui_setting : 0.565 sec.
+        1  LoadLevelResources: ui_pause_next : 0.688 sec.
+        1  LoadLevelResources: 93218A3E-4DC4-6602-64B8-F6A87A1E2029 : 0.880 sec.
+        1  LoadLevelResources: underwater_aerial_garden : 1.197 sec.
+        1  [0:02] StartLevel aerial_garden : Heap Used 904.554MB, 1118914
+        1  Armadillo Load end 0.008000s
+        1  Level has started:
+        1  Level has started: underwater_aerial_garden
+        1  SubLevelLocator sublevel_secret [36AB6B90-4729-4556-7E2A-1EA08431B48B], state changed 7->6
+        1  SubLevelLocator sublevel_pool_underwater [19F2D5BB-4416-527D-65E2-11886594DE02], state changed 7->6
+        1  SubLevelLocator sublevel_locator_veg_chibi [03E392BA-41D8-DB7E-67D7-0AB3A537B83E], state changed 6->7
+GuestOut lines containing % (unformatted remnants): 0 []
+DONE

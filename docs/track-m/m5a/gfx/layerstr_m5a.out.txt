@@ -1,0 +1,59 @@
+sha256 9725ce7a9225f42f8961c433dacae4cc8fae3a16e95ef1d0a7c7e8bc09132c40 C:/VulkanSDK/1.4.357.0/Bin/VkLayer_khronos_validation.dll
+%s Creating a sampler object with LOD clamping (minLod = %f, maxLod = %f).
+This may cause reduced performance. Instead of clamping LOD in the sampler, consider using a VkImageView which restricts the mip-levels, set minLod to 0.0, and maxLod to VK_LOD_CLAMP_NONE.
+is VK_TRUE but the depthClamp feature was not enabled.
+VUID-vkCmdSetDepthClampEnableEXT-depthClamp-07449
+the depthClipEnable feature was not enabled.
+VUID-vkCmdSetDepthClipEnableEXT-depthClipEnable-07451
+the depthClipControl feature was not enabled.
+VUID-vkCmdSetDepthClipNegativeOneToOneEXT-depthClipControl-07453
+was created with minLod %f, but descriptorType is VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT.
+%f, but the minLod feature is not enabled.
+VUID-VkImageViewMinLodCreateInfoEXT-minLod-06455
+VUID-VkImageViewMinLodCreateInfoEXT-minLod-06456
+is VK_TRUE, but the depthClamp feature was not enabled.
+VUID-VkPipelineRasterizationStateCreateInfo-depthClampEnable-00782
+VkPipelineRasterizationStateCreateInfo::depthClampEnable was VK_TRUE in the last bound graphics pipeline.
+vkCmdSetDepthClampEnableEXT last set depthClampEnable to VK_TRUE.
+VkPhysicalDeviceFeatures::depthClamp is not supported
+VkPhysicalDeviceDepthClampControlFeaturesEXT::depthClampControl is not supported
+VkPhysicalDeviceDepthClampZeroOneFeaturesKHR::depthClampZeroOne is not supported
+VkPhysicalDeviceDepthClipControlFeaturesEXT::depthClipControl is not supported
+VkPhysicalDeviceDepthClipEnableFeaturesEXT::depthClipEnable is not supported
+VkPhysicalDeviceImageViewMinLodFeaturesEXT::minLod is not supported
+VUID-VkPipelineViewportDepthClampControlCreateInfoEXT-depthClampMode-parameter
+VUID-vkCmdSetDepthClampRangeEXT-depthClampMode-parameter
+includes VK_SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM, so minLod (%f) and maxLod (%f) must be 0.
+is VK_TRUE, but minLod (%f) and maxLod (%f) must both be zero.
+includes VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT, but minLod (%f) and maxLod (%f) are not zero.
+is VK_TRUE but the depthClipControl feature was not enabled.
+depthClampEnable
+depthClampMode
+depthClampControl
+depthClipEnable
+depthClampZeroOne
+depthClipControl
+The depthClipControl feature must be enabled
+The depthClipEnable feature must be enabled
+If depthClampMode is VK_DEPTH_CLAMP_MODE_USER_DEFINED_RANGE_EXT, then pDepthClampRange must be a valid pointer to a valid VkDepthClampRangeEXT structure
+If the minLod feature is not enabled, minLod must be 0.0
+minLod must be less or equal to the index of the last mipmap level accessible to the view
+If the depthClamp feature is not enabled, depthClampEnable must be VK_FALSE
+If depthClampMode is VK_DEPTH_CLAMP_MODE_USER_DEFINED_RANGE_EXT, and the pipeline is not created with VK_DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT, then pDepthClampRange must be a valid pointer to a valid VkDepthClampRangeEXT structure
+depthClampMode must be a valid VkDepthClampModeEXT value
+If the depthClipControl feature is not enabled, negativeOneToOne must be VK_FALSE
+If unnormalizedCoordinates is VK_TRUE, minLod and maxLod must be zero
+If flags includes VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT, then minLod and maxLod must be zero
+[If flags includes VK_SAMPLER_CREATE_IMAGE_PROCESSING_BIT_QCOM, then minLod and maxLod must be zero
+maxLod must be greater than or equal to minLod
+If descriptorType is VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, the imageView member of each element of pImageInfo must have either been created without a VkImageViewMinLodCreateInfoEXT included in the pNext chain or with a VkImageViewMinLodCreateInfoEXT::minLod of 0.0
+If the depthClamp feature is enabled, a shader object is bound to any graphics stage or a graphics pipeline is bound which was created with the VK_DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT dynamic state enabled, and the current value of rasterizerDiscardEnable is VK_FALSE, then vkCmdSetDepthClampEnableEX
+If the depthClipEnable feature is enabled, and a shader object is bound to any graphics stage or a graphics pipeline is bound which was created with the VK_DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT dynamic state, then vkCmdSetDepthClipEnableEXT must have been called and not subsequently invalidated in the
+If the depthClipControl feature is enabled, and a shader object is bound to any graphics stage or a graphics pipeline is bound which was created with the VK_DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT dynamic state enabled, then vkCmdSetDepthClipNegativeOneToOneEXT must have been called and not
+If the depthClampControl feature is enabled, and a shader object is bound to any graphics stage or a graphics pipeline is bound which was created with the VK_DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT dynamic state enabled, and the current value of depthClampEnable is VK_TRUE, then vkCmdSetDepthClampRangeE
+strings matched 52
+DONE
+P2 (%f) must be less or equal to the index of the last mipmap level accessible to the view (%f).
+P2 minLod must be less or equal to the index of the last mipmap level accessible to the view
+P2 matched 2
+DONE2

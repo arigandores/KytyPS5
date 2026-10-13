@@ -1,0 +1,174 @@
+=== LOG C:/kyty/m657/m3a/log_m3_sg_v_r1.txt size 316192041 lines 1164394
+  count ClearDecodeFail 2
+     ex: ClearDecodeFail: aspect=color vkformat=13 pixel_format=13 addr=0x00000005164b0000 size=0x3c0000 value=0x00000000 extent=2432x1368 levels=1 layers=1 tile=24
+     ex: ClearDecodeFail: aspect=depth vkformat=124 pixel_format=124 addr=0x0000000524500000 size=0x480000 value=0xffffffff extent=1920x1080 levels=1 layers=1 tile=24
+  count BufferFillTrace 0
+  count clr_ok 10230
+     ex: FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=4 rec_pack=20 rec_pack_cs=37 rec_bind=57 rec_pack_kb=41 rec_direct_busy=4 rec_spin_us=5196 rec_sleep=7 prot_spin_us=15 prot_spin_calls=2 prot_spin_pages=66 prot_spin_gpu_us=15 prot_spin_gpu_calls=2 prot_spin_gpu_pages=66 sync_noop=37 sf_skip=37 sf_bad=0 tex_inval=4 tex_inval_empty=4 tex_hint_zero=4 pb_pages=392 pb_flush=27 pb_runs=30 pb_kb=1
+     ex: FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=0 rec_spin_us=1699 rec_sleep=5 prot_spin_us=3 prot_spin_calls=1 prot_spin_pages=1 prot_spin_gpu_us=3 prot_spin_gpu_calls=1 prot_spin_gpu_pages=1 sync_noop=2 sf_skip=2 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 p
+     ex: FrameTrace-x: n=4 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=1 rec_spin_us=332 rec_sleep=2 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu_us=0 prot_spin_gpu_calls=0 prot_spin_gpu_pages=0 sync_noop=0 sf_skip=0 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 pb
+     ex: FrameTrace-x: n=5 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=4 rec_pack=20 rec_pack_cs=44 rec_bind=64 rec_pack_kb=43 rec_direct_busy=8 rec_spin_us=8850 rec_sleep=14 prot_spin_us=166 prot_spin_calls=47 prot_spin_pages=14309 prot_spin_gpu_us=164 prot_spin_gpu_calls=46 prot_spin_gpu_pages=14308 sync_noop=43 sf_skip=43 sf_bad=0 tex_inval=121 tex_inval_empty=121 tex_hint_zero=120 pb_pages=364 pb_flush=46 p
+  count clr_decode 10230
+     ex: FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=4 rec_pack=20 rec_pack_cs=37 rec_bind=57 rec_pack_kb=41 rec_direct_busy=4 rec_spin_us=5196 rec_sleep=7 prot_spin_us=15 prot_spin_calls=2 prot_spin_pages=66 prot_spin_gpu_us=15 prot_spin_gpu_calls=2 prot_spin_gpu_pages=66 sync_noop=37 sf_skip=37 sf_bad=0 tex_inval=4 tex_inval_empty=4 tex_hint_zero=4 pb_pages=392 pb_flush=27 pb_runs=30 pb_kb=1
+     ex: FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=0 rec_spin_us=1699 rec_sleep=5 prot_spin_us=3 prot_spin_calls=1 prot_spin_pages=1 prot_spin_gpu_us=3 prot_spin_gpu_calls=1 prot_spin_gpu_pages=1 sync_noop=2 sf_skip=2 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 p
+     ex: FrameTrace-x: n=4 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=1 rec_spin_us=332 rec_sleep=2 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu_us=0 prot_spin_gpu_calls=0 prot_spin_gpu_pages=0 sync_noop=0 sf_skip=0 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 pb
+     ex: FrameTrace-x: n=5 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=4 rec_pack=20 rec_pack_cs=44 rec_bind=64 rec_pack_kb=43 rec_direct_busy=8 rec_spin_us=8850 rec_sleep=14 prot_spin_us=166 prot_spin_calls=47 prot_spin_pages=14309 prot_spin_gpu_us=164 prot_spin_gpu_calls=46 prot_spin_gpu_pages=14308 sync_noop=43 sf_skip=43 sf_bad=0 tex_inval=121 tex_inval_empty=121 tex_hint_zero=120 pb_pages=364 pb_flush=46 p
+  count T# MIN_LOD 1
+     ex: Texture: T# MIN_LOD 1024/256 applied to a sampled view (VK_EXT_image_view_min_lod)
+  count image_view_min_lod 2
+     ex: Vulkan VK_EXT_image_view_min_lod: enabled
+     ex: Texture: T# MIN_LOD 1024/256 applied to a sampled view (VK_EXT_image_view_min_lod)
+  count epthClamp 0
+  count epth_clamp 0
+  count epthClip 0
+  count MipDefer 0
+  count minLod 0
+  count 06456 8
+     ex: 	 header = 0x0000000500645610
+     ex: FrameTrace-x: n=3625 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=2457 rec_pack=4792 rec_pack_cs=242 rec_bind=5034 rec_pack_kb=5737 rec_direct_busy=22 rec_spin_us=24799 rec_sleep=3 prot_spin_us=189 prot_spin_calls=42 prot_spin_pages=779 prot_spin_gpu_us=155 prot_spin_gpu_calls=38 prot_spin_gpu_pages=775 sync_noop=23395 sf_skip=23395 sf_bad=0 tex_inval=1262 tex_inval_empty=1262 tex_hint_zero=1259 pb_page
+     ex: FrameTrace-x: n=4127 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=2716 rec_pack=5123 rec_pack_cs=247 rec_bind=5370 rec_pack_kb=6243 rec_direct_busy=22 rec_spin_us=28513 rec_sleep=3 prot_spin_us=174 prot_spin_calls=42 prot_spin_pages=779 prot_spin_gpu_us=165 prot_spin_gpu_calls=38 prot_spin_gpu_pages=775 sync_noop=25755 sf_skip=25755 sf_bad=0 tex_inval=1305 tex_inval_empty=1305 tex_hint_zero=1303 pb_page
+     ex: FrameTrace-x: n=6807 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=2483 rec_pack=4737 rec_pack_cs=247 rec_bind=4984 rec_pack_kb=5759 rec_direct_busy=24 rec_spin_us=26628 rec_sleep=3 prot_spin_us=127 prot_spin_calls=42 prot_spin_pages=779 prot_spin_gpu_us=119 prot_spin_gpu_calls=38 prot_spin_gpu_pages=775 sync_noop=23115 sf_skip=23115 sf_bad=0 tex_inval=1203 tex_inval_empty=1203 tex_hint_zero=1201 pb_page
+  count ImgMinLod 0
+  count img_minlod 10230
+     ex: FrameTrace-draw: n=2 logs=295 log_us=321 log_gpu_us=210 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=3210 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=148 m_fail=0 memo_hit=125 memo_miss=0 m_read_us=0 m_wide=148 b_tex=0 b_texn=143 b_view=0 b_viewn=70 b_buf=0 b_
+     ex: FrameTrace-draw: n=3 logs=148 log_us=93 log_gpu_us=2 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=0 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=0 m_fail=0 memo_hit=0 memo_miss=0 m_read_us=0 m_wide=0 b_tex=0 b_texn=3 b_view=0 b_viewn=2 b_buf=0 b_smp=0 bb_find=0
+     ex: FrameTrace-draw: n=4 logs=129 log_us=66 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=0 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=0 m_fail=0 memo_hit=0 memo_miss=0 m_read_us=0 m_wide=0 b_tex=0 b_texn=0 b_view=0 b_viewn=0 b_buf=0 b_smp=0 bb_find=0
+     ex: FrameTrace-draw: n=5 logs=932 log_us=1018 log_gpu_us=242 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=3210 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=168 m_fail=0 memo_hit=129 memo_miss=0 m_read_us=0 m_wide=168 b_tex=0 b_texn=143 b_view=0 b_viewn=93 b_buf=0 b
+  count min_lod 2
+     ex: Vulkan VK_EXT_image_view_min_lod: enabled
+     ex: Texture: T# MIN_LOD 1024/256 applied to a sampled view (VK_EXT_image_view_min_lod)
+  count FrameStats 0
+  count ClearConsumed 0
+  count VK_EXT_depth_clip 0
+  count DepthClip 0
+  count ZCLIP 0
+  count clip_ext 0
+  count Vulkan VK_EXT 1
+     ex: Vulkan VK_EXT_image_view_min_lod: enabled
+  count texel 0
+  count NativeStorage 0
+  count B2R 0
+  count b2r 10230
+     ex: FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=4 rec_pack=20 rec_pack_cs=37 rec_bind=57 rec_pack_kb=41 rec_direct_busy=4 rec_spin_us=5196 rec_sleep=7 prot_spin_us=15 prot_spin_calls=2 prot_spin_pages=66 prot_spin_gpu_us=15 prot_spin_gpu_calls=2 prot_spin_gpu_pages=66 sync_noop=37 sf_skip=37 sf_bad=0 tex_inval=4 tex_inval_empty=4 tex_hint_zero=4 pb_pages=392 pb_flush=27 pb_runs=30 pb_kb=1
+     ex: FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=0 rec_spin_us=1699 rec_sleep=5 prot_spin_us=3 prot_spin_calls=1 prot_spin_pages=1 prot_spin_gpu_us=3 prot_spin_gpu_calls=1 prot_spin_gpu_pages=1 sync_noop=2 sf_skip=2 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 p
+     ex: FrameTrace-x: n=4 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=1 rec_spin_us=332 rec_sleep=2 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu_us=0 prot_spin_gpu_calls=0 prot_spin_gpu_pages=0 sync_noop=0 sf_skip=0 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 pb
+     ex: FrameTrace-x: n=5 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=4 rec_pack=20 rec_pack_cs=44 rec_bind=64 rec_pack_kb=43 rec_direct_busy=8 rec_spin_us=8850 rec_sleep=14 prot_spin_us=166 prot_spin_calls=47 prot_spin_pages=14309 prot_spin_gpu_us=164 prot_spin_gpu_calls=46 prot_spin_gpu_pages=14308 sync_noop=43 sf_skip=43 sf_bad=0 tex_inval=121 tex_inval_empty=121 tex_hint_zero=120 pb_pages=364 pb_flush=46 p
+  count SameBacking 0
+  count InvalidateMemoryFromGPU 0
+  count Expand 0
+=== LOG C:/kyty/m657/m3a/log_m3_hb_f.txt size 568021256 lines 1879933
+  count ClearDecodeFail 2
+     ex: ClearDecodeFail: aspect=color vkformat=13 pixel_format=13 addr=0x00000005164b0000 size=0x3c0000 value=0x00000000 extent=2432x1368 levels=1 layers=1 tile=24
+     ex: ClearDecodeFail: aspect=depth vkformat=124 pixel_format=124 addr=0x0000000524500000 size=0x480000 value=0xffffffff extent=1920x1080 levels=1 layers=1 tile=24
+  count BufferFillTrace 0
+  count clr_ok 18913
+     ex: FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=1 rec_spin_us=1617 rec_sleep=5 prot_spin_us=4 prot_spin_calls=1 prot_spin_pages=66 prot_spin_gpu_us=4 prot_spin_gpu_calls=1 prot_spin_gpu_pages=66 sync_noop=2 sf_skip=2 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0
+     ex: FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=0 rec_spin_us=2327 rec_sleep=6 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu_us=0 prot_spin_gpu_calls=0 prot_spin_gpu_pages=0 sync_noop=0 sf_skip=0 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 p
+     ex: FrameTrace-x: n=4 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=4 rec_pack=21 rec_pack_cs=59 rec_bind=80 rec_pack_kb=50 rec_direct_busy=5 rec_spin_us=5248 rec_sleep=9 prot_spin_us=364 prot_spin_calls=35 prot_spin_pages=6157 prot_spin_gpu_us=111 prot_spin_gpu_calls=31 prot_spin_gpu_pages=4109 sync_noop=37 sf_skip=37 sf_bad=0 tex_inval=223 tex_inval_empty=221 tex_hint_zero=219 pb_pages=584 pb_flush=50 pb_r
+     ex: FrameTrace-x: n=5 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=8 rec_pack=39 rec_pack_cs=59 rec_bind=98 rec_pack_kb=73 rec_direct_busy=11 rec_spin_us=5835 rec_sleep=6 prot_spin_us=108 prot_spin_calls=21 prot_spin_pages=8297 prot_spin_gpu_us=108 prot_spin_gpu_calls=21 prot_spin_gpu_pages=8297 sync_noop=76 sf_skip=76 sf_bad=0 tex_inval=17 tex_inval_empty=17 tex_hint_zero=17 pb_pages=409 pb_flush=62 pb_run
+  count clr_decode 18913
+     ex: FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=1 rec_spin_us=1617 rec_sleep=5 prot_spin_us=4 prot_spin_calls=1 prot_spin_pages=66 prot_spin_gpu_us=4 prot_spin_gpu_calls=1 prot_spin_gpu_pages=66 sync_noop=2 sf_skip=2 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0
+     ex: FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=0 rec_spin_us=2327 rec_sleep=6 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu_us=0 prot_spin_gpu_calls=0 prot_spin_gpu_pages=0 sync_noop=0 sf_skip=0 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 p
+     ex: FrameTrace-x: n=4 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=4 rec_pack=21 rec_pack_cs=59 rec_bind=80 rec_pack_kb=50 rec_direct_busy=5 rec_spin_us=5248 rec_sleep=9 prot_spin_us=364 prot_spin_calls=35 prot_spin_pages=6157 prot_spin_gpu_us=111 prot_spin_gpu_calls=31 prot_spin_gpu_pages=4109 sync_noop=37 sf_skip=37 sf_bad=0 tex_inval=223 tex_inval_empty=221 tex_hint_zero=219 pb_pages=584 pb_flush=50 pb_r
+     ex: FrameTrace-x: n=5 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=8 rec_pack=39 rec_pack_cs=59 rec_bind=98 rec_pack_kb=73 rec_direct_busy=11 rec_spin_us=5835 rec_sleep=6 prot_spin_us=108 prot_spin_calls=21 prot_spin_pages=8297 prot_spin_gpu_us=108 prot_spin_gpu_calls=21 prot_spin_gpu_pages=8297 sync_noop=76 sf_skip=76 sf_bad=0 tex_inval=17 tex_inval_empty=17 tex_hint_zero=17 pb_pages=409 pb_flush=62 pb_run
+  count T# MIN_LOD 1
+     ex: Texture: T# MIN_LOD 1024/256 applied to a sampled view (VK_EXT_image_view_min_lod)
+  count image_view_min_lod 2
+     ex: Vulkan VK_EXT_image_view_min_lod: enabled
+     ex: Texture: T# MIN_LOD 1024/256 applied to a sampled view (VK_EXT_image_view_min_lod)
+  count epthClamp 0
+  count epth_clamp 0
+  count epthClip 0
+  count MipDefer 0
+  count minLod 0
+  count 06456 12
+     ex: 	 header = 0x0000000500645610
+     ex: FrameTrace-x: n=953 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=812 rec_pack=1899 rec_pack_cs=172 rec_bind=2071 rec_pack_kb=2149 rec_direct_busy=27 rec_spin_us=12754 rec_sleep=5 prot_spin_us=217 prot_spin_calls=62 prot_spin_pages=1578 prot_spin_gpu_us=183 prot_spin_gpu_calls=47 prot_spin_gpu_pages=1563 sync_noop=10596 sf_skip=10596 sf_bad=0 tex_inval=283 tex_inval_empty=283 tex_hint_zero=279 pb_pages=4
+     ex: FrameTrace-draw: n=1129 logs=45 log_us=97 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=106456 p_creads=3394 m_eval=0 m_asm=0 m_spec=0 m_insts=200 m_fail=0 memo_hit=2909 memo_miss=0 m_read_us=0 m_wide=200 b_tex=0 b_texn=11175 b_view=0 b_viewn=1128 b
+     ex: FrameTrace-x: n=2544 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=736 rec_pack=1814 rec_pack_cs=150 rec_bind=1964 rec_pack_kb=1971 rec_direct_busy=21 rec_spin_us=10458 rec_sleep=5 prot_spin_us=258 prot_spin_calls=68 prot_spin_pages=1409 prot_spin_gpu_us=206 prot_spin_gpu_calls=37 prot_spin_gpu_pages=1378 sync_noop=9668 sf_skip=9668 sf_bad=0 tex_inval=331 tex_inval_empty=331 tex_hint_zero=328 pb_pages=33
+  count ImgMinLod 0
+  count img_minlod 18913
+     ex: FrameTrace-draw: n=2 logs=253 log_us=126 log_gpu_us=3 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=0 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=0 m_fail=0 memo_hit=0 memo_miss=0 m_read_us=0 m_wide=0 b_tex=0 b_texn=3 b_view=0 b_viewn=2 b_buf=0 b_smp=0 bb_find=
+     ex: FrameTrace-draw: n=3 logs=155 log_us=86 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=0 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=0 m_fail=0 memo_hit=0 memo_miss=0 m_read_us=0 m_wide=0 b_tex=0 b_texn=0 b_view=0 b_viewn=0 b_buf=0 b_smp=0 bb_find=0
+     ex: FrameTrace-draw: n=4 logs=1127 log_us=1134 log_gpu_us=340 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=3726 p_creads=4 m_eval=0 m_asm=0 m_spec=0 m_insts=256 m_fail=0 memo_hit=210 memo_miss=0 m_read_us=0 m_wide=256 b_tex=0 b_texn=165 b_view=0 b_viewn=83 b_buf=0
+     ex: FrameTrace-draw: n=5 logs=467 log_us=474 log_gpu_us=387 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=5916 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=192 m_fail=0 memo_hit=196 memo_miss=0 m_read_us=0 m_wide=192 b_tex=0 b_texn=264 b_view=0 b_viewn=151 b_buf=0 b
+  count min_lod 2
+     ex: Vulkan VK_EXT_image_view_min_lod: enabled
+     ex: Texture: T# MIN_LOD 1024/256 applied to a sampled view (VK_EXT_image_view_min_lod)
+  count FrameStats 0
+  count ClearConsumed 0
+  count VK_EXT_depth_clip 0
+  count DepthClip 0
+  count ZCLIP 0
+  count clip_ext 0
+  count Vulkan VK_EXT 1
+     ex: Vulkan VK_EXT_image_view_min_lod: enabled
+  count texel 0
+  count NativeStorage 0
+  count B2R 0
+  count b2r 18913
+     ex: FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=1 rec_spin_us=1617 rec_sleep=5 prot_spin_us=4 prot_spin_calls=1 prot_spin_pages=66 prot_spin_gpu_us=4 prot_spin_gpu_calls=1 prot_spin_gpu_pages=66 sync_noop=2 sf_skip=2 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0
+     ex: FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=0 rec_spin_us=2327 rec_sleep=6 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu_us=0 prot_spin_gpu_calls=0 prot_spin_gpu_pages=0 sync_noop=0 sf_skip=0 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 p
+     ex: FrameTrace-x: n=4 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=4 rec_pack=21 rec_pack_cs=59 rec_bind=80 rec_pack_kb=50 rec_direct_busy=5 rec_spin_us=5248 rec_sleep=9 prot_spin_us=364 prot_spin_calls=35 prot_spin_pages=6157 prot_spin_gpu_us=111 prot_spin_gpu_calls=31 prot_spin_gpu_pages=4109 sync_noop=37 sf_skip=37 sf_bad=0 tex_inval=223 tex_inval_empty=221 tex_hint_zero=219 pb_pages=584 pb_flush=50 pb_r
+     ex: FrameTrace-x: n=5 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=8 rec_pack=39 rec_pack_cs=59 rec_bind=98 rec_pack_kb=73 rec_direct_busy=11 rec_spin_us=5835 rec_sleep=6 prot_spin_us=108 prot_spin_calls=21 prot_spin_pages=8297 prot_spin_gpu_us=108 prot_spin_gpu_calls=21 prot_spin_gpu_pages=8297 sync_noop=76 sf_skip=76 sf_bad=0 tex_inval=17 tex_inval_empty=17 tex_hint_zero=17 pb_pages=409 pb_flush=62 pb_run
+  count SameBacking 0
+  count InvalidateMemoryFromGPU 0
+  count Expand 0
+=== LOG C:/kyty/m657/m3a/log_m3_mg_v.txt size 601929044 lines 1894030
+  count ClearDecodeFail 1
+     ex: ClearDecodeFail: aspect=color vkformat=13 pixel_format=13 addr=0x00000005164b0000 size=0x3c0000 value=0x00000000 extent=2432x1368 levels=1 layers=1 tile=24
+  count BufferFillTrace 0
+  count clr_ok 20246
+     ex: FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=12 rec_pack=58 rec_pack_cs=100 rec_bind=158 rec_pack_kb=115 rec_direct_busy=12 rec_spin_us=9407 rec_sleep=7 prot_spin_us=959 prot_spin_calls=37 prot_spin_pages=25090 prot_spin_gpu_us=955 prot_spin_gpu_calls=35 prot_spin_gpu_pages=25088 sync_noop=142 sf_skip=142 sf_bad=0 tex_inval=27 tex_inval_empty=27 tex_hint_zero=27 pb_pages=1255 pb_flush=
+     ex: FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=1 rec_spin_us=1937 rec_sleep=5 prot_spin_us=3 prot_spin_calls=1 prot_spin_pages=1 prot_spin_gpu_us=3 prot_spin_gpu_calls=1 prot_spin_gpu_pages=1 sync_noop=2 sf_skip=2 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 p
+     ex: FrameTrace-x: n=4 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=1 rec_spin_us=618 rec_sleep=2 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu_us=0 prot_spin_gpu_calls=0 prot_spin_gpu_pages=0 sync_noop=0 sf_skip=0 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 pb
+     ex: FrameTrace-x: n=5 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=8 rec_pack=40 rec_pack_cs=81 rec_bind=121 rec_pack_kb=83 rec_direct_busy=9 rec_spin_us=10138 rec_sleep=14 prot_spin_us=186 prot_spin_calls=51 prot_spin_pages=14313 prot_spin_gpu_us=183 prot_spin_gpu_calls=50 prot_spin_gpu_pages=14312 sync_noop=76 sf_skip=76 sf_bad=0 tex_inval=177 tex_inval_empty=177 tex_hint_zero=176 pb_pages=561 pb_flush=77
+  count clr_decode 20246
+     ex: FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=12 rec_pack=58 rec_pack_cs=100 rec_bind=158 rec_pack_kb=115 rec_direct_busy=12 rec_spin_us=9407 rec_sleep=7 prot_spin_us=959 prot_spin_calls=37 prot_spin_pages=25090 prot_spin_gpu_us=955 prot_spin_gpu_calls=35 prot_spin_gpu_pages=25088 sync_noop=142 sf_skip=142 sf_bad=0 tex_inval=27 tex_inval_empty=27 tex_hint_zero=27 pb_pages=1255 pb_flush=
+     ex: FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=1 rec_spin_us=1937 rec_sleep=5 prot_spin_us=3 prot_spin_calls=1 prot_spin_pages=1 prot_spin_gpu_us=3 prot_spin_gpu_calls=1 prot_spin_gpu_pages=1 sync_noop=2 sf_skip=2 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 p
+     ex: FrameTrace-x: n=4 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=1 rec_spin_us=618 rec_sleep=2 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu_us=0 prot_spin_gpu_calls=0 prot_spin_gpu_pages=0 sync_noop=0 sf_skip=0 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 pb
+     ex: FrameTrace-x: n=5 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=8 rec_pack=40 rec_pack_cs=81 rec_bind=121 rec_pack_kb=83 rec_direct_busy=9 rec_spin_us=10138 rec_sleep=14 prot_spin_us=186 prot_spin_calls=51 prot_spin_pages=14313 prot_spin_gpu_us=183 prot_spin_gpu_calls=50 prot_spin_gpu_pages=14312 sync_noop=76 sf_skip=76 sf_bad=0 tex_inval=177 tex_inval_empty=177 tex_hint_zero=176 pb_pages=561 pb_flush=77
+  count T# MIN_LOD 1
+     ex: Texture: T# MIN_LOD 1024/256 applied to a sampled view (VK_EXT_image_view_min_lod)
+  count image_view_min_lod 2
+     ex: Vulkan VK_EXT_image_view_min_lod: enabled
+     ex: Texture: T# MIN_LOD 1024/256 applied to a sampled view (VK_EXT_image_view_min_lod)
+  count epthClamp 0
+  count epth_clamp 0
+  count epthClip 0
+  count MipDefer 0
+  count minLod 0
+  count 06456 4
+     ex: 	 header = 0x0000000500645610
+     ex: FrameTrace-x: n=3478 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=1193 rec_pack=2041 rec_pack_cs=142 rec_bind=2183 rec_pack_kb=2504 rec_direct_busy=16 rec_spin_us=11219 rec_sleep=3 prot_spin_us=60 prot_spin_calls=13 prot_spin_pages=42 prot_spin_gpu_us=58 prot_spin_gpu_calls=11 prot_spin_gpu_pages=40 sync_noop=11921 sf_skip=11921 sf_bad=0 tex_inval=755 tex_inval_empty=755 tex_hint_zero=754 pb_pages=4992
+     ex: FrameTrace-x: n=8728 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=1193 rec_pack=2039 rec_pack_cs=142 rec_bind=2181 rec_pack_kb=2506 rec_direct_busy=14 rec_spin_us=11581 rec_sleep=3 prot_spin_us=59 prot_spin_calls=13 prot_spin_pages=42 prot_spin_gpu_us=57 prot_spin_gpu_calls=11 prot_spin_gpu_pages=40 sync_noop=11905 sf_skip=11905 sf_bad=0 tex_inval=793 tex_inval_empty=793 tex_hint_zero=792 pb_pages=4992
+     ex: FrameTrace-x: n=17312 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=1203 rec_pack=2053 rec_pack_cs=142 rec_bind=2195 rec_pack_kb=2523 rec_direct_busy=13 rec_spin_us=11667 rec_sleep=3 prot_spin_us=57 prot_spin_calls=14 prot_spin_pages=42 prot_spin_gpu_us=52 prot_spin_gpu_calls=11 prot_spin_gpu_pages=39 sync_noop=12101 sf_skip=12101 sf_bad=0 tex_inval=773 tex_inval_empty=773 tex_hint_zero=772 pb_pages=4968
+  count ImgMinLod 0
+  count img_minlod 20246
+     ex: FrameTrace-draw: n=2 logs=862 log_us=961 log_gpu_us=671 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=9242 p_creads=4 m_eval=0 m_asm=0 m_spec=0 m_insts=388 m_fail=0 memo_hit=349 memo_miss=0 m_read_us=0 m_wide=388 b_tex=0 b_texn=414 b_view=0 b_viewn=230 b_buf=0 b
+     ex: FrameTrace-draw: n=3 logs=143 log_us=99 log_gpu_us=3 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=0 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=0 m_fail=0 memo_hit=0 memo_miss=0 m_read_us=0 m_wide=0 b_tex=0 b_texn=3 b_view=0 b_viewn=2 b_buf=0 b_smp=0 bb_find=0
+     ex: FrameTrace-draw: n=4 logs=134 log_us=49 log_gpu_us=0 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=0 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=0 m_fail=0 memo_hit=0 memo_miss=0 m_read_us=0 m_wide=0 b_tex=0 b_texn=0 b_view=0 b_viewn=0 b_buf=0 b_smp=0 bb_find=0
+     ex: FrameTrace-draw: n=5 logs=1320 log_us=1392 log_gpu_us=477 d_pop=0 d_check=0 d_rt=0 d_prog=0 d_bind=0 d_vb=0 d_acq=0 d_pipe=0 d_commit=0 d_emit=0 c_pop=0 c_prog=0 c_pipe=0 c_bind=0 c_commit=0 c_emit=0 p_prep=0 p_key=0 p_mat=0 p_perm=0 p_reads=6420 p_creads=0 m_eval=0 m_asm=0 m_spec=0 m_insts=308 m_fail=0 memo_hit=250 memo_miss=0 m_read_us=0 m_wide=308 b_tex=0 b_texn=286 b_view=0 b_viewn=167 b_buf=0
+  count min_lod 2
+     ex: Vulkan VK_EXT_image_view_min_lod: enabled
+     ex: Texture: T# MIN_LOD 1024/256 applied to a sampled view (VK_EXT_image_view_min_lod)
+  count FrameStats 0
+  count ClearConsumed 0
+  count VK_EXT_depth_clip 0
+  count DepthClip 0
+  count ZCLIP 0
+  count clip_ext 0
+  count Vulkan VK_EXT 1
+     ex: Vulkan VK_EXT_image_view_min_lod: enabled
+  count texel 0
+  count NativeStorage 0
+  count B2R 0
+  count b2r 20246
+     ex: FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=12 rec_pack=58 rec_pack_cs=100 rec_bind=158 rec_pack_kb=115 rec_direct_busy=12 rec_spin_us=9407 rec_sleep=7 prot_spin_us=959 prot_spin_calls=37 prot_spin_pages=25090 prot_spin_gpu_us=955 prot_spin_gpu_calls=35 prot_spin_gpu_pages=25088 sync_noop=142 sf_skip=142 sf_bad=0 tex_inval=27 tex_inval_empty=27 tex_hint_zero=27 pb_pages=1255 pb_flush=
+     ex: FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=1 rec_spin_us=1937 rec_sleep=5 prot_spin_us=3 prot_spin_calls=1 prot_spin_pages=1 prot_spin_gpu_us=3 prot_spin_gpu_calls=1 prot_spin_gpu_pages=1 sync_noop=2 sf_skip=2 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 p
+     ex: FrameTrace-x: n=4 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=1 rec_spin_us=618 rec_sleep=2 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu_us=0 prot_spin_gpu_calls=0 prot_spin_gpu_pages=0 sync_noop=0 sf_skip=0 sf_bad=0 tex_inval=0 tex_inval_empty=0 tex_hint_zero=0 pb_pages=0 pb_flush=0 pb_runs=0 pb_kb=0 pb_merged=0 pb
+     ex: FrameTrace-x: n=5 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=8 rec_pack=40 rec_pack_cs=81 rec_bind=121 rec_pack_kb=83 rec_direct_busy=9 rec_spin_us=10138 rec_sleep=14 prot_spin_us=186 prot_spin_calls=51 prot_spin_pages=14313 prot_spin_gpu_us=183 prot_spin_gpu_calls=50 prot_spin_gpu_pages=14312 sync_noop=76 sf_skip=76 sf_bad=0 tex_inval=177 tex_inval_empty=177 tex_hint_zero=176 pb_pages=561 pb_flush=77
+  count SameBacking 0
+  count InvalidateMemoryFromGPU 0
+  count Expand 0
+DONE

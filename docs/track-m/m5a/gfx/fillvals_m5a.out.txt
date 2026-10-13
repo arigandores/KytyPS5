@@ -1,0 +1,12 @@
+HEAD dd73d04d470a5f3f86812e2df778bc7fd56b406a
+files with BufferFillTrace lines:
+   5930 docs/track-f/f9d/extract/extract.tsv
+   156 docs/track-f/f9e/scan_f9e.txt
+value x outcome (unique lines per file):
+   outcome=ok     value=0x00000000 n=5727 halves_equal=1 byte_replicated=1
+   outcome=none   value=0x00000000 n=310 halves_equal=1 byte_replicated=1
+   outcome=none   value=0xffffffff n=27 halves_equal=1 byte_replicated=1
+   outcome=none   value=0x20202020 n=17 halves_equal=1 byte_replicated=1
+   outcome=none   value=0xfffffff0 n=5 halves_equal=0 byte_replicated=0
+ok_nonzero 0 ok_unequal_halves 0
+DONE

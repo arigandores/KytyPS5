@@ -1,0 +1,141 @@
+     eb2440  55                       push     rbp
+     eb2441  4889e5                   mov      rbp, rsp
+     eb2444  4157                     push     r15
+     eb2446  4156                     push     r14
+     eb2448  4155                     push     r13
+     eb244a  4154                     push     r12
+     eb244c  53                       push     rbx
+     eb244d  4883ec58                 sub      rsp, 0x58
+     eb2451  4c8b25b020f807           mov      r12, qword ptr [rip + 0x7f820b0]   ; ->0x8e34508
+     eb2458  c5fa100570ca4907         vmovss   xmm0, dword ptr [rip + 0x749ca70]   ; ->0x834eed0
+     eb2460  4889fb                   mov      rbx, rdi
+     eb2463  498b0424                 mov      rax, qword ptr [r12]
+     eb2467  488945d0                 mov      qword ptr [rbp - 0x30], rax
+     eb246b  4c8b7e10                 mov      r15, qword ptr [rsi + 0x10]
+     eb246f  c5f8134714               vmovlps  qword ptr [rdi + 0x14], xmm0
+     eb2474  c7471c00000000           mov      dword ptr [rdi + 0x1c], 0
+     eb247b  498b4708                 mov      rax, qword ptr [r15 + 8]
+     eb247f  80780c00                 cmp      byte ptr [rax + 0xc], 0
+     eb2483  0f84d0000000             je       0xeb2559
+     eb2489  48895d80                 mov      qword ptr [rbp - 0x80], rbx
+     eb248d  4883c348                 add      rbx, 0x48
+     eb2491  41bc10000000             mov      r12d, 0x10
+     eb2497  4531ed                   xor      r13d, r13d
+     eb249a  660f1f440000             nop      word ptr [rax + rax]
+     eb24a0  c5f81005085c4807         vmovups  xmm0, xmmword ptr [rip + 0x7485c08]   ; ->0x83380b0
+     eb24a8  488b00                   mov      rax, qword ptr [rax]
+     eb24ab  48b90001000080bb0000     movabs   rcx, 0xbb8000000100
+     eb24b5  488d55a8                 lea      rdx, [rbp - 0x58]
+     eb24b9  488d7590                 lea      rsi, [rbp - 0x70]
+     eb24bd  c5f81143ec               vmovups  xmmword ptr [rbx - 0x14], xmm0
+     eb24c2  c4a279314420f0           vpmovzxbd xmm0, dword ptr [rax + r12 - 0x10]
+     eb24c9  c5f9d643e0               vmovq    qword ptr [rbx - 0x20], xmm0
+     eb24ce  c4a17a100420             vmovss   xmm0, dword ptr [rax + r12]
+     eb24d4  c5fa1143e8               vmovss   dword ptr [rbx - 0x18], xmm0
+     eb24d9  48894d94                 mov      qword ptr [rbp - 0x6c], rcx
+     eb24dd  48c74588ffffffff         mov      qword ptr [rbp - 0x78], 0xffffffffffffffff
+     eb24e5  66c745900001             mov      word ptr [rbp - 0x70], 0x100
+     eb24eb  c5f857c0                 vxorps   xmm0, xmm0, xmm0
+     eb24ef  488b051a43ca0d           mov      rax, qword ptr [rip + 0xdca431a]   ; ->0xeb56810
+     eb24f6  488b88f8820100           mov      rcx, qword ptr [rax + 0x182f8]
+     eb24fd  48894da0                 mov      qword ptr [rbp - 0x60], rcx
+     eb2501  c7459c00000000           mov      dword ptr [rbp - 0x64], 0
+     eb2508  66c745920000             mov      word ptr [rbp - 0x6e], 0
+     eb250e  c5fc1102                 vmovups  ymmword ptr [rdx], ymm0
+     eb2512  48c7422000000000         mov      qword ptr [rdx + 0x20], 0
+     eb251a  488d5588                 lea      rdx, [rbp - 0x78]
+     eb251e  488b38                   mov      rdi, qword ptr [rax]
+     eb2521  e8ea986306               call     0x74ebe10
+     eb2526  85c0                     test     eax, eax
+     eb2528  0f88b2000000             js       0xeb25e0
+     eb252e  488b4588                 mov      rax, qword ptr [rbp - 0x78]
+     eb2532  49ffc5                   inc      r13
+     eb2535  4983c420                 add      r12, 0x20
+     eb2539  488903                   mov      qword ptr [rbx], rax
+     eb253c  4883c328                 add      rbx, 0x28
+     eb2540  498b4708                 mov      rax, qword ptr [r15 + 8]
+     eb2544  0fb6480c                 movzx    ecx, byte ptr [rax + 0xc]
+     eb2548  4939cd                   cmp      r13, rcx
+     eb254b  0f824fffffff             jb       0xeb24a0
+     eb2551  4531f6                   xor      r14d, r14d
+     eb2554  e9b7000000               jmp      0xeb2610
+     eb2559  c743400000803f           mov      dword ptr [rbx + 0x40], 0x3f800000
+     eb2560  48c7432800000000         mov      qword ptr [rbx + 0x28], 0
+     eb2568  c5f8114330               vmovups  xmmword ptr [rbx + 0x30], xmm0
+     eb256d  48b90001000080bb0000     movabs   rcx, 0xbb8000000100
+     eb2577  48c74588ffffffff         mov      qword ptr [rbp - 0x78], 0xffffffffffffffff
+     eb257f  c5f857c0                 vxorps   xmm0, xmm0, xmm0
+     eb2583  488d7590                 lea      rsi, [rbp - 0x70]
+     eb2587  488d5588                 lea      rdx, [rbp - 0x78]
+     eb258b  488b057e42ca0d           mov      rax, qword ptr [rip + 0xdca427e]   ; ->0xeb56810
+     eb2592  48894d94                 mov      qword ptr [rbp - 0x6c], rcx
+     eb2596  66c745900001             mov      word ptr [rbp - 0x70], 0x100
+     eb259c  488b88f8820100           mov      rcx, qword ptr [rax + 0x182f8]
+     eb25a3  48894da0                 mov      qword ptr [rbp - 0x60], rcx
+     eb25a7  c7459c00000000           mov      dword ptr [rbp - 0x64], 0
+     eb25ae  66c745920000             mov      word ptr [rbp - 0x6e], 0
+     eb25b4  c5fc1145a8               vmovups  ymmword ptr [rbp - 0x58], ymm0
+     eb25b9  48c745c800000000         mov      qword ptr [rbp - 0x38], 0
+     eb25c1  488b38                   mov      rdi, qword ptr [rax]
+     eb25c4  e847986306               call     0x74ebe10
+     eb25c9  4c8b4d88                 mov      r9, qword ptr [rbp - 0x78]
+     eb25cd  85c0                     test     eax, eax
+     eb25cf  786a                     js       0xeb263b
+     eb25d1  41bd01000000             mov      r13d, 1
+     eb25d7  4531f6                   xor      r14d, r14d
+     eb25da  4c894b48                 mov      qword ptr [rbx + 0x48], r9
+     eb25de  eb3b                     jmp      0xeb261b
+     eb25e0  4c8b4d88                 mov      r9, qword ptr [rbp - 0x78]
+     eb25e4  488d3d45e46407           lea      rdi, [rip + 0x764e445]   ; ->0x8500a30 "os_ppr_audio_out.c"
+     eb25eb  488d0d4d772407           lea      rcx, [rip + 0x724774d]   ; ->0x80f9d3f "Failed to sceAudioOut2PortCreate (result=0x%X,handle=0x%lX)
+"
+     eb25f2  be3b010000               mov      esi, 0x13b
+     eb25f7  ba0100848a               mov      edx, 0x8a840001
+     eb25fc  4189c0                   mov      r8d, eax
+     eb25ff  4189c6                   mov      r14d, eax
+     eb2602  31c0                     xor      eax, eax
+     eb2604  e877b6f4ff               call     0xdfdc80
+     eb2609  488b4588                 mov      rax, qword ptr [rbp - 0x78]
+     eb260d  488903                   mov      qword ptr [rbx], rax
+     eb2610  488b5d80                 mov      rbx, qword ptr [rbp - 0x80]
+     eb2614  4c8b25ed1ef807           mov      r12, qword ptr [rip + 0x7f81eed]   ; ->0x8e34508
+     eb261b  44896b20                 mov      dword ptr [rbx + 0x20], r13d
+     eb261f  498b0424                 mov      rax, qword ptr [r12]
+     eb2623  483b45d0                 cmp      rax, qword ptr [rbp - 0x30]
+     eb2627  7544                     jne      0xeb266d
+     eb2629  4489f0                   mov      eax, r14d
+     eb262c  4883c458                 add      rsp, 0x58
+     eb2630  5b                       pop      rbx
+     eb2631  415c                     pop      r12
+     eb2633  415d                     pop      r13
+     eb2635  415e                     pop      r14
+     eb2637  415f                     pop      r15
+     eb2639  5d                       pop      rbp
+     eb263a  c3                       ret      
+     eb263b  488d3deee36407           lea      rdi, [rip + 0x764e3ee]   ; ->0x8500a30 "os_ppr_audio_out.c"
+     eb2642  488d0df6762407           lea      rcx, [rip + 0x72476f6]   ; ->0x80f9d3f "Failed to sceAudioOut2PortCreate (result=0x%X,handle=0x%lX)
+"
+     eb2649  be3b010000               mov      esi, 0x13b
+     eb264e  ba0100848a               mov      edx, 0x8a840001
+     eb2653  4189c0                   mov      r8d, eax
+     eb2656  4189c6                   mov      r14d, eax
+     eb2659  31c0                     xor      eax, eax
+     eb265b  4531ed                   xor      r13d, r13d
+     eb265e  e81db6f4ff               call     0xdfdc80
+     eb2663  488b4588                 mov      rax, qword ptr [rbp - 0x78]
+     eb2667  48894348                 mov      qword ptr [rbx + 0x48], rax
+     eb266b  ebae                     jmp      0xeb261b
+     eb266d  e81e9a6306               call     0x74ec090
+     eb2672  0f0b                     ud2      
+     eb2674  cc                       int3     
+     eb2675  cc                       int3     
+     eb2676  cc                       int3     
+     eb2677  cc                       int3     
+     eb2678  cc                       int3     
+     eb2679  cc                       int3     
+     eb267a  cc                       int3     
+     eb267b  cc                       int3     
+     eb267c  cc                       int3     
+     eb267d  cc                       int3     
+     eb267e  cc                       int3     
+     eb267f  cc                       int3     

@@ -1,0 +1,19 @@
+sha256 79bd50f5b6a6d1fee4a93fb8ce705c7f6048b4d65ca7dbce79be8faac2b14d1e C:/VulkanSDK/1.4.357.0/share/vulkan/registry/validusage.json
+sha256 5ce67444b5233c113b492bd35c1912cd7711cf557a4daf691c7941630ad3ec02 C:/VulkanSDK/1.4.357.0/share/vulkan/registry/vk.xml
+version {'schema version': 2, 'api version': '1.4.357', 'comment': 'from git branch: github-main commit: d184375dcc5da2b06ca375a8d7d1f9d21ca64a76', 'date': '2026-07-17 00:55:04Z'}
+VkImageViewMinLodCreateInfoEXT | VUID-VkImageViewMinLodCreateInfoEXT-minLod-06455 | If the minLod feature is not enabled, minLod must be 0.0
+VkImageViewMinLodCreateInfoEXT | VUID-VkImageViewMinLodCreateInfoEXT-minLod-06456 | minLod must be less or equal to the index of the last mipmap level accessible to the view
+VkImageViewMinLodCreateInfoEXT | VUID-VkImageViewMinLodCreateInfoEXT-sType-sType | sType must be VK_STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT
+vkCmdSetDepthClipEnableEXT | VUID-vkCmdSetDepthClipEnableEXT-depthClipEnable-07451 | The depthClipEnable feature must be enabled
+VkPipelineRasterizationStateCreateInfo | VUID-VkPipelineRasterizationStateCreateInfo-depthClampEnable-00782 | If the depthClamp feature is not enabled, depthClampEnable must be VK_FALSE
+matched 5
+>
+        </type>
+        <type category="struct" name="VkImageViewMinLodCreateInfoEXT" structextends="VkImageViewCreateInfo">
+            <member values="VK_STRUCTURE_TYPE_IMAGE_VIEW_MIN_LOD_CREATE_INFO_EXT"><type>VkStructureType</type> <name>sType</name></member>
+            <member optional="true">const <type>void</type>* <name>pNext</name></member>
+            <member><type>float</type>                       <name>minLod</name></member>
+        </type>
+        <type category="struct" name="VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT" structextends="VkPhysicalDeviceFeatures2,VkDeviceCreateInfo">
+            <member values
+DONE

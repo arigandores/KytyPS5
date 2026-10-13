@@ -1,0 +1,12 @@
+decoder sha256 dd81780be4d772d64b36dcb3cc9876d76f7dcb627f63f670bff65968287ac1dc
+programs 5698 walk status {'OK': 5690, 'FRONT_OK': 8}
+  dim 1D             instructions      65 programs    24
+  dim 2D             instructions  129001 programs  4452
+  dim 3D             instructions    3969 programs  2501
+  dim CUBE           instructions    8765 programs  1731
+  dim 1D_ARRAY       instructions       0 programs     0
+  dim 2D_ARRAY       instructions   34803 programs  1866
+  dim 2D_MSAA        instructions       0 programs     0
+  dim 2D_MSAA_ARRAY  instructions       0 programs     0
+  examples 1D ['092754e7ae8bac9a pc=1647 op=0x66', '092754e7ae8bac9a pc=1690 op=0x66', '092754e7ae8bac9a pc=1936 op=0x66', '0af122d5ac62c4c5 pc=2857 op=0x66', '0af122d5ac62c4c5 pc=2896 op=0x66', '0af122d5ac62c4c5 pc=3143 op=0x66', '0c891023270da2a3 pc=9 op=0x00', '1f16e50eea0c89e3 pc=2428 op=0x66']
+DONE

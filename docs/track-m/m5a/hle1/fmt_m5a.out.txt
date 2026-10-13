@@ -1,0 +1,28 @@
+direct sites: printf 762, vsnprintf 24, puts 48, snprintf(libc.prx, not ours) 235
+vsnprintf wrappers (function start <- vsnprintf site): 22
+   0x1c0a0 (vsnprintf at 0x1c153) callers 53
+   0x1c1f0 (vsnprintf at 0x1c32a) callers 6
+   0x39ac0 (vsnprintf at 0x39b93) callers 0
+   0x39bf0 (vsnprintf at 0x39cb6) callers 0
+   0x27e3d0 (vsnprintf at 0x27e4b7) callers 1241
+   0x2b8cf0 (vsnprintf at 0x2b8d20) callers 2
+   0x38e0b0 (vsnprintf at 0x38e147) callers 901
+   0x392c00 (vsnprintf at 0x392d34) callers 2
+   0x3a0b30 (vsnprintf at 0x3a0bf7) callers 51
+   0x3a0d90 (vsnprintf at 0x3a0e19) callers 0
+   0x3a0e20 (vsnprintf at 0x3a0eac) callers 1
+   0x3a0ed0 (vsnprintf at 0x3a0f5b) callers 108
+   0x3fc4b0 (vsnprintf at 0x3fc57b) callers 88
+   0x43a4e0 (vsnprintf at 0x43a5a5) callers 1
+   0x453560 (vsnprintf at 0x45361d) callers 27
+   0xa4a630 (vsnprintf at 0xa4a70a) callers 2
+   0xa4aaa0 (vsnprintf at 0xa4ab82) callers 6
+   0x10a6240 (vsnprintf at 0x10a62fa) callers 8
+   0x10a6410 (vsnprintf at 0x10a646a) callers 0
+   0x58312d0 (vsnprintf at 0x5831394) callers 12
+   0x676ecf0 (vsnprintf at 0x676edb8) callers 16
+   0x74d6be0 (vsnprintf at 0x74d6c20) callers 0
+call sites with a literal %%-format in an argument register: {'printf': 751, 'vsnprintf': 2, 'puts': 5, 'snprintf(libc.prx, not ours)': 215, 'wrapper_0x1c0a0': 46, 'wrapper_0x1c1f0': 8, 'wrapper_0x27e3d0': 1118, 'wrapper_0x2b8cf0': 2, 'wrapper_0x3a0b30': 21, 'wrapper_0x3a0e20': 1, 'wrapper_0x3a0ed0': 99, 'wrapper_0x3fc4b0': 33, 'wrapper_0x453560': 18, 'wrapper_0xa4a630': 1, 'wrapper_0xa4aaa0': 1, 'wrapper_0x58312d0': 5, 'wrapper_0x676ecf0': 5}
+of them with dynamic precision ".*": 0
+strings anywhere in eboot.elf with ".*" precision: 0 (unique 0)
+DONE

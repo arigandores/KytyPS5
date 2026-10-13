@@ -1,0 +1,12 @@
+S1 T023: decision differs (ours calls guest callback / upstream does not) by class: {'up=0': 90, 'down=0': 45, 'down<up': 105}
+   example up=0 up,down,res,num_dw,ours_avail,upstream_avail = ('0x0', '0x1fffffffc', 0, 1, 0, 2147483647)
+   example down=0 up,down,res,num_dw,ours_avail,upstream_avail = ('0x200000000', '0x0', 0, 1, 0, 18446744071562067968)
+   example down<up up,down,res,num_dw,ours_avail,upstream_avail = ('0x200000000', '0x1fffffffc', 0, 1, 0, 18446744073709551615)
+S1 T023: for non-null cursors with down > up the decision is identical: True
+S2 T031: "%.*s" with prec=-1 on "abcdef": ours=[]  C-standard=[abcdef]  msvcrt=[abcdef]
+S2 T031: prec >= 0 identical: True
+S3 T055: ours     events READY,PLAY,PAUSE,PLAY,PAUSE,PLAY,WARNING,STOP fails [] IsActive(raw, game wrapper) [(False, False), (True, True), (True, True), (False, False)]
+S3 T055: upstream events READY,PLAY,PAUSE,PLAY,PAUSE,PLAY,WARNING,STOP fails [] IsActive(raw, game wrapper) [(True, False), (True, True), (True, True), (False, False)]
+S3 T055: events equal: True ; game-wrapper IsActive equal: True ; raw IsActive equal: False
+S4 T125: ports with PCM 22; ours queued 4 (objects dropped 18); upstream queued 4 + 1 object mix of 18 objects
+ALL OK

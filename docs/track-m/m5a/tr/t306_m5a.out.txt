@@ -1,0 +1,27 @@
+=== 5a34b303576ee324 walk=OK words=704 stage hint: has EXP
+  sample pc=62 op=0x37 nsa=0 offset v3 <- pc=43 v_mov_b32 7e0602ff 00000100 | exec writes before writer: [] | between writer and sample: []
+  sample pc=64 op=0x37 nsa=1 offset v2 <- pc=45 v_mov_b32 7e0402ff 00003f01 | exec writes before writer: [] | between writer and sample: []
+  sample pc=67 op=0x37 nsa=1 offset v1 <- pc=55 v_mov_b32 7e0202ff 00003f00 | exec writes before writer: [] | between writer and sample: []
+  sample pc=70 op=0x37 nsa=1 offset v0 <- pc=58 v_mov_b32 7e0002bf | exec writes before writer: [] | between writer and sample: []
+  sample pc=73 op=0x37 nsa=1 offset v12 <- pc=42 v_mov_b32 7e180281 | exec writes before writer: [] | between writer and sample: []
+  sample pc=78 op=0x37 nsa=1 offset v16 <- pc=47 v_mov_b32 7e2002ff 00003f3f | exec writes before writer: [] | between writer and sample: []
+  sample pc=81 op=0x37 nsa=1 offset v28 <- pc=49 v_mov_b32 7e3802ff 0000013f | exec writes before writer: [] | between writer and sample: []
+  sample pc=84 op=0x37 nsa=1 offset v6 <- pc=51 v_mov_b32 7e0c02ff 00000101 | exec writes before writer: [] | between writer and sample: []
+=== f47c0c097c598a36 walk=OK words=336 stage hint: pixel-or-vertex (VINTRP)
+  sample pc=99 op=0x37 nsa=1 offset v3 <- pc=79 v_mov_b32 7e060281 | exec writes before writer: [(58, 'v_cmpx (partial)'), (60, 'v_cmpx (partial)'), (66, 'exec<-SOP1_0x4 src=40')] | between writer and sample: []
+  sample pc=215 op=0x37 nsa=1 offset v4 <- pc=195 v_mov_b32 7e0802ff 00000100 | exec writes before writer: [(173, 'v_cmpx (partial)'), (175, 'v_cmpx (partial)'), (182, 'exec<-SOP1_0x4 src=28')] | between writer and sample: []
+=== 7b4078750f32db50 walk=OK words=724 stage hint: compute-like (no VINTRP, no EXP)
+  sample pc=105 op=0x34 nsa=1 offset v24 <- pc=89 v_mov_b32 7e3002ff 00000101 | exec writes before writer: [(5, 'exec<-SOP1_0x4 src=18'), (10, 'exec<-SOP1_0x4 src=193')] | between writer and sample: []
+  sample pc=108 op=0x34 nsa=0 offset v26 <- pc=92 v_mov_b32 7e340281 | exec writes before writer: [(5, 'exec<-SOP1_0x4 src=18'), (10, 'exec<-SOP1_0x4 src=193')] | between writer and sample: []
+  sample pc=110 op=0x34 nsa=1 offset v17 <- pc=95 v_mov_b32 7e2202ff 00000100 | exec writes before writer: [(5, 'exec<-SOP1_0x4 src=18'), (10, 'exec<-SOP1_0x4 src=193')] | between writer and sample: []
+=== b912bcf29000558d walk=OK words=772 stage hint: compute-like (no VINTRP, no EXP)
+  sample pc=69 op=0x37 nsa=1 offset v4 <- pc=55 v_mov_b32 7e0802ff 00003f00 | exec writes before writer: [(20, 'exec<-SOP1_0x4 src=106')] | between writer and sample: []
+  sample pc=72 op=0x37 nsa=1 offset v3 <- pc=57 v_mov_b32 7e0602bf | exec writes before writer: [(20, 'exec<-SOP1_0x4 src=106')] | between writer and sample: []
+  sample pc=75 op=0x37 nsa=1 offset v1 <- pc=60 v_mov_b32 7e020281 | exec writes before writer: [(20, 'exec<-SOP1_0x4 src=106')] | between writer and sample: []
+  sample pc=78 op=0x37 nsa=1 offset v8 <- pc=62 v_mov_b32 7e1002ff 00000100 | exec writes before writer: [(20, 'exec<-SOP1_0x4 src=106')] | between writer and sample: []
+  sample pc=117 op=0x37 nsa=1 offset v3 <- pc=81 v_mov_b32 7e0602ff 00003f01 | exec writes before writer: [(20, 'exec<-SOP1_0x4 src=106')] | between writer and sample: []
+  sample pc=120 op=0x37 nsa=1 offset v1 <- pc=83 v_mov_b32 7e0202ff 00003f3f | exec writes before writer: [(20, 'exec<-SOP1_0x4 src=106')] | between writer and sample: []
+  sample pc=123 op=0x37 nsa=1 offset v2 <- pc=66 v_mov_b32 7e0402ff 0000013f | exec writes before writer: [(20, 'exec<-SOP1_0x4 src=106')] | between writer and sample: []
+  sample pc=139 op=0x37 nsa=1 offset v0 <- pc=86 v_mov_b32 7e0002ff 00000101 | exec writes before writer: [(20, 'exec<-SOP1_0x4 src=106')] | between writer and sample: []
+samples 21
+DONE t306_m5a

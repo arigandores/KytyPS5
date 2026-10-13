@@ -1,0 +1,70 @@
+    10546d0  e8ab764906               call     0x74ebd80
+    10546d5  85c0                     test     eax, eax
+    10546d7  0f8e5a010000             jle      0x1054837
+    10546dd  4189c7                   mov      r15d, eax
+    10546e0  4c8d65b0                 lea      r12, [rbp - 0x50]
+    10546e4  4531f6                   xor      r14d, r14d
+    10546e7  eb13                     jmp      0x10546fc
+    10546e9  0f1f8000000000           nop      dword ptr [rax]
+    10546f0  41ffc6                   inc      r14d
+    10546f3  4539f7                   cmp      r15d, r14d
+    10546f6  0f843b010000             je       0x1054837
+    10546fc  488b7b60                 mov      rdi, qword ptr [rbx + 0x60]
+    1054700  4489f6                   mov      esi, r14d
+    1054703  4c89e2                   mov      rdx, r12
+    1054706  e825764906               call     0x74ebd30
+    105470b  894328                   mov      dword ptr [rbx + 0x28], eax
+    105470e  85c0                     test     eax, eax
+    1054710  78de                     js       0x10546f0
+    1054712  837db001                 cmp      dword ptr [rbp - 0x50], 1
+    1054716  75d8                     jne      0x10546f0
+    1054718  c5fa7e45b8               vmovq    xmm0, qword ptr [rbp - 0x48]
+    105471d  0fb60514b1b40d           movzx    eax, byte ptr [rip + 0xdb4b114]   ; ->0xeb9f838
+    1054724  c5f97f45a0               vmovdqa  xmmword ptr [rbp - 0x60], xmm0
+    1054729  84c0                     test     al, al
+    105472b  0f845f010000             je       0x1054890
+    1054731  bf00000100               mov      edi, 0x10000
+    1054736  0b3df4b0b40d             or       edi, dword ptr [rip + 0xdb4b0f4]   ; ->0xeb9f830
+    105473c  c4c1797ec7               vmovd    r15d, xmm0
+    1054741  c4c37916c401             vpextrd  r12d, xmm0, 1
+    1054747  488d3532df1707           lea      rsi, [rip + 0x717df32]   ; ->0x81d2680 "## Video on Stream %d - Width %d Height %d ##
+"
+    105474e  4489f2                   mov      edx, r14d
+    1054751  31c0                     xor      eax, eax
+    1054753  4489f9                   mov      ecx, r15d
+    1054756  4589e0                   mov      r8d, r12d
+    1054759  e8729c22ff               call     0x27e3d0
+    105475e  c4e279580521b12f07       vpbroadcastd xmm0, dword ptr [rip + 0x72fb121]   ; ->0x834f888
+    1054767  c5f96f55a0               vmovdqa  xmm2, xmmword ptr [rbp - 0x60]
+    105476c  c4e279580d67ad2f07       vpbroadcastd xmm1, dword ptr [rip + 0x72fad67]   ; ->0x834f4dc
+    1054775  438d0464                 lea      eax, [r12 + r12*2]
+    1054779  4489f6                   mov      esi, r14d
+    105477c  d1e8                     shr      eax, 1
+    105477e  440faff8                 imul     r15d, eax
+    1054782  c4e2693dc0               vpmaxsd  xmm0, xmm2, xmm0
+    1054787  c4e27939c1               vpminsd  xmm0, xmm0, xmm1
+    105478c  c5f9d64368               vmovq    qword ptr [rbx + 0x68], xmm0
+    1054791  c5f97e5370               vmovd    dword ptr [rbx + 0x70], xmm2
+    1054796  894374                   mov      dword ptr [rbx + 0x74], eax
+    1054799  44897b78                 mov      dword ptr [rbx + 0x78], r15d
+    105479d  c5f9efc0                 vpxor    xmm0, xmm0, xmm0
+    10547a1  c5fa7f437c               vmovdqu  xmmword ptr [rbx + 0x7c], xmm0
+    10547a6  488b7b60                 mov      rdi, qword ptr [rbx + 0x60]
+    10547aa  e871754906               call     0x74ebd20
+    10547af  894328                   mov      dword ptr [rbx + 0x28], eax
+    10547b2  85c0                     test     eax, eax
+    10547b4  7928                     jns      0x10547de
+    10547b6  0fb6057bb0b40d           movzx    eax, byte ptr [rip + 0xdb4b07b]   ; ->0xeb9f838
+    10547bd  84c0                     test     al, al
+    10547bf  0f8463010000             je       0x1054928
+    10547c5  bf00000100               mov      edi, 0x10000
+    10547ca  0b3d60b0b40d             or       edi, dword ptr [rip + 0xdb4b060]   ; ->0xeb9f830
+    10547d0  488d35824f0107           lea      rsi, [rip + 0x7014f82]   ; ->0x8069759 "Video: Error EnableStream Video"
+    10547d7  31c0                     xor      eax, eax
+    10547d9  e8f29b22ff               call     0x27e3d0
+    10547de  0fb60553b0b40d           movzx    eax, byte ptr [rip + 0xdb4b053]   ; ->0xeb9f838
+    10547e5  84c0                     test     al, al
+    10547e7  0f84f4000000             je       0x10548e1
+    10547ed  bf00000100               mov      edi, 0x10000
+    10547f2  0b3d38b0b40d             or       edi, dword ptr [rip + 0xdb4b038]   ; ->0xeb9f830
+    10547f8  488b55c8                 mov      rdx, qword ptr [rbp - 0x38]

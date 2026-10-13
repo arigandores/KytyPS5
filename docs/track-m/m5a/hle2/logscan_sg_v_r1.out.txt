@@ -1,0 +1,44 @@
+====================================================================================================
+LOG C:/kyty/m657/m3a/log_m3_sg_v_r1.txt lines 1164394 sec 9.0
+  b'APR submit failed for unknown file id'             0  first=-
+  b'APR submit read failed'                            0  first=-
+  b'APR submit event failed'                           0  first=-
+  b'AMPR submit write-address failed'                  0  first=-
+  b'AMM submit command failed'                         0  first=-
+  b'APR read missing host file'                        0  first=-
+  b'APR resolve missing path'                          0  first=-
+  b'APR stat failed'                                   0  first=-
+  b'APR size failed'                                   0  first=-
+  b'MT265: mode'                                       0  first=-
+  b'user event add:'                                   0  first=-
+  b'user event edge add:'                              0  first=-
+  b'user event trigger:'                               0  first=-
+  b'user event delete:'                                0  first=-
+  b'AMPR event add:'                                   0  first=-
+  b'AMPR system event add:'                            0  first=-
+  b'AMPR event delete:'                                0  first=-
+  b'Equeue create:'                                    8  first=7135
+       b'\tEqueue create: Gpu::GpuDevice::EopEq\n'
+  b'Equeue wait:'                                      0  first=-
+  b'Equeue wait received'                              0  first=-
+  b'Equeue wait timedout'                              0  first=-
+  b'Equeue delete:'                                    0  first=-
+  b'SystemService event'                               0  first=-
+  b'reserve-fixed replace'                             0  first=-
+  b'\t type = '                                       64  first=15172
+       b'\t type = 0\n'
+  b'\t name = '                                       45  first=4937
+       b'\t name = orbis_user_malloc\n'
+  b'KYTY_PRINT_NAMES'                                  0  first=-
+  b'Ampr::'                                            0  first=-
+  b'Sysmodule::'                                       0  first=-
+  b'SystemService::'                                   0  first=-
+  b'unsupported param_id'                              0  first=-
+  PRINT_NAME lines total 24620 top [(b'PthreadCondWait', 22666), (b'PthreadMutexInitNamed', 354), (b'PthreadRwlockInitNamed', 351), (b'PthreadRwlockattrInit', 338), (b'PthreadRwlockattrSettype', 338), (b'PthreadRwlockattrDestroy', 338), (b'PthreadRwlockDestroy', 78), (b'PthreadCreate', 69), (b'PthreadCondInitNamed', 23), (b'PthreadCondattrInit', 22), (b'PthreadCondattrDestroy', 22), (b'PthreadDetach', 11), (b'PthreadSetaffinity', 5), (b'PthreadSetprio', 5)]
+  "\t id = N" lines 31 values [(6, 1), (33, 1), (131, 1), (132, 1), (138, 1), (139, 1), (140, 1), (141, 1), (149, 1), (150, 1), (152, 1), (153, 1), (164, 1), (165, 1), (166, 1), (168, 1), (169, 1), (180, 1), (207, 1), (210, 1), (228, 1), (231, 2), (261, 1), (267, 1), (271, 1), (272, 1), (274, 1), (275, 1), (277, 1), (288, 1)]
+  "\t id =" preceding lines [(b'Close: C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/data/commo', 2), (b'=============================================', 1), (b'mutex init: SoundSystem, 0', 1), (b'mutex init: mutex_ bb5f646, 0', 1), (b'mutex init: RudpSockListMtx, 0', 1), (b'priority   = 500', 1), (b'stack_size    = 2097152', 1), (b'id = 231', 1), (b'id = 277', 1), (b'id = 274', 1)]
+  Equeue names [(b'Gpu::GpuDevice::EopEq', 5), (b'Gpu::EopEqCompute', 2), (b'Gpu::EopEqComputeForApplication', 1)]
+  MapDirect blocks 7 fixed 3 flags {16: 1, 0: 4, 144: 2} type(MapDirectMemory2) {None: 7}
+  start/len pairs (munmap|release) 0
+  fixed direct maps over live direct/flex range 0 []
+DONE

@@ -1,0 +1,64 @@
+=== LOG C:/kyty/m657/m3a/log_m3_sg_v_r1.txt size 316192041 FrameTrace-draw 10230 FrameTrace-x 10230
+  sum img_up                132052  frames_nonzero 10229
+  sum img_defer                707  frames_nonzero 68
+  sum img_defer_kb         1587968  frames_nonzero 57
+  sum img_minlod             31343  frames_nonzero 23
+  sum clr_ok                 68906  frames_nonzero 10225
+  sum clr_ok_kb          215506240  frames_nonzero 10225
+  sum clr_ambig                  0  frames_nonzero 0
+  sum clr_none              143209  frames_nonzero 10228
+  sum clr_decode              9872  frames_nonzero 9801
+  sum clr_over                 227  frames_nonzero 42
+  sum clr_taken_img          68906  frames_nonzero 10225
+  sum clr_taken_meta         20097  frames_nonzero 10225
+  mark invalid image view             0
+  mark Fatal Error                    0
+  mark ImgUploadWhy                   0
+  mark gpu-invalidate                 0
+  mark MipDefer                       0
+  mark TextureCache: invalid          0
+  mark texture minimum LOD            0
+  mark unsupported texture mip view   0
+=== LOG C:/kyty/m657/m3a/log_m3_hb_f.txt size 568021256 FrameTrace-draw 18913 FrameTrace-x 18913
+  sum img_up                 99695  frames_nonzero 18910
+  sum img_defer                590  frames_nonzero 110
+  sum img_defer_kb         1167168  frames_nonzero 107
+  sum img_minlod              1187  frames_nonzero 8
+  sum clr_ok                105430  frames_nonzero 18901
+  sum clr_ok_kb          507505792  frames_nonzero 18901
+  sum clr_ambig                  0  frames_nonzero 0
+  sum clr_none              246577  frames_nonzero 18908
+  sum clr_decode             18668  frames_nonzero 18105
+  sum clr_over                 697  frames_nonzero 59
+  sum clr_taken_img         105430  frames_nonzero 18902
+  sum clr_taken_meta         37547  frames_nonzero 18905
+  mark invalid image view             0
+  mark Fatal Error                    0
+  mark ImgUploadWhy                   0
+  mark gpu-invalidate                 0
+  mark MipDefer                       0
+  mark TextureCache: invalid          0
+  mark texture minimum LOD            0
+  mark unsupported texture mip view   0
+=== LOG C:/kyty/m657/m3a/log_m3_mg_v.txt size 601929044 FrameTrace-draw 20246 FrameTrace-x 20246
+  sum img_up                 53370  frames_nonzero 20243
+  sum img_defer                312  frames_nonzero 13
+  sum img_defer_kb          776448  frames_nonzero 11
+  sum img_minlod              5059  frames_nonzero 12
+  sum clr_ok                188889  frames_nonzero 20239
+  sum clr_ok_kb          631862464  frames_nonzero 20239
+  sum clr_ambig                  0  frames_nonzero 0
+  sum clr_none              283944  frames_nonzero 20242
+  sum clr_decode                 3  frames_nonzero 3
+  sum clr_over                3777  frames_nonzero 423
+  sum clr_taken_img         188889  frames_nonzero 20239
+  sum clr_taken_meta         40135  frames_nonzero 20239
+  mark invalid image view             0
+  mark Fatal Error                    0
+  mark ImgUploadWhy                   0
+  mark gpu-invalidate                 0
+  mark MipDefer                       0
+  mark TextureCache: invalid          0
+  mark texture minimum LOD            0
+  mark unsupported texture mip view   0
+DONE

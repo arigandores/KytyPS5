@@ -1,0 +1,13 @@
+    10547f8  488b55c8                 mov      rdx, qword ptr [rbp - 0x38]
+    10547fc  488d35284c0d07           lea      rsi, [rip + 0x70d4c28]   ; ->0x812942b
+    1054803  31c0                     xor      eax, eax
+    1054805  e8c69b22ff               call     0x27e3d0
+    105480a  488d055fc52f07           lea      rax, [rip + 0x72fc55f]   ; ->0x8350d70
+    1054811  488b10                   mov      rdx, qword ptr [rax]
+    1054814  480faf55c8               imul     rdx, qword ptr [rbp - 0x38]
+    1054819  48b8cff753e3a59bc420     movabs   rax, 0x20c49ba5e353f7cf
+    1054823  48c1ea03                 shr      rdx, 3
+    1054827  c4e2fbf6c0               mulx     rax, rax, rax
+    105482c  48c1e804                 shr      rax, 4
+    1054830  48898390000000           mov      qword ptr [rbx + 0x90], rax
+    1054837  4c8db3a0020000           lea      r14, [rbx + 0x2a0]

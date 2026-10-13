@@ -1,0 +1,58 @@
+R16_SFLOAT           W=0x00000000  ours=(0.0,)  memory=uniform (0.0,)  -> SAME
+R16_SFLOAT           W=0x3c003c00  ours=(1.0,)  memory=uniform (1.0,)  -> SAME
+R16_SFLOAT           W=0x00003c00  ours=(1.0,)  memory=NOT uniform (texel = lo or hi by byte offset)   -> DIFFERS
+R16_SFLOAT           W=0xffffffff  ours=('nan',)  memory=uniform ('nan',)  -> SAME
+R16_SFLOAT           W=0x20202020  ours=(0.008057,)  memory=uniform (0.008057,)  -> SAME
+R16_SFLOAT           W=0xfffffff0  ours=('nan',)  memory=NOT uniform (texel = lo or hi by byte offset)   -> DIFFERS
+R16_SFLOAT           W=0x3f800000  ours=(0.0,)  memory=NOT uniform (texel = lo or hi by byte offset)   -> DIFFERS
+R16_UNORM            W=0x00000000  ours=(0.0,)  memory=uniform (0.0,)  -> SAME
+R16_UNORM            W=0x3c003c00  ours=(0.234379,)  memory=uniform (0.234379,)  -> SAME
+R16_UNORM            W=0x00003c00  ours=(0.234379,)  memory=NOT uniform (texel = lo or hi by byte offset)   -> DIFFERS
+R16_UNORM            W=0xffffffff  ours=(1.0,)  memory=uniform (1.0,)  -> SAME
+R16_UNORM            W=0x20202020  ours=(0.12549,)  memory=uniform (0.12549,)  -> SAME
+R16_UNORM            W=0xfffffff0  ours=(0.999771,)  memory=NOT uniform (texel = lo or hi by byte offset)   -> DIFFERS
+R16_UNORM            W=0x3f800000  ours=(0.0,)  memory=NOT uniform (texel = lo or hi by byte offset)   -> DIFFERS
+R16G16_SFLOAT        W=0x00000000  ours=(0.0, 0.0)  memory=uniform (0.0, 0.0)  -> SAME
+R16G16_SFLOAT        W=0x3c003c00  ours=(1.0, 1.0)  memory=uniform (1.0, 1.0)  -> SAME
+R16G16_SFLOAT        W=0x00003c00  ours=(1.0, 0.0)  memory=uniform (1.0, 0.0)  -> SAME
+R16G16_SFLOAT        W=0xffffffff  ours=('nan', 'nan')  memory=uniform ('nan', 'nan')  -> SAME
+R16G16_SFLOAT        W=0x20202020  ours=(0.008057, 0.008057)  memory=uniform (0.008057, 0.008057)  -> SAME
+R16G16_SFLOAT        W=0xfffffff0  ours=('nan', 'nan')  memory=uniform ('nan', 'nan')  -> SAME
+R16G16_SFLOAT        W=0x3f800000  ours=(0.0, 1.875)  memory=uniform (0.0, 1.875)  -> SAME
+R16G16B16A16_SFLOAT  W=0x00000000  ours=(0.0, 0.0, 0.0, 0.0)  memory=uniform (0.0, 0.0, 0.0, 0.0)  -> SAME
+R16G16B16A16_SFLOAT  W=0x3c003c00  ours=(1.0, 1.0, 0.0, 0.0)  memory=uniform (1.0, 1.0, 1.0, 1.0)  -> DIFFERS
+R16G16B16A16_SFLOAT  W=0x00003c00  ours=(1.0, 0.0, 0.0, 0.0)  memory=uniform (1.0, 0.0, 1.0, 0.0)  -> DIFFERS
+R16G16B16A16_SFLOAT  W=0xffffffff  ours=('nan', 'nan', 0.0, 0.0)  memory=uniform ('nan', 'nan', 'nan', 'nan')  -> DIFFERS
+R16G16B16A16_SFLOAT  W=0x20202020  ours=(0.008057, 0.008057, 0.0, 0.0)  memory=uniform (0.008057, 0.008057, 0.008057, 0.008057)  -> DIFFERS
+R16G16B16A16_SFLOAT  W=0xfffffff0  ours=('nan', 'nan', 0.0, 0.0)  memory=uniform ('nan', 'nan', 'nan', 'nan')  -> DIFFERS
+R16G16B16A16_SFLOAT  W=0x3f800000  ours=(0.0, 1.875, 0.0, 0.0)  memory=uniform (0.0, 1.875, 0.0, 1.875)  -> DIFFERS
+R16G16B16A16_UNORM   W=0x00000000  ours=(0.0, 0.0, 0.0, 0.0)  memory=uniform (0.0, 0.0, 0.0, 0.0)  -> SAME
+R16G16B16A16_UNORM   W=0x3c003c00  ours=(0.234379, 0.234379, 0.0, 0.0)  memory=uniform (0.234379, 0.234379, 0.234379, 0.234379)  -> DIFFERS
+R16G16B16A16_UNORM   W=0x00003c00  ours=(0.234379, 0.0, 0.0, 0.0)  memory=uniform (0.234379, 0.0, 0.234379, 0.0)  -> DIFFERS
+R16G16B16A16_UNORM   W=0xffffffff  ours=(1.0, 1.0, 0.0, 0.0)  memory=uniform (1.0, 1.0, 1.0, 1.0)  -> DIFFERS
+R16G16B16A16_UNORM   W=0x20202020  ours=(0.12549, 0.12549, 0.0, 0.0)  memory=uniform (0.12549, 0.12549, 0.12549, 0.12549)  -> DIFFERS
+R16G16B16A16_UNORM   W=0xfffffff0  ours=(0.999771, 1.0, 0.0, 0.0)  memory=uniform (0.999771, 1.0, 0.999771, 1.0)  -> DIFFERS
+R16G16B16A16_UNORM   W=0x3f800000  ours=(0.0, 0.248051, 0.0, 0.0)  memory=uniform (0.0, 0.248051, 0.0, 0.248051)  -> DIFFERS
+R32G32_SFLOAT        W=0x00000000  ours=(0.0, 0.0)  memory=uniform (0.0, 0.0)  -> SAME
+R32G32_SFLOAT        W=0x3c003c00  ours=(0.007827, 0.0)  memory=uniform (0.007827, 0.007827)  -> DIFFERS
+R32G32_SFLOAT        W=0x00003c00  ours=(0.0, 0.0)  memory=uniform (0.0, 0.0)  -> DIFFERS
+R32G32_SFLOAT        W=0xffffffff  ours=('nan', 0.0)  memory=uniform ('nan', 'nan')  -> DIFFERS
+R32G32_SFLOAT        W=0x20202020  ours=(0.0, 0.0)  memory=uniform (0.0, 0.0)  -> DIFFERS
+R32G32_SFLOAT        W=0xfffffff0  ours=('nan', 0.0)  memory=uniform ('nan', 'nan')  -> DIFFERS
+R32G32_SFLOAT        W=0x3f800000  ours=(1.0, 0.0)  memory=uniform (1.0, 1.0)  -> DIFFERS
+R8_UNORM             W=0x00000000  ours=(0.0,)  memory=uniform (0.0,)  -> SAME
+R8_UNORM             W=0x3c003c00  ours=(0.0,)  memory=NOT uniform (texel = byte by offset)   -> DIFFERS
+R8_UNORM             W=0x00003c00  ours=(0.0,)  memory=NOT uniform (texel = byte by offset)   -> DIFFERS
+R8_UNORM             W=0xffffffff  ours=(1.0,)  memory=uniform (1.0,)  -> SAME
+R8_UNORM             W=0x20202020  ours=(0.12549,)  memory=uniform (0.12549,)  -> SAME
+R8_UNORM             W=0xfffffff0  ours=(0.941176,)  memory=NOT uniform (texel = byte by offset)   -> DIFFERS
+R8_UNORM             W=0x3f800000  ours=(0.0,)  memory=NOT uniform (texel = byte by offset)   -> DIFFERS
+R8G8_UNORM           W=0x00000000  ours=(0.0, 0.0)  memory=uniform (0.0, 0.0)  -> SAME
+R8G8_UNORM           W=0x3c003c00  ours=(0.0, 0.235294)  memory=uniform (0.0, 0.235294)  -> SAME
+R8G8_UNORM           W=0x00003c00  ours=(0.0, 0.235294)  memory=NOT uniform (texel = lo or hi by offset)   -> DIFFERS
+R8G8_UNORM           W=0xffffffff  ours=(1.0, 1.0)  memory=uniform (1.0, 1.0)  -> SAME
+R8G8_UNORM           W=0x20202020  ours=(0.12549, 0.12549)  memory=uniform (0.12549, 0.12549)  -> SAME
+R8G8_UNORM           W=0xfffffff0  ours=(0.941176, 1.0)  memory=NOT uniform (texel = lo or hi by offset)   -> DIFFERS
+R8G8_UNORM           W=0x3f800000  ours=(0.0, 0.0)  memory=NOT uniform (texel = lo or hi by offset)   -> DIFFERS
+differing (format, value) pairs: 31 of 56
+DONE

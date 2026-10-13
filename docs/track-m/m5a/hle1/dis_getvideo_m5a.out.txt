@@ -1,0 +1,111 @@
+    1055ddc  e87f5f4906               call     0x74ebd60
+    1055de1  888393020000             mov      byte ptr [rbx + 0x293], al
+    1055de7  4883c408                 add      rsp, 8
+    1055deb  5b                       pop      rbx
+    1055dec  5d                       pop      rbp
+    1055ded  c3                       ret      
+    1055dee  cc                       int3     
+    1055def  cc                       int3     
+    1055df0  31c0                     xor      eax, eax
+    1055df2  c3                       ret      
+    1055df3  cc                       int3     
+    1055df4  cc                       int3     
+    1055df5  cc                       int3     
+    1055df6  cc                       int3     
+    1055df7  cc                       int3     
+    1055df8  cc                       int3     
+    1055df9  cc                       int3     
+    1055dfa  cc                       int3     
+    1055dfb  cc                       int3     
+    1055dfc  cc                       int3     
+    1055dfd  cc                       int3     
+    1055dfe  cc                       int3     
+    1055dff  cc                       int3     
+    1055e00  85f6                     test     esi, esi
+    1055e02  0f8588154906             jne      0x74e7390
+    1055e08  c3                       ret      
+    1055e09  cc                       int3     
+    1055e0a  cc                       int3     
+    1055e0b  cc                       int3     
+    1055e0c  cc                       int3     
+    1055e0d  cc                       int3     
+    1055e0e  cc                       int3     
+    1055e0f  cc                       int3     
+    1055e10  488d4708                 lea      rax, [rdi + 8]
+    1055e14  c3                       ret      
+    1055e15  cc                       int3     
+    1055e16  cc                       int3     
+    1055e17  cc                       int3     
+    1055e18  cc                       int3     
+    1055e19  cc                       int3     
+    1055e1a  cc                       int3     
+    1055e1b  cc                       int3     
+    1055e1c  cc                       int3     
+    1055e1d  cc                       int3     
+    1055e1e  cc                       int3     
+    1055e1f  cc                       int3     
+    1055e20  55                       push     rbp
+    1055e21  4889e5                   mov      rbp, rsp
+    1055e24  4157                     push     r15
+    1055e26  4156                     push     r14
+    1055e28  53                       push     rbx
+    1055e29  4883ec18                 sub      rsp, 0x18
+    1055e2d  4c8b3dd4e6dd07           mov      r15, qword ptr [rip + 0x7dde6d4]   ; ->0x8e34508
+    1055e34  498b07                   mov      rax, qword ptr [r15]
+    1055e37  488945e0                 mov      qword ptr [rbp - 0x20], rax
+    1055e3b  488b1dce94b40d           mov      rbx, qword ptr [rip + 0xdb494ce]   ; ->0xeb9f310
+    1055e42  4885db                   test     rbx, rbx
+    1055e45  756e                     jne      0x1055eb5
+    1055e47  bf60000000               mov      edi, 0x60
+    1055e4c  e88f154906               call     0x74e73e0
+    1055e51  c5f8100d677e2f07         vmovups  xmm1, xmmword ptr [rip + 0x72f7e67]   ; ->0x834dcc0
+    1055e59  4889c3                   mov      rbx, rax
+    1055e5c  c7400800000000           mov      dword ptr [rax + 8], 0
+    1055e63  c5f857c0                 vxorps   xmm0, xmm0, xmm0
+    1055e67  c5f8114010               vmovups  xmmword ptr [rax + 0x10], xmm0
+    1055e6c  488d0565678c07           lea      rax, [rip + 0x78c6765]   ; ->0x891c5d8
+    1055e73  31f6                     xor      esi, esi
+    1055e75  31d2                     xor      edx, edx
+    1055e77  4c8d7338                 lea      r14, [rbx + 0x38]
+    1055e7b  488903                   mov      qword ptr [rbx], rax
+    1055e7e  4c89f7                   mov      rdi, r14
+    1055e81  c5f8114b24               vmovups  xmmword ptr [rbx + 0x24], xmm1
+    1055e86  e8e5a4fafe               call     0x370
+    1055e8b  488d15c1cb2007           lea      rdx, [rip + 0x720cbc1]   ; ->0x8262a53 "DeviceManagerBase"
+    1055e92  488d7ddc                 lea      rdi, [rbp - 0x24]
+    1055e96  4c89f6                   mov      rsi, r14
+    1055e99  31c9                     xor      ecx, ecx
+    1055e9b  e8a0a5fafe               call     0x440
+    1055ea0  c7433404000000           mov      dword ptr [rbx + 0x34], 4
+    1055ea7  c7432000000000           mov      dword ptr [rbx + 0x20], 0
+    1055eae  48891d5b94b40d           mov      qword ptr [rip + 0xdb4945b], rbx   ; ->0xeb9f310
+    1055eb5  4883c338                 add      rbx, 0x38
+    1055eb9  488d7ddc                 lea      rdi, [rbp - 0x24]
+    1055ebd  4889de                   mov      rsi, rbx
+    1055ec0  e87ba7fafe               call     0x640
+    1055ec5  488b1d4494b40d           mov      rbx, qword ptr [rip + 0xdb49444]   ; ->0xeb9f310
+    1055ecc  4885db                   test     rbx, rbx
+    1055ecf  756e                     jne      0x1055f3f
+    1055ed1  bf60000000               mov      edi, 0x60
+    1055ed6  e805154906               call     0x74e73e0
+    1055edb  c5f8100ddd7d2f07         vmovups  xmm1, xmmword ptr [rip + 0x72f7ddd]   ; ->0x834dcc0
+    1055ee3  4889c3                   mov      rbx, rax
+    1055ee6  c7400800000000           mov      dword ptr [rax + 8], 0
+    1055eed  c5f857c0                 vxorps   xmm0, xmm0, xmm0
+    1055ef1  c5f8114010               vmovups  xmmword ptr [rax + 0x10], xmm0
+    1055ef6  488d05db668c07           lea      rax, [rip + 0x78c66db]   ; ->0x891c5d8
+    1055efd  31f6                     xor      esi, esi
+    1055eff  31d2                     xor      edx, edx
+    1055f01  4c8d7338                 lea      r14, [rbx + 0x38]
+    1055f05  488903                   mov      qword ptr [rbx], rax
+    1055f08  4c89f7                   mov      rdi, r14
+    1055f0b  c5f8114b24               vmovups  xmmword ptr [rbx + 0x24], xmm1
+    1055f10  e85ba4fafe               call     0x370
+    1055f15  488d1537cb2007           lea      rdx, [rip + 0x720cb37]   ; ->0x8262a53 "DeviceManagerBase"
+    1055f1c  488d7ddc                 lea      rdi, [rbp - 0x24]
+    1055f20  4c89f6                   mov      rsi, r14
+    1055f23  31c9                     xor      ecx, ecx
+    1055f25  e816a5fafe               call     0x440
+    1055f2a  c7433404000000           mov      dword ptr [rbx + 0x34], 4
+    1055f31  c7432000000000           mov      dword ptr [rbx + 0x20], 0
+    1055f38  48891dd193b40d           mov      qword ptr [rip + 0xdb493d1], rbx   ; ->0xeb9f310

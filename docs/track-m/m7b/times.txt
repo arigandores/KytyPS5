@@ -1,0 +1,16 @@
+2026-10-13T04:22:12Z start M7b read ROADMAP p.767,773 (69a32f85)
+2026-10-13T04:23:18Z own worktree C:/kyty/m657/m7b/wt at 91a46dc5 created
+2026-10-13T04:23:30Z API: in_progress HPP-856 (M6a3 Emu Engineer), HPP-853 - no harness series; configure+tests build start
+2026-10-13T04:30:04Z tests build done 690558e7
+2026-10-13T04:32:18Z corpus z0/z1/p1/p0 on own exe 690558e7: ALL OK
+2026-10-13T04:33:47Z oracle_m7b.py (eboot words + own decoder + own SPIR-V reader) ffe65d25
+2026-10-13T04:34:05Z own eboot test =0/=1 and cs7b recompile =0/=1 on own exe
+2026-10-13T04:37:25Z mutants k1-k3 start (API: no harness series)
+2026-10-13T04:38:22Z mutants k1-k3 done; k3b,k3c,k4 start
+2026-10-13T04:39:24Z mutants k3b,k3c,k4 done; k5,k7 start
+2026-10-13T04:40:17Z mutants k5,k7 done (k7 equivalent); k7b start
+2026-10-13T04:41:31Z mutants k7b done (equivalent); control start
+2026-10-13T04:42:38Z control PASS; k8_lane_half start
+2026-10-13T04:43:01Z k8 done; final control start
+2026-10-13T04:43:21Z final control done 302fa300
+2026-10-13T04:44:45Z review.md written b1091380

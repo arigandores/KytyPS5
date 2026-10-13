@@ -1,0 +1,54 @@
+eboot.bin bytes 251850759
+program 5a34b303576ee324 file C:/kyty/s288/s4/gcn/g_1/ps_5a34b303576ee324.bin dwords 704: found in eboot.bin at ['0x9078be0']
+  instructions 414, early writes of exec []
+  pc  62 op 0x37 vaddr0 v3 writer pc 43 v_mov_b32 v3, 0x00000100     pair (0, 1) exec-between []
+  pc  64 op 0x37 vaddr0 v2 writer pc 45 v_mov_b32 v2, 0x00003f01     pair (1, -1) exec-between []
+  pc  67 op 0x37 vaddr0 v1 writer pc 55 v_mov_b32 v1, 0x00003f00     pair (0, -1) exec-between []
+  pc  70 op 0x37 vaddr0 v0 writer pc 58 v_mov_b32 v0, 63             pair (-1, 0) exec-between []
+  pc  73 op 0x37 vaddr0 v12 writer pc 42 v_mov_b32 v12, 1             pair (1, 0) exec-between []
+  pc  78 op 0x37 vaddr0 v16 writer pc 47 v_mov_b32 v16, 0x00003f3f    pair (-1, -1) exec-between []
+  pc  81 op 0x37 vaddr0 v28 writer pc 49 v_mov_b32 v28, 0x0000013f    pair (-1, 1) exec-between []
+  pc  84 op 0x37 vaddr0 v6 writer pc 51 v_mov_b32 v6, 0x00000101     pair (1, 1) exec-between []
+program f47c0c097c598a36 file C:/kyty/s288/s4/gcn/g_1/ps_f47c0c097c598a36.bin dwords 336: found in eboot.bin at ['0xe0f9a20']
+  instructions 186, early writes of exec [(3, 'S', ['befe0a7e'])]
+  pc  99 op 0x37 vaddr0 v3 writer pc 79 v_mov_b32 v3, 1              pair (1, 0) exec-between []
+  pc 215 op 0x37 vaddr0 v4 writer pc 195 v_mov_b32 v4, 0x00000100     pair (0, 1) exec-between []
+program 7b4078750f32db50 file C:/kyty/m657/m7a/cs7b/7b4078750f32db50.bin dwords 724: found in eboot.bin at ['0xe0ea360']
+  instructions 463, early writes of exec [(5, 'S', ['befe0412']), (10, 'S', ['befe04c1'])]
+  pc 105 op 0x34 vaddr0 v24 writer pc 89 v_mov_b32 v24, 0x00000101    pair (1, 1) exec-between []
+  pc 108 op 0x34 vaddr0 v26 writer pc 92 v_mov_b32 v26, 1             pair (1, 0) exec-between []
+  pc 110 op 0x34 vaddr0 v17 writer pc 95 v_mov_b32 v17, 0x00000100    pair (0, 1) exec-between []
+program b912bcf29000558d file C:/kyty/m657/m7a/cs7b/b912bcf29000558d.bin dwords 772: found in eboot.bin at ['0x9076d88']
+  instructions 468, early writes of exec [(20, 'S', ['befe046a'])]
+  pc  69 op 0x37 vaddr0 v4 writer pc 55 v_mov_b32 v4, 0x00003f00     pair (0, -1) exec-between []
+  pc  72 op 0x37 vaddr0 v3 writer pc 57 v_mov_b32 v3, 63             pair (-1, 0) exec-between []
+  pc  75 op 0x37 vaddr0 v1 writer pc 60 v_mov_b32 v1, 1              pair (1, 0) exec-between []
+  pc  78 op 0x37 vaddr0 v8 writer pc 62 v_mov_b32 v8, 0x00000100     pair (0, 1) exec-between []
+  pc 117 op 0x37 vaddr0 v3 writer pc 81 v_mov_b32 v3, 0x00003f01     pair (1, -1) exec-between []
+  pc 120 op 0x37 vaddr0 v1 writer pc 83 v_mov_b32 v1, 0x00003f3f     pair (-1, -1) exec-between []
+  pc 123 op 0x37 vaddr0 v2 writer pc 66 v_mov_b32 v2, 0x0000013f     pair (-1, 1) exec-between []
+  pc 139 op 0x37 vaddr0 v0 writer pc 86 v_mov_b32 v0, 0x00000101     pair (1, 1) exec-between []
+SPIR-V 5a34b303576ee324 corpus/z1/ps_5a34b303576ee324_914a71d3664b53ab_0/out.spv: image ops 12, ConstOffset 8, Offset 0, ConstOffsets 0
+  ConstOffset values in function order: [(0, 1), (1, -1), (0, -1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, 1)]
+  GCN pairs in pc order       : [(0, 1), (1, -1), (0, -1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, 1)]
+  order match: True; multiset match: True; dedup-adjacent match: True
+SPIR-V 5a34b303576ee324:z0 corpus/z0/ps_5a34b303576ee324_914a71d3664b53ab_0/out.spv: image ops 12, ConstOffset 0, Offset 0, ConstOffsets 0
+  ConstOffset values in function order: []
+  GCN pairs in pc order       : [(0, 1), (1, -1), (0, -1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, 1)]
+  order match: False; multiset match: False; dedup-adjacent match: False
+SPIR-V f47c0c097c598a36 corpus/z1/ps_f47c0c097c598a36_3de3d43ef41686a6_0/out.spv: image ops 15, ConstOffset 2, Offset 0, ConstOffsets 0
+  ConstOffset values in function order: [(1, 0), (0, 1)]
+  GCN pairs in pc order       : [(1, 0), (0, 1)]
+  order match: True; multiset match: True; dedup-adjacent match: True
+SPIR-V f47c0c097c598a36:z0 corpus/z0/ps_f47c0c097c598a36_3de3d43ef41686a6_0/out.spv: image ops 15, ConstOffset 0, Offset 0, ConstOffsets 0
+  ConstOffset values in function order: []
+  GCN pairs in pc order       : [(1, 0), (0, 1)]
+  order match: False; multiset match: False; dedup-adjacent match: False
+SPIR-V 7b4078750f32db50:m7a_1 ../m7a/cs7b/out_1.spv: image ops 8, ConstOffset 6, Offset 0, ConstOffsets 0
+  ConstOffset values in function order: [(1, 1), (1, 1), (1, 0), (1, 0), (0, 1), (0, 1)]
+  GCN pairs in pc order       : [(1, 1), (1, 0), (0, 1)]
+  order match: False; multiset match: False; dedup-adjacent match: True
+SPIR-V 7b4078750f32db50:m7a_0 ../m7a/cs7b/out_0.spv: image ops 8, ConstOffset 0, Offset 0, ConstOffsets 0
+  ConstOffset values in function order: []
+  GCN pairs in pc order       : [(1, 1), (1, 0), (0, 1)]
+  order match: False; multiset match: False; dedup-adjacent match: False

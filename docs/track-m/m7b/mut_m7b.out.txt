@@ -1,0 +1,28 @@
+exe before mutants 690558e788b782332deb82be37d62ab3b1f34be5e042cb92a1f4369e7304b0ff
+k1_mask         test:CAUGHT recompile:not-caught | =1 rc 0 ['ShaderCfgTests: failed: T306: offset written under another lane mask became a ConstOffset', 'ShaderCfgTests: failed: T306: a ConstOffset was recorded for a form that must take the previous path', 'ShaderCfgTests: failed: T306: the previous path of a non-constant offset was not taken with exactly one MTexOf'] | =0 rc 0 [] | T2 rc 0 records 6 fallback (0, 0, 0)
+k2_full         test:CAUGHT recompile:not-caught | =1 rc 0 ['ShaderCfgTests: failed: T306: offset written under a partial mask became a ConstOffset of a sample under a con', 'ShaderCfgTests: failed: T306: a ConstOffset was recorded for a form that must take the previous path', 'ShaderCfgTests: failed: T306: the previous path of a non-constant offset was not taken with exactly one MTexOf'] | =0 rc 0 [] | T2 rc 0 records 6 fallback (0, 0, 0)
+k3_silent       test:CAUGHT recompile:not-caught | =1 rc 0 ['ShaderCfgTests: failed: T306: the previous path of a non-constant offset was not taken with exactly one MTexOf'] | =0 rc 0 [] | T2 rc 0 records 6 fallback (0, 0, 0)
+ONLY run - no control
+exe before mutants ad9457bff23e1c037dfa3df3011925ea6325ece4117c0b828f37321c51c1f924
+k3b_line_only   test:not-caught recompile:not-caught | =1 rc 0 [] | =0 rc 0 [] | T2 rc 0 records 6 fallback (0, 0, 0)
+k3c_count_only  test:CAUGHT recompile:not-caught | =1 rc 0 ['ShaderCfgTests: failed: T306: the previous path of a non-constant offset was not taken with exactly one MTexOf'] | =0 rc 0 [] | T2 rc 0 records 6 fallback (0, 0, 0)
+k4_lit_reject   test:CAUGHT recompile:CAUGHT | =1 rc 0 ['ShaderCfgTests: failed: T306 eboot: a sample of the game does not carry exactly the offset of its GCN literal'] | =0 rc 0 [] | T2 rc 0 records 0 fallback (6, 0, 0)
+ONLY run - no control
+exe before mutants c9ea622b7137457b0c915561e754a3856434782420e7d0b234c497f7e7401d3e
+k5_noflag       test:CAUGHT recompile:not-caught | =1 rc 0 ['ShaderCfgTests: failed: T306: offset written under the mask of the sample does not follow KYTY_M_T306', 'ShaderCfgTests: failed: T306: the ConstOffset of the same-mask form is not (+1, +1)', 'ShaderCfgTests: failed: T306: the previous path of a non-constant offset was not taken with exactly one MTexOf'] | =0 rc 0 [] | T2 rc 0 records 6 fallback (0, 0, 0)
+k7_indirect     test:not-caught recompile:not-caught | =1 rc 0 [] | =0 rc 0 [] | T2 rc 0 records 6 fallback (0, 0, 0)
+ONLY run - no control
+exe before mutants 37a5fcfc5b14d2d829148cbc418a94644ba17c223a716452dce0a9f9afddb80e
+k7b_indirect    test:not-caught recompile:not-caught | =1 rc 0 [] | =0 rc 0 [] | T2 rc 0 records 6 fallback (0, 0, 0)
+ONLY run - no control
+exe before mutants 3983aa1561fb5f347ac68b5bc83e1a262bf39624621b79e02fc4785f370ba1ed
+CONTROL restored tree: build rc 0, =1 rc 0 failed 0, =0 rc 0 failed 0, T2 records 6 fallback (0, 0, 0) -> PASS
+exe after control 3a6af6e521defaea888ed1a2adab7901894ab226291d5623d0d8d3f4439dd4fd (same as before: False)
+ALL DONE
+exe before mutants 3a6af6e521defaea888ed1a2adab7901894ab226291d5623d0d8d3f4439dd4fd
+k8_lane_half    test:not-caught recompile:CAUGHT | =1 rc 0 [] | =0 rc 0 [] | T2 rc 0 records 3 fallback (0, 0, 0)
+ONLY run - no control
+exe before mutants c635f6b373511c44f85f76507dc54a172950cce3621fb2c9ed3b35635adb510d
+CONTROL restored tree: build rc 0, =1 rc 0 failed 0, =0 rc 0 failed 0, T2 records 6 fallback (0, 0, 0) -> PASS
+exe after control eeaa50dea1769dcbd77717ecac0ce96ebe6d315ebd4d58227c8ad9d7fc777269 (same as before: False)
+ALL DONE

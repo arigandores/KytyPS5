@@ -1,0 +1,8 @@
+(a) rows 269, processes rc!=0 or no out.spv: 0 []
+(b) =0 (z0, probe off) == MS1 M2d d byte for byte: 269 of 269
+(c) rows =1 != =0: 2 ['ps_5a34b303576ee324_914a71d3664b53ab_0', 'ps_f47c0c097c598a36_3de3d43ef41686a6_0']
+(d) probe on does not change out.spv: =1 269 of 269, =0 269 of 269
+(e) =0 probe: records 0, fallback lines counted 0; MTexOffset lines per config {'z0': 0, 'z1': 0, 'p1': 0, 'p0': 0}
+   p1 ps_5a34b303576ee324_914a71d3664b53ab_0 [(62, 0, 1, 2, 'const'), (64, 1, -1, 2, 'const'), (67, 0, -1, 2, 'const'), (70, -1, 0, 2, 'const'), (73, 1, 0, 2, 'const'), (78, -1, -1, 2, 'const'), (81, -1, 1, 2, 'const'), (84, 1, 1, 2, 'const')] [(b'0', b'0', b'0', b'8')]
+   p1 ps_f47c0c097c598a36_3de3d43ef41686a6_0 [(99, 1, 0, 2, 'const'), (215, 0, 1, 2, 'const')] [(b'0', b'0', b'0', b'2')]
+ALL OK

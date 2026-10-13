@@ -1,0 +1,2 @@
+cs7b/out_0.spv val rc=0
+cs7b/out_1.spv val rc=0

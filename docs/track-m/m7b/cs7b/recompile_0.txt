@@ -1,0 +1,3 @@
+recompile-t306-fallback: nonconstant=0 cube=0 range=0 records=0
+recompile C:/kyty/m657/m7b/oracle/eboot_words/7b4078750f32db50.bin: cs hash=7b4078750f32db50 wave=64 local=16x16x1 lds=384 inputs=0 permutations=1 buffer_align=[16c,16c,16,16,16] translate=3.7ms emit=1.0ms spirv=21700 words (cached 19716) -> C:/kyty/m657/m7b/cs7b/out_0.spv
+recompile-identity: permutation=0 words=21700 stored_words=19716 identical=0

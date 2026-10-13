@@ -1,0 +1,8 @@
+SPIR-V 7b4078750f32db50:own_1 cs7b/out_1.spv: image ops 8, ConstOffset 6, Offset 0, ConstOffsets 0
+  ConstOffset values in function order: [(1, 1), (1, 1), (1, 0), (1, 0), (0, 1), (0, 1)]
+  GCN pairs in pc order       : [(1, 1), (1, 0), (0, 1)]
+  order match: False; multiset match: False; dedup-adjacent match: True
+SPIR-V 7b4078750f32db50:own_0 cs7b/out_0.spv: image ops 8, ConstOffset 0, Offset 0, ConstOffsets 0
+  ConstOffset values in function order: []
+  GCN pairs in pc order       : [(1, 1), (1, 0), (0, 1)]
+  order match: False; multiset match: False; dedup-adjacent match: False

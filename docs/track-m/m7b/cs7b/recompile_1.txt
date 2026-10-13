@@ -1,0 +1,9 @@
+recompile-t306: hash=7b4078750f32db50 pc=0x1a4 x=1 y=1 z=0 components=2 path=const
+recompile-t306: hash=7b4078750f32db50 pc=0x1a4 x=1 y=1 z=0 components=2 path=const
+recompile-t306: hash=7b4078750f32db50 pc=0x1b0 x=1 y=0 z=0 components=2 path=const
+recompile-t306: hash=7b4078750f32db50 pc=0x1b0 x=1 y=0 z=0 components=2 path=const
+recompile-t306: hash=7b4078750f32db50 pc=0x1b8 x=0 y=1 z=0 components=2 path=const
+recompile-t306: hash=7b4078750f32db50 pc=0x1b8 x=0 y=1 z=0 components=2 path=const
+recompile-t306-fallback: nonconstant=0 cube=0 range=0 records=6
+recompile C:/kyty/m657/m7b/oracle/eboot_words/7b4078750f32db50.bin: cs hash=7b4078750f32db50 wave=64 local=16x16x1 lds=384 inputs=0 permutations=1 buffer_align=[16c,16c,16,16,16] translate=3.8ms emit=1.7ms spirv=21733 words (cached 19716) -> C:/kyty/m657/m7b/cs7b/out_1.spv
+recompile-identity: permutation=0 words=21733 stored_words=19716 identical=0

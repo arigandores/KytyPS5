@@ -1,0 +1,3 @@
+pure rc=0 total=49 match=49 END mode_line=1 stat_names=1 img_names=1 t109_names=1 -> OK
+cls rc=0 mode_line=['T188: mode=2 cls=2 k=4'] -> OK
+ALL OK

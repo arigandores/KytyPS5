@@ -1,0 +1,13 @@
+track M link M9d2 (HPP-874): RC1 of M9e - DiagT109::NoteDraw counts rasterized slots only, [min, max] clamp range (ROADMAP s122 item 788(b))
+
+- src/libs/diagT188.{h,cpp}: NoteDraw takes the computed scissors (VkRect2D, same slot count); a slot counts only when
+  its scissor has area > 0 (covers the empty ViewportIndex slot with width 0, a zero-area guest scissor and the
+  clip_disable branch); per counted slot lo = min(minDepth, maxDepth), hi = max(...), narrow iff lo > 0 or hi < 1.
+- renderDraw.cpp SetGraphicsDynamicParams: the call after the slot loop passes the same arrays that go to
+  setViewportWithCount / setScissorWithCount (RC15 kept).
+- tests/T188Stand.cpp: the 6 previous T109 cases get scissors of area > 0 (expectations unchanged); new cases t109_vi16,
+  t109_inv, t109_inv_n, t109_vi16n (49 cases). Mutants t5 (every slot) and t6 (raw minDepth / maxDepth) caught.
+KYTY_DIAG_T188=0 path unchanged (NoteDraw only under Mode() >= 1); translation signature set untouched.
+Base: worktree commit d490f648 (M9d). Built and stand-checked, not run in the game (WIP until the tags of M9f).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

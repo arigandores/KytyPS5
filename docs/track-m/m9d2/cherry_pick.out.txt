@@ -1,0 +1,4 @@
+Auto-merging src/graphics/host_gpu/renderer/renderDraw.cpp
+[main 6fde3e0ca] track M link M9d2 (HPP-874): RC1 of M9e - DiagT109::NoteDraw counts rasterized slots only, [min, max] clamp range (ROADMAP s122 item 788(b))
+ Date: Tue Oct 13 11:27:28 2026 +0200
+ 4 files changed, 61 insertions(+), 8 deletions(-)

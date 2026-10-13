@@ -1,0 +1,5 @@
+patched src/libs/diagT188.h lf
+patched src/libs/diagT188.cpp lf
+patched src/graphics/host_gpu/renderer/renderDraw.cpp lf
+patched tests/T188Stand.cpp lf
+ALL OK

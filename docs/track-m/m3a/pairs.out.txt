@@ -1,0 +1,7 @@
+pair sg: left m3_sg_v_r1 (MS1), right m3_sg_f (FS15) -> pairs/pair_sg.png rc 0 sha256 ef03b440f2a20d3a
+pair hb: left m3_hb_v (MS1), right m3_hb_f (FS15) -> pairs/pair_hb.png rc 0 sha256 4bab5cb2e6fefab2
+pair mg: left m3_mg_v (MS1), right m3_mg_f (FS15) -> pairs/pair_mg.png rc 0 sha256 0391d8eaa2d23322
+pair ac: left m3_ac_v (MS1), right m3_ac_f (FS15) -> pairs/pair_ac.png rc 0 sha256 d04ee72007fa2250
+pair f1: left m3_f1_v (MS1), right m3_f1_f (FS15) -> pairs/pair_f1.png rc 0 sha256 723159a08169e6d1
+pair f2: left m3_f2_v (MS1), right m3_f2_f (FS15) -> pairs/pair_f2.png rc 0 sha256 d764827e32758033
+banner T231: top m3_sg_v_r1 (T231=1), bottom m3_sg_t2310 (T231=0), 19.5-21.5 s every 0.25 s -> pairs/banner_t231.png rc 0 sha256 cfd0c6f411064029

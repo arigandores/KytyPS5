@@ -1,0 +1,83 @@
+suite test_m3a.py sha256 c138a391fb3ebd62c7424e74c6ea9537618c1a5cdf818b1763b4e88f311ccc3e target m3a_read.py sha256 266d2ea7ea3302cb0c611621c0512b84061aece17ad314133e29f03a8c180762 go_m3a.sh sha256 4a68191c8b6eaf6554ba67560c6c98c0e395d173ac9988679749a7db52637483 g5_m3a.py sha256 d9191361f864dea8d750103f3adedb5f1b00d5e59710df55f11b588d0435b6ad kset_m3a.py sha256 cbfe3e706666bac4270f9cd64125dc960d9c3036f9d9d990d7c912f5a57fc715
+[ok] plan m3_i: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save K1 knob - patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save K1 k
+[ok] plan m3_sg_w: go dry run = reader plan bin ms1 level underwater_aerial_garden kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0 | bin ms1 level underwater_aerial_garden kind w sd 100 timeout 900 hold 310 cache K1 save K1 k
+[ok] plan m3_sg_v: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 k
+[ok] plan m3_sg_f: go dry run = reader plan bin fs15 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patch 0 | bin fs15 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save 
+[ok] plan m3_hb_w: go dry run = reader plan bin ms1 level hoover_beach kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0 | bin ms1 level hoover_beach kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0
+[ok] plan m3_hb_v: go dry run = reader plan bin ms1 level hoover_beach kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms1 level hoover_beach kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0
+[ok] plan m3_hb_f: go dry run = reader plan bin fs15 level hoover_beach kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patch 0 | bin fs15 level hoover_beach kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patch 0
+[ok] plan m3_mg_w: go dry run = reader plan bin ms1 level mini_giants_garden kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0 | bin ms1 level mini_giants_garden kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 
+[ok] plan m3_mg_v: go dry run = reader plan bin ms1 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms1 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 
+[ok] plan m3_mg_f: go dry run = reader plan bin fs15 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patch 0 | bin fs15 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache K0 save none knob - 
+[ok] plan m3_ac_w: go dry run = reader plan bin ms1 level armadillo_challenge_1 kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0 | bin ms1 level armadillo_challenge_1 kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - 
+[ok] plan m3_ac_v: go dry run = reader plan bin ms1 level armadillo_challenge_1 kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms1 level armadillo_challenge_1 kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - 
+[ok] plan m3_ac_f: go dry run = reader plan bin fs15 level armadillo_challenge_1 kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patch 0 | bin fs15 level armadillo_challenge_1 kind v sd 300 timeout 480 hold 330 cache K0 save none k
+[ok] plan m3_f1_w: go dry run = reader plan bin ms1 level fragile_battle_1 kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0 | bin ms1 level fragile_battle_1 kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0
+[ok] plan m3_f1_v: go dry run = reader plan bin ms1 level fragile_battle_1 kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms1 level fragile_battle_1 kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0
+[ok] plan m3_f1_f: go dry run = reader plan bin fs15 level fragile_battle_1 kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patch 0 | bin fs15 level fragile_battle_1 kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patc
+[ok] plan m3_f2_w: go dry run = reader plan bin ms1 level fragile_battle_2 kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0 | bin ms1 level fragile_battle_2 kind w sd 100 timeout 900 hold 310 cache K1 save K1 knob - patch 0
+[ok] plan m3_f2_v: go dry run = reader plan bin ms1 level fragile_battle_2 kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms1 level fragile_battle_2 kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0
+[ok] plan m3_f2_f: go dry run = reader plan bin fs15 level fragile_battle_2 kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patch 0 | bin fs15 level fragile_battle_2 kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patc
+[ok] plan m3_g5_a1: go dry run = reader plan bin fs15 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patch 0 | bin fs15 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save 
+[ok] plan m3_g5_b1: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 k
+[ok] plan m3_g5_b2: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 k
+[ok] plan m3_g5_a2: go dry run = reader plan bin fs15 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save none knob - patch 0 | bin fs15 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K0 save 
+[ok] plan m3_g6: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save none knob - patch 1 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save no
+[ok] plan m3_sg_t2310: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save none knob KYTY_M_T231=0 patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cach
+[ok] plan m3_g5_t2330p: go dry run = reader plan bin ms1 level underwater_aerial_garden kind p sd 300 timeout 480 hold 150 cache K1 save KT knob KYTY_M_T233=0 patch 0 | bin ms1 level underwater_aerial_garden kind p sd 300 timeout 480 hold 150 cache 
+[ok] plan m3_g5_t2330: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache KT save none knob KYTY_M_T233=0 patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cach
+[ok] plan m3_hb_t2330p: go dry run = reader plan bin ms1 level hoover_beach kind p sd 300 timeout 480 hold 150 cache K1 save KT knob KYTY_M_T233=0 patch 0 | bin ms1 level hoover_beach kind p sd 300 timeout 480 hold 150 cache K1 save KT knob KYTY_M_T
+[ok] plan m3_hb_t2330: go dry run = reader plan bin ms1 level hoover_beach kind v sd 300 timeout 480 hold 330 cache KT save none knob KYTY_M_T233=0 patch 0 | bin ms1 level hoover_beach kind v sd 300 timeout 480 hold 330 cache KT save none knob KYTY
+[ok] plan m3_hb_t2330w: go dry run = reader plan bin ms1 level hoover_beach kind w sd 100 timeout 900 hold 310 cache KT save none knob KYTY_M_T233=0 patch 0 | bin ms1 level hoover_beach kind w sd 100 timeout 900 hold 310 cache KT save none knob KYTY
+[ok] plan m3_mg_t0320: go dry run = reader plan bin ms1 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache KT save none knob KYTY_M_T032=0 patch 0 | bin ms1 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache KT save no
+[ok] plan m3_ac_t2650: go dry run = reader plan bin ms1 level armadillo_challenge_1 kind v sd 300 timeout 480 hold 330 cache K1 save none knob KYTY_M_T265=0 patch 0 | bin ms1 level armadillo_challenge_1 kind v sd 300 timeout 480 hold 330 cache K1 s
+[ok] plan m3_f1_t2720w: go dry run = reader plan bin ms1 level fragile_battle_1 kind w sd 100 timeout 900 hold 310 cache K1 save none knob KYTY_M_T272=0 patch 0 | bin ms1 level fragile_battle_1 kind w sd 100 timeout 900 hold 310 cache K1 save none k
+[ok] plan m3_f2_t2030p: go dry run = reader plan bin ms1 level fragile_battle_2 kind p sd 300 timeout 480 hold 150 cache K1 save KT knob KYTY_M_T203=0 patch 0 | bin ms1 level fragile_battle_2 kind p sd 300 timeout 480 hold 150 cache K1 save KT knob 
+[ok] plan m3_sg_v_r1: go dry run = reader plan bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 knob - patch 0 | bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 cache K1 save K1 k
+[ok] plan m3_x: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3_sg_q: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3_g5_t2340: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3_i_t2340: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3_g6_t2650: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3_g5_t2330w: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3_hb_t2650p: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3_hb_t3060: refused by go (rc 2) and the reader (None) 2
+[ok] plan m3_g5_c1: refused by go (rc 2) and the reader (None) 2
+[ok] plan fs15_v: refused by go (rc 2) and the reader (None) 2
+[ok] dir of a T233 arm = ..._mw1_31 variant_fixb26_fixb1b_fixf10_fixf19_mw1_31
+[ok] dir of MS1 defaults = ..._mw1_33 
+[ok] dir of FS15 = ..._fixf19 
+[ok] HLE arm keeps mask 0x33, T265 want 0 
+[ok] fs15_v as m3_sg_f: ADMITTED []
+[ok] fs15_v as m3_sg_f: members ALL YES []
+[ok] fs15_v as m3_sg_f: form FS15 ALL YES []
+[ok] fs15_v: G5 measure end A n > 0 and end B n >= end A n {'end_a': {'n': 9179, 'mean': 33160.41, 'sd': 5720.52, 'se': 59.709}, 'end_b': {'n': 9179, 'mean': 33160.41, 'sd': 5720.52, 'se': 59.709}, 'first_scene_n': 379, 'quit_ln': 1175666}
+[ok] negative plan=ms1 ea35b679b0bcfe83: NOT_ADMITTED by "plan of go" ['the plan of go_m3a.sh = the plan of the reader (ms1 ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df K1 K1 v / fs15 bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c K
+[ok] negative k0_cmp=KSET DIFFER4 only-a : NOT_ADMITTED by "K0" ['live caches before the tag = K0 (KSET DIFFER4 only-a 1)']
+[ok] negative installed_sha=ea35b679b0bcfe837670: NOT_ADMITTED by "installed during" ['installed during the tag = fs15 bfac84be (ea35b679b0bcfe83)']
+[ok] negative installed_after=ea35b679b0bcfe837670: NOT_ADMITTED by "before = after" ['installed before = after = FS15 bfac84be (bfac84bea0eaec8b / ea35b679b0bcfe83)']
+[ok] negative manifest_cmp=manifest cmp DIFFER: NOT_ADMITTED by "caches returned" ['caches returned (manifest_cmp: manifest cmp DIFFER)']
+[ok] negative level=hoover_beach: NOT_ADMITTED by "guest args" ['guest args -lvl underwater_aerial_garden (-lvl underwater_aerial_garden; harness hoover_beach)']
+[ok] FS15 log read as MS1 m3_sg_v: NOT_ADMITTED by json binary and signature ['json binary_sha256 = ms1 ea35b679 (bfac84bea0eaec8b)', "translation signature 8dcf3177 and cache dir variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 (['9177b426'] / ['variant_fixb26_fixb1b_fixf10_fixf19'
+[ok] negative env extra KYTY_M_T233: NOT_ADMITTED by env 
+[ok] fs15_w with an FS15 W plan: ADMITTED []
+[ok] fs15_w: W members ALL YES (0 [Vulkan][E], [Vulkan][W] > 0, DualSrcBlend, FS15 0 M lines) []
+[ok] scan_m: MWave1 mask 0x33 [51]
+[ok] scan_m: MT lines parsed, one unparsable ({'265': [1], '272': [0], '231': [1]}, 1)
+[ok] scan_m: GamePatch applied 1, poke 1, lines 3 [('3b5100797fe83663', 2)]
+[ok] scan_m: device lost 1 1
+[ok] m_members MS1 defaults: MT272 mode 0 is a NO, unparsable MT is a NO, MWave1 YES [True, True, False, True, False]
+[ok] m_members T272 arm: MT272 mode 0 YES 
+[ok] G5 end B: rows n 1502..2000, mean 40000 {'n': 499, 'mean': 40000.0, 'sd': 0.0, 'se': 0.0}
+[ok] G5 end A: rows before Event: quit (n <= 1800) - 299 rows {'n': 299, 'mean': 40000.0, 'sd': 0.0, 'se': 0.0}
+[ok] G5 delta exactly +1.0 % -> NOT_WORSE 
+[ok] G5 delta +1.01 % -> FAIL 
+[ok] G5 delta -1.0 % -> NOT_WORSE (BETTER) 
+[ok] G5 an arm not admitted -> NOT_EVALUABLE 
+[ok] kset: GLCache differs only -> EQUAL4 rc 0 b'KSET EQUAL4 files 1; GLCache row: only-a 1 only-b 1\r\n'
+[ok] kset: _ShaderCache differs -> DIFFER4 rc 1 b'KSET DIFFER4 only-a 1 only-b 1; GLCache row: only-a 0 only-b'
+[ok] cp1250 strict output of m3a_read.py --plan m3_g6: rc 0, no UnicodeEncodeError b''
+[ok] cp1250 strict output of m3a_read.py --table: rc 0, no UnicodeEncodeError b''
+[ok] cp1250 strict output of g5_m3a.py: rc 0, no UnicodeEncodeError b''
+checks 80, failed 0 []
+ALL OK

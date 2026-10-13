@@ -1,0 +1,5 @@
+list txt SWEEP 26
+list total 26
+tasks total 92 todo 92
+done this run 92 of 92 wall 72 s lock_now False
+SWEEP COMPLETE

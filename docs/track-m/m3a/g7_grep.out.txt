@@ -1,0 +1,4 @@
+G7 grep ms1: 36 files, rc 0, output grep_ms1.out.txt sha256 7e2e310a35900538; last line: themes with fatal hits: []
+G7 grep ms1: fatal hits (sum of the theme rows) 0
+G7 grep fs15: 16 files, rc 0, output grep_fs15.out.txt sha256 0eefb9ac776ad4f4; last line: themes with fatal hits: []
+G7 grep fs15: fatal hits (sum of the theme rows) 0

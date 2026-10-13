@@ -1,0 +1,14 @@
+G5 (item 756 (g)(5)): ABBA m3_g5_a1 m3_g5_b1 m3_g5_b2 m3_g5_a2; limit +1.0 %
+MEASURE end A (the letter: to the end of the hold - rows before Event: quit):
+  A m3_g5_a1: mean 32341.08 us, n 9407, sd 5544.9, SE 57.170, FPS 30.920, speed 0.5154; ok bin fs15 members ALL YES
+  B m3_g5_b1: mean 32696.65 us, n 9303, sd 5171.6, SE 53.619, FPS 30.584, speed 0.5097; ok bin ms1 members ALL YES
+  B m3_g5_b2: mean 32976.99 us, n 9224, sd 5338.1, SE 55.581, FPS 30.324, speed 0.5054; ok bin ms1 members ALL YES
+  A m3_g5_a2: mean 32888.87 us, n 9241, sd 5481.4, SE 57.021, FPS 30.405, speed 0.5068; ok bin fs15 members ALL YES
+  sum A 65229.95, sum B 65673.64; delta +0.6802 % (2SE from the arm SE 0.3426 %); spread A |A1-A2|/mean 1.6796 %, B |B1-B2|/mean 0.8537 %
+MEASURE end B (variant: every row after + 30 s, the exit frames included):
+  A m3_g5_a1: mean 32341.08 us, n 9407, sd 5544.9, SE 57.170, FPS 30.920, speed 0.5154; ok bin fs15 members ALL YES
+  B m3_g5_b1: mean 32696.65 us, n 9303, sd 5171.6, SE 53.619, FPS 30.584, speed 0.5097; ok bin ms1 members ALL YES
+  B m3_g5_b2: mean 32975.09 us, n 9225, sd 5340.9, SE 55.607, FPS 30.326, speed 0.5054; ok bin ms1 members ALL YES
+  A m3_g5_a2: mean 32888.87 us, n 9241, sd 5481.4, SE 57.021, FPS 30.405, speed 0.5068; ok bin fs15 members ALL YES
+  sum A 65229.95, sum B 65671.74; delta +0.6773 % (2SE from the arm SE 0.3426 %); spread A |A1-A2|/mean 1.6796 %, B |B1-B2|/mean 0.8480 %
+G5 WORD end A NOT_WORSE (delta +0.6802 %); end B NOT_WORSE (delta +0.6773 %)

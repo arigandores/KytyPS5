@@ -1,0 +1,16 @@
+g6_m3a: scp24.py sha256 0b38cf7945e2664abac3b1537b9ff64627923f0567be45437677a5d70c34c419
+G1' speed iv_5 1.0001 (in [0.95; 1.05]); T6 0.9988 (>= 0.95); control ia_A3 0.4670 vs 0.4671 |dev| 0.0000; sign of item 240 (a) over the clock names (print) median 0.4679 inactive False
+G1' VERDICT_PAIR ia_A3/iv_5 SPEED_OK
+RATCHET iv_5: frames >= 3 vblanks 2.35 % vs qa_A 6.83 %: delta -4.48 % (> 5 p.p.: False); segments of 60 s 12.3 % 2.5 % 2.2 % 0.1 % 0.0 % 0.1 %
+G6 ROWS iv_5: X ia_A3 (stop-check PASS); config rows of iv_5 all ok; G1' word TWO_OF_TWO (one V: TWO_OF_TWO reads ONE_OF_ONE); outcome SPEED_OK; speed 1.0001; RATCHET NONE; R2 OK
+G6 RATCHET line: RATCHET iv_5: frames >= 3 vblanks 2.35 % vs qa_A 6.83 %: delta -4.48 % (> 5 p.p.: False); segments of 60 s 12.3 % 2.5 % 2.2 % 0.1 % 0.0 % 0.1 %
+G6 PASS (item 756 (g)(6): G1' in [0.95; 1.05] - SPEED_OK, RATCHET NONE)
+REGRESS iv_5 (rebind False): outcome SPEED_OK speed 1.0001 RATCHET NONE, flag line "(> 5 p.p.: False)" True -> ok
+G1' speed iv_5 1.0001 (in [0.95; 1.05]); T6 0.9988 (>= 0.95); control ia_A3 0.4670 vs 0.4671 |dev| 0.0000; sign of item 240 (a) over the clock names (print) median 0.4679 inactive False
+G1' VERDICT_PAIR ia_A3/iv_5 SPEED_OK
+RATCHET iv_5: frames >= 3 vblanks 2.35 % vs qa_A 6.83 %: delta -4.48 % (> 5 p.p.: False); segments of 60 s 12.3 % 2.5 % 2.2 % 0.1 % 0.0 % 0.1 %
+G6 ROWS iv_5: X ia_A3 (stop-check PASS); config rows of iv_5 all ok; G1' word TWO_OF_TWO (one V: TWO_OF_TWO reads ONE_OF_ONE); outcome SPEED_OK; speed 1.0001; RATCHET NONE; R2 OK
+G6 RATCHET line: RATCHET iv_5: frames >= 3 vblanks 2.35 % vs qa_A 6.83 %: delta -4.48 % (> 5 p.p.: False); segments of 60 s 12.3 % 2.5 % 2.2 % 0.1 % 0.0 % 0.1 %
+G6 PASS (item 756 (g)(6): G1' in [0.95; 1.05] - SPEED_OK, RATCHET NONE)
+REGRESS iv_5 (rebind True): outcome SPEED_OK speed 1.0001 RATCHET NONE, flag line "(> 5 p.p.: False)" True -> ok
+ALL OK

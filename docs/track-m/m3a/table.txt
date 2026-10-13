@@ -1,0 +1,29 @@
+reader m3a_read.py sha256 266d2ea7ea3302cb0c611621c0512b84061aece17ad314133e29f03a8c180762
+| tag | status | bin | level | kind | members | form FS15 | frames >= 1 s | glitches | video | hold_s | mean dt (+30 s, end A) | MWave1 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| m3_ac_f | ADMITTED | fs15 | armadillo_challenge_1 | v | ALL YES | ALL YES | 0 | 0 | 20079 | 332.4 | 16668.94 | [] |
+| m3_ac_v | ADMITTED | ms1 | armadillo_challenge_1 | v | ALL YES | ALL YES | 0 | 0 | 19983 | 332.1 | 16731.2 | ['0x33'] |
+| m3_ac_w | ADMITTED | ms1 | armadillo_challenge_1 | w | ALL YES | ALL YES | 0 | None | None | 314.8 | 37131.36 | ['0x33'] |
+| m3_f1_f | ADMITTED | fs15 | fragile_battle_1 | v | ALL YES | ALL YES | 0 | 0 | 19984 | 332.2 | 16799.61 | [] |
+| m3_f1_v | ADMITTED | ms1 | fragile_battle_1 | v | ALL YES | ALL YES | 0 | 0 | 19959 | 332.1 | 16832.42 | ['0x33'] |
+| m3_f1_w | ADMITTED | ms1 | fragile_battle_1 | w | ALL YES | ALL YES | 0 | None | None | 315.4 | 43851.94 | ['0x33'] |
+| m3_f2_f | ADMITTED | fs15 | fragile_battle_2 | v | ALL YES | ALL YES | 0 | 0 | 19782 | 332.3 | 17002.68 | [] |
+| m3_f2_v | ADMITTED | ms1 | fragile_battle_2 | v | ALL YES | ALL YES | 0 | 0 | 19465 | 332.0 | 17282.26 | ['0x33'] |
+| m3_f2_w | ADMITTED | ms1 | fragile_battle_2 | w | ALL YES | ALL YES | 0 | None | None | 316.1 | 46991.05 | ['0x33'] |
+| m3_g5_a1 | ADMITTED | fs15 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10568 | 334.2 | 32341.08 | [] |
+| m3_g5_a2 | ADMITTED | fs15 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10266 | 333.9 | 32888.87 | [] |
+| m3_g5_b1 | ADMITTED | ms1 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10337 | 334.2 | 32696.65 | ['0x33'] |
+| m3_g5_b2 | ADMITTED | ms1 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10245 | 334.2 | 32976.99 | ['0x33'] |
+| m3_g6 | ADMITTED | ms1 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 14013 | 334.0 | 23491.32 | ['0x33'] |
+| m3_hb_f | ADMITTED | fs15 | hoover_beach | v | ALL YES | ALL YES | 0 | 0 | 18937 | 331.9 | 17752.08 | [] |
+| m3_hb_v | ADMITTED | ms1 | hoover_beach | v | ALL YES | ALL YES | 0 | 0 | 19808 | 332.1 | 16990.64 | ['0x33'] |
+| m3_hb_w | ADMITTED | ms1 | hoover_beach | w | ALL YES | ALL YES | 0 | None | None | 313.6 | 45460.19 | ['0x33'] |
+| m3_i | ADMITTED | ms1 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10239 | 334.1 | 33615.09 | ['0x33'] |
+| m3_mg_f | ADMITTED | fs15 | mini_giants_garden | v | ALL YES | ALL YES | 0 | 0 | 20204 | 332.1 | 16779.15 | [] |
+| m3_mg_v | ADMITTED | ms1 | mini_giants_garden | v | ALL YES | ALL YES | 0 | 0 | 20256 | 331.9 | 16671.77 | ['0x33'] |
+| m3_mg_w | ADMITTED | ms1 | mini_giants_garden | w | ALL YES | ALL YES | 0 | None | None | 316.2 | 54262.11 | ['0x33'] |
+| m3_sg_f | ADMITTED | fs15 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 9810 | 334.1 | 34481.87 | [] |
+| m3_sg_t2310 | ADMITTED | ms1 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10361 | 334.2 | 32836.08 | ['0x33'] |
+| m3_sg_v | NOT_ADMITTED | ms1 | underwater_aerial_garden | v | - | - | None | None | None | None | None | None |
+| m3_sg_v_r1 | ADMITTED | ms1 | underwater_aerial_garden | v | ALL YES | ALL YES | 0 | 0 | 10241 | 334.2 | 33479.5 | ['0x33'] |
+| m3_sg_w | ADMITTED | ms1 | underwater_aerial_garden | w | ALL YES | ALL YES | 0 | None | None | 324.4 | 134833.13 | ['0x33'] |

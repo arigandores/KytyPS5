@@ -1,0 +1,797 @@
+2026-10-12T10:26:52Z wake: lead comment p.760 (8012c8c2) read; HPP-841 blocked with live run; M3a stays blocked, no tags
+2026-10-12T11:10:28Z wake: lead comment p.761(d),(e) RC-M1/M4/N1 (48e608a8) read; HPP-841 blocked, run 663b54c5 live; no MS1, no tags, lock not taken
+2026-10-12T12:03:51Z wake issue_blockers_resolved: HPP-841 done, p.763 MS1 ea35b679 accepted; start: print pred.md + harness port (FS15c, P24 G6, sweep_f48a G7); no tag yet, lock not taken
+2026-10-12T12:23:16Z seal pred.md sha256 f731a3ff8639b5720a969f29e0c84e90b18b54f3a2b39b7fcc5f595f7afdf1f5; form634 --text ALL OK, --series ALL OK; test_m3a ALL OK (80 checks); g6 regress ALL OK
+2026-10-12T12:23:32Z M3a API check before m3_i: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T12:23:39Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_i; plan: dryrun m3_i base m3_i bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K0 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T12:23:39Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_i
+2026-10-12T12:23:54Z M3a go_m3a m3_i run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T12:24:08Z M3a go_m3a m3_i host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.381 procs []
+2026-10-12T12:24:09Z M3a go_m3a m3_i display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T12:24:09Z
+2026-10-12T12:31:18Z M3a go_m3a m3_i lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T12:31:18Z M3a go_m3a m3_i installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T12:31:21Z M3a go_m3a m3_i manifest before: manifest C:/kyty/m657/m3a/runs/m3_i/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T12:31:24Z M3a go_m3a m3_i caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T12:31:31Z M3a go_m3a m3_i K0 taken: manifest C:/kyty/m657/m3a/k0/k0.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; K0 = live before: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T12:31:32Z M3a go_m3a m3_i state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-12T12:31:31Z
+2026-10-12T12:31:32Z M3a go_m3a m3_i installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T12:31:33Z M3a go_m3a m3_i enter_scene start (level underwater_aerial_garden, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K0 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T12:38:23Z M3a go_m3a m3_i enter_scene rc 0; guard watch: 2026-10-12T12:38:20Z watch end, user process seen: no; hold watch: 2026-10-12T12:38:21Z watch end, user VM seen: no
+2026-10-12T12:38:23Z M3a go_m3a m3_i run: VERDICT: underwater_aerial_garden in 65.5 s - PASS (acceptance <= 90 s)
+2026-10-12T12:38:24Z M3a go_m3a m3_i log_m3_i.txt sha256 03a26754b3be06c171dbb35ed04498fad8abee6c7d27c587d3dcc41ef5e60079
+2026-10-12T12:38:31Z M3a go_m3a m3_i the run state saved as K1: manifest C:/kyty/m657/m3a/k1.new/k1.tsv files 5597 bytes 1548230605 listsha 61a7ddda563257f8ae88148ceed6d201f191a79fecbd6433f296b67d00eb373d (previous in k1.prev)
+2026-10-12T12:38:33Z M3a go_m3a m3_i installed binary returned from the pinned FS15 copy
+2026-10-12T12:38:35Z M3a go_m3a m3_i installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T12:38:36Z M3a go_m3a m3_i caches, seeds, saves and GLCache returned (K0)
+2026-10-12T12:38:42Z M3a go_m3a m3_i manifest after: manifest C:/kyty/m657/m3a/runs/m3_i/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T12:38:42Z M3a go_m3a m3_i lock released (rc 0)
+2026-10-12T12:38:44Z M3a go_m3a m3_i display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T12:38:43Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T12:38:43Z; dispstate ON idle_s 0
+2026-10-12T12:38:57Z M3a go_m3a m3_i host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.165 procs []
+2026-10-12T12:40:23Z M3a post_m3a m3_i: read.txt dda91a40d8e1bc93,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 33.82 fps 29.57 frames 9912 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after t, display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: one-frame glitches: 0
+2026-10-12T12:40:36Z M3a API check before m3_sg_w: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T12:40:43Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_sg_w; plan: dryrun m3_sg_w base m3_sg_w bin ms1 level underwater_aerial_garden kind w sd 100 timeout 900 hold 310 rec --emu-arg=--vulkan-validation --emu-arg=true cache K1 save K1 knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KY
+2026-10-12T12:40:44Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_sg_w
+2026-10-12T12:41:01Z M3a go_m3a m3_sg_w run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T12:41:14Z M3a go_m3a m3_sg_w host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.588 procs []
+2026-10-12T12:41:15Z M3a go_m3a m3_sg_w display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T12:41:15Z
+2026-10-12T12:48:36Z M3a go_m3a m3_sg_w lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T12:48:36Z M3a go_m3a m3_sg_w installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T12:48:38Z M3a go_m3a m3_sg_w manifest before: manifest C:/kyty/m657/m3a/runs/m3_sg_w/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T12:48:39Z M3a go_m3a m3_sg_w live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T12:48:43Z M3a go_m3a m3_sg_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T12:48:57Z M3a go_m3a m3_sg_w live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_sg_w/manifest_base.tsv files 5597 bytes 1548230605 listsha 61a7ddda563257f8ae88148ceed6d201f191a79fecbd6433f296b67d00eb373d; = k1.tsv: manifest cmp EQUAL files 5597 listsha 61a7ddda563257f8ae88148ceed6d201f191a79fecbd6433f296b67d00eb373d
+2026-10-12T12:48:58Z M3a go_m3a m3_sg_w state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T12:48:57Z
+2026-10-12T12:48:58Z M3a go_m3a m3_sg_w installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T12:48:58Z M3a go_m3a m3_sg_w enter_scene start (level underwater_aerial_garden, bin ms1, kind w, sd 100, timeout 900, hold 310, --emu-arg=--vulkan-validation --emu-arg=true, cache K1 save K1, knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T12:54:54Z M3a go_m3a m3_sg_w enter_scene rc 0; guard watch: 2026-10-12T12:54:53Z watch end, user process seen: no; hold watch: 2026-10-12T12:54:53Z watch end, user VM seen: no
+2026-10-12T12:54:54Z M3a go_m3a m3_sg_w run: VERDICT: underwater_aerial_garden in 32.8 s - PASS (acceptance <= 90 s)
+2026-10-12T12:54:55Z M3a go_m3a m3_sg_w log_m3_sg_w.txt sha256 b4278fcfa26a680b9eab5d08f3051b929d7eef4d5c2fe65a032f27714c5fd01b
+2026-10-12T12:55:02Z M3a go_m3a m3_sg_w the run state saved as K1: manifest C:/kyty/m657/m3a/k1.new/k1.tsv files 5597 bytes 1549652429 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a (previous in k1.prev)
+2026-10-12T12:55:05Z M3a go_m3a m3_sg_w installed binary returned from the pinned FS15 copy
+2026-10-12T12:55:05Z M3a go_m3a m3_sg_w installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T12:55:07Z M3a go_m3a m3_sg_w caches, seeds, saves and GLCache returned (K0)
+2026-10-12T12:55:12Z M3a go_m3a m3_sg_w manifest after: manifest C:/kyty/m657/m3a/runs/m3_sg_w/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T12:55:12Z M3a go_m3a m3_sg_w lock released (rc 0)
+2026-10-12T12:55:13Z M3a go_m3a m3_sg_w display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T12:55:13Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T12:55:13Z; dispstate ON idle_s 0
+2026-10-12T12:55:26Z M3a go_m3a m3_sg_w host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.001 procs []
+2026-10-12T12:55:47Z M3a post_m3a m3_sg_w: read.txt 0735079908b0c28a,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 133.33 fps 7.50 frames 2441 limit_ms 200 (W form, item 621) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: 
+2026-10-12T12:55:50Z M3a API check before m3_sg_v: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T12:55:55Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_sg_v; plan: dryrun m3_sg_v base m3_sg_v bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T12:55:55Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_sg_v
+2026-10-12T12:56:13Z M3a go_m3a m3_sg_v run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T12:56:27Z M3a go_m3a m3_sg_v host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.998 procs []
+2026-10-12T12:56:28Z M3a go_m3a m3_sg_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 4 utc 2026-10-12T12:56:28Z
+2026-10-12T13:03:57Z M3a go_m3a m3_sg_v lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T13:03:58Z M3a go_m3a m3_sg_v installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T13:04:01Z M3a go_m3a m3_sg_v manifest before: manifest C:/kyty/m657/m3a/runs/m3_sg_v/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T13:04:02Z M3a go_m3a m3_sg_v live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T13:04:06Z M3a go_m3a m3_sg_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T13:04:24Z M3a go_m3a m3_sg_v live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_sg_v/manifest_base.tsv files 5597 bytes 1549652429 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a; = k1.tsv: manifest cmp EQUAL files 5597 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a
+2026-10-12T13:04:25Z M3a go_m3a m3_sg_v state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T13:04:25Z
+2026-10-12T13:04:28Z M3a go_m3a m3_sg_v installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T13:04:28Z M3a go_m3a m3_sg_v enter_scene start (level underwater_aerial_garden, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T13:04:40Z M3a go_m3a m3_sg_v enter_scene rc 3; guard watch: 2026-10-12T13:04:39Z watch end, user process seen: no; hold watch: 2026-10-12T13:04:38Z watch end, user VM seen: no
+2026-10-12T13:04:41Z M3a go_m3a m3_sg_v run: 
+2026-10-12T13:04:42Z M3a go_m3a m3_sg_v installed binary returned from the pinned FS15 copy
+2026-10-12T13:04:45Z M3a go_m3a m3_sg_v installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T13:04:51Z M3a go_m3a m3_sg_v manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_sg_v/manifest_run.tsv files 5597 bytes 1549652429 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a
+2026-10-12T13:04:56Z M3a go_m3a m3_sg_v caches, seeds, saves and GLCache returned (K0)
+2026-10-12T13:05:00Z M3a go_m3a m3_sg_v manifest after: manifest C:/kyty/m657/m3a/runs/m3_sg_v/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T13:05:01Z M3a go_m3a m3_sg_v lock released (rc 0)
+2026-10-12T13:05:05Z M3a go_m3a m3_sg_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T13:05:03Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T13:05:04Z; dispstate ON idle_s 0
+2026-10-12T13:05:20Z M3a go_m3a m3_sg_v host load after the tag (item 632 (v)(2)): hostload: over05 1 max 2.266 total 3.110 procs [('<app>', 35256, 2.266)]
+2026-10-12T13:05:21Z M3a go_m3a m3_sg_v enter_scene never launched the emulator - not a tag, repeat by the same name
+2026-10-12T13:05:39Z M3a API check before m3_sg_f: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T13:05:52Z m3_sg_v call 1 refused inside enter_scene (GPU not idle: gpu_util_median 20.0 > 10) - not an attempt (runs/m3_sg_v.nostart_130520), K1 not saved; repeat by the same name
+2026-10-12T13:05:54Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_sg_v; plan: dryrun m3_sg_v base m3_sg_v bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T13:05:55Z M3a launch_m3a previous output of m3_sg_v moved to m3a/old/
+2026-10-12T13:05:55Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_sg_v
+2026-10-12T13:07:33Z M3a go_m3a m3_sg_v procload busy: procload: busy [('<app>', 35256, 3.853)]
+2026-10-12T13:07:51Z m3_sg_v call 2 procload busy (masked app 3.85 CPU s/s) - not an attempt; call 3 with PLWAIT=540
+2026-10-12T13:07:54Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_sg_v; plan: dryrun m3_sg_v base m3_sg_v bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T13:07:55Z M3a launch_m3a previous output of m3_sg_v moved to m3a/old/
+2026-10-12T13:07:55Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_sg_v
+2026-10-12T13:16:50Z M3a go_m3a m3_sg_v procload busy: procload: busy [('<app>', 35256, 3.898)]
+2026-10-12T13:17:15Z m3_sg_v call 3 procload busy again: a user program (<app>, pid 35256, started 13:00:33Z, ~3.9 CPU s/s) runs since 13:00Z - the series waits for its exit (no tag while the user uses the machine); 3 calls of m3_sg_v so far, none an attempt
+2026-10-12T13:46:22Z monitor scheduled (executionPolicy.monitor external_service host-idle, nextCheckAt 2026-10-12T14:31:08Z, timeout 24 h, maxAttempts 40; stages kept 1) as the wake path while the user program runs
+2026-10-12T13:49:23Z the user program (pid 35256) exited at ~13:48:28Z; series continues
+2026-10-12T13:49:24Z M3a API check before m3_sg_v: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T13:49:29Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_sg_v; plan: dryrun m3_sg_v base m3_sg_v bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T13:49:29Z M3a launch_m3a previous output of m3_sg_v moved to m3a/old/
+2026-10-12T13:49:29Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_sg_v
+2026-10-12T13:49:44Z M3a go_m3a m3_sg_v run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T13:49:57Z M3a go_m3a m3_sg_v host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.626 procs []
+2026-10-12T13:49:58Z M3a go_m3a m3_sg_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T13:49:58Z
+2026-10-12T13:56:05Z M3a go_m3a m3_sg_v lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T13:56:07Z M3a go_m3a m3_sg_v installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T13:56:10Z M3a go_m3a m3_sg_v manifest before: manifest C:/kyty/m657/m3a/runs/m3_sg_v/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T13:56:11Z M3a go_m3a m3_sg_v live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T13:56:14Z M3a go_m3a m3_sg_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T13:56:33Z M3a go_m3a m3_sg_v live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_sg_v/manifest_base.tsv files 5597 bytes 1549652429 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a; = k1.tsv: manifest cmp EQUAL files 5597 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a
+2026-10-12T13:56:33Z M3a go_m3a m3_sg_v state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T13:56:33Z
+2026-10-12T13:56:34Z M3a go_m3a m3_sg_v installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T13:56:34Z M3a go_m3a m3_sg_v enter_scene start (level underwater_aerial_garden, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T14:02:37Z M3a go_m3a m3_sg_v enter_scene rc 0; guard watch: 2026-10-12T14:02:36Z watch end, user process seen: no; hold watch: 2026-10-12T14:02:35Z watch end, user VM seen: no
+2026-10-12T14:02:37Z M3a go_m3a m3_sg_v run: VERDICT: underwater_aerial_garden in 18.9 s - PASS (acceptance <= 90 s)
+2026-10-12T14:02:38Z M3a go_m3a m3_sg_v log_m3_sg_v.txt sha256 19c103598c04f12000a040d7f3bfce7794529accd968315150adfa83020892b0
+2026-10-12T14:02:45Z M3a go_m3a m3_sg_v the run state saved as K1: manifest C:/kyty/m657/m3a/k1.new/k1.tsv files 5597 bytes 1549652429 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a (previous in k1.prev)
+2026-10-12T14:02:46Z M3a go_m3a m3_sg_v installed binary returned from the pinned FS15 copy
+2026-10-12T14:02:46Z M3a go_m3a m3_sg_v installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T14:02:51Z M3a go_m3a m3_sg_v caches, seeds, saves and GLCache returned (K0)
+2026-10-12T14:02:58Z M3a go_m3a m3_sg_v manifest after: manifest C:/kyty/m657/m3a/runs/m3_sg_v/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T14:02:58Z M3a go_m3a m3_sg_v lock released (rc 0)
+2026-10-12T14:03:00Z M3a go_m3a m3_sg_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T14:02:59Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T14:02:59Z; dispstate ON idle_s 0
+2026-10-12T14:03:13Z M3a go_m3a m3_sg_v host load after the tag (item 632 (v)(2)): hostload: over05 1 max 0.622 total 1.400 procs [('<app>', 25796, 0.622)]
+2026-10-12T14:04:03Z M3a post_m3a m3_sg_v: read.txt 4b48f60bf37dcc5c,   ADMISSION FAIL; STATUS NOT_ADMITTED;  READING NOT_ADMITTED: admission member: ["window events: minimized 1, Recovering Vulkan swapchain 1 (all {'lost keyboard focus': 3, 'minimized': 1})"];, tempo: TEMPO PASS form harness mean_dt_ms 33.40 fps 29.94 frames 10030 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: one-frame glitches: 0
+2026-10-12T14:04:06Z M3a API check before m3_sg_f: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T14:04:20Z m3_sg_v NOT_ADMITTED: window event minimized 1, Recovering Vulkan swapchain 1, lost keyboard focus 3 (the user at the machine) - by item 273 (z) the series stops on this tag; SERIES_STOP; question to the lead about the repeat m3_sg_v_r1
+2026-10-12T14:06:41Z SERIES_STOP removed by item 764 (lead comment 70dc40a0, KytyPS5 8f784900): m3_sg_v = interference of item 273 (z); repeat m3_sg_v_r1 assigned; rule for the series: window-event-only NOT_ADMITTED -> own repeat <tag>_r<k>, k <= 2, >= 15 min after the event and after procload; stop at the 3rd event on one tag or events on 3 tags in a row; K1 after the interference stays: k1/k1.tsv sha256 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a (manifest C:/kyty/m657/m3a/k1.new/k1.tsv files 5597 bytes 1549652429 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a)
+2026-10-12T14:06:49Z m3_sg_v window event (minimized) at ~14:01:08Z (enter_scene start 13:56:34Z + entry 14.9 s + 258.5 s of FrameTrace after the entry line); the repeat m3_sg_v_r1 not before 14:16:08Z (item 764)
+2026-10-12T14:16:21Z M3a API check before m3_sg_v_r1: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T14:16:25Z repeat m3_sg_v_r1 by item 764 (M3A_REPEAT_OK=1)
+2026-10-12T14:16:27Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_sg_v_r1; plan: dryrun m3_sg_v_r1 base m3_sg_v bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T14:16:27Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_sg_v_r1
+2026-10-12T14:21:39Z M3a go_m3a m3_sg_v_r1 procload busy: procload: busy [('<app>', 29396, 4.984)]
+2026-10-12T14:21:53Z m3_sg_v_r1 call 1: procload busy - another user program (<app>, pid 29396, started 14:04:23Z, ~5 CPU s/s; it explains the window event of m3_sg_v); not an attempt; the series waits for its exit
+2026-10-12T14:40:59Z monitor re-scheduled (+60 min, external_service host-idle); the user program pid 29396 still runs
+2026-10-12T18:31:38Z the user program (pid 29396) exited at ~18:30:00Z; series continues with m3_sg_v_r1 (call 2)
+2026-10-12T18:31:40Z M3a API check before m3_sg_v_r1: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T18:31:47Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_sg_v_r1; plan: dryrun m3_sg_v_r1 base m3_sg_v bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T18:31:47Z M3a launch_m3a previous output of m3_sg_v_r1 moved to m3a/old/
+2026-10-12T18:31:47Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_sg_v_r1
+2026-10-12T18:33:15Z M3a go_m3a m3_sg_v_r1 run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T18:33:27Z M3a go_m3a m3_sg_v_r1 host load before the tag (item 632 (v)(2)): hostload: over05 2 max 0.767 total 2.193 procs [('<app>', 51000, 0.767), ('<app>', 49140, 0.524)]
+2026-10-12T18:33:28Z M3a go_m3a m3_sg_v_r1 display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T18:33:28Z
+2026-10-12T18:41:11Z M3a go_m3a m3_sg_v_r1 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T18:41:11Z M3a go_m3a m3_sg_v_r1 installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T18:41:14Z M3a go_m3a m3_sg_v_r1 manifest before: manifest C:/kyty/m657/m3a/runs/m3_sg_v_r1/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T18:41:15Z M3a go_m3a m3_sg_v_r1 live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T18:41:22Z M3a go_m3a m3_sg_v_r1 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T18:41:37Z M3a go_m3a m3_sg_v_r1 live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_sg_v_r1/manifest_base.tsv files 5597 bytes 1549652429 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a; = k1.tsv: manifest cmp EQUAL files 5597 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a
+2026-10-12T18:41:37Z M3a go_m3a m3_sg_v_r1 state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T18:41:37Z
+2026-10-12T18:41:37Z M3a go_m3a m3_sg_v_r1 installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T18:41:38Z M3a go_m3a m3_sg_v_r1 enter_scene start (level underwater_aerial_garden, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T18:47:40Z M3a go_m3a m3_sg_v_r1 enter_scene rc 0; guard watch: 2026-10-12T18:47:39Z watch end, user process seen: no; hold watch: 2026-10-12T18:47:39Z watch end, user VM seen: no
+2026-10-12T18:47:40Z M3a go_m3a m3_sg_v_r1 run: VERDICT: underwater_aerial_garden in 20.1 s - PASS (acceptance <= 90 s)
+2026-10-12T18:47:41Z M3a go_m3a m3_sg_v_r1 log_m3_sg_v_r1.txt sha256 94d441528ac1dfe86547d3e9a6e8ee98ed2d4a5933254903d1b6a5766bbaabf2
+2026-10-12T18:47:43Z M3a go_m3a m3_sg_v_r1 move of live _ShaderSeeds into k1.new failed
+2026-10-12T18:47:44Z M3a go_m3a m3_sg_v_r1 installed binary returned from the pinned FS15 copy
+2026-10-12T18:47:44Z M3a go_m3a m3_sg_v_r1 installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T18:47:46Z M3a go_m3a m3_sg_v_r1 manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_sg_v_r1/manifest_run.tsv files 831 bytes 703519919 listsha de50df02776b0113ba212fe968a7d9fb499de15b011f0ce736fde771040d15f7
+2026-10-12T18:47:47Z M3a go_m3a m3_sg_v_r1 caches, seeds, saves and GLCache returned (K0)
+2026-10-12T18:47:53Z M3a go_m3a m3_sg_v_r1 manifest after: manifest C:/kyty/m657/m3a/runs/m3_sg_v_r1/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T18:47:53Z M3a go_m3a m3_sg_v_r1 lock released (rc 1)
+2026-10-12T18:47:55Z M3a go_m3a m3_sg_v_r1 display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T18:47:54Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T18:47:55Z; dispstate ON idle_s 0
+2026-10-12T18:48:08Z M3a go_m3a m3_sg_v_r1 host load after the tag (item 632 (v)(2)): hostload: over05 2 max 0.689 total 1.827 procs [('<app>', 54856, 0.689), ('<app>', 49140, 0.501)]
+2026-10-12T18:49:05Z M3a post_m3a m3_sg_v_r1: read.txt 034fa962903684bd,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 33.75 fps 29.63 frames 9935 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after t, display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: one-frame glitches: 0
+2026-10-12T18:49:09Z M3a API check before m3_sg_f: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T18:49:13Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_sg_f; plan: dryrun m3_sg_f base m3_sg_f bin fs15 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K0 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T18:49:13Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_sg_f
+2026-10-12T18:49:32Z M3a go_m3a m3_sg_f run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T18:49:45Z M3a go_m3a m3_sg_f host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.184 procs []
+2026-10-12T18:49:47Z M3a go_m3a m3_sg_f display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T18:49:46Z
+2026-10-12T18:57:28Z M3a go_m3a m3_sg_f lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T18:57:28Z M3a go_m3a m3_sg_f installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T18:57:30Z M3a go_m3a m3_sg_f manifest before: manifest C:/kyty/m657/m3a/runs/m3_sg_f/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T18:57:31Z M3a go_m3a m3_sg_f live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T18:57:35Z M3a go_m3a m3_sg_f caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T18:57:35Z M3a go_m3a m3_sg_f state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-12T18:57:35Z
+2026-10-12T18:57:36Z M3a go_m3a m3_sg_f installed the fs15 copy for the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T18:57:36Z M3a go_m3a m3_sg_f enter_scene start (level underwater_aerial_garden, bin fs15, kind v, sd 300, timeout 480, hold 330, --rec, cache K0 save none, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T19:03:38Z M3a go_m3a m3_sg_f enter_scene rc 0; guard watch: 2026-10-12T19:03:38Z watch end, user process seen: no; hold watch: 2026-10-12T19:03:37Z watch end, user VM seen: no
+2026-10-12T19:03:38Z M3a go_m3a m3_sg_f run: VERDICT: underwater_aerial_garden in 19.9 s - PASS (acceptance <= 90 s)
+2026-10-12T19:03:39Z M3a go_m3a m3_sg_f log_m3_sg_f.txt sha256 7376298e6c02aa632cc164b62ea5a8f10cc248032664faf7d2c99424736fc3b5
+2026-10-12T19:03:40Z M3a go_m3a m3_sg_f installed binary returned from the pinned FS15 copy
+2026-10-12T19:03:40Z M3a go_m3a m3_sg_f installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T19:03:44Z M3a go_m3a m3_sg_f manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_sg_f/manifest_run.tsv files 4868 bytes 1334458003 listsha 2a0ea22e0a6b0dbda509a01664a43ef7d2db5ecfd64fab7f9d57c33181e0ab5a
+2026-10-12T19:03:46Z M3a go_m3a m3_sg_f caches, seeds, saves and GLCache returned (K0)
+2026-10-12T19:03:53Z M3a go_m3a m3_sg_f manifest after: manifest C:/kyty/m657/m3a/runs/m3_sg_f/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T19:03:53Z M3a go_m3a m3_sg_f lock released (rc 0)
+2026-10-12T19:03:57Z M3a go_m3a m3_sg_f display after lock released (item 620 (g)(1)): dispstate ON idle_s 33 utc 2026-10-12T19:03:54Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T19:03:55Z; dispstate ON idle_s 33
+2026-10-12T19:04:09Z M3a go_m3a m3_sg_f host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.987 procs []
+2026-10-12T19:05:09Z M3a post pair sg: pairs/pair_sg.png (left m3_sg_v MS1, right m3_sg_f FS15) sha256 e03ffa16d13fb641
+2026-10-12T19:05:10Z M3a post_m3a m3_sg_f: read.txt 0db78554ea7e6152,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 34.78 fps 28.75 frames 9631 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after t, display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 33 utc 202, glitch: one-frame glitches: 0
+2026-10-12T19:05:15Z M3a API check before m3_hb_w: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T19:05:21Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_hb_w; plan: dryrun m3_hb_w base m3_hb_w bin ms1 level hoover_beach kind w sd 100 timeout 900 hold 310 rec --emu-arg=--vulkan-validation --emu-arg=true cache K1 save K1 knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK
+2026-10-12T19:05:22Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_hb_w
+2026-10-12T19:05:39Z M3a go_m3a m3_hb_w run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T19:05:53Z M3a go_m3a m3_hb_w host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.985 procs []
+2026-10-12T19:05:54Z M3a go_m3a m3_hb_w display before the lock (item 620 (g)(1)): dispstate ON idle_s 57 utc 2026-10-12T19:05:54Z
+2026-10-12T19:13:31Z M3a go_m3a m3_hb_w lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T19:13:31Z M3a go_m3a m3_hb_w installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T19:13:34Z M3a go_m3a m3_hb_w manifest before: manifest C:/kyty/m657/m3a/runs/m3_hb_w/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T19:13:34Z M3a go_m3a m3_hb_w live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T19:13:37Z M3a go_m3a m3_hb_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T19:13:55Z M3a go_m3a m3_hb_w live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_hb_w/manifest_base.tsv files 5597 bytes 1549652429 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a; = k1.tsv: manifest cmp EQUAL files 5597 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a
+2026-10-12T19:13:56Z M3a go_m3a m3_hb_w state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T19:13:56Z
+2026-10-12T19:13:57Z M3a go_m3a m3_hb_w installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T19:13:58Z M3a go_m3a m3_hb_w enter_scene start (level hoover_beach, bin ms1, kind w, sd 100, timeout 900, hold 310, --emu-arg=--vulkan-validation --emu-arg=true, cache K1 save K1, knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T19:19:41Z M3a go_m3a m3_hb_w enter_scene rc 0; guard watch: 2026-10-12T19:19:40Z watch end, user process seen: no; hold watch: 2026-10-12T19:19:40Z watch end, user VM seen: no
+2026-10-12T19:19:41Z M3a go_m3a m3_hb_w run: VERDICT: hoover_beach in 18.9 s - PASS (acceptance <= 90 s)
+2026-10-12T19:19:43Z M3a go_m3a m3_hb_w log_m3_hb_w.txt sha256 e0105a9768d008890ca367877eca4854f4a3e14602f9fdb06eb400f770fa14fa
+2026-10-12T19:19:46Z M3a go_m3a m3_hb_w move of live _ShaderSeeds into k1.new failed
+2026-10-12T19:19:47Z M3a go_m3a m3_hb_w installed binary returned from the pinned FS15 copy
+2026-10-12T19:19:47Z M3a go_m3a m3_hb_w installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T19:19:50Z M3a go_m3a m3_hb_w manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_hb_w/manifest_run.tsv files 831 bytes 703519919 listsha de50df02776b0113ba212fe968a7d9fb499de15b011f0ce736fde771040d15f7
+2026-10-12T19:19:53Z M3a go_m3a m3_hb_w caches, seeds, saves and GLCache returned (K0)
+2026-10-12T19:19:57Z M3a go_m3a m3_hb_w manifest after: manifest C:/kyty/m657/m3a/runs/m3_hb_w/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T19:19:58Z M3a go_m3a m3_hb_w lock released (rc 1)
+2026-10-12T19:20:00Z M3a go_m3a m3_hb_w display after lock released (item 620 (g)(1)): dispstate ON idle_s 59 utc 2026-10-12T19:19:59Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T19:19:59Z; dispstate ON idle_s 59
+2026-10-12T19:20:12Z M3a go_m3a m3_hb_w host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.624 procs []
+2026-10-12T19:20:45Z M3a post_m3a m3_hb_w: read.txt f1e174d115d66f97,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 45.88 fps 21.80 frames 6852 limit_ms 200 (W form, item 621) (FrameTrace frames after , display before / after: dispstate ON idle_s 57 utc 202 / dispstate ON idle_s 59 utc 202, glitch: 
+2026-10-12T19:20:50Z M3a API check before m3_hb_v: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T19:20:54Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_hb_v; plan: dryrun m3_hb_v base m3_hb_v bin ms1 level hoover_beach kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T19:20:54Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_hb_v
+2026-10-12T19:21:11Z M3a go_m3a m3_hb_v run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T19:21:22Z M3a go_m3a m3_hb_v host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.450 procs []
+2026-10-12T19:21:24Z M3a go_m3a m3_hb_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T19:21:23Z
+2026-10-12T19:29:03Z M3a go_m3a m3_hb_v lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T19:29:03Z M3a go_m3a m3_hb_v installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T19:29:08Z M3a go_m3a m3_hb_v manifest before: manifest C:/kyty/m657/m3a/runs/m3_hb_v/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T19:29:08Z M3a go_m3a m3_hb_v live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T19:29:12Z M3a go_m3a m3_hb_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T19:29:27Z M3a go_m3a m3_hb_v live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_hb_v/manifest_base.tsv files 5597 bytes 1549652429 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a; = k1.tsv: manifest cmp EQUAL files 5597 listsha 46765422cad14471670c44457e7851e355e01978363c52265e3b9f712c16a04a
+2026-10-12T19:29:30Z M3a go_m3a m3_hb_v state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T19:29:29Z
+2026-10-12T19:29:30Z M3a go_m3a m3_hb_v installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T19:29:31Z M3a go_m3a m3_hb_v enter_scene start (level hoover_beach, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T19:35:30Z M3a go_m3a m3_hb_v enter_scene rc 0; guard watch: 2026-10-12T19:35:30Z watch end, user process seen: no; hold watch: 2026-10-12T19:35:29Z watch end, user VM seen: no
+2026-10-12T19:35:32Z M3a go_m3a m3_hb_v run: VERDICT: hoover_beach in 15.4 s - PASS (acceptance <= 90 s)
+2026-10-12T19:35:33Z M3a go_m3a m3_hb_v log_m3_hb_v.txt sha256 23c9b83e24ce2b86ec397148cc8958a1a8b4314f518b494228bf17f2977f4437
+2026-10-12T19:35:41Z M3a go_m3a m3_hb_v the run state saved as K1: manifest C:/kyty/m657/m3a/k1.new/k1.tsv files 5597 bytes 1552298750 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838 (previous in k1.prev)
+2026-10-12T19:35:44Z M3a go_m3a m3_hb_v installed binary returned from the pinned FS15 copy
+2026-10-12T19:35:45Z M3a go_m3a m3_hb_v installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T19:35:46Z M3a go_m3a m3_hb_v caches, seeds, saves and GLCache returned (K0)
+2026-10-12T19:35:49Z M3a go_m3a m3_hb_v manifest after: manifest C:/kyty/m657/m3a/runs/m3_hb_v/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T19:35:50Z M3a go_m3a m3_hb_v lock released (rc 0)
+2026-10-12T19:35:54Z M3a go_m3a m3_hb_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 32 utc 2026-10-12T19:35:51Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T19:35:52Z; dispstate ON idle_s 32
+2026-10-12T19:36:06Z M3a go_m3a m3_hb_v host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.093 procs []
+2026-10-12T19:37:43Z M3a post_m3a m3_hb_v: read.txt 13b2024633df4dd7,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 17.04 fps 58.68 frames 19520 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 32 utc 202, glitch: one-frame glitches: 0
+2026-10-12T19:37:45Z M3a API check before m3_hb_f: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T19:37:51Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_hb_f; plan: dryrun m3_hb_f base m3_hb_f bin fs15 level hoover_beach kind v sd 300 timeout 480 hold 330 rec --rec cache K0 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T19:37:51Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_hb_f
+2026-10-12T19:38:07Z M3a go_m3a m3_hb_f run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T19:38:19Z M3a go_m3a m3_hb_f host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.475 procs []
+2026-10-12T19:38:21Z M3a go_m3a m3_hb_f display before the lock (item 620 (g)(1)): dispstate ON idle_s 7 utc 2026-10-12T19:38:20Z
+2026-10-12T19:46:00Z M3a go_m3a m3_hb_f lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T19:46:02Z M3a go_m3a m3_hb_f installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T19:46:05Z M3a go_m3a m3_hb_f manifest before: manifest C:/kyty/m657/m3a/runs/m3_hb_f/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T19:46:05Z M3a go_m3a m3_hb_f live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T19:46:08Z M3a go_m3a m3_hb_f caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T19:46:08Z M3a go_m3a m3_hb_f state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-12T19:46:08Z
+2026-10-12T19:46:09Z M3a go_m3a m3_hb_f installed the fs15 copy for the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T19:46:10Z M3a go_m3a m3_hb_f enter_scene start (level hoover_beach, bin fs15, kind v, sd 300, timeout 480, hold 330, --rec, cache K0 save none, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T19:52:11Z M3a go_m3a m3_hb_f enter_scene rc 0; guard watch: 2026-10-12T19:52:10Z watch end, user process seen: no; hold watch: 2026-10-12T19:52:09Z watch end, user VM seen: no
+2026-10-12T19:52:11Z M3a go_m3a m3_hb_f run: VERDICT: hoover_beach in 17.9 s - PASS (acceptance <= 90 s)
+2026-10-12T19:52:12Z M3a go_m3a m3_hb_f log_m3_hb_f.txt sha256 aff05c2adf51d4202ac88996bbba0fc9f2a73061f24e685e6fc8614e1c39c447
+2026-10-12T19:52:13Z M3a go_m3a m3_hb_f installed binary returned from the pinned FS15 copy
+2026-10-12T19:52:14Z M3a go_m3a m3_hb_f installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T19:52:17Z M3a go_m3a m3_hb_f manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_hb_f/manifest_run.tsv files 4868 bytes 1335609403 listsha 8beba7feafb45322df1f3f84bcdaf0f34496535fac5e84b5a1187eb864d7c7fe
+2026-10-12T19:52:18Z M3a go_m3a m3_hb_f caches, seeds, saves and GLCache returned (K0)
+2026-10-12T19:52:22Z M3a go_m3a m3_hb_f manifest after: manifest C:/kyty/m657/m3a/runs/m3_hb_f/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T19:52:23Z M3a go_m3a m3_hb_f lock released (rc 0)
+2026-10-12T19:52:25Z M3a go_m3a m3_hb_f display after lock released (item 620 (g)(1)): dispstate ON idle_s 2 utc 2026-10-12T19:52:24Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T19:52:25Z; dispstate ON idle_s 3
+2026-10-12T19:52:37Z M3a go_m3a m3_hb_f host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.917 procs []
+2026-10-12T19:54:06Z M3a post pair hb: pairs/pair_hb.png (left m3_hb_v MS1, right m3_hb_f FS15) sha256 4bab5cb2e6fefab2
+2026-10-12T19:54:06Z M3a post_m3a m3_hb_f: read.txt 4b1dc2f648f6c477,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 17.78 fps 56.25 frames 18703 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 7 utc 2026 / dispstate ON idle_s 2 utc 2026, glitch: one-frame glitches: 0
+2026-10-12T19:54:10Z M3a API check before m3_mg_w: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T19:54:15Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_mg_w; plan: dryrun m3_mg_w base m3_mg_w bin ms1 level mini_giants_garden kind w sd 100 timeout 900 hold 310 rec --emu-arg=--vulkan-validation --emu-arg=true cache K1 save K1 knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU
+2026-10-12T19:54:15Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_mg_w
+2026-10-12T19:54:30Z M3a go_m3a m3_mg_w run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T19:54:43Z M3a go_m3a m3_mg_w host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.581 procs []
+2026-10-12T19:54:45Z M3a go_m3a m3_mg_w display before the lock (item 620 (g)(1)): dispstate ON idle_s 128 utc 2026-10-12T19:54:44Z
+2026-10-12T20:02:43Z M3a go_m3a m3_mg_w lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T20:02:43Z M3a go_m3a m3_mg_w installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T20:02:46Z M3a go_m3a m3_mg_w manifest before: manifest C:/kyty/m657/m3a/runs/m3_mg_w/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T20:02:47Z M3a go_m3a m3_mg_w live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T20:02:49Z M3a go_m3a m3_mg_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T20:03:13Z M3a go_m3a m3_mg_w live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_mg_w/manifest_base.tsv files 5597 bytes 1552298750 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838; = k1.tsv: manifest cmp EQUAL files 5597 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838
+2026-10-12T20:03:13Z M3a go_m3a m3_mg_w state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T20:03:13Z
+2026-10-12T20:03:14Z M3a go_m3a m3_mg_w installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T20:03:15Z M3a go_m3a m3_mg_w enter_scene start (level mini_giants_garden, bin ms1, kind w, sd 100, timeout 900, hold 310, --emu-arg=--vulkan-validation --emu-arg=true, cache K1 save K1, knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T20:03:23Z M3a go_m3a m3_mg_w enter_scene rc 3; guard watch: 2026-10-12T20:03:22Z watch end, user process seen: no; hold watch: 2026-10-12T20:03:21Z watch end, user VM seen: no
+2026-10-12T20:03:24Z M3a go_m3a m3_mg_w run: 
+2026-10-12T20:03:25Z M3a go_m3a m3_mg_w installed binary returned from the pinned FS15 copy
+2026-10-12T20:03:26Z M3a go_m3a m3_mg_w installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T20:03:32Z M3a go_m3a m3_mg_w manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_mg_w/manifest_run.tsv files 5597 bytes 1552298750 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838
+2026-10-12T20:03:33Z M3a go_m3a m3_mg_w caches, seeds, saves and GLCache returned (K0)
+2026-10-12T20:03:38Z M3a go_m3a m3_mg_w manifest after: manifest C:/kyty/m657/m3a/runs/m3_mg_w/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T20:03:39Z M3a go_m3a m3_mg_w lock released (rc 0)
+2026-10-12T20:03:41Z M3a go_m3a m3_mg_w display after lock released (item 620 (g)(1)): dispstate ON idle_s 6 utc 2026-10-12T20:03:40Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T20:03:40Z; dispstate ON idle_s 7
+2026-10-12T20:03:54Z M3a go_m3a m3_mg_w host load after the tag (item 632 (v)(2)): hostload: over05 1 max 1.753 total 2.585 procs [('<app>', 12552, 1.753)]
+2026-10-12T20:03:54Z M3a go_m3a m3_mg_w enter_scene never launched the emulator - not a tag, repeat by the same name
+2026-10-12T20:04:19Z m3_mg_w call 1 refused inside enter_scene (GPU not idle: gpu_util_median 24.0) - not an attempt (runs/m3_mg_w.nostart_200354); a user program (<app>, pid 12552, started 20:02:05Z) runs - the series waits for its exit
+2026-10-12T20:58:23Z the user program (pid 12552) exited at ~20:57:17Z; series continues with m3_mg_w (call 2)
+2026-10-12T20:58:24Z M3a API check before m3_mg_w: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T20:58:30Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_mg_w; plan: dryrun m3_mg_w base m3_mg_w bin ms1 level mini_giants_garden kind w sd 100 timeout 900 hold 310 rec --emu-arg=--vulkan-validation --emu-arg=true cache K1 save K1 knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU
+2026-10-12T20:58:30Z M3a launch_m3a previous output of m3_mg_w moved to m3a/old/
+2026-10-12T20:58:30Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_mg_w
+2026-10-12T20:58:45Z M3a go_m3a m3_mg_w run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T20:58:57Z M3a go_m3a m3_mg_w host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.164 procs []
+2026-10-12T20:58:58Z M3a go_m3a m3_mg_w display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T20:58:58Z
+2026-10-12T21:06:46Z M3a go_m3a m3_mg_w lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T21:06:46Z M3a go_m3a m3_mg_w installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T21:06:50Z M3a go_m3a m3_mg_w manifest before: manifest C:/kyty/m657/m3a/runs/m3_mg_w/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T21:06:50Z M3a go_m3a m3_mg_w live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T21:06:54Z M3a go_m3a m3_mg_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T21:07:08Z M3a go_m3a m3_mg_w live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_mg_w/manifest_base.tsv files 5597 bytes 1552298750 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838; = k1.tsv: manifest cmp EQUAL files 5597 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838
+2026-10-12T21:07:08Z M3a go_m3a m3_mg_w state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T21:07:08Z
+2026-10-12T21:07:08Z M3a go_m3a m3_mg_w installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T21:07:09Z M3a go_m3a m3_mg_w enter_scene start (level mini_giants_garden, bin ms1, kind w, sd 100, timeout 900, hold 310, --emu-arg=--vulkan-validation --emu-arg=true, cache K1 save K1, knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T21:12:56Z M3a go_m3a m3_mg_w enter_scene rc 0; guard watch: 2026-10-12T21:12:55Z watch end, user process seen: no; hold watch: 2026-10-12T21:12:55Z watch end, user VM seen: no
+2026-10-12T21:12:56Z M3a go_m3a m3_mg_w run: VERDICT: mini_giants_garden in 24.4 s - PASS (acceptance <= 90 s)
+2026-10-12T21:12:57Z M3a go_m3a m3_mg_w log_m3_mg_w.txt sha256 4d8d8ed42593478841fa052e3140d84787db1c7c7553b5fd44d4af1c44af076d
+2026-10-12T21:13:06Z M3a go_m3a m3_mg_w the run state saved as K1: manifest C:/kyty/m657/m3a/k1.new/k1.tsv files 5597 bytes 1552298750 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838 (previous in k1.prev)
+2026-10-12T21:13:07Z M3a go_m3a m3_mg_w installed binary returned from the pinned FS15 copy
+2026-10-12T21:13:07Z M3a go_m3a m3_mg_w installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T21:13:11Z M3a go_m3a m3_mg_w caches, seeds, saves and GLCache returned (K0)
+2026-10-12T21:13:18Z M3a go_m3a m3_mg_w manifest after: manifest C:/kyty/m657/m3a/runs/m3_mg_w/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T21:13:18Z M3a go_m3a m3_mg_w lock released (rc 0)
+2026-10-12T21:13:22Z M3a go_m3a m3_mg_w display after lock released (item 620 (g)(1)): dispstate ON idle_s 3 utc 2026-10-12T21:13:20Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T21:13:21Z; dispstate ON idle_s 4
+2026-10-12T21:13:35Z M3a go_m3a m3_mg_w host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.703 procs []
+2026-10-12T21:13:58Z M3a post_m3a m3_mg_w: read.txt 57e909d869aaaf8a,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 54.52 fps 18.34 frames 5819 limit_ms 200 (W form, item 621) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 3 utc 2026, glitch: 
+2026-10-12T21:14:04Z M3a API check before m3_mg_v: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T21:14:09Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_mg_v; plan: dryrun m3_mg_v base m3_mg_v bin ms1 level mini_giants_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T21:14:10Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_mg_v
+2026-10-12T21:14:27Z M3a go_m3a m3_mg_v run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T21:14:39Z M3a go_m3a m3_mg_v host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.787 procs []
+2026-10-12T21:14:40Z M3a go_m3a m3_mg_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T21:14:40Z
+2026-10-12T21:22:47Z M3a go_m3a m3_mg_v lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T21:22:48Z M3a go_m3a m3_mg_v installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T21:22:52Z M3a go_m3a m3_mg_v manifest before: manifest C:/kyty/m657/m3a/runs/m3_mg_v/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T21:22:52Z M3a go_m3a m3_mg_v live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T21:22:56Z M3a go_m3a m3_mg_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T21:23:10Z M3a go_m3a m3_mg_v live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_mg_v/manifest_base.tsv files 5597 bytes 1552298750 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838; = k1.tsv: manifest cmp EQUAL files 5597 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838
+2026-10-12T21:23:11Z M3a go_m3a m3_mg_v state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T21:23:10Z
+2026-10-12T21:23:14Z M3a go_m3a m3_mg_v installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T21:23:14Z M3a go_m3a m3_mg_v enter_scene start (level mini_giants_garden, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T21:29:16Z M3a go_m3a m3_mg_v enter_scene rc 0; guard watch: 2026-10-12T21:29:16Z watch end, user process seen: no; hold watch: 2026-10-12T21:29:15Z watch end, user VM seen: no
+2026-10-12T21:29:17Z M3a go_m3a m3_mg_v run: VERDICT: mini_giants_garden in 17.9 s - PASS (acceptance <= 90 s)
+2026-10-12T21:29:18Z M3a go_m3a m3_mg_v log_m3_mg_v.txt sha256 fa9d13ff260c5f6bd96ae92cfcca998e905d21ff8afdeea1236956660516919b
+2026-10-12T21:29:28Z M3a go_m3a m3_mg_v the run state saved as K1: manifest C:/kyty/m657/m3a/k1.new/k1.tsv files 5597 bytes 1552298750 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838 (previous in k1.prev)
+2026-10-12T21:29:28Z M3a go_m3a m3_mg_v installed binary returned from the pinned FS15 copy
+2026-10-12T21:29:29Z M3a go_m3a m3_mg_v installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T21:29:34Z M3a go_m3a m3_mg_v caches, seeds, saves and GLCache returned (K0)
+2026-10-12T21:29:39Z M3a go_m3a m3_mg_v manifest after: manifest C:/kyty/m657/m3a/runs/m3_mg_v/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T21:29:40Z M3a go_m3a m3_mg_v lock released (rc 0)
+2026-10-12T21:29:45Z M3a go_m3a m3_mg_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T21:29:42Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T21:29:44Z; dispstate ON idle_s 0
+2026-10-12T21:29:57Z M3a go_m3a m3_mg_v host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.866 procs []
+2026-10-12T21:31:25Z M3a post_m3a m3_mg_v: read.txt c32129d3ae3a95bc,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.94 frames 19947 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: one-frame glitches: 0
+2026-10-12T21:31:29Z M3a API check before m3_mg_f: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T21:31:33Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_mg_f; plan: dryrun m3_mg_f base m3_mg_f bin fs15 level mini_giants_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K0 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T21:31:34Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_mg_f
+2026-10-12T21:31:49Z M3a go_m3a m3_mg_f run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T21:32:01Z M3a go_m3a m3_mg_f host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.785 procs []
+2026-10-12T21:32:02Z M3a go_m3a m3_mg_f display before the lock (item 620 (g)(1)): dispstate ON idle_s 1 utc 2026-10-12T21:32:02Z
+2026-10-12T21:40:28Z M3a go_m3a m3_mg_f lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T21:40:28Z M3a go_m3a m3_mg_f installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T21:40:31Z M3a go_m3a m3_mg_f manifest before: manifest C:/kyty/m657/m3a/runs/m3_mg_f/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T21:40:33Z M3a go_m3a m3_mg_f live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T21:40:36Z M3a go_m3a m3_mg_f caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T21:40:37Z M3a go_m3a m3_mg_f state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-12T21:40:36Z
+2026-10-12T21:40:37Z M3a go_m3a m3_mg_f installed the fs15 copy for the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T21:40:39Z M3a go_m3a m3_mg_f enter_scene start (level mini_giants_garden, bin fs15, kind v, sd 300, timeout 480, hold 330, --rec, cache K0 save none, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T21:46:44Z M3a go_m3a m3_mg_f enter_scene rc 0; guard watch: 2026-10-12T21:46:44Z watch end, user process seen: no; hold watch: 2026-10-12T21:46:44Z watch end, user VM seen: no
+2026-10-12T21:46:45Z M3a go_m3a m3_mg_f run: VERDICT: mini_giants_garden in 22.4 s - PASS (acceptance <= 90 s)
+2026-10-12T21:46:46Z M3a go_m3a m3_mg_f log_m3_mg_f.txt sha256 e30a20c171a3dedecfd3a16f1e54c07e48c5a5e304201683a02ae7ba02de34e3
+2026-10-12T21:46:49Z M3a go_m3a m3_mg_f installed binary returned from the pinned FS15 copy
+2026-10-12T21:46:49Z M3a go_m3a m3_mg_f installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T21:46:54Z M3a go_m3a m3_mg_f manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_mg_f/manifest_run.tsv files 4868 bytes 1334457993 listsha 1584435a723516100463d39e156061c94f17c4008bd800a8c50c61504da6d527
+2026-10-12T21:46:55Z M3a go_m3a m3_mg_f caches, seeds, saves and GLCache returned (K0)
+2026-10-12T21:47:05Z M3a go_m3a m3_mg_f manifest after: manifest C:/kyty/m657/m3a/runs/m3_mg_f/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T21:47:08Z M3a go_m3a m3_mg_f lock released (rc 0)
+2026-10-12T21:47:10Z M3a go_m3a m3_mg_f display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T21:47:09Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T21:47:09Z; dispstate ON idle_s 0
+2026-10-12T21:47:22Z M3a go_m3a m3_mg_f host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.284 procs []
+2026-10-12T21:48:54Z M3a post pair mg: pairs/pair_mg.png (left m3_mg_v MS1, right m3_mg_f FS15) sha256 0391d8eaa2d23322
+2026-10-12T21:48:54Z M3a post_m3a m3_mg_f: read.txt 67936ad23069c21f,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 16.79 fps 59.58 frames 19850 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 1 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: one-frame glitches: 0
+2026-10-12T21:48:57Z M3a API check before m3_ac_w: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T21:49:04Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_ac_w; plan: dryrun m3_ac_w base m3_ac_w bin ms1 level armadillo_challenge_1 kind w sd 100 timeout 900 hold 310 rec --emu-arg=--vulkan-validation --emu-arg=true cache K1 save K1 knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_
+2026-10-12T21:49:06Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_ac_w
+2026-10-12T21:49:21Z M3a go_m3a m3_ac_w run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T21:49:33Z M3a go_m3a m3_ac_w host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.439 procs []
+2026-10-12T21:49:35Z M3a go_m3a m3_ac_w display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T21:49:34Z
+2026-10-12T21:57:28Z M3a go_m3a m3_ac_w lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T21:57:29Z M3a go_m3a m3_ac_w installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T21:57:33Z M3a go_m3a m3_ac_w manifest before: manifest C:/kyty/m657/m3a/runs/m3_ac_w/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T21:57:33Z M3a go_m3a m3_ac_w live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T21:57:35Z M3a go_m3a m3_ac_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T21:57:53Z M3a go_m3a m3_ac_w live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_ac_w/manifest_base.tsv files 5597 bytes 1552298750 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838; = k1.tsv: manifest cmp EQUAL files 5597 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838
+2026-10-12T21:57:53Z M3a go_m3a m3_ac_w state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T21:57:53Z
+2026-10-12T21:57:54Z M3a go_m3a m3_ac_w installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T21:57:55Z M3a go_m3a m3_ac_w enter_scene start (level armadillo_challenge_1, bin ms1, kind w, sd 100, timeout 900, hold 310, --emu-arg=--vulkan-validation --emu-arg=true, cache K1 save K1, knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T22:03:38Z M3a go_m3a m3_ac_w enter_scene rc 0; guard watch: 2026-10-12T22:03:37Z watch end, user process seen: no; hold watch: 2026-10-12T22:03:38Z watch end, user VM seen: no
+2026-10-12T22:03:39Z M3a go_m3a m3_ac_w run: VERDICT: armadillo_challenge_1 in 20.2 s - PASS (acceptance <= 90 s)
+2026-10-12T22:03:42Z M3a go_m3a m3_ac_w log_m3_ac_w.txt sha256 1187dbaa6baf216c01e4f9dd0b948865cffebd3c48024969551e5a640e236af7
+2026-10-12T22:03:43Z M3a go_m3a m3_ac_w move of live _ShaderSeeds into k1.new failed
+2026-10-12T22:03:44Z M3a go_m3a m3_ac_w installed binary returned from the pinned FS15 copy
+2026-10-12T22:03:45Z M3a go_m3a m3_ac_w installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T22:03:49Z M3a go_m3a m3_ac_w manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_ac_w/manifest_run.tsv files 831 bytes 706212862 listsha d57a8354613d5aad110077cd22a326454a6b7caaecac4873324f4ce5fdc7952b
+2026-10-12T22:03:50Z M3a go_m3a m3_ac_w caches, seeds, saves and GLCache returned (K0)
+2026-10-12T22:03:56Z M3a go_m3a m3_ac_w manifest after: manifest C:/kyty/m657/m3a/runs/m3_ac_w/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T22:03:56Z M3a go_m3a m3_ac_w lock released (rc 1)
+2026-10-12T22:03:59Z M3a go_m3a m3_ac_w display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T22:03:57Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T22:03:58Z; dispstate ON idle_s 0
+2026-10-12T22:04:12Z M3a go_m3a m3_ac_w host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.157 procs []
+2026-10-12T22:04:40Z M3a post_m3a m3_ac_w: read.txt 627029f2a6757124,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 37.47 fps 26.69 frames 8413 limit_ms 200 (W form, item 621) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: 
+2026-10-12T22:04:46Z M3a API check before m3_ac_v: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T22:04:51Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_ac_v; plan: dryrun m3_ac_v base m3_ac_v bin ms1 level armadillo_challenge_1 kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T22:04:53Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_ac_v
+2026-10-12T22:05:07Z M3a go_m3a m3_ac_v run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T22:05:19Z M3a go_m3a m3_ac_v host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.859 procs []
+2026-10-12T22:05:20Z M3a go_m3a m3_ac_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T22:05:20Z
+2026-10-12T22:11:51Z M3a go_m3a m3_ac_v lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T22:11:51Z M3a go_m3a m3_ac_v installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T22:11:54Z M3a go_m3a m3_ac_v manifest before: manifest C:/kyty/m657/m3a/runs/m3_ac_v/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T22:11:54Z M3a go_m3a m3_ac_v live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T22:11:58Z M3a go_m3a m3_ac_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T22:12:15Z M3a go_m3a m3_ac_v live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_ac_v/manifest_base.tsv files 5597 bytes 1552298750 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838; = k1.tsv: manifest cmp EQUAL files 5597 listsha d68b41ca831b9be77091cd798b91234879b5d32f58e6aceef746559106527838
+2026-10-12T22:12:18Z M3a go_m3a m3_ac_v state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T22:12:18Z
+2026-10-12T22:12:18Z M3a go_m3a m3_ac_v installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T22:12:19Z M3a go_m3a m3_ac_v enter_scene start (level armadillo_challenge_1, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T22:18:18Z M3a go_m3a m3_ac_v enter_scene rc 0; guard watch: 2026-10-12T22:18:14Z watch end, user process seen: no; hold watch: 2026-10-12T22:18:16Z watch end, user VM seen: no
+2026-10-12T22:18:18Z M3a go_m3a m3_ac_v run: VERDICT: armadillo_challenge_1 in 12.8 s - PASS (acceptance <= 90 s)
+2026-10-12T22:18:19Z M3a go_m3a m3_ac_v log_m3_ac_v.txt sha256 d2f221b2304393a6f816e24bac6fa3f8a261381802e13828dacc7e6a28e829a7
+2026-10-12T22:18:27Z M3a go_m3a m3_ac_v the run state saved as K1: manifest C:/kyty/m657/m3a/k1.new/k1.tsv files 5599 bytes 1552656283 listsha a825c04ea82b8a12a9d106da6ced8574e3127a20747c4da024968f3d16341e82 (previous in k1.prev)
+2026-10-12T22:18:32Z M3a go_m3a m3_ac_v installed binary returned from the pinned FS15 copy
+2026-10-12T22:18:32Z M3a go_m3a m3_ac_v installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T22:18:34Z M3a go_m3a m3_ac_v caches, seeds, saves and GLCache returned (K0)
+2026-10-12T22:18:37Z M3a go_m3a m3_ac_v manifest after: manifest C:/kyty/m657/m3a/runs/m3_ac_v/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T22:18:38Z M3a go_m3a m3_ac_v lock released (rc 0)
+2026-10-12T22:18:42Z M3a go_m3a m3_ac_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 12 utc 2026-10-12T22:18:41Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T22:18:41Z; dispstate ON idle_s 12
+2026-10-12T22:18:54Z M3a go_m3a m3_ac_v host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.913 procs []
+2026-10-12T22:20:24Z M3a post_m3a m3_ac_v: read.txt 919071708cd3dfac,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 16.73 fps 59.76 frames 19872 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 12 utc 202, glitch: one-frame glitches: 0
+2026-10-12T22:20:27Z M3a API check before m3_ac_f: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T22:20:32Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_ac_f; plan: dryrun m3_ac_f base m3_ac_f bin fs15 level armadillo_challenge_1 kind v sd 300 timeout 480 hold 330 rec --rec cache K0 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T22:20:32Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_ac_f
+2026-10-12T22:20:49Z M3a go_m3a m3_ac_f run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T22:21:01Z M3a go_m3a m3_ac_f host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.086 procs []
+2026-10-12T22:21:03Z M3a go_m3a m3_ac_f display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T22:21:03Z
+2026-10-12T22:27:31Z M3a go_m3a m3_ac_f lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T22:27:33Z M3a go_m3a m3_ac_f installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T22:27:35Z M3a go_m3a m3_ac_f manifest before: manifest C:/kyty/m657/m3a/runs/m3_ac_f/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T22:27:35Z M3a go_m3a m3_ac_f live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T22:27:39Z M3a go_m3a m3_ac_f caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T22:27:39Z M3a go_m3a m3_ac_f state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-12T22:27:39Z
+2026-10-12T22:27:40Z M3a go_m3a m3_ac_f installed the fs15 copy for the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T22:27:42Z M3a go_m3a m3_ac_f enter_scene start (level armadillo_challenge_1, bin fs15, kind v, sd 300, timeout 480, hold 330, --rec, cache K0 save none, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T22:33:44Z M3a go_m3a m3_ac_f enter_scene rc 0; guard watch: 2026-10-12T22:33:43Z watch end, user process seen: no; hold watch: 2026-10-12T22:33:43Z watch end, user VM seen: no
+2026-10-12T22:33:44Z M3a go_m3a m3_ac_f run: VERDICT: armadillo_challenge_1 in 19.1 s - PASS (acceptance <= 90 s)
+2026-10-12T22:33:46Z M3a go_m3a m3_ac_f log_m3_ac_f.txt sha256 ee799bb6ac8e3a2132ce1caa4425bdfe33e549bb5474e68c26ae876e6df20e80
+2026-10-12T22:33:47Z M3a go_m3a m3_ac_f installed binary returned from the pinned FS15 copy
+2026-10-12T22:33:47Z M3a go_m3a m3_ac_f installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T22:33:50Z M3a go_m3a m3_ac_f manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_ac_f/manifest_run.tsv files 4870 bytes 1334751376 listsha 3e3659aa2489bd686d333114291e9082e584094861bad3fd016952c56fa46ca7
+2026-10-12T22:33:53Z M3a go_m3a m3_ac_f caches, seeds, saves and GLCache returned (K0)
+2026-10-12T22:33:55Z M3a go_m3a m3_ac_f manifest after: manifest C:/kyty/m657/m3a/runs/m3_ac_f/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T22:33:56Z M3a go_m3a m3_ac_f lock released (rc 0)
+2026-10-12T22:33:57Z M3a go_m3a m3_ac_f display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T22:33:57Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T22:33:57Z; dispstate ON idle_s 0
+2026-10-12T22:34:10Z M3a go_m3a m3_ac_f host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 2.204 procs []
+2026-10-12T22:35:35Z M3a post pair ac: pairs/pair_ac.png (left m3_ac_v MS1, right m3_ac_f FS15) sha256 d04ee72007fa2250
+2026-10-12T22:35:36Z M3a post_m3a m3_ac_f: read.txt 8dbaca8826f99248,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 16.68 fps 59.94 frames 19949 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: one-frame glitches: 0
+2026-10-12T22:35:39Z M3a API check before m3_f1_w: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T22:35:44Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_f1_w; plan: dryrun m3_f1_w base m3_f1_w bin ms1 level fragile_battle_1 kind w sd 100 timeout 900 hold 310 rec --emu-arg=--vulkan-validation --emu-arg=true cache K1 save K1 knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_C
+2026-10-12T22:35:44Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_f1_w
+2026-10-12T22:35:59Z M3a go_m3a m3_f1_w run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T22:36:13Z M3a go_m3a m3_f1_w host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.050 procs []
+2026-10-12T22:36:14Z M3a go_m3a m3_f1_w display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T22:36:14Z
+2026-10-12T22:42:57Z M3a go_m3a m3_f1_w lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T22:42:58Z M3a go_m3a m3_f1_w installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T22:43:03Z M3a go_m3a m3_f1_w manifest before: manifest C:/kyty/m657/m3a/runs/m3_f1_w/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T22:43:03Z M3a go_m3a m3_f1_w live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T22:43:06Z M3a go_m3a m3_f1_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T22:43:22Z M3a go_m3a m3_f1_w live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_f1_w/manifest_base.tsv files 5599 bytes 1552656283 listsha a825c04ea82b8a12a9d106da6ced8574e3127a20747c4da024968f3d16341e82; = k1.tsv: manifest cmp EQUAL files 5599 listsha a825c04ea82b8a12a9d106da6ced8574e3127a20747c4da024968f3d16341e82
+2026-10-12T22:43:22Z M3a go_m3a m3_f1_w state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T22:43:22Z
+2026-10-12T22:43:22Z M3a go_m3a m3_f1_w installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T22:43:23Z M3a go_m3a m3_f1_w enter_scene start (level fragile_battle_1, bin ms1, kind w, sd 100, timeout 900, hold 310, --emu-arg=--vulkan-validation --emu-arg=true, cache K1 save K1, knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T22:49:07Z M3a go_m3a m3_f1_w enter_scene rc 0; guard watch: 2026-10-12T22:49:05Z watch end, user process seen: no; hold watch: 2026-10-12T22:49:05Z watch end, user VM seen: no
+2026-10-12T22:49:07Z M3a go_m3a m3_f1_w run: VERDICT: fragile_battle_1 in 18.9 s - PASS (acceptance <= 90 s)
+2026-10-12T22:49:09Z M3a go_m3a m3_f1_w log_m3_f1_w.txt sha256 2a14260feb7daa126f39586b8fe83c13ad3a627d2e472a1d0004f0368403f483
+2026-10-12T22:49:19Z M3a go_m3a m3_f1_w the run state saved as K1: manifest C:/kyty/m657/m3a/k1.new/k1.tsv files 5603 bytes 1553886139 listsha 3a484e6f7ca186f21ee485f38b4cb43c279d90c2e1892b9b87dcf24ed960ecb6 (previous in k1.prev)
+2026-10-12T22:49:20Z M3a go_m3a m3_f1_w installed binary returned from the pinned FS15 copy
+2026-10-12T22:49:21Z M3a go_m3a m3_f1_w installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T22:49:25Z M3a go_m3a m3_f1_w caches, seeds, saves and GLCache returned (K0)
+2026-10-12T22:49:28Z M3a go_m3a m3_f1_w manifest after: manifest C:/kyty/m657/m3a/runs/m3_f1_w/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T22:49:28Z M3a go_m3a m3_f1_w lock released (rc 0)
+2026-10-12T22:49:31Z M3a go_m3a m3_f1_w display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T22:49:29Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T22:49:30Z; dispstate ON idle_s 0
+2026-10-12T22:49:45Z M3a go_m3a m3_f1_w host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.045 procs []
+2026-10-12T22:50:10Z M3a post_m3a m3_f1_w: read.txt e6bb0412daabae4e,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 44.13 fps 22.66 frames 7161 limit_ms 200 (W form, item 621) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: 
+2026-10-12T22:50:16Z M3a API check before m3_f1_v: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T22:50:20Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_f1_v; plan: dryrun m3_f1_v base m3_f1_v bin ms1 level fragile_battle_1 kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T22:50:20Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_f1_v
+2026-10-12T22:51:49Z M3a go_m3a m3_f1_v run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T22:52:02Z M3a go_m3a m3_f1_v host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.226 procs []
+2026-10-12T22:52:05Z M3a go_m3a m3_f1_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T22:52:03Z
+2026-10-12T22:58:45Z M3a go_m3a m3_f1_v lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T22:58:45Z M3a go_m3a m3_f1_v installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T22:58:49Z M3a go_m3a m3_f1_v manifest before: manifest C:/kyty/m657/m3a/runs/m3_f1_v/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T22:58:51Z M3a go_m3a m3_f1_v live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T22:58:54Z M3a go_m3a m3_f1_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T22:59:08Z M3a go_m3a m3_f1_v live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_f1_v/manifest_base.tsv files 5603 bytes 1553886139 listsha 3a484e6f7ca186f21ee485f38b4cb43c279d90c2e1892b9b87dcf24ed960ecb6; = k1.tsv: manifest cmp EQUAL files 5603 listsha 3a484e6f7ca186f21ee485f38b4cb43c279d90c2e1892b9b87dcf24ed960ecb6
+2026-10-12T22:59:08Z M3a go_m3a m3_f1_v state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T22:59:08Z
+2026-10-12T22:59:09Z M3a go_m3a m3_f1_v installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T22:59:12Z M3a go_m3a m3_f1_v enter_scene start (level fragile_battle_1, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T23:05:09Z M3a go_m3a m3_f1_v enter_scene rc 0; guard watch: 2026-10-12T23:05:09Z watch end, user process seen: no; hold watch: 2026-10-12T23:05:08Z watch end, user VM seen: no
+2026-10-12T23:05:10Z M3a go_m3a m3_f1_v run: VERDICT: fragile_battle_1 in 14.8 s - PASS (acceptance <= 90 s)
+2026-10-12T23:05:11Z M3a go_m3a m3_f1_v log_m3_f1_v.txt sha256 33d6ed1ad078d491507ab888e74c63e6e1d6b57c89f80a1aaad8e314303e1e3e
+2026-10-12T23:05:18Z M3a go_m3a m3_f1_v the run state saved as K1: manifest C:/kyty/m657/m3a/k1.new/k1.tsv files 5603 bytes 1555784988 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170 (previous in k1.prev)
+2026-10-12T23:05:20Z M3a go_m3a m3_f1_v installed binary returned from the pinned FS15 copy
+2026-10-12T23:05:21Z M3a go_m3a m3_f1_v installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T23:05:25Z M3a go_m3a m3_f1_v caches, seeds, saves and GLCache returned (K0)
+2026-10-12T23:05:29Z M3a go_m3a m3_f1_v manifest after: manifest C:/kyty/m657/m3a/runs/m3_f1_v/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T23:05:30Z M3a go_m3a m3_f1_v lock released (rc 0)
+2026-10-12T23:05:32Z M3a go_m3a m3_f1_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T23:05:31Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T23:05:31Z; dispstate ON idle_s 0
+2026-10-12T23:05:44Z M3a go_m3a m3_f1_v host load after the tag (item 632 (v)(2)): hostload: over05 1 max 0.546 total 1.600 procs [('<app>', 54496, 0.546)]
+2026-10-12T23:07:09Z M3a post_m3a m3_f1_v: read.txt a6c67f23f249046b,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 16.83 fps 59.42 frames 19754 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: one-frame glitches: 0
+2026-10-12T23:07:13Z M3a API check before m3_f1_f: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T23:07:18Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_f1_f; plan: dryrun m3_f1_f base m3_f1_f bin fs15 level fragile_battle_1 kind v sd 300 timeout 480 hold 330 rec --rec cache K0 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T23:07:18Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_f1_f
+2026-10-12T23:07:33Z M3a go_m3a m3_f1_f run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T23:07:46Z M3a go_m3a m3_f1_f host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.322 procs []
+2026-10-12T23:07:48Z M3a go_m3a m3_f1_f display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T23:07:47Z
+2026-10-12T23:14:36Z M3a go_m3a m3_f1_f lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T23:14:37Z M3a go_m3a m3_f1_f installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T23:14:40Z M3a go_m3a m3_f1_f manifest before: manifest C:/kyty/m657/m3a/runs/m3_f1_f/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T23:14:40Z M3a go_m3a m3_f1_f live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T23:14:45Z M3a go_m3a m3_f1_f caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T23:14:45Z M3a go_m3a m3_f1_f state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-12T23:14:45Z
+2026-10-12T23:14:46Z M3a go_m3a m3_f1_f installed the fs15 copy for the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T23:14:49Z M3a go_m3a m3_f1_f enter_scene start (level fragile_battle_1, bin fs15, kind v, sd 300, timeout 480, hold 330, --rec, cache K0 save none, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T23:20:53Z M3a go_m3a m3_f1_f enter_scene rc 0; guard watch: 2026-10-12T23:20:52Z watch end, user process seen: no; hold watch: 2026-10-12T23:20:52Z watch end, user VM seen: no
+2026-10-12T23:20:54Z M3a go_m3a m3_f1_f run: VERDICT: fragile_battle_1 in 17.3 s - PASS (acceptance <= 90 s)
+2026-10-12T23:20:57Z M3a go_m3a m3_f1_f log_m3_f1_f.txt sha256 c1d0d69fb2eeb40d59fd32e4ddec350e63c8af82661723ff6f9e3306a13b08f2
+2026-10-12T23:20:58Z M3a go_m3a m3_f1_f installed binary returned from the pinned FS15 copy
+2026-10-12T23:20:59Z M3a go_m3a m3_f1_f installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T23:21:03Z M3a go_m3a m3_f1_f manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_f1_f/manifest_run.tsv files 4872 bytes 1335676544 listsha 04f763790796b609d51f49c314dca609c11d7811ea85dd72992659c91956fa4a
+2026-10-12T23:21:05Z M3a go_m3a m3_f1_f caches, seeds, saves and GLCache returned (K0)
+2026-10-12T23:21:09Z M3a go_m3a m3_f1_f manifest after: manifest C:/kyty/m657/m3a/runs/m3_f1_f/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T23:21:12Z M3a go_m3a m3_f1_f lock released (rc 0)
+2026-10-12T23:21:15Z M3a go_m3a m3_f1_f display after lock released (item 620 (g)(1)): dispstate ON idle_s 2 utc 2026-10-12T23:21:14Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T23:21:14Z; dispstate ON idle_s 0
+2026-10-12T23:21:27Z M3a go_m3a m3_f1_f host load after the tag (item 632 (v)(2)): hostload: over05 1 max 0.648 total 1.316 procs [('<app>', 62632, 0.648)]
+2026-10-12T23:23:00Z M3a post pair f1: pairs/pair_f1.png (left m3_f1_v MS1, right m3_f1_f FS15) sha256 723159a08169e6d1
+2026-10-12T23:23:00Z M3a post_m3a m3_f1_f: read.txt 8579eec01c90cb1f,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 16.80 fps 59.52 frames 19795 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 2 utc 2026, glitch: one-frame glitches: 0
+2026-10-12T23:23:04Z M3a API check before m3_f2_w: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T23:23:10Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_f2_w; plan: dryrun m3_f2_w base m3_f2_w bin ms1 level fragile_battle_2 kind w sd 100 timeout 900 hold 310 rec --emu-arg=--vulkan-validation --emu-arg=true cache K1 save K1 knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_C
+2026-10-12T23:23:10Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_f2_w
+2026-10-12T23:23:25Z M3a go_m3a m3_f2_w run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T23:23:38Z M3a go_m3a m3_f2_w host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.235 procs []
+2026-10-12T23:23:39Z M3a go_m3a m3_f2_w display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T23:23:39Z
+2026-10-12T23:30:19Z M3a go_m3a m3_f2_w lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T23:30:19Z M3a go_m3a m3_f2_w installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T23:30:22Z M3a go_m3a m3_f2_w manifest before: manifest C:/kyty/m657/m3a/runs/m3_f2_w/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T23:30:22Z M3a go_m3a m3_f2_w live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T23:30:29Z M3a go_m3a m3_f2_w caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T23:30:48Z M3a go_m3a m3_f2_w live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_f2_w/manifest_base.tsv files 5603 bytes 1555784988 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170; = k1.tsv: manifest cmp EQUAL files 5603 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170
+2026-10-12T23:30:48Z M3a go_m3a m3_f2_w state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T23:30:48Z
+2026-10-12T23:30:48Z M3a go_m3a m3_f2_w installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T23:30:49Z M3a go_m3a m3_f2_w enter_scene start (level fragile_battle_2, bin ms1, kind w, sd 100, timeout 900, hold 310, --emu-arg=--vulkan-validation --emu-arg=true, cache K1 save K1, knobs VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T23:36:37Z M3a go_m3a m3_f2_w enter_scene rc 0; guard watch: 2026-10-12T23:36:35Z watch end, user process seen: no; hold watch: 2026-10-12T23:36:33Z watch end, user VM seen: no
+2026-10-12T23:36:37Z M3a go_m3a m3_f2_w run: VERDICT: fragile_battle_2 in 21.6 s - PASS (acceptance <= 90 s)
+2026-10-12T23:36:39Z M3a go_m3a m3_f2_w log_m3_f2_w.txt sha256 7bce9bf88450222bf4c41ce9351e27afaf789d17f0ffbfbeb45a54a188c6b825
+2026-10-12T23:36:41Z M3a go_m3a m3_f2_w move of live _ShaderSeeds into k1.new failed
+2026-10-12T23:36:44Z M3a go_m3a m3_f2_w installed binary returned from the pinned FS15 copy
+2026-10-12T23:36:44Z M3a go_m3a m3_f2_w installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T23:36:45Z M3a go_m3a m3_f2_w manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_f2_w/manifest_run.tsv files 831 bytes 708948641 listsha f683e078b5f30ad7a8cb9dd58f82b37a3adf774fe7d4671081c8a62b72953d51
+2026-10-12T23:36:47Z M3a go_m3a m3_f2_w caches, seeds, saves and GLCache returned (K0)
+2026-10-12T23:36:53Z M3a go_m3a m3_f2_w manifest after: manifest C:/kyty/m657/m3a/runs/m3_f2_w/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T23:36:53Z M3a go_m3a m3_f2_w lock released (rc 1)
+2026-10-12T23:36:55Z M3a go_m3a m3_f2_w display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T23:36:54Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T23:36:55Z; dispstate ON idle_s 0
+2026-10-12T23:37:08Z M3a go_m3a m3_f2_w host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.013 procs []
+2026-10-12T23:37:30Z M3a post_m3a m3_f2_w: read.txt 814701deb7d4501d,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 47.41 fps 21.09 frames 6678 limit_ms 200 (W form, item 621) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: 
+2026-10-12T23:37:35Z M3a API check before m3_f2_v: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T23:37:40Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_f2_v; plan: dryrun m3_f2_v base m3_f2_v bin ms1 level fragile_battle_2 kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T23:37:40Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_f2_v
+2026-10-12T23:37:55Z M3a go_m3a m3_f2_v run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T23:38:07Z M3a go_m3a m3_f2_v host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.618 procs []
+2026-10-12T23:38:09Z M3a go_m3a m3_f2_v display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T23:38:09Z
+2026-10-12T23:44:45Z M3a go_m3a m3_f2_v lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-12T23:44:45Z M3a go_m3a m3_f2_v installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T23:44:48Z M3a go_m3a m3_f2_v manifest before: manifest C:/kyty/m657/m3a/runs/m3_f2_v/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T23:44:51Z M3a go_m3a m3_f2_v live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-12T23:44:54Z M3a go_m3a m3_f2_v caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-12T23:45:09Z M3a go_m3a m3_f2_v live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_f2_v/manifest_base.tsv files 5603 bytes 1555784988 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170; = k1.tsv: manifest cmp EQUAL files 5603 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170
+2026-10-12T23:45:10Z M3a go_m3a m3_f2_v state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-12T23:45:10Z
+2026-10-12T23:45:13Z M3a go_m3a m3_f2_v installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-12T23:45:13Z M3a go_m3a m3_f2_v enter_scene start (level fragile_battle_2, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-12T23:51:15Z M3a go_m3a m3_f2_v enter_scene rc 0; guard watch: 2026-10-12T23:51:10Z watch end, user process seen: no; hold watch: 2026-10-12T23:51:10Z watch end, user VM seen: no
+2026-10-12T23:51:17Z M3a go_m3a m3_f2_v run: VERDICT: fragile_battle_2 in 15.2 s - PASS (acceptance <= 90 s)
+2026-10-12T23:51:18Z M3a go_m3a m3_f2_v log_m3_f2_v.txt sha256 38bb0c5528103b620823aa95b31cc78da2382d947c533e93fcda9efa3bcca69e
+2026-10-12T23:51:19Z M3a go_m3a m3_f2_v move of live _ShaderSeeds into k1.new failed
+2026-10-12T23:51:23Z M3a go_m3a m3_f2_v installed binary returned from the pinned FS15 copy
+2026-10-12T23:51:25Z M3a go_m3a m3_f2_v installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-12T23:51:27Z M3a go_m3a m3_f2_v manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_f2_v/manifest_run.tsv files 831 bytes 712074420 listsha cbede1c2168116d7f1ffc35920226c1c36ef94cf672ad0c0c01645068975777f
+2026-10-12T23:51:28Z M3a go_m3a m3_f2_v caches, seeds, saves and GLCache returned (K0)
+2026-10-12T23:51:35Z M3a go_m3a m3_f2_v manifest after: manifest C:/kyty/m657/m3a/runs/m3_f2_v/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-12T23:51:35Z M3a go_m3a m3_f2_v lock released (rc 1)
+2026-10-12T23:51:39Z M3a go_m3a m3_f2_v display after lock released (item 620 (g)(1)): dispstate ON idle_s 3 utc 2026-10-12T23:51:36Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-12T23:51:37Z; dispstate ON idle_s 0
+2026-10-12T23:51:52Z M3a go_m3a m3_f2_v host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.950 procs []
+2026-10-12T23:53:19Z M3a post_m3a m3_f2_v: read.txt 72924129cb097b3f,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 17.24 fps 57.99 frames 19282 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 3 utc 2026, glitch: one-frame glitches: 0
+2026-10-12T23:53:21Z M3a API check before m3_f2_f: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-12T23:53:27Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_f2_f; plan: dryrun m3_f2_f base m3_f2_f bin fs15 level fragile_battle_2 kind v sd 300 timeout 480 hold 330 rec --rec cache K0 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-12T23:53:27Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_f2_f
+2026-10-12T23:53:43Z M3a go_m3a m3_f2_f run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-12T23:53:56Z M3a go_m3a m3_f2_f host load before the tag (item 632 (v)(2)): hostload: over05 1 max 0.631 total 1.398 procs [('<app>', 13652, 0.631)]
+2026-10-12T23:53:57Z M3a go_m3a m3_f2_f display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-12T23:53:57Z
+2026-10-13T00:00:37Z M3a go_m3a m3_f2_f lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-13T00:00:37Z M3a go_m3a m3_f2_f installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:00:40Z M3a go_m3a m3_f2_f manifest before: manifest C:/kyty/m657/m3a/runs/m3_f2_f/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T00:00:42Z M3a go_m3a m3_f2_f live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-13T00:00:46Z M3a go_m3a m3_f2_f caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-13T00:00:47Z M3a go_m3a m3_f2_f state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-13T00:00:46Z
+2026-10-13T00:00:47Z M3a go_m3a m3_f2_f installed the fs15 copy for the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:00:50Z M3a go_m3a m3_f2_f enter_scene start (level fragile_battle_2, bin fs15, kind v, sd 300, timeout 480, hold 330, --rec, cache K0 save none, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-13T00:06:52Z M3a go_m3a m3_f2_f enter_scene rc 0; guard watch: 2026-10-13T00:06:51Z watch end, user process seen: no; hold watch: 2026-10-13T00:06:50Z watch end, user VM seen: no
+2026-10-13T00:06:54Z M3a go_m3a m3_f2_f run: VERDICT: fragile_battle_2 in 19.4 s - PASS (acceptance <= 90 s)
+2026-10-13T00:06:55Z M3a go_m3a m3_f2_f log_m3_f2_f.txt sha256 1f53f1b51ef2bd4ccdec8ff0bd851467ba77deb8fe67309b4c1b1ce88d0dda13
+2026-10-13T00:06:57Z M3a go_m3a m3_f2_f installed binary returned from the pinned FS15 copy
+2026-10-13T00:06:57Z M3a go_m3a m3_f2_f installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:07:01Z M3a go_m3a m3_f2_f manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_f2_f/manifest_run.tsv files 4874 bytes 1338851024 listsha 314f87754e929a8495df568c25e4b595e06df2976eebccf7b9634c0231e55da4
+2026-10-13T00:07:02Z M3a go_m3a m3_f2_f caches, seeds, saves and GLCache returned (K0)
+2026-10-13T00:07:13Z M3a go_m3a m3_f2_f manifest after: manifest C:/kyty/m657/m3a/runs/m3_f2_f/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T00:07:13Z M3a go_m3a m3_f2_f lock released (rc 0)
+2026-10-13T00:07:14Z M3a go_m3a m3_f2_f display after lock released (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-13T00:07:14Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-13T00:07:14Z; dispstate ON idle_s 0
+2026-10-13T00:07:27Z M3a go_m3a m3_f2_f host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.954 procs []
+2026-10-13T00:08:55Z M3a post pair f2: pairs/pair_f2.png (left m3_f2_v MS1, right m3_f2_f FS15) sha256 d764827e32758033
+2026-10-13T00:08:55Z M3a post_m3a m3_f2_f: read.txt 5010808c71f4570e,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 17.00 fps 58.84 frames 19573 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 0 utc 2026 / dispstate ON idle_s 0 utc 2026, glitch: one-frame glitches: 0
+2026-10-13T00:08:58Z M3a API check before m3_sg_t2310: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-13T00:09:03Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_sg_t2310; plan: dryrun m3_sg_t2310 base m3_sg_t2310 bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_M_T231=0
+2026-10-13T00:09:04Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_sg_t2310
+2026-10-13T00:09:20Z M3a go_m3a m3_sg_t2310 run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-13T00:09:34Z M3a go_m3a m3_sg_t2310 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.675 procs []
+2026-10-13T00:09:35Z M3a go_m3a m3_sg_t2310 display before the lock (item 620 (g)(1)): dispstate ON idle_s 8 utc 2026-10-13T00:09:35Z
+2026-10-13T00:15:28Z M3a go_m3a m3_sg_t2310 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-13T00:15:29Z M3a go_m3a m3_sg_t2310 installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:15:31Z M3a go_m3a m3_sg_t2310 manifest before: manifest C:/kyty/m657/m3a/runs/m3_sg_t2310/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T00:15:32Z M3a go_m3a m3_sg_t2310 live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-13T00:15:35Z M3a go_m3a m3_sg_t2310 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-13T00:15:50Z M3a go_m3a m3_sg_t2310 live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_sg_t2310/manifest_base.tsv files 5603 bytes 1555784988 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f9617; = k1.tsv: manifest cmp EQUAL files 5603 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170
+2026-10-13T00:15:50Z M3a go_m3a m3_sg_t2310 state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-13T00:15:50Z
+2026-10-13T00:15:51Z M3a go_m3a m3_sg_t2310 installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-13T00:15:52Z M3a go_m3a m3_sg_t2310 enter_scene start (level underwater_aerial_garden, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save none, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_M_T231=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-13T00:21:51Z M3a go_m3a m3_sg_t2310 enter_scene rc 0; guard watch: 2026-10-13T00:21:50Z watch end, user process seen: no; hold watch: 2026-10-13T00:21:50Z watch end, user VM seen: no
+2026-10-13T00:21:51Z M3a go_m3a m3_sg_t2310 run: VERDICT: underwater_aerial_garden in 16.9 s - PASS (acceptance <= 90 s)
+2026-10-13T00:21:52Z M3a go_m3a m3_sg_t2310 log_m3_sg_t2310.txt sha256 1c9531fc80f605a741ea369cc2699d7669426953fd9a4792478fb2d42a90d1bf
+2026-10-13T00:21:53Z M3a go_m3a m3_sg_t2310 installed binary returned from the pinned FS15 copy
+2026-10-13T00:21:53Z M3a go_m3a m3_sg_t2310 installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:21:56Z M3a go_m3a m3_sg_t2310 manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_sg_t2310/manifest_run.tsv files 5603 bytes 1555796571 listsha ed74c7d29280cb692ff97233bfd12d2fc8793c67be4bd719eefb512f36f44b92
+2026-10-13T00:21:57Z M3a go_m3a m3_sg_t2310 caches, seeds, saves and GLCache returned (K0)
+2026-10-13T00:22:00Z M3a go_m3a m3_sg_t2310 manifest after: manifest C:/kyty/m657/m3a/runs/m3_sg_t2310/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T00:22:01Z M3a go_m3a m3_sg_t2310 lock released (rc 0)
+2026-10-13T00:22:03Z M3a go_m3a m3_sg_t2310 display after lock released (item 620 (g)(1)): dispstate ON idle_s 661 utc 2026-10-13T00:22:02Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-13T00:22:02Z; dispstate ON idle_s 661
+2026-10-13T00:22:15Z M3a go_m3a m3_sg_t2310 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.602 procs []
+2026-10-13T00:23:15Z M3a post banner T231: pairs/banner_t231.png (top m3_sg_v T231=1, bottom m3_sg_t2310 T231=0; 19.5-21.5 s every 0.25 s) sha256 7f5d7d8ffc7859d1
+2026-10-13T00:23:15Z M3a post_m3a m3_sg_t2310: read.txt 4964b48c855551b7,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 33.11 fps 30.20 frames 10119 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 8 utc 2026 / dispstate ON idle_s 661 utc 20, glitch: one-frame glitches: 0
+2026-10-13T00:23:19Z M3a API check before m3_g5_a1: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-13T00:23:26Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_g5_a1; plan: dryrun m3_g5_a1 base m3_g5_a1 bin fs15 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K0 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-13T00:23:26Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_g5_a1
+2026-10-13T00:23:41Z M3a go_m3a m3_g5_a1 run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-13T00:23:53Z M3a go_m3a m3_g5_a1 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.485 procs []
+2026-10-13T00:23:54Z M3a go_m3a m3_g5_a1 display before the lock (item 620 (g)(1)): dispstate ON idle_s 773 utc 2026-10-13T00:23:54Z
+2026-10-13T00:29:42Z M3a go_m3a m3_g5_a1 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-13T00:29:42Z M3a go_m3a m3_g5_a1 installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:29:45Z M3a go_m3a m3_g5_a1 manifest before: manifest C:/kyty/m657/m3a/runs/m3_g5_a1/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T00:29:45Z M3a go_m3a m3_g5_a1 live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-13T00:29:48Z M3a go_m3a m3_g5_a1 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-13T00:29:48Z M3a go_m3a m3_g5_a1 state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-13T00:29:48Z
+2026-10-13T00:29:48Z M3a go_m3a m3_g5_a1 installed the fs15 copy for the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:29:49Z M3a go_m3a m3_g5_a1 enter_scene start (level underwater_aerial_garden, bin fs15, kind v, sd 300, timeout 480, hold 330, --rec, cache K0 save none, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-13T00:35:52Z M3a go_m3a m3_g5_a1 enter_scene rc 0; guard watch: 2026-10-13T00:35:52Z watch end, user process seen: no; hold watch: 2026-10-13T00:35:51Z watch end, user VM seen: no
+2026-10-13T00:35:52Z M3a go_m3a m3_g5_a1 run: VERDICT: underwater_aerial_garden in 21.4 s - PASS (acceptance <= 90 s)
+2026-10-13T00:35:53Z M3a go_m3a m3_g5_a1 log_m3_g5_a1.txt sha256 4d5063da1686435dbeecb7778f20b7c21a7e9d539780a083f78bda3ac2ce69d5
+2026-10-13T00:35:54Z M3a go_m3a m3_g5_a1 installed binary returned from the pinned FS15 copy
+2026-10-13T00:35:54Z M3a go_m3a m3_g5_a1 installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:35:57Z M3a go_m3a m3_g5_a1 manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_g5_a1/manifest_run.tsv files 4868 bytes 1334458005 listsha bd0473eaf84d1662e83ee6761cb573b448150b394706fd7899609ba7b66c6913
+2026-10-13T00:35:58Z M3a go_m3a m3_g5_a1 caches, seeds, saves and GLCache returned (K0)
+2026-10-13T00:36:01Z M3a go_m3a m3_g5_a1 manifest after: manifest C:/kyty/m657/m3a/runs/m3_g5_a1/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T00:36:01Z M3a go_m3a m3_g5_a1 lock released (rc 0)
+2026-10-13T00:36:03Z M3a go_m3a m3_g5_a1 display after lock released (item 620 (g)(1)): dispstate ON idle_s 1501 utc 2026-10-13T00:36:02Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-13T00:36:03Z; dispstate ON idle_s 1502
+2026-10-13T00:36:16Z M3a go_m3a m3_g5_a1 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.525 procs []
+2026-10-13T00:37:05Z M3a post_m3a m3_g5_a1: read.txt 5a0b49e76d1e7834,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 32.62 fps 30.65 frames 10269 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 773 utc 20 / dispstate ON idle_s 1501 utc 2, glitch: one-frame glitches: 0
+2026-10-13T00:37:07Z M3a API check before m3_g5_b1: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-13T00:37:13Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_g5_b1; plan: dryrun m3_g5_b1 base m3_g5_b1 bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-13T00:37:14Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_g5_b1
+2026-10-13T00:37:29Z M3a go_m3a m3_g5_b1 run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-13T00:37:41Z M3a go_m3a m3_g5_b1 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.548 procs []
+2026-10-13T00:37:43Z M3a go_m3a m3_g5_b1 display before the lock (item 620 (g)(1)): dispstate ON idle_s 1601 utc 2026-10-13T00:37:42Z
+2026-10-13T00:43:32Z M3a go_m3a m3_g5_b1 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-13T00:43:33Z M3a go_m3a m3_g5_b1 installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:43:36Z M3a go_m3a m3_g5_b1 manifest before: manifest C:/kyty/m657/m3a/runs/m3_g5_b1/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T00:43:37Z M3a go_m3a m3_g5_b1 live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-13T00:43:42Z M3a go_m3a m3_g5_b1 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-13T00:44:01Z M3a go_m3a m3_g5_b1 live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_g5_b1/manifest_base.tsv files 5603 bytes 1555784988 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170; = k1.tsv: manifest cmp EQUAL files 5603 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170
+2026-10-13T00:44:02Z M3a go_m3a m3_g5_b1 state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-13T00:44:02Z
+2026-10-13T00:44:03Z M3a go_m3a m3_g5_b1 installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-13T00:44:04Z M3a go_m3a m3_g5_b1 enter_scene start (level underwater_aerial_garden, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-13T00:50:01Z M3a go_m3a m3_g5_b1 enter_scene rc 0; guard watch: 2026-10-13T00:50:01Z watch end, user process seen: no; hold watch: 2026-10-13T00:50:01Z watch end, user VM seen: no
+2026-10-13T00:50:01Z M3a go_m3a m3_g5_b1 run: VERDICT: underwater_aerial_garden in 14.9 s - PASS (acceptance <= 90 s)
+2026-10-13T00:50:02Z M3a go_m3a m3_g5_b1 log_m3_g5_b1.txt sha256 296e5a11d134e6eb4a861af65849dadfc46a445f7e853019775c6ae3e62d2b48
+2026-10-13T00:50:04Z M3a go_m3a m3_g5_b1 move of live _ShaderSeeds into k1.new failed
+2026-10-13T00:50:04Z M3a go_m3a m3_g5_b1 installed binary returned from the pinned FS15 copy
+2026-10-13T00:50:05Z M3a go_m3a m3_g5_b1 installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:50:06Z M3a go_m3a m3_g5_b1 manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_g5_b1/manifest_run.tsv files 831 bytes 708640681 listsha c3cf491e481989ab5860e60a1bd7d0636f0242bc6c94f5b351170814ddfec597
+2026-10-13T00:50:07Z M3a go_m3a m3_g5_b1 caches, seeds, saves and GLCache returned (K0)
+2026-10-13T00:50:10Z M3a go_m3a m3_g5_b1 manifest after: manifest C:/kyty/m657/m3a/runs/m3_g5_b1/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T00:50:10Z M3a go_m3a m3_g5_b1 lock released (rc 1)
+2026-10-13T00:50:12Z M3a go_m3a m3_g5_b1 display after lock released (item 620 (g)(1)): dispstate ON idle_s 2350 utc 2026-10-13T00:50:11Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-13T00:50:12Z; dispstate ON idle_s 2351
+2026-10-13T00:50:26Z M3a go_m3a m3_g5_b1 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.954 procs []
+2026-10-13T00:51:26Z M3a post_m3a m3_g5_b1: read.txt 6eb813e3dbac5d6b,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 32.98 fps 30.32 frames 10157 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 1601 utc 2 / dispstate ON idle_s 2350 utc 2, glitch: one-frame glitches: 0
+2026-10-13T00:51:28Z M3a API check before m3_g5_b2: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-13T00:51:34Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_g5_b2; plan: dryrun m3_g5_b2 base m3_g5_b2 bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save K1 knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-13T00:51:35Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_g5_b2
+2026-10-13T00:51:54Z M3a go_m3a m3_g5_b2 run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-13T00:52:06Z M3a go_m3a m3_g5_b2 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.457 procs []
+2026-10-13T00:52:08Z M3a go_m3a m3_g5_b2 display before the lock (item 620 (g)(1)): dispstate ON idle_s 2466 utc 2026-10-13T00:52:07Z
+2026-10-13T00:57:58Z M3a go_m3a m3_g5_b2 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-13T00:57:58Z M3a go_m3a m3_g5_b2 installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T00:58:02Z M3a go_m3a m3_g5_b2 manifest before: manifest C:/kyty/m657/m3a/runs/m3_g5_b2/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T00:58:02Z M3a go_m3a m3_g5_b2 live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-13T00:58:06Z M3a go_m3a m3_g5_b2 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-13T00:58:19Z M3a go_m3a m3_g5_b2 live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_g5_b2/manifest_base.tsv files 5603 bytes 1555784988 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170; = k1.tsv: manifest cmp EQUAL files 5603 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170
+2026-10-13T00:58:19Z M3a go_m3a m3_g5_b2 state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-13T00:58:19Z
+2026-10-13T00:58:20Z M3a go_m3a m3_g5_b2 installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-13T00:58:21Z M3a go_m3a m3_g5_b2 enter_scene start (level underwater_aerial_garden, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save K1, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-13T01:04:17Z M3a go_m3a m3_g5_b2 enter_scene rc 0; guard watch: 2026-10-13T01:04:17Z watch end, user process seen: no; hold watch: 2026-10-13T01:04:17Z watch end, user VM seen: no
+2026-10-13T01:04:18Z M3a go_m3a m3_g5_b2 run: VERDICT: underwater_aerial_garden in 14.4 s - PASS (acceptance <= 90 s)
+2026-10-13T01:04:19Z M3a go_m3a m3_g5_b2 log_m3_g5_b2.txt sha256 5d37b27a79b51112f8153825670066e0804875dccc9d72c34583a4170e7bb482
+2026-10-13T01:04:20Z M3a go_m3a m3_g5_b2 move of live _ShaderSeeds into k1.new failed
+2026-10-13T01:04:20Z M3a go_m3a m3_g5_b2 installed binary returned from the pinned FS15 copy
+2026-10-13T01:04:21Z M3a go_m3a m3_g5_b2 installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T01:04:22Z M3a go_m3a m3_g5_b2 manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_g5_b2/manifest_run.tsv files 831 bytes 708640681 listsha c3cf491e481989ab5860e60a1bd7d0636f0242bc6c94f5b351170814ddfec597
+2026-10-13T01:04:23Z M3a go_m3a m3_g5_b2 caches, seeds, saves and GLCache returned (K0)
+2026-10-13T01:04:31Z M3a go_m3a m3_g5_b2 manifest after: manifest C:/kyty/m657/m3a/runs/m3_g5_b2/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T01:04:32Z M3a go_m3a m3_g5_b2 lock released (rc 1)
+2026-10-13T01:04:33Z M3a go_m3a m3_g5_b2 display after lock released (item 620 (g)(1)): dispstate ON idle_s 3212 utc 2026-10-13T01:04:33Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-13T01:04:33Z; dispstate ON idle_s 3212
+2026-10-13T01:04:46Z M3a go_m3a m3_g5_b2 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.677 procs []
+2026-10-13T01:05:45Z M3a post_m3a m3_g5_b2: read.txt 5e488106449ec2a7,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 33.23 fps 30.09 frames 10081 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 2466 utc 2 / dispstate ON idle_s 3212 utc 2, glitch: one-frame glitches: 0
+2026-10-13T01:05:47Z M3a API check before m3_g5_a2: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-13T01:05:52Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_g5_a2; plan: dryrun m3_g5_a2 base m3_g5_a2 bin fs15 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K0 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0
+2026-10-13T01:05:52Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_g5_a2
+2026-10-13T01:06:07Z M3a go_m3a m3_g5_a2 run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-13T01:06:20Z M3a go_m3a m3_g5_a2 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.750 procs []
+2026-10-13T01:06:21Z M3a go_m3a m3_g5_a2 display before the lock (item 620 (g)(1)): dispstate ON idle_s 3320 utc 2026-10-13T01:06:21Z
+2026-10-13T01:12:12Z M3a go_m3a m3_g5_a2 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-13T01:12:12Z M3a go_m3a m3_g5_a2 installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T01:12:15Z M3a go_m3a m3_g5_a2 manifest before: manifest C:/kyty/m657/m3a/runs/m3_g5_a2/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T01:12:15Z M3a go_m3a m3_g5_a2 live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-13T01:12:18Z M3a go_m3a m3_g5_a2 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-13T01:12:18Z M3a go_m3a m3_g5_a2 state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-13T01:12:18Z
+2026-10-13T01:12:19Z M3a go_m3a m3_g5_a2 installed the fs15 copy for the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T01:12:19Z M3a go_m3a m3_g5_a2 enter_scene start (level underwater_aerial_garden, bin fs15, kind v, sd 300, timeout 480, hold 330, --rec, cache K0 save none, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-13T01:18:21Z M3a go_m3a m3_g5_a2 enter_scene rc 0; guard watch: 2026-10-13T01:18:20Z watch end, user process seen: no; hold watch: 2026-10-13T01:18:20Z watch end, user VM seen: no
+2026-10-13T01:18:21Z M3a go_m3a m3_g5_a2 run: VERDICT: underwater_aerial_garden in 18.9 s - PASS (acceptance <= 90 s)
+2026-10-13T01:18:22Z M3a go_m3a m3_g5_a2 log_m3_g5_a2.txt sha256 1c5a5d16dcfae5d20d8609ca48addc8c00899d68b91e32fd9b4780941124140c
+2026-10-13T01:18:24Z M3a go_m3a m3_g5_a2 installed binary returned from the pinned FS15 copy
+2026-10-13T01:18:25Z M3a go_m3a m3_g5_a2 installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T01:18:28Z M3a go_m3a m3_g5_a2 manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_g5_a2/manifest_run.tsv files 4868 bytes 1334458009 listsha 65b0eaa391f04d998f713667eebf040618bfb2d92cf69ea11f37220db74238fb
+2026-10-13T01:18:30Z M3a go_m3a m3_g5_a2 caches, seeds, saves and GLCache returned (K0)
+2026-10-13T01:18:32Z M3a go_m3a m3_g5_a2 manifest after: manifest C:/kyty/m657/m3a/runs/m3_g5_a2/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T01:18:33Z M3a go_m3a m3_g5_a2 lock released (rc 0)
+2026-10-13T01:18:35Z M3a go_m3a m3_g5_a2 display after lock released (item 620 (g)(1)): dispstate ON idle_s 4053 utc 2026-10-13T01:18:34Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-13T01:18:35Z; dispstate ON idle_s 4053
+2026-10-13T01:18:50Z M3a go_m3a m3_g5_a2 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.452 procs []
+2026-10-13T01:19:44Z M3a post_m3a m3_g5_a2: read.txt 919bd37fe8ba2182,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 33.17 fps 30.15 frames 10091 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 3320 utc 2 / dispstate ON idle_s 4053 utc 2, glitch: one-frame glitches: 0
+2026-10-13T01:19:49Z M3a API check before m3_g6: comments new (not own) 0; queue: QUEUE FREE;
+2026-10-13T01:19:57Z M3a launch_m3a form 634 (item 660): no guard before the lock; queue: QUEUE FREE; tag m3_g6; plan: dryrun m3_g6 base m3_g6 bin ms1 level underwater_aerial_garden kind v sd 300 timeout 480 hold 330 rec --rec cache K1 save none knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_GAME_PATCH=C:/kyty/KytyPS5/patches/PPSA21564_pvar.txt KYTY_POKE=27e46c:90909090909
+2026-10-13T01:19:58Z M3a launch_m3a detached call: bash C:/kyty/m657/m3a/go_m3a.sh m3_g6
+2026-10-13T01:20:13Z M3a go_m3a m3_g6 run check (item 587 (g)): RUN ALIVE d3db65b1 status in_progress
+2026-10-13T01:20:25Z M3a go_m3a m3_g6 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.550 procs []
+2026-10-13T01:20:26Z M3a go_m3a m3_g6 display before the lock (item 620 (g)(1)): dispstate ON idle_s 4165 utc 2026-10-13T01:20:26Z
+2026-10-13T01:26:17Z M3a go_m3a m3_g6 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-13T01:26:17Z M3a go_m3a m3_g6 installed binary inside the lock before the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T01:26:20Z M3a go_m3a m3_g6 manifest before: manifest C:/kyty/m657/m3a/runs/m3_g6/manifest_before.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T01:26:20Z M3a go_m3a m3_g6 live caches before the tag against K0 (seal section 5): KSET EQUAL4 files 4774; GLCache row: only-a 0 only-b 0
+2026-10-13T01:26:23Z M3a go_m3a m3_g6 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (286/184/5/667/130/ MB)
+2026-10-13T01:26:38Z M3a go_m3a m3_g6 live caches set to K1: manifest C:/kyty/m657/m3a/runs/m3_g6/manifest_base.tsv files 5603 bytes 1555784988 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170; = k1.tsv: manifest cmp EQUAL files 5603 listsha 5d5692982938baa9b4142e43c5cde91f10af936105c1a7a43d72b5b4d9f96170
+2026-10-13T01:26:38Z M3a go_m3a m3_g6 state before the start (K1): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 present at 2026-10-13T01:26:38Z
+2026-10-13T01:26:38Z M3a go_m3a m3_g6 installed the ms1 copy for the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-13T01:26:39Z M3a go_m3a m3_g6 enter_scene start (level underwater_aerial_garden, bin ms1, kind v, sd 300, timeout 480, hold 330, --rec, cache K1 save none, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_GAME_PATCH=C:/kyty/KytyPS5/patches/PPSA21564_pvar.txt KYTY_POKE=27e46c:909090909090 KYTY_KEYS=<seal>); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-13T01:32:37Z M3a go_m3a m3_g6 enter_scene rc 0; guard watch: 2026-10-13T01:32:36Z watch end, user process seen: no; hold watch: 2026-10-13T01:32:35Z watch end, user VM seen: no
+2026-10-13T01:32:37Z M3a go_m3a m3_g6 run: VERDICT: underwater_aerial_garden in 15.9 s - PASS (acceptance <= 90 s)
+2026-10-13T01:32:39Z M3a go_m3a m3_g6 log_m3_g6.txt sha256 ab6003b771cc8403c4f4da9ddbfd268415e320b43744bf319d913ad1e2f28405
+2026-10-13T01:32:42Z M3a go_m3a m3_g6 installed binary returned from the pinned FS15 copy
+2026-10-13T01:32:42Z M3a go_m3a m3_g6 installed binary after the tag: bfac84bea0eaec8bf3dae6ab5f67cd480f26921829f64f4a8b467bd50e922d8c
+2026-10-13T01:32:46Z M3a go_m3a m3_g6 manifest of the run state (before the return): manifest C:/kyty/m657/m3a/runs/m3_g6/manifest_run.tsv files 5603 bytes 1555796571 listsha ed74c7d29280cb692ff97233bfd12d2fc8793c67be4bd719eefb512f36f44b92
+2026-10-13T01:32:50Z M3a go_m3a m3_g6 caches, seeds, saves and GLCache returned (K0)
+2026-10-13T01:32:55Z M3a go_m3a m3_g6 manifest after: manifest C:/kyty/m657/m3a/runs/m3_g6/manifest_after.tsv files 4868 bytes 1318828127 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc; cmp: manifest cmp EQUAL files 4868 listsha 016dc55ca35f041ab020da402a2d5f70de5e1e499e743de06249b0e1403100cc
+2026-10-13T01:32:56Z M3a go_m3a m3_g6 lock released (rc 0)
+2026-10-13T01:32:58Z M3a go_m3a m3_g6 display after lock released (item 620 (g)(1)): dispstate ON idle_s 4916 utc 2026-10-13T01:32:57Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-13T01:32:57Z; dispstate ON idle_s 4916
+2026-10-13T01:33:12Z M3a go_m3a m3_g6 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.453 procs []
+2026-10-13T01:34:28Z M3a post_m3a m3_g6: read.txt 24ea5603656f0868,   ADMISSION PASS; STATUS ADMITTED;  MEMBERS ALL YES;  FORM FS15 (rows; a NO - question to the lead) ALL YES;  READING ADMITTED, members ALL YES, form FS15 ALL YES (no verdict; reading - M3b);, tempo: TEMPO PASS form harness mean_dt_ms 24.19 fps 41.35 frames 13845 limit_ms 100 (item 620 (g)(2)) (FrameTrace frames after , display before / after: dispstate ON idle_s 4165 utc 2 / dispstate ON idle_s 4916 utc 2, glitch: one-frame glitches: 0
+2026-10-13T01:34:52Z series of tags done (m3_g6 last); G7 sweep start
+2026-10-13T01:40:56Z G5 g5.out.txt, G6 g6.out.txt, G7 g7_agg/g7_grep/g7_wit, pairs.out.txt written; report_auto.md
+2026-10-13T01:42:08Z report.md written sha256 8b5b5766af7ed4e400348c1017f866fbfa53c18512bd2ed12e77f6b23752f51a

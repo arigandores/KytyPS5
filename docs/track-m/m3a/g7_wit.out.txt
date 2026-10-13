@@ -1,0 +1,7 @@
+G7 wit sg: keys in FS15 27, in MS1 27, LOST 0 []
+G7 wit hb: keys in FS15 27, in MS1 27, LOST 0 []
+G7 wit mg: keys in FS15 27, in MS1 27, LOST 0 []
+G7 wit ac: keys in FS15 27, in MS1 27, LOST 0 []
+G7 wit f1: keys in FS15 27, in MS1 27, LOST 0 []
+G7 wit f2: keys in FS15 27, in MS1 27, LOST 0 []
+G7 witnesses lost 0

@@ -1,0 +1,7 @@
+z1_cd_no_narrow SURVIVED {'pure': True}
+z2_cd_no_count CAUGHT {'pure': False}
+z3_cd_twice CAUGHT {'pure': False}
+z4_vi_or_cd CAUGHT {'pure': False}
+sources restored (sha256 of 5 files): True
+mutants 3 of 4 CAUGHT (batch, no control)
+BATCH FAIL

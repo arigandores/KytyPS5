@@ -1,0 +1,6 @@
+t4_zx_narrow_any CAUGHT {'pure': False}
+t5_all_slots CAUGHT {'pure': False}
+t6_raw_range CAUGHT {'pure': False}
+sources restored (sha256 of 5 files): True
+mutants 3 of 3 CAUGHT (batch, no control)
+BATCH OK

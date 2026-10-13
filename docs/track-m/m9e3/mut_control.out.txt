@@ -1,0 +1,4 @@
+sources restored (sha256 of 5 files): True
+CONTROL build=1 arms={'pure': True, 'cls': True, 'gpu1': True, 'gpu0': True, 'gpuv': True}
+mutants 0 of 0 CAUGHT
+ALL OK

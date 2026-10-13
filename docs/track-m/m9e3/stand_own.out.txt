@@ -1,0 +1,6 @@
+pure rc=0 total=51 match=51 END mode_line=1 stat_names=1 img_names=1 t109_names=1 -> OK
+cls rc=0 mode_line=['T188: mode=2 cls=2 k=4'] -> OK
+gpu1 rc=0 ok16=1 failed_members=[] validation_lines=0 clear_or_copy=0 -> OK
+gpu0 rc=0 ok16=1 failed_members=[] validation_lines=0 clear_or_copy=0 -> OK
+gpuv rc=0 ok16=1 failed_members=[] validation_lines=2 clear_or_copy=0 -> OK
+ALL OK

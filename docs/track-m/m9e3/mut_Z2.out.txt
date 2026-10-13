@@ -1,0 +1,7 @@
+z5_vi_swap CAUGHT {'pure': False}
+z6_cd_no_zxbias SURVIVED {'pure': True}
+z8_reset_cd CAUGHT {'pure': False}
+z9_print_swap CAUGHT {'pure': False}
+sources restored (sha256 of 5 files): True
+mutants 3 of 4 CAUGHT (batch, no control)
+BATCH FAIL

@@ -1,0 +1,6 @@
+t1_vp0_only CAUGHT {'pure': False}
+t2_nonstrict CAUGHT {'pure': False}
+t3_bias_any CAUGHT {'pure': False}
+sources restored (sha256 of 5 files): True
+mutants 3 of 3 CAUGHT (batch, no control)
+BATCH OK

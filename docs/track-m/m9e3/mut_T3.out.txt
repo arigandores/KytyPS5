@@ -1,0 +1,6 @@
+t7_vi_none CAUGHT {'pure': False}
+t8_vi_count1 CAUGHT {'pure': False}
+t9_cd_any CAUGHT {'pure': False}
+sources restored (sha256 of 5 files): True
+mutants 3 of 3 CAUGHT (batch, no control)
+BATCH OK

@@ -1056,6 +1056,9 @@ std::atomic<uint64_t> g_bias_d32 {0};
 std::atomic<uint64_t> g_bias_narrow {0};
 std::atomic<uint64_t> g_ovr_w {0};
 std::atomic<uint64_t> g_ovr_vpc {0};
+std::atomic<uint64_t> g_zx_narrow_vi {0};   // M9d3 (item 789(v)(2))
+std::atomic<uint64_t> g_bias_narrow_vi {0}; // M9d3
+std::atomic<uint64_t> g_narrow_cd {0};      // M9d3
 
 void Bump(std::atomic<uint64_t>& a) {
 	a.fetch_add(1, std::memory_order_relaxed);
@@ -1064,7 +1067,7 @@ void Bump(std::atomic<uint64_t>& a) {
 } // namespace
 
 void NoteDraw(uint32_t depth_format, bool test, bool write, bool z_export, bool bias, const VkViewport* viewports,
-              const VkRect2D* scissors, uint32_t count) {
+              const VkRect2D* scissors, uint32_t count, bool clip_disable) {
 	if (depth_format != VK_FORMAT_D32_SFLOAT && depth_format != VK_FORMAT_D32_SFLOAT_S8_UINT) {
 		return;
 	}
@@ -1087,13 +1090,22 @@ void NoteDraw(uint32_t depth_format, bool test, bool write, bool z_export, bool 
 		Bump(g_zx_d32);
 		if (narrow) {
 			Bump(g_zx_narrow);
+			if (count > 1) {
+				Bump(g_zx_narrow_vi); // M9d3: the narrow slot may be one the VS never writes
+			}
 		}
 	}
 	if (bias) {
 		Bump(g_bias_d32);
 		if (narrow) {
 			Bump(g_bias_narrow);
+			if (count > 1) {
+				Bump(g_bias_narrow_vi); // M9d3
+			}
 		}
+	}
+	if (narrow && (z_export || bias) && count > 1 && clip_disable) {
+		Bump(g_narrow_cd); // M9d3: once per draw (reference)
 	}
 }
 
@@ -1107,18 +1119,22 @@ void NoteRenderOverride(uint32_t value) {
 Totals Read() {
 	const auto load = [](const std::atomic<uint64_t>& a) { return a.load(std::memory_order_relaxed); };
 	return {load(g_d32),       load(g_zx_d32), load(g_zx_narrow), load(g_bias_d32),
-	        load(g_bias_narrow), load(g_ovr_w),  load(g_ovr_vpc)};
+	        load(g_bias_narrow), load(g_ovr_w),  load(g_ovr_vpc), load(g_zx_narrow_vi),
+	        load(g_bias_narrow_vi), load(g_narrow_cd)};
 }
 
 void PrintStat(const char* when) {
 	const auto t = Read();
 	LOGF("T109Stat: when=%s d32=%" PRIu64 " zx_d32=%" PRIu64 " zx_narrow=%" PRIu64 " bias_d32=%" PRIu64
-	     " bias_narrow=%" PRIu64 " ovr_w=%" PRIu64 " ovr_vpc=%" PRIu64 "\n",
-	     when, t.d32, t.zx_d32, t.zx_narrow, t.bias_d32, t.bias_narrow, t.ovr_w, t.ovr_vpc);
+	     " bias_narrow=%" PRIu64 " ovr_w=%" PRIu64 " ovr_vpc=%" PRIu64 " zx_narrow_vi=%" PRIu64
+	     " bias_narrow_vi=%" PRIu64 " narrow_cd=%" PRIu64 "\n",
+	     when, t.d32, t.zx_d32, t.zx_narrow, t.bias_d32, t.bias_narrow, t.ovr_w, t.ovr_vpc, t.zx_narrow_vi,
+	     t.bias_narrow_vi, t.narrow_cd);
 }
 
 void ResetForStand() {
-	for (auto* a: {&g_d32, &g_zx_d32, &g_zx_narrow, &g_bias_d32, &g_bias_narrow, &g_ovr_w, &g_ovr_vpc}) {
+	for (auto* a: {&g_d32, &g_zx_d32, &g_zx_narrow, &g_bias_d32, &g_bias_narrow, &g_ovr_w, &g_ovr_vpc, &g_zx_narrow_vi,
+	               &g_bias_narrow_vi, &g_narrow_cd}) {
 		a->store(0, std::memory_order_relaxed);
 	}
 }

@@ -508,12 +508,14 @@ static void SetGraphicsDynamicParams(const CommandBuffer& buffer, Sink& vk_buffe
 	if (DiagT188::Mode() >= 1) [[unlikely]] {
 		// Track M, M9d (T109, ROADMAP s122 item 785(b)(4)): the draw with its computed viewports - the array
 		// setViewportWithCount took above, after minDepth / maxDepth; M9d2 (item 788(b)(3)): and the computed scissors -
-		// the array setScissorWithCount took above (a slot counts only when it rasterizes).
+		// the array setScissorWithCount took above (a slot counts only when it rasterizes); M9d3 (item 789(v)(1)): and
+		// clip_disable of the same draw (the witness narrow_cd).
 		DiagT109::NoteDraw(depth.image_id ? static_cast<uint32_t>(depth.desc.view_info.format) : 0u,
 		                   depth.depth_test_enable, depth.depth_write_enable,
 		                   ctx.GetShaderRegisters().db_shader_control.shader_z_export_enable, depth_bias_enable,
 		                   reinterpret_cast<const VkViewport*>(viewports.data()),
-		                   reinterpret_cast<const VkRect2D*>(scissors.data()), viewport_count);
+		                   reinterpret_cast<const VkRect2D*>(scissors.data()), viewport_count,
+		                   ctx.GetClipControl().clip_disable);
 	}
 	if (depth_bias_enable) {
 		// Vulkan has one bias for both faces. Prefer a visible front face when both are enabled.

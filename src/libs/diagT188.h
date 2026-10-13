@@ -236,8 +236,11 @@ namespace Libs::DiagT109 {
 // VkViewport and VkRect2D arrays passed to vkCmdSetViewportWithCount / vkCmdSetScissorWithCount (after minDepth /
 // maxDepth and the empty-slot rule). Track M, M9d2 (RC1 of M9e, ROADMAP s122 item 788(b)): a slot counts only when
 // its scissor has area > 0 (it rasterizes); its clamp range is [min(minDepth, maxDepth), max(minDepth, maxDepth)].
+// M9d3 (RC1 of M9e2, item 789(v)): clip_disable - PA_CL_CLIP_CNTL.CLIP_DISABLE of the same draw; zx_narrow_vi /
+// bias_narrow_vi - the draws counted in zx_narrow / bias_narrow with count > 1 (which slot the VS writes is not seen
+// on the CPU); narrow_cd - the draws counted in zx_narrow or bias_narrow with count > 1 and clip_disable (reference).
 void NoteDraw(uint32_t depth_format, bool test, bool write, bool z_export, bool bias, const VkViewport* viewports,
-              const VkRect2D* scissors, uint32_t count);
+              const VkRect2D* scissors, uint32_t count, bool clip_disable);
 // HwCtxSetDepthMetadataRegister, the DB_RENDER_OVERRIDE branch (every path of the register): one write.
 void NoteRenderOverride(uint32_t value);
 
@@ -249,6 +252,9 @@ struct Totals {
 	uint64_t bias_narrow;
 	uint64_t ovr_w;
 	uint64_t ovr_vpc;
+	uint64_t zx_narrow_vi;   // M9d3
+	uint64_t bias_narrow_vi; // M9d3
+	uint64_t narrow_cd;      // M9d3
 };
 [[nodiscard]] Totals Read();
 void                 PrintStat(const char* when);

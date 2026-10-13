@@ -1,0 +1,115 @@
+tag t188_mg2 (plan: bin m9d3 level mini_giants_garden kind v sd 300 timeout 480 hold 330 cache K0 save none knob KYTY_DIAG_M5W2=1 KYTY_DIAG_T188=2)  reader sha256 5f72413d53fc4f436f57b11cb1548fd632cf7953dad4b30304d909892dc64414
+  ADMISSION PASS; STATUS ADMITTED
+    [ok] tag json present
+    [ok] json binary_sha256 = M9d3 test binary feb55b54 (feb55b549e26fc6d) - the only identification (item 789 (d) N4)
+    [ok] installed during the tag = feb55b54 (feb55b549e26fc6d)
+    [ok] installed before = after = MS1 ea35b679 (ea35b679b0bcfe83 / ea35b679b0bcfe83)
+    [ok] json prereg sha256 = seal sha256 (846f8af7dd4a8cda / 846f8af7dd4a8cda)
+    [ok] the plan of go_m9f.sh = the plan of the reader (m9d3 feb55b549e26fc6dfd2a03f08997446106cc8bba6bb7e8c31449e7991a737a2c K0 none v KYTY_DIAG_)
+    [ok] env = the form of the tag (exact)
+    [ok] no KYTY_TEST_* in the env (none)
+    [ok] 0 ExitFatal: lines (log 0; whole stdout 0)
+    [ok] last --vulkan-validation false (false)
+    [ok] last --shader-validation false (false)
+    [ok] no --rd
+    [ok] guest args -lvl mini_giants_garden (-lvl mini_giants_garden; harness mini_giants_garden)
+    [ok] hold option 330 s (330)
+    [ok] log present
+    [ok] stdout present
+    [ok] entry outcome ok (ok)
+    [ok] entry line present (3655676)
+    [ok] window events: minimized 0, Recovering Vulkan swapchain 0 (all {}) - a window event is an interference, repeat (item 767 (i))
+    [ok] translation signature 8dcf3177 and cache dir variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 (['8dcf3177'] / ['variant_fixb26_fixb1b_fixf10_fixf19_mw1_33'])
+    [ok] GamePatch lines 0 (0)
+    [ok] no DiagB32 line (0)
+    [ok] no TestLogStall line (0)
+    [ok] no TestHidLoss line (0)
+    [ok] knob witness: exactly one line M5W2: mode=1 ([1], unparsable 0)
+    [ok] knob witness: exactly one line T188: mode=2 cls=all k=4 ([(2, 'all', 4)], unparsable 0)
+    [ok] caches returned (manifest_cmp: manifest cmp EQUAL files 4868 listsha fd)
+    [ok] summary line LogAsync: full_waits= present once, all fields (1, bad 0) - absent: killed (item 615 (b)(6))
+  MEMBERS ALL YES
+    [YES] hold >= 300 s after the first scene frame (331.9 s)
+    [YES] the process lived through the hold (outcome ok, hold_exit None)
+    [YES] 0 death markers (log and stdout) []; device lost lines 0
+    [YES] 0 frames >= 1 s after the first scene frame (0; first 356; with the first frame 0)
+    [YES] video index records >= 3000 (20269)
+    [YES] 0 one-frame glitches (0)
+    [YES] sheet for the lead made (sheet: C:/kyty/m657/m9f/runs/t188_mg2/sheet_t188_mg2.png frames 20269 step 422 tiles 8x6)
+    [YES] exit by the harness: Event: quit line in the log (5330873)
+    [YES] after Event: quit: 0 --- Fatal Error --- (log 0; whole stdout 0)
+    [YES] the process ended before the harness timeout (close_killed False, close_rc 0)
+    [YES] MWave1: mask=0x33 on every parsed line, >= 1 line (lines ['0x33'], unparsable 0)
+    [YES] MT265: mode=1 on every parsed line (lines []; absent - not called, a row)
+    [YES] MT272: mode=1 on every parsed line (lines [1]; absent - not called, a row)
+    [YES] MT231: mode=1 on every parsed line (lines [1]; absent - not called, a row)
+    [YES] M5W2Stat: >= 1 parsed line, 0 unparsable (8 / 0; M5W2Clr outside a total group 0)
+  M5W2 TOTAL (last line with the largest pushes, item 770 (e)) when=exit of 8 lines (whens ['exit', 'periodic'])
+    pushes=31657 ao_obj_push=751623 ao_obj_nz=174173 ao_obj_nopcm=57 ao_bus_push=94933 ao_bus_nz=62833 clr_dw=138063 clr_dw_div=0 minlod_views=902 minlod_div=0 inv_calls=4209201 inv_part=2875 inv_gpu=4040 inv_off=2874 raw_rd=330472137 raw_rd_gpu=0 minlod_div_x=0 clr_dw_div8=0 ao_obj_unread=0 inv_part_src=2875 ao_obj_vq=538049
+    M5W2Clr fmt=9 (R8Unorm) clr_dw=58949 clr_dw_div=0 clr_dw_div8=0
+    M5W2Clr fmt=16 (R8G8Unorm) clr_dw=19458 clr_dw_div=0 clr_dw_div8=0
+    M5W2Clr fmt=37 clr_dw=19889 clr_dw_div=0 clr_dw_div8=0
+    M5W2Clr fmt=58 clr_dw=1 clr_dw_div=0 clr_dw_div8=0
+    M5W2Clr fmt=70 clr_dw=19883 clr_dw_div=0 clr_dw_div8=0
+    M5W2Clr fmt=98 clr_dw=19883 clr_dw_div=0 clr_dw_div8=0
+  M5W2 NO-KNOB LINES {"T023": 0, "T031": 0, "T309_space": 0, "T309_waddr": 0}
+  M5W2 REFERENCE ROWS (item 769 (v)) {"clr_ok": 198163, "clr_ok_lines": 20244, "img_minlod": 4864, "img_minlod_lines": 20244, "tminlod_applied_lines": 1}
+  INFO {"first_scene_n": 356, "frames_ge1s": 0, "frames_ge1s_with_first": 0, "glitches": 0, "hold_s": 331.9, "max_dt": 145418, "mean_dt_us": 16686.8, "mt": {"231": [1], "265": [], "272": [1]}, "mwave1": ["0x33"], "scene_frames": 19889, "video_index": 20269}
+  T188 STOP MEMBERS ALL HOLD (t188_rules.py sha256 78f135a6e8fa0ab526d3c69ec8284897cee9501002390ecc56b4bc77c8a6fde6)
+    [holds] N: exactly one mode line T188: mode=2 cls=all k=4 ([(2, 'all', 4)], unparsable 0)
+    [holds] E: exactly one T188Stat when=exit (1 of 8 lines), exactly one T109Stat when=exit (1 of 8 lines)
+    [holds] E: T188Img when=exit rows >= 1 (33), key=other at most once (0), every row when=exit (0 not)
+    [holds] E: 0 unparsable lines (T188Stat 0, T188Img 0, T109Stat 0, T188: mode 0)
+    [holds] Z: invariants 0 on every T188Stat line (part_unk/ep_bad/lock_bad/tint_bad/tint_rb0_bad/tint_rb1_bad): all 0
+    [holds] N (I7, cls=all): tint_skip_cls = 0 (0)
+    [holds] I1: part = part_st + part_fill + part_copy + part_unk (2875 = 2875), part_unk = 0 (0)
+    [holds] I2a: part = part_synced + part_dlmem + reopen + ep_new (2875 = 2875)
+    [holds] I2b: ep_new + ep_prop = sum cl_* (15, without cl_none) + open (2875 = 2875)
+    [holds] I2c: ep_pend = pend_done + pend_drop + pend_free + pend_open (0 = 0)
+    [holds] I2d: ep_pend <= cl_smp + ... + cl_vo (S3 only) (0 <= 1311)
+    [holds] I4: part = w_mipal + w_inmip + w_other (2875 = 2875)
+    [holds] I4: part_off <= part (2874 <= 2875); w_bytes <= img_bytes (9275343872 <= 40696258304); img_bytes_unsync <= img_bytes (40696258304 <= 40696258304)
+    [holds] I4: in_pass_unsync <= in_pass <= part (0 <= 0 <= 2875)
+    [holds] I3: every class field summed over the T188Img rows and key=other = the global field (27 fields): all equal
+    [holds] I6: tint_ep <= (cl_smp + ... + cl_vo) + pend_done (0 <= 1311); tint_bad = 0 (0)
+    [holds] I6 (=2): per class tint_bytes <= lost_bytes + lost_pend_bytes (rows over: none)
+    [holds] I6: tint_rb_req = rb0_ok + rb0_bad + rb0_none + rb0_nofmt (0 = 0)
+    [holds] I6: tint_rb0_ok = rb1_ok + rb1_over + rb1_bad + rb1_none (0 = 0); rb0_bad = rb1_bad = 0 (0, 0)
+    [holds] I6: tint_rb_req <= K x classes with tint_ep >= 1 (0 <= 4 x 0; key=other counts its tint_ep as an upper bound)
+    [holds] I8: ep_bad = 0 (0), lock_bad = 0 (0)
+    [holds] I5: part = inv_part_src (2875 = 2875); part_off = inv_off when inv_part = inv_part_src (applies: 2874 = 2874)
+    [holds] I9: zx_narrow <= zx_d32 <= d32 (0 <= 20102 <= 30007054); bias_narrow <= bias_d32 <= d32 (0 <= 0); ovr_vpc <= ovr_w (0 <= 240639)
+  T188 LINES {"img": 33, "stat": 8, "stat_whens": ["periodic", "periodic", "periodic", "periodic", "periodic", "periodic", "periodic", "exit"], "t109": 8}; mode [(2, 'all', 4)]
+  T188Stat exit: part=2875 part_st=2875 part_fill=0 part_copy=0 part_unk=0 part_off=2874 part_synced=0 part_dlmem=0 reopen=0 ep_new=2875 ep_prop=0 prop_merge=0 w_mipal=0 w_inmip=2665 w_other=210 w_bytes=9275343872 img_bytes=40696258304 img_bytes_unsync=40696258304 img_full_unsync=40696258304 in_pass=0 in_pass_unsync=0 cl_smp=0 cl_rt=440 cl_rtclr=0 cl_dt=437 cl_sto=434 cl_clrop=0 cl_oth=0 cl_vo=0 cl_cover=0 cl_cmp=0 cl_msaa=0 cl_free=1564 cl_commit=0 cl_copydst=0 cl_skip=0 cl_none=3344959 ep_pend=0 pend_done=0 pend_drop=0 pend_free=0 pend_open=0 lost_bytes=13469218816 lost_pend_bytes=0 w_ovf=0 sync_full=0 sync_part=0 dl_mem=0 ep_bad=0 lock_bad=0 tint_ep=0 tint_mips=0 tint_bytes=0 tint_part_mips=871 tint_skip_fmt=437 tint_skip_vol=0 tint_skip_cls=0 tint_skip_cpu=0 tint_skip_ovf=0 tint_bad=0 tint_rb_req=0 tint_rb0_ok=0 tint_rb0_bad=0 tint_rb0_none=0 tint_rb0_nofmt=0 tint_rb1_ok=0 tint_rb1_over=0 tint_rb1_bad=0 tint_rb1_none=0
+    open (read only at ep_bad = 0, item 788 (g) N2): 0
+  CLASS CHOICE (item 785 (v)(2)): scene lost_bytes + lost_pend_bytes 13469218816; chosen ['2d563fe24091c227', 'f6979ae3eff873a6']; share 0.6028 < 0.8 with 2 class(es) (max 2); rest - not determined (item 785 (v)(2))
+  T188Img rows (key lost tint_bytes tint_ep coverage rb0_ok readback_alive fmt w x h levels layers usage): 33 rows
+    2d563fe24091c227 5297733632 0 0 0.0000 0 no 97 2432x1368 1 1 5
+    f6979ae3eff873a6 2821718016 0 0 0.0000 0 no 97 1920x1080 1 1 5
+    8d5a649beca008a7 2439774208 0 0 0.0000 0 no 126 2432x1368 1 1 9
+    2bf933601e3255ae 1483997184 0 0 0.0000 0 no 126 1920x1080 1 1 9
+    06ec1f8a771935d3 840996864 0 0 0.0000 0 no 91 1216x684 1 1 2
+    e7065abc0eddd696 525164544 0 0 0.0000 0 no 91 960x540 1 1 2
+    de582a1a2d7ca9e6 46268416 0 0 0.0000 0 no 97 2432x1368 1 1 4
+    4595b0ac030d8be7 13565952 0 0 0.0000 0 no 97 1920x1080 1 1 4
+    8f5a14521a6791a5 0 0 0 none 0 no 97 2432x1368 1 1 7
+    644877afc48882f9 0 0 0 none 0 no 122 1920x1080 1 1 5
+    bf4ed7f70d69a2b6 0 0 0 none 0 no 97 960x540 6 1 3
+    1e388396179da338 0 0 0 none 0 no 100 608x342 1 1 3
+    67e43afb90464571 0 0 0 none 0 no 97 1216x684 1 1 5
+    bd15f73e559b7a33 0 0 0 none 0 no 126 1216x684 1 1 11
+    e109087a26a3a59a 0 0 0 none 0 no 97 3840x2160 1 1 5
+    65926e3e6cff5d92 0 0 0 none 0 no 122 480x270 1 1 5
+    bdb3a80524fa96d7 0 0 0 none 0 no 122 960x540 1 1 5
+    2d48fc3dafda4ab7 0 0 0 none 0 no 122 240x135 1 1 5
+    364e6bb2559a6871 0 0 0 none 0 no 97 960x540 1 1 3
+    96bfd4b28c28bd49 0 0 0 none 0 no 97 3328x1872 1 1 5
+  T109 rows (item 785 (g), 789 (g), 791 (v)): lines 8 ['periodic', 'periodic', 'periodic', 'periodic', 'periodic', 'exit']
+    exit d32=30007054 zx_d32=20102 zx_narrow=0 bias_d32=0 bias_narrow=0 ovr_w=240639 ovr_vpc=0 zx_narrow_vi=0 bias_narrow_vi=0 narrow_cd=0
+    d32 >= 1 True; zx_d32 >= 1 True; ovr_vpc >= 1 False; zx_narrow >= 1 False; bias_d32 >= 1 False; I9 True; zx_narrow = zx_narrow_vi >= 1 (789 (g)(3) not determined for zx) False; reference _vi <= / cd <= {"bias_vi_le": true, "cd_le": true, "zx_vi_le": true}
+    diff zx_narrow - zx_narrow_vi per line (last 6) [0, 0, 0, 0, 0, 0]; zx part counted by item 791 (v) False
+    diff bias_narrow - bias_narrow_vi per line (last 6) [0, 0, 0, 0, 0, 0]; by the form of 791 (v) False
+  DETECTOR threshold 246 (M_b 123); window 19914 records from present 356; max N_mag 109; marked > threshold 0 (>= 3: NO)
+    top12 (record/offset/N_mag/M6c record) 542/187/77/456 544/189/27/458 545/190/48/459 546/191/45/460 565/210/102/479 566/211/109/480 568/213/56/482 569/214/66/483 3578/3223/26/3492 12673/12318/25/12587 13028/12673/25/12942 20048/19693/25/19962; sheets ['sheet_top.png', 'pairs_top_1.png', 'pairs_top_2.png', 'pairs_even_1.png', 'pairs_even_2.png']
+  T188_STOP NO
+  READING ADMITTED, members ALL YES, T188 stop members ALL HOLD (no verdict on T188 / T109; reading - M9g)

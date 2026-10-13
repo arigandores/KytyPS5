@@ -1,0 +1,3 @@
+NMAG t188_sg2: threshold 338 (M_b 169); window 9117 records from present 339 (w0 338); max N_mag 289; marked > threshold 0 (>= 3: NO)
+  top12 (record off N_mag M6c record): 1086/748/80/1102 1087/749/122/1103 1088/750/169/1104 1089/751/149/1105 1090/752/104/1106 1091/753/65/1107 1108/770/37/1124 1109/771/289/1125 1110/772/144/1126 1111/773/114/1127 1112/774/126/1128 1113/775/82/1129
+  sheets: sheet_top.png pairs_top_1.png pairs_top_2.png pairs_even_1.png pairs_even_2.png; script sha256 983763920e5fa0469ab873fd6556cfcec6fe6d1e83a72149f2635ea877cc529c

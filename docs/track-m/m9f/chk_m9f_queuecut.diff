@@ -1,0 +1,8 @@
+29c29
+< QS=$(python $G/queue_m9f.py 2>&1 | tr '\n' ';' | cut -c1-200)
+---
+> QF=$(python $G/queue_m9f.py 2>&1 | tr '\n' ';'); QS=$(echo "$QF" | cut -c1-200)
+34c34
+< echo "$QS" | grep -q 'QUEUE FREE' || exit 9
+---
+> echo "$QF" | grep -q 'QUEUE FREE' || exit 9

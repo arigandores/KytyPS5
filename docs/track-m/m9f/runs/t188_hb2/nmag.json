@@ -1,0 +1,193 @@
+{
+ "decoded": 20117,
+ "even": [
+  {
+   "m6c_record": 267,
+   "nmag": 0,
+   "offset": 0,
+   "record": 307
+  },
+  {
+   "m6c_record": 2068,
+   "nmag": 0,
+   "offset": 1801,
+   "record": 2108
+  },
+  {
+   "m6c_record": 3869,
+   "nmag": 0,
+   "offset": 3602,
+   "record": 3909
+  },
+  {
+   "m6c_record": 5669,
+   "nmag": 0,
+   "offset": 5402,
+   "record": 5709
+  },
+  {
+   "m6c_record": 7470,
+   "nmag": 0,
+   "offset": 7203,
+   "record": 7510
+  },
+  {
+   "m6c_record": 9271,
+   "nmag": 0,
+   "offset": 9004,
+   "record": 9311
+  },
+  {
+   "m6c_record": 11072,
+   "nmag": 0,
+   "offset": 10805,
+   "record": 11112
+  },
+  {
+   "m6c_record": 12873,
+   "nmag": 0,
+   "offset": 12606,
+   "record": 12913
+  },
+  {
+   "m6c_record": 14674,
+   "nmag": 0,
+   "offset": 14407,
+   "record": 14714
+  },
+  {
+   "m6c_record": 16474,
+   "nmag": 0,
+   "offset": 16207,
+   "record": 16514
+  },
+  {
+   "m6c_record": 18275,
+   "nmag": 0,
+   "offset": 18008,
+   "record": 18315
+  },
+  {
+   "m6c_record": 20076,
+   "nmag": 0,
+   "offset": 19809,
+   "record": 20116
+  }
+ ],
+ "first_scene_n": 308,
+ "idx_records": 20117,
+ "idx_sha256": "2ac135c0607f44e48a7d3e1e532d2f0a3e6a63ecfe520e80f4abf24bc441a171",
+ "m6c": {
+  "first_scene_n": 268,
+  "video_sha256": "a26096fb6f69bf60959fb696e358b46888a3847262309d42404927909cd9b6e2",
+  "w0": 267,
+  "window_records": 19837
+ },
+ "m_b": 324,
+ "marked": 0,
+ "marked_first": [],
+ "marked_ge3": false,
+ "max_nmag_window": 412,
+ "read_json_sha256": "3ba8ad88024656b289be528e6255df8be87438d9a3d661e0f5125948210bde92",
+ "scene": "hb",
+ "script_sha256": "983763920e5fa0469ab873fd6556cfcec6fe6d1e83a72149f2635ea877cc529c",
+ "sheets": [
+  "sheet_top.png",
+  "pairs_top_1.png",
+  "pairs_top_2.png",
+  "pairs_even_1.png",
+  "pairs_even_2.png"
+ ],
+ "tag": "t188_hb2",
+ "threshold": 648,
+ "top": [
+  {
+   "m6c_record": 557,
+   "nmag": 208,
+   "offset": 290,
+   "present": 598,
+   "record": 597
+  },
+  {
+   "m6c_record": 558,
+   "nmag": 412,
+   "offset": 291,
+   "present": 599,
+   "record": 598
+  },
+  {
+   "m6c_record": 559,
+   "nmag": 157,
+   "offset": 292,
+   "present": 600,
+   "record": 599
+  },
+  {
+   "m6c_record": 560,
+   "nmag": 288,
+   "offset": 293,
+   "present": 601,
+   "record": 600
+  },
+  {
+   "m6c_record": 561,
+   "nmag": 197,
+   "offset": 294,
+   "present": 602,
+   "record": 601
+  },
+  {
+   "m6c_record": 580,
+   "nmag": 77,
+   "offset": 313,
+   "present": 621,
+   "record": 620
+  },
+  {
+   "m6c_record": 581,
+   "nmag": 225,
+   "offset": 314,
+   "present": 622,
+   "record": 621
+  },
+  {
+   "m6c_record": 582,
+   "nmag": 83,
+   "offset": 315,
+   "present": 623,
+   "record": 622
+  },
+  {
+   "m6c_record": 583,
+   "nmag": 148,
+   "offset": 316,
+   "present": 624,
+   "record": 623
+  },
+  {
+   "m6c_record": 584,
+   "nmag": 65,
+   "offset": 317,
+   "present": 625,
+   "record": 624
+  },
+  {
+   "m6c_record": 595,
+   "nmag": 17,
+   "offset": 328,
+   "present": 636,
+   "record": 635
+  },
+  {
+   "m6c_record": 750,
+   "nmag": 23,
+   "offset": 483,
+   "present": 791,
+   "record": 790
+  }
+ ],
+ "variant": "pairs_even_* - executor variant (12 offsets at even steps over the window)",
+ "video_sha256": "9c0b7da08be25da6ce2904873e125ac2c7148af973176b9ed485f01fd9cb01b3",
+ "w0": 307,
+ "window_records": 19810
+}

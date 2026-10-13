@@ -1,0 +1,12 @@
+reader m9f_read.py sha256 5f72413d53fc4f436f57b11cb1548fd632cf7953dad4b30304d909892dc64414
+| tag | status | members | T188 stop | part | part_synced | ep_new | ep_prop | lost_bytes | lost_pend_bytes | tint_ep | tint_mips | tint_bytes | tint_part_mips | tint_rb_req | tint_rb0_ok | tint_rb1_ok | tint_rb1_over | tint_rb1_none | w_ovf | pend_drop | open | marked (>= 3) | max N_mag | d32 | zx_d32 | zx_narrow | zx_narrow_vi | bias_d32 | bias_narrow | ovr_vpc | zx part 791 | chosen classes (share) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| t188_hb2 | ADMITTED | ALL YES | no | 20289 | 0 | 20289 | 0 | 476769189888 | 0 | 0 | 0 | 0 | 19603 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 (NO) | 412 | 19071769 | 0 | 0 | 0 | 0 | 0 | 0 | False | ['39ddf0f637380bc2', '3238ca779cbe8b5d'] (0.9023) |
+| t188_mg2 | ADMITTED | ALL YES | no | 2875 | 0 | 2875 | 0 | 13469218816 | 0 | 0 | 0 | 0 | 871 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 (NO) | 109 | 30007054 | 20102 | 0 | 0 | 0 | 0 | 0 | False | ['2d563fe24091c227', 'f6979ae3eff873a6'] (0.6028) |
+| t188_sg2 | ADMITTED | ALL YES | no | 45253 | 0 | 45253 | 0 | 202556899328 | 0 | 0 | 0 | 0 | 26818 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 (NO) | 289 | 31126095 | 27276 | 0 | 0 | 0 | 0 | 0 | False | ['5361bd31ce1330a1', '9d6e5919163d9e89'] (0.8376) |
+
+series 2 candidates by item 785 (v)(5) (rows; the tags are named by M9g):
+  t188_hb2: detector < 3 (0) - =3 classes ['39ddf0f637380bc2', '3238ca779cbe8b5d'] (share 0.9023 >= 0.8 with 2 class(es) (max 2); rest - not determined (item 785 (v)(2))); =2(c) by item 785 (b)(5) only when the lead sees a difference in the pair =2 / M6c
+  t188_mg2: detector < 3 (0) - =3 classes ['2d563fe24091c227', 'f6979ae3eff873a6'] (share 0.6028 < 0.8 with 2 class(es) (max 2); rest - not determined (item 785 (v)(2))); =2(c) by item 785 (b)(5) only when the lead sees a difference in the pair =2 / M6c
+  t188_sg2: detector < 3 (0) - =3 classes ['5361bd31ce1330a1', '9d6e5919163d9e89'] (share 0.8376 >= 0.8 with 2 class(es) (max 2); rest - not determined (item 785 (v)(2))); =2(c) by item 785 (b)(5) only when the lead sees a difference in the pair =2 / M6c
+  =3 tags in total by the choice: 6 (limit 6, item 785 (v)(5))

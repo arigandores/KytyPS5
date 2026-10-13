@@ -1,0 +1,23 @@
+ALL OK
+2026-10-13T16:17:40Z M9f go_m9f t188_sg2 run check (item 587 (g)): RUN ALIVE 73b9b29a status in_progress
+2026-10-13T16:17:52Z M9f go_m9f t188_sg2 host load before the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 0.612 procs []
+2026-10-13T16:17:54Z M9f go_m9f t188_sg2 display before the lock (item 620 (g)(1)): dispstate ON idle_s 0 utc 2026-10-13T16:17:54Z
+2026-10-13T16:26:02Z M9f go_m9f t188_sg2 lock taken; guard: GUARD CLEAN; hold: HOLD CLEAR; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-13T16:26:02Z M9f go_m9f t188_sg2 installed binary inside the lock before the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-13T16:26:05Z M9f go_m9f t188_sg2 manifest before: manifest C:/kyty/m657/m9f/runs/t188_sg2/manifest_before.tsv files 4868 bytes 1321608221 listsha fd4fcbec54a00cb61337e7cbf1f1a7ad159cf2886178152e00f04692ad779ba1
+2026-10-13T16:26:10Z M9f go_m9f t188_sg2 caches, seeds, saves and GLCache copied: _ShaderCache _ShaderSeeds _PipelineCache _SaveData GLCache (288/184/5/667/130/ MB)
+2026-10-13T16:26:10Z M9f go_m9f t188_sg2 state before the start (K0): pipelines.bin present, replay present, variant_fixb26_fixb1b_fixf10_fixf19 present, variant_fixb26_fixb1b_fixf10_fixf19_mw1_33 absent at 2026-10-13T16:26:10Z
+2026-10-13T16:26:11Z M9f go_m9f t188_sg2 installed the M9d3 test binary for the tag: feb55b549e26fc6dfd2a03f08997446106cc8bba6bb7e8c31449e7991a737a2c
+2026-10-13T16:26:11Z M9f go_m9f t188_sg2 enter_scene start (level underwater_aerial_garden, bin m9d3, kind v, sd 300, timeout 480, hold 330, --rec, cache K0, knobs KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 KYTY_DIAG_M5W2=1 KYTY_DIAG_T188=2); shell KYTY_*/VK_LAYER_* after unset: 0
+2026-10-13T16:33:02Z M9f go_m9f t188_sg2 enter_scene rc 0; guard watch: 2026-10-13T16:33:00Z watch end, user process seen: no; hold watch: 2026-10-13T16:33:00Z watch end, user VM seen: no
+2026-10-13T16:33:02Z M9f go_m9f t188_sg2 run: VERDICT: underwater_aerial_garden in 65.8 s - PASS (acceptance <= 90 s)
+2026-10-13T16:33:03Z M9f go_m9f t188_sg2 log_t188_sg2.txt sha256 c443947aa4adec3c91c836b9b6cae40c8de136f458ff398cfa869c544e88deb2
+2026-10-13T16:33:05Z M9f go_m9f t188_sg2 installed binary returned from the pinned MS1 copy
+2026-10-13T16:33:05Z M9f go_m9f t188_sg2 installed binary after the tag: ea35b679b0bcfe83767093204f348b189384cab1a7b273f89b164b64cba4d4df
+2026-10-13T16:33:11Z M9f go_m9f t188_sg2 manifest of the run state (before the return): manifest C:/kyty/m657/m9f/runs/t188_sg2/manifest_run.tsv files 5597 bytes 1551010711 listsha 27939b9369005932f530e33d46d2b5671e4729197d299f046f950e9b5b760045
+2026-10-13T16:33:13Z M9f go_m9f t188_sg2 caches, seeds, saves and GLCache returned
+2026-10-13T16:33:16Z M9f go_m9f t188_sg2 manifest after: manifest C:/kyty/m657/m9f/runs/t188_sg2/manifest_after.tsv files 4868 bytes 1321608221 listsha fd4fcbec54a00cb61337e7cbf1f1a7ad159cf2886178152e00f04692ad779ba1; cmp: manifest cmp EQUAL files 4868 listsha fd4fcbec54a00cb61337e7cbf1f1a7ad159cf2886178152e00f04692ad779ba1
+2026-10-13T16:33:17Z M9f go_m9f t188_sg2 lock released (rc 0)
+2026-10-13T16:33:22Z M9f go_m9f t188_sg2 display after lock released (item 620 (g)(1)): dispstate ON idle_s 8 utc 2026-10-13T16:33:19Z; hold: 0 display events, 0 OFF; hold reset (stop file) utc 2026-10-13T16:33:19Z; dispstate ON idle_s 0
+2026-10-13T16:33:34Z M9f go_m9f t188_sg2 host load after the tag (item 632 (v)(2)): hostload: over05 0 max 0.000 total 1.742 procs []
+rc=0

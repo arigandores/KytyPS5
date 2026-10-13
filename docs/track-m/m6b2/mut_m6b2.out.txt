@@ -1,0 +1,11 @@
+NAMED CAUGHT x_eq_div (3 failed members; first: pure: match 102 of 103 (want 103 of 103))
+NAMED CAUGHT c_minlod_div_x (3 failed members; first: pure: match 102 of 103 (want 103 of 103))
+NAMED CAUGHT c_clr_dw_div8 (4 failed members; first: pure: match 101 of 103 (want 103 of 103))
+NAMED CAUGHT r8_never (4 failed members; first: pure: match 102 of 103 (want 103 of 103))
+NAMED CAUGHT rg8_always (4 failed members; first: pure: match 102 of 103 (want 103 of 103))
+PROBE CAUGHT lvl_base (3 failed members; first: pure: match 102 of 103 (want 103 of 103))
+PROBE CAUGHT gt_ge (3 failed members; first: pure: match 102 of 103 (want 103 of 103))
+PROBE SURVIVED r8_low16 (0 failed members; first: -)
+PROBE CAUGHT grain_half (4 failed members; first: pure: match 101 of 103 (want 103 of 103))
+CONTROL restored tree: build=1 driver=ALL OK
+ALL OK

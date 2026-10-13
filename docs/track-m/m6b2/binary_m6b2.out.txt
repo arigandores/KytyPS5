@@ -1,0 +1,20 @@
+C:/kyty/m657/bin/kyty_emulator_23f3c4e7.exe 23f3c4e73f69b2246a0250c518dc1a0f799221342ddbfddee0ba6ca7160c39a3
+    minlod_div_x=% 1
+    clr_dw_div8=% 2
+    ao_obj_unread=% 1
+    inv_part_src=% 1
+   M5W2Stat: when=%s 1
+   M5W2Clr: when=%s 1
+   M5W2: mode=%d 1
+   g97198ce90 1
+   8dcf31779bbcb7c6e605653a138dae162f645a46 1
+C:/kyty/m657/bin/kyty_emulator_146c9358.exe 146c93585b664fc98c50fc8a79fdfd99f09430940cb10ecc041720f2cd821202
+    minlod_div_x=% 0
+    clr_dw_div8=% 0
+    ao_obj_unread=% 0
+    inv_part_src=% 0
+   M5W2Stat: when=%s 1
+   M5W2Clr: when=%s 1
+   M5W2: mode=%d 1
+   g97198ce90 0
+   8dcf31779bbcb7c6e605653a138dae162f645a46 1

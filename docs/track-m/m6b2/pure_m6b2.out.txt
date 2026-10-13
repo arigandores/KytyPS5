@@ -1,0 +1,6 @@
+T021 M5a grid: minlod_div field 96, minlod_div_x field 80, divergence 80, x_without_divergence 0, divergence_outside_x 0
+T021 extended grid (B 0..7, count 1..8, M 1..4095): cells 262080
+  x_without_divergence count=1: 21497, first [(1, 1, 257), (1, 1, 258), (1, 1, 259)]
+clr8 r8_div=4294967040 rg8_div=4294901760 model_mismatch=0 other_formats_true=0
+vk eR8Unorm=9 eR8G8Unorm=16
+ALL OK

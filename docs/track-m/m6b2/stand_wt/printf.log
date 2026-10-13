@@ -1,0 +1,6 @@
+LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100
+GuestPrintf: negative precision prec=-1
+MStandPrintf A []
+MStandPrintf B []
+MStandPrintf C [ab]
+LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=5 bytes=175 max_queued_bytes=175 sync_lines=0 drain_timeouts=0

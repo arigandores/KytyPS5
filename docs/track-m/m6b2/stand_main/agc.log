@@ -1,0 +1,49 @@
+LogAsync: mode=1 limit_bytes=268435456 drain_ms=5000 stall_ms=100 flush_ms=100
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=up0 up=0x0000000000000000 down=0x00007ff710a90ed0 reserved_dw=0 num_dw=2 callback=1 n=1
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=down0 up=0x00007ff710a8cf10 down=0x0000000000000000 reserved_dw=0 num_dw=2 callback=1 n=2
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=both0 up=0x0000000000000000 down=0x0000000000000000 reserved_dw=0 num_dw=2 callback=1 n=3
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=down_lt_up up=0x00007ff710a8d060 down=0x00007ff710a8cf98 reserved_dw=0 num_dw=2 callback=1 n=4
+	 op    = 0x00000000
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=down0 up=0x00007ff710a8cf10 down=0x0000000000000000 reserved_dw=0 num_dw=2 callback=1 n=5
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=both0 up=0x0000000000000000 down=0x0000000000000000 reserved_dw=0 num_dw=2 callback=1 n=6
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=down_lt_up up=0x00007ff710a8d060 down=0x00007ff710a8cf98 reserved_dw=0 num_dw=2 callback=1 n=7
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=up0 up=0x0000000000000000 down=0x00007ff710a90ed0 reserved_dw=0 num_dw=2 callback=1 n=8
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=down0 up=0x00007ff710a8cf10 down=0x0000000000000000 reserved_dw=0 num_dw=2 callback=1 n=9
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=both0 up=0x0000000000000000 down=0x0000000000000000 reserved_dw=0 num_dw=2 callback=1 n=10
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=down_lt_up up=0x00007ff710a8d060 down=0x00007ff710a8cf98 reserved_dw=0 num_dw=2 callback=1 n=11
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=up0 up=0x0000000000000000 down=0x00007ff710a90ed0 reserved_dw=0 num_dw=2 callback=1 n=12
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=down0 up=0x00007ff710a8cf10 down=0x0000000000000000 reserved_dw=0 num_dw=2 callback=1 n=13
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=both0 up=0x0000000000000000 down=0x0000000000000000 reserved_dw=0 num_dw=2 callback=1 n=14
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=down_lt_up up=0x00007ff710a8d060 down=0x00007ff710a8cf98 reserved_dw=0 num_dw=2 callback=1 n=15
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=up0 up=0x0000000000000000 down=0x00007ff710a90ed0 reserved_dw=0 num_dw=2 callback=1 n=16
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=down0 up=0x00007ff710a8cf10 down=0x0000000000000000 reserved_dw=0 num_dw=2 callback=1 n=17
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=both0 up=0x0000000000000000 down=0x0000000000000000 reserved_dw=0 num_dw=2 callback=1 n=18
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=down_lt_up up=0x00007ff710a8d060 down=0x00007ff710a8cf98 reserved_dw=0 num_dw=2 callback=1 n=19
+	 op    = 0x00000000
+AgcReserveDW: cursor state class=up0 up=0x0000000000000000 down=0x00007ff710a90ed0 reserved_dw=0 num_dw=2 callback=1 n=20
+	 op    = 0x00000000
+	 op    = 0x00000000
+	 op    = 0x00000000
+	 op    = 0x00000000
+	 op    = 0x00000000
+	 op    = 0x00000000
+LogAsync: full_waits=0 full_wait_us=0 stalls=0 stall_cut=0 lines=48 bytes=3132 max_queued_bytes=3132 sync_lines=0 drain_timeouts=0

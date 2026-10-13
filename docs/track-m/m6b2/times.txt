@@ -1,0 +1,9 @@
+2026-10-13T04:05:00Z start reading ROADMAP p.770-771 (cdb65ed2) and report 98a9143d
+2026-10-13T04:07:59Z main_vs_wt compared 40b730f4
+2026-10-13T04:08:43Z API: in_progress HPP-855, HPP-852 only (no runs series); stand runs start
+2026-10-13T04:08:45Z stand wt ALL OK 6c0d7c54; main ALL OK 6c0d7c54
+2026-10-13T04:10:41Z pure_m6b2 (compiled verbatim functions of 97198ce9) ALL OK 943d5034
+2026-10-13T04:11:26Z API: in_progress HPP-855, HPP-852 only; mutants mut_m6b2.py start (5 named + 4 probe + control)
+2026-10-13T04:13:15Z mutants end: ALL OK 4fe1ca63
+2026-10-13T04:13:41Z binary strings 23f3c4e7 d4e6aca1
+2026-10-13T04:14:54Z review.md written a84a9359

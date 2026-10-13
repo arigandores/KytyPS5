@@ -20,6 +20,7 @@
 #include <cstdint>
 
 struct VkViewport;
+struct VkRect2D;
 
 namespace Libs::DiagT188 {
 
@@ -231,10 +232,12 @@ namespace Libs::DiagT109 {
 
 // SetGraphicsDynamicParams, one call per draw (mode >= 1): depth_format - the depth target's view format (VkFormat;
 // VK_FORMAT_UNDEFINED without a target), test / write - depth_test_enable / depth_write_enable, z_export -
-// db_shader_control.shader_z_export_enable, bias - depth_bias_enable, viewports / count - the computed VkViewport array
-// passed to vkCmdSetViewportWithCount (after minDepth / maxDepth).
+// db_shader_control.shader_z_export_enable, bias - depth_bias_enable, viewports / scissors / count - the computed
+// VkViewport and VkRect2D arrays passed to vkCmdSetViewportWithCount / vkCmdSetScissorWithCount (after minDepth /
+// maxDepth and the empty-slot rule). Track M, M9d2 (RC1 of M9e, ROADMAP s122 item 788(b)): a slot counts only when
+// its scissor has area > 0 (it rasterizes); its clamp range is [min(minDepth, maxDepth), max(minDepth, maxDepth)].
 void NoteDraw(uint32_t depth_format, bool test, bool write, bool z_export, bool bias, const VkViewport* viewports,
-              uint32_t count);
+              const VkRect2D* scissors, uint32_t count);
 // HwCtxSetDepthMetadataRegister, the DB_RENDER_OVERRIDE branch (every path of the register): one write.
 void NoteRenderOverride(uint32_t value);
 

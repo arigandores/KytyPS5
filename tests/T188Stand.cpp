@@ -668,11 +668,54 @@ void CasesT109() {
 		vp[0].maxDepth   = d.max0;
 		vp[1].minDepth   = d.min1;
 		vp[1].maxDepth   = d.max1;
-		T109::NoteDraw(d.fmt, d.test, d.write, d.zx, d.bias, vp, d.count);
+		VkRect2D sc[2]   = {};
+		sc[0].extent     = {64, 64}; // M9d2: both slots rasterize
+		sc[1].extent     = {64, 64};
+		T109::NoteDraw(d.fmt, d.test, d.write, d.zx, d.bias, vp, sc, d.count);
 		const auto t = T109::Read();
 		Check(d.name,
 		      {{"x:d32", d.want.d32}, {"x:zx_d32", d.want.zx_d32}, {"x:zx_narrow", d.want.zx_narrow},
 		       {"x:bias_d32", d.want.bias_d32}, {"x:bias_narrow", d.want.bias_narrow}},
+		      {{"x:d32", t.d32}, {"x:zx_d32", t.zx_d32}, {"x:zx_narrow", t.zx_narrow}, {"x:bias_d32", t.bias_d32},
+		       {"x:bias_narrow", t.bias_narrow}});
+	}
+	// M9d2 (RC1 of M9e, ROADMAP s122 item 788(b)(4)): rasterized slots only (scissor area > 0) and the [min, max] range.
+	// D32, test, write, Z export and bias on; an empty slot is minDepth = maxDepth = 0, width 1, scissor {0, 0} (as
+	// SetGraphicsDynamicParams leaves it); the active slot has a 64x64 scissor. want = zx_narrow = bias_narrow.
+	struct Slots {
+		const char* name;
+		uint32_t    count;
+		uint32_t    active;
+		float       min_a, max_a;
+		uint64_t    want;
+	};
+	const Slots slots[] = {
+	    // 16 slots, slot 0 full, slots 1-15 empty 0/0 (t5: every slot without the scissor test)
+	    {"t109_vi16", 16, 0, 0.0f, 1.0f, 0},
+	    // inverted full range [1, 0] (t6: raw minDepth / maxDepth without min/max)
+	    {"t109_inv", 1, 0, 1.0f, 0.0f, 0},
+	    // inverted narrow range [1, 0.5] - positive control of min/max
+	    {"t109_inv_n", 1, 0, 1.0f, 0.5f, 1},
+	    // 16 slots, active slot 3 [0, 0.5], the rest empty (t1: only slot 0)
+	    {"t109_vi16n", 16, 3, 0.0f, 0.5f, 1},
+	};
+	for (const auto& s: slots) {
+		Reset(1);
+		VkViewport vp[16] = {};
+		VkRect2D   sc[16] = {};
+		for (auto& v: vp) {
+			v.width  = 1.0f;
+			v.height = 1.0f;
+		}
+		vp[s.active].width    = 64.0f;
+		vp[s.active].height   = 64.0f;
+		vp[s.active].minDepth = s.min_a;
+		vp[s.active].maxDepth = s.max_a;
+		sc[s.active].extent   = {64, 64};
+		T109::NoteDraw(VK_FORMAT_D32_SFLOAT, true, true, true, true, vp, sc, s.count);
+		const auto t = T109::Read();
+		Check(s.name,
+		      {{"x:d32", 1}, {"x:zx_d32", 1}, {"x:zx_narrow", s.want}, {"x:bias_d32", 1}, {"x:bias_narrow", s.want}},
 		      {{"x:d32", t.d32}, {"x:zx_d32", t.zx_d32}, {"x:zx_narrow", t.zx_narrow}, {"x:bias_d32", t.bias_d32},
 		       {"x:bias_narrow", t.bias_narrow}});
 	}

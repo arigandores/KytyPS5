@@ -1064,7 +1064,7 @@ void Bump(std::atomic<uint64_t>& a) {
 } // namespace
 
 void NoteDraw(uint32_t depth_format, bool test, bool write, bool z_export, bool bias, const VkViewport* viewports,
-              uint32_t count) {
+              const VkRect2D* scissors, uint32_t count) {
 	if (depth_format != VK_FORMAT_D32_SFLOAT && depth_format != VK_FORMAT_D32_SFLOAT_S8_UINT) {
 		return;
 	}
@@ -1074,7 +1074,12 @@ void NoteDraw(uint32_t depth_format, bool test, bool write, bool z_export, bool 
 	Bump(g_d32);
 	bool narrow = false;
 	for (uint32_t i = 0; i < count; i++) {
-		if (viewports[i].minDepth > 0.0f || viewports[i].maxDepth < 1.0f) {
+		if (scissors[i].extent.width == 0 || scissors[i].extent.height == 0) {
+			continue; // M9d2: the slot does not rasterize (empty ViewportIndex slot, zero-area scissor)
+		}
+		const float lo = std::min(viewports[i].minDepth, viewports[i].maxDepth);
+		const float hi = std::max(viewports[i].minDepth, viewports[i].maxDepth);
+		if (lo > 0.0f || hi < 1.0f) {
 			narrow = true;
 		}
 	}

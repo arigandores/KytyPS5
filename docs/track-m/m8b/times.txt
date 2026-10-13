@@ -1,0 +1,12 @@
+2026-10-13T06:41:40Z scan_ctx log_m6_sg
+2026-10-13T06:42:12Z worktree m8b/wt on 6da84361 created
+2026-10-13T06:42:25Z configure m8b/build done
+2026-10-13T06:43:23Z configure m8b/build rc=0
+2026-10-13T06:43:47Z stand built m8b/build 660caa7e
+2026-10-13T06:43:50Z own stand run FileNotFoundError: [WinError 2] The system cannot find the file specified
+2026-10-13T06:43:54Z own stand run ALL OK
+2026-10-13T06:45:21Z mutants start
+2026-10-13T06:46:20Z mutants end FAIL c3461723
+2026-10-13T06:46:55Z scan_ctx log_m6_hb log_m6_mg
+2026-10-13T06:48:38Z scan_ctx.out.txt 6ea87eb4
+2026-10-13T06:50:11Z review.md written 35554ef5; copied to docs/track-m/m8b

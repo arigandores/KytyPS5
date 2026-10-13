@@ -1,0 +1,117 @@
+== C:/kyty/m657/m6c/log_m6_sg.txt
+AudioOut2ContextCreate 0
+AudioOut2ContextDestroy 0
+AudioOut: opened SDL device 3
+AudioOut: vibration port 1
+AudioOut2PortCreate 0
+libAudioOut::AudioOutOpen 0
+AudioStat: 0
+FixF8 1
+WASAPI 0
+SDL_OpenAudioDevice failed 0
+queue_depth =  1
+audio_handle  =  22
+port_type     =  22
+-- queue_depth = 
+    queue_depth = 1, num_grains = 512
+-- FixF8
+    FixF8: mode=1
+-- AudioOut: opened SDL device
+    AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+-- port_type     = 
+    port_type     = 0
+    port_type     = 1
+    port_type     = 256
+    port_type     = 256
+    port_type     = 256
+    port_type     = 256
+-- audio_handle  = 
+    audio_handle  = 1
+    audio_handle  = 2
+    audio_handle  = 0
+    audio_handle  = 0
+    audio_handle  = 0
+    audio_handle  = 0
+-- AudioOut: vibration port
+    AudioOut: vibration port 3 (48000 Hz, 2 ch, 512 frames, float) -> pad haptics
+ports {b'port_type     = type     = 0': 1, b'audio_handle  = _handle  = 1': 1, b'port_type     = type     = 1': 1, b'audio_handle  = _handle  = 2': 1, b'port_type     = pe     = 256': 18, b'audio_handle  = _handle  = 0': 18, b'port_type     = type     = 3': 1, b'audio_handle  = _handle  = 3': 1, b'port_type     = type     = 6': 1, b'audio_handle  = _handle  = 4': 1}
+== C:/kyty/m657/m6c/log_m6_hb.txt
+AudioOut2ContextCreate 0
+AudioOut2ContextDestroy 0
+AudioOut: opened SDL device 3
+AudioOut: vibration port 1
+AudioOut2PortCreate 0
+libAudioOut::AudioOutOpen 0
+AudioStat: 0
+FixF8 1
+WASAPI 0
+SDL_OpenAudioDevice failed 0
+queue_depth =  1
+audio_handle  =  22
+port_type     =  22
+-- queue_depth = 
+    queue_depth = 1, num_grains = 512
+-- FixF8
+    FixF8: mode=1
+-- AudioOut: opened SDL device
+    AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+-- port_type     = 
+    port_type     = 0
+    port_type     = 1
+    port_type     = 256
+    port_type     = 256
+    port_type     = 256
+    port_type     = 256
+-- audio_handle  = 
+    audio_handle  = 1
+    audio_handle  = 2
+    audio_handle  = 0
+    audio_handle  = 0
+    audio_handle  = 0
+    audio_handle  = 0
+-- AudioOut: vibration port
+    AudioOut: vibration port 3 (48000 Hz, 2 ch, 512 frames, float) -> pad haptics
+ports {b'port_type     = type     = 0': 1, b'audio_handle  = _handle  = 1': 1, b'port_type     = type     = 1': 1, b'audio_handle  = _handle  = 2': 1, b'port_type     = pe     = 256': 18, b'audio_handle  = _handle  = 0': 18, b'port_type     = type     = 3': 1, b'audio_handle  = _handle  = 3': 1, b'port_type     = type     = 6': 1, b'audio_handle  = _handle  = 4': 1}
+== C:/kyty/m657/m6c/log_m6_mg.txt
+AudioOut2ContextCreate 0
+AudioOut2ContextDestroy 0
+AudioOut: opened SDL device 3
+AudioOut: vibration port 1
+AudioOut2PortCreate 0
+libAudioOut::AudioOutOpen 0
+AudioStat: 0
+FixF8 1
+WASAPI 0
+SDL_OpenAudioDevice failed 0
+queue_depth =  1
+audio_handle  =  19
+port_type     =  19
+-- queue_depth = 
+    queue_depth = 1, num_grains = 512
+-- FixF8
+    FixF8: mode=1
+-- AudioOut: opened SDL device
+    AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+    AudioOut: opened SDL device "(system default)" (48000 Hz, 2 ch, format 0x8120)
+-- port_type     = 
+    port_type     = 0
+    port_type     = 1
+    port_type     = 256
+    port_type     = 256
+    port_type     = 256
+    port_type     = 256
+-- audio_handle  = 
+    audio_handle  = 1
+    audio_handle  = 2
+    audio_handle  = 0
+    audio_handle  = 0
+    audio_handle  = 0
+    audio_handle  = 0
+-- AudioOut: vibration port
+    AudioOut: vibration port 3 (48000 Hz, 2 ch, 512 frames, float) -> pad haptics
+ports {b'port_type     = type     = 0': 1, b'audio_handle  = _handle  = 1': 1, b'port_type     = type     = 1': 1, b'audio_handle  = _handle  = 2': 1, b'port_type     = pe     = 256': 15, b'audio_handle  = _handle  = 0': 15, b'port_type     = type     = 3': 1, b'audio_handle  = _handle  = 3': 1, b'port_type     = type     = 6': 1, b'audio_handle  = _handle  = 4': 1}

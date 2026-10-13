@@ -1,0 +1,10 @@
+2026-10-13T04:41:35Z start reading ROADMAP p.772, p.774 (3522823d) and report m6a3 (dbd8518a)
+2026-10-13T04:41:41Z main_vs_wt compared 1a1a17be
+2026-10-13T04:41:51Z binary strings 2179005b b571a0e5
+2026-10-13T04:42:28Z API: in_progress HPP-857, HPP-853 (M7b review, not a runs series); stand builds start
+2026-10-13T04:42:31Z stand wt ALL OK 0eb91ab0; main ALL OK 0eb91ab0
+2026-10-13T04:43:18Z stand rebuilt (wt relinked, main up to date) and rerun: wt ALL OK 0eb91ab0; main ALL OK 0eb91ab0
+2026-10-13T04:44:55Z API: in_progress HPP-857 HPP-853; mutants mut_m6b3.py start (4 named + 4 probe + control) 5fd322be
+2026-10-13T04:46:46Z mutants end: ALL OK 16d9015e
+2026-10-13T04:48:10Z note: 04:42:28 stand builds did not run (cmd quoting), 04:42:31 runs were on the author's exes; the counted run is 04:43:18 (wt stand relinked 04:43:01)
+2026-10-13T04:48:10Z review.md written b2063b93

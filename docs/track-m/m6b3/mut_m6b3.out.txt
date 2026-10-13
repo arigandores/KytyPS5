@@ -1,0 +1,10 @@
+NAMED CAUGHT fallback_off (11 failed members; first: pure: match 127 of 132 (want 132 of 132))
+NAMED CAUGHT os_check_off (5 failed members; first: pure: rc=3221225477 END lines=0)
+NAMED CAUGHT c_ao_obj_vq (6 failed members; first: pure: match 130 of 132 (want 132 of 132))
+NAMED CAUGHT r8_low16 (4 failed members; first: pure: match 131 of 132 (want 132 of 132))
+PROBE CAUGHT vq_on_unread (8 failed members; first: pure: match 128 of 132 (want 132 of 132))
+PROBE CAUGHT nz_skip_fb (4 failed members; first: pure: match 131 of 132 (want 132 of 132))
+PROBE CAUGHT copy_half (3 failed members; first: pure: match 131 of 132 (want 132 of 132))
+PROBE CAUGHT check_one_byte (3 failed members; first: pure: rc=3221225477 END lines=0)
+CONTROL restored tree: build=1 driver=ALL OK
+ALL OK

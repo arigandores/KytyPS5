@@ -1,0 +1,31 @@
+C:/kyty/m657/bin/kyty_emulator_2179005b.exe sha256 2179005bc42e42133e92d4a4c9cc0a2f33b3670f0263a6ca67c2c3804ac7e43f
+   ao_obj_vq=% 1
+   inv_part_src=% 1
+   ao_obj_unread=% 1
+   M5W2Stat: when=%s 1
+   g3d2270241 1
+   g97198ce90 0
+   8dcf31779bbc 1
+   M5W2: mode= 1
+   tail fmt: b'inv_part_src=%llu ao_obj_vq=%llu\n'
+C:/kyty/m657/m6a/build/install/kyty_emulator.exe sha256 2179005bc42e42133e92d4a4c9cc0a2f33b3670f0263a6ca67c2c3804ac7e43f
+   ao_obj_vq=% 1
+   inv_part_src=% 1
+   ao_obj_unread=% 1
+   M5W2Stat: when=%s 1
+   g3d2270241 1
+   g97198ce90 0
+   8dcf31779bbc 1
+   M5W2: mode= 1
+   tail fmt: b'inv_part_src=%llu ao_obj_vq=%llu\n'
+C:/kyty/m657/bin/kyty_emulator_23f3c4e7.exe sha256 23f3c4e73f69b2246a0250c518dc1a0f799221342ddbfddee0ba6ca7160c39a3
+   ao_obj_vq=% 0
+   inv_part_src=% 1
+   ao_obj_unread=% 1
+   M5W2Stat: when=%s 1
+   g3d2270241 0
+   g97198ce90 1
+   8dcf31779bbc 1
+   M5W2: mode= 1
+   tail fmt: b'inv_part_src=%llu\n'
+C:/kyty/m657/m6a/build\kytyGitVersion.h ['8dcf31779bbcb7c6e605653a138dae162f645a46'] ['g3d2270241']

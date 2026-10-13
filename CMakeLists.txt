@@ -563,6 +563,16 @@ add_executable(audio_out2_port_tests EXCLUDE_FROM_ALL
 target_link_libraries(audio_out2_port_tests common fmt::fmt)
 target_include_directories(audio_out2_port_tests PRIVATE ${inc_headers})
 
+# Track M, M8a (HPP-858, ROADMAP s122 item 778(g)(2)): stand of T125 (KYTY_M_T125) without the game - the real
+# libAudio2.cpp, the device layer replaced; run by docs/track-m/m8a/run_stand_m8a.py, not by ctest.
+add_executable(m_t125_stand EXCLUDE_FROM_ALL
+	"${KYTY_TESTS_DIR}/MT125Stand.cpp"
+	"${KYTY_SOURCE_DIR}/libs/libAudio2.cpp"
+	"${KYTY_SOURCE_DIR}/loader/timer.cpp"
+)
+target_link_libraries(m_t125_stand common fmt::fmt)
+target_include_directories(m_t125_stand PRIVATE ${inc_headers})
+
 add_executable(event_queue_lifetime_tests EXCLUDE_FROM_ALL
 	"${KYTY_TESTS_DIR}/EventQueueLifetimeTests.cpp"
 	"${KYTY_SOURCE_DIR}/kernel/eventQueue.cpp"

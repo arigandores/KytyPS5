@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include <vector>
 
@@ -179,6 +181,7 @@ struct AudioOut2ContextState {
 	uint32_t               queued      = 0;
 	uint32_t               num_grains  = 512;
 	uint64_t               last_update = 0;
+	int                    object_audio_handle = 0; // Track M, M8a (T125): the object mix device (KYTY_M_T125=1)
 };
 
 struct AudioOut2PortStateEntry {
@@ -192,6 +195,8 @@ struct AudioOut2PortStateEntry {
 	AudioInternal::Format  audio_format  = AudioInternal::Format::Unknown;
 	int                    audio_handle  = 0;
 	const void*            pcm_data      = nullptr;
+	float                  m125_gain       = 1.0f;       // Track M, M8a (T125): GAIN of an object port
+	uint32_t               m125_ambisonics = UINT32_MAX; // Track M, M8a (T125): AMBISONICS of an object port
 };
 
 struct AudioOut2SpeakerArrayState {
@@ -344,7 +349,220 @@ static AudioOut2PortStateEntry* audioout2_find_port_locked(AudioOut2PortHandle p
 	return nullptr;
 }
 
+// Track M, M8a (T125, upstream c86c8b4d9 in own form; HPP-858, ROADMAP s122 item 778(g)(2)): KYTY_M_T125 (default 0),
+// read once per process (line "MT125: mode="). At 1 the object ports of a context (port type 0x100, mono float or
+// mono s16, 48 kHz) are mixed into one stereo float device of the context, opened by AudioOut2ContextCreate when
+// max_object_ports > 0 (AudioOutOpen -> OpenSdlDevice -> the F8 owner SdlAudioAcquire), with the port GAIN and the
+// stereo decode of AMBISONICS (the form of upstream audioout2_mix_object); the PCM of an object is read through its
+// pointer at the push, as the PCM of a bus port. The bus ports keep the selection and the data of 0 byte for byte (no
+// GAIN on them); the return codes to the game do not change (an invalid GAIN / AMBISONICS is not applied). At 0 the
+// object PCM is not output, as before. "MT125Stat: when=exit mixed=<n> mixed_nz=<n>" (pushes with the mix output, of
+// them with a nonzero mix sample) is printed by an at_quick_exit handler, at 1 only.
+static constexpr uint32_t M125_PORT_ATTRIBUTE_ID_GAIN       = 1;
+static constexpr uint32_t M125_PORT_ATTRIBUTE_ID_AMBISONICS = 8;
+static std::atomic<uint64_t> g_m125_mixed {0};
+static std::atomic<uint64_t> g_m125_mixed_nz {0};
+
+static void MT125PrintExitStat() {
+	LOGF("MT125Stat: when=exit mixed=%" PRIu64 " mixed_nz=%" PRIu64 "\n", g_m125_mixed.load(std::memory_order_relaxed),
+	     g_m125_mixed_nz.load(std::memory_order_relaxed));
+}
+
+static bool MT125On() {
+	static const bool on = [] {
+		const bool value = Common::EnvFlagOn("KYTY_M_T125");
+		LOGF("MT125: mode=%d\n", value ? 1 : 0);
+		if (value) {
+			(void)std::at_quick_exit(MT125PrintExitStat);
+		}
+		return value;
+	}();
+	return on;
+}
+
+// T125: an object port that goes into the mix - the ports upstream c86c8b4d9 creates at all (port type 0x100, 48 kHz,
+// mono float or mono s16), with PCM set. Other object ports (another 0x1xx type, rate or format) are not mixed.
+static bool audioout2_m125_mixable(const AudioOut2PortStateEntry& state) {
+	return state.port_type == 0x100u && state.sampling_freq == 48000u &&
+	       (state.audio_format == AudioInternal::Format::FloatMono ||
+	        state.audio_format == AudioInternal::Format::Signed16bitMono) &&
+	       state.pcm_data != nullptr;
+}
+
+// T125: (left, right) of an object by its AMBISONICS - ordinary objects (UINT32_MAX) and FuMa W (64) at the centre,
+// ACN/SN3D W (0) at full gain, the first-order Y component (2, 65) as left/right cardioids; any other channel has no
+// stereo share (false).
+static bool audioout2_m125_coefficients(uint32_t ambisonics, float* left, float* right) {
+	constexpr float half_power = 0.70710678f;
+	switch (ambisonics) {
+		case UINT32_MAX:
+		case 64:
+			*left  = half_power;
+			*right = half_power;
+			return true;
+		case 0:
+			*left  = 1.0f;
+			*right = 1.0f;
+			return true;
+		case 2:
+		case 65:
+			*left  = half_power;
+			*right = -half_power;
+			return true;
+		default: return false;
+	}
+}
+
+// T125: adds one object to the stereo mix (frames x 2 floats); the caller holds g_audioout2_port_mutex.
+static void audioout2_m125_mix_object(std::vector<float>* mix, const AudioOut2PortStateEntry& object, uint32_t frames) {
+	float left  = 0.0f;
+	float right = 0.0f;
+	if (!audioout2_m125_coefficients(object.m125_ambisonics, &left, &right)) {
+		return;
+	}
+	left *= object.m125_gain;
+	right *= object.m125_gain;
+	const auto* bytes    = static_cast<const uint8_t*>(object.pcm_data);
+	const bool  is_float = object.audio_format == AudioInternal::Format::FloatMono;
+	const auto  count    = std::min(frames, object.samples_num);
+	for (uint32_t frame = 0; frame < count; frame++) {
+		float sample = 0.0f;
+		if (is_float) {
+			std::memcpy(&sample, bytes + static_cast<size_t>(frame) * sizeof(float), sizeof(float));
+		} else {
+			int16_t value = 0;
+			std::memcpy(&value, bytes + static_cast<size_t>(frame) * sizeof(int16_t), sizeof(int16_t));
+			sample = static_cast<float>(value) / 32768.0f;
+		}
+		(*mix)[static_cast<size_t>(frame) * 2] += sample * left;
+		(*mix)[static_cast<size_t>(frame) * 2 + 1] += sample * right;
+	}
+}
+
+// T125: the object mix device of a context and its frames (0 when the context has none).
+static int audioout2_m125_mix_device(AudioOut2ContextHandle ctx, uint32_t* frames) {
+	int handle = 0;
+	g_audioout2_context_mutex.Lock();
+	if (const auto* context = audioout2_find_context_locked(ctx); context != nullptr) {
+		handle  = context->object_audio_handle;
+		*frames = (context->num_grains == 0 ? 512u : context->num_grains);
+	}
+	g_audioout2_context_mutex.Unlock();
+	return handle;
+}
+
+// T125 (KYTY_M_T125=1): audioout2_context_has_queueable_device plus the object mix device when an object of the
+// context is mixed. Called without g_audioout2_context_mutex (AudioOut2ContextPush), as the original.
+static bool audioout2_m125_has_queueable_device(AudioOut2ContextHandle ctx) {
+	uint32_t   frames     = 512;
+	const int  mix_handle = audioout2_m125_mix_device(ctx, &frames);
+	Common::LockGuard lock(g_audioout2_port_mutex);
+	for (const auto& state: g_audioout2_ports) {
+		if (!state.used || state.context != ctx) {
+			continue;
+		}
+		if (state.audio_handle > 0 && state.pcm_data != nullptr && AudioInternal::AudioOutHasDevice(state.audio_handle)) {
+			return true;
+		}
+		if (mix_handle > 0 && audioout2_m125_mixable(state) && AudioInternal::AudioOutHasDevice(mix_handle)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// T125 (KYTY_M_T125=1): audioout2_queue_context_audio of 0 - the bus ports exactly as at 0 (selection, order,
+// pointers), then the mix of the object ports as the last output of the batch.
+static void audioout2_m125_queue_context_audio(AudioOut2ContextHandle ctx, bool blocking) {
+	uint32_t  frames     = 512;
+	const int mix_handle = audioout2_m125_mix_device(ctx, &frames);
+
+	std::vector<AudioInternal::OutputParam> params;
+	params.reserve(AudioInternal::OUT_PORTS_MAX);
+	std::vector<float> mix;
+	bool               mixed = false;
+
+	g_audioout2_port_mutex.Lock();
+	for (const auto& state: g_audioout2_ports) {
+		if (state.used && state.context == ctx && state.audio_handle > 0 &&
+		    state.pcm_data != nullptr && params.size() < AudioInternal::OUT_PORTS_MAX) {
+			params.push_back(AudioInternal::OutputParam {state.audio_handle, state.pcm_data});
+		}
+	}
+	if (mix_handle > 0) {
+		for (const auto& state: g_audioout2_ports) {
+			if (state.used && state.context == ctx && audioout2_m125_mixable(state)) {
+				if (!mixed) {
+					mix.assign(static_cast<size_t>(frames) * 2, 0.0f);
+					mixed = true;
+				}
+				audioout2_m125_mix_object(&mix, state, frames);
+			}
+		}
+	}
+	g_audioout2_port_mutex.Unlock();
+
+	if (mixed && params.size() < AudioInternal::OUT_PORTS_MAX) {
+		params.push_back(AudioInternal::OutputParam {mix_handle, mix.data()});
+		g_m125_mixed.fetch_add(1, std::memory_order_relaxed);
+		if (std::any_of(mix.begin(), mix.end(), [](float v) { return v != 0.0f; })) {
+			g_m125_mixed_nz.fetch_add(1, std::memory_order_relaxed);
+		}
+	}
+
+	if (params.empty()) {
+		return;
+	}
+
+	(void)AudioInternal::AudioOutOutputs(params.data(), static_cast<uint32_t>(params.size()), blocking);
+}
+
+// T125 (KYTY_M_T125=1): GAIN (id 1) and AMBISONICS (id 8) of an object port, read in the order of the array; an
+// invalid value is not applied and the call still returns OK (the PCM of the call is set by the common path).
+static void audioout2_m125_set_object_attributes(AudioOut2PortHandle port, const AudioOut2Attribute* attributes,
+                                                 uint32_t num) {
+	if (attributes == nullptr) {
+		return;
+	}
+	Common::LockGuard lock(g_audioout2_port_mutex);
+	auto*             state = audioout2_find_port_locked(port);
+	if (state == nullptr || !audioout2_port_type_is_object(state->port_type)) {
+		return;
+	}
+	const uint32_t channels = audioout2_data_format_channels(state->data_format);
+	for (uint32_t i = 0; i < num; i++) {
+		const auto& attribute = attributes[i];
+		if (attribute.value == nullptr) {
+			continue;
+		}
+		if (attribute.attribute_id == M125_PORT_ATTRIBUTE_ID_GAIN) {
+			if (attribute.value_size != channels * sizeof(float)) {
+				continue;
+			}
+			std::array<float, 16> gains {};
+			std::memcpy(gains.data(), attribute.value, attribute.value_size);
+			const bool valid = std::all_of(gains.begin(), gains.begin() + channels,
+			                               [](float v) { return std::isfinite(v) && v >= 0.0f; });
+			if (valid) {
+				state->m125_gain = gains[0];
+			}
+		} else if (attribute.attribute_id == M125_PORT_ATTRIBUTE_ID_AMBISONICS) {
+			if (attribute.value_size != sizeof(uint32_t)) {
+				continue;
+			}
+			uint32_t ambisonics = 0;
+			std::memcpy(&ambisonics, attribute.value, sizeof(ambisonics));
+			if (ambisonics == UINT32_MAX || ambisonics <= 15 || (ambisonics >= 64 && ambisonics <= 99)) {
+				state->m125_ambisonics = ambisonics;
+			}
+		}
+	}
+}
+
 static bool audioout2_context_has_queueable_device(AudioOut2ContextHandle ctx) {
+	if (MT125On()) {
+		return audioout2_m125_has_queueable_device(ctx); // Track M, M8a (T125)
+	}
 	Common::LockGuard lock(g_audioout2_port_mutex);
 	for (const auto& state: g_audioout2_ports) {
 		if (state.used && state.context == ctx && state.audio_handle > 0 &&
@@ -356,6 +574,10 @@ static bool audioout2_context_has_queueable_device(AudioOut2ContextHandle ctx) {
 }
 
 static void audioout2_queue_context_audio(AudioOut2ContextHandle ctx, bool blocking) {
+	if (MT125On()) {
+		audioout2_m125_queue_context_audio(ctx, blocking); // Track M, M8a (T125): the bus ports as below + the mix
+		return;
+	}
 	std::vector<AudioInternal::OutputParam> params;
 	params.reserve(AudioInternal::OUT_PORTS_MAX);
 
@@ -465,6 +687,23 @@ int KYTY_SYSV_ABI AudioOut2ContextCreate(const AudioOut2ContextParam* params, vo
 	state->num_grains  = (params->num_grains == 0 ? 512u : params->num_grains);
 	state->last_update = LibKernel::KernelGetProcessTime();
 	g_audioout2_context_mutex.Unlock();
+	if (MT125On() && params->max_object_ports > 0) {
+		// Track M, M8a (T125): the object mix device of the context, opened outside the lock; kept only if the
+		// context still exists (a concurrent destroy closes nothing of it yet). A failed open leaves 0: no mix, OK.
+		const uint32_t frames = (params->num_grains == 0 ? 512u : params->num_grains);
+		const int      handle = AudioInternal::AudioOutOpen(AUDIO_OUT_PORT_TYPE_MAIN, frames, 48000,
+		                                                    AudioInternal::Format::FloatStereo);
+		bool           kept   = false;
+		g_audioout2_context_mutex.Lock();
+		if (auto* created = audioout2_find_context_locked(*ctx); created != nullptr) {
+			created->object_audio_handle = handle;
+			kept                         = true;
+		}
+		g_audioout2_context_mutex.Unlock();
+		if (!kept) {
+			audioout2_close_audio_handle(handle);
+		}
+	}
 
 	LOGF("\t buffer      = 0x%016" PRIx64 "\n"
 	     "\t buffer_size = 0x%016" PRIx64 "\n"
@@ -480,8 +719,10 @@ int KYTY_SYSV_ABI AudioOut2ContextDestroy(AudioOut2ContextHandle ctx) {
 	PRINT_NAME();
 	LOGF("\t ctx = 0x%016" PRIx64 "\n", ctx);
 
+	int object_audio_handle = 0; // Track M, M8a (T125): the object mix device of the context (0 at KYTY_M_T125=0)
 	g_audioout2_context_mutex.Lock();
 	if (auto* state = audioout2_find_context_locked(ctx); state != nullptr) {
+		object_audio_handle = state->object_audio_handle;
 		*state = AudioOut2ContextState {};
 	}
 	g_audioout2_context_mutex.Unlock();
@@ -503,6 +744,7 @@ int KYTY_SYSV_ABI AudioOut2ContextDestroy(AudioOut2ContextHandle ctx) {
 	for (size_t i = 0; i < audio_handles_num; i++) {
 		audioout2_close_audio_handle(audio_handles[i]);
 	}
+	audioout2_close_audio_handle(object_audio_handle); // Track M, M8a (T125): nothing for 0
 
 	return OK;
 }
@@ -704,6 +946,9 @@ int KYTY_SYSV_ABI AudioOut2PortDestroy(AudioOut2PortHandle port) {
 int KYTY_SYSV_ABI AudioOut2PortSetAttributes(AudioOut2PortHandle       port,
                                              const AudioOut2Attribute* attributes, uint32_t num) {
 	EXIT_NOT_IMPLEMENTED(num != 0 && attributes == nullptr);
+	if (MT125On()) {
+		audioout2_m125_set_object_attributes(port, attributes, num); // Track M, M8a (T125): GAIN, AMBISONICS
+	}
 
 	const void* pcm_data = nullptr;
 	bool        has_pcm  = false;

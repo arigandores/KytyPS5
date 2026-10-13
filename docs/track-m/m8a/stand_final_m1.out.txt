@@ -1,0 +1,204 @@
+STAND MT125 env=1
+MT125: mode=1
+	 buffer      = 0x0000000000000000
+	 buffer_size = 0x0000000000000000
+	 ctx         = 0x0000000000000001
+	 queue_depth = 64, num_grains = 512
+MEMBER A_mix_device OK opened_in_create=1
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000001
+	 port_type     = 0
+	 data_format   = 0x00000200
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 2
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000002
+	 port_type     = 1
+	 data_format   = 0x00000200
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 3
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000003
+	 port_type     = 3
+	 data_format   = 0x00000200
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 4
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000004
+	 port_type     = 6
+	 data_format   = 0x00000200
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 5
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000005
+	 port_type     = 256
+	 data_format   = 0x00000100
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000006
+	 port_type     = 256
+	 data_format   = 0x00000100
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000007
+	 port_type     = 256
+	 data_format   = 0x00000100
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000008
+	 port_type     = 256
+	 data_format   = 0x00000101
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+	 ctx           = 0x0000000000000001
+	 port          = 0x0000000000000009
+	 port_type     = 256
+	 data_format   = 0x00000200
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+	 ctx           = 0x0000000000000001
+	 port          = 0x000000000000000a
+	 port_type     = 256
+	 data_format   = 0x00000100
+	 sampling_freq = 44100
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+	 ctx           = 0x0000000000000001
+	 port          = 0x000000000000000b
+	 port_type     = 257
+	 data_format   = 0x00000100
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+	 ctx           = 0x0000000000000001
+	 port          = 0x000000000000000c
+	 port_type     = 256
+	 data_format   = 0x00000100
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+	 buffer      = 0x0000000000000000
+	 buffer_size = 0x0000000000000000
+	 ctx         = 0x0000000000000002
+	 queue_depth = 64, num_grains = 512
+	 ctx           = 0x0000000000000002
+	 port          = 0x000000000000000d
+	 port_type     = 256
+	 data_format   = 0x00000100
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+MEMBER A0_outputs OK n=5 want=5
+MEMBER A0_bus_is_bus_pcm OK 4 outputs = the 4 bus PCM buffers in order
+MEMBER A0_mix_eq_ref OK max_diff=0.000000
+MEMBER A1_outputs OK n=5 want=5
+MEMBER A1_bus_is_bus_pcm OK 4 outputs = the 4 bus PCM buffers in order
+MEMBER A1_mix_eq_ref OK max_diff=0.000000
+MEMBER A2_outputs OK n=5 want=5
+MEMBER A2_bus_is_bus_pcm OK 4 outputs = the 4 bus PCM buffers in order
+MEMBER A2_mix_eq_ref OK max_diff=0.000000
+MEMBER A3_outputs OK n=5 want=5
+MEMBER A3_bus_is_bus_pcm OK 4 outputs = the 4 bus PCM buffers in order
+MEMBER A3_mix_eq_ref OK max_diff=0.000000
+MEMBER B_mix_own_object OK n=1
+	 ctx = 0x0000000000000002
+	 ctx = 0x0000000000000001
+MEMBER A_destroy_closes OK live_before=5 live_after=0
+	 buffer      = 0x0000000000000000
+	 buffer_size = 0x0000000000000000
+	 ctx         = 0x0000000000000003
+	 queue_depth = 64, num_grains = 512
+	 ctx           = 0x0000000000000003
+	 port          = 0x000000000000000e
+	 port_type     = 256
+	 data_format   = 0x00000100
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+MEMBER G_f32_amb4294967295_p0 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb4294967295_p1 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb0_p0 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb0_p1 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb1_p0 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb1_p1 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb2_p0 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb2_p1 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb3_p0 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb3_p1 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb64_p0 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb64_p1 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb65_p0 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb65_p1 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb66_p0 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb66_p1 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb99_p0 OK n=1 max_diff=0.000000
+MEMBER G_f32_amb99_p1 OK n=1 max_diff=0.000000
+MEMBER G_f32_zero_gain_mutes OK n=1 max_diff=0.000000
+MEMBER G_f32_gain_persists OK n=1 max_diff=0.000000
+MEMBER G_f32_invalid_not_applied OK n=1 max_diff=0.000000
+	 ctx = 0x0000000000000003
+MEMBER G_f32_destroy_closes OK live=0
+	 buffer      = 0x0000000000000000
+	 buffer_size = 0x0000000000000000
+	 ctx         = 0x0000000000000004
+	 queue_depth = 64, num_grains = 512
+	 ctx           = 0x0000000000000004
+	 port          = 0x000000000000000f
+	 port_type     = 256
+	 data_format   = 0x00000101
+	 sampling_freq = 48000
+	 flags         = 0x00000000
+	 user          = 0x0000000000000001
+	 audio_handle  = 0
+MEMBER G_s16_amb4294967295_p0 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb4294967295_p1 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb0_p0 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb0_p1 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb1_p0 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb1_p1 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb2_p0 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb2_p1 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb3_p0 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb3_p1 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb64_p0 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb64_p1 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb65_p0 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb65_p1 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb66_p0 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb66_p1 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb99_p0 OK n=1 max_diff=0.000000
+MEMBER G_s16_amb99_p1 OK n=1 max_diff=0.000000
+MEMBER G_s16_zero_gain_mutes OK n=1 max_diff=0.000000
+MEMBER G_s16_gain_persists OK n=1 max_diff=0.000000
+MEMBER G_s16_invalid_not_applied OK n=1 max_diff=0.000000
+	 ctx = 0x0000000000000004
+MEMBER G_s16_destroy_closes OK live=0
+EXPECT mixed=47 mixed_nz=27
+STAND DONE mode=1 fail=0
+MT125Stat: when=exit mixed=47 mixed_nz=27

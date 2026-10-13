@@ -1,0 +1,7 @@
+MUTANT m1_no_gain CAUGHT first=DRIVER m1_exit0 FAIL rc=1
+MUTANT m2_no_format_check CAUGHT first=DRIVER m1_exit0 FAIL rc=1
+MUTANT m3_mix_at_0 CAUGHT first=DRIVER m0_exit0 FAIL rc=1
+MUTANT m4_one_object_lost CAUGHT first=DRIVER m1_exit0 FAIL rc=1
+MUTANT m5_y_sign CAUGHT first=DRIVER m1_exit0 FAIL rc=1
+CONTROL ALL OK
+ALL OK

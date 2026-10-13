@@ -1,0 +1,12 @@
+OK src/libs/libAudio2.cpp '#include <atomic>'
+OK src/libs/libAudio2.cpp '\tuint64_t               last_update = 0;'
+OK src/libs/libAudio2.cpp '\tconst void*            pcm_data      = nullptr;'
+OK src/libs/libAudio2.cpp 'static bool audioout2_context_has_queueable_device(AudioOut2ContextHan'
+OK src/libs/libAudio2.cpp 'static void audioout2_queue_context_audio(AudioOut2ContextHandle ctx, '
+OK src/libs/libAudio2.cpp '\tstate->last_update = LibKernel::KernelGetProcessTime();'
+OK src/libs/libAudio2.cpp '\tg_audioout2_context_mutex.Lock();'
+OK src/libs/libAudio2.cpp '\tfor (size_t i = 0; i < audio_handles_num; i++) {'
+OK src/libs/libAudio2.cpp '                                             const AudioOut2Attribute*'
+OK CMakeLists.txt 'target_include_directories(audio_out2_port_tests PRIVATE ${inc_headers'
+OK tests/MT125Stand.cpp
+PATCH OK

@@ -1,0 +1,13 @@
+DRIVER m0_exit0 OK rc=0
+DRIVER m0_done OK 
+DRIVER m0_members OK members=59 fail=0 
+DRIVER m0_mode_line OK ['MT125: mode=0']
+DRIVER m0_no_stat_line OK []
+DRIVER m1_exit0 OK rc=0
+DRIVER m1_done OK 
+DRIVER m1_members OK members=59 fail=0 
+DRIVER m1_mode_line OK ['MT125: mode=1']
+DRIVER m1_stat_line OK stat=['MT125Stat: when=exit mixed=47 mixed_nz=27'] want='MT125Stat: when=exit mixed=47 mixed_nz=27'
+DRIVER bus_byte_for_byte OK equal=16 of 16
+DRIVER mix_only_at_1 OK m0=0 m1=4
+ALL OK

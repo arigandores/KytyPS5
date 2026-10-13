@@ -1,0 +1,16 @@
+2026-10-13T06:05:44Z names_before_code.md written (draft 06:03Z by date -u at draft start; copied now), before the first code edit
+2026-10-13T06:06:01Z worktree m8a/wt on ed94b13d created (mk_wt.out.txt WT OK); configure start
+2026-10-13T06:07:15Z configure done; base build (kyty_emulator, unpatched MS1 tree) start
+2026-10-13T06:13:26Z base build done (BUILD OK); first code edit: patch_m8a.py on m8a/wt
+2026-10-13T06:14:19Z stand on wt ALL OK (stand_wt.out.txt); mutants start
+2026-10-13T06:14:49Z mutants end
+2026-10-13T06:15:20Z emulator build on patched wt done
+2026-10-13T06:16:35Z binary d06507d6 (wt HEAD 6da84361) pinned to m657/bin
+2026-10-13T06:17:24Z d06507d6 withdrawn (SDL_REVISION from configure before the commit: two version strings) and removed; reconfigure + rebuild -> 4445a49b (one version string g6da843618) pinned m657/bin/kyty_emulator_4445a49b.exe
+2026-10-13T06:17:42Z stand final on wt HEAD 6da84361: ALL OK; shader_cfg_tests build start
+2026-10-13T06:18:34Z worktree m8a/wtmain on main 206cdbce (main compile check) created
+2026-10-13T06:25:42Z shader_cfg_tests build done; run start
+2026-10-13T06:25:42Z shader_cfg_tests run end
+2026-10-13T06:27:14Z main stand (wtmain 206cdbce): ALL OK; main emulator build start
+2026-10-13T06:35:41Z main emulator build (wtmain 206cdbce) BUILD OK sha256 7fd0d6f7d6e125c4f60931f6c83556a09577a54e5155b95897b9d94e7a28ac30 (compile check, not shipped)
+2026-10-13T06:36:10Z report and artifacts committed to main (docs/track-m/m8a); stage review by lead

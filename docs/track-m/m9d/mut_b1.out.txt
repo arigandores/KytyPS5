@@ -1,0 +1,6 @@
+m1_cover_data CAUGHT {'pure': False}
+m2_reopen_new CAUGHT {'pure': False}
+m3_close_unchecked CAUGHT {'pure': False}
+sources restored (sha256 of 5 files): True
+mutants 3 of 3 CAUGHT (batch, no control)
+BATCH OK

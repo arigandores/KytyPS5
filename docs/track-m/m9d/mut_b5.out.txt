@@ -1,0 +1,6 @@
+m13_sw_in_branch CAUGHT {'gpu1': False}
+g3_rb_before_clear CAUGHT {'gpu1': False}
+g4_no_transit CAUGHT {'gpuv': False}
+sources restored (sha256 of 5 files): True
+mutants 3 of 3 CAUGHT (batch, no control)
+BATCH OK

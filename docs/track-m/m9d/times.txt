@@ -1,0 +1,40 @@
+2026-10-13T07:02:20Z M9d HPP-869 start; lock absent; API in_progress: HPP-869 (this), HPP-860 M8c (Emu Engineer, not a lock series); read ROADMAP p.785, design_m9a2.md, m9b2 review
+2026-10-13T07:02:48Z worktree C:/kyty/m657/m9d/wt created on 3d227024 (mk_wt_m9d.sh)
+2026-10-13T07:13:25Z names_before_code.md fixed before code, sha256 0391ad779dd4bf92
+2026-10-13T07:24:17Z patch_m9d.py applied to worktree (first code edit): ALL OK
+2026-10-13T07:26:30Z API in_progress: see next; configure start
+2026-10-13T07:27:36Z configure end rc
+2026-10-13T07:27:42Z build version+emulator start
+2026-10-13T07:34:52Z build emulator end
+2026-10-13T07:41:39Z patch_m9d_stand.py applied to wt: ALL OK; build t188_stand start
+2026-10-13T07:45:04Z build t188_stand end
+2026-10-13T07:46:21Z stand t188_stand on wt: total=45 match=45 (first run); API in_progress: HPP-861:2f5a0935 HPP-869:eb15eb75; build shader_recompiler_compute_tests start
+2026-10-13T07:50:03Z build shader_recompiler_compute_tests end
+2026-10-13T07:50:11Z GPU stand first run (driver reset check) start
+2026-10-13T07:50:14Z GPU stand first run end
+2026-10-13T07:51:07Z GPU stand run 2 end (rc=0)
+2026-10-13T07:51:23Z GPU stand: first run rc 65 (stand defect: raw Image at guest address 0 - EXIT invalid data image range; not a driver reset), fixed address; run 2 rc 0 total=16 ok=16, no device lost -> not a dl_cases.txt case
+2026-10-13T07:53:33Z run_stand_m9d.py on wt build: ALL OK
+2026-10-13T07:53:47Z build shader_cfg_tests start
+2026-10-13T07:57:07Z shader_cfg_tests: rc 0 [test] lines 135 failed names 0 failed lines 5 spv 374
+2026-10-13T07:59:00Z mutants batch 1 start (m1 m2 m3)
+2026-10-13T07:59:29Z mutants batch 1 end
+2026-10-13T07:59:43Z mutants batch 2 start (pure)
+2026-10-13T08:01:39Z mutants batch 2 end
+2026-10-13T08:02:00Z mutant m7 (header) start
+2026-10-13T08:03:25Z mutant m7 end
+2026-10-13T08:03:31Z GPU mutants batch 4 start (m8s m14 m15 g1 g2)
+2026-10-13T08:06:59Z GPU mutants batch 4 end
+2026-10-13T08:07:11Z GPU mutants batch 5 start (g3 g4 m13)
+2026-10-13T08:10:47Z GPU mutants batch 5 end
+2026-10-13T08:10:59Z mutants control start
+2026-10-13T08:12:45Z mutants control end: ALL OK; sources = before mutants: 7/7
+2026-10-13T08:13:41Z worktree commit d490f648 (on 3d227024)
+2026-10-13T08:13:48Z build version+emulator on d490f648 start
+2026-10-13T08:15:21Z build emulator end
+2026-10-13T08:15:42Z binary sha256 751bfa7fd93b5611ec99bb8c6e81a1f46d32b5dac42488805c6b9a2f8a43f885 pinned C:/kyty/m657/bin/kyty_emulator_751bfa7f.exe (not installed)
+2026-10-13T08:17:51Z wtmain commit 4363c35e (on main 90a13438); +/- lines = d490f648, patch-id -U0 fbb8cd11 = fbb8cd11; buildmain configure + t188_stand start
+2026-10-13T08:26:38Z stand on main build (wtmain 4363c35e): ALL OK
+2026-10-13T08:30:13Z kyty_emulator main build (compile check, wtmain 4363c35e): BUILD OK: C:\kyty\m657\m9d\buildmain\install\kyty_emulator.exe
+2026-10-13T08:30:27Z main fast-forward 90a13438 -> 4363c35e (code of M9d)
+2026-10-13T08:32:45Z report.md written; docs copy to KytyPS5/docs/track-m/m9d

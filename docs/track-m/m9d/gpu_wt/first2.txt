@@ -1,0 +1,19 @@
+[host]    LeastRecentlyUsedCache           ok
+T188Gpu: member=tint_rgba8_l1_t0 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_rgba8_l1_t1 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_rgba8_l4_t0 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_rgba8_l4_t1 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_r16f_l1_t0 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_r16f_l1_t1 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_r16f_l4_t0 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_r16f_l4_t1 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_rg8_l1_t0 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_rg8_l1_t1 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_rg8_l4_t0 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=tint_rg8_l4_t1 rb0=1 bad_tinted=0 bad_other=0 ok=1
+T188Gpu: member=sw_first wseq=2 sseq=1 ok=1
+T188Gpu: member=ovr range=1/1 direct=2/1 indirect=3/2 ok=1
+T188Gpu: member=s7 ep_new=1 cl_commit=1 part_st=1 lock_bad=0 ok=1
+T188Gpu: member=rc12 fuse_env=unset storage=1 fused=0 rb0_ok=1 rb1_over=1 rb1_bad=0 rb1_ok=0 cl_oth=1 tint_ep=1 ok=1
+T188Gpu: total=16 ok=16 END
+rc=0

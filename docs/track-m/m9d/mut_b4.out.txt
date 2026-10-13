@@ -1,0 +1,8 @@
+m8s_no_s7_site CAUGHT {'gpu1': False}
+m14_flag_upload_only CAUGHT {'gpu1': False, 'gpu0': True}
+m15_ovr_first_reg CAUGHT {'gpu1': False}
+g1_base_plus1 CAUGHT {'gpu1': False}
+g2_layer1 CAUGHT {'gpu1': False}
+sources restored (sha256 of 5 files): True
+mutants 5 of 5 CAUGHT (batch, no control)
+BATCH OK

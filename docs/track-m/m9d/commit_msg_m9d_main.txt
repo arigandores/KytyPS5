@@ -1,0 +1,23 @@
+track M link M9d (HPP-869): KYTY_DIAG_T188 stage 1 of T188 and T109Stat - main (cherry-pick of worktree commit d490f648 on M6a3 3d227024)
+
+Code only of measurement and its controls, default 0 (KYTY_DIAG_T188=0: one "T188: mode=0 cls=all k=4" line per
+process, every other new place under one not-taken test of a global read once at static init):
+- src/libs/diagT188.{h,cpp}: episodes of a partial GPU write over a GpuModified image (S2 InvalidateMemoryFromGPU, writer
+  St/Fill/Copy), their closures (S3 upload with deferred levels S3b/S3c, S4, S5, S7 CommitGpuWrite, S7b, S7c, S8 carry,
+  Svo), stamps wseq (first statement of Image::MarkGpuModified, unconditional at mode >= 1 - RC13) / sseq (full
+  SynchronizeBufferFromImage) / dseq (DownloadImageMemory), class table (FNV-1a key at S2), lock_bad self check
+  (TrackingSpinLock::HeldByCurrentThread), lines T188Stat / T188Img / T109Stat (periodic every 4096 AudioOut2 pushes,
+  exit).
+- mode 2/3 (no measurement): magenta tint of the lost / all uploaded levels with readback rb0 (same command buffer) and
+  rb1 (a later frame); t188_rb_wr set in the body of TextureCache::UploadImage (both branches, both calls), Image::Upload,
+  MarkGpuModified, ClearImage, CopyImage / CopyImageMip destinations (RC12).
+- T109: DiagT109::NoteDraw in SetGraphicsDynamicParams with the computed viewports (RC15); DB_RENDER_OVERRIDE counted in
+  the one branch of HwCtxSetDepthMetadataRegister (RC14).
+- stands: tests/T188Stand.cpp (target t188_stand, functions, T109), --t188-gpu-stand of shader_recompiler_compute_tests
+  (tint on the real device, real Image MarkGpuModified, PM4 handlers, real TextureCache S7 and RC12 re-upload).
+Outside the translation signature set (imageInfo.h, src/graphics/shader/**, gpu_format.h, gpu_defs.h untouched).
+Base: worktree of M6a3 3d227024. Built and stand-checked, not run in the game (WIP until the tags of M9f).
+
+On main: conflicts in textureCache.cpp (two insertions next to track F code: CompletePendingUpload, after InitializeImage) resolved keeping both sides; +/- lines per file = d490f648, patch-id --stable of -U0 = d490f648.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

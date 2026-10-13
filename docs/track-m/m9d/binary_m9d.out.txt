@@ -1,0 +1,13 @@
+T188: mode=%d cls=all k=%u 1
+T188Stat: when= 1
+T188Img: when=exit key=%016 1
+T109Stat: when=%s d32= 1
+tint_rb1_none 1
+img_full_unsync 1
+gd490f648 1
+-1937-gd490f648c 1
+8dcf31779bbc 1
+KYTY_DIAG_T188 2
+KYTY_DIAG_T188_CLS 1
+M5W2Stat: when=%s 1
+ao_obj_vq=% 1

@@ -1,0 +1,4 @@
+m7_wseq_frozen CAUGHT {'pure': False}
+sources restored (sha256 of 5 files): True
+mutants 1 of 1 CAUGHT (batch, no control)
+BATCH OK

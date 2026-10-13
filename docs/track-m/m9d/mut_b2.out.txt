@@ -1,0 +1,15 @@
+m4_tint_w CAUGHT {'pure': False}
+m5_tint_deferred CAUGHT {'pure': False}
+m6_sync_partial CAUGHT {'pure': False}
+m8_commit_noop CAUGHT {'pure': False}
+m9_propagate_noop CAUGHT {'pure': False}
+m10_lock_unchecked CAUGHT {'pure': False}
+m11_vol_mipal CAUGHT {'pure': False}
+m12_class_at_close CAUGHT {'pure': False}
+t1_vp0_only CAUGHT {'pure': False}
+t2_nonstrict CAUGHT {'pure': False}
+t3_bias_any CAUGHT {'pure': False}
+t4_zx_narrow_any CAUGHT {'pure': False}
+sources restored (sha256 of 5 files): True
+mutants 12 of 12 CAUGHT (batch, no control)
+BATCH OK

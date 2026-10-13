@@ -1,0 +1,20 @@
+CMakeLists.txt                                                         +5/-0 vs +5/-0 EQUAL
+src/emulator.cpp                                                       +3/-0 vs +3/-0 EQUAL
+src/graphics/guest_gpu/command_processor/pm4Handlers.cpp               +6/-0 vs +6/-0 EQUAL
+src/graphics/host_gpu/regionManager.h                                  +13/-0 vs +13/-0 EQUAL
+src/graphics/host_gpu/renderer/cache/bufferCache.cpp                   +2/-2 vs +2/-2 EQUAL
+src/graphics/host_gpu/renderer/cache/textureCache.cpp                  +377/-2 vs +377/-2 EQUAL
+src/graphics/host_gpu/renderer/cache/textureCache.h                    +33/-2 vs +33/-2 EQUAL
+src/graphics/host_gpu/renderer/image/image.cpp                         +3/-0 vs +3/-0 EQUAL
+src/graphics/host_gpu/renderer/image/image.h                           +9/-0 vs +9/-0 EQUAL
+src/graphics/host_gpu/renderer/pipeline/descriptors.cpp                +1/-1 vs +1/-1 EQUAL
+src/graphics/host_gpu/renderer/renderDraw.cpp                          +9/-0 vs +9/-0 EQUAL
+src/graphics/presentation/window/swapchain.cpp                         +1/-1 vs +1/-1 EQUAL
+src/libs/diagT188.cpp                                                  +1121/-0 vs +1121/-0 EQUAL
+src/libs/diagT188.h                                                    +254/-0 vs +254/-0 EQUAL
+src/libs/libAudio2.cpp                                                 +4/-0 vs +4/-0 EQUAL
+tests/ShaderRecompilerComputeTests.cpp                                 +323/-0 vs +323/-0 EQUAL
+tests/T188Stand.cpp                                                    +739/-0 vs +739/-0 EQUAL
+patch-id -U0: wt fbb8cd11 main fbb8cd11 EQUAL
+patch-id default context: wt 558202b4 main 8ac9e2c7 DIFF
+ALL OK

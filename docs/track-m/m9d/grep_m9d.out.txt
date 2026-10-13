@@ -1,0 +1,212 @@
+# git grep on worktree HEAD 3d227024 (base M6a3 3d227024)
+## copyBufferToImage
+src/common/frameStats.h:838:	// identity holds) and _cp_kb is the LINEAR size copyBufferToImage actually moves (the unit
+src/common/frameStats.h:842:	C1StorageDetileCopyKb, // c1_si_dt_cp_kb: KiB copyBufferToImage really moves there
+src/common/frameStats.h:845:	C1StorageDirectCopyKb, // c1_si_nd_cp_kb: KiB copyBufferToImage really moves there
+src/common/frameStats.h:848:	C1NoStorageDetileCopyKb, // c1_ns_dt_cp_kb: KiB copyBufferToImage really moves there
+src/common/frameStats.h:851:	C1NoStorageDirectCopyKb, // c1_ns_nd_cp_kb: KiB copyBufferToImage really moves there
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1402:	// directly instead of a scratch buffer that copyBufferToImage then moves? Two independent
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1415:	// be quoted. `copy_bytes` is what copyBufferToImage moves, or would have moved.
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1742:	// ObtainBufferForImage + detile + copyBufferToImage round trip is dropped and the image keeps
+src/graphics/host_gpu/renderer/gpuTimeProfiler.cpp:235:	// Session 71, candidate C1: the detile / copyBufferToImage split. GpuTime-kind collapses all
+src/graphics/host_gpu/renderer/gpuTimeProfiler.cpp:239:	//   0 whole upload (textureCache.cpp)          4 copyBufferToImage (image.cpp)
+src/graphics/host_gpu/renderer/image/image.cpp:330:	command.copyBufferToImage(buffer, backing.image, vk::ImageLayout::eTransferDstOptimal,
+src/graphics/host_gpu/renderer/image/image.cpp:610:				command.copyBufferToImage(buffer.Handle(), backing.image,
+src/graphics/host_gpu/renderer/image/tiler.h:72:	// through a UINT storage view instead of a scratch buffer a copyBufferToImage then moves.
+tests/ShaderRecompilerComputeTests.cpp:15914:    cmd.copyBufferToImage(staging, image->image,
+## copyImage\b
+src/graphics/host_gpu/renderer/depthRenderTarget.cpp:485:	command.copyImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal,
+src/graphics/host_gpu/renderer/image/image.cpp:455:	command.copyImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal, backing.image,
+src/graphics/host_gpu/renderer/image/image.cpp:506:		command.copyImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal, backing.image,
+src/graphics/host_gpu/renderer/image/image.cpp:646:	command.copyImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal, backing.image,
+src/graphics/presentation/window/swapchain.cpp:290:	command.copyImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal, image.image,
+## copyImageToImage
+## resolveImage
+src/graphics/host_gpu/renderer/image/image.cpp:516:		command.resolveImage(source.backing.image, vk::ImageLayout::eTransferSrcOptimal,
+tests/ShaderRecompilerComputeTests.cpp:14341:      color.resolveImageView = resolved.view;
+tests/ShaderRecompilerComputeTests.cpp:14342:      color.resolveImageLayout = vk::ImageLayout::eGeneral;
+## clearColorImage
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2742:		command.Handle().clearColorImage(image.backing.image, vk::ImageLayout::eTransferDstOptimal,
+src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3616:			buffer.Handle().clearColorImage(image.backing.image,
+src/graphics/presentation/window/swapchain.cpp:300:	command.clearColorImage(image.image, vk::ImageLayout::eTransferDstOptimal, &color, 1, &range);
+tests/ShaderRecompilerComputeTests.cpp:5917:      scheduler.Current().Handle().clearColorImage(
+tests/ShaderRecompilerComputeTests.cpp:8621:      scheduler.Current().Handle().clearColorImage(
+tests/ShaderRecompilerComputeTests.cpp:9865:        scheduler.Current().Handle().clearColorImage(color.backing.image,
+tests/ShaderRecompilerComputeTests.cpp:10541:      scheduler.Current().Handle().clearColorImage(
+## clearDepthStencilImage
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2745:		command.Handle().clearDepthStencilImage(image.backing.image,
+src/graphics/host_gpu/renderer/renderDraw.cpp:2275:			buffer.Handle().clearDepthStencilImage(image.backing.image,
+tests/ShaderRecompilerComputeTests.cpp:6464:      command.Handle().clearDepthStencilImage(stencil_clear_image.backing.image,
+tests/ShaderRecompilerComputeTests.cpp:9860:        scheduler.Current().Handle().clearDepthStencilImage(image.backing.image,
+tests/ShaderRecompilerComputeTests.cpp:11687:          scheduler.Current().Handle().clearDepthStencilImage(
+## blitImage
+src/graphics/presentation/window/swapchain.cpp:729:	vk_command.blitImage(source.image, vk::ImageLayout::eTransferSrcOptimal,
+## DetileToImage
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1525:				m_tiler.DetileToImage(image, fuse_format, source, source_offset, source_size,
+src/graphics/host_gpu/renderer/image/tiler.cpp:498:void TileManager::DetileToImage(Image& image, vk::Format view_format, vk::Buffer tiled,
+src/graphics/host_gpu/renderer/image/tiler.h:76:	void DetileToImage(Image& image, vk::Format view_format, vk::Buffer tiled,
+## \.Upload\(
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:823:		destination.Upload(color_copies, color_buffer.buffer, color_buffer.offset,
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:829:		destination.Upload(depth_copies, depth_buffer.buffer, depth_buffer.offset,
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1439:		image.Upload(copies, linear.buffer, linear.offset, linear.size,
+tests/ShaderRecompilerComputeTests.cpp:15434:    volume_image.Upload(volume_copies, volume_upload.buffer, 0,
+tests/ShaderRecompilerComputeTests.cpp:29381:  source.Upload(source_copies, upload.Handle(), upload_offset, 128);
+tests/ShaderRecompilerComputeTests.cpp:29419:  buffered_source.Upload(std::span{&buffered_region, 1}, upload.Handle(),
+## MarkGpuModified\(\)
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:877:			destination.MarkGpuModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:904:		destination.MarkGpuModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2290:		image.MarkGpuModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2358:	image.MarkGpuModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2456:	image.MarkGpuModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2524:	image.MarkGpuModified();
+src/graphics/host_gpu/renderer/image/image.h:153:	void MarkGpuModified() noexcept {
+src/graphics/host_gpu/renderer/renderDraw.cpp:1621:			image.MarkGpuModified();
+src/graphics/host_gpu/renderer/renderDraw.cpp:3685:			image.MarkGpuModified();
+tests/ShaderRecompilerComputeTests.cpp:5049:        image.MarkGpuModified();
+## MarkGpuWritten\(
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2505:void TextureCache::MarkGpuWritten(ImageId id) {
+src/graphics/host_gpu/renderer/cache/textureCache.h:112:	void MarkGpuWritten(ImageId id);
+src/graphics/host_gpu/renderer/depthRenderTarget.cpp:456:		cache.MarkGpuWritten(write_id);
+src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:3630:	cache.MarkGpuWritten(id);
+src/graphics/host_gpu/renderer/renderDraw.cpp:5409:		cache.MarkGpuWritten(dst.image_id);
+tests/ShaderRecompilerComputeTests.cpp:5370:      texture_cache.MarkGpuWritten(underspecified_id);
+tests/ShaderRecompilerComputeTests.cpp:5681:      texture_cache.MarkGpuWritten(mip_image);
+tests/ShaderRecompilerComputeTests.cpp:5762:      texture_cache.MarkGpuWritten(array_image);
+tests/ShaderRecompilerComputeTests.cpp:5786:      texture_cache.MarkGpuWritten(unique_volume_image);
+tests/ShaderRecompilerComputeTests.cpp:5843:      texture_cache.MarkGpuWritten(depth_containment_image);
+tests/ShaderRecompilerComputeTests.cpp:5921:      texture_cache.MarkGpuWritten(layered_d16_color_image);
+tests/ShaderRecompilerComputeTests.cpp:6076:      texture_cache.MarkGpuWritten(color_image);
+tests/ShaderRecompilerComputeTests.cpp:6327:      texture_cache.MarkGpuWritten(mirror_image);
+tests/ShaderRecompilerComputeTests.cpp:6359:      texture_cache.MarkGpuWritten(mirror_refresh);
+tests/ShaderRecompilerComputeTests.cpp:6372:      texture_cache.MarkGpuWritten(exact_buffer_image);
+tests/ShaderRecompilerComputeTests.cpp:6440:      texture_cache.MarkGpuWritten(clear_image);
+tests/ShaderRecompilerComputeTests.cpp:6467:      texture_cache.MarkGpuWritten(stencil_clear_id);
+tests/ShaderRecompilerComputeTests.cpp:6636:      texture_cache.MarkGpuWritten(fault_a_image);
+tests/ShaderRecompilerComputeTests.cpp:6637:      texture_cache.MarkGpuWritten(fault_b_image);
+tests/ShaderRecompilerComputeTests.cpp:6711:      texture_cache.MarkGpuWritten(publish_image);
+tests/ShaderRecompilerComputeTests.cpp:6754:        texture_cache.MarkGpuWritten(image);
+tests/ShaderRecompilerComputeTests.cpp:6965:      texture_cache.MarkGpuWritten(unformatted_alias_image);
+tests/ShaderRecompilerComputeTests.cpp:7021:      texture_cache.MarkGpuWritten(layered_color_image);
+tests/ShaderRecompilerComputeTests.cpp:7067:      texture_cache.MarkGpuWritten(replacement_source_image);
+tests/ShaderRecompilerComputeTests.cpp:7291:      texture_cache.MarkGpuWritten(byte_mirror_image);
+tests/ShaderRecompilerComputeTests.cpp:7658:      texture_cache.MarkGpuWritten(exact_image);
+tests/ShaderRecompilerComputeTests.cpp:7723:        texture_cache.MarkGpuWritten(image);
+tests/ShaderRecompilerComputeTests.cpp:7738:      texture_cache.MarkGpuWritten(gc_images[0]);
+tests/ShaderRecompilerComputeTests.cpp:8241:      texture_cache.MarkGpuWritten(d16_depth_image);
+tests/ShaderRecompilerComputeTests.cpp:8284:        texture_cache.MarkGpuWritten(combined_destination_image);
+tests/ShaderRecompilerComputeTests.cpp:8624:      cache.MarkGpuWritten(id);
+tests/ShaderRecompilerComputeTests.cpp:9868:      cache.MarkGpuWritten(binding.image_id);
+tests/ShaderRecompilerComputeTests.cpp:9869:      cache.MarkGpuWritten(ordinary.image_id);
+tests/ShaderRecompilerComputeTests.cpp:10544:      texture_cache.MarkGpuWritten(raw_blocks.image_id);
+tests/ShaderRecompilerComputeTests.cpp:11691:        texture_cache.MarkGpuWritten(id);
+## CommitGpuWrite\(
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1008:		CommitGpuWrite(replacement);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2336:				CommitGpuWrite(image);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2438:	CommitGpuWrite(image);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2496:	CommitGpuWrite(image);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2512:	CommitGpuWrite(image);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2515:void TextureCache::CommitGpuWrite(Image& image) {
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2731:		CommitGpuWrite(image);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2750:	CommitGpuWrite(image);
+src/graphics/host_gpu/renderer/cache/textureCache.h:292:	void CommitGpuWrite(Image& image);
+## ClearBufferModified\(\)
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:880:	destination.ClearBufferModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1814:		image.ClearBufferModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1862:		image.ClearBufferModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2520:	image.ClearBufferModified();
+src/graphics/host_gpu/renderer/image/image.h:183:	void               ClearBufferModified() noexcept { m_buffer_modified = false; }
+tests/ShaderRecompilerComputeTests.cpp:5048:        image.ClearBufferModified();
+## MarkBufferModified\(\)
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:850:			destination.MarkBufferModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1264:	if (first < image.source_first_level) image.MarkBufferModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2155:				inserted.MarkBufferModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:3073:		image.MarkBufferModified();
+src/graphics/host_gpu/renderer/image/image.h:179:	void               MarkBufferModified() noexcept {
+## IsBufferModified\(\)
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:72:	     image.IsCpuDirty(), image.IsBufferModified(), image.IsGpuModified(),
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:492:		     image.IsBufferModified(), static_cast<uint32_t>(image.info.metadata.kind));
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:848:	if (source.IsBufferModified()) {
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:893:	if (source.IsBufferModified() || source.backing.samples != destination.backing.samples) {
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:995:		if (cached.IsBufferModified() || cached.IsDefinitelyCpuDirty()) {
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1334:	     image->IsCpuDirty() ? 1 : 0, image->IsBufferModified() ? 1 : 0);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1736:	const bool upload = image.IsBufferModified() || image.IsCpuDirty();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1751:	    upload && image.IsBufferModified() && !image.IsCpuDirty() &&
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1817:		const bool buffer_modified = image.IsBufferModified();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2039:	bool cpu_dirty = image.IsBufferModified() || image.IsDefinitelyCpuDirty();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2161:			const bool guest_dirty = image.IsBufferModified() || image.IsCpuDirty();
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2386:		    image.IsBufferModified() && !image.IsCpuDirty() &&
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2428:	if (c3_pop && !image.IsBufferModified() &&
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2683:	if (!full_image && (image.IsBufferModified() || image.IsCpuDirty())) {
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2689:		if (image.info.samples == 1 && (image.IsBufferModified() || image.IsCpuDirty())) {
+src/graphics/host_gpu/renderer/image/image.h:178:	[[nodiscard]] bool IsBufferModified() const noexcept { return m_buffer_modified; }
+src/graphics/host_gpu/renderer/image/image.h:195:		return IsGpuModified() && !IsBufferModified() && !IsCpuDirty();
+src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:5029:					const bool needs_work = image.IsCpuDirty() || image.IsBufferModified() ||
+src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:5055:				    !image.IsBufferModified() && image.IsTracked() &&
+src/graphics/host_gpu/renderer/renderDraw.cpp:1663:	    !image.IsBufferModified() && image.IsTracked() && image.track_addr == source.address &&
+tests/ShaderRecompilerComputeTests.cpp:5003:        cache.GetImage(first).IsBufferModified(), "lower MIN_LOD did not require newly resident data");
+tests/ShaderRecompilerComputeTests.cpp:6150:                  !oversized_ms.IsBufferModified() &&
+tests/ShaderRecompilerComputeTests.cpp:6338:                  !texture_cache.GetImage(mirror_image).IsBufferModified(),
+tests/ShaderRecompilerComputeTests.cpp:6356:                  !texture_cache.GetImage(mirror_refresh).IsBufferModified(),
+tests/ShaderRecompilerComputeTests.cpp:6379:              !texture_cache.GetImage(exact_buffer_image).IsBufferModified() &&
+tests/ShaderRecompilerComputeTests.cpp:6395:              !texture_cache.GetImage(exact_float_image).IsBufferModified() &&
+tests/ShaderRecompilerComputeTests.cpp:6432:                  texture_cache.GetImage(clear_image).IsBufferModified(),
+tests/ShaderRecompilerComputeTests.cpp:6437:                  !texture_cache.GetImage(clear_image).IsBufferModified() &&
+tests/ShaderRecompilerComputeTests.cpp:6920:              texture_cache.GetImage(reused_color_id).IsBufferModified() &&
+tests/ShaderRecompilerComputeTests.cpp:6974:                   .IsBufferModified(),
+tests/ShaderRecompilerComputeTests.cpp:7123:                  !texture_cache.GetImage(compressed_image).IsBufferModified(),
+tests/ShaderRecompilerComputeTests.cpp:7297:              !texture_cache.GetImage(byte_mirror_image).IsBufferModified() &&
+## InvalidateMemoryFromGPU\(
+src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2277:	m_texture_cache.InvalidateMemoryFromGPU(vaddr, size);
+src/graphics/host_gpu/renderer/cache/bufferCache.cpp:2346:		m_texture_cache.InvalidateMemoryFromGPU(dst_vaddr, size);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:3048:void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size) {
+src/graphics/host_gpu/renderer/cache/textureCache.h:119:	void               InvalidateMemoryFromGPU(uint64_t address, uint64_t size);
+src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:1073:		context.GetTextureCache().InvalidateMemoryFromGPU(address, size);
+tests/ShaderRecompilerComputeTests.cpp:6428:      texture_cache.InvalidateMemoryFromGPU(base + 0x6000,
+tests/ShaderRecompilerComputeTests.cpp:6912:      texture_cache.InvalidateMemoryFromGPU(reused_depth.info.stencil.address,
+## pending_levels\s*=
+src/graphics/host_gpu/renderer/cache/bufferCache.h:142:	                                               bool pending_levels = false);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1268:		image.pending_levels = 0;
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1629:	if (image.pending_levels == 0) {
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1639:	image.pending_levels = 0;
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1852:		image.pending_levels = deferred > image.source_first_level ? deferred : 0;
+src/graphics/host_gpu/renderer/image/image.h:232:	uint32_t         pending_levels     = 0;
+src/graphics/host_gpu/renderer/pipeline/descriptors.cpp:5054:				if (eligible && image.pending_levels == 0 && !image.IsCpuDirty() &&
+src/graphics/host_gpu/renderer/renderDraw.cpp:1614:	    !image.binding.needs_rebind && image.pending_levels == 0 &&
+src/graphics/host_gpu/renderer/renderDraw.cpp:1661:	if (gate && (!stencil || stencil_record) && image.pending_levels == 0 && !image.IsCpuDirty() &&
+## UploadImage\(
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1382:uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t source_offset,
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1641:	const auto uploaded = UploadImage(image, source.buffer, source.offset, source.size,
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1849:		    UploadImage(image, source.buffer, source.offset, source.size, source.host_written,
+src/graphics/host_gpu/renderer/cache/textureCache.h:276:	uint64_t UploadImage(Image& image, vk::Buffer source, uint64_t source_offset,
+tests/ShaderRecompilerComputeTests.cpp:15881:  void UploadImage(const char *shader_name, Image *image, vk::Buffer staging,
+## FreeImage\(
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:445:			FreeImage(association, __func__, __LINE__);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:481:void TextureCache::FreeImage(ImageId id, const char* reason, uint32_t line) {
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1014:	FreeImage(cached_id, __func__, __LINE__);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1050:				FreeImage(cached_id, __func__, __LINE__);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1102:		FreeImage(cached_id, __func__, __LINE__);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1106:		FreeImage(cached_id, __func__, __LINE__);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:1129:	FreeImage(source_id, __func__, __LINE__);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2146:				FreeImage(result, __func__, __LINE__);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:3431:		FreeImage(id, __func__, __LINE__);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:3626:			FreeImage(id, __func__, __LINE__);
+src/graphics/host_gpu/renderer/cache/textureCache.h:229:	void                      FreeImage(ImageId id, const char* reason = "unknown", uint32_t line = 0);
+## SynchronizeBufferFromImage\(
+src/graphics/host_gpu/renderer/cache/bufferCache.cpp:1095:		return is_texel_buffer ? SynchronizeBufferFromImage(buffer, vaddr, size) : false;
+src/graphics/host_gpu/renderer/cache/bufferCache.cpp:1153:		return SynchronizeBufferFromImage(buffer, vaddr, size);
+src/graphics/host_gpu/renderer/cache/bufferCache.h:316:	[[nodiscard]] bool SynchronizeBufferFromImage(Buffer& buffer, uint64_t vaddr, uint64_t size);
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2875:bool BufferCache::SynchronizeBufferFromImage(Buffer& buffer, uint64_t vaddr, uint64_t size) {
+tests/ShaderRecompilerComputeTests.cpp:185:  static bool SynchronizeBufferFromImage(BufferCache &cache, Buffer &buffer,
+tests/ShaderRecompilerComputeTests.cpp:187:    return cache.SynchronizeBufferFromImage(buffer, address, size);
+tests/ShaderRecompilerComputeTests.cpp:5693:              !BufferCacheTestAccess::SynchronizeBufferFromImage(
+tests/ShaderRecompilerComputeTests.cpp:5696:                  BufferCacheTestAccess::SynchronizeBufferFromImage(
+tests/ShaderRecompilerComputeTests.cpp:5796:              !BufferCacheTestAccess::SynchronizeBufferFromImage(
+tests/ShaderRecompilerComputeTests.cpp:5800:                  BufferCacheTestAccess::SynchronizeBufferFromImage(
+tests/ShaderRecompilerComputeTests.cpp:5850:          !BufferCacheTestAccess::SynchronizeBufferFromImage(
+tests/ShaderRecompilerComputeTests.cpp:7680:                  !BufferCacheTestAccess::SynchronizeBufferFromImage(
+## DownloadImageMemory\(
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:2948:bool TextureCache::DownloadImageMemory(ImageId id) {
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:3616:				if (safe && !DownloadImageMemory(id)) {
+src/graphics/host_gpu/renderer/cache/textureCache.cpp:3648:			(void)DownloadImageMemory(id);
+src/graphics/host_gpu/renderer/cache/textureCache.h:308:	[[nodiscard]] bool DownloadImageMemory(ImageId id);
+tests/ShaderRecompilerComputeTests.cpp:402:    return cache.DownloadImageMemory(id);

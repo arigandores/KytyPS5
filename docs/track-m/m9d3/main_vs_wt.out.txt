@@ -1,0 +1,17 @@
+patch-id --stable -U0:
+86729716ab75186cfb322d19eb527b59c29a43ac 067dfd93298358ae974d52d13727fa4ea0dd8cdb
+86729716ab75186cfb322d19eb527b59c29a43ac 2042c697cd4c6b4972be5137ce64b235a8981443
+patch-id --stable default context:
+241a0e851d2e62be4db213f1b756b30fc5929fd1 067dfd93298358ae974d52d13727fa4ea0dd8cdb
+241a0e851d2e62be4db213f1b756b30fc5929fd1 2042c697cd4c6b4972be5137ce64b235a8981443
+numstat:
+4	2	src/graphics/host_gpu/renderer/renderDraw.cpp
+21	5	src/libs/diagT188.cpp
+7	1	src/libs/diagT188.h
+48	24	tests/T188Stand.cpp
+4	2	src/graphics/host_gpu/renderer/renderDraw.cpp
+21	5	src/libs/diagT188.cpp
+7	1	src/libs/diagT188.h
+48	24	tests/T188Stand.cpp
+signature set files touched:
+0

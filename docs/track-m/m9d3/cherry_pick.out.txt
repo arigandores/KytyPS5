@@ -1,0 +1,4 @@
+Auto-merging src/graphics/host_gpu/renderer/renderDraw.cpp
+[main 2042c697c] track M link M9d3 (HPP-876): RC1 of M9e2 - witness of multi-slot narrow draws in DiagT109::NoteDraw (ROADMAP s122 item 789(v))
+ Date: Tue Oct 13 12:25:26 2026 +0200
+ 4 files changed, 80 insertions(+), 32 deletions(-)

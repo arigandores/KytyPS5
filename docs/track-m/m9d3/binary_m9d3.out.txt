@@ -1,0 +1,4 @@
+T109Stat: when=[ -~]* 1 ['T109Stat: when=%s d32=%llu zx_d32=%llu zx_narrow=%llu bias_d32=%llu bias_narrow=%llu ovr_w=%llu ovr_vpc=%llu zx_narrow_vi=%llu bias_narrow_vi=%llu narrow_cd=%llu']
+KytyPS5-[0-9-]+-[0-9a-f]+-[0-9]+-g[0-9a-f]+ 2 ['KytyPS5-2026-09-15-6a2987a-1936-g3d2270241', 'KytyPS5-2026-09-15-6a2987a-1939-g067dfd932']
+8dcf31779bbcb7c6e605653a138dae162f645a46 1 ['8dcf31779bbcb7c6e605653a138dae162f645a46']
+zx_narrow_vi=[ -~]* 1 ['zx_narrow_vi=%llu bias_narrow_vi=%llu narrow_cd=%llu']

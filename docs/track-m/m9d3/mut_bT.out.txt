@@ -1,0 +1,12 @@
+t1_vp0_only CAUGHT {'pure': False}
+t2_nonstrict CAUGHT {'pure': False}
+t3_bias_any CAUGHT {'pure': False}
+t4_zx_narrow_any CAUGHT {'pure': False}
+t5_all_slots CAUGHT {'pure': False}
+t6_raw_range CAUGHT {'pure': False}
+t7_vi_none CAUGHT {'pure': False}
+t8_vi_count1 CAUGHT {'pure': False}
+t9_cd_any CAUGHT {'pure': False}
+sources restored (sha256 of 5 files): True
+mutants 9 of 9 CAUGHT (batch, no control)
+BATCH OK

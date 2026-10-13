@@ -1,0 +1,3 @@
+m9d2 374 m9d3 374 names_equal True bytes_differ 0
+failed_lines equal to M9d2: True
+ALL OK

@@ -1,0 +1,31 @@
+2026-10-13T10:05:48Z M9d3 (HPP-876) start; lock absent; HPP-861 executionRunId empty; base worktree C:/kyty/m657/m9d/wt 3f5d8725
+2026-10-13T10:06:23Z note_m9d3.md (zapiska) fixed before any code edit, sha256 6c068042061d3895
+2026-10-13T10:07:33Z patch_m9d3.py on worktree: ALL OK
+2026-10-13T10:08:19Z check_gate_order.py wt: GATE ORDER: clean; byte for byte = M9d2 output
+2026-10-13T10:08:50Z HPP-861 executionRunId=None; build t188_stand start
+2026-10-13T10:10:16Z build t188_stand end: BUILD OK: C:\kyty\m657\m9d\build\t188_stand.exe
+2026-10-13T10:10:21Z stand pure+cls on wt build: ALL OK
+2026-10-13T10:10:31Z HPP-861 executionRunId=None; mutants batch T (t1-t9) start
+2026-10-13T10:12:05Z mutants batch T end: BATCH OK
+2026-10-13T10:12:18Z HPP-861 executionRunId=None; mutants batch P (pure m1-m12 without m7) start
+2026-10-13T10:14:08Z mutants batch P end: BATCH OK
+2026-10-13T10:14:16Z HPP-861 executionRunId=None; mutant m7 + GPU batch G1 (m8s m14 m15) start
+2026-10-13T10:18:15Z mutants batch G1 end: BATCH OK
+2026-10-13T10:18:24Z HPP-861 executionRunId=None; GPU batch G2 (m13 g1 g2 g3 g4) start
+2026-10-13T10:23:04Z mutants batch G2 end: BATCH OK
+2026-10-13T10:23:11Z HPP-861 executionRunId=None; mutants control start
+2026-10-13T10:25:10Z mutants control end: ALL OK; sources = before mutants: 5/5
+2026-10-13T10:25:27Z worktree commit 067dfd93 (on 3f5d8725)
+2026-10-13T10:25:36Z HPP-861 executionRunId=None; build version+emulator on 067dfd93 start
+2026-10-13T10:27:17Z build emulator end: BUILD OK: C:\kyty\m657\m9d\build\install\kyty_emulator.exe
+2026-10-13T10:27:32Z binary sha256 feb55b549e26fc6dfd2a03f08997446106cc8bba6bb7e8c31449e7991a737a2c pinned C:/kyty/m657/bin/kyty_emulator_feb55b54.exe (not installed); KYTY_SHADER_SOURCE_HASH 8dcf3177 = M9d2
+2026-10-13T10:27:40Z HPP-861 executionRunId=None; build shader_cfg_tests + run start
+2026-10-13T10:29:17Z shader_cfg_tests: rc 0 [test] 135, failed names 0, failed lines 5; spv 374 = M9d2 byte for byte: ALL OK
+2026-10-13T10:29:36Z main commit 2042c697 (cherry-pick of 067dfd93 on d273a2bc, no conflict)
+2026-10-13T10:29:46Z HPP-861 executionRunId=None; wtmain detached at 2042c697; buildmain t188_stand start
+2026-10-13T10:31:21Z stand on main build (wtmain 2042c697): ALL OK
+2026-10-13T10:31:28Z HPP-861 executionRunId=6f08db24-d130-4af4-855b-49c1f137d7a7; buildmain kyty_emulator (compile check) start
+2026-10-13T10:31:44Z previous line: command NOT started - HPP-861 (M3a2) executionRunId non-empty (general rule 30); waiting, docs only
+2026-10-13T10:33:03Z HPP-861 executionRunId=None; buildmain kyty_emulator (compile check) start
+2026-10-13T10:34:37Z kyty_emulator main build (compile check, wtmain 2042c697): BUILD OK: C:\kyty\m657\m9d\buildmain\install\kyty_emulator.exe
+2026-10-13T10:34:54Z report.md written; docs copy to KytyPS5/docs/track-m/m9d3

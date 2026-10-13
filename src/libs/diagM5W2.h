@@ -11,7 +11,16 @@
 //     clr_dw_div - of them the forms where our clear differs from upstream 57c97ebd8 / 89792a3bc: R16 (R16_SFLOAT,
 //     R16_UNORM) with lo != hi, RGBA16F / RGBA16_UNORM / RG32F with the word != 0; also per vk::Format ("M5W2Clr:");
 //   T021 (imageView.cpp, FindView - a created view): minlod_views - views with min_lod > 0, minlod_div - of them
-//     base_level > 0 and min_lod > (level_count - 1) * 256 (our clamp level_count - 1 differs from the absolute one);
+//     base_level > 0 and min_lod > (level_count - 1) * 256 (reference since M6a2); minlod_div_x (M6a2, ROADMAP s122
+//     item 770(b), the divergence field of rule 767(k)) - base_level > 0 and min_lod > 256 * max(base_level,
+//     level_count - 1): our lowest readable level differs from the absolute minLod only there;
+//   M6a2 (item 770(v)): clr_dw_div8 - accepted fills of class (a3) of M5a (reference, not part of clr_dw_div):
+//     R8Unorm with W != (W & 0xff) * 0x01010101, R8G8Unorm with (W & 0xffff) != (W >> 16);
+//   M6a2 (item 770(g)): at =1 the grain of an OBJECT port is read only through a copy by
+//     Libs::LibKernel::Memory::TryReadBacking; a refused copy is ao_obj_unread (counted in ao_obj_push, never in
+//     ao_obj_nz); the other ports keep the raw read (the output path reads them raw already);
+//   M6a2 (item 770(d)): inv_part_src - the pairs of inv_part with coverage tested against SourceRange() (size =
+//     source_size or info.data.size) instead of info.data (reference);
 //   T188 (textureCache.cpp, InvalidateMemoryFromGPU): inv_calls - calls with a valid range; inv_part - (call, colour
 //     image) pairs where the image IsGpuModified and the write does not cover the image's range; inv_gpu - pairs with
 //     IsGpuModified (reference); inv_off - inv_part whose write starts at an address other than the image's base
@@ -43,16 +52,21 @@ bool PcmHasNonzero(const void* pcm, uint32_t data_format, uint32_t samples);
 void NoteClearDword(uint32_t vk_format, uint32_t word);
 // True if our decode of (vk_format, word) differs from upstream 57c97ebd8 / 89792a3bc (pure).
 bool ClearDwordDiverges(uint32_t vk_format, uint32_t word);
+// M6a2: true for class (a3) of M5a - R8Unorm without a repeated byte, R8G8Unorm with lo != hi (pure).
+bool ClearDwordDiverges8(uint32_t vk_format, uint32_t word);
 
 // T021: a created image view with this min_lod (4.8 fixed point), base_level and level_count.
 void NoteMinLodView(uint32_t min_lod, uint32_t base_level, uint32_t level_count);
 // True if base_level > 0 and min_lod > (level_count - 1) * 256 (pure; min_lod > 0 assumed).
 bool MinLodDiverges(uint32_t min_lod, uint32_t base_level, uint32_t level_count);
+// M6a2: true if base_level > 0 and min_lod > 256 * max(base_level, level_count - 1) (pure; level_count 0 - false).
+bool MinLodDivergesExact(uint32_t min_lod, uint32_t base_level, uint32_t level_count);
 
 // T188: one InvalidateMemoryFromGPU call with a valid range; then one call per colour image it overlaps.
+// source_size - SourceRange().size of the image (its address is image_address).
 void NoteInvalidateCall();
-void NoteInvalidateImage(bool gpu_modified, uint64_t image_address, uint64_t image_size, uint64_t address,
-                         uint64_t size);
+void NoteInvalidateImage(bool gpu_modified, uint64_t image_address, uint64_t image_size, uint64_t source_size,
+                         uint64_t address, uint64_t size);
 
 // T258: one raw read binding (!written && !formatted); gpu_image - FindImageFromRange found an image.
 void NoteRawRead(bool gpu_image);
@@ -74,6 +88,10 @@ struct Totals {
 	uint64_t raw_rd;
 	uint64_t raw_rd_gpu;
 	uint64_t pushes;
+	uint64_t minlod_div_x;  // M6a2
+	uint64_t clr_dw_div8;   // M6a2
+	uint64_t ao_obj_unread; // M6a2
+	uint64_t inv_part_src;  // M6a2
 };
 Totals Read();
 

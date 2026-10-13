@@ -3414,8 +3414,8 @@ void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size) {
 		}
 		TraceWatchedImage("gpu-invalidate", image, address, size);
 		if (diag_m5w2) [[unlikely]] {
-			DiagM5W2::NoteInvalidateImage(image.IsGpuModified(), image.info.data.address, image.info.data.size, address,
-			                              size);
+			DiagM5W2::NoteInvalidateImage(image.IsGpuModified(), image.info.data.address, image.info.data.size,
+			                              image.SourceRange().size, address, size); // M6a2: + inv_part_src
 		}
 		Common::DrawStat::Mark(Common::DrawStat::GpuWrite);
 		if (image.IsGpuModified()) {
